@@ -13,3 +13,4 @@ build/
 /econ-review.md
 /refactor-plan.md
 /*.log
+/.claude/worktrees/

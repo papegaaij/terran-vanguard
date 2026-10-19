@@ -370,7 +370,15 @@ the EMP Burst against the machines are options, not needs.
 
 ## Concept art
 
-None yet. The level will need (part F's production-art round; the mood comes from the Tharsis
+Production art of M7 part F's round 42 (step ART-F2), pending the user's review. Prompts:
+[concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r42-a.png](concept/backdrop-final-r42-a.png) | Level 19 backdrop final (`tools/art/backdrop_l19.py`): the play field at twelve times (slag fields, halls, furnace row, yard approach and gate, casting yard, the wreck's crawl, south gate), no units or props; the belt's four frames and the pieces (sheet) | proposed (round 42) |
+| [concept/backdrop-final-r42-a.gif](concept/backdrop-final-r42-a.gif) | Level 19 backdrop final: the whole level flown at 0.5x with the belts running, 10 fps | proposed (round 42) |
+
+The level will need (part F's production-art round; the mood comes from the Tharsis
 foundry mood still in [mars](../../../world/mars/README.md) and the walker's chosen concept a, the
 "Strider heavy" biped, round 36 MA.4 and B.1):
 

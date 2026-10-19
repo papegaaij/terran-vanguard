@@ -8,7 +8,7 @@
 scroll_speed: 150     # the slopes and the escarpment; the entry, the deck and the dunes set their own
 launch_seconds: 5     # the ship and Rook drop from the transport's bay in formation
 launch: drop          # default pending the user's review in round 38: from above the top edge, not the bottom
-bounty_scale: 0.42    # every bounty × 0.42: the typical haul on budget(15) (TypicalHaulTest, step B3: typical 1,800, -0.3 %)
+bounty_scale: 0.26    # every bounty × 0.26: the typical haul on budget(15) (TypicalHaulTest, step PE15: typical 1,796, -0.5 %)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
   setting: Mars, Olympus Mons
@@ -43,7 +43,7 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (step ART-
       layers:
         deep: Mars from high up, Olympus Mons' caldera rim and flank, the Tharsis plain beyond.
         high-air: the transport's underside (0–3 s), fading entry streaks (0–8 s, the entry glow), thin cirrus (≤ 40 %).
-      purpose: The launch; the Dust Kite's first sight at t=7; popcorn.
+      purpose: The launch; the Dust Kite's first sight at t=5; Needler lines and Stinger streams round the popcorn.
   - name: Cloud Deck
     end: 65
     speed: 170
@@ -88,41 +88,77 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (step ART-
         low-air: dust streaks off the crests.
       purpose: The finale field of six Burrowers; the level ends over the rail line.
 
-# Act 3 popcorn (Dust Kite and Skitter streams of 3, V-wings and snakes of 4) round the set pieces, a wave every
-# 3-3.5 s from t=7 (the act's minimum: at least 55 a minute; the pacing rule: no empty screen over 3 s). The
-# Burrower's first field is alone: no other wave enters from t=68 until t=73 and the Kites of t=62.5 are gone
-# first. A Burrower `field` wave's x and size give its area (its bottom edge enters at the top edge at t),
+# Step PE15 (2026-10-19, the user's round 40 P.e "all later levels" and "tougher, not more"): the waves to the
+# Act 2+ rules (PacingTest: at most 3 pauses over 2 s at medium and hard; ActFloorTest: at least 2.5 enemies on the
+# screen and 10 enemy shots a minute with the plan's fit at medium). The set pieces, the Burrower fields, the
+# pincers and the radio keep their times; between them a wave about every 2 s from t=5, filled with long-lived,
+# firing, low-threat groups: Needler lines of 3 (12 HP with `small_act_hp`: they hover and fire), Stinger streams
+# of 3 (18 HP), Dust Kite swarms of 6 (they loop on the screen) in place of the V-wings, round the Act 3 popcorn.
+# The Burrower's first field is still alone: no other wave enters from t=68 until t=73 and the Kites of t=62.5
+# are gone first. A Burrower `field` wave's x and size give its area (its bottom edge enters at the top edge at t),
 # where its units enter buried with the ground before they burrow toward the ship.
 waves:
-  - {t: 7, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "**New.** The first targets, shimmering out of the haze"}
+  - {t: 5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "**New.** The first targets, shimmering out of the haze"}
+  - {t: 7.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 10.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 12.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 14, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1.25}
   - {t: 17.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
-  - {t: 21, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 19.5, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 22.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 24.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 28, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: Over the first cloud bank}
+  - {t: 26.5, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
+  - t: 28
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[240, -60], [230, 200], [300, 360], [260, 620]]]   # down the middle, swinging right
+    notes: Over the first cloud bank
+  - {t: 30.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 31.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 33.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 35, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25, notes: Out of a cloud bank}
+  - {t: 36.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 38.5, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The leader drops an overdrive}
   - {t: 42, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 45.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 43.5, formation: line abreast, enemy: needler, count: 3, from: front}
+  - t: 45.5
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half
+  - {t: 47, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 49, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, skip: [easy], notes: "2 per side, hold {hold} s; edge warnings; Rook's flank bark; easy: a line abreast from the front"}
   - {t: 49, formation: line abreast, enemy: needler, count: 2, from: front, skip: [medium, hard], notes: "Easy only: instead of the pincer, its first rank"}
   - {t: 51, formation: line abreast, enemy: needler, count: 2, from: front, skip: [medium, hard], notes: "Easy only: the pincer's second rank, 2 s later (step B3: no empty screen over 3 s before the t=52.5 snake)"}
   - {t: 52.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
+  - {t: 54.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 56, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 57.5, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
   - {t: 59.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: Act HP factor (57 HP)}
   - {t: 62.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: As the deck closes; gone before the first Burrower}
   - {t: 68, formation: field, enemy: burrower, count: 3, from: front, x: 240, size: [400, 200], notes: "**New.** Alone: no other wave until t=73 (buried, ahead of the ship)"}
   - {t: 73, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 74.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 76.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 78, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 80, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], notes: With the lava-terrace mortars}
-  - {t: 84, formation: V-wing, enemy: dust-kite, count: 4, from: front}
-  - {t: 87.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 82, formation: line abreast, enemy: needler, count: 3, from: front}
+  - t: 84
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[360, -60], [350, 200], [290, 380], [330, 620]]]   # down the right half
+  - {t: 89, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
   - {t: 91, formation: V-wing, enemy: needler, count: 5, from: front, notes: Over the basalt turret nest}
   - {t: 94.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25}
+  - {t: 96.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 98, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220]}
   - {t: 101.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: Over the Burrower field}
+  - {t: 103, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
   - t: 105
     formation: pack
     enemy: ravager
@@ -136,7 +172,14 @@ waves:
       - [[240, -30], [240, 100], [560, -60]]   # hard's fifth
     notes: Down the regolith fields; act HP factor (19 HP)
   - {t: 108.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 112, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 110, formation: line abreast, enemy: needler, count: 3, from: front}
+  - t: 112
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[240, -60], [230, 200], [300, 360], [260, 620]]]   # down the middle, swinging right
+  - {t: 114, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 115.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
   - t: 118
     formation: convoy
@@ -145,19 +188,34 @@ waves:
     from: front
     paths: [[[300, -40], [300, -800]]]   # straight along the survey station's road (lycus-road at x 300)
     notes: On the survey station's road; act HP factor (38 HP); hard 4
+  - {t: 120, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 121.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 123, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
   - {t: 125, formation: field, enemy: burrower, count: 5, from: front, x: 240, size: [420, 240], notes: Among the station's pads (none surfaces on them)}
   - {t: 128.5, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The last one drops an armour patch}
+  - {t: 130.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 132, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 134, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
   - {t: 135.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front}
+  - {t: 137.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 139, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
+  - {t: 141, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 142.5, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, skip: [easy], notes: "2 per side, hold {hold} s; edge warnings; easy: a line abreast from the front"}
   - {t: 142.5, formation: line abreast, enemy: needler, count: 4, from: front, skip: [medium, hard], notes: "Easy only: instead of the pincer"}
   - {t: 146, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 149.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: Over the first dunes}
+  - {t: 147.5, formation: line abreast, enemy: needler, count: 3, from: front}
+  - t: 149.5
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half
+    notes: Over the first dunes
+  - {t: 151.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 153, formation: field, enemy: burrower, count: 5, from: front, x: 240, size: [420, 240]}
-  - {t: 156.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 158, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 160, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left, notes: Over the crashed lander's nest}
+  - {t: 162, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
   - t: 163.5
     formation: pack
     enemy: ravager
@@ -174,8 +232,17 @@ waves:
   - {t: 170.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 172, formation: field, enemy: burrower, count: 6, from: front, x: 240, size: [440, 260], notes: "The finale: the dune field heaves (Okafor's warning at t=168)"}
   - {t: 174, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 177.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
-  - {t: 181, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "The last wave, over the rail line"}
+  - {t: 176, formation: line abreast, enemy: needler, count: 3, from: front}
+  - t: 177.5
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[360, -60], [350, 200], [290, 380], [330, 620]]]   # down the right half
+  - {t: 179.5, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 181, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 183, formation: line abreast, enemy: needler, count: 4, from: front, notes: "The last waves, over the rail line"}
+  - {t: 185.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x
   - target: lava-terrace mortars

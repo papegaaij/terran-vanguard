@@ -394,10 +394,10 @@ popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels
 **Exception, the Needler and the Stinger** (the user's Act 2 playtest, 2026-10-18: "the missiles take
 out most enemies with a single shot"): the `small` units listed in the basis's `small_act_hp`
 ([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09,
-11–14 and 18**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
-L12 and 18 at L13 and L18; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
+11–16 and 18**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
+L12 and 18 at L13, L15, L16 and L18; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
 units keep their HP. Level 18 (M7 part E) joins with its waves built to the Act 2+ floor (the user's decision
-of 2026-10-19); Levels 15–17 join with their own rework. Level 10 and the rest of Act 3 keep 4 and 6: applied there, the autopilot's Level 10
+of 2026-10-19), Levels 15 and 16 with their reworks (steps PE15 and PE16); Level 17 joins with its own. Level 10 and the rest of Act 3 keep 4 and 6: applied there, the autopilot's Level 10
 escort fell to 2 of 4 shuttles home at medium (D2 = a asks for 3) and Level 11's hard runs stopped
 completing (with the old waves). Levels 11–14 took it with their L10-style waves (steps WA and WB,
 2026-10-19): without it the plan's fit kills the Needlers before their first shot (Level 12: 4 shots a
@@ -427,8 +427,8 @@ autopilot killed none at hard), the Wraith's HP is set for the rear gun, which t
 a bigger unit's time to kill depends less on the beam's instant reach (pending a measurement on the levels
 that fly them). `BalanceTest` judges these units' time to kill at the reference DPS × the factor;
 `tools/balance.py` prints them and fails when the plan's first Ion Beam moves off `from_level`. Levels 15–17 fly
-the Pulse Cannon and keep their HP (their small units live 0.6–0.9 s: their P.e rework takes `small_act_hp`
-like Act 2's); a later level gets the factor by its number, and a Needler or Stinger there keeps 24 / 36 HP only
+the Pulse Cannon and take no beam-era factor (their small units lived 0.6–0.9 s: their P.e rework takes `small_act_hp`
+like Act 2's, Level 15's in step PE15 and Level 16's in step PE16); a later level gets the factor by its number, and a Needler or Stinger there keeps 24 / 36 HP only
 when the level also joins `small_act_hp.levels` (else 8 / 12).
 
 **Damage to the player** (shield first, overflow to armour; collisions split half/half — see
@@ -833,6 +833,10 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   Level 18 meets the Act 2+ pacing and floor rules, round 40 P.e "all later levels"): Needler 12, Stinger 18 HP
   there, with its waves of firing groups; Levels 15–17 join with their own P.e rework (pending the user's review
   in round 41).
+- 2026-10-19: `small_act_hp.levels` extended to Level 15 (step PE15, the user's round 40 P.e "all later levels"):
+  Needler 12, Stinger 18 HP there, with its waves of firing groups; Level 15 measures 2.68 enemies on the screen
+  and 17.2 shots a minute at medium (the floor: 2.5 and 10). Levels 16–17 join with their own rework (pending
+  the user's review).
 - 2026-10-19: **Beam-era HP** (the user's decision of 2026-10-19, "tougher, not more": raise the HP for the beam era
   so units live long enough to shoot back, instead of step E4's 605 enemies on Level 18; later levels follow the
   same rule; M7 part E, step E5): `beam_era_hp` ×2 on `small` units from Level 18 (the plan's first Ion Beam), set

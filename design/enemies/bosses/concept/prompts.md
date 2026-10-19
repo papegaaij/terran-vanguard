@@ -129,3 +129,25 @@ four bone mandibles unfold from its rim around a lime throat.
 - **Negative prompt:** photograph, painterly brush strokes, perspective camera, side view, horizon, text, watermark, flower, starfish, spider, cute, cartoon, magenta or hot-pink glow, yellow body, blue or cyan body colour, green sand.
 - **Animation brief:** the tell: five vein ridges swell under the sand and converge on the breach point, which bulges and cracks (violet light) over 2 s under the edge warning (3 s ahead). Breach: the sand slumps into a funnel (height-field displacement with spiral ridges sliding inward), sand thrown out, the collar rises through three rise states clipped at the sand, the crossed mandibles unfold (two open states) and the throat lights. Open: three 14-orb rings; rocks and sand streaks spiral into the funnel and the ship drifts toward it. Close: mandibles cross shut, the collar sinks, the funnel fills over 2 s. The model is four-fold symmetric, so one render serves every breach side.
 - **Mockup generator:** `python3 tools/concept/bosses_r36.py colossus-b`
+
+# Round 42 — production art (M7 part F)
+
+## revenant-walker-final-r42-a
+
+**Production art, pending the user's review** (step ART-F1, 2026-10-19). The chosen round-36 a
+"Strider heavy" straight to production: the concept's legs, torso layout, materials and missile from
+`tools/concept/bosses_r36.py` imported unchanged, re-laid to the [walker's spec](../revenant-walker/README.md):
+drawn at 72 px per model unit (the concept 92), the round reactor grille split into the **two reactor
+vents** (shut by slats; open hot amber; overheated white-orange in phase 3), a **front plate** wrapping
+the prow (the `armoured` part) with a short chin cannon under it, the shoulder pods as separate sprites
+that turn to their aim (16 headings, the hatch tell with the cells lit red) over mount blocks, a torn stub
+for a destroyed pod, the flamer turret in 32 aim headings with an additive pilot light (idle → blue-white
+flare, the cone's tell). The death topples the walker forward along its heading in 6 steps (the legs
+buckle, the hull pitches forward and rolls onto its left flank, serial-plate side up) and ends in the
+wreck that stays (burnt, the reactor blown, the serial plate ground to bare metal: hint 2). 8 body headings
+× an 8-frame walk; the missile (16 headings), its grey smoke puffs and the flame-cone puffs (additive,
+white-yellow core → orange → red) are 2D/model frames for the game to place.
+
+- **Brief:** as [revenant-walker-r36-a](#revenant-walker-r36-a) (prompt, negative prompt, palette); no markings, no insignia.
+- **Generator:** `python3 tools/art/revenant_walker.py` (`--review` rebuilds this sheet and GIF from the
+  written frames); the sprite names and frame layout are in the generator's docstring.

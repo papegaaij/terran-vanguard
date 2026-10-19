@@ -288,12 +288,23 @@ sections (M3's b) is rejected in the recommendation: it doubles the waves, tests
 The returning `medium` units get the act HP factor (reference DPS 80 at L16, M18 = a: Mantis
 26 → 40, Burrower 44 → 46); `tiny` and `small` keep their HP.
 
-- **Density and pacing**: **215 enemies at medium** (the waves' 200, the 18 anchors among them,
-  and 15 turrets and mortars; a Threadcrawler counts as one) over the 185 s after the launch,
-  **≈ 70 a minute** (minimum 55, the act's band 60–72, [Act 3](../README.md#density-and-threat-profile));
-  a wave every 3–4 s with small popcorn waves (Dust Kite streams of 3, V-wings of 4–5, snakes of 4;
-  Skitter streams of 3, snakes of 4), and **only pairs in the narrows** (t=140–148, 180 px); never
-  an empty screen over 3 s (the Threadcrawler's and the gates' time on the screen included).
+- **Density and pacing** (step PE16, the user's round 40 P.e "all later levels" and "tougher, not more"):
+  **367 enemies at medium** (the waves' 325, the 18 anchors among them, and 24 turrets and mortars; a
+  Threadcrawler counts as one) over the 185 s after the launch, **≈ 119 a minute** (minimum 55; above the
+  step's 70–100 target, pending the user's review); a wave about every 2.3 s. The Act 2+ rules hold: at
+  medium and hard at most 3 pauses over 2 s (`PacingTest`: medium and hard 1, gate 1's lone window
+  35.5–37.8) and, with the plan's fit at medium, **2.63 enemies on the screen and 13.9 enemy shots a
+  minute** (`ActFloorTest`: 2.5 and 10; before: 0.94 and 2.9, 15 pauses). The floor comes from long-lived,
+  firing groups rather than more popcorn: **Needler circles of 6** (they orbit for 8 s and fire; hard 5),
+  **Needler pairs** where the canyon is narrow (one per fork channel, 160 / 320 px), **Stinger streams**
+  (down the fork's channels and, in pairs, the narrows' middle), the Dust Kite V-wings and snakes turned
+  into **swarms of 9** that loop on the screen (hard 7), three more **Spine Turret ledges** (t≈61, 88,
+  120) and **two more Burrower fields** on the outflow's sand (t=164 and 177.5), whose rings give most of
+  the medium shots. Eight Skitter streams became Stinger streams; five popcorn streams were dropped.
+  **Only pairs in the narrows** (t=140–148, 180 px) stays: Stinger pairs on the middle path and the
+  Kite and Skitter pairs. Hard: 374 enemies, 4.38 on the screen, 43.8 shots a minute (Level 15: 4.79),
+  its group-size lever trimmed on the circles, swarms and pairs (`hard: count`); easy 297, no pause
+  over 3 s.
 - **Gates**: six gates of nine pairs at medium; never two gates closer than 1.5 s of scroll (the
   anchor spec); gate 1 alone (no other wave until t=37.5), each later gate with only popcorn above
   it; the crawlers' paths never under a gate.
@@ -316,64 +327,92 @@ rapids (t=100).
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 7 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Over the plateau before the canyon mouth |
+| 5.5 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Over the plateau before the canyon mouth |
+| 8 | 1 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
 | 10.5 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
-| 13.5 | 1 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 5 | front | |
+| 12 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
+| 13.5 | 1 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | |
+| 15.5 | 1 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
 | 17 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 19.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
 | 20.5 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Over the canyon mouth as the walls close in |
-| 24.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 28 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | The first wave between the walls |
-| 31 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Gone before the first barrier |
-| 37.5 | 2 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
-| 41 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 22.5 | 1 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
+| 24.5 | 1 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
+| 28 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | The first wave between the walls |
+| 30 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Gone before the first barrier |
+| 37.5 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | |
+| 39.5 | 2 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
+| 41 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
 | 43 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | Over the first turret ledge |
-| 48.5 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
+| 48 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
+| 50.5 | 2 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
 | 53 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
-| 59.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 5 | front | |
+| 55.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
+| 59.5 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | |
 | 63 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive |
+| 65 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | As the mesa splits the canyon: one per channel |
 | 66.5 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (alternating edges) | As the mesa splits the canyon: two down each channel (alternating channels) |
+| 68.5 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (alternating edges) | Down both channels (alternating) |
 | 70 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | In the fork: the widest channel at its row (the left) |
 | 72 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | Past the relay hut (left channel) |
+| 73.5 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | Down both channels |
 | 75.5 | 3 | stream | [Needler](../../../enemies/air/needler/README.md) | 4 | front (alternating edges) | Alternating the edges of the widest channel (the left) |
-| 78 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | As the channels close (the widest channel, the left) |
+| 77 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | Down both channels |
 | 81.5 | 3 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | After the channels rejoin |
+| 82.5 | 3 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | After the channels rejoin, before the crawler |
 | 84 | 3 | snake | [Threadcrawler](../../../enemies/ground/threadcrawler/README.md) | 1 | front | **New.** Crawls along the left wall's foot (up-canyon: on screen at the scroll less its 70 px/s); popcorn kept light until t=88 |
-| 88 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (right) | |
+| 89.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
 | 91.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
-| 95 | 4 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 5 | front | Into the rapids |
-| 98 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Either side of the rock pillar |
+| 93.5 | 3 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
+| 95 | 4 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | Into the rapids |
+| 98 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | Either side of the rock pillar |
 | 100 | 4 | snake | [Threadcrawler](../../../enemies/ground/threadcrawler/README.md) | 1 | front | Hard only: a third crawler along the right wall's foot, gone before the S-bend |
 | 101 | 4 | line abreast | [Mantis](../../../enemies/air/mantis/README.md) | 2 | front | Act HP factor (40 HP) |
-| 104 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (left) | Through the S-bend |
-| 107 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Over the cliff road's rovers |
+| 104 | 4 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | Through the S-bend |
+| 105.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Through the S-bend, clear of its walls |
+| 107 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | Over the cliff road's rovers |
 | 110 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 113 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
+| 112 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
+| 114.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Past the Helix station, clear of the right wall |
 | 116 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Past the Helix station on the north rim |
-| 119 | 4 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 5 | front | Vrell flyers pass the station by |
-| 122.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 126 | 5 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Into the narrows |
+| 117.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
+| 119 | 4 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | Vrell flyers pass the station by |
+| 122.5 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
+| 127.5 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Into the narrows, clear of the walls |
 | 129.5 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The last one drops an armour patch |
+| 133 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front (alternating edges) | Down the narrows' middle |
 | 135.5 | 5 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Down the narrows' middle (their sway kept off the walls) |
+| 137 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front (alternating edges) | |
 | 138 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 140 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front (alternating edges) | Only pairs in the narrows (180 px) |
 | 142 | 5 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 2 | front (alternating edges) | Only pairs in the narrows (180 px) |
+| 145 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front (alternating edges) | |
 | 147 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 2 | front (left) | Only pairs in the narrows (180 px) |
+| 148.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front (alternating edges) | |
 | 150 | 5 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
-| 155.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 155.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
+| 157 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | |
 | 158.5 | 5 | stream | [Needler](../../../enemies/air/needler/README.md) | 4 | front (alternating edges) | |
 | 160 | 6 | snake | [Threadcrawler](../../../enemies/ground/threadcrawler/README.md) | 1 | front | Along the right wall's foot as the outflow opens, then across the floor from wall to wall (its body across the path); no gate after it |
-| 162 | 6 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 5 | front | |
-| 165.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 162 | 6 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | |
+| 163.5 | 6 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
+| 164 | 6 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | The outflow sand: the first field, as the crawler clears the floor |
+| 165.5 | 6 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
 | 169 | 6 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | The outflow's sand floor (buried, ahead of the ship); act HP factor (46 HP) |
-| 172.5 | 6 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (left) | |
+| 171 | 6 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
+| 172.5 | 6 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | |
 | 176 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 179.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 183 | 6 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 5 | front | The last wave, as the walls fall away |
+| 177.5 | 6 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | A second field on the outflow sand (buried, ahead of the ship) |
+| 179.5 | 6 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
+| 181 | 6 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | |
+| 183 | 6 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 9 | front | The last wave, as the walls fall away |
+| 186.5 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | The last group, as the walls are gone |
 
-Totals: Dust Kite 85 · Skitter 55 · Needler 26 · Stinger 8 · Threadcrawler 2 · Mantis 2 · Burrower 4.
+Totals: Dust Kite 117 · Needler 112 · Skitter 28 · Stinger 52 · Threadcrawler 2 · Mantis 2 · Burrower 12.
 <!-- /data -->
 
 The totals count the waves at medium: with the gates' 18 anchors (9 pairs) and the ground targets'
-11 Spine Turrets and 4 Polyp Mortars that is 215 enemies.
+20 Spine Turrets and 4 Polyp Mortars that is 367 enemies.
 
 ## Ground targets
 
@@ -389,10 +428,13 @@ wall stands in that band (the validator checks every placement against the rock)
 | 2 | Gate 2: one pair (t=46); hard 2 pairs | With popcorn above it only |
 | 2 | [Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×2 at the right wall's foot (t≈53) | Bounty |
 | 2 | Gate 3: two pairs at different heights, 1.5 s of scroll apart (t=57); easy 1 pair | With popcorn above it only |
+| 3 | Spine Turret ledge ×3 at the right wall's foot after gate 3 (t≈61) | Bounty; step PE16 (the Act 2+ floor) |
 | 3 | Spine Turret ledge ×3 at the mesa's right foot (right channel, t≈70) | Bounty; only reachable from the right channel |
 | 3 | Candor relay hut at the left wall's foot (left channel, trigger, t≈71) | 3 hits (hard 5) burst its cargo door: the hidden crate rolls out onto the flyable side (the secret) |
+| 3 | Spine Turret ledge ×3 at the right wall's foot as the rapids near (t≈88) | Bounty; step PE16 (the Act 2+ floor) |
 | 4 | Spine Turret pair on a burnt cliff habitat's pad at the left wall's foot (t≈104) | Bounty |
 | 4 | Stranded cargo rovers ×4 on the cliff road at the right wall's foot (`ground`, 3 HP, t≈107) | Each drops a small salvage pickup (10); the pickups slide off the rock |
+| 4 | Spine Turret ledge ×3 at the left wall's foot below the Helix rim (t≈120) | Bounty; step PE16 (the Act 2+ floor) |
 | 5 | Gate 4: two pairs at different heights (t=132) | In the narrowing canyon |
 | 5 | Polyp Mortar ×2 on ledges at the narrows' walls' foot (t≈138) | Bounty; their shells arc over the canyon |
 | 5 | Gate 5: one pair at the narrowest point (t=144, 180 px) | Only pairs of popcorn round it |
@@ -478,26 +520,24 @@ and break (the unit's), the relay hut's door burst.
 Budget(16) = 700 × 1.07¹⁵ ≈ **1,931**. Amounts in **Act 1 terms** (Dust Kite 4, Skitter 5,
 Needler 12, Stinger 15, Mantis 30, Tendril Anchor 12, a burnt tendril 8, Threadcrawler 48 whole or
 60 by parts, Burrower 24, Spine Turret 12, Polyp Mortar 15; crate 100, secondary 80, salvage 10),
-paid × **2.56** (bounties also × the scale, rounded per kill). A **`bounty_scale` of 0.54**
-(estimate) puts the typical haul at 1,939 (+0.4 %): paid per kill Dust Kite 6, Skitter 7, Needler
-17, Stinger 21, Mantis 41, anchor 17, tendril 11, Threadcrawler 66 (83 by parts), Burrower 33, Spine
-Turret 17, Polyp Mortar 21. The scale is higher than Level 15's 0.42 because this level is air-heavy (air kills count
-at 60 % in the typical haul) where Level 15's 27 Burrowers count at the ground's 80 %; the Dust
-Kite's 4 makes the scale coarse (it pays 5 from 0.44 to 0.53 and 6 from 0.54, and the typical haul
-jumps from −4.7 % to +0.4 % between them), so `TypicalHaulTest` fits the final value.
+paid × **2.56** (bounties also × the scale, rounded per kill). A **`bounty_scale` of 0.27**
+(step PE16, from 0.54 with the busier waves) puts the typical haul at 1,926 (−0.3 %; perfect 3,074): paid
+per kill Dust Kite 3, Skitter 3, Needler 8, Stinger 10, Mantis 21, anchor 8, tendril 6, Threadcrawler 33
+(41 by parts), Burrower 17, Spine Turret 8, Polyp Mortar 10. The Dust Kite's 4 makes the scale coarse
+(0.28 already gives +5.8 %), so `TypicalHaulTest` fits the final value.
 
-Rendered from the data (one kills row; per payout × 2.56 × 0.54, rounded): a perfect run takes the
+Rendered from the data (one kills row; per payout × 2.56 × 0.27, rounded): a perfect run takes the
 Threadcrawlers apart (the tail first, with its bonus) and burns every tendril besides killing the
 anchors.
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Dust Kite 85 × 4 + Skitter 55 × 5 + Needler 26 × 12 + Stinger 8 × 15 + Threadcrawler 2 × 60 by parts (48 whole) + Mantis 2 × 30 + Burrower 4 × 24 | 1,891 | 1,163 |
-| Ground targets: Tendril Anchor 18 × 12 + Spine Turret 11 × 12 + Polyp Mortar 4 × 15 + cargo rovers 4 × small salvage 10 + 9 tendrils burnt × 8 | 780 | 528 |
+| Kills: Dust Kite 117 × 4 + Needler 112 × 12 + Skitter 28 × 5 + Stinger 52 × 15 + Threadcrawler 2 × 60 by parts (48 whole) + Mantis 2 × 30 + Burrower 12 × 24 | 2,171 | 1,352 |
+| Ground targets: Tendril Anchor 18 × 12 + Spine Turret 20 × 12 + Polyp Mortar 4 × 15 + cargo rovers 4 × small salvage 10 + 9 tendrils burnt × 8 | 502 | 342 |
 | Secret: relay hut (hidden crate, 5% of budget) | 256 | 128 |
 | Secondary: open road (every tendril broken) | 205 | 102 |
-| **Total** (bounty scale 0.54) | **3,132** | **1,922** |
+| **Total** (bounty scale 0.27) | **3,134** | **1,924** |
 | Budget(n) = the typical haul's target; typical -0 %, perfect 1.62 × budget | | 1,931 |
 <!-- /data -->
 
@@ -572,7 +612,11 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
 - [x] Threat profile, Varga's four lines and Rook's teaser fitting the intel panel; the anchor's
       and Threadcrawler's intel portraits
 - [x] Briefing: two one-screen pages with their images
-- [x] Typical haul within ±5 % of 1,931 (`TypicalHaulTest`); the autopilot's wall damage measured
+- [x] Typical haul within ±5 % of 1,931 (`TypicalHaulTest`: 1,926 at `bounty_scale` 0.27, −0.3 %, step PE16);
+      the autopilot's wall damage measured
+- [x] The Act 2+ rules (round 40 P.e): ≤ 3 pauses over 2 s at medium and hard (`PacingTest`), ≥ 2.5 enemies on
+      the screen and ≥ 10 shots a minute with the plan's fit (`ActFloorTest`), the Needler and Stinger in
+      `small_act_hp` (`ActHpFactorTest`), no air unit over rock (`TerrainClearanceTest`) — step PE16
 - [x] Music and ambience as in *Music & ambience*; easy/hard as in *Difficulty notes*
 - [x] Production art and captures for part C's round (round 39: ART-C's backdrop and props, step C5's
       capture; built in steps C1–C4, G1, G2; accepted in round 39)
@@ -666,3 +710,16 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   (most of sections 2-4) only its inner gorge and first bench are on screen, so it still reads as a
   band; the buttes show mostly their pale caps.
 - 2026-10-19 (user, round 40, W.a): the canyon walls' redo approved as final (`art: final`); W.b the redo's defaults (a)-(f) all yes, W.c Varga's t=47 line accepted, W.d the fork's right channel kept.
+- 2026-10-19 (step PE16; the user's round 40 P.e "all later levels" and "tougher, not more"; pending the user's
+  review): the waves reworked to the Act 2+ rules. The walls, the fork, the six gates and their anchors, the
+  Threadcrawlers, the Mantis pair, the narrows' pairs, the relay hut, the Helix glimpse, the pickups' carriers and
+  the radio keep their times; the first Kite stream moved from t=7 to 5.5, the t=31 Skitters to 30. Added: 10
+  Needler circles of 6 (hold 8 s), 13 Needler pairs, Stinger streams (channel, narrows pairs, and eight Skitter
+  streams turned into Stinger streams), 10 Kite V-wings and snakes as swarms of 9, Spine Turret ledges at t≈61, 88
+  and 120, Burrower fields at t=164 and 177.5; dropped the Kite and Skitter streams at 48.5, 78, 88, 113 and 126.
+  The Needler and the Stinger joined `small_act_hp` (12 and 18 HP). Medium 215 → 367 enemies (≈ 70 → 119 a
+  minute, over the step's 70–100 target: the plan's fit and Rook kill a hovering Needler line before its first
+  shot, so the floor needed the circles, the swarms and the Burrowers' rings), 0.94 → 2.63 on the screen,
+  2.9 → 13.9 shots a minute, 15 → 1 pauses over 2 s; hard 264 → 374, 1.78 → 4.38 on the screen, 11.0 → 43.8
+  shots, 10 → 1 pauses; easy 165 → 297, no pause over 3 s. `bounty_scale` 0.54 → 0.27 (typical 1,926, −0.3 %;
+  perfect 3,074).

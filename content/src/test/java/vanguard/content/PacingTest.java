@@ -106,7 +106,7 @@ class PacingTest {
      * 10, L12 22, L13 14, L14 12, L15 17, L16 15, L17 15): they keep Act 1's rule until their waves are reworked,
      * pending the user's review. Remove a level once it passes.
      */
-    static final Set<String> PENDING_ACT_TWO_RULE = Set.of(Level15Test.LEVEL, Level16Test.LEVEL, Level17Test.LEVEL);
+    static final Set<String> PENDING_ACT_TWO_RULE = Set.of(Level17Test.LEVEL);
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right

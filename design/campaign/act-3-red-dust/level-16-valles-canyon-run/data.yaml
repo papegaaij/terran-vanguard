@@ -10,7 +10,7 @@
 # mouth (scroll 2,850) to full by 4,180 and back to 0 over the outflow (31,250 to 34,850).
 scroll_speed: 200     # the canyon; the plateau, the gate stretches and the rapids set their own
 launch_seconds: 5     # from the rail head at Lycus (a CDF field pad, scenery)
-bounty_scale: 0.54    # every bounty × 0.54: TypicalHaulTest (step C4): typical 1,944 on budget(16) 1,931 (+0.7 %)
+bounty_scale: 0.27    # every bounty × 0.27: the typical haul on budget(16) (TypicalHaulTest, step PE16: typical 1,926, -0.3 %)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
   setting: Mars, Valles Marineris
@@ -196,27 +196,64 @@ terrain:
 # Dust Kites' 50 px sway needs room: in the fork and the narrows they fly authored paths down a channel's or the
 # canyon's middle (step C4, TerrainClearanceTest; a stream's unit from the right flies the mirror image).
 waves:
-  - {t: 7, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Over the plateau before the canyon mouth}
+  - {t: 5.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Over the plateau before the canyon mouth}
+  - {t: 8, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
   - {t: 10.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
-  - {t: 13.5, formation: V-wing, enemy: dust-kite, count: 5, from: front}
+  - {t: 12, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
+  - t: 13.5
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [200, 200], [300, 380], [240, 620]]]   # over the plateau
+    hard: {count: 7}
+  - {t: 15.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
   - {t: 17, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 19.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
   - {t: 20.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Over the canyon mouth as the walls close in}
-  - {t: 24.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 28, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: The first wave between the walls}
-  - {t: 31, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: Gone before the first barrier}
-  - {t: 37.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
-  - {t: 41, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 22.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
+  - {t: 24.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
+  - t: 28
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
+    notes: The first wave between the walls
+  - {t: 30, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: Gone before the first barrier}
+  - t: 37.5
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
+  - {t: 39.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
+  - {t: 41, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 43, formation: V-wing, enemy: needler, count: 5, from: front, notes: Over the first turret ledge}
-  - {t: 48.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 48, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
+  - {t: 50.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
   - {t: 53, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
-  - {t: 59.5, formation: V-wing, enemy: dust-kite, count: 5, from: front}
+  - {t: 55.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
+  - t: 59.5
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
   - {t: 63, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The leader drops an overdrive}
+  - {t: 65, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}, notes: "As the mesa splits the canyon: one per channel"}
   - {t: 66.5, formation: stream, enemy: dust-kite, count: 4, from: front, edge: alternating, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: "As the mesa splits the canyon: two down each channel (alternating channels)"}
+  - {t: 68.5, formation: stream, enemy: stinger, count: 4, from: front, edge: alternating, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: "Down both channels (alternating)"}
   - {t: 70, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "In the fork: the widest channel at its row (the left)"}
   - {t: 72, formation: stream, enemy: dust-kite, count: 3, from: front, edge: left, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: Past the relay hut (left channel)}
+  - {t: 73.5, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: "Down both channels"}
   - {t: 75.5, formation: stream, enemy: needler, count: 4, from: front, edge: alternating, interval: 1.25, notes: "Alternating the edges of the widest channel (the left)"}
-  - {t: 78, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: "As the channels close (the widest channel, the left)"}
+  - {t: 77, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: "Down both channels"}
   - {t: 81.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: After the channels rejoin}
+  - {t: 82.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}, notes: "After the channels rejoin, before the crawler"}
   - t: 84
     formation: snake
     enemy: threadcrawler
@@ -224,10 +261,18 @@ waves:
     from: front
     crawl: [[16530, 78], [17200, 82], [18000, 86]]   # up-canyon along the left wall's foot, 16 px off its line; the body behind the head above the top edge at t
     notes: "**New.** Crawls along the left wall's foot (up-canyon: on screen at the scroll less its 70 px/s); popcorn kept light until t=88"
-  - {t: 88, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25}
+  - {t: 89.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
   - {t: 91.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
-  - {t: 95, formation: V-wing, enemy: dust-kite, count: 5, from: front, notes: Into the rapids}
-  - {t: 98, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: Either side of the rock pillar}
+  - {t: 93.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
+  - t: 95
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
+    notes: Into the rapids
+  - {t: 98, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25, notes: Either side of the rock pillar}
   - t: 100
     formation: snake
     enemy: threadcrawler
@@ -237,21 +282,44 @@ waves:
     crawl: [[19630, 380], [20300, 356]]   # along the right wall's foot in the rapids
     notes: "Hard only: a third crawler along the right wall's foot, gone before the S-bend"
   - {t: 101, formation: line abreast, enemy: mantis, count: 2, from: front, notes: Act HP factor (40 HP)}
-  - {t: 104, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left, notes: Through the S-bend}
-  - {t: 107, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Over the cliff road's rovers"}
+  - t: 104
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[200, -60], [190, 200], [230, 380], [200, 620]]]   # through the S-bend
+    hard: {count: 7}
+    notes: Through the S-bend
+  - {t: 105.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}, notes: "Through the S-bend, clear of its walls"}
+  - {t: 107, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Over the cliff road's rovers"}
   - {t: 110, formation: V-wing, enemy: needler, count: 5, from: front}
-  - {t: 113, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 112, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
+  - {t: 114.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}, notes: "Past the Helix station, clear of the right wall"}
   - {t: 116, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: Past the Helix station on the north rim}
-  - {t: 119, formation: V-wing, enemy: dust-kite, count: 5, from: front, notes: Vrell flyers pass the station by}
-  - {t: 122.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 126, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Into the narrows}
+  - {t: 117.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
+  - t: 119
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[190, -60], [175, 200], [210, 380], [190, 620]]]   # the canyon's middle below the Helix rim
+    hard: {count: 7}
+    notes: Vrell flyers pass the station by
+  - {t: 122.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 127.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}, notes: "Into the narrows, clear of the walls"}
   - {t: 129.5, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The last one drops an armour patch}
+  - {t: 133, formation: stream, enemy: stinger, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]], notes: "Down the narrows' middle"}
   - {t: 135.5, formation: snake, enemy: dust-kite, count: 4, from: front, paths: [[[240, -60], [240, 640]]], notes: Down the narrows' middle (their sway kept off the walls)}
+  - {t: 137, formation: stream, enemy: stinger, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]]}
   - {t: 138, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 140, formation: stream, enemy: stinger, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]], notes: "Only pairs in the narrows (180 px)"}
   - {t: 142, formation: stream, enemy: dust-kite, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]], notes: Only pairs in the narrows (180 px)}
+  - {t: 145, formation: stream, enemy: stinger, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]]}
   - {t: 147, formation: stream, enemy: skitter, count: 2, from: front, edge: left, interval: 1.25, notes: Only pairs in the narrows (180 px)}
+  - {t: 148.5, formation: stream, enemy: stinger, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]]}
   - {t: 150, formation: V-wing, enemy: dust-kite, count: 4, from: front}
-  - {t: 155.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 155.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 157, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}}
   - {t: 158.5, formation: stream, enemy: needler, count: 4, from: front, edge: alternating, interval: 1.25}
   - t: 160
     formation: snake
@@ -260,13 +328,38 @@ waves:
     from: front
     crawl: [[31705, 395], [32000, 403], [32230, 240], [32450, 66], [32800, 57]]   # along the right wall's foot, then across the floor to the left wall's (Q.22c)
     notes: "Along the right wall's foot as the outflow opens, then across the floor from wall to wall (its body across the path); no gate after it"
-  - {t: 162, formation: V-wing, enemy: dust-kite, count: 5, from: front}
-  - {t: 165.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - t: 162
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
+  - {t: 163.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
+  - {t: 164, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [200, 200], notes: "The outflow sand: the first field, as the crawler clears the floor"}
+  - {t: 165.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 169, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [360, 220], notes: "The outflow's sand floor (buried, ahead of the ship); act HP factor (46 HP)"}
-  - {t: 172.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
+  - {t: 171, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
+  - t: 172.5
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
   - {t: 176, formation: V-wing, enemy: needler, count: 5, from: front}
-  - {t: 179.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 183, formation: V-wing, enemy: dust-kite, count: 5, from: front, notes: "The last wave, as the walls fall away"}
+  - {t: 177.5, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [200, 200], notes: "A second field on the outflow sand (buried, ahead of the ship)"}
+  - {t: 179.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 181, formation: circle, enemy: needler, count: 6, from: front, hold: 8, hard: {count: 5}}
+  - t: 183
+    formation: swarm
+    enemy: dust-kite
+    count: 9
+    from: front
+    paths: [[[240, -60], [228, 200], [262, 380], [240, 620]]]   # down the canyon's middle, a gentle swing
+    hard: {count: 7}
+    notes: "The last wave, as the walls fall away"
+  - {t: 186.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 2}, notes: "The last group, as the walls are gone"}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x; everything at a wall stands in its 24 px foot band
   # The gates (design/enemies/ground/tendril-anchor): linked nests, consecutive placements paired (left, right), at
@@ -316,6 +409,14 @@ ground_targets:  # at: [t, x], when it enters at the top edge and its x; everyth
     notes:
       target: 'Gate 3: two pairs at different heights, 1.5 s of scroll apart (t=57)'
       effect: With popcorn above it only
+  - target: gate 3 ledge
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[61, 392], [61.4, 394], [61.8, 396]]
+    notes:
+      target: 'Spine Turret ledge ×{count} at the right wall''s foot after gate 3 (t≈61)'
+      effect: Bounty; step PE16 (the Act 2+ floor)
   - target: mesa ledge
     section: 3
     enemy: spine-turret
@@ -336,6 +437,14 @@ ground_targets:  # at: [t, x], when it enters at the top edge and its x; everyth
     notes:
       target: Candor relay hut at the left wall's foot (left channel, trigger, t≈71)
       effect: '{hits} hits (hard 5) burst its cargo door: the hidden crate rolls out onto the flyable side (the secret)'
+  - target: rapids ledge
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[88, 404], [88.4, 404], [88.8, 403]]
+    notes:
+      target: 'Spine Turret ledge ×{count} at the right wall''s foot as the rapids near (t≈88)'
+      effect: Bounty; step PE16 (the Act 2+ floor)
   - target: habitat pad
     section: 4
     enemy: spine-turret
@@ -357,6 +466,14 @@ ground_targets:  # at: [t, x], when it enters at the top edge and its x; everyth
       target: Stranded cargo rovers ×{count} on the cliff road at the right wall's foot (`ground`, {hp} HP, t≈107)
       effect: Each drops a {drop} pickup ({drop_credits}); the pickups slide off the rock
       budget: cargo rovers {count} × {drop} {drop_credits}
+  - target: helix ledge
+    section: 4
+    enemy: spine-turret
+    count: 3
+    at: [[120, 72], [120.4, 73], [120.8, 74]]
+    notes:
+      target: 'Spine Turret ledge ×{count} at the left wall''s foot below the Helix rim (t≈120)'
+      effect: Bounty; step PE16 (the Act 2+ floor)
   - target: gate 4
     section: 5
     enemy: tendril-anchor

@@ -31,7 +31,7 @@ contact_damage: {tiny: 6, small: 10, medium: 15, large: 20, huge: 25}  # by size
 small_act_hp:  # the user's Act 2 playtest (2026-10-18, PT2-B 2c): these returning `small` units get the act HP factor too, capped, in these levels
   cap: 3
   units: [needler, stinger]
-  levels: [8, 9, 11, 12, 13, 14, 18]   # Levels 08-09, where the playtest found them too soft, and 11-14 with their L10-style waves (steps WA and WB, 2026-10-19: without it the plan fit kills the Needlers before they fire); Level 18 with its waves to the Act 2+ floor (M7 part E, step E2: the user's decision of 2026-10-19, round 40 P.e "all later levels"; Needler 12, Stinger 18); Level 10 (the user's reference) and Levels 15-17 keep theirs until their own P.e rework (pending the user's review)
+  levels: [8, 9, 11, 12, 13, 14, 15, 16, 18]   # Levels 08-09, where the playtest found them too soft, and 11-14 with their L10-style waves (steps WA and WB, 2026-10-19: without it the plan fit kills the Needlers before they fire); Levels 15, 16 and 18 with their waves to the Act 2+ floor (the user's decision of 2026-10-19, round 40 P.e "all later levels": M7 part E step E2 for Level 18, steps PE15 and PE16 for Levels 15 and 16; Needler 12, Stinger 18); Level 10 (the user's reference) and Level 17 keeps its until their own P.e rework (pending the user's review)
 beam_era_hp:  # M7 part E, step E5 (the user's decision of 2026-10-19, "tougher, not more"): from the level the balance plan fits the Ion Beam, units of these tiers (bosses aside) take this factor on their HP on top of the act HP factor, their own first level included; the bounty is unchanged
   from_level: 18
   factor: 2

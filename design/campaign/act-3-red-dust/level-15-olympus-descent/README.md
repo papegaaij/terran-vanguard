@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../world/mars, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 # Level 15 – Olympus Descent
@@ -63,7 +63,7 @@ Rendered from the data. Directions by each wave's `from`, counted by enemy (the 
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (Burrowers when surfaced, Ravager packs, a Creeper convoy, turret nests and mortars), `buried` (Burrowers under the sand: nothing hits them), `air`; `high-air` and `low-air` carry the cloud decks (scenery) |
-| Attack directions | front 96% · sides 4% (two Needler pincers) |
+| Attack directions | front 97% · sides 3% (two Needler pincers) |
 | Density | 3 |
 | Recommended traits | `anti-ground`, `forward` |
 | Hazards | none (no terrain collision; the Burrowers' rings are their attack) |
@@ -114,7 +114,7 @@ section 3.
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. Entry Corridor | 0–30 | 0–5,700 | 190 | light, clear peak 0–8 | `deep`: Mars from high up, Olympus Mons' caldera rim and flank, the Tharsis plain beyond. `high-air`: the transport's underside (0–3 s), fading entry streaks (0–8 s, the entry glow), thin cirrus (≤ 40 %). | The launch; the Dust Kite's first sight at t=7; popcorn. |
+| 1. Entry Corridor | 0–30 | 0–5,700 | 190 | light, clear peak 0–8 | `deep`: Mars from high up, Olympus Mons' caldera rim and flank, the Tharsis plain beyond. `high-air`: the transport's underside (0–3 s), fading entry streaks (0–8 s, the entry glow), thin cirrus (≤ 40 %). | The launch; the Dust Kite's first sight at t=5; Needler lines and Stinger streams round the popcorn. |
 | 2. Cloud Deck | 30–65 | 5,700–11,660 | 170 | medium | `deep`: the flank closer, lava channels. `low-air`: the thick water-ice deck in banks (~30 %), covering the field at t≈61.5–64.5 while `ground` takes over. `high-air`: cirrus (≤ 40 %). | Mixed air waves through the cloud banks; the first pincer. |
 | 3. Olympus Slopes | 65–115 | 11,660–19,170 | 150 | light | `ground`: the volcano's lower flank, lava terraces, basalt outcrops, dusty regolith fields with burrow furrows. `low-air`: the last cloud wisps, thin dust. | The Burrower alone at t=68, then fields of 4 with popcorn; the first turret nest and mortars. |
 | 4. Lycus Escarpment | 115–150 | 19,170–24,420 | 150 | light | `ground`: the foot of the escarpment (the great cliff, drawn as perspective scenery, nothing gameplay touches on its face); **Lycus Survey Station**, overrun: pads, a domed hab, a road with Vrell growths; the crashed drop pod on a ledge at its foot. `low-air`: thin dust. | The station's growths, the Creeper convoy on its road, the secret. |
@@ -130,14 +130,19 @@ Tharsis dunes).
 
 Formation names from the [formation vocabulary](../../../enemies/README.md). The returning
 `medium` units get the act HP factor (reference DPS 76 at L15, M18 = a: Ravager 16 → 19, Creeper
-30 → 38, Spore Bomber 24 → 57); the `tiny` and `small` ones keep their HP.
+30 → 38, Spore Bomber 24 → 57); the Needler and the Stinger get it capped at ×3 (`small_act_hp`, step PE15:
+12 and 18 HP, as in Act 2's reworked levels and Level 18); the other `tiny` and `small` ones keep their HP.
 
-- **Density and pacing** (§1.7): **200 enemies at medium** (the waves' 186 and the 14 turrets
-  and mortars) over the 185 s after the launch, **≈ 65 a minute** (the act's minimum is 55, its
-  band 60–72, [Act 3](../README.md#density-and-threat-profile)); a wave every 3–3.5 s from t=7,
-  filled with small Dust Kite and Skitter waves (streams of 3, V-wings and snakes of 4), so the
-  screen is never empty for 3 s (`PacingTest`): the cadence keeps the 3 s rule, not the wave size. A submerged Burrower counts as on the screen: its ripple is visible
-  (proposal, for `PacingTest`).
+- **Density and pacing** (step PE15, the user's round 40 P.e "all later levels" and "tougher, not more"):
+  **306 enemies at medium** (the waves' 292 and the 14 turrets and mortars) over the 185 s after the
+  launch, **≈ 99 a minute** (the act's minimum is 55); a wave about every 2 s from t=5. The Act 2+ rules
+  hold: at medium and hard at most 3 pauses over 2 s (`PacingTest`: medium 1, the Burrower's first window
+  65.5–68; hard none) and, with the plan's fit at medium, **2.68 enemies on the screen and 17.2 enemy shots
+  a minute** (`ActFloorTest`: 2.5 and 10; before: 200 enemies, 1.42 and 10.7, 17 pauses). The floor comes from
+  long-lived, firing, low-threat groups, not more popcorn: **Needler lines of 3** (they hover and fire),
+  **Stinger streams of 3**, the Dust Kite V-wings turned into **swarms of 6** that loop on the screen, round
+  the Act 3 popcorn (Dust Kite and Skitter streams of 3, snakes of 4). A submerged Burrower counts as on the
+  screen: its ripple is visible (`PacingTest`).
 - **The Burrower's first sight** (t=68): one field of three alone; no other wave enters until
   t=73 and the Kites before it leave the screen first, as Level 10's "safe first sight". Its fields
   are `field` waves (scattered, entering with the ground; the unit spec's "swarm (scattered)",
@@ -149,62 +154,93 @@ Formation names from the [formation vocabulary](../../../enemies/README.md). The
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 7 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | **New.** The first targets, shimmering out of the haze |
+| 5 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | **New.** The first targets, shimmering out of the haze |
+| 7.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 10.5 | 1 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
+| 12.5 | 1 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 14 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (left) | |
 | 17.5 | 1 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
-| 21 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 19.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 22.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 24.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 28 | 1 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Over the first cloud bank |
+| 26.5 | 1 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
+| 28 | 1 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | Over the first cloud bank |
+| 30.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 31.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
+| 33.5 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 35 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (right) | Out of a cloud bank |
+| 36.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 38.5 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive |
 | 42 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 45.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
+| 43.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 45.5 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | |
+| 47 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 49 | 2 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s; edge warnings; Rook's flank bark; easy: a line abreast from the front |
 | 49 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Easy only: instead of the pincer, its first rank |
 | 51 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Easy only: the pincer's second rank, 2 s later (step B3: no empty screen over 3 s before the t=52.5 snake) |
 | 52.5 | 2 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (left) | |
+| 54.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 56 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 57.5 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
 | 59.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | Act HP factor (57 HP) |
 | 62.5 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | As the deck closes; gone before the first Burrower |
 | 68 | 3 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 3 | front | **New.** Alone: no other wave until t=73 (buried, ahead of the ship) |
 | 73 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
+| 74.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 76.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
+| 78 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 80 | 3 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | With the lava-terrace mortars |
-| 84 | 3 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
-| 87.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 82 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 84 | 3 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | |
+| 89 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
 | 91 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | Over the basalt turret nest |
 | 94.5 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (right) | |
+| 96.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 98 | 3 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | |
 | 101.5 | 3 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | Over the Burrower field |
+| 103 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
 | 105 | 3 | pack | [Ravager](../../../enemies/ground/ravager/README.md) | 4 | front | Down the regolith fields; act HP factor (19 HP) |
 | 108.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 112 | 3 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
+| 110 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 112 | 3 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | |
+| 114 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 115.5 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
 | 118 | 4 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | On the survey station's road; act HP factor (38 HP); hard 4 |
+| 120 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 121.5 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
+| 123 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
 | 125 | 4 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 5 | front | Among the station's pads (none surfaces on them) |
 | 128.5 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The last one drops an armour patch |
+| 130.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 132 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
+| 134 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
 | 135.5 | 4 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | |
+| 137.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 139 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
+| 141 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 142.5 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s; edge warnings; easy: a line abreast from the front |
 | 142.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Easy only: instead of the pincer |
 | 146 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 149.5 | 4 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Over the first dunes |
+| 147.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 149.5 | 4 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | Over the first dunes |
+| 151.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 153 | 5 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 5 | front | |
-| 156.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 158 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 160 | 5 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (left) | Over the crashed lander's nest |
+| 162 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
 | 163.5 | 5 | pack | [Ravager](../../../enemies/ground/ravager/README.md) | 4 | front | Over the dune crests |
 | 167 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 170.5 | 5 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
 | 172 | 5 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 6 | front | The finale: the dune field heaves (Okafor's warning at t=168) |
 | 174 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 177.5 | 5 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
-| 181 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | The last wave, over the rail line |
+| 176 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 177.5 | 5 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | |
+| 179.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | |
+| 181 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
+| 183 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | The last waves, over the rail line |
+| 185.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
 
-Totals: Dust Kite 72 · Skitter 43 · Needler 21 · Stinger 8 · Spore Bomber 4 · Burrower 27 · Ravager 8 · Creeper 3.
+Totals: Dust Kite 84 · Needler 73 · Stinger 56 · Skitter 37 · Spore Bomber 4 · Burrower 27 · Ravager 8 · Creeper 3.
 <!-- /data -->
 
 ## Ground targets
@@ -311,20 +347,20 @@ the ground units and targets, 80 % of the salvage, half the secret and the secon
 **Act 1 terms** (the stat-block bounties: Dust Kite 4, Skitter 5, Needler 12, Stinger 15, Spore
 Bomber 25, Burrower 24, Ravager 18, Creeper 22, Spine Turret 12, Polyp Mortar 15; the crate 100,
 the secondary 80, the salvage 10), each paid × the act factor **2.56** (bounties also × the
-level's scale, rounded per kill). A **`bounty_scale` of 0.42** (estimate; M12 = a accepts the act
-step's low scale) puts the typical haul on the budget: paid per kill Dust Kite 4, Skitter 5,
-Needler 13, Stinger 16, Spore Bomber 27, Burrower 26, Ravager 19, Creeper 24, Spine Turret 13,
-Polyp Mortar 16. `TypicalHaulTest` fits the final scale (±5 %) once the data exists.
+level's scale, rounded per kill). A **`bounty_scale` of 0.26** (step PE15, from 0.42 with the busier
+waves; M12 = a accepts the act step's low scale) puts the typical haul on the budget (`TypicalHaulTest`:
+1,796, −0.5 %): paid per kill Dust Kite 3, Skitter 3, Needler 8, Stinger 10, Spore Bomber 17, Burrower 16,
+Ravager 12, Creeper 15, Spine Turret 8, Polyp Mortar 10.
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Dust Kite 72 × 4 + Skitter 43 × 5 + Needler 21 × 12 + Stinger 8 × 15 + Spore Bomber 4 × 25 + Burrower 27 × 24 + Ravager 8 × 18 + Creeper 3 × 22 | 1,938 | 1,348 |
-| Ground targets: Polyp Mortar 4 × 15 + Spine Turret 10 × 12 + station containers 4 × small salvage 10 | 298 | 222 |
+| Kills: Dust Kite 84 × 4 + Needler 73 × 12 + Stinger 56 × 15 + Skitter 37 × 5 + Spore Bomber 4 × 25 + Burrower 27 × 24 + Ravager 8 × 18 + Creeper 3 × 22 | 2,148 | 1,403 |
+| Ground targets: Polyp Mortar 4 × 15 + Spine Turret 10 × 12 + station containers 4 × small salvage 10 | 224 | 163 |
 | Secret: drop pod (hidden crate, 6% of budget) | 256 | 128 |
 | Secondary: clear the slopes | 205 | 102 |
-| **Total** (bounty scale 0.42) | **2,697** | **1,800** |
-| Budget(n) = the typical haul's target; typical -0 %, perfect 1.49 × budget | | 1,805 |
+| **Total** (bounty scale 0.26) | **2,833** | **1,796** |
+| Budget(n) = the typical haul's target; typical -0 %, perfect 1.57 × budget | | 1,805 |
 <!-- /data -->
 
 Burrowers count at the ground rate (80 %) though a missed window lets one dive away: the
@@ -341,12 +377,14 @@ at L2 at the L18 visit, on budget(n) income: the user's decision of 2026-10-14).
 
 ## Difficulty notes
 
-- **Easy**: Burrower fields one smaller (formation lever) and the spec's easy hooks (ring of 8,
+- **Easy**: every group a fifth smaller (formation lever: Needler lines and Stinger streams of 2,
+  227 enemies, ≈ 74 a minute, Act 1's pacing rule: one pause over 3 s), Burrower fields one smaller and the spec's easy hooks (ring of 8,
   2.4 s surfaced); both Needler pincers enter from the front as a line abreast, the first in two
   ranks of 2 at t=49 and 51 (step B3, accepted in round 38: the autopilot clears one line in
   under a second, leaving the screen empty over 3 s before the t=52.5 snake); an extra armour
   patch from the station's last container.
-- **Hard**: the spec's hard hooks (ring of 12 and a second ring of 8, 1.8 s surfaced); the Creeper
+- **Hard**: every group a fifth larger (formation lever: Needler lines and Stinger streams of 4, 388
+  enemies; plan fit 4.79 on the screen, 43.5 shots a minute, no pause over 2 s); the spec's hard hooks (ring of 12 and a second ring of 8, 1.8 s surfaced); the Creeper
   convoy has 4; a Spine Turret pair at the rail line (t≈185, beside it as it crosses the screen); the drop pod's rubble takes 6 hits.
 
 ## Concept art
@@ -383,6 +421,9 @@ level's data. The briefing images are on the
 - [x] Wave script: ≥ 55 enemies a minute at medium (`DensityTest`: 64.9), no empty screen over 3 s
       (`PacingTest`, a Burrower counting as on the screen in every phase), the pincers' edge warnings,
       the act HP factor for Ravager, Creeper and Spore Bomber — step B3
+- [x] Waves to the Act 2+ rules (round 40 P.e): at most 3 pauses over 2 s at medium and hard (`PacingTest`),
+      ≥ 2.5 enemies on the screen and ≥ 10 shots a minute with the plan's fit at medium (`ActFloorTest`: 2.68 and
+      17.2), Needler and Stinger in `small_act_hp` (`ActHpFactorTest`) — step PE15
 - [x] Ground targets: the nests, the mortars, Lycus Survey Station's growths and containers, the
       crashed lander's nest — steps B2, B3 (`Level15Test`: 10 turrets and 4 mortars at medium, 12 turrets on
       hard), ART-B (`l15_props.py`); seen in round 38's capture
@@ -399,7 +440,7 @@ level's data. The briefing images are on the
       (`intel.py`), B4 (the `BURROW_FIELD` mark)
 - [x] Briefing: two one-screen pages with their images (`BriefingLayoutTest`) — steps B2, ART-B, VOX-B;
       seen in round 38's intro capture
-- [x] Typical haul within ±5 % of 1,805 (`TypicalHaulTest`: 1,800 at `bounty_scale` 0.42, −0.3 %) — step B3
+- [x] Typical haul within ±5 % of 1,805 (`TypicalHaulTest`: 1,796 at `bounty_scale` 0.26, −0.5 %) — steps B3, PE15
 - [x] Music: "Red Dust Run" base stem from section 2, full mix from section 3; the Mars ambience — step B4
       (track 8 in the game's `Tracks`; `mars-entry` = round 38's chosen entry roar a in sections 1–2, crossfading over
       2 s to the chosen `mars-dust` a at section 3; the transport drawn as a 75 % normal-blend overhead pass by its
@@ -478,3 +519,13 @@ level's data. The briefing images are on the
   level ending over the dunes rather than the rail line stay as built, the prose above now gives the
   measured values. The Burrower's bulge plays round 38's crack layer b over the eruption, its dive the
   grain slide b; the entry roar a and `mars-dust` a chosen.
+- 2026-10-19 (step PE15; the user's round 40 P.e "all later levels" and "tougher, not more"; pending the user's
+  review): the waves reworked to the Act 2+ rules. The Burrower fields, the set pieces (Spore Bombers, Ravager
+  packs, the convoy), the pincers, the pickups' carriers and the radio keep their times; the first Kite stream
+  moved from t=7 to t=5 (the launch ends at 5) and the t=21 Needler line to 22.5; between the anchors 33 firing
+  groups were added (16 Needler lines of 3 and one of 4 over the rail line at 183, 16 Stinger streams of 3, the
+  last at 185.5), six of the seven Kite V-wings (28, 45.5, 84, 112, 149.5, 177.5; 10.5 kept) became swarms of 6
+  on authored paths, and two Skitter streams (87.5, 156.5) were dropped. The Needler and the Stinger joined `small_act_hp` (12 and 18 HP). Medium:
+  200 → 306 enemies (≈ 65 → 99 a minute), 1.42 → 2.68 on the screen, 10.7 → 17.2 shots a minute, 17 → 1 pauses
+  over 2 s; hard 251 → 388, 2.34 → 4.79 on the screen, 21.1 → 43.5 shots, 9 → 0 pauses; easy 152 → 227, 1 pause
+  over 3 s. `bounty_scale` 0.42 → 0.26 (typical 1,796, −0.5 %; perfect 2,833).

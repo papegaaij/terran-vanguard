@@ -1942,3 +1942,46 @@ Use: the Ghost Drone's burst. Brief: three dry precise shots (human guns, not Vr
 
 ### ghost-drone-death-r41-a — synthesized
 Use: the Ghost Drone's death, `small` explosion rung. Brief: a mechanical break-up, sparks and metal. Why: a dry 100–300 Hz thud and snap, nine inharmonic metal pieces, 70 spark grains of 2.5–9 kHz, no fireball rumble; 0.8 s, −19 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+## Concept round 42 (M7 part F, Level 19 "Foundry of Tharsis")
+
+All thirteen are synthesized by `tools/concept/audio/sfx_r42.py` (nothing for CREDITS.md); no bubbly, popping or squelching layers, every blast with a ramped attack. Proposed (round 42), option a each, pending the user's review. Levels as round 41.
+
+### walker-stomp-r42-a — synthesized
+Use: the Revenant Walker's footfall (each stride). Brief: a dull heavy stomp with a hydraulic hiss, no pop. Why: a 30–120 Hz thud and a 120–400 Hz body (band noise, 6 ms attack), a low leg clank (inharmonic partials round 260 Hz, fast decay) and a 2–6 kHz hydraulic hiss easing off; 1.0 s, −19 dB (the −4 dBFS ceiling limits the level). Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### walker-hatch-r42-a — synthesized
+Use: a pod's hatch flipping open, the 0.4 s tell before a salvo. Brief: a mechanical clunk. Why: a latch tick, a short 1.8–6 kHz pneumatic hiss and a hinge clack (inharmonic partials round 900 Hz with a low knock) at 0.11 s; 0.45 s, −22 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### walker-missile-r42-a — synthesized
+Use: one pod missile leaving (an alternative to the planned enemy missile launch r08 a). Brief: an ignition and a rocket whoosh. Why: a dry ignition crack, a band-noise whoosh rising 0.5 → 2.6 kHz (20 ms attack) that slides off to one side and a thin 3–8 kHz exhaust hiss; 0.8 s, −19 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### walker-flame-tell-r42-a — synthesized
+Use: the flamer's 0.6 s tell. Brief: a gas hiss rising. Why: band noise rising 0.8 → 3.2 kHz and swelling over a low 80–400 Hz gas rush, cut at the end for the flame; 0.7 s, −22 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### walker-flame-r42-a — synthesized
+Use: the flame cone (a loop while it burns). Brief: a roaring flame. Why: an 80–1400 Hz roar through a wandering resonance, flickering at 3, 7 and 11 cycles a loop (channels apart), a 40–120 Hz body and a soft 3–7 kHz gas hiss, no crackle grains; 2.0 s seamless loop, −28 dB band RMS. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### vent-tell-r42-a — synthesized
+Use: a furnace vent's 1.0 s tell (the glow). Brief: a rising gas roar. Why: a resonance rising 250 → 1400 Hz and swelling over a deepening 40–160 Hz rumble, ending at its peak for the burst; 1.05 s, −22 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### vent-burst-r42-a — synthesized
+Use: the vent's burst. Brief: a fire blast roaring out and dying, no pop at the start. Why: a 40 ms attack, a roar whose resonance falls 1.4 → 0.3 kHz, a broad 60–3000 Hz body and a low rush, decaying over 1.5 s; −16 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### tank-tracks-r42-a — synthesized
+Use: the Warden Tank's tracks (a loop, the nearest tank). Brief: grinding treads and a diesel-turbine hum. Why: a 400–1600 Hz tread grind, track-link ticks 14 a second (0.7–2.6 kHz grains, both tracks), a 41 Hz diesel harmonic set and a faint 1.9 kHz turbine whine; 2.0 s seamless loop, −32 dB band RMS. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### tank-turret-r42-a — synthesized
+Use: the turret slew. Brief: a servo whine. Why: a harmonic set gliding 420 → 640 Hz then holding, an 80 ms attack and a 150 ms release, eight faint gear ticks; 0.6 s, −24 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### tank-burst-r42-a — synthesized
+Use: the burst after the 0.3 s hold. Brief: a heavy autocannon. Why: four rounds 0.12 s apart, each a snap, a 0.8–3 kHz crack and a 50–250 Hz body with a short low echo; 0.75 s, −18 dB (the −4 dBFS ceiling limits the level). Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### tank-death-r42-a — synthesized
+Use: the Warden Tank's death. Brief: a hull explosion with metal debris. Why: a deep 30–200 Hz boom, a fire roar falling 1.5 → 0.3 kHz, a heavy metal clang (inharmonic partials round 420 Hz), eight pieces of debris clattering down and 50 spark grains; 1.8 s, −17 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### belt-rumble-r42-a — synthesized
+Use: the conveyor belts (a loop while belts are on screen; the plan folds them into the bed, offered all the same). Brief: a belt rumble. Why: a 40–160 Hz roller rumble, a 200–1200 Hz belt grind, plate seams knocking 6 a second (a 250–900 Hz knock and a 1.2–2.5 kHz rattle) and a 50 Hz motor hum; 2.4 s seamless loop, −34 dB band RMS. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### mars-foundry-r42-a — synthesized
+Use: ambience `mars-foundry` (Level 19). Brief: conveyor rumble, a far furnace roar, a slow hammer, the plateau wind. Why: a 35–180 Hz conveyor rumble, an 80–900 Hz furnace roar (peaking at 240 Hz) breathing slowly, a distant hammer every 4.0 s (a low-passed thud and ring with two hall echoes) and a plains wind on slow gusts; 16.0 s seamless loop, −36 dB band RMS like every ambience loop. Edit: ceiling −4 dBFS (loops −1 dBFS).

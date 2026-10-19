@@ -195,6 +195,11 @@ the rear guns). The GIFs condense the fight, and these points differ (the spec s
 - the sprites are ≈ 230 px (a) and ≈ 260 px (b) across, the spec draws the walker ≈ 170×190 px;
 - the legs: two (a, chosen), as the *Look* now reads.
 
+Production art: [revenant-walker-final-r42-a.png](../concept/revenant-walker-final-r42-a.png)
+([GIF](../concept/revenant-walker-final-r42-a.gif)), `tools/art/revenant_walker.py` (sprite names and
+frame layout in its docstring and `briefs/m7f-names.md`); `art: chosen` stays until the user reviews it
+(round 42). Prompt notes: [../concept/prompts.md](../concept/prompts.md#revenant-walker-final-r42-a).
+
 ## Implementation
 
 - [ ] Stat block and boss script in a `data.yaml` (parts, the front plate as an `armoured` part, the

@@ -68,11 +68,12 @@ class Level15Test {
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
         assertEquals(1_805, Math.round(content.economy().budget().of(level.number())), "700 × 1.07¹⁴");
-        assertEquals(72 * 4 + 43 * 5 + 21 * 12 + 8 * 15 + 4 * 25 + 27 * 24 + 8 * 18 + 3 * 22, kills);
+        assertEquals(84 * 4 + 37 * 5 + 73 * 12 + 56 * 15 + 4 * 25 + 27 * 24 + 8 * 18 + 3 * 22, kills);
         assertEquals(4 * 15 + 10 * 12, ground, "the Polyp Mortars and the Spine Turrets");
         assertEquals(100, crates, "the drop pod's crate in Act 1 terms (pays 256)");
         assertEquals(80, level.secondary().credits(), "clear the slopes, in Act 1 terms (pays 205)");
-        assertEquals(0.42, content.level(LEVEL).bounties(), "fitted by TypicalHaulTest (typical 1,800, -0.3 %)");
+        assertEquals(
+                0.26, content.level(LEVEL).bounties(), "fitted by TypicalHaulTest (step PE15: typical 1,796, -0.5 %)");
     }
 
     @Test
@@ -91,16 +92,16 @@ class Level15Test {
             if (difficulty == Difficulty.MEDIUM) {
                 assertEquals(
                         Map.of(
-                                "dust-kite", 72,
-                                "skitter", 43,
-                                "needler", 21,
-                                "stinger", 8,
+                                "dust-kite", 84,
+                                "skitter", 37,
+                                "needler", 73,
+                                "stinger", 56,
                                 "spore-bomber", 4,
                                 "burrower", 27,
                                 "ravager", 8,
                                 "creeper", 3),
                         waves);
-                assertEquals(Map.of("spine-turret", 10, "polyp-mortar", 4), ground, "186 + 14 = 200 enemies");
+                assertEquals(Map.of("spine-turret", 10, "polyp-mortar", 4), ground, "292 + 14 = 306 enemies");
             }
             assertEquals(
                     difficulty == Difficulty.HARD ? 12 : 10,
