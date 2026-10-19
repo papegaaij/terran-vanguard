@@ -109,7 +109,9 @@ final class BossLooks {
 
     /**
      * The boss at its interpolated place: necks, bell with its crown, core glow, heads (a hull boss:
-     * its hull and parts, the turrets toward the ship at ({@code shipX}, {@code shipY})).
+     * its hull and parts, the turrets toward the ship at ({@code shipX}, {@code shipY})). M7 part A: the
+     * head {@code heatPart} (-1 for none) is the one a beam burns: it shows the beam's steady heat tint
+     * instead of the hit flash, which a beam would renew every step into a flat white silhouette.
      */
     void draw(
             SpriteBatch batch,
@@ -118,12 +120,13 @@ final class BossLooks {
             double seconds,
             float whiteFlash,
             double shipX,
-            double shipY) {
+            double shipY,
+            int heatPart) {
         if (hull != null) {
             hull.draw(batch, piece, alpha, seconds, whiteFlash, shipX, shipY);
             return;
         }
-        drawAt(batch, piece, piece.renderX(alpha), piece.renderY(alpha), seconds, whiteFlash, false);
+        drawAt(batch, piece, piece.renderX(alpha), piece.renderY(alpha), seconds, whiteFlash, false, heatPart);
     }
 
     /** A hull boss's shadow while it flies above the play plane; nothing for the frigate's kind. */
@@ -144,11 +147,18 @@ final class BossLooks {
             hull.drawWreck(batch, piece, x, y, scale, tint.r, tint.a);
             return;
         }
-        drawAt(batch, piece, x, y, 0, 0, true);
+        drawAt(batch, piece, x, y, 0, 0, true, -1);
     }
 
     private void drawAt(
-            SpriteBatch batch, SetPiece piece, double x, double y, double seconds, float whiteFlash, boolean wreck) {
+            SpriteBatch batch,
+            SetPiece piece,
+            double x,
+            double y,
+            double seconds,
+            float whiteFlash,
+            boolean wreck,
+            int heatPart) {
         var boss = piece.boss().orElseThrow();
         var parts = piece.spec().parts();
         int i = 0;
@@ -202,6 +212,14 @@ final class BossLooks {
             double py = y + piece.partOffsetY(p);
             if (wreck || piece.partWrecked(p)) {
                 drawCentred(batch, stumps.get(frame), px, py);
+            } else if (p == heatPart) {
+                flash.draw(
+                        batch,
+                        heads.get(frame),
+                        Math.round(X0 + px),
+                        Math.round(py),
+                        ArsenalLooks.HEAT,
+                        ArsenalLooks.HEAT_AMOUNT);
             } else if (piece.partTicksSinceHit(p) < HIT_FLASH_TICKS) {
                 flash.draw(batch, heads.get(frame), Math.round(X0 + px), Math.round(py), Color.WHITE, whiteFlash);
             } else {

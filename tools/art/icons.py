@@ -21,7 +21,13 @@ rear guns down or sideways); the parts and specials have one symbol per kind in 
 (generator yellow core, shield cyan, plating steel, engine orange, utility green, specials orange).
 Graded parts (Mk I-VI, Composite I-V) carry their grade as amber studs along the badge's foot.
 
-Run: python3 tools/art/icons.py [--review]   (~20 s; --review only rebuilds the sheet)
+The Act 3 items (M7 part A: Ion Beam, Rear Lance, Deflector Pod, Light Drone Bay, EMP Burst, Orbital
+Lance, Shield Overcharge) had no icon chosen in round 36: they are an a/b proposal of concept round 37
+(``act3_symbol``); the user chose a (P.3 = a, 2026-10-13), written to assets/ and shown on
+design/ui/hangar/concept/act3-icons-r37-a.png, the rejected b on concept/rejected/act3-icons-r37-b.png.
+
+Run: python3 tools/art/icons.py [--review] [--variant a|b]   (~20 s; --review only rebuilds the sheets,
+--variant only that proposal sheet)
 """
 import re
 import sys
@@ -276,13 +282,118 @@ MODELS = {
     "escort-rook": lambda: model_symbol(*models.ship_c_model(palette=ships_r02.ROOK_SCHEMES["a"][1]), 1.6, 0.0),
 }
 GUNS = ("pulse-cannon", "scatter-vulcan", "lance-laser", "fan-blaster", "side-splitter", "tail-gun")
+
+
+# --------------------------------------------------------------------------- the Act 3 items (M7 part A)
+# Round 36 chose no icons for them, so they were an a/b proposal of concept round 37 (``--variant b``
+# renders b's sheet only); the user chose a (P.3, 2026-10-13), the one written to assets/.
+
+def _with(model, extra_scene):
+    """A model on the badge plus badge-unit shapes: (scene, extra materials)."""
+    inner, mats = model
+
+    def scene(p):
+        return union(inner(p), *extra_scene(p))
+    return scene, mats
+
+
+def _deflector_pod(v):
+    import deflector_pod
+    scene, mats = deflector_pod.pod_model(v)
+    return model_symbol(scene, mats, 0.62, 0.0, (0.0, -0.06, 0.0))
+
+
+def _drone():
+    import gear_r36
+    scene, mats = gear_r36.drone_a()
+    return model_symbol(scene, mats, 1.6, 0.0)
+
+
+def act3_symbol(symbol, v):
+    """(scene, extra materials) of an Act 3 item's emblem in variant v, or None."""
+    if symbol == "ion-beam":
+        def scene(p):
+            if v == "a":   # the gun block and a thick beam with a white core and a contact star
+                beam = bolt(p, (0, -0.42), (0, 0.6), 0.2)
+                star = np.minimum(bolt(p, (-0.38, 0.66), (0.38, 0.66), 0.06), sd_sphere(p, (0, 0.66, 0.14), 0.17))
+                return union((beam, M["shot"]), (star, M["core"]), (block(p, (0, -0.64), (0.46, 0.16)), M_STEEL))
+            beam = bolt(p, (0, -0.2), (0, 0.85), 0.15)  # b: an emitter ring with the beam out of it
+            return union((ring(p, (0, -0.42), 0.32, 0.1), M_STEEL), (sd_sphere(p, (0, -0.42, 0.08), 0.16), M["shot"]),
+                         (beam, M["shot"]))
+        return scene, []
+    if symbol == "rear-lance":
+        def scene(p):
+            if v == "a":   # the Lance Laser's emblem turned round: block at the top, the lance downwards
+                shots = bolt(p, (0, 0.4), (0, -0.82), 0.12)
+                gun = np.minimum(block(p, (0, 0.62), (0.42, 0.16)), block(p, (0, 0.4), (0.16, 0.14)))
+                return union((shots, M["shot"]), (gun, M_STEEL))
+            shots = np.minimum(bolt(p, (0, 0.1), (0, -0.85), 0.11), bolt(p, (-0.42, 0.3), (-0.42, -0.4), 0.06))
+            shots = np.minimum(shots, bolt(p, (0.42, 0.3), (0.42, -0.4), 0.06))  # b: one lance piercing two marks
+            return union((shots, M["shot"]), (block(p, (0, 0.6), (0.3, 0.2)), M_STEEL))
+        return scene, []
+    if symbol == "deflector-pod":
+        if v == "a":       # the pod with its field's arc beside it
+            return _with(_deflector_pod("a"), lambda p: [(arc(rotate_z(p, -np.pi / 2), (0.0, -0.1), 0.62, 0.07,
+                                                              np.radians(62)), M["shield"])])
+
+        def scene(p):      # b: the field's arc catching a bolt
+            hit = np.minimum(sd_sphere(p, (0.22, 0.0, 0.12), 0.14), bolt(p, (0.25, 0.0), (0.8, 0.45), 0.07))
+            return union((arc(rotate_z(p, -np.pi / 2), (0.0, 0.25), 0.75, 0.1, np.radians(58)), M["shield"]),
+                         (hit, M["shot"]), (block(p, (-0.62, 0), (0.14, 0.42)), M_STEEL))
+        return scene, []
+    if symbol == "light-drone-bay":
+        if v == "a":       # the disc drone itself
+            return _drone()
+        return _with(model_symbol(*__import__("gear_r36").drone_a(), 2.6, 0.0),
+                     lambda p: [(arc(p, (0, 0), 0.72, 0.06, np.radians(150)), M["util"])])
+    if symbol == "special-emp-burst":
+        def scene(p):
+            zig = [(-0.5, 0.55), (0.1, 0.1), (-0.15, -0.05), (0.45, -0.6)]
+            bolt_ = np.min([bolt(p, a, b, 0.09) for a, b in zip(zig[:-1], zig[1:])], axis=0)
+            if v == "a":   # a ring with a lightning bolt across it
+                return union((ring(p, (0, 0), 0.72, 0.08), M["special"]), (bolt_, M["special"]))
+            arcs_ = np.minimum(arc(p, (0, -0.5), 0.6, 0.07, np.radians(45)), arc(p, (0, -0.5), 1.05, 0.07, np.radians(38)))
+            return union((sd_sphere(p, (0, -0.5, 0.06), 0.2), M["special"]), (arcs_, M["special"]))
+        return scene, []
+    if symbol == "special-orbital-lance":
+        def scene(p):
+            target = ring(p, (0, -0.55), 0.3, 0.07)
+            if v == "a":   # a column striking a target ring
+                return union((bolt(p, (0, 0.85), (0, -0.45), 0.17), M["special"]), (target, M["special"]),
+                             (block(p, (0, 0.82), (0.36, 0.08)), M_STEEL))
+            sat = np.minimum(block(p, (0, 0.62), (0.13, 0.13)), block(p, (0, 0.62), (0.62, 0.06)))
+            return union((sat, M_STEEL), (bolt(p, (0, 0.45), (0, -0.4), 0.1), M["special"]), (target, M["special"]))
+        return scene, []
+    if symbol == "special-shield-overcharge":
+        outer = [(0, 0.85), (0.7, 0.55), (0.6, -0.25), (0, -0.85), (-0.6, -0.25), (-0.7, 0.55)]
+
+        def scene(p):
+            if v == "a":   # two shield shells, one inside the other
+                inner = [(x * 0.62, y * 0.62) for x, y in outer]
+                shells = np.maximum(plate(p, outer, 0.06, 0.08), -plate(p, [(x * 0.82, y * 0.82) for x, y in outer], 0.06, 0.2))
+                return union((shells, M["special"]), (plate(p, inner, 0.08, 0.08), M["special"]))
+            up = np.minimum(bolt(p, (0, -0.35), (0, 0.4), 0.1), np.minimum(bolt(p, (0, 0.45), (-0.28, 0.15), 0.09),
+                                                                            bolt(p, (0, 0.45), (0.28, 0.15), 0.09)))
+            return union((plate(p, outer, 0.04, 0.08), M_STEEL), (up, M["special"]))
+        return scene, []
+    return None
+
+
+ACT3 = ("ion-beam", "rear-lance", "deflector-pod", "light-drone-bay", "special-emp-burst",
+        "special-orbital-lance", "special-shield-overcharge")
+VARIANT = "a"
+CHOSEN = "a"   # the user's pick, round 37 P.3 (2026-10-13); the other sheet goes to concept/rejected/
 SYMBOLS = {"generator": generator, "shield": shield, "plating": plating, "engine": engine}
 
 
 def emblem(symbol, grade):
     """(scene in badge units, materials) of one icon."""
     mats = list(MATS)
-    if symbol in MODELS:
+    act3 = act3_symbol(symbol, VARIANT) if symbol in ACT3 else None
+    if act3 is not None:
+        inner, extra = act3
+        mats += extra
+    elif symbol in MODELS:
         inner, extra = MODELS[symbol]()
         mats += extra
     elif symbol in GUNS:
@@ -310,7 +421,9 @@ def emblem(symbol, grade):
 
 
 def render(job):
-    name, symbol, grade, size = job
+    global VARIANT
+    name, symbol, grade, size, *variant = job
+    VARIANT = variant[0] if variant else "a"
     scene, mats = emblem(symbol, grade)
     half = size / 2
 
@@ -365,7 +478,41 @@ def review():
     print(f"review: {path.relative_to(ROOT)}")
 
 
+def act3_review(v):
+    """The round-37 proposal sheet of the Act 3 items' icons in variant v (CHOSEN is the one in assets/)."""
+    labels = {name: label for name, label, _, _ in catalogue()}
+    jobs = [(name + suffix, name, 0, size, v) for name in ACT3 for suffix, size in SIZES.items()]
+    with ProcessPoolExecutor() as pool:
+        icons = dict(zip([j[0] for j in jobs], pool.map(render, jobs)))
+    cell = 230
+    sheet = raster.sheet(16 + 4 * cell + 16, 60 + 2 * 96 + 20, f"ACT 3 EQUIPMENT ICONS - PROPOSAL {v.upper()} (ROUND 37)",
+                         "PRODUCTION ART, M7 PART A BATCH - R37")
+    raster.draw_text(sheet, 16, 38, "16X16 (SHOP ROWS, HUD SPECIAL ROW) AT 1X AND 3X, 24X24 (SELECTED, CALLOUTS) AT 1X AND 2X",
+                     raster.LABEL)
+    for i, name in enumerate(ACT3):
+        x, y = 16 + (i % 4) * cell, 56 + (i // 4) * 96
+        small, large = icons[name], icons[name + "-large"]
+        plate_ = Image.new("RGBA", (cell - 8, 80), (6, 8, 26, 255))
+        plate_.alpha_composite(small, (2, 2))
+        plate_.alpha_composite(sprite.enlarge(small, 3), (22, 2))
+        plate_.alpha_composite(large, (74, 2))
+        plate_.alpha_composite(sprite.enlarge(large, 2), (102, 2))
+        sheet.alpha_composite(plate_, (x, y))
+        raster.draw_text(sheet, x + 2, y + 66, labels.get(name, name).upper()[:30], raster.LABEL_DIM)
+    folder = CONCEPT if v == CHOSEN else CONCEPT / "rejected"
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f"act3-icons-r37-{v}.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
-    if "--review" not in sys.argv[1:]:
+    args = sys.argv[1:]
+    if "--variant" in args:
+        act3_review(args[args.index("--variant") + 1])
+        sys.exit()
+    if "--review" not in args:
         build()
     review()
+    for v in ("a", "b"):
+        act3_review(v)

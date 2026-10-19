@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-09
+updated: 2026-10-13
 ---
 
 # Art direction
@@ -284,9 +284,15 @@ every scene gets a clearly visible **atmosphere layer** and, where the setting a
 - **Perspective between layers**: anything that connects two layers is drawn in true
   perspective around the screen centre, where a layer with scroll factor *k* is also drawn at
   scale *k*. Tall structures (towers, spires, masts) push their roofs away from the centre
-  (camera height model, see parallax B); canyon walls and cliffs run from the rim at scale 1.0
-  down to the floor at the `far` scale (0.6 in parallax C). As they scroll, walls turn, which
-  gives real depth. Everything else is orthographic.
+  (camera height model, see parallax B). Cliffs seen from above (a plateau edge, a crater rim)
+  run from their top at scale 1.0 down to the floor at the `far` scale (0.6 in parallax C).
+  **Canyons the ship flies through** are the exception (user decision MA.1 of round 36,
+  2026-10-13, amending this rule for canyons): the canyon floor is the ground layer at 1.0, and the
+  walls rise from it toward the camera to the plateau at about 1.25, leaning outward from the centre
+  like the perspective towers below; the **foot** of a wall is the collision line, and by the tower
+  rule nothing gameplay touches stands on a leaning face or on the plateau (Level 16, see
+  [Mars](../world/mars/README.md#parallax-layers)). As they scroll, walls turn, which gives real
+  depth. Everything else is orthographic.
 - **Perspective towers are scenery** (user decision D1 of M5 part B, 2026-10-06): the towers of a
   city (Level 08's Nova Lagos first, then Levels 09 and 14) are drawn in true perspective at run
   time, a pre-rendered roof and textured walls per tower, projected each frame round the play
@@ -498,7 +504,8 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
       backdrop pieces' own, the shadows fall on the sea's chop, which marks the shadow stencil
       everywhere).
 - [ ] Perspective geometry between layers for canyon walls and cliffs — **later: Act 3** (the
-      canyon walls, L16).
+      canyon walls of L16 rising toward the camera, collision at their foot: MA.1 = b of round 36;
+      M7 part C).
 - [x] Runtime drop shadows from sprite alpha, offset per layer, masked to shadow-catching layers
       (`Shadows`: the flyers, the Coilwyrm's segments and the ship; the ground layer's tiles, road
       and pieces mark the stencil buffer). The flyers' second shadow on low-air bank tops (12, 17)
@@ -678,3 +685,9 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
   moved to `concept/rejected/` (`water_fx.py --variant b` now writes its review there). The quiet
   `sub` look (build choice a), the faint reef growths (x) and the invisible under-water stretch of
   the arms at 1:1 (y) kept as built.
+- 2026-10-13 (user, round 36, MA.1 = b): the perspective rule amended for canyons the ship flies
+  through: the floor at 1.0, the walls rising toward the camera to the plateau at about 1.25 like
+  Level 08's towers, the collision line at the walls' foot, nothing gameplay touches on a face or
+  the plateau. Variant a (the rim at 1.0 as the collision line, the faces dropping to the floor at
+  0.6, as the chosen scene r03-c draws it) rejected: b reads as flying inside the canyon. Cliffs
+  seen from above keep the old rule.

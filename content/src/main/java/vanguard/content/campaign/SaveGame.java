@@ -22,6 +22,8 @@ import vanguard.content.Difficulty;
  * @param specials charges per special
  * @param armour the current armour points (repair is not automatic)
  * @param escort the escort slot: Rook, his guns and his armour (format version 3)
+ * @param bays the utility bays bought in the hangar, 0 or 1 (format version 4, M7 part A): the third
+ *     bay, whose slot {@code UTILITY_3} holds a module only once it is bought
  * @param retriesLeft retries left in the next level on hard; empty where retries are unlimited
  * @param grades the best grade per completed level, by level number
  * @param dataCores the data cores found
@@ -41,6 +43,7 @@ public record SaveGame(
         Map<String, Integer> specials,
         double armour,
         EscortSlot escort,
+        int bays,
         Optional<Integer> retriesLeft,
         Map<Integer, String> grades,
         List<String> dataCores,
@@ -67,6 +70,52 @@ public record SaveGame(
             throw new IllegalArgumentException("invalid save: level " + nextLevel + ", credits " + credits + ", armour "
                     + armour + ", playtime " + playtime);
         }
+        if (bays < 0 || loadout.containsKey(LoadoutSlot.UTILITY_3) && bays < 1) {
+            throw new IllegalArgumentException("invalid save: " + bays + " bays bought, the third utility slot "
+                    + loadout.get(LoadoutSlot.UTILITY_3));
+        }
+    }
+
+    /** A save of the fields before the bought utility bays (format version 3): no bay bought. */
+    public SaveGame(
+            int version,
+            Instant created,
+            double playtime,
+            Difficulty difficulty,
+            int nextLevel,
+            int credits,
+            long score,
+            Map<LoadoutSlot, Fitted> loadout,
+            Map<ItemKind, List<Fitted>> inventory,
+            List<String> unlocks,
+            Map<String, Integer> specials,
+            double armour,
+            EscortSlot escort,
+            Optional<Integer> retriesLeft,
+            Map<Integer, String> grades,
+            List<String> dataCores,
+            List<String> storyFlags,
+            Stats stats) {
+        this(
+                version,
+                created,
+                playtime,
+                difficulty,
+                nextLevel,
+                credits,
+                score,
+                loadout,
+                inventory,
+                unlocks,
+                specials,
+                armour,
+                escort,
+                0,
+                retriesLeft,
+                grades,
+                dataCores,
+                storyFlags,
+                stats);
     }
 
     /** A save of the fields before the escort slot: Rook is not hired (a new campaign's escort). */

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Hangar
@@ -82,6 +82,10 @@ illustrative and come from [player](../../player/README.md).)
   recommended weapon traits. A set piece (a `huge` unit outside the waves, such as Level 03's
   Leviathan) is not named: from sensor L2 it shows as an "unknown huge contact" (its size tier)
   with its 40×40 silhouette at the right of the boss row.
+  The L3 **wave strip** shows each wave's start as an amber tick over the level's length, with the
+  level's marks: a defend phase as a dim band under the ticks, a hazard span (a whiteout, a root
+  field) as a pale band over them, and the boss's or mid-boss's arrival as a red tick the strip's
+  full depth over everything (Levels 05, 07, 11 and 14).
 - **Repair**: armour repair per point or "repair all", with cost; from Level 08 a second line
   for Rook's armour (see *Escort* below).
 - **Save**: slot list, see [saves](../../systems/saves/README.md).
@@ -130,6 +134,16 @@ sell-back, see [economy](../../systems/economy/README.md#sell-back-and-undo).
 Swapping the plating keeps the damage: the missing armour points stay missing (Standard 41/60 →
 Composite I 61/80), with at least 1 point left. Repair is a separate choice.
 
+**Mouse** (M6 part A, see [ui](../README.md#mouse)): hovering a shop row, a choice chip or a
+command of the top bar highlights it as the keys would (so the test fire and the power bar's
+projection follow the pointer); a click on a choice chip or an enabled command makes it as Enter
+does (selling and launching still ask); a click on a weapon mount's callout, Rook's callout or a
+module tile selects that slot as Q / E do (by click only, so moving across the schematic does not
+switch the shop list); a click on Rook's `LEFT` / `RIGHT` chip sets his side; the wheel over the
+shop list scrolls it. While the repair panel is open only it takes the mouse: a click on the
+`SHIP` or `ROOK` line picks it, a click or a drag on the slider sets the points and a click on the
+repair button repairs; the right button closes it, and elsewhere asks to quit as Esc does.
+
 ## Concept art
 
 Concept [round 06](../../concept-rounds/round-06/README.md) — full 960×540 screens at 1× plus a 2× detail crop; generator `tools/concept/ui_r06.py`. Prompts: [concept/prompts.md](concept/prompts.md).
@@ -160,9 +174,12 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r31-a.png](concept/intel-final-r31-a.png) | Review sheet (M5 part C batch, `tools/art/intel.py`, [round 31](../../concept-rounds/README.md)): the 30×30 intel portraits of Level 09's Hive Node and Ravager, from the production models of `tools/art/hive_node.py` and `tools/art/ravager.py`, at 1× and 3× | chosen |
 | [concept/intel-final-r32-a.png](concept/intel-final-r32-a.png) | Review sheet (M5 part D batch, `tools/art/intel.py`, [round 32](../../concept-rounds/README.md)): the 30×30 intel portraits of Level 10's Wraith and Mote Swarm, from the production models of `tools/art/wraith.py` and `tools/art/mote_swarm.py`, at 1× and 3× | chosen |
 | [concept/intel-final-r33-a.png](concept/intel-final-r33-a.png) | Review sheet (M5 part E batch, `tools/art/intel.py`, [round 33](../../concept-rounds/README.md)): the 30×30 intel portraits of Level 11's Driftjelly and Reef Spitter, from the production models of `tools/art/driftjelly.py` and `tools/art/reef_spitter.py`, and the 40×40 silhouette of the Harbour Kraken (its head and mantle), at 1× and 3× | chosen |
-| [concept/intel-final-r34-a.png](concept/intel-final-r34-a.png) | Review sheet (M5 part F batch, `tools/art/intel.py`, round 34): the 30×30 intel portrait of Level 12's Lamprey, from the production model of `tools/art/lamprey.py` nose down in swim frame 1, at 1× and 3× | proposed |
-| [concept/intel-final-r35-a.png](concept/intel-final-r35-a.png) | Review sheet (M5 part G batch, `tools/art/intel.py`, round 35): the 30×30 intel portrait of Level 13's Skimmer, from the production model of `tools/art/skimmer.py`, the whole hull at heading 0 moving down the screen, at 1× and 3× | proposed |
-| [concept/intel-final-r36-a.png](concept/intel-final-r36-a.png) | Review sheet (M5 part H batch, `tools/art/intel.py`, round 36): the 40×40 boss silhouette of Level 14's Siege Spire (`boss-siege-spire`), the rooted body as the arena first shows it (the production trunk, six roots and pods of `tools/art/siege_spire.py` placed by its pivots), at 1× and 3× | proposed |
+| [concept/intel-final-r34-a.png](concept/intel-final-r34-a.png) | Review sheet (M5 part F batch, `tools/art/intel.py`, round 34): the 30×30 intel portrait of Level 12's Lamprey, from the production model of `tools/art/lamprey.py` nose down in swim frame 1, at 1× and 3× | chosen |
+| [concept/intel-final-r35-a.png](concept/intel-final-r35-a.png) | Review sheet (M5 part G batch, `tools/art/intel.py`, round 35): the 30×30 intel portrait of Level 13's Skimmer, from the production model of `tools/art/skimmer.py`, the whole hull at heading 0 moving down the screen, at 1× and 3× | chosen |
+| [concept/intel-final-r36-a.png](concept/intel-final-r36-a.png) | Review sheet (M5 part H batch, `tools/art/intel.py`, round 36): the 40×40 boss silhouette of Level 14's Siege Spire (`boss-siege-spire`), the rooted body as the arena first shows it (the production trunk, six roots and pods of `tools/art/siege_spire.py` placed by its pivots), at 1× and 3× | chosen |
+| [concept/intel-final-r38-a.png](concept/intel-final-r38-a.png) | Review sheet (M7 part B batch, `tools/art/intel.py`, round 38): the 30×30 intel portraits of Level 15's Burrower and Dust Kite, from the production sprites | chosen (round 38, F.5: approved as final) |
+| [concept/intel-final-r39-a.png](concept/intel-final-r39-a.png) | Review sheet (M7 part C batch, `tools/art/intel.py`, round 39): the 30×30 intel portraits of Level 16's Tendril Anchor and Threadcrawler, from the production models of `tools/art/canyon_units.py` | chosen (round 39, F.5: approved as final) |
+| [concept/intel-final-r40-a.png](concept/intel-final-r40-a.png) | Intel portraits of Level 17's Choir Herald and Shellback (`tools/art/intel.py`) | proposed (round 40) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -171,10 +188,37 @@ M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game captur
 |---|---|---|
 | [concept/test-fire-capture-r26-a.png](concept/test-fire-capture-r26-a.png) | Game capture before Level 01: the hangar with the Side Splitter selected and its loop in the shop's test-fire box, and below it the box at 2× for the Pulse Cannon (L1>L2, upgrade highlighted), Scatter Vulcan, Autocannon Pod (left wing), Bomb Rack and Micro-missile Pod (right wing) and Side Splitter (rear) | chosen |
 
+M7 part A, the Act 3 items' icons ([round 37](../../concept-rounds/README.md)): round 36 chose none,
+so `tools/art/icons.py` proposes two emblems for each of the Ion Beam, Rear Lance, Deflector Pod,
+Light Drone Bay, EMP Burst, Orbital Lance and Shield Overcharge. Round 37 chose **a** (P.3, user
+2026-10-13), in `assets/` (16 and 24 px, the names `ItemIcons` derives); b is in `concept/rejected/`. Prompts: [concept/prompts.md](concept/prompts.md#act3-icons-r37-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act3-icons-r37-a.png](concept/act3-icons-r37-a.png) | A: the beam gun with a thick beam and contact star, the Lance Laser's emblem turned round, the pod with its field arc, the disc drone, an EMP ring with a lightning bolt, a column on a target ring, two nested shields (16/24 px at 1x and enlarged) | chosen (round 37, P.3) |
+| [concept/rejected/act3-icons-r37-b.png](concept/rejected/act3-icons-r37-b.png) | B: an emitter ring with the beam, one lance through two marks, the field arc catching a bolt, a small drone in an orbit arc (utility green), concentric arcs, a satellite above a column, a shield with an up arrow | rejected — round 37: a (each item as its effect) picked |
+| [concept/act3-hangar-capture-r37-a.png](concept/act3-hangar-capture-r37-a.png) | Game capture (round 37, M7 part A), the hangar before Level 19 from a hand-written save: the Act 3 shop rows (Ion Beam, Deflector Pod, Light Drone Bay, Rear Lance, EMP Burst, Orbital Lance, Shield Overcharge bought, Evasive thrusters) and the `UTILITY BAY 3` row bought, the `UTL` tile appearing (sheet) | chosen (round 37, K.4: accepted) |
+| [concept/act3-hangar-capture-r37-a.mp4](concept/act3-hangar-capture-r37-a.mp4) | The same, 97 s | chosen (round 37, K.4: accepted) |
+
+**After a load and in a replay** (user decision 2026-10-18): Continue and Load game reach the
+hangar through the next level's briefing; that hangar does not autosave as it opens (a save was
+just loaded), except after an act intro that was due, whose story flag the autosave keeps. A
+mission select replay reaches the **replay hangar** through the level's briefing: the same hangar
+on the real campaign (purchases, sales, fitting and repairs are kept, the credits spent are spent),
+with `REPLAY L05 - <NAME>` in its top bar instead of `BEFORE L05`, the replayed level's intel, and
+`> REPLAY` on the launch chip. Its launch writes the campaign to the autosave and flies a replay of
+it ([mission select](../mission-select/README.md)).
+
+**After the release's end** (M6 part B, Q1 = a, accepted by the user in round 35): the hangar
+before the first level that is not built (Level 15 after Act 2) reads `ACT III - RED DUST: COMING
+SOON` in its top bar instead of the mission; it cannot launch. Continue reaches it after the
+release's end, which writes that autosave.
+
 ## Implementation
 
 - [x] Tabs/panels as above with keyboard and gamepad navigation
-- [ ] Mouse navigation — **later: M6** (mouse support in the out-of-game screens, see [ui](../README.md))
+- [x] Replay hangar (user decision 2026-10-18): reached through the level's briefing from the mission select, on the real campaign, `REPLAY L05` header and `> REPLAY` launch, the campaign autosaved at launch (`HangarScreen.replay`, `replayFlight`; `MissionFlowTest`)
+- [x] Mouse navigation — M6 part A (`HangarPointer`, `HangarPointerTest`; see *Design*), accepted by the user in concept round 35
 - [x] Slot selection filters the shop; owned/buyable/locked sorting
 - [x] Power bar with projected load and refusal
 - [x] Comparison deltas vs the fitted item
@@ -212,6 +256,23 @@ M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game captur
 - [x] The intel panel's level name beside the sensor chip: a name too long for the body font
       (`EVACUATION CORRIDOR`) takes the label font (`IntelPanel.nameFits`, `IntelPanelLayoutTest`)
       — M5 part D
+- [x] The hangar before Level 15 reads `ACT III - RED DUST: COMING SOON` (was `BEFORE L15 - NOT
+      BUILT YET`) — M6 part B
+- [x] Act 3 shop (M7 part A, step A5): the Ion Beam, Rear Lance, Deflector Pod, Light Drone Bay, EMP
+      Burst, Orbital Lance and Shield Overcharge in the live shop with their icons
+      (`Catalogue.AWAITING_ICONS` empty); the Shield Overcharge bought once (`BUY 5 000`) and sold
+      like gear, its detail and tile showing its cooldown (`COOLDOWN 45 S`, `45S`); the tile names
+      `EMP`, `LANCE`, `OVRCHG` and the callout `DRONE BAY` (`Names`)
+- [x] Third utility bay (M7 part A, step A5): the utility slots' shops end with a bay row (`UTILITY
+      BAY 3`, `BUY 5 000` from the L15 visit; in the bought bay's own shop `SELL`, asking first and
+      refused while a module is fitted: `UNFIT ITS MODULE FIRST`), part of the visit's undo; once
+      bought its slot joins the Q/E tabs after the second bay and its `UTL` tile shows in the
+      schematic's lower right corner (clickable like the others) (`HangarState.bayRow`,
+      `ShopPanel`, `LoadoutPanel`, `HangarPointer`; `ActThreeHangarTest`, `LoadoutTilesLayoutTest`)
+- [x] Test fire of the Ion Beam (its column burns the dummy on its line), the Light Drone Bay (the
+      drone orbits and fires at its convergence point) and the Deflector Pod (the dummies fire slow
+      bullets at the ship and its field catches them on its side) (`TestFire`, `TestFireView`;
+      `TestFireTest`) — loops once step A4 maps the three into the simulation's mounts
 
 ## Open questions
 
@@ -456,3 +517,58 @@ M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game captur
   silhouette approved as **final**, the weak spots as they are (the dark Reef Spitter, the Kraken's
   silhouette without arms); Rook's teaser and Varga's four Level 11 lines approved (L2 and L3 as
   shortened to fit the panel).
+- 2026-10-12: M6 part A: mouse navigation as under *Design*, pending the user's review in concept
+  round 35. Main-agent default: slots are chosen by a click, not by hover. The command bar's and
+  the repair panel's layout moved into `HangarPointer`, which the drawing and the hit regions share.
+- 2026-10-12: M6 part B (Q1 = a, pending the user's review in round 35): the top bar's mission line
+  before a level that is not built reads `ACT III - RED DUST: COMING SOON`
+  (`ReleaseEndScreen.COMING_SOON`); after Act 2 the hangar is reached through Continue, since the
+  outro now leads to the release's end.
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C4's coming-soon line and the mouse, A.1).
+- 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): the Lamprey's and the Skimmer's
+  intel portraits and the Siege Spire's silhouette (12.2e, 13.2e, 14.2g) approved as **final**; Rook's
+  teasers and Varga's intel lines for Levels 12–14 accepted. `art` stays `chosen`; `design` stays in
+  `review` for concept round 35.
+- 2026-10-12 (user, round 35): accepted as built: C4's coming-soon line (`ACT III - RED DUST: COMING
+  SOON` before Level 15), the mouse in the hangar and the build choices A.1 (a)–(g) (slots chosen by
+  a click, shop rows, chips and commands by hover) and D.3 (a) (the intel's "FOLLOWS IN A LATER
+  RELEASE."); `design: approved`, `art` stays `chosen`.
+- 2026-10-12: Step K10: the wave strip marks the arrival of a level's boss or mid-boss (its
+  placement's `t`) with a red tick the strip's depth, drawn over the waves; Level 14's and Level
+  11's *Sensor-suite detail* promised it. Levels 05 and 07 get the same tick, which their documents
+  do not spell out (pending the user's review).
+- 2026-10-13 (user, round 36, L.2): accepted: the red full-height BOSS tick on the intel's wave strip at the boss's time (sensor L3) on every boss level (L05, L07, L11, L14).
+- 2026-10-13: M7 part A, step A5 (defaults pending the user's review): the third bay's `UTL` tile
+  sits in the schematic's lower right corner, opposite Rook's callout (the module row has no room
+  for an eighth 48 px tile); the bay is bought from a bay row at the end of the utility slots'
+  shops and sold from its own slot's shop, and is not listed before the L15 visit (no locked row);
+  the Act 3 specials' tiles read `EMP`, `LANCE` and `OVRCHG`; the Deflector Pod's test fire has
+  the dummies fire a slow (110 px/s) harmless bullet at the ship every 0.6 s; a dummy stands 1 s
+  of the L1 Ion Beam.
+- 2026-10-13: M7 part A, step A8 (round 37's capture findings R.4 e–g, **pending the user's
+  review**): a loadout already over its generator's output (a hand-written save, or one from before a
+  draw changed) is refused for power only by a change that widens the gap, so it can still fit a
+  special (no draw) or a lighter item; the detail of an item bought this visit reads `BOUGHT THIS
+  VISIT: FULL REFUND` where its `VS FITTED:` line would stand, and that line is left out when nothing
+  differs; the visit's free-charge notice leaves the message line on the next move or slot change
+  (a transaction's message still stays until the next one); after buying a bay the cursor goes to the
+  bay's new slot, on its first row.
+- 2026-10-13 (user, round 37): the Act 3 icons **a** chosen (P.3: each item drawn as its effect); the
+  emblems (b) rejected and moved to `concept/rejected/` (`tools/art/icons.py` routes the unchosen sheet
+  there). The hangar capture accepted (K.4); step A5's defaults kept (B.4 a–e: the `UTL` tile in the
+  lower right corner, the bay row from the L15 visit with no locked row, the tiles `EMP`, `LANCE`,
+  `OVRCHG` and `DRONE BAY`, the test fire's slow dummy bullets, a dummy standing 1 s of the L1 Ion
+  Beam); R.4 fix all: step A8's fixes (e)–(g) above kept; save format 4 accepted (V.1); the balance
+  plan's purchases re-planned for R.1's act factor (step Q1).
+- 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 looks, review sheet `intel-final-r38-a` proposed for round 38 (pending the user's review).
+- 2026-10-14 (user, round 38): the Burrower's and Dust Kite's intel portraits `intel-final-r38-a` approved as
+  final (F.5); B.2 (d), the intel strip marking the six Burrower fields (`BURROW_FIELD`), kept. `art` stays
+  `chosen`.
+- 2026-10-18 (user, round 39): the Tendril Anchor's and Threadcrawler's intel portraits `intel-final-r39-a`
+  approved as final (F.5); B.4 (f), the intel strip's GATE and CRAWLER ticks, kept. Level 16's L3 intel line
+  now "Kill an anchor to drop a tendril. A cache down the left fork." and its traits `forward`, `piercing`
+  (R.4, in the level's data). `art` stays `chosen`.
+- 2026-10-18 (user decision, Act 2 playtest): the hangar after Continue and Load game comes after
+  the next level's briefing; the mission select replay gets the replay hangar (`REPLAY L05`
+  header, `> REPLAY` launch; its changes kept in the campaign, written to the autosave at launch,
+  the latter pending the user's review).

@@ -44,8 +44,8 @@ import vanguard.game.ui.Words;
  * hangar teaser stay below. A page may show a tactical map or mission image (tools/art/briefing_images.py)
  * above its text; a page whose text does not fit below its image goes on over the next screens with
  * the same image, each counted as a page. The portrait shows the page's expression. Confirm shows
- * the whole page, then the next; Back (Esc / B) asks to quit to the main menu ({@link BriefingExit}),
- * on the title card too, keeping the campaign as it is. The portrait opens through a burst of
+ * the whole page, then the next, as a click does; Back (Esc / B, the mouse's right button) asks to
+ * quit to the main menu ({@link BriefingExit}), on the title card too, keeping the campaign as it is. The portrait opens through a burst of
  * transmission static, again when the speaker changes, and closes through one after the last page;
  * then the campaign goes on with {@code next} (the hangar).
  *
@@ -194,13 +194,22 @@ public final class BriefingScreen implements GameScreen {
      */
     record Onward(String next, String hint) {}
 
+    /** The NEXT panel of the last built act's outro. */
+    static final String RELEASE_END =
+            "THE END OF THIS RELEASE AND THE CREDITS. " + ReleaseEndScreen.NEXT_ACT + " IS COMING SOON.";
+
     /**
      * What follows the outro on the campaign's route ({@code CampaignRoute.beforeNextLevel}): the
      * next act's title card and briefing when the next level opens an act with data (Act 2 after
      * Act 1), the next level's briefing when it has one, otherwise the hangar (Level 08's capture,
-     * round 30: the hint said the hangar while the Act 2 title card came first).
+     * round 30: the hint said the hangar while the Act 2 title card came first); after the last built
+     * act, the release's end (M6 part B).
      */
     static Onward onward(Content content, OutroScript outro) {
+        if (content.levelKey(outro.nextLevel()).isEmpty()) {
+            // M6 part B (Q1 = a): the release's end, ReleaseEndScreen.
+            return new Onward(RELEASE_END, "ENTER TO THE END");
+        }
         Optional<BriefingScript> briefing = Briefings.before(content, outro.nextLevel());
         if (briefing.isEmpty()) {
             String hangar = content.levelKey(outro.nextLevel())
@@ -351,7 +360,7 @@ public final class BriefingScreen implements GameScreen {
         }
         if (titleCard > 0) {
             titleCard -= seconds;
-            if (input.confirm()) {
+            if (input.confirm() || input.clicked()) {
                 services.play(Sfx.MENU_CONFIRM);
                 titleCard = 0;
             }
@@ -363,7 +372,7 @@ public final class BriefingScreen implements GameScreen {
             return untilClosed > 0 ? Transition.STAY : Transition.replace(next.get());
         }
         String speaker = speaker();
-        if (input.confirm()) {
+        if (input.confirm() || input.clicked()) {
             services.play(Sfx.MENU_CONFIRM);
             pager.confirm();
         }

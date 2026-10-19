@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Spine Turret
@@ -55,6 +55,17 @@ Values are first-draft balancing numbers at **medium** (see the [balancing basis
   cracks for the 1.0 s telegraph, the turret stands there, invulnerable and silent while it grows,
   and fires first 1.5 s (hard 1.0 s) after it appeared. On easy a burst grows a turret only (the
   secondary counts 4 of the 8 growths).
+- **Turned arc: the `arc` placement parameter (Act 3, overnight design phase 2026-10-12, pending the
+  user's review).** A level may place a turret with its facing, and so its 100° silence rule, turned
+  **180°**: `arc: up` (the default is `down`, the behaviour above). An up-facing turret is **silent
+  while it is above the ship** and opens fire up the screen once the ground has carried it past (the
+  ship more than 100° off its facing until then): the roster's "turrets that fire after you pass",
+  answered by rear guns after the pass and by `anti-ground` fire before it. The art is unchanged (the
+  barrel already has 32 headings; heading 16 aims up). Used by
+  [Level 19](../../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/README.md)'s gantry nests and
+  by [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md)'s reverse
+  scroll, where the arc follows the travel: a down-facing turret fires up at the ship while it rises
+  toward it and falls silent once past.
 
 ### Concept art
 
@@ -77,6 +88,7 @@ Production art for concept round 15 (M4 part B, the Level 02 batch), review file
 - [x] Stat block values loaded from data; global difficulty multipliers applied
 - [x] Death effect, bounty and score per this spec
 - [x] Glow frames (the violet barrel root) for Level 06's darkness — M4 part F (`spine-turret-glow_*`, drawn additively by `EnemyLooks`; final in round 23)
+- [ ] The `arc` placement parameter (`down` default, `up` turned 180°) — **later: Act 3** (Levels 19 and 20)
 
 ## Decisions
 
@@ -96,3 +108,6 @@ Production art for concept round 15 (M4 part B, the Level 02 batch), review file
   (`darkness-final-r23-a` in Level 06's concept directory).
 - 2026-10-05: M4 part H docs reconciliation: the glow frames were built in part F and approved in
   round 23; ticked, the document is `done`.
+- 2026-10-12 (overnight design phase, pending the user's review): the `arc` placement parameter
+  (`arc: up` turns the facing and the silence arc 180°) for Level 19's up-facing nests and Level 20's
+  reverse scroll; its item is tagged for Act 3, so the document stays `done`.

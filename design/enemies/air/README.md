@@ -1,9 +1,9 @@
 ---
 title: Air enemies
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
-updated: 2026-10-08
+updated: 2026-10-14
 ---
 
 # Air enemies
@@ -17,13 +17,13 @@ levels.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [skitter](skitter/README.md) | Tiny swarm fodder that rams; teaches shooting (L01) | approved | done | final |
 | [needler](needler/README.md) | Basic gunner, hovers and fires aimed thorns (L01) | approved | done | final |
-| [stinger](stinger/README.md) | Diver that fires a fan at the bottom of its dive (L02) | review | done | final |
+| [stinger](stinger/README.md) | Diver that fires a fan at the bottom of its dive (L02) | approved | done | final |
 | [spore-bomber](spore-bomber/README.md) | Low-air bomber dropping rising spore mines (L03) | approved | done | final |
 | [whirl-seed](whirl-seed/README.md) | Tiny radial spinner released in clusters (L03) | approved | done | final |
 | [brood-pod](brood-pod/README.md) | Egg sac that bursts into Skitters when killed or after 8 s (L04) | approved | done | final |
@@ -31,14 +31,15 @@ Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units 
 | [coilwyrm](coilwyrm/README.md) | Segment-chain serpent that loops to the rear and regrows a head once (L06) | approved | done | final |
 | [wraith](wraith/README.md) | Cloaked manta that decloaks behind the player (L10) | approved | done | final |
 | [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | done | final |
-| [lamprey](lamprey/README.md) | Homing eel that latches and drains the shield (L12) | review | in-progress | proposed |
+| [lamprey](lamprey/README.md) | Homing eel that latches and drains the shield (L12) | approved | done | final |
+| [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | chosen |
+| [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | not-started | chosen |
+| [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
 
 ## Roster
 
 | Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|---|
-| Choir Herald | Vrell | air | medium | Support: `aura` gives nearby enemies a shield ring. A priority target, with a glowing crest as weak point. | carrier + escorts, circle | 17 | idea |
-| Ghost Drone | Unmarked (Ascendancy) | air | small | Grey, angular, no Vrell biology. `strafe` with a precise `burst`. The first hint of human involvement. | line abreast, pincer | 18 | idea |
 | Talon | Ascendancy | air | small | Fast interceptor. `swoop` with paired `aimed` shots; small hex shield (2 HP). | V-wing, line abreast | 29 | idea |
 | Gilded Gunship | Ascendancy | air | medium | Heavy and slow. Armoured front (50% damage reduction) with a `ring` burst every 3 s; exposed engines at the rear take ×2. | column, carrier + escorts | 30 | idea |
 | Hornet | Ascendancy | air | medium | Missile boat. `hover` at the top and launch 4 shootable `homing` missiles. | line abreast | 31 | idea |
@@ -127,9 +128,32 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-r
 | [concept/coilwyrm-r08-a.png](concept/coilwyrm-r08-a.png) | Coilwyrm re-render (sheet) | chosen |
 | [concept/coilwyrm-r08-a.gif](concept/coilwyrm-r08-a.gif) | Coilwyrm re-render (motion) | chosen |
 
+Concept round 36 (Act 3 "Red Dust", overnight design phase 2026-10-12; the round's review board
+follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; generator
+`tools/concept/enemies_r36.py`.
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/choir-herald-r36-a.png](concept/rejected/choir-herald-r36-a.png) | Choir Herald A, cantor bell — teal-black bell with a sound-wave aura: source, wing beat, headings, escort ring states (sheet) | rejected — round 36: b (seraph) picked |
+| [concept/rejected/choir-herald-r36-a.gif](concept/rejected/choir-herald-r36-a.gif) | Choir Herald A — with six Needler escorts in a circle; one escort shot through its ring, then the Herald dies and the rings fade (motion) | rejected — round 36: b (seraph) picked |
+| [concept/choir-herald-r36-b.png](concept/choir-herald-r36-b.png) | Choir Herald B, seraph — bone seraph with a floating halo crest and segmented violet rings (sheet) | chosen (round 36, U.3) |
+| [concept/choir-herald-r36-b.gif](concept/choir-herald-r36-b.gif) | Choir Herald B — the same scene as A (motion) | chosen (round 36, U.3) |
+| [concept/choir-herald-final-r40-a.png](concept/choir-herald-final-r40-a.png) | Choir Herald final sprites (`tools/art/siege_units.py`, the chosen seraph b): wing beat, crest bloom, segmented ring 0-6, absorb flash, thread, aura circle (sheet) | proposed (round 40) |
+| [concept/choir-herald-final-r40-a.gif](concept/choir-herald-final-r40-a.gif) | Choir Herald final: four ringed Needlers, one ring draining, the Herald dies and the rings collapse, 10 fps | proposed (round 40) |
+| [concept/ghost-drone-r36-a.png](concept/ghost-drone-r36-a.png) | Ghost Drone A, facet dart — grey human-built drone with the U.5 fix (2×2 px red eye, white wing-tip running lights, additive glow), 16 headings, next to a Talon and the player (sheet) | chosen (round 36, U.4; re-rendered with U.5) |
+| [concept/ghost-drone-r36-a.gif](concept/ghost-drone-r36-a.gif) | Ghost Drone A with the U.5 eye and running lights — line abreast, then a pincer, over dusty Mars plains (motion) | chosen (round 36, U.4; re-rendered with U.5) |
+| [concept/rejected/ghost-drone-r36-b.png](concept/rejected/ghost-drone-r36-b.png) | Ghost Drone B, crescent — grey drone with a forward-swept wing (sheet) | rejected — round 36: a (facet dart) picked |
+| [concept/rejected/ghost-drone-r36-b.gif](concept/rejected/ghost-drone-r36-b.gif) | Ghost Drone B — the same scene as A (motion) | rejected — round 36: a (facet dart) picked |
+| [concept/rejected/dust-kite-r36-a.png](concept/rejected/dust-kite-r36-a.png) | Dust Kite A, diamond kite — rust membrane on a bone cross strut with a teal spine: source, 16 headings, membrane flex, entry shimmer, death puff, next to a Skitter and the player (sheet) | rejected — round 36: b (crescent sail) picked |
+| [concept/rejected/dust-kite-r36-a.gif](concept/rejected/dust-kite-r36-a.gif) | Dust Kite A — a stream, a V-wing of 7 and a loose swarm over Mars; most shot down, a few ram the ship (motion) | rejected — round 36: b (crescent sail) picked |
+| [concept/dust-kite-r36-b.png](concept/dust-kite-r36-b.png) | Dust Kite B, crescent sail — bat-like swept rust sail on bone finger struts, teal-glowing spine nodes (sheet) | chosen (round 36, U.7) |
+| [concept/dust-kite-r36-b.gif](concept/dust-kite-r36-b.gif) | Dust Kite B — the same scene as A (motion) | chosen (round 36, U.7) |
+| [concept/dust-kite-final-r38-a.png](concept/dust-kite-final-r38-a.png) | Dust Kite final sprites (`tools/art/dust_kite.py`): 16 headings × 4 membrane-flex frames, death spark and dust puff (sheet) | chosen (round 38, F.4: approved as final) |
+| [concept/dust-kite-final-r38-a.gif](concept/dust-kite-final-r38-a.gif) | Dust Kite final: stream, V-wing and swarm from the production frames (motion) | chosen (round 38, F.4: approved as final) |
+
 ## Implementation
 
-- [ ] Each enemy promoted to its own directory with a stat block before it is implemented.
+- [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
 
 ## Open questions
 
@@ -151,3 +175,7 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-r
   D7 = a, HP 16) and the Mote Swarm (D8 = a, real flocking) get their data files and go to `review`
   for round 32; their art goes straight to production (D10 = a). The Skitter's authored-paths item
   is narrowed to snakes and swarms (D8 = a: the route as data), streams keeping their shapes.
+- 2026-10-12 (overnight design phase): Act 3 units promoted to draft specs (Choir Herald, Ghost
+  Drone) and the new Dust Kite (M10 = b, Act 3's popcorn; name pending); concept round 36 proposes
+  the Choir Herald, Ghost Drone and Dust Kite a/b, pending the user's review.
+- 2026-10-13 (user, round 36): the Act 3 air units approved (D.15–D.17), the Dust Kite's name included. Picks: Choir Herald **b** (seraph), Ghost Drone **a** (facet dart, with the eye and running lights fix U.5 for the art step), Dust Kite **b** (crescent sail). The rejected variants moved to `concept/rejected/`.

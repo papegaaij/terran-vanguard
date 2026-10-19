@@ -10,6 +10,7 @@ import vanguard.content.campaign.Hangar.Action;
 import vanguard.content.campaign.Hangar.Choice;
 import vanguard.content.campaign.Hangar.Offer;
 import vanguard.content.campaign.Intel;
+import vanguard.content.campaign.ItemKind;
 import vanguard.content.campaign.LoadoutSlot;
 import vanguard.sim.WingmanSpec;
 
@@ -25,9 +26,22 @@ import vanguard.sim.WingmanSpec;
  * cycle (after the rear mount): its rows are his guns, and a last row sets his side (left / right
  * pick it); the repair panel has a {@code SHIP} and a {@code ROOK} line (the tabs switch between
  * them), and the launch warns about his armour below 50 % or a grounded Rook.
+ *
+ * <p>M7 part A: the utility slots' shops end with a bay row (design/player/systems, Third utility
+ * bay): in the starting bays' shops the bay for sale ({@code BUY}), in a bought bay's own shop that bay
+ * ({@code SELL}, refused while a module is fitted in it; selling asks first like an item). A bought
+ * bay's slot joins the slots the tabs cycle, after the second bay. A cooldown special's rows are the
+ * shop's ({@code BUY} once, {@code SELL}).
+ *
+ * <p>The mouse ({@link HangarPointer}) reaches the same places directly: {@code point...} select a
+ * slot, a row, a choice, a command, a repair line or the repair points, and the wheel scrolls the
+ * shop list.
  */
 public final class HangarState {
-    /** The slots in the order the tabs cycle through them: the mounts, the core parts, the special and the two bays. */
+    /**
+     * The slots in the order the tabs cycle through them: the mounts, the core parts, the special and the
+     * two starting bays; a bought bay's slot follows them ({@link #slots()}).
+     */
     public static final List<LoadoutSlot> SLOTS = List.of(
             LoadoutSlot.FRONT,
             LoadoutSlot.LEFT_WING,
@@ -95,6 +109,8 @@ public final class HangarState {
     private int repairPoints;
     private RepairLine repairLine = RepairLine.SHIP;
     private String message = "";
+    /** M7 part A: the notice the message line shows until the next move, empty once it is gone. */
+    private String notice = "";
 
     /** @param launchable whether the next level is built */
     public HangarState(Hangar hangar, boolean launchable) {
@@ -106,13 +122,23 @@ public final class HangarState {
         return hangar;
     }
 
-    /** The slots the tabs cycle: the escort's among them once Rook is hired. */
+    /**
+     * The slots the tabs cycle: the escort's among them once Rook is hired, and (M7 part A) the bought
+     * utility bays' after the starting ones.
+     */
     public List<LoadoutSlot> slots() {
-        return hangar.escortHired() ? ESCORT_SLOTS : SLOTS;
+        List<LoadoutSlot> base = hangar.escortHired() ? ESCORT_SLOTS : SLOTS;
+        if (!hangar.campaign().gear().open(LoadoutSlot.UTILITY_3)) {
+            return base;
+        }
+        List<LoadoutSlot> slots = new ArrayList<>(base);
+        slots.add(LoadoutSlot.UTILITY_3);
+        return slots;
     }
 
     public LoadoutSlot slot() {
-        return slots().get(slot);
+        List<LoadoutSlot> slots = slots();
+        return slots.get(Math.min(slot, slots.size() - 1));
     }
 
     /** Whether the escort's shop shows its side row after his guns. */
@@ -120,9 +146,76 @@ public final class HangarState {
         return slot() == LoadoutSlot.ESCORT && hangar.escortHired();
     }
 
-    /** The rows the list shows: the shop's, and the escort's side row. */
+    /** The rows the list shows: the shop's, and the escort's side row or a utility slot's bay row. */
     public int rowCount() {
-        return rows().size() + (hasSideRow() ? 1 : 0);
+        return rows().size() + (hasSideRow() || bayRow().isPresent() ? 1 : 0);
+    }
+
+    /**
+     * M7 part A: the utility slot's bay row, after its shop rows: in a bought bay's own slot that bay's
+     * line (to sell it), in another utility slot the next bay for sale (to buy it); empty elsewhere, and
+     * before the bay is for sale (it is not listed while locked).
+     */
+    public Optional<Hangar.BayOffer> bayRow() {
+        LoadoutSlot shown = slot();
+        if (shown.kind() != ItemKind.UTILITY) {
+            return Optional.empty();
+        }
+        List<Hangar.BayOffer> lines = hangar.bays();
+        Optional<Hangar.BayOffer> own = lines.stream()
+                .filter(line -> line.bay().slot() == shown && line.state() == Hangar.State.OWNED)
+                .findFirst();
+        if (own.isPresent()) {
+            return own;
+        }
+        return lines.stream()
+                .filter(line -> line.state() == Hangar.State.BUYABLE
+                        && line.refusal()
+                                .filter(Hangar.BayRefusal.ORDER::equals)
+                                .isEmpty())
+                .findFirst();
+    }
+
+    /** M7 part A: whether the bay row (after a utility slot's shop rows) is selected. */
+    public boolean baySelected() {
+        return row == rows().size() && bayRow().isPresent();
+    }
+
+    /** M7 part A: what the bay row offers: {@link Action#BUY} for a bay for sale, {@link Action#SELL} for a bought one. */
+    static Action bayAction(Hangar.BayOffer line) {
+        return line.state() == Hangar.State.OWNED ? Action.SELL : Action.BUY;
+    }
+
+    /**
+     * The action the selected row's highlighted choice makes, for the screen's sound: the shop row's
+     * choice, or the bay row's buy or sell.
+     */
+    public Optional<Action> selectedAction() {
+        if (baySelected()) {
+            return bayRow().map(HangarState::bayAction);
+        }
+        return choice().map(Choice::action);
+    }
+
+    /**
+     * A sale the screen asks about.
+     *
+     * @param name what is sold, upper case
+     * @param refund the credits it returns
+     * @param bought it was bought during this visit, so all it cost comes back
+     */
+    public record Sale(String name, int refund, boolean bought) {}
+
+    /** The sale the selected row's highlighted choice makes; empty when it is not a sale. */
+    public Optional<Sale> sale() {
+        if (baySelected()) {
+            return bayRow().filter(line -> bayAction(line) == Action.SELL)
+                    .map(line -> new Sale(Names.slot(line.bay().slot()), -line.credits(), line.bought()));
+        }
+        Optional<Offer> offer = selected();
+        return choice().filter(chosen -> chosen.action() == Action.SELL)
+                .flatMap(chosen ->
+                        offer.map(sold -> new Sale(Names.of(sold.item().name()), -chosen.credits(), sold.bought())));
     }
 
     /** Whether the escort's side row (after his guns) is selected. */
@@ -196,10 +289,24 @@ public final class HangarState {
         return line == RepairLine.SHIP ? hangar.affordableRepair() : hangar.affordableEscortRepair();
     }
 
-    /** What the last transaction did or why it was refused. */
-    /** Shows {@code text} on the shop's message line until the next transaction. */
+    /**
+     * Shows {@code text} on the shop's message line (the visit's free charges) until the next move, slot
+     * change or transaction (M7 part A, round 37 R.4 g: it no longer stays on every slot).
+     */
     public void notice(String text) {
         message = text;
+        notice = text;
+    }
+
+    /** M7 part A: a move ({@link Outcome#MOVED}) takes the visit's notice off the message line. */
+    private Outcome moved(Outcome outcome) {
+        if (outcome == Outcome.MOVED && !notice.isEmpty()) {
+            if (message.equals(notice)) {
+                message = "";
+            }
+            notice = "";
+        }
+        return outcome;
     }
 
     /** The notice for a special's free charges: "1 FREE AIRSTRIKE CHARGE, FITTED". */
@@ -210,16 +317,17 @@ public final class HangarState {
         return free.fitted() ? charges + ", FITTED" : charges;
     }
 
+    /** What the last transaction did or why it was refused, or the visit's notice. */
     public String message() {
         return message;
     }
 
     public Outcome nextSlot() {
-        return selectSlot(slot + 1);
+        return moved(selectSlot(slot + 1));
     }
 
     public Outcome previousSlot() {
-        return selectSlot(slot - 1);
+        return moved(selectSlot(slot - 1));
     }
 
     private Outcome selectSlot(int index) {
@@ -235,46 +343,48 @@ public final class HangarState {
     }
 
     public Outcome up() {
-        return switch (focus) {
-            case SHOP -> {
-                if (row == 0) {
-                    focus = Focus.COMMANDS;
-                    if (!enabled(command)) {
-                        command = Command.SAVE;
+        return moved(
+                switch (focus) {
+                    case SHOP -> {
+                        if (row == 0) {
+                            focus = Focus.COMMANDS;
+                            if (!enabled(command)) {
+                                command = Command.SAVE;
+                            }
+                        } else {
+                            selectRow(row - 1);
+                        }
+                        yield Outcome.MOVED;
                     }
-                } else {
-                    selectRow(row - 1);
-                }
-                yield Outcome.MOVED;
-            }
-            case REPAIR -> changeRepair(10);
-            case COMMANDS -> Outcome.NONE;
-        };
+                    case REPAIR -> changeRepair(10);
+                    case COMMANDS -> Outcome.NONE;
+                });
     }
 
     public Outcome down() {
-        return switch (focus) {
-            case COMMANDS -> {
-                focus = Focus.SHOP;
-                yield Outcome.MOVED;
-            }
-            case SHOP -> {
-                if (row + 1 >= rowCount()) {
-                    yield Outcome.NONE;
-                }
-                selectRow(row + 1);
-                yield Outcome.MOVED;
-            }
-            case REPAIR -> changeRepair(-10);
-        };
+        return moved(
+                switch (focus) {
+                    case COMMANDS -> {
+                        focus = Focus.SHOP;
+                        yield Outcome.MOVED;
+                    }
+                    case SHOP -> {
+                        if (row + 1 >= rowCount()) {
+                            yield Outcome.NONE;
+                        }
+                        selectRow(row + 1);
+                        yield Outcome.MOVED;
+                    }
+                    case REPAIR -> changeRepair(-10);
+                });
     }
 
     public Outcome left() {
-        return sideways(-1);
+        return moved(sideways(-1));
     }
 
     public Outcome right() {
-        return sideways(1);
+        return moved(sideways(1));
     }
 
     private Outcome sideways(int direction) {
@@ -329,6 +439,98 @@ public final class HangarState {
         return Outcome.MOVED;
     }
 
+    /** The mouse: a click on a slot's callout or tile selects it, as the tabs do. */
+    public Outcome pointSlot(LoadoutSlot chosen) {
+        int index = slots().indexOf(chosen);
+        if (focus == Focus.REPAIR || index < 0 || index == slot && focus == Focus.SHOP) {
+            return Outcome.NONE;
+        }
+        if (index == slot) {
+            focus = Focus.SHOP;
+            return moved(Outcome.MOVED);
+        }
+        return moved(selectSlot(index));
+    }
+
+    /** The mouse: the pointer on a shop row selects it (the focus goes to the shop). */
+    public Outcome pointRow(int index) {
+        if (focus == Focus.REPAIR || index < 0 || index >= rowCount()) {
+            return Outcome.NONE;
+        }
+        if (focus == Focus.SHOP && index == row) {
+            return Outcome.NONE;
+        }
+        focus = Focus.SHOP;
+        if (index != row) {
+            selectRow(index);
+        }
+        return moved(Outcome.MOVED);
+    }
+
+    /** The mouse: the pointer on one of the selected row's choices highlights it, as left / right do. */
+    public Outcome pointChoice(int index) {
+        int choices = selected().map(offer -> offer.choices().size()).orElse(0);
+        if (focus != Focus.SHOP || index < 0 || index >= choices || index == Math.min(choice, choices - 1)) {
+            return Outcome.NONE;
+        }
+        choice = index;
+        return moved(Outcome.MOVED);
+    }
+
+    /** Whether the bay row's chip shows: the bay row is selected and the shop has the focus (its click confirms). */
+    public boolean bayChipShown() {
+        return focus == Focus.SHOP && baySelected();
+    }
+
+    /** The mouse: a click on the side row's LEFT or RIGHT chip sets Rook's side. */
+    public Outcome pointSide(WingmanSpec.Side side) {
+        if (focus != Focus.SHOP || !sideSelected()) {
+            return Outcome.NONE;
+        }
+        return side(side);
+    }
+
+    /** The mouse: the pointer on an enabled command of the command bar highlights it. */
+    public Outcome pointCommand(Command chosen) {
+        if (focus == Focus.REPAIR || !enabled(chosen) || focus == Focus.COMMANDS && command == chosen) {
+            return Outcome.NONE;
+        }
+        focus = Focus.COMMANDS;
+        command = chosen;
+        return Outcome.MOVED;
+    }
+
+    /** The mouse: a click on a line of the repair panel picks it, as the tabs do there. */
+    public Outcome pointRepairLine(RepairLine line) {
+        if (focus != Focus.REPAIR || line == repairLine) {
+            return Outcome.NONE;
+        }
+        return switchRepairLine();
+    }
+
+    /** The mouse: the repair slider set to a share (0..1) of the points the credits pay for. */
+    public Outcome pointRepair(double share) {
+        if (focus != Focus.REPAIR) {
+            return Outcome.NONE;
+        }
+        int most = Math.max(1, affordable(repairLine));
+        int points = Math.clamp(Math.round(Math.clamp(share, 0, 1) * most), 1, most);
+        return changeRepair(points - repairPoints);
+    }
+
+    /**
+     * The mouse wheel over the shop list: the shown rows scroll by {@code notches}, the selection
+     * stays; returns whether the list moved.
+     */
+    public boolean scroll(int notches) {
+        int scrolled = Math.clamp(top + notches, 0, Math.max(0, rowCount() - VISIBLE_ROWS));
+        if (scrolled == top) {
+            return false;
+        }
+        top = scrolled;
+        return true;
+    }
+
     private Outcome changeRepair(int points) {
         int changed = Math.clamp(repairPoints + points, 1, Math.max(1, affordable(repairLine)));
         if (changed == repairPoints) {
@@ -351,7 +553,7 @@ public final class HangarState {
     public Outcome confirm() {
         return switch (focus) {
             case COMMANDS -> runCommand();
-            case SHOP -> sideSelected() ? side(escortSide().other()) : choose();
+            case SHOP -> sideSelected() ? side(escortSide().other()) : baySelected() ? chooseBay() : choose();
             case REPAIR -> repair();
         };
     }
@@ -373,6 +575,8 @@ public final class HangarState {
             case UNDO -> {
                 hangar.undo();
                 message = "UNDONE - FULL REFUND";
+                // An undone bay purchase closes its slot again.
+                keepSlot();
                 afterChange(Optional.empty());
                 if (!hangar.canUndo()) {
                     moveCommand(1);
@@ -431,8 +635,70 @@ public final class HangarState {
         return apply(offer.get(), made);
     }
 
+    /** M7 part A: the bay row's choice: buy the bay for sale, or ask before selling the bought one. */
+    private Outcome chooseBay() {
+        Hangar.BayOffer line = bayRow().orElseThrow();
+        if (!line.allowed()) {
+            message = bayRefusal(line.refusal().orElseThrow());
+            return Outcome.REFUSED;
+        }
+        if (bayAction(line) == Action.SELL) {
+            return Outcome.SELL;
+        }
+        if (!hangar.buyBay(line.bay())) {
+            message = bayRefusal(Hangar.BayRefusal.CREDITS);
+            return Outcome.REFUSED;
+        }
+        message = "BOUGHT " + Names.slot(line.bay().slot()) + " - ITS SLOT IS OPEN";
+        // M7 part A (round 37, R.4 g): the cursor goes to the bay's new slot (its tile), on its first
+        // row, not to the last row left in this slot (a locked one).
+        int opened = slots().indexOf(line.bay().slot());
+        if (opened >= 0) {
+            selectSlot(opened);
+        } else {
+            afterChange(Optional.empty());
+        }
+        return Outcome.DONE;
+    }
+
+    /** M7 part A: sells the bay of the selected bay row; its slot closes, so the tabs leave it. */
+    private Outcome sellBay() {
+        Hangar.BayOffer line = bayRow().orElseThrow();
+        if (bayAction(line) != Action.SELL || !hangar.sellBay(line.bay())) {
+            line.refusal().ifPresent(refusal -> message = bayRefusal(refusal));
+            return Outcome.REFUSED;
+        }
+        message = "SOLD " + Names.slot(line.bay().slot()) + " FOR " + Names.credits(-line.credits());
+        keepSlot();
+        afterChange(Optional.empty());
+        return Outcome.DONE;
+    }
+
+    /** After a bought bay's slot closed: the selection stays within the slots the tabs cycle. */
+    private void keepSlot() {
+        int last = slots().size() - 1;
+        if (slot > last) {
+            slot = last;
+            row = 0;
+            top = 0;
+            choice = 0;
+        }
+    }
+
+    /** Why the bay row's choice cannot be made, for the shop's message line. */
+    static String bayRefusal(Hangar.BayRefusal refusal) {
+        return switch (refusal) {
+            case CREDITS -> "NOT ENOUGH CREDITS";
+            case IN_USE -> "UNFIT ITS MODULE FIRST";
+            case ORDER -> "BUY THE BAY BEFORE IT FIRST";
+        };
+    }
+
     /** Makes the sale the screen asked about. */
     public Outcome sell() {
+        if (baySelected()) {
+            return sellBay();
+        }
         Optional<Offer> offer = selected();
         Optional<Choice> chosen = choice();
         if (offer.isEmpty() || chosen.isEmpty() || chosen.get().action() != Action.SELL) {
@@ -470,8 +736,9 @@ public final class HangarState {
         List<Offer> rows = rows();
         List<String> names = new ArrayList<>();
         rows.forEach(offer -> names.add(offer.item().name()));
-        int index = item.map(names::indexOf).filter(found -> found >= 0).orElse(Math.min(row, rows.size() - 1));
+        int index = item.map(names::indexOf).filter(found -> found >= 0).orElse(Math.min(row, rowCount() - 1));
         selectRow(Math.max(0, index));
+        top = Math.min(top, Math.max(0, rowCount() - VISIBLE_ROWS));
     }
 
     /** The launch warning for a grounded Rook. */

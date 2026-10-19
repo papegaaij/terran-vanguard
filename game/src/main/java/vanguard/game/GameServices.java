@@ -13,7 +13,9 @@ import vanguard.content.Difficulty;
 import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.Catalogue;
+import vanguard.content.campaign.HighScores;
 import vanguard.content.campaign.SaveSlots;
+import vanguard.content.campaign.ScoreFile;
 import vanguard.game.audio.Mixer;
 import vanguard.game.audio.Sfx;
 import vanguard.game.audio.SfxBank;
@@ -21,7 +23,9 @@ import vanguard.game.audio.Voices;
 import vanguard.game.display.DisplayModes;
 import vanguard.game.input.ActionInput;
 import vanguard.game.input.GdxDevices;
+import vanguard.game.input.GdxPointer;
 import vanguard.game.input.MenuInput;
+import vanguard.game.input.Pointer;
 import vanguard.game.render.FlashShader;
 import vanguard.game.render.Sprites;
 import vanguard.game.render.TransmissionStatic;
@@ -46,6 +50,11 @@ public final class GameServices implements Disposable {
     public final Files files;
     public final Audio audio;
     public final GdxDevices devices;
+    /** The mouse's events and position, the game's input processor. */
+    public final GdxPointer mouse;
+    /** The mouse as the out-of-game screens read it in a frame (design/ui, Mouse). */
+    public final Pointer pointer;
+
     public final ActionInput input;
     public final MenuInput menu;
     public final DisplayModes display;
@@ -60,6 +69,10 @@ public final class GameServices implements Disposable {
     public final Catalogue catalogue;
     /** The save slots in the saves directory next to the settings file; read-only in a debug run. */
     public final SaveSlots saves;
+    /** The high scores in scores.yaml next to the settings file; read-only in a debug run. */
+    public final ScoreFile scores;
+    /** The game's version, {@code 0.1.0} ({@code dev} without the build's version file). */
+    public final String version;
 
     public final Sprites sprites;
     public final Mixer mixer;
@@ -85,7 +98,9 @@ public final class GameServices implements Disposable {
             SettingsStore store,
             Difficulty difficulty,
             boolean invulnerable,
-            SaveSlots saves) {
+            SaveSlots saves,
+            ScoreFile scores,
+            String version) {
         this.files = files;
         this.audio = audio;
         this.display = display;
@@ -95,12 +110,16 @@ public final class GameServices implements Disposable {
         this.invulnerable = invulnerable;
         devices = new GdxDevices();
         devices.deadZone(settings.controls().deadZone());
+        mouse = new GdxPointer();
+        pointer = new Pointer();
         input = new ActionInput(settings.controls().bindings());
-        menu = new MenuInput(input);
+        menu = new MenuInput(input, pointer);
         content = ContentLoader.fromClasspath();
         campaignRules = CampaignRules.of(content);
         catalogue = Catalogue.of(content);
         this.saves = saves;
+        this.scores = scores;
+        this.version = version;
         sprites = new Sprites(files);
         mixer = new Mixer(settings.audio());
         sfx = new SfxBank(audio, files, mixer);
@@ -152,6 +171,21 @@ public final class GameServices implements Disposable {
             return saves.write(slot, campaign.save(Instant.now()));
         } catch (IOException | RuntimeException e) {
             LOG.log(Level.WARNING, "could not write save slot " + slot.index() + " in " + saves.directory(), e);
+            return false;
+        }
+    }
+
+    /**
+     * Writes the high scores; a failure is logged, since it must not stop the game, and a debug run
+     * writes nothing.
+     *
+     * @return whether the file was written
+     */
+    public boolean saveScores(HighScores table) {
+        try {
+            return scores.write(table);
+        } catch (IOException | RuntimeException e) {
+            LOG.log(Level.WARNING, "could not write the high scores to " + scores.path(), e);
             return false;
         }
     }

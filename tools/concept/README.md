@@ -117,6 +117,20 @@ was made at 640x360 and is frozen; rejected outputs are rewritten into `concept/
 | `props_r31.py [out.png]` | (models only; an optional preview sheet) | Level 09's prop models for `tools/art/backdrop_l09.py`: the CDF Kilo truck (16 headings, ground scenery on the Okonjo Bridge) and the rooftop cocoon (intact, hit, opened, its break); about 15 s |
 | `collapse_r31.py [a] [b] [c]` | `design/campaign/act-2-homefront/level-09-arcology-fall/concept/collapse-r31-{a,b,c}.png/.gif` (a and b now in `concept/rejected/`) | Level 09's arcology collapse over the production backdrop: a topples across (the tower projection tilted about its foot), b pancakes into a dust wave sweeping the band (both with the 1.5 s shadow warning, the 3 s fall, 6 s of dust and the provisional rubble, which is gone since c's production: they need it back from git history to be re-run); c, the approved rework, leans 1.5 s to the right, drops straight down in 1.5 s and bursts into a dust blast of puff sprites onto a rubble heap; its puffs and heap go to production through `tools/art/collapse_l09.py`; about 1 min (c 30 s) |
 
+## Scripts (round 36 – Act 3 "Red Dust" units, bosses, Mars and gear)
+
+| Script | Outputs | Notes |
+|---|---|---|
+| `enemies_r36.py [burrower] [tendril-anchor] [choir-herald] [ghost-drone] [ghost-drone-a] [warden-tank]` | `design/enemies/ground/concept/{burrower,tendril-anchor}-r36-{a,b}.{png,gif}`, `design/enemies/ground/concept/warden-tank-r36-a.{png,gif}`, `design/enemies/air/concept/{choir-herald,ghost-drone}-r36-{a,b}.{png,gif}` | the new Act 3 units, a/b each (the Warden Tank only as the r05-a model in unmarked grey): PNG sheet + GIF in the 480×540 play field over Mars; models in the script on the frozen `render/` package, turning units with `ModelSpaceAngleSprites`; no args = everything, a few minutes |
+| `bosses_r36.py [walker-a] [walker-b] [colossus-a] [colossus-b]` | `design/enemies/bosses/concept/{revenant-walker,dust-colossus}-r36-{a,b}.{png,gif}` | the Act 3 mid-boss (with its wreck and the serial plate close-up, hint 2) and act boss, a/b each; models in the script (the frozen `render/` package only imported); no args = all four, about 10–15 min |
+| `mars_r36.py [olympus] [valles] [ares] [storm] [foundry] [hellas] [panorama] [canyon] [radius] [dome] [--no-gif]` | `design/world/mars/concept/mars-{olympus,valles,ares-landing,storm-plains,tharsis-foundry,hellas,panorama}-r36-a.png`, `{canyon-walls,storm-radius}-r36-{a,b}.{png,gif}`, `dome-r36-{a,b}.png` | Mars mood stills per sub-location (direction only), the canyon walls' camera model a/b, the dust-storm radius look a/b and the Ares Landing dome a/b; on the frozen `render/` package and the `parallax_r02`/`parallax_r03`/`scenes_r06` helpers, units from `enemies_r36.py` (variant a); no args = everything, about 5 min |
+| `gear_r36.py [ion-beam] [light-drone] [emp-burst] [shield-overcharge] [--variant a\|b]` | `design/player/weapons/concept/{ion-beam,light-drone}-r36-{a,b}.{png,gif}`, `design/player/specials/concept/{emp-burst,shield-overcharge}-r36-{a,b}.{png,gif}` | the Act 3 gear looks a/b: PNG sheet + GIF in the 480×540 field over Mars with the Stormhawk (the overcharge GIF adds the right HUD panel, 720×540); reuses `vfx_r09.py`'s beam, `enemies_r36.py`'s models and production sprites from `assets/` |
+
+Since round 36's review (2026-10-13) these scripts and `portraits_r36.py` write the user's picks
+(each script's `CHOSEN`) into `concept/` and the unchosen variants into `concept/rejected/`;
+`enemies_r36.py ghost-drone-a` re-renders only the chosen Ghost Drone, with the U.5 eye and
+running lights (`ghost_glow`, an additive light layer).
+
 ## Scripts (game placeholders – level backdrops, ground targets and the UI kit)
 
 | Script | Outputs | Notes |
@@ -149,6 +163,9 @@ Outputs go to `design/audio/sfx/concept/` and `design/audio/music/concept/`.
 `design/concept-rounds/round-RR/index.html` (see `design/concept-rounds/README.md`).
 `board.py RR SS TT` builds a combined round: `round-RR/index.html` also shows the files named for
 rounds `SS` and `TT`, each section titled with its own round (round 34 holds rounds 35 and 36).
+`--subjects a,b,…` keeps only those subjects: round 35's board is
+`board.py 35 --subjects pointer,app-icon,m6-capture`, since round 34 already used the `r35` names for
+Level 13's files.
 
 ## The `render/` package
 

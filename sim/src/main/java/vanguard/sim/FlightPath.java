@@ -65,6 +65,19 @@ public final class FlightPath {
         return new FlightPath(mirroredXs, ys.clone());
     }
 
+    /**
+     * M7 part C: the same path with the play field's width mapped onto the flyable span from {@code left}
+     * to {@code right} (design/campaign Level 16, formations in a canyon): x' = left + x × (right − left) /
+     * 480, heights unchanged; points outside the field stay as far outside the span, in proportion.
+     */
+    FlightPath mappedX(double left, double right) {
+        double[] mappedXs = new double[xs.length];
+        for (int i = 0; i < xs.length; i++) {
+            mappedXs[i] = Formations.Span.map(xs[i], left, right);
+        }
+        return new FlightPath(mappedXs, ys.clone());
+    }
+
     /** M5 part D: the x of its last point. */
     double endX() {
         return xs[xs.length - 1];

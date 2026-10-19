@@ -11,6 +11,7 @@ import vanguard.content.SimSpecs;
 import vanguard.content.campaign.Hangar.Action;
 import vanguard.content.campaign.Hangar.State;
 import vanguard.sim.Armament;
+import vanguard.sim.SpecialSpec;
 import vanguard.sim.WeaponSpec;
 
 class FlightTest {
@@ -117,5 +118,39 @@ class FlightTest {
         assertEquals(2, flight.sensor(), "the fitted level, without easy's intel bonus");
         assertEquals(List.of(), flight.notFlown());
         assertEquals(72.0, flight.loadout().magnet().orElseThrow().radius());
+    }
+    /**
+     * M7 part A (step A4): Act 3's arsenal flies from the campaign's loadout: the Ion Beam, the Light
+     * Drone Bay and the Deflector Pod as their mounts, the Evasive thrusters' dash, and each new special
+     * (the Shield Overcharge on its cooldown, no charges carried); nothing is left out.
+     */
+    @Test
+    void actThreesArsenalFliesFromTheLoadout() {
+        Catalogue catalogue = Catalogue.complete(CONTENT);
+        Campaign campaign = HangarTest.campaign(Difficulty.MEDIUM, 19, 0, 60);
+        DebugFit.parse("front=ion-beam:2,left=light-drone-bay,right=deflector-pod:3,utility=evasive-thrusters")
+                .withSpecial("shield-overcharge")
+                .applyTo(campaign, catalogue);
+
+        Flight flight = Flight.of(CONTENT, catalogue, campaign);
+
+        assertEquals(List.of(), flight.notFlown());
+        Armament armament = flight.loadout().armament();
+        assertEquals(WeaponSpec.Delivery.BEAM, armament.mount(0).weapon().delivery());
+        assertEquals(true, armament.mount(1).bay());
+        assertEquals(true, armament.mount(2).deflects());
+        assertEquals(4, armament.mount(2).deflector().charges(), "L3: 4 charges");
+        assertEquals(SimSpecs.thrusters(CONTENT), flight.loadout().thrusters().orElseThrow());
+        SpecialSpec overcharge = flight.loadout().special().orElseThrow();
+        assertEquals(SpecialSpec.Kind.OVERCHARGE, overcharge.kind());
+        assertEquals(true, overcharge.cooldown());
+
+        for (String special : List.of("emp-burst:3", "orbital-lance:2")) {
+            DebugFit.parse("front=ion-beam").withSpecial(special).applyTo(campaign, catalogue);
+            SpecialSpec flown =
+                    Flight.of(CONTENT, catalogue, campaign).loadout().special().orElseThrow();
+            assertEquals(special.endsWith(":3") ? SpecialSpec.Kind.EMP : SpecialSpec.Kind.LANCE, flown.kind());
+            assertEquals(special.endsWith(":3") ? 3 : 2, flown.charges(), special);
+        }
     }
 }

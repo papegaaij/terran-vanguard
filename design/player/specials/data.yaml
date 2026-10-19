@@ -1,10 +1,15 @@
-# Specials: the charge-based specials of Acts 1-2. Schema: ../../tech/architecture/README.md#data-file-schemas
+# Specials: the charge specials and (M7 part A) the first cooldown special. Schema: ../../tech/architecture/README.md#data-file-schemas
 # The README's specials table is hand-written; keep its Cost and Unlock cells in step.
 input_buffer: 0.1   # s a press of the special button waits while the special is busy (Common input rules)
+cooldown_pickup: 10 # s a special charge pickup takes off a cooldown special's running cooldown (Cooldown specials)
 specials:
-  # charge price cr, most charges carried, unlock level, charges given once at the unlock (optional)
+  # charge price cr, most charges carried, unlock level, charges given once at the unlock (optional);
+  # a cooldown special instead: price cr (bought once) and cooldown s
   - {name: Airstrike, charge_price: 300, max_charges: 4, unlock: 4, free_charges: 1}
   - {name: Smart Bomb, charge_price: 400, max_charges: 3, unlock: 6, free_charges: 1}
+  - {name: EMP Burst, charge_price: 350, max_charges: 3, unlock: 15, free_charges: 1}
+  - {name: Orbital Lance, charge_price: 600, max_charges: 2, unlock: 17}
+  - {name: Shield Overcharge, price: 5000, cooldown: 45, unlock: 19}
   - {name: Decoy Flares, charge_price: 150, max_charges: 6, unlock: 27}  # with the first homing projectiles (D4 of M4 part G; was 7)
 
 # The Airstrike (README, Airstrike (L04)). The damage already includes the x2 anti-ground bonus.
@@ -27,3 +32,27 @@ smart_bomb:
   damage: {all: 120, boss_part: 60}   # once to every enemy on screen as the ring passes it / to each boss part
   invulnerable: 1.0           # s the ship takes no damage from the activation (it blinks)
   repeat: 1.5                 # s between two bombs
+
+# The EMP Burst (README, EMP Burst (L15); M7 part A).
+emp:
+  ring: 0.4                     # s for the ring to cover the whole play field from the ship (the Smart Bomb's timing)
+  stun: {machine: 3, vrell: 1.5}  # s a unit is stunned: a machine (stat block `machine: true`) / every other (Vrell) unit
+  repeat: 1.0                   # s between two bursts
+
+# The Orbital Lance (README, Orbital Lance (L17); M7 part A).
+orbital_lance:
+  lock: 0.6                     # s the red targeting line shows at the ship's x before the lance fires
+  width: 40                     # px, the column over the play field's height
+  seconds: 3                    # s it burns, then fades over `fade`
+  fade: 0.3
+  follow: 240                   # px/s its centre follows the ship's x at most
+  dps: 400                      # damage per second to every enemy in the column (hardened included)
+  boss_part: {dps: 200, cap: 400}  # per boss part: damage per second and the most one lance deals it
+  repeat: 1.0                   # s after the fade before the next lance can be called
+  radio: {speaker: Lance Control, portrait: generic-cdf, line: "Lance uplink locked. Firing!"}
+
+# The Shield Overcharge (README, Shield Overcharge (L19); M7 part A), the first cooldown special.
+overcharge:
+  factor: 2                     # the shield's capacity × this while overcharged; it fills to it at once
+  seconds: 8                    # s the capacity stays raised
+  bleed: 0.5                    # s the excess bleeds away over afterwards

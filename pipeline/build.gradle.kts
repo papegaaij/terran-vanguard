@@ -115,31 +115,84 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // Concept round 33's choice: the Driftjelly's pulse (synthesized; the other seven Level 11
         // sounds are made from their originals by tools/art/sfx_originals.py).
         "driftjelly-pulse-r33-a.ogg",
-        // Concept round 34 (open, M5 part F): Level 12's sounds, option a until the choice; the
-        // rain-only storm bed (F6 = a) beside round 08's chosen storm ambience, which stays.
+        // Concept round 34's choices (user, 2026-10-12; M5 parts F-H, rounds 34-36's sounds): Level 12's
+        // thunder and gust b, the latch, drain, shake-off, chime and the rain-only storm bed (F6 = a) a,
+        // beside round 08's chosen storm ambience, which stays.
         "ambience-storm-rain-r34-a.ogg",
-        "thunder-1-r34-a.ogg",
-        "thunder-2-r34-a.ogg",
-        "thunder-3-r34-a.ogg",
-        "gust-r34-a.ogg",
+        "thunder-1-r34-b.ogg",
+        "thunder-2-r34-b.ogg",
+        "thunder-3-r34-b.ogg",
+        "gust-r34-b.ogg",
         "lamprey-latch-r34-a.ogg",
         "lamprey-drain-r34-a.ogg",
         "lamprey-shake-r34-a.ogg",
         "sonde-chime-r34-a.ogg",
-        // Concept round 35 (open, M5 part G): Level 13's sounds, option a until the choice (the drone
-        // launch and the relay destroyed have one proposal each).
+        // Level 13's: grid online b, the relay hit and the integrity alarm a, the drone launch and the
+        // relay destroyed (one proposal each).
         "relay-hit-r35-a.ogg",
         "integrity-alarm-r35-a.ogg",
         "relay-destroyed-r35-a.ogg",
         "drone-launch-r35-a.ogg",
-        "grid-online-r35-a.ogg",
-        // Concept round 36 (open, M5 part H): Level 14's sounds, option a until the choice (the root
-        // growth and the canopy hum have one proposal each).
+        "grid-online-r35-b.ogg",
+        // Level 14's: the tear-free roar and the canopy withering b, the root burst a, the root growth and
+        // the canopy hum (one proposal each).
         "root-burst-r36-a.ogg",
         "root-growth-r36-a.ogg",
-        "tear-free-roar-r36-a.ogg",
-        "canopy-withering-r36-a.ogg",
+        "tear-free-roar-r36-b.ogg",
+        "canopy-withering-r36-b.ogg",
         "canopy-hum-r36-a.ogg",
+        // M7 part A, the Act 3 arsenal: the Ion Beam's chosen loop (round 36 a) and round 37's picks
+        // (user, 2026-10-13: the beam's stop and rock impact, the deflector's return, the EMP ring and
+        // power-down, the lance's rumble and the overcharge's whoosh b, the rest a; the lance's loop c
+        // and the lock beep are already there).
+        "ion-beam-loop-r36-a.ogg",
+        "ion-beam-start-r37-a.ogg",
+        "ion-beam-stop-r37-b.ogg",
+        "beam-impact-r37-a.ogg",
+        "beam-impact-rock-r37-b.ogg",
+        "deflector-tick-r37-a.ogg",
+        "deflector-return-r37-b.ogg",
+        "drone-break-r37-a.ogg",
+        "drone-rebuild-r37-a.ogg",
+        "emp-ring-r37-b.ogg",
+        "emp-powerdown-r37-b.ogg",
+        "lance-rumble-r37-b.ogg",
+        "overcharge-whoosh-r37-b.ogg",
+        "overcharge-end-r37-a.ogg",
+        "cooldown-ready-r37-a.ogg",
+        "dash-r37-a.ogg",
+        // M7 part B, Level 15: the Burrower's eruption chosen in round 36 (S.2 = a; it opens with the 1.0 s
+        // bulge tell, so it starts at the bulge) and round 38's picks (2026-10-14): the bulge's crack layer b
+        // over the eruption, the dive b, the entry roar a and the Mars dust wind a.
+        "burrow-eruption-r36-a.ogg",
+        "burrow-bulge-r38-b.ogg",
+        "burrow-dive-r38-b.ogg",
+        "entry-roar-r38-a.ogg",
+        "mars-dust-r38-a.ogg",
+        // M7 part C, Level 16: the canyon wall scrape chosen in round 36 (S.3 = b) and round 39's proposals,
+        // option a until the user's choice (the tendril's hum, burn and break, the Threadcrawler's walk, the
+        // `mars-canyon` ambience; all synthesized).
+        "canyon-scrape-r36-b.ogg",
+        "tendril-hum-r39-a.ogg",
+        "tendril-burn-r39-a.ogg",
+        "tendril-break-r39-a.ogg",
+        "crawler-walk-r39-a.ogg",
+        "mars-canyon-r39-a.ogg",
+        // M7 part D, Level 17: round 40's proposals, option a until the user's choice (the domes' hit and break,
+        // the Choir Herald's song, aura, absorb and collapse, the Shellback's walk, lob, curl, roll and uncurl,
+        // the `mars-colony` ambience; all synthesized).
+        "dome-hit-r40-a.ogg",
+        "dome-break-r40-a.ogg",
+        "herald-song-r40-a.ogg",
+        "herald-aura-r40-a.ogg",
+        "aura-absorb-r40-a.ogg",
+        "aura-collapse-r40-a.ogg",
+        "shellback-walk-r40-a.ogg",
+        "shellback-lob-r40-a.ogg",
+        "shellback-curl-r40-a.ogg",
+        "shellback-roll-r40-a.ogg",
+        "shellback-uncurl-r40-a.ogg",
+        "mars-colony-r40-a.ogg",
     )
 }
 
@@ -227,18 +280,84 @@ tasks.register("importPlaceholders") {
     dependsOn(cutPlaceholderSprites, copyPlaceholderSounds, copyPlaceholderStageSounds, copyPlaceholderMusic, credits)
 }
 
-/** Packs assets/sprites and assets/backdrop into texture atlases; build output, never committed. */
+/**
+ * A tool's file arguments as inputs and outputs of the task: Gradle hashes them by their paths
+ * relative to their roots, so the task's build cache entry is shared by every checkout and build
+ * directory (absolute paths in plain `args` would make each one a miss).
+ */
+abstract class AtlasArgs : CommandLineArgumentProvider {
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val sprites: DirectoryProperty
+
+    @get:Optional
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val backdrop: DirectoryProperty
+
+    @get:Optional
+    @get:InputFile
+    @get:PathSensitive(PathSensitivity.NONE)
+    abstract val claims: RegularFileProperty
+
+    @get:Optional
+    @get:OutputFile
+    abstract val claimsOutput: RegularFileProperty
+
+    @get:Optional
+    @get:OutputDirectory
+    abstract val atlasOutput: DirectoryProperty
+
+    override fun asArguments(): List<String> = listOfNotNull(
+        sprites.get().asFile.absolutePath,
+        backdrop.orNull?.asFile?.absolutePath,
+        claims.orNull?.asFile?.absolutePath,
+        claimsOutput.orNull?.asFile?.absolutePath,
+        atlasOutput.orNull?.asFile?.absolutePath,
+    )
+}
+
+/**
+ * The atlases each sprite goes into, from the levels' data (SpriteUse). It reads the whole content,
+ * so it runs again after any content change; packAtlases only sees its small output and packs again
+ * only when a sprite moves to other atlases.
+ */
+val spriteClaimsFile = layout.buildDirectory.file("atlas-claims.txt")
+val spriteClaims = tasks.register<JavaExec>("spriteClaims") {
+    description = "Writes the atlases each sprite goes into, from the levels' data."
+    group = "assets"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass = "vanguard.pipeline.SpriteClaims"
+    argumentProviders.add(objects.newInstance<AtlasArgs>().apply {
+        sprites = assets.dir("sprites")
+        claimsOutput = spriteClaimsFile
+    })
+    outputs.cacheIf { true }
+}
+
+/**
+ * Packs assets/sprites and assets/backdrop into texture atlases; build output, never committed. The
+ * atlases are packed side by side, and the task is cacheable: its inputs are the frames, the claims
+ * and the packer (the pipeline's own classes and its external libraries, not the content), so an
+ * unchanged tree takes the atlases from the build cache, in every build directory.
+ */
 val packAtlases = tasks.register<JavaExec>("packAtlases") {
     description = "Packs the sprite frames in assets/ into texture atlases."
     group = "assets"
-    classpath = sourceSets.main.get().runtimeClasspath
+    val externalRuntime = configurations.runtimeClasspath.get().incoming.artifactView {
+        componentFilter { it !is ProjectComponentIdentifier }
+    }.files
+    classpath = files(sourceSets.main.get().output, externalRuntime)
     mainClass = "vanguard.pipeline.AtlasPacker"
-    val output = layout.buildDirectory.dir("atlases")
-    inputs.dir(assets.dir("sprites"))
-    inputs.dir(assets.dir("backdrop"))
-    outputs.dir(output)
-    args(assets.asFile.absolutePath, output.get().asFile.absolutePath)
+    argumentProviders.add(objects.newInstance<AtlasArgs>().apply {
+        sprites = assets.dir("sprites")
+        backdrop = assets.dir("backdrop")
+        claims = spriteClaimsFile
+        atlasOutput = layout.buildDirectory.dir("atlases")
+    })
+    dependsOn(spriteClaims)
     jvmArgs("-Djava.awt.headless=true")
+    outputs.cacheIf { true }
 }
 
 /** The packed atlases, for the desktop build's resources. */

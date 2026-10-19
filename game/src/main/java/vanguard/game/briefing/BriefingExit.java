@@ -9,7 +9,7 @@ import vanguard.game.ui.Dialog;
  * Back out of a briefing to the main menu (design/ui/briefing): Back (Esc / B) asks first, as the
  * hangar's quit does, and a yes leaves for the main menu. The campaign is left as it is: after a
  * won level it is written to the autosave the hangar would have written as it opened, so the won
- * level stays won and Continue goes on in the hangar; a new game's intro briefing has nothing to
+ * level stays won and Continue opens the briefing again; a new game's intro briefing has nothing to
  * keep yet and leaves the saves alone, and so does a debug run, which writes no save at all.
  */
 public final class BriefingExit {

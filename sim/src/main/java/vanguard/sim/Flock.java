@@ -128,6 +128,14 @@ public final class Flock implements Hashed {
      * flies, and the members are moved to their new places.
      */
     void advance() {
+        advance(null);
+    }
+
+    /**
+     * As {@link #advance()}; M7 part C (design/campaign Level 16, What walls stop): with a {@code canyon}
+     * the members are clamped to its flyable side (no damage) before they move to their places.
+     */
+    void advance(Canyon canyon) {
         loopedBack = 0;
         ticks++;
         flyLeader();
@@ -137,13 +145,23 @@ public final class Flock implements Hashed {
             if (members[i] == null) {
                 continue;
             }
-            heading[i] = nextHeading[i];
-            pace[i] = nextPace[i];
+            if (!members[i].empStunned()) {
+                // M7 part A: a member the EMP Burst stuns drifts on along its heading and pace.
+                heading[i] = nextHeading[i];
+                pace[i] = nextPace[i];
+            }
             double step = cruise * pace[i] * SimStep.SECONDS;
             px[i] += Trig.cos(heading[i]) * step;
             py[i] += Trig.sin(heading[i]) * step;
         }
         relax();
+        if (canyon != null) {
+            for (int i = 0; i < size; i++) {
+                if (members[i] != null) {
+                    px[i] = canyon.flyableX(py[i], px[i], members[i].hitbox().width() / 2);
+                }
+            }
+        }
         for (int i = 0; i < size; i++) {
             if (members[i] != null) {
                 // Facing: radians clockwise from straight down the screen.

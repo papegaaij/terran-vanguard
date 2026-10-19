@@ -3,7 +3,7 @@ title: Act 1 – First Contact
 design: approved
 implementation: done
 art: final
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Act 1 – First Contact
@@ -110,12 +110,14 @@ pages are in the act's [data.yaml](data.yaml) (`outro`, see the
 [architecture](../../tech/architecture/README.md#data-file-schemas) schema text) and rendered
 here, as the act briefing.
 
+<!-- data: act-outro-pages -->
 | Page | Speaker | Image |
 |---|---|---|
 | 1 | Commander Okafor | `act-1-outro-carcass`: the carrier's carcass drifting at L1, Earth beyond |
 | 2 | Commander Okafor (grim) | `act-1-outro-daedalus-rim`: the empty Daedalus Rim settlement, airlocks open, lights on |
 | 3 | Dr. Varga (grim) | `act-1-outro-second-fleet`: the second fleet's track toward Earth on a tactical plot |
 | 4 | Commander Okafor (fierce) | `act-1-outro-rook`: Aegis Wing, Rook's ship on Lancer's wing |
+<!-- /data -->
 
 <!-- data: act-outro -->
 > **Commander Okafor:** "The carrier is dead. The yards are scarred but standing, the

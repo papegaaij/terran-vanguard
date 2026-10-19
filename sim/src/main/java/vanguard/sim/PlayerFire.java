@@ -25,6 +25,11 @@ import java.util.List;
  * touch; nothing else reaches the {@code sub} layer (homing missiles and turrets do not seek it,
  * blasts and mines pass over it), and a sunken trigger is hit by torpedoes only. What a hit destroys
  * is handed to {@link Hits}, which the {@link Sortie} implements.
+ *
+ * <p>M7 part A: a {@link WeaponSpec.Delivery#BEAM} mount fires no shots; while fire is held its {@link
+ * Beam} runs from the muzzle straight up and {@link #burn} damages the first target in its column every
+ * step (see there). A drone bay's gun fires from its {@link Drones drone} at the convergence point, and
+ * only while the drone is whole; a Deflector Pod ({@link Deflectors}) fires nothing.
  */
 final class PlayerFire {
     private static final int SHOT_CAPACITY = 256;
@@ -58,6 +63,17 @@ final class PlayerFire {
 
         /** Part {@code part} of set piece {@code piece} was destroyed by a shot or blast of {@code mount}; -1 for none. */
         void partDestroyed(int piece, int part, int mount);
+
+        /** M7 part D: the unit part of the enemy at {@code index} was destroyed (by a special: no mount). */
+        default void unitPartDestroyed(int index) {
+            unitPartDestroyed(index, -1);
+        }
+
+        /**
+         * M7 part D: the unit part of the enemy at {@code index} (design/enemies/ground/shellback, the vent) was
+         * destroyed by a shot or blast of {@code mount}; -1 for none. The enemy stays.
+         */
+        void unitPartDestroyed(int index, int mount);
     }
 
     /** Homing locks on a set piece's part use serials from here: unit serials stay far below it. */
@@ -82,6 +98,15 @@ final class PlayerFire {
      */
     static final double FLANK_PREFERENCE = 1.2;
 
+    /** M7 part A: a grown beam's length from its muzzle, px: past the top edge from anywhere on the field. */
+    static final double BEAM_REACH = PlayField.HEIGHT;
+
+    /**
+     * M7 part A: a beam on a trigger (which counts hits, not damage) counts one hit per this many steps
+     * of contact, the first at once: 10 a second, like a fast gun (default, pending the user's review).
+     */
+    static final int BEAM_TRIGGER_TICKS = 6;
+
     private final Ship ship;
     private final Armament armament;
     private final SimEvents events;
@@ -97,7 +122,19 @@ final class PlayerFire {
     private final double[] turretHeadings;
 
     private final int[] turretTargets;
+    /** M7 part A: per mount its beam (a {@link WeaponSpec.Delivery#BEAM} mount's), null for others. */
+    private final Beam[] beams;
+
+    private final boolean anyBeam;
+    /** M7 part A: the drone bays' drones and the Deflector Pods' fields (empty when none is fitted). */
+    private final Drones drones;
+
+    private final Deflectors deflectors;
     private int overdriveTicks;
+    /** M7 part C: the level's rock and the scroll now; null in a level without terrain. */
+    private Canyon canyon;
+    /** M7 part C: the level's tendril gates, which a beam burns on its way past; null without. */
+    private Links links;
     /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
     private int lastHit;
     /** Steps since {@link #lastHit} was damaged. */
@@ -127,7 +164,31 @@ final class PlayerFire {
         sinceShot = new int[armament.size()];
         turretHeadings = new double[armament.size()];
         turretTargets = new int[armament.size()];
+        beams = new Beam[armament.size()];
+        boolean beam = false;
+        for (int m = 0; m < armament.size(); m++) {
+            if (armament.mount(m).fires() && armament.mount(m).weapon().delivery() == WeaponSpec.Delivery.BEAM) {
+                beams[m] = new Beam();
+                beam = true;
+            }
+        }
+        anyBeam = beam;
+        drones = new Drones(ship, armament);
+        deflectors = new Deflectors(ship, armament);
         reset();
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, What walls stop): the level's rock, which stops shots and the
+     * beam, keeps mines on the flyable side and lands bombs and shells at the wall's foot.
+     */
+    void canyon(Canyon rock) {
+        canyon = rock;
+    }
+
+    /** M7 part C: the level's tendril gates (design/enemies/ground/tendril-anchor); null without. */
+    void links(Links gates) {
+        links = gates;
     }
 
     /** Back to the level start: no shots, every weapon ready, no overdrive. */
@@ -136,9 +197,16 @@ final class PlayerFire {
         for (int m = 0; m < armament.size(); m++) {
             cooldowns[m] = 0;
             sinceShot[m] = Integer.MAX_VALUE;
-            turretHeadings[m] = armament.mount(m).weapon().muzzles().getFirst().angle();
+            turretHeadings[m] = armament.mount(m).fires()
+                    ? armament.mount(m).weapon().muzzles().getFirst().angle()
+                    : 0;
             turretTargets[m] = -1;
+            if (beams[m] != null) {
+                beams[m].reset();
+            }
         }
+        drones.reset();
+        deflectors.reset();
         overdriveTicks = 0;
         lastHit = -1;
         sinceHit = Integer.MAX_VALUE;
@@ -167,13 +235,23 @@ final class PlayerFire {
                 cooldowns[m]--;
             }
             Armament.Mount mount = armament.mount(m);
+            if (!mount.fires()) {
+                // M7 part A: a Deflector Pod fires nothing.
+                continue;
+            }
             WeaponSpec weapon = overdriveTicks > 0 ? mount.overdrive() : mount.weapon();
+            if (beams[m] != null) {
+                beam(m, weapon, held);
+                continue;
+            }
             if (weapon.delivery() == WeaponSpec.Delivery.TURRET) {
                 aim(m, weapon, enemies);
             }
             if (cooldowns[m] > 0
                     || !held
                     || idle(weapon)
+                    // M7 part A: a broken (or fading-in) drone does not fire.
+                    || (mount.bay() && !drones.whole(m))
                     || (weapon.delivery() == WeaponSpec.Delivery.TURRET && turretTargets[m] < 0)
                     || (weapon.delivery() == WeaponSpec.Delivery.MINE
                             && liveMines(m) >= weapon.mines().maxLive())) {
@@ -183,8 +261,80 @@ final class PlayerFire {
             }
             cooldowns[m] = weapon.intervalTicks();
             sinceShot[m] = 0;
-            volley(m, weapon, enemies, ground);
+            if (mount.bay()) {
+                droneVolley(m, weapon);
+            } else {
+                volley(m, weapon, enemies, ground);
+            }
         }
+    }
+
+    /**
+     * M7 part A: beam mount {@code m} this step: on while fire is held ({@link SimEvents.Type#BEAM_ON}
+     * as it comes on), off otherwise ({@link SimEvents.Type#BEAM_OFF}); its muzzle glows while it runs.
+     */
+    private void beam(int m, WeaponSpec weapon, boolean held) {
+        Beam beam = beams[m];
+        WeaponSpec.Muzzle muzzle = weapon.muzzles().getFirst();
+        beam.x = ship.x() + muzzle.dx();
+        beam.fromY = ship.y() + muzzle.dy();
+        beam.width = weapon.size().width();
+        if (!held) {
+            ceaseBeam(m);
+            return;
+        }
+        if (!beam.on) {
+            beam.on = true;
+            beam.ticksOn = 0;
+            events.add(SimEvents.Type.BEAM_ON, beam.x, beam.fromY, m);
+        }
+        beam.ticksOn++;
+        sinceShot[m] = 0;
+    }
+
+    /** M7 part A: every beam goes off (the ship does not fly: its launch, its wreck, the level's end). */
+    void ceaseBeams() {
+        if (!anyBeam) {
+            return;
+        }
+        for (int m = 0; m < beams.length; m++) {
+            if (beams[m] != null) {
+                ceaseBeam(m);
+            }
+        }
+    }
+
+    private void ceaseBeam(int m) {
+        Beam beam = beams[m];
+        if (beam.on) {
+            events.add(SimEvents.Type.BEAM_OFF, beam.x, beam.fromY, m);
+        }
+        beam.reset();
+    }
+
+    /**
+     * M7 part A: drone bay {@code m}'s gun fires one shot from its drone, aimed at the convergence point
+     * ahead of the ship's centre.
+     */
+    private void droneVolley(int m, WeaponSpec weapon) {
+        double x = drones.x(m);
+        double y = drones.y(m);
+        Shot shot = shots.obtain();
+        if (shot != null) {
+            double heading =
+                    StrictMath.atan2(ship.x() - x, ship.y() + drones.spec(m).converge() - y);
+            shot.fire(weapon, m, x, y, heading);
+        }
+        events.add(SimEvents.Type.SHOT_FIRED, x, y, m);
+    }
+
+    /**
+     * M7 part A: one step of the drones (their orbit, rebuild and fade-in) and the Deflector Pods (their
+     * charges), with the overdrive's numbers while one runs; nothing without them.
+     */
+    void tend() {
+        drones.update(overdriveTicks > 0, events);
+        deflectors.update(overdriveTicks > 0, events);
     }
 
     /**
@@ -192,7 +342,7 @@ final class PlayerFire {
      * torpedo over land (its pod still draws its power; the HUD reads NO WATER).
      */
     boolean idle(WeaponSpec weapon) {
-        return weapon.delivery() == WeaponSpec.Delivery.TORPEDO && !water;
+        return weapon != null && weapon.delivery() == WeaponSpec.Delivery.TORPEDO && !water;
     }
 
     private void volley(int mount, WeaponSpec weapon, Pool<Enemy> enemies, Pool<GroundObject> ground) {
@@ -377,11 +527,20 @@ final class PlayerFire {
             WeaponSpec weapon = shot.weapon();
             if (weapon.delivery().landing()) {
                 shot.fall(groundScroll);
+                if (canyon != null) {
+                    // M7 part C: over rock it lands (and bursts) at the wall's foot instead.
+                    shot.landAt(canyon.flyableX(shot.landY(), shot.landX(), 0));
+                }
                 continue;
             }
             if (weapon.delivery() == WeaponSpec.Delivery.MINE) {
                 // A mine holds its place on the screen (it does not scroll) until it bursts or fizzles.
                 shot.drift();
+                if (canyon != null) {
+                    // M7 part C: laid and pushed on the flyable side only; against a wall it stays at its edge.
+                    shot.placeX(
+                            canyon.flyableX(shot.y(), shot.x(), weapon.size().width() / 2));
+                }
                 if (shot.spent() || !PlayField.overlaps(shot.x(), shot.y(), weapon.size())) {
                     shots.free(i);
                 } else if (shot.armsNow()) {
@@ -497,7 +656,8 @@ final class PlayerFire {
             Enemy enemy = enemies.get(j);
             if (enemy.serial() == target) {
                 // M5 part F (user decision F3 = a): a homing shot loses a target that latched onto the hull.
-                if (!onField(enemy) || enemy.latched()) {
+                // M7 part B: and one that went under the sand.
+                if (!onField(enemy) || enemy.latched() || !enemy.layer().touchable()) {
                     return false;
                 }
                 targetX = enemy.x();
@@ -595,6 +755,349 @@ final class PlayerFire {
         return Math.abs(off) <= shot.weapon().coneHalfAngle();
     }
 
+    /** M7 part A: what the beam cast found nearest along the column (see {@link #burn}). */
+    private static final int CAST_NONE = 0;
+
+    private static final int CAST_ENEMY = 1;
+    private static final int CAST_PART = 2;
+    private static final int CAST_SPORE = 3;
+    private static final int CAST_GROUND = 4;
+    private static final int CAST_BLOCKED = 5;
+    /**
+     * Round 37 R.4 (c): a set piece's armour (a part that takes no damage now, its body or neck): it stops
+     * the beam on every layer, the ground's included (a boss is not hardened ground); stored as {@link
+     * #CAST_BLOCKED}.
+     */
+    private static final int CAST_ARMOUR = 6;
+
+    /** M7 part A: the beam cast's nearest find: its kind, height, layer, index (and part) so far. */
+    private int castKind;
+
+    private double castY;
+    private Layer castLayer;
+    private int castIndex;
+    private int castPart;
+    /** M7 part A: the nearest glance crossing the cast passed over. */
+    private double castGlance;
+
+    /**
+     * M7 part A (design/player/weapons/ion-beam, Beam rules): every beam that is on casts its column
+     * (its width, from its muzzle straight up to its reach, which grows over {@link #Beam.GROW_TICKS}
+     * after it comes on) across every hit path at once, without allocating: enemies (segment chains
+     * and swarm members among them), set pieces' parts (an armoured body or neck stops it unless a
+     * living part of that piece is in the column: it burns over the back to it), armed spore mines and
+     * ground objects. The nearest touch wins, a tie the higher layer. What it can damage takes the
+     * weapon's damage for this step (a part times its weak-point multiplier; a trigger counts a hit
+     * every {@link #BEAM_TRIGGER_TICKS} steps) and its kill pays as a shot's. On the ground layer what
+     * it cannot damage (hardened ground objects and units without {@code anti-ground}, a walker's
+     * frontal armour, a growth still growing) does not stop it: it passes over with a glance ({@link
+     * Beam#glanceY()}); above the ground such a thing stops it without damage ({@link
+     * Beam.Contact#BLOCKED}). Round 37 R.4 (c): a set piece's armour stops it on every layer, the ground's
+     * included (the Siege Spire's trunk, its maw and core before their phases), and so does a high-air
+     * boss's body (the Brood Carrier's hull in its first phase): the beam reaches high air, so it is not
+     * beneath the hull as a bolt is. Units under the water, a Lamprey latched onto the
+     * hull (front shots pass it), allies, pickups and enemy bullets do not stop it.
+     *
+     * <p>M7 part C: a canyon wall or rock island in the column ends it there ({@link #wallAhead}, {@link
+     * Beam.Contact#ROCK}); a gate's tendril it crosses short of its end burns, and it goes on past it ({@link
+     * Links#burn}; M9 = a). M7 part D: a Herald's aura ring absorbs its damage in {@link Enemy#damage}.
+     */
+    void burn(Pool<Enemy> enemies, Pool<GroundObject> ground, Pool<Mine> spores) {
+        if (!anyBeam) {
+            return;
+        }
+        for (int m = 0; m < beams.length; m++) {
+            Beam beam = beams[m];
+            if (beam == null || !beam.on) {
+                continue;
+            }
+            WeaponSpec weapon = overdriveTicks > 0
+                    ? armament.mount(m).overdrive()
+                    : armament.mount(m).weapon();
+            double half = weapon.size().width() / 2;
+            double reach = beam.fromY + BEAM_REACH * Math.min(1, (double) beam.ticksOn / Beam.GROW_TICKS);
+            double limit = Math.min(reach, wallAhead(beam.x, half, beam.fromY));
+            cast(m, weapon, beam.x, half, beam.fromY, limit, enemies, ground, spores);
+            if (links != null) {
+                // M7 part C (M9 = a): the tendrils it crosses short of its end burn, and it goes on past them.
+                links.burn(beam.x, half, beam.fromY, castKind == CAST_NONE ? limit : castY, weapon.damage());
+            }
+            beam.glanceY = castGlance < castY ? castGlance : Double.NaN;
+            beam.target = -1;
+            if (castKind == CAST_NONE) {
+                // M7 part C: ended by rock short of its reach: the rock-scorch impact.
+                beam.contact = limit < reach ? Beam.Contact.ROCK : Beam.Contact.NONE;
+                beam.endY = limit;
+                beam.trigger = -1;
+                beam.triggerTicks = 0;
+                continue;
+            }
+            beam.endY = castY + Beam.BORE;
+            beam.contact = castKind == CAST_BLOCKED ? Beam.Contact.BLOCKED : Beam.Contact.BURN;
+            int trigger = -1;
+            double damage = weapon.damage() * groundFactor(weapon, castLayer);
+            switch (castKind) {
+                case CAST_ENEMY -> {
+                    Enemy enemy = enemies.get(castIndex);
+                    beam.target = enemy.serial();
+                    lastHit = enemy.serial();
+                    sinceHit = 0;
+                    if (castPart >= 0) {
+                        // M7 part D: its unit part lay nearer in the column (the Shellback's vent).
+                        if (enemy.damagePart(damage, false)) {
+                            hits.unitPartDestroyed(castIndex, m);
+                        }
+                    } else if (enemy.damage(damage)) {
+                        hits.enemyDestroyed(castIndex, m);
+                    }
+                }
+                case CAST_PART -> {
+                    SetPiece piece = setPieces[castIndex];
+                    beam.target = PART_SERIAL + castIndex * LevelScript.SetPieceSpec.MAX_PARTS + castPart;
+                    if (piece.damagePartAt(castPart, damage, beam.x, castY, 0, 1)) {
+                        hits.partDestroyed(castIndex, castPart, m);
+                    }
+                }
+                case CAST_SPORE -> {
+                    if (spores.get(castIndex).damage(damage)) {
+                        hits.mineDestroyed(castIndex);
+                    }
+                }
+                case CAST_GROUND -> {
+                    GroundObject object = ground.get(castIndex);
+                    if (object.spec().trigger()) {
+                        trigger = object.serial();
+                        beam.triggerTicks = beam.trigger == trigger ? beam.triggerTicks + 1 : 0;
+                        if (beam.triggerTicks % BEAM_TRIGGER_TICKS == 0) {
+                            strike(castIndex, object, damage);
+                        }
+                    } else {
+                        strike(castIndex, object, damage);
+                    }
+                }
+                default -> {
+                    // CAST_BLOCKED: it stops at the edge without damage.
+                }
+            }
+            beam.trigger = trigger;
+            if (trigger < 0) {
+                beam.triggerTicks = 0;
+            }
+        }
+    }
+
+    /**
+     * M7 part A, a hook for part C (canyon walls and rock islands, M2 = a): the height at which a wall
+     * in the column from {@code fromY} up stops the beam; none yet.
+     */
+    private double wallAhead(double x, double halfWidth, double fromY) {
+        // M7 part C: the first rock in the column (a wall's or an island's), +∞ without terrain.
+        return canyon == null ? Double.POSITIVE_INFINITY : canyon.terrain.ceiling(canyon.scroll(), x, halfWidth, fromY);
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, What walls stop; M2 = a), after the hit passes so that a unit at
+     * a wall's foot is hit first: a shot in rock stops there with a {@link SimEvents.Type#ROCK_SPARK}
+     * (bolts, turret shots, the Rear Lance, the wing, rear, drone and wingman guns); a homing missile
+     * detonates there, its blast (if its weapon has one) hitting the ground units and objects in its
+     * radius. Bombs and shells pass over rock (they land at the wall's foot, {@link #move}) and mines are
+     * kept off it.
+     */
+    void stopAtRock(Pool<GroundObject> ground, Pool<Enemy> enemies) {
+        if (canyon == null) {
+            return;
+        }
+        for (int i = shots.size() - 1; i >= 0; i--) {
+            Shot shot = shots.get(i);
+            WeaponSpec weapon = shot.weapon();
+            WeaponSpec.Delivery delivery = weapon.delivery();
+            if (delivery.landing() || delivery == WeaponSpec.Delivery.MINE) {
+                continue;
+            }
+            Hitbox size = weapon.size();
+            if (!canyon.rock(shot.x(), shot.y(), size.width() / 2, size.height() / 2)) {
+                continue;
+            }
+            events.add(SimEvents.Type.ROCK_SPARK, shot.x(), shot.y(), shot.mount());
+            if (delivery == WeaponSpec.Delivery.HOMING && weapon.blast() > 0) {
+                rockBurst(shot, ground, enemies);
+            }
+            shots.free(i);
+        }
+    }
+
+    /** M7 part C: a homing missile's blast on rock: the ground objects and ground units in its radius. */
+    private void rockBurst(Shot shot, Pool<GroundObject> ground, Pool<Enemy> enemies) {
+        WeaponSpec weapon = shot.weapon();
+        double x = shot.x();
+        double y = shot.y();
+        events.add(SimEvents.Type.BLAST, x, y, shot.mount());
+        for (int j = ground.size() - 1; j >= 0; j--) {
+            GroundObject object = ground.get(j);
+            LevelScript.GroundObjectSpec spec = object.spec();
+            if (object.hittable()
+                    && !spec.submerged()
+                    && (weapon.antiGround() || !spec.hardened())
+                    && inBlast(x, y, weapon.blast(), object.x(), object.y(), spec.size())) {
+                strike(j, object, shot.damage());
+            }
+        }
+        for (int j = enemies.size() - 1; j >= 0; j--) {
+            Enemy enemy = enemies.get(j);
+            if (enemy.layer() != Layer.GROUND
+                    || !onField(enemy)
+                    || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
+                continue;
+            }
+            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
+                events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), shot.mount());
+            } else {
+                blastPart(j, enemy, x, y, weapon.blast(), shot.damage(), shot.mount());
+                if (enemy.damage(shot.damage(), true)) {
+                    hits.enemyDestroyed(j, shot.mount());
+                }
+            }
+        }
+    }
+
+    /**
+     * M7 part D: a blast of {@code radius} around (x, y) that reaches enemy {@code j} hurts its standing unit
+     * part too when it covers it (the gap check's default: both), before the body.
+     */
+    private void blastPart(int j, Enemy enemy, double x, double y, double radius, double damage, int mount) {
+        if (enemy.partInBlast(x, y, radius) && enemy.damagePart(damage, true)) {
+            hits.unitPartDestroyed(j, mount);
+        }
+    }
+
+    /** The beam cast for mount {@code m}: sets the {@code cast*} fields to the nearest find below {@code limit}. */
+    private void cast(
+            int m,
+            WeaponSpec weapon,
+            double x,
+            double half,
+            double fromY,
+            double limit,
+            Pool<Enemy> enemies,
+            Pool<GroundObject> ground,
+            Pool<Mine> spores) {
+        castKind = CAST_NONE;
+        castY = limit;
+        castLayer = null;
+        castIndex = -1;
+        castPart = -1;
+        castGlance = Double.POSITIVE_INFINITY;
+        WeaponSpec.Delivery delivery = weapon.delivery();
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            Layer layer = enemy.layer();
+            if (!delivery.reaches(layer) || !onField(enemy) || (enemy.latched() && !hitsLatched(m))) {
+                continue;
+            }
+            double y = columnContact(x, half, fromY, enemy.x(), enemy.y(), enemy.hitbox());
+            boolean damageable =
+                    (weapon.antiGround() || !enemy.spec().hardened()) && !enemy.glances(0, 1) && !enemy.growing();
+            if (enemy.partAlive()) {
+                // M7 part D: a unit part first, so a tie goes to it (the Shellback's vent).
+                double partY = columnContact(x, half, fromY, enemy.partX(), enemy.partY(), enemy.partBox());
+                consider(damageable ? CAST_ENEMY : CAST_BLOCKED, partY, layer, j, 0);
+            }
+            consider(damageable ? CAST_ENEMY : CAST_BLOCKED, y, layer, j, -1);
+        }
+        for (int k = 0; k < setPieces.length; k++) {
+            SetPiece piece = setPieces[k];
+            boolean anchored = piece.arena().isPresent();
+            if (!piece.present() || (!anchored && !delivery.reaches(piece.layer()))) {
+                continue;
+            }
+            boolean partInColumn = false;
+            for (int p = 0; p < piece.partCount(); p++) {
+                Layer partLayer = piece.partLayer(p);
+                if (piece.partWrecked(p) || !piece.partOnField(p) || (anchored && !delivery.reaches(partLayer))) {
+                    continue;
+                }
+                double y = piece.partColumn(p, x, half, fromY);
+                if (y < Double.POSITIVE_INFINITY) {
+                    partInColumn = true;
+                }
+                consider(piece.partShielded(p) ? CAST_ARMOUR : CAST_PART, y, partLayer, k, p);
+            }
+            if (anchored || partInColumn) {
+                // An arena boss's platform is scenery; over the armoured back (a high-air boss's hull too,
+                // round 37 R.4 c) the beam burns on to a part in its column.
+                continue;
+            }
+            if (PlayField.overlaps(piece.x(), piece.y(), piece.body())) {
+                consider(
+                        CAST_ARMOUR,
+                        columnContact(x, half, fromY, piece.x(), piece.y(), piece.body()),
+                        piece.layer(),
+                        k,
+                        -1);
+            }
+            consider(CAST_ARMOUR, piece.neckColumn(x, half, fromY), piece.layer(), k, -1);
+        }
+        if (delivery.reaches(Layer.AIR)) {
+            for (int j = 0; j < spores.size(); j++) {
+                Mine spore = spores.get(j);
+                if (spore.armed()) {
+                    consider(
+                            CAST_SPORE,
+                            columnContact(x, half, fromY, spore.x(), spore.y(), EnemyGun.MineSpec.BOX),
+                            Layer.AIR,
+                            j,
+                            -1);
+                }
+            }
+        }
+        for (int j = 0; j < ground.size(); j++) {
+            GroundObject object = ground.get(j);
+            LevelScript.GroundObjectSpec spec = object.spec();
+            if (!object.hittable() || spec.submerged()) {
+                continue;
+            }
+            double y = columnContact(x, half, fromY, object.x(), object.y(), spec.size());
+            boolean damageable = weapon.antiGround() || !spec.hardened();
+            consider(damageable ? CAST_GROUND : CAST_BLOCKED, y, spec.lowAir() ? Layer.LOW_AIR : Layer.GROUND, j, -1);
+        }
+    }
+
+    /**
+     * M7 part A: a find of {@code kind} touched at height {@code y} on {@code layer}: nearer than the
+     * cast's find so far (a tie on a higher layer) it becomes the find; something it cannot damage on
+     * the ground layer is passed over instead (a glance crossing), a set piece's armour ({@link
+     * #CAST_ARMOUR}) excepted.
+     */
+    private void consider(int kind, double y, Layer layer, int index, int part) {
+        boolean nearer = y < castY;
+        boolean tie = y == castY && castKind != CAST_NONE && layer.ordinal() > castLayer.ordinal();
+        if (!nearer && !tie) {
+            return;
+        }
+        if (kind == CAST_BLOCKED && layer == Layer.GROUND) {
+            castGlance = Math.min(castGlance, y);
+            return;
+        }
+        castKind = kind == CAST_ARMOUR ? CAST_BLOCKED : kind;
+        castY = y;
+        castLayer = layer;
+        castIndex = index;
+        castPart = part;
+    }
+
+    /**
+     * M7 part A: where a beam's column centred on {@code cx}, {@code halfWidth} either side and running
+     * up from {@code fromY}, first touches a box of {@code box} around (bx, by): its bottom edge, or the
+     * column's start when the box reaches below it; {@link Double#POSITIVE_INFINITY} when the column
+     * misses it (touching edges do not count, as for {@link Hitbox#overlaps}).
+     */
+    static double columnContact(double cx, double halfWidth, double fromY, double bx, double by, Hitbox box) {
+        if (Math.abs(bx - cx) * 2 >= box.width() + 2 * halfWidth || by + box.height() / 2 <= fromY) {
+            return Double.POSITIVE_INFINITY;
+        }
+        return Math.max(fromY, by - box.height() / 2);
+    }
+
     /** Bolts and missiles hit the enemies they pass on the layers they reach. */
     void hitEnemies(Pool<Enemy> enemies) {
         for (int i = shots.size() - 1; i >= 0; i--) {
@@ -608,8 +1111,13 @@ final class PlayerFire {
                 Layer layer = enemy.layer();
                 if (!weapon.delivery().reaches(layer)
                         || !onField(enemy)
-                        || (enemy.latched() && !hitsLatched(shot.mount()))
-                        || !weapon.size().overlaps(shot.x(), shot.y(), enemy.hitbox(), enemy.x(), enemy.y())
+                        || (enemy.latched() && !hitsLatched(shot.mount()))) {
+                    continue;
+                }
+                // M7 part D: a unit part is tested before the body (the Shellback's vent).
+                boolean onPart = enemy.partAlive()
+                        && weapon.size().overlaps(shot.x(), shot.y(), enemy.partBox(), enemy.partX(), enemy.partY());
+                if ((!onPart && !weapon.size().overlaps(shot.x(), shot.y(), enemy.hitbox(), enemy.x(), enemy.y()))
                         || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
                     continue;
                 }
@@ -628,7 +1136,11 @@ final class PlayerFire {
                     sinceHit = 0;
                 }
                 boolean spent = shot.pierced();
-                if (enemy.damage(shot.damage() * groundFactor(weapon, layer))) {
+                if (onPart) {
+                    if (enemy.damagePart(shot.damage() * groundFactor(weapon, layer), false)) {
+                        hits.unitPartDestroyed(j, shot.mount());
+                    }
+                } else if (enemy.damage(shot.damage() * groundFactor(weapon, layer))) {
                     hits.enemyDestroyed(j, shot.mount());
                 }
                 if (spent) {
@@ -650,8 +1162,8 @@ final class PlayerFire {
         }
         Armament.Mount fitted = armament.mount(mount);
         return fitted.slot() == Armament.Slot.REAR
-                || fitted.weapon().flanking()
-                || fitted.overdrive().flanking();
+                || (fitted.fires()
+                        && (fitted.weapon().flanking() || fitted.overdrive().flanking()));
     }
 
     /** Bolts and missiles hit the armed spore mines on the player's layer. */
@@ -866,8 +1378,11 @@ final class PlayerFire {
             }
             if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
                 events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), shot.mount());
-            } else if (enemy.damage(shot.damage(), true)) {
-                hits.enemyDestroyed(j, shot.mount());
+            } else {
+                blastPart(j, enemy, x, y, weapon.blast(), shot.damage(), shot.mount());
+                if (enemy.damage(shot.damage(), true)) {
+                    hits.enemyDestroyed(j, shot.mount());
+                }
             }
         }
         // M5 part E: a set piece's part on the ground now (an arena boss's surfaced head, an awash arm).
@@ -961,8 +1476,11 @@ final class PlayerFire {
             if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
                 // M5 part C: a hardened unit glances off as a hardened ground object does (M5 part H: and a growth).
                 events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), mine.mount());
-            } else if (enemy.damage(mine.damage(), true)) {
-                hits.enemyDestroyed(j, mine.mount());
+            } else {
+                blastPart(j, enemy, x, y, radius, mine.damage(), mine.mount());
+                if (enemy.damage(mine.damage(), true)) {
+                    hits.enemyDestroyed(j, mine.mount());
+                }
             }
         }
         for (int k = 0; k < setPieces.length; k++) {
@@ -999,7 +1517,7 @@ final class PlayerFire {
      * under the water.
      */
     private static boolean blastReaches(Layer layer) {
-        return layer != Layer.HIGH_AIR && layer != Layer.SUB;
+        return layer != Layer.HIGH_AIR && layer != Layer.SUB && layer.touchable();
     }
 
     /** A hit on a ground object: a trigger counts it, a destructible takes the damage. */
@@ -1044,11 +1562,34 @@ final class PlayerFire {
     void addTo(StateHash hash) {
         for (int m = 0; m < armament.size(); m++) {
             hash.add(cooldowns[m]).add(sinceShot[m]);
-            if (armament.mount(m).weapon().delivery() == WeaponSpec.Delivery.TURRET) {
+            if (armament.mount(m).fires() && armament.mount(m).weapon().delivery() == WeaponSpec.Delivery.TURRET) {
                 hash.add(turretHeadings[m]).add(turretTargets[m]);
             }
         }
         hash.add(overdriveTicks);
+        // M7 part A: only with a beam, a drone bay or a Deflector Pod fitted, so other sorties hash as before.
+        if (anyBeam) {
+            for (Beam beam : beams) {
+                if (beam != null) {
+                    beam.addTo(hash);
+                }
+            }
+        }
+        drones.addTo(hash);
+        deflectors.addTo(hash);
+    }
+
+    /** M7 part A: mount {@code m}'s beam, null unless it is a {@link WeaponSpec.Delivery#BEAM} mount. */
+    Beam beam(int m) {
+        return beams[m];
+    }
+
+    Drones drones() {
+        return drones;
+    }
+
+    Deflectors deflectors() {
+        return deflectors;
     }
 
     Pool<Shot> shots() {

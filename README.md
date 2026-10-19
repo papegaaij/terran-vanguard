@@ -25,6 +25,7 @@ Requires JDK 21 (`JAVA_HOME` pointing at it) and the Git LFS files; Gradle comes
 ./gradlew check                 # compile, format check, all tests
 ./gradlew :desktop:run          # start the game
 ./gradlew :desktop:packageLinuxX64   # bundle with its own runtime: desktop/build/construo/dist/
+                                     # (release: design/tech/release/README.md)
 ```
 
 The first start opens in borderless full screen; **Alt+Enter** or **F11** switch to a window
@@ -36,7 +37,7 @@ platform's config directory (`~/.config/terran-vanguard/` on Linux, `%APPDATA%\T
 on Windows, `~/Library/Application Support/Terran Vanguard/` on macOS); add
 `controls.auto-fire=true` there to fire without holding the button.
 
-Options: `--bench <seconds>` flies Level 01, exits after that time and logs the frame count;
+Options: `--version` prints the version and exits; `--bench <seconds>` flies Level 01, exits after that time and logs the frame count;
 `--settings <file>` uses another settings file; `--difficulty easy|medium|hard` picks the
 difficulty (medium by default, until the new-game menu exists); `--debug-speed <n>` (a testing
 aid) runs game time n times faster, e.g. 4 to get through Level 01 in under a minute.

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
@@ -26,8 +27,8 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M5 part F's sounds (design/audio/sfx and music, Level 12): round 34's sounds (variant a until the
- * round closes) from their files, the rain-only storm bed with the ocean in the eye, the thunder
+ * M5 part F's sounds (design/audio/sfx and music, Level 12): round 34's sounds (the user's picks of
+ * 2026-10-12: the thunder and the gust b, the rest a) from their files, the rain-only storm bed with the ocean in the eye, the thunder
  * 0.3 to 1.5 s after each flash, the gust with its telegraph, the latch and the drain loop while a
  * Lamprey drains, the sonde's chime; the latch, shake-off and gust at the warnings' level with a short
  * duck of the theme; the theme's base stem at -6 dB in the eye.
@@ -39,7 +40,7 @@ class Level12SoundsTest {
     private static final long NANOS_PER_STEP = 1_000_000_000L / SimStep.PER_SECOND;
 
     @Test
-    void everySoundHasItsFileAndRoundThirtyFoursVariantA() {
+    void everySoundHasItsFileAndTheUsersPick() {
         List<Sfx> all = List.of(
                 Sfx.AMBIENCE_STORM,
                 Sfx.THUNDER_1,
@@ -50,9 +51,14 @@ class Level12SoundsTest {
                 Sfx.LAMPREY_DRAIN,
                 Sfx.LAMPREY_SHAKE,
                 Sfx.SONDE_CHIME);
+        Set<Sfx> b = Set.of(Sfx.THUNDER_1, Sfx.THUNDER_2, Sfx.THUNDER_3, Sfx.GUST);
         for (Sfx sfx : all) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r34-a.ogg"), sfx + ": round 34's a, pending the user's pick");
+            String pick = b.contains(sfx) ? "-r34-b.ogg" : "-r34-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), sfx + ": the user's round 34 pick");
+            String other = b.contains(sfx) ? "-r34-a.ogg" : "-r34-b.ogg";
+            assertFalse(
+                    Files.exists(ASSETS.resolve(sfx.path().replace(pick, other))), sfx + ": the other variant left");
         }
         assertEquals("sfx/ambience-storm-rain-r34-a.ogg", Sfx.AMBIENCE_STORM.path(), "the rain-only bed (F6 = a)");
         // Round 08's chosen storm ambience (rain and its own thunder) stays in the assets.

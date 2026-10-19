@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-10-12
+updated: 2026-10-19
 ---
 
 # Implementation roadmap
@@ -29,6 +29,7 @@ milestone lists which documents it covers, it does not copy their items.
 | M4 | **Act 1** | Levels 02–07 with their enemies, bosses, weapons, specials and allies; balance tests green | [act 1](../../campaign/act-1-first-contact/README.md) levels, the Act 1 [enemies](../../enemies/README.md) and bosses, [weapons](../../player/weapons/README.md), [specials](../../player/specials/README.md), [allies](../../allies/README.md); the M3 documents' `later: M4` items: [economy](../../systems/economy/README.md) bounties and balancing sheet, [difficulty](../../systems/difficulty/README.md) bullet tags, [retry](../../systems/retry/README.md) boss checkpoint, [debrief](../../ui/debrief/README.md) data cores and act summary, [hangar](../../ui/hangar/README.md) test fire and Varga's intel lines |
 | M5 | **Act 2** | Levels 08–14 and their new units and equipment | [act 2](../../campaign/act-2-homefront/README.md) levels and their enemies and equipment, the [wingmen](../../player/wingmen/README.md) escort slot (Rook from L08), the [saves](../../systems/saves/README.md) `escort` field, the Targeting computer in the shop with its effects and the Salvage scanner's ([ship systems](../../player/systems/README.md), part A), the perspective towers and roofs of L08 (art direction); built in parts A–I (below) |
 | M6 | **Acts 1–2 release** | Credits screen with the CC-BY attributions, polish pass, release bundles for all OSes on a `v0.1` tag | [credits](../../ui/credits/README.md), mouse support in the out-of-game screens ([ui](../../ui/README.md)), the [scoring](../../systems/scoring/README.md) high-score table per difficulty with its name entry at game over and at the campaign's end, remaining checklist items of Acts 1–2 |
+| M7 | **Act 3** | Levels 15–21 and their new units and equipment | [act 3](../../campaign/act-3-red-dust/README.md) levels and their enemies, bosses and equipment (Ion Beam and `beam`, drones, EMP Burst, Orbital Lance, Shield Overcharge and cooldowns, Evasive thrusters, the third utility bay), terrain collision and canyon walls, reverse scroll, the dust-storm visibility, the Mars backdrops; built in parts A–I (below; the design approved in concept round 36) |
 
 ### Rules
 
@@ -74,10 +75,33 @@ Hive Node and Ravager and D's Wraith.
 | **C** Level 09 — **done** | Hive Node (hardened, periodic spawn), Ravager (`pack`, the pounce's air window), hardened enemies; hold zones and the level clock in script time; the named-target tracker; a missed node fails at once; the collapse; the bridge secondary (a wave tag); the `required` launch warning; the balance plan's anti-ground (Bomb Rack and Rook's Mortar); multi-level units in each level's atlas; "Firestorm" final and stems with a run-time stem hook; the Kilo Lead's audition | B | 31 (closed): the collapse's look (a and b rejected, the rework c approved with two tweaks and built), the Hive Node, the Ravager, the Level 09 backdrop with the trucks and the cocoon, the briefing images, "Firestorm" and its base stem approved as final; the collapse sound (a), both pounce sounds (picked at random), the Kilo Lead's voice (a); the captures, the voiced lines, the texts, the numbers, the decisions and the build choices accepted |
 | **D** Level 10 — **done** | Wraith (cloak, loop, rear entry, `rear ambush`); Mote Swarm (`flock`, `swarm`, authored paths: the Skitter's item); the air escort (shuttles: stations and lane sway, liftoff and climb-out, every bullet and contact hurting) and the scripted loss with its music duck; the `SHUTTLES` tracker with armour bars; `required: [rear]` and the plan's rear check; the ambience change by section; rear-heavy pacing; the Lifeline voices' auditions | B | 32 (closed): the Wraith, the Mote Swarm, the Level 10 backdrop at first light with the ferry hatch, the briefing images and intel portraits approved as final; the shuttle (a), the loss's look (b, the iris column), the decloak sound (b, CC-BY), the swarm sound (b), the lance sound (a), the Lifeline and Lifeline Three voices (b, b); the captures, the voiced lines, the texts, the numbers, the decisions and the build choices accepted |
 | **E** Level 11 — **done** | The `sub` layer and the water rules (a `water` level flag; the `sub` pass with pre-rendered collars); the Torpedo Pod and `anti-sub` (torpedoes seeking sunken triggers); Driftjelly (`field`, proximity ring above and below the water), Reef Spitter (rafts on the flanks); the naval convoy (cargo ships and frigate: stations, the glide to the arena lanes, the hold clear of Tiamat) with the `CONVOY` tracker and the `afloat` secondary; the Harbour Kraken mid-boss (anchored arena, lane slams, surfacing head); the ocean backdrop; the Bomb Rack over water; Atlas Control's audition | A | 33 (closed): the Driftjelly, the Reef Spitter, the Harbour Kraken (reworked on the user's feedback), the water and torpedo effects, the props, the ocean backdrop, the briefing images and intel pictures approved as final; the convoy ship pair (a), the lane telegraph and slam (a), Atlas Control's voice (b); the eight sounds, the captures, the voiced lines, the texts, the numbers, the decisions and the build choices accepted, the sunken pod at 3 hits |
-| **F** Level 12 — **built, pending the user's review in the combined round** | Weather (rain, lightning reveal of the `low-air` banks, gusts and the wall's drift, the eye); Lamprey (chase, latch, drain, shake-off) with the chaser `swarm` and the rear `stream`; the sondes and the `collect` secondary; the drifting canister; the storm backdrop; the eye's music level; the mines' sounds in play | D, E | 34 |
-| **G** Level 13 — **built, pending the user's review in the combined round** | `defend` with a timed halt; the Nansen Relay and its integrity bar; hook modes `alternate`, `in-arc`, `always`; Skimmer; `cross`; whiteout; supply drones; the arctic backdrop | E | 35 |
-| **H** Level 14 and the act end — **built, pending the user's review in the combined round** | Root bursts; the Siege Spire act boss (root parts, maw launches, ground → air phase); the Geneva backdrop; the daylight section; Act 2's outro pages and act summary; the act-end order | B, C, D | 36 |
-| **I** Close-out — **built, pending the user's review in the combined round** (the voice listen-through and the playthrough are the user's) | `ActPlaythroughTest` and `BalanceTest` for Act 2 with Rook and the Act 2 plan; the variety checklist as built; the later tags (drones and the other utility modules to Acts 3–6); leftover sounds and the voice listen-through; the user's playthrough | all | 37 |
+| **F** Level 12 — **done** (combined round 34 closed) | Weather (rain, lightning reveal of the `low-air` banks, gusts and the wall's drift, the eye); Lamprey (chase, latch, drain, shake-off) with the chaser `swarm` and the rear `stream`; the sondes and the `collect` secondary; the drifting canister; the storm backdrop; the eye's music level; the mines' sounds in play | D, E | 34 |
+| **G** Level 13 — **done** (combined round 34 closed) | `defend` with a timed halt; the Nansen Relay and its integrity bar; hook modes `alternate`, `in-arc`, `always`; Skimmer; `cross`; whiteout; supply drones; the arctic backdrop | E | 35 |
+| **H** Level 14 and the act end — **done** (combined round 34 closed) | Root bursts; the Siege Spire act boss (root parts, maw launches, ground → air phase); the Geneva backdrop; the daylight section; Act 2's outro pages and act summary; the act-end order | B, C, D | 36 |
+| **I** Close-out — **built, round 34 closed** (the voice listen-through done; the user's playthrough and the `sub` layer's three-OS CI check still open) | `ActPlaythroughTest` and `BalanceTest` for Act 2 with Rook and the Act 2 plan; the variety checklist as built; the later tags (drones and the other utility modules to Acts 3–6); leftover sounds and the voice listen-through; the user's playthrough | all | 37 |
+
+### M7 parts
+
+M7 is built like M5: each part is a commit series the user can play, opened with its own gap check
+and closed by its production-art concept round. The Act 3 design was approved in concept
+[round 36](../../concept-rounds/round-36/README.md) (2026-10-13), so a part's gap check only covers
+what building it brings up. The architecture's new kinds come with the parts that build them
+(Q.25c): `field` (B), `links` (C), `untouched` (D), the Spine Turret's `arc` (F), `pursuit` (G).
+
+| Part | Scope | Depends on | Round |
+|---|---|---|---|
+| **A** Act 3 systems — **done** (round 37 closed; the user's playthrough open) | Ion Beam (`beam` delivery), Light Drone Bay and drone behaviours (orbit, block, rebuild), Rear Lance, Deflector Pod; EMP Burst (stun, strip), Orbital Lance, Shield Overcharge with cooldown timers; Evasive thrusters (dash, double-tap); buying the third bay (`UTILITY_3`); `reference_dps` 15–21 and the Act 3 balance plan. The [HUD](../../ui/hud/README.md)'s **cooldown ring** on the special row and the **dash pip**, and the [controls](../../ui/controls/README.md)' Dash binding (Q.25e). Flown on Act 1–2 levels with `--loadout`/`--special` | — | 37 |
+| **B** Level 15 + Act 3 intro — **done** (round 38 closed; the user's playthrough open) | Act 3 `data.yaml` (title card, four pages, images), the Act 2 → 3 handover and the release saves at the L15 hangar playing the intro once (L.6); L15 data; the descent (clouds on `high-air`); Burrower and the `BURIED` layer; Olympus backdrop; Ares Control's lines rendered (cast in round 36, Thomas A) with the respelling list, his radio portrait (C.1 = b) | A | 38 |
+| **C** Level 16 — **done** except the canyon walls' look (round 39 closed; R.1's wall redo in progress, to round 40) | Terrain: walls, islands, contact, shots vs rock, Rook and paths; the canyon walls rising toward the camera with the collision at their foot (MA.1 = b); Tendril Anchor (`link`, beam vs tendril); Threadcrawler (ground chain along the walls' foot); Valles backdrop | B | 39 |
+| **D** Level 17 — **built**, pending round 40 | Choir Herald (`aura`); Shellback (walk, mortar, curl-roll crush); the Ares Landing dome as its own [allies](../../allies/README.md) document (Q.25b; the geodesic glass look, MA.3 = a) and its secondary; Helix compound set piece; Ares Landing backdrop | B | 40 |
+| **E** Level 18 | Dust-storm visibility (the soft ragged falloff, MA.2 = b); Ghost Drone (hint 1; the eye and running lights, U.5); Dust Devil (pull, spiral, core window); plains backdrop; **track 9** "Grey Signal", the Act 3 B theme, with its motif stem (moved here from part G: Level 18 needs it first) | B | 41 |
+| **F** Level 19 | Revenant Walker mid-boss (the "Strider heavy" biped; hint 2, wreck beat); Warden Tank unmarked (hull + turret); conveyors, furnace vents, rear-firing turrets; Tharsis foundry backdrop; Vorne's motif layer | C or D (walkers) | 42 |
+| **G** Level 20 | Reverse scroll (signed scroll, TOP warnings, rules by travel direction); Mote Swarm pursuit; Rear-guard drone (its bay's weapons document); Hellas rim backdrop; track 8 for the retreat | A, B | 43 |
+| **H** Level 21 + act end | Dust Colossus (the "Sinkhole colony": breach points, mouths, suction, ring); slow arena; Choir's first words; Act 3 outro and summary; Hellas basin backdrop | B (burrow), G | 44 |
+| **I** Close-out | `ActPlaythroughTest`/`BalanceTest` through Act 3, variety as built, later tags → Act 4, voice listen-through, the user's playthrough | all | 45 |
+
+C is the riskiest part (terrain touches every system); it can start right after A if B's Burrower
+slips. G's reverse scroll is independent of C–F and could run in parallel on its own files.
 
 ## Implementation
 
@@ -93,9 +117,28 @@ Hive Node and Ravager and D's Wraith.
       and the Act 2 intro, done, concept round 30 closed; part C, Level 09, done, concept round 31
       closed; part D, Level 10, done, concept round 32
       closed; part E, Level 11, done, concept round 33 closed; parts F, Level 12, G, Level 13, H,
-      Level 14 and the act end, and I, the close-out, built, pending the user's review in the combined
-      concept round (rounds 34–37), with the voice listen-through and the user's playthrough)
-- [ ] M6 Acts 1–2 release
+      Level 14 and the act end, done, the combined concept round 34 closed on 2026-10-12; part I, the
+      close-out, built, the voice listen-through done; open: the user's playthrough of Act 2 and the
+      `sub` layer's CI check on three OSes after the push)
+- [ ] M6 Acts 1–2 release: done except Q11 (the final title and the repository's name) and the
+      `v0.1` tag (next week: the merge and the tag wait until the commits can be signed); concept
+      round 35 closed on 2026-10-12, every part accepted as built (part A, mouse support on every
+      out-of-game screen with the glass pointer, [ui](../../ui/README.md#mouse); part B, the high
+      scores and the release's end, [scoring](../../systems/scoring/README.md#high-scores); part C,
+      the release plumbing, [release](../release/README.md); part D, the polish and close-out, the
+      per-level bench in [tech](../README.md#per-level-bench-m6-part-d)); the pointer and the
+      application icon final, the game's own assets Apache-2.0 (Q13). Still waiting for round 34's
+      leftovers and the user: the credits roll's regeneration (R.1), the placeholder audit's list
+      (R.2), the Act 2 playthrough's fixes (R.3) and the arm64 app on a real Mac (R.5)
+- [ ] M7 Act 3 (parts A–I under *M7 parts*; the design approved in concept round 36 on 2026-10-13;
+      part A, the Act 3 systems and arsenal, done: concept round 37 closed on 2026-10-13, every pick
+      built (R.1's act factor and R.4 c in step Q1, the picks in step Q2), pending the user's
+      playthrough; part B, Level 15 and the Act 3 intro, done: built on 2026-10-14 (steps B1–B5), concept round 38
+      closed the same day, its picks built (step R38C), pending the user's playthrough; part C, Level 16,
+      built on 2026-10-14 (steps C1–C5, G1, G2, ART-C, AUD-C; voices step VOX-C), concept round 39 closed on
+      2026-10-18 (step R39C), done except R.1's redo of the canyon walls' look (step CW, in progress, to round
+      40), pending the user's playthrough; part D, Level 17, built on 2026-10-18/19 (steps D1–D5, G1, G2, ART-D,
+      AUD-D, VOX-D), pending concept round 40)
 
 ## Open questions
 
@@ -412,3 +455,82 @@ Hive Node and Ravager and D's Wraith.
   items of the cross-cutting documents are ticked or retagged to Acts 3–7 (or M6). Parts F–I are
   built and wait for the combined concept round; M5 is not done until the user has reviewed them,
   listened to the voices and played the act.
+- 2026-10-12: M6 part C (release plumbing) built with the defaults of Q8 (unsigned), Q9 (the
+  Stormhawk icon), Q10 (0.1.0, tag `v0.1`) and Q15 (README, licence, credits in each bundle);
+  all four bundles dry-run on JDK 21 and the Linux bundle started under Xvfb; pending the user's
+  review in concept round 35. Q11 (title, repository name) and Q13 (the own assets' licence)
+  stay the user's and block the tag. See [release](../release/README.md).
+- 2026-10-12: M6 part A (mouse support) built with the defaults of Q6 (b, the glass pointer with
+  the system arrow as the fallback) and Q7 (the pause and mission failed screens take the mouse,
+  the pointer is hidden only while flying): hover, clicks, the right button as Back and the wheel
+  on every out-of-game screen and overlay, the hangar's and the options' own regions; pending the
+  user's review in concept round 35. See [ui](../../ui/README.md#mouse).
+- 2026-10-12: M6 part B (high scores and the release's end) built with the defaults of Q1 (a: end
+  card, name entry, credits, main menu; the hangar before Level 15 reads `ACT III - RED DUST:
+  COMING SOON`), Q2 (a: name entry at the hard game over and at the release's end), Q3 (a: a
+  SCORES main-menu item; the main menu is back in `review`), Q4 (the name's form) and Q5 (a: one
+  new Okafor line at the game over, voiced); pending the user's review in concept round 35 (Q1,
+  Q3 and Q5 flagged risky). The main menu and title show `v0.1`. See
+  [scoring](../../systems/scoring/README.md#high-scores), [retry](../../systems/retry/README.md),
+  [credits](../../ui/credits/README.md), [main menu](../../ui/main-menu/README.md) and
+  [hangar](../../ui/hangar/README.md).
+- 2026-10-12: M6 part D (polish and close-out) built with the default of Q12 (the polish list of
+  the gap check, no attract mode in v0.1) and Q14 = b (Rook's guns and barks tables and the act
+  outro's page table rendered); the hangar's intel no longer names a milestone, the placeholder
+  audit runs as a test, the per-level bench is recorded in [tech](../README.md#per-level-bench-m6-part-d).
+  M6 is built and waits for the user's review in concept round 35 (and round 34 for the credits
+  roll's regeneration and Levels 12–14's sounds); it is not done until the user has played it.
+- 2026-10-12: concept round 34 closed (user): Levels 12–14, their units and the Act 2 end accepted
+  with C1–C13; the a/b picks, the redone Spire death, the kinder Spire (P2) and the economy's model
+  (P3 = A) built in the follow-up steps K1–K4; parts F–H done. M5 stays open for the user's
+  playthrough of Act 2 (P9) and the `sub` layer's three-OS CI check (P7).
+- 2026-10-12 (user): concept round 35 closed: M6's parts A–D accepted as built (C1–C5, Q1, Q2 = a,
+  Q4–Q10, Q12, Q14 = b, Q15, the build choices and the capture); the glass pointer and the
+  application icon final; Q13: the game's own art, music and voices are Apache-2.0. M6 is done
+  except Q11 (title and repository name) and the merge and `v0.1` tag (R.4: not possible until the
+  commits can be signed), both next week; it is not released yet.
+- 2026-10-13 (user, round 36, Q.25a): the M7 row and its parts A–I added from the gap analysis
+  (`m7-gaps.md` §4.1), with track 9 moved from part G to part E (Level 18 needs it first), the dome
+  as its own allies document in part D (Q.25b), the HUD's cooldown ring and dash pip and the
+  controls' Dash binding as part A items (Q.25e), the release saves' Act 3 intro in part B (L.6) and
+  the round's picks named where a part builds them.
+- 2026-10-13: M7 part A built (steps A1–A7, the user away; defaults pending the user's review): the
+  Ion Beam's `beam` delivery, the Light Drone Bay's drones, the Deflector Pod, the Rear Lance, the
+  EMP Burst with the `machine` flag, the Orbital Lance, the Shield Overcharge with the cooldown rules
+  and the HUD ring, the Evasive thrusters' dash and pip, the third utility bay (save format 4),
+  `reference_dps` 15–21 and the balance plan to L21; flown on Act 1–2 levels with `--loadout` and
+  `--special`. Its production art, sounds, captures and defaults go to concept
+  [round 37](../../concept-rounds/round-37/README.md).
+- 2026-10-13 (user, round 37): concept round 37 closed: everything accepted or picked as in the
+  round's *Outcome* cells (C1–C2 accepted, F.1–F.4 final, P.1 a, P.2 b, P.3 a, the sound picks, Lance
+  Control b, K.1–K.4 and B.1–B.6 yes, R.1 = apply the act factor, R.4 = fix all incl. (c), V.1
+  accepted); steps Q1 (R.1 re-plan, the beam stopping on the Carrier's first phase and the Spire with
+  the `CAST_ARMOUR` rule), Q2 (the picks in the game) and Q3 (the round closed, the rejected files
+  moved, the generators routed) built it. M7 part A is **done**, pending the user's playthrough; M7
+  stays open.
+- 2026-10-14: M7 part B built (the user away; Q1 = a and the economy decision of 2026-10-14 from the user,
+  every other default pending the user's review): the `buried` layer and the Burrower's screen-fixed
+  burrow, the Dust Kite's swoop, Level 15's data with the drop launch and eased sections, the Act 3 act
+  data and the intro played once from a release save (L.6, `act-intro:N` flags), Ares Control voiced with
+  the respelling list, the Olympus backdrop and the part's production art, track 8 with a provisional
+  base stem, the Mars ambiences; budget(n) the absolute typical haul (round 37 R.1 reverted) with the
+  Act 3 plan re-planned. Its art, sounds, voices, captures and defaults go to concept
+  [round 38](../../concept-rounds/round-38/README.md). Interim builds: with Level 15 present the release's
+  end after Act 2 no longer fires, and the hangar after Level 15 cannot launch Level 16 until part C.
+- 2026-10-14 (user, round 38): concept round 38 closed: everything accepted or picked as in the round's
+  *Outcome* cells (C1–C2 accepted, F.1–F.8 and M.1 final, M.2 approved, sounds bulge b, dive b, entry roar a,
+  Mars dust a, V.1–V.5, K.1–K.2 and B.1–B.3 yes, R.1 noted, R.2 accepted, R.3 keep all); step R38C put the
+  bulge's crack layer and the dive b into the game. M7 part B is **done**, pending the user's playthrough;
+  M7 stays open.
+- 2026-10-14: M7 part C built (the user away; every default pending the user's review): the terrain (walls,
+  islands, contact and push, shots, beams and missiles vs rock, Rook in the canyon), the walls projected rising
+  toward the camera (MA.1 = b), the Tendril Anchor gates (`link`, beam vs tendril) and the `links` secondary with
+  its BARRIERS tracker, the Threadcrawler as a ground chain, Level 16's data and the Valles backdrop, the part's
+  sounds. Its art, sounds, capture and defaults go to concept [round 39](../../concept-rounds/round-39/README.md);
+  Level 16's voices (step VOX-C) are not rendered yet (radio as text). Step C5 fixed a crash at every Level 16
+  start (the cargo rovers have no break-apart frames). M7 stays open.
+- 2026-10-18 (user, round 39): concept round 39 closed: everything accepted as in the round's *Outcome* cells
+  (C1–C3 accepted, F.1–F.6 final, S.1–S.5, V.1–V.2, K.1 and B.1–B.5 yes, R.2, R.3, R.5 keep); R.1 asks for the
+  canyon walls to look like a real canyon (the Grand Canyon from above): their rendering and textures are redone
+  in step CW (in progress) for round 40; R.4: Level 16's hint changed (no beam promised), the Act 3 economy kept.
+  M7 part C is **done** except R.1's redo, pending the user's playthrough; M7 stays open.

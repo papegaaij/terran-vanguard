@@ -5,7 +5,8 @@ online; one proposal each for the drone launch and the relay destroyed (the powe
 (Freesound originals, every one already in CREDITS.md for earlier rounds, so no new rows) and
 synthesized layers mixed.
 
-Outputs (design/audio/sfx/concept/, OGG Vorbis q6, 44.1 kHz stereo; each file starts at its event):
+Outputs (design/audio/sfx/concept/, the unchosen variants in concept/rejected/; OGG Vorbis q6,
+44.1 kHz stereo; each file starts at its event):
 
   relay-hit-r35-a.ogg        a "struck plating": a heavy impact on sheet metal ("Impact on metal",
                              JoMungus, CC0) cut short, an electric spark over it ("ELECTRIC_ZAP_001",
@@ -290,6 +291,11 @@ def treat(subject, v):
     return run
 
 
+# the user's picks (round 34's review, 2026-10-12): the unchosen variants are written to concept/rejected/
+CHOSEN = {"relay-hit": "a", "integrity-alarm": "a", "grid-online": "b", "drone-launch": "a",
+          "relay-destroyed": "a"}
+
+
 def build(subject, v, preview_cache):
     layers = [layer for layer in SOUNDS[subject]["variants"][v] if "page" in layer]
     with tempfile.TemporaryDirectory() as tmp:
@@ -300,7 +306,8 @@ def build(subject, v, preview_cache):
     if synths:
         used += ("; " if used else "") + ", ".join(dict.fromkeys(synths)) + " synthesized"
     name = f"{subject}-r35-{v}"
-    out = write_ogg(OUT / f"{name}.ogg", st, max_peak_db=SOUNDS[subject]["ceiling"],
+    out_dir = OUT if CHOSEN[subject] == v else OUT / "rejected"
+    out = write_ogg(out_dir / f"{name}.ogg", st, max_peak_db=SOUNDS[subject]["ceiling"],
                     tags={"COMMENT": f"{SCRIPT} {name}: {used}"})
     report(out, used)
 

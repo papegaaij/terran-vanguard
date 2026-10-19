@@ -21,6 +21,8 @@ import vanguard.sim.WingmanSpec;
  * @param starterArmour the starter plating's maximum armour
  * @param plating the maximum armour of each plating, by name
  * @param escort Rook's rules in the escort slot (design/player/wingmen)
+ * @param cooldownSpecials M7 part A: the specials bought once with a cooldown instead of charges
+ *     (design/player/specials, Cooldown specials): the gear holds 1 for an owned one, never used up
  */
 public record CampaignRules(
         int startingCredits,
@@ -30,8 +32,10 @@ public record CampaignRules(
         double starterArmour,
         Map<String, Double> plating,
         List<String> grades,
-        EscortRules escort) {
+        EscortRules escort,
+        java.util.Set<String> cooldownSpecials) {
     public CampaignRules {
+        cooldownSpecials = java.util.Set.copyOf(cooldownSpecials);
         retries = Map.copyOf(retries);
         starterLoadout = Map.copyOf(starterLoadout);
         plating = Map.copyOf(plating);
@@ -80,7 +84,11 @@ public record CampaignRules(
                 content.scoring().grades().stream()
                         .map(ScoringData.Grade::grade)
                         .toList(),
-                escortRules(content.wingmen()));
+                escortRules(content.wingmen()),
+                content.specials().specials().stream()
+                        .filter(vanguard.content.SpecialsData.Special::cooldownSpecial)
+                        .map(vanguard.content.SpecialsData.Special::name)
+                        .collect(Collectors.toSet()));
     }
 
     private static EscortRules escortRules(WingmenData wingmen) {

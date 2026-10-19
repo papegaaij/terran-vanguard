@@ -1,3 +1,5 @@
-# Retry: the armour floor of a retried level (README.md, Settled rules). Retries per level are a
-# difficulty lever (../difficulty/data.yaml). Schema: ../../tech/architecture/README.md#data-file-schemas
+# Retry: the armour floor of a retried level (README.md, Settled rules) and Okafor's last
+# transmission on the game over screen (README.md, Game over). Retries per level are a difficulty
+# lever (../difficulty/data.yaml). Schema: ../../tech/architecture/README.md#data-file-schemas
 armour_floor: 0.5   # a retry starts with the level-start armour, but at least this share of the maximum
+game_over: {speaker: Okafor, expression: grim, line: "Lancer is down. Aegis Wing, close ranks and hold the line. Okafor out."}

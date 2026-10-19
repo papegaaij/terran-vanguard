@@ -105,7 +105,7 @@ class WindTest {
         }
         assertEquals(1, blown.latched());
         blown.step(Command.NONE);
-        assertEquals(blown.ship().x() - 22, blown.enemy(0).x(), 1e-9, "latched it sits on its spot");
+        assertEquals(blown.ship().x() - 21, blown.enemy(0).x(), 1e-9, "latched it sits on its spot");
     }
 
     @Test

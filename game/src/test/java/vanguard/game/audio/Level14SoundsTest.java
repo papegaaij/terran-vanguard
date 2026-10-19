@@ -27,7 +27,7 @@ import vanguard.sim.Sortie;
  * M5 part H's sounds (design/audio/sfx and music, Level 14): the canopy's hum as the level's ambience
  * (the key {@code earth-canopy}), dying with the Siege Spire over 2 s while the megacity's own ambience
  * rises over 7 s; "Firestorm" from section 2, the full mix from section 4, the boss warning and the boss
- * theme for the Spire, the debrief's jingle; round 36's sounds (variant a until the round closes): a root
+ * theme for the Spire, the debrief's jingle; round 36's sounds (the user's picks of 2026-10-12: the tear-free roar and the canopy withering b, the rest a): a root
  * burst's stone giving way from its telegraph and its growths growing in as they appear.
  */
 class Level14SoundsTest {
@@ -38,12 +38,15 @@ class Level14SoundsTest {
     private static final long NANOS_PER_STEP = 1_000_000_000L / SimStep.PER_SECOND;
 
     @Test
-    void everySoundHasItsFileAndRoundThirtySixsVariantA() {
+    void everySoundHasItsFileAndTheUsersPick() {
         for (Sfx sfx : List.of(
                 Sfx.ROOT_BURST, Sfx.ROOT_GROWTH, Sfx.TEAR_FREE_ROAR, Sfx.CANOPY_WITHERING, Sfx.AMBIENCE_CANOPY)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r36-a.ogg"), sfx + ": round 36's a, pending the user's pick");
+            boolean b = sfx == Sfx.TEAR_FREE_ROAR || sfx == Sfx.CANOPY_WITHERING;
+            assertTrue(sfx.path().endsWith(b ? "-r36-b.ogg" : "-r36-a.ogg"), sfx + ": the user's round 34 pick");
         }
+        assertFalse(Files.exists(ASSETS.resolve("sfx/tear-free-roar-r36-a.ogg")), "the roar's a left");
+        assertFalse(Files.exists(ASSETS.resolve("sfx/canopy-withering-r36-a.ogg")), "the withering's a left");
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_CANOPY.priority());
     }
 

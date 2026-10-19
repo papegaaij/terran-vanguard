@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Debrief screen
@@ -96,6 +96,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
       replay (M4 part G)
 - [x] BOSS TIME row with the par and the Boss rush bonus in levels with a boss (M4 part G; the
       bonus itself is paid since part E)
+- [x] Game over screen to game-over-r08-a with the last transmission and the top 10 with its name
+      entry (M6 part B; see [retry](../../systems/retry/README.md) and
+      [scoring](../../systems/scoring/README.md#high-scores))
 
 ## Decisions
 
@@ -142,3 +145,12 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
   `in-progress` for these items.
 - 2026-10-05: Round 25 closed (user): the act summary layout, the DATA CORE rows and the BOSS TIME
   row accepted as built (seen in the Level 07 capture); every item is done.
+- 2026-10-12: M6 part B: the game over screen (the chosen game-over-r08-a, listed here) is built
+  to its concept: the campaign stats, Okafor's voiced last transmission and the hard top 10 with
+  the letter-grid name entry, typing and the mouse; **pending the user's review in round 35** (Q2,
+  Q4, Q5). Details in [retry](../../systems/retry/README.md) and
+  [scoring](../../systems/scoring/README.md#high-scores).
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C2: the game over screen differs from the chosen game-over-r08-a).
+- 2026-10-12 (user, round 35): the game over screen accepted as built, with its differences from
+  game-over-r08-a (C2: `GAME OVER` in the red heading font, SHIPS LOST instead of CREDITS SPENT,
+  Okafor's voiced line, the footer, `SP` instead of `.`), Q2 = a, Q4 and Q5; `design: approved`.

@@ -34,6 +34,8 @@ final class HudKit {
     private static final int FRAME = MissionLayout.FRAME;
     /** A bar segment and the gap after it. */
     private static final int SEGMENT_PITCH = 13;
+    /** M7 part A: a segment's white core sits this far inside its cell. */
+    private static final int CORE_INSET = 3;
     /** The glow behind a readout is this opaque. */
     private static final float GLOW_ALPHA = 28 / 255f;
     /** A plate's text sits this far right of the plate's left edge. */
@@ -51,6 +53,8 @@ final class HudKit {
     private final NinePatch portrait;
     private final NinePatch fill;
     private final NinePatch glow;
+    /** M7 part A: a white pixel, for the special's cooldown ring and the dash pip's fill. */
+    final TextureRegion pixel;
 
     HudKit(Sprites sprites, Fonts fonts) {
         this.small = fonts.label;
@@ -62,6 +66,7 @@ final class HudKit {
         this.portrait = sprites.hudPortrait;
         this.fill = sprites.hudFill;
         this.glow = sprites.hudGlow;
+        this.pixel = sprites.pixel;
     }
 
     void leftPanel(SpriteBatch batch) {
@@ -142,6 +147,31 @@ final class HudKit {
         for (int i = 0; i < count; i++) {
             fill(batch, i < lit ? full : empty, x + 1 + i * SEGMENT_PITCH, y + 1, SEGMENT_PITCH - 1, height - 2);
         }
+    }
+
+    /**
+     * M7 part A: the Shield Overcharge's second layer over a gauge drawn by {@link #segments}: a core in
+     * {@code colour} inside each of the first {@code share} (0..1) of its segments.
+     */
+    void cores(SpriteBatch batch, Color colour, int x, int y, int width, int height, double share) {
+        int count = width / SEGMENT_PITCH;
+        int lit = (int) Math.ceil(count * Math.clamp(share, 0, 1));
+        for (int i = 0; i < lit; i++) {
+            fill(
+                    batch,
+                    colour,
+                    x + 1 + i * SEGMENT_PITCH + CORE_INSET,
+                    y + 1 + CORE_INSET,
+                    SEGMENT_PITCH - 1 - 2 * CORE_INSET,
+                    height - 2 - 2 * CORE_INSET);
+        }
+    }
+
+    /** A flat rectangle in {@code colour} (the cooldown ring's dots, the dash pip's fill). */
+    void flat(SpriteBatch batch, Color colour, float x, float y, float width, float height) {
+        batch.setColor(colour);
+        batch.draw(pixel, x, y, width, height);
+        batch.setColor(Color.WHITE);
     }
 
     /** A phosphor cell (a pip, a bar's fill, a flash) in {@code colour}; nothing narrower than its two ends. */

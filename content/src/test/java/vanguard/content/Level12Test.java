@@ -93,7 +93,7 @@ class Level12Test {
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_473, Math.round(budget), "the typical haul's target, 700 × 1.07¹¹");
         assertEquals(
-                111 * 5 + 43 * 12 + 42 * 3 + 27 * 12 + 4 * 25 + 5 * 30 + 2 * 30,
+                111 * 5 + 43 * 12 + 42 * 3 + 27 * 12 + 6 * 25 + 5 * 30 + 2 * 30,
                 kills,
                 "Skitter, Needler, Whirl Seed, Lamprey, Spore Bomber, Wraith, Mantis");
         assertTrue(level.groundUnits().isEmpty(), "no ground targets");
@@ -102,7 +102,7 @@ class Level12Test {
         System.out.printf(
                 "Level 12 budget (Act 1 terms): kills %d, crate %d, secondary %d: %d (budget %.0f)%n",
                 kills, crates, secondary, total, budget);
-        assertEquals(2_036, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
+        assertEquals(2_086, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
         assertEquals(0.75, content.level(LEVEL).bounties());
     }
 
@@ -122,16 +122,16 @@ class Level12Test {
                         "mantis", 2,
                         "needler", 43,
                         "skitter", 111,
-                        "spore-bomber", 4,
+                        "spore-bomber", 6,
                         "whirl-seed", 42,
                         "wraith", 5),
                 waves);
         assertEquals(
-                Map.of(WaveSpec.Entry.FRONT, 164, WaveSpec.Entry.SIDES, 56, WaveSpec.Entry.REAR, 14),
+                Map.of(WaveSpec.Entry.FRONT, 166, WaveSpec.Entry.SIDES, 56, WaveSpec.Entry.REAR, 14),
                 from,
                 "the rear only the Wraiths and the Lampreys (skitters do not stream in from the rear)");
         assertEquals(
-                List.of(25.0, 75.0, 125.0, 150.0, 175.0, 205.0),
+                List.of(25.0, 75.0, 125.0, 150.0, 175.0, 218.0),
                 level.sections().stream().map(LevelScript.Section::end).toList());
         assertTrue(level.sections().stream().noneMatch(LevelScript.Section::arena), "no boss");
         assertTrue(level.setPieces().isEmpty());

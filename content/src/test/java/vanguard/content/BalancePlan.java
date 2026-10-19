@@ -24,7 +24,9 @@ import vanguard.content.campaign.LoadoutSlot;
  * The expected purchases of a typical medium player per hangar visit (design/player/balance-plan.yaml),
  * made through the shop's own rules ({@link Hangar}): the balance tests and the act playthrough buy
  * the plan with it, and tools/balance.py prints the same plan as the balancing sheet. The slot
- * {@code escort} is Rook's gun (M5 part C: his Mortar, bought before Level 09).
+ * {@code escort} is Rook's gun (M5 part C: his Mortar, bought before Level 09); M7 part A: the slot
+ * {@code special} fits an owned special again (the Airstrike after Level 15's EMP charge, which buying
+ * fits). Act 3's items are in the shop it is given ({@link Catalogue#complete}).
  */
 public final class BalancePlan {
     private static final Map<String, LoadoutSlot> SLOTS = Map.of(
@@ -32,7 +34,8 @@ public final class BalancePlan {
             "rear", LoadoutSlot.REAR,
             "wing_l", LoadoutSlot.LEFT_WING,
             "wing_r", LoadoutSlot.RIGHT_WING,
-            "escort", LoadoutSlot.ESCORT);
+            "escort", LoadoutSlot.ESCORT,
+            "special", LoadoutSlot.SPECIAL);
     private static final Map<String, LoadoutSlot> CORE = Map.of(
             "generator", LoadoutSlot.GENERATOR,
             "shield", LoadoutSlot.SHIELD,
@@ -43,12 +46,18 @@ public final class BalancePlan {
     private final JsonNode plan;
     private final JsonNode difficulties;
     private final int repairPoints;
+    private final double gradeBonus;
+    private final int escortRepairPoints;
+    private final JsonNode expert;
 
     private BalancePlan(Catalogue catalogue, JsonNode tree) {
         this.catalogue = catalogue;
         this.plan = tree.path("plan");
         this.difficulties = tree.path("difficulties");
         this.repairPoints = tree.path("repair_points_per_level").asInt();
+        this.gradeBonus = tree.path("typical_grade_bonus").asDouble();
+        this.escortRepairPoints = tree.path("escort_repair_points_per_level").asInt();
+        this.expert = tree.path("expert");
     }
 
     /** The plan in the design tree, with the shop's items. */
@@ -64,6 +73,45 @@ public final class BalancePlan {
     /** The armour points the static sheet repairs at every visit after the first (an estimate). */
     public int repairPoints() {
         return repairPoints;
+    }
+
+    /**
+     * Round 34, P3 = A: the typical player's grade bonus the static sheet adds to every level's typical
+     * haul (a B: 0.1 of the level's credits).
+     */
+    public double gradeBonus() {
+        return gradeBonus;
+    }
+
+    /**
+     * Round 34, P3 = A: Rook's armour points the static sheet repairs at every visit after a level
+     * flown with him (an estimate; the ship's come first).
+     */
+    public int escortRepairPoints() {
+        return escortRepairPoints;
+    }
+
+    /** Round 34, P3 = A: the share of a perfect run the expert's bound collects (the test autopilot's). */
+    public double expertCollection() {
+        return expert.path("collection").asDouble();
+    }
+
+    /** Round 34, P3 = A: the expert's grade bonus (A / A+), a share of the collected credits. */
+    public double expertGradeBonus() {
+        return expert.path("grade_bonus").asDouble();
+    }
+
+    /** Round 34, P3 = A: how far an act's end credits may lie from the expert's bound, as a share of it. */
+    public double expertTolerance() {
+        return expert.path("tolerance").asDouble();
+    }
+
+    /**
+     * Round 34, P3 = A: a perfect run of level {@code key} as {@code difficulty} builds it (its
+     * formation sizes), before the difficulty's credit income (the credit-budget table's perfect run).
+     */
+    public static int perfectRun(Content content, String key, Difficulty difficulty) {
+        return TypicalHaul.of(content, key, difficulty).perfect();
     }
 
     /** The visits the plan lists, by the number of the level that follows. */
@@ -84,9 +132,9 @@ public final class BalancePlan {
     public record Visit(int spent, List<String> log, List<String> problems) {}
 
     /**
-     * Buys the plan of the visit before {@code level} in {@code hangar}: sales, weapons, refits of
-     * owned items, upgrades, core parts, utility modules, then special charges, as tools/balance.py
-     * does; then what the
+     * Buys the plan of the visit before {@code level} in {@code hangar}: sales, weapons, sales of
+     * owned weapons, refits of owned items, upgrades, core parts, utility modules, then special charges
+     * and the refit of a special, as tools/balance.py does; then what the
      * plan's {@code difficulties} add on the campaign's difficulty.
      */
     public Visit buy(Hangar hangar, int level) {
@@ -127,18 +175,21 @@ public final class BalancePlan {
             String slug = buy.get(1).asString();
             buyItem(hangar, slot, catalogue.item(slot.kind(), slug), log, problems);
         }
-        for (JsonNode fit : step.path("fit")) {
-            LoadoutSlot slot = slot(fit.get(0).asString());
-            Catalogue.Item item = catalogue.item(slot.kind(), fit.get(1).asString());
-            if (row(hangar, slot, State.FITTED, item).isPresent()) {
-                continue; // fitted already (on hard, where the plan's Mortar was not affordable)
-            }
+        for (JsonNode sell : step.path("sell_owned")) {
+            // M7 part A: an owned weapon sold from the inventory (a front gun is never unfitted).
+            LoadoutSlot slot = slot(sell.get(0).asString());
+            Catalogue.Item item = catalogue.item(slot.kind(), sell.get(1).asString());
             Optional<Offer> owned = row(hangar, slot, State.OWNED, item);
             if (owned.isEmpty()) {
-                problems.add("fit " + item.name() + " → " + slot + ": not owned");
+                problems.add("sell " + item.name() + " → " + slot + ": not owned");
                 continue;
             }
-            make(hangar, slot, owned.get(), Action.FIT, "fit " + item.name() + " → " + slot, log, problems);
+            make(hangar, slot, owned.get(), Action.SELL, "sell " + item.name() + " (owned)", log, problems);
+        }
+        for (JsonNode fit : step.path("fit")) {
+            if (!fit.get(0).asString().equals("special")) {
+                refit(hangar, fit, log, problems);
+            }
         }
         for (JsonNode upgrade : step.path("upgrade")) {
             upgradeTo(hangar, slot(upgrade.get(0).asString()), upgrade.get(1).asInt(), log, problems);
@@ -168,6 +219,27 @@ public final class BalancePlan {
                 make(hangar, LoadoutSlot.SPECIAL, row.get(), Action.BUY_CHARGE, name + " charge", log, problems);
             }
         }
+        // M7 part A: a special fitted again after the visit's charges (buying a charge fits its special).
+        for (JsonNode fit : step.path("fit")) {
+            if (fit.get(0).asString().equals("special")) {
+                refit(hangar, fit, log, problems);
+            }
+        }
+    }
+
+    /** Fits an owned item again in place of the fitted one, which is kept; nothing when it is fitted already. */
+    private void refit(Hangar hangar, JsonNode fit, List<String> log, List<String> problems) {
+        LoadoutSlot slot = slot(fit.get(0).asString());
+        Catalogue.Item item = catalogue.item(slot.kind(), fit.get(1).asString());
+        if (row(hangar, slot, State.FITTED, item).isPresent()) {
+            return; // fitted already (on hard, where the plan's Mortar was not affordable)
+        }
+        Optional<Offer> owned = row(hangar, slot, State.OWNED, item);
+        if (owned.isEmpty()) {
+            problems.add("fit " + item.name() + " → " + slot + ": not owned");
+            return;
+        }
+        make(hangar, slot, owned.get(), Action.FIT, "fit " + item.name() + " → " + slot, log, problems);
     }
 
     /** The plan's starting loadout is the campaign's starter loadout. */

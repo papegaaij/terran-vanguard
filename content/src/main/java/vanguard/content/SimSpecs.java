@@ -13,15 +13,20 @@ import vanguard.sim.AirstrikeSpec;
 import vanguard.sim.AllySpec;
 import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
+import vanguard.sim.DeflectorSpec;
+import vanguard.sim.DroneSpec;
+import vanguard.sim.EmpSpec;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Hull;
+import vanguard.sim.LanceSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.Magnet;
+import vanguard.sim.OverchargeSpec;
 import vanguard.sim.PickupRules;
 import vanguard.sim.PickupType;
 import vanguard.sim.Plating;
@@ -34,6 +39,7 @@ import vanguard.sim.ShieldModel;
 import vanguard.sim.ShipSpec;
 import vanguard.sim.SmartBombSpec;
 import vanguard.sim.SpecialSpec;
+import vanguard.sim.ThrusterSpec;
 import vanguard.sim.WaveSpec;
 import vanguard.sim.WeaponSpec;
 import vanguard.sim.WingmanSpec;
@@ -113,10 +119,7 @@ public final class SimSpecs {
         return new Loadout(
                 ship(content, named(content.systems().engines(), SystemsData.Engine::name, engine)),
                 new Armament(weapons.stream()
-                        .map(fitted -> new Armament.Mount(
-                                fitted.slot(),
-                                weapon(content, fitted.slot(), fitted.weapon(), fitted.level(), turnBonus),
-                                weapon(content, fitted.slot(), fitted.weapon(), fitted.level() + 1, turnBonus)))
+                        .map(fitted -> mount(content, fitted.slot(), fitted.weapon(), fitted.level(), turnBonus))
                         .toList()),
                 new ShieldModel(model.capacity(), regen, model.regenDelaySeconds(), model.breakSeconds()),
                 plating(named(content.armour().plating(), ArmourData.Plating::name, plating)));
@@ -153,10 +156,73 @@ public final class SimSpecs {
     /**
      * Whether the simulation flies the weapon: standard bolts, homing missiles and turrets, dropped
      * and lobbed ground-only shots, proximity mines and (M5 part E) torpedoes, which run only in a
-     * level over water.
+     * level over water. M7 part A: the Rear Lance flies (standard bolts), and the Ion Beam ({@code hits:
+     * beam}), the Light Drone Bay (a {@code drone}) and the Deflector Pod ({@code hits: deflector}), each
+     * as its {@link #mount}.
      */
     public static boolean flies(Content content, String weapon) {
-        return delivery(content.weapon(weapon)).isPresent();
+        WeaponData data = content.weapon(weapon);
+        return data.deflector() || delivery(data).isPresent();
+    }
+
+    /**
+     * M7 part A: a weapon fitted in a slot at an upgrade level as the simulation's mount, with its
+     * overdrive (the next level's numbers, the overdrive row at L5): a gun ({@link #weapon}), a Light
+     * Drone Bay (its drone's gun and the drone, {@link Armament.Mount#droneBay}) or a Deflector Pod (its
+     * field, {@link Armament.Mount#deflector}); the turn rate raised by {@code turnBonus} as in {@link
+     * #weapon(Content, Armament.Slot, String, int, double)}.
+     */
+    public static Armament.Mount mount(
+            Content content, Armament.Slot slot, String slug, int upgradeLevel, double turnBonus) {
+        WeaponData data = content.weapon(slug);
+        if (data.deflector()) {
+            return Armament.Mount.deflector(
+                    slot, field(level(data, upgradeLevel)), field(level(data, upgradeLevel + 1)));
+        }
+        WeaponSpec weapon = weapon(content, slot, slug, upgradeLevel, turnBonus);
+        WeaponSpec overdrive = weapon(content, slot, slug, upgradeLevel + 1, turnBonus);
+        if (data.drone().isPresent()) {
+            WeaponData.Drone drone = data.drone().get();
+            return Armament.Mount.droneBay(
+                    slot,
+                    weapon,
+                    overdrive,
+                    drone(drone, level(data, upgradeLevel)),
+                    drone(drone, level(data, upgradeLevel + 1)));
+        }
+        return new Armament.Mount(slot, weapon, overdrive);
+    }
+
+    /** An upgrade level's numbers, 6 being the overdrive row. */
+    private static WeaponData.Level level(WeaponData weapon, int upgradeLevel) {
+        return upgradeLevel > weapon.levels().size()
+                ? weapon.overdrive()
+                : weapon.levels().get(upgradeLevel - 1);
+    }
+
+    /** M7 part A: a Deflector Pod's field at one level. */
+    private static DeflectorSpec field(WeaponData.Level level) {
+        return new DeflectorSpec(
+                level.radius().orElseThrow(),
+                level.charges().orElseThrow(),
+                level.recharge().orElseThrow());
+    }
+
+    /** M7 part A: the Light Drone Bay's drone at one level. */
+    private static DroneSpec drone(WeaponData.Drone drone, WeaponData.Level level) {
+        WeaponData.Contact contact = drone.contact();
+        return new DroneSpec(
+                drone.orbit(),
+                drone.period(),
+                drone.converge(),
+                level.droneHits().orElseThrow(),
+                level.rebuild().orElseThrow(),
+                drone.fadeIn(),
+                contact.hits(),
+                contact.smallHits(),
+                contact.laserHits(),
+                contact.damage(),
+                hitbox(drone.hitbox()));
     }
 
     /** The utility modules the simulation flies (design/player/systems). */
@@ -166,12 +232,31 @@ public final class SimSpecs {
 
     public static final String SALVAGE_SCANNER = "Salvage scanner";
 
+    /** M7 part A: the Evasive thrusters (Act 3), the dash. */
+    public static final String EVASIVE_THRUSTERS = "Evasive thrusters";
+
     /**
      * Whether the simulation flies the utility module of this name: the Pickup magnet, the Targeting
-     * computer and the Salvage scanner; the later acts' modules follow with them.
+     * computer, the Salvage scanner and (M7 part A) the Evasive thrusters; the later acts' modules
+     * follow with them.
      */
     public static boolean fliesUtility(String name) {
-        return name.equals(PICKUP_MAGNET) || name.equals(TARGETING_COMPUTER) || name.equals(SALVAGE_SCANNER);
+        return name.equals(PICKUP_MAGNET)
+                || name.equals(TARGETING_COMPUTER)
+                || name.equals(SALVAGE_SCANNER)
+                || name.equals(EVASIVE_THRUSTERS);
+    }
+
+    /**
+     * M7 part A: the Evasive thrusters' dash from design/player/systems/data.yaml: its distance over its
+     * time, the invulnerable time from its start, the cooldown and the double-tap window.
+     */
+    public static ThrusterSpec thrusters(Content content) {
+        SystemsData.Dash dash = named(content.systems().utility(), SystemsData.Utility::name, EVASIVE_THRUSTERS)
+                .dash()
+                .orElseThrow(() -> new IllegalArgumentException(EVASIVE_THRUSTERS + " has no dash numbers"));
+        return new ThrusterSpec(
+                dash.distance(), dash.seconds(), dash.invulnerable(), dash.cooldown(), dash.doubleTap());
     }
 
     /** The Targeting computer's numbers from design/player/systems/data.yaml. */
@@ -268,17 +353,35 @@ public final class SimSpecs {
         return new WingmanSpec.Offset(slot.x(), slot.y());
     }
 
-    /** The specials the simulation flies so far (design/player/specials): the Airstrike and the Smart Bomb. */
+    /**
+     * The specials the simulation flies (design/player/specials): the Airstrike and the Smart Bomb, and
+     * (M7 part A) the EMP Burst, the Orbital Lance and the Shield Overcharge (a cooldown special).
+     */
     public static final String AIRSTRIKE = "Airstrike";
 
     public static final String SMART_BOMB = "Smart Bomb";
 
-    /** Whether the simulation flies the special of this name; the Decoy Flares follow later in M4. */
+    public static final String EMP_BURST = "EMP Burst";
+
+    public static final String ORBITAL_LANCE = "Orbital Lance";
+
+    public static final String SHIELD_OVERCHARGE = "Shield Overcharge";
+
+    /** Whether the simulation flies the special of this name; the Decoy Flares follow with the homing projectiles. */
     public static boolean fliesSpecial(String name) {
-        return name.equals(AIRSTRIKE) || name.equals(SMART_BOMB);
+        return name.equals(AIRSTRIKE)
+                || name.equals(SMART_BOMB)
+                || name.equals(EMP_BURST)
+                || name.equals(ORBITAL_LANCE)
+                || name.equals(SHIELD_OVERCHARGE);
     }
 
-    /** The special of this name with {@code charges} carried into the level; it must fly. */
+    /**
+     * The special of this name with {@code charges} carried into the level (at most its most); it must
+     * fly. M7 part A: a cooldown special (the Shield Overcharge) carries no charges, {@code charges} is
+     * ignored: it is ready at the start and again its cooldown after each use, a special charge pickup
+     * taking {@code cooldown_pickup} s off a running cooldown.
+     */
     public static SpecialSpec special(Content content, String name, int charges) {
         if (!fliesSpecial(name)) {
             throw new IllegalArgumentException("the special " + name + " does not fly yet");
@@ -288,45 +391,77 @@ public final class SimSpecs {
                 .filter(item -> item.name().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("no special '" + name + "'"));
-        int carried = Math.min(charges, special.maxCharges());
-        if (name.equals(SMART_BOMB)) {
-            SpecialsData.SmartBomb bomb = specials.smartBomb();
-            return new SpecialSpec(
-                    name,
-                    carried,
-                    special.maxCharges(),
-                    specials.inputBuffer(),
-                    new SmartBombSpec(
-                            bomb.ring(),
-                            bomb.damage().all(),
-                            bomb.damage().bossPart(),
-                            bomb.invulnerable(),
-                            bomb.repeat(),
-                            bomb.flash().seconds(),
-                            bomb.flash().opacity(),
-                            bomb.flash().fade()));
+        SpecialSpec.Effect effect = effect(specials, name);
+        if (special.cooldownSpecial()) {
+            return SpecialSpec.cooldown(
+                    name, specials.inputBuffer(), special.cooldown().orElseThrow(), specials.cooldownPickup(), effect);
         }
-        SpecialsData.Airstrike data = specials.airstrike();
-        AirstrikeSpec airstrike = new AirstrikeSpec(
-                data.delay(),
-                data.offset(),
-                data.speed(),
-                hitbox(data.bomberSize()),
-                data.bombSpacing(),
-                data.fall(),
-                data.blastRadius(),
-                data.damage().ground(),
-                data.cap().ground(),
-                data.damage().air(),
-                data.cap().air(),
-                data.cap().bossPart());
-        return new SpecialSpec(
-                name, Math.min(charges, special.maxCharges()), special.maxCharges(), specials.inputBuffer(), airstrike);
+        int most = special.maxCharges().orElseThrow();
+        return new SpecialSpec(name, Math.min(charges, most), most, specials.inputBuffer(), effect);
+    }
+
+    /** What the special of this name does, from its block in design/player/specials/data.yaml. */
+    private static SpecialSpec.Effect effect(SpecialsData specials, String name) {
+        return switch (name) {
+            case SMART_BOMB -> {
+                SpecialsData.SmartBomb bomb = specials.smartBomb();
+                yield new SmartBombSpec(
+                        bomb.ring(),
+                        bomb.damage().all(),
+                        bomb.damage().bossPart(),
+                        bomb.invulnerable(),
+                        bomb.repeat(),
+                        bomb.flash().seconds(),
+                        bomb.flash().opacity(),
+                        bomb.flash().fade());
+            }
+            case EMP_BURST -> {
+                // M7 part A: the ring, the machine's and the Vrell unit's stun, the repeat.
+                SpecialsData.Emp emp = specials.emp();
+                yield new EmpSpec(emp.ring(), emp.stun().machine(), emp.stun().vrell(), emp.repeat());
+            }
+            case ORBITAL_LANCE -> {
+                // M7 part A: the lock, the column and its follow, the DPS and the boss parts' cap.
+                SpecialsData.OrbitalLance lance = specials.orbitalLance();
+                yield new LanceSpec(
+                        lance.lock(),
+                        lance.width(),
+                        lance.seconds(),
+                        lance.fade(),
+                        lance.follow(),
+                        lance.dps(),
+                        lance.bossPart().dps(),
+                        lance.bossPart().cap(),
+                        lance.repeat());
+            }
+            case SHIELD_OVERCHARGE -> {
+                SpecialsData.Overcharge overcharge = specials.overcharge();
+                yield new OverchargeSpec(overcharge.factor(), overcharge.seconds(), overcharge.bleed());
+            }
+            default -> {
+                SpecialsData.Airstrike data = specials.airstrike();
+                yield new AirstrikeSpec(
+                        data.delay(),
+                        data.offset(),
+                        data.speed(),
+                        hitbox(data.bomberSize()),
+                        data.bombSpacing(),
+                        data.fall(),
+                        data.blastRadius(),
+                        data.damage().ground(),
+                        data.cap().ground(),
+                        data.damage().air(),
+                        data.cap().air(),
+                        data.cap().bossPart());
+            }
+        };
     }
 
     private static Optional<WeaponSpec.Delivery> delivery(WeaponData weapon) {
         return switch (weapon.hits()) {
+            // M7 part A: the Light Drone Bay's drone fires standard bolts too.
             case "standard" -> Optional.of(WeaponSpec.Delivery.BOLT);
+            case WeaponData.BEAM -> Optional.of(WeaponSpec.Delivery.BEAM);
             case "homing" ->
                 Optional.of(weapon.slew().isPresent() ? WeaponSpec.Delivery.TURRET : WeaponSpec.Delivery.HOMING);
             case WeaponData.MINES -> Optional.of(WeaponSpec.Delivery.MINE);
@@ -357,11 +492,19 @@ public final class SimSpecs {
         WeaponSpec.Delivery delivery = delivery(weapon)
                 .orElseThrow(
                         () -> new IllegalArgumentException(slug + ": its hits '" + weapon.hits() + "' do not fly yet"));
-        WeaponData.Level level = upgradeLevel > weapon.levels().size()
-                ? weapon.overdrive()
-                : weapon.levels().get(upgradeLevel - 1);
+        WeaponData.Level level = level(weapon, upgradeLevel);
         ShipData.Mounts mounts = content.ship().mounts();
         double centre = content.ship().size() / 2;
+        if (delivery == WeaponSpec.Delivery.BEAM) {
+            // M7 part A: one column from the nose (the front mount), its width and damage per second.
+            return WeaponSpec.beam(
+                    slug,
+                    weapon.vfx(),
+                    weapon.sfx(),
+                    level.width().orElseThrow(),
+                    level.damage(),
+                    muzzle(mounts.front(), centre, 0, 0));
+        }
         List<WeaponSpec.Muzzle> muzzles = new ArrayList<>();
         double ports = weapon.ports().orElse(0.0);
         for (WeaponData.Shot shot : level.pattern()) {
@@ -407,7 +550,7 @@ public final class SimSpecs {
                         level.rate(),
                         level.damage(),
                         speed,
-                        hitbox(weapon.size()),
+                        hitbox(weapon.size().orElseThrow()),
                         weapon.range()
                                 .map(range -> switch (range.kind()) {
                                     case SCREEN -> Double.POSITIVE_INFINITY;
@@ -550,12 +693,12 @@ public final class SimSpecs {
             }
             addWave(content, wave, difficulty, enemyChanges, carried, waves, inLevel);
         }
-        return new LevelScript(
+        LevelScript script = new LevelScript(
                 levelKey(levelKey, 2),
                 levelKey(levelKey, 1),
                 level.launchSeconds(),
-                // M5 part G: a timed halt's sections with their ramp.
-                PartGRules.sections(level),
+                // M5 part G: a timed halt's sections with their ramp; M7 part B: a moving section's ease.
+                MarsRules.sections(level),
                 waves,
                 groundObjects(level, difficulty, carried),
                 groundUnits(content, level, difficulty, inLevel),
@@ -594,6 +737,17 @@ public final class SimSpecs {
                 PartGRules.placedPickups(
                         PartFRules.placedPickups(placed, SimSpecs::pickup), level.released(), SimSpecs::pickup),
                 level.objectives().defend().map(defend -> PartGRules.defend(content, defend, difficulty)));
+        // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
+        // 16); M7 part D: the ground allies (Level 17's domes).
+        return SiegeRules.script(
+                content,
+                level,
+                difficulty,
+                TerrainRules.script(
+                        level,
+                        difficulty,
+                        MarsRules.script(level, script),
+                        slug -> enemy(content, slug, difficulty, Optional.empty(), inLevel)));
     }
 
     /** A dark level's light at {@code difficulty} (Level 06): easy's longer headlight and flares, the flares it fires. */
@@ -915,10 +1069,19 @@ public final class SimSpecs {
                     .or(attack::count)
                     .orElse(1);
             List<Integer> firing = new ArrayList<>();
+            // Round 34, P2: the parts with aim: down fire this (aimed) attack straight down.
+            List<Integer> down = new ArrayList<>();
             for (int p = 0; p < partList.size(); p++) {
                 if (partList.get(p).attack().filter(name::equals).isPresent()) {
                     firing.add(p);
+                    if (partList.get(p).aim().isPresent()) {
+                        down.add(p);
+                    }
                 }
+            }
+            if (!down.isEmpty() && pattern != BossSpec.Pattern.AIMED) {
+                throw new IllegalArgumentException(
+                        slug + ": only a part firing an aimed attack aims down, not one firing " + name);
             }
             double interval =
                     attack.interval().orElseThrow() / levers.enemyFireRate().of(difficulty);
@@ -961,7 +1124,8 @@ public final class SimSpecs {
                     firing,
                     // M5 part H: the pods' orbs, each pod on its own clock.
                     attack.staggered().orElse(false),
-                    Optional.empty()));
+                    Optional.empty(),
+                    down));
         }
         Map<String, Integer> spawnCounts = hook.flatMap(EnemyData.Hook::spawns).orElse(Map.of());
         List<BossSpec.Phase> phases = new ArrayList<>();
@@ -1291,7 +1455,8 @@ public final class SimSpecs {
         List<String> groups = level.objectives().groups();
         List<LevelScript.GroundUnit> units = new ArrayList<>();
         for (LevelData.GroundTarget target : level.groundTargets()) {
-            if (target.enemy().isEmpty()) {
+            // M7 part C: a linked nest's anchors are the gates' (TerrainRules.gates, LevelScript.withGates).
+            if (target.enemy().isEmpty() || TerrainRules.linked(target)) {
                 continue;
             }
             EnemySpec enemy = enemy(content, target.enemy().get(), difficulty, Optional.empty(), inLevel);
@@ -1404,9 +1569,21 @@ public final class SimSpecs {
                     .orElseGet(() -> content.difficulty().formationSize(group.count(), difficulty));
             boolean first = g == 0;
             boolean last = g == groups.size() - 1;
+            // M7 part D: a carrier naming its enemy is that enemy's first group's (Level 17's t=124 Choir Herald).
+            int ofEnemy = g;
+            for (int h = 0; h < g; h++) {
+                if (groups.get(h).enemy().equals(group.enemy())) {
+                    ofEnemy = h;
+                    break;
+                }
+            }
+            boolean enemyFirst = ofEnemy == g;
             List<WaveSpec.Carried> pickups = carried.stream()
                     .filter(p -> p.carrier().waveT() == wave.t())
-                    .filter(p -> p.carrier().unit() == LevelData.CarrierUnit.LAST ? last : first)
+                    .filter(p -> p.carrier()
+                            .enemy()
+                            .map(slug -> slug.equals(group.enemy()) && enemyFirst)
+                            .orElse(p.carrier().unit() == LevelData.CarrierUnit.LAST ? last : first))
                     .map(p -> new WaveSpec.Carried(
                             pickup(p.pickup()),
                             switch (p.carrier().unit()) {
@@ -1415,8 +1592,12 @@ public final class SimSpecs {
                                 case LAST -> WaveSpec.Carried.LAST;
                             }))
                     .toList();
-            EnemySpec unit = enemy(
+            EnemySpec mapped = enemy(
                     content, group.enemy(), difficulty, Optional.ofNullable(enemyChanges.get(group.enemy())), inLevel);
+            // M7 part C: a crawl wave's chain crawls its ground path (the Threadcrawler).
+            EnemySpec unit = wave.crawl()
+                    .map(path -> TerrainRules.crawl(content, content.enemy(group.enemy()), difficulty, mapped, path))
+                    .orElse(mapped);
             out.add(PartGRules.lanesAndPairs(
                     wave,
                     change,
@@ -1537,7 +1718,7 @@ public final class SimSpecs {
 
     /**
      * As {@link #enemy(Content, String, Difficulty, Optional)} in Level {@code level} of Act {@code
-     * act}: a returning unit of tier {@code medium} or larger gets the act HP factor there (see
+     * act}: a returning unit of tier {@code medium} or larger (or a listed {@code small} one) gets the act HP factor there (see
      * {@link #actHpFactor}) on its HP and its chain's, rounded once with the HP lever.
      */
     public static EnemySpec enemy(
@@ -1554,16 +1735,25 @@ public final class SimSpecs {
      * The act HP factor of a unit in Level {@code level} of Act {@code act} (design/enemies,
      * Balancing basis; user decision D5 = c of M5 part A): from Act 2 on, a unit of tier {@code
      * medium} or larger that returns from an earlier level (its {@code first_level}) gets the
-     * reference DPS at the level over that at its first level, so its time to kill stays; {@code
-     * tiny} and {@code small} units, Act 1's levels and a unit's own first level get 1. Its bounty is
-     * unchanged (the act factor scales the credits).
+     * reference DPS at the level over that at its first level, so its time to kill stays; a {@code
+     * small} one listed in the basis's {@code small_act_hp} (the Needler and the Stinger) gets the same
+     * capped at its {@code cap} in its {@code levels} (08–09; the user's Act 2 playtest, 2026-10-18); the
+     * other {@code tiny} and
+     * {@code small} units, Act 1's levels and a unit's own first level get 1. Its bounty is unchanged
+     * (the act factor scales the credits).
      */
     public static double actHpFactor(Content content, String slug, int act, int level) {
         return actHpFactor(content, content.enemy(slug), new InLevel(act, level));
     }
 
     private static double actHpFactor(Content content, EnemyData enemy, InLevel inLevel) {
-        if (inLevel.act() < 2 || enemy.tier().compareTo(Tier.MEDIUM) < 0 || enemy.firstLevel() >= inLevel.level()) {
+        EnemyBasisData.SmallActHp small = content.enemyBasis().smallActHp();
+        boolean smallUnit = enemy.tier() == Tier.SMALL
+                && small.units().stream()
+                        .anyMatch(unit -> content.enemies().get(unit) == enemy && small.applies(unit, inLevel.level()));
+        if (inLevel.act() < 2
+                || (enemy.tier().compareTo(Tier.MEDIUM) < 0 && !smallUnit)
+                || enemy.firstLevel() >= inLevel.level()) {
             return 1;
         }
         Map<Integer, Double> reference = content.enemyBasis().referenceDps();
@@ -1573,7 +1763,9 @@ public final class SimSpecs {
             throw new IllegalArgumentException(enemy.name() + ": no reference DPS for Level " + inLevel.level()
                     + " or its first level " + enemy.firstLevel() + " (design/enemies/data.yaml)");
         }
-        return now / first;
+        // The user's Act 2 playtest (2026-10-18, PT2-B 2c): the listed small units' factor is capped, so Needlers
+        // and Stingers take two bolts and the Skitters (tiny) stay one-shot fodder.
+        return smallUnit ? Math.min(small.cap(), now / first) : now / first;
     }
 
     /** Where a unit flies, for the act HP factor: a level's act and number; {@link #NOWHERE} outside a level. */
@@ -1654,7 +1846,9 @@ public final class SimSpecs {
         Optional<EnemyData.PartData> head = enemy.segmentChain()
                 .flatMap(chain -> enemy.partList().flatMap(parts -> parts.stream()
                         .filter(part -> part.kind().equals("vital"))
-                        .findFirst()));
+                        .findFirst()))
+                // M7 part D: a unit with a unit part (the Shellback's vent) is its body (SiegeRules.body).
+                .or(() -> SiegeRules.body(enemy));
         EnemySpec spec = new EnemySpec(
                 slug,
                 content.difficulty().enemyHp(head.map(EnemyData.PartData::hp).orElse(enemy.hp()) * actHp, difficulty),
@@ -1743,10 +1937,25 @@ public final class SimSpecs {
                 proximityRing(content, enemy, difficulty),
                 movement.terrain().flatMap(EnemyData.Terrain::drift).orElse(0.0));
         // M5 part F: a chaser's chase and its latch with the drain (the Lamprey).
-        return PartFRules.chaser(
+        // M7 part A: a machine (its stat block's machine: true) is stunned longest by the EMP Burst.
+        EnemySpec machine = PartFRules.chaser(
+                        enemy,
+                        hook,
+                        enemy.segmentChain().isPresent() ? withChain(content, enemy, spec, difficulty, actHp) : spec)
+                .withMachine(enemy.isMachine());
+        // M7 part B: a burrow (the Burrower) and a triggered swoop (the Dust Kite); M7 part C: a link (the Tendril
+        // Anchor).
+        // M7 part D: an aura (the Choir Herald), a unit part and a curl-roll (the Shellback).
+        return SiegeRules.unit(
+                content,
                 enemy,
-                hook,
-                enemy.segmentChain().isPresent() ? withChain(content, enemy, spec, difficulty, actHp) : spec);
+                difficulty,
+                actHp,
+                TerrainRules.anchor(
+                        content,
+                        enemy,
+                        difficulty,
+                        MarsRules.kite(enemy, hook, MarsRules.burrower(content, enemy, hook, difficulty, machine))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */
@@ -1842,6 +2051,8 @@ public final class SimSpecs {
     private static EnemySpec withChain(
             Content content, EnemyData enemy, EnemySpec head, Difficulty difficulty, double actHp) {
         EnemyData.SegmentChain chain = enemy.segmentChain().orElseThrow();
+        // M7 part C: a chain whose cut rear part dies (the Threadcrawler's cut) has no regrow.
+        Optional<EnemyData.Regrow> regrow = chain.regrow();
         Optional<EnemyData.Hook> hook = hook(enemy, difficulty);
         int segments = hook.flatMap(EnemyData.Hook::segments).orElse(chain.segments());
         EnemyData.PartData tail = enemy.partList().orElseThrow().stream()
@@ -1857,7 +2068,8 @@ public final class SimSpecs {
             double t = segments == 1 ? 0 : (double) i / (segments - 1);
             double size =
                     chain.size().get(0) + (chain.size().get(1) - chain.size().get(0)) * t;
-            boxes.add(new Hitbox(size * chain.hitboxShare(), size * chain.hitboxShare()));
+            // M7 part C: a ground chain's segment is wider across its path than along it (the Threadcrawler's).
+            boxes.add(new Hitbox(chain.width().orElse(size) * chain.hitboxShare(), size * chain.hitboxShare()));
             lengths.add(size);
         }
         lengths.add(tail.hitbox().height() / chain.hitboxShare());
@@ -1906,33 +2118,40 @@ public final class SimSpecs {
                         gun.mine(),
                         gun.mortar()))
                 .orElse(gun));
-        EnemySpec regrown = part(
-                content,
-                slug + "-regrown",
-                head,
-                chain.regrow().hp() * actHp,
-                head.hitbox(),
-                head.contactDamage(),
-                false,
-                chain.regrow().bounty(),
-                fan,
-                chain.regrow().speed(),
-                difficulty);
+        EnemySpec regrown = regrow.map(grow -> part(
+                        content,
+                        slug + "-regrown",
+                        head,
+                        grow.hp() * actHp,
+                        head.hitbox(),
+                        head.contactDamage(),
+                        false,
+                        grow.bounty(),
+                        fan,
+                        grow.speed(),
+                        difficulty))
+                .orElse(null);
         EnemySpec.ChainSpec spec = new EnemySpec.ChainSpec(
                 segment,
                 boxes,
                 tailSpec,
                 tail.firstBonus().orElse(0),
                 regrown,
-                chain.regrow().seconds(),
-                chain.regrow().speed(),
+                regrow.map(EnemyData.Regrow::seconds).orElse(0.0),
+                regrow.map(EnemyData.Regrow::speed).orElse(0.0),
                 offsets,
                 chain.popInterval(),
                 enemy.partList().orElseThrow().stream()
                         .filter(part -> part.kind().equals("vital"))
                         .findFirst()
                         .flatMap(EnemyData.PartData::multiplier)
-                        .orElse(1.0));
+                        .orElse(1.0),
+                // M7 part C: a head-first kill pays the whole (the Threadcrawler's head first_bonus).
+                enemy.partList().orElseThrow().stream()
+                        .filter(part -> part.kind().equals("vital"))
+                        .findFirst()
+                        .flatMap(EnemyData.PartData::firstBonus)
+                        .orElse(0));
         return new EnemySpec(
                 head.slug(),
                 head.hp(),
@@ -2004,7 +2223,7 @@ public final class SimSpecs {
                 .damage();
     }
 
-    private static Optional<EnemyData.Hook> hook(EnemyData enemy, Difficulty difficulty) {
+    static Optional<EnemyData.Hook> hook(EnemyData enemy, Difficulty difficulty) {
         return enemy.difficulty().flatMap(hooks -> switch (difficulty) {
             case EASY -> hooks.easy();
             case MEDIUM -> Optional.empty();
@@ -2035,6 +2254,13 @@ public final class SimSpecs {
                 .filter(attack -> !proximityRing(attack))
                 // M5 part F: a drain is its latch's (EnemySpec.latch), not a gun.
                 .filter(attack -> !attack.pattern().equals(PartFRules.DRAIN))
+                // M7 part B: a burrowing unit's ring is its burrow's (EnemySpec.burrow), not a gun.
+                .filter(attack -> !MarsRules.burrowRing(enemy, attack))
+                // M7 part C: a link (the tendril) and a pore wave are not guns; an attack fires only on its `only`.
+                .filter(attack -> !TerrainRules.notAGun(attack))
+                // M7 part D: an aura (the Choir Herald's) is not a gun (EnemySpec.aura, SiegeRules).
+                .filter(attack -> !SiegeRules.notAGun(attack))
+                .filter(attack -> attack.firesOn(difficulty))
                 .filter(attack ->
                         attack.away().isEmpty() || enemy.movement().walk().isEmpty())
                 .toList();
@@ -2083,25 +2309,30 @@ public final class SimSpecs {
                         lob.impact() / 2,
                         hook.flatMap(EnemyData.Hook::ring).orElse(lob.ring()),
                         bulletDamage(content, lob.ringBullet())));
-        return new EnemyGun(
-                interval(content, attack, hook, difficulty),
-                attack.firstShotDelay().orElse(0.0),
-                burst,
-                attack.speed().orElseThrow() * levers.enemyBulletSpeed().of(difficulty),
-                damage,
-                hook.flatMap(EnemyData.Hook::leadsTargetIn)
-                        .map(in -> in.contains("circle"))
-                        .orElse(false),
-                fan,
-                Math.toRadians(attack.spread().orElse(0.0)),
-                attack.turnRate().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
-                attack.arc().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
-                mine,
-                mortar,
-                // M5 part D: the stat block's burst gap (the Wraith's 0.12 s).
-                attack.burstGap().orElse(EnemyGun.BURST_GAP_SECONDS),
-                // M5 part D: its bursts straight up the screen as a fixed fan (the Wraith's).
-                attack.aim().filter("up"::equals).isPresent());
+        // M7 part D: a ring (the Choir Herald's song) is a fan round the whole circle (SiegeRules.ring).
+        return SiegeRules.ring(
+                enemy,
+                attack,
+                difficulty,
+                new EnemyGun(
+                        interval(content, attack, hook, difficulty),
+                        attack.firstShotDelay().orElse(0.0),
+                        burst,
+                        attack.speed().orElseThrow() * levers.enemyBulletSpeed().of(difficulty),
+                        damage,
+                        hook.flatMap(EnemyData.Hook::leadsTargetIn)
+                                .map(in -> in.contains("circle"))
+                                .orElse(false),
+                        fan,
+                        Math.toRadians(attack.spread().orElse(0.0)),
+                        attack.turnRate().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
+                        attack.arc().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
+                        mine,
+                        mortar,
+                        // M5 part D: the stat block's burst gap (the Wraith's 0.12 s).
+                        attack.burstGap().orElse(EnemyGun.BURST_GAP_SECONDS),
+                        // M5 part D: its bursts straight up the screen as a fixed fan (the Wraith's).
+                        attack.aim().filter("up"::equals).isPresent()));
     }
 
     /**
@@ -2219,6 +2450,9 @@ public final class SimSpecs {
                         case BOSS_PART_DESTROYED -> LevelScript.CueTrigger.BOSS_PART_DESTROYED;
                         case FIRST_LATCH -> LevelScript.CueTrigger.FIRST_LATCH;
                         case ALLY_BELOW -> LevelScript.CueTrigger.ALLY_BELOW;
+                        case FIRST_SURFACING -> LevelScript.CueTrigger.FIRST_SURFACING;
+                        // M7 part C: the canyon's first wall touch (Level 16).
+                        case FIRST_WALL_CONTACT -> LevelScript.CueTrigger.FIRST_WALL_CONTACT;
                     })
                     .orElse(LevelScript.CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own
@@ -2252,7 +2486,9 @@ public final class SimSpecs {
                     line.speaker(),
                     line.line(),
                     line.distorted().orElse(false),
-                    line.expression().orElse(Expression.NEUTRAL).slug()));
+                    line.expression().orElse(Expression.NEUTRAL).slug(),
+                    // M7 part B: a generic portrait for a speaker without one of his own (Level 15's Ares Control).
+                    line.portrait().orElse(line.speaker())));
         }
         return cues;
     }
@@ -2272,7 +2508,7 @@ public final class SimSpecs {
                 .toList());
     }
 
-    private static Hitbox hitbox(Size size) {
+    static Hitbox hitbox(Size size) {
         return new Hitbox(size.width(), size.height());
     }
 }

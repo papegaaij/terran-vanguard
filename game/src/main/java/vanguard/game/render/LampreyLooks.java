@@ -1,5 +1,7 @@
 package vanguard.game.render;
 
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
@@ -8,34 +10,63 @@ import vanguard.sim.SimStep;
 /**
  * M5 part F, a latching chaser's own poses (design/enemies/air/lamprey; tools/art/lamprey.py): its
  * latched pose at its hull spot ({@code lamprey-latched}, {@value #LATCHED_FRAMES} frames a spot,
- * indexed {@code spot * 4 + frame}), drawn over the ship with latch look a's "gulp": the ship's own
- * shield ring pulsing with each swallow (the {@code gulp_pulse} of its pivot file, 0.55, 0.3, 0.12, 0
- * of the ring's strength on the gulp's frames); and its stun, thrown off and tumbling a full turn
- * ({@code lamprey-stunned}, the frame by the stun's progress). Chasing, flying on and fleeing it is
- * drawn with its 16-angle frames, and it dies in its {@code small} wet pop ({@link EnemyLooks}).
+ * indexed {@code spot * 4 + frame}) drawn over the ship, and its stun, thrown off and tumbling a full
+ * turn ({@code lamprey-stunned}, the frame by the stun's progress). Chasing, flying on and fleeing it
+ * is drawn with its 16-angle frames, and it dies in its {@code small} wet pop ({@link EnemyLooks}).
+ *
+ * <p>The latch's look is the art's (its pivot file's {@code latch_look}): look b, "siphon" (the user's
+ * pick in round 34, 2026-10-12), when the art has its {@code lamprey-drain} frames: the tail lashing
+ * in the latched frames, and at the mouth's contact with the hull cyan shield motes spiralling into a
+ * teal glow ({@link #drain}, additive, the latched frame's own 10 fps), no shield ring. Look a,
+ * "gulp", without them: the ship's own shield ring pulsing with each swallow (the {@code gulp_pulse}
+ * of the pivot file, 0.55, 0.3, 0.12, 0 of the ring's strength on the gulp's frames).
  *
  * @param latched the latched frames, {@value #LATCHED_FRAMES} per spot
  * @param stunned the stun's tumble
- * @param gulp the shield ring's strength on each latched frame
+ * @param gulp the shield ring's strength on each latched frame (look a; all 0 for look b)
+ * @param drain the siphon's glow at the mouth, {@value #LATCHED_FRAMES} frames (look b); empty for look a
  */
-record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, float[] gulp) {
-    /** The latched pose's frames a spot (a 0.4 s gulp at 10 fps). */
+record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, float[] gulp, Array<AtlasRegion> drain) {
+    /** The latched pose's frames a spot (a 0.4 s gulp or lash at 10 fps). */
     static final int LATCHED_FRAMES = 4;
 
     static final double FPS = 10;
     /** Latch look a's gulp (tools/art/lamprey.py), used when the pivot file does not give it. */
     static final float[] GULP = {0.55f, 0.3f, 0.12f, 0};
+    /** Look b: no shield ring. */
+    static final float[] NO_GULP = {0};
+
+    /**
+     * Look b: where the siphon's glow is centred at each spot (left, right, tail), px from the ship's
+     * centre, y up: lamprey.py's {@code SPOT_CONTACT}, the mouth's contact on the Stormhawk's 48 px
+     * level frame, so 16 px from the latched sprite's centre toward the hull.
+     */
+    static final int[][] DRAIN_AT = {{-6, -13}, {5, -13}, {0, -19}};
 
     /** The looks of a unit with them ({@code <slug>-latched} and {@code -stunned}); null for another. */
     static LampreyLooks of(Sprites sprites, String slug, JsonValue pivots) {
         if (!sprites.has(slug + "-latched") || !sprites.has(slug + "-stunned")) {
             return null;
         }
-        float[] gulp = GULP;
-        if (pivots != null && pivots.has("gulp_pulse")) {
-            gulp = pivots.get("gulp_pulse").asFloatArray();
+        Array<AtlasRegion> drain = sprites.has(slug + "-drain") ? sprites.frames(slug + "-drain") : new Array<>();
+        return new LampreyLooks(
+                sprites.frames(slug + "-latched"),
+                sprites.frames(slug + "-stunned"),
+                gulp(pivots, drain.size > 0),
+                drain);
+    }
+
+    /** The shield ring's strengths: none for look b (the siphon), else the pivot file's or {@link #GULP}. */
+    static float[] gulp(JsonValue pivots, boolean siphon) {
+        if (siphon) {
+            return NO_GULP;
         }
-        return new LampreyLooks(sprites.frames(slug + "-latched"), sprites.frames(slug + "-stunned"), gulp);
+        if (pivots != null
+                && pivots.has("gulp_pulse")
+                && pivots.get("gulp_pulse").isArray()) {
+            return pivots.get("gulp_pulse").asFloatArray();
+        }
+        return GULP;
     }
 
     /** The latched frame's index at {@code spot} at step {@code tick}, each unit at its {@code phase}. */
@@ -43,7 +74,7 @@ record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, floa
         return spot * LATCHED_FRAMES + gulpFrame(tick, phase);
     }
 
-    /** The gulp's frame (0 to 3) at step {@code tick}. */
+    /** The gulp's (or lash's) frame (0 to 3) at step {@code tick}. */
     static int gulpFrame(long tick, int phase) {
         return (int) Math.floorMod((long) Math.floor(tick * FPS / SimStep.PER_SECOND) + phase, (long) LATCHED_FRAMES);
     }
@@ -56,5 +87,28 @@ record LampreyLooks(Array<AtlasRegion> latched, Array<AtlasRegion> stunned, floa
     /** The shield ring's strength on gulp frame {@code frame}. */
     float gulpStrength(int frame) {
         return gulp[Math.floorMod(frame, gulp.length)];
+    }
+
+    /** True for latch look b, the siphon (its glow at the mouth instead of the shield ring's pulse). */
+    boolean siphon() {
+        return drain.size > 0;
+    }
+
+    /**
+     * Look b: the siphon's glow of a Lamprey latched at {@code spot} on a ship whose centre is at
+     * ({@code shipX}, {@code shipY}), additive, on the latched frame's own frame; nothing for look a.
+     */
+    void drawDrain(SpriteBatch batch, int spot, long tick, int phase, float shipX, float shipY) {
+        if (!siphon()) {
+            return;
+        }
+        AtlasRegion frame = drain.get(Math.floorMod(gulpFrame(tick, phase), drain.size));
+        int[] at = DRAIN_AT[Math.clamp(spot, 0, DRAIN_AT.length - 1)];
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        batch.draw(
+                frame,
+                Math.round(shipX + at[0] - frame.getRegionWidth() / 2f),
+                Math.round(shipY + at[1] - frame.getRegionHeight() / 2f));
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 }

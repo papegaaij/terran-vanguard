@@ -98,9 +98,11 @@ class AirstrikeTest {
     }
 
     @Test
-    void theSpecialCommandIsTheLastBitSoOlderRecordingsKeepTheirs() {
+    void theSpecialCommandKeepsItsBitAndOnlyTheDashFollowsItSoOlderRecordingsKeepTheirs() {
         assertEquals(6, Command.SPECIAL.ordinal());
-        assertEquals(Command.values().length - 1, Command.SPECIAL.ordinal());
+        // M7 part A: the Dash appended after it, last.
+        assertEquals(7, Command.DASH.ordinal());
+        assertEquals(Command.values().length - 1, Command.DASH.ordinal());
         assertEquals(1 << 6, SPECIAL);
     }
 

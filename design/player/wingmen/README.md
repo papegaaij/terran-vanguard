@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-12
+updated: 2026-10-13
 ---
 
 # Wingmen and drones
@@ -111,12 +111,14 @@ from the sortie's seed and kept in the boss checkpoint, so a sortie with him sta
 player weapon's base price, upgrades follow the [weapons](../weapons/README.md#common-rules)
 formula on 60 % of the player weapon's upgrade base.
 
+<!-- data: rook-guns -->
 | Gun | Id | Based on | Scale | DPS L1 → L5 | Price | Upgrades L2 / L3 / L4 / L5 | Available |
 |---|---|---|---|---|---|---|---|
-| Autocannon | `autocannon` | [Autocannon Pod](../weapons/autocannon-pod/README.md) | × 1.5 | 12 → 37 | free (fitted when he joins) | 150 / 300 / 600 / 1 200 | L08 |
-| Scatter | `scatter` | [Scatter Vulcan](../weapons/scatter-vulcan/README.md) | × 0.6 (volley) | 11 → 39 | 720 | 360 / 720 / 1 440 / 2 880 | L08 |
-| Missiles | `missiles` | [Micro-missile Pod](../weapons/micro-missile-pod/README.md) | × 1.5 | 12 → 42 | 480 | 240 / 480 / 960 / 1 920 | L08 |
-| Mortar | `mortar` | [Hammer Mortar](../weapons/hammer-mortar/README.md) | × 0.6 (aimed: lands on his ground target) | 15 → 54 | 900 | 450 / 900 / 1 800 / 3 600 | L08 |
+| Autocannon | `autocannon` | [Autocannon Pod](../weapons/autocannon-pod/README.md) | × 1.5 | 12 → 37 | free (fitted when he joins) | 150 / 300 / 600 / 1 200 | act 2 |
+| Scatter | `scatter` | [Scatter Vulcan](../weapons/scatter-vulcan/README.md) | × 0.6 (volley) | 11 → 39 | 720 | 360 / 720 / 1 440 / 2 880 | act 2 |
+| Missiles | `missiles` | [Micro-missile Pod](../weapons/micro-missile-pod/README.md) | × 1.5 | 12 → 42 | 480 | 240 / 480 / 960 / 1 920 | act 2 |
+| Mortar | `mortar` | [Hammer Mortar](../weapons/hammer-mortar/README.md) | × 0.6 (aimed: lands on his ground target) | 15 → 54 | 900 | 450 / 900 / 1 800 / 3 600 | act 2 |
+<!-- /data -->
 
 - The **scale multiplies each projectile's damage**; the pattern, rate, speed, blast, turn rate
   and traits are the base weapon's at the same level. He fires the pattern from one muzzle at his
@@ -264,6 +266,7 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
   his phase-3 line "Roots and all. Somebody call a gardener." is an event line 5 s after the phase
   starts. No change to his AI.
 
+<!-- data: rook-barks -->
 | Priority | Trigger | Variants (speaker Rook) |
 |---|---|---|
 | 1 | Boss warning starts (an act boss's warning, a mid-boss's sting) | "Here comes the big one." · "Heads up. Something nasty's coming." · "Oh, I don't like the look of that." · "Big contact inbound. Stay loose, Lancer." |
@@ -274,6 +277,7 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
 | 6 | Rook ejects (shouted) | "Punching out! Give 'em hell!" · "I'm out, I'm out! She's all yours, Lancer!" · "Ejecting! Somebody owes me a ship." |
 | 7 | 10 kills (the player's and his) within 5 s; the count starts over | "Nice shooting!" · "Ha! Save some for me!" · "Now that's how it's done." · "Look at you go, Lancer." |
 | 8 | An overdrive pickup appears | "Power-up! Grab it!" · "Ooh, shiny. Grab that." · "Overdrive's up for grabs, Lancer!" |
+<!-- /data -->
 
 Expressions: 1, 4 and 5 `grim`; 2, 3 and 6 `fierce` and shouted; 7 and 8 `fierce` (the voice's
 joking row).
@@ -298,9 +302,10 @@ save (the autosave of a failure, a retry or a won level included) holds it.
 
 Rook's numbers, his guns and his barks live in [data.yaml](data.yaml) (`rook`, `guns`, `barks`;
 schema in [architecture](../../tech/architecture/README.md#data-file-schemas)), loaded by the
-content's `WingmenData` (M5 part A). The guns and barks tables above are still hand-written: keep
-them in step with the file until `tools/sync_tables.py` renders them. Rook's repair cost per point
-is the difficulty's `repair_cost`, so it is not in the file.
+content's `WingmenData` (M5 part A). The guns and barks tables above are rendered from it by
+`tools/sync_tables.py` (`rook-guns`, `rook-barks`; M6 part D): the DPS, prices and upgrades from
+each gun's base weapon and the price factor, the Scale and Trigger cells' wording from `notes`.
+Rook's repair cost per point is the difficulty's `repair_cost`, so it is not in the file.
 
 ### In the game (M5 part A)
 
@@ -345,13 +350,61 @@ is the difficulty's `repair_cost`, so it is not in the file.
 
 | Name | Slot | Summary | Draw | Price | Unlock | Design |
 |---|---|---|---|---|---|---|
-| Light drone | wing mount | Orbits the ship at 36 px, fires a small forward gun, blocks bullets (breaks after 8 hits, rebuilds in 6 s). Sold as the Light Drone Bay in [weapons](../weapons/README.md) | 2 → 3 | 2 000 | L15 | idea |
-| Rear-guard drone | wing mount | Trails behind, fires backwards (`rear`) | 2 → 3 | 2 400 | L20 | idea |
+| Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
+| Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the Rear-guard Drone Bay; see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
 | Heavy drone "Warden" | escort | Tough (armour 120), slow-firing cannon, draws enemy fire | 0 | 6 000 | L22 | idea |
 | Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | L29 | idea |
 
 Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Warden arrives before
 Rook's absence (L27–L29) so the escort slot never has to stay empty.
+
+#### Light drone
+
+Act 3 (L15), approved in concept round 36 (user, 2026-10-13, D.26; its look is the disc drone, G.2 = a). The shop item, its per-level
+numbers (DPS 10 → 30, hits 8 → 12, rebuild 6 → 4 s) and its price are in the
+[Light Drone Bay](../weapons/light-drone-bay/README.md); this is its behaviour.
+
+| Property | Value |
+|---|---|
+| Craft | A 14×14 drone (sprite), hit box 8×8, on the `air` layer; drawn over the ship's shadow, under the ship |
+| Orbit | Round the ship's centre at **36 px**, one turn per **2.4 s** (150°/s), clockwise; a left bay's drone starts at 9 o'clock, a right bay's at 3 o'clock, so a pair flies opposite each other. The orbit centre follows the ship at once (the drone keeps its angle) |
+| Fire | Whenever the player fires: one shot at a time at the bay's rate, aimed from the drone at the **convergence point 140 px ahead of the ship's centre**, so every shot crosses the ship's line of fire |
+| Block | An enemy bullet that touches the drone is absorbed and costs it one hit; a `laser` touch costs 2 hits and the laser goes on. Enemy aimed shots never target the drone |
+| Contact | An `air` enemy touching the drone costs it 4 hits (a `tiny` or `small` rammer 2) and takes 10 damage; a `tiny` or `small` rammer is destroyed, as against the ship |
+| Break | After the level's number of hits it breaks: a small spark burst (`explosion-small`), its shots stop |
+| Rebuild | The bay builds a new drone in the level's rebuild time; it fades in at its bay over 0.3 s and returns to its orbit. A new attempt or a retry starts with whole drones |
+| Kills | Pay like the player's: bounty, score, chain, objectives (its shots are the player's) |
+| Walls (Act 3, M2 = a) | Terrain never hurts it: where a canyon wall or rock island would cut its orbit the radius shrinks to keep it in the open (down to 20 px), and grows back afterwards; its shots stop at walls like bolts |
+| Reverse scroll (L20) | No change: the orbit and the convergence point are relative to the screen and the ship's nose |
+| Ship lost | When the ship is wrecked the drones break with it |
+| HUD | The bay's row in the weapons box shows the drone's hits left as five pips draining; while it rebuilds, the pips refill over the rebuild time in a dim colour |
+
+#### Rear-guard drone
+
+Act 3 (L20), approved in concept round 36 (user, 2026-10-13, D.26). Sold as a wing item, the
+**Rear-guard Drone Bay** (wing mount, `rear` (drone), 2 400 cr, draw 2 → 3 MW, unlock L20, upgrade
+costs 1 200 / 2 400 / 4 800 / 9 600); it has no weapons document yet (M7 part G gives it one, with
+Level 20).
+
+| Level | Rate /s | Damage | Rear DPS | Breaks after | Rebuild | Draw MW |
+|---|---|---|---|---|---|---|
+| 1 | 6 | 1.5 | 9.0 | 8 hits | 6 s | 2 |
+| 2 | 6 | 2 | 12.0 | 9 hits | 5.5 s | 2.5 |
+| 3 | 6 | 2.7 | 16.2 | 10 hits | 5 s | 2.5 |
+| 4 | 6 | 3.5 | 21.0 | 11 hits | 4.5 s | 3 |
+| 5 | 6 | 4.3 | 25.8 | 12 hits | 4 s | 3 |
+
+| Property | Value |
+|---|---|
+| Craft | The light drone's 14×14 body with a rear-facing gun; hit box 8×8, `air` layer |
+| Station | **40 px behind** the ship's centre and 12 px to its bay's side (a pair flies side by side, 24 px apart), following the ship with a 0.15 s lag, so it swings out in a turn |
+| Fire | Whenever the player fires: straight back (180°), the `pulse` family pitched up; its shots stop at walls |
+| Block, contact, break, rebuild, kills, walls, HUD | As the light drone's |
+| Reverse scroll (L20, M4 = a, M5 = a) | "Behind" stays the bottom of the screen: the drone trails below the ship, which is ahead in the direction of travel there, so it shields the ship from the obstacles and ambushes that come up from the bottom and fires into them |
+
+It gives the rear DPS of a Tail Gun L2–L3 from a wing mount, so a player can keep the rear slot
+for another gun (the Rear Lance) or carry rear fire and a rear shield at once in Level 20; it gives
+up the wing pod's forward DPS (10 at a Micro-missile Pod L2).
 
 ## Concept art
 
@@ -403,7 +456,7 @@ built were accepted in concept round 28.
 - [x] His craft in the level: banking frames, engine flames, runtime shadow, muzzle flash, hit flash, smoke when low, the eject (see *In the game*); the placeholder Ember frames, glow and drawn pod remain as fallbacks
 - [x] Debug option `--escort rook:<gun>:<level>[,side=left|right]` and `--escort none` (`DebugFit.withEscort`, never saved; `LaunchOptionsTest.aDebugEscortFliesRookWithHisGun`, `EscortTest.theEscortDebugOptionFliesHimOnAnyLevelOrKeepsHimHome`, `theEscortDebugOptionIsNeverSavedNorKept`)
 - [x] His data in [data.yaml](data.yaml) with its loader and validator (`WingmenData`, `ContentValidator.checkWingmen`; `WingmenDataTest`)
-- [ ] The guns and barks tables above rendered from [data.yaml](data.yaml) by `tools/sync_tables.py` (still hand-written, see *Data*) — **later: M6** (tooling polish; the tables match the data as of 2026-10-12)
+- [x] The guns and barks tables above rendered from [data.yaml](data.yaml) by `tools/sync_tables.py` (`rook-guns`, `rook-barks`; M6 part D: the Available cell now reads the data's `act 2` where the hand-written table said L08)
 - [x] `BalanceTest` prints his DPS (the sheet's `Rook` column, his gun's single-target DPS, not in the forward DPS; `tools/balance.py` prints the same `Rook DPS`); the balance plan buys his guns from L08 and `ActPlaythroughTest` pays his repairs at every visit from L08 after the ship's; the autopilot and `ActPlaythroughTest` fly with him (Acts 1–2 as one campaign on every difficulty, his armour kept between levels, his retries with the armour floor) — M5 part I
 - [x] Production sprites of Rook's craft (5 banking frames, Ember, 42×42), his engine flame, the eject pod and the engine mounts (`tools/art/rook.py`, approved as final in concept round 28)
 - [x] His shots in their base weapons' families: drawn with the base weapons' final shot sprites and muzzle flash at his nose (`WeaponLooks` builds his gun's look by its base weapon's slug; `WingmanLooks.drawMuzzle`)
@@ -419,7 +472,9 @@ built were accepted in concept round 28.
       impact hurts, so a slammed lane is safe again); a slam's impact hitting him; the cases in
       `SlamArenaTest` (`rookKeepsOutOfATelegraphedLane`, `aSlamHitsRookInItsLane`)
 - [ ] Warden heavy drone: formation, cannon, draw-fire rule — **later: Act 4** (the Warden unlocks at L22)
-- [ ] Drone behaviours: orbit, trail, block, rebuild — **later: Act 3** (light drone L15, rear-guard drone L20) and **later: Act 5** (hunter drone L29)
+- [ ] Drone behaviours: orbit, trail, block, rebuild — **later: Act 3** (light drone L15, rear-guard drone L20) and **later: Act 5** (hunter drone L29) — the Act 3 pair specified under *Light drone* and *Rear-guard drone* (draft); the light drone's
+  orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
+  rear-guard drone's trail waits for part G
 - [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4**
 
 - [x] Level 12 (M5 part F, step 3): the wind pushing him (positions, edges clamped); his shots
@@ -640,3 +695,21 @@ built were accepted in concept round 28.
   hard also in Levels 10 and 11 (80-point repairs at the visits after), with every level still won at
   the first attempt. The guns and barks tables' rendering is retagged **later: M6** (tooling); with
   the drone items tagged Acts 3–5 the document is `done`.
+- 2026-10-12: M6 part D (Q14 = b, pending the user's review in round 35): the guns and barks tables
+  are rendered from the data (`rook-guns`, `rook-barks`); the guns' Available cell reads the data's
+  `act 2` (he joins at L08) instead of the hand-written L08.
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C5 and Q14, the rendered tables).
+- 2026-10-12 (user, round 35): C5 (the guns' Available cell `act 2`, rendered from the data) and
+  Q14 = b (Rook's guns and barks tables and the act outro's page table rendered) accepted;
+  `design: approved`.
+- 2026-10-12 (overnight design phase): the Act 3 drones specified as draft rows with their own
+  sections: the light drone (orbit 36 px at 2.4 s a turn, fire at a convergence point 140 px ahead,
+  bullets and contacts cost hits, break and rebuild, walls shrink its orbit; its shop numbers in the
+  [Light Drone Bay](../weapons/light-drone-bay/README.md)) and the rear-guard drone (40 px behind,
+  fires backwards, 9 → 26 rear DPS, the same block and rebuild; behind stays the screen's bottom in
+  the reverse scroll). Pending the user's review in concept round 36; the approved parts of this
+  document are unchanged.
+- 2026-10-13 (user, round 36): the Act 3 drones approved (D.26): the light drone (orbit 36 px,
+  convergence 140 px, block, break and rebuild; the disc drone of G.2 = a) and the rear-guard drone
+  (its bay gets a weapons document in part G). M17 = a kept: Rook flies all seven Act 3 levels from
+  the escort slot, no new gun; his Level 20 quiet beat plays without `requires: escort` (Q.20d).

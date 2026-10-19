@@ -174,6 +174,61 @@ record Spawn(
      */
     record Field(double x, double y, double vx, double vy, boolean submerged, long seed) {}
 
+    /**
+     * M7 part C: this unit with its flight mapped onto the flyable span {@code span} (design/campaign Level
+     * 16, formations in a canyon): its path, its orbit's centre, its release point, its loop-back, its
+     * ambush's ways and its swarm's route and place; a walker's ground path, a field's area and a lane stay
+     * as authored.
+     */
+    Spawn mappedX(Formations.Span span) {
+        double l = span.left();
+        double r = span.right();
+        return new Spawn(
+                tick,
+                kind,
+                enemy,
+                path.mappedX(l, r),
+                speed,
+                holdSeconds,
+                orbit.map(o -> new Orbit(
+                        Formations.Span.map(o.centreX(), l, r),
+                        o.centreY(),
+                        o.radius(),
+                        o.angle(),
+                        o.radiansPerSecond())),
+                exit,
+                leadsTarget,
+                carried,
+                release.map(at -> new Release(Formations.Span.map(at.x(), l, r), at.y(), at.angle())),
+                escort,
+                walk,
+                loop.map(back -> new Loop(back.path().mappedX(l, r), back.gapSeconds(), back.warningSeconds())),
+                ambush.map(way -> new Ambush(
+                        way.rise().mappedX(l, r),
+                        way.gapSeconds(),
+                        way.flashSeconds(),
+                        way.holdSeconds(),
+                        way.exit().mappedX(l, r),
+                        way.exitSpeed(),
+                        way.warningSeconds())),
+                swarm.map(member -> new Swarm(
+                        new Route(
+                                member.route().path().mappedX(l, r),
+                                member.route().loops().stream()
+                                        .map(loopPath -> loopPath.mappedX(l, r))
+                                        .toList(),
+                                member.route().speed(),
+                                member.route().diveSpeed(),
+                                member.route().gapSeconds(),
+                                member.route().warningSeconds()),
+                        member.member(),
+                        Formations.Span.map(member.x(), l, r),
+                        member.y())),
+                field,
+                chaseDelay,
+                lane);
+    }
+
     Spawn(
             int tick,
             int kind,
@@ -371,6 +426,8 @@ record Spawn(
     record Exit(boolean towardShip, double dx, double dy) {
         static final Exit DOWN = new Exit(false, 0, -1);
         static final Exit TOWARD_SHIP = new Exit(true, 0, 0);
+        /** M7 part D: straight up and out (a Choir Herald's hover ends so, design/enemies/air/choir-herald). */
+        static final Exit UP = new Exit(false, 0, 1);
 
         /** Down and out to the side of the play field the unit is on. */
         static Exit awayFromCentre(double x) {

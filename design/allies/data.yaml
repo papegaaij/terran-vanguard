@@ -3,7 +3,7 @@
 # The civilian crawler (Level 04), the evacuation shuttle (Level 10, M5 part D), the naval convoy's
 # cargo ship and escort frigate (Level 11, M5 part E) and the Nansen Relay (Level 13, M5 part G); the
 # other allies get theirs with the levels that use them. The CDF supply drone is presentation only (no
-# entry: Level 13's `drops`).
+# entry: Level 13's `drops`). M7 part D: the Ares Landing dome (Level 17), its document in ares-landing-dome/.
 civilian-crawler:
   name: Civilian crawler
   layer: ground
@@ -77,3 +77,20 @@ nansen-relay:             # Level 13's defend primary (M5 part G, user decisions
   headings: {count: 1, step: 10}   # it never turns
   smoke_below: 0.5        # share of its integrity
   first_level: 13
+ares-landing-dome:        # Level 17's five greenhouse domes (M7 part D, round 36: M16 = a, Q.17a, Q.25b, MA.3 = a; the defaults of the gap check pending the user's review in round 40)
+  name: Ares Landing dome
+  layer: ground
+  size: [120, 120]        # sprite px: the footprint, a geodesic glass dome on a concrete ring with airlocks (Eden 144: the level's size override)
+  hitbox: [88, 88]        # the footprint less 16 px each side
+  hits: 3                 # it breaks on the 3rd hit at medium (the level sets easy 4, hard 2); no repair
+  damaged_by:             # only attacks the target-the-objective hook aims at it; shots aimed at the ship pass over it
+    objective_aimed: false
+    claws: 0
+    bombs: 1              # a hooked Spore Bomber over it as its footprint passes beneath: one hit, its load spent
+    lobs: true            # a hooked Shellback's mortar direct hit: one hit (the ring of 8 hurts only the ship)
+    rolls: 1              # a Shellback's roll crossing its footprint: one hit per roll
+  follows: ground         # enters at the top edge and scrolls through with the ground (the scroll never halts in Level 17)
+  headings: {count: 1, step: 10}   # it never turns
+  smoke_below: 0.5        # share of its hits (unused by its looks: the inner green light flickers at one hit left, its document)
+  sprite: ares-dome       # step ART-D's sprites: ares-dome, -crack-1..3, -flicker, -broken (Eden: ares-dome-eden)
+  first_level: 17

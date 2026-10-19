@@ -133,12 +133,12 @@ public final class PixelScreen implements Disposable {
 
         int windowWidth = Gdx.graphics.getBackBufferWidth();
         int windowHeight = Gdx.graphics.getBackBufferHeight();
-        float fit = Math.min((float) windowWidth / WIDTH, (float) windowHeight / HEIGHT);
-        float scale = video.scaling() == Scaling.INTEGER ? Math.max(1, (int) fit) : fit;
-        int width = Math.round(WIDTH * scale);
-        int height = Math.round(HEIGHT * scale);
-        int x = (windowWidth - width) / 2;
-        int y = (windowHeight - height) / 2;
+        Viewport viewport = Viewport.of(windowWidth, windowHeight, video.scaling());
+        float scale = viewport.scale();
+        int width = viewport.width();
+        int height = viewport.height();
+        int x = viewport.x();
+        int y = viewport.y();
 
         Gdx.gl.glViewport(0, 0, windowWidth, windowHeight);
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -165,6 +165,37 @@ public final class PixelScreen implements Disposable {
             batch.begin();
             batch.draw(scanlines, x, y, width, height, 0, 0, 1, HEIGHT);
             batch.end();
+        }
+    }
+
+    /**
+     * Where the internal screen lies in the window's back buffer (x from the left, y from the
+     * bottom, as GL's viewport): the largest integer scale that fits, or with sharp-bilinear the
+     * fitting scale, centred with black bars round it. Its inverse maps the mouse pointer.
+     */
+    public record Viewport(int x, int y, int width, int height, float scale) {
+        public static Viewport of(int bufferWidth, int bufferHeight, Scaling scaling) {
+            float fit = Math.min((float) bufferWidth / WIDTH, (float) bufferHeight / HEIGHT);
+            float scale = scaling == Scaling.INTEGER ? Math.max(1, (int) fit) : fit;
+            int width = Math.round(WIDTH * scale);
+            int height = Math.round(HEIGHT * scale);
+            return new Viewport((bufferWidth - width) / 2, (bufferHeight - height) / 2, width, height, scale);
+        }
+
+        /**
+         * The pixel screen's x of a window x in logical units ({@code Gdx.input.getX}), of a window
+         * {@code windowWidth} logical units and {@code bufferWidth} back-buffer pixels wide.
+         */
+        public float screenX(float windowX, int windowWidth, int bufferWidth) {
+            float bufferX = windowX * bufferWidth / Math.max(1, windowWidth);
+            return (bufferX - x) * WIDTH / width;
+        }
+
+        /** The pixel screen's y (down) of a window y in logical units (down, {@code Gdx.input.getY}). */
+        public float screenY(float windowY, int windowHeight, int bufferHeight) {
+            float bufferY = windowY * bufferHeight / Math.max(1, windowHeight);
+            float top = bufferHeight - y - height;
+            return (bufferY - top) * HEIGHT / height;
         }
     }
 

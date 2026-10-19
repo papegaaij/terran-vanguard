@@ -12,6 +12,7 @@ import vanguard.content.BackdropData;
 import vanguard.content.BackdropLayer;
 import vanguard.content.LevelData;
 import vanguard.sim.PlayField;
+import vanguard.sim.Terrain;
 
 /**
  * A level's parallax backdrop as its data file lays it out (design/art-direction, Parallax layer
@@ -31,6 +32,18 @@ public final class Backdrop {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
     /** Weather on high-air may cover the play plane at no more than 40 % opacity. */
     private static final float HIGH_AIR_OPACITY = 0.4f;
+    /**
+     * M7 part B: a huge overhead pass on high-air (art direction, the layer table: 75 % so the ship shows
+     * under it, normal blending): Level 15's Mars transport over the launch (tools/art/backdrop_l15.py
+     * proposes the key {@code overhead_pass}; kept as this piece-name rule in the game, no data key, pending
+     * the user's review in round 38).
+     */
+    static final float OVERHEAD_PASS_OPACITY = 0.75f;
+    /**
+     * M7 part B: the high-air pieces drawn as an overhead pass ({@link #OVERHEAD_PASS_OPACITY}). M7 part C:
+     * Level 16's rock arches (their alpha at most 53 %, so at most 40 % where they cross the field).
+     */
+    static final java.util.Set<String> OVERHEAD_PASSES = java.util.Set.of("transport", "arch-a", "arch-b");
     /** M5 part H: the high-air layer's strength ({@link #frontFade}), 1 by default. */
     private float frontFade = 1;
 
@@ -58,6 +71,13 @@ public final class Backdrop {
     private UnderTowers underTowers;
 
     private final TextureRegion strip = new TextureRegion();
+    /** M7 part C: the backdrop atlas and the level's folder in it (the canyon's images, {@link #canyon}). */
+    private final Sprites sprites;
+
+    private final String folder;
+    /** M7 part C: the canyon's rock drawn with the ground's pieces; null without terrain ({@link #canyon}). */
+    private WallProjection canyon;
+
     private Look from;
     private Look to;
     private float weight;
@@ -83,11 +103,12 @@ public final class Backdrop {
      */
     public Backdrop(Sprites sprites, LevelData level, String levelKey) {
         this.level = level;
+        this.sprites = sprites;
         BackdropData data = level.backdrop();
         ramp = data.ramp();
         pixel = sprites.pixel;
         haze = Color.valueOf(data.hazeColour());
-        String folder = folder(levelKey, level);
+        folder = folder(levelKey, level);
         int layerCount = BackdropLayer.values().length;
         int sectionCount = level.sections().size();
         tiles = new Tiles[layerCount][sectionCount];
@@ -102,7 +123,8 @@ public final class Backdrop {
             List<Piece> onLayer = new ArrayList<>();
             for (BackdropData.PlacedPiece placed : data.placements()) {
                 BackdropData.Piece spec = data.pieces().get(placed.piece());
-                if (spec.layer() == layer && !spec.isTower()) {
+                // M7 part C: a face patch is drawn on its wall's face (WallProjection), not flat.
+                if (spec.layer() == layer && !spec.isTower() && !WallProjection.FACE_PATCHES.contains(placed.piece())) {
                     Array<AtlasRegion> images = sprites.backdrop(folder + placed.piece(), spec.imageCount());
                     long bottom =
                             Math.round(level.pieceCentre(placed) - spec.size().height() / 2);
@@ -184,6 +206,43 @@ public final class Backdrop {
     /** M5 part C: tower {@code index} ({@link #towerNear}) is drawn bent (see {@link TowerProjection#bend}); -1 for none. */
     void bendTower(int index, double lean, double shakeX, double shakeY, double share, double crush, float dust) {
         towers.bend(index, lean, shakeX, shakeY, share, crush, dust);
+    }
+
+    /**
+     * M7 part C: the level's canyon from the simulation's {@code terrain} (null: none), drawn with the
+     * ground's pieces ({@link WallProjection}) in the {@code looks} the level data gives it: the walls'
+     * {@code canyon-wall} and {@code wall-foot}, the islands' {@code <look>-face} and {@code <look>-top}
+     * images, the face patches' images, all from the level's backdrop folder.
+     */
+    void canyon(Terrain terrain, WallProjection.Looks looks) {
+        if (terrain == null) {
+            canyon = null;
+            return;
+        }
+        List<WallProjection.Island> islands = new ArrayList<>();
+        for (WallProjection.IslandLook look : looks.islands()) {
+            List<AtlasRegion> top = new ArrayList<>();
+            sprites.backdrop(folder + look.look() + "-top").forEach(top::add);
+            islands.add(new WallProjection.Island(
+                    look.foot(),
+                    look.look(),
+                    sprites.backdrop(folder + look.look() + "-face", 1).first(),
+                    top));
+        }
+        List<WallProjection.Patch> patches = new ArrayList<>();
+        for (WallProjection.FacePatch patch : looks.patches()) {
+            AtlasRegion image = sprites.backdrop(folder + patch.look(), 1).first();
+            double half = image.getRegionHeight() / 2.0;
+            patches.add(new WallProjection.Patch(patch.side(), patch.row() - half, patch.row() + half, image));
+        }
+        canyon = new WallProjection(
+                terrain,
+                looks,
+                sprites.backdrop(folder + "canyon-wall", 1).first(),
+                sprites.backdrop(folder + "wall-foot", 1).first(),
+                pixel,
+                islands,
+                patches);
     }
 
     /** What is drawn over the ground layer's set pieces and under its towers (Level 09's collapse). */
@@ -287,14 +346,150 @@ public final class Backdrop {
      * lowest first, each its walls and then its roof (design/art-direction, Perspective towers are
      * scenery), with Level 09's collapse's shadow and base dust between them ({@link #underTowers}):
      * all under the ground objects and units drawn next, and marking the shadow stencil with the rest
-     * of the ground (see {@link Shadows}).
+     * of the ground (see {@link Shadows}). M7 part C: before the towers, a canyon's rock ({@link
+     * WallProjection}): the foot bands and the rock's shadows on the floor, the walls' steps, the {@code
+     * plateau} layer beyond the walls' rims (over the rock below the rim's height), the buttes (the tower
+     * rule: ground units, bullets and the flyers' shadows stay over them).
      */
     public void drawGroundPieces(SpriteBatch batch, double groundScroll, BackdropClock clock) {
         drawPieces(batch, BackdropLayer.GROUND, scroll(BackdropLayer.GROUND, groundScroll), clock, false);
         if (underTowers != null) {
             underTowers.draw(batch);
         }
+        if (canyon != null) {
+            canyon.prepare(Math.round(groundScroll));
+            canyon.drawFloor(batch);
+            canyon.drawWalls(batch);
+            drawPlateau(batch, groundScroll, clock);
+            canyon.drawIslands(batch);
+        }
         towers.draw(batch, groundScroll);
+    }
+
+    /**
+     * M7 part C: the {@code plateau} layer (its tiles, then its pieces) only beyond the canyon walls'
+     * rims, row by row (drawn over the walls: the rock below the rim is behind the plateau) ({@link WallProjection#leftClip}, {@link WallProjection#rightClip}); nothing where
+     * a row has no wall. Its tile sets do not drift.
+     */
+    private void drawPlateau(SpriteBatch batch, double groundScroll, BackdropClock clock) {
+        if (!level.backdrop().hasPlateau()) {
+            return;
+        }
+        int l = BackdropLayer.PLATEAU.ordinal();
+        long scroll = scroll(BackdropLayer.PLATEAU, groundScroll);
+        for (int y = 0; y < HEIGHT; y++) {
+            float left = canyon.leftClip(y);
+            float right = canyon.rightClip(y);
+            if (Float.isNaN(left) && Float.isNaN(right)) {
+                continue;
+            }
+            long row = scroll + y;
+            Tiles section = null;
+            for (int s = 0; s < tiles[l].length; s++) {
+                if (seams[l][s] > row) {
+                    break;
+                }
+                section = tiles[l][s];
+            }
+            if (section == null) {
+                continue;
+            }
+            TextureRegion image = section.image();
+            int top = image.getRegionHeight() - 1 - (int) Math.floorMod(row, (long) image.getRegionHeight());
+            clipped(batch, image, 0, top, WIDTH, 0, y, left, right);
+        }
+        for (Piece piece : pieces[l]) {
+            BackdropData.PlacedPiece placed = piece.placed();
+            int width = (int) Math.round(piece.spec().size().width());
+            int height = (int) Math.round(piece.spec().size().height());
+            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            long bottom = piece.bottom() - scroll + Math.round(placed.offsetY(along));
+            if (bottom >= HEIGHT || bottom + height <= 0) {
+                continue;
+            }
+            long x = Math.round(placed.x() + placed.offsetX(along) - width / 2.0);
+            TextureRegion image = piece.images().get(imageAt(piece, clock.real(), along));
+            for (int r = 0; r < height; r++) {
+                long y = bottom + r;
+                if (y < 0 || y >= HEIGHT) {
+                    continue;
+                }
+                float left = canyon.leftClip((int) y);
+                float right = canyon.rightClip((int) y);
+                if (Float.isNaN(left) && Float.isNaN(right)) {
+                    continue;
+                }
+                int column = placed.mirrored() ? -1 : 0;
+                clipped(batch, image, column, height - 1 - r, width, x, (int) y, left, right);
+            }
+        }
+    }
+
+    /**
+     * One row of an image ({@code imageRow} from its top, {@code width} px from column 0, or mirrored when
+     * {@code mirrored} is -1) drawn at play-field x {@code x} on screen row {@code y}, only left of {@code
+     * left} and right of {@code right} (NaN: nothing on that side).
+     */
+    private void clipped(
+            SpriteBatch batch,
+            TextureRegion image,
+            int mirrored,
+            int imageRow,
+            int width,
+            long x,
+            int y,
+            float left,
+            float right) {
+        if (!Float.isNaN(left)) {
+            part(
+                    batch,
+                    image,
+                    mirrored,
+                    imageRow,
+                    width,
+                    x,
+                    y,
+                    Math.max(0, x),
+                    Math.min(Math.min(x + width, WIDTH), (long) Math.ceil(left)));
+        }
+        if (!Float.isNaN(right)) {
+            part(
+                    batch,
+                    image,
+                    mirrored,
+                    imageRow,
+                    width,
+                    x,
+                    y,
+                    Math.max(Math.max(0, x), (long) Math.floor(right)),
+                    Math.min(x + width, WIDTH));
+        }
+    }
+
+    /** The image row's columns that land on play-field x {@code [from, to)}. */
+    private void part(
+            SpriteBatch batch,
+            TextureRegion image,
+            int mirrored,
+            int imageRow,
+            int width,
+            long x,
+            int y,
+            long from,
+            long to) {
+        if (to <= from) {
+            return;
+        }
+        int columns = (int) (to - from);
+        if (mirrored < 0) {
+            // A mirrored piece: play-field x maps to the image's column width − 1 − (x − its left).
+            int column = (int) (x + width - to);
+            strip.setRegion(image, column, imageRow, columns, 1);
+            batch.draw(strip, X0 + to, y, -columns, 1);
+        } else {
+            strip.setRegion(image, (int) (from - x), imageRow, columns, 1);
+            batch.draw(strip, X0 + from, y);
+        }
     }
 
     /**
@@ -337,8 +532,10 @@ public final class Backdrop {
         drawSectionTiles(batch, BackdropLayer.HIGH_AIR, scroll, clock);
         drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false);
         drawAtmosphere(batch, from.wisps(), to.wisps(), scroll, clock.real());
-        batch.setColor(Color.WHITE);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setColor(1, 1, 1, OVERHEAD_PASS_OPACITY * frontFade);
+        drawPieces(batch, BackdropLayer.HIGH_AIR, scroll, clock, false, true);
+        batch.setColor(Color.WHITE);
     }
 
     /**
@@ -439,9 +636,20 @@ public final class Backdrop {
 
     private void drawPieces(
             SpriteBatch batch, BackdropLayer layer, long scroll, BackdropClock clock, boolean overhead) {
+        drawPieces(batch, layer, scroll, clock, overhead, false);
+    }
+
+    /** As above, only the high-air overhead passes ({@code passes}) or all but them. */
+    private void drawPieces(
+            SpriteBatch batch,
+            BackdropLayer layer,
+            long scroll,
+            BackdropClock clock,
+            boolean overhead,
+            boolean passes) {
         for (Piece piece : pieces[layer.ordinal()]) {
             BackdropData.PlacedPiece placed = piece.placed();
-            if (placed.isOverhead() != overhead) {
+            if (placed.isOverhead() != overhead || overheadPass(layer, placed) != passes) {
                 continue;
             }
             float width = (float) piece.spec().size().width();
@@ -459,6 +667,11 @@ public final class Backdrop {
                 batch.draw(image, x, y);
             }
         }
+    }
+
+    /** M7 part B: whether a placed piece is a huge overhead pass on high-air ({@link #OVERHEAD_PASSES}). */
+    static boolean overheadPass(BackdropLayer layer, BackdropData.PlacedPiece placed) {
+        return layer == BackdropLayer.HIGH_AIR && OVERHEAD_PASSES.contains(placed.piece());
     }
 
     /** The animation frame at real {@code seconds}, the heading along the path at {@code along}, or the only image. */

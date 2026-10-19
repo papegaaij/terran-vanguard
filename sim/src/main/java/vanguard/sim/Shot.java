@@ -176,6 +176,22 @@ public final class Shot implements Hashed {
         return ticks >= airTicks;
     }
 
+    /**
+     * M7 part C: its landing point moved across to {@code x} (a bomb or shell aimed over rock lands at the
+     * wall's foot); a dropped bomb is seen there from now.
+     */
+    void landAt(double x) {
+        if (x != landX) {
+            landX = x;
+            placeInAir();
+        }
+    }
+
+    /** M7 part C: a mine moved across to {@code x} (kept off rock). */
+    void placeX(double toX) {
+        x = toX;
+    }
+
     /** A dropped bomb is seen at its landing point; a lobbed shell between the muzzle and it. */
     private void placeInAir() {
         if (weapon.delivery() == WeaponSpec.Delivery.DROPPED) {

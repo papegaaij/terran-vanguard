@@ -14,7 +14,9 @@ import vanguard.game.audio.Sfx;
 import vanguard.game.input.Action;
 import vanguard.game.input.MenuInput;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Dialog;
+import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 import vanguard.game.ui.Menu;
 
@@ -23,10 +25,15 @@ import vanguard.game.ui.Menu;
  * scene with the title theme, first with "PRESS START" (Enter / A, or Start), then with the menu in a glass panel. The
  * screens opened from the menu (difficulty, options, credits) lie over it, so the theme plays on.
  *
- * <p>Continue loads the most recent save into the hangar and is hidden while there is none; Load
+ * <p>Continue loads the most recent save into the next level's briefing, then the hangar, and is
+ * hidden while there is none; Load
  * game opens the slot list and is disabled while every slot is empty (design/systems/saves). New
  * game goes through the difficulty select into the intro briefing. Missions opens the mission select
  * of the current campaign (the most recent save) and is disabled while it has flown no mission.
+ * Scores shows the high scores (M6 part B, Q3 = a). The version ({@code v0.1}) stands in the
+ * bottom-left corner.
+ * A click anywhere on the title screen goes on as Enter does; in the menu the pointer selects an
+ * item and a click chooses it.
  */
 public final class MainMenuScreen implements GameScreen {
     private static final float MUSIC_VOLUME = 0.6f;
@@ -34,7 +41,7 @@ public final class MainMenuScreen implements GameScreen {
     private static final float BLINK_SECONDS = 1;
 
     private static final int PANEL_X = 586;
-    private static final int PANEL_Y = 232;
+    private static final int PANEL_Y = 199;
     private static final int PANEL_WIDTH = 334;
     private static final int ITEM_X = 616;
     private static final int ITEM_STEP = 33;
@@ -45,6 +52,7 @@ public final class MainMenuScreen implements GameScreen {
         NEW_GAME,
         LOAD_GAME,
         MISSIONS,
+        SCORES,
         OPTIONS,
         CREDITS,
         QUIT
@@ -68,6 +76,7 @@ public final class MainMenuScreen implements GameScreen {
         items.add(Menu.Item.of(Item.NEW_GAME, "NEW GAME"));
         items.add(new Menu.Item<>(Item.LOAD_GAME, "LOAD GAME", anySave));
         items.add(new Menu.Item<>(Item.MISSIONS, "MISSIONS", MissionSelectScreen.anyOpen(services)));
+        items.add(Menu.Item.of(Item.SCORES, "SCORES"));
         items.add(Menu.Item.of(Item.OPTIONS, "OPTIONS"));
         items.add(Menu.Item.of(Item.CREDITS, "CREDITS"));
         items.add(Menu.Item.of(Item.QUIT, "QUIT"));
@@ -104,7 +113,7 @@ public final class MainMenuScreen implements GameScreen {
         if (title) {
             if (input.back()) {
                 askToQuit();
-            } else if (input.confirm() || services.input.pressed(Action.PAUSE)) {
+            } else if (input.confirm() || input.clicked() || services.input.pressed(Action.PAUSE)) {
                 services.play(Sfx.MENU_CONFIRM);
                 title = false;
             }
@@ -116,20 +125,21 @@ public final class MainMenuScreen implements GameScreen {
             elapsed = 0;
             return Transition.STAY;
         }
-        if (menu.navigate(input)) {
+        if (menu.navigate(input, MainMenuScreen::row)) {
             services.play(Sfx.MENU_MOVE);
         }
-        if (!input.confirm()) {
+        if (!menu.confirmed(input, MainMenuScreen::row)) {
             return Transition.STAY;
         }
         services.play(Sfx.MENU_CONFIRM);
         return switch (menu.selectedId()) {
             case CONTINUE ->
                 Transition.replace(
-                        new HangarScreen(services, Campaign.load(services.campaignRules, latest.orElseThrow()), false));
+                        HangarScreen.onContinue(services, Campaign.load(services.campaignRules, latest.orElseThrow())));
             case NEW_GAME -> Transition.open(new DifficultyScreen(services));
             case LOAD_GAME -> Transition.open(SlotsScreen.load(services));
             case MISSIONS -> Transition.open(MissionSelectScreen.overMenu(services));
+            case SCORES -> Transition.open(new ScoresScreen(services));
             case OPTIONS -> Transition.open(new OptionsScreen(services));
             case CREDITS -> Transition.open(new CreditsScreen(services));
             case QUIT -> {
@@ -137,6 +147,23 @@ public final class MainMenuScreen implements GameScreen {
                 yield Transition.STAY;
             }
         };
+    }
+
+    /** The version as the menu shows it: {@code 0.1.0} as {@code v0.1}; another form as it is. */
+    static String shortVersion(String version) {
+        String[] parts = version.split("\\.");
+        if (parts.length >= 2
+                && parts[0].chars().allMatch(Character::isDigit)
+                && parts[1].chars().allMatch(Character::isDigit)) {
+            return "v" + parts[0] + "." + parts[1];
+        }
+        return version;
+    }
+
+    /** A menu item's hit region: its selection bar, the rows touching. */
+    static Box row(int index) {
+        return Box.row(
+                PANEL_X + 2, PANEL_WIDTH - 4, PANEL_Y + PADDING + index * ITEM_STEP, Fonts.HEADING_CAP, ITEM_STEP);
     }
 
     private void askToQuit() {
@@ -157,6 +184,7 @@ public final class MainMenuScreen implements GameScreen {
             glass.hints(batch, "UP/DOWN SELECT    ENTER CONFIRM    ESC BACK");
         }
         glass.right(batch, glass.fonts.label, "(C) 2185 UTC DEFENCE FORCE", Glass.DIM, PixelScreen.WIDTH - 16, 518);
+        glass.shadowed(batch, glass.fonts.label, shortVersion(services.version), Glass.DIM, 16, 518);
         quit.ifPresent(dialog -> glass.dialog(batch, dialog));
     }
 

@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: chosen
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Enemies
@@ -22,10 +22,10 @@ directories hold the rosters.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (22) | approved | not-started | chosen |
-| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (18) | approved | not-started | chosen |
+| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (22) | approved | in-progress | chosen |
+| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (18) | approved | in-progress | chosen |
 | [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (9) | approved | in-progress | chosen |
-| [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | not-started | chosen |
+| [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | in-progress | chosen |
 | [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | done | chosen |
 
 ## Design
@@ -87,7 +87,7 @@ block, followed by behaviour notes and the standard sections.
 
 | Field | Meaning |
 |---|---|
-| Faction | Vrell / Ascendancy / Hybrid / Unmarked |
+| Faction | Vrell / Ascendancy / Hybrid / Unmarked; a **machine** (M7 part A: `machine: true` in its data file, shown after the faction) is stunned 3 s by the [EMP Burst](../player/specials/README.md#emp-burst-l15), every other unit is biomechanical (Vrell) and stunned 1.5 s. No unit of Acts 1–2 is a machine; Act 3 marks the Ghost Drone, the Warden Tank and the Revenant Walker |
 | Layer | From the layer vocabulary (`ground`, `low-air`, `air`, `high-air`, `sub`, `space`) |
 | Size tier | `tiny` / `small` / `medium` / `large` / `huge` (see [size tiers](#size-tiers)) |
 | Size | Sprite size in px at the 960×540 baseline (e.g. 36×36; see [art direction](../art-direction/README.md)) |
@@ -151,7 +151,7 @@ Planned (M5 part H, decisions H2 and H5 = a, pending the user's review; the sche
 
 - **Boss `lob`.** The enemy `mortar` attack with a part as its origin (the Polyp Mortar's lob
   generalised): the impact marker shows on the ground layer for 1.0 s, then a ring of 10 bullets
-  (hard 12), every 4 s per mortar root. Used by the [Siege Spire](bosses/siege-spire/README.md).
+  (hard 12), every 8 s per mortar root (4 s until round 34's P2). Used by the [Siege Spire](bosses/siege-spire/README.md).
 - **Boss `sweep`.** The `laser-sweep` geometry of the Mantis with a part as its origin: a 120° arc
   (hard 180°), shown for 0.6 s, then a `laser` beam of 8 once per sweep, every 5 s, with `ring`s
   between. Used by the airborne Siege Spire.
@@ -257,7 +257,7 @@ that move in any direction must read from any angle:
 | `convoy` | Ground or naval units in a column along a road, river or lane. |
 | `pack` | 3–5 walkers entering together, each on its own ground path, 0.25 s apart (the Ravager). |
 | `submerged ambush` | `sub` units that surface together around the player (Act 4: no Act 2 level uses it). |
-| `field` | Units scattered over an area that enters with the sea (scroll factor 1, surfaced or submerged) and drifts on the wave's current: a Driftjelly field of 6–12 (M5 part E). |
+| `field` | Units scattered over an area that enters with the sea (scroll factor 1, surfaced or submerged) and drifts on the wave's current: a Driftjelly field of 6–12 (M5 part E). M7 part B: a Burrower field of 3–6 enters buried with the ground and burrows from there, its surfacings staggered. |
 | `swarm` | A loose cloud of 6–24 units with flocking behaviour round a leader point that flies an authored route, from the top or the bottom edge, often looping back from below (the Mote Swarm, M5 part D). Planned (M5 part F): a swarm of chasers (the Lamprey, 3–6) is a cloud at its entry edge (front, sides or rear) whose members each start their own chase after a seeded 0–0.6 s delay, without flocking. |
 | `solo set piece` | One huge unit on its own, announced by radio (at most one per level). |
 | `whirl cluster` | A burst of 5–8 tiny spinners released from one point, spiralling outward and ricocheting. |
@@ -286,7 +286,7 @@ Current coverage (✓ = passes):
 |---|---|---|---|---|---|---|---|
 | 1 First Contact | tiny, small, medium, large, huge | Coilwyrm (L06), Leviathan (L03), Gorgon Frigate (L05), Brood Carrier (L07) | Scuttler (L04) | Whirl Seed (L03) | Mantis sides (L06, L07), Coilwyrm rear loops (L06), Brood Pod Skitter bursts | 3 of 14 (Skitter, Stinger, Mantis); the 14 used in L01–L07: Skitter, Needler, Stinger, Spine Turret, Spore Bomber, Whirl Seed, Leviathan, Brood Pod, Scuttler, Polyp Mortar, Gorgon Frigate, Coilwyrm, Mantis, Brood Carrier | ✓ |
 | 2 Homefront | tiny, small, medium, huge (as built: no `large` unit) | Harbour Kraken (L11), Siege Spire (L14) | Creeper (L08), Ravager packs (L09, L14), Scuttler returns (L13) | Whirl Seed returns (L12) | Wraith and Mote Swarm rear (L10), Mantis sides (L12, L13), Skimmers from all edges (L13), maw Wraiths (L14) | 5 of 20 (Skitter, Stinger, Creeper, Wraith, Mantis); the 20 used in L08–L14: Needler, Skitter, Stinger, Spine Turret, Polyp Mortar, Creeper, Hive Node, Ravager, Mote Swarm, Wraith, Driftjelly, Reef Spitter, Harbour Kraken, Lamprey, Mantis, Spore Bomber, Whirl Seed, Scuttler, Skimmer, Siege Spire | ✓ |
-| 3 Red Dust | tiny, small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 3 of 11 (Burrower, Choir Herald, Threadcrawler) | ✓ |
+| 3 Red Dust | tiny (the new Dust Kite, plus returning Skitters and Whirl Seeds), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 3 of 12 (Burrower, Choir Herald, Threadcrawler) | ✓ |
 | 4 Deep Water | small, medium, large, huge | Eel Swarm, Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25) | Siren side caves, L27 rear | 0 of 10 | ✓ |
 | 5 The Belt | tiny, small, medium, large, huge | Rail Serpent, Shard Drone links, Iron Sovereign | Strider (L32), Crawler Tank (L34) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear (L30), Void Leech rear | 1 of 15 (Asteroid Mite) | ✓ |
 | 6 Jovian Storm | small, medium, large, huge | Halo Platform, Ascendant | Warden Tank and Strider return (L39, L41) | Halo Platform (L41), Buzzsaw Drone returns (L38) | Honour Guard rear (L40), Harrow all edges | 0 of 12 | ✓ |
@@ -359,15 +359,20 @@ damage units per second, Pulse Cannon L1 = 20, interpolated from the
 [weapon roster](../player/weapons/README.md) and the [level budget](../systems/economy/README.md#per-level-budget)):
 
 <!-- data: reference-dps -->
-| Level | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| DPS | 20 | 26 | 32 | 38 | 45 | 52 | 60 | 60 | 63 | 66 | 70 | 73 | 76 | 80 |
+| Level | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| DPS | 20 | 26 | 32 | 38 | 45 | 52 | 60 | 60 | 63 | 66 | 70 | 73 | 76 | 80 | 76 | 80 | 84 | 88 | 92 | 96 | 100 |
 <!-- /data -->
 
 Levels 08–14 were lowered on 2026-10-01 (user decision) to what a typical loadout reaches according to
 `tools/balance.py` (≈ 60–80), instead of growing the economy. The Act 2 stat blocks have been rescaled
 (2026-10-01): each Act 2 unit's HP was multiplied by new ÷ old reference DPS (70–130) at its first level
 (e.g. L10 ×0.73, L14 ×0.62) and rounded, keeping the time-to-kill targets.
+
+Levels 15–21 (Act 3, M18 = a of concept round 36) rise from 76 to 100 by 4 a level, what the typical
+plan reaches with the Ion Beam (bought at L2 at the L18 visit and raised to L3 at L19, 77 · 77 · 77 · 80 ·
+100 · 100 · 100 in the [balance plan](../player/balance-plan.yaml) on budget(n) income, the user's decision of
+2026-10-14); the act HP factor of returning units uses them like Act 2's.
 
 **Early levels are deliberately easy** (user decision 2026-10-01): in L01–L03 a typical
 loadout is about 1.5× stronger than the reference DPS above (`tools/balance.py`). This is
@@ -385,7 +390,15 @@ level from **Act 2 on** (Level 08 and later), a returning unit of tier **`medium
 (its `first_level` earlier than the level) gets
 `HP × (reference DPS at that level ÷ reference DPS at its first level)`, so its time-to-kill stays
 the same; no elite variants. **`tiny` and `small` units keep their HP**, so the dense levels'
-popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels are unchanged. The
+popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels are unchanged.
+**Exception, the Needler and the Stinger** (the user's Act 2 playtest, 2026-10-18: "the missiles take
+out most enemies with a single shot"): the `small` units listed in the basis's `small_act_hp`
+([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, so far **Levels
+08–09** only: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08 and 15 at L09;
+the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small units keep their HP.
+From Level 10 on (the user's reference, "as it should be") they keep 4 and 6: applied there, the
+autopilot's Level 10 escort fell to 2 of 4 shuttles home at medium (D2 = a asks for 3) and Level 11's
+hard runs stopped completing, so extending the list is left to the user. The
 factor applies to every part's HP of a multi-part unit and every segment of a chain; it is applied
 with the difficulty's HP lever, one rounding (half to even, at least 1). Bounties are unchanged (the
 act factor already scales them). The time-to-kill check of `BalanceTest` covers these units at
@@ -767,3 +780,15 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   Siege Spire are `huge`), so its tiers are tiny, small, medium and huge (still at least three,
   with tiny and huge). The Act 2 movement patterns, attack patterns, formations and hook modes
   ticked with their tests; the remaining items of those kinds retagged to Acts 3–7.
+- 2026-10-13 (user, round 36, Q.25d): the variety checklist's Act 3 row lists the Dust Kite (M10 = b)
+  as the act's new `tiny` unit, beside the returning tiny Skitters and Whirl Seeds; the act's new
+  units are now 12 (the Dust Kite a glider, not insectoid). The Act 3 unit and boss specs are
+  approved (round 36, D.9–D.19).
+- 2026-10-18: The user's Act 2 playtest (PT2-B 2c, with the recommendation "for Needlers and Stingers
+  only", chosen by the user): the Needler and the Stinger get the act HP factor capped at ×3
+  (`small_act_hp` in [data.yaml](data.yaml); `SimSpecs.actHpFactor`, `tools/balance.py`,
+  `ActHpFactorTest`, `BalanceTest`'s time-to-kill bands) in Levels 08–09 only, the levels whose numbers
+  change: applied from L08 on, Level 10's escort check (3 of 4 shuttles home at medium, D2 = a) failed
+  at 2 of 4 and Level 11's hard runs stopped completing, so Levels 10–17 keep the old HP until the
+  user extends `levels` (pending the user's review). The brief's "Stinger 18 at L08" assumed the full
+  ×3; the reference DPS ratio gives ×2.31 there (14 HP; 15 at L09).

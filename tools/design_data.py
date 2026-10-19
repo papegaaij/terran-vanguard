@@ -108,8 +108,9 @@ def base_angle(w, lv):
 
 
 def focus(w, lv):
-    """Share of a volley that hits the single target (seeking, lobbed and dropped weapons: all)."""
-    if w.get("seek"):
+    """Share of a volley that hits the single target (seeking, lobbed and dropped weapons: all; M7 part A:
+    a drone's shots, aimed at the convergence point, all)."""
+    if w.get("seek") or "drone" in w:
         return 1.0
     target = weapon_rules()["single_target"]
     half = target["width"] / 2 + w["size"][0] / 2
@@ -120,6 +121,11 @@ def focus(w, lv):
 
 
 def stats(w, lv):
-    """(volley DPS, single-target DPS) of one upgrade level or the overdrive pattern."""
+    """(volley DPS, single-target DPS) of one upgrade level or the overdrive pattern. M7 part A: a beam's
+    damage per second is both (it burns its first target); a deflector deals none."""
+    if w["hits"] == "beam":
+        return lv["damage"], lv["damage"]
+    if w["hits"] == "deflector":
+        return 0.0, 0.0
     volley = len(lv["pattern"]) * lv["damage"] * lv["rate"]
     return volley, volley * focus(w, lv)

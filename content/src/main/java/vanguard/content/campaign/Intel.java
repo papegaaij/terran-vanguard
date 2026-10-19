@@ -26,7 +26,9 @@ import vanguard.content.Tier;
  *     shows from sensor L2 as unknown contacts of their size tier with their silhouette, not by name
  * @param seconds the level's length
  * @param marks M5 part G: the spans the wave strip marks (Level 13's three defend phases, the halt's
- *     sections, and its whiteout, the heavy peak in them); empty for a level without a defend
+ *     sections, and its whiteout, the heavy peak in them); M5 part H: a root field as a hazard and the
+ *     boss's arrival (step K10); M7 part B: the Burrower fields' arrivals; M7 part C: the gates' and the crawlers'
+ *     arrivals; empty for a level with none of them
  */
 public record Intel(
         int number,
@@ -81,8 +83,34 @@ public record Intel(
         }
     }
 
-    /** M5 part G: a span the wave strip marks: a defend phase (a timed halt's section) or its whiteout (a heavy peak). */
-    public record Mark(double from, double to, boolean hazard) {}
+    /**
+     * M5 part G: a span the wave strip marks: a defend phase (a timed halt's section) or a hazard (Level
+     * 13's whiteout, a heavy peak; Level 14's root field); step K10: the boss's arrival, a moment
+     * ({@code from == to}).
+     */
+    public record Mark(double from, double to, Kind kind) {
+        /** What a mark stands for, which the strip draws in its own way. */
+        public enum Kind {
+            /** A defend phase (M7 part D: or a section with ground allies, Level 17's domes): a dim band under the waves. */
+            PHASE,
+            /** A hazard span: a pale band over them. */
+            HAZARD,
+            /** The boss's (or mid-boss's) arrival: a red tick over the waves. */
+            BOSS,
+            /**
+             * M7 part B (design/campaign Level 15, Threat profile): a field of burrowing units entering (the
+             * Burrowers, a moment, {@code from == to}): the wave strip marks the Burrower fields.
+             */
+            BURROW_FIELD,
+            /**
+             * M7 part C (design/campaign Level 16, Threat profile): a gate of tendril barriers entering (a linked
+             * nest, {@code link: pairs}; a moment at its first pair): the wave strip marks the barriers.
+             */
+            GATE,
+            /** M7 part C: a crawling chain entering (the Threadcrawler's wave, a moment): the strip marks the crawlers. */
+            CRAWLER
+        }
+    }
 
     /** Without M5 part G's marks. */
     public Intel(
@@ -111,7 +139,20 @@ public record Intel(
         LevelData level = content.level(levelKey);
         Map<Entry, Double> counts = new EnumMap<>(Entry.class);
         Set<String> enemies = new LinkedHashSet<>();
+        // M7 part C: a gate's anchors (a linked nest) are introduced like a wave's units, in order of appearance.
+        java.util.Map<String, Double> gates = new java.util.LinkedHashMap<>();
+        for (LevelData.GroundTarget target : level.groundTargets()) {
+            if (target.link().isPresent() && !target.at().isEmpty()) {
+                gates.merge(target.enemy().orElseThrow(), target.at().getFirst().t(), Math::min);
+            }
+        }
         for (LevelData.Wave wave : level.waves()) {
+            for (var gate : List.copyOf(gates.entrySet())) {
+                if (gate.getValue() <= wave.t()) {
+                    enemies.add(content.enemy(gate.getKey()).name());
+                    gates.remove(gate.getKey());
+                }
+            }
             for (LevelData.Group group : wave.groupList()) {
                 if (wave.from() == Entry.ALL) {
                     // M5 part G: a cross from all four edges, split evenly over them (two are the sides).
@@ -124,6 +165,7 @@ public record Intel(
                 enemies.add(content.enemy(group.enemy()).name());
             }
         }
+        gates.keySet().forEach(slug -> enemies.add(content.enemy(slug).name()));
         double total = counts.values().stream().mapToDouble(Double::doubleValue).sum();
         Map<Entry, Integer> shares = new EnumMap<>(Entry.class);
         counts.forEach((entry, count) -> shares.put(entry, (int) Math.rint(100.0 * count / total)));
@@ -140,39 +182,78 @@ public record Intel(
                         .toList(),
                 level.secrets().size(),
                 level.seconds(),
-                marks(level));
+                marks(content, level));
     }
 
     /**
      * M5 part G: a defend level's marks: each timed halt's section (the defend's phases) and a heavy peak
-     * inside one (the whiteout); M5 part H: a level with root bursts marks its root field as a hazard; none
-     * for another level.
+     * inside one (the whiteout); M5 part H: a level with root bursts marks its root field as a hazard;
+     * step K10: a level with a boss (or mid-boss) marks its arrival; M7 part B: every wave of a burrowing unit (a
+     * Burrower field) is marked at its time; M7 part D: a level with ground allies marks the sections they enter in
+     * (Level 17's two dome sections) as phases; none for another level.
      */
-    static List<Mark> marks(LevelData level) {
+    static List<Mark> marks(Content content, LevelData level) {
+        List<Mark> marks = new java.util.ArrayList<>();
         if (!level.bursts().isEmpty()) {
             // M5 part H: the root field, the sections the root bursts lie in, as a hazard (Level 14, 60–95 s).
             int first = level.sectionAt(level.bursts().getFirst().t());
             int last = level.sectionAt(level.bursts().getLast().t());
-            return List.of(new Mark(
+            marks.add(new Mark(
                     level.sectionStart(first - 1),
                     level.sections().get(last - 1).end(),
-                    true));
+                    Mark.Kind.HAZARD));
+        } else if (!level.objectives().defend().isEmpty()) {
+            phases(level, marks);
         }
-        if (level.objectives().defend().isEmpty()) {
-            return List.of();
+        // M7 part D (design/campaign Level 17, Threat profile): the sections the ground allies enter in (the two dome
+        // sections), as phases.
+        java.util.Set<Integer> allySections = new java.util.TreeSet<>();
+        for (LevelData.GroundAlly ally : level.groundAllies()) {
+            int section = level.sectionAt(ally.at().t());
+            if (section > 0) {
+                allySections.add(section);
+            }
         }
-        List<Mark> marks = new java.util.ArrayList<>();
+        for (int section : allySections) {
+            marks.add(new Mark(
+                    level.sectionStart(section - 1),
+                    level.sections().get(section - 1).end(),
+                    Mark.Kind.PHASE));
+        }
+        level.boss().ifPresent(boss -> marks.add(new Mark(boss.t(), boss.t(), Mark.Kind.BOSS)));
+        for (LevelData.Wave wave : level.waves()) {
+            if (wave.groupList().stream()
+                    .anyMatch(group ->
+                            content.enemy(group.enemy()).movement().burrow().isPresent())) {
+                marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.BURROW_FIELD));
+            }
+            // M7 part C: the crawlers the level flies at medium (Level 16's two; hard's third is not marked).
+            if (wave.crawl().isPresent() && wave.fliesOn(vanguard.content.Difficulty.MEDIUM)) {
+                marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.CRAWLER));
+            }
+        }
+        // M7 part C: each gate (a linked nest) at its first pair.
+        for (LevelData.GroundTarget target : level.groundTargets()) {
+            if (target.link().isPresent() && !target.at().isEmpty()) {
+                double t = target.at().getFirst().t();
+                marks.add(new Mark(t, t, Mark.Kind.GATE));
+            }
+        }
+        return marks;
+    }
+
+    /** M5 part G: each timed halt's section and a heavy peak inside one. */
+    private static void phases(LevelData level, List<Mark> marks) {
         for (int i = 0; i < level.sections().size(); i++) {
             LevelData.Section section = level.sections().get(i);
             if (!section.timedHalt()) {
                 continue;
             }
-            marks.add(new Mark(level.sectionStart(i), section.end(), false));
+            marks.add(new Mark(level.sectionStart(i), section.end(), Mark.Kind.PHASE));
             section.peak()
                     .filter(peak -> peak.atmosphere() == LevelData.Atmosphere.HEAVY)
-                    .ifPresent(peak -> marks.add(new Mark(peak.from(), peak.to(), true)));
+                    .ifPresent(peak -> marks.add(new Mark(peak.from(), peak.to(), Mark.Kind.HAZARD)));
         }
-        return marks;
     }
 
     /** Whether the sensor level shows a field. */

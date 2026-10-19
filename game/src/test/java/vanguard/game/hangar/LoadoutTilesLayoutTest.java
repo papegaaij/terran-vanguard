@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import vanguard.content.ContentLoader;
 import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Catalogue.Item;
 import vanguard.content.campaign.ItemKind;
+import vanguard.content.campaign.LoadoutSlot;
+import vanguard.game.ui.Box;
 
 /**
  * Every part a module tile can show fits the tile: its name in the 8 px label font is no wider
@@ -76,5 +79,40 @@ class LoadoutTilesLayoutTest {
     void theCalloutsKeepTheWeaponNames() {
         assertEquals("MICRO-MSL", Names.callout("Micro-missile Pod"));
         assertEquals("MK II", Names.callout("Mk II \"Arc\""));
+        assertEquals("DRONE BAY", Names.callout("Light Drone Bay"));
+    }
+
+    /** M7 part A: the Act 3 specials' tile names. */
+    @Test
+    void theActThreeSpecialsTiles() {
+        assertEquals("EMP", Names.tile("EMP Burst"));
+        assertEquals("LANCE", Names.tile("Orbital Lance"));
+        assertEquals("OVRCHG", Names.tile("Shield Overcharge"));
+    }
+
+    /**
+     * M7 part A: the third utility bay's tile shows only once the bay is bought, inside the schematic
+     * (its lower right corner), clear of every other callout and tile.
+     */
+    @Test
+    void theThirdBaysTileShowsOnlyOnceBoughtClearOfTheOthers() {
+        assertFalse(LoadoutPanel.slots(true, false).containsKey(LoadoutSlot.UTILITY_3));
+        Map<LoadoutSlot, Box> boxes = LoadoutPanel.slots(true, true);
+        Box third = boxes.get(LoadoutSlot.UTILITY_3);
+        Box schematic = LoadoutPanel.schematic();
+        assertEquals(LoadoutPanel.TILE_WIDTH, third.width());
+        assertTrue(third.x() >= schematic.x() && third.x() + third.width() <= schematic.x() + schematic.width());
+        assertTrue(third.y() >= schematic.y() && third.y() + third.height() <= schematic.y() + schematic.height());
+        for (Map.Entry<LoadoutSlot, Box> other : boxes.entrySet()) {
+            if (other.getKey() == LoadoutSlot.UTILITY_3) {
+                continue;
+            }
+            Box box = other.getValue();
+            boolean apart = third.x() >= box.x() + box.width()
+                    || box.x() >= third.x() + third.width()
+                    || third.y() >= box.y() + box.height()
+                    || box.y() >= third.y() + third.height();
+            assertTrue(apart, () -> "overlaps " + other.getKey());
+        }
     }
 }

@@ -25,6 +25,16 @@ Outputs (assets/ui/, a texture of its own like the title scene, not packed):
                                   heat shields glowing) coming down through it from the top right on
                                   their smoke trails, kept off the lettering
   design/campaign/act-2-homefront/concept/act-2-still-final-r30-a.png   its review sheet, as Act 1's
+  act-3-red-dust-still.png        960x540 (M7 part B batch, concept round 38): Mars from the entry corridor,
+                                  Level 15's deep layer in perspective from high up: the Tharsis plain
+                                  (`mars-high`, broad light and dark regions over its tiling) running to the
+                                  curved horizon, Olympus Mons (`olympus`, 2.2x) far below in the lower middle
+                                  under the lettering, the cloud deck's banks (`deck-banks`) on a nearer plane in
+                                  the middle distance with their shadows on the plain, the thin cirrus (`cirrus`,
+                                  additive at 40 %) nearest; the haze thickening to the butterscotch sky, the limb
+                                  line, the sky dark above; a dust-storm front rolling along the northern horizon
+                                  on the right (drawn here, no piece)
+  design/campaign/act-3-red-dust/concept/act-3-still-final-r38-a.png   its review sheet, as Act 1's
 
 The look is Level 01's final backdrop (tools/art/backdrop_l01.py, approved in round 12): Earth and
 the terminator are its placeholder generator's functions (tools/concept/backdrop_l01.py, frozen,
@@ -45,8 +55,13 @@ trails and the landers are drawn here. The composite under the light is posteriz
 96-colour palette with ordered dither, the additive light (fires, lamps, the landers' shields and
 trails) to 32 of its own.
 
-Run: python3 tools/art/act_stills.py [act-1] [act-2] [--review]   (~25 s for both; after
-backdrop_l01.py, stormhawk.py and backdrop_l08.py)
+Act 3's still is built from Level 15's production backdrop (tools/art/backdrop_l15.py's images in
+assets/backdrop/level-15/): each layer is a plane under the camera sampled per pixel with mip levels
+(the ground, the deck at 0.55 of its distance, the cirrus at 0.2), hazed by distance; one 96-colour
+dithered palette.
+
+Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [--review]   (~30 s for all; after
+backdrop_l01.py, stormhawk.py, backdrop_l08.py and backdrop_l15.py)
 """
 import importlib.util
 import sys
@@ -623,8 +638,169 @@ def review2():
     print(f"review: {path.relative_to(ROOT)}")
 
 
+# =========================================================================== Act 3: Olympus from the entry corridor
+
+A3_SOURCE = artkit.source_note(SCRIPT, "M7 part B batch")
+A3_ROUND = "r38"
+A3_CONCEPT = DESIGN / "campaign" / "act-3-red-dust" / "concept"
+A3_NAME = "act-3-red-dust"
+L15_DIR = ROOT / "assets" / "backdrop" / "level-15"
+HORIZON, CURVE = 104.0, 6e-5            # the horizon's middle and the planet's curve down to the sides
+FOCAL = 480.0
+GROUND_A = 366_000.0                    # the ground plane: its distance ahead = GROUND_A / rows below the horizon
+DECK_SHARE, CIRRUS_SHARE = 0.55, 0.2    # the cloud deck's and the cirrus' planes, nearer (their A a share of it)
+DECK_TEX = 0.4                          # the deck's texels per plane unit: its banks drawn 2.5x the level's size
+OLY_UV, OLY_SCALE = (-60.0, 1300.0), 2.2   # the volcano (the `olympus` piece) on the ground plane, its scale
+HAZE_FAR = 9000.0                       # the haze's distance scale (tile px)
+SKY = np.array([0xd6, 0xa6, 0x70], float)   # backdrop_l15.HAZE_COLOUR: the butterscotch sky
+SKY_TOP = np.array([20, 12, 22.0])      # the sky from high up
+STORM = (500, 960)                      # the dust-storm front's span on the horizon (x)
+
+
+def l15(name):
+    """A Level 15 backdrop image (tools/art/backdrop_l15.py) as a premultiplied float RGBA array."""
+    a = np.array(Image.open(L15_DIR / f"{name}.png").convert("RGBA")).astype(np.float64)
+    a[..., :3] *= a[..., 3:4] / 255
+    return a
+
+
+def mip_chain(a, levels=7):
+    out = [a]
+    for _ in range(levels):
+        q = out[-1]
+        q = q[:q.shape[0] // 2 * 2, :q.shape[1] // 2 * 2]
+        out.append((q[0::2, 0::2] + q[1::2, 0::2] + q[0::2, 1::2] + q[1::2, 1::2]) / 4)
+    return out
+
+
+def bilinear(a, x, y, periodic):
+    """``a`` at pixel coordinates (x, y), wrapping or transparent outside."""
+    h, w = a.shape[:2]
+    x, y = x - 0.5, y - 0.5
+    x0, y0 = np.floor(x).astype(int), np.floor(y).astype(int)
+    fx, fy = (x - x0)[..., None], (y - y0)[..., None]
+
+    def at(xi, yi):
+        if periodic:
+            return a[yi % h, xi % w]
+        inside = ((xi >= 0) & (xi < w) & (yi >= 0) & (yi < h))[..., None]
+        return a[np.clip(yi, 0, h - 1), np.clip(xi, 0, w - 1)] * inside
+    top = at(x0, y0) * (1 - fx) + at(x0 + 1, y0) * fx
+    bot = at(x0, y0 + 1) * (1 - fx) + at(x0 + 1, y0 + 1) * fx
+    return top * (1 - fy) + bot * fy
+
+
+def plane_sample(chain, x, y, footprint, periodic):
+    """A texture on a plane: (x, y) its texel coordinates, ``footprint`` texels per screen pixel,
+    filtered by blending the two nearest mip levels."""
+    lod = np.clip(np.log2(np.maximum(footprint, 1.0)), 0, len(chain) - 1.001)
+    out = np.zeros(x.shape + (4,))
+    for level in range(len(chain)):
+        wgt = np.clip(1 - np.abs(lod - level), 0, 1)
+        if wgt.max() == 0:
+            continue
+        s = 2.0 ** level
+        out += bilinear(chain[level], x / s, y / s, periodic) * wgt[..., None]
+    return out
+
+
+def horizon_y():
+    return HORIZON + CURVE * (_xx - W / 2) ** 2
+
+
+def olympus_still():
+    """Act 3's still: Mars from the entry corridor, the deep layer of Level 15 seen in perspective from
+    high up: the Tharsis plain (`mars-high`) running to the curved horizon, Olympus Mons (`olympus`)
+    far below in the lower middle, the cloud deck's banks (`deck-banks`) on a nearer plane, the thin
+    cirrus (`cirrus`) nearer still, additive at 40 % as the game draws it; the haze thickening with
+    distance to the butterscotch sky; a dust-storm front rolling along the northern horizon."""
+    hor = horizon_y()
+    dy = np.maximum(_yy - hor, 0.5)
+    ground = _yy > hor
+    z = GROUND_A / dy                                            # tile px ahead
+    u = (_xx - W / 2) * z / FOCAL
+    foot = z / FOCAL
+    plain = plane_sample(mip_chain(l15("mars-high")), u + 140, -z, foot, True)[..., :3]
+    oly = l15("olympus")
+    ou = (u - OLY_UV[0]) / OLY_SCALE + oly.shape[1] / 2
+    ov = -(z - OLY_UV[1]) / OLY_SCALE + oly.shape[0] / 2
+    vol = plane_sample(mip_chain(oly), ou, ov, foot / OLY_SCALE, False)
+    v = z + 700
+    albedo = (1 + 0.16 * np.sin(u / 610 + 1.3) * np.sin(v / 830) + 0.12 * np.sin(u / 1700 - v / 2300)
+              + 0.08 * np.sin(u / 290 + v / 410))                  # broad light and dark regions over the tiling
+    plain = plain * albedo[..., None]
+    rgb = vol[..., :3] + plain * (1 - vol[..., 3:4] / 255)
+    haze = (1 - np.exp(-z / HAZE_FAR))[..., None]
+    rgb = rgb * (1 - (0.12 + 0.8 * haze)) + SKY * 0.9 * (0.12 + 0.8 * haze)
+    # the cloud deck on its plane, kept off the volcano
+    zd = GROUND_A * DECK_SHARE / dy
+    deck_chain = mip_chain(l15("deck-banks"))
+    deck = plane_sample(deck_chain, ((_xx - W / 2) * zd / FOCAL + 300) * DECK_TEX, (-zd - 400) * DECK_TEX,
+                        zd / FOCAL * DECK_TEX, True)
+    clear = np.clip(np.hypot((_xx - 430) / 320, (_yy - 440) / 130) - 0.7, 0, 1)
+    band = np.clip((zd - 1100) / 900, 0, 1) * np.clip((16000 - zd) / 6000, 0, 1)      # banks in the middle distance
+    da = deck[..., 3:4] / 255 * (clear * band)[..., None] * 0.9
+    shadow = plane_sample(deck_chain, (u * DECK_SHARE + 340) * DECK_TEX, (-z * DECK_SHARE - 340) * DECK_TEX,
+                          foot * DECK_SHARE * DECK_TEX, True)
+    rgb = rgb * (1 - 0.3 * (shadow[..., 3:4] / 255) * (clear * band)[..., None])          # their shadows on the plain
+    dcol = np.where(deck[..., 3:4] > 0, deck[..., :3] / np.maximum(deck[..., 3:4] / 255, 1e-6), 0)
+    dhaze = (1 - np.exp(-zd / HAZE_FAR))[..., None]
+    dcol = dcol * (1 - 0.7 * dhaze) + SKY * 0.7 * dhaze
+    rgb = rgb * (1 - da) + dcol * da
+    # the storm front on the northern horizon: billowing dust rising off the plain
+    n1 = raster.fbm(W, 1, 40, 3871, octaves=4, period=False)[0]
+    span = np.clip((_xx[0] - STORM[0]) / 160, 0, 1) * np.clip((STORM[1] + 40 - _xx[0]) / 60, 0, 1)
+    top = hor[0] - span * (20 + 42 * n1)
+    bill = raster.fbm(W, H, 10, 3872, octaves=4, period=False)
+    storm = np.clip((_yy - top[None, :] + 4 * bill) / 6, 0, 1) * (_yy < hor + 26 * span[None, :]) * (span[None, :] > 0)
+    storm *= np.clip((hor + 26 * span[None, :] - _yy) / 18, 0, 1)
+    shade = np.clip(0.6 + 0.9 * (bill - 0.5) - 0.01 * (_yy - top[None, :]), 0.15, 1)
+    scol = raster.ramp([(0.0, (84, 46, 30)), (0.5, (160, 102, 62)), (1.0, (226, 176, 120))], shade)
+    scol = scol * 0.75 + SKY * 0.25                                        # far off: hazed
+    sky_t = np.clip((hor - _yy) / hor, 0, 1) ** 0.6
+    sky = SKY[None, None, :] * (1 - sky_t[..., None]) + SKY_TOP * sky_t[..., None]
+    sky += np.exp(-((_yy - hor) / 2.5) ** 2)[..., None] * np.array([60, 44, 30.0])     # the limb's bright line
+    rgb = np.where(ground[..., None], rgb, sky)
+    a = (storm * span[None, :] ** 0.5)[..., None]
+    rgb = rgb * (1 - a) + scol * a
+    # the cirrus, nearest: thin water ice, additive at 40 %
+    zc = GROUND_A * CIRRUS_SHARE / dy
+    ci = plane_sample(mip_chain(l15("cirrus")), (_xx - W / 2) * zc / FOCAL, -zc - 200, zc / FOCAL, True)
+    rgb = rgb + ci[..., :3] * 0.4 * ground[..., None]
+    return np.clip(rgb, 0, 255)
+
+
+def still3():
+    img = ui_dither(olympus_still(), np.ones((H, W)), STILL_COLOURS)
+    return img.convert("RGB").convert("RGBA")
+
+
+def build3():
+    OUT.mkdir(parents=True, exist_ok=True)
+    img = still3()
+    artkit.save_png(img, OUT / f"{A3_NAME}-still.png", A3_SOURCE)
+    print(f"{A3_NAME}-still.png: {img.width}x{img.height}, {artkit.colour_count([img])} colours")
+
+
+def review3():
+    img = Image.open(OUT / f"{A3_NAME}-still.png").convert("RGBA")
+    sheet = raster.sheet(1000, 40 + 2 * (H + 30) + 10,
+                         "ACT 3 TITLE-CARD STILL (FINAL R38): OLYMPUS MONS",
+                         f"PRODUCTION ART, M7 PART B BATCH - {A3_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"THE STILL, 960X540 AT 1X ({artkit.colour_count([img])} COLOURS)", raster.LABEL)
+    sheet.alpha_composite(img, (16, 52))
+    raster.draw_text(sheet, 16, 52 + H + 14, f"THE TITLE CARD OVER IT: DARKENED TO {int(BRIGHTNESS * 100)} %, LETTERBOX, "
+                                             "CHROME LETTERING (THE GAME ADDS THE SETTINGS LINE AND THE MISSIONS)",
+                     raster.LABEL)
+    sheet.alpha_composite(title_card(img, A3_NAME), (16, 52 + H + 28))
+    A3_CONCEPT.mkdir(parents=True, exist_ok=True)
+    path = A3_CONCEPT / f"act-3-still-final-{A3_ROUND}-a.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
-    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2")] or ["act-1", "act-2"]
+    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3")] or ["act-1", "act-2", "act-3"]
     if "act-1" in acts:
         if "--review" not in sys.argv[1:]:
             build()
@@ -633,3 +809,7 @@ if __name__ == "__main__":
         if "--review" not in sys.argv[1:]:
             build2()
         review2()
+    if "act-3" in acts:
+        if "--review" not in sys.argv[1:]:
+            build3()
+        review3()

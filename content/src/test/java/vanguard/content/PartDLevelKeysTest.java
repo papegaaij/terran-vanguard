@@ -52,8 +52,8 @@ class PartDLevelKeysTest {
 
     private static final String WAVES = String.join(
             "\n",
-            "  - {t: 176.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}",
-            "  - t: 179",
+            "  - {t: 188.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}",
+            "  - t: 190",
             "    formation: swarm",
             "    enemy: mote-swarm",
             "    count: 20",
@@ -80,7 +80,7 @@ class PartDLevelKeysTest {
                 text, "  primary: reach-end\n  secondary: {escapes: creeper, credits: 56}", ESCORT.stripTrailing());
         text = replace(
                 text,
-                "  - {t: 181, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: Past the arcology district; the last wave}",
+                "  - {t: 190, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: Over the Ndidi Arcology; the last wave}",
                 WAVES);
         text = replace(
                 text,
@@ -306,7 +306,7 @@ class PartDLevelKeysTest {
                 text -> withoutLoss(text).replace("  ambience_changes:", DUCK + "  ambience_changes:"), "music.duck");
         assertProblem(
                 text -> withPartD(text)
-                        .replace("  - {t: 176.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}\n", ""),
+                        .replace("  - {t: 188.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}\n", ""),
                 "first-decloak");
         assertProblem(
                 text -> withPartD(text).replace("    loop_back: {after: 1.5, count: 1}\n    hard: {loops: 2}", ""),

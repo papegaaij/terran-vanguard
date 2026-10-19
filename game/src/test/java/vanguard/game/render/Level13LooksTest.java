@@ -65,6 +65,7 @@ class Level13LooksTest {
         assertFrames("nansen-relay-smoke", 8);
         JsonValue pivots =
                 new JsonReader().parse(new FileHandle(new File(ASSETS.toFile(), "pivots/nansen-relay.json")));
+        assertEquals("b", pivots.getString("variant"), "the grid node, the user's pick in round 34");
         assertEquals(4, pivots.get("smoke").size, "smoke points per state");
         assertEquals(4, pivots.get("fire").size, "fire points per state");
         assertEquals(0, pivots.get("smoke").get(0).size, "the intact relay does not smoke");

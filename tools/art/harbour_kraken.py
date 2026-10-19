@@ -83,6 +83,7 @@ it while it lies awash. The slam's churning telegraph and splash are round 33's 
 Run: python3 tools/art/harbour_kraken.py [--review]   (~6 min on 20 cores; the head renders are
 cached in the system temp dir, conceptgame-cache/; --review only rebuilds the review files)
 """
+import json
 import sys
 import tempfile
 from concurrent.futures import ProcessPoolExecutor
@@ -92,7 +93,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter
 
 import artkit
-from artkit import DESIGN, TAU, sprite
+from artkit import DESIGN, ROOT, TAU, sprite
 
 import driftjelly as dj  # noqa: E402  (tools/art: the water look)
 import kraken_r07 as kr  # noqa: E402  (concept script, imported unchanged: layout, paths, height map)
@@ -103,7 +104,7 @@ from render import boss_models as bm  # noqa: E402
 from render import enemy_models as em  # noqa: E402
 from render import sdf  # noqa: E402
 from render.enemy_models import V_DARK  # noqa: E402
-from render.enemy_rigs import model_rotation, model_space_materials  # noqa: E402
+from render.enemy_rigs import model_rotation, model_space_materials, write_gif  # noqa: E402
 from render.sdf import mirror_x, rotate_z, sd_ellipsoid, union  # noqa: E402
 
 # Round 33 (user, 2026-10-09): the head surfaces and sinks off the deck's south edge, in open water in
@@ -864,8 +865,614 @@ def review():
     artkit.save_review(sheet, gif, CONCEPT, SLUG, fps=15)
 
 
+# =========================================================================== round 40
+# The L11 rework (playtest 2026-10-18, pt2-b.md proposal 3a): four one-lane arms, each rooted in a
+# fleshy socket breaking the surface in its lane, and the whole animal 124 px up the screen. The
+# round-33 registration is kept: the head stays 216 px below the platform's centre, so the head, the
+# grip and its under-water stretch, the surfacing, the death and the segment frames are reused as
+# they are; the platform itself moves up (the halt puts its centre at y -46 instead of 78). New: the
+# four root sockets (intact, hit, raised = rearing with the glowing tell, cut = a severed stump
+# oozing, sinking at the death), the tell's additive glow and the four arms' under-water reach from
+# the mantle's rim to their sockets. Proposals for round 40 (written beside the chosen set).
+
+R40_TAG = "r40-a"
+R40_ROUND = "r40"
+R40_BATCH = "round 40 batch"
+R40_SOURCE = artkit.source_note(SCRIPT, "round 40 batch, L11 rework proposal a")
+R40_ANCHOR = -46.0                              # the platform's centre at the halt (screen y; round 33: 78)
+LANES = (1, 2, 3, 4)
+# The sockets (the 40 x 40 root targets' centres), px relative to the platform's centre: y 256 is
+# screen 210 at the halt. Lanes 1 and 4 sit on their lane centres (x 60 / 420); lanes 2 and 3 sit
+# 26 px outward of theirs (x 154 / 326) so their boxes clear the mantle's flanks and the eyes.
+SOCKETS = {1: (-180.0, 256.0), 2: (-86.0, 256.0), 3: (86.0, 256.0), 4: (180.0, 256.0)}
+LANE_X = {1: -180.0, 2: -60.0, 3: 60.0, 4: 180.0}
+LANE_TOP = 290.0                                # where an arm reaches its lane's centre line (screen 244)
+MANTLE_ROOT = {1: 5, 2: 4, 3: 3, 4: 2}          # the concept's root ring index an arm leaves the mantle at
+ROOT_SIZE = (72, 96)
+ROOT_PX = TAPERS[0] / ARM_EXTENT                # 26.25 px per unit: the 42 px segment's scale
+ROOT_EXT = ROOT_SIZE[0] / ROOT_PX
+ROOT_FACTOR = 4
+ROOT_TARGET = (40, 40)
+INTACT_FRAMES, RAISED_FRAMES, CUT_FRAMES, RSINK_FRAMES, GLOW_FRAMES = 4, 6, 6, 5, 4
+RAISED_APEX = [0.55, 0.8, 1.02, 1.2, 1.2, 1.16]
+RAISED_LASER = [0.2, 0.45, 0.75, 1.0, 1.0, 0.72]
+R40_STEPS = {"root": 12, "raised": 9, "raised_hold": 8, "cut": 8, "ooze": 10, "root_sink": 12, "glow": 6, "reach": 12}
+GLOW_SIZE = (64, 64)
+CAMERA = 7.0                                    # the mild perspective that makes the rearing read
+REST_SIGN = {1: -1, 2: 1, 3: -1, 4: 1}
+OOZE = np.array([74, 10, 18], float)
+OOZE_HI = np.array([150, 28, 34], float)
+
+
+def lane_side(lane):
+    """+1 for the left sockets (their arm comes in from the head, on the right), -1 for the right."""
+    return 1.0 if lane <= 2 else -1.0
+
+
+def socket_ctrl(lane, apex, sway=0.0, cut=False):
+    """The arm's base as 3-D control points (units; x right, y down the screen, z up): up out of the
+    water inside its socket's collar, arching (the apex near the socket's centre) and on down into
+    its lane at a shallow angle; a cut arm ends just past the arch."""
+    sx = lane_side(lane)
+    ox = sx * 0.28 if lane in (2, 3) else 0.0            # lanes 2/3 head inward to the lane's centre
+    lift = max(0.0, apex - 0.5)                          # rearing: the arm's run lifts off the water
+    pts = [(0.0, -0.12, -0.5), (0.0, -0.02, apex * 0.85), (0.02 * sx + sway * 0.03, 0.22, apex)]
+    if cut:
+        return pts + [(ox * 0.25, 0.36, apex * 1.2 + 0.1)]
+    return pts + [(ox * 0.5 + sway * 0.08, 0.55, apex * 0.55 + 0.6 * lift), (ox + sway * 0.2, 0.88, -0.2 + 0.9 * lift),
+                  (ox * 1.4 + sway * 0.35, 1.2, -0.9 + 1.0 * lift)]
+
+
+def root_model(lane, apex, laser=0.0, sway=0.0, cut=False, glowing=False):
+    """(scene, mats) of a root socket: a dark webbed collar ringed with pale suckers where the arm
+    breaks the surface, the mottled arm rearing out of it and running on down its lane, suckers
+    along its flanks and the crimson dorsal seam on its back (an emitter while raised); a cut arm
+    ends in a raw crimson wound."""
+    ctrl = np.array(socket_ctrl(lane, apex, sway, cut))
+    pts = kr.catmull(ctrl, per=6)
+    n = len(pts)
+    u = np.arange(n) / (n - 1)
+    r_end = 0.42 if cut else 0.3
+    rad = 0.5 + (r_end - 0.5) * u ** 1.1
+    model = pts * np.array([1.0, -1.0, 1.0])              # model y up the screen
+    tang = np.gradient(model[:, :2], axis=0)
+    tang /= np.maximum(np.linalg.norm(tang, axis=1, keepdims=True), 1e-9)
+    side = np.stack([-tang[:, 1], tang[:, 0]], axis=1)
+    seam = bm.V_LASER if glowing else bm.V_SEAM
+    ring_r, ring_w = 0.6, 0.15
+    ring = [(ring_r * np.cos(a), ring_r * 0.92 * np.sin(a) + 0.05) for a in np.linspace(0, TAU, 12, endpoint=False)]
+
+    def scene(p):
+        body = [(sdf.sd_capsule(p, tuple(model[i]), tuple(model[i + 1]), rad[i], rad[i + 1]), bm.V_BODY)
+                for i in range(n - 1)]
+        d, m = union(*body)
+        q = np.stack([np.hypot(p[:, 0], (p[:, 1] - 0.05) / 0.92) - ring_r, p[:, 2] + 0.02], axis=-1)
+        collar = np.sqrt(np.sum(q * q, axis=-1)) - ring_w
+        web = sd_ellipsoid(p, (0.0, 0.05, -0.12), (ring_r + 0.1, ring_r * 0.92 + 0.1, 0.16))
+        d, m = union((d, m), (np.minimum(collar, web), V_DARK), k=0.08)
+        extras = [(sdf.sd_sphere(p, (x, y, 0.1), 0.085), bm.V_BONE) for x, y in ring]
+        for i in range(int(0.3 * n), n - 2, 2):
+            for s in (-1, 1):
+                c = model[i, :2] + side[i] * s * rad[i] * 0.62
+                extras.append((sdf.sd_sphere(p, (c[0], c[1], model[i, 2] + 0.72 * rad[i]), 0.075), bm.V_BONE))
+        top = list(range(int(0.25 * n), n if cut else n - 1))
+        for a, b in zip(top, top[1:]):
+            extras.append((sdf.sd_capsule(p, (model[a, 0], model[a, 1], model[a, 2] + rad[a]),
+                                          (model[b, 0], model[b, 1], model[b, 2] + rad[b]), 0.085), seam))
+        if cut:
+            e, t = model[-1], model[-1] - model[-2]
+            t = t / np.linalg.norm(t)
+            extras.append((sdf.sd_sphere(p, tuple(e + t * 0.06), r_end * 0.72), bm.V_LASER))
+        return union((d, m), *extras, k=0.025)
+    return artkit.perspective(scene, CAMERA), bm.mats("harbour-kraken", 1.0, laser=laser, body_pattern=bm.mottled())
+
+
+def root_render(job):
+    """One socket render at 4x and its height map (the ray-marcher's grid), cached outside the repo."""
+    lane, apex, laser, sway, cut, glowing = job
+    CACHE.mkdir(parents=True, exist_ok=True)
+    path = CACHE / f"r40-root-{lane}-{apex:.3f}-{laser:.2f}-{sway:.2f}-{int(cut)}-{int(glowing)}.npz"
+    if path.exists():
+        f = np.load(path)
+        return f["hi"], f["z"]
+    scene, mats = root_model(lane, apex, laser, sway, cut, glowing)
+    size = (ROOT_SIZE[0] * ROOT_FACTOR, ROOT_SIZE[1] * ROOT_FACTOR)
+    hi = sdf.render(scene, mats, size, ROOT_EXT)
+    z = kr.heightmap(scene, size, ROOT_EXT, (0.0, 0.0))
+    np.savez_compressed(path, hi=hi, z=z)
+    return hi, z
+
+
+def root_cut(hi, z, level=0.0, dim=1.0):
+    """What of a socket render is above the water plane -> native sprite and its 0/1 mask."""
+    keep = (hi[..., 3] > 0) & (np.nan_to_num(z, nan=-9) > level)
+    h = hi.copy()
+    h[..., 3] = np.where(keep, hi[..., 3], 0)
+    if dim != 1.0:
+        h[..., :3] *= dim
+    img = artkit.native(h, ROOT_FACTOR, crisp=70)
+    return img, (np.array(img)[..., 3] > 0).astype(float)
+
+
+def water_shadow(mask, dx, dy, alpha):
+    """A raised knot's soft shadow on the water, stepped."""
+    sh = Image.fromarray((mask * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2.2))
+    a = np.roll(np.roll(np.asarray(sh, float) / 255, int(round(dy)), 0), int(round(dx)), 1)
+    a = np.floor(a * 3 + 0.5) / 3 * alpha * (mask < 0.5)
+    out = Image.new("RGBA", ROOT_SIZE)
+    out.alpha_composite(dj.stepped(np.zeros(a.shape + (3,)) + np.array([4, 10, 24]), a, 4))
+    return out
+
+
+def ooze(lane, j, k=1.0):
+    """The severed stump's ichor: a dark crimson slick spreading from the wound down the water,
+    glints on it, drops beading off; a 4-frame loop (``k`` < 1: still spreading)."""
+    w, h = ROOT_SIZE
+    f = dj.Field(w, h)
+    sx = lane_side(lane)
+    cx, cy = w / 2 + (0.3 * sx if lane in (2, 3) else 0) * ROOT_PX * 0.25, h / 2 + 14
+    ph = TAU * j / CUT_FRAMES
+    th = np.arctan2(f.y - cy, f.x - cx)
+    rr = np.hypot((f.x - cx) / 1.0, (f.y - cy) / (1.35 + 0.15 * np.sin(ph)))
+    edge = (16 * k) * (1 + 0.16 * np.sin(3 * th + ph) + 0.1 * np.sin(5 * th - 2 * ph + 1) + 0.06 * np.sin(8 * th + ph))
+    film = np.clip((edge - rr) / 2.0, 0, 1)
+    f.over(OOZE, film * 0.9)
+    glint = np.clip(np.sin(f.x * 0.9 + 1.7 * np.sin(f.y * 0.4 + ph)) * np.sin(f.y * 0.7 - ph), 0, 1) ** 6
+    f.over(OOZE_HI, film * glint * 0.9)
+    rng = np.random.default_rng(4010 + lane)
+    for _ in range(7):
+        a, r0 = rng.uniform(0.2, np.pi - 0.2), rng.uniform(6, 16) * k
+        age = (j / CUT_FRAMES + rng.uniform(0, 1)) % 1.0
+        x, y = cx + np.cos(a) * r0 * 0.6, cy + np.sin(a) * (r0 + 6 * age)
+        f.over(OOZE_HI * (1 - age) + OOZE * age, (np.hypot(f.x - x, f.y - y) <= 1.1 - 0.4 * age) * (1 - 0.6 * age))
+    return f.image()
+
+
+def socket_frame(hi_z, lane, phase, seed, shadow=0.0, oozing=None, level=0.0, dim=1.0, churn=0.0):
+    hi, z = hi_z
+    img, mask = root_cut(hi, z, level, dim)
+    out = Image.new("RGBA", ROOT_SIZE)
+    if oozing is not None:
+        out.alpha_composite(ooze(lane, *oozing))
+    if shadow > 0:
+        out.alpha_composite(water_shadow(mask, 2 + 3 * shadow, 3 + 4 * shadow, 0.5))
+    out.alpha_composite(img)
+    if mask.sum() > 3:
+        f = dj.Field(*ROOT_SIZE)
+        dj.edge_foam(f, mask, phase, seed, width=2.0 + 2 * churn, gain=0.9, specks=20 + int(30 * churn),
+                     reach=6 + 6 * churn, inner=1.0 + churn)
+        out.alpha_composite(f.image())
+    return out
+
+
+def tinted(img, k=0.3, tint=(255, 224, 209)):
+    """The hit flash (as the game's PART_FLASH: 0.3 toward a pale flesh tint)."""
+    a = np.array(img).astype(np.float64)
+    on = a[..., 3:4] > 0
+    a[..., :3] = np.where(on, a[..., :3] * (1 - k) + np.array(tint) * k, a[..., :3])
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
+
+
+def root_glow(i):
+    """The raised tell's glow round the socket (additive, centred on it): a crimson halo pulsing,
+    a hot core over the knot."""
+    w, h = GLOW_SIZE
+    k = [0.7, 1.0, 0.82, 0.58][i]
+    cv = v8.Canvas(w, h)
+    c = w / 2
+    d = cv.dist(c, c)
+    fade = np.clip((w / 2 - d) / 5.0, 0, 1)
+    cv.add(tuple(CRIMSON), v8.gauss(d, 12 + 4 * k) * 0.55 * k * fade)
+    cv.add((255, 170, 150), v8.gauss(d, 4 + 2 * k) * 0.45 * k)
+    tex = v8._cart_noise(w, 4020 + i, cell=w * v8.SS // 5)
+    cv.add((120, 18, 16), np.clip(v8.gauss(d, 20) * (0.4 + 0.8 * tex) - 0.25, 0, 1) * 0.6 * k * fade)
+    return artkit.additive(cv.image())
+
+
+def root_jobs():
+    """Every socket render the round-40 set needs, keyed (lane, state, frame)."""
+    jobs = {}
+    for lane in LANES:
+        for j in range(INTACT_FRAMES):
+            jobs[(lane, "intact", j)] = (lane, round(0.39 + 0.03 * np.sin(TAU * j / INTACT_FRAMES), 3), 0.0,
+                                         round(float(np.sin(TAU * j / INTACT_FRAMES)) * 0.4, 2), False, False)
+        for j in range(RAISED_FRAMES):
+            jobs[(lane, "raised", j)] = (lane, RAISED_APEX[j], RAISED_LASER[j], 0.0, False, True)
+        for j, (apex, laser) in enumerate([(0.95, 0.35), (0.6, 0.25)] + [(0.3 + 0.02 * np.cos(TAU * i / 4), 0.15)
+                                                                       for i in range(CUT_FRAMES - 2)]):
+            jobs[(lane, "cut", j)] = (lane, round(float(apex), 3), laser, 0.0, True, False)
+    return jobs
+
+
+def build_r40():
+    jobs = root_jobs()
+    keys = list(jobs)
+    with ProcessPoolExecutor() as pool:
+        renders = dict(zip(keys, pool.map(root_render, [jobs[k] for k in keys])))
+    sets = {"intact": [], "raised": [], "hit": [], "cut": [], "sink": []}
+    for lane in LANES:
+        seed = 4100 + 10 * lane
+        for j in range(INTACT_FRAMES):
+            sets["intact"].append(socket_frame(renders[(lane, "intact", j)], lane, TAU * j / INTACT_FRAMES, seed))
+        for j in range(RAISED_FRAMES):
+            sets["raised"].append(socket_frame(renders[(lane, "raised", j)], lane, 0.7 * j, seed + 1,
+                                               shadow=RAISED_APEX[j] - 0.4, churn=0.5))
+        sets["hit"].append(tinted(sets["intact"][-INTACT_FRAMES]))
+        for j in range(CUT_FRAMES):
+            spread = (0.45, 0.75)[j] if j < 2 else 1.0
+            sets["cut"].append(socket_frame(renders[(lane, "cut", j)], lane, 0.9 * j, seed + 2,
+                                            oozing=(max(0, j - 2), spread), churn=0.6 if j < 2 else 0.2))
+        for j in range(RSINK_FRAMES):
+            t = (j + 1) / RSINK_FRAMES
+            sets["sink"].append(socket_frame(renders[(lane, "intact", 0)], lane, 1.1 * j, seed + 3,
+                                             level=0.12 + 0.62 * t ** 1.2, dim=0.85 - 0.25 * t, churn=0.5 + 0.5 * t))
+    body = artkit.quantize_set(sets["intact"] + sets["raised"] + sets["cut"] + sets["sink"], COLOURS)
+    at = 0
+    out = {"hit": artkit.quantize_set(sets["hit"], 32)}      # its own palette: the pale tint keeps its shades
+    for name in ("intact", "raised", "cut", "sink"):
+        out[name] = body[at:at + len(sets[name])]
+        at += len(sets[name])
+    art = Art(artkit.load_frames(f"{SLUG}-arm"), artkit.load_frames(f"{SLUG}-tip"))
+    reach_frames, centre, size = reach_set(art)
+    names = [(f"{SLUG}-root-{R40_TAG}", out["intact"]), (f"{SLUG}-root-raised-{R40_TAG}", out["raised"]),
+             (f"{SLUG}-root-hit-{R40_TAG}", out["hit"]), (f"{SLUG}-root-cut-{R40_TAG}", out["cut"]),
+             (f"{SLUG}-root-sink-{R40_TAG}", out["sink"]),
+             (f"{SLUG}-root-glow-{R40_TAG}", artkit.quantize_set([root_glow(i) for i in range(GLOW_FRAMES)], 24)),
+             (f"{SLUG}-reach-{R40_TAG}", artkit.quantize_set(reach_frames, COLOURS))]
+    for name, frames in names:
+        artkit.write_frames(name, frames, R40_SOURCE)
+        print(f"{name}: {len(frames)} frames, {frames[0].width}x{frames[0].height}")
+    write_r40_pivots(centre, size)
+
+
+# --------------------------------------------------------------------------- the reach
+
+def reach_paths():
+    """Each arm's under-water stretch from the mantle's root ring to where its socket's incoming
+    leg starts, in the concept's field (relative positions + PLAT)."""
+    out = {}
+    for lane in LANES:
+        sx = lane_side(lane)
+        iy = 0.45 if lane in (1, 4) else 0.8
+        sock = np.array(SOCKETS[lane])
+        leg = sock + np.array([sx * 0.95, iy * 0.75]) * ROOT_PX     # the incoming leg's start
+        root = np.array(kr.ROOTS[MANTLE_ROOT[lane]]) - PLAT
+        if lane in (1, 4):
+            mid = [root + np.array([-sx * 36, 0.0]), (root + leg) / 2 + np.array([0.0, 12.0])]
+        else:
+            mid = [root + np.array([-sx * 10, -16.0])]
+        end = leg + (sock - leg) * 0.35
+        out[lane] = [tuple(PLAT + p) for p in [root] + mid + [leg, end]]
+    return out
+
+
+def reach_set(art):
+    """The four under-water reaches, plain, for the `sub` pass: a 4-frame sway (none at the ends)."""
+    paths = reach_paths()
+    allp = np.array([p for ps in paths.values() for p in ps])
+    lo, hi = allp.min(axis=0) - 30, allp.max(axis=0) + 30
+    size = (int(np.ceil(hi[0] - lo[0])) // 2 * 2, int(np.ceil(hi[1] - lo[1])) // 2 * 2)
+    centre = lo + np.array(size) / 2
+    origin = centre - np.array(size) / 2
+    frames = []
+    for j in range(SWAY_FRAMES):
+        w = TAU * j / SWAY_FRAMES
+        poses = []
+        for lane, ps in paths.items():
+            sw = []
+            for i, (x, y) in enumerate(ps):
+                env = np.sin(np.pi * i / (len(ps) - 1))
+                sw.append((x + 5 * env * np.sin(w + lane), y + 3.5 * env * np.cos(w + 1.3 * lane)))
+            poses.append(kr.sample_arm(sw, lambda u, ue: -1.0 + 0.8 * u, f"reach{lane}", 42, 38))
+        frames.append(compose_arms(art, poses, size, origin, False))
+    return frames, centre, size
+
+
+# --------------------------------------------------------------------------- pivots
+
+def rest_path(lane):
+    """An arm at rest beyond its socket: a curl under the water below it (px relative to the platform)."""
+    x, y = SOCKETS[lane]
+    s = REST_SIGN[lane]
+    ox = (LANE_X[lane] - x) * 0.5
+    return [[round(x + ox * 0.6, 1), y + 30], [round(x + ox, 1), y + 50], [round(x + ox + 10 * s, 1), y + 66],
+            [round(x + ox + 2 * s, 1), y + 78], [round(x + ox - 12 * s, 1), y + 70]]
+
+
+def write_r40_pivots(reach_centre, reach_size):
+    """Round 40's registration, added to assets/pivots/harbour-kraken.json under ``r40_a`` (every
+    round-33 key stays as it is, so today's game keeps drawing the chosen fight)."""
+    path = artkit.PIVOTS / f"{SLUG}.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    head = np.array(data["head"])
+    halt = lambda p: [round(240 + p[0], 1), round(R40_ANCHOR + p[1], 1)]   # noqa: E731
+    roots = []
+    for lane in LANES:
+        mr = np.array(kr.ROOTS[MANTLE_ROOT[lane]]) - PLAT
+        roots.append({"lane": lane, "socket": list(SOCKETS[lane]), "socket_at_halt": halt(SOCKETS[lane]),
+                      "mantle_root": [round(float(v), 1) for v in mr], "lane_x": LANE_X[lane], "lane_top": LANE_TOP,
+                      "rest_path": rest_path(lane)})
+    data["r40_a"] = {
+        "note": "round 40 proposal a (L11 rework 3a, pending the user's pick): four one-lane arms rooted in sockets; "
+                "the head, grip, surfacing, death and segment frames and every round-33 key above are reused unchanged; "
+                "the idle arms and the two slam arms' rest curls are not drawn (8 arms: 4 grip + 4 lane arms)",
+        "anchor": R40_ANCHOR,
+        "anchor_note": "the platform's centre at the halt, screen y (round 33: 78): everything moves 124 px up",
+        "at_halt": {"head": halt(head), "eyes": [halt(e) for e in data["eyes"]], "eye_radius": data["eye_radius"],
+                    "beak": halt(data["beak"]), "deck_y": [R40_ANCHOR - 76, R40_ANCHOR + 76]},
+        "roots": roots,
+        "root_size": list(ROOT_SIZE), "root_target": list(ROOT_TARGET),
+        "root_note": "a socket sprite is centred on its socket; the slam chain starts at the socket and runs to "
+                     "(lane_x, lane_top), then down the lane (the round-33 lane leg); its first segments lie under "
+                     "the socket sprite, which is drawn over the arm's segments",
+        "root_frames": {"root": INTACT_FRAMES, "root-raised": RAISED_FRAMES, "root-hit": 1, "root-cut": CUT_FRAMES,
+                        "root-sink": RSINK_FRAMES},
+        "root_index": "(lane - 1) * frames + frame",
+        "root_states": {
+            "root": "intact, a 4-frame loop",
+            "root-hit": "intact frame 0 at the hit flash (0.3 toward the pale flesh tint; or the flash shader on 'root')",
+            "root-raised": "the tell: frames 0-3 rear up once, then 4-5 loop until the arm rises; with root-glow",
+            "root-cut": "frames 0-1 the stump recoiling (play once, with the arm's segment pops), then 2-5 the ooze loop",
+            "root-sink": "the death: the knot going under (play once), with the head's sink"},
+        "root_glow": "additive, centred on the socket, a 4-frame pulse while raised (glow steps)",
+        "root_glow_size": list(GLOW_SIZE),
+        "reach": [round(float(v - p), 1) for v, p in zip(reach_centre, PLAT)], "reach_size": list(reach_size),
+        "reach_note": "the four arms' under-water stretches from the mantle's roots to the sockets, plain: through "
+                      "the `sub` pass with the head, a sway loop (reach steps)",
+        "steps": R40_STEPS,
+        "sprites": {k: f"{SLUG}-{k}-{R40_TAG}" for k in ("root", "root-raised", "root-hit", "root-cut", "root-sink",
+                                                          "root-glow", "reach")}}
+    path.write_text(json.dumps(data, indent=1) + "\n", encoding="utf-8")
+    print(f"pivots: {path.relative_to(ROOT)} (r40_a)")
+
+
+# --------------------------------------------------------------------------- review
+
+def r40_load():
+    names = ("root", "root-raised", "root-hit", "root-cut", "root-sink", "root-glow", "reach")
+    out = {n: artkit.load_frames(f"{SLUG}-{n}-{R40_TAG}") for n in names}
+    out.update(load())
+    return out
+
+
+def by_lane(frames, lane, n):
+    return frames[(lane - 1) * n:lane * n]
+
+
+def scr(rel_xy):
+    """A position relative to the platform -> the play field at the halt (round 40)."""
+    return 240.0 + rel_xy[0], R40_ANCHOR + rel_xy[1]
+
+
+def lane_arm(lane, share, whip_amp, phase):
+    """A slam arm's path from its socket into its lane and down to the tip (screen px)."""
+    sx, sy = scr(SOCKETS[lane])
+    lx, ly = scr((LANE_X[lane], LANE_TOP))
+    pts = [(sx, sy)]
+    for i in range(13):
+        u = i / 12
+        x = lx + whip_amp * min(1.0, u * 1.5) * np.sin(TAU * (1.25 * u - 1.5 * share) + phase)
+        pts.append((x, ly + (PlayFieldH - 24 - ly) * u))
+    return pts
+
+
+PlayFieldH = 540
+
+
+def r40_state(t):
+    """The review's choreography (s): lane 2 telegraphs, slams, is shot and cut; the head surfaces,
+    opens its eyes and glows for a fan; lane 4 telegraphs and slams; the death."""
+    s = {"head": ("deep", 0), "roots": {k: ("root", int(t * STEP / R40_STEPS["root"]) % INTACT_FRAMES) for k in LANES},
+         "arms": [], "glow": [], "marks": [], "pops": [], "death": None}
+    for lane, t0 in ((2, 1.0), (4, 8.8)):
+        tel, rise, awash, sink = t0, t0 + 1.4, t0 + 1.9, t0 + 3.4 if lane == 2 else t0 + 2.8
+        if tel <= t < rise:
+            k = int((t - tel) * STEP / R40_STEPS["raised"])
+            fr = k if k < 4 else 4 + int((t - tel) * STEP / R40_STEPS["raised_hold"]) % 2
+            s["roots"][lane] = ("root-raised", fr)
+            s["glow"].append((lane, int(t * STEP / R40_STEPS["glow"]) % GLOW_FRAMES))
+            s["marks"].append(lane)
+            s["arms"].append((lane, "under", (t - tel) / 1.4))
+        elif rise <= t < awash:
+            s["roots"][lane] = ("root-raised", 4 + int(t * STEP / R40_STEPS["raised_hold"]) % 2)
+            s["arms"].append((lane, "rise", (t - rise) / 0.5))
+            s["marks"].append(lane)
+        elif awash <= t < sink:
+            s["arms"].append((lane, "awash", (t - awash)))
+            if lane == 2 and int((t - awash) * 15) % 5 == 0:
+                s["roots"][lane] = ("root-hit", 0)
+        elif lane == 4 and sink <= t < sink + 0.5:
+            s["arms"].append((lane, "sink", (t - sink) / 0.5))
+    cut_t = 4.4
+    if t >= cut_t:
+        k = int((t - cut_t) * STEP / R40_STEPS["cut"])
+        s["roots"][2] = ("root-cut", k if k < 2 else 2 + int((t - cut_t) * STEP / R40_STEPS["ooze"]) % 4)
+        if t < cut_t + 1.2:
+            s["pops"].append((2, t - cut_t))
+    if 5.0 <= t < 7.0:
+        s["head"] = ("swap", min(SURFACE_FRAMES - 1, int((t - 5.0) * STEP / SURFACE_STEPS)))
+    elif 7.0 <= t < 12.1:
+        tm = t - 7.0
+        fr = 1 if tm < 0.15 else 2
+        if 0.8 <= tm < 1.6:
+            fr = 3 if tm < 1.2 else 4
+        s["head"] = ("up", fr)
+    if t >= 12.1:
+        d = t - 12.1
+        s["death"] = d
+        s["head"] = ("dead", min(SINK_FRAMES - 1, int(d * STEP / SINK_STEPS)))
+        k = min(RSINK_FRAMES - 1, int(d * STEP / R40_STEPS["root_sink"]))
+        for lane in LANES:
+            s["roots"][lane] = ("root-sink", k) if lane != 2 else s["roots"][2]
+        s["arms"] = []
+    return s
+
+
+def draw_r40(art, plat, sea, t, boxes=False):
+    s = r40_state(t)
+    cell = sea.copy()
+    sub = Image.new("RGBA", cell.size)
+    a = Art(art["arm"], art["tip"])
+    j = int(t * STEP / SWAY_STEPS) % SWAY_FRAMES
+    death = s["death"]
+    hx, hy = scr(rel(HEAD_AT))
+    rd = json.loads((artkit.PIVOTS / f"{SLUG}.json").read_text(encoding="utf-8"))["r40_a"]
+    gs = art["grip-sub"][j] if death is None else fade(art["grip-sub"][j], 1 - min(death, 1))
+    put(sub, gs, *scr(GRIP_SUB_AT))
+    rs = art["reach"][int(t * STEP / R40_STEPS["reach"]) % SWAY_FRAMES]
+    put(sub, rs if death is None else fade(rs, 1 - min(death, 1)), *scr(rd["reach"]))
+    if death is None or death < 1.6:
+        put(sub, art["sub"][0] if death is None else fade(art["sub"][0], 1 - death / 1.6), hx, hy)
+    chains = []
+    for lane, phase, k in s["arms"]:
+        if phase == "under":
+            pts = lane_arm(lane, 0.0, 6, 0.0)
+            rest = [scr(p) for p in [SOCKETS[lane]] + rd["roots"][lane - 1]["rest_path"]]
+            pts = [tuple(np.array(rest[min(i * len(rest) // len(pts), len(rest) - 1)]) * (1 - k) + np.array(p) * k)
+                   for i, p in enumerate(pts)]
+            e_of = lambda u, ue: -0.4      # noqa: E731
+        elif phase == "rise":
+            pts = lane_arm(lane, k, 22, 0.0)
+            e_of = (lambda kk: (lambda u, ue: 0.3 if u <= kk else -0.3))(k)
+        elif phase == "awash":
+            pts = lane_arm(lane, 1.0, 6 + 16 * np.exp(-k * 2.5), 0.0)
+            e_of = lambda u, ue: 0.03      # noqa: E731
+        else:
+            pts = lane_arm(lane, 1.0, 6, 0.0)
+            e_of = (lambda kk: (lambda u, ue: 0.03 if u < 1 - kk else -0.3))(k)
+        ap = kr.sample_arm(pts, e_of, f"lane{lane}", 40, 14)
+        chains.append(ap)
+        for (x, y), hd, sz, e, tip in reversed(items_of(ap)):
+            if e <= 0:
+                put(sub, a.segment(sz, hd, tip), x, y)
+    for lane in LANES:                                       # the rest curls, under the water
+        if s["roots"][lane][0] == "root-cut" or any(c[0] == lane for c in s["arms"]) or death is not None:
+            continue
+        rest = [scr(p) for p in [SOCKETS[lane]] + rd["roots"][lane - 1]["rest_path"]]
+        ap = kr.sample_arm(rest, lambda u, ue: -0.6, f"rest{lane}", 40, 22)
+        for (x, y), hd, sz, e, tip in reversed(items_of(ap)):
+            put(sub, a.segment(sz, hd, tip), x, y)
+    cell.alpha_composite(dj.sub_pass(sub, t, k=0.5, blur=0.9, sway=0.8))
+    for lane in s["marks"]:                                  # stand-in for round 33's lane marks
+        if int(t * 10) % 2 == 0:
+            lx = scr((LANE_X[lane], 0))[0]
+            d = ImageDraw.Draw(cell, "RGBA")
+            for y in range(int(scr((0, LANE_TOP))[1]), 516, 22):
+                for ex in (lx - 56, lx + 52):
+                    d.rectangle([ex, y, ex + 3, y + 11], fill=(230, 60, 50, 150))
+    for x in (60, 180, 420):                                 # stand-ins: the cargo ships at the halt
+        d = ImageDraw.Draw(cell, "RGBA")
+        d.rounded_rectangle([x - 12, 422, x + 12, 478], 8, fill=(88, 96, 104, 255), outline=(40, 44, 50, 255))
+    put(cell, plat, 240, R40_ANCHOR)
+    if death is None:
+        put(cell, art["grip"][j], *scr(GRIP_AT))
+    else:
+        put(cell, art["grip-slide"][min(int(death * STEP / SLIDE_STEPS), SLIDE_FRAMES - 1)], *scr(GRIP_AT))
+    kind, fi = s["head"]
+    if kind == "swap":
+        put(cell, art["surface"][fi], hx, hy)
+    elif kind == "up":
+        put(cell, art["up"][fi], hx, hy)
+        put(cell, art["collar"][int(t * STEP / COLLAR_STEPS) % COLLAR_FRAMES], hx, hy)
+    elif kind == "dead":
+        put(cell, art["sink"][fi], hx, hy)
+    for ap in chains:
+        items = items_of(ap)
+        for (x, y), hd, sz, e, tip in reversed(items):
+            if e > 0:
+                put(cell, a.segment(sz, hd, tip), x, y)
+        for n, (p, q) in enumerate(zip(items, items[1:])):
+            if p[3] * q[3] < 0 or (abs(p[3]) < 0.06 and n % 2 == 0):
+                put(cell, art["foam"][(n % 2) * FOAM_FRAMES + int(t * 10 + n) % FOAM_FRAMES], *p[0])
+    n_of = {"root": INTACT_FRAMES, "root-raised": RAISED_FRAMES, "root-hit": 1, "root-cut": CUT_FRAMES,
+            "root-sink": RSINK_FRAMES}
+    for lane in LANES:
+        name, fr = s["roots"][lane]
+        if death is not None and death > (0.8 if name == "root-cut" else RSINK_FRAMES * R40_STEPS["root_sink"] / STEP):
+            continue
+        put(cell, by_lane(art[name], lane, n_of[name])[fr], *scr(SOCKETS[lane]))
+    for lane, g in s["glow"]:
+        cell = add(cell, art["root-glow"][g], *scr(SOCKETS[lane]))
+    for lane, dt in s["pops"]:                               # the severed arm's segment pops
+        pts = lane_arm(lane, 1.0, 6, 0.0)
+        ap = kr.sample_arm(pts, lambda u, ue: 0.03, "pop", 40, 14)
+        for n, (x, y) in enumerate(ap.pts):
+            k = int(dt * STEP / 4) - n // 2
+            if 0 <= k < ARM_DEATH_FRAMES:
+                cell = add(cell, art["arm-death"][k], x, y)
+    if death is not None:
+        k = int(death * STEP / DEATH_STEPS)
+        if k < DEATH_FRAMES:
+            cell = add(cell, art["death"][k], hx + DEATH_AT[0], hy + DEATH_AT[1])
+    if boxes:
+        d = ImageDraw.Draw(cell, "RGBA")
+        for lane in LANES:
+            x, y = scr(SOCKETS[lane])
+            d.rectangle([x - 20, y - 20, x + 20, y + 20], outline=(255, 230, 60, 255))
+        for e in rd["at_halt"]["eyes"]:
+            r = rd["at_halt"]["eye_radius"]
+            d.ellipse([e[0] - r, e[1] - r, e[0] + r, e[1] + r], outline=(140, 255, 120, 255))
+        bx, by = rd["at_halt"]["beak"]
+        d.line([bx - 6, by, bx + 6, by], fill=(255, 90, 80, 255))
+        d.line([bx, by - 6, bx, by + 6], fill=(255, 90, 80, 255))
+        for lx in (120, 240, 360):
+            for y in range(0, 540, 8):
+                d.line([lx, y, lx, y + 3], fill=(255, 255, 255, 70))
+    return cell
+
+
+def review_r40():
+    artkit.REVIEW_ROUND = R40_ROUND
+    art = r40_load()
+    plat = platform_stand_in()
+    sea = dj.ocean_plate(480, 540, seed=121)
+
+    def on_sea(img, size=ROOT_SIZE):
+        cell = dj.ocean_plate(*size, seed=121)
+        put(cell, img, size[0] / 2, size[1] / 2)
+        return cell
+    states = []
+    for name, n in (("root", INTACT_FRAMES), ("root-raised", RAISED_FRAMES), ("root-cut", CUT_FRAMES),
+                    ("root-sink", RSINK_FRAMES)):
+        states.append((name, [on_sea(f) for f in by_lane(art[name], 2, n)]))
+    lanes_row = [on_sea(by_lane(art["root"], k, INTACT_FRAMES)[0]) for k in LANES] + \
+                [on_sea(art["root-hit"][k - 1]) for k in LANES]
+    stills = [draw_r40(art, plat, sea, t).resize((240, 270), Image.BOX) for t in (1.9, 3.4, 6.0, 8.3, 10.4)]
+    layout = draw_r40(art, plat, sea, 8.3, boxes=True)
+    reach_cell = dj.ocean_plate(art["reach"][0].width, art["reach"][0].height, seed=121)
+    reach_cell.alpha_composite(dj.sub_pass(art["reach"][0], 0.0, k=0.5, blur=0.9))
+    sheet = artkit.review_sheet("HARBOUR KRAKEN - ROUND 40 PROPOSAL A: FOUR ROOTED ARMS, 124 PX UP", [
+        ("THE HALT AT 1X (PLATFORM CENTRE Y -46): ROOT TARGETS 40X40 (YELLOW), EYES (GREEN), BEAK (RED), LANES; "
+         "SHIPS AND LANE MARKS ARE STAND-INS", [layout], 1, False),
+        ("IN PLAY (0.5X): LANE 2 RAISED (TELL) / SLAM AWASH, ROOT SHOT / CUT, HEAD SURFACING / BEAK GLOW / LANE 4 RISING",
+         stills, 1, False),
+        ("SOCKETS, INTACT FRAME 0, LANES 1-4 / HIT FLASH, LANES 1-4 (ON THE SEA)", lanes_row, 2, False),
+        ("LANE 2 INTACT LOOP (4 X 12 STEPS)", states[0][1], 2, False),
+        ("LANE 2 RAISED: REARING 0-3 (9 STEPS), HOLD 4-5 (8 STEPS) - THE TELL, WITH THE GLOW", states[1][1], 2, False),
+        ("RAISED GLOW (ADDITIVE, 4 X 6 STEPS)", art["root-glow"], 2, True),
+        ("LANE 2 CUT: STUMP RECOIL 0-1, THEN THE OOZE LOOP 2-5", states[2][1], 2, False),
+        ("LANE 2 SINK AT THE DEATH (5 X 12 STEPS)", states[3][1], 2, False),
+        ("THE FOUR ARMS' UNDER-WATER REACH (SUB PASS STAND-IN), 4 SWAY FRAMES", [reach_cell] + art["reach"][1:2], 1,
+         False)], width=1500, batch=R40_BATCH)
+    gif = [draw_r40(art, plat, sea, f / 15) for f in range(int(14.5 * 15))]
+    png = CONCEPT / f"{SLUG}-{R40_TAG}.png"
+    gif_path = CONCEPT / f"{SLUG}-{R40_TAG}.gif"
+    sheet.convert("RGB").save(png, optimize=True)
+    write_gif(gif, gif_path, fps=15, colors=128)
+    print(f"review: {png.relative_to(ROOT)}, {gif_path.relative_to(ROOT)}")
+
+
+def r40_main(argv):
+    if "--review" not in argv:
+        build_r40()
+    review_r40()
+
+
 if __name__ == "__main__":
     artkit.REVIEW_ROUND = REVIEW_ROUND
-    if "--review" not in sys.argv[1:]:
-        build()
-    review()
+    if "--r40" in sys.argv[1:]:
+        r40_main(sys.argv[1:])
+    else:
+        if "--review" not in sys.argv[1:]:
+            build()
+        review()

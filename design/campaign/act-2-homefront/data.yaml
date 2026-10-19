@@ -17,7 +17,7 @@ briefing:  # Commander Okafor, full screen; one page per paragraph, each with it
 outro:  # after the Level 14 debrief with the act summary (M5 part H, H6 = a, H7 = a: four pages, the approved text unchanged, one paragraph each, each with its image)
   music: act-complete  # track 24 under the first page, played once
   pages:
-    - {speaker: Okafor, expression: grim, image: act-2-outro-stump, line: "The Siege Spire is dead. Within the hour every Vrell force on Earth lost its coordination. Some are digging in, most are scattering, and the army is clearing them city by city."}
-    - {speaker: Okafor, expression: grim, image: act-2-outro-names, line: "Nova Lagos is counting its losses. So is Geneva. So are we. Remember the names, then get some sleep."}
-    - {speaker: Okafor, expression: grim, image: act-2-outro-mars, line: "An hour ago Ares Landing sent a priority signal. Mars is under siege, and the colonies have been holding alone for three weeks."}
-    - {speaker: Okafor, expression: fierce, image: act-2-outro-aegis, line: "We take the fight to them now. Aegis Wing ships out for Mars in seventy-two hours. Aegis Actual out."}
+    - {speaker: Okafor, expression: grim, image: act-2-outro-stump, line: "The Siege Spire is dead. Within the hour every Vrell force on Earth lost its coordination. Some are digging in, most are scattering, and the army is clearing them city by city.", notes: {image: "the withered stump of the Spire in Geneva at sunrise, the lake bright behind it"}}
+    - {speaker: Okafor, expression: grim, image: act-2-outro-names, line: "Nova Lagos is counting its losses. So is Geneva. So are we. Remember the names, then get some sleep.", notes: {image: "a Nova Lagos / Geneva street at dawn, a wall of candles and names"}}
+    - {speaker: Okafor, expression: grim, image: act-2-outro-mars, line: "An hour ago Ares Landing sent a priority signal. Mars is under siege, and the colonies have been holding alone for three weeks.", notes: {image: "Ares Landing's priority signal on a CDF plot, Mars at its edge"}}
+    - {speaker: Okafor, expression: fierce, image: act-2-outro-aegis, line: "We take the fight to them now. Aegis Wing ships out for Mars in seventy-two hours. Aegis Actual out.", notes: {image: "Aegis Wing's Stormhawks and Rook's Ember craft on the apron at dusk, a Mars-bound transport behind them"}}

@@ -28,8 +28,8 @@ public final class HangarView implements Disposable {
     public HangarView(Files files, Glass glass, Sprites sprites, Catalogue catalogue, Content content) {
         map = new TacticalMap(files);
         ItemIcons icons = new ItemIcons(sprites, catalogue);
-        shop = new ShopPanel(glass, icons, content);
-        loadout = new LoadoutPanel(glass, sprites.ship.get(sprites.ship.size / 2), icons);
+        shop = new ShopPanel(glass, icons, content, catalogue);
+        loadout = new LoadoutPanel(glass, sprites.ship.get(sprites.ship.size / 2), icons, catalogue);
         intel = new IntelPanel(glass, sprites);
         testFire = new TestFirePanel(glass, content, new TestFireView(sprites, new PodPivots(files)), sprites.pixel);
     }

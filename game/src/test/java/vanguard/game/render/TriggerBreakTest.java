@@ -1,9 +1,12 @@
 package vanguard.game.render;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -65,5 +68,23 @@ class TriggerBreakTest {
         }
         // Level 08's billboard once its data names its sprite; Level 06's survey cache and terminal never.
         assertTrue(Set.of("billboard").containsAll(breaking), breaking.toString());
+    }
+
+    @Test
+    void theRelayHutsDoorShowsItsHitsAndBurstsAsItIsSpent() {
+        assertTrue(TriggerBreak.doorBursts(object(3, "relay-hut")));
+        assertFalse(TriggerBreak.breaks(object(3, "relay-hut")), "no wreck: its burst frame stays");
+        assertFalse(TriggerBreak.doorBursts(object(0, "relay-hut")), "a destructible breaks by its own event");
+        // medium's 3 hits: sealed, one hit, two hits, burst; hard's 5: 0, 1, 1, 2, 2, burst
+        assertEquals(List.of(0, 1, 2, 3), doorFrames(3));
+        assertEquals(List.of(0, 1, 1, 2, 2, 3), doorFrames(5));
+    }
+
+    private static List<Integer> doorFrames(int hits) {
+        List<Integer> frames = new ArrayList<>();
+        for (int left = hits; left >= 0; left--) {
+            frames.add(TriggerBreak.doorFrame(hits, left, left == 0));
+        }
+        return frames;
     }
 }

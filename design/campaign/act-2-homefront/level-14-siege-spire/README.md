@@ -1,8 +1,8 @@
 ---
 title: Level 14 – Siege Spire
-design: review
-implementation: in-progress
-art: proposed
+design: approved
+implementation: done
+art: final
 depends-on: [../../../enemies/bosses/siege-spire]
 updated: 2026-10-12
 ---
@@ -115,8 +115,9 @@ The **boss arrives at t=108**: the arena section starts then, with speed 0, and 
 boss's arrival (its bar, the sting, track 22) and the boss checkpoint are one moment. **The 15 px/s
 creep of boss phase 1 in the approved spec is dropped** (H1 = a, pending the user's review): the
 built anchored arena needs speed 0, and all six roots stand on the screen from the start. "In turn"
-comes from the staggered fire (pods 1.6 s apart, the mortar roots every 4 s) and from the player's
-choice of root: the roots' guns turn toward the ship, so the player's x decides the exposure. The
+comes from the staggered fire (pods 0.4 s apart, each every 1.6 s, the mortar roots every 8 s since
+round 34's P2) and from the player's choice of root: the inner pods' guns turn toward the ship and the
+outer pods fire straight down their columns, so the player's x decides the exposure. The
 arena runs from t=108 to t=250; the level clock halts at the arena's end while the Spire lives, and a
 kill jumps the clock to it (Level 07's `arenaJump`), the scroll ramping up over 1 s into the 12 s
 daylight section, which **drifts at 25 px/s** (steps H7b and H9, pending the user's review: at 140 px/s the
@@ -336,10 +337,11 @@ the **daylight section** (12 s: the canopy withers and tears on a real-seconds t
 boss's death, low sunlight, the closing radio line; no enemies, no music, the ambience without
 the hum) → the **debrief with the act summary** (`mission-complete` jingle, the tally, the summary
 `ACT II COMPLETE · HOMEFRONT`) → the **act outro**, four voiced pages (H7 = a; the data is
-in the [Act 2 README](../README.md)) with `act-complete` under page 1 → the hangar. There is no
-Level 15 yet: after the outro the hangar reads `BEFORE L15 - NOT BUILT YET` and cannot launch
-(H9 = a), as Act 1's did in M4; M6 turns the end of Act 2 into the release's end (credits, high
-scores). `--act-end` works unchanged for this level.
+in the [Act 2 README](../README.md)) with `act-complete` under page 1 → the release's end. There
+is no Level 15 yet: M6 part B (Q1 = a, accepted in round 35) follows the outro with the end card, the
+name entry and the credits, then the main menu; Continue opens the hangar before L15, which reads
+`ACT III - RED DUST: COMING SOON` and cannot launch (H9 = a had it read `BEFORE L15 - NOT BUILT
+YET`). `--act-end` works unchanged for this level.
 
 ## Credit budget
 
@@ -389,20 +391,22 @@ pending the user's review) auditions what has no concept: the **root burst** and
 here, the **tear-free roar** and the **canopy withering** a/b in the [sfx](../../../audio/sfx/README.md)
 round; the armoured car, the outro images, the burst's sounds and the hum get one version; the Geneva
 backdrop and the Spire go straight to production. Generator notes: [concept/prompts.md](concept/prompts.md).
+Closed in the combined round 34 (user, 2026-10-12): the root burst **a**, the daylight **a**; everything
+else approved as final and accepted, the Spire's death after a redo.
 
 | File | What | Status |
 |---|---|---|
-| [concept/root-burst-r36-a.png](concept/root-burst-r36-a.png), [.gif](concept/root-burst-r36-a.gif) | Root burst, look a "breaking paving": cracks with a violet glow seeping through, dust, a slate root arching out with two knots, the growths swelling out of them (`tools/art/root_burst.py`; in the game until the pick: `--assets` wrote `assets/sprites/root-burst-decal`, `-puff`, `-root`, step H5) | proposed |
-| [concept/root-burst-r36-b.png](concept/root-burst-r36-b.png), [.gif](concept/root-burst-r36-b.gif) | Root burst, look b "creep surge": creep tendrils from the gutters, spore mist, a sac mound swelling and two buds splitting open | proposed |
-| [concept/daylight-r36-a.png](concept/daylight-r36-a.png) | Daylight section, look a "golden hour": warm grade, low-sun beams through the tearing canopy (`tools/art/daylight_l14.py`; still and timeline) | proposed |
-| [concept/daylight-r36-b.png](concept/daylight-r36-b.png) | Daylight section, look b "pale dawn": cool grade, haze burning off from the lake, no beams | proposed |
-| [concept/backdrop-final-r36-a.png](concept/backdrop-final-r36-a.png), [.gif](concept/backdrop-final-r36-a.gif) | Production backdrop straight from scene-geneva-r10-a (`tools/art/backdrop_l14.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r36-a); its block for the level data, for the main agent to merge, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the city rebuilt from plans (perimeter blocks, tile and slate roofs, sodium lamps, the canopy's mottled shadow baked in): the lakefront with the lake, the old town, the root field with roots as thick as trams, cracked paving and collapsed houses, the daylight tiles; sections 4–6 one unique strip (the converging avenues, the Concord plaza under the Spire's anchor with six avenues along its roots, the daylight graded by its distance past the arena frame); the Rhone with the Pont du Mont-Blanc, Saint-Pierre's square and the Place du Molard cut from the tiles under them, the cathedral towers in perspective, the Jet d'Eau, the Ravagers' crater, boulevards over the tile seams, Hammer flight and the few moving cars; the spore haze and the canopy's veins; the game's daylight looks (the canopy tearing, the beams, look a); composites with stand-ins for the units and the Spire; the GIF the ease into the halt and the daylight after a kill | proposed |
-| [concept/l14-props-final-r36-a.png](concept/l14-props-final-r36-a.png), [.gif](concept/l14-props-final-r36-a.gif) | Production art (`tools/art/l14_props.py`): the CDF armoured car under creep, cleared hit by hit, hatch open with the supply crate | proposed |
-| [concept/act-2-outro-final-r36-a.png](concept/act-2-outro-final-r36-a.png) | Production art (`tools/art/outro_l14_images.py`): the Act 2 outro's four briefing images, the stump in Geneva at sunrise, the memorial wall of names at dawn, Ares Landing's priority signal from Mars, Aegis Wing and the Mars transport on the apron at dusk | proposed |
-| [concept/level-14-capture-final-r36-a.png](concept/level-14-capture-final-r36-a.png), [.mp4](concept/level-14-capture-final-r36-a.mp4) | Capture of the game (medium, a strong fit with Rook, **`--invulnerable`**: the dead-reckoning driver cannot survive the Spire on the debug start's cores): 115 / 117 kills, ROOTS 8 / 8, secret 1 / 1, the Spire in 1:26 (par 2:10), A+; nineteen frames (the briefing pages and the hangar from a won Level 13, one phase-1 frame from a run without `--invulnerable`) and the whole run with sound through the act end ([recipe](concept/prompts.md#level-14-capture-final-r36-a)) | proposed |
-| [concept/level-14-capture-fixes-r36-a.png](concept/level-14-capture-fixes-r36-a.png), [.mp4](concept/level-14-capture-fixes-r36-a.mp4) | Supplementary capture of the step H7b fixes (step H8; the level time burnt in): Hammer flight at x 130 clear of the car, the growths' first shot about 290 px above the bottom edge, the radio at the roots' end and the boss arrival (Rook's warning bark, his phase-3 line), the free spire over the ash stump, the withering 3 s after the kill, the daylight's 40 px/s drift; the bottom row a run **without `--invulnerable`** on the balance plan's L14 fit (cores included) with Rook, lost five times in the Spire fight ([recipe](concept/prompts.md#level-14-capture-fixes-r36-a)) | proposed |
-| [concept/level-14-capture-daylight-r36-a.png](concept/level-14-capture-daylight-r36-a.png), [.mp4](concept/level-14-capture-daylight-r36-a.mp4) | Supplementary clip of the step H9 changes (step CF; 47 s with sound, the level time burnt in, and a sheet; `--invulnerable`): Okafor's root-grid line at the roots' end (≈ 95) ahead of the Choir (≈ 105) and Varga (≈ 111), the CDF supply drone carrying the armour patch in from the bottom edge (t 96.5–103), the kill (≈ 194.5) and the daylight at 25 px/s: the stump on the screen through the beams, its last root tips leaving at ≈ 215.3 (≈ 21 s after the kill), the debrief at ≈ 217.5 ([recipe](concept/prompts.md#level-14-capture-daylight-r36-a)) | proposed |
-| [concept/act-2-outro-capture-r36-a.png](concept/act-2-outro-capture-r36-a.png) | Capture of the act end from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15 ([recipe](concept/prompts.md#act-2-outro-capture-r36-a)) | proposed |
+| [concept/root-burst-r36-a.png](concept/root-burst-r36-a.png), [.gif](concept/root-burst-r36-a.gif) | Root burst, look a "breaking paving": cracks with a violet glow seeping through, dust, a slate root arching out with two knots, the growths swelling out of them (`tools/art/root_burst.py`; in the game until the pick: `--assets` wrote `assets/sprites/root-burst-decal`, `-puff`, `-root`, step H5) | chosen |
+| [concept/rejected/root-burst-r36-b.png](concept/rejected/root-burst-r36-b.png), [.gif](concept/rejected/root-burst-r36-b.gif) | Root burst, look b "creep surge": creep tendrils from the gutters, spore mist, a sac mound swelling and two buds splitting open | rejected |
+| [concept/daylight-r36-a.png](concept/daylight-r36-a.png) | Daylight section, look a "golden hour": warm grade, low-sun beams through the tearing canopy (`tools/art/daylight_l14.py`; still and timeline) | chosen |
+| [concept/rejected/daylight-r36-b.png](concept/rejected/daylight-r36-b.png) | Daylight section, look b "pale dawn": cool grade, haze burning off from the lake, no beams | rejected |
+| [concept/backdrop-final-r36-a.png](concept/backdrop-final-r36-a.png), [.gif](concept/backdrop-final-r36-a.gif) | Production backdrop straight from scene-geneva-r10-a (`tools/art/backdrop_l14.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r36-a); its block for the level data, for the main agent to merge, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the city rebuilt from plans (perimeter blocks, tile and slate roofs, sodium lamps, the canopy's mottled shadow baked in): the lakefront with the lake, the old town, the root field with roots as thick as trams, cracked paving and collapsed houses, the daylight tiles; sections 4–6 one unique strip (the converging avenues, the Concord plaza under the Spire's anchor with six avenues along its roots, the daylight graded by its distance past the arena frame); the Rhone with the Pont du Mont-Blanc, Saint-Pierre's square and the Place du Molard cut from the tiles under them, the cathedral towers in perspective, the Jet d'Eau, the Ravagers' crater, boulevards over the tile seams, Hammer flight and the few moving cars; the spore haze and the canopy's veins; the game's daylight looks (the canopy tearing, the beams, look a); composites with stand-ins for the units and the Spire; the GIF the ease into the halt and the daylight after a kill | chosen |
+| [concept/l14-props-final-r36-a.png](concept/l14-props-final-r36-a.png), [.gif](concept/l14-props-final-r36-a.gif) | Production art (`tools/art/l14_props.py`): the CDF armoured car under creep, cleared hit by hit, hatch open with the supply crate | chosen |
+| [concept/act-2-outro-final-r36-a.png](concept/act-2-outro-final-r36-a.png) | Production art (`tools/art/outro_l14_images.py`): the Act 2 outro's four briefing images, the stump in Geneva at sunrise, the memorial wall of names at dawn, Ares Landing's priority signal from Mars, Aegis Wing and the Mars transport on the apron at dusk | chosen |
+| [concept/level-14-capture-final-r36-a.png](concept/level-14-capture-final-r36-a.png), [.mp4](concept/level-14-capture-final-r36-a.mp4) | Capture of the game (medium, a strong fit with Rook, **`--invulnerable`**: the dead-reckoning driver cannot survive the Spire on the debug start's cores): 115 / 117 kills, ROOTS 8 / 8, secret 1 / 1, the Spire in 1:26 (par 2:10), A+; nineteen frames (the briefing pages and the hangar from a won Level 13, one phase-1 frame from a run without `--invulnerable`) and the whole run with sound through the act end ([recipe](concept/prompts.md#level-14-capture-final-r36-a)) | chosen |
+| [concept/level-14-capture-fixes-r36-a.png](concept/level-14-capture-fixes-r36-a.png), [.mp4](concept/level-14-capture-fixes-r36-a.mp4) | Supplementary capture of the step H7b fixes (step H8; the level time burnt in): Hammer flight at x 130 clear of the car, the growths' first shot about 290 px above the bottom edge, the radio at the roots' end and the boss arrival (Rook's warning bark, his phase-3 line), the free spire over the ash stump, the withering 3 s after the kill, the daylight's 40 px/s drift; the bottom row a run **without `--invulnerable`** on the balance plan's L14 fit (cores included) with Rook, lost five times in the Spire fight ([recipe](concept/prompts.md#level-14-capture-fixes-r36-a)) | chosen |
+| [concept/level-14-capture-daylight-r36-a.png](concept/level-14-capture-daylight-r36-a.png), [.mp4](concept/level-14-capture-daylight-r36-a.mp4) | Supplementary clip of the step H9 changes (step CF; 47 s with sound, the level time burnt in, and a sheet; `--invulnerable`): Okafor's root-grid line at the roots' end (≈ 95) ahead of the Choir (≈ 105) and Varga (≈ 111), the CDF supply drone carrying the armour patch in from the bottom edge (t 96.5–103), the kill (≈ 194.5) and the daylight at 25 px/s: the stump on the screen through the beams, its last root tips leaving at ≈ 215.3 (≈ 21 s after the kill), the debrief at ≈ 217.5 ([recipe](concept/prompts.md#level-14-capture-daylight-r36-a)) | chosen |
+| [concept/act-2-outro-capture-r36-a.png](concept/act-2-outro-capture-r36-a.png) | Capture of the act end from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15 ([recipe](concept/prompts.md#act-2-outro-capture-r36-a)) | chosen |
 
 ## Implementation
 
@@ -413,14 +417,14 @@ backdrop and the Spire go straight to production. Generator notes: [concept/prom
 - [x] Scroll timeline, sections, atmosphere intensity and parallax content per layer as in
       *Layout*; the arena section with `speed: 0` halting the scroll at t=108, the 12 s daylight
       section after it, primary `reach-end` (M5 part H, step H4)
-- [ ] Production backdrop `tools/art/backdrop_l14.py`: six sections, the canopy shadow and spore
+- [x] Production backdrop `tools/art/backdrop_l14.py`: six sections, the canopy shadow and spore
       haze, the rotunda arena, the daylight grade; moving scenery on real seconds in the arena
       (M5 part H, step H5)
 - [x] Root bursts (H2 = a): `root_bursts` with the placed ground unit, the 1 s telegraph, the
       invulnerable silent growth, the first shot after 0.75 s (hard 0.5 s; step H7b), the position rule,
       counted in the density and the secondary (M5 part H, steps H3 and H4)
 - [x] Root-burst look: the cracking and dust, the root breaking out, the grow-in, the crater;
-      look a in the game until the user's pick in round 36 (M5 part H, steps H5 and H6:
+      look a, the user's pick in round 34 (M5 part H, steps H5 and H6:
       `RootBurstLooks`, `Level14LooksTest`)
 - [x] Wave script matches the *Waves* table: at least 50 enemies a minute at medium from t=8 to
       the arena (`DensityTest`), no empty screen over 3 s on every difficulty (`PacingTest`)
@@ -442,13 +446,15 @@ backdrop and the Spire go straight to production. Generator notes: [concept/prom
 - [x] Secondary objective `ROOTS n/8` (easy `n/4`) tracked and rewarded 63 in Act 1 terms, the
       debrief's row `ROOTS n / 8` (M5 part H, steps H3, H4 and H6; `PartHHudTest`,
       `LevelScreenPartHTest`)
-- [ ] Threat profile from the data, Varga's four intel lines and Rook's teaser fitting the intel
+- [x] Threat profile from the data, Varga's four intel lines and Rook's teaser fitting the intel
       panel (`IntelPanelLayoutTest`), the Spire's intel silhouette and the L3 strip's marks (M5
-      part H, steps H4 and H5)
+      part H, steps H4 and H5; `boss-siege-spire`, the root field's mark, `PartHHudTest`); the boss's
+      mark at 108 s, a red tick over the waves, added in step K10 (`Intel.marks`,
+      `IntelPanelLayoutTest.level14sStripMarksTheBossAtItsArrival`)
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their
       images (M5 part H, steps H4 and H5; checked in step H6)
 - [x] Daylight section: no enemies and no music, the canopy withering and tearing from the boss's
-      death, the sunlit grade; daylight look a in the game until the user's pick in round 36 (M5
+      death, the sunlit grade; daylight look a, the user's pick in round 34 (M5
       part H, steps H5 and H6: `SpireLooks`, `Level14LooksTest`)
 - [x] Act end: the debrief with the act summary, then the four outro pages with `act-complete`,
       then the hangar (`--level 14 --act-end`; `OutroOnwardTest`, `DebriefActEndTest`,
@@ -614,3 +620,28 @@ backdrop and the Spire go straight to production. Generator notes: [concept/prom
   daylight boulevard later). (3) The t=100 armour patch is carried in by Level 13's CDF supply drone,
   flying in from below the bottom edge (no helipad here), releasing it at x 240, 380 px up and
   leaving the same way (the data's `drops`); without a relay no launch sound plays.
+- 2026-10-12 user, round 34: the tear-free roar **b** (a creature's bellow rising with the lift, wet
+  tearing, an air shockwave) and the canopy withering **b** (a dying exhale, a groan and a sigh into the
+  wind, 7.5 s) instead of a; the root burst stays a. Step K1 wired them
+  ([sfx](../../../audio/sfx/README.md#decisions)).
+- 2026-10-12 user, round 34 P2 (a kinder Spire for players who do not dodge well): the proposal
+  (the outer pods 1 and 4 fire straight down, the inner ones stay aimed) plus the lobs every 8 s per
+  mortar root (was 4; markers unchanged), measured with step H8b's calibration harness (the XTest
+  driver's random dodge, armour lost per 10 s in the fight): medium 30.6 → 9.8 (the Harbour Kraken
+  10.5), easy 12.1 → 1.5, hard 38.1 → 23.4. The roots' HP ×1.04 keeps the autopilot's fight at the par
+  (medium mean 130.4 s, par 130). Details, the variants tried and what is pending in the
+  [Siege Spire's Decisions](../../../enemies/bosses/siege-spire/README.md#decisions).
+- 2026-10-12 (user, round 34): concept round 34 closed. The root burst **a** "breaking paving" and
+  the daylight **a** "golden hour" (b "creep surge" and b "pale dawn" rejected, their files in
+  `concept/rejected/`); the Geneva backdrop, the armoured car, the Act 2 outro images, the briefing
+  images and the Siege Spire's art and intel silhouette approved as **final**, the Spire's death after
+  the redo r36-b ([Siege Spire](../../../enemies/bosses/siege-spire/README.md#decisions)), so
+  `art: final`; the captures (14.3a–d), the texts (C5, the teaser for Rook), the numbers (C6 hard over
+  the window, C8 the bounty at 26.8 %, C9 the HP ×1.8), C1 (no creep), C2 (the root field at 80 px/s),
+  C3 (the daylight at 25 px/s), C12 (the timeline and radio), H1–H10 and every build choice accepted;
+  P1 (Rook ejects in the Spire fight) and P6 (easy's refused Airstrike charge) accepted, P2 and the
+  sounds as in the lines above; the 20 voiced lines heard. The document leaves `review` for
+  `approved`. Still open: the user's playthrough of Act 2 (P9).
+- 2026-10-12: Step K10: the intel strip's boss mark at 108 s (the *Sensor-suite detail*) built, a red
+  tick the strip's depth drawn over the waves (the same for every level with a boss, see
+  [hangar](../../../ui/hangar/README.md)); every item ticked, `implementation: done`.

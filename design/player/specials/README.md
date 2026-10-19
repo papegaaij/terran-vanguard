@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-05
+updated: 2026-10-18
 ---
 
 # Special abilities
@@ -23,10 +23,10 @@ no airstrikes under the Europa ice. This gives the hangar intel another thing to
 | Airstrike | charges, max 4 (1 free at unlock) | Two CDF bombers sweep up the screen: heavy damage (300) to `ground` and `low-air`, 60 to `air` | 300 / charge | L04 (CDF bomber support assigned after L03) | Not under ice/water; not beyond the gate | draft |
 | Smart Bomb | max 3 charges (1 free at unlock) | Flash: clears all enemy bullets, 120 damage to everything on screen | 400 / charge | L06 | none | draft |
 | Decoy Flares | max 6 charges | Homing missiles and seekers retarget to flares for 4 s | 150 / charge | L27 (with the first homing projectiles) | none | draft |
-| EMP Burst | max 3 charges | Stuns machines 3 s and strips enemy shields; Vrell (biomechanical) stunned 1.5 s | 350 / charge | L15 | none | idea |
+| EMP Burst | max 3 charges (1 free at unlock) | Stuns machines 3 s and strips enemy shields and aura rings; Vrell (biomechanical) stunned 1.5 s; bosses never stunned (see *Act 3 specials in detail*) | 350 / charge | L15 | none | draft |
 | Sonar Pulse | max 4 charges | Reveals the `sub` layer and makes it hittable by all weapons for 6 s | 250 / charge | L22 | Water levels only | idea |
-| Orbital Lance | max 2 charges | 3 s vertical beam that follows the ship's X, 400 DPS on all layers except `sub` | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate | idea |
-| Shield Overcharge | cooldown 45 s | Fills the shield and doubles its capacity for 8 s | 5 000 once | L19 | none | idea |
+| Orbital Lance | max 2 charges | 3 s vertical beam, 40 px wide, that follows the ship's X, 400 DPS on all layers except `sub` (boss parts at most 400 per lance); a `beam` for tendrils | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate | draft |
+| Shield Overcharge | cooldown 45 s | Fills the shield to twice its capacity and keeps the capacity doubled for 8 s | 5 000 once | L19 | none | draft |
 | Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | L31 | none | idea |
 | Vrell Swarm Call | cooldown 75 s | Captured Choir tech: summons 6 friendly Vrell drones for 10 s | 10 000 once | L45 | none | idea |
 
@@ -103,6 +103,85 @@ special with nothing to decoy.
   applies them only for a won level.
 - Charges used in a failed attempt are restored on retry (see above).
 
+### Act 3 specials in detail
+
+Approved in concept round 36 (user, 2026-10-13, D.24; the looks EMP Burst a and Shield
+Overcharge b). The tables are hand-written; the numbers the game reads are in [data.yaml](data.yaml)
+(M7 part A: the `specials` rows, the `emp`, `orbital_lance` and `overcharge` blocks and
+`cooldown_pickup`; keep both in step).
+
+#### EMP Burst (L15)
+
+| Property | Value |
+|---|---|
+| Charges | 350 cr each, at most 3. **1 free charge** when it unlocks (hangar visit before L15), into the inventory; fitted only into an **empty** special slot, with the hangar notice (the Smart Bomb's rule) |
+| Effect | Instant. A blue-white electric ring expands from the ship to cover the whole play field in **0.4 s**; each unit is affected when the ring reaches its centre (the Smart Bomb's timing) |
+| Machines | Units whose stat block marks them as **machines** are **stunned 3 s**. In Act 3 these are the unmarked grey units: the Ghost Drone ([air](../../enemies/air/README.md)) and the Warden Tank ([ground](../../enemies/ground/README.md)) |
+| Vrell | Every other unit is Vrell (biomechanical) and is **stunned 1.5 s** |
+| Stun | A stunned unit's own clock stops: it does not steer, turn, fire or change state, and its timers (fire, windows, surfacing, auras, links) resume where they stopped. An air unit keeps its momentum and drifts on along its line; a ground unit stops where it is on the ground (a chain stops whole). It stays hittable and keeps its contact damage. A new EMP restarts the stun at its full length; stuns do not add up |
+| Shields and auras | Strips enemy shields: every **aura ring** a Choir Herald has given (M8 = a) is emptied at once, and a stunned Herald refills nothing during its stun. Any other enemy shield of a later act (a part's shield HP) is emptied the same way |
+| Bosses | Boss, mid-boss and set-piece parts are **never stunned**; their shields and aura rings are stripped. The Revenant Walker (a machine mid-boss) may answer the EMP in its own document; by default it does not |
+| Not affected | Enemy bullets and mines in flight; units in the `sub` or buried layer (a surfaced Burrower is stunned, and stays up for the stun); tendrils (an anchor is stunned as a Vrell, its link holds: only `beam` breaks a link, M9 = a); allies (domes, Rook, the player's drones) |
+| Damage | None. Kills made during a stun pay as usual |
+| Defence | No invulnerability, bullets are not cleared |
+| Repeat | 1.0 s between bursts |
+| Look and sound | The ring with crackling arcs along it; a stunned unit gets a 4-frame electric crackle overlay, its glow dims and a machine's running lights go out; the `tesla` family layered and longer ([sfx](../../audio/sfx/README.md#weapon-sound-families)) |
+
+The machine flag is new: the enemy documents of Act 3 mark the Ghost Drone, the Warden Tank and
+the Revenant Walker as machines (D-enemies and D-bosses steps), every Vrell unit is biomechanical
+by default.
+
+#### Orbital Lance (L17)
+
+| Property | Value |
+|---|---|
+| Charges | 600 cr each, at most 2 |
+| Call | Press special → an event line on the radio ("Lance uplink locked. Firing!", a CDF orbital officer in the generic CDF portrait, text and blip, like Hammer Lead's call). A thin red targeting line runs down the play field at the ship's x for **0.6 s**, then the lance fires |
+| Lance | A vertical column **40 px wide** over the whole play field's height for **3 s**, then a 0.3 s fade. Its centre follows the ship's x at up to **240 px/s**, so it lags a fast dodge and can be swept across a wave |
+| Damage | **400 per second** (applied every simulation step) to every enemy whose hit box overlaps the column, on `air`, `low-air`, `ground` (hardened targets included: it comes from above, like the Airstrike, and ignores frontal armour) and `high-air`; not the `sub` or buried layer. It is a `beam` for the tendrils: a link in the column takes its damage (M9 = a) |
+| Bosses | 200 per second on each boss part, at most **400** per boss part per lance; weak-point multipliers do not apply |
+| Walls | Not stopped by canyon walls or rock islands (it comes from orbit); units on a wall are hit |
+| Not affected | Allies (domes, Rook, drones), pickups; enemy bullets are not cleared |
+| Defence | No invulnerability |
+| Repeat | A new lance can be called 1.0 s after the last one has faded |
+| Limits | Needs satellite cover: not under the ice or under water, not beyond the gate (no Act 3 level restricts it) |
+| Look and sound | The `beam` family's loop c (`shot-beam-r04-c`, the piercing ray), a scorch line on the ground under the column, a white-hot core with a blue halo |
+
+At 600 a charge (22–33 % of an Act 3 level's budget) it is the strongest single call in the shop:
+a `medium` unit inside the column dies in well under a second, and 400 is about 4–7 % of an act
+boss's HP at Act 3's reference DPS.
+
+#### Shield Overcharge (L19, the first cooldown special)
+
+| Property | Value |
+|---|---|
+| Price | **5 000 once**, no charges; sold back at 60 % like other gear |
+| Cooldown | **45 s**, counted from each activation |
+| Effect | Instant. The shield fills to **twice its capacity** (Mk III: 90 of 45), a broken shield included (its break and regen delay are cancelled). For **8 s** the capacity is doubled: hits drain the doubled shield as usual, and its regen, after the normal delay, refills it towards the doubled capacity. After 8 s the capacity is normal again and any excess bleeds away over 0.5 s |
+| Not affected | Armour (no repair), the mercy time, the power load (a special draws no power); the spare-power regen bonus applies as ever |
+| Defence | No invulnerability: it is a buffer, not a shield against everything |
+| Look and sound | **White** (round 36, G.4 = b; gold is the Ascendancy's colour): at activation the shield ring flares white-hot into a **double shell**, a second ring just outside the first, that stays while overcharged; the HUD's shield bar keeps its 0–45 scale and shows the second layer as **white cores** inside the filled cells; a rising charge-up whoosh (the shield-restore chime's family, not bubbly) |
+
+#### Cooldown specials and the HUD ring
+
+The rules every cooldown special follows (the Shield Overcharge first; Time Dilation and the Vrell
+Swarm Call later):
+
+- **Ready at the start** of every attempt: the level start, a retry and a boss checkpoint. Nothing
+  carries from one level to the next, and nothing is restored on a retry because nothing is spent.
+- **The cooldown runs in level time** from the activation: it stops while the game is paused and
+  runs faster with the debug speed.
+- **A press while it cools** plays the denied sound and flashes the HUD row (the common input
+  rules); the 0.1 s buffer also holds a press made up to 0.1 s before it is ready.
+- **A special charge pickup** dropped while a cooldown special is fitted takes **10 s** off the
+  running cooldown (nothing when it is ready); the pickup is dropped as for the charge specials.
+- **HUD ring** (the special row of the [HUD](../../ui/hud/README.md)): the special's 16 px icon sits
+  in a thin ring. While cooling the ring fills clockwise from 12 o'clock in a dim cyan and the row
+  shows the whole seconds left where a charge special shows `×` charges (`SHIELD OVERCHARGE 27s`);
+  when it is full the ring flashes white once, a short soft ready chime plays (UI synth, never
+  bubbly) and the row reads `READY`. While the effect lasts (the Overcharge's 8 s) a white arc
+  drains anticlockwise over the ring to show the time left.
+
 ### One special at a time
 
 The special slot holds **one** special; there is no swap button. Specials are changed in the
@@ -121,13 +200,55 @@ Concept [round 09](../../concept-rounds/round-09/README.md) — generator `tools
 | [concept/smart-bomb-final-r26-a.png](concept/smart-bomb-final-r26-a.png) | Production art, round 26 (`tools/art/smart_bomb.py`): the Smart Bomb's ring profile (`smart-bomb-ring`, 72×8, additive, drawn as a band of quads round the circle) and the burst at the bomb point (`smart-bomb-burst_0..11`, 128×128, additive, 30 fps), and the whole effect over a dimmed Level 01 field every 4th step (sheet) | chosen |
 | [concept/smart-bomb-final-r26-a.gif](concept/smart-bomb-final-r26-a.gif) | Production art, round 26: the flash, burst and ring clearing a field of Needlers and bullets (motion) | chosen |
 
+Concept [round 36](../../concept-rounds/round-36/README.md) (Act 3 "Red Dust", overnight design
+phase 2026-10-12) — the EMP Burst and the Shield Overcharge with its cooldown ring, a/b each;
+generator `tools/concept/gear_r36.py`.
+
+| File | What | Status |
+|---|---|---|
+| [concept/emp-burst-r36-a.png](concept/emp-burst-r36-a.png) | EMP Burst A — a ring with crackling arcs at +0.05 / 0.15 / 0.25 / 0.35 s; the stun overlay: machines (Ghost Drone, grey Warden Tank) lights out for 3 s, Vrell (Needler) glow dimmed for 1.5 s (sheet) | chosen (round 36, G.3) |
+| [concept/emp-burst-r36-a.gif](concept/emp-burst-r36-a.gif) | EMP Burst A — the burst covers the field in 0.4 s, the machines and Needlers stop while the bullets in flight fly on (motion) | chosen (round 36, G.3) |
+| [concept/rejected/emp-burst-r36-b.png](concept/rejected/emp-burst-r36-b.png) | EMP Burst B "arc front" — a dashed double ring that forks into each unit it reaches, flicker and a spark cage as the stun overlay (sheet) | rejected — round 36: a (ring with crackling arcs) picked |
+| [concept/rejected/emp-burst-r36-b.gif](concept/rejected/emp-burst-r36-b.gif) | EMP Burst B — the same scene as A (motion) | rejected — round 36: a (ring with crackling arcs) picked |
+| [concept/rejected/shield-overcharge-r36-a.png](concept/rejected/shield-overcharge-r36-a.png) | Shield Overcharge A — gold flare and shimmer; the shield bar 0–90 with a gold upper half, the 24×24 cooldown ring and the special row in five states (sheet) | rejected — round 36: b (white double shell) picked; a's gold is the Ascendancy colour |
+| [concept/rejected/shield-overcharge-r36-a.gif](concept/rejected/shield-overcharge-r36-a.gif) | Shield Overcharge A — field and right HUD panel: shield 45 → 21, overcharged to 90 for 8 s, the excess bleeds away, a press while cooling denied, the ring filling over 45 s (motion) | rejected — round 36: b (white double shell) picked; a's gold is the Ascendancy colour |
+| [concept/shield-overcharge-r36-b.png](concept/shield-overcharge-r36-b.png) | Shield Overcharge B — a white-hot double shell; the bar 0–45 with white second-layer cores (sheet) | chosen (round 36, G.4) |
+| [concept/shield-overcharge-r36-b.gif](concept/shield-overcharge-r36-b.gif) | Shield Overcharge B — the same scene as A (motion) | chosen (round 36, G.4) |
+
+Production art for concept round 37 (M7 part A step ART-A, `tools/art/act3_specials.py`; prompts in
+[concept/prompts.md](concept/prompts.md#emp-burst-final-r37-a)): the EMP Burst (G.3 = a) and the Shield
+Overcharge (G.4 = b) in the chosen looks, and the Orbital Lance, which round 36 showed no look for, as
+an a/b proposal (the user picked b, "descending rings", 2026-10-13: b is written to `assets/`, step Q2;
+a in `concept/rejected/`). Round 37 closed 2026-10-13: the EMP Burst's and the Shield Overcharge's art
+approved as final (F.3, F.4).
+
+| File | What | Status |
+|---|---|---|
+| [concept/emp-burst-final-r37-a.png](concept/emp-burst-final-r37-a.png) | EMP Burst final effects: the ring as a strip mapped round the circle (`emp-burst-ring`, 4 crackle frames) and the stun crackle overlay in three sizes, on the field (sheet) | chosen (round 37, F.3: approved as final) |
+| [concept/emp-burst-final-r37-a.gif](concept/emp-burst-final-r37-a.gif) | The ring covering the field in 0.4 s, Ghost Drones dark for 3 s and Needlers dimmed for 1.5 s under the crackle (motion) | chosen (round 37, F.3: approved as final) |
+| [concept/rejected/orbital-lance-r37-a.png](concept/rejected/orbital-lance-r37-a.png) | Orbital Lance A "piercing ray": a solid red targeting line, a column with a wide white-hot core and a blue halo with striations racing down, the scorch tile and embers (sheet) | rejected — round 37: b (descending rings) picked |
+| [concept/rejected/orbital-lance-r37-a.gif](concept/rejected/orbital-lance-r37-a.gif) | A: the lock line for 0.6 s, the 40 px column following the ship for 3 s over Needlers and a Hive Node, the scorch left on the ground, the 0.3 s fade (motion) | rejected — round 37: b (descending rings) picked |
+| [concept/orbital-lance-r37-b.png](concept/orbital-lance-r37-b.png) | Orbital Lance B "descending rings": a dashed double red line with chevrons running down, a column with a narrower core and bright rings travelling down it (sheet) | chosen (round 37, P.2) |
+| [concept/orbital-lance-r37-b.gif](concept/orbital-lance-r37-b.gif) | B in the same scene (motion) | chosen (round 37, P.2) |
+| [concept/shield-overcharge-final-r37-a.png](concept/shield-overcharge-final-r37-a.png) | Shield Overcharge final effects: the white double shell loop and the activation flare (sheet) | chosen (round 37, F.4: approved as final) |
+| [concept/shield-overcharge-final-r37-a.gif](concept/shield-overcharge-final-r37-a.gif) | The flare, the double shell round the ship for a few seconds, its end (motion) | chosen (round 37, F.4: approved as final) |
+| [concept/specials-capture-r37-a.png](concept/specials-capture-r37-a.png) | Game capture (round 37, M7 part A): the EMP Burst stunning Needlers made machines in scratch data (3 s) and Skitters (1.5 s), L05; the Orbital Lance's lock line, column, scorch and Lance Control's line, L07; the Shield Overcharge's double shell and white cores, its cooldown ring (a charge pickup taking 10 s off) through to READY, L09; the Smart Bomb, L14 (sheet) | chosen (round 37, K.2: accepted) |
+| [concept/specials-capture-r37-a.mp4](concept/specials-capture-r37-a.mp4) | The same, 46 s with the game's sound | chosen (round 37, K.2: accepted) |
+
 ## Implementation
 
 - [x] Special slot and charge counting: the special button (`Command.SPECIAL`) with its 0.1 s
   buffer and the denied sound, charges used and found reported by the level and applied for a won
   level only (a retry restores them), the special charge pickup (`--special airstrike:2` fits it
   for testing)
-- [ ] Cooldown timers — **later: Act 3** (the Shield Overcharge at L19, the first cooldown special)
+- [x] Cooldown timers — **later: Act 3** (the Shield Overcharge at L19, the first cooldown special) — rules under *Cooldown specials and the HUD ring*
+  (M7 part A, step A2: the data, `price` and `cooldown` instead of charges, `cooldown_pickup`; the
+  shop's buy-once and sell-back rows in `Hangar` with the gear holding 1 for an owned one, stated
+  default accepted in round 37, B.2 d; the timers in the simulation: step A3; the HUD ring and the
+  ready chime: step A6)
+- [x] EMP Burst as specified in *Act 3 specials in detail* (the stun, the machine flag, stripping aura rings; its free charge at the L15 unlock) — **later: Act 3** (M7 part A; step A2: its row with the free charge and the `emp` block, the stat blocks' `machine` key; the game, step A6: the ring with its arcs, the crackle on stunned units, a stunned Vrell unit's glow dimmed and a machine's lights out, the ring and power-down sounds; the simulation, step A3: `EmpSpec`, the stun stopping the unit's clock, `Act3SpecialsTest`; the aura and shield strip is a hook until the Choir Herald's `aura`, M7 part D)
+- [x] Orbital Lance as specified in *Act 3 specials in detail* (the steered column, the boss cap, tendrils as a `beam`, its radio call) — **later: Act 3** (M7 part A; step A2: its row and the `orbital_lance` block; it counts as `anti-ground` for a level's `required` traits, `Hangar.HARDENED_SPECIALS`; the game, step A6: the red targeting line, the column and its scorch line with embers, the lock beep, loop c and the rumble, Lance Control's line on the radio (text and blip until step Q2 cast and rendered her voice, round 37 b); the simulation, step A3: `LanceSpec`, the boss-part ledger, `Act3SpecialsTest`; tendrils as a `beam` with the Tendril Anchor, M7 part C)
+- [x] Shield Overcharge as specified in *Act 3 specials in detail* (the doubled capacity, the white double shell and the shield bar's white second-layer cores) — **later: Act 3** (M7 part A; step A2: its row, 5 000 once with a 45 s cooldown, and the `overcharge` block; the game, step A6: the white double shell and its activation flare, the shield bar's white cores, the whoosh and the end shimmer)
 - [x] Airstrike as specified in *Acts 1–2 specials in detail* (M4 part D: the production bomber
   sprite with its engine flicker and ground shadow, the Bomb Rack's bomb, the blasts
   `explosion-medium`; the boss-part cap applies once bosses exist)
@@ -142,7 +263,10 @@ Concept [round 09](../../concept-rounds/round-09/README.md) — generator `tools
 - [ ] Setting restrictions read from the level data — **later: Act 4** (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special)
 - [x] HUD special row: icon, name, charges; greyed while the strike flies or with no charge; flashes
   when denied
-- [ ] HUD: cooldown ring — **later: Act 3** (with the cooldown timers) — and the unavailable-in-this-setting state — **later: Act 4** (with the setting restrictions)
+- [x] HUD: cooldown ring (M7 part A step A6: `ShipPanel`; the row goes compact, the icon in its
+  ring where the word `SPECIAL` stands, and reads `OVERCHARGE 27s` / `READY`; the white flash and the
+  chime as it is ready; the overcharge's white arc draining anticlockwise)
+- [ ] HUD: the unavailable-in-this-setting state — **later: Act 4** (with the setting restrictions)
 
 ## Decisions
 
@@ -217,3 +341,40 @@ Concept [round 09](../../concept-rounds/round-09/README.md) — generator `tools
   files proposed for round 26; not drawn yet (kept for later): the bullets popping with a sparkle
   as the ring passes them, which the round-09 sheet shows.
 - 2026-10-05: Concept round 26 closed (user: the round accepted as proposed): the Smart Bomb's production ring and burst approved as **final**, with its chosen sound as wired; the bullets' sparkle as the ring passes them stays for later. The part's `art` stays `chosen`: the Decoy Flares (Act 4) have no production art yet.
+- 2026-10-12 (overnight design phase): the Act 3 specials specified as draft rows with their
+  details: the EMP Burst (machines 3 s, Vrell 1.5 s, a stunned unit's clock stops, aura rings and
+  shields stripped, bosses never stunned, one free charge at L15; a new `machine` flag in the enemy
+  stat blocks), the Orbital Lance (0.6 s targeting line, a 40 px column for 3 s following the ship
+  at 240 px/s, 400 per second, boss parts at most 400 per lance, a `beam` for tendrils, not stopped
+  by walls) and the Shield Overcharge (twice the capacity for 8 s); the cooldown rules (ready at
+  every attempt's start, level time, a charge pickup takes 10 s off) and the HUD ring. Pending the
+  user's review in concept round 36; the Acts 1–2 specials are unchanged.
+- 2026-10-12 (overnight design phase): concept round 36 proposes an a/b of the EMP Burst and of the
+  Shield Overcharge with its HUD ring (`tools/concept/gear_r36.py`), pending the user's choice.
+- 2026-10-13 (user, round 36): the *Act 3 specials in detail* approved (D.24): the EMP Burst, the
+  Orbital Lance (its caller "Lance Control", Q.24g), the Shield Overcharge, the cooldown rules and
+  the HUD ring. G.3 = a: the EMP Burst's ring with crackling arcs chosen, the "arc front" (b)
+  rejected. **G.4 = b**: the Shield Overcharge is **white** (a white-hot double shell, the shield
+  bar's 0–45 scale kept with white second-layer cores, a white arc on the HUD ring); the gold look
+  (a, the Ascendancy's colour) rejected. The rejected files moved to `concept/rejected/`. The special
+  row's width for "OVERCHARGE" is checked with the HUD in part A.
+- 2026-10-13: M7 part A, step A6, the game's side (our reading, **pending the user's review** in
+  round 37): the EMP ring is the 60×128 strip as a band round the circle, fading to 65 %; the
+  crackle by the unit's size (under 32 px, under 64 px, above), a stunned Vrell unit's glow at 35 %
+  and a machine's out; the lance's scorch columns fade over 4 s, their embers over 1.2 s; the
+  overcharge's shell fades to half over the excess's bleed. The Orbital Lance's call is Lance
+  Control's line, urgent like Hammer Lead's (the level screen now picks the call by the special's
+  kind: the Airstrike's and the lance's; step A3's finding), text and blip until the voice is cast.
+- 2026-10-13 (user, round 37): the EMP Burst's and the Shield Overcharge's production art approved as
+  final (F.3, F.4); the Orbital Lance's look **b** "descending rings" chosen (P.2; a "piercing ray"
+  rejected and moved to `concept/rejected/`, `tools/art/act3_specials.py` routes it there); the
+  specials capture accepted (K.2); the compact special row for a cooldown special accepted as a change
+  to the approved HUD text (C2); the build choices all kept (B.2 a–e: the stun stops the unit's clock,
+  a chain stops whole, no stacking, bosses and `sub` units never stunned; a cooldown special ready at
+  every attempt, a pickup takes 10 s off; the Overcharge ends at an attempt's start; B.3 b and d; B.5
+  d–g); sounds S.7 EMP ring b, S.8 power-down b, S.9 lance rumble b, S.10 activation b, S.11 end a,
+  S.12 ready chime a; Lance Control is Celine Major (S.16 = b, step Q2). R.4 (d), the READY flash
+  counted in game time, fixed (step A8).
+- 2026-10-18 (user, round 39): C1: this spec wins over Level 16's first table: the Orbital Lance's column is not
+  stopped by rock (Level 16's *What walls stop* now lists it apart from the Ion Beam). R.3: the Lance's scorch line
+  on the canyon's pale sand kept as it is.

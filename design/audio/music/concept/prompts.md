@@ -847,3 +847,180 @@ seam 0.52, 2.61 MB. Measured only, not listened to.
   fade tail (dark) and the loop points (amber), with the measured numbers.
 
 Outcome (user, 2026-10-07): both files approved as **final** in round 31.
+
+# Round 36 — the Act 3 B theme (track 9), two sketches
+
+Brief (M7 "Act 3 – Red Dust" design phase, step A-audio; pending the user's review in round 36): track 9,
+the Act 3 B theme, "dusty mid-tempo techno, Vorne's motif as a faint layer", for Levels 18, 19 and the
+Level 21 approach. Two contrasting a/b sketches of about a minute from
+`tools/concept/audio/music_r36b.py` (deterministic, round-02 loop format: intro + loop + 2-bar fade tail,
+`LOOPSTART` / `LOOPLENGTH`, −14 LUFS, −2 dBFS sample-peak ceiling). In both, Vorne's motif
+(1 – ♭3 – 5 – 7) is its own group ("motif"), absent in the intro and the A section and entering at the
+loop's bar 8, so the production can deliver it as a separate layer (Level 18 brings it in at the Ghost
+Drones' first sight, Level 21's approach mutes it). A dust wind made periodic in the loop (no jump at the
+seam) swells in each sketch's breakdown. Not listened to by Claude: checked by loudness, peaks, the seam
+(the jump at the loop point against the nearby sample steps; about 1 or less is clean), the motif layer's
+level against the mix (RMS per section) and spectrograms.
+
+## act3-b-theme-r36-a — "Oxide Drift" (#9 Act 3 B, 65.2 s)
+
+**Rejected** (round 36, 2026-10-13: b picked); the files are in `rejected/`.
+
+**Brief**: track 8's Martian world slowed into techno: a muffled four-on-the-floor kick, a rolling 16th
+bass (every 16th off the kick, the octave on the last), a filtered pluck sequencer on the chord tones
+(its filter opening through the A section, closed in the breakdown, open in D, with a 16th arp over the
+last bars), Martian hand drums (track 8's doum and tek) and shaker, and the lonely reed of "Red Dust Run"
+back as a call over the B section and the end of D. A 4-bar dust breakdown (C) drops the kick for a sub
+and a wind swell. Vorne's motif in cold organ (an octave down) and low brass far back (1.4 kHz low-pass,
+4.5 s reverb at 60 %), A3 C4 E4 G♯4 at bars 8, 12, 16, 20 and 24: A harmonic minor holds his
+minor-major-7th chord, and E phrygian dominant (track 8's scale) is its fifth mode, so the Ascendancy's
+motif hides inside the Martian scale; its G♯ rings on over the F chord that follows. The layer sits
+17.7 dB under the mix in B (14.6 in the breakdown, 17.2 in D).
+
+**Tempo / key**: 126 BPM, A minor (harmonic) / E phrygian dominant. **Loop**: `LOOPSTART` 357000
+(8.095 s), `LOOPLENGTH` 2352000 (53.333 s = 28 bars). **Chords**: A `Am Am F F Dm Dm E E`; B `Am F Dm E`
+× 2; C `Am Am F E`; D `F G Am Am Dm E Am E`. **Measured**: −14.0 LUFS, peak −1.3 dBFS, true peak
+−1.1 dBTP, seam 0.24.
+
+**AI prompt**: *"Dusty mid-tempo techno level theme for a 1990s sci-fi shooter on Mars, 126 BPM, A
+harmonic minor / E phrygian dominant, muffled four-on-the-floor kick, rolling sixteenth-note bass,
+filtered pluck sequencer, Middle-Eastern hand drums and shaker, a lonely double-reed melody, desert
+wind, a cold organ and low brass motif far in the background, hypnotic, instrumental, seamless loop."*
+
+## act3-b-theme-r36-b — "Grey Signal" (#9 Act 3 B, 65.8 s)
+
+**Chosen** (round 36, 2026-10-13).
+
+**Brief**: dub techno: syncopated chord stabs (minor-ninth and major-seventh voicings on steps 4, 11 and
+15 of each bar) through a dotted-8th ping-pong delay and a long reverb, their filter opening through
+the loop; a deep sub bass, rimshots and swung 16th hats (open hats in D), the hand drums and shaker
+from the B section on, a dark pad, the same looped dust wind swelling in the 4-bar breakdown (C:
+stabs, pad and sub alone, a kick fill back in). Vorne's motif as an intercepted signal: a thin whistle
+voice through a radio band-pass (700 Hz – 2.6 kHz) over a swell of static (band noise only, no
+crackle), D4 F4 A4 C♯5 at bars 8, 12, 16, 20 and 24, its C♯ grinding against the C of the D minor-ninth
+chord: a human transmission where none should be. The layer sits 19.8 dB under the mix in B and D
+(17.3 in the breakdown).
+
+**Tempo / key**: 125 BPM, D minor, 10 % swing. **Loop**: `LOOPSTART` 359856 (8.160 s), `LOOPLENGTH`
+2370816 (53.760 s = 28 bars). **Chords**: A, B and D `Dm9 Dm9 B♭maj7 B♭maj7 Gm9 Gm9 A7(♭9) A7(♭9)`; C
+`Dm9 Dm9 B♭maj7 A7(♭9)`. **Measured**: −14.0 LUFS, peak −1.4 dBFS, true peak −1.0 dBTP, seam 0.57.
+
+**AI prompt**: *"Dusty dub techno level theme for a 1990s sci-fi shooter on Mars, 125 BPM, D minor,
+syncopated minor-ninth chord stabs with ping-pong delay and long reverb, deep sub bass, rimshots and
+swung hi-hats, hand drums, desert wind, a faint whistled four-note motif heard through radio static
+like an intercepted transmission, hypnotic, instrumental, seamless loop."*
+
+## music-final-r38-a — track 8 and its provisional base stem
+
+Brief (M7 part B, step AUD-B; pending the user's review in round 38): track 8 "Red Dust Run" (Act 3 A:
+Levels 15–17 and 20) at full length, as the [*Act 3 music*](../README.md#track-8-red-dust-run-in-production-m7-part-b)
+section asks: a full-length mix of about 3:00 from the chosen round-02 sketch
+([mars-theme-r02-a](mars-theme-r02-a.ogg), 135 BPM, E phrygian dominant, 53.8 s), checked against the final
+spec (OGG Vorbis q6, −14 LUFS ±0.5 LU, true peak ≤ −1 dBTP, `LOOPSTART` / `LOOPLENGTH`, a `SOURCE`
+comment), plus a base stem from the same render. `python3 tools/art/themes.py red-dust red-dust-base`
+renders both with the new generator `tools/concept/audio/music_r38.py` and checks them.
+
+Composition (`music_r38.py`): the sketch's 4-bar intro (wind, drone, hand drums, the reed's call), then a
+96-bar loop of twelve 8-bar sections on its material: A (the sketch's A melody over E–F–E–Dm–Am–F–Dm–E),
+B (the Andalusian cadence Am–G–F–E with the 16th arpeggio and the B melody), **D "caravan"** (new: half
+time, the hand drums forward, a low patient reed melody over an E pedal), A2 (the A melody an octave
+down over the arpeggio), C (the sketch's dust storm: muffled kit, the wind swelling, the call; then its
+build), **E bridge** (new: Dm–Am–F–G–E, a high open reed melody, full kit), B2 (the B melody, strings
+doubling it an octave under), F desert (no kit: hand drums, wind, drone and the call alone), G build (the
+kick, then the hats, then the full kit return, the arpeggio's filter opening, the A melody's second
+half), B3 (the climax), A3 (the A melody with the strings under it) and T (the call answered and falling
+home, a snare roll into the loop start). The sketch's chains and seeds are kept; new are the drone (an E
+pedal in low strings, an A pedal under the cadence) and the wind made loop-periodic (its last 0.5 s
+cross-faded into its first, so the seam is clean). Section loudness of the full mix: −12.9 (B3) to
+−16.7 LUFS (F, the desert), the intro −16.0.
+
+Base stem: one render, the base groups through the full mix's own chains (every chain linear, so the full
+mix is exactly the sum of its groups), linked mastering as in `music_r11.py`: kept the hand drums and
+shaker, the reese bass, the wind, the drone, the string pads and the kicks; dropped the snares, hats,
+toms and crashes (the breakbeat top), the reed and the strings' melody, and the 16th arpeggio. Per section
+the base sits 1.6 (C, the storm) to 3.3 LU (B3) under the full mix (−16.0 to −19.3 LUFS). **Provisional**: the music README
+wants the full mix reviewed before the stem, but Level 15 plays the stem from section 2, so it is
+rendered now and re-rendered from the same generator if the review changes the full mix.
+
+Measured (`themes.py --check red-dust red-dust-base`): `red-dust-run.ogg` 181.78 s, loop 333200 +
+7526400 samples (7.556 s + 170.667 s), −14.0 LUFS, −1.6 dBTP, seam 0.28, 4.08 MB; `red-dust-run-base.ogg`
+same length and loop, −16.8 LUFS (−2.8 LU under the full mix), −2.5 dBTP, seam 0.17, 4.22 MB. No
+true-peak dips were needed (the pair goes through the same envelope pass as "Firestorm", `PAIR_RENDERED`).
+Measured only, not listened to.
+
+- `red-dust-run-final-r38-a.ogg`, `red-dust-run-base-final-r38-a.ogg`: byte copies of the two files in
+  `assets/music/`, for the review board.
+- `red-dust-run-seam-final-r38-a.ogg`, `red-dust-run-base-seam-final-r38-a.ogg`: listening aids, the last
+  8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades at both ends).
+- `music-final-r38-a.png`: both files' waveforms with the intro (grey), loop (blue), fade tail (dark) and
+  the loop points (amber), with the measured numbers.
+
+# Round 40 — track 29 "Debrief", two proposals
+
+Brief (step MUS-D, the user's request of 2026-10-18; pending the user's review in round 40): the debrief has
+only the 6 s mission complete jingle (track 23); a quiet music loop should carry on under the debrief after
+it. New track 29 "Debrief" (P2): 60–90 s with intro + seamless loop in the round-02 format (`LOOPSTART` /
+`LOOPLENGTH`, a 2-bar fade tail), −18…−20 LUFS so it sits under the debrief's sounds and voice, in D major
+(the jingle's last chord, humanity's motif in its major form) so it follows the jingle; calm and a little
+proud, not the hangar theme "Dry Dock" (swung 90 BPM D dorian, FM electric piano, flute, vibes) again.
+`tools/concept/audio/music_r40.py` renders both (deterministic, mastered to −19 LUFS with a −3 dBFS
+ceiling) and a 15 s listening aid each: the jingle (`mission-complete-final-r26-a.ogg`, the game's file),
+then the loop file from 5.714 s (three jingle bars at 126 BPM: the downbeat after its final chord, while it
+rings out), both at their mastered levels as the game would play them. Not listened to by Claude: checked
+by loudness (whole file, intro, per section), peaks, the loop seam (the jump at the loop point against the
+nearby sample steps; about 1 or less is clean), a band balance against the chosen hangar and briefing
+themes, and the levels across the handover.
+
+Band balance (dB of the total energy, 20–60 / 60–250 / 250–2k / 2–6k / 6–16k Hz): "Dry Dock" full −8.2 /
+−2.8 / −5.1 / −19.8 / −26.3; "Situation Room" −7.0 / −4.9 / −3.4 / −16.7 / −27.2.
+
+## debrief-theme-r40-a — "Homeward" (#29 Debrief, 77.1 s)
+
+**Brief**: warm synth-orchestral, no beat. A 2-bar intro holds the jingle's D major chord on in strings and
+a soft "oo" choir, the harp coming in on its second bar. The 16-bar loop: slow string pads (0.6 s attack)
+over a low synth pad, low strings and a quiet sub on the roots, a soft harp (decaying partials, a 6 ms
+attack, no pluck transient) in rising eighths. A half: humanity's motif slow on a solo French horn, D4 A4 D5
+E5 F♯5 over D – Bm, an answer (E5 D5 B4, C♯5), the motif again climbing on to G5 A5, then down to E5 over
+the A. B half: the choir joins the pads, a solo string counter-melody over G – A – F♯m – Bm, the horn's
+8-9-10 fragment (D5 E5 F♯5) over G – D/F♯ and a closing phrase back to the loop start; one soft timpani
+note and a quiet cymbal swell mark the B half.
+
+**Tempo / key**: 63 BPM (half the jingle's 126, so a bar of the loop is two of the jingle), D major.
+**Loop**: `LOOPSTART` 378000 (8.571 s), `LOOPLENGTH` 2688000 (60.952 s = 16 bars). **Chords**: A
+`D Bm G A D Bm Em7 Asus–A`; B `G A F♯m Bm G D/F♯ Em7 Asus–A`. **Measured**: −19.0 LUFS (intro −21.1, A
+−18.4, B −19.1), peak and true peak −7.1 dB, seam 0.37; bands −9.2 / −5.8 / −2.2 / −19.1 / −39.0 dB:
+mid-weighted and darker above 6 kHz than the references (no hats; leaves room above the voice). Join: the
+jingle's last 2 s −12.6 LUFS, the loop's first seconds −22.1 LUFS (the intended step down from the −14
+jingle to the −19 bed), no hole at the handover (the quietest 0.4 s −28.9 dBFS RMS), peak −1.9 dBFS.
+
+**AI prompt**: *"Quiet, warm synth-orchestral loop for the mission debrief of a 1990s sci-fi shooter, 63
+BPM, D major, slow string and soft choir pads, a gentle harp in eighths, a solo French horn playing a
+slow rising five-note heroic motif, a solo violin counter-melody, calm and a little proud, no drums,
+instrumental, seamless loop."*
+
+## debrief-theme-r40-b — "Stand Down" (#29 Debrief, 80.7 s)
+
+**Brief**: laid-back electronic, straight (no swing). A 2-bar intro: the Dmaj9 pad swelling, the eighth
+pulses fading in with their filter opening, the sub on the second bar. The 24-bar loop: maj9 / m9 pads
+pumping gently on a soft kick (beats 1 and the "and" of 3), eighth-note pulses on the chord tones (a soft
+pulse-and-triangle voice, 8 ms attack, a low-pass with no resonance, so nothing pops) through a
+dotted-eighth ping-pong delay, a round sub bass, a brushed snare (band noise, no tonal body) on 2 and 4,
+closed eighth hats and a shaker. A: the groove, the pulses' filter opening. B: the motif hinted on a soft
+glass lead (sine with a fading octave FM sheen), 5-8-9-10 (A4 D5 E5 F♯5) and a falling answer. C: no kit
+(the shaker alone), the pads up, the motif in full once (D4 A4 D5 E5 F♯5, then E5 D5 C♯5 A4, D5) and its
+hint an octave down; the kick comes back under the last bar.
+
+**Tempo / key**: 84 BPM, D major. **Loop**: `LOOPSTART` 283500 (6.429 s), `LOOPLENGTH` 3024000 (68.571 s
+= 24 bars). **Chords**: A and B `Dmaj9 Dmaj9 Bm9 Bm9 Gmaj9 Gmaj9 Em9 A11`; C `Gmaj9 A6 F♯m7 Bm9 Gmaj9 A6
+Em9 A`. **Measured**: −19.0 LUFS (intro −21.1, A −19.9, B −18.6, C −17.9), peak and true peak −5.6 dB,
+seam 0.80; bands −6.7 / −4.6 / −3.6 / −24.1 / −30.1 dB: a little more sub than the references, softer in
+2–6 kHz. Join: the jingle's last 2 s −12.6 LUFS, the loop's first seconds −21.4 LUFS, the quietest 0.4 s at
+the handover −27.0 dBFS RMS, peak −1.9 dBFS.
+
+**AI prompt**: *"Laid-back downtempo electronic loop for the mission debrief of a 1990s sci-fi shooter, 84
+BPM, D major, warm major-ninth pads gently pumping on a soft kick, soft eighth-note synth pulses with
+ping-pong delay, round sub bass, brushed snare and shaker, a glassy lead hinting at a rising heroic
+motif, calm and a little proud, instrumental, seamless loop."*
+
+- `debrief-join-r40-a.ogg`, `debrief-join-r40-b.ogg`: listening aids, the jingle → each loop, 15 s (1 s fade
+  out).

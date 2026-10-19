@@ -55,6 +55,18 @@ import vanguard.sim.PlayField;
  *     a burst on a naval unit and a naval unit's death); presentation only
  * @param rootBursts M5 part H (design/campaign Level 14, Hazards; decision H2 = a): the root bursts, ground
  *     units grown at a point of the field after a telegraph instead of entering at the top edge
+ * @param launch M7 part B (design/campaign Level 15, Layout; a default pending the user's review in round 38):
+ *     {@code drop}, the ship (and the escort in his slot) drops from above the top edge to the start spot over the
+ *     launch instead of rising from the bottom edge; the bottom launch if not given
+ * @param noSurface M7 part B (Level 15's station pads, hab and rail line): the areas of the ground where no
+ *     Burrower surfaces (the spot rule picks the nearest allowed spot, else skips that surfacing)
+ * @param terrain M7 part C (design/campaign Level 16, Terrain): the canyon's walls and islands, rock on the play
+ *     plane, and what a touch of it costs; none if not given
+ * @param allies M7 part D (design/campaign Level 17, The Ares Landing domes; design/allies, Ares Landing dome): the
+ *     ground allies that scroll through with the ground outside the objectives (Level 17's five domes) and the
+ *     target-the-objective hook that goes for them; none if not given
+ * @param flak M7 part D, presentation (Level 17's militia flak guns at the spaceport): flak bursts on {@code low-air}
+ *     from a time on, hitting nothing; none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -93,8 +105,15 @@ public record LevelData(
         Optional<Double> dropFactor,
         @JsonProperty("drops") Optional<List<Drop>> pointDrops,
         Optional<String> waterSplash,
-        Optional<RootBursts> rootBursts) {
+        Optional<RootBursts> rootBursts,
+        Optional<String> launch,
+        Optional<List<NoSurface>> noSurface,
+        Optional<TerrainBlock> terrain,
+        Optional<GroundAllies> allies,
+        Optional<Flak> flak) {
     public LevelData {
+        launch.ifPresent(kind -> Check.that(LAUNCH_DROP.equals(kind), "launch: only 'drop', was '" + kind + "'"));
+        noSurface = noSurface.map(List::copyOf);
         dropFactor.ifPresent(factor -> Check.positive("drop_factor", factor));
         waterSplash.ifPresent(splash -> Check.that(
                 WATER_SPLASH_ALL.equals(splash) || WATER_SPLASH_NAVAL.equals(splash),
@@ -126,6 +145,45 @@ public record LevelData(
      * long as the data makes it.
      */
     public static final double OUTRO_SECONDS = 15;
+
+    /** M7 part B: {@code launch: drop}, the ship drops in from above the top edge (Level 15's transport bay). */
+    public static final String LAUNCH_DROP = "drop";
+
+    /** M7 part B: whether the launch drops the ship in from above ({@code launch: drop}); false if not given. */
+    public boolean dropLaunch() {
+        return launch.filter(LAUNCH_DROP::equals).isPresent();
+    }
+
+    /**
+     * M7 part C: the row of the ground (the walls' rows, {@link TerrainBlock#row}) a ground placement's centre lies on:
+     * it enters at the top edge at {@code t} with its bottom edge there, so its centre is {@code height / 2} px above
+     * the row at the top edge then.
+     */
+    public double placementRow(double t, double height) {
+        return TerrainBlock.row(scrollAt(t), PlayField.HEIGHT + height / 2);
+    }
+
+    /** M7 part B: the no-surface zones; none if not given. */
+    public List<NoSurface> noSurfaceZones() {
+        return noSurface.orElse(List.of());
+    }
+
+    /**
+     * M7 part B: an area of the ground where no Burrower surfaces (Level 15's station pads, its hab and the rail
+     * line): {@code size} px wide and tall, its centre at {@code x} px from the left edge, passing the middle of the
+     * screen at {@code t} s (as a backdrop piece is placed); it scrolls with the ground.
+     */
+    public record NoSurface(double t, double x, Size size) {
+        public NoSurface {
+            Check.notNegative("t", t);
+            Check.that(x >= 0 && x <= PlayField.WIDTH, "x: inside the play field, was " + x);
+        }
+    }
+
+    /** M7 part D: the ground allies' units (Level 17's domes) in the order the data lists them; none if not given. */
+    public List<GroundAlly> groundAllies() {
+        return allies.map(GroundAllies::units).orElse(List.of());
+    }
 
     /** M5 part E: whether the whole play field is water, its {@code water}; false if not given. */
     public boolean overWater() {
@@ -220,6 +278,11 @@ public record LevelData(
             double ramp = Math.min(sections.get(i - 1).rampSeconds(), end - start);
             // eased up over [start, start + ramp]: speed × S(u) instead of speed
             px -= speed * ramp * (easeOut(clampedU(to, start, ramp)) - easeOut(clampedU(from, start, ramp)));
+        } else if (i > 0 && section.easeSeconds() > 0) {
+            // M7 part B: eased from the speed before over [start, start + ramp]: before + (speed - before) × S(u)
+            double ramp = Math.min(section.easeSeconds(), end - start);
+            double before = speedOf(sections.get(i - 1));
+            px -= (speed - before) * ramp * (easeOut(clampedU(to, start, ramp)) - easeOut(clampedU(from, start, ramp)));
         }
         return px;
     }
@@ -318,7 +381,10 @@ public record LevelData(
      *
      * @param tiles the backdrop's tile sets in this section, at most one per layer
      * @param ramp M5 part G, a timed halt's (speed 0 without an arena): s the scroll eases down to 0 before
-     *     it and back up after it ({@link #rampSeconds()}, 2 if not given)
+     *     it and back up after it ({@link #rampSeconds()}, 2 if not given). M7 part B (Level 15's speed changes,
+     *     "each eased over 1 s"): on a moving section after the first, s over which the scroll eases from the
+     *     section before it's speed to its own from its start (smoothstep on the level clock; {@link
+     *     #easeSeconds()}); none if not given, the change instant as before
      */
     public record Section(
             String name,
@@ -336,8 +402,16 @@ public record LevelData(
             speed.ifPresent(s -> Check.notNegative("speed", s));
             ramp.ifPresent(r -> Check.positive("ramp", r));
             Check.that(
-                    ramp.isEmpty() || (speed.filter(s -> s == 0).isPresent() && !arena.orElse(false)),
-                    "ramp: only on a timed halt (speed 0 without an arena)");
+                    ramp.isEmpty() || speed.filter(s -> s == 0).isEmpty() || !arena.orElse(false),
+                    "ramp: on a timed halt (speed 0 without an arena) or a moving section, not on an arena");
+        }
+
+        /**
+         * M7 part B: a moving section's ease from the speed before it, s: its {@code ramp}; 0 (instant) on a timed
+         * halt, an arena or a section without one.
+         */
+        public double easeSeconds() {
+            return timedHalt() || isArena() || speed.filter(s -> s == 0).isPresent() ? 0 : ramp.orElse(0.0);
         }
 
         /**
@@ -940,6 +1014,10 @@ public record LevelData(
      *     outside the play field for an entry from a side or the rear; they scroll with the ground and
      *     stand still in a timed halt): unit i on lane i, wrapping; a {@code cross} has a lane per unit.
      *     M5 part G also: a {@code circle}'s {@code at} is its centre (Level 13's Needlers above the relay)
+     * @param crawl M7 part C (design/enemies/ground/threadcrawler): a crawling chain's ground path, {@code [scroll, x]}
+     *     points in the walls' rows (the level's {@code terrain}): its head starts at the first point at the wave's
+     *     {@code t} with the body laid out straight behind it toward the lower rows (down-canyon), then crawls the
+     *     path at its {@code crawl} speed on top of the scroll
      */
     public record Wave(
             double t,
@@ -966,8 +1044,12 @@ public record LevelData(
             Optional<Double> spacing,
             Optional<Double> current,
             Optional<Boolean> clockwise,
-            Optional<List<List<Point>>> lanes) {
+            Optional<List<List<Point>>> lanes,
+            Optional<List<TerrainBlock.GroundPoint>> crawl) {
         public Wave {
+            crawl = crawl.map(List::copyOf);
+            crawl.ifPresent(path -> Check.that(path.size() >= 2, "crawl: a ground path of two points or more"));
+            Check.that(crawl.isEmpty() || (paths.isEmpty() && lanes.isEmpty()), "a wave crawls, walks paths or lanes");
             lanes.ifPresent(l -> {
                 Check.that(!l.isEmpty(), "lanes: at least one lane");
                 l.forEach(lane -> Check.that(lane.size() >= 2, "lanes: every lane has two points or more"));
@@ -1169,6 +1251,9 @@ public record LevelData(
      * @param side M5 part G (design/campaign Level 13, Ground targets): an enemy nest entering at a side
      *     edge and drifting across (the mortar floe); its {@code at} placements are then {@code [t, y]},
      *     y px from the bottom edge (y up), where each unit crosses the edge
+     * @param link M7 part C (design/enemies/ground/tendril-anchor; Level 16's gates): {@code pairs}, an enemy nest of a
+     *     unit with a {@code link} attack whose placements pair up in order, each two the anchors of one tendril
+     *     (the same {@code t}, the left one first) on every difficulty's list
      */
     public record GroundTarget(
             String target,
@@ -1192,8 +1277,12 @@ public record LevelData(
             Optional<Boolean> dark,
             Optional<Double> current,
             Optional<Point> drift,
-            Optional<SideEntry> side) {
+            Optional<SideEntry> side,
+            Optional<String> link) {
         public GroundTarget {
+            link.ifPresent(kind -> Check.that(LINK_PAIRS.equals(kind), "link: only 'pairs', was '" + kind + "'"));
+            Check.that(link.isEmpty() || enemy.isPresent(), "only an enemy nest is linked (link: pairs)");
+            Check.that(link.isEmpty() || side.isEmpty(), "a linked nest stands on the ground, not in from a side");
             Check.that(side.isEmpty() || enemy.isPresent(), "only an enemy nest enters from a side (side)");
             Check.that(side.isEmpty() || current.isEmpty(), "a nest from a side drifts across it, no current");
             Check.that(
@@ -1235,6 +1324,9 @@ public record LevelData(
                     "only enemies have easy/hard placements");
         }
     }
+
+    /** M7 part C: {@code link: pairs}, a ground target's anchors paired in order (Level 16's gates). */
+    public static final String LINK_PAIRS = "pairs";
 
     /**
      * A difficulty's change to a ground target: an enemy nest's placements ({@code at}) or (M5 part
@@ -1429,11 +1521,23 @@ public record LevelData(
      * The {@code unit} ({@code first}, {@code second} or {@code last}) of the wave starting at
      * {@code wave} seconds, the {@code last} unit of a ground-target {@code group} to die (when the
      * group is cleared), or (part G) the {@code unit}-th of the level boss's {@code parts} to be
-     * shot off (Level 07's first destroyed bay sac); parts lost in the boss's death drop nothing.
+     * shot off (Level 07's first destroyed bay sac); parts lost in the boss's death drop nothing. M7 part D: a wave's
+     * carrier may name its {@code enemy}, the {@code unit} then counted among that enemy's units of the wave only (a
+     * mixed wave's: Level 17's t=124 Choir Herald among its bombers drops the shield cell).
      */
     public record Carrier(
-            Optional<Double> wave, Optional<String> group, Optional<List<String>> parts, CarrierUnit unit) {
+            Optional<Double> wave,
+            Optional<String> group,
+            Optional<List<String>> parts,
+            CarrierUnit unit,
+            Optional<String> enemy) {
+        /** Without M7 part D's enemy. */
+        public Carrier(Optional<Double> wave, Optional<String> group, Optional<List<String>> parts, CarrierUnit unit) {
+            this(wave, group, parts, unit, Optional.empty());
+        }
+
         public Carrier {
+            Check.that(enemy.isEmpty() || wave.isPresent(), "dropped_by.enemy: only a wave's carrier names its enemy");
             Check.that(
                     (wave.isPresent() ? 1 : 0) + (group.isPresent() ? 1 : 0) + (parts.isPresent() ? 1 : 0) == 1,
                     "dropped_by: give a wave, a group or the boss's parts");
@@ -1466,7 +1570,16 @@ public record LevelData(
      * @param expression the speaker's portrait expression, neutral when not given
      */
     public record RadioLine(
-            String speaker, String line, Optional<Boolean> distorted, Optional<Expression> expression) {}
+            String speaker,
+            String line,
+            Optional<Boolean> distorted,
+            Optional<Expression> expression,
+            Optional<String> portrait) {
+        /** Without M7 part B's generic portrait. */
+        public RadioLine(String speaker, String line, Optional<Boolean> distorted, Optional<Expression> expression) {
+            this(speaker, line, distorted, expression, Optional.empty());
+        }
+    }
 
     /**
      * A radio chatter cue, triggered at {@code t} seconds or by an {@code event}.
@@ -1664,7 +1777,16 @@ public record LevelData(
          * for the first time in the attempt (Level 13's relay below 50 % and 25 %; once each).
          */
         @JsonProperty("ally-below")
-        ALLY_BELOW
+        ALLY_BELOW,
+        /** M7 part B: the attempt's first Burrower breaking the surface (once); only with a burrowing enemy. */
+        @JsonProperty("first-surfacing")
+        FIRST_SURFACING,
+        /**
+         * M7 part C (design/campaign Level 16, Radio chatter): the attempt's first touch of rock by the ship (once);
+         * it plays in the next free gap or goes stale; only in a level with {@code terrain}.
+         */
+        @JsonProperty("first-wall-contact")
+        FIRST_WALL_CONTACT
     }
 
     /**
@@ -1956,6 +2078,119 @@ public record LevelData(
     }
 
     /**
+     * M7 part D, the level's {@code allies} block (design/campaign Level 17, The Ares Landing domes; design/allies,
+     * Ares Landing dome; Q.25b/c of round 36; the defaults pending the user's review in round 40): ground allies that
+     * scroll through with the ground (an ally that {@code follows: ground}; the scroll never halts for them), outside
+     * the objectives: they never fail the mission, and an {@code untouched} secondary judges them. {@code units}: each
+     * ally's slug, its {@code name} ({@code {ally}} in a radio line) and {@code at} {@code [t, x]}, when it enters at
+     * the top edge (its bottom edge there) and its x, as a ground target's placement. {@code targeted_by}: per enemy
+     * slug the target-the-objective hook's mode (as a defend's; enemies not listed are not hooked: the hook is per unit
+     * type, every wave of a listed enemy is hooked). {@code bomb_row}: the row, px below the top edge, a hooked bomber
+     * holds while it steers to the next ally coming down; {@code bomb_slot}: px between the x slots of a hooked wave's
+     * bombers (a wave of three at −slot, 0, +slot round the ally's x). {@code easy} / {@code hard}: the hits the allies
+     * break on and the hook's modes on that difficulty (merged over {@code targeted_by}).
+     */
+    public record GroundAllies(
+            List<GroundAlly> units,
+            Map<String, HookMode> targetedBy,
+            double bombRow,
+            double bombSlot,
+            Optional<AlliesChange> easy,
+            Optional<AlliesChange> hard) {
+        public GroundAllies {
+            Check.notEmpty("units", units);
+            units = List.copyOf(units);
+            targetedBy = Map.copyOf(targetedBy);
+            Check.that(
+                    units.stream().map(GroundAlly::name).distinct().count() == units.size(),
+                    "units: every ally has its own name");
+            for (int i = 1; i < units.size(); i++) {
+                Check.that(
+                        units.get(i).at().t() >= units.get(i - 1).at().t(),
+                        "units[" + i + "]: listed in the order they enter");
+            }
+            Check.positive("bomb_slot", bombSlot);
+        }
+
+        /** The change of {@code difficulty}, if any. */
+        public Optional<AlliesChange> change(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy;
+                case MEDIUM -> Optional.empty();
+                case HARD -> hard;
+            };
+        }
+
+        /** Per enemy slug its hook mode on {@code difficulty}: {@code targeted_by} with the difficulty's merged over it. */
+        public Map<String, HookMode> modes(Difficulty difficulty) {
+            Map<String, HookMode> modes = new java.util.TreeMap<>(targetedBy);
+            change(difficulty).flatMap(AlliesChange::targetedBy).ifPresent(modes::putAll);
+            return modes;
+        }
+
+        /** Whether {@code enemy} goes for the allies on {@code difficulty} (a mode other than {@code none}). */
+        public boolean hooks(String enemy, Difficulty difficulty) {
+            HookMode mode = modes(difficulty).get(enemy);
+            return mode != null && mode != HookMode.NONE;
+        }
+    }
+
+    /**
+     * M7 part D: a ground ally of a level's {@code allies} block: its {@code ally} slug, its {@code name} and {@code
+     * at} {@code [t, x]}, when it enters at the top edge (its bottom edge there) and its x; optional {@code size}, its
+     * footprint instead of the ally's (Level 17's Eden, 144 px: its hit box keeps the ally's margin, {@link
+     * #hitbox}), and {@code sprite}, its sprites' base name instead of the ally's (Eden's {@code ares-dome-eden}).
+     */
+    public record GroundAlly(String ally, String name, Placement at, Optional<Size> size, Optional<String> sprite) {
+        public GroundAlly {
+            Check.that(!name.isBlank(), "name: the ally's name");
+            Check.that(at.x() >= 0 && at.x() <= PlayField.WIDTH, "at: x inside the play field, was " + at.x());
+            sprite.ifPresent(base -> Check.that(!base.isBlank(), "sprite: a sprite name"));
+        }
+
+        /** Its footprint: its {@code size}, else the ally's. */
+        public Size size(AlliesData.Ally spec) {
+            return size.orElse(spec.size());
+        }
+
+        /** Its hit box: the ally's, or with a {@code size} that size less the ally's margin round its hit box. */
+        public Size hitbox(AlliesData.Ally spec) {
+            return size.map(s -> new Size(
+                            s.width() - (spec.size().width() - spec.hitbox().width()),
+                            s.height() - (spec.size().height() - spec.hitbox().height())))
+                    .orElse(spec.hitbox());
+        }
+
+        /** Its sprites' base name: its {@code sprite}, else the ally's ({@link AlliesData.Ally#spriteName}). */
+        public String spriteName(AlliesData.Ally spec) {
+            return sprite.orElseGet(() -> spec.spriteName(ally));
+        }
+    }
+
+    /**
+     * M7 part D: a difficulty's change to a level's ground allies: the {@code hits} they break on (the ally's own
+     * {@code hits} at medium) and the hook's modes (merged over {@code targeted_by}).
+     */
+    public record AlliesChange(Optional<Integer> hits, Optional<Map<String, HookMode>> targetedBy) {
+        public AlliesChange {
+            hits.ifPresent(n -> Check.positive("hits", n));
+            targetedBy = targetedBy.map(Map::copyOf);
+        }
+    }
+
+    /**
+     * M7 part D, presentation (design/campaign Level 17, Layout: the militia's flak guns at the spaceport): from
+     * {@code from} s on a flak burst on {@code low-air} every {@code every} s, over the lower field, hitting nothing
+     * (the escort frigate's flak, Level 11, without a ship).
+     */
+    public record Flak(double from, double every) {
+        public Flak {
+            Check.notNegative("from", from);
+            Check.positive("every", every);
+        }
+    }
+
+    /**
      * The road on the ground layer (Level 04): a curve through {@code points}, one {@code [t, x]}
      * each ({@code t} when it passes the middle of the screen, as for placed backdrop pieces),
      * drawn as a ribbon {@code width} px wide with the backdrop image {@code texture}
@@ -1993,7 +2228,12 @@ public record LevelData(
      * death (Level 11's "Convoy afloat"; the tracker's {@code label}), failed at the first sinking.
      * M5 part F: {@code collect: sondes}, every weather sonde of the level flown through (Level 12's
      * "Sondes"; the tracker's {@code label}), met at the last, failed when one leaves the bottom edge
-     * uncollected.
+     * uncollected. M7 part C (design/campaign Level 16, Objective; Q.16a): {@code links: true}, every tendril of the
+     * level's linked nests ({@code link: pairs}) broken before it leaves the screen, by killing an anchor or burning
+     * it (Level 16's "Open road"; the tracker's {@code label}), failed at the first that leaves the bottom edge
+     * standing, decided at the last. M7 part D (design/campaign Level 17, Objective; Q.25c): {@code untouched: true},
+     * none of the level's ground allies ({@code allies}) hit (Level 17's "No dome hit"; the tracker's {@code label}),
+     * failed at the first hit on any of them, met when the last leaves the bottom edge.
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -2008,9 +2248,91 @@ public record LevelData(
             Optional<String> name,
             Optional<Boolean> afloat,
             Optional<String> collect,
-            Optional<Double> integrity) {
+            Optional<Double> integrity,
+            Optional<Boolean> links,
+            Optional<Boolean> untouched) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** Without M7 part D's untouched. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    Optional.empty());
+        }
+
+        /**
+         * M7 part D: whether it is an {@code untouched} objective (design/campaign Level 17, "No dome hit"): failed at
+         * the first hit on any of the level's ground allies, met when the last one leaves the bottom edge untouched.
+         */
+        public boolean keepsAlliesUntouched() {
+            return untouched.orElse(false);
+        }
+
+        /** Without M7 part C's links. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
+        /** M7 part C: whether it is a {@code links} objective (every tendril broken). */
+        public boolean breaksLinks() {
+            return links.orElse(false);
+        }
 
         /** Without M5 part G's integrity. */
         public Secondary(
@@ -2039,6 +2361,8 @@ public record LevelData(
                     name,
                     afloat,
                     collect,
+                    Optional.empty(),
+                    Optional.empty(),
                     Optional.empty());
         }
 
@@ -2120,8 +2444,12 @@ public record LevelData(
                                     + (afloat.isPresent() ? 1 : 0)
                                     + (collect.isPresent() ? 1 : 0)
                                     + (integrity.isPresent() ? 1 : 0)
+                                    + (links.isPresent() ? 1 : 0)
+                                    + (untouched.isPresent() ? 1 : 0)
                             == 1,
-                    "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect or integrity");
+                    "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links or untouched");
+            Check.that(links.orElse(true), "links: true, or leave it out");
+            Check.that(untouched.orElse(true), "untouched: true, or leave it out");
             integrity.ifPresent(share -> Check.that(share > 0 && share < 1, "integrity: a share between 0 and 1"));
             collect.ifPresent(what -> Check.that(SONDES.equals(what), "collect: sondes, was '" + what + "'"));
             Check.that(afloat.orElse(true), "afloat: true, or leave it out");
@@ -2137,10 +2465,12 @@ public record LevelData(
                                     || afloat.isPresent()
                                     || collect.isPresent()
                                     || integrity.isPresent()
+                                    || links.isPresent()
+                                    || untouched.isPresent()
                             ? label.isPresent()
                             : label.isEmpty() || groups.isPresent(),
-                    "a kill_all, parts, afloat, collect or integrity objective has its tracker label, a groups one"
-                            + " may have one, the others none");
+                    "a kill_all, parts, afloat, collect, integrity, links or untouched objective has its tracker label,"
+                            + " a groups one may have one, the others none");
             Check.notNegative("credits", credits);
         }
     }
@@ -2522,6 +2852,8 @@ public record LevelData(
                     varga.size() == SENSOR_KEYS.size() && SENSOR_KEYS.containsAll(varga.keySet()),
                     "varga: a line for each of " + SENSOR_KEYS + ", found " + varga.keySet());
             layers = List.copyOf(layers);
+            // M7 part B: every name is a layer (Level 15's `buried`, the Burrowers under the sand).
+            layers.forEach(Layers::of);
             traits = List.copyOf(traits);
             hazards = List.copyOf(hazards);
             varga = Map.copyOf(varga);

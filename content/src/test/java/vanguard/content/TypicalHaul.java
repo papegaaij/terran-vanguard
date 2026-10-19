@@ -50,6 +50,9 @@ record TypicalHaul(int perfect, double typical, double budget) {
 
         for (var wave : level.waves()) {
             sum.bounty(wave.count(), wave.enemy().bounty(), rate(rate, wave.enemy()));
+            // M7 part D: a unit part pays its own bounty (the Shellback's vent: 40 + 12 by parts, as the README's
+            // table)
+            wave.enemy().part().ifPresent(part -> sum.bounty(wave.count(), part.bounty(), rate(rate, wave.enemy())));
             // a segment chain's unit is its head; its segments and tail pay their own bounty
             wave.enemy().chain().ifPresent(chain -> {
                 sum.bounty(

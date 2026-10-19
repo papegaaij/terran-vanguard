@@ -1,10 +1,10 @@
 ---
 title: Allies
-design: review
+design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../enemies, ../art-direction, ../ui/hud]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Allies
@@ -16,6 +16,12 @@ structures to defend, and harmless set dressing such as supply drones. This part
 specs; level documents place them, set level-specific numbers (difficulty variants, positions,
 rewards) and link here. The player's wingman Rook is not an ally in this sense: he is
 equipment, see [wingmen](../player/wingmen/README.md).
+
+## Contents
+
+| Part | Summary | Design | Impl | Art |
+|---|---|---|---|---|
+| [ares-landing-dome](ares-landing-dome/README.md) | Level 17's greenhouse domes: `ground`, scrolling with the ground, broken by hits (3; easy 4, hard 2) from hooked bomb runs, hooked lobs and rolls; never fails the mission | review | done | chosen |
 
 ## Design
 
@@ -162,8 +168,8 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 | [concept/rejected/evacuation-shuttle-r32-b.png](concept/rejected/evacuation-shuttle-r32-b.png), [.gif](concept/rejected/evacuation-shuttle-r32-b.gif) | Evacuation shuttle b, "heavy lifter" (`tools/art/shuttle.py --variant b`, production quality): the same set; review files only | rejected |
 | [concept/convoy-ships-r33-a.png](concept/convoy-ships-r33-a.png), [.gif](concept/convoy-ships-r33-a.gif) | Convoy ship pair a, "Atlantic line" (`tools/art/convoy_ships.py`, production quality, M5 part E, round 33): the ocean scene's feeder container ship (56×120: afloat, damaged and listing with its fire, 10 sinking steps through the surface, collar, wake, HUD pip) and grey CDF frigate (40×110: collar, wake, gun flash, flak burst); in the game until the pick | chosen |
 | [concept/rejected/convoy-ships-r33-b.png](concept/rejected/convoy-ships-r33-b.png), [.gif](concept/rejected/convoy-ships-r33-b.gif) | Convoy ship pair b, "Reactor run" (`tools/art/convoy_ships.py --variant b`, production quality): a rust-red heavy-lift carrier with its bridge forward and reactor cargo, and a CDF stealth trimaran frigate; the same sets; review files only | rejected |
-| [concept/relay-r35-a.png](concept/relay-r35-a.png), [.gif](concept/relay-r35-a.gif) | Nansen Relay a "ice station" (`tools/art/relay.py`, production quality, M5 part G, round 35): 96×96 intact / damaged / critical / destroyed, the grid-online light sequence, fire, smoke column, HUD pip; the loop: hits, smoke, fire, power-down, grid online | proposed |
-| [concept/relay-r35-b.png](concept/relay-r35-b.png), [.gif](concept/relay-r35-b.gif) | Nansen Relay b "grid node" (hardened blockhouse, three phased-array faces): as a | proposed |
+| [concept/rejected/relay-r35-a.png](concept/rejected/relay-r35-a.png), [.gif](concept/rejected/relay-r35-a.gif) | Nansen Relay a "ice station" (`tools/art/relay.py`, production quality, M5 part G, round 35): 96×96 intact / damaged / critical / destroyed, the grid-online light sequence, fire, smoke column, HUD pip; the loop: hits, smoke, fire, power-down, grid online | rejected |
+| [concept/relay-r35-b.png](concept/relay-r35-b.png), [.gif](concept/relay-r35-b.gif) | Nansen Relay b "grid node" (hardened blockhouse, three phased-array faces): as a | chosen |
 
 ## Implementation
 
@@ -194,8 +200,8 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
       in G4 (`AlliesData`, `PartGRules.ally`, `PartGUnitsDataTest`, `BalanceTest.theAutopilotKeepsTheRelay`)
 - [x] Nansen Relay, presentation (M5 part G, steps G5 and G6): the sprite with its states (a/b in
       round 35), the hit flash, the smoke below 50 %, dark with the smoke column, the lights sequence at
-      grid online, the HUD icon and integrity bar — in the game in G6 (`RelayLooks`, variant a until the
-      round's pick; fire below 25 %; the lights from the synchronisation's end, t=218; the HUD's `RELAY`
+      grid online, the HUD icon and integrity bar — in the game in G6 (`RelayLooks`, variant b since the
+      user's pick in round 34; fire below 25 %; the lights from the synchronisation's end, t=218; the HUD's `RELAY`
       line has the integrity bar and no room for the `-pip` icon, which stays unused; `Level13LooksTest`,
       `PartGHudTest`)
 - [x] CDF supply drone (M5 part G, steps G3 to G6, Level 13; part H, Level 14): a pickup released at a
@@ -340,3 +346,20 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
   entered at the top edge, is carried in by the supply drone: the level's `drops`; without a defended
   ally the drone flies in from 24 px below the bottom edge under its point and leaves the same way
   (`DroneLooks`; Level 13's arcs from the helipad are unchanged).
+- 2026-10-12 (user, [round 34](../concept-rounds/round-34/README.md)): the Nansen Relay **b** "grid node"
+  (the hardened blockhouse with three phased-array faces), a "ice station" rejected and moved to
+  `concept/rejected/`; step K3 produced b into `assets/` (`tools/art/relay.py --assets --variant b`).
+  The relay's integrity (C11), the drone and hut, H9's armour patch and the escort numbers accepted;
+  `design: approved`, `art: final`.
+- 2026-10-12 (overnight design phase): the Ares Landing dome added to the roster, drafted in Level 17
+  (five named domes to hold); it gets its own section here when Act 3 is built, pending the user's
+  review in round 36.
+- 2026-10-13 (user, round 36): the Ares Landing dome approved with Level 17 (M16 accepted, Q.17a:
+  the hooked Shellbacks hurt it too); its look is the geodesic glass dome on a concrete ring (MA.3 =
+  a, in [Mars](../world/mars/README.md#concept-art)); it becomes its own document here in M7 part D
+  (Q.25b).
+- 2026-10-18 (M7 part D, step D2; pending the user's review in round 40): the Ares Landing dome's own
+  document, [ares-landing-dome](ares-landing-dome/README.md) (Q.25b), its numbers in [data.yaml](data.yaml)
+  under its slug (`hits: 3` instead of an `hp`, `damaged_by` `bombs: 1`, `lobs: true`, `rolls: 1`, `sprite:
+  ares-dome`); the roster row became the Contents row. New keys: an ally's `hits` (it counts hits; its hp is
+  that count) and `sprite`, `damaged_by.bombs` and `damaged_by.rolls`.

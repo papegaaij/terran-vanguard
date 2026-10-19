@@ -8,6 +8,7 @@ import java.util.Locale;
 import vanguard.content.campaign.Flight;
 import vanguard.game.level.LowArmour;
 import vanguard.sim.Defences;
+import vanguard.sim.Drones;
 import vanguard.sim.Sortie;
 import vanguard.sim.SpecialSlot;
 import vanguard.sim.Wingman;
@@ -24,6 +25,10 @@ import vanguard.sim.Wingman;
  * the player's; after he ejects the bar is empty and the well reads {@code EJECTED} in red. Without
  * an escort its region stays empty. Under it: the fitted items the sortie leaves out, as "not yet
  * available".
+ *
+ * <p>M7 part A: a cooldown special's ring and its seconds or {@code READY} in a compact special row
+ * ({@link #compact}), the Shield Overcharge's white cores in the shield bar, the Evasive thrusters'
+ * dash pip right of the shield's label plate, a drone bay's hits strip under its weapons row.
  */
 final class ShipPanel {
     private static final int X = PixelScreen.WIDTH - HudKit.PANEL_WIDTH;
@@ -50,6 +55,42 @@ final class ShipPanel {
 
     static final int CRITICAL_ARMOUR_PHASE_TICKS = 18;
     private static final float GREYED = 0.35f;
+    /**
+     * The special's row: the icon's and the name's left after the word {@code SPECIAL}, or (M7 part A)
+     * in the compact row without it; the count right-aligned 6 px in; the longest name beside the word.
+     */
+    static final int ICON_X = 64;
+
+    static final int NAME_X = 84;
+    static final int COMPACT_ICON_X = 8;
+    static final int COMPACT_NAME_X = 32;
+    static final int COUNT_RIGHT = HudKit.INNER_WIDTH - 6;
+    static final int NAME_CHARS = 10;
+    /** M7 part A: a cooldown special's ring: its dots and radius round the 16 px icon, its colours. */
+    private static final int RING_DOTS = 28;
+
+    private static final float RING_RADIUS = 10.5f;
+    static final Color RING_COOLING = Color.valueOf("1E7A80");
+    static final Color RING_READY = Color.valueOf("00C8D0");
+    /**
+     * M7 part A: how long the ring's and the dash pip's white flash last as they get ready, simulation
+     * ticks (0.2 s); it counts time, not rendered frames, so an uncapped frame rate does not shorten it.
+     */
+    static final int READY_FLASH_TICKS = Math.round(0.2f * vanguard.sim.SimStep.PER_SECOND);
+    /** What a ready cooldown special's row reads. */
+    static final String READY = "READY";
+    /** M7 part A: the overcharge's second layer, white cores in the shield gauge's cells. */
+    static final Color OVERCHARGE_CORE = Color.WHITE;
+    /** M7 part A: the dash pip right of the shield's label plate, its size and its flash. */
+    static final int DASH_PIP_X = 126;
+
+    static final int DASH_PIP_WIDTH = 16;
+    static final int DASH_PIP_HEIGHT = 6;
+    private static final int DASH_PIP_DROP = 9;
+    /** M7 part A: a drone bay's hits strip under its row's level pips. */
+    private static final int DRONE_STRIP_DROP = 12;
+
+    private static final int DRONE_STRIP_HEIGHT = 2;
     /** The special's row: its well's top below the panel's top inset, and its height. */
     static final int SPECIAL_TOP = 258;
 
@@ -108,6 +149,19 @@ final class ShipPanel {
 
     private int frame;
     private int denied;
+    /**
+     * M7 part A: the tick the cooldown ring's white ready flash started, and the dash pip's; a ready
+     * special waits for the next draw to take its tick.
+     */
+    private long readyFlashTick = NO_FLASH;
+
+    private long dashFlashTick = NO_FLASH;
+    private boolean readyFlashPending;
+    private boolean dashWasReady = true;
+    /** The tick of a flash that never started (far enough back not to overflow). */
+    private static final long NO_FLASH = Long.MIN_VALUE / 2;
+    /** M7 part A: the special's name as its row shows it, from the first draw (it fits its room). */
+    private String specialLabel;
 
     ShipPanel(HudKit kit, double overdriveLength, TextureRegion specialIcon, TextureRegion escortIcon) {
         this.kit = kit;
@@ -120,6 +174,16 @@ final class ShipPanel {
     /** The special button was denied: the special's row flashes. */
     void specialDenied() {
         denied = DENIED_FRAMES;
+    }
+
+    /** M7 part A: a cooldown special is ready: its ring flashes white once. */
+    void specialReady() {
+        readyFlashPending = true;
+    }
+
+    /** M7 part A: whether a ready flash started at tick {@code start} still shows at tick {@code tick}. */
+    static boolean flashing(long tick, long start) {
+        return tick - start >= 0 && tick - start < READY_FLASH_TICKS;
     }
 
     /**
@@ -136,6 +200,10 @@ final class ShipPanel {
             double regenBonus,
             List<String> notFlown) {
         frame++;
+        if (readyFlashPending) {
+            readyFlashTick = sortie.tick();
+            readyFlashPending = false;
+        }
         Defences defences = sortie.ship().defences();
         kit.rightPanel(batch);
         int x = X + HudKit.INSET;
@@ -168,9 +236,24 @@ final class ShipPanel {
                 y - 52,
                 !flicker,
                 false);
+        if (!flicker && defences.shield() > defences.maxShield()) {
+            // M7 part A: the Shield Overcharge's second layer as white cores in the filled cells (the bar
+            // keeps its scale).
+            kit.cores(
+                    batch,
+                    OVERCHARGE_CORE,
+                    x,
+                    y - 52 - 34,
+                    HudKit.INNER_WIDTH,
+                    BAR_HEIGHT,
+                    secondLayer(defences.shield(), defences.maxShield()));
+        }
+        if (sortie.ship().thrustersFitted()) {
+            dashPip(batch, sortie.ship().dashReadiness(), sortie.ship().dashReady(), sortie.tick(), x, y - 52);
+        }
         power(batch, sparePower, regenBonus, sortie.overdriveSeconds() > 0, x, y - 104);
-        weapons(batch, weapons, idle, sortie.overdriveSeconds(), x, y - 148);
-        special(batch, sortie.special(), x, y - SPECIAL_TOP);
+        weapons(batch, sortie, weapons, idle, sortie.overdriveSeconds(), x, y - 148);
+        special(batch, sortie.special(), defences, flashing(sortie.tick(), readyFlashTick), x, y - SPECIAL_TOP);
         if (denied > 0) {
             denied--;
         }
@@ -222,27 +305,136 @@ final class ShipPanel {
         }
     }
 
-    /** The special's row below the weapons box: {@code SPECIAL [icon] AIRSTRIKE ×2}. */
-    private void special(SpriteBatch batch, SpecialSlot special, int x, int top) {
+    /**
+     * The special's row below the weapons box: {@code SPECIAL [icon] AIRSTRIKE ×2}; M7 part A: a cooldown
+     * special's icon in its ring (design/player/specials, Cooldown specials and the HUD ring), filling
+     * clockwise from 12 o'clock in dim cyan while it cools with the whole seconds left ({@code 27s}),
+     * full and {@code READY} once it is ready (a white flash as it gets there), and while the Shield
+     * Overcharge lasts a white arc draining anticlockwise over it. The Shield Overcharge's name is too
+     * wide for the row: it reads {@code OVERCHARGE}.
+     */
+    private void special(
+            SpriteBatch batch, SpecialSlot special, Defences defences, boolean readyFlash, int x, int top) {
         int height = SPECIAL_HEIGHT;
         kit.lcd(batch, x, top - height, HudKit.INNER_WIDTH, height);
         boolean flash = denied > 0 && denied / DENIED_PHASE_FRAMES % 2 == 0;
         kit.glow(batch, flash ? HudKit.ALERT : HudKit.READOUT, x, top - height, HudKit.INNER_WIDTH, height);
         int rowTop = top - 5;
-        kit.text(batch, kit.small, "SPECIAL", flash ? HudKit.ALERT : HudKit.LABEL, x + 6, rowTop);
         if (!special.fitted() || specialIcon == null) {
-            kit.text(batch, kit.small, "-", HudKit.LABEL, x + 84, rowTop);
+            kit.text(batch, kit.small, "SPECIAL", flash ? HudKit.ALERT : HudKit.LABEL, x + 6, rowTop);
+            kit.text(batch, kit.small, "-", HudKit.LABEL, x + NAME_X, rowTop);
             return;
         }
+        if (specialLabel == null) {
+            specialLabel = specialLabel(special.name());
+        }
+        // M7 part A: a cooldown special (its ring) or a name too wide beside the word: the icon takes
+        // the word's place at the row's left.
+        boolean compact = compact(specialLabel, special.cooldown());
+        if (!compact) {
+            kit.text(batch, kit.small, "SPECIAL", flash ? HudKit.ALERT : HudKit.LABEL, x + 6, rowTop);
+        }
+        int iconX = x + (compact ? COMPACT_ICON_X : ICON_X);
         boolean ready = special.ready();
         float shade = ready ? 1 : GREYED;
         batch.setColor(1, 1, 1, shade);
-        batch.draw(specialIcon, x + 64, top - 4 - specialIcon.getRegionHeight());
+        batch.draw(specialIcon, iconX, top - 4 - specialIcon.getRegionHeight());
         batch.setColor(Color.WHITE);
         Color colour = flash ? HudKit.ALERT : ready ? HudKit.READOUT : HudKit.LABEL;
-        String charges = times + special.charges();
-        kit.text(batch, kit.small, special.name().toUpperCase(Locale.ROOT), colour, x + 84, rowTop, 90);
-        kit.textRight(batch, kit.small, charges, colour, x, rowTop, HudKit.INNER_WIDTH - 6);
+        String count;
+        if (special.cooldown()) {
+            ring(
+                    batch,
+                    special,
+                    defences,
+                    iconX + specialIcon.getRegionWidth() / 2f,
+                    top - 4 - specialIcon.getRegionHeight() / 2f,
+                    readyFlash);
+            count = cooldownText(special.ready(), special.cooldownSeconds());
+        } else {
+            count = times + special.charges();
+        }
+        int nameX = compact ? COMPACT_NAME_X : NAME_X;
+        kit.text(batch, kit.small, specialLabel, colour, x + nameX, rowTop, COUNT_RIGHT - nameX);
+        kit.textRight(batch, kit.small, count, colour, x, rowTop, COUNT_RIGHT);
+    }
+
+    /**
+     * M7 part A: whether the special's row is compact, its icon at the row's left in place of the word
+     * {@code SPECIAL}: for a cooldown special (its icon in the ring, its seconds or {@code READY} after
+     * the name) and for a name longer than {@value #NAME_CHARS} characters ({@code ORBITAL LANCE}); the
+     * HUD font's glyphs are 8 px wide.
+     */
+    static boolean compact(String label, boolean cooldown) {
+        return cooldown || label.length() > NAME_CHARS;
+    }
+
+    /** M7 part A: a special's name as the HUD's special row shows it (design/ui/hud). */
+    static String specialLabel(String name) {
+        String label = name.toUpperCase(Locale.ROOT);
+        return label.equals("SHIELD OVERCHARGE") ? "OVERCHARGE" : label;
+    }
+
+    /** M7 part A: what a cooldown special's row reads after its name: the whole seconds left, or {@code READY}. */
+    static String cooldownText(boolean ready, double secondsLeft) {
+        return ready || secondsLeft <= 0 ? READY : (int) Math.ceil(secondsLeft) + "s";
+    }
+
+    /** M7 part A: the share of the shield gauge's cells that show the overcharge's white cores. */
+    static double secondLayer(double shield, double maxShield) {
+        return maxShield <= 0 ? 0 : Math.clamp((shield - maxShield) / maxShield, 0, 1);
+    }
+
+    /**
+     * M7 part A: the cooldown ring round the special's icon centred on ({@code cx}, {@code cy}): dots
+     * clockwise from 12 o'clock, lit in dim cyan as far as the cooldown has run, all lit (cyan) when
+     * ready, white for a moment as it gets there; the overcharge's white arc on it while that lasts.
+     */
+    private void ring(
+            SpriteBatch batch, SpecialSlot special, Defences defences, float cx, float cy, boolean readyFlash) {
+        double share = special.cooldownShare();
+        boolean ready = special.ready();
+        double effect = 0;
+        if (special.overcharge() != null && defences.overcharged()) {
+            effect = defences.overchargeTicks()
+                    / Math.max(1.0, special.overcharge().seconds() * vanguard.sim.SimStep.PER_SECOND);
+        }
+        for (int k = 0; k < RING_DOTS; k++) {
+            double angle = 2 * Math.PI * (k + 0.5) / RING_DOTS;
+            Color colour;
+            if (readyFlash) {
+                colour = Color.WHITE;
+            } else if ((k + 0.5) / RING_DOTS < effect) {
+                colour = Color.WHITE;
+            } else if (ready) {
+                colour = RING_READY;
+            } else if ((k + 0.5) / RING_DOTS < share) {
+                colour = RING_COOLING;
+            } else {
+                colour = PIP_EMPTY;
+            }
+            float dx = (float) (Math.sin(angle) * RING_RADIUS);
+            float dy = (float) (Math.cos(angle) * RING_RADIUS);
+            kit.flat(batch, colour, Math.round(cx + dx - 1), Math.round(cy + dy - 1), 2, 2);
+        }
+    }
+
+    /**
+     * M7 part A: the dash pip beside the shield's label (design/player/systems, Evasive thrusters): an
+     * empty cell filling over the cooldown, full when a dash is ready, flashing white as it gets there.
+     */
+    private void dashPip(SpriteBatch batch, double readiness, boolean ready, long tick, int x, int y) {
+        if (ready && !dashWasReady) {
+            dashFlashTick = tick;
+        }
+        dashWasReady = ready;
+        int pipX = x + DASH_PIP_X;
+        int pipY = y - DASH_PIP_DROP;
+        kit.lcd(batch, pipX, pipY, DASH_PIP_WIDTH, DASH_PIP_HEIGHT);
+        kit.flat(batch, PIP_EMPTY, pipX, pipY, DASH_PIP_WIDTH, DASH_PIP_HEIGHT);
+        Color colour = flashing(tick, dashFlashTick) ? Color.WHITE : ready ? SHIELD : RING_COOLING;
+        float width = ready ? DASH_PIP_WIDTH : (float) Math.floor(DASH_PIP_WIDTH * Math.clamp(readiness, 0, 1));
+        kit.flat(batch, colour, pipX, pipY, width, DASH_PIP_HEIGHT);
     }
 
     private void power(SpriteBatch batch, double spare, double bonus, boolean overdrive, int x, int y) {
@@ -265,7 +457,13 @@ final class ShipPanel {
     }
 
     private void weapons(
-            SpriteBatch batch, Flight.Weapon[] weapons, boolean[] idle, double overdriveSeconds, int x, int y) {
+            SpriteBatch batch,
+            Sortie sortie,
+            Flight.Weapon[] weapons,
+            boolean[] idle,
+            double overdriveSeconds,
+            int x,
+            int y) {
         kit.label(batch, "WEAPONS", x, y);
         int top = y - 22;
         int height = weapons.length * ROW + ROW + 10;
@@ -288,6 +486,10 @@ final class ShipPanel {
             for (int i = 0; i < LEVEL_PIPS; i++) {
                 kit.fill(batch, i < level ? HudKit.AMBER : PIP_EMPTY, pipsX + i * 10, rowTop - 9, 8, 7);
             }
+            int bay = weapon == null ? -1 : droneBay(sortie, slot);
+            if (bay >= 0) {
+                droneHits(batch, sortie.drones(), bay, pipsX, rowTop);
+            }
         }
         int rowTop = top - 7 - weapons.length * ROW;
         boolean on = overdriveSeconds > 0;
@@ -307,6 +509,42 @@ final class ShipPanel {
                     rowTop,
                     HudKit.INNER_WIDTH - 6);
         }
+    }
+
+    /** M7 part A: the drone bay's mount in weapon slot {@code slot} (front, rear, left, right); -1 for none. */
+    private static int droneBay(Sortie sortie, int slot) {
+        if (!sortie.drones().any()) {
+            return -1;
+        }
+        for (int m = 0; m < sortie.armament().size(); m++) {
+            if (sortie.armament().mount(m).slot().ordinal() == slot
+                    && sortie.drones().bay(m)) {
+                return m;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * M7 part A: a drone's hits left as a thin strip of five pips under its row's level pips, draining
+     * as it absorbs hits; while its bay rebuilds it the strip refills dim (pending the user's review:
+     * the level pips stay).
+     */
+    private void droneHits(SpriteBatch batch, Drones drones, int m, int pipsX, int rowTop) {
+        boolean broken = drones.broken(m);
+        int lit = droneHitPips(drones.hitsLeft(m), drones.spec(m).hits(), broken, drones.rebuilt(m));
+        for (int i = 0; i < LEVEL_PIPS; i++) {
+            Color colour = i >= lit ? PIP_EMPTY : broken ? RING_COOLING : SHIELD;
+            kit.flat(batch, colour, pipsX + i * 10, rowTop - DRONE_STRIP_DROP, 8, DRONE_STRIP_HEIGHT);
+        }
+    }
+
+    /** M7 part A: the drone strip's lit pips: its hits left of five, or while broken how far it is rebuilt. */
+    static int droneHitPips(int hitsLeft, int hits, boolean broken, double rebuilt) {
+        if (broken) {
+            return (int) Math.floor(LEVEL_PIPS * Math.clamp(rebuilt, 0, 1));
+        }
+        return hits <= 0 ? 0 : (int) Math.ceil(LEVEL_PIPS * Math.clamp((double) hitsLeft / hits, 0, 1));
     }
 
     /**

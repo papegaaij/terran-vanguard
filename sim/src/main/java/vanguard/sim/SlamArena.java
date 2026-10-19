@@ -28,6 +28,15 @@ import java.util.List;
  * ({@link BossSpec.Lanes#NONE}) only keeps its parts' layers ({@code air} among them) and its weak spots;
  * a lift moves its lifting parts onto the move's layer ({@link #lift}).
  *
+ * <p>Round 40 (the reworked Harbour Kraken, proposal 3a of the Act 2 playtest, pending the user's review):
+ * {@linkplain BossSpec.Lanes#rooted() rooted} arms, one lane each. A root keeps its layer (always
+ * hittable), takes {@link BossSpec.Lanes#raisedMultiplier()} while its arm is raised (telegraph to
+ * sink) and its arm's segments are its hit boxes only in the rise and awash. Single slams alternate the
+ * ship's lane and the lane of the nearest convoy ship whose root lives; a choice whose root is cut goes
+ * to the other, else to the living root nearest the ship. A volley slams the ship's lane (if its root
+ * lives) and fills up to {@link BossSpec.Slam#volleyLanes()} lanes with the living convoy ships' lanes
+ * nearest the ship, then the living lanes nearest it; a busy arm keeps its place and sits it out.
+ *
  * <p>Everything is allocated here; stepping does not allocate. Its state is hashed with its boss.
  */
 public final class SlamArena implements Hashed {
@@ -65,6 +74,9 @@ public final class SlamArena implements Hashed {
     private final BossSpec.Lanes lanes;
     private final BossSpec.Slam slam;
     private final int arms;
+    /** Round 40: every arm is a rooted one-lane arm. */
+    private final boolean rooted;
+
     private final int[] armPart;
     private final int[] armLanes;
     /** Per part, its arm; -1 for a part that is no slam arm. */
@@ -114,6 +126,7 @@ public final class SlamArena implements Hashed {
         lanes = arena.lanes();
         slam = arena.slam();
         arms = lanes.arms().size();
+        rooted = lanes.rooted();
         armPart = new int[arms];
         armLanes = new int[arms];
         armChain = new int[arms];
@@ -236,7 +249,7 @@ public final class SlamArena implements Hashed {
             }
             cycle[a]++;
             int impact = telegraphTicks + riseTicks;
-            if (cycle[a] == telegraphTicks) {
+            if (cycle[a] == telegraphTicks && !rooted) {
                 layers[armPart[a]] = Layer.GROUND;
             }
             if (cycle[a] == impact) {
@@ -245,7 +258,7 @@ public final class SlamArena implements Hashed {
             if (lane2[a] > 0 && cycle[a] == impact + secondTicks) {
                 impact(a, lane2[a], actions, firing);
             }
-            if (cycle[a] == sinkStart(a)) {
+            if (cycle[a] == sinkStart(a) && !rooted) {
                 layers[armPart[a]] = Layer.SUB;
             }
             if (cycle[a] >= sinkStart(a) + sinkTicks) {
@@ -278,7 +291,7 @@ public final class SlamArena implements Hashed {
         // The splash: one bullet from each of evenly spaced points along the arm, out to either side in turn, a little
         // down.
         double x = lanes.centre(lane);
-        double top = lanes.top();
+        double top = rooted ? armTop(a) : lanes.top();
         double length = top - TIP_MARGIN;
         for (int k = 0; k < slam.splashCount(); k++) {
             double y = top - length * (k + 0.5) / slam.splashCount();
@@ -384,6 +397,9 @@ public final class SlamArena implements Hashed {
 
     /** A single slam by the alternate rule; returns the arm that slams, -1 for none (both severed). */
     private int single(double shipX, SetPiece.BossActions actions) {
+        if (rooted) {
+            return singleRooted(shipX, actions);
+        }
         int player = laneOf(shipX);
         int ship = nearestShip(shipX, actions.shipLanes(), 0);
         boolean toShip = (choices & 1) == 1 && ship > 0;
@@ -408,6 +424,75 @@ public final class SlamArena implements Hashed {
     }
 
     /**
+     * Round 40: a single slam of rooted arms: the ship's lane and the lane of the nearest convoy ship
+     * whose root lives in turn; a choice whose root is cut goes to the other, else to the living root
+     * nearest the ship. Returns the arm that slams, -1 for none (every root cut).
+     */
+    private int singleRooted(double shipX, SetPiece.BossActions actions) {
+        int living = livingLanes();
+        if (living == 0) {
+            return -1;
+        }
+        int player = laneOf(shipX);
+        int ship = nearestShip(shipX, actions.shipLanes() & living, 0);
+        boolean toShip = (choices & 1) == 1 && ship > 0;
+        choices++;
+        int first = toShip ? ship : player;
+        int other = toShip ? player : ship;
+        int lane = (living & (1 << first)) != 0 ? first : other > 0 && (living & (1 << other)) != 0 ? other : 0;
+        if (lane == 0) {
+            lane = nearestShip(shipX, living, 0);
+        }
+        int arm = livingOwner(lane);
+        start(arm, lane, 0, actions);
+        return arm;
+    }
+
+    /** Round 40: the lanes whose (rooted) arm lives, bit {@code n} for lane {@code n}. */
+    private int livingLanes() {
+        int mask = 0;
+        for (int a = 0; a < arms; a++) {
+            if (!piece.partWrecked(armPart[a])) {
+                mask |= armLanes[a];
+            }
+        }
+        return mask;
+    }
+
+    /**
+     * Round 40: a volley of rooted arms: the ship's lane if its root lives, then the living convoy
+     * ships' lanes nearest the ship, then the living lanes nearest it, up to {@link
+     * BossSpec.Slam#volleyLanes()} lanes; a busy arm keeps its place in the volley and sits it out.
+     */
+    private void volleyRooted(double shipX, SetPiece.BossActions actions) {
+        int living = livingLanes();
+        int chosen = 0;
+        int count = 0;
+        int player = laneOf(shipX);
+        if ((living & (1 << player)) != 0) {
+            chosen |= 1 << player;
+            count++;
+        }
+        int ships = actions.shipLanes() & living;
+        while (count < slam.volleyLanes()) {
+            int lane = nearestShip(shipX, ships & ~chosen, 0);
+            if (lane == 0) {
+                lane = nearestShip(shipX, living & ~chosen, 0);
+            }
+            if (lane == 0) {
+                break;
+            }
+            chosen |= 1 << lane;
+            count++;
+        }
+        for (int a = 0; a < arms; a++) {
+            if ((chosen & armLanes[a]) != 0 && cycle[a] < 0) {
+                start(a, Integer.numberOfTrailingZeros(armLanes[a]), 0, actions);
+            }
+        }
+    }
+
+    /**
      * A volley: the ship's lane, the nearest convoy ship's and (hard) a third (the next-nearest
      * ship's, else the lane beside the ship's), each slammed by its half's living arm; an arm with no
      * target of its own slams its half's lane nearest the ship while the other arm lives; an arm with
@@ -415,6 +500,10 @@ public final class SlamArena implements Hashed {
      * three lanes. A busy arm sits the volley out.
      */
     private void volley(double shipX, SetPiece.BossActions actions) {
+        if (rooted) {
+            volleyRooted(shipX, actions);
+            return;
+        }
         int shipsMask = actions.shipLanes();
         int player = laneOf(shipX);
         int first = nearestShip(shipX, shipsMask, 0);
@@ -586,6 +675,10 @@ public final class SlamArena implements Hashed {
                 return spot.multiplier();
             }
         }
+        if (rooted && partArm[p] >= 0 && cycle[partArm[p]] >= 0) {
+            // Round 40: a raised arm's root takes more (the tell).
+            return partMultiplier * lanes.raisedMultiplier();
+        }
         return partMultiplier;
     }
 
@@ -640,6 +733,33 @@ public final class SlamArena implements Hashed {
     /** How many slam arms it has. */
     public int armCount() {
         return arms;
+    }
+
+    /** Round 40: whether its arms are rooted one-lane arms (each part is a root that stays put). */
+    public boolean rooted() {
+        return rooted;
+    }
+
+    /** Round 40: whether arm {@code a} is raised (telegraph to sink): its root takes the raised multiplier. */
+    public boolean armRaised(int a) {
+        return cycle[a] >= 0;
+    }
+
+    /**
+     * Round 40: whether arm {@code a} lies along its lane out of the water (its rise and awash): a rooted
+     * arm's segments are its root's hit boxes only then.
+     */
+    public boolean armOut(int a) {
+        return cycle[a] >= telegraphTicks && cycle[a] < sinkStart(a);
+    }
+
+    /**
+     * Round 40: where a rooted arm {@code a} lies from when it slams: its root's lower edge, px above the
+     * bottom edge (the segments and the splash run from there down to {@link #TIP_MARGIN}).
+     */
+    public double armTop(int a) {
+        int p = armPart[a];
+        return piece.partY(p) - piece.spec().parts().get(p).box().height() / 2;
     }
 
     /** Arm {@code a}'s part index. */

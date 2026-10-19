@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Architecture
@@ -82,9 +82,9 @@ README), and the tables in the README are **rendered from the data**:
 | Ship and core parts | `design/player/{ship,shields,armor,generator,systems,specials}/data.yaml` | their tables (the specials table is still hand-written) |
 | Player-wide | `design/player/data.yaml` (shop availability, pickups) | the *In-level pickups* table |
 | Level | `design/campaign/<act>/<level>/data.yaml` (sections, scroll, waves, ground targets, secrets, cues, objectives, music, difficulty changes, backdrop) | the *Threat profile*, *Layout*, *Backdrop*, *Waves*, *Ground targets*, *Radio chatter* and *Credit budget* tables |
-| Act | `design/campaign/<act>/data.yaml` (the act's levels, title card, act briefing and act-end outro) | the act's *Act intro and outro* quotes (the outro's still hand-kept, planned `act-outro` table) |
+| Act | `design/campaign/<act>/data.yaml` (the act's levels, title card, act briefing and act-end outro) | the act's *Act intro and outro* quotes and the outro's page table (`act-outro-pages`, M6 part D) |
 | Allies | `design/allies/data.yaml` (one entry per ally) | the allies' spec tables (still hand-written) |
-| Wingmen | planned (M5 part A): `design/player/wingmen/data.yaml` (Rook, his guns, his barks) | the guns and barks tables (still hand-written) |
+| Wingmen | `design/player/wingmen/data.yaml` (Rook, his guns, his barks) | the guns and barks tables (`rook-guns`, `rook-barks`, M6 part D) |
 | Economy, scoring, difficulty, retry | `design/systems/<part>/data.yaml` | the scoring bonus and grade tables and the difficulty levers (the economy's tables are still hand-written; retry has no table) |
 
 - **Marked tables.** A generated table sits between `<!-- data: NAME -->` and `<!-- /data -->`;
@@ -163,13 +163,28 @@ first entry of a part's model list is the starter (price 0, `start`).
   pod fires nothing (`Sortie.mountIdle`) but still draws its power; pooled, no allocation per step.
   `content` requires a speed, a range in px, a `cone`, `accelerate` when the speed rises, a `turn`
   on every level and no `lifetime`.
+  M7 part A (Act 3's arsenal; built in step A2, the simulation's specs in steps A1 and A4):
+  `hits: beam` (the [Ion Beam](../../player/weapons/ion-beam/README.md)) has no `speed`, `size`,
+  `range` or `lifetime`, and every level and the overdrive is `{width, damage}`: the beam's hit width
+  in px and its damage **per second** (no `pattern` or `rate`; volley and single-target DPS are that
+  damage). `hits: deflector` (the [Deflector Pod](../../player/weapons/deflector-pod/README.md), a
+  `pod`) has no projectile either, and every level and the overdrive is a field `{radius, charges,
+  recharge}` (px round the ship's centre on the pod's side, the bullets it catches, s until one charge
+  returns) with no `pattern`, `rate` or `damage`. A **`drone`** block (the [Light Drone
+  Bay](../../player/weapons/light-drone-bay/README.md), `hits: standard`, a `pod`) holds the drone's
+  `size` and `hitbox`, `orbit` (px), `period` (s a turn), `converge` (px ahead of the ship's centre its
+  shots aim at), `fade_in` (s) and `contact` (`hits`, `small_hits`, `laser_hits`, `damage`); every
+  level and the overdrive then adds `drone_hits` (hits before it breaks) and `rebuild` (s). A drone
+  bay's shots count as single-target hits; a deflector's DPS is 0. `SimSpecs.flies` is false for the
+  three until their specs are mapped (step A4); the Rear Lance is a plain `standard` rear weapon.
 - **Enemy** (`enemies/<category>/<slug>/data.yaml`): the stat block of the
   [enemies](../../enemies/README.md#stat-block-template) template: `name`, `faction`, `layer`,
   `tier`, `size`, `hitbox`, `parts` (`single` or `multi`: a multi-part unit lists its
   `part_list`, each part a `name`, an `offset` `[dx, dy]` from the centre in its own frame facing
   down (dx right, dy up towards the tail), a `hitbox`, `hp`, `kind` `destroyable`/`vital`/
   `armoured`, `bounty` and the `attack` it fires by name; the parts' HP and bounties add up to the
-  unit's), `orientation`, `hp`, `armour`, `speed`, `movement` (one
+  unit's), `orientation`, `hp`, `armour`, `speed`, the optional `machine` (M7 part A: `true` for a
+  machine, which the EMP Burst stuns longest; every other unit is biomechanical), `movement` (one
   entry per pattern: `snake` `spacing`; `swoop` `radius`, `top_speed`; `straight` `speed`;
   `hover` `seconds`, `y`; `orbit` `radius`, `turn_rate`; `strafe` `y`, the height a convoy turns
   across at; `spiral_out` `seconds`, `turns`, `growth`, `drift`, `ricochets`;
@@ -404,8 +419,74 @@ first entry of a part's model list is the starter (price 0, `start`).
   pick skip it. With every slot taken a touch is its tier's contact. A unit with a `latch` takes the
   wind (a level's `weather`) in every state but latched. Events **`LAMPREY_LATCHED`** (value: the
   spot) and **`LAMPREY_SHAKEN`** (the count thrown off), and the ship's draining flag for the HUD.
-  Basis (`enemies/data.yaml`): `reference_dps` per level, `bullet_damage`, `contact_damage`
-  per tier, `formations` (name: description).
+  M7 part B, for the [Burrower](../../enemies/ground/burrower/README.md) and the
+  [Dust Kite](../../enemies/air/dust-kite/README.md) (Level 15; M7 = a and the user's Q1 = a of
+  2026-10-14; loaded and checked in step B2, mapped for the simulation in step B3): the layer name
+  **`buried`** (`Layer.BURIED`, under the sand: hit by nothing, no contact, never targeted), never a
+  stat block's `layer` (a burrowing unit's stat block says `ground`, the layer it surfaces on; `buried` is
+  its current layer under the sand); the movement **`burrow`**: `swim` (px/s under the sand, on the
+  screen: screen-fixed while it travels, bulges and is surfaced, Q1 = a), `travel` `[min, max]` (s to
+  the next spot, seeded), `spot` (picked when the bulge starts: `ahead` `[min, max]` px above the ship's
+  centre, `side` px either side of its x, `edge` px inside the side edges, `clear` px at least from the
+  ship's centre), `bulge`, `surfaced` and `dive` (s; `buried` from the dive's middle), `surfacings` (then
+  it travels off the bottom edge under the sand: an escape, no bounty), `rings` (each `at` s after it
+  breaks out, with an optional `count` instead of the attack's) and per wave `stagger` (s at least
+  between two surfacings) and `max_up` (at most that many surfaced or bulging at once; one that would
+  break it waits buried); a burrowing unit's only attack is its `ring` (no `within`, no `interval`: it
+  fires at the burrow's `rings`); its formation is `field` (the units enter buried with the ground in the
+  wave's area); the hook **`burrow`** (`surfaced`, `rings`: the easy and hard windows and rings); its
+  longest life before it escapes with surfacings left, 30 s (not while up), has no key (content's
+  `MarsRules`, a default pending the user's review in round 38). The
+  movement **`swoop`** gains a **`trigger`** (px above the ship's row: once the unit is that close it
+  swoops across the ship's lane on one curve of its `radius`, aimed at the ship's x when it starts, no
+  homing, at its `top_speed`, then glides on; a `sine` glide before it), and the hook **`swoop_speed`**
+  (hard's 230); the simulation's curve bends 60 px to the side halfway down, the wave's units to
+  alternate sides (content's `MarsRules`, a default pending the user's review in round 38; the
+  triggered swoop's `radius` is not read). A plain `swoop` without a trigger stays the entry curve it
+  was (not flown). A `V-wing` of units that neither hover nor dive (the Dust Kite) flies the V down the
+  screen, the leader first (M7 part B, step B3).
+  M7 part C, for the [Tendril Anchor](../../enemies/ground/tendril-anchor/README.md) and the
+  [Threadcrawler](../../enemies/ground/threadcrawler/README.md) (Level 16; loaded and checked in step C2,
+  mapped for the simulation in step C4): the attack pattern **`link`** (the tendril between two anchors of
+  a linked nest: its `bullet` the touch's class, no speed, interval or first shot; its block **`link`**:
+  `hp` (damaged only by a `beam`, which goes on past it), `dormant` (s of the harmless tell once the pair
+  scrolls onto the screen), `band` (px, the contact band), `width` (px, drawn), `cooldown` (s, the
+  touch's own; the ship not pushed), `burnt_bounty` (credits for burning it)), only on a ground unit with
+  `terrain` movement, at most one; an attack's **`only`** (the difficulties it fires on: the anchors'
+  hard orb; every one if not given); the movement **`crawl`** (`speed`, px/s along the ground on top of
+  the scroll: the head crawls the wave's `crawl` path; only a ground segment chain, with a `pores` attack);
+  the attack pattern **`pores`** (a chain's pore wave: each segment's pore an aimed `bullet` at `speed` in
+  turn head to tail, `interval` s apart; its block **`pores`**: `rest`, `glow` (the tell) and optional
+  `every_other`); the hook **`pores`** (`rest`, `every_other`: the easy and hard waves); a
+  `segment_chain`'s optional **`width`** (the segments' sprite across the path: hit box `width × share`
+  by `length × share`) and **`cut`** (`delay`: a cut's rear part dies, from the cut backwards) instead of
+  `regrow` (one of them). A chain head's `first_bonus` pays a head-first kill its whole (the
+  Threadcrawler's 30 + 18 = 48; taken apart 60), a default accepted in round 39 (2026-10-18).
+  M7 part D, for the [Choir Herald](../../enemies/air/choir-herald/README.md) and the
+  [Shellback](../../enemies/ground/shellback/README.md) (Level 17; loaded and checked in step D2 by content's
+  `EnemyData` and `SiegeChecks`, mapped in step D4, flown from step D3; the defaults pending the user's review in
+  round 40): the attack pattern **`aura`** (no bullet, speed, interval, count or first shot; its block
+  **`aura`**: `radius` (px from its centre), `share` and `cap` (the ring a unit in range carries: `share` × that
+  unit's HP at the level, at most `cap`), `refill` (the share of the ring a second, after `refill_delay` s
+  without a hit, while the aura's unit lives and the unit stays in range), `fill` (s to the full ring on
+  entering the radius), `keep` (s a unit leaving it keeps its ring), `collapse` (s the rings it fed take to
+  collapse at its death) and `escort_radius` (its `carrier + escorts` escorts orbit it at this share of the
+  radius, so they stay ringed)); never on a boss, at most one, only on an `air` unit; rings on every other
+  enemy on every layer, never on a boss or another aura unit; the EMP Burst strips them; the hook **`aura`**
+  (`radius`, `refill`: the Herald's easy 75 px and 15 %/s, hard 105 px). A unit's **`roll`** block (`below`,
+  the share of its body's HP, its vital part's, at which it curls once; `curl`, s; `seconds` and `speed`, the
+  roll along its walk path; `uncurl`, s; `belly_seconds` and `belly_factor`, the damage factor on its body
+  after the uncurl; `ball`, the rolled ball's size and hit box): fully armoured while curled, no attack, the
+  roll crushes the ground objects in its path (an ally's `rolls`, destructible scenery, crates; never enemies or
+  the ship); only on a `ground` walker, the ball inside its sprite; the hook **`roll`** (`seconds`: hard's
+  3.0). A `part_list` on a unit that is not a boss (the Shellback's `vital` body and `destroyable` vent, the
+  vent's `attack: mortar`: its loss silences the mortar): the parts' HP and bounties add up to the unit's, a
+  vital part's `first_bonus` pays a body-first kill its whole (the Shellback's 40 + 8 = 48; the vent first
+  52). The Dust Kite's **`flock`** (moved forward from part E: Level 17's swarm) makes it fly `swarm` waves
+  too: a unit with a flock flies only swarms unless its stat block lists other formations.
+  Basis (`enemies/data.yaml`): `reference_dps` per level (Levels 01–21 since M7 part A), `bullet_damage`, `contact_damage`
+  per tier, `small_act_hp` (`cap`, `units`, `levels`: the `small` units that get the act HP factor, capped, in those levels; the user's Act 2
+  playtest, 2026-10-18), `formations` (name: description).
 - **Level** (`campaign/<act>/<level>/data.yaml`): `scroll_speed`, `launch_seconds`, optional
   `bounty_scale` (default 1: a factor on every bounty paid in the level, after the act factor and
   the difficulty's income, before the one rounding per payout; see the economy), optional
@@ -839,7 +920,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `mortar` block, the hook `ring`), **`laser-sweep`** the boss sweep (`Pattern.SWEEP`: its `sweep` block,
   the hook `sweep_arc`; its `interval` the turn in an alternation; fired by the part its phase ends on),
   an attack's **`staggered: true`** (aimed or mortar, only a boss's fired by several parts: part k of n
-  k × interval ÷ n after the first; `Attack.stagger`); a window spawn's **`ambush: {most}`** (an ambush
+  k × interval ÷ n after the first; `Attack.stagger`); a part's **`aim: down`** (round 34, P2: the part
+  fires its `aimed` attack straight down the screen instead of at the ship, the Siege Spire's pods 1 and
+  3; `Attack.down`, `BossActions.down`); a window spawn's **`ambush: {most}`** (an ambush
   launch flying its enemy's rear-ambush path: only a unit with the `ambush` and `hover` movements; no
   `arc` or `glide`; `Spawn.ambushMost`); an anchored boss without `lanes` (`Lanes.NONE`), its parts'
   layers `sub`/`ground` as before (the core reaches `air` by the move), its phase **`move`** a lift
@@ -855,6 +938,72 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   cap alive); an anchored boss without lanes, its phase `move` = lift (smoothstep, layer at the end,
   stump = parts destroyed/armoured at the lift); events ROOT_BURST_TELEGRAPH/GREW, SPIRE_MAW_OPENED,
   SPIRE_LIFT/LIFTED, SPIRE_SWEEP_TELEGRAPH, SPIRE_SWEEP; new state hashed only when used.
+  M7 part B, for [Level 15](../../campaign/act-3-red-dust/level-15-olympus-descent/README.md) (loaded and
+  checked in step B2, mapped for the simulation in step B3, content's `MarsRules`; the defaults pending the user's review in round
+  38): a moving section's **`ramp`** (s: from the section's start the scroll eases from the speed before it
+  to its own, smoothstep on the level clock; none, an instant change, if not given, so the levels before
+  hash as they did; a timed halt's `ramp` keeps its meaning; not on an arena), integrated exactly by
+  `LevelData.scrollAt` and `tools/sync_tables.py`; **`launch: drop`** (the ship, and the escort in his
+  slot, drops from above the top edge to the start spot over `launch_seconds`, controls ignored as in
+  any launch; the bottom launch if not given); **`no_surface`** (the ground areas where no Burrower
+  surfaces, each `t` (its centre passing the middle of the screen, as a backdrop piece), `x` and `size`;
+  they scroll with the ground; the spot rule picks the nearest allowed spot, else skips that surfacing,
+  which still counts; only in a level with a burrowing enemy); a `field` wave of a burrowing unit (its
+  area where the units enter buried); the radio event **`first-surfacing`** (the attempt's first Burrower
+  breaking the surface; once; only with a burrowing enemy); a secret's `radio` line's optional
+  **`portrait`** (a generic portrait, as a cue's: Ares Control's `generic-colonial`); the threat
+  profile's `layers` are layer names (`buried` among them, checked). The per-section ambience is the
+  existing `ambience_changes` (Level 15: `mars-entry`, then `mars-dust` from section 3). The intel's wave
+  strip marks every wave of a burrowing unit (`Intel.Mark.Kind.BURROW_FIELD`).
+  M7 part C, for [Level 16](../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md) (loaded and
+  checked in step C2 by content's `TerrainBlock` and `TerrainChecks`, mapped in step C4; the defaults accepted in
+  round 39, 2026-10-18): **`terrain`** (`left` and `right`, each a wall's collision line, its foot,
+  as `[scroll, x]` points or `[scroll, x, height]`: the scroll is the ground scroll at which the row reaches
+  the play field's **top edge**, x px from the left edge, linear between points, no wall at a row without
+  points; `height` 0 (flat) to 1 (the wall's full rise to the plateau at about 1.25), 1 if not given,
+  presentation only (the canyon mouth's and the outflow's ramp); `islands`, each a `name`, a `look` (the
+  art's `<look>-top` and `<look>-face`) and `points`, a polygon of `[x, scroll]`; `contact`: `damage` per
+  difficulty, `push` px along the normal over `push_seconds`, then a `cooldown` in which a touch only
+  clamps). The one coordinate helper is `TerrainBlock.row(groundScroll, y) = groundScroll + y − 540` (y up):
+  a ground placement `[t, x]` (its bottom edge at the top edge at t) has its centre on row `scrollAt(t) + h /
+  2`, a backdrop piece passing the middle at t on row `scrollAt(t) − 270`. The validator: the flyable width
+  at least 180 px and a channel beside an island at least 130 px on every row where a line bends, a wall
+  moving at most 0.5 px sideways per px of scroll, the islands between the walls; no ground target, secret
+  trigger, released pickup or crawl point in rock, a gate's anchors within the 24 px foot band of a collision
+  line, a burrowing field's area on the flyable floor; wave paths against rock are flown by a test over the
+  real sortie (`TerrainClearanceTest`, step C4), not re-simulated. A ground target's **`link: pairs`** (an
+  enemy nest of a unit with a `link` attack: its placements pair up in order, the same t, the left anchor
+  first, on every difficulty's list; two pairs at least 1.5 s apart): Level 16's gates. A wave's
+  **`crawl`** (a crawling unit's ground path, `[scroll, x]` points in the walls' rows: its head starts at the
+  first point at the wave's t with the body straight behind it toward the lower rows, then crawls the path;
+  only and always a crawling unit's wave, only with terrain). The secondary **`links: true`** (every
+  tendril of the linked nests broken before it leaves the screen; its tracker `label`, Level 16's
+  `BARRIERS`; only with linked nests). The radio event **`first-wall-contact`** (the attempt's first touch
+  of rock; only with terrain). The backdrop layer **`plateau`** (optional in `scroll_factors`, above the
+  ground, about 1.25: drawn only beyond the projected walls; only with terrain). The intel's wave strip
+  marks each linked nest at its first pair (`Intel.Mark.Kind.GATE`) and each crawling wave flown at medium
+  (`CRAWLER`), and a linked nest's unit joins the intel's enemies in order of appearance.
+  M7 part D, for [Level 17](../../campaign/act-3-red-dust/level-17-dome-siege/README.md) (loaded and checked
+  in step D2 by content's `LevelData` and `SiegeChecks`, mapped in step D4, flown from steps D1/D3; the
+  defaults pending the user's review in round 40): **`allies`** (ground allies outside the objectives, which
+  scroll through with the ground and never fail the mission: `units`, each an `ally` slug that `follows:
+  ground` and counts `hits`, its `name` (`{ally}` in the radio's `ally-hit` and `ally-lost`) and `at` `[t, x]`
+  (it enters at the top edge at t, its bottom edge there, as a ground target), optional `size` (its footprint
+  instead of the ally's, the hit box keeping the ally's margin: Eden's 144) and `sprite`; `targeted_by` `{<enemy
+  slug>: <mode>}` as a defend's, per unit type (every wave of a listed enemy is hooked); `bomb_row` (px below
+  the top edge: the row a hooked bomber holds while it steers to the next ally coming down, at its own speed,
+  and drops one bomb run as the ally's footprint passes beneath it) and `bomb_slot` (px between a hooked
+  wave's bombers' x slots round the ally's x); `easy` / `hard`: `hits` and `targeted_by` merged over the
+  block's); a hooked mortar's objective lob lands where its ally will be (ground space, the marker on the
+  ground). The secondary **`untouched: true`** (none of the level's ground allies hit; its tracker `label`,
+  Level 17's `DOMES`; failed at the first hit, met when the last ally leaves the bottom edge; only with
+  `allies`). A pickup's **`dropped_by.enemy`** (a wave's carrier counted among that enemy's units of the wave
+  only: Level 17's Herald among its bombers). **`flak`** (presentation: `from` s, a burst on `low-air` every
+  `every` s over the lower field, hitting nothing: Level 17's militia guns). The music's ambience
+  `mars-colony`. The validator: the allies' footprints inside the play field and clear of one another on the
+  ground, `targeted_by` naming known enemies, `bomb_row` on the play field, no ground target within 100 px of
+  the `helix-compound` backdrop placement, a `dropped_by.enemy` flying in its wave. The intel's wave strip
+  marks the sections the ground allies enter in as phases (`Intel.Mark.Kind.PHASE`).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the
@@ -896,8 +1045,11 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   the walls facing right and down, away from the key light, default 0.5; the walls facing up and
   left are drawn as the texture). Each frame the renderer (`TowerProjection`) draws a tower's
   visible walls (the sides that face the projection centre: the roof leans out past them) and
-  then its roof at its projected place on whole pixels, towers in order of height (lowest first,
-  then in placement order), after the ground layer's tiles and flat pieces and before the ground
+  then its roof at its projected place on whole pixels, the towers on screen ordered each frame
+  outermost first (of two whose drawn boxes overlap, the one beyond the other as seen from the
+  projection centre, along an axis whose footprint gap lies on one side of it; a topological pass,
+  lowest first where nothing constrains the order; playtest 2026-10-18: by height alone an inner
+  roof passed under the taller tower beyond it), after the ground layer's tiles and flat pieces and before the ground
   objects and units, so a tower never hides a unit, a ground target or a bullet; it marks the
   shadow stencil with the rest of the ground, so flyers' shadows fall on walls and roofs at the
   ground offset. A wall is drawn as textured quads, cells of at most 16 px along it and bands up
@@ -933,14 +1085,22 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   Targeting computer's `targeting` (`turn_bonus`, 0.2: the share added to the
   Stormhawk's homing turn rates and the Swivel's slew; `bar_seconds`, 1.5: how long an HP bar stays
   after the last hit; `bar_fade`, 0.3 s) and the Salvage scanner's `salvage` (`bonus`, one share
-  per level: `[0.1, 0.2]`)); specials (`input_buffer` (s a press waits
-  while the special is busy), `specials` with `name`, `charge_price`, `max_charges`, `unlock` and
-  optional `free_charges` (given once at the unlock), and the `airstrike` block: `delay`, `offset`,
+  per level: `[0.1, 0.2]`) and (M7 part A) the Evasive thrusters' `dash` (`distance` px, `seconds`,
+  `invulnerable` s and `cooldown` s from its start, `double_tap` s between the first press's release
+  and the second press)); specials (`input_buffer` (s a press waits
+  while the special is busy), `cooldown_pickup` (M7 part A: s a special charge pickup takes off a
+  cooldown special's running cooldown), `specials` with `name`, `unlock` and either `charge_price`,
+  `max_charges` and optional `free_charges` (given once at the unlock) or (M7 part A, a cooldown
+  special bought once) `price` and `cooldown` (s), and the `airstrike` block: `delay`, `offset`,
   `speed`, `bomber_size`, `bomb_spacing`, `fall`, `blast_radius`, `damage` (`ground`, `air` per
   blast), `cap` (`ground`, `air`, `boss_part` per strike) and the call's `radio` (`speaker`,
   `portrait`, `line`), and the `smart_bomb` block: `flash` (`seconds` held at `opacity`, then
   `fade` s), `ring` (s to cover the play field), `damage` (`all`, `boss_part`), `invulnerable` and
-  `repeat` (s)). Each model also has `name`, `price` and `available`.
+  `repeat` (s); M7 part A: the `emp` block (`ring` s, `stun` s for a `machine` and a `vrell` unit,
+  `repeat` s), the `orbital_lance` block (`lock` s, `width` px, `seconds`, `fade` s, `follow` px/s,
+  `dps`, `boss_part` `dps` and `cap`, `repeat` s, the call's `radio`) and the `overcharge` block
+  (`factor` on the shield's capacity, `seconds`, `bleed` s)). Each model also has `name`, `price` and
+  `available`.
 - **Player** (`player/data.yaml`): `availability`, `pickup_seconds`, `pickup_drift_speed`, `pickups` (salvage
   credits, overdrive `levels` and `seconds`, shield cell `shield_percent`, armour patch
   `armour`, special charge `charges`, data core). Levels name pickups as `small salvage`,
@@ -951,7 +1111,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `enemy_hp`, changes such as `formation_size` (−0.2 = −20 %), `aimed_spread_degrees`, `bullet_budget`,
   `repair_cost`, `retries`, `boss_checkpoint`, `sensor_bonus`); scoring (`kill_score`,
   `pickup_score`, `chain`, `rating` weights and `full_chain`, `bonuses`, `grades`); retry (`armour_floor`, the
-  share of the maximum armour a retry starts with at least).
+  share of the maximum armour a retry starts with at least; `game_over`, Okafor's last transmission on
+  the game over screen: `speaker`, `expression`, `line`, spoken through the radio filter).
 - **Voice** (`audio/voice/data.yaml`): `expressions` (`neutral`, `grim`, `fierce` and `shout`,
   each `exaggeration`, `cfg_weight`, `temperature`: Chatterbox's settings) and `speakers` by voice
   slug: `names` (the speakers as the level data writes them), `ref` (the clip in
@@ -960,7 +1121,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   (`pa`: the public-address filter instead of the radio filter, part of the key) and `stage` (the
   sound file in `assets/voice/<voice>/` a radio line plays when it is only a stage direction,
   `[the Choir sings]`). The line list and keys: `vanguard.content.voice.VoiceLines`; the files
-  `assets/voice/<voice>/<key>.ogg`.
+  `assets/voice/<voice>/<key>.ogg`. M7 part B (round 36, Q.24f): the optional top-level **`respell`**
+  (a word or name → its spelling as spoken, `Ares: Airees`): applied to the text as spoken of every
+  line (whole words, case-sensitive, the longest first; `VoiceData.respelled`), so part of the key; the
+  subtitle keeps the real spelling.
 - **Allies** (`allies/data.yaml`): one entry per ally
   slug with `name`, `layer`, `size`, `hitbox`, `hp` (medium; the level sets difficulty variants),
   `damaged_by` (`objective_aimed`: only shots the target-the-objective hook aims at it;
@@ -987,16 +1151,29 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   between bursts, drawn on `low-air` over the convoy with a quiet sound, hitting nothing); a lost
   naval ally **sinks** (a presentation effect; the simulation marks it sunk at once). `content`
   checks `stations` with the `ground` layer and only `slams`.
+  M7 part D (the [Ares Landing dome](../../allies/ares-landing-dome/README.md), Level 17; loaded and checked
+  in step D2, mapped in step D4; the defaults pending the user's review in round 40): **`hits`** instead of
+  `hp` (one of them: the ally counts hits, its hp is that count; every attack its `damaged_by` names deals
+  the hits given there, a hooked lob's direct hit one); `damaged_by` **`bombs`** (the hits a hooked
+  bomber's drop deals as the ally's footprint passes beneath it, once per bomber) and **`rolls`** (the
+  hits a roll deals crossing its footprint, once per roll); an ally hurt by bomb runs or rolls counts
+  hits and one that counts hits is hurt by them, both only with `follows: ground`; **`sprite`**
+  (presentation: its sprites' base name, the slug if not given: the dome's `ares-dome`).
 - **Act** (`campaign/<act>/data.yaml`): `levels` `[first, last]` (global numbers), `title_card`
-  (`act`, `name`, `line`), `briefing` (pages as a level's); planned (part G): `outro`, the act-end
+  (`act`, `name`, `line`), `briefing` (pages as a level's); `outro`, the act-end
   outro after the last level's debrief: `music` (a music file's name, `act-complete`: track 24
   under the first page, played once) and `pages` (as the briefing's: `speaker`, `line`, optional
-  `expression` and `image`); the loader checks that every level's act exists and includes it.
+  `expression` and `image`, and `notes.image`, the README's description of the image); the loader checks that every level's act exists and includes it.
   Saves (not a data file; see [saves](../../systems/saves/README.md)): format version 2 (part G)
   adds `stats.levels`, per won level number its banked `credits` and `kills`. Planned (M5 part A):
   format version 3 adds `escort` (`hired`, `side`, `fitted`, `guns` with `item` and `level`,
-  `armour`), migrated from version 2.
-- **Wingmen** (planned (M5 part A): `player/wingmen/data.yaml`, see
+  `armour`), migrated from version 2; version 4 (M7 part A, Q1 = a) adds `bays` (the utility bays
+  bought, 0 or 1), migrated from version 3 with 0. M7 part B (L.6 of round 36; a default pending the
+  user's review in round 38): the story flag **`act-intro:N`** records act N's intro as shown (set
+  whenever a briefing opens an act); the version 3 migration adds `act-intro:1`, and `act-intro:2` from
+  Level 08 on (the release had Acts 1–2), never `act-intro:3`; Continue on a save whose next level
+  opens an act without its flag plays that intro once (`CampaignRoute.onContinue`), then the hangar.
+- **Wingmen** (`player/wingmen/data.yaml`, see
   [wingmen](../../player/wingmen/README.md#data)): `rook` (`joins` (the first
   level), `side` (a new campaign's), `armour`, `size`, `hitbox`, `muzzle` (his one gun's muzzle,
   px from the sprite's top left), `speed`, `acceleration_seconds`,
@@ -1085,6 +1262,11 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
 
 Screenshot tests are left out until there is a need.
 
+Every module's test classes spread over forked JVMs, half the machine's cores (`maxParallelForks` in the
+`buildSrc` conventions, 1 GB heap each; 2026-10-18: the full `check` from 50 to 12 minutes on 20 cores). Forks
+rather than JUnit's in-JVM parallel threads: flights running side by side in one JVM change what the JIT
+compiles, and the allocation tests then see allocations that escape analysis otherwise removes.
+
 ### Conventions
 
 - Java 21; records, sealed interfaces and switch expressions where they fit; no reflection-based
@@ -1099,7 +1281,9 @@ Screenshot tests are left out until there is a need.
 
 - Every push: build, format check and tests on Linux, Windows and macOS (as in the spike).
 - Tags `v*`: Construo bundles for linux-x64, windows-x64, macos-x64 and macos-arm64 are attached
-  to a GitHub release. macOS builds are unsigned until notarization is set up.
+  to a GitHub release, after the Linux bundle has been started under Xvfb; the bundles are
+  unsigned. The version, the icon, the bundle contents and the notes:
+  [release](../release/README.md).
 
 ## Implementation
 
@@ -1759,3 +1943,20 @@ Screenshot tests are left out until there is a need.
   patterns from a part say the same), `part_layers` `air` (the core reaches `air` by the lift's
   `layer`), a `stump` key (the stump is the boss's state) and `ambush` on a window (the spawn's). A phase
   with a `move` now keeps its arena keys (its `drop`); Level 07's carrier has none, so nothing else moves.
+- 2026-10-12: M6 part D (Q14 = b, pending the user's review in round 35): Rook's guns and barks
+  tables (`rook-guns`, `rook-barks`) and the act outro's page table (`act-outro-pages`) are rendered
+  by `tools/sync_tables.py`; their wording sits under `notes` (`notes.scale`, `notes.trigger`,
+  `notes.image`). The specials, allies and economy tables stay hand-written (`later: Act 3` tooling).
+- 2026-10-12 (user, round 35): Q14 = b accepted: Rook's guns and barks tables and the act outro's
+  page table stay rendered by `tools/sync_tables.py`; the specials, allies and economy tables stay
+  hand-written until Act 3.
+- 2026-10-19 (refactor, the user's request of 2026-10-18): the game module's biggest classes are split without
+  behaviour changes: `LevelRenderer` keeps only the pass order (`GroundPasses`, `UnitPasses`, `SetPiecePasses`,
+  `PlayerPasses`, `PropPasses`, the `KindLooks` registry, `PlayFrame`), `FlightSounds` routes events to six sound
+  families sharing one `SoundMix` (`PlayerCues`, `BossCues`, `UnitCues`, `AllyCues`, `ArsenalCues`, `LevelCues`),
+  `LevelScreen` hands events to `RadioEvents` and `EventEffects`; `PassOrderTest` pins the draw order.
+- 2026-10-19 (build speed, the user's request of 2026-10-18): `spriteClaims` writes each sprite's atlases from
+  `SpriteUse` to `build/atlas-claims.txt` (the only place the pipeline reads the content); `packAtlases` packs
+  the atlases in parallel from that file and is cacheable (inputs hashed by relative path), so an unchanged tree
+  restores it from the build cache; duplicate-frame entries are sorted by name and index and backdrop pages are
+  numbered in folder order, so the output is byte-reproducible.

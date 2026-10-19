@@ -26,7 +26,8 @@ import vanguard.content.WingmenData;
  * The spoken lines (design/audio/voice, Offline pipeline): every radio cue of every level (with its
  * easy and hard variants, one line per convoy unit for {@code {ally}} and one per escort side for
  * {@code {side}}), the secrets' lines, the
- * specials' calls, the low-armour line (source {@code armour}), Rook's radio barks (source
+ * specials' calls, the low-armour line (source {@code armour}), the game over transmission (source {@code
+ * retry game-over}), Rook's radio barks (source
  * {@code wingmen barks <trigger>}) and every page of the levels' and acts' briefings and of the acts' outros (spoken
  * dry, as briefings), each with the key its rendered file is named by. The renderer (tools/art/voice.py, through {@code :pipeline:voiceLines}) and
  * the game share this list, so the game finds a line's file by the same key.
@@ -84,7 +85,7 @@ public final class VoiceLines {
      * @param voice the speaker table's voice slug ({@code dock})
      * @param speaker the speaker's name in the data ({@code Dock One})
      * @param text the line as the subtitle shows it
-     * @param spoken the text the voice says: markup and stage directions removed
+     * @param spoken the text the voice says: markup and stage directions removed, M7 part B's respellings applied
      * @param settings the Chatterbox settings it is spoken with
      * @param key the hash its file is named by
      * @param source where it comes from, for the renderer's log
@@ -192,7 +193,8 @@ public final class VoiceLines {
             Filter filter,
             String source) {
         Optional<String> voice = voices.voiceOf(speaker);
-        String spoken = spoken(text);
+        // M7 part B: the respellings (Ares → Airees) are part of the text as spoken, so of the key.
+        String spoken = voices.respelled(spoken(text));
         if (voice.isEmpty() || spoken.isEmpty()) {
             return Optional.empty();
         }
@@ -245,6 +247,9 @@ public final class VoiceLines {
         VoiceData voices = content.voices();
         SpecialsData.Radio call = content.specials().airstrike().radio();
         add(lines, line(voices, call.speaker(), call.line(), Expression.NEUTRAL, false, Filter.RADIO, "specials"));
+        // M7 part A: the Orbital Lance's call, Lance Control (cast in round 37, step Q2).
+        SpecialsData.Radio lance = content.specials().orbitalLance().radio();
+        add(lines, line(voices, lance.speaker(), lance.line(), Expression.NEUTRAL, false, Filter.RADIO, "specials"));
         LevelData.RadioLine lowArmour = content.armour().radio();
         add(
                 lines,
@@ -256,6 +261,17 @@ public final class VoiceLines {
                         false,
                         lowArmour.distorted().orElse(false) ? Filter.DISTORTED : Filter.RADIO,
                         "armour"));
+        LevelData.RadioLine gameOver = content.retry().gameOver();
+        add(
+                lines,
+                line(
+                        voices,
+                        gameOver.speaker(),
+                        gameOver.line(),
+                        gameOver.expression().orElse(Expression.NEUTRAL),
+                        false,
+                        gameOver.distorted().orElse(false) ? Filter.DISTORTED : Filter.RADIO,
+                        "retry game-over"));
         WingmenData.Barks barks = content.wingmen().barks();
         for (WingmenData.Bark bark : barks.triggers()) {
             for (String text : bark.lines()) {
@@ -331,6 +347,20 @@ public final class VoiceLines {
                                         voices,
                                         cue.speaker(),
                                         text.replace(ALLY, unit.name()),
+                                        expression,
+                                        shout,
+                                        filter,
+                                        source));
+                    }
+                } else if (text.contains(ALLY) && !level.groundAllies().isEmpty()) {
+                    // M7 part D: a ground ally is named by its name ("Bradbury is hit!"; Level 17's domes)
+                    for (LevelData.GroundAlly ally : level.groundAllies()) {
+                        add(
+                                lines,
+                                line(
+                                        voices,
+                                        cue.speaker(),
+                                        text.replace(ALLY, ally.name()),
                                         expression,
                                         shout,
                                         filter,

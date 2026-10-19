@@ -17,23 +17,12 @@ import vanguard.sim.WaveSpec;
  * M5 part G's rules for the simulation (design/campaign Level 13 Polar Relay, design/enemies/naval/skimmer,
  * design/allies Nansen Relay; user decisions G1–G9 = a of 2026-10-11 and the stated defaults, pending the
  * user's review in the combined round): the {@code defend} primary with its ally and the hook modes per
- * enemy kind at a difficulty, a timed halt's sections, the lane walkers' lanes, a {@code cross}'s entry,
+ * enemy kind at a difficulty, the lane walkers' lanes, a {@code cross}'s entry,
  * hard's pairs, a nest entering from a side, the pickups released at a point (the supply drones) and the
- * {@code ally-below} cues' share. Javadoc "M5 part G": M4's part G is {@link LevelRules}.
+ * {@code ally-below} cues' share (a timed halt's sections: {@link MarsRules#sections}). Javadoc "M5 part G": M4's part G is {@link LevelRules}.
  */
 final class PartGRules {
     private PartGRules() {}
-
-    /** The level's sections for the simulation: a timed halt with its {@code ramp} (the default 2 s if not given). */
-    static List<LevelScript.Section> sections(LevelData level) {
-        return level.sections().stream()
-                .map(section -> new LevelScript.Section(
-                        section.end(),
-                        section.speed().orElse(level.scrollSpeed()),
-                        section.isArena(),
-                        section.rampSeconds()))
-                .toList();
-    }
 
     /**
      * The defend primary at {@code difficulty}: its ally (an ally that {@code follows: ground}, its

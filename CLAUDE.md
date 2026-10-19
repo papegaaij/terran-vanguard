@@ -121,8 +121,8 @@ design tree; this list is only a reminder.
 - `python3 tools/balance.py` – balancing report for levels 01–14 from the data files and the
   expected purchases in `design/player/balance-plan.yaml` (`--weapons` prints every weapon's
   per-level numbers); the same checks run as JUnit tests (`BalanceTest`, `ActPlaythroughTest`).
-  It exits 0; the L01–L03 DPS gap, the Coilwyrm's bounty and the Level 12 Wraith rear check (pending
-  the user's review) are printed as accepted exceptions.
+  It exits 0; the L01–L03 DPS gap, the Coilwyrm's bounty and the Level 12 Wraith rear check
+  (accepted by the user in round 34) are printed as accepted exceptions.
 - `tools/concept/` – reproducible generators for concept mockups (Python 3 + PIL + numpy,
   ffmpeg for audio/GIF encoding). Each script documents its outputs at the top.
 - `tools/art/` – production generators for final assets (see
@@ -191,6 +191,20 @@ versions in `gradle/libs.versions.toml`.
   iterating, the full `check` once at the end.
 - Never run two code steps in the same module (`sim/`, `content/`, `game/`, `pipeline/`) at once;
   an art or doc step may run next to a code step.
+- Docs-only steps (round closes, merges, file moves, review pages) run on the cheaper model (Sonnet);
+  code, art and capture steps keep the default.
+- Parallel code steps check only their own module and name, not chase, failures from other steps in
+  flight; the main agent runs one full `check` after each wave. Put the exact APIs a step needs in its
+  brief, and have each agent report once, after its final check.
+- Agents look at images small: contact sheets scaled to about 1000 px wide, crops for a detail; the
+  full-size files stay in the repo.
+- Agents wait for a long build with one blocking wait, never by polling it.
+- Only the last step of a wave (or the main agent) runs the full `check`; every other step checks its
+  own module only.
+- Keep code out of docs-only steps so they can run on Sonnet: a small code edit goes to the next code step.
+- When a part is done, move its working note's log to an archive file, so the live note stays short.
+- Classes that grow too big (thousands of lines, frequent edits, conflicts, regressions) are refactored
+  into smaller ones rather than read in pieces; schedule the refactoring as its own step.
 
 ## Git
 

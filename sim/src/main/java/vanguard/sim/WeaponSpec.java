@@ -15,9 +15,11 @@ import java.util.List;
  *     targets, and a {@link Delivery#BOLT} or {@link Delivery#HOMING} weapon does double damage on
  *     the ground layer (a ground-only weapon's damage already includes it)
  * @param rate volleys per second
- * @param damage damage per projectile
+ * @param damage damage per projectile; M7 part A: a {@link Delivery#BEAM}'s damage per simulation step
+ *     (its rate is {@link SimStep#PER_SECOND}, so rate times damage is its damage per second)
  * @param speed px/s; 0 for dropped and lobbed projectiles
- * @param size a projectile's hit box
+ * @param size a projectile's hit box; M7 part A: a {@link Delivery#BEAM}'s column width (its height
+ *     is not used)
  * @param range px a bolt (or a turret's shot, a torpedo) flies before it is gone ({@link
  *     Double#POSITIVE_INFINITY}: until it leaves the screen); a homing weapon's seek radius (a
  *     torpedo's too) and a turret's reach; how far ahead of the muzzle a lobbed shell lands
@@ -71,6 +73,40 @@ public record WeaponSpec(
         if (accelSeconds < 0 || (delivery == Delivery.MINE) == mines.equals(Mines.NONE)) {
             throw new IllegalArgumentException(slug + ": a mine weapon has mine numbers, others none");
         }
+        if (delivery == Delivery.BEAM
+                && (muzzles.size() != 1 || rate != SimStep.PER_SECOND || pierce != 1 || !(size.width() > 0))) {
+            throw new IllegalArgumentException(
+                    slug + ": a beam has one muzzle, a width, pierce 1 and the rate " + SimStep.PER_SECOND);
+        }
+    }
+
+    /**
+     * M7 part A: a {@link Delivery#BEAM} weapon (design/player/weapons/ion-beam): one column of {@code
+     * width} px from {@code nose} straight up, dealing {@code damagePerSecond} as one sixtieth every
+     * simulation step to the first target it touches. Its rate is {@link SimStep#PER_SECOND} and its
+     * damage the damage per step; it has no speed, range, pierce, blast or mines.
+     */
+    public static WeaponSpec beam(
+            String slug, String vfx, String sfx, double width, double damagePerSecond, Muzzle nose) {
+        return new WeaponSpec(
+                slug,
+                vfx,
+                sfx,
+                Delivery.BEAM,
+                false,
+                SimStep.PER_SECOND,
+                damagePerSecond / SimStep.PER_SECOND,
+                0,
+                new Hitbox(width, 0),
+                Double.POSITIVE_INFINITY,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                List.of(nose));
     }
 
     /** A weapon without M5 part F's {@code side} or {@code rear} trait. */
@@ -245,13 +281,23 @@ public record WeaponSpec(
          * it touches (units, destructibles, a sunken trigger) at full damage, never a flyer. Only in a
          * level over water ({@link LevelScript#water()}): elsewhere its mount fires nothing.
          */
-        TORPEDO;
+        TORPEDO,
+        /**
+         * M7 part A (design/player/weapons/ion-beam, the {@code beam} delivery): no projectiles; while
+         * fire is held a column of the weapon's width runs from its muzzle straight up and ends at the
+         * first target in it, nearest the ship, on {@code air}, {@code low-air}, {@code ground} or
+         * {@code high-air} (a tie goes to the higher layer), which takes the weapon's damage every
+         * simulation step. Hardened ground targets do not stop it; it never pierces. Appended last so
+         * the earlier deliveries keep their ordinals.
+         */
+        BEAM;
 
         /** Whether its projectiles hit enemies on {@code layer} on their way (blasts aside). */
         public boolean reaches(Layer layer) {
             return switch (this) {
                 case BOLT -> layer.hitByStandardShots();
-                case HOMING, TURRET -> layer != Layer.SUB;
+                // M7 part B: nothing reaches the buried layer.
+                case HOMING, TURRET, BEAM -> layer != Layer.SUB && layer.touchable();
                 case TORPEDO -> layer == Layer.SUB || layer == Layer.GROUND;
                 case DROPPED, LOBBED, MINE -> false;
             };

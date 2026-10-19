@@ -111,7 +111,9 @@ class SubLayerTest {
     @Test
     void subIsAppendedSoTheOtherLayersKeepTheirOrdinalsAndItNeitherTakesStandardShotsNorTouchesTheShip() {
         assertEquals(
-                List.of(Layer.GROUND, Layer.LOW_AIR, Layer.AIR, Layer.HIGH_AIR, Layer.SUB), List.of(Layer.values()));
+                List.of(Layer.GROUND, Layer.LOW_AIR, Layer.AIR, Layer.HIGH_AIR, Layer.SUB),
+                // M7 part B: the buried layer is appended after it.
+                List.of(Layer.values()).subList(0, 5));
         assertFalse(Layer.SUB.hitByStandardShots());
         assertFalse(Layer.SUB.collidesWithPlayer());
         for (WeaponSpec.Delivery delivery : WeaponSpec.Delivery.values()) {

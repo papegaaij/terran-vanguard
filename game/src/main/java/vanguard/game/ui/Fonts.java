@@ -15,6 +15,17 @@ public final class Fonts implements Disposable {
     public static final String BODY_FILE = "fonts/body-10x20.fnt";
     public static final String HEADING_FILE = "fonts/heading-20x30.fnt";
 
+    /** The fonts' cell widths, for layouts worked out without the fonts (the mouse's hit regions). */
+    public static final int LABEL_CELL = 8;
+
+    public static final int BODY_CELL = 10;
+    public static final int HEADING_CELL = 20;
+    /** The height of the fonts' capitals, as {@code BitmapFont.getCapHeight} reads it from the glyphs. */
+    public static final int LABEL_CAP = 7;
+
+    public static final int BODY_CAP = 11;
+    public static final int HEADING_CAP = 19;
+
     public final BitmapFont label;
     public final BitmapFont body;
     public final BitmapFont heading;

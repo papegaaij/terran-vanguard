@@ -82,3 +82,89 @@ Settings: a 960×540 window at 0,0, `audio.master=0`, `controls.auto-fire=true`;
 ship holds its start position. Fits: `front=hornet-launcher:3,rear=fan-blaster:5,left=swivel-gun:3,right=swivel-gun:3`;
 `front=pulse-cannon:3,rear=tail-gun:5,left=swivel-gun:5,right=swivel-gun:5`;
 `front=pulse-cannon:1,rear=proximity-mines:5`. The × in the middle is the X server's mouse pointer.
+
+## ion-beam-r36-a
+
+**Chosen** (round 36, 2026-10-13).
+
+**Ion Beam A, the chosen round-08/09 beam family per level (Act 3, from Level 15)**: the continuous front beam on Mars. Files: `ion-beam-r36-a.png` (sheet: the width per level, L1 6 px to L5 14 px and the overdrive's 18 px; the contact on an air unit, the tendril it burns through, the rock-scorch on a rock island, the glance spark over a hardened ground target; two whole-field frames) and `ion-beam-r36-a.gif` (Valles canyon at 12.5 fps, the beam at L2: two Ghost Drones one after the other, a Tendril Anchor link burnt through with the beam going on to the Needler beyond, a rock island stopping it while the Needler beyond stays safe, a Hive Node passed over, the open sky).
+
+- **Prompt:** top-down effect frames for a late-1990s pre-rendered CGI vertical shoot'em up over a rust-red Martian canyon floor: a continuous straight ion beam rising from the nose of a small blue-and-white fighter, a segmented electric-cyan column with a white-hot core and soft blue bloom, boring a few pixels into the first enemy above it and ending in a white contact flare with a horizontal streak and cyan sparks thrown back; where it meets the edge of a layered rock mesa the flare is dusted tan, small dust puffs kick back and a dark scorch trail with a cyan rim stays on the rock; where it crosses a fleshy crimson energy tendril strung between the canyon walls the tendril glows white-hot at the crossing while the beam carries on past it; Raptor / Tyrian 2000 era look.
+- **Negative prompt:** orange or red beam or heat glow (reserved for enemy bullets), beam cut off flat at the sprite edge, beam passing through rock, photographic realism, side view, lens dirt, text, watermark.
+- **Animation brief:** on in 0.05 s (start sound), off with a 0.08 s fade; the column's stripes run up; the contact flare loops 6 frames; a steady heat tint on the target, not a blink per step; scorch marks scroll with the rock.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py ion-beam --variant a` (reuses `vfx_r09.py`'s beam and flare, `enemies_r36.py`'s canyon and Tendril Anchor, production sprites from `assets/`)
+
+## ion-beam-r36-b
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+
+**Ion Beam B, "ion stream"**: the same scene with a different column. Files: `rejected/ion-beam-r36-b.png` and `rejected/ion-beam-r36-b.gif`.
+
+- **Prompt:** as A, but the beam is a stream of ions rather than a laser: a hard thin white core inside a pale translucent cyan sheath, two hair-thin bright cyan strands twisting round the core like a helix, bright white packets racing up the column; at the contact point a lighter flare with two flat cyan rings spreading along the surface; at rock, small white-hot slag beads dripping down from the contact point.
+- **Negative prompt:** as A, plus: segmented stripes, purple or violet strands (Vrell hue).
+- **Animation brief:** the helix pitch is 30 px and turns as the packets run up at about 1 000 px/s; otherwise as A.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py ion-beam --variant b`
+
+## light-drone-r36-a
+
+**Chosen** (round 36, 2026-10-13).
+
+**Light drone A, disc (Light Drone Bay, Act 3, from Level 15)**: the 14×14 drone and its 12×18 bay pod. Files: `light-drone-r36-a.png` (sheet: the drone at 4× in its headings and its block flash, the bay alone and on both wings, the orbit and convergence diagram, block / break / rebuild crops, the HUD weapons box with the hits-left pips) and `light-drone-r36-a.gif` (12.5 fps over Martian ground: two drones orbiting the Stormhawk, firing at the convergence point, absorbing Needler bullets; the left one breaks on its 8th hit and is rebuilt by its bay after 6 s, then the right one breaks).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy highlights, crisp silhouette, isolated on a flat dark background. A tiny round combat drone seen from directly above: a light blue-grey disc hull with a cobalt-blue rim band, a dark glass dome with a glowing cyan lens, a short gun barrel at the front, two small thruster nubs at the back; and its carrier pod for a fighter's wing tip: a rounded grey pod with a lit circular docking pad at its nose.
+- **Negative prompt:** photograph, painterly, perspective camera, side view, text, watermark, red or orange lights, organic shapes, insignia, rotor blades.
+- **Animation brief:** 16 headings (it turns to the convergence point, 140 px ahead of the ship); a white flash when it absorbs a bullet; breaks in the small explosion; rebuilt: fades in at the bay over 0.3 s with a white flash and flies out to its 36 px orbit.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py light-drone --variant a` (the Stormhawk, explosions and HUD panel are the production files in `assets/` and the round-28 capture)
+
+## light-drone-r36-b
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+
+**Light drone B, dart**: the same scene with a different drone and bay. Files: `rejected/light-drone-r36-b.png` and `rejected/light-drone-r36-b.gif`.
+
+- **Prompt:** as A, but the drone is a tiny delta-wing dart like a miniature of the player's fighter: light blue-grey hull, cobalt leading-edge stripes, a raised dark spine with a cyan sensor at the nose, two small engine nacelles glowing cyan at the back; the bay is a slim grey launch rail with a glowing cyan slot and two small fins.
+- **Negative prompt:** as A.
+- **Animation brief:** as A.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py light-drone --variant b`
+
+## arsenal-capture-r37-a
+
+Concept round 37 (M7 part A close-out, step A7), a capture of the game, not generated art (`.png`
+labelled sheet, `.mp4` H.264/AAC with the game's sound, 53 s, the full 960×540 frame with a caption
+strip). Method (the four r37 captures share it): the install script of `:desktop:installDist` (the
+2026-10-13 snapshot) on a private Xvfb display, settings: a 960×540 window at 0,0,
+`controls.auto-fire=true`, `audio.master=0.5`; every run with `--bench` and a scratch `--settings`
+file; recorded with `ffmpeg -f x11grab -framerate 30`; sound: OpenAL Soft's `wave` driver
+(`ALSOFT_CONF` with `drivers = wave`) writing the game's mix to a file, nothing played aloud,
+aligned by the file's end time less 0.25 s (the game's shutdown after its last sample; checked on
+the EMP ring: its sound within 0.07 s of the ring's first frame). The ship was moved by XTest key
+events on that display (left/right holds of 0.35 s every 1.2 s, V = dash, X = special). Level t =
+video time − 7.1 to 7.9 s (each run's first level frame). Every run: `--start level --loadout
+front=ion-beam:2,left=light-drone-bay,right=deflector-pod,utility=evasive-thrusters`. Runs used here:
+
+- **Level 05, medium** (`--level 5 --difficulty medium --invulnerable --special emp-burst:3
+  --bench 192`), no keys until t 178: the ship stays on the centre line, under the Gorgon Frigate
+  (t 150). The deflector catches at t 51 come from this run (`--invulnerable` keeps the Deflector
+  Pods catching; it stops the drones being hit, so the drone run had none).
+- **Level 05, hard** (`--level 5 --difficulty hard --special smart-bomb:3 --bench 75`, sways,
+  dashes), **scratch data:** a copy of [light-drone-bay/data.yaml](../light-drone-bay/data.yaml)
+  with level 1 `drone_hits: 2` (the real file: 8) placed first on the run's classpath only (a copy
+  of the start script with `CLASSPATH=<scratch>:$APP_HOME/lib/…`; the real file is unchanged): in
+  two earlier 60 s runs on hard with the real data the drone took three or four hits and never
+  broke. A Skitter rammed it at t 27.6.
+- **Level 07, medium** (`--level 7 --difficulty medium --invulnerable --special orbital-lance:2`):
+  the beam under the Brood Carrier (t 107–113). **Level 14, medium** (`--level 14 --escort none
+  --invulnerable --special smart-bomb:3`): the beam under the Siege Spire (t 114, sheet only).
+
+The sheet: the Ion Beam on the Gorgon Frigate (stopping at a tentacle with the contact flare, at the
+hull, on the opened core), the Brood Carrier and the Siege Spire with the column running through
+them; the drone's orbit, the ram, the break spark, the rebuild ring and fade-in (zoom 2.4×), the
+HUD's hits strip under the `L LIGHT DRONE BAY` row (full, refilling dim, full again); the
+Deflector Pod's field arc catching two bullets (white flash) at t 51.2–51.6. The mp4: Level 05 t
+150–178 (the frigate fight to its death), Level 07 t 107–113, Level 05 hard t 23–36 (drone break and
+rebuild), Level 05 t 48.5–54 (the catches).
+
+Findings (pending the user's review): the beam's tint on the tentacle reads as a flat pure-white
+silhouette over a second rather than a tint; on the frigate's hull the column just ends, with no
+contact flare; the column runs on past the Brood Carrier in phase 1 (on `high-air`, which the Ion
+Beam reaches) and past the Siege Spire at t 114: to check whether these parts are meant to stop it.

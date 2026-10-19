@@ -72,6 +72,11 @@ final class LevelRules {
 
     /** The secondary objective for the simulation; a parts objective's parts and phase as indexes into the boss's. */
     static LevelScript.Secondary secondary(Content content, LevelData level, LevelData.Secondary secondary) {
+        // M7 part D (Q.25c): every ground ally untouched (Level 17's "No dome hit", SiegeRules).
+        Optional<LevelScript.Secondary> untouched = SiegeRules.secondary(secondary);
+        if (untouched.isPresent()) {
+            return untouched.get();
+        }
         if (secondary.afloat().orElse(false)) {
             // M5 part E (user decision E8 = a): the naval convoy afloat at the boss's death.
             return LevelScript.Secondary.afloat(
@@ -83,6 +88,11 @@ final class LevelRules {
                     secondary.integrity().get(),
                     secondary.credits(),
                     secondary.label().orElseThrow());
+        }
+        if (secondary.breaksLinks()) {
+            // M7 part C (Q.16a): every tendril of the gates broken before it leaves the screen (Level 16's "Barriers").
+            return LevelScript.Secondary.links(
+                    secondary.credits(), secondary.label().orElseThrow());
         }
         if (secondary.collect().isPresent()) {
             // M5 part F: every weather sonde flown through (Level 12's "Sondes").

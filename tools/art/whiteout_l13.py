@@ -25,9 +25,10 @@ the RGBA layers (straight alpha, stepped to a few translucency levels) at real t
 whether the banks are tiles or drawn procedurally).
 
 Outputs (review only): design/campaign/act-2-homefront/level-13-polar-relay/concept/
-  whiteout-r35-a.png / .gif, whiteout-r35-b.png / .gif   a still of the halted frame at the peak (the
-  relay, Skimmers and a Scuttler at the edges in the white, Stingers diving at the relay, the player,
-  Rook, bullets, the edge warnings) with the layer breakdown and the ramp; a 4 s loop of the peak
+  whiteout-r35-b.png / .gif   a still of the halted frame at the peak (the relay, Skimmers and a
+  Scuttler at the edges in the white, Stingers diving at the relay, the player, Rook, bullets, the edge
+  warnings) with the layer breakdown and the ramp; a 4 s loop of the peak (the chosen b, round 34; the
+  rejected a's go to concept/rejected/whiteout-r35-a.*)
 
 Run: python3 tools/art/whiteout_l13.py   (~1 min)
 """
@@ -45,6 +46,7 @@ from render import raster  # noqa: E402
 from render.enemy_rigs import write_gif  # noqa: E402
 
 REVIEW_ROUND = "r35"
+CHOSEN = "b"                                    # the user's pick, round 34 (13.1b): the blizzard curtain
 CONCEPT = l13_props.CONCEPT
 W, H = 480, 540
 VARIANTS = {"a": "A - ROLLING BANKS", "b": "B - BLIZZARD CURTAIN"}
@@ -91,8 +93,9 @@ def streaks(seed, x, y):
     return sample(n, across * 1.3, along / 6.0)
 
 
-def bank_layer(variant, w=W, h=H, t=0.0, cover=1.0):
-    """The banks at real time ``t`` (s) and ramp ``cover`` (0 none .. 1 the peak), w x h, RGBA."""
+def bank_layer(variant, w=W, h=H, t=0.0, cover=1.0, raw=False):
+    """The banks at real time ``t`` (s) and ramp ``cover`` (0 none .. 1 the peak), w x h, RGBA (with
+    ``raw``: the unstepped (rgb, alpha) arrays, for a caller that blends layers first)."""
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float64)
     edge = np.minimum(xx, w - 1 - xx)                     # distance to the nearer side edge
     side = np.where(xx < w / 2, 1.0, -1.0)                # +1 left bank, -1 right bank (inward)
@@ -112,7 +115,7 @@ def bank_layer(variant, w=W, h=H, t=0.0, cover=1.0):
         lit = np.clip(0.62 - (gx + gy) * 0.8, 0, 1)                      # billows lit from the top-left
         lo, hi_ = np.array([150, 166, 184]), np.array([242, 246, 250])
         rgb = lo + (hi_ - lo) * np.clip(0.2 + 0.8 * lit, 0, 1)[..., None]
-        return stepped_rgba(rgb, a, 6)
+        return (rgb, a) if raw else stepped_rgba(rgb, a, 6)
     # b: a near-opaque sheet at the edge, torn along the wind into streamers
     drift = 70.0 * t
     sx, sy = xx - WIND[0] * drift, yy - WIND[1] * drift
@@ -126,7 +129,7 @@ def bank_layer(variant, w=W, h=H, t=0.0, cover=1.0):
     a = np.clip(np.maximum(sheet * 0.93, streamer * 0.7) * (0.5 + 0.5 * cover), 0, 0.96)
     lo, hi_ = np.array([170, 186, 202]), np.array([246, 249, 252])
     rgb = lo + (hi_ - lo) * np.clip(0.45 + 1.1 * (st - 0.5) + 0.3 * sheet, 0, 1)[..., None]
-    return stepped_rgba(rgb, a, 6)
+    return (rgb, a) if raw else stepped_rgba(rgb, a, 6)
 
 
 @lru_cache(maxsize=None)
@@ -270,18 +273,19 @@ def review(variant, plate, units, relay_img):
     for i, c in enumerate(ramp):
         sheet.alpha_composite(c, (520 + i * 168, 350))
     gif = [frame(variant, plate, units, relay_img, i / 20, 1.0, i % 80) for i in range(80)]
-    CONCEPT.mkdir(parents=True, exist_ok=True)
-    png, gpath = CONCEPT / f"whiteout-{REVIEW_ROUND}-{variant}.png", CONCEPT / f"whiteout-{REVIEW_ROUND}-{variant}.gif"
+    folder = CONCEPT if variant == CHOSEN else CONCEPT / "rejected"
+    folder.mkdir(parents=True, exist_ok=True)
+    png, gpath = folder / f"whiteout-{REVIEW_ROUND}-{variant}.png", folder / f"whiteout-{REVIEW_ROUND}-{variant}.gif"
     sheet.convert("RGB").save(png, optimize=True)
     write_gif(gif, gpath, fps=20, colors=128)
     print(f"review: {png.relative_to(ROOT)}, {gpath.relative_to(ROOT)}")
 
 
 def main(args):
-    import relay  # tools/art: the relay's variant a (the game's until the pick)
+    import relay  # tools/art: the relay's game variant (b since round 34)
     plate = l13_props.HaltPlate()
     units = Units()
-    relay_img = relay.preview_frame("a")
+    relay_img = relay.preview_frame(relay.PRODUCTION)
     for v in VARIANTS:
         if args and v not in args:
             continue

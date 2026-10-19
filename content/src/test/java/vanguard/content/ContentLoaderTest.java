@@ -20,14 +20,17 @@ class ContentLoaderTest {
     void everyDataFileInTheDesignTreeLoadsAndValidates() {
         Content content = ContentLoader.load(DesignTree.dataFiles());
 
-        assertEquals(14, content.weapons().size());
+        assertEquals(18, content.weapons().size());
         assertEquals(
                 List.of(
                         "brood-carrier",
                         "brood-pod",
+                        "burrower",
+                        "choir-herald",
                         "coilwyrm",
                         "creeper",
                         "driftjelly",
+                        "dust-kite",
                         "gorgon-frigate",
                         "harbour-kraken",
                         "hive-node",
@@ -40,12 +43,15 @@ class ContentLoaderTest {
                         "ravager",
                         "reef-spitter",
                         "scuttler",
+                        "shellback",
                         "siege-spire",
                         "skimmer",
                         "skitter",
                         "spine-turret",
                         "spore-bomber",
                         "stinger",
+                        "tendril-anchor",
+                        "threadcrawler",
                         "whirl-seed",
                         "wraith"),
                 content.enemies().keySet().stream().sorted().toList());
@@ -153,7 +159,7 @@ class ContentLoaderTest {
                 LEVEL_01,
                 text -> text.replaceFirst("enemy: needler", "enemy: neddler"),
                 "design/" + LEVEL_01
-                        + ": waves[2].enemy: unknown enemy 'neddler' (known: brood-carrier, brood-pod, coilwyrm, creeper, driftjelly, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, scuttler, siege-spire, skimmer, skitter, spine-turret, spore-bomber, stinger, whirl-seed, wraith)");
+                        + ": waves[2].enemy: unknown enemy 'neddler' (known: brood-carrier, brood-pod, burrower, choir-herald, coilwyrm, creeper, driftjelly, dust-kite, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, scuttler, shellback, siege-spire, skimmer, skitter, spine-turret, spore-bomber, stinger, tendril-anchor, threadcrawler, whirl-seed, wraith)");
     }
 
     @Test

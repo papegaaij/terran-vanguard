@@ -106,12 +106,12 @@ class PartGUnitsDataTest {
                         text,
                         "    claws: 10             # damage per second",
                         "    dives: 10\n    claws: 10             # damage per second"),
-                "only a defended ally (follows: ground) is hurt by dives and lobs");
+                "only a ground ally (follows: ground) is hurt by dives, lobs, bomb runs and rolls");
         assertProblem(
                 text -> replace(
                         text,
                         "    dives: 10             # a hooked diver",
                         "    bullets: true\n    dives: 10             # a hooked diver"),
-                "a defended ally (follows: ground) is hurt only by objective-aimed attacks, dives and lobs");
+                "a ground ally (follows: ground) is hurt only by objective-aimed attacks, dives, lobs, bomb runs");
     }
 }

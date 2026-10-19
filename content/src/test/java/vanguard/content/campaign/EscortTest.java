@@ -238,6 +238,7 @@ class EscortTest {
                     .readTree(SaveFormat.write(before(level, 100).save(Instant.EPOCH)));
             tree.put("version", 2);
             tree.remove("escort");
+            tree.remove("bays");
 
             SaveGame migrated = SaveFormat.read(tree.toString());
 
@@ -257,6 +258,8 @@ class EscortTest {
         String json = SaveFormat.write(before(9, 0).save(Instant.EPOCH));
         ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(json);
         tree.remove("escort");
+        tree.remove("bays");
+        tree.put("version", 3);
 
         assertThrows(SaveException.class, () -> SaveFormat.read(tree.toString()));
     }

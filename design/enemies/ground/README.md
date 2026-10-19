@@ -1,9 +1,9 @@
 ---
 title: Ground enemies
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
-updated: 2026-10-07
+updated: 2026-10-18
 ---
 
 # Ground enemies
@@ -16,33 +16,33 @@ terrain, never collide with the player, and are what `anti-ground` and `area` we
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [spine-turret](spine-turret/README.md) | Basic grown turret with aimed thorns (L02) | approved | done | final |
-| [polyp-mortar](polyp-mortar/README.md) | Acid mortar with a marked impact and ring burst (L05) | review | done | final |
-| [scuttler](scuttler/README.md) | Crab walker with frontal claw armour and facing fans (L04) | review | done | final |
+| [polyp-mortar](polyp-mortar/README.md) | Acid mortar with a marked impact and ring burst (L05) | approved | done | final |
+| [scuttler](scuttler/README.md) | Crab walker with frontal claw armour and facing fans (L04) | approved | done | final |
 | [creeper](creeper/README.md) | Salamander walker crawling in convoys, 5-way fans (L08) | approved | done | final |
 | [hive-node](hive-node/README.md) | Hardened spawner mound, anti-ground only (L09) | approved | done | final |
 | [ravager](ravager/README.md) | Animal pack hunter that gallops and pounces (L09) | approved | done | final |
+| [burrower](burrower/README.md) | Sand-swimmer that surfaces after a bulge tell, fires a ring, dives (L15) | approved | in-progress | final |
+| [tendril-anchor](tendril-anchor/README.md) | Wall anchor pairs with a damaging tendril barrier; beam burns through (L16) | approved | done | final |
+| [threadcrawler](threadcrawler/README.md) | Ground centipede chain on canyon floors and walls, travelling spore wave (L16) | approved | done | final |
+| [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | chosen |
+| [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | not-started | chosen |
+| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | not-started | chosen |
 
 ## Roster
 
 | Name | Faction | Layer | Tier | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|---|
-| Burrower | Vrell | ground | medium | `burrow`: surfaces in sand, fires a `ring`, submerges after 2 s; invulnerable while submerged. | swarm (scattered) | 15 | idea |
-| Tendril Anchor | Vrell | ground | small | Pairs of anchors on canyon walls stretch a damaging `link` tendril across the path; destroy one to break the barrier (`beam` burns through). | turret nest (pairs) | 16 | idea |
 | SAM Nest | Ascendancy | ground | small | Launches 2 shootable `homing` missiles at the player. | turret nest | 29 | idea |
 | Sentinel Tower | Ascendancy | ground | medium | Tall tower with a 360° `laser-sweep`; the sweep arc is shown first. Hardened base. | turret nest | 32 | idea |
 | Rail Bunker | Ascendancy | ground | medium | **Hardened**. Charges a screen-long `laser-line` rail shot along the player's column (0.8 s telegraph). | turret nest | 33 | idea |
 | Crawler Tank | Ascendancy | ground | medium | Tracked tank that `crawl`s along hulls and roads; has a front turret **and a rear turret**, so it shoots back after you pass. | convoy | 34 | idea |
 | Graft Turret | Hybrid | ground | small | An Ascendancy turret overgrown with Vrell tissue. **Regrows** 5 s after destruction unless its tissue root (weak point) is destroyed too. | turret nest | 37 | idea |
 | Shield Pylon | Ascendancy | ground | medium | Hardened pylon projecting a dome that makes every enemy inside it invulnerable. Destroy pylons to open fortress sections. | turret nest | 41 | idea |
-| Threadcrawler | Vrell | ground | large | Centipede of 10–16 segments (`chain`) that crawls along canyon floors, walls and hulls following the terrain, legs rippling down its body. Every segment fires a slow `aimed` spore in turn (a travelling wave of shots); the head is `vital`. | snake (solo) | 16 | idea |
-| Dust Devil | Vrell | ground → low-air | medium | *(roster fork addition)* A whirling vortex organism: a radially symmetric spinning funnel (`radial`, `spin`) that wanders across Martian plains in a `swirl`, pulling loose pickups and the player's ship slightly toward it and spitting a `spiral` of grit. The core is visible (and hittable) only at the top of each spin cycle. | swarm (2–3 roaming) | 18 | idea |
-| Shellback | Vrell | ground | large | Lumbering four-legged armoured beast, tortoise/armadillo-like, with overlapping shell plates and a spore-mortar vent on its back (`mortar`, area shots). Slow heavy walk (16 angles). Badly damaged it **curls into a ball and rolls** along its path (`spin`), crushing ground targets, then uncurls; belly and vent are the weak points. Animal, not insect. | single / pair | 17 | idea |
-| Warden Tank | Unmarked (Ascendancy) → Ascendancy | ground | medium | Tracked tank: hull at 16 angles drives its own heading along roads and conveyors (`walk`), turret at 32 angles tracks the player independently and fires `burst`s. In Act 3 unmarked grey (a hint), from Act 5 in black and gold. Rear hull plate is the weak point. | convoy | 19 | idea |
 | Strider | Ascendancy | ground | large | Two-legged walker mech (8-frame walk cycle, 16 angles) that stalks across hulls and tunnel floors, arms with twin cannons (`fan`) and a shoulder `homing` pod. Legs are `destroyable`: destroying one topples it (a telegraphed fall across the ground layer). | solo, pairs | 32 | idea |
 | Halo Platform | Ascendancy | ground (fortress mount) | large | A ring of 6 turret segments rotating around a shielded core (`radial` ring + 32-angle turrets). Each turret is `destroyable` and fires as it swings round (`aimed`, `laser-line`); the core's shield drops when half the ring is gone. The ring's rotation speeds up as turrets die. | turret nest (solo centrepiece) | 41 | idea |
 
@@ -121,10 +121,35 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-r
 | [concept/scuttler-r08-a.png](concept/scuttler-r08-a.png) | Scuttler re-render (sheet) | chosen |
 | [concept/scuttler-r08-a.gif](concept/scuttler-r08-a.gif) | Scuttler re-render (motion) | chosen |
 
+Concept round 36 (Act 3 "Red Dust", overnight design phase 2026-10-12; the round's review board
+follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian ground; generator
+`tools/concept/enemies_r36.py`.
+
+| File | What | Status |
+|---|---|---|
+| [concept/burrower-r36-a.png](concept/burrower-r36-a.png) | Burrower A, sand maw — slate/lime radial worm head: furrow, bulge tell, breach, ring of orbs, submerge (sheet) | chosen (round 36, U.1) |
+| [concept/burrower-r36-a.gif](concept/burrower-r36-a.gif) | Burrower A — three Burrowers cycling in the play field (motion) | chosen (round 36, U.1) |
+| [concept/rejected/burrower-r36-b.png](concept/rejected/burrower-r36-b.png) | Burrower B, sand clam — bone/violet armoured clam-shell that faces the ship (sheet) | rejected — round 36: a (sand maw) picked |
+| [concept/rejected/burrower-r36-b.gif](concept/rejected/burrower-r36-b.gif) | Burrower B — the same scene as A (motion) | rejected — round 36: a (sand maw) picked |
+| [concept/tendril-anchor-r36-a.png](concept/tendril-anchor-r36-a.png) | Tendril Anchor A — polyp clamps on the canyon walls with a fleshy rope link; pulse, link and burning link (sheet) | chosen (round 36, U.2) |
+| [concept/tendril-anchor-r36-a.gif](concept/tendril-anchor-r36-a.gif) | Tendril Anchor A — scrolling canyon: one pair broken by killing an anchor, one cut by a beam (mock-up beam) (motion) | chosen (round 36, U.2) |
+| [concept/rejected/tendril-anchor-r36-b.png](concept/rejected/tendril-anchor-r36-b.png) | Tendril Anchor B — spine pylons with a crackling three-strand energy filament (sheet) | rejected — round 36: a (polyp clamps) picked |
+| [concept/rejected/tendril-anchor-r36-b.gif](concept/rejected/tendril-anchor-r36-b.gif) | Tendril Anchor B — the same scene as A (motion) | rejected — round 36: a (polyp clamps) picked |
+| [concept/warden-tank-r36-a.png](concept/warden-tank-r36-a.png) | Warden Tank, unmarked grey — the chosen r05-a model with only its livery changed (no gold, no accent), side by side with r05-a (sheet) | chosen (round 36, U.6: the unmarked grey livery) |
+| [concept/burrower-final-r38-a.png](concept/burrower-final-r38-a.png) | Burrower final sprites (`tools/art/burrower.py`): body and maw bloom, the sand bow wave (screen-fixed while up, Q1 = a), 16-heading ripple, bulge, breach, dive, hole, crater, death (sheet) | chosen (round 38, F.3: approved as final) |
+| [concept/burrower-final-r38-a.gif](concept/burrower-final-r38-a.gif) | Burrower final: three Burrowers cycling over a scrolling Level 15 ground stand-in, 10 fps (motion) | chosen (round 38, F.3: approved as final) |
+| [concept/tendril-anchor-final-r39-a.png](concept/tendril-anchor-final-r39-a.png) | Tendril Anchor final sprites (`tools/art/canyon_units.py`): the anchor at 40 px in 32 headings with its pulse, the tendril's standing loop, dormant tell, flare, wither, frayed end and burn spot (sheet) | chosen (round 39, F.3: approved as final) |
+| [concept/tendril-anchor-final-r39-a.gif](concept/tendril-anchor-final-r39-a.gif) | Tendril Anchor final: a gate dormant, flaring, standing, burnt through by a beam (mock-up) and withering, 10 fps | chosen (round 39, F.3: approved as final) |
+| [concept/threadcrawler-final-r39-a.png](concept/threadcrawler-final-r39-a.png) | Threadcrawler final sprites (`tools/art/canyon_units.py`): head (16 headings × 4 jaw frames), segment (16 × 4 leg frames), tail, pore glow, husk (sheet) | chosen (round 39, F.4: approved as final) |
+| [concept/threadcrawler-final-r39-a.gif](concept/threadcrawler-final-r39-a.gif) | Threadcrawler final: the chain crawling up a Level 16 floor, leg ripple and the pores' wave, 10 fps | chosen (round 39, F.4: approved as final) |
+| [concept/shellback-final-r40-a.png](concept/shellback-final-r40-a.png) | Shellback final sprites (`tools/art/siege_units.py`, the chosen r05 a): 16 headings × 6 walk, curl, roll, vent swell and burst vent, belly glow, husk (sheet) | proposed (round 40) |
+| [concept/shellback-final-r40-a.gif](concept/shellback-final-r40-a.gif) | Shellback final: walk, vent swell, curl, roll, uncurl with the belly glowing, 10 fps | proposed (round 40) |
+| [concept/warden-tank-r36-a.gif](concept/warden-tank-r36-a.gif) | Warden Tank, unmarked grey — on a dirt road on Mars (motion) | chosen (round 36, U.6: the unmarked grey livery) |
+
 ## Implementation
 
-- [ ] Each enemy promoted to its own directory with a stat block before it is implemented.
-- [ ] Ground targets scroll with the terrain; destroyed states persist as wreckage.
+- [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
+- [x] Ground targets scroll with the terrain; destroyed states persist as wreckage (Acts 1–2's ground targets, M6 part D)
 
 ## Open questions
 
@@ -143,3 +168,9 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-r
 - 2026-10-01: Acts 1–2 units promoted to full specs: Spine Turret, Polyp Mortar, Scuttler, Creeper, Hive Node, Ravager.
 - 2026-10-01: Concept round 08: model-space re-renders accepted; they supersede the r05 sheets.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../reviews/acts-1-2/README.md).
+- 2026-10-12 (overnight design phase): Act 3 units promoted to draft specs (Burrower, Tendril
+  Anchor, Threadcrawler, Shellback, Dust Devil, Warden Tank); concept round 36 proposes the Burrower and
+  Tendril Anchor a/b and the unmarked-grey Warden Tank, pending the user's review.
+- 2026-10-13 (user, round 36): the Act 3 ground units approved (D.9–D.14). Picks: Burrower **a** (sand maw), Tendril Anchor **a** (polyp clamps); the unmarked grey Warden Tank accepted (U.6). The rejected variants (Burrower b, Tendril Anchor b) moved to `concept/rejected/`. With the canyon walls' b (MA.1) the anchors and the Threadcrawler keep to the walls' foot.
+- 2026-10-18 (user, round 39): the Tendril Anchor's and the Threadcrawler's production art
+  (`tendril-anchor-final-r39-a`, `threadcrawler-final-r39-a`) approved as final (F.3, F.4); both parts `art: final`.

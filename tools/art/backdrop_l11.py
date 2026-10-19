@@ -127,7 +127,9 @@ LANE = 120
 LANE_SHIPS = [(60, 450), (180, 450), (420, 450)]                # at the halt: lanes 1, 2, 4
 CLEAR_SHIPS = [(60, 450), (64, 300), (420, 450)]      # after the halt until the platform has passed (E2b's call)
 CLEAR_SECONDS = 4.5
-PLATFORM_AT = (240.0, 78.0)             # Tiamat's centre at the halt (round 33: 110 -> 78) (px from the left, below the top): round 07's
+PLATFORM_AT = (240.0, -46.0)            # Tiamat's centre at the halt (px from the left, below the top; round 33: 110 -> 78;
+#                                         round 40 proposal a, the L11 rework: 78 -> -46, the deck mostly above the top edge
+#                                         so the Kraken, 216 px below its centre, sits 124 px higher; pending the user's pick)
 PLATFORM = (256, 208)
 DECK = (104, 76)                        # the deck's half extents (round 07: 208 x 152)
 

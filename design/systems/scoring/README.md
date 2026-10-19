@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../economy]
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Scoring
@@ -90,14 +90,41 @@ Best grade per level is stored in the save and shown in the
 ### High scores
 
 A local top-10 table per difficulty: name (3–10 characters), score, furthest level, date.
-It is filled in at game over (quitting a campaign) and at the campaign's end.
+It is filled in at the hard game over and at the campaign's end (in the Acts 1–2 release, the
+release's end; see *When* below).
+
+As built in M6 part B (accepted by the user in concept round 35, 2026-10-12):
+
+- **When** (Q2 = a): at the game over screen (hard, no retry left) and at the release's end (after
+  Act 2's outro, on every difficulty; see the [main menu](../../ui/main-menu/README.md) and
+  [credits](../../ui/credits/README.md)). Quitting a campaign to the menu enters nothing: a save
+  can be continued. On easy and medium the release's end is the only entry.
+- **Ranking**: higher scores first; an equal score ranks below the entries already there (an
+  earlier date first, then the one entered first). A score of 0 is never entered. A score that
+  does not make the top 10 shows the table with "THIS SCORE DID NOT MAKE THE TOP 10."
+- **Furthest level**: at a game over the level that ended the campaign, at the release's end the
+  last won level (14); the table shows it as `M12`.
+- **Name** (Q4): A–Z, 0–9, space and `-`, 3–10 characters without a space at either end, upper
+  case in the 10×20 font. The entry offers the last name entered (the cursor waits on END, so
+  confirm keeps it). The letter grid of the chosen
+  [game-over-r08-a](../../ui/debrief/concept/game-over-r08-a.png) has two rows of 20 keys (A–T;
+  U–Z, 0–9, SP, `-`, DEL, END): the arrows or the D-pad pick a key, confirm presses it, Esc / B /
+  the right button deletes; typing on the keyboard adds characters (lower case is raised),
+  backspace deletes, and a typed character moves the cursor to END so Enter takes the name; the
+  mouse hovers a key and a click presses it.
+- **File**: `scores.yaml` next to the settings file (like `saves/`): `version`, `last_name` and
+  one list per difficulty of `{name, score, level, date}`. A missing file is an empty table; a
+  file that is not YAML is an empty table too and is kept as `scores.yaml.bad` when the next score
+  is written; an invalid entry is left out. A debug run reads it but never writes it, and says so
+  under the table ("SCORES OFF - DEBUG RUN: NOT SAVED.").
+- **Viewing** (Q3 = a): the main menu's SCORES item shows the three tables.
 
 ## Implementation
 
 - [x] Score counter with chain multiplier and HUD display
 - [x] Level-end bonus calculation and grade rating
 - [x] Grade credit bonus fed into the economy (`Campaign.complete` banks `LevelResult.gradeBonus` with a won level's credits)
-- [ ] High-score table per difficulty, with the name entry at game over and at the campaign's end — **later: M6** (user decision D5 of M4 part H; see the [roadmap](../../tech/roadmap/README.md))
+- [x] High-score table per difficulty, with the name entry at game over and at the campaign's end (M6 part B: `HighScores`, `ScoreFile`, `NameEntry`, `ScoreEntry`; tests `HighScoresTest`, `ScoreFileTest`, `NameEntryTest`, `ScoreScreensLayoutTest`)
 
 ## Open questions
 
@@ -154,3 +181,15 @@ It is filled in at game over (quitting a campaign) and at the campaign's end.
 - 2026-10-05: M4 part H (user decision D5 = B): the high-score table goes to M6 (added to the
   roadmap's M6 row), the credits screen is built in part H. The grade credit bonus has been banked
   since M3 (`Campaign.complete`), so that item is ticked and the document is `done` for M4.
+- 2026-10-12: M6 part B built the high scores (defaults Q2 = a, Q4, **pending the user's review in
+  round 35**): the top 10 per difficulty in `scores.yaml` next to the settings file
+  (`vanguard.content.campaign.HighScores`, `ScoreFile`; read-only in a debug run), ties ranked
+  below the entries already there, the name entry with the letter grid, typing and the mouse
+  (`vanguard.game.ui.NameEntry`), at the hard game over and at the release's end; the main menu's
+  SCORES screen shows the tables (Q3 = a). Main-agent choices: a score of 0 is never entered, a
+  damaged file is kept as `scores.yaml.bad`, Esc deletes a character (the entry cannot be skipped;
+  the last name is offered with the cursor on END).
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C3, Q2, Q4 and the build choices B.1).
+- 2026-10-12 (user, round 35): accepted as built: C3 (a score is entered at the hard game over and
+  at the release's end only; quitting a campaign enters nothing), Q2 = a, Q4 (the name's form) and
+  the build choices B.1 (a)–(j); `design: approved`.

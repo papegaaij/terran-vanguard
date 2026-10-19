@@ -32,10 +32,16 @@ import vanguard.sim.SimStep;
  * ({@link #drawAir}): the free spire tearing loose (its lift frames, gliding from the trunk to its
  * station) and then airborne, turning slowly through its 16 headings, a hit on its core flashing it,
  * the six crimson emitters charging through a sweep's telegraph; at its death its eight death frames
- * over the 3 s chain where it died. Above every layer with the bullets ({@link #drawSweep}): the sweep's
+ * over the 3 s chain where it died, carried down with the ground's scroll since the death (the scroll ramps
+ * back up after the kill, so the falling arms stay over the ground they fall to). Above every layer with the bullets ({@link #drawSweep}): the sweep's
  * telegraph line along its first edge and its beam. Over the high-air layer ({@link #drawDaylight}):
  * from the death on, real seconds, the canopy's veins fading out from 2 to 7 s, its tear frames from 0.5
  * to 8.5 s (2 s each, tiled on the high-air scroll) and the low sun's beams ramping in from 2.5 to 5 s.
+ *
+ * <p>Round 40 (the Siege Spire's lanes, proposal 4a, pending the user's review): a pod in its aim turn
+ * glows before its one aimed shot ({@link #drawAimGlow}): its sprite tinted toward crimson and the free
+ * spire's crimson emitter charge ({@code siege-spire-emitter}, reused) over it, additive and enlarged,
+ * both growing with the glow's share ({@link SetPiece#aimGlowShare}).
  */
 final class SpireLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
@@ -97,6 +103,14 @@ final class SpireLooks {
     private static final Color ASH = new Color(0.38f, 0.35f, 0.36f, 1);
     private static final Color CRIMSON = Color.valueOf("FF2A3C");
     private static final Color HOT = Color.valueOf("FFE0E4");
+    /**
+     * Round 40: a pod's aim glow: its sprite tinted at most this far toward {@link #CRIMSON}, the emitter
+     * charge over it drawn this many times its size (20 px), from a share of {@value #AIM_GLOW_FROM}.
+     */
+    static final float AIM_TINT = 0.45f;
+
+    static final float AIM_GLOW_SCALE = 2.6f;
+    static final float AIM_GLOW_FROM = 0.35f;
 
     private final FlashShader flash;
     private final TextureRegion pixel;
@@ -130,6 +144,9 @@ final class SpireLooks {
     private final boolean[] mortar;
     /** Per root the boss part on its tip (the pod the data names there); -1 for none. */
     private final int[] rootPart;
+    /** Per part whether its gun fires straight down (the data's {@code aim: down}): its pod faces down. */
+    private final boolean[] firesDown;
+
     /** The free spire's emitter points per heading, px from the core (x right, y up), six a heading. */
     private final float[][] emitterX;
 
@@ -155,6 +172,8 @@ final class SpireLooks {
     private double deathX = Double.NaN;
 
     private double deathY;
+    /** The ground's place (the stump's y with the scroll still to come) at the death. */
+    private double deathGround;
 
     private static final long NEVER = Long.MIN_VALUE / 2;
 
@@ -216,6 +235,12 @@ final class SpireLooks {
         maw = partNamed(spec.parts(), "maw");
         core = vitalPart(spec.parts());
         BossSpec boss = spec.boss().orElseThrow();
+        firesDown = new boolean[spec.parts().size()];
+        for (BossSpec.Attack attack : boss.attacks()) {
+            for (int p = 0; p < firesDown.length; p++) {
+                firesDown[p] |= attack.firesDown(p);
+            }
+        }
         deathTicks = Math.max(1, SimStep.ticks(boss.deathSeconds() > 0 ? boss.deathSeconds() : 3));
         lobTick = new long[spec.parts().size()];
         reset();
@@ -354,11 +379,23 @@ final class SpireLooks {
             }
             AtlasRegion frame = mortar[r]
                     ? mortars.get(mortarFrame(tick - lobTick[p], mortars.size))
-                    : pods.get(podHeading(shipX - px, shipY - py));
+                    : pods.get(podFrame(firesDown[p], shipX - px, shipY - py));
+            double aim = stumped ? -1 : aimShare(piece, p);
             if (!stumped && hits.on(p, tick, piece.partTicksSinceHit(p))) {
                 flash.draw(batch, frame, Math.round(X0 + px), Math.round(py), Color.WHITE, whiteFlash);
+            } else if (aim >= 0) {
+                flash.draw(
+                        batch,
+                        frame,
+                        Math.round(X0 + px - frame.getRegionWidth() / 2.0) + frame.getRegionWidth() / 2f,
+                        Math.round(py - frame.getRegionHeight() / 2.0) + frame.getRegionHeight() / 2f,
+                        CRIMSON,
+                        aimTint(aim));
             } else {
                 centred(batch, frame, px, py);
+            }
+            if (aim >= 0) {
+                drawAimGlow(batch, aim, px, py);
             }
         }
         if (!stumped && maw >= 0 && exposed(piece, maw)) {
@@ -382,6 +419,60 @@ final class SpireLooks {
             }
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
+    }
+
+    /** Round 40: the emitter charge over a pod in its aim turn, {@code share} through its glow, additive. */
+    private void drawAimGlow(SpriteBatch batch, double share, double x, double y) {
+        AtlasRegion glow = emitter.get(aimGlowFrame(share, emitter.size));
+        float strength = aimGlowStrength(share);
+        float width = glow.getRegionWidth();
+        float height = glow.getRegionHeight();
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        batch.setColor(1, 1, 1, strength);
+        batch.draw(
+                glow,
+                Math.round(X0 + x - width / 2),
+                Math.round(y - height / 2),
+                width / 2,
+                height / 2,
+                width,
+                height,
+                AIM_GLOW_SCALE,
+                AIM_GLOW_SCALE,
+                0);
+        batch.setColor(Color.WHITE);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /**
+     * Round 40: how far through its aim glow part {@code p} is (the share of the attack whose turn it
+     * holds, {@link SetPiece#aimGlowShare}); -1 when it does not glow.
+     */
+    static double aimShare(SetPiece piece, int p) {
+        if (!piece.partAimGlowing(p)) {
+            return -1;
+        }
+        for (int a = 0; a < piece.attackCount(); a++) {
+            if (piece.aimPart(a) == p) {
+                return piece.aimGlowShare(a);
+            }
+        }
+        return -1;
+    }
+
+    /** Round 40: the emitter charge's frame at {@code share} of the aim glow, through its {@code frames}. */
+    static int aimGlowFrame(double share, int frames) {
+        return Math.clamp((int) (share * frames), 0, frames - 1);
+    }
+
+    /** Round 40: the emitter charge's opacity at {@code share}: in from {@value #AIM_GLOW_FROM}, full at the end. */
+    static float aimGlowStrength(double share) {
+        return (float) Math.clamp(AIM_GLOW_FROM + (1 - AIM_GLOW_FROM) * share, 0, 1);
+    }
+
+    /** Round 40: the pod's tint toward crimson at {@code share} of the aim glow. */
+    static float aimTint(double share) {
+        return (float) (AIM_TINT * Math.clamp(share, 0, 1));
     }
 
     /** The crown's frame: shut until the maw is exposed, then half open, then open. */
@@ -421,6 +512,11 @@ final class SpireLooks {
      * A turret pod's heading frame toward a target {@code (dx, dy)} away (x right, y up): the nearest of
      * {@value #POD_HEADINGS} steps clockwise from straight down.
      */
+    /** A pod's frame: straight down (heading 0) for a gun that fires down, else toward the ship. */
+    static int podFrame(boolean down, double dx, double dy) {
+        return down ? 0 : podHeading(dx, dy);
+    }
+
     static int podHeading(double dx, double dy) {
         double clockwise = Math.atan2(-dx, -dy);
         long step = Math.round(clockwise / (2 * Math.PI / POD_HEADINGS));
@@ -472,17 +568,23 @@ final class SpireLooks {
     /**
      * The free spire on the play plane: tearing loose (its lift frames gliding from the trunk to its
      * station), airborne at its heading with its core's hit flash and its emitters through a sweep's
-     * telegraph; dying ({@code age} ≥ 0, steps since its death) its death frames where it died.
+     * telegraph; dying ({@code age} ≥ 0, steps since its death) its death frames where it died, moved
+     * down by the ground's scroll since then.
+     *
+     * @param scrollLag the ground's scroll still to come before the current step, as for {@link #drawGround}
      */
-    void drawAir(SpriteBatch batch, SetPiece piece, float alpha, long tick, int age, float whiteFlash) {
+    void drawAir(
+            SpriteBatch batch, SetPiece piece, float alpha, long tick, int age, float whiteFlash, double scrollLag) {
         if (age >= 0) {
+            double ground = piece.stumpY() + scrollLag;
             if (Double.isNaN(deathX)) {
                 deathX = piece.renderX(1);
                 deathY = piece.renderY(1);
+                deathGround = ground;
             }
             int frame = deathFrame(age, deathTicks, death.size);
             if (frame >= 0) {
-                centred(batch, death.get(frame), deathX, deathY);
+                centred(batch, death.get(frame), deathX, deathY + ground - deathGround);
             }
             return;
         }

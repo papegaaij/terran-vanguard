@@ -13,10 +13,10 @@ import vanguard.sim.Loadout;
  * What a sortie flies of the campaign's loadout: the fitted weapons the simulation flies (the Act 1
  * arsenal, see {@link SimSpecs#flies}), the shield with the spare-power bonus, the plating and
  * the engine (the generator's output gives the spare power), and the fitted special with the
- * charges carried when the simulation flies it (the Airstrike, {@link SimSpecs#fliesSpecial}), and
- * the Pickup magnet at the best level fitted in a utility bay ({@link SimSpecs#fliesUtility}), the
+ * charges carried when the simulation flies it ({@link SimSpecs#fliesSpecial}; M7 part A: a cooldown
+ * special carries none), and the Pickup magnet at the best level fitted in a utility bay ({@link SimSpecs#fliesUtility}), the
  * Targeting computer (its turn bonus on the Stormhawk's homing weapons, its HP bars and weak-point
- * brackets for the renderer) and the Salvage scanner's bonus at its best fitted level, and the
+ * brackets for the renderer) and the Salvage scanner's bonus at its best fitted level, the Evasive thrusters' dash (M7 part A), and the
  * sensor suite's best level for the HUD's threat arrows (L2+; it always gave the hangar intel), and
  * Rook in the escort slot with his fitted gun when he flies ({@link Campaign#escortFlight()}). The
  * other specials and utility modules are bought, fitted and saved but fly later; they and any weapon
@@ -60,6 +60,7 @@ public record Flight(
         int sensor = 0;
         boolean targeting = false;
         int salvage = 0;
+        boolean thrusters = false;
         for (var entry : loadout.entrySet()) {
             LoadoutSlot slot = entry.getKey();
             Fitted item = entry.getValue();
@@ -73,6 +74,8 @@ public record Flight(
                 targeting = true;
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.SALVAGE_SCANNER)) {
                 salvage = Math.max(salvage, item.level());
+            } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.EVASIVE_THRUSTERS)) {
+                thrusters = true;
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.PICKUP_MAGNET)) {
                 magnet = Math.max(magnet, item.level());
             } else if (weaponSlot(slot) != null) {
@@ -104,6 +107,10 @@ public record Flight(
         }
         if (salvage > 0) {
             flown = flown.withSalvage(SimSpecs.salvageBonus(content, salvage));
+        }
+        if (thrusters) {
+            // M7 part A: the dash (one module; a second one in another bay adds nothing).
+            flown = flown.withThrusters(SimSpecs.thrusters(content));
         }
         Optional<Campaign.EscortFlight> rook = campaign.escortFlight();
         if (rook.isPresent()) {

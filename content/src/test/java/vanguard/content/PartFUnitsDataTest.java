@@ -46,7 +46,7 @@ class PartFUnitsDataTest {
         assertEquals(4, chase.seconds());
         assertEquals(1, latch.slots());
         assertEquals(
-                List.of(new EnemySpec.Spot(-22, -13), new EnemySpec.Spot(21, -13), new EnemySpec.Spot(0, -35)),
+                List.of(new EnemySpec.Spot(-21, -13), new EnemySpec.Spot(20, -13), new EnemySpec.Spot(0, -34)),
                 latch.spots(),
                 "left, right and tail, y up");
         assertEquals(2, latch.damageFactor());
@@ -105,7 +105,7 @@ class PartFUnitsDataTest {
         assertProblem(
                 replace(LAMPREY, "  shake: {reversals: 4, within: 1.2}", "  shake: {reversals: 1, within: 1.2}"),
                 "reversals: at least 2");
-        assertProblem(replace(LAMPREY, "    tail: [0, -35]", "    tail: [0, -95]"), "latch.spots.tail");
+        assertProblem(replace(LAMPREY, "    tail: [0, -34]", "    tail: [0, -95]"), "latch.spots.tail");
         assertProblem(replace(LAMPREY, "  slots: 1 ", "  slots: 0 "), "slots must be > 0");
         assertProblem(
                 replace(LAMPREY, "  hard: {drain: 12, latch_slots: 2}", "  hard: {drain: 12, latch_slots: 2, spin: 1}"),

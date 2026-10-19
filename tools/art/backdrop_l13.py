@@ -5,8 +5,8 @@
 Straight to production (user decision G9 = a, pending the user's review) from the chosen arctic scene,
 scene-arctic-r09-a (tools/concept/scenes_r09.py: its ice ramp ICE9, the floes' noise, hillshade, rim,
 the teal submerged margins, the long cool shadows, the waterline foam and the dark water's colour stops,
-imported or taken unchanged). The whiteout is tools/art/whiteout_l13.py's look **a** (rolling banks;
-round 35's audition: re-run with ``WHITEOUT_LOOK = "b"`` if the user picks b).
+imported or taken unchanged). The whiteout is tools/art/whiteout_l13.py's look **b** (the blizzard curtain;
+round 35's audition, the user's pick in round 34 on 2026-10-12).
 
 **The ground is one unique strip** (no repeating ice tile): the approach (t 0-40) and the halt's fixed
 frame are a single render, 480 x 6,144 px from ground position -144 to the halt's top edge (6,000),
@@ -34,7 +34,7 @@ the seam, where the exit's tile set begins (the ground at 6,000 px).
 09's stops, calm), drifting 3 px/s to the left on the real clock (the open water in the leads moves
 gently in the halt); `ground` 1.0: the strip in sections 1-4, `open-floes` (looser floes, open sea) in
 the exit; `low-air` 1.5: the atmosphere's banks: `fog-wisps` (light, ~10 %), `fog-banks` (medium:
-thicker at the edges, ~20 %), `whiteout` (heavy: whiteout_l13 look a's banks at the peak, from both
+thicker at the edges, ~20 %), `whiteout` (heavy: whiteout_l13 look b's curtain at the peak, from both
 side edges, the centre clear; 480 x 540, its noise's period); no high-air tiles (the snow is the game's,
 on the real clock). **Loose ice**: one piece `loose-ice` (8 headings: each heading frame a different
 floe or brash cluster, frame 2, heading east, the mortar floe) on straight paths at 6 px/s in the halt's
@@ -49,7 +49,7 @@ Outputs (assets/backdrop/level-13/):
   open-floes                 ground tile set 480x960: the exit's looser floes and open sea
   arctic-water               deep tile set 480x960, drifting: the dark water under the ice
   fog-wisps, fog-banks       low-air tile sets 480x960: light and medium fog
-  whiteout                   low-air tile set 480x540: the heavy peak's banks (whiteout_l13 look a)
+  whiteout                   low-air tile set 480x540: the heavy peak's banks (whiteout_l13 look b)
   loose-ice                  ground piece 96x112, 8 headings: drifting floes and brash, the mortar floe
   design/campaign/.../level-13-polar-relay/concept/backdrop-final-r35-a.png/.gif   review: the
                        images, composites as the game draws them (stand-ins for the units), the GIF the
@@ -73,7 +73,7 @@ import artkit
 from artkit import DESIGN, ROOT, TAU, raster
 
 import backdrop_l11 as b11  # noqa: E402  (tools/art: blending, wrap score, flow)
-import whiteout_l13  # noqa: E402  (tools/art: the whiteout's banks, round 35's look a)
+import whiteout_l13  # noqa: E402  (tools/art: the whiteout's banks, look b)
 import parallax_r02 as r02  # noqa: E402  (concept script, unchanged: periodic noise, posterize)
 import parallax_r03 as r03  # noqa: E402  (concept script, unchanged: banks, stretched noise, stepped alpha)
 import scenes_r06 as s6  # noqa: E402  (concept script, unchanged: periodic masks, hillshade)
@@ -90,7 +90,7 @@ REVIEW = CONCEPT / "backdrop-final-r35-a.png"
 W, SCREEN = 480, 540
 MID = SCREEN / 2
 TILE_H = 960
-WHITEOUT_LOOK = "a"                     # round 35's audition: look a goes in the game until the user chooses
+WHITEOUT_LOOK = "b"                     # the user's pick in round 34 (2026-10-12): the blizzard curtain
 
 FACTORS = {"deep": 0.85, "far": 0.9, "ground": 1.0, "low-air": 1.5, "high-air": 2.2}
 HAZE_COLOUR = "a8b8c4"                  # the arctic's pale grey-blue (over the water only)
@@ -602,12 +602,21 @@ def fog_tile(name, seed, max_alpha):
 
 
 def whiteout(w, h):
-    """The heavy peak's banks: whiteout_l13's bank_layer (look a) at the peak, as wide as the play
-    field and one noise period (540 px) tall, so it repeats without a line (rendered three periods
-    tall and the middle one kept: the layer's light gradient is one-sided at its borders)."""
+    """The heavy peak's banks: whiteout_l13's bank_layer (look b) at the peak, as wide as the play
+    field and 540 px tall, repeating without a line. Look a's fields are one noise period (540 px)
+    tall: rendered three periods tall and the middle one kept (its light gradient is one-sided at the
+    borders). Look b's streaks run along the wind, off the noise's grid, so no 540 rows repeat: two
+    periods are rendered and cross-faded (row y fades from row y + 540 into row y), so the tile's
+    last row meets its first."""
     per = whiteout_l13.H
-    tall = whiteout_l13.bank_layer(WHITEOUT_LOOK, W, 3 * per, 0.0, 1.0).crop((0, per, W, 2 * per))
-    return artkit.quantize_set([tall], 32)[0]
+    if WHITEOUT_LOOK == "a":
+        tall = whiteout_l13.bank_layer("a", W, 3 * per, 0.0, 1.0).crop((0, per, W, 2 * per))
+        return artkit.quantize_set([tall], 32)[0]
+    rgb, a = whiteout_l13.bank_layer(WHITEOUT_LOOK, W, 2 * per, 0.0, 1.0, raw=True)
+    k = (np.arange(per) / per)[:, None]
+    rgb = rgb[per:] * (1 - k[..., None]) + rgb[:per] * k[..., None]
+    a = a[per:] * (1 - k) + a[:per] * k
+    return artkit.quantize_set([whiteout_l13.stepped_rgba(rgb, a, 6)], 32)[0]
 
 
 # =========================================================================== the loose ice
@@ -663,7 +672,7 @@ TILE_SETS = {   # id -> (layer, height, drift, note)
                                            "open water where it begins at the halt's top edge"),
     "fog-wisps": ("low-air", TILE_H, None, "light: thin pale fog wisps, ~10 %"),
     "fog-banks": ("low-air", TILE_H, None, "medium: the fog thickening at the edges, ~20 %, the centre clear"),
-    "whiteout": ("low-air", whiteout_l13.H, None, "heavy: the whiteout's banks from both side edges (whiteout_l13 look a), "
+    "whiteout": ("low-air", whiteout_l13.H, None, "heavy: the whiteout's banks from both side edges (whiteout_l13 look b), "
                                                   "the centre round the relay clear; they hide the ground units at the edges"),
 }
 SECTION_TILES = [["arctic-water", "open-floes"] if i >= EXIT else ["arctic-water"] for i in range(len(SECTIONS))]
@@ -795,7 +804,7 @@ def block_lines():
         "  # Presentation only: the pack ice round Nansen Relay (tools/art/backdrop_l13.py, straight from",
         "  # scene-arctic-r09-a, G9 = a; M5 part G, step G5). The ground is one unique strip (pack-ice-1..4, the",
         "  # approach and the halt's frame, the leads cut along the waves' lanes) over the drifting `deep` water;",
-        "  # the exit's `open-floes`; fog and the whiteout (whiteout_l13 look a) as the atmosphere's banks.",
+        "  # the exit's `open-floes`; fog and the whiteout (whiteout_l13 look b) as the atmosphere's banks.",
         "  scroll_factors: " + flow(b["scroll_factors"]),
         f"  ramp: {RAMP}",
         f"  haze_colour: {HAZE_COLOUR}  # the arctic's pale grey-blue over the water",
@@ -1352,7 +1361,7 @@ TIMES = [(3, "1 THE START: PACK ICE, FOG WISPS"), (12.5, "1 THE RESEARCH HUT ON 
          (39, "1/2 THE EASE INTO THE HALT"), (58, "2 THE HALT: THE FIRST CROSS"),
          (72, "2 THE MORTARS' FLOE DRIFTING IN"), (106, "3 SCUTTLERS ON THE FLOES"),
          (150, "3 THE FOG THICKENING (MEDIUM)"), (176, "4 THE WHITEOUT RAMPING IN"),
-         (182, "4 THE WHITEOUT'S PEAK (LOOK A)"), (205, "4 THE LAST CROSS"),
+         (182, "4 THE WHITEOUT'S PEAK (LOOK B)"), (205, "4 THE LAST CROSS"),
          (223, "5 GRID ONLINE: THE SCROLL RESUMES"), (230, "5 OPEN FLOES NORTHWARD")]
 
 
@@ -1389,7 +1398,7 @@ def review(backdrop):
     n_rows = (len(TIMES) + per_row - 1) // per_row
     big_y = comp_y + n_rows * 300 + 20
     sheet = raster.sheet(width, big_y + 540 + 60, "LEVEL 13 BACKDROP - FINAL (PROPOSAL)",
-                         "PRODUCTION ART, M5 PART G BATCH - R35; STRAIGHT FROM SCENE-ARCTIC-R09-A; WHITEOUT LOOK A; "
+                         "PRODUCTION ART, M5 PART G BATCH - R35; STRAIGHT FROM SCENE-ARCTIC-R09-A; WHITEOUT LOOK B; "
                          "COMPOSITES AS THE GAME DRAWS THEM (STAND-INS FOR THE UNITS), 1/2 SCALE")
     for name, im, px, py in rows:
         plate = Image.new("RGBA", im.size, artkit.PLATE)

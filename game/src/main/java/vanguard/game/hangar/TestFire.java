@@ -10,6 +10,7 @@ import vanguard.content.WeaponData;
 import vanguard.content.campaign.LoadoutSlot;
 import vanguard.sim.Armament;
 import vanguard.sim.Command;
+import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
@@ -39,6 +40,12 @@ import vanguard.sim.WingmanSpec;
  * <p>One of Rook's guns (the escort's shop, M5 part A) fires like a front gun: his gun at its level
  * from his single nose muzzle at his scale (design/player/wingmen, Rook's guns), the dummies as tough
  * as for the base weapon times the scale.
+ *
+ * <p>M7 part A: the Ion Beam burns the dummy on its line (it stands {@value #BEAM_SECONDS} s of the
+ * level-1 beam); the Light Drone Bay's drone orbits and fires at its convergence point (nothing hits
+ * it); for a Deflector Pod, which deals no damage, the dummies fire a slow harmless bullet at the ship
+ * every {@value #DUMMY_FIRE_SECONDS} s so the pod's field visibly catches them (default, pending the
+ * user's review: design/ui/hangar is silent); the bullets the field misses pass the untouchable ship.
  */
 public final class TestFire {
     /**
@@ -73,6 +80,12 @@ public final class TestFire {
     static final double HITS_TO_KILL = 2;
     /** A bomb, shell or mine blast at level 1 destroys a dummy outright: a pass under the pod gives only one. */
     static final double BLASTS_TO_KILL = 1;
+    /** M7 part A: a dummy stands this long in the level-1 Ion Beam. */
+    static final double BEAM_SECONDS = 1;
+    /** M7 part A: while a Deflector Pod is tested, each dummy fires at the ship this often, s. */
+    static final double DUMMY_FIRE_SECONDS = 0.6;
+    /** M7 part A: the dummies' bullet speed, px/s: slow, so the catch shows. */
+    static final double DUMMY_BULLET_SPEED = 110;
     /** After the last dummy is gone, the loop shows this long more (its explosion) before it starts over. */
     static final int TAIL_TICKS = SimStep.ticks(0.6);
     /** A loop never runs longer than this, ticks after the climb (the last dummy is off the field by then). */
@@ -186,6 +199,29 @@ public final class TestFire {
         double hp = (blasting ? BLASTS_TO_KILL : HITS_TO_KILL)
                 * weapon.levels().getFirst().damage()
                 * scale;
+        if (weapon.beam()) {
+            // M7 part A: the beam's damage is per second.
+            hp = BEAM_SECONDS * weapon.levels().getFirst().damage();
+        } else if (weapon.deflector()) {
+            // A deflector deals no damage: the dummies only pass, firing at the ship.
+            hp = 1;
+        }
+        Optional<EnemyGun> gun = weapon.deflector()
+                ? Optional.of(new EnemyGun(
+                        DUMMY_FIRE_SECONDS,
+                        DUMMY_FIRE_SECONDS / 2,
+                        1,
+                        DUMMY_BULLET_SPEED,
+                        1,
+                        false,
+                        1,
+                        0,
+                        Double.POSITIVE_INFINITY,
+                        Double.POSITIVE_INFINITY,
+                        Optional.empty(),
+                        Optional.empty(),
+                        EnemyGun.BURST_GAP_SECONDS))
+                : Optional.empty();
         EnemySpec dummy = new EnemySpec(
                 DUMMY,
                 hp,
@@ -201,7 +237,7 @@ public final class TestFire {
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty(),
-                Optional.empty(),
+                gun,
                 Optional.empty(),
                 Optional.empty(),
                 true);

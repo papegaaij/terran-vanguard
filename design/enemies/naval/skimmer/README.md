@@ -1,8 +1,8 @@
 ---
 title: Skimmer
-design: review
-implementation: in-progress
-art: chosen
+design: approved
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-2-homefront/level-13-polar-relay]
 updated: 2026-10-12
 ---
@@ -66,12 +66,12 @@ Values at **medium** from [data.yaml](data.yaml) (M5 part G, step G4) (see the [
 
 Chosen concept: [skimmer-r06-a.png](../concept/skimmer-r06-a.png), [skimmer-r06-a.gif](../concept/skimmer-r06-a.gif) (listed in the [naval](../README.md#concept-art) Concept art table).
 
-The production files (M5 part G, step G2, straight to production per G9 = a; pending the user's review in
-concept round 35), generator notes in [concept/prompts.md](concept/prompts.md):
+The production files (M5 part G, step G2, straight to production per G9 = a; approved as final in the combined
+concept round 34), generator notes in [concept/prompts.md](concept/prompts.md):
 
 | File | What | Status |
 |---|---|---|
-| [concept/skimmer-final-r35-a.png](concept/skimmer-final-r35-a.png), [.gif](concept/skimmer-final-r35-a.gif) | Production art, round 35 (`tools/art/skimmer.py`): 16 headings × 2 tail frames above the waterline with the collar, the sub-pass body, a wake per heading, the flip-and-sink; the loop on the halted frame's stand-in | proposed |
+| [concept/skimmer-final-r35-a.png](concept/skimmer-final-r35-a.png), [.gif](concept/skimmer-final-r35-a.gif) | Production art, round 35 (`tools/art/skimmer.py`): 16 headings × 2 tail frames above the waterline with the collar, the sub-pass body, a wake per heading, the flip-and-sink; the loop on the halted frame's stand-in | chosen |
 
 ## Implementation
 
@@ -80,12 +80,14 @@ concept round 35), generator notes in [concept/prompts.md](concept/prompts.md):
       `sine` from its data in G4 (`PartGUnitsDataTest`, `Level13Test`)
 - [x] Aimed shot every 1.8 s, hard 2-shot bursts, counted as one attack under `alternate` (M5 part G, G3;
       `HookModesTest`, `SkimmerTest`)
-- [ ] Foam wakes (E's wake sprites, a wake per heading) (M5 part G, G5 and G6)
-- [ ] Flip-and-sink death with the water splash (M5 part G, G6)
+- [x] Foam wakes (E's wake sprites, a wake per heading) (M5 part G, G5 and G6)
+- [x] Flip-and-sink death with the water splash (M5 part G, G6)
 - [x] `data.yaml` for the stat block (with the level's data; the loaders are strict) (M5 part G, G4)
-- [ ] Production sprite `tools/art/skimmer.py`: 16 angles × 2 tail frames, the sink, the intel portrait (M5 part G, G5; final-ready when the user accepts it in round 35)
+- [x] Production sprite `tools/art/skimmer.py`: 16 angles × 2 tail frames, the sink, the intel portrait (M5 part G, G5; approved as final in round 34)
 - [x] Stat block values loaded from data; global difficulty multipliers applied (M5 part G, G4)
-- [ ] Death effect, bounty and score per this spec
+- [x] Death effect, bounty and score per this spec (the `small` water burst and the flip-and-sink,
+      `LANE_WALKER_DOWN`, `skimmer-sink`; bounty 14 from its data, checked by `BalanceTest`; the score the
+      generic bounty × 10 × chain; checked in step K8)
 
 ## Decisions
 
@@ -110,3 +112,6 @@ concept round 35), generator notes in [concept/prompts.md](concept/prompts.md):
   `ground` unit with the `sine` weave; a lane walker by its waves' `lanes`; hard's 2-shot burst as the
   hook `burst: 2`), the stat block table rendered from it; the production sprites written to `assets/`
   (`tools/art/skimmer.py --assets`) and the intel portrait (`tools/art/intel.py skimmer`).
+- 2026-10-12 (user, [round 34](../../../concept-rounds/round-34/README.md)): the production art with its wakes, sink and death effect in the game
+  (13.2a) and the intel portrait approved as **final**, so `art: final`; G1–G9 and the stated
+  defaults accepted, so `design: approved`.

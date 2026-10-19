@@ -68,7 +68,8 @@ public final class ThreatArrows implements Disposable {
         count = 0;
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if (enemy.layer() == Layer.GROUND) {
+            // M7 part B: nor a buried unit (a Burrower's ripple scrolls in with the ground).
+            if (enemy.layer() == Layer.GROUND || enemy.layer() == Layer.BURIED) {
                 continue;
             }
             track(

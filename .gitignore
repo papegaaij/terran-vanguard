@@ -4,3 +4,12 @@ __pycache__/
 build/
 .gradle/
 .kotlin/
+
+# Claude's working notes and step briefs (local only)
+/briefs/
+/*-gaps*.md
+/act2-playtest.md
+/pt2-*.md
+/econ-review.md
+/refactor-plan.md
+/*.log

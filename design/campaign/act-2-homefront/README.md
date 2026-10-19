@@ -1,9 +1,9 @@
 ---
 title: Act 2 – Homefront
-design: review
+design: approved
 implementation: in-progress
-art: chosen
-updated: 2026-10-12
+art: final
+updated: 2026-10-18
 ---
 
 # Act 2 – Homefront
@@ -23,9 +23,9 @@ Siege Spire, a Vrell citadel that has rooted itself in the heart of the UTC capi
 | [level-09-arcology-fall](level-09-arcology-fall/README.md) | The act's first `destroy-targets`: six hardened hive nodes, hold zones, Ravager packs, the arcology collapse · front · density 3 | approved | done | final |
 | [level-10-evacuation-corridor](level-10-evacuation-corridor/README.md) | escort` of five shuttles at first light, first rear-heavy level (Wraith, Mote Swarm), one scripted loss · front and rear (a third from behind by threat) · density 3 | approved | done | final |
 | [level-11-atlantic-convoy](level-11-atlantic-convoy/README.md) | Naval layer (Driftjelly, Reef Spitter), `sub` shadows, mid-boss Harbour Kraken · front · density 3 | approved | done | final |
-| [level-12-storm-front](level-12-storm-front/README.md) | Weather (rain, lightning, gusts), Lamprey intro, Varga sees the Vrell herd the storm · all · density 4 | review | in-progress | proposed |
-| [level-13-polar-relay](level-13-polar-relay/README.md) | defend` the Arctic relay for 180 s, Skimmer intro, whiteout · all edges · density 4 | review | in-progress | proposed |
-| [level-14-siege-spire](level-14-siege-spire/README.md) | Geneva Concord approach through the root field, act boss Siege Spire · front · density 4 | review | in-progress | proposed |
+| [level-12-storm-front](level-12-storm-front/README.md) | Weather (rain, lightning, gusts), Lamprey intro, Varga sees the Vrell herd the storm · all · density 4 | approved | done | final |
+| [level-13-polar-relay](level-13-polar-relay/README.md) | defend` the Arctic relay for 180 s, Skimmer intro, whiteout · all edges · density 4 | approved | done | final |
+| [level-14-siege-spire](level-14-siege-spire/README.md) | Geneva Concord approach through the root field, act boss Siege Spire · front · density 4 | approved | done | final |
 
 ## Design
 
@@ -111,20 +111,24 @@ it opens on the landfall twelve days later and does not repeat them.
 Siege Spire's kill → the daylight section (the boss theme fades, no music) → the debrief with the
 act summary `ACT II COMPLETE · HOMEFRONT` (the `mission-complete` jingle, the
 [summary](../../ui/debrief/README.md)) → the four outro pages with track 24 *act complete* under
-page 1 → autosave into the hangar, which reads `BEFORE L15 - NOT BUILT YET` until Act 3 (H9 = a;
-M6 owns the end of the release).
+page 1 → the release's end (M6 part B, Q1 = a, accepted in round 35: end card, name entry, credits,
+main menu; [credits](../../ui/credits/README.md)), which autosaves the hangar before L15; Continue
+opens it, reading `ACT III - RED DUST: COMING SOON` until Act 3 (was `BEFORE L15 - NOT BUILT YET`,
+H9 = a).
 
 **Act-end outro** (four pages in the briefing format, each voiced and with its own image in
 `assets/ui/briefing/`; H7 = a: the approved text of the former single act debrief, one paragraph
 per page, unchanged). The pages are in the act's [data.yaml](data.yaml) (`outro`) and rendered
 here.
 
+<!-- data: act-outro-pages -->
 | Page | Speaker | Image |
 |---|---|---|
 | 1 | Commander Okafor (grim) | `act-2-outro-stump`: the withered stump of the Spire in Geneva at sunrise, the lake bright behind it |
 | 2 | Commander Okafor (grim) | `act-2-outro-names`: a Nova Lagos / Geneva street at dawn, a wall of candles and names |
 | 3 | Commander Okafor (grim) | `act-2-outro-mars`: Ares Landing's priority signal on a CDF plot, Mars at its edge |
 | 4 | Commander Okafor (fierce) | `act-2-outro-aegis`: Aegis Wing's Stormhawks and Rook's Ember craft on the apron at dusk, a Mars-bound transport behind them |
+<!-- /data -->
 
 <!-- data: act-outro -->
 > **Commander Okafor:** "The Siege Spire is dead. Within the hour every Vrell force on Earth
@@ -166,15 +170,16 @@ Vrell only.
 New: Creeper (L08), Hive Node and Ravager (L09), Wraith and Mote Swarm (L10), Driftjelly, Reef
 Spitter and the Harbour Kraken (L11), Lamprey (L12), Skimmer (L13), Siege Spire (L14).
 Returning from Act 1: Skitter, Needler, Stinger (L08–L14), Spine Turret, Polyp Mortar (L08, L09,
-L13, L14), Spore Bomber (L12), Mantis (L12, L13), Whirl Seed (L12), Scuttler (L13). Only the
-returning `medium` and larger units get the act HP factor from the
+L13, L14), Spore Bomber (L08, L09, L12), Mantis (L08, L09, L12, L13), Whirl Seed (L12), Scuttler (L13).
+Only the returning `medium` and larger units get the act HP factor from the
 [balancing basis](../../enemies/README.md#balancing-basis) (D5 = c of M5 part A): here the Spore
 Bomber, the Mantis and the Scuttler, and the act's own units in the levels after their first: the
 Creeper (L08) in L09 (30 → 32 HP) and L14 (40), the Hive Node (L09) in L14 (81 HP), the Ravager
 (L09) in L14 (20) and the Wraith (L10) in L14 (19; the Spire's maw launches it too). The Skimmer
 (L13) is new there and has no factor. The
 `tiny` and `small` ones (Skitter, Whirl Seed, Needler, Stinger, Spine Turret, Polyp Mortar) keep
-their HP, so none of Level 08's returning units changes.
+their HP, except the Needler and the Stinger in Levels 08–09: since the user's Act 2 playtest
+(2026-10-18) they get it capped at ×3 there (Needler 12 HP, Stinger 14 and 15).
 The level documents list the waves.
 
 ### Music
@@ -213,7 +218,8 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
 ## Implementation
 
 - [ ] All 7 levels promoted to draft level documents and implemented: Levels 08–11 done; Levels
-      12–14 built, pending the user's review in the combined concept round (M5 parts F–H).
+      12–14 built and accepted in the combined concept round 34 (M5 parts F–H, 2026-10-12); the user's
+      playthrough of the act (round 34's P9) still open.
       Acts 1–2 flown as one campaign on every difficulty by `ActPlaythroughTest` (M5 part I).
 - [x] Weather system (rain, lightning, wind gusts and drift) for L12 — M5 part F ([Level 12](level-12-storm-front/README.md#weather); `WindTest`, `Level12Test`, `Level12LooksTest`).
 - [x] Halted-scroll `defend` mode for L13 — M5 part G ([Level 13](level-13-polar-relay/README.md#the-halt); `TimedHaltTest`, `DefendTest`, `Level13Test`).
@@ -292,3 +298,13 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
 - 2026-10-12: `design` back to `review` (from `approved`) for the act-end order (H6 = a corrects the
   approved "fanfare over the daylight") and the outro split into four pages (H7 = a), both pending the
   user's review: C13 in the combined [concept round 34](../../concept-rounds/round-34/README.md#changes-to-approved-specs).
+- 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): C13 accepted (the act-end order
+  as Act 1's and the four voiced outro pages), the outro images and the act-end capture approved, so
+  the document goes back to `approved`; with Levels 12–14 final every level's art is final, so `art:
+  final`. The levels item stays open until the user has played the act (P9).
+- 2026-10-18 (the user's Act 2 playtest, PT2-B 1b, 2a, 2b, 2c chosen): Levels 08 and 09 rewritten
+  with L10-style waves (a wave about every 2.5 s, Needler and Stinger groups between the Skitters,
+  Spore Bomber lines and Mantis pincers returning there, Creeper convoys of 5; the brief's 6–7 units a
+  wave with at most 40 % Skitters cut back once the plan's fit died on hard, pending the user's review), the Ravager slowed and kept out of Level 09's
+  holds, the Needler and the Stinger given the act HP factor capped at ×3 in those two levels, and the
+  Act 2+ pacing rule and floor (`PacingTest`, `ActFloorTest`; Levels 11–14 left pending below it).

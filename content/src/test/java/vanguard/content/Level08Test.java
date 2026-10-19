@@ -20,8 +20,8 @@ import vanguard.sim.WaveSpec;
 import vanguard.sim.WingmanSpec;
 
 /**
- * Level 08 as the game runs it: its credit budget, the README's totals, the Creeper convoys (their
- * sizes per difficulty and the fans' 0.5 s stagger), the difficulty variations (the pincers, the
+ * Level 08 as the game runs it: its credit budget, the README's totals (the L10-style waves of the user's Act 2
+ * playtest, 2026-10-18), the Creeper convoys (their sizes per difficulty and the fans' 0.5 s stagger), the difficulty variations (the pincers, the
  * circle's pairs, the hard overpass turrets, easy's extra armour patch), the billboard secret, the
  * pickups, the secondary and the retimed radio, and whole runs in which the autopilot flies the
  * level to its end with Rook on his wing.
@@ -76,14 +76,17 @@ class Level08Test {
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_124, Math.round(budget), "the typical haul's target, 700 × 1.07⁷");
-        assertEquals(108 * 5 + 42 * 12 + 12 * 15 + 15 * 22, kills, "Skitter, Needler, Stinger, Creeper");
+        assertEquals(
+                157 * 5 + 98 * 12 + 45 * 15 + 9 * 25 + 4 * 30 + 19 * 22,
+                kills,
+                "Skitter, Needler, Stinger, Spore Bomber, Mantis, Creeper");
         assertEquals(9 * 12 + 3 * 15, ground, "Spine Turret 9 × 12 + Polyp Mortar 3 × 15");
         assertEquals(100, crates, "the billboard cache in Act 1 terms (pays 160)");
         assertEquals(56, level.secondary().credits(), "in Act 1 terms (pays 90)");
         System.out.printf(
                 "Level 08 budget (Act 1 terms): kills %d, ground %d, crate %d, secondary %d: %d (budget %.0f)%n",
                 kills, ground, crates, level.secondary().credits(), total, budget);
-        assertEquals(1_863, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
+        assertEquals(3_708, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
     }
 
     @Test
@@ -99,14 +102,16 @@ class Level08Test {
         }
 
         assertEquals(Map.of("polyp-mortar", 3, "spine-turret", 9), ground);
-        assertEquals(Map.of("creeper", 15, "needler", 42, "skitter", 108, "stinger", 12), waves);
+        assertEquals(
+                Map.of("creeper", 19, "mantis", 4, "needler", 98, "skitter", 157, "spore-bomber", 9, "stinger", 45),
+                waves);
         assertEquals("creeper", level.secondary().escapes());
         assertEquals(
                 List.of(10.0, 65.0, 115.0, 160.0, 200.0),
                 level.sections().stream().map(LevelScript.Section::end).toList());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
-        assertEquals(15, sortie.escapesTotal(), "every Creeper");
-        assertEquals(189, sortie.enemyTotal());
+        assertEquals(19, sortie.escapesTotal(), "every Creeper");
+        assertEquals(344, sortie.enemyTotal());
         assertEquals(
                 List.of(68.0, 84.0, 114.0, 128.0, 162.0),
                 level.waves().stream()
@@ -117,8 +122,8 @@ class Level08Test {
     }
 
     /**
-     * Easy: the pincers from the front, a 2-Creeper convoy at t=84, an extra armour patch. Hard: one
-     * more Creeper at t=84 and t=162, the circle breaking in pairs, two turrets at the overpass, and
+     * Easy: the pincers from the front, a 2-Creeper convoy at t=84 and 4-Creeper ones at t=114 and t=128, an extra
+     * armour patch. Hard: one more Creeper in each convoy after the first, the circle breaking in pairs, two turrets at the overpass, and
      * the Creeper's hooks (seven ways every 2.6 s).
      */
     @ParameterizedTest
@@ -131,9 +136,9 @@ class Level08Test {
                 .toList();
         assertEquals(
                 switch (difficulty) {
-                    case EASY -> List.of(1, 2, 3, 3, 5);
-                    case MEDIUM -> List.of(1, 3, 3, 3, 5);
-                    case HARD -> List.of(1, 4, 3, 3, 6);
+                    case EASY -> List.of(1, 2, 4, 4, 5);
+                    case MEDIUM -> List.of(1, 3, 5, 5, 5);
+                    case HARD -> List.of(1, 4, 6, 6, 6);
                 },
                 convoys);
         // easy: the two Needler pincers come from the front as a line abreast

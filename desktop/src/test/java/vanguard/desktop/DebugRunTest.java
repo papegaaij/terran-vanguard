@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,9 @@ import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.DebugFit;
+import vanguard.content.campaign.HighScores;
 import vanguard.content.campaign.SaveSlots;
+import vanguard.content.campaign.ScoreFile;
 
 /**
  * Debug runs never write saves (design/systems/saves): every debug option makes the save slots
@@ -116,6 +119,11 @@ class DebugRunTest {
 
         assertEquals(List.of(false, false, false), playAndSave(slots, campaign(options)));
         assertFalse(Files.exists(directory.resolve("saves")), "not even the saves directory is created");
+        ScoreFile scores = DesktopLauncher.scoreFile(options, settings());
+        assertFalse(scores.writable(), "nor high scores (M6 part B)");
+        assertFalse(scores.write(HighScores.empty()
+                .add(Difficulty.HARD, new HighScores.Entry("LANCER", 1000, 3, LocalDate.of(2026, 10, 12)))));
+        assertFalse(Files.exists(directory.resolve(ScoreFile.FILE_NAME)));
     }
 
     @Test
@@ -145,5 +153,8 @@ class DebugRunTest {
         assertEquals(
                 List.of("autosave.json", "slot-1.json"),
                 List.copyOf(savesOnDisk().keySet()));
+        ScoreFile scores = DesktopLauncher.scoreFile(options, settings());
+        assertEquals(directory.resolve(ScoreFile.FILE_NAME), scores.path(), "scores.yaml next to the settings file");
+        assertTrue(scores.writable());
     }
 }

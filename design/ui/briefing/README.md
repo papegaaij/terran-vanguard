@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Briefing screen
@@ -46,10 +46,14 @@ the real briefing text is written in each level document.
 - Text types out at twice the radio's speed with a soft blip: 60 characters/s at the default
   text speed of 30; the Gameplay tab's text speed scales both. Confirm shows the full page, then
   continues.
+- **Every mission starts here** (user decision 2026-10-18): after a debrief, a new game, an act
+  start, a Continue or a loaded slot (the act intro first only while it is due), and a mission
+  select replay (the level's own pages, without its act's title card and intro); confirm on the
+  last page goes on to the hangar. Only the debug starts go straight into the level.
 - **Back (Esc / B) quits to the main menu** (user decision 2026-10-04), on the title card too,
   after the kit's confirm dialog ("QUIT TO MAIN MENU?", as the hangar's quit asks). It leaves the
   campaign as it is: after a won level the briefing writes the autosave the hangar would have
-  written as it opened, so the level stays won and Continue goes on in the hangar; a new game's
+  written as it opened, so the level stays won and Continue opens this briefing again; a new game's
   intro briefing has nothing to keep yet and writes no save (an older campaign's autosave stays).
   Back no longer skips to the objectives; confirm still shows each page at once.
 - Portraits: 144×144, pre-rendered, three expressions per main character (neutral, grim, fierce);
@@ -87,9 +91,12 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/briefing-images-final-r31-a.png](concept/briefing-images-final-r31-a.png) | Review sheet, M5 part C (round 31): the two 672×240 images of Level 09 (`level-09-arcology-district`: the route over the arcology district with the three node clusters, the Okonjo Bridge and the Ndidi Arcology; `level-09-node-scan`: the Hive Node's iris cycle and the Ravager's pounce, from the production sprites) | chosen |
 | [concept/briefing-images-final-r32-a.png](concept/briefing-images-final-r32-a.png) | Review sheet, M5 part D (round 32): Level 10's two 672×240 images (`level-10-evacuation-route`: the corridor at first light from Eko spaceport's five pads over the suburbs, the viaduct and the coast road with the capsized ferry to the lagoon's climb-out; `level-10-wraith-scan`: the Wraith cloaked and decloaked, its pass, loop and rear entry with the 3 s warning and bursts through the shuttle band, a Mote Swarm's loop-back, from the production sprites) | chosen |
 | [concept/briefing-images-final-r33-a.png](concept/briefing-images-final-r33-a.png) | Review sheet, M5 part E (round 33): Level 11's two 672×240 images (`level-11-convoy-route`: the North Atlantic from above with Convoy Atlas-Seven's four hulls, the seeded sea lanes, the reef line, Platform Tiamat with the Kraken's arms and its hologram under it, the route to open water; `level-11-sub-scan`: a waterline cut-away with a Driftjelly surfaced and submerged, the shots stopping at the waterline, a torpedo's run, a Reef Spitter raft with its roots, the unknown large contact; from the production sprites) | chosen |
-| [concept/briefing-images-final-r34-a.png](concept/briefing-images-final-r34-a.png) | Review sheet, M5 part F (round 34): Level 12's two 672×240 images (`level-12-storm-front`: the storm system from above off the Azores, its cloud bands winding clockwise into the eye, moving east onto the convoy lanes, Vrell flyers in it, Lancer and Rook's route in through the wall, across the eye and out; `level-12-sonde-scan`: the production weather sonde blinking in the rain with its fly-through ring and the SONDES tracker, beside a pressure plot whose measured curve is a regular saw where a storm's curve should be) | proposed |
-| [concept/briefing-images-final-r35-a.png](concept/briefing-images-final-r35-a.png) | Review sheet, M5 part G (round 35): Level 13's two 672×240 images (`level-13-relay-grid`: the Arctic from above the pole, Nansen Relay north of Svalbard and the defence grid it ties together (the Arctic relays, guns and radars, the satellites on their orbit), an inset of the halt's frame from the final backdrop with the relay, the landing force closing from every edge and Lancer and Rook holding over it; `level-13-ice-field`: the halt's frame as a scan, a Skimmer weaving along the south lead (its lane and the 40 px weave), a Scuttler with its claws' armoured front arc and the side shots that get in, a shot aimed at the relay with the ship standing in its way) | proposed |
-| [concept/briefing-images-final-r36-a.png](concept/briefing-images-final-r36-a.png) | Review sheet, M5 part H (round 36): Level 14's two 672×240 images (`level-14-spire-over-geneva`: Geneva Concord seen from the lake, the Jet d'Eau, the old town's roofs and Saint-Pierre's towers, the Siege Spire's trunk rising three kilometres out of the Concord rotunda into the canopy spread over the old town, the route along the lakefront and through the old town to the rotunda, Lancer and Rook going in first; `level-14-root-scan`: Varga's scan of the root grid, the final backdrop's Root Field through the hologram with its roots traced and the burst points marked, one burst in detail (the cracking paving's 1 s of dust, the root with its Spine Turret and Polyp Mortar), anti-ground for the roots, and a Wraith coming from behind once the crown opens) | proposed |
+| [concept/briefing-images-final-r34-a.png](concept/briefing-images-final-r34-a.png) | Review sheet, M5 part F (round 34): Level 12's two 672×240 images (`level-12-storm-front`: the storm system from above off the Azores, its cloud bands winding clockwise into the eye, moving east onto the convoy lanes, Vrell flyers in it, Lancer and Rook's route in through the wall, across the eye and out; `level-12-sonde-scan`: the production weather sonde blinking in the rain with its fly-through ring and the SONDES tracker, beside a pressure plot whose measured curve is a regular saw where a storm's curve should be) | chosen |
+| [concept/briefing-images-final-r35-a.png](concept/briefing-images-final-r35-a.png) | Review sheet, M5 part G (round 35): Level 13's two 672×240 images (`level-13-relay-grid`: the Arctic from above the pole, Nansen Relay north of Svalbard and the defence grid it ties together (the Arctic relays, guns and radars, the satellites on their orbit), an inset of the halt's frame from the final backdrop with the relay, the landing force closing from every edge and Lancer and Rook holding over it; `level-13-ice-field`: the halt's frame as a scan, a Skimmer weaving along the south lead (its lane and the 40 px weave), a Scuttler with its claws' armoured front arc and the side shots that get in, a shot aimed at the relay with the ship standing in its way) | chosen |
+| [concept/briefing-images-final-r36-a.png](concept/briefing-images-final-r36-a.png) | Review sheet, M5 part H (round 36): Level 14's two 672×240 images (`level-14-spire-over-geneva`: Geneva Concord seen from the lake, the Jet d'Eau, the old town's roofs and Saint-Pierre's towers, the Siege Spire's trunk rising three kilometres out of the Concord rotunda into the canopy spread over the old town, the route along the lakefront and through the old town to the rotunda, Lancer and Rook going in first; `level-14-root-scan`: Varga's scan of the root grid, the final backdrop's Root Field through the hologram with its roots traced and the burst points marked, one burst in detail (the cracking paving's 1 s of dust, the root with its Spine Turret and Polyp Mortar), anti-ground for the roots, and a Wraith coming from behind once the crown opens) | chosen |
+| [concept/briefing-images-final-r38-a.png](concept/briefing-images-final-r38-a.png) | Review sheet, M7 part B (round 38): the Act 3 intro's four and Level 15's two 672×240 images (`act-3-arrival`: Mars in the transport's forward view with the colonies' beacons, most dark, Ares Landing lit; `act-3-mars-front`: the Mars front display, Hellas glowing, the spread north, the colonies marked; `act-3-colonists`: a dome-ring gun pit at dusk; `act-3-drop`: the drop bay over Mars; `level-15-descent-route`: the entry-corridor profile from the transport over Olympus Mons, the escarpment and the dunes to the rail line; `level-15-burrower-scan`: the Burrower scan) | chosen (round 38, F.8: approved as final) |
+| [concept/briefing-images-final-r39-a.png](concept/briefing-images-final-r39-a.png) | Review sheet, M7 part C (round 39): Level 16's two 672×240 images (`level-16-canyon-route`: the Valles on a CDF plot, the route's six sections, Ares Landing, an unlabelled black square on the north rim (Helix); `level-16-tendril-scan`: a gate with a beam burning through the tendril, a pair broken by an anchor kill, a Threadcrawler at the wall's foot) | chosen (round 39, F.6: approved as final) |
+| [concept/briefing-images-final-r40-a.png](concept/briefing-images-final-r40-a.png) | Level 17's briefing images (`level-17-ares-domes`, `level-17-choir-herald`; `tools/art/briefing_images.py`) | proposed (round 40) |
 
 ## Implementation
 
@@ -269,3 +276,15 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
   images (user): Level 11's two images, `level-11-convoy-route` (with ship pair a, the picked one, so
   no redraw) and `level-11-sub-scan`, approved as **final**, the weak spots as they are (the faint
   relief, the small ships and reefs, the route under the platform). `art` stays `chosen`.
+- 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): Levels 12–14's six briefing images
+  (12.2d, 13.2d, 14.2f) approved as **final**, and the two-page briefings (C5) accepted. `art` stays
+  `chosen`.
+- 2026-10-14 (M7 part B, step ART-B): the Act 3 intro's four and Level 15's two images rendered by `tools/art/briefing_images.py` (key `r38`), review sheet `briefing-images-final-r38-a` proposed for round 38; the earlier images stay byte-identical. Pending the user's review: the colony positions (Ares Landing 31°W 16°N, Tharsis Foundry 106°W 6°N), 12 beacons with 1 answering, the rust display ramp for Act 3.
+- 2026-10-14 (user, round 38): the Act 3 intro's four and Level 15's two images `briefing-images-final-r38-a`
+  approved as final (F.8); the intro pages wearing Level 15's header and objectives (K.2) accepted as
+  built. `art` stays `chosen`.
+- 2026-10-18 (user, round 39): Level 16's two briefing images `briefing-images-final-r39-a` approved as final
+  (F.6). `art` stays `chosen`.
+- 2026-10-18 (user decision, Act 2 playtest): every mission starts with its briefing, then the
+  hangar: Continue, Load game and the mission select replay now open the briefing first (see the
+  [screen flow](../README.md#screen-flow)).

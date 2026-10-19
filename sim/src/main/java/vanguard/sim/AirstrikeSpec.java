@@ -24,7 +24,8 @@ public record AirstrikeSpec(
         double groundCap,
         double airDamage,
         double airCap,
-        double bossPartCap) {
+        double bossPartCap)
+        implements SpecialSpec.Effect {
     public AirstrikeSpec {
         if (!(speed > 0) || !(bombSpacing > 0) || !(fallSeconds > 0)) {
             throw new IllegalArgumentException("an Airstrike needs a speed, a bomb spacing and a fall time");

@@ -35,10 +35,29 @@ final class ContentValidator {
     List<String> problems() {
         checkItems();
         checkWingmen();
+        checkSmallActHp();
         content.enemies().values().forEach(this::checkEnemy);
         content.levels().values().forEach(this::checkLevel);
         content.levels().forEach(this::checkAct);
         return problems;
+    }
+
+    /** The basis's {@code small_act_hp} names known {@code small} units (the user's Act 2 playtest, 2026-10-18). */
+    private void checkSmallActHp() {
+        List<String> units = content.enemyBasis().smallActHp().units();
+        for (int i = 0; i < units.size(); i++) {
+            String field = "small_act_hp.units[" + i + "]";
+            checkEnemyName(content.enemyBasis(), field, units.get(i));
+            EnemyData enemy = content.enemies().get(units.get(i));
+            if (enemy != null && enemy.tier() != Tier.SMALL) {
+                problem(content.enemyBasis(), field, units.get(i) + " is not a small unit");
+            }
+        }
+        for (int level : content.enemyBasis().smallActHp().levels()) {
+            if (!content.enemyBasis().referenceDps().containsKey(level)) {
+                problem(content.enemyBasis(), "small_act_hp.levels", "Level " + level + " has no reference DPS");
+            }
+        }
     }
 
     /** A level's act has its data file, and the act's levels include the level. */
@@ -145,6 +164,10 @@ final class ContentValidator {
         if (enemy.layer().equals(SUB)) {
             problem(enemy, "layer", "a unit's stat block is not on sub: it dives from ground");
         }
+        // M7 part B: nor under the sand: a Burrower is buried only by its burrow movement.
+        if (enemy.layer().equals("buried")) {
+            problem(enemy, "layer", "a unit's stat block is not on buried: it burrows from ground");
+        }
         enemy.cloak().ifPresent(cloak -> {
             if (cloak.layer().equals(SUB)) {
                 problem(enemy, "cloak.layer", "a unit does not decloak under the water");
@@ -213,6 +236,8 @@ final class ContentValidator {
         checkPartE(enemy);
         checkPartF(enemy);
         PartHChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
+        TerrainChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
+        SiegeChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         enemy.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
                 .flatMap(EnemyData.Hook::leadsTargetIn)
@@ -557,6 +582,8 @@ final class ContentValidator {
         checkPartF(level, levelEnemies);
         new PartGChecks(content, level, (field, message) -> problem(level, field, message)).run(levelEnemies);
         PartHChecks.level(content, level, (field, message) -> problem(level, field, message));
+        TerrainChecks.level(content, level, (field, message) -> problem(level, field, message));
+        SiegeChecks.level(content, level, (field, message) -> problem(level, field, message));
         checkArenaLevel(level);
         new BackdropCheck(level, (field, message) -> problem(level, field, message)).run();
     }
@@ -744,14 +771,65 @@ final class ContentValidator {
                     }));
         }
         if (enemy.formations().stream().anyMatch(use -> use.name().equals(LevelData.Wave.FIELD))
-                && enemy.movement().drift().isEmpty()) {
-            problem(enemy, "formations", "a field's units drift: give movement.drift");
+                && enemy.movement().drift().isEmpty()
+                && enemy.movement().burrow().isEmpty()) {
+            problem(enemy, "formations", "a field's units drift or burrow: give movement.drift or movement.burrow");
         }
+        checkPartB(enemy);
         enemy.boss()
                 .flatMap(EnemyData.BossData::lanes)
                 .flatMap(EnemyData.Lanes::arms)
                 .ifPresent(arms -> arms.keySet().forEach(part -> checkPartName(enemy, "boss.lanes.arms", part)));
         checkArenaBoss(enemy);
+    }
+
+    /**
+     * M7 part B's unit keys (design/enemies/ground/burrower, design/enemies/air/dust-kite): a burrowing unit is a
+     * {@code ground} unit (the layer it surfaces on; {@code buried} is its current layer under the sand) whose only
+     * attack is the ring it fires while surfaced (no reach); the hook {@code burrow} needs the burrow, {@code
+     * swoop_speed} a triggered swoop.
+     */
+    private void checkPartB(EnemyData enemy) {
+        Optional<EnemyData.Burrow> burrow = enemy.movement().burrow();
+        burrow.ifPresent(b -> {
+            if (!enemy.layer().equals("ground")) {
+                problem(enemy, "movement.burrow", "a burrowing unit surfaces on the ground layer: layer ground");
+            }
+            if (enemy.attacks().size() != 1
+                    || !enemy.attacks().getFirst().pattern().equals("ring")
+                    || enemy.attacks().getFirst().within().isPresent()
+                    || enemy.attacks().getFirst().interval().isPresent()) {
+                problem(
+                        enemy,
+                        "attacks",
+                        "a burrowing unit's only attack is its ring, fired at the burrow's rings (no reach, no interval)");
+            }
+        });
+        boolean triggered =
+                enemy.movement().swoop().flatMap(EnemyData.Swoop::trigger).isPresent();
+        for (var hook : List.of(
+                enemy.difficulty().flatMap(EnemyData.Hooks::easy),
+                enemy.difficulty().flatMap(EnemyData.Hooks::hard))) {
+            hook.flatMap(EnemyData.Hook::burrow).ifPresent(change -> {
+                if (burrow.isEmpty()) {
+                    problem(enemy, "difficulty.burrow", "a burrow change without a burrow");
+                }
+                double surfaced = change.surfaced()
+                        .orElse(burrow.map(EnemyData.Burrow::surfaced).orElse(0.0));
+                change.rings().ifPresent(rings -> rings.stream()
+                        .filter(ring -> ring.at() >= surfaced)
+                        .forEach(ring -> problem(
+                                enemy,
+                                "difficulty.burrow.rings",
+                                "a ring at " + ring.at() + " s fires after the dive")));
+            });
+            if (hook.flatMap(EnemyData.Hook::swoopSpeed).isPresent() && !triggered) {
+                problem(
+                        enemy,
+                        "difficulty.swoop_speed",
+                        "a swoop speed without a triggered swoop (movement.swoop.trigger)");
+            }
+        }
     }
 
     /**
@@ -871,11 +949,12 @@ final class ContentValidator {
                 continue;
             }
             EnemyData enemy = content.enemy(group.enemy());
-            if (enemy.movement().drift().isEmpty()) {
+            // M7 part B: or burrow (a Burrower field enters buried with the ground).
+            if (enemy.movement().drift().isEmpty() && enemy.movement().burrow().isEmpty()) {
                 problem(
                         level,
                         field + ".enemy",
-                        "a field's units drift: '" + group.enemy() + "' has no movement.drift");
+                        "a field's units drift or burrow: '" + group.enemy() + "' has no movement.drift or .burrow");
             }
             Size size = wave.size().get();
             double x = wave.x().orElseThrow();
@@ -1213,7 +1292,11 @@ final class ContentValidator {
                 // M5 part F (F9 = a): a swarm of chasers needs no flock and flies no route.
                 boolean chasers = enemy.movement().chase().isPresent() && flock.isEmpty();
                 swarm |= group.formation().equals("swarm") && !chasers;
-                if (!chasers && group.formation().equals("swarm") != flock.isPresent()) {
+                // M7 part D: a unit with a flock that also lists other formations (the Dust Kite) flies those too.
+                boolean onlySwarms =
+                        enemy.formations().stream().allMatch(use -> use.name().equals("swarm"));
+                if (!chasers
+                        && (group.formation().equals("swarm") ? flock.isEmpty() : flock.isPresent() && onlySwarms)) {
                     problem(
                             level,
                             field + ".formation",
@@ -1399,6 +1482,11 @@ final class ContentValidator {
                 .anyMatch(wave -> wave.loopBack().isPresent()
                         && wave.groupList().stream()
                                 .anyMatch(group -> group.formation().equals("swarm")));
+        // M7 part B: a burrowing enemy (the Burrower) in a wave.
+        boolean burrows = level.waves().stream()
+                .flatMap(wave -> wave.groupList().stream())
+                .anyMatch(group -> content.enemies().containsKey(group.enemy())
+                        && content.enemy(group.enemy()).movement().burrow().isPresent());
         for (int i = 0; i < level.radio().size(); i++) {
             LevelData.CueEvent event = level.radio().get(i).event().orElse(null);
             String field = "radio[" + i + "].event";
@@ -1411,7 +1499,18 @@ final class ContentValidator {
                 problem(level, field, "first-decloak in a level without a cloaked enemy");
             } else if (event == LevelData.CueEvent.FIRST_LOOP_BACK && !loops) {
                 problem(level, field, "first-loop-back in a level without a swarm that loops back");
+            } else if (event == LevelData.CueEvent.FIRST_SURFACING && !burrows) {
+                problem(level, field, "first-surfacing in a level without a burrowing enemy");
             }
+        }
+        if (!level.noSurfaceZones().isEmpty() && !burrows) {
+            problem(level, "no_surface", "no-surface zones in a level without a burrowing enemy");
+        }
+        for (int i = 0; i < level.noSurfaceZones().size(); i++) {
+            checkTime(
+                    level,
+                    "no_surface[" + i + "].t",
+                    level.noSurfaceZones().get(i).t());
         }
         LevelData.Music music = level.music();
         if (music.duck().isPresent() && !scripted) {
@@ -1691,10 +1790,19 @@ final class ContentValidator {
                             || event == LevelData.CueEvent.ALLY_LOST
                             || event == LevelData.CueEvent.ALLY_HIT)
                     .orElse(false);
-            if ((allyEvent || cue.allies().isPresent())
-                    && escort.isEmpty()
-                    && level.convoy().isEmpty()) {
-                problem(level, field, "convoy events and allies ranges need an escort objective or a naval convoy");
+            // M7 part D: the ally events name a ground ally of the level's allies block too (Level 17's domes).
+            if ((allyEvent
+                            && escort.isEmpty()
+                            && level.convoy().isEmpty()
+                            && level.allies().isEmpty())
+                    || (cue.allies().isPresent()
+                            && escort.isEmpty()
+                            && level.convoy().isEmpty())) {
+                problem(
+                        level,
+                        field,
+                        "convoy events and allies ranges need an escort objective or a naval convoy (the ally events: or"
+                                + " ground allies)");
             }
             // M5 part G: a defend primary fails at its ally's loss.
             boolean canFail = escort.isPresent()

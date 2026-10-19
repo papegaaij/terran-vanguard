@@ -1,11 +1,13 @@
 package vanguard.desktop;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.audio.Lwjgl3Audio;
 import java.nio.file.Path;
 import vanguard.content.campaign.SaveSlots;
+import vanguard.content.campaign.ScoreFile;
 import vanguard.game.TerranVanguard;
 import vanguard.game.display.Bounds;
 import vanguard.game.display.DisplayModes;
@@ -25,9 +27,27 @@ public final class DesktopLauncher {
 
     private static final int AUDIO_BUFFER_COUNT = 8;
 
+    /**
+     * The window icons (tools/art/app_icon.py): GLFW picks the size the platform asks for; macOS has
+     * no window icons, the app bundle's icns stands in.
+     */
+    static final String[] WINDOW_ICONS = {
+        "icon/icon-16.png",
+        "icon/icon-32.png",
+        "icon/icon-48.png",
+        "icon/icon-64.png",
+        "icon/icon-128.png",
+        "icon/icon-256.png"
+    };
+
     private DesktopLauncher() {}
 
     public static void main(String[] args) {
+        if (printsVersion(args)) {
+            System.out.println(Version.line());
+            return;
+        }
+        System.out.println(Version.line());
         LaunchOptions options = LaunchOptions.parse(args);
         var settingsFile = new SettingsFile(
                 options.settingsFile().orElseGet(() -> ConfigDirectory.current().resolve(SettingsFile.FILE_NAME)));
@@ -53,7 +73,9 @@ public final class DesktopLauncher {
                 options.actEnd(),
                 options.benchSeconds(),
                 saves,
-                screenshots);
+                scoreFile(options, settingsFile.path()),
+                screenshots,
+                Version.current());
         new Lwjgl3Application(game, configuration(settings, System.getProperty("os.name"))) {
             /** libGDX's OpenAL audio with the master limiter on the final mix (design/audio, Master limiter). */
             @Override
@@ -61,6 +83,11 @@ public final class DesktopLauncher {
                 return new LimitedAudio(AUDIO_SOURCES, AUDIO_BUFFER_COUNT, AUDIO_BUFFER_BYTES);
             }
         };
+    }
+
+    /** Whether the command line asks only for the version ({@code --version}): print it and exit. */
+    static boolean printsVersion(String[] args) {
+        return args.length == 1 && args[0].equals("--version");
     }
 
     /**
@@ -72,9 +99,21 @@ public final class DesktopLauncher {
         return options.debugRun() ? SaveSlots.readOnly(directory) : new SaveSlots(directory);
     }
 
+    /**
+     * The high scores (design/systems/scoring): scores.yaml next to the settings file, like the
+     * saves; a debug run only reads it.
+     */
+    static ScoreFile scoreFile(LaunchOptions options, Path settingsFile) {
+        Path file = settingsFile.toAbsolutePath().resolveSibling(ScoreFile.FILE_NAME);
+        return options.debugRun() ? ScoreFile.readOnly(file) : ScoreFile.of(file);
+    }
+
     private static Lwjgl3ApplicationConfiguration configuration(DisplaySettings settings, String osName) {
         var config = new Lwjgl3ApplicationConfiguration();
         config.setTitle("Terran Vanguard");
+        if (!osName.startsWith("Mac")) {
+            config.setWindowIcon(FileType.Classpath, WINDOW_ICONS);
+        }
         Monitor[] monitors = Lwjgl3ApplicationConfiguration.getMonitors();
         Monitor monitor =
                 Monitors.find(monitors, settings.monitor(), Lwjgl3ApplicationConfiguration.getPrimaryMonitor());

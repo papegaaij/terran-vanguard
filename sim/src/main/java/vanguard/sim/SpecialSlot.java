@@ -20,6 +20,14 @@ import java.util.Optional;
  * sortie reports the charges used and found; the campaign applies them for a won level only, so a
  * retry starts with the level-start charges again. Without a fitted special nothing here is part
  * of the state hash, so recordings without the special button replay as before.
+ *
+ * <p>M7 part A adds a kind per special ({@link SpecialSpec.Kind}): the EMP Burst (a ring like the
+ * Smart Bomb's that stuns the units it reaches), the Orbital Lance (a steered column burning what
+ * it overlaps) and the Shield Overcharge, the first cooldown special: no charges, ready at every
+ * attempt's start (the level start, a retry, a boss checkpoint) and again its cooldown after each
+ * activation, counted in simulation steps; a press while it cools is denied unless it is ready
+ * within the input buffer, and a special charge pickup takes its pickup time off a running
+ * cooldown. The Airstrike's and the Smart Bomb's state hashes as before.
  */
 public final class SpecialSlot {
     /** The two bombers. */
@@ -33,6 +41,24 @@ public final class SpecialSlot {
     private final SmartBombSpec smartBomb;
     /** The ship's defences, which a Smart Bomb guards; null without one. */
     private final Defences defences;
+    /** M7 part A: the EMP Burst's numbers; null for another special. */
+    private final EmpSpec emp;
+    /** M7 part A: the Orbital Lance's numbers; null for another special. */
+    private final LanceSpec lance;
+    /** M7 part A: the Shield Overcharge's numbers; null for another special. */
+    private final OverchargeSpec overcharge;
+    /** M7 part A: whether the fitted special is a cooldown special. */
+    private final boolean cooldown;
+    /** M7 part A: a cooldown special's cooldown and what a charge pickup takes off it, in steps. */
+    private final int cooldownTicks;
+
+    private final int pickupTicks;
+    /** M7 part A: the Orbital Lance's lock, burn, fade and repeat, in steps. */
+    private final int lockTicks;
+
+    private final int burnTicks;
+    private final int fadeTicks;
+    private final int lanceRepeatTicks;
 
     private final int ringTicks;
     private final int repeatTicks;
@@ -71,6 +97,15 @@ public final class SpecialSlot {
     private final double[] ledgerDealt = new double[LEDGER_CAPACITY];
     private int ledgerSize;
 
+    /** M7 part A: steps a cooldown special still cools; 0 when it is ready. */
+    private int cooling;
+    /** M7 part A: the Orbital Lance's centre now and in the last step. */
+    private double lanceX;
+
+    private double prevLanceX;
+    /** M7 part A: whether the Shield Overcharge raised the capacity in the last step (for its end's event). */
+    private boolean overcharged;
+
     SpecialSlot(Optional<SpecialSpec> fitted, SimEvents events) {
         this(fitted, events, null);
     }
@@ -81,8 +116,26 @@ public final class SpecialSlot {
         airstrike = spec == null ? null : spec.airstrike();
         smartBomb = spec == null ? null : spec.smartBomb();
         this.defences = defences;
-        ringTicks = smartBomb == null ? 0 : Math.max(1, SimStep.ticks(smartBomb.ringSeconds()));
-        repeatTicks = smartBomb == null ? 0 : Math.max(1, SimStep.ticks(smartBomb.repeatSeconds()));
+        emp = spec == null ? null : spec.emp();
+        lance = spec == null ? null : spec.lance();
+        overcharge = spec == null ? null : spec.overcharge();
+        cooldown = spec != null && spec.cooldown();
+        cooldownTicks = cooldown ? Math.max(1, SimStep.ticks(spec.cooldownSeconds())) : 0;
+        pickupTicks = cooldown ? SimStep.ticks(spec.cooldownPickupSeconds()) : 0;
+        if (smartBomb != null) {
+            ringTicks = Math.max(1, SimStep.ticks(smartBomb.ringSeconds()));
+            repeatTicks = Math.max(1, SimStep.ticks(smartBomb.repeatSeconds()));
+        } else if (emp != null) {
+            ringTicks = Math.max(1, SimStep.ticks(emp.ringSeconds()));
+            repeatTicks = Math.max(ringTicks, SimStep.ticks(emp.repeatSeconds()));
+        } else {
+            ringTicks = 0;
+            repeatTicks = 0;
+        }
+        lockTicks = lance == null ? 0 : SimStep.ticks(lance.lockSeconds());
+        burnTicks = lance == null ? 0 : Math.max(1, SimStep.ticks(lance.seconds()));
+        fadeTicks = lance == null ? 0 : SimStep.ticks(lance.fadeSeconds());
+        lanceRepeatTicks = lance == null ? 0 : SimStep.ticks(lance.repeatSeconds());
         this.events = events;
         int capacity = airstrike == null ? 0 : BOMBERS * ((int) (PlayField.HEIGHT / airstrike.bombSpacing()) + 1);
         bombs = new Pool<>(capacity, AirstrikeBomb::new, AirstrikeBomb[]::new);
@@ -115,22 +168,38 @@ public final class SpecialSlot {
         bombY = 0;
         ringReach = 0;
         Pools.clear(bombs);
+        cooling = 0;
+        lanceX = 0;
+        prevLanceX = 0;
+        overcharged = false;
     }
 
     /**
      * The special button for one step: a press calls a strike, waits for the one in flight or is
-     * denied. Only while {@code active} (the ship flies the level); other presses are ignored.
+     * denied. Only while {@code active} (the ship flies the level); other presses are ignored. M7
+     * part A: a cooldown special's cooldown runs down here every step ({@link SimEvents.Type#SPECIAL_READY}
+     * when it is over); a press while it cools waits only when it is ready within the buffer.
      */
     void command(int commands, boolean active, double shipX, double shipY) {
         boolean down = Command.SPECIAL.in(commands);
         boolean pressed = down && !held;
         held = down;
+        if (cooling > 0 && --cooling == 0) {
+            events.add(SimEvents.Type.SPECIAL_READY, shipX, shipY);
+        }
+        if (overcharge != null) {
+            boolean now = defences.overcharged();
+            if (overcharged && !now) {
+                events.add(SimEvents.Type.OVERCHARGE_ENDED, shipX, shipY);
+            }
+            overcharged = now;
+        }
         if (!active) {
             buffer = 0;
             return;
         }
         if (pressed) {
-            if (spec == null || charges == 0) {
+            if (spec == null || (!cooldown && charges == 0) || cooling > bufferTicks) {
                 events.add(SimEvents.Type.SPECIAL_DENIED, shipX, shipY);
                 return;
             }
@@ -139,7 +208,7 @@ public final class SpecialSlot {
         if (buffer == 0) {
             return;
         }
-        if (sinceCall < 0) {
+        if (sinceCall < 0 && cooling == 0) {
             buffer = 0;
             call(shipX, shipY);
         } else if (--buffer == 0) {
@@ -148,8 +217,13 @@ public final class SpecialSlot {
     }
 
     private void call(double shipX, double shipY) {
-        charges--;
-        used++;
+        if (cooldown) {
+            // M7 part A: a cooldown special uses no charge; its cooldown counts from the activation.
+            cooling = cooldownTicks;
+        } else {
+            charges--;
+            used++;
+        }
         sinceCall = 0;
         callX = shipX;
         events.add(SimEvents.Type.SPECIAL_CALLED, shipX, shipY);
@@ -164,6 +238,25 @@ public final class SpecialSlot {
                 defences.guard(SimStep.ticks(smartBomb.invulnerableSeconds()));
             }
             events.add(SimEvents.Type.SMART_BOMB, shipX, shipY);
+        } else if (emp != null) {
+            bombX = shipX;
+            bombY = shipY;
+            double dx = Math.max(shipX, PlayField.WIDTH - shipX);
+            double dy = Math.max(shipY, PlayField.HEIGHT - shipY);
+            ringReach = Math.sqrt(dx * dx + dy * dy);
+            ledgerSize = 0;
+            events.add(SimEvents.Type.EMP_BURST, shipX, shipY);
+        } else if (lance != null) {
+            lanceX = prevLanceX = shipX;
+            ledgerSize = 0;
+            events.add(SimEvents.Type.LANCE_LOCK, shipX, shipY);
+        } else if (overcharge != null) {
+            // Instant: nothing flies; the defences hold the raised capacity, the cooldown runs.
+            sinceCall = -1;
+            defences.overcharge(
+                    overcharge.factor(), SimStep.ticks(overcharge.seconds()), SimStep.ticks(overcharge.bleedSeconds()));
+            overcharged = true;
+            events.add(SimEvents.Type.OVERCHARGE, shipX, shipY);
         }
     }
 
@@ -182,6 +275,10 @@ public final class SpecialSlot {
             Pool<EnemyBullet> bullets,
             Pool<Lob> lobs,
             Pool<Mine> mines) {
+        if (emp != null) {
+            burst(enemies, setPieces);
+            return;
+        }
         if (smartBomb == null || sinceCall < 0) {
             return;
         }
@@ -211,11 +308,18 @@ public final class SpecialSlot {
         }
         for (int j = enemies.size() - 1; j >= 0; j--) {
             Enemy enemy = enemies.get(j);
-            if (!PlayerFire.onField(enemy) || !within(enemy.x(), enemy.y(), radius)) {
+            // M7 part B: the Smart Bomb hits the sub layer but never the buried one.
+            if (!enemy.layer().touchable() || !PlayerFire.onField(enemy) || !within(enemy.x(), enemy.y(), radius)) {
                 continue;
             }
-            if (strike(2 * enemy.serial()) && enemy.damage(smartBomb.damage(), true)) {
-                hits.enemyDestroyed(j);
+            if (strike(2 * enemy.serial(), smartBomb.damage())) {
+                // M7 part D: a unit part takes the bomb too (the Shellback's vent).
+                if (enemy.partAlive() && enemy.damagePart(smartBomb.damage(), true)) {
+                    hits.unitPartDestroyed(j);
+                }
+                if (enemy.damage(smartBomb.damage(), true)) {
+                    hits.enemyDestroyed(j);
+                }
             }
         }
         for (int j = ground.size() - 1; j >= 0; j--) {
@@ -240,7 +344,7 @@ public final class SpecialSlot {
                         || !within(px, py, radius)) {
                     continue;
                 }
-                if (strike(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p)
+                if (strike(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p, smartBomb.damage())
                         && piece.damagePart(p, smartBomb.bossPartDamage())) {
                     hits.partDestroyed(k, p);
                 }
@@ -254,8 +358,11 @@ public final class SpecialSlot {
         return dx * dx + dy * dy <= radius * radius;
     }
 
-    /** Records a strike on the target with {@code key}; false when the bomb struck it already (or the ledger is full). */
-    private boolean strike(int key) {
+    /**
+     * Records a strike on the target with {@code key} (with {@code dealt} in the ledger); false when the
+     * bomb struck it already (or the ledger is full).
+     */
+    private boolean strike(int key, double dealt) {
         for (int entry = 0; entry < ledgerSize; entry++) {
             if (ledgerKeys[entry] == key) {
                 return false;
@@ -265,9 +372,249 @@ public final class SpecialSlot {
             return false;
         }
         ledgerKeys[ledgerSize] = key;
-        ledgerDealt[ledgerSize] = smartBomb.damage();
+        ledgerDealt[ledgerSize] = dealt;
         ledgerSize++;
         return true;
+    }
+
+    /**
+     * M7 part A, one step of an EMP Burst (design/player/specials, EMP Burst (L15)): its ring grows as
+     * the Smart Bomb's; every unit on the screen whose centre it reaches is stunned once, a machine for
+     * the machine stun and every other unit for the Vrell stun ({@link Enemy#empStun(int)}); a chain
+     * member stuns its whole chain. Never units under the water ({@code sub}); enemy bullets and mines,
+     * set pieces (bosses, mid-bosses) and allies are untouched, but the set pieces' shields are
+     * stripped ({@link #strip}). It is busy until its repeat time has passed.
+     */
+    private void burst(Pool<Enemy> enemies, SetPiece[] setPieces) {
+        if (sinceCall < 0) {
+            return;
+        }
+        sinceCall++;
+        if (sinceCall > repeatTicks) {
+            sinceCall = -1;
+            return;
+        }
+        if (sinceCall > ringTicks) {
+            return;
+        }
+        if (sinceCall == 1) {
+            strip(enemies, setPieces);
+        }
+        double radius = empRadius();
+        for (int j = enemies.size() - 1; j >= 0; j--) {
+            Enemy enemy = enemies.get(j);
+            // M7 part B: a buried unit is out of the ring's reach as one under the water.
+            if (enemy.layer() == Layer.SUB
+                    || !enemy.layer().touchable()
+                    || !PlayerFire.onField(enemy)
+                    || !within(enemy.x(), enemy.y(), radius)) {
+                continue;
+            }
+            int ticks = SimStep.ticks(enemy.spec().machine() ? emp.machineStunSeconds() : emp.vrellStunSeconds());
+            Chain chain = enemy.chain();
+            if (chain != null) {
+                // The whole chain stops once, as the ring reaches its first member.
+                if (strike(Integer.MIN_VALUE + chain.serial(), 0)) {
+                    chain.empStun(ticks);
+                    events.add(SimEvents.Type.EMP_STUNNED, enemy.x(), enemy.y(), enemy.kind());
+                }
+            } else if (strike(2 * enemy.serial(), 0)) {
+                enemy.empStun(ticks);
+                events.add(SimEvents.Type.EMP_STUNNED, enemy.x(), enemy.y(), enemy.kind());
+            }
+        }
+    }
+
+    /**
+     * M7 part A, a hook: the EMP Burst strips every enemy shield at once: M7 part D, the aura rings a Choir
+     * Herald has given (design/enemies/air/choir-herald, EMP; {@link SimEvents.Type#RINGS_STRIPPED} when there
+     * was one; the Herald's own stun then pauses its aura); a later act's part shields are still to come.
+     */
+    private void strip(Pool<Enemy> enemies, SetPiece[] setPieces) {
+        int stripped = 0;
+        for (int j = 0; j < enemies.size(); j++) {
+            if (enemies.get(j).stripRing()) {
+                stripped++;
+            }
+        }
+        if (stripped > 0) {
+            events.add(SimEvents.Type.RINGS_STRIPPED, bombX, bombY, stripped);
+        }
+    }
+
+    /** M7 part A: the EMP Burst's ring radius now; 0 when none expands. */
+    public double empRadius() {
+        if (emp == null || sinceCall < 0 || sinceCall > ringTicks) {
+            return 0;
+        }
+        return ringReach * sinceCall / ringTicks;
+    }
+
+    /** M7 part A: the EMP Burst's ring radius between the last step and this one; {@code alpha} in [0, 1]. */
+    public double empRadius(double alpha) {
+        if (emp == null || sinceCall < 0 || sinceCall > ringTicks) {
+            return 0;
+        }
+        return ringReach * Math.max(0, sinceCall - 1 + alpha) / ringTicks;
+    }
+
+    /** M7 part A: seconds since the last EMP Burst went off, while it is busy; negative when none is. */
+    public double empSeconds(double alpha) {
+        return emp == null || sinceCall < 0 ? -1 : (sinceCall - 1 + alpha) * SimStep.SECONDS;
+    }
+
+    /** M7 part A: the EMP Burst's numbers; null when the fitted special is another. */
+    public EmpSpec emp() {
+        return emp;
+    }
+
+    /**
+     * M7 part A, one step of an Orbital Lance (design/player/specials, Orbital Lance (L17)): its centre
+     * follows {@code shipX} at up to its follow speed from the call on; after the lock it burns for its
+     * time: every enemy on the screen whose hit box overlaps the column, on every layer but {@code sub}
+     * (hardened included: it comes from above), takes its DPS for the step; a ground object its share
+     * (a secret trigger counts one hit per lance); each set piece part in the column its boss-part DPS,
+     * at most its cap per lance, without weak-point multipliers. Walls do not stop it (part C: nothing
+     * to do); a tendril link in it would take its damage as from a {@code beam} (part C hook). It fades,
+     * and is busy until its repeat time after the fade has passed.
+     */
+    void lance(
+            double shipX, Pool<Enemy> enemies, Pool<GroundObject> ground, SetPiece[] setPieces, PlayerFire.Hits hits) {
+        if (lance == null || sinceCall < 0) {
+            return;
+        }
+        sinceCall++;
+        prevLanceX = lanceX;
+        double most = lance.follow() * SimStep.SECONDS;
+        lanceX += Math.clamp(shipX - lanceX, -most, most);
+        if (sinceCall == lockTicks + 1) {
+            events.add(SimEvents.Type.LANCE_FIRED, lanceX, 0);
+        }
+        if (sinceCall > lockTicks + burnTicks + fadeTicks + lanceRepeatTicks) {
+            sinceCall = -1;
+            return;
+        }
+        if (sinceCall <= lockTicks || sinceCall > lockTicks + burnTicks) {
+            if (sinceCall == lockTicks + burnTicks + 1) {
+                events.add(SimEvents.Type.LANCE_ENDED, lanceX, 0);
+            }
+            return;
+        }
+        double half = lance.width() / 2;
+        double damage = lance.dps() * SimStep.SECONDS;
+        for (int j = enemies.size() - 1; j >= 0; j--) {
+            Enemy enemy = enemies.get(j);
+            if (enemy.layer() == Layer.SUB
+                    || !enemy.layer().touchable()
+                    || !PlayerFire.onField(enemy)
+                    || PlayerFire.columnContact(lanceX, half, 0, enemy.x(), enemy.y(), enemy.hitbox())
+                            == Double.POSITIVE_INFINITY) {
+                continue;
+            }
+            if (enemy.partAlive()
+                    && PlayerFire.columnContact(lanceX, half, 0, enemy.partX(), enemy.partY(), enemy.partBox())
+                            < Double.POSITIVE_INFINITY
+                    && enemy.damagePart(damage, true)) {
+                // M7 part D: a unit part in the column burns too (the Shellback's vent).
+                hits.unitPartDestroyed(j);
+            }
+            if (enemy.damage(damage, true)) {
+                hits.enemyDestroyed(j);
+            }
+        }
+        for (int j = ground.size() - 1; j >= 0; j--) {
+            GroundObject object = ground.get(j);
+            LevelScript.GroundObjectSpec spec = object.spec();
+            if (!object.hittable()
+                    || spec.submerged()
+                    || !PlayField.overlaps(object.x(), object.y(), spec.size())
+                    || PlayerFire.columnContact(lanceX, half, 0, object.x(), object.y(), spec.size())
+                            == Double.POSITIVE_INFINITY) {
+                continue;
+            }
+            if (spec.trigger()) {
+                if (strike(2 * object.serial() + 1, 0) && object.countHit()) {
+                    hits.triggerReleased(j);
+                }
+            } else if (object.damage(damage)) {
+                hits.groundDestroyed(j);
+            }
+        }
+        double partDamage = lance.bossPartDps() * SimStep.SECONDS;
+        for (int k = 0; k < setPieces.length; k++) {
+            SetPiece piece = setPieces[k];
+            for (int p = 0; p < piece.partCount() && piece.present(); p++) {
+                if (piece.partLayer(p) == Layer.SUB
+                        || piece.partWrecked(p)
+                        || piece.partShielded(p)
+                        || !piece.partOnField(p)
+                        || piece.partColumn(p, lanceX, half, 0) == Double.POSITIVE_INFINITY) {
+                    continue;
+                }
+                double amount =
+                        capped(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p, partDamage, lance.bossPartCap());
+                if (amount > 0 && piece.damagePartFlat(p, amount)) {
+                    hits.partDestroyed(k, p);
+                }
+            }
+        }
+    }
+
+    /** {@code damage} to the target with {@code key}, cut to what {@code cap} leaves after this call's earlier damage; recorded. */
+    private double capped(int key, double damage, double cap) {
+        int entry = 0;
+        while (entry < ledgerSize && ledgerKeys[entry] != key) {
+            entry++;
+        }
+        if (entry == ledgerSize) {
+            if (ledgerSize == LEDGER_CAPACITY) {
+                return 0;
+            }
+            ledgerKeys[entry] = key;
+            ledgerDealt[entry] = 0;
+            ledgerSize++;
+        }
+        double amount = Math.min(damage, cap - ledgerDealt[entry]);
+        if (amount <= 0) {
+            return 0;
+        }
+        ledgerDealt[entry] += amount;
+        return amount;
+    }
+
+    /** M7 part A: the Orbital Lance's numbers; null when the fitted special is another. */
+    public LanceSpec lance() {
+        return lance;
+    }
+
+    /** M7 part A: whether the Orbital Lance's targeting line shows (called, before it fires). */
+    public boolean lanceLocking() {
+        return lance != null && sinceCall >= 0 && sinceCall <= lockTicks;
+    }
+
+    /** M7 part A: whether the Orbital Lance burns now (its column deals damage). */
+    public boolean lanceBurning() {
+        return lance != null && sinceCall > lockTicks && sinceCall <= lockTicks + burnTicks;
+    }
+
+    /**
+     * M7 part A: the Orbital Lance column's strength for the presentation: 1 while it burns, falling to 0
+     * over its fade; 0 when no column shows.
+     */
+    public double lanceStrength(double alpha) {
+        if (lance == null || sinceCall <= lockTicks) {
+            return 0;
+        }
+        double into = sinceCall - 1 + alpha - lockTicks - burnTicks;
+        if (into <= 0) {
+            return 1;
+        }
+        return fadeTicks == 0 ? 0 : Math.max(0, 1 - into / fadeTicks);
+    }
+
+    /** M7 part A: the Orbital Lance's centre between the last step and this one; {@code alpha} in [0, 1]. */
+    public double lanceX(double alpha) {
+        return prevLanceX + (lanceX - prevLanceX) * alpha;
     }
 
     /** The Smart Bomb ring's radius now; 0 when none expands. */
@@ -387,11 +734,16 @@ public final class SpecialSlot {
             Layer layer = enemy.layer();
             if (layer == Layer.HIGH_AIR
                     || layer == Layer.SUB
+                    || !layer.touchable()
                     || !PlayerFire.onField(enemy)
                     || !PlayerFire.inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
             double amount = deal(2 * enemy.serial(), layer);
+            if (amount > 0 && enemy.partInBlast(x, y, radius) && enemy.damagePart(amount, true)) {
+                // M7 part D: a blast covering a unit part hurts it too (the Shellback's vent).
+                hits.unitPartDestroyed(j);
+            }
             if (amount > 0 && enemy.damage(amount, true)) {
                 hits.enemyDestroyed(j);
             }
@@ -469,6 +821,15 @@ public final class SpecialSlot {
 
     /** A special charge pickup: one more charge, up to the most carried; returns whether it counted. */
     boolean collect() {
+        if (cooldown) {
+            // M7 part A: a cooldown special: its pickup time off a running cooldown, nothing when it is
+            // ready; at least a step stays, so the ready event comes from the command step.
+            if (cooling == 0) {
+                return false;
+            }
+            cooling = Math.max(1, cooling - pickupTicks);
+            return true;
+        }
         if (spec == null || charges >= spec.maxCharges()) {
             return false;
         }
@@ -479,6 +840,28 @@ public final class SpecialSlot {
 
     void addTo(StateHash hash) {
         if (spec == null) {
+            return;
+        }
+        if (airstrike == null && smartBomb == null) {
+            // M7 part A's specials: their own state; the Airstrike and the Smart Bomb hash as before.
+            hash.add(spec.kind().ordinal())
+                    .add(charges)
+                    .add(used)
+                    .add(found)
+                    .add(held ? 1 : 0)
+                    .add(buffer)
+                    .add(sinceCall)
+                    .add(cooling)
+                    .add(bombX)
+                    .add(bombY)
+                    .add(ringReach)
+                    .add(lanceX)
+                    .add(prevLanceX)
+                    .add(overcharged ? 1 : 0)
+                    .add(ledgerSize);
+            for (int i = 0; i < ledgerSize; i++) {
+                hash.add(ledgerKeys[i]).add(ledgerDealt[i]);
+            }
             return;
         }
         if (smartBomb != null) {
@@ -534,14 +917,42 @@ public final class SpecialSlot {
         return found;
     }
 
-    /** Whether a strike is flying: called and its bombers not yet past the top edge. */
+    /**
+     * Whether a strike is flying: called and its bombers not yet past the top edge (M7 part A: or a
+     * burst, a lance busy, a cooldown special cooling).
+     */
     public boolean busy() {
-        return sinceCall >= 0;
+        return sinceCall >= 0 || cooling > 0;
     }
 
     /** Whether a press now calls a strike. */
     public boolean ready() {
-        return spec != null && charges > 0 && sinceCall < 0;
+        return spec != null && (cooldown || charges > 0) && sinceCall < 0 && cooling == 0;
+    }
+
+    /** M7 part A: the fitted special's kind; null without one. */
+    public SpecialSpec.Kind kind() {
+        return spec == null ? null : spec.kind();
+    }
+
+    /** M7 part A: whether the fitted special is a cooldown special (the HUD's ring instead of charges). */
+    public boolean cooldown() {
+        return cooldown;
+    }
+
+    /** M7 part A: a cooldown special's seconds left to cool; 0 when it is ready (or a charge special). */
+    public double cooldownSeconds() {
+        return cooling * SimStep.SECONDS;
+    }
+
+    /** M7 part A: how far a cooldown special's cooldown has run, 0 just activated to 1 ready (the HUD ring). */
+    public double cooldownShare() {
+        return cooldownTicks == 0 ? 1 : 1 - (double) cooling / cooldownTicks;
+    }
+
+    /** M7 part A: the Shield Overcharge's numbers; null when the fitted special is another. */
+    public OverchargeSpec overcharge() {
+        return overcharge;
     }
 
     /** Whether the bombers are on their way up the screen. */

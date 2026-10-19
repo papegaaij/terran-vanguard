@@ -23,10 +23,18 @@ public final class Ship {
     private double vy;
     private int bank;
     private int bankTimer;
+    /** M7 part A: the Evasive thrusters' dash; null without them (then nothing of it is hashed). */
+    private final Thrusters thrusters;
 
     Ship(ShipSpec spec, Defences defences) {
+        this(spec, defences, null);
+    }
+
+    /** @param dash M7 part A: the fitted Evasive thrusters' dash; null for none */
+    Ship(ShipSpec spec, Defences defences, ThrusterSpec dash) {
         this.spec = spec;
         this.defences = defences;
+        this.thrusters = dash == null ? null : new Thrusters(dash);
         this.accelerationPerStep = spec.speed() / spec.accelerationSeconds() * SimStep.SECONDS;
         this.stopPerStep = spec.speed() / spec.stopSeconds() * SimStep.SECONDS;
         reset(defences.maxArmour());
@@ -38,10 +46,19 @@ public final class Ship {
      * to 1; commands are ignored meanwhile.
      */
     void launch(double progress) {
+        launch(progress, false);
+    }
+
+    /**
+     * As {@link #launch(double)}; M7 part B (design/campaign Level 15, default pending the user's review):
+     * with {@code drop} it drops from above the top edge (the transport's bay) to the start position
+     * instead, slowing down as it arrives.
+     */
+    void launch(double progress, boolean drop) {
         double remaining = 1 - progress;
-        double railY = -spec.size();
+        double fromY = drop ? PlayField.HEIGHT + spec.size() : -spec.size();
         x = START_X;
-        y = START_Y + (railY - START_Y) * remaining * remaining;
+        y = START_Y + (fromY - START_Y) * remaining * remaining;
         vx = vy = 0;
     }
 
@@ -52,6 +69,9 @@ public final class Ship {
         vx = vy = 0;
         bank = bankTimer = 0;
         defences.restore(armour);
+        if (thrusters != null) {
+            thrusters.reset();
+        }
     }
 
     void rememberPosition() {
@@ -71,6 +91,13 @@ public final class Ship {
      * exactly 0 changes nothing.
      */
     void fly(int commands, double wind) {
+        if (thrusters != null) {
+            thrusters.command(commands);
+            if (thrusters.dashing()) {
+                dash(wind);
+                return;
+            }
+        }
         double dx = (Command.RIGHT.in(commands) ? 1 : 0) - (Command.LEFT.in(commands) ? 1 : 0);
         double dy = (Command.UP.in(commands) ? 1 : 0) - (Command.DOWN.in(commands) ? 1 : 0);
         double speed = spec.speed() * (Command.PRECISION.in(commands) ? spec.precisionFactor() : 1);
@@ -97,6 +124,43 @@ public final class Ship {
         defences.step();
     }
 
+    /**
+     * M7 part A: one step of a dash (design/player/systems, Evasive thrusters): its share of the dash's
+     * distance along its direction, the ship's own velocity set aside (it keeps it for afterwards), the
+     * wind's push as ever; the play field's edges clamp it.
+     */
+    private void dash(double wind) {
+        x += thrusters.stepX();
+        y += thrusters.stepY();
+        thrusters.moved();
+        if (wind != 0) {
+            x += wind * SimStep.SECONDS;
+        }
+        double margin = spec.edgeLimit();
+        x = Math.clamp(x, margin, PlayField.WIDTH - margin);
+        y = Math.clamp(y, margin, PlayField.HEIGHT - margin);
+        steerBank();
+        defences.step();
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, Wall contact): moved {@code distance} px along the unit vector
+     * (nx, ny) out of rock, its velocity into the rock dropped (it slides along the wall); the play field's
+     * edges clamp it as ever.
+     */
+    void pushOut(double nx, double ny, double distance) {
+        x += nx * distance;
+        y += ny * distance;
+        double into = vx * nx + vy * ny;
+        if (into < 0) {
+            vx -= into * nx;
+            vy -= into * ny;
+        }
+        double margin = spec.edgeLimit();
+        x = Math.clamp(x, margin, PlayField.WIDTH - margin);
+        y = Math.clamp(y, margin, PlayField.HEIGHT - margin);
+    }
+
     /** Moves one velocity component towards its target: accelerating, or braking to a stop. */
     private double approach(double velocity, double target) {
         double rate = target == 0 ? stopPerStep : accelerationPerStep;
@@ -121,6 +185,57 @@ public final class Ship {
     void addTo(StateHash hash) {
         hash.add(x).add(y).add(vx).add(vy).add(bank).add(bankTimer);
         defences.addTo(hash);
+        if (thrusters != null) {
+            // M7 part A: only with the Evasive thrusters fitted, so other runs hash as before.
+            thrusters.addTo(hash);
+        }
+    }
+
+    /** M7 part A: whether the Evasive thrusters are fitted (the HUD's dash pip). */
+    public boolean thrustersFitted() {
+        return thrusters != null;
+    }
+
+    /** M7 part A: whether a dash moves the ship now. */
+    public boolean dashing() {
+        return thrusters != null && thrusters.dashing();
+    }
+
+    /** M7 part A: whether a dash started in this step (the {@link SimEvents.Type#DASH} event). */
+    boolean dashStarted() {
+        return thrusters != null && thrusters.started();
+    }
+
+    /** M7 part A: the last dash's direction as an eighth: 0 straight up, clockwise (2 right, 4 down, 6 left). */
+    public int dashEighth() {
+        return thrusters == null ? 0 : thrusters.eighth();
+    }
+
+    /** M7 part A: the last dash's direction, a unit vector (y up); 0 before any. */
+    public double dashDirX() {
+        return thrusters == null ? 0 : thrusters.dirX();
+    }
+
+    public double dashDirY() {
+        return thrusters == null ? 0 : thrusters.dirY();
+    }
+
+    /**
+     * M7 part A: whether the dash's invulnerability holds: enemy bullets pass through the ship (they
+     * are not absorbed), contacts and hazards do not hurt it.
+     */
+    public boolean evading() {
+        return thrusters != null && thrusters.invulnerable();
+    }
+
+    /** M7 part A: how far the dash's cooldown has run, 0 just dashed to 1 ready (the dash pip); 1 without thrusters. */
+    public double dashReadiness() {
+        return thrusters == null ? 1 : thrusters.cooldownShare();
+    }
+
+    /** M7 part A: whether a dash can start now. */
+    public boolean dashReady() {
+        return thrusters != null && thrusters.coolingTicks() == 0 && !thrusters.dashing();
     }
 
     public double x() {

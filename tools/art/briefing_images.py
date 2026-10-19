@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Production art: the briefings' tactical maps and mission images (design/ui/briefing), one per
-briefing page of the Act 1 intro, Levels 01-07, the Act 1 outro, the Act 2 intro and Levels 08-12, in the chosen briefing-r08-a look: a dark
+briefing page of the Act 1 intro, Levels 01-07, the Act 1 outro, the Act 2 intro, Levels 08-14, the Act 3 intro and
+Level 15, in the chosen briefing-r08-a look: a dark
 tactical display with its grid, scan rows and edge ticks, holographic planets, cyan routes and
 labels, red and violet for the Vrell, amber for objectives.
 
@@ -93,6 +94,44 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-14-root-scan      L14 p2: the final backdrop's Root Field as a scan, its roots traced and the
                           burst points marked; one burst from the production frames (the 1 s of dust,
                           the root with its Spine Turret and Polyp Mortar); a Wraith from behind
+  act-3-arrival           Act 3 p1: Mars filling the transport's forward view (an orthographic globe from a
+                          simplified map of the real planet: the Tharsis volcanoes, the Valles Marineris, the
+                          craters and dark regions, the thin limb haze), framed by the canopy struts and the nav
+                          screen; the CDF overlay on the glass with the colonies' beacons, eleven dark, Ares
+                          Landing's lit, the Vrell over it
+  act-3-mars-front        Act 3 p2: Varga's CDF globe display of Mars as a flat projection (the same map's relief
+                          in Act 3's rust display ramp): the Hellas basin glowing Vrell red, the growth spreading
+                          north from it in tendrils, Ares Landing on the edge of the northern plains, Tharsis
+                          Foundry on the plateau, the Valles Marineris between them, Olympus Mons
+  act-3-colonists         Act 3 p3: a militia gun pit on Bradbury dome's ring at dusk under the butterscotch sky
+                          (the sun down behind the mesas in its small blue halo): the gunner in a dust-orange suit
+                          (the dust-suit controller's look, generic-colonial-r36-b: goggles on the brow, the
+                          respirator at the throat, an air pack) leaning back at a twin autocannon, looking up
+                          at the Vrell overhead; the dome's geodesic glass behind him (dome a of design/world/mars)
+                          with its patched panels: plates and taped cracks
+  act-3-drop              Act 3 p4: the transport's drop bay open over Mars: Level 15's production `transport`
+                          piece (tools/art/backdrop_l15.py) turned nose right, the planet through the open bay,
+                          Lancer, Rook and two Stormhawks on its launch rails, a callout of the rails at full size
+                          (Lancer, Aegis Two and Aegis 4; Rook and Aegis 3); below, Mars as Level 15 draws it
+                          (`mars-high` with the `olympus` piece, hazed), the cloud deck's banks (`deck-banks`) and
+                          the cirrus (additive at 40 %)
+  level-15-descent-route  L15 p1: the entry corridor as a CDF profile plot west to east: the transport in orbit
+                          (the Act 2 outro's heavy transport model, tools/art/outro_l14_images.py, as a hologram),
+                          the descent over Olympus Mons' caldera (22 km), through the cirrus and the cloud deck
+                          along the flank, over the basal escarpment with Lycus Survey Station at its foot, the
+                          Tharsis dunes and the rail line's pylons, east toward Ares Landing; the level's five
+                          sections numbered on the route; Lancer and Rook
+  level-15-burrower-scan  L15 p2: Varga's cut through the regolith: a Burrower swimming under the sand (a scan
+                          silhouette of tools/art/burrower.py's sprite, its ripples on the surface above), the
+                          guns stopping at the surface over it; the bulge (the 1 s tell) with it rising under
+                          it; the surfaced maw over its bow wave, its lime glow added, firing its ring of ten
+                          orbs; the dive; the anti-ground x2 marker
+  level-17-ares-domes     L17 p1: Okafor's plan of Ares Landing, north to the left: the rail line, the outer
+                          domes Bradbury and Lowell, the burnt greenhouses, the inner ring road round
+                          Schiaparelli, Burroughs and Eden, the spaceport; red Vrell vectors on the domes (the
+                          ally's sprites, tools/art/siege_units.py); an unnamed black-and-gold compound
+  level-17-choir-herald   L17 p2: Varga's scan of a Choir Herald, its crest lit, the dashed aura and threads to
+                          three ringed Needlers; an inset of a Shellback mid-curl with its lime vent marked
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -105,6 +144,8 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r34-a.png   review sheet, L12 (M5 part F)
   design/ui/briefing/concept/briefing-images-final-r35-a.png   review sheet, L13 (M5 part G)
   design/ui/briefing/concept/briefing-images-final-r36-a.png   review sheet, L14 (M5 part H)
+  design/ui/briefing/concept/briefing-images-final-r38-a.png   review sheet, Act 3 intro + L15 (M7 part B)
+  design/ui/briefing/concept/briefing-images-final-r40-a.png   review sheet, L17 (M7 part D)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -115,18 +156,19 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36] [--review]   (~10 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
 creeper.py, enemy_bullets.py, weapon_fx.py, hive_node.py, ravager.py, wraith.py, mote_swarm.py and
 shuttle.py, convoy_ships.py (switch the ship pair: its --variant b, then this script again),
 driftjelly.py, reef_spitter.py, harbour_kraken.py, backdrop_l11.py, l12_props.py and backdrop_l12.py, skimmer.py,
-relay.py, backdrop_l13.py, siege_spire.py, root_burst.py --assets and backdrop_l14.py, whose sprites
-and pieces it shows); the review sheet written is the open round's (r36) unless
+relay.py, backdrop_l13.py, siege_spire.py, root_burst.py --assets, backdrop_l14.py, burrower.py and backdrop_l15.py, whose sprites
+and pieces it shows); the review sheet written is the open round's (r38) unless
 a round is named.
 """
 import json
+import math
 import sys
 
 import numpy as np
@@ -152,7 +194,9 @@ SOURCE_M5E = artkit.source_note(SCRIPT, "M5 part E batch")
 SOURCE_M5F = artkit.source_note(SCRIPT, "M5 part F batch")
 SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
-ROUND = "r36"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, r31, r32, r33, r34, r35)
+SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
+SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
+ROUND = "r40"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -2619,6 +2663,1109 @@ def root_scan():
     return b
 
 
+# --------------------------------------------------------------------------- Act 3 (M7 part B)
+
+MARS_HOLO = [(0.0, (8, 4, 8)), (0.35, (40, 18, 16)), (0.7, (96, 46, 30)), (1.0, (180, 108, 68))]   # Act 3's display ramp
+MARS_TRUE = [(0.0, (12, 5, 6)), (0.22, (52, 20, 13)), (0.5, (118, 50, 26)), (0.78, (186, 100, 56)),
+             (1.0, (230, 164, 108))]                   # Mars through the transport's glass
+BUTTERSCOTCH = (214, 150, 92)                          # the sky (design/world/mars, Palette)
+MW, MH = 720, 360                                      # the Mars map: equirectangular, half a degree a pixel
+# Act 3's places (east longitude, north latitude; design/world/mars, Geography)
+OLYMPUS = (-134.0, 18.0)
+THARSIS_FOUNDRY = (-106.0, 6.0)
+ARES_LANDING = (-31.0, 16.0)
+HELLAS = (70.0, -42.0)
+VALLES = [(-101, -6), (-92, -8), (-80, -9), (-68, -11), (-56, -12), (-47, -11), (-40, -7), (-36, 0), (-33, 8)]
+_MARS_MAP = []
+
+
+def gc(lon, lat, lon0, lat0):
+    """The great-circle angle in degrees from (lon0, lat0)."""
+    p, p0 = np.radians(lat), np.radians(lat0)
+    c = np.sin(p) * np.sin(p0) + np.cos(p) * np.cos(p0) * np.cos(np.radians(lon - lon0))
+    return np.degrees(np.arccos(np.clip(c, -1, 1)))
+
+
+def polyline_distance(lon, lat, points):
+    """The distance in degrees (east-west shortened by the latitude) to a polyline of (lon, lat)."""
+    best = np.full(np.shape(lon), 1e9)
+    k = np.cos(np.radians(lat))
+    for (x0, y0), (x1, y1) in zip(points[:-1], points[1:]):
+        ax, ay = (lon - x0) * k, lat - y0
+        bx, by = (x1 - x0) * k, y1 - y0
+        t = np.clip((ax * bx + ay * by) / (bx * bx + by * by), 0, 1)
+        best = np.minimum(best, np.hypot(ax - t * bx, ay - t * by))
+    return best
+
+
+def mars_map():
+    """Mars as an equirectangular map (``h`` height about -1..1.5, ``a`` albedo 0..1, ``cap`` the polar
+    ice), its real features simplified: the northern lowlands, the Tharsis bulge and its volcanoes
+    (Olympus Mons on its escarpment, its caldera), the Valles Marineris into the outflow channels,
+    the Hellas and Argyre basins, craters on the southern highlands, the dark albedo regions."""
+    if _MARS_MAP:
+        return _MARS_MAP[0]
+    lon = (np.arange(MW) + 0.5) * 360 / MW - 180
+    lat = 90 - (np.arange(MH) + 0.5) * 180 / MH
+    LON, LAT = np.meshgrid(lon, lat)
+    n = raster.fbm(MW, MH, 40, 3801, octaves=6)
+    n2 = raster.fbm(MW, MH, 90, 3802, octaves=3)
+    rl = np.radians(LON)
+    edge = 20 + 9 * np.sin(rl * 2 + 0.6) + 5 * np.sin(rl * 5 + 1.3)    # the dichotomy: lowlands north
+    h = 0.32 * np.tanh((edge - LAT) / 9) + 0.2 * (n - 0.5)
+    h += 0.6 * np.exp(-(gc(LON, LAT, -108, 2) / 26) ** 2)
+    for lo, la, r, amp in ((-121, -9, 3.2, 0.55), (-113, 1, 3.2, 0.5), (-104, 11, 3.2, 0.55),
+                           (147, 25, 4.5, 0.4), (-110, 41, 9, 0.18)):
+        d = gc(LON, LAT, lo, la)
+        h += amp * np.exp(-(d / r) ** 2) - 0.3 * amp * np.exp(-(d / (0.22 * r)) ** 2)
+    d = gc(LON, LAT, *OLYMPUS)
+    h += np.where(d < 9.5, 0.3 + 1.0 * np.clip(1 - d / 9.5, 0, 1) ** 1.3, 0) - 0.35 * np.exp(-(d / 0.9) ** 2)
+    d = gc(LON, LAT, *HELLAS)
+    h += -0.95 * np.exp(-(d / 16) ** 2) + 0.2 * np.exp(-((d - 21) / 4) ** 2)
+    d = gc(LON, LAT, -43, -50)
+    h += -0.45 * np.exp(-(d / 8) ** 2) + 0.12 * np.exp(-((d - 10) / 2.5) ** 2)
+    dv = polyline_distance(LON, LAT, VALLES)
+    h -= 0.5 * np.exp(-(dv / 1.1) ** 2)
+    rng = np.random.default_rng(3803)
+    for _ in range(240):                                 # craters on the southern highlands
+        lo, la, r = rng.uniform(-180, 180), rng.uniform(-76, 34), rng.uniform(0.6, 3.6)
+        if la > 20 + 9 * np.sin(np.radians(lo) * 2 + 0.6) - 8:
+            continue
+        rows = slice(max(0, int((90 - la - 4 * r) * 2)), min(MH, int((90 - la + 4 * r) * 2) + 1))
+        dc = gc(LON[rows], LAT[rows], lo, la)
+        h[rows] += -0.16 * np.exp(-(dc / r) ** 2) + 0.06 * np.exp(-((dc - r) / (0.3 * r)) ** 2)
+    a = 0.62 + 0.3 * (n2 - 0.5) + 0.16 * (n - 0.5)
+    for lo, la, r, s in ((70, 8, 12, 0.35), (-30, 45, 14, 0.25), (-25, -22, 16, 0.3), (0, -6, 9, 0.3),
+                         (100, -18, 14, 0.25), (145, -24, 15, 0.25), (-150, -30, 14, 0.2), (-70, -28, 10, 0.15),
+                         (40, -10, 10, 0.2)):
+        a -= s * np.exp(-(gc(LON, LAT, lo, la) / r) ** 2) * (0.6 + 0.8 * n2)
+    a += 0.18 * np.exp(-(gc(LON, LAT, *HELLAS) / 13) ** 2) + 0.1 * np.exp(-(gc(LON, LAT, -110, 5) / 25) ** 2)
+    a -= 0.4 * np.exp(-(dv / 1.0) ** 2)
+    cap = ((LAT < -82 + 5 * n) | (LAT > 79 + 5 * n)).astype(np.float64)
+    _MARS_MAP.append({"h": h, "a": np.clip(a, 0, 1), "cap": cap})
+    return _MARS_MAP[0]
+
+
+def mars_sample(field, lon, lat):
+    """``field`` of mars_map() at (lon, lat), bilinear, the longitude wrapping."""
+    x = ((np.asarray(lon, float) + 180) % 360) / 360 * MW - 0.5
+    y = np.clip((90 - np.asarray(lat, float)) / 180 * MH - 0.5, 0, MH - 1.001)
+    x0, y0 = np.floor(x).astype(int), np.floor(y).astype(int)
+    fx, fy = x - x0, y - y0
+    x1, x0 = (x0 + 1) % MW, x0 % MW
+    y1 = np.minimum(y0 + 1, MH - 1)
+    top = field[y0, x0] * (1 - fx) + field[y0, x1] * fx
+    bot = field[y1, x0] * (1 - fx) + field[y1, x1] * fx
+    return top * (1 - fy) + bot * fy
+
+
+class Globe:
+    """An orthographic view of Mars: centre (cx, cy), radius r px, looking at (lon0, lat0)."""
+
+    def __init__(self, cx, cy, r, lon0, lat0):
+        self.cx, self.cy, self.r = cx, cy, r
+        self.lon0, self.p0 = lon0, np.radians(lat0)
+
+    def inverse(self, xx, yy):
+        """Per pixel: inside the disc, lon, lat and the normal (nx right, ny up, nz to the viewer)."""
+        x, y = (xx - self.cx) / self.r, -(yy - self.cy) / self.r
+        rho = np.hypot(x, y)
+        inside = rho < 1
+        c = np.arcsin(np.clip(rho, 0, 1))
+        rr = np.maximum(rho, 1e-9)
+        lat = np.degrees(np.arcsin(np.clip(np.cos(c) * np.sin(self.p0) + y * np.sin(c) * np.cos(self.p0) / rr, -1, 1)))
+        lon = self.lon0 + np.degrees(np.arctan2(x * np.sin(c), rr * np.cos(c) * np.cos(self.p0) - y * np.sin(c) * np.sin(self.p0)))
+        return inside, lon, lat, x, y, np.sqrt(np.clip(1 - rho ** 2, 0, 1))
+
+    def project(self, lon, lat):
+        """Screen (x, y) of (lon, lat) and whether it faces the viewer."""
+        p, dl = np.radians(lat), np.radians(lon - self.lon0)
+        x = np.cos(p) * np.sin(dl)
+        y = np.cos(self.p0) * np.sin(p) - np.sin(self.p0) * np.cos(p) * np.cos(dl)
+        front = np.sin(self.p0) * np.sin(p) + np.cos(self.p0) * np.cos(p) * np.cos(dl) > 0
+        return self.cx + self.r * x, self.cy - self.r * y, front
+
+
+def tag(b, x, y, text, colour, right=False):
+    """A label on a dark tag, readable over the planet."""
+    if right:
+        x -= raster.text_width(text)
+    b.draw.rectangle([x - 2, y - 2, x + raster.text_width(text) + 1, y + 8], fill=(6, 8, 18, 200))
+    b.label(x, y, text, colour)
+
+
+def big(b, x, y, text, colour, right=False):
+    """A label at twice the font's size (the counts)."""
+    if right:
+        x -= raster.text_width(text, 2)
+    raster.draw_text(b.over, x, y, text, colour + (255,), scale=2)
+
+
+def arrival():
+    """Act 3 p1: Mars filling the transport's forward view (its glass framed by the canopy struts and
+    the nav console), the CDF overlay on the glass with the colonies' beacons, every one dark but
+    Ares Landing's."""
+    b = Board()
+    b.base *= 0.55
+    rng = np.random.default_rng(3811)
+    for _ in range(110):                                    # stars over the limb
+        x, y = int(rng.integers(0, W)), int(rng.integers(0, H))
+        b.base[y, x] += rng.uniform(40, 150)
+    g = Globe(290, 268, 236, -72, -28)
+    inside, lon, lat, nx, ny, nz = g.inverse(b.xx, b.yy)
+    m = mars_map()
+    hgt = np.where(inside, mars_sample(m["h"], lon, lat), 0)
+    alb = mars_sample(m["a"], lon, lat)
+    cap = mars_sample(m["cap"], lon, lat) > 0.5
+    gy, gx = np.gradient(hgt)
+    relief = np.clip(1 - 7 * (gx + gy), 0.5, 1.6)
+    lam = -0.62 * nx + 0.5 * ny + 0.6 * nz                 # the sun from the top left
+    light = np.clip(lam * 1.15 + 0.04, 0, 1) ** 0.75
+    body = raster.ramp(MARS_TRUE, np.clip((0.35 + 0.75 * alb) * light * relief, 0, 1))
+    body = np.where(cap[..., None], np.array([226, 214, 206.0]) * light[..., None], body)
+    rho = np.hypot(nx, ny)
+    b.base = np.where(inside[..., None], body, b.base)
+    haze = np.exp(-((rho - 1) / 0.022) ** 2) * np.clip(lam + 0.5, 0, 1.2)       # the thin atmosphere at the limb
+    b.base += haze[..., None] * np.array(BUTTERSCOTCH) * 0.7
+    # the canopy: top bar, the left pillar, the strut before the nav screen, the console lip
+    frame = (9, 11, 20)
+    fill(b, [(0, 0), (W, 0), (W, 20), (0, 20)], frame)
+    fill(b, [(0, 20), (24, 20), (8, H), (0, H)], frame)
+    fill(b, [(512, 20), (530, 20), (548, H), (530, H)], frame)
+    fill(b, [(530, 20), (W, 20), (W, H), (548, H)], (6, 10, 24))
+    fill(b, [(0, 230), (548, 230), (548, H), (0, H)], frame)
+    for x in range(40, 512, 48):
+        b.glow(x, 235, 3, (60, 120, 160) if x % 96 else (160, 110, 40), 0.9)
+    b.line([(0, 20), (512, 20)], CYAN_DIM, 1, 150)
+    b.line([(24, 20), (8, H)], CYAN_DIM, 1, 110)
+    b.line([(512, 20), (530, H - 10)], CYAN_DIM, 1, 110)
+    b.line([(8, 230), (531, 230)], CYAN_DIM, 1, 150)
+    b.title("CDF TRANSPORT - FORWARD VIEW")
+    b.label(W - 10, 9, "MARS - DAY 9 AT FULL BURN", AMBER, right=True)
+    # the overlay on the glass: the beacons, the Vrell in orbit over Ares Landing
+    beacons = [(-139, 25), (-106, 6), (-100, -6), (-72, -7), (-47, -11), (-60, 30), (-12, 24), (-88, 34),
+               (-150, -6), (-120, 38), (-20, -2), (-84, -24)]
+    for lo, la in beacons:
+        x, y, front = g.project(lo, la)
+        if front and y < 226:
+            b.draw.ellipse([x - 4, y - 4, x + 4, y + 4], fill=(6, 8, 18, 190))
+            b.ring(x, y, 4, colour=GREY, alpha=230)
+            b.line([(x - 2, y - 2), (x + 2, y + 2)], GREY, 1, 230)
+    ax, ay, _ = g.project(*ARES_LANDING)
+    b.glow(ax, ay, 10, (220, 140, 40), 1.0)
+    for k, r in enumerate((5, 10, 16, 23)):
+        b.ring(ax, ay, r, colour=AMBER, alpha=235 - 45 * k)
+    b.marker(ax, ay, "diamond", AMBER, 3)
+    b.line([(ax - 8, ay - 8), (ax - 28, ay - 44), (ax - 44, ay - 44)], AMBER, 1, 220)
+    tag(b, ax - 48, ay - 48, "ARES LANDING", AMBER, right=True)
+    tag(b, ax - 48, ay - 38, "BEACON LIT", WHITE, right=True)
+    for k in range(7):
+        a = rng.uniform(0, 2 * np.pi)
+        r = rng.uniform(26, 44)
+        b.marker(ax + r * np.cos(a), ay - abs(r * np.sin(a)) * 0.7 - 6, "chevron", RED, 2)
+    tx, ty, _ = g.project(*THARSIS_FOUNDRY)
+    b.line([(tx + 5, ty - 5), (tx + 22, ty - 28), (tx + 26, ty - 28)], GREY, 1, 220)
+    tag(b, tx + 30, ty - 32, "THARSIS FOUNDRY", WHITE)
+    tag(b, tx + 30, ty - 22, "DARK", RED)
+    ox, oy, _ = g.project(*OLYMPUS)
+    b.bracket(ox - 12, oy - 9, ox + 12, oy + 9, CYAN_DIM, 4)
+    tag(b, ox - 20, oy + 13, "OLYMPUS MONS", CYAN)
+    b.bracket(30, 26, 506, 226, CYAN_DIM, 10)
+    # the nav screen
+    px = 560
+    b.label(px, 30, "COLONY BEACONS", WHITE)
+    b.label(px, 44, "LISTED", CYAN_DIM)
+    b.label(W - 12, 44, "12", CYAN, right=True)
+    b.label(px, 54, "ANSWERING", CYAN_DIM)
+    b.label(W - 12, 54, "1", AMBER, right=True)
+    b.label(px, 64, "DARK", CYAN_DIM)
+    b.label(W - 12, 64, "11", RED, right=True)
+    b.line([(px, 80), (W - 12, 80)], CYAN_DIM, 1, 120)
+    b.label(px, 88, "ARES LANDING", AMBER)
+    b.label(px, 98, "HOLDING ALONE", WHITE)
+    big(b, px, 112, "5 WEEKS", AMBER)
+    b.label(px, 136, "NO FLEET", CYAN_DIM)
+    b.label(px, 146, "NO SUPPLY DROPS", CYAN_DIM)
+    b.label(px, 156, "MILITIA GUNS", CYAN_DIM)
+    b.line([(px, 172), (W - 12, 172)], CYAN_DIM, 1, 120)
+    b.marker(px + 4, 184, "chevron", RED, 3)
+    b.label(px + 14, 180, "VRELL OVER", RED)
+    b.label(px + 14, 190, "ARES LANDING", RED)
+    b.label(px, 214, "CUT OFF FROM", CYAN_DIM)
+    b.label(px, 224, "EVERY OTHER", CYAN_DIM)
+    return b
+
+
+FRONT_X, FRONT_Y, FRONT_K = 28, 26, 1.55               # the front map: x, y of (FRONT_LON, FRONT_LAT), px a degree
+FRONT_LON, FRONT_LAT, FRONT_LON1, FRONT_LAT1 = -165.0, 62.0, 105.0, -70.0
+
+
+def mgeo(lon, lat):
+    return FRONT_X + (lon - FRONT_LON) * FRONT_K, FRONT_Y + (FRONT_LAT - lat) * FRONT_K
+
+
+def wiggle(p0, p1, amp, seed, n=40):
+    """A path from p0 to p1 (lon, lat) bent sideways by a few sines, ends fixed."""
+    rng = np.random.default_rng(seed)
+    p0, p1 = np.array(p0, float), np.array(p1, float)
+    s = np.linspace(0, 1, n)
+    d = p1 - p0
+    nrm = np.array([-d[1], d[0]]) / np.hypot(*d)
+    off = sum(rng.uniform(0.4, 1.0) * np.sin(np.pi * s * k + rng.uniform(0, 6.3)) / k for k in (1, 2, 3, 5))
+    off = (off - off[0] * (1 - s) - off[-1] * s) * amp
+    return p0 + s[:, None] * d + off[:, None] * nrm
+
+
+def mars_front():
+    """Act 3 p2: Varga's CDF globe display of Mars as a flat projection: the Hellas basin in the south
+    glowing Vrell red, the growth spreading north from it in tendrils, Ares Landing on the edge of the
+    northern plains, Tharsis Foundry on the plateau, the Valles Marineris between them."""
+    b = Board()
+    x0, y0 = mgeo(FRONT_LON, FRONT_LAT)
+    x1, y1 = mgeo(FRONT_LON1, FRONT_LAT1)
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= y0) & (b.yy < y1)
+    lon = FRONT_LON + (b.xx - FRONT_X) / FRONT_K
+    lat = FRONT_LAT - (b.yy - FRONT_Y) / FRONT_K
+    m = mars_map()
+    hgt = mars_sample(m["h"], lon, lat)
+    alb = mars_sample(m["a"], lon, lat)
+    gy, gx = np.gradient(hgt)
+    shade = np.clip(0.5 + 0.28 * hgt - 9 * (gx + gy), 0, 1.2) * (0.6 + 0.5 * alb)
+    body = raster.ramp(MARS_HOLO, np.clip(shade, 0, 1))
+    b.base = np.where(box[..., None], body, b.base)
+    hx, hy = mgeo(*HELLAS)
+    dh = gc(lon, lat, *HELLAS)
+    tint = np.exp(-(dh / 16) ** 2) * box
+    b.base = b.base * (1 - 0.6 * tint[..., None]) + tint[..., None] * np.array([150, 24, 40.0]) * 0.8
+    b.glow(hx, hy, 34, (120, 16, 36), 1.0)
+    b.title("CDF GLOBAL DISPLAY - MARS")
+    for lo in range(-150, 105, 30):
+        b.line([mgeo(lo, FRONT_LAT), mgeo(lo, FRONT_LAT1)], CYAN_DIM, 1, 45)
+    for la in (60, 30, 0, -30, -60):
+        b.line([mgeo(FRONT_LON, la), mgeo(FRONT_LON1, la)], CYAN_DIM, 1, 90 if la == 0 else 45)
+    b.draw.rectangle([x0, y0, x1 - 1, y1 - 1], outline=CYAN_DIM + (180,))
+    # the Vrell growth: tendrils out of the basin, spreading north, a few branching
+    targets = [((58, -24), (74, 14), 7), ((80, -26), (98, 6), 5), ((50, -32), (22, 20), 9),
+               ((46, -40), (-8, -2), 8), ((40, -46), (-24, 6), 10), ((60, -58), (-62, -40), 9),
+               ((90, -38), (100, -16), 3), ((-62, -40), (-92, -16), 5)]
+    rng = np.random.default_rng(3821)
+    for k, (p0, p1, amp) in enumerate(targets):
+        path = wiggle(p0, p1, amp, 3830 + k)
+        pts = [mgeo(*p) for p in path]
+        for i in range(len(pts) - 1):
+            w = 3 if i < len(pts) * 0.35 else 2 if i < len(pts) * 0.7 else 1
+            b.line([pts[i], pts[i + 1]], VIOLET, w, 220)
+        for p in pts[::5]:
+            b.glow(*p, 4, (90, 20, 60), 0.6)
+        for _ in range(2):                                  # side shoots
+            i = int(rng.integers(len(path) // 3, len(path) - 6))
+            tip = path[i] + rng.normal(0, 1, 2) * 3 + (path[-1] - path[0]) * 0.18
+            b.line([mgeo(*q) for q in wiggle(path[i], tip, 2, 3900 + k * 7 + i, 10)], VIOLET, 1, 180)
+    # the canyon, the volcano, the colonies
+    b.line([mgeo(*p) for p in VALLES], CYAN, 1, 200)
+    vx, vy = mgeo(-80, -9)
+    b.label(vx - 30, vy + 10, "VALLES MARINERIS", CYAN)
+    ox, oy = mgeo(*OLYMPUS)
+    b.marker(ox, oy, "dot", CYAN_DIM, 2)
+    b.label(ox - 30, oy - 14, "OLYMPUS MONS", CYAN_DIM)
+    ax, ay = mgeo(*ARES_LANDING)
+    for k, r in enumerate((5, 10, 15)):
+        b.ring(ax, ay, r, colour=AMBER, alpha=230 - 60 * k)
+    b.glow(ax, ay, 8, (200, 120, 30), 0.9)
+    b.marker(ax, ay, "diamond", AMBER, 3)
+    b.label(ax - 30, ay - 30, "ARES LANDING", AMBER)
+    b.label(ax - 30, ay - 20, "NORTHERN PLAINS", CYAN_DIM)
+    tx, ty = mgeo(*THARSIS_FOUNDRY)
+    b.marker(tx, ty, "diamond", GREY, 3)
+    b.label(FRONT_X + 4, ty + 8, "THARSIS FOUNDRY", GREY)
+    b.label(FRONT_X + 4, ty + 18, "THARSIS PLATEAU", CYAN_DIM)
+    b.ring(hx, hy, 18, colour=RED, alpha=220, width=2)
+    b.ring(hx, hy, 26, colour=VIOLET, alpha=150)
+    b.label(hx - 36, hy + 30, "HELLAS BASIN", RED)
+    b.label(hx - 36, hy + 40, "WHERE THEY LANDED", RED)
+    # the analysis
+    px = 462
+    b.line([(px - 8, 26), (px - 8, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "VRELL ON MARS", WHITE)
+    b.label(px, 44, "CAME DOWN: HELLAS BASIN", RED)
+    b.label(px, 54, "SPREAD: NORTH", VIOLET)
+    b.line([(px, 70), (W - 12, 70)], CYAN_DIM, 1, 120)
+    b.label(px, 78, "CHANGED FOR MARS", WHITE)
+    b.label(px, 92, "SWIM THROUGH THE SAND", AMBER)
+    b.label(px, 102, "RIDE THE DUST STORMS", AMBER)
+    b.line([(px, 118), (W - 12, 118)], CYAN_DIM, 1, 120)
+    b.marker(px + 4, 132, "diamond", AMBER, 3)
+    b.label(px + 14, 129, "COLONY - HOLDING", AMBER)
+    b.marker(px + 4, 146, "diamond", GREY, 3)
+    b.label(px + 14, 143, "COLONY - CUT OFF", GREY)
+    b.line([(px - 1, 160), (px + 9, 157)], VIOLET, 2)
+    b.label(px + 14, 157, "VRELL GROWTH", VIOLET)
+    b.label(W - 10, 9, "LEARNING THIS PLANET FASTER THAN WE DID", AMBER, right=True)
+    return b
+
+
+def rim_lit(rgba, colour, reach, strength=0.9):
+    """``rgba`` (a float array) with a rim light from the right: the pixels within ``reach`` of the
+    shape's right-hand edge brightened toward ``colour``."""
+    a = rgba[..., 3] > 0
+    edge = np.zeros_like(a)
+    for k in range(1, reach + 1):
+        shifted = np.zeros_like(a)
+        shifted[:, :-k] = a[:, k:]
+        edge |= a & ~shifted
+    out = rgba.copy()
+    out[edge, :3] = out[edge, :3] * (1 - strength) + np.array(colour, float) * strength
+    return out
+
+
+GUNNER_SS = 4                                          # the gun pit's supersampling
+
+
+def gun_pit(scale=1.45):
+    """The militia gun pit at dusk as one sprite (160x100 at ``scale``, the muzzles of the guns to the top right): a twin
+    autocannon on its pedestal, the gunner in a dust-orange suit (the dust-suit controller's look of
+    design/story/characters, generic-colonial-r36-b: goggles on the brow, the respirator at the
+    throat, the suit's seal ring, an air pack) in its seat, head tilted back to look up; the regolith
+    bags of the pit in front. Silhouetted against the sunset, rim-lit from the right."""
+    s = GUNNER_SS
+    w, h = 160, 100
+    img = Image.new("RGBA", (w * s, h * s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+
+    def P(*pts):
+        return [(x * s, y * s) for x, y in pts]
+
+    metal, metal2 = (40, 36, 42, 255), (62, 56, 60, 255)
+    suit, suit2 = (104, 52, 28, 255), (132, 70, 36, 255)
+    # the gun: pedestal, cradle, twin barrels at 35 degrees, the drum
+    d.polygon(P((84, 98), (92, 98), (91, 66), (85, 66)), fill=metal)
+    el = np.radians(35)
+    dv, nv = np.array([np.cos(el), -np.sin(el)]), np.array([np.sin(el), np.cos(el)])
+    c = np.array([88.0, 62.0])
+    for off in (-3.0, 3.0):
+        p0, p1 = c + nv * off - dv * 4, c + nv * off + dv * 70
+        d.line(P(tuple(p0), tuple(p1)), fill=metal2, width=3 * s)
+        q0, q1 = c + nv * off + dv * 64, c + nv * off + dv * 72
+        d.line(P(tuple(q0), tuple(q1)), fill=metal, width=5 * s)
+    box = [c - dv * 10 - nv * 7, c + dv * 10 - nv * 7, c + dv * 10 + nv * 8, c - dv * 10 + nv * 8]
+    d.polygon(P(*[tuple(p) for p in box]), fill=metal)
+    d.ellipse(P((96, 62), (110, 76)), fill=metal2)                 # the drum
+    d.line(P((76, 74), (84, 70)), fill=metal, width=2 * s)          # the grips
+    # the gunner, in the seat left of the cradle, leaning back, face turned up to the top right
+    d.polygon(P((44, 84), (62, 84), (62, 89), (44, 89)), fill=metal)                # the seat
+    d.polygon(P((33, 57), (41, 54), (47, 79), (39, 81)), fill=(66, 60, 58, 255))   # the air pack
+    d.polygon(P((45, 85), (63, 85), (57, 58), (41, 60)), fill=suit)                # the torso, leaning back
+    d.polygon(P((56, 78), (72, 74), (76, 96), (69, 97), (66, 82), (56, 86)), fill=suit)   # the leg
+    d.line(P((53, 61), (64, 71), (77, 72)), fill=suit2, width=5 * s, joint="curve")    # the arm to the grips
+    d.ellipse(P((42, 53), (58, 60)), fill=(58, 64, 66, 255))                        # the seal ring
+    d.ellipse(P((43, 38), (57, 53)), fill=(70, 50, 42, 255))                        # the hood
+    d.polygon(P((50, 41), (56, 37), (61, 44), (58, 51), (52, 50)), fill=(150, 98, 74, 255))   # the face, upturned
+    d.line(P((44, 44), (55, 37)), fill=(40, 34, 34, 255), width=2 * s)              # the goggles' strap
+    d.ellipse(P((51, 34), (58, 40)), fill=(255, 190, 60, 255))                     # the goggles on the brow
+    d.polygon(P((55, 50), (61, 47), (63, 52), (57, 55)), fill=(58, 72, 72, 255))   # the respirator at the throat
+    # the regolith bags along the front of the pit
+    rng = np.random.default_rng(3841)
+    for row, y in enumerate((80, 88)):
+        x = -6 + row * 9
+        while x < w:
+            bw = rng.uniform(16, 22)
+            d.rounded_rectangle(P((x, y + rng.uniform(-1, 1)), (x + bw, y + 11)), radius=4 * s,
+                                fill=(50 + int(rng.integers(0, 14)), 30, 22, 255))
+            x += bw + 1
+    a = np.array(img).astype(np.float64)
+    a = rim_lit(a, (240, 166, 98), 2 * s)
+    small = np.array(Image.fromarray(a.astype(np.uint8), "RGBA").resize((round(w * scale), round(h * scale)), Image.LANCZOS))
+    small[..., 3] = np.where(small[..., 3] > 110, 255, 0)
+    return artkit.quantize_set([Image.fromarray(small)], 40)[0]
+
+
+def colonists():
+    """Act 3 p3: a militia gun pit on a dome's ring at Ares Landing at dusk under a butterscotch sky
+    (the sun just down behind the horizon's mesas, its small blue halo), the gunner looking up at
+    the Vrell overhead; behind him the dome's geodesic glass (dome a of design/world/mars: white struts
+    in a triangle lattice, crops glowing green inside), its panels patched with plates and tape."""
+    b = Board()
+    hz = 196
+    t = np.clip(b.yy / hz, 0, 1)
+    sky = raster.ramp([(0.0, (34, 20, 30)), (0.45, (92, 52, 46)), (0.8, (176, 116, 74)), (1.0, BUTTERSCOTCH)], t)
+    b.base = sky
+    sx, sy = 590, hz - 4
+    b.glow(sx, sy, 70, (60, 40, 20), 1.0)
+    b.glow(sx, sy, 14, (60, 100, 150), 1.0)                # the Martian sunset's blue halo
+    b.glow(sx, sy, 3, (200, 220, 230), 1.0)
+    mesa = hz - 2 + 4 * np.sin(b.xx / 37) + 3 * np.sin(b.xx / 11) + np.where((b.xx > 470) & (b.xx < 540), -8, 0)
+    b.base = np.where((b.yy > mesa)[..., None], np.array([60, 32, 26.0]) * (1 + 0.2 * np.sin(b.xx / 5))[..., None], b.base)
+    # the dome: a sphere's side, seen from its ring
+    cx, cy, R = 150.0, 268.0, 280.0
+    nx, ny = (b.xx - cx) / R, (b.yy - cy) / R
+    rr = nx ** 2 + ny ** 2
+    dome = (rr < 1) & (b.yy < 214)
+    nz = np.sqrt(np.clip(1 - rr, 0, 1))
+    az = np.arctan2(nx, nz)
+    el = np.arcsin(np.clip(-ny, -1, 1))
+    sp = 0.16
+    u, v, w_ = el / sp, (az + el * 0.577) / sp, (az - el * 0.577) / sp
+    strut = (np.abs(u - np.round(u)) < 0.05 / np.maximum(nz, 0.3)) | \
+            (np.abs(v - np.round(v)) < 0.045 / np.maximum(nz, 0.3)) | \
+            (np.abs(w_ - np.round(w_)) < 0.045 / np.maximum(nz, 0.3))
+    cell = np.floor(u) * 7919 + np.floor(v) * 104729 + np.floor(w_) * 1299709
+    hsh = (np.sin(cell * 12.9898) * 43758.5453) % 1.0
+    rows = (np.sin(b.yy / 3.2) > 0.2) & (b.yy > 120)       # the crop rows inside
+    glass = np.array([16, 44, 34.0]) + rows[..., None] * np.array([30, 90, 46.0]) * np.clip((b.yy - 110) / 90, 0, 1)[..., None]
+    sheen = np.clip(nx * 1.4 - 0.2, 0, 1) ** 2 * np.clip(1 - nz * 0.8, 0, 1)
+    glass = glass + sheen[..., None] * np.array([150, 100, 60.0])
+    near = np.exp(-(((b.xx - 236) / 70) ** 2 + ((b.yy - 140) / 50) ** 2))    # the patched stretch
+    plate = hsh < 0.05 + 0.3 * near
+    taped = (hsh >= 0.05 + 0.3 * near) & (hsh < 0.1 + 0.5 * near)
+    glass = np.where(plate[..., None], np.array([76, 70, 70.0]) + 10 * np.sin(b.xx * 2.1)[..., None], glass)
+    tape = taped & ((np.abs((b.xx - b.yy) % 14 - 7) < 1.0) | (np.abs((b.xx + b.yy) % 14 - 7) < 1.0))
+    glass = np.where(tape[..., None], np.array([210, 168, 84.0]), glass)
+    lit = np.clip(0.4 + 0.6 * nx + 0.3 * nz, 0.25, 1)
+    glass = np.where(strut[..., None], np.array([170, 156, 146.0]) * lit[..., None], glass)
+    b.base = np.where(dome[..., None], glass, b.base)
+    b.base += (np.exp(-((np.sqrt(rr) - 1) / 0.004) ** 2) * (b.yy < 214))[..., None] * np.array([120, 90, 60])
+    # the ring: concrete, its joints
+    ring = b.yy >= 214
+    b.base = np.where(ring[..., None], np.array([66, 52, 50.0]) + 14 * ((b.xx % 48) > 1)[..., None] - 30 * (b.yy < 216)[..., None], b.base)
+    b.title("ARES LANDING - BRADBURY DOME RING, DUSK")
+    b.label(W - 10, 9, "THEY WILL NOT THANK US", AMBER, right=True)
+    # the pit and the gunner
+    pit = gun_pit()
+    gx, gy = 396, 240 - pit.height // 2 - 2
+    b.sprite(pit, gx, gy)
+    b.label(gx - 40, gy - pit.height // 2 - 2, "MILITIA GUN PIT 4", AMBER)
+    # the patches on the glass
+    b.bracket(186, 104, 290, 178, WHITE, 5)
+    b.label(186, 92, "PATCHED PANELS", WHITE)
+    b.label(14, 26, "FIVE WEEKS UNDER SIEGE", WHITE)
+    b.label(14, 36, "THE DOMES STILL MAKE AIR", GREEN)
+    # what the gunner is watching: the Vrell high overhead
+    for x, y in ((560, 44), (580, 56), (600, 40), (542, 62), (618, 66)):
+        b.marker(x, y, "chevron", RED, 3)
+    b.bracket(530, 30, 632, 76, RED, 5)
+    b.label(530, 82, "VRELL - OVERHEAD", RED)
+    b.label(W - 10, H - 16, "WE FLY FOR THEM ANYWAY", AMBER, right=True)
+    return b
+
+
+def transport_holo(scale):
+    """The heavy transport of the Act 2 outro (tools/art/outro_l14_images.py's model) as the display
+    draws it."""
+    import outro_l14_images as o14                    # noqa: E402  (imports this module: kept local)
+    return holo(scaled(o14.transport_sprite(), scale), CYAN, 12)
+
+
+def descent_ground(x):
+    """The ground's height in px on the descent plot at x: Olympus Mons' shield with its caldera and
+    the basal escarpment, the station's floor, the dunes, the rail line's plain."""
+    x = np.asarray(x, float)
+    west = 122 * np.clip(1 - (np.abs(x - 92) / 120) ** 1.5, 0, 1)
+    east = np.where(x < 248, 52 + 70 * np.clip(1 - (np.clip(x - 92, 0, None) / 156) ** 1.2, 0, 1), 0)
+    hgt = np.where(x < 92, west, east)
+    hgt -= 12 * np.exp(-((x - 92) / 7) ** 6)                       # the caldera's flat floor
+    hgt = np.where((x >= 248) & (x < 258), 52 * (258 - x) / 10, hgt)  # the escarpment
+    dunes = (x > 286) & (x < 430)
+    hgt += np.where(dunes, 4 + 3 * np.abs(np.sin((x - 286) / 9)) ** 0.6 * np.sign(np.sin((x - 286) / 18)), 0)
+    return hgt
+
+
+def descent_route():
+    """L15 p1: Okafor's entry corridor as a CDF profile plot, west to east: the transport in orbit,
+    the descent through the entry corridor over Olympus Mons' caldera, down through the cloud deck
+    along the flank, over the Lycus escarpment with Lycus Survey Station at its foot, across the
+    Tharsis dunes to the colony rail line, east toward Ares Landing; Lancer and Rook; the numbers
+    are the level's sections."""
+    b = Board()
+    datum = 218
+    ground = datum - descent_ground(b.xx[0])
+    under = b.yy > ground[None, :]
+    plot = b.xx < 500
+    tex = raster.fbm(W, H, 12, 3851, octaves=3, period=False)
+    depth = np.clip((b.yy - ground[None, :]) / 60, 0, 1)
+    body = raster.ramp(MARS_HOLO, np.clip(0.95 - 0.7 * depth + 0.18 * (tex - 0.5), 0, 1))
+    b.base = np.where((under & plot)[..., None], body, b.base)
+    # the cloud deck along the flank, the cirrus above
+    puff = raster.fbm(W, H, 14, 3852, octaves=4, period=False)
+    band = np.exp(-((b.yy - 140) / 12) ** 2) * np.clip((b.xx - 112) / 30, 0, 1) * np.clip((440 - b.xx) / 40, 0, 1)
+    cloud = np.clip((puff * band - 0.22) * 3.0, 0, 1) * ~under * plot
+    b.base = b.base * (1 - 0.8 * cloud[..., None]) + cloud[..., None] * np.array([150, 124, 120.0])
+    streak = np.zeros((H, W))
+    for y, x0, x1 in ((74, 130, 300), (82, 200, 390), (68, 320, 470)):       # the thin cirrus
+        streak += np.exp(-((b.yy - y) / 1.6) ** 2) * np.clip((b.xx - x0) / 30, 0, 1) * np.clip((x1 - b.xx) / 30, 0, 1)
+    b.base += (np.clip(streak, 0, 1) * (0.5 + 0.5 * puff))[..., None] * np.array([60, 60, 74.0])
+    b.line([(x, ground[x]) for x in range(0, 500, 2)], CYAN, 1, 220)
+    b.line([(0, datum), (500, datum)], CYAN_DIM, 1, 90)
+    b.title("OLYMPUS DESCENT - THE ENTRY CORRIDOR")
+    b.label(W - 10, 9, "DON'T KEEP THEM WAITING", AMBER, right=True)
+    # the transport in orbit, the corridor down
+    b.dashed([(0, 36), (500, 32)], CYAN_DIM, 1, 3, 5)
+    b.label(14, 26, "ORBIT", CYAN_DIM)
+    b.sprite(transport_holo(0.3), 70, 40)
+    route = [(96, 46), (140, 64), (184, 92), (214, 118), (240, 146), (262, 172), (280, 192), (330, 196),
+             (400, 198), (470, 202)]
+    for p, q in zip(route[:3], route[1:3]):
+        b.glow(*q, 6, (120, 60, 20), 0.6)                        # the entry glow, fading
+    b.dashed(route, AMBER, 2)
+    b.arrow(470, 202, 504, 203, AMBER, size=5, dashed=False)
+    b.sprite(scaled_sprite("ship_2", 0.6), 168, 54)
+    b.sprite(scaled_sprite("rook_2", 0.6), 194, 62)
+    b.label(208, 46, "LANCER, ROOK", CYAN)
+    for n, (x, y) in enumerate(((128, 70), (226, 116), (234, 160), (266, 202), (380, 186)), 1):
+        b.draw.rectangle([x - 4, y - 5, x + 4, y + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(x - 2, y - 3, str(n), AMBER)
+    # the places
+    b.label(54, 82, "OLYMPUS MONS", CYAN)
+    b.label(54, 92, "22 KM", CYAN_DIM)
+    b.line([(92, 108), (92, 100)], CYAN_DIM, 1, 200)
+    b.label(330, 118, "CLOUD DECK", WHITE)
+    b.label(330, 58, "CIRRUS", CYAN_DIM)
+    b.marker(272, 212, "square", GREY, 3)
+    tag(b, 270, 224, "LYCUS SURVEY STATION - NO SIGNAL", GREY)
+    for x in range(436, 500, 12):                                 # the rail line and its pylons
+        b.line([(x, datum - 2), (x, datum - 12)], CYAN_DIM, 1, 200)
+    b.line([(430, datum - 3), (500, datum - 3)], CYAN, 1, 220)
+    b.label(430, 160, "RAIL LINE", CYAN)
+    b.line([(440, 168), (446, datum - 14)], CYAN_DIM, 1, 160)
+    for x, y in ((236, 98), (252, 108), (318, 150), (300, 166)):
+        b.marker(x, y, "chevron", RED, 2)
+    # the legend: the level's sections
+    px = 516
+    b.line([(px - 8, 26), (px - 8, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "THE WAY IN, WEST TO EAST", WHITE)
+    rows = [("1", "ENTRY CORRIDOR", CYAN), ("2", "THE CLOUD DECK", CYAN), ("3", "OLYMPUS SLOPES", CYAN),
+            ("4", "LYCUS ESCARPMENT", CYAN), ("5", "THARSIS DUNES", CYAN)]
+    for i, (n, name, colour) in enumerate(rows):
+        y = 48 + 14 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, colour)
+    b.label(px + 12, 118, "TO THE RAIL LINE", CYAN_DIM)
+    b.line([(px, 134), (W - 12, 134)], CYAN_DIM, 1, 120)
+    b.label(px, 142, "ARES LANDING", AMBER)
+    b.label(px, 152, "EAST ALONG THE RAIL", CYAN_DIM)
+    b.label(px, 166, "HOLDING 5 WEEKS", WHITE)
+    b.marker(px + 4, 190, "chevron", RED, 3)
+    b.label(px + 14, 186, "VRELL OWN THE SKY", RED)
+    b.label(px + 14, 196, "OVER ARES LANDING", RED)
+    b.label(W - 10, H - 16, "WE COME IN FROM THE WEST", CYAN_DIM, right=True)
+    return b
+
+
+def burrower_scan():
+    """L15 p2: Varga's cut through the regolith: a Burrower swimming under the sand (a scan silhouette of
+    the production sprite, its ripples on the surface above), the guns stopping at the surface over it;
+    the bulge, the 1 s tell, with the Burrower rising under it; the surfaced maw (its bow wave, the open
+    maw and its lime glow) firing its ring of ten orbs; the anti-ground x2 marker."""
+    b = Board()
+    sl = 118                                                         # the surface
+    tex = raster.fbm(W, H, 16, 3861, octaves=4, period=False)
+    strata = 0.5 + 0.5 * np.sin((b.yy - sl) / 7 + 3 * tex)
+    depth = np.clip((b.yy - sl) / (H - sl), 0, 1)
+    body = raster.ramp(MARS_HOLO, np.clip(0.75 - 0.55 * depth + 0.12 * strata + 0.1 * (tex - 0.5), 0, 1))
+    b.base = np.where((b.yy > sl)[..., None], body, b.base)
+    b.title("SENSOR SCAN - BURROWER - A CUT THROUGH THE REGOLITH")
+    b.label(W - 10, 9, "SHOOT WHERE THE SAND BULGES", AMBER, right=True)
+    b.line([(0, sl), (W, sl)], CYAN, 1, 230)
+    b.label(W - 10, sl - 12, "SURFACE", CYAN, right=True)
+    b.label(W - 10, sl + 6, "REGOLITH", CYAN_DIM, right=True)
+    # 1: buried, swimming; nothing reaches it
+    bx, by = 112, sl + 58
+    b.sprite(holo(asset("burrower_0"), VIOLET), bx, by)
+    b.dashed([(bx - 92, by + 6), (bx - 40, by + 2)], VIOLET, 1, 4, 3)
+    b.arrow(bx + 40, by, bx + 84, by - 10, VIOLET, size=4)
+    for k, x in enumerate((bx - 50, bx - 18, bx + 14)):                # its ripples above, heading right
+        b.sprite(asset(f"burrower-ripple_{12 * 4 + k}"), x, sl - 2)
+    b.sprite(scaled_sprite("ship_2", 0.75), bx, 40)
+    for dx in (-8, 8):
+        b.dashed([(bx + dx, 58), (bx + dx, sl - 6)], AMBER, 1, 4, 3)
+        b.marker(bx + dx, sl - 4, "cross", AMBER, 2)
+    b.label(14, 26, "BURIED: NOTHING", RED)
+    b.label(14, 36, "TOUCHES IT", RED)
+    b.label(14, H - 16, "IT SWIMS UNDER THE SAND", VIOLET)
+    # 2: the bulge, the tell
+    ux = 300
+    b.sprite(holo(asset("burrower_0"), VIOLET), ux, sl + 34)
+    b.arrow(ux + 40, sl + 52, ux + 40, sl + 18, VIOLET, size=4, dashed=False)
+    b.sprite(asset("burrower-bulge_7"), ux, sl - 4)
+    b.bracket(ux - 34, sl - 38, ux + 34, sl + 26, AMBER, 6)
+    b.label(ux - 34, sl - 62, "THE BULGE: 1 S", AMBER)
+    b.label(ux - 34, sl - 52, "SHOOT THERE", AMBER)
+    # 3: surfaced, firing its ring, then it dives
+    mx, my = 486, sl - 30
+    b.sprite(asset("burrower-bow_0"), mx, my)
+    b.sprite(asset("burrower_3"), mx, my)
+    glow = np.array(asset("burrower-glow_3")).astype(np.float64)
+    light_at(b, glow[..., :3] * glow[..., 3:4] / 255, mx, my)
+    orb = asset("orb_0")
+    for k in range(10):
+        a = 2 * np.pi * k / 10 + 0.3
+        ox, oy = mx + 58 * np.cos(a), my + 58 * np.sin(a) * 0.82
+        b.sprite(orb, ox, oy)
+        b.line([(mx + 38 * np.cos(a), my + 38 * np.sin(a) * 0.82), (ox - 7 * np.cos(a), oy - 7 * np.sin(a))], VIOLET, 1, 150)
+    b.label(mx + 72, my - 34, "SURFACED:", WHITE)
+    b.label(mx + 72, my - 24, "A RING OF 10", VIOLET)
+    b.label(mx + 72, my - 14, "THEN IT DIVES", CYAN_DIM)
+    b.sprite(holo(asset("burrower-dive_5"), VIOLET), mx - 6, sl + 62)
+    b.arrow(mx + 30, sl + 30, mx + 24, sl + 52, VIOLET, size=3, dashed=False)
+    # what to bring
+    gx, gy = 360, 30
+    b.draw.rectangle([gx - 4, gy - 6, gx + 72, gy + 26], outline=GREEN + (240,))
+    b.sprite(asset("bomb-rack-shot"), gx + 8, gy + 10)
+    b.label(gx + 18, gy - 1, "ANTI-", GREEN)
+    b.label(gx + 18, gy + 9, "GROUND X2", GREEN)
+    b.arrow(gx + 72, gy + 14, mx - 34, my - 22, GREEN, size=4)
+    return b
+
+
+
+# =========================================================================== Level 16 (M7 part C)
+
+HELD_SPRITES = ROOT / "build" / "art-held" / "sprites"
+L16 = ROOT / "assets" / "backdrop" / "level-16"
+CANYON_X, CANYON_Y, CANYON_K = 22, 26, 5.4            # the canyon plot: x, y of (CANYON_LON, CANYON_LAT), px a degree
+CANYON_LON, CANYON_LAT, CANYON_LON1, CANYON_LAT1 = -106.0, 22.0, -24.0, -14.5
+CANYON_ROUTE = [(-101, -6), (-92, -8), (-80, -9), (-68, -11), (-56, -12), (-47, -11), (-40, -7), (-36, 0), (-33, 8),
+                (-31, 16)]
+HELIX = (-63.5, -7.2)                                 # Helix's research station on the north rim (not named)
+
+
+def held_asset(name):
+    """A production sprite from assets/, or from build/art-held/ while no data claims it yet."""
+    for folder in (SPRITES, HELD_SPRITES):
+        if (folder / f"{name}.png").exists():
+            return Image.open(folder / f"{name}.png").convert("RGBA")
+    raise FileNotFoundError(name)
+
+
+def cgeo(lon, lat):
+    return CANYON_X + (lon - CANYON_LON) * CANYON_K, CANYON_Y + (CANYON_LAT - lat) * CANYON_K
+
+
+def canyon_route():
+    """L16 p1: Okafor's plot of the Valles Marineris from orbit, west to east: the Noctis Labyrinthus's maze of
+    graben at the west end, the canyon cut deep through the plateau, the fork's mesa, the Coprates rapids, the
+    narrows, the Eos outflow's chaos opening north toward Ares Landing; the route along it with the level's six
+    sections; on the north rim by the rapids a small black square the plot does not name (Helix's station)."""
+    b = Board()
+    x0, y0 = cgeo(CANYON_LON, CANYON_LAT)
+    x1, y1 = cgeo(CANYON_LON1, CANYON_LAT1)
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= y0) & (b.yy < y1)
+    lon = CANYON_LON + (b.xx - CANYON_X) / CANYON_K
+    lat = CANYON_LAT - (b.yy - CANYON_Y) / CANYON_K
+    m = mars_map()
+    hgt = mars_sample(m["h"], lon, lat) * 0.6
+    alb = mars_sample(m["a"], lon, lat)
+    fine = raster.fbm(W, H, 16, 3871, octaves=4, period=False)
+    # the canyon at this scale: the route's trough, wide in the middle, the fork's mesa, the Noctis maze, Eos's chaos
+    valles = CANYON_ROUTE[:-2]
+    dv = polyline_distance(lon, lat, valles)
+    width = 1.5 + 1.2 * np.exp(-((lon + 68) / 14) ** 2) - 0.7 * np.exp(-((lon + 52) / 4) ** 2)
+    trough = np.clip(1 - dv / width, 0, 1) ** 0.6 * (lon < -36)
+    mesa = np.exp(-(((lon + 80) / 2.4) ** 2 + ((lat + 9) / 0.5) ** 2))
+    maze = np.exp(-gc(lon, lat, -102, -7) ** 2 / 30) * ((np.abs(np.sin(lon * 1.9 + 4.8 * fine)) < 0.18)
+                                                        | (np.abs(np.sin(lat * 2.3 + 4 * fine)) < 0.15))
+    chaos = np.exp(-gc(lon, lat, -40, -4) ** 2 / 18) * (fine > 0.55)
+    hgt = hgt - 0.9 * trough + 0.6 * mesa * trough - 0.4 * np.clip(maze, 0, 1) - 0.3 * chaos + 0.08 * (fine - 0.5)
+    gy, gx = np.gradient(hgt)
+    shade = np.clip(0.55 + 0.25 * hgt - 14 * (gx + gy), 0, 1.2) * (0.65 + 0.45 * alb) * (1 - 0.55 * trough)
+    body = raster.ramp(MARS_HOLO, np.clip(shade, 0, 1))
+    b.base = np.where(box[..., None], body, b.base)
+    b.title("VALLES MARINERIS - THE CANYON RUN")
+    b.label(W - 10, 9, "THE ONE ROAD THEY DON'T HOLD", AMBER, right=True)
+    for lo in range(-100, -24, 10):
+        b.line([cgeo(lo, CANYON_LAT), cgeo(lo, CANYON_LAT1)], CYAN_DIM, 1, 40)
+    for la in (20, 10, 0, -10):
+        b.line([cgeo(CANYON_LON, la), cgeo(CANYON_LON1, la)], CYAN_DIM, 1, 80 if la == 0 else 40)
+    b.draw.rectangle([x0, y0, x1 - 1, y1 - 1], outline=CYAN_DIM + (180,))
+    # the route along the canyon, the sections numbered
+    route = [cgeo(*p) for p in wiggle(CANYON_ROUTE[0], CANYON_ROUTE[1], 0.3, 3872, 6)[:-1]]
+    for p0, p1 in zip(CANYON_ROUTE[1:-1], CANYON_ROUTE[2:]):
+        route += [cgeo(*p) for p in wiggle(p0, p1, 0.25, 3873 + int(p0[0]), 8)[:-1]]
+    route.append(cgeo(*CANYON_ROUTE[-1]))
+    b.dashed(route[:-6], AMBER, 2)
+    b.dashed(route[-7:], AMBER, 1, 3, 4)
+    b.arrow(*route[-3], *route[-1], AMBER, size=5, dashed=False)
+    sx, sy = cgeo(-102, 3)
+    b.sprite(scaled_sprite("ship_2", 0.5), sx, sy - 8)
+    b.sprite(scaled_sprite("rook_2", 0.5), sx + 14, sy)
+    b.label(sx + 26, sy - 8, "LANCER, ROOK", CYAN)
+    for n, (lo, la, dx, dy) in enumerate(((-100, -6, -4, -16), (-91, -8, 0, 12), (-80, -9, 0, -18), (-67, -11, 0, 12),
+                                          (-55, -12, 0, 12), (-43, -9, 10, 4)), 1):
+        x, y = cgeo(lo, la)
+        x, y = x + dx, y + dy
+        b.draw.rectangle([x - 4, y - 5, x + 4, y + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(x - 2, y - 3, str(n), AMBER)
+    # the places
+    nx, ny = cgeo(-104, -13)
+    b.label(nx, ny, "NOCTIS LABYRINTHUS", CYAN_DIM)
+    fx, fy = cgeo(-82, -4.5)
+    b.label(fx - 10, fy - 4, "THE FORK", CYAN)
+    cx_, cy_ = cgeo(-74, -14.0)
+    b.label(cx_, cy_, "COPRATES", CYAN_DIM)
+    ex, ey = cgeo(-45, -14.0)
+    b.label(ex - 6, ey, "EOS CHAOS", CYAN_DIM)
+    hx, hy = cgeo(*HELIX)
+    b.draw.rectangle([hx - 2, hy - 2, hx + 2, hy + 2], fill=(0, 0, 0, 255), outline=(30, 40, 52, 255))
+    ax, ay = cgeo(-31, 16)
+    for k, r in enumerate((4, 8, 12)):
+        b.ring(ax, ay, r, colour=AMBER, alpha=230 - 60 * k)
+    b.glow(ax, ay, 7, (200, 120, 30), 0.9)
+    b.marker(ax, ay, "diamond", AMBER, 3)
+    b.label(ax - 78, ay - 4, "ARES LANDING", AMBER)
+    # the legend: the level's sections
+    px = 474
+    b.line([(px - 8, 26), (px - 8, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "THE CANYON, WEST TO EAST", WHITE)
+    rows = [("1", "NOCTIS EDGE"), ("2", "INTO THE CANYON"), ("3", "FORK ONE"), ("4", "COPRATES RAPIDS"),
+            ("5", "THE NARROWS"), ("6", "EOS OUTFLOW")]
+    for i, (n, name) in enumerate(rows):
+        y = 46 + 13 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, CYAN)
+    b.line([(px, 128), (W - 12, 128)], CYAN_DIM, 1, 120)
+    b.label(px, 136, "2,000 KM TO ARES LANDING", AMBER)
+    b.label(px, 150, "WALLS ON BOTH SIDES", WHITE)
+    b.label(px, 160, "KEEP OFF THE ROCK", RED)
+    b.label(px, 174, "ROOK: ON LANCER'S TAIL", CYAN_DIM)
+    b.label(px, 184, "IN THE NARROWS", CYAN_DIM)
+    b.label(W - 10, H - 16, "FLY IT FAST", CYAN_DIM, right=True)
+    return b
+
+
+def tendril_scan():
+    """L16 p2: Varga's scan of a cut through the canyon from above: the two walls, an anchor pair at their
+    foot with the tendril between them, an Ion Beam burning through the tendril (white-hot where it crosses),
+    a second pair broken by killing an anchor (the rope withered back), and a Threadcrawler at the right
+    wall's foot with its pores glowing; the `beam` marker."""
+    b = Board()
+    wl = 150 + 10 * np.sin(b.yy[:, 0] / 40)                       # the walls' foot (x per row)
+    wr = 470 + 8 * np.sin(b.yy[:, 0] / 33 + 1)
+    tex = raster.fbm(W, H, 12, 3881, octaves=3, period=False)
+    rock_l = (b.xx < wl[:, None]) & (b.xx > 40)
+    rock_r = (b.xx > wr[:, None]) & (b.xx < 600)
+    band = 0.45 + 0.35 * np.sin(b.xx / 5 + 3 * tex)
+    rock = raster.ramp(MARS_HOLO, np.clip(band * 0.7 + 0.15 * tex, 0, 1))
+    b.base = np.where((rock_l | rock_r)[..., None], rock, b.base)
+    floor = raster.ramp(MARS_HOLO, np.clip(0.3 + 0.12 * tex, 0, 1))
+    b.base = np.where((~(rock_l | rock_r) & (b.xx >= 40) & (b.xx < 600))[..., None], floor, b.base)
+    b.line([(wl[y], y) for y in range(0, H, 2)], CYAN, 1, 230)
+    b.line([(wr[y], y) for y in range(0, H, 2)], CYAN, 1, 230)
+    b.title("SENSOR SCAN - TENDRIL ANCHOR - A GATE ACROSS THE CANYON")
+    b.label(W - 10, 9, "BURN IT OR KILL AN ANCHOR", AMBER, right=True)
+    b.label(46, 26, "WALL", CYAN_DIM)
+    b.label(wr[26] + 8, 26, "WALL", CYAN_DIM)
+    tendril = np.array(held_asset("tendril_1")).astype(np.float64)
+    wither = np.array(held_asset("tendril-wither_3")).astype(np.float64)
+
+    def rope(strip, ax, bx, y, sprites):
+        h, w = strip.shape[:2]
+        img = np.zeros((h, int(bx - ax), 4))
+        for k in range(img.shape[1]):
+            img[:, k] = strip[:, k % w]
+        sprites.append((Image.fromarray(img.astype(np.uint8), "RGBA"), (ax + bx) / 2, y))
+
+    # gate one: standing, the beam burning through it
+    y1 = 70
+    ax_, bx_ = wl[y1] + 14, wr[y1] - 14
+    parts = []
+    rope(tendril, ax_ + 12, bx_ - 12, y1, parts)
+    for img, x, y in parts:
+        b.sprite(img, x, y)
+    b.sprite(asset("tendril-anchor_72"), ax_, y1)
+    b.sprite(asset("tendril-anchor_24"), bx_, y1)
+    bx_beam = 300
+    col = np.array(asset("ion-beam-column-3_0")).astype(np.float64)
+    beam = np.vstack([col] * 3)[: H - y1 - 40]
+    light_at(b, beam[..., :3] * beam[..., 3:4] / 255, bx_beam, y1 + beam.shape[0] / 2 + 2)
+    burn = np.array(held_asset("tendril-burn_1")).astype(np.float64)
+    light_at(b, burn[..., :3] * burn[..., 3:4] / 255 * 1.2, bx_beam, y1)
+    b.sprite(scaled_sprite("ship_2", 0.75), bx_beam, H - 20)
+    b.label(bx_beam + 26, y1 + 18, "A BEAM BURNS", WHITE)
+    b.label(bx_beam + 26, y1 + 28, "THROUGH THE TENDRIL", WHITE)
+    b.label(ax_ - 4, y1 - 30, "ANCHOR", RED)
+    b.line([(ax_, y1 - 20), (ax_, y1 - 12)], RED, 1)
+    b.label(ax_ + 70, y1 - 22, "TENDRIL: IT BURNS ON TOUCH", RED)
+    # gate two: an anchor killed, the rope withered back into the other
+    y2 = 150
+    ax2, bx2 = wl[y2] + 14, wr[y2] - 14
+    parts = []
+    rope(wither, bx2 - 80, bx2 - 12, y2 + 2, parts)
+    for img, x, y in parts:
+        b.sprite(img, x, y)
+    b.marker(ax2, y2, "cross", AMBER, 6)
+    b.sprite(asset("tendril-anchor_24"), bx2, y2)
+    b.label(ax2 + 16, y2 - 4, "KILL EITHER ANCHOR:", AMBER)
+    b.label(ax2 + 16, y2 + 6, "THE GATE FALLS", AMBER)
+    # the Threadcrawler at the right wall's foot, crawling up
+    seg, head, tail = "threadcrawler-segment", "threadcrawler-head", "threadcrawler-tail"
+    pts = [(wr[y] - 22, y) for y in range(178, 250, 15)]
+    pore = np.array(asset("threadcrawler-pore_2")).astype(np.float64)
+    for i, (x, y) in reversed(list(enumerate(pts))):
+        name = f"{head}_{8 * 4}" if i == 0 else f"{tail}_8" if i == len(pts) - 1 else f"{seg}_{8 * 4 + (i % 4)}"
+        b.sprite(scaled_sprite(name, 0.62), x, y)
+        if i in (3, 4):
+            light_at(b, pore[..., :3] * pore[..., 3:4] / 255 * 0.8, x, y)
+    b.label(wr[200] - 150, 196, "SOMETHING LONG", GREEN)
+    b.label(wr[200] - 150, 206, "CRAWLS AT THE FOOT", GREEN)
+    # what to bring
+    gx, gy = 70, 200
+    b.draw.rectangle([gx - 4, gy - 6, gx + 58, gy + 16], outline=GREEN + (240,))
+    b.label(gx + 4, gy, "BEAM", GREEN)
+    b.arrow(gx + 58, gy + 4, bx_beam - 22, y1 + 40, GREEN, size=4)
+    return b
+
+# =========================================================================== Level 17 (M7 part D)
+
+SOURCE_M7D = artkit.source_note(SCRIPT, "M7 part D batch")
+
+
+def held_frame(name, scale=1.0, colours=48):
+    """A frame from assets/ or build/art-held/ at ``scale`` (box-filtered, 1-bit alpha), palettised."""
+    img = held_asset(name)
+    if scale != 1.0:
+        img = img.resize((max(1, round(img.width * scale)), max(1, round(img.height * scale))), Image.BOX)
+    a = np.array(img).astype(np.float64)
+    a[..., 3] = np.where(a[..., 3] >= 128, 255, 0)
+    return artkit.quantize_set([Image.fromarray(a.astype(np.uint8), "RGBA")], colours)[0]
+
+
+def colony_y(fx):
+    """The colony plan's y of a play-field x (north is to the left: west at the bottom, east at the top)."""
+    return 20 + (480 - fx) * 0.42
+
+
+def ares_domes():
+    """L17 p1: Okafor's plan of Ares Landing in the CDF map style, north to the left: the rail line from the
+    north, the outer domes Bradbury and Lowell, the burnt outer greenhouses, the inner ring road round
+    Schiaparelli, Burroughs and Eden (the largest), the spaceport to the south; red Vrell vectors converging
+    on the domes; the level's five sections along the route. East of the burnt greenhouses a small black
+    compound with a gold edge that the plan does not name (Helix's)."""
+    b = Board()
+    x0, x1 = 16, 468
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= 18) & (b.yy < H - 10)
+    tex = raster.fbm(W, H, 24, 3901, octaves=4, period=False)
+    fine = raster.fbm(W, H, 6, 3903, octaves=2, period=False)
+    body = raster.ramp(MARS_HOLO, np.clip(0.42 + 0.3 * (tex - 0.5) + 0.12 * (fine - 0.5), 0, 1))
+    b.base = np.where(box[..., None], body, b.base)
+    domes = [("BRADBURY", 150, 130, 11), ("LOWELL", 176, 350, 11), ("SCHIAPARELLI", 318, 110, 11),
+             ("BURROUGHS", 344, 370, 11), ("EDEN", 380, 240, 15)]
+    growth = np.zeros((H, W))
+    for name, mx, fx, r in domes:                                   # Vrell growth creeping toward the rings
+        my = colony_y(fx)
+        growth += np.exp(-(((b.xx - mx) ** 2 + (b.yy - my) ** 2) / (28 + 2 * r) ** 2)) * (tex > 0.52)
+    gm = (growth > 0.3) & box
+    b.base = np.where(gm[..., None], b.base * 0.55 + np.array((70, 30, 90)) * 0.45, b.base)
+    b.title("ARES LANDING - THE FIVE DOMES")
+    b.label(W - 10, 9, "KEEP THE BOMBERS OFF THE GLASS", AMBER, right=True)
+    b.draw.rectangle([x0, 18, x1 - 1, H - 11], outline=CYAN_DIM + (180,))
+    b.arrow(46, 30, 26, 30, CYAN, size=3, dashed=False)
+    b.label(50, 27, "N", CYAN)
+    # the rail line from the north, into the yard
+    rail = [(x0, colony_y(310)), (90, colony_y(310)), (128, colony_y(240)), (200, colony_y(240)), (232, colony_y(160)),
+            (268, colony_y(160))]
+    b.line(rail, GREY, 3, 200)
+    b.dashed(rail, WHITE, 1, 2, 3)
+    b.label(22, colony_y(310) - 12, "RAIL", CYAN_DIM)
+    # the burnt outer greenhouses (west) and the unnamed compound (east)
+    for k in range(5):
+        gx, gy = 214 + 11 * k, colony_y(120) - 6 + (k % 2) * 8
+        b.draw.rectangle([gx, gy, gx + 7, gy + 16], fill=(40, 34, 34, 230), outline=(90, 80, 76, 255))
+    b.label(204, colony_y(70) + 2, "BURNT", GREY)
+    b.label(204, colony_y(70) + 12, "GREENHOUSES", GREY)
+    hx, hy = 246, colony_y(390)
+    b.draw.rectangle([hx - 7, hy - 6, hx + 7, hy + 6], fill=(0, 0, 0, 255), outline=(200, 160, 60, 255))
+    b.draw.rectangle([hx - 3, hy - 2, hx + 3, hy + 2], fill=(220, 180, 80, 255))
+    # the inner ring road
+    b.ring(350, colony_y(240), 62, 78, colour=GREY, alpha=170, width=2)
+    b.label(300, 22, "INNER RING", CYAN_DIM)
+    # the spaceport
+    for px, py in ((420, colony_y(300)), (446, colony_y(180)), (432, colony_y(380))):
+        b.ring(px, py, 7, colour=WHITE, alpha=200)
+        b.marker(px, py, "dot", WHITE, 1)
+    b.draw.rectangle([450, colony_y(420) - 6, 462, colony_y(420) + 8], outline=WHITE + (180,))
+    b.label(408, H - 30, "SPACEPORT", AMBER)
+    # the domes: the ally's sprite small, lit green, named
+    for name, mx, fx, r in domes:
+        my = colony_y(fx)
+        b.glow(mx, my, r * 1.6, (20, 120, 50), 0.9)
+        sp = held_frame("ares-dome-eden_1" if name == "EDEN" else "ares-dome_1", (2 * r + 6) / (144 if name == "EDEN" else 120))
+        b.sprite(sp, mx, my)
+        ly = my + r + 4 if fx > 240 or name == "EDEN" else my - r - 12
+        tag(b, mx - raster.text_width(name) / 2, ly, name, GREEN)
+    # Vrell vectors converging on the domes
+    for (sx, sy), (name, mx, fx, r) in zip(((120, 10), (230, 228), (300, 232), (300, 10), (412, 10)), domes):
+        my = colony_y(fx)
+        d = np.array([mx - sx, my - sy], float)
+        d /= np.linalg.norm(d)
+        b.arrow(sx, sy, mx - d[0] * (r + 6), my - d[1] * (r + 6), RED, size=3)
+    # the route along the colony, the sections numbered
+    route = [(x0 + 4, 121), (468, 121)]
+    b.dashed(route, AMBER, 1, 3, 4)
+    for n, x in enumerate((64, 150, 246, 340, 430), 1):
+        b.draw.rectangle([x - 4, 228 - 5, x + 4, 228 + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(x - 2, 228 - 3, str(n), AMBER)
+    sx, sy = 30, 121
+    b.sprite(scaled_sprite("ship_2", 0.5), sx, sy)
+    # the legend
+    px = 480
+    b.line([(px - 6, 26), (px - 6, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "NORTH TO SOUTH", WHITE)
+    rows = [("1", "RAIL APPROACH"), ("2", "OUTER DOMES"), ("3", "BURNT GREENHOUSES"), ("4", "INNER RING"), ("5", "SPACEPORT")]
+    for i, (n, name) in enumerate(rows):
+        y = 46 + 13 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, CYAN)
+    b.line([(px, 116), (W - 12, 116)], CYAN_DIM, 1, 120)
+    b.label(px, 124, "REACH THE SPACEPORT", AMBER)
+    b.label(px, 138, "NO DOME HIT", GREEN)
+    b.label(px, 152, "BOMBERS GO FOR THE GLASS", RED)
+    b.label(px, 166, "THE PEOPLE ARE", CYAN_DIM)
+    b.label(px, 176, "BELOW GROUND", CYAN_DIM)
+    b.label(W - 10, H - 16, "MILITIA GUNS: NOT YET", CYAN_DIM, right=True)
+    return b
+
+
+def herald_scan():
+    """L17 p2: Varga's scan of a Choir Herald (its crest lit) with the dashed circle of its aura and thin threads
+    to three ringed escorts; an inset of a Shellback mid-curl with its lime vent marked."""
+    b = Board()
+    tex = raster.fbm(W, H, 16, 3911, octaves=4, period=False)
+    inset = (b.xx >= 430) & (b.xx < W - 12) & (b.yy >= 30) & (b.yy < H - 14)
+    ground = raster.ramp(MARS_HOLO, np.clip(0.4 + 0.25 * (tex - 0.5), 0, 1))
+    b.base = np.where(inset[..., None], ground, b.base)
+    b.title("SENSOR SCAN - CHOIR HERALD - IT SINGS SHIELDS")
+    b.label(W - 10, 9, "KILL THE SINGER, THEN THE REST", AMBER, right=True)
+    hx, hy, r = 200, 124, 84
+    aura = np.array(asset("choir-herald-aura")).astype(np.float64)
+    aura = np.array(Image.fromarray(aura.astype(np.uint8), "RGBA").resize((2 * r + 4, 2 * r + 4), Image.BOX)).astype(np.float64)
+    light_at(b, aura[..., :3] * aura[..., 3:4] / 255 * 1.6, hx, hy, "under")
+    b.sprite(asset("choir-herald_2", 2), hx, hy)
+    crest = np.array(asset("choir-herald-crest_2", 2)).astype(np.float64)
+    light_at(b, crest[..., :3] * crest[..., 3:4] / 255, hx, hy)
+    ring = np.array(asset("choir-herald-ring_6").resize((54, 54), Image.NEAREST)).astype(np.float64)
+    ring3 = np.array(asset("choir-herald-ring_2").resize((54, 54), Image.NEAREST)).astype(np.float64)
+    for k, a in enumerate((-2.4, -0.3, 1.6)):
+        ex, ey = hx + 68 * math.cos(a), hy + 62 * math.sin(a)
+        b.dashed([(hx + 30 * math.cos(a), hy + 30 * math.sin(a)), (ex - 20 * math.cos(a), ey - 20 * math.sin(a))],
+                 VIOLET, 1, 2, 2)
+        b.sprite(asset(f"needler_{k}"), ex, ey)
+        rr = ring3 if k == 1 else ring
+        light_at(b, rr[..., :3] * rr[..., 3:4] / 255, ex, ey)
+    b.line([(hx + 44, 44), (hx + 30, hy - 30)], AMBER, 1)
+    b.label(hx + 30, 34, "THE CREST: THE SINGER", AMBER)
+    b.label(20, 30, "EVERY UNIT IN ITS REACH", VIOLET)
+    b.label(20, 40, "WEARS A SHIELD RING", VIOLET)
+    b.label(20, H - 40, "A RING SOAKS UP SHOTS,", WHITE)
+    b.label(20, H - 30, "THEN REFILLS", WHITE)
+    b.label(hx + 94, hy - 22, "SEGMENTS DROP", VIOLET)
+    b.label(hx + 94, hy - 12, "AS IT DRAINS", VIOLET)
+    b.label(296, H - 64, "SINGER DOWN:", AMBER)
+    b.label(296, H - 54, "EVERY RING COLLAPSES", AMBER)
+    b.label(296, H - 30, "EMP STRIPS THEM", GREEN)
+    # the inset: a Shellback curling, its vent marked
+    b.draw.rectangle([430, 30, W - 13, H - 15], outline=CYAN_DIM + (200,))
+    b.label(436, 36, "SHELLBACK", WHITE)
+    sx, sy = 540, 128
+    b.sprite(asset("shellback-curl_1"), sx, sy)
+    vent = json.loads((ROOT / "assets" / "pivots" / "shellback.json").read_text(encoding="utf-8"))["vent"][0]
+    vx, vy = sx - 56 + vent[0], sy - 56 + vent[1]
+    glow = np.array(asset("shellback-vent_2")).astype(np.float64)
+    light_at(b, glow[..., :3] * glow[..., 3:4] / 255, vx, vy)
+    b.ring(vx, vy, 12, colour=LIME, alpha=240)
+    b.line([(vx + 12, vy - 6), (608, 64)], LIME, 1)
+    b.label(578, 52, "VENT", LIME)
+    b.label(436, H - 50, "CURLED: SHOTS", RED)
+    b.label(436, H - 40, "SPARK OFF. WAIT", RED)
+    b.label(436, H - 28, "THE BELLY AFTER", GREEN)
+    b.arrow(sx + 44, sy + 40, sx + 70, sy + 72, AMBER, size=3)
+    return b
+
+
+L15 = ROOT / "assets" / "backdrop" / "level-15"
+
+
+def l15_layer(name, turn=True, scale=1.0):
+    """A Level 15 backdrop image (tools/art/backdrop_l15.py) as a float RGBA array, turned so its
+    flight direction points right, at ``scale``."""
+    img = Image.open(L15 / f"{name}.png").convert("RGBA")
+    if turn:
+        img = img.rotate(-90, expand=True)
+    if scale != 1.0:
+        img = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
+    return np.array(img).astype(np.float64)
+
+
+def tiled(a, w, h, dx=0, dy=0):
+    """A wrapping tile array repeated over w x h, shifted by (dx, dy)."""
+    ys = (np.arange(h) + dy) % a.shape[0]
+    xs = (np.arange(w) + dx) % a.shape[1]
+    return a[np.ix_(ys, xs)]
+
+
+def drop():
+    """Act 3 p4: the transport's drop bay open over Mars (Level 15's production `transport` piece,
+    turned nose right, the planet showing through the open bay), Aegis Wing on the launch rails in it,
+    shown again in a callout; below, Mars from high up as Level 15 draws it (`mars-high` with the
+    `olympus` piece), the cloud deck's banks far below it (`deck-banks`) and the thin cirrus."""
+    b = Board()
+    ground = tiled(l15_layer("mars-high", scale=0.5), W, H, 40, 30)[..., :3]
+    oly = l15_layer("olympus", scale=0.5)
+    ox, oy = 232, 20
+    sl = ground[oy:oy + oly.shape[0], ox:ox + oly.shape[1]]
+    part = oly[:sl.shape[0], :sl.shape[1]]
+    sl[:] = part[..., :3] * part[..., 3:4] / 255 + sl * (1 - part[..., 3:4] / 255)
+    rgb = ground * 0.8 * (1 - 0.22) + np.array(BUTTERSCOTCH) * 0.22        # far below: the haze over it
+    deck = tiled(l15_layer("deck-banks", scale=0.55), W, H, 260, 90)
+    a = deck[..., 3:4] / 255 * np.clip((300 - b.xx) / 120, 0, 0.9)[..., None]     # the banks clear of the volcano
+    rgb = deck[..., :3] * a + rgb * (1 - a)
+    cirrus = tiled(l15_layer("cirrus", scale=0.9), W, H, 0, 40)
+    rgb = rgb + cirrus[..., :3] * cirrus[..., 3:4] / 255 * 0.4                 # additive at 40 %, as the game
+    b.base = rgb * 0.7
+    b.title("CDF TRANSPORT - DROP BAY OPEN")
+    b.label(W - 10, 9, "DROP IN 90 MINUTES", AMBER, right=True)
+    # the transport, nose right, its bay open over the planet
+    tsp = Image.open(L15 / "transport.png").convert("RGBA").rotate(-90, expand=True)
+    k = 0.42
+    tsp = scaled(tsp, k, 48)
+    tx, ty = 170, 126
+    shadow(b, tsp, tx, ty, 10, 14, 0.35)
+    b.sprite(tsp, tx, ty)
+    bay = (tx - tsp.width / 2 + (659 - 260) * k, ty - tsp.height / 2 + 200 * k)   # the bay's centre
+    bw, bh = 62 * k, 40 * k
+    lineup = [("ship_2", -12, -8), ("rook", -12, 8), ("ship_2", 12, -8), ("ship_2", 12, 8)]
+    for kind, dx, dy in lineup:
+        img = rook_craft() if kind == "rook" else asset("ship_2")
+        b.sprite(turned(scaled(img, 0.3), 90), bay[0] + dx, bay[1] + dy)
+    b.bracket(bay[0] - bw - 3, bay[1] - bh - 3, bay[0] + bw + 3, bay[1] + bh + 3, AMBER, 5)
+    # the callout: the rails at full size
+    cx0, cy0, cx1, cy1 = 452, 28, 662, 214
+    fill(b, [(cx0, cy0), (cx1, cy0), (cx1, cy1), (cx0, cy1)], (6, 10, 24), 0.92)
+    b.draw.rectangle([cx0, cy0, cx1, cy1], outline=CYAN_DIM + (220,))
+    b.dashed([(bay[0] + bw + 3, bay[1] - bh - 3), (cx0, cy0)], AMBER, 1, 3, 3)
+    b.dashed([(bay[0] + bw + 3, bay[1] + bh + 3), (cx0, cy1)], AMBER, 1, 3, 3)
+    b.label(cx0 + 8, cy0 + 6, "DROP BAY - LAUNCH RAILS", WHITE)
+    rails = [(84, [("LANCER", "ship_2", CYAN), ("AEGIS TWO", "ship_2", GREY), ("AEGIS 4", "ship_2", GREY)]),
+             (150, [("ROOK", "rook", AMBER), ("AEGIS 3", "ship_2", GREY)])]
+    for ry, crew in rails:
+        b.line([(cx0 + 10, ry), (cx1 - 10, ry)], CYAN_DIM, 2, 200)
+        b.line([(cx0 + 10, ry - 4), (cx0 + 10, ry + 4)], CYAN_DIM, 1, 200)
+        for i, (name, kind, colour) in enumerate(crew):
+            x = cx1 - 36 - 64 * i
+            img = rook_craft() if kind == "rook" else asset("ship_2")
+            b.sprite(turned(img, 90), x, ry)
+            b.label(x - raster.text_width(name) // 2, ry + 26, name, colour)
+        b.arrow(cx1 - 22, ry - 22, cx1 - 6, ry - 22, AMBER, size=3, dashed=False)
+    b.label(cx0 + 8, cy1 - 14, "AEGIS ACTUAL OUT", CYAN_DIM)
+    # what lies below
+    vx, vy = ox + oly.shape[1] / 2, oy + oly.shape[0] / 2
+    b.ring(vx, vy, 20, colour=CYAN, alpha=170)
+    tag(b, vx - 50, vy + 64, "OLYMPUS MONS", CYAN)
+    tag(b, vx - 50, vy + 74, "FAR BELOW", CYAN_DIM)
+    tag(b, 14, 26, "WE GO IN FROM THE WEST", WHITE)
+    tag(b, 14, 36, "PAST OLYMPUS MONS", AMBER)
+    tag(b, 14, 214, "THE CLOUD DECK", WHITE)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -2661,6 +3808,16 @@ IMAGES = {
     "level-13-ice-field": ice_field,
     "level-14-spire-over-geneva": spire_over_geneva,
     "level-14-root-scan": root_scan,
+    "act-3-arrival": arrival,
+    "act-3-mars-front": mars_front,
+    "act-3-colonists": colonists,
+    "act-3-drop": drop,
+    "level-15-descent-route": descent_route,
+    "level-15-burrower-scan": burrower_scan,
+    "level-16-canyon-route": canyon_route,
+    "level-16-tendril-scan": tendril_scan,
+    "level-17-ares-domes": ares_domes,
+    "level-17-choir-herald": herald_scan,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -2676,7 +3833,10 @@ BATCHES = {
     "r33": (list(IMAGES)[33:35], "M5 PART E"),
     "r34": (list(IMAGES)[35:37], "M5 PART F"),
     "r35": (list(IMAGES)[37:39], "M5 PART G"),
-    "r36": (list(IMAGES)[39:], "M5 PART H"),
+    "r36": (list(IMAGES)[39:41], "M5 PART H"),
+    "r38": (list(IMAGES)[41:47], "M7 PART B"),
+    "r39": (list(IMAGES)[47:49], "M7 PART C"),
+    "r40": (list(IMAGES)[49:], "M7 PART D"),
 }
 
 
@@ -2689,6 +3849,9 @@ def build(names):
                   else SOURCE_M5F if name in BATCHES["r34"][0]
                   else SOURCE_M5G if name in BATCHES["r35"][0]
                   else SOURCE_M5H if name in BATCHES["r36"][0]
+                  else SOURCE_M7B if name in BATCHES["r38"][0]
+                  else SOURCE_M7C if name in BATCHES["r39"][0]
+                  else SOURCE_M7D if name in BATCHES["r40"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

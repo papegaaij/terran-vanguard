@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-06
+updated: 2026-10-13
 ---
 
 # Ship systems
@@ -37,7 +37,7 @@ are the "nice extra options": they make the ship better at a job without adding 
 | Pickup magnet | Pickups within 72 / 108 / 144 px of the ship fly to it at 240 / 300 / 360 px/s (see below) | L1–L3 | 1 | 600 / 1 500 / 3 000 | act 1 | approved |
 | Salvage scanner | +10 / +20 % credits from salvage pickups and hidden crates; a glint marks the objects that hide a secret (see below) | L1–L2 | 1 | 2 500 / 6 000 | act 2 | approved |
 | Targeting computer | Homing turn rate +20 % (Stormhawk weapons), fading HP bars under damaged enemies, brackets on open weak points (see below) | L1 | 1 | 3 000 | act 2 (from L07 with the L06 [data core](../../systems/economy/README.md#data-cores), otherwise L08) | approved |
-| Evasive thrusters | Double-tap direction: 72 px dash, 0.25 s invulnerable, 3 s cooldown | L1 | 2 | 4 000 | act 3 | idea |
+| Evasive thrusters | Double-tap a direction (or the Dash button): 72 px dash in 0.12 s, 0.25 s invulnerable, 3 s cooldown (see below) | L1 | 2 | 4 000 | act 3 | approved |
 | Auto-repair nanites | Repairs 1 armour per 4 s, up to 50 % of max armour | L1–L2 (2 s at L2) | 3 | 6 000 / 12 000 | act 4 | idea |
 | Pressure hull | Removes the underwater top-speed and shield-regen penalties (see [europa](../../world/europa/README.md#under-water-rules)) | L1 | 1 | 2 000 | L22 | idea |
 | Ascendancy IFF spoofer | Ascendancy turrets hesitate 0.5 s before firing | L1 | 2 | 5 000 | act 6 (story) | idea |
@@ -95,6 +95,42 @@ the L08 visit (`available: act 2`).
   glint chosen in concept round 28: a 23×23 four-point star with a warm white core over a soft gold
   halo (`glint-secret`, `tools/art/secret_glint.py`).
 
+### Evasive thrusters (Act 3)
+
+Approved in concept round 36 (user, 2026-10-13, D.25). The
+*Utility modules* row above is rendered from [data.yaml](data.yaml), whose `dash` block holds the
+numbers below (M7 part A).
+
+| Property | Value |
+|---|---|
+| Module | One level, 4 000 cr, draw 2 MW, one bay; on sale from the L15 visit (`available: act 3`). A second one adds nothing |
+| Input | The **Dash** action of the [controls](../../ui/controls/README.md): a double-tap of a direction (the second press within **0.25 s** of the first press's release, nothing else pressed in between), or the bindable Dash button (V, the left bumper), which dashes in the direction held, or straight ahead with none. Only while the module is fitted; otherwise neither does anything |
+| Dash | **72 px** in that direction (8 directions; a diagonal moves 72 px along it) over **0.12 s** (600 px/s), the ship's own speed set aside for that time; afterwards it keeps the speed it had before. Play field edges clamp it; a canyon wall or rock island stops it at the wall without wall contact |
+| Invulnerable | **0.25 s** from the dash's start: enemy bullets pass through the ship (they are not absorbed), contacts and hazards do not hurt. The hull shows 3 fading afterimages along the dash |
+| Cooldown | **3 s** from the dash's start; a dash pressed while it cools does nothing (no sound, so a missed double-tap in normal flying is silent) |
+| HUD | A small dash pip beside the shield row: empty while cooling, filling over the 3 s, a short flash when ready (see [HUD](../../ui/hud/README.md)) |
+| Sound | A short thruster burst (the engine's family, not bubbly) |
+| Replays | Detected from the direction inputs per simulation step, so the same input gives the same dash in a replay |
+| Rook and drones | Unaffected; Rook reacts to the ship's new place with his usual delay, the drones keep their orbit and station round it |
+| Reverse scroll (L20) | Directions are the screen's |
+
+Power: at 2 MW the thrusters do not fit the typical Act 3 loadout, which is at 13.5–14 of the Mk III
+generator's 14 MW by L19 (see the [Ion Beam's power check](../weapons/ion-beam/README.md#price-and-power-m11)):
+a player takes them in place of a pod level or a shield tier until the Mk IV generator (Act 4).
+
+### Third utility bay (Act 3)
+
+- On sale once from the L15 visit at 5 000 cr (*Utility bays* below); the hangar shows a third
+  utility slot only after it is bought, and the save records the bought bay (format: the slot
+  `UTILITY_3` the loader already knows; M7 part A, user decision Q1 = a: an empty bought bay has no
+  loadout entry, so save format version 4 records the bays bought in a `bays` field of its own, see
+  [saves](../../systems/saves/README.md)).
+- Any utility module fits it, the same module as in another bay included (a second Targeting
+  computer or thrusters still adds nothing); its module's draw counts like the others'.
+- Selling it is not possible while a module is fitted in it; sold back at 60 % like other gear.
+- The typical plan does not buy it in Act 3 (5 000 against the Mk III and the Act 3 guns); it is
+  the reward for a thrifty player and the utility modules' answer to the power cap.
+
 ### Hydro-kit (automatic)
 
 Not a module and not for sale: before L23 every Stormhawk gets a free field refit for
@@ -141,6 +177,8 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 | [concept/secret-glint-r28-a.gif](concept/secret-glint-r28-a.gif) | Option a playing as the game does (4 frames in 0.3 s every 1.5 s) on a cargo container, deck and dark, beside the old glint (motion) | chosen |
 | [concept/rejected/secret-glint-r28-b.png](concept/rejected/secret-glint-r28-b.png) | Salvage scanner glint, option b "scanner ping": 35×35, a thin gold ring expanding from the object (radius 3, 7, 11, 15 px) and fading, four lock marks on it at the diagonals, a white flash at the centre in the first two frames, additive, 24 colours (sheet) | rejected |
 | [concept/rejected/secret-glint-r28-b.gif](concept/rejected/secret-glint-r28-b.gif) | Option b playing as the game would, beside the old glint (motion) | rejected |
+| [concept/dash-capture-r37-a.png](concept/dash-capture-r37-a.png) | Game capture (round 37, M7 part A), L05 hard: the Evasive thrusters' dash by V and by a double-tap, its afterimages and burst, the HUD dash pip emptying and refilling in 3 s, a dash refused while it cools (sheet) | chosen (round 37, K.3: accepted) |
+| [concept/dash-capture-r37-a.mp4](concept/dash-capture-r37-a.mp4) | The same, 19 s with the game's sound | chosen (round 37, K.3: accepted) |
 
 ## Implementation
 
@@ -166,9 +204,19 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - [x] The third utility bay as data (5 000 cr, `available: act 3`): loaded and validated, for sale
   from the L15 visit and never in Acts 1–2, the save unchanged (M4 close-out; `Catalogue.bays()`,
   `Hangar.available(Bay)`, test `UtilityModulesTest`)
-- [ ] Buying the third bay in the hangar and fitting its slot (`UTILITY_3`) — **later: Act 3** (it
-  is first for sale at the L15 visit; the save then records the bought bay)
-- [ ] The other modules' effects — **later: Act 3** (Evasive thrusters, the third bay's act),
+- [x] Buying the third bay in the hangar and fitting its slot (`UTILITY_3`) — **later: Act 3** (it
+  is first for sale at the L15 visit; the save then records the bought bay) — rules under *Third utility bay (Act 3)*
+  (M7 part A, step A2, the content side: `Hangar.bays`/`buyBay`/`sellBay` with the visit's undo,
+  no shop rows for `UTILITY_3` until it is bought, never sold while a module is fitted, 60 % back;
+  `Gear.bays` and save format 4; `--loadout utility3=` counts it bought; test `ActThreeShopTest`. The
+  hangar's third tile and bay row: step A5, `ActThreeHangarTest`)
+- [x] Evasive thrusters as under *Evasive thrusters (Act 3)*: the double-tap and Dash
+  button, the 72 px dash, 0.25 s invulnerability, 3 s cooldown, the HUD pip — **later: Act 3** (M7 part A;
+  step A2: the `dash` block in [data.yaml](data.yaml), `SystemsData.Dash`; step A3: the dash, its
+  double-tap detection and invulnerability in the simulation; step A6: the Dash button sends
+  `Command.DASH`, the HUD's dash pip right of the shield's label plate, three fading afterimages,
+  the thruster burst and its sound, the hull see-through every other two steps while invulnerable)
+- [ ] The other modules' effects —
   **later: Act 4** (Auto-repair nanites, Pressure hull) and **later: Act 6** (Ascendancy IFF
   spoofer)
 - [x] Sensor level controls the intel panel detail
@@ -277,3 +325,21 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   `secret_glint.py --review` writes it). With the Targeting computer's code-drawn bars and brackets
   accepted as built, every asset of this part is approved: `art: final`. Every remaining item is
   tagged with its act, so the part is `done` again.
+- 2026-10-12 (overnight design phase): the Evasive thrusters specified as a draft section (the
+  Dash action by double-tap or its button, 72 px over 0.12 s, 0.25 s invulnerable, 3 s cooldown,
+  walls stop it without contact, a HUD pip) and the third bay's rules (on sale once from L15,
+  any module, not sold while fitted); the rendered rows keep their data until M7 part A. The
+  power check found the thrusters' 2 MW does not fit the typical Act 3 loadout on the Mk III.
+  Pending the user's review in concept round 36.
+- 2026-10-13 (user, round 36): the Act 3 sections approved (D.25): the Evasive thrusters (the dash,
+  its double-tap and button, 0.25 s invulnerability, 3 s cooldown, 2 MW) and the third utility bay
+  on sale once from the L15 visit. The HUD's dash pip and the controls' Dash binding are part A items
+  ([roadmap](../../tech/roadmap/README.md), Q.25e).
+- 2026-10-13: M7 part A, step A2: the Evasive thrusters' `dash` block in data.yaml (row `approved`);
+  the third utility bay bought and sold in the hangar's rules with save format 4's `bays` (user
+  decision Q1 = a).
+- 2026-10-13 (user, round 37): the dash capture accepted (K.3); the dash's build choices kept (B.2 f:
+  the direction held, a double-tap within 0.25 s, a dash asked for while it cools does nothing; B.2 g:
+  `Command.DASH` the last command bit; B.5 b: the dash pip right of the shield's label plate, its white
+  state 0.2 s of game time since R.4 d); its sound S.13 a "thruster puff"; save format 4 accepted
+  (V.1); a second set of thrusters adds nothing (B.3 c).

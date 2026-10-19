@@ -3,15 +3,18 @@ package vanguard.game.hangar;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import vanguard.content.Content;
+import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Catalogue.Item;
 import vanguard.content.campaign.Catalogue.Stat;
 import vanguard.content.campaign.Fitted;
 import vanguard.content.campaign.Flight;
+import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.Hangar.Choice;
 import vanguard.content.campaign.Hangar.Offer;
 import vanguard.content.campaign.Hangar.Refusal;
@@ -19,6 +22,7 @@ import vanguard.content.campaign.Hangar.State;
 import vanguard.content.campaign.ItemKind;
 import vanguard.content.campaign.LoadoutSlot;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 import vanguard.game.ui.Words;
@@ -31,6 +35,10 @@ import vanguard.sim.WingmanSpec;
  * traits, numbers and the deltas against the fitted item, its choices, the last transaction's
  * message; the test-fire box below them is the {@link TestFirePanel}'s. The escort's shop (M5 part
  * A) lists Rook's guns and, last, the row of his side with its {@code LEFT} / {@code RIGHT} choice.
+ * M7 part A: a utility slot's shop ends with its bay row ({@link HangarState#bayRow()}: the third
+ * bay for sale with its {@code BUY} chip, or in the bought bay's own shop its {@code SELL} chip), and a
+ * cooldown special's detail shows its cooldown. The rows and chips double as the mouse's hit regions
+ * ({@link HangarPointer}).
  */
 final class ShopPanel {
     static final int X = 16;
@@ -54,11 +62,13 @@ final class ShopPanel {
     private final Glass glass;
     private final ItemIcons icons;
     private final Content content;
+    private final Catalogue catalogue;
 
-    ShopPanel(Glass glass, ItemIcons icons, Content content) {
+    ShopPanel(Glass glass, ItemIcons icons, Content content, Catalogue catalogue) {
         this.content = content;
         this.glass = glass;
         this.icons = icons;
+        this.catalogue = catalogue;
     }
 
     void draw(SpriteBatch batch, HangarState state, List<String> markedTraits) {
@@ -71,6 +81,8 @@ final class ShopPanel {
             int y = ROWS_Y + (i - state.top()) * ROW;
             if (i < rows.size()) {
                 drawRow(batch, rows.get(i), y, shop && i == state.row(), markedTraits);
+            } else if (state.bayRow().isPresent()) {
+                drawBayRow(batch, state.bayRow().get(), y, shop && i == state.row());
             } else {
                 drawSideRow(batch, state, y, shop && i == state.row());
             }
@@ -84,16 +96,22 @@ final class ShopPanel {
             glass.scrollMarkers(
                     batch, RIGHT - Fonts.width(glass.fonts.label, more) - 6, moreY - 2, state.top() > 0, below);
         }
-        int detail = ROWS_Y + HangarState.VISIBLE_ROWS * ROW + 16;
-        glass.header(batch, "SELECTED", INNER, RIGHT, detail);
-        state.selected().ifPresent(offer -> drawDetail(batch, state, offer, detail + 16));
+        glass.header(batch, "SELECTED", INNER, RIGHT, DETAIL_Y - 16);
+        state.selected().ifPresent(offer -> drawDetail(batch, state, offer, DETAIL_Y));
         if (state.sideSelected()) {
-            drawSide(batch, state, detail + 16);
+            drawSide(batch, state, DETAIL_Y);
         }
-        Optional<Choice> refused = state.focus() == HangarState.Focus.SHOP
-                ? state.choice().filter(choice -> !choice.allowed())
+        boolean shopFocus = state.focus() == HangarState.Focus.SHOP;
+        if (state.baySelected()) {
+            drawBay(batch, state.bayRow().orElseThrow(), shopFocus, DETAIL_Y);
+        }
+        Optional<String> refused = shopFocus
+                ? state.choice().filter(choice -> !choice.allowed()).map(HangarState::refusal)
                 : Optional.empty();
-        String message = refused.map(HangarState::refusal).orElse(state.message());
+        if (shopFocus && state.baySelected()) {
+            refused = state.bayRow().flatMap(Hangar.BayOffer::refusal).map(HangarState::bayRefusal);
+        }
+        String message = refused.orElse(state.message());
         List<String> lines = Words.wrap(message, (WIDTH - 20) / Fonts.advance(glass.fonts.label));
         for (int i = 0; i < Math.min(2, lines.size()); i++) {
             Color colour = refused.isPresent() ? Glass.ALERT : Glass.CYAN;
@@ -154,21 +172,103 @@ final class ShopPanel {
         glass.shadowed(batch, glass.fonts.label, "WHERE ROOK FLIES BESIDE YOU.", Glass.WHITE, INNER, y + 24);
         glass.shadowed(batch, glass.fonts.label, "FREE: LEFT / RIGHT SET IT.", Glass.LABEL, INNER, y + 38);
         boolean shop = state.focus() == HangarState.Focus.SHOP;
-        float x = INNER;
         for (WingmanSpec.Side side : WingmanSpec.Side.values()) {
-            String text = side.name();
-            float width = Fonts.width(glass.fonts.label, text) + 14;
+            Box chip = sideChip(side);
             boolean on = state.escortSide() == side;
-            glass.chip(batch, glass.fonts.label, text, x, y + 64, width, 20, on && shop, true);
+            glass.chip(
+                    batch,
+                    glass.fonts.label,
+                    side.name(),
+                    chip.x(),
+                    chip.y(),
+                    chip.width(),
+                    chip.height(),
+                    on && shop,
+                    true);
             if (on && !shop) {
-                glass.outline(batch, Glass.AMBER, x, y + 64, width, 20);
+                glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
             }
-            x += width + 6;
         }
     }
 
     /** The side row's name. */
     static final String SIDE = "ROOK'S SIDE";
+
+    /**
+     * M7 part A: a utility slot's bay row: the bay's name with a bay glyph, its price while for sale or
+     * {@code OWNED} once bought.
+     */
+    private void drawBayRow(SpriteBatch batch, Hangar.BayOffer line, int y, boolean selected) {
+        glass.row(batch, X + 4, y - 5, WIDTH - 8, ROW - 2);
+        if (selected) {
+            glass.selection(batch, X + 2, y - 5, WIDTH - 4, ROW - 2);
+            glass.cursor(batch, glass.fonts.label, X + 4, y + 4);
+        }
+        drawBayGlyph(batch, INNER - 2, y - 3, 16);
+        boolean owned = line.state() == State.OWNED;
+        glass.right(
+                batch,
+                glass.fonts.label,
+                owned ? "OWNED" : Names.credits(line.bay().price()),
+                Glass.CYAN,
+                RIGHT,
+                y);
+        glass.shadowed(
+                batch,
+                glass.fonts.label,
+                Names.slot(line.bay().slot()),
+                selected ? Glass.AMBER : Glass.WHITE,
+                NAME_X,
+                y);
+    }
+
+    /** A bay's glyph (it has no icon of its own): a module tile's frame with its slot open, {@code size} px square. */
+    private void drawBayGlyph(SpriteBatch batch, float x, float y, int size) {
+        glass.outline(batch, Glass.CYAN, x + 1, y + 1, size - 2, size - 2);
+        glass.fill(batch, Glass.CYAN, x + size / 2f - 1, y + 4, 2, size - 8);
+        glass.fill(batch, Glass.CYAN, x + 4, y + size / 2f - 1, size - 8, 2);
+    }
+
+    /** M7 part A: the bay row's detail: what the bay is, what selling it asks, and its one chip. */
+    private void drawBay(SpriteBatch batch, Hangar.BayOffer line, boolean shop, int y) {
+        drawBayGlyph(batch, RIGHT - 24, y - 6, 24);
+        glass.shadowed(batch, glass.fonts.body, Names.slot(line.bay().slot()), Glass.AMBER, INNER, y);
+        glass.shadowed(batch, glass.fonts.label, BAY_WHAT, Glass.WHITE, INNER, y + 24);
+        glass.shadowed(
+                batch, glass.fonts.label, line.state() == State.OWNED ? BAY_SELL : BAY_BUY, Glass.LABEL, INNER, y + 38);
+        Box chip = bayChip(line);
+        boolean allowed = line.allowed();
+        glass.chip(
+                batch,
+                glass.fonts.label,
+                bayLabel(line),
+                chip.x(),
+                chip.y(),
+                chip.width(),
+                chip.height(),
+                shop && allowed,
+                allowed);
+        if (shop && !allowed) {
+            glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
+        }
+    }
+
+    /** The bay row's detail lines. */
+    static final String BAY_WHAT = "A THIRD SLOT FOR ANY MODULE.";
+
+    static final String BAY_BUY = "ITS TILE SHOWS ONCE BOUGHT.";
+    static final String BAY_SELL = "UNFIT ITS MODULE TO SELL IT.";
+
+    /** The bay row's chip: {@code BUY 5 000} or {@code SELL 3 000}. */
+    static String bayLabel(Hangar.BayOffer line) {
+        return (HangarState.bayAction(line) == Hangar.Action.SELL ? "SELL " : "BUY ")
+                + Names.grouped(Math.abs(line.credits()));
+    }
+
+    /** The bay row's one chip, where the side row's chips are. */
+    static Box bayChip(Hangar.BayOffer line) {
+        return new Box(INNER, DETAIL_Y + 64, chipWidth(bayLabel(line)), 20);
+    }
 
     /** An item's icon with its top-left corner at (x, y), darkened while it is locked. */
     private static void drawIcon(SpriteBatch batch, TextureRegion icon, float x, float y, boolean locked) {
@@ -203,7 +303,7 @@ final class ShopPanel {
             glass.shadowed(batch, glass.fonts.label, text, Glass.AMBER, traitX, y + 24);
             traitX += Fonts.width(glass.fonts.label, text) + 8;
         }
-        int line = y + (item.traits().isEmpty() ? 24 : 40);
+        int line = statsY(item);
         Map<Stat, Double> stats = item.stats(offer.level());
         Optional<Item> fitted = state.hangar().fitted(state.slot());
         StringBuilder numbers = new StringBuilder();
@@ -212,10 +312,20 @@ final class ShopPanel {
                 .append(' ')
                 .append(Names.number(stat.getValue()))
                 .append("   "));
+        // M7 part A: a cooldown special's cooldown, where a charge special shows its most charges.
+        catalogue.cooldown(item).ifPresent(seconds -> numbers.append("COOLDOWN ")
+                .append(Names.number(seconds))
+                .append(" S   "));
         numbers.append("DRAW ").append(Names.megawatts(item.draw(offer.level())));
         glass.shadowed(batch, glass.fonts.label, numbers.toString(), Glass.WHITE, INNER, line);
-        if (offer.state() != State.FITTED && fitted.isPresent()) {
-            drawDeltas(batch, item, offer.level(), fitted.get(), fittedLevel(state), line + 14);
+        List<Delta> deltas = offer.state() != State.FITTED && fitted.isPresent()
+                ? deltas(item, offer.level(), fitted.get(), fittedLevel(state))
+                : List.of();
+        if (!deltas.isEmpty()) {
+            drawDeltas(batch, deltas, line + 14);
+        } else if (fullRefund(offer)) {
+            // M7 part A (round 37, R.4 e): a sale of what this visit bought returns all it cost.
+            glass.shadowed(batch, glass.fonts.label, FULL_REFUND, Glass.LABEL, INNER, line + 14);
         }
         if (!flies(state.slot(), item)) {
             glass.shadowed(batch, glass.fonts.label, "NOT YET IN FLIGHT", Glass.DIM, INNER, line + 28);
@@ -225,7 +335,7 @@ final class ShopPanel {
             glass.shadowed(batch, glass.fonts.label, unlock, Glass.LABEL, INNER, line + 42);
             return;
         }
-        drawChoices(batch, state, offer, line + 44);
+        drawChoices(batch, state, offer);
     }
 
     private static int fittedLevel(HangarState state) {
@@ -237,43 +347,120 @@ final class ShopPanel {
         return Flight.flies(content, slot, new Fitted(item.id(), 1));
     }
 
-    private void drawDeltas(SpriteBatch batch, Item item, int level, Item fitted, int fittedLevel, int y) {
-        float x = INNER;
-        glass.shadowed(batch, glass.fonts.label, "VS FITTED:", Glass.LABEL, x, y);
-        x += Fonts.width(glass.fonts.label, "VS FITTED:") + 8;
+    /** M7 part A: what the detail says of a sale of an item this visit bought (its full price comes back). */
+    static final String FULL_REFUND = "BOUGHT THIS VISIT: FULL REFUND";
+
+    /** One stat's change against the fitted item, as the {@code VS FITTED:} line shows it. */
+    record Delta(String text, boolean better) {}
+
+    /** M7 part A: whether a row's sale returns its full price: it was bought during this visit and can be sold. */
+    static boolean fullRefund(Offer offer) {
+        return offer.bought() && offer.choice(Hangar.Action.SELL).isPresent();
+    }
+
+    /**
+     * The stats that change against the fitted item (both have the stat, the change is not zero) and the
+     * draw's change; M7 part A: empty when nothing changes, and the {@code VS FITTED:} line is then left
+     * out (a cooldown special against a charge special shares no stat and draws the same).
+     */
+    static List<Delta> deltas(Item item, int level, Item fitted, int fittedLevel) {
+        List<Delta> deltas = new ArrayList<>();
         Map<Stat, Double> mine = item.stats(level);
         Map<Stat, Double> theirs = fitted.stats(fittedLevel);
         for (Stat stat : Stat.values()) {
             if (mine.containsKey(stat) && theirs.containsKey(stat)) {
-                x = delta(batch, label(stat), mine.get(stat) - theirs.get(stat), stat.higherIsBetter(), x, y);
+                delta(deltas, label(stat), mine.get(stat) - theirs.get(stat), stat.higherIsBetter());
             }
         }
-        delta(batch, "DRAW", item.draw(level) - fitted.draw(fittedLevel), false, x, y);
+        delta(deltas, "DRAW", item.draw(level) - fitted.draw(fittedLevel), false);
+        return deltas;
     }
 
-    private float delta(SpriteBatch batch, String label, double change, boolean higherIsBetter, float x, int y) {
-        if (Math.abs(change) < 1e-9) {
-            return x;
+    private static void delta(List<Delta> deltas, String label, double change, boolean higherIsBetter) {
+        if (Math.abs(change) >= 1e-9) {
+            deltas.add(new Delta(
+                    label + " " + (change > 0 ? "+" : "") + Names.number(change), (change > 0) == higherIsBetter));
         }
-        String text = label + " " + (change > 0 ? "+" : "") + Names.number(change);
-        Color colour = (change > 0) == higherIsBetter ? Glass.GREEN : Glass.ALERT;
-        glass.shadowed(batch, glass.fonts.label, text, colour, x, y);
-        return x + Fonts.width(glass.fonts.label, text) + 10;
     }
 
-    private void drawChoices(SpriteBatch batch, HangarState state, Offer offer, int y) {
-        Optional<Choice> selected = state.focus() == HangarState.Focus.SHOP ? state.choice() : Optional.empty();
+    private void drawDeltas(SpriteBatch batch, List<Delta> deltas, int y) {
         float x = INNER;
-        for (Choice choice : offer.choices()) {
-            String text = choiceLabel(choice);
-            float width = Fonts.width(glass.fonts.label, text) + 14;
-            boolean on = selected.filter(c -> c.action() == choice.action()).isPresent();
-            glass.chip(batch, glass.fonts.label, text, x, y, width, 20, on && choice.allowed(), choice.allowed());
-            if (on && !choice.allowed()) {
-                glass.outline(batch, Glass.AMBER, x, y, width, 20);
-            }
-            x += width + 6;
+        glass.shadowed(batch, glass.fonts.label, "VS FITTED:", Glass.LABEL, x, y);
+        x += Fonts.width(glass.fonts.label, "VS FITTED:") + 8;
+        for (Delta delta : deltas) {
+            glass.shadowed(batch, glass.fonts.label, delta.text(), delta.better() ? Glass.GREEN : Glass.ALERT, x, y);
+            x += Fonts.width(glass.fonts.label, delta.text()) + 10;
         }
+    }
+
+    private void drawChoices(SpriteBatch batch, HangarState state, Offer offer) {
+        Optional<Choice> selected = state.focus() == HangarState.Focus.SHOP ? state.choice() : Optional.empty();
+        List<Choice> choices = offer.choices();
+        for (int i = 0; i < choices.size(); i++) {
+            Choice choice = choices.get(i);
+            Box chip = choiceChip(offer, i);
+            boolean on = selected.filter(c -> c.action() == choice.action()).isPresent();
+            glass.chip(
+                    batch,
+                    glass.fonts.label,
+                    choiceLabel(choice),
+                    chip.x(),
+                    chip.y(),
+                    chip.width(),
+                    chip.height(),
+                    on && choice.allowed(),
+                    choice.allowed());
+            if (on && !choice.allowed()) {
+                glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
+            }
+        }
+    }
+
+    /** The selected item's detail starts here, under its header. */
+    static final int DETAIL_Y = ROWS_Y + HangarState.VISIBLE_ROWS * ROW + 32;
+
+    /** The hit region of the list's {@code shown}-th shown row: its selection bar, the rows touching. */
+    static Box row(int shown) {
+        return new Box(X + 2, ROWS_Y - 5 + shown * ROW, WIDTH - 4, ROW);
+    }
+
+    /** The shown rows, where the wheel scrolls the list. */
+    static Box list() {
+        return new Box(X, ROWS_Y - 5, WIDTH, HangarState.VISIBLE_ROWS * ROW);
+    }
+
+    /** The y of the detail's numbers: under the name, and under the traits when it has some. */
+    private static int statsY(Item item) {
+        return DETAIL_Y + (item.traits().isEmpty() ? 24 : 40);
+    }
+
+    /** A choice's chip under the detail of a row that is not locked, as wide as its label. */
+    static Box choiceChip(Offer offer, int index) {
+        float x = INNER;
+        for (int i = 0; i < index; i++) {
+            x += chipWidth(choiceLabel(offer.choices().get(i))) + 6;
+        }
+        return new Box(
+                x,
+                statsY(offer.item()) + 44,
+                chipWidth(choiceLabel(offer.choices().get(index))),
+                20);
+    }
+
+    /** The side row's {@code LEFT} or {@code RIGHT} chip. */
+    static Box sideChip(WingmanSpec.Side side) {
+        float x = INNER;
+        for (WingmanSpec.Side before : WingmanSpec.Side.values()) {
+            if (before == side) {
+                break;
+            }
+            x += chipWidth(before.name()) + 6;
+        }
+        return new Box(x, DETAIL_Y + 64, chipWidth(side.name()), 20);
+    }
+
+    private static int chipWidth(String label) {
+        return label.length() * Fonts.LABEL_CELL + 14;
     }
 
     /** A choice's chip: the action and its credits, without "CR" so three chips fit the drawer. */

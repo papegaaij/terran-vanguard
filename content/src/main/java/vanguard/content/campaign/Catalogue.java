@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 import vanguard.content.Content;
 import vanguard.content.Difficulty;
@@ -52,7 +53,8 @@ public final class Catalogue {
      * A shop item.
      *
      * @param id a weapon's slug, or the part's name in its data file
-     * @param price the purchase price (for a special: one charge); 0 for a starter part
+     * @param price the purchase price (for a charge special: one charge; M7 part A: a cooldown special
+     *     is bought once at its price); 0 for a starter part
      * @param upgrades the cost of each upgrade, to L2 and on
      * @param draws the power draw at each level from L1, MW
      * @param unlock the level from whose hangar visit the item is in the shop
@@ -99,6 +101,15 @@ public final class Catalogue {
             return draws.size();
         }
 
+        /**
+         * M7 part A: whether it is a cooldown special (design/player/specials, Cooldown specials):
+         * bought once and sold back like other gear, no charges, so it has no {@link Stat#CHARGES}
+         * (its cooldown is {@link Catalogue#cooldown}).
+         */
+        public boolean cooldownSpecial() {
+            return kind == ItemKind.SPECIAL && !stats.getFirst().containsKey(Stat.CHARGES);
+        }
+
         public double draw(int level) {
             return draws.get(level - 1);
         }
@@ -122,8 +133,8 @@ public final class Catalogue {
     }
 
     /**
-     * A utility bay bought in the hangar (design/player/systems, Utility bays): the third, from Act 3.
-     * Buying and fitting it comes with Act 3; until then no hangar visit offers it.
+     * A utility bay bought in the hangar (design/player/systems, Utility bays): the third, from Act 3
+     * (M7 part A: bought and sold through {@link Hangar#bay}).
      *
      * @param slot the loadout slot the bay opens
      * @param price its price, credits
@@ -138,6 +149,8 @@ public final class Catalogue {
     private final Map<Difficulty, Integer> sensorBonus;
     /** Rook's guns' base weapons, by gun id. */
     private final Map<String, String> escortBases;
+    /** M7 part A: the cooldown specials' cooldowns, seconds, by name. */
+    private final Map<String, Double> cooldowns;
 
     private Catalogue(
             Map<ItemKind, List<Item>> items,
@@ -145,8 +158,10 @@ public final class Catalogue {
             double sellBack,
             Map<Difficulty, Integer> repairCost,
             Map<Difficulty, Integer> sensorBonus,
-            Map<String, String> escortBases) {
+            Map<String, String> escortBases,
+            Map<String, Double> cooldowns) {
         this.items = items;
+        this.cooldowns = cooldowns;
         this.escortBases = escortBases;
         this.bays = bays;
         this.sellBack = sellBack;
@@ -154,16 +169,41 @@ public final class Catalogue {
         this.sensorBonus = sensorBonus;
     }
 
+    /**
+     * M7 part A: the Act 3 shop items the live catalogue leaves out until their hangar icons are in the
+     * assets (the game's item icons fail on a missing one as the hangar loads, m7a-gaps §2 risk 5):
+     * the four Act 3 weapons by slug and the three Act 3 specials by name. Step A5 (the hangar) empties
+     * it once tools/art/icons.py has drawn them; {@link #complete} has them already. Step A5: empty, every
+     * icon is in the assets.
+     */
+    public static final Set<String> AWAITING_ICONS = Set.of();
+
+    /** The shop the game runs: every item of the design data but those {@link #AWAITING_ICONS}. */
     public static Catalogue of(Content content) {
+        return of(content, AWAITING_ICONS);
+    }
+
+    /**
+     * M7 part A: every item of the design data, the ones {@link #AWAITING_ICONS} included, for the
+     * content tests (the balance plan to Level 21, the Act 3 hangar rules).
+     */
+    public static Catalogue complete(Content content) {
+        return of(content, Set.of());
+    }
+
+    private static Catalogue of(Content content, Set<String> withheld) {
         Map<ItemKind, List<Item>> items = new EnumMap<>(ItemKind.class);
         for (ItemKind kind : ItemKind.values()) {
             items.put(kind, new ArrayList<>());
         }
         WeaponRulesData rules = content.weaponRules();
-        content.weapons().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(weapon -> {
-            Item item = weapon(weapon.getKey(), weapon.getValue(), rules);
-            items.get(item.kind()).add(item);
-        });
+        content.weapons().entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .filter(weapon -> !withheld.contains(weapon.getKey()))
+                .forEach(weapon -> {
+                    Item item = weapon(weapon.getKey(), weapon.getValue(), rules);
+                    items.get(item.kind()).add(item);
+                });
         var player = content.player();
         for (var model : content.generators().models()) {
             items.get(ItemKind.GENERATOR)
@@ -230,15 +270,31 @@ public final class Catalogue {
                                     .toList(),
                             module.sold()));
         }
+        Map<String, Double> cooldowns = new java.util.TreeMap<>();
         for (var special : content.specials().specials()) {
+            if (withheld.contains(special.name())) {
+                continue;
+            }
+            special.cooldown().ifPresent(seconds -> cooldowns.put(special.name(), seconds));
             items.get(ItemKind.SPECIAL)
-                    .add(part(
-                            ItemKind.SPECIAL,
-                            special.name(),
-                            special.chargePrice(),
-                            0,
-                            special.unlock(),
-                            Map.of(Stat.CHARGES, (double) special.maxCharges())));
+                    .add(
+                            special.cooldownSpecial()
+                                    // M7 part A: a cooldown special is bought once at its price.
+                                    ? part(
+                                            ItemKind.SPECIAL,
+                                            special.name(),
+                                            special.price().orElseThrow(),
+                                            0,
+                                            special.unlock(),
+                                            Map.of())
+                                    : part(
+                                            ItemKind.SPECIAL,
+                                            special.name(),
+                                            special.chargePrice().orElseThrow(),
+                                            0,
+                                            special.unlock(),
+                                            Map.of(Stat.CHARGES, (double)
+                                                    special.maxCharges().orElseThrow())));
         }
         Map<String, String> escortBases = new java.util.TreeMap<>();
         var guns = content.wingmen().guns();
@@ -257,7 +313,13 @@ public final class Catalogue {
             sensors.put(level, difficulty.sensorBonus().of(level));
         }
         return new Catalogue(
-                items, bays(content), content.economy().sellBack(), repair, sensors, Map.copyOf(escortBases));
+                items,
+                bays(content),
+                content.economy().sellBack(),
+                repair,
+                sensors,
+                Map.copyOf(escortBases),
+                Map.copyOf(cooldowns));
     }
 
     /**
@@ -278,8 +340,7 @@ public final class Catalogue {
                 .toList();
         int sides = base.mirrored().orElse(false) ? 2 : 1;
         List<Map<Stat, Double>> stats = base.levels().stream()
-                .map(level ->
-                        Map.of(Stat.DPS, sides * level.pattern().size() * level.damage() * gun.scale() * level.rate()))
+                .map(level -> Map.of(Stat.DPS, sides * base.volleyDps(level) * gun.scale()))
                 .toList();
         return new Item(
                 ItemKind.ESCORT,
@@ -291,6 +352,13 @@ public final class Catalogue {
                 player.firstLevel(gun.available()),
                 base.traits(),
                 stats);
+    }
+
+    /** M7 part A: a cooldown special's cooldown in seconds; empty for every other item. */
+    public java.util.Optional<Double> cooldown(Item item) {
+        return item.kind() == ItemKind.SPECIAL
+                ? java.util.Optional.ofNullable(cooldowns.get(item.id()))
+                : java.util.Optional.empty();
     }
 
     /** The slug of the player weapon Rook's gun {@code id} is derived from (its icon is that weapon's). */
@@ -333,7 +401,7 @@ public final class Catalogue {
                 .toList();
         int sides = weapon.mirrored().orElse(false) ? 2 : 1;
         List<Map<Stat, Double>> stats = weapon.levels().stream()
-                .map(level -> Map.of(Stat.DPS, sides * level.pattern().size() * level.damage() * level.rate()))
+                .map(level -> Map.of(Stat.DPS, sides * weapon.volleyDps(level)))
                 .toList();
         List<Double> draws = IntStream.rangeClosed(1, weapon.levels().size())
                 .mapToObj(level -> draw(weapon, level, rules.drawRound()))
@@ -375,6 +443,11 @@ public final class Catalogue {
     /** What selling an item at {@code level} returns: the sell-back share of all spent on it, rounded half to even. */
     public int sellPrice(Item item, int level) {
         return (int) Math.rint(item.spent(level) * sellBack);
+    }
+
+    /** M7 part A: what selling a bought utility bay returns: the sell-back share of its price, rounded half to even. */
+    public int sellPrice(Bay bay) {
+        return (int) Math.rint(bay.price() * sellBack);
     }
 
     /** Credits per armour point repaired in the hangar. */

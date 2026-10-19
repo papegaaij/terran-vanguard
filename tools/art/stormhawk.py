@@ -153,6 +153,11 @@ def build():
     artkit.write_frames("engine-flame", flame_frames(), SOURCE)
     frames = ["hard left", "left", "level", "right", "hard right"]
     artkit.write_pivots("ship", SOURCE, {"frames": frames, "points": mount_points()})
+    # pod types other generators add (the Act 3 deflector pod and drone bay: act3kit.write_pods) stay
+    old = artkit.PIVOTS / "pods.json"
+    if old.exists():
+        for name, value in json.loads(old.read_text(encoding="utf-8"))["offsets"].items():
+            offsets.setdefault(name, value)
     artkit.write_pivots("pods", SOURCE, {
         "frames": frames, "offsets": offsets,
         "engine-flame": {"attach": list(FLAME_ATTACH),

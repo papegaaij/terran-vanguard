@@ -20,8 +20,10 @@ briefing pages) are spoken sentence by sentence (chunks of up to CHUNK_WORDS wor
 with PAUSE s of silence. Each chunk is spoken with a fixed seed (from the key, or the speaker
 table's pin); the generation is capped at MAX_FACTOR x the expected length from the word count
 (WORDS_PER_SECOND), and a take that hits the cap, runs on past it or is shorter than MIN_FACTOR x
-the expected length is retried with the next seed, up to TAKES seeds; every retry is logged
-(~/.cache/tv-tts/raw/voice/render-log.json and stdout).
+the expected length is retried with the next seed, up to TAKES seeds, and so is a take holding a
+silence longer than MAX_PAUSE s inside it (M7 part B: Ares Control's audition held 2 s pauses inside
+two lines; `longest_pause`, 20 ms frames more than PAUSE_DB under the take's loudest); every retry is
+logged (~/.cache/tv-tts/raw/voice/render-log.json and stdout).
 
 Post: the Choir's layering (choir() of tools/concept/audio/tts_r18.py) for a voice with
 `layering: choir`; then radio filter b (radio() there) for a radio line, the same plus dropouts
@@ -68,6 +70,8 @@ TOKENS_PER_SECOND = 25   # Chatterbox's speech tokens
 SENTENCE_PAUSE = 0.4     # s expected per sentence end
 WHISPER_PY = BASE / "venv-dia" / "bin" / "python"   # faster-whisper, for a cut-off line's word timing
 TIMINGS = RAW / "timings.json"
+MAX_PAUSE = 0.8          # s: a take with a longer silence inside it is retried with the next seed
+PAUSE_DB = 40.0          # dB under the take's loudest 20 ms frame that count as silence
 
 
 def cut_word(line):
@@ -121,6 +125,24 @@ def trim(wav, sr):
     return wav[max(0, loud[0] * frame - keep): min(len(wav), (loud[-1] + 1) * frame + keep)]
 
 
+def longest_pause(wav, sr):
+    """The longest run of silent 20 ms frames (PAUSE_DB under the loudest) between the take's first and
+    last sounding frame, in seconds."""
+    import numpy as np
+    frame = int(0.02 * sr)
+    n = len(wav) // frame
+    if n == 0:
+        return 0.0
+    rms = np.sqrt(np.mean(wav[: n * frame].reshape(n, frame) ** 2, axis=1) + 1e-12)
+    loud = rms > rms.max() * 10 ** (-PAUSE_DB / 20)
+    sounding = np.nonzero(loud)[0]
+    longest = run = 0
+    for v in loud[sounding[0]:sounding[-1] + 1]:
+        run = 0 if v else run + 1
+        longest = max(longest, run)
+    return longest * frame / sr
+
+
 def worker(jobs_path):
     import random
 
@@ -158,8 +180,10 @@ def worker(jobs_path):
                 wav = trim(wav, model.sr)
                 dur = len(wav) / model.sr
                 hit_cap = raw_s >= 0.97 * cap_s
+                pause = longest_pause(wav, model.sr)
                 why = ("hit the cap" if hit_cap else "ran on" if dur > cap_s
-                       else "too short" if dur < MIN_FACTOR * expected else "")
+                       else "too short" if dur < MIN_FACTOR * expected
+                       else f"a {pause:.1f} s pause" if pause > MAX_PAUSE else "")
                 tries.append({"seed": seed, "seconds": round(dur, 2), "rejected": why})
                 if not why:
                     best = (wav, seed)

@@ -236,20 +236,22 @@ public enum Sfx {
     /** M5 part E: a Driftjelly's proximity ring firing (round 33 a): a soft underwater bloop. */
     DRIFTJELLY_PULSE("sfx/driftjelly-pulse-r33-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M5 part F, Level 12's thunder (round 34 a, provisional until the round closes: the storm bed's
-     * own source low-passed with a sub rumble): three variants, one 0.3 to 1.5 s after each lightning
-     * flash ({@link FlightSounds}); one of each at a time.
+     * M5 part F, Level 12's thunder (round 34 b, the user's pick: a close strike, a crack then the roll,
+     * at three speeds from near to far; 7.1, 6.1 and 5.6 s): three variants, one 0.3 to 1.5 s after
+     * each lightning flash ({@link FlightSounds}); one of each at a time (a variant comes back after
+     * three flashes, 10.5 s at the closest).
      */
-    THUNDER_1("sfx/thunder-1-r34-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    THUNDER_1("sfx/thunder-1-r34-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
 
-    THUNDER_2("sfx/thunder-2-r34-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
-    THUNDER_3("sfx/thunder-3-r34-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    THUNDER_2("sfx/thunder-2-r34-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    THUNDER_3("sfx/thunder-3-r34-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M5 part F: a gust's wind, started with its telegraph and panned from the upwind side (round 34 a,
-     * synthesized: it rises over the 1.0 s telegraph, holds through the gust and falls; 3.6 s).
+     * M5 part F: a gust's wind, started with its telegraph and panned from the upwind side (round 34 b,
+     * the user's pick: a recorded gust that rises over the 1.0 s telegraph, holds through the gust and
+     * falls; 3.6 s).
      */
-    GUST("sfx/gust-r34-a.ogg", 2, Bus.EFFECTS, WARNING),
-    /** M5 part F: a Lamprey latching onto the hull (round 34 a, suck and bite). */
+    GUST("sfx/gust-r34-b.ogg", 2, Bus.EFFECTS, WARNING),
+    /** M5 part F: a Lamprey latching onto the hull (round 34 a, the user's pick: suck and bite). */
     LAMPREY_LATCH("sfx/lamprey-latch-r34-a.ogg", 2, Bus.EFFECTS, WARNING),
     /** M5 part F: the drain's loop while a Lamprey drains the shield (round 34 a, a 2.4 s hum in 0.4 s gulps). */
     LAMPREY_DRAIN("sfx/lamprey-drain-r34-a.ogg", 1, Bus.EFFECTS, WARNING),
@@ -258,7 +260,7 @@ public enum Sfx {
     /** M5 part F: a weather sonde collected (round 34 a, a telemetry chirp into two bell tones). */
     SONDE_CHIME("sfx/sonde-chime-r34-a.ogg", 1, Bus.EFFECTS, PICKUP),
     /**
-     * M5 part G, Level 13's Nansen Relay (round 35 a, provisional until the round closes): a relay-aimed
+     * M5 part G, Level 13's Nansen Relay (round 35 a, the user's pick in round 34's review): a relay-aimed
      * hit on it, struck plating with a spark (0.55 s; every hit, so short).
      */
     RELAY_HIT("sfx/relay-hit-r35-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
@@ -272,28 +274,105 @@ public enum Sfx {
     /** M5 part G: a supply drone lifting off the relay's helipad, rotors spinning up and receding (round 35 a, 2.2 s). */
     DRONE_LAUNCH("sfx/drone-launch-r35-a.ogg", 1, Bus.EFFECTS, PICKUP),
     /**
-     * M5 part G: grid online, a chain of breakers closing into a bright chord (round 35 a, 2.6 s), as the
-     * relay's lights come on in sequence when the synchronisation completes.
+     * M5 part G: grid online, a power charge spinning up into a breaker's contact clunk and a chord
+     * (round 35 b, the user's pick; 2.6 s), as the relay's lights come on in sequence when the
+     * synchronisation completes.
      */
-    GRID_ONLINE("sfx/grid-online-r35-a.ogg", 1, Bus.EFFECTS, WARNING),
+    GRID_ONLINE("sfx/grid-online-r35-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
-     * M5 part H, Level 14's root burst (round 36 a, provisional until the round closes): the paving
+     * M5 part H, Level 14's root burst (round 36 a, the user's pick in round 34's review): the paving
      * under stress through the 1 s telegraph, then the root breaking out at 1.0 s (2.1 s), from the
      * burst's telegraph event.
      */
     ROOT_BURST("sfx/root-burst-r36-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /**
+     * M7 part B, the Burrower's surfacing (round 36 a, chosen; design/audio/sfx, Act 3 sounds): the tell's
+     * rumble swelling over its first 1.0 s, then the break-out and the sand raining down (2.1 s). Played
+     * at the bulge's start, so the impact lands as it surfaces, with {@link #BURROW_BULGE} over it.
+     */
+    BURROW_ERUPTION("sfx/burrow-eruption-r36-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /**
+     * M7 part B: the Burrower's bulge crack layer (round 38 b, the user's pick of 2026-10-14): sand and crust
+     * cracking faster towards the break (1.27 s), started with {@link #BURROW_ERUPTION} at the bulge's start.
+     */
+    BURROW_BULGE("sfx/burrow-bulge-r38-b.ogg", 2, Bus.EFFECTS, WARNING),
+    /**
+     * M7 part C: a hull touching a canyon wall or rock island (round 36 b, S.3, the metal screech with a
+     * spark hiss, 0.6 s): once per touch, panned to the touching side, a little under the damage sound.
+     */
+    CANYON_SCRAPE("sfx/canyon-scrape-r36-b.ogg", 2, Bus.EFFECTS, WARNING),
+    /**
+     * M7 part C: a standing tendril barrier's hum (round 39 a, proposed: a steady 120 Hz harmonic drone, a seamless
+     * 6 s loop, levelled in its file): one loop for the nearest standing tendril, panned to it, rising from the
+     * dormant tell into the flare.
+     */
+    TENDRIL_HUM("sfx/tendril-hum-r39-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part C: a beam burning a tendril (round 39 a, proposed: a crackle over a sizzle, a seamless 2 s loop). */
+    TENDRIL_BURN("sfx/tendril-burn-r39-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part C: a tendril breaking (round 39 a, proposed: a whip-crack snap and a falling whine, 0.9 s). */
+    TENDRIL_BREAK("sfx/tendril-break-r39-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part C: the Threadcrawler's walk (round 39 a, proposed: a many-legged skitter on rock, a seamless 3 s
+     * loop): one loop for the nearest crawler on screen, panned to its head.
+     */
+    CRAWLER_WALK("sfx/crawler-walk-r39-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part D: a dome of Level 17 taking a hit ({@code ALLY_HIT} on a ground ally; round 40 a, proposed: a glass
+     * knock, a creak round the dome and a fine stress-line crackle, no shatter, 1.2 s), panned to the dome.
+     */
+    DOME_HIT("sfx/dome-hit-r40-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part D: a dome breaking ({@code ALLY_LOST} on a ground ally; round 40 a, proposed: a crack, a cascade of
+     * panes, air rushing out and a steel-frame groan, 3.6 s), under the radio's ally-loss line.
+     */
+    DOME_BREAK("sfx/dome-break-r40-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part D: the Choir Herald's song with its ring of bullets (round 40 a, proposed: three voices a fifth apart
+     * singing an "ah", F3 A3 E3, 1.9 s), instead of a gun's report.
+     */
+    HERALD_SONG("sfx/herald-song-r40-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part D: the Herald's aura (round 40 a, proposed: steady high partials with slow swells, a seamless 4 s loop,
+     * levelled in its file): one loop while any unit carries a ring, panned to the nearest ringed unit.
+     */
+    HERALD_AURA("sfx/herald-aura-r40-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part D: a ring absorbing a hit (round 40 a, proposed: a glassy ping, 0.4 s), spaced out. */
+    AURA_ABSORB("sfx/aura-absorb-r40-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    /**
+     * M7 part D: the rings collapsing at their Herald's death, or stripped by the EMP Burst (round 40 a, proposed: a
+     * falling chord of five voices with a sheet of ring-glass shimmer, 2.0 s).
+     */
+    AURA_COLLAPSE("sfx/aura-collapse-r40-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part D: the Shellback's walk (round 40 a, proposed: padded footfalls and clacking plates, a seamless 3.2 s
+     * loop): one loop for the nearest walking Shellback on screen, panned to it.
+     */
+    SHELLBACK_WALK("sfx/shellback-walk-r40-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part D: a Shellback's mortar lob (round 40 a, proposed: a dull cough and a pressure hiss, 0.6 s). */
+    SHELLBACK_LOB("sfx/shellback-lob-r40-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part D: a Shellback curling up (round 40 a, proposed: plates grinding shut, 0.8 s). */
+    SHELLBACK_CURL("sfx/shellback-curl-r40-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part D: a Shellback's roll (round 40 a, proposed: a rumbling rock-crushing grind, a seamless 2.5 s loop):
+     * one loop for the nearest rolling Shellback, panned to it.
+     */
+    SHELLBACK_ROLL("sfx/shellback-roll-r40-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part D: a Shellback uncurling (round 40 a, proposed: the plates opening, 0.7 s). */
+    SHELLBACK_UNCURL("sfx/shellback-uncurl-r40-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part B: a Burrower's 0.4 s dive, the grain slide (round 38 b, the user's pick of 2026-10-14). */
+    BURROW_DIVE("sfx/burrow-dive-r38-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M5 part H: a burst's growths growing in, a stretching creak set with a dull knock at 1.45 s (round 36 a, one proposal). */
     ROOT_GROWTH("sfx/root-growth-r36-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M5 part H: the Siege Spire tearing free at phase 3's lift, the ground ripping, roots snapping and
-     * the shockwave at 0.35 s under a deep roar (round 36 a, 3.4 s).
+     * M5 part H: the Siege Spire tearing free at phase 3's lift, a creature's bellow rising with the
+     * lift over wet tearing and an air shockwave (round 36 b, the user's pick; 3.4 s).
      */
-    TEAR_FREE_ROAR("sfx/tear-free-roar-r36-a.ogg", 1, Bus.EFFECTS, BOSS),
+    TEAR_FREE_ROAR("sfx/tear-free-roar-r36-b.ogg", 1, Bus.EFFECTS, BOSS),
     /**
-     * M5 part H: the canopy withering after the Spire's death, a dry crackle spreading over the city and
-     * the membrane tearing far above, settling into a soft wind (round 36 a, 7.0 s).
+     * M5 part H: the canopy withering after the Spire's death, a dying exhale, a groan and a sigh
+     * settling into a soft wind (round 36 b, the user's pick; 7.5 s).
      */
-    CANOPY_WITHERING("sfx/canopy-withering-r36-a.ogg", 1, Bus.EFFECTS, BOSS),
+    CANOPY_WITHERING("sfx/canopy-withering-r36-b.ogg", 1, Bus.EFFECTS, BOSS),
     /** A tow's cable snapping as its pod falls free: Level 07's lifeboat (round 25 a, a chain snap). */
     CABLE_SNAP("sfx/secret-cable-snap-r25-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /** The Airstrike's jets flyby (round 08 a), as the bombers enter. */
@@ -304,6 +383,48 @@ public enum Sfx {
     SMART_BOMB("sfx/special-smartbomb-r08-a.ogg", 1, Bus.EFFECTS, BOSS),
     /** The special button with no charge, no special or a strike still flying (round 08 a). */
     SPECIAL_DENIED("sfx/special-denied-r08-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M7 part A, the Act 3 arsenal (design/audio/sfx, round 37's picks of 2026-10-13: b for the beam's
+     * stop and rock impact, the deflector's return, the EMP ring and power-down, the lance's rumble and
+     * the overcharge's whoosh, a for the rest; the beam's loop round 36's chosen a): the Ion Beam's start,
+     * played with its loop, and its stop.
+     */
+    ION_BEAM_START("sfx/ion-beam-start-r37-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+
+    ION_BEAM_LOOP("sfx/ion-beam-loop-r36-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    ION_BEAM_STOP("sfx/ion-beam-stop-r37-b.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    /** M7 part A: the beam's sizzle loop on a target it burns, and on rock (a ground object). */
+    BEAM_IMPACT("sfx/beam-impact-r37-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+
+    BEAM_IMPACT_ROCK("sfx/beam-impact-rock-r37-b.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    /** M7 part A: a Deflector Pod's catch tick and its charge's return. */
+    DEFLECTOR_TICK("sfx/deflector-tick-r37-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+
+    DEFLECTOR_RETURN("sfx/deflector-return-r37-b.ogg", 1, Bus.EFFECTS, PICKUP),
+    /** M7 part A: a light drone breaking, and its bay's rebuilt drone fading in. */
+    DRONE_BREAK("sfx/drone-break-r37-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+
+    DRONE_REBUILD("sfx/drone-rebuild-r37-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    /** M7 part A: the EMP Burst's ring, and a stunned unit's power-down whine. */
+    EMP_RING("sfx/emp-ring-r37-b.ogg", 1, Bus.EFFECTS, BOSS),
+
+    EMP_POWERDOWN("sfx/emp-powerdown-r37-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part A: the Orbital Lance's targeting line (the chosen lock beep, round 08 a), its column's loop
+     * (the `beam` family's loop c, round 04) and the rumble under it.
+     */
+    LANCE_LOCK("sfx/enemy-lock-r08-a.ogg", 1, Bus.EFFECTS, BOSS),
+
+    LANCE_LOOP("sfx/shot-beam-r04-c.ogg", 1, Bus.EFFECTS, BOSS),
+    LANCE_RUMBLE("sfx/lance-rumble-r37-b.ogg", 1, Bus.EFFECTS, BOSS),
+    /** M7 part A: the Shield Overcharge's activation whoosh and its end shimmer. */
+    OVERCHARGE_WHOOSH("sfx/overcharge-whoosh-r37-b.ogg", 1, Bus.EFFECTS, BOSS),
+
+    OVERCHARGE_END("sfx/overcharge-end-r37-a.ogg", 1, Bus.EFFECTS, PICKUP),
+    /** M7 part A: a cooldown special ready again (the HUD ring's chime). */
+    COOLDOWN_READY("sfx/cooldown-ready-r37-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M7 part A: the Evasive thrusters' burst as a dash starts. */
+    DASH("sfx/dash-r37-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
     /** The Earth-orbit ambience, looped (design/audio/sfx, Ambience per setting). */
     AMBIENCE_ORBIT("sfx/ambience-orbit-r08-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The Luna ambience, looped (design/audio/sfx, Ambience per setting): Level 04. */
@@ -316,7 +437,7 @@ public enum Sfx {
      */
     AMBIENCE_OCEAN("sfx/ambience-ocean-r08-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M5 part F: the Earth ocean storm's rain-only bed (user decision F6 = a; round 34 a, provisional:
+     * M5 part F: the Earth ocean storm's rain-only bed (user decision F6 = a; round 34 a, accepted:
      * the CC0 source of round 08's chosen storm ambience after its thunder, a seamless 10 s loop), so
      * the thunder can follow the lightning: Level 12 but in the eye.
      */
@@ -332,6 +453,23 @@ public enum Sfx {
      * Spire dies; then the megacity's own ambience comes back ({@link #afterBoss}).
      */
     AMBIENCE_CANOPY("sfx/canopy-hum-r36-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M7 part B: Level 15's descent through the thin air (round 38's entry roar a, the user's pick, a
+     * seamless 12 s loop), sections 1-2, crossfading to {@link #AMBIENCE_MARS_DUST} at section 3.
+     */
+    AMBIENCE_MARS_ENTRY("sfx/entry-roar-r38-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /** M7 part B: the Martian dust wind (round 38 a, the user's pick, a seamless 16 s loop): Level 15 from section 3. */
+    AMBIENCE_MARS_DUST("sfx/mars-dust-r38-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M7 part C: the Martian dust wind with a canyon howl (round 39 a, proposed, a seamless 16 s loop): Level 16
+     * from its start.
+     */
+    AMBIENCE_MARS_CANYON("sfx/mars-canyon-r39-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M7 part D: Ares Landing's colony ambience (round 40 a, proposed: a thin plains wind, the domes' air-plant hum
+     * and a distant rail clank, a seamless 16 s loop): Level 17 from its start.
+     */
+    AMBIENCE_MARS_COLONY("sfx/mars-colony-r40-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -418,6 +556,10 @@ public enum Sfx {
             case "earth-storm" -> AMBIENCE_STORM;
             case "earth-arctic" -> AMBIENCE_ARCTIC;
             case "earth-canopy" -> AMBIENCE_CANOPY;
+            case "mars-entry" -> AMBIENCE_MARS_ENTRY;
+            case "mars-dust" -> AMBIENCE_MARS_DUST;
+            case "mars-canyon" -> AMBIENCE_MARS_CANYON;
+            case "mars-colony" -> AMBIENCE_MARS_COLONY;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

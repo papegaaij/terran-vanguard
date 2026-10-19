@@ -16,7 +16,11 @@ public enum Action {
     SPECIAL,
     /** Held: slower, finer movement. */
     PRECISION,
-    /** Evasive thrusters; only with the module fitted (not in M1). */
+    /**
+     * Evasive thrusters; only with the module fitted. Its primary input is the double-tap of a direction
+     * (detected in the simulation, M7 part A), so its primary key slot is fixed; V and the left bumper
+     * are its bindable button.
+     */
     DASH,
     PAUSE,
     MENU_UP,
@@ -44,11 +48,12 @@ public enum Action {
 
     /**
      * Whether a slot of this remappable action can be changed: Pause keeps Esc, a fixed system key
-     * (design/ui/controls), as its primary key; every action keeps a remappable alternative key.
+     * (design/ui/controls), as its primary key, and Dash its double-tap (M7 part A); every action keeps
+     * a remappable alternative key.
      */
     public boolean remappable(BindingSlot slot) {
         return switch (slot) {
-            case PRIMARY -> this != PAUSE;
+            case PRIMARY -> this != PAUSE && this != DASH;
             case ALTERNATIVE -> true;
             case GAMEPAD -> gamepadRemappable();
         };

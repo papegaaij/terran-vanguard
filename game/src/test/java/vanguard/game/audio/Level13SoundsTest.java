@@ -30,8 +30,8 @@ import vanguard.sim.Sortie;
  * M5 part G's sounds (design/audio/sfx and music, Level 13): the arctic ambience under the whole level
  * (the key {@code earth-arctic}, the blocking bug of step G4), 3 dB louder through the whiteout when the
  * peak says so; "Homefront" from section 2, the full mix from section 4, the mission-complete jingle at
- * t=220.6 after the theme's 2.6 s fade from t=218 (grid online's chord before it) and none at the debrief; round 35's sounds (variant a until the round
- * closes): the relay's hit, its integrity alarm at 50 % and 25 %, its destruction, grid online at the
+ * t=220.6 after the theme's 2.6 s fade from t=218 (grid online's chord before it) and none at the debrief; round 35's sounds (the user's picks of
+ * 2026-10-12: grid online b, the rest a): the relay's hit, its integrity alarm at 50 % and 25 %, its destruction, grid online at the
  * synchronisation's end and the supply drone's launch as its arc starts.
  */
 class Level13SoundsTest {
@@ -42,12 +42,14 @@ class Level13SoundsTest {
     private static final long NANOS_PER_STEP = 1_000_000_000L / SimStep.PER_SECOND;
 
     @Test
-    void everySoundHasItsFileAndRoundThirtyFivesVariantA() {
+    void everySoundHasItsFileAndTheUsersPick() {
         for (Sfx sfx :
                 List.of(Sfx.RELAY_HIT, Sfx.INTEGRITY_ALARM, Sfx.RELAY_DESTROYED, Sfx.DRONE_LAUNCH, Sfx.GRID_ONLINE)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r35-a.ogg"), sfx + ": round 35's a, pending the user's pick");
+            String pick = sfx == Sfx.GRID_ONLINE ? "-r35-b.ogg" : "-r35-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), sfx + ": the user's round 34 pick");
         }
+        assertFalse(Files.exists(ASSETS.resolve("sfx/grid-online-r35-a.ogg")), "grid online's a left");
         assertTrue(Files.isRegularFile(ASSETS.resolve(Sfx.AMBIENCE_ARCTIC.path())));
         assertEquals("sfx/ambience-arctic-r08-a.ogg", Sfx.AMBIENCE_ARCTIC.path(), "round 08's chosen a");
     }

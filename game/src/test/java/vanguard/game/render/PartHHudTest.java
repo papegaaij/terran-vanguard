@@ -77,11 +77,14 @@ class PartHHudTest {
     }
 
     @Test
-    void theIntelStripMarksTheRootField() {
+    void theIntelStripMarksTheRootFieldAndTheBoss() {
         List<Intel.Mark> marks = Intel.of(CONTENT, KEY, 3).marks();
         assertTrue(
                 marks.stream().anyMatch(mark -> mark.from() <= 63 && mark.to() >= 92),
                 "the root field's bursts (t=63-92) are marked: " + marks);
+        assertTrue(
+                marks.contains(new Intel.Mark(108, 108, Intel.Mark.Kind.BOSS)),
+                "the Siege Spire's arrival (t=108) is marked (step K10): " + marks);
     }
 
     private static BitmapFont.BitmapFontData font(String file) {

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player, ../difficulty]
-updated: 2026-10-12
+updated: 2026-10-14
 ---
 
 # Economy
@@ -140,12 +140,46 @@ A typical player can afford about 60–65 % of it, so choices matter.
 - Special charges (consumed)
 - Armour repair (medium 5 cr/point, hard 10 cr/point, easy free)
 
-**Hard is tighter on purpose.** The shop plan in [balance-plan.yaml](../../player/balance-plan.yaml)
-is a medium player's; on hard (income ×0.9 of the hard levels' larger hauls, repairs 10 cr/point)
-the static estimate cannot always pay both the plan and the repairs of its 15 armour points per
-level: today the L13 visit falls 425 credits short of the Composite II plating. A typical hard
-player is expected to take less damage or skip some repairs (user decision 2026-10-05); the content
-test `BalanceTest` prints the hard sheet with such shortfalls as accepted notes.
+**The static sheet** (`tools/balance.py`, `BalanceTest`) follows the typical player through the shop
+plan in [balance-plan.yaml](../../player/balance-plan.yaml): each level earns its typical haul plus
+the typical player's grade bonus (a **B, +10 %**, `typical_grade_bonus`; round 34 P3 = A), and each
+visit pays the repairs of an estimated 15 armour points of the ship and, after a level flown with
+Rook (from Level 08), 10 of his (`escort_repair_points_per_level`) at the difficulty's cost. On
+medium it leaves 724 credits at the L09 visit and 1 088 at L13, and ends Act 2 at about 4 000.
+
+**Act 3 before its level data** (user decision 2026-10-14; round 37 R.1 reverted). budget(n) is the
+**absolute typical haul**, the act factor included: a level's typical haul (its credit-budget table,
+every payout × the act factor and its `bounty_scale`) lands on budget(n), as Act 2's do. A level
+without a `data.yaml` yet (Levels 16–21 until M7 part C on writes them) therefore earns **budget(n)**
+in the sheet, about 1 930 → 2 710 a level (2 120 → 2 980 with the B bonus); Level 15 earns its own
+typical haul (1 800). `tools/balance.py` (`income`) and `BalanceTest` agree. The plan's Act 3 visits
+([balance-plan.yaml](../../player/balance-plan.yaml)) keep the Ion Beam's hand order with each item as
+soon as it is affordable: an EMP charge (L15), the Mk III generator (L16), saving (L17), the beam at L2
+with the Pulse Cannon sold (L18), the beam at L3 (L19), the Tail Gun L3 (L20), Composite III (L21);
+forward DPS 77 · 77 · 77 · 80 · 100 · 100 · 100 against the reference 76 → 100, at most 14 of 14 MW. The
+medium sheet's tightest visit is L19 (387 left); it leaves about 1 900 after the L21 visit. On hard the
+beam is refused at L18 (short by about 330 after the repairs), so hard keeps the Pulse Cannon L4 (77
+forward, 0.77× the reference at L21) and banks about 7 100 by the L21 visit (pending the user's review;
+hard is tighter on purpose, below). Each Act 3 level's own data replaces the fallback as it is written.
+
+**Hard is tighter on purpose.** The plan is a medium player's; on hard (income ×0.9 of the hard
+levels' larger hauls, repairs 10 cr/point) the static sheet may not pay both the plan and the repairs;
+a typical hard player is then expected to take less damage or skip some repairs (user decision
+2026-10-05), and `BalanceTest` prints such a shortfall as an accepted note. Without the grade bonus
+the hard sheet was short at the L09 visit (Rook's Mortar, 900, with 735 left: 165 short, so the
+L11 re-fit was refused too); with the B bonus it pays every purchase and repair in Acts 1–2 (the
+tightest visit L09, 324 left) and ends Act 2 at about 3 600.
+
+**The expert's bound.** The test autopilot (`ActPlaythroughTest`) plays like an expert: it
+collects about 0.9 of a perfect run and earns A / A+ grades (+25 %), so it ends Act 2 far richer than
+the typical player (18 131 / 14 669 / 10 857 credits on easy / medium / hard). That surplus is the
+designed reward for near-perfect play, about half from collection and half from grades, not a fault
+of the economy. The test checks it against the **expert's bound**: the starting credits plus each
+level's perfect run × the difficulty's income × 0.9, with a +25 % grade bonus, less the purchases and
+repairs it paid (`expert` in balance-plan.yaml); every act's end must lie within ±15 % of it (today
++1.6 % / +3.3 % on medium after Acts 1 / 2, easy +5.7 % / +6.0 %, hard −5.6 % / −10.6 %). An expert
+earns ≈ 1.77 × the typical income and could max out everything around Acts 6–7, a typical B player
+about 70 % of it; to watch at Act 3.
 - Rook's guns, their upgrades (60 % of the player's prices, see
   [wingmen](../../player/wingmen/README.md#rooks-ai-first-draft-parameters)) and his repairs (a
   hangar line at the difficulty's repair cost per point, like the player's armour)
@@ -192,7 +226,7 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   haul and `BalanceTest` leave it out; test `UtilityEffectsTest`)
 - [x] Balancing sheet that simulates per-level budgets vs prices: `tools/balance.py` prints the
   balance plan's purchases per hangar visit against each level's typical haul (budget(n) for a level
-  without data yet), with the power load, the DPS against the reference and the enemies' time to
+  without data yet, the user's decision of 2026-10-14), with the power load, the DPS against the reference and the enemies' time to
   kill and bounty; the checks are the content tests `BalanceTest` (the plan affordable and in the
   shop at every visit, levels 01–14; the accepted exceptions to the
   [balancing basis](../../enemies/README.md#balancing-basis), Levels 01–03's DPS gap and the
@@ -200,6 +234,9 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   accepted) and `ActPlaythroughTest` (Acts 1–2 flown as one campaign by the test autopilot on every
   difficulty with the plan's purchases, credits carried from level to level, Rook from Level 08 with
   his repairs after the ship's; Act 2 added in M5 part I)
+- [x] Round 34 P3 = A: the static sheet with the typical player's B grade bonus and Rook's repair
+  estimate (`tools/balance.py` and `BalanceTest` agree), `ActPlaythroughTest`'s act ends within ±15 %
+  of the expert's bound
 
 ## Open questions
 
@@ -329,3 +366,35 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   attempt, and the autopilot ends Act 2 with about 18 300 (easy), 14 700 (medium) and 10 900 (hard)
   credits after the plan's purchases, well above the static sheet's estimate (it earns A and A+
   grades). `BalanceTest` and `tools/balance.py` print Rook's DPS.
+- 2026-10-12 user, round 34 P3 = A (review the economy; the analysis in step K4's economy review):
+  no player's credits change. Act 2 ends far richer for the test autopilot (14 669 on medium) than
+  the static sheet's 2 717 because the autopilot is an expert (≈ 0.9 of a perfect run, A / A+
+  grades), while the sheet counted no grade bonus at all and no repairs for Rook. The model is fixed
+  instead: the static sheet (`tools/balance.py` and `BalanceTest`, which agree) adds the typical
+  player's B grade bonus (+10 %) and Rook's repair estimate (10 points per level flown with him), so
+  medium ends Act 2 at ≈ 4 000 and hard pays every purchase and repair; `ActPlaythroughTest` checks the
+  act ends against the expert's bound (±15 %) instead of leaving them unchecked. The stale *Sinks*
+  sentence (hard's L13 visit 425 short) is replaced: before this change hard was short at L09 by 165
+  (Rook's Mortar). Rejected: B (a smaller grade-bonus premium) and C (a narrower perfect-to-typical
+  spread) for now; to revisit once Act 3's data shows how early an expert maxes out.
+- 2026-10-13 (round 37 R.1, user decision): the balance sheet's income for a level without data is
+  budget(n) × act_factor^(act − 1) (Act 3: ×2.56), not budget(n) as step A2 of M7 part A had read it;
+  `tools/balance.py` and `BalanceTest` apply it, and the plan's Act 3 visits are re-planned for it (the
+  Ion Beam at L3 at the L17 visit, Composite III at L18, the rest saved once the Mk III's 14 MW is
+  full). The Act 3 levels' own data (M7 part B on) replaces the fallback.
+- 2026-10-13 (user, round 37): round 37 closed: R.1 = apply the act factor (built in step Q1, above),
+  against step A2's reading; R.2 accepted (hard tighter by design), and moot since the re-plan lets hard
+  buy the Ion Beam at L17 too; B.3 (a), the plan as A2 built it, superseded by Q1's re-plan; B.3 (b)–(d)
+  yes. The medium sheet banking about 24 000 by the L21 visit (the Mk III's 14 MW caps the loadout from
+  L18) stays pending the user's review until the Act 3 levels' own data replaces the fallback.
+- 2026-10-14 (user): budget(n) is the absolute typical haul; round 37 R.1 reverted. A level's typical haul
+  (act factor and `bounty_scale` included) lands on budget(n), so the sheet's income for a level without
+  data is budget(n), as step A2 of M7 part A had read it, not budget(n) × act_factor^(act − 1);
+  `tools/balance.py` and `BalanceTest` are reverted, Level 15's own data (typical 1 800) counts, and the plan's
+  Act 3 visits are re-planned on that income in the Ion Beam's approved order, each item as soon as it is
+  affordable (M7 part B, step B3): EMP charge L15, Mk III L16, beam L2 L18, beam L3 L19, Tail Gun L3 L20,
+  Composite III L21. Hard keeps the Pulse Cannon (the beam refused at L18), pending the user's review.
+- 2026-10-14 (user, round 38, R.1): noted: the record of the 2026-10-14 decision (budget(n) is the absolute
+  typical haul, round 37 R.1's act factor reverted) and the Act 3 re-plan stand as built, including hard keeping
+  the Pulse Cannon L4 when the beam is refused at L18 (about 7 100 banked by the L21 visit); the hard plan
+  is not changed.

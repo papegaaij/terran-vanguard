@@ -5,6 +5,7 @@ import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.SerializationFeature;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 
 /**
@@ -17,11 +18,15 @@ import tools.jackson.databind.node.ObjectNode;
  * credits and kills for the act summary. A version 1 save loads with none recorded. 3 (M5 part A)
  * adds {@code escort}, Rook in the escort slot; a version 2 save gets the new campaign's (Rook not
  * hired), or Rook hired with the free Autocannon at L1, full armour, on the left, when its next
- * level is 8 or later (design/systems/saves, Version 3).
+ * level is 8 or later (design/systems/saves, Version 3). 4 (M7 part A, user decision Q1 = a) adds
+ * {@code bays}, the utility bays bought (the third bay, from Act 3); a version 3 save gets 0, and (M7 part B, user
+ * decision L.6 of round 36; a default pending the user's review in round 38) the story flags {@code act-intro:1}
+ * and, from Level 08 on, {@code act-intro:2}: the release that wrote it had Acts 1–2 only, so their intros have
+ * been shown and Act 3's has not ({@link CampaignRoute#onContinue}).
  */
 public final class SaveFormat {
     /** The version this game writes. */
-    public static final int VERSION = 3;
+    public static final int VERSION = 4;
 
     /**
      * What a migrated version 2 save that is past Level 07 gets: Rook's state as he joins, frozen as
@@ -32,6 +37,13 @@ public final class SaveFormat {
     static final String ESCORT_GUN = "autocannon";
     static final double ESCORT_ARMOUR = 80;
     static final String ESCORT_SIDE = "left";
+
+    /**
+     * M7 part B: the first level of each act a version 3 save could have reached, frozen as the release that wrote
+     * such saves had them (Act 1 from Level 01, Act 2 from Level 08): a migrated save whose next level is at least
+     * an act's first has seen that act's intro.
+     */
+    static final int[] RELEASED_ACT_FIRST_LEVELS = {1, 8};
 
     private static final JsonMapper MAPPER = JsonMapper.builder()
             .enable(SerializationFeature.INDENT_OUTPUT)
@@ -69,6 +81,9 @@ public final class SaveFormat {
         }
         if (tree.get("version").intValue() == 2) {
             migrateFrom2(tree);
+        }
+        if (tree.get("version").intValue() == 3) {
+            migrateFrom3(tree);
         }
         try {
             return MAPPER.treeToValue(tree, SaveGame.class);
@@ -110,5 +125,35 @@ public final class SaveFormat {
         }
         escort.put("armour", ESCORT_ARMOUR);
         save.put("version", 3);
+    }
+
+    /**
+     * Version 3 to 4 (M7 part A): no utility bay bought, which no save before Act 3 can have; M7 part B: the intros
+     * of the released acts the save has reached are marked as shown ({@link #RELEASED_ACT_FIRST_LEVELS}).
+     */
+    private static void migrateFrom3(JsonNode tree) throws SaveException {
+        if (!(tree instanceof ObjectNode save) || save.has("bays")) {
+            throw new SaveException("invalid save: a version 3 save has no bays");
+        }
+        save.put("bays", 0);
+        JsonNode next = save.get("nextLevel");
+        if (save.get("storyFlags") instanceof ArrayNode flags && next != null && next.isInt()) {
+            for (int act = 0; act < RELEASED_ACT_FIRST_LEVELS.length; act++) {
+                String flag = "act-intro:" + (act + 1); // frozen, as Campaign.actIntroFlag writes it
+                if (next.intValue() >= RELEASED_ACT_FIRST_LEVELS[act] && !contains(flags, flag)) {
+                    flags.add(flag);
+                }
+            }
+        }
+        save.put("version", 4);
+    }
+
+    private static boolean contains(ArrayNode flags, String flag) {
+        for (JsonNode node : flags) {
+            if (node.isString() && node.asString().equals(flag)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

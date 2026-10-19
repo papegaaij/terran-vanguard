@@ -28,7 +28,8 @@ import vanguard.sim.WingmanSpec;
 
 /**
  * Level 09 as the game runs it (design/campaign/act-2-homefront/level-09-arcology-fall): its credit
- * budget and the README's totals, the six Hive Nodes as named targets with their three hold zones
+ * budget and the README's totals (the L10-style waves of the user's Act 2 playtest, 2026-10-18), no Ravager in a
+ * hold, the six Hive Nodes as named targets with their three hold zones
  * (20 / 30 / 40 px/s), the collapse over cluster C, the Ravager packs (their sizes per difficulty)
  * and the scoped bridge secondary (6 / 8 / 10), the cocoon secret, the pickups, the radio script, and
  * whole runs in which the autopilot bombs the nodes and flies the level to its end with Rook.
@@ -103,7 +104,9 @@ class Level09Test {
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_203, Math.round(budget), "the typical haul's target, 700 × 1.07⁸");
         assertEquals(
-                146 * 5 + 38 * 12 + 9 * 15 + 9 * 22 + 22 * 18, kills, "Skitter, Needler, Stinger, Creeper, Ravager");
+                166 * 5 + 77 * 12 + 36 * 15 + 6 * 25 + 2 * 30 + 11 * 22 + 22 * 18,
+                kills,
+                "Skitter, Needler, Stinger, Spore Bomber, Mantis, Creeper, Ravager");
         assertEquals(6 * 45 + 7 * 12 + 4 * 15, ground, "Hive Node 6 × 45 + Spine Turret 7 × 12 + Polyp Mortar 4 × 15");
         assertEquals(12 * 5, released, "one opening of 2 Skitters per node");
         assertEquals(100, crates, "the cocoon cache in Act 1 terms (pays 160)");
@@ -112,7 +115,7 @@ class Level09Test {
                 "Level 09 budget (Act 1 terms): kills %d, ground %d, node Skitters %d, crate %d, secondary %d: %d"
                         + " (budget %.0f)%n",
                 kills, ground, released, crates, level.secondary().credits(), total, budget);
-        assertEquals(2_552, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
+        assertEquals(3_779, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
     }
 
     @Test
@@ -128,7 +131,23 @@ class Level09Test {
         }
 
         assertEquals(Map.of("hive-node", 6, "polyp-mortar", 4, "spine-turret", 7), ground);
-        assertEquals(Map.of("creeper", 9, "needler", 38, "ravager", 22, "skitter", 146, "stinger", 9), waves);
+        assertEquals(
+                Map.of(
+                        "creeper",
+                        11,
+                        "mantis",
+                        2,
+                        "needler",
+                        77,
+                        "ravager",
+                        22,
+                        "skitter",
+                        166,
+                        "spore-bomber",
+                        6,
+                        "stinger",
+                        36),
+                waves);
         assertEquals(
                 List.of(20.0, 58.0, 96.0, 138.0, 186.0),
                 level.sections().stream().map(LevelScript.Section::end).toList());
@@ -136,13 +155,13 @@ class Level09Test {
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(8, sortie.escapesTotal(), "the two bridge packs");
         System.out.printf("Level 09 enemy total at the start: %d%n", sortie.enemyTotal());
-        assertEquals(241, sortie.enemyTotal(), "the node Skitters count as they are released");
+        assertEquals(337, sortie.enemyTotal(), "the node Skitters count as they are released");
     }
 
     /**
      * Easy: the bridge packs of 3 (the secondary counts 6), the pincers from the front, holds at
-     * 20 px/s, a second Airstrike charge. Hard: every pack one more (the bridge 10), holds at 40 px/s,
-     * the cluster C turret pair, 3 Skitters per opening, pounces every 2 s.
+     * 20 px/s, a second Airstrike charge. Hard: the packs as medium, the bridge packs as easy (one more each than medium
+     * until the user's Act 2 playtest; the bridge 6), holds at 40 px/s, the cluster C turret pair, 3 Skitters per opening, pounces every 4 s as on medium (was 2).
      */
     @ParameterizedTest
     @EnumSource(Difficulty.class)
@@ -156,14 +175,14 @@ class Level09Test {
                 switch (difficulty) {
                     case EASY -> List.of(3, 3, 3, 3, 3, 3);
                     case MEDIUM -> List.of(3, 4, 4, 4, 3, 4);
-                    case HARD -> List.of(4, 5, 5, 5, 4, 5);
+                    case HARD -> List.of(3, 4, 3, 3, 3, 4);
                 },
                 packs);
         assertEquals(
                 switch (difficulty) {
                     case EASY -> 6;
                     case MEDIUM -> 8;
-                    case HARD -> 10;
+                    case HARD -> 6;
                 },
                 sortie(content, 1, difficulty).escapesTotal(),
                 "the secondary counts the two bridge packs");
@@ -204,7 +223,7 @@ class Level09Test {
                 .findFirst()
                 .orElseThrow();
         if (difficulty == Difficulty.HARD) {
-            assertEquals(2.0, ravager.pounce().orElseThrow().intervalSeconds(), 1e-9, "hard's authored interval");
+            assertEquals(4.0, ravager.pounce().orElseThrow().intervalSeconds(), 1e-9, "hard's authored interval");
         }
     }
 
@@ -330,16 +349,38 @@ class Level09Test {
         int failures = 0;
         double collapseAt = -1;
         double collapseBand = Double.NaN;
+        int attempt = sortie.attempt();
+        double ravagerSeen = -1;
+        double clearBeforeHold = Double.MAX_VALUE;
+        int ravagersInHolds = 0;
         while (!sortie.complete() && steps++ < MAX_STEPS) {
             if (sortie.primaryFailed()) {
                 failures++;
             }
             Level04Test.step(sortie);
+            if (sortie.attempt() != attempt) {
+                attempt = sortie.attempt();
+                ravagerSeen = -1;
+                clearBeforeHold = Double.MAX_VALUE;
+                ravagersInHolds = 0;
+            }
+            // PT2-B 1b (the user's Act 2 playtest): no Ravager on the screen in a hold
+            if (ravagerOnScreen(sortie)) {
+                ravagerSeen = sortie.realSeconds();
+                if (sortie.holdActive()) {
+                    ravagersInHolds++;
+                }
+            }
             SimEvents events = sortie.events();
             for (int i = 0; i < events.size(); i++) {
                 switch (events.type(i)) {
                     case SECRET_FOUND -> secrets++;
-                    case HOLD_START -> holds++;
+                    case HOLD_START -> {
+                        holds++;
+                        if (ravagerSeen >= 0) {
+                            clearBeforeHold = Math.min(clearBeforeHold, sortie.realSeconds() - ravagerSeen);
+                        }
+                    }
                     case POUNCE -> pounces++;
                     case COLLAPSE_WARNING -> {
                         collapseAt = sortie.levelSeconds();
@@ -390,6 +431,26 @@ class Level09Test {
         }
         assertTrue(collapseAt > 0, "the arcology falls");
         assertEquals(3, holds, "three holds in the winning attempt");
+        System.out.printf(
+                "Level 09 %s: the last Ravager left %.1f s before a hold at the closest; steps with a Ravager in a"
+                        + " hold %d%n",
+                difficulty, clearBeforeHold, ravagersInHolds);
+        assertEquals(0, ravagersInHolds, "no Ravager on the screen in a hold");
+        assertTrue(clearBeforeHold >= 3, "the Ravagers gone at least 3 s before each hold: " + clearBeforeHold);
+    }
+
+    private static boolean ravagerOnScreen(Sortie sortie) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            var enemy = sortie.enemy(i);
+            if (enemy.spec().slug().equals("ravager")
+                    && enemy.renderY(1) > -enemy.spec().hitbox().height() / 2
+                    && enemy.renderY(1) - enemy.spec().hitbox().height() / 2 < PlayField.HEIGHT
+                    && enemy.renderX(1) > -enemy.spec().hitbox().width() / 2
+                    && enemy.renderX(1) - enemy.spec().hitbox().width() / 2 < PlayField.WIDTH) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The ground position of the arcology's footprint's centre (the backdrop's placement of the tower that falls). */
@@ -407,7 +468,8 @@ class Level09Test {
      * above the bottom edge at the impact): the scroll stays at the hold's 30 px/s until 9.0 s after
      * the warning starts, so the rubble heap round the foot stays on the screen (sliding down under
      * the settling dust) until the hold ends; then the scroll eases back to the section's 150 px/s.
-     * The pilot (the capture's two Bomb Racks, no Rook) holds its fire until 1.8 s into hold C.
+     * The pilot (the capture's two Bomb Racks, no Rook) holds its fire until 1.7 s into hold C (1.8 s before the
+     * L10-style waves of 2026-10-18 gave it more to shoot at).
      */
     @Test
     void withALateKillTheHeapStaysInSightUntilTheDustHasSettled() {
@@ -444,7 +506,7 @@ class Level09Test {
         double footAtHoldEnd = Double.NaN;
         double eased = -1;
         while (!sortie.complete() && steps++ < MAX_STEPS) {
-            boolean fire = holdC >= 0 && sortie.realSeconds() - holdC >= 1.8;
+            boolean fire = holdC >= 0 && sortie.realSeconds() - holdC >= 1.7;
             sortie.step(fire ? Autopilot.commands(sortie) : Command.NONE);
             SimEvents events = sortie.events();
             for (int i = 0; i < events.size(); i++) {

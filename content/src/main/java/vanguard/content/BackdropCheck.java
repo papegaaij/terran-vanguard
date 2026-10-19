@@ -74,6 +74,11 @@ final class BackdropCheck {
                 if (!backdrop.hasDeep() && layers.contains(BackdropLayer.DEEP)) {
                     problem.accept("sections[" + i + "].tiles", "a deep tile set, but scroll_factors has no deep");
                 }
+                // M7 part C: the plateau layer is a canyon level's (Level 16), with its factor.
+                if (!backdrop.hasPlateau() && layers.contains(BackdropLayer.PLATEAU)) {
+                    problem.accept(
+                            "sections[" + i + "].tiles", "a plateau tile set, but scroll_factors has no plateau");
+                }
             }
             ok &= resolved;
         }
@@ -145,6 +150,9 @@ final class BackdropCheck {
             if (piece.layer() == BackdropLayer.DEEP && !backdrop.hasDeep()) {
                 problem.accept(field, "a piece on deep, but scroll_factors has no deep");
             }
+            if (piece.layer() == BackdropLayer.PLATEAU && !backdrop.hasPlateau()) {
+                problem.accept(field, "a piece on plateau, but scroll_factors has no plateau");
+            }
             if (piece.headings().isPresent() != placed.path().isPresent()) {
                 problem.accept(field, "a piece with headings follows a path, and only such a piece");
             }
@@ -214,6 +222,15 @@ final class BackdropCheck {
                 fields.add("backdrop.placed[" + i + "]" + (p.count() > 1 ? " (repeat " + (n + 1) + ")" : ""));
             }
         }
+        // the scroll and every placement's centre once, not per piece and step (the full check took seconds a load)
+        double[] centres = new double[placed.size()];
+        BackdropData.Piece[] pieces = new BackdropData.Piece[placed.size()];
+        double[] factors = new double[placed.size()];
+        for (int i = 0; i < placed.size(); i++) {
+            centres[i] = level.pieceCentre(placed.get(i));
+            pieces[i] = backdrop.pieces().get(placed.get(i).piece());
+            factors[i] = backdrop.factor(pieces[i].layer());
+        }
         boolean[] seen = new boolean[placed.size()];
         boolean[] tooFast = new boolean[placed.size()];
         boolean densityReported = false;
@@ -221,13 +238,14 @@ final class BackdropCheck {
         int steps = SimStep.ticks(level.outroEnd());
         for (int step = 0; step <= steps; step++) {
             double t = step * SimStep.SECONDS;
+            double scroll = level.scrollAt(t);
             List<String> midSize = new ArrayList<>();
             Set<String> animated = new TreeSet<>();
             for (int i = 0; i < placed.size(); i++) {
                 BackdropData.PlacedPiece p = placed.get(i);
-                if (onScreen(p, t)) {
+                if (onScreen(p, pieces[i], centres[i] - scroll * factors[i], t)) {
                     seen[i] = true;
-                    BackdropData.Piece piece = backdrop.pieces().get(p.piece());
+                    BackdropData.Piece piece = pieces[i];
                     if (piece.countsAsMidSize()) {
                         midSize.add(p.piece());
                     }
@@ -235,7 +253,7 @@ final class BackdropCheck {
                         animated.add(p.piece());
                     }
                     if (piece.isTower() && !tooFast[i]) {
-                        double speed = piece.tower().orElseThrow().ownSpeed(groundSpeed(t));
+                        double speed = piece.tower().orElseThrow().ownSpeed(groundSpeed(t, scroll));
                         if (speed > MAX_OWN_SPEED) {
                             problem.accept(
                                     fields.get(i),
@@ -252,7 +270,7 @@ final class BackdropCheck {
                     }
                 }
             }
-            addDriftingTiles(t, animated);
+            addDriftingTiles(t, scroll, animated);
             if (!densityReported && midSize.size() > MAX_MID_SIZE) {
                 problem.accept(
                         "backdrop.placed",
@@ -276,8 +294,8 @@ final class BackdropCheck {
     }
 
     /** The ground's scroll speed at {@code t}, px/s (over the step that starts there). */
-    private double groundSpeed(double t) {
-        return (level.scrollAt(t + SimStep.SECONDS) - level.scrollAt(t)) / SimStep.SECONDS;
+    private double groundSpeed(double t, double scroll) {
+        return (level.scrollAt(t + SimStep.SECONDS) - scroll) / SimStep.SECONDS;
     }
 
     private static String at(double t) {
@@ -285,9 +303,8 @@ final class BackdropCheck {
     }
 
     /** Whether a part of the piece is on screen; a tower's footprint or its roof, drawn farther from the centre. */
-    private boolean onScreen(BackdropData.PlacedPiece placed, double t) {
-        BackdropData.Piece piece = backdrop.pieces().get(placed.piece());
-        double y = level.pieceCentre(placed) - level.scrollAt(t) * backdrop.factor(piece.layer()) + placed.offsetY(t);
+    private boolean onScreen(BackdropData.PlacedPiece placed, BackdropData.Piece piece, double base, double t) {
+        double y = base + placed.offsetY(t);
         double x = placed.x() + placed.offsetX(t);
         if (onScreen(x, y, piece.size().width(), piece.size().height())) {
             return true;
@@ -311,11 +328,11 @@ final class BackdropCheck {
     }
 
     /** The drifting section tile sets with a part on screen, and the atmosphere's banks if they drift. */
-    private void addDriftingTiles(double t, Set<String> animated) {
+    private void addDriftingTiles(double t, double scroll, Set<String> animated) {
         for (int i = 0; i < level.sections().size(); i++) {
             for (String id : level.sections().get(i).tiles()) {
                 BackdropData.TileSet tileSet = backdrop.tileSets().get(id);
-                if (tileSet.drifts() && sectionOnScreen(tileSet.layer(), i, t)) {
+                if (tileSet.drifts() && sectionOnScreen(tileSet.layer(), i, scroll)) {
                     animated.add(id);
                 }
             }
@@ -330,8 +347,8 @@ final class BackdropCheck {
         }
     }
 
-    private boolean sectionOnScreen(BackdropLayer layer, int index, double t) {
-        double bottom = level.scrollAt(t) * backdrop.factor(layer);
+    private boolean sectionOnScreen(BackdropLayer layer, int index, double scroll) {
+        double bottom = scroll * backdrop.factor(layer);
         double end = index + 1 < level.sections().size() ? level.seam(layer, index + 1) : Double.POSITIVE_INFINITY;
         return level.seam(layer, index) < bottom + PlayField.HEIGHT && end > bottom;
     }

@@ -29,6 +29,11 @@ public final class Pickup implements Hashed {
         return --ticksLeft > 0 && y > 0;
     }
 
+    /** M7 part C: slides {@code dx} px across, off rock (after its drift of the step). */
+    void slide(double dx) {
+        x += dx;
+    }
+
     /** Whether it is within {@code radius} of the point ({@code px}, {@code py}). */
     boolean within(double px, double py, double radius) {
         double dx = px - x;

@@ -51,11 +51,11 @@ class OutroOnwardTest {
 
     /**
      * M5 part H (H6 = a, H7 = a, H9 = a): Level 14 ends Act 2: the act summary in the debrief, then its four
-     * voiced outro pages with the act-complete fanfare under the first, then the hangar before Level 15,
-     * which is not built yet.
+     * voiced outro pages with the act-complete fanfare under the first; M7 part B: then Act 3's title card and
+     * the Level 15 briefing (M6 part B's release end came here while Level 15 was not built).
      */
     @Test
-    void afterAct2sFourOutroPagesComesTheHangarBeforeLevel15() {
+    void afterAct2sFourOutroPagesComeAct3sTitleCardAndTheBriefingOfLevel15() {
         String directory = "act-2-homefront";
         ActData act = content.acts().get(directory);
         OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act, 14), 15)
@@ -67,19 +67,28 @@ class OutroOnwardTest {
         assertEquals(4, outro.pages().size(), "four pages, one a paragraph (H7 = a)");
         assertEquals(Optional.of("act-complete"), outro.music(), "track 24 under page 1");
         assertTrue(outro.pages().stream().allMatch(page -> page.speaker().equals("Okafor")));
-        assertTrue(content.levelKey(15).isEmpty(), "Level 15 is not built yet");
+        assertTrue(content.levelKey(15).isPresent(), "Level 15 is built (M7 part B)");
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
-        assertEquals("THE HANGAR BEFORE MISSION 15", onward.next());
-        assertEquals("ENTER TO THE HANGAR", onward.hint());
+        assertEquals("ACT III: RED DUST, THEN THE BRIEFING FOR MISSION 15: OLYMPUS DESCENT", onward.next());
+        assertEquals("ENTER TO ACT III", onward.hint());
     }
 
-    /** A next level that is not built yet: the hangar follows. */
+    /** A next level that is not built yet: the release ends (M6 part B). */
     @Test
-    void withoutTheNextLevelsDataTheHangarFollows() {
+    void withoutTheNextLevelsDataTheReleaseEnds() {
         int unbuilt = 50;
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro(49, unbuilt));
 
-        assertEquals("THE HANGAR BEFORE MISSION 50", onward.next());
-        assertEquals("ENTER TO THE HANGAR", onward.hint());
+        assertEquals(BriefingScreen.RELEASE_END, onward.next());
+        assertEquals("ENTER TO THE END", onward.hint());
+    }
+
+    /** M6 part B: the end card, then the name entry only for a top-10 score, then the credits. */
+    @Test
+    void theReleasesEndShowsTheCardTheNameEntryAndTheCredits() {
+        assertEquals(ReleaseEndScreen.Phase.ENTRY, ReleaseEndScreen.next(ReleaseEndScreen.Phase.CARD, true));
+        assertEquals(ReleaseEndScreen.Phase.CREDITS, ReleaseEndScreen.next(ReleaseEndScreen.Phase.CARD, false));
+        assertEquals(ReleaseEndScreen.Phase.CREDITS, ReleaseEndScreen.next(ReleaseEndScreen.Phase.ENTRY, true));
+        assertEquals("ACT III - RED DUST: COMING SOON", ReleaseEndScreen.COMING_SOON, "the hangar before Level 15");
     }
 }

@@ -1,5 +1,6 @@
 # Builds the game, checks the formatting and runs the tests on Linux, Windows and macOS; starts
-# the desktop build under a virtual display; on v* tags attaches the Construo bundles to a release.
+# the desktop build under a virtual display; on v* tags builds the Construo bundles, starts the
+# Linux bundle under a virtual display and attaches them to a release (design/tech/release).
 name: ci
 
 on:
@@ -26,10 +27,10 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # Only the LFS files the build packages and tests read; the design tree's concept art and
-      # audio would waste LFS bandwidth.
+      # Only the LFS files the build packages and tests read (the game's assets, the bundles'
+      # icons); the design tree's concept art and audio would waste LFS bandwidth.
       - name: Fetch LFS assets
-        run: git lfs pull --include="assets/**"
+        run: git lfs pull --include="assets/**,desktop/icons/**"
 
       - uses: actions/setup-java@v5
         with:
@@ -58,7 +59,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Fetch LFS assets
-        run: git lfs pull --include="assets/**"
+        run: git lfs pull --include="assets/**,desktop/icons/**"
 
       - uses: actions/setup-java@v5
         with:
@@ -98,7 +99,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Fetch LFS assets
-        run: git lfs pull --include="assets/**"
+        run: git lfs pull --include="assets/**,desktop/icons/**"
 
       - uses: actions/setup-java@v5
         with:
@@ -107,11 +108,42 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v5
 
-      # Construo cross-builds every target on Linux; the macOS bundles are not signed yet.
+      # The tag names the version of gradle.properties: v0.1 for 0.1.0, or the full v0.1.1.
+      - name: Check the tag against the version
+        run: |
+          version=$(sed -n 's/^version=//p' gradle.properties)
+          echo "version=$version" >> "$GITHUB_ENV"
+          if [[ "$GITHUB_REF_NAME" != "v$version" && "$GITHUB_REF_NAME" != "v${version%.0}" ]]; then
+            echo "tag $GITHUB_REF_NAME does not match version $version in gradle.properties"
+            exit 1
+          fi
+
+      # Construo cross-builds every target on Linux; the bundles are not signed (see the notes).
       - name: Build the bundles
         run: ./gradlew :desktop:packageLinuxX64 :desktop:packageWinX64 :desktop:packageMacX64 :desktop:packageMacM1
+
+      - name: Install a virtual display with software OpenGL
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri
+
+      # The Linux bundle as a player gets it: unpacked, its own runtime, no JDK on the PATH.
+      - name: Start the Linux bundle for a few seconds
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          unzip -q "desktop/build/construo/dist/terran-vanguard-$version-linuxX64.zip" -d "$RUNNER_TEMP/bundle"
+          folder="$RUNNER_TEMP/bundle/terran-vanguard-$version"
+          test -f "$folder/README.txt" && test -f "$folder/LICENSE.txt" && test -f "$folder/CREDITS.md"
+          game="$folder/terran-vanguard"
+          env -u JAVA_HOME PATH=/usr/sbin:/usr/bin:/sbin:/bin "$game" --version | tee version.log
+          grep -qx "Terran Vanguard $version" version.log
+          env -u JAVA_HOME PATH=/usr/sbin:/usr/bin:/sbin:/bin xvfb-run -a -s "-screen 0 1920x1080x24" \
+            "$game" --bench 5 --settings "$RUNNER_TEMP/bundle-settings.properties" | tee bundle.log
+          grep -q "^\[bench\]" bundle.log
 
       - name: Attach the bundles to a release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" desktop/build/construo/dist/*.zip --title "$GITHUB_REF_NAME" --generate-notes
+        run: |
+          sed "s/@version@/$version/g; s/@tag@/$GITHUB_REF_NAME/g" design/tech/release/release-notes.md > "$RUNNER_TEMP/notes.md"
+          gh release create "$GITHUB_REF_NAME" desktop/build/construo/dist/*.zip \
+            --title "Terran Vanguard $GITHUB_REF_NAME" --notes-file "$RUNNER_TEMP/notes.md"

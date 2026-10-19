@@ -1504,3 +1504,410 @@ Edit: 7.50 s, −19.1 dB, ceiling −2 dBFS (peak −3.0, −18.1 LUFS).
 Source: none. Use: Level 14's ambience layer in place of the sirens, cut when the Spire dies; a loop.
 Why: A low organic hum: two harmonic voices on 46.00 / 46.25 Hz (beating slowly; harmonics peaking around 200 Hz so small speakers carry it), a throb six times a loop (0.75 Hz), a 4 s breath swelling the upper harmonics, an organic noise band (90–500 Hz); every frequency a multiple of 1/8 Hz and the noise circular, so it loops with no crossfade.
 Edit: seamless 8.00 s loop, band RMS −39.0 dB (3 dB under the ambience loops' −36; loudest 100 ms −33.7), peak −20.3 dBFS, −31.0 LUFS; the seam's step +2.4 dB against its neighbours after encoding (no click).
+
+## Round 36 (Act 3) — the Burrower's eruption, the canyon wall scrape, the Ion Beam loop and the dust-storm bed
+
+Brief (M7 "Act 3 – Red Dust" design phase, step A-audio; pending the user's review in round 36): a/b for the Burrower's eruption (Level 15 on: the 1.0 s bulge tell with its low rumble, then the break-out; its ring follows 0.4 s later), the canyon wall scrape (Level 16: the ship touching rock, 10 damage and a 28 px push over 0.12 s, then a 0.5 s cooldown), the Ion Beam loop (Act 3's front beam, heard for as long as fire is held, between the round-04 start and stop sounds) and the dust-storm bed (Level 18's `mars-storm` ambience: a low roar with grit hiss). All from `tools/concept/audio/sfx_r36b.py` (round 36's Level 14 sounds use `sfx_r36.py`; different subjects), deterministic, from **Freesound originals** (new in this round: Elements-Library, nicoproson, lolamadeus, a deleted user's metal pipe, Halleck, craigsmith, dobroide; reused: uagadugu, noahpardo, peepholecircus; all CC0 but Halleck's and dobroide's CC-BY 4.0) plus synthesized layers. No bubble, popping or squelch layers. Levels as the loudest 100 ms of the 200 Hz–5 kHz band against the existing set (root burst −17, edge warning −16.2, ship sinking −20, armour hit −20.5, ship hit −18); the loops by band RMS (the round-04 beam loops −30, the ambience loops −36), one gain and no limiter so the seams stay intact. Not listened to by Claude: checked by envelopes, spectrograms, band balance, levels and the loop seams.
+
+### burrow-eruption-r36-a — "Cracking Earthquake" by uagadugu + "Hard Impact on Sand" by Elements-Library + "SAND POUR.wav" by nicoproson + synthesized pressure, grains and thump
+
+**Chosen** (round 36, 2026-10-13).
+Source: <https://freesound.org/people/uagadugu/sounds/222521/>, <https://freesound.org/people/Elements-Library/sounds/683785/>, <https://freesound.org/people/nicoproson/sounds/627070/> — CC0 1.0. Use: a Burrower surfacing, from the bulge tell's start (the break-out at 1.0 s).
+Why: A sand burst: the ground rumble swelling 14 dB over the 1.0 s tell (low-passed at 2.5 kHz) under a pressure tone rising 38 → 64 Hz and sand hissing out of the cracks (dense 2–6 ms grains, 2–7 kHz, thickening into a grainy hiss, never single clicks); at 1.0 s a heavy impact on sand, a sub thump and the sand raining back down.
+Edit: 2.11 s, −19.6 dB (its dense lows held by the ceiling), ceiling −2 dBFS (peak −2.0, −16.3 LUFS; 67 % of the energy below 200 Hz).
+
+### burrow-eruption-r36-b — "Deep Roar Echo 2.wav" by noahpardo + "Gravel Impacts and Falls.wav" by lolamadeus + synthesized churn, spray and thump
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+Source: <https://freesound.org/people/noahpardo/sounds/345735/>, <https://freesound.org/people/lolamadeus/sounds/179341/> — CC0 1.0. Use: as a.
+Why: The swimmer breaks out: a low churn of sand under the ground (noise through a band wandering 70–320 Hz, slowly; nothing bubbly) swelling over the tell, a muffled growl just before the break (the roar at 0.7 speed, 1.5 kHz low-pass); at 1.0 s gravel and rock thrown up and falling over a wide spray (a noise burst whose high-pass rises 300 → 2500 Hz as it thins) and a sub thump.
+Edit: 2.10 s, −20.3 dB (held by the ceiling), ceiling −2 dBFS (peak −2.2, −14.9 LUFS).
+
+### canyon-scrape-r36-a — "Metal pipe along concrete 2.wav" by a deleted Freesound user + "Hard Impact on Sand" by Elements-Library + "Gravel Impacts and Falls.wav" by lolamadeus + synthesized thump
+
+**Rejected** (round 36, 2026-10-13: b picked); the files are in `rejected/`.
+Source: <https://freesound.org/people/deleted_user_2104797/sounds/164673/>, <https://freesound.org/people/Elements-Library/sounds/683785/>, <https://freesound.org/people/lolamadeus/sounds/179341/> — CC0 1.0. Use: the ship touching a canyon wall or rock island (with the rock spark and hit flash).
+Why: A rock grind: the hull dragged along stone (the pipe on concrete, 0.62 s), a dull hit under it (the sand impact high-passed at 90 Hz), grit falling (gravel, 250 Hz high-pass) and a short thump; dull and heavy, no ring.
+Edit: 0.63 s, −18.0 dB, ceiling −3 dBFS (peak −3.9, −18.6 LUFS).
+
+### canyon-scrape-r36-b — "big metal side impact 3 scraping.wav" by Halleck + synthesized sparks and thump
+
+**Chosen** (round 36, 2026-10-13).
+Source: <https://freesound.org/people/Halleck/sounds/121623/> — CC-BY 4.0. Use: as a.
+Why: A metal screech: a car-chase foley side impact scraping along metal (0.6 s), a spark spray off the hull (fine dense noise, 3–9 kHz, a short comb for a metallic sheen, dying in 0.25 s; no clicks) and a short thump; brighter and more alarming than a.
+Edit: 0.60 s, −18.1 dB, ceiling −3 dBFS (peak −5.8, −15.8 LUFS).
+
+### ion-beam-loop-r36-a — "laser beam" by peepholecircus + synthesized body and hiss
+
+**Chosen** (round 36, 2026-10-13).
+Source: <https://freesound.org/people/peepholecircus/sounds/169991/> — CC0 1.0. Use: the Ion Beam's loop (between the round-04 start and stop sounds).
+Why: The chosen round-04 hum (`shot-beam-r04-a`: the same source and loop window, 2.60 s from 5.60 s, 0.12 s cross-fade), made heavier for a main weapon: an ion body under it (two harmonic voices on 110.00 / 110.38 Hz beating once a loop, harmonics peaking at 220–440 Hz, 5 dB under the hum) and a faint hiss (2–6 kHz, 16 dB under); every synthesized frequency a whole number of cycles in the loop.
+Edit: seamless 2.60 s loop, band RMS −30.0 dB (the round-04 loops' level), peak −19.6 dBFS, −26.7 LUFS; seam step +1.8 dB after encoding (no click).
+
+### ion-beam-loop-r36-b — synthesized
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+Source: none. Use: as a.
+Why: An ion stream: a buzzing core (two saw-like voices on 165.0 / 165.5 Hz, harmonics 1–14 with a formant at 1.2 kHz, a slow beat once a loop and a 10 % swell twice a loop), a shimmer band round 1.8 kHz fluttering 16 times a second (a smooth sine flutter, not pulses; the channels a quarter cycle apart) and a hiss (3–8 kHz); circular noise and whole-cycle frequencies, so it loops with no cross-fade.
+Edit: seamless 2.00 s loop, band RMS −30.2 dB, peak −13.5 dBFS, −23.1 LUFS (39 % of the energy below 200 Hz: heavier than a); seam step +1.4 dB after encoding.
+
+### dust-storm-bed-r36-a — "G56-22-Sandstorm.wav" by craigsmith + "20101121.wind.howl.furious.01.wav" by dobroide
+
+**Chosen** (round 36, 2026-10-13).
+Source: <https://freesound.org/people/craigsmith/sounds/438877/> — CC0 1.0; <https://freesound.org/people/dobroide/sounds/109371/> — CC-BY 4.0. Use: Level 18's storm bed (`mars-storm`), from t=25, swelling in the storm walls, dropping to a light wind in the eye (the game sets its gain).
+Why: A recorded front: the sandstorm's fast, high, steady wind (80 Hz high-pass) over a furious low wind howl (900 Hz low-pass, 4 dB under), each cut to 16 s and looped with a 1.5 s equal-power cross-fade (filtered before the cut, so the seam stays continuous).
+Edit: seamless 16.00 s loop, band RMS −36.1 dB (the ambience loops' level), peak −21.9 dBFS, −32.7 LUFS; seam step +4.8 dB after encoding (a cross-faded noise join, no click).
+
+### dust-storm-bed-r36-b — synthesized
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+Source: none. Use: as a.
+Why: A synthesized front: a low roar (noise peaking at 120 Hz), a grit hiss (2.5–9 kHz, rising harder with the gusts) and a howl (noise through a band-pass wandering 450–900 Hz), all riding gusts (sinusoids of 1, 3 and 5 cycles a loop, the channels apart); circular noise, the howl's filter run over three loop lengths and the middle one kept, so the loop joins with no cross-fade.
+Edit: seamless 16.00 s loop, band RMS −36.1 dB, peak −13.3 dBFS, −27.0 LUFS (40 % of the energy below 200 Hz: a heavier roar than a); seam step +3.3 dB after encoding.
+
+## Round 37 (M7 part A) — the Act 3 equipment: beam start, stop and impact, Deflector Pod, EMP Burst, Orbital Lance, Shield Overcharge, ready chime, dash, light drones
+
+Brief (M7 part A "Act 3 systems and arsenal", step AUD-A; pending the user's review in round 37): a/b for the equipment sounds of [*Act 3 sounds*](../README.md#act-3-sounds-approved-round-36) that part A builds: the Ion Beam's start and stop around its chosen loop (round 36, S.4 = a; the beam is at full length in 0.05 s and fades in 0.08 s, so the round-04 start's 0.9 s charge and the stop's 1.3 s power-down are too long for it), the beam's contact sizzle (a loop while it touches; plain and on rock), the Deflector Pod's tick (a bullet caught) and charge return, the EMP Burst's ring and a stunned machine's power-down, the deep rumble under the Orbital Lance's column (the column itself plays the chosen loop [c](shot-beam-r04-c.ogg), its targeting line the chosen lock beep), the Shield Overcharge's activation whoosh and end shimmer, the cooldown special's ready chime, the Evasive thrusters' dash and the light drones' break and rebuild. All from `tools/concept/audio/sfx_r37.py`, deterministic, from **Freesound originals** (new in this round: jokallset, Maxx222, JSK_Productions; reused: Glitchedtones, noirenex, JoelAudio, michael_grinnell, uagadugu, qubodup, wilhellboy, Cyberios, dinodilopho, JoMungus; all CC0 1.0) plus synthesized layers. No bubbly, popping or squelching layers (user rule): no short pitch-swept sine blips, no low clicks, buzzes built with random harmonic phases (a band-passed saw at 50 Hz turns into a click train), grains Hann-windowed and dense enough to fuse; every file scanned for isolated 5 ms peaks 12 dB over their surroundings (none). Levels as the loudest 100 ms of the 200 Hz–5 kHz band against the existing set; the loops by band RMS, one gain and no limiter so the seams stay intact. Not listened to by Claude: checked by envelopes, spectrograms, band balance, levels and the loop seams.
+
+The chosen loop itself ([ion-beam-loop-r36-a](ion-beam-loop-r36-a.ogg)) stays as it is: `sfx_r37.py --check-loop` measures it as the game imports it: 114 660 samples (2.600 s), band RMS −30.0 dB, −26.7 LUFS, peak −19.6 dBFS, seam step +1.8 dB decoded. The start is a layer played **with** the loop's first pass (the loop starts at the press too), the stop at the release while the loop fades out in 0.08 s.
+
+### ion-beam-start-r37-a — "Machine Charge.wav" by Glitchedtones + synthesized ignition and ion body
+
+Proposed (round 37).
+Source: <https://freesound.org/people/Glitchedtones/sounds/375925/> — CC0 1.0 (the round-04 start's source). Use: the Ion Beam's start, with the loop.
+Why: A charge snap: the charge's rise (0.72 s from 0.12 s, 120 Hz high-pass) played 1.8× fast, an ignition hiss (2–7 kHz noise, 2 ms attack, no low end so no pop) and the loop's own ion body (harmonics 1–8 of its 110 Hz voice, peak at 330 Hz) rising 55 → 110 Hz in 0.12 s onto the loop's pitch, then fading under it.
+Edit: 0.40 s, −24.1 dB, ceiling −6 dBFS (peak −9.2).
+
+### ion-beam-start-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: An ion strike: a bright arc crack (a dense rain of 1–3 ms grains, 3–8 kHz, fused into one rough burst), the ion body falling 220 → 110 Hz in 0.2 s onto the loop's pitch (a settling, not a blip: eight harmonics, smoothstep) and a 2–6 kHz hiss swelling and fading.
+Edit: 0.45 s, −24.4 dB, ceiling −6 dBFS (peak −6.1, −20.1 LUFS).
+
+### ion-beam-stop-r37-a — "Power Down" by noirenex + synthesized ion body
+
+Proposed (round 37).
+Source: <https://freesound.org/people/noirenex/sounds/159399/> — CC0 1.0 (the round-04 stop's source). Use: the Ion Beam's stop, at the release.
+Why: The power-down, short: the source's first fall (0.5 s, 0.3 s fade-out) over the ion body sliding 110 → 45 Hz as it dies.
+Edit: 0.55 s, −25.0 dB, ceiling −6 dBFS (peak −11.7, −25.1 LUFS).
+
+### ion-beam-stop-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: An ion collapse: the ion body sliding 110 → 35 Hz (exponential) as it fades over 0.5 s, its hiss band falling 4 → 1 kHz with it.
+Edit: 0.62 s, −25.0 dB, ceiling −6 dBFS (peak −11.6, −23.4 LUFS; 41 % of the energy below 200 Hz).
+
+### beam-impact-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: the beam's contact on a target (a layer under the beam loop while it touches; the game starts and stops it with the contact).
+Why: An arc scorch: a dense dry sizzle (circular noise 2–7 kHz whose level flutters fast and randomly, a control signal low-passed at 60 Hz: a flutter, not pulses) over a lower burning body (300–1200 Hz, breathing slowly); circular noise, so it loops with no cross-fade.
+Edit: seamless 1.50 s loop, band RMS −38.3 dB (most of its energy lies above 5 kHz: at the beam loops' −30 it would be 4 LU louder than the loop it sits under), −27.7 LUFS, peak −17.7 dBFS; seam step +5.4 dB after encoding (a noise join, no click).
+
+### beam-impact-r37-b — "Plasma cutter gas.wav" by jokallset + synthesized sizzle
+
+Proposed (round 37).
+Source: <https://freesound.org/people/jokallset/sounds/395889/> — CC0 1.0 (a steady plasma-cutter gas roar, no spatter). Use: as a.
+Why: A cutting torch: the cutter's gas roar (800 Hz–7 kHz, filtered before the cut; 1.5 s from 2.0 s with a 0.3 s cross-fade) with a's sizzle 6 dB under it; smoother and more "industrial" than a.
+Edit: seamless 1.50 s loop, band RMS −38.4 dB, −28.8 LUFS, peak −21.6 dBFS; seam step −4.2 dB after encoding.
+
+### beam-impact-rock-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: the beam stopped by a canyon wall or rock island (Level 16 on), in place of the plain impact.
+Why: a with a grit crackle (2–5 ms Hann-windowed grains, 1.5–5 kHz, about 150 a second, placed round the loop so it joins) 5 dB under and a low stone roar (circular noise 150–600 Hz) 10 dB under.
+Edit: seamless 1.50 s loop, band RMS −38.1 dB, −28.2 LUFS, peak −18.0 dBFS; seam step −4.2 dB after encoding.
+
+### beam-impact-rock-r37-b — "Plasma cutter gas.wav" by jokallset + synthesized sizzle, grit and stone
+
+Proposed (round 37).
+Source: <https://freesound.org/people/jokallset/sounds/395889/> — CC0 1.0. Use: as the rock a, if b is picked for the plain impact.
+Why: b with the same grit crackle and stone roar.
+Edit: seamless 1.50 s loop, band RMS −38.2 dB, −29.1 LUFS, peak −18.0 dBFS; seam step +5.1 dB after encoding.
+
+### deflector-tick-r37-a — "ELECTRIC_ZAP_001.wav" by JoelAudio + synthesized ping
+
+Proposed (round 37).
+Source: <https://freesound.org/people/JoelAudio/sounds/136542/> — CC0 1.0 (the shield hit's source). Use: the Deflector Pod catching a bullet (it may come several times a second).
+Why: The shield hit pitched up and cut short, as the weapon's document asks: its first 0.2 s (300 Hz–9 kHz) played 1.6× fast, with a glassy tick on top (2.6 / 4.1 kHz partials, 1 ms attack, tau 25 ms).
+Edit: 0.12 s, −25.5 dB (its energy is mostly above 5 kHz; held by the ceiling), ceiling −5 dBFS (peak −5.2).
+
+### deflector-tick-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: A dry deflect: a fused 2–9 kHz noise snap (30 ms) and three inharmonic metal partials (1.9 / 3.3 / 5.2 kHz) ringing 35 ms and drooping 3 %; no low end.
+Edit: 0.12 s, −24.5 dB, ceiling −5 dBFS (peak −5.2).
+
+### deflector-return-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: a Deflector Pod charge returning.
+Why: A soft rise: two soft voices 0.2 % apart (a sine with a quiet 2nd and 3rd harmonic) easing up a fifth, 520 → 780 Hz, on a smoothstep over 0.3 s (slow at both ends, never a fast sweep), 60 ms attack, with an airy 3–8 kHz breath.
+Edit: 0.45 s, −26.9 dB, ceiling −10 dBFS (peak −20.2, −26.6 LUFS).
+
+### deflector-return-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: A charge settling: a held E5–B5 fifth fading in over 0.18 s above a rising air whoosh (band 800 → 3000 Hz); no pitch glide at all.
+Edit: 0.45 s, −27.0 dB, ceiling −10 dBFS (peak −17.7, −25.9 LUFS).
+
+### emp-ring-r37-a — "Electric zap.wav" by michael_grinnell + synthesized thump, arcs and buzz
+
+Proposed (round 37).
+Source: <https://freesound.org/people/michael_grinnell/sounds/512471/> — CC0 1.0 (the `tesla` shot's source). Use: the EMP Burst's ring (0.4 s outward).
+Why: The tesla shot layered and longer, as the brief says: four copies (80 Hz–6 kHz) at 1.0 / 0.8 / 0.65 / 0.5× speed entering at 0 / 0.08 / 0.2 / 0.35 s, centre, left, right, centre; an electric thump (70 → 30 Hz); crackling arcs (fused 1–4 ms grains, 1.5–8 kHz, 900 → 150 a second) running out to both sides as the ring grows; a fading 100 Hz buzz.
+Edit: 1.35 s, −18.6 dB at the Smart Bomb's ceiling −1.5 dBFS (peak −1.6, −14.1 LUFS; the Smart Bomb −14.4 dB, −13.6 LUFS).
+
+### emp-ring-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: An arc ring: a mains-like buzz (saw-spectrum harmonics of 60 → 45 Hz with random phases, 400 Hz–3 kHz) dying over 0.9 s, a discharge crack (1–10 kHz grains) 5 dB under it, the arcs running out to both sides and a soft thump.
+Edit: 1.34 s, −18.0 dB, ceiling −1.5 dBFS (peak −2.8, −19.2 LUFS: less dense than a).
+
+### emp-powerdown-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: a machine stunned by the EMP, as its running lights go out (several can play at once).
+Why: A spin-down whine: a relay clunk (300–1500 Hz noise and a 900 Hz body, tau 20 ms, no sub) and a whine running down 1400 → 180 Hz with its 2nd harmonic and a breath of band noise, fading as it falls.
+Edit: 0.92 s, −24.1 dB, ceiling −8 dBFS (peak −11.0, −26.5 LUFS).
+
+### emp-powerdown-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: The buzz dies: a 100 Hz mains buzz (random-phase harmonics up to 3 kHz) flickering (a smooth 9 Hz wobble deepening from 10 % to 80 %) and sagging to 70 Hz, a faint whine falling 900 → 250 Hz under it.
+Edit: 0.90 s, −24.0 dB, ceiling −8 dBFS (peak −10.9, −21.9 LUFS; 69 % of the energy below 200 Hz).
+
+### lance-rumble-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: the deep rumble under the Orbital Lance's 3 s column (with the column's loop c; looped, so a longer column works too).
+Why: An orbital roar: circular noise peaking at 60 Hz (with a 120–400 Hz band so small speakers carry it) swelling 15 % once a loop, over two low harmonic voices on 41.0 / 41.3 Hz (harmonics 1–10, a bump at 200 Hz) beating once a loop.
+Edit: seamless 3.00 s loop, band RMS −36.0 dB (the ambience loops' level), −24.9 LUFS (the column's loop c −22.5), peak −13.7 dBFS, 87 % of the energy below 200 Hz; seam step +3.1 dB after encoding.
+
+### lance-rumble-r37-b — "Cracking Earthquake" by uagadugu + synthesized roar
+
+Proposed (round 37).
+Source: <https://freesound.org/people/uagadugu/sounds/222521/> — CC0 1.0 (the root burst's rumble). Use: as a.
+Why: The ground answers: the earthquake (30 Hz–1.2 kHz, filtered before the cut; 3.0 s from 2.0 s, a 0.6 s cross-fade) with its cracking, over a's roar 4 dB under.
+Edit: seamless 3.00 s loop, band RMS −36.1 dB, −23.1 LUFS, peak −11.4 dBFS, 94 % below 200 Hz; seam step −3.3 dB after encoding.
+
+### overcharge-whoosh-r37-a — "Power Up Charge" by qubodup + synthesized whoosh and shimmer
+
+Proposed (round 37).
+Source: <https://freesound.org/people/qubodup/sounds/172631/> — CC0 1.0 (the shield-restore chime's source). Use: the Shield Overcharge's activation.
+Why: The restore, charged: the restore's source (0.8 s) at 0.9× speed, a rising whoosh (band 400 → 4000 Hz over 0.7 s) and a white shimmer bloom at the top (nine fluttering partials 2.5–6.5 kHz gliding up 8 %).
+Edit: 1.00 s, −19.4 dB, ceiling −3 dBFS (peak −3.1, −14.2 LUFS: the shield restore's −14.2).
+
+### overcharge-whoosh-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: A double shell: a soft supersaw pad rising an octave (220 → 440 Hz, smoothstep over 0.75 s) as its low-pass opens 500 → 5000 Hz, the same whoosh, and a brighter bloom (eleven partials 3–8 kHz).
+Edit: 1.00 s, −19.0 dB, ceiling −3 dBFS (peak −7.0, −19.8 LUFS; nothing below 200 Hz: lighter than a).
+
+### overcharge-end-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: the end of the overcharge's 8 s (the second shell fading).
+Why: The shimmer fades: ten high partials (2–7 kHz) each fluttering at its own rate, gliding down to 0.7× and ringing out.
+Edit: 0.90 s, −23.9 dB, ceiling −8 dBFS (peak −11.4, −24.3 LUFS).
+
+### overcharge-end-r37-b — "Power Up Charge" by qubodup + synthesized shimmer
+
+Proposed (round 37).
+Source: <https://freesound.org/people/qubodup/sounds/172631/> — CC0 1.0. Use: as a.
+Why: The charge drains: the restore's source (its first 0.6 s, 200 Hz–4 kHz) played backwards, so its rise becomes a fall, and faded out over its length, under a falling shimmer (eight partials 2.5–6 kHz gliding to 0.75×).
+Edit: 0.90 s, −24.2 dB, ceiling −8 dBFS (peak −9.2, −20.6 LUFS).
+
+### cooldown-ready-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: a cooldown special's ring full (the HUD's white flash).
+Why: Two soft bells: A5 then E6, 70 ms apart, each a sine with a quiet 2.76× partial decaying three times faster (a small bell), 4 ms attack, tau 0.18 s; a different pair from the sonde chime's E6 / B6.
+Edit: 0.50 s, −22.0 dB (UI: the equip sound −24.7, the sonde chime −15.9), ceiling −8 dBFS (peak −13.6, −21.6 LUFS).
+
+### cooldown-ready-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: A glass fifth: one soft C6–G6 chord (8 ms attack) with a quiet shimmering partial at 4.1× the root, tau 0.25 s.
+Edit: 0.50 s, −22.0 dB, ceiling −8 dBFS (peak −14.2, −21.6 LUFS).
+
+### dash-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: the Evasive thrusters' dash (0.12 s, 72 px).
+Why: A thruster puff: noise through a band-pass sweeping 600 → 2500 Hz in 0.04 s and back to 900 Hz over the rest (6 ms attack, tau 0.09 s) over a short low roar (noise under 400 Hz, tau 0.1 s); the game has no engine loop, so "the engine's family" is a jet's.
+Edit: 0.35 s, −20.6 dB (the overdrive start −19.9), ceiling −4 dBFS (peak −4.2).
+
+### dash-r37-b — "RocketThrustMaxx.wav" by Maxx222 + "Afterburner (Close, Screamer, Quick Onset)" by JSK_Productions
+
+Proposed (round 37).
+Source: <https://freesound.org/people/Maxx222/sounds/446764/>, <https://freesound.org/people/JSK_Productions/sounds/829068/> — CC0 1.0. Use: as a.
+Why: A rocket kick: 0.35 s of a steady rocket thrust (from 2.0 s, 8 ms fade-in, 0.25 s fade-out) with the afterburner's scream at its loudest (from 2.2 s, 300 Hz high-pass) 4 dB under; a heavier, rawer burst than a.
+Edit: 0.35 s, −20.1 dB, ceiling −4 dBFS (peak −4.5; 47 % of the energy below 200 Hz).
+
+### drone-break-r37-a — "HeavyBulletPing.mp3" by wilhellboy + "Small Explosion" by Cyberios + synthesized sparks
+
+Proposed (round 37).
+Source: <https://freesound.org/people/wilhellboy/sounds/351371/>, <https://freesound.org/people/Cyberios/sounds/145788/> — CC0 1.0 (the metal hit's and the `tiny` blast a's sources). Use: a light drone breaking.
+Why: As the brief says, the metal hit and a `tiny` blast: the ping (0.3 s), the blast (0.45 s, 90 Hz high-pass) 20 ms later and a spark spray (3–9 kHz with a metallic comb, dying in 0.25 s).
+Edit: 0.49 s, −20.2 dB (the `tiny` blasts −18.1 / −14.4), ceiling −4 dBFS (peak −7.0, −17.8 LUFS).
+
+### drone-break-r37-b — "Impact on metal" by JoMungus + "Small explosion" by dinodilopho + synthesized sparks
+
+Proposed (round 37).
+Source: <https://freesound.org/people/JoMungus/sounds/726486/>, <https://freesound.org/people/dinodilopho/sounds/328833/> — CC0 1.0 (the armour hit's and the `tiny` blast b's sources). Use: as a.
+Why: A crunch: struck plating (its first 0.4 s, 120 Hz high-pass), the blast (0.6 s) 30 ms later and the sparks; duller and heavier than a.
+Edit: 0.63 s, −20.3 dB, ceiling −4 dBFS (peak −7.3, −19.5 LUFS).
+
+### drone-rebuild-r37-a — synthesized
+
+Proposed (round 37).
+Source: none. Use: a light drone rebuilt (its 0.3 s fade-in).
+Why: Materialise: a soft filtered saw pad (two voices 0.4 % apart) easing up a fourth, 330 → 440 Hz, as its low-pass opens 600 → 3000 Hz, a 0.15 s attack and release.
+Edit: 0.60 s, −24.9 dB, ceiling −10 dBFS (peak −19.8, −23.9 LUFS).
+
+### drone-rebuild-r37-b — synthesized
+
+Proposed (round 37).
+Source: none. Use: as a.
+Why: Three bells: E5, A5, E6 sine bells (as the ready chime a's) 60 ms apart over a faint 4–9 kHz sparkle fading in; no glide.
+Edit: 0.57 s, −25.0 dB, ceiling −10 dBFS (peak −15.5, −24.9 LUFS).
+
+## Round 38 (M7 part B) — Level 15: the Burrower's bulge and dive, the entry roar, the Mars dust wind
+
+Brief (M7 part B "Level 15 Olympus Descent", step AUD-B; round 38 closed 2026-10-14: bulge **b**, dive **b**, entry roar **a**, `mars-dust` **a**; the unchosen dive a, entry roar b and `mars-dust` b in `rejected/`, where `sfx_r38.py` now writes them): a/b for the Level 15 sounds of [*Act 3 sounds*](../README.md#act-3-sounds-approved-round-36) and the `mars-dust` ambience: the Burrower's 1.0 s bulge tell and its 0.4 s dive, the high thin entry roar of sections 1–2 and the Mars dust wind from section 3 (and Levels 20–21). All from `tools/concept/audio/sfx_r38.py`, deterministic, from **cached Freesound originals credited in earlier rounds** (smidoid, nicoproson, iwanPlays, dobroide, craigsmith, cobratronik; CC0 1.0, smidoid and dobroide CC-BY 4.0) plus synthesized layers. No bubbly, popping or squelching layers (user rule): grains Hann-windowed and dense enough to fuse, no pitch-swept blips, no low thump under the dive; files scanned for isolated 10 ms frames 12 dB over their surroundings (only the bulge layer's sparse early cracks, by design, masked in its mix with the eruption). Levels: one-shots on the loudest 100 ms of the 200 Hz–5 kHz band, the loops by band RMS (−36 dB like every ambience), one gain and no limiter. Not listened to by Claude: checked by envelopes, spectrograms, band balance, levels and the loop seams.
+
+The chosen eruption ([burrow-eruption-r36-a](burrow-eruption-r36-a.ogg), S.2 = a) already contains the bulge: its first 1.0 s is the ground rumble swelling 14 dB with a pressure tone and a sand hiss, the impact lands at 1.0 s. A separate rumble would double it, so the bulge's **a is no file**: the eruption a is started at the bulge's start (the game's default until the pick); b adds a crack layer over it.
+
+### burrow-bulge-r38-b — "cracking.wav" by smidoid + synthesized cracks and trickle
+
+Proposed (round 38).
+Source: <https://freesound.org/people/smidoid/sounds/49139/> — CC-BY 4.0. Use: the Burrower's bulge (`burrow`), a layer started with the eruption a at the bulge's start.
+Why: Sand and crust cracking: 30 synthesized cracks (4–18 ms band noise, 1.2–6 kHz, with a duller tick) bunching and growing towards the break at 1.0 s, smidoid's cracking at 0.8× speed from 0.5 s (250 Hz high-pass, panned left), and a gritty trickle (2.5–7 kHz, fluttering) swelling under them; no rumble of its own.
+Edit: 1.27 s, −25.0 dB, ceiling −6 dBFS (peak −6.1, −20.9 LUFS; 0 % below 200 Hz). Mixed with the eruption ([burrow-bulge-mix-r38-b](burrow-bulge-mix-r38-b.ogg)): peak −2.2 dBFS, −15.8 LUFS, the loudest 100 ms band −19.1 dB (the eruption's −19.3 alone).
+
+### burrow-dive-r38-a — "SAND POUR.wav" by nicoproson + "Bricks/Stones/Rocks/Gravel Falling" by iwanPlays + synthesized slump
+
+Proposed (round 38).
+Sources: <https://freesound.org/people/nicoproson/sounds/627070/>, <https://freesound.org/people/iwanPlays/sounds/567249/> — CC0 1.0. Use: the Burrower diving (0.4 s).
+Why: A falling sand hiss: the pour (0.6 s from 11.6 s, 350 Hz high-pass) under a low-pass falling 9 → 1.6 kHz, a few stones dropping in 7 dB under (300 Hz high-pass, panned right) and a soft sand slump (a 70–250 Hz noise band) 9 dB under.
+Edit: 0.62 s, −22.2 dB, ceiling −4 dBFS (peak −10.3, −22.0 LUFS; 90 % of the energy in 200 Hz–5 kHz).
+
+### burrow-dive-r38-b — synthesized
+
+Proposed (round 38).
+Source: none. Use: as a.
+Why: A grain slide: 2–6 ms noise grains band-passed round a centre falling 5 → 1 kHz, coming 900 → 150 a second (a hiss sliding down, never single clicks), fading out, over the same slump; set 4 dB under a's band level because its energy lies higher (at −22 dB it measured 5 LU louder than a).
+Edit: 0.55 s, −26.4 dB, ceiling −4 dBFS (peak −5.1, −21.4 LUFS), a 20 ms fade-in.
+
+### entry-roar-r38-a — "20101121.wind.howl.furious.01.wav" by dobroide + synthesized buffet
+
+Proposed (round 38).
+Source: <https://freesound.org/people/dobroide/sounds/109371/> — CC-BY 4.0 (the storm bed's howl, another stretch). Use: Level 15's entry roar in sections 1–2 (a loop; the game raises its level as the air thickens and crossfades it into `mars-dust` at section 3).
+Why: A high thin wind roar over the hull: the howl high-passed at 650 Hz before the cut (its furious body gone, the thin roar left; 12 s from 150 s, 1.5 s cross-fade) over a synthesized hull buffet (circular noise 30–180 Hz riding 2, 5 and 9 gust cycles a loop) 10 dB under.
+Edit: seamless 12.00 s loop, band RMS −36.2 dB, −29.0 LUFS, peak −17.1 dBFS; seam step +6.7 dB after encoding (a noise join, no click).
+
+### entry-roar-r38-b — synthesized
+
+Proposed (round 38).
+Source: none. Use: as a.
+Why: Thin air tearing past the hull: a roar band (circular noise 0.7–6 kHz, peaking at 2 kHz) and a resonant whistle band-passed round a centre wandering 1.6–2.6 kHz (q 6; the filter run over three loop lengths and the middle kept), both riding gusts of 1, 3 and 7 cycles a loop, over a's buffet.
+Edit: seamless 12.00 s loop, band RMS −36.3 dB, −27.9 LUFS, peak −17.3 dBFS; seam step +1.9 dB after encoding.
+
+### mars-dust-r38-a — "G56-22-Sandstorm.wav" by craigsmith + "Wind__Artic__Cold.wav" by cobratronik
+
+Proposed (round 38).
+Sources: <https://freesound.org/people/craigsmith/sounds/438877/>, <https://freesound.org/people/cobratronik/sounds/117136/> — CC0 1.0. Use: `mars-dust`, the Martian dust wind (Level 15 from section 3, Levels 20 and 21; Level 18's eye crossfades the storm bed into it).
+Why: A recorded dust wind, the storm bed's calmer cousin: the sandstorm's steady grit (16 s from 44 s, 0.3–6 kHz, so not the storm bed's stretch) riding slow periodic gusts (1 and 3 cycles a loop, ±25 % and ±12 %), over the low moan of a cold wind (16 s from 30 s, 650 Hz low-pass) 6 dB under; no furious howl.
+Edit: seamless 16.00 s loop, band RMS −36.1 dB, −32.7 LUFS, peak −21.2 dBFS; seam step −13.0 dB after encoding.
+
+### mars-dust-r38-b — synthesized
+
+Proposed (round 38).
+Source: none. Use: as a.
+Why: A thin Martian wind: pinkish noise (circular, 150 Hz–3 kHz, peaking at 500 Hz), a faint whistle band-passed round a centre wandering 0.9–1.4 kHz (q 5) and a grit hiss (3–8 kHz) rising with the gusts (1, 2 and 5 cycles a loop), the two channels apart.
+Edit: seamless 16.00 s loop, band RMS −36.1 dB, −29.5 LUFS, peak −17.6 dBFS; seam step +2.9 dB after encoding.
+
+## Round 39 (M7 part C) — Level 16: the tendril's hum, burn and break, the Threadcrawler's walk, the canyon ambience
+
+Brief (M7 part C "Level 16 Valles Canyon Run", step AUD-C; pending the user's review in round 39): one proposal (a) each for the Level 16 sounds of [*Act 3 sounds*](../README.md#act-3-sounds-approved-round-36) and the `mars-canyon` ambience; the canyon wall scrape is the chosen [canyon-scrape-r36-b](canyon-scrape-r36-b.ogg) (Halleck's CC-BY scrape, [CREDITS.md](../../../../CREDITS.md)), copied into the assets unchanged. All from `tools/concept/audio/sfx_r39.py`, deterministic and **fully synthesized** (no third-party source, nothing new for CREDITS.md). No bubbly, popping or squelching layers (user rule): transients are band-noise grains with a fast decay, tones are steady or glide with a sawtooth's harmonics and fade out before a low tone, never a falling sine. Levels: the break on the loudest 100 ms of the 200 Hz–5 kHz band (−17 dB), the loops by band RMS, one gain and no limiter. Not listened to by Claude: checked by envelopes, band balance, levels and the loop seams.
+
+### tendril-hum-r39-a — synthesized
+
+Chosen (round 39, S.1, user 2026-10-18). Source: none. Use: a tendril barrier live (a loop; the nearest one plays; the game raises its gain over the 1.0 s dormant tell into the flare).
+Why: A taut electric-organic drone: 120 Hz and its harmonics up to 5 kHz (whole cycles in the loop, odd partials stronger, the third a little reedy, fixed random phases per channel) over a faint steady fizz (circular noise 2.5–6 kHz). No wobble: no vibrato, no beating pair, no amplitude modulation, so it cannot read as bubbling.
+Edit: seamless 6.00 s loop, band RMS −38.0 dB, peak −20.7 dBFS; 77 % of the energy lies below 200 Hz (the fundamental), seam step +3.5 dB after encoding (a steady tone, no click).
+
+### tendril-burn-r39-a — synthesized
+
+Chosen (round 39, S.2, user 2026-10-18). Source: none. Use: a `beam` on a tendril (a loop while it burns, over the beam's own loop and the rock-or-target impact layer).
+Why: A searing crackle: 3–9 ms noise grains (band 2–8 kHz, fast exponential decay, ~220 a second at random strengths, two channels apart, placed circularly) over a dry sizzle bed (3–9 kHz, gusts of 2 and 7 cycles a loop).
+Edit: seamless 2.00 s loop, band RMS −34.1 dB, peak −5.3 dBFS; seam step −1.4 dB after encoding.
+
+### tendril-break-r39-a — synthesized
+
+Chosen (round 39, S.3, user 2026-10-18). Source: none. Use: the tendril or an anchor dies (one-shot).
+Why: A whip-crack (a 2 ms broadband snap, then a 30 ms noise tail above 1.8 kHz) and the line going slack: six sawtooth partials and a band-noise component gliding 2.4 → 0.55 kHz over 0.7 s from 12 ms in, fading out before it settles into a low tone.
+Edit: 0.92 s, −17.3 dB loudest 100 ms band, ceiling −4 dBFS (peak −4.1, −14.3 LUFS); 0 % below 200 Hz.
+
+### crawler-walk-r39-a — synthesized
+
+Chosen (round 39, S.4, user 2026-10-18). Source: none. Use: the Threadcrawler's walk (a loop while any of it is on screen); the pores use the enemy small shot, the death the Coilwyrm's bursts.
+Why: A dry many-legged skitter on rock: twelve legs in two staggered rows, each a 2–6 ms noise tick (1.8–7 kHz, fast decay) once per step, 25 steps in the loop (8.4 a second), a little timing jitter and the odd skipped tick so it never marches, spread across the field by leg; under a faint rock rustle (0.9–2.8 kHz).
+Edit: seamless 3.00 s loop, band RMS −36.1 dB, peak −6.7 dBFS; seam step −27 dB after encoding.
+
+### mars-canyon-r39-a — synthesized
+
+Chosen (round 39, S.5, user 2026-10-18). Source: none. Use: ambience `mars-canyon` (Level 16).
+Why: The Martian dust wind with a canyon howl: pinkish wind (circular noise 120 Hz–3 kHz, peaking at 380 Hz) and a grit hiss over a resonant moan (band-passed noise, q 9, wandering 260–420 Hz) with a second voice an octave up (q 7, 600–760 Hz), both breathing with slow gusts (1, 2 and 5 cycles a loop); lower and steadier than `mars-dust`.
+Edit: seamless 16.00 s loop, band RMS −36.0 dB, peak −16.8 dBFS; seam step +6.4 dB after encoding (a noise join, no click).
+
+## Concept round 40 (M7 part D, Level 17 "Dome Siege")
+
+All twelve are synthesized by `tools/concept/audio/sfx_r40.py` (no third-party layers, nothing for CREDITS.md);
+no bubbly, popping or squelching layers. Proposed (round 40), option a each, pending the user's review.
+Levels: one-shots on the loudest 100 ms of the 200 Hz–5 kHz band, loops by the whole loop's band RMS.
+
+### dome-hit-r40-a — synthesized
+Use: a dome of Level 17 takes a hit (`ALLY_HIT`). Brief: thick glass under stress: a heavy knock, a creak running round the dome and a fine crackle of stress lines; no shatter. Why: a 70–190 Hz noise thud plus a 1.2–3 kHz tick, a band-noise creak (resonance wandering 700 → 1400 Hz, panned across the field) and 60 grains of 2–9 kHz. Edit: 1.2 s, −18 dB loudest 100 ms band, ceiling −4 dBFS.
+
+### dome-break-r40-a — synthesized
+Use: a dome breaks (`ALLY_LOST`). Brief: a long glass cave-in: a crack, panes going in a cascade, air rushing out in a falling hiss, a steel frame groan. Why: a snap, ~400 glass grains (3–10 ms, thinning out), a hiss falling 6 → 1.2 kHz and a rough sawtooth set sinking 150 → 85 Hz. Edit: 3.6 s, −16 dB, ceiling −4 dBFS.
+
+### herald-song-r40-a — synthesized
+Use: the Choir Herald's song (with its `ring`). Brief: a short sung phrase in the Choir's colour, not words. Why: three sawtooth voices (unison, a fifth, an octave) through 800/1150/2900 Hz formants, F3 → A3 → E3 with 0.12 s slides and a slow vibrato. Edit: 1.9 s, −20 dB.
+
+### herald-aura-r40-a — synthesized
+Use: the aura, a loop while any ring is up. Brief: a soft high shimmer. Why: six steady sine partials (1.9–4.6 kHz, whole cycles in the loop) each with a slow amplitude swell, over faint 5–9 kHz air; no vibrato or beating pair. Edit: seamless 4.0 s loop, −40 dB band RMS.
+
+### aura-absorb-r40-a — synthesized
+Use: a ring absorbs a hit. Brief: a glassy ping (the enemy-shield hit). Why: four steady inharmonic partials (2.1, 3.3, 4.7, 6.1 kHz), 3 ms attack, exponential decay, never a pitch glide. Edit: 0.4 s, −22 dB.
+
+### aura-collapse-r40-a — synthesized
+Use: the rings collapse at the Herald's death. Brief: a falling chord. Why: five sustained voices (A4 minor-ish stack) sliding a fourth down together over 1.6 s, with a fading sheet of ring-glass pings. Edit: 2.0 s, −18 dB.
+
+### shellback-walk-r40-a — synthesized
+Use: the Shellback's walk (a loop while on screen). Brief: heavy padded footfalls with shell plates clacking. Why: four footfalls (60–160 Hz thud and a 300–900 Hz pad), left and right, each followed by four 1–3.6 kHz plate ticks. Edit: seamless 3.2 s loop, −34 dB band RMS.
+
+### shellback-lob-r40-a — synthesized
+Use: the Shellback's mortar lob (the impact is the Polyp Mortar's chosen impact). Brief: the mortar's lob, lower. Why: an 80–260 Hz cough thump with a short rise-and-fall pressure hiss (300–1800 Hz). Edit: 0.6 s, −17 dB.
+
+### shellback-curl-r40-a — synthesized
+Use: the Shellback curls up. Brief: plates grinding shut. Why: eleven staggered plate scrapes (band noise sweeping down from 0.6–2.5 kHz) ending in a heavy clack. Edit: 0.8 s, −20 dB.
+
+### shellback-roll-r40-a — synthesized
+Use: the Shellback's roll (a loop). Brief: a rumbling grind that crushes. Why: a 40–140 Hz rumble and a gritty 0.7–4.5 kHz crush noise swelling on 2.5 turns in the loop. Edit: seamless 2.5 s loop, −30 dB band RMS.
+
+### shellback-uncurl-r40-a — synthesized
+Use: the Shellback uncurls. Brief: the plates opening. Why: the curl's scrapes in reverse order (rising), a looser clack and a short exhale of grit. Edit: 0.7 s, −22 dB.
+
+### mars-colony-r40-a — synthesized
+Use: ambience `mars-colony` (Level 17). Brief: the plains wind, the domes' air-plant hum, a distant rail clank. Why: a thinner wind than `mars-dust` (circular noise 100 Hz–2.4 kHz) with slow gusts, a steady 60 Hz hum with partials 2–6, and three soft 900 Hz metal tick pairs per loop, far off. Edit: seamless 16.0 s loop, −36 dB band RMS.

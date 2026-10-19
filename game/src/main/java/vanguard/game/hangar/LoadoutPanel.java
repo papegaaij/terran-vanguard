@@ -3,9 +3,12 @@ package vanguard.game.hangar;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import vanguard.content.campaign.Campaign;
+import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Catalogue.Item;
 import vanguard.content.campaign.Catalogue.Stat;
 import vanguard.content.campaign.Fitted;
@@ -13,6 +16,7 @@ import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.Hangar.Choice;
 import vanguard.content.campaign.LoadoutSlot;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Glass;
 
 /**
@@ -24,6 +28,11 @@ import vanguard.game.ui.Glass;
  * {@code L} or {@code R}), the module tiles of the core parts, the special and
  * the two utility bays, and the power bar in its trough with the load, the load the selected choice
  * would make in a lighter colour (red when it would not fit) and the generator's output.
+ *
+ * <p>M7 part A: a bought third utility bay's tile (design/player/systems, Third utility bay) shows only
+ * once the bay is bought, in the schematic's lower right corner opposite Rook's callout (default,
+ * pending the user's review: the module row has no room for an eighth 48 px tile); a cooldown
+ * special's tile shows its cooldown ({@code 45S}) where a charge special shows its charges.
  */
 final class LoadoutPanel {
     private static final int X = 306;
@@ -55,6 +64,12 @@ final class LoadoutPanel {
             LoadoutSlot.UTILITY_2);
     /** A module tile's width; its name is centred in the 8 px label font ({@link Names#tile}). */
     static final int TILE_WIDTH = 48;
+
+    static final int TILE_HEIGHT = 48;
+    /** M7 part A: the bought third bay's tile, in the schematic's lower right corner. */
+    static final int THIRD_BAY_X = X + WIDTH - 8 - TILE_WIDTH;
+
+    static final int THIRD_BAY_Y = Y + SCHEMATIC_HEIGHT - 8 - TILE_HEIGHT;
 
     private static final int TILE_GAP = 2;
 
@@ -99,11 +114,13 @@ final class LoadoutPanel {
     private final Glass glass;
     private final TextureRegion ship;
     private final ItemIcons icons;
+    private final Catalogue catalogue;
 
-    LoadoutPanel(Glass glass, TextureRegion ship, ItemIcons icons) {
+    LoadoutPanel(Glass glass, TextureRegion ship, ItemIcons icons, Catalogue catalogue) {
         this.glass = glass;
         this.ship = ship;
         this.icons = icons;
+        this.catalogue = catalogue;
     }
 
     void draw(SpriteBatch batch, HangarState state) {
@@ -232,34 +249,71 @@ final class LoadoutPanel {
         return (int) Math.ceil(campaign.gear().escort().armour()) + "/" + (int) campaign.escortMaxArmour();
     }
 
-    private void drawTiles(SpriteBatch batch, Hangar hangar, LoadoutSlot selected) {
-        Campaign campaign = hangar.campaign();
-        int x = X + (WIDTH - TILES.size() * TILE_WIDTH - (TILES.size() - 1) * TILE_GAP) / 2;
+    /**
+     * The hit regions of the slots, for the mouse ({@link HangarPointer}): the weapon mounts'
+     * callouts, Rook's callout once he is hired, and the module tiles, the third bay's once it is
+     * bought.
+     */
+    static Map<LoadoutSlot, Box> slots(boolean escortHired, boolean thirdBay) {
+        Map<LoadoutSlot, Box> boxes = new EnumMap<>(LoadoutSlot.class);
+        for (Callout callout : CALLOUTS) {
+            boxes.put(callout.slot(), new Box(callout.x(), callout.y(), callout.width(), CALLOUT_HEIGHT));
+        }
+        if (escortHired) {
+            boxes.put(LoadoutSlot.ESCORT, new Box(ESCORT_X, ESCORT_Y, ESCORT_CALLOUT_WIDTH, ESCORT_HEIGHT));
+        }
+        int x = tilesX();
         for (LoadoutSlot slot : TILES) {
-            boolean on = slot == selected;
-            glass.button(batch, x, TILES_Y, TILE_WIDTH, 48, on, true);
-            glass.centred(
-                    batch,
-                    glass.fonts.body,
-                    Names.code(slot),
-                    on ? Glass.AMBER : Glass.WHITE,
-                    x + TILE_WIDTH / 2f,
-                    TILES_Y + 4);
-            Optional<Item> item = hangar.fitted(slot);
-            String model = item.map(i -> Names.tile(i.name())).orElse("-");
-            glass.centred(batch, glass.fonts.label, model, Glass.BODY, x + TILE_WIDTH / 2f, TILES_Y + 24);
-            glass.centred(
-                    batch,
-                    glass.fonts.label,
-                    value(campaign, slot, item),
-                    Glass.CYAN,
-                    x + TILE_WIDTH / 2f,
-                    TILES_Y + 35);
+            boxes.put(slot, new Box(x, TILES_Y, TILE_WIDTH, TILE_HEIGHT));
             x += TILE_WIDTH + TILE_GAP;
+        }
+        if (thirdBay) {
+            boxes.put(LoadoutSlot.UTILITY_3, new Box(THIRD_BAY_X, THIRD_BAY_Y, TILE_WIDTH, TILE_HEIGHT));
+        }
+        return boxes;
+    }
+
+    /** The schematic panel (its glass), for the layout test. */
+    static Box schematic() {
+        return new Box(X, Y, WIDTH, SCHEMATIC_HEIGHT);
+    }
+
+    private static int tilesX() {
+        return X + (WIDTH - TILES.size() * TILE_WIDTH - (TILES.size() - 1) * TILE_GAP) / 2;
+    }
+
+    private void drawTiles(SpriteBatch batch, Hangar hangar, LoadoutSlot selected) {
+        int x = tilesX();
+        for (LoadoutSlot slot : TILES) {
+            drawTile(batch, hangar, slot, x, TILES_Y, slot == selected);
+            x += TILE_WIDTH + TILE_GAP;
+        }
+        if (hangar.campaign().gear().open(LoadoutSlot.UTILITY_3)) {
+            drawTile(batch, hangar, LoadoutSlot.UTILITY_3, THIRD_BAY_X, THIRD_BAY_Y, selected == LoadoutSlot.UTILITY_3);
         }
     }
 
-    private static String value(Campaign campaign, LoadoutSlot slot, Optional<Item> item) {
+    private void drawTile(SpriteBatch batch, Hangar hangar, LoadoutSlot slot, int x, int y, boolean on) {
+        glass.button(batch, x, y, TILE_WIDTH, TILE_HEIGHT, on, true);
+        glass.centred(
+                batch, glass.fonts.body, Names.code(slot), on ? Glass.AMBER : Glass.WHITE, x + TILE_WIDTH / 2f, y + 4);
+        Optional<Item> item = hangar.fitted(slot);
+        String model = item.map(i -> Names.tile(i.name())).orElse("-");
+        glass.centred(batch, glass.fonts.label, model, Glass.BODY, x + TILE_WIDTH / 2f, y + 24);
+        glass.centred(
+                batch,
+                glass.fonts.label,
+                value(hangar.campaign(), catalogue, slot, item),
+                Glass.CYAN,
+                x + TILE_WIDTH / 2f,
+                y + 35);
+    }
+
+    /**
+     * A tile's number: the output, capacity, armour, speed, a charge special's charges ({@code X2}), a
+     * cooldown special's cooldown ({@code 45S}, M7 part A) or a module's level.
+     */
+    static String value(Campaign campaign, Catalogue catalogue, LoadoutSlot slot, Optional<Item> item) {
         if (item.isEmpty()) {
             return "";
         }
@@ -269,7 +323,11 @@ final class LoadoutPanel {
             case SHIELD -> Names.number(item.get().stats(1).get(Stat.CAPACITY));
             case ARMOUR -> (int) Math.ceil(campaign.armour()) + "/" + (int) campaign.maxArmour();
             case ENGINE -> Names.number(item.get().stats(1).get(Stat.SPEED));
-            case SPECIAL -> "X" + campaign.gear().charges(fitted.item());
+            case SPECIAL ->
+                catalogue
+                        .cooldown(item.get())
+                        .map(seconds -> Names.number(seconds) + "S")
+                        .orElse("X" + campaign.gear().charges(fitted.item()));
             default -> "L" + fitted.level();
         };
     }

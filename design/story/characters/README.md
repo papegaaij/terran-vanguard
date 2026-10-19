@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-02
+updated: 2026-10-14
 ---
 
 # Characters
@@ -78,6 +78,17 @@ Production art, UI batch part U3 (for concept [round 13](../../concept-rounds/ro
 | [concept/portraits-final-r13-a.gif](concept/portraits-final-r13-a.gif) | The three radio portraits cycling neutral → grim → fierce beside the Choir's loop at 12 fps | chosen |
 | [concept/portraits-capture-final-r13-a.png](concept/portraits-capture-final-r13-a.png) | Game capture: Level 01 at 22 s, Okafor's fierce radio portrait with "Contacts inbound. Weapons free." | chosen |
 
+Concept [round 36](../../concept-rounds/round-36/README.md) (Act 3 "Red Dust", overnight design
+phase) — the generic colonial speaker in style B, Level 15's `radio-generic-colonial`: the radio
+portrait of Ares Control (Levels 15–17 and 19–21), on the teal friendly channel like the CDF officer;
+generator `tools/concept/portraits_r36.py`, prompts in [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/generic-colonial-r36-a.png](concept/rejected/generic-colonial-r36-a.png) | Generic colonial A, the old controller — older colonist in a dust-orange militia cap with a boom mic, rust clothes (72×72 at 1× and 2×) | rejected — round 36: b (dust-suit controller) picked |
+| [concept/generic-colonial-r36-b.png](concept/generic-colonial-r36-b.png) | Generic colonial B, the dust-suit controller — the same speaker as a surface worker, goggles on the brow and a respirator | chosen (round 36, C.1) |
+| [concept/portraits-final-r38-a.png](concept/portraits-final-r38-a.png) | Review sheet (`tools/art/portraits.py`, M7 part B): the colonial generic radio portrait `radio-generic-colonial-neutral` (Ares Control, from the chosen dust-suit look b), final art | chosen (round 38, F.6: approved as final) |
+
 ## Decisions
 
 - 2026-09-30: Six-character cast; pre-rendered 3D bust portraits with side-coded frames.
@@ -87,3 +98,8 @@ Production art, UI batch part U3 (for concept [round 13](../../concept-rounds/ro
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../reviews/acts-1-2/README.md).
 - 2026-10-02: Production art, UI batch part U3: `tools/art/portraits.py` renders the speakers of Acts 1–2 in the chosen style B with retained colour: Okafor, Rook and Varga in neutral, grim and fierce (the concept busts with the expression's brows, lids, mouth and head pitch; one 36-colour palette per character, so an expression change keeps the colours), the briefing size for the briefing speakers Okafor and Varga, the generic CDF officer and civilian neutral, the Choir's 32-frame glyph loop (animated on the radio at 12 fps). Vorne, who does not speak in Acts 1–2, comes with Act 6. The portrait rules' "1–2 expressions (urgent, grim, smug)" are now the briefing document's three. Review files proposed for round 13; `art` stays `chosen`.
 - 2026-10-02: Concept round 13 closed (user decision): the production portraits of Acts 1–2 (Okafor, Rook, Varga in neutral, grim and fierce, the generic officer and civilian, the Choir's 32-frame loop; `tools/art/portraits.py`) approved as **final**; `art` stays `chosen`, since Vorne's portraits come with Act 6.
+- 2026-10-12 (overnight design phase): Ares Control's radio portrait (generic colonial a/b, teal friendly channel kept) proposed in concept round 36, pending the user's choice.
+- 2026-10-13 (user, round 36, C.1 = b): Ares Control's radio portrait is the dust-suit controller (b), on the teal friendly channel (amber stays the enemy's); the old controller (a) rejected and moved to `concept/rejected/`. Its production portraits (neutral, grim, fierce) are made in M7 part B.
+- 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 look (generic colonial b), review sheet `portraits-final-r38-a` proposed for round 38 (pending the user's review).
+- 2026-10-14 (user, round 38): Ares Control's production portrait `portraits-final-r38-a` approved as final
+  (F.6). `art` stays `chosen`.

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-12
+updated: 2026-10-13
 ---
 
 # Weapons
@@ -18,8 +18,9 @@ threat profiles recommend traits, and the hangar marks the weapons that have the
 
 ## Contents
 
-The weapons available by L14 (Acts 1–2) have full designs; later weapons are still roster rows
-below.
+The weapons available by L14 (Acts 1–2) have full designs, plus the Act 3 weapons (Ion Beam, Rear
+Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13);
+later weapons are still roster rows below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -28,15 +29,19 @@ below.
 | [lance-laser](lance-laser/README.md) | Lance Laser — Front, piercing, forward; DPS 25 → 95; 2 500; L05 | approved | done | final |
 | [hammer-mortar](hammer-mortar/README.md) | Hammer Mortar — Front, anti-ground, area; DPS 25 → 90; 1 500; L07 | approved | done | final |
 | [hornet-launcher](hornet-launcher/README.md) | Hornet Launcher — Front, homing; DPS 15 → 60; 2 000; L10 | approved | done | final |
+| [ion-beam](ion-beam/README.md) | Ion Beam — Front, beam; DPS 45 → 130; 5 000; L15 | approved | in-progress | final |
 | [side-splitter](side-splitter/README.md) | Side Splitter — Rear, side; DPS 12 → 40; 1 400; L05 | approved | done | final |
 | [tail-gun](tail-gun/README.md) | Tail Gun — Rear, rear; DPS 10 → 35; 600; L08 | approved | done | final |
 | [fan-blaster](fan-blaster/README.md) | Fan Blaster — Rear, rear, spread; DPS 10.2 → 40; 1 200; L10 | approved | done | final |
 | [proximity-mines](proximity-mines/README.md) | Proximity Mines — Rear, rear, area; DPS 20 → 70; 1 500; L12 | approved | done | final |
+| [rear-lance](rear-lance/README.md) | Rear Lance — Rear, rear, piercing; DPS 18 → 60; 2 800; L17 | approved | in-progress | none |
 | [autocannon-pod](autocannon-pod/README.md) | Autocannon Pod — Wing (per pod), forward; DPS 8 → 25; 500; L02 | approved | done | final |
 | [bomb-rack](bomb-rack/README.md) | Bomb Rack — Wing (per pod), anti-ground; DPS 12 → 40; 900; L03 | approved | in-progress | final |
 | [micro-missile-pod](micro-missile-pod/README.md) | Micro-missile Pod — Wing (per pod), homing; DPS 8 → 28; 800; L06 | approved | done | final |
 | [swivel-gun](swivel-gun/README.md) | Swivel Gun — Wing (per pod), side, homing; DPS 8 → 26; 1 500; L09 | approved | done | final |
 | [torpedo-pod](torpedo-pod/README.md) | Torpedo Pod — Wing (per pod), anti-sub; DPS 10 → 32; 1 000; L11 | approved | done | final |
+| [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | chosen |
+| [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
 
 ## Design
 
@@ -71,11 +76,12 @@ factors, draw rounding, the single-target DPS target) are in [data.yaml](data.ya
 [data file schemas](../../tech/architecture/README.md#data-file-schemas)). Each weapon's property
 and per-level tables are rendered from it with `python3 tools/sync_tables.py`;
 `python3 tools/balance.py` checks a typical player's purchases
-([balance-plan.yaml](../balance-plan.yaml)) for levels 01–14 against the [credit budget](../../systems/economy/README.md#per-level-budget),
+([balance-plan.yaml](../balance-plan.yaml)) for levels 01–21 against the [credit budget](../../systems/economy/README.md#per-level-budget),
 the power cap and the DPS available (and time-to-kill once enemy stat data exists, see the
 script's docstring). DPS is given two ways: **volley DPS** (all shots) and **single-target DPS**
 (shots that hit a 36 px target 100 px away; seeking, lobbed and dropped weapons count every
-shot).
+shot). M7 part A: a `beam`'s damage per second is both (it burns its first target), a drone bay's
+shots all count (they aim at the convergence point), a deflector deals none.
 
 ### Roster — later weapons
 
@@ -84,14 +90,10 @@ Still at `idea`; they get a directory when they are designed (Act 3 onwards).
 | Name | Slot | Traits | DPS L1/L5 | Draw L1→L5 | Base price | Unlock | Design |
 |---|---|---|---|---|---|---|---|
 | Harpoon Torpedoes | front | anti-sub, forward | 30 / 100 (sub + surface) | 3 → 5 | 2 000 | L22 | idea |
-| Ion Beam | front | beam | 35 / 130 (continuous) | 5 → 9 | 5 000 | L15 | idea |
 | Plasma Arc | front | area, spread | 30 / 120 (short range, chains to 3–6 targets) | 5 → 8 | 6 000 | L31 | idea |
 | Choir Resonator | front | spread, piercing | 45 / 160 | 7 → 11 | 12 000 | L44 (captured Vrell tech) | idea |
 | Depth Charges | rear | anti-sub, rear | 25 / 80 (sink into the `sub` layer) | 2 → 3 | 1 300 | L22 | idea |
-| Rear Lance | rear | rear, piercing | 18 / 60 | 3 → 5 | 2 800 | L17 | idea |
 | Swarm Tail | rear | rear, homing | 15 / 55 (micro-missiles that curve back up) | 3 → 5 | 3 500 | L30 | idea |
-| Deflector Pod | wing | — (defensive) | absorbs up to 3 bullets per 2 s on its side | 2 → 3 | 1 600 | L18 | idea |
-| Light Drone Bay | wing | forward (drone) | 10 / 30. See [wingmen](../wingmen/README.md) | 2 → 3 | 2 000 | L15 | idea |
 | Tesla Coil Pod | wing | area, shield-breaker | 12 / 40 (short-range zap) | 2 → 4 | 3 000 | L29 | idea |
 
 ### Coverage check
@@ -144,6 +146,23 @@ are in its own `concept/`); generator `tools/art/act2_weapon_fx.py`.
 |---|---|---|
 | [concept/act2-weapons-capture-r28-a.png](concept/act2-weapons-capture-r28-a.png) | Game captures with `--loadout` on Act 1 levels: the Fan Blaster, Tail Gun, Hornets, Swivel Guns and Proximity Mines in flight with their final effects | chosen |
 
+Concept [round 36](../../concept-rounds/round-36/README.md) (Act 3 "Red Dust", overnight design
+phase 2026-10-12) — the Act 3 front beam and the drone bay, a/b each; generator
+`tools/concept/gear_r36.py`.
+
+| File | What | Status |
+|---|---|---|
+| [concept/ion-beam-r36-a.png](concept/ion-beam-r36-a.png) | [Ion Beam](ion-beam/README.md) A — the chosen round-08/09 beam family per level (L1 6 px to L5 14 px, overdrive 18 px): contact on the first target, a tendril burnt through, rock-scorch on a rock island, the glance spark over a hardened ground target (sheet) | chosen (round 36, G.1) |
+| [concept/ion-beam-r36-a.gif](concept/ion-beam-r36-a.gif) | Ion Beam A — Valles canyon at L2: two Ghost Drones in turn, a Tendril Anchor link burnt through, a rock island stopping the beam, a Hive Node passed over (motion) | chosen (round 36, G.1) |
+| [concept/rejected/ion-beam-r36-b.png](concept/rejected/ion-beam-r36-b.png) | Ion Beam B "ion stream" — a white core in a cyan sheath with two helix strands and racing packets, ring splash at the contact, slag beads on rock (sheet) | rejected — round 36: a (the round-08/09 beam family) picked |
+| [concept/rejected/ion-beam-r36-b.gif](concept/rejected/ion-beam-r36-b.gif) | Ion Beam B — the same scene as A (motion) | rejected — round 36: a (the round-08/09 beam family) picked |
+| [concept/light-drone-r36-a.png](concept/light-drone-r36-a.png) | [Light Drone Bay](light-drone-bay/README.md) A — 14×14 disc drone and its dock-ring bay pod: headings, block flash, 36 px orbit and 140 px convergence, block / break (8 hits) / rebuild 6 s, the HUD hits-left pips (sheet) | chosen (round 36, G.2) |
+| [concept/light-drone-r36-a.gif](concept/light-drone-r36-a.gif) | Light drone A — two drones orbiting the Stormhawk, firing at the convergence point, absorbing Needler bullets, breaking and being rebuilt (motion) | chosen (round 36, G.2) |
+| [concept/rejected/light-drone-r36-b.png](concept/rejected/light-drone-r36-b.png) | Light drone B — a dart drone like a miniature Stormhawk and a slim launch-rail bay (sheet) | rejected — round 36: a (disc drone) picked |
+| [concept/rejected/light-drone-r36-b.gif](concept/rejected/light-drone-r36-b.gif) | Light drone B — the same scene as A (motion) | rejected — round 36: a (disc drone) picked |
+| [concept/arsenal-capture-r37-a.png](concept/arsenal-capture-r37-a.png) | Game capture (round 37, M7 part A) with `--loadout front=ion-beam:2,left=light-drone-bay,right=deflector-pod,utility=evasive-thrusters` on Act 1 levels: the beam's contact flare and heat tint on the Gorgon Frigate's tentacle, hull and core (L05) and under the Brood Carrier (L07); a drone rammed, broken and rebuilt with the HUD hits strip (L05 hard, scratch data: 2 hits); the Deflector Pod catching bullets and its charges returning (sheet) | chosen (round 37, K.1: accepted) |
+| [concept/arsenal-capture-r37-a.mp4](concept/arsenal-capture-r37-a.mp4) | The same, 53 s with the game's sound | chosen (round 37, K.1: accepted) |
+
 ## Implementation
 
 - [x] Weapon data format: slot, traits, per-level damage/pattern/draw, price, unlock (the
@@ -158,7 +177,8 @@ are in its own `concept/`); generator `tools/art/act2_weapon_fx.py`.
 - [x] The mines' `area` on `air`, `low-air` and `ground` (M5 part A)
 - [x] `anti-sub` on the `sub` layer, and nothing else but the Smart Bomb reaching it (E2 = a;
   `SubLayerTest`) — M5 part E (step E2a)
-- [ ] `beam` — **later: Act 3** (the Ion Beam, L15)
+- [x] `beam` — **later: Act 3** (the Ion Beam, L15) — M7 part A (step A1; walls, tendrils and
+  auras stop or feed it with their parts C and D: the [Ion Beam](ion-beam/README.md#implementation))
 - [x] Hangar trait markers linked to the level threat profile
 
 ## Open questions
@@ -223,3 +243,18 @@ are in its own `concept/`); generator `tools/art/act2_weapon_fx.py`.
   The ground-only blasts over water hit surfaced units only (a default).
 - 2026-10-12: M5 part I (close-out): the Torpedo Pod item ticked (built in part E, its own document
   `done`); every other item is ticked or tagged later (`beam`, Act 3), so the document is `done`.
+- 2026-10-12 (overnight design phase): the Act 3 weapons Ion Beam (L1 raised to 45 DPS), Rear Lance,
+  Deflector Pod and Light Drone Bay promoted from the roster to draft documents, pending the user's
+  review in round 36.
+- 2026-10-12 (overnight design phase): concept round 36 proposes an a/b of the Ion Beam and of the
+  light drone and its bay (`tools/concept/gear_r36.py`); both documents `art: proposed`, pending the
+  user's choice.
+- 2026-10-13 (user, round 36): the Ion Beam, Rear Lance, Deflector Pod and Light Drone Bay approved
+  (D.20–D.23); the Ion Beam's draw 4 → 8 MW (M11). Picks: the Ion Beam **a** (the round-08/09 beam
+  family), the light drone **a** (disc drone, dock-ring bay); the rejected variants moved to
+  `concept/rejected/`.
+- 2026-10-13 (user, round 37): the Act 3 arsenal's capture accepted (K.1); the Ion Beam's and the light
+  drone's production art approved as final (F.1, F.2), the Deflector Pod's look **a** chosen (P.1, b
+  rejected and moved to its `concept/rejected/`); the simulation's build choices B.1 (a)–(f) all yes; R.3
+  (the Deflector Pod's data layout) accepted; R.4 (a)–(g) all fixed, (c) by Q1's `CAST_ARMOUR` rule (a
+  set piece's armour stops the beam on every layer).

@@ -34,7 +34,10 @@ import vanguard.sim.Sortie;
  * won level is banked with Rook's armour as it ended, and the campaign goes through a save and a load
  * before and after every visit. Level 07's win ends Act 1 with its outro and Act 2's intro briefing
  * follows; Level 14's win ends Act 2 with its outro. The credits and the fit per visit are printed
- * per act (the playthrough sheet in the test report).
+ * per act (the playthrough sheet in the test report). Round 34, P3 = A (design/systems/economy): the
+ * credits at each act's end lie within the balance plan's tolerance of the expert's bound, the starting
+ * credits plus each level's perfect run × the difficulty's income × the expert's collection, with the
+ * expert's grade bonus, less the purchases and repairs paid ({@link #expertBound}).
  */
 class ActPlaythroughTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
@@ -85,6 +88,9 @@ class ActPlaythroughTest {
         assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.beforeNextLevel(CONTENT, campaign));
         List<Visit> visits = new ArrayList<>();
         List<String> problems = new ArrayList<>();
+        double incomeFactor = CONTENT.difficulty().creditIncome().of(difficulty);
+        // Round 34, P3 = A: the expert's bound, carried level by level.
+        long bound = CONTENT.economy().startingCredits();
 
         for (int level = 1; level <= LAST; level++) {
             assertEquals(level, campaign.nextLevel());
@@ -127,6 +133,7 @@ class ActPlaythroughTest {
                     .map(rook -> String.format("%.0f/%.0f", rook.armour(), escortMax))
                     .orElse(hangar.escortHired() ? "grounded" : "-");
             String key = CampaignRoute.launch(CONTENT, campaign).orElseThrow();
+            bound += expertBound(plan, key, difficulty, incomeFactor) - bought.spent() - repairs - escortRepairs;
 
             Rules rules = SimSpecs.rules(CONTENT, key, difficulty);
             campaign.launch();
@@ -210,6 +217,14 @@ class ActPlaythroughTest {
                 assertInstanceOf(
                         CampaignRoute.Step.Outro.class, next, "Level " + level + " ends its act with its outro");
                 report(difficulty, ACT_ENDS.indexOf(level) + 1, visits, campaign);
+                double off = (campaign.credits() - bound) / (double) bound;
+                System.out.printf(
+                        "Expert's bound at the act's end: %d credits; the playthrough %+.1f %% (at most ±%.0f %%)%n",
+                        bound, 100 * off, 100 * plan.expertTolerance());
+                assertTrue(
+                        Math.abs(off) <= plan.expertTolerance(),
+                        difficulty + ": Act " + (ACT_ENDS.indexOf(level) + 1) + " ends with " + campaign.credits()
+                                + " credits, the expert's bound is " + bound);
                 visits.clear();
                 if (level < LAST) {
                     // After the outro: the next act's intro briefing before its first level.
@@ -224,6 +239,16 @@ class ActPlaythroughTest {
         }
         assertEquals(LAST + 1, campaign.nextLevel());
         assertTrue(problems.isEmpty(), difficulty + ": the balance plan at the visits: " + problems);
+    }
+
+    /**
+     * Round 34, P3 = A: what the expert earns in level {@code key}: its perfect run × the difficulty's
+     * income × the expert's collection, rounded, then the expert's grade bonus on it, rounded.
+     */
+    private static long expertBound(BalancePlan plan, String key, Difficulty difficulty, double incomeFactor) {
+        long collected = Math.round(
+                Math.rint(BalancePlan.perfectRun(CONTENT, key, difficulty) * incomeFactor * plan.expertCollection()));
+        return collected + Math.round(Math.rint(collected * plan.expertGradeBonus()));
     }
 
     private static Sortie sortie(Campaign campaign, String key, Rules rules) {

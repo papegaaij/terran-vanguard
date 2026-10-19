@@ -1,10 +1,10 @@
 ---
 title: Saves
 design: approved
-implementation: done
+implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar]
-updated: 2026-10-06
+updated: 2026-10-14
 ---
 
 # Saves
@@ -49,9 +49,10 @@ A versioned document (engine-agnostic; for example JSON):
 | `loadout` | Fitted item per slot, with upgrade level |
 | `inventory` | Owned unfitted items with upgrade levels, by kind (front, rear, wing, generator, shield, plating, engine, utility) |
 | `unlocks` | Shop items unlocked (by act, data cores or story) |
-| `specials` | Charges per special type |
+| `specials` | Charges per special type; a cooldown special (M7 part A: the Shield Overcharge) is owned with 1, never used up |
 | `armour` | Current armour (repair is not automatic) |
 | `escort` | The escort slot (format version 3, M5 part A): `hired` (Rook has joined), `side` (`left`/`right`), `fitted` (the id of his fitted gun, none before he joins), `guns` (every gun he owns with its level, `{"item": "autocannon", "level": 1}`, the fitted one included) and `armour` (his current armour; repair is not automatic). See [wingmen](../../player/wingmen/README.md) |
+| `bays` | The utility bays bought in the hangar, 0 or 1 (format version 4, M7 part A): the third bay, on sale from the L15 visit; the slot `UTILITY_3` in `loadout` holds a module only once it is bought. See [systems](../../player/systems/README.md#third-utility-bay-act-3) |
 | `retriesLeft` | Hard mode only |
 | `grades` | Best grade per completed level |
 | `dataCores` | Collected data cores (lore) |
@@ -79,6 +80,20 @@ campaign's, with Rook hired (Autocannon L1, full armour, left side) when its `ne
 later. The field is always present from version 3 on, and a version 3 save without it is
 unreadable like any save with a missing field.
 
+**Version 4** (M7 part A, user decision Q1 = a of 2026-10-13) adds `bays`, the utility bays bought:
+an empty bought bay has no `loadout` entry, so it needs a field of its own. A new campaign has 0; a
+version 3 save is migrated (versions 1 and 2 first through 3) with 0, which every save before Act 3
+has. A save with a module in `UTILITY_3` and no bay bought is invalid. The release's Act 3 intro
+(part B) needs no further version: it is a story flag. M7 part B (user decision L.6 of round 36; the
+mechanism a default pending the user's review in round 38): the story flag `act-intro:N` records act
+N's intro (its title card and intro pages) as shown, set whenever a briefing opens an act (a new game,
+after an act's outro, or on Continue); the version 3 migration adds `act-intro:1`, and `act-intro:2`
+when the save's next level is 8 or later (the release that wrote it had Acts 1–2), never
+`act-intro:3`; Continue on a save whose next level opens an act without its flag plays that act's
+intro and the level's briefing once (`CampaignRoute.onContinue`), sets the flag, then opens the
+hangar (its autosave keeps it): a save at the Level 15 hangar from the M6 release sees the Act 3
+intro once.
+
 ### Slot display
 
 Each slot shows: act and level name, difficulty, credits, playtime, date, and a small icon for
@@ -96,6 +111,14 @@ the act.
 - [x] `escort` field, with Rook (format version 3, migrated from version 2) — M5 part A
   (`SaveFormat.VERSION` 3, `migrateFrom2` hires him when the save is past Level 07; tests in
   `EscortTest`: the round trip, a new campaign's, the migration, a version 3 save without it)
+- [x] `bays` field, the third utility bay bought (format version 4, migrated from version 3) — M7 part A
+  (`SaveFormat.VERSION` 4, `migrateFrom3` adds 0; `Gear.bays`, `Hangar.buyBay`/`sellBay`; tests in
+  `SaveFormatTest`: the round trip, the migration from version 3, a version 4 save without it, an
+  unbought bay with a module)
+- [x] Act intro once on Continue (L.6): the `act-intro:N` story flags, the version 3 migration's flags and
+  `CampaignRoute.onContinue` — content built in M7 part B step B2 (tests in `CampaignRouteTest`,
+  `SaveFormatTest`); the game's Continue (`HangarScreen.onContinue`, from the slots and the main menu) in
+  step B4; a version 3 save at the L15 hangar captured in round 38 (step B5, pending the user's review)
 - [x] Per-level records in `stats.levels` (format version 2, migrated from version 1) for the act summary (M4 part G; `SaveFormat.VERSION` 2, `migrateFrom1`)
 
 ## Decisions
@@ -150,3 +173,9 @@ the act.
   slots for every debug option, `--escort` never part of the campaign's gear) noted as built, and
   the save's `escort` field (format version 3) accepted with part A. Every item is ticked, so the
   document is `done` again.
+- 2026-10-13: M7 part A (user decision Q1 = a): save format version 4 adds `bays`, the utility bays
+  bought, with a migration from version 3 (0 bays); the systems document's "the slot `UTILITY_3` the
+  loader already knows" could not record an empty bought bay. A cooldown special is held in
+  `specials` with 1 (stated default, accepted in round 37, V.1), so it needs no format change.
+- 2026-10-13 (user, round 37, V.1): save format 4 accepted as built: the `bays` field (0 or 1), version
+  3 saves migrated with 0, an owned cooldown special held in `specials` with 1 (no format change).

@@ -1,0 +1,63 @@
+# Choir Herald stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part D, step D2 (Level 17; M8 = a): a support flyer whose `aura` sings a shield ring onto every other enemy
+# near it. Loaded and checked in step D2, mapped for the simulation in step D4 (sim: step D3). Defaults of the gap
+# check, pending the user's review in round 40: its escorts (`carrier + escorts`) orbit it at 0.8 × the aura's radius
+# (`escort_radius`), so they stay ringed; the aura covers enemies on every layer (the Shellbacks and the ground nests
+# too); the hover's side-to-side drift is a `sine` of 32 px over 10 s (20 px/s at its fastest).
+name: Choir Herald
+faction: Vrell
+layer: air
+tier: medium
+size: [72, 72]    # sprite px
+hitbox: [52, 48]
+parts: single
+orientation: fixed
+hp: 60            # 0.7 s of the Act 3 reference DPS (84 at L17)
+armour: none of its own (its aura never covers itself or another Herald)
+speed: 100        # px/s entering
+movement:
+  hover: {seconds: 12, y: [150, 200], exit: back}   # holds 150-200 px below the top edge for 12 s, then exits up
+  sine: {amplitude: 32, period: 10}                 # the hover's slow side-to-side drift (20 px/s at its fastest)
+attacks:
+  - pattern: aura
+    aura:
+      radius: 90          # px from its centre
+      share: 1.0          # the ring absorbs up to 1x the unit's HP at the level (M8 = a) ...
+      cap: 40             # ... at most 40
+      refill: 0.25        # of the ring's maximum a second, while it lives and the unit stays in range
+      refill_delay: 2.0   # s without a hit before the refill starts
+      fill: 0.5           # s: a unit entering the radius gets its full ring over this
+      keep: 1.0           # s: a unit leaving the radius keeps its ring this long, then it fades
+      collapse: 0.3       # s: every ring it fed collapses over this at its death
+      escort_radius: 0.8  # its escorts orbit it at 0.8 x the radius (72 px; easy 60, hard 84)
+    notes:
+      text: '`{pattern}`: every other enemy within **{aura.radius} px** of its centre carries a shield ring absorbing up to **1× that unit''s HP at the level** (M8 = a), at most {aura.cap}; the ring refills at 25 % of its maximum per second after {aura.refill_delay} s without a hit, while the Herald lives and the unit stays in range'
+  - pattern: ring
+    name: song
+    bullet: small
+    interval: 4.0         # s
+    speed: 100            # px/s, slow
+    count: 10
+    notes:
+      text: 'its own song: a `{pattern}` of {count} every {interval} s (slow {speed} px/s, `{bullet}` {damage})'
+formations:
+  - {name: carrier + escorts}
+  - {name: circle}
+weak_points:
+  - {name: the glowing halo crest}
+drops: []         # Level 17's shield cell is the level's (pickups)
+traits: [forward, piercing, homing]
+bounty: 30
+first_level: 17
+difficulty:
+  easy: {aura: {radius: 75, refill: 0.15}}
+  hard: {aura: {radius: 105}, attacks: {song: {count: 12, interval: 3.2}}}
+notes:
+  orientation: (faces down; it hovers and drifts)
+  speed: entry; hover drift 20 px/s
+  movement: '`hover`: enters behind its escorts, holds 150–200 px below the top edge for {movement.hover.seconds} s with a slow side-to-side drift, then exits up; its escorts `orbit` it at 0.8 × the aura''s radius (72 px)'
+  formations: (the escorts in `orbit` round it); never more than one on the screen
+  weak_points: (drawn only)
+  death: '`medium` organic burst with a falling chord; every ring it fed collapses over 0.3 s'
+  used_in: the act's priority target (Level 17)
+  difficulty: 'easy: radius 75 px, refill 15 %/s; hard: radius 105 px, ring of 12 every 3.2 s'

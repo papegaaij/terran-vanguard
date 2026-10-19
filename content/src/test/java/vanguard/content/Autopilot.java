@@ -14,6 +14,8 @@ import vanguard.sim.SetPiece;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sondes;
 import vanguard.sim.Sortie;
+import vanguard.sim.Tendril;
+import vanguard.sim.Terrain;
 
 /**
  * A simple pilot for headless runs of a whole level: fires all the time, lines up under the lowest
@@ -131,6 +133,32 @@ public final class Autopilot {
     }
 
     /**
+     * M7 part C: the channel it takes where rock splits the canyon (Level 16's fork mesa and rock pillar); the
+     * tests fly both. Without terrain the choice changes nothing.
+     */
+    public enum Channel {
+        /** The left channel (the default: Level 16's relay hut, the secret, stands in it). */
+        LEFT,
+        /** The right channel. */
+        RIGHT
+    }
+
+    /** M7 part C: the half width of the ship's hull kept off rock, px, and the margin beyond it. */
+    private static final double HULL_HALF = 18;
+
+    /** M7 part C: the margin beyond the hull it keeps from rock, px (an anchor at a wall's foot stays in reach). */
+    private static final double ROCK_MARGIN = 8;
+
+    /** M7 part C: how far ahead it looks at the rock coming down at its height, s (walls move ≤ 115 px/s). */
+    private static final double ROCK_AHEAD = 0.6;
+
+    /** M7 part C: the half height of the hull it checks the rock over, px. */
+    private static final double HULL_HALF_HEIGHT = 22;
+
+    /** M7 part C: how low it holds while a standing tendril comes down at it, px. */
+    private static final double TENDRIL_HOLD = 40;
+
+    /**
      * One step's commands, an arena boss played as step E2c's pilot ({@link ArenaPlay#EYES}): the
      * measurements the levels' tests and the balance were made with.
      */
@@ -140,6 +168,29 @@ public final class Autopilot {
 
     /** One step's commands, an arena boss played as {@code play} says. */
     public static int commands(Sortie sortie, ArenaPlay play) {
+        return commands(sortie, play, Channel.LEFT);
+    }
+
+    /** One step's commands, the canyon's split taken by {@code channel} (M7 part C, Level 16). */
+    public static int commands(Sortie sortie, Channel channel) {
+        return commands(sortie, ArenaPlay.EYES, channel);
+    }
+
+    /**
+     * One step's commands, an arena boss played as {@code play} says and (M7 part C) the canyon's split taken by
+     * {@code channel}: in a canyon it keeps its hull {@link #ROCK_MARGIN} px off the rock at its height now and over
+     * the next {@link #ROCK_AHEAD} s, whatever else it does.
+     */
+    public static int commands(Sortie sortie, ArenaPlay play, Channel channel) {
+        int commands = pilot(sortie, play);
+        if (sortie.groundAllies() && rollThreat(sortie)) {
+            // M7 part D: a wounded Shellback's roll would crush a dome: no shot at it until the dome is out of reach.
+            commands &= ~Command.FIRE.bit();
+        }
+        return sortie.terrain() == null ? commands : canyon(sortie, commands, channel);
+    }
+
+    private static int pilot(Sortie sortie, ArenaPlay play) {
         double shipX = sortie.ship().x();
         double shipY = sortie.ship().y();
         int commands = Command.FIRE.bit();
@@ -190,14 +241,22 @@ public final class Autopilot {
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             double y = enemy.renderY(1);
-            // M5 part H: a root burst's growth takes no damage while it grows (Level 14).
+            // M5 part H: a root burst's growth takes no damage while it grows (Level 14); M7 part B: nothing
+            // hits a buried Burrower.
             if (!enemy.cloaked()
                     && !enemy.growing()
+                    && enemy.layer().touchable()
                     && y < PlayField.HEIGHT - 10
                     && y > shipY + 40
                     && (lowest == null || y < lowest.renderY(1))) {
                 lowest = enemy;
             }
+        }
+        Enemy maw = burrower(sortie, shipY);
+        if (maw != null) {
+            // M7 part B: a Burrower bulging or up (Level 15): under its spot before it breaks out, to hit it in
+            // its window; its ring's bullets are dodged as any.
+            lowest = maw;
         }
         Enemy behind = rearAmbusher(sortie, shipY);
         if (behind != null) {
@@ -236,7 +295,15 @@ public final class Autopilot {
         if (head != null) {
             lowest = head;
         }
-        Enemy walker = convoyThreat(sortie, shipY);
+        Enemy anchor = gateAnchor(sortie, shipX, shipY);
+        if (anchor != null) {
+            // M7 part C: a gate's anchor before its tendril reaches the ship, holding low meanwhile (Level 16).
+            lowest = anchor;
+            targetY = Math.min(targetY, TENDRIL_HOLD);
+        }
+        // M7 part D: Level 17's domes: the hooked bomber about to reach its dome, the Choir Herald, any hooked
+        // bomber, a Shellback's vent or belly (never while it is armoured), instead of a convoy's threat.
+        Enemy walker = sortie.groundAllies() ? siegeTarget(sortie, shipY) : convoyThreat(sortie, shipY);
         Enemy guard = guardTarget(sortie);
         if (guard != null) {
             // M5 part G: the defended ally's attackers first, from below them.
@@ -274,9 +341,11 @@ public final class Autopilot {
                 targetY = Math.max(40, pickup.renderY(1) - 10);
             }
         }
-        GroundObject cache = sortie.airEscort() && behind == null ? secretTarget(sortie, shipY) : null;
+        GroundObject cache =
+                (sortie.airEscort() || sortie.terrain() != null) && behind == null ? secretTarget(sortie, shipY) : null;
         if (cache != null) {
-            // Level 10's ferry hatch (2026-10-08: 50 HP): it lines up under it to shoot it open.
+            // Level 10's ferry hatch (2026-10-08: 50 HP): it lines up under it to shoot it open; M7 part C: Level 16's
+            // relay hut (in the left channel; the rock keeps a pilot in the right one from it).
             targetX = cache.renderX();
         }
         if (sortie.airEscort()) {
@@ -510,6 +579,10 @@ public final class Autopilot {
         boolean close = false;
         for (int c = 0; c < sortie.chainCount() && !close; c++) {
             var chain = sortie.chain(c);
+            if (chain.ground()) {
+                // M7 part C: a crawling chain (the Threadcrawler) is on the ground and cannot ram.
+                continue;
+            }
             for (int k = 0; k < chain.size(); k++) {
                 Enemy member = chain.member(k);
                 if (member != null
@@ -531,6 +604,111 @@ public final class Autopilot {
             return -1;
         }
         return chainClearance(sortie, shipX - 50, shipY) > chainClearance(sortie, shipX + 50, shipY) ? -1 : 1;
+    }
+
+    /**
+     * M7 part C: the anchor to shoot of the lowest standing gate coming down above the ship (Level 16): the live
+     * anchor nearer the ship; null for none.
+     */
+    private static Enemy gateAnchor(Sortie sortie, double shipX, double shipY) {
+        if (sortie.links() == null) {
+            return null;
+        }
+        Tendril lowest = null;
+        for (int i = 0; i < sortie.links().size(); i++) {
+            Tendril tendril = sortie.links().get(i);
+            double y = Math.min(tendril.ay(), tendril.by());
+            if (tendril.standing()
+                    && y > shipY
+                    && y < PlayField.HEIGHT + 20
+                    && (lowest == null || y < Math.min(lowest.ay(), lowest.by()))) {
+                lowest = tendril;
+            }
+        }
+        if (lowest == null) {
+            return null;
+        }
+        Enemy best = null;
+        double bestDistance = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            if (enemy.spec().link().isEmpty()) {
+                continue;
+            }
+            double x = enemy.renderX(1);
+            double y = enemy.renderY(1);
+            boolean a = Math.hypot(x - lowest.ax(), y - lowest.ay()) < 4;
+            boolean b = Math.hypot(x - lowest.bx(), y - lowest.by()) < 4;
+            double distance = Math.abs(x - shipX);
+            if ((a || b) && distance < bestDistance) {
+                best = enemy;
+                bestDistance = distance;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * M7 part C: {@code commands} kept off the rock (Level 16): the span of the channel it flies (the {@code channel}
+     * side where rock splits the canyon) at its hull's height now and over the next {@link #ROCK_AHEAD} s, less the
+     * hull and {@link #ROCK_MARGIN}; a move out of it is dropped, and outside it it moves back in.
+     */
+    private static int canyon(Sortie sortie, int commands, Channel channel) {
+        Terrain terrain = sortie.terrain();
+        double shipX = sortie.ship().x();
+        double shipY = sortie.ship().y();
+        double scroll = sortie.groundScroll();
+        double speed = sortie.groundSpeed();
+        double lo = Double.NEGATIVE_INFINITY;
+        double hi = Double.POSITIVE_INFINITY;
+        for (double ahead = 0; ahead <= ROCK_AHEAD + 1e-9; ahead += 0.1) {
+            double at = scroll + speed * ahead;
+            for (double dy = -HULL_HALF_HEIGHT; dy <= HULL_HALF_HEIGHT; dy += HULL_HALF_HEIGHT) {
+                double[] span = channelSpan(terrain, at, shipY + dy, channel);
+                lo = Math.max(lo, span[0]);
+                hi = Math.min(hi, span[1]);
+            }
+        }
+        double margin = HULL_HALF + ROCK_MARGIN;
+        if (hi - lo < 2 * margin) {
+            // The rock moves faster than the look-ahead allows: the span at its height now.
+            double[] span = channelSpan(terrain, scroll, shipY, channel);
+            lo = span[0];
+            hi = span[1];
+            margin = Math.min(margin, (hi - lo) / 2);
+        }
+        double left = lo + margin;
+        double right = hi - margin;
+        int horizontal = Command.LEFT.bit() | Command.RIGHT.bit();
+        if (shipX < left - DEAD_ZONE) {
+            return (commands & ~horizontal) | Command.RIGHT.bit();
+        }
+        if (shipX > right + DEAD_ZONE) {
+            return (commands & ~horizontal) | Command.LEFT.bit();
+        }
+        if (Command.LEFT.in(commands) && shipX <= left) {
+            return commands & ~Command.LEFT.bit();
+        }
+        if (Command.RIGHT.in(commands) && shipX >= right) {
+            return commands & ~Command.RIGHT.bit();
+        }
+        return commands;
+    }
+
+    /**
+     * M7 part C: the flyable span {@code [left, right]} at play-field height {@code y} of the channel the pilot takes:
+     * the leftmost or the rightmost one where rock splits the canyon; the field's edges where there is no wall.
+     */
+    private static double[] channelSpan(Terrain terrain, double scroll, double y, Channel channel) {
+        double row = Terrain.row(scroll, y);
+        double left = terrain.leftAt(row);
+        double right = terrain.rightAt(row);
+        left = Double.isNaN(left) ? 0 : left;
+        right = Double.isNaN(right) ? PlayField.WIDTH : right;
+        double x = channel == Channel.LEFT ? left + 0.5 : right - 0.5;
+        double from = terrain.spanLeft(scroll, y, x);
+        double to = terrain.spanRight(scroll, y, x);
+        return Double.isNaN(from) ? new double[] {left, right} : new double[] {from, to};
     }
 
     /** The distance from (x, y) to the nearest chain member, the vertical counted at 0.7. */
@@ -563,7 +741,7 @@ public final class Autopilot {
      * it rather than the crawlers; with an air escort low, below the shuttle band.
      */
     private static double cruise(Sortie sortie) {
-        if (sortie.airEscort()) {
+        if (sortie.airEscort() || sortie.groundAllies()) {
             return CRUISE_Y;
         }
         for (int k = 0; k < sortie.allyCount(); k++) {
@@ -607,6 +785,113 @@ public final class Autopilot {
             }
         }
         return best;
+    }
+
+    /** M7 part D: a Shellback's roll reaches a dome whose centre lies within this many px of it (350 px + margins). */
+    private static final double ROLL_REACH = 450;
+
+    /** M7 part D: half the width of the ship's fire column the autopilot keeps a Shellback out of, px. */
+    private static final double FIRE_COLUMN = 70;
+
+    /**
+     * M7 part D (design/campaign Level 17; Varga: "when it curls up, wait"): whether a Shellback that has not rolled
+     * yet stands in the ship's fire column above it while a standing dome lies within its roll's reach, so that
+     * shooting it would set off a roll into the dome.
+     */
+    private static boolean rollThreat(Sortie sortie) {
+        double shipX = sortie.ship().x();
+        double shipY = sortie.ship().y();
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            if (!rollPending(enemy)
+                    || Math.abs(enemy.renderX(1) - shipX) > FIRE_COLUMN
+                    || enemy.renderY(1) < shipY
+                    || enemy.renderY(1) > PlayField.HEIGHT + 40) {
+                continue;
+            }
+            if (domeInReach(sortie, enemy)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M7 part D: whether a standing dome lies within {@code enemy}'s roll's reach. */
+    private static boolean domeInReach(Sortie sortie, Enemy enemy) {
+        for (int k = 0; k < sortie.allyCount(); k++) {
+            if (sortie.ally(k).alive()
+                    && Math.hypot(
+                                    sortie.ally(k).renderX(1) - enemy.renderX(1),
+                                    sortie.ally(k).renderY(1) - enemy.renderY(1))
+                            < ROLL_REACH) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M7 part D: a walker with a curl-roll still to come (above its roll's share of its HP, walking). */
+    private static boolean rollPending(Enemy enemy) {
+        return enemy.spec().roll().isPresent()
+                && enemy.hp() > 0
+                && enemy.curlPhase() == Enemy.CurlPhase.WALK
+                && enemy.hp()
+                        > enemy.spec().roll().get().belowShare() * enemy.spec().hp();
+    }
+
+    /** M7 part D: a hooked bomber whose dome is within this many px of its row is shot before the Herald. */
+    private static final double BOMB_URGENT = 200;
+
+    /**
+     * M7 part D (design/campaign Level 17): the unit to shoot first round the domes: a hooked bomber whose dome is
+     * within {@link #BOMB_URGENT} px of reaching its row, then the Choir Herald (its rings on everything near it),
+     * then the hooked bomber whose dome comes nearest, then a Shellback walking or showing its belly (its vent sits
+     * on its back, so shooting the body from below takes the vent first); a curled or rolling one is waited out.
+     * Null when none of them is on the screen above the ship.
+     */
+    private static Enemy siegeTarget(Sortie sortie, double shipY) {
+        Enemy herald = null;
+        Enemy bomber = null;
+        double bomberGap = Double.POSITIVE_INFINITY;
+        Enemy shellback = null;
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            double x = enemy.renderX(1);
+            double y = enemy.renderY(1);
+            if (x < 8 || x > PlayField.WIDTH - 8 || y > PlayField.HEIGHT - 10 || y < shipY + 20 || enemy.hp() <= 0) {
+                continue;
+            }
+            if (enemy.spec().aura().isPresent()) {
+                herald = enemy;
+            } else if (enemy.bombRun() >= 0 && !enemy.bombSpent()) {
+                // when it drops: once its dome's hit box reaches its row and it has steered over the dome
+                int dome = enemy.bombRun();
+                double reach = sortie.ally(dome).renderY(1)
+                        - sortie.allySpec(dome).hitbox().height() / 2
+                        - y;
+                double across = Math.abs(sortie.ally(dome).renderX(1) - x)
+                        - sortie.allySpec(dome).hitbox().width() / 2;
+                double gap = Math.max(
+                        reach,
+                        across * sortie.groundSpeed() / Math.max(1, enemy.spec().speed()));
+                if (gap < bomberGap) {
+                    bomberGap = gap;
+                    bomber = enemy;
+                }
+            } else if (enemy.spec().roll().isPresent()
+                    && !enemy.armoured()
+                    && !(rollPending(enemy) && domeInReach(sortie, enemy))
+                    && (shellback == null || y < shellback.renderY(1))) {
+                shellback = enemy;
+            }
+        }
+        if (bomber != null && bomberGap < BOMB_URGENT) {
+            return bomber;
+        }
+        if (herald != null) {
+            return herald;
+        }
+        return bomber != null ? bomber : shellback;
     }
 
     /** M5 part G: whether it guards a defended ally now (the synchronisation running, the ally standing). */
@@ -1374,7 +1659,8 @@ public final class Autopilot {
             }
             for (int i = 0; i < sortie.enemyCount(); i++) {
                 Enemy enemy = sortie.enemy(i);
-                if (enemy.layer() == Layer.GROUND) {
+                // M7 part B: nor a buried one (it touches nothing).
+                if (enemy.layer() == Layer.GROUND || !enemy.layer().touchable()) {
                     continue;
                 }
                 double ex = enemy.renderX(1) + (enemy.renderX(1) - enemy.renderX(0)) * steps;
@@ -1519,7 +1805,11 @@ public final class Autopilot {
         boolean overGround = !sortie.script().targets().isEmpty() || sortie.defending();
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if ((overGround && enemy.layer() == Layer.GROUND) || enemy.cloaked() || holding(enemy)) {
+            // M7 part B: a buried Burrower touches nothing; it is not dodged.
+            if ((overGround && enemy.layer() == Layer.GROUND)
+                    || !enemy.layer().touchable()
+                    || enemy.cloaked()
+                    || holding(enemy)) {
                 continue;
             }
             double dx = enemy.renderX(1) - shipX;
@@ -1535,6 +1825,26 @@ public final class Autopilot {
             }
         }
         return 0;
+    }
+
+    /**
+     * M7 part B: the Burrower to line up under (Level 15): of those bulging or up above the ship, the one whose
+     * window closes first (a bulging one's after an up one's); null for none.
+     */
+    private static Enemy burrower(Sortie sortie, double shipY) {
+        Enemy best = null;
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            Enemy.BurrowPhase phase = enemy.burrowPhase();
+            if ((phase == Enemy.BurrowPhase.BULGE || phase == Enemy.BurrowPhase.SURFACED)
+                    && enemy.burrowSpotY() > shipY + 40
+                    && (best == null
+                            || (phase == Enemy.BurrowPhase.SURFACED
+                                    && best.burrowPhase() == Enemy.BurrowPhase.BULGE))) {
+                best = enemy;
+            }
+        }
+        return best;
     }
 
     /** Level 10: a rear-ambush unit at its hold point (flashing or holding): it stays put, so it is lined up over, not dodged. */
@@ -1554,7 +1864,11 @@ public final class Autopilot {
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             double dy = enemy.renderY(1) - shipY;
-            if (!enemy.cloaked() && Math.abs(enemy.renderX(1) - shipX) < 40 && dy < 0 && dy > -DANGER - 30) {
+            if (!enemy.cloaked()
+                    && enemy.layer().touchable()
+                    && Math.abs(enemy.renderX(1) - shipX) < 40
+                    && dy < 0
+                    && dy > -DANGER - 30) {
                 return true;
             }
         }

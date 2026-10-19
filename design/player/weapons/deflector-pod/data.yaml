@@ -1,0 +1,20 @@
+# Deflector Pod: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# M7 part A: hits: deflector, no shots; each level (per pod) the field's radius (px round the ship's
+# centre, on the pod's side), its charges and the seconds until one charge returns.
+name: Deflector Pod
+slot: wing
+traits: []
+price: 1600
+unlock: 18
+draw: [2, 3]
+sfx: deflector   # not a weapon sound family: the deflect tick and the charge-return tone (README, Sound family)
+vfx: deflector
+hits: deflector
+pod: true
+levels:
+  - {radius: 22, charges: 3, recharge: 0.67}
+  - {radius: 24, charges: 3, recharge: 0.55}
+  - {radius: 26, charges: 4, recharge: 0.5}
+  - {radius: 28, charges: 4, recharge: 0.45}
+  - {radius: 30, charges: 5, recharge: 0.4}
+overdrive: {radius: 32, charges: 6, recharge: 0.35}

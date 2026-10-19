@@ -84,6 +84,65 @@ final class Formations {
     private Formations() {}
 
     /**
+     * M7 part C (design/campaign Level 16; risk 1 of part C's plan, default pending the user's review): the
+     * flyable span a wave's formation is laid out on in a canyon, at the wave's entry row: the play field's
+     * width is mapped onto it, so entries and spreads stay off the rock; residuals are fixed by an authored
+     * {@code x} or {@code lanes} and proven by the content's clearance test.
+     *
+     * @param left the span's left edge, px
+     * @param right its right edge, px
+     */
+    record Span(double left, double right) {
+        Span {
+            if (!(right > left)) {
+                throw new IllegalArgumentException("a span is wider than nothing: " + left + " to " + right);
+            }
+        }
+
+        /** Whether it is the whole play field (then nothing is mapped). */
+        boolean whole() {
+            return left <= 0 && right >= WIDTH;
+        }
+
+        /** The play-field x {@code x} mapped onto the span from {@code left} to {@code right}. */
+        static double map(double x, double left, double right) {
+            return left + x * (right - left) / WIDTH;
+        }
+
+        /**
+         * Whether a wave is laid out by its formation alone, so it is mapped onto the span: not with an
+         * authored point, paths or lanes, not a field, nor a walker's, a chain's or a burrower's (ground).
+         */
+        static boolean maps(WaveSpec wave) {
+            EnemySpec enemy = wave.enemy();
+            return wave.at().isEmpty()
+                    && wave.paths().isEmpty()
+                    && wave.lanes().isEmpty()
+                    && wave.field().isEmpty()
+                    && enemy.walker().isEmpty()
+                    && enemy.chain().isEmpty()
+                    && enemy.burrow().isEmpty()
+                    && enemy.layer() != Layer.GROUND;
+        }
+    }
+
+    /**
+     * As {@link #plan(WaveSpec, int, SplitMix64, List)}; M7 part C: with a {@code span} (a canyon's flyable
+     * span at the wave's entry row) a wave laid out by its formation alone ({@link Span#maps}) is mapped
+     * onto it. Without one, or with the whole field, it is planned exactly as before.
+     */
+    static void plan(WaveSpec wave, int kind, SplitMix64 rng, List<Spawn> out, Optional<Span> span) {
+        int before = out.size();
+        plan(wave, kind, rng, out);
+        if (span.isEmpty() || span.get().whole() || !Span.maps(wave)) {
+            return;
+        }
+        for (int i = before; i < out.size(); i++) {
+            out.set(i, out.get(i).mappedX(span.get()));
+        }
+    }
+
+    /**
      * A boss stream's unit (design/enemies/bosses: Skitter streams from the side edges), entering
      * from the left or the right edge on a side stream's path; its tick is not read.
      */
@@ -439,8 +498,27 @@ final class Formations {
 
         void vWing() {
             requireFront();
-            Range depth = stopDepth();
             double centre = frontColumn();
+            if (!stops()) {
+                // M7 part B (the Dust Kite's glide): units that neither hover nor dive fly the V down the
+                // screen, the leader first and each rank V_RANK_STEP px behind the one before it.
+                double speed = speed(enemy().speed());
+                for (int i = 0; i < wave.count(); i++) {
+                    int rank = (i + 1) / 2;
+                    int side = i == 0 ? 0 : (i % 2 == 1 ? -1 : 1);
+                    double x = centre + side * rank * V_SPACING;
+                    add(
+                            i,
+                            wave.t() + rank * V_RANK_STEP / speed,
+                            FlightPath.through(x, HEIGHT + OUTSIDE, x, -OUTSIDE),
+                            speed,
+                            0,
+                            Optional.empty(),
+                            Spawn.Exit.DOWN);
+                }
+                return;
+            }
+            Range depth = stopDepth();
             int ranks = wave.count() / 2;
             double rankStep = Math.min(V_RANK_STEP, (depth.max() - depth.min()) / Math.max(1, ranks));
             for (int i = 0; i < wave.count(); i++) {
@@ -491,7 +569,8 @@ final class Formations {
                         speed(enemy().speed()),
                         hover.seconds().pick(rng),
                         Optional.empty(),
-                        Spawn.Exit.awayFromCentre(x));
+                        // M7 part D: a Herald's hover ends straight up (its stat block's exit: back).
+                        enemy().aura().isPresent() ? Spawn.Exit.UP : Spawn.Exit.awayFromCentre(x));
             }
         }
 
@@ -611,6 +690,20 @@ final class Formations {
          */
         void carrierEscorts() {
             requireFront();
+            if (enemy().aura().isPresent() && stops()) {
+                // M7 part D: a Herald carrier (design/enemies/air/choir-herald) comes down to its hover, spread
+                // across like a line abreast (one: at the wave's front column); the escorts' wave circles it.
+                for (int i = 0; i < wave.count(); i++) {
+                    double x = wave.count() == 1 ? frontColumn() : (i + 1) * WIDTH / (wave.count() + 1);
+                    stopAt(
+                            i,
+                            wave.t(),
+                            FlightPath.through(
+                                    x, HEIGHT + OUTSIDE, x, HEIGHT - stopDepth().at(0.5)),
+                            x);
+                }
+                return;
+            }
             if (enemy().brood().isPresent()) {
                 for (int i = 0; i < wave.count(); i++) {
                     double x = (i + 1) * WIDTH / (wave.count() + 1);
@@ -736,6 +829,10 @@ final class Formations {
          * (straight up without one), the bottom edge warned ahead.
          */
         void chains() {
+            if (enemy().crawl().isPresent()) {
+                crawlers();
+                return;
+            }
             if (wave.paths().isEmpty()) {
                 throw unsupported("a segment chain flies its wave's paths");
             }
@@ -760,6 +857,34 @@ final class Formations {
                         Optional.empty(),
                         Optional.empty(),
                         loop));
+            }
+        }
+
+        /**
+         * M7 part C, ground chains (design/enemies/ground/threadcrawler): unit i's head crawls its {@link
+         * EnemySpec.Crawl} path in ground space from the wave's time on (units after the first {@link
+         * #DIVE_STAGGER_SECONDS} apart); the wave's paths are not read, and its spawn's path is a stand-in.
+         */
+        private void crawlers() {
+            EnemySpec.Crawl crawl = enemy().crawl().orElseThrow();
+            double x = crawl.x(0);
+            FlightPath standIn = FlightPath.through(x, HEIGHT + OUTSIDE, x, -OUTSIDE);
+            for (int i = 0; i < wave.count(); i++) {
+                out.add(new Spawn(
+                        SimStep.ticks(wave.t() + i * DIVE_STAGGER_SECONDS),
+                        kind,
+                        enemy(),
+                        standIn,
+                        crawl.speed(),
+                        0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN,
+                        false,
+                        carried(i),
+                        Optional.empty(),
+                        Optional.empty(),
+                        Optional.empty(),
+                        Optional.empty()));
             }
         }
 

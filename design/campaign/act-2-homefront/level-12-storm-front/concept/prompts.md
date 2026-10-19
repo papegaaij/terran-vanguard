@@ -159,3 +159,22 @@ times less 0.38 s): the mean power of the mix over the drops (aligned by their a
 ≈ 10 dB above the drop's click and clunk in run B and 15–20 dB above them in run A; the front gun fires on the same tick
 at the same level, so the drop is masked. Not judged by ear (Claude cannot listen). The sheet: (1) the mines behind the
 ship at 1:1 (run A, t 16–20); (2) 2× around the parked ship (run B, t 25–27); (3) the plot.
+
+## level-12-capture-reveal-r34-a
+
+Round 34 (P5), a capture of the game, not generated art (`.png` sheet, `.mp4` with the game's sound): a Spore Bomber
+under a cloud bank revealed by a lightning flash, taken on 2026-10-12 (step K6). **It uses a scratch-only data variant,
+never in the repository**: in the real data no Spore Bomber is under a bank at any flash (the t=64 pair has left the screen
+by t ≈ 77.8, before the t=78 flash; the t=146 pair is just entering, clear of the banks, at the t=147 flash; the waves
+are the same on every difficulty), so a copy of the working tree (19:57) had the t=146 `line abreast` Spore Bomber pair
+moved to `t: 101.5` in this level's `data.yaml` (nothing else changed) and was built by `:desktop:installDist` into an
+isolated build directory. The pair's right unit (x 360) then flies into the tall bank on the right (`bank-tall-a`, the
+canister's cover) as it enters. Recording as for [level-12-capture-final-r34-a](#level-12-capture-final-r34-a) (private
+Xvfb, 960×540, `ALSOFT_DRIVERS=wave`, the sound aligned at `device reopen`, `ffmpeg -f x11grab -framerate 30`; **t** is
+seconds since `[display] window`). One run: `--bench 124 --level 12 --invulnerable --escort none --loadout
+front=pulse-cannon:1`, medium, auto-fire on, the ship held near the middle (dead reckoning; it sits at x ≈ 340, where its
+shots break the canister). A 10 fps scan of the bombers' yellow-green pixels: the right one hidden from t 102.5, seen through
+the lit bank from the t=103.5 flash to 103.9, hidden again 104.0–104.2, then clear of the bank; the left one over open sea
+throughout. The clip (15 s): t 99–107 in real time with sound, then t 102.8–104.5 at 0.25× (silent), H.264 CRF 20, AAC
+128 kb/s, a caption and the level time burnt in (`drawtext`), joined with the concat filter. The sheet: the play field at
+1:1 at t 102.3, 102.9, 103.3, 103.65 (and a 2.4× inset of the revealed bomber), 103.85, 104.05, 104.6.

@@ -1,0 +1,39 @@
+# Terran Vanguard @tag@ — Acts 1 and 2
+
+A late-90s style vertical shoot'em up set in 2185. This release holds the first two of the
+campaign's seven acts: fourteen levels on easy, medium or hard, with their briefings, radio
+chatter, shop and hangar, the Act 1 and Act 2 bosses and the act outros. The later acts follow in
+later releases.
+
+## Download
+
+| System | File |
+|---|---|
+| Windows 10/11, 64-bit | `terran-vanguard-@version@-winX64.zip` |
+| macOS, Apple Silicon (M1 and later) | `terran-vanguard-@version@-macM1.zip` |
+| macOS, Intel | `terran-vanguard-@version@-macX64.zip` |
+| Linux, 64-bit x86 | `terran-vanguard-@version@-linuxX64.zip` |
+
+Unpack the zip anywhere and start the game from the `terran-vanguard-@version@` folder; it brings
+its own Java runtime, nothing has to be installed. `README.txt` in that folder has the controls
+and where the settings, saves and screenshots are kept.
+
+## The game is not signed
+
+- **Windows:** SmartScreen may say "Windows protected your PC". Choose **More info**, then
+  **Run anyway** (only on the first start).
+- **macOS:** the first start is refused ("cannot be opened because the developer cannot be
+  verified"). Control-click the app, choose **Open** and confirm, or choose **Open Anyway** in
+  System Settings → Privacy & Security. If macOS says the app is damaged, run once in Terminal:
+  `xattr -dr com.apple.quarantine "/path/to/Terran Vanguard.app"`.
+- **Linux:** if the game does not start, make it executable: `chmod +x terran-vanguard`.
+
+## Requirements
+
+A 64-bit system with OpenGL 3.2 or newer (any graphics chip from the last ten years); keyboard
+or gamepad. The game starts in borderless full screen; Alt+Enter or F11 switch to a window.
+
+## Licence and credits
+
+The game is open source under the Apache License 2.0 (`LICENSE.txt`). `CREDITS.md` lists every
+third-party file (sound effects, fonts) with its author and licence.

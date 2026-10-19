@@ -83,9 +83,9 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (tools/art
         far: the storm's cloud wall all round, turning slowly clockwise (≈ 3°/s). No rain, no gusts. The armour patch at t≈152; the third sonde at t≈165.
       purpose: Calm; Varga sees the Needlers circling with the storm.
   - name: Breakout
-    end: 205
+    end: 218   # playtest 2026-10-18: 205 -> 218, so Okafor's level-end line is spoken before the debrief (with Rook and the sondes met late in the eye it opened at 218.1 and played over the debrief)
     atmosphere: medium
-    peak: {atmosphere: light, from: 198, to: 205}   # the storm thinning toward the end
+    peak: {atmosphere: light, from: 198, to: 218}   # the storm thinning toward the end, then out of it
     tiles: [swell, chop]
     notes:
       layers:
@@ -148,6 +148,7 @@ waves:
   - {t: 92, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
   - {t: 96, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [240, 110]}
   - {t: 98.5, formation: stream, enemy: skitter, count: 4, from: sides, edge: right, interval: 1.25, notes: Beside the drifting canister}
+  - {t: 101.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: 'The lightning reveal: the right one flies into the tall bank on the right (the canister''s cover), seen through it in the t=103.5 flash'}
   - {t: 104, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: The first one drops an overdrive}
   - {t: 108, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
   - {t: 112, formation: stream, enemy: lamprey, count: 4, from: rear, interval: 1.5}

@@ -224,3 +224,95 @@ change is the renderer: every angle set uses `enemy_rigs.ModelSpaceAngleSprites`
 patterns (chitin ridges, glowing seams, mottled hide) are evaluated in model space and turn with
 the body in the heading grids and the GIF, instead of staying fixed to the screen. The image
 prompt, negative prompt and animation brief of `coilwyrm-r05-a` above still apply unchanged.
+
+## choir-herald-r36-a
+
+**Rejected** (round 36, 2026-10-13: b picked); the files are in `rejected/`.
+
+**Choir Herald A, cantor bell (Vrell, Act 3, Level 17)**: an 80 px support flyer whose aura shields its escorts. Files: `rejected/choir-herald-r36-a.png` (sheet: source, wing beat, headings, the escort ring states) and `rejected/choir-herald-r36-a.gif` (Herald with six Needler escorts in a circle over Mars; one escort is shot through its ring, then the Herald dies and the rings fade).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A manta-like alien flyer seen from directly above: a teal-black chitin bell body (#1e5c5a, dark #06201e) with broad membrane wings, two small teal eyes at the front, two trailing tails; on its back a ring of ivory bone (#8ab8a8) around a glowing teal (#00ff9a) resonance sac, with a fan of five bone pipes rising behind it like organ pipes.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, insect
+- **Animation brief:** 16 headings, a 5-frame wing beat; the crest pulses. Aura: translucent teal sound-wave rings roll out from the crest to the 90 px reach every ~0.4 s. Each escort inside wears a translucent teal bubble with a bright arc showing the absorb left; hits flash it white-teal and shorten the arc; at zero it pops and the escort takes damage. When the Herald dies a last wave rolls out and every bubble fades in 0.4 s.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py choir-herald` (models in the generator itself, on the frozen `tools/concept/render/` package)
+
+## choir-herald-r36-b
+
+**Chosen** (round 36, 2026-10-13).
+
+**Choir Herald B, seraph (Vrell, Act 3, Level 17)**: an 80 px support flyer with a floating halo crest. Files: `choir-herald-r36-b.png` and `choir-herald-r36-b.gif` (same scene as A).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A slim alien seraph-moth seen from directly above: an ivory bone chitin body (#dccfb4) with two pairs of rounded veined wings (fore wings mauve with faint violet veins, hind wings dark #5c4a5c), and a ring of bone floating above its back on three thin struts, carrying six glowing violet (#9a4dff) nodes.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, angel, propeller
+- **Animation brief:** 16 headings, a 5-frame wing beat. Aura: a slowly turning dotted violet circle marks the 90 px reach, faint dashed threads run from the halo to each protected escort. Each escort wears a ring of six violet arc segments; every hit takes one segment off (easy to count), the last one leaves it unshielded. When the Herald dies the threads and segments vanish.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py choir-herald`
+
+## ghost-drone-r36-a
+
+**Chosen** (round 36, 2026-10-13); re-rendered the same day with the U.5 fix: a 2×2 px emissive red eye and a white running light on each wing tip, their glow (a red bloom, small white halos) drawn additively like the Vrell glows, so the shape reads in Level 18's dust storm from the sprite itself.
+
+**Ghost Drone A, facet dart (unmarked, Act 3, Level 18)**: a 40 px grey human-built drone, the first hint of human involvement. Files: `ghost-drone-r36-a.png` (sheet: source, 16 headings with the additive lights, next to a Talon and the player) and `ghost-drone-r36-a.gif` (line abreast, then a pincer, over dusty Mars plains).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A small unmanned combat drone seen from directly above: a flat faceted arrowhead of stealth-like planes in plain matte grey (#7c818b, facets #5d626c) with faint panel lines, a darker sensor spine along the centre ending in one bright emissive red sensor eye near the nose (a clear lens, at least 2×2 px at 40 px, with a soft red bloom), a small white running light on each wing tip with a faint halo, two short gun barrels underneath, a slit engine glowing orange at the rear. No insignia, no colour trim, no gold; a thin neutral grey rim light.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, organic shapes, chitin, gold, yellow, insignia, decals, hazard stripes, blue or cyan accents, magenta glow
+- **Animation brief:** 16 headings. Strafes: a line abreast drops in from the top and peels off sideways, later a pincer crosses in from both sides; each drone fires precise 3-round bursts (small orbs, 0.07 s apart, one aim point, fast). Nothing about it should read as Vrell or Ascendancy except the shared red sensor and engine glow.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py ghost-drone-a` (the chosen a only; `ghost_glow` is the additive light layer)
+
+## ghost-drone-r36-b
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+
+**Ghost Drone B, crescent (unmarked, Act 3, Level 18)**: a 40 px grey drone with a forward-swept wing. Files: `rejected/ghost-drone-r36-b.png` and `rejected/ghost-drone-r36-b.gif` (same scene as A).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A small unmanned combat drone seen from directly above: a long darker grey sensor pod (#5d626c) with a smoked glass strip and one red sensor eye at the nose, a forward-swept crescent wing in plain matte grey (#7c818b) with panel lines, a gun pod at each wing tip (gunmetal #434750), two small canted tail fins, an orange engine glow at the tail. No insignia, no colour trim, no gold; a thin neutral grey rim light.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, organic shapes, chitin, gold, yellow, insignia, decals, hazard stripes, blue or cyan accents, magenta glow
+- **Animation brief:** As A.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py ghost-drone`
+
+## dust-kite-r36-a
+
+**Rejected** (round 36, 2026-10-13: b picked); the files are in `rejected/`.
+
+**Dust Kite A, diamond kite (Vrell, Act 3 popcorn from Level 15)**: a 24 px, 1 HP membrane glider that sways down and swoops across the ship's lane to ram it. Files: `rejected/dust-kite-r36-a.png` (sheet: source, 16 headings, the 4 membrane-flex frames, the 0.3 s entry shimmer, the death puff, next to a Skitter and the player) and `rejected/dust-kite-r36-a.gif` (a stream, a V-wing of 7 and a loose swarm over Mars; most are shot down, a few ram the ship, some miss).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A tiny alien membrane glider shaped like a classic diamond kite seen from directly above: a taut leathery membrane in deep rust (#b04a2c shading to #3a1008) dusted with patchy ochre Martian dust, stretched on a pale sandy bone cross strut near the front, a ridged spine running nose to tail with a glowing teal (#00ff9a) seam, a small dark blunt head with two teal eye points, a thin whip tail behind with two tiny bone vanes.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, insect legs, feathers, paper kite, string
+- **Animation brief:** 16 headings x 4 membrane-flex frames (the sail billows, the tail flicks). For its first 0.3 s on screen it is drawn blended into the dust and fades to full contrast. Sine glide down (50 px amplitude, 1.6 s period, 130 px/s); 180 px above the ship's row one shallow swoop across the ship's lane at 200 px/s (aimed once, no homing), alternating sides in a stream, then straight on off the screen. Death: a ragged puff of rust dust and motes drifting with its momentum, two membrane scraps and a brief teal spark (no rings, no round flash). A ram flashes the ship and ends the kite the same way.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py dust-kite` (models in the generator itself, on the frozen `tools/concept/render/` package)
+
+## dust-kite-r36-b
+
+**Chosen** (round 36, 2026-10-13).
+
+**Dust Kite B, crescent sail (Vrell, Act 3 popcorn from Level 15)**: a 24 px, 1 HP membrane glider with a bat-like sail. Files: `dust-kite-r36-b.png` and `dust-kite-r36-b.gif` (same scene as A).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, isolated on a flat dark background. A tiny alien membrane glider seen from directly above: a broad swept crescent sail in deep rust (#b04a2c shading to #3a1008) dusted with patchy ochre Martian dust, stretched on a sandy bone leading edge and three bone finger struts a side, a scalloped trailing edge; a slim segmented rust body whose plate gaps glow teal (#00ff9a) along the spine, three glowing teal nodes on its back, a small dark head with two teal eye points, a short forked tail.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, insect legs, feathers, bat face, fur
+- **Animation brief:** As A (16 headings x 4 membrane-flex frames, entry shimmer, sine glide and one swoop, the same dust puff and teal spark death).
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py dust-kite`
+
+## dust-kite-final-r38-a
+
+Round 38, production art (M7 part B batch, step ART-B; straight to production from the chosen concept
+dust-kite-r36-b, U.7 = b). Not a mockup: the review sheet (`.png`) and a play-field loop (`.gif`, 480×540
+at 1×: a stream, a V-wing of 7 and a swarm over the Level 15 ground stand-in, the entry shimmer drawn
+with the concept's fade) of the frames in `assets/sprites/dust-kite*`, rendered by
+[tools/art/dust_kite.py](../../../../tools/art/dust_kite.py) (`python3 tools/art/dust_kite.py`) from the
+concept model `kite_b` of `tools/concept/enemies_r36.py` (imported unchanged), every heading its own
+render under the fixed key light, with the concept's ochre/rust light rim.
+
+- **Prompt:** as dust-kite-r36-b.
+- **Negative prompt:** as dust-kite-r36-b.
+- **Animation brief:** 16 headings × 4 membrane-flex frames (10 fps); death: a teal spark (additive: a white-teal pin flash, three short streaks, motes) and a lit puff of rust dust with two membrane scraps tumbling off (solid, 4 translucency steps), 2 steps a frame each.
+- **Generator:** `python3 tools/art/dust_kite.py` (`--review` rebuilds only the review files)
+
+## choir-herald-final-r40-a
+
+Round 40, production art (M7 part D batch, step ART-D; straight to production from the chosen concept
+choir-herald-r36-b, U.3 = b "seraph", the model `herald_b` of `tools/concept/enemies_r36.py` unchanged). Not a
+mockup: the review sheet (`.png`) and a loop (`.gif`) of the files in `assets/sprites/`, rendered by
+[tools/art/siege_units.py](../../../../tools/art/siege_units.py): the Herald at 72 px facing down with its
+wing-beat loop, the crest's additive violet bloom, the segmented shield ring (0-6 segments lit), its absorb
+flash, the faint dashed aura circle (90 px) and the thread strip. The GIF plays a Herald with four Needlers
+orbiting in its ring: threads to each, one escort's ring draining segment by segment under fire, then the
+Herald dies and the rings collapse over 0.3 s.

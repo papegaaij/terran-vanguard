@@ -19,6 +19,8 @@ import vanguard.game.GameServices;
 import vanguard.game.audio.Sfx;
 import vanguard.game.hangar.Names;
 import vanguard.game.input.MenuInput;
+import vanguard.game.input.Pointer;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Dialog;
 import vanguard.game.ui.Glass;
 
@@ -28,7 +30,7 @@ import vanguard.game.ui.Glass;
  * date, and a preview of the selected save. Loading (from the main menu) opens the hangar with the
  * save; saving (from the hangar) writes into a manual slot, after a confirmation when it holds a
  * save; in a debug run it writes nothing and says that saving is off. Back returns to the screen
- * below.
+ * below. With the mouse, hovering a slot selects it and a click loads or saves it.
  */
 public final class SlotsScreen implements GameScreen {
     private static final DateTimeFormatter DATE =
@@ -114,11 +116,26 @@ public final class SlotsScreen implements GameScreen {
         } else if (input.down()) {
             selected = selected == entries.size() - 1 ? first : selected + 1;
         }
+        Pointer pointer = input.pointer();
+        boolean clicked = false;
+        for (int i = first; i < entries.size(); i++) {
+            if (pointer.clicks(row(i))) {
+                selected = i;
+                clicked = true;
+            } else if (pointer.hovers(row(i))) {
+                selected = i;
+            }
+        }
         if (selected != before) {
             services.play(Sfx.MENU_MOVE);
             message = idleMessage();
         }
-        return input.confirm() ? confirm() : Transition.STAY;
+        return input.confirm() || clicked ? confirm() : Transition.STAY;
+    }
+
+    /** A slot's hit region: its selection bar, the rows touching. */
+    static Box row(int index) {
+        return new Box(LIST_X + 2, LIST_Y - 4 + index * ROW, LIST_WIDTH - 4, ROW);
     }
 
     private Transition confirm() {
@@ -141,7 +158,7 @@ public final class SlotsScreen implements GameScreen {
         if (entry instanceof SaveSlots.Entry.Saved saved) {
             services.play(Sfx.MENU_CONFIRM);
             return Transition.replace(
-                    new HangarScreen(services, Campaign.load(services.campaignRules, saved.save()), false));
+                    HangarScreen.onContinue(services, Campaign.load(services.campaignRules, saved.save())));
         }
         services.play(Sfx.MENU_BACK);
         return Transition.STAY;

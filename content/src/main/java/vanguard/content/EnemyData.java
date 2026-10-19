@@ -16,6 +16,10 @@ import java.util.Optional;
  * @param submerge M5 part E: how it surfaces and submerges (the Driftjelly), a unit on {@code ground}
  * @param latch M5 part F: it latches onto the ship's hull and drains the shield (the Lamprey; with its
  *     {@code chase} movement and its {@code drain} attack)
+ * @param machine M7 part A: it is a machine, which the EMP Burst stuns longest (design/player/specials,
+ *     EMP Burst); false (biomechanical, Vrell) when not given
+ * @param roll M7 part D: its curl-roll (the Shellback): once, badly hurt, it curls into an armoured ball, rolls along
+ *     its walk path and uncurls with its belly exposed
  */
 public record EnemyData(
         String name,
@@ -44,13 +48,112 @@ public record EnemyData(
         Optional<SegmentChain> segmentChain,
         Optional<Cloak> cloak,
         Optional<Submerge> submerge,
-        Optional<Latch> latch) {
+        Optional<Latch> latch,
+        Optional<Boolean> machine,
+        Optional<Roll> roll) {
     public EnemyData {
         Layers.of(layer);
         Check.positive("hp", hp);
         Check.notNegative("speed", speed);
         Check.notNegative("bounty", bounty);
         Check.positive("first_level", firstLevel);
+    }
+
+    /**
+     * M7 part D, the curl-roll (design/enemies/ground/shellback): once, when its body (its vital part, else the unit)
+     * falls to {@code below} of its HP, it curls over {@code curl} s (already armoured), rolls {@code seconds} s along
+     * its walk path at {@code speed} px/s as a ball of {@code ball} px (its hit box; fully armoured: shots spark off;
+     * it crushes the ground objects in its path), uncurls over {@code uncurl} s and walks on; for {@code
+     * belly_seconds} s after it uncurls its body takes {@code belly_factor} × the damage (the belly). No attack while
+     * curled.
+     */
+    public record Roll(
+            double below,
+            double curl,
+            double seconds,
+            double speed,
+            double uncurl,
+            double bellySeconds,
+            double bellyFactor,
+            Size ball) {
+        public Roll {
+            Check.that(below > 0 && below < 1, "below: a share of its HP between 0 and 1, was " + below);
+            Check.positive("curl", curl);
+            Check.positive("seconds", seconds);
+            Check.positive("speed", speed);
+            Check.positive("uncurl", uncurl);
+            Check.notNegative("belly_seconds", bellySeconds);
+            Check.that(bellyFactor >= 1, "belly_factor: 1 or more, was " + bellyFactor);
+        }
+
+        /** The px it rolls: {@code seconds × speed}. */
+        public double length() {
+            return seconds * speed;
+        }
+    }
+
+    /** M7 part D: a difficulty's change to a curl-roll: its roll time instead (the Shellback's hard 3.0 s). */
+    public record RollChange(Optional<Double> seconds) {
+        public RollChange {
+            seconds.ifPresent(t -> Check.positive("seconds", t));
+        }
+    }
+
+    /**
+     * M7 part D, the {@code aura} attack (design/enemies/air/choir-herald; M8 = a): every other enemy within {@code
+     * radius} px of its centre (never a boss or mid-boss, never another unit with an aura) carries a shield ring that
+     * absorbs damage before its HP: at most {@code share} × that unit's HP at the level, capped at {@code cap}. A unit
+     * entering the radius gets its full ring over {@code fill} s, one leaving it keeps the ring {@code keep} s; while
+     * the aura's unit lives a ring untouched for {@code refill_delay} s refills at {@code refill} of its maximum a
+     * second; at its death every ring it fed collapses over {@code collapse} s. Its escorts ({@code carrier +
+     * escorts}) orbit it at {@code escort_radius} × the radius, so they stay inside it. The EMP Burst strips the rings.
+     */
+    public record Aura(
+            double radius,
+            double share,
+            double cap,
+            double refill,
+            double refillDelay,
+            double fill,
+            double keep,
+            double collapse,
+            double escortRadius) {
+        public Aura {
+            Check.positive("radius", radius);
+            Check.positive("share", share);
+            Check.positive("cap", cap);
+            Check.that(refill > 0 && refill <= 1, "refill: a share of the ring a second, above 0 and at most 1");
+            Check.notNegative("refill_delay", refillDelay);
+            Check.positive("fill", fill);
+            Check.positive("keep", keep);
+            Check.positive("collapse", collapse);
+            Check.that(
+                    escortRadius > 0 && escortRadius < 1,
+                    "escort_radius: a share of the radius between 0 and 1, was " + escortRadius);
+        }
+
+        /** The ring a unit of {@code hp} carries: {@code share × hp}, at most {@code cap}. */
+        public double ring(double hp) {
+            return Math.min(cap, share * hp);
+        }
+    }
+
+    /** M7 part D: a difficulty's change to an aura: its radius or refill instead (the Choir Herald's easy and hard). */
+    public record AuraChange(Optional<Double> radius, Optional<Double> refill) {
+        public AuraChange {
+            radius.ifPresent(r -> Check.positive("radius", r));
+            refill.ifPresent(r -> Check.that(r > 0 && r <= 1, "refill: above 0 and at most 1"));
+        }
+    }
+
+    /** M7 part D: its {@code aura} attack's aura (the Choir Herald); none without one. */
+    public Optional<Aura> aura() {
+        return attacks.stream().flatMap(attack -> attack.aura().stream()).findFirst();
+    }
+
+    /** M7 part A: whether its stat block marks it a machine ({@code machine: true}); a Vrell unit is not. */
+    public boolean isMachine() {
+        return machine.orElse(false);
     }
 
     /** The movement patterns it uses, with their parameters (design/enemies/README.md, Movement pattern vocabulary). */
@@ -84,6 +187,8 @@ public record EnemyData(
      * @param flock M5 part D: how a {@code swarm} wave's members steer (the Mote Swarm)
      * @param anchored M5 part E: an arena boss's anchored arrival (the Harbour Kraken)
      * @param chase M5 part F: it homes on the ship from its entry, then flies straight on (the Lamprey)
+     * @param burrow M7 part B: it travels under the sand and surfaces near the ship (the Burrower)
+     * @param crawl M7 part C: its head crawls a wave's ground path (the Threadcrawler; the wave's {@code crawl})
      */
     public record Movement(
             Optional<Snake> snake,
@@ -102,7 +207,20 @@ public record EnemyData(
             Optional<Ambush> ambush,
             Optional<Flock> flock,
             Optional<Anchored> anchored,
-            Optional<Chase> chase) {}
+            Optional<Chase> chase,
+            Optional<Burrow> burrow,
+            Optional<Crawl> crawl) {}
+
+    /**
+     * M7 part C, the {@code crawl} movement (design/enemies/ground/threadcrawler): a ground chain's head crawls its
+     * wave's ground path ({@code crawl} points in the walls' rows) at {@code speed} px/s along the ground, on top of
+     * the scroll; the body follows by its segment chain.
+     */
+    public record Crawl(double speed) {
+        public Crawl {
+            Check.positive("speed", speed);
+        }
+    }
 
     /**
      * M5 part F, the {@code chase} movement (design/enemies/air/lamprey): from its entry it steers
@@ -253,19 +371,26 @@ public record EnemyData(
      * to {@code size[1]} px, hit boxes {@code hitboxShare} of the sprite, {@code spacing} × the
      * segment length apart, each with {@code hp} and paying {@code bounty}; {@code contact} the
      * contact class of the segments and the tail; {@code regrow} the rear part's new head after a
-     * cut (once per chain); {@code popInterval} s per segment of the chained death.
+     * cut (once per chain); {@code popInterval} s per segment of the chained death. M7 part C (the Threadcrawler):
+     * {@code width} the segments' sprite across the path, px (their hit box {@code width × share} by {@code length
+     * × share}; square if not given), and {@code cut} instead of {@code regrow}: a cut chain's rear part dies.
      */
     public record SegmentChain(
             int segments,
             List<Double> size,
+            Optional<Double> width,
             double hitboxShare,
             double spacing,
             double hp,
             int bounty,
             Tier contact,
-            Regrow regrow,
+            Optional<Regrow> regrow,
+            Optional<Cut> cut,
             double popInterval) {
         public SegmentChain {
+            Check.that(
+                    regrow.isPresent() != cut.isPresent(), "a chain's rear part regrows a head (regrow) or dies (cut)");
+            width.ifPresent(w -> Check.positive("width", w));
             Check.positive("segments", segments);
             Check.that(size.size() == 2, "size is [first, last]");
             Check.positive("hitbox_share", hitboxShare);
@@ -273,6 +398,16 @@ public record EnemyData(
             Check.positive("hp", hp);
             Check.notNegative("bounty", bounty);
             Check.positive("pop_interval", popInterval);
+        }
+    }
+
+    /**
+     * M7 part C (the Threadcrawler): a cut chain's rear part stops, writhes and dies {@code delay} s after the cut, from
+     * the cut backwards at the chain's pop interval (no new head; the front part crawls on).
+     */
+    public record Cut(double delay) {
+        public Cut {
+            Check.positive("delay", delay);
         }
     }
 
@@ -359,6 +494,8 @@ public record EnemyData(
      * @param layer M5 part E: an arena boss's part's starting layer ({@code sub} or {@code ground});
      *     its script moves it
      * @param spots M5 part E: weak spots on it (the Kraken's eyes)
+     * @param aim round 34 (P2, the kinder Siege Spire): {@code down}, the part fires its aimed attack
+     *     straight down the screen instead of at the ship; empty: as its attack aims
      */
     public record PartData(
             String name,
@@ -371,8 +508,11 @@ public record EnemyData(
             Optional<Double> multiplier,
             Optional<Integer> firstBonus,
             Optional<String> layer,
-            Optional<List<SpotData>> spots) {
+            Optional<List<SpotData>> spots,
+            Optional<String> aim) {
         public PartData {
+            aim.ifPresent(a -> Check.that(a.equals("down"), "a part's aim is down, was '" + a + "'"));
+            Check.that(aim.isEmpty() || attack.isPresent(), "a part aimed down fires an attack");
             firstBonus.ifPresent(b -> Check.notNegative("first_bonus", b));
             layer.ifPresent(l -> Check.that(
                     l.equals("sub") || l.equals("ground"), "a part's layer is sub or ground, was '" + l + "'"));
@@ -400,7 +540,8 @@ public record EnemyData(
                 @com.fasterxml.jackson.annotation.JsonProperty("multiplier") Optional<Double> multiplier,
                 @com.fasterxml.jackson.annotation.JsonProperty("first_bonus") Optional<Integer> firstBonus,
                 @com.fasterxml.jackson.annotation.JsonProperty("layer") Optional<String> layer,
-                @com.fasterxml.jackson.annotation.JsonProperty("spots") Optional<List<SpotData>> spots) {
+                @com.fasterxml.jackson.annotation.JsonProperty("spots") Optional<List<SpotData>> spots,
+                @com.fasterxml.jackson.annotation.JsonProperty("aim") Optional<String> aim) {
             Check.that(
                     name != null && offset != null && hitbox != null && kind != null,
                     "a part has a name, an offset, a hit box and a kind");
@@ -422,7 +563,8 @@ public record EnemyData(
                     multiplier == null ? Optional.empty() : multiplier,
                     firstBonus == null ? Optional.empty() : firstBonus,
                     layer == null ? Optional.empty() : layer,
-                    spots == null ? Optional.empty() : spots);
+                    spots == null ? Optional.empty() : spots,
+                    aim == null ? Optional.empty() : aim);
         }
 
         /** Whether it is a fire-only part. */
@@ -484,8 +626,92 @@ public record EnemyData(
         }
     }
 
-    /** An entry curve of {@code radius} px, reaching {@code topSpeed} px/s. */
-    public record Swoop(Optional<Span> radius, Optional<Double> topSpeed) {}
+    /**
+     * An entry curve of {@code radius} px, reaching {@code topSpeed} px/s. M7 part B (design/enemies/air/dust-kite):
+     * with a {@code trigger} it is the Dust Kite's final swoop instead, started once the unit is within that many px
+     * above the ship's row: one shallow curve across the ship's lane, aimed at the ship's x when it starts (no
+     * homing), at {@code topSpeed} (the hook {@code swoop_speed} instead); then it glides on off the bottom or a
+     * side. Mapped for the simulation by {@link MarsRules#kite}.
+     */
+    public record Swoop(Optional<Span> radius, Optional<Double> topSpeed, Optional<Double> trigger) {
+        public Swoop {
+            topSpeed.ifPresent(speed -> Check.positive("top_speed", speed));
+            trigger.ifPresent(px -> Check.positive("trigger", px));
+            Check.that(trigger.isEmpty() || topSpeed.isPresent(), "a triggered swoop has its top_speed");
+        }
+    }
+
+    /**
+     * M7 part B, the {@code burrow} movement (design/enemies/ground/burrower; M7 = a and the user's Q1 = a of
+     * 2026-10-14): it travels under the sand on the {@code buried} layer at {@code swim} px/s on the screen (screen-fixed
+     * while it travels, bulges and is surfaced: it works against the scroll) to a spot picked relative to the ship
+     * when the bulge starts ({@code spot}), bulges there for {@code bulge} s, is a {@code ground} unit for {@code
+     * surfaced} s (its attack's rings at the {@code rings}' times after it breaks out), dives over {@code dive} s
+     * ({@code buried} from the dive's middle) and travels {@code travel} s (seeded) to its next spot; after {@code
+     * surfacings} surfacings it travels off the bottom edge under the sand (an escape, no bounty). A wave's units
+     * surface at least {@code stagger} s apart and at most {@code max_up} at once (a unit that would break it waits
+     * buried). Mapped for the simulation by {@link MarsRules#burrower}.
+     */
+    public record Burrow(
+            double swim,
+            Span travel,
+            Spot spot,
+            double bulge,
+            double surfaced,
+            double dive,
+            int surfacings,
+            List<Ring> rings,
+            double stagger,
+            int maxUp) {
+        public Burrow {
+            Check.positive("swim", swim);
+            Check.positive("travel", travel.min());
+            Check.positive("bulge", bulge);
+            Check.positive("surfaced", surfaced);
+            Check.positive("dive", dive);
+            Check.positive("surfacings", surfacings);
+            Check.notEmpty("rings", rings);
+            rings = List.copyOf(rings);
+            for (Ring ring : rings) {
+                Check.that(ring.at() < surfaced, "rings: each fires while it is surfaced, before " + surfaced + " s");
+            }
+            Check.notNegative("stagger", stagger);
+            Check.positive("max_up", maxUp);
+        }
+    }
+
+    /**
+     * M7 part B: where a Burrower surfaces, picked when the bulge starts: {@code ahead} {@code [min, max]} px above the
+     * ship's centre, within {@code side} px either side of its x, {@code edge} px inside the play field's side edges and
+     * at least {@code clear} px from the ship's centre.
+     */
+    public record Spot(Span ahead, double side, double edge, double clear) {
+        public Spot {
+            Check.positive("ahead", ahead.min());
+            Check.notNegative("side", side);
+            Check.notNegative("edge", edge);
+            Check.positive("clear", clear);
+        }
+    }
+
+    /**
+     * M7 part B: a Burrower's ring {@code at} s after it breaks out, of {@code count} bullets (its attack's count, or
+     * the hook's {@code attacks.<name>.count}, if not given).
+     */
+    public record Ring(double at, Optional<Integer> count) {
+        public Ring {
+            Check.notNegative("at", at);
+            count.ifPresent(n -> Check.positive("count", n));
+        }
+    }
+
+    /** M7 part B: a difficulty's change to the {@code burrow} movement (the Burrower's easy and hard windows and rings). */
+    public record BurrowChange(Optional<Double> surfaced, Optional<List<Ring>> rings) {
+        public BurrowChange {
+            surfaced.ifPresent(s -> Check.positive("surfaced", s));
+            rings.ifPresent(list -> Check.notEmpty("rings", list));
+        }
+    }
 
     /** Straight at {@code speed} px/s. */
     public record Straight(double speed) {
@@ -586,6 +812,13 @@ public record EnemyData(
      * @param staggered M5 part H, a boss's {@code aimed} or {@code mortar} attack fired by several parts
      *     (design/enemies/bosses/siege-spire: the pods' orbs, the mortar roots' lobs): each part on its own
      *     clock, part k of n {@code k × interval ÷ n} after the first; not with {@code rotate}
+     * @param link M7 part C, the {@code link} pattern (design/enemies/ground/tendril-anchor): the tendril between two
+     *     anchors of a linked nest, its touch the attack's {@code bullet} class; no speed or interval
+     * @param pores M7 part C, the {@code pores} pattern (design/enemies/ground/threadcrawler): a chain's pore wave,
+     *     each segment's pore an aimed {@code bullet} at {@code speed} in turn head to tail, {@code interval} s apart
+     * @param only M7 part C: the difficulties it fires on (the Tendril Anchor's hard orbs); every one if not given
+     * @param aura M7 part D, the {@code aura} pattern (design/enemies/air/choir-herald): the shield rings it sings onto
+     *     the enemies near it; no bullet, speed, interval or count
      */
     public record Attack(
             String pattern,
@@ -613,8 +846,38 @@ public record EnemyData(
             Optional<Pounce> pounce,
             Optional<Double> within,
             Optional<Double> rate,
-            Optional<Boolean> staggered) {
+            Optional<Boolean> staggered,
+            Optional<Link> link,
+            Optional<Pores> pores,
+            Optional<List<String>> only,
+            Optional<Aura> aura) {
         public Attack {
+            Check.that(pattern.equals("aura") == aura.isPresent(), "an aura attack has its aura, the others none");
+            Check.that(
+                    !pattern.equals("aura")
+                            || (bullet.isEmpty()
+                                    && speed.isEmpty()
+                                    && interval.isEmpty()
+                                    && count.isEmpty()
+                                    && firstShotDelay.isEmpty()),
+                    "an aura has no bullet, speed, interval, count or first shot");
+            Check.that(pattern.equals("link") == link.isPresent(), "a link attack has its link, the others none");
+            Check.that(
+                    !pattern.equals("link")
+                            || (bullet.isPresent()
+                                    && speed.isEmpty()
+                                    && interval.isEmpty()
+                                    && firstShotDelay.isEmpty()
+                                    && only.isEmpty()),
+                    "a link has its touch's bullet class and no speed, interval, first shot or difficulties");
+            Check.that(pattern.equals("pores") == pores.isPresent(), "a pores attack has its pores, the others none");
+            Check.that(
+                    !pattern.equals("pores") || interval.isPresent(),
+                    "a pores attack has its interval (s between two pores)");
+            only.ifPresent(names -> {
+                Check.notEmpty("only", names);
+                names.forEach(Difficulty::of);
+            });
             Check.that(
                     staggered.isEmpty() || pattern.equals("aimed") || pattern.equals("mortar"),
                     "only an aimed or a mortar attack is staggered");
@@ -646,9 +909,12 @@ public record EnemyData(
                             || pattern.equals("spiral")
                             || pattern.equals("laser-sweep")
                             || pattern.equals("pounce")
-                            || pattern.equals("drain"),
-                    "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, pounce or drain, was '"
-                            + pattern + "'");
+                            || pattern.equals("drain")
+                            || pattern.equals("link")
+                            || pattern.equals("pores")
+                            || pattern.equals("aura"),
+                    "pattern must be aimed, fan, mine, spawn, mortar, ring, spiral, laser-sweep, pounce, drain, link,"
+                            + " pores or aura, was '" + pattern + "'");
             Check.that(pattern.equals("pounce") == pounce.isPresent(), "a pounce has its pounce, the others none");
             Check.that(
                     !pattern.equals("pounce") || (bullet.isEmpty() && speed.isEmpty() && interval.isPresent()),
@@ -671,6 +937,8 @@ public record EnemyData(
                     pattern.equals("laser-sweep")
                             || pattern.equals("pounce")
                             || pattern.equals("drain")
+                            || pattern.equals("link")
+                            || pattern.equals("aura")
                             || pattern.equals("spawn") != (bullet.isPresent() && speed.isPresent()),
                     "an attack has a bullet and a speed, a spawn attack neither");
             Check.that(!pattern.equals("spawn") || interval.isEmpty(), "a spawn attack has no interval");
@@ -692,6 +960,54 @@ public record EnemyData(
             count.ifPresent(c -> Check.positive("count", c));
             Check.that(pattern.equals("fan") || stagger.isEmpty(), "only a fan has a stagger");
             stagger.ifPresent(st -> Check.positive("stagger", st));
+        }
+
+        /** M7 part C: whether it fires on {@code difficulty}: its {@code only}, every one if not given. */
+        public boolean firesOn(Difficulty difficulty) {
+            return only.map(names -> names.stream().map(Difficulty::of).anyMatch(difficulty::equals))
+                    .orElse(true);
+        }
+    }
+
+    /**
+     * M7 part C, a {@code link}'s tendril (design/enemies/ground/tendril-anchor; M9 = a): {@code hp} (damaged only by
+     * a {@code beam}, which goes on past it), {@code dormant} s of a harmless flickering tell after the pair scrolls
+     * onto the screen, then a touch in its {@code band} px contact band costs the attack's bullet class with a {@code
+     * cooldown} s of its own (the ship and the escort; no push); {@code width} its strip's width, px; {@code
+     * burnt_bounty} the credits for burning it (Act 1 terms). Either anchor's death breaks it for good.
+     */
+    public record Link(double hp, double dormant, double band, double width, double cooldown, int burntBounty) {
+        public Link {
+            Check.positive("hp", hp);
+            Check.notNegative("dormant", dormant);
+            Check.positive("band", band);
+            Check.positive("width", width);
+            Check.positive("cooldown", cooldown);
+            Check.notNegative("burnt_bounty", burntBounty);
+        }
+    }
+
+    /**
+     * M7 part C, a chain's pore wave (design/enemies/ground/threadcrawler): after {@code rest} s, each segment's pore
+     * fires in turn head to tail (the attack's {@code interval} s apart), each glowing {@code glow} s before it fires
+     * (the tell); with {@code every_other} only every other pore fires (easy).
+     */
+    public record Pores(double rest, double glow, Optional<Boolean> everyOther) {
+        public Pores {
+            Check.positive("rest", rest);
+            Check.positive("glow", glow);
+        }
+
+        /** Whether only every other pore fires. */
+        public boolean alternate() {
+            return everyOther.orElse(false);
+        }
+    }
+
+    /** M7 part C: a difficulty's change to a pore wave (the Threadcrawler's easy every other pore, hard 1.5 s rest). */
+    public record PoresChange(Optional<Double> rest, Optional<Boolean> everyOther) {
+        public PoresChange {
+            rest.ifPresent(r -> Check.positive("rest", r));
         }
     }
 
@@ -1208,6 +1524,11 @@ public record EnemyData(
      * @param lanes M5 part E: the lanes an arena boss's volley slams instead (hard's 3)
      * @param drain M5 part F: a drain's rate instead, shield points a second (the Lamprey's hard 12)
      * @param latchSlots M5 part F: a latch's slots instead (the Lamprey's hard 2)
+     * @param burrow M7 part B: the burrow's surfaced time and rings instead (the Burrower's easy and hard)
+     * @param swoopSpeed M7 part B: a triggered swoop's top speed instead, px/s (the Dust Kite's hard 230)
+     * @param pores M7 part C: a pore wave's rest or every other pore instead (the Threadcrawler's easy and hard)
+     * @param aura M7 part D: an aura's radius or refill instead (the Choir Herald's easy 75 px and 15 %/s, hard 105 px)
+     * @param roll M7 part D: a curl-roll's roll time instead (the Shellback's hard 3.0 s)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -1228,8 +1549,14 @@ public record EnemyData(
             Optional<Double> telegraph,
             Optional<Integer> lanes,
             Optional<Double> drain,
-            Optional<Integer> latchSlots) {
+            Optional<Integer> latchSlots,
+            Optional<BurrowChange> burrow,
+            Optional<Double> swoopSpeed,
+            Optional<PoresChange> pores,
+            Optional<AuraChange> aura,
+            Optional<RollChange> roll) {
         public Hook {
+            swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));
             latchSlots.ifPresent(n -> Check.positive("latch_slots", n));
             hoverSeconds.ifPresent(h -> Check.positive("hover_seconds", h));

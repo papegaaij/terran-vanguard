@@ -1,6 +1,6 @@
 ---
 title: Polyp Mortar
-design: review
+design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
@@ -130,3 +130,5 @@ Chosen concept: [polyp-mortar-r04-a.png](../concept/polyp-mortar-r04-a.png) (lis
 - 2026-10-11: M5 part G, step G1a (the user is on vacation, the main agent took the gap analysis's recommendations; **pending the user's review** in the combined round at the end of M5): **G1 = a** the `always` hook made exact for the mortar: marker, direct hit and lob on the relay, the ring on the ship only; the floe drifts in from the left at 10 px/s. `design: review` for this behaviour, `implementation: in-progress` for its build.
 - 2026-10-11: M5 part G, step G3 (the simulation; pending the user's review): under `always` a mortar lobs at the relay's centre while the relay can be aimed at (on the screen, its synchronisation not over), otherwise at the ship; a relay-aimed lob deals its direct hit to the relay when it lands on the relay's hit box, and also to a ship inside its impact circle, as any lob; its ring goes at nobody. A ground unit entering at a side edge appears just outside it at its height (y up) and drifts across at its own `drift`, on top of the scroll; its edge is warned 3 s ahead; it is gone once off the other edge or the bottom one.
 - 2026-10-12: M5 part I (close-out): the `always` hook and the side-entering floe ticked as built in part G (Level 13's data: `targeted_by`, the floe's `side`; `HookModesTest`, `CrossTest`, `Level13Test`); every item is ticked, so the document is `done`.
+- 2026-10-12 (user, [round 34](../../../concept-rounds/round-34/README.md)): G1 = a (the `always` hook for the mortar made exact, row 13.7a) and step G3's
+  build accepted; the document goes back to `approved`.

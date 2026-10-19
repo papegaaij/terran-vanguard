@@ -67,15 +67,19 @@ item|“inhuman screech.wav” by Wolfsinger
 detail|CC-BY 4.0 · freesound.org/people/Wolfsinger/sounds/25713
 item|“Tearing Flesh” by dereklieu
 detail|CC-BY 3.0 · freesound.org/people/dereklieu/sounds/241822
+item|“big metal side impact 3 scraping.wav” by Halleck
+detail|CC-BY 4.0 · freesound.org/people/Halleck/sounds/121623
+item|“20101121.wind.howl.furious.01.wav” by dobroide
+detail|CC-BY 4.0 · freesound.org/people/dobroide/sounds/109371
 gap|
 role|WITH THANKS TO (CC0)
-text|adviseme333, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, Breviceps, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, derplayer, dinodilopho, Division4884, Elektrocell, FlatHill, frankelmedico, GameAudio, Glitchedtones, gprosser, HenKonen, humanoide9000, InMotionAudio, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, JoMungus, JovianSounds, jvmyka@gmail.com, kalhan, Kinoton, kyles, loganzsound, lorenzgillner, LucasDuff, magnuswaker, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, nicktermer, noahpardo, noirenex, Noxdl, peepholecircus, pgi, plasterbrain, profoundsounds, qubodup, RutgerMuller, Sadiquecat, SamsterBirdies, SecureSubset, Sheyvan, sidohzen, SuperPhat, ThefitzyG, TRP, uagadugu, unfa, wilhellboy, xkeril
+text|adviseme333, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, Breviceps, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, derplayer, dinodilopho, Division4884, Elektrocell, Elements-Library, FlatHill, frankelmedico, GameAudio, Glitchedtones, gprosser, HenKonen, humanoide9000, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, jvmyka@gmail.com, kalhan, Kinoton, kyles, loganzsound, lorenzgillner, LucasDuff, magnuswaker, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, nicktermer, nicoproson, noirenex, Noxdl, peepholecircus, pgi, plasterbrain, profoundsounds, qubodup, RutgerMuller, Sadiquecat, SamsterBirdies, SecureSubset, Sheyvan, sidohzen, SuperPhat, ThefitzyG, TRP, uagadugu, unfa, wilhellboy, xkeril
 gap|
 title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings
 gap|
 role|READ BY (PUBLIC DOMAIN AND CC0)
-text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Cori Samuel, Faith Abiola-Ellison, Gord Mackenzie, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Rick Rodstrom, Ruth Golding, Tadhg Hynes
+text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Celine Major, Cori Samuel, Faith Abiola-Ellison, Gord Mackenzie, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Rick Rodstrom, Ruth Golding, Tadhg Hynes, Thomas A
 gap|
 title|FONTS
 item|“DejaVu Sans Mono Bold” by DejaVu fonts team, after Bitstream Vera (Bitstream)

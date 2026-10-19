@@ -51,12 +51,26 @@ class VoiceFilesTest {
             "act-2-homefront/level-14-siege-spire",
             "act-2-homefront briefing",
             "act-2-homefront outro",
+            "act-3-red-dust/level-15-olympus-descent",
+            "act-3-red-dust/level-16-valles-canyon-run",
+            "act-3-red-dust/level-17-dome-siege",
+            "act-3-red-dust briefing",
             "specials",
             "armour",
             VoiceLines.BARKS);
 
+    /**
+     * Lines of the rendered sources re-keyed by a respelling (design/audio/voice, Pronunciation), by source, and
+     * the files of their old keys, until {@code python3 tools/art/voice.py} renders them; empty again since M7
+     * part B's step VOX-B rendered the Act 2 outro's page 3 with "Airees".
+     */
+    private static final Set<String> RESPELLED = Set.of();
+
+    private static final Set<String> RESPELLED_OLD = Set.of();
+
     private static boolean rendered(VoiceLines.VoiceLine line) {
-        return RENDERED.stream().anyMatch(where -> line.source().startsWith(where));
+        return RENDERED.stream().anyMatch(where -> line.source().startsWith(where))
+                && !RESPELLED.contains(line.source());
     }
 
     @Test
@@ -87,6 +101,7 @@ class VoiceFilesTest {
             List<String> unused = files.filter(Files::isRegularFile)
                     .map(file -> ASSETS.relativize(file).toString().replace('\\', '/'))
                     .filter(path -> !used.contains(path))
+                    .filter(path -> !RESPELLED_OLD.contains(path))
                     .toList();
             assertEquals(List.of(), unused, "voice files no line uses; tools/art/voice.py deletes them");
         }
@@ -111,18 +126,19 @@ class VoiceFilesTest {
 
     /**
      * The speakers of a rendered level whose casting round is still open: their lines play as text
-     * until it closes (Level 13's Nansen while concept round 35 is open; Level 08's Civilian was cast in
-     * concept round 30, Level 09's Kilo Lead in round 31, Level 10's Lifeline and Lifeline Three in round
-     * 32, Level 11's Atlas Control in round 33). Each must still be marked uncast in the speaker table;
+     * until it closes (none now: Level 08's Civilian was cast in concept round 30, Level 09's Kilo Lead in
+     * round 31, Level 10's Lifeline and Lifeline Three in round 32, Level 11's Atlas Control in round 33,
+     * Level 13's Nansen in round 35, picked in round 34's review). Each must still be marked uncast in the
+     * speaker table;
      * once cast, it leaves this set and its lines need their files.
      */
-    private static final Set<String> AUDITIONING = Set.of("Nansen");
+    private static final Set<String> AUDITIONING = Set.of();
 
     /**
      * The rendered levels have no uncast speaker left but the ones in an open audition
      * ({@link #AUDITIONING}): Level 07's Lifeboat Seven was cast in round 25, Level 08's Civilian in
-     * round 30, Level 09's Kilo Lead in round 31, Level 10's Lifeline and Lifeline Three in round 32
-     * and Level 11's Atlas Control in round 33, so their lines have a voice (and their files, above) instead of playing as text.
+     * round 30, Level 09's Kilo Lead in round 31, Level 10's Lifeline and Lifeline Three in round 32,
+     * Level 11's Atlas Control in round 33 and Level 13's Nansen in round 35, so their lines have a voice (and their files, above) instead of playing as text.
      */
     @Test
     void everySpeakerOfARenderedLevelIsCast() {

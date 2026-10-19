@@ -16,6 +16,11 @@ public final class Outro {
         elapsed = 0;
     }
 
+    /** Whether the level is won and the outro runs. */
+    public boolean running() {
+        return elapsed >= 0;
+    }
+
     /** The level starts over. */
     public void stop() {
         elapsed = -1;

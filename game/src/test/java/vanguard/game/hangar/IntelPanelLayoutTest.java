@@ -17,6 +17,7 @@ import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.content.LevelData;
 import vanguard.content.campaign.Intel;
+import vanguard.game.ui.Glass;
 import vanguard.game.ui.Speaker;
 
 /**
@@ -42,6 +43,9 @@ class IntelPanelLayoutTest {
             return left < other.right && other.left < right && top < other.bottom && other.top < bottom;
         }
     }
+
+    /** A flat fill in the wave strip. */
+    private record Fill(Color colour, float x, int y, float width, int height) {}
 
     /** Records where every part lands. */
     private static final class Measure implements IntelPanel.Canvas {
@@ -80,9 +84,12 @@ class IntelPanelLayoutTest {
             parts.add(new Box("wave strip", x, y, x + width, y + height));
         }
 
+        /** The wave strip's fills: its ticks and marks, inside the strip. */
+        final List<Fill> fills = new ArrayList<>();
+
         @Override
         public void fill(Color colour, float x, int y, float width, int height) {
-            // a wave's tick, inside the wave strip
+            fills.add(new Fill(colour, x, y, width, height));
         }
 
         @Override
@@ -164,6 +171,39 @@ class IntelPanelLayoutTest {
                         "the row is shown");
             }
         }
+    }
+
+    /**
+     * Level 14's strip at sensor L3 marks the Siege Spire's arrival at 108 s (its *Sensor-suite detail*;
+     * step K10): one red tick the strip's depth, inside the strip and over the waves; below L3 there is no
+     * strip, so no mark.
+     */
+    @Test
+    void level14sStripMarksTheBossAtItsArrival() {
+        String level = CONTENT.levelKey(14).orElseThrow();
+        Intel intel = Intel.of(CONTENT, level, 3);
+        Measure measure = new Measure();
+        IntelPanel.layout(measure, intel, CONTENT.level(level).briefing().teaser(), level);
+        Box strip = measure.parts.stream()
+                .filter(box -> box.what().equals("wave strip"))
+                .findFirst()
+                .orElseThrow();
+        List<Fill> boss = measure.fills.stream()
+                .filter(fill -> fill.colour().equals(Glass.ALERT))
+                .toList();
+        assertEquals(1, boss.size(), "one boss mark: " + boss);
+        Fill mark = boss.getFirst();
+        float x = (float) (strip.left() + 2 + (strip.right() - strip.left() - 4) * 108 / intel.seconds());
+        assertEquals(x, mark.x(), 0.01f, "at 108 s of " + intel.seconds());
+        assertTrue(
+                mark.y() > strip.top() && mark.y() + mark.height() < strip.bottom() && mark.height() >= 8,
+                "the strip's depth, inside it: " + mark + " in " + strip);
+        assertEquals(boss.getFirst(), measure.fills.getLast(), "drawn over the waves");
+
+        Measure l2 = new Measure();
+        IntelPanel.layout(
+                l2, Intel.of(CONTENT, level, 2), CONTENT.level(level).briefing().teaser(), level);
+        assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(Glass.ALERT)), "no strip below L3");
     }
 
     /**

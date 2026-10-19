@@ -149,7 +149,15 @@ final class MissionPanel {
                 String pip = escort.ally().slug() + "-pip";
                 allyPip = sprites.has(pip) ? sprites.region(pip) : null;
             });
-            if (sortie.navalConvoy()) {
+            if (sortie.groundAllies()) {
+                // M7 part D: Level 17's domes: the secondary's label (DOMES) and the dome pip.
+                alliesLabel =
+                        secondary.label().isEmpty() ? DOMES : secondary.label().toUpperCase(Locale.ROOT);
+                String pip = sortie.allySpec(0).slug() + "-pip";
+                allyPip = sprites.has(pip)
+                        ? sprites.region(pip)
+                        : sprites.has(GROUND_PIP) ? sprites.region(GROUND_PIP) : null;
+            } else if (sortie.navalConvoy()) {
                 alliesLabel =
                         secondary.label().isEmpty() ? CONVOY : secondary.label().toUpperCase(Locale.ROOT);
                 for (int k = 0; k < sortie.allyCount() && allyPip == null; k++) {
@@ -162,8 +170,9 @@ final class MissionPanel {
         }
         boolean targets = !sortie.script().targets().isEmpty();
         boolean naval = sortie.navalConvoy();
+        boolean ground = sortie.groundAllies();
         boolean defend = sortie.defending();
-        boolean two = (sortie.allyCount() > 0 && !naval) || targets;
+        boolean two = (sortie.allyCount() > 0 && !naval && !ground) || targets;
         kit.leftPanel(batch);
         int top = MissionLayout.MISSION.yTop();
         plate(batch, mission, top);
@@ -179,7 +188,7 @@ final class MissionPanel {
             drawTargetsTracker(batch, sortie);
         } else if (defend) {
             drawRelayTracker(batch, sortie);
-        } else if (naval) {
+        } else if (naval || ground) {
             drawConvoyTracker(batch, sortie);
         } else if (sortie.airEscort()) {
             drawShuttleTracker(batch, sortie);
@@ -595,18 +604,29 @@ final class MissionPanel {
 
     /** M5 part E: the naval convoy tracker's label without one of its own. */
     static final String CONVOY = "CONVOY";
+    /** M7 part D: the ground allies' tracker's label without one of its own. */
+    static final String DOMES = "DOMES";
+    /**
+     * M7 part D: the ground allies' pip where their ally has no {@code <slug>-pip} (tools/art/siege_units.py's 12x12
+     * dome on its ring; vanguard.pipeline.SpriteUse claims it for a level with ground allies).
+     */
+    static final String GROUND_PIP = "dome-pip";
 
     /**
      * M5 part E, the naval convoy's one-line tracker (design/ui/hud, Level 11; the stated default of
      * 2026-10-08): {@code CONVOY} and a pip per cargo ship in order (green; amber after its first
      * slam; white for a moment on a hit; a red flash, then dark, when it sinks), the line flashing
      * green when the afloat secondary is met and red when it fails; {@code DONE} once met, {@code
-     * FAILED} once failed and the boss is down (the pips show until then).
+     * FAILED} once failed and the boss is down (the pips show until then). M7 part D: the ground allies' tracker
+     * (design/ui/hud, Level 17) is the same line, {@code DOMES} and a pip per dome in order (green untouched, amber
+     * once hit, white for a moment on a hit, a red flash then dark when it breaks), failed at the first hit on any
+     * dome, {@code FAILED} once every dome has left the screen.
      */
     private void drawConvoyTracker(SpriteBatch batch, Sortie sortie) {
         int wellTop = well(batch, MissionLayout.OBJECTIVE.yTop(), WELL);
+        boolean ground = sortie.groundAllies();
         boolean met = sortie.secondaryMet();
-        boolean failed = sortie.afloatFailed();
+        boolean failed = ground ? sortie.untouchedFailed() : sortie.afloatFailed();
         if (met && metFrame < 0) {
             metFrame = frame;
         } else if (!met) {
@@ -626,12 +646,12 @@ final class MissionPanel {
         Color colour = flash || failFlash ? HudKit.LCD : met ? SUCCESS : failed ? LOST : HudKit.LABEL;
         int y = wellTop - TEXT_DROP;
         kit.text(batch, kit.body, alliesLabel, colour, X + PAD, y, TEXT_WIDTH);
-        String status = convoyStatus(met, failed, bossDown(sortie));
+        String status = convoyStatus(met, failed, ground ? allPassed(sortie) : bossDown(sortie));
         if (status != null) {
             kit.textRight(batch, kit.body, status, colour, X + PAD, y, TEXT_WIDTH);
             return;
         }
-        int count = sortie.damageableAllies();
+        int count = ground ? sortie.allyCount() : sortie.damageableAllies();
         if (allyLost.length != sortie.allyCount()) {
             allyLost = new int[sortie.allyCount()];
             Arrays.fill(allyLost, -1);
@@ -640,7 +660,7 @@ final class MissionPanel {
         int pipX = X + PAD + TEXT_WIDTH - count * ALLY_PIP_STEP + ALLY_PIP_STEP - pipWidth;
         int shown = 0;
         for (int k = 0; k < sortie.allyCount() && shown < count; k++) {
-            if (!sortie.allySpec(k).damageable()) {
+            if (!ground && !sortie.allySpec(k).damageable()) {
                 continue;
             }
             Ally ally = sortie.ally(k);
@@ -655,7 +675,8 @@ final class MissionPanel {
             int bottom = y - LINE + 3;
             if (allyPip != null) {
                 batch.setColor(pip);
-                batch.draw(allyPip, left, bottom);
+                // M7 part D: a pip shorter than the line (the 12 px dome) sits in its middle.
+                batch.draw(allyPip, left, bottom + Math.max(0, (LINE - allyPip.getRegionHeight()) / 2));
                 batch.setColor(Color.WHITE);
             } else {
                 kit.fill(batch, pip, left, bottom, ALLY_PIP_WIDTH, LINE);
@@ -681,6 +702,16 @@ final class MissionPanel {
             return "DONE";
         }
         return failed && bossDown ? "FAILED" : null;
+    }
+
+    /** M7 part D: whether every ground ally has left the bottom edge, standing or broken (the domes are decided). */
+    static boolean allPassed(Sortie sortie) {
+        for (int k = 0; k < sortie.allyCount(); k++) {
+            if (sortie.ally(k).y() + sortie.allySpec(k).size().height() / 2 > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** Whether the level's arena boss is down (the convoy's secondary is decided then). */
@@ -799,8 +830,9 @@ final class MissionPanel {
         boolean flash = metFrame >= 0 && frame - metFrame < FLASH_FRAMES && (frame - metFrame) / 8 % 2 == 0;
         boolean failFlash =
                 failedFrame >= 0 && frame - failedFrame < FLASH_FRAMES && (frame - failedFrame) / 8 % 2 == 0;
-        if (sortie.script().secondary().sondes()) {
-            // M5 part F: each sonde collected flashes the tracker green once (Level 12's SONDES n / 3).
+        if (sortie.script().secondary().sondes() || sortie.script().secondary().links()) {
+            // M5 part F: each sonde collected flashes the tracker green once (Level 12's SONDES n / 3); M7
+            // part C: each tendril broken, the same (Level 16's BARRIERS n / 9).
             int collected = sortie.escapesDestroyed();
             if (collected > collectedSeen) {
                 collectFrame = frame;

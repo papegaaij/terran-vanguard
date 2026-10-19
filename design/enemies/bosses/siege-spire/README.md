@@ -1,8 +1,8 @@
 ---
 title: Siege Spire
-design: review
-implementation: in-progress
-art: chosen
+design: approved
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-12
 ---
@@ -30,11 +30,11 @@ Values are balancing numbers at **medium**, in [data.yaml](data.yaml) with the b
 | Size | 440×440 px, hitbox 380×380 (the rooted body: the trunk ≈ 180 × 240 px with its lean, the roots ≈ 380 px across); the free spire 160×200 hitbox, drawn 244 px |
 | Parts | 4 root turret pods (`destroyable`, `ground`), 2 acid-mortar roots (`destroyable`, `ground`), the launch maw (`destroyable`, ×2, exposed in phase 2 only), the spire core (`vital`, ×2, exposed in phase 3, `air` after the lift), the trunk (`armoured`: shots glance, no HP, not in the bar; it stays at the anchor as the stump) |
 | Orientation | `32 angles` (the turret pods; the free spire 16 pre-rendered headings over its six-fold symmetry) |
-| HP | turret pod 665 each (2,660); mortar root 775 each (1,550); maw 2,880 (×2); core 4,950 (×2); the spec's ×1.8, tuned to the measured fight (H10 = a); total 12040 (easy 9030 / hard 15652, from the global multipliers) |
+| HP | turret pod 690 each (2,760); mortar root 800 each (1,600); maw 2,880 (×2); core 4,950 (×2); the spec's ×1.8, tuned to the measured fight (H10 = a; round 34, P2: the roots ×1.04 again with the thinner phase-1 fire); total 12190 (easy 9142 / hard 15847, from the global multipliers) |
 | Armour / shield | trunk armoured (shots glance off it; it stays as the stump); the roots and the maw are ground parts (all weapons, `anti-ground` ×2); the maw ×2 and the core ×2; invulnerable during the lift |
 | Speed | 0 px/s (anchored); the free spire sways ±100 px, 50 px/s at most |
 | Movement | anchored at the Concord rotunda: it scrolls in with the ground (invulnerable, without its bar) and engages when the scroll halts, the anchor at y 196; phase 3 lifts it off the anchor in 3 s (invulnerable, eased) to x 240, y 120, where it sways; the stump stays (see *Phases*) |
-| Attack | see *Phases*: phase 1: each turret pod fires an `aimed` violet orb (150 px/s, `medium` = 6) every 1.6 s, the four staggered; the two mortar roots `lob` acid every 4 s each, staggered: a lime marker on the ship's position 1 s ahead, a ship inside the 40 px impact circle takes `heavy` = 10, then a ring of 10 bullets (110 px/s, `small` = 4); phase 2: the maw spits a 9-way `fan` (spread 80°, 140 px/s, `medium` = 6) every 2.5 s; phase 3: the free spire's `laser-sweep` from the core, a beam 300 px long sweeping a 120° arc over 1.2 s, centred on the ship's bearing when the 0.6 s telegraph starts (the six crimson emitters charge), `laser` = 8 once per sweep, every 5 s; between the sweeps a 14-bullet `ring` (120 px/s, `small` = 4) |
+| Attack | see *Phases*: phase 1: each turret pod fires a violet orb (150 px/s, `medium` = 6) every 1.6 s, the four staggered: the inner pods (2 and 3) `aimed` at the ship, the outer ones (1 and 4) straight down the screen (`aim: down`); the two mortar roots `lob` acid every 8 s each, staggered: a lime marker on the ship's position 1 s ahead, a ship inside the 40 px impact circle takes `heavy` = 10, then a ring of 10 bullets (110 px/s, `small` = 4); phase 2: the maw spits a 9-way `fan` (spread 80°, 140 px/s, `medium` = 6) every 2.5 s; phase 3: the free spire's `laser-sweep` from the core, a beam 300 px long sweeping a 120° arc over 1.2 s, centred on the ship's bearing when the 0.6 s telegraph starts (the six crimson emitters charge), `laser` = 8 once per sweep, every 5 s; between the sweeps a 14-bullet `ring` (120 px/s, `small` = 4) |
 | Formations | solo set piece (the maw launches Wraiths in phase 2) |
 | Weak points | lime maw (×2), lime spire core (×2) (the maw in phase 2, the core in phase 3) |
 | Effective traits | `anti-ground`, `rear`, `piercing` |
@@ -44,7 +44,7 @@ Values are balancing numbers at **medium**, in [data.yaml](data.yaml) with the b
 | Difficulty hooks | hard: the lob's ring of 12, the sweep 180°, the maw launches 3 Wraiths |
 <!-- /data -->
 
-**The measured fight (H10 = a, `SiegeSpireTest`).** The autopilot with the balance plan's Level 14 fit (the front at L4, two Micro-missile Pods at L2, the Tail Gun at L2, Armour Mk III, Rook's Autocannon) on a fixture arena, five seeds: with the spec's HP (6,690) the fight lasted ≈ 76 s at medium (the roots ≈ 42 s, the maw ≈ 12 s, the free spire ≈ 21 s): the plan's DPS on the roots (`anti-ground` from Rook) and on the ×2 maw and core is well above the paper's 0.6 × 80. Every HP was scaled ×1.8 (pod 370 → 665, mortar root 430 → 775, maw 1,600 → 2,880, core 2,750 → 4,950; total 12,040): **medium 126.1–131.7 s, mean 129.5 s** (the roots ≈ 72 s, the maw ≈ 21 s with three launches of two Wraiths, the lift and the free spire ≈ 36 s; remeasured in step H6 after pod 1's offset was fixed: it was 132.4 s with the pod off its root), every seed inside the act-boss window of 90–180 s; **the par is 130 s**. Easy (×0.75 HP): 93–98 s, every seed won. Hard (×1.3 HP, the ring of 12, the 180° sweep, 3 Wraiths a launch): 190–205 s on the four seeds won, one seed lost (the autopilot is worn down in the roots phase); the hard fight is longer than the window because the autopilot lines up over every launched Wraith. The paper estimate at 0.6 × the reference DPS (the ease, the lift, the delays and the parts' HP at their multipliers, `BalanceTest`, `tools/balance.py`): 174 s, inside the window. In Level 14 itself (seed 2185) the fight lasted 97 s on easy, 136 s on medium and 204 s on hard, all won on the first attempt.
+**The measured fight (H10 = a, `SiegeSpireTest`).** The autopilot with the balance plan's Level 14 fit (the front at L4, two Micro-missile Pods at L2, the Tail Gun at L2, Armour Mk III, Rook's Autocannon) on a fixture arena, five seeds: with the spec's HP (6,690) the fight lasted ≈ 76 s at medium (the roots ≈ 42 s, the maw ≈ 12 s, the free spire ≈ 21 s): the plan's DPS on the roots (`anti-ground` from Rook) and on the ×2 maw and core is well above the paper's 0.6 × 80. Every HP was scaled ×1.8 (pod 370 → 665, mortar root 430 → 775, maw 1,600 → 2,880, core 2,750 → 4,950; total 12,040): **medium 126.1–131.7 s, mean 129.5 s** (the roots ≈ 72 s, the maw ≈ 21 s with three launches of two Wraiths, the lift and the free spire ≈ 36 s; remeasured in step H6 after pod 1's offset was fixed: it was 132.4 s with the pod off its root), every seed inside the act-boss window of 90–180 s; **the par is 130 s**. Easy (×0.75 HP): 93–98 s, every seed won. Hard (×1.3 HP, the ring of 12, the 180° sweep, 3 Wraiths a launch): 190–205 s on the four seeds won, one seed lost (the autopilot is worn down in the roots phase); the hard fight is longer than the window because the autopilot lines up over every launched Wraith. The paper estimate at 0.6 × the reference DPS (the ease, the lift, the delays and the parts' HP at their multipliers, `BalanceTest`, `tools/balance.py`): 174 s, inside the window. In Level 14 itself (seed 2185) the fight lasted 97 s on easy, 136 s on medium and 204 s on hard, all won on the first attempt. **Round 34, P2 (the kinder Spire):** with the outer pods firing straight down and the lobs every 8 s the roots fell faster (the autopilot dodges less), so the roots' HP went up ×1.04 (pods 690, mortar roots 800; total 12,190): **medium mean 130.4 s**, the par stays 130 s; easy mean 96.1 s, hard 182–195 s, mean 190.1 s, all five seeds won on both.
 
 ### Phases
 
@@ -52,18 +52,18 @@ The boss is one anchored arena boss with one HP bar and no slam lanes (the model
 
 | Phase | Ends at | Behaviour |
 |---|---|---|
-| 1 — Roots | roots 4 210 → 0 | Turret pods fire `aimed` violet orbs (150 px/s, `medium` = 6) every 1.6 s each, staggered; mortar roots **`lob`** acid every 4 s, staggered between the two (marker 1.0 s on the ship's position at the throw, then the flight and a 10-bullet ring at the impact; hard: a ring of 12). The roots are `ground` parts: all weapons hit them, `anti-ground` ×2. |
+| 1 — Roots | roots 4 360 → 0 | Turret pods fire violet orbs (150 px/s, `medium` = 6) every 1.6 s each, staggered: the inner pods (2 and 3) `aimed` at the ship, the outer ones (1 and 4) straight down the screen (round 34, P2); mortar roots **`lob`** acid every 8 s (round 34, P2: was 4 s), staggered between the two (marker 1.0 s on the ship's position at the throw, then the flight and a 10-bullet ring at the impact; hard: a ring of 12). The roots are `ground` parts: all weapons hit them, `anti-ground` ×2. |
 | 2 — Maw | maw 2 880 → 0 | The claw crown opens (the maw is exposed from the phase's start, a lime ×2 weak spot) and the maw launches **2 Wraiths every 8 s** (hard 3) and spits a 9-bullet `fan` (spread 80°, 140 px/s) every 2.5 s. The launched Wraiths are ambushes (H3 = a, below). Destroyed roots stay dead. The maw's death drops an overdrive. |
 | 3 — Free spire | core 4 950 → 0 | A **lift** (H4 = a): the whole boss lifts off its anchor to a station in the upper half over ≈ 3 s (invulnerable, as moves are), its core turning to `air` (a ship touching it takes contact damage, `huge` 25) and the pose to the free spire; the tear-free shockwave is an event (a ring of dust and debris drawn by the game, no collision) and drops one armour patch at the start. The stump and the debris stay at the anchor as scenery (drawn from the boss's state, not as a backdrop piece). The spire then drifts across the upper half at 50 px/s (sway ±100 px) firing a telegraphed **`sweep`** (below) every 5 s and `ring`s of 14 in between; the core is a lime ×2 weak spot. |
 
 #### Attacks added for this boss (H5 = a)
 
-- **`lob`** (a part's attack): built on the Polyp Mortar's lob and generalised to a part as the origin. The marker (1.0 s) is placed on the ship's position at the throw; the flight; the impact ring (10 bullets, hard 12); events for the sound; interval 4 s per mortar root, staggered; its state is hashed only when a level has it.
+- **`lob`** (a part's attack): built on the Polyp Mortar's lob and generalised to a part as the origin. The marker (1.0 s) is placed on the ship's position at the throw; the flight; the impact ring (10 bullets, hard 12); events for the sound; interval 8 s per mortar root (4 s until round 34's P2), staggered; its state is hashed only when a level has it.
 - **`sweep`** (the airborne spire's `laser-sweep`): built on the Mantis's sweep, generalised from the enemy to a part as the origin (the spire's core); a 120° arc (hard 180°), a 0.6 s telegraph line, then the sweeping beam: `laser` = 8 per touch, once per sweep, against the ship and Rook; every 5 s, interleaved with the `ring`s of 14. The airborne spire keeps the lower half free so that the sweep and the rings stay dodgeable.
 
 #### The maw's Wraiths (H3 = a)
 
-A launched [Wraith](../../air/wraith/README.md) starts **cloaked** at the maw's centre, swoops down a lane toward the player's side past the ship, re-enters from the **bottom edge** after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10. For each re-entry the sim adds the **3 s bottom-edge warning** (computed from the launch tick, deterministic) and counts the bottom edge as a rear wave for Rook (Trail formation, his rear bark). **At most 4 Wraiths from the maw are alive at once.** They are counted as the level's enemies and pay the normal Wraith bounty (see below).
+A launched [Wraith](../../air/wraith/README.md) starts **cloaked** at the maw's centre, swoops down one of the launch lanes past the ship (spread evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three; C7 in round 34), re-enters from the **bottom edge** after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10. For each re-entry the sim adds the **3 s bottom-edge warning** (computed from the launch tick, deterministic) and counts the bottom edge as a rear wave for Rook (Trail formation, his rear bark). **At most 4 Wraiths from the maw are alive at once.** They are counted as the level's enemies and pay the normal Wraith bounty (see below).
 
 ### Arena
 
@@ -82,8 +82,9 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
 
 | File | What | Status |
 |---|---|---|
-| [concept/siege-spire-final-r36-a.png](concept/siege-spire-final-r36-a.png), [.gif](concept/siege-spire-final-r36-a.gif) | Production art (`tools/art/siege_spire.py`, in `assets/` since step H4): trunk (3 maw steps), six roots alive/dead, pods (32 headings), mortars, husks, the stump, the lift, the free spire (16 headings over 60°), emitter and maw glows, debris; assembled phases 1–3 and the fight GIF; about 41 % of one atlas page | proposed |
-| [concept/siege-spire-death-final-r36-a.png](concept/siege-spire-death-final-r36-a.png), [.gif](concept/siege-spire-death-final-r36-a.gif) | Production art (`tools/art/siege_spire_death.py`, `assets/sprites/siege-spire-death_0..7`, step H5; notes in [concept/prompts.md](concept/prompts.md#siege-spire-death-final-r36-a)): the death in the free pose over the 3 s chain, the core's lime light cracking out along the six petals (0–3), then the six petal chunks flying apart and burning down to embers (4–7); the game's chained explosions go over it | proposed |
+| [concept/siege-spire-final-r36-a.png](concept/siege-spire-final-r36-a.png), [.gif](concept/siege-spire-final-r36-a.gif) | Production art (`tools/art/siege_spire.py`, in `assets/` since step H4): trunk (3 maw steps), six roots alive/dead, pods (32 headings), mortars, husks, the stump, the lift, the free spire (16 headings over 60°), emitter and maw glows, debris; assembled phases 1–3 and the fight GIF; about 41 % of one atlas page | chosen |
+| [concept/rejected/siege-spire-death-final-r36-a.png](concept/rejected/siege-spire-death-final-r36-a.png), [.gif](concept/rejected/siege-spire-death-final-r36-a.gif) | Production art (`tools/art/siege_spire_death.py`, `assets/sprites/siege-spire-death_0..7`, step H5; notes in [concept/prompts.md](concept/prompts.md#siege-spire-death-final-r36-a)): the death in the free pose over the 3 s chain, the core's lime light cracking out along the six petals (0–3), then the six petal chunks flying apart and burning down to embers (4–7); the game's chained explosions go over it. The user asked for a redo in round 34 ("split the arms and let them fall down"; it collapses, not sinks and drifts): replaced in the game by r36-b | rejected |
+| [concept/siege-spire-death-final-r36-b.png](concept/siege-spire-death-final-r36-b.png), [.gif](concept/siege-spire-death-final-r36-b.gif) | The redo (round 34 follow-up, step K3, two passes; `tools/art/siege_spire_death.py`, `assets/sprites/siege-spire-death_0..7`, 332×414; notes in [concept/prompts.md](concept/prompts.md#siege-spire-death-final-r36-b)): the free spire's 3D model broken along its natural joints: the six arms snap off and fly apart along their own directions, tumbling; the crown cracks into three chunks that lean out and topple; the core bursts; the base drops onto the stump and crumbles. Falling is away from the camera: the pieces shrink, darken and lose their sheen, their drop shadows sliding in to meet them; the arms land first, then the chunks, raising pale stone dust that thins away; frame 7 the debris lies round the stump. Sheet rows 3–4 and the GIF over the Level 14 arena with the ash stump at 1× | chosen |
 
 ## Implementation
 
@@ -96,7 +97,7 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
 - [x] The fight measured over five seeds (mean 129.5 s, every seed 90–180 s), the HP tuned, the par (130 s) and the bounty (452 as paid, 26.8 %) set; `SiegeSpireTest` (M5 part H, step H4)
 - [x] Death effect, bounty and score per this spec; the canopy's death handing over to the daylight (M5 part H, steps H4 and H6: the death frames over the 3 s chain with the chained bursts, the screen flash and the credit shower; `SpireLooks`, `Level14LooksTest`, `LevelScreenPartHTest`)
 - [x] The presentation in the game (M5 part H, step H6, `SpireLooks`): the roots alive and withered, the trunk with the crown opening as the maw is exposed, the turret pods turned toward the ship, the mortar pods opening for their lobs, the husks, the hit flashes, the maw's bloom at each launch, the lift frames gliding from the trunk to the station over the stump, the tear-free shockwave (a dust ring and shards), the free spire turning, its emitters charging through the sweep's telegraph, the telegraph line and the beam, its shadow
-- [ ] Production art: sprites, the death chain, the stump, the shockwave debris, the intel silhouette (M5 part H, step H5)
+- [x] Production art: sprites, the death chain, the stump, the shockwave debris, the intel silhouette (M5 part H, step H5; the death redone in step K3; approved as final in round 34)
 
 ## Decisions
 
@@ -125,3 +126,48 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
   Phase 3's two lines (Okafor's, then Rook's) now both play (Level 14's Decisions), and the canopy's
   withering sound waits for the death chain's end (3 s). The white screen flash at the chain's end is
   kept: it is every act boss's death flash (the Brood Carrier's too).
+- 2026-10-12 user, round 34 P2 (make phase 1 survivable for a player who does not dodge well; the
+  proposal: two of the four pods fire straight down): built with a new part key `aim: down` (the
+  part fires its `aimed` attack straight down the screen; `BossSpec.Attack.down`). The outer pods 1
+  and 4 fire down (their columns at x ≈ 80 and 400 leave the middle open), the inner pods 2 and 3
+  stay aimed, the orbs' rhythm unchanged (1.6 s per pod, staggered); the lobs every 8 s per mortar
+  root (was 4; the marker, impact and ring unchanged). Measured with step H8b's calibration harness
+  (eight seeds, armour lost per 10 s in the fight, medium): the XTest driver's random dodge 30.6 →
+  9.8 (the Harbour Kraken 10.5; it now reaches phase 2, 60 % of the bar left when it dies, was 84 %),
+  a strafer 38.9 → 17.6, a ship sitting still at the centre 75.9 → 45.0; easy 12.1 → 1.5 (the random
+  dodger now wins all eight), hard 38.1 → 23.4. The down-firing pods alone barely help a random
+  dodger (pods 1/4 down: 25.8, pods 2/3 down: 32.7: the orbs fly ≈ 2.5 s, so an aimed one is no
+  likelier to hit a moving ship than a column), so the lobs are halved too (with the orbs every 2.4 s
+  and the lobs every 6 s instead: 10.4, but a longer HP bump). The roots' HP ×1.04 (pods 665 → 690,
+  mortar roots 775 → 800; total 12,190) keeps the autopilot's fight at the par (medium mean 130.4 s,
+  par 130) and the paper estimate inside the act-boss window (more HP would push it past 180 s).
+  Pending the user's review: easy is now much kinder than in proportion (the shield regenerates
+  between the thinner volleys), and the game still turns pods 1 and 4 toward the ship (`SpireLooks`
+  should show them facing down).
+- 2026-10-12 user, round 34 (14.2b): the death redone: "split the arms and let them fall down", "break
+  it into natural pieces, detach the arms; it sits on land, so it collapses, it does not sink and
+  drift". Step K3 (**pending the user's review** in the next round), a second pass after the main
+  agent's review (the first still read as one spiky ball, nothing shrank or landed, the broken faces
+  read as black holes, the dust was dark and dithered): the pieces are cut from the production model
+  (not the sprite): six arms at their joints, the crown in three chunks along jagged seams between
+  them, the base (lower trunk and root stubs), the core torn out. The arms fly out along their own
+  directions (about 0.55 model units) while they tumble, so the pieces part from frame 2 on; the
+  crown chunks lean out and topple. The camera looks straight down, so a fall is a move away from it:
+  each piece shrinks from the air's scale to the ground's (1.2 → 1.0), darkens to 80 % and loses
+  its sheen, under gravity (altitude 1 − u²), drifting 58 px down the screen toward the stump (the
+  station's height above the anchor); its drop shadow (the game's 50 %, 85 % scale, 21, 30 px at the
+  air's height, baked into these frames since the game draws no shadow for them) slides in and
+  meets it at the impact. The broken faces show the interior: dull violet-grey with faint violet
+  veins that fade. Pale stone-dust plumes rise at each impact (no dither) and thin away; the base
+  crumbles onto the stump; frame 7 is the debris lying round the stump. The frames grew to 332×414
+  (the spire's centre still the canvas centre, so `SpireLooks` draws them unchanged). Not done: the
+  frames stay at the death's screen point while the scroll ramps up to the daylight's 25 px/s (over
+  1 s), so the ground slides about 60 px under them over the 3 s, about 20 px under the landed
+  debris (frames 6–7): `SpireLooks` should add the ground's scroll since the death to the frames'
+  y, as it does for the stump (game code, step K1's call).
+- 2026-10-12 (user, [round 34](../../../concept-rounds/round-34/README.md)): the production art (14.2a) and the intel silhouette approved as
+  **final**; the death's redo **r36-b** approved as final, r36-a (the 2D break-up) rejected and moved to
+  `concept/rejected/`; step K1 made the death frames scroll with the ground. C7 (the launch lanes spread
+  evenly; the spec above now says so), C8 (the bounty at 26.8 %), C9 (the HP ×1.8, now ×1.04 on the
+  roots after P2) and H1–H10 accepted, P2 as above. `design: approved`, `art: final`, `implementation:
+  done`.

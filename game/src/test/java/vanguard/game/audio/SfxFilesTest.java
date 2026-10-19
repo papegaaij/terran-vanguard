@@ -37,7 +37,9 @@ class SfxFilesTest {
     private static final Pattern CHOSEN_ROW =
             Pattern.compile("^\\| \\[concept/([^/\\]]+\\.ogg)\\]\\(concept/[^)]+\\) \\|.*\\| (chosen[^|]*) \\|$");
     private static final Pattern PROPOSED_ROW =
-            Pattern.compile("^\\| \\[concept/([^/\\]]+\\.ogg)\\]\\(concept/[^)]+\\) \\|.*\\| proposed \\|$");
+            // "proposed", or with its round: "proposed (round 39)" (M7 part C)
+            Pattern.compile(
+                    "^\\| \\[concept/([^/\\]]+\\.ogg)\\]\\(concept/[^)]+\\) \\|.*\\| proposed( \\([^|]*\\))? \\|$");
     private static final Pattern UNPLAYED_ROW =
             Pattern.compile("^\\| \\[([^\\]]+\\.ogg)\\]\\(concept/[^)]+\\) \\| (.*) \\|$");
     private static final String UNPLAYED_HEADING = "### Chosen sounds the game does not play";

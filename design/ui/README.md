@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../art-direction, ../systems]
-updated: 2026-10-07
+updated: 2026-10-18
 ---
 
 # User interface
@@ -25,7 +25,7 @@ frames and chunky bitmap fonts.
 | [main-menu](main-menu/README.md) | Title screen, continue/new/load, options, credits, quit | approved | done | final |
 | [briefing](briefing/README.md) | Story briefing before each level: portraits, typed text, objectives | approved | done | chosen |
 | [hangar](hangar/README.md) | Ship configurator: intel, shop, loadout, repair, save, launch | approved | in-progress | chosen |
-| [hud](hud/README.md) | In-level side panels: status, weapons, special, radio chatter, progress | review | in-progress | final |
+| [hud](hud/README.md) | In-level side panels: status, weapons, special, radio chatter, progress | approved | in-progress | final |
 | [pause](pause/README.md) | Pause menu during a level | approved | done | final |
 | [debrief](debrief/README.md) | Level complete: kills, credits, bonuses, grade | approved | done | final |
 | [mission-select](mission-select/README.md) | Replay a flown mission: the act-by-act list with best grades, later missions locked | review | done | n/a |
@@ -38,19 +38,21 @@ frames and chunky bitmap fonts.
 ### Screen flow
 
 ```
-Title ─► Main menu ─┬─ Continue ─────────────► Hangar
-                    ├─ New game ─► Difficulty ─► Intro briefing ─► Hangar
-                    ├─ Load game ─► Slot list ─► Hangar
-                    ├─ Missions ─► Mission select ─► Level (replay) ─► Debrief ─► Mission select
+Title ─► Main menu ─┬─ Continue ─────────────► Briefing ─► Hangar ─► Level
+                    ├─ New game ─► Difficulty ─► Intro briefing ─► Hangar ─► Level
+                    ├─ Load game ─► Slot list ─► Briefing ─► Hangar ─► Level
+                    ├─ Missions ─► Mission select ─► Briefing ─► Hangar (replay) ─► Level (replay) ─► Debrief ─► Mission select
+                    ├─ Scores (the high scores per difficulty; M6 part B)
                     ├─ Options
                     ├─ Credits
                     └─ Quit
 Hangar ─► Launch ─► Level ─► Debrief ─► Briefing ─► Hangar ─► …
 Act's last level ─► Debrief + act summary ─► Act outro ─► Next act's intro (title card, act briefing) ─► Briefing ─► Hangar
-                                         (Act 1 until Act 2 exists: Act outro ─► Hangar before L08, "not built yet")
+Last built act (Act 2) ─► Act outro ─► End card ─► Name entry (top 10) ─► Credits ─► Main menu
+                                         (Continue: the hangar before L15, "ACT III - RED DUST: COMING SOON")
 Briefing ─► Back ─► Quit to main menu? ─► Main menu                 (the campaign kept)
 Level ─► Pause ─► Resume / Restart / Options / Abort to hangar / Quit
-Level ─► Mission failed ─► Retry / Back to hangar / Quit      (hard, no retry left: Game over ─► Main menu)
+Level ─► Mission failed ─► Retry / Back to hangar / Quit      (hard, no retry left: Game over + name entry ─► Main menu)
 ```
 
 **Act end** (M4 part G, user decision D2): after an act's last level the debrief adds the act
@@ -59,6 +61,15 @@ summary ([debrief](debrief/README.md)), then the act-end outro plays on the brie
 then the next act's intro opens it as at a new game (its title card and act briefing), then that
 level's mission briefing and the hangar. The autosave happens when the hangar opens, as always.
 A replay from mission select shows neither the act summary nor the outro.
+
+**Every mission starts with its briefing** (user decision 2026-10-18, from the Act 2 playtest):
+briefing, then hangar, then level, on every path. Continue and Load game open the next level's
+mission briefing (an act intro that is still due, the `act-intro:N` story flag of
+[saves](../systems/saves/README.md), plays first, as before), then the hangar, which does not
+autosave right after a load (except after such an act intro, to keep its flag). A mission select
+replay opens that level's mission briefing (without its act's intro) and then the replay hangar
+on the real campaign ([mission select](mission-select/README.md)). Only the debug starts
+(`--level`, `--loadout` …) go straight into the level.
 
 ### Shared UI rules
 
@@ -70,6 +81,38 @@ A replay from mission select shows neither the act summary nor the outro.
   benefits from it).
 - Confirm = Enter / A, Back = Esc / B everywhere.
 - Panel frames, buttons and bars form one shared UI kit, designed once and reused.
+
+### Mouse
+
+The mouse works on every out-of-game screen and overlay (M6 part A); keyboard and gamepad stay
+the primary input and are unchanged, and so are the key-hint plates.
+
+- **Pointer**: the kit's glass arrow (`ui/pointer.png`, [tools/art/pointer.py](../../tools/art/README.md),
+  16×16, hotspot the tip) as a hardware cursor at the window's integer scale; the system arrow
+  where the art is missing or the platform refuses a custom cursor. The window is mapped into the
+  960×540 screen by the inverse of the letterbox, in logical window units, so HiDPI windows (macOS
+  Retina, Windows scaling) and the sharp-bilinear scaling map right; a point on a letterbox bar
+  lies outside every screen.
+- **Hover selects, a click confirms.** Hover only moves the selection while the pointer moves, so
+  the last device used owns the selection and a resting pointer never fights the keys. A click
+  selects and confirms in one; a click on a disabled item or outside every region does nothing.
+  The click that only gives the window the focus confirms nothing (one tenth of a second after the
+  focus is gained).
+- **Back**: the right button and the mouse's back button act as Esc / B on every screen (back,
+  resume, close, cancel a capture, ask to quit where Esc asks).
+- **Wheel**: scrolls the lists that scroll — the mission select and the hangar's shop list (none
+  of the Acts 1–2 slots has more than its eight rows yet) — and scrubs the credits roll (36 px a
+  notch).
+- **Per screen**: the title screen goes on with a click anywhere; the menus (main menu, pause,
+  mission failed, load / save slots, mission select) and every confirm dialog take hover and
+  clicks on their items and buttons; the difficulty cards are hovered and a click starts the
+  campaign; a click turns the briefing's and the act outro's pages as Enter does (the title card
+  too), and goes on in the debrief, the act summary and the game over screen; the credits take a
+  click once the roll has stopped. The [hangar](hangar/README.md) and the [options](options/README.md)
+  have their own regions (see there).
+- **In flight** the pointer is hidden by a transparent cursor (not caught, so it can still leave a
+  window) and the mouse does nothing; it shows again in the pause menu, on the mission failed
+  screen and from the level's won outro on.
 
 ## Concept art
 
@@ -91,6 +134,22 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/ui-kit-final-r13-a.png](concept/ui-kit-final-r13-a.png) | Review sheet: the widgets as the screens draw them over the darkened title scene (panels with trim and corner tabs, header rules, list rows with the selection and cursor, menu items, chips on / off / locked, NEW tag, slider, toggle, tabs, pips, chevron, the confirm dialog with its holo brackets, callouts, amber card frame, inset, key-hint plate), a 2× detail and every piece with its size | chosen |
 | [concept/ui-kit-capture-final-r13-a.png](concept/ui-kit-capture-final-r13-a.png) | Game capture: the quit confirmation over the main menu | chosen |
 
+Production art, M6 part A (for concept round 35): the glass mouse pointer rendered by
+[tools/art/pointer.py](../../tools/art/README.md) into `assets/ui/pointer.png`. Prompts:
+[concept/prompts.md](concept/prompts.md#pointer-r35-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/pointer-r35-a.png](concept/pointer-r35-a.png) | Review sheet: the glass pointer (11×16 steel arrow, amber lit edge, navy outline, hotspot the tip) at 1×, 4× and 8× on a checker, then at 1×, 2× and 3× over a glass menu item, a bright and a dark backdrop | final |
+
+Game capture, M6 part D (for concept round 35): the release build's out-of-game flow. Prompts:
+[concept/prompts.md](concept/prompts.md#m6-capture-r35-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/m6-capture-r35-a.png](concept/m6-capture-r35-a.png) | Sheet of eight screens from the capture: the title with `v0.1` and the glass pointer, the main menu with SCORES, the SCORES tabs, the hangar driven by mouse (an upgrade bought by click), the hard game over with Okafor's last transmission, the release's end card, the name entry and the credits roll | chosen |
+| [concept/m6-capture-r35-a.mp4](concept/m6-capture-r35-a.mp4) | The capture with the game's sound (6.5 min): title → menu → SCORES (tabs clicked) → New game → difficulty → briefing, the hangar by mouse (slots, items, upgrade, undo, Launch hovered), a hard Level 08 lost a fourth time → game over with Okafor's voiced line, Level 14 won → debrief → act summary → outro → end card → name entry → credits → main menu | chosen |
+
 Production art, UI batch part U3 (concept round 13): the bitmap fonts rendered by [tools/art/fonts.py](../../tools/art/README.md) into `assets/fonts/`. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
@@ -100,9 +159,10 @@ Production art, UI batch part U3 (concept round 13): the bitmap fonts rendered b
 ## Implementation
 
 - [x] Screen/state machine for the flow above
+- [x] Every mission starts briefing → hangar → level (user decision 2026-10-18): Continue, Load game and the mission select replay open the level's briefing first (`CampaignRoute.onContinue` / `beforeReplay` / `missionBriefing`, `HangarScreen.onContinue` / `replay`; tests `MissionFlowTest`, `CampaignRouteTest`)
 - [x] Shared UI kit: panels, buttons, lists, bars, portrait frame, bitmap fonts (glass pieces: `tools/art/ui_kit.py`; fonts: `tools/art/fonts.py`)
 - [x] Keyboard and gamepad navigation on every screen (every screen of `vanguard.game.screen` reads the shared menu input, `services.menu`: menus, briefing, hangar, options, pause, debrief with the act summary and outro, mission select, mission failed, game over, credits)
-- [ ] Mouse support on every out-of-game screen (hover selects, click confirms, wheel scrolls lists, right-click or a back button goes back), with the hangar's panels and the options sliders and remapping usable by mouse; the in-level game stays keyboard/gamepad only, and the pointer is hidden in flight (today it stays visible in full screen) — **later: M6** (see the [roadmap](../tech/roadmap/README.md))
+- [x] Mouse support on every out-of-game screen (hover selects, click confirms, wheel scrolls lists, right-click or a back button goes back), with the hangar's panels and the options sliders and remapping usable by mouse; the in-level game stays keyboard/gamepad only, and the pointer is hidden in flight — M6 part A (`vanguard.game.input.Pointer`, `GdxPointer`, `display.PointerCursor`; see *Mouse* above), accepted by the user in concept round 35
 
 ## Open questions
 
@@ -179,3 +239,32 @@ Production art, UI batch part U3 (concept round 13): the bitmap fonts rendered b
 - 2026-10-07: The mouse pointer stays visible in full screen during a level (seen in the round-30
   capture, confirmed by the user); hiding it in flight is part of the M6 mouse support work (user
   decision).
+- 2026-10-12: M6 part A, mouse support (pending the user's review in concept round 35), with the
+  defaults of the M6 plan: Q6 = b, the custom glass pointer with the system arrow as the fallback
+  (art proposed, `pointer-r35-a`); Q7, the pause and mission failed screens take the mouse and the
+  pointer is hidden only while flying. Main-agent defaults for the review: hover selects only
+  while the pointer moves (the last device owns the selection); a click on an item selects and
+  confirms at once (also a difficulty card: it starts the campaign); the right button is Back
+  everywhere, also in the briefing, where it asks to quit as Esc does (there is no page back); in
+  the hangar a slot's callout or tile is selected by a click, not by hover (hovering the schematic
+  would switch the shop list under the pointer), while shop rows, choice chips and commands follow
+  hover; a click that gives the window the focus is dropped for 0.1 s after the focus is gained
+  (a window that never reports the focus, X11 without a window manager, takes every click).
+  Smoke run on Xvfb driven by XTest: title → New game → difficulty card → the briefing's pages by
+  clicks → hangar (the Pulse Cannon's upgrade bought by its chip) → Launch; the cursor read back
+  as the 32×32 glass arrow at scale 2 on the menus and the pause menu and as an empty 16×16 cursor
+  in flight. Headless tests: `PointerTest`, `ViewportTest` (scales 1–4, letterbox, HiDPI,
+  sharp-bilinear), `MenuTest`, `DialogTest`, `MouseRegionsTest` (every menu's rows, the
+  difficulty cards, the Options tabs, rows, chips, sliders, sound tests and binding cells, the
+  remap capture), `HangarPointerTest`.
+- 2026-10-12: Back to `design: review` until [concept round 35](../concept-rounds/round-35/README.md) closes (Q6, Q7 and the build choices A.1; the pointer art proposed).
+- 2026-10-12 (user, round 35): accepted as built: Q6, the glass pointer (`pointer-r35-a`,
+  `tools/art/pointer.py`) approved as **final**; Q7 (the pause and mission failed screens take the
+  mouse, the pointer hidden only while flying); the build choices A.1 (a)–(g); the release build's
+  capture (K.1, `m6-capture-r35-a`) accepted. `design: approved`; `art` back to `chosen`, since not
+  every screen under it is final (the hangar and the briefing are `chosen`).
+- 2026-10-18 (user, Act 2 playtest): every mission starts with its briefing, then the hangar, then
+  the level: Continue and Load game open the next level's briefing (an act intro that is due first)
+  instead of the hangar, and a mission select replay opens the level's briefing and the replay
+  hangar instead of the level. Screen flow updated; details in
+  [mission select](mission-select/README.md#decisions).

@@ -52,3 +52,33 @@ and branching, brighter frame by frame; frames 4-7 (1.5-3 s) the six petal chunk
 core) flying apart, the core's light gone, the tissue charring, their edges burning down to embers
 (`loot_targets.crumbled`) until nothing is left; 244×244, one 48-colour palette, drawn as the free frame is
 (not additive). The game's chained `huge` explosions play over it; the stump stays on the ground.
+The user asked for a redo in round 34 (it read as sinking and drifting confetti): see r36-b; the
+generator now makes b.
+
+## siege-spire-death-final-r36-b
+
+Production art, the round 34 follow-up (step K3, two passes; pending the user's review). The user:
+"Split the arms and let them fall down"; "break it into natural pieces, detach the arms; it sits on
+land, so it collapses, it does not sink and drift". Not a mockup: the sheet and GIF of
+`assets/sprites/siege-spire-death_0..7`, rendered by
+[tools/art/siege_spire_death.py](../../../../../tools/art/siege_spire_death.py) (`python3
+tools/art/siege_spire_death.py --assets`; ~25 min on 20 cores the first time, then cached;
+`SPIRE_DEATH_FACTOR=1` renders a quick preview into its own cache files). The pieces are cut from the
+production model of `siege_spire.py` (the free spire's heading 0, rendered again in 3D under the same
+key light, so each piece is lit as it turns): the six arms (petal, bone claw, crimson emitter) snapped
+off 0.36 model units from the axis, past the crown's cap; the crown (cap, upper trunk, upper spines) in
+three 120° chunks along jagged vertical seams between the arms, the core torn out; the base (lower
+trunk, root stubs) below a jagged break at 1.25 units. The camera looks straight down, so a fall is a
+move away from it: a piece shrinks from the air's scale to the ground's (1.2 → 1.0), darkens to 80 %
+and loses its sheen while gravity (altitude 1 − u²) carries it 58 px down the screen toward the stump;
+its drop shadow (the game's: flat 50 %, 85 % scale, offset 21, 30 px at the air's height, shrinking to
+the piece as it lands) is baked into the frames. The broken faces are the interior: dull violet-grey,
+faint violet veins fading frame by frame (lime while the core lives). Frames (0.375 s each): 0 lime
+cracks at the joints and seams (where two pieces meet, by depth); 1 the arms sag, the cracks blaze; 2
+the arms break away, the crown splits, the core bursts; 3–4 the arms flying out along their own
+directions and tumbling, the crown chunks leaning out; 5 the arms land, the base crumbles onto the
+stump; 6 the crown chunks crash; 5–7 pale stone-dust plumes (4 translucency steps, no dither) rise at
+each impact and thin away; 7 the debris round the stump. 332×414 (the spire's centre at the canvas
+centre), one 48-colour palette. The sheet's lower rows and the GIF show it at 1× over the Level 14
+arena with the ash stump and the dead roots (`backdrop_l14.py`'s composite), the GIF starting with the
+free spire and its shadow.

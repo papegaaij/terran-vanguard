@@ -54,19 +54,25 @@ class TypicalHaulTest {
                         Map.entry(5, 1_334),
                         Map.entry(6, 1_615),
                         Map.entry(7, 1_542),
-                        Map.entry(8, 1_738),
-                        Map.entry(9, 1_789),
+                        Map.entry(8, 1_776),
+                        Map.entry(9, 1_913),
                         Map.entry(10, 2_113),
                         Map.entry(11, 2_118),
-                        Map.entry(12, 2_514),
+                        Map.entry(12, 2_574),
                         Map.entry(13, 2_466),
-                        Map.entry(14, 2_397)),
+                        Map.entry(14, 2_397),
+                        Map.entry(15, 2_697),
+                        Map.entry(16, 3_021),
+                        Map.entry(17, 3_289)),
                 perfect);
     }
 
     private Map<Integer, TypicalHaul> hauls() {
         Map<Integer, TypicalHaul> hauls = new TreeMap<>();
         for (String key : content.levels().keySet()) {
+            if (!Unmapped.mapped(key)) {
+                continue; // M7 part C: a level not mapped yet (Unmapped)
+            }
             hauls.put(Content.levelNumber(key), TypicalHaul.of(content, key));
         }
         return hauls;

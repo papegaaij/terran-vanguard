@@ -53,6 +53,11 @@ final class Remapping {
             }
             return Optional.empty();
         }
+        if (input.pointer().back()) {
+            // The mouse's right button cancels as Esc does; the mouse itself is never captured.
+            cancel();
+            return Optional.empty();
+        }
         switch (capture.orElseThrow().poll(devices)) {
             case KeyCapture.Result.Waiting waiting -> {}
             case KeyCapture.Result.Cancelled cancelled -> cancel();
@@ -122,6 +127,9 @@ final class Remapping {
     }
 
     /** A key's name as the table shows it: {@code SPACE}, {@code L-CTRL}; a dash for none. */
+    /** M7 part A: Dash's fixed primary input in the Controls tab (design/ui/controls). */
+    static final String DOUBLE_TAP = "DOUBLE-TAP";
+
     static String keyName(int key) {
         return key == Binding.NO_KEY ? "-" : Keys.toString(key).toUpperCase(Locale.ROOT);
     }

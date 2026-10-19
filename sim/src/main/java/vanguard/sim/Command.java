@@ -13,7 +13,14 @@ public enum Command {
      * Pressed: calls the fitted special (design/player/specials). Last, so the bits of the commands
      * before it, and the recordings made before it existed, stay the same.
      */
-    SPECIAL;
+    SPECIAL,
+    /**
+     * M7 part A, pressed: the Dash button (design/player/systems, Evasive thrusters): a dash in the
+     * direction held, or straight ahead with none, while the thrusters are fitted. Appended after
+     * {@link #SPECIAL}, so the bits of the commands before it, and the recordings made before it
+     * existed, stay the same.
+     */
+    DASH;
 
     /** No command pressed. */
     public static final int NONE = 0;

@@ -15,7 +15,7 @@ backdrop:
   # Presentation only: the pack ice round Nansen Relay (tools/art/backdrop_l13.py, straight from
   # scene-arctic-r09-a, G9 = a; M5 part G, step G5). The ground is one unique strip (pack-ice-1..4, the
   # approach and the halt's frame, the leads cut along the waves' lanes) over the drifting `deep` water;
-  # the exit's `open-floes`; fog and the whiteout (whiteout_l13 look a) as the atmosphere's banks.
+  # the exit's `open-floes`; fog and the whiteout (whiteout_l13 look b) as the atmosphere's banks.
   scroll_factors: {deep: 0.85, far: 0.9, ground: 1.0, low-air: 1.5, high-air: 2.2}
   ramp: 4
   haze_colour: a8b8c4  # the arctic's pale grey-blue over the water
@@ -29,7 +29,7 @@ backdrop:
     open-floes: {layer: ground, height: 960}   # the exit: looser floes and open sea northward (translucent water, alpha >= 3); open water where it begins at the halt's top edge
     fog-wisps: {layer: low-air, height: 960}   # light: thin pale fog wisps, ~10 %
     fog-banks: {layer: low-air, height: 960}   # medium: the fog thickening at the edges, ~20 %, the centre clear
-    whiteout: {layer: low-air, height: 540}   # heavy: the whiteout's banks from both side edges (whiteout_l13 look a), the centre round the relay clear; they hide the ground units at the edges
+    whiteout: {layer: low-air, height: 540}   # heavy: the whiteout's banks from both side edges (whiteout_l13 look b), the centre round the relay clear; they hide the ground units at the edges
   pieces:
     pack-ice-1: {layer: ground, size: [480, 1536]}
     pack-ice-2: {layer: ground, size: [480, 1536]}

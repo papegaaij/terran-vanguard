@@ -43,3 +43,42 @@ centre (the deck 208 × 152 px as in round 07); the head's centre is 152 px belo
   `harbour-kraken-death_0..9` (160×160, additive): the death — the head going down dead-eyed in a
   churning foam ring, the grip sliding off the deck, a lime and crimson burst with spray glints.
 - `harbour-kraken-arm-death_0..7` (48×48, additive): a severed slam arm's segment pop.
+
+## harbour-kraken-r40-a
+
+Round 40, proposal a for the Level 11 rework (playtest 2026-10-18, `pt2-b.md` proposal 3a: four
+one-lane arms rooted in sockets the player can cut, the whole animal moved up the screen). Frames by
+`python3 tools/art/harbour_kraken.py --r40`, the review sheet and loop by `--r40 --review` (the
+chosen round-33 set is not touched: the new sprites carry `-r40-a` in their names). The round-33
+registration is kept: the head stays 216 px below the platform's centre, so the head, grip,
+surfacing, death and segment frames are reused unchanged, and the platform moves up instead (its
+centre at the halt y −46 instead of 78; `tools/art/backdrop_l11.py`): the head's centre is at y
+170, the eyes at 222, the beak at 268. Registration in `assets/pivots/harbour-kraken.json` under
+`r40_a`. The review's sea, platform, `sub` pass, ships and lane marks are stand-ins.
+
+- `harbour-kraken-root-r40-a_0..15` (72×96, indexed (lane − 1) × 4 + frame): a root socket where an
+  arm breaks the surface, centred on the 40×40 root target (screen x 60 / 154 / 326 / 420, y 210;
+  lanes 2 and 3 sit 26 px outward of their lane centres to clear the mantle and the eyes): a dark
+  webbed collar ringed with pale suckers, the mottled arm rising out of it and running on down its
+  lane, suckers along its flanks and the crimson dorsal seam on its back; a 4-frame breathing loop.
+  The same SDF materials as the arms (`boss_models.mats("harbour-kraken")`, mottled), under a mild
+  perspective so the rearing reads.
+- `harbour-kraken-root-hit-r40-a_0..3`: frame 0 at the hit flash (0.3 toward the pale flesh tint).
+- `harbour-kraken-root-raised-r40-a_0..23` (6 per lane): the tell — the arm rearing out of its
+  collar (frames 0–3, once), then holding (4–5, a loop), the seam an emitter growing to full
+  crimson, a soft shadow on the water; with `harbour-kraken-root-glow-r40-a_0..3` (64×64, additive,
+  a crimson halo pulsing on the socket).
+- `harbour-kraken-root-cut-r40-a_0..23` (6 per lane): the severed stump recoiling (0–1, once, with
+  the round-33 segment pops along the lost arm), then a 4-frame loop of a dark crimson ichor slick
+  spreading from it, glints and beading drops.
+- `harbour-kraken-root-sink-r40-a_0..19` (5 per lane): the death, the knot going under in churning
+  foam.
+- `harbour-kraken-reach-r40-a_0..3` (388×132, plain, for the `sub` pass): the four arms' under-water
+  stretches from the mantle's root ring to their sockets (the round-33 segment frames along the
+  paths), a 4-frame sway.
+
+Brief (for an artist): the Harbour Kraken's four lane arms, each anchored in a fleshy socket at the
+surface — a ring of dark webbing studded with pale suckers, the thick rust-mottled arm rising out of
+it with a crimson seam along its back; when it is about to strike it rears up and the seam blazes
+crimson; once cut, a short stump weeps a dark crimson slick. Pre-rendered 90s CGI, top-down, key
+light from the top left, the round-33 Kraken's palette.

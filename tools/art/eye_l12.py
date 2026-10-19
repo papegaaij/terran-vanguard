@@ -26,9 +26,10 @@ Looks:
      curling into the eye, darker and more ominous; a broad pale-gold pool in the centre with
      faint rays and slow glints on the swell.
 
-Outputs: design/campaign/act-2-homefront/level-12-storm-front/concept/eye-r34-a.png/.gif and
-eye-r34-b.png/.gif (a sheet: the composed eye, the ring and the shaft on their own, the ring turned
-by 30 deg; a GIF: 6 s at 10 fps in real time, the sea scrolling under the turning wall, not a loop).
+Outputs: design/campaign/act-2-homefront/level-12-storm-front/concept/eye-r34-a.png/.gif (the
+chosen a, round 34) and concept/rejected/eye-r34-b.png/.gif (the rejected b) (a sheet: the composed
+eye, the ring and the shaft on their own, the ring turned by 30 deg; a GIF: 6 s at 10 fps in real
+time, the sea scrolling under the turning wall, not a loop).
 The sea is a stand-in (Level 11's swell tile, darkened and calmed); step 5 makes the eye's own sea.
 
 Run: python3 tools/art/eye_l12.py [a] [b]   (~20 s)
@@ -43,6 +44,7 @@ from artkit import DESIGN, ROOT, write_gif
 from render import raster  # noqa: E402
 
 REVIEW_ROUND = "r34"
+CHOSEN = "a"                                    # the user's pick, round 34; the other look goes to rejected/
 CONCEPT = DESIGN / "campaign" / "act-2-homefront" / "level-12-storm-front" / "concept"
 W, H = 480, 540                                 # the play field
 RING = 760
@@ -251,10 +253,11 @@ def review(look):
         sheet.alpha_composite(img, (x, 56))
         x += img.width + 16
     gif = [compose(look, ring, light, f / 10).convert("RGB") for f in range(60)]
-    CONCEPT.mkdir(parents=True, exist_ok=True)
-    png = CONCEPT / f"eye-{REVIEW_ROUND}-{look}.png"
+    folder = CONCEPT if look == CHOSEN else CONCEPT / "rejected"
+    folder.mkdir(parents=True, exist_ok=True)
+    png = folder / f"eye-{REVIEW_ROUND}-{look}.png"
     sheet.convert("RGB").save(png, optimize=True)
-    write_gif(gif, CONCEPT / f"eye-{REVIEW_ROUND}-{look}.gif", fps=10, colors=128)
+    write_gif(gif, folder / f"eye-{REVIEW_ROUND}-{look}.gif", fps=10, colors=128)
     print(f"review: {png.relative_to(ROOT)} (+ .gif)")
 
 

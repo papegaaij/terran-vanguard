@@ -94,6 +94,29 @@ class Level14LooksTest {
         assertEquals(16, SpireLooks.podHeading(0, 100), "up");
         assertEquals(24, SpireLooks.podHeading(100, 0), "right");
         assertEquals(1, SpireLooks.podHeading(-Math.tan(Math.toRadians(10)) * 100, -100), "10° rounds to one step");
+        assertEquals(8, SpireLooks.podFrame(false, -100, 0), "an aimed pod faces the ship");
+        assertEquals(0, SpireLooks.podFrame(true, -100, 0), "a pod that fires straight down faces down");
+    }
+
+    @Test
+    void twoTurretPodsFireStraightDown() {
+        // Round 34 P2 (step K2): pods 1 and 4 fire straight down (the data's `aim: down`); they face down.
+        LevelScript.SetPieceSpec spire = SCRIPT.setPieces().stream()
+                .filter(LevelScript.SetPieceSpec::isBoss)
+                .findFirst()
+                .orElseThrow();
+        Set<Integer> down = new HashSet<>();
+        for (var attack : spire.boss().orElseThrow().attacks()) {
+            for (int p = 0; p < spire.parts().size(); p++) {
+                if (attack.firesDown(p)) {
+                    down.add(p);
+                }
+            }
+        }
+        assertEquals(2, down.size(), "two pods fire down: " + down);
+        down.forEach(p -> assertTrue(
+                spire.parts().get(p).name().startsWith("pod"),
+                spire.parts().get(p).name()));
     }
 
     @Test

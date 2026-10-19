@@ -33,3 +33,135 @@ The sheet shows the four frames and the shadow at 4× and all at 1×; the loop h
 ## smart-bomb-final-r26-a
 
 Round 26, production art (M4 part H batch). Review sheet and loop made from `assets/` by `tools/art/smart_bomb.py --review`; the files are rendered by `tools/art/smart_bomb.py` (see `tools/art/README.md`). The Smart Bomb's flash and ring from the chosen round-09 specials sheet (`specials-r09-a`): `smart-bomb-ring` (72×8, additive: the ring's cross-section, a pale blue halo, a white core and a cyan band trailing inside, the sheet's own profile; the game draws it as a band of quads round the circle, so the ring stays crisp at every radius) and `smart-bomb-burst_0..11` (128×128, additive, 2 steps a frame: the blinding core where the bomb went off, a white-hot point, a pale blue bloom, a six-point star closing and white sparks). The white field flash stays the spec's fill (0.1 s at 80 %, fading over 0.25 s, toned down by the flash reduction). The sheet shows the profile, the burst and the whole effect over a dimmed Level 01 field every 4th step; the loop the same at 30 fps. The chosen sound (`special-smartbomb-r08-a`) is wired by the SFX pass. Not an image-generator prompt: the look is the chosen concept's, whose prompt stays valid; this is the brief for reviewing the production frames.
+
+## emp-burst-r36-a
+
+**Chosen** (round 36, 2026-10-13).
+
+**EMP Burst A, ring with crackling arcs (Act 3, from Level 15)**: the special's burst and the stun look. Files: `emp-burst-r36-a.png` (sheet: the burst at +0.05 / 0.15 / 0.25 / 0.35 s, the 4-frame stun overlay on a Ghost Drone with its lights out and on a Needler with its glow dimmed, the grey Warden Tank running and stunned, the stun lengths) and `emp-burst-r36-a.gif` (20 fps over Martian ground: three Ghost Drones, five Needlers and a Warden Tank firing; the burst covers the field in 0.4 s, the machines stop for 3 s and the Needlers for 1.5 s while the bullets already in flight fly on; the lead Needler is shot down during its stun).
+
+- **Prompt:** top-down effect frames for a late-1990s pre-rendered CGI vertical shoot'em up over a rust-red Martian plain: a thin bright blue-white electromagnetic shockwave ring expanding from a small blue-and-white fighter across the whole screen, a white core in a cyan-blue halo with short jagged lightning arcs crackling along it and a faint blue wash inside; the grey drones and the grey tank it passes go dark (running lights and engine glow out) with blue-white electric arcs crawling over their hulls; the alien craft it passes dim their glow and twitch under arcs; enemy bullets keep flying; Raptor / Tyrian 2000 era look.
+- **Negative prompt:** white full-screen flash (that is the Smart Bomb), bullets popping or vanishing, orange or red lightning, explosions on the stunned units, photographic realism, side view, text, watermark.
+- **Animation brief:** the ring reaches every unit within 0.4 s; each unit's stun starts when the ring reaches its centre; the overlay loops 4 frames; air units drift on their line while stunned, the tank's tracks and turret freeze.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py emp-burst --variant a` (Ghost Drone and grey Warden Tank models from `tools/concept/enemies_r36.py`, the Needler, Stormhawk and explosions from `assets/`)
+
+## emp-burst-r36-b
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+
+**EMP Burst B, arc front**: the same scene with a different burst. Files: `rejected/emp-burst-r36-b.png` and `rejected/emp-burst-r36-b.gif`.
+
+- **Prompt:** as A, but the shockwave is a broken, dashed double ring (cyan-white outer, pale inner 9 px behind it) that throws two forked lightning bolts into each craft at the moment it reaches it, with a split-second blue-white flicker over the whole field at the burst; stunned craft take on a cool grey cast with a small cage of sparks circling them.
+- **Negative prompt:** as A.
+- **Animation brief:** the forks last as long as the ring touches the unit (about one frame at 20 fps); otherwise as A.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py emp-burst --variant b`
+
+## shield-overcharge-r36-a
+
+**Rejected** (round 36, 2026-10-13: b picked); the files are in `rejected/`.
+
+**Shield Overcharge A, gold (Act 3, from Level 19)**: the first cooldown special and its HUD ring. Files: `rejected/shield-overcharge-r36-a.png` (sheet: the activation, a hit while overcharged, the shimmer, the end with the excess bleeding away; the 24×24 ring in its states; the shield bar and the special row in five states) and `rejected/shield-overcharge-r36-a.gif` (720×540 at 15 fps: the play field over a dusty Martian plain with three Ghost Drones firing, and the right HUD panel from the round-28 game capture with the new rows painted in: shield 45 drops to 21, the overcharge fills it to 90, hits and regen for 8 s, the excess bleeds to 45; a press while cooling is denied at 6 s; the ring fills over the 45 s cooldown).
+
+- **Prompt:** top-down effect frames for a late-1990s pre-rendered CGI vertical shoot'em up: a small blue-and-white fighter whose round hexagon-cell energy shield flares gold-white in a ring and then shimmers gold with a highlight running round it, enemy hits rippling gold across the bubble; next to it a HUD panel in a dark blue bevelled frame with a segmented cyan shield bar whose second half lights in gold cells, and a special-ability row with a small shield icon inside a thin ring that fills clockwise in dim cyan while a gold arc drains anticlockwise; Raptor / Tyrian 2000 era look.
+- **Negative prompt:** invulnerability glow on the hull, orange flames, red tint, rounded modern flat UI, photographic realism, side view, watermark.
+- **Animation brief:** activation 0.35 s; the shimmer pulses at about 1 Hz; after 8 s the excess bleeds over 0.5 s and the bubble fades; the ring flashes white once when ready.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py shield-overcharge --variant a` (HUD fonts and the panel from `assets/fonts/` and `design/player/wingmen/concept/rook-ingame-capture-r28-a.png`)
+
+## shield-overcharge-r36-b
+
+**Chosen** (round 36, 2026-10-13).
+
+**Shield Overcharge B, white-hot double shell**: the same scene with a different look and bar. Files: `shield-overcharge-r36-b.png` and `shield-overcharge-r36-b.gif`.
+
+- **Prompt:** as A, but in white and pale cyan instead of gold: two concentric shells snap out at activation; while overcharged a bright white inner shell and a faint outer shell with a thin crackle running round it; the shield bar keeps its scale and shows the second layer as white cores inside the cyan cells; the ring's effect arc is white.
+- **Negative prompt:** as A, plus: gold or yellow (the Ascendancy's livery hue).
+- **Animation brief:** as A.
+- **Mockup generator:** `python3 tools/concept/gear_r36.py shield-overcharge --variant b`
+
+## emp-burst-final-r37-a
+
+Production art (M7 part A batch, step ART-A, for concept round 37), not a mockup: `python3 tools/art/act3_specials.py emp` writes `emp-burst-ring_0..3` (a 60×128 strip, across
+the ring × along its circumference, drawn as a band of quads round the circle like the Smart Bomb's)
+and `emp-burst-crackle[-medium|-large]_0..3` (32, 56 and 96 px) into `assets/sprites/`, and this review
+sheet and GIF. The look round 36 chose (G.3 = a, `gear_r36.emp_ring`/`crackle` a): a thin blue-white
+ring with crackling arcs along it, a 4-frame crackle over stunned units.
+
+- **Prompt:** top-down effect frames for a late-1990s pre-rendered CGI vertical shoot'em up: a thin
+  blue-white electric shockwave ring expanding from a small fighter with short lightning arcs
+  crackling along it; stunned enemy craft go dark with small white-blue electric arcs crawling over
+  them; Raptor / Tyrian 2000 era look.
+- **Negative prompt:** orange, fire, photographic realism, side view, watermark.
+
+## orbital-lance-r37-a
+
+Production art (M7 part A batch, step ART-A, for concept round 37), not a mockup: round 36 showed no look for the Orbital Lance, so `python3 tools/art/act3_specials.py lance`
+renders two proposals; a is written to `assets/sprites/` (`orbital-lance-line_0..3`, a 12×64 tile;
+`orbital-lance-column_0..7`, a 72×64 tile; `orbital-lance-scorch`, a 48×32 normal-blend tile, and
+`orbital-lance-embers_0..3`). **A "piercing ray":** a thin solid red targeting line with a pale pulse
+running down it; the column a wide white-hot core in a blue halo with fine striations racing down
+(the `beam` family's piercing ray), its edges wavering; dark burnt ground with glowing embers.
+
+- **Prompt:** top-down effect frames for a late-1990s pre-rendered CGI vertical shoot'em up: a thin
+  red targeting line down the screen, then a huge vertical column of white-hot light with a blue halo
+  striking from orbit through the whole screen, leaving a dark scorched line on red Martian ground;
+  Raptor / Tyrian 2000 era look.
+- **Negative prompt:** orange fire column, explosions along it, photographic realism, side view, watermark.
+- **Animation brief:** line 0.6 s blinking; column 3 s following the ship at up to 240 px/s, 0.3 s fade.
+
+## orbital-lance-r37-b
+
+**B "descending rings":** a dashed double red line with chevrons pointing down and running down; a
+column with a narrower white core and bright rings travelling down it, as if energy pours from orbit;
+the same scorch with cooler embers. Rendered only to its review files.
+
+- **Prompt:** as A, but the targeting line a dashed double red line with downward chevrons, and the
+  column ringed with bright bands sliding down it.
+- **Negative prompt:** as A.
+
+## shield-overcharge-final-r37-a
+
+Production art (M7 part A batch, step ART-A, for concept round 37), not a mockup: `python3 tools/art/act3_specials.py overcharge` writes `shield-overcharge-shell_0..7` (72×72,
+the white double shell: the production shield ring recoloured white, a second ring just outside it and a
+crackle running round) and `shield-overcharge-flare_0..6` (110×110, two white rings opening with a white
+core, 0.35 s) into `assets/sprites/`, and this review sheet and GIF; the look round 36 chose (G.4 = b,
+`gear_r36.oc_bubble`/`oc_activation` b). The HUD's white cores and cooldown ring are drawn by the game.
+
+- **Prompt:** as [shield-overcharge-r36-b](#shield-overcharge-r36-b).
+
+## specials-capture-r37-a
+
+Concept round 37 (M7 part A close-out, step A7), a capture of the game, not generated art (`.png`
+labelled sheet, `.mp4` H.264/AAC with the game's sound, 46 s, the full 960×540 frame with a caption
+strip); the method of
+[arsenal-capture-r37-a](../../weapons/concept/prompts.md#arsenal-capture-r37-a) (private Xvfb,
+960×540 window, `--bench`, x11grab 30 fps, the mix through OpenAL Soft's `wave` driver, XTest
+keys: sways, X = special). Every run: `--start level --loadout
+front=ion-beam:2,left=light-drone-bay,right=deflector-pod,utility=evasive-thrusters` and:
+
+- **EMP Burst**: `--level 5 --difficulty hard --special emp-burst:3` (no `--invulnerable`; the level
+  failed at t 62 when battery A got past) and `--level 5 --difficulty medium --invulnerable
+  --special emp-burst:3`. **Scratch data:** no Act 1–2 unit is a machine, so both runs read a copy
+  of [needler/data.yaml](../../../enemies/air/needler/data.yaml) with `machine: true` placed first
+  on the run's classpath only (a copy of the start script with `CLASSPATH=<scratch>:$APP_HOME/lib/…`;
+  the real file is unchanged). The burst at t 50.9 caught the Needler pincer holding at the edges
+  (machines, 3 s), the one at t 63 a Skitter stream (Vrell, 1.5 s).
+- **Orbital Lance**: `--level 7 --difficulty medium --invulnerable --special orbital-lance:2`,
+  lances at t 30 and t 106 (on the Brood Carrier).
+- **Shield Overcharge**: `--level 9 --difficulty medium --escort none --special shield-overcharge`
+  (no `--invulnerable`; the level failed at t 52, a node got past), fired at t 12; a special
+  charge pickup (the Level 09 Stinger column's) at t 34.5 took 10 s off; READY at t 46.8, fired again at t 50.
+- **Smart Bomb**: `--level 14 --difficulty medium --escort none --invulnerable --special
+  smart-bomb:3`, bombs at t 25, 45 and 70.
+
+The sheet: the EMP ring, the crackle on the machine Needlers (zoom 2×) still on 2 s later and gone
+after 3 s, the ring and the crackle on Vrell Skitters; the lance's red lock line, its column, the
+Lance Control radio line ("Lance uplink locked. Firing!"), the dark scorch strip it leaves, the
+second lance on the carrier; the Smart Bomb's flash and kills; the Overcharge's activation, its
+white double shell (zoom 2×), the shield bar at 40 with white cores, the HUD ring at 23 s and 12 s
+across the pickup and at READY. The mp4: Level 05 hard t 50–56, Level 05 t 62–66, Level 07 t 29–35.6
+and 105.4–111.4, Level 09 t 11.4–19.4, 32.4–36.9 and 44.4–51.4, Level 14 t 24.3–28.7.
+
+Findings (pending the user's review): the READY white flash of the cooldown ring (and the dash
+pip's, see [dash-capture-r37-a](../../systems/concept/prompts.md#dash-capture-r37-a)) shows in one
+captured frame only: it counts rendered frames (12), and the game ran uncapped at about 460 fps
+under Xvfb, so on a fast machine without vsync it is gone in about 25 ms.

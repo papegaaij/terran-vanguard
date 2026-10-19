@@ -32,6 +32,14 @@ final class WaveSchedule {
     private final String[] tags;
     /** The number of volley clocks: one per staggered walker wave. */
     private final int volleyClocks;
+    /** M7 part B: per planned unit, its place in its wave (from 0, in planning order). */
+    private final int[] places;
+    /** M7 part D: per planned unit, the number of units its wave planned (a bomb run's slots). */
+    private final int[] waveSizes;
+    /** M7 part B: per planned unit, its wave's burrow stagger clock (a Burrower wave's); -1 for none. */
+    private final int[] burrowGroups;
+    /** M7 part B: the number of burrow stagger clocks: one per Burrower wave. */
+    private final int burrowClocks;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -40,6 +48,18 @@ final class WaveSchedule {
 
     /** @param kinds the level's distinct enemies, every wave's among them; a spawn's kind indexes it */
     WaveSchedule(List<WaveSpec> waves, List<EnemySpec> kinds, SplitMix64 rng) {
+        this(waves, kinds, rng, wave -> java.util.Optional.empty());
+    }
+
+    /**
+     * @param spans M7 part C: per wave, the canyon's flyable span at its entry row ({@link
+     *     Formations.Span}); empty for the whole field (every wave of a level without terrain)
+     */
+    WaveSchedule(
+            List<WaveSpec> waves,
+            List<EnemySpec> kinds,
+            SplitMix64 rng,
+            java.util.function.Function<WaveSpec, java.util.Optional<Formations.Span>> spans) {
         this.kinds = kinds;
         List<Spawn> planned = new ArrayList<>();
         List<WaveSpec> warned = new ArrayList<>();
@@ -47,10 +67,12 @@ final class WaveSchedule {
         Map<Spawn, WaveSpec.Entry> entryOf = new IdentityHashMap<>();
         Map<Spawn, int[]> volleyOf = new IdentityHashMap<>();
         Map<Spawn, String> tagOf = new IdentityHashMap<>();
+        Map<Spawn, int[]> placeOf = new IdentityHashMap<>();
         int clocks = 0;
+        int burrows = 0;
         for (WaveSpec wave : waves) {
             int before = planned.size();
-            Formations.plan(wave, kinds.indexOf(wave.enemy()), rng, planned);
+            Formations.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
             boolean cross = wave.formation() == WaveSpec.Formation.CROSS;
             int crossEdges = 0;
             for (int i = before; i < planned.size(); i++) {
@@ -59,6 +81,12 @@ final class WaveSchedule {
                 crossEdges |= edge;
                 entryOf.put(planned.get(i), cross ? entryAt(edge) : wave.entry());
                 tagOf.put(planned.get(i), wave.tag());
+                placeOf.put(planned.get(i), new int[] {
+                    i - before, wave.enemy().burrow().isPresent() ? burrows : -1, planned.size() - before
+                });
+            }
+            if (wave.enemy().burrow().isPresent()) {
+                burrows++;
             }
             if (staggered(wave)) {
                 for (int i = before; i < planned.size(); i++) {
@@ -83,7 +111,14 @@ final class WaveSchedule {
         volleyGroups = new int[spawns.length];
         volleyUnits = new int[spawns.length];
         tags = new String[spawns.length];
+        places = new int[spawns.length];
+        waveSizes = new int[spawns.length];
+        burrowGroups = new int[spawns.length];
         for (int i = 0; i < spawns.length; i++) {
+            int[] place = placeOf.getOrDefault(spawns[i], new int[] {0, -1, 1});
+            places[i] = place[0];
+            waveSizes[i] = place[2];
+            burrowGroups[i] = place[1];
             tags[i] = tagOf.getOrDefault(spawns[i], "");
             entries[i] = entryOf.getOrDefault(spawns[i], WaveSpec.Entry.FRONT);
             int[] volley = volleyOf.getOrDefault(spawns[i], new int[] {-1, 0});
@@ -91,6 +126,7 @@ final class WaveSchedule {
             volleyUnits[i] = volley[1];
         }
         volleyClocks = clocks;
+        burrowClocks = burrows;
         // A chain's loop-back re-enters from the bottom edge: warned like a rear entry.
         List<Spawn> loops =
                 planned.stream().filter(spawn -> spawn.loop().isPresent()).toList();
@@ -233,6 +269,26 @@ final class WaveSchedule {
     /** The number of volley clocks: one per staggered walker wave. */
     int volleyClocks() {
         return volleyClocks;
+    }
+
+    /** M7 part B: the place in its wave (from 0) of the unit {@link #due} returned last. */
+    int lastPlace() {
+        return places[next - 1];
+    }
+
+    /** M7 part D: the number of units the wave of the unit {@link #due} returned last planned. */
+    int lastWaveSize() {
+        return waveSizes[next - 1];
+    }
+
+    /** M7 part B: the burrow stagger clock of the unit {@link #due} returned last; -1 without one. */
+    int lastBurrowGroup() {
+        return burrowGroups[next - 1];
+    }
+
+    /** M7 part B: the number of burrow stagger clocks: one per Burrower wave. */
+    int burrowClocks() {
+        return burrowClocks;
     }
 
     /** The edges with a warning showing at {@code tick}, as {@link WarningEdge} bits. */

@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
@@ -32,6 +33,11 @@ public record AlliesData(Map<String, Ally> allies) {
      * @param banks M5 part D, presentation: its rendered banking frames
      * @param glide M5 part D, presentation: s of a lost unit's glide into {@code far}
      * @param flak M5 part E, presentation (the escort frigate): its flak bursts over the convoy
+     * @param hits M7 part D (design/allies, Ares Landing dome): the hits it breaks on, given instead of {@code hp}
+     *     (its {@code hp} is then this count): every attack its {@code damaged_by} names deals the hits given there, a
+     *     hooked lob's direct hit one; empty for an ally with HP
+     * @param sprite M7 part D, presentation: its sprites' base name (the Ares Landing dome's {@code ares-dome}); the
+     *     slug if not given
      */
     public record Ally(
             String name,
@@ -46,7 +52,9 @@ public record AlliesData(Map<String, Ally> allies) {
             Optional<Integer> firstLevel,
             Optional<Banks> banks,
             Optional<Double> glide,
-            Optional<Flak> flak) {
+            Optional<Flak> flak,
+            Optional<Integer> hits,
+            Optional<String> sprite) {
         /** What a ground ally follows. */
         public static final String ROAD = "road";
         /** M5 part D: what an air ally follows, its station in the level's band. */
@@ -62,9 +70,84 @@ public record AlliesData(Map<String, Ally> allies) {
          */
         public static final String GROUND = "ground";
 
+        /** Without M7 part D's hits and sprite. */
+        public Ally(
+                String name,
+                String layer,
+                Size size,
+                Size hitbox,
+                double hp,
+                DamagedBy damagedBy,
+                String follows,
+                Headings headings,
+                double smokeBelow,
+                Optional<Integer> firstLevel,
+                Optional<Banks> banks,
+                Optional<Double> glide,
+                Optional<Flak> flak) {
+            this(
+                    name,
+                    layer,
+                    size,
+                    hitbox,
+                    hp,
+                    damagedBy,
+                    follows,
+                    headings,
+                    smokeBelow,
+                    firstLevel,
+                    banks,
+                    glide,
+                    flak,
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
+        /** M7 part D: an ally as written, with its {@code hp} or (the Ares Landing dome) its {@code hits}. */
+        @JsonCreator
+        static Ally of(
+                @JsonProperty("name") String name,
+                @JsonProperty("layer") String layer,
+                @JsonProperty("size") Size size,
+                @JsonProperty("hitbox") Size hitbox,
+                @JsonProperty("hp") Optional<Double> hp,
+                @JsonProperty("damaged_by") DamagedBy damagedBy,
+                @JsonProperty("follows") String follows,
+                @JsonProperty("headings") Headings headings,
+                @JsonProperty("smoke_below") double smokeBelow,
+                @JsonProperty("first_level") Optional<Integer> firstLevel,
+                @JsonProperty("banks") Optional<Banks> banks,
+                @JsonProperty("glide") Optional<Double> glide,
+                @JsonProperty("flak") Optional<Flak> flak,
+                @JsonProperty("hits") Optional<Integer> hits,
+                @JsonProperty("sprite") Optional<String> sprite) {
+            Check.that(hp.isPresent() != hits.isPresent(), "give the ally's hp or (M7 part D) its hits, one of them");
+            return new Ally(
+                    name,
+                    layer,
+                    size,
+                    hitbox,
+                    hp.orElseGet(() -> (double) hits.orElseThrow()),
+                    damagedBy,
+                    follows,
+                    headings,
+                    smokeBelow,
+                    firstLevel,
+                    banks,
+                    glide,
+                    flak,
+                    hits,
+                    sprite);
+        }
+
         public Ally {
             Layers.of(layer);
             Check.positive("hp", hp);
+            hits.ifPresent(n -> {
+                Check.positive("hits", n);
+                Check.that(hp == n, "hits: its hp counts the hits");
+            });
+            sprite.ifPresent(base -> Check.that(!base.isBlank(), "sprite: a sprite name"));
             Check.share("smoke_below", smokeBelow);
             firstLevel.ifPresent(level -> Check.positive("first_level", level));
             Check.that(
@@ -74,15 +157,25 @@ public record AlliesData(Map<String, Ally> allies) {
             boolean naval = follows.equals(STATIONS);
             boolean standing = follows.equals(GROUND);
             Check.that(
-                    standing || (damagedBy.dives().isEmpty() && damagedBy.lobs().isEmpty()),
-                    "only a defended ally (follows: ground) is hurt by dives and lobs");
+                    standing
+                            || (damagedBy.dives().isEmpty()
+                                    && damagedBy.lobs().isEmpty()
+                                    && damagedBy.bombs().isEmpty()
+                                    && damagedBy.rolls().isEmpty()),
+                    "only a ground ally (follows: ground) is hurt by dives, lobs, bomb runs and rolls");
+            Check.that(
+                    hits.isPresent()
+                            == (damagedBy.bombs().isPresent()
+                                    || damagedBy.rolls().isPresent()),
+                    "an ally hurt by bomb runs or rolls counts hits (hits), one that counts hits is hurt by them");
             Check.that(
                     !standing
                             || (damagedBy.claws() == 0
                                     && !damagedBy.hitByBullets()
                                     && !damagedBy.hitByContact()
                                     && damagedBy.slams().isEmpty()),
-                    "a defended ally (follows: ground) is hurt only by objective-aimed attacks, dives and lobs");
+                    "a ground ally (follows: ground) is hurt only by objective-aimed attacks, dives, lobs, bomb runs"
+                            + " and rolls");
             Check.that(
                     air == layer.equals("air"),
                     "an ally on the air layer follows lanes, one on the ground follows the road or stations");
@@ -117,6 +210,16 @@ public record AlliesData(Map<String, Ally> allies) {
         /** M5 part G: whether it is a defend primary's ally, standing on the ground (Level 13's relay). */
         public boolean standing() {
             return follows.equals(GROUND);
+        }
+
+        /** M7 part D: whether it counts hits ({@code hits}) instead of HP (the Ares Landing dome). */
+        public boolean countsHits() {
+            return hits.isPresent();
+        }
+
+        /** M7 part D, presentation: its sprites' base name, its {@code sprite} or the slug. */
+        public String spriteName(String slug) {
+            return sprite.orElse(slug);
         }
     }
 
@@ -154,7 +257,11 @@ public record AlliesData(Map<String, Ally> allies) {
      * @param dives M5 part G (design/allies, Nansen Relay; user decision G1 = a): the damage a diver the
      *     hook sends at it deals once as it crosses its hit box (the relay's 10)
      * @param lobs M5 part G: a mortar's lob the hook aims at it deals its direct hit to it when it lands on
-     *     it (the ring hurts only the ship)
+     *     it (the ring hurts only the ship); M7 part D: one hit to an ally that counts hits
+     * @param bombs M7 part D (design/allies, Ares Landing dome): the hits a hooked bomber's drop deals as the ally's
+     *     footprint passes beneath it (once per bomber, its load spent)
+     * @param rolls M7 part D: the hits a rolling unit's roll deals as it crosses the ally's footprint (once per roll;
+     *     the Shellback's)
      */
     public record DamagedBy(
             boolean objectiveAimed,
@@ -163,8 +270,24 @@ public record AlliesData(Map<String, Ally> allies) {
             Optional<Boolean> contact,
             Optional<Double> slams,
             Optional<Double> dives,
-            Optional<Boolean> lobs) {
+            Optional<Boolean> lobs,
+            Optional<Double> bombs,
+            Optional<Double> rolls) {
+        /** Without M7 part D's bombs and rolls. */
+        public DamagedBy(
+                boolean objectiveAimed,
+                double claws,
+                Optional<Boolean> bullets,
+                Optional<Boolean> contact,
+                Optional<Double> slams,
+                Optional<Double> dives,
+                Optional<Boolean> lobs) {
+            this(objectiveAimed, claws, bullets, contact, slams, dives, lobs, Optional.empty(), Optional.empty());
+        }
+
         public DamagedBy {
+            bombs.ifPresent(n -> Check.positive("bombs", n));
+            rolls.ifPresent(n -> Check.positive("rolls", n));
             Check.notNegative("claws", claws);
             slams.ifPresent(n -> Check.positive("slams", n));
             dives.ifPresent(d -> Check.positive("dives", d));
@@ -174,6 +297,16 @@ public record AlliesData(Map<String, Ally> allies) {
         /** M5 part G: the damage of a hooked diver crossing it; 0 when dives do not hurt it. */
         public double diveDamage() {
             return dives.orElse(0.0);
+        }
+
+        /** M7 part D: the hits a hooked bomber's drop deals; 0 when bomb runs do not hurt it. */
+        public double hitsPerBomb() {
+            return bombs.orElse(0.0);
+        }
+
+        /** M7 part D: the hits a roll crossing it deals; 0 when rolls do not hurt it. */
+        public double hitsPerRoll() {
+            return rolls.orElse(0.0);
         }
 
         /** M5 part G: whether a hooked mortar's lob landing on it hurts it. */

@@ -61,6 +61,17 @@ class DefencesTest {
     }
 
     @Test
+    void aLatchedDrainGoesOnThroughTheMercyTime() {
+        // Round 34, 12.7b.b = no: the mercy time after an armour hit does not stop a Lamprey's drain.
+        defences.takeCollision(6, events, 0, 0);
+        assertTrue(defences.mercyTicks() > 0);
+        defences.drain(2, events, 0, 0);
+
+        assertEquals(15, defences.shield(), "drained in the mercy time");
+        assertEquals(57, defences.armour(), "never the armour");
+    }
+
+    @Test
     void shieldHitsGiveNoMercy() {
         defences.takeShot(4, events, 0, 0);
         defences.takeShot(4, events, 0, 0);

@@ -9,7 +9,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import java.util.Arrays;
+import vanguard.sim.Beam;
+import vanguard.sim.Deflectors;
+import vanguard.sim.Drones;
 import vanguard.sim.Enemy;
+import vanguard.sim.EnemyBullet;
 import vanguard.sim.Layer;
 import vanguard.sim.Ship;
 import vanguard.sim.ShipSpec;
@@ -29,7 +33,12 @@ import vanguard.sim.WeaponSpec;
  * points to the box, a scissor keeps everything inside it. M5 part E: a torpedo's range is water (its
  * loop's level is over water): a band of sea under the grid, the dummies submerged under it as faint
  * cyan boxes, the torpedoes with their bubbles running under the surface (dimmed as the {@code sub}
- * pass would), dropping in with a splash and bursting under the water. Drawing allocates nothing.
+ * pass would), dropping in with a splash and bursting under the water. M7 part A: the Ion Beam's
+ * column (its level's tile, cut at the dummy it burns, with its tip and the small contact flare), the
+ * Light Drone Bay's drone on its orbit facing its convergence point (fading in while rebuilt), and the
+ * Deflector Pod's field on its side while it holds a charge (brighter for a moment as one returns)
+ * with the catch flash where it takes a dummy's bullet; the dummies' bullets as the level's orbs.
+ * Drawing allocates nothing.
  */
 public final class TestFireView {
     /** Play-field px to box px. */
@@ -69,6 +78,38 @@ public final class TestFireView {
     /** M5 part E: the torpedo's bubbles, splashes and water bursts (alpha-blended, as the level's water effects). */
     private final Effects water = Effects.solid();
 
+    /** M7 part A: the beam's tile frames, its tip and contact flare; one column frame per step. */
+    private static final int BEAM_FRAMES = 8;
+
+    private static final int CONTACT_FRAME_TICKS = 2;
+    /** The catch flash: 16 headings of 6 frames, 2 steps a frame (tools/art/deflector_pod.py). */
+    private static final int CATCH_HEADINGS = 16;
+
+    private static final int CATCH_FRAMES = 6;
+    /** The drone faces 16 headings (tools/art/light_drone.py). */
+    private static final int DRONE_HEADINGS = 16;
+    /** A field's alpha while it holds a charge, and how long it shines brighter as one returns. */
+    private static final float FIELD_ALPHA = 0.7f;
+
+    private static final int CHARGED_TICKS = 8;
+    /** The most mounts the view tracks a field's charge glow for. */
+    private static final int MAX_MOUNTS = 4;
+
+    private final BulletLooks bullets;
+    private final Array<AtlasRegion> droneFrames;
+    private final Array<AtlasRegion> beamContact;
+    /** The catch flash by heading, each its six frames. */
+    private final Array<Array<AtlasRegion>> catches = new Array<>();
+
+    private final TextureRegion cut = new TextureRegion();
+    private final int[] charged = new int[MAX_MOUNTS];
+    /** The shown level's beam column and tip, and its fields by side; null when not fitted. */
+    private Array<AtlasRegion> beamColumn;
+
+    private Array<AtlasRegion> beamTip;
+    private AtlasRegion fieldLeft;
+    private AtlasRegion fieldRight;
+
     private final Matrix4 saved = new Matrix4();
     private final Matrix4 transform = new Matrix4();
     private final int[] flash = new int[MAX_DUMMIES];
@@ -81,6 +122,17 @@ public final class TestFireView {
         hull = sprites.ship;
         this.pods = pods;
         glance = sprites.frames("ballistic-impact");
+        bullets = new BulletLooks(sprites);
+        droneFrames = sprites.frames("light-drone-bay-drone");
+        beamContact = sprites.frames("ion-beam-contact-small");
+        Array<AtlasRegion> flashes = sprites.frames("deflector-pod-catch");
+        for (int heading = 0; heading < CATCH_HEADINGS; heading++) {
+            Array<AtlasRegion> frames = new Array<>(CATCH_FRAMES);
+            for (int frame = 0; frame < CATCH_FRAMES; frame++) {
+                frames.add(flashes.get(heading * CATCH_FRAMES + frame));
+            }
+            catches.add(frames);
+        }
     }
 
     /** A new loop of a new weapon: its looks, nothing of the last one left. */
@@ -95,6 +147,13 @@ public final class TestFireView {
     public void show(Sortie sortie, int level, boolean rook) {
         weapons = new WeaponLooks(sortie.armament(), new int[] {level}, sprites, pods);
         hull = rook && sprites.has("rook") ? sprites.frames("rook") : sprites.ship;
+        boolean beam = sortie.armament().mount(0).fires()
+                && sortie.armament().mount(0).weapon().delivery() == WeaponSpec.Delivery.BEAM;
+        beamColumn = beam ? sprites.frames("ion-beam-column-" + level) : null;
+        beamTip = beam ? sprites.frames("ion-beam-tip-" + level) : null;
+        boolean field = sortie.armament().mount(0).deflects();
+        fieldLeft = field ? sprites.region("deflector-pod-field-" + level + "-left") : null;
+        fieldRight = field ? sprites.region("deflector-pod-field-" + level + "-right") : null;
         restart();
     }
 
@@ -104,6 +163,7 @@ public final class TestFireView {
         trails.clear();
         water.clear();
         Arrays.fill(flash, 0);
+        Arrays.fill(charged, 0);
     }
 
     /** After each simulation step: the effects advance, the step's hits and explosions start theirs. */
@@ -124,6 +184,11 @@ public final class TestFireView {
         for (int i = 0; i < flash.length; i++) {
             if (flash[i] > 0) {
                 flash[i]--;
+            }
+        }
+        for (int i = 0; i < charged.length; i++) {
+            if (charged[i] > 0) {
+                charged[i]--;
             }
         }
         SimEvents events = sortie.events();
@@ -152,9 +217,25 @@ public final class TestFireView {
                 case SHOT_GLANCED -> effects.start(glance, FRAME_TICKS, x, y);
                 case BLAST -> effects.start(weapons.blast(events.value(i), sprites.explosionSmall), FRAME_TICKS, x, y);
                 case ENEMY_DESTROYED -> effects.start(sprites.explosionSmall, FRAME_TICKS, x, y);
+                case DEFLECTOR_CAUGHT -> {
+                    // The flash's heading: from the ship's centre to the catch, clockwise from up.
+                    double heading =
+                            Math.atan2(x - sortie.ship().x(), y - sortie.ship().y());
+                    effects.start(catches.get(headingIndex(heading, CATCH_HEADINGS)), FRAME_TICKS, x, y);
+                }
+                case DEFLECTOR_CHARGED -> {
+                    if (events.value(i) < charged.length) {
+                        charged[events.value(i)] = CHARGED_TICKS;
+                    }
+                }
                 default -> {}
             }
         }
+    }
+
+    /** The nearest of {@code headings} headings to {@code radians} (clockwise from up). */
+    static int headingIndex(double radians, int headings) {
+        return Math.floorMod((int) Math.round(radians / (2 * Math.PI) * headings), headings);
     }
 
     /** The dummy nearest to (x, y); -1 for none. */
@@ -215,14 +296,120 @@ public final class TestFireView {
         trails.draw(batch, 0);
         drawShots(batch, sortie, alpha, false);
         drawShip(batch, sortie.ship(), alpha);
+        drawDrones(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        drawFields(batch, sortie, alpha);
+        drawBeam(batch, sortie);
         drawShots(batch, sortie, alpha, true);
         drawMuzzles(batch, sortie, alpha, true);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         drawMuzzles(batch, sortie, alpha, false);
+        drawBullets(batch, sortie, alpha);
         effects.draw(batch, 0);
         batch.setTransformMatrix(saved);
         Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
+    }
+
+    /**
+     * M7 part A: the drone of each drone bay on its orbit, facing its convergence point ahead of the
+     * ship, faded while it is rebuilt; nothing while it is broken.
+     */
+    private void drawDrones(SpriteBatch batch, Sortie sortie, float alpha) {
+        Drones drones = sortie.drones();
+        if (!drones.any()) {
+            return;
+        }
+        Ship ship = sortie.ship();
+        for (int m = 0; m < sortie.armament().size(); m++) {
+            if (!drones.bay(m) || drones.broken(m)) {
+                continue;
+            }
+            double dx = drones.offsetX(m);
+            double dy = drones.offsetY(m);
+            double heading = Math.atan2(-dx, drones.spec(m).converge() - dy);
+            batch.setColor(1, 1, 1, (float) drones.fadeIn(m));
+            drawScaled(
+                    batch,
+                    droneFrames.get(headingIndex(heading, DRONE_HEADINGS)),
+                    ship.renderX(alpha) + dx,
+                    ship.renderY(alpha) + dy,
+                    1);
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * M7 part A: each Deflector Pod's field round the ship's centre on its side (the sprite's inner edge
+     * on the centre) while it holds a charge, brighter for a moment as a charge returns.
+     */
+    private void drawFields(SpriteBatch batch, Sortie sortie, float alpha) {
+        Deflectors fields = sortie.deflectors();
+        if (!fields.any() || fieldLeft == null) {
+            return;
+        }
+        Ship ship = sortie.ship();
+        float x = (float) (PixelScreen.PLAY_FIELD_X + ship.renderX(alpha));
+        float y = (float) ship.renderY(alpha);
+        for (int m = 0; m < sortie.armament().size(); m++) {
+            if (!fields.pod(m) || fields.charges(m) == 0) {
+                continue;
+            }
+            boolean left = fields.side(m) < 0;
+            AtlasRegion field = left ? fieldLeft : fieldRight;
+            float glow = m < charged.length ? (float) charged[m] / CHARGED_TICKS : 0;
+            batch.setColor(1, 1, 1, Math.min(1, FIELD_ALPHA + (1 - FIELD_ALPHA) * glow));
+            batch.draw(
+                    field,
+                    Math.round(left ? x - field.getRegionWidth() : x),
+                    Math.round(y - field.getRegionHeight() / 2f));
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * M7 part A: the Ion Beam's column from the nose up, tile on tile, cut at the dummy it burns where
+     * its tip bores in under the small contact flare.
+     */
+    private void drawBeam(SpriteBatch batch, Sortie sortie) {
+        if (beamColumn == null) {
+            return;
+        }
+        Beam beam = sortie.beam(0);
+        if (beam == null || !beam.on()) {
+            return;
+        }
+        int frame = (int) (sortie.tick() % BEAM_FRAMES);
+        AtlasRegion tile = beamColumn.get(frame % beamColumn.size);
+        AtlasRegion tip = beamTip.get(frame % beamTip.size);
+        boolean burning = beam.contact() == Beam.Contact.BURN;
+        float x = (float) (PixelScreen.PLAY_FIELD_X + beam.x() - tile.getRegionWidth() / 2f);
+        float top = (float) beam.endY() - (burning ? tip.getRegionHeight() : 0);
+        int height = tile.getRegionHeight();
+        for (float y = (float) beam.fromY(); y < top; y += height) {
+            int shown = (int) Math.min(height, Math.ceil(top - y));
+            // The tile's lower rows, so the column runs on seamlessly to its cut end.
+            cut.setRegion(tile, 0, height - shown, tile.getRegionWidth(), shown);
+            batch.draw(cut, x, y);
+        }
+        if (burning) {
+            batch.draw(tip, (float) (PixelScreen.PLAY_FIELD_X + beam.x() - tip.getRegionWidth() / 2f), top);
+            AtlasRegion flare = beamContact.get((int) (sortie.tick() / CONTACT_FRAME_TICKS % beamContact.size));
+            // The flare's hit point: (32, 22) of the large 64x52 flare, scaled with the small one.
+            float hitX = flare.getRegionWidth() / 2f;
+            float hitY = flare.getRegionHeight() * 22f / 52f;
+            batch.draw(
+                    flare,
+                    Math.round(PixelScreen.PLAY_FIELD_X + beam.x() - hitX),
+                    Math.round(beam.endY() - (flare.getRegionHeight() - hitY)));
+        }
+    }
+
+    /** M7 part A: the dummies' bullets (a Deflector Pod's test), as the level's orbs. */
+    private void drawBullets(SpriteBatch batch, Sortie sortie, float alpha) {
+        for (int i = 0; i < sortie.bulletCount(); i++) {
+            EnemyBullet bullet = sortie.bullet(i);
+            drawScaled(batch, bullets.frame(bullet, i, sortie.tick()), bullet.renderX(alpha), bullet.renderY(alpha), 1);
+        }
     }
 
     /** M5 part E: the range's water under the whole box (the loop's level is over water). */
@@ -338,7 +525,10 @@ public final class TestFireView {
         for (int m = 0; m < weapons.size(); m++) {
             WeaponLooks.Look look = weapons.look(m);
             int frame = sortie.ticksSinceShot(m) / 2;
-            if (look.glowingMuzzle != glowing || frame >= look.muzzle.size) {
+            // M7 part A: a Deflector Pod fires nothing; a beam's and a drone bay's look has no muzzle.
+            if (look.glowingMuzzle != glowing
+                    || frame >= look.muzzle.size
+                    || !sortie.armament().mount(m).fires()) {
                 continue;
             }
             WeaponSpec weapon = sortie.armament().mount(m).weapon();

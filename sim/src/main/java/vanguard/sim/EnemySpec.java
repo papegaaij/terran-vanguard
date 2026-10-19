@@ -52,6 +52,21 @@ import java.util.Optional;
  *     straight on
  * @param latch M5 part F: it latches onto the ship's hull on contact and drains the shield (the
  *     Lamprey); a unit with a latch takes the level's wind in every state but latched
+ * @param machine M7 part A: a machine (its stat block's {@code machine: true}), not a biomechanical
+ *     Vrell unit: the EMP Burst stuns it for the machine stun (design/player/specials, EMP Burst)
+ * @param burrow M7 part B: it swims under the sand and surfaces near the ship (design/enemies/ground/
+ *     burrower): its current layer is {@link Layer#BURIED} but while it is up ({@link Layer#GROUND})
+ * @param swoop M7 part B: its swoop across the ship's lane once it nears the ship's row (design/enemies/
+ *     air/dust-kite)
+ * @param link M7 part C: the tendril it spans with its partner in a gate (design/enemies/ground/
+ *     tendril-anchor): a {@link LevelScript.Gate}'s anchor
+ * @param crawl M7 part C: the ground path its chain's head crawls and the pore wave of its segments
+ *     (design/enemies/ground/threadcrawler); a chain's head only
+ * @param aura M7 part D: the shield rings it sings onto the other units near it (design/enemies/air/
+ *     choir-herald); a unit with one is also a carrier its escorts circle
+ * @param part M7 part D: its destroyable part, on a unit that is not a boss (design/enemies/ground/shellback,
+ *     the mortar vent); {@link #hp()} and {@link #bounty()} are then the body's
+ * @param roll M7 part D: a walker's curl-roll (design/enemies/ground/shellback)
  */
 public record EnemySpec(
         String slug,
@@ -89,7 +104,15 @@ public record EnemySpec(
         Optional<ProximityRing> ring,
         double drift,
         Optional<Chase> chase,
-        Optional<Latch> latch) {
+        Optional<Latch> latch,
+        boolean machine,
+        Optional<Burrow> burrow,
+        Optional<Swoop> swoop,
+        Optional<Link> link,
+        Optional<Crawl> crawl,
+        Optional<Aura> aura,
+        Optional<UnitPart> part,
+        Optional<Roll> roll) {
     public EnemySpec {
         if (latch.isPresent() && chase.isEmpty()) {
             throw new IllegalArgumentException(slug + ": a unit that latches chases the ship first");
@@ -101,6 +124,613 @@ public record EnemySpec(
             throw new IllegalArgumentException(
                     slug + ": only a unit on the ground layer (the sea's surface) submerges");
         }
+        if (burrow.isPresent() && (layer != Layer.GROUND || submerge.isPresent() || gun.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a burrower is a ground unit without a submerge or a gun (its rings are its burrow's)");
+        }
+        if (swoop.isPresent() && (layer != Layer.AIR || burrow.isPresent() || chase.isPresent())) {
+            throw new IllegalArgumentException(slug + ": a swoop is an air unit's, without a chase");
+        }
+        if (crawl.isPresent() && chain.isEmpty()) {
+            throw new IllegalArgumentException(slug + ": a crawl is a segment chain's head's");
+        }
+        if (link.isPresent() && (chain.isPresent() || burrow.isPresent())) {
+            throw new IllegalArgumentException(slug + ": a gate's anchor is a plain ground unit");
+        }
+        if (aura.isPresent() && (chain.isPresent() || brood.isPresent())) {
+            throw new IllegalArgumentException(slug + ": an aura is a plain unit's (not a chain's or a spawner's)");
+        }
+        if (part.isPresent() && chain.isPresent()) {
+            throw new IllegalArgumentException(slug + ": a chain's parts are its members, not a unit part");
+        }
+        if (roll.isPresent() && walker.isEmpty()) {
+            throw new IllegalArgumentException(slug + ": a curl-roll is a walker's");
+        }
+    }
+
+    /** The constructor of M7 part C: without M7 part D's aura, unit part and curl-roll. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** The constructor of M7 part B: without M7 part C's link and crawl. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** M7 part C: this unit with its {@code link}, the tendril of a gate's anchor (design/enemies/ground/tendril-anchor); empty for none. */
+    public EnemySpec withLink(Optional<Link> withLink) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                withLink,
+                crawl,
+                aura,
+                part,
+                roll);
+    }
+
+    /**
+     * M7 part D: this unit with its {@code aura} (design/enemies/air/choir-herald): it rings the other units
+     * near it with shields ({@link Enemy#ring()}); empty for none.
+     */
+    public EnemySpec withAura(Optional<Aura> withAura) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                withAura,
+                part,
+                roll);
+    }
+
+    /**
+     * M7 part D: this unit with its {@code part}, a destroyable part on a unit that is not a boss
+     * (design/enemies/ground/shellback, the mortar vent); empty for none.
+     */
+    public EnemySpec withPart(Optional<UnitPart> withUnitPart) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                withUnitPart,
+                roll);
+    }
+
+    /** M7 part D: this walker with its curl-roll (design/enemies/ground/shellback); empty for none. */
+    public EnemySpec withRoll(Optional<Roll> withRoll) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                withRoll);
+    }
+
+    /** M7 part C: this chain's head with its {@code crawl} (design/enemies/ground/threadcrawler); empty for none. */
+    public EnemySpec withCrawl(Optional<Crawl> withCrawl) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                withCrawl,
+                aura,
+                part,
+                roll);
+    }
+
+    /** The constructor of M7 part A: without the burrows and swoops of Level 15 (M7 part B). */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** The constructor of Act 2: every unit biomechanical (Vrell), none a machine (M7 part A). */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                false);
     }
 
     /** The constructor of Level 11: without the chasers and latches of Level 12 (M5 part F). */
@@ -216,7 +846,263 @@ public record EnemySpec(
                 ring,
                 drift,
                 Optional.of(withChase),
-                withLatch);
+                withLatch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll);
+    }
+
+    /**
+     * M7 part A: this unit as a machine or not (its stat block's {@code machine} key; design/enemies,
+     * Stat block template): the EMP Burst stuns a machine longer than a Vrell unit.
+     */
+    public EnemySpec withMachine(boolean isMachine) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                isMachine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll);
+    }
+
+    /** M7 part B: this unit with its {@code burrow} (design/enemies/ground/burrower); empty for none. */
+    public EnemySpec withBurrow(Optional<Burrow> withBurrow) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                withBurrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll);
+    }
+
+    /** M7 part B: this unit with its {@code swoop} (design/enemies/air/dust-kite); empty for none. */
+    public EnemySpec withSwoop(Optional<Swoop> withSwoop) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                withSwoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll);
+    }
+
+    /**
+     * M7 part B, the {@code burrow} movement (design/enemies/ground/burrower; user decision Q1 = a: it is
+     * fixed on the screen, not on the ground, while it swims, bulges and is up). A {@code field} wave's
+     * unit appears buried above the top edge and scrolls in with the ground until it is {@link
+     * SurfaceSpot#edgeMargin()} inside the top edge and no higher than {@link SurfaceSpot#aheadMax()} above the ship;
+     * then it cycles: it picks a spot ({@link SurfaceSpot}) and swims to it under the sand at {@code swimSpeed}
+     * px/s for a seeded {@code travelSeconds} (on until it arrives; it waits buried there when it
+     * arrives early); its wave's stagger lets it bulge ({@code staggerSeconds} after the wave's last
+     * bulge, and only while fewer than {@code maxUp} of its wave would be up when it surfaces); it bulges
+     * for {@code bulgeSeconds} at the spot, is up ({@link Layer#GROUND}) for {@code surfacedSeconds},
+     * firing {@code ring} (and {@code secondRing}, hard) at their times after it surfaced, then dives for
+     * {@code diveSeconds}, buried again from the dive's middle. After {@code surfacings} surfacings, or
+     * once it has lived {@code lifeSeconds} (not while up), it swims off the bottom edge under the sand
+     * at its swim speed on top of the scroll: an escape, no bounty.
+     */
+    public record Burrow(
+            double swimSpeed,
+            SurfaceSpot spot,
+            Range travelSeconds,
+            double bulgeSeconds,
+            double surfacedSeconds,
+            double diveSeconds,
+            int surfacings,
+            BurrowRing ring,
+            Optional<BurrowRing> secondRing,
+            double staggerSeconds,
+            int maxUp,
+            double lifeSeconds) {
+        public Burrow {
+            if (!(swimSpeed > 0)
+                    || !(travelSeconds.min() > 0)
+                    || !(bulgeSeconds > 0)
+                    || !(surfacedSeconds > 0)
+                    || !(diveSeconds > 0)
+                    || surfacings < 1
+                    || !(staggerSeconds >= 0)
+                    || maxUp < 1
+                    || !(lifeSeconds > 0)) {
+                throw new IllegalArgumentException(
+                        "a burrow has a swim speed, travel, bulge, surfaced and dive times, surfacings, a stagger,"
+                                + " a cap on units up and a life");
+            }
+            if (!(ring.atSeconds() < surfacedSeconds)
+                    || (secondRing.isPresent() && !(secondRing.get().atSeconds() < surfacedSeconds))) {
+                throw new IllegalArgumentException("a burrow's rings fire while it is up");
+            }
+        }
+    }
+
+    /**
+     * M7 part B: where a Burrower surfaces (design/enemies/ground/burrower, Choosing a spot), picked as it
+     * starts to swim: {@code aheadMin}–{@code aheadMax} px above the ship's centre and within ±{@code
+     * across} px of its x (seeded), kept {@code edgeMargin} px inside the play field's edges and at least
+     * {@code clearance} px from the ship's centre (checked again as the bulge starts); outside the level's
+     * no-surface zones ({@link LevelScript.NoSurface}): the nearest allowed point, else that surfacing is
+     * skipped (it still counts).
+     */
+    public record SurfaceSpot(double aheadMin, double aheadMax, double across, double edgeMargin, double clearance) {
+        public SurfaceSpot {
+            if (!(aheadMin >= 0)
+                    || !(aheadMax >= aheadMin)
+                    || !(across >= 0)
+                    || !(edgeMargin >= 0)
+                    || !(clearance >= 0)) {
+                throw new IllegalArgumentException(
+                        "a spot has a band ahead of the ship, a spread, a margin and a clearance");
+            }
+        }
+    }
+
+    /**
+     * M7 part B: a Burrower's ring: {@code count} bullets at {@code bulletSpeed} px/s, each dealing {@code
+     * damage}, {@code atSeconds} after it surfaced (none while the ship is closer than bullets may spawn).
+     */
+    public record BurrowRing(int count, double bulletSpeed, double damage, double atSeconds) {
+        public BurrowRing {
+            if (count < 1 || !(bulletSpeed > 0) || !(damage >= 0) || !(atSeconds >= 0)) {
+                throw new IllegalArgumentException("a burrow ring has bullets, a speed, a damage and a time");
+            }
+        }
+    }
+
+    /**
+     * M7 part B, the {@code swoop} (design/enemies/air/dust-kite): flying its path, once its centre is
+     * above the ship's centre by {@code triggerAbove} px or less, it leaves the path on one shallow curve at
+     * {@code speed} px/s through the point where the ship was as the swoop started (aimed, no homing): a
+     * quadratic curve whose control point lies {@code bend} px to its side of its start, halfway down; the
+     * units of a wave bend to alternate sides (the first to the left). Past that point it flies straight
+     * on along the curve's end and is gone once off the play field.
+     */
+    public record Swoop(double triggerAbove, double speed, double bend) {
+        public Swoop {
+            if (!(triggerAbove > 0) || !(speed > 0) || !(bend >= 0)) {
+                throw new IllegalArgumentException("a swoop has a trigger distance, a speed and a bend");
+            }
+        }
     }
 
     /**
@@ -739,7 +1625,9 @@ public record EnemySpec(
      * head's death does with the whole chain. The tail pays {@code tailFirstBonus} more when it is
      * destroyed before any other part. The head is a weak point: every damage it takes is
      * multiplied by {@code headMultiplier} (its part's {@code multiplier}, like a set piece's part);
-     * a regrown head's is 1.
+     * a regrown head's is 1. M7 part C: the head pays {@code headFirstBonus} more when it is destroyed
+     * before any other part (design/enemies/ground/threadcrawler: a head-first kill pays the whole); a
+     * ground chain ({@link Crawl}) never regrows, and its {@code regrown} may be null.
      */
     public record ChainSpec(
             EnemySpec segment,
@@ -751,7 +1639,8 @@ public record EnemySpec(
             double regrowSpeed,
             java.util.List<Double> offsets,
             double popSeconds,
-            double headMultiplier) {
+            double headMultiplier,
+            int headFirstBonus) {
         public ChainSpec {
             segmentBoxes = java.util.List.copyOf(segmentBoxes);
             offsets = java.util.List.copyOf(offsets);
@@ -761,6 +1650,32 @@ public record EnemySpec(
             if (!(headMultiplier > 0)) {
                 throw new IllegalArgumentException("a chain's head multiplier is positive: " + headMultiplier);
             }
+        }
+
+        /** Without M7 part C's head-first bonus. */
+        public ChainSpec(
+                EnemySpec segment,
+                java.util.List<Hitbox> segmentBoxes,
+                EnemySpec tail,
+                int tailFirstBonus,
+                EnemySpec regrown,
+                double regrowSeconds,
+                double regrowSpeed,
+                java.util.List<Double> offsets,
+                double popSeconds,
+                double headMultiplier) {
+            this(
+                    segment,
+                    segmentBoxes,
+                    tail,
+                    tailFirstBonus,
+                    regrown,
+                    regrowSeconds,
+                    regrowSpeed,
+                    offsets,
+                    popSeconds,
+                    headMultiplier,
+                    0);
         }
 
         /** A chain whose head takes plain damage (multiplier 1). */
@@ -790,6 +1705,221 @@ public record EnemySpec(
         /** The members: head, segments and tail. */
         public int members() {
             return offsets.size();
+        }
+    }
+
+    /**
+     * M7 part C, a gate's tendril (design/enemies/ground/tendril-anchor, the {@code link} attack; M9 = a): the
+     * line between the centres of the two anchors of a {@link LevelScript.Gate}. It is dormant (harmless, a
+     * flickering thread) for {@code dormantSeconds} after the pair enters at the top edge, then its touch
+     * deals {@code contactDamage} to the ship (shield first) or Rook, with {@code cooldownSeconds} of its
+     * own cooldown per craft (the ship is not pushed), for a hull within {@code band}/2 px of the line.
+     * Either anchor's death breaks it; a {@code beam} damages it ({@code tendrilHp}, the beam going on past
+     * it), and burning it through pays {@code burntBounty} (Act 1 terms). Every other shot, bomb, enemy and
+     * bullet passes through it.
+     */
+    public record Link(
+            double tendrilHp,
+            double dormantSeconds,
+            double contactDamage,
+            double cooldownSeconds,
+            double band,
+            int burntBounty) {
+        public Link {
+            if (!(tendrilHp > 0)
+                    || !(dormantSeconds >= 0)
+                    || !(contactDamage >= 0)
+                    || !(cooldownSeconds >= 0)
+                    || !(band > 0)
+                    || burntBounty < 0) {
+                throw new IllegalArgumentException(
+                        "a tendril has HP, a dormancy, a touch, a cooldown, a band and a bounty");
+            }
+        }
+    }
+
+    /**
+     * M7 part C, the {@code crawl} movement of a ground chain's head (design/enemies/ground/threadcrawler):
+     * the head crawls the ground path through the points ({@code xs[i]}, row {@code scrolls[i]}: the ground
+     * scroll at which that row reaches the top edge, as a canyon wall's points; linear between them) at
+     * {@code speed} px/s on top of the scroll, from the wave's time on, and straight on along its last leg
+     * past the end; the members follow on its history in ground space and scroll with the ground. A cut
+     * (a destroyed segment) stops the members behind it where they are; they die {@code cutSeconds} later,
+     * from the cut backwards, one every {@link ChainSpec#popSeconds()}; it never regrows. Its segments fire
+     * the {@code pores} wave.
+     */
+    public record Crawl(double speed, double[] scrolls, double[] xs, PoreWave pores, double cutSeconds) {
+        public Crawl {
+            scrolls = scrolls.clone();
+            xs = xs.clone();
+            java.util.Objects.requireNonNull(pores);
+            if (scrolls.length < 2 || scrolls.length != xs.length) {
+                throw new IllegalArgumentException("a crawl path has at least two points, each a row and an x");
+            }
+            for (int i = 1; i < scrolls.length; i++) {
+                if (scrolls[i] == scrolls[i - 1] && xs[i] == xs[i - 1]) {
+                    throw new IllegalArgumentException("a crawl path has no repeated point");
+                }
+            }
+            if (!(speed > 0) || !(cutSeconds >= 0)) {
+                throw new IllegalArgumentException("a crawl has a speed and a cut delay: " + speed + ", " + cutSeconds);
+            }
+        }
+
+        /** A crawl whose cut part dies 1.0 s after the cut (the stat block's {@code cut.delay}). */
+        public Crawl(double speed, double[] scrolls, double[] xs, PoreWave pores) {
+            this(speed, scrolls, xs, pores, 1.0);
+        }
+
+        @Override
+        public double[] scrolls() {
+            return scrolls.clone();
+        }
+
+        @Override
+        public double[] xs() {
+            return xs.clone();
+        }
+
+        /** The path's points, without a copy (the chain reads them every step). */
+        int points() {
+            return xs.length;
+        }
+
+        double row(int i) {
+            return scrolls[i];
+        }
+
+        double x(int i) {
+            return xs[i];
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof Crawl crawl
+                    && speed == crawl.speed
+                    && cutSeconds == crawl.cutSeconds
+                    && pores.equals(crawl.pores)
+                    && java.util.Arrays.equals(scrolls, crawl.scrolls)
+                    && java.util.Arrays.equals(xs, crawl.xs);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(
+                    speed, cutSeconds, pores, java.util.Arrays.hashCode(scrolls), java.util.Arrays.hashCode(xs));
+        }
+
+        @Override
+        public String toString() {
+            return "Crawl[" + speed + ", " + java.util.Arrays.toString(scrolls) + ", " + java.util.Arrays.toString(xs)
+                    + ", " + pores + ", " + cutSeconds + "]";
+        }
+    }
+
+    /**
+     * M7 part C, a ground chain's pore wave (design/enemies/ground/threadcrawler, Travelling wave): the
+     * segments' pores fire one slow aimed spore each in turn, head to tail, {@code interval} s apart (every
+     * other segment's only when {@code everyOther}: easy), each aimed at the ship as it fires, at {@code
+     * bulletSpeed} px/s dealing {@code damage}; a pore glows for {@code glow} s before it fires (the tell),
+     * and the next wave's first glow starts {@code rest} s after a wave's last pore fired. The first wave's
+     * first glow starts as the chain enters the play field (default pending the user's review); a pore off
+     * the play field, of a doomed or destroyed segment, or of a stunned chain does not fire (its turn
+     * passes).
+     */
+    public record PoreWave(
+            double interval, double rest, double glow, double bulletSpeed, double damage, boolean everyOther) {
+        public PoreWave {
+            if (!(interval > 0) || !(rest >= 0) || !(glow >= 0) || !(bulletSpeed > 0) || !(damage >= 0)) {
+                throw new IllegalArgumentException("a pore wave has an interval, a rest, a glow, a speed and a damage");
+            }
+        }
+    }
+
+    /**
+     * M7 part D, a Choir Herald's {@code aura} (design/enemies/air/choir-herald; M8 = a): while it lives, is on
+     * the play field and the EMP Burst does not stun it, every other unit whose centre is within {@code radius}
+     * px of its centre carries a shield ring of at most its HP at the level, capped at {@code cap}, which
+     * absorbs damage before its HP. A unit entering the radius gets its full ring over {@code fillSeconds};
+     * one that left it keeps its ring {@code keepSeconds}, then the ring fades (over {@code fillSeconds}); a
+     * ring untouched for {@code refillDelaySeconds} refills at {@code refillShare} of its maximum a second
+     * while the unit stays in range. At the Herald's death every ring it fed collapses over {@code
+     * collapseSeconds}. Its escorts circle it at {@code escortRadiusShare} × the radius (the gap check's
+     * default 0.8, pending round 40) so that they stay ringed. Never on another Herald, a chain's member,
+     * a unit buried or under the water, nor a boss or set piece (those are no units).
+     */
+    public record Aura(
+            double radius,
+            double cap,
+            double refillShare,
+            double refillDelaySeconds,
+            double fillSeconds,
+            double keepSeconds,
+            double collapseSeconds,
+            double escortRadiusShare) {
+        public Aura {
+            if (!(radius > 0) || !(cap > 0) || !(refillShare >= 0) || !(refillDelaySeconds >= 0)) {
+                throw new IllegalArgumentException("an aura has a radius, a cap and a refill: " + radius + ", " + cap);
+            }
+            if (!(fillSeconds > 0) || !(keepSeconds >= 0) || !(collapseSeconds > 0) || !(escortRadiusShare > 0)) {
+                throw new IllegalArgumentException("an aura's fill and collapse take time: " + fillSeconds);
+            }
+        }
+    }
+
+    /**
+     * M7 part D, a destroyable part on a unit that is not a boss (design/enemies/ground/shellback, the mortar
+     * vent; part F's Warden Tank turret may reuse it): {@code hp} of its own, its {@code hitbox} centred
+     * {@code dx} px to the unit's right and {@code dy} px towards its tail in its own frame (facing down the
+     * screen), turning with the unit's facing in its 16 headings. Shots test it before the body; a blast
+     * covering both hurts both. Destroyed, it pays {@code bounty} (as a chain's part does) and, with {@code
+     * silencesGun}, the unit's gun stops for good. Killing the body while it stands pays the unit's bounty
+     * plus {@code firstBonus} (the whole: the Shellback's 40 + 8).
+     */
+    public record UnitPart(
+            String name,
+            double hp,
+            Hitbox hitbox,
+            double dx,
+            double dy,
+            int bounty,
+            boolean silencesGun,
+            int firstBonus) {
+        public UnitPart {
+            if (!(hp > 0)) {
+                throw new IllegalArgumentException(name + ": a unit part has HP: " + hp);
+            }
+        }
+
+        /** A part without a whole-kill bonus. */
+        public UnitPart(String name, double hp, Hitbox hitbox, double dx, double dy, int bounty, boolean silencesGun) {
+            this(name, hp, hitbox, dx, dy, bounty, silencesGun, 0);
+        }
+    }
+
+    /**
+     * M7 part D, a walker's curl-roll (design/enemies/ground/shellback): once, when its HP falls to {@code
+     * belowShare} of its stat block's (or below) without destroying it, it curls for {@code curlSeconds},
+     * rolls {@code rollSeconds} along its walk path at {@code rollSpeed} px/s (on along its last heading past
+     * the path's end), uncurls for {@code uncurlSeconds} and shows its belly for {@code bellySeconds}, taking
+     * {@code bellyFactor} × the damage, then walks on. From the curl's start to the uncurl's end its hit box is
+     * the {@code ball}, every damage glances off and its gun waits; it stands while it curls, uncurls and
+     * shows its belly. The rolling ball crushes ground allies (one hit per roll per ally) and destructible
+     * ground objects in its path, never enemies or the ship.
+     */
+    public record Roll(
+            double belowShare,
+            double curlSeconds,
+            double rollSeconds,
+            double rollSpeed,
+            double uncurlSeconds,
+            double bellySeconds,
+            double bellyFactor,
+            Hitbox ball) {
+        public Roll {
+            if (!(belowShare > 0 && belowShare < 1) || !(rollSpeed > 0) || !(bellyFactor >= 1)) {
+                throw new IllegalArgumentException("a roll starts below a share of the HP: " + belowShare);
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import vanguard.game.settings.Settings;
 
 class OptionTabsTest {
     /** Settings, a display mode and a sound test without an audio device. */
-    private static final class Target implements OptionsTarget {
+    static final class Target implements OptionsTarget {
         Settings settings = Settings.defaults();
         boolean fullScreen = true;
         final SoundTest soundTest;

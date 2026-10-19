@@ -17,9 +17,9 @@ movement:
 latch:
   slots: 1                  # latched at once (hard 2, the hook latch_slots)
   spots:                    # [dx, dy] px from the ship's centre, y up (as the muzzles): tools/art/lamprey.py's pivots/lamprey.json, y flipped
-    left: [-22, -13]
-    right: [21, -13]
-    tail: [0, -35]          # for a touch within 45° of straight down from the ship's centre
+    left: [-21, -13]
+    right: [20, -13]
+    tail: [0, -34]          # for a touch within 45° of straight down from the ship's centre
   damage_factor: 2          # the damage it takes while latched
   shake: {reversals: 4, within: 1.2}   # reversals of the commanded horizontal direction (neutral steps ignored) throw off every latched one
   stun: 1                   # s thrown off: outward from its spot, slowing to a stop, then it flees to the nearer side edge

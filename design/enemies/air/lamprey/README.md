@@ -1,10 +1,10 @@
 ---
 title: Lamprey
-design: review
-implementation: in-progress
-art: proposed
+design: approved
+implementation: done
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/shields]
-updated: 2026-10-12
+updated: 2026-10-13
 ---
 
 # Lamprey
@@ -85,16 +85,16 @@ stated defaults; the schema keys in [architecture](../../../tech/architecture/RE
 
 ## Concept art
 
-Chosen concept: [lamprey-r06-a.png](../concept/lamprey-r06-a.png), [lamprey-r06-a.gif](../concept/lamprey-r06-a.gif) (listed in the [air](../README.md#concept-art) Concept art table). The production sprite (16 angles × 4 swim frames, the latched poses, the stunned pose) is made by `tools/art/lamprey.py` from the concept's model; the latch (the Lamprey on the hull with the drain flicker) is shown a/b in concept round 34 (user decision F8 = a; the game's sprite names hold look a, `--latch b` writes b). Production review files and their brief: [concept/prompts.md](concept/prompts.md). Its `data.yaml` (step 4) claims the sprites for Level 12's atlas; its 30×30 intel portrait comes from `tools/art/intel.py` (step 4, review sheet `design/ui/hangar/concept/intel-final-r34-a.png`).
+Chosen concept: [lamprey-r06-a.png](../concept/lamprey-r06-a.png), [lamprey-r06-a.gif](../concept/lamprey-r06-a.gif) (listed in the [air](../README.md#concept-art) Concept art table). The production sprite (16 angles × 4 swim frames, the latched poses, the stunned pose) is made by `tools/art/lamprey.py` from the concept's model; the latch (the Lamprey on the hull with the drain flicker) is shown a/b in concept round 34 (user decision F8 = a; the user picked look b in round 34, which the game's sprite names hold; `--latch a` writes a). Production review files and their brief: [concept/prompts.md](concept/prompts.md). Its `data.yaml` (step 4) claims the sprites for Level 12's atlas; its 30×30 intel portrait comes from `tools/art/intel.py` (step 4, review sheet `design/ui/hangar/concept/intel-final-r34-a.png`).
 
 | File | What | Status |
 |---|---|---|
-| [concept/lamprey-final-r34-a.png](concept/lamprey-final-r34-a.png) | Final sprites (`tools/art/lamprey.py`, round 34): 16 headings × 4 swim frames (36 px), the latched pose at the left, right and tail spots × 4 frames (look a), the stunned tumble (8 frames, curled, teeth dimmed), the wet pop (teal glow, additive) and the tatters (body in three, the mouth disc, fin spines; solid), on a storm-sea stand-in; one 32-colour palette over the body sets | proposed |
-| [concept/lamprey-final-r34-a.gif](concept/lamprey-final-r34-a.gif) | A Lamprey chasing the ship (180°/s turn), latching on its left side, the shake-off, thrown off and stunned, fleeing; a second one shot (the wet pop with `explosion-small`); the HUD's shield row draining | proposed |
-| [concept/latch-r34-a.png](concept/latch-r34-a.png) | Latch look a, "gulp": the body nearly still, swallowing in 0.4 s gulps; the ship's own shield ring pulses with each gulp (shield light drawn into the eel); at the three spots | proposed |
-| [concept/latch-r34-a.gif](concept/latch-r34-a.gif) | Latch a on the Stormhawk at the left, right and tail spots, with the HUD's `SHIELD DRAIN` row flickering (8 steps on, 8 off) | proposed |
-| [concept/latch-r34-b.png](concept/latch-r34-b.png) | Latch look b, "siphon": the tail lashing (the swim cycle, less), cyan shield motes spiralling into a teal glow at the mouth (`lamprey-drain`, additive, 4 frames); no shield ring | proposed |
-| [concept/latch-r34-b.gif](concept/latch-r34-b.gif) | Latch b at the three spots, with the HUD's `SHIELD DRAIN` row flickering | proposed |
+| [concept/lamprey-final-r34-a.png](concept/lamprey-final-r34-a.png) | Final sprites (`tools/art/lamprey.py`, round 34): 16 headings × 4 swim frames (36 px), the latched pose at the left, right and tail spots × 4 frames (look b, the sheet and GIF rebuilt with it in step K8), the stunned tumble (8 frames, curled, teeth dimmed), the wet pop (teal glow, additive) and the tatters (body in three, the mouth disc, fin spines; solid), on a storm-sea stand-in; one 32-colour palette over the body sets | chosen |
+| [concept/lamprey-final-r34-a.gif](concept/lamprey-final-r34-a.gif) | A Lamprey chasing the ship (180°/s turn), latching on its left side, the shake-off, thrown off and stunned, fleeing; a second one shot (the wet pop with `explosion-small`); the HUD's shield row draining | chosen |
+| [concept/rejected/latch-r34-a.png](concept/rejected/latch-r34-a.png) | Latch look a, "gulp": the body nearly still, swallowing in 0.4 s gulps; the ship's own shield ring pulses with each gulp (shield light drawn into the eel); at the three spots | rejected |
+| [concept/rejected/latch-r34-a.gif](concept/rejected/latch-r34-a.gif) | Latch a on the Stormhawk at the left, right and tail spots, with the HUD's `SHIELD DRAIN` row flickering (8 steps on, 8 off) | rejected |
+| [concept/latch-r34-b.png](concept/latch-r34-b.png) | Latch look b, "siphon": the tail lashing (the swim cycle, less), cyan shield motes spiralling into a teal glow at the mouth (`lamprey-drain`, additive, 4 frames); no shield ring | chosen |
+| [concept/latch-r34-b.gif](concept/latch-r34-b.gif) | Latch b at the three spots, with the HUD's `SHIELD DRAIN` row flickering | chosen |
 
 ## Implementation
 
@@ -168,3 +168,21 @@ Chosen concept: [lamprey-r06-a.png](../concept/lamprey-r06-a.png), [lamprey-r06-
   over the second) with its shadow; its death the `small` wet pop (explosion-small, `lamprey-death`
   additive, `lamprey-tatters` solid). Its sounds: the latch's bite, the drain loop while it drains,
   the shake-off (round 34 a).
+- 2026-10-12 user, round 34 (row 12.7b, build choice b = **no**): a latched Lamprey keeps draining
+  the shield through the ship's mercy time after an armour hit (the mercy time spares the ship damage,
+  not the drain); the other build choices stay as built. `Defences.drain` no longer checks the mercy
+  time (`DefencesTest.aLatchedDrainGoesOnThroughTheMercyTime`).
+- 2026-10-12 user, round 34 (row 12.1b): the latch look is **b**, "siphon": the tail lashing, cyan shield
+  motes spiralling into a teal glow at the mouth, no shield ring; a ("gulp", the ship's shield ring
+  pulsing) rejected. Step K1: the game draws b when the art has its `lamprey-drain` frames
+  (`LampreyLooks`: the glow additive at the mouth's contact with the hull, 16 px from the latched
+  sprite's centre toward the hull, on the latched frame's 10 fps; no `drawGulp`), and look a's ring
+  otherwise; `tools/art/lamprey.py --latch b` writes b's frames and pivots (step K3).
+- 2026-10-12 (user, [round 34](../../../concept-rounds/round-34/README.md)): the production sprites (12.2a) and the intel portrait approved as
+  **final**, so `art: final`; the latch look **b** as above (a's files moved to `concept/rejected/`); the
+  latch and drain sounds stay **a**; the build choices accepted but (b) as above. `design: approved`.
+  Pending the user's review: b's latch spots sit 1 px off the data's (step K3).
+- 2026-10-13 (user, round 36 L.5): the data's latch `spots` move 1 px to match look b's pivots
+  (`assets/pivots/lamprey.json` left `[-21, 13]`, right `[20, 13]`, tail `[0, 34]`, y down): left
+  `[-21, -13]`, right `[20, -13]`, tail `[0, -34]` (y up). The siphon's glow (14 to 17 px from the
+  latched sprite's centre toward the hull) now sits 15 px in at every spot.

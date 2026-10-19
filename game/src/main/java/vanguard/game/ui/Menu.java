@@ -1,11 +1,15 @@
 package vanguard.game.ui;
 
 import java.util.List;
+import java.util.function.IntFunction;
 import vanguard.game.input.MenuInput;
+import vanguard.game.input.Pointer;
 
 /**
  * A vertical menu list: items that can be disabled (shown, but the cursor passes over them), the
- * cursor on one enabled item, moved with up and down and wrapping at the ends.
+ * cursor on one enabled item, moved with up and down and wrapping at the ends. With the mouse,
+ * hovering an enabled item selects it and a click on one confirms it; the screen gives each item's
+ * hit region, the rectangle it draws the item's selection bar in.
  */
 public final class Menu<T> {
     /** One entry; {@code id} tells the screen what was chosen. */
@@ -56,6 +60,54 @@ public final class Menu<T> {
         }
         if (input.down()) {
             return move(1);
+        }
+        return false;
+    }
+
+    /**
+     * Moves the cursor on up or down, or onto the enabled item a moving pointer hovers; returns
+     * whether it moved.
+     *
+     * @param rows each item's hit region by its index
+     */
+    public boolean navigate(MenuInput input, IntFunction<Box> rows) {
+        if (navigate(input)) {
+            return true;
+        }
+        Pointer pointer = input.pointer();
+        if (!pointer.moved()) {
+            return false;
+        }
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).enabled() && pointer.hovers(rows.apply(i))) {
+                int before = selected;
+                selected = i;
+                return selected != before;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Whether the selected item is confirmed in this frame: by the confirm key, or by a click on an
+     * enabled item, which selects it first. A click on a disabled item or beside the list does nothing.
+     */
+    public boolean confirmed(MenuInput input, IntFunction<Box> rows) {
+        if (input.confirm()) {
+            return true;
+        }
+        Pointer pointer = input.pointer();
+        if (!pointer.clicked()) {
+            return false;
+        }
+        for (int i = 0; i < items.size(); i++) {
+            if (pointer.clicks(rows.apply(i))) {
+                if (!items.get(i).enabled()) {
+                    return false;
+                }
+                selected = i;
+                return true;
+            }
         }
         return false;
     }

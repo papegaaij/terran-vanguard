@@ -14,7 +14,8 @@ import vanguard.game.ui.Glass;
  * game's own credits around the attributions that CREDITS.md's licences ask for, scrolls up a glass
  * column over the dimmed title scene at a reading pace and stops with its last line in the middle.
  * Holding confirm or down (Enter, the D-pad, A) runs it faster, holding up runs it back; back (Esc /
- * B) returns to the screen below at any time, as confirm does once the roll has stopped.
+ * B) returns to the screen below at any time, as confirm does once the roll has stopped. The mouse
+ * wheel scrubs the roll, the right button goes back, and a click goes back once the roll has stopped.
  */
 public final class CreditsScreen implements GameScreen {
     /** The roll file, written from CREDITS.md by {@code :pipeline:credits}. */
@@ -36,6 +37,8 @@ public final class CreditsScreen implements GameScreen {
     static final float SPEED = 30;
 
     static final float FAST = 8;
+    /** One notch of the mouse wheel scrubs the roll by this many px, down the roll or back. */
+    static final float WHEEL_STEP = 36;
 
     static final String HINTS = "HOLD ENTER/DOWN FASTER    HOLD UP REWIND    ESC BACK";
     static final String END_HINTS = "ENTER / ESC BACK";
@@ -63,7 +66,7 @@ public final class CreditsScreen implements GameScreen {
     @Override
     public Transition update(float seconds) {
         boolean ended = offset <= end();
-        if (services.menu.back() || (ended && services.menu.confirm())) {
+        if (services.menu.back() || (ended && (services.menu.confirm() || services.menu.clicked()))) {
             services.play(Sfx.MENU_BACK);
             return Transition.BACK;
         }
@@ -73,7 +76,8 @@ public final class CreditsScreen implements GameScreen {
         } else if (services.input.held(Action.MENU_CONFIRM) || services.input.held(Action.MENU_DOWN)) {
             speed = SPEED * FAST;
         }
-        offset = Math.clamp(offset - speed * seconds, end(), BOTTOM);
+        offset = Math.clamp(
+                offset - speed * seconds - WHEEL_STEP * services.menu.pointer().wheel(), end(), BOTTOM);
         return Transition.STAY;
     }
 

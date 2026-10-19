@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../art-direction, ../audio, ../ui/controls]
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Tech stack
@@ -22,6 +22,7 @@ engine-agnostic; this section is the only place that names engine APIs.
 |---|---|---|---|---|
 | [architecture](architecture/README.md) | Module layout, simulation, data files next to the documents, testing, conventions, CI | approved | in-progress | n/a |
 | [roadmap](roadmap/README.md) | Seven milestones from skeleton to the Acts 1–2 release | approved | in-progress | n/a |
+| [release](release/README.md) | Version, application icon, bundle contents, release notes and the CI release job | approved | in-progress | final |
 
 ## Design
 
@@ -146,6 +147,46 @@ from it); Construo needs a fat jar; gdx-tools pulls in the LWJGL 2 backend (keep
 module); the LWJGL3 audio buffer size is in bytes; `AudioDevice` and sound effects share one
 non-thread-safe source pool; `Sound.play` allocates.
 
+### Per-level bench (M6 part D)
+
+Measured 2026-10-12 on the development machine (20 threads, 62 GiB) without a GPU: Xvfb with Mesa's
+llvmpipe software renderer, so every frame is rasterised on the CPU, the nearest thing at hand to
+modest graphics hardware. Each of Levels 01–14 ran once from the `:desktop:installDist` build:
+`--bench <s> --level <n> --invulnerable --debug-speed 1` at medium, a 1920×1080 window (pixel scale
+2), auto-fire on, the ship left at its start (nothing dodged, every attack's bullets on screen),
+Rook flying from Level 08, OpenAL Soft's `wave` driver, `-Xmx1g` (a modest machine's heap; the
+default is a quarter of the RAM) with `-Xlog:gc,safepoint`, the peak resident set from
+`/usr/bin/time -v`. The run is the level's last section end plus 15 s, so it covers the level and,
+where the boss is not killed, its fight; nothing was done between runs.
+
+| Level | Run s | Frames | Avg fps | Longest frame | GC cycles | Heap before GC (max) | Live after GC (max) | Longest pause | Peak RSS |
+|---|---|---|---|---|---|---|---|---|---|
+| 01 | 195 | 66 447 | 341 | 50.1 ms | 9 | 806 MiB | 88 MiB | 0.13 ms | 1 579 MiB |
+| 02 | 200 | 67 296 | 336 | 53.2 ms | 7 | 574 MiB | 46 MiB | 0.21 ms | 1 353 MiB |
+| 03 | 200 | 68 833 | 344 | 51.5 ms | 9 | 908 MiB | 46 MiB | 0.17 ms | 1 719 MiB |
+| 04 | 205 | 68 008 | 332 | 53.7 ms | 9 | 848 MiB | 66 MiB | 1.01 ms | 1 632 MiB |
+| 05 | 230 | 84 440 | 367 | 50.9 ms | 10 | 792 MiB | 88 MiB | 0.16 ms | 1 607 MiB |
+| 06 | 205 | 65 467 | 319 | 59.4 ms | 5 | 308 MiB | 44 MiB | 0.17 ms | 1 105 MiB |
+| 07 | 285 | 102 706 | 360 | 50.2 ms | 9 | 702 MiB | 40 MiB | 0.16 ms | 1 513 MiB |
+| 08 | 215 | 66 675 | 310 | 34.1 ms | 9 | 792 MiB | 40 MiB | 0.26 ms | 1 585 MiB |
+| 09 | 200 | 60 824 | 304 | 47.1 ms | 6 | 560 MiB | 44 MiB | 0.18 ms | 1 368 MiB |
+| 10 | 215 | 67 663 | 315 | 70.8 ms | 10 | 804 MiB | 42 MiB | 0.19 ms | 1 597 MiB |
+| 11 | 190 | 47 464 | 250 | 37.8 ms | 8 | 820 MiB | 90 MiB | 0.89 ms | 1 648 MiB |
+| 12 | 220 | 57 241 | 260 | 67.3 ms | 9 | 908 MiB | 42 MiB | 0.21 ms | 1 708 MiB |
+| 13 | 250 | 65 881 | 264 | 52.7 ms | 10 | 864 MiB | 88 MiB | 0.17 ms | 1 707 MiB |
+| 14 | 277 | 95 411 | 344 | 32.5 ms | 11 | 838 MiB | 66 MiB | 0.20 ms | 1 681 MiB |
+
+- **Frame rate:** 250–367 fps on average everywhere; the Act 2 ocean and storm levels (11–13) are
+  the heaviest at 250–264 fps, about four times the 60 Hz budget even on the software renderer.
+- **Longest frame:** 33–71 ms once per run. The bench line does not say when; the level's start
+  (its unit atlas and backdrop pages uploaded) is the likely place, as in the spike's mode switch,
+  but it is not separated here: a follow-up could log the frame times after the first second.
+- **Memory:** the live heap after a collection stays at 40–90 MiB; with the 1 GiB cap, ZGC runs
+  5–11 cycles a level with the longest safepoint pause at 1.0 ms (gate 2: under 2 ms). The resident
+  set peaks at 1.1–1.7 GiB, most of it the textures that llvmpipe keeps in the process's memory; on
+  a GPU they live in video memory.
+- No level is near the limit, so no fix follows (report only, Q12).
+
 ## Implementation
 
 - [x] Desk research on libGDX (versions, Java 25, Maven, macOS, packaging, audio, input)
@@ -173,3 +214,7 @@ non-thread-safe source pool; `Sound.play` allocates.
 - 2026-10-02: The `spike/libgdx` branch was deleted (user decision); the spike is kept as the signed tag `spike-libgdx` on its last commit.
 - 2026-10-05: M4 part H docs reconciliation: the skeleton is planned (architecture, roadmap) and
   built (M0–M3 done); ticked, the document is `done`.
+- 2026-10-12: M6 part D's per-level bench (Q12, report only; see *Per-level bench*): Levels
+  01–14 at 250–367 fps on the software renderer, the longest safepoint pause 1.0 ms with a 1 GiB
+  heap, the resident set at most 1.7 GiB; no level needs a fix.
+- 2026-10-12 (user, round 35): the per-level bench accepted as a report (D.2); no fix follows.

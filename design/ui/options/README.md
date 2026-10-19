@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../controls, ../../art-direction, ../../audio/voice]
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Options
@@ -38,6 +38,12 @@ Settings screen reachable from the main menu and the pause menu, in the glass st
 - **Gameplay:** text speed for briefings and radio, screen shake, flash reduction, floating credit
   numbers on or off (see [HUD](../hud/README.md)).
 - Changes apply immediately and persist with the settings file, not with save slots.
+- **Mouse** (M6 part A, see [ui](../README.md#mouse)): a click on a tab shows it; hovering a row
+  selects it; a click on a chip sets it; a click or a drag on a slider's track sets the value at
+  the pointer (on its step, with the slider's feedback sound); a sound test's chip picks the
+  previous or next entry near its arrows and plays on its name; a click on a cell of the bindings
+  table selects it and starts the capture, which only listens to keys and buttons, so the click is
+  never captured; the right button cancels a capture as Esc does and closes the screen elsewhere.
 
 ## Concept art
 
@@ -64,6 +70,8 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - [x] Display mode switch in the Video tab
 - [x] Sound test in the Audio tab
 - [x] Gameplay: the floating credit numbers on or off (M4 part H)
+- [x] Mouse: tabs, rows, chips, slider drag, sound test, remapping by click (M6 part A,
+      `OptionsLayout`, `MouseRegionsTest`; accepted by the user in concept round 35)
 
 ## Decisions
 
@@ -130,3 +138,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
   `gameplay.credit-numbers` (`true`/`false`; missing or unreadable reads as on), from the
   [HUD](../hud/README.md)'s "can be disabled in options" (default of the part's plan). Capture in
   [hud-warnings-capture-r26-a](../hud/concept/hud-warnings-capture-r26-a.png).
+- 2026-10-12: M6 part A: the mouse on the Options screen as under *Design* (pending the user's
+  review in concept round 35). The layout the screen draws by moved into `OptionsLayout`, which
+  also says what lies under the pointer.
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (the mouse, A.1).
+- 2026-10-12 (user, round 35): the mouse on the Options screen and the build choices A.1 accepted
+  as built; `design: approved`.

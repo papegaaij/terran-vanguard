@@ -17,17 +17,17 @@ size: [440, 440]    # sprite px: the rooted body (the trunk and the six roots)
 hitbox: [380, 380]  # the rooted body (no armour: an arena boss's shots fly over it; its parts take the hits)
 parts: multi
 part_list:  # offset [dx, dy] px from the anchor, dy up; the pods and mortars sit on the root tips
-  - {name: pod 1, offset: [-160.6, 24.3], hitbox: [36, 36], hp: 665, kind: destroyable, bounty: 31, attack: orbs}        # root 3, the left (24 px above the anchor, as the pivots' pod; step H6 fixed the sign)
-  - {name: pod 2, offset: [-59.3, 151.2], hitbox: [36, 36], hp: 665, kind: destroyable, bounty: 31, attack: orbs}        # root 2, upper left
-  - {name: pod 3, offset: [59.3, -151.2], hitbox: [36, 36], hp: 665, kind: destroyable, bounty: 31, attack: orbs}        # root 5, lower right
-  - {name: pod 4, offset: [160.6, -24.3], hitbox: [36, 36], hp: 665, kind: destroyable, bounty: 31, attack: orbs}        # root 0, the right
-  - {name: mortar left, offset: [-101.3, -126.9], hitbox: [36, 36], hp: 775, kind: destroyable, bounty: 31, attack: acid}   # root 4
-  - {name: mortar right, offset: [101.3, 126.9], hitbox: [36, 36], hp: 775, kind: destroyable, bounty: 31, attack: acid}    # root 1
+  - {name: pod 1, offset: [-160.6, 24.3], hitbox: [36, 36], hp: 690, kind: destroyable, bounty: 31, attack: orbs, aim: down}   # root 3, the left (24 px above the anchor, as the pivots' pod; step H6 fixed the sign); fires straight down (round 34, P2)
+  - {name: pod 2, offset: [-59.3, 151.2], hitbox: [36, 36], hp: 690, kind: destroyable, bounty: 31, attack: orbs}        # root 2, upper left
+  - {name: pod 3, offset: [59.3, -151.2], hitbox: [36, 36], hp: 690, kind: destroyable, bounty: 31, attack: orbs}        # root 5, lower right
+  - {name: pod 4, offset: [160.6, -24.3], hitbox: [36, 36], hp: 690, kind: destroyable, bounty: 31, attack: orbs, aim: down}   # root 0, the right; fires straight down (round 34, P2)
+  - {name: mortar left, offset: [-101.3, -126.9], hitbox: [36, 36], hp: 800, kind: destroyable, bounty: 31, attack: acid}   # root 4
+  - {name: mortar right, offset: [101.3, 126.9], hitbox: [36, 36], hp: 800, kind: destroyable, bounty: 31, attack: acid}    # root 1
   - {name: maw, offset: [0, 68], hitbox: [60, 44], hp: 2880, kind: destroyable, bounty: 62, attack: spit, multiplier: 2}   # the lime maw in the claw crown (×2)
   - {name: core, offset: [0, 110], hitbox: [60, 60], hp: 4950, kind: vital, bounty: 124, multiplier: 2}   # the lime core, inside the trunk until the lift (×2)
   - {name: trunk, offset: [0, 125], hitbox: [80, 90], kind: armoured}   # the upper trunk above the maw: shots glance off it; it stays at the anchor (the stump)
 orientation: 32 angles
-hp: 12040            # the parts' sum; the trunk is armoured
+hp: 12190            # the parts' sum; the trunk is armoured (round 34, P2: the roots ×1.04 for the thinner fire)
 armour: 'trunk armoured (shots glance off it; it stays as the stump); the roots and the maw are ground parts (all weapons, `anti-ground` ×2); the maw ×2 and the core ×2; invulnerable during the lift'
 speed: 0            # anchored: it scrolls in with the ground and stays where the scroll halts; 50 px/s at most once free
 movement:
@@ -41,13 +41,13 @@ attacks:
     speed: 150
     staggered: true     # each pod on its own clock, pod k of 4 k × 0.4 s after the first
     notes:
-      text: 'phase 1: each turret pod fires an `{pattern}` violet orb ({speed} px/s, `{bullet}` = {damage}) every {interval} s, the four staggered'
+      text: 'phase 1: each turret pod fires a violet orb ({speed} px/s, `{bullet}` = {damage}) every {interval} s, the four staggered: the inner pods (2 and 3) `{pattern}` at the ship, the outer ones (1 and 4) straight down the screen (`aim: down`)'
   - pattern: mortar
     name: acid
     bullet: heavy       # the blob's direct hit
-    interval: 4         # s between two lobs of one mortar root
+    interval: 8         # s between two lobs of one mortar root (round 34, P2: was 4)
     speed: 110          # px/s, the ring's bullets
-    staggered: true     # the two mortar roots 2 s apart
+    staggered: true     # the two mortar roots 4 s apart
     mortar: {marker: 1.0, impact: 40, ring: 10, ring_bullet: small}
     notes:
       text: 'the two mortar roots `lob` acid every {interval} s each, staggered: a lime marker on the ship''s position {mortar.marker} s ahead, a ship inside the {mortar.impact} px impact circle takes `{bullet}` = {damage}, then a ring of {mortar.ring} bullets ({speed} px/s, `{mortar.ring_bullet}` = 4)'
@@ -122,7 +122,7 @@ notes:
   size: '(the rooted body: the trunk ≈ 180 × 240 px with its lean, the roots ≈ 380 px across); the free spire {boss.poses.0.hitbox.0}×{boss.poses.0.hitbox.1} hitbox, drawn 244 px'
   parts: '4 root turret pods (`destroyable`, `ground`), 2 acid-mortar roots (`destroyable`, `ground`), the launch maw (`destroyable`, ×2, exposed in phase 2 only), the spire core (`vital`, ×2, exposed in phase 3, `air` after the lift), the trunk (`armoured`: shots glance, no HP, not in the bar; it stays at the anchor as the stump)'
   orientation: (the turret pods; the free spire 16 pre-rendered headings over its six-fold symmetry)
-  hp: 'turret pod 665 each (2,660); mortar root 775 each (1,550); maw 2,880 (×2); core 4,950 (×2); the spec''s ×1.8, tuned to the measured fight (H10 = a); total'
+  hp: 'turret pod 690 each (2,760); mortar root 800 each (1,600); maw 2,880 (×2); core 4,950 (×2); the spec''s ×1.8, tuned to the measured fight (H10 = a; round 34, P2: the roots ×1.04 again with the thinner phase-1 fire); total'
   speed: '(anchored); the free spire sways ±{movement.sine.amplitude} px, 50 px/s at most'
   movement: 'anchored at the Concord rotunda: it scrolls in with the ground (invulnerable, without its bar) and engages when the scroll halts, the anchor at y {movement.anchored.y}; phase 3 lifts it off the anchor in 3 s (invulnerable, eased) to x 240, y 120, where it sways; the stump stays (see *Phases*)'
   attack_prefix: 'see *Phases*: '

@@ -15,6 +15,11 @@ public final class Lob implements Hashed {
     private int flightTicks;
     /** M5 part G: the convoy unit it was aimed at by the always hook (Level 13's relay); -1 for the ship. */
     private int target = -1;
+    /**
+     * M7 part D: whether its impact point lies in ground space (aimed at a ground ally scrolling with the
+     * ground, Level 17's domes): the marker scrolls with the ground, and the dome with it.
+     */
+    private boolean onGround;
 
     /** Lobbed by a mortar with {@code mortarGun} at (x, y) toward (targetX, targetY). */
     void launch(EnemyGun mortarGun, double x, double y, double targetX, double targetY) {
@@ -24,6 +29,7 @@ public final class Lob implements Hashed {
     /** As {@link #launch(EnemyGun, double, double, double, double)}, aimed at convoy unit {@code aimedAt} (-1: the ship). */
     void launch(EnemyGun mortarGun, double x, double y, double targetX, double targetY, int aimedAt) {
         target = aimedAt;
+        onGround = false;
         gun = mortarGun;
         fromX = x;
         fromY = y;
@@ -31,6 +37,15 @@ public final class Lob implements Hashed {
         toY = targetY;
         age = 0;
         flightTicks = Math.max(1, SimStep.ticks(mortarGun.mortar().orElseThrow().flightSeconds()));
+    }
+
+    /**
+     * M7 part D: as {@link #launch(EnemyGun, double, double, double, double, int)}, aimed at ground ally
+     * {@code aimedAt} standing at (targetX, targetY): the impact point scrolls with the ground from now on.
+     */
+    void launchOnGround(EnemyGun mortarGun, double x, double y, double targetX, double targetY, int aimedAt) {
+        launch(mortarGun, x, y, targetX, targetY, aimedAt);
+        onGround = true;
     }
 
     /** Flies one step; returns whether it landed in this step. */
@@ -42,6 +57,10 @@ public final class Lob implements Hashed {
     /** The mortar scrolled down with the ground: the start of the arc goes with it. */
     void scroll(double distance) {
         fromY -= distance;
+        if (onGround) {
+            // M7 part D: so does an impact point in ground space.
+            toY -= distance;
+        }
     }
 
     @Override
@@ -49,6 +68,9 @@ public final class Lob implements Hashed {
         hash.add(fromX).add(fromY).add(toX).add(toY).add(age);
         if (target >= 0) {
             hash.add(target);
+        }
+        if (onGround) {
+            hash.add(1);
         }
     }
 

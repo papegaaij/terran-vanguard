@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 class LampreyTest {
     /** The latched pose's spots from assets/pivots/lamprey.json (image y down), here y up. */
     static final List<EnemySpec.Spot> SPOTS =
-            List.of(new EnemySpec.Spot(-22, -13), new EnemySpec.Spot(21, -13), new EnemySpec.Spot(0, -35));
+            List.of(new EnemySpec.Spot(-21, -13), new EnemySpec.Spot(20, -13), new EnemySpec.Spot(0, -34));
 
     static final EnemySpec.Latch LATCH = new EnemySpec.Latch(1, SPOTS, 2, 4, 1.2, 1, 120, 8);
 
@@ -120,7 +120,7 @@ class LampreyTest {
         double shield = defences.shield();
         for (int i = 0; i < 30; i++) {
             sortie.step(Command.of(Command.RIGHT));
-            assertEquals(sortie.ship().x() - 22, lamprey.x(), 1e-9, "it moves with the ship");
+            assertEquals(sortie.ship().x() - 21, lamprey.x(), 1e-9, "it moves with the ship");
             assertEquals(sortie.ship().y() - 13, lamprey.y(), 1e-9);
         }
         assertEquals(shield - 8 * 0.5, defences.shield(), 1e-6, "8 shield points a second, regeneration paused");
@@ -197,7 +197,7 @@ class LampreyTest {
     void whileLatchedOnlyTheRearMountAndFlankingWeaponsHitItAtTwiceTheDamage() {
         // Bolts leaving a muzzle right on the left spot: by geometry every one would hit it.
         WeaponSpec atSpot = TestSpecs.bolt(
-                "test-gun", 10, 2.0, 900, new Hitbox(4, 12), TestSpecs.INFINITE, 1, TestSpecs.muzzle(-22, -13, 0));
+                "test-gun", 10, 2.0, 900, new Hitbox(4, 12), TestSpecs.INFINITE, 1, TestSpecs.muzzle(-21, -13, 0));
         assertEquals(1, survivors(new Armament.Mount(Armament.Slot.FRONT, atSpot, atSpot)), "front shots pass");
         assertEquals(0, survivors(new Armament.Mount(Armament.Slot.REAR, atSpot, atSpot)), "the rear mount hits");
         WeaponSpec side = atSpot.flanking(true);

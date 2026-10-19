@@ -13,7 +13,7 @@ import vanguard.sim.Sortie;
 
 /**
  * M5 part G, a defend primary's ally (design/allies, Nansen Relay; design/campaign Level 13; the sprites
- * of tools/art/relay.py, variant a until round 35's pick, with assets/pivots/{@code <ally>}.json): the
+ * of tools/art/relay.py, variant b "grid node" (the user's pick in round 34, 2026-10-12), with assets/pivots/{@code <ally>}.json): the
  * relay standing on the ground in its state's frame (intact, damaged below its smoke share, critical
  * below {@value #CRITICAL_SHARE}, destroyed), a white flash on each hit, the shared ship smoke rising
  * from its state's smoke points and (critical) its fires flickering at the fire points; destroyed, dark

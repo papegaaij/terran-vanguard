@@ -18,7 +18,8 @@ over a storm-sea stand-in (Level 11's swell tile, darkened); the concept's image
 
 ## latch-r34-a
 
-The latch, look a "gulp" (`latch-r34-a.png`, `.gif`; the game's names `lamprey-latched_0..11`):
+The latch, look a "gulp" (`rejected/latch-r34-a.png`, `.gif`; rejected in round 34, `--latch a` writes it
+under the game's names `lamprey-latched_0..11`):
 rendered by `tools/art/lamprey.py`. Brief: a latched Lamprey reads as feeding, not as a decal — the
 body nearly still (the model's latched pose) swelling and narrowing across a 4-frame swallow (0.4 s a
 gulp, the body's width ×1.00/1.07/1.12/1.05), and the ship's own shield ring (`ship-shield`,
@@ -28,7 +29,7 @@ looks).
 
 ## latch-r34-b
 
-The latch, look b "siphon" (`latch-r34-b.png`, `.gif`; review only, `--latch b` writes it under the
-game's names plus `lamprey-drain_0..3`): the tail keeps lashing (the swim cycle at latch 0.6), and at
+The latch, look b "siphon" (`latch-r34-b.png`, `.gif`; the user's pick in round 34, the game's names
+`lamprey-latched_0..11` plus `lamprey-drain_0..3`, written by `tools/art/lamprey.py`, whose default is b): the tail keeps lashing (the swim cycle at latch 0.6), and at
 the contact point cyan shield motes spiral into a teal glow in the mouth (32 px, additive, 4 frames at
 10 fps). No shield ring.

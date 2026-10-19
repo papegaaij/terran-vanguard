@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../player/wingmen, ../../../enemies/ground/creeper]
-updated: 2026-10-07
+updated: 2026-10-18
 ---
 
 # Level 08 – Neon Skyline
@@ -54,12 +54,12 @@ Creeper on a low roof, its aimed five-way fan, a convoy's fans staggered 0.5 s a
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (Creepers on the streets and low roofs, turret nests, mortars), `air`; `low-air` carries the traffic lanes (scenery, no enemies) |
-| Attack directions | front 92% · sides 8% by enemy count (two Needler pincers and the finale's side stream) |
+| Attack directions | front 95% · sides 5% by enemy count (two Needler pincers, the Mantis pincers and the finale's side stream) |
 | Density | 3 |
 | Recommended traits | `anti-ground`, `forward` |
 | Hazards | none |
 | Boss / mid-boss | none (finale: Creeper convoy plus Needler circle) |
-| Sensor-suite detail | none: Earth megacity at night, `ground` + `air`, front · L1: + directions, density 3, no hazards · L2: + Skitter, Needler, Stinger, Creeper (new), Spine Turret and Polyp Mortar portraits; no boss · L3: + `anti-ground` highlighted, the wave strip marking the Creeper convoys at 84, 114, 128 and 162 s, 1 secret |
+| Sensor-suite detail | none: Earth megacity at night, `ground` + `air`, front · L1: + directions, density 3, no hazards · L2: + Skitter, Needler, Stinger, Spore Bomber, Mantis, Creeper (new), Spine Turret and Polyp Mortar portraits; no boss · L3: + `anti-ground` highlighted, the wave strip marking the Creeper convoys at 84, 114, 128 and 162 s, 1 secret |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (the data's `varga`, as in Act 1's levels):
@@ -103,7 +103,7 @@ scenery: no collision, and shots pass through them, so the player never has to h
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. On the Wing | 0–10 | 0–1,400 | 140 | light | `deep`: the night sky's glow on the Gulf of Guinea, seen in the harbour's water. `ground`: Lagos harbour, the water and its piers, a container ship at the pier, gantry cranes on the quay, container yards; the first elevated cross highway over the seam. `low-air`: amber-lit fog banks, CDF gunships heading home. `high-air`: thin mist. | The launch with Rook in his slot from the start (he launches in formation and fires when the player fires); the HUD prompt `ROOK SIDE` · `IN THE HANGAR` at t=6 for 6 s. No enemies until the first Skitters at t=12. |
+| 1. On the Wing | 0–10 | 0–1,400 | 140 | light | `deep`: the night sky's glow on the Gulf of Guinea, seen in the harbour's water. `ground`: Lagos harbour, the water and its piers, a container ship at the pier, gantry cranes on the quay, container yards; the first elevated cross highway over the seam. `low-air`: amber-lit fog banks, CDF gunships heading home. `high-air`: thin mist. | The launch with Rook in his slot from the start (he launches in formation and fires when the player fires); the HUD prompt `ROOK SIDE` · `IN THE HANGAR` at t=6 for 6 s. The first Skitters enter as the launch ends (t=6.5; t=12 until the L10-style waves of 2026-10-18). |
 | 2. Traffic Lanes | 10–65 | 1,400–9,100 | 140 | clear | `ground`: the harbour's last container yards, then two tree-lined avenues as lanes, low roofs, parks, the landing pad on a low roof; the first perspective towers rising along the avenues. `low-air`: streams of civilian aircars fleeing south (scenery; no searchlights, as the streams on the two avenues fill the motion budget), a CDF gunship pair. `high-air`: thin mist. | Rook shoots what the player shoots; his first kill; the first turret nest. |
 | 3. Rooftop Crawl | 65–115 | 9,100–16,100 | 140 | light | `ground`: the boulevard and side streets with their lamp lines, blocks of low roofs, rooftop gardens, water tanks, the ramps and ledges the Creepers follow; perspective towers rising between them. `low-air`: thin fog banks lit amber by the avenue lamps; traffic thinning. | Creeper introduction: one alone, then convoys. The billboard secret. |
 | 4. Smoke District | 115–160 | 16,100–22,400 | 140 | medium | `ground`: burnt and burning blocks (the fire glow is on them and on the smoke's underside), a collapsed overpass, a parking deck. `low-air`: dense smoke columns (below the play plane). `high-air`: ash wisps (≤ 40% opacity). | Mixed waves, Stinger dives, mortars on the overpass. |
@@ -125,10 +125,11 @@ units (backdrop 2048² and 2048×1024).
 ## Waves
 
 Enemy definitions are linked per row; formation names come from the
-[formation vocabulary](../../../enemies/README.md#formation-vocabulary). All of the level's
-returning Act 1 units are `tiny` or `small`, so none gets the act HP factor from the
-[balancing basis](../../../enemies/README.md#balancing-basis) (it applies only to returning
-`medium` and larger units, D5 = c of M5 part A); HP values live in the enemy specs only.
+[formation vocabulary](../../../enemies/README.md#formation-vocabulary). The returning Spore
+Bombers (45 HP) and Mantises (30) get the act HP factor from the
+[balancing basis](../../../enemies/README.md#balancing-basis) (D5 = c of M5 part A), and since the
+user's Act 2 playtest (2026-10-18) the Needler (12) and the Stinger (14) too, capped at ×3; the
+Skitters, turrets and mortars keep theirs. HP values live in the enemy specs only.
 
 This table is the design the level data is authored from (M5 part B, step B4); once the data
 exists, it is generated from it like Act 1's.
@@ -136,77 +137,115 @@ exists, it is generated from it like Act 1's.
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 12 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Over the harbour cranes; the first targets for Rook |
-| 16 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
-| 20 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Over the container yards |
-| 23 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Curls between the avenues |
-| 27 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Over the aircar lanes |
-| 32 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 35.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Mirror of the t=23 snake |
-| 39.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Over the first turret nest |
-| 46 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
-| 49.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Hover over the highway, fire, leave |
-| 52.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 58.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
-| 62.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Into the tower district |
-| 66 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Away from the Creeper's side |
+| 6.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Over the harbour cranes as the launch ends; the first targets for Rook |
+| 9 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Over the container ship |
+| 11.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Curls over the quay |
+| 14 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Over the container yards |
+| 16.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 19 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 21.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | Returning: drifts down the avenues laying spores |
+| 21.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 24 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Curls between the avenues |
+| 26.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Over the aircar lanes |
+| 29 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 31.5 | 2 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | Returning: one from each side, edge warnings; sweeps for 6 s |
+| 31.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (alternating edges) | |
+| 34 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 36.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 39 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 41.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 44 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Over the first turret nest |
+| 46.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 49 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 51.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
+| 54 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Hover over the highway, fire, leave |
+| 56.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 59 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 61.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Into the tower district |
+| 64 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Away from the Creeper's side |
 | 68 | 3 | single | [Creeper](../../../enemies/ground/creeper/README.md) | 1 | front | **New.** Alone on a low roof, down a ramp to the avenue; Varga's line at t=66 |
-| 72 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 76 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
-| 79.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
+| 70.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 73 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 75.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 78 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 80.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
 | 84 | 3 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | Along the low roofs and down to the avenue, fans 0.5 s apart; Varga's anti-ground line; easy 2, hard 4 |
-| 88 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over the second turret nest |
+| 86 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Over the second turret nest |
+| 88.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 91 | 3 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 94 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s; Rook's flank bark |
 | 94 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Easy only: the pincer from the front |
-| 98 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Past the billboard |
-| 101.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 107 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Dive one after another |
-| 110.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Ahead of the walkers shelter nine reports |
-| 114 | 3 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | **Added** (D5): the walkers shelter nine reports, over the low roofs |
-| 117.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | Into the smoke |
-| 121 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Over the parking-deck nest |
-| 128 | 4 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | Through the burning blocks |
-| 131.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 134.5 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
-| 138 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Weaves through the smoke columns |
+| 96.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Past the billboard |
+| 99 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | |
+| 99 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 101.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 104 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Dive one after another |
+| 106.5 | 3 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | |
+| 106.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 109 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 111.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Ahead of the walkers shelter nine reports |
+| 114 | 3 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | The walkers shelter nine reports, over the low roofs; easy 4, hard 6 |
+| 116.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Into the smoke |
+| 119 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Over the parking-deck nest |
+| 121.5 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 124 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 126.5 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 128 | 4 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Through the burning blocks; easy 4, hard 6 |
+| 131.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 134 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 136.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 139 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Weaves through the smoke columns |
 | 142 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side; Rook's flank bark |
 | 142 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Easy only: the pincer from the front |
 | 145.5 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | The last one drops the armour patch |
-| 149 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Over the overpass mortars |
-| 156 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 159.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over the Third Mainland ahead of the convoy |
+| 148 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Over the overpass mortars |
+| 150.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 153 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 155.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 158 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Over the Third Mainland ahead of the convoy |
 | 162 | 5 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | On the elevated highway; the first one drops an overdrive; hard 6 |
-| 165 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Into the smoke wall |
+| 164.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Into the smoke wall |
+| 167 | 5 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 170 | 5 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | Orbits above the highway for 6 s, then breaks toward the player one by one (hard: in pairs) |
 | 174 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides | Enters while the circle orbits |
-| 181 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Past the arcology district; the last wave |
+| 177 | 5 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | |
+| 177 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 180 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Past the arcology district |
+| 182.5 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 185 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 187.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 190 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Over the Ndidi Arcology; the last wave |
 
-Totals: Skitter 108 · Needler 42 · Stinger 12 · Creeper 15.
+Totals: Skitter 157 · Needler 98 · Stinger 45 · Spore Bomber 9 · Mantis 4 · Creeper 19.
 <!-- /data -->
 
-**Density** (user decision D5 = a of M5 part B): the first draft had 80 enemies at medium (72 in
-waves, 8 ground units) over 195 s of scroll, 24.6 a minute, against Act 2's
-[minimum](../../README.md#difficulty-curve) of **50**, which needs at least 163. The level reaches
-it with **more and larger waves of its own units** (Skitter streams and snakes, Needler and
-Stinger groups, a third turret nest and a third mortar) between and around the Creeper beats,
-plus a fourth Creeper convoy (12 → 15 Creepers): **189 enemies at medium** (air 162, ground 27:
-the 15 Creepers, 9 Spine Turrets and 3 Polyp Mortars), **58.2 a minute** over the 195 s after the
-launch (`DensityTest`). Per section: 1 none (the opener) · 2 60 · 3 52 · 4 50 · 5 27. The design
-had 181; the data step added two Skitter streams (t=110.5 and t=159.5) where the pacing check
-found gaps.
+**Waves rewritten after the user's Act 2 playtest** (2026-10-18, PT2-B 2b: "the waves are still
+very small and silent, with quite a few pauses with no enemies at all"; Level 10 the reference):
+a wave about every **2.6 s** from the launch's end (t=6.5) to t=190, 71 waves of **4.7 units** on
+average (two rows at one time are one mixed wave), the next entering while the last is still on the
+screen. **332 enemies in waves** at medium (344 with the ground units, 106 a minute after the launch;
+`DensityTest`): Skitter 157 (47 %, was 57 %), Needler 98 (was 42), Stinger 45 (was 12), Spore Bomber 9
+(three lines), Mantis 4 (two pincers), Creeper 19. The Needlers hover and fire, the Stingers fan, the
+Spore Bombers drift and lay spores, so something always fires. The first draft of this rewrite had
+the brief's 6–7 units a wave with at most 40 % Skitters (419 units, 140 Needlers, 77 Stingers): with
+the plan's fit it put 5 enemies on the screen and 45 shots a minute (twice Level 10's 22), the plan's
+fit came out of medium with 6 of 80 armour and died in every hard attempt, so the firing groups were
+cut to 3–4 and the Skitter share went up (pending the user's review). The set pieces keep their times
+and counts but the convoys: the lone Creeper at t=68, the convoys at 84 (3), 114 and 128 (now 5 each,
+were 3) and 162 (5, the overdrive), the two Needler pincers (t=94, 142), the circle (t=170), the
+pickup carriers (t=145.5, easy's t=131.5); the radio is unchanged.
 
-The opener is about 10 s (was 20): the launch with Rook in his slot, then the first Skitters at
-t=12. **Pacing** (`PacingTest`): the screen stays empty for longer than 3 s only twice, the opener
-(the launch's end to the first Skitters, ≈ 7 s) and the quiet end over the arcology district
-after the last snake (≈ 183–200 s). Between t=12 and t=181 no two waves start more than 7 s apart
-and the turret nests, mortars and Creepers hold the screen in the longer steps. The autopilot
-(the balance plan's fit with Rook on its wing) clears the waves quickly, so the data step moved
-several waves up by 1–2.5 s (t=27, 35.5, 39.5, 52.5, 76, 79.5, 101.5, 107, 145.5, 149, 174) and
-added two Skitter streams (t=110.5 and t=159.5) until no other gap passed 3 s on any difficulty.
-On easy the two pincers are a line abreast from the front (their waves at t=94 and t=142 are
-listed twice, one row for easy). A convoy's Creepers enter 1.5 s apart on one path; walking north
-at 35 px/s against the 140 px/s scroll they move down the screen at 105 px/s, about 160 px apart,
-with clear gaps between the 60 px sprites.
+**What the player sees** (the autopilot, seed 2185, the completing attempt; `ActFloorTest` with the
+plan's fit, `PacingTest` with the user's fit; the before values on the old waves): with the plan's
+fit **2.6 enemies on the screen and 20 enemy shots a minute** (was 0.9 and 6.5; the floor is 2.5 and
+10; Level 10 4.2 and 22); with the user's fit (Pulse Cannon L4, Micro-missile Pod L2, Bomb Rack L3,
+Side Splitter, Rook's Autocannon L2) 1.8 on the screen, 8.9 shots a minute and 2 stretches over 2 s
+with nothing on the screen at medium, the quiet end over the arcology one of them (was 0.6, 2.5 and
+17; at most 3).
+A convoy's Creepers enter 1.5 s apart on one path; walking north at 35 px/s against the 140 px/s
+scroll they move down the screen at 105 px/s, about 160 px apart, with clear gaps between the 60 px
+sprites. On easy the two pincers are a line abreast from the front (their waves at t=94 and t=142
+are listed twice, one row for easy).
 
 ## Ground targets
 
@@ -284,7 +323,7 @@ retimed: Okafor's opener and Rook's side line (t=1 and t=3) are now t=1 and t=8.
 and Okafor (t=112 and t=113) now t=113 and t=120.5; the Choir and Varga (t=166 and t=167, with the
 Choir's 3.9 s stage sound and its 5.6 s subtitle) now t=165 and t=171, after Okafor's convoy line
 at t=157. The event lines get their gaps: 15.8–26 s and 33.4–43 s for Rook's first kill (the first
-Skitters enter at t=12), 91–113 s for the billboard's line (it fires when the third hit topples the billboard, at
+Skitters enter at t=6.5, so the line waits for that gap), 91–113 s for the billboard's line (it fires when the third hit topples the billboard, at
 ≈ t=100–105). The
 radio test flies the level with Rook on both sides, with his barks and the first-kill event; the
 Civilian's lines are voiced since round 30 cast her (4.8 s each; the t=113 call closes well before
@@ -308,29 +347,33 @@ Budget(8) = 700 × 1.07⁷ ≈ **1,124**, the typical haul's target
 ([economy](../../../systems/economy/README.md#per-level-budget)), not a perfect collection: the
 typical player takes 60 % of the air kills, 80 % of the ground targets (the Creepers among them)
 and half the secrets and secondary objectives. The level's `bounty_scale` puts the typical haul on
-it within ±5 % (`TypicalHaulTest`): **0.56**, the typical haul 1,105 (−1.7 %), a perfect run
-1,738 (1.55 × budget). The table lists the stat-block bounties (Act 1 terms); each is paid × the
-act factor 1.6 × 0.56, rounded per kill: Skitter 4, Needler 11, Stinger 13, Creeper 20, Spine
-Turret 11, Polyp Mortar 13. (0.57 rounds the Skitter up to 5 and puts the typical haul at +5.0 %.)
+it within ±5 % (`TypicalHaulTest`): **0.28** since the L10-style waves of 2026-10-18 (0.56 before),
+the typical haul 1,092 (−2.8 %), a perfect run 1,776 (1.58 × budget): nearly twice the units, each
+paying less. The table lists the stat-block bounties (Act 1 terms); each is paid × the act factor 1.6
+× 0.28, rounded per kill: Skitter 2, Needler 5, Stinger 7, Spore Bomber 11, Mantis 13, Creeper 10,
+Spine Turret 5, Polyp Mortar 7 (0.29 puts the typical haul at +3.7 %).
 Rook's kills pay like the player's and do not move the typical haul (user decision D2 of M5 part
 A).
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 108 × 5 + Needler 42 × 12 + Stinger 12 × 15 + Creeper 15 × 22 | 1,350 | 870 |
-| Ground targets: Spine Turret 9 × 12 + Polyp Mortar 3 × 15 | 138 | 110 |
+| Kills: Skitter 157 × 5 + Needler 98 × 12 + Stinger 45 × 15 + Spore Bomber 9 × 25 + Mantis 4 × 30 + Creeper 19 × 22 | 1,460 | 914 |
+| Ground targets: Spine Turret 9 × 12 + Polyp Mortar 3 × 15 | 66 | 53 |
 | Secret: billboard cache (hidden crate, 9% of budget) | 160 | 80 |
 | Secondary: no Creeper gets through | 90 | 45 |
-| **Total** (bounty scale 0.56) | **1,738** | **1,105** |
-| Budget(n) = the typical haul's target; typical -2 %, perfect 1.55 × budget | | 1,124 |
+| **Total** (bounty scale 0.28) | **1,776** | **1,092** |
+| Budget(n) = the typical haul's target; typical -3 %, perfect 1.58 × budget | | 1,124 |
 <!-- /data -->
 
 ## Difficulty notes
 
 - **Easy**: both Needler pincers (t=94, t=142) enter from the front instead (as a line abreast); the t=84 convoy has
-  2 Creepers; one extra armour patch at t≈130.
-- **Hard**: the t=84 and t=162 convoys have one more Creeper each; the Creeper fans seven ways
+  2 Creepers and those at t=114 and t=128 have 4; one extra armour patch at t≈130; the other waves by the
+  difficulty's formation-size lever.
+- **Hard**: the convoys after the first have one more Creeper each (4, 6, 6, 6); the Needler and Stinger
+  groups one smaller than on medium and no Spore Bomber lines (`hard: {count}`, `skip`; with the hard
+  levers on top of +20 % units the plan's fit died in every attempt and Rook ejected); the Creeper fans seven ways
   every 2.6 s (its stat-block hooks); the Needler circle breaks toward the player in pairs; the
   overpass mortars get a pair of Spine Turrets.
 
@@ -382,8 +425,12 @@ Concept round 30 (prompts: [concept/prompts.md](concept/prompts.md); concept gen
 - [x] Wave script matches the *Waves* table (time, formation, count, entry edge); the Creeper
       convoys fan 0.5 s apart.
 - [x] At least 50 enemies per minute of scroll at medium (`DensityTest`), from the level's own
-      units; no empty screen over 3 s but the opener and the quiet end (`PacingTest`, every
-      difficulty).
+      units and returning Act 1 units.
+- [x] The user's Act 2 playtest (2026-10-18): L10-style waves (a wave about every 2.6 s, Spore Bomber
+      lines, Mantis pincers, Creeper convoys of 5); at medium and hard at
+      most 3 stretches over 2 s with nothing on the screen with the user's fit (`PacingTest`), at
+      medium with the plan's fit at least 2.5 enemies on the screen and 10 enemy shots a minute
+      (`ActFloorTest`); the Needler and the Stinger with the capped act HP factor.
 - [x] Ground targets and the billboard secret.
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`, flown with Rook on
       both sides, his barks and the first-kill event); Rook's `{side}` line, his first-kill line
@@ -494,3 +541,19 @@ Concept round 30 (prompts: [concept/prompts.md](concept/prompts.md); concept gen
   approved, so the document leaves `review` for `approved`, as the round said it would. Every art
   part of the level is production art, `art: final`; every Implementation item is ticked, so the
   implementation is `done`.
+- 2026-10-18: The user's playtest: "buildings are sometimes stacked incorrectly. A building can pass
+  underneath a building to its right" (near the end, on the right). The towers were drawn in one fixed
+  order, lowest first, so an inner roof leaning over a taller outer tower was covered by that tower's
+  wall (t=171.9: the 1.10 tower at x 353 under the 1.35 one at x 435). Now the towers on screen are
+  ordered each frame outermost first, as seen from the projection centre
+  ([architecture](../../../tech/architecture/README.md)). The cars over the viaducts are left for the
+  user to decide.
+- 2026-10-18: The user's Act 2 playtest ("they feel unbalanced … everything else is almost no effort
+  at all … the waves are still very small and silent, with quite a few pauses with no enemies at
+  all"; PT2-B 2a, 2b, 2c chosen): the waves rewritten L10-style (332 units in 71 waves of 4.7 about
+  2.6 s apart, Skitters 47 %, Spore Bomber lines and Mantis pincers added, the convoys at t=114 and
+  t=128 of 5; the brief's 6–7 units a wave and at most 40 % Skitters cut back once the plan's fit died
+  on hard, the hard firing groups one smaller than medium), the first wave at t=6.5 as the launch ends
+  and the last at t=190, so the opener is no pause; `bounty_scale` 0.56 → 0.28 for the same haul; the Needler (12 HP) and the
+  Stinger (14) with the capped act HP factor; `PacingTest`'s Act 2 rule and `ActFloorTest`. The
+  returning Spore Bombers and Mantises and the larger convoys are pending the user's review.

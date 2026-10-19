@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: chosen
-updated: 2026-10-09
+updated: 2026-10-13
 ---
 
 # Bosses
@@ -16,14 +16,16 @@ shortened re-creations of earlier bosses.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [gorgon-frigate](gorgon-frigate/README.md) | Act 1 mid-boss: medusa-bell warship with three serpent-neck turrets (L05) | approved | done | final |
 | [brood-carrier](brood-carrier/README.md) | Act 1 boss: living carrier, overhead pass, broadside bays, core (L07) | approved | done | final |
 | [harbour-kraken](harbour-kraken/README.md) | Act 2 mid-boss: cephalopod around a platform, lane slams, surfacing head (L11) | approved | done | final |
-| [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | review | in-progress | chosen |
+| [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | approved | done | final |
+| [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | not-started | chosen |
+| [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | not-started | chosen |
 
 ## Roster
 
@@ -31,7 +33,6 @@ Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units 
 
 | Name | Faction | Layer | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|
-| Dust Colossus | Vrell | ground (burrowing) | A colony-sized sand organism that `burrow`s under the arena and breaches from the sides, the rear and the front in turn. Each breach exposes a mouth (weak point) that fires a `ring` and sucks debris toward it. Tests side and rear weapons. | – | 21 | idea |
 | Abyssal Maw | Vrell | sub | Underwater leviathan guarding the hatchery. Rises from below in a jaw-snap (a telegraphed shadow), trails Eel Swarms, and fires bioluminescent `fan` walls. Wrecked Helix implants on its body are the last clue before the reveal. | carrier + escorts | 28 | idea |
 | Iron Sovereign | Ascendancy | space + ground | A battle station with three concentric rotating rings. Each ring carries batteries (rail, SAM, laser) that rotate into view; destroy the batteries to stop a ring, and stop all rings to expose the core. Tests piercing and positioning. | turret nest | 35 | idea |
 | Ascendant | Hybrid | air + space | Vorne's flagship, half warship and half Vrell organism. **Phase 1**: gold hull with shield generators and mirror panels (`reflect`). **Phase 2**: the Vrell half erupts and regenerates tissue while spawning Chimeras. **Phase 3**: Vorne's Vrell lifeboat breaks free and flees (can't be killed; it escapes). Taunts from Vorne over the radio. | carrier + escorts | 42 | idea |
@@ -41,7 +42,6 @@ Promoted to their own documents for the Acts 1–2 wrap-up; the remaining units 
 
 | Name | Faction | Layer | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|
-| Revenant Walker | Unmarked (Ascendancy) | ground | A human-built war walker with filed-off serials. Missile pods (`homing`) and a rear-facing flamer that attacks after you pass. **Hint 2.** | – | 19 | idea |
 | Honour Guard | Ascendancy | air | Three ace pilots in custom gold Talons attacking from front, sides and rear in turn. Each ace has its own pattern (sniper `laser-line`, `spiral` dancer, `kamikaze` feints) and taunts over the radio. | pincer, rear ambush | 40 | idea |
 | Vorne's Chimera | Hybrid | air + ground | Vorne fused with his Vrell lifeboat inside a Vrell-grown citadel. Alternates between Ascendancy tactics (shields, missiles) and Vrell ones (spawning, regeneration). Pulp villain monologue; a tragic last line. | – | 48 | idea |
 
@@ -98,13 +98,29 @@ Concept [round 07](../../concept-rounds/round-07/README.md) — Kraken redone as
 | [concept/harbour-kraken-r07-a.png](concept/harbour-kraken-r07-a.png) | Harbour Kraken r07 — one connected animal: arms continue under water to the mantle (four depth bands), foam collars where arms break the surface, swell-band water, top-down surfacing and diving, slam sequence, phases (sheet) | chosen |
 | [concept/harbour-kraken-r07-a.gif](concept/harbour-kraken-r07-a.gif) | Harbour Kraken r07 — 10.4 s loop at 15 fps: churning lane telegraph, arm rises and slams with spray, head surfaces crown-first, lime eyes, 7-orb fan, dives | chosen |
 
+Concept round 36 (Act 3 "Red Dust", overnight design phase 2026-10-12; the round's review board
+follows) — the Act 3 mid-boss and act boss, a/b each; generator `tools/concept/bosses_r36.py`.
+The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule for exposed cores).
+
+| File | What | Status |
+|---|---|---|
+| [concept/revenant-walker-r36-a.png](concept/revenant-walker-r36-a.png) | Revenant Walker A "Strider heavy" — unmarked grey reverse-knee biped: two shoulder missile boxes (2×3 cells) that die separately, tail flamer between fuel tanks, hot-amber reactor grille on its back; the wreck with its serial plate ground blank, close-up (sheet) | chosen (round 36, B.1) |
+| [concept/revenant-walker-r36-a.gif](concept/revenant-walker-r36-a.gif) | Revenant Walker A — strides through the foundry; front guns kill the launchers, rear guns the back reactor once it is below the ship; the wreck and the plate's glint (motion) | chosen (round 36, B.1) |
+| [concept/rejected/revenant-walker-r36-b.png](concept/rejected/revenant-walker-r36-b.png) | Revenant Walker B "Siege crawler" — low four-legged hull with a dozer prow, two vertical-launch blocks (2×4 cells), twin-nozzle rear flamer barbette, reactor under radiator fins; the wreck with its plate cut off by torch (sheet) | rejected — round 36: a (Strider heavy, biped) picked |
+| [concept/rejected/revenant-walker-r36-b.gif](concept/rejected/revenant-walker-r36-b.gif) | Revenant Walker B — the same fight as A (motion) | rejected — round 36: a (Strider heavy, biped) picked |
+| [concept/rejected/dust-colossus-r36-a.png](concept/rejected/dust-colossus-r36-a.png) | Dust Colossus A "Rearing maw" — segmented slate worm arching out of a cracking sand dome; three jaw plates around rings of teeth and a lime throat; furrow and bulge tell, breach, rings, suction (sheet) | rejected — round 36: b (Sinkhole colony) picked |
+| [concept/rejected/dust-colossus-r36-a.gif](concept/rejected/dust-colossus-r36-a.gif) | Dust Colossus A — breaches at the edges of the slow-scrolling Hellas arena in turn (motion) | rejected — round 36: b (Sinkhole colony) picked |
+| [concept/dust-colossus-r36-b.png](concept/dust-colossus-r36-b.png) | Dust Colossus B "Sinkhole colony" — the ground collapses into a funnel; four bone mandibles unfold around a lime throat, violet-lit vein ridges under the sand (sheet) | chosen (round 36, B.2) |
+| [concept/dust-colossus-r36-b.gif](concept/dust-colossus-r36-b.gif) | Dust Colossus B — the same arena as A (motion) | chosen (round 36, B.2) |
+
 ## Implementation
 
 - [x] Each boss promoted to its own directory with phases, attack scripts and weak-point
       layout before it is implemented: the Acts 1–2 bosses (Gorgon Frigate and Brood Carrier,
       built in M4; Harbour Kraken and Siege Spire for M5).
 - [ ] The same for the roster's bosses of Acts 3–7 — **later: Act 3** (the Revenant Walker, L19,
-      and the Dust Colossus, L21, first) to Act 7.
+      and the Dust Colossus, L21, first) to Act 7. The two Act 3 bosses are promoted to draft
+      specs (overnight design phase, 2026-10-12); they are built with Act 3 (M7), Acts 4–7 follow.
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
       Frigate; drawn in plain shapes until its production sprites).
@@ -133,3 +149,7 @@ Concept [round 07](../../concept-rounds/round-07/README.md) — Kraken redone as
   with a boss script, see the [architecture](../../tech/architecture/README.md) log); the sting
   comes with Level 05's data, the screen flash and the sprites with the production art.
 - 2026-10-05: M4 close-out bookkeeping (round 26): the promotion item is split into the Acts 1–2 bosses, all promoted (two built in M4), and the roster's Acts 3–7 bosses, tagged with their acts; every other item is ticked, so the document is `done` for M4.
+- 2026-10-12 (overnight design phase): the Revenant Walker (L19) and the Dust Colossus (L21)
+  promoted from the roster to draft specs; concept round 36 proposes an a/b of each, pending the
+  user's review.
+- 2026-10-13 (user, round 36): the Revenant Walker and the Dust Colossus approved (D.18, D.19). Picks: the walker **a** (the "Strider heavy" biped), the Colossus **b** (the "Sinkhole colony"); the rejected variants moved to `concept/rejected/`.

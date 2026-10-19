@@ -132,7 +132,7 @@ public final class Campaign {
         }
         inventory.put(ItemKind.ESCORT, guns);
         Escort escort = new Escort(slot.hired(), side(slot.side()), slot.armour());
-        return new Gear(save.credits(), loadout, inventory, save.specials(), save.armour(), escort);
+        return new Gear(save.credits(), loadout, inventory, save.specials(), save.armour(), escort, save.bays());
     }
 
     private static WingmanSpec.Side side(String saved) {
@@ -187,7 +187,8 @@ public final class Campaign {
                 gear.inventory(),
                 gear.specials(),
                 gear.armour(),
-                new Escort(true, gear.escort().side(), escort.maxArmour()));
+                new Escort(true, gear.escort().side(), escort.maxArmour()),
+                gear.bays());
     }
 
     /** A new campaign: Level 01 next, the starting credits, the starter loadout at full armour. */
@@ -267,6 +268,7 @@ public final class Campaign {
                 gear.specials(),
                 gear.armour(),
                 escortSlot(gear),
+                gear.bays(),
                 retriesLeft,
                 grades,
                 dataCores,
@@ -305,7 +307,7 @@ public final class Campaign {
             }
             storyFlags.add(flag);
             int carried = charges.getOrDefault(special.name(), 0);
-            int added = Math.min(special.free(), special.maxCharges() - carried);
+            int added = Math.min(special.free(), special.maxCharges().orElseThrow() - carried);
             if (added <= 0) {
                 continue;
             }
@@ -317,7 +319,8 @@ public final class Campaign {
             given.add(new FreeCharges(special.name(), added, fit));
         }
         if (!given.isEmpty()) {
-            gear = new Gear(gear.credits(), loadout, gear.inventory(), charges, gear.armour(), gear.escort());
+            gear = new Gear(
+                    gear.credits(), loadout, gear.inventory(), charges, gear.armour(), gear.escort(), gear.bays());
         }
         return given;
     }
@@ -427,10 +430,20 @@ public final class Campaign {
         gear = gear.withCredits(gear.credits() + result.credits().total() + result.gradeBonus())
                 .withArmour(Math.min(armourLeft, maxArmour()));
         Fitted special = gear.loadout().get(LoadoutSlot.SPECIAL);
-        if (special != null && (chargesUsed != 0 || chargesFound != 0)) {
+        // M7 part A: a cooldown special is owned, not charged: a level neither uses nor finds charges of it.
+        if (special != null
+                && !rules.cooldownSpecials().contains(special.item())
+                && (chargesUsed != 0 || chargesFound != 0)) {
             Map<String, Integer> charges = new HashMap<>(gear.specials());
             charges.put(special.item(), Math.max(0, gear.charges(special.item()) - chargesUsed + chargesFound));
-            gear = new Gear(gear.credits(), gear.loadout(), gear.inventory(), charges, gear.armour(), gear.escort());
+            gear = new Gear(
+                    gear.credits(),
+                    gear.loadout(),
+                    gear.inventory(),
+                    charges,
+                    gear.armour(),
+                    gear.escort(),
+                    gear.bays());
         }
         if (escortArmourLeft.isPresent() && gear.escort().hired() && debugEscort.isEmpty()) {
             // The --escort debug option's Rook is not the gear's: his armour is not kept.
@@ -572,6 +585,27 @@ public final class Campaign {
     /** The story state, saved as the save's story flags (among them the free charges given). */
     public List<String> storyFlags() {
         return List.copyOf(storyFlags);
+    }
+
+    /**
+     * M7 part B (user decision L.6 of round 36; the flag mechanism a default pending the user's review in round 38):
+     * the story flag that records act {@code act}'s intro (its title card and intro pages) as shown.
+     */
+    public static String actIntroFlag(int act) {
+        return "act-intro:" + act;
+    }
+
+    /** M7 part B: whether act {@code act}'s intro has been shown in this campaign (its story flag). */
+    public boolean actIntroShown(int act) {
+        return storyFlags.contains(actIntroFlag(act));
+    }
+
+    /** M7 part B: records act {@code act}'s intro as shown (a story flag, saved with the next autosave). */
+    public void markActIntroShown(int act) {
+        String flag = actIntroFlag(act);
+        if (!storyFlags.contains(flag)) {
+            storyFlags.add(flag);
+        }
     }
 
     /** The data cores found, by name, in the order they were found. */

@@ -75,8 +75,11 @@ class BackdropAssetsTest {
             Path folder = BACKDROP.resolve(Backdrop.folder(entry.getKey(), entry.getValue()));
             for (BackdropData.PlacedPiece placed : backdrop.placements()) {
                 BackdropData.Piece spec = backdrop.pieces().get(placed.piece());
-                // A tower's roof lies over its own walls, not over the tiles.
-                if (spec.layer() == backdrop.base() && !spec.isTower()) {
+                // A tower's roof lies over its own walls, not over the tiles; a face patch (M7 part C) is
+                // drawn on a wall's face.
+                if (spec.layer() == backdrop.base()
+                        && !spec.isTower()
+                        && !WallProjection.FACE_PATCHES.contains(placed.piece())) {
                     for (BufferedImage image : images(folder, placed.piece(), spec)) {
                         assertNoEdgeOnScreen(level, placed, spec, image);
                     }

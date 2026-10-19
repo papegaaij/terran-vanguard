@@ -174,3 +174,103 @@ change is the renderer: every angle set uses `enemy_rigs.ModelSpaceAngleSprites`
 patterns (chitin ridges, glowing seams, mottled hide) are evaluated in model space and turn with
 the body in the heading grids and the GIF, instead of staying fixed to the screen. The image
 prompt, negative prompt and animation brief of `scuttler-r05-a` above still apply unchanged.
+
+## burrower-r36-a
+
+**Chosen** (round 36, 2026-10-13).
+
+**Burrower A, sand maw (Vrell, Act 3, Level 15)**: a 68 px radial worm head that surfaces from the Martian sand. Files: `burrower-r36-a.png` (sheet: source, rise and maw states, crops of the tell) and `burrower-r36-a.gif` (three Burrowers cycling in the 480×540 play field).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, on rust-ochre Martian sand. An alien sand-worm head breaking out of the ground, seen from directly above: a domed, ringed head of mauve-grey slate chitin (#7c6878) on a thick column that vanishes into the sand, a crown of ten ivory bone spikes (#c8b8c0) splayed at the sand line, a six-toothed bone maw in the centre opening onto a glowing lime (#a8ff2a) throat, eight small lime pores around the dome. A dark ring of disturbed sand around it.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, sea mine
+- **Animation brief:** Buried it is invisible and untouchable; only a low furrow runs through the sand. It picks a spot ahead of the ship; the sand there bulges for 0.8 s (a hill-shaded mound of lighter fresh sand, then radial cracks and grit trickling down) — the tell. It breaches in a spray of sand (0.25 s, rendered as rise steps with the model cut at the sand line), opens its maw and fires a ring of 10 orbs from the pores, stays up 2 s (hittable), sinks in 0.35 s and leaves a pit that fades over 2.5 s.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py burrower` (models in the generator itself, on the frozen `tools/concept/render/` package; `ModelSpaceAngleSprites`)
+
+## burrower-r36-b
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+
+**Burrower B, sand clam (Vrell, Act 3, Level 15)**: a 68 px armoured clam that faces the ship. Files: `rejected/burrower-r36-b.png` (sheet) and `rejected/burrower-r36-b.gif` (same scene as A).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, on rust-ochre Martian sand. An alien armoured burrower seen from directly above: four overlapping ivory carapace plates (#dccfb4, banded, with bone ridges) that form a closed oval shell, two curved bone shovel claws at the front and two short spurs at the back; when the plates slide apart they bare a glowing violet (#9a4dff) gun core ringed by six violet ports. A dark ring of disturbed sand around it.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, magenta or hot-pink glow, yellow glow, blue or cyan body colour, eggs, beans
+- **Animation brief:** Same cycle as A (furrow, 0.8 s bulge, breach, 2 s up, sink, fading pit), but violet light seeps from the cracks of the bulge, so the tell also reads in the dust storm. Up, the plates part (shut / half / open) and the ports fire the ring of 10 orbs.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py burrower`
+
+## tendril-anchor-r36-a
+
+**Chosen** (round 36, 2026-10-13).
+
+**Tendril Anchor A, polyp clamp and flesh rope (Vrell, Act 3, Level 16)**: a 48 px anchor on each canyon wall; a pair stretches a damaging tendril across the canyon. Files: `tendril-anchor-r36-a.png` (sheet: source, headings, pulse, the link and the burning link) and `tendril-anchor-r36-a.gif` (scrolling canyon at 12.5 fps: one pair broken by killing an anchor, one cut by a beam).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, on the dark layered rock rim of a Martian canyon. A squat alien polyp clamped to the canyon edge by three curved ivory bone roots, mauve-grey slate chitin (#7c6878) with a fleshy cone pointing across the canyon, thin crimson (#ff3038) seams along the cone, a bone lip ring around a glowing crimson orifice at its tip. Separately: a twisted sinew rope in pale mauve-grey with a crimson glowing vein, as a tiling strip.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, mechanical parts, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, sea mine
+- **Animation brief:** Anchors at 16 headings (pairs face each other), a 3-frame pulse. The rope sways slowly; crimson pulses travel along its vein. Killing an anchor makes the rope whip back into the other anchor in 0.7 s and hang limp (harmless). A beam heats the rope white-hot where it crosses and cuts it; both halves recoil. The glowing orifice is the weak point. The blue beam in the mockup is a stand-in, not the Ion Beam's look.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py tendril-anchor`
+
+## tendril-anchor-r36-b
+
+**Rejected** (round 36, 2026-10-13: a picked); the files are in `rejected/`.
+
+**Tendril Anchor B, spine pylon and crackling filament (Vrell, Act 3, Level 16)**: a 48 px anchor; the link is an energy filament. Files: `rejected/tendril-anchor-r36-b.png` and `rejected/tendril-anchor-r36-b.gif` (same scene as A).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, on the dark layered rock rim of a Martian canyon. An alien pylon clamped to the canyon edge by an ivory bone tripod: a curved, armoured slate-chitin horn (#7c6878) leaning out over the canyon, two small vanes with crimson (#ff3038) glowing seams, a glowing crimson node at the horn's tip. Separately: three jagged crimson energy strands with a pale pink core, crackling between two nodes.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, robot, rivets, metal plating, magenta or hot-pink glow, yellow glow, blue or cyan body colour, lightning bolt clip art
+- **Animation brief:** As A, but the link is re-drawn every frame as three jagged strands with a soft crimson glow (like the Mantis laser sweep). Killing an anchor makes the filament snap back and fade; a beam heats it and cuts it.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py tendril-anchor`
+
+## warden-tank-r36-a
+
+**Warden Tank, unmarked grey (Act 3, Level 19)**: the chosen `warden-tank-r05-a` model with only its livery changed. Files: `warden-tank-r36-a.png` (sheet with a side-by-side of r05-a and the grey version) and `warden-tank-r36-a.gif` (on a dirt road on Mars).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, glossy specular highlights, crisp silhouette, on rust-ochre Martian ground. The Warden Tank of `warden-tank-r05-a` (same angular faceted hull with hex panelling, two tread tracks, a separate hexagonal turret with a long barrel), but repainted in plain matte greys: hull #7c818b, facets #5d626c, former gold trim as light grey #a3a8b0, barrel and guns gunmetal #434750; no gold, no white accent, no insignia; only the small red running lights and orange exhaust glow remain; a thin neutral grey rim light (pale on top-left edges, near-black on bottom-right).
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view, three-quarter view, text, watermark, motion blur, gold, yellow, insignia, decals, hazard stripes, camouflage, magenta glow, organic shapes
+- **Animation brief:** Unchanged from r05-a: the hull follows its road and turns to the tangent (16 headings, 2 tread frames), the turret tracks the player separately at 32 headings. Its shots are plain enemy orbs, not gold shells. Rendered with `ModelSpaceAngleSprites` (the round-08 rule), so the hex panelling turns with the hull.
+- **Mockup generator:** `python3 tools/concept/enemies_r36.py warden-tank` (model `warden_hull`/`warden_turret` from `tools/concept/render/archetype_models.py`, materials replaced in the generator)
+
+## burrower-final-r38-a
+
+Round 38, production art (M7 part B batch, step ART-B; straight to production from the chosen concept
+burrower-r36-a, U.1 = a; user decision Q1 = a of 2026-10-14: screen-fixed while it travels, bulges and
+is surfaced, with a sand bow wave). Not a mockup: the review sheet (`.png`) and a play-field loop
+(`.gif`, 480×540 at 1×, the ground scrolling at 150 px/s) of the frames in `assets/sprites/burrower*`,
+rendered by [tools/art/burrower.py](../../../../tools/art/burrower.py) (`python3 tools/art/burrower.py`)
+from the concept model `burrower_a` of `tools/concept/enemies_r36.py` (imported unchanged) at 64 px. The
+sand marks (ripple, bulge, bow wave, breach rim, dive slump, filling hole, crater) are relief decals
+shaded by the fixed top-left key light with dithered 4-step translucency; the ground is a stand-in from
+`tools/concept/mars_r36.py` (rust dunes, basalt regolith) until Level 15's backdrop exists.
+
+- **Prompt:** as burrower-r36-a, plus for the sand marks: late-1990s pre-rendered CGI ground decals seen straight from above, key light from the top-left; a sand ripple with a low mound at its head and a darker furrow with lit lips trailing behind; a growing mound of rust sand with seven radial cracks leaking lime light (#a8ff2a); fresh ochre sand (#d69660) piled against the top side of the surfaced maw and spilling round it as the ground streams past; a collapsed crater with a lit rim, slumped walls and dark chitin bits on its floor.
+- **Negative prompt:** as burrower-r36-a; no soft airbrushed shadows, no photographic sand texture, no water.
+- **Animation brief:** ripple 16 headings × 4 frames (12 fps); bulge 10 frames over 1.0 s; breach 6 frames over 0.3 s; the bow-wave loop 8 frames at 15 fps; maw shut/half/open/firing with an additive lime bloom; dive 8 frames over 0.4 s ending in the open hole; the hole fills over 1.6 s; death: lime burst (additive) and a sand spout burying the dome shards and bone spikes, over the kill's crater.
+- **Generator:** `python3 tools/art/burrower.py` (`--review` rebuilds only the review files)
+
+## tendril-anchor-final-r39-a
+
+Round 39, production art (M7 part C batch, step ART-C; straight to production from the chosen concept
+tendril-anchor-r36-a, U.2 = a: polyp clamps and a fleshy rope). Not a mockup: the review sheet (`.png`)
+and a loop (`.gif`) of the files in `assets/sprites/` (and `build/art-held/sprites/` for the tendril strips,
+until the game's data claims them), rendered by [tools/art/canyon_units.py](../../../../tools/art/canyon_units.py):
+the anchor at 40 px in 32 headings with its pulse, the tendril's standing loop, dormant tell, flare, wither,
+frayed end and the beam's burn spot. The GIF plays a gate: dormant, flare, standing, burnt through by a beam
+(a mock-up of the Ion Beam), withering back.
+
+## threadcrawler-final-r39-a
+
+Round 39, production art (M7 part C batch, step ART-C; from the chosen concept threadcrawler-r06-a, the
+round-06 models unchanged). Not a mockup: the review sheet and a loop of the head (16 headings x 4 jaw
+frames), the segment (16 headings x 4 leg frames), the tail, the pore glow and the curled husk, rendered by
+[tools/art/canyon_units.py](../../../../tools/art/canyon_units.py). The GIF plays the chain crawling up a
+Level 16 floor with the leg ripple and the pores' travelling wave.
+
+## shellback-final-r40-a
+
+Round 40, production art (M7 part D batch, step ART-D; from the chosen concept shellback-r05-a, the model
+`shellback` of `tools/concept/render/beast_models.py` unchanged for the walk, the tuck and the ball; the
+curl's in-between frames blend the walk and tuck poses, and the last one the tuck into the ball). Not a
+mockup: the review sheet and a loop of the files in `assets/sprites/`, rendered by
+[tools/art/siege_units.py](../../../../tools/art/siege_units.py): 112 px, 16 headings x 6 heavy-walk frames,
+4 curl frames per heading, the ball's 8 roll frames per heading (80 px), the belly seam's lime glow, the vent's
+swell glow and its burst stump (placed by `assets/pivots/shellback.json`), the husk. The GIF plays a
+Shellback walking down Level 17's colony ground, swelling its vent for a lob, curling, rolling, uncurling with
+the belly glowing, walking on.

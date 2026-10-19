@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../creeper]
-updated: 2026-10-07
+updated: 2026-10-18
 ---
 
 # Ravager
@@ -30,16 +30,16 @@ The numbers live in [data.yaml](data.yaml). Values are first-draft balancing num
 | Orientation | `16 angles` (16 headings × 8 gallop frames; it faces where it runs; leap frames for the pounce) |
 | HP | 16 (easy 12 / hard 21, from the global multipliers) |
 | Armour / shield | none |
-| Speed | 160 px/s (plus scroll) |
+| Speed | 120 px/s (plus scroll) |
 | Movement | `walk` (a gallop) along its own authored ground path in a pack; turns at 180°/s; the gallop's 8 frames advance with distance (46 px per cycle) |
-| Attack | `pounce`: within 200 px of the ship it leaps over the ship's position over 0.75 s, aimed twice as far so the middle of the leap passes over that spot, drawn up to 1.43× with its shadow sliding away; for the middle 0.3 s it is on `air` and deals contact `medium` = 15 once; then it lands behind it (kept on the play field) and runs on; 3 s between pounces; no ranged attack |
+| Attack | `pounce`: within 170 px of the ship it leaps over the ship's position over 0.75 s, aimed twice as far so the middle of the leap passes over that spot, drawn up to 1.43× with its shadow sliding away; for the middle 0.3 s it is on `air` and deals contact `medium` = 15 once; then it lands behind it (kept on the play field) and runs on; 4 s between pounces; no ranged attack |
 | Formations | pack (3–5) (each unit on its own path, 0.25 s apart) |
 | Weak points | glowing teal maw (drawn only) |
 | Effective traits | `anti-ground`, `spread` |
 | Credits | 18 (score 180 × chain) |
 | Death | `small` organic burst; no husk |
 | First level / used in | L09; returns L14 (with the act HP factor) |
-| Difficulty hooks | hard: 2 s between pounces; packs +1 (level data) |
+| Difficulty hooks | hard: 4 s between pounces as on medium (the hook keeps the fire-rate lever off) |
 <!-- /data -->
 
 ### Behaviour
@@ -49,11 +49,13 @@ The numbers live in [data.yaml](data.yaml). Values are first-draft balancing num
   on **its own** authored ground path, 0.25 s apart (a convoy's walkers share one path 1.5 s
   apart). A wave gives one path per unit, in screen coordinates at the wave's time, scrolling with
   the ground, as for every walker; a difficulty that adds a unit needs a path for it.
-- **Gallop.** It runs its path at 160 px/s on top of the scroll, turning at most 180°/s, the
+- **Gallop.** It runs its path at 120 px/s on top of the scroll (160 until the user's Act 2 playtest), turning at most 180°/s, the
   nearest of its 16 headings drawn and its 8 gallop frames advancing with distance (46 px of
   ground per cycle, the concept's stride). Its paths run **across or obliquely down** the screen:
-  straight down it would move at 160 + 150 px/s and cross the field in about 1.7 s.
-- **Pounce** (user decision D4 = a of M5 part C). When the ship's centre is within **200 px** of
+  straight down it would move at 120 + 150 px/s and cross the field in about 2 s. Level 09's
+  crossing packs run **at the ship first** (down the street toward it, so a forward gun can track
+  them) and then turn across it (the user's Act 2 playtest, 2026-10-18).
+- **Pounce** (user decision D4 = a of M5 part C). When the ship's centre is within **170 px** of
   its own, it leaps **over** the ship's position **at take-off** (no homing) over **0.75 s**: the
   leap aims at take-off + 2 × (ship − take-off), so its middle (the apex and the air window) passes
   over where the ship was and it lands as far beyond it (the overshoot; a landing point off the play
@@ -66,7 +68,7 @@ The numbers live in [data.yaml](data.yaml). Values are first-draft balancing num
   hits it at ×1 (no anti-ground ×2), ground-only blasts (dropped bombs, lobbed shells, Rook's
   Mortar) miss it, and mines can trigger on it. The rest of the leap it is `ground` (anti-ground
   bolts ×2, blasts hit). It lands, turns back onto its path at its turn rate and runs on; it may
-  pounce again **3 s** after landing (hard 2 s). It pounces only while it is on the screen.
+  pounce again **4 s** after landing (on hard too). It pounces only while it is on the screen.
 - **Weak point drawn only** (single-part rule, M5 part C default as for the Creeper): the teal maw
   glows but takes no extra damage; the draft's ×1.5 is struck.
 - **In Level 14** (M5 part H) it returns with the act HP factor: 20 HP at medium (time to kill
@@ -91,8 +93,8 @@ The production files, generator notes in [concept/prompts.md](concept/prompts.md
 
 - [x] Stat block values loaded from [data.yaml](data.yaml); global difficulty multipliers applied
 - [x] `pack` formation: one path per unit, 0.25 s apart
-- [x] Pack gallop with distance-driven frames (46 px per 8-frame cycle), turn rate 180°/s
-- [x] Pounce: 200 px trigger, 0.75 s leap over the ship's take-off position (the overshoot), the per-unit layer (`air` for the middle 0.3 s) read at every hit, contact and targeting site, contact once per pounce with the ship and Rook, 3 s between pounces (hard 2 s)
+- [x] Pack gallop at 120 px/s (160 until 2026-10-18) with distance-driven frames (46 px per 8-frame cycle), turn rate 180°/s
+- [x] Pounce: 170 px trigger (200 until 2026-10-18), 0.75 s leap over the ship's take-off position (the overshoot), the per-unit layer (`air` for the middle 0.3 s) read at every hit, contact and targeting site, contact once per pounce with the ship and Rook, 4 s between pounces on every difficulty (3 s, hard 2 s until 2026-10-18)
 - [x] Leap scale-up and shadow separation
 - [x] Death effect, bounty and score per this spec
 - [x] Production sprites (gallop, leap, shadow, death) and intel portrait (art track, concept round 31)
@@ -138,3 +140,10 @@ The production files, generator notes in [concept/prompts.md](concept/prompts.md
   46 px stride, the 200 px trigger, the air window, the cooldown from landing) and the overshoot's
   clamped landing (build choice c) accepted. `design: approved`, `art: final`; every Implementation
   item is ticked, so the implementation is `done`.
+- 2026-10-18: The user's Act 2 playtest ("The ravagers are too hard, especially when trying to kill
+  the nodes. They move too quickly out of the screen. Do not mix the ravagers with the nodes and slow
+  them down a little bit."; PT2-B proposal 1b, chosen by the user): gallop 160 → **120 px/s**, a
+  pounce every **4 s** (was 3; on hard too, was 2: with the hard step the slower Ravagers wore the
+  plan's fit down in every attempt, pending the user's review), trigger range 200 → **170 px**; in Level 09 no pack runs in a hold (the bridge packs at
+  t=100/106, hold C's two packs moved to t=141/147 after hold B) and the two crossing packs
+  (t=62, t=141) gallop down at the ship before they turn. Level 14's Ravagers follow the stat block.

@@ -1,0 +1,15 @@
+# Act 3 – Red Dust: its levels and the act intro (title card and the four intro pages), rendered into
+# README.md (Act intro and outro). The outro after Level 21 comes in M7 part H. M7 part B, step B2.
+# Schema: ../../tech/architecture/README.md#data-file-schemas
+levels: [15, 21]
+
+title_card:  # over the act's still (ui/act-3-red-dust-still.png, tools/art/act_stills.py act-3 from Level 15's backdrop): Mars from the entry corridor, Olympus Mons far below through thin cirrus
+  act: ACT III
+  name: RED DUST
+  line: Mars · June 2185
+
+briefing:  # three pages by Commander Okafor, one by Dr. Varga (approved in round 36), each voiced and with its image (tools/art/briefing_images.py)
+  - {speaker: Okafor, expression: grim, image: act-3-arrival, line: "Nine days at full burn. Ares Landing has now held alone for five weeks: no fleet, no supply drops, only militia guns and the air its domes still make. Every colony on Mars is cut off from every other."}
+  - {speaker: Varga, image: act-3-mars-front, line: "The Vrell came down in the Hellas basin, in the south, and spread north from there. They have changed for Mars: they swim through the sand and ride the dust storms. They are learning this planet faster than we did."}
+  - {speaker: Okafor, image: act-3-colonists, line: "The colonists asked Earth for help long before the Gate opened, and got committees. They will not thank us for coming late. They don't have to. We fly for them anyway."}
+  - {speaker: Okafor, expression: fierce, image: act-3-drop, line: "We go in from the west, past Olympus Mons, and take the canyons back one at a time. Drop in ninety minutes. Mission briefing follows. Aegis Actual out."}

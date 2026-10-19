@@ -1,0 +1,61 @@
+# Tendril Anchor stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part C, step C2 (Level 16; M9 = a of round 36): a pair of anchors at the canyon walls' foot and the tendril
+# between them. A level places the pairs as a linked enemy nest (`link: pairs`, consecutive placements paired: a
+# default of the gap check, pending the user's review in round 39); the `link` attack is the tendril. Loaded and
+# checked in step C2, mapped for the simulation in step C4 (sim: step C3).
+name: Tendril Anchor
+faction: Vrell
+layer: ground
+tier: small
+size: [40, 40]    # sprite px, each anchor
+hitbox: [30, 30]
+parts: 'anchor pair: two `destroyable` anchors and the tendril between them (M9 = a: its own HP, hit only by `beam`)'
+orientation: 32 angles
+hp: 12            # each anchor: a 0.15 s time to kill at Level 16's reference DPS 80 (M18 = a)
+armour: none on the anchors; the tendril ignores every non-`beam` shot (shots pass through it)
+speed: 0          # still; scrolls with the ground (walls included)
+movement:
+  terrain: {}
+attacks:
+  - pattern: link
+    name: tendril
+    bullet: medium       # its touch: `medium` = 6
+    link:
+      hp: 40             # damaged only by a `beam`, which goes on past it (easy 30 / hard 52 from the global multipliers)
+      dormant: 1.0       # s of a harmless flickering thread once the pair scrolls onto the screen (the tell)
+      band: 6            # px, the contact band along the line between the anchors' centres
+      width: 8           # px, the strip drawn
+      cooldown: 0.5      # s, the touch's own cooldown (the ship and Rook; not pushed)
+      burnt_bounty: 8    # credits for burning it (Act 1 terms; score 80 × chain)
+    notes:
+      text: '`{pattern}`: the tendril between the two anchors ({link.hp} HP, hit only by `beam`; easy 30 / hard 52), dormant {link.dormant} s after the pair scrolls onto the screen, then contact `{bullet}` {damage} per touch with a {link.cooldown} s cooldown (M9 = a; its {link.band} px band, the ship not pushed); the anchors fire nothing (hard: each anchor an `aimed` orb every {attacks.1.interval} s, standard {attacks.1.speed} px/s, `small` 4)'
+  - pattern: aimed
+    name: orb
+    bullet: small
+    interval: 3.0
+    speed: 150
+    first_shot_delay: 1.0
+    only: [hard]         # the anchors fire only on hard
+    notes:
+      text: ''
+formations:
+  - {name: turret nest, size: [2, 6]}   # pairs; 1–3 pairs per gate
+weak_points:
+  - {name: the glowing root bulb at the tendril's base}
+drops: []
+traits: [beam, piercing, forward]
+bounty: 12
+first_level: 16
+notes:
+  layer: ' (at a wall''s foot, a rock''s or on a pylon); the tendril on the player''s plane (`link`)'
+  size: '(each anchor); tendril {attacks.0.link.width} px wide, its contact band {attacks.0.link.band} px'
+  orientation: (each faces its partner); the tendril a stretched strip
+  hp: 'anchor'
+  speed: (still; scrolls with the ground, walls included)
+  movement: '`terrain`'
+  formations: '(pairs); 1–3 pairs per gate, a gate''s tendrils at different heights'
+  weak_points: (drawn only)
+  bounty: '; tendril burnt {attacks.0.link.burnt_bounty} (score 80 × chain)'
+  death: 'anchor: `small` organic burst, the tendril snaps back into the surviving anchor and withers over 0.4 s; tendril burnt: it parts in the middle, both halves recoil'
+  used_in: on rocks and pylons elsewhere in later acts (the level documents decide)
+  difficulty: 'hard: the anchors'' aimed orbs; easy: tendril 30 HP (global multiplier)'

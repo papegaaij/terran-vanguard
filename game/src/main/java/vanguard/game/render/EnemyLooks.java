@@ -189,17 +189,24 @@ public record EnemyLooks(
         Array<AtlasRegion> none = new Array<>();
         boolean walker = data.movement().walk().isPresent();
         int walkFrames = walker ? sprites.frames(slug).size / orientation.headings() : 1;
+        // M7 part C: a ground chain (the Threadcrawler) has its own head art ({@code <slug>-head}) and its
+        // parts' headings are its orientation's (16), not the Coilwyrm's production set of 48.
+        boolean crawler = data.movement().crawl().isPresent();
+        String art = crawler && !sprites.has(slug) && sprites.has(slug + "-head") ? slug + "-head" : slug;
         Array<AtlasRegion> frames =
-                sprites.has(slug) ? sprites.frames(slug) : Placeholders.frames(slug, orientation.headings());
-        int headings = data.segmentChain().isPresent() && sprites.has(slug) ? CHAIN_HEADINGS : orientation.headings();
+                sprites.has(art) ? sprites.frames(art) : Placeholders.frames(slug, orientation.headings());
+        int headings = data.segmentChain().isPresent() && sprites.has(art) && !crawler
+                ? CHAIN_HEADINGS
+                : orientation.headings();
         Tier tier = tinyPart ? Tier.TINY : DEATH_TIERS.getOrDefault(slug, data.tier());
         boolean iris = data.attacks().stream()
                         .flatMap(attack -> attack.spawn().stream())
                         .anyMatch(spawn -> spawn.every().isPresent())
                 && sprites.has(slug)
                 && frames.size == IRIS_STATES * PULSE_FRAMES;
-        // A segment chain (the Coilwyrm, the only one) bursts wet: its segments and tail with the
-        // segment burst (shot or in the chained death's ripple), its heads with the deeper one.
+        // A segment chain (the Coilwyrm; M7 part C: the Threadcrawler too, design/audio/sfx) bursts wet: its
+        // segments and tail with the segment burst (shot or in the chained death's ripple), its heads with the
+        // deeper one.
         boolean chain = data.segmentChain().isPresent();
         Sfx chainBurst = tinyPart ? Sfx.COILWYRM_BURST : Sfx.COILWYRM_HEAD_BURST;
         // M5 part E: a pulsing jelly (its -pulse frames) pulses at its own rate, not a radial spinner's.

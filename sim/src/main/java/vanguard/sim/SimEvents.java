@@ -143,7 +143,10 @@ public final class SimEvents {
         SLED_HIT,
         /** A destroyed ground target threw a rock (at the rock). */
         ROCK_THROWN,
-        /** A chain's segment was cut and its rear part starts to grow a new head (at the cut); value: the segment's kind. */
+        /**
+         * A chain's segment was cut and its rear part starts to grow a new head (at the cut); M7 part C: or, a
+         * ground chain's ({@link Chain#ground()}), stops and dies after its cut delay. Value: the segment's kind.
+         */
         CHAIN_CUT,
         /** A cut chain's new head has grown (at it); value: its kind. */
         CHAIN_REGROWN,
@@ -348,7 +351,170 @@ public final class SimEvents {
          * its {@link #ENEMY_DESTROYED} (at it): its remains drift on with what carried it; value:
          * {@link #driftValue(double, double)}.
          */
-        WRECK_DRIFT;
+        WRECK_DRIFT,
+        /**
+         * M7 part A: a beam came on (at its muzzle; design/player/weapons/ion-beam): the start sound, then
+         * the loop. Its column and contact are fields of {@link Sortie#beam(int)}, not events. Value: the
+         * mount.
+         */
+        BEAM_ON,
+        /** M7 part A: a beam went off (at its muzzle): the stop sound and its fade. Value: the mount. */
+        BEAM_OFF,
+        /**
+         * M7 part A: a light drone absorbed a bullet, a laser touch or a contact (at the drone); value:
+         * its bay's mount.
+         */
+        DRONE_HIT,
+        /** M7 part A: a light drone broke (at the drone): a small spark burst; value: its bay's mount. */
+        DRONE_BROKEN,
+        /** M7 part A: a drone bay rebuilt its drone, which starts to fade in (at the bay); value: the mount. */
+        DRONE_REBUILT,
+        /**
+         * M7 part A: a Deflector Pod caught an enemy bullet (at the bullet): the catch flash on its arc and
+         * the deflect tick; value: the pod's mount.
+         */
+        DEFLECTOR_CAUGHT,
+        /** M7 part A: a Deflector Pod got a charge back (on its side of the ship): its field brightens; value: the mount. */
+        DEFLECTOR_CHARGED,
+        /**
+         * M7 part A: a cooldown special's cooldown is over (at the ship): the HUD ring's white flash and
+         * the ready chime (design/player/specials, Cooldown specials and the HUD ring).
+         */
+        SPECIAL_READY,
+        /**
+         * M7 part A: an EMP Burst went off (at the ship; after its {@link #SPECIAL_CALLED}): the ring
+         * ({@link SpecialSlot#empRadius(double)}) and its sound.
+         */
+        EMP_BURST,
+        /**
+         * M7 part A: the EMP Burst's ring stunned a unit (at it; a chain once, at the member it reached
+         * first): the power-down whine; value: its kind. The crackle overlay follows
+         * {@link Enemy#empStunned()}.
+         */
+        EMP_STUNNED,
+        /**
+         * M7 part A: an Orbital Lance was called (at the ship): its radio line and the lock beep; the red
+         * targeting line shows while {@link SpecialSlot#lanceLocking()}.
+         */
+        LANCE_LOCK,
+        /** M7 part A: the Orbital Lance fires (at its centre, the bottom edge): the column, its loop and rumble. */
+        LANCE_FIRED,
+        /** M7 part A: the Orbital Lance stops burning and fades (at its centre, the bottom edge): the loop stops. */
+        LANCE_ENDED,
+        /** M7 part A: the Shield Overcharge went off (at the ship): the white double shell flares, the whoosh. */
+        OVERCHARGE,
+        /** M7 part A: the Shield Overcharge's raised capacity ended (at the ship): the shell goes, the shimmer. */
+        OVERCHARGE_ENDED,
+        /**
+         * M7 part A: a dash started (at the ship's position before it; design/player/systems, Evasive
+         * thrusters): the thruster burst and the afterimages; value: its direction, 0 straight up and
+         * then clockwise in eighths (2 right, 4 down, 6 left).
+         */
+        DASH,
+        /**
+         * M7 part B: a Burrower's bulge starts (at its spot; design/enemies/ground/burrower, the tell): the
+         * mound, its cracks and glow, the low rumble; it surfaces there {@link EnemySpec.Burrow#bulgeSeconds()}
+         * later. Value: its kind.
+         */
+        BURROW_BULGE,
+        /**
+         * M7 part B: a Burrower broke out (at it): the sand spray, the crater rim; it is on {@code ground}
+         * now; the radio event {@code first-surfacing}. Value: its kind.
+         */
+        BURROW_SURFACED,
+        /** M7 part B: a Burrower starts to dive (at it); buried from the dive's middle, a filling hole left. Value: its kind. */
+        BURROW_DIVE,
+        /** M7 part B: a Burrower swam off the bottom edge under the sand (at its last position): an escape. Value: its kind. */
+        BURROW_ESCAPED,
+        /** M7 part B: a unit with a swoop banks into it (at it; design/enemies/air/dust-kite). Value: its kind. */
+        SWOOP,
+        /**
+         * M7 part C: a hull touched rock (at the touch, on the rock's line; design/campaign Level 16, Wall
+         * contact): the rock spark, the scrape and the short hit flash. Value: -1 the rock on the ship's left,
+         * 1 on its right; 2 Rook touched it. Once per touch (its cooldown's contacts only clamp).
+         */
+        WALL_CONTACT,
+        /**
+         * M7 part C: a shot or an enemy bullet stopped at rock (at it; design/campaign Level 16, What walls
+         * stop): the small dust spark. Value: the shot's mount, -1 an enemy bullet.
+         */
+        ROCK_SPARK,
+        /**
+         * M7 part C: a gate's tendril ended its dormancy and flared to its full width, its touch hurting from
+         * now (at its middle; design/enemies/ground/tendril-anchor, Tell); value: its {@link Tendril#serial()}.
+         */
+        TENDRIL_FLARE,
+        /**
+         * M7 part C: a flared tendril touched a hull (at the craft) and dealt its damage; value: {@link
+         * Links#TOUCH_SHIP} (0) the ship, {@link Links#TOUCH_ROOK} (2) Rook.
+         */
+        TENDRIL_TOUCH,
+        /**
+         * M7 part C: a beam started burning a tendril (where its column crosses it); value: its {@link
+         * Tendril#serial()}. {@link Tendril#burning()} says whether it still does.
+         */
+        TENDRIL_BURN,
+        /**
+         * M7 part C: a tendril broke for good (at its middle): value 0 an anchor died (it snaps back into the
+         * survivor), 1 a beam burnt it through (it parts in the middle).
+         */
+        TENDRIL_BROKEN,
+        /**
+         * M7 part C: a ground chain's segment's pore fired its spore (at the segment; design/enemies/ground/
+         * threadcrawler, Travelling wave); value: the member's index in its chain (1 the first segment).
+         */
+        PORE_FIRED,
+        /**
+         * M7 part D: a hooked bomber dropped its load on a ground ally (design/campaign Level 17, What goes for
+         * the domes; at the bomber's centre, over the dome); value: the ground ally's index. The dome's {@link
+         * #ALLY_HIT} follows in the same step when the load hurts it.
+         */
+        BOMB_DROPPED,
+        /**
+         * M7 part D: an aura ring absorbed damage (at the ringed unit; design/enemies/air/choir-herald): the ring's
+         * flash and the absorb sound; value: the unit's kind. At most one per unit every few steps (a beam's
+         * damage comes every step).
+         */
+        RING_ABSORBED,
+        /** M7 part D: a Herald died and every ring it fed collapses (at the Herald); value: how many rings. */
+        RINGS_COLLAPSED,
+        /** M7 part D: the EMP Burst stripped every aura ring (at the burst's centre); value: how many rings. */
+        RINGS_STRIPPED,
+        /**
+         * M7 part D: a unit part on a unit that is not a boss was destroyed (at the part; design/enemies/ground/
+         * shellback, the mortar vent); value: the unit's kind. A set piece's part has {@link #PART_DESTROYED}.
+         */
+        UNIT_PART_DESTROYED,
+        /** M7 part D: a walker started its curl (at it; design/enemies/ground/shellback); value: its kind. */
+        CURLED,
+        /** M7 part D: a curled walker started its roll (at it); value: its kind. */
+        ROLL_STARTED,
+        /**
+         * M7 part D: a rolling ball crushed a ground target (at the ball for a ground ally, at the object for a
+         * ground object); value: the ground ally's index, -1 for a ground object. The ally's {@link #ALLY_HIT}
+         * follows in the same step.
+         */
+        ROLL_CRUSHED,
+        /** M7 part D: a rolled walker started to uncurl (at it); its belly shows after the uncurl; value: its kind. */
+        UNCURLED,
+        /**
+         * M7 part D: a walker's mortar vent swells before its lob ({@link Enemy#MORTAR_TELL_SECONDS} ahead, at the
+         * walker; design/enemies/ground/shellback); value: its kind. The lob is {@link #MORTAR_LOBBED}.
+         */
+        MORTAR_TELL,
+        /**
+         * Round 40 (the reworked Harbour Kraken, proposal 3a): a rooted slam arm's root took damage this step
+         * (at the root; a hit on its arm's segments counts, the damage goes to the root): its hit flash and
+         * sound; at most one per root and step. Value: the root's part index. Its cut is {@link
+         * #PART_DESTROYED}; whether it took the raised multiplier: {@link SlamArena#armRaised(int)}.
+         */
+        ROOT_HIT,
+        /**
+         * Round 40 (the Siege Spire's lanes, proposal 4a): a part's aim turn starts its glow, the tell before
+         * its one aimed shot ({@link BossSpec.AimTurns}; at the part); value: the part's index. The glow
+         * runs while {@link SetPiece#partAimGlowing(int)}.
+         */
+        AIM_TELL;
 
         private static final Type[] VALUES = values();
     }

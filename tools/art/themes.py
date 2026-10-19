@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Production music: the title, hangar and briefing themes (UI batch part U3, round 13), the Act 1
 boss and act-end music (M4 part G, round 25), the Act 1 level themes with their base stems, the
-three jingles and the mini-boss sting (M4 part H, round 26) and the first two Act 2 level themes with
-their base stems (M5 part B, round 30; M5 part C, round 31).
+three jingles and the mini-boss sting (M4 part H, round 26), the first two Act 2 level themes with
+their base stems (M5 part B, round 30; M5 part C, round 31) and the Act 3 A theme with its provisional
+base stem (M7 part B, round 38).
 
 Outputs:
   assets/music/title-theme.ogg     "Terran Vanguard", full length (chosen: title-theme-full-r08-a)
@@ -23,6 +24,9 @@ Outputs:
   assets/music/homefront-base.ogg  its base stem (music_r30.py; straight to production, no concept file)
   assets/music/firestorm.ogg       #7 "Firestorm", full length (chosen: act2-b-theme-r08-a)
   assets/music/firestorm-base.ogg  its base stem (music_r31.py; straight to production, no concept file)
+  assets/music/red-dust-run.ogg    #8 "Red Dust Run", full length (music_r38.py: the chosen mars-theme-r02-a
+                                   composed out to full length; no earlier concept file, review in round 38)
+  assets/music/red-dust-run-base.ogg  its base stem (music_r38.py, the same pass; provisional)
   design/audio/music/concept/themes-final-r13-a.png      review sheet of round 13
   design/audio/music/concept/boss-music-final-r25-a.png  review sheet of round 25
   design/audio/music/concept/{choir-descends,boss-warning,act-complete}-final-r25-a.ogg
@@ -45,6 +49,11 @@ Outputs:
                                    the two round-31 files (byte copies)
   design/audio/music/concept/firestorm{,-base}-seam-final-r31-a.ogg
                                    track 7 and its base stem across the loop seam
+  design/audio/music/concept/music-final-r38-a.png       review sheet of round 38
+  design/audio/music/concept/red-dust-run{,-base}-final-r38-a.ogg
+                                   the two round-38 files (byte copies)
+  design/audio/music/concept/red-dust-run{,-base}-seam-final-r38-a.ogg
+                                   track 8 and its base stem across the loop seam
 
 Each piece is rendered by the frozen concept generator that made the chosen file
 (tools/concept/audio/music_r08.py: ``render_loop`` for the themes, ``render_sting`` for the
@@ -62,7 +71,9 @@ gain envelope for both (the crossfade stays exact) that dips only around those t
 TP_FIX_AIM and re-encoded until no 4x peak is above TP_FIX_LIMIT. Round 31 does the same for the
 chosen "Firestorm" and its new base stem (-0.2 and -0.1 dBTP; a plain cut would again have taken the full
 mix under -14.5 LUFS); that stem has no concept file, so only the full mix is compared there (the stem
-comes from the same pass). The listening aids are mixes
+comes from the same pass). Track 8 "Red Dust Run" (round 38) is rendered the same way, as a pair by its
+generator music_r38.py (PAIR_RENDERED): its full length is new composition, so there is no earlier concept
+file to compare with, and the envelope only dips if the encode has true-peak overs. The listening aids are mixes
 of the decoded finals (re-encoded at q6, gain unchanged); the game never loads them.
 
 ``--check`` verifies the files in assets/music: SOURCE comment, nominal bitrate of q6 (192 kbit/s
@@ -83,12 +94,13 @@ each generator proves its full mix is the chosen one) has no concept file to com
 Usage: python3 tools/art/themes.py [title] [hangar] [briefing] [boss] [warning] [actcomplete]
                                    [afterburner] [afterburner-base] [coalition] [coalition-base]
                                    [miniboss] [complete] [failed] [gameover] [homefront]
-                                   [homefront-base] [firestorm] [firestorm-base]
+                                   [homefront-base] [firestorm] [firestorm-base] [red-dust]
+                                   [red-dust-base]
                                                        render (default all), then check and review
        python3 tools/art/themes.py --check [keys]      check only (default all)
        python3 tools/art/themes.py --review [keys]     review sheets (and r25/r26 aids) of the keys' rounds
 Run time ~4 min for the three round-13 themes, ~2 min for the round-25 pieces, ~5 min for round 26,
-~6 min for round 30, ~6 min for round 31.
+~6 min for round 30, ~6 min for round 31, ~5 min for round 38.
 """
 import importlib
 import re
@@ -137,6 +149,8 @@ ROUNDS = {
          artkit.source_note(SCRIPT, "M5 part B")),
     31: ("music-final-r31-a.png", "FIRESTORM AND ITS BASE STEM (FINAL)", "PRODUCTION ART, M5 PART C - R31",
          artkit.source_note(SCRIPT, "M5 part C")),
+    38: ("music-final-r38-a.png", "RED DUST RUN AND ITS BASE STEM (FULL LENGTH, PROVISIONAL STEM)",
+         "PRODUCTION ART, M7 PART B - R38", artkit.source_note(SCRIPT, "M7 part B")),
 }
 # key: (asset name, music_r08 key, title shown on the sheet, round); loops first, then one-shots
 THEMES = {
@@ -148,6 +162,8 @@ THEMES = {
     "coalition": ("coalition-rising", "coalition", "COALITION RISING - TRACK 5, ACT 1 B", 26),
     "homefront": ("homefront", "homefront", "HOMEFRONT - TRACK 6, ACT 2 A", 30),
     "firestorm": ("firestorm", "act2b", "FIRESTORM - TRACK 7, ACT 2 B", 31),
+    # no music_r08 key: composed out to full length by music_r38 (PAIR_RENDERED)
+    "red-dust": ("red-dust-run", None, "RED DUST RUN - TRACK 8, ACT 3 A", 38),
 }
 # key: (asset name, key of its full mix in THEMES, title, round, stem generator, chosen file)
 STEMS = {
@@ -161,6 +177,9 @@ STEMS = {
     # no concept round either: music_r31 writes firestorm-base-r31-a.ogg only into the temporary directory
     "firestorm-base": ("firestorm-base", "firestorm", "FIRESTORM - TRACK 7, BASE STEM", 31,
                        "music_r31", "firestorm-base-r31-a"),
+    # rendered with its full mix by music_r38 (provisional until round 38 reviews the full mix)
+    "red-dust-base": ("red-dust-run-base", "red-dust", "RED DUST RUN - TRACK 8, BASE STEM (PROVISIONAL)", 38,
+                      "music_r38", "red-dust-run-base-r38-a"),
 }
 CUES = {
     "warning": ("boss-warning", "warning", "RED ALERT - TRACK 22, BOSS WARNING", 25),
@@ -178,6 +197,10 @@ HANDOFF = CONCEPT / "boss-handoff-final-r25-a.ogg"
 # "firestorm" -0.2 dBTP at 8 spots, its base stem -0.1 dBTP at 2): rendered as their stem generator
 # renders the pair, then one transient gain envelope for both files (TP_FIX_*).
 TRUE_PEAK_FIX = {"afterburner", "firestorm"}
+# Full mixes rendered as a pair with their base stem by the stem generator (and the same envelope, which
+# dips nothing when the encode has no true-peak overs): the TRUE_PEAK_FIX ones and track 8, whose
+# generator composes the full mix (music_r38) and has no music_r08 key.
+PAIR_RENDERED = TRUE_PEAK_FIX | {"red-dust"}
 TP_FIX_LIMIT = -1.2  # dB, 4x oversampled peak of the decoded files above which a transient is dipped
 TP_FIX_AIM = -1.3  # dB, where the dip aims (below the limit: the encoder moves peaks by a few 0.01 dB)
 TP_FIX_ATTACK, TP_FIX_HOLD, TP_FIX_RELEASE = 0.002, 0.001, 0.05  # s, raised-cosine ramps around an over
@@ -188,6 +211,8 @@ SEAM_SECONDS = 8.0
 def concept_file(key):
     if key in STEMS:
         return CONCEPT / f"{STEMS[key][5]}.ogg"
+    if PIECES[key][1] is None:  # composed by its stem generator: its own full-mix name (not written by default)
+        return CONCEPT / f"{importlib.import_module(STEMS[key + '-base'][4]).FULL_NAME}.ogg"
     table = music_r08.LOOPS if key in THEMES else music_r08.STINGS
     return CONCEPT / f"{table[PIECES[key][1]][0]}.ogg"
 
@@ -255,7 +280,7 @@ def render_true_peak_fixed(key, tmp):
         full, base = full * undb(-over - 0.1), base * undb(-over - 0.1)
     write_ogg(out[stem], base, max_peak_db=None, tags=tags)
     for k in out:
-        if (k == key or concept_file(k).exists()) and out[k].read_bytes() != concept_file(k).read_bytes():
+        if concept_file(k).exists() and out[k].read_bytes() != concept_file(k).read_bytes():
             raise SystemExit(f"{k}: the generator no longer reproduces {concept_file(k).name}")
     env = np.ones(full.shape[1])
     for _ in range(8):
@@ -281,7 +306,7 @@ def render_true_peak_fixed(key, tmp):
 def fix_pair(key):
     """The full mix in TRUE_PEAK_FIX that ``key`` (a full mix or its base stem) belongs to, or None."""
     pair = STEMS[key][1] if key in STEMS else key
-    return pair if pair in TRUE_PEAK_FIX else None
+    return pair if pair in PAIR_RENDERED else None
 
 
 def render(key, rendered):

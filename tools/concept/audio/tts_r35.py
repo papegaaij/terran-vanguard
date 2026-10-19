@@ -2,7 +2,7 @@
 """Concept round 35: the Nansen audition (Level 13 "Polar Relay", M5 part G, decision G9 = a,
 pending the user's review).
 
-Outputs (design/audio/voice/concept/):
+Outputs (design/audio/voice/concept/; the rejected b's audition in concept/rejected/, not rewritten):
   voice-nansen-r35-<a|b>.ogg  Nansen (the CDF officer of Nansen Relay, a new speaker): three of its
                               lines from Level 13's radio chatter, t=36 (the arrival: "Aegis,
                               Nansen. Very glad to see you. They come at us from every direction out
@@ -25,6 +25,11 @@ archive.org item's `licenseurl`), made as in rounds 19-33 with
     ffmpeg -ss 60 -t 12 -i https://archive.org/download/<item>/<file> -ac 1 -ar 24000 <clip>.wav
 (`python3 tools/concept/audio/tts_r35.py --refs` cuts the missing ones) and checked with their
 Whisper (faster-whisper base.en) transcript, the .txt next to each clip.
+At the user's pick (2026-10-12, a, in round 34's review) a's clip was renamed refs/ref-nansen.wav (the
+cast voice's, which `ref("a")` now reads); b's clip and its CREDITS.md row went when the round closed,
+and b's audition stays in concept/rejected/ as reviewed. So the script now renders, posts and reads
+back only the chosen a (CHOSEN; `--refs` cuts nothing while refs/ref-nansen.wav exists); b's source
+stays in REFS as the record.
 
 Setup: the Chatterbox venv of round 18 (~/.cache/tv-tts/venv-chatterbox, see tts_r18.py); Whisper
 (faster-whisper) from the Dia venv (~/.cache/tv-tts/venv-dia), for the read-back.
@@ -66,15 +71,19 @@ REFS = {
           "public domain (creativecommons.org/licenses/publicdomain)"),
 }
 SEED = 35
+CHOSEN = "a"                                    # the user's pick (round 34's review, 2026-10-12)
 
 
 def ref(variant):
+    if variant == CHOSEN:
+        return REFDIR / f"ref-{SPEAKER}.wav"    # the cast voice's clip (renamed at the pick)
     return REFDIR / f"ref-{SPEAKER}-r35-{variant}.wav"
 
 
 def refs():
     """Cut the missing reference clips and write their Whisper transcripts."""
-    for variant, (item, name, start, _, _) in REFS.items():
+    for variant in (CHOSEN,):
+        item, name, start, _, _ = REFS[variant]
         out = ref(variant)
         if not out.exists():
             subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(start), "-t", "12",
@@ -93,6 +102,8 @@ def worker():
     model = ChatterboxTTS.from_pretrained(device="cuda")
     RAW.mkdir(parents=True, exist_ok=True)
     for i, variant in enumerate(REFS):
+        if variant != CHOSEN:
+            continue
         for j, text in enumerate(LINES):
             for f in (random.seed, np.random.seed, torch.manual_seed):
                 f(SEED + 10 * i + j)
@@ -113,12 +124,12 @@ def whisper(mode):
         return " ".join(seg.text.strip() for seg in segs)
 
     if mode == "--transcribe-refs":
-        for variant in REFS:
+        for variant in (CHOSEN,):
             t = text(ref(variant))
             ref(variant).with_suffix(".txt").write_text(t + "\n")
             print(ref(variant).name, ":", t)
     else:
-        for variant in REFS:
+        for variant in (CHOSEN,):
             for j in range(len(LINES)):
                 name = f"{SPEAKER}-{variant}-{j + 1}"
                 print("raw", name, ":", text(RAW / f"{name}.wav"))
@@ -137,7 +148,7 @@ def post():
     import tts_r18
     s = tts_r18._synth()
     DEST.mkdir(parents=True, exist_ok=True)
-    for variant in REFS:
+    for variant in (CHOSEN,):
         parts = []
         for j in range(len(LINES)):
             x = s.decode(RAW / f"{SPEAKER}-{variant}-{j + 1}.wav")[0]

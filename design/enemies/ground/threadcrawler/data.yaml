@@ -1,0 +1,68 @@
+# Threadcrawler stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part C, step C2 (Level 16): a segment chain on the ground. Its head crawls the wave's `crawl` path (points in
+# the walls' rows along the canyon floor and the walls' foot) at the `crawl` speed on top of the scroll; the body
+# follows by the chain; the pore wave is its attack. A cut's rear part dies (`cut`), it never regrows. Counts as one
+# enemy (density, kill ratio). Loaded and checked in step C2, mapped for the simulation in step C4 (sim: step C3).
+# Credits (pending the user's review in round 39): a head-first kill pays the whole 48 (the head's 30 and its
+# first_bonus 18); taken apart it pays 60 (head 30, segments 2 each, the tail 2 and its first_bonus 4 when it goes
+# first: "6 against a segment's 2").
+name: Threadcrawler
+faction: Vrell
+layer: ground
+tier: large       # ≈ 360 px along its path with 12 segments
+size: [56, 56]    # the head's sprite px
+hitbox: [40, 40]  # the head's
+parts: multi
+part_list:  # offset 0: head and tail are placed on the path history, not at a fixed offset
+  - {name: head, offset: [0, 0], hitbox: [40, 40], hp: 80, kind: vital, bounty: 30, first_bonus: 18}   # first_bonus: a head-first kill pays the whole 48
+  - {name: tail, offset: [0, 0], hitbox: [28, 28], hp: 20, kind: destroyable, bounty: 2, first_bonus: 4}   # 6 when destroyed first
+segment_chain:              # the body between head and tail
+  segments: 12
+  size: [32, 32]            # px, a segment's sprite along the path (48 × 32, no taper)
+  width: 48                 # px, its sprite across the path: hit box 36 × 24
+  hitbox_share: 0.75
+  spacing: 0.8              # × the segment length, along the head's path history (≈ 360 px)
+  hp: 8
+  bounty: 2
+  contact: small            # contact damage class of segments and tail (the head: its tier)
+  cut: {delay: 1.0}         # a cut's rear part stops, writhes and dies 1.0 s later, from the cut backwards
+  pop_interval: 0.08        # s between two bursts of the chained death, head to tail
+orientation: 16 angles
+hp: 196             # the parts' sum: head 80, 12 segments × 8, tail 20
+armour: none
+speed: 70           # px/s, the head along its path (plus scroll)
+movement:
+  crawl: {speed: 70}        # along the wave's ground path, on top of the scroll
+attacks:
+  - pattern: pores
+    name: pores
+    bullet: small
+    speed: 110              # slow
+    interval: 0.25          # s between two pores, head to tail (a travelling wave)
+    pores: {rest: 2.0, glow: 0.3}   # s of rest between two waves; s a pore glows before it fires (the tell)
+    notes:
+      text: 'each segment''s pore fires one slow `aimed` spore in turn, head to tail, {interval} s apart (a travelling wave), then {pores.rest} s rest; slow {speed} px/s, `{bullet}` {damage}; a pore glows lime {pores.glow} s before it fires'
+formations:
+  - {name: snake}
+weak_points:
+  - {name: the head's lime eye clusters (the vital head)}
+drops: []
+traits: [anti-ground, piercing, beam]
+bounty: 56          # the parts' sum: head 30, 12 segments × 2, tail 2 (whole 48 by the head's first_bonus; 60 taken apart)
+first_level: 16
+difficulty:
+  easy: {segments: 10, pores: {every_other: true}}
+  hard: {segments: 16, pores: {rest: 1.5}}
+notes:
+  layer: ' (the canyon floor and the walls'' foot)'
+  size: '(the head); segment 48×32 (hitbox 36×24); tail 40×40 (hitbox 28×28)'
+  parts: '`vital` head, 10–16 `destroyable` segments (12 by default), `destroyable` tail'
+  orientation: per part, following the head's path history (`chain`)
+  hp: 'head 80 · segment {segment_chain.hp} each · tail 20; whole'
+  speed: along its path (plus scroll)
+  movement: '`crawl` along an authored ground path over the canyon floor and along the walls'' foot (the wave''s `crawl`); the segments follow by `chain`; the legs ripple in a wave down the body (4 leg frames, phase offset per segment)'
+  formations: (solo); never two on screen
+  bounty: '; whole (head-first kill) 48: the head''s 30 + its first bonus {part_list.0.first_bonus}; parts: head 30, segment {segment_chain.bounty} each, tail 2 + {part_list.1.first_bonus} if destroyed first (60 with 12 segments)'
+  death: 'head killed: the body dies segment by segment from head to tail, {segment_chain.pop_interval} s apart (`small` bursts, a `medium` at the head); a curled husk stays on the ground; a cut''s rear part dies {segment_chain.cut.delay} s after the cut, from the cut backwards'
+  used_in: returns L45 (Act 7) with the act HP factor
+  difficulty: 'easy: 10 segments, the wave every other pore; hard: 16 segments, rest 1.5 s'

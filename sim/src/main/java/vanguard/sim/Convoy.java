@@ -28,6 +28,12 @@ import java.util.List;
  * ground and stands at its place when the ground has scrolled as far as at the defend's start (Level 13:
  * the timed halt); a lost unit lies there as a wreck. The target-the-objective hook's modes aim at it
  * ({@link #objective()}) until its synchronisation is over ({@link #defended()}).
+ *
+ * <p>M7 part D, ground allies outside the objectives (design/allies, Ares Landing dome; Level 17; {@link
+ * LevelScript.GroundAllies}): each unit stands on the ground, {@code follows: ground}, its footprint's lower
+ * edge entering the top edge at its time, and scrolls through with the ground; a broken unit lies there as a
+ * wreck. The hook aims at them per unit ({@link #nextDome}, {@link #nearestCloser}, {@link #objective(double,
+ * double)}); they never fail the mission.
  */
 final class Convoy {
     private final LevelScript.Escort escort;
@@ -116,6 +122,8 @@ final class Convoy {
      * scroll} px.
      */
     Convoy(LevelScript.Defend defend, double scroll) {
+        ground = null;
+        groundY = new double[0];
         this.defend = defend;
         standScroll = scroll;
         naval = null;
@@ -142,8 +150,63 @@ final class Convoy {
         reset();
     }
 
+    /** M7 part D: the ground allies; null for another convoy. */
+    private final LevelScript.GroundAllies ground;
+    /** M7 part D: per ground ally, its centre's height with the ground unscrolled (y up). */
+    private final double[] groundY;
+
+    /**
+     * M7 part D: the ground allies {@code allies}, unit {@code k} standing with its centre at {@code
+     * standY[k]} (y up) with the ground unscrolled.
+     */
+    Convoy(LevelScript.GroundAllies allies, double[] standY) {
+        ground = allies;
+        groundY = standY.clone();
+        defend = null;
+        standScroll = 0;
+        naval = null;
+        escort = null;
+        road = null;
+        int units = allies.units().size();
+        if (standY.length != units) {
+            throw new IllegalArgumentException("one height per ground ally");
+        }
+        this.allies = new Ally[units];
+        for (int k = 0; k < units; k++) {
+            this.allies[k] = new Ally();
+        }
+        enterTicks = new int[units];
+        startY = 0;
+        air = null;
+        scripted = -1;
+        saveable = units;
+        liftTick = 0;
+        liftTicks = 1;
+        climbTick = Integer.MAX_VALUE;
+        climbTicks = 1;
+        lossTick = Integer.MAX_VALUE;
+        glowTick = Integer.MAX_VALUE;
+        liftScroll = 0;
+        homeY = 0;
+        fromX = new double[0];
+        fromY = new double[0];
+        glideTicks = new int[0];
+        flakWait = new int[0];
+        reset();
+    }
+
+    /**
+     * M7 part D: where ground ally {@code unit}'s centre stands with the ground unscrolled (y up), given the
+     * ground scrolled by its entry ({@code scrollAtEntry}): its footprint's lower edge at the top edge then.
+     */
+    static double standY(LevelScript.GroundAlly unit, double scrollAtEntry) {
+        return scrollAtEntry + PlayField.HEIGHT + unit.ally().size().height() / 2;
+    }
+
     /** M5 part E: a naval convoy (Level 11), every unit at its station. */
     Convoy(LevelScript.Naval naval) {
+        ground = null;
+        groundY = new double[0];
         defend = null;
         standScroll = 0;
         this.naval = naval;
@@ -180,6 +243,8 @@ final class Convoy {
      */
     Convoy(LevelScript.Escort escort, Road road, List<LevelScript.Section> sections) {
         this.escort = escort;
+        ground = null;
+        groundY = new double[0];
         defend = null;
         standScroll = 0;
         naval = null;
@@ -247,6 +312,19 @@ final class Convoy {
             resetNaval();
             return;
         }
+        if (ground != null) {
+            for (int k = 0; k < allies.length; k++) {
+                LevelScript.GroundAlly unit = ground.units().get(k);
+                allies[k].resetStanding(unit.x(), groundY[k], unit.ally().hp());
+            }
+            lost = 0;
+            firstHit = -1;
+            firstLost = -1;
+            lostSaveable = 0;
+            lastLost = -1;
+            lastHit = -1;
+            return;
+        }
         if (defend != null) {
             allies[0].resetStanding(
                     defend.x(), defend.y() + standScroll, defend.ally().hp());
@@ -295,6 +373,15 @@ final class Convoy {
 
     /** One step: the units due roll in, the others roll on or hold their stations, the wrecks scroll. */
     void update(int levelTick, double groundScroll, double scrollStep) {
+        if (ground != null) {
+            // M7 part D: each lies on the ground, standing or a wreck, and scrolls with it.
+            for (int k = 0; k < allies.length; k++) {
+                Ally ally = allies[k];
+                ally.remember();
+                ally.place(ground.units().get(k).x(), groundY[k] - groundScroll, 0, 0);
+            }
+            return;
+        }
         if (defend != null) {
             // M5 part G: it lies on the ground, standing or a wreck, and scrolls with it.
             Ally ally = allies[0];
@@ -502,6 +589,9 @@ final class Convoy {
 
     /** Unit {@code k}'s spec: the escort's ally, or (M5 part E) the naval unit's own. */
     AllySpec spec(int k) {
+        if (ground != null) {
+            return ground.units().get(k).ally();
+        }
         if (defend != null) {
             return defend.ally();
         }
@@ -532,6 +622,103 @@ final class Convoy {
                         && PlayField.overlaps(ally.x(), ally.y(), defend.ally().hitbox())
                 ? 0
                 : -1;
+    }
+
+    /**
+     * The unit an {@code always} hook's attack from (x, y) goes at now: a defend primary's ally ({@link
+     * #objective()}); M7 part D: the nearest ground ally standing on the play field (centre to centre); -1
+     * for none (and for another convoy).
+     */
+    int objective(double x, double y) {
+        if (ground == null) {
+            return objective();
+        }
+        double best = Double.POSITIVE_INFINITY;
+        int found = -1;
+        for (int k = 0; k < allies.length; k++) {
+            Ally ally = allies[k];
+            if (!ally.alive() || !PlayField.overlaps(ally.x(), ally.y(), spec(k).hitbox())) {
+                continue;
+            }
+            double distance = (ally.x() - x) * (ally.x() - x) + (ally.y() - y) * (ally.y() - y);
+            if (distance < best) {
+                best = distance;
+                found = k;
+            }
+        }
+        return found;
+    }
+
+    /**
+     * M7 part D, a bomb run's target (design/campaign Level 17, What goes for the domes): the lowest standing
+     * ground ally whose hit box still reaches the bomber's row at height {@code y} (y up), on the screen or
+     * still to enter at the top edge; -1 for none (every one broken or past, or another convoy). Default
+     * pending the user's review: the hit box's top edge rather than the centre, so a bomber over a dome's
+     * hit box never turns away from it.
+     */
+    int nextDome(double x, double y) {
+        if (ground == null) {
+            return -1;
+        }
+        int found = -1;
+        double lowest = Double.POSITIVE_INFINITY;
+        for (int k = 0; k < allies.length; k++) {
+            Ally ally = allies[k];
+            if (!ally.alive() || ally.y() + spec(k).hitbox().height() / 2 <= y) {
+                continue;
+            }
+            if (ally.y() < lowest) {
+                lowest = ally.y();
+                found = k;
+            }
+        }
+        return found;
+    }
+
+    /**
+     * M7 part D, the {@code alternate} hook on ground allies: the nearest standing unit on the screen from
+     * (x, y) if it is closer than the ship (centre to centre); -1 for the ship.
+     */
+    int nearestCloser(double x, double y, double shipX, double shipY) {
+        return nearest(x, y, shipX, shipY);
+    }
+
+    /** M7 part D: whether standing ground ally {@code k}'s hit box lies under the point (x, y) (a bomber's centre). */
+    boolean over(int k, double x, double y) {
+        Ally ally = allies[k];
+        Hitbox box = spec(k).hitbox();
+        return ally.alive() && Math.abs(x - ally.x()) * 2 < box.width() && Math.abs(y - ally.y()) * 2 < box.height();
+    }
+
+    /** M7 part D: whether these are ground allies (Level 17's domes). */
+    boolean groundAllies() {
+        return ground != null;
+    }
+
+    /** M7 part D: the ground allies' spec; null for another convoy. */
+    LevelScript.GroundAllies groundSpec() {
+        return ground;
+    }
+
+    /** M7 part D: the ground allies never hit in this attempt (the debrief's {@code DOMES UNTOUCHED n / 5}). */
+    int untouched() {
+        int count = 0;
+        for (Ally ally : allies) {
+            if (ally.ticksSinceHit() == Integer.MAX_VALUE) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /** M7 part D: whether every ground ally's footprint has left the bottom edge (standing or a wreck). */
+    boolean allPassed() {
+        for (int k = 0; k < allies.length; k++) {
+            if (allies[k].y() + spec(k).size().height() / 2 > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** M5 part G: the defend's synchronisation is over: nothing aims at the ally or hurts it any more. */
@@ -720,9 +907,10 @@ final class Convoy {
         }
         double best = (shipX - x) * (shipX - x) + (shipY - y) * (shipY - y);
         int found = -1;
-        double half = spec(0).size().height() / 2;
         for (int k = 0; k < allies.length; k++) {
             Ally ally = allies[k];
+            // M7 part D: each unit's own footprint (Level 17's Eden is larger).
+            double half = spec(k).size().height() / 2;
             // M5 part G: not above the top edge either (a defended ally scrolls in from there).
             if (!ally.rolling() || ally.y() + half <= 0 || ally.y() - half >= PlayField.HEIGHT) {
                 continue;
@@ -741,10 +929,9 @@ final class Convoy {
         if (defended) {
             return -1;
         }
-        Hitbox hitbox = spec(0).hitbox();
         for (int k = 0; k < allies.length; k++) {
             Ally ally = allies[k];
-            if (ally.rolling() && hitbox.overlaps(ally.x(), ally.y(), box, x, y)) {
+            if (ally.rolling() && spec(k).hitbox().overlaps(ally.x(), ally.y(), box, x, y)) {
                 return k;
             }
         }
@@ -845,6 +1032,10 @@ final class Convoy {
         if (defend != null) {
             // M5 part G: only a defend primary's, so the other convoys hash as before.
             hash.add(lostSaveable).add(lastLost).add(lastHit).add(defended ? 1 : 0);
+        }
+        if (ground != null) {
+            // M7 part D: only ground allies', so the other convoys hash as before.
+            hash.add(lostSaveable).add(lastLost).add(lastHit);
         }
         if (air != null) {
             // M5 part D: only an air escort's, so Level 04's convoy hashes as before.

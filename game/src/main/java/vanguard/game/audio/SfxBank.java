@@ -96,6 +96,14 @@ public final class SfxBank implements Disposable, Mixer.Listener {
         sounds.get(sfx).setVolume(loopIds[sfx.ordinal()], volume * mixer.gain(sfx.bus()));
     }
 
+    /** M7 part C: pans a running loop ({@code pan} -1 left to 1 right) at its volume; nothing when it is not looping. */
+    public void loopPan(Sfx sfx, float pan) {
+        if (loopVolumes[sfx.ordinal()] < 0) {
+            return;
+        }
+        sounds.get(sfx).setPan(loopIds[sfx.ordinal()], pan, loopVolumes[sfx.ordinal()] * mixer.gain(sfx.bus()));
+    }
+
     /** A running loop's volume before the mixer's gain; negative when it is not looping. */
     float loopVolume(Sfx sfx) {
         return loopVolumes[sfx.ordinal()];

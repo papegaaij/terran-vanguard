@@ -39,7 +39,40 @@ public final class Enemy implements Hashed {
         /** M5 part F: thrown off the hull, slowing to a stop. */
         STUNNED,
         /** M5 part G: a lane walker on its lane in ground space (design/enemies/naval/skimmer). */
-        LANE
+        LANE,
+        /** M7 part B: a Burrower in its cycle (design/enemies/ground/burrower), placed by its {@link Burrowing}. */
+        BURROW,
+        /** M7 part B: in its swoop across the ship's lane (design/enemies/air/dust-kite), then straight on. */
+        SWOOP,
+        /**
+         * M7 part D: a hooked mine layer's bomb run on the ground allies (design/campaign Level 17, What goes
+         * for the domes): to its row, steering over its dome, then (its load spent, or no dome left) straight
+         * down.
+         */
+        BOMB
+    }
+
+    /**
+     * M7 part B: where a Burrower is in its cycle (design/enemies/ground/burrower, user decision Q1 = a),
+     * for the presentation and the tests; {@link #NONE} for any other unit. It is on {@link Layer#BURIED}
+     * in every phase but {@link #SURFACED} and the first half of {@link #DIVE}.
+     */
+    public enum BurrowPhase {
+        NONE,
+        /** Buried, scrolling in with the ground from above the top edge (a ripple). */
+        ENTER,
+        /** Buried, swimming to its spot, fixed on the screen (the ripple trail). */
+        TRAVEL,
+        /** Buried at its spot, waiting for its wave's stagger. */
+        WAIT,
+        /** The tell at its spot: the mound, its cracks and glow, the rumble. */
+        BULGE,
+        /** Up on {@code ground}, hittable; its rings fire. */
+        SURFACED,
+        /** Diving; buried from the dive's middle, a filling hole left. */
+        DIVE,
+        /** Buried, swimming off the bottom edge with the scroll: its escape. */
+        ESCAPE
     }
 
     /**
@@ -82,6 +115,24 @@ public final class Enemy implements Hashed {
         EXIT
     }
 
+    /**
+     * M7 part D: where a walker with a curl-roll is in it (design/enemies/ground/shellback), for the
+     * presentation and the tests; {@link #WALK} for any other unit. From {@link #CURLING} to the end of
+     * {@link #UNCURLING} it is armoured and its hit box is the ball.
+     */
+    public enum CurlPhase {
+        /** Walking its path (before its roll, or after it). */
+        WALK,
+        /** Tucking in where it stands. */
+        CURLING,
+        /** Rolling along its path at the roll's speed, crushing ground targets. */
+        ROLLING,
+        /** Uncurling where it stands. */
+        UNCURLING,
+        /** Its belly showing where it stands: the body takes the belly factor. */
+        BELLY
+    }
+
     /** A walker is at a waypoint this close to it and heads for the next. */
     private static final double ARRIVED = 6;
 
@@ -93,14 +144,8 @@ public final class Enemy implements Hashed {
     /** Its place in its chain: 0 the head. */
     private int link;
 
-    /** A sweep's state (design/enemies/air/mantis): steps to the next telegraph, -1 when none comes. */
-    private int sweepWait;
-    /** Steps into the current telegraph and sweep; -1 while none runs. */
-    private int sweepTicks;
-    /** The sweep's centre: radians clockwise from straight down. */
-    private double sweepCentre;
-    /** Whether the current sweep hit the ship. */
-    private boolean sweepHit;
+    /** A laser sweep (design/enemies/air/mantis; hashed only with one). */
+    private final SweepBeam sweepBeam = new SweepBeam();
 
     private int kind;
     private int serial;
@@ -204,40 +249,11 @@ public final class Enemy implements Hashed {
     /** {@link #spawnStep}: the spawner releases its units now. */
     static final int SPAWN_RELEASE = 2;
 
-    /**
-     * M5 part C, a periodic spawner (design/enemies/ground/hive-node): steps until its next release,
-     * -1 before its centre crossed the top edge.
-     */
-    private int spawnWait;
-    /** Steps since its iris started to open; -1 while it is shut. */
-    private int irisTicks;
-    /** Whether the iris now opening releases its units at its end. */
-    private boolean releasing;
+    /** M5 part C, a periodic spawner's cycle (design/enemies/ground/hive-node; hashed only with one). */
+    private final SpawnerIris spawnerIris = new SpawnerIris();
 
-    /** M5 part C, a pounce (design/enemies/ground/ravager): steps since take-off; -1 while it is not leaping. */
-    private int leapTicks;
-    /** Steps before it may leap again (from landing). */
-    private int pounceWait;
-    /** The leap's steps, and the steps of its air window [{@link #airFrom}, {@link #airTo}). */
-    private int leapTotal;
-
-    private int airFrom;
-    private int airTo;
-    /**
-     * Where the leap started, where it lands and the point its middle (the apex and the air window)
-     * passes over: the ship's position at take-off (user decision 2026-10-07, the overshoot).
-     */
-    private double leapFromX;
-
-    private double leapFromY;
-    private double leapToX;
-    private double leapToY;
-    private double leapOverX;
-    private double leapOverY;
-    /** What this leap touched already, as {@link #TOUCHED_SHIP} and {@link #TOUCHED_WINGMAN} bits: once each per leap. */
-    private int pounceTouched;
-    /** Whether it landed in this step (not hashed: set and read within the step). */
-    private boolean landed;
+    /** M5 part C, a pounce (design/enemies/ground/ravager; hashed only with one). */
+    private final Pouncing pouncing = new Pouncing();
 
     /** M5 part C: its wave's tag; "" for none (not hashed: it follows from the plan). */
     private String tag = "";
@@ -279,18 +295,16 @@ public final class Enemy implements Hashed {
     private double driftX;
 
     private double driftY;
-    /** M5 part E, a submerging unit (the Driftjelly; hashed only with a submerge): whether its current layer is {@link Layer#SUB}. */
-    private boolean submerged;
-    /** Its swap timer's random state, its own seed (a SplitMix64 state stepped by {@link #nextSwap()}). */
-    private long swapSeed;
-    /** Steps until its next swap starts. */
-    private int swapWait;
-    /** Steps into the swap running now; -1 while none runs. */
-    private int swapTicks = -1;
-    /** Whether the swap running now goes down (from the surface). */
-    private boolean swapDown;
+    /** M5 part E, a submerging unit's swap timer (the Driftjelly; hashed only with a submerge). */
+    private final Submerging submerging = new Submerging();
     /** M5 part E, a proximity ring (hashed only with one): steps until it may fire its ring again; 0 ready. */
     private int ringWait;
+    /** M7 part B: a Burrower's cycle (hashed only with a burrow); idle for any other unit. */
+    private final Burrowing burrowing = new Burrowing();
+    /** M7 part B: a Burrower's wave's stagger clock in the {@link EnemyForce}; -1 for none. */
+    private int burrowGroup = -1;
+    /** M7 part B, a swoop (design/enemies/air/dust-kite; hashed only with one). */
+    private final Swooping swooping = new Swooping();
     /** M5 part F: a chaser's state (design/enemies/air/lamprey); {@link LatchPhase#NONE} for other units. */
     private LatchPhase latchPhase = LatchPhase.NONE;
     /** M5 part F: steps left after its entry before its chase starts. */
@@ -323,6 +337,8 @@ public final class Enemy implements Hashed {
     private boolean divedAtObjective;
 
     private boolean diveHit;
+    /** M7 part D, a bomb run (design/campaign Level 17, What goes for the domes; hashed only once it flies one). */
+    private final BombRun bombRun = new BombRun();
 
     /**
      * M5 part H, a root burst's growth (design/campaign Level 14, Hazards; decision H2 = a): steps left
@@ -340,10 +356,61 @@ public final class Enemy implements Hashed {
      */
     private boolean launched;
 
+    /**
+     * M7 part A, the EMP Burst's stun (design/player/specials, EMP Burst): steps left; 0 when it is not
+     * stunned. Separate from a Lamprey's own {@link #stunTicks} after a shake-off.
+     */
+    private int empStun;
+    /** M7 part A: an air unit's drift per step while stunned: its last step's movement when the stun began. */
+    private double stunDx;
+
+    private double stunDy;
+    /**
+     * M7 part A: how far its stuns let it drift off the path, circle or carrier it is placed on; it
+     * resumes there shifted by this, so it does not jump when a stun ends (0 for most units).
+     */
+    private double offX;
+
+    private double offY;
+
     /** A pounce's contact with the ship. */
     static final int TOUCHED_SHIP = 1;
     /** A pounce's contact with the wingman. */
     static final int TOUCHED_WINGMAN = 2;
+
+    /**
+     * M7 part D: the fewest steps between two of a unit's {@link SimEvents.Type#RING_ABSORBED} (or armour
+     * {@link SimEvents.Type#SHOT_GLANCED}) events from {@link #damage}, so a beam's or a lance's step-by-step
+     * damage does not flood the events.
+     */
+    private static final int ABSORB_EVENT_GAP = 6;
+
+    /** M7 part D: a mortar vent swells this long before its lob (design/enemies/ground/shellback). */
+    static final double MORTAR_TELL_SECONDS = 0.5;
+
+    /** Where {@link #damage} reports what an aura ring absorbs and what a curled shell glances off. */
+    private final SimEvents events;
+
+    /** M7 part D, an aura ring (design/enemies/air/choir-herald; {@link Auras}); none for most units. */
+    private final AuraRing auraRing = new AuraRing();
+    /** Steps until {@link #damage} reports again (not hashed: it only spaces the events). */
+    private int absorbQuiet;
+    /** M7 part D: a unit part (design/enemies/ground/shellback, the vent); none for most units. */
+    private final PartHp partHp = new PartHp();
+    /** M7 part D: its curl-roll (design/enemies/ground/shellback; hashed only with a roll). */
+    private final CurlRoll curlRoll = new CurlRoll();
+    /** M7 part D: a Herald's steps into its hover, for its side-to-side drift. */
+    private int hoverTicks;
+
+    /** A unit whose events go nowhere (for tests that fly one on its own). */
+    Enemy() {
+        this(new SimEvents(16));
+    }
+
+    /** A pooled unit reporting into {@code events}. */
+    Enemy(SimEvents events) {
+        this.events = events;
+    }
 
     /** @param unitSerial unique among the units of an attempt, for the shots that lock onto it */
     void spawn(Spawn plan, int unitSerial) {
@@ -367,6 +434,7 @@ public final class Enemy implements Hashed {
         orbit = plan.orbit();
         exit = plan.exit();
         hp = spec.hp();
+        partHp.start(spec);
         ticksSinceHit = Integer.MAX_VALUE;
         burstLeft = 0;
         leadsTarget = plan.leadsTarget();
@@ -413,12 +481,7 @@ public final class Enemy implements Hashed {
                     ? SimStep.ticks(walker.spit().get().intervalSeconds() / 2)
                     : 0;
             if (spec.pounce().isPresent()) {
-                EnemySpec.Pounce pounce = spec.pounce().get();
-                leapTotal = Math.max(1, SimStep.ticks(pounce.leapSeconds()));
-                int air = Math.min(leapTotal, SimStep.ticks(pounce.airSeconds()));
-                // The middle of the leap: its steps run 1 .. leapTotal.
-                airFrom = 1 + (leapTotal - air) / 2;
-                airTo = airFrom + air;
+                pouncing.start(spec.pounce().get());
             }
         }
         if (plan.field().isPresent()) {
@@ -431,6 +494,15 @@ public final class Enemy implements Hashed {
             driftY = field.vy();
             facing = 0;
             submerge(field.submerged(), field.seed(), true);
+        }
+        if (spec.burrow().isPresent()) {
+            // M7 part B: a Burrower starts buried where it appears and scrolls in with the ground.
+            phase = Phase.BURROW;
+            driftX = 0;
+            driftY = 0;
+            facing = 0;
+            long seed = plan.field().isPresent() ? plan.field().get().seed() : 0x9E3779B97F4A7C15L * (unitSerial + 1L);
+            burrowing.start(spec.burrow().get(), x, y, seed, SurfaceZones.NONE);
         }
         if (spec.chase().isPresent() && phase == Phase.ENTER) {
             // M5 part F: a chaser flies in along its path; its chase starts its delay after its entry.
@@ -463,10 +535,7 @@ public final class Enemy implements Hashed {
         tag = "";
         chain = null;
         link = 0;
-        sweepWait = -1;
-        sweepTicks = -1;
-        sweepCentre = 0;
-        sweepHit = false;
+        sweepBeam.clear();
         broodTicks = -1;
         escort = false;
         carrier = null;
@@ -485,23 +554,9 @@ public final class Enemy implements Hashed {
         volleyUnit = 0;
         glideTicks = 0;
         glideHoldTicks = 0;
-        spawnWait = -1;
-        irisTicks = -1;
-        releasing = false;
-        leapTicks = -1;
-        pounceWait = 0;
-        leapTotal = 0;
-        airFrom = 0;
-        airTo = 0;
-        leapFromX = 0;
-        leapFromY = 0;
-        leapToX = 0;
-        leapToY = 0;
-        leapOverX = 0;
-        leapOverY = 0;
-        pounceTouched = 0;
+        spawnerIris.clear();
+        pouncing.clear();
         allyContacts = 0;
-        landed = false;
         ambush = null;
         ambushPhase = AmbushPhase.NONE;
         ambushTicks = 0;
@@ -512,11 +567,7 @@ public final class Enemy implements Hashed {
         member = 0;
         driftX = 0;
         driftY = 0;
-        submerged = false;
-        swapSeed = 0;
-        swapWait = 0;
-        swapTicks = -1;
-        swapDown = false;
+        submerging.clear();
         ringWait = 0;
         latchPhase = LatchPhase.NONE;
         chaseWait = 0;
@@ -529,10 +580,24 @@ public final class Enemy implements Hashed {
         attackTarget = -1;
         divedAtObjective = false;
         diveHit = false;
+        bombRun.clear();
         growTicks = 0;
         growTotal = 0;
         rootBurst = -1;
         launched = false;
+        empStun = 0;
+        stunDx = 0;
+        stunDy = 0;
+        offX = 0;
+        offY = 0;
+        burrowing.clear();
+        burrowGroup = -1;
+        swooping.clear();
+        auraRing.reset();
+        absorbQuiet = 0;
+        partHp.clear();
+        curlRoll.clear();
+        hoverTicks = 0;
     }
 
     /**
@@ -541,6 +606,11 @@ public final class Enemy implements Hashed {
      */
     void escort(Enemy circled) {
         carrier = circled;
+        if (circled != null && circled.spec.aura().isPresent()) {
+            // M7 part D: a Herald's escorts circle it inside its aura (the gap check's 0.8, pending round 40).
+            EnemySpec.Aura aura = circled.spec.aura().get();
+            escortRadius = aura.radius() * aura.escortRadiusShare();
+        }
         centreX = circled != null ? circled.x : x;
         centreY = circled != null ? circled.y : y;
         x = prevX = centreX + escortRadius * Trig.cos(angle);
@@ -581,6 +651,7 @@ public final class Enemy implements Hashed {
         orbit = Optional.empty();
         exit = Spawn.Exit.DOWN;
         hp = spec.hp();
+        partHp.start(spec);
         ticksSinceHit = Integer.MAX_VALUE;
         volleyTicks = 0;
         burstLeft = 0;
@@ -652,6 +723,7 @@ public final class Enemy implements Hashed {
         x = prevX = atX;
         y = prevY = PlayField.HEIGHT + box.height() / 2;
         hp = spec.hp();
+        partHp.start(spec);
         ticksSinceHit = Integer.MAX_VALUE;
         aim = 0;
         facing = 0;
@@ -739,50 +811,12 @@ public final class Enemy implements Hashed {
         if (spec.submerge().isEmpty()) {
             return;
         }
-        EnemySpec.Submerge submerge = spec.submerge().get();
-        submerged = under;
-        swapSeed = seed;
-        swapTicks = -1;
-        swapDown = false;
-        double wait = anyPoint
-                ? nextSwap() * submerge.everyMax()
-                : submerge.everyMin() + nextSwap() * (submerge.everyMax() - submerge.everyMin());
-        swapWait = Math.max(1, SimStep.ticks(wait));
-    }
-
-    /** The next draw of its swap timer, uniform in [0, 1): SplitMix64 on its own state. */
-    private double nextSwap() {
-        long z = (swapSeed += 0x9E3779B97F4A7C15L);
-        z = (z ^ (z >>> 30)) * 0xBF58476D1CE4E5B9L;
-        z = (z ^ (z >>> 27)) * 0x94D049BB133111EBL;
-        return ((z ^ (z >>> 31)) >>> 11) * 0x1.0p-53;
-    }
-
-    /**
-     * M5 part E: one real step of a submerging unit's timer: a running swap goes on (the layer flips
-     * at its middle) or ends, drawing the next wait; otherwise the wait counts down to the next swap.
-     */
-    private void swapStep() {
-        EnemySpec.Submerge submerge = spec.submerge().get();
-        int total = Math.max(2, SimStep.ticks(submerge.swapSeconds()));
-        if (swapTicks >= 0) {
-            if (++swapTicks == total / 2) {
-                submerged = swapDown;
-            }
-            if (swapTicks >= total) {
-                swapTicks = -1;
-                double wait = submerge.everyMin() + nextSwap() * (submerge.everyMax() - submerge.everyMin());
-                swapWait = Math.max(1, SimStep.ticks(wait));
-            }
-        } else if (--swapWait <= 0) {
-            swapTicks = 0;
-            swapDown = !submerged;
-        }
+        submerging.start(spec.submerge().get(), under, seed, anyPoint);
     }
 
     /** M5 part E: whether a submerging unit's current layer is {@link Layer#SUB}, under the surface. */
     public boolean submerged() {
-        return submerged;
+        return submerging.submerged();
     }
 
     /**
@@ -790,16 +824,96 @@ public final class Enemy implements Hashed {
      * and the current step, 0 to 1 (its layer flips at 0.5); -1 while none runs (for the looks).
      */
     public double swap(double alpha) {
-        if (swapTicks < 0 || spec.submerge().isEmpty()) {
+        if (spec.submerge().isEmpty()) {
             return -1;
         }
-        int total = Math.max(2, SimStep.ticks(spec.submerge().get().swapSeconds()));
-        return Math.min(1, Math.max(0, (swapTicks - 1 + alpha) / total));
+        return submerging.swap(spec.submerge().get(), alpha);
     }
 
     /** M5 part E: whether the swap running now goes down (it dives); false for one that surfaces or none. */
     public boolean diving() {
-        return swapTicks >= 0 && swapDown;
+        return submerging.diving();
+    }
+
+    /**
+     * M7 part B, a swoop (design/enemies/air/dust-kite): once it flies above the ship's centre by its
+     * trigger distance or less (on the play field, once per unit) it banks into its swoop.
+     */
+    private void swoopDue(double shipX, double shipY) {
+        if (swooping.due(spec.swoop().orElseThrow(), x, y, box, shipX, shipY)) {
+            phase = Phase.SWOOP;
+        }
+    }
+
+    /** M7 part B: its place in its wave (from 0): a swoop bends left for an even place, right for an odd one. */
+    void wavePlace(int place) {
+        swooping.wavePlace(place);
+    }
+
+    /** M7 part B: whether it is in its swoop (design/enemies/air/dust-kite). */
+    public boolean swooping() {
+        return phase == Phase.SWOOP;
+    }
+
+    /** M7 part B: whether its swoop started in this step (the {@link SimEvents.Type#SWOOP} event). */
+    boolean swoopedNow() {
+        return swooping.swoopedNow();
+    }
+
+    /** M7 part B: the side its swoop bends to, -1 left and 1 right (from its place in its wave). */
+    public int swoopSide() {
+        return swooping.side();
+    }
+
+    /** M7 part B: whether it is a Burrower (its stat block has a burrow). */
+    public boolean burrowing() {
+        return spec.burrow().isPresent();
+    }
+
+    /** M7 part B: where a Burrower is in its cycle; {@link BurrowPhase#NONE} for any other unit. */
+    public BurrowPhase burrowPhase() {
+        return burrowing.phase();
+    }
+
+    /**
+     * M7 part B: how far a Burrower is through its current swim, bulge, surfaced window or dive, 0 to 1,
+     * between the previous and the current step; 0 in its other phases (for the looks).
+     */
+    public double burrowProgress(double alpha) {
+        return burrowing.progress(alpha);
+    }
+
+    /** M7 part B: a Burrower's surfacings so far (skipped ones included). */
+    public int burrowSurfacings() {
+        return burrowing.surfacings();
+    }
+
+    /** M7 part B: the spot a Burrower swims to, surfaces at or surfaced at, px. */
+    public double burrowSpotX() {
+        return burrowing.spotX();
+    }
+
+    /** M7 part B: the spot's height, px from the bottom edge. */
+    public double burrowSpotY() {
+        return burrowing.spotY();
+    }
+
+    /** M7 part B: the level's no-surface zones its spots keep out of (set as it enters). */
+    void surfaceZones(SurfaceZones zones) {
+        burrowing.zones(zones);
+    }
+
+    /** M7 part B: the stagger clock of its wave in the {@link EnemyForce}; -1 for none. */
+    void burrowGroup(int group) {
+        burrowGroup = spec.burrow().isPresent() ? group : -1;
+    }
+
+    int burrowGroup() {
+        return burrowGroup;
+    }
+
+    Burrowing burrow() {
+        return burrowing;
     }
 
     /** M5 part E: whether its proximity ring may fire now (its cooldown from the last ring is over). */
@@ -882,13 +996,22 @@ public final class Enemy implements Hashed {
         if (ticksSinceHit < Integer.MAX_VALUE) {
             ticksSinceHit++;
         }
+        if (absorbQuiet > 0) {
+            absorbQuiet--;
+        }
+        if (empStun > 0) {
+            // M7 part A: its own clock stops (its timers included) while the EMP Burst's stun lasts.
+            empStun--;
+            return phase == Phase.CHAIN || phase == Phase.FLOCK || stunnedStep(shipX, shipY, groundScroll);
+        }
         // M5 part E: the swap timer and the ring's cooldown run on the real steps (a halted arena too).
         if (spec.submerge().isPresent()) {
-            swapStep();
+            submerging.step(spec.submerge().get());
         }
         if (ringWait > 0) {
             ringWait--;
         }
+        swooping.scratch();
         if (phase == Phase.CHAIN || phase == Phase.FLOCK) {
             // Its chain or its flock placed it this step already.
             return true;
@@ -896,6 +1019,31 @@ public final class Enemy implements Hashed {
         prevX = x;
         prevY = y;
         switch (phase) {
+            case BURROW -> {
+                // M7 part B: fixed on the screen but in its entry and escape (Q1 = a).
+                boolean on = burrowing.step(shipX, shipY, groundScroll, box.height() / 2);
+                x = burrowing.x();
+                y = burrowing.y();
+                turn();
+                return on;
+            }
+            case SWOOP -> {
+                swooping.step(spec.swoop().orElseThrow());
+                x = swooping.x();
+                y = swooping.y();
+                turn();
+                return PlayField.overlaps(x, y, box);
+            }
+            case BOMB -> {
+                // M7 part D: toward its row and its dome's slot at its speed, or straight down.
+                bombRun.step(x, y, speed * SimStep.SECONDS);
+                x = bombRun.x();
+                y = bombRun.y();
+                turn();
+                boolean on = PlayField.overlaps(x, y, box);
+                entered |= on;
+                return on || (!entered && y + box.height() / 2 > 0);
+            }
             case SPIRAL -> {
                 spiral();
                 return true;
@@ -953,16 +1101,20 @@ public final class Enemy implements Hashed {
             }
             case WALK -> {
                 scrolled += groundScroll;
-                landed = false;
-                if (leapTicks >= 0) {
+                pouncing.scratch();
+                if (pouncing.leaping()) {
                     // In a pounce it flies over the ship's position at take-off and lands beyond it.
-                    leap();
+                    pouncing.step(spec.pounce().orElseThrow());
+                    x = pouncing.x();
+                    y = pouncing.y();
                 } else {
                     y -= groundScroll;
-                    walk();
-                    if (pounceWait > 0) {
-                        pounceWait--;
+                    if (curlRoll.phase() == CurlPhase.WALK) {
+                        walk();
+                    } else {
+                        curlRoll.step(this, spec.roll().orElseThrow(), events);
                     }
+                    pouncing.waitStep();
                 }
                 boolean on = PlayField.overlaps(x, y, box);
                 entered |= on;
@@ -980,6 +1132,11 @@ public final class Enemy implements Hashed {
                 angle += escortRate * SimStep.SECONDS;
                 x = centreX + escortRadius * Trig.cos(angle);
                 y = centreY + escortRadius * Trig.sin(angle);
+                if (offX != 0 || offY != 0) {
+                    // M7 part A: shifted by its drift while stunned.
+                    x += offX;
+                    y += offY;
+                }
             }
             case ENTER -> {
                 distance += speed * SimStep.SECONDS;
@@ -999,10 +1156,15 @@ public final class Enemy implements Hashed {
                 if (spec.brood().isPresent() && (broodTicks >= 0 || y <= PlayField.HEIGHT)) {
                     broodTicks++;
                 }
+                if (spec.swoop().isPresent()) {
+                    swoopDue(shipX, shipY);
+                }
             }
             case HOLD -> {
                 if (orbit.isPresent()) {
                     circle(orbit.get());
+                } else if (spec.aura().isPresent() && spec.sine().isPresent()) {
+                    hoverDrift(spec.sine().get());
                 }
                 if (spec.sweep().isPresent()) {
                     sweep(shipX, shipY);
@@ -1037,11 +1199,113 @@ public final class Enemy implements Hashed {
                         diveShot = true;
                     }
                 }
+                if (spec.swoop().isPresent()) {
+                    swoopDue(shipX, shipY);
+                }
                 return PlayField.overlaps(x, y, box);
             }
         }
         turn();
         return true;
+    }
+
+    /**
+     * M7 part A, the EMP Burst (design/player/specials, EMP Burst): it is stunned for {@code ticks}
+     * steps, restarting a running stun (stuns do not add up). Its own clock stops: it does not steer,
+     * turn, fire or change state, and its timers resume where they stopped. An air unit drifts on along
+     * its last step's movement; a unit on the ground stays where it is on the ground; a latched Lamprey
+     * stays latched (its drain pauses: {@link #latched()} stays true, {@link #draining()} not). It stays
+     * hittable and keeps its contact damage. A chain member is stunned with its chain ({@link Chain#empStun}).
+     */
+    void empStun(int ticks) {
+        if (ticks <= 0) {
+            return;
+        }
+        if (empStun == 0) {
+            stunDx = x - prevX;
+            stunDy = y - prevY;
+        }
+        empStun = ticks;
+    }
+
+    /** M7 part A: whether the EMP Burst's stun holds it now (the crackle overlay, the dimmed glow). */
+    public boolean empStunned() {
+        return empStun > 0;
+    }
+
+    /** M7 part A: steps left of the EMP Burst's stun; 0 when it is not stunned. */
+    public int empStunTicks() {
+        return empStun;
+    }
+
+    /** M7 part A: whether it is latched and draining the shield now (not while stunned). */
+    boolean draining() {
+        return phase == Phase.LATCHED && empStun == 0;
+    }
+
+    /**
+     * M7 part A: one stunned step: an air unit drifts on (its anchor shifted along, see {@link #offX}),
+     * a ground unit or a walker scrolls with the ground (a leaping one hangs where it is), a lane walker
+     * stays on its lane's spot, a latched one stays on its spot on the hull. Returns whether it is still
+     * in play, as its own movement would.
+     */
+    private boolean stunnedStep(double shipX, double shipY, double groundScroll) {
+        prevX = x;
+        prevY = y;
+        switch (phase) {
+            case LATCHED -> {
+                EnemySpec.Spot at = spec.latch().orElseThrow().spots().get(spot);
+                x = shipX + at.dx();
+                y = shipY + at.dy();
+                return true;
+            }
+            case GROUND -> {
+                y -= groundScroll;
+                return y + box.height() / 2 > 0;
+            }
+            case WALK -> {
+                scrolled += groundScroll;
+                if (!pouncing.leaping()) {
+                    y -= groundScroll;
+                }
+                boolean on = PlayField.overlaps(x, y, box);
+                entered |= on;
+                return on || (!entered && y + box.height() / 2 > 0);
+            }
+            case LANE -> {
+                scrolled += groundScroll;
+                placeLane();
+                boolean on = PlayField.overlaps(x, y, box);
+                entered |= on;
+                return on || (!entered && distance < path.length());
+            }
+            case BURROW -> {
+                // M7 part B: up (only then can the EMP reach it) it is fixed on the screen; its timers wait.
+                return true;
+            }
+            default -> {
+                x += stunDx;
+                y += stunDy;
+                switch (phase) {
+                    case ENTER, HOLD, ESCORT, AMBUSH -> {
+                        offX += stunDx;
+                        offY += stunDy;
+                    }
+                    case SPIRAL -> {
+                        releaseX += stunDx;
+                        releaseY += stunDy;
+                    }
+                    case SWOOP -> {
+                        // M7 part B: its curve drifts with it.
+                        swooping.drift(stunDx, stunDy);
+                    }
+                    default -> {
+                        // It flies on its velocity, which carries on from where it drifted to.
+                    }
+                }
+                return phase != Phase.LEAVE || PlayField.overlaps(x, y, box);
+            }
+        }
     }
 
     /**
@@ -1109,6 +1373,8 @@ public final class Enemy implements Hashed {
         phase = Phase.STUNNED;
         latchPhase = LatchPhase.STUNNED;
         stunTicks = 0;
+        // M7 part A: thrown off, it takes the shake-off's own stun instead of the EMP Burst's.
+        empStun = 0;
     }
 
     /** One step of its stun; at its end it flees at its speed to the nearer side edge. */
@@ -1327,13 +1593,18 @@ public final class Enemy implements Hashed {
      * Past the last point it walks straight on.
      */
     private void walk() {
+        walk(spec.walker().orElseThrow().speed());
+    }
+
+    /** One step over the ground at {@code walkSpeed} px/s (M7 part D: a roll goes at the roll's speed). */
+    void walk(double walkSpeed) {
         EnemySpec.Walker walker = spec.walker().orElseThrow();
         if (waypoint < walkPath.points()) {
             double dx = walkPath.x(waypoint) - x;
             double dy = walkPath.y(waypoint) - scrolled - y;
             double distanceLeft = Math.sqrt(dx * dx + dy * dy);
             double delta = Math.IEEEremainder(heading(dx, dy) - facing, 2 * StrictMath.PI);
-            double turning = 2 * walker.speed() / walker.turnRate();
+            double turning = 2 * walkSpeed / walker.turnRate();
             if (distanceLeft <= ARRIVED || (distanceLeft < turning && Math.abs(delta) > StrictMath.PI / 2)) {
                 waypoint++;
             } else {
@@ -1341,31 +1612,10 @@ public final class Enemy implements Hashed {
                 facing = Math.IEEEremainder(facing + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
             }
         }
-        double step = walker.speed() * SimStep.SECONDS;
+        double step = walkSpeed * SimStep.SECONDS;
         x -= Trig.sin(facing) * step;
         y -= Trig.cos(facing) * step;
         walked += step;
-    }
-
-    /**
-     * One step of a pounce's leap: its first half to the point it passes over (the ship's position at
-     * take-off), its second half on to its landing point; at its end it lands and waits its interval.
-     */
-    private void leap() {
-        leapTicks++;
-        double p = (double) leapTicks / leapTotal;
-        if (2 * leapTicks <= leapTotal) {
-            x = leapFromX + (leapOverX - leapFromX) * 2 * p;
-            y = leapFromY + (leapOverY - leapFromY) * 2 * p;
-        } else {
-            x = leapOverX + (leapToX - leapOverX) * (2 * p - 1);
-            y = leapOverY + (leapToY - leapOverY) * (2 * p - 1);
-        }
-        if (leapTicks >= leapTotal) {
-            leapTicks = -1;
-            pounceWait = SimStep.ticks(spec.pounce().orElseThrow().intervalSeconds());
-            landed = true;
-        }
     }
 
     /**
@@ -1378,11 +1628,7 @@ public final class Enemy implements Hashed {
      * is then shorter), so a ship that holds still is touched and one that moves away is not.
      */
     boolean pounce(double shipX, double shipY) {
-        if (walkPath == null
-                || spec.pounce().isEmpty()
-                || leapTicks >= 0
-                || pounceWait > 0
-                || !PlayField.overlaps(x, y, box)) {
+        if (walkPath == null || spec.pounce().isEmpty() || !pouncing.ready() || !PlayField.overlaps(x, y, box)) {
             return false;
         }
         double dx = shipX - x;
@@ -1391,16 +1637,7 @@ public final class Enemy implements Hashed {
         if (dx * dx + dy * dy > range * range) {
             return false;
         }
-        leapTicks = 0;
-        leapFromX = x;
-        leapFromY = y;
-        leapOverX = shipX;
-        leapOverY = shipY;
-        double halfWidth = box.width() / 2;
-        double halfHeight = box.height() / 2;
-        leapToX = Math.clamp(2 * shipX - x, halfWidth, PlayField.WIDTH - halfWidth);
-        leapToY = Math.clamp(2 * shipY - y, halfHeight, PlayField.HEIGHT - halfHeight);
-        pounceTouched = 0;
+        pouncing.takeOff(x, y, shipX, shipY, box.width() / 2, box.height() / 2);
         if (dx != 0 || dy != 0) {
             facing = heading(dx, dy);
         }
@@ -1409,12 +1646,12 @@ public final class Enemy implements Hashed {
 
     /** Whether it is in a pounce's leap. */
     public boolean leaping() {
-        return leapTicks >= 0;
+        return pouncing.leaping();
     }
 
     /** Whether its pounce landed in this step. */
     boolean landedNow() {
-        return landed;
+        return pouncing.landedNow();
     }
 
     /**
@@ -1422,10 +1659,7 @@ public final class Enemy implements Hashed {
      * step ({@code alpha} in [0, 1]); 0 while it is not leaping.
      */
     public double leapProgress(double alpha) {
-        if (leapTicks < 0) {
-            return 0;
-        }
-        return Math.clamp((leapTicks - 1 + alpha) / leapTotal, 0.0, 1.0);
+        return pouncing.progress(alpha);
     }
 
     /**
@@ -1433,7 +1667,7 @@ public final class Enemy implements Hashed {
      * pounce's scale at the apex, along a parabola; 1 while it is not leaping.
      */
     public double leapScale(double alpha) {
-        if (leapTicks < 0) {
+        if (!pouncing.leaping()) {
             return 1;
         }
         double p = leapProgress(alpha);
@@ -1446,7 +1680,11 @@ public final class Enemy implements Hashed {
      * Every hit, contact and targeting rule reads this.
      */
     public Layer layer() {
-        if (leapTicks >= airFrom && leapTicks < airTo) {
+        if (spec.burrow().isPresent()) {
+            // M7 part B: buried but while it is up (M7 = a).
+            return burrowing.up() ? spec.layer() : Layer.BURIED;
+        }
+        if (pouncing.inAir()) {
             return Layer.AIR;
         }
         // M5 part D: a cloaked unit is on its decloaked layer from its flash's start on.
@@ -1454,7 +1692,7 @@ public final class Enemy implements Hashed {
             return spec.cloak().get().layer();
         }
         // M5 part E: a submerging unit is under the surface from its dive's middle to its rise's.
-        if (submerged) {
+        if (submerging.submerged()) {
             return Layer.SUB;
         }
         return spec.layer();
@@ -1465,11 +1703,7 @@ public final class Enemy implements Hashed {
      * whether it is the leap's first touch of it, which deals its contact; once per leap.
      */
     boolean pounceTouch(int what) {
-        if ((pounceTouched & what) != 0) {
-            return false;
-        }
-        pounceTouched |= what;
-        return true;
+        return pouncing.touch(what);
     }
 
     /**
@@ -1481,38 +1715,7 @@ public final class Enemy implements Hashed {
      * to during the telegraph (the iris shuts again without it).
      */
     int spawnStep(double shipX, double shipY) {
-        EnemySpec.Spawner spawner = spec.spawner().orElseThrow();
-        int telegraph = SimStep.ticks(spawner.telegraphSeconds());
-        if (irisTicks >= 0 && ++irisTicks >= 2 * Math.max(1, telegraph)) {
-            irisTicks = -1;
-        }
-        if (spawnWait < 0) {
-            if (y > PlayField.HEIGHT) {
-                return SPAWN_NONE;
-            }
-            spawnWait = SimStep.ticks(spawner.everySeconds());
-            return SPAWN_NONE;
-        }
-        spawnWait--;
-        double dx = shipX - x;
-        double dy = shipY - y;
-        boolean clear = dx * dx + dy * dy > spawner.shutWithin() * spawner.shutWithin() && y >= 0;
-        int result = SPAWN_NONE;
-        if (spawnWait == telegraph) {
-            releasing = clear;
-            if (clear) {
-                irisTicks = 0;
-                result = SPAWN_TELEGRAPH;
-            }
-        }
-        if (spawnWait == 0) {
-            spawnWait = SimStep.ticks(spawner.everySeconds());
-            if (releasing && clear) {
-                result = SPAWN_RELEASE;
-            }
-            releasing = false;
-        }
-        return result;
+        return spawnerIris.step(spec.spawner().orElseThrow(), x, y, shipX, shipY);
     }
 
     /**
@@ -1520,18 +1723,12 @@ public final class Enemy implements Hashed {
      * the telegraph to 1 at the release and shuts again over as long; 0 for other units.
      */
     public double iris() {
-        if (irisTicks < 0) {
-            return 0;
-        }
-        int telegraph = Math.max(1, SimStep.ticks(spec.spawner().orElseThrow().telegraphSeconds()));
-        return irisTicks <= telegraph
-                ? (double) irisTicks / telegraph
-                : Math.max(0, (double) (2 * telegraph - irisTicks) / telegraph);
+        return spec.spawner().isEmpty() ? 0 : spawnerIris.iris(spec.spawner().get());
     }
 
     /** Whether its iris is opening for a release now: the spawn's telegraph. */
     public boolean irisOpening() {
-        return releasing && irisTicks >= 0;
+        return spawnerIris.opening();
     }
 
     /**
@@ -1539,6 +1736,10 @@ public final class Enemy implements Hashed {
      * arrives from within the armour's arc of the walker's facing.
      */
     boolean glances(double shotVx, double shotVy) {
+        if (armoured()) {
+            // M7 part D: a curled shell sparks off every shot.
+            return true;
+        }
         if (walkPath == null || !(spec.walker().orElseThrow().frontArc() > 0)) {
             return false;
         }
@@ -1597,7 +1798,7 @@ public final class Enemy implements Hashed {
      * its turn.
      */
     boolean staggeredVolley(int[] clocks) {
-        if (spec.gun().isEmpty() || !PlayField.overlaps(x, y, box)) {
+        if (spec.gun().isEmpty() || gunQuiet() || !PlayField.overlaps(x, y, box)) {
             return false;
         }
         if (clocks[volleyGroup] == 0) {
@@ -1657,6 +1858,50 @@ public final class Enemy implements Hashed {
 
     void attackTarget(int target) {
         attackTarget = target;
+    }
+
+    /**
+     * M7 part D: starts its bomb run (design/campaign Level 17, What goes for the domes; defaults pending the
+     * user's review): it flies to its row at height {@code rowY} (y up) and steers at its speed to its
+     * dome's x plus {@code offset} (its slot in its wave), instead of its path.
+     */
+    void bombRun(double rowY, double offset) {
+        phase = Phase.BOMB;
+        bombRun.start(rowY, offset, x);
+        entered = false;
+    }
+
+    /** M7 part D: the ground ally its bomb run steers to this step ({@code dome}, -1 for none), standing at {@code domeX}. */
+    void bombTarget(int dome, double domeX) {
+        bombRun.target(dome, domeX, box.width() / 2);
+    }
+
+    /** M7 part D: it dropped its load over its dome: it flies on straight down. */
+    void dropBomb() {
+        bombRun.drop();
+    }
+
+    /** M7 part D: whether it flies a bomb run with its load still aboard (it steers to a dome or looks for one). */
+    boolean bombLoaded() {
+        return phase == Phase.BOMB && !bombRun.spent();
+    }
+
+    /**
+     * M7 part D: the ground ally its bomb run steers to now (design/campaign Level 17, What goes for the
+     * domes); -1 when it flies none, its load is spent or no dome is left.
+     */
+    public int bombRun() {
+        return bombRun.dome();
+    }
+
+    /** M7 part D: whether its bomb run's load is spent (dropped on a dome): it flies on straight down. */
+    public boolean bombSpent() {
+        return bombRun.spent();
+    }
+
+    /** M7 part D: whether it flies a bomb run (Level 17's hooked Spore Bombers), its load aboard or spent. */
+    public boolean bombing() {
+        return bombRun.bombing();
     }
 
     /** M5 part G: whether its dive went at the objective (the {@code always} hook). */
@@ -1720,6 +1965,11 @@ public final class Enemy implements Hashed {
             EnemySpec.Sine sine = spec.sine().get();
             x += sine.amplitude() * Trig.sin(2 * StrictMath.PI * distance / (speed * sine.periodSeconds()));
         }
+        if (offX != 0 || offY != 0) {
+            // M7 part A: shifted by its drift while stunned.
+            x += offX;
+            y += offY;
+        }
     }
 
     /**
@@ -1753,7 +2003,7 @@ public final class Enemy implements Hashed {
         // + 1: the gun already counts down in the step the unit stops, which is step 0 of the delay.
         volleyTicks = spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
         if (spec.sweep().isPresent()) {
-            sweepWait = SimStep.ticks(spec.sweep().get().firstDelaySeconds());
+            sweepBeam.arm(spec.sweep().get());
         }
     }
 
@@ -1761,6 +2011,11 @@ public final class Enemy implements Hashed {
         angle += circle.radiansPerSecond() * SimStep.SECONDS;
         x = circle.centreX() + circle.radius() * Trig.cos(angle);
         y = circle.centreY() + circle.radius() * Trig.sin(angle);
+        if (offX != 0 || offY != 0) {
+            // M7 part A: shifted by its drift while stunned.
+            x += offX;
+            y += offY;
+        }
     }
 
     private void leave(double shipX, double shipY) {
@@ -1798,8 +2053,17 @@ public final class Enemy implements Hashed {
             return true;
         }
         if (phase == Phase.WALK) {
-            // A walker's fan, along its facing, while it is on the screen.
-            if (spec.gun().isEmpty() || !PlayField.overlaps(x, y, box) || --volleyTicks > 0) {
+            // A walker's fan, along its facing, while it is on the screen (M7 part D: not while it is
+            // curled, its timer waiting, nor once its vent is gone).
+            if (spec.gun().isEmpty() || gunQuiet() || !PlayField.overlaps(x, y, box) || --volleyTicks > 0) {
+                if (volleyTicks == SimStep.ticks(MORTAR_TELL_SECONDS)
+                        && spec.gun().isPresent()
+                        && spec.gun().get().mortar().isPresent()
+                        && !gunQuiet()
+                        && PlayField.overlaps(x, y, box)) {
+                    // M7 part D: the mortar vent swells before its lob (design/enemies/ground/shellback).
+                    events.add(SimEvents.Type.MORTAR_TELL, x, y, kind);
+                }
                 return false;
             }
             volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
@@ -1883,14 +2147,32 @@ public final class Enemy implements Hashed {
             // M5 part H: a root burst's growth takes no damage while it grows.
             return false;
         }
+        if (armoured()) {
+            // M7 part D: a curled shell glances off everything, blasts and the Lance included.
+            glancedOff();
+            return false;
+        }
+        // M7 part D: an aura ring spends itself first; only the overflow reaches the HP.
+        double left = absorb(amount);
+        if (left <= 0) {
+            ticksSinceHit = 0;
+            return false;
+        }
         // A segment chain's original head is a weak point (its spec carries the chain); a set
         // piece's parts multiply theirs in SetPiece.damagePart.
-        hp -= spec.chain().isPresent() ? amount * spec.chain().get().headMultiplier() : amount;
+        hp -= spec.chain().isPresent() ? left * spec.chain().get().headMultiplier() : left;
         if (phase == Phase.LATCHED) {
             // M5 part F: a latched Lamprey takes its latch's damage factor on top (x2).
-            hp -= amount * (spec.latch().orElseThrow().damageFactor() - 1);
+            hp -= left * (spec.latch().orElseThrow().damageFactor() - 1);
+        }
+        if (curlRoll.phase() == CurlPhase.BELLY) {
+            // M7 part D: its belly shows after the uncurl: the body takes the belly factor.
+            hp -= left * (spec.roll().orElseThrow().bellyFactor() - 1);
         }
         ticksSinceHit = 0;
+        if (hp > 0 && curlDue()) {
+            curl();
+        }
         return hp <= 0;
     }
 
@@ -1941,7 +2223,7 @@ public final class Enemy implements Hashed {
             hash.add(chain.serial()).add(link);
         }
         if (spec.sweep().isPresent()) {
-            hash.add(sweepWait).add(sweepTicks).add(sweepCentre).add(sweepHit ? 1 : 0);
+            sweepBeam.addTo(hash);
         }
         if (walkPath != null) {
             hash.add(facing)
@@ -1956,18 +2238,10 @@ public final class Enemy implements Hashed {
         }
         // M5 part C's spawners and pounces add their state; earlier units hash as before.
         if (spec.spawner().isPresent()) {
-            hash.add(spawnWait).add(irisTicks).add(releasing ? 1 : 0);
+            spawnerIris.addTo(hash);
         }
         if (spec.pounce().isPresent()) {
-            hash.add(leapTicks)
-                    .add(pounceWait)
-                    .add(leapFromX)
-                    .add(leapFromY)
-                    .add(leapToX)
-                    .add(leapToY)
-                    .add(leapOverX)
-                    .add(leapOverY)
-                    .add(pounceTouched);
+            pouncing.addTo(hash);
         }
         // M5 part D's ambush units and flock members add theirs; earlier units hash as before.
         if (ambush != null) {
@@ -1989,11 +2263,7 @@ public final class Enemy implements Hashed {
             hash.add(driftX).add(driftY);
         }
         if (spec.submerge().isPresent()) {
-            hash.add(submerged ? 1 : 0)
-                    .add(swapSeed)
-                    .add(swapWait)
-                    .add(swapTicks)
-                    .add(swapDown ? 1 : 0);
+            submerging.addTo(hash);
         }
         if (spec.ring().isPresent()) {
             hash.add(ringWait);
@@ -2008,6 +2278,8 @@ public final class Enemy implements Hashed {
         if (divedAtObjective) {
             hash.add(diveHit ? 1 : 0);
         }
+        // M7 part D's bomb runs add theirs; earlier units hash as before.
+        bombRun.addTo(hash, entered);
         // M5 part H's root-burst growths and boss-launched ambushes add theirs; earlier units hash as before.
         if (rootBurst >= 0) {
             hash.add(rootBurst).add(growTicks).add(growTotal);
@@ -2024,6 +2296,29 @@ public final class Enemy implements Hashed {
                     .add(spot)
                     .add(stunTicks)
                     .add(entered ? 1 : 0);
+        }
+        if (empStun != 0 || offX != 0 || offY != 0) {
+            // M7 part A: only while the EMP Burst stuns it or after it drifted, so other runs hash as before.
+            hash.add(empStun).add(stunDx).add(stunDy).add(offX).add(offY);
+        }
+        // M7 part B's burrowers and swoopers add theirs; earlier units hash as before.
+        if (spec.burrow().isPresent()) {
+            burrowing.addTo(hash);
+            hash.add(burrowGroup).add(facing);
+        }
+        if (spec.swoop().isPresent()) {
+            swooping.addTo(hash);
+        }
+        // M7 part D's rings, unit parts, curl-rolls and Herald hovers add theirs; earlier units hash as before.
+        auraRing.addTo(hash);
+        if (spec.part().isPresent()) {
+            partHp.addTo(hash);
+        }
+        if (spec.roll().isPresent()) {
+            curlRoll.addTo(hash);
+        }
+        if (spec.aura().isPresent()) {
+            hash.add(hoverTicks);
         }
     }
 
@@ -2131,63 +2426,54 @@ public final class Enemy implements Hashed {
      */
     private void sweep(double shipX, double shipY) {
         EnemySpec.Sweep sweep = spec.sweep().orElseThrow();
-        int telegraph = SimStep.ticks(sweep.telegraphSeconds());
-        int total = telegraph + SimStep.ticks(sweep.sweepSeconds());
-        if (sweepTicks >= 0 && ++sweepTicks >= total) {
-            sweepTicks = -1;
-        }
-        if (sweepWait < 0 || --sweepWait > 0) {
-            return;
-        }
-        if (holdTicks < total) {
-            sweepWait = -1;
+        if (!sweepBeam.due(sweep, holdTicks)) {
             return;
         }
         boolean left = x < PlayField.WIDTH / 2.0;
         double inward = left ? -StrictMath.PI / 2 : StrictMath.PI / 2;
         double bearing = heading(shipX - x - beamOffsetX(), shipY - y - beamOffsetY());
-        sweepCentre = left ? Math.clamp(bearing, inward, 0) : Math.clamp(bearing, 0, inward);
-        sweepTicks = 0;
-        sweepHit = false;
-        sweepWait = SimStep.ticks(sweep.intervalSeconds());
+        sweepBeam.start(sweep, left ? Math.clamp(bearing, inward, 0) : Math.clamp(bearing, 0, inward));
     }
 
     /** Whether its sweep is in its telegraph now. */
     public boolean telegraphing() {
-        return sweepTicks >= 0
-                && sweepTicks < SimStep.ticks(spec.sweep().orElseThrow().telegraphSeconds());
+        return sweepBeam.running()
+                && empStun == 0
+                && sweepBeam.telegraphing(spec.sweep().orElseThrow());
     }
 
-    /** Whether its beam is sweeping now. */
+    /** Whether its beam is sweeping now (M7 part A: not while the EMP Burst stuns it; it resumes after). */
     public boolean sweeping() {
-        return sweepTicks >= 0 && !telegraphing();
+        return sweepBeam.running()
+                && empStun == 0
+                && sweepBeam.sweeping(spec.sweep().orElseThrow());
     }
 
     /** Whether the sweep just entered its beam this step (for its sound). */
     boolean sweepStarted() {
-        return sweepTicks == SimStep.ticks(spec.sweep().orElseThrow().telegraphSeconds());
+        return sweepBeam.sweepStarted(spec.sweep().orElseThrow());
     }
 
     /** Whether the sweep's telegraph just started this step (for its sound). */
     boolean telegraphStarted() {
-        return sweepTicks == 0;
+        return sweepBeam.telegraphStarted();
     }
 
     /** The sweep's centre, radians clockwise from straight down. */
     public double sweepCentre() {
-        return sweepCentre;
+        return sweepBeam.centre();
     }
 
     /** The sweep's first edge: from straight inward's side, radians clockwise from straight down. */
     public double sweepFrom() {
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
-        return x < PlayField.WIDTH / 2.0 ? sweepCentre - half : sweepCentre + half;
+        return x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() - half : sweepBeam.centre() + half;
     }
 
     /** The sweep's last edge, toward straight down. */
     public double sweepTo() {
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
-        return x < PlayField.WIDTH / 2.0 ? sweepCentre + half : sweepCentre - half;
+        return x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() + half : sweepBeam.centre() - half;
     }
 
     /**
@@ -2195,9 +2481,7 @@ public final class Enemy implements Hashed {
      * {@link #sweepFrom()} to {@link #sweepTo()} over the sweep; {@code alpha} interpolates between steps.
      */
     public double beam(double alpha) {
-        EnemySpec.Sweep sweep = spec.sweep().orElseThrow();
-        int telegraph = SimStep.ticks(sweep.telegraphSeconds());
-        double into = Math.max(0, sweepTicks - telegraph + alpha) / SimStep.ticks(sweep.sweepSeconds());
+        double into = sweepBeam.into(spec.sweep().orElseThrow(), alpha);
         return sweepFrom() + (sweepTo() - sweepFrom()) * Math.min(1, into);
     }
 
@@ -2218,16 +2502,17 @@ public final class Enemy implements Hashed {
 
     /** Whether the current sweep hit the ship already. */
     boolean sweepHit() {
-        return sweepHit;
+        return sweepBeam.hit();
     }
 
     void markSweepHit() {
-        sweepHit = true;
+        sweepBeam.markHit();
     }
 
     /** Its hit box: its stat block's, or a chain member's own. */
     public Hitbox hitbox() {
-        return box;
+        // M7 part D: curled, its hit box is the ball.
+        return armoured() ? spec.roll().get().ball() : box;
     }
 
     /**
@@ -2265,6 +2550,7 @@ public final class Enemy implements Hashed {
         orbit = Optional.empty();
         exit = Spawn.Exit.DOWN;
         hp = spec.hp();
+        partHp.start(spec);
         ticksSinceHit = Integer.MAX_VALUE;
         volleyTicks = spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
         burstLeft = 0;
@@ -2311,6 +2597,14 @@ public final class Enemy implements Hashed {
     /** It carries {@code pickup}, dropped when it is destroyed (a chain's head carries its wave's). */
     void carry(Optional<PickupType> pickup) {
         carried = pickup;
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, What walls stop): moved across to {@code toX}, kept off rock (a
+     * swoop clamped to the flyable side, no damage).
+     */
+    void clampX(double toX) {
+        x = toX;
     }
 
     /** Its chain moved it to (atX, atY), facing {@code heading}. */
@@ -2365,6 +2659,7 @@ public final class Enemy implements Hashed {
         orbit = Optional.empty();
         exit = Spawn.Exit.DOWN;
         hp = spec.hp();
+        partHp.start(spec);
         ticksSinceHit = Integer.MAX_VALUE;
         volleyTicks = 0;
         burstLeft = 0;
@@ -2378,6 +2673,237 @@ public final class Enemy implements Hashed {
         x = prevX = atX;
         y = prevY = atY;
         facing = heading;
+    }
+
+    // ---- M7 part D: aura rings (design/enemies/air/choir-herald), stepped by Auras ----
+
+    /** Spends its ring on {@code amount} of damage; returns what is left for the HP. */
+    private double absorb(double amount) {
+        if (!(auraRing.ring() > 0)) {
+            return amount;
+        }
+        double left = auraRing.spend(amount);
+        if (absorbQuiet == 0) {
+            events.add(SimEvents.Type.RING_ABSORBED, x, y, kind);
+            absorbQuiet = ABSORB_EVENT_GAP;
+        }
+        return left;
+    }
+
+    /** M7 part D: its aura ring, stepped by {@link Auras}. */
+    AuraRing auraRing() {
+        return auraRing;
+    }
+
+    /**
+     * M7 part D: whether Herald {@code herald}'s aura reaches this unit now: another unit than a Herald, not a
+     * chain's member, not buried nor under the water, its centre within the aura's radius of the Herald's.
+     */
+    boolean inAura(Enemy herald, double radius) {
+        if (this == herald || spec.aura().isPresent() || chain != null) {
+            return false;
+        }
+        Layer now = layer();
+        if (now == Layer.BURIED || now == Layer.SUB) {
+            return false;
+        }
+        double dx = x - herald.x;
+        double dy = y - herald.y;
+        return dx * dx + dy * dy <= radius * radius;
+    }
+
+    /** M7 part D: whether a Herald sings now: alive on the play field and not stunned by the EMP Burst. */
+    boolean singing() {
+        return spec.aura().isPresent() && empStun == 0 && PlayField.overlaps(x, y, box);
+    }
+
+    /**
+     * {@link Auras#step}: Herald {@code herald} rings it from now (it entered the radius, or its old feeder
+     * lost it): its maximum is its HP at the level, capped by the aura, and it fills over the aura's fill time.
+     */
+    void claimRing(Enemy herald) {
+        auraRing.claim(herald.spec.aura().get(), herald.serial, spec.hp());
+    }
+
+    /** M7 part D, its Herald died: its ring collapses over the aura's collapse time. */
+    void collapseRing() {
+        auraRing.collapse();
+    }
+
+    /**
+     * M7 part D, the EMP Burst (design/player/specials): its ring is stripped to nothing (its Herald keeps
+     * it, the refill waits its delay again); returns whether it had one.
+     */
+    boolean stripRing() {
+        return auraRing.strip();
+    }
+
+    /** M7 part D: its aura ring's damage left; 0 without one. */
+    public double ring() {
+        return auraRing.ring();
+    }
+
+    /** M7 part D: its aura ring's maximum (its HP at the level, capped by the aura); 0 without a ring. */
+    public double ringMax() {
+        return auraRing.ringMax();
+    }
+
+    /** M7 part D: its aura ring's share left, 0 to 1; 0 without a ring. */
+    public double ringShare() {
+        return auraRing.ringShare();
+    }
+
+    /** M7 part D: the serial of the Herald that feeds its ring (the thread of light to it); -1 for none. */
+    public int ringFeeder() {
+        return auraRing.ringFeeder();
+    }
+
+    /** M7 part D: how far its ring's collapse at its Herald's death is, 0 to 1; 0 while none runs. */
+    public double ringCollapse() {
+        return auraRing.ringCollapse();
+    }
+
+    /**
+     * M7 part D: a Herald's hover: its side-to-side drift ({@code sine}, the stat block's 32 px over 10 s) goes
+     * on in time where its entry's weave along its path left off.
+     */
+    private void hoverDrift(EnemySpec.Sine sine) {
+        hoverTicks++;
+        x = path.x(segment, distance);
+        y = path.y(segment, distance);
+        double along = distance / speed + hoverTicks * SimStep.SECONDS;
+        x += sine.amplitude() * Trig.sin(2 * StrictMath.PI * along / sine.periodSeconds());
+        if (offX != 0 || offY != 0) {
+            x += offX;
+            y += offY;
+        }
+    }
+
+    // ---- M7 part D: a unit part (design/enemies/ground/shellback, the mortar vent) ----
+
+    /** M7 part D: whether its unit part stands; false for a unit without one. */
+    public boolean partAlive() {
+        return partHp.alive();
+    }
+
+    /** M7 part D: its unit part's HP share left, 0 to 1; 0 without one or once it is destroyed. */
+    public double partShare() {
+        return spec.part().isPresent() ? partHp.share(spec.part().get()) : 0;
+    }
+
+    /** M7 part D: its unit part's centre, px (its offset turned with its facing); its own centre without one. */
+    public double partX() {
+        if (spec.part().isEmpty()) {
+            return x;
+        }
+        return PartHp.x(spec.part().get(), x, facing);
+    }
+
+    /** M7 part D: its unit part's centre's height, px. */
+    public double partY() {
+        if (spec.part().isEmpty()) {
+            return y;
+        }
+        return PartHp.y(spec.part().get(), y, facing);
+    }
+
+    /** M7 part D: its unit part's hit box; its own without one. */
+    Hitbox partBox() {
+        return spec.part().isPresent() ? spec.part().get().hitbox() : box;
+    }
+
+    /** M7 part D: whether its standing part lies in a blast of {@code radius} around (bx, by). */
+    boolean partInBlast(double bx, double by, double radius) {
+        return partAlive() && PlayerFire.inBlast(bx, by, radius, partX(), partY(), partBox());
+    }
+
+    /**
+     * M7 part D: its standing part takes damage (an aura ring spends itself first; a curled shell glances off);
+     * returns whether this destroyed it.
+     */
+    boolean damagePart(double amount, boolean fromAbove) {
+        if (!partAlive() || growTicks > 0) {
+            return false;
+        }
+        if (armoured()) {
+            glancedOff();
+            return false;
+        }
+        double left = absorb(amount);
+        ticksSinceHit = 0;
+        if (left <= 0) {
+            return false;
+        }
+        return partHp.take(left);
+    }
+
+    /** M7 part D: whether its gun is quiet now: curled, or silenced for good with its part gone. */
+    private boolean gunQuiet() {
+        if (curlRoll.phase() != CurlPhase.WALK) {
+            return true;
+        }
+        return spec.part().isPresent() && spec.part().get().silencesGun() && partHp.gone();
+    }
+
+    // ---- M7 part D: the curl-roll (design/enemies/ground/shellback) ----
+
+    /** M7 part D: whether it is curled: armoured against every damage, its hit box the ball. */
+    public boolean armoured() {
+        return curlRoll.armoured();
+    }
+
+    /** A damage glanced off its curled shell: the grey flash's event (spaced like the absorb's). */
+    private void glancedOff() {
+        if (absorbQuiet == 0) {
+            events.add(SimEvents.Type.SHOT_GLANCED, x, y, -1);
+            absorbQuiet = ABSORB_EVENT_GAP;
+        }
+    }
+
+    /** Whether its HP fell to its roll's share and its roll is still to come. */
+    private boolean curlDue() {
+        if (curlRoll.rolled()
+                || spec.roll().isEmpty()
+                || walkPath == null
+                || curlRoll.phase() != CurlPhase.WALK
+                || pouncing.leaping()) {
+            return false;
+        }
+        return hp <= spec.roll().get().belowShare() * spec.hp();
+    }
+
+    /** It starts its curl where it stands. */
+    private void curl() {
+        curlRoll.curl();
+        events.add(SimEvents.Type.CURLED, x, y, kind);
+    }
+
+    /** M7 part D: where it is in its curl-roll; {@link CurlPhase#WALK} for a unit without one. */
+    public CurlPhase curlPhase() {
+        return curlRoll.phase();
+    }
+
+    /** M7 part D: how far into the curl-roll's current phase it is, 0 to 1; 0 while it walks. */
+    public double curlProgress() {
+        if (curlRoll.phase() == CurlPhase.WALK) {
+            return 0;
+        }
+        return curlRoll.progress(spec.roll().get());
+    }
+
+    /** M7 part D: whether it is rolling now (its ball crushes ground targets). */
+    boolean rolling() {
+        return curlRoll.phase() == CurlPhase.ROLLING;
+    }
+
+    /** M7 part D: whether this roll crushed ground ally {@code k} already. */
+    boolean crushedAlly(int k) {
+        return curlRoll.crushedAlly(k);
+    }
+
+    /** M7 part D: this roll crushed ground ally {@code k}. */
+    void markCrushed(int k) {
+        curlRoll.markCrushed(k);
     }
 
     /** M5 part D: the flock it is a member of; null for other units. */

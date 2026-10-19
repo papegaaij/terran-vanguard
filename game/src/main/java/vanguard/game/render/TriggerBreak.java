@@ -43,4 +43,32 @@ public final class TriggerBreak {
         }
         return ticksSinceHit < CLEARED_TICKS ? hits : hits + 1;
     }
+
+    /**
+     * M7 part C: the trigger looks whose door bursts on the hit that spends them (Level 16's Candor relay hut,
+     * tools/art/canyon_units.py): a destructible's small explosion at the door, the burst frame staying.
+     */
+    private static final Set<String> DOOR_BURSTS = Set.of("relay-hut");
+
+    /** M7 part C: whether {@code spec} is a trigger whose door bursts open on the hit that spends it. */
+    public static boolean doorBursts(LevelScript.GroundObjectSpec spec) {
+        return spec.trigger() && DOOR_BURSTS.contains(spec.look());
+    }
+
+    /** M7 part C: whether {@code look} shows its door's state hit by hit ({@link #doorFrame}). */
+    static boolean door(String look) {
+        return DOOR_BURSTS.contains(look);
+    }
+
+    /**
+     * M7 part C: a door's frame of four (sealed, one hit, two hits, burst): the hits taken spread over the
+     * two damaged frames, so medium's 3 hits show 0, 1, 2, then 3 and hard's 5 show 0, 1, 1, 2, 2, then 3.
+     */
+    static int doorFrame(int hits, int hitsLeft, boolean spent) {
+        if (spent || hitsLeft <= 0) {
+            return 3;
+        }
+        int taken = hits - hitsLeft;
+        return hits <= 1 ? 0 : Math.clamp((taken * 2 + hits - 2) / (hits - 1), 0, 2);
+    }
 }

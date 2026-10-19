@@ -13,6 +13,13 @@ package vanguard.sim;
  * the members behind it die one by one, from the cut backwards; while they wait for their burst
  * they are {@linkplain #doomed doomed}. Pooled, with fixed arrays, so the
  * chain never allocates while it flies.
+ *
+ * <p>M7 part C, a ground chain ({@link #ground()}; design/enemies/ground/threadcrawler): its head point crawls
+ * its head's {@link EnemySpec.Crawl} path in ground space on top of the scroll, its history is kept in ground
+ * space (x, row) and placed by the ground's scroll now, so the body scrolls with the ground; it never regrows
+ * and never loops back. A cut stops the members behind it where they are; they die after the crawl's cut
+ * delay, from the cut backwards. Its segments fire the pore wave ({@link #poreFiring()}, {@link #poreGlow}).
+ * Opt-in: an air chain (the Coilwyrm) flies and hashes exactly as before.
  */
 public final class Chain implements Hashed {
     /** History points kept: enough for the longest chain at the slowest sampling. */
@@ -78,6 +85,11 @@ public final class Chain implements Hashed {
     private boolean canRegrow;
     /** Whether it is a wave's chain rather than a regrown rear part. */
     private boolean original;
+    /**
+     * M7 part A: steps the EMP Burst still stops it whole (design/player/specials, EMP Burst); 0 when
+     * it flies. Its regrowth waits meanwhile.
+     */
+    private int empStun;
     /** Whether a cut split it (or killed a part of it). */
     private boolean cut;
 
@@ -95,6 +107,30 @@ public final class Chain implements Hashed {
      * wave's, the rear once it has looped back, its parent's for a rear part.
      */
     private WaveSpec.Entry entry = WaveSpec.Entry.FRONT;
+
+    /**
+     * M7 part C: whether it crawls the ground: its history and head point are then in ground space (x, row;
+     * {@link Terrain#row}), {@link #segment} and {@link #distance} its crawl path's leg and the way along it.
+     */
+    private boolean ground;
+
+    private EnemySpec.Crawl crawl;
+    /** M7 part C: the ground's scroll now, by which a ground chain places its members. */
+    private double scroll;
+    /** M7 part C: whether no member has been destroyed yet (the head's first bonus). */
+    private boolean intact;
+    /** M7 part C: members from here on stopped where a cut left them (a ground chain's rear part); MAX when none. */
+    private int stoppedFrom;
+
+    private final double[] stoppedX = new double[MAX_MEMBERS];
+    private final double[] stoppedRow = new double[MAX_MEMBERS];
+    private final double[] stoppedFacing = new double[MAX_MEMBERS];
+    /** M7 part C: the pore wave's clock, steps since the ground chain entered the play field; -1 before. */
+    private int poreClock;
+    /** M7 part C: the member whose pore fires in this step; -1 for none. */
+    private int poreFiring;
+    /** M7 part C: whether the last {@link #destroyed} cut a ground chain (stopping its rear part). */
+    private boolean cutNow;
 
     /**
      * A wave's chain entering from {@code from}: the head point starts at its path's start, the
@@ -137,9 +173,79 @@ public final class Chain implements Hashed {
         popTicks = 0;
         entered = false;
         drifting = false;
+        empStun = 0;
         entry = WaveSpec.Entry.FRONT;
         for (int i = 0; i < MAX_MEMBERS; i++) {
             members[i] = null;
+        }
+        ground = false;
+        crawl = null;
+        scroll = 0;
+        intact = true;
+        stoppedFrom = MAX_MEMBERS;
+        poreClock = -1;
+        poreFiring = -1;
+        cutNow = false;
+    }
+
+    /**
+     * M7 part C: a wave's ground chain entering from {@code from} at the ground scroll {@code groundScroll}: the
+     * head point starts at its crawl path's first point, the members strung out behind it along the path's
+     * first leg (in ground space).
+     */
+    void startGround(
+            EnemySpec.ChainSpec chainSpec,
+            int chainSerial,
+            EnemySpec.Crawl path,
+            double groundScroll,
+            WaveSpec.Entry from) {
+        clear(chainSpec, chainSerial);
+        ground = true;
+        crawl = path;
+        scroll = groundScroll;
+        entry = from;
+        regrownKind = -1;
+        original = true;
+        canRegrow = false;
+        mode = Mode.PATH;
+        speed = path.speed();
+        headX = path.x(0);
+        headY = path.row(0);
+        size = spec.members();
+        for (int i = 0; i < size; i++) {
+            offsets[i] = spec.offsets().get(i);
+        }
+        prefill(path.x(1) - path.x(0), path.row(1) - path.row(0));
+    }
+
+    /** M7 part C: the head point crawls one step along its path (ground space), straight on past its end. */
+    private void crawlStep() {
+        double step = speed * SimStep.SECONDS;
+        int last = crawl.points() - 1;
+        while (true) {
+            double dx = crawl.x(segment + 1) - crawl.x(segment);
+            double dr = crawl.row(segment + 1) - crawl.row(segment);
+            double length = Math.sqrt(dx * dx + dr * dr);
+            if (distance + step < length) {
+                distance += step;
+                headX = crawl.x(segment) + dx / length * distance;
+                headY = crawl.row(segment) + dr / length * distance;
+                return;
+            }
+            step -= length - distance;
+            if (segment + 1 >= last) {
+                // Past the end: straight on along the last leg.
+                distance = length;
+                vx = dx / length * speed;
+                vy = dr / length * speed;
+                headX = crawl.x(last) + dx / length * step;
+                headY = crawl.row(last) + dr / length * step;
+                mode = Mode.STRAIGHT;
+                straightTicks = 0;
+                return;
+            }
+            segment++;
+            distance = 0;
         }
     }
 
@@ -181,7 +287,17 @@ public final class Chain implements Hashed {
      * lunging) and the members follow on its history. Returns false once it has flown its course
      * and no member is on the play field any more.
      */
-    boolean advance() {
+    boolean advance(double groundScroll) {
+        if (ground) {
+            scroll = groundScroll;
+            poreFiring = -1;
+        }
+        if (empStun > 0) {
+            // M7 part A: stunned, it stops whole where it is; its members stay on their places.
+            empStun--;
+            place();
+            return true;
+        }
         if (drifting) {
             speed *= DRIFT;
             vx *= DRIFT;
@@ -194,6 +310,10 @@ public final class Chain implements Hashed {
         boolean moved = true;
         switch (mode) {
             case PATH -> {
+                if (ground) {
+                    crawlStep();
+                    break;
+                }
                 distance += speed * SimStep.SECONDS;
                 if (distance >= path.length()) {
                     segment = path.segmentAt(path.length(), segment);
@@ -229,10 +349,59 @@ public final class Chain implements Hashed {
         }
         boolean onField = place();
         entered |= onField;
+        if (ground) {
+            pores();
+            // Once in, it is done when no member is on the play field; before, while it can still scroll in.
+            return onField || (!entered && Terrain.y(scroll, headY) > 0);
+        }
         if (onField || mode == Mode.PATH || mode == Mode.REGROW || loop != null) {
             return true;
         }
         return !entered && straightTicks < SimStep.ticks(1);
+    }
+
+    /** M7 part C: the pore wave's clock runs from the entry on and picks the pore that fires now (if any). */
+    private void pores() {
+        if (poreClock < 0 && entered) {
+            poreClock = 0;
+        }
+        if (poreClock < 0 || drifting) {
+            return;
+        }
+        int k = poreAt(poreClock % poreCycle());
+        poreFiring = k < 0 ? -1 : poreMember(k);
+        poreClock++;
+    }
+
+    /** M7 part C: the number of pores in a wave: every segment's, or every other one's. */
+    private int poreCount() {
+        int segments = spec.members() - 2;
+        return crawl.pores().everyOther() ? (segments + 1) / 2 : segments;
+    }
+
+    /** M7 part C: the member of the wave's {@code k}-th pore. */
+    private int poreMember(int k) {
+        return crawl.pores().everyOther() ? 1 + 2 * k : 1 + k;
+    }
+
+    /** M7 part C: one wave and its rest, steps: the first glow, the pores' spacing and the rest. */
+    private int poreCycle() {
+        EnemySpec.PoreWave wave = crawl.pores();
+        int cycle = SimStep.ticks(wave.glow())
+                + Math.max(0, poreCount() - 1) * SimStep.ticks(wave.interval())
+                + SimStep.ticks(wave.rest());
+        return Math.max(1, cycle);
+    }
+
+    /** M7 part C: the pore that fires at step {@code c} of a wave's cycle; -1 for none. */
+    private int poreAt(int c) {
+        int t = c - SimStep.ticks(crawl.pores().glow());
+        int interval = Math.max(1, SimStep.ticks(crawl.pores().interval()));
+        if (t < 0 || t % interval != 0) {
+            return -1;
+        }
+        int k = t / interval;
+        return k < poreCount() ? k : -1;
     }
 
     /** The loop-back: the head point re-enters on its second path, the members strung out behind it. */
@@ -291,6 +460,15 @@ public final class Chain implements Hashed {
             double dx = hx[front] - hx[older];
             double dy = hy[front] - hy[older];
             double heading = dx == 0 && dy == 0 ? member.facing() : StrictMath.atan2(-dx, -dy);
+            if (ground) {
+                // M7 part C: the history is in ground space; a stopped member stays where the cut left it.
+                if (i >= stoppedFrom) {
+                    x = stoppedX[i];
+                    y = stoppedRow[i];
+                    heading = stoppedFacing[i];
+                }
+                y = Terrain.y(scroll, y);
+            }
             member.chainTo(x, y, heading);
             onField |= PlayField.overlaps(x, y, member.hitbox());
         }
@@ -307,6 +485,11 @@ public final class Chain implements Hashed {
      */
     boolean destroyed(int i, Chain rear, int rearSerial) {
         members[i] = null;
+        intact = false;
+        if (ground) {
+            groundCut(i);
+            return false;
+        }
         if (i == 0) {
             canRegrow = false;
             dyingFrom = Math.min(dyingFrom, 1);
@@ -336,6 +519,50 @@ public final class Chain implements Hashed {
         return false;
     }
 
+    /**
+     * M7 part C: member {@code i} of a ground chain was destroyed: the head's death lets the whole body die from
+     * the front (it slows to a halt); a cut stops the members behind it where they are, and they die from the
+     * cut backwards after the crawl's cut delay ({@link #takeCut}); the tail's leaves the rest crawling on.
+     */
+    private void groundCut(int i) {
+        if (i == 0) {
+            dyingFrom = Math.min(dyingFrom, 1);
+            drift();
+            popTicks = popTicks > 0 ? popTicks : SimStep.ticks(spec.popSeconds());
+            return;
+        }
+        boolean behind = false;
+        for (int k = i + 1; k < size; k++) {
+            behind |= members[k] != null;
+        }
+        if (!behind) {
+            size = i;
+            dyingFrom = Math.min(dyingFrom, size);
+            return;
+        }
+        cut = true;
+        if (i + 1 < dyingFrom) {
+            dyingFrom = i + 1;
+            popTicks = Math.max(1, SimStep.ticks(crawl.cutSeconds()));
+            for (int k = i + 1; k < Math.min(size, stoppedFrom); k++) {
+                if (members[k] != null) {
+                    stoppedX[k] = members[k].x();
+                    stoppedRow[k] = Terrain.row(scroll, members[k].y());
+                    stoppedFacing[k] = members[k].facing();
+                }
+            }
+            stoppedFrom = Math.min(stoppedFrom, i + 1);
+            cutNow = true;
+        }
+    }
+
+    /** M7 part C: whether the last {@link #destroyed} cut a ground chain; clears it. */
+    boolean takeCut() {
+        boolean was = cutNow;
+        cutNow = false;
+        return was;
+    }
+
     /** The head is dead: no loop-back, and the body drifts to a halt while it bursts. */
     private void drift() {
         drifting = true;
@@ -351,6 +578,8 @@ public final class Chain implements Hashed {
         rear.speed = spec.regrowSpeed();
         rear.entered = true;
         rear.entry = entry;
+        // M7 part A: a stunned chain's rear part stays stunned with its members.
+        rear.empStun = empStun;
         // The rear part's history: this one's, up to the cut point.
         double cutS = hs[newest] - offsets[i];
         int at = newest;
@@ -414,7 +643,25 @@ public final class Chain implements Hashed {
      * the head as member 0 ({@link #grown}) or, when the rear part died meanwhile, lets it end.
      */
     boolean regrowDue() {
-        return mode == Mode.REGROW && --regrowTicks <= 0;
+        return mode == Mode.REGROW && empStun == 0 && --regrowTicks <= 0;
+    }
+
+    /**
+     * M7 part A, the EMP Burst: the whole chain stops for {@code ticks} steps (restarting a running
+     * stun), each member stunned with it ({@link Enemy#empStun}); a head grown meanwhile flies at once.
+     */
+    void empStun(int ticks) {
+        empStun = ticks;
+        for (int i = 0; i < size; i++) {
+            if (members[i] != null) {
+                members[i].empStun(ticks);
+            }
+        }
+    }
+
+    /** M7 part A: whether the EMP Burst stops it now. */
+    public boolean empStunned() {
+        return empStun > 0;
     }
 
     /** The new head has grown (or not, {@code head} null): it lunges at (shipX, shipY). */
@@ -501,7 +748,7 @@ public final class Chain implements Hashed {
     }
 
     public double headY() {
-        return headY;
+        return ground ? Terrain.y(scroll, headY) : headY;
     }
 
     /** The head point's heading, radians clockwise from straight down (a growing head faces it). */
@@ -514,7 +761,62 @@ public final class Chain implements Hashed {
 
     /** Whether destroying member {@code i} now pays the first bonus: the tail of an uncut wave's chain. */
     boolean firstBonusDue(int i) {
+        if (ground) {
+            // M7 part C: a ground chain never regrows: the tail destroyed before any other part.
+            return original && intact && i > 0 && i == size - 1 && i == spec.members() - 1;
+        }
         return original && !cut && canRegrow && i == size - 1 && i == spec.members() - 1;
+    }
+
+    /**
+     * M7 part C: whether destroying the head now pays its {@link EnemySpec.ChainSpec#headFirstBonus}: a wave's
+     * chain's head destroyed before any other part (call before {@link #destroyed}).
+     */
+    boolean headFirstBonusDue() {
+        return original && intact && members[0] != null;
+    }
+
+    /** M7 part C: whether it crawls the ground (a Threadcrawler) rather than flying (the Coilwyrm). */
+    public boolean ground() {
+        return ground;
+    }
+
+    /** M7 part C: whether member {@code i} is stopped where a cut left it (writhing until it dies). */
+    public boolean stopped(int i) {
+        return ground && i >= stoppedFrom && i < size;
+    }
+
+    /** M7 part C: the member whose pore fires in this step; -1 for none (and for an air chain). */
+    int poreFiring() {
+        return poreFiring;
+    }
+
+    /** M7 part C: the crawl of a ground chain; null for an air chain. */
+    EnemySpec.Crawl crawl() {
+        return crawl;
+    }
+
+    /**
+     * M7 part C: how brightly member {@code i}'s pore glows now, 0 to 1 over its glow before it fires (the
+     * tell); 0 for a member without a pore in the wave, before the chain entered and for an air chain.
+     */
+    public double poreGlow(int i) {
+        if (!ground || poreClock <= 0 || drifting || i < 1 || i > spec.members() - 2) {
+            return 0;
+        }
+        boolean everyOther = crawl.pores().everyOther();
+        if (everyOther && (i - 1) % 2 != 0) {
+            return 0;
+        }
+        int k = everyOther ? (i - 1) / 2 : i - 1;
+        int glow = SimStep.ticks(crawl.pores().glow());
+        int fires = glow + k * Math.max(1, SimStep.ticks(crawl.pores().interval()));
+        // The clock's value in this step (it has moved on since).
+        int t = (poreClock - 1) % poreCycle() - (fires - glow);
+        if (t < 0 || t > glow) {
+            return 0;
+        }
+        return glow == 0 ? 1 : (double) t / glow;
     }
 
     /** The edge it entered from last: its wave's, or the rear after its loop-back. */
@@ -575,6 +877,19 @@ public final class Chain implements Hashed {
         }
         for (int k = 0, p = newest; k < count; k++, p = (p - 1 + HISTORY) % HISTORY) {
             hash.add(hx[p]).add(hy[p]).add(hs[p]);
+        }
+        if (empStun != 0) {
+            // M7 part A: only while the EMP Burst stops it, so other runs hash as before.
+            hash.add(empStun);
+        }
+        if (ground) {
+            // M7 part C: only a ground chain's, so the Coilwyrm hashes as before.
+            hash.add(intact ? 1 : 0).add(stoppedFrom).add(poreClock).add(poreFiring);
+            for (int k = stoppedFrom; k < size; k++) {
+                hash.add(stoppedX[k]).add(stoppedRow[k]);
+            }
+        } else if (spec.headFirstBonus() > 0) {
+            hash.add(intact ? 1 : 0);
         }
     }
 }

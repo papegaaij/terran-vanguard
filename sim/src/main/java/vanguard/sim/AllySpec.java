@@ -31,6 +31,10 @@ package vanguard.sim;
  *     dives do not hurt it
  * @param lobs M5 part G ({@code damaged_by: lobs}): a mortar's lob the hook aimed at it deals its direct
  *     hit to it when it lands on its hit box (the ring hurts only the ship)
+ * @param bombs M7 part D (design/allies, Ares Landing dome; {@code damaged_by: bomb-runs}): the hits one
+ *     bomb run's load deals it when the bomber's centre is over its hit box; 0 when bomb runs do not hurt it
+ * @param rolls M7 part D ({@code damaged_by: rolls}): the hits one Shellback roll crossing its footprint
+ *     deals it; 0 when rolls do not hurt it
  */
 public record AllySpec(
         String slug,
@@ -49,8 +53,13 @@ public record AllySpec(
         double slams,
         double flakSeconds,
         double dives,
-        boolean lobs) {
+        boolean lobs,
+        double bombs,
+        double rolls) {
     public AllySpec {
+        if (!(bombs >= 0) || !(rolls >= 0)) {
+            throw new IllegalArgumentException(slug + ": a bomb run and a roll deal 0 or more");
+        }
         if (!(dives >= 0)) {
             throw new IllegalArgumentException(slug + ": a dive deals 0 or more");
         }
@@ -63,6 +72,47 @@ public record AllySpec(
         if (!(slams >= 0) || !(flakSeconds >= 0)) {
             throw new IllegalArgumentException(slug + ": slams and the flak take no less than 0");
         }
+    }
+
+    /** Without M7 part D's bomb runs and rolls. */
+    public AllySpec(
+            String slug,
+            Hitbox size,
+            Hitbox hitbox,
+            double hp,
+            boolean objectiveAimed,
+            double clawsPerSecond,
+            double smokeBelow,
+            double maxHeadingDegrees,
+            boolean bullets,
+            boolean contact,
+            int bankFrames,
+            double bankFull,
+            double glideSeconds,
+            double slams,
+            double flakSeconds,
+            double dives,
+            boolean lobs) {
+        this(
+                slug,
+                size,
+                hitbox,
+                hp,
+                objectiveAimed,
+                clawsPerSecond,
+                smokeBelow,
+                maxHeadingDegrees,
+                bullets,
+                contact,
+                bankFrames,
+                bankFull,
+                glideSeconds,
+                slams,
+                flakSeconds,
+                dives,
+                lobs,
+                0,
+                0);
     }
 
     /** Without M5 part G's dives and lobs. */
@@ -140,7 +190,15 @@ public record AllySpec(
      * escort frigate, cannot be damaged and is never lost).
      */
     public boolean damageable() {
-        return objectiveAimed || clawsPerSecond > 0 || bullets || contact || slams > 0 || dives > 0 || lobs;
+        return objectiveAimed
+                || clawsPerSecond > 0
+                || bullets
+                || contact
+                || slams > 0
+                || dives > 0
+                || lobs
+                || bombs > 0
+                || rolls > 0;
     }
 
     /** A ground ally (Level 04's crawler): no bullets, no contact, no banks and no glide. */

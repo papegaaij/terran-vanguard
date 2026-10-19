@@ -1,0 +1,109 @@
+# Level 15 backdrop PROPOSAL (tools/art/backdrop_l15.py --proposal; M7 part B batch, round 38, step ART-B).
+# For the level-data steps (B2/B3) to merge into data.yaml: `backdrop` is the level's block, every section takes
+# the `tiles` below, and the two `peak`s use the atmospheres named here.
+#
+# sections[i].tiles (by section, in order), atmosphere and peak:
+#   Entry Corridor: tiles: [mars-high, cirrus]; atmosphere: light; peak: {atmosphere: clear, from: 0, to: 8}   # the entry glow: entry-streaks, the deep washed out
+#   Cloud Deck: tiles: [mars-flank, cirrus]; atmosphere: medium
+#   Olympus Slopes: tiles: [mars-flank, slopes]; atmosphere: light
+#   Lycus Escarpment: tiles: [mars-flank, escarpment]; atmosphere: light
+#   Tharsis Dunes: tiles: [mars-flank, dunes, dust-streaks]; atmosphere: light; peak: {atmosphere: heavy, from: 170, to: 180}   # the dust peak: dust-peak banks
+#
+# Built round this timeline (re-run --proposal and the images after the data moves a section end or speed):
+#   Entry Corridor to 30 at 190 px/s, Cloud Deck to 65 at 170 px/s (ease 1 s), Olympus Slopes to 115 at 150 px/s (ease 1 s), Lycus Escarpment to 150 at 150 px/s, Tharsis Dunes to 190 at 160 px/s (ease 1 s).
+# The deck close-over (risk 7): slopes-lead's bottom edge, the swap line at ground 11590, crosses the screen
+#   t 61.41-64.59; deck-close's 1,000 px core covers the whole field ~2 s round t 63 and the line all the
+#   way across (--check); section 2's medium atmosphere ramps to section 3's light over 63-67.
+# Exact rows: mars-blend, slopes-lead, seam-escarpment and seam-dunes lie on the seams (t to 4 decimals on
+#   purpose; each fades 32 rows into the tile set it continues, so a few px of drift stay invisible).
+# The cirrus' and dust-streaks' tile sets are empty round the row where they end/begin (section 3's high-air
+#   seam, section 5's low-air seam): re-run after the data moves those section starts.
+# NEW KEY (B3 data + B4 game): `transport` is a huge overhead pass on high-air (art direction rule 5): drawn with
+#   normal blending at 75 % instead of additive at 40 %, as `overhead_pass: true` on the piece (proposal): only on
+#   high-air; BackdropCheck may require it off the screen before the first wave (t 7). Without it the game draws it
+#   additive at 40 % and only its lit edges show.
+# Ground targets the pieces are built under (re-run after the data moves them): terrace [[80, 110], [80.6, 370]]; outcrop [[92, 120], [92.4, 160], [92.8, 200]]; pads [[118, 100], [118.5, 150], [124, 330], [124.5, 380]]; hab [[121, 230], [121.6, 270]]; containers [[122, 50], [123.5, 430], [126, 190], [128, 60]]; rubble [[128, 400]]; lander [[160, 300], [160.4, 340], [160.8, 380]]; rail [[178, 200], [178.4, 280]]; the road at x 300.
+# No-surface (B2): besides the pads, the hab and the rail line, the cliff's face: x >= 436 from t 115 to 150.
+# Motion budget: drifting deck-banks / dust-thin / dust-peak are the atmosphere's banks (one element), dust-streaks
+#   the second in section 5; no animated or moving pieces; the cliff's roof slides 37.5 px/s (k 1.25 at 150).
+
+backdrop:
+  # Presentation only: Olympus Descent (tools/art/backdrop_l15.py, from mars-olympus-r36-a and parallax r02-c).
+  # Sections 1-2 have no ground: Mars far below on deep (x0.15), the cloud decks on low-air and high-air; the
+  # ground takes over under the opaque deck-close; the escarpment's cliff and the rail pylons are towers.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}
+  ramp: 4
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {wisps: entry-streaks, haze: 0.34}   # the entry-glow peak 0-8: the plasma streaks, the surface washed out
+    light: {banks: dust-thin, haze: 0.2}   # sections 1, 3-5: thin dust veils
+    medium: {banks: deck-banks, haze: 0.26}   # section 2: the water-ice deck in banks ~30 %, opaque cores
+    heavy: {banks: dust-peak, haze: 0.3}   # the dust peak 170-180: rolling dust banks ~30 %, translucent
+  tile_sets:
+    mars-high: {layer: deep, height: 960}   # section 1: Mars from high up, the Tharsis plain small (dark lava lobes, crater fields with wind streaks, graben)
+    mars-flank: {layer: deep, height: 960}   # sections 2-5: Olympus Mons' flank closer: leveed lava channels and lobate flows along the flight (under the ground from section 3)
+    slopes: {layer: ground, height: 960}   # section 3: the lower flank: stepped lava terraces, basalt knobs, dusty regolith fields with burrow furrows
+    escarpment: {layer: ground, height: 960}   # section 4: the foot of the Lycus escarpment: regolith, scree fans and boulders toward the cliff on the right
+    dunes: {layer: ground, height: 960}   # section 5: the Tharsis dune sea, crests across the wind from the left, dark sand in the troughs
+    cirrus: {layer: high-air, height: 960}   # sections 1-2: thin water-ice cirrus (additive at 40 %); empty where it ends at section 3's seam
+    entry-streaks: {layer: high-air, height: 960}   # the `clear` look's wisps: the entry's plasma streaks and glow (the entry-glow peak 0-8, faded by the ramp)
+    deck-banks: {layer: low-air, height: 960, drift: 5}   # medium: the thick water-ice deck in banks, ~30 %, opaque cores, pale peach tops, mauve undersides
+    dust-thin: {layer: low-air, height: 960, drift: 8}   # light: thin dust veils stretched along the wind, ~14 %, at most 35 % opaque
+    dust-streaks: {layer: low-air, height: 960, drift: 12}   # section 5: dust streaks blown off the dune crests, ~12 %, translucent; empty where section 5 begins
+    dust-peak: {layer: low-air, height: 960, drift: 16}   # heavy: the dust peak's rolling banks, ~30 %, at most 55 % opaque (the Burrowers' bulges read under them)
+  pieces:
+    olympus: {layer: deep, size: [440, 440]}   # Olympus Mons from the entry corridor: the caldera's nested pits, the radial flank, the basal scarp (edges transparent)
+    mars-blend: {layer: deep, size: [480, 400]}   # on the deep seam of section 2: mars-high into mars-flank along a lava margin (exact rows)
+    slopes-lead: {layer: ground, size: [480, 658]}   # the slopes continued below section 3's seam: the ground's opaque edge (the swap line) crosses the screen under deck-close (exact rows)
+    seam-escarpment: {layer: ground, size: [480, 320]}   # on section 4's seam: the slopes into the escarpment's regolith along a lava front (exact rows)
+    seam-dunes: {layer: ground, size: [480, 320]}   # on section 5's seam: the escarpment's regolith into the dune sea (exact rows)
+    lava-terrace: {layer: ground, size: [480, 300], mid_size: true}   # a raised lava terrace across the flank, flat top, lobate front: the two mortars stand on it
+    basalt-outcrop: {layer: ground, size: [208, 160], mid_size: true}   # a basalt outcrop, knobs round a flat top: the turret nest of three
+    lycus-pads: {layer: ground, size: [160, 176], mid_size: true}   # a pair of Lycus Survey Station's landing pads, overrun: scorched concrete, Vrell growth with teal veins (two turrets; placed twice)
+    lycus-hab: {layer: ground, size: [152, 152], mid_size: true}   # the station's domed hab drawn flat (a low dome): ribs, airlock, panels, growth (two mortars on its roof)
+    lycus-road: {layer: ground, size: [112, 601]}   # the station's graded road with tyre ruts and Vrell growths along it (the Creeper convoy)
+    drop-pod-ledge: {layer: ground, size: [136, 120]}   # the ledge at the cliff's foot the rubble lies on: a rock shelf, the pod's impact furrow
+    crashed-lander: {layer: ground, size: [216, 176], mid_size: true}   # a crashed colony lander on a dune crest, a leg folded, sand drifted against it (the nest of three)
+    rail-line: {layer: ground, size: [480, 104]}   # the colony rail line across the field on its embankment, sleepers, cable trough
+    escarpment-cliff: {layer: ground, size: [96, 1600], tower: {height: 1.2, wall: wall-escarpment, shade: 0.55}}   # the great cliff along the right edge in perspective (scenery: nothing gameplay touches): the plateau's rim, strata on its face
+    rail-pylon: {layer: ground, size: [14, 14], tower: {height: 0.9, wall: wall-pylon, shade: 0.5}}   # a rail line's catenary pylon in perspective
+    deck-close: {layer: low-air, size: [480, 1360]}   # the opaque close-over: the deck covers the whole field ~2 s round t=63 while the ground takes over (1,000 px core)
+    transport: {layer: high-air, size: [400, 660], overhead_pass: true}   # the Mars transport passing over the launch, its drop bay open (a huge overhead pass: 75 %, normal blending)
+  placed:
+    # 1. Olympus Mons under the entry corridor (deep x0.15: on screen the whole section)
+    - {piece: olympus, t: 16, x: 256}
+    # 2. the deep seam (deep position 1395): mars-high into mars-flank; exact rows, re-run after the data moves section 2's start
+    - {piece: mars-blend, t: 40.5294, x: 240}
+    # 2-3. the swap line (ground 11590) crosses the screen t 61.41-64.59 under deck-close; the slopes run on into section 3's seam (12200)
+    - {piece: slopes-lead, t: 64.8412, x: 240}
+    # 4. section 4's seam (ground 19710): the slopes into the escarpment
+    - {piece: seam-escarpment, t: 116.8, x: 240}
+    # 5. section 5's seam (ground 24960): the escarpment into the dunes
+    - {piece: seam-dunes, t: 151.719, x: 240}
+    # 3. the lava terrace across the flank under the two mortars
+    - {piece: lava-terrace, t: 82.167, x: 240}
+    # 3. the basalt outcrop under the turret nest
+    - {piece: basalt-outcrop, t: 94.28, x: 160}
+    # 4. Lycus Survey Station: the road (the Creeper convoy enters at x 300), two pairs of pads (two turrets each), the hab (two mortars on its roof)
+    - {piece: lycus-road, t: 121.27, x: 300}
+    - {piece: lycus-pads, t: 120.157, x: 125}
+    - {piece: lycus-pads, t: 126.157, x: 355}
+    - {piece: lycus-hab, t: 123.153, x: 250}
+    # 4. the ledge at the cliff's foot under the drop pod's rubble (the secret)
+    - {piece: drop-pod-ledge, t: 129.893, x: 400}
+    # 5. the crashed lander on a dune crest under the nest of three
+    - {piece: crashed-lander, t: 162.188, x: 340}
+    # 5. the colony rail line across the field at the end (the hard turret pair beside it)
+    - {piece: rail-line, t: 187, x: 240}
+    # 4. the Lycus escarpment along the right edge, three stretches with ravines (perspective towers)
+    - {piece: escarpment-cliff, t: 122.833, x: 480}
+    - {piece: escarpment-cliff, t: 134.3, x: 480}
+    - {piece: escarpment-cliff, t: 145.767, x: 480}
+    # 5. the rail line's pylons (perspective)
+    - {piece: rail-pylon, t: 187.22, x: 84}
+    - {piece: rail-pylon, t: 187.22, x: 252}
+    - {piece: rail-pylon, t: 187.22, x: 420}
+    # 2. the close-over: its core covers the whole field ~2 s and the swap line all the way across
+    - {piece: deck-close, t: 63, x: 240}
+    # 1. the launch: the transport passes over in the first 3 s
+    - {piece: transport, t: 0.48, x: 240}

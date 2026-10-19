@@ -5,7 +5,8 @@ its drain loop; one proposal for the shake-off and the sonde chime; and the rain
 from the same CC0 source as the chosen ambience-storm-r08-a (which stays). Recorded layers (Freesound
 originals, all already in CREDITS.md for earlier rounds) and synthesized layers mixed.
 
-Outputs (design/audio/sfx/concept/, OGG Vorbis q6, 44.1 kHz stereo; each file starts at its event):
+Outputs (design/audio/sfx/concept/, the unchosen variants in concept/rejected/; OGG Vorbis q6,
+44.1 kHz stereo; each file starts at its event):
 
   thunder-{1,2,3}-r34-a.ogg  a "the storm's own thunder": three rolls cut from the storm bed's source
                              ("Rain and Thunder 4", FlatHill, CC0: its one big clap and two later
@@ -338,6 +339,11 @@ def seam(path):
     return abs(x[0] - x[-1]) / step
 
 
+# the user's picks (round 34's review, 2026-10-12): the unchosen variants are written to concept/rejected/
+CHOSEN = {"thunder-1": "b", "thunder-2": "b", "thunder-3": "b", "gust": "b", "lamprey-latch": "a",
+          "lamprey-drain": "a", "lamprey-shake": "a", "sonde-chime": "a"}
+
+
 def build(subject, v, preview_cache):
     layers = recorded_layers(subject, v)
     with tempfile.TemporaryDirectory() as tmp:
@@ -351,7 +357,8 @@ def build(subject, v, preview_cache):
     tags = {"COMMENT": f"{SCRIPT} {name}: {used}"}
     if "loop" in SOUNDS[subject]:
         tags.update(LOOPSTART=0, LOOPLENGTH=st.shape[1])
-    out = write_ogg(OUT / f"{name}.ogg", st, max_peak_db=SOUNDS[subject]["ceiling"], tags=tags)
+    out_dir = OUT if CHOSEN[subject] == v else OUT / "rejected"
+    out = write_ogg(out_dir / f"{name}.ogg", st, max_peak_db=SOUNDS[subject]["ceiling"], tags=tags)
     report(out, used)
     if "loop" in SOUNDS[subject]:
         print(f"  loop seam {seam(out):.1f} x the median step")

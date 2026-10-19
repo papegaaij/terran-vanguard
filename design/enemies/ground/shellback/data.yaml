@@ -1,0 +1,67 @@
+# Shellback stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part D, step D2 (Level 17): a walker with a destroyable mortar vent (a part on a unit that is not a boss) and the
+# curl-roll (`roll`). Loaded and checked in step D2, mapped for the simulation in step D4 (sim: step D3). Credits: a
+# body-first kill pays the whole 48 (the body's 40 and its first_bonus 8); the vent first pays 52 (vent 12, body 40).
+# Defaults of the gap check, pending the user's review in round 40: the roll follows the walk path (Q.22d), armoured
+# against every shot and blast while curled, an EMP Burst pausing it; the vent a general unit part that silences the
+# mortar.
+name: Shellback
+faction: Vrell
+layer: ground
+tier: large
+size: [112, 112]  # sprite px (the concept)
+hitbox: [84, 84]  # the body's
+parts: multi
+part_list:  # offsets in its own frame (facing down the screen: dx right, dy up towards its tail)
+  - {name: body, offset: [0, 0], hitbox: [84, 84], hp: 120, kind: vital, bounty: 40, first_bonus: 8}       # first_bonus: a body-first kill pays the whole 48
+  - {name: vent, offset: [0, 15], hitbox: [28, 28], hp: 24, kind: destroyable, bounty: 12, attack: mortar}  # the lime mortar vent at the rear of the back (15 px: the production sprite's vent, assets/pivots/shellback.json, step D4): its loss stops the mortar
+orientation: 16 angles
+hp: 144           # the parts' sum: body 120, vent 24
+armour: none while walking; fully `armoured` while curled and rolling (shots spark off, grey flash); the body takes ×1.5 for 1.5 s while it uncurls (the belly)
+speed: 24         # px/s walking, on top of the scroll
+movement:
+  walk: {speed: 24, turn_rate: 45, stride: 32}   # px/s, °/s, px of ground per 6-frame heavy-walk cycle
+roll:
+  below: 0.4          # once, when the body falls to 40 % of its HP
+  curl: 0.6           # s tucking in (already armoured)
+  seconds: 2.5        # s rolling along its walk path ...
+  speed: 140          # ... at 140 px/s (350 px)
+  uncurl: 0.6         # s
+  belly_seconds: 1.5  # s after the uncurl ...
+  belly_factor: 1.5   # ... its body takes 1.5x
+  ball: [72, 72]      # px, the rolled ball (its hit box while curled)
+attacks:
+  - pattern: mortar
+    name: mortar
+    bullet: heavy             # the blob's direct hit
+    interval: 4.0             # s between two lobs
+    speed: 110                # px/s, the ring's bullets
+    first_shot_delay: 1.5     # s after it enters the screen
+    mortar: {marker: 1.2, impact: 32, ring: 8, ring_bullet: small}
+    notes:
+      text: '`{pattern}` from the vent every {interval} s: the vent swells 0.5 s (tell), the impact marked on the ground {mortar.marker} s ahead at the ship''s position, a direct hit `{bullet}` {damage}, then a `ring` of {mortar.ring} (slow {speed} px/s, `{mortar.ring_bullet}` 4); none while curled'
+formations:
+  - {name: single}
+  - {name: convoy}
+weak_points:
+  - {name: the lime vent (a destroyable part)}
+  - {name: the belly while it uncurls, multiplier: 1.5}
+drops: []
+traits: [anti-ground, area]
+bounty: 52        # the parts' sum: body 40, vent 12 (whole 48 by the body's first_bonus)
+first_level: 17
+difficulty:
+  easy: {attacks: {mortar: {interval: 5.0}}, ring: 6}
+  hard: {attacks: {mortar: {interval: 3.2}}, ring: 10, roll: {seconds: 3.0}}
+notes:
+  size: (the concept); vent hitbox 28×28 at the rear of the back; rolled ball {roll.ball.0}×{roll.ball.1}
+  parts: 'body (`vital`), mortar vent (`destroyable`: kills the mortar)'
+  orientation: (16 headings × 6 heavy-walk frames; curl and uncurl frames; the ball rolls with 8 frames per band pair at 16 headings)
+  hp: 'body 120 · vent 24;'
+  speed: walk (plus scroll); roll {roll.speed} px/s
+  movement: '`walk` along an authored ground path, turning at {movement.walk.turn_rate}°/s; once, at ≤ 40 % body HP, it curls ({roll.curl} s), rolls {roll.seconds} s along its path (`spin`), uncurls ({roll.uncurl} s) and walks on'
+  formations: '(a pair: a `convoy` of 2 walking 3 s apart, so their rolls never overlap)'
+  bounty: '; whole (body first) 48; parts: body 40, vent 12 (52)'
+  death: '`large` organic burst, shell plates scatter; the cracked shell stays as a husk'
+  used_in: introduced in Level 17 (Dome Siege); the act HP factor of a `large` unit where it returns
+  difficulty: 'easy: mortar every 5.0 s, ring of 6; hard: every 3.2 s, ring of 10, the roll 3.0 s'

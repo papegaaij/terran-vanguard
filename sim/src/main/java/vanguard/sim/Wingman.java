@@ -85,6 +85,18 @@ public final class Wingman {
      */
     static final double POD_CLEARANCE = 36;
 
+    /**
+     * M7 part C (design/campaign Level 16, Rook in the canyon): he keeps this far off rock, px, between his
+     * hull and the collision line.
+     */
+    static final double ROCK_CLEARANCE = 24;
+
+    /** M7 part C: under this flyable width, px, he drops to the trail position ("I'll tuck in behind"). */
+    static final double CANYON_TRAIL_WIDTH = 240;
+
+    /** M7 part C: how far above the player he looks for a narrowing or a split, px, besides the player's row. */
+    static final double CANYON_LOOK_AHEAD = 120;
+
     private final WingmanSpec spec;
     private final Hull hull;
     private final double accelerationStep;
@@ -173,6 +185,10 @@ public final class Wingman {
     private int target;
     /** M5 part F: the level's wind this step, px/s to the right. */
     private double wind;
+    /** M7 part C: the level's rock and the scroll now; null in a level without terrain. */
+    private Canyon canyon;
+    /** M7 part C: the level's tendril gates (a standing tendril is a wall to him); null without. */
+    private Links links;
 
     private int targetWait;
     private int cooldown;
@@ -289,7 +305,7 @@ public final class Wingman {
             sinceShot++;
         }
         boolean flank = scanEnemies(enemies, setPieces, playerHit);
-        chooseFormation(shipX, activeEdges, flank);
+        chooseFormation(shipX, shipY, activeEdges, flank);
         dodge(bullets);
         glided = Math.min(glideTicks, glided + 1);
         evading = clearOfBodies(enemies, shipX, shipY, shipX + slotX() + dodgeX, shipY + slotY() + dodgeY);
@@ -304,6 +320,119 @@ public final class Wingman {
      */
     void wind(double pxPerSecond) {
         wind = pxPerSecond;
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, Rook in the canyon): the level's rock; he keeps {@link
+     * #ROCK_CLEARANCE} off it, trails where the canyon is narrow or split and follows the player's channel.
+     */
+    void canyon(Canyon rock) {
+        canyon = rock;
+    }
+
+    /**
+     * M7 part C (design/enemies/ground/tendril-anchor, Rook): the level's tendril gates: he treats a standing
+     * tendril as a wall, holding {@link #TENDRIL_CLEARANCE} below it, and targets the nearer anchor of the
+     * lowest one above him first; he crosses only once it is down.
+     */
+    void links(Links gates) {
+        links = gates;
+    }
+
+    /** M7 part C: he keeps this far below a standing tendril's line (his hull's edge to the line), px. */
+    static final double TENDRIL_CLEARANCE = 12;
+
+    /** M7 part C: held below the standing tendrils above him (never under the play field's margin). */
+    private void keepBelowTendrils() {
+        Hitbox box = hull.parts().getFirst().box();
+        double ceiling = links.ceiling(x, box.width() / 2, y - box.height() / 2);
+        if (ceiling == Double.POSITIVE_INFINITY) {
+            return;
+        }
+        double top = Math.max(limit, ceiling - box.height() / 2 - TENDRIL_CLEARANCE);
+        if (y > top) {
+            y = top;
+            vy = Math.min(vy, 0);
+        }
+    }
+
+    /**
+     * M7 part C: moved {@code distance} px along the unit vector (nx, ny) out of rock (a wall contact), his
+     * velocity into it dropped; the play field's margins clamp him as ever.
+     */
+    void pushOut(double nx, double ny, double distance) {
+        x += nx * distance;
+        y += ny * distance;
+        double into = vx * nx + vy * ny;
+        if (into < 0) {
+            vx -= into * nx;
+            vy -= into * ny;
+        }
+        x = Math.clamp(x, limit, PlayField.WIDTH - limit);
+        y = Math.clamp(y, limit, PlayField.HEIGHT - limit);
+    }
+
+    /**
+     * M7 part C: whether the canyon at the player's row or {@link #CANYON_LOOK_AHEAD} above it is split by an
+     * island or narrower than {@link #CANYON_TRAIL_WIDTH} (the channel holding the player's x).
+     */
+    private boolean narrow(double shipX, double shipY) {
+        double scroll = canyon.scroll();
+        for (int k = 0; k < 2; k++) {
+            double rowY = shipY + k * CANYON_LOOK_AHEAD;
+            if (canyon.terrain.channels(scroll, rowY) > 1) {
+                return true;
+            }
+            double left = canyon.terrain.spanLeft(scroll, rowY, shipX);
+            double right = canyon.terrain.spanRight(scroll, rowY, shipX);
+            if (!Double.isNaN(left) && right - left < CANYON_TRAIL_WIDTH) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M7 part C: whether a point at (px, py) lies outside the player's channel there, kept {@link
+     * #ROCK_CLEARANCE} and his half width inside; false without terrain.
+     */
+    private boolean offChannel(double px, double py, double shipX) {
+        if (canyon == null) {
+            return false;
+        }
+        double half = hull.parts().getFirst().box().width() / 2 + ROCK_CLEARANCE;
+        double from = canyon.terrain.spanLeft(canyon.scroll(), py, shipX);
+        double to = canyon.terrain.spanRight(canyon.scroll(), py, shipX);
+        return !Double.isNaN(from) && (px < from + half || px > to - half);
+    }
+
+    /**
+     * M7 part C: kept {@link #ROCK_CLEARANCE} off rock: inside the channel holding the player's x at his
+     * height (his own when the player's x is rock there), his half width and the clearance in from its
+     * sides (its middle when it is narrower).
+     */
+    private void keepOffRock(double shipX) {
+        double scroll = canyon.scroll();
+        double from = canyon.terrain.spanLeft(scroll, y, shipX);
+        double to = canyon.terrain.spanRight(scroll, y, shipX);
+        if (Double.isNaN(from)) {
+            from = canyon.terrain.spanLeft(scroll, y, x);
+            to = canyon.terrain.spanRight(scroll, y, x);
+        }
+        if (Double.isNaN(from)) {
+            // Over rock himself (pushed in): the contact pushes him out.
+            return;
+        }
+        double half = hull.parts().getFirst().box().width() / 2 + ROCK_CLEARANCE;
+        double lo = from + half;
+        double hi = to - half;
+        if (lo > hi) {
+            lo = hi = (from + to) / 2;
+        }
+        if (x < lo || x > hi) {
+            x = Math.clamp(x, lo, hi);
+            vx = 0;
+        }
     }
 
     /** His generator's state, for a boss checkpoint. */
@@ -328,11 +457,17 @@ public final class Wingman {
         int bestRank = Integer.MAX_VALUE;
         double bestDistance = Double.MAX_VALUE;
         double flankDistance = spec.ai().flankDistance();
+        // M7 part C: the nearer anchor of the lowest standing tendril above him comes first.
+        int gateAnchor = links == null ? -1 : links.nearerAnchor(x, y);
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             // M5 part E (default 12): a unit under the water is neither his target nor a flank threat.
             // M5 part F (user decision F3 = a): a Lamprey latched onto the player is not his target.
-            if (!PlayerFire.onField(enemy) || enemy.layer() == Layer.SUB || enemy.latched()) {
+            // M7 part B: nor is a unit under the sand.
+            if (!PlayerFire.onField(enemy)
+                    || enemy.layer() == Layer.SUB
+                    || !enemy.layer().touchable()
+                    || enemy.latched()) {
                 continue;
             }
             double dx = enemy.x() - x;
@@ -348,7 +483,7 @@ public final class Wingman {
                 continue;
             }
             targetSeen |= enemy.serial() == target;
-            int rank = enemy.serial() == playerHit ? 1 : beside ? 2 : 3;
+            int rank = enemy.serial() == gateAnchor ? 0 : enemy.serial() == playerHit ? 1 : beside ? 2 : 3;
             double distance = dx * dx + dy * dy;
             if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                 best = enemy.serial();
@@ -426,11 +561,13 @@ public final class Wingman {
     /**
      * Trail while a rear wave is active, Wide while a sides wave is or an enemy is on his flank,
      * Wing otherwise; the mirrored side while his own slot lies outside the play field, back once it
-     * has been inside for the swap time. Each change waits his reaction delay, then he glides.
+     * has been inside for the swap time. M7 part C: Trail too where the canyon is narrow or split ({@link
+     * #narrow}), and a slot in rock counts as outside. Each change waits his reaction delay, then he glides.
      */
-    private void chooseFormation(double shipX, int activeEdges, boolean flank) {
+    private void chooseFormation(double shipX, double shipY, int activeEdges, boolean flank) {
         Formation wanted;
-        if (WarningEdge.BOTTOM.in(activeEdges)) {
+        if (WarningEdge.BOTTOM.in(activeEdges) || (canyon != null && narrow(shipX, shipY))) {
+            // M7 part C: and where the canyon is narrow or split, back to his side once it widens.
             wanted = Formation.TRAIL;
         } else if (WarningEdge.LEFT.in(activeEdges) || WarningEdge.RIGHT.in(activeEdges) || flank) {
             wanted = Formation.WIDE;
@@ -449,7 +586,10 @@ public final class Wingman {
         }
         WingmanSpec.Side own = spec.side();
         double ownX = shipX + own.sign() * offset(formation).x();
-        boolean ownOutside = ownX < limit || ownX > PlayField.WIDTH - limit;
+        // M7 part C: his own slot in rock (off the player's channel) counts as outside too.
+        boolean ownOutside = ownX < limit
+                || ownX > PlayField.WIDTH - limit
+                || offChannel(ownX, shipY - offset(formation).y(), shipX);
         WingmanSpec.Side wantedSide;
         if (side == own) {
             inside = 0;
@@ -924,6 +1064,16 @@ public final class Wingman {
      * nearest point at the minimum distance on a margin.
      */
     private void keepClear(double shipX, double shipY) {
+        keepClearOfShip(shipX, shipY);
+        if (canyon != null) {
+            keepOffRock(shipX);
+        }
+        if (links != null) {
+            keepBelowTendrils();
+        }
+    }
+
+    private void keepClearOfShip(double shipX, double shipY) {
         double right = PlayField.WIDTH - limit;
         double top = PlayField.HEIGHT - limit;
         if (x < limit || x > right) {

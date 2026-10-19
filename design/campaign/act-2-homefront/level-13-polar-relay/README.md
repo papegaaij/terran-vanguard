@@ -1,8 +1,8 @@
 ---
 title: Level 13 – Polar Relay
-design: review
-implementation: in-progress
-art: proposed
+design: approved
+implementation: done
+art: final
 depends-on: [../../../enemies/naval/skimmer, ../../../enemies/ground/scuttler, ../../../enemies/air/stinger, ../../../enemies/ground/polyp-mortar, ../../../allies, ../../../systems/economy]
 updated: 2026-10-12
 ---
@@ -457,7 +457,8 @@ straight away for the arctic backdrop (`tools/art/backdrop_l13.py`) and the Skim
 [skimmer-r06-a](../../../enemies/naval/concept/skimmer-r06-a.png)); **a/b** for **the relay** (its
 states and the lights sequence) and **the whiteout peak** (a still each); **one version** for the
 drone and the research hut; **sounds a/b** for the relay hit, the integrity alarm and grid online (one
-version for the drone launch); **Nansen** auditioned a/b as Atlas Control was.
+version for the drone launch); **Nansen** auditioned a/b as Atlas Control was. Closed in the combined round 34 (user, 2026-10-12): the
+whiteout **b**, the relay **b**, Nansen **a**; everything else approved as final and accepted.
 
 Round 35's level files (step G2; the relay's a/b is in [allies](../../../allies/README.md#concept-art),
 the Skimmer's in its own README, the sounds and Nansen in [sfx](../../../audio/sfx/README.md) and
@@ -465,13 +466,14 @@ the Skimmer's in its own README, the sounds and Nansen in [sfx](../../../audio/s
 
 | File | What | Status |
 |---|---|---|
-| [concept/whiteout-r35-a.png](concept/whiteout-r35-a.png), [.gif](concept/whiteout-r35-a.gif) | Whiteout peak a "rolling banks" (`tools/art/whiteout_l13.py`): the halted frame at the peak, the layers, the ramp; a 4 s loop | proposed |
-| [concept/whiteout-r35-b.png](concept/whiteout-r35-b.png), [.gif](concept/whiteout-r35-b.gif) | Whiteout peak b "blizzard curtain": as a | proposed |
-| [concept/l13-props-final-r35-a.png](concept/l13-props-final-r35-a.png), [.gif](concept/l13-props-final-r35-a.gif) | Production art, one version each (`tools/art/l13_props.py`): the CDF supply drone (rotor phases, clamps, nav lights, the patch in its bay; its arc from the helipad) and the research hut (four states, the hatch beacon) | proposed |
-| [concept/backdrop-final-r35-a.png](concept/backdrop-final-r35-a.png), [.gif](concept/backdrop-final-r35-a.gif) | Production backdrop straight from scene-arctic-r09-a (`tools/art/backdrop_l13.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r35-a); its block for the level data, merged, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the ground as one unique strip of four pieces (the approach and the halt's frame, the leads cut along every Skimmer lane, the relay's and the hut's floes, brash in the margins and rubble where the walkers cross), the dark arctic water drifting on `deep`, the exit's open floes, the loose ice and the mortars' floe drifting on paths, the fog (light, medium) and the whiteout (look a) as the atmosphere's banks; composites with stand-ins for the units; the GIF the ease into the halt and the whiteout's ramp | proposed |
-| [concept/level-13-capture-final-r35-a.png](concept/level-13-capture-final-r35-a.png), [.mp4](concept/level-13-capture-final-r35-a.mp4) | Capture of the game (medium, the balance plan's L13 fit with Rook, no `--invulnerable`): 193 / 208 kills, the relay at 54 % (the secondary met), secret 1 / 1, A, 2,776 credits; sixteen frames (three from shorter runs: easy's whiteout, the damage smoke, the destroyed relay) and the whole run with sound ([recipe](concept/prompts.md#level-13-capture-final-r35-a)) | proposed |
-| [concept/level-13-capture-fixes-r35-a.png](concept/level-13-capture-fixes-r35-a.png), [.mp4](concept/level-13-capture-fixes-r35-a.mp4) | Supplement to the capture, the fixes made after it (45 s clip with sound + sheet, [notes](concept/prompts.md#level-13-capture-fixes-r35-a)): the t=20 Skimmers on their leads (a run without firing: two hulls touch a floe edge, t 24.5 and 27.5), the mortars' burst riding their floe (t 77), the pale fog bank against the capture's grey one (t 145), the whiteout (176–186), the end's chord (218.05–220.65) and jingle (from 220.65) without overlap | proposed |
-| [concept/level-13-capture-leads-r35-a.png](concept/level-13-capture-leads-r35-a.png), [.mp4](concept/level-13-capture-leads-r35-a.mp4) | Supplementary clip after G5c's wider leads (step CF; 22 s with sound, the level time burnt in, and a sheet; no firing, `--invulnerable`): the t=20 Skimmers through their whole leads, every hull on open water (a 10 fps scan, 2× insets of the nearest ones), and the halt frame: the relay's floe in brash-strewn water, small floes at the side edges ([recipe](concept/prompts.md#level-13-capture-leads-r35-a)) | proposed |
+| [concept/rejected/whiteout-r35-a.png](concept/rejected/whiteout-r35-a.png), [.gif](concept/rejected/whiteout-r35-a.gif) | Whiteout peak a "rolling banks" (`tools/art/whiteout_l13.py`): the halted frame at the peak, the layers, the ramp; a 4 s loop | rejected |
+| [concept/whiteout-r35-b.png](concept/whiteout-r35-b.png), [.gif](concept/whiteout-r35-b.gif) | Whiteout peak b "blizzard curtain": as a | chosen |
+| [concept/l13-props-final-r35-a.png](concept/l13-props-final-r35-a.png), [.gif](concept/l13-props-final-r35-a.gif) | Production art, one version each (`tools/art/l13_props.py`): the CDF supply drone (rotor phases, clamps, nav lights, the patch in its bay; its arc from the helipad) and the research hut (four states, the hatch beacon) | chosen |
+| [concept/backdrop-final-r35-a.png](concept/backdrop-final-r35-a.png), [.gif](concept/backdrop-final-r35-a.gif) | Production backdrop straight from scene-arctic-r09-a (`tools/art/backdrop_l13.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r35-a); its block for the level data, merged, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the ground as one unique strip of four pieces (the approach and the halt's frame, the leads cut along every Skimmer lane, the relay's and the hut's floes, brash in the margins and rubble where the walkers cross), the dark arctic water drifting on `deep`, the exit's open floes, the loose ice and the mortars' floe drifting on paths, the fog (light, medium) and the whiteout (look b, the user's pick in round 34; the sheet rebuilt with it) as the atmosphere's banks; composites with stand-ins for the units; the GIF the ease into the halt and the whiteout's ramp | chosen |
+| [concept/level-13-capture-final-r35-a.png](concept/level-13-capture-final-r35-a.png), [.mp4](concept/level-13-capture-final-r35-a.mp4) | Capture of the game (medium, the balance plan's L13 fit with Rook, no `--invulnerable`): 193 / 208 kills, the relay at 54 % (the secondary met), secret 1 / 1, A, 2,776 credits; sixteen frames (three from shorter runs: easy's whiteout, the damage smoke, the destroyed relay) and the whole run with sound ([recipe](concept/prompts.md#level-13-capture-final-r35-a)) | chosen |
+| [concept/level-13-capture-fixes-r35-a.png](concept/level-13-capture-fixes-r35-a.png), [.mp4](concept/level-13-capture-fixes-r35-a.mp4) | Supplement to the capture, the fixes made after it (45 s clip with sound + sheet, [notes](concept/prompts.md#level-13-capture-fixes-r35-a)): the t=20 Skimmers on their leads (a run without firing: two hulls touch a floe edge, t 24.5 and 27.5), the mortars' burst riding their floe (t 77), the pale fog bank against the capture's grey one (t 145), the whiteout (176–186), the end's chord (218.05–220.65) and jingle (from 220.65) without overlap | chosen |
+| [concept/level-13-capture-leads-r35-a.png](concept/level-13-capture-leads-r35-a.png), [.mp4](concept/level-13-capture-leads-r35-a.mp4) | Supplementary clip after G5c's wider leads (step CF; 22 s with sound, the level time burnt in, and a sheet; no firing, `--invulnerable`): the t=20 Skimmers through their whole leads, every hull on open water (a 10 fps scan, 2× insets of the nearest ones), and the halt frame: the relay's floe in brash-strewn water, small floes at the side edges ([recipe](concept/prompts.md#level-13-capture-leads-r35-a)) | chosen |
+| [concept/level-13-capture-relay-lost-r35-a.png](concept/level-13-capture-relay-lost-r35-a.png), [.mp4](concept/level-13-capture-relay-lost-r35-a.mp4) | The relay-lost mission-failed screen (P5 of round 34; nine frames + a 26 s clip with sound, the level time burnt in, [recipe](concept/prompts.md#level-13-capture-relay-lost-r35-a)): medium, the plan's L13 fit with Rook, auto-fire off and the ship parked in a corner, no `--invulnerable`: the secondary failed below half (Nansen's "Integrity at half", t ≈ 90), Scuttler fans on the relay (its white hit flash, the damage smoke), the last hit at t 103.6, the explosion at 103.8, the burning wreck and its smoke column, the mission-failed screen at t ≈ 106.4 with Okafor's "Nansen is gone. Pull back, Lancer." (the ship alive at 37 armour) | chosen |
 
 ## Implementation
 
@@ -510,42 +512,44 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
 - [x] Water by unit: only a burst on a Skimmer and its death use the water splash (G5 = a) (M5 part G, G3, G6;
       `water_splash: naval-only`, `LevelScreen.splashes`: a burst on a unit with its own water layer; the
       Skimmer's sub body, wake and flip-and-sink by heading, `NavalLooks`)
-- [ ] Production backdrop (five sections, the fixed halt frame with leads cut along the lanes, loose drifting
+- [x] Production backdrop (five sections, the fixed halt frame with leads cut along the lanes, loose drifting
       ice, fog from t=140, the whiteout banks and snow on the real clock, easy's 6 s whiteout peak, grid
       online; it replaces the data's placeholder `backdrop` block, Level 12's sea); the relay's
       production sprite and lights; the Skimmer's production sprite; the drone and the hut (M5 part G, G2, G5, G6)
       — the backdrop in G5 (`tools/art/backdrop_l13.py`, the data's `backdrop` block and the sections'
       `tiles`; see *Concept art*): the ground one unique strip of four pieces with the halt's frame and
       the leads cut along every lane, the drifting water, the loose ice and the mortars' floe on paths,
-      fog light/medium and the whiteout (look a) as the atmosphere's banks; the snow, the banks' roll on
+      fog light/medium and the whiteout (look b since round 34) as the atmosphere's banks; the snow, the banks' roll on
       the real clock and easy's 6 s peak are G6's
-- [ ] Research hut secret (110 in Act 1 terms) and the two supply drones (a presentation arc releasing the
+- [x] Research hut secret (110 in Act 1 terms) and the two supply drones (a presentation arc releasing the
       patch at a point) (M5 part G, G3, G4, G5, G6) — the point drop in the simulation done in G3
       (`LevelScript.PlacedPickup` with a y, `SimEvents.Type.PICKUP_PLACED`); the hut trigger, its secret and
       the `drops` with the drone's sprite in the data, the hut's and the drone's sprites in `assets/` in G4;
       the drone's arc in G6 (`DroneLooks`: 4 s from the relay's helipad to the drop, the patch in its
       bay, back with its clamps open, the sides alternating; its launch sound as the arc starts); the
-      hut is drawn as a trigger with its beacon glow (the generic trigger looks)
+      hut is drawn as a trigger with its beacon glow (the generic trigger looks); checked in step K8
+      (`Level13Test`, `Level13LooksTest`, `Level13SoundsTest`)
 - [x] HUD tracker: `RELAY` with the integrity bar and its 50 % tick, the sync countdown, the secondary's
       line (M5 part G, G6; `MissionPanel`, `PartGHudTest`), the debrief's `RELAY n %` row
       (`LevelScreenPartGTest`)
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), the integrity events, Nansen
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`), the integrity events, Nansen
       cast in round 35 (M5 part G, G4, G6) — the cast speakers' 15 lines rendered in G6 (no voiced timed
-      line late, none moved); Nansen's lines play as text until round 35 casts him
+      line late, none moved); Nansen cast in round 34 (a, Patrick Eaton), his five lines rendered in step K1
 - [x] Music: "Homefront" from section 2, the full mix in section 4, the jingle after grid online's chord
       (the fade from t=218, the jingle at t=220.6; step G8) and no debrief
       jingle; the arctic ambience (M5 part G, G6; `Level13SoundsTest`) — its +3 dB in the whiteout and
       easy's 6 s peak read the section peak's `ambience_db` and `easy` (code in G6; the data's keys are
       the main agent's merge)
-- [ ] Threat profile (the defend exception stated), Varga's four intel lines, Rook's teaser, two briefing
+- [x] Threat profile (the defend exception stated), Varga's four intel lines, Rook's teaser, two briefing
       pages with their images, the L3 strip's defend marks and `IntelPanelLayoutTest` (M5 part G, G4, G5;
       the strip's marks done in G6: `Intel.marks`, `PartGHudTest`; the two images rendered in G5, set as the pages'
-      `image` once the texts fit four lines, `BriefingLayoutTest`)
+      `image` once the texts fit four lines, `BriefingLayoutTest`; both pages carry their images,
+      checked in step K8)
 - [x] Typical haul at medium within ±5 % of budget(13) = 1,577 with the level's `bounty_scale`
       (`TypicalHaulTest`: 1,606 at 0.67, +1.8 %) (M5 part G, G4)
 - [x] Easy/hard variations as in *Difficulty notes* (easy's 6 s whiteout peak is presentation: the
       backdrop item); `Level13Test`, `PartGLevelKeysTest`, `PartGUnitsDataTest` (M5 part G, G4)
-- [ ] Captures and round 35 (M5 part G, G7 and G8)
+- [x] Captures and round 35 (M5 part G, G7 and G8; reviewed in the combined round 34)
 
 ## Open questions
 
@@ -708,3 +712,20 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   top of the scroll (the mortars' floe, 10 px/s) now hands its drift to the game with its death (a new
   simulation event, `WRECK_DRIFT`, presentation only), and its death burst and remains drift on with the
   floe instead of staying at the left edge where it was shot.
+- 2026-10-12 user, round 34: grid online **b** (a spin-up into a contact clunk; 2.6 s like a, so the
+  jingle's 2.6 s fade stays), the other relay sounds a; Nansen's voice **a**, Patrick Eaton: step K1 cast
+  him and rendered his five lines ([voice](../../../audio/voice/README.md#decisions); the portrait stays
+  the generic CDF one, `RadioTimelineTest` passes unchanged).
+- 2026-10-12 (user, round 34): concept round 34 closed. The whiteout **b** "blizzard curtain"
+  (a "rolling banks" rejected, its files in `concept/rejected/`; b built into `backdrop_l13.py` in step
+  K3) and the Nansen Relay **b** "grid node" ([allies](../../../allies/README.md#decisions)); the
+  arctic backdrop, the drone and the research hut, the briefing images and the Skimmer's art and intel
+  portrait approved as **final**, so `art: final`; the captures (13.3a–c), the texts (C5), the numbers
+  (C11: integrity 240 / 340 / 520, hard above medium), C4 (the grid-online chord and the jingle at
+  t=220.6), G1–G9 and every build choice accepted; the sounds and Nansen as in the line above; the 15
+  voiced lines heard. The document leaves `review` for `approved`. Still open: the relay-lost mission
+  failed screen (P5, being captured) and the user's playthrough of Act 2 (P9).
+- 2026-10-12: Step K10: the relay-lost `mission-failed` cue gets `expression: grim` like every other
+  level's failure line (the failed screen showed Okafor's neutral portrait); the line re-rendered with
+  the grim settings (`tools/art/voice.py`, `okafor/7f735b28f819.ogg`, Whisper and pitch checked; the
+  old `49386929d4bb.ogg` deleted, round 34's link updated).

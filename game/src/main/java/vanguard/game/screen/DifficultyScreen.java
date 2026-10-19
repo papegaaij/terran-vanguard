@@ -12,7 +12,9 @@ import vanguard.content.campaign.Campaign;
 import vanguard.game.GameServices;
 import vanguard.game.audio.Sfx;
 import vanguard.game.input.MenuInput;
+import vanguard.game.input.Pointer;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 import vanguard.game.ui.Words;
@@ -22,6 +24,7 @@ import vanguard.game.ui.Words;
  * over the dimmed hero scene, each with its chevrons, rank, one-line description and the key
  * levers from design/systems/difficulty. Left and right choose, confirm starts the campaign, back
  * returns to the menu. A new campaign at the chosen difficulty starts with the intro briefing.
+ * With the mouse a card is chosen by hovering it and started by a click on it.
  */
 public final class DifficultyScreen implements GameScreen {
     private static final int CARD_WIDTH = 270;
@@ -84,12 +87,19 @@ public final class DifficultyScreen implements GameScreen {
             services.play(Sfx.MENU_BACK);
             return Transition.BACK;
         }
-        if (input.confirm()) {
+        Pointer pointer = input.pointer();
+        int before = selected;
+        for (int i = 0; i < Difficulty.values().length; i++) {
+            if (pointer.hovers(card(i)) || pointer.clicks(card(i))) {
+                selected = i;
+            }
+        }
+        boolean clicked = pointer.clicked() && pointer.clicks(card(selected));
+        if (input.confirm() || clicked) {
             services.play(Sfx.MENU_CONFIRM);
             Campaign campaign = Campaign.start(services.campaignRules, Difficulty.values()[selected]);
             return Transition.replace(HangarScreen.beforeNextLevel(services, campaign));
         }
-        int before = selected;
         if (input.left()) {
             selected = Math.max(0, selected - 1);
         } else if (input.right()) {
@@ -99,6 +109,12 @@ public final class DifficultyScreen implements GameScreen {
             services.play(Sfx.MENU_MOVE);
         }
         return Transition.STAY;
+    }
+
+    /** A card's hit region: the selected card's raised rectangle, whichever card is selected. */
+    static Box card(int index) {
+        int x0 = (PixelScreen.WIDTH - 3 * CARD_WIDTH - 2 * GAP) / 2;
+        return new Box(x0 + index * (CARD_WIDTH + GAP), CARD_Y - RAISE, CARD_WIDTH, CARD_HEIGHT + 2 * RAISE);
     }
 
     @Override

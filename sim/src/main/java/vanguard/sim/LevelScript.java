@@ -48,7 +48,18 @@ import java.util.Optional;
  *     patch in the eye); M5 part G: or released at a point in the field (Level 13's supply drones'
  *     patches), in time order
  * @param defend M5 part G: the {@code defend} primary objective (Level 13's Nansen Relay): one ally on
- *     the ground that must survive its synchronisation; never beside an escort or a naval convoy
+ *     the ground that must survive its synchronisation; never beside an escort or a naval convoy * @param noSurface M7 part B: the ground where a Burrower never surfaces (design/campaign Level 15:
+ *     the station's pads, the hab, the rail line); empty for none. Not with holds or an arena.
+ * @param launchDrop M7 part B (default pending the user's review): the launch drops the ship (and the
+ *     wingman in his slot) from above the top edge to the start position instead of raising it from
+ *     below (Level 15's drop from the transport's bay)
+ * @param terrain M7 part C: the canyon's walls and rock islands and what touching them does (Level 16);
+ *     empty for none
+ * @param gates M7 part C: the tendril gates' anchor pairs (Level 16), each anchor also one of {@code
+ *     groundUnits} ({@link #withGates}); empty for none
+ * @param groundAllies M7 part D: allies standing on the ground outside the objectives (Level 17's Ares
+ *     Landing domes, {@link GroundAllies}), which never fail the mission; never beside an escort, a naval
+ *     convoy or a defend primary, and not with holds or an arena (their places follow the scroll's time)
  */
 public record LevelScript(
         int number,
@@ -81,8 +92,20 @@ public record LevelScript(
         Optional<Sondes> sondes,
         double dropFactor,
         List<PlacedPickup> placedPickups,
-        Optional<Defend> defend) {
+        Optional<Defend> defend,
+        List<NoSurface> noSurface,
+        boolean launchDrop,
+        Optional<TerrainSpec> terrain,
+        List<Gate> gates,
+        Optional<GroundAllies> groundAllies) {
     public LevelScript {
+        gates = List.copyOf(gates);
+        checkGroundAllies(sections, holds, escort, convoy, defend, groundAllies);
+        noSurface = List.copyOf(noSurface);
+        if (!noSurface.isEmpty() && (!holds.isEmpty() || sections.stream().anyMatch(Section::arena))) {
+            throw new IllegalArgumentException(
+                    "no-surface zones are placed by the scroll's time, which holds and arenas make depend on play");
+        }
         // M5 part G: the drones' point drops and the top edge's placed pickups in one time order.
         placedPickups = placedPickups.stream()
                 .sorted(java.util.Comparator.comparingDouble(PlacedPickup::t))
@@ -131,6 +154,637 @@ public record LevelScript(
         }
         if (convoy.isPresent() && escort.isPresent()) {
             throw new IllegalArgumentException("a naval convoy is not an escort: a level has one or the other");
+        }
+    }
+
+    /** A level without M7 part B's no-surface zones and drop launch. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            int secrets,
+            List<RadioCue> radio,
+            Secondary secondary,
+            List<CraneSpec> cranes,
+            List<DebrisSpec> debris,
+            List<SetPieceSpec> setPieces,
+            Optional<Escort> escort,
+            Optional<Road> road,
+            List<String> targets,
+            Optional<SledSpec> sled,
+            Optional<RockSpec> rocks,
+            List<GroupDrop> groupDrops,
+            Optional<Darkness> darkness,
+            List<TowSpec> tows,
+            List<PartDrop> partDrops,
+            List<Hold> holds,
+            Optional<Collapse> collapse,
+            boolean water,
+            Optional<Naval> convoy,
+            Optional<Weather> weather,
+            Optional<Sondes> sondes,
+            double dropFactor,
+            List<PlacedPickup> placedPickups,
+            Optional<Defend> defend) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                List.of(),
+                false,
+                Optional.empty());
+    }
+
+    /** M7 part B: this level with the no-surface zones {@code zones} (Level 15's station and rail line). */
+    public LevelScript withNoSurface(List<NoSurface> zones) {
+        return new LevelScript(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                zones,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
+    }
+
+    /** M7 part B: this level with the launch dropping from above ({@code drop}) or rising from below. */
+    public LevelScript withLaunchDrop(boolean drop) {
+        return new LevelScript(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                drop,
+                terrain,
+                gates,
+                groundAllies);
+    }
+
+    /** M7 part C: this level with the canyon's walls and rock islands {@code canyon} (Level 16); empty for none. */
+    public LevelScript withTerrain(Optional<TerrainSpec> canyon) {
+        return new LevelScript(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                launchDrop,
+                canyon,
+                gates,
+                groundAllies);
+    }
+
+    /** A level without M7 part C's tendril gates. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            int secrets,
+            List<RadioCue> radio,
+            Secondary secondary,
+            List<CraneSpec> cranes,
+            List<DebrisSpec> debris,
+            List<SetPieceSpec> setPieces,
+            Optional<Escort> escort,
+            Optional<Road> road,
+            List<String> targets,
+            Optional<SledSpec> sled,
+            Optional<RockSpec> rocks,
+            List<GroupDrop> groupDrops,
+            Optional<Darkness> darkness,
+            List<TowSpec> tows,
+            List<PartDrop> partDrops,
+            List<Hold> holds,
+            Optional<Collapse> collapse,
+            boolean water,
+            Optional<Naval> convoy,
+            Optional<Weather> weather,
+            Optional<Sondes> sondes,
+            double dropFactor,
+            List<PlacedPickup> placedPickups,
+            Optional<Defend> defend,
+            List<NoSurface> noSurface,
+            boolean launchDrop,
+            Optional<TerrainSpec> terrain) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                List.of());
+    }
+
+    /**
+     * M7 part C: this level with the tendril gates {@code pairs} (Level 16; design/enemies/ground/tendril-anchor):
+     * each gate's two anchors join the ground units (in time order, after the units already there at the same
+     * time; group -1), so they enter, scroll, fire, count and pay as any ground unit, and the sortie spans the
+     * gate's tendril between them. The anchors are not to be among the ground units already. Only once.
+     */
+    public LevelScript withGates(List<Gate> pairs) {
+        if (!gates.isEmpty()) {
+            throw new IllegalArgumentException("a level's gates are set once");
+        }
+        List<GroundUnit> units = new java.util.ArrayList<>(groundUnits);
+        for (Gate gate : pairs) {
+            units.add(new GroundUnit(gate.t(), gate.leftX(), gate.anchor(), -1));
+            units.add(new GroundUnit(gate.t(), gate.rightX(), gate.anchor(), -1));
+        }
+        // A stable sort: the units already there keep their order, each gate's left anchor before its right.
+        units.sort(java.util.Comparator.comparingDouble(GroundUnit::t));
+        return new LevelScript(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                units,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                pairs,
+                groundAllies);
+    }
+
+    /**
+     * M7 part C, a tendril gate's anchor pair (design/enemies/ground/tendril-anchor; design/campaign Level 16,
+     * Gates): two {@code anchor} units entering at the top edge at {@code t} at {@code leftX} and {@code
+     * rightX}, scrolling with the ground at the walls' foot, and the tendril of the anchor's {@link
+     * EnemySpec.Link} between their centres. A gate of several pairs at different heights is several of these.
+     */
+    public record Gate(double t, double leftX, double rightX, EnemySpec anchor) {
+        public Gate {
+            if (anchor.link().isEmpty()) {
+                throw new IllegalArgumentException(anchor.slug() + " spans no tendril: a gate's anchor has a link");
+            }
+            if (!(leftX < rightX) || !(t >= 0)) {
+                throw new IllegalArgumentException(
+                        "a gate's left anchor is left of its right one: " + leftX + ", " + rightX);
+            }
+        }
+    }
+
+    /** A level without M7 part D's ground allies. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            int secrets,
+            List<RadioCue> radio,
+            Secondary secondary,
+            List<CraneSpec> cranes,
+            List<DebrisSpec> debris,
+            List<SetPieceSpec> setPieces,
+            Optional<Escort> escort,
+            Optional<Road> road,
+            List<String> targets,
+            Optional<SledSpec> sled,
+            Optional<RockSpec> rocks,
+            List<GroupDrop> groupDrops,
+            Optional<Darkness> darkness,
+            List<TowSpec> tows,
+            List<PartDrop> partDrops,
+            List<Hold> holds,
+            Optional<Collapse> collapse,
+            boolean water,
+            Optional<Naval> convoy,
+            Optional<Weather> weather,
+            Optional<Sondes> sondes,
+            double dropFactor,
+            List<PlacedPickup> placedPickups,
+            Optional<Defend> defend,
+            List<NoSurface> noSurface,
+            boolean launchDrop,
+            Optional<TerrainSpec> terrain,
+            List<Gate> gates) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                Optional.empty());
+    }
+
+    /** M7 part D: this level with the ground allies {@code allies} (Level 17's Ares Landing domes); empty for none. */
+    public LevelScript withGroundAllies(Optional<GroundAllies> allies) {
+        return new LevelScript(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                allies);
+    }
+
+    /**
+     * M7 part D: ground allies stand on the ground by the scroll's time, so they come without holds or an
+     * arena, and beside no escort, naval convoy or defend primary (the sortie has one convoy).
+     */
+    private static void checkGroundAllies(
+            List<Section> sections,
+            List<Hold> holds,
+            Optional<Escort> escort,
+            Optional<Naval> convoy,
+            Optional<Defend> defend,
+            Optional<GroundAllies> groundAllies) {
+        // An untouched secondary without ground allies is the sortie's to refuse: a level is built with its
+        // secondary first and its ground allies after (withGroundAllies).
+        if (groundAllies.isEmpty()) {
+            return;
+        }
+        if (escort.isPresent() || convoy.isPresent() || defend.isPresent()) {
+            throw new IllegalArgumentException(
+                    "ground allies have no escort, naval convoy or defend primary beside them");
+        }
+        if (!holds.isEmpty() || sections.stream().anyMatch(Section::arena)) {
+            throw new IllegalArgumentException(
+                    "ground allies stand by the scroll's time, which holds and arenas make depend on play");
+        }
+    }
+
+    /**
+     * M7 part D, a ground ally (design/allies, Ares Landing dome; design/campaign Level 17, The Ares Landing
+     * domes): {@code ally} standing on the ground at {@code x} px from the left edge, its footprint's lower
+     * edge entering the top edge at {@code enterSeconds} on the level clock; it scrolls through with the
+     * ground from there.
+     *
+     * @param name its name in the radio ({@code {ally}}: "Bradbury")
+     */
+    public record GroundAlly(AllySpec ally, String name, double x, double enterSeconds) {
+        public GroundAlly {
+            java.util.Objects.requireNonNull(ally);
+            java.util.Objects.requireNonNull(name);
+            if (!(x >= 0 && x <= PlayField.WIDTH) || !(enterSeconds >= 0)) {
+                throw new IllegalArgumentException(
+                        ally.slug() + ": a ground ally stands on the play field and enters in the level");
+            }
+        }
+    }
+
+    /**
+     * M7 part D, the level's ground allies outside the objectives (design/campaign Level 17, The Ares Landing
+     * domes; Q.25b, M16 = a): its units stand on the ground and scroll through with it; each takes the
+     * hooked attacks its {@link AllySpec} names (a bomb run's {@link AllySpec#bombs()}, a lob's direct hit,
+     * a roll's {@link AllySpec#rolls()}) as hits, without regeneration; a broken unit lies there as a wreck.
+     * They never fail the mission. Defaults pending the user's review (round 40): the hook is per enemy
+     * kind, as Level 13's.
+     *
+     * @param units in the order of the level's tracker pips (Level 17: Bradbury, Lowell, Schiaparelli,
+     *     Burroughs, Eden)
+     * @param targetedBy per enemy slug its hook mode (the level's {@code targeted_by} at the difficulty);
+     *     enemies not listed are not hooked. A hooked ({@link HookMode#ALWAYS}) mine layer flies a bomb run
+     * @param bombRow a bomb run's row, px below the top edge (160): a unit entering at the front descends
+     *     to it; one entering from a side keeps its entry row
+     * @param bombSlot px between the bomb run targets of a wave's units, across, centred on the dome (40)
+     */
+    public record GroundAllies(
+            List<GroundAlly> units, java.util.Map<String, HookMode> targetedBy, double bombRow, double bombSlot) {
+        public GroundAllies {
+            units = List.copyOf(units);
+            targetedBy = java.util.Map.copyOf(targetedBy);
+            if (units.isEmpty() || units.size() > 31) {
+                throw new IllegalArgumentException("ground allies are 1 to 31 units: " + units.size());
+            }
+            if (!(bombRow >= 0 && bombRow <= PlayField.HEIGHT) || !(bombSlot >= 0)) {
+                throw new IllegalArgumentException(
+                        "a bomb run's row lies on the play field, its slots 0 or more apart");
+            }
+        }
+
+        /** The hook mode of the enemy {@code slug}: {@link HookMode#NONE} when not listed. */
+        public HookMode mode(String slug) {
+            return targetedBy.getOrDefault(slug, HookMode.NONE);
+        }
+    }
+
+    /** A level without M7 part C's terrain. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            int secrets,
+            List<RadioCue> radio,
+            Secondary secondary,
+            List<CraneSpec> cranes,
+            List<DebrisSpec> debris,
+            List<SetPieceSpec> setPieces,
+            Optional<Escort> escort,
+            Optional<Road> road,
+            List<String> targets,
+            Optional<SledSpec> sled,
+            Optional<RockSpec> rocks,
+            List<GroupDrop> groupDrops,
+            Optional<Darkness> darkness,
+            List<TowSpec> tows,
+            List<PartDrop> partDrops,
+            List<Hold> holds,
+            Optional<Collapse> collapse,
+            boolean water,
+            Optional<Naval> convoy,
+            Optional<Weather> weather,
+            Optional<Sondes> sondes,
+            double dropFactor,
+            List<PlacedPickup> placedPickups,
+            Optional<Defend> defend,
+            List<NoSurface> noSurface,
+            boolean launchDrop) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                secrets,
+                radio,
+                secondary,
+                cranes,
+                debris,
+                setPieces,
+                escort,
+                road,
+                targets,
+                sled,
+                rocks,
+                groupDrops,
+                darkness,
+                tows,
+                partDrops,
+                holds,
+                collapse,
+                water,
+                convoy,
+                weather,
+                sondes,
+                dropFactor,
+                placedPickups,
+                defend,
+                noSurface,
+                launchDrop,
+                Optional.empty());
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, Terrain; M1 = a): the canyon's rock and what touching it does.
+     *
+     * @param terrain the walls' collision lines and the rock islands
+     * @param damage what a touch deals the ship (shield first, the overflow to armour) and Rook (his
+     *     armour): {@code heavy} 10, easy {@code medium} 6
+     * @param push how far a touch pushes the hull back out of the rock along its normal, px (28)
+     * @param pushSeconds over how long (0.12 s)
+     * @param cooldownSeconds after a touch, how long further contact only clamps the hull, without
+     *     damage or push (0.5 s)
+     */
+    public record TerrainSpec(Terrain terrain, double damage, double push, double pushSeconds, double cooldownSeconds) {
+        public TerrainSpec {
+            java.util.Objects.requireNonNull(terrain);
+            if (!(damage >= 0) || !(push >= 0) || !(pushSeconds > 0) || !(cooldownSeconds >= 0)) {
+                throw new IllegalArgumentException("a wall contact has a damage, a push over some time and a cooldown");
+            }
         }
     }
 
@@ -233,7 +887,12 @@ public record LevelScript(
                 sondes,
                 dropFactor,
                 placedPickups,
-                Optional.of(objective));
+                Optional.of(objective),
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
     }
 
     /**
@@ -374,7 +1033,12 @@ public record LevelScript(
                 sondes,
                 dropFactor,
                 placedPickups,
-                defend);
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
     }
 
     /** M5 part F: this level with the weather sondes {@code buoys} and the secondary objective {@code objective} (a test's own level). */
@@ -410,7 +1074,12 @@ public record LevelScript(
                 Optional.of(buoys),
                 dropFactor,
                 placedPickups,
-                defend);
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
     }
 
     /** M5 part F: this level with the drop factor {@code factor} and the placed pickups {@code placed}. */
@@ -446,7 +1115,12 @@ public record LevelScript(
                 sondes,
                 factor,
                 placed,
-                defend);
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
     }
 
     /** A level without M5 part E's naval convoy. */
@@ -592,7 +1266,12 @@ public record LevelScript(
                 sondes,
                 dropFactor,
                 placedPickups,
-                defend);
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
     }
 
     /** M5 part E: this level with the naval convoy {@code naval} (a test's own level). */
@@ -628,7 +1307,12 @@ public record LevelScript(
                 sondes,
                 dropFactor,
                 placedPickups,
-                defend);
+                defend,
+                noSurface,
+                launchDrop,
+                terrain,
+                gates,
+                groundAllies);
     }
 
     /** A level without M5 part C's hold zones and collapse. */
@@ -1602,8 +2286,14 @@ public record LevelScript(
      * the scroll eases from the section before's speed to 0 over that section's last {@code
      * rampSeconds} and back up to the next section's speed over its first {@code rampSeconds}
      * (smoothstep, on the level clock); the {@code ramp} is read only on a timed halt.
+     *
+     * <p>M7 part B (design/campaign Level 15: "each change eased over 1 s"): a moving section with an
+     * {@code easeSeconds} above 0 that follows a moving section (not an arena, not a timed halt) eases
+     * from that section's speed to its own over its first {@code easeSeconds} (smoothstep, on the level
+     * clock: step k of n runs at the old speed + (new − old) × smoothstep((k + 1) ÷ n)); 0, the default,
+     * changes the speed at once, as before.
      */
-    public record Section(double end, double speed, boolean arena, double rampSeconds) {
+    public record Section(double end, double speed, boolean arena, double rampSeconds, double easeSeconds) {
         /** M5 part G: a timed halt's eases when its data gives no {@code ramp}, s. */
         public static final double TIMED_HALT_RAMP_SECONDS = 2;
 
@@ -1611,6 +2301,14 @@ public record LevelScript(
             if (!(rampSeconds >= 0)) {
                 throw new IllegalArgumentException("a section's ramp is 0 s or more: " + rampSeconds);
             }
+            if (!(easeSeconds >= 0) || (easeSeconds > 0 && (speed == 0 || arena))) {
+                throw new IllegalArgumentException("only a moving section eases in, over 0 s or more: " + easeSeconds);
+            }
+        }
+
+        /** A section that changes its speed at once (without M7 part B's ease). */
+        public Section(double end, double speed, boolean arena, double rampSeconds) {
+            this(end, speed, arena, rampSeconds, 0);
         }
 
         /** A section with the timed halt's default ramp ({@link #TIMED_HALT_RAMP_SECONDS}, read only on one). */
@@ -1625,6 +2323,20 @@ public record LevelScript(
         /** M5 part G: whether it is a timed halt (speed 0 without an arena). */
         public boolean timedHalt() {
             return speed == 0 && !arena;
+        }
+    }
+
+    /**
+     * M7 part B, a no-surface zone (design/campaign Level 15: the station's pads and hab, the rail line):
+     * the ground that crosses the top edge between the level times {@code from} and {@code to} s, from
+     * {@code left} to {@code right} px across; it scrolls with the ground. A Burrower never surfaces in one
+     * ({@link EnemySpec.SurfaceSpot}).
+     */
+    public record NoSurface(double from, double to, double left, double right) {
+        public NoSurface {
+            if (!(from >= 0) || !(to > from) || !(right > left)) {
+                throw new IllegalArgumentException("a no-surface zone spans a time and a width");
+            }
         }
     }
 
@@ -1724,6 +2436,11 @@ public record LevelScript(
      * @param integrity M5 part G (Level 13's "Integrity ≥ 50 %"): with more than 0, the defend
      *     primary's ally must keep this share of its integrity: failed at once below it, met when its
      *     synchronisation completes ({@link #integrity(double, int, String)}); 0 for none
+     * @param links M7 part C (design/campaign Level 16, Q.16a): every tendril of the level's gates broken
+     *     before it leaves the screen ({@link #links(int, String)}); counted as an escapes objective
+     * @param untouched M7 part D (design/campaign Level 17, Q.25c): none of the level's ground allies hit
+     *     ({@link #untouched(int, String)}): failed at the first hit on any of them, met when the last of
+     *     them leaves the bottom edge
      */
     public record Secondary(
             double killRatio,
@@ -1738,8 +2455,33 @@ public record LevelScript(
             String tag,
             boolean afloat,
             boolean sondes,
-            double integrity) {
+            double integrity,
+            boolean links,
+            boolean untouched) {
         public Secondary {
+            if (untouched
+                    && (links
+                            || sondes
+                            || afloat
+                            || integrity > 0
+                            || killRatio > 0
+                            || !groups.isEmpty()
+                            || !escapes.isEmpty()
+                            || !killAll.isEmpty()
+                            || !parts.isEmpty())) {
+                throw new IllegalArgumentException("an untouched objective judges the ground allies, nothing else");
+            }
+            if (links
+                    && (sondes
+                            || afloat
+                            || integrity > 0
+                            || killRatio > 0
+                            || !groups.isEmpty()
+                            || !escapes.isEmpty()
+                            || !killAll.isEmpty()
+                            || !parts.isEmpty())) {
+                throw new IllegalArgumentException("a links objective counts the tendrils, nothing else");
+            }
             if (!(integrity >= 0 && integrity < 1)) {
                 throw new IllegalArgumentException("an integrity objective's share is from 0 to below 1: " + integrity);
             }
@@ -1769,6 +2511,92 @@ public record LevelScript(
             if (afloat && (!groups.isEmpty() || !escapes.isEmpty() || !killAll.isEmpty() || !parts.isEmpty())) {
                 throw new IllegalArgumentException("an afloat objective counts the convoy, nothing else");
             }
+        }
+
+        /** Without M7 part D's untouched. */
+        public Secondary(
+                double killRatio,
+                int credits,
+                List<String> groups,
+                String escapes,
+                List<String> killAll,
+                String label,
+                String partsOf,
+                List<Integer> parts,
+                int beforePhase,
+                String tag,
+                boolean afloat,
+                boolean sondes,
+                double integrity,
+                boolean links) {
+            this(
+                    killRatio,
+                    credits,
+                    groups,
+                    escapes,
+                    killAll,
+                    label,
+                    partsOf,
+                    parts,
+                    beforePhase,
+                    tag,
+                    afloat,
+                    sondes,
+                    integrity,
+                    links,
+                    false);
+        }
+
+        /**
+         * M7 part D (design/campaign Level 17, Q.25c): {@code untouched: true}, none of the level's ground
+         * allies hit, for {@code credits}, with the tracker's {@code label} ({@code DOMES}): failed at the
+         * first hit, met when the last of them leaves the bottom edge.
+         */
+        public static Secondary untouched(int credits, String label) {
+            return new Secondary(
+                    0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, false, true);
+        }
+
+        /** Without M7 part C's links. */
+        public Secondary(
+                double killRatio,
+                int credits,
+                List<String> groups,
+                String escapes,
+                List<String> killAll,
+                String label,
+                String partsOf,
+                List<Integer> parts,
+                int beforePhase,
+                String tag,
+                boolean afloat,
+                boolean sondes,
+                double integrity) {
+            this(
+                    killRatio,
+                    credits,
+                    groups,
+                    escapes,
+                    killAll,
+                    label,
+                    partsOf,
+                    parts,
+                    beforePhase,
+                    tag,
+                    afloat,
+                    sondes,
+                    integrity,
+                    false);
+        }
+
+        /**
+         * M7 part C (design/campaign Level 16, Q.16a): {@code links: true}, every tendril of the level's
+         * gates broken before it leaves the screen, for {@code credits}, with the tracker's {@code label}
+         * ({@code BARRIERS}): met at the last, failed at the first one lost.
+         */
+        public static Secondary links(int credits, String label) {
+            return new Secondary(
+                    0, credits, List.of(), "", List.of(), label, "", List.of(), -1, "", false, false, 0, true);
         }
 
         /** Without M5 part G's integrity. */
@@ -1912,7 +2740,13 @@ public record LevelScript(
 
         /** M5 part D: whether the level has no secondary objective ({@link #NONE}). */
         public boolean none() {
-            return killRatio == 0 && credits == 0 && !byGroups() && !byEscapes() && !afloat && !byIntegrity();
+            return killRatio == 0
+                    && credits == 0
+                    && !byGroups()
+                    && !byEscapes()
+                    && !afloat
+                    && !byIntegrity()
+                    && !untouched;
         }
 
         /** Whether the objective is about groups rather than the kill ratio. */
@@ -1927,7 +2761,7 @@ public record LevelScript(
          * destroyed of all, met when the last is destroyed, failed when one gets away (survives).
          */
         public boolean byEscapes() {
-            return !escapes.isEmpty() || !killAll.isEmpty() || byParts() || sondes;
+            return !escapes.isEmpty() || !killAll.isEmpty() || byParts() || sondes || links;
         }
 
         /** Whether the objective is to shoot off a boss's parts before a phase ends (Level 07's "Gut the bays"). */
@@ -2851,7 +3685,23 @@ public record LevelScript(
          * in the attempt (Level 13's relay below 50 % and 25 %); the subject is the share as a decimal
          * ("0.5"), and each share's cues start once.
          */
-        ALLY_BELOW;
+        ALLY_BELOW,
+        /**
+         * M7 part B: the attempt's first Burrower surfaced ({@link SimEvents.Type#BURROW_SURFACED}); once. No
+         * subject (the radio event {@code first-surfacing}).
+         */
+        FIRST_SURFACING,
+        /**
+         * M7 part C: the attempt's first wall contact of the ship ({@link SimEvents.Type#WALL_CONTACT}, not
+         * Rook's); once. No subject. Only in a level with terrain.
+         */
+        FIRST_WALL_CONTACT,
+        /**
+         * Round 40 (the reworked Harbour Kraken, proposal 3a): the attempt's first lane telegraph of an arena
+         * boss on a lane holding a convoy ship a slam hurts (the teaching line: cut that lane's root); once.
+         * No subject. Its {@link #FIRST_TELEGRAPH} cues start as well when it is the first telegraph.
+         */
+        FIRST_SHIP_TELEGRAPH;
 
         /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
         public static final String PART_SEPARATOR = "|";

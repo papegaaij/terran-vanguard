@@ -1,6 +1,7 @@
 package vanguard.desktop;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -16,5 +17,12 @@ class DesktopLauncherTest {
     void fullScreenMinimisesOnWindowsAndMacOsWhenTheFocusGoes() {
         assertTrue(DesktopLauncher.autoIconify("Windows 11"));
         assertTrue(DesktopLauncher.autoIconify("Mac OS X"));
+    }
+
+    @Test
+    void theWindowIconsAreOnTheClassPath() {
+        for (String icon : DesktopLauncher.WINDOW_ICONS) {
+            assertNotNull(DesktopLauncherTest.class.getResource("/" + icon), icon);
+        }
     }
 }

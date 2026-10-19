@@ -18,7 +18,8 @@ public record SmartBombSpec(
         double repeatSeconds,
         double flashSeconds,
         double flashOpacity,
-        double fadeSeconds) {
+        double fadeSeconds)
+        implements SpecialSpec.Effect {
     public SmartBombSpec {
         if (!(ringSeconds > 0) || !(repeatSeconds > 0)) {
             throw new IllegalArgumentException("a Smart Bomb needs a ring time and a repeat time");

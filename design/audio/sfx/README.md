@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../player, ../../enemies, ../../ui]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Sound effects
@@ -162,10 +162,10 @@ reused round 02 files marked (r02).
 | Harbour Kraken (Level 11, M5 part E), one proposal each in [round 33](../../concept-rounds/round-33/README.md), all accepted (chosen; recordings with synthesized layers, the churn's waves CC-BY, byjoshberry, on the credits roll): the lane telegraph's churn [a](concept/kraken-churn-r33-a.ogg) (a rushing surge of waves over a rumble swelling over the 1.0 s telegraph, reworked without bubbles; hard overruns its 0.8 s telegraph by 0.2 s), the slam [a](concept/kraken-slam-r33-a.ogg) (the arm's rush, then a heavy wet impact and big splash at 0.5 s into the file), the head's surfacing swell [a](concept/kraken-surface-r33-a.ogg) (a deep swell, water streaming off as the crown breaks, with each `SURFACE`), its death [a](concept/kraken-death-r33-a.ogg) (a long wet groan over churning water, reworked without bubbles, under the `huge` water burst) | P2 |
 | Convoy ships (Level 11, M5 part E), chosen in [round 33](../../concept-rounds/round-33/README.md) as the Kraken's: a ship hit [a](concept/ship-hit-r33-a.ogg) (metal struck, water rushing in; on `ALLY_HIT`), a ship sinking [a](concept/ship-sink-r33-a.ogg) (a steel groan, a muffled boom, waves washing over; 3.8 s, reworked without bubbles), the frigate's distant flak [a](concept/frigate-flak-r33-a.ogg) (two dull pops far away, raised twice to −16 dB after listening, one file per `ALLY_FLAK`) | P2 |
 | Driftjelly (Level 11, M5 part E): its ring's pulse chosen in [round 33](../../concept-rounds/round-33/README.md), [a](concept/driftjelly-pulse-r33-a.ogg) (a soft synthesized underwater bloop and ripple, no source; kept over reusing the enemy shot's small sound); its death the `small` rung with the `water` explosion | P3 |
-| Lamprey (Level 12, planned, M5 part F): the **latch**, a wet suck-and-bite as it latches (`LAMPREY_LATCHED`); the **drain**, a quiet looping hum-and-crackle while any Lamprey drains (stopping at the break or the shake-off); the **shake-off**, a slap and a squeal as they are thrown off (`LAMPREY_SHAKEN`); its death the `small` rung (a wet pop). Latch and drain a/b in round 34 (user decision F8 = a), the shake-off one proposal | P1 |
-| Weather (Level 12, planned, M5 part F): **thunder** one-shots, 2–3 variants, 0.3–1.5 s after each lightning flash (`LIGHTNING`; the delay and variant fixed by the flash's index), F6 = a; a **gust** whoosh rising with each gust's telegraph. Thunder and gust a/b in round 34 (F8 = a); CC0 or CC-BY recordings or synthesis | P2 |
-| Nansen Relay (Level 13, M5 part G; G9 = a, pending the user's review; the game plays round 35's **a** of each as a placeholder until the round closes, `Sfx.RELAY_HIT`, `INTEGRITY_ALARM`, `RELAY_DESTROYED`, `DRONE_LAUNCH`, `GRID_ONLINE`): the relay's **hit** (a short metallic thud with a zap, on the relay-aimed hit event; relay hit [a](concept/relay-hit-r35-a.ogg) / [b](concept/relay-hit-r35-b.ogg)), the **integrity alarm** (a two-tone alarm once at 50 % and once at 25 %, on `ALLY_BELOW`; [a](concept/integrity-alarm-r35-a.ogg) / [b](concept/integrity-alarm-r35-b.ogg)), **relay destroyed** (a power-down and rumble, [a](concept/relay-destroyed-r35-a.ogg), one version), the **drone launch** (rotors spinning up, [a](concept/drone-launch-r35-a.ogg), one version) and **grid online** (the lights coming on in sequence at t=218, a power-up chain; [a](concept/grid-online-r35-a.ogg) / [b](concept/grid-online-r35-b.ogg)); the Skimmer's flip-and-sink reuses the water explosion | P2 |
-| Siege Spire (Level 14, planned, M5 part H; H8 = a, pending the user's review): the **canopy hum**, a seamless loop [a](concept/canopy-hum-r36-a.ogg) while the canopy lives (cut at the Spire's death, no hum in the daylight), the **root burst** crack as the paving breaks (the telegraph's end; [a](concept/root-burst-r36-a.ogg) / [b](concept/root-burst-r36-b.ogg)), the **growth** swell [a](concept/root-growth-r36-a.ogg) under a growing turret or mortar (one version), the **tear-free roar** (phase 3's lift-off; [a](concept/tear-free-roar-r36-a.ogg) / [b](concept/tear-free-roar-r36-b.ogg)) and the **canopy withering** after the Spire's death ([a](concept/canopy-withering-r36-a.ogg) / [b](concept/canopy-withering-r36-b.ogg)); the sac, the lob and the sweep reuse the existing sounds | P2 |
+| Lamprey (Level 12, planned, M5 part F): the **latch**, a wet suck-and-bite as it latches (`LAMPREY_LATCHED`); the **drain**, a quiet looping hum-and-crackle while any Lamprey drains (stopping at the break or the shake-off); the **shake-off**, a slap and a squeal as they are thrown off (`LAMPREY_SHAKEN`); its death the `small` rung (a wet pop). Latch and drain a/b in round 34 (user decision F8 = a), the shake-off one proposal; the user picked a for both (2026-10-12) | P1 |
+| Weather (Level 12, planned, M5 part F): **thunder** one-shots, 2–3 variants, 0.3–1.5 s after each lightning flash (`LIGHTNING`; the delay and variant fixed by the flash's index), F6 = a; a **gust** whoosh rising with each gust's telegraph. Thunder and gust a/b in round 34 (F8 = a); the user picked **b** for both (2026-10-12: the close strikes, the recorded gust); CC0 or CC-BY recordings or synthesis | P2 |
+| Nansen Relay (Level 13, M5 part G; G9 = a; the user's picks of 2026-10-12: grid online **b**, every other **a**, `Sfx.RELAY_HIT`, `INTEGRITY_ALARM`, `RELAY_DESTROYED`, `DRONE_LAUNCH`, `GRID_ONLINE`): the relay's **hit** (a short metallic thud with a zap, on the relay-aimed hit event; relay hit [a](concept/relay-hit-r35-a.ogg) / [b](concept/rejected/relay-hit-r35-b.ogg)), the **integrity alarm** (a two-tone alarm once at 50 % and once at 25 %, on `ALLY_BELOW`; [a](concept/integrity-alarm-r35-a.ogg) / [b](concept/rejected/integrity-alarm-r35-b.ogg)), **relay destroyed** (a power-down and rumble, [a](concept/relay-destroyed-r35-a.ogg), one version), the **drone launch** (rotors spinning up, [a](concept/drone-launch-r35-a.ogg), one version) and **grid online** (the lights coming on in sequence at t=218, a power-up chain; [a](concept/rejected/grid-online-r35-a.ogg) / [b](concept/grid-online-r35-b.ogg)); the Skimmer's flip-and-sink reuses the water explosion | P2 |
+| Siege Spire (Level 14, M5 part H; H8 = a; the user's picks of 2026-10-12: the tear-free roar and the canopy withering **b**, the root burst **a**): the **canopy hum**, a seamless loop [a](concept/canopy-hum-r36-a.ogg) while the canopy lives (cut at the Spire's death, no hum in the daylight), the **root burst** crack as the paving breaks (the telegraph's end; [a](concept/root-burst-r36-a.ogg) / [b](concept/rejected/root-burst-r36-b.ogg)), the **growth** swell [a](concept/root-growth-r36-a.ogg) under a growing turret or mortar (one version), the **tear-free roar** (phase 3's lift-off; [a](concept/rejected/tear-free-roar-r36-a.ogg) / [b](concept/tear-free-roar-r36-b.ogg)) and the **canopy withering** after the Spire's death ([a](concept/rejected/canopy-withering-r36-a.ogg) / [b](concept/canopy-withering-r36-b.ogg)); the sac, the lob and the sweep reuse the existing sounds | P2 |
 | Arcology collapse (Level 09, M5 part C): a low rumble under the 1.5 s lean and the 1.5 s drop swelling into a long crash at the impact (about 7 s) — chosen [a](concept/collapse-r31-a.ogg) (stony rumble swelling into a tumbling masonry crash, CC-BY; a steel-frame cave-in was rejected; the production file crashes at 3.0 s, the concept file at 1.5 s), [round 31](../../concept-rounds/round-31/README.md) | P2 |
 | Leviathan whale-song cry (its death, under the large burst) — [a](concept/enemy-leviathan-cry-r16-a.ogg) (synthesized, round 16) | P2 |
 | Polyp Mortar lob — chosen [a](concept/enemy-mortar-lob-r21-a.ogg) (mortar thump; an organic spit was rejected); impact — chosen [a](concept/enemy-mortar-impact-r21-a.ogg) (wet splat; an acid sizzle was rejected), [round 21](../../concept-rounds/round-21/README.md) | P2 |
@@ -204,6 +204,85 @@ gate. P2–P3, one loop per setting in the [world](../../world/README.md).
 | Earth ocean storm | `earth-storm` (M5 part F: Level 12 in sections 1–4 and 6, crossfading to `earth-ocean` in the eye and back over 4 s; user decision F6 = a: the game plays round 34's **rain-only bed** [ambience-storm-rain-r34-a](concept/ambience-storm-rain-r34-a.ogg), 10 s, cut from the same CC0 source, until the round closes; the chosen a kept) | [a](concept/ambience-storm-r08-a.ogg) — rain and thunder, 24 s |
 | Earth arctic | `earth-arctic` (M5 part G: `Sfx.AMBIENCE_ARCTIC` under all of Level 13, +3 dB in the whiteout peak, ramping with it) | [a](concept/ambience-arctic-r08-a.ogg) — cold wind, 16 s |
 | Earth megacity under the canopy | `earth-canopy` (M5 part H: `Sfx.AMBIENCE_CANOPY` under Level 14 instead of the megacity's sirens; at the Siege Spire's death it fades out over 2 s while `earth-megacity` rises over 7 s under the canopy's withering, pending the user's review) | [a](concept/canopy-hum-r36-a.ogg) — the canopy's hum, round 36's one proposal, a seamless 8 s loop |
+| Mars entry | `mars-entry` (Act 3: Level 15 in sections 1–2, the descent through the thin air; crossfading to `mars-dust` over 2 s at section 3; M7 part B: `Sfx.AMBIENCE_MARS_ENTRY`) | the [entry roar](#act-3-sounds-approved-round-36) of round 38: the chosen [a](concept/entry-roar-r38-a.ogg) "recorded roar", a seamless 12 s loop (S.3 = a, 2026-10-14) |
+| Mars dust wind | `mars-dust` (Act 3: Level 15 from section 3, Levels 20 and 21; M7 part B: `Sfx.AMBIENCE_MARS_DUST`) | the chosen [a](concept/mars-dust-r38-a.ogg) "recorded dust wind" of round 38, a seamless 16 s loop (S.4 = a, 2026-10-14) |
+| Mars canyon | `mars-canyon` (Act 3: Level 16, the dust wind with a canyon howl; M7 part C) | the chosen [a](concept/mars-canyon-r39-a.ogg) of round 39, a synthesized dust wind with a resonant canyon howl, a seamless 16 s loop (S.5, 2026-10-18) |
+| Mars colony | `mars-colony` (Act 3: Level 17, the plains wind, the domes' air-plant hum, a distant rail clank) | proposed in round 40: [a](concept/mars-colony-r40-a.ogg) — synthesized plains wind, air-plant hum (60 Hz partials) and a distant rail clank, seamless 16 s loop (the game plays it until the pick) |
+| Mars dust storm | `mars-storm` (Act 3: Level 18 from t=25, swelling in the storm walls, +3 dB as Level 13's whiteout; in the eye a crossfade to `mars-dust` and back over 4 s, as Level 12's eye) | [a](concept/dust-storm-bed-r36-a.ogg) — "recorded front", a sandstorm over a furious low howl, seamless 16 s loop (round 36, S.5 = a) |
+| Mars foundry | `mars-foundry` (Act 3: Level 19, conveyor rumble, a far furnace roar, a slow hammer, the plateau wind) | — (part F's round) |
+
+### Act 3 sounds (approved, round 36)
+
+**Status: approved in concept round 36 (user, 2026-10-13, D.29).** The new sounds Levels 15–21 and the Act 3 arsenal need, from the level, unit and
+equipment documents (which link here for them). The rules are the act's: CC0 or CC-BY recordings
+with synthesized layers where a recording lacks something, levelled on the 200 Hz–5 kHz band, and
+**no bubbly, popping or squelching sounds** (user rule): sand, rock, wind, metal, fire and glass,
+not liquid. Round 36 picked four of them (the burrow eruption a, the canyon wall scrape b, the Ion
+Beam loop a and the dust-storm bed a); every other one is proposed a/b in the round of the part
+that builds it (M7 parts A–H), as Act 2 did. A sound that reuses a chosen file says so.
+
+**Terrain, hazards and set pieces**
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| Canyon wall scrape | The ship (or Rook) touches a canyon wall or rock island (L16 on; M1 = a: damage, push-back, 0.5 s cooldown): once per contact | A **metal screech** with a spark hiss (the chosen b, [canyon-scrape-r36-b](concept/canyon-scrape-r36-b.ogg), 0.6 s; S.3 = b over a's rock grind): a hard onset and a rough tail; reads as damage (played with the armour or shield hit, a little under it), panned to the touching side | round 36: b | P1 |
+| Shots on rock | A bolt or bullet stopped by a wall | Reuse: a quiet dull rock tick, the ground hit at −6 dB; the beam's rock scorch is the Ion Beam's impact below | — | P2 |
+| Entry roar | Level 15 sections 1–2, the descent through the thin air (a loop) | A high thin wind roar over the hull, rising as the air thickens, crossfading into `mars-dust` at section 3 | round 38: a, chosen ([entry-roar-r38-a](concept/entry-roar-r38-a.ogg), a seamless 12 s loop; the rise is the game's level ramp) | P2 |
+| Relay hut door | Level 16's secret: the hut opened | Reuse the crate's metal burst; no new file unless the round asks | — | P3 |
+| Dome hit | A dome of Level 17 takes a hit (`ALLY_HIT`) | Thick glass under stress: a heavy knock, a creak running round the dome and a fine crackle of stress lines; no shatter; 1.2 s | round 40 (M7 part D): [a](concept/dome-hit-r40-a.ogg), a glass knock, a creak round the dome and a fine stress-line crackle, 1.2 s | P1 |
+| Dome break | A dome breaks (`ALLY_LOST`) | A long glass cave-in: a crack, the panes going in a cascade, air rushing out in a falling hiss, a steel frame groan; 3–4 s, under the ally-loss sound | round 40: [a](concept/dome-break-r40-a.ogg), a crack, a cascade of panes, air rushing out and a steel-frame groan, 3.6 s | P1 |
+| Distant flak | Level 17's militia guns (t≈160) and Level 20's rim guns | Reuse the frigate's chosen distant flak ([a](concept/frigate-flak-r33-a.ogg)) | — | P2 |
+| Conveyor belts | Level 19, the belts under the tanks (a loop while belts are on screen) | Folded into the `mars-foundry` bed rather than a sound per belt | part F | P3 |
+| Furnace vent | Level 19's vents: the tell (the glow) and the burst | Tell: a rising gas roar, 1.0 s; burst: a fire blast roaring out and dying, 1.5 s; no pop at the start | part F | P2 |
+| Basin rumble | Level 20 from t=12 (the ridge), Level 21 from the ridge pass (t≈64) into the fight | A deep earth groan with grinding under it, a loop that can swell; Level 21's cuts at the kill | part G | P2 |
+| Ridge pass | Level 21, the Colossus's back moving under the sand past the ship (t≈64–72) | A travelling rumble panned across the field with sand hissing off the ridge, 6–8 s | part H | P2 |
+
+**Enemies** (each unit's death plays its size rung; the Vrell screech rule covers a new large Vrell
+unit as it enters: the Shellback; the human-built units never screech)
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| Burrower bulge | The 1.0 s bulge tell (`burrow`) | A low rumble and sand cracking, swelling to the surfacing; the cue the player hunts by ear | round 38: b, chosen: [a crack layer](concept/burrow-bulge-r38-b.ogg) played over the eruption a, both from the bulge's start ([as mixed](concept/burrow-bulge-mix-r38-b.ogg); M7 part B: `Sfx.BURROW_BULGE`) | P1 |
+| Burrower eruption | It surfaces | Sand and grit bursting upward, a short heavy whoomph with a rock-crack; dry, no plop. The chosen a "sand burst" ([burrow-eruption-r36-a](concept/burrow-eruption-r36-a.ogg), 2.1 s: the tell's rumble swelling over 1.0 s, then the impact and sand raining down; S.2 = a); M7 part B: `Sfx.BURROW_ERUPTION`, played at the bulge's start | round 36: a | P1 |
+| Burrower dive | It dives (0.4 s) | A falling sand hiss, short (M7 part B: `Sfx.BURROW_DIVE`) | round 38: b "grain slide", chosen ([burrow-dive-r38-b](concept/burrow-dive-r38-b.ogg)) | P2 |
+| Dust Kite | — | None of its own (popcorn): the `tiny` rung; a quiet membrane flutter only if the round finds them silent | — | P3 |
+| Tendril hum | A tendril barrier live (a loop; the nearest one plays) | A taut electric-organic drone, rising with the 1.0 s dormant tell into a flare; no wobble that could read as bubbling | round 39 (M7 part C): a, chosen ([tendril-hum-r39-a](concept/tendril-hum-r39-a.ogg), a steady 120 Hz harmonic drone, seamless 6 s loop; S.1) | P1 |
+| Tendril burn and break | A `beam` on a tendril (a loop while it burns); the tendril or an anchor dies | Burn: a searing crackle over the beam; break: a whip-crack snap and a falling whine as the line goes slack | round 39, chosen (S.2, S.3): burn [a](concept/tendril-burn-r39-a.ogg), a crackle of noise grains over a sizzle, seamless 2 s loop; break [a](concept/tendril-break-r39-a.ogg), a snap and a falling harmonic whine, 0.9 s | P2 |
+| Threadcrawler | Its walk (a loop while on screen) and the pore wave | Walk: a dry many-legged skitter on rock; the pores fire as the enemy small shot, head to tail; the chain's death as the Coilwyrm's bursts, smaller | round 39, chosen (S.4): walk [a](concept/crawler-walk-r39-a.ogg), twelve legs of noise ticks over a rock rustle, seamless 3 s loop (the pores and the death reuse existing sounds) | P2 |
+| Choir Herald | Its song (with its `ring`), the aura (a loop while any ring is up), a ring absorbing a hit, the rings collapsing at its death | Song: a short sung phrase in the Choir's colour (not words); aura: a soft high shimmer; absorb: a glassy ping (the enemy-shield hit); collapse: a falling chord, as its death row says | round 40: song [a](concept/herald-song-r40-a.ogg) (three voices, F3 A3 E3, 1.9 s), aura [a](concept/herald-aura-r40-a.ogg) (steady high partials, seamless 4 s loop), absorb [a](concept/aura-absorb-r40-a.ogg) (a glassy ping, 0.4 s), collapse [a](concept/aura-collapse-r40-a.ogg) (a falling chord, 2.0 s) | P1 |
+| Shellback | Walk, mortar lob, curl, roll, uncurl | Walk: heavy padded footfalls with shell plates clacking; lob: the Polyp Mortar's chosen lob, lower; curl: plates grinding shut; roll: a rumbling grind that crushes (a loop, 2.5 s); impact: the mortar's chosen impact | round 40: walk [a](concept/shellback-walk-r40-a.ogg) (padded footfalls and clacking plates, seamless 3.2 s loop), lob [a](concept/shellback-lob-r40-a.ogg) (a dull cough and a pressure hiss, 0.6 s), curl [a](concept/shellback-curl-r40-a.ogg) (plates grinding shut, 0.8 s), roll [a](concept/shellback-roll-r40-a.ogg) (a rumbling rock-crushing grind, seamless 2.5 s loop), uncurl [a](concept/shellback-uncurl-r40-a.ogg) (0.7 s); its impact is the mortar's chosen impact | P2 |
+| Dust Devil | Spin (a loop, the nearest one), the 0.4 s rise and opening, the grit spiral | Spin: a whirling wind roar with grit; opening: the vanes parting with a gust and a low hollow tone; the spiral as the enemy small shot with a grit hiss | part E | P1 |
+| Ghost Drone | Its drop into the lane, the 0.3 s eye glint, its burst, its death | Drop: a clean turbine whine descending; glint: a short electronic lock tick; burst: three dry precise shots (human guns, not Vrell); death: a mechanical break-up, sparks and metal, on the `small` rung. It must sound built, not grown | part E | P1 |
+| Warden Tank | Tracks (a loop while on screen, the nearest), turret slew, the 0.3 s hold and burst, death | Tracks: grinding treads and a diesel-turbine hum; slew: a servo whine; burst: a heavy autocannon; death: a hull explosion with metal debris | part F | P2 |
+| Mote Swarm (pursuit) | Level 20's pursuing band (a loop) and each lunge | Band: the chosen swarm whoosh's insect chitter stretched into a hum ([b](concept/mote-swarm-r32-b.ogg), Level 10); lunge: a rising rush, 0.6 s | part G | P2 |
+| Rear-guard and light drones | A drone breaking, a drone rebuilt | Break: a small metal crunch and spark (the metal hit and a `tiny` blast); rebuilt: a soft rising synth tone | part A | P2 |
+
+**Bosses**
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| Revenant Walker | Its stride (each footfall), the pods' launch, the flamer's 0.6 s tell and cone, a vent hit, its death and the wreck's settle | Stride: a dull heavy stomp with a hydraulic hiss (no pop); pods: the chosen enemy missile launch ([a](concept/enemy-missile-r08-a.ogg), its first enemy use); tell: a gas hiss rising; flamer: a roaring flame loop; death: the `huge` rung with metal collapse; the wreck: metal settling and ticking as it cools, under the crawl | part F | P1 |
+| Dust Colossus | Each breach's 2.0 s bulge and its eruption, the suction (a loop while it pulls), the bite, a mouth's death, the death chain | Bulge: the Burrower's rumble, far bigger and longer; breach: a mountain of sand erupting with a roar; suction: a deep inhaling roar with sand streaming; bite: a heavy jaw snap with grinding chitin; death: a collapse into the sand, a long subsiding roar under the `huge` rung; dry throughout | part H | P1 |
+
+**Player equipment**
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| Ion Beam loop | The `beam` family (start → loop → stop), the Ion Beam | The round-04 loop's source made heavier: [ion-beam-loop-r36-a](concept/ion-beam-loop-r36-a.ogg) (2.6 s loop, the round-04 loop's source with an ion body; S.4 = a), which does not betray its length over a long hold, in place of the round-04 loop [a](concept/shot-beam-r04-a.ogg) | round 36: a | P1 |
+| Beam impact | The beam on a target, a wall or a tendril (a layer while it touches) | A searing contact sizzle (the scorch), dry; on rock with a grit crackle | part A | P2 |
+| Deflector Pod | A bullet caught; a charge returned | Tick: the shield hit pitched up and cut short; return: a soft rising tone, as its document says | part A | P2 |
+| Light drone fire | — | The `pulse` family pitched up and quieter (its document) | — | P2 |
+| EMP Burst | Its ring; a stunned machine | The chosen tesla shot ([a](concept/shot-tesla-r03-a.ogg)) layered and longer with an electric thump; a machine's power-down whine as its lights go out | part A | P2 |
+| Orbital Lance | The call, the 0.6 s targeting line, the 3 s column | The call is voiced ([voice](../voice/README.md)); the targeting line plays the chosen lock beep ([a](concept/enemy-lock-r08-a.ogg)); the column the chosen loop [c](concept/shot-beam-r04-c.ogg) with a deep rumble under it | part A | P2 |
+| Shield Overcharge | Activation; the end of its 8 s | Activation: a rising charge-up whoosh in the shield-restore chime's family; end: a soft falling shimmer | part A | P2 |
+| Cooldown ready | A cooldown special's ring full (HUD) | A short soft ready chime, UI synth (the specials' rule) | part A | P2 |
+| Dash | The Evasive thrusters' dash | The *Dash* row of *Player ship*: a short thruster burst in the engine's family | part A | P2 |
+
+**Mixing** (proposal): a unit's loop (the tendril hum, the Dust Devil's spin, the Warden Tank's
+tracks, the Shellback's roll) plays **once per kind**, for the nearest such unit and panned to it,
+at the enemy-fire level; it starts and stops with a 0.2 s fade, is never stolen while its unit
+lives (as an ambience) and counts as one voice. The dust storm changes nothing in the mix: the
+bullets and their sounds stay as they are (M6 = a).
 
 ### Chosen sounds the game does not play
 
@@ -217,19 +296,19 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
 | [player-shot-r02-b.ogg](concept/player-shot-r02-b.ogg) | `pulse` family b ("heavy"): the family plays a, levels differ by pitch; kept for layering a heavy level |
 | [player-shot-r02-c.ogg](concept/player-shot-r02-c.ogg) | `laser` family a: the Lance Laser plays b (r03) |
 | [player-shot-r02-e.ogg](concept/player-shot-r02-e.ogg) | `vulcan` family a: the Scatter Vulcan plays b (r03) |
-| [shot-tesla-r03-a.ogg](concept/shot-tesla-r03-a.ogg) | Tesla Coil Pod, Plasma Arc, EMP Burst: later acts |
+| [shot-tesla-r03-a.ogg](concept/shot-tesla-r03-a.ogg) | Tesla Coil Pod, Plasma Arc: later acts; the EMP Burst: Act 3 (M7 part A, draft) |
 | [shot-resonator-r03-a.ogg](concept/shot-resonator-r03-a.ogg) | Choir Resonator: a later act |
-| [shot-beam-r04-a.ogg](concept/shot-beam-r04-a.ogg) | Ion Beam loop: a later act |
+| [shot-beam-r04-a.ogg](concept/shot-beam-r04-a.ogg) | Ion Beam loop: replaced by round 36's heavier loop a (S.4); kept as the source of that loop |
 | [shot-beam-r04-b.ogg](concept/shot-beam-r04-b.ogg) | Alternative beam loop: a later act |
-| [shot-beam-r04-c.ogg](concept/shot-beam-r04-c.ogg) | Orbital Lance loop (L17): a later act |
-| [shot-beam-start-r04-a.ogg](concept/shot-beam-start-r04-a.ogg) | Beam start: a later act |
-| [shot-beam-stop-r04-a.ogg](concept/shot-beam-stop-r04-a.ogg) | Beam stop: a later act |
+| [shot-beam-start-r04-a.ogg](concept/shot-beam-start-r04-a.ogg) | Beam start: round 37's shorter start a (its source at 1.8× speed; S.1) plays in its place (M7 part A); kept as that start's source |
+| [shot-beam-stop-r04-a.ogg](concept/shot-beam-stop-r04-a.ogg) | Beam stop: round 37's stop b ("ion collapse", S.2) plays in its place (M7 part A); kept as the source of the rejected stop a |
+| [dust-storm-bed-r36-a.ogg](concept/dust-storm-bed-r36-a.ogg) | Mars dust-storm bed `mars-storm` (round 36, S.5): Act 3, Level 18 (M7) |
+| [burrow-bulge-mix-r38-b.ogg](concept/burrow-bulge-mix-r38-b.ogg) | Listening aid for round 38's S.1 = b: the eruption a and the bulge's crack layer b summed; the game plays the two files itself (`Sfx.BURROW_ERUPTION`, `Sfx.BURROW_BULGE`) |
 | [special-sonar-r04-a.ogg](concept/special-sonar-r04-a.ogg) | Sonar Pulse (L22): Act 4 |
 | [special-flares-r08-a.ogg](concept/special-flares-r08-a.ogg) | Decoy Flares (L27): Act 4 |
 | [explosion-underwater-r04-a.ogg](concept/explosion-underwater-r04-a.ogg) | Under-water kills: Act 4 |
 | [ambience-storm-r08-a.ogg](concept/ambience-storm-r08-a.ogg) | Ocean storm setting: its baked-in thunder cannot follow Level 12's flashes, so the game plays round 34's rain-only bed from the same source (F6 = a); kept for the round's review |
-| [enemy-missile-r08-a.ogg](concept/enemy-missile-r08-a.ogg) | No Act 1 enemy fires missiles (the SAM Nest, L29, and the Hornet, L31, are the first) |
-| [enemy-lock-r08-a.ogg](concept/enemy-lock-r08-a.ogg) | No Act 1 turret locks on (the SAM Nest, L29, is the first) |
+| [enemy-missile-r08-a.ogg](concept/enemy-missile-r08-a.ogg) | No enemy of Acts 1–2 fires missiles (the Revenant Walker's pods, L19, are the first; Act 3 draft) |
 | [enemy-laser-warning-r08-a.ogg](concept/enemy-laser-warning-r08-a.ogg) | Act 1's only laser, the Mantis, has its own telegraph (round 23) |
 | [enemy-coilwyrm-death-final-r24-a.ogg](concept/enemy-coilwyrm-death-final-r24-a.ogg) | A review preview of the Coilwyrm's chained death; the game plays its two bursts |
 
@@ -603,37 +682,140 @@ ray — already on the credits roll) with synthesized layers; levels as the loud
 
 | File | What | Status |
 |---|---|---|
-| [concept/thunder-1-r34-a.ogg](concept/thunder-1-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) + synthesized sub rumble — thunder a 1 (the storm's own thunder, the bed's source): its big clap and roll, low-passed at 1.8 kHz to drop the rain (6.5 s, −14 dB, −14.4 LUFS) | proposed |
-| [concept/thunder-2-r34-a.ogg](concept/thunder-2-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) + synthesized sub rumble — thunder a 2: a shorter distant roll, panned right (3.6 s, −16 dB, −20.4 LUFS) | proposed |
-| [concept/thunder-3-r34-a.ogg](concept/thunder-3-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) + synthesized sub rumble — thunder a 3: a deep low roll, nearly all below 200 Hz (3.6 s, −19 dB, −16.3 LUFS) | proposed |
-| [concept/thunder-1-r34-b.ogg](concept/thunder-1-r34-b.ogg) | "Closeup Thunder Strike 01" by loganzsound (CC0) + synthesized sub rumble — thunder b 1 (close strikes): a sharp crack, then the roll (7.0 s, −14 dB, −22.1 LUFS) | proposed |
-| [concept/thunder-2-r34-b.ogg](concept/thunder-2-r34-b.ogg) | "Closeup Thunder Strike 01" by loganzsound (CC0) + synthesized sub rumble — thunder b 2: the strike 14 % slower, farther, panned right (6.0 s, −16 dB, −22.7 LUFS) | proposed |
-| [concept/thunder-3-r34-b.ogg](concept/thunder-3-r34-b.ogg) | "Closeup Thunder Strike 01" by loganzsound (CC0) + synthesized sub rumble — thunder b 3: the strike 26 % slower, the farthest (5.5 s, −17 dB, −22.5 LUFS) | proposed |
-| [concept/gust-r34-a.ogg](concept/gust-r34-a.ogg) | synthesized (no source) — gust a: band-passed wind rising over the 1.0 s telegraph with a hollow howl, holding through the gust with a flutter, falling; from the left to the right (3.6 s, −19 dB) | proposed |
-| [concept/gust-r34-b.ogg](concept/gust-r34-b.ogg) | "Wind__Artic__Cold.wav" by cobratronik (CC0) + synthesized rumble — gust b: a recorded gust in the same envelope and pan (3.6 s, −19 dB) | proposed |
-| [concept/lamprey-latch-r34-a.ogg](concept/lamprey-latch-r34-a.ogg) | "Slime Attack 1" by qubodup + "rip_tear FLESH!!!!.wav" by aust_paul (both CC0) + synthesized suction and thump — latch a, suck and bite: an inhaling rush, the bite at 0.16 s, teeth grinding in (0.67 s, −16.7 dB) | proposed |
-| [concept/lamprey-latch-r34-b.ogg](concept/lamprey-latch-r34-b.ogg) | "Wet Splat" by JustInvoke (CC-BY) + "slightmetallicthud.mp3" by profoundsounds + "rip_tear FLESH!!!!.wav" by aust_paul (CC0) + synthesized thump — latch b, clamp on the hull: a wet splat on a metallic thud at 0 s, teeth gnawing in (0.68 s, −17.5 dB) | proposed |
-| [concept/lamprey-drain-r34-a.ogg](concept/lamprey-drain-r34-a.ogg) | synthesized (no source) — drain a, seamless 2.4 s loop: a low electric hum throbbing in 0.4 s gulps (latch look a's swallow), sparse crackle, a faint whine (−22 dB) | proposed |
-| [concept/lamprey-drain-r34-b.ogg](concept/lamprey-drain-r34-b.ogg) | "SonicDeathRay_1.2KHzWithCrackle.wav" by zimbot (CC-BY, slowed to 0.45) + synthesized sub hum — drain b, seamless 2.4 s loop: a siphoning whine with crackle over a sub swelling twice a loop (−22 dB) | proposed |
-| [concept/lamprey-shake-r34-a.ogg](concept/lamprey-shake-r34-a.ogg) | "Wet Splat" by JustInvoke + "inhuman screech.wav" by Wolfsinger (both CC-BY) + synthesized whoosh — shake-off: a wet slap and a short squeal whooshing away (0.82 s, −13.5 dB; −17 dB until step G8) | proposed |
-| [concept/sonde-chime-r34-a.ogg](concept/sonde-chime-r34-a.ogg) | synthesized (no source) — sonde collected: a three-blip telemetry chirp into two bright bell tones, E6 and B6 (0.95 s, −16 dB) | proposed |
-| [concept/ambience-storm-rain-r34-a.ogg](concept/ambience-storm-rain-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) — the rain-only storm bed (F6 = a): the source's stretch after its thunder, 90 Hz high-pass, seamless 10.0 s loop, at the ambiences' level (band RMS −38.8 dB under the −10 dBFS ceiling; the same rain is ~14 dB quieter inside the chosen bed) | proposed |
-| [concept/relay-hit-r35-a.ogg](concept/relay-hit-r35-a.ogg) | "Impact on metal" by JoMungus + "ELECTRIC_ZAP_001" by JoelAudio (CC0) + synthesized thump — relay hit a: struck plating and a spark (0.57 s, −19 dB) | proposed |
-| [concept/relay-hit-r35-b.ogg](concept/relay-hit-r35-b.ogg) | "slightmetallicthud" by profoundsounds (CC0) + synthesized glitch and thump — relay hit b: a dull thud and the link glitching (0.45 s, −19 dB) | proposed |
-| [concept/integrity-alarm-r35-a.ogg](concept/integrity-alarm-r35-a.ogg) | synthesized (no source) — integrity alarm a: hi-lo two-tone (988/740 Hz) ×3 (1.5 s, −17 dB) | proposed |
-| [concept/integrity-alarm-r35-b.ogg](concept/integrity-alarm-r35-b.ogg) | synthesized (no source) — integrity alarm b: three rising whoops 420→1050 Hz (1.5 s, −17 dB) | proposed |
-| [concept/grid-online-r35-a.ogg](concept/grid-online-r35-a.ogg) | synthesized (no source) — grid online a: five breakers closing, a mains hum swelling, an A-major bloom (2.6 s, −17 dB) | proposed |
-| [concept/grid-online-r35-b.ogg](concept/grid-online-r35-b.ogg) | "Machine Charge" by Glitchedtones (CC0) + synthesized clunk, whine and chord — grid online b: spin-up into a contact clunk (2.6 s, −17 dB) | proposed |
-| [concept/drone-launch-r35-a.ogg](concept/drone-launch-r35-a.ogg) | synthesized (no source) — drone launch: four rotors spinning up, climbing away with a pan (2.2 s, −20 dB) | proposed |
-| [concept/relay-destroyed-r35-a.ogg](concept/relay-destroyed-r35-a.ogg) | "Big Boom" by unfa + "Sounds For Earthquakes - Radiator Metal Rumbling" by RutgerMuller (CC0) + synthesized power-down and thump — relay destroyed (3.7 s, −15 dB) | proposed |
-| [concept/root-burst-r36-a.ogg](concept/root-burst-r36-a.ogg) | "Cracking Earthquake" by uagadugu + "Gravel Falling" by iwanPlays (CC0) + "cracking.wav" by smidoid + "building_collapse02_close" by onteca (CC-BY) + synthesized cracks and thump — root burst a (round 36): paving cracking under a swelling rumble for 1 s, a masonry crunch and falling stones at 1.0 s (2.1 s, −17 dB) | proposed |
-| [concept/root-burst-r36-b.ogg](concept/root-burst-r36-b.ogg) | "Squelch" by LucasDuff + "…ship hull list2" by kyles + "rip_tear FLESH!!!!" by aust_paul (CC0) + "Tearing Flesh" by dereklieu (CC-BY) + synthesized slosh, creak and thump — root burst b (round 36): a wet creep surge and a root creaking for 1 s, a wet tear at 1.0 s (2.0 s, −17 dB) | proposed |
-| [concept/root-growth-r36-a.ogg](concept/root-growth-r36-a.ogg) | "…ship hull list2" by kyles (CC0) + synthesized swell, creak and knock — root growth (round 36): stretching creak and a swelling over 1.5 s, a knock as it sets (1.75 s, −20 dB) | proposed |
-| [concept/tear-free-roar-r36-a.ogg](concept/tear-free-roar-r36-a.ogg) | "Cracking Earthquake" by uagadugu + "ICEBrk_Break04" by InMotionAudio + "Big Boom" by unfa + "Deep Roar Echo 2" by noahpardo + "Gravel Falling" by iwanPlays (CC0) + "building_collapse02_close" by onteca + "cracking.wav" by smidoid (CC-BY) + synthesized thump and lift — tear-free a (round 36): a tectonic rip, root snaps, a shockwave boom at 0.35 s, a deep roar under the lift (3.4 s, −15 dB) | proposed |
-| [concept/tear-free-roar-r36-b.ogg](concept/tear-free-roar-r36-b.ogg) | "Sea Creature Roar" by Bikkit99 + "Dragon: Snarl, Roar + Attack" by Breviceps + "rip_tear FLESH!!!!" by aust_paul (CC0) + "Tearing Flesh" by dereklieu (CC-BY) + synthesized shockwave and thump — tear-free b (round 36): a creature bellow rising in pitch with the lift, wet tearing roots, an air shockwave (3.4 s, −14 dB) | proposed |
-| [concept/canopy-withering-r36-a.ogg](concept/canopy-withering-r36-a.ogg) | "rip_tear FLESH!!!!" by aust_paul + "Wind__Artic__Cold" by cobratronik (CC0) + "Tearing Flesh" by dereklieu (CC-BY) + synthesized crackle — withering a (round 36): a dry crackling shrivel and a slow far tear settling into wind (7.0 s, −19 dB) | proposed |
-| [concept/canopy-withering-r36-b.ogg](concept/canopy-withering-r36-b.ogg) | "Simple Mutate (Monster)" by Division4884 + "Wind__Artic__Cold" by cobratronik (CC0) + synthesized sigh and groan — withering b (round 36): a dying exhale, a deep groan and sigh descending into wind (7.5 s, −19 dB) | proposed |
-| [concept/canopy-hum-r36-a.ogg](concept/canopy-hum-r36-a.ogg) | synthesized (no source) — canopy hum (round 36), seamless 8.0 s loop: two slowly beating harmonic voices on 46 Hz, a 0.75 Hz throb and a 4 s breath (band RMS −39 dB, 3 dB under the ambiences) | proposed |
+| [concept/rejected/thunder-1-r34-a.ogg](concept/rejected/thunder-1-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) + synthesized sub rumble — thunder a 1 (the storm's own thunder, the bed's source): its big clap and roll, low-passed at 1.8 kHz to drop the rain (6.5 s, −14 dB, −14.4 LUFS) | rejected |
+| [concept/rejected/thunder-2-r34-a.ogg](concept/rejected/thunder-2-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) + synthesized sub rumble — thunder a 2: a shorter distant roll, panned right (3.6 s, −16 dB, −20.4 LUFS) | rejected |
+| [concept/rejected/thunder-3-r34-a.ogg](concept/rejected/thunder-3-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) + synthesized sub rumble — thunder a 3: a deep low roll, nearly all below 200 Hz (3.6 s, −19 dB, −16.3 LUFS) | rejected |
+| [concept/thunder-1-r34-b.ogg](concept/thunder-1-r34-b.ogg) | "Closeup Thunder Strike 01" by loganzsound (CC0) + synthesized sub rumble — thunder b 1 (close strikes): a sharp crack, then the roll (7.0 s, −14 dB, −22.1 LUFS) | chosen |
+| [concept/thunder-2-r34-b.ogg](concept/thunder-2-r34-b.ogg) | "Closeup Thunder Strike 01" by loganzsound (CC0) + synthesized sub rumble — thunder b 2: the strike 14 % slower, farther, panned right (6.0 s, −16 dB, −22.7 LUFS) | chosen |
+| [concept/thunder-3-r34-b.ogg](concept/thunder-3-r34-b.ogg) | "Closeup Thunder Strike 01" by loganzsound (CC0) + synthesized sub rumble — thunder b 3: the strike 26 % slower, the farthest (5.5 s, −17 dB, −22.5 LUFS) | chosen |
+| [concept/rejected/gust-r34-a.ogg](concept/rejected/gust-r34-a.ogg) | synthesized (no source) — gust a: band-passed wind rising over the 1.0 s telegraph with a hollow howl, holding through the gust with a flutter, falling; from the left to the right (3.6 s, −19 dB) | rejected |
+| [concept/gust-r34-b.ogg](concept/gust-r34-b.ogg) | "Wind__Artic__Cold.wav" by cobratronik (CC0) + synthesized rumble — gust b: a recorded gust in the same envelope and pan (3.6 s, −19 dB) | chosen |
+| [concept/lamprey-latch-r34-a.ogg](concept/lamprey-latch-r34-a.ogg) | "Slime Attack 1" by qubodup + "rip_tear FLESH!!!!.wav" by aust_paul (both CC0) + synthesized suction and thump — latch a, suck and bite: an inhaling rush, the bite at 0.16 s, teeth grinding in (0.67 s, −16.7 dB) | chosen |
+| [concept/rejected/lamprey-latch-r34-b.ogg](concept/rejected/lamprey-latch-r34-b.ogg) | "Wet Splat" by JustInvoke (CC-BY) + "slightmetallicthud.mp3" by profoundsounds + "rip_tear FLESH!!!!.wav" by aust_paul (CC0) + synthesized thump — latch b, clamp on the hull: a wet splat on a metallic thud at 0 s, teeth gnawing in (0.68 s, −17.5 dB) | rejected |
+| [concept/lamprey-drain-r34-a.ogg](concept/lamprey-drain-r34-a.ogg) | synthesized (no source) — drain a, seamless 2.4 s loop: a low electric hum throbbing in 0.4 s gulps (latch look a's swallow), sparse crackle, a faint whine (−22 dB) | chosen |
+| [concept/rejected/lamprey-drain-r34-b.ogg](concept/rejected/lamprey-drain-r34-b.ogg) | "SonicDeathRay_1.2KHzWithCrackle.wav" by zimbot (CC-BY, slowed to 0.45) + synthesized sub hum — drain b, seamless 2.4 s loop: a siphoning whine with crackle over a sub swelling twice a loop (−22 dB) | rejected |
+| [concept/lamprey-shake-r34-a.ogg](concept/lamprey-shake-r34-a.ogg) | "Wet Splat" by JustInvoke + "inhuman screech.wav" by Wolfsinger (both CC-BY) + synthesized whoosh — shake-off: a wet slap and a short squeal whooshing away (0.82 s, −13.5 dB; −17 dB until step G8) | chosen |
+| [concept/sonde-chime-r34-a.ogg](concept/sonde-chime-r34-a.ogg) | synthesized (no source) — sonde collected: a three-blip telemetry chirp into two bright bell tones, E6 and B6 (0.95 s, −16 dB) | chosen |
+| [concept/ambience-storm-rain-r34-a.ogg](concept/ambience-storm-rain-r34-a.ogg) | "Rain and Thunder 4" by FlatHill (CC0) — the rain-only storm bed (F6 = a): the source's stretch after its thunder, 90 Hz high-pass, seamless 10.0 s loop, at the ambiences' level (band RMS −38.8 dB under the −10 dBFS ceiling; the same rain is ~14 dB quieter inside the chosen bed) | chosen |
+| [concept/relay-hit-r35-a.ogg](concept/relay-hit-r35-a.ogg) | "Impact on metal" by JoMungus + "ELECTRIC_ZAP_001" by JoelAudio (CC0) + synthesized thump — relay hit a: struck plating and a spark (0.57 s, −19 dB) | chosen |
+| [concept/rejected/relay-hit-r35-b.ogg](concept/rejected/relay-hit-r35-b.ogg) | "slightmetallicthud" by profoundsounds (CC0) + synthesized glitch and thump — relay hit b: a dull thud and the link glitching (0.45 s, −19 dB) | rejected |
+| [concept/integrity-alarm-r35-a.ogg](concept/integrity-alarm-r35-a.ogg) | synthesized (no source) — integrity alarm a: hi-lo two-tone (988/740 Hz) ×3 (1.5 s, −17 dB) | chosen |
+| [concept/rejected/integrity-alarm-r35-b.ogg](concept/rejected/integrity-alarm-r35-b.ogg) | synthesized (no source) — integrity alarm b: three rising whoops 420→1050 Hz (1.5 s, −17 dB) | rejected |
+| [concept/rejected/grid-online-r35-a.ogg](concept/rejected/grid-online-r35-a.ogg) | synthesized (no source) — grid online a: five breakers closing, a mains hum swelling, an A-major bloom (2.6 s, −17 dB) | rejected |
+| [concept/grid-online-r35-b.ogg](concept/grid-online-r35-b.ogg) | "Machine Charge" by Glitchedtones (CC0) + synthesized clunk, whine and chord — grid online b: spin-up into a contact clunk (2.6 s, −17 dB) | chosen |
+| [concept/drone-launch-r35-a.ogg](concept/drone-launch-r35-a.ogg) | synthesized (no source) — drone launch: four rotors spinning up, climbing away with a pan (2.2 s, −20 dB) | chosen |
+| [concept/relay-destroyed-r35-a.ogg](concept/relay-destroyed-r35-a.ogg) | "Big Boom" by unfa + "Sounds For Earthquakes - Radiator Metal Rumbling" by RutgerMuller (CC0) + synthesized power-down and thump — relay destroyed (3.7 s, −15 dB) | chosen |
+| [concept/root-burst-r36-a.ogg](concept/root-burst-r36-a.ogg) | "Cracking Earthquake" by uagadugu + "Gravel Falling" by iwanPlays (CC0) + "cracking.wav" by smidoid + "building_collapse02_close" by onteca (CC-BY) + synthesized cracks and thump — root burst a (round 36): paving cracking under a swelling rumble for 1 s, a masonry crunch and falling stones at 1.0 s (2.1 s, −17 dB) | chosen |
+| [concept/rejected/root-burst-r36-b.ogg](concept/rejected/root-burst-r36-b.ogg) | "Squelch" by LucasDuff + "…ship hull list2" by kyles + "rip_tear FLESH!!!!" by aust_paul (CC0) + "Tearing Flesh" by dereklieu (CC-BY) + synthesized slosh, creak and thump — root burst b (round 36): a wet creep surge and a root creaking for 1 s, a wet tear at 1.0 s (2.0 s, −17 dB) | rejected |
+| [concept/root-growth-r36-a.ogg](concept/root-growth-r36-a.ogg) | "…ship hull list2" by kyles (CC0) + synthesized swell, creak and knock — root growth (round 36): stretching creak and a swelling over 1.5 s, a knock as it sets (1.75 s, −20 dB) | chosen |
+| [concept/rejected/tear-free-roar-r36-a.ogg](concept/rejected/tear-free-roar-r36-a.ogg) | "Cracking Earthquake" by uagadugu + "ICEBrk_Break04" by InMotionAudio + "Big Boom" by unfa + "Deep Roar Echo 2" by noahpardo + "Gravel Falling" by iwanPlays (CC0) + "building_collapse02_close" by onteca + "cracking.wav" by smidoid (CC-BY) + synthesized thump and lift — tear-free a (round 36): a tectonic rip, root snaps, a shockwave boom at 0.35 s, a deep roar under the lift (3.4 s, −15 dB) | rejected |
+| [concept/tear-free-roar-r36-b.ogg](concept/tear-free-roar-r36-b.ogg) | "Sea Creature Roar" by Bikkit99 + "Dragon: Snarl, Roar + Attack" by Breviceps + "rip_tear FLESH!!!!" by aust_paul (CC0) + "Tearing Flesh" by dereklieu (CC-BY) + synthesized shockwave and thump — tear-free b (round 36): a creature bellow rising in pitch with the lift, wet tearing roots, an air shockwave (3.4 s, −14 dB) | chosen |
+| [concept/rejected/canopy-withering-r36-a.ogg](concept/rejected/canopy-withering-r36-a.ogg) | "rip_tear FLESH!!!!" by aust_paul + "Wind__Artic__Cold" by cobratronik (CC0) + "Tearing Flesh" by dereklieu (CC-BY) + synthesized crackle — withering a (round 36): a dry crackling shrivel and a slow far tear settling into wind (7.0 s, −19 dB) | rejected |
+| [concept/canopy-withering-r36-b.ogg](concept/canopy-withering-r36-b.ogg) | "Simple Mutate (Monster)" by Division4884 + "Wind__Artic__Cold" by cobratronik (CC0) + synthesized sigh and groan — withering b (round 36): a dying exhale, a deep groan and sigh descending into wind (7.5 s, −19 dB) | chosen |
+| [concept/canopy-hum-r36-a.ogg](concept/canopy-hum-r36-a.ogg) | synthesized (no source) — canopy hum (round 36), seamless 8.0 s loop: two slowly beating harmonic voices on 46 Hz, a 0.75 Hz throb and a 4 s breath (band RMS −39 dB, 3 dB under the ambiences) | chosen |
+
+Concept [round 36](../../concept-rounds/round-36/README.md) (Act 3 "Red Dust", overnight design
+phase 2026-10-12, step A-audio) — a/b for four Act 3 sounds from cached Freesound originals (CC0, two
+CC-BY, all in [CREDITS.md](../../../CREDITS.md)) plus synthesized layers; generator
+`tools/concept/audio/sfx_r36b.py` (the `b` suffix because Level 14's sounds already use `r36`
+names). One-shots levelled like the recorded enemy sounds, loops by their band RMS (beam −30 dB,
+storm bed −36 dB); no bubble, popping or squelch layers. For the Ion Beam a third option is to keep
+the chosen round-04 loop [shot-beam-r04-a](concept/shot-beam-r04-a.ogg) unchanged.
+
+| File | What | Status |
+|---|---|---|
+| [concept/burrow-eruption-r36-a.ogg](concept/burrow-eruption-r36-a.ogg) | "Cracking Earthquake" by uagadugu + "Hard Impact on Sand" by Elements-Library + "SAND POUR.wav" by nicoproson (CC0) + synthesized pressure tone and sand hiss — burrow eruption a "sand burst": the 1.0 s tell's rumble swelling, then the break-out impact and sand raining down (2.1 s, −19 dB) | chosen (round 36, S.2) |
+| [concept/rejected/burrow-eruption-r36-b.ogg](concept/rejected/burrow-eruption-r36-b.ogg) | "Deep Roar Echo 2" by noahpardo + "Gravel Impacts and Falls.wav" by lolamadeus (CC0) + synthesized churn, spray and thump — b "the swimmer breaks out": sand churning under the ground, a muffled growl, gravel thrown up (2.1 s, −19 dB) | rejected — round 36: a (sand burst) picked |
+| [concept/rejected/canyon-scrape-r36-a.ogg](concept/rejected/canyon-scrape-r36-a.ogg) | "Metal pipe along concrete 2.wav" (deleted user) + "Hard Impact on Sand" by Elements-Library + "Gravel Impacts and Falls.wav" by lolamadeus (CC0) — canyon wall scrape a "rock grind": the hull dragged along stone, a dull hit, grit falling (0.65 s, −18 dB) | rejected — round 36: b (metal screech) picked |
+| [concept/canyon-scrape-r36-b.ogg](concept/canyon-scrape-r36-b.ogg) | "big metal side impact 3 scraping.wav" by Halleck (CC-BY) + synthesized spark hiss and thump — b "metal screech" (0.6 s, −18 dB) | chosen (round 36, S.3) |
+| [concept/ion-beam-loop-r36-a.ogg](concept/ion-beam-loop-r36-a.ogg) | "laser beam" by peepholecircus (CC0, the round-04 loop's source and window) + a synthesized ion body and circular hiss — Ion Beam loop a "the chosen hum, heavier", seamless 2.60 s loop (−30 dB) | chosen (round 36, S.4) |
+| [concept/rejected/ion-beam-loop-r36-b.ogg](concept/rejected/ion-beam-loop-r36-b.ogg) | synthesized (no source) — b "ion stream": a buzzing core, a smooth shimmer flutter at 1.8 kHz, a circular hiss and a slow swell, seamless 2.00 s loop (−30 dB) | rejected — round 36: a (the chosen hum, heavier) picked |
+| [concept/dust-storm-bed-r36-a.ogg](concept/dust-storm-bed-r36-a.ogg) | "G56-22-Sandstorm.wav" by craigsmith (CC0) + "20101121.wind.howl.furious.01.wav" by dobroide (CC-BY) — dust-storm bed a "recorded front" (`mars-storm`, Level 18): a steady sandstorm over a low furious howl, seamless 16.0 s loop (−36 dB) | chosen (round 36, S.5) |
+| [concept/rejected/dust-storm-bed-r36-b.ogg](concept/rejected/dust-storm-bed-r36-b.ogg) | synthesized (no source) — b "synthesized front": a low roar, grit hiss and a wandering howl band swelling with gusts, seamless 16.0 s loop (−36 dB) | rejected — round 36: a (recorded front) picked |
+
+Concept round 37 (M7 part A, step AUD-A) — a/b for the Act 3 equipment sounds from Freesound originals
+(CC0, in [CREDITS.md](../../../CREDITS.md); new: jokallset, Maxx222, JSK_Productions) plus synthesized
+layers; generator `tools/concept/audio/sfx_r37.py` (briefs and measurements in
+[concept/prompts.md](concept/prompts.md), section *Round 37*). Closed 2026-10-13 (user): S.2, S.4, S.6–S.10
+**b**, the rest **a**; the unchosen variants in `concept/rejected/` (the generator writes them there).
+One-shots levelled like the recorded sounds, loops by band RMS (the impact sizzle −38 dB, about 1–2.5 LU
+under the beam loop; the lance rumble −36 dB); no bubble, popping or squelch layers, every file scanned
+for isolated peaks. The chosen Ion Beam loop [ion-beam-loop-r36-a](concept/ion-beam-loop-r36-a.ogg) stays
+as it is (`--check-loop`: 2.600 s, band RMS −30.0 dB, seam +1.8 dB); the start plays **with** the loop,
+the stop at the release.
+
+| File | What | Status |
+|---|---|---|
+| [concept/ion-beam-start-r37-a.ogg](concept/ion-beam-start-r37-a.ogg) | "Machine Charge" by Glitchedtones (CC0) + synthesized ignition and ion body — Ion Beam start a "charge snap": the round-04 start's rise at 1.8× speed, a hiss and the loop's 110 Hz body rising onto its pitch (0.40 s, −24 dB) | chosen (round 37, S.1) |
+| [concept/rejected/ion-beam-start-r37-b.ogg](concept/rejected/ion-beam-start-r37-b.ogg) | synthesized (no source) — start b "ion strike": an arc crack and the ion body settling 220 → 110 Hz (0.45 s, −24 dB) | rejected — round 37: a (charge snap) picked |
+| [concept/rejected/ion-beam-stop-r37-a.ogg](concept/rejected/ion-beam-stop-r37-a.ogg) | "Power Down" by noirenex (CC0) + synthesized ion body — stop a "power down, short": the round-04 stop's first fall over the body sliding 110 → 45 Hz (0.55 s, −25 dB) | rejected — round 37: b (ion collapse) picked |
+| [concept/ion-beam-stop-r37-b.ogg](concept/ion-beam-stop-r37-b.ogg) | synthesized (no source) — stop b "ion collapse": the body sliding 110 → 35 Hz, its hiss falling (0.62 s, −25 dB) | chosen (round 37, S.2) |
+| [concept/beam-impact-r37-a.ogg](concept/beam-impact-r37-a.ogg) | synthesized (no source) — beam impact a "arc scorch": a fluttering dry 2–7 kHz sizzle over a low burning body, seamless 1.50 s loop (−38 dB, −27.7 LUFS) | chosen (round 37, S.3) |
+| [concept/rejected/beam-impact-r37-b.ogg](concept/rejected/beam-impact-r37-b.ogg) | "Plasma cutter gas.wav" by jokallset (CC0) + synthesized sizzle — impact b "cutting torch", seamless 1.50 s loop (−38 dB, −28.8 LUFS) | rejected — round 37: a (arc scorch) picked |
+| [concept/rejected/beam-impact-rock-r37-a.ogg](concept/rejected/beam-impact-rock-r37-a.ogg) | synthesized (no source) — impact a on rock: with a grit crackle and a stone roar, seamless 1.50 s loop (−38 dB) | rejected — round 37: b (cutting torch on rock) picked |
+| [concept/beam-impact-rock-r37-b.ogg](concept/beam-impact-rock-r37-b.ogg) | "Plasma cutter gas.wav" by jokallset (CC0) + synthesized sizzle, grit and stone — impact b on rock, seamless 1.50 s loop (−38 dB) | chosen (round 37, S.4) |
+| [concept/deflector-tick-r37-a.ogg](concept/deflector-tick-r37-a.ogg) | "ELECTRIC_ZAP_001" by JoelAudio (CC0) + synthesized ping — Deflector tick a: the shield hit at 1.6× speed, cut short, a glassy tick (0.12 s, −25.5 dB) | chosen (round 37, S.5) |
+| [concept/rejected/deflector-tick-r37-b.ogg](concept/rejected/deflector-tick-r37-b.ogg) | synthesized (no source) — tick b "dry deflect": a high snap and three inharmonic metal partials ringing 35 ms (0.12 s, −24.5 dB) | rejected — round 37: a (the shield hit, up) picked |
+| [concept/rejected/deflector-return-r37-a.ogg](concept/rejected/deflector-return-r37-a.ogg) | synthesized (no source) — charge return a "soft rise": two soft voices easing up a fifth, 520 → 780 Hz (0.45 s, −27 dB) | rejected — round 37: b (charge settle) picked |
+| [concept/deflector-return-r37-b.ogg](concept/deflector-return-r37-b.ogg) | synthesized (no source) — return b "charge settle": an E5–B5 fifth fading in over a rising air whoosh, no glide (0.45 s, −27 dB) | chosen (round 37, S.6) |
+| [concept/rejected/emp-ring-r37-a.ogg](concept/rejected/emp-ring-r37-a.ogg) | "Electric zap.wav" by michael_grinnell (CC0) + synthesized thump, arcs and buzz — EMP ring a "the tesla, layered": four ever slower copies spreading out, crackling arcs, a thump (1.35 s, −18.6 dB, −14.1 LUFS) | rejected — round 37: b (arc ring) picked |
+| [concept/emp-ring-r37-b.ogg](concept/emp-ring-r37-b.ogg) | synthesized (no source) — ring b "arc ring": a dying 60 → 45 Hz electric buzz, a discharge crack, arcs and a thump (1.34 s, −18 dB, −19.2 LUFS) | chosen (round 37, S.7) |
+| [concept/rejected/emp-powerdown-r37-a.ogg](concept/rejected/emp-powerdown-r37-a.ogg) | synthesized (no source) — machine power-down a "spin-down whine": a relay clunk and a whine falling 1400 → 180 Hz (0.92 s, −24 dB) | rejected — round 37: b (buzz dies) picked |
+| [concept/emp-powerdown-r37-b.ogg](concept/emp-powerdown-r37-b.ogg) | synthesized (no source) — power-down b "buzz dies": a flickering 100 Hz mains buzz sagging to 70 Hz (0.9 s, −24 dB) | chosen (round 37, S.8) |
+| [concept/rejected/lance-rumble-r37-a.ogg](concept/rejected/lance-rumble-r37-a.ogg) | synthesized (no source) — Orbital Lance rumble a "orbital roar" under loop c: a deep roar over low voices on 41 Hz, seamless 3.00 s loop (−36 dB, −24.9 LUFS) | rejected — round 37: b (the ground answers) picked |
+| [concept/lance-rumble-r37-b.ogg](concept/lance-rumble-r37-b.ogg) | "Cracking Earthquake" by uagadugu (CC0) + synthesized roar — rumble b "the ground answers", seamless 3.00 s loop (−36 dB, −23.1 LUFS) | chosen (round 37, S.9) |
+| [concept/rejected/overcharge-whoosh-r37-a.ogg](concept/rejected/overcharge-whoosh-r37-a.ogg) | "Power Up Charge" by qubodup (CC0) + synthesized whoosh and shimmer — Shield Overcharge activation a "the restore, charged" (1.0 s, −19 dB) | rejected — round 37: b (double shell) picked |
+| [concept/overcharge-whoosh-r37-b.ogg](concept/overcharge-whoosh-r37-b.ogg) | synthesized (no source) — activation b "double shell": a pad rising an octave as its filter opens, a whoosh and a white bloom (1.0 s, −19 dB) | chosen (round 37, S.10) |
+| [concept/overcharge-end-r37-a.ogg](concept/overcharge-end-r37-a.ogg) | synthesized (no source) — overcharge end a "shimmer fades": fluttering high partials gliding down (0.9 s, −24 dB) | chosen (round 37, S.11) |
+| [concept/rejected/overcharge-end-r37-b.ogg](concept/rejected/overcharge-end-r37-b.ogg) | "Power Up Charge" by qubodup (CC0) + synthesized shimmer — end b "the charge drains": the restore's source backwards, fading, under a falling shimmer (0.9 s, −24 dB) | rejected — round 37: a (shimmer fades) picked |
+| [concept/cooldown-ready-r37-a.ogg](concept/cooldown-ready-r37-a.ogg) | synthesized (no source) — cooldown ready a "two soft bells": A5 then E6 (0.5 s, −22 dB) | chosen (round 37, S.12) |
+| [concept/rejected/cooldown-ready-r37-b.ogg](concept/rejected/cooldown-ready-r37-b.ogg) | synthesized (no source) — ready b "glass fifth": one soft C6–G6 chord (0.5 s, −22 dB) | rejected — round 37: a (two soft bells) picked |
+| [concept/dash-r37-a.ogg](concept/dash-r37-a.ogg) | synthesized (no source) — dash a "thruster puff": a jet noise burst sweeping 600 → 2500 → 900 Hz over a short low roar (0.35 s, −20.6 dB) | chosen (round 37, S.13) |
+| [concept/rejected/dash-r37-b.ogg](concept/rejected/dash-r37-b.ogg) | "RocketThrustMaxx.wav" by Maxx222 + "Afterburner (Close, Screamer, Quick Onset)" by JSK_Productions (CC0) — dash b "rocket kick" (0.35 s, −20 dB) | rejected — round 37: a (thruster puff) picked |
+| [concept/drone-break-r37-a.ogg](concept/drone-break-r37-a.ogg) | "HeavyBulletPing" by wilhellboy + "Small Explosion" by Cyberios (CC0) + synthesized sparks — light drone break a: the metal hit and a `tiny` blast with sparks (0.49 s, −20 dB) | chosen (round 37, S.14) |
+| [concept/rejected/drone-break-r37-b.ogg](concept/rejected/drone-break-r37-b.ogg) | "Impact on metal" by JoMungus + "Small explosion" by dinodilopho (CC0) + synthesized sparks — break b "crunch" (0.63 s, −20 dB) | rejected — round 37: a (ping and blast) picked |
+| [concept/drone-rebuild-r37-a.ogg](concept/drone-rebuild-r37-a.ogg) | synthesized (no source) — drone rebuilt a "materialise": a soft saw pad easing up a fourth as its filter opens (0.6 s, −25 dB) | chosen (round 37, S.15) |
+| [concept/rejected/drone-rebuild-r37-b.ogg](concept/rejected/drone-rebuild-r37-b.ogg) | synthesized (no source) — rebuilt b "three bells": E5, A5, E6 over a faint sparkle (0.57 s, −25 dB) | rejected — round 37: a (materialise) picked |
+
+Concept round 38 (M7 part B, Level 15, step AUD-B; closed 2026-10-14: bulge **b**, dive **b**, entry roar **a**,
+`mars-dust` **a**, the unchosen files in `concept/rejected/`) — a/b for the Burrower's
+bulge and dive, Level 15's entry roar and the Mars dust wind `mars-dust`, from cached Freesound originals
+already credited (CC0; the dobroide howl and smidoid's cracking CC-BY; all in
+[CREDITS.md](../../../CREDITS.md)) plus synthesized layers; generator `tools/concept/audio/sfx_r38.py`
+(briefs and measurements in [concept/prompts.md](concept/prompts.md), section *Round 38*). One-shots levelled
+like the recorded enemy sounds, loops by band RMS (−36 dB, the ambiences'); no bubble, popping or
+squelch layers. The chosen eruption a already opens with the 1.0 s bulge tell (its rumble swells for
+1.0 s, the impact lands at 1.0 s), so it is played **at the bulge's start**, and the bulge's a is that
+alone (no file); b adds a crack layer over it. The game ships the eruption and the four chosen files
+(`:pipeline:copyPlaceholderSounds`).
+
+| File | What | Status |
+|---|---|---|
+| [concept/burrow-bulge-r38-b.ogg](concept/burrow-bulge-r38-b.ogg) | "cracking.wav" by smidoid (CC-BY) + synthesized cracks and a gritty trickle — bulge b "crack layer": sand and crust cracking faster towards the break, no rumble of its own, played with the eruption a from the bulge's start (1.27 s, −25 dB; a is the eruption alone) | chosen (round 38, S.1) |
+| [concept/burrow-bulge-mix-r38-b.ogg](concept/burrow-bulge-mix-r38-b.ogg) | Listening aid: the eruption a and the bulge b started together, as the game mixes b (2.1 s; not loaded by the game) | chosen (round 38, S.1; listening aid) |
+| [concept/rejected/burrow-dive-r38-a.ogg](concept/rejected/burrow-dive-r38-a.ogg) | "SAND POUR.wav" by nicoproson + "Bricks/Stones/Rocks/Gravel Falling" by iwanPlays (CC0) + a synthesized sand slump — dive a "sand pour": a sand hiss under a low-pass falling 9 → 1.6 kHz, small stones dropping in (0.62 s, −22 dB, −22.0 LUFS) | rejected — round 38: b (grain slide) picked |
+| [concept/burrow-dive-r38-b.ogg](concept/burrow-dive-r38-b.ogg) | synthesized (no source) — dive b "grain slide": a dense rain of noise grains whose band falls 5 → 1 kHz as it thins, over the slump (0.55 s, −26 dB, −21.4 LUFS) | chosen (round 38, S.2) |
+| [concept/entry-roar-r38-a.ogg](concept/entry-roar-r38-a.ogg) | "20101121.wind.howl.furious.01.wav" by dobroide (CC-BY) + a synthesized hull buffet — entry roar a "recorded roar": the howl high-passed at 650 Hz (its body gone, the thin roar left) over a low buffet 10 dB under, seamless 12.0 s loop (−36 dB) | chosen (round 38, S.3) |
+| [concept/rejected/entry-roar-r38-b.ogg](concept/rejected/entry-roar-r38-b.ogg) | synthesized (no source) — entry roar b "synthesized roar": a thin air roar (0.7–6 kHz), a resonant whistle wandering 1.6–2.6 kHz and the buffet, seamless 12.0 s loop (−36 dB) | rejected — round 38: a (recorded roar) picked |
+| [concept/mars-dust-r38-a.ogg](concept/mars-dust-r38-a.ogg) | "G56-22-Sandstorm.wav" by craigsmith + "Wind__Artic__Cold.wav" by cobratronik (CC0) — `mars-dust` a "recorded dust wind": the sandstorm (another stretch than the storm bed's, 0.3–6 kHz) riding slow gusts over a cold wind's low moan, thinner and calmer than `mars-storm`, seamless 16.0 s loop (−36 dB) | chosen (round 38, S.4) |
+| [concept/rejected/mars-dust-r38-b.ogg](concept/rejected/mars-dust-r38-b.ogg) | synthesized (no source) — `mars-dust` b "synthesized dust wind": a thin pinkish wind, a faint whistle wandering 0.9–1.4 kHz and a grit hiss rising with the gusts, seamless 16.0 s loop (−36 dB) | rejected — round 38: a (recorded dust wind) picked |
+| [concept/tendril-hum-r39-a.ogg](concept/tendril-hum-r39-a.ogg) | synthesized (no source) — tendril hum a: 120 Hz and its harmonics up to 5 kHz (odd ones stronger) over a steady fizz, no vibrato, beating or modulation (no wobble), seamless 6.0 s loop (−38 dB) | chosen (round 39, S.1) |
+| [concept/tendril-burn-r39-a.ogg](concept/tendril-burn-r39-a.ogg) | synthesized (no source) — tendril burn a: 3–9 ms noise-grain crackle (2–8 kHz, ~220 a second) over a dry sizzle bed, seamless 2.0 s loop (−34 dB) | chosen (round 39, S.2) |
+| [concept/tendril-break-r39-a.ogg](concept/tendril-break-r39-a.ogg) | synthesized (no source) — tendril break a: a whip-crack and a falling harmonic whine (2.4 → 0.55 kHz, fading out), 0.9 s (−17 dB) | chosen (round 39, S.3) |
+| [concept/crawler-walk-r39-a.ogg](concept/crawler-walk-r39-a.ogg) | synthesized (no source) — Threadcrawler walk a: twelve legs in two rows, 2–6 ms noise ticks at 8.4 steps a second over a rock rustle, seamless 3.0 s loop (−36 dB) | chosen (round 39, S.4) |
+| [concept/mars-canyon-r39-a.ogg](concept/mars-canyon-r39-a.ogg) | synthesized (no source) — `mars-canyon` a: a dust wind with a resonant canyon howl (260–420 Hz plus an octave voice) breathing with the gusts, seamless 16.0 s loop (−36 dB) | chosen (round 39, S.5) |
+| [concept/dome-hit-r40-a.ogg](concept/dome-hit-r40-a.ogg) | synthesized (no source) — `dome-hit` a: a 70–190 Hz knock and a glass tick, a creak (resonance 0.7 → 1.4 kHz) panned round the field, 60 stress-line grains; no shatter, 1.2 s (−18 dB) | proposed (round 40) |
+| [concept/dome-break-r40-a.ogg](concept/dome-break-r40-a.ogg) | synthesized (no source) — `dome-break` a: a crack, ~400 glass grains thinning out, a hiss falling 6 → 1.2 kHz and a sawtooth frame groan sinking 150 → 85 Hz, 3.6 s (−16 dB) | proposed (round 40) |
+| [concept/herald-song-r40-a.ogg](concept/herald-song-r40-a.ogg) | synthesized (no source) — `herald-song` a: three voices (a fifth apart) singing an 'ah' (formants 800/1150/2900 Hz), F3 → A3 → E3 with a slow vibrato, 1.9 s (−20 dB) | proposed (round 40) |
+| [concept/herald-aura-r40-a.ogg](concept/herald-aura-r40-a.ogg) | synthesized (no source) — `herald-aura` a: six steady partials at 1.9–4.6 kHz with slow swells over a faint 5–9 kHz air, seamless 4.0 s loop (−40 dB) | proposed (round 40) |
+| [concept/aura-absorb-r40-a.ogg](concept/aura-absorb-r40-a.ogg) | synthesized (no source) — `aura-absorb` a: a glassy ping of four inharmonic partials (2.1–6.1 kHz), 0.4 s (−22 dB) | proposed (round 40) |
+| [concept/aura-collapse-r40-a.ogg](concept/aura-collapse-r40-a.ogg) | synthesized (no source) — `aura-collapse` a: five sustained voices sliding a fourth down over 1.6 s with a fading sheet of ring-glass pings, 2.0 s (−18 dB) | proposed (round 40) |
+| [concept/shellback-walk-r40-a.ogg](concept/shellback-walk-r40-a.ogg) | synthesized (no source) — `shellback-walk` a: four padded footfalls (60–160 Hz thud, 300–900 Hz pad) and clacking plates, seamless 3.2 s loop (−34 dB) | proposed (round 40) |
+| [concept/shellback-lob-r40-a.ogg](concept/shellback-lob-r40-a.ogg) | synthesized (no source) — `shellback-lob` a: an 80–260 Hz cough thump and a short pressure hiss (300–1800 Hz), 0.6 s (−17 dB) | proposed (round 40) |
+| [concept/shellback-curl-r40-a.ogg](concept/shellback-curl-r40-a.ogg) | synthesized (no source) — `shellback-curl` a: eleven staggered plate scrapes (band noise 0.6–2.5 kHz) ending in a heavy clack, 0.8 s (−20 dB) | proposed (round 40) |
+| [concept/shellback-roll-r40-a.ogg](concept/shellback-roll-r40-a.ogg) | synthesized (no source) — `shellback-roll` a: a 40–140 Hz rumble and a gritty rock-crush noise on 2.5 turns a loop, seamless 2.5 s loop (−30 dB) | proposed (round 40) |
+| [concept/shellback-uncurl-r40-a.ogg](concept/shellback-uncurl-r40-a.ogg) | synthesized (no source) — `shellback-uncurl` a: the plate scrapes in reverse order, a looser clack and a short exhale of grit, 0.7 s (−22 dB) | proposed (round 40) |
+| [concept/mars-colony-r40-a.ogg](concept/mars-colony-r40-a.ogg) | synthesized (no source) — `mars-colony` a: a thin plains wind, the domes' air-plant hum (60 Hz and partials 2–6, steady) and a distant rail clank, seamless 16.0 s loop (−36 dB) | proposed (round 40) |
 
 ## Implementation
 
@@ -715,17 +897,19 @@ ray — already on the credits roll) with synthesized layers; levels as the loud
   shake-off, the sonde chime; auditioned in round 34, then played from `assets/sfx/`
   (`Level12SoundsTest`) — built with round 34's variant a copied as placeholders
   (`copyPlaceholderSounds`; `Sfx.AMBIENCE_STORM`, `THUNDER_1`–`3`, `GUST`, `LAMPREY_LATCH`,
-  `LAMPREY_DRAIN`, `LAMPREY_SHAKE`, `SONDE_CHIME`; `FlightSounds`), swapped for the user's picks when
-  the round closes
-- [ ] The Proximity Mines' drop and arm heard in Level 12's capture (M5 part F, step 7)
+  `LAMPREY_DRAIN`, `LAMPREY_SHAKE`, `SONDE_CHIME`; `FlightSounds`), swapped for the user's picks
+  (step K1: the thunder and the gust b)
+- [ ] The Proximity Mines' drop and arm heard in Level 12's capture (M5 part F, step 7) — left open:
+      both heard in the capture and accepted in round 34, but the drop was raised to −10 dB afterwards and
+      not re-captured
 - [x] Level 13's sounds (M5 part G, step G6): `AMBIENCE_ARCTIC` (key `earth-arctic`) with its whiteout
   peak (the section peak's `ambience_db`, ramping with the atmosphere; `LevelMusic.ambienceLevels`), the
   relay hit, the integrity alarm, relay destroyed, the drone launch and grid online as round 35's **a**
   placeholders (`copyPlaceholderSounds`; `Sfx.RELAY_HIT`, `INTEGRITY_ALARM`, `RELAY_DESTROYED`,
-  `DRONE_LAUNCH`, `GRID_ONLINE`; `FlightSounds`), swapped for the user's picks when the round closes; the
+  `DRONE_LAUNCH`, `GRID_ONLINE`; `FlightSounds`), swapped for the user's picks (step K1: grid online b); the
   Skimmer's sink on the water explosion (`Level13SoundsTest`)
-- [x] Level 14's sounds (M5 part H, step H6; round 36's variant a until the round closes, pending the
-  user's review): the canopy hum as the ambience `earth-canopy` (`Sfx.AMBIENCE_CANOPY`; at the Spire's
+- [x] Level 14's sounds (M5 part H, step H6; the user's picks since step K1: the tear-free roar and the
+  canopy withering b, the rest a): the canopy hum as the ambience `earth-canopy` (`Sfx.AMBIENCE_CANOPY`; at the Spire's
   death it fades out over 2 s while the megacity's ambience rises over 7 s, `LevelMusic`), the root burst at
   each burst's telegraph (`ROOT_BURST`), the growth as its growths appear (`ROOT_GROWTH`), the tear-free
   roar at the lift (`TEAR_FREE_ROAR`), the canopy withering 3 s after the Spire's death (step H7b)
@@ -735,6 +919,24 @@ ray — already on the credits roll) with synthesized layers; levels as the loud
   from rounds 02–08, round 21's four, round 23's five, round 24's two, round 25's seven, round 27's one, round 31's three, round 32's three and round 33's seven) in `assets/sfx/` under its concept name, with a `SOURCE` comment, by
   [`tools/art/sfx_originals.py`](../../../tools/art/README.md); `importPlaceholders` keeps them
   (only the synthesized sounds are still copied). `art: final` waits for the user's round-12 review.
+- [ ] Act 3's sounds (approved in round 36; M7 parts A–H): the sounds of
+  *Act 3 sounds* in `assets/sfx/` and `Sfx` as each part builds its levels, units and equipment; the
+  five Mars ambiences (`mars-dust`, `mars-canyon`, `mars-colony`, `mars-storm`, `mars-foundry`) and the
+  basin rumble; a unit's loop once per kind for the nearest unit (the mixing proposal). M7 part A
+  (step A6): the Act 3 arsenal's sounds play — the Ion Beam's start with its loop (round 36 a) and
+  stop, the sizzle while it burns (rock on a ground object), the deflector tick and return, the
+  drone break and rebuild (an absorbed hit pings the metal hit softly), the EMP ring and one
+  power-down a step, the Orbital Lance's lock beep and its loop c with the rumble while it burns, the
+  overcharge whoosh and end, the cooldown chime and the dash burst — as round 37's picks (user,
+  2026-10-13: the beam's stop, the rock sizzle, the deflector return, the EMP ring and power-down, the
+  lance rumble and the overcharge whoosh b, the rest a; step Q2) (`FlightSounds`, `Sfx`). M7 part B
+  (step B4): Level 15's — the Burrower's eruption a from its bulge's start with round 38's crack layer b
+  over it (`Sfx.BURROW_BULGE`, step R38C) and its dive b, the entry roar `mars-entry` a in sections 1–2
+  crossfading over 2 s to `mars-dust` a at section 3 (round 38's picks, user 2026-10-14; `Level15SoundsTest`). M7 part C
+  (steps AUD-C, G1, G2): Level 16's — the canyon scrape b panned at the contact, the tendril hum (0.4 while
+  dormant) and burn loops and the break, the Threadcrawler's walk loop (nearest unit, panned) and its cut as the
+  Coilwyrm's rip at pitch 0.8, −3 dB, the `mars-canyon` ambience (`Level16SoundsTest`; round 39's proposals,
+  pending the user's review)
 
 ## Decisions
 
@@ -1052,3 +1254,82 @@ ray — already on the credits roll) with synthesized layers; levels as the loud
   the arming beep's −10 dB instead of the shots' −14 dB (`FlightSounds.MINE_DROPPING`): in the CF capture
   the front gun firing on the same tick masked the drop completely (10–20 dB under the mix); the arming
   beep was heard. Not re-captured.
+- 2026-10-12 user, round 34 (Levels 12–14's sounds, rounds 34–36's proposals): the thunder **b** (three
+  close strikes, loganzsound CC0), the gust **b** (the recorded gust, cobratronik CC0), grid online **b**
+  (the spin-up into a contact clunk, Glitchedtones CC0), the tear-free roar **b** (the creature's bellow
+  with the lift) and the canopy withering **b** (the dying exhale, groan and sigh); every other sound of
+  the three rounds **a** or accepted as its one proposal. Rejected: thunder, gust, grid online, roar and
+  withering a; the latch, drain, relay hit, integrity alarm and root burst b (their files move to
+  `concept/rejected/` when the round closes). Step K1 wired the b files (`Sfx`, `copyPlaceholderSounds`;
+  the a copies left `assets/sfx/`); measured as G8 did (the loudest 100 ms of the 200 Hz–5 kHz band),
+  each b is within 1 dB of the a it replaces (the third thunder 2 dB over), so the levels stay; grid
+  online's b is 2.6 s like a, so Level 13's jingle fade stays 2.6 s. None has a bubble, squelch or water
+  layer (the roar's wet tearing is the user's pick). The picked sounds are the concept files, already
+  built from the Freesound originals or synthesized, without a `SOURCE` mark (`PlaceholderAuditTest`
+  lists them).
+- 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): the round closed. The one-proposal
+  sounds accepted (12.4e the shake-off, the sonde chime and the rain-only bed; 13.4d the drone launch and
+  relay destroyed; 14.4d the root growth and the canopy hum); the picks as in the line above. The
+  rejected files (thunder 1–3, gust, grid online, roar and withering a; the latch, drain, relay hit,
+  integrity alarm and root burst b) moved to `concept/rejected/`, their CREDITS.md rows with them.
+  Pending: the picked sounds still lack a `SOURCE` mark (`PlaceholderAuditTest` lists them).
+- 2026-10-12 (overnight design phase, **pending the user's review in round 36**): Act 3's sounds
+  listed with briefs (*Act 3 sounds*): terrain and set pieces (the canyon wall scrape, the dome's hit
+  and break, the furnace vents, the basin rumble), the new units and the two bosses, the Act 3
+  equipment (the Ion Beam with its impact, the EMP Burst, the Orbital Lance, the Shield Overcharge,
+  the Deflector Pod, the drones, the dash), and five Mars ambiences; reuses named where a chosen file
+  fits (the frigate's flak, the swarm's whoosh, the enemy missile launch for the walker's pods, the
+  lock beep for the lance's targeting line, the tesla shot for the EMP). Round 36 proposes a/b for the
+  burrow eruption, the canyon wall scrape, the Ion Beam loop and the dust-storm bed; the rest go to
+  the round of the part that builds them. No bubbly, popping or squelching sounds (user rule). A
+  unit's loop plays once per kind, for the nearest unit (proposal). The unplayed-sound reasons of the
+  beam, tesla, missile and lock files name their Act 3 use.
+- 2026-10-13 (user, round 36): the *Act 3 sounds* section approved (D.29). Picks: burrow eruption
+  **a** "sand burst", canyon wall scrape **b** "metal screech" (with Halleck's CC-BY scrape: on the
+  credits roll), Ion Beam loop **a** "the chosen hum, heavier", dust-storm bed **a** "recorded front"
+  (`mars-storm`; dobroide's CC-BY howl on the credits roll). The rejected files (burrow eruption b,
+  scrape a, ion loop b, storm bed b) moved to `concept/rejected/`, CREDITS.md updated.
+- 2026-10-13: M7 part A, step A6: the Act 3 arsenal's sounds wired in flight with round 37's a as
+  placeholders (copied into `assets/sfx/` by `importPlaceholders`) until the round closes; the Ion
+  Beam loop a, the lock beep and loop c left the *Chosen sounds the game does not play* table. Our
+  reading, pending the user's review: the beam's start plays with its loop (not before it), the
+  sizzle's −38 dB file plays as it is under the loop, the EMP's power-down plays once a step for what
+  the ring reaches (a machine's at the explosions' level, a Vrell unit's 6 dB lower), a drone's
+  absorbed hit plays the metal hit 12 dB under the hits.
+- 2026-10-13: step Q2: round 37's sound picks in the game (user: S.2, S.4, S.6–S.10 **b**, the rest
+  **a**): the seven b files replace their a copies in `assets/sfx/` (`Sfx`, the `importPlaceholders`
+  list, `PlaceholderAuditTest`, `ArsenalSoundsTest`), played at the a's levels. Measured: no clicks or
+  loop-seam jumps; the EMP ring b sits about 5 LU and the overcharge whoosh b about 5.5 LU under their
+  a (the ring has no headroom at −2.7 dBFS peak, the whoosh 4 dB at −7 dBFS), so both are quieter than
+  the Smart Bomb and the shield restore in flight — pending the user's review.
+- 2026-10-13 (user, round 37): round 37 closed (step Q3): the picks S.1–S.15 as built in step Q2
+  (S.2, S.4, S.6–S.10 **b**, the rest **a**); the fifteen unchosen files moved to `concept/rejected/`
+  (`sfx_r37.py` routes them by `CHOSEN`, CREDITS.md paths updated). B.6 (a)–(d) yes: the beam's start
+  plays with its loop, the sizzle at its file's −38 dB, the EMP power-down once a step (a Vrell unit
+  6 dB lower), a drone's absorbed hit 12 dB under the hits.
+- 2026-10-14 (M7 part B, step AUD-B, **pending the user's review in round 38**): round 38's sounds
+  proposed (`sfx_r38.py`): the bulge a (the eruption a alone, started at the bulge: its built-in swell is
+  the tell, so a separate rumble would double it) / b (a crack layer over it), the dive, the entry roar
+  and `mars-dust` a/b. The chosen eruption a and each a are copied into `assets/sfx/` until the pick
+  (`PlaceholderAuditTest` lists them); the game plays the eruption at the bulge's start, not at the
+  surfacing.
+- 2026-10-14: M7 part C (step AUD-C): the chosen canyon wall scrape b ([canyon-scrape-r36-b](concept/canyon-scrape-r36-b.ogg),
+  Halleck, CC-BY, already in CREDITS.md and now on the credits roll) is copied into `assets/sfx/`; round 39's
+  proposals (`sfx_r39.py`, all synthesized, option a each): the tendril hum, burn loop and break, the Threadcrawler's
+  walk and the `mars-canyon` ambience, copied into `assets/sfx/` until the pick, pending the user's review.
+- 2026-10-14 (user, round 38): closed (step R38C): S.1 = **b**, the crack layer `burrow-bulge-r38-b` played over
+  the eruption a, both from the bulge's start at the same pitch (`Sfx.BURROW_BULGE`, `FlightSounds`); S.2 =
+  **b**, the grain slide; S.3 = **a**, the recorded entry roar; S.4 = **a**, the recorded dust wind. The game
+  ships the four chosen files (`copyPlaceholderSounds`, `PlaceholderAuditTest`); the dive a, the entry roar b
+  and `mars-dust` b moved to `concept/rejected/` (`sfx_r38.py` routes them by `CHOSEN`, CREDITS.md paths
+  updated). B.3 (d)–(e) yes: `mars-entry` crossfading over 2 s to `mars-dust` at section 3, the eruption from
+  the bulge's start.
+- 2026-10-18: M7 part D (step AUD-D): round 40's proposals (`sfx_r40.py`, all synthesized, option a each, no
+  third-party layers and none bubbly or popping): the dome hit and break, the Choir Herald's song, aura loop,
+  absorb ping and collapse chord, the Shellback's walk, lob, curl, roll loop and uncurl, and the `mars-colony`
+  ambience; copied into `assets/sfx/` until the pick (`PlaceholderAuditTest` lists them), pending the user's review.
+- 2026-10-18 (user, round 39): closed: the tendril hum (S.1), burn (S.2) and break (S.3), the Threadcrawler's walk
+  (S.4) and the `mars-canyon` ambience (S.5) accepted as proposed (one variant each, all synthesized), so all five
+  `chosen`; the game already ships them. B.4 (b), (d), (e) kept: the scrape at −2 dB panned at the contact, the
+  unit loops and the tendril hum's 0.4 while dormant with 0.2 s fades, the crawler's cut as the Coilwyrm's rip at
+  pitch 0.8, −3 dB.

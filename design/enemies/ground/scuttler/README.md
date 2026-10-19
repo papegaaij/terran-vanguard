@@ -1,6 +1,6 @@
 ---
 title: Scuttler
-design: review
+design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
@@ -124,3 +124,5 @@ Production art proposal for concept round 16 (M4 part D, the Level 04 batch; pen
 - 2026-10-11: M5 part G, step G1a (the user is on vacation, the main agent took the gap analysis's recommendations; **pending the user's review** in the combined round at the end of M5): **G1 = a** the `in-arc` hook made exact: within ±45° of the facing the fan is centred on the relay and relay-aimed, the spit stays on the ship; Level 13's lanes end 100–140 px short of the relay. `design: review` for this behaviour, `implementation: in-progress` for its build.
 - 2026-10-11: M5 part G, step G3 (the simulation; pending the user's review): the `in-arc` arc is the walker's own `front_arc` (the Scuttler's 45°), measured from its facing to the bearing of the relay's centre; the fan then goes at the relay's centre with the difficulty's aim spread, its bullets relay-aimed (they still hurt the ship they cross). The spit stays on the ship under `in-arc` (only Level 04's `nearest` sends it at a convoy unit). A walker's path in a timed halt does not move, since it scrolls with the ground.
 - 2026-10-12: M5 part I (close-out): the `in-arc` hook and Level 13's walker paths ticked as built in part G (Level 13's data: `targeted_by`, the pincers' `paths`; `HookModesTest`, `Level13Test`); every item is ticked, so the document is `done`.
+- 2026-10-12 (user, [round 34](../../../concept-rounds/round-34/README.md)): G1 = a (the `in-arc` hook made exact, row 13.7a) and step G3's
+  build accepted; the document goes back to `approved`.

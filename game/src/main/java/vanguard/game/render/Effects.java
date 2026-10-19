@@ -92,6 +92,22 @@ public final class Effects {
     }
 
     /**
+     * M7 part C: as {@link #startOnGround(Array, int, double, double, int, double)}, drawn at {@code scale}
+     * and {@code opacity} (0..1): a stopped shot's small spark at rock.
+     */
+    public void startOnGroundScaled(
+            Array<AtlasRegion> frames,
+            int ticksPerFrame,
+            double x,
+            double y,
+            int delayTicks,
+            double groundScroll,
+            float scale,
+            float opacity) {
+        start(frames, ticksPerFrame, x, y + groundScroll, delayTicks, scale, opacity, true);
+    }
+
+    /**
      * M5 part G: as {@link #startOnGround(Array, int, double, double, int, double)}, on something that
      * drifts on top of the ground's scroll (Level 13's mortar floe): it drifts on with it.
      *

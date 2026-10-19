@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player/armor, ../../player/shields, ../difficulty, ../saves]
-updated: 2026-10-05
+updated: 2026-10-18
 ---
 
 # Retry
@@ -24,7 +24,9 @@ charges are all restored. Whatever was earned in the failed attempt is lost. The
    screen follows **3 s** after the destruction (the explosion, the slow motion and the start of
    the sting).
 2. **Mission failed** screen with Okafor's portrait and a short line
-   ("Pull back, Lancer. Regroup and try again."). Options:
+   ("Pull back, Lancer. Regroup and try again."). As it opens the radio closes: the line on it
+   and its voice are cut and the HUD's radio box under the screen stays empty, so only the
+   screen's line is shown (a level's own failure line is spoken too). Options:
    - **Retry**: restart the level immediately with the level-start state.
    - **Back to hangar**: return to the hangar with the level-start state, to change the
      loadout. Purchases there are normal purchases. Then launch again.
@@ -33,7 +35,9 @@ charges are all restored. Whatever was earned in the failed attempt is lost. The
 3. On hard, the screen shows the retries left (3 per level). The failure **uses its retry at
    once** and the autosave is written then, so quitting from this screen and continuing cannot
    give it back. With none left the campaign ends: game over screen, high-score entry, back to the
-   main menu. A game over goes back to the save made in the hangar right before the level was
+   main menu. The game over screen carries Okafor's last transmission (`game_over` in
+   [data.yaml](data.yaml), voiced through the radio filter; M6 part B, Q5 = a, accepted by the
+   user in round 35): *"Lancer is down. Aegis Wing, close ranks and hold the line. Okafor out."* A game over goes back to the save made in the hangar right before the level was
    last launched, with a fresh set of retries: the autosave written at that failure holds the
    hangar state of the last launch (loadout, inventory, credits, charges and armour as launched)
    and the level's full retries, so **Continue** opens the hangar before the level and never
@@ -92,6 +96,7 @@ new input recording starts there. Retrying from the boss does not count as a har
 - [x] Mission failed screen with the three (four) options
 - [x] Back (Esc, the gamepad's back button) opens the quit question (`MissionFailedExitTest`)
 - [x] Hard-mode retry counter and game over
+- [x] Game over screen to the chosen game-over-r08-a: the campaign's stats, Okafor's voiced last transmission, the hard top 10 with the name entry (M6 part B; [scoring](../scoring/README.md#high-scores))
 - [x] "Back to hangar" path that keeps the level as the next one
 - [x] A failed primary objective fails the level like a wreck (no explosion, the level's failure line) — M4 part D, reused by Level 05
 
@@ -166,3 +171,29 @@ new input recording starts there. Retrying from the boss does not count as a har
   button open the Quit to main menu question from any item, as choosing Quit does; Back again or
   No stays on the screen. Test: `MissionFailedExitTest`.
 - 2026-10-05: M4 part H docs reconciliation: implementation `done`; every item is ticked (the boss checkpoint since M4 part E).
+- 2026-10-12: M6 part B (Q5 = a, **pending the user's review in round 35**): the game over screen
+  is built to game-over-r08-a (`GameOverScreen`): GAME OVER in red, `HARD - RETRIES 0 / 3 -
+  MISSION 08 - NEON SKYLINE`, the campaign panel (score, furthest mission, playtime, enemies, best
+  grade with its mission, ships lost), the LAST TRANSMISSION with Okafor's sign-off, and the hard
+  top 10 with the name entry when the score qualifies; then confirm to the main menu. The line is
+  new story text: *"Lancer is down. Aegis Wing, close ranks and hold the line. Okafor out."*
+  (`game_over` in data.yaml, grim, radio filter), played 2.5 s after the game over cue; rendered
+  with `tools/art/voice.py`, seed pinned after eight auditioned takes (Whisper read "age is wing"
+  for "Aegis Wing" in the key's own seed). The concept's "CREDITS SPENT" row became SHIPS LOST
+  (the campaign does not count spending).
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C2 and Q5, Okafor's new line).
+- 2026-10-12 (user, round 35): accepted as built: C2 (the game over screen's differences from
+  game-over-r08-a: `GAME OVER` in the red heading font, SHIPS LOST, the footer, `SP` in the grid)
+  and Q5 (Okafor's last transmission, text and voice); `design: approved`.
+- 2026-10-12 (step K9, a stated default pending the user's review): Level 13's relay-lost capture
+  (round 35) left Varga's last line frozen in the HUD's radio box under the mission failed screen
+  with Okafor's "Nansen is gone. Pull back, Lancer." The radio now closes as the screen opens (the
+  voice was cut there already), after a wreck and a failed primary objective alike
+  (`LevelScreen.failedScreenOpens`, `LevelScreenPartGTest`). Measured in a wave-driver run: Okafor's
+  line plays in full (4.2 s) from the screen's opening; every level's failure line resolves to its
+  voice file the way the screen looks it up.
+- 2026-10-13 (user, round 36, L.3): accepted: the radio box is cleared and a playing voice cut when the mission failed or game over screen opens.
+- 2026-10-18: with every mission starting at its briefing (user decision, [screen flow](../../ui/README.md#screen-flow)),
+  Continue after a game over opens the mission's briefing, then the hangar; the game over footer now
+  reads "NO RETRIES LEFT. CONTINUE RETURNS TO THE BRIEFING BEFORE THIS MISSION." (was "... THE HANGAR
+  ...", accepted in round 35; pending the user's review).

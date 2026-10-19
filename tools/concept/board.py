@@ -12,6 +12,9 @@ shown as a table whose links to audio files become players (e.g. before / after 
 Usage: python3 tools/concept/board.py 01
        python3 tools/concept/board.py 34 35 36   a combined round: round-34's board also shows the
                                                  files named for rounds 35 and 36
+       python3 tools/concept/board.py 35 --subjects pointer,app-icon,m6-capture
+                                                 only these subjects (round 35 shares the r35 names
+                                                 with round 34's Level 13 files)
 """
 import html
 import os
@@ -133,11 +136,20 @@ def listening_table(readme):
 
 
 def main():
-    if len(sys.argv) < 2 or not all(re.fullmatch(r"\d\d", a) for a in sys.argv[1:]):
+    args = sys.argv[1:]
+    subjects = None
+    if "--subjects" in args:
+        k = args.index("--subjects")
+        if k + 1 >= len(args):
+            print(__doc__)
+            return 2
+        subjects = set(args[k + 1].split(","))
+        args = args[:k] + args[k + 2:]
+    if not args or not all(re.fullmatch(r"\d\d", a) for a in args):
         print(__doc__)
         return 2
-    round_no = sys.argv[1]
-    rounds = set(sys.argv[1:])
+    round_no = args[0]
+    rounds = set(args)
     out_dir = DESIGN / "concept-rounds" / f"round-{round_no}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -147,6 +159,8 @@ def main():
     parts, toc = [], {}
     for (owner, subject, rnd), variants in sorted(collect(rounds).items(),
                                                    key=lambda kv: (str(kv[0][0]), kv[0][2], kv[0][1])):
+        if subjects is not None and subject not in subjects:
+            continue
         # a combined round names each subject's own round
         tag = f"-r{rnd}" if len(rounds) > 1 else ""
         doc = owner / "README.md"

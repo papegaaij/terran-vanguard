@@ -5,7 +5,9 @@ design/ui/hud), in the chosen style B with retained colour (round 04) and the ro
 Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``portraits/<name>``):
   radio-<slug>-<expression>.png      72x72 radio portrait (HUD), for okafor, rook, varga in
                                      neutral, grim and fierce; generic-cdf and generic-civilian
-                                     in neutral
+                                     in neutral; generic-colonial in neutral (Ares Control, the
+                                     colony's controller of Act 3; M7 part B batch, round 36's
+                                     chosen b "dust-suit controller", tools/concept/portraits_r36.py)
   briefing-<slug>-<expression>.png   144x144 briefing portrait (the 72 px portrait at 2x with CRT
                                      scanlines), for the briefing speakers okafor, rook (from
                                      Act 2: Level 08's hangar teaser, round 30) and varga
@@ -14,6 +16,8 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
   design/story/characters/rook/concept/rook-briefing-portrait-final-r30-a.png   Rook's briefing
                                      portraits (round 30), next to his radio portraits and the
                                      other briefing speakers'
+  design/story/characters/concept/portraits-final-r38-a.png   the colonial generic's review
+                                     (round 38): 1x, 2x, 4x and a line-up with the other generics
 
 The busts are the concept SDF busts (tools/concept/portraits_r03.py, the generic speakers of
 portraits_r08.py), imported unchanged; the expressions replace their face with this script's
@@ -28,7 +32,8 @@ too. The Choir is round 08's glyph (portraits_r08.choir_frame), all 32 frames of
 
 Vorne does not speak in Acts 1-2 and gets his portraits with Act 6.
 
-Run: python3 tools/art/portraits.py [--review]   (~1 min; --review only rebuilds the sheet)
+Run: python3 tools/art/portraits.py [speaker ...] [--review]   (~1 min; with speaker slugs, e.g.
+generic-colonial, only their portraits; --review only rebuilds the sheets)
 """
 import sys
 from concurrent.futures import ProcessPoolExecutor
@@ -43,6 +48,7 @@ from artkit import ROOT, SPRITES, sprite
 import portraits_r03 as r03  # noqa: E402  (concept scripts, imported unchanged)
 import portraits_r04 as r04  # noqa: E402
 import portraits_r08 as r08  # noqa: E402  (registers the generic speakers in r03.CAST)
+import portraits_r36 as r36  # noqa: E402  (registers the colonial generic's variants in r03.CAST)
 from render import raster, sdf  # noqa: E402
 
 SCRIPT = "portraits.py"
@@ -60,7 +66,14 @@ SPEAKERS = {
     "varga": (EXPRESSIONS, ("radio", "briefing")),
     "generic-cdf": (("neutral",), ("radio",)),
     "generic-civilian": (("neutral",), ("radio",)),
+    "generic-colonial": (("neutral",), ("radio",)),
 }
+# M7 part B: the colonial generic is round 36's chosen variant under the game's slug
+r03.CAST["generic-colonial"] = dict(r03.CAST[f"generic-colonial-{r36.CHOSEN}"])
+# the batch each speaker was made in (the Source note); the UI batch's are left out
+BATCHES = {"generic-colonial": "M7 part B batch"}
+COLONIAL_ROUND = "r38"
+CONCEPT_COLONIAL = CONCEPT
 CHOIR = "the-choir"
 # the briefing speakers as round 13 approved them: its review sheet stays as it was
 R13_BRIEFING = ("okafor", "varga")
@@ -231,23 +244,29 @@ def render(job):
         return figure(slug, r03.render_bust(slug))
 
 
-def build():
+def build(only=()):
     OUT.mkdir(parents=True, exist_ok=True)
+    speakers = {slug: v for slug, v in SPEAKERS.items() if not only or slug in only}
     for old in OUT.glob("*.png"):
-        old.unlink()
-    jobs = [(slug, name) for slug, (names, _) in SPEAKERS.items() for name in names]
+        if not only or any(old.name.startswith(f"{size}-{slug}-") for slug in only for size in ("radio", "briefing")):
+            old.unlink()
+    jobs = [(slug, name) for slug, (names, _) in speakers.items() for name in names]
     with ProcessPoolExecutor() as pool:
         figures = dict(zip(jobs, pool.map(render, jobs)))
     count = 0
-    for slug, (names, sizes) in SPEAKERS.items():
+    for slug, (names, sizes) in speakers.items():
         shared = artkit.quantize_set([figures[slug, name] for name in names], r04.COLORS)
+        source = artkit.source_note(SCRIPT, BATCHES[slug]) if slug in BATCHES else SOURCE
         for name, fig in zip(names, shared):
             radio, briefing = screen(slug, fig)
-            artkit.save_png(radio, OUT / f"radio-{slug}-{name}.png", SOURCE)
+            artkit.save_png(radio, OUT / f"radio-{slug}-{name}.png", source)
             count += 1
             if "briefing" in sizes:
-                artkit.save_png(briefing, OUT / f"briefing-{slug}-{name}.png", SOURCE)
+                artkit.save_png(briefing, OUT / f"briefing-{slug}-{name}.png", source)
                 count += 1
+    if only and CHOIR not in only:
+        print(f"{count} portrait files in {OUT.relative_to(ROOT)}")
+        return
     for k in range(r08.CHOIR_FRAMES):
         artkit.save_png(r08.choir_frame(k)[1], OUT / f"radio-{CHOIR}-neutral_{k}.png", SOURCE)
         count += 1
@@ -355,7 +374,37 @@ def review_rook():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+def review_colonial():
+    """Round 38: the colonial generic (Ares Control) at 1x, 2x and 4x, and at 1x next to the other
+    generic speakers."""
+    img = load("radio-generic-colonial-neutral")
+    width = 16 + 72 + 12 + 144 + 12 + 288 + 16 + 3 * (72 + 12) + 16
+    sheet = raster.sheet(width, 56 + 288 + 40, f"COLONIAL GENERIC RADIO PORTRAIT (FINAL {COLONIAL_ROUND.upper()})",
+                         f"PRODUCTION ART, M7 PART B BATCH - {COLONIAL_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"ARES CONTROL, NEUTRAL: 72X72 AT 1X, 2X, 4X ({artkit.colour_count([img])} COLOURS) "
+                                    "| THE GENERIC SPEAKERS AT 1X (CDF, CIVILIAN, COLONIAL)", raster.LABEL)
+    x, y = 16, 56
+    for zoom in (1, 2, 4):
+        sheet.alpha_composite(sprite.enlarge(img, zoom), (x, y))
+        x += 72 * zoom + 12
+    x += 4
+    for slug in ("generic-cdf", "generic-civilian", "generic-colonial"):
+        sheet.alpha_composite(load(f"radio-{slug}-neutral"), (x, y))
+        raster.draw_text(sheet, x, y + 76, slug.replace("generic-", "").upper(), raster.LABEL_DIM)
+        x += 72 + 12
+    png = CONCEPT_COLONIAL / f"portraits-final-{COLONIAL_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
+    only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
+    unknown = set(only) - set(SPEAKERS) - {CHOIR}
+    if unknown:
+        sys.exit(f"unknown speakers: {', '.join(sorted(unknown))}")
     if "--review" not in sys.argv[1:]:
-        build()
-    review()
+        build(only)
+    if not only or set(only) - {"generic-colonial"}:
+        review()
+    if not only or "generic-colonial" in only:
+        review_colonial()

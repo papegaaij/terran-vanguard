@@ -350,3 +350,65 @@ A male and a female candidate, both readers of polar-expedition non-fiction (b r
 |---|---|---|---|---|
 | a | Patrick Eaton | [In the Arctic Seas, ch. 1 (McClintock)](https://archive.org/details/arctic_seas_pje_1311_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 124 Hz (takes 126 / 141 / 140 Hz); a male voice, near the Kilo Lead (129 Hz) |
 | b | Sharon Riskedahl | [Farthest North, Volume 1, ch. 1 part 1 (Nansen)](https://archive.org/details/farthestnorth_vol1_0912_librivox) (file 02; file 01 is the contents), cut at 60 s | public domain | 172 Hz (takes 221 / 188 / 190 Hz); a female voice, near Atlas Control (174 Hz) |
+
+## voice-ares-control
+
+Round 36 (the Ares Control audition, Act 3 "Red Dust", M7 part B; pending the user's review), generated
+with `tools/concept/audio/tts_r36.py` as round 35 (seed 36 + 10 × the variant's index + the line's
+index), each line through radio filter b on its own (−16 LUFS), joined with 1 s of silence. Ares
+Control (L15–17 and L19–21, Ares Landing's flight controller and the colony's one voice; the radio
+portrait `radio-generic-colonial`, proposed in this round) at the voice README's proposed base
+settings for him, a little drier than neutral (0.4 / 0.45 / 0.7), three of his lines chosen for the
+arc from resentment to the thaw: Level 15's t=12 jab ("Aegis flight, Ares Landing. Five weeks we held
+alone. Nice of Earth to drop by."), Level 17's t=102 with the dome names ("Inner ring: Schiaparelli,
+Burroughs, then Eden. Eden feeds the whole colony.") and Level 21's closing line ("Clear sky over every
+dome, Aegis. Dinner's on Ares Landing."). The text as spoken applies the
+[proposed respelling list](../README.md#act-3-voices) for the names these lines use (Ares → "Airees",
+Schiaparelli → "Skyaparelli", Burroughs → "Burrows"), so the round auditions the respellings too.
+Measured: a 21.66 s, −15.7 LUFS; b 25.22 s, −16.0 LUFS; the takes a 7.52 / 6.12 / 5.12 s, b 7.20 /
+7.96 / 7.16 s (b's second and third takes hold a pause of about 2 s before "Eden feeds" and before
+"Dinner's"). Whisper (faster-whisper base.en, prompted with the real names) reads back a "Aegis
+Flight, Ares Landing. Five weeks we held alone, nice of Earth to drop by. Inner Ring, Schiaparelli,
+Burroughs, then Eden, Eden feeds the whole colony. Clear Sky over every dome, Aegis, dinners on Ares
+Landing."; b the same words. Without the prompt it hears b's "Aegis" as "ages" and "Airees" as
+"Aries". No take jumps an octave (librosa pyin: the frames above 250 Hz lie in the leading silence or,
+in b's third take, in its pause, below −40 dB; b's second take rises to ≈ 280 Hz on the breath after
+"Eden."). Measured only, not listened to.
+
+Two men, as the spec asks (older than Rook, a clip pitch about 100–115 Hz, below Nansen's 124 Hz and
+the Kilo Lead's 129 Hz), neither in the cast nor auditioned before: a reads a history of the
+loyalist settlers of Upper Canada (the colonial settler-militia register), b Burroughs's Mars.
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | David Wales | [Pioneer Life Among the Loyalists in Upper Canada, ch. 1 (Herrington)](https://archive.org/details/pioneerlifeuppercanada_1407_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 102 Hz (takes 110 / 119 / 97 Hz); near the perimeter beacon and Lifeboat Seven (105 Hz) |
+| b | Thomas A | [The Warlord of Mars, ch. 2 (Burroughs)](https://archive.org/details/warlord_mars_tac_librivox) (ch. 1 at 60 s measured 116 Hz), cut at 60 s | public domain (Public Domain Mark 1.0) | 112 Hz (takes 132 / 119 / 146 Hz); the takes come out higher than the clip, near Nansen (124 Hz) |
+
+Closed in round 36 (user, 2026-10-13, S.6 = b): **b** (Thomas A) chosen with the respellings; mind his
+mid-line pauses when his lines are rendered (part B). a's audition and its reference clip moved to
+`concept/rejected/`.
+
+## voice-lance-control
+
+Round 37 (the Lance Control audition, M7 part A; pending the user's review), generated with
+`tools/concept/audio/tts_r37.py` as round 33, the take through radio filter b (−16 LUFS). Lance Control
+(the CDF orbital officer who fires the [Orbital Lance](../../../player/specials/README.md), from Level 17;
+speaker `Lance Control`, the radio portrait `radio-generic-cdf`; Hammer Lead's Airstrike call is the
+model), neutral (0.5 / 0.5 / 0.7), its one line "Lance uplink locked. Firing!". The seeds are pinned:
+of six takes per candidate (seeds 100–105) the shortest, most clipped take that Whisper (faster-whisper
+base.en) read back right from the raw WAV, a 104 and b 101 ("Lance uplink locked, firing."; other
+takes read "Landsup link", "Plants", "Plans are blank", one began with a breath). Measured: a 2.06 s
+(take 1.76 s), b 2.62 s (take 2.32 s), both −16.0 LUFS (OGG Vorbis q4, 44.1 kHz mono). Through the
+radio filter Whisper hears "Lands up, link locked, firing." (a) and "Plants up, link locked, firing."
+(b): the filter's band limit blurs "uplink" for the recogniser; the listener judges it. b's take rises
+to ≈ 350 Hz on "Firing!" (a lift, not an octave jump inside a word). Measured only, not listened to.
+
+The voice README asks for clipped and precise, unlike Hammer Lead's (his clip 99 Hz); both candidates
+read military or war non-fiction in a brisk, even delivery, neither in the cast nor auditioned before
+(also measured and passed over: Norman Elfer, 99 Hz, Hammer Lead's pitch; Clive Catterall, 89 Hz, slow;
+Scott Danneker, a wide pitch range and long pauses; Susan Morin, a storybook read).
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Ted Lienhart | [Our Air Force: The Keystone of National Defense, ch. 1 (Mitchell)](https://archive.org/details/ourairforce_2502_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 132 Hz, a narrow range (IQR 16 Hz), 2.7 words/s (take 126 Hz); the clipped staff officer, near the Kilo Lead (129 Hz) |
+| b | Celine Major | [Campaigns of the Civil War, ch. 1 (Geer)](https://archive.org/details/campaignsofthecivilwar_2603_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 159 Hz, 3.0 words/s (take 162 Hz); quicker and lighter, the precise operator, near Dock (167 Hz) |

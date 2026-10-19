@@ -1,9 +1,9 @@
 ---
 title: Space enemies
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
-updated: 2026-10-03
+updated: 2026-10-12
 ---
 
 # Space enemies
@@ -59,7 +59,7 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — model-space re-r
 
 ## Implementation
 
-- [ ] Each enemy promoted to its own directory with a stat block before it is implemented.
+- [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
 
 ## Open questions
 

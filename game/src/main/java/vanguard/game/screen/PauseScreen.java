@@ -11,7 +11,9 @@ import vanguard.game.audio.Sfx;
 import vanguard.game.input.Action;
 import vanguard.game.input.MenuInput;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Dialog;
+import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 import vanguard.game.ui.Menu;
 
@@ -21,7 +23,8 @@ import vanguard.game.ui.Menu;
  * the hangar with the level-start state (after a confirmation) and quit to the main menu (after a
  * confirmation). Restart and abort follow the retry rules (design/systems/retry): what the attempt
  * earned is lost, and on hard each uses one of the level's retries, so with none left both are
- * disabled. Back or Pause resumes; Pause during the countdown returns to the menu.
+ * disabled. Back or Pause resumes; Pause during the countdown returns to the menu. The mouse
+ * works here (design/ui, Mouse): hover selects, a click chooses, the right button resumes.
  */
 public final class PauseScreen implements GameScreen {
     static final float COUNTDOWN_SECONDS = 1;
@@ -81,10 +84,10 @@ public final class PauseScreen implements GameScreen {
             resume();
             return Transition.STAY;
         }
-        if (menu.navigate(input)) {
+        if (menu.navigate(input, PauseScreen::row)) {
             services.play(Sfx.MENU_MOVE);
         }
-        if (!input.confirm()) {
+        if (!menu.confirmed(input, PauseScreen::row)) {
             return Transition.STAY;
         }
         services.play(Sfx.MENU_CONFIRM);
@@ -110,6 +113,11 @@ public final class PauseScreen implements GameScreen {
                         "QUIT TO MAIN MENU?", "PROGRESS SINCE THE LAST SAVE IS LOST.", "YES, QUIT", "NO, BACK"));
         }
         return Transition.STAY;
+    }
+
+    /** A menu item's hit region: its selection bar, the rows touching. */
+    static Box row(int index) {
+        return Box.row(PANEL_X + 2, PANEL_WIDTH - 4, ITEM_Y + index * ITEM_STEP, Fonts.BODY_CAP, ITEM_STEP);
     }
 
     private Transition answer(Dialog.Answer answer) {

@@ -19,7 +19,14 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      on its kelp raft); lamprey (Level 12, M5 part F batch: the production model of
                      tools/art/lamprey.py nose down, in swim frame 1); skimmer (Level 13, M5 part G
                      batch: the production model of tools/art/skimmer.py, the whole hull at heading 0,
-                     moving down the screen, its tail centred)
+                     moving down the screen, its tail centred); burrower, dust-kite (Level 15, M7 part B
+                     batch: the production models of tools/art/burrower.py, surfaced with the maw open,
+                     and tools/art/dust_kite.py, nose down with the membrane up); tendril-anchor,
+                     threadcrawler (Level 16, M7 part C batch: the production models of
+                     tools/art/canyon_units.py, the anchor's cone pointing down at its full pulse, and the
+                     Threadcrawler's head nose down with its first segment trailing); choir-herald, shellback
+                     (Level 17, M7 part D batch: the production models of tools/art/siege_units.py, the
+                     Herald facing down with its crest lit, the Shellback walking down, its vent swollen)
   boss-<boss>.png    40x40 sensor silhouette of a boss of Act 1: gorgon-frigate (L05 mid-boss),
                      brood-carrier (L07) (UI batch); leviathan (L03's set piece, the threat
                      profile's "unknown huge contact", M4 part C batch); harbour-kraken (L11's
@@ -38,6 +45,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r34-a.png   review sheet of the M5 part F batch's
   design/ui/hangar/concept/intel-final-r35-a.png   review sheet of the M5 part G batch's
   design/ui/hangar/concept/intel-final-r36-a.png   review sheet of the M5 part H batch's
+  design/ui/hangar/concept/intel-final-r38-a.png   review sheet of the M7 part B batch's
+  design/ui/hangar/concept/intel-final-r39-a.png   review sheet of the M7 part C batch's
+  design/ui/hangar/concept/intel-final-r40-a.png   review sheet of the M7 part D batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -72,7 +82,10 @@ from PIL import Image
 import artkit
 from artkit import DESIGN, ROOT, SPRITES, sprite
 
+import burrower  # noqa: E402  (the Burrower's production model)
+import canyon_units  # noqa: E402  (the Tendril Anchor's and the Threadcrawler's production models)
 import coilwyrm  # noqa: E402  (the Coilwyrm's production models)
+import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import creeper  # noqa: E402  (the Creeper's production model)
 import reef_spitter  # noqa: E402  (the Reef Spitter's production gun and raft models)
 import hive_node  # noqa: E402  (the Hive Node's production model)
@@ -81,6 +94,7 @@ import leviathan  # noqa: E402  (the Leviathan's production model)
 import mantis  # noqa: E402  (the Mantis's production model)
 import mote_swarm  # noqa: E402  (the Mote's production model)
 import ravager  # noqa: E402  (the Ravager's production model)
+import siege_units  # noqa: E402  (the Choir Herald's and the Shellback's production models)
 import skimmer  # noqa: E402  (the Skimmer's production model and headings)
 import vrell_l03  # noqa: E402  (the Whirl Seed's production model)
 import vrell_l04  # noqa: E402  (the Brood Pod's and the Scuttler's production models)
@@ -108,11 +122,15 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "driftjelly": "M5 part E batch", "reef-spitter": "M5 part E batch",
            "boss-harbour-kraken": "M5 part E batch",
            "lamprey": "M5 part F batch",
-           "skimmer": "M5 part G batch", "boss-siege-spire": "M5 part H batch"}
+           "skimmer": "M5 part G batch", "boss-siege-spire": "M5 part H batch",
+           "burrower": "M7 part B batch", "dust-kite": "M7 part B batch",
+           "tendril-anchor": "M7 part C batch", "threadcrawler": "M7 part C batch",
+           "choir-herald": "M7 part D batch", "shellback": "M7 part D batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
-          "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36"}
+          "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
+          "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -138,6 +156,12 @@ ENEMIES = {
     "driftjelly": lambda: m6.driftjelly(0.0),
     "lamprey": lambda: lamprey.model(0, phase=lamprey.TAU / lamprey.SWIM),
     "skimmer": lambda: skimmer.turned(lambda: m6.skimmer(0.0), skimmer.rotation(0)),
+    "burrower": burrower.intel_model,
+    "dust-kite": dust_kite.intel_model,
+    "tendril-anchor": canyon_units.anchor_intel_model,
+    "threadcrawler": canyon_units.threadcrawler_intel_model,
+    "choir-herald": siege_units.herald_intel_model,
+    "shellback": siege_units.shellback_intel_model,
 }
 BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire")
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it

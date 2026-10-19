@@ -63,7 +63,8 @@ floes, the seam, the wraps, the motion budget and the fog over the ice (it must 
 the code takes [scene-arctic-r09-a](../../../../art-direction/concept/scene-arctic-r09-a.png)'s ice
 (`tools/concept/scenes_r09.py`: the ICE9 ramp, hillshade and rim, the teal submerged margins, the long
 cool shadows, the waterline foam) and its water's colour stops, and the whiteout from
-[whiteout-r35-a](#whiteout-r35-a) (`tools/art/whiteout_l13.py`, look a).
+[whiteout-r35-b](#whiteout-r35-b) (`tools/art/whiteout_l13.py`, look b, the user's pick in round 34;
+first built with look a).
 
 - **The ground** (`pack-ice-1..4`, four 480×1,536 pieces, one render from ground −144 to the halt's top
   edge at 6,000): white-blue floes on translucent dark water (alpha 3: the shadow stencil), the leads cut
@@ -81,7 +82,7 @@ cool shadows, the waterline foam) and its water's colour stops, and the whiteout
 - **Fog** (`fog-wisps` ~10 %, `fog-banks` ~20 % at the edges): pale fog, every tone at or above the
   ice's lit snow (lighter towards its dense core, lit from the top-left), soft blurred edges, 16 alpha
   steps; it lightens the ice it covers and lies as a pale veil over the water, and the **whiteout**
-  (480×540, one period of look a's banks at the peak, both side edges, the centre clear).
+  (480×540, look b's curtain at the peak, both side edges, the centre clear).
 
 
 ## level-13-capture-final-r35-a
@@ -157,3 +158,22 @@ t 21–27; (2) 2× insets of the eight hull positions nearest to ice, picked by 
 within 6 px of white): in each the white is the boat's own wake, the nearest floe edge ≈ 15 px off (t 21.6); no hull
 over ice; (3) the halt frame at 1:1 (t 40, 46, 52): the relay's floe in brash-strewn water, small floes along both side
 edges, the walkers closing.
+
+## level-13-capture-relay-lost-r35-a
+
+Round 35 (P5 of round 34), a capture of the game, not generated art (`.png` sheet, `.mp4` with the game's sound): the
+relay lost and the mission-failed screen, taken on 2026-10-12 (step K6) from a snapshot of the uncommitted working tree
+(19:57), built by `:desktop:installDist` into an isolated build directory, on a private Xvfb display (960×540; settings: a
+960×540 window at 0,0, `controls.auto-fire=false`), the sound from OpenAL Soft's `wave` driver (`ALSOFT_DRIVERS=wave`,
+nothing played aloud) aligned at the game's `device reopen` log line, the video `ffmpeg -f x11grab -draw_mouse 0
+-framerate 30 -copyts`; **t** is seconds since the game's `[display] window` log line. One run: `--bench 140 --level 13
+--loadout front=pulse-cannon:4,left=micro-missile-pod:2,right=micro-missile-pod:2,rear=tail-gun,generator=mk-ii,shield=mk-ii,armor=composite-ii`
+(the balance plan's L13 fit), Rook with his default gun, medium, **no** `--invulnerable` (it keeps a lost relay from failing
+the mission); the ship moves to the bottom-left corner (x 30, y 30) at t 6 and never fires, so only Rook defends. The
+relay's secondary fails below half at t ≈ 90 (Nansen: "Integrity at half! We can't take much more!"), Scuttler fans centred
+on it bring it down: last hit t 103.6, explosion 103.8, the burning wreck and its smoke column to 106.2, the mission-failed
+screen from t ≈ 106.4 with Okafor's "Nansen is gone. Pull back, Lancer." in its speech box; the ship ends at 37 armour. The
+clip: t 86–112 (26 s), H.264 CRF 22, AAC 128 kb/s, the sound 3 dB down, the level time burnt in (`drawtext`). The sheet:
+nine frames (the left HUD panel and the play field, the last one centred on the failed screen): t 80, 90, 93, 100, 103.6,
+103.8, 104.4, 105.8, 108. Note: the HUD's radio box keeps Varga's last line under the failed screen; Okafor's line is shown
+only in the screen's speech box.

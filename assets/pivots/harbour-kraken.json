@@ -167,5 +167,250 @@
   "eyes open",
   "beak glow half",
   "beak glow full"
- ]
+ ],
+ "r40_a": {
+  "note": "round 40 proposal a (L11 rework 3a, pending the user's pick): four one-lane arms rooted in sockets; the head, grip, surfacing, death and segment frames and every round-33 key above are reused unchanged; the idle arms and the two slam arms' rest curls are not drawn (8 arms: 4 grip + 4 lane arms)",
+  "anchor": -46.0,
+  "anchor_note": "the platform's centre at the halt, screen y (round 33: 78): everything moves 124 px up",
+  "at_halt": {
+   "head": [
+    240.0,
+    170.0
+   ],
+   "eyes": [
+    [
+     198.5,
+     222.5
+    ],
+    [
+     281.5,
+     222.5
+    ]
+   ],
+   "eye_radius": 14.1,
+   "beak": [
+    240.0,
+    268.4
+   ],
+   "deck_y": [
+    -122.0,
+    30.0
+   ]
+  },
+  "roots": [
+   {
+    "lane": 1,
+    "socket": [
+     -180.0,
+     256.0
+    ],
+    "socket_at_halt": [
+     60.0,
+     210.0
+    ],
+    "mantle_root": [
+     -34.6,
+     326.6
+    ],
+    "lane_x": -180.0,
+    "lane_top": 290.0,
+    "rest_path": [
+     [
+      -180.0,
+      286.0
+     ],
+     [
+      -180.0,
+      306.0
+     ],
+     [
+      -190.0,
+      322.0
+     ],
+     [
+      -182.0,
+      334.0
+     ],
+     [
+      -168.0,
+      326.0
+     ]
+    ]
+   },
+   {
+    "lane": 2,
+    "socket": [
+     -86.0,
+     256.0
+    ],
+    "socket_at_halt": [
+     154.0,
+     210.0
+    ],
+    "mantle_root": [
+     -12.4,
+     333.0
+    ],
+    "lane_x": -60.0,
+    "lane_top": 290.0,
+    "rest_path": [
+     [
+      -78.2,
+      286.0
+     ],
+     [
+      -73.0,
+      306.0
+     ],
+     [
+      -63.0,
+      322.0
+     ],
+     [
+      -71.0,
+      334.0
+     ],
+     [
+      -85.0,
+      326.0
+     ]
+    ]
+   },
+   {
+    "lane": 3,
+    "socket": [
+     86.0,
+     256.0
+    ],
+    "socket_at_halt": [
+     326.0,
+     210.0
+    ],
+    "mantle_root": [
+     12.4,
+     333.0
+    ],
+    "lane_x": 60.0,
+    "lane_top": 290.0,
+    "rest_path": [
+     [
+      78.2,
+      286.0
+     ],
+     [
+      73.0,
+      306.0
+     ],
+     [
+      63.0,
+      322.0
+     ],
+     [
+      71.0,
+      334.0
+     ],
+     [
+      85.0,
+      326.0
+     ]
+    ]
+   },
+   {
+    "lane": 4,
+    "socket": [
+     180.0,
+     256.0
+    ],
+    "socket_at_halt": [
+     420.0,
+     210.0
+    ],
+    "mantle_root": [
+     34.6,
+     326.6
+    ],
+    "lane_x": 180.0,
+    "lane_top": 290.0,
+    "rest_path": [
+     [
+      180.0,
+      286.0
+     ],
+     [
+      180.0,
+      306.0
+     ],
+     [
+      190.0,
+      322.0
+     ],
+     [
+      182.0,
+      334.0
+     ],
+     [
+      168.0,
+      326.0
+     ]
+    ]
+   }
+  ],
+  "root_size": [
+   72,
+   96
+  ],
+  "root_target": [
+   40,
+   40
+  ],
+  "root_note": "a socket sprite is centred on its socket; the slam chain starts at the socket and runs to (lane_x, lane_top), then down the lane (the round-33 lane leg); its first segments lie under the socket sprite, which is drawn over the arm's segments",
+  "root_frames": {
+   "root": 4,
+   "root-raised": 6,
+   "root-hit": 1,
+   "root-cut": 6,
+   "root-sink": 5
+  },
+  "root_index": "(lane - 1) * frames + frame",
+  "root_states": {
+   "root": "intact, a 4-frame loop",
+   "root-hit": "intact frame 0 at the hit flash (0.3 toward the pale flesh tint; or the flash shader on 'root')",
+   "root-raised": "the tell: frames 0-3 rear up once, then 4-5 loop until the arm rises; with root-glow",
+   "root-cut": "frames 0-1 the stump recoiling (play once, with the arm's segment pops), then 2-5 the ooze loop",
+   "root-sink": "the death: the knot going under (play once), with the head's sink"
+  },
+  "root_glow": "additive, centred on the socket, a 4-frame pulse while raised (glow steps)",
+  "root_glow_size": [
+   64,
+   64
+  ],
+  "reach": [
+   0.2,
+   297.8
+  ],
+  "reach_size": [
+   388,
+   132
+  ],
+  "reach_note": "the four arms' under-water stretches from the mantle's roots to the sockets, plain: through the `sub` pass with the head, a sway loop (reach steps)",
+  "steps": {
+   "root": 12,
+   "raised": 9,
+   "raised_hold": 8,
+   "cut": 8,
+   "ooze": 10,
+   "root_sink": 12,
+   "glow": 6,
+   "reach": 12
+  },
+  "sprites": {
+   "root": "harbour-kraken-root-r40-a",
+   "root-raised": "harbour-kraken-root-raised-r40-a",
+   "root-hit": "harbour-kraken-root-hit-r40-a",
+   "root-cut": "harbour-kraken-root-cut-r40-a",
+   "root-sink": "harbour-kraken-root-sink-r40-a",
+   "root-glow": "harbour-kraken-root-glow-r40-a",
+   "reach": "harbour-kraken-reach-r40-a"
+  }
+ }
 }

@@ -1,0 +1,22 @@
+# Rear Lance: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+name: Rear Lance
+slot: rear
+traits: [rear, piercing]
+price: 2800
+unlock: 17
+draw: [3, 5]
+sfx: laser
+vfx: laser
+hits: standard
+speed: 1100
+size: [4, 24]
+range: screen
+levels:
+  - {pattern: [[0, 180]], rate: 4, damage: 4.5, pierce: 2}
+  - {pattern: [[0, 180]], rate: 4, damage: 6, pierce: 3}
+  - {pattern: [[-6, 180], [6, 180]], rate: 4, damage: 4.5, pierce: 3}
+  - {pattern: [[-6, 180], [6, 180]], rate: 4, damage: 6, pierce: 4}
+  - {pattern: [[-6, 180], [6, 180]], rate: 4, damage: 7.5, pierce: 5}
+overdrive: {pattern: [[-10, 180], [0, 180], [10, 180]], rate: 4, damage: 7, pierce: 6}
+notes:
+  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules))'

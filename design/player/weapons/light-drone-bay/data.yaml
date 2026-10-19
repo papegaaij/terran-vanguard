@@ -1,0 +1,33 @@
+# Light Drone Bay: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# M7 part A: the drone (../../wingmen/README.md#light-drone) fires the levels' shots from its orbit at
+# the convergence point; each level adds the hits it takes before it breaks and its rebuild time.
+name: Light Drone Bay
+slot: wing
+traits: [forward]
+price: 2000
+unlock: 15
+draw: [2, 3]
+sfx: pulse   # pitched up and quieter
+vfx: pulse   # smaller
+hits: standard
+speed: 900
+size: [3, 8]
+range: screen
+pod: true
+drone:
+  size: [14, 14]     # sprite px
+  hitbox: [8, 8]
+  orbit: 36          # px round the ship's centre, clockwise; a left bay's drone starts at 9 o'clock, a right bay's at 3
+  period: 2.4        # s per turn (150°/s)
+  converge: 140      # px ahead of the ship's centre: every shot aims there
+  fade_in: 0.3       # s a rebuilt drone fades in at its bay
+  contact: {hits: 4, small_hits: 2, laser_hits: 2, damage: 10}  # an air enemy's touch (a tiny or small rammer: small_hits, and it is destroyed); a laser touch; damage to the enemy
+levels:
+  - {pattern: [[0, 0]], rate: 6, damage: 1.7, drone_hits: 8, rebuild: 6}
+  - {pattern: [[0, 0]], rate: 6, damage: 2.3, drone_hits: 9, rebuild: 5.5}
+  - {pattern: [[0, 0]], rate: 6, damage: 3.2, drone_hits: 10, rebuild: 5}
+  - {pattern: [[0, 0]], rate: 6, damage: 4, drone_hits: 11, rebuild: 4.5}
+  - {pattern: [[0, 0]], rate: 6, damage: 5, drone_hits: 12, rebuild: 4}
+overdrive: {pattern: [[0, 0]], rate: 7, damage: 5, drone_hits: 12, rebuild: 4}
+notes:
+  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules))'

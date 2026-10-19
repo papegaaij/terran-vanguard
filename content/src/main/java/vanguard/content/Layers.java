@@ -13,6 +13,9 @@ final class Layers {
             case "air" -> Layer.AIR;
             case "high-air" -> Layer.HIGH_AIR;
             case "sub" -> Layer.SUB;
+            // M7 part B (M7 = a): under the sand, hit by nothing (a Burrower's current layer; the threat profile's
+            // dominant layers)
+            case "buried" -> Layer.BURIED;
             default -> throw new IllegalArgumentException("unknown layer '" + name + "'");
         };
     }

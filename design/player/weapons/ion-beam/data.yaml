@@ -1,0 +1,21 @@
+# Ion Beam: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# M7 part A: hits: beam, each level a width (px) and a damage per second (no pattern, rate, speed or range).
+name: Ion Beam
+slot: front
+traits: [beam]
+price: 5000
+upgrade_base: 2500   # the Lance Laser's prices (round 36, Q.23f), so L3 is reachable in Act 3
+unlock: 15
+draw: [4, 8]         # M11 (round 36): lowered from 5 → 9
+sfx: beam
+vfx: beam
+hits: beam
+levels:
+  - {width: 6, damage: 45}
+  - {width: 8, damage: 60}
+  - {width: 10, damage: 80}
+  - {width: 12, damage: 105}
+  - {width: 14, damage: 130}
+overdrive: {width: 18, damage: 160}
+notes:
+  layers_hit: '`air`, `low-air`, `ground` (hardened ground targets glance off) and **`high-air`**; not `sub` or the buried layer ([layer rules](../../../enemies/README.md#layer-rules))'

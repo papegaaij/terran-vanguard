@@ -15,8 +15,8 @@ or mirrored afterwards; one 32-colour palette over the body sets):
   lamprey-latched_0..11   36x36, the latched pose at its three hull spots, indexed spot * 4 + frame
                           (spots: 0 left, 1 right, 2 tail; 10 fps): facing in (left spot heading 12,
                           right spot heading 4, tail spot heading 8), the mouth disc flattened onto
-                          the hull. Latch look a (the game's names; b only in the review, written
-                          under these names by `--latch b`):
+                          the hull. Latch look b (the user's pick in round 34, 12.1b; the game's
+                          names; a only in the review, written under these names by `--latch a`):
                             a "gulp": the body nearly still, swelling and narrowing in a 4-frame
                               swallow (0.4 s a gulp); the game pulses the ship's own shield ring
                               (ship-shield, additive) with each gulp: 0.55 / 0.3 / 0.12 / 0 of its
@@ -36,16 +36,18 @@ or mirrored afterwards; one 32-colour palette over the body sets):
                           level frame ship_2), the mouth 2 px over the hull: the latch's `spots`
                           offsets for the data (step 4)
   design/enemies/air/lamprey/concept/lamprey-final-r34-a.png/.gif
-  design/enemies/air/lamprey/concept/latch-r34-a.png/.gif, latch-r34-b.png/.gif
+  design/enemies/air/lamprey/concept/latch-r34-b.png/.gif (chosen b, round 34) and
+  concept/rejected/latch-r34-a.png/.gif (the rejected a)
 
 How the game draws it (EnemyLooks / ShipLooks, step 6): chasing, flying on and fleeing as any
 16-angle unit with its shadow; latched: lamprey-latched_<spot * 4 + frame> at the ship's centre plus
-the spot's offset, drawn over the ship (no shadow of its own), with the gulp's shield pulse (a);
+the spot's offset, drawn over the ship (no shadow of its own), with b's lamprey-drain glow (additive)
+at the contact point;
 stunned: lamprey-stunned_<frame> with its shadow; death: explosion-small + lamprey-death (additive)
 + lamprey-tatters (solid, under the glow), 4 steps a frame. The sprites stay unclaimed (SpriteUse)
 until the Lamprey's data.yaml exists (step 4).
 
-Run: python3 tools/art/lamprey.py [--latch a|b] [--review]   (~1 min; --review only rebuilds the
+Run: python3 tools/art/lamprey.py [--latch a|b] [--review]   (--latch defaults to GAME_LOOK, b)   (~1 min; --review only rebuilds the
 review files from assets/sprites)
 """
 import json
@@ -75,6 +77,7 @@ SCRIPT = "lamprey.py"
 BATCH = "M5 part F batch"
 SOURCE = artkit.source_note(SCRIPT, BATCH)
 REVIEW_ROUND = "r34"
+GAME_LOOK = "b"                                 # the user's pick, round 34 (12.1b): the siphon
 CONCEPT = DESIGN / "enemies" / "air" / "lamprey" / "concept"
 STEP = 60
 
@@ -278,7 +281,7 @@ def spot_offsets(latched):
     return out
 
 
-def build(variant="a"):
+def build(variant=GAME_LOOK):
     swim = [(k, j) for k in range(HEADINGS) for j in range(SWIM)]
     with ProcessPoolExecutor() as pool:
         def run(name, arglist):
@@ -390,13 +393,23 @@ def load_art():
            "boom": artkit.load_frames("explosion-small"), "ship": artkit.load_frames("ship")[SHIP_FRAME],
            "shield": artkit.load_frames("ship-shield"),
            "spots": json.loads((artkit.PIVOTS / "lamprey.json").read_text())["spots"]}
-    art["latched-a"] = artkit.load_frames("lamprey-latched")
-    # b's look for the review only (the game's names hold a): rendered here, not written
+    # the look the game's names hold (pivots/lamprey.json says which), and the other for the review
+    # only: rendered here, not written; b's drain glow from assets/ when the game holds b
+    game = json.loads((artkit.PIVOTS / "lamprey.json").read_text()).get("latch_look", "a")
+    other = "a" if game == "b" else "b"
+    art["game"] = game
+    art[f"latched-{game}"] = artkit.load_frames("lamprey-latched")
+    jobs = [("latched", c) for c in latched_cells(other)]
+    if game == "b":
+        art["drain"] = artkit.load_frames("lamprey-drain")
+    else:
+        jobs += [("drain", (i,)) for i in range(SWIM)]
     with ProcessPoolExecutor() as pool:
-        out = list(pool.map(_job, [("latched", c) for c in latched_cells("b")] + [("drain", (i,)) for i in range(SWIM)]))
+        out = list(pool.map(_job, jobs))
     n = len(SPOTS) * SWIM
-    art["latched-b"] = artkit.quantize_set(out[:n], COLOURS)
-    art["drain"] = artkit.quantize_set(out[n:], 16)
+    art[f"latched-{other}"] = artkit.quantize_set(out[:n], COLOURS)
+    if game != "b":
+        art["drain"] = artkit.quantize_set(out[n:], 16)
     return art
 
 
@@ -424,9 +437,11 @@ def latch_review(art, variant):
             cell = latched_draw(cell, art, variant, spot, 50 + 100 * i, 62, step)
         shield_bar(cell, 70, 118, max(0.0, 0.8 - 0.08 * step / STEP), step)
         gif.append(sprite.enlarge(cell, 2))
-    png = CONCEPT / f"latch-{REVIEW_ROUND}-{variant}.png"
+    folder = CONCEPT if variant == GAME_LOOK else CONCEPT / "rejected"   # the user's pick, round 34
+    folder.mkdir(parents=True, exist_ok=True)
+    png = folder / f"latch-{REVIEW_ROUND}-{variant}.png"
     sheet.convert("RGB").save(png, optimize=True)
-    write_gif(gif, CONCEPT / f"latch-{REVIEW_ROUND}-{variant}.gif", fps=20, colors=128)
+    write_gif(gif, folder / f"latch-{REVIEW_ROUND}-{variant}.gif", fps=20, colors=128)
     print(f"review: {png.relative_to(ROOT)} (+ .gif)")
 
 
@@ -482,7 +497,7 @@ def review_loop(art):
             if np.hypot(*(pos - np.array(sh))) < 22:
                 state, t_state = "latched", t
         elif state == "latched":
-            cell = latched_draw(cell, art, "a", "left", sh[0], sh[1], step)
+            cell = latched_draw(cell, art, art["game"], "left", sh[0], sh[1], step)
             if t - t_state > 0.6 + 4 * 0.22 + 0.05:
                 state, t_state = "stunned", t
                 ox, oy = art["spots"]["left"]
@@ -520,7 +535,8 @@ def review():
     sheet = artkit.review_sheet("LAMPREY - FINAL SPRITES", [
         ("HEADINGS 0-15 (CLOCKWISE FROM DOWN: 4 FLIES LEFT, 8 UP, 12 RIGHT), SWIM FRAME 0", [h[0] for h in heading], 2, False),
         (f"SWIM, HEADING 0 AND HEADING 6, {FPS} FPS", heading[0] + heading[6], 3, False),
-        ("LATCHED (LOOK A, THE GAME'S NAMES): LEFT / RIGHT / TAIL SPOT X 4 GULP FRAMES", art["latched-a"], 2, False),
+        (f"LATCHED (LOOK {art['game'].upper()}, THE GAME'S NAMES): LEFT / RIGHT / TAIL SPOT X 4 "
+         + ("GULP" if art["game"] == "a" else "LASH") + " FRAMES", art[f"latched-{art['game']}"], 2, False),
         ("STUNNED: CURLED, TEETH DIMMED, A TURN IN 8 FRAMES (12 FPS)", art["stunned"], 2, False),
         (f"TATTERS, {STEP // DEATH_STEPS} FPS, SOLID", art["tatters"], 2, False),
         (f"WET POP GLOW, {STEP // DEATH_STEPS} FPS, ADDITIVE", art["death"], 2, True),
@@ -535,7 +551,7 @@ def review():
 if __name__ == "__main__":
     artkit.REVIEW_ROUND = REVIEW_ROUND
     args = sys.argv[1:]
-    look = args[args.index("--latch") + 1] if "--latch" in args else "a"
+    look = args[args.index("--latch") + 1] if "--latch" in args else GAME_LOOK
     if "--review" not in args:
         build(look)
     review()

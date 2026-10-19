@@ -1,6 +1,7 @@
 package vanguard.game.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -8,12 +9,14 @@ import vanguard.content.BriefingPage;
 import vanguard.content.Content;
 import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
+import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.Intel;
 import vanguard.content.campaign.SaveSlots;
 import vanguard.game.GameServices;
 import vanguard.game.audio.MusicStreamer;
 import vanguard.game.audio.Sfx;
+import vanguard.game.hangar.HangarPointer;
 import vanguard.game.hangar.HangarState;
 import vanguard.game.hangar.HangarState.Command;
 import vanguard.game.hangar.HangarState.Focus;
@@ -22,6 +25,7 @@ import vanguard.game.hangar.HangarView;
 import vanguard.game.hangar.Names;
 import vanguard.game.input.MenuInput;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Dialog;
 import vanguard.game.ui.Glass;
 
@@ -34,6 +38,15 @@ import vanguard.game.ui.Glass;
  * warning and quitting ask first; the selected weapon's test fire loops in the shop's box. It
  * autosaves when it opens (design/systems/saves), except right after a save was loaded, and when
  * the player quits from it (never in a debug run, which says so instead), and plays the hangar theme.
+ * The mouse reaches the same places ({@link HangarPointer}); a frame with a key press ignores it.
+ *
+ * <p>The replay hangar (the user's decision of 2026-10-18: a mission select's replay goes briefing,
+ * hangar, level) works on the real campaign of the save the replay was started from: what is bought,
+ * sold and fitted there is kept, and the credits spent are spent. Its top bar says {@code REPLAY L05}
+ * instead of {@code BEFORE L05} and its launch {@code > REPLAY}; it opens without an autosave (a save
+ * was just loaded), and its launch writes the campaign as the hangar left it to the autosave, of which
+ * the flight is then a replay ({@link Campaign#replay}): full armour, unlimited retries, nothing earned,
+ * progress unchanged, a better grade kept in that autosave.
  */
 public final class HangarScreen implements GameScreen {
     private static final float MUSIC_VOLUME = 0.6f;
@@ -42,9 +55,15 @@ public final class HangarScreen implements GameScreen {
 
     private final GameServices services;
     private final Campaign campaign;
+    /** The replay this hangar launches; empty for the campaign's next level. */
+    private final Optional<Campaign.Replay> replay;
+    /** The number of the level the hangar launches. */
+    private final int number;
+
     private final Optional<String> nextLevel;
     private final HangarState state;
     private final HangarView view;
+    private final HangarPointer pointer = new HangarPointer();
     private final Optional<MusicStreamer> music;
     private final String autosave;
     private Optional<Dialog> dialog = Optional.empty();
@@ -59,9 +78,21 @@ public final class HangarScreen implements GameScreen {
 
     /** @param autosave write the autosave as the hangar opens */
     public HangarScreen(GameServices services, Campaign campaign, boolean autosave) {
+        this(services, campaign, autosave, Optional.empty());
+    }
+
+    /**
+     * @param replay the replay the hangar launches (the slot the campaign was loaded from, the level), or
+     *     empty for the campaign's next level
+     */
+    private HangarScreen(GameServices services, Campaign campaign, boolean autosave, Optional<Campaign.Replay> replay) {
         this.services = services;
         this.campaign = campaign;
-        nextLevel = CampaignRoute.launch(services.content, campaign);
+        this.replay = replay;
+        number = replay.map(Campaign.Replay::level).orElse(campaign.nextLevel());
+        nextLevel = replay.isPresent()
+                ? services.content.levelKey(number)
+                : CampaignRoute.launch(services.content, campaign);
         // A special's free charges at its unlock (the first Airstrike charge), before the autosave.
         List<Campaign.FreeCharges> given = campaign.giveFreeCharges(services.content.specials());
         state = new HangarState(new Hangar(services.catalogue, campaign), nextLevel.isPresent());
@@ -95,10 +126,67 @@ public final class HangarScreen implements GameScreen {
 
     /**
      * After a won level's debrief: the act outro first when the level ended its act (design/campaign,
-     * Act intro and outro), then as {@link #beforeNextLevel}.
+     * Act intro and outro), then as {@link #beforeNextLevel}, or the release's end when the content
+     * has no next level (M6 part B).
      */
     public static GameScreen afterLevel(GameServices services, Campaign campaign) {
         return screen(services, campaign, CampaignRoute.afterLevel(services.content, campaign));
+    }
+
+    /**
+     * A loaded save (the main menu's Continue, a slot's load; the user's decision of 2026-10-18): the next
+     * level's mission briefing, then the hangar without an autosave, as a save was just loaded. M7 part B
+     * (user decision L.6 of round 36): a save whose next level opens an act whose intro it has not shown (a
+     * release save at the Level 15 hangar) plays that intro first ({@code CampaignRoute.onContinue}), then
+     * the level's briefing and the hangar with its autosave, which keeps the flag. The hangar alone while
+     * the next level is not built.
+     */
+    public static GameScreen onContinue(GameServices services, Campaign campaign) {
+        CampaignRoute.Step step = CampaignRoute.onContinue(services.content, campaign);
+        if (continueAutosaves(step)) {
+            return screen(services, campaign, step);
+        }
+        return switch (step) {
+            case CampaignRoute.Step.Briefing briefing ->
+                new BriefingScreen(
+                        services, campaign, briefing.script(), () -> new HangarScreen(services, campaign, false));
+            case CampaignRoute.Step other -> new HangarScreen(services, campaign, false);
+        };
+    }
+
+    /** Whether the hangar after a Continue's step autosaves: after an act intro, to keep its flag. */
+    static boolean continueAutosaves(CampaignRoute.Step step) {
+        return step instanceof CampaignRoute.Step.Briefing briefing
+                && briefing.script().titleCard().isPresent();
+    }
+
+    /**
+     * A mission select's replay (the user's decision of 2026-10-18): the level's mission briefing, then the
+     * replay hangar on the save's real campaign, then the level as a replay.
+     *
+     * @param slot the slot the save was read from
+     */
+    static GameScreen replay(GameServices services, SaveSlots.Slot slot, Campaign campaign, int level) {
+        Optional<Campaign.Replay> replay = Optional.of(new Campaign.Replay(slot, level));
+        return switch (CampaignRoute.beforeReplay(services.content, level)) {
+            case CampaignRoute.Step.Briefing briefing ->
+                new BriefingScreen(
+                        services,
+                        campaign,
+                        briefing.script(),
+                        () -> new HangarScreen(services, campaign, false, replay));
+            case CampaignRoute.Step step -> new HangarScreen(services, campaign, false, replay);
+        };
+    }
+
+    /**
+     * The flight of a replay hangar's launch: a replay of the campaign as the hangar left it ({@link
+     * Campaign#replay}), whose better grade goes into {@code slot}.
+     *
+     * @param slot the autosave when the launch wrote the campaign there, otherwise the slot it was loaded from
+     */
+    static Campaign replayFlight(CampaignRules rules, Campaign campaign, SaveSlots.Slot slot, int level) {
+        return Campaign.replay(rules, slot, campaign.save(Instant.now()), level);
     }
 
     private static GameScreen screen(GameServices services, Campaign campaign, CampaignRoute.Step step) {
@@ -107,7 +195,13 @@ public final class HangarScreen implements GameScreen {
                 new BriefingScreen(
                         services, campaign, briefing.script(), () -> new HangarScreen(services, campaign, true));
             case CampaignRoute.Step.Outro outro ->
-                BriefingScreen.outro(services, campaign, outro.script(), () -> beforeNextLevel(services, campaign));
+                BriefingScreen.outro(
+                        services,
+                        campaign,
+                        outro.script(),
+                        () -> CampaignRoute.releaseEnd(services.content, campaign)
+                                ? new ReleaseEndScreen(services, campaign)
+                                : beforeNextLevel(services, campaign));
             case CampaignRoute.Step.Hangar hangar -> new HangarScreen(services, campaign, true);
         };
     }
@@ -162,14 +256,25 @@ public final class HangarScreen implements GameScreen {
         } else if (input.right()) {
             outcome = state.right();
         } else if (input.confirm()) {
-            // What the confirmation makes, read before it changes the selection.
-            Sfx done = doneSound(
-                    state.focus() == Focus.SHOP ? state.choice().map(Hangar.Choice::action) : Optional.empty(),
-                    state.focus(),
-                    state.command());
-            return react(state.confirm(), done);
+            return confirm();
+        } else {
+            HangarPointer.Result mouse = pointer.update(state, input.pointer());
+            if (mouse.confirm()) {
+                return confirm();
+            }
+            outcome = mouse.outcome();
         }
         return react(outcome, Sfx.MENU_CONFIRM);
+    }
+
+    /** Confirm, by the key or a click: makes the highlighted choice or command. */
+    private Transition confirm() {
+        // What the confirmation makes, read before it changes the selection.
+        Sfx done = doneSound(
+                state.focus() == Focus.SHOP ? state.selectedAction() : Optional.empty(),
+                state.focus(),
+                state.command());
+        return react(state.confirm(), done);
     }
 
     /**
@@ -201,13 +306,12 @@ public final class HangarScreen implements GameScreen {
             case REFUSED -> services.play(Sfx.SHOP_DENIED);
             case SELL -> {
                 services.play(Sfx.MENU_CONFIRM);
-                var offer = state.selected().orElseThrow();
-                int refund = -state.choice().orElseThrow().credits();
+                var sale = state.sale().orElseThrow();
                 ask(
                         Pending.SELL,
                         new Dialog(
-                                "SELL " + Names.of(offer.item().name()) + " FOR " + Names.credits(refund) + "?",
-                                offer.bought()
+                                "SELL " + sale.name() + " FOR " + Names.credits(sale.refund()) + "?",
+                                sale.bought()
                                         ? "BOUGHT DURING THIS VISIT: THE FULL PRICE COMES BACK."
                                         : "UNDO RETURNS THIS VISIT'S TRANSACTIONS FOR 100 %.",
                                 "YES, SELL",
@@ -266,7 +370,14 @@ public final class HangarScreen implements GameScreen {
     }
 
     private Transition launch() {
-        return Transition.replace(new LevelScreen(services, campaign, nextLevel.orElseThrow()));
+        if (replay.isEmpty()) {
+            return Transition.replace(new LevelScreen(services, campaign, nextLevel.orElseThrow()));
+        }
+        // The replay hangar's changes are the campaign's: written to the autosave, which the flight replays.
+        boolean written = services.save(SaveSlots.Slot.AUTOSAVE, campaign);
+        SaveSlots.Slot slot = written ? SaveSlots.Slot.AUTOSAVE : replay.get().slot();
+        Campaign flight = replayFlight(services.campaignRules, campaign, slot, number);
+        return Transition.replace(new LevelScreen(services, flight, nextLevel.orElseThrow()));
     }
 
     @Override
@@ -293,11 +404,11 @@ public final class HangarScreen implements GameScreen {
 
     private void drawTopBar(SpriteBatch batch, Glass glass) {
         glass.panel(batch, 16, 6, PixelScreen.WIDTH - 32, 40, 0.86f);
-        int number = campaign.nextLevel();
         glass.shadowed(batch, glass.fonts.heading, "HANGAR", Glass.WHITE, 26, 11);
+        String before = replay.isPresent() ? "REPLAY" : "BEFORE";
         String mission = nextLevel
-                .map(key -> String.format(Locale.ROOT, "BEFORE L%02d - %s", number, Content.levelName(key)))
-                .orElse(String.format(Locale.ROOT, "BEFORE L%02d - NOT BUILT YET", number))
+                .map(key -> String.format(Locale.ROOT, "%s L%02d - %s", before, number, Content.levelName(key)))
+                .orElse(ReleaseEndScreen.COMING_SOON)
                 .toUpperCase(Locale.ROOT);
         glass.shadowed(batch, glass.fonts.label, mission, Glass.CYAN, 160, 13);
         String act = services.content
@@ -307,21 +418,30 @@ public final class HangarScreen implements GameScreen {
                         .orElse("")
                 + campaign.difficulty().name();
         glass.shadowed(batch, glass.fonts.label, act, Glass.LABEL, 160, 27);
-        float x = 448;
         for (Command command : List.of(Command.UNDO, Command.REPAIR, Command.SAVE)) {
-            glass.chip(batch, glass.fonts.label, command.name(), x, 15, 64, 22, on(command), state.enabled(command));
-            x += 70;
+            Box chip = HangarPointer.command(command);
+            glass.chip(
+                    batch,
+                    glass.fonts.label,
+                    command.name(),
+                    chip.x(),
+                    chip.y(),
+                    chip.width(),
+                    chip.height(),
+                    on(command),
+                    state.enabled(command));
         }
         glass.inset(batch, 662, 12, 144, 28);
         glass.right(batch, glass.fonts.body, Names.credits(campaign.credits()), Glass.AMBER, 798, 16);
+        Box launch = HangarPointer.command(Command.LAUNCH);
         glass.chip(
                 batch,
                 glass.fonts.body,
-                "> LAUNCH",
-                814,
-                10,
-                124,
-                32,
+                replay.isPresent() ? "> REPLAY" : "> LAUNCH",
+                launch.x(),
+                launch.y(),
+                launch.width(),
+                launch.height(),
                 on(Command.LAUNCH),
                 state.enabled(Command.LAUNCH));
     }
@@ -351,11 +471,11 @@ public final class HangarScreen implements GameScreen {
     private void drawRepair(SpriteBatch batch, Glass glass) {
         Hangar hangar = state.hangar();
         boolean rook = hangar.escortHired();
-        int lines = rook ? 2 : 1;
-        int width = 400;
-        int height = 124 + 16 * lines;
-        float x = (PixelScreen.WIDTH - width) / 2f;
-        float y = (PixelScreen.HEIGHT - height) / 2f;
+        Box panel = HangarPointer.repairPanel(rook);
+        float x = panel.x();
+        float y = panel.y();
+        float width = panel.width();
+        float height = panel.height();
         glass.dim(batch, 0.4f);
         glass.panel(batch, x, y, width, height, 0.94f);
         glass.header(batch, "REPAIR ARMOUR", x + 12, x + width - 12, y + 12);
@@ -372,11 +492,12 @@ public final class HangarScreen implements GameScreen {
         String rate = hangar.repairCost() == 0 ? "FREE ON EASY" : Names.credits(hangar.repairCost()) + " A POINT";
         glass.shadowed(batch, glass.fonts.label, rate, Glass.LABEL, x + 12, lineY);
         int points = state.repairPoints();
+        Box slider = HangarPointer.repairSlider(rook);
         glass.slider(
                 batch,
-                x + 12,
-                lineY + 24,
-                260,
+                slider.x(),
+                slider.y(),
+                slider.width(),
                 (double) points / Math.max(1, state.affordable(state.repairLine())),
                 points + " PT");
         String cost = String.format(
@@ -385,7 +506,8 @@ public final class HangarScreen implements GameScreen {
                 state.repairLine() == HangarState.RepairLine.ROOK ? "ROOK: " : "",
                 points,
                 Names.credits((long) points * hangar.repairCost()));
-        glass.chip(batch, glass.fonts.label, cost, x + 12, lineY + 52, width - 24, 24, true, true);
+        Box button = HangarPointer.repairButton(rook);
+        glass.chip(batch, glass.fonts.label, cost, button.x(), button.y(), button.width(), button.height(), true, true);
     }
 
     /**

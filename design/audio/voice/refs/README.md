@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [..]
-updated: 2026-10-09
+updated: 2026-10-14
 ---
 
 # Reference voices
@@ -40,6 +40,9 @@ How the clips are chosen and used: [voice](../README.md#reference-voices).
 | `ref-lifeline.wav` | Lifeline: Lifeline One, Two, Four and Five and the hit line (Level 10) | KevinS | [Over the Ocean to Paris, ch. 1 (Dixon)](https://archive.org/details/overtheoceantoparis_2404_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 32) |
 | `ref-lifeline-three.wav` | Lifeline Three (Level 10) | Maria Kasper | [The Curtiss Aviation Book, ch. 1 (Curtiss)](https://archive.org/details/curtissaviationbook_2006_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 32) |
 | `ref-atlas-control.wav` | Atlas Control (Level 11) | MaryAnn | [Eighteen Months in the War Zone: A Record of a Woman's Work, ch. 1 (Finzi)](https://archive.org/details/eighteenmonthsinthewarzone_1409_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 33) |
+| `ref-nansen.wav` | Nansen (Level 13) | Patrick Eaton | [In the Arctic Seas, ch. 1 (McClintock)](https://archive.org/details/arctic_seas_pje_1311_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 35, picked in round 34's review) |
+| `ref-ares-control.wav` | Ares Control (Levels 15–17, 19–21) | Thomas A | [The Warlord of Mars, ch. 2 (Burroughs)](https://archive.org/details/warlord_mars_tac_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 36, S.6 = b; renamed at the cast, part B, its pauses trimmed: 10.3 s) |
+| `ref-lance-control.wav` | Lance Control (the Orbital Lance's call) | Celine Major | [Campaigns of the Civil War, ch. 1 (Geer)](https://archive.org/details/campaignsofthecivilwar_2603_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 37, S.16 = b) |
 
 Round 19's chosen candidates were renamed to `ref-<speaker>.wav`; the rejected candidates and
 round 18's Tranquility Control clip (David Leeson), which no speaker uses any more, were deleted
@@ -110,3 +113,19 @@ with their CREDITS.md rows (their sources and cuts stay in `tools/concept/audio/
 - 2026-10-09: Round 33 decided (user): Atlas Control is MaryAnn (b), renamed
   `ref-atlas-control.wav`; Alister's candidate (a) deleted with its CREDITS.md row (its source and
   cut stay in `tools/concept/audio/tts_r33.py`).
+- 2026-10-12: Nansen's clip (round 35, picked in round 34's review) added to the table; round 36's candidates for Ares Control added (sources and licences as recorded in CREDITS.md).
+- 2026-10-13 (user, round 36, S.6 = b): Ares Control's reference is Thomas A's clip
+  (`ref-ares-control-r36-b.wav`, renamed `ref-ares-control.wav` when his lines are rendered in part B);
+  David Wales's clip a moved to `../concept/rejected/` with its transcript and CREDITS.md row.
+- 2026-10-13 (user, round 37, S.16 = b): Lance Control is Celine Major; her candidate clip
+  (`ref-lance-control-r37-b.wav`) renamed `ref-lance-control.wav` (step Q2, which renders the call);
+  Ted Lienhart's clip a stays until the round closes.
+- 2026-10-13 (user, round 37 closed, step Q3): Ted Lienhart's clip a (`ref-lance-control-r37-a.wav`)
+  moved to `../concept/rejected/` with its transcript and CREDITS.md row.
+- 2026-10-14 (M7 part B, step AUD-B): Thomas A's clip renamed `ref-ares-control.wav` (and its
+  transcript) and **trimmed**: Chatterbox copies a clip's prosody, and his audition's takes held 2 s
+  pauses inside two lines, so the lead-in is cut to 0.1 s and the 0.6 s and 1.2 s silences inside the
+  reading to 0.3 s (`trim_pauses` in `tools/concept/audio/tts_r36.py`, which `--refs` applies to a
+  fresh cut too): 12.0 → 10.3 s, the same words (Whisper), median pitch 118 Hz. The render checks
+  every take for a pause as well (`tools/art/voice.py`, `MAX_PAUSE`). Pending the user's review with
+  his Level 15 lines (round 38).

@@ -1,0 +1,394 @@
+# Level 15 – Olympus Descent: the level script, rendered into README.md (briefing, threat profile, layout,
+# waves, ground targets, radio, credit budget). Times are seconds from the level start. M7 part B, step B2,
+# from the README's approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M7 part B, flown by the simulation since step B3: the sections' moving `ramp` (each speed change
+# eased over 1 s), `launch: drop`, `no_surface` and the Burrower's and the Dust Kite's own blocks (their stat blocks).
+# The `backdrop` block and the sections' tiles, atmospheres and peaks are step ART-B's proposal
+# (concept/backdrop-proposal.yaml, tools/art/backdrop_l15.py --proposal), merged in step B2.
+scroll_speed: 150     # the slopes and the escarpment; the entry, the deck and the dunes set their own
+launch_seconds: 5     # the ship and Rook drop from the transport's bay in formation
+launch: drop          # default pending the user's review in round 38: from above the top edge, not the bottom
+bounty_scale: 0.42    # every bounty × 0.42: the typical haul on budget(15) (TypicalHaulTest, step B3: typical 1,800, -0.3 %)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Mars, Olympus Mons
+  layers: [ground, buried, air]
+  density: 3
+  traits: [anti-ground, forward]
+  hazards: []
+  boss: none
+  objective: REACH THE RAIL LINE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Mars, Lancer. A hot descent, then the slopes of Olympus Mons. Something lives in the sand.
+    l1: Nearly all from ahead, two pincers from the flanks. Nothing behind you.
+    l2: "New: Burrowers under the sand, and dust kites in the clouds."
+    l3: Anti-ground for the Burrowers. One cache on the escarpment.
+  notes:
+    Dominant layers: '`ground` (Burrowers when surfaced, Ravager packs, a Creeper convoy, turret nests and mortars), `buried` (Burrowers under the sand: nothing hits them), `air`; `high-air` and `low-air` carry the cloud decks (scenery)'
+    Attack directions: '{directions} (two Needler pincers)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: none (no terrain collision; the Burrowers' rings are their attack)
+    Boss / mid-boss: none (finale the dune field of six Burrowers under a Kite V-wing)
+    Sensor-suite detail: 'none: Mars, entry and the slopes of Olympus Mons, `ground` + `air`, front · L1: + directions, density {density}, no hazards, the objective `{objective}` · L2: + Burrower (new), Dust Kite (new), Skitter, Needler, Stinger, Spore Bomber, Ravager and Creeper portraits; no boss · L3: + `anti-ground` highlighted, the wave strip marking the Burrower fields at 68, 80, 98, 125, 153 and 172 s, 1 secret'
+
+sections:  # back to back from t = 0; tiles: the backdrop's tile sets (step ART-B: tools/art/backdrop_l15.py)
+  - name: Entry Corridor
+    end: 30
+    speed: 190
+    atmosphere: light
+    peak: {atmosphere: clear, from: 0, to: 8}   # the entry glow: the plasma streaks (the clear look's wisps), the surface washed out
+    tiles: [mars-high, cirrus]
+    notes:
+      layers:
+        deep: Mars from high up, Olympus Mons' caldera rim and flank, the Tharsis plain beyond.
+        high-air: the transport's underside (0–3 s), fading entry streaks (0–8 s, the entry glow), thin cirrus (≤ 40 %).
+      purpose: The launch; the Dust Kite's first sight at t=7; popcorn.
+  - name: Cloud Deck
+    end: 65
+    speed: 170
+    ramp: 1   # eased from 190 over its first second
+    atmosphere: medium
+    tiles: [mars-flank, cirrus]
+    notes:
+      layers:
+        deep: the flank closer, lava channels.
+        low-air: the thick water-ice deck in banks (~30 %), covering the field at t≈61.5–64.5 while `ground` takes over.
+        high-air: cirrus (≤ 40 %).
+      purpose: Mixed air waves through the cloud banks; the first pincer.
+  - name: Olympus Slopes
+    end: 115
+    ramp: 1   # eased from 170 to 150
+    atmosphere: light
+    tiles: [mars-flank, slopes]   # the deep tile under the opaque ground (the deep layer covers every section)
+    notes:
+      layers:
+        ground: the volcano's lower flank, lava terraces, basalt outcrops, dusty regolith fields with burrow furrows.
+        low-air: the last cloud wisps, thin dust.
+      purpose: The Burrower alone at t=68, then fields of 4 with popcorn; the first turret nest and mortars.
+  - name: Lycus Escarpment
+    end: 150
+    atmosphere: light
+    tiles: [mars-flank, escarpment]
+    notes:
+      layers:
+        ground: 'the foot of the escarpment (the great cliff, drawn as perspective scenery, nothing gameplay touches on its face); **Lycus Survey Station**, overrun: pads, a domed hab, a road with Vrell growths; the crashed drop pod on a ledge at its foot.'
+        low-air: thin dust.
+      purpose: The station's growths, the Creeper convoy on its road, the secret.
+  - name: Tharsis Dunes
+    end: 190
+    speed: 160
+    ramp: 1   # eased from 150
+    atmosphere: light
+    peak: {atmosphere: heavy, from: 170, to: 180}   # the dust peak: rolling dust banks
+    tiles: [mars-flank, dunes, dust-streaks]
+    notes:
+      layers:
+        ground: the dune sea, a crashed colony lander on a crest, then the colony rail line and its pylons across the field at the end.
+        low-air: dust streaks off the crests.
+      purpose: The finale field of six Burrowers; the level ends over the rail line.
+
+# Act 3 popcorn (Dust Kite and Skitter streams of 3, V-wings and snakes of 4) round the set pieces, a wave every
+# 3-3.5 s from t=7 (the act's minimum: at least 55 a minute; the pacing rule: no empty screen over 3 s). The
+# Burrower's first field is alone: no other wave enters from t=68 until t=73 and the Kites of t=62.5 are gone
+# first. A Burrower `field` wave's x and size give its area (its bottom edge enters at the top edge at t),
+# where its units enter buried with the ground before they burrow toward the ship.
+waves:
+  - {t: 7, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "**New.** The first targets, shimmering out of the haze"}
+  - {t: 10.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 14, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 17.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
+  - {t: 21, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 24.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 28, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: Over the first cloud bank}
+  - {t: 31.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 35, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25, notes: Out of a cloud bank}
+  - {t: 38.5, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The leader drops an overdrive}
+  - {t: 42, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 45.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 49, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, skip: [easy], notes: "2 per side, hold {hold} s; edge warnings; Rook's flank bark; easy: a line abreast from the front"}
+  - {t: 49, formation: line abreast, enemy: needler, count: 2, from: front, skip: [medium, hard], notes: "Easy only: instead of the pincer, its first rank"}
+  - {t: 51, formation: line abreast, enemy: needler, count: 2, from: front, skip: [medium, hard], notes: "Easy only: the pincer's second rank, 2 s later (step B3: no empty screen over 3 s before the t=52.5 snake)"}
+  - {t: 52.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
+  - {t: 56, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 59.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: Act HP factor (57 HP)}
+  - {t: 62.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: As the deck closes; gone before the first Burrower}
+  - {t: 68, formation: field, enemy: burrower, count: 3, from: front, x: 240, size: [400, 200], notes: "**New.** Alone: no other wave until t=73 (buried, ahead of the ship)"}
+  - {t: 73, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 76.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 80, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], notes: With the lava-terrace mortars}
+  - {t: 84, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 87.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 91, formation: V-wing, enemy: needler, count: 5, from: front, notes: Over the basalt turret nest}
+  - {t: 94.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25}
+  - {t: 98, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220]}
+  - {t: 101.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: Over the Burrower field}
+  - t: 105
+    formation: pack
+    enemy: ravager
+    count: 4
+    from: front
+    paths:   # down the regolith fields, then across the slope
+      - [[120, -30], [140, 120], [-80, 40]]
+      - [[200, -30], [210, 130], [560, 30]]
+      - [[280, -30], [270, 110], [-100, 60]]
+      - [[360, -30], [340, 140], [580, 50]]
+      - [[240, -30], [240, 100], [560, -60]]   # hard's fifth
+    notes: Down the regolith fields; act HP factor (19 HP)
+  - {t: 108.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 112, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 115.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - t: 118
+    formation: convoy
+    enemy: creeper
+    count: 3
+    from: front
+    paths: [[[300, -40], [300, -800]]]   # straight along the survey station's road (lycus-road at x 300)
+    notes: On the survey station's road; act HP factor (38 HP); hard 4
+  - {t: 121.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 125, formation: field, enemy: burrower, count: 5, from: front, x: 240, size: [420, 240], notes: Among the station's pads (none surfaces on them)}
+  - {t: 128.5, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The last one drops an armour patch}
+  - {t: 132, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 135.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front}
+  - {t: 139, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
+  - {t: 142.5, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, skip: [easy], notes: "2 per side, hold {hold} s; edge warnings; easy: a line abreast from the front"}
+  - {t: 142.5, formation: line abreast, enemy: needler, count: 4, from: front, skip: [medium, hard], notes: "Easy only: instead of the pincer"}
+  - {t: 146, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 149.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: Over the first dunes}
+  - {t: 153, formation: field, enemy: burrower, count: 5, from: front, x: 240, size: [420, 240]}
+  - {t: 156.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 160, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left, notes: Over the crashed lander's nest}
+  - t: 163.5
+    formation: pack
+    enemy: ravager
+    count: 4
+    from: front
+    paths:   # over the dune crests, each down its own trough
+      - [[100, -30], [130, 150], [-80, 60]]
+      - [[190, -30], [180, 120], [560, 20]]
+      - [[290, -30], [300, 140], [-100, 70]]
+      - [[380, -30], [350, 110], [580, 40]]
+      - [[240, -30], [250, 130], [560, -50]]   # hard's fifth
+    notes: Over the dune crests
+  - {t: 167, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 170.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 172, formation: field, enemy: burrower, count: 6, from: front, x: 240, size: [440, 260], notes: "The finale: the dune field heaves (Okafor's warning at t=168)"}
+  - {t: 174, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 177.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 181, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "The last wave, over the rail line"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x
+  - target: lava-terrace mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[80, 110], [80.6, 370]]
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×{count} on a lava terrace (t≈80)'
+      effect: 'With the t=80 Burrower field: the first mixed ground read'
+  - target: basalt nest
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[92, 120], [92.4, 160], [92.8, 200]]
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on a basalt outcrop (t≈92)'
+      effect: Bounty
+  - target: station pads
+    section: 4
+    enemy: spine-turret
+    count: 4
+    at: [[118, 100], [118.5, 150], [124, 330], [124.5, 380]]
+    notes:
+      target: "Lycus Survey Station's growths: Spine Turret ×{count} on its pads (t≈118–125)"
+      effect: Bounty; the station is Coalition scenery (no damage, shots pass over it)
+  - target: hab roof
+    section: 4
+    enemy: polyp-mortar
+    count: 2
+    at: [[121, 230], [121.6, 270]]
+    notes:
+      target: Polyp Mortar ×{count} on the hab's roof (t≈121)
+      effect: Bounty
+  - target: station containers
+    section: 4
+    layer: ground
+    size: [32, 24]
+    sprite: lycus-container   # tools/art (step ART-B): a colony supply container, intact, damaged, wrecked
+    hp: 3
+    drop: small salvage
+    group: containers   # easy: the last one destroyed drops an extra armour patch (difficulty)
+    count: 4
+    at: [[122, 50], [123.5, 390], [126, 190], [128, 60]]
+    notes:
+      target: Station supply containers ×{count} (`ground`, {hp} HP, t≈122–128)
+      effect: Each drops a {drop} pickup ({drop_credits}); easy, the last one an armour patch too
+      budget: station containers {count} × {drop} {drop_credits}
+  - target: drop pod rubble
+    section: 4
+    layer: ground
+    size: [48, 40]
+    sprite: drop-pod-rubble   # tools/art (step ART-B): the rubble over the crashed pod, its break frames; drop-pod the pod it uncovers
+    hits: 4
+    hard: {hits: 6}
+    reveals: drop pod
+    at: [[128, 400]]   # on the escarpment's ledge
+    notes:
+      target: Rubble over the crashed drop pod on the escarpment's ledge (trigger, t≈128, x≈400)
+      effect: '{hits} hits (hard 6) knock it away and uncover the hidden crate'
+  - target: lander nest
+    section: 5
+    enemy: spine-turret
+    count: 3
+    at: [[160, 300], [160.4, 340], [160.8, 380]]
+    notes:
+      target: Spine Turret nest ×{count} at a crashed colony lander on a dune crest (t≈160)
+      effect: Bounty
+  - target: rail-line pair
+    section: 5
+    enemy: spine-turret
+    count: 0
+    at: []
+    hard: {at: [[185.3, 168], [185.7, 336]]}   # beside the rail line (its centre passes the middle at t=187), between its pylons
+    notes:
+      target: Spine Turret pair at the rail line (t≈185), **hard only**
+      effect: Bounty
+
+no_surface:  # M7 part B: where no Burrower surfaces (the spot rule picks the nearest allowed spot, else skips that surfacing); t = the centre passing the middle of the screen, as a backdrop piece (centred on ART-B's pieces)
+  - {t: 120.16, x: 125, size: [170, 186]}   # the station's west pads (lycus-pads)
+  - {t: 126.16, x: 355, size: [170, 186]}   # the east pads
+  - {t: 123.15, x: 250, size: [162, 162]}   # the domed hab (lycus-hab)
+  - {t: 132.5, x: 456, size: [48, 5250]}   # the escarpment's cliff face along the right edge (x >= 432, t 115-150)
+  - {t: 187, x: 240, size: [480, 114]}    # the rail line and its pylons (rail-line)
+
+secrets:
+  - name: drop pod
+    crate: 100   # Act 1 terms: pays 256 with the act factor (decided in round 36, Q.15c)
+    radio: {speaker: Ares Control, portrait: generic-colonial, line: "Our supply drop from last week. It's yours, Aegis."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 38.5, unit: first}}       # the leader of the t=38.5 Stinger V-wing
+  - {pickup: armour patch, dropped_by: {wave: 128.5, unit: last}}    # the last Stinger of the t=128.5 V-wing
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
+  - {t: 1, speaker: Okafor, line: "Aegis, you're clear of the transport. The corridor is hot. Weapons free."}
+  - {t: 12, speaker: Ares Control, portrait: generic-colonial, line: "Aegis flight, Ares Landing. Five weeks we held alone. Nice of Earth to drop by."}
+  - {t: 23.5, speaker: Rook, requires: escort, line: "Copy, Lancer. I'm on your {side}. Watch the clouds, things are hiding in them."}
+  - {t: 34.5, speaker: Varga, line: "Those kites ride the dust. You barely see them until they turn. Shoot early."}
+  - {t: 45.5, speaker: Okafor, line: "Clouds are breaking up. Olympus Mons dead ahead, all twenty-two kilometres of it."}
+  - {t: 57, speaker: Varga, line: "Ground movement on the slopes. Something is swimming under the sand."}
+  - {event: first-surfacing, speaker: Varga, line: "There! The sand bulges before it comes up. Hit it while it's out.", notes: {trigger: "First Burrower surfaces (`first-surfacing`)"}}
+  - {t: 84, speaker: Ares Control, portrait: generic-colonial, line: "Those things took our survey posts. Lycus Station went dark a week ago."}
+  - {t: 100, speaker: Rook, requires: escort, line: "Bugs that swim in the dirt. Back home we just had moles."}
+  - {t: 110, speaker: Okafor, line: "Lycus Station ahead. The growths on its pads are Vrell. Burn them off."}
+  - {t: 142, speaker: The Choir, distorted: true, line: "[the Choir sings]"}
+  - {t: 149.5, speaker: Varga, line: "That song again. Lancer, it's coming from under the ground."}
+  - {t: 158.5, speaker: Ares Control, portrait: generic-colonial, line: "Rail line in sight. Half the colony is watching you come in."}
+  - {t: 168, speaker: Okafor, line: "Big contact under the dunes. Lots of them. Keep moving."}
+  - {event: secondary-objective, speaker: Ares Control, portrait: generic-colonial, line: "The slopes are quiet. Maybe Earth can fly after all.", notes: {trigger: Secondary met (at the level end)}}
+  - {event: level-end, speaker: Okafor, line: "You're down, Aegis. Refuel at the rail head. The canyon run starts at dawn."}
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, credits: 80, name: Clear the slopes}   # at least 65 % of the level's enemies, judged at the end (80 in Act 1 terms: pays 205)
+
+music:
+  track: 8            # Act 3 A "Red Dust Run" (audio/music track list)
+  start_section: 2    # the base stem from the Cloud Deck; section 1 has the entry roar only
+  full_section: 3     # the full mix from the slopes, the Burrower's first sight
+  ambience: mars-entry    # the high thin entry roar in sections 1-2 (step AUD-B proposes it)
+  ambience_changes:
+    - {section: 3, ambience: mars-dust, crossfade: 2}   # the Martian dust wind from the slopes on
+  end_jingle: mission-complete
+
+difficulty:  # the easy line abreasts are entries of their own, the convoy's hard 4 and the fields' sizes come from the formation lever, the rubble's hard hits and the hard rail-line pair are in their entries; the stat blocks' hooks apply (the Burrower's easy ring of 8 and 2.4 s window, hard ring of 12, second ring of 8 and 1.8 s window; the Kite's hard swoop at 230 px/s)
+  easy:
+    extra_pickups:
+      - {pickup: armour patch, dropped_by: {group: containers, unit: last}}   # the station's last container
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-15-descent-route, line: "The Vrell own the sky over Ares Landing, so we come in from the west: down the flank of Olympus Mons and across the dunes to the colony rail line. They have held five weeks alone. Don't keep them waiting."}
+    - {speaker: Varga, image: level-15-burrower-scan, line: "The colonists call them Burrowers. They swim under the sand, surface to fire, then dive. Nothing touches them underground. The sand bulges just before one comes up: shoot there."}
+  teaser: {speaker: Rook, line: "Mars. Red sand, red sky, and bugs that swim in the dirt. There's a beam gun in the shop, if you're feeling rich."}
+
+backdrop:
+  # Presentation only: Olympus Descent (tools/art/backdrop_l15.py, from mars-olympus-r36-a and parallax r02-c).
+  # Sections 1-2 have no ground: Mars far below on deep (x0.15), the cloud decks on low-air and high-air; the
+  # ground takes over under the opaque deck-close; the escarpment's cliff and the rail pylons are towers.
+  scroll_factors: {deep: 0.15, far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}
+  ramp: 4
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {wisps: entry-streaks, haze: 0.34}   # the entry-glow peak 0-8: the plasma streaks, the surface washed out
+    light: {banks: dust-thin, haze: 0.2}   # sections 1, 3-5: thin dust veils
+    medium: {banks: deck-banks, haze: 0.26}   # section 2: the water-ice deck in banks ~30 %, opaque cores
+    heavy: {banks: dust-peak, haze: 0.3}   # the dust peak 170-180: rolling dust banks ~30 %, translucent
+  tile_sets:
+    mars-high: {layer: deep, height: 960}   # section 1: Mars from high up, the Tharsis plain small (dark lava lobes, crater fields with wind streaks, graben)
+    mars-flank: {layer: deep, height: 960}   # sections 2-5: Olympus Mons' flank closer: leveed lava channels and lobate flows along the flight (under the ground from section 3)
+    slopes: {layer: ground, height: 960}   # section 3: the lower flank: stepped lava terraces, basalt knobs, dusty regolith fields with burrow furrows
+    escarpment: {layer: ground, height: 960}   # section 4: the foot of the Lycus escarpment: regolith, scree fans and boulders toward the cliff on the right
+    dunes: {layer: ground, height: 960}   # section 5: the Tharsis dune sea, crests across the wind from the left, dark sand in the troughs
+    cirrus: {layer: high-air, height: 960}   # sections 1-2: thin water-ice cirrus (additive at 40 %); empty where it ends at section 3's seam
+    entry-streaks: {layer: high-air, height: 960}   # the `clear` look's wisps: the entry's plasma streaks and glow (the entry-glow peak 0-8, faded by the ramp)
+    deck-banks: {layer: low-air, height: 960, drift: 5}   # medium: the thick water-ice deck in banks, ~30 %, opaque cores, pale peach tops, mauve undersides
+    dust-thin: {layer: low-air, height: 960, drift: 8}   # light: thin dust veils stretched along the wind, ~14 %, at most 35 % opaque
+    dust-streaks: {layer: low-air, height: 960, drift: 12}   # section 5: dust streaks blown off the dune crests, ~12 %, translucent; empty where section 5 begins
+    dust-peak: {layer: low-air, height: 960, drift: 16}   # heavy: the dust peak's rolling banks, ~30 %, at most 55 % opaque (the Burrowers' bulges read under them)
+  pieces:
+    olympus: {layer: deep, size: [440, 440]}   # Olympus Mons from the entry corridor: the caldera's nested pits, the radial flank, the basal scarp (edges transparent)
+    mars-blend: {layer: deep, size: [480, 400]}   # on the deep seam of section 2: mars-high into mars-flank along a lava margin (exact rows)
+    slopes-lead: {layer: ground, size: [480, 658]}   # the slopes continued below section 3's seam: the ground's opaque edge (the swap line) crosses the screen under deck-close (exact rows)
+    seam-escarpment: {layer: ground, size: [480, 320]}   # on section 4's seam: the slopes into the escarpment's regolith along a lava front (exact rows)
+    seam-dunes: {layer: ground, size: [480, 320]}   # on section 5's seam: the escarpment's regolith into the dune sea (exact rows)
+    lava-terrace: {layer: ground, size: [480, 300], mid_size: true}   # a raised lava terrace across the flank, flat top, lobate front: the two mortars stand on it
+    basalt-outcrop: {layer: ground, size: [208, 160], mid_size: true}   # a basalt outcrop, knobs round a flat top: the turret nest of three
+    lycus-pads: {layer: ground, size: [160, 176], mid_size: true}   # a pair of Lycus Survey Station's landing pads, overrun: scorched concrete, Vrell growth with teal veins (two turrets; placed twice)
+    lycus-hab: {layer: ground, size: [152, 152], mid_size: true}   # the station's domed hab drawn flat (a low dome): ribs, airlock, panels, growth (two mortars on its roof)
+    lycus-road: {layer: ground, size: [112, 601]}   # the station's graded road with tyre ruts and Vrell growths along it (the Creeper convoy)
+    drop-pod-ledge: {layer: ground, size: [136, 120]}   # the ledge at the cliff's foot the rubble lies on: a rock shelf, the pod's impact furrow
+    crashed-lander: {layer: ground, size: [216, 176], mid_size: true}   # a crashed colony lander on a dune crest, a leg folded, sand drifted against it (the nest of three)
+    rail-line: {layer: ground, size: [480, 104]}   # the colony rail line across the field on its embankment, sleepers, cable trough
+    escarpment-cliff: {layer: ground, size: [96, 1600], tower: {height: 1.2, wall: wall-escarpment, shade: 0.55}}   # the great cliff along the right edge in perspective (scenery: nothing gameplay touches): the plateau's rim, strata on its face
+    rail-pylon: {layer: ground, size: [14, 14], tower: {height: 0.9, wall: wall-pylon, shade: 0.5}}   # a rail line's catenary pylon in perspective
+    deck-close: {layer: low-air, size: [480, 1360]}   # the opaque close-over: the deck covers the whole field ~2 s round t=63 while the ground takes over (1,000 px core)
+    transport: {layer: high-air, size: [400, 660]}   # the Mars transport passing over the launch, its drop bay open (ART-B proposes the piece key overhead_pass, 75 % normal blending: new for steps B3/B4; additive at 40 % until then)
+  placed:
+    # 1. Olympus Mons under the entry corridor (deep x0.15: on screen the whole section)
+    - {piece: olympus, t: 16, x: 256}
+    # 2. the deep seam (deep position 1395): mars-high into mars-flank; exact rows, re-run after the data moves section 2's start
+    - {piece: mars-blend, t: 40.5294, x: 240}
+    # 2-3. the swap line (ground 11590) crosses the screen t 61.41-64.59 under deck-close; the slopes run on into section 3's seam (12200)
+    - {piece: slopes-lead, t: 64.8412, x: 240}
+    # 4. section 4's seam (ground 19710): the slopes into the escarpment
+    - {piece: seam-escarpment, t: 116.8, x: 240}
+    # 5. section 5's seam (ground 24960): the escarpment into the dunes
+    - {piece: seam-dunes, t: 151.719, x: 240}
+    # 3. the lava terrace across the flank under the two mortars
+    - {piece: lava-terrace, t: 82.167, x: 240}
+    # 3. the basalt outcrop under the turret nest
+    - {piece: basalt-outcrop, t: 94.28, x: 160}
+    # 4. Lycus Survey Station: the road (the Creeper convoy enters at x 300), two pairs of pads (two turrets each), the hab (two mortars on its roof)
+    - {piece: lycus-road, t: 121.27, x: 300}
+    - {piece: lycus-pads, t: 120.157, x: 125}
+    - {piece: lycus-pads, t: 126.157, x: 355}
+    - {piece: lycus-hab, t: 123.153, x: 250}
+    # 4. the ledge at the cliff's foot under the drop pod's rubble (the secret)
+    - {piece: drop-pod-ledge, t: 129.893, x: 400}
+    # 5. the crashed lander on a dune crest under the nest of three
+    - {piece: crashed-lander, t: 162.188, x: 340}
+    # 5. the colony rail line across the field at the end (the hard turret pair beside it)
+    - {piece: rail-line, t: 187, x: 240}
+    # 4. the Lycus escarpment along the right edge, three stretches with ravines (perspective towers)
+    - {piece: escarpment-cliff, t: 122.833, x: 480}
+    - {piece: escarpment-cliff, t: 134.3, x: 480}
+    - {piece: escarpment-cliff, t: 145.767, x: 480}
+    # 5. the rail line's pylons (perspective)
+    - {piece: rail-pylon, t: 187.22, x: 84}
+    - {piece: rail-pylon, t: 187.22, x: 252}
+    - {piece: rail-pylon, t: 187.22, x: 420}
+    # 2. the close-over: its core covers the whole field ~2 s and the swap line all the way across
+    - {piece: deck-close, t: 63, x: 240}
+    # 1. the launch: the transport passes over in the first 3 s
+    - {piece: transport, t: 0.48, x: 240}

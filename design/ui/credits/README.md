@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../CREDITS.md]
-updated: 2026-10-05
+updated: 2026-10-12
 ---
 
 # Credits
@@ -44,15 +44,27 @@ Scrolling credits screen from the main menu (and after the campaign ends). Carri
   generators) before; tools (libGDX and LWJGL, Java 21, Gradle, Construo, Python with NumPy and
   Pillow, FFmpeg, Chatterbox, Claude Code), the Apache-2.0 licence, "made with libGDX" and "thank
   you for playing" after. The texts live in `CreditsList`.
-- **Today's roll:** 23 sound-effect attributions (CC-BY 3.0/4.0) and 54 thanked CC0 sound
-  authors, 13 thanked LibriVox readers (public domain / CC0), 1 font (DejaVu Sans Mono Bold,
-  Bitstream Vera Fonts licence); no third-party music.
+  The Apache-2.0 licence covers the game's own art, music and voices as well as the code (user,
+  round 35, Q13); third-party assets keep their own licences, listed in CREDITS.md.
+- **Today's roll** (2026-10-12, M6 part D; to be regenerated after round 34): 28 attributed items,
+  27 sound-effect attributions (CC-BY 3.0/4.0) and 1 font (DejaVu Sans Mono Bold, Bitstream Vera
+  Fonts licence), 70 thanked CC0 sound authors and 18 thanked LibriVox readers (public domain /
+  CC0); no third-party music.
 - **Screen.** A 560 px glass column centred over the title scene at half brightness, its trim
   running past the screen's top and bottom; the lines are centred, word-wrapped to 520 px in the
   UI kit's fonts and fade over 40 px at the column's ends (y 14–500). The roll enters from the
   bottom at 30 px/s and stops with its last line in the middle. Holding confirm or down (Enter,
   D-pad down, A) runs it 8× faster, holding up runs it back; back (Esc / B) returns to the screen
   below at any time, confirm too once the roll has stopped.
+
+### At the release's end (M6 part B)
+
+The Acts 1–2 release ends after Act 2's outro (Q1 = a, accepted by the user in round 35): the
+end card (`ACTS I-II COMPLETE`, the campaign's totals, `TO BE CONTINUED`, `ACT III - RED DUST.
+MARS. COMING SOON.`), the name entry when the score makes the difficulty's top 10
+([scoring](../../systems/scoring/README.md#high-scores)), then this roll over the end screen with
+the title theme playing on, and when it goes back, the main menu. The same rule will bring the roll
+after the campaign's final level (Act 7).
 
 ## Concept art
 
@@ -69,6 +81,7 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
 - [x] Scrolling credits with skip
 - [x] CC-BY attributions generated from CREDITS.md for every shipped CC-BY asset
 - [x] Reachable from the main menu
+- [x] Reachable at the release's end, after Act 2's outro (end card, name entry, credits, main menu) — M6 part B
 - [ ] Reachable after the final level — **later: Act 7** (the campaign end)
 
 ## Decisions
@@ -88,3 +101,15 @@ Concept [round 08](../../concept-rounds/round-08/README.md) — glass style; gen
   music lines ("made by the game's own generators"); this closes the open question. The screen is
   drawn in the final UI kit over the final title scene, so `art: final`; the roll after the final
   level stays tagged for Act 7, so the document is `done`.
+- 2026-10-12: M6 part B (Q1 = a, **pending the user's review in round 35**): the roll plays at the
+  release's end (`ReleaseEndScreen`: end card → name entry if the score qualifies → this roll →
+  main menu), when an act outro finishes and the content has no next level
+  (`CampaignRoute.releaseEnd`; `--act-end` on an earlier level is unaffected). The end card's text
+  is new player-facing text for the round. It writes the autosave the hangar would have written,
+  so Continue opens the hangar before Level 15.
+- 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C4 and Q1, the release's end).
+- 2026-10-12 (user, round 35): accepted as built: C4 and Q1 = a (the release's end after Act 2's
+  outro: end card, name entry, credits roll, main menu; the end card's text as built) and the build
+  choices B.1 (g) and (h). Q13: the game's own art, music and voices are Apache-2.0 like the code,
+  as the roll already says. `design: approved`; R.1 (the roll regenerated after round 34's sound
+  picks) stays open.

@@ -51,8 +51,14 @@ utility:
     draw: 2
     prices: [4000]
     available: act 3
-    design: idea
-    notes: {effect: 'Double-tap direction: 72 px dash, 0.25 s invulnerable, 3 s cooldown'}
+    design: approved
+    dash:  # M7 part A: distance px over seconds, invulnerable s from its start, cooldown s from its start; double_tap: the second press within this many s of the first press's release
+      distance: 72
+      seconds: 0.12
+      invulnerable: 0.25
+      cooldown: 3
+      double_tap: 0.25
+    notes: {effect: 'Double-tap a direction (or the Dash button): {dash.distance} px dash in {dash.seconds} s, {dash.invulnerable} s invulnerable, {dash.cooldown} s cooldown (see below)'}
   - name: Auto-repair nanites
     draw: 3
     prices: [6000, 12000]

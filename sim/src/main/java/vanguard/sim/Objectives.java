@@ -37,6 +37,8 @@ final class Objectives {
     private boolean afloatFailed;
     /** M5 part G: whether the defended ally dropped below an integrity objective's share. */
     private boolean integrityFailed;
+    /** M7 part D: whether a ground ally was hit, which fails an untouched objective. */
+    private boolean untouchedFailed;
 
     /**
      * @param groups the groups the ground units belong to: the secondary's or the destroy-targets
@@ -83,6 +85,7 @@ final class Objectives {
         secondaryMet = other.secondaryMet;
         afloatFailed = other.afloatFailed;
         integrityFailed = other.integrityFailed;
+        untouchedFailed = other.untouchedFailed;
     }
 
     /** Back to the level start. */
@@ -99,6 +102,33 @@ final class Objectives {
         secondaryMet = false;
         afloatFailed = false;
         integrityFailed = false;
+        untouchedFailed = false;
+    }
+
+    /**
+     * M7 part D (design/campaign Level 17, Q.25c): a ground ally took a hit; returns whether that failed an
+     * untouched objective (the first hit, before the last of them left the screen).
+     */
+    boolean allyHit() {
+        if (!secondary.untouched() || untouchedFailed || secondaryMet) {
+            return false;
+        }
+        untouchedFailed = true;
+        return true;
+    }
+
+    /** M7 part D: the last ground ally left the bottom edge; returns whether that met an untouched objective (none hit). */
+    boolean alliesPassed() {
+        if (!secondary.untouched() || untouchedFailed || secondaryMet) {
+            return false;
+        }
+        secondaryMet = true;
+        return true;
+    }
+
+    /** M7 part D: whether an untouched objective failed (a ground ally was hit). */
+    boolean untouchedFailed() {
+        return untouchedFailed;
     }
 
     /**
@@ -199,6 +229,31 @@ final class Objectives {
     /** M5 part F: a weather sonde left the bottom edge uncollected; returns whether that failed the objective. */
     boolean sondeLost() {
         if (!secondary.sondes() || escapesFailed || secondaryMet) {
+            return false;
+        }
+        escapesFailed = true;
+        return true;
+    }
+
+    /**
+     * M7 part C (design/campaign Level 16, Q.16a): a gate's tendril was broken; returns whether that met a
+     * links objective (the last of them).
+     */
+    boolean linkBroken() {
+        if (!secondary.links() || escapesFailed || secondaryMet) {
+            return false;
+        }
+        escapesDestroyed++;
+        if (escapesDestroyed == escapesTotal) {
+            secondaryMet = true;
+            return true;
+        }
+        return false;
+    }
+
+    /** M7 part C: a tendril left the screen unbroken; returns whether that failed a links objective. */
+    boolean linkLost() {
+        if (!secondary.links() || escapesFailed || secondaryMet) {
             return false;
         }
         escapesFailed = true;
@@ -339,6 +394,10 @@ final class Objectives {
         if (secondary.byIntegrity()) {
             // M5 part G: only with an integrity objective, so the other levels hash as before.
             hash.add(integrityFailed ? 1 : 0);
+        }
+        if (secondary.untouched()) {
+            // M7 part D: only with an untouched objective, so the other levels hash as before.
+            hash.add(untouchedFailed ? 1 : 0);
         }
     }
 }

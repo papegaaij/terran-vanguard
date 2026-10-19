@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import vanguard.content.Difficulty;
 class SaveFormatTest {
     static SaveGame save() {
         Campaign campaign = Campaign.start(CampaignTest.RULES, Difficulty.HARD);
+        campaign.markActIntroShown(1); // M7 part B: as the new game's intro briefing does
         campaign.complete(CampaignTest.won("A", 80, 12_000), 41.5);
         campaign.play(300);
         return campaign.save(Instant.parse("2026-10-02T10:00:00Z"));
@@ -26,7 +28,8 @@ class SaveFormatTest {
 
         String json = SaveFormat.write(save);
 
-        assertTrue(json.contains("\"version\" : 3"), json);
+        assertTrue(json.contains("\"version\" : 4"), json);
+        assertTrue(json.contains("\"bays\" : 0"), json);
         assertEquals(save, SaveFormat.read(json));
         assertEquals(
                 Map.of(1, new SaveGame.LevelStats(480, 80)),
@@ -42,6 +45,7 @@ class SaveFormatTest {
         tree.put("version", 1);
         ((ObjectNode) tree.get("stats")).remove("levels");
         tree.remove("escort");
+        tree.remove("bays");
         String old = tree.toString();
         assertTrue(!old.contains("\"levels\""), old);
 
@@ -57,10 +61,93 @@ class SaveFormatTest {
 
     @Test
     void aVersion1SaveWithLevelStatsIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 3", "\"version\" : 1");
-        // Its stats.levels (version 2) is what makes it invalid; the escort (version 3) goes first.
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save()));
+        tree.put("version", 1);
+        tree.remove("escort");
+        tree.remove("bays");
+        // Its stats.levels (version 2) is what makes it invalid.
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json));
+        SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(tree.toString()));
+        assertTrue(e.getMessage().contains("stats.levels"), e.getMessage());
+    }
+
+    /** M7 part A (Q1 = a): a version 3 save (M5 to M6) has no bays bought; it loads with none. */
+    @Test
+    void aVersion3SaveLoadsWithNoBayBought() throws SaveException {
+        SaveGame save = save();
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save));
+        tree.put("version", 3);
+        tree.remove("bays");
+
+        SaveGame loaded = SaveFormat.read(tree.toString());
+
+        assertEquals(SaveFormat.VERSION, loaded.version());
+        assertEquals(0, loaded.bays());
+        assertEquals(save, loaded);
+        assertEquals(0, Campaign.load(CampaignTest.RULES, loaded).gear().bays());
+    }
+
+    /**
+     * M7 part B (L.6 of round 36): a version 3 save (the M6 release, Acts 1–2) has seen the intros of the acts it
+     * reached: the migration marks {@code act-intro:1}, and {@code act-intro:2} from Level 08 on, never Act 3's.
+     */
+    @Test
+    void aVersion3SaveGetsTheReleasedActsIntrosAsShown() throws SaveException {
+        assertEquals(
+                List.of("act-intro:1"), SaveFormat.read(version3(3, List.of())).storyFlags());
+        assertEquals(
+                List.of("act-intro:1", "act-intro:2"),
+                SaveFormat.read(version3(8, List.of())).storyFlags());
+        assertEquals(
+                List.of("free-charges:Airstrike", "act-intro:1", "act-intro:2"),
+                SaveFormat.read(version3(15, List.of("free-charges:Airstrike"))).storyFlags());
+        assertEquals(
+                List.of("act-intro:1", "act-intro:2"),
+                SaveFormat.read(version3(15, List.of("act-intro:1"))).storyFlags(),
+                "a flag already there is not added twice");
+    }
+
+    private static String version3(int nextLevel, List<String> flags) {
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save()));
+        tree.put("version", 3);
+        tree.remove("bays");
+        tree.put("nextLevel", nextLevel);
+        flags.forEach(tree.putArray("storyFlags")::add);
+        if (flags.isEmpty()) {
+            tree.putArray("storyFlags");
+        }
+        return tree.toString();
+    }
+
+    @Test
+    void aVersion3SaveWithBaysOrAVersion4SaveWithoutThemIsRejected() {
+        String json = SaveFormat.write(save());
+
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4", "\"version\" : 3")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 0,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 0", "\"bays\" : -1")));
+    }
+
+    /** M7 part A: the third bay's slot holds a module only once the bay is bought; the bought bay survives. */
+    @Test
+    void aModuleInTheThirdBayNeedsItBought() throws SaveException {
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save());
+        Gear gear = campaign.gear();
+        java.util.Map<LoadoutSlot, Fitted> loadout = new java.util.EnumMap<>(gear.loadout());
+        loadout.put(LoadoutSlot.UTILITY_3, new Fitted("Pickup magnet", 1));
+        campaign.gear(
+                new Gear(gear.credits(), loadout, gear.inventory(), gear.specials(), gear.armour(), gear.escort(), 1));
+        String json = SaveFormat.write(campaign.save(Instant.EPOCH));
+
+        SaveGame loaded = SaveFormat.read(json);
+        assertEquals(1, loaded.bays());
+        assertEquals(new Fitted("Pickup magnet", 1), loaded.loadout().get(LoadoutSlot.UTILITY_3));
+        assertEquals(1, Campaign.load(CampaignTest.RULES, loaded).gear().bays());
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 1", "\"bays\" : 0")));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new Gear(
+                        gear.credits(), loadout, gear.inventory(), gear.specials(), gear.armour(), gear.escort()));
     }
 
     @Test
@@ -74,7 +161,7 @@ class SaveFormatTest {
 
     @Test
     void aNewerFormatVersionIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 3", "\"version\" : 4");
+        String json = SaveFormat.write(save()).replace("\"version\" : 4", "\"version\" : 5");
 
         SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(json));
         assertTrue(e.getMessage().contains("newer version"), e.getMessage());
@@ -84,10 +171,10 @@ class SaveFormatTest {
     void anUnknownOrMissingVersionIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 3", "\"version\" : 0")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 3,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4", "\"version\" : 0")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4,", "")));
         assertThrows(
-                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 3", "\"version\" : \"3\"")));
+                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4", "\"version\" : \"4\"")));
     }
 
     @Test

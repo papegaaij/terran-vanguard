@@ -273,11 +273,12 @@ drops:  # M5 part G (G6 = a): the supply drones' armour patches, released at [x,
 pickups:
   - {pickup: overdrive, dropped_by: {wave: 124, unit: first}}   # the first Mantis of the t=124 pincer
 
-radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected); Nansen is uncast until round 35 (his lines play as text).
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected); Nansen is voiced (cast in round 35).
 # Retimed in step G4 to the 1 s rule with every line as text (RadioTimelineTest): each timed line starts when the one
 # before has closed; the secondary's line fits between Nansen's t=218 and Okafor's t=233.5. Step G6 rendered the cast
 # speakers' lines (Okafor, Varga, Rook) and checked the times against the voices: no voiced timed line starts more than
-# 1 s late, so none moved (Nansen's lines play as text until round 35 casts him; recheck then).
+# 1 s late, so none moved. Rechecked 2026-10-18 with Nansen's rendered voices: still none late, and the closing lines'
+# voices end inside the outro.
   - {t: 1, speaker: Okafor, line: "Nansen Relay coordinates every gun on the planet. If it goes dark, so does the grid."}
   - {t: 13, speaker: Varga, line: "Fast boats in the leads. They weave. Lead your shots, or spray."}   # before the introduction at t=20
   - {t: 24, speaker: Rook, requires: escort, line: "Cold enough for you, Lancer? My canopy's frosting on the inside."}
@@ -295,7 +296,7 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {event: secondary-objective, speaker: Nansen, portrait: generic-cdf, line: "Integrity holding above half. You kept the lights on, Aegis."}
   - {t: 233.5, speaker: Okafor, line: "Well held, Aegis. Now we can see the whole board.", notes: {trigger: "t=233.5 (after the secondary's line)"}}
   - {event: level-end, speaker: Rook, requires: escort, line: "Next time they need a relay defended, I'm asking for one with palm trees."}
-  - {event: mission-failed, speaker: Okafor, line: "Nansen is gone. Pull back, Lancer.", notes: {trigger: "Relay destroyed (`mission-failed`)"}}
+  - {event: mission-failed, speaker: Okafor, expression: grim, line: "Nansen is gone. Pull back, Lancer.", notes: {trigger: "Relay destroyed (`mission-failed`)"}}
 
 objectives:
   primary: defend
@@ -319,7 +320,7 @@ music:
   full_section: 4     # the full mix in the whiteout
   ambience: earth-arctic   # AMBIENCE_ARCTIC (ambience-arctic-r08-a.ogg; the game's key in step G6), ≈ +3 dB in the whiteout peak
   end_jingle: mission-complete
-  jingle: {t: 218, fade: 2.6}   # G8 = a: the jingle once under "Grid sync complete", the theme faded out first; the debrief without it. The fade (step G8: 2.6 s, was 1) lasts grid online's 2.6 s chord, so the jingle starts as the chord ends (t 220.6)
+  jingle: {t: 218, fade: 2.6}   # G8 = a: the jingle once under "Grid sync complete", the theme faded out first; the debrief without it. The fade (step G8: 2.6 s, was 1) lasts grid online's 2.6 s chord (its b, the user's pick of 2026-10-12, is 2.6 s too), so the jingle starts as the chord ends (t 220.6)
 
 difficulty: {}  # the relay's integrity and easy's unhooked Stingers are in the defend block; the t=118 cross's hard 8 and the t=210 Stingers' hard pairs in their waves; the stat blocks' hooks apply (hard: the Skimmers' 2-shot bursts, the Scuttlers' 7-way fan)
 
@@ -333,7 +334,7 @@ backdrop:
   # Presentation only: the pack ice round Nansen Relay (tools/art/backdrop_l13.py, straight from
   # scene-arctic-r09-a, G9 = a; M5 part G, step G5). The ground is one unique strip (pack-ice-1..4, the
   # approach and the halt's frame, the leads cut along the waves' lanes) over the drifting `deep` water;
-  # the exit's `open-floes`; fog and the whiteout (whiteout_l13 look a) as the atmosphere's banks.
+  # the exit's `open-floes`; fog and the whiteout (whiteout_l13 look b) as the atmosphere's banks.
   scroll_factors: {deep: 0.85, far: 0.9, ground: 1.0, low-air: 1.5, high-air: 2.2}
   ramp: 4
   haze_colour: a8b8c4  # the arctic's pale grey-blue over the water
@@ -347,7 +348,7 @@ backdrop:
     open-floes: {layer: ground, height: 960}   # the exit: looser floes and open sea northward (translucent water, alpha >= 3); open water where it begins at the halt's top edge
     fog-wisps: {layer: low-air, height: 960}   # light: thin pale fog wisps, ~10 %
     fog-banks: {layer: low-air, height: 960}   # medium: the fog thickening at the edges, ~20 %, the centre clear
-    whiteout: {layer: low-air, height: 540}   # heavy: the whiteout's banks from both side edges (whiteout_l13 look a), the centre round the relay clear; they hide the ground units at the edges
+    whiteout: {layer: low-air, height: 540}   # heavy: the whiteout's banks from both side edges (whiteout_l13 look b), the centre round the relay clear; they hide the ground units at the edges
   pieces:
     pack-ice-1: {layer: ground, size: [480, 1536]}
     pack-ice-2: {layer: ground, size: [480, 1536]}

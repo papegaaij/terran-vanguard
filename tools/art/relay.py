@@ -4,7 +4,8 @@ defends (design/allies, "Nansen Relay"; design/campaign/act-2-homefront/level-13
 batch, concept round 35, step G2). It had no concept of its own, only the station of the chosen
 arctic scene (scene-arctic-r09-a: tools/concept/scenes_r08.py's `_station`, kit-bashed from
 render/station.py), so this script proposes it as two sets at production quality (decision G9 = a,
-pending the user's review); both are produced, a in the game until the pick (as Level 11's ships).
+pending the user's review); both are produced. The user picked b in round 34 (2026-10-12), so b is the
+game's set (`PRODUCTION`).
 
   a  "Ice station" (the arctic scene's station, consolidated into one 96 px compound): a steel
      foundation deck, two glass habitat domes with warm lights, the big up-tilted dish with its red
@@ -39,9 +40,10 @@ always written):
                              (MissionPanel loads <ally>-pip)
   pivots/nansen-relay.json   per state the smoke and fire points, the column point, the helipad's
                              centre (the supply drone's lift-off), px from the frame's top left
-  design/allies/concept/relay-r35-a.png/.gif, relay-r35-b.png/.gif   the review sheets and loops (the
-                             relay on the halted frame's stand-in plate: hit flashes, smoke below 50 %,
-                             fire below 25 %, grid online's sequence, destroyed with its column)
+  design/allies/concept/relay-r35-b.png/.gif   the review sheets and loops (the chosen b, round 34;
+                             the rejected a's in concept/rejected/relay-r35-a.*): the relay on the
+                             halted frame's stand-in plate: hit flashes, smoke below 50 %, fire below
+                             25 %, grid online's sequence, destroyed with its column
 
 The hit flash is the game's (a white silhouette of the current frame for 2 steps, as the convoy's).
 
@@ -70,7 +72,7 @@ SOURCE = artkit.source_note(SCRIPT, BATCH)
 REVIEW_ROUND = "r35"
 CONCEPT = DESIGN / "allies" / "concept"
 SLUG = "nansen-relay"
-PRODUCTION = "a"                     # a in the game until the user's pick (round 35)
+PRODUCTION = "b"                     # the user's pick in round 34 (2026-10-12): the grid node
 SIZE = (96, 96)
 COLOURS = 48
 STATES = 4
@@ -493,8 +495,9 @@ def review(variant, sets):
         ("FIRE 16X16 (ADDITIVE, 8 FPS), DESTROYED SMOKE PUFF 32X32, HUD PIP 12X12",
          sets[f"{SLUG}-fire"] + sets[f"{SLUG}-smoke"][::2] + sets[f"{SLUG}-pip"], 3, False),
     ], width=1300, batch=BATCH)
-    sheet_path, gif_path = CONCEPT / f"relay-{REVIEW_ROUND}-{variant}.png", CONCEPT / f"relay-{REVIEW_ROUND}-{variant}.gif"
-    CONCEPT.mkdir(parents=True, exist_ok=True)
+    folder = CONCEPT if variant == PRODUCTION else CONCEPT / "rejected"   # the user's pick, round 34
+    sheet_path, gif_path = folder / f"relay-{REVIEW_ROUND}-{variant}.png", folder / f"relay-{REVIEW_ROUND}-{variant}.gif"
+    folder.mkdir(parents=True, exist_ok=True)
     sheet.convert("RGB").save(sheet_path, optimize=True)
     from render.enemy_rigs import write_gif
     write_gif(review_loop(variant, sets, plate, smoke), gif_path, fps=20, colors=128)

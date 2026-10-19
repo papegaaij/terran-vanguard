@@ -397,11 +397,11 @@ public final class Glass {
     /** The confirm dialog of the UI kit, centred on the screen over a dimmed backdrop. */
     public void dialog(SpriteBatch batch, Dialog dialog) {
         BitmapFont body = fonts.body;
-        int width = Math.max(
-                360, Math.max(Fonts.width(body, dialog.question()), Fonts.width(fonts.label, dialog.detail())) + 40);
-        int height = 132;
-        float x = Math.round((PixelScreen.WIDTH - width) / 2f);
-        float y = Math.round((PixelScreen.HEIGHT - height) / 2f);
+        Box box = dialog.box();
+        float x = box.x();
+        float y = box.y();
+        float width = box.width();
+        float height = box.height();
         dim(batch, 0.4f);
         batch.setColor(1, 1, 1, 0.94f);
         draw(batch, glass, x, y, width, height);
@@ -410,9 +410,9 @@ public final class Glass {
         header(batch, "CONFIRM", x + 12, x + width - 12, y + 12);
         shadowed(batch, body, dialog.question(), WHITE, x + 12, y + 32);
         shadowed(batch, fonts.label, dialog.detail(), LABEL, x + 12, y + 56);
-        float buttonWidth = (width - 36) / 2f;
-        float buttonY = y + height - 42;
-        chip(batch, body, dialog.yes(), x + 12, buttonY, buttonWidth, 26, dialog.yesSelected(), true);
-        chip(batch, body, dialog.no(), x + 24 + buttonWidth, buttonY, buttonWidth, 26, !dialog.yesSelected(), true);
+        Box yes = dialog.yesButton();
+        Box no = dialog.noButton();
+        chip(batch, body, dialog.yes(), yes.x(), yes.y(), yes.width(), yes.height(), dialog.yesSelected(), true);
+        chip(batch, body, dialog.no(), no.x(), no.y(), no.width(), no.height(), !dialog.yesSelected(), true);
     }
 }

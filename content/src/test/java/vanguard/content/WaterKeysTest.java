@@ -25,7 +25,7 @@ class WaterKeysTest {
     private static final String SKITTER = "enemies/air/skitter/data.yaml";
 
     private static final String BILLBOARD = "    layer: ground\n    size: [72, 40]\n    sprite: billboard\n    hits: 3";
-    private static final String SCALE = "bounty_scale: 0.56";
+    private static final String SCALE = "bounty_scale: 0.28";
 
     private static String replace(String text, String what, String with) {
         assertTrue(text.contains(what), "the data has " + what);
@@ -66,8 +66,10 @@ class WaterKeysTest {
     @Test
     void aLevelIsOverLandUnlessItSaysWater() {
         Content content = ContentLoader.fromClasspath();
-        for (String key : content.levels().keySet()) {
-            // M5 part E: Level 11 is the first level over water (its sunken pod lies under it); M5 part F:
+        for (String key :
+                content.levels().keySet().stream().filter(Unmapped::mapped).toList()) {
+            // M7 part C: a level not mapped yet left out (Unmapped). M5 part E: Level 11 is the first level
+            // over water (its sunken pod lies under it); M5 part F:
             // Level 12's open sea too, with nothing under it.
             // M5 part G: Level 13's pack ice is water in the simulation too (G5 = a).
             boolean water =

@@ -43,6 +43,18 @@ import vanguard.sim.SlamArena;
  *
  * <p>At its death the head sinks in its foam ring over its fading plain frame, the grip slides off
  * the deck, the shadows fade, and all of it scrolls on with the ground from where it died.
+ *
+ * <p>Round 40 (proposal 3a, the r40 a look, pending the user's pick; only for a spec whose lanes are
+ * {@linkplain vanguard.sim.BossSpec.Lanes#rooted() rooted}, the old fight keeps round 33's look): four
+ * one-lane arms rooted in sockets ({@code assets/pivots/harbour-kraken.json}, block {@code r40_a}). The
+ * idle arms and the slam arms' rest curls are not drawn; under the water the reach (the four arms'
+ * stretches from the mantle to the sockets) lies with the head. Each socket's knot is drawn at its root
+ * part's offset over its arm's segments ({@link #drawRoots}): intact (a loop), flashing at a hit,
+ * rearing once and holding while its arm is raised (the telegraph to the sink, when it takes the raised
+ * multiplier) under an additive glow, recoiling at its cut and oozing after it, going under at the
+ * death. A rooted arm runs from its socket to its lane's centre and down the lane ({@link #rootedPath});
+ * it is not drawn at rest or in the telegraph, breaks the surface from the socket down as it rises and
+ * sinks into the deep, fading. The lanes' churn, marks and splash run from the roots' lower edge.
  */
 final class KrakenLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
@@ -141,6 +153,35 @@ final class KrakenLooks {
     private static final double FORESHADOW_TO_Y = 380;
     private static final float FORESHADOW_TURN = 18;
     private static final float FORESHADOW_OPACITY = 0.9f;
+    /**
+     * Round 40 (the r40 a look): the socket sprites' frames a lane (the pivots' {@code root_frames}) and
+     * the steps a frame (its {@code steps}): the intact loop, the rear once then its hold loop, the cut's
+     * recoil once then the ooze loop, the death's sink, the glow's pulse and the reach's sway.
+     */
+    static final int ROOT_FRAMES = 4;
+
+    static final int ROOT_RAISED_FRAMES = 6;
+    static final int ROOT_REAR_FRAMES = 4;
+    static final int ROOT_CUT_FRAMES = 6;
+    static final int ROOT_RECOIL_FRAMES = 2;
+    static final int ROOT_SINK_FRAMES = 5;
+    static final int ROOT_GLOW_FRAMES = 4;
+    static final int ROOT_TICKS = 12;
+    static final int RAISED_TICKS = 9;
+    static final int RAISED_HOLD_TICKS = 8;
+    static final int CUT_TICKS = 8;
+    static final int OOZE_TICKS = 10;
+    static final int ROOT_SINK_TICKS = 12;
+    static final int GLOW_TICKS = 6;
+    static final int REACH_TICKS = 12;
+    /** What a socket shows ({@link #rootLook}). */
+    enum RootLook {
+        INTACT,
+        HIT,
+        RAISED,
+        CUT,
+        SINK
+    }
 
     private final FlashShader flash;
     private final AtlasRegion subHead;
@@ -163,6 +204,26 @@ final class KrakenLooks {
     private final Array<AtlasRegion> mark;
     private final Array<AtlasRegion> splash;
     private final Array<AtlasRegion> strip;
+    /** Round 40: whether the arms are rooted (the r40 a look); its sprites, empty for round 33's look. */
+    private final boolean rooted;
+
+    private final Array<AtlasRegion> root;
+    private final Array<AtlasRegion> rootHit;
+    private final Array<AtlasRegion> rootRaised;
+    private final Array<AtlasRegion> rootGlow;
+    private final Array<AtlasRegion> rootCut;
+    private final Array<AtlasRegion> rootSink;
+    private final Array<AtlasRegion> reach;
+    /** Round 40: the reach's centre from the platform's (y up); a lane's top below its socket, px. */
+    private float reachDx;
+
+    private float reachDy;
+    private float laneDrop;
+    /** Round 40: per arm the step it was raised (its rear's start) and cut; {@link #NEVER} for none. */
+    private long[] raisedTick = new long[0];
+
+    private long[] cutTick = new long[0];
+    private static final long NEVER = Long.MIN_VALUE / 2;
     /** The registration, px from the platform's centre, y up. */
     private final float headDy;
 
@@ -205,8 +266,9 @@ final class KrakenLooks {
     private int sprites;
     private int pathPoints;
 
-    private KrakenLooks(Sprites atlas, FlashShader flash, JsonValue pivots) {
+    private KrakenLooks(Sprites atlas, FlashShader flash, JsonValue pivots, boolean rooted) {
         this.flash = flash;
+        this.rooted = rooted;
         String slug = "harbour-kraken";
         subHead = atlas.frames(slug + "-sub").first();
         up = atlas.frames(slug);
@@ -232,6 +294,19 @@ final class KrakenLooks {
         idleLeftDx = pivots.get("idle_left").getFloat(0);
         idleRightDx = pivots.get("idle_right").getFloat(0);
         idleDy = -pivots.get("idle_left").getFloat(1);
+        JsonValue r40 = rooted ? pivots.get(R40) : null;
+        root = r40Frames(atlas, r40, "root");
+        rootHit = r40Frames(atlas, r40, "root-hit");
+        rootRaised = r40Frames(atlas, r40, "root-raised");
+        rootGlow = r40Frames(atlas, r40, "root-glow");
+        rootCut = r40Frames(atlas, r40, "root-cut");
+        rootSink = r40Frames(atlas, r40, "root-sink");
+        reach = r40Frames(atlas, r40, "reach");
+        if (r40 != null) {
+            reachDx = r40.get("reach").getFloat(0);
+            reachDy = -r40.get("reach").getFloat(1);
+            laneDrop = laneDrop(r40);
+        }
         JsonValue slam = pivots.get("slam_arms");
         for (int side = 0; side < 2; side++) {
             JsonValue one = slam.get(side == 0 ? "left" : "right");
@@ -259,7 +334,34 @@ final class KrakenLooks {
                 || !boss.slug().equals("harbour-kraken")) {
             return null;
         }
-        return new KrakenLooks(atlas, flash, pivots);
+        boolean rooted = rooted(boss);
+        if (rooted && (!pivots.has(R40) || !atlas.has(ROOT_SPRITE))) {
+            return null;
+        }
+        return new KrakenLooks(atlas, flash, pivots, rooted);
+    }
+
+    /** Round 40: the pivots' block of the r40 a look. */
+    static final String R40 = "r40_a";
+    /** Round 40: the intact socket's sprite, which the r40 a look needs. */
+    static final String ROOT_SPRITE = "harbour-kraken-root-r40-a";
+
+    /** Round 40: whether the boss's arms are rooted, so the r40 a look draws it (round 33's look otherwise). */
+    static boolean rooted(LevelScript.SetPieceSpec boss) {
+        return boss.boss()
+                .flatMap(spec -> spec.arena())
+                .map(arena -> arena.lanes().rooted())
+                .orElse(false);
+    }
+
+    /** Round 40: a lane's top (where its arm turns down the lane) below its socket, px: the pivots' first root. */
+    static float laneDrop(JsonValue r40) {
+        JsonValue first = r40.get("roots").get(0);
+        return first.getFloat("lane_top") - first.get("socket").getFloat(1);
+    }
+
+    private static Array<AtlasRegion> r40Frames(Sprites atlas, JsonValue r40, String key) {
+        return r40 == null ? new Array<>(0) : atlas.frames(r40.get("sprites").getString(key));
     }
 
     private static Array<AtlasRegion> optional(Sprites atlas, String name) {
@@ -275,6 +377,8 @@ final class KrakenLooks {
         glowBefore = false;
         deathX = Double.NaN;
         hits.reset();
+        Arrays.fill(raisedTick, NEVER);
+        Arrays.fill(cutTick, NEVER);
     }
 
     /** Whether it is drawn: scrolling in, present or dying. */
@@ -315,6 +419,26 @@ final class KrakenLooks {
             glowSince = tick;
         }
         glowBefore = glowing;
+        if (rooted) {
+            if (raisedTick.length != arena.armCount()) {
+                raisedTick = new long[arena.armCount()];
+                cutTick = new long[arena.armCount()];
+                Arrays.fill(raisedTick, NEVER);
+                Arrays.fill(cutTick, NEVER);
+            }
+            for (int a = 0; a < arena.armCount(); a++) {
+                if (!arena.armRaised(a)) {
+                    raisedTick[a] = NEVER;
+                } else if (raisedTick[a] == NEVER) {
+                    raisedTick[a] = tick;
+                }
+                if (!piece.partWrecked(arena.armPart(a))) {
+                    cutTick[a] = NEVER;
+                } else if (cutTick[a] == NEVER) {
+                    cutTick[a] = tick;
+                }
+            }
+        }
     }
 
     // --- under the water ------------------------------------------------------------------------
@@ -328,8 +452,13 @@ final class KrakenLooks {
         float fade = deathAge < 0 ? 1 : Math.max(0, 1 - deathAge / 60f);
         if (fade > 0) {
             batch.setColor(1, 1, 1, fade);
-            drawScaled(batch, idleLeft.get(sway), x + idleLeftDx, y + idleDy, SHADOW_SCALE, 0);
-            drawScaled(batch, idleRight.get(sway), x + idleRightDx, y + idleDy, SHADOW_SCALE, 0);
+            if (rooted) {
+                // Round 40: the reach to the sockets instead of the idle arms.
+                drawCentred(batch, reach.get((int) (tick / REACH_TICKS % reach.size)), x + reachDx, y + reachDy);
+            } else {
+                drawScaled(batch, idleLeft.get(sway), x + idleLeftDx, y + idleDy, SHADOW_SCALE, 0);
+                drawScaled(batch, idleRight.get(sway), x + idleRightDx, y + idleDy, SHADOW_SCALE, 0);
+            }
             drawCentred(batch, gripSub.get(sway % gripSub.size), x, y + gripSubDy);
             batch.setColor(Color.WHITE);
         }
@@ -337,7 +466,10 @@ final class KrakenLooks {
             SlamArena arena = piece.arena().orElseThrow();
             for (int a = 0; a < arena.armCount(); a++) {
                 if (layArm(piece, arena, a, x, y)) {
+                    float sinking = rooted ? sinkingFade(arena.armState(a), arena.armShare(a)) : 1;
+                    batch.setColor(1, 1, 1, sinking);
                     drawArm(batch, false, 0);
+                    batch.setColor(Color.WHITE);
                 }
             }
         }
@@ -404,6 +536,9 @@ final class KrakenLooks {
             if (step < sink.size) {
                 drawCentred(batch, sink.get(step), x, y + headDy);
             }
+            if (rooted) {
+                drawRoots(batch, piece, x, y, tick, deathAge, whiteFlash);
+            }
             return;
         }
         drawCentred(batch, grip.get((int) (tick / SWAY_TICKS % grip.size)), x, y + gripDy);
@@ -431,6 +566,152 @@ final class KrakenLooks {
                 drawFoam(batch, arena, a, tick);
             }
         }
+        if (rooted) {
+            drawRoots(batch, piece, x, y, tick, -1, whiteFlash);
+        }
+    }
+
+    // --- round 40: the roots ---------------------------------------------------------------------
+
+    /**
+     * The sockets' knots at their root parts' offsets from the platform centre ({@code x}, {@code y}),
+     * over the arms' segments, and the raised ones' glow (additive); {@code deathAge} the steps since
+     * the death, -1 while it lives.
+     */
+    private void drawRoots(
+            SpriteBatch batch, SetPiece piece, double x, double y, long tick, int deathAge, float whiteFlash) {
+        SlamArena arena = piece.arena().orElseThrow();
+        ensureArms(arena.armCount());
+        for (int a = 0; a < arena.armCount(); a++) {
+            int part = arena.armPart(a);
+            int lane = Integer.numberOfTrailingZeros(arena.armLanes(a));
+            var spec = piece.spec().parts().get(part);
+            double sx = x + spec.dx();
+            double sy = y + spec.dy();
+            boolean cut = piece.partWrecked(part);
+            boolean raised = deathAge < 0 && !cut && arena.armRaised(a);
+            boolean hit = deathAge < 0 && !cut && hits.on(part, tick, piece.partTicksSinceHit(part)) && whiteFlash > 0;
+            RootLook look = rootLook(deathAge >= 0, cut, raised, hit);
+            long since =
+                    switch (look) {
+                        case RAISED -> raisedTick[a] == NEVER ? 0 : tick - raisedTick[a];
+                        case CUT -> cutTick[a] == NEVER ? Long.MAX_VALUE / 2 : tick - cutTick[a];
+                        case SINK -> deathAge;
+                        default -> 0;
+                    };
+            int frame = rootFrame(look, since, tick);
+            if (cut && deathAge >= 0) {
+                // A cut stump's ooze fades out while the living knots go under.
+                float fade = 1 - deathAge / (float) (ROOT_SINK_FRAMES * ROOT_SINK_TICKS);
+                if (fade <= 0) {
+                    continue;
+                }
+                batch.setColor(1, 1, 1, fade);
+                drawCentred(batch, rootCut.get(rootIndex(lane, ROOT_CUT_FRAMES, frame)), sx, sy);
+                batch.setColor(Color.WHITE);
+                continue;
+            }
+            if (frame < 0) {
+                continue;
+            }
+            switch (look) {
+                case INTACT -> drawCentred(batch, root.get(rootIndex(lane, ROOT_FRAMES, frame)), sx, sy);
+                case HIT -> drawCentred(batch, rootHit.get(rootIndex(lane, 1, 0)), sx, sy);
+                case RAISED -> {
+                    AtlasRegion region = rootRaised.get(rootIndex(lane, ROOT_RAISED_FRAMES, frame));
+                    if (hits.on(part, tick, piece.partTicksSinceHit(part)) && whiteFlash > 0) {
+                        flash.draw(
+                                batch,
+                                region,
+                                Math.round(X0 + sx),
+                                Math.round(sy),
+                                FLASH_TINT,
+                                PART_FLASH * whiteFlash);
+                    } else {
+                        drawCentred(batch, region, sx, sy);
+                    }
+                }
+                case CUT -> drawCentred(batch, rootCut.get(rootIndex(lane, ROOT_CUT_FRAMES, frame)), sx, sy);
+                case SINK -> drawCentred(batch, rootSink.get(rootIndex(lane, ROOT_SINK_FRAMES, frame)), sx, sy);
+            }
+            if (raised) {
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                drawCentred(batch, rootGlow.get(glowFrame(tick)), sx, sy);
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            }
+        }
+    }
+
+    private void ensureArms(int arms) {
+        if (raisedTick.length != arms) {
+            raisedTick = new long[arms];
+            cutTick = new long[arms];
+            Arrays.fill(raisedTick, NEVER);
+            Arrays.fill(cutTick, NEVER);
+        }
+    }
+
+    /**
+     * What a socket shows: going under at the death (a cut stump keeps its ooze), its stump once cut,
+     * rearing while its arm is raised (a hit flashes that frame), the hit frame at a hit, else intact.
+     */
+    static RootLook rootLook(boolean dead, boolean cut, boolean raised, boolean hit) {
+        if (cut) {
+            return RootLook.CUT;
+        }
+        if (dead) {
+            return RootLook.SINK;
+        }
+        if (raised) {
+            return RootLook.RAISED;
+        }
+        return hit ? RootLook.HIT : RootLook.INTACT;
+    }
+
+    /**
+     * A socket's frame within its lane's block: the intact loop at step {@code tick}; {@code since} steps
+     * into its raise (the rear's four frames once, then the hold's two in a loop), its cut (the recoil's
+     * two once, then the ooze's four in a loop) or the death (the sink's five once, then -1: gone).
+     */
+    static int rootFrame(RootLook look, long since, long tick) {
+        return switch (look) {
+            case INTACT -> (int) (tick / ROOT_TICKS % ROOT_FRAMES);
+            case HIT -> 0;
+            case RAISED ->
+                since < (long) ROOT_REAR_FRAMES * RAISED_TICKS
+                        ? (int) (Math.max(0, since) / RAISED_TICKS)
+                        : ROOT_REAR_FRAMES
+                                + (int) ((since - (long) ROOT_REAR_FRAMES * RAISED_TICKS)
+                                        / RAISED_HOLD_TICKS
+                                        % (ROOT_RAISED_FRAMES - ROOT_REAR_FRAMES));
+            case CUT ->
+                since < (long) ROOT_RECOIL_FRAMES * CUT_TICKS
+                        ? (int) (Math.max(0, since) / CUT_TICKS)
+                        : ROOT_RECOIL_FRAMES
+                                + (int) ((since - (long) ROOT_RECOIL_FRAMES * CUT_TICKS)
+                                        / OOZE_TICKS
+                                        % (ROOT_CUT_FRAMES - ROOT_RECOIL_FRAMES));
+            case SINK ->
+                since < (long) ROOT_SINK_FRAMES * ROOT_SINK_TICKS ? (int) (Math.max(0, since) / ROOT_SINK_TICKS) : -1;
+        };
+    }
+
+    /** A socket sprite's index: lane {@code lane}'s block of {@code frames}, frame {@code frame} (the pivots' {@code root_index}). */
+    static int rootIndex(int lane, int frames, int frame) {
+        return (lane - 1) * frames + frame;
+    }
+
+    /** The raised glow's pulse frame at step {@code tick}. */
+    static int glowFrame(long tick) {
+        return (int) (tick / GLOW_TICKS % ROOT_GLOW_FRAMES);
+    }
+
+    /** A rooted arm sinking into the deep under the water: its opacity through the sink's second half (1 otherwise). */
+    static float sinkingFade(SlamArena.ArmState state, double share) {
+        if (state != SlamArena.ArmState.SINK || share < 0.5) {
+            return 1;
+        }
+        return (float) Math.clamp(1 - (share - 0.5) * 2, 0, 1);
     }
 
     /** The surfacing frame of a rise or dive {@code share} (0 down to 1 up): played forward rising, backward diving. */
@@ -474,7 +755,7 @@ final class KrakenLooks {
             double laneX = arena.laneWidth() * (lane - 0.5);
             int f = (int) (tick / STRIP_FRAME_TICKS);
             double length = whipLaneTop - SlamArena.TIP_MARGIN;
-            for (double yy = arena.laneTop() - STRIP_STEP / 2.0; yy > SlamArena.TIP_MARGIN; yy -= STRIP_STEP) {
+            for (double yy = whipLaneTop - STRIP_STEP / 2.0; yy > SlamArena.TIP_MARGIN; yy -= STRIP_STEP) {
                 // The strips follow the arm's settling bend.
                 double bent = laneX + whip((whipLaneTop - yy) / length, whipAt, whipSign);
                 drawRotated(batch, strip.get(f % strip.size), bent - STRIP_SIDE, yy);
@@ -494,11 +775,14 @@ final class KrakenLooks {
         if (piece.partWrecked(part)) {
             return false;
         }
-        int side = piece.spec().parts().get(part).dx() < 0 ? 0 : 1;
         SlamArena.ArmState state = arena.armState(a);
         double share = arena.armShare(a);
         int lane = arena.armLane(a) > 0 ? arena.armLane(a) : arena.armFirstLane(a);
         double laneX = arena.laneWidth() * (lane - 0.5);
+        if (rooted) {
+            return layRootedArm(piece, arena, a, x, y, state, share, lane, laneX);
+        }
+        int side = piece.spec().parts().get(part).dx() < 0 ? 0 : 1;
         double sign = side == 0 ? 1 : -1;
         whipSign = sign;
         whipLaneTop = arena.laneTop();
@@ -523,6 +807,58 @@ final class KrakenLooks {
             above[i] = spriteArc[i] >= base && spriteArc[i] <= front;
         }
         return true;
+    }
+
+    /**
+     * Round 40: lays rooted arm {@code a} from its socket along its lane; false at rest and in the
+     * telegraph (not drawn: its root rears instead). Through the sink's second half it lies under the
+     * water ({@link #sinkingFade}).
+     */
+    private boolean layRootedArm(
+            SetPiece piece,
+            SlamArena arena,
+            int a,
+            double x,
+            double y,
+            SlamArena.ArmState state,
+            double share,
+            int lane,
+            double laneX) {
+        if (state == SlamArena.ArmState.IDLE || state == SlamArena.ArmState.TELEGRAPH) {
+            return false;
+        }
+        var spec = piece.spec().parts().get(arena.armPart(a));
+        double sx = x + spec.dx();
+        double sy = y + spec.dy();
+        double sign = rootedSign(lane, arena.laneCount());
+        whipSign = sign;
+        whipLaneTop = sy - laneDrop;
+        whipAt = whipTime(state, share);
+        rootedPath(sx, sy, laneX, whipLaneTop, whipAt, sign, pathX, pathY);
+        pathPoints = 1 + LANE_POINTS;
+        place();
+        float base = baseArc();
+        float front = frontArc(state, share, base, spriteArc[sprites - 1]);
+        for (int i = 0; i < sprites; i++) {
+            above[i] = spriteArc[i] >= base && spriteArc[i] <= front;
+        }
+        return true;
+    }
+
+    /** Round 40: a rooted arm's whip side: the left half's lanes bend as round 33's left arm, the right half's mirrored. */
+    static double rootedSign(int lane, int lanes) {
+        return lane <= lanes / 2 ? 1 : -1;
+    }
+
+    /**
+     * Round 40: a rooted arm's path: its socket ({@code sx}, {@code sy}), then its lane leg from the lane's
+     * centre at {@code laneTop} down to its tip in the whip's bend ({@link #lanePoints}).
+     */
+    static void rootedPath(
+            double sx, double sy, double laneX, double laneTop, double w, double sign, float[] xs, float[] ys) {
+        xs[0] = (float) sx;
+        ys[0] = (float) sy;
+        lanePoints(laneX, laneTop, w, sign, xs, ys, 1);
     }
 
     private final boolean[] above = new boolean[MAX_SPRITES];
@@ -797,7 +1133,7 @@ final class KrakenLooks {
             batch.setColor(1, 1, 1, strength);
             double laneX = arena.laneWidth() * (lane - 0.5);
             int h = frame.getRegionHeight();
-            for (double yy = arena.laneTop() - h / 2.0; yy > -h / 2.0; yy -= h) {
+            for (double yy = laneTop(arena, lane) - h / 2.0; yy > -h / 2.0; yy -= h) {
                 drawCentred(batch, frame, laneX, yy);
             }
         }
@@ -831,7 +1167,7 @@ final class KrakenLooks {
                     continue;
                 }
                 double laneX = arena.laneWidth() * (lane - 0.5);
-                double top = arena.laneTop();
+                double top = laneTop(arena, lane);
                 if (dashes) {
                     double edge = arena.laneWidth() / 2 - EDGE_INSET;
                     for (double yy = top - 8; yy > 0; yy -= DASH_STEP) {
@@ -857,8 +1193,9 @@ final class KrakenLooks {
             long age = tick - impactTick[lane];
             double laneX = arena.laneWidth() * (lane - 0.5);
             int h = splash.first().getRegionHeight();
+            double top = laneTop(arena, lane);
             for (int k = 0; ; k++) {
-                double yy = arena.laneTop() - k * SPLASH_STEP - h / 2.0;
+                double yy = top - k * SPLASH_STEP - h / 2.0;
                 if (yy < -h / 2.0) {
                     break;
                 }
@@ -868,6 +1205,21 @@ final class KrakenLooks {
                 }
             }
         }
+    }
+
+    /**
+     * Where lane {@code lane}'s churn, marks and splash start: the lanes' top edge, or (round 40) its
+     * rooted arm's root's lower edge, px above the bottom edge.
+     */
+    static double laneTop(SlamArena arena, int lane) {
+        if (arena.rooted()) {
+            for (int a = 0; a < arena.armCount(); a++) {
+                if ((arena.armLanes(a) & (1 << lane)) != 0) {
+                    return arena.armTop(a);
+                }
+            }
+        }
+        return arena.laneTop();
     }
 
     /** The splash frame of segment {@code k} (from the arm's base) {@code age} steps after the impact; -1 before it starts. */

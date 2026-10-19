@@ -1,0 +1,65 @@
+# Burrower stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part B (Level 15; M7 = a, the `buried` layer; the user's Q1 = a of 2026-10-14: screen-fixed while it
+# travels, bulges and is surfaced, with a sand bow wave, so the spot rule's numbers hold on a scrolling
+# ground). The `burrow` movement and its difficulty hooks are loaded and checked (step B2) and flown by the
+# simulation (steps B1, B3; its longest life of 30 s has no key here: content's MarsRules, a default pending
+# the user's review in round 38).
+name: Burrower
+faction: Vrell
+layer: ground     # while surfaced; `buried` under the sand (the burrow's current layer)
+tier: medium
+size: [64, 64]    # sprite px, surfaced
+hitbox: [44, 44]
+parts: single
+orientation: radial
+hp: 44            # a 0.58 s time to kill at Level 15's reference DPS 76 (M18 = a)
+armour: invulnerable while `buried`; none while surfaced
+speed: 90         # px/s under the sand
+movement:
+  burrow:
+    swim: 90              # px/s under the sand, on the screen (Q1 = a: it works against the scroll)
+    travel: [1.0, 1.8]    # s of travel to the next spot, seeded per unit
+    spot:                 # picked when the bulge starts, relative to the ship (screen space)
+      ahead: [140, 240]   # px above the ship's centre
+      side: 110           # px either side of the ship's x
+      edge: 40            # px kept inside the play field's side edges
+      clear: 110          # px at least from the ship's centre (the ring's 72 px spawn rule)
+    bulge: 1.0            # s of the tell at the spot before it breaks out
+    surfaced: 2.0         # s on the ground layer
+    dive: 0.4             # s, `buried` from its middle
+    surfacings: 3         # then it travels off the bottom edge under the sand: an escape, no bounty
+    rings: [{at: 0.4}]    # s after it breaks out: a ring of its attack each
+    stagger: 0.8          # s at least between two surfacings of one wave
+    max_up: 2             # units of one wave surfaced (or bulging) at once; one that would break it waits buried
+attacks:
+  - pattern: ring
+    name: ring
+    bullet: small
+    count: 10
+    speed: 150         # px/s
+    notes:
+      text: '{count}-bullet `{pattern}` ({speed} px/s, `{bullet}` = {damage}) {movement.burrow.rings.0.at} s after it surfaces, once per surfacing'
+formations:
+  - {name: field, size: [3, 6]}
+weak_points:
+  - {name: glowing lime maw}
+drops: []
+traits: [anti-ground, area, forward]
+bounty: 24
+first_level: 15
+difficulty:
+  easy: {attacks: {ring: {count: 8}}, burrow: {surfaced: 2.4}}
+  hard:
+    attacks: {ring: {count: 12}}
+    burrow: {surfaced: 1.8, rings: [{at: 0.4}, {at: 1.4, count: 8}]}   # a second ring of 8 at 1.4 s
+notes:
+  layer: ' while surfaced; `buried` while submerged (new layer, M7 = a: nothing hits it; its **current layer**, flipping at the middle of the dive)'
+  size: (surfaced); submerged a 40 px sand ripple (no hitbox)
+  orientation: (a round maw ringed by digging plates) with a 16-angle ripple trail while submerged
+  speed: under the sand, screen-fixed (it works against the scroll, user Q1 = a); still on the screen while it bulges and is surfaced, a sand bow wave on its top side
+  movement: '`burrow`: submerged travel ({movement.burrow.travel} s) to a spot {movement.burrow.spot.ahead} px above the ship and within ±{movement.burrow.spot.side} px of its x (at least {movement.burrow.spot.clear} px from it, {movement.burrow.spot.edge} px inside the side edges), {movement.burrow.bulge} s bulge tell, surfaced {movement.burrow.surfaced} s, dive {movement.burrow.dive} s; up to {movement.burrow.surfacings} surfacings, then it travels off the bottom of the screen under the sand'
+  formations: '(scattered), surfacings staggered {movement.burrow.stagger} s apart, at most {movement.burrow.max_up} up at once'
+  weak_points: (drawn only)
+  death: '`medium` organic burst with a sand spout; leaves a collapsed crater for the rest of the level'
+  used_in: may return in L20–L21 (the level documents decide)
+  difficulty: 'easy: ring of 8, surfaced 2.4 s; hard: ring of 12 plus a second ring of 8 at 1.4 s, surfaced 1.8 s'

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/saves, ../../systems/difficulty]
-updated: 2026-10-04
+updated: 2026-10-18
 ---
 
 # Main menu
@@ -36,6 +36,7 @@ attract-mode demo (open question).
 │                                NEW GAME                                      │
 │                                LOAD GAME                                     │
 │                                MISSIONS                                      │
+│                                SCORES                                        │
 │                                OPTIONS                                       │
 │                                CREDITS                                       │
 │                                QUIT                                          │
@@ -47,10 +48,11 @@ attract-mode demo (open question).
 
 | Item | Behaviour | Requested by user |
 |---|---|---|
-| Continue | Loads the most recent save. Hidden when no save exists | added |
+| Continue | Loads the most recent save and opens the next level's briefing, then the hangar (2026-10-18; an act intro that is due first). Hidden when no save exists | added |
 | New game | Difficulty select: Easy / Medium / Hard with a one-line description each, then the intro briefing | yes |
-| Load game | Slot list (8 manual + autosave), see [saves](../../systems/saves/README.md) | yes |
+| Load game | Slot list (8 manual + autosave), see [saves](../../systems/saves/README.md); a loaded slot goes on like Continue: briefing, then hangar | yes |
 | Missions | The [mission select](../mission-select/README.md): replay a mission the current campaign (the most recent save) has flown. Disabled while it has flown none | yes (2026-10-04) |
+| Scores | The high scores: the top 10 of each difficulty on three tabs (Q / E, left / right or a click), opening on the current campaign's difficulty ([scoring](../../systems/scoring/README.md#high-scores)). **Change for review** (M6 part B, Q3 = a) | added (M6) |
 | Options | Audio (music, SFX, radio volume), controls ([remapping](../controls/README.md)), display (fullscreen, scale, optional CRT/scanline filter) | added |
 | Credits | Scrolling credits over the credits music | added |
 | Quit | Confirmation, then exit | yes |
@@ -98,11 +100,15 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 - [x] Missions item opening the [mission select](../mission-select/README.md), disabled while the
       current campaign has flown no mission
 - [x] Options: audio volumes, controls, display settings
+- [x] Scores item between Missions and Options with the three difficulty tables (M6 part B, `ScoresScreen`)
+- [x] The version (`v0.1`, from the build's `version.properties`) in the bottom-left corner of the title and the menu (M6 part B)
 
 ## Open questions
 
-- Final title: *Terran Vanguard* is the working title (logo D); confirm before release.
-- Attract-mode demo after idle: worth it? It needs a recorded input playback system.
+- Final title: *Terran Vanguard* is the working title (logo D); confirm before release. Kept for
+  now (round 35, Q11); the user settles it, with the repository's name, before the `v0.1` tag.
+- Attract-mode demo after idle: worth it? It needs a recorded input playback system. Not in v0.1
+  (round 35, Q12).
 
 ## Decisions
 
@@ -119,7 +125,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
   the table says, so the menu item stays open for part B. New game opens difficulty select A (rank
   cards with chevrons, rank, the draft descriptions and six levers read from
   `design/systems/difficulty/data.yaml`), which starts Level 01 straight away until the intro
-  briefing and the hangar exist. Credits is a placeholder panel until the credits roll (M6). The
+  briefing and the hangar exist. Credits was a placeholder panel until the credits roll (M4 part H). The
   placeholder scene and the logo with transparency are rendered by `tools/concept/ui_assets.py`
   from the chosen menu A's generator (`ui_r06.hero_backdrop`, `ui_r06.logo_layer`) into
   `assets/ui/`, because the concept sheet has the menu and the logo baked in; `importPlaceholders`
@@ -147,3 +153,18 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 - 2026-10-02: Concept round 13 closed (user decision): the title scene and logo D (`tools/art/ui_scenes.py`) and the menu, difficulty and load screens in the production glass kit approved as **final**, `art: final`.
 - 2026-10-04 (user decision): a **Missions** item between Load game and Options opens the
   [mission select](../mission-select/README.md) to replay flown missions.
+- 2026-10-12: M6 part B (Q3 = a, **a change to the approved menu, pending the user's review in
+  round 35**, so `design: review`): a **Scores** item between Missions and Options opens the high
+  scores (`ScoresScreen`): HIGH SCORES over three tabs EASY / MEDIUM / HARD (Q / E, left / right,
+  or a click; it opens on the most recent save's difficulty, medium without one), the table as on
+  the game over screen, and a line that says when a score is entered; Esc, Enter or a click beside
+  the tabs returns. The menu panel moved up 33 px so eight items (with Continue) end where seven
+  did. The mock's `v0.1` is drawn small and dim in the bottom-left corner on the title and the
+  menu (`Version.current()` passed from the launcher; `0.1.0` shows as `v0.1`, an IDE run as `dev`).
+- 2026-10-12 (user, round 35): accepted as built: C1 (the SCORES item between Missions and Options,
+  the menu panel 33 px higher), the build choices B.1 (f) and (j) (`v0.1` in the bottom-left corner)
+  and D.3 (b); `design: approved`. Q11 (the final title) stays open until next week.
+- 2026-10-18 (user decision, Act 2 playtest): Continue and Load game no longer open the hangar
+  directly: the next level's mission briefing comes first, then the hangar (see the
+  [screen flow](../README.md#screen-flow)); the Missions item's replay goes briefing, hangar, level
+  too ([mission select](../mission-select/README.md)).

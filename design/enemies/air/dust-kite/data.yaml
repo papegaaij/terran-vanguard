@@ -1,0 +1,58 @@
+# Dust Kite stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part B (Level 15; M10 = b): the sine glide and the swoop triggered by the ship's distance. The
+# swoop's `trigger` and the hook `swoop_speed` are loaded and checked (step B2) and flown by the simulation
+# (steps B1, B3; the curve's sideways bend of 60 px has no key here: content's MarsRules, a default pending the
+# user's review in round 38). The entry fade (0.3 s) is a look only (the game).
+# M7 part D, step D2 (moved forward from part E: Level 17's t=77 swarm of 8 needs it first): the `flock` of a `swarm`
+# wave, the Mote Swarm's weights, its spacing and reach scaled to the kite's 24 px, its cruise the glide (pending the
+# user's review in round 40); part E's dust storm (Level 18) reuses it. Mapped for the simulation by the existing
+# flock mapping (step D4 flies Level 17's swarm).
+name: Dust Kite
+faction: Vrell
+layer: air
+tier: tiny
+size: [24, 24]    # sprite px
+hitbox: [16, 14]
+parts: single
+orientation: 16 angles
+hp: 1
+armour: none
+speed: 130        # px/s gliding
+movement:
+  sine: {amplitude: 50, period: 1.6}    # px, s: the sway of its glide down the screen
+  snake: {spacing: 0.3}                 # s between two units of a snake
+  swoop: {radius: [160, 260], top_speed: 200, trigger: 180}   # within 180 px above the ship's row: one shallow curve across its lane, aimed at the ship's x when it starts (no homing)
+  flock:            # M7 part D: a swarm wave's kites round the leader point that flies the wave's route
+    separation: 26    # px kept between members (the Mote Swarm's 18 for its 16 px)
+    radius: 64        # px: the neighbourhood the rules look at
+    alignment: 0.5    # the Mote Swarm's weights (pending the user's review in round 40)
+    cohesion: 0.3
+    leader: 0.6
+    speed: 130        # px/s cruise, the glide
+    dive_speed: 200   # px/s after a loop-back, the swoop's top speed
+    turn_rate: 240    # °/s
+    max: 12           # members at most
+attacks: []       # contact only
+formations:
+  - {name: stream}
+  - {name: V-wing, size: [4, 7]}
+  - {name: snake, size: [4, 6]}
+  - {name: swarm, size: [8, 12]}
+weak_points:
+  - {name: teal spine glow}
+drops: []
+traits: [spread, forward]
+bounty: 4
+first_level: 15
+difficulty:
+  hard: {swoop_speed: 230}
+notes:
+  orientation: (it faces its glide; 4 membrane-flex frames)
+  speed: gliding; {movement.swoop.top_speed} px/s in the final swoop
+  movement: '`sine` glide down the screen (amplitude {movement.sine.amplitude} px, period {movement.sine.period} s); within {movement.swoop.trigger} px above the ship''s row it `swoop`s across the ship''s lane on a shallow curve (aimed at the ship''s x when it starts, no homing) and glides on off the bottom or a side; a stream''s kites alternate sides; in a `swarm` the kites `flock` (separation {movement.flock.separation} px, alignment, cohesion) round a leader point that flies the wave''s authored route'
+  attack: '`none` (contact `{tier}` {contact_damage}; destroyed by the impact)'
+  formations: (Level 17's swarm bends round the Helix compound; Level 18's dust storm flies it too)
+  weak_points: (drawn only)
+  death: '`tiny` puff of rust dust and a teal spark'
+  used_in: popcorn in every Act 3 level
+  difficulty: 'none beyond the global ones (formation size); hard: the swoop at 230 px/s'

@@ -269,6 +269,11 @@ public record BossSpec(
      * @param sweep M5 part H: a {@link Pattern#SWEEP}'s arc, sweep and telegraph times, beam length and
      *     width, damage and its origin below the part ({@link EnemySpec.Sweep#originDown()}); its interval
      *     and first delay are not read (the gun's interval is); empty for other patterns
+     * @param down round 34 (P2, the kinder Siege Spire): the parts of {@code parts} that fire this
+     *     {@link Pattern#AIMED} attack straight down the screen instead of at the ship (a part's {@code
+     *     aim: down}); empty for others
+     * @param aimTurns round 40 (the Siege Spire's lanes, proposal 4a of the Act 2 playtest): its parts
+     *     take turns to aim, one at a time ({@link AimTurns}); empty for none
      */
     public record Attack(
             String name,
@@ -282,9 +287,19 @@ public record BossSpec(
             double durationSeconds,
             List<Integer> parts,
             boolean stagger,
-            Optional<EnemySpec.Sweep> sweep) {
+            Optional<EnemySpec.Sweep> sweep,
+            List<Integer> down,
+            Optional<AimTurns> aimTurns) {
         public Attack {
             parts = List.copyOf(parts);
+            down = List.copyOf(down);
+            if (aimTurns.isPresent() && (pattern != Pattern.AIMED || rotate)) {
+                throw new IllegalArgumentException(
+                        name + ": only an aimed attack that does not rotate takes aim turns");
+            }
+            if (!down.isEmpty() && (pattern != Pattern.AIMED || !parts.containsAll(down))) {
+                throw new IllegalArgumentException(name + ": only an aimed attack's own parts fire straight down");
+            }
             if (pattern == Pattern.LOB && gun.mortar().isEmpty()) {
                 throw new IllegalArgumentException(name + ": a lob fires a mortar");
             }
@@ -294,6 +309,68 @@ public record BossSpec(
             if (stagger && rotate) {
                 throw new IllegalArgumentException(name + ": an attack rotates or staggers, not both");
             }
+        }
+
+        /** An attack without round 40's aim turns. */
+        public Attack(
+                String name,
+                Pattern pattern,
+                EnemyGun gun,
+                double burstGapSeconds,
+                boolean rotate,
+                int count,
+                int arms,
+                double turnRadiansPerSecond,
+                double durationSeconds,
+                List<Integer> parts,
+                boolean stagger,
+                Optional<EnemySpec.Sweep> sweep,
+                List<Integer> down) {
+            this(
+                    name,
+                    pattern,
+                    gun,
+                    burstGapSeconds,
+                    rotate,
+                    count,
+                    arms,
+                    turnRadiansPerSecond,
+                    durationSeconds,
+                    parts,
+                    stagger,
+                    sweep,
+                    down,
+                    Optional.empty());
+        }
+
+        /** An attack whose parts all fire as its pattern says (none straight down). */
+        public Attack(
+                String name,
+                Pattern pattern,
+                EnemyGun gun,
+                double burstGapSeconds,
+                boolean rotate,
+                int count,
+                int arms,
+                double turnRadiansPerSecond,
+                double durationSeconds,
+                List<Integer> parts,
+                boolean stagger,
+                Optional<EnemySpec.Sweep> sweep) {
+            this(
+                    name,
+                    pattern,
+                    gun,
+                    burstGapSeconds,
+                    rotate,
+                    count,
+                    arms,
+                    turnRadiansPerSecond,
+                    durationSeconds,
+                    parts,
+                    stagger,
+                    sweep,
+                    List.of());
         }
 
         /** An attack without M5 part H's stagger and sweep. */
@@ -320,12 +397,34 @@ public record BossSpec(
                     durationSeconds,
                     parts,
                     false,
-                    Optional.empty());
+                    Optional.empty(),
+                    List.of());
+        }
+
+        /** Whether part {@code p} fires this attack straight down (round 34, P2). */
+        public boolean firesDown(int p) {
+            return down.contains(p);
         }
 
         /** How long its turn lasts in an alternation. */
         public double turnSeconds() {
             return pattern == Pattern.SPIRAL ? durationSeconds : gun.intervalSeconds();
+        }
+    }
+
+    /**
+     * Round 40 (design/enemies/bosses/siege-spire; proposal 4a of the Act 2 playtest, pending the user's
+     * review): an aimed attack's parts take turns to aim, one at a time. Every {@code everySeconds} (the
+     * first that long after the phase's delay) the next living part of the attack, in its parts' order,
+     * fires one shot of the gun at the ship; for the {@code glowSeconds} before it that part glows (the
+     * tell) and holds its own regular fire. Between its turns a part fires as the attack says (with
+     * {@code aim: down}: straight down its column). Not in an alternation.
+     */
+    public record AimTurns(double everySeconds, double glowSeconds) {
+        public AimTurns {
+            if (!(everySeconds > 0) || !(glowSeconds >= 0) || !(glowSeconds < everySeconds)) {
+                throw new IllegalArgumentException("aim turns come every so often, each after a shorter glow");
+            }
         }
     }
 
@@ -581,8 +680,21 @@ public record BossSpec(
      * field's left edge (lane 1 first), from {@code top} px above the bottom edge (the platform's
      * lower edge at the halt) down to the bottom edge; {@code arms}, each slam arm's part with the
      * lanes it owns (user decision E5 = a: the left arm lanes 1–2, the right arm 3–4).
+     *
+     * <p>Round 40 (the reworked Harbour Kraken, proposal 3a of the Act 2 playtest): {@code rooted} arms,
+     * one lane each. A rooted arm's part is its <em>root</em>: it stays at its offset (it is not the
+     * chain's moving tip), keeps its starting layer (always hittable, also while the head is under the
+     * water) and takes {@code raisedMultiplier} times the damage while its arm is raised (from its
+     * telegraph until it has sunk: the tell); the arm's segments are the root's hit boxes only while the
+     * arm lies along its lane out of the water (its rise and awash), laid from the root's lower edge
+     * down. Cutting a root ends its lane's slams for good. Their slams pick only lanes whose root lives
+     * ({@link SlamArena}).
+     *
+     * @param rooted round 40: every arm is a rooted one-lane arm
+     * @param raisedMultiplier round 40: a rooted arm's damage multiplier while it is raised (on top of
+     *     the part's own); 1 otherwise
      */
-    public record Lanes(int count, double width, double top, List<Arm> arms) {
+    public record Lanes(int count, double width, double top, List<Arm> arms, boolean rooted, double raisedMultiplier) {
         /** No lanes. */
         public static final Lanes NONE = new Lanes(0, 0, 0, List.of());
 
@@ -594,11 +706,24 @@ public record BossSpec(
                     || count * width > PlayField.WIDTH + 1e-9) {
                 throw new IllegalArgumentException("lanes of a width on the play field");
             }
+            int owned = 0;
             for (Arm arm : arms) {
                 if (arm.lanes() == 0 || (arm.lanes() >> (count + 1)) != 0 || (arm.lanes() & 1) != 0) {
                     throw new IllegalArgumentException("an arm owns lanes 1-" + count);
                 }
+                if (rooted && (Integer.bitCount(arm.lanes()) != 1 || (owned & arm.lanes()) != 0)) {
+                    throw new IllegalArgumentException("a rooted arm owns one lane of its own");
+                }
+                owned |= arm.lanes();
             }
+            if (!(raisedMultiplier > 0) || (!rooted && raisedMultiplier != 1)) {
+                throw new IllegalArgumentException("only rooted arms take more damage while raised");
+            }
+        }
+
+        /** Lanes whose arms are not rooted (M5 part E). */
+        public Lanes(int count, double width, double top, List<Arm> arms) {
+            this(count, width, top, arms, false, 1);
         }
 
         /** The centre of lane {@code lane} (1-based), px from the left edge. */

@@ -1,0 +1,518 @@
+# Level 16 – Valles Canyon Run: the level script, rendered into README.md (briefing, threat profile, layout, wall
+# table, waves, ground targets, radio, credit budget). Times are seconds from the level start. M7 part C, step C2,
+# from the README's approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M7 part C (loaded and checked in step C2, flown by the simulation from steps C1/C3/C4): `terrain` (the
+# walls' and islands' collision lines and the contact), a linked nest's `link: pairs` (the gates), a wave's `crawl`
+# path (the Threadcrawlers), the `links` secondary, the radio event `first-wall-contact`.
+# Defaults of the gap check built here, pending the user's review in round 39: the gates as linked enemy nests among
+# the ground targets (moved from the README's wave table), the crawlers crawl up-canyon (the head along increasing
+# rows) and the t=160 one crosses the floor from wall to wall (Q.22c), the walls' height ramps from 0 at the canyon
+# mouth (scroll 2,850) to full by 4,180 and back to 0 over the outflow (31,250 to 34,850).
+scroll_speed: 200     # the canyon; the plateau, the gate stretches and the rapids set their own
+launch_seconds: 5     # from the rail head at Lycus (a CDF field pad, scenery)
+bounty_scale: 0.54    # every bounty × 0.54: TypicalHaulTest (step C4): typical 1,944 on budget(16) 1,931 (+0.7 %)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Mars, Valles Marineris
+  layers: [ground, air]
+  density: 4
+  traits: [forward, piercing]   # round 39 R.4: no beam (the plan buys the Ion Beam at L18); every gate falls to an anchor kill
+  hazards: [canyon walls, barriers]
+  boss: none
+  objective: REACH ARES LANDING   # the OBJECTIVE field from sensor L1
+  varga:
+    none: The Valles Marineris, Lancer. Walls on both sides, and the Vrell have strung it shut.
+    l1: "Everything comes from ahead. The walls are the danger: keep off them."
+    l2: "New: tendril barriers on the walls, and a long crawler."
+    l3: Kill an anchor to drop a tendril. A cache down the left fork.
+  notes:
+    Dominant layers: '`ground` (tendril anchors, Threadcrawlers and turrets at the walls'' foot, a Burrower field on the outflow''s floor), `air`; `low-air` dust plumes and `high-air` rock arches (scenery)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}: `piercing` for the Threadcrawler; an anchor kill drops each tendril (a beam also burns it, once the ship has one: the plan buys the Ion Beam at Level 18)'
+    Hazards: '**Canyon walls** (terrain collision: 10 per touch and a push-back), **tendril barriers** (6 per touch)'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: Mars, Valles Marineris, `ground` + `air`, front · L1: + directions, density {density}, hazards "canyon walls" and "barriers", the objective `{objective}` · L2: + Tendril Anchor (new), Threadcrawler (new), Dust Kite, Skitter, Needler and Mantis portraits; no boss · L3: + `forward` and `piercing` highlighted, the wave strip marking the six barriers and the two crawlers, 1 secret'
+
+sections:  # back to back from t = 0; each speed change eased over 1 s (ramp)
+  - name: Noctis Edge
+    end: 25
+    speed: 190
+    atmosphere: light
+    tiles: [noctis-chasm, noctis-plateau, plateau, dust-streaks]
+    notes:
+      layers:
+        ground: the plateau east of Lycus, the labyrinth of Noctis cracking into chasms; from t=15 the ship drops into the canyon mouth, the floor becomes the ground layer and the walls rise at the field's edges.
+        far: the first canyon floor through the cracks.
+        high-air: thin dust.
+      purpose: Popcorn on the plateau; the walls close in (480 → 400 px) with nothing on them.
+  - name: Into the Canyon
+    end: 60
+    speed: 200
+    ramp: 1
+    atmosphere: light
+    tiles: [canyon-floor, plateau, dust-streaks]
+    notes:
+      layers:
+        ground: the canyon floor, a dry riverbed, with ledges at the walls' foot. The walls rise toward the camera to the plateau (1.25), burnt cliff habitats of the colonies on their faces (scenery).
+        low-air: dust plumes in the canyon.
+      purpose: Gate 1 alone (t=34), gates 2 and 3; the first ledge turrets and mortars.
+  - name: Fork One
+    end: 95
+    speed: 180
+    ramp: 1
+    atmosphere: light
+    tiles: [canyon-floor, plateau]
+    notes:
+      layers:
+        ground: A **mesa** (rock island) splits the canyon into two 150 px channels from t=66 to t=80, the left channel past the **Candor relay hut** at the left wall's foot (the secret), the right channel past a turret ledge at the mesa's foot.
+      purpose: The branch (M3 = a); the Threadcrawler's first sight along the left wall (t=84) after the channels rejoin.
+  - name: Coprates Rapids
+    end: 125
+    speed: 230
+    ramp: 1
+    atmosphere: light
+    peak: {atmosphere: medium, from: 110, to: 120}   # the dust in the rapids
+    tiles: [riverbed, plateau, dust-streaks]
+    notes:
+      layers:
+        ground: a rock pillar mid-canyon (t≈100), an S-bend, the cliff road along the right wall's foot with stranded cargo rovers; from t≈113 the **Helix research station** on the wide north (right) plateau, lit, pads intact.
+        high-air: two rock arches passing over the canyon (scenery, ≤ 40 % where they cross the field).
+      purpose: Speed; the dodge round the pillar; the Helix glimpse (radio). No gates.
+  - name: The Narrows
+    end: 160
+    speed: 180
+    ramp: 1
+    atmosphere: medium   # dust in the narrows
+    tiles: [canyon-floor, plateau]
+    notes:
+      layers:
+        ground: the walls close to **180 px** (t=140–148) and stand at their tallest, the floor in their shadow; mortar ledges at their foot.
+      purpose: Gates 4–6 in the narrowing canyon; Rook tucks in behind.
+  - name: Eos Outflow
+    end: 190
+    ramp: 1
+    atmosphere: light
+    peak: {atmosphere: clear, from: 178, to: 190}   # clear from 178
+    tiles: [eos-chaos, plateau]
+    notes:
+      layers:
+        ground: the canyon opens onto the outflow's chaos terrain and its sand floor (the walls sinking back to the floor's level by t≈182), a turret nest on the floor.
+      purpose: The second Threadcrawler, a Burrower field on the sand, the last waves; the level ends as the walls leave the field.
+
+# The canyon (design/campaign Level 16, Terrain): the walls' collision lines (their foot) [scroll, x] with scroll the
+# ground scroll at which the row reaches the top edge, an optional third value the wall's height (0 flat to 1 full,
+# 1 if not given: the mouth's and the outflow's ramp); the islands [x, scroll]. The same geometry on every
+# difficulty. The pillar's rows 19,200 and 19,476 are explicit points (a 130 px left channel).
+terrain:
+  left:
+    - [2850, 0, 0]       # t=15: the canyon mouth, the walls begin at the field's edges, flat
+    - [4180, 40]         # t=22: full height
+    - [5750, 70]
+    - [7750, 90]         # gate 1 (t=34) enters at ≈ 320
+    - [9750, 80]
+    - [11150, 70]        # gate 3
+    - [12470, 40]        # widening for the fork
+    - [12830, 40]        # the fork island (66–80)
+    - [15350, 40]
+    - [16070, 60]        # rejoined; the first Threadcrawler along the left wall's foot
+    - [18050, 70]        # the rapids begin
+    - [19200, 70]        # the rock pillar (x 200–250): channels 130 + 150
+    - [19476, 70]
+    - [20350, 90]        # the S-bend
+    - [21500, 50]
+    - [22420, 40]        # the north plateau 160 px wide: the Helix station (t≈113–124)
+    - [23800, 60]
+    - [24950, 90]        # the narrows begin
+    - [26210, 110]       # gate 4
+    - [27650, 150]       # the narrowest stretch (180 px)
+    - [29090, 150]       # gate 5 (t=144)
+    - [29810, 130]       # gate 6
+    - [31250, 80]        # the outflow opens; the walls start sinking
+    - [33250, 30, 0.4]
+    - [34850, 0, 0]      # t=178: the walls leave the field, flat
+  right:
+    - [2850, 480, 0]
+    - [4180, 440]
+    - [5750, 410]
+    - [7750, 390]
+    - [9750, 380]
+    - [11150, 400]
+    - [12470, 440]
+    - [12830, 440]
+    - [15350, 440]
+    - [16070, 420]
+    - [18050, 400]
+    - [19200, 400]
+    - [19476, 400]
+    - [20350, 370]
+    - [21500, 330]
+    - [22420, 320]
+    - [23800, 340]
+    - [24950, 390]
+    - [26210, 370]
+    - [27650, 330]
+    - [29090, 330]
+    - [29810, 350]
+    - [31250, 400]
+    - [33250, 450, 0.4]
+    - [34850, 480, 0]
+  islands:
+    - name: fork mesa      # tip to tip 12,830–15,350; channels 40–190 and 290–440
+      look: mesa
+      points: [[240, 12830], [190, 13370], [190, 14810], [240, 15350], [290, 14810], [290, 13370]]
+    - name: rock pillar    # a rounded block x 200–250, 1.2 s at 230 px/s
+      look: pillar
+      points: [[212, 19200], [238, 19200], [250, 19224], [250, 19452], [238, 19476], [212, 19476], [200, 19452], [200, 19224]]
+  contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}   # `heavy` 10 (easy `medium` 6) per touch
+  notes:   # the README's wall table, by row
+    before: The plateau, no walls
+    rows:
+      2850: 'The canyon mouth: the walls begin at the field''s edges'
+      4180: 'The walls at full height'
+      7750: Gate 1 (t=34) enters at ≈ 320
+      11150: Gate 3
+      12470: Widening for the fork
+      12830: The fork island (below) from its tip
+      15350: The fork island's last row
+      16070: Rejoined; the first Threadcrawler along the left wall's foot
+      18050: The rapids begin
+      19200: The rock pillar, x 200–250
+      19476: The rock pillar's last row
+      20350: The S-bend
+      22420: 'The north plateau 160 px wide: the Helix station (t≈113–124)'
+      24950: The narrows begin
+      26210: Gate 4
+      27650: The narrowest stretch
+      29090: Gate 5 (t=144)
+      29810: Gate 6
+      31250: The outflow opens; the walls start sinking
+      34850: The walls leave the field; none after t≈182
+
+# Act 3 popcorn (Dust Kite and Skitter streams of 3, V-wings of 4–5, snakes of 4) round the gates, a wave every
+# 3–4 s, only pairs in the narrows (t=140–148). The gates are ground targets (linked nests, below); gate 1 alone (no
+# other wave until t=37.5). In the fork (t=66–80) a wave flies the widest channel at its entry row (both are 150 px, so the left one; `edge` does
+# not choose: round 39 C2, accepted); the
+# Dust Kites' 50 px sway needs room: in the fork and the narrows they fly authored paths down a channel's or the
+# canyon's middle (step C4, TerrainClearanceTest; a stream's unit from the right flies the mirror image).
+waves:
+  - {t: 7, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Over the plateau before the canyon mouth}
+  - {t: 10.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 13.5, formation: V-wing, enemy: dust-kite, count: 5, from: front}
+  - {t: 17, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 20.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Over the canyon mouth as the walls close in}
+  - {t: 24.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 28, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: The first wave between the walls}
+  - {t: 31, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: Gone before the first barrier}
+  - {t: 37.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
+  - {t: 41, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 43, formation: V-wing, enemy: needler, count: 5, from: front, notes: Over the first turret ledge}
+  - {t: 48.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 53, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 59.5, formation: V-wing, enemy: dust-kite, count: 5, from: front}
+  - {t: 63, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The leader drops an overdrive}
+  - {t: 66.5, formation: stream, enemy: dust-kite, count: 4, from: front, edge: alternating, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: "As the mesa splits the canyon: two down each channel (alternating channels)"}
+  - {t: 70, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "In the fork: the widest channel at its row (the left)"}
+  - {t: 72, formation: stream, enemy: dust-kite, count: 3, from: front, edge: left, interval: 1.25, paths: [[[115, -60], [115, 640]]], notes: Past the relay hut (left channel)}
+  - {t: 75.5, formation: stream, enemy: needler, count: 4, from: front, edge: alternating, interval: 1.25, notes: "Alternating the edges of the widest channel (the left)"}
+  - {t: 78, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: "As the channels close (the widest channel, the left)"}
+  - {t: 81.5, formation: V-wing, enemy: dust-kite, count: 4, from: front, notes: After the channels rejoin}
+  - t: 84
+    formation: snake
+    enemy: threadcrawler
+    count: 1
+    from: front
+    crawl: [[16530, 78], [17200, 82], [18000, 86]]   # up-canyon along the left wall's foot, 16 px off its line; the body behind the head above the top edge at t
+    notes: "**New.** Crawls along the left wall's foot (up-canyon: on screen at the scroll less its 70 px/s); popcorn kept light until t=88"
+  - {t: 88, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25}
+  - {t: 91.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 95, formation: V-wing, enemy: dust-kite, count: 5, from: front, notes: Into the rapids}
+  - {t: 98, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: Either side of the rock pillar}
+  - t: 100
+    formation: snake
+    enemy: threadcrawler
+    count: 1
+    from: front
+    skip: [easy, medium]
+    crawl: [[19630, 380], [20300, 356]]   # along the right wall's foot in the rapids
+    notes: "Hard only: a third crawler along the right wall's foot, gone before the S-bend"
+  - {t: 101, formation: line abreast, enemy: mantis, count: 2, from: front, notes: Act HP factor (40 HP)}
+  - {t: 104, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left, notes: Through the S-bend}
+  - {t: 107, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Over the cliff road's rovers"}
+  - {t: 110, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 113, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 116, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: Past the Helix station on the north rim}
+  - {t: 119, formation: V-wing, enemy: dust-kite, count: 5, from: front, notes: Vrell flyers pass the station by}
+  - {t: 122.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 126, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Into the narrows}
+  - {t: 129.5, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The last one drops an armour patch}
+  - {t: 135.5, formation: snake, enemy: dust-kite, count: 4, from: front, paths: [[[240, -60], [240, 640]]], notes: Down the narrows' middle (their sway kept off the walls)}
+  - {t: 138, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 142, formation: stream, enemy: dust-kite, count: 2, from: front, edge: alternating, interval: 1.25, paths: [[[240, -60], [240, 640]]], notes: Only pairs in the narrows (180 px)}
+  - {t: 147, formation: stream, enemy: skitter, count: 2, from: front, edge: left, interval: 1.25, notes: Only pairs in the narrows (180 px)}
+  - {t: 150, formation: V-wing, enemy: dust-kite, count: 4, from: front}
+  - {t: 155.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 158.5, formation: stream, enemy: needler, count: 4, from: front, edge: alternating, interval: 1.25}
+  - t: 160
+    formation: snake
+    enemy: threadcrawler
+    count: 1
+    from: front
+    crawl: [[31705, 395], [32000, 403], [32230, 240], [32450, 66], [32800, 57]]   # along the right wall's foot, then across the floor to the left wall's (Q.22c)
+    notes: "Along the right wall's foot as the outflow opens, then across the floor from wall to wall (its body across the path); no gate after it"
+  - {t: 162, formation: V-wing, enemy: dust-kite, count: 5, from: front}
+  - {t: 165.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 169, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [360, 220], notes: "The outflow's sand floor (buried, ahead of the ship); act HP factor (46 HP)"}
+  - {t: 172.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
+  - {t: 176, formation: V-wing, enemy: needler, count: 5, from: front}
+  - {t: 179.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 183, formation: V-wing, enemy: dust-kite, count: 5, from: front, notes: "The last wave, as the walls fall away"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x; everything at a wall stands in its 24 px foot band
+  # The gates (design/enemies/ground/tendril-anchor): linked nests, consecutive placements paired (left, right), at
+  # the walls' foot 20 px off the collision line (step C4: a beam reaches each from a ship clear of the rock); every gate in the shared canyon (none in the fork's channels).
+  - target: gate 1
+    section: 2
+    enemy: tendril-anchor
+    link: pairs
+    count: 2
+    at: [[34, 98], [34, 382]]
+    notes:
+      target: 'Gate 1: one [Tendril Anchor](../../../enemies/ground/tendril-anchor/README.md) pair across the canyon (t=34), alone (no other wave until t=37.5)'
+      effect: '**New.** The barrier comes down the screen; kill either anchor or burn the tendril'
+  - target: left ledge turrets
+    section: 2
+    enemy: spine-turret
+    count: 3
+    at: [[43, 101], [43.4, 101], [43.8, 100]]
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) ledge ×{count} at the left wall''s foot (t≈43)'
+      effect: Bounty; their thorns stop at the opposite rock
+  - target: gate 2
+    section: 2
+    enemy: tendril-anchor
+    link: pairs
+    count: 2
+    at: [[46, 104], [46, 364]]
+    hard: {at: [[46, 104], [46, 364], [47.5, 102], [47.5, 362]]}
+    notes:
+      target: 'Gate 2: one pair (t=46)'
+      effect: With popcorn above it only
+  - target: right ledge mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 2
+    at: [[53, 375], [53.6, 376]]
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×{count} at the right wall''s foot (t≈53)'
+      effect: Bounty
+  - target: gate 3
+    section: 2
+    enemy: tendril-anchor
+    link: pairs
+    count: 4
+    at: [[57, 90], [57, 380], [58.5, 83], [58.5, 389]]
+    easy: {at: [[57, 90], [57, 380]]}
+    notes:
+      target: 'Gate 3: two pairs at different heights, 1.5 s of scroll apart (t=57)'
+      effect: With popcorn above it only
+  - target: mesa ledge
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[70, 304], [70.4, 304], [70.8, 304]]
+    notes:
+      target: Spine Turret ledge ×{count} at the mesa's right foot (right channel, t≈70)
+      effect: Bounty; only reachable from the right channel
+  - target: relay hut
+    section: 3
+    layer: ground
+    size: [48, 40]
+    sprite: relay-hut   # step ART-C: the Candor relay hut, its cargo door sealed, then burst
+    hits: 3
+    hard: {hits: 5}
+    reveals: relay hut
+    at: [[71, 60]]   # at the left wall's foot in the left channel
+    notes:
+      target: Candor relay hut at the left wall's foot (left channel, trigger, t≈71)
+      effect: '{hits} hits (hard 5) burst its cargo door: the hidden crate rolls out onto the flyable side (the secret)'
+  - target: habitat pad
+    section: 4
+    enemy: spine-turret
+    count: 2
+    at: [[104, 99], [104.4, 101]]
+    notes:
+      target: Spine Turret pair on a burnt cliff habitat's pad at the left wall's foot (t≈104)
+      effect: Bounty
+  - target: cargo rovers
+    section: 4
+    layer: ground
+    size: [36, 24]
+    sprite: canyon-rover   # step ART-C: a stranded colony cargo rover, intact, damaged, wrecked
+    hp: 3
+    drop: small salvage
+    count: 4
+    at: [[107, 338], [107.5, 334], [108, 330], [108.5, 326]]   # on the cliff road at the right wall's foot
+    notes:
+      target: Stranded cargo rovers ×{count} on the cliff road at the right wall's foot (`ground`, {hp} HP, t≈107)
+      effect: Each drops a {drop} pickup ({drop_credits}); the pickups slide off the rock
+      budget: cargo rovers {count} × {drop} {drop_credits}
+  - target: gate 4
+    section: 5
+    enemy: tendril-anchor
+    link: pairs
+    count: 4
+    at: [[132, 131], [132, 349], [133.5, 138], [133.5, 342]]
+    notes:
+      target: 'Gate 4: two pairs at different heights (t=132)'
+      effect: In the narrowing canyon
+  - target: narrows mortars
+    section: 5
+    enemy: polyp-mortar
+    count: 2
+    at: [[138, 155], [138.6, 322]]
+    notes:
+      target: Polyp Mortar ×{count} on ledges at the narrows' walls' foot (t≈138)
+      effect: Bounty; their shells arc over the canyon
+  - target: gate 5
+    section: 5
+    enemy: tendril-anchor
+    link: pairs
+    count: 2
+    at: [[144, 170], [144, 310]]
+    notes:
+      target: 'Gate 5: one pair at the narrowest point (t=144, 180 px)'
+      effect: Only pairs of popcorn round it
+  - target: gate 6
+    section: 5
+    enemy: tendril-anchor
+    link: pairs
+    count: 4
+    at: [[152, 149], [152, 331], [153.5, 140], [153.5, 340]]
+    easy: {at: [[152, 149], [152, 331]]}
+    notes:
+      target: 'Gate 6: two pairs, the last barrier (t=152)'
+      effect: The secondary is decided when its last tendril is gone (t≈155)
+  - target: outflow nest
+    section: 6
+    enemy: spine-turret
+    count: 3
+    at: [[170, 200], [170.4, 240], [170.8, 280]]
+    notes:
+      target: Spine Turret nest ×{count} on the outflow's floor (t≈170)
+      effect: Bounty
+
+secrets:
+  - name: relay hut
+    crate: 100   # Act 1 terms: pays 256 with the act factor
+    radio: {speaker: Ares Control, portrait: generic-colonial, line: "That's our relay cache. Take it, Aegis."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 63, unit: first}}         # the leader of the t=63 Stinger V-wing
+  - {pickup: armour patch, dropped_by: {wave: 129.5, unit: last}}    # the last Stinger of the t=129.5 V-wing
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
+  - {t: 1, speaker: Okafor, line: "Aegis, canyon mouth ahead. Stay fast, and stay off the walls."}
+  - {t: 11, speaker: Rook, requires: escort, line: "On your {side}, Lancer. Where it gets narrow, I'll tuck in behind."}
+  - {t: 22, speaker: Ares Control, portrait: generic-colonial, line: "Aegis, this canyon is our only road east. The Vrell have strung it shut."}
+  - {event: first-wall-contact, speaker: Okafor, line: "Mind the walls, Lancer. They don't give.", notes: {trigger: "First wall touch (`first-wall-contact`)"}}
+  - {t: 33, speaker: Varga, line: "Barrier ahead. Two anchors on the walls: kill either one and it falls."}
+  - {t: 47, speaker: Varga, line: "Kill an anchor and the tendril drops. Ordinary shots pass straight through it."}   # round 39 R.4: no beam promised (the plan has none at L16)
+  - {t: 60, speaker: Okafor, line: "The canyon splits ahead. Pick a side and commit."}
+  - {t: 81, speaker: Varga, line: "Movement on the left wall. Something long."}
+  - {t: 94, speaker: Rook, requires: escort, line: "Coprates rapids. And Okafor calls this a road."}
+  - {t: 114, speaker: Varga, line: "That's the Helix research station on the rim. Vrell all round it, and not a scratch."}
+  - {t: 126, speaker: Okafor, line: "Eyes on the canyon, Doctor."}
+  - {t: 146, speaker: Ares Control, portrait: generic-colonial, line: "Eos outflow ahead. You're nearly through, Aegis."}
+  - {event: secondary-objective, speaker: Ares Control, portrait: generic-colonial, line: "Every barrier down. The road east is open.", notes: {trigger: "Secondary met (`secondary-objective`)"}}
+  - {t: 166, speaker: The Choir, distorted: true, line: "[the Choir sings]"}   # step VOX-C: 162 -> 166, past the secondary's line when gate 6 is decided as late as t=159
+  - {t: 173, speaker: Varga, line: "The singing is louder out east. Toward Ares Landing."}   # step VOX-C: 169.5 -> 173, after the Choir
+  - {t: 180, speaker: Okafor, line: "Ares Landing has you on its scopes. Bring it home."}
+  - {event: level-end, speaker: Okafor, line: "Canyon run complete. The domes are yours to hold now. Get some sleep."}
+
+objectives:
+  primary: reach-end
+  secondary: {links: true, label: BARRIERS, credits: 80, name: Open road}   # every tendril broken before it leaves the screen (9 at medium, easy 7, hard 10; 80 in Act 1 terms: pays 205)
+
+music:
+  track: 8            # Act 3 A "Red Dust Run" (audio/music track list)
+  start_section: 2    # the base stem from Into the Canyon
+  full_section: 4     # the full mix from the Coprates rapids
+  ambience: mars-canyon   # the Martian dust wind with a canyon howl (step AUD-C), from t=0
+  end_jingle: mission-complete
+
+difficulty:  # the gates' easy and hard pairs, hard's third crawler and the relay hut's hard hits are in their entries; the wall contact's easy 6 in terrain.contact; the stat blocks' hooks apply (the anchors' hard orbs, the Threadcrawler's easy 10 segments and every other pore, hard 16 segments and 1.5 s rest)
+  easy: {}
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-16-canyon-route, line: "Ares Landing is two thousand kilometres east, and the one road the Vrell don't hold from the air is the Valles Marineris. Fly it fast and keep off the walls. Rook, stay on Lancer's tail in the narrows."}
+    - {speaker: Varga, image: level-16-tendril-scan, line: "They grow barriers across the canyon: an anchor on each wall and a burning tendril between. Kill either anchor and it falls; a beam burns through the tendril. Something long crawls along the walls, too."}
+  teaser: {speaker: Rook, line: "Canyon run. Walls on both sides and nowhere to swerve. Scrape the paint and I'm telling Okafor."}
+
+backdrop:
+  # Presentation only: Valles Canyon Run (tools/art/backdrop_l16.py, from canyon-walls-r36-b and mars-valles-r36-a).
+  # The walls are NOT pieces: their geometry is the level's `terrain`, projected by the game (WallProjection) from
+  # the foot (1.0) to the plateau's rim (1.25) in steps (cliffs and talus benches set back toward the rock, side
+  # canyons in the rim: CanyonProfile, round 40) with the textures canyon-wall (128x1280: columns the steps' strata
+  # foot -> rim, rows along the wall), wall-foot (24x512, the foot band, column 0 at the collision line), the
+  # buttes' mesa-face/pillar-face and caps mesa-top_0..2 (three slices, far end first) and pillar-top; the
+  # `plateau` layer (x1.25) shows only beyond the rims, its pieces kept clear of the rock. No deep
+  # layer: the ground covers the screen; section 1's Noctis cracks show the far layer (x0.6) through them.
+  scroll_factors: {far: 0.6, ground: 1, plateau: 1.25, low-air: 1.35, high-air: 2.2}
+  ramp: 3
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {haze: 0.06}   # the outflow's clear air (t 178-190): haze only
+    light: {banks: dust-veil, haze: 0.12}   # thin dust veils along the canyon
+    medium: {banks: narrows-dust, haze: 0.2}   # the narrows' dust (section 5; the rapids' peak 110-120)
+  tile_sets:
+    noctis-chasm: {layer: far, height: 960}   # section 1: the chasm floor deep below the cracks (talus, rubble), hazed
+    noctis-plateau: {layer: ground, height: 960}   # section 1: the plateau east of Lycus cracking into the labyrinth's graben; the cracks transparent onto the far layer
+    canyon-floor: {layer: ground, height: 960}   # sections 2, 3, 5: the floor, wind ripples along the canyon, a dry channel, boulders
+    riverbed: {layer: ground, height: 960}   # section 4, the Coprates rapids: braided scoured channels, streamlined bars, cobbles
+    eos-chaos: {layer: ground, height: 960}   # section 6: the outflow's sand floor (x 130-350, the Burrowers') between the chaos terrain's blocks
+    plateau: {layer: plateau, height: 960}   # the plateau's pale top beyond the walls' rims, dendritic gullies draining into the big side canyons (they repeat with the tile; the islands' caps are their own)
+    dust-streaks: {layer: high-air, height: 960}   # sections 1, 2, 4: dust streaks blown along the canyon (additive at 40 %)
+    dust-veil: {layer: low-air, height: 960, drift: 0}   # light: thin dust veils along the canyon, ~10 %, at most 30 % opaque
+    narrows-dust: {layer: low-air, height: 960, drift: 0}   # medium: the narrows' dust (and the rapids' 110-120), ~25 %, at most 45 % opaque
+  pieces:
+    canyon-mouth: {layer: ground, size: [480, 1264]}   # the Noctis plateau's cracks closing into the canyon floor (exact rows)
+    seam-rapids: {layer: ground, size: [480, 320]}   # section 4's seam: the floor into the rapids' riverbed (exact rows)
+    seam-narrows: {layer: ground, size: [480, 320]}   # section 5's seam: the riverbed back into the floor (exact rows)
+    seam-eos: {layer: ground, size: [480, 320]}   # section 6's seam: the floor into the outflow's sand and chaos (exact rows)
+    cliff-road: {layer: ground, size: [120, 1600]}   # the colonists' road along the right wall's foot, ruts, a broken rail (the cargo rovers)
+    habitat-pad: {layer: ground, size: [96, 64]}   # a burnt cliff habitat's landing pad at a wall's foot (the Spine Turret pair)
+    cliff-habitat: {layer: ground, size: [64, 160]}   # a FACE PATCH, not a flat piece: a burnt habitat cut into a wall's red middle cliff (64 columns the cliff's foot to its top, 160 rows); the game draws it on that step (placements below)
+    helix-station: {layer: plateau, size: [126, 161]}   # Helix's research station on the north plateau: black and gold, lit, unlabelled, untouched
+    dust-plume: {layer: low-air, size: [72, 72]}   # a dust plume in the canyon, at most 45 %
+    arch-a: {layer: high-air, size: [480, 160]}   # a rock arch over the canyon, alpha <= 53 % (x the 75 % overhead pass: <= 40 %)
+    arch-b: {layer: high-air, size: [480, 192]}   # a thinner, broken-backed arch with a lower span, alpha <= 53 %
+  placed:
+    # 1. the canyon mouth: Noctis's cracks close into the canyon floor after the walls begin (exact rows)
+    - {piece: canyon-mouth, t: 23.4316, x: 240}
+    # the section seam under seam-rapids (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-rapids, t: 96.2826, x: 240}
+    # the section seam under seam-narrows (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-narrows, t: 126.361, x: 240}
+    # the section seam under seam-eos (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-eos, t: 161.4, x: 240}
+    # 4. the cliff road along the right wall's foot under the cargo rovers
+    - {piece: cliff-road, t: 108.872, x: 324}
+    # 4. a burnt habitat's pad at the left wall's foot under the Spine Turret pair
+    - {piece: habitat-pad, t: 105.104, x: 100}
+    # 4. the Helix research station on the north (right) plateau, beside the widest stretch (plateau layer x1.25)
+    - {piece: helix-station, t: 116.067, x: 412}
+    # 4. two rock arches over the rapids (overhead pass: arch-a, arch-b in Backdrop.OVERHEAD_PASSES)
+    - {piece: arch-a, t: 101.5, x: 240}
+    - {piece: arch-b, t: 117, x: 240}
+    # 2-5. dust plumes in the canyon (low-air), every 6.5 s along the middle
+    - {piece: dust-plume, t: 28, x: 210, repeat: {count: 20, every: 6.5}}
+    - {piece: dust-plume, t: 31.3, x: 270, repeat: {count: 19, every: 6.5}}
+    # face patches: cliff-habitat drawn on a wall's face (the game's WallProjection), not as a flat piece; the side
+    # from x (left of 240: the left wall), t puts its centre on terrain rows 6,600, 8,350, 10,400 and 20,180
+    - {piece: cliff-habitat, t: 35.625, x: 32}
+    - {piece: cliff-habitat, t: 44.375, x: 448}
+    - {piece: cliff-habitat, t: 54.625, x: 32}
+    - {piece: cliff-habitat, t: 105.522, x: 448}
+  # Atmospheres as the README's Layout: 1-4 light (4: a medium peak 110-120 for the rapids' dust), 5 medium, 6 light with a clear peak 178-190.

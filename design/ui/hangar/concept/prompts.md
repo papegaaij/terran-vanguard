@@ -143,6 +143,89 @@ Production art, M5 part E batch (round 33). The sheet of Level 11's new sensor-L
 
 Production art, M5 part H batch (round 36). The sheet of Level 14's new sensor-L2 picture, rendered by [tools/art/intel.py](../../../../tools/art/intel.py) (`python3 tools/art/intel.py boss-siege-spire`, after `siege_spire.py --assets`): the 40×40 silhouette of the act boss, the Siege Spire rooted as the arena first shows it (the outline of the production trunk with its crown shut, its six live roots and their pods from [tools/art/siege_spire.py](../../../../tools/art/siege_spire.py), placed by `assets/pivots/siege-spire.json`), at 1× and 3×; Level 14's wave enemies all have portraits already. Brief as for intel-final-r13-a.
 
+## act3-icons-r37-a
+
+Production art (M7 part A batch, step ART-A, for concept round 37), not a mockup: `python3 tools/art/icons.py` (the Act 3 items' emblems in `act3_symbol`, variant a written to
+`assets/sprites/icons/`; `--variant b` renders only b's sheet). The icons' one emblem style: a bevelled
+dark steel badge with the item, its model where one exists (the Deflector Pod a, the drone), otherwise a
+symbol in the kind's colour (weapons' shots cyan, specials orange). **A:** the Ion Beam's gun with a
+thick beam and a contact star; the Rear Lance as the Lance Laser's emblem turned round; the Deflector
+Pod with its field's arc; the disc drone; the EMP Burst a ring with a lightning bolt across; the Orbital
+Lance a column on a target ring; the Shield Overcharge two nested shields.
+
+- **Prompt:** a row of 24 px equipment icons for a late-1990s pre-rendered CGI shoot'em up shop: each a
+  small bevelled dark steel badge lit from the top left with a glowing cyan or orange symbol;
+  Raptor / Tyrian 2000 era look.
+- **Negative prompt:** flat modern icons, outlines, text, photographic realism, watermark.
+
+## act3-icons-r37-b
+
+**B:** an emitter ring with the beam out of it; one lance piercing two marks; the field's arc catching
+a bolt beside a pod; a small drone inside an orbit arc (utility green); concentric arcs over a source
+for the EMP; a satellite above a column striking a target ring; a shield with an up arrow. Rendered only
+to its review sheet.
+
+- **Prompt:** as A.
+- **Negative prompt:** as A.
+
 ## test-fire-capture-r26-a
 
 A capture of the game, not generated art (M4 part H, round 26): `build/.../install/terran-vanguard/bin/terran-vanguard --bench <s> --settings <file>` on a private 1920×1080 Xvfb display (settings and saves in a temporary directory), the keys sent into the game window with XTest (Esc, Abort to hangar, then Down and E through the front, wing and rear slots) and the screen taken with the game's own screenshot key (F12, the 960×540 internal screen). The sheet: one uncropped screenshot (the Side Splitter selected) and below it the test-fire box (26, 422, 264×64) cropped from six screenshots and scaled 2× (nearest neighbour) with a caption each, composed with PIL. Brief: `the selected weapon's pattern at the shown level against three dummy targets, looping in the shop's preview box; a quick way to understand spread, rear and side weapons`.
+
+## act3-hangar-capture-r37-a
+
+Concept round 37 (M7 part A close-out, step A7), a capture of the game, not generated art (`.png`
+sheet of 15 window screenshots with captions, `.mp4` H.264/AAC with the game's sound, 97 s, the
+full 960×540 frame with a caption strip); the method of
+[arsenal-capture-r37-a](../../../player/weapons/concept/prompts.md#arsenal-capture-r37-a) (private
+Xvfb, 960×540 window, x11grab 30 fps with the pointer, the mix through OpenAL Soft's `wave` driver,
+here aligned on the menu confirm sound against the menu's first frame). **Scratch save:**
+`saves/slot-1.json` next to the scratch settings file, hand-written as a format version 2 save after
+reading `SaveFormat` (the game migrated it to version 4: Rook hired with the Autocannon, `bays` 0):
+next level 19, medium, 42 000 credits, Pulse Cannon L4, Micro-Missile Pods L2 on both wings, Tail
+Gun L2, generator Mk III "Fusion", shield Mk III, Composite II, engine Mk II, Airstrike ×2, Sensor
+suite L3 and Pickup magnet. Its loadout draws 15 MW on the 14 MW generator (an oversight in the
+scratch save, not reachable in play), so the power bar reads over the cap throughout. Run:
+`--bench 240 --start title`, Enter (press start), Enter (Continue: the hangar, as Level 19 is not
+built), then XTest keys: Down to the Ion Beam; E to the left wing, Down to the Deflector Pod and the
+Light Drone Bay; E to the rear, Down to the Rear Lance; E through the escort, generator, shield,
+armour and engine to the special, Down to the EMP Burst, Orbital Lance and Shield Overcharge, Enter
+(bought and fitted); E to utility bay 1, Down to the Evasive thrusters and to the last row `UTILITY
+BAY 3`, Enter (bought); E, E to utility bay 3, Down to the Evasive thrusters, Enter (bought into
+the inventory). The bench ended before the bay's own `SELL` row was shown.
+
+The sheet and the mp4 show, in that order: the Act 3 hangar (`ACT III - RED DUST: COMING SOON`,
+intel L19 "no intel yet"), the Ion Beam (BUY 5 000, its test fire), the Deflector Pod (CR 1 600)
+and the Light Drone Bay (CR 2 000) with their test fires, the Rear Lance (CR 2 800), the specials
+list (EMP Burst owned, Orbital Lance CR 600 a charge, Shield Overcharge `NEW` CR 5 000 `COOLDOWN 45
+S`), the Overcharge bought (`BOUGHT AND FITTED SHIELD OVERCHARGE`, `SELL 5 000`, tile `OVRCHG` /
+`45S`), the Evasive thrusters (CR 4 000), the bay row (`A THIRD SLOT FOR ANY MODULE. ITS TILE SHOWS
+ONCE BOUGHT.`, BUY 5 000), the bay bought (`BOUGHT UTILITY BAY 3 - ITS SLOT IS OPEN`, the `UTL` tile
+in the schematic's lower right), `SHOP - UTILITY BAY 3` with that tile selected, and the Evasive
+thrusters bought there.
+
+Findings (pending the user's review): the EMP Burst's `FIT` is refused with `NEEDS 1 MW MORE POWER`
+though it draws 0 MW, while the Shield Overcharge (0 MW) was bought and fitted in the same state
+(both with the loadout over its cap); `SELL 5 000` right after buying the Overcharge is the full
+price (the visit's undo refund, or the 60 % sell-back not applied); the Overcharge's detail shows an
+empty `VS FITTED:` line; the visit's message `1 FREE EMP BURST CHARGE` stays on the message line on
+every slot until the next transaction; after the bay is bought the cursor lands on the locked
+`ASCENDANCY IFF SPOOFER` row.
+
+## intel-final-r38-a
+
+Production art, M7 part B batch (round 38). The sheet of Level 15's new sensor-L2 pictures, rendered by [tools/art/intel.py](../../../../tools/art/intel.py) (`python3 tools/art/intel.py burrower dust-kite`): the 30×30 portraits of its new enemy types from their production models, the Burrower from [tools/art/burrower.py](../../../../tools/art/burrower.py) surfaced with its maw open, and the Dust Kite from [tools/art/dust_kite.py](../../../../tools/art/dust_kite.py) nose down (heading 0) with its membrane up (flex frame 1), at 1× and 3×. Brief as for intel-final-r13-a.
+
+## intel-final-r39-a
+
+Round 39, production art (M7 part C batch, step ART-C): the 30×30 intel portraits of Level 16's Tendril
+Anchor (the cone pointing down at its full pulse) and Threadcrawler (the head nose down, two segments
+trailing), from the production models of `tools/art/canyon_units.py`, rendered by
+[tools/art/intel.py](../../../../tools/art/intel.py) (`python3 tools/art/intel.py tendril-anchor threadcrawler`).
+
+## intel-final-r40-a
+
+Round 40, production art (M7 part D batch, step ART-D): the 30×30 intel portraits of Level 17's Choir Herald
+(facing down, its crest lit) and Shellback (walking down, its vent swollen), from the production models of
+`tools/art/siege_units.py`, rendered by [tools/art/intel.py](../../../../tools/art/intel.py)
+(`python3 tools/art/intel.py choir-herald shellback`).

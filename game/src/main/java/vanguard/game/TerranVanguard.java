@@ -11,7 +11,9 @@ import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
 import vanguard.content.campaign.DebugFit;
 import vanguard.content.campaign.SaveSlots;
+import vanguard.content.campaign.ScoreFile;
 import vanguard.game.display.DisplayModes;
+import vanguard.game.display.PointerCursor;
 import vanguard.game.display.Screenshots;
 import vanguard.game.render.PixelScreen;
 import vanguard.game.screen.LevelScreen;
@@ -24,7 +26,9 @@ import vanguard.game.settings.SettingsStore;
  * The game: runs the screen flow in the 960x540 pixel screen, samples the input actions once per
  * frame, toggles the display mode and takes screenshots (F12) on every screen. It starts at the
  * title screen or, for testing, straight in Level 01; in bench mode it exits after the set time.
- * While the window is minimised a level shows its pause menu and nothing is drawn.
+ * While the window is minimised a level shows its pause menu and nothing is drawn. The mouse works
+ * on every out-of-game screen with the glass pointer; while a level is flown the pointer is hidden
+ * and the mouse does nothing.
  */
 public final class TerranVanguard extends ApplicationAdapter {
     /** Frames longer than this (a stall, a dragged window) count as this long. */
@@ -42,11 +46,14 @@ public final class TerranVanguard extends ApplicationAdapter {
     private final boolean actEnd;
     private final Optional<BenchRun> bench;
     private final SaveSlots saves;
+    private final ScoreFile scores;
+    private final String version;
     private final Screenshots screenshots;
     private SpriteBatch batch;
     private PixelScreen pixelScreen;
     private GameServices services;
     private ScreenFlow screens;
+    private PointerCursor cursor;
 
     /**
      * @param displayModes the display mode switcher, set up from the settings file
@@ -61,7 +68,9 @@ public final class TerranVanguard extends ApplicationAdapter {
      * @param actEnd a debug option: winning the level start's level ends its act (act summary, outro)
      * @param benchSeconds exit after this many seconds and log the frame count; 0 runs until quit
      * @param saves the save slots: read-only in a debug run, which writes no save
+     * @param scores the high-score file: read-only in a debug run
      * @param screenshots the directory the screenshot key writes into
+     * @param version the game's version, {@code 0.1.0}, which the main menu shows as {@code v0.1}
      */
     public TerranVanguard(
             DisplayModes displayModes,
@@ -76,7 +85,9 @@ public final class TerranVanguard extends ApplicationAdapter {
             boolean actEnd,
             double benchSeconds,
             SaveSlots saves,
-            Path screenshots) {
+            ScoreFile scores,
+            Path screenshots,
+            String version) {
         this.displayModes = displayModes;
         this.settings = settings;
         this.store = store;
@@ -89,6 +100,8 @@ public final class TerranVanguard extends ApplicationAdapter {
         this.actEnd = actEnd;
         this.bench = benchSeconds > 0 ? Optional.of(new BenchRun(benchSeconds)) : Optional.empty();
         this.saves = saves;
+        this.scores = scores;
+        this.version = version;
         this.screenshots = new Screenshots(screenshots);
     }
 
@@ -97,9 +110,11 @@ public final class TerranVanguard extends ApplicationAdapter {
         Gdx.app.log("gl", Gdx.gl.glGetString(GL20.GL_RENDERER) + " / " + Gdx.gl.glGetString(GL20.GL_VERSION));
         batch = new SpriteBatch();
         pixelScreen = new PixelScreen();
-        services =
-                new GameServices(Gdx.files, Gdx.audio, displayModes, settings, store, difficulty, invulnerable, saves);
+        services = new GameServices(
+                Gdx.files, Gdx.audio, displayModes, settings, store, difficulty, invulnerable, saves, scores, version);
         screens = new ScreenFlow(startLevel ? testLevel() : MainMenuScreen.title(services), Gdx.app::exit);
+        Gdx.input.setInputProcessor(services.mouse);
+        cursor = new PointerCursor(Gdx.files);
     }
 
     /** Level 01 (or the {@code --level}) of a new campaign at the launch difficulty, for testing; a debug run, which writes no save. */
@@ -122,6 +137,11 @@ public final class TerranVanguard extends ApplicationAdapter {
         services.input.update(services.devices);
         float seconds = Math.min(frameSeconds, MAX_FRAME_SECONDS);
         services.menu.update(seconds);
+        boolean flying = screens.pointerHidden();
+        cursor.update(flying);
+        services.mouse.scaling(services.settings().video().scaling());
+        services.pointer.enabled(!flying);
+        services.pointer.update(services.mouse, services.devices.focused(), seconds);
         screens.update(seconds * timeScale);
         screenshots.update(seconds);
         pixelScreen.begin(batch);
@@ -164,6 +184,7 @@ public final class TerranVanguard extends ApplicationAdapter {
     public void dispose() {
         displayModes.storeCurrent();
         screens.dispose();
+        cursor.dispose();
         services.dispose();
         pixelScreen.dispose();
         batch.dispose();

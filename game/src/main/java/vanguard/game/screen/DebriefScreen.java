@@ -270,8 +270,12 @@ public final class DebriefScreen implements GameScreen {
     static final String HULLS_AFLOAT = "HULLS AFLOAT";
 
     public static final String SONDES = "SONDES";
+    /** M7 part C: the tendrils broken (Level 16's {@code BARRIERS BROKEN n / 9}). */
+    public static final String BARRIERS_BROKEN = "BARRIERS BROKEN";
     /** M5 part G: the defended relay's row (Level 13). */
     public static final String RELAY = "RELAY";
+    /** M7 part D: the ground allies never hit, after their tracker's label (Level 17's {@code DOMES UNTOUCHED n / 5}). */
+    public static final String UNTOUCHED = "UNTOUCHED";
 
     /**
      * M5 part E: the afloat secondary's row (design/ui/debrief, Level 11): {@code HULLS AFLOAT 3 / 3}
@@ -372,11 +376,12 @@ public final class DebriefScreen implements GameScreen {
     }
 
     /**
-     * Whether the frame's input goes on (skips the count-up, then leaves): confirm, and Back (Esc,
-     * the gamepad's back button) too, since the debrief has nothing to go back to.
+     * Whether the frame's input goes on (skips the count-up, then leaves): confirm or a click, and
+     * Back (Esc, the gamepad's back button, the mouse's right button) too, since the debrief has
+     * nothing to go back to.
      */
     static boolean goesOn(MenuInput input) {
-        return input.confirm() || input.back();
+        return input.confirm() || input.back() || input.clicked();
     }
 
     @Override

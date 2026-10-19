@@ -72,6 +72,21 @@ sealed interface OptionRow {
             return true;
         }
 
+        /**
+         * Sets the value at a share of the range (the mouse on the track), on the nearest step;
+         * returns whether it changed.
+         */
+        public boolean point(OptionsTarget target, double share) {
+            double now = get.applyAsDouble(target.settings());
+            double steps = Math.rint(Math.clamp(share, 0, 1) * (max - min) / step);
+            double next = Math.rint(Math.clamp(min + steps * step, min, max) * 1e6) / 1e6;
+            if (Math.abs(next - now) < step / 2) {
+                return false;
+            }
+            target.change(set.apply(target.settings(), next));
+            return true;
+        }
+
         /** The value's place between min and max, 0..1. */
         double share(Settings settings) {
             return (get.applyAsDouble(settings) - min) / (max - min);

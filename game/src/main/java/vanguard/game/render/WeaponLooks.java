@@ -17,6 +17,12 @@ import vanguard.sim.WeaponSpec;
  * (tools/art/water_fx.py: 32 headings) runs under the water, drawn in the {@code sub} pass with its
  * bubble trail; it drops in with a splash and bursts under the water or on its surface. Weapons
  * without their own art yet borrow the family of their delivery.
+ *
+ * <p>M7 part A: a Deflector Pod's mount fires nothing ({@code Mount.fires()} is false): its look is
+ * only its pod; a drone bay's look is its pod and its drone's shot (tools/art/light_drone.py, 32
+ * headings), an Ion Beam's has no shots. Neither has a muzzle flash on the hull: the beam's glow and
+ * the drone are drawn with their own looks ({@link ArsenalLooks}). The Rear Lance fires the Lance
+ * Laser's lance of its level turned round.
  */
 public final class WeaponLooks {
     private static final int MISSILE_HEADINGS = 32;
@@ -102,6 +108,20 @@ public final class WeaponLooks {
     }
 
     private static Look look(Armament.Mount mount, int level, Sprites sprites, PodPivots pods) {
+        if (!mount.fires()) {
+            // M7 part A: a Deflector Pod: no shots, no muzzle, only its pod on the wing.
+            String name = "pod-deflector" + (mount.slot() == Armament.Slot.LEFT_WING ? "-left" : "-right");
+            boolean drawn = sprites.has(name);
+            return new Look(
+                    new AtlasRegion[0],
+                    new AtlasRegion[0],
+                    true,
+                    new Array<>(),
+                    true,
+                    sprites.pulseImpact,
+                    drawn ? sprites.frames(name) : null,
+                    drawn ? pods.offsets(name) : null);
+        }
         WeaponSpec weapon = mount.weapon();
         String slug = weapon.slug();
         boolean glowing;
@@ -122,12 +142,24 @@ public final class WeaponLooks {
                 overdrive = single(indexed(lances, level + 1));
                 glowing = true;
             }
+            case "rear-lance" -> {
+                // M7 part A: the Lance Laser's lance of the same level turned round (it fires backwards).
+                Array<AtlasRegion> lances = sprites.frames("lance-laser-shot");
+                shots = single(turnedRound(indexed(lances, level)));
+                overdrive = single(turnedRound(indexed(lances, level + 1)));
+                glowing = true;
+            }
             case "micro-missile-pod", "hornet-launcher" -> {
                 shots = overdrive = byHeading(sprites.frames(slug + "-shot"));
                 glowing = false;
             }
             case "swivel-gun" -> {
                 shots = overdrive = byHeading(sprites.frames("swivel-gun-shot"));
+                glowing = true;
+            }
+            case "light-drone-bay" -> {
+                // M7 part A: the drone's small energy bolt, 32 headings (it aims at its convergence point).
+                shots = overdrive = byHeading(sprites.frames("light-drone-bay-shot"));
                 glowing = true;
             }
             case "proximity-mines" -> {
@@ -177,11 +209,13 @@ public final class WeaponLooks {
             pod = sprites.frames(name);
             offsets = pods.offsets(name);
         }
+        // M7 part A: a beam glows at its nose and a drone fires from its orbit: no muzzle flash on the hull.
+        boolean hullMuzzle = !mount.bay() && weapon.delivery() != WeaponSpec.Delivery.BEAM;
         Look look = new Look(
                 shots,
                 overdrive,
                 glowing,
-                muzzle(weapon.vfx(), sprites),
+                hullMuzzle ? muzzle(weapon.vfx(), sprites) : new Array<>(),
                 !launcher(weapon.vfx()),
                 impact(weapon.vfx(), sprites),
                 pod,
@@ -212,6 +246,7 @@ public final class WeaponLooks {
             case "micro-missile-pod" -> "micro-missile";
             case "swivel-gun" -> "swivel";
             case "torpedo-pod" -> "torpedo";
+            case "light-drone-bay" -> "drone-bay";
             default -> null;
         };
     }
@@ -236,6 +271,13 @@ public final class WeaponLooks {
             case "vulcan", "ballistic" -> sprites.frames("ballistic-impact");
             default -> launcher(vfx) ? sprites.frames("explosive-impact") : sprites.pulseImpact;
         };
+    }
+
+    /** M7 part A: a copy of {@code region} turned round (a half turn: flipped both ways). */
+    private static AtlasRegion turnedRound(AtlasRegion region) {
+        AtlasRegion turned = new AtlasRegion(region);
+        turned.flip(true, true);
+        return turned;
     }
 
     private static AtlasRegion[] single(AtlasRegion region) {

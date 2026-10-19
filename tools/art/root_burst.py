@@ -29,11 +29,11 @@ over 0.5 s, 128x96; the last one stays as the crater), ``grow_in(unit, s)`` and 
 growth points, px from the burst's point).
 
 Outputs (review only): design/campaign/act-2-homefront/level-14-siege-spire/concept/
-  root-burst-r36-a.png / .gif, root-burst-r36-b.png / .gif   the frame sets, a time strip of one
-  burst on the old town's ground, and a 4.5 s GIF of two bursts scrolling with the ground at 140 px/s
+  root-burst-r36-a.png / .gif (the chosen a, round 34; the rejected b's in concept/rejected/
+  root-burst-r36-b.*)   the frame sets, a time strip of one burst on the old town's ground, and a 4.5 s GIF of two bursts scrolling with the ground at 140 px/s
   (the growths' first shots at 2.5 s)
 
-With --assets (step H5, look a until the user picks; ``--assets b`` writes look b instead) the game's
+With --assets (step H5; look a, the user's pick in round 34; ``--assets b`` writes look b instead) the game's
 frames go into assets/sprites/: root-burst-decal_0..7, root-burst-puff_0..11, root-burst-root_0..5
 (the frame sets above, under the names the game loads), and that look's review is rebuilt.
 
@@ -427,8 +427,9 @@ def review(variant, frames, us):
          [grow_in(us[n], s) for n in GROWTH for s in (0.0, 0.25, 0.5, 0.75, 1.0)], 2, False),
     ]
     sheet = artkit.review_sheet(f"LEVEL 14 ROOT BURST, VARIANT {VARIANTS[variant]}", rows, width=1500, batch="M5 part H batch")
-    png = CONCEPT / f"root-burst-{REVIEW_ROUND}-{variant}.png"
-    CONCEPT.mkdir(parents=True, exist_ok=True)
+    folder = CONCEPT if variant == GAME_VARIANT else CONCEPT / "rejected"   # the user's pick, round 34
+    png = folder / f"root-burst-{REVIEW_ROUND}-{variant}.png"
+    folder.mkdir(parents=True, exist_ok=True)
     sheet.convert("RGB").save(png, optimize=True)
     # the GIF: two bursts scrolling with the ground
     bursts = [Burst(variant, frames, us, 0.2, 150, 120), Burst(variant, frames, us, 1.4, 340, 160)]
@@ -453,7 +454,7 @@ def make(variant):
 
 SCRIPT = "root_burst.py"
 SOURCE = artkit.source_note(SCRIPT, "M5 part H batch")
-GAME_VARIANT = "a"                              # round 36: look a in the game until the user picks
+GAME_VARIANT = "a"                              # the user's pick, round 34 (round 36's look a)
 
 
 def write_assets(variant):

@@ -30,8 +30,15 @@ import vanguard.sim.WingmanSpec;
  * cost per point, which is part of the visit's undo; his side is a setting outside it (design/ui/hangar):
  * an undo keeps the side he has now.
  *
+ * <p>M7 part A: a cooldown special (the Shield Overcharge) is bought once ({@link Action#BUY}) and
+ * sold back ({@link Action#SELL}) like other gear instead of by the charge; the gear holds 1 for an
+ * owned one. The third utility bay is bought and sold through {@link #bays}, {@link #buyBay} and
+ * {@link #sellBay}, part of the visit's undo; its slot {@link LoadoutSlot#UTILITY_3} has no shop
+ * rows until it is bought, and it cannot be sold while a module is fitted in it.
+ *
  * <p>The power load is the sum of the fitted items' draws and may not exceed the generator's
- * output; the front gun and the core parts are always fitted. A plating swap keeps the damage: the
+ * output (a loadout already over it may make changes that do not widen the gap); the front gun and
+ * the core parts are always fitted. A plating swap keeps the damage: the
  * missing armour points stay missing (at least 1 point is left).
  */
 public final class Hangar {
@@ -63,6 +70,31 @@ public final class Hangar {
         MAX_LEVEL,
         /** The special carries its most charges. */
         FULL
+    }
+
+    /** M7 part A: why a utility bay cannot be bought or sold. */
+    public enum BayRefusal {
+        CREDITS,
+        /** A module is fitted in it (or in a bay bought after it): it cannot be sold. */
+        IN_USE,
+        /** A bay before it is not bought yet. */
+        ORDER
+    }
+
+    /**
+     * M7 part A: a bought utility bay's shop line (design/player/systems, Third utility bay).
+     *
+     * @param state {@link State#OWNED} when bought, {@link State#BUYABLE} when for sale at this visit,
+     *     {@link State#LOCKED} before its unlock
+     * @param bought it was bought during this visit, so it sells for all it cost
+     * @param credits what buying it costs, or (negative) what selling it returns
+     * @param refusal why that cannot be done now; empty when it can (never for a locked bay's line,
+     *     which offers nothing)
+     */
+    public record BayOffer(Catalogue.Bay bay, State state, boolean bought, int credits, Optional<BayRefusal> refusal) {
+        public boolean allowed() {
+            return state != State.LOCKED && refusal.isEmpty();
+        }
     }
 
     /**
@@ -187,9 +219,10 @@ public final class Hangar {
 
     /**
      * The specials that damage hardened targets (design/player/specials: the Airstrike's bombs and the
-     * Smart Bomb's flash hit them); the Decoy Flares do not.
+     * Smart Bomb's flash hit them; M7 part A: the Orbital Lance comes from above and damages them);
+     * the Decoy Flares, the EMP Burst and the Shield Overcharge do not.
      */
-    public static final Set<String> HARDENED_SPECIALS = Set.of("Airstrike", "Smart Bomb");
+    public static final Set<String> HARDENED_SPECIALS = Set.of("Airstrike", "Smart Bomb", "Orbital Lance");
 
     /** M5 part D: the trait of the weapons that fire behind the ship (Level 10's {@code required: [rear]}). */
     public static final String REAR = "rear";
@@ -238,12 +271,79 @@ public final class Hangar {
                 && (item.unlock() <= campaign.nextLevel() || campaign.unlocks().contains(item.id()));
     }
 
-    /**
-     * Whether a bought utility bay is for sale at this visit: from its unlock level (the third bay from
-     * Act 3). Buying and fitting it comes with Act 3, so no visit offers it in the shop yet.
-     */
+    /** Whether a bought utility bay is for sale at this visit: from its unlock level (the third bay from Act 3). */
     public boolean available(Catalogue.Bay bay) {
         return bay.unlock() <= campaign.nextLevel();
+    }
+
+    /** M7 part A: the lines of the utility bays that are bought, in their order. */
+    public List<BayOffer> bays() {
+        List<BayOffer> offers = new ArrayList<>();
+        List<Catalogue.Bay> all = catalogue.bays();
+        int owned = campaign.gear().bays();
+        for (int i = 0; i < all.size(); i++) {
+            Catalogue.Bay bay = all.get(i);
+            if (i < owned) {
+                boolean isBought = i >= owned - bought.bays();
+                boolean inUse = all.subList(i, all.size()).stream()
+                        .anyMatch(later -> campaign.gear().loadout().containsKey(later.slot()));
+                offers.add(new BayOffer(
+                        bay,
+                        State.OWNED,
+                        isBought,
+                        -(isBought ? bay.price() : catalogue.sellPrice(bay)),
+                        inUse ? Optional.of(BayRefusal.IN_USE) : Optional.empty()));
+            } else if (!available(bay)) {
+                offers.add(new BayOffer(bay, State.LOCKED, false, bay.price(), Optional.empty()));
+            } else {
+                Optional<BayRefusal> refusal = i > owned
+                        ? Optional.of(BayRefusal.ORDER)
+                        : campaign.credits() < bay.price() ? Optional.of(BayRefusal.CREDITS) : Optional.empty();
+                offers.add(new BayOffer(bay, State.BUYABLE, false, bay.price(), refusal));
+            }
+        }
+        return offers;
+    }
+
+    /**
+     * M7 part A: buys a utility bay that is for sale; its slot opens empty.
+     *
+     * @return whether it was bought
+     */
+    public boolean buyBay(Catalogue.Bay bay) {
+        Optional<BayOffer> line = bays().stream()
+                .filter(offer -> offer.bay().equals(bay) && offer.state() == State.BUYABLE)
+                .findFirst();
+        if (line.isEmpty() || !line.get().allowed()) {
+            return false;
+        }
+        Step before = step();
+        Gear gear = before.gear();
+        undo.push(before);
+        restore(new Step(gear.withCredits(gear.credits() - bay.price()).withBays(gear.bays() + 1), bought.withBay(+1)));
+        return true;
+    }
+
+    /**
+     * M7 part A: sells the last bought utility bay back, for all it cost when it was bought during the
+     * visit, the sell-back share otherwise; never while a module is fitted in it.
+     *
+     * @return whether it was sold
+     */
+    public boolean sellBay(Catalogue.Bay bay) {
+        Optional<BayOffer> line = bays().stream()
+                .filter(offer -> offer.bay().equals(bay) && offer.state() == State.OWNED)
+                .findFirst();
+        if (line.isEmpty() || !line.get().allowed()) {
+            return false;
+        }
+        Step before = step();
+        Gear gear = before.gear();
+        undo.push(before);
+        restore(new Step(
+                gear.withCredits(gear.credits() - line.get().credits()).withBays(gear.bays() - 1),
+                line.get().bought() ? bought.withBay(-1) : bought));
+        return true;
     }
 
     /**
@@ -257,6 +357,10 @@ public final class Hangar {
             // The escort slot opens when Rook joins (Level 08).
             return List.of();
         }
+        if (!gear.open(slot)) {
+            // M7 part A: the third utility bay's slot opens when the bay is bought.
+            return List.of();
+        }
         List<Offer> offers = new ArrayList<>();
         Set<String> listed = new LinkedHashSet<>();
         Optional.ofNullable(gear.loadout().get(slot)).ifPresent(fitted -> {
@@ -266,14 +370,19 @@ public final class Hangar {
         if (kind == ItemKind.SPECIAL) {
             for (Item special : catalogue.items(kind)) {
                 if (gear.charges(special.id()) > 0 && !listed.contains(special.id())) {
+                    boolean isBought = bought.specials().contains(special.id());
                     offers.add(new Offer(
                             special,
                             State.OWNED,
                             1,
                             Optional.of(new Fitted(special.id(), 1)),
+                            isBought,
                             false,
-                            false,
-                            List.of(fitChoice(slot, special, 1), chargeChoice(special))));
+                            List.of(
+                                    fitChoice(slot, special, 1),
+                                    special.cooldownSpecial()
+                                            ? sellChoice(special, 1, 0, isBought)
+                                            : chargeChoice(special))));
                     listed.add(special.id());
                 }
             }
@@ -303,7 +412,10 @@ public final class Hangar {
                         Optional.empty(),
                         false,
                         item.unlock() == campaign.nextLevel() && campaign.nextLevel() > 1,
-                        List.of(kind == ItemKind.SPECIAL ? chargeChoice(item) : buyChoice(slot, item)))));
+                        List.of(
+                                kind != ItemKind.SPECIAL
+                                        ? buyChoice(slot, item)
+                                        : item.cooldownSpecial() ? cooldownBuyChoice(item) : chargeChoice(item)))));
         catalogue.items(kind).stream()
                 .filter(item -> item.forSale() && !available(item))
                 .sorted(Comparator.comparingInt(Item::unlock).thenComparingInt(Item::price))
@@ -315,9 +427,15 @@ public final class Hangar {
     private Offer fittedOffer(LoadoutSlot slot, Fitted fitted) {
         ItemKind kind = slot.kind();
         Item item = item(kind, fitted);
-        boolean isBought = bought.fitted().contains(slot);
+        boolean cooldown = item.cooldownSpecial();
+        boolean isBought = cooldown
+                ? bought.specials().contains(item.id())
+                : bought.fitted().contains(slot);
         List<Choice> choices = new ArrayList<>();
-        if (kind == ItemKind.SPECIAL) {
+        if (cooldown) {
+            // M7 part A: a cooldown special is sold back like other gear; it draws no power.
+            choices.add(sellChoice(item, 1, 0, isBought));
+        } else if (kind == ItemKind.SPECIAL) {
             choices.add(chargeChoice(item));
         } else if (item.maxLevel() > 1) {
             choices.add(upgradeChoice(item, fitted.level()));
@@ -343,9 +461,16 @@ public final class Hangar {
         Map<LoadoutSlot, Fitted> fitted = withFitted(slot, new Fitted(item.id(), 1));
         double load = load(fitted);
         double output = output(fitted);
-        boolean fits = load <= output + EPSILON;
+        boolean fits = !overdrawn(load, output);
         Optional<Refusal> refusal = campaign.credits() < item.price() ? Optional.of(Refusal.CREDITS) : Optional.empty();
         return new Choice(Action.BUY, item.price(), load, output, fits, refusal);
+    }
+
+    /** M7 part A: a cooldown special is bought once, at its price, and fitted at once (it draws no power). */
+    private Choice cooldownBuyChoice(Item special) {
+        Optional<Refusal> refusal =
+                campaign.credits() < special.price() ? Optional.of(Refusal.CREDITS) : Optional.empty();
+        return new Choice(Action.BUY, special.price(), load(), output(), true, refusal);
     }
 
     private Choice fitChoice(LoadoutSlot slot, Item item, int level) {
@@ -373,7 +498,17 @@ public final class Hangar {
         if (campaign.credits() < cost) {
             return Optional.of(Refusal.CREDITS);
         }
-        return load > output + EPSILON ? Optional.of(Refusal.POWER) : Optional.empty();
+        return overdrawn(load, output) ? Optional.of(Refusal.POWER) : Optional.empty();
+    }
+
+    /**
+     * Whether a change to {@code load} and {@code output} breaks the power budget: the load exceeds the
+     * output by more than it does now. M7 part A (round 37, R.4 f): a loadout already over its output (a
+     * save from before a draw changed, a hand-written one) is not stuck: a change that draws no more
+     * than before (fitting a special, which draws nothing) is made, one that widens the gap is refused.
+     */
+    private boolean overdrawn(double load, double output) {
+        return load > output + EPSILON && load - output > load() - output() + EPSILON;
     }
 
     private Map<LoadoutSlot, Fitted> withFitted(LoadoutSlot slot, Fitted item) {
@@ -402,7 +537,12 @@ public final class Hangar {
         switch (action) {
             case BUY -> {
                 Fitted bought = new Fitted(item.id(), 1);
-                if (choice.get().fits()) {
+                if (slot.kind() == ItemKind.SPECIAL) {
+                    // M7 part A: a cooldown special, owned (1) and fitted; the special it replaces keeps its charges.
+                    change.specials.put(item.id(), 1);
+                    change.loadout.put(slot, bought);
+                    change.specialsBought.add(item.id());
+                } else if (choice.get().fits()) {
                     change.fit(slot, bought, true);
                 } else {
                     change.store(slot.kind(), bought, true);
@@ -421,7 +561,15 @@ public final class Hangar {
             }
             case UNFIT -> change.store(slot.kind(), change.loadout.remove(slot), change.fitted.remove(slot));
             case SELL -> {
-                if (row.state() == State.FITTED) {
+                if (slot.kind() == ItemKind.SPECIAL) {
+                    // M7 part A: a cooldown special, fitted or owned.
+                    change.specials.remove(item.id());
+                    change.specialsBought.remove(item.id());
+                    if (row.state() == State.FITTED) {
+                        change.loadout.remove(slot);
+                        change.fitted.remove(slot);
+                    }
+                } else if (row.state() == State.FITTED) {
                     change.loadout.remove(slot);
                     change.fitted.remove(slot);
                 } else {
@@ -560,13 +708,21 @@ public final class Hangar {
      *
      * @param fitted the slots they are fitted in
      * @param stored the ones in the inventory, by kind
+     * @param specials M7 part A: the cooldown specials bought, wherever they are
+     * @param bays M7 part A: the utility bays bought (the last ones the gear has)
      */
-    private record Bought(Set<LoadoutSlot> fitted, Map<ItemKind, List<Fitted>> stored) {
-        static final Bought NONE = new Bought(Set.of(), Map.of());
+    private record Bought(Set<LoadoutSlot> fitted, Map<ItemKind, List<Fitted>> stored, Set<String> specials, int bays) {
+        static final Bought NONE = new Bought(Set.of(), Map.of(), Set.of(), 0);
 
         Bought {
             fitted = Set.copyOf(fitted);
             stored = Gear.inventoryCopy(stored);
+            specials = Set.copyOf(specials);
+        }
+
+        /** M7 part A: with {@code change} more (or fewer) utility bays bought during the visit. */
+        Bought withBay(int change) {
+            return new Bought(fitted, stored, specials, bays + change);
         }
 
         List<Fitted> stored(ItemKind kind) {
@@ -584,6 +740,9 @@ public final class Hangar {
         final Escort escort;
         final Set<LoadoutSlot> fitted = EnumSet.noneOf(LoadoutSlot.class);
         final Map<ItemKind, List<Fitted>> stored = new EnumMap<>(ItemKind.class);
+        final Set<String> specialsBought = new java.util.TreeSet<>();
+        final int bays;
+        final int baysBought;
 
         Change(Step step) {
             Gear gear = step.gear();
@@ -596,6 +755,9 @@ public final class Hangar {
             escort = gear.escort();
             fitted.addAll(step.bought().fitted());
             step.bought().stored().forEach((kind, items) -> stored.put(kind, new ArrayList<>(items)));
+            specialsBought.addAll(step.bought().specials());
+            bays = gear.bays();
+            baysBought = step.bought().bays();
         }
 
         /**
@@ -639,7 +801,8 @@ public final class Hangar {
 
         Step step() {
             return new Step(
-                    new Gear(credits, loadout, inventory, specials, armour, escort), new Bought(fitted, stored));
+                    new Gear(credits, loadout, inventory, specials, armour, escort, bays),
+                    new Bought(fitted, stored, specialsBought, baysBought));
         }
     }
 }

@@ -38,8 +38,10 @@ class PortraitsTest {
                         cue.portrait().orElse(cue.speaker()), cue.expression().orElse(Expression.NEUTRAL));
             }
             for (LevelData.Secret secret : level.secrets()) {
+                // M7 part B: a generic portrait for a speaker without one of his own (Level 15's Ares Control).
                 assertRadio(
-                        secret.radio().speaker(), secret.radio().expression().orElse(Expression.NEUTRAL));
+                        secret.radio().portrait().orElse(secret.radio().speaker()),
+                        secret.radio().expression().orElse(Expression.NEUTRAL));
             }
         }
         LevelData.RadioLine lowArmour = content.armour().radio();

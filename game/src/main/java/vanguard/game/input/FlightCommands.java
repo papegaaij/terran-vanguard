@@ -15,6 +15,10 @@ public final class FlightCommands {
         commands |= bit(input, Action.MOVE_RIGHT, Command.RIGHT);
         commands |= bit(input, Action.PRECISION, Command.PRECISION);
         commands |= bit(input, Action.SPECIAL, Command.SPECIAL);
+        // M7 part A: the Dash button (V, the left bumper); the double-tap of a direction is detected in
+        // the simulation from the direction bits, and either does something only with the Evasive
+        // thrusters fitted (design/ui/controls).
+        commands |= bit(input, Action.DASH, Command.DASH);
         // With auto-fire on, holding fire does nothing extra (design/ui/controls).
         if (settings.autoFire() || input.held(Action.FIRE)) {
             commands |= Command.FIRE.bit();

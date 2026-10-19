@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Voice
@@ -193,7 +193,9 @@ generic speakers; the speaker table in [data.yaml](data.yaml) maps the speakers'
   CDF officer of the Nansen Relay; the radio portrait `radio-generic-cdf`), auditioned a/b in
   concept round 35 as Atlas Control was
   (`tools/concept/audio/tts_r35.py`): a, Patrick Eaton (male, clip pitch 124 Hz), b, Sharon Riskedahl
-  (female, 172 Hz), marked `uncast: true` until the round picks. Level 13 plans about 20 radio lines,
+  (female, 172 Hz), marked `uncast: true` until the round picked. Cast 2026-10-12 (the user's pick in
+  round 34's review): Nansen is Patrick Eaton (a), at the neutral settings through radio filter b, as
+  auditioned (`refs/ref-nansen.wav`); his five lines are voiced, two takes pinned. Level 13 plans about 20 radio lines,
   about six of them Nansen's, the radio events `ally-below` (50 % Nansen, 25 % Okafor),
   `secondary-objective` and `mission-failed` (Okafor), Varga's four intel lines and two briefing pages
   (the teaser is text only). Level 14 (M5 part H) adds no speaker: about 15 radio lines (Okafor,
@@ -238,6 +240,99 @@ sung in the Choir's voice (Varga's reference voice with the layering above; a, b
 synthesized choir pad like the music's (c, d); option **a** plays until the user's choice. The
 file is copied into `assets/voice/choir/` by `./gradlew :pipeline:copyPlaceholderStageSounds`;
 the renderer leaves files not named by a key alone.
+
+### Act 3 voices (approved, round 36)
+
+**Status: approved in concept round 36 (user, 2026-10-13, D.30), with every proposal of this section
+taken.** Act 3 is voiced as Acts 1–2: every radio line and briefing page, the act intro's four
+pages (M7 part B) and the outro's four (part H); the hangar teaser and the intel lines stay text. The
+speakers per level are in the [Act 3 README](../../campaign/act-3-red-dust/README.md#voice). Two new
+speakers: Ares Control was cast in round 36 (S.6 = b), Lance Control is cast a/b in part A's round as
+Atlas Control was (real lines, two new candidate readers from the CC0 and public-domain sources,
+never a main-cast reader nor a voice already cast, radio filter b, the neutral settings, `uncast:
+true` until the round picks). The lines are rendered in the parts that build their levels.
+
+- **Ares Control** (Levels 15–17 and 19–21). One character (the act README's decision, Q.17d):
+  Ares Landing's flight controller, who also speaks for the colony in Level 17's
+  siege, so the drafts' *Ares Warden* lines (Level 17's nine, Level 21's closing line) are his. A man,
+  older than Rook, proud and tired, dry rather than angry; the resentment of the first line ("*Nice of
+  Earth to drop by.*") has to thaw audibly by the dinner lines of Levels 17 and 21, so the reader
+  needs a warm low register under the dryness. **Cast (round 36, S.6 = b): reader Thomas A** (LibriVox,
+  *The Warlord of Mars*, ch. 2; clip 112 Hz, below Nansen's 124 Hz and the Kilo Lead's 129 Hz, so the
+  CDF officers and the colonist differ), at base settings a little drier than neutral (exaggeration
+  about 0.4, cfg_weight 0.45). His audition held a **pause of about 2 s inside** its second and third
+  lines: the render (`tools/art/voice.py`) retries every take that holds a silence longer than 0.8 s
+  inside it with the next seed (logged), and his clip, renamed `refs/ref-ares-control.wav` when
+  `uncast` is replaced in the voice data, has its own pauses trimmed (0.6 s and 1.2 s silences cut
+  to 0.3 s, 10.3 s; [refs](refs/README.md), part B step AUD-B, pending review in round 38), since
+  Chatterbox copies a clip's prosody; David Wales (a) is rejected. His Level 20 call "*Rim guns, open fire!*" is a `shout`. The audition lines: Level
+  15's t=12 jab and Level 17's t=102 "*Inner ring: Schiaparelli, Burroughs, then Eden.*" (the names
+  below). About 31 cues, **about 39 takes**: Level 17's dome hit and dome lost lines expand `{ally}`
+  to the five domes (Bradbury, Lowell, Schiaparelli, Burroughs, Eden), as Atlas Control's ship names
+  did. Radio portrait: the new colonial generic `radio-generic-colonial`, variant b "the dust-suit
+  controller" (round 36, C.1 = b), on the **teal** friendly channel like the CDF officer (amber stays
+  the enemy's).
+- **Lance Control** (the [Orbital Lance](../../player/specials/README.md)'s call, "*Lance uplink
+  locked. Firing!*", from Level 17; cast in part A's round, where the special is built and flown on
+  earlier levels). The CDF orbital officer, one take, the generic CDF portrait; Hammer Lead's
+  Airstrike call is the model (a role of its own, round 19's rule). Clipped and precise, a voice
+  unlike Hammer Lead's. The name Lance Control is decided (round 36, Q.24g).
+
+**The cast speakers in Act 3.** Okafor (she / her) carries the Helix beat: her cut-off "*Not on this
+channel, Doctor.*" in Levels 17 and 19 is the same text, speaker and expression, so it has one key and
+plays **one file** twice: the refrain sounds identical on purpose (Level 18's varied line has its
+own). Varga's hint-1 line in Level 18 (t=71, "*That's not Vrell. That signature is... ours?*") is
+the act's key read: doubt rising into the question, her pitch kept in her 190–210 Hz (earlier takes
+of hers jumped an octave) and "ours" heard as "ours", not "hours"; pin it. Rook's quiet beat in Level
+20 (t=113) is read at the neutral row, not his lively base, slower, with no joke in it; pin it.
+Rook's other Act 3 lines keep his `requires: escort` and his settings.
+
+**The Choir speaks** (Level 21, at the Colossus's death; the
+[dust colossus](../../enemies/bosses/dust-colossus/README.md#the-choirs-first-words), M14 = a). Its
+first words, "*…many… we are many… we are going…*", are a spoken Choir line, not the stage sound: the
+engine in the Choir's base voice with the layering of *The Choir* above. Treatment (proposal, part
+H's round; the fragments, the filter and the length are approved, the layering is a/b):
+
+- **Fragments**: a Choir line is split at its ellipses and each fragment is spoken on its own
+  ("Many." · "We are many." · "We are going."), joined by 0.7 s of the Choir's drone (the briefing
+  pages' sentence join, longer), so the pauses are the same in every render and a fragment can be
+  re-rolled or pinned alone. The subtitle shows the line as written.
+- **Layering**: the round-18 copies (−12, −5, 0, +7 semitones), but the base voice is Varga's
+  reader and Varga speaks next ("*Commander… that was not singing.*"), so the unison copy must not let
+  her voice through: a/b in part H's round, a the round-18 gains as they are, b the unison copy down
+  from 0.45 to 0.25 with the −5 copy leading. Delivery slower than the sung sting, words still clear
+  through the radio filter.
+- **Filter**: the drafts' `distorted` expression (more static and dropouts); the dropouts fall in the
+  gaps between the fragments, never on a word of its first spoken line (pinned by seed).
+- **Length**: at most about 6 s with the gaps, the Level 21 radio model's slot (the Choir from the
+  kill to ≈ K+6.0, Varga after it); a longer take moves the level's closing lines.
+- The Choir still **sings** (its round-29 stage sound) in Levels 15 and 16 and before Level 21's boss.
+
+**Pronunciation.** Chatterbox reads text only (no phoneme input), so the levers are the spelling it
+is given and pinned seeds. Whisper's read-back of the Act 2 takes heard "Ares" as "air is" without
+a name prompt, as it hears "Vrell" as "rail" and "Aegis" as "Aides" (accepted in Acts 1–2 by ear): that
+may be Whisper not knowing the word rather than the voice saying it wrong, so the names are listened
+to before anything is respelled. Decided (round 36, Q.24f and S.6's (a)–(c); built in part B): a **respelling list** in
+the speaker table (word → spelling as spoken), applied to the text as spoken of every line (the
+subtitle keeps the real spelling) and part of the key, so a changed respelling re-renders exactly
+the lines that use the word; the Whisper read-back's name prompt gets the Act 3 names. The
+respellings Airees, Skyaparelli and Burrows were heard in Ares Control's audition and accepted (round
+36, S.6); the others were tried at the render step (M7 part B, step VOX-B: Whisper's read-back of Okafor and
+Ares Control, three seeds each, the plain spelling against the respelling) and kept only where they read better:
+
+| Name | Say | Respelling |
+|---|---|---|
+| Ares (Landing, Control) | AIR-eez, one word | "Airees" |
+| Schiaparelli (a dome) | skyah-pah-REL-ee | "Skyaparelli" |
+| Valles Marineris | VAL-iss mar-ih-NAIR-iss | "Vallis Marinairis" (kept: plain read "Vales"/"Valet's") |
+| Lycus (Survey Station) | LIE-kus | as written ("Lykus", "Lie-kus" and "Lykuss" read no better: "Lyca"/"Like a" every way) |
+| Coprates (Rapids) | KOP-ruh-teez | "Coprateez" (kept: plain read "cop rates") |
+| Eos (outflow) | EE-oss | as written (plain read "Eos" as well as "Ee-oss", which once read "E-O-S") |
+| Helix (research station) | HEE-lix | as written (Level 16, step VOX-C: read "Helix" with and without the name prompt) |
+| Noctis, Candor | NOK-tiss, KAN-dor | not in a voiced line yet (Level 16 names them in text only) |
+| Burroughs (a dome) | BUR-ohz | "Burrows" (Level 17, step VOX-D: every take of "Burrows is hit!" that read "Burrows" plainly jumped an octave; the pin reads "Barrows") |
+| Bradbury, Lowell (domes) | as usually said | as written (Level 17, step VOX-D: read back as written with the name prompt; one "bribery" and one "Below" take replaced by pins) |
+| Olympus Mons, Tharsis, Hellas, Noctis, Candor, Europa, Conamara, Thera | as usually said | as written; respelled only if the read-back fails |
 
 ### Briefings
 
@@ -347,23 +442,48 @@ level).
       Rook; the Choir's stage sound), no new speaker and no audition; RadioTimelineTest covering
       Level 12 with and without Rook (M5 part F, step 6; rendered 2026-10-11, 18 lines, six takes
       pinned; pending the user's review in the combined round)
-- [ ] Nansen (Level 13): reference clips for the round-35 audition under `refs/` and in CREDITS.md,
-      the chosen reader in the speaker table (M5 part G, step G2 done; the casting and the lines'
-      rendering with the content step)
+- [x] Nansen (Level 13): reference clips for the round-35 audition under `refs/` and in CREDITS.md,
+      the chosen reader in the speaker table (M5 part G, step G2; cast as a, Patrick Eaton, and his five
+      lines rendered in step K1, 2026-10-12: two takes pinned, `RadioTimelineTest` passing unchanged)
 - [x] Level 13's lines of the cast speakers (radio with the events `ally-below` 25 % and
       `mission-failed`, the briefing pages, the hut's line, the level-end line) rendered (Okafor, Varga,
-      Rook; the Choir's stage sound); Nansen's six lines play as text until round 35 casts him
-      (VoiceFilesTest's `AUDITIONING`); RadioTimelineTest covering Level 13 voiced (M5 part G, step G6;
+      Rook; the Choir's stage sound); Nansen's lines played as text until round 35 cast him
+      (VoiceFilesTest's `AUDITIONING`, empty since step K1); RadioTimelineTest covering Level 13 voiced (M5 part G, step G6;
       rendered 2026-10-12, 15 lines, three takes pinned; pending the user's review in the combined round)
 - [x] Level 14's lines (radio, the briefing pages, the armoured car's line; the intel lines and the
       teaser are text) and the four Act 2 outro pages rendered with the cast speakers (Okafor, Varga,
       Rook, Hammer Lead; the Choir's stage sound); RadioTimelineTest covering Level 14 voiced, with
       and without Rook (M5 part H, step H6; rendered 2026-10-12, 20 lines, three takes pinned; pending
       the user's review in the combined round)
+- [x] Level 15's lines (radio with Rook's `{side}` takes, the briefing pages, the drop pod's line), the
+      Act 3 intro's four pages and the Act 2 outro's page 3 (re-keyed by "Airees") rendered with the cast
+      speakers (Okafor, Varga, Rook, Ares Control; the Choir's stage sound); four takes pinned; Ares
+      Control's takes free of mid-line pauses (voice.py's `MAX_PAUSE` retry: three lines retried);
+      `VoiceFilesTest` covers Level 15 and the Act 3 briefing (M7 part B, step VOX-B, 2026-10-14; accepted
+      in round 38)
+- [x] Level 16's lines (radio with Rook's `{side}` takes, the first wall touch, the relay hut's and the
+      secondary's lines, the level end, the briefing pages) rendered with the cast speakers (Okafor, Varga,
+      Rook, Ares Control; the Choir's stage sound); four takes pinned; `VoiceFilesTest` and
+      `RadioTimelineTest` cover Level 16 (M7 part C, step VOX-C, 2026-10-18; accepted in round 39, Varga's
+      t=47 line re-rendered for R.4)
+- [x] Level 17's lines (15 timed with Rook's three, the `ally-hit` and `ally-lost` lines once per dome by its
+      name: Bradbury, Lowell, Schiaparelli, Burroughs, Eden; the seed vault's, the secondary's and the level
+      end's lines; the two briefing pages: 30 files) rendered with the cast speakers (Okafor, Varga, Rook, Ares
+      Control); 17 takes pinned; `VoiceFilesTest` covers Level 17 (M7 part D, step VOX-D, 2026-10-18; pending
+      the user's review in round 40). Open: `VoiceLines.radio` and the game's `{ally}` name must read a ground
+      ally's name (the dome lines are keyed by it), and `RadioTimelineTest` gets Level 17's runs once the level
+      is mapped (step D4)
 - [x] A line that is only a stage direction plays its speaker's `stage` sound (speaker table) on
       the voice bus, found by `VoiceLines.radioVoice` for the game and RadioTimelineTest; the
       Choir's is round 29's option b (the sung "ah" F3 to E3), copied by
       `:pipeline:copyPlaceholderStageSounds`; VoiceFilesTest checks the file and every Choir cue
+- [ ] Act 3 (approved in round 36, M7): Ares Control cast (round 36, S.6 = b, Thomas A): his clip
+      renamed `refs/ref-ares-control.wav`, the speaker table without `uncast`, his takes checked for
+      mid-line pauses, the colonial portrait b (part B); Lance Control cast a/b in part A's round (round 37, S.16 = b, Celine Major: her clip renamed `refs/ref-lance-control.wav`, the speaker in the table, the call rendered and spoken in flight, step Q2); the respelling list in the text as spoken (built in part B step B2: `respell` in
+      the speaker table, `VoiceData.respelled`; Ares Control in the table) and the
+      Act 3 names in the read-back prompt (part B); the Choir's spoken line in fragments with its
+      layering a/b (part H); each Act 3 level's lines and the act intro and outro pages rendered and
+      reviewed in its part's round, `RadioTimelineTest` voiced per level with and without Rook
 
 ## Concept art
 
@@ -436,12 +556,33 @@ Nansen, the CDF officer of Nansen Relay: three of its lines (the t=36 arrival, t
 the t=218 grid sync) with two candidate reference voices, a male (a) and a female (b), rendered by
 Chatterbox at the neutral settings through radio filter b (`tools/concept/audio/tts_r35.py`; the readers
 and pitches in [concept/prompts.md](concept/prompts.md#voice-nansen)); the candidates' clips
-`refs/ref-nansen-r35-a/b.wav`.
+`refs/ref-nansen-r35-a/b.wav`. Closed in concept round 34 (user, 2026-10-12): **a** (Patrick Eaton), his clip
+renamed `refs/ref-nansen.wav`; b's clip moved to `concept/rejected/` with its CREDITS.md row.
 
 | File | What | Status |
 |---|---|---|
-| [concept/voice-nansen-r35-a.ogg](concept/voice-nansen-r35-a.ogg) | Nansen (round 35 audition), reader Patrick Eaton (`tools/concept/audio/tts_r35.py`) | proposed |
-| [concept/voice-nansen-r35-b.ogg](concept/voice-nansen-r35-b.ogg) | Nansen (round 35 audition), reader Sharon Riskedahl (`tools/concept/audio/tts_r35.py`) | proposed |
+| [concept/voice-nansen-r35-a.ogg](concept/voice-nansen-r35-a.ogg) | Nansen (round 35 audition), reader Patrick Eaton (`tools/concept/audio/tts_r35.py`) | chosen |
+| [concept/rejected/voice-nansen-r35-b.ogg](concept/rejected/voice-nansen-r35-b.ogg) | Nansen (round 35 audition), reader Sharon Riskedahl (`tools/concept/audio/tts_r35.py`) | rejected |
+| [concept/rejected/ref-nansen-r35-b.wav](concept/rejected/ref-nansen-r35-b.wav), [.txt](concept/rejected/ref-nansen-r35-b.txt) | Nansen's candidate b reference clip (Sharon Riskedahl, LibriVox, 172 Hz) and its Whisper transcript, moved here from `refs/` at the pick | rejected |
+
+Concept [round 36](../../concept-rounds/round-36/README.md) (Act 3 "Red Dust", M7 part B, pending the user's
+review) — casting **Ares Control**, Ares Landing's flight controller: three of his lines (Level 15's t=12
+jab, Level 17's t=102 dome names, Level 21's closing line, 1 s apart) with two candidate male reference
+voices, rendered by Chatterbox at his proposed base settings through radio filter b
+(`tools/concept/audio/tts_r36.py`; readers, pitches and measurements in
+[concept/prompts.md](concept/prompts.md#voice-ares-control)); the text as spoken uses the proposed
+respellings Airees, Skyaparelli and Burrows. The candidates' clips `refs/ref-ares-control-r36-a/b.wav`. Closed in round 36 (user, 2026-10-13): **b** (Thomas A), with the
+respellings; a's audition and its reference clip moved to `concept/rejected/` with the clip's CREDITS.md
+row; b's clip is renamed `refs/ref-ares-control.wav` at the render step (part B).
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/voice-ares-control-r36-a.ogg](concept/rejected/voice-ares-control-r36-a.ogg) | Ares Control (round 36 audition), reader David Wales (clip 102 Hz, 21.7 s; `tools/concept/audio/tts_r36.py`) | rejected — round 36: b (Thomas A) picked |
+| [concept/voice-ares-control-r36-b.ogg](concept/voice-ares-control-r36-b.ogg) | Ares Control (round 36 audition), reader Thomas A (clip 112 Hz, 25.2 s, a 2 s pause inside the second and third lines; `tools/concept/audio/tts_r36.py`) | chosen (round 36, S.6: Thomas A; mind his mid-line pauses when rendering) |
+| [concept/rejected/voice-lance-control-r37-a.ogg](concept/rejected/voice-lance-control-r37-a.ogg) | Lance Control (round 37 audition), reader Ted Lienhart (clip 132 Hz, take 126 Hz; "Lance uplink locked. Firing!", seed 104, 2.06 s; `tools/concept/audio/tts_r37.py`) | rejected — round 37: b (Celine Major) picked |
+| [concept/voice-lance-control-r37-b.ogg](concept/voice-lance-control-r37-b.ogg) | Lance Control (round 37 audition), reader Celine Major (clip 159 Hz, take 162 Hz; seed 101, 2.62 s; `tools/concept/audio/tts_r37.py`) | chosen (round 37, S.16: Celine Major; her clip is `refs/ref-lance-control.wav`, the call rendered from it in step Q2) |
+| [concept/rejected/ref-ares-control-r36-a.wav](concept/rejected/ref-ares-control-r36-a.wav), [.txt](concept/rejected/ref-ares-control-r36-a.txt) | Ares Control's candidate a reference clip (David Wales, LibriVox, 102 Hz) and its Whisper transcript, moved here from `refs/` at the pick | rejected — round 36: b (Thomas A) picked |
+| [concept/rejected/ref-lance-control-r37-a.wav](concept/rejected/ref-lance-control-r37-a.wav), [.txt](concept/rejected/ref-lance-control-r37-a.txt) | Lance Control's candidate a reference clip (Ted Lienhart, LibriVox, 132 Hz) and its Whisper transcript, moved here from `refs/` when round 37 closed | rejected — round 37: b (Celine Major) picked |
 
 Concept [round 33](../../concept-rounds/round-33/README.md) (M5 part E, user decision E10 = a) — casting Level 11's Atlas Control, the CDF
 officer of convoy Atlas-Seven: three of its lines (the t=1 call, the `ally-hit` line with `{ally}` =
@@ -463,9 +604,14 @@ choir pad (c, d), all through radio filter b (`tools/concept/audio/choir_r29.py`
 in [concept/prompts.md](concept/prompts.md#voice-choir-sings)). Closed 2026-10-06: **b** chosen;
 a, c and d in `concept/rejected/`.
 
+Lance Control's audition (concept [round 37](../../concept-rounds/round-37/README.md), S.16; its rows are in
+the round-36 table above): closed 2026-10-13 (user): **b** (Celine Major). Her clip is
+`refs/ref-lance-control.wav` (the speaker `lance-control` in data.yaml, the call rendered in step Q2);
+Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the clip's CREDITS.md row with them.
+
 ## Open questions
 
-- None open.
+- **Act 3**: the Choir's speech layering (a/b in part H's round).
 
 ## Decisions
 
@@ -841,3 +987,88 @@ a, c and d in `concept/rejected/`.
   to the whole city" sits higher than her other lines (259 Hz median against her 190–210 Hz, no jump;
   most seeds tried read it 230–270 Hz, so it was left at the key's seed), and Hammer Lead's "flight".
   Measured only, not listened to.
+- 2026-10-12 user, round 34 (13.4e, round 35's audition): Nansen is **a**, Patrick Eaton (male, 124 Hz);
+  b (Sharon Riskedahl) rejected (her clip and audition go when the round closes). Step K1: the speaker
+  table casts him (`ref: ref-nansen`, no `uncast`), his five Level 13 lines are rendered (portrait still
+  `radio-generic-cdf`), VoiceFilesTest's `AUDITIONING` is empty. Checked by Whisper and the pitch of the
+  raw takes (the radio filter fools the pitch tracker: through it every take read 115–420 Hz): two takes
+  pinned, "Grid sync complete…" (the key's seed said "completes") and "Integrity holding above half…"
+  (the key's seed jumped to about 400 Hz for half the line); every take now 130–140 Hz median. Whisper
+  hears "Aides"/"ages" for "Aegis" without the name prompt, as with the other voices. RadioTimelineTest
+  passes without retiming (the t=36 line runs 5.3 s, Okafor follows at t=47.5). Measured only, not
+  listened to.
+- 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): the round closed. The 53 voiced
+  lines of Levels 12–14 and the Act 2 outro accepted after the user's listen-through (I.4, P8 done);
+  Nansen's b audition and her reference clip (`ref-nansen-r35-b.wav`, `.txt`) moved to
+  `concept/rejected/`, the clip's CREDITS.md row with them.
+- 2026-10-12 (overnight design phase, **pending the user's review in round 36**): Act 3's voices
+  written as a draft (*Act 3 voices*): one new colony speaker, **Ares Control** (the drafts' Ares
+  Warden merged into him, as the act README decides; a man, older than Rook, clip pitch about
+  100–115 Hz; about 39 takes with the five domes' `{ally}` lines; cast a/b in part B's round), and
+  **Lance Control**, the Orbital Lance's caller (one take; part A's round); Okafor's refrain as one
+  file; pins planned for Varga's hint-1 line and Rook's quiet beat; the Choir's first spoken words
+  rendered in fragments at its ellipses with a layering a/b so Varga's voice does not show through,
+  at most about 6 s; a respelling list for the Mars names (Ares, Schiaparelli, Valles Marineris,
+  Lycus, Coprates, Eos, Burroughs), applied to the text as spoken and part of the key.
+- 2026-10-13 (user, round 36): the *Act 3 voices* section approved (D.30) with its proposals: Ares
+  Control one character (Ares Warden merged), the respelling list (Q.24f), Lance Control as the
+  orbital officer's call sign (Q.24g). S.6 = b: Ares Control cast as **Thomas A** (112 Hz); his
+  audition's 2 s pauses inside two lines are noted for the render step; the respellings Airees,
+  Skyaparelli and Burrows accepted; David Wales (a) rejected, his audition and reference clip moved to
+  `concept/rejected/` with the clip's CREDITS.md row. C.1 = b: his radio portrait is the dust-suit
+  controller on the teal channel. The document's `design` stays `draft` (only its Act 3 section was
+  part of this round's approval).
+- 2026-10-13: step Q2 (user, round 37, S.16 = b): Lance Control is Celine Major. Her clip renamed
+  `refs/ref-lance-control.wav`, `lance-control` added to the speaker table, and the call ("Lance uplink
+  locked. Firing!") rendered by `tools/art/voice.py` on the key's own seed (2.32 s, median 158 Hz like
+  the clip): Whisper base.en reads "Lance uplink locked, firing." from the raw take and through the
+  radio filter, so no pin or respelling was needed (the audition's take read "Plants up, link"). Her
+  "Firing!" stays level rather than rising as in the audition — pending the user's review. The level
+  screen now plays the call instead of showing it as text with the blip (`VoiceLines` lists the lance's
+  call with the Airstrike's; `SpecialCallTest`).
+- 2026-10-13 (user, round 37): round 37 closed (step Q3): S.16 = b (Celine Major) as built in step Q2;
+  Ted Lienhart's audition (`voice-lance-control-r37-a.ogg`) and his reference clip and transcript
+  (`ref-lance-control-r37-a.wav/.txt`, from `refs/`) moved to `concept/rejected/`, the clip's CREDITS.md
+  row with them; `tools/concept/audio/tts_r37.py` now renders only the chosen b. B.5 (g), the Orbital
+  Lance's call picked by the special's kind: yes.
+- 2026-10-14: M7 part B, step VOX-B (**pending the user's review** in round 38): Level 15's 17 radio
+  takes (Rook's t=23.5 line in both sides), its two briefing pages, the Act 3 intro's four pages and the
+  Act 2 outro's page 3 (re-keyed by "Airees"; the old file deleted) rendered by `tools/art/voice.py`, 26
+  files. The respelling list tried by Whisper's read-back (Okafor and Ares Control, three seeds each):
+  "Vallis Marinairis" and "Coprateez" kept, Lycus and Eos spoken as written (see *Pronunciation*). Pins:
+  Rook's t=23.5 left (the key's seed jumped high on "Lancer") and right (read "Copies"), Ares Control's
+  t=84 (of six seeds the one nearest his pitch; every seed reads "Like a station" for Lycus) and the drop
+  pod's line (the key's seed ran an octave high). Three takes were retried for a pause over 0.8 s. Level
+  15's Varga line at t=33.5 moved to t=34.5: Rook's t=23.5 line held the radio a second too long as text
+  (`RadioTimelineTest`).
+- 2026-10-14 (user, round 38): accepted: Ares Control's cast (Thomas A, the trimmed reference clip) and his five
+  lines, the "Lycus Station" and "last week" takes included (V.1); the respellings Airees, Skyaparelli,
+  Burrows, Vallis Marinairis and Coprateez, Lycus and Eos plain (V.2); Level 15's radio (V.3); the Act 3
+  intro's four pages and Level 15's two briefing pages (V.4); the Act 2 outro's page 3 re-keyed with
+  "Airees" (V.5).
+- 2026-10-18: M7 part C, step VOX-C (**pending the user's review** in round 39): Level 16's 17 voiced lines
+  (Rook's t=11 line in both sides: 18 takes) and its two briefing pages rendered by `tools/art/voice.py`, 20
+  files; Airees, Vallis Marinairis and Coprateez as approved, Eos and Helix as written (Noctis and Candor are
+  in no voiced line). Pins: Okafor's t=1 (the key's seed read "Canyon Martha Head"), Varga's t=114 (read
+  "Rell"; the pin reads "Vrell"), Ares Control's t=22 (a high jump on one word) and the relay hut's line (the
+  key's seed ran high and read "If that's"). Two takes were retried for a pause over 0.8 s. Level 16's Choir
+  moved t=162 → 166 and Varga's reply 169.5 → 173 (`RadioTimelineTest`: the secondary's closing line held
+  the Choir back when gate 6 fell after t≈155).
+- 2026-10-18 (user, round 39): accepted: Level 16's voiced lines and briefing pages, the four pinned seeds, Eos
+  and Helix spoken plain (V.1), and the Choir's retiming to t=166 with Varga's reply at t=173 (V.2). R.4 (no beam
+  at Level 16 on the plan): Varga's t=47 line rewritten as "Kill an anchor and the tendril drops. Ordinary shots
+  pass straight through it." and re-rendered (`tools/art/voice.py`, the key's own seed, read back as written;
+  `varga/e80e3305e17d.ogg`, the old `9f06f1dd1404.ogg` deleted); `VoiceFilesTest` and `RadioTimelineTest` pass.
+- 2026-10-18: M7 part D, step VOX-D (**pending the user's review** in round 40): Level 17's 28 voiced lines (the
+  `ally-hit` and `ally-lost` lines once per dome name: 10 takes) and its two briefing pages rendered by
+  `tools/art/voice.py`, 30 files; Airees, Skyaparelli and Burrows as approved, Bradbury, Lowell, Eden and Helix
+  as written. "Ares" read back as "Ares"/"Aries" (the respelling) in every pinned take; the key's seed of Ares
+  Control's t=1 line read "air is landing" and is pinned. Pins (17): Ares Control 13 (takes an octave high or
+  jumping high, and read-backs "air is landing", "Bradbury has hit", "Below", "bribery", and "The sky
+  apparently", "sparrows" through the filter),
+  Varga 2 (octave jumps), Okafor 1 (t=88.5, pitch), Rook 1 (t=14 read "Copy errors" through the filter).
+  Pitch per speaker on the unfiltered takes: Okafor about 140-160 Hz, Varga 190-240, Rook 140-195, Ares
+  Control 100-130. One take retried for a pause over 0.8 s (Okafor's level end). No radio retime: the timed
+  lines never overlap (the closest, t=80.5 → 88.5, leave 3.6 s). Built in the step's snapshot only, to hand to
+  the content and game owners: `VoiceLines.radio` expands `{ally}` by `level.groundAllies()`' names, and
+  `LevelScreen.allyName` (now `RadioEvents.allyName`) names a ground ally as a naval one (`sortie.groundAllies()`).

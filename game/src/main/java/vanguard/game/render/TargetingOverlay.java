@@ -88,7 +88,11 @@ public final class TargetingOverlay {
     public void draw(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
-            if (enemy.chain() != null || enemy.kind() >= barred.length || !barred[enemy.kind()]) {
+            // M7 part B: a buried unit (a Burrower under the sand) shows no bar: nothing can hit it.
+            if (enemy.chain() != null
+                    || enemy.kind() >= barred.length
+                    || !barred[enemy.kind()]
+                    || !enemy.layer().touchable()) {
                 continue;
             }
             bar(batch, enemy, enemy.hp(), enemy.spec().hp(), enemy.ticksSinceHit(), alpha);

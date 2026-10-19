@@ -15,6 +15,7 @@ import vanguard.sim.PlayField;
  * wisps and haze.
  *
  * @param scrollFactors every layer's scroll speed relative to the ground layer ({@code deep} optional:
+ *     M7 part C: and {@code plateau}, a canyon level's;
  *     a surface level without one has opaque ground tiles, see {@link #base()})
  * @param ramp seconds an atmosphere change takes, centred on the section boundary
  * @param hazeColour the setting's haze colour, {@code rrggbb}
@@ -37,9 +38,15 @@ public record BackdropData(
     public BackdropData {
         images.ifPresent(folder -> Check.that(folder.matches("level-\\d{2}"), "images: a level folder, level-NN"));
         Check.that(
-                scrollFactors.keySet().containsAll(EnumSet.complementOf(EnumSet.of(BackdropLayer.DEEP))),
+                scrollFactors
+                        .keySet()
+                        .containsAll(EnumSet.complementOf(EnumSet.of(BackdropLayer.DEEP, BackdropLayer.PLATEAU))),
                 "scroll_factors: give every layer (deep, far, ground, low-air, high-air; deep may be left"
-                        + " out on a surface whose ground tiles cover the screen)");
+                        + " out on a surface whose ground tiles cover the screen; plateau only on a canyon level)");
+        Check.that(
+                !scrollFactors.containsKey(BackdropLayer.PLATEAU)
+                        || scrollFactors.get(BackdropLayer.PLATEAU) > scrollFactors.get(BackdropLayer.GROUND),
+                "scroll_factors.plateau: above the ground layer, faster than it (M7 part C: about 1.25)");
         scrollFactors.forEach((layer, factor) -> Check.positive("scroll_factors." + layer.key(), factor));
         Check.that(
                 scrollFactors.get(BackdropLayer.GROUND) == 1.0,
@@ -62,7 +69,12 @@ public record BackdropData(
         return out;
     }
 
-    /** The layer's scroll factor; 0 for a {@code deep} layer the level does not have. */
+    /** M7 part C: whether the level has a {@code plateau} layer (a canyon's, Level 16). */
+    public boolean hasPlateau() {
+        return scrollFactors.containsKey(BackdropLayer.PLATEAU);
+    }
+
+    /** The layer's scroll factor; 0 for a {@code deep} or {@code plateau} layer the level does not have. */
     public double factor(BackdropLayer layer) {
         return scrollFactors.getOrDefault(layer, 0.0);
     }

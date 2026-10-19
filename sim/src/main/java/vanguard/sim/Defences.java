@@ -29,6 +29,16 @@ public final class Defences {
     private boolean broken;
     /** Whether this attempt's armour has been critical: the low-armour radio line has been set off. */
     private boolean critical;
+    /** M7 part A, the Shield Overcharge: the capacity's factor while overcharged; 1 otherwise. */
+    private double overFactor = 1;
+    /** Steps the capacity stays raised; 0 when it is not. */
+    private int overTicks;
+    /** Steps the excess still bleeds away over; 0 when none bleeds. */
+    private int bleedTicks;
+    /** The shield the excess bleeds off per step. */
+    private double bleedPerStep;
+    /** Steps the excess bleeds over at the overcharge's end (from the last activation). */
+    private int bleedSteps = 1;
 
     Defences(ShieldModel model, Plating plating, double mercySeconds) {
         this.model = model;
@@ -52,6 +62,10 @@ public final class Defences {
         mercy = 0;
         broken = false;
         critical = false;
+        overFactor = 1;
+        overTicks = 0;
+        bleedTicks = 0;
+        bleedPerStep = 0;
     }
 
     /** Back to a boss checkpoint's shield and armour, with the armour lost in the level until then. */
@@ -61,17 +75,67 @@ public final class Defences {
         this.armourLost = armourLost;
     }
 
-    /** Counts down the mercy time and regenerates the shield once the delay has passed. */
+    /**
+     * Counts down the mercy time and regenerates the shield once the delay has passed (M7 part A:
+     * towards the overcharged capacity while it lasts; at its end the excess bleeds away).
+     */
     void step() {
         if (mercy > 0) {
             mercy--;
         }
+        if (overTicks > 0 || bleedTicks > 0) {
+            overchargeStep();
+        }
+        double capacity = capacity();
         if (regenWait > 0) {
             regenWait--;
-        } else if (shield < model.capacity()) {
+        } else if (shield < capacity) {
             broken = false;
-            shield = Math.min(model.capacity(), shield + regenPerStep);
+            shield = Math.min(capacity, shield + regenPerStep);
         }
+    }
+
+    /**
+     * M7 part A, the Shield Overcharge (design/player/specials, Shield Overcharge (L19)): the shield
+     * fills to {@code factor} times its capacity at once, a broken shield included (its break and regen
+     * delay cancelled), and the capacity stays raised for {@code ticks} steps; the excess then bleeds
+     * away over {@code bleedTicks}. Armour, the mercy time and the regen rate are untouched; a new
+     * activation starts it afresh.
+     */
+    void overcharge(double factor, int ticks, int bleed) {
+        overFactor = factor;
+        overTicks = Math.max(1, ticks);
+        bleedTicks = 0;
+        bleedPerStep = 0;
+        bleedSteps = Math.max(1, bleed);
+        shield = capacity();
+        broken = false;
+        regenWait = 0;
+    }
+
+    private void overchargeStep() {
+        if (overTicks > 0) {
+            if (--overTicks > 0) {
+                return;
+            }
+            overFactor = 1;
+            double excess = shield - model.capacity();
+            if (excess > 0) {
+                bleedTicks = bleedSteps;
+                bleedPerStep = excess / bleedSteps;
+            }
+            return;
+        }
+        shield = Math.max(model.capacity(), shield - bleedPerStep);
+        if (--bleedTicks == 0 || shield <= model.capacity()) {
+            bleedTicks = 0;
+            bleedPerStep = 0;
+        }
+    }
+
+    /** The shield's capacity now: its model's, M7 part A: times the overcharge's factor while that lasts. */
+    private double capacity() {
+        return overTicks > 0 ? model.capacity() * overFactor : model.capacity();
     }
 
     /** A bullet: everything to the shield, the overflow to armour. Returns whether armour reached zero. */
@@ -118,14 +182,15 @@ public final class Defences {
      * M5 part F, a latched Lamprey's drain (design/enemies/air/lamprey): {@code points} off the shield
      * only, never the armour, and the regeneration paused (the step counts as a hit for its delay, also
      * once the shield is down, so it stays down while anything is latched). At zero the break rule
-     * applies and nothing more is drained. In the mercy time after an armour hit it drains nothing.
+     * applies and nothing more is drained. It drains on through the mercy time after an armour hit
+     * (round 34, 12.7b.b = no): the mercy time spares the ship damage, not a latched unit's drain.
      */
     void drain(double points, SimEvents events, double x, double y) {
         if (armour <= 0) {
             return;
         }
         regenWait = Math.max(regenWait, delayTicks);
-        if (mercy > 0 || shield <= 0) {
+        if (shield <= 0) {
             return;
         }
         shield -= Math.min(shield, points);
@@ -137,9 +202,9 @@ public final class Defences {
         }
     }
 
-    /** A shield cell: adds {@code points} up to the capacity. */
+    /** A shield cell: adds {@code points} up to the capacity (M7 part A: the overcharged one while it lasts). */
     void restoreShield(double points) {
-        shield = Math.min(model.capacity(), shield + points);
+        shield = Math.max(shield, Math.min(capacity(), shield + points));
     }
 
     /** An armour patch: adds {@code points} up to the plating's maximum. */
@@ -152,6 +217,14 @@ public final class Defences {
         if (critical) {
             // Only once set, so the hash of a run whose armour never gets this low stays as it was.
             hash.add(1);
+        }
+        if (overTicks > 0 || bleedTicks > 0) {
+            // M7 part A: only while an overcharge or its bleed runs, so other runs hash as before.
+            hash.add(overFactor)
+                    .add(overTicks)
+                    .add(bleedTicks)
+                    .add(bleedPerStep)
+                    .add(bleedSteps);
         }
     }
 
@@ -174,8 +247,29 @@ public final class Defences {
         return shield;
     }
 
+    /** The shield's capacity (the HUD's scale); M7 part A: without an overcharge's raise, see {@link #shieldCapacity()}. */
     public double maxShield() {
         return model.capacity();
+    }
+
+    /** M7 part A: the shield's capacity now, raised while overcharged. */
+    public double shieldCapacity() {
+        return capacity();
+    }
+
+    /** M7 part A: whether the Shield Overcharge raises the capacity now (the white double shell). */
+    public boolean overcharged() {
+        return overTicks > 0;
+    }
+
+    /** M7 part A: steps the overcharge still lasts; 0 when none does. */
+    public int overchargeTicks() {
+        return overTicks;
+    }
+
+    /** M7 part A: whether the excess of an ended overcharge is bleeding away. */
+    public boolean bleeding() {
+        return bleedTicks > 0;
     }
 
     public double armour() {

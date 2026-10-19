@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-10-04
+updated: 2026-10-18
 ---
 
 # Mission select
@@ -13,8 +13,9 @@ updated: 2026-10-04
 
 Replay a mission the current campaign has already flown (user decision 2026-10-04): the
 campaign's levels act by act with their best grades, the flown ones open, every later one locked
-with its name hidden. A replay is a free flight for a better grade: it earns nothing and leaves the
-campaign where it is. This is the "level-select of a replay mode" that
+with its name hidden. A replay starts like every mission, with its briefing and the hangar (user
+decision 2026-10-18), and is a free flight for a better grade: it earns nothing and leaves the
+campaign's progress where it is. This is the "level-select of a replay mode" that
 [scoring](../../systems/scoring/README.md) keeps the best grade per level for.
 
 ## Design
@@ -34,7 +35,7 @@ campaign where it is. This is the "level-select of a replay mode" that
 │                     │ ACT II  ??? ──────────────────────── │                 │
 │                     │ NO CREDITS EARNED - BEST GRADE KEPT  │                 │
 │                     └──────────────────────────────────────┘                 │
-│                   UP/DOWN SELECT    ENTER FLY    ESC BACK                    │
+│                 UP/DOWN SELECT    ENTER BRIEFING    ESC BACK                 │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -48,21 +49,33 @@ campaign where it is. This is the "level-select of a replay mode" that
   built. Every other level is **locked**: dimmed, "???" for its name and "LOCKED" on the right,
   the campaign's next level too. An act whose first level the campaign has not reached shows "???"
   for its name. The list scrolls (14 rows) with the kit's scroll markers.
-- **Controls:** up / down move between open missions (locked ones are skipped), confirm flies the
-  selected one, Back returns to the main menu. The cursor starts on the last flown mission. Drawn
+- **Controls:** up / down move between open missions (locked ones are skipped), confirm opens the
+  selected one's briefing, Back returns to the main menu. The cursor starts on the last flown mission. Drawn
   with the glass kit over the dimmed title scene; the title theme plays on.
-- **A replay** (main-agent choice, for the user to confirm; the design had no replay mode before,
-  [campaign](../../campaign/README.md) left it for later):
-  - it flies at the campaign's difficulty with the campaign's **current loadout** and special
-    charges, at **full armour** (no repair bill, since nothing of the flight is kept);
+- **The way in** (user decision 2026-10-18): mission select → the level's **mission briefing**
+  (its own pages, objectives and hangar teaser, without its act's title card and intro pages) →
+  the **replay hangar** → the level as a replay → debrief → mission select. The briefing's Back
+  asks to quit to the main menu, as every briefing's does.
+- **The replay hangar** is the normal [hangar](../hangar/README.md) on the **real campaign** of the
+  save the replay was started from: what is bought, sold, fitted or repaired there is kept, and the
+  credits spent are really spent. Its top bar reads `REPLAY L05 - <NAME>` instead of
+  `BEFORE L05`, its intel is the replayed level's, and its launch chip reads `> REPLAY`. It opens
+  without an autosave (a save was just loaded, as after Continue); its **launch** writes the
+  campaign as the hangar left it to the autosave, and the flight is a replay of that autosave; its
+  quit and its SAVE command work as in the campaign's hangar.
+- **A replay flight** (main-agent choice, confirmed by the user 2026-10-04; the design had no
+  replay mode before, [campaign](../../campaign/README.md) left it for later):
+  - it flies at the campaign's difficulty with the loadout and special charges the replay hangar
+    left, at **full armour** (no repair bill, since nothing of the flight is kept);
   - it never changes the campaign's **progress** or next level, its credits, score, kills, armour,
-    charges or retries, and it is never autosaved;
+    charges or retries, and the flight itself is never autosaved;
   - it earns **no credits** (no farming, see [economy](../../systems/economy/README.md)); the
     [debrief](../debrief/README.md) shows a REPLAY section with "NO CREDITS BANKED", the balance
     and the score in place of the credits;
   - it **keeps a better grade**: a grade that beats the level's best is written into the save the
-    replay was started from, and the debrief shows NEW BEST; nothing else of that save changes
-    (its write time neither, so it stays the current campaign);
+    flight is a replay of (the autosave the replay hangar's launch wrote; the slot it was loaded
+    from when that write failed), and the debrief shows NEW BEST; nothing else of that save
+    changes (its write time neither, so it stays the current campaign);
   - its retries are unlimited, also on hard, so a replay never ends in a game over; the
     [pause](../pause/README.md) menu's abort reads ABORT REPLAY and the mission failed screen's
     BACK TO MISSIONS, both returning here, as the debrief does after a won replay. Quit to main menu
@@ -83,12 +96,17 @@ campaign where it is. This is the "level-select of a replay mode" that
 - [x] Tests: `MissionsTest` (the list's locked and open levels and act names, a better grade only,
       a replay earns nothing and keeps the progress, only flown levels)
 - [x] Checked in a game capture: the list over the title scene with Levels 01–03 flown
+- [x] A replay opens the level's briefing (`CampaignRoute.beforeReplay`, the act intro left out by
+      `CampaignRoute.missionBriefing`) and then the replay hangar on the real campaign
+      (`HangarScreen.replay`: `REPLAY L05` header, `> REPLAY` launch, the campaign written to the
+      autosave at launch, the flight `HangarScreen.replayFlight`) — 2026-10-18
+- [x] Tests: `MissionFlowTest` (a purchase in the replay hangar is kept, the replay still earns
+      nothing and keeps the progress), `CampaignRouteTest` (the replay's briefing without the act
+      intro)
 
 ## Open questions
 
-- The replay rules above are main-agent choices: the current loadout at full armour, no credits,
-  no progress, the better grade kept, unlimited retries. Should a replay start with the briefing
-  (today it starts the level at once), or offer the hangar to change the loadout for the replay?
+- None open.
 
 ## Decisions
 
@@ -97,3 +115,11 @@ campaign where it is. This is the "level-select of a replay mode" that
   rules are main-agent choices (conservative: nothing kept but a better grade), for the user to
   confirm.
 - 2026-10-04 (user decision): the replay rules are confirmed as built: the current loadout at full armour, no credits, progress or charges change, only a better best grade is kept, unlimited retries.
+- 2026-10-18 (user decision, Act 2 playtest): the open question is answered: a replay starts with
+  the level's briefing, then the hangar, then the level, as every mission does. The replay hangar
+  works on the real campaign (purchases, sales and loadout changes are kept, credits spent are
+  spent); the flight stays a replay as decided on 2026-10-04, built from the campaign as the hangar
+  left it. Built choices (pending the user's review): the replay's briefing leaves out the act's
+  title card and intro pages; the replay hangar opens without an autosave and writes the autosave
+  at launch, which the flight then replays and into which its better grade goes; the header reads
+  `REPLAY L05` and the launch `> REPLAY`.

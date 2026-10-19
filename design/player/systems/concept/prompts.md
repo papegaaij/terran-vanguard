@@ -40,3 +40,28 @@ object's centre (radius 3, 7, 11, 15 px over the four frames) and fades as it gr
 lock marks on it at the diagonals (a sensor's lock), a faint wash inside the ring and a white flash
 at the centre in the first two frames: it reads as the scanner finding the object rather than the
 object shining.
+
+## dash-capture-r37-a
+
+Concept round 37 (M7 part A close-out, step A7), a capture of the game, not generated art (`.png`
+labelled sheet, `.mp4` H.264/AAC with the game's sound, 19 s, the full 960×540 frame with a caption
+strip); the method of
+[arsenal-capture-r37-a](../../weapons/concept/prompts.md#arsenal-capture-r37-a) (private Xvfb,
+960×540 window, `--bench`, x11grab 30 fps, the mix through OpenAL Soft's `wave` driver). The Evasive
+thrusters fitted with `--start level --level 5 --difficulty hard --loadout
+front=ion-beam:2,left=light-drone-bay,right=deflector-pod,utility=evasive-thrusters`; XTest keys on
+the display: V (the Dash key) at t 14, 29 and 44, each followed by a 0.27 s Down hold to take the
+ship back (a V dash with no direction held goes forward 72 px); double-taps (two 0.08 s presses
+0.15 s apart) of Left at t 21 and of Right 0.5 s later (refused: the 3 s cooldown), and of Right at
+t 33 in a second run (the same arguments with `--special emp-burst:3` and the EMP capture's Needler scratch data). The drone run's scratch data
+(see the arsenal entry) does not touch the dash.
+
+The sheet: the V dash at 2.4× (the frame it is pressed as bullets hit the shield, the afterimages
+behind the ship, fading), the same moment full frame; the HUD dash pip right of the `SHIELD` plate
+(cyan ready, empty at the dash, refilling dim, white, cyan); the double-tap Left dash with its
+afterimages trailing right, the refused Right double-tap, the other run's Right dash and the pip
+during the double-tap dash. The mp4: Level 05 t 12.8–18, 20–25.4, 28–32 and (second run) 32–36.3.
+
+Findings (pending the user's review): the pip's white "ready" state lasts one captured frame (10
+rendered frames at about 460 fps uncapped under Xvfb, about 20 ms); see the same note on the cooldown
+ring in [specials-capture-r37-a](../../specials/concept/prompts.md#specials-capture-r37-a).

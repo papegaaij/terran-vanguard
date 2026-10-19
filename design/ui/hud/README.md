@@ -1,10 +1,10 @@
 ---
 title: HUD
-design: review
+design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-12
+updated: 2026-10-13
 ---
 
 # HUD
@@ -267,6 +267,15 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       wave strip's marks: Level 13's three defend phases and the whiteout (new marks, done in M5 part
       G, step G6: `Intel.marks`, `PartGHudTest`), Level 14's root field (t=60–95) and the boss at 108
       ([hangar](../hangar/README.md))
+- [x] The special row's **cooldown ring** (the [specials](../../player/specials/README.md)' *Cooldown
+      specials and the HUD ring*: the clockwise fill, the seconds left, `READY` with its chime, the
+      white arc while the Shield Overcharge lasts) and the **dash pip** beside the shield row (the
+      [Evasive thrusters](../../player/systems/README.md)) — **later: Act 3** (M7 part A; round 36,
+      Q.25e). Built in step A6 (`ShipPanel`): the ring of 28 dots round the 16 px icon, the row
+      compact (the icon where the word `SPECIAL` stands) for a cooldown special or a name over 10
+      characters (`ORBITAL LANCE`), `OVERCHARGE` for the Shield Overcharge; the dash pip a 16×6 cell
+      right of the shield's label plate; with it the overcharge's white cores in the shield bar and
+      a drone bay's hits strip under its weapons row
 
 ## Open questions
 
@@ -575,3 +584,23 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 - 2026-10-12: `design` back to `review` (from `approved`) for the radio rule changes of steps H7b and
   H9 above, which apply to every level; listed for the user as C10 in the combined
   [concept round 34](../../concept-rounds/round-34/README.md#changes-to-approved-specs).
+- 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): C10 accepted (the radio rule of
+  H7b and H9 for all levels: a `boss-phase` line stale after 20 s and dropped at the boss's death, a
+  secondary line waiting at a boss warning dropped, a closing line on a free radio ahead of the next
+  timed line), and the Level 12–14 trackers and words; `design` back to `approved`.
+- 2026-10-13 (user, round 36, Q.25e): the cooldown ring and the dash pip of the Act 3 equipment added to the checklist as M7 part A items.
+- 2026-10-13: M7 part A, step A6 (our reading, **pending the user's review** in round 37): the 8 px
+  HUD font cannot fit `SHIELD OVERCHARGE` (nor `OVERCHARGE` beside `READY` after the word
+  `SPECIAL`, nor `ORBITAL LANCE` beside its charges), so the special row goes **compact** for a
+  cooldown special or a name over 10 characters: the icon (in its ring) where the word `SPECIAL`
+  stands, the name after it; the Act 1–2 specials and the EMP Burst keep the row as it was. The
+  ring is 28 dots: dim cyan as the cooldown runs, cyan when ready, white for 0.2 s as it gets
+  there, the overcharge's white arc over it. The **dash pip** is a 16×6 cell right of the shield's
+  label plate, filling dim cyan over the cooldown, cyan when ready, white for 0.2 s as it gets
+  there (step A8: both count game time; they counted 12 and 10 rendered frames, round 37 R.4 d). A drone bay's **hits** are a 2 px strip of five pips under its row's level pips (the
+  level pips stay), cyan, refilling dim while its bay rebuilds it.
+- 2026-10-13 (user, round 37): both changes to the approved specs accepted: the light drone's hits as a
+  2 px strip under its row with the level pips kept (C1) and the compact special row for a cooldown
+  special or a name over 10 characters (C2); step A6's HUD choices kept (B.5 a, b: the 28-dot cooldown
+  ring with the overcharge's white arc, the dash pip right of the shield's label plate); R.4 (d) fixed:
+  the READY flash and the dash pip's white state last 0.2 s of game time (step A8).

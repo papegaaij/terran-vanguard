@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../tech/roadmap, ../../tech/architecture, ../../audio/music, ../../audio/sfx]
-updated: 2026-10-09
+updated: 2026-10-12
 ---
 
 # Production art plan
@@ -167,6 +167,12 @@ Game captures of the production batches that span several parts; prompts:
 - [x] A unit used by several levels packed into each of their unit atlases, the shared pages
       keeping only the game-wide sprites (`SpriteUse`, `SpriteUseTest`; D10 = a) — M5 part C
 - [x] M5 part E (Level 11) units and effects produced and approved as final in round 33 (2026-10-09; the ship pair a and the slam look a picked, b's review files in `concept/rejected/`): the Driftjelly, Reef Spitter and Harbour Kraken (`tools/art/driftjelly.py`, `reef_spitter.py`, `harbour_kraken.py`), the water and torpedo effects with the lane telegraph and slam a/b (`tools/art/water_fx.py`), the convoy ships a/b (`tools/art/convoy_ships.py`) and the props (`tools/art/l11_props.py`); the backdrop (`tools/art/backdrop_l11.py`), the briefing images and the intel pictures (`tools/art/briefing_images.py`, `intel.py`) approved with them
+- [x] M6 part D placeholder audit (`PlaceholderAuditTest` in `pipeline`): every PNG and OGG in
+      `assets/` carries its `Source` chunk or `SOURCE` comment or is a listed known exception
+      (the synthesized concept sounds kept as they are, the act titles' lettering, and Levels
+      12–14's sounds pending concept round 34), a listed file that turns final or leaves fails it,
+      and every sprite root of Levels 01–14 (`SpriteUse.roots`) has frames, every unit its own
+      sprite (a hull boss or set piece its parts), so none is drawn by the code's placeholder shapes
 - [ ] M5 parts final — **later: M5** (a round per level, as in M4; part A's round 28, part B's
       round 30, part C's round 31, part D's round 32 and part E's round 33 closed)
 
@@ -356,3 +362,12 @@ Game captures of the production batches that span several parts; prompts:
   two-page cap around Levels 12–14. Rejected: b (keep the rule and open the second shared page:
   16 MiB more always loaded). `SpriteUse` and its test follow in part C; the plan is
   `in-progress` again.
+- 2026-10-12: M6 part D's placeholder audit (Q12, pending the user's review in round 35): no
+  shipped image of Levels 01–14 is a placeholder; the shipped files without a production mark
+  are 46 sounds and the two act-title letterings: 27 synthesized concept sounds (pickups, UI,
+  launch rail, edge warning, the Leviathan's cry, save, mine arm, Driftjelly, the Choir's sting),
+  final as they are by the SFX row above but never given a `SOURCE` comment, and 19 Level 12–14
+  sounds waiting for round 34. `PlaceholderAuditTest` lists them; after round 34 its list shrinks.
+- 2026-10-12 (user, round 35): the placeholder audit accepted (D.1), and the 27 synthesized concept
+  sounds without a `SOURCE` comment count as final (D.3 d); the list of 19 Level 12–14 sounds shrinks
+  after round 34's picks (R.2).

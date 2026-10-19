@@ -3,6 +3,20 @@
 # The renderer (tools/art/voice.py) and the game (vanguard.content.voice.VoiceLines) read it: a
 # change here changes the key of every line it touches, so only those lines are rendered again.
 
+# respell: a word or name -> its spelling as spoken (round 36, Q.24f and S.6's (a)-(c); M7 part B): applied to
+# the text as spoken of every line, whole words, case-sensitive, longest first; the subtitle keeps the real
+# spelling. It is part of the key, so a changed respelling re-renders exactly the lines that use the word.
+# Airees, Skyaparelli and Burrows were heard in Ares Control's audition and accepted; the others were tried at
+# the render step (VOX-B, Whisper read-back of Okafor and Ares Control, three seeds each, plain against
+# respelled): Vallis Marinairis and Coprateez kept (the plain spellings read "Vales/Valet's" and "cop rates");
+# Lycus and Eos dropped (plain read back as well as Lykus and Ee-oss, which also read "E-O-S" once).
+respell:
+  Ares: Airees
+  Schiaparelli: Skyaparelli
+  Burroughs: Burrows
+  Valles Marineris: Vallis Marinairis
+  Coprates: Coprateez
+
 expressions:   # exaggeration 0.25-2, cfg_weight (lower: slower, more dramatic), temperature
   neutral: {exaggeration: 0.5, cfg_weight: 0.5, temperature: 0.7}
   grim: {exaggeration: 0.45, cfg_weight: 0.5, temperature: 0.7}
@@ -32,6 +46,9 @@ speakers:
       3e65a05739f4: 65428273    # Level 09 failed "Node C1 got past you, Lancer…": the key's seed read "See, one" and "your answer" dry
       57cca67e43d2: 241503377   # Level 10 briefing page 1 "Nova Lagos evacuates…": the key's seed read "Fides shuttles" both ways
       9043598844d3: 118220431   # Level 10 end, four home "Four of five made orbit…": the key's seed read "eight to hundred and eighty" dry
+      111125288031: 66006       # game over "Lancer is down…" (M6 part B): picked of eight auditioned seeds; the key's seed read "age is wing" for "Aegis Wing"
+      100852a91877: 16842982    # Level 16 t=1 "Aegis, canyon mouth ahead…": the key's seed read "Canyon Martha Head" through the filter
+      1cc5abef7b71: 30201466    # Level 17 t=88.5 "Not on this channel, Doctor.": the key's seed dipped to about 130 Hz and jumped high (p90 220 Hz); the pin stays near her 155 Hz
   varga:
     names: [Varga]
     ref: ref-varga
@@ -43,6 +60,9 @@ speakers:
       cda9d1e479a9: 215661581   # Level 12 t=58 "There's a CDF sonde out there…": the key's seed jumped an octave on "data"
       dd97a15d5b15: 232364292   # Level 12 t=30 "Eel-shaped contacts…": the key's seed jumped an octave on "shaped contacts"
       de6dd3e53a7a: 233249564   # Level 12 canister pickup "A CDF supply canister…": the key's seed ended in seven mumbled "Mm"s and a pitch jump
+      4e10c065c26c: 81881299    # Level 16 t=114 "That's the Helix research station…": the key's seed read "Rell all rounded"; the pin reads "Vrell" (of five seeds)
+      ccd2cc769c8b: 214804611   # Level 17 t=29 "Shelled walker…": the key's seed jumped an octave (about 480 Hz) on a quarter of the line
+      7c8aa087882e: 130607078   # Level 17 t=123 "Singer with bombers…": the key's seed jumped high (p90 about 360 Hz); the pin is the steadiest of six
       febdaf698bba: 267115454   # Level 09 briefing page 2 "The nodes are hardened…": the key's seed read "the streets and packs" both ways
       a86c85a4cc53: 77391054    # Level 10 briefing page 2 "The Vrell hunt…": the key's seed read "The rail hunt" but with a prompt through the filter; the pin reads "Vrell" with a prompt both ways
       ec548c3af77b: 118220431   # Level 10 secret "That ferry's hold…": the key's seed read "berry's" through the filter; the pin "ferries" every way
@@ -50,6 +70,9 @@ speakers:
     names: [Rook]
     ref: ref-rook
     pins:
+      aef1e736b4b8: 183466816   # Level 15 t=23.5 "Copy, Lancer. I'm on your left…": the key's seed jumped high (about 490 Hz) on "Lancer"
+      f8ce36c82ede: 260907338   # Level 15 t=23.5 "…I'm on your right…": the key's seed read "Copies, Lancer" and jumped high through the filter
+      c51c4ab76151: 206709112   # Level 17 t=14 "Copy, Ares…": the key's seed read "Copy errors" through the radio filter; the pin reads "Aries" (the approved Airees) both ways
       c2a515c7fc87: 113898164   # Level 13 t=58.5 "Contacts, all sides!…": the key's seed jumped an octave (about 430 Hz) throughout
       0d795fb668a6: 14168230    # Level 12 first-latch "You've got a passenger!…": the key's seed said "You got a passenger" and ran unvoiced then high (about 230 Hz)
       4195e4cad552: 68803080    # Level 11 boss-part-destroyed "Tell the cook we're having calamari.": the key's seed jumped an octave (about 500 Hz) on its first four words
@@ -107,6 +130,34 @@ speakers:
   atlas-control:   # Level 11 (M5 part E, E10 = a): the CDF officer of convoy Atlas-Seven; cast in round 33 (b, MaryAnn), neutral as auditioned
     names: [Atlas Control]
     ref: ref-atlas-control
-  nansen:   # Level 13 (M5 part G, G9 = a): the CDF officer at Nansen Relay; auditioned a/b in round 35 (tools/concept/audio/tts_r35.py), uncast until the round picks: the lines play as text
+  nansen:   # Level 13 (M5 part G, G9 = a): the CDF officer at Nansen Relay; cast in round 35 (a, Patrick Eaton; the user's pick in round 34's review, 2026-10-12), neutral as auditioned
     names: [Nansen]
-    uncast: true
+    ref: ref-nansen
+    pins:
+      05b93a9b2975: 181451311   # Level 13 t=218 "Grid sync complete…": the key's seed said "Grid sync completes" both ways
+      5539218ddd0b: 99019941    # Level 13 secondary "Integrity holding above half…": the key's seed jumped an octave (about 400 Hz) for half the line
+  ares-control:   # Levels 15-17 and 19-21 (M7 part B): Ares Landing's flight controller; cast in round 36 (S.6 = b, Thomas A), a little drier than neutral; radio portrait generic-colonial (teal)
+    names: [Ares Control]
+    ref: ref-ares-control   # refs/ref-ares-control.wav: the round-36 clip (b) with its two mid-line pauses trimmed out (step AUD-B)
+    shift: {exaggeration: -0.1, cfg_weight: -0.05}
+    pins:
+      9beef5fc32a2: 163547658   # Level 15 t=84 "Those things took our survey posts…": of six seeds the one nearest his pitch (about 127 Hz); every seed read "Like a station" (Lycus, LIE-kus)
+      d5164ec2b9e1: 223477655   # Level 15 secret drop pod "Our supply drop…": the key's seed ran an octave high (about 430 Hz) and read "with yours"
+      728e990f43d1: 120129663   # Level 16 t=22 "Aegis, this canyon is our only road east…": the key's seed jumped high (about 400 Hz) on a word; the pin stays near 115 Hz
+      beaf54a50a1b: 199963432   # Level 16 secret relay hut "That's our relay cache…": the key's seed ran high (about 290 Hz) and read "If that's"
+      355825c69708: 55967256    # Level 17 t=1 "Aegis flight, Ares Landing…": the key's seed jumped high (about 460 Hz) and read "air is landing"; the pin reads "Ares Landing"
+      80042f3b7ac1: 134242786   # Level 17 t=71.5 "Outer greenhouses are gone…": the key's seed ran high (about 430 Hz) for 40 % of the line
+      636f4639a086: 104288560   # Level 17 t=102 "Inner ring: Schiaparelli…": the key's seed jumped high on a word (p90 250 Hz)
+      e58ad4490b68: 240700467   # Level 17 t=130.5 "Eden is under you…": the key's seed ran high (about 370 Hz) for 30 % of the line
+      585cdf8da96a: 92686772    # Level 17 secondary "Five domes, not a crack…": the key's seed ran high (about 290-440 Hz)
+      46deafaee0f2: 74320361    # Level 17 ally-hit "Bradbury is hit!…": the key's seed ran an octave high (about 430 Hz) and read "Bradbury has hit"
+      8656858c0c57: 140871495   # Level 17 ally-hit "Lowell is hit!…": the key's seed ran an octave high (about 440 Hz) and read "Below"
+      8a7a7977419e: 145220981   # Level 17 ally-hit "Burroughs is hit!…": every seed that read "Burrows" plainly ran an octave high (about 430 Hz, 14 tried); the pin is at his pitch and reads "Barrows"
+      273a59d92ab0: 41157226    # Level 17 ally-hit "Eden is hit!…": the key's seed ran high (about 440 Hz) for 40 % of the line
+      7c6bd910a7c8: 130481007   # Level 17 ally-lost "We've lost Bradbury…": the key's seed read "bribery"
+      3065891bde62: 50771294    # Level 17 ally-lost "We've lost Schiaparelli…": the key's seed ran an octave high (about 440 Hz)
+      bc146c639ce2: 197239699   # Level 17 ally-hit "Schiaparelli is hit!…": the key's seed read "The sky apparently" through the filter
+      fd2a0968be6d: 265477748   # Level 17 ally-lost "We've lost Burroughs…": the key's seed read "sparrows" through the filter
+  lance-control:   # the Orbital Lance's call (M7 part A, design/player/specials): the CDF orbital officer; cast in round 37 (b, Celine Major, S.16), neutral as auditioned
+    names: [Lance Control]
+    ref: ref-lance-control

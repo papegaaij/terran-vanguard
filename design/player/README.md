@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-06
+updated: 2026-10-14
 ---
 
 # Player
@@ -64,9 +64,11 @@ generator limits what can be fitted at the same time.
 - **Availability** in the component tables (`start`, `act N`) means: in the shop from the first
   hangar visit of that act; `act 1` items appear from the visit before L02, `act 2` items from
   the visit before L08, and so on. Weapons and specials use exact levels (`Lnn`).
-- All balancing numbers for Acts 1–2 live in the parts' `data.yaml` files (this directory's
-  [data.yaml](data.yaml) holds availability and the pickups); check them with
-  `python3 tools/balance.py` (see [weapons](weapons/README.md#data-and-balancing)).
+- All balancing numbers for Acts 1–3 live in the parts' `data.yaml` files (this directory's
+  [data.yaml](data.yaml) holds availability and the pickups; Act 3's arsenal since M7 part A); check
+  them with `python3 tools/balance.py` (see [weapons](weapons/README.md#data-and-balancing)). The
+  [balance plan](balance-plan.yaml) runs to Level 21 (the Ion Beam's hand plan; a level's income is its
+  typical haul, budget(n) until its data exists: the user's decision of 2026-10-14, round 37 R.1 reverted).
 
 ### Power budget
 

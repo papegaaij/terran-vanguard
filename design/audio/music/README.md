@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../campaign]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Music
@@ -29,8 +29,8 @@ everywhere.
 | 5 | Act 1 B: Earth orbit & Luna | Levels 01–07 | Synth-orchestral, the main motif | 3:00 loop | P1 | [music-r01-b](concept/music-r01-b.ogg) "Coalition Rising" (chosen); full length: [coalition-rising-full-r08-a](concept/coalition-rising-full-r08-a.ogg) (chosen) |
 | 6 | Act 2 A: Earth surface | Levels 08–14 | Urgent breakbeat, orchestral hits, choir; the main motif as a 16th riff | 3:00 | P2 | [earth-theme-r03-a](concept/earth-theme-r03-a.ogg) "Homefront" (chosen); full length: [homefront-full-r08-a](concept/homefront-full-r08-a.ogg) (chosen) |
 | 7 | Act 2 B: Earth surface | Levels 08–14, incl. the L12 storm (no separate storm variant) | Urgent breakbeat, orchestral hits | 3:00 | P2 | [act2-b-theme-r08-a](concept/act2-b-theme-r08-a.ogg) "Firestorm" (chosen) |
-| 8 | Act 3 A: Mars | Levels 15–21 | Dusty breakbeat, desert-scale (phrygian dominant) lead | 3:00 | P2 | [mars-theme-r02-a](concept/mars-theme-r02-a.ogg) "Red Dust Run" (chosen) |
-| 9 | Act 3 B: Mars | Levels 15–21 | Dusty mid-tempo techno, Vorne's motif as a faint layer | 3:00 | P2 | — |
+| 8 | Act 3 A: Mars | Levels 15–17 and 20 (see *Act 3 music*) | Dusty breakbeat, desert-scale (phrygian dominant) lead | 3:00 | P2 | [mars-theme-r02-a](concept/mars-theme-r02-a.ogg) "Red Dust Run" (chosen) |
+| 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | — (brief in *Act 3 music*; proposed in round 36) |
 | 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen) |
 | 11 | Act 4 B: Europa | Levels 22–28 | Muffled ambient-dnb, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | — |
 | 12 | Act 5 A: Asteroid belt | Levels 29–35 | Driving industrial, metallic percussion, Vorne's motif in the open | 3:00 | P3 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
@@ -49,6 +49,7 @@ everywhere.
 | 26 | Game over | Hard-mode game over | Somber, main motif in minor | 0:20 | P3 | [game-over-r08-a](concept/game-over-r08-a.ogg) (chosen) |
 | 27 | Ending | Campaign ending | Main motif, orchestral | 3:00 | P3 | — |
 | 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
+| 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-a](concept/debrief-theme-r40-a.ogg) "Homeward" / [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (proposed, round 40) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -76,6 +77,8 @@ Which level uses A or B is set per level in the [campaign](../../campaign/README
   [story](../../story/README.md): a faint background layer from the first hints in Act 3 (the
   Act 3 B theme and the L19 Revenant Walker fight) and in Act 4 (L27–28), then in the open from
   Act 5, when Vorne's broadcast reveals the Ascendancy.
+  In track 9 "Grey Signal" (Act 3 B, D minor) it is not brass but a thin whistle heard through a
+  radio band-pass, D4 · F4 · A4 · C♯5: an intercepted human signal (round 36, S.1 = b).
 
 ### Loops and transitions
 
@@ -181,6 +184,96 @@ final in concept round 31), in the same method as "Homefront":
   appears (an anchored boss arrives at the halt; the level's draft said "when the Kraken surfaces",
   which read as "shows itself"), then the theme with the full mix, as at Level 05's frigate. No new
   music file and no new music key: the level's `music` block.
+
+### Act 3 music (approved, round 36)
+
+**Status: approved in concept round 36 (user, 2026-10-13, D.28)**, written for the
+[Act 3 README](../../campaign/act-3-red-dust/README.md#music)'s plan; the level documents carry the same cues in their *Music & ambience*. Two
+themes serve the act: track 8 "Red Dust Run" (chosen in round 02) in Levels 15–17 and 20, and track
+9, the B theme, in Levels 18, 19 and the Level 21 approach. The Vrell boss theme, the boss warning,
+the mini-boss sting and the jingles are the built ones; no other new music.
+
+#### Track 8 "Red Dust Run" in production (M7 part B)
+
+As "Homefront" and "Firestorm": a full-length mix (≈ 3:00) from the chosen round-02 sketch's
+generator, checked against the final spec (OGG Vorbis q6, −14 LUFS ±0.5 LU, true peak ≤ −1 dBTP,
+`LOOPSTART` / `LOOPLENGTH`, a `SOURCE` comment) and rendered by `tools/art/themes.py`, plus a base
+stem from a new frozen stem generator (the round-11 method: one render, the base groups through the
+full mix's own chains and linked mastering). Unlike tracks 6 and 7, track 8 has only its 53.8 s
+sketch, so the full length is new composition and gets its own review (part B's round) before the
+stem. Guidance for the split: the base keeps the hand drums, the reese bass, the wind and the drone;
+it drops the breakbeat top, the reed melody and the 16th arpeggio.
+
+#### Track 9, the Act 3 B theme: brief
+
+Where track 8 runs, track 9 stalks: the same desert, slower and colder, with the first trace of
+something that is not Vrell under it. It follows the round-36 sketch **b "Grey Signal"** (user
+decision S.1 = b, 2026-10-13; [concept/act3-b-theme-r36-b.ogg](concept/act3-b-theme-r36-b.ogg), its
+brief in [concept/prompts.md](concept/prompts.md));
+the title is "Grey Signal". The first brief's 122 BPM in B phrygian is dropped (Q.24e).
+
+- **Tempo and key**: **125 BPM, D minor**, 10 % swing; the chords `Dm9 Dm9 B♭maj7 B♭maj7 Gm9 Gm9
+  A7(♭9) A7(♭9)` (the breakdown `Dm9 Dm9 B♭maj7 A7(♭9)`). Vorne's motif sits in D minor here (D · F ·
+  A · C♯, see *Motifs*): its C♯ grinds against the C of the D minor-ninth, so the motif sounds wrong
+  without being loud.
+- **Sound**: **dub techno**: syncopated minor-ninth and major-seventh chord stabs through a
+  dotted-eighth ping-pong delay and a long reverb, their filter opening through the loop; a deep sub
+  bass; rimshots and swung 16th hats (open hats in D); **track 8's hand drums and shaker** from the
+  B section on, so the act's two themes are one family; a dark pad; the dust wind swelling in the
+  breakdown. **No bubbly or popping sounds**: no resonant "bloop" plucks, no water-drop or popping
+  percussion.
+- **Form** (production ≈ 3:00; the sketch 65.8 s): an intro played once (wind, the filtered groove
+  opening up) → A, the groove → B, the stabs and hand drums → breakdown (stabs, pad and sub alone, a
+  kick fill back in) → D, the full groove, looping back to A; the production extends the sketch's
+  28-bar loop to about 3:00.
+- **Stems**: three, sample-aligned from one render as round 11's: **base** (kick, sub, pad, shaker
+  and hand drums, the wind), **full** (the base plus the hats' top, rimshots and the stabs), and
+  **motif**, Vorne's motif layer below. Delivery as every theme (OGG Vorbis q6, −14 LUFS full mix,
+  true peak ≤ −1 dBTP, loop comments, `SOURCE`).
+
+#### Vorne's motif layer (Levels 18–19)
+
+The motif is planted where the grey, human-built machines are, and nowhere else in the act: from the
+Ghost Drones' first sight in Level 18 (t=69.5, **hint 1**) and under the Revenant Walker in Level 19,
+alone over its wreck (**hint 2**). It is **muted in Level 21** (the Colossus is pure Vrell) and
+returns in Act 4 (L27–L28).
+
+- **The layer** (as in the chosen sketch b): an **intercepted radio signal**, a thin whistle voice
+  through a radio band-pass (700 Hz – 2.6 kHz) over a swell of band-noise static (no crackle), the
+  motif on D4 · F4 · A4 · C♯5, one statement every 4 bars from bar 8 (≈ 7.7 s apart in the sketch;
+  the production may space them wider); mixed about **18–20 dB under the full mix** (17 in the
+  breakdown): a player notices it the second time, not the first. A human transmission where none
+  should be.
+- **Playback** (a, decided in round 36, Q.24d): the motif stem is a **third stream** decoded in lockstep with
+  the base and full stems and added on top of their crossfade, with its own level: in over 2 s, out
+  over 4 s. A level's music data gets a `motif` list (by section, time or event: `on`, `off` or
+  `alone`); `alone` fades the base and full stems out over 2 s and leaves the motif over the
+  ambience. This is not Level 12's rejected third "eye" stem (F5): that one could be had by a
+  level change of the existing stems (`section_db`), while the motif is musical content that must be
+  absent everywhere else and heard alone once. Alternative b: four premixed files of one render
+  (base, base + motif, full, full + motif) and a fifth, the motif alone, with the player crossfading
+  between any two; no third stream, but five files and a more general crossfade. Rejected (b).
+
+#### Cues per level
+
+The intensity layer switches by section (`stems`), as built; "base" and "full" are the theme's stems.
+
+| Level | Theme | Music by section | Sting / boss | Vorne's motif | Ambience |
+|---|---|---|---|---|---|
+| [15](../../campaign/act-3-red-dust/level-15-olympus-descent/README.md#music--ambience) | 8 | s1 (entry corridor) no music; base from s2; full from s3 (the slopes, the Burrower) | — | — | a high thin entry roar in s1–2, `mars-dust` from s3 |
+| [16](../../campaign/act-3-red-dust/level-16-valles-canyon-run/README.md#music--ambience) | 8 | s1 ambience alone; base from s2 (into the canyon); full from s4 (the rapids) | — | — | `mars-canyon` (the dust wind with a canyon howl) from t=0 |
+| [17](../../campaign/act-3-red-dust/level-17-dome-siege/README.md#music--ambience) | 8 | s1 ambience alone; base from s2 (the first dome); full from s4 (the inner ring); base again in s5 | — | — | `mars-colony`; the militia flak at t≈160 |
+| [18](../../campaign/act-3-red-dust/level-18-dust-storm/README.md#music--ambience) | 9 | s1 the plains wind alone; base from s2; base in s4 (the eye); full in s5 (the back wall); out over s6 (the clearing) | — | on at t=69.5 (the Ghost Drones' first sight), off in s4, on in s5, out with the theme | `mars-storm` from t=25, swelling in the walls, a light wind in the eye |
+| [19](../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/README.md#music--ambience) | 9 | s1 ambience alone; base from s2; full from s3; the full mix under the fight; s6 (the wreck) the motif alone; base from s7 | mini-boss sting (21) as the walker's bar appears | on with the walker's arrival; **alone** over the wreck crawl (hint 2); off from s7 | `mars-foundry` |
+| [20](../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#music--ambience) | 8 | base in s1 (the strike); full from s2 (the turnabout, t=20); base in s5 (the lull, under Rook's line); full from s6 | — | — (the pursuers are Vrell) | `mars-dust` with the basin rumble from t=12, fading by t=40 |
+| [21](../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#music--ambience) | 9, then 18 | s1 the rim's wind alone; base from s2; full from s3 (the ridge pass); boss warning (22) at t=105, then "The Choir Descends" (18) through the fight, fading at the kill; s6 (the settling dust) no music | boss warning and boss theme | **muted** | `mars-dust`; a seismic rumble bed from t≈64, cut at the kill; a calm wind over the settling dust |
+
+Every level plays the `mission-complete` jingle (23) at its debrief; Level 21's debrief is followed by
+the act outro with the act-complete fanfare (24) under its first page (Level 14's order). Level 20
+plays track 8 (decided in round 36, Q.20e): its breakbeat suits the run, Levels 18–19 already carry the B
+theme, and Level 18 is the first to need track 9, so track 9 moves from the roadmap's part G to part
+E. No new music hook beyond the `motif` list: the rest uses the built `stems`, `boss_sting`, the boss
+warning and the music-free section of Level 14's daylight.
 
 ## Concept art
 
@@ -326,6 +419,52 @@ chosen `act2-b-theme-r08-a` byte for byte); `SOURCE` comment; both get Afterburn
 | [concept/firestorm-base-seam-final-r31-a.ogg](concept/firestorm-base-seam-final-r31-a.ogg) | Listening aid: track 7 (base stem) across its loop seam, 8 s each side | chosen |
 | [concept/music-final-r31-a.png](concept/music-final-r31-a.png) | Review sheet: both files' waveforms with intro, loop and fade tail marked, their loop points, loudness, true peak, seam and size | chosen |
 
+Concept [round 36](../../concept-rounds/round-36/README.md) (Act 3 "Red Dust", overnight design
+phase 2026-10-12, step A-audio) — two sketches for track 9, the Act 3 B theme, with Vorne's motif as
+a faint layer in its own group (so the stems can mute it); intro + loop + fade tail, sample-exact loop
+points as Vorbis comments, −14 LUFS; generator `tools/concept/audio/music_r36b.py`.
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/act3-b-theme-r36-a.ogg](concept/rejected/act3-b-theme-r36-a.ogg) | Track 9 sketch a "Oxide Drift", 126 BPM, A harmonic minor / E phrygian dominant (track 8's Martian scale): muffled four-on-the-floor kick, rolling 16th bass, filtered pluck sequencer, track 8's hand drums and lonely reed; the motif on cold organ and low brass far back (65.2 s) | rejected — round 36: b ("Grey Signal") picked |
+| [concept/act3-b-theme-r36-b.ogg](concept/act3-b-theme-r36-b.ogg) | Track 9 sketch b "Grey Signal", 125 BPM, D minor dub techno: minor-ninth stabs through a ping-pong delay, deep sub bass, rimshots and swung hats; the motif as an intercepted whistle through a radio band-pass with static (65.8 s) | chosen (round 36, S.1: track 9 follows "Grey Signal") |
+
+Concept round 38 (M7 part B, step AUD-B; closed 2026-10-14: the full mix approved as final, M.1, and the
+base stem approved as rendered, M.2) — track 8 "Red Dust Run" at
+full length and its base stem (rendered provisionally, now approved), rendered by [tools/art/themes.py](../../../tools/art/README.md)
+(keys `red-dust`, `red-dust-base`) from the new generator `tools/concept/audio/music_r38.py`: the chosen
+round-02 sketch composed out (its voices, grooves, chords, melodies and mix chains; twelve 8-bar
+sections, two new melodies) and the base stem from the same render (the round-11 linked mastering; kept:
+hand drums and shaker, reese bass, wind, drone, string pads and kicks; dropped: the breakbeat top, the
+crashes, the reed and the 16th arpeggio). Both in `assets/music/` with a `SOURCE` comment. The README
+wants the full mix reviewed before the stem; Level 15 plays the stem from section 2, so the stem is
+rendered now from the same pass and is re-rendered if the review changes the full mix (M7 part B's
+default). Prompts:
+[concept/prompts.md](concept/prompts.md#music-final-r38-a--track-8-and-its-provisional-base-stem).
+
+| File | What | Status |
+|---|---|---|
+| [concept/red-dust-run-final-r38-a.ogg](concept/red-dust-run-final-r38-a.ogg) | #8 "Red Dust Run" at full length, `assets/music/red-dust-run.ogg` byte for byte: 181.8 s, loop 333200 + 7526400 samples (7.56 s + 170.67 s, 96 bars at 135 BPM), −14.0 LUFS, −1.6 dBTP, seam 0.28 | chosen (round 38, M.1: approved as final) |
+| [concept/red-dust-run-base-final-r38-a.ogg](concept/red-dust-run-base-final-r38-a.ogg) | #8 base stem (provisional), `assets/music/red-dust-run-base.ogg` byte for byte: same length and loop points, the full mix's gain (−16.8 LUFS, −2.8 LU), −2.5 dBTP, seam 0.17 | chosen (round 38, M.2: approved) |
+| [concept/red-dust-run-seam-final-r38-a.ogg](concept/red-dust-run-seam-final-r38-a.ogg) | Listening aid: track 8 across its loop seam, 8 s each side | chosen (round 38, M.1: approved as final) |
+| [concept/red-dust-run-base-seam-final-r38-a.ogg](concept/red-dust-run-base-seam-final-r38-a.ogg) | Listening aid: track 8 (base stem) across its loop seam, 8 s each side | chosen (round 38, M.2: approved) |
+| [concept/music-final-r38-a.png](concept/music-final-r38-a.png) | Review sheet: both files' waveforms with intro, loop and fade tail marked, their loop points, loudness, true peak, seam and size | chosen (round 38, M.1: approved as final) |
+
+Concept round 40 (step MUS-D, 2026-10-18) — two proposals for the new track 29 "Debrief", a quiet loop
+under the debrief after the mission complete jingle (23): intro + loop + 2-bar fade tail, sample-exact
+`LOOPSTART` / `LOOPLENGTH`, −19 LUFS, both in D major so they follow the jingle's last chord; generator
+`tools/concept/audio/music_r40.py`, which also renders a 15 s "jingle → loop" listening aid for each (the
+jingle, then the loop from 5.714 s, three jingle bars at 126 BPM, both at their mastered levels). Not wired
+into the game: that follows the user's pick. Prompts:
+[concept/prompts.md](concept/prompts.md#round-40--track-29-debrief-two-proposals).
+
+| File | What | Status |
+|---|---|---|
+| [concept/debrief-theme-r40-a.ogg](concept/debrief-theme-r40-a.ogg) | Track 29 a "Homeward", 63 BPM (half the jingle's tempo), D major, 77.1 s (loop 8.57 s + 60.95 s): slow string and choir pads, a soft harp in eighths, low strings; humanity's motif slow on a solo horn, a solo string counter-melody in the B half; no beat | proposed (round 40) |
+| [concept/debrief-theme-r40-b.ogg](concept/debrief-theme-r40-b.ogg) | Track 29 b "Stand Down", 84 BPM, D major, 80.7 s (loop 6.43 s + 68.57 s): laid-back electronic, maj9 pads pumping on a soft kick, eighth-note pulses through a ping-pong delay, sub bass, brushes and shaker; the motif hinted on a glass lead, in full once in the drumless C section | proposed (round 40) |
+| [concept/debrief-join-r40-a.ogg](concept/debrief-join-r40-a.ogg) | Listening aid: the mission complete jingle → "Homeward", 15 s | proposed (round 40) |
+| [concept/debrief-join-r40-b.ogg](concept/debrief-join-r40-b.ogg) | Listening aid: the mission complete jingle → "Stand Down", 15 s | proposed (round 40) |
+
 ## Implementation
 
 - [x] Music player with intro + loop points
@@ -364,6 +503,11 @@ chosen `act2-b-theme-r08-a` byte for byte); `SOURCE` comment; both get Afterburn
       `Level12SoundsTest`) — built: `LevelMusic.sectionLevels`, the level moving linearly to a
       section's over 1 s as it starts, multiplied with the start level, the ducks and the fades; a
       restart starts at the first section's
+- [ ] Act 3 (approved in round 36, M7): track 8 "Red Dust Run" at full
+      length with its base stem in the track map (part B); track 9, the B theme, with its base, full
+      and motif stems (part E, Level 18); the `motif` list and the third, lockstep motif stream
+      (`on`, `off`, `alone`; part E, used again in part F); each Act 3 level's music block as in
+      *Act 3 music* (parts B–H)
 
 ## Open questions
 
@@ -542,3 +686,27 @@ chosen `act2-b-theme-r08-a` byte for byte); `SOURCE` comment; both get Afterburn
   and the jingle starts as the chord ends (t=220.6, still under Nansen's line). Rejected: moving
   `jingle.t` to 219.6 with the 1 s fade (the theme would play on at full under the chord) and a separate
   jingle delay in the game (the fade models it already).
+- 2026-10-12 (overnight design phase, **pending the user's review in round 36**): Act 3 music
+  written as a draft (*Act 3 music*): track 8 in Levels 15–17 and 20, track 9 (the B theme) in
+  Levels 18, 19 and the Level 21 approach, as the act README plans; track 9's brief (122 BPM, B
+  phrygian, dusty four-on-the-floor with track 8's reed, three stems); Vorne's motif as a third stem
+  played where the grey machines are (Level 18 from the Ghost Drones' first sight, Level 19 under the
+  walker and alone over its wreck), muted in Level 21; the cues per level. Track 8's full length is
+  new composition (only a 53.8 s sketch exists) and gets its own review in part B.
+- 2026-10-13 (user, round 36): the *Act 3 music* section approved (D.28) with the motif as a third
+  lockstep stream (Q.24d) and track 8 for Level 20 (Q.20e; track 9 is built in part E). **S.1 = b**:
+  track 9 follows the sketch "Grey Signal" (125 BPM, D minor dub techno, the motif as an intercepted
+  radio whistle through a band-pass); its brief and the motif layer rewritten to match (Q.24e), the
+  first brief's 122 BPM B phrygian dropped. Sketch a "Oxide Drift" rejected and moved to
+  `concept/rejected/`.
+- 2026-10-14 (M7 part B, step AUD-B, **pending the user's review in round 38**): track 8 "Red Dust Run"
+  composed out to full length (`music_r38.py`: 4-bar intro + a 96-bar loop of A, B, the new "caravan"
+  D, A2, the storm C, the new bridge E, B2, the desert F without kit, the build G, B3, A3 and the turn
+  T; 181.8 s) and its base stem rendered from the same pass (provisional: the README's order, full mix
+  before stem, is kept by re-rendering the stem if the review changes the full mix), both as final files
+  in `assets/music/` (`themes.py`, `PAIR_RENDERED`; no true-peak dips needed). The game's track map
+  entry (8 → `red-dust-run`) is part B's game step.
+- 2026-10-14 (user, round 38): track 8 "Red Dust Run" at full length approved as final (M.1); its base stem,
+  rendered from the same pass ahead of the README's order, approved as it is (M.2): it stays in
+  `assets/music/`. `art` stays `chosen` (the other Act 3 tracks are to come).
+- 2026-10-18 (user request; step MUS-D, **pending the user's review in round 40**): the debrief gets a music loop of its own after the 6 s mission complete jingle: new track 29 "Debrief" (P2), quiet (−19 LUFS), D major so it follows the jingle, not "Dry Dock" again. Two proposals: a "Homeward" (synth-orchestral, the motif on a solo horn) and b "Stand Down" (laid-back electronic, the motif hinted), each with a jingle → loop listening aid; the game wiring follows the pick.

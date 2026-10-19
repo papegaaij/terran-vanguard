@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Campaign
@@ -21,8 +21,8 @@ consecutive levels.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [act-1-first-contact](act-1-first-contact/README.md) | Levels 01–07 · Earth orbit & Luna · the Vrell strike · boss Brood Carrier | approved | done | final |
-| [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | review | in-progress | chosen |
-| [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | draft | not-started | none |
+| [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | in-progress | final |
+| [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | chosen |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | draft | not-started | none |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal · boss Iron Sovereign | draft | not-started | none |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
@@ -60,6 +60,15 @@ consecutive levels.
   has at most 2 longer pauses. Gaps are filled with small, easy waves of enemies the act already
   knows, so the difficulty does not rise. Levels 01–03 are exempt as the warm-up. `PacingTest`
   measures it on the autopilot's runs.
+- **A busy screen from Act 2 on** (the user's Act 2 playtest, 2026-10-18: Levels 08–09 felt "small
+  and silent, with quite a few pauses"; Level 10 is the reference, "as it should be"): at medium and
+  hard no more than 3 stretches over **2 s** with nothing on the screen, measured with a fit as strong
+  as the user's (his Level 08 fit up to Level 10, the balance plan's after it; easy keeps the rule
+  above); and at medium with the plan's fit at least **2.5 enemies on the screen** on average and
+  **10 enemy shots a minute** (`ActFloorTest`): a wave about every 2.5 s, groups that fire between
+  the Skitter streams. Levels 11–17 were measured below it when it came in and keep
+  the older rule until their waves are reworked (`PacingTest.PENDING_ACT_TWO_RULE`, pending the
+  user's review).
 - **Level length**: 3–5 minutes of scroll plus the boss fight. Act 1 levels sit near 3 minutes;
   Act 7 levels near 5.
 - **Objective types**: `reach-end` (default), `escort`, `defend` (scroll halts and waves come
@@ -285,3 +294,8 @@ criteria), Open questions, Decisions. The worked example is
 - 2026-10-12: M5 part I (close-out): the Act 2 items ticked as built (Level 08 after Act 1, the
   sequence 08→14 flown by `ActPlaythroughTest` as one campaign with Act 1, the threat profiles of
   Levels 08–14, the `anti-sub` row); the rest retagged to Acts 3–7.
+- 2026-10-18: The user's Act 2 playtest (PT2-B 2a, chosen by the user): the pacing rule gets an Act 2+
+  part (no more than 3 stretches over 2 s with nothing on the screen, flown with a fit as strong as
+  the user's) and a floor of what the player sees (2.5 enemies on the screen, 10 enemy shots a minute;
+  `ActFloorTest`), since units per minute alone let waves of one-shot popcorn that die before they
+  fire pass. Levels 08 and 09 rewritten to meet it; Levels 11–17 measured below it are left pending.

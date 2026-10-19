@@ -66,6 +66,10 @@ public final class RadioSchedule {
     public static int fitted(Sortie sortie) {
         int fitted = sortie.special().fitted() ? LevelScript.RadioCue.FITTED_SPECIAL : 0;
         for (int m = 0; m < sortie.armament().size(); m++) {
+            if (!sortie.armament().mount(m).fires()) {
+                // M7 part A: a Deflector Pod fires nothing.
+                continue;
+            }
             WeaponSpec.Delivery delivery = sortie.armament().mount(m).weapon().delivery();
             if (delivery == WeaponSpec.Delivery.HOMING || delivery == WeaponSpec.Delivery.TURRET) {
                 fitted |= LevelScript.RadioCue.FITTED_HOMING;

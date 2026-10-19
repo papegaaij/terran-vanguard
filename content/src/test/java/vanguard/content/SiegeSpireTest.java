@@ -237,8 +237,8 @@ class SiegeSpireTest {
         assertTrue(spec.parts().get(CORE).vital());
         assertEquals(2, spec.parts().get(MAW).multiplier(), "the lime maw ×2");
         assertEquals(2, spec.parts().get(CORE).multiplier(), "the lime core ×2");
-        assertEquals(665, spec.parts().get(POD_1).hp(), "tuned to the measured fight (H10 = a)");
-        assertEquals(775, spec.parts().get(MORTAR_LEFT).hp());
+        assertEquals(690, spec.parts().get(POD_1).hp(), "tuned to the measured fight (H10 = a; round 34, P2)");
+        assertEquals(800, spec.parts().get(MORTAR_LEFT).hp());
         assertEquals(2880, spec.parts().get(MAW).hp());
         assertEquals(4950, spec.parts().get(CORE).hp());
         assertEquals(130, boss.parSeconds(), "the par: the measured mean");
@@ -252,11 +252,12 @@ class SiegeSpireTest {
         assertTrue(orbs.stagger(), "each pod on its own clock");
         assertEquals(List.of(0, 1, 2, 3), orbs.parts());
         assertEquals(1.6, orbs.gun().intervalSeconds(), 1e-9);
+        assertEquals(List.of(0, 3), orbs.down(), "round 34, P2: the outer pods (1 and 4) fire straight down");
         BossSpec.Attack acid = boss.attacks().get(1);
         assertEquals(BossSpec.Pattern.LOB, acid.pattern(), "the mortar roots' lob (H5 = a)");
         assertTrue(acid.stagger());
         assertEquals(List.of(MORTAR_LEFT, MORTAR_RIGHT), acid.parts());
-        assertEquals(4, acid.gun().intervalSeconds(), 1e-9);
+        assertEquals(8, acid.gun().intervalSeconds(), 1e-9, "round 34, P2: was 4");
         assertEquals(1.0, acid.gun().mortar().orElseThrow().flightSeconds());
         assertEquals(10, acid.gun().mortar().orElseThrow().ring());
         assertEquals(10, acid.gun().damage(), "the direct hit `heavy`");
@@ -302,7 +303,7 @@ class SiegeSpireTest {
                 3,
                 hard.phases().get(1).windows().orElseThrow().spawns().getFirst().count(),
                 "hard: 3 Wraiths");
-        assertEquals(665 * 1.3, spire(Difficulty.HARD).parts().get(POD_1).hp(), 1);
+        assertEquals(690 * 1.3, spire(Difficulty.HARD).parts().get(POD_1).hp(), 1);
     }
 
     /**
@@ -350,6 +351,48 @@ class SiegeSpireTest {
         }
         System.out.printf("Spire %s: %d of %d won, mean %.1f s%n", difficulty, killed, SEEDS.length, sum / killed);
         assertTrue(killed >= (difficulty == Difficulty.EASY ? SEEDS.length : 3), killed + " won");
+    }
+
+    /**
+     * Round 34, P2 (the kinder Spire): the outer pods (1 and 4, {@code aim: down}) fire their orbs straight
+     * down the screen, the inner ones (2 and 3) at the ship; the ship is parked off the pods' columns.
+     */
+    @Test
+    void theOuterPodsFireStraightDownTheInnerOnesAtTheShip() {
+        Sortie sortie = sortie(2185, Difficulty.MEDIUM);
+        SetPiece spire = sortie.setPiece(0);
+        int guard = 0;
+        while (!spire.engaged() && guard++ < SimStep.ticks(120)) {
+            sortie.step(0);
+        }
+        assertTrue(spire.engaged());
+        int down = 0;
+        int aimed = 0;
+        for (int i = 0; i < SimStep.ticks(8) && sortie.flying(); i++) {
+            sortie.step(0);
+            for (int b = 0; b < sortie.bulletCount(); b++) {
+                vanguard.sim.EnemyBullet bullet = sortie.bullet(b);
+                for (int pod = 0; pod < 4; pod++) {
+                    double dx = bullet.renderX(1) - spire.partX(pod);
+                    double dy = bullet.renderY(1) - spire.partY(pod);
+                    // A new orb: one step (150 px/s) from its pod.
+                    if (Math.hypot(dx, dy) > 3) {
+                        continue;
+                    }
+                    if (pod == 0 || pod == 3) {
+                        assertEquals(Math.PI, Math.abs(bullet.heading()), 1e-9, "straight down from pod " + (pod + 1));
+                        down++;
+                    } else {
+                        double toShip = StrictMath.atan2(
+                                sortie.ship().x() - spire.partX(pod),
+                                sortie.ship().y() - spire.partY(pod));
+                        assertEquals(toShip, bullet.heading(), 0.05, "at the ship from pod " + (pod + 1));
+                        aimed++;
+                    }
+                }
+            }
+        }
+        assertTrue(down >= 4 && aimed >= 4, down + " down, " + aimed + " aimed");
     }
 
     @Test

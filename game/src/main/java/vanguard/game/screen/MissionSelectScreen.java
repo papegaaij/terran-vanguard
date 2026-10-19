@@ -16,15 +16,20 @@ import vanguard.game.GameServices;
 import vanguard.game.audio.MusicStreamer;
 import vanguard.game.audio.Sfx;
 import vanguard.game.input.MenuInput;
+import vanguard.game.input.Pointer;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
+import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 
 /**
  * The mission select (design/ui/mission-select): the current campaign's levels act by act in a
  * glass panel over the dimmed title scene, the flown ones open with their best grade, the later
  * ones locked with their names hidden ("???"), as is the name of an act not reached yet. Up / down
- * select an open mission, confirm flies it as a replay ({@link Campaign#replay}), back returns to
- * the main menu. The current campaign is the most recent save, as for Continue.
+ * select an open mission, confirm opens its briefing and the replay hangar ({@link
+ * HangarScreen#replay}), from which it flies as a replay ({@link Campaign#replay}), back returns to
+ * the main menu. The current campaign is the most recent save, as for Continue. With the mouse,
+ * hovering an open mission selects it, a click flies it and the wheel scrolls the list.
  *
  * <p>Opened over the main menu it keeps the menu's title theme; after a replay it stands alone with
  * its own.
@@ -141,15 +146,41 @@ public final class MissionSelectScreen implements GameScreen {
         if (direction != 0 && move(direction)) {
             services.play(Sfx.MENU_MOVE);
         }
-        if (!input.confirm()) {
+        Pointer pointer = input.pointer();
+        top = wheel(top, pointer.wheel(), lines.size());
+        boolean clicked = false;
+        for (int i = top; i < Math.min(lines.size(), top + VISIBLE_ROWS); i++) {
+            if (!open(i)) {
+                continue;
+            }
+            Box row = row(i - top);
+            if (pointer.clicks(row) || pointer.hovers(row)) {
+                if (i != selected) {
+                    services.play(Sfx.MENU_MOVE);
+                }
+                selected = i;
+                clicked |= pointer.clicks(row);
+            }
+        }
+        if (!input.confirm() && !clicked) {
             return Transition.STAY;
         }
         services.play(Sfx.MENU_CONFIRM);
         int level = ((Line.Entry) lines.get(selected)).mission().number();
         SaveSlots.Entry.Saved saved = current.orElseThrow();
-        Campaign replay = Campaign.replay(services.campaignRules, saved.slot(), saved.save(), level);
-        return Transition.replace(new LevelScreen(
-                services, replay, services.content.levelKey(level).orElseThrow()));
+        // The user's decision of 2026-10-18: the level's briefing, then the replay hangar on the real campaign.
+        return Transition.replace(HangarScreen.replay(
+                services, saved.slot(), Campaign.load(services.campaignRules, saved.save()), level));
+    }
+
+    /** The list's first shown line after the wheel turned {@code notches}: it stops at either end. */
+    static int wheel(int top, int notches, int lines) {
+        return Math.clamp(top + notches, 0, Math.max(0, lines - VISIBLE_ROWS));
+    }
+
+    /** The hit region of the list's {@code shown}-th shown line: its selection bar, the rows touching. */
+    static Box row(int shown) {
+        return Box.row(PANEL_X + 2, PANEL_WIDTH - 4, LIST_Y + shown * ROW, Fonts.BODY_CAP, ROW);
     }
 
     /** Moves the selection to the next open mission that way, without wrapping. */
@@ -192,11 +223,11 @@ public final class MissionSelectScreen implements GameScreen {
         glass.centred(
                 batch,
                 glass.fonts.label,
-                "NO CREDITS EARNED - BEST GRADE KEPT - CAMPAIGN UNCHANGED",
+                "NO CREDITS EARNED - BEST GRADE KEPT - PROGRESS UNCHANGED",
                 Glass.DIM,
                 PixelScreen.WIDTH / 2f,
                 PANEL_Y + PANEL_HEIGHT - 24);
-        glass.hints(batch, "UP/DOWN SELECT    ENTER FLY    ESC BACK");
+        glass.hints(batch, "UP/DOWN SELECT    ENTER BRIEFING    ESC BACK");
     }
 
     private void drawLine(SpriteBatch batch, Glass glass, Line line, boolean isSelected, int y) {

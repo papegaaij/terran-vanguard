@@ -19,6 +19,7 @@ import vanguard.content.campaign.Fitted;
 import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.LoadoutSlot;
 import vanguard.content.campaign.SaveGame;
+import vanguard.sim.Armament;
 import vanguard.sim.EnemySpec;
 
 /**
@@ -27,9 +28,11 @@ import vanguard.sim.EnemySpec;
  * plan as the balancing sheet:
  *
  * <ul>
- *   <li>the balance plan's purchases are in the shop and affordable at every hangar visit, with
- *       the levels' typical hauls as income (budget(n) for a level without data yet), within the
- *       generator's output; on medium with the repairs of the plan's estimated damage, on hard
+ *   <li>the balance plan's purchases (M7 part A: to Level 21, Act 3's items in the complete catalogue)
+ *       are in the shop and affordable at every hangar visit, with
+ *       the levels' typical hauls as income (budget(n) for a level without data yet) plus the typical
+ *       player's grade bonus (a B, round 34 P3 = A), within the generator's output; on medium with
+ *       the repairs of the plan's estimated damage, the ship's and from Level 08 Rook's, on hard
  *       (income × 0.9, repairs 10 cr a point) with the repairs the credits left allow, the
  *       shortfall printed as accepted ({@link #HARD_REPAIRS}); Rook's gun (bought and fitted from
  *       Level 08 on) priced in and his single-target DPS printed per visit (M5 part I);
@@ -39,14 +42,15 @@ import vanguard.sim.EnemySpec;
  *       Coilwyrm's bounty and the Ravager's and the Wraith's times to kill as the accepted exceptions
  *       ({@link #ACCEPTED}); a boss's bounty as paid there (its Act 1 terms × the act factor × the
  *       level's bounty scale);
- *   <li>a returning {@code medium} or larger unit keeps its time to kill at every Act 2 level after
- *       its first, with the act HP factor (user decision D5 = c of M5 part A);
+ *   <li>a returning {@code medium} or larger unit (and the Needler and the Stinger, capped at ×3, 2026-10-18) keeps
+ *       its time to kill at every Act 2 level after its first, with the act HP factor (user decision D5 = c of M5
+ *       part A);
  *   <li>the plan's anti-ground sources clear every hold zone's hardened cluster in at most {@link
  *       #HOLD_SHARE} of the hold's window at medium (user decision D8 = c of M5 part C; hard's
  *       tighter ratio is accepted, user decision 2026-10-07);
  *   <li>the plan's rear DPS kills every rear-ambush unit (a Wraith) in at most {@link #REAR_SHARE} of
  *       its decloak flash and hold at medium (user decision D7 = a of M5 part D), Level 12's Wraith with
- *       the act HP factor as the exception pending review ({@link #REAR_PENDING});
+ *       the act HP factor as the exception the user accepted in round 34 (P4; {@link #REAR_PENDING});
  *   <li>M5 part F: the plan's rear DPS kills a latched Lamprey (its HP at medium, ×2 damage while
  *       latched) well inside the shake-off's time, and the autopilot (Level 12's plan fit with Rook)
  *       shakes off or kills every Lamprey that latches, the drain of a latch staying a small share of
@@ -55,7 +59,9 @@ import vanguard.sim.EnemySpec;
  */
 class BalanceTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
-    private static final Catalogue CATALOGUE = Catalogue.of(CONTENT);
+    /** M7 part A: the complete catalogue, Act 3's items included before their hangar icons. */
+    private static final Catalogue CATALOGUE = Catalogue.complete(CONTENT);
+
     private static final CampaignRules RULES = CampaignRules.of(CONTENT);
 
     /** The plan's fit against the reference DPS: inside this band. */
@@ -90,13 +96,14 @@ class BalanceTest {
 
     /**
      * M5 part F: the rear checks over {@link #REAR_SHARE} reported for the user's decision in the combined
-     * concept round (key "Lnn slug"); the test fails when one is fixed (remove it here) or a new one appears.
+     * concept round (key "Lnn slug"), accepted by the user (round 34 P4); the test fails when one is fixed
+     * (remove it here) or a new one appears.
      */
     static final Map<String, String> REAR_PENDING = Map.of(
             "L12 wraith",
             "18 HP (the act HP factor ×1.11) / the Tail Gun L1's 10 DPS = 1.80 s of the 2.9 s flash and hold"
                     + " (0.62, at most 0.6): the plan upgrades the rear only at L14 (Tail Gun L2, 14 DPS);"
-                    + " pending the user's review in the combined round (M5 part F, step 4)");
+                    + " accepted by the user (round 34 P4)");
 
     /** M5 part F: a latched Lamprey dies within this share of its shake-off time to the plan's rear DPS. */
     static final double LATCHED_SHARE = 0.25;
@@ -203,15 +210,34 @@ class BalanceTest {
                 }
                 repairs = credits - campaign.credits();
             }
+            // Round 34, P3 = A: Rook's repair estimate after a level flown with him, after the ship's.
+            if (hangar.escortMissingArmour() > 0) {
+                int credits = campaign.credits();
+                int missing = hangar.escortMissingArmour();
+                int points = difficulty == Difficulty.MEDIUM ? missing : hangar.affordableEscortRepair();
+                if (points > 0 && !hangar.repairEscort(points)) {
+                    problems.add("Rook's repairs: " + missing + " points cost " + missing * hangar.repairCost() + ", "
+                            + credits + " credits left");
+                } else {
+                    unrepaired += missing - points;
+                }
+                repairs += credits - campaign.credits();
+            }
             if (hangar.load() > hangar.output() + 1e-9) {
                 problems.add("load " + hangar.load() + " MW over the output " + hangar.output());
             }
             double[] dps = dps(campaign.gear().loadout());
-            Optional<String> key = CONTENT.levelKey(level);
+            // M7 part C: a level the mapping does not know yet counts as one without data (Unmapped).
+            Optional<String> key = CONTENT.levelKey(level).filter(Unmapped::mapped);
             double budget = CONTENT.economy().budget().of(level);
-            int income = (int) Math.rint(incomeFactor
+            // Without level data (Act 3's levels after Level 15 until part C on writes theirs) the income is
+            // budget(n): the budget is the absolute typical haul, act factor included (user decision 2026-10-14,
+            // round 37 R.1 reverted; tools/balance.py's income() agrees); the levels' own data replaces it.
+            int haul = (int) Math.rint(incomeFactor
                     * key.map(k -> TypicalHaul.of(CONTENT, k, difficulty).typical())
-                            .orElse(budget));
+                            .orElse(Math.rint(budget)));
+            // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
+            int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
                     level,
                     budget,
@@ -231,13 +257,20 @@ class BalanceTest {
                     antiGround(campaign.gear().loadout()),
                     escort(campaign.gear().loadout())));
             SaveGame after = campaign.save(Instant.EPOCH);
-            save = next(after, after.credits() + income, campaign.maxArmour() - plan.repairPoints());
+            save = next(
+                    after,
+                    after.credits() + income,
+                    campaign.maxArmour() - plan.repairPoints(),
+                    campaign.escortMaxArmour() - plan.escortRepairPoints());
         }
         return rows;
     }
 
-    /** The save after the level: its income banked and the estimated damage taken; Rook's guns kept. */
-    private static SaveGame next(SaveGame save, int credits, double armour) {
+    /**
+     * The save after the level: its income banked and the estimated damage taken, Rook's too once he is
+     * hired ({@code escortArmour}); Rook's guns kept.
+     */
+    private static SaveGame next(SaveGame save, int credits, double armour, double escortArmour) {
         return new SaveGame(
                 save.version(),
                 save.created(),
@@ -251,7 +284,14 @@ class BalanceTest {
                 save.unlocks(),
                 save.specials(),
                 armour,
-                save.escort(),
+                save.escort().hired()
+                        ? new SaveGame.EscortSlot(
+                                true,
+                                save.escort().side(),
+                                save.escort().fitted(),
+                                save.escort().guns(),
+                                escortArmour)
+                        : save.escort(),
                 save.retriesLeft(),
                 save.grades(),
                 save.dataCores(),
@@ -331,15 +371,19 @@ class BalanceTest {
     /**
      * A level's single-target DPS: its volley DPS × the share of a volley that hits a target {@code
      * single_target.width} wide {@code single_target.distance} from the muzzle (a seeking weapon:
-     * all). The same model as tools/design_data.py's {@code stats} and the weapon tables.
+     * all). M7 part A, by the hand formulas of their documents: a beam's damage per second (it burns
+     * its first target), a drone bay's rate × damage (its shots aim at the convergence point), a
+     * deflector's 0. The same model as tools/design_data.py's {@code stats} and the weapon tables.
      */
     static double singleTarget(WeaponData weapon, WeaponData.Level level) {
-        double volley = level.pattern().size() * level.damage() * level.rate();
-        if (weapon.seek().orElse(false)) {
+        double volley = weapon.volleyDps(level);
+        if (level.kind() != WeaponData.Level.Kind.SHOTS
+                || weapon.seek().orElse(false)
+                || weapon.drone().isPresent()) {
             return volley;
         }
         WeaponRulesData.SingleTarget target = CONTENT.weaponRules().singleTarget();
-        double half = target.width() / 2 + weapon.size().width() / 2;
+        double half = target.width() / 2 + weapon.size().orElseThrow().width() / 2;
         double base = baseAngle(weapon, level);
         long hits = level.pattern().stream()
                 .filter(shot ->
@@ -369,7 +413,9 @@ class BalanceTest {
      * credits fall short, of the repairs or of a purchase after the repairs of the visits before,
      * the shortfall is printed as accepted ({@link #HARD_REPAIRS}), and so is a later refit of an item
      * whose purchase it refused (M5 part E: Level 11's Mortar for Rook, refused at Level 09 on hard,
-     * so Rook keeps his Autocannon there).
+     * so Rook keeps his Autocannon there) and the sale of the item a refused purchase would have
+     * replaced (M7 part A: an Ion Beam refused on hard leaves the Pulse Cannon L4 fitted; M7 part B, the
+     * user's decision of 2026-10-14: on budget(n) income hard is tighter than medium by design).
      */
     @Test
     void onHardThePlanIsInTheShopWithTheShortfallAccepted() {
@@ -383,9 +429,12 @@ class BalanceTest {
         java.util.regex.Pattern buy =
                 java.util.regex.Pattern.compile("buy (.+ → \\S+): " + Hangar.Refusal.CREDITS.name() + " \\(");
         java.util.regex.Pattern fit = java.util.regex.Pattern.compile("fit (.+ → \\S+): not owned");
+        // M7 part A: the replaced front gun is sold from the inventory only once its successor is bought.
+        java.util.regex.Pattern sell = java.util.regex.Pattern.compile("sell .+ → (\\S+): not owned");
         for (String problem : print(rows)) {
             java.util.regex.Matcher bought = buy.matcher(problem);
             java.util.regex.Matcher fitted = fit.matcher(problem);
+            java.util.regex.Matcher sold = sell.matcher(problem);
             if (problem.contains(": " + Hangar.Refusal.CREDITS.name() + " (")) {
                 System.out.println(problem + ": accepted, " + HARD_REPAIRS);
                 if (bought.find()) {
@@ -393,6 +442,8 @@ class BalanceTest {
                 }
             } else if (fitted.find() && refused.contains(fitted.group(1))) {
                 System.out.println(problem + ": accepted, its purchase was refused for credits before");
+            } else if (sold.find() && refused.stream().anyMatch(item -> item.endsWith("→ " + sold.group(1)))) {
+                System.out.println(problem + ": accepted, the purchase that replaces it was refused for credits");
             } else {
                 problems.add(problem);
             }
@@ -437,7 +488,8 @@ class BalanceTest {
                     String.join("; ", row.visit().log()));
             row.visit().problems().forEach(problem -> problems.add("L" + row.level() + ": " + problem));
         }
-        System.out.println("* the level's typical haul (design/systems/economy); otherwise budget(n);"
+        System.out.println("* the level's typical haul (design/systems/economy); otherwise budget(n); income:"
+                + " the level before's haul plus the typical B grade bonus; repairs: the ship's and Rook's estimate;"
                 + " Rook: his gun's single-target DPS (from Level 08), not in the forward DPS");
         return problems;
     }
@@ -455,7 +507,7 @@ class BalanceTest {
         List<String> slow = new ArrayList<>();
         int holds = 0;
         for (Row row : sheet()) {
-            Optional<String> key = CONTENT.levelKey(row.level());
+            Optional<String> key = CONTENT.levelKey(row.level()).filter(Unmapped::mapped); // M7 part C: Unmapped
             if (key.isEmpty()) {
                 continue;
             }
@@ -500,7 +552,7 @@ class BalanceTest {
         Set<String> pending = new TreeSet<>();
         int checked = 0;
         for (Row row : sheet()) {
-            Optional<String> key = CONTENT.levelKey(row.level());
+            Optional<String> key = CONTENT.levelKey(row.level()).filter(Unmapped::mapped); // M7 part C: Unmapped
             if (key.isEmpty()) {
                 continue;
             }
@@ -522,7 +574,7 @@ class BalanceTest {
                     String name = String.format("L%02d %s", row.level(), enemy.slug());
                     if (REAR_PENDING.containsKey(name)) {
                         pending.add(name);
-                        System.out.println(name + ": pending a decision: " + REAR_PENDING.get(name));
+                        System.out.println(name + ": accepted by the user: " + REAR_PENDING.get(name));
                     } else {
                         slow.add(String.format("%s: %.2f s of %.1f s", name, kill, window));
                     }
@@ -531,7 +583,7 @@ class BalanceTest {
         }
         assertTrue(checked > 0, "Level 10's Wraiths are checked");
         assertTrue(slow.isEmpty(), "the plan's rear gun is too slow for: " + slow);
-        assertEquals(REAR_PENDING.keySet(), pending, "the rear checks pending a decision");
+        assertEquals(REAR_PENDING.keySet(), pending, "the rear checks accepted by the user (round 34 P4)");
     }
 
     /**
@@ -545,7 +597,7 @@ class BalanceTest {
         List<String> slow = new ArrayList<>();
         int checked = 0;
         for (Row row : sheet()) {
-            Optional<String> key = CONTENT.levelKey(row.level());
+            Optional<String> key = CONTENT.levelKey(row.level()).filter(Unmapped::mapped); // M7 part C: Unmapped
             if (key.isEmpty()) {
                 continue;
             }
@@ -681,6 +733,32 @@ class BalanceTest {
         }
     }
 
+    /**
+     * M7 part A (step A4): the hand formulas {@link #singleTarget} takes for Act 3's new kinds of weapon
+     * match their DPS as flown: the Ion Beam's damage per second, the Light Drone Bay's rate × damage
+     * (its drone's shots converge on the target) and the Deflector Pod's 0, every level.
+     */
+    @Test
+    void theHandFormulasOfTheBeamTheDroneAndTheDeflectorMatchTheirFlownDps() {
+        for (String slug : List.of("ion-beam", "light-drone-bay", "deflector-pod")) {
+            WeaponData weapon = CONTENT.weapon(slug);
+            Armament.Slot slot = weapon.slot() == WeaponData.Slot.FRONT ? Armament.Slot.FRONT : Armament.Slot.LEFT_WING;
+            double distance = weapon.drone()
+                    .map(WeaponData.Drone::converge)
+                    .orElse(CONTENT.weaponRules().singleTarget().distance());
+            for (int level = 1; level <= weapon.levels().size(); level++) {
+                WeaponData.Level numbers = weapon.levels().get(level - 1);
+                // A drone's bolts arrive by the volley: one either way at the window's edges.
+                double tolerance = weapon.drone().isPresent() ? numbers.damage() / 4 + 1e-9 : 0.01;
+                assertEquals(
+                        singleTarget(weapon, numbers),
+                        ActThreeArsenalFlightTest.flownDps(slot, slug, level, distance),
+                        tolerance,
+                        slug + " L" + level);
+            }
+        }
+    }
+
     @Test
     void thePlansFitMeetsTheReferenceDps() {
         List<String> off = new ArrayList<>();
@@ -723,31 +801,45 @@ class BalanceTest {
 
     /**
      * The act HP factor (design/enemies Balancing basis, D5 = c of M5 part A): a returning unit of
-     * tier {@code medium} or larger, built by {@link SimSpecs#enemy} for each Act 2 level after its
-     * first (Levels 08–14, as far as the reference DPS curve goes), keeps its time to kill inside its
+     * tier {@code medium} or larger (and the basis's {@code small_act_hp} units, the factor capped at ×3: the user's Act
+     * 2 playtest, 2026-10-18), built by {@link SimSpecs#enemy} for each Act 2 and (M7 part A) Act 3
+     * level after its first (Levels 08–21, as far as the reference DPS curve goes), keeps its time to kill inside its
      * size class's target at that level's reference DPS (its parts' and segments' HP summed; 1 HP of
      * rounding allowed). Units already off target at their first level are left to {@link
      * #everyEnemyFitsTheBalancingBasis}.
      */
     @Test
-    void everyReturningUnitKeepsItsTimeToKillInActTwo() {
+    void everyReturningUnitKeepsItsTimeToKillFromActTwo() {
         Map<String, String> found = new TreeMap<>();
         int checked = 0;
         for (var entry : new TreeMap<>(CONTENT.enemies()).entrySet()) {
             EnemyData enemy = entry.getValue();
             if (enemy.boss().isPresent()
-                    || enemy.tier().compareTo(Tier.MEDIUM) < 0
+                    || (enemy.tier().compareTo(Tier.MEDIUM) < 0
+                            && !CONTENT.enemyBasis().smallActHp().units().contains(entry.getKey()))
                     || enemy.tier() == Tier.HUGE
-                    || timeToKill(enemy).isPresent()) {
+                    || timeToKill(enemy).isPresent()
+                    || !Unmapped.mappedEnemy(entry.getKey())) { // M7 part C: Unmapped
                 continue;
             }
-            double[] target = enemy.tier() == Tier.MEDIUM ? new double[] {0.4, 1.5} : new double[] {1, 3};
-            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_2_LAST; level++) {
+            double[] target =
+                    switch (enemy.tier()) {
+                        case SMALL -> new double[] {0, 0.3};
+                        case MEDIUM -> new double[] {0.4, 1.5};
+                        default -> new double[] {1, 3};
+                    };
+            for (int level = Math.max(ACT_2_FIRST, enemy.firstLevel() + 1); level <= ACT_3_LAST; level++) {
                 Double reference = CONTENT.enemyBasis().referenceDps().get(level);
                 if (reference == null) {
                     continue;
                 }
-                EnemySpec spec = SimSpecs.enemy(CONTENT, entry.getKey(), Difficulty.MEDIUM, Optional.empty(), 2, level);
+                if (enemy.tier() == Tier.SMALL
+                        && !CONTENT.enemyBasis().smallActHp().applies(entry.getKey(), level)) {
+                    continue; // only in small_act_hp's levels (Levels 08-09)
+                }
+                int act = level >= ACT_3_FIRST ? 3 : 2;
+                EnemySpec spec =
+                        SimSpecs.enemy(CONTENT, entry.getKey(), Difficulty.MEDIUM, Optional.empty(), act, level);
                 double hp = spec.hp()
                         + spec.chain()
                                 .map(chain -> chain.segment().hp()
@@ -772,6 +864,11 @@ class BalanceTest {
     static final int ACT_2_FIRST = 8;
 
     static final int ACT_2_LAST = 14;
+
+    /** M7 part A: Act 3's levels (design/campaign/act-3-red-dust), as far as the reference DPS goes. */
+    static final int ACT_3_FIRST = 15;
+
+    static final int ACT_3_LAST = 21;
 
     /**
      * Time to kill at the unit's first level (design/enemies Balancing basis): {@code tiny} one hit

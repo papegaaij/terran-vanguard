@@ -79,6 +79,11 @@ public final class Hud {
         ship.specialDenied();
     }
 
+    /** M7 part A: a cooldown special is ready again: its HUD ring flashes white once. */
+    public void specialReady() {
+        ship.specialReady();
+    }
+
     /** @param prompts the control prompts to show */
     public void draw(SpriteBatch batch, Sortie sortie, RadioQueue radio, List<PromptTexts.Text> prompts) {
         mission.draw(batch, sortie, radio, prompts);

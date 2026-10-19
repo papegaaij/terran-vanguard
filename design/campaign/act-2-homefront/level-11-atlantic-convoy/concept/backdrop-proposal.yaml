@@ -13,15 +13,15 @@
 # Built round this timeline (re-run --proposal and the images after the data moves a section end):
 #   Convoy Muster to 20, Jelly Fields to 65, Reef Line to 110, Tiamat Approach to 160, Harbour Kraken to 161 (speed 0, arena), Open Water to 176; 140 px/s.
 # Platform Tiamat (piece platform-tiamat, 256 x 208, centred on the platform's centre; deck 208 x 152,
-#   edges x +-104, y +-76, round 07's model): its centre lies 22,931 px up the ground layer (from the
+#   edges x +-104, y +-76, round 07's model): its centre lies 23,055 px up the ground layer (from the
 #   screen's bottom at the level start), x 240. At the halt (ground scroll 22,468.83 = scrollAt(t 160)
 #   + the ease into the halt, 68.83 px: Sortie.haltScroll)
-#   that is screen (240, 78) from the play field's top left: the deck spans x 136-344,
-#   y 2-154; the lanes run below y 154; the Kraken's head centre (216 px below, off the
-#   deck's south edge) is at (240, 294).
-#   It scrolls in at the top over the last 1.3 s before the halt; at the halt the piece's top edge
-#   is -26 px below the top. The Kraken's anchor uses the same ground position
-#   (the halt scroll + 462). The placement t lies in the open-water section, by the data's scrollAt (speed 0
+#   that is screen (240, -46) from the play field's top left: the deck spans x 136-344,
+#   y -122-30; the lanes run below y 30; the Kraken's head centre (216 px below, off the
+#   deck's south edge) is at (240, 170).
+#   It scrolls in at the top over the last 0.4 s before the halt; at the halt the piece's top edge
+#   is -150 px below the top. The Kraken's anchor uses the same ground position
+#   (the halt scroll + 586). The placement t lies in the open-water section, by the data's scrollAt (speed 0
 #   in the arena): end(arena) + (ground position - 270 - scrollAt(arena start)) / its speed.
 # The convoy's channels: no piece that breaks the surface lies under a station's hull (x 130, 240,
 #   350 +- 28 px, the README's stations); slicks, oil and the reef shelves lie flat or under water.
@@ -133,5 +133,5 @@ backdrop:
     - {piece: lifeboat, t: 153, x: 52}
     - {piece: freighter-smoke, t: 127.31, x: 450}
     - {piece: burning-freighter, t: 128, x: 432}
-    # 4-6. Platform Tiamat: at the halt its centre is at (240, 78) (ground position 22,930.83 px, the simulation's halt scroll + 462; t = the open-water speed's time to scroll 260.83 px past the data's scroll at the arena)
-    - {piece: platform-tiamat, t: 162.863, x: 240}
+    # 4-6. Platform Tiamat: at the halt its centre is at (240, -46) (ground position 23,054.83 px, the simulation's halt scroll + 586; t = the open-water speed's time to scroll 384.83 px past the data's scroll at the arena)
+    - {piece: platform-tiamat, t: 163.749, x: 240}

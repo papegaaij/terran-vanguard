@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import vanguard.content.AlliesData;
 import vanguard.content.Content;
 import vanguard.content.EnemyData;
 import vanguard.content.LevelData;
@@ -23,7 +24,8 @@ import vanguard.content.LevelData;
  * ground targets' looks, the escorted ally and the level's features the game draws with sprites of
  * its own (cranes, debris, sleds, rocks, the darkness's flares, the tows' lifeboat, pod and cable, the
  * collapse's dust puffs, the scripted loss's glow and lance, the weather's looks and sondes, the root
- * bursts' cracks, dust and roots). A
+ * bursts' cracks, dust and roots; M7 part D: the ground allies' sprite sets and their pip, a trigger look's
+ * contents, the militia flak's puffs). A
  * sprite belongs to a root when its name is the root or starts with the root and a hyphen
  * ({@code leviathan} owns {@code leviathan-fin-left}). The shared roots are the weapons, the specials
  * and the game's own effects ({@link #GAME_WIDE}); an enemy no level uses yet goes in its first level's
@@ -58,8 +60,19 @@ final class SpriteUse {
             "glint",
             "water");
 
-    /** The sprites an enemy's attack pattern draws besides the enemy (the game's names). */
-    private static final Map<String, String> PATTERN_ROOTS = Map.of("mortar", "mortar", "mine", "spore-mine");
+    /**
+     * The sprites an enemy's attack pattern draws besides the enemy (the game's names). M7 part C: a
+     * {@code link} (the Tendril Anchor's) draws the tendril between a pair, {@code tendril_*} and its
+     * {@code tendril-dormant}, {@code -flare}, {@code -wither}, {@code -end} and {@code -burn} frames.
+     */
+    private static final Map<String, String> PATTERN_ROOTS =
+            Map.of("mortar", "mortar", "mine", "spore-mine", "link", "tendril");
+
+    /**
+     * M7 part C: the look of a level with {@code terrain} (Level 16, CanyonLooks): the wall contact's and
+     * the stopped shots' spark, {@code wall-spark_*} and {@code wall-spark-dust_*} (tools/art/canyon_units.py).
+     */
+    static final String TERRAIN_ROOT = "wall-spark";
 
     /** The sprites of a level's tows: {@code lifeboat}, {@code lifeboat-pod}, {@code lifeboat-cable} and their {@code -glow}s. */
     static final String TOW_ROOT = "lifeboat";
@@ -89,6 +102,24 @@ final class SpriteUse {
      * enemies' own sprites.
      */
     static final String ROOT_BURST_ROOT = "root-burst";
+
+    /**
+     * M7 part D: the HUD pip of a level's ground allies (Level 17's DOMES tracker, MissionPanel's {@code GROUND_PIP}:
+     * tools/art/siege_units.py's {@code dome-pip}, used where the ally has no {@code <slug>-pip}).
+     */
+    static final String GROUND_PIP = "dome-pip";
+
+    /**
+     * M7 part D: a level's militia flak (its presentation key {@code flak}, Level 17's spaceport guns) is drawn with
+     * the escort frigate's flak puff, {@code escort-frigate-flak_*} (Level 11).
+     */
+    static final String FLAK_ROOT = "escort-frigate-flak";
+
+    /**
+     * M7 part D: a trigger look over contents with sprites of their own (LevelRenderer's {@code TRIGGER_CONTENTS}):
+     * Level 17's collapsed greenhouse frame over the seed-vault capsule, {@code seed-capsule} and its {@code -glow}.
+     */
+    static final Map<String, String> TRIGGER_CONTENTS = Map.of("greenhouse-frame", "seed-capsule");
 
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
@@ -173,6 +204,8 @@ final class SpriteUse {
                 // are drawn as the beacon or the level's trigger light.
                 target.sprite().ifPresent(roots::add);
             }
+            // M7 part D: a look over contents with sprites of their own (Level 17's seed-vault capsule).
+            target.sprite().map(TRIGGER_CONTENTS::get).ifPresent(roots::add);
         }
         List<String> open = new ArrayList<>(enemies);
         while (!open.isEmpty()) {
@@ -209,6 +242,19 @@ final class SpriteUse {
         level.tows().filter(tows -> !tows.isEmpty()).ifPresent(tows -> roots.add(TOW_ROOT));
         // M5 part F: a level with weather draws its rain, gusts, lightning, hidden bodies' glow and sondes.
         level.weather().ifPresent(weather -> roots.add(WEATHER_ROOT));
+        // M7 part C: a level with terrain draws the sparks of its rock.
+        level.terrain().ifPresent(terrain -> roots.add(TERRAIN_ROOT));
+        // M7 part D: a level's ground allies (Level 17's domes) in their sprite sets, the DOMES tracker's pip, and
+        // its militia flak with the frigate's puffs.
+        level.allies().ifPresent(allies -> {
+            allies.units().forEach(unit -> {
+                roots.add(unit.ally());
+                AlliesData.Ally ally = content.allies().allies().get(unit.ally());
+                roots.add(ally == null ? unit.sprite().orElse(unit.ally()) : unit.spriteName(ally));
+            });
+            roots.add(GROUND_PIP);
+        });
+        level.flak().ifPresent(flak -> roots.add(FLAK_ROOT));
         // M5 part H: a level with root bursts draws their cracks, dust and roots.
         if (!level.bursts().isEmpty()) {
             roots.add(ROOT_BURST_ROOT);

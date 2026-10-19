@@ -44,3 +44,50 @@ one baseline, white and tinted at run time`, every pixel from the generator.
 ## ui-kit-capture-final-r13-a
 
 A capture of the game, not generated art: `desktop/build/install/terran-vanguard/bin/terran-vanguard --bench <s> --settings <file> --start title` on a private 960×540 Xvfb display (settings in a temporary directory, so the saves are too: `display.mode=window`, a 960×540 window at 0,0, `audio.master=0`), the keys sent into the game window with XTest and the screen grabbed with ImageMagick `import`: the main menu with Quit confirmed, so the dialog shows. Uncropped; [tools/art/ui_review.py](../../../tools/art/ui_review.py) builds the part's sheet from it where it has one.
+
+## pointer-r35-a
+
+Production art, M6 part A (round 35, Q6 = b): the mouse pointer of the out-of-game screens. Not a
+mockup: the review sheet of `assets/ui/pointer.png`, built by
+[tools/art/pointer.py](../../../tools/art/pointer.py) (`python3 tools/art/pointer.py`, `--review`
+rebuilds only the sheet). A 16×16 canvas with an 11×16 arrow whose tip, the hotspot, is pixel
+(0, 0); the game scales it by the integer pixel scale as a hardware cursor, with the system arrow as
+the fallback. The body is SDF ray-marched at 8× as a bevelled plate with the HUD's top-left key
+light through palette B's UTC HULL steel ramp (the UI kit's `render`/`shaded`), with a 1 px amber
+lit left edge like the kit's cursors and a 1 px near-black navy outline so it reads on bright and
+dark backdrops.
+
+Brief: `small classic arrow mouse pointer, late 1990s pre-rendered CGI game UI, bevelled
+blue-violet brushed steel body lit from the top-left, thin amber highlight along its left edge,
+crisp one-pixel dark navy outline, pixel-exact at 16x16, transparent background`
+
+Negative prompt: the common negative prompt above, plus `modern flat cursor, drop shadow, glow`.
+
+## m6-capture-r35-a
+
+Round 35, a capture of the game, not generated art (`.png` sheet of eight screens, `.mp4` with the
+game's sound), taken in M6 part D from `:desktop:installDist` (atlases packed from the current
+`assets/`) on a private Xvfb display (1920×1080 screen, the game in a 960×540 window at 0,0;
+settings in a temporary directory: `display.mode=window`, `audio.master=0.5`,
+`controls.auto-fire=true` except the game over run). Four runs, joined:
+1. `--bench 75 --start title` with a `scores.yaml` beside the settings (four medium and three hard
+   sample entries): the pointer moved and clicked through the title, the menu, SCORES (the HARD,
+   EASY and MEDIUM tabs clicked, right click back), New game and the medium card.
+2. `--bench 150 --start title`: to the hangar by clicks, then the hangar by mouse (the shop rows
+   hovered, the GEN and ENG slots and the FRONT slot clicked, UPGRADE clicked, UNDO clicked,
+   LAUNCH hovered).
+3. `--bench 600 --difficulty hard --level 8` without auto-fire: the ship left still until its
+   armour runs out, RETRY taken three times, the fourth loss → the game over screen with Okafor's
+   last transmission (the voiced line found in the mix at its place).
+4. `--bench 1200 --level 14 --invulnerable --loadout
+   front=lance-laser:5,left=micro-missile-pod:5,right=micro-missile-pod:5,rear=proximity-mines:5`,
+   flown by keys parked under the Siege Spire's parts until it dies, then Enter through the debrief,
+   the act summary and the four outro pages to the release's end: the end card, the name entry
+   (`LANCER` typed, End, Enter), the credits roll (held Enter runs it fast) and the main menu.
+   A debug run, so the end card reads `AUTOSAVE OFF - DEBUG RUN` and the name entry `SCORES OFF -
+   DEBUG RUN: NOT SAVED.`; a played campaign shows neither.
+Keys and the pointer sent with XTest; video `ffmpeg -f x11grab -draw_mouse 1 -framerate 30`
+(`-draw_mouse 0` for runs 3 and 4, where the pointer is hidden), the sound from OpenAL Soft's
+`wave` driver (`ALSOFT_CONF` with `drivers = wave`) writing the game's mix to a file, nothing
+played aloud; the mix laid under the video at the run's start offset, the four cuts joined with
+`ffmpeg -f concat`. Not listened to by Claude.

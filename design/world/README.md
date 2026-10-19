@@ -3,7 +3,7 @@ title: World
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-01
+updated: 2026-10-13
 ---
 
 # World
@@ -21,7 +21,7 @@ levels of its act build on. Levels reference a setting; they do not redefine it.
 | [earth-orbit](earth-orbit/README.md) | Shipyards, orbital defence platforms and debris above a blue Earth | approved | n/a | chosen |
 | [luna](luna/README.md) | Grey craters, Shackleton Station and mass-driver tracks | approved | n/a | chosen |
 | [earth](earth/README.md) | Megacities, open ocean and arctic on Earth's surface | approved | n/a | chosen |
-| [mars](mars/README.md) | Red canyons, dust storms, terraforming domes, Olympus Mons | draft | n/a | chosen |
+| [mars](mars/README.md) | Red canyons, dust storms, terraforming domes, Olympus Mons | approved | n/a | chosen |
 | [europa](europa/README.md) | Cracked ice surface and the dark ocean beneath it | draft | n/a | chosen |
 | [belt](belt/README.md) | Asteroid fields and hollowed-out mining stations | draft | n/a | chosen |
 | [jovian](jovian/README.md) | Jupiter's storms, floating cloud cities, Callisto HQ | draft | n/a | chosen |

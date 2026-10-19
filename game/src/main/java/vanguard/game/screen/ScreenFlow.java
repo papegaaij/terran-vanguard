@@ -40,6 +40,11 @@ public final class ScreenFlow implements Disposable {
         }
     }
 
+    /** Whether the screen on top hides the mouse pointer (a level in flight). */
+    public boolean pointerHidden() {
+        return screens.peek().pointerHidden();
+    }
+
     public void draw(SpriteBatch batch) {
         screens.peek().draw(batch);
     }

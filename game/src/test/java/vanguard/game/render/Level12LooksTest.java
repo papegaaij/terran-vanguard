@@ -33,7 +33,7 @@ import vanguard.sim.Sortie;
  * the data's keys, none in the eye, and bright and dense enough to see within the high-air cap; the
  * gust arrow big and clear of the edge warnings; the reveal showing the bodies under the banks; the eye's wall turning clockwise at 3 deg/s over the eye's span
  * with its 5 s fades; the banks hiding the low-air bodies; the Lamprey's latched pose at its hull spot
- * with the gulp's shield pulse, and its stun's tumble.
+ * with latch look b's siphon glow at the mouth (round 34, the user's pick), and its stun's tumble.
  */
 class Level12LooksTest {
     private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
@@ -205,9 +205,35 @@ class Level12LooksTest {
     }
 
     @Test
-    void theLampreysLatchedFramesGoBySpotAndGulpWithTheShieldsPulse() throws Exception {
+    void theLampreysLatchedFramesGoBySpotWithTheSiphonsGlowAtTheMouth() throws Exception {
         JsonValue pivots = new JsonReader().parse(new FileHandle(new File(ASSETS.toFile(), "pivots/lamprey.json")));
-        assertArrayEquals(LampreyLooks.GULP, pivots.get("gulp_pulse").asFloatArray(), 1e-6f, "latch look a");
+        assertEquals("b", pivots.getString("latch_look"), "latch look b, the siphon (round 34)");
+        assertArrayEquals(LampreyLooks.NO_GULP, LampreyLooks.gulp(pivots, true), "no shield ring with the siphon");
+        JsonValue lookA = new JsonReader().parse("{\"gulp_pulse\": [0.55, 0.3, 0.12, 0.0]}");
+        assertArrayEquals(LampreyLooks.GULP, LampreyLooks.gulp(lookA, false), 1e-6f, "look a's art: the ring");
+        assertArrayEquals(
+                LampreyLooks.GULP, LampreyLooks.gulp(new JsonReader().parse("{\"gulp_pulse\": null}"), false));
+        for (int frame = 0; frame < LampreyLooks.LATCHED_FRAMES; frame++) {
+            BufferedImage drain = ImageIO.read(
+                    ASSETS.resolve("sprites/lamprey-drain_" + frame + ".png").toFile());
+            assertEquals(32, drain.getWidth(), "drain " + frame);
+            assertEquals(32, drain.getHeight(), "drain " + frame);
+        }
+        // The glow sits at the mouth's contact with the hull (lamprey.py's SPOT_CONTACT on the 48 px ship,
+        // y flipped), inside the latched sprite's 36 px at its spot, on its hull side (the left spot faces
+        // right, the right one left, the tail one up): 14 to 17 px from the sprite's centre that way.
+        assertArrayEquals(new int[][] {{-6, -13}, {5, -13}, {0, -19}}, LampreyLooks.DRAIN_AT);
+        EnemySpec lamprey = SimSpecs.enemy(CONTENT, "lamprey", Difficulty.MEDIUM, java.util.Optional.empty());
+        List<EnemySpec.Spot> spots = lamprey.latch().orElseThrow().spots();
+        int[][] facing = {{1, 0}, {-1, 0}, {0, 1}};
+        for (int spot = 0; spot < 3; spot++) {
+            double along = (LampreyLooks.DRAIN_AT[spot][0] - spots.get(spot).dx()) * facing[spot][0]
+                    + (LampreyLooks.DRAIN_AT[spot][1] - spots.get(spot).dy()) * facing[spot][1];
+            double across = (LampreyLooks.DRAIN_AT[spot][0] - spots.get(spot).dx()) * facing[spot][1]
+                    + (LampreyLooks.DRAIN_AT[spot][1] - spots.get(spot).dy()) * facing[spot][0];
+            assertTrue(along >= 14 && along <= 17, "toward the hull at spot " + spot + ": " + along);
+            assertEquals(0, across, 1e-9, "on the body's axis at spot " + spot);
+        }
         assertEquals(EnemySpec.Latch.RIGHT * 4 + 2, LampreyLooks.latchedIndex(EnemySpec.Latch.RIGHT, 12, 0));
         // 10 fps: a frame every 6 steps, each unit at its own phase.
         assertEquals(0, LampreyLooks.gulpFrame(5, 0));

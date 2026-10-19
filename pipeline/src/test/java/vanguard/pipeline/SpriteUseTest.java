@@ -118,6 +118,40 @@ class SpriteUseTest {
     }
 
     /**
+     * M7 part D: Level 17's domes claim their sprite sets ({@code ares-dome}, Eden's {@code ares-dome-eden}) and the
+     * DOMES tracker's pip, its seed-vault frame the capsule under it, its militia flak the frigate's puffs; each in
+     * Level 17's unit atlas, the puffs in Level 11's as well.
+     */
+    @Test
+    void aLevelsGroundAlliesClaimTheirDomesThePipTheCapsuleAndTheFlak() {
+        String level17 = SpriteUse.atlasOf(17);
+        Map<String, Set<String>> atlases = SpriteUse.atlases(
+                content,
+                List.of(
+                        "ares-dome",
+                        "ares-dome-crack-1",
+                        "ares-dome-broken",
+                        "ares-dome-eden-dust",
+                        "dome-pip",
+                        "seed-capsule",
+                        "seed-capsule-glow",
+                        "greenhouse-frame",
+                        "escort-frigate-flak"));
+        for (String sprite : List.of(
+                "ares-dome",
+                "ares-dome-crack-1",
+                "ares-dome-broken",
+                "ares-dome-eden-dust",
+                "dome-pip",
+                "seed-capsule",
+                "seed-capsule-glow",
+                "greenhouse-frame")) {
+            assertEquals(Set.of(level17), atlases.get(sprite), sprite);
+        }
+        assertEquals(Set.of(SpriteUse.atlasOf(11), level17), atlases.get("escort-frigate-flak"));
+    }
+
+    /**
      * M5 part G: the ship's damage smoke, which Level 13's relay also trails (RelayLooks), is a game-wide
      * sprite (the {@code ship} root), so every level, Level 13 included, finds it in the shared pages.
      */

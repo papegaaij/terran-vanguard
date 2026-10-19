@@ -10,4 +10,9 @@ public interface GameScreen extends Disposable {
 
     /** Draws the screen into the 960x540 pixel screen; {@code batch} is drawing. */
     void draw(SpriteBatch batch);
+
+    /** Whether the mouse pointer is hidden and the mouse does nothing: while a level is flown. */
+    default boolean pointerHidden() {
+        return false;
+    }
 }

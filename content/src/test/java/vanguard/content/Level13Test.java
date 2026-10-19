@@ -331,7 +331,7 @@ class Level13Test {
         assertTrue(level.radio().stream()
                 .filter(cue -> cue.speaker().equals("Rook"))
                 .allMatch(cue -> (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0));
-        assertTrue(content.voices().uncast("Nansen"), "Nansen is auditioned in round 35");
+        assertFalse(content.voices().uncast("Nansen"), "Nansen is cast (round 34, 13.4e = a: Patrick Eaton)");
     }
 
     @Test

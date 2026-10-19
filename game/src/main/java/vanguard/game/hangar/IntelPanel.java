@@ -109,7 +109,7 @@ final class IntelPanel {
         if (intel.isEmpty() || teaser.isEmpty()) {
             canvas.text(String.format(Locale.ROOT, "MISSION %02d", number), Glass.CYAN, INNER, Y + 34, false);
             canvas.text("NO INTEL YET: THE MISSION", Glass.LABEL, INNER, Y + 52, false);
-            canvas.text("FOLLOWS IN A LATER BUILD (M4).", Glass.LABEL, INNER, Y + 64, false);
+            canvas.text("FOLLOWS IN A LATER RELEASE.", Glass.LABEL, INNER, Y + 64, false);
             return;
         }
         layout(canvas, intel.get(), teaser.get(), levelKey);
@@ -320,18 +320,36 @@ final class IntelPanel {
         int width = RIGHT - VALUE_X;
         canvas.inset(VALUE_X - 2, y - 2, width + 4, 12);
         // M5 part G: a defend level's phases as dim bands under the waves (a pixel apart, so the three read
-        // as three), its whiteout as a pale band over them.
+        // as three), a hazard span (the whiteout, the root field) as a pale band over them.
         for (Intel.Mark mark : intel.marks()) {
             float left = (float) (VALUE_X + width * mark.from() / intel.seconds());
             float right = (float) (VALUE_X + width * mark.to() / intel.seconds());
-            if (mark.hazard()) {
-                canvas.fill(Glass.TRIM_LIGHT, left, y + 7, right - left, 2);
-            } else {
-                canvas.fill(Glass.TRIM, left + 1, y - 1, right - left - 2, 10);
+            switch (mark.kind()) {
+                case HAZARD -> canvas.fill(Glass.TRIM_LIGHT, left, y + 7, right - left, 2);
+                case PHASE -> canvas.fill(Glass.TRIM, left + 1, y - 1, right - left - 2, 10);
+                case BOSS, BURROW_FIELD, GATE, CRAWLER -> {
+                    // drawn over the waves, below
+                }
             }
         }
         for (double t : intel.waves()) {
             canvas.fill(Glass.AMBER, (float) (VALUE_X + width * t / intel.seconds()), y, 2, 8);
+        }
+        // Step K10: the boss's arrival as a red tick the strip's full depth, over the waves.
+        for (Intel.Mark mark : intel.marks()) {
+            if (mark.kind() == Intel.Mark.Kind.BOSS) {
+                canvas.fill(Glass.ALERT, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 1, 2, 10);
+            } else if (mark.kind() == Intel.Mark.Kind.BURROW_FIELD) {
+                // M7 part B: a Burrower field (Level 15's threat profile) as a green tick the strip's full depth.
+                canvas.fill(Glass.GREEN, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 1, 2, 10);
+            } else if (mark.kind() == Intel.Mark.Kind.GATE) {
+                // M7 part C: a gate of tendril barriers (Level 16's threat profile) as a cyan tick the strip's full
+                // depth.
+                canvas.fill(Glass.CYAN, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 1, 2, 10);
+            } else if (mark.kind() == Intel.Mark.Kind.CRAWLER) {
+                // M7 part C: a Threadcrawler as a green tick over the strip's lower half (a field's is full depth).
+                canvas.fill(Glass.GREEN, (float) (VALUE_X + width * mark.from() / intel.seconds()), y + 3, 2, 6);
+            }
         }
         return y + STEP;
     }

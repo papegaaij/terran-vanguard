@@ -47,22 +47,24 @@ class PartCUnitsDataTest {
     }
 
     @Test
-    void theRavagerPouncesEveryThreeSecondsAndTwoOnHard() {
+    void theRavagerPouncesEveryFourSecondsOnHardToo() {
         EnemySpec ravager = spec("ravager", Difficulty.MEDIUM);
         EnemySpec.Pounce pounce = ravager.pounce().orElseThrow();
 
         assertFalse(ravager.hardened());
         assertEquals(Layer.GROUND, ravager.layer());
-        assertEquals(160, ravager.walker().orElseThrow().speed());
+        // The user's Act 2 playtest (2026-10-18, PT2-B 1b): 120 px/s (was 160), 170 px (was 200), 4 s (was 3; hard 4
+        // too, was 2).
+        assertEquals(120, ravager.walker().orElseThrow().speed());
         assertTrue(ravager.gun().isEmpty(), "no ranged attack");
         assertEquals(15, ravager.contactDamage(), "`medium` contact");
-        assertEquals(200, pounce.range());
+        assertEquals(170, pounce.range());
         assertEquals(0.75, pounce.leapSeconds());
         assertEquals(0.3, pounce.airSeconds());
         assertEquals(1.43, pounce.scale());
-        assertEquals(3.0 / CONTENT.difficulty().enemyFireRate().of(Difficulty.MEDIUM), pounce.intervalSeconds(), 1e-9);
+        assertEquals(4.0 / CONTENT.difficulty().enemyFireRate().of(Difficulty.MEDIUM), pounce.intervalSeconds(), 1e-9);
         assertEquals(
-                2.0, spec("ravager", Difficulty.HARD).pounce().orElseThrow().intervalSeconds(), 1e-9);
+                4.0, spec("ravager", Difficulty.HARD).pounce().orElseThrow().intervalSeconds(), 1e-9);
     }
 
     @Test
@@ -97,14 +99,14 @@ class PartCUnitsDataTest {
 
     @Test
     void aPounceHasNoBulletAndItsAirWindowLiesInsideTheLeap() {
-        assertProblem(replace(RAVAGER, "    interval: 3.0", "    interval: 3.0\n    bullet: small"));
+        assertProblem(replace(RAVAGER, "    interval: 4.0", "    interval: 4.0\n    bullet: small"));
         assertProblem(replace(RAVAGER, "      air: 0.3", "      air: 0.9"));
-        assertProblem(replace(RAVAGER, "      range: 200", "      range: 200\n      homing: true"));
+        assertProblem(replace(RAVAGER, "      range: 170", "      range: 170\n      homing: true"));
     }
 
     @Test
     void onlyAWalkerPounces() {
-        List<DataFile> files = replace(RAVAGER, "  walk: {speed: 160, turn_rate: 180, stride: 46}", "  terrain: {}");
+        List<DataFile> files = replace(RAVAGER, "  walk: {speed: 120, turn_rate: 180, stride: 46}", "  terrain: {}");
 
         var e = assertThrows(ContentException.class, () -> ContentLoader.load(files));
         assertTrue(e.getMessage().contains("only a walker pounces"), e.getMessage());

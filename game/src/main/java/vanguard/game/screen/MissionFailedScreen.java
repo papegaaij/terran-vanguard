@@ -12,7 +12,9 @@ import vanguard.game.audio.Sfx;
 import vanguard.game.hangar.Names;
 import vanguard.game.input.MenuInput;
 import vanguard.game.render.PixelScreen;
+import vanguard.game.ui.Box;
 import vanguard.game.ui.Dialog;
+import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
 import vanguard.game.ui.Menu;
 import vanguard.game.ui.Speaker;
@@ -27,7 +29,8 @@ import vanguard.sim.LevelScript;
  * a confirmation, which Back (Esc, the gamepad's back button) asks too), with what the attempt earned and, on hard, the retries left: the failure has
  * used its retry already (and the autosave holds it), so Retry and Back to hangar only take it. Once
  * the attempt reached a boss checkpoint (easy and medium), Retry from boss comes first: the boss's
- * arrival on an empty field with the defences and tallies of then; it uses no retry.
+ * arrival on an empty field with the defences and tallies of then; it uses no retry. The mouse
+ * works here (design/ui, Mouse): hover selects, a click chooses, the right button asks to quit.
  */
 public final class MissionFailedScreen implements GameScreen {
     private static final Color TINT = new Color(0.45f, 0.02f, 0.02f, 0.5f);
@@ -105,15 +108,16 @@ public final class MissionFailedScreen implements GameScreen {
                 case NONE -> Transition.STAY;
             };
         }
-        if (menu.navigate(input)) {
+        if (menu.navigate(input, MissionFailedScreen::row)) {
             services.play(Sfx.MENU_MOVE);
         }
-        if (asksToQuit(input, menu.selectedId() == Item.QUIT)) {
+        boolean confirmed = !input.back() && menu.confirmed(input, MissionFailedScreen::row);
+        if (asksToQuit(input.back(), confirmed, menu.selectedId() == Item.QUIT)) {
             services.play(Sfx.MENU_CONFIRM);
             quit = Optional.of(quitDialog());
             return Transition.STAY;
         }
-        if (!input.confirm()) {
+        if (!confirmed) {
             return Transition.STAY;
         }
         services.play(Sfx.MENU_CONFIRM);
@@ -138,7 +142,22 @@ public final class MissionFailedScreen implements GameScreen {
 
     /** Whether the frame's input asks to quit: Back on any item, or confirm on Quit to main menu. */
     static boolean asksToQuit(MenuInput input, boolean onQuit) {
-        return input.back() || onQuit && input.confirm();
+        return asksToQuit(input.back(), input.confirm(), onQuit);
+    }
+
+    /** As {@link #asksToQuit(MenuInput, boolean)}, with a confirmation by key or by a click on an item. */
+    static boolean asksToQuit(boolean back, boolean confirmed, boolean onQuit) {
+        return back || onQuit && confirmed;
+    }
+
+    /** A menu item's hit region: its selection bar, the rows touching. */
+    static Box row(int index) {
+        return Box.row(
+                ITEM_X - 24,
+                PANEL_X + PANEL_WIDTH - ITEM_X + 22,
+                ITEM_Y + index * ITEM_STEP,
+                Fonts.BODY_CAP,
+                ITEM_STEP);
     }
 
     /**

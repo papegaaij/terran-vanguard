@@ -194,6 +194,11 @@ public final class Sprites implements Disposable {
         return images;
     }
 
+    /** M7 part C: a backdrop image's frames or slices in their index order ({@code _0}, ...), or the single image. */
+    public Array<AtlasRegion> backdrop(String name) {
+        return frames(backdrop, name);
+    }
+
     private static Array<AtlasRegion> frames(TextureAtlas atlas, String name) {
         Array<AtlasRegion> frames = atlas.findRegions(name);
         if (frames.isEmpty()) {

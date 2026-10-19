@@ -14,6 +14,7 @@ import java.util.Optional;
  * @param wingman the wingman flying in the escort slot (Rook, from Level 08); empty for none
  * @param salvageBonus the fitted Salvage scanner's share added to salvage pickups' and hidden crates'
  *     credits (design/player/systems); 0 for none
+ * @param thrusters M7 part A: the fitted Evasive thrusters' dash; empty for none
  */
 public record Loadout(
         ShipSpec ship,
@@ -23,11 +24,25 @@ public record Loadout(
         Optional<SpecialSpec> special,
         Optional<Magnet> magnet,
         Optional<WingmanSpec> wingman,
-        double salvageBonus) {
+        double salvageBonus,
+        Optional<ThrusterSpec> thrusters) {
     public Loadout {
         if (!(salvageBonus >= 0)) {
             throw new IllegalArgumentException("the salvage bonus is a share of at least 0");
         }
+    }
+
+    /** A loadout without the Evasive thrusters. */
+    public Loadout(
+            ShipSpec ship,
+            Armament armament,
+            ShieldModel shield,
+            Plating plating,
+            Optional<SpecialSpec> special,
+            Optional<Magnet> magnet,
+            Optional<WingmanSpec> wingman,
+            double salvageBonus) {
+        this(ship, armament, shield, plating, special, magnet, wingman, salvageBonus, Optional.empty());
     }
 
     /** A loadout without a special, a magnet, a wingman or a salvage bonus. */
@@ -37,21 +52,29 @@ public record Loadout(
 
     /** This loadout with {@code fitted} in the special slot. */
     public Loadout withSpecial(SpecialSpec fitted) {
-        return new Loadout(ship, armament, shield, plating, Optional.of(fitted), magnet, wingman, salvageBonus);
+        return new Loadout(
+                ship, armament, shield, plating, Optional.of(fitted), magnet, wingman, salvageBonus, thrusters);
     }
 
     /** This loadout with {@code fitted} in a utility bay. */
     public Loadout withMagnet(Magnet fitted) {
-        return new Loadout(ship, armament, shield, plating, special, Optional.of(fitted), wingman, salvageBonus);
+        return new Loadout(
+                ship, armament, shield, plating, special, Optional.of(fitted), wingman, salvageBonus, thrusters);
     }
 
     /** This loadout with {@code flying} in the escort slot. */
     public Loadout withWingman(WingmanSpec flying) {
-        return new Loadout(ship, armament, shield, plating, special, magnet, Optional.of(flying), salvageBonus);
+        return new Loadout(
+                ship, armament, shield, plating, special, magnet, Optional.of(flying), salvageBonus, thrusters);
     }
 
     /** This loadout with a Salvage scanner adding {@code bonus} (a share) to salvage and hidden crates. */
     public Loadout withSalvage(double bonus) {
-        return new Loadout(ship, armament, shield, plating, special, magnet, wingman, bonus);
+        return new Loadout(ship, armament, shield, plating, special, magnet, wingman, bonus, thrusters);
+    }
+
+    /** M7 part A: this loadout with the Evasive thrusters' {@code dash} in a utility bay. */
+    public Loadout withThrusters(ThrusterSpec dash) {
+        return new Loadout(ship, armament, shield, plating, special, magnet, wingman, salvageBonus, Optional.of(dash));
     }
 }

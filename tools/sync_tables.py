@@ -83,8 +83,74 @@ def level_rows(w):
     return rows
 
 
+def beam_rows(w):
+    """M7 part A: a beam's per-level rows: width and damage per second (its volley and single-target DPS)."""
+    rows = []
+    for i, lv in enumerate(w["levels"] + [w["overdrive"]], start=1):
+        od = i == 6
+        rows.append(["OD" if od else str(i), num(lv["width"]), num(lv["damage"]), f"{lv['damage']:.1f}",
+                     f"{lv['damage']:.1f}", "— (ignores cap)" if od else num(draw(w, i)),
+                     "—" if od or i == 1 else grouped(upgrade_costs(w)[i - 2])])
+    return rows
+
+
+def deflector_rows(w):
+    """M7 part A: a deflector's per-level rows: field radius, charges, recharge and the bullets it catches
+    in 2 s when it is caught on every charge's return."""
+    rows = []
+    for i, lv in enumerate(w["levels"] + [w["overdrive"]], start=1):
+        od = i == 6
+        sustained = 2 / lv["recharge"]
+        rows.append(["OD" if od else str(i), num(lv["radius"]), str(lv["charges"]), f"{num(lv['recharge'])} s",
+                     f"{sustained:.1f}".rstrip("0").rstrip("."), "— (ignores cap)" if od else num(draw(w, i)),
+                     "—" if od or i == 1 else grouped(upgrade_costs(w)[i - 2])])
+    return rows
+
+
+def drone_rows(w):
+    """M7 part A: a drone bay's per-level rows: its shots and the drone's hits and rebuild time."""
+    rows = []
+    for i, lv in enumerate(w["levels"] + [w["overdrive"]], start=1):
+        volley, single = stats(w, lv)
+        od = i == 6
+        rows.append(["OD" if od else str(i), num(lv["rate"]), num(lv["damage"]), f"{volley:.1f}", f"{single:.1f}",
+                     f"{lv['drone_hits']} hits", f"{num(lv['rebuild'])} s",
+                     "— (ignores cap)" if od else num(draw(w, i)),
+                     "—" if od or i == 1 else grouped(upgrade_costs(w)[i - 2])])
+    return rows
+
+
+def per_level_rows(w):
+    """A weapon's per-level rows as its table shows them (M7 part A: a beam's, a deflector's, a drone bay's)."""
+    if w["hits"] == "beam":
+        return beam_rows(w)
+    if w["hits"] == "deflector":
+        return deflector_rows(w)
+    return drone_rows(w) if "drone" in w else level_rows(w)
+
+
 def weapon_levels(d):
     w = data(d)
+    od_note = f"OD = the overdrive ({pickups()['overdrive']['seconds']} s pickup)."
+    generated = "Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand."
+    if w["hits"] == "beam":
+        head = ["Level", "Width px", "Damage / s", "Volley DPS", "Single-target DPS", "Draw MW", "Upgrade cost"]
+        return table(head, beam_rows(w)) + "\n\n" + (
+            f"{generated} One beam: whatever it touches first takes all of its damage per second, so volley and "
+            f"single-target DPS are the same. {od_note}")
+    if w["hits"] == "deflector":
+        head = ["Level", "Field radius px", "Charges", "One charge back every", "Bullets per 2 s (sustained)",
+                "Draw MW", "Upgrade cost"]
+        return table(head, deflector_rows(w)) + "\n\n" + (
+            f"{generated} Values are per pod; it deals no damage. Bullets per 2 s: one caught on every charge's "
+            f"return. {od_note}")
+    if "drone" in w:
+        head = ["Level", "Rate /s", "Damage", "Volley DPS", "Single-target DPS", "Drone breaks after", "Rebuild",
+                "Draw MW", "Upgrade cost"]
+        return table(head, drone_rows(w)) + "\n\n" + (
+            f"{generated} Values are per bay (one drone each). Its shots aim at the convergence point "
+            f"{num(w['drone']['converge'])} px ahead of the ship's centre, so every shot counts as a single-target "
+            f"hit. {od_note}")
     rows = level_rows(w)
     per = " Values are per pod." if w.get("pod") else (" Values are per side." if w.get("mirrored") else "")
     target = weapon_rules()["single_target"]
@@ -228,8 +294,9 @@ def stat_block(d):
         return f" {fill(notes[key], values)}" if key in notes else ""
 
     # A spawn or a pounce (M5 part C) has no bullet: its text names no {damage}.
+    # M7 part C: an attack whose text is empty (the Tendril Anchor's hard orb, told in the link's) adds nothing.
     attacks = "; ".join(fill(a["notes"]["text"], values | a | {"damage": bullet.get(a.get("bullet"))})
-                        for a in e["attacks"])
+                        for a in e["attacks"] if a["notes"]["text"])
     attacks = fill(notes.get("attack_prefix", ""), values) + attacks
     parts = notes["parts"] if e["parts"] == "multi" else e["parts"]
     hp_text = (fill(notes["hp"], values) + " " if "hp" in notes else "") + num(e["hp"])
@@ -238,7 +305,7 @@ def stat_block(d):
     weak = ", ".join(w["name"] + (f" (×{num(w['multiplier'])})" if "multiplier" in w else "")
                      for w in e["weak_points"]) or "none"
     rows = [
-        ["Faction", e["faction"]],
+        ["Faction", e["faction"] + (" (machine: the EMP Burst stuns it longest)" if e.get("machine") else "")],
         ["Layer", f"`{e['layer']}`" + fill(notes.get("layer", ""), values)],
         ["Size tier", f"`{e['tier']}`"],
         ["Size", f"{e['size'][0]}×{e['size'][1]} px, hitbox {e['hitbox'][0]}×{e['hitbox'][1]}" + suffix("size")],
@@ -282,7 +349,8 @@ def formations(d):
 
 EDGES = {"left": "left", "right": "right", "alternating": "alternating edges"}
 EVENTS = {"level-end": "Level end", "secondary-objective": "Secondary objective met"}
-PORTRAITS = {"generic-cdf": "Generic CDF", "generic-civilian": "Generic civilian"}  # the generic portraits of unnamed speakers
+PORTRAITS = {"generic-cdf": "Generic CDF", "generic-civilian": "Generic civilian",
+             "generic-colonial": "Generic colonial"}  # the generic portraits of unnamed speakers
 
 
 def timed_halt(section):
@@ -292,7 +360,8 @@ def timed_halt(section):
 
 def travelled(level, i, a, b):
     """The px section i scrolls from a to b s; around a timed halt the scroll eases (smoothstep) down to 0
-    over the halt's ramp before it and back up over as long after it (LevelData.scrollAt)."""
+    over the halt's ramp before it and back up over as long after it; M7 part B: a moving section's `ramp` eases
+    from the speed before it over its first `ramp` s (LevelData.scrollAt)."""
     secs = level["sections"]
     s = secs[i]
     speed = s.get("speed", level["scroll_speed"])
@@ -314,6 +383,11 @@ def travelled(level, i, a, b):
     if speed and i > 0 and timed_halt(secs[i - 1]):
         ramp = min(secs[i - 1].get("ramp", 2), s["end"] - start)
         px -= speed * ramp * (ease_out(u(b, start, ramp)) - ease_out(u(a, start, ramp)))
+    elif speed and i > 0 and not timed_halt(s) and not s.get("arena") and s.get("ramp"):
+        # M7 part B: a moving section's ramp eases from the speed before it over its first `ramp` s
+        ramp = min(s["ramp"], s["end"] - start)
+        before = secs[i - 1].get("speed", level["scroll_speed"])
+        px -= (speed - before) * ramp * (ease_out(u(b, start, ramp)) - ease_out(u(a, start, ramp)))
     return px
 
 
@@ -470,10 +544,18 @@ def on_screen(level, backdrop, placed):
     return max(0, time_at(level, centre - reach)), min(level["sections"][-1]["end"], time_at(level, centre + reach))
 
 
+def backdrop_layers(b):
+    """The backdrop's layer columns: M7 part C's `plateau` (a canyon level's) after the ground, where it has one."""
+    if "plateau" not in b["scroll_factors"]:
+        return BACKDROP_LAYERS
+    return BACKDROP_LAYERS[:3] + ["plateau"] + BACKDROP_LAYERS[3:]
+
+
 def backdrop_table(d):
     level = data(d)
     b = level["backdrop"]
-    cells = [{layer: [] for layer in BACKDROP_LAYERS} for _ in level["sections"]]
+    layers = backdrop_layers(b)
+    cells = [{layer: [] for layer in layers} for _ in level["sections"]]
     for i, s in enumerate(level["sections"]):
         for tile in s["tiles"]:
             cells[i][b["tile_sets"][tile]["layer"]].append(f"`{tile}`")
@@ -502,8 +584,64 @@ def backdrop_table(d):
         if "peak" in s:
             peak = s["peak"]
             atmosphere += f"; {peak['atmosphere']} peak {num(peak['from'])}–{num(peak['to'])} s: {mix(peak['atmosphere'])}"
-        rows.append([f"{i + 1}. {s['name']}", atmosphere] + ["; ".join(cells[i][layer]) for layer in BACKDROP_LAYERS])
-    return table(["Section", "Atmosphere"] + [f"`{layer}`" for layer in BACKDROP_LAYERS], rows)
+        rows.append([f"{i + 1}. {s['name']}", atmosphere] + ["; ".join(cells[i][layer]) for layer in layers])
+    return table(["Section", "Atmosphere"] + [f"`{layer}`" for layer in layers], rows)
+
+
+def wall_x(points, row):
+    """A wall's collision line at a row ([scroll, x(, height)] points, linear between them); None off it."""
+    for a, b in zip(points, points[1:]):
+        if a[0] <= row <= b[0]:
+            return a[1] + (b[1] - a[1]) * (row - a[0]) / (b[0] - a[0])
+    return None
+
+
+def island_span(island, row):
+    """An island's rock on a row ([x, scroll] polygon): (from, to), or None off it."""
+    xs = []
+    pts = island["points"]
+    for a, b in zip(pts, pts[1:] + pts[:1]):
+        lo, hi = sorted((a[1], b[1]))
+        if lo <= row <= hi:
+            xs += [a[0], b[0]] if a[1] == b[1] else [a[0] + (b[0] - a[0]) * (row - a[1]) / (b[1] - a[1])]
+    return (min(xs), max(xs)) if xs else None
+
+
+def terrain_table(d):
+    """M7 part C: the walls' collision lines row by row (each wall point's row with the time it reaches the top
+    edge), the flyable width (the channels beside an island), the notes by row; then the islands' outlines."""
+    level = data(d)
+    terrain = level["terrain"]
+    left, right = terrain.get("left", []), terrain.get("right", [])
+    islands = terrain.get("islands", [])
+    notes = terrain.get("notes", {})
+    rows = []
+    first = min(p[0] for p in left + right)
+    if first > 0 and "before" in notes:
+        rows.append([f"0–{num(round(time_at(level, first), 1))} (0–{grouped(first, ',')})", "—", "—",
+                     num(480), notes["before"]])
+    for scroll in sorted({p[0] for p in left + right} | {p[1] for i in islands for p in i["points"]}):
+        lx, rx = wall_x(left, scroll), wall_x(right, scroll)
+        spans = [s for s in (island_span(i, scroll) for i in islands) if s]
+        edges = [lx if lx is not None else 0] + [x for s in sorted(spans) for x in s] + [rx if rx is not None else 480]
+        widths = [edges[k + 1] - edges[k] for k in range(0, len(edges), 2)]
+        heights = {p[2] for p in left + right if p[0] == scroll and len(p) > 2}
+        note = notes.get("rows", {}).get(scroll, "")
+        if heights:
+            note = "; ".join(filter(None, [note, f"wall height {num(heights.pop())}"]))
+        rows.append([f"{num(round(time_at(level, scroll), 1))} ({grouped(scroll, ',')})",
+                     "—" if lx is None else num(lx), "—" if rx is None else num(rx),
+                     " + ".join(num(round(w)) for w in widths), note])
+    out = table(["t at the top edge (scroll px)", "Left x", "Right x", "Flyable width", "Notes"], rows)
+    for island in islands:
+        outline = " → ".join(f"({num(p[0])}, {grouped(p[1], ',')})" for p in island["points"])
+        out += f"\n\n**{island['name'][0].upper()}{island['name'][1:]}** (`{island['look']}`; x, scroll at the top edge): {outline}."
+    contact = terrain["contact"]
+    damage = contact["damage"]
+    out += (f"\n\n**Contact**: {num(damage['medium'])} per touch (easy {num(damage['easy'])}, hard {num(damage['hard'])}), "
+            f"pushed {num(contact['push'])} px along the wall's normal over {num(contact['push_seconds'])} s, then a "
+            f"{num(contact['cooldown'])} s cooldown in which a touch only clamps.")
+    return out
 
 
 def waves(d):
@@ -551,6 +689,10 @@ def ground_values(target):
 
 def placements(target):
     """The easy / hard placements of a ground target, if they differ ("; easy ×2, hard ×4")."""
+    if target.get("link") == "pairs":  # M7 part C: a gate's anchors, in pairs ("; hard 2 pairs")
+        changes = [f"{level} {len(target[level]['at']) // 2} pair{'s' if len(target[level]['at']) > 2 else ''}"
+                   for level in ("easy", "hard") if "at" in target.get(level, {})]
+        return "; " + ", ".join(changes) if changes else ""
     changes = [f"{level} ×{len(target[level]['at'])}" for level in ("easy", "hard") if "at" in target.get(level, {})]
     return "; " + ", ".join(changes) if changes else ""
 
@@ -650,6 +792,52 @@ def act_outro(d):
     return quote(data(d)["outro"]["pages"])
 
 
+def act_outro_pages(d):
+    """The act-end outro's pages: the speaker (with the expression) and the image with its description."""
+    rows = []
+    for i, page in enumerate(data(d)["outro"]["pages"], start=1):
+        speaker = SPEAKERS.get(page["speaker"], page["speaker"])
+        expression = page.get("expression")
+        rows.append([str(i), speaker + (f" ({expression})" if expression else ""),
+                     f"`{page['image']}`: {page['notes']['image']}"])
+    return table(["Page", "Speaker", "Image"], rows)
+
+
+# --- Rook (design/player/wingmen) -------------------------------------------------------------
+
+def rook_guns(d):
+    """Rook's guns: each a player weapon's per-level table with the damage scaled, at the price factor."""
+    guns = data(d)["guns"]
+    factor = guns["price_factor"]
+    rows = []
+    for i, gun in enumerate(guns["list"]):
+        w = load(f"player/weapons/{gun['base']}/data.yaml")
+        dps = [stats(w, w["levels"][lv])[0] * gun["scale"] for lv in (0, len(w["levels"]) - 1)]
+        base = w.get("upgrade_base", w["price"])
+        upgrades = " / ".join(grouped(base * factor * f) for f in weapon_rules()["upgrade_cost_factors"])
+        note = gun.get("notes", {}).get("scale")
+        rows.append([
+            gun["name"], f"`{gun['id']}`", f"[{w['name']}](../weapons/{gun['base']}/README.md)",
+            f"× {num(gun['scale'])}" + (f" {note}" if note else ""),
+            f"{round_half_up(dps[0])} → {round_half_up(dps[1])}",
+            "free (fitted when he joins)" if i == 0 else grouped(w["price"] * factor), upgrades, available(gun),
+        ])
+    return table(["Gun", "Id", "Based on", "Scale", "DPS L1 → L5", "Price", "Upgrades L2 / L3 / L4 / L5",
+                  "Available"], rows)
+
+
+def rook_barks(d):
+    """Rook's radio barks in priority order: the trigger (its numbers filled in) and the variants."""
+    barks = data(d)["barks"]
+    rows = []
+    for i, bark in enumerate(barks["triggers"], start=1):
+        values = {k: (f"{round_half_up(v * 100)} %" if k == "below" else num(v)) for k, v in bark.items()
+                  if k in ("ahead", "below", "kills", "seconds")}
+        trigger = fill(bark["notes"]["trigger"], values) + (" (shouted)" if bark.get("shout") else "")
+        rows.append([str(i), trigger, " · ".join(f'"{line}"' for line in bark["lines"])])
+    return table(["Priority", "Trigger", f"Variants (speaker {barks['speaker']})"], rows)
+
+
 def level_number(d):
     return int(re.match(r"level-(\d+)-", os.path.basename(d)).group(1))
 
@@ -673,6 +861,14 @@ def part_names(parts):
     for (base, credits), members in groups.items():
         out.append(f"{base}s {len(members)} × {credits}" if len(members) > 1 else f"{members[0]['name']} {credits}")
     return out
+
+
+def whole_part(e):
+    """M7 part D: the vital part of a unit that is not a segment chain whose vital part pays a first bonus (the
+    Shellback's body: a body-first kill pays the whole); None for another unit."""
+    if e.get("segment_chain"):
+        return None
+    return next((p for p in e.get("part_list", []) if p.get("kind") == "vital" and "first_bonus" in p), None)
 
 
 def credit_budget(d):
@@ -700,8 +896,9 @@ def credit_budget(d):
     rows = []  # [source, perfect, typical]
 
     def add(source, items):
-        """items: (count, credits per payout, share the typical player collects)."""
-        rows.append([source, sum(n * c for n, c, _ in items), sum(n * c * r for n, c, r in items)])
+        """items: (count, credits per payout, share the typical player collects[, False: not in a perfect run])."""
+        rows.append([source, sum(i[0] * i[1] for i in items if len(i) < 4 or i[3]),
+                     sum(i[0] * i[1] * i[2] for i in items)])
 
     kills = [(enemy_name(slug), n, slug) for slug, n in enemy_totals(level).items()]
     # the units a spawner releases (Level 04's Brood Pods: their Skitters), killed too
@@ -717,17 +914,43 @@ def credit_budget(d):
     kills += [(f"released {enemy_name(slug)}", n, slug) for slug, n in released.items()]
 
     def kill_items(n, slug):
-        """A kill's payouts; a segment chain's head, segments and tail each pay (and round) their own."""
+        """A kill's payouts; a segment chain's head, segments and tail each pay (and round) their own. M7 part C: a
+        chain whose head pays a first bonus (the Threadcrawler's whole 48) is taken apart in a perfect run (the tail
+        first, with its bonus) and killed head first by the typical player."""
         e = load(f"{enemy_dir(slug)}/data.yaml")
         chain = e.get("segment_chain")
+        vital = whole_part(e)
+        if not chain and vital:  # M7 part D: the Shellback, its vent first in a perfect run, body first typically
+            others = [p for p in e["part_list"] if p is not vital]
+            return ([(n, bounty(vital["bounty"]), layer_rate(slug)),
+                     (n, bounty(vital["first_bonus"]), layer_rate(slug), False)]
+                    + [(n, bounty(p["bounty"]), 0) for p in others])
         if not chain:
             return [(n, bounty(e["bounty"]), layer_rate(slug))]
         head, tail = e["part_list"][0], e["part_list"][1]
+        if "first_bonus" in head:
+            return [(n, bounty(head["bounty"]), layer_rate(slug)),
+                    (n, bounty(head["first_bonus"]), layer_rate(slug), False),
+                    (n * chain["segments"], bounty(chain["bounty"]), 0),
+                    (n, bounty(tail["bounty"]), 0),
+                    (n, bounty(tail.get("first_bonus", 0)), 0)]
         return [(n, bounty(head["bounty"]), layer_rate(slug)),
                 (n * chain["segments"], bounty(chain["bounty"]), layer_rate(slug)),
                 (n, bounty(tail["bounty"]), layer_rate(slug))]
 
-    add("Kills: " + " + ".join(f"{name} {n} × {stat_bounty(slug)}" for name, n, slug in kills),
+    def kill_name(name, n, slug):
+        e = load(f"{enemy_dir(slug)}/data.yaml")
+        head = e.get("part_list", [{}])[0]
+        if e.get("segment_chain") and "first_bonus" in head:  # M7 part C: the Threadcrawler
+            tail = e["part_list"][1]
+            parts = e["bounty"] + tail.get("first_bonus", 0)
+            return f"{name} {n} × {parts} by parts ({head['bounty'] + head['first_bonus']} whole)"
+        vital = whole_part(e)
+        if vital:  # M7 part D: a non-chain unit whose vital part pays a first bonus (the Shellback's whole 48)
+            return f"{name} {n} × {e['bounty']} by parts ({vital['bounty'] + vital['first_bonus']} whole)"
+        return f"{name} {n} × {stat_bounty(slug)}"
+
+    add("Kills: " + " + ".join(kill_name(name, n, slug) for name, n, slug in kills),
         [item for _, n, slug in kills for item in kill_items(n, slug)])
     # ground enemies by their stat block's bounty, then the destructibles that pay or drop credits
     enemies = {}
@@ -745,6 +968,15 @@ def credit_budget(d):
     for g in paying:
         items.append((g["count"], bounty(g.get("bounty", 0)), rate["ground_targets"]))
         items.append((g["count"], pay(g.get("drop_credits", 0)), rate["ground_targets"] * rate["pickups"]))
+    # M7 part C: a linked nest's tendrils burnt (the gates, in a perfect run; the typical player kills an anchor)
+    burnt = {}
+    for g in level["ground_targets"]:
+        if g.get("link") == "pairs":
+            link = next(a["link"] for a in load(f"{enemy_dir(g['enemy'])}/data.yaml")["attacks"] if a.get("link"))
+            burnt[link["burnt_bounty"]] = burnt.get(link["burnt_bounty"], 0) + len(g["at"]) // 2
+    for credits, n in burnt.items():
+        parts.append(f"{n} tendrils burnt × {credits}")
+        items.append((n, bounty(credits), 0))
     if parts:
         add("Ground targets: " + " + ".join(parts), items)
     # set pieces: their parts' bounties, and their death drop
@@ -797,6 +1029,8 @@ def credit_budget(d):
     count = 1
     if secondary is None:
         source = None
+    elif secondary.get("links"):  # M7 part C (Level 16): every tendril broken
+        source = f"Secondary: {secondary['name'][0].lower()}{secondary['name'][1:]} (every tendril broken)"
     elif "name" in secondary:  # the objective's own name (Level 09's "Hold the bridge")
         if "groups" in secondary:
             count = len(secondary["groups"])
@@ -900,8 +1134,9 @@ RENDERERS = {
     "pickups": player_pickups, "ship-movement": ship_movement, "stat-block": stat_block,
     "reference-dps": reference_dps, "player-damage": player_damage, "formations": formations,
     "level-sections": level_sections, "backdrop": backdrop_table, "threat-profile": threat_profile, "waves": waves, "ground-targets": ground_targets, "radio": radio,
-    "credit-budget": credit_budget, "briefing": briefing, "teaser": teaser,
-    "act-title-card": act_title_card, "act-briefing": act_briefing, "act-outro": act_outro, "score-bonuses": score_bonuses, "grades": grades, "difficulty": difficulty,
+    "credit-budget": credit_budget, "briefing": briefing, "teaser": teaser, "terrain": terrain_table,
+    "act-title-card": act_title_card, "act-briefing": act_briefing, "act-outro": act_outro, "act-outro-pages": act_outro_pages,
+    "rook-guns": rook_guns, "rook-barks": rook_barks, "score-bonuses": score_bonuses, "grades": grades, "difficulty": difficulty,
 }
 
 

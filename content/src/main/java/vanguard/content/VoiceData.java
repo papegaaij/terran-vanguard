@@ -1,9 +1,13 @@
 package vanguard.content;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * design/audio/voice/data.yaml: the speaker table of the spoken radio lines and briefings. The
@@ -12,14 +16,23 @@ import java.util.TreeMap;
  * @param expressions the Chatterbox settings per expression ({@code neutral}, {@code grim},
  *     {@code fierce}) and for shouted lines ({@code shout})
  * @param speakers the voices by slug
+ * @param respell M7 part B (design/audio/voice, Pronunciation; round 36 Q.24f): a word or name and its spelling as
+ *     spoken ({@code Ares} → {@code Airees}), applied to the text as spoken of every line ({@link #respelled}); the
+ *     subtitle keeps the real spelling; none if not given
  */
-public record VoiceData(Map<String, Settings> expressions, Map<String, Speaker> speakers) {
+public record VoiceData(
+        Map<String, Settings> expressions, Map<String, Speaker> speakers, Optional<Map<String, String>> respell) {
     /** The row a shouted line uses whatever its expression. */
     public static final String SHOUT = "shout";
 
     public VoiceData {
         expressions = Map.copyOf(new TreeMap<>(expressions));
         speakers = Map.copyOf(new TreeMap<>(speakers));
+        respell = respell.map(Map::copyOf);
+        respell.ifPresent(map -> map.forEach((word, spoken) -> {
+            Check.that(word.matches("\\p{L}+( \\p{L}+)*"), "respell: '" + word + "' is not a word or words");
+            Check.that(!spoken.isBlank() && !spoken.equals(word), "respell: '" + word + "' needs another spelling");
+        }));
         for (Expression expression : Expression.values()) {
             Check.that(expressions.containsKey(expression.slug()), "expressions: missing '" + expression.slug() + "'");
         }
@@ -87,6 +100,37 @@ public record VoiceData(Map<String, Settings> expressions, Map<String, Speaker> 
                     file.matches("[a-z0-9]+(-[a-z0-9]+)*\\.ogg"), "stage: an .ogg file name, was '" + file + "'"));
             Check.that(stage.isEmpty() || ref.isPresent(), "stage: only a cast speaker has a stage sound");
         }
+    }
+
+    /** Without M7 part B's respellings. */
+    public VoiceData(Map<String, Settings> expressions, Map<String, Speaker> speakers) {
+        this(expressions, speakers, Optional.empty());
+    }
+
+    /**
+     * M7 part B: {@code text} as the voice is given it, every respelled word or name ({@link #respell}) replaced by
+     * its spelling as spoken: whole words only, case-sensitive, the longest first (so {@code Valles Marineris} wins
+     * over a single word in it).
+     */
+    public String respelled(String text) {
+        if (respell.isEmpty() || respell.get().isEmpty()) {
+            return text;
+        }
+        List<String> words = new ArrayList<>(respell.get().keySet());
+        words.sort(Comparator.comparingInt(String::length).reversed().thenComparing(Comparator.naturalOrder()));
+        StringBuilder pattern = new StringBuilder("(?<![\\p{L}\\p{N}'-])(");
+        for (int i = 0; i < words.size(); i++) {
+            pattern.append(i == 0 ? "" : "|").append(Pattern.quote(words.get(i)));
+        }
+        pattern.append(")(?![\\p{L}\\p{N}-])");
+        Matcher matcher = Pattern.compile(pattern.toString()).matcher(text);
+        StringBuilder out = new StringBuilder();
+        while (matcher.find()) {
+            matcher.appendReplacement(
+                    out, Matcher.quoteReplacement(respell.get().get(matcher.group(1))));
+        }
+        matcher.appendTail(out);
+        return out.toString();
     }
 
     /** The slug of the voice that speaks as {@code name}, if any; none for an uncast speaker. */

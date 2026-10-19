@@ -98,17 +98,21 @@ class PartGHudTest {
         var marks = vanguard.content.campaign.Intel.of(CONTENT, KEY, 3).marks();
         assertEquals(
                 List.of(
-                        new vanguard.content.campaign.Intel.Mark(40, 100, false),
-                        new vanguard.content.campaign.Intel.Mark(100, 160, false),
-                        new vanguard.content.campaign.Intel.Mark(160, 220, false),
-                        new vanguard.content.campaign.Intel.Mark(176, 188, true)),
+                        new vanguard.content.campaign.Intel.Mark(
+                                40, 100, vanguard.content.campaign.Intel.Mark.Kind.PHASE),
+                        new vanguard.content.campaign.Intel.Mark(
+                                100, 160, vanguard.content.campaign.Intel.Mark.Kind.PHASE),
+                        new vanguard.content.campaign.Intel.Mark(
+                                160, 220, vanguard.content.campaign.Intel.Mark.Kind.PHASE),
+                        new vanguard.content.campaign.Intel.Mark(
+                                176, 188, vanguard.content.campaign.Intel.Mark.Kind.HAZARD)),
                 marks,
                 "the halt's three sections and the whiteout's peak");
         assertTrue(
                 vanguard.content.campaign.Intel.of(CONTENT, CONTENT.levelKey(12).orElseThrow(), 3)
                         .marks()
                         .isEmpty(),
-                "a level without a defend has none");
+                "a level without a defend or a boss has none");
     }
 
     private static BitmapFont.BitmapFontData font(String file) {

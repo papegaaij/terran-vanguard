@@ -18,7 +18,7 @@ import vanguard.sim.PlayField;
  * roof's, textured with the wall texture (its columns along the wall, repeating, its rows from the
  * foot up) and shaded per side (those facing right and down at the tower's {@code shade}); then the
  * roof, pre-rendered at its drawn size, at its projected place on whole pixels. Towers are drawn
- * lowest first. Rows up a wall follow the true perspective (a band's edge at height z is drawn at
+ * outermost first ({@link #order}, each frame). Rows up a wall follow the true perspective (a band's edge at height z is drawn at
  * 6 ÷ (6 − z)); a wall is cut into cells of at most {@value #CELL} px each way and bands that widen by
  * at most a tenth, so the affine texturing of a cell's two triangles stays within about a third of
  * a pixel of the exact mapping.
@@ -30,8 +30,9 @@ import vanguard.sim.PlayField;
  * roof greyed with dust; its walls are still the sides the standing tower shows the camera.
  *
  * <p>Cost: per tower on screen one roof sprite and its one or two visible walls, each a quad per
- * cell (a 100 px wall leaning 60 px: 7 cells along it and 4 bands up it, 28 quads); nothing is
- * allocated per frame.
+ * cell (a 100 px wall leaning 60 px: 7 cells along it and 4 bands up it, 28 quads), and the draw
+ * order over the n towers on screen, O(n²); nothing is allocated per frame (the order's pair table
+ * grows only when more towers are on screen than ever before).
  */
 final class TowerProjection {
     /** A wall cell's longest side, px: along the wall and up it. */
@@ -109,13 +110,50 @@ final class TowerProjection {
     private final double[] edgeY = new double[BENT_BANDS + 2];
 
     /**
-     * @param towers the level's placed towers, in any order: drawn lowest first, then in this order
+     * The towers on screen this frame ({@link #order}), by slot: the tower's index, its footprint's
+     * and roof's drawn corners (play-field px, y up) and its drawn box (footprint and roof together;
+     * a bent tower's widened by its lean and shudder).
+     */
+    private final int[] slotTower;
+
+    private final int[] footX;
+    private final int[] footY;
+    private final int[] roofX;
+    private final int[] roofY;
+    private final int[] boxLeft;
+    private final int[] boxRight;
+    private final int[] boxLow;
+    private final int[] boxHigh;
+    /** The slots in draw order; how many towers each slot still waits for; the slots already ordered. */
+    private final int[] drawOrder;
+
+    private final int[] waiting;
+    private final boolean[] ordered;
+    /** {@code first[a * n + b]}: slot a is drawn before slot b (n towers on screen). */
+    private boolean[] first = new boolean[64 * 64];
+
+    /**
+     * @param towers the level's placed towers, in any order: each frame drawn outermost first, towers
+     *     that never cover each other lowest first, then in this order
      * @param pixel a white pixel (a bent tower's roof dust)
      */
     TowerProjection(List<Tower> towers, TextureRegion pixel) {
         this.towers = towers.toArray(Tower[]::new);
         this.pixel = pixel;
         Arrays.sort(this.towers, Comparator.comparingDouble(Tower::height));
+        int n = this.towers.length;
+        slotTower = new int[n];
+        footX = new int[n];
+        footY = new int[n];
+        roofX = new int[n];
+        roofY = new int[n];
+        boxLeft = new int[n];
+        boxRight = new int[n];
+        boxLow = new int[n];
+        boxHigh = new int[n];
+        drawOrder = new int[n];
+        waiting = new int[n];
+        ordered = new boolean[n];
     }
 
     /**
@@ -233,41 +271,187 @@ final class TowerProjection {
     }
 
     /**
-     * Draws the towers on screen.
+     * Orders the towers on screen for the painter: seen from the camera over the projection centre, a
+     * tower nearer the centre hides the walls of the one beyond it that face it, whatever their
+     * heights, so of two towers whose drawn boxes overlap the outer one is drawn first. Their
+     * footprints are apart along x or y (or both): along an axis whose gap lies wholly on one side of
+     * the centre, the one farther out on it is outer; a gap round the centre's line, or two axes that
+     * disagree, means neither can cover the other. The relation is not transitive (no comparator): a
+     * stable topological pass over the pairs, in the constructor's order (lowest first) where nothing
+     * constrains it, and on a cycle (not expected for boxes standing on one plane) the tower whose
+     * footprint lies farthest from the centre next.
      *
      * @param groundScroll the ground layer's distance in px
+     * @return how many towers are on screen; {@link #drawn} gives them in draw order
      */
-    void draw(SpriteBatch batch, double groundScroll) {
+    int order(double groundScroll) {
         long scroll = Math.round(groundScroll);
-        Color tint = batch.getColor();
-        float lit = batch.getPackedColor();
+        int n = 0;
         for (int t = 0; t < towers.length; t++) {
             Tower tower = towers[t];
             if (t == hidden) {
                 continue;
             }
-            int footX = (int) Math.round(tower.x() - tower.footWidth() / 2.0);
-            int footY = (int) (tower.bottom() - scroll);
+            int fx = (int) Math.round(tower.x() - tower.footWidth() / 2.0);
+            int fy = (int) (tower.bottom() - scroll);
             int roofWidth = tower.roof().getRegionWidth();
             int roofHeight = tower.roof().getRegionHeight();
-            int roofX = roofLeft(tower.x(), roofWidth, tower.scale());
-            int roofY = roofBottom(tower.centre() - groundScroll, roofHeight, tower.scale());
-            int left = Math.min(footX, roofX);
-            int right = Math.max(footX + tower.footWidth(), roofX + roofWidth);
-            int low = Math.min(footY, roofY);
-            int high = Math.max(footY + tower.footHeight(), roofY + roofHeight);
+            int rx = roofLeft(tower.x(), roofWidth, tower.scale());
+            int ry = roofBottom(tower.centre() - groundScroll, roofHeight, tower.scale());
+            int left = Math.min(fx, rx);
+            int right = Math.max(fx + tower.footWidth(), rx + roofWidth);
+            int low = Math.min(fy, ry);
+            int high = Math.max(fy + tower.footHeight(), ry + roofHeight);
+            if (t == bent) {
+                // The lean and the shudder carry the bent tower's top past the standing roof.
+                double k = tower.scale();
+                int sideways = (int) Math.ceil(
+                        k * (Math.abs(leanOffset(1, tower.height() * UNIT, bendLean)) + Math.abs(bendShakeX)));
+                int up = (int) Math.ceil(k * Math.abs(bendShakeY));
+                left -= sideways;
+                right += sideways;
+                low -= up;
+                high += up;
+            }
             if (right <= 0 || left >= WIDTH || high <= 0 || low >= HEIGHT) {
                 continue;
             }
+            slotTower[n] = t;
+            footX[n] = fx;
+            footY[n] = fy;
+            roofX[n] = rx;
+            roofY[n] = ry;
+            boxLeft[n] = left;
+            boxRight[n] = right;
+            boxLow[n] = low;
+            boxHigh[n] = high;
+            n++;
+        }
+        if (n * n > first.length) {
+            first = new boolean[n * n];
+        }
+        Arrays.fill(first, 0, n * n, false);
+        Arrays.fill(waiting, 0, n, 0);
+        Arrays.fill(ordered, 0, n, false);
+        for (int a = 0; a < n; a++) {
+            for (int b = a + 1; b < n; b++) {
+                if (boxRight[a] <= boxLeft[b]
+                        || boxRight[b] <= boxLeft[a]
+                        || boxHigh[a] <= boxLow[b]
+                        || boxHigh[b] <= boxLow[a]) {
+                    continue;
+                }
+                int outer = outerFirst(a, b);
+                if (outer > 0) {
+                    first[a * n + b] = true;
+                    waiting[b]++;
+                } else if (outer < 0) {
+                    first[b * n + a] = true;
+                    waiting[a]++;
+                }
+            }
+        }
+        for (int out = 0; out < n; out++) {
+            int next = -1;
+            for (int s = 0; s < n && next < 0; s++) {
+                if (!ordered[s] && waiting[s] == 0) {
+                    next = s;
+                }
+            }
+            if (next < 0) {
+                double farthest = -1;
+                for (int s = 0; s < n; s++) {
+                    double d = ordered[s] ? -1 : distanceOut(s);
+                    if (d > farthest) {
+                        farthest = d;
+                        next = s;
+                    }
+                }
+            }
+            ordered[next] = true;
+            drawOrder[out] = next;
+            for (int s = 0; s < n; s++) {
+                if (first[next * n + s] && !ordered[s]) {
+                    waiting[s]--;
+                }
+            }
+        }
+        return n;
+    }
+
+    /** The tower drawn {@code i}th ({@link #order}), its index (as {@link #tower}). */
+    int drawn(int i) {
+        return slotTower[drawOrder[i]];
+    }
+
+    /** Of slots a and b ({@link #order}): +1 if a is drawn first (the outer), -1 if b is, 0 for either. */
+    private int outerFirst(int a, int b) {
+        int x = outerFirst(
+                footX[a],
+                footX[a] + towers[slotTower[a]].footWidth(),
+                footX[b],
+                footX[b] + towers[slotTower[b]].footWidth(),
+                CX);
+        int y = outerFirst(
+                footY[a],
+                footY[a] + towers[slotTower[a]].footHeight(),
+                footY[b],
+                footY[b] + towers[slotTower[b]].footHeight(),
+                CY);
+        if (x != 0 && y != 0 && x != y) {
+            // Each lies on the camera's side of one of the gaps: neither can cover the other.
+            return 0;
+        }
+        return x != 0 ? x : y;
+    }
+
+    /**
+     * Along one axis, two footprints' spans [a0, a1] and [b0, b1] and the projection centre's
+     * coordinate {@code c}: +1 if a lies beyond b as seen from the centre (a is drawn first), -1 if b
+     * lies beyond a, 0 if the spans overlap or their gap holds the centre.
+     */
+    static int outerFirst(float a0, float a1, float b0, float b1, float c) {
+        if (a1 <= b0) {
+            return a1 >= c ? -1 : b0 <= c ? 1 : 0;
+        }
+        if (b1 <= a0) {
+            return b1 >= c ? 1 : a0 <= c ? -1 : 0;
+        }
+        return 0;
+    }
+
+    /** How far slot s's footprint lies from the projection centre at its nearest point, px. */
+    private double distanceOut(int s) {
+        Tower tower = towers[slotTower[s]];
+        double dx = Math.max(0, Math.max(footX[s] - CX, CX - (footX[s] + tower.footWidth())));
+        double dy = Math.max(0, Math.max(footY[s] - CY, CY - (footY[s] + tower.footHeight())));
+        return Math.hypot(dx, dy);
+    }
+
+    /**
+     * Draws the towers on screen, outermost first ({@link #order}).
+     *
+     * @param groundScroll the ground layer's distance in px
+     */
+    void draw(SpriteBatch batch, double groundScroll) {
+        int n = order(groundScroll);
+        Color tint = batch.getColor();
+        float lit = batch.getPackedColor();
+        for (int i = 0; i < n; i++) {
+            int slot = drawOrder[i];
+            int t = slotTower[slot];
+            Tower tower = towers[t];
+            int roofWidth = tower.roof().getRegionWidth();
+            int roofHeight = tower.roof().getRegionHeight();
             float shaded =
                     Color.toFloatBits(tint.r * tower.shade(), tint.g * tower.shade(), tint.b * tower.shade(), tint.a);
-            float fx0 = X0 + footX;
+            float fx0 = X0 + footX[slot];
             float fx1 = fx0 + tower.footWidth();
-            float fy0 = footY;
+            float fy0 = footY[slot];
             float fy1 = fy0 + tower.footHeight();
-            float rx0 = X0 + roofX;
+            float rx0 = X0 + roofX[slot];
             float rx1 = rx0 + roofWidth;
-            float ry0 = roofY;
+            float ry0 = roofY[slot];
             float ry1 = ry0 + roofHeight;
             int sides = visibleSides(fx0, fy0, fx1, fy1, rx0, ry0, rx1, ry1);
             if (t == bent) {

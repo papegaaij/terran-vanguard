@@ -43,6 +43,7 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
      *     whose effects are not built yet); true if not given
      * @param targeting the Targeting computer's numbers; empty for the other modules
      * @param salvage the Salvage scanner's bonus per level; empty for the other modules
+     * @param dash M7 part A: the Evasive thrusters' dash; empty for the other modules
      */
     public record Utility(
             String name,
@@ -53,7 +54,8 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
             Optional<Magnet> magnet,
             Optional<Boolean> forSale,
             Optional<Targeting> targeting,
-            Optional<Salvage> salvage) {
+            Optional<Salvage> salvage,
+            Optional<Dash> dash) {
         public Utility {
             Check.notNegative("draw", draw);
             Check.notEmpty("prices", prices);
@@ -80,6 +82,23 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
             Check.notNegative("turn_bonus", turnBonus);
             Check.positive("bar_seconds", barSeconds);
             Check.notNegative("bar_fade", barFade);
+        }
+    }
+
+    /**
+     * M7 part A, the Evasive thrusters' dash (design/player/systems, Evasive thrusters): {@code
+     * distance} px in one of eight directions over {@code seconds}, the ship's own speed set aside;
+     * {@code invulnerable} s from its start in which enemy bullets pass through the ship and contacts
+     * and hazards do not hurt; the next dash {@code cooldown} s after its start; a double-tap is the
+     * second press of a direction within {@code double_tap} s of the first press's release.
+     */
+    public record Dash(double distance, double seconds, double invulnerable, double cooldown, double doubleTap) {
+        public Dash {
+            Check.positive("distance", distance);
+            Check.positive("seconds", seconds);
+            Check.notNegative("invulnerable", invulnerable);
+            Check.positive("cooldown", cooldown);
+            Check.positive("double_tap", doubleTap);
         }
     }
 

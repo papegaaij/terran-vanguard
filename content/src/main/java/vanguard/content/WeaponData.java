@@ -2,6 +2,7 @@ package vanguard.content;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -15,9 +16,12 @@ import java.util.stream.Stream;
  * @param unlock the level from whose hangar visit the weapon is in the shop
  * @param draw the power draw at L1 and L5 in MW
  * @param hits which targets it can hit: {@code standard}, {@code homing}, {@code ground-only},
- *     {@code area} (proximity mines), {@code anti-sub} (torpedoes, M5 part E)
- * @param speed the projectile speed in px/s; none for lobbed and dropped projectiles
- * @param size the projectile's hit box
+ *     {@code area} (proximity mines), {@code anti-sub} (torpedoes, M5 part E); M7 part A: {@code beam}
+ *     (the Ion Beam: a continuous column, every level a {@code width} and a damage per second) and
+ *     {@code deflector} (the Deflector Pod: no shots, every level a field)
+ * @param speed the projectile speed in px/s; none for lobbed and dropped projectiles, a beam and a
+ *     deflector
+ * @param size the projectile's hit box; none for a beam and a deflector
  * @param range how far the projectiles fly (or a torpedo runs); none for mines, which have a
  *     lifetime instead; a homing weapon's (or a torpedo's) seek radius
  * @param lifetime how long a projectile lives, in seconds
@@ -36,6 +40,8 @@ import java.util.stream.Stream;
  * @param mirrored fires the pattern to the left too (numbers per side)
  * @param pod a wing pod (numbers per pod)
  * @param seek homing, lobbed or dropped: every projectile counts as a single-target hit
+ * @param drone M7 part A: the Light Drone Bay's drone, which fires the levels' shots from its orbit;
+ *     every level then has its {@code drone_hits} and {@code rebuild}
  */
 public record WeaponData(
         String name,
@@ -49,7 +55,7 @@ public record WeaponData(
         String vfx,
         String hits,
         Optional<Speed> speed,
-        Size size,
+        Optional<Size> size,
         Optional<Range> range,
         Optional<Double> lifetime,
         Optional<Double> converge,
@@ -67,12 +73,54 @@ public record WeaponData(
         Optional<Boolean> pod,
         Optional<Boolean> seek,
         List<Level> levels,
-        Level overdrive) {
+        Level overdrive,
+        Optional<Drone> drone) {
     public WeaponData {
         Check.notNegative("price", price);
         Check.positive("unlock", unlock);
         Check.that(levels.size() == 5, "levels: one entry for each of L1–L5, found " + levels.size());
-        Check.that(range.isPresent() || lifetime.isPresent(), "range or lifetime is required");
+        upgradeBase.ifPresent(base -> Check.positive("upgrade_base", base));
+        if (hits.equals(BEAM) || hits.equals(DEFLECTOR)) {
+            // M7 part A: a beam and a deflector fire no projectiles.
+            Check.that(
+                    speed.isEmpty() && size.isEmpty() && range.isEmpty() && lifetime.isEmpty() && drone.isEmpty(),
+                    "a weapon with hits: " + hits + " has no speed, size, range, lifetime or drone");
+            Level.Kind kind = hits.equals(BEAM) ? Level.Kind.BEAM : Level.Kind.FIELD;
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive)).allMatch(level -> level.kind() == kind),
+                    hits.equals(BEAM)
+                            ? "a beam (hits: beam): every level and the overdrive have a width and a damage per second"
+                                    + " and no pattern or rate"
+                            : "a deflector (hits: deflector): every level and the overdrive have a radius, charges"
+                                    + " and a recharge and no pattern, rate or damage");
+            Check.that(
+                    !hits.equals(DEFLECTOR) || pod.orElse(false),
+                    "a deflector (hits: deflector) is a wing pod (pod: true)");
+        } else {
+            Check.that(size.isPresent(), "size is required");
+            Check.that(range.isPresent() || lifetime.isPresent(), "range or lifetime is required");
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .allMatch(level -> level.kind() == Level.Kind.SHOTS),
+                    "every level and the overdrive have a pattern, a rate and a damage (hits: " + hits + ")");
+        }
+        drone.ifPresent(numbers -> {
+            Check.that(
+                    hits.equals("standard") && pod.orElse(false),
+                    "a drone bay (drone) fires standard shots from a wing pod (pod: true)");
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .allMatch(level -> level.droneHits().isPresent()
+                                    && level.rebuild().isPresent()),
+                    "a drone bay (drone): every level and the overdrive need drone_hits and rebuild");
+        });
+        if (drone.isEmpty()) {
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .noneMatch(level -> level.droneHits().isPresent()
+                                    || level.rebuild().isPresent()),
+                    "drone_hits and rebuild belong to a drone bay (drone)");
+        }
         accelerate.ifPresent(seconds -> {
             Check.positive("accelerate", seconds);
             Check.that(speed.isPresent(), "accelerate needs a speed [start, end]");
@@ -129,6 +177,73 @@ public record WeaponData(
      */
     public static final String TORPEDO = "anti-sub";
 
+    /**
+     * M7 part A: the {@code hits} of the Ion Beam (design/player/weapons/ion-beam): a continuous column
+     * from the nose that damages the first target in it every step; each level a width and a damage
+     * per second.
+     */
+    public static final String BEAM = "beam";
+
+    /**
+     * M7 part A: the {@code hits} of the Deflector Pod (design/player/weapons/deflector-pod): no shots,
+     * a field on the pod's side that catches enemy bullets; each level a radius, charges and a
+     * recharge.
+     */
+    public static final String DEFLECTOR = "deflector";
+
+    /** M7 part A: whether it is a beam ({@value #BEAM}). */
+    public boolean beam() {
+        return hits.equals(BEAM);
+    }
+
+    /** M7 part A: whether it is a deflector ({@value #DEFLECTOR}), which deals no damage. */
+    public boolean deflector() {
+        return hits.equals(DEFLECTOR);
+    }
+
+    /**
+     * The damage per second of one level's volley (per side of a mirrored weapon, per pod): every
+     * projectile of the pattern at the rate; M7 part A: a beam's damage per second, a deflector's 0.
+     */
+    public double volleyDps(Level level) {
+        return switch (level.kind()) {
+            case SHOTS -> level.pattern().size() * level.damage() * level.rate();
+            case BEAM -> level.damage();
+            case FIELD -> 0;
+        };
+    }
+
+    /**
+     * M7 part A, the Light Drone Bay's drone (design/player/wingmen, Light drone): its sprite {@code
+     * size} and {@code hitbox}, its {@code orbit} radius round the ship's centre and the {@code
+     * period} of one turn (clockwise), the {@code converge} point px ahead of the ship's centre its
+     * shots aim at, the {@code fade_in} s of a rebuilt drone and what an {@code air} enemy's touch
+     * does ({@code contact}). The hits it takes before it breaks and its rebuild time are per level.
+     */
+    public record Drone(
+            Size size, Size hitbox, double orbit, double period, double converge, double fadeIn, Contact contact) {
+        public Drone {
+            Check.positive("orbit", orbit);
+            Check.positive("period", period);
+            Check.positive("converge", converge);
+            Check.notNegative("fade_in", fadeIn);
+        }
+    }
+
+    /**
+     * What an {@code air} enemy touching a drone does: it costs the drone {@code hits} ({@code
+     * small_hits} for a {@code tiny} or {@code small} rammer, which is destroyed) and the enemy takes
+     * {@code damage}; a {@code laser} touch costs {@code laser_hits}.
+     */
+    public record Contact(int hits, int smallHits, int laserHits, double damage) {
+        public Contact {
+            Check.positive("hits", hits);
+            Check.positive("small_hits", smallHits);
+            Check.positive("laser_hits", laserHits);
+            Check.notNegative("damage", damage);
+        }
+    }
+
     public enum Slot {
         FRONT,
         REAR,
@@ -172,14 +287,21 @@ public record WeaponData(
     }
 
     /**
-     * One upgrade level.
+     * One upgrade level: shots (a pattern at a rate), or (M7 part A) a beam's width and damage per
+     * second, or a deflector's field.
      *
-     * @param pattern one shot per projectile of a volley
-     * @param rate volleys per second
-     * @param damage damage per projectile
+     * @param pattern one shot per projectile of a volley; empty for a beam and a field
+     * @param rate volleys per second; 0 for a beam and a field
+     * @param damage damage per projectile; a beam's damage per second; 0 for a field
      * @param blast blast radius in px
      * @param turn homing turn rate in °/s
      * @param maxLive most mines alive at once
+     * @param width M7 part A: a beam's hit width and drawn core, px
+     * @param radius M7 part A: a deflector's field radius round the ship's centre, px
+     * @param charges M7 part A: the bullets a deflector catches before it is empty
+     * @param recharge M7 part A: seconds until a deflector gets one charge back
+     * @param droneHits M7 part A: the hits a drone takes before it breaks
+     * @param rebuild M7 part A: seconds the bay takes to build a new drone
      */
     public record Level(
             List<Shot> pattern,
@@ -188,11 +310,90 @@ public record WeaponData(
             Optional<Integer> pierce,
             Optional<Double> blast,
             Optional<Double> turn,
-            Optional<Integer> maxLive) {
+            Optional<Integer> maxLive,
+            Optional<Double> width,
+            Optional<Double> radius,
+            Optional<Integer> charges,
+            Optional<Double> recharge,
+            Optional<Integer> droneHits,
+            Optional<Double> rebuild) {
+        /** What a level is: a volley of shots, a beam or a deflector's field. */
+        public enum Kind {
+            SHOTS,
+            BEAM,
+            FIELD
+        }
+
         public Level {
-            Check.notEmpty("pattern", pattern);
-            Check.positive("rate", rate);
-            Check.positive("damage", damage);
+            pattern = List.copyOf(pattern);
+            width.ifPresent(px -> Check.positive("width", px));
+            radius.ifPresent(px -> Check.positive("radius", px));
+            charges.ifPresent(count -> Check.positive("charges", count));
+            recharge.ifPresent(seconds -> Check.positive("recharge", seconds));
+            droneHits.ifPresent(count -> Check.positive("drone_hits", count));
+            rebuild.ifPresent(seconds -> Check.positive("rebuild", seconds));
+            boolean field = radius.isPresent() || charges.isPresent() || recharge.isPresent();
+            if (width.isPresent()) {
+                Check.that(
+                        pattern.isEmpty() && rate == 0 && !field,
+                        "a beam level has a width and a damage per second, no pattern, rate or field");
+                Check.positive("damage", damage);
+            } else if (field) {
+                Check.that(
+                        radius.isPresent() && charges.isPresent() && recharge.isPresent(),
+                        "a deflector level needs a radius, charges and a recharge");
+                Check.that(
+                        pattern.isEmpty() && rate == 0 && damage == 0,
+                        "a deflector level has no pattern, rate or damage");
+            } else {
+                Check.notEmpty("pattern", pattern);
+                Check.positive("rate", rate);
+                Check.positive("damage", damage);
+            }
+        }
+
+        /**
+         * Reads a level from its data: the pattern, rate and damage are optional here so a beam level
+         * (width, damage) and a field level (radius, charges, recharge) can leave them out; the
+         * constructor checks what each kind needs.
+         */
+        @JsonCreator
+        static Level of(
+                @JsonProperty("pattern") Optional<List<Shot>> pattern,
+                @JsonProperty("rate") Optional<Double> rate,
+                @JsonProperty("damage") Optional<Double> damage,
+                @JsonProperty("pierce") Optional<Integer> pierce,
+                @JsonProperty("blast") Optional<Double> blast,
+                @JsonProperty("turn") Optional<Double> turn,
+                @JsonProperty("max_live") Optional<Integer> maxLive,
+                @JsonProperty("width") Optional<Double> width,
+                @JsonProperty("radius") Optional<Double> radius,
+                @JsonProperty("charges") Optional<Integer> charges,
+                @JsonProperty("recharge") Optional<Double> recharge,
+                @JsonProperty("drone_hits") Optional<Integer> droneHits,
+                @JsonProperty("rebuild") Optional<Double> rebuild) {
+            return new Level(
+                    pattern.orElse(List.of()),
+                    rate.orElse(0.0),
+                    damage.orElse(0.0),
+                    pierce,
+                    blast,
+                    turn,
+                    maxLive,
+                    width,
+                    radius,
+                    charges,
+                    recharge,
+                    droneHits,
+                    rebuild);
+        }
+
+        /** Whether it fires shots, burns a beam or holds a deflector's field. */
+        public Kind kind() {
+            if (width.isPresent()) {
+                return Kind.BEAM;
+            }
+            return radius.isPresent() ? Kind.FIELD : Kind.SHOTS;
         }
     }
 

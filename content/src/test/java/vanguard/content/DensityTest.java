@@ -26,7 +26,8 @@ class DensityTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
 
     static Stream<String> levels() {
-        return CONTENT.levels().keySet().stream();
+        return CONTENT.levels().keySet().stream()
+                .filter(Unmapped::mapped); // M7 part C: levels not mapped yet (Unmapped)
     }
 
     @ParameterizedTest

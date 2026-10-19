@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player/ship, ../../player/specials]
-updated: 2026-10-05
+updated: 2026-10-13
 ---
 
 # Controls
@@ -56,7 +56,7 @@ gamepad are both first-class; everything can be remapped in Options.
 - [x] Remapping screen in Options with conflict detection
 - [x] Alt+Enter / F11 toggle full screen on every screen
 - [x] F12 screenshot on every screen, into `screenshots/` next to the settings file
-- [ ] Double-tap dash detection (only when the evasive thrusters module is fitted) — **later: Act 3** (the [evasive thrusters](../../player/systems/README.md) are `available: act 3`)
+- [x] Double-tap dash detection (only when the evasive thrusters module is fitted) — **later: Act 3** (the [evasive thrusters](../../player/systems/README.md) are `available: act 3`) — M7 part A with the Dash binding (round 36, Q.25e): detected in the simulation from the direction bits (step A3); the Dash button sends `Command.DASH` (`FlightCommands`, step A6); the Controls tab shows the primary slot as the fixed `DOUBLE-TAP`, V and the left bumper stay remappable
 
 ## Open questions
 
@@ -96,3 +96,7 @@ gamepad are both first-class; everything can be remapped in Options.
   settings file cannot bind it. Tests: `ScreenshotsTest`, `BindingsTest`.
 - 2026-10-05: M4 part H docs reconciliation: the double-tap dash waits for the evasive thrusters
   (Act 3) and is tagged so; the document is `done`.
+- 2026-10-13 (user, round 36, Q.25e): the double-tap dash and the Dash binding are M7 part A items (the Evasive thrusters approved in round 36).
+- 2026-10-13 (user, round 37, B.5 h and B.2 f): the Options screen's Controls tab shows the Dash's
+  primary slot as the fixed `DOUBLE-TAP` (V and the left bumper stay remappable); the double-tap counts
+  only one direction pressed, released and pressed again within 0.25 s with nothing else between.

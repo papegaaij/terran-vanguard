@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The balancing sheet for the player's equipment (Acts 1-2).
+"""The balancing sheet for the player's equipment (Acts 1-3; Act 3 from M7 part A, Level 15's data from M7 part B).
 
 The numbers come from the parts' data files (design/player/**/data.yaml, the economy, the
 difficulty levers, the enemies and the levels); the expected purchases per hangar visit are in
@@ -10,20 +10,22 @@ BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Ac
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
-  python3 tools/balance.py              the sheet per visit, levels 01-14, and the enemy checks
+  python3 tools/balance.py              the sheet per visit, levels 01-21 (the plan's visits), and the enemy checks
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
-table where the level has data, else budget(n)), the plan's purchases (with the free charges a
-special gives at its unlock), the repair estimate, the power load and the plan's forward
+table where the level has data, else budget(n), the absolute typical haul: user decision 2026-10-14,
+round 37 R.1 reverted, design/systems/economy, Per-level budget; plus the typical player's grade
+bonus, a B: round 34 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
+estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
 inside 0.75-1.33x; Levels 01-03's gentle onboarding (up to 1.75x) is the accepted exception
 (user decision 2026-10-01). Per level with data: the slowest time to kill among its enemies and its
 boss's at the plan's DPS. Per enemy: the time to kill at its first level and the bounty against
 the balancing basis (design/enemies/README.md); a deviation is listed, marked when it is an
 accepted exception (the Coilwyrm's bounty, user decision 2026-10-05; the Ravager's and the Wraith's
-times to kill, M5 parts C and D); BalanceTest holds the same ACCEPTED list and the ones pending a
-decision. Per level with a rear ambush (M5 part D, D7 = a): each ambush unit's HP against the
+times to kill, M5 parts C and D); BalanceTest holds the same ACCEPTED list and the rear checks the
+user accepted (round 34 P4, REAR_PENDING). Per level with a rear ambush (M5 part D, D7 = a): each ambush unit's HP against the
 plan's rear DPS and its decloak flash plus hold; BalanceTest checks HP / rear DPS <= 0.6 x that.
 
 Exit status: 1 when the plan overspends, exceeds the power, buys an item before its unlock or
@@ -33,7 +35,7 @@ import re
 import sys
 
 from design_data import DESIGN, difficulty_hp, draw, enemy_dir, load, stats, upgrade_costs, weapons
-from sync_tables import credit_budget, level_rows
+from sync_tables import credit_budget, per_level_rows
 
 ONBOARDING = {1, 2, 3}           # accepted: about 1.5x the reference DPS (design/enemies, Balancing basis)
 DPS_BAND = (0.75, 1.33)
@@ -48,9 +50,9 @@ ACCEPTED = {
 }
 HOLD_SHARE = 0.6                 # a hold's cluster dies in at most this share of its window (BalanceTest, medium)
 REAR_SHARE = 0.6                 # a rear-ambush unit dies in at most this share of its flash and hold (BalanceTest, medium)
-# M5 part F: rear checks over REAR_SHARE pending the user's decision (BalanceTest.REAR_PENDING), printed as accepted
+# M5 part F: rear checks over REAR_SHARE the user accepted (round 34 P4; BalanceTest.REAR_PENDING), printed as accepted
 REAR_PENDING = {(12, "wraith"): "the act HP factor on the Wraith, the rear still the Tail Gun L1 until L14; "
-                                "pending the user's review in the combined round (M5 part F)"}
+                                "accepted by the user (round 34 P4)"}
 LATCHED_SHARE = 0.25             # a latched Lamprey dies in at most this share of its shake-off time (BalanceTest)
 
 
@@ -94,13 +96,17 @@ def typical_haul(d):
 
 
 def income(data, n):
-    """(credits the level earns, whether it is the level's typical haul)."""
+    """(credits the level earns, whether it is the level's typical haul). Without level data (Act 3's
+    levels after Level 15 until part C on writes theirs): budget(n), the absolute typical haul with the
+    act factor included (user decision 2026-10-14, round 37 R.1 reverted); the levels' own data replaces it."""
     d = level_dir(n)
-    return (typical_haul(d), True) if d else (round(budget(data, n)), False)
+    if d:
+        return typical_haul(d), True
+    return round(budget(data, n)), False
 
 
 def apply_plan(data):
-    """Yield (level, state) for levels 01-14 following the expected-loadout plan."""
+    """Yield (level, state) for every level from 01 to the plan's last visit, following the expected-loadout plan."""
     plan, W = data["plan"], data["weapons"]
     state = {"credits": data["economy"]["starting_credits"], "spent": 0, "income": 0, "slots": {},
              "invested": {}, "core": {}, "utility": {}, "charges": {}, "log": [], "earned": None,
@@ -113,7 +119,7 @@ def apply_plan(data):
         if slot:
             state["invested"][slot] = state["invested"].get(slot, 0) + amount
 
-    for n in range(1, 15):
+    for n in range(1, max(int(key) for key in plan["plan"]) + 1):
         key = f"{n:02d}"
         state["log"] = []
         # the free charges a special gives once at its unlock, as the hangar opens
@@ -146,9 +152,24 @@ def apply_plan(data):
             w = W[slug]
             if w["unlock"] > n:
                 state["log"].append(f"!! {slug} not unlocked before L{key}")
+            if slot in state["slots"]:  # the item it replaces goes to the inventory (M7 part A: the front gun)
+                old_slug, old_level = state["slots"][slot]
+                state["owned"].setdefault(slot, {})[old_slug] = old_level
+                state["invested"].pop(slot, None)
             pay(w["price"], f"buy {w['name']} → {slot}", slot)
             state["slots"][slot] = [slug, 1]
+        for slot, slug in step.get("sell_owned", []):  # M7 part A: an owned, unfitted weapon sold
+            owned = state["owned"].get(slot, {})
+            if slug not in owned:
+                state["log"].append(f"!! sell {slug} ({slot}): not owned")
+                continue
+            lvl = owned.pop(slug)
+            spent = W[slug]["price"] + sum(upgrade_costs(W[slug])[:lvl - 1])
+            pay(-round(spent * data["economy"]["sell_back"]), f"sell {W[slug]['name']} (owned)")
         for slot, slug in step.get("fit", []):  # an owned item fitted again (M5 part D: Rook's Autocannon)
+            if slot == "special":  # M7 part A: a special fitted again; its charges and the others' are kept
+                state["log"].append(f"fit {slug} (special) again")
+                continue
             owned = state["owned"].get(slot, {})
             if slug not in owned:
                 state["log"].append(f"!! fit {slug} ({slot}): not owned")
@@ -189,8 +210,13 @@ def apply_plan(data):
             pay(sp["charge_price"] * count, f"{count}× {name} charge")
         if n > 1:
             pay(plan["repair_points_per_level"] * data["repair_cost"], "repairs (estimate)")
+        if n > data["wingmen"]["rook"]["joins"]:
+            # round 34, P3 = A: Rook's repairs after a level flown with him, after the ship's
+            pay(plan["escort_repair_points_per_level"] * data["repair_cost"], "Rook's repairs (estimate)")
         yield n, state
         earned, haul = income(data, n)
+        # round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul, rounded half to even
+        earned += round(earned * plan["typical_grade_bonus"])
         state["earned"] = (earned, haul)
         state["credits"] += earned
         state["income"] += earned
@@ -235,7 +261,7 @@ def loadout_numbers(data, state):
 # --- enemies ----------------------------------------------------------------------------------
 
 def enemy(slug):
-    return load(f"{enemy_dir(slug)}/data.yaml")
+    return dict(load(f"{enemy_dir(slug)}/data.yaml"), slug=slug)
 
 
 def enemy_slugs():
@@ -372,24 +398,25 @@ def bounty_problem(data, e):
 
 
 ACT_2 = range(8, 15)  # Levels 08-14
+ACT_3 = range(15, 22)  # Levels 15-21 (M7 part A: the reference DPS before the levels' data)
 
 
-def act_hp_report(ref):
+def act_hp_report(ref, levels=ACT_2, act=2):
     """The act HP factor (design/enemies, Balancing basis; D5 = c of M5 part A): every returning
-    medium-or-larger unit's HP (parts summed, medium) and time to kill at the Act 2 levels after its
+    medium-or-larger unit's HP (and the listed small ones', capped) (parts summed, medium) and time to kill at the act's levels after its
     first; BalanceTest checks the same."""
-    print("\nReturning units in Act 2 (act HP factor = reference DPS at the level / at the first level):")
-    print("Enemy            | Tier     | First | " + " | ".join(f"L{n:02d} HP / TTK" for n in ACT_2))
+    print(f"\nReturning units in Act {act} (act HP factor = reference DPS at the level / at the first level):")
+    print("Enemy            | Tier     | First | " + " | ".join(f"L{n:02d} HP / TTK" for n in levels))
     for slug in enemy_slugs():
         e = enemy(slug)
-        if "boss" in e or e["tier"] in ("tiny", "small", "huge") or e["first_level"] not in ref:
+        if "boss" in e or e["tier"] == "huge" or not gets_act_hp(e) or e["first_level"] not in ref:
             continue
         cells = []
-        for n in ACT_2:
-            if n <= e["first_level"] or n not in ref:
+        for n in levels:
+            if n <= e["first_level"] or n not in ref or not gets_act_hp(e, n):
                 cells.append(f"{'-':>12}")
                 continue
-            hp = e["hp"] * ref[n] / ref[e["first_level"]]
+            hp = e["hp"] * act_hp_factor(e, ref[n] / ref[e["first_level"]])
             cells.append(f"{hp:5.0f} {hp / ref[n]:4.2f} s")
         print(f"{e['name']:16} | {e['tier']:8} | L{e['first_level']:02d}   | " + " | ".join(cells))
 
@@ -461,7 +488,9 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul where the "
-          "level has data (its credit-budget table), else budget(n). Rook DPS: his gun's single-target DPS "
+          "level has data (its credit-budget table), else budget(n) × the act factor^(act − 1), plus the typical player's grade bonus "
+          f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
+          "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "
           "(from Level 08), not in the forward DPS.")
     print("\nLevels with data:")
     for line in ttk_lines:
@@ -473,6 +502,7 @@ def report(data):
                            for diff, steps in hard.items() for lvl, step in steps.items()))
     enemy_report(data, ref)
     act_hp_report(ref)
+    act_hp_report(ref, ACT_3, 3)
     print("\nAccepted: " + ("none" if not accepted else "\n  " + "\n  ".join(accepted)))
     print("\nProblems: " + ("none" if not problems else "\n  " + "\n  ".join(problems)))
     return 1 if problems else 0
@@ -512,13 +542,26 @@ def hold_lines(data, d, state):
     return lines
 
 
+def gets_act_hp(e, n=None):
+    """Whether a unit gets the act HP factor where it returns (in Level n, or in any level when n is None):
+    medium and larger, and the small units the basis lists in small_act_hp in its levels (the user's Act 2
+    playtest, 2026-10-18: the Needler and the Stinger in Levels 08-09)."""
+    small = load("enemies/data.yaml")["small_act_hp"]
+    return e["tier"] not in ("tiny", "small") or (e["slug"] in small["units"] and (n is None or n in small["levels"]))
+
+
+def act_hp_factor(e, ratio):
+    """The act HP factor from the reference DPS ratio: a listed small unit's capped at small_act_hp.cap."""
+    return min(ratio, load("enemies/data.yaml")["small_act_hp"]["cap"]) if e["tier"] == "small" else ratio
+
+
 def level_hp(e, n, ref):
-    """A unit's HP at medium in Level n: with the act HP factor for a returning medium-or-larger unit in
-    Act 2 (reference DPS at the level / at its first level), rounded as the game does."""
+    """A unit's HP at medium in Level n: with the act HP factor for a returning medium-or-larger unit (or
+    a small one in the basis's small_act_hp) from Act 2 on (reference DPS at the level / at its first
+    level), rounded as the game does."""
     factor = 1
-    if n in ACT_2 and e["tier"] not in ("tiny", "small") and n > e["first_level"] and n in ref \
-            and e["first_level"] in ref:
-        factor = ref[n] / ref[e["first_level"]]
+    if n >= ACT_2.start and gets_act_hp(e, n) and n > e["first_level"] and n in ref and e["first_level"] in ref:
+        factor = act_hp_factor(e, ref[n] / ref[e["first_level"]])
     return difficulty_hp(e["hp"] * factor, 1)
 
 
@@ -527,7 +570,7 @@ def ambush_lines(d, rear, n, ref):
     plan's rear DPS and its window behind the ship (its decloak flash and its hold) at medium;
     BalanceTest checks HP / rear DPS <= 0.6 x window. M5 part F: a unit that latches (the Lamprey), its HP
     against the rear DPS x its damage factor, within 0.25 of its shake-off time. Returns (lines, the too
-    slow ones, the too slow ones pending a decision)."""
+    slow ones, the too slow ones the user accepted)."""
     level = load(f"{d}/data.yaml")
     lines, slow, pending = [], [], []
     for slug in dict.fromkeys(w["enemy"] for w in level["waves"] if w.get("formation") == "rear ambush"):
@@ -558,7 +601,7 @@ def ambush_lines(d, rear, n, ref):
 def weapons_dump(data):
     for slug, w in data["weapons"].items():
         print(f"\n{w['name']} ({slug})")
-        for r in level_rows(w):
+        for r in per_level_rows(w):
             print("  " + " | ".join(r))
 
 

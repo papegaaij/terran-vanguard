@@ -1,10 +1,10 @@
 ---
 title: Level 12 – Storm Front
-design: review
-implementation: in-progress
-art: proposed
+design: approved
+implementation: done
+art: final
 depends-on: [../../../enemies/air/lamprey, ../../../enemies/air/whirl-seed, ../../../player/wingmen, ../../../player/weapons/proximity-mines]
-updated: 2026-10-12
+updated: 2026-10-18
 ---
 
 # Level 12 – Storm Front
@@ -111,7 +111,7 @@ placed in step 4.
 
 ## Layout
 
-Ground scroll speed **140 px/s** (the chosen storm scene). Total ≈ 205 s ≈ 28,700 px. Over water
+Ground scroll speed **140 px/s** (the chosen storm scene). Total ≈ 218 s ≈ 30,520 px. Over water
 throughout: the data sets **`water: true`** (the [Level 11](../level-11-atlantic-convoy/README.md#layout)
 flag: kills on the play field play the water burst; no `sub` units in this level).
 
@@ -130,7 +130,7 @@ elements. In the eye the rain stops and the cloud wall turns slowly.
 | 3. Lightning Field | 75–125 | 10,500–17,500 | 140 | medium | `low-air`: as section 2, plus lightning every 6–10 s; each flash lights the cloud banks from inside for 0.5 s and shows what flies under them. The drifting canister at t≈99; the second sonde at t≈110. | Low visibility; attacks from the sides and rear. |
 | 4. Storm Wall | 125–150 | 17,500–21,000 | 140 | medium, heavy peak 130–145 | `low-air`: banks at 30–40% leaving the centre lane readable. `high-air`: dense rain (≤ 40%). A steady 20 px/s drift to the right plus gusts. | The single heavy peak: dense whirl clusters and a Lamprey swarm. |
 | 5. The Eye | 150–175 | 21,000–24,500 | 140 | clear | `deep`: calm dark sea with a shaft of pale light. `far`: the storm's cloud wall all round, turning slowly clockwise (≈ 3°/s). No rain, no gusts. The armour patch at t≈152; the third sonde at t≈165. | Calm; Varga sees the Needlers circling with the storm. |
-| 6. Breakout | 175–205 | 24,500–28,700 | 140 | medium, light peak 198–205 | `high-air`: back through the wall into rain, which thins toward the end; the sky lightens at the top edge. | Last waves from all sides, then out of the storm. |
+| 6. Breakout | 175–218 | 24,500–30,520 | 140 | medium, light peak 198–218 | `high-air`: back through the wall into rain, which thins toward the end; the sky lightens at the top edge. | Last waves from all sides, then out of the storm. |
 <!-- /data -->
 
 ## Weather
@@ -194,8 +194,8 @@ specs only.
   difficulty). The draft's 111 units over 205 s (≈ 33 a minute) are too few: the table keeps the
   set pieces and step 4 filled the gaps with **popcorn from L12's own roster**: Skitter
   streams of 4 (3 just before a quiet moment) and snakes of 6, Whirl clusters of 6 and Needler lines
-  of 3, a wave every 3–4 s from t=7, from the front and the sides. **234 units at medium (≈ 70 a
-  minute)**, more than the step-1 estimate of 175–185: the plan's two Micro-missile Pods kill the
+  of 3, a wave every 3–4 s from t=7, from the front and the sides. **236 units at medium (≈ 70 a
+  minute)** (234 until round 36 added the reveal pair of Spore Bombers at t=101.5), more than the step-1 estimate of 175–185: the plan's two Micro-missile Pods kill the
   waves fast, and fewer popcorn waves left empty screens over 3 s (`PacingTest`; step 4, pending the
   user's review). No rear Skitters: a `stream` from the rear is flown only by chasers.
   The **t=32 introduction stays alone** on the screen: no other wave enters from t=32 until its
@@ -231,6 +231,7 @@ specs only.
 | 92 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
 | 96 | 3 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
 | 98.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | right side | Beside the drifting canister |
+| 101.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | The lightning reveal: the right one flies into the tall bank on the right (the canister's cover), seen through it in the t=103.5 flash |
 | 104 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | The first one drops an overdrive |
 | 108 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
 | 112 | 3 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | rear | |
@@ -260,12 +261,13 @@ specs only.
 | 196 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 199.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | The last wave |
 
-Totals: Skitter 111 · Needler 43 · Whirl Seed 42 · Lamprey 27 · Spore Bomber 4 · Wraith 5 · Mantis 2.
+Totals: Skitter 111 · Needler 43 · Whirl Seed 42 · Lamprey 27 · Spore Bomber 6 · Wraith 5 · Mantis 2.
 <!-- /data -->
 
 The set pieces at medium are the draft's table: Lamprey 27 · Whirl Seed 30 · Needler 25 · Wraith 5 ·
-Spore Bomber 4 · Skitter 18 · Mantis 2 (hard 4), 111 units in 23 waves; the popcorn comes on top (the totals
-above).
+Spore Bomber 4 · Skitter 18 · Mantis 2 (hard 4), 111 units in 23 waves, plus (round 36) a third Spore Bomber
+pair at t=101.5 for the lightning reveal: its right unit flies into the tall bank on the right (the canister's cover)
+and shows through it in the t=103.5 flash; the popcorn comes on top (the totals above).
 
 ## Ground targets
 
@@ -374,7 +376,8 @@ Budget(12) = 700 × 1.07¹¹ ≈ **1,473**, the typical haul's target
 data keeps Act 1 terms** (stated default): the stat-block bounties (Lamprey 12, Whirl Seed 3,
 Needler 12, Wraith 30, Spore Bomber 25, Skitter 5, Mantis 30), the canister's crate 130 and the
 secondary 75; the code pays each × the act factor 1.6 (bounties also × the level's
-**`bounty_scale`** **0.75**, fitted by `TypicalHaulTest`: the typical haul 1,476, +0.2 %). Spores are
+**`bounty_scale`** **0.75**, fitted by `TypicalHaulTest`: the typical haul 1,512, +2.6 %; 1,476
+before round 36's reveal pair, the scale kept as the haul stays within ±5 %). Spores are
 not budgeted (their number depends on how long the bombers live). The step-1 estimate (≈ 0.9 at 50
 a minute) assumed less popcorn; at 70 a minute the scale is lower. The draft's 2,105 was the old
 perfect-run curve with Act-2-scaled amounts (Lamprey 19, canister 210).
@@ -382,11 +385,11 @@ perfect-run curve with Act-2-scaled amounts (Lamprey 19, canister 210).
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 111 × 5 + Needler 43 × 12 + Whirl Seed 42 × 3 + Lamprey 27 × 12 + Spore Bomber 4 × 25 + Wraith 5 × 30 + Mantis 2 × 30 | 2,186 | 1,312 |
+| Kills: Skitter 111 × 5 + Needler 43 × 12 + Whirl Seed 42 × 3 + Lamprey 27 × 12 + Spore Bomber 6 × 25 + Wraith 5 × 30 + Mantis 2 × 30 | 2,246 | 1,348 |
 | Secret: drifting canister (hidden crate, 9% of budget) | 208 | 104 |
 | Secondary: fly through all three sondes | 120 | 60 |
-| **Total** (bounty scale 0.75) | **2,514** | **1,476** |
-| Budget(n) = the typical haul's target; typical +0 %, perfect 1.71 × budget | | 1,473 |
+| **Total** (bounty scale 0.75) | **2,574** | **1,512** |
+| Budget(n) = the typical haul's target; typical +3 %, perfect 1.75 × budget | | 1,473 |
 <!-- /data -->
 
 **Balance plan** (stated default): the L12 visit as written (sells both wing pods, buys two
@@ -416,33 +419,35 @@ peak; the other sections run lighter. User decision **F8 = a**: the backdrop, pr
 images and intel portrait go straight to production; concept round 34 shows a/b only for **the
 eye's look** (the turning cloud wall and the light shaft) and **the latch** (the Lamprey on the
 hull with the drain flicker), and the sounds a/b for thunder, gust, latch and drain (the sonde
-chime one version).
+chime one version). Closed 2026-10-12 (user): the eye **a**, b rejected; everything else approved
+as final and accepted.
 
 The eye's two looks come from `tools/art/eye_l12.py`, whose `wall_ring(look)` and `shaft(look)` step 5's
 backdrop generator imports for the chosen one; briefs in [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/eye-r34-a.png](concept/eye-r34-a.png) | The eye a, "billowing wall, cool shaft": a ring of round billows lit radially from the eye (bright silver inner faces, the storm dark behind), a gentle spiral; a cool silver-white pool of light up and left with a soft haze column; the wall turned 30° after 10 s; the ring and the shaft alone (sea: a stand-in) | proposed |
-| [concept/eye-r34-a.gif](concept/eye-r34-a.gif) | The eye a, 6 s in real time: the wall turning clockwise at 3°/s, the calm sea scrolling under it | proposed |
-| [concept/eye-r34-b.png](concept/eye-r34-b.png) | The eye b, "banded spiral wall, warm shaft": a darker wall of stretched spiral bands with two thin feeder arms curling into the eye, pale-gold inner faces; a broad warm pool in the centre with slow sun glints on the swell | proposed |
-| [concept/eye-r34-b.gif](concept/eye-r34-b.gif) | The eye b, 6 s in real time: the wall turning, the glints fading in and out, the sea scrolling | proposed |
-| [concept/backdrop-final-r34-a.png](concept/backdrop-final-r34-a.png), [.gif](concept/backdrop-final-r34-a.gif) | Production backdrop straight from scene-storm-r10-a on Level 11's ocean kit (`tools/art/backdrop_l12.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r34-a); its block for the level data is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the storm sea in two layers (swell on `deep`, chop with torn crests and wind streaks on `ground`), the eye's calm chop with the two seam pieces, opaque scud banks on `low-air` (light ~12 % at the edges, medium ~22 %, heavy ~35 % with the centre lane clear), two tall banks hiding the drifting canister, the eye's wall ring (look a, turned clockwise at 3°/s by the game) and shaft, the breakout's light; composites with stand-ins for the rain, the flash and its 0.5 s reveal, the low-air bodies under the banks with their glow, the gust telegraph and a sonde; the GIF the canister's two flashes and the way into the eye | proposed |
-| [concept/l12-props-final-r34-a.png](concept/l12-props-final-r34-a.png), [.gif](concept/l12-props-final-r34-a.gif) | Final props and weather looks (`tools/art/l12_props.py`, [notes](concept/prompts.md#l12-props-final-r34-a)): the weather sonde (blink loop, collect pop), the supply canister under its drogue chute (intact, hit, spent) with its beacon glow, rain streaks, the gust arrow and wind streaks, lightning bolts, a cloud lit from inside, a hidden body's glow; the GIF a canister under a bank, a flash, a gust telegraph and a sonde collected | proposed |
-| [concept/level-12-capture-final-r34-a.png](concept/level-12-capture-final-r34-a.png), [.mp4](concept/level-12-capture-final-r34-a.mp4) | Capture of the game after the fixes of 2026-10-11 (medium, the balance plan's L12 fit, no `--invulnerable` so the Lampreys can latch): 226 / 234 kills, sondes 3 / 3, the canister seen and broken in the t 99.5 flash, three latches (the `SHAKE OFF` · `LEFT-RIGHT` prompt below the ship on the second, shaken off; none on the third), the 2× gust arrow clear of the edge warnings, A, 3,024 credits; fifteen frames and the whole run with sound ([recipe](concept/prompts.md#level-12-capture-final-r34-a)) | proposed |
-| [concept/level-12-readability-r34-a.png](concept/level-12-readability-r34-a.png) | 1:1 and 2× crops: rain, gust telegraph, a Spore Bomber under a bank, the canister's glint and flash, the latch on each flank, a stunned Lamprey, a sonde and its pop, the eye's ring and shaft, the breakout light, the `SONDES` tracker, `SHIELD DRAIN`, the shake-off prompt in the play field, the debrief's `SONDES` row ([notes](concept/prompts.md#level-12-readability-r34-a)) | proposed |
-| [concept/level-12-capture-mines-r34-a.png](concept/level-12-capture-mines-r34-a.png), [.mp4](concept/level-12-capture-mines-r34-a.mp4) | Supplementary clip of the Proximity Mines in play (step CF; 24 s with sound, the level time burnt in, and a sheet): the plan's fit with the mines in the rear slot through the left flank wave, then a control run with the music and radio off; the sheet's plot of the mix around a drop: the arm chirp is heard, the drop is masked by the front gun (pending the user's review; [recipe](concept/prompts.md#level-12-capture-mines-r34-a)) | proposed |
+| [concept/eye-r34-a.png](concept/eye-r34-a.png) | The eye a, "billowing wall, cool shaft": a ring of round billows lit radially from the eye (bright silver inner faces, the storm dark behind), a gentle spiral; a cool silver-white pool of light up and left with a soft haze column; the wall turned 30° after 10 s; the ring and the shaft alone (sea: a stand-in) | chosen |
+| [concept/eye-r34-a.gif](concept/eye-r34-a.gif) | The eye a, 6 s in real time: the wall turning clockwise at 3°/s, the calm sea scrolling under it | chosen |
+| [concept/rejected/eye-r34-b.png](concept/rejected/eye-r34-b.png) | The eye b, "banded spiral wall, warm shaft": a darker wall of stretched spiral bands with two thin feeder arms curling into the eye, pale-gold inner faces; a broad warm pool in the centre with slow sun glints on the swell | rejected |
+| [concept/rejected/eye-r34-b.gif](concept/rejected/eye-r34-b.gif) | The eye b, 6 s in real time: the wall turning, the glints fading in and out, the sea scrolling | rejected |
+| [concept/backdrop-final-r34-a.png](concept/backdrop-final-r34-a.png), [.gif](concept/backdrop-final-r34-a.gif) | Production backdrop straight from scene-storm-r10-a on Level 11's ocean kit (`tools/art/backdrop_l12.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r34-a); its block for the level data is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the storm sea in two layers (swell on `deep`, chop with torn crests and wind streaks on `ground`), the eye's calm chop with the two seam pieces, opaque scud banks on `low-air` (light ~12 % at the edges, medium ~22 %, heavy ~35 % with the centre lane clear), two tall banks hiding the drifting canister, the eye's wall ring (look a, turned clockwise at 3°/s by the game) and shaft, the breakout's light; composites with stand-ins for the rain, the flash and its 0.5 s reveal, the low-air bodies under the banks with their glow, the gust telegraph and a sonde; the GIF the canister's two flashes and the way into the eye | chosen |
+| [concept/l12-props-final-r34-a.png](concept/l12-props-final-r34-a.png), [.gif](concept/l12-props-final-r34-a.gif) | Final props and weather looks (`tools/art/l12_props.py`, [notes](concept/prompts.md#l12-props-final-r34-a)): the weather sonde (blink loop, collect pop), the supply canister under its drogue chute (intact, hit, spent) with its beacon glow, rain streaks, the gust arrow and wind streaks, lightning bolts, a cloud lit from inside, a hidden body's glow; the GIF a canister under a bank, a flash, a gust telegraph and a sonde collected | chosen |
+| [concept/level-12-capture-final-r34-a.png](concept/level-12-capture-final-r34-a.png), [.mp4](concept/level-12-capture-final-r34-a.mp4) | Capture of the game after the fixes of 2026-10-11 (medium, the balance plan's L12 fit, no `--invulnerable` so the Lampreys can latch): 226 / 234 kills, sondes 3 / 3, the canister seen and broken in the t 99.5 flash, three latches (the `SHAKE OFF` · `LEFT-RIGHT` prompt below the ship on the second, shaken off; none on the third), the 2× gust arrow clear of the edge warnings, A, 3,024 credits; fifteen frames and the whole run with sound ([recipe](concept/prompts.md#level-12-capture-final-r34-a)) | chosen |
+| [concept/level-12-readability-r34-a.png](concept/level-12-readability-r34-a.png) | 1:1 and 2× crops: rain, gust telegraph, a Spore Bomber under a bank, the canister's glint and flash, the latch on each flank, a stunned Lamprey, a sonde and its pop, the eye's ring and shaft, the breakout light, the `SONDES` tracker, `SHIELD DRAIN`, the shake-off prompt in the play field, the debrief's `SONDES` row ([notes](concept/prompts.md#level-12-readability-r34-a)) | chosen |
+| [concept/level-12-capture-mines-r34-a.png](concept/level-12-capture-mines-r34-a.png), [.mp4](concept/level-12-capture-mines-r34-a.mp4) | Supplementary clip of the Proximity Mines in play (step CF; 24 s with sound, the level time burnt in, and a sheet): the plan's fit with the mines in the rear slot through the left flank wave, then a control run with the music and radio off; the sheet's plot of the mix around a drop: the arm chirp is heard, the drop is masked by the front gun (pending the user's review; [recipe](concept/prompts.md#level-12-capture-mines-r34-a)) | chosen |
+| [concept/level-12-capture-reveal-r34-a.png](concept/level-12-capture-reveal-r34-a.png), [.mp4](concept/level-12-capture-reveal-r34-a.mp4) | A Spore Bomber revealed by a lightning flash (P5 of round 34; eight frames + a 15 s clip with sound, real time then 0.25× slow motion, [recipe](concept/prompts.md#level-12-capture-reveal-r34-a)). **A scratch data variant, not the level as built**: in the real data no Spore Bomber is under a bank at any flash (the t=64 pair leaves the screen at t ≈ 77.8, the t=146 pair is just entering clear of the banks at the t=147 flash), so the capture's build moved the t=146 pair to t=101.5: the right unit flies into the tall bank on the right (the canister's cover), hidden from t 102.5, seen through the lit bank in the t=103.5 flash, hidden again at 104.0, the left one over open sea for contrast. Since round 36 (L.1, 2026-10-13) the level has that pair at t=101.5 in its data, the t=146 pair kept | chosen |
 
 ## Implementation
 
 - [x] Level data `data.yaml` with every block below and this README's tables turned into marked
       tables rendered from it; `PartFLevelKeysTest`, `Level12Test` (M5 part F, step 4)
-- [ ] Scroll timeline, sections, atmosphere and layer content as in *Layout*; heavy only from 130
-      to 145 s; `water: true` (M5 part F, steps 4 and 5; step 4's data done, the backdrop a stand-in
-      with Level 11's sea until step 5)
-- [ ] Production backdrop: six sections (squall, rain wall, lightning field, storm wall, the eye
+- [x] Scroll timeline, sections, atmosphere and layer content as in *Layout*; heavy only from 130
+      to 145 s; `water: true` (M5 part F, steps 4 and 5; step 4's data, `Level12Test`; the production
+      backdrop of step 5 in place of the stand-in; checked in step K8)
+- [x] Production backdrop: six sections (squall, rain wall, lightning field, storm wall, the eye
       with its turning cloud wall and light shaft, breakout with the sky lightening), the bank tile
-      sets, swell and whitecaps; the motion budget (M5 part F, step 5; the eye a/b in round 34)
+      sets, swell and whitecaps; the motion budget (M5 part F, step 5; the eye a/b in round 34: a, approved as final)
 - [x] Weather in the simulation: the gust schedule with telegraph, push and ramps, the wall's
       drift, easy/hard values, applied to the ship, Rook, Lampreys and Whirl Seeds only; exactly zero
       in levels without weather; in the state hash only in a level with weather (`WindTest`) (M5
@@ -487,12 +492,16 @@ backdrop generator imports for the chosen one; briefs in [concept/prompts.md](co
 - [x] Music: "Firestorm"'s base stem from section 2, the full mix in the wall, the base stem at
       −6 dB in the eye, the full mix at the breakout (F5 = a); the rain-only storm bed with the
       ocean in the eye, thunder after the flashes (F6 = a); the new sounds (M5 part F, steps 2 and 6:
-      round 34's variant a played until the round closes; `Level12SoundsTest`)
-- [ ] L12's units, props, rain and flash in L12's own atlas, at most 6 pages (M5 part F, step 5)
+      round 34's variant a until the round closed, then the user's picks: the thunder and the gust b
+      (step K1); `Level12SoundsTest`)
+- [x] L12's units, props, rain and flash in L12's own atlas, at most 6 pages (M5 part F, step 5;
+      checked in step K8: `level-12` 3/6 pages with its backdrop, the `weather-*`, sonde and canister
+      sprites in its unit atlas; `SpriteUseTest`, the packer's `AtlasBudget`)
 - [x] Easy/hard variations as in *Difficulty notes* (M5 part F, step 4)
-- [ ] Captures for concept round 34: the level, the wall, the eye, a latch and shake-off, a flash
+- [x] Captures for concept round 34: the level, the wall, the eye, a latch and shake-off, a flash
       with the canister, the sondes, each difficulty's autopilot outcome; the Proximity Mines' drop
-      and arm sounds heard in play (M5 part F, step 7)
+      and arm sounds heard in play (M5 part F, step 7; accepted in round 34, the drop raised to the arm's
+      level after the capture and not re-captured)
 
 ## Decisions
 
@@ -631,3 +640,33 @@ backdrop generator imports for the chosen one; briefs in [concept/prompts.md](co
   though it already plays at the warnings' level (the game's ceiling). Its file is now 3.5 dB louder
   (round 34's placeholder regenerated at −13.5 dB instead of −17; [sfx](../../../audio/sfx/README.md));
   the latch, the gust and the theme's 6 dB duck stay.
+- 2026-10-12 user, round 34: the thunder **b** (three close strikes, a crack then the roll) and the gust
+  **b** (a recorded gust) instead of a; the Lamprey's latch and drain sounds stay a; the latch look is
+  **b**, "siphon" ([lamprey](../../../enemies/air/lamprey/README.md#decisions)). Step K1 wired them (the
+  b files at the a's levels, within 1 dB; [sfx](../../../audio/sfx/README.md#decisions)).
+- 2026-10-12 (user, round 34): concept round 34 closed. The eye **a** "billowing wall, cool shaft"
+  (b "banded spiral wall" rejected, its files in `concept/rejected/`); the storm backdrop, the props,
+  the briefing images and the Lamprey's art and intel portrait approved as **final**, so `art: final`;
+  the captures (12.3a–c, the mine drop as raised since), the texts (page 1 shortened, C5), the numbers,
+  F1–F9 and every build choice accepted but 12.7b (b): **no**, a latched Lamprey keeps draining
+  through the ship's mercy time ([Lamprey](../../../enemies/air/lamprey/README.md#decisions)); the
+  sounds and the latch look as in the line above; the 18 voiced lines heard; P4 (the Wraith rear check
+  at 0.62) accepted. The document leaves `review` for `approved`. Still open: the Spore Bomber
+  revealed by a flash (P5, being captured) and the user's playthrough of Act 2 (P9).
+- 2026-10-13 (user, round 36 L.1/L.5): **L.1**: the lightning reveal never showed a Spore Bomber
+  under a bank at a flash in the built level, so a Spore Bomber pair (`line abreast`, front) is
+  **added** at t=101.5 as in the K6 capture's scratch variant, the t=146 pair kept: its right unit
+  flies into the tall bank on the right and is seen through it in the t=103.5 flash. 236 units at
+  medium (was 234); the typical haul 1,512 against the budget 1,473 (+2.6 %, was +0.2 %), within
+  ±5 %, so `bounty_scale` stays 0.75; density, pacing and the balance checks pass. **L.5**: the
+  Lamprey's latch spots in its data move 1 px to look b's pivots
+  ([Lamprey](../../../enemies/air/lamprey/README.md#decisions)).
+- 2026-10-18: The user's playtest: "The last transmission about the storm clearing is too late. It was
+  played during the post mission screen. Probably extend the mission until it is fully played." With
+  Rook flying and the sondes met late in the eye, the secondary's line waited for a gap until the level
+  end (205), so Okafor's level-end line opened at 218.1 and the outro's 15 s cap handed over to the
+  debrief while he spoke. **Breakout now ends at 218** (its light peak too): the secondary plays after
+  Rook's t=200 line and the level-end line is spoken by ≈ 229, inside the outro. The game now also cuts
+  a voice still speaking when the debrief takes over, and `RadioTimelineTest` checks every level's
+  closing voices end inside the outro. The extension leaves a quiet exit of 13–15 s after the last wave
+  (`PacingTest`: the level's second longer pause on easy and medium, inside the rule's two).

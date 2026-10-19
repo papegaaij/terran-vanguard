@@ -28,8 +28,9 @@ The backdrop step decides which of these become baked tiles (the grade on sectio
 the game draws on the real clock (canopy, beams, haze: a few frames, e.g. one per second).
 
 Outputs (review only): design/campaign/act-2-homefront/level-14-siege-spire/concept/
-  daylight-r36-a.png, daylight-r36-b.png   a still of the old town and the lake 8 s after the death
-  (480x540, 1x) and the timeline at 0, 3, 6, 9 and 12 s (half size)
+  daylight-r36-a.png (the chosen a, round 34; the rejected b's in concept/rejected/daylight-r36-b.png)
+  a still of the old town and the lake 8 s after the death (480x540, 1x) and the timeline at 0, 3, 6,
+  9 and 12 s (half size)
 
 Run: python3 tools/art/daylight_l14.py [a] [b]   (~1 min)
 """
@@ -47,6 +48,7 @@ import scenes_r10 as s10  # noqa: E402
 from render import raster  # noqa: E402
 
 REVIEW_ROUND = "r36"
+CHOSEN = "a"                                    # the user's pick, round 34 (golden hour)
 CONCEPT = DESIGN / "campaign" / "act-2-homefront" / "level-14-siege-spire" / "concept"
 VARIANTS = {"a": "A - GOLDEN HOUR", "b": "B - PALE DAWN"}
 W, H = 480, 540
@@ -206,8 +208,9 @@ def review(variant):
             ("THE 12 S TIMELINE FROM THE DEATH (HALF SIZE): WITHERING, TEARING, FADING", strip, 1, False)]
     sheet = artkit.review_sheet(f"LEVEL 14 DAYLIGHT, VARIANT {VARIANTS[variant]}", rows, width=1500,
                                 batch="M5 part H batch")
-    CONCEPT.mkdir(parents=True, exist_ok=True)
-    png = CONCEPT / f"daylight-{REVIEW_ROUND}-{variant}.png"
+    folder = CONCEPT if variant == CHOSEN else CONCEPT / "rejected"   # the user's pick, round 34
+    folder.mkdir(parents=True, exist_ok=True)
+    png = folder / f"daylight-{REVIEW_ROUND}-{variant}.png"
     sheet.convert("RGB").save(png, optimize=True)
     print(f"review: {png.relative_to(artkit.ROOT)}")
 

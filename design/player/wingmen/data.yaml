@@ -24,44 +24,52 @@ rook:
   eject: {explosion: medium, pod_speed: 120}
 guns:
   price_factor: 0.6           # of the base weapon's price and upgrade base
-  list:                       # the first is the starter: free, fitted when he joins
+  list:                       # the first is the starter: free, fitted when he joins; notes.scale follows the README's Scale cell
     - {id: autocannon, name: Autocannon, base: autocannon-pod, scale: 1.5, available: act 2}
-    - {id: scatter, name: Scatter, base: scatter-vulcan, scale: 0.6, available: act 2}
+    - {id: scatter, name: Scatter, base: scatter-vulcan, scale: 0.6, available: act 2, notes: {scale: (volley)}}
     - {id: missiles, name: Missiles, base: micro-missile-pod, scale: 1.5, available: act 2}
-    - {id: mortar, name: Mortar, base: hammer-mortar, scale: 0.6, available: act 2}
+    - {id: mortar, name: Mortar, base: hammer-mortar, scale: 0.6, available: act 2, notes: {scale: '(aimed: lands on his ground target)'}}
 barks:
   speaker: Rook
   spacing: 8                  # s between the start of a Rook line and the next bark
-  triggers:                   # in priority order (first = highest)
+  triggers:                   # in priority order (first = highest); notes.trigger is the README's Trigger cell
     - trigger: boss-warning
+      notes: {trigger: "Boss warning starts (an act boss's warning, a mid-boss's sting)"}
       expression: grim
       lines: ["Here comes the big one.", "Heads up. Something nasty's coming.", "Oh, I don't like the look of that.", "Big contact inbound. Stay loose, Lancer."]
     - trigger: rear-wave
+      notes: {trigger: "A `rear` wave enters within {ahead} s"}
       ahead: 1.5              # s before the wave enters
       expression: fierce
       shout: true
       lines: ["Six o'clock, Lancer!", "Contacts on six! Why is it always six?", "Check six, check six!", "Behind us! They're on our tails!"]
     - trigger: sides-wave
+      notes: {trigger: "A `sides` wave enters"}
       expression: fierce
       shout: true
       lines: ["Contacts on your flank!", "Bandits coming in from the side!", "Flank! Watch the edges, Lancer!"]
     - trigger: player-armour
+      notes: {trigger: "The player's armour falls below {below} (again only after it was back at {below} or more)"}
       below: 0.3
       expression: grim
       lines: ["You're smoking, Lancer. Ease off!", "That hull won't take much more, Lancer!", "Lancer, you're coming apart. Get clear!"]
     - trigger: rook-armour
+      notes: {trigger: "Rook's armour falls below {below} (once per attempt)"}
       below: 0.3
       expression: grim
       lines: ["Taking a beating over here!", "I'm hit. I'm okay. I'm mostly okay!", "Rook's hurting, Lancer. Hurting bad."]
     - trigger: rook-ejects
+      notes: {trigger: "Rook ejects"}
       expression: fierce
       shout: true
       lines: ["Punching out! Give 'em hell!", "I'm out, I'm out! She's all yours, Lancer!", "Ejecting! Somebody owes me a ship."]
     - trigger: kill-streak
+      notes: {trigger: "{kills} kills (the player's and his) within {seconds} s; the count starts over"}
       kills: 10
       seconds: 5
       expression: fierce
       lines: ["Nice shooting!", "Ha! Save some for me!", "Now that's how it's done.", "Look at you go, Lancer."]
     - trigger: overdrive
+      notes: {trigger: "An overdrive pickup appears"}
       expression: fierce
       lines: ["Power-up! Grab it!", "Ooh, shiny. Grab that.", "Overdrive's up for grabs, Lancer!"]

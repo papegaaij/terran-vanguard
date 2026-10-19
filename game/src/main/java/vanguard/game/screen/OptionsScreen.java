@@ -1,5 +1,23 @@
 package vanguard.game.screen;
 
+import static vanguard.game.screen.OptionsLayout.CHIP_HEIGHT;
+import static vanguard.game.screen.OptionsLayout.COLUMNS;
+import static vanguard.game.screen.OptionsLayout.LEFT;
+import static vanguard.game.screen.OptionsLayout.PANEL_HEIGHT;
+import static vanguard.game.screen.OptionsLayout.PANEL_WIDTH;
+import static vanguard.game.screen.OptionsLayout.PANEL_X;
+import static vanguard.game.screen.OptionsLayout.PANEL_Y;
+import static vanguard.game.screen.OptionsLayout.ROWS_Y;
+import static vanguard.game.screen.OptionsLayout.ROW_STEP;
+import static vanguard.game.screen.OptionsLayout.SLIDER_WIDTH;
+import static vanguard.game.screen.OptionsLayout.TABLE_STEP;
+import static vanguard.game.screen.OptionsLayout.TABLE_Y;
+import static vanguard.game.screen.OptionsLayout.TABS_X;
+import static vanguard.game.screen.OptionsLayout.TABS_Y;
+import static vanguard.game.screen.OptionsLayout.TAB_GAP;
+import static vanguard.game.screen.OptionsLayout.TAB_HEIGHT;
+import static vanguard.game.screen.OptionsLayout.VALUE_X;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.List;
@@ -12,6 +30,7 @@ import vanguard.game.input.Binding;
 import vanguard.game.input.BindingSlot;
 import vanguard.game.input.Bindings;
 import vanguard.game.input.MenuInput;
+import vanguard.game.input.Pointer;
 import vanguard.game.settings.Settings;
 import vanguard.game.ui.Fonts;
 import vanguard.game.ui.Glass;
@@ -23,23 +42,12 @@ import vanguard.game.ui.Words;
  * Gameplay tabs. Up and down select a row, left and right change it, Q / E or the bumpers switch
  * tabs, back closes the screen. Every change applies at once; the settings file is written when
  * the screen closes. The Audio tab's sound test stops when the screen closes.
+ *
+ * <p>With the mouse ({@link OptionsLayout}): a click on a tab shows it, hovering a row selects it, a
+ * click sets a chip, a click or a drag on a slider's track sets its value, a sound test's arrows pick
+ * and its name plays, and a click on a cell of the bindings table captures a key for it.
  */
 public final class OptionsScreen implements GameScreen {
-    private static final int PANEL_X = 71;
-    private static final int PANEL_Y = 31;
-    private static final int PANEL_WIDTH = 818;
-    private static final int PANEL_HEIGHT = 472;
-    private static final int LEFT = 89;
-    private static final int VALUE_X = 380;
-    private static final int ROWS_Y = 100;
-    private static final int ROW_STEP = 40;
-    private static final int TABLE_Y = 112;
-    private static final int TABLE_STEP = 22;
-    private static final int SLIDER_WIDTH = 300;
-    private static final int CHIP_HEIGHT = 16;
-    /** The x of the Controls table's columns: action, primary, alternative, gamepad. */
-    private static final int[] COLUMNS = {LEFT, 329, 499, 659};
-
     private static final String[] COLUMN_NAMES = {"ACTION", "PRIMARY", "ALTERNATIVE", "GAMEPAD"};
 
     private final GameServices services;
@@ -51,6 +59,8 @@ public final class OptionsScreen implements GameScreen {
     private int row;
     /** The column of the bindings table the cursor is in. */
     private BindingSlot column = BindingSlot.PRIMARY;
+    /** The row whose slider the mouse drags; -1 for none. */
+    private int dragging = -1;
 
     public OptionsScreen(GameServices services) {
         this.services = services;
@@ -109,6 +119,9 @@ public final class OptionsScreen implements GameScreen {
             return Transition.STAY;
         }
         List<OptionRow> rows = tabs.get(tab).rows();
+        if (pointer(input.pointer(), rows)) {
+            return Transition.STAY;
+        }
         if (input.up() || input.down()) {
             row = Math.floorMod(row + (input.down() ? 1 : -1), rows.size());
             services.play(Sfx.MENU_MOVE);
@@ -125,6 +138,96 @@ public final class OptionsScreen implements GameScreen {
             confirm(current);
         }
         return Transition.STAY;
+    }
+
+    /** Follows the mouse; returns whether a click acted, so the keys wait for the next frame. */
+    private boolean pointer(Pointer pointer, List<OptionRow> rows) {
+        if (dragging >= 0) {
+            if (pointer.held() && rows.get(dragging) instanceof OptionRow.Slider slider) {
+                if (slider.point(target, OptionsLayout.share(pointer.x()))) {
+                    services.play(slider.feedback());
+                }
+                return true;
+            }
+            dragging = -1;
+        }
+        if (!pointer.moved() && !pointer.clicked()) {
+            return false;
+        }
+        Optional<OptionsLayout.Hit> hit = OptionsLayout.at(tabs, tab, pointer.x(), pointer.y());
+        if (hit.isEmpty()) {
+            return false;
+        }
+        if (!pointer.clicked()) {
+            hover(hit.get());
+            return false;
+        }
+        switch (hit.get()) {
+            case OptionsLayout.Hit.Tab chosen -> {
+                if (chosen.index() != tab) {
+                    tab = chosen.index();
+                    row = 0;
+                    services.play(Sfx.MENU_MOVE);
+                }
+            }
+            case OptionsLayout.Hit.Row clicked -> {
+                row = clicked.row();
+                if (rows.get(row) instanceof OptionRow.Button button) {
+                    confirm(button);
+                }
+            }
+            case OptionsLayout.Hit.Chip chip -> {
+                row = chip.row();
+                OptionRow.Choice choice = (OptionRow.Choice) rows.get(row);
+                if (choice.get().applyAsInt(target) != chip.chip()) {
+                    choice.set().accept(target, chip.chip());
+                    services.play(Sfx.MENU_MOVE);
+                }
+            }
+            case OptionsLayout.Hit.Slider track -> {
+                row = track.row();
+                dragging = row;
+                OptionRow.Slider slider = (OptionRow.Slider) rows.get(row);
+                if (slider.point(target, track.share())) {
+                    services.play(slider.feedback());
+                }
+            }
+            case OptionsLayout.Hit.Sound sound -> {
+                row = sound.row();
+                OptionRow current = rows.get(row);
+                if (sound.direction() == 0) {
+                    confirm(current);
+                } else if (current.change(target, sound.direction())) {
+                    services.play(Sfx.MENU_MOVE);
+                }
+            }
+            case OptionsLayout.Hit.Cell cell -> {
+                row = cell.row();
+                column = cell.slot();
+                confirm(rows.get(row));
+            }
+        }
+        return true;
+    }
+
+    /** Hovering selects the row under the pointer, and in the bindings table the cell. */
+    private void hover(OptionsLayout.Hit hit) {
+        int before = row;
+        BindingSlot columnBefore = column;
+        switch (hit) {
+            case OptionsLayout.Hit.Tab chosen -> {}
+            case OptionsLayout.Hit.Row over -> row = over.row();
+            case OptionsLayout.Hit.Chip chip -> row = chip.row();
+            case OptionsLayout.Hit.Slider track -> row = track.row();
+            case OptionsLayout.Hit.Sound sound -> row = sound.row();
+            case OptionsLayout.Hit.Cell cell -> {
+                row = cell.row();
+                column = cell.slot();
+            }
+        }
+        if (row != before || column != columnBefore) {
+            services.play(Sfx.MENU_MOVE);
+        }
     }
 
     private void moveColumn(int direction) {
@@ -162,12 +265,12 @@ public final class OptionsScreen implements GameScreen {
         services.titleScene.draw(batch, 0.4f);
         glass.panel(batch, PANEL_X, PANEL_Y, PANEL_WIDTH, PANEL_HEIGHT, 0.82f);
         glass.shadowed(batch, glass.fonts.heading, "OPTIONS", Glass.WHITE, LEFT, 46);
-        float tabX = 300;
+        float tabX = TABS_X;
         for (int i = 0; i < tabs.size(); i++) {
             String name = tabs.get(i).name();
             float width = Fonts.width(glass.fonts.body, name) + 20;
-            glass.tab(batch, glass.fonts.body, name, tabX, 42, width, 24, i == tab);
-            tabX += width + 8;
+            glass.tab(batch, glass.fonts.body, name, tabX, TABS_Y, width, TAB_HEIGHT, i == tab);
+            tabX += width + TAB_GAP;
         }
         glass.rule(batch, LEFT, PANEL_X + PANEL_WIDTH - 18, 77);
         OptionsTab drawn = new OptionsTab(batch, glass);
@@ -267,7 +370,8 @@ public final class OptionsScreen implements GameScreen {
             glass.item(batch, glass.fonts.body, Remapping.name(action), LEFT, y, PANEL_X + 2, 230, 20, selected, true);
             Binding binding = services.settings().controls().bindings().get(action);
             String[] cells = {
-                Remapping.keyName(binding.primaryKey()),
+                // M7 part A: Dash's primary input is the double-tap of a direction, fixed text.
+                action == Action.DASH ? Remapping.DOUBLE_TAP : Remapping.keyName(binding.primaryKey()),
                 Remapping.keyName(binding.alternativeKey()),
                 Remapping.gamepadName(action, binding)
             };
