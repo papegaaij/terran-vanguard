@@ -70,22 +70,28 @@ class Level14Test {
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_687, Math.round(budget), "the typical haul's target, 700 × 1.07¹³");
-        assertEquals(55 * 5 + 30 * 12 + 6 * 22 + 4 * 18 + 4 * 30, kills, "Skitter, Needler, Creeper, Ravager, Wraith");
+        assertEquals(
+                57 * 5 + 62 * 12 + 20 * 22 + 4 * 18 + 4 * 30 + 4 * 30 + 9 * 25 + 21 * 15,
+                kills,
+                "Skitter, Needler, Creeper, Ravager, Wraith, Mantis, Spore Bomber, Stinger");
         assertEquals(
                 (3 + 4) * 12 + 2 * 45 + 4 * 15,
                 ground,
                 "the cathedral nest's and the root bursts' Spine Turrets, the hive nodes, the bursts' Polyp Mortars");
-        assertEquals(6 * 31 + 62 + 124, boss, "the pods and mortar roots, the maw and the core (Act 1 terms)");
+        assertEquals(6 * 64 + 128 + 256, boss, "the pods and mortar roots, the maw and the core (Act 1 terms)");
         assertEquals(88, crates, "the armoured car's crate in Act 1 terms (pays 141)");
         assertEquals(63, secondary, "the root grid in Act 1 terms (pays 101)");
-        assertEquals(0.76, content.level(LEVEL).bounties());
+        assertEquals(
+                0.40,
+                content.level(LEVEL).bounties(),
+                "round 40: 0.76 -> 0.81 with one Wraith a launch; step WB: 0.40 with the L10-style waves");
         double paid =
                 boss * content.economy().actFactor() * content.level(LEVEL).bounties();
         System.out.printf(
                 "Level 14 (Act 1 terms): kills %d, ground %d, boss %d (paid %.0f, %.1f %% of the budget), crate %d,"
                         + " secondary %d%n",
                 kills, ground, boss, paid, 100 * paid / budget, crates, secondary);
-        assertEquals(0.27, paid / budget, 0.01, "the act boss's share, about 30 % (BalanceTest's tolerance)");
+        assertEquals(0.292, paid / budget, 0.01, "the act boss's share, about 30 % (BalanceTest's tolerance)");
     }
 
     @Test
@@ -95,7 +101,25 @@ class Level14Test {
         for (WaveSpec wave : level.waves()) {
             waves.merge(wave.enemy().slug(), wave.count(), Integer::sum);
         }
-        assertEquals(Map.of("creeper", 6, "needler", 30, "ravager", 4, "skitter", 55, "wraith", 4), waves);
+        assertEquals(
+                Map.of(
+                        "creeper",
+                        20,
+                        "mantis",
+                        4,
+                        "needler",
+                        62,
+                        "ravager",
+                        4,
+                        "skitter",
+                        57,
+                        "spore-bomber",
+                        9,
+                        "stinger",
+                        21,
+                        "wraith",
+                        4),
+                waves);
         Map<String, Integer> ground = new TreeMap<>();
         for (LevelScript.GroundUnit unit : level.groundUnits()) {
             ground.merge(unit.enemy().slug(), 1, Integer::sum);

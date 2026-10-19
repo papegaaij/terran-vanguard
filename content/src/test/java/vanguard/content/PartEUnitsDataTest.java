@@ -158,9 +158,9 @@ class PartEUnitsDataTest {
             + "  - {event: ally-lost, speaker: Okafor, line: \"We've lost the {ally}.\"}  # trigger";
     /** Level 05 as it is: its Gorgon Frigate has no lanes. */
     private static final String PAR = "without lanes";
-    /** The Harbour Kraken's lanes as its data file writes them. */
-    private static final String LANES =
-            String.join("\n", "    count: 4", "    width: 120", "    arms: {left arm: [1, 2], right arm: [3, 4]}");
+    /** The Harbour Kraken's lanes as its data file writes them (round 40: one rooted arm a lane). */
+    private static final String LANES = String.join(
+            "\n", "    count: 4", "    width: 120", "    arms: {root 1: [1], root 2: [2], root 3: [3], root 4: [4]}");
 
     /**
      * Level 05 with the edits; {@code level} edits the level's text. With {@code lanes} other than
@@ -319,8 +319,8 @@ class PartEUnitsDataTest {
 
     @Test
     void theBossesLanesAreOwnedByItsParts() {
-        assertProblem(files(text -> text, LANES.replace("left arm", "left head")), "left head");
-        assertProblem(files(text -> text, LANES.replace("[3, 4]", "[3, 5]")), "lane 5");
+        assertProblem(files(text -> text, LANES.replace("root 1:", "left head:")), "left head");
+        assertProblem(files(text -> text, LANES.replace("root 4: [4]", "root 4: [5]")), "lane 5");
         assertProblem(files(text -> text, LANES.replace("width: 120", "width: 130")), "play field");
     }
 

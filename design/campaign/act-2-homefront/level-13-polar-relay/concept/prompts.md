@@ -75,10 +75,12 @@ first built with look a).
   lead, the relay's floe at (240, 250) in the halt and the research hut's floe (t=12, x=380); brash in
   the leads' outer bays (beyond the hulls' reach) and rubble where a Scuttler's path crosses a lead; open water in the top rows.
 - **The exit** (`open-floes`, 480×960): looser floes and open sea, open water where it begins.
-- **The water** (`arctic-water`, `deep`, 480×960, drifting 3 px/s left): the dark arctic swell (r09's
+- **The water** (`arctic-water`, `deep`, 480×960; drifting 3 px/s left until 2026-10-19, still since): the dark arctic swell (r09's
   stops, 7 tones), a wandering, damped swell rather than stripes; it tiles both ways.
-- **Loose ice** (`loose-ice`, 96×112, 8 headings): seven drifting floe and brash clusters and, as
-  heading 2 (east), the Polyp Mortars' floe (a flat floe 64×84 the two mortars stand on).
+- **Loose ice** (96×112; `loose-ice` with 8 headings, a look per direction, until 2026-10-19): since the
+  user's playtest every floe drifts east at 10 px/s, so each look is a piece of its own, `mortar-floe`
+  (the Polyp Mortars' flat floe 64×84 the two mortars stand on) and `loose-ice-a` .. `-g` (seven floe and
+  brash clusters), 2 headings of the same image; the eight looks are unchanged.
 - **Fog** (`fog-wisps` ~10 %, `fog-banks` ~20 % at the edges): pale fog, every tone at or above the
   ice's lit snow (lighter towards its dense core, lit from the top-left), soft blurred edges, 16 alpha
   steps; it lightens the ice it covers and lies as a pale veil over the water, and the **whiteout**

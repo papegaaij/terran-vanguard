@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../player/wingmen, ../../../enemies/ground/creeper]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Level 08 – Neon Skyline
@@ -53,7 +53,7 @@ Creeper on a low roof, its aimed five-way fan, a convoy's fans staggered 0.5 s a
 <!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `ground` (Creepers on the streets and low roofs, turret nests, mortars), `air`; `low-air` carries the traffic lanes (scenery, no enemies) |
+| Dominant layers | `ground` (Creepers on the streets and low roofs, turret nests, mortars), `air`; the streets carry the civilian traffic and `low-air` the CDF gunships (scenery, no enemies) |
 | Attack directions | front 95% · sides 5% by enemy count (two Needler pincers, the Mantis pincers and the finale's side stream) |
 | Density | 3 |
 | Recommended traits | `anti-ground`, `forward` |
@@ -97,15 +97,20 @@ and low roofs. The turret nests stand on a landing pad, a low roof and the parki
 Creepers crawl along the avenues and the low roofs and down ramps between them, never up or down a
 tower wall; the billboard and its crate sit on a low roof.
 
-**Traffic** (user decision D2 = a): the civilian aircars and the CDF gunships on `low-air` are
-scenery: no collision, and shots pass through them, so the player never has to hold fire.
+**Traffic** (user decision D2 = a): the civilian cars and the CDF gunships are scenery: no
+collision, and shots pass over them, so the player never has to hold fire. Since the user's playtest
+of 2026-10-18 ("cars sometimes pass over a viaduct when they should pass underneath") the cars are
+**street traffic on `ground`**: placed before every other ground piece, they pass **under the cross
+highways**, and the towers, drawn after the flat pieces, lean over them; the CDF gunships stay on
+`low-air`. No lane runs under a tower's footprint or a roof's opaque pixels while on the screen (the
+north-bound lane on the east avenue moved to x 244, west of the landing pad's roof).
 
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
 | 1. On the Wing | 0–10 | 0–1,400 | 140 | light | `deep`: the night sky's glow on the Gulf of Guinea, seen in the harbour's water. `ground`: Lagos harbour, the water and its piers, a container ship at the pier, gantry cranes on the quay, container yards; the first elevated cross highway over the seam. `low-air`: amber-lit fog banks, CDF gunships heading home. `high-air`: thin mist. | The launch with Rook in his slot from the start (he launches in formation and fires when the player fires); the HUD prompt `ROOK SIDE` · `IN THE HANGAR` at t=6 for 6 s. The first Skitters enter as the launch ends (t=6.5; t=12 until the L10-style waves of 2026-10-18). |
-| 2. Traffic Lanes | 10–65 | 1,400–9,100 | 140 | clear | `ground`: the harbour's last container yards, then two tree-lined avenues as lanes, low roofs, parks, the landing pad on a low roof; the first perspective towers rising along the avenues. `low-air`: streams of civilian aircars fleeing south (scenery; no searchlights, as the streams on the two avenues fill the motion budget), a CDF gunship pair. `high-air`: thin mist. | Rook shoots what the player shoots; his first kill; the first turret nest. |
-| 3. Rooftop Crawl | 65–115 | 9,100–16,100 | 140 | light | `ground`: the boulevard and side streets with their lamp lines, blocks of low roofs, rooftop gardens, water tanks, the ramps and ledges the Creepers follow; perspective towers rising between them. `low-air`: thin fog banks lit amber by the avenue lamps; traffic thinning. | Creeper introduction: one alone, then convoys. The billboard secret. |
+| 2. Traffic Lanes | 10–65 | 1,400–9,100 | 140 | clear | `ground`: the harbour's last container yards, then two tree-lined avenues as lanes, low roofs, parks, the landing pad on a low roof; the first perspective towers rising along the avenues; streams of civilian cars fleeing south along the avenues, under the cross highways (scenery; no searchlights, as the streams fill the motion budget). `low-air`: a CDF gunship pair. `high-air`: thin mist. | Rook shoots what the player shoots; his first kill; the first turret nest. |
+| 3. Rooftop Crawl | 65–115 | 9,100–16,100 | 140 | light | `ground`: the boulevard and side streets with their lamp lines, blocks of low roofs, rooftop gardens, water tanks, the ramps and ledges the Creepers follow; perspective towers rising between them. `low-air`: thin fog banks lit amber by the avenue lamps; the street traffic thinning on the boulevard. | Creeper introduction: one alone, then convoys. The billboard secret. |
 | 4. Smoke District | 115–160 | 16,100–22,400 | 140 | medium | `ground`: burnt and burning blocks (the fire glow is on them and on the smoke's underside), a collapsed overpass, a parking deck. `low-air`: dense smoke columns (below the play plane). `high-air`: ash wisps (≤ 40% opacity). | Mixed waves, Stinger dives, mortars on the overpass. |
 | 5. Neon Heights | 160–200 | 22,400–28,000 | 140 | medium, heavy peak 166–174 | `ground`: neon-lit low roofs and towers, neon signage under smoke (no saturated teal), the elevated Third Mainland highway carrying the finale convoy; at the level's end the Ndidi Arcology, a tower with creep on its roof and upper floors (the lead into L09). `low-air`: smoke banks. | Finale set piece, then the level ends over the arcology district. |
 <!-- /data -->
@@ -262,7 +267,7 @@ are listed twice, one row for easy).
 
 Totals: Spine Turret 9 · Polyp Mortar 3 (hard: +2 Spine Turrets at the overpass, a
 ground-target group with no units on easy and medium). The civilian
-traffic on `low-air` is scenery and cannot be hit.
+traffic (cars on the streets, gunships on `low-air`) is scenery and cannot be hit.
 
 ## Hazards
 
@@ -418,8 +423,9 @@ Concept round 30 (prompts: [concept/prompts.md](concept/prompts.md); concept gen
       *Layout*: the towers in true perspective as scenery, everything gameplay touches at street
       level or on low structures drawn without lean (D1) (Level 08's own backdrop;
       `BackdropSeamsTest` checks its piece edges and the ground across the tile set changes).
-- [x] Civilian traffic lanes on `low-air` as scenery: no collision, shots pass through (D2);
-      round 30's wedge cars and CDF gunships (`tools/art/l08_traffic.py`).
+- [x] Civilian traffic as scenery: no collision, shots pass through (D2); round 30's wedge cars and
+      CDF gunships (`tools/art/l08_traffic.py`); since the playtest of 2026-10-18 the cars on `ground`
+      under the cross highways, the gunships on `low-air` (`tools/art/backdrop_l08.py`).
 - [x] Rook in formation from the launch (hired at the hangar visit before L08); the HUD prompt
       `ROOK SIDE` · `IN THE HANGAR` at t=6.
 - [x] Wave script matches the *Waves* table (time, formation, count, entry edge); the Creeper
@@ -557,3 +563,20 @@ Concept round 30 (prompts: [concept/prompts.md](concept/prompts.md); concept gen
   and the last at t=190, so the opener is no pause; `bounty_scale` 0.56 → 0.28 for the same haul; the Needler (12 HP) and the
   Stinger (14) with the capped act HP factor; `PacingTest`'s Act 2 rule and `ActFloorTest`. The
   returning Spore Bombers and Mantises and the larger convoys are pending the user's review.
+- 2026-10-19: The user's choice for the cars over the viaducts (2026-10-18: "ground traffic + the five
+  cross highways overhead"): the sedans and vans are **ground pieces**, their streams re-derived for the
+  ground's scroll (250 px/s on the screen south-bound, 80 north-bound), and **placed before every other
+  ground piece**, so the five cross highways, drawn later on the same layer, pass over them and the
+  towers lean over both. Not `overhead: true`: that pass comes after the towers, so a highway would
+  cover a tower's leaning roof (the 1.10 tower at x 436 by 23 px at t≈69) and the turret nests' ground
+  targets; the draw order gives the cars under the viaducts without it (pending the user's review).
+  Checked with the generator's geometry: no car's core under a tower footprint or an opaque roof while
+  on the screen; the x 106 lane never meets the x 131 tower column (those towers stand in section 3,
+  the lane runs in section 2); the north-bound lane moved from x 258 to 244, out from under the landing
+  pad's roof (x ≥ 252); section 3's first sedan enters at t 67.2 (was 66), so no car catches the seam's
+  highway and drives out from under it onto section 2's blocks. The traffic review sheet
+  (`concept/traffic-final-r30-a`) still shows the low-air streams of round 30.
+- 2026-10-19: `backdrop_l08.py --check` found three towers of the x 131 column in the Smoke District
+  (t 122.5–125.3: a burnt 68×64 at h 0.60, two 56×56 at h 0.85 and 0.60) leaning over the t=114 convoy's
+  fifth and sixth Creepers (hard 6), the convoy CA's L10-style waves lengthened from 4 to 5: the three
+  placements are removed (their lots show the ground tile's low roofs); the check passes again.

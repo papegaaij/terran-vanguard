@@ -174,6 +174,87 @@ class IntelPanelLayoutTest {
     }
 
     /**
+     * A level whose fields fit keeps its rows 14 px apart (Level 01); a busy one closes them up so they end
+     * above Varga's quote (Level 14 at sensor L2, eight enemy types after the Act 2 wave rework), with every
+     * enemy type still named.
+     */
+    @Test
+    void aBusyLevelsRowsCloseUpAndKeepEveryName() {
+        assertEquals(14, rowStep("act-1-first-contact/level-01-break-at-dawn", 2));
+        String level = "act-2-homefront/level-14-siege-spire";
+        int step = rowStep(level, 2);
+        assertTrue(step < 14 && step >= IntelPanel.LINE, "rows " + step + " px apart");
+        Measure measure = new Measure();
+        Intel intel = Intel.of(CONTENT, level, 2);
+        IntelPanel.layout(measure, intel, CONTENT.level(level).briefing().teaser(), level);
+        String names = String.join(
+                " ",
+                texts(measure)
+                        .subList(
+                                texts(measure).indexOf("ENEMIES") + 1,
+                                texts(measure).indexOf("SECRETS")));
+        assertEquals(Names.of(String.join(", ", intel.enemies())), names);
+    }
+
+    /**
+     * Where closing up the rows is not enough (a level with fourteen enemy types), the names end on "+N
+     * MORE" and the panel still fits.
+     */
+    @Test
+    void tooManyEnemyTypesEndOnMore() {
+        String level = "act-2-homefront/level-14-siege-spire";
+        Intel intel = Intel.of(CONTENT, level, 2);
+        List<String> enemies = new ArrayList<>(intel.enemies());
+        for (int i = 0; enemies.size() < 14; i++) {
+            enemies.add("Polyp Mortar " + i);
+        }
+        Intel busy = new Intel(
+                intel.number(),
+                intel.sensor(),
+                intel.profile(),
+                intel.directions(),
+                enemies,
+                intel.waves(),
+                intel.contacts(),
+                intel.secrets(),
+                intel.seconds());
+        Measure measure = assertFits(busy, CONTENT.level(level).briefing().teaser(), level, "fourteen types: ");
+        List<String> texts = texts(measure);
+        String last = texts.get(texts.indexOf("SECRETS") - 1);
+        assertTrue(last.matches(".*\\+\\d+ MORE"), "ends on +N MORE: " + texts);
+    }
+
+    /** The panel's text lines in order, without the quote marks of the measure. */
+    private static List<String> texts(Measure measure) {
+        return measure.parts.stream()
+                .map(Box::what)
+                .filter(what -> what.startsWith("text \""))
+                .map(what -> what.substring(6, what.length() - 1))
+                .toList();
+    }
+
+    /** How far apart the SETTING and LAYERS rows are. */
+    private static int rowStep(String level, int sensor) {
+        Measure measure = new Measure();
+        IntelPanel.layout(
+                measure,
+                Intel.of(CONTENT, level, sensor),
+                CONTENT.level(level).briefing().teaser(),
+                level);
+        int setting = measure.parts.stream()
+                .filter(box -> box.what().equals("text \"SETTING\""))
+                .findFirst()
+                .orElseThrow()
+                .top();
+        int layers = measure.parts.stream()
+                .filter(box -> box.what().equals("text \"LAYERS\""))
+                .findFirst()
+                .orElseThrow()
+                .top();
+        return layers - setting;
+    }
+
+    /**
      * Level 14's strip at sensor L3 marks the Siege Spire's arrival at 108 s (its *Sensor-suite detail*;
      * step K10): one red tick the strip's depth, inside the strip and over the waves; below L3 there is no
      * strip, so no mark.

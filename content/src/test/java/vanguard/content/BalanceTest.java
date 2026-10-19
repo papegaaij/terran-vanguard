@@ -919,11 +919,13 @@ class BalanceTest {
      * the effective {@code dps}, its exposure windows counted (tools/balance.py prints the same): the
      * bar appears as the scroll eases into the halt ({@code Sortie.ARENA_RAMP_SECONDS}); a phase that
      * ends on slams lasts its delay and its slams (each cycle the telegraph, rise, awash and sink; the
-     * last one to its impact), at most its seconds, its parts out of the way (the arms need not die);
+     * last one to its impact), at most its seconds, its parts out of the way (the arms need not die); a
+     * phase without a surfacing (round 40, the rooted Kraken's Arms) cuts its parts down to its left, the
+     * cheapest first, at most its seconds;
      * a phase that ends on a share of its parts' HP takes that HP in cycles of its surfacing (the rise,
      * the open window, the dive, and a slam's cycle after the dive): while the window is open the damage
      * takes the mean of the part's own multiplier and its weak spots' (the eyes and the mantle hit about
-     * equally), while it rises or dives on the surface (half of each) its own, under the water nothing
+     * equally; round 40, rooted arms: its weak spots'), while it rises or dives on the surface (half of each) its own, under the water nothing
      * (the plan has no Torpedo Pod); the last phase takes the rest with its part kept up.
      */
     static double arenaSeconds(EnemyData enemy, double dps) {
@@ -944,6 +946,22 @@ class BalanceTest {
                 seconds += Math.min(slams, until.seconds().orElse(Double.POSITIVE_INFINITY));
                 continue;
             }
+            if (phase.surface().isEmpty()) {
+                // Round 40 (the rooted Kraken's Arms): its always-hittable parts cut down to its left, the cheapest
+                // first at their own multiplier, its delay first, at most its seconds.
+                List<String> names = new java.util.ArrayList<>(until.parts().orElseThrow());
+                names.sort(java.util.Comparator.comparingDouble(name -> left[enemy.partIndex(name)]
+                        / parts.get(enemy.partIndex(name)).multiplier().orElse(1.0)));
+                List<String> cut = names.subList(0, names.size() - until.left().orElse(0));
+                double spent = phase.delay().orElse(0.0);
+                for (String name : cut) {
+                    int p = enemy.partIndex(name);
+                    spent += left[p] / (dps * parts.get(p).multiplier().orElse(1.0));
+                    left[p] = 0;
+                }
+                seconds += Math.min(spent, until.seconds().orElse(Double.POSITIVE_INFINITY));
+                continue;
+            }
             EnemyData.SurfaceData surface = phase.surface().orElseThrow();
             EnemyData.PartData part = parts.get(enemy.partIndex(surface.part()));
             double own = part.multiplier().orElse(1.0);
@@ -951,7 +969,10 @@ class BalanceTest {
                     .mapToDouble(EnemyData.SpotData::multiplier)
                     .max()
                     .orElse(own);
-            double open = (own + spot) / 2;
+            // Round 40: the rooted Kraken's head sits in open view above the lanes and its fans are evadable, so
+            // the open window goes to the eyes; before, the eyes and the mantle took about equal shares.
+            boolean rooted = boss.lanes().map(EnemyData.Lanes::isRooted).orElse(false);
+            double open = rooted ? spot : (own + spot) / 2;
             List<String> names = until.parts().orElseThrow();
             double need = 0;
             double full = 0;

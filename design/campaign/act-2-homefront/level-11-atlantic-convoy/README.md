@@ -1,10 +1,10 @@
 ---
 title: Level 11 – Atlantic Convoy
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../enemies/bosses/harbour-kraken, ../../../enemies/naval/driftjelly, ../../../enemies/naval/reef-spitter, ../../../allies, ../../../player/weapons/torpedo-pod, ../../../player/wingmen]
-updated: 2026-10-09
+updated: 2026-10-19
 ---
 
 # Level 11 – Atlantic Convoy
@@ -18,8 +18,8 @@ the Arctic relays across a grey Atlantic that the Vrell have seeded with driftin
 naval surface and the `sub` layer: jellies swap between the surface and the water below it, where
 only the optional [Torpedo Pod](../../../player/weapons/torpedo-pod/README.md) reaches them. At the
 overrun fusion platform Tiamat the scroll halts for the mid-boss, the
-[Harbour Kraken](../../../enemies/bosses/harbour-kraken/README.md), whose arms slam lanes where
-three cargo ships hold station. 160 s of scroll at 140 px/s, the mid-boss (tuned to about 60 s)
+[Harbour Kraken](../../../enemies/bosses/harbour-kraken/README.md), whose four rooted arms slam
+lanes where three cargo ships hold station; a cut root makes its lane safe (round 40). 160 s of scroll at 140 px/s, the mid-boss (tuned to about 55 s)
 and a 15 s exit.
 
 **Status (M5 part E, step E3a).** This document states the design decided on 2026-10-08 (user
@@ -67,8 +67,8 @@ Generated from the level data's `threat_profile`. The directions are counted by 
 <!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `ground` (naval surface: rafts, surfaced jellies, the Kraken's arms and head when up), `sub` (submerged jellies, the Kraken below, a sunken pod), `air` |
-| Attack directions | front 98% · sides 2% |
+| Dominant layers | `ground` (naval surface: rafts, surfaced jellies, the Kraken's arm roots, its slamming arms and its head when up), `sub` (submerged jellies, the Kraken below, a sunken pod), `air` |
+| Attack directions | front 99% · sides 1% |
 | Density | 3 |
 | Recommended traits | `spread`, `anti-ground`; `anti-sub` optional (submerged jellies, the sunken pod, the Kraken's head in phase 1), not `required` |
 | Hazards | Driftjelly fields (proximity rings on and under the surface) |
@@ -150,8 +150,8 @@ strong elements; mist, smoke and whitecaps stay faint.
 **Timeline.** The launch takes the first 5 s. Sections 1–4 scroll 160 s (22,400 px). Section 5 is
 the **arena** (`arena: true`, `speed: 0`, new in M5 part E), t = 160–161: the scroll eases to a
 halt over its first second (68.8 px at 140 px/s, so the halt scroll is 22,468.8 px) with Tiamat's
-centre 78 px below the top edge (110 until round 33: raised so the Kraken's head surfaces in open
-water off the deck's south edge, the deck at y 2–154), and the level clock halts at its end (t = 161) until the Kraken
+centre 46 px above the top edge (round 40, the Kraken's rooted arms: the deck at y −122–30, mostly
+off the screen; 78 px below it until then, 110 until round 33), and the level clock halts at its end (t = 161) until the Kraken
 dies; section 6 then starts and scrolls 15 s (2,100 px), with a lighter overcast from t=170. About
 **236 s** with a 60 s fight. Because the level clock halts at the arena, everything in the fight
 runs on the simulation's real steps (the ships' glide, the jelly swaps, the lane cycle, the arena's
@@ -166,7 +166,7 @@ data's scroll, which counts the arena at speed 0).
 | 2. Jelly Fields | 20–65 | 2,800–9,100 | 140 | light | `ground`: Driftjelly fields drifting in the current, surfaced jellies cut at the waterline; Vrell spawn slicks. `sub`: submerged jellies under the tint pass; at t≈55 a huge dark shape (≈ 400 px) slides under the convoy and fades into the deep (the Kraken, foreshadowing, scenery). | Driftjellies introduced alone first; the `sub` layer seen. |
 | 3. Reef Line | 65–110 | 9,100–15,400 | 140 | medium | `ground`: violet-veined Vrell reef growths breaking the surface in lines, with foam collars; Reef Spitter rafts bobbing on kelp. `sub`: reef roots fading into the deep, a CDF supply pod snagged on one (the secret). `low-air`: mist banks (~22%). | Reef Spitters introduced as a lone nest of 3, then combined with a jelly field. |
 | 4. Tiamat Approach | 110–160 | 15,400–22,400 | 140 | light | `ground`: debris and floating cargo containers from a burning freighter (smoke at half particle speed, per the motion budget); the overrun fusion platform Tiamat enters at the top at the end, gripped by the Kraken's armoured arms. `sub`: the Kraken's mantle shadow under the platform. | Mixed waves; the last Reef Spitter nest; the flotsam pickups. |
-| 5. Harbour Kraken | 160–161 | 22,400–22,400 | 0 | clear | `ground`: platform Tiamat at the top of the play field, four lanes of 120 px below it, the three cargo ships in lanes 1, 2 and 4 in the lower band. `sub`: the Kraken's mantle, head and idle arms under the surface. | The mid-boss (≈ 60 s at medium); the scroll stays halted while it lives, and section 6 starts at its death. |
+| 5. Harbour Kraken | 160–161 | 22,400–22,400 | 0 | clear | `ground`: platform Tiamat at the top edge (mostly above it), the Kraken's four arm roots at the mantle's rim (y 210), four lanes of 120 px below them, the three cargo ships in lanes 1, 2 and 4 in the lower band. `sub`: the Kraken's mantle and head under the surface. | The mid-boss (≈ 60 s at medium); the scroll stays halted while it lives, and section 6 starts at its death. |
 | 6. Open Water | 161–176 | 22,400–24,500 | 140 | clear, light peak 170–176 | `ground`: the convoy steaming north past the abandoned platform. `deep`: the swell under a lighter overcast. | Release; level end. |
 <!-- /data -->
 
@@ -174,26 +174,34 @@ data's scroll, which counts the arena at speed 0).
 
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). The returning units are
-`tiny` or `small` (Skitter, Needler, Stinger), so no act HP factor applies (default).
+`tiny` or `small` (Skitter, Needler, Stinger): only the Needler and the Stinger get the act HP factor,
+capped at ×3 (`small_act_hp` in the [balancing basis](../../../enemies/README.md), 2026-10-19: a Needler
+has 12 HP here, so it lives to fire its first thorn).
 
 - **`field`** (new, default): a Driftjelly wave is a field of scattered units that enters at the top
   edge with the sea (scroll factor 1) and drifts on the current at the jelly's drift speed (15 px/s);
   each jelly swaps between surfaced and submerged on its own seeded timer (6–10 s), a field starting
   about half submerged ([driftjelly](../../../enemies/naval/driftjelly/README.md)). `swarm` stays
   Level 10's flock.
-- **Density and pacing** (step E3a, default): at least **50 enemies a minute** at medium up to the
-  arena (`DensityTest`; the arena's jelly field does not count) and no empty screen over **3 s** of
-  real time (`PacingTest`, every difficulty). The draft's 71 units over ≈ 156 s (≈ 27 a minute) were
-  too few: the table keeps the set pieces (the introductions, the jelly fields, the V-wings, the
-  pincer, the ten-Skitter stream, the raft nests) and fills the gaps with Act 2 popcorn, a wave every
-  3–3.5 s from t=7: Skitter streams of 4 and snakes of 6, small Mote Swarms of 8 down a side lane or
-  across the lower band (cheap: 2 credits a mote, so the haul stays on the budget with a
-  `bounty_scale` of 0.6), and a few Needler lines. **254 enemies before the arena at medium, ≈ 98 a
-  minute**; two popcorn waves follow the Kraken in section 6. `PacingTest` with the autopilot and the
-  plan's fit: no pause over 3 s but the quiet end on every difficulty. No rear waves (front 98 % by
-  count, the pincer from the sides). The two "alone" introductions keep a quiet window: no other
-  wave enters for 3.5 s after the first jelly field (t=22) or for 3.5 s after the first raft nest
-  (t=70), and the popcorn before each leaves the screen first, as Level 10's "safe first sight".
+- **Density and pacing** (step WB, 2026-10-19, the user's P.e "yes, all" of round 40: the L10-style
+  waves steps CA and WA gave Levels 08–09 and 12–13): a wave about every **2.5 s** from t=5.5, the next
+  entering while the last is still on the screen: Skitter streams of 4 (1.25 s apart) and snakes of 5,
+  Mote Swarms of 8 down a side lane or across the lower band (2 credits a mote: the cheapest way to keep
+  the screen busy), Needler groups of 4 that live long enough to fire, and a few Stinger V-wings.
+  **313 enemies before the arena at medium (≈ 122 a minute; 61 waves of 5.4 on average)**; two popcorn
+  waves and a swarm follow the Kraken in section 6, then the release. Kept: the four jelly fields, the
+  raft nests, the pincer, the ten-Skitter stream (now 8), the t=84 V-wing's overdrive. The Act 2 rules
+  (`PacingTest`, `ActFloorTest`, flown with the plan's fit; the floor leaves out the boss fight, which
+  has its own tests): at medium **2.90 enemies on the screen, 14.4 enemy shots a minute, 1 pause over
+  2 s** (the release at the end), at hard 3.15, 15.1 and 2 (before: medium 1.87, 6.0 and 10; hard 2.40,
+  12.3 and 4). Hard is harder by its levers (HP, fire rate, formation sizes, the jellies' rings) with the
+  Needler groups one smaller and the Mote Swarms at 8 (`hard: {count}`: a swarm of 10 mostly escaped,
+  which cost the hard run its grade); the plan's fit keeps **all three ships afloat** on every
+  difficulty (3 slam hits, as before). No rear waves (front 99 % by count, the pincer from the sides).
+  The two "alone" introductions keep a quiet window: no other wave enters for 3.5 s after the first
+  jelly field (t=22) or for 3.5 s after the first raft nest (t=70), and the popcorn before each leaves
+  the screen first, as Level 10's "safe first sight". (The step E3a script: 254 enemies before the
+  arena, a wave every 3–3.5 s, `bounty_scale` 0.6.)
 - **The second raft nest** moved from t≈92 to t≈101 (with the t=100 jelly field, as the draft's
   notes say): at t≈92 a raft lay 0.8 s ahead of the sunken pod, where the torpedoes that should free
   the pod locked on to it (a torpedo picks the nearest `sub` or naval target in its cone, and the pod
@@ -202,54 +210,70 @@ Enemy definitions are linked per row; formation names come from the
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 7 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Over the convoy at its stations; the first targets |
-| 11.5 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 15 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
-| 18.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Gone before the first jelly field |
+| 5.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Over the convoy at its stations; the first targets |
+| 8 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 10.5 | 1 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 13 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | |
+| 15.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 18 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Gone before the first jelly field |
 | 22 | 2 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | **New.** Alone (no other wave until t=25.5); the ring fires only when the ship is within 96 px; about half of them start submerged |
 | 25.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
-| 29 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 32 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 36 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 40 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | Weaves above the jelly field |
-| 44 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 47 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
+| 28 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 30.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 33 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 35.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 38 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | Weaves above the jelly field |
+| 40.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 43 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 45.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 48 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
 | 50 | 2 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 8 | front | Denser field, drifting to the right; easy 6 |
-| 54 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 52.5 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 55.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Down the left lane as the huge shape slides under the convoy (Rook's line at t=55) |
-| 59 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
-| 62.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 58 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | |
+| 60.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 63 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
 | 66 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Gone before the first raft nest |
 | 73.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | After the lone raft nest's quiet window |
-| 77 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 80.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 76 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 78.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | |
+| 81 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 84 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive |
-| 87.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
-| 91 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Over the reef line before the sunken pod |
-| 94.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over the sunken pod's reef line |
+| 86.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
+| 89 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 91.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | Over the reef line before the sunken pod |
+| 94 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over the sunken pod's reef line |
+| 96.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 100 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 8 | front | Between the reef lines, with the second raft nest, drifting to the left; easy 6 |
-| 103.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 107 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
-| 110.5 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Over the first floating containers |
-| 114 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 116.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Over the floating containers |
+| 102.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 105 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
+| 107.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 110.5 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | Over the first floating containers |
+| 113 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 115 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over the floating containers |
 | 118 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s; Rook's flank bark |
-| 121.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 125 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 130.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Beside the burning freighter |
-| 134 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
-| 137.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 120.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 123 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 125.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 128 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 130.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Beside the burning freighter |
+| 133 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | |
+| 135.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
+| 138 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 140 | 4 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | Among the flotsam |
-| 143.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 146 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 10 | front (alternating edges) | |
+| 142.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 145 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | |
+| 148 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 150.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | |
-| 154 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 157 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | The last wave before Tiamat enters at the top |
+| 153 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 155.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 157.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | The last wave before Tiamat enters at the top |
 | 160 | 5 | mid-boss | [Harbour Kraken](../../../enemies/bosses/harbour-kraken/README.md) | 1 | front (anchored to Platform Tiamat, scrolls in with it) | At the halt (the bar, the sting, the boss checkpoint); releases a Driftjelly field of 6 in lanes 1 and 4 at its first surfacing |
-| 163 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over open water, after the Kraken |
+| 161.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Over open water, after the Kraken |
+| 164 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 166.5 | 6 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | front | The last wave |
 
-Totals: Skitter 110 · Mote Swarm 96 · Driftjelly 28 · Needler 19 · Stinger 4 · Harbour Kraken 1.
+Totals: Skitter 103 · Needler 68 · Mote Swarm 120 · Driftjelly 28 · Stinger 10 · Harbour Kraken 1.
 <!-- /data -->
 
 The arena's jelly field (6 Driftjellies in lanes 1 and 4) is released by the Kraken at its first
@@ -349,7 +373,8 @@ takes per line, default). **Rook's lines** carry `requires: escort`.
 | t=146.5 | Varga | "The contact is rising under the platform. Lancer, it's holding on to it." |
 | t=158 | Rook | "Here comes the big one." |
 | First lane telegraph (`first-telegraph`) | Okafor | "Watch the churning water. That's where the arms come down." |
-| First slam arm severed (`boss-part-destroyed`, the slam arms) | Rook | "Tell the cook we're having calamari." |
+| First telegraph on a cargo ship's lane (`first-ship-telegraph`, round 40) | Okafor | "The arms are rooted at the rim. Cut a root and that lane is safe!" |
+| First arm root cut (`boss-part-destroyed`, the roots) | Rook | "Tell the cook we're having calamari." |
 | A cargo ship's first hit (`ally-hit`) | Generic CDF (Atlas Control) | "The {ally} is hit! Taking on water, but holding!" |
 | A cargo ship sinks (`ally-lost`) | Generic CDF (Atlas Control) | "We've lost the {ally}. Crew in the water. Ruyter is picking them up." |
 | Kraken destroyed (`boss-destroyed`) | Varga | "It's letting go of the platform. It's sinking. Good." |
@@ -369,19 +394,28 @@ ships afloat). On easy a ship's second hit plays no line (only the first hit and
 Mid-boss: [Harbour Kraken](../../../enemies/bosses/harbour-kraken/README.md). Its phases, lanes,
 HP, attacks and bounty live in the spec. Arena notes for this level:
 
-- The scroll halts with Tiamat at the top of the play field; the four slam lanes are 120 px wide
-  (lane 1 at the left edge) and run the full height below the platform. The Kraken is **anchored**:
+- The scroll halts with Tiamat at the top edge (its centre 46 px above it, round 40); the Kraken's
+  four arm roots sit at the mantle's rim at y 210 over the lane centres; the four slam lanes are
+  120 px wide (lane 1 at the left edge) and run from the roots' lower edge (y 230) down. The Kraken is **anchored**:
   it scrolls in with the platform, invulnerable and without its bar, and engages at the halt
   ([schemas](../../../tech/architecture/README.md#data-file-schemas)).
-- The cargo ships hold lanes 1, 2 and 4 in the lower band; the left slam arm serves lanes 1–2 and
-  the right one lanes 3–4 (user decision E5 = a), so severing the left arm makes Halvorsen's and
-  Mbeki's lanes safe and the right arm Saint-Laurent's.
+- The cargo ships hold lanes 1, 2 and 4 in the lower band; each lane has its own rooted arm (round
+  40; until then E5 = a gave each of two arms a half), so cutting roots 1, 2 and 4 makes Halvorsen's,
+  Mbeki's and Saint-Laurent's lanes safe. The roots are always on the surface. Okafor teaches it at
+  the first telegraph on a ship's lane (`first-ship-telegraph`); Rook's calamari line now plays at
+  the first root cut.
 - Players with the optional Torpedo Pod can damage the submerged head in phase 1 (spec).
 - The arena's jelly field (6 jellies in lanes 1 and 4) is released at the Kraken's first surfacing.
 - The mini-boss sting plays at the halt, when the boss bar appears (default, as the other
   mid-bosses); the boss checkpoint is recorded there ([retry](../../../systems/retry/README.md)).
-- The fight is tuned to **≈ 60 s** at medium with the autopilot (E6 = a); its `par` comes from the
-  measured fight. In the level (`Level11Test`, the plan's fit with Rook, KrakenTest's five seeds,
+- **Round 40** (the reworked fight; step CB): in the level (`Level11Test`, five seeds) the first
+  pilot (the eyes while the head is up, else the nearest root) kills it in **54.1 s** at medium
+  (easy 37.2 s, hard 66.1 s), the root-first pilot in **54.7 s** (easy 37.9 s, hard 72.1 s); at medium
+  **both keep all three cargo ships on every seed** (15 of 15), on hard the root-first pilot keeps 14
+  of 15 (the secondary on 4 seeds) and the first pilot 11 of 15. The perfect autopilot takes 0–2 hits
+  a fight. The figures below are round 33's.
+- The fight is tuned to **≈ 60 s** at medium with the autopilot (E6 = a; round 40: ≈ 55 s, the par
+  55); its `par` comes from the measured fight. In the level (`Level11Test`, the plan's fit with Rook, KrakenTest's five seeds,
   the bar to the kill), the first pilot (eyes first): **62.5 s** mean at medium (56.4–79.0), 84.6 s
   on hard; the arm-first pilot: **55.5 s** at medium, 39.2 s on easy, 98.9 s on hard. Every run
   completes; on hard a pilot worn down in the arena takes several attempts (a retry restarts the
@@ -425,15 +459,15 @@ chosen round-03 files.
 
 Budget(11) = 700 × 1.07¹⁰ ≈ **1,377**, the typical haul's target
 ([economy](../../../systems/economy/README.md#per-level-budget)), not a perfect collection. The
-level's **`bounty_scale` of 0.6** puts the typical haul on it (1,414, +2.7 % with the Kraken's 216;
-`TypicalHaulTest`,
-±5 %); the first estimate was 0.6–0.8 (few air units, cheap naval ones), and the popcorn the pacing
-rule needs is kept cheap (Mote Swarms, Skitters) so the scale stays at its lower end.
+level's **`bounty_scale` of 0.43** puts the typical haul on it (1,345, −2.4 %; `TypicalHaulTest`,
+±5 %); it was 0.6 until the L10-style waves (step WB, 2026-10-19), which carry about half as many
+units again; the popcorn stays cheap (Mote Swarms, Skitters) so the scale does not fall further.
 **The data keeps Act 1 terms** (default): the stat-block bounties (Driftjelly 10, Reef Spitter 14,
 Skitter 5, Needler 12, Stinger 15), the sunken pod's crate 100, the secondary 100, the container
 salvage 10; the code pays each × the act factor 1.6 (bounties also × the scale). The
-**Kraken's bounty** (**216** in Act 1 terms: head 144, arms 36 each, arms : head = 1 : 4 per arm;
-raised from 186 on 2026-10-09) pays **208** at the scale of 0.6, **15 %** of the budget, inside the
+**Kraken's bounty** (**300** in Act 1 terms: head 200, the four roots 25 each since step WB, so each
+part pays what it did at the scale of 0.6; 216 before, head 144 and roots 18; raised from 186 on
+2026-10-09) pays **207** at the scale of 0.43, **15 %** of the budget, inside the
 mid-boss band of 10–20 % (`BalanceTest`, `tools/balance.py`); the boss counts at 100 % in the typical
 haul. Submerged jellies count at the ground rate (80 %) though a player without a torpedo kills them
 only surfaced: the autopilot with the plan's fit kills **12–18 of the 28** before the arena at
@@ -446,19 +480,20 @@ Kraken "300 absolute").
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 110 × 5 + Mote Swarm 96 × 2 + Driftjelly 28 × 10 + Needler 19 × 12 + Stinger 4 × 15 | 1,306 | 840 |
-| Ground targets: Reef Spitter 12 × 14 + floating containers 8 × small salvage 10 | 284 | 207 |
-| Mid-boss: Harbour Kraken (head 144 + left arm 36 + right arm 36) | 208 | 208 |
+| Kills: Skitter 103 × 5 + Needler 68 × 12 + Mote Swarm 120 × 2 + Driftjelly 28 × 10 + Stinger 10 × 15 | 1,269 | 801 |
+| Ground targets: Reef Spitter 12 × 14 + floating containers 8 × small salvage 10 | 248 | 178 |
+| Mid-boss: Harbour Kraken (head 200 + roots 4 × 25) | 206 | 206 |
 | Secret: sunken pod (hidden crate, 7% of budget) | 160 | 80 |
 | Secondary: convoy afloat (all 3 cargo ships afloat at the Harbour Kraken's death) | 160 | 80 |
-| **Total** (bounty scale 0.6) | **2,118** | **1,414** |
-| Budget(n) = the typical haul's target; typical +3 %, perfect 1.54 × budget | | 1,377 |
+| **Total** (bounty scale 0.43) | **2,043** | **1,345** |
+| Budget(n) = the typical haul's target; typical -2 %, perfect 1.48 × budget | | 1,377 |
 <!-- /data -->
 
 **Balance plan** (default): the plan's L11 visit buys **no** Torpedo Pod (it is optional); it
 refits **Rook's Mortar** for the rafts and the surfaced Kraken (`fit: [[escort, mortar]]`) and keeps
 the front upgrade ([balance plan](../../../player/balance-plan.yaml)). `BalanceTest` measures the
-Kraken's duration with its exposure windows (E6 = a: 57.4 s at the plan's DPS) and its share after
+Kraken's duration with its exposure windows (E6 = a: 57.4 s at the plan's DPS; round 40: 72.3 s, the
+open window at the eyes' ×2) and its share after
 the scale (15 %). On hard the plan's Mortar was refused for credits at the Level 09 visit (accepted
 there), so the refit is skipped and Rook keeps his Autocannon; `BalanceTest` accepts that refit too.
 
@@ -466,10 +501,11 @@ there), so the refit is skipped and Rook keeps his Autocannon; `BalanceTest` acc
 
 - **Easy**: cargo ships survive four slams (sink on the fifth; the convoy's `easy: {hp: 5}`); the t=50
   and t=100 jelly fields have 6 jellies each; the other waves by the formation lever.
-- **Hard**: cargo ships sink on the second slam (the convoy's `hard: {hp: 2}`); an extra Reef Spitter
+- **Hard**: the Needler groups of 4 fly as 3, the one at t=155.5 as 2, and the Mote Swarms stay 8
+  (`hard: {count}`, step WB: the formation lever would make them 5 and 10); cargo ships sink on the second slam (the convoy's `hard: {hp: 2}`); an extra Reef Spitter
   nest of 3 at t≈140 (x 50, 430, 46); the sunken pod needs six
   torpedo hits; the
-  Kraken's hard hooks come from its spec (lane telegraph 0.8 s, phase 3 slams three lanes); the
+  Kraken's hard hooks come from its spec (lane telegraph 1.1 s, round 40; phase 3 slams three lanes); the
   jellies' 12-bullet rings and 110 px trigger (their spec).
 
 ## Concept art
@@ -516,6 +552,10 @@ pair and for the lane telegraph and slam look. The round's captures of this leve
 - [x] Wave script: the set pieces with the popcorn, `field` jelly waves; at least 50 enemies a
       minute at medium up to the arena (`DensityTest`); no empty screen over 3 s of real time on
       every difficulty (`PacingTest`) (M5 part E, step E3a)
+- [x] L10-style waves (round 40 P.e): at medium and hard at most 3 empty stretches over 2 s
+      (`PacingTest`'s Act 2 rule), at medium ≥ 2.5 enemies on the screen and ≥ 10 enemy shots a
+      minute outside the boss fight (`ActFloorTest`), all three ships afloat with the plan's fit, the
+      typical haul on the budget (step WB, 2026-10-19)
 - [x] Ground targets: the raft nests (hard's extra nest) on the flanks, off the hulls
       (`Level11Test`, 2026-10-09), the eight floating containers (salvage, the last one's armour
       patch: a destructible `group`, step E3a), kills on water sinking (M5 part E, steps E2b and
@@ -545,6 +585,12 @@ pair and for the lane telegraph and slam look. The round's captures of this leve
 - [x] Easy/hard variations as in *Difficulty notes* (M5 part E, step E3a)
 - [x] Captures for concept round 33: the level, the Kraken fight, a torpedo run (M5 part E, step E5;
       the Kraken's retaken after the user's feedback, all accepted)
+- [x] Round 40 (the reworked Kraken, step CB): Platform Tiamat's piece at t 163.749 (its centre 46 px
+      above the top edge at the halt; `backdrop_l11.py --check`), `hold_clear` 552 → 676, the teaching
+      line on `first-ship-telegraph`, Rook's line on the first root cut; both pilots keep the convoy
+      at medium (`Level11Test`, `KrakenTest`)
+- [ ] Round 40: Okafor's teaching line voiced (a VOX step) and a capture of the reworked arena for the
+      user's review
 
 ## Open questions
 
@@ -662,3 +708,21 @@ pair and for the lane telegraph and slam look. The round's captures of this leve
   kept as built: "hard is supposed to be hard"), the decisions and every build choice (a)–(y)
   accepted; the texts approved, so `design: approved`; every Implementation item is ticked, so the
   implementation is `done`.
+- 2026-10-19 (step CB, round 40; the user approved proposal 3a and the r40 Kraken art on 2026-10-18):
+  the arena moved 124 px up (Tiamat's centre −46, the piece at t 163.749, `hold_clear` 676: the deck's
+  top edge 662 px above the bottom edge at the halt), the Kraken's four rooted arms, Okafor's line at
+  the first telegraph on a ship's lane ("The arms are rooted at the rim. Cut a root and that lane is
+  safe!"), Rook's calamari line at the first root cut. The Kraken's head re-measured to 3,400 for the
+  ≈ 55 s fight (pending the user's review; see its README). The perfect run 2,118 → 2,116 (the four
+  roots' bounty rounds 2 lower). L11 stays in `PacingTest.PENDING_ACT_TWO_RULE` (its waves next).
+- 2026-10-19 (step WB, round 40 P.e "yes, all", pending the user's review): the waves rewritten
+  L10-style (61 waves, 313 enemies before the arena at medium, a wave about every 2.5 s; Needler groups,
+  Mote Swarms and Skitter streams round the kept set pieces), so the level passes `PacingTest`'s Act 2
+  rule and `ActFloorTest`: medium 1.87 → 2.90 enemies on the screen, 6.0 → 14.4 shots a minute, 10 → 1
+  pauses over 2 s; hard 2.40 → 3.15, 12.3 → 15.1, 4 → 2; three ships afloat on every difficulty. The
+  Needler and the Stinger get the capped act HP factor here (`small_act_hp` levels 11 and 14 added, as
+  WA did for 12–13: with 4 HP the plan's fit killed them before they fired). `bounty_scale` 0.6 → 0.43
+  (typical 1,345, −2.4 %; perfect 2,043, 1.48 ×); the Kraken's bounty 216 → 300 (head 200, roots 25) so
+  its parts pay what they did and its share stays 15 % (`KrakenTest`). The floor leaves out the boss
+  fight (a set piece is not an enemy on the screen; the Kraken has its own tests). L11 leaves
+  `PacingTest.PENDING_ACT_TWO_RULE`.

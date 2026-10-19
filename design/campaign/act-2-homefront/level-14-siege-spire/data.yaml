@@ -9,13 +9,13 @@
 # sections' tiles.
 scroll_speed: 140     # the chosen Geneva scene's speed
 launch_seconds: 5     # flying in from the bottom edge with Rook in his slot, as in Levels 08-13
-bounty_scale: 0.76    # every bounty × 0.76: the typical haul on budget(14) (M5 part H, step H4)
+bounty_scale: 0.40    # every bounty × 0.40: the typical haul on budget(14) (M5 part H, step H4: 0.76; round 40: 0.81 with one Wraith a launch; step WB, 2026-10-19: 0.40 with the L10-style waves, the Siege Spire's bounty doubled to match, so a perfect run keeps 1.4 × the budget)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
   setting: Earth megacity
   layers: [ground, air, high-air]
   density: 4
-  traits: [anti-ground, piercing]   # `rear` helps against the Wraiths (the notes): three traits do not fit the intel panel
+  traits: [homing, anti-ground]   # round 40 (4c; was anti-ground, piercing): homing reaches every root; `rear` helps against the Wraiths (the notes): three traits do not fit the intel panel
   hazards: [root bursts]
   boss: Siege Spire
   objective: DESTROY THE SIEGE SPIRE   # the OBJECTIVE field from sensor L1
@@ -23,15 +23,15 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     none: Geneva Concord, Lancer. Something has grown here for two nights, on the ground and in the air.
     l1: "Mostly from ahead. Roots break the streets: watch for the dust."
     l2: Root guns, hive nodes, cloaked Wraiths. And the Spire.
-    l3: Bring anti-ground. When the crown opens, look behind you.
+    l3: Homing missiles reach every root.
   notes:
     Dominant layers: '`ground` (the roots, the root-burst growths, the hive nodes, Creepers, Ravagers), `air`, `high-air` (cloaked Wraiths under the canopy)'
     Attack directions: '{directions} (the approach by its waves; in the boss fight the maw''s Wraiths loop round to the rear)'
     Density: '{density}'
-    Recommended traits: '`anti-ground`, `piercing`; `rear` helps against the Wraiths (three traits do not fit the intel panel)'
+    Recommended traits: '`homing`, `anti-ground`; `rear` helps against the Wraiths (three traits do not fit the intel panel)'
     Hazards: Root bursts (telegraphed by dust, ground layer, no collision); low light under the canopy
     Boss / mid-boss: 'Act boss [Siege Spire](../../../enemies/bosses/siege-spire/README.md)'
-    Sensor-suite detail: '**none**: Geneva Concord, `ground` + `air` + `high-air`, front. **L1**: + the directions, density {density}, hazard "root bursts", the objective `{objective}`. **L2**: + Creeper, Ravager, Hive Node, Wraith, Needler, Skitter, Spine Turret, Polyp Mortar portraits; the boss''s name and silhouette (`siege-spire`). **L3**: + `anti-ground` and `piercing` highlighted; the timeline strip marks the root field (60–95 s) and the boss (108 s); 1 secret.'
+    Sensor-suite detail: '**none**: Geneva Concord, `ground` + `air` + `high-air`, front. **L1**: + the directions, density {density}, hazard "root bursts", the objective `{objective}`. **L2**: + Creeper, Ravager, Hive Node, Wraith, Needler, Skitter, Spine Turret, Polyp Mortar portraits; the boss''s name and silhouette (`siege-spire`). **L3**: + `homing` and `anti-ground` highlighted; the timeline strip marks the root field (60–95 s) and the boss (108 s); 1 secret.'
 
 sections:  # back to back from t = 0; tiles: the backdrop's tile sets (step H5: tools/art/backdrop_l14.py)
   - name: Lakefront
@@ -101,44 +101,59 @@ boss:  # the act boss: anchored at the Concord rotunda, it scrolls in with the g
   section: 5
   notes:
     from: front (anchored at the rotunda, scrolls in with the ground)
-    waves: 'At the halt (the warning, the bar and the boss checkpoint); phase 2: the maw launches 2 Wraiths every 8 s (hard 3) as ambushes that loop to the rear'
-    spawns: {wraith: 6}   # the maw's launches of a typical fight (the autopilot with the plan's fit at medium: 3 launches of 2), which the credit budget counts
+    waves: 'At the halt (the warning, the bar and the boss checkpoint); phase 2: the maw launches a Wraith every 8 s (hard 2) as ambushes that loop to the rear, at most 2 alive'
+    spawns: {wraith: 3}   # the maw's launches of a typical fight (the autopilot with the plan's fit at medium: 3 launches of 1 since round 40, 3 of 2 before), which the credit budget counts
 
-# Act 2 popcorn (Skitter streams, snakes and line abreasts, Needler V-wings and lines) round the set
-# pieces, a wave every 3-3.5 s (the act's minimum: at least 50 a minute; the pacing rule: no empty screen
-# over 3 s), from the front and the sides; the two rear ambushes as authored. The root bursts'
-# introduction keeps a quiet window: no wave enters from t=62 until t=67 (the first burst's dust at 63).
+# L10-style waves (the user's Act 2 playtest, 2026-10-18/19, P.e "yes, all"; as steps CA and WA did Levels
+# 08-09 and 12-13; step WB): a wave about every 2.5 s from t=5.5 to the arena, the next entering while the
+# last is still on the screen; Needler groups of 4-5 (12 HP here: `small_act_hp`) and Stinger columns of 3
+# between Skitter streams and snakes, and returning medium units that stay and fire: Creeper convoys of 5 up
+# the streets (four, two of them the draft's convoys of 3), Spore Bomber lines and Mantis pincers. Hard: the
+# Needler and Stinger groups one smaller and the late Spore Bomber lines 2 (`hard: {count}`), the units' and
+# the roots' hard hooks on top. Kept as they were: the Ravager pack out of the crater (t=72, the overdrive),
+# the two rear Wraith ambushes (t=82 with easy's Needler V-wing, t=104), the ground targets and the root
+# bursts. The root bursts' introduction keeps its quiet window: no wave enters from t=59 (a Spore Bomber
+# line that lingers to t≈62) until t=66 (the first burst's dust at 63; 67 before, which left the screen
+# empty for 2 s once the first growths died). Nothing enters in the fight or the daylight.
 waves:
-  - {t: 7, formation: stream, enemy: skitter, count: 3, from: front, edge: right, interval: 1.25, notes: Popcorn over the lake}
-  - {t: 10.5, formation: line abreast, enemy: skitter, count: 4, from: front, notes: Popcorn}
-  - {t: 14, formation: V-wing, enemy: needler, count: 3, from: front, notes: Over the bridges}
-  - {t: 16.5, formation: stream, enemy: skitter, count: 4, from: sides, edge: alternating, interval: 1.5, notes: Popcorn from the sides}
-  - {t: 21, formation: V-wing, enemy: needler, count: 5, from: front, notes: Over the rooftops}
-  - {t: 24.5, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 5.5, formation: stream, enemy: skitter, count: 6, from: front, edge: right, interval: 0.75, notes: Popcorn over the lake as the launch ends}
+  - {t: 8, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 10.5, formation: line abreast, enemy: skitter, count: 5, from: front}
+  - {t: 13, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}, notes: Over the bridges}
+  - {t: 15.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 18, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}, notes: Over the rooftops}
+  - {t: 20.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "Returning: one from each side, edge warnings; sweeps for {hold} s"}
+  - {t: 23, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 25.5, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}}
   - t: 28
     formation: convoy
     enemy: creeper
-    count: 3
+    count: 5
     from: front
     paths: [[[150, -40], [150, -150], [220, -240], [220, -800]]]   # along the Rue du Rhône
     notes: Along the Rue du Rhône
-  - {t: 31, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 34, formation: V-wing, enemy: needler, count: 4, from: front}
-  - {t: 37.5, formation: snake, enemy: skitter, count: 5, from: front, edge: left, notes: Weaves between the cathedral towers}
-  - {t: 41, formation: stream, enemy: skitter, count: 3, from: front, edge: right, interval: 1.25, notes: Over the cathedral square's turret nest}
-  - {t: 44.5, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 28.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 31, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 0.75}
+  - {t: 33.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front}
+  - {t: 36, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: "2 per side, hold {hold} s"}
+  - {t: 38.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: Weaves between the cathedral towers}
+  - {t: 40.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 3}, notes: Over the cathedral square's turret nest}
+  - {t: 43, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 45.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6}
   - t: 47.5
     formation: convoy
     enemy: creeper
-    count: 3
+    count: 5
     from: front
     paths: [[[330, -40], [330, -160], [260, -250], [260, -800]]]   # down from the cathedral hill
     notes: Down from the cathedral hill
-  - {t: 51, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
-  - {t: 54.5, formation: V-wing, enemy: needler, count: 3, from: front, notes: Over the Place du Molard}
-  - {t: 59, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.5, notes: Gone before the first root burst}
-  - {t: 67, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1.25, notes: After the first burst's quiet window}
-  - {t: 69.5, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 48, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 50.5, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}}
+  - {t: 53, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 55.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: Over the Place du Molard}
+  - {t: 58.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}, notes: The last before the first root burst; no wave enters from t=59 until t=66}
+  - {t: 66, formation: stream, enemy: skitter, count: 5, from: front, edge: left, interval: 1, notes: After the first burst's quiet window}
+  - {t: 68.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - t: 72
     formation: pack
     enemy: ravager
@@ -151,17 +166,35 @@ waves:
       - [[250, -30], [260, 100], [580, -50]]
       - [[180, -30], [190, 90], [540, -60]]   # hard's fifth
     notes: Out of a root-burst crater; the leader drops an overdrive
-  - {t: 76, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
-  - {t: 79.5, formation: V-wing, enemy: needler, count: 3, from: front}
+  - {t: 74.5, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}}
+  - t: 77
+    formation: convoy
+    enemy: creeper
+    count: 5
+    from: front
+    paths: [[[240, -40], [240, -150], [180, -250], [180, -800]]]   # up a street broken by the roots
+    notes: Up a street broken by the roots
+  - {t: 77, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 79.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}}
   - {t: 82, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy], notes: "Cloaked on `high-air` under the canopy; Rook's rear bark (not scripted); easy: a Needler V-wing from the front instead"}
   - {t: 82, formation: V-wing, enemy: needler, count: 3, from: front, skip: [medium, hard], notes: "Easy only: instead of the rear Wraiths"}
-  - {t: 85.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
-  - {t: 88.5, formation: line abreast, enemy: skitter, count: 4, from: front}
-  - {t: 91.5, formation: V-wing, enemy: needler, count: 3, from: front}
-  - {t: 95.5, formation: stream, enemy: skitter, count: 4, from: sides, edge: alternating, interval: 1.25, notes: Popcorn from the sides on the avenues}
-  - {t: 99, formation: V-wing, enemy: needler, count: 3, from: front}
-  - {t: 102, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 84.5, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 87, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, hard: {count: 2}}
+  - {t: 89.5, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}}
+  - {t: 92, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 94.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - t: 97
+    formation: convoy
+    enemy: creeper
+    count: 5
+    from: front
+    paths: [[[110, -40], [110, -150], [190, -260], [190, -800]]]   # up an avenue toward the rotunda
+    notes: Up an avenue toward the rotunda
+  - {t: 97, formation: stream, enemy: skitter, count: 5, from: sides, edge: alternating, interval: 1, notes: Popcorn from the sides on the avenues}
+  - {t: 99.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 102, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 3}}
   - {t: 104, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: The last wave before the Spire}
+  - {t: 105.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x
   - target: armoured car
@@ -234,6 +267,7 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 62, speaker: Okafor, line: "Roots surfacing in the streets! They're growing guns."}
   - {t: 96, speaker: The Choir, distorted: true, line: "[the Choir sings]"}
   - {t: 102, speaker: Varga, line: "It's singing to the whole city. Lancer, that's the Spire."}
+  - {t: 110, speaker: Rook, requires: escort, line: "Missiles on the roots, I'll keep the flyers off you.", notes: {trigger: "At the halt (round 40, 4c: the weapon hint)"}}
   - {event: boss-phase, phase: Maw, speaker: Varga, line: "The crown is opening. It's launching flyers, and they'll loop behind you.", notes: {trigger: "Phase 2 (`boss-phase` Maw)"}}
   - {event: boss-phase, phase: Free spire, speaker: Okafor, expression: fierce, line: "It's tearing loose! Stay on it, Lancer!", notes: {trigger: "Phase 3 (`boss-phase` Free spire)"}}
   - {event: boss-phase, phase: Free spire, speaker: Rook, requires: escort, line: "Roots and all. Somebody call a gardener.", notes: {trigger: "Phase 3, queued after Okafor's line"}}
@@ -259,7 +293,7 @@ difficulty: {}  # easy's Spine-Turret-only bursts and hard's growth delay are in
 briefing:
   pages:   # texts shortened to the 4 lines a page with an image holds (step H5; pending the user's review)
     - {speaker: Okafor, image: level-14-spire-over-geneva, line: "Lancer, Aegis Actual. Something grew out of Geneva Concord two nights ago: the Siege Spire, three kilometres tall and still growing. Your flight goes in first, along the lakefront and through the old town to the rotunda. Destroy it. Aegis Actual out."}
-    - {speaker: Varga, image: level-14-root-scan, line: "The Vrell fight as one, and I believe the Spire binds them. Its roots run under the old town and grow guns where they break the surface. Kill the roots and the trunk starves. Bring anti-ground and something that pierces. When the crown opens, look behind you."}
+    - {speaker: Varga, image: level-14-root-scan, line: "The Vrell fight as one, and I believe the Spire binds them. Its roots run under the old town and grow guns where they break the surface. Missiles find the root guns while you dodge; bombs crack them. When the crown opens, look behind you."}
   teaser: {speaker: Rook, line: "Roots first, flyers from behind, then the Spire. I'll take the six o'clock."}
 
 backdrop:

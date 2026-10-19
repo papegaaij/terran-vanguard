@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: chosen
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Enemies
@@ -393,12 +393,14 @@ the same; no elite variants. **`tiny` and `small` units keep their HP**, so the 
 popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels are unchanged.
 **Exception, the Needler and the Stinger** (the user's Act 2 playtest, 2026-10-18: "the missiles take
 out most enemies with a single shot"): the `small` units listed in the basis's `small_act_hp`
-([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, so far **Levels
-08–09** only: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08 and 15 at L09;
-the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small units keep their HP.
-From Level 10 on (the user's reference, "as it should be") they keep 4 and 6: applied there, the
-autopilot's Level 10 escort fell to 2 of 4 shuttles home at medium (D2 = a asks for 3) and Level 11's
-hard runs stopped completing, so extending the list is left to the user. The
+([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09
+and 11–14**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
+L12 and 18 at L13; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
+units keep their HP. Level 10 and Act 3 keep 4 and 6: applied there, the autopilot's Level 10
+escort fell to 2 of 4 shuttles home at medium (D2 = a asks for 3) and Level 11's hard runs stopped
+completing (with the old waves). Levels 11–14 took it with their L10-style waves (steps WA and WB,
+2026-10-19): without it the plan's fit kills the Needlers before their first shot (Level 12: 4 shots a
+minute, Level 14: 3, the floor asks for 10). The
 factor applies to every part's HP of a multi-part unit and every segment of a chain; it is applied
 with the difficulty's HP lever, one rounding (half to even, at least 1). Bounties are unchanged (the
 act factor already scales them). The time-to-kill check of `BalanceTest` covers these units at
@@ -792,3 +794,11 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   at 2 of 4 and Level 11's hard runs stopped completing, so Levels 10–17 keep the old HP until the
   user extends `levels` (pending the user's review). The brief's "Stinger 18 at L08" assumed the full
   ×3; the reference DPS ratio gives ×2.31 there (14 HP; 15 at L09).
+- 2026-10-19: `small_act_hp.levels` extended to Levels 12–13 with their L10-style waves (step WA, the user's
+  P.e "yes, all"): Needler 12, Stinger 17/18 HP there; without it Level 12 measured 1.7 enemies on the
+  screen and 4 shots a minute at medium (the Act 2 floor: 2.5 and 10), with it 2.7 and 18 (pending the
+  user's review).
+- 2026-10-19: `small_act_hp.levels` extended to Levels 11 and 14 with their L10-style waves (step WB, the
+  user's P.e "yes, all"): Needler 12 HP there; with it Level 14 measures 2.8 enemies on the screen and 23
+  shots a minute at medium, Level 11 2.9 and 14 (the floor: 2.5 and 10), and Level 11's hard run keeps
+  all three ships afloat (pending the user's review).

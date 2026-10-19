@@ -278,11 +278,14 @@ public record EnemyData(
      * M5 part E, an arena boss's arrival (design/enemies/bosses/harbour-kraken): no descent and no
      * hover; its centre stops {@code y} px below the top edge when the scroll halts in its arena. It
      * lies on the ground layer that far up the scroll from the halt, scrolls in with the ground
-     * (invulnerable, without its bar) and engages at the halt.
+     * (invulnerable, without its bar) and engages at the halt. Round 40 (the reworked Harbour Kraken): the
+     * centre may lie above the top edge (a negative {@code y}; Platform Tiamat at -46), as long as the boss's
+     * hit box reaches onto the play field.
      */
     public record Anchored(double y) {
         public Anchored {
-            Check.positive("y", y);
+            Check.that(
+                    Double.isFinite(y) && y < vanguard.sim.PlayField.HEIGHT, "y: on or above the play field, was " + y);
         }
     }
 
@@ -819,6 +822,10 @@ public record EnemyData(
      * @param only M7 part C: the difficulties it fires on (the Tendril Anchor's hard orbs); every one if not given
      * @param aura M7 part D, the {@code aura} pattern (design/enemies/air/choir-herald): the shield rings it sings onto
      *     the enemies near it; no bullet, speed, interval or count
+     * @param aimTurns round 40 (design/enemies/bosses/siege-spire, proposal 4a of the Act 2 playtest): a boss's
+     *     {@code aimed} attack fired by several parts takes turns to aim, one part at a time, each after a glow
+     *     (the tell); between its turns a part fires as the attack says ({@code aim: down}: straight down its
+     *     column); not with {@code rotate}
      */
     public record Attack(
             String pattern,
@@ -850,7 +857,8 @@ public record EnemyData(
             Optional<Link> link,
             Optional<Pores> pores,
             Optional<List<String>> only,
-            Optional<Aura> aura) {
+            Optional<Aura> aura,
+            Optional<AimTurns> aimTurns) {
         public Attack {
             Check.that(pattern.equals("aura") == aura.isPresent(), "an aura attack has its aura, the others none");
             Check.that(
@@ -960,12 +968,27 @@ public record EnemyData(
             count.ifPresent(c -> Check.positive("count", c));
             Check.that(pattern.equals("fan") || stagger.isEmpty(), "only a fan has a stagger");
             stagger.ifPresent(st -> Check.positive("stagger", st));
+            Check.that(
+                    aimTurns.isEmpty() || (pattern.equals("aimed") && !rotate.orElse(false)),
+                    "only an aimed attack that does not rotate takes aim turns");
         }
 
         /** M7 part C: whether it fires on {@code difficulty}: its {@code only}, every one if not given. */
         public boolean firesOn(Difficulty difficulty) {
             return only.map(names -> names.stream().map(Difficulty::of).anyMatch(difficulty::equals))
                     .orElse(true);
+        }
+    }
+
+    /**
+     * Round 40, an aimed boss attack's aim turns (design/enemies/bosses/siege-spire, proposal 4a): every {@code every}
+     * s the next living part in turn fires one shot at the ship, after glowing {@code glow} s (the tell).
+     */
+    public record AimTurns(double every, double glow) {
+        public AimTurns {
+            Check.positive("every", every);
+            Check.notNegative("glow", glow);
+            Check.that(glow < every, "an aim turn's glow is shorter than its every");
         }
     }
 
@@ -1208,7 +1231,12 @@ public record EnemyData(
      * a): {@code count} lanes {@code width} px wide from the play field's left edge, lane 1 first;
      * {@code arms}, each slam arm's part name with the lanes (1-based) it owns.
      */
-    public record Lanes(int count, double width, Optional<java.util.Map<String, List<Integer>>> arms) {
+    public record Lanes(
+            int count,
+            double width,
+            Optional<java.util.Map<String, List<Integer>>> arms,
+            Optional<Boolean> rooted,
+            Optional<Double> raised) {
         public Lanes {
             Check.positive("count", count);
             Check.positive("width", width);
@@ -1218,6 +1246,26 @@ public record EnemyData(
             arms.ifPresent(map -> map.values()
                     .forEach(owned -> owned.forEach(lane -> Check.that(
                             lane >= 1 && lane <= count, "arms: lane " + lane + " is not one of the " + count))));
+            boolean isRooted = rooted.orElse(false);
+            Check.that(raised.isEmpty() || isRooted, "only rooted arms take more damage while raised (raised)");
+            raised.ifPresent(r -> Check.positive("raised", r));
+            if (isRooted) {
+                java.util.Set<Integer> owned = new java.util.HashSet<>();
+                arms.orElse(java.util.Map.of())
+                        .forEach((part, lanes) -> Check.that(
+                                lanes.size() == 1 && owned.add(lanes.getFirst()),
+                                "a rooted arm owns one lane of its own: '" + part + "' owns " + lanes));
+            }
+        }
+
+        /** Lanes whose arms are not rooted (M5 part E). */
+        public Lanes(int count, double width, Optional<java.util.Map<String, List<Integer>>> arms) {
+            this(count, width, arms, Optional.empty(), Optional.empty());
+        }
+
+        /** Round 40: whether every arm is a rooted one-lane arm. */
+        public boolean isRooted() {
+            return rooted.orElse(false);
         }
     }
 
@@ -1227,16 +1275,26 @@ public record EnemyData(
      * impact's {@code damage} class on the ship and the escort in the lane (once per slam); the
      * {@code splash} bullets from along the arm; {@code choose: alternate} (the ship's lane and the
      * nearest convoy ship's in turn, the only rule); the hooks {@code telegraph} and {@code lanes} change
-     * the telegraph and the lanes a volley slams (one per arm when not given).
+     * the telegraph and the lanes a volley slams (one per arm when not given). Round 40: {@code volley}, the
+     * lanes a volley slams at medium (the rooted Kraken's 2: the ship's lane and a convoy ship's), one per arm
+     * when not given.
      */
     public record SlamData(
-            double telegraph, double rise, double awash, double sink, String damage, Splash splash, String choose) {
+            double telegraph,
+            double rise,
+            double awash,
+            double sink,
+            String damage,
+            Splash splash,
+            String choose,
+            Optional<Integer> volley) {
         public SlamData {
             Check.positive("telegraph", telegraph);
             Check.positive("rise", rise);
             Check.positive("awash", awash);
             Check.positive("sink", sink);
             Check.that(choose.equals("alternate"), "choose must be alternate, was '" + choose + "'");
+            volley.ifPresent(v -> Check.positive("volley", v));
         }
     }
 

@@ -104,7 +104,7 @@ class PartGLevelKeysTest {
                                 replace(text, "  primary: defend\n", "  primary: reach-end\n"),
                                 "  secondary: {integrity: 0.5, label: INTEGRITY, credits: 95, name: Keep the relay at 50 % or more}",
                                 "  secondary: {kill_ratio: 0.5, credits: 95}")
-                        .replaceAll("(?s)  defend:   # M5 part G.*?hard: \\{hp: 520\\}\n", ""),
+                        .replaceAll("(?s)  defend:   # M5 part G.*?hard: \\{hp: 560\\}\n", ""),
                 "a timed halt (speed 0 without an arena) needs a defend primary");
     }
 
@@ -183,7 +183,7 @@ class PartGLevelKeysTest {
 
     @Test
     void aSideNestCrossesTheEdgeInTheField() {
-        assertProblem(text -> replace(text, "[[66, 440], [66, 400]]", "[[66, 600], [66, 400]]"), "y=600");
+        assertProblem(text -> replace(text, "[[66, 480], [66, 440]]", "[[66, 600], [66, 440]]"), "y=600");
     }
 
     @Test

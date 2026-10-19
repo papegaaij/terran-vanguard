@@ -1882,6 +1882,12 @@ Use: a dome of Level 17 takes a hit (`ALLY_HIT`). Brief: thick glass under stres
 ### dome-break-r40-a — synthesized
 Use: a dome breaks (`ALLY_LOST`). Brief: a long glass cave-in: a crack, panes going in a cascade, air rushing out in a falling hiss, a steel frame groan. Why: a snap, ~400 glass grains (3–10 ms, thinning out), a hiss falling 6 → 1.2 kHz and a rough sawtooth set sinking 150 → 85 Hz. Edit: 3.6 s, −16 dB, ceiling −4 dBFS.
 
+### dome-break-r40-b — Freesound mix (redo after the user's verdict on a)
+Use: a dome breaks (`ALLY_LOST`). Brief: a cave-in / collapse: a low rumble, the structure coming down, glass and frame breaking; no bubbly or popping layer. Why: the user on a: "This doesn't sound as a cave in. It needs a rumble." Sources: [collapse.wav](https://freesound.org/people/metalfortress/sounds/611801/) (metalfortress, CC0) 0–2.4 s, 30 Hz high-pass; [Glass Shatter 2](https://freesound.org/people/Greg_Surr/sounds/554564/) (Greg_Surr, CC0) at 0.15 s; a synthesized 55 → 38 Hz sub thump. Edit: tools/concept/audio/sfx_r40_dome_break.py, 2.4 s, −16 dB, ceiling −4 dBFS.
+
+### dome-break-r40-c — Freesound mix (redo after the user's verdict on a)
+Use: as b. Brief: a heavier rubble crash over a deep ground rumble, panes smashing in it. Sources: [Building Collapse](https://freesound.org/people/craigsmith/sounds/845932/) (craigsmith, CC0) 0–2.4 s, low-passed at 2.2 kHz; [Earth's Crust Depressing](https://freesound.org/people/bevibeldesign/sounds/366089/) (bevibeldesign, CC0) 1.0–3.4 s, 180 Hz low-pass; [Glass Smash](https://freesound.org/people/dwswords/sounds/848312/) (dwswords, CC0) at 0.5 s. Edit: same script, 2.4 s, −16 dB, ceiling −4 dBFS.
+
 ### herald-song-r40-a — synthesized
 Use: the Choir Herald's song (with its `ring`). Brief: a short sung phrase in the Choir's colour, not words. Why: three sawtooth voices (unison, a fifth, an octave) through 800/1150/2900 Hz formants, F3 → A3 → E3 with 0.12 s slides and a slow vibrato. Edit: 1.9 s, −20 dB.
 

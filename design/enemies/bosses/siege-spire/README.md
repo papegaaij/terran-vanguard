@@ -1,10 +1,10 @@
 ---
 title: Siege Spire
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-12
+updated: 2026-10-19
 ---
 
 # Siege Spire
@@ -30,21 +30,23 @@ Values are balancing numbers at **medium**, in [data.yaml](data.yaml) with the b
 | Size | 440×440 px, hitbox 380×380 (the rooted body: the trunk ≈ 180 × 240 px with its lean, the roots ≈ 380 px across); the free spire 160×200 hitbox, drawn 244 px |
 | Parts | 4 root turret pods (`destroyable`, `ground`), 2 acid-mortar roots (`destroyable`, `ground`), the launch maw (`destroyable`, ×2, exposed in phase 2 only), the spire core (`vital`, ×2, exposed in phase 3, `air` after the lift), the trunk (`armoured`: shots glance, no HP, not in the bar; it stays at the anchor as the stump) |
 | Orientation | `32 angles` (the turret pods; the free spire 16 pre-rendered headings over its six-fold symmetry) |
-| HP | turret pod 690 each (2,760); mortar root 800 each (1,600); maw 2,880 (×2); core 4,950 (×2); the spec's ×1.8, tuned to the measured fight (H10 = a; round 34, P2: the roots ×1.04 again with the thinner phase-1 fire); total 12190 (easy 9142 / hard 15847, from the global multipliers) |
+| HP | turret pod 460 each (1,840); mortar root 530 each (1,060); maw 2,880 (×2); core 4,950 (×2); the spec's ×1.8, tuned to the measured fight (H10 = a; round 34, P2: the roots ×1.04 again with the thinner phase-1 fire; round 40: the roots −33 %, so a Pulse-only fight ends in time); total 10730 (easy 8048 / hard 13949, from the global multipliers) |
 | Armour / shield | trunk armoured (shots glance off it; it stays as the stump); the roots and the maw are ground parts (all weapons, `anti-ground` ×2); the maw ×2 and the core ×2; invulnerable during the lift |
 | Speed | 0 px/s (anchored); the free spire sways ±100 px, 50 px/s at most |
 | Movement | anchored at the Concord rotunda: it scrolls in with the ground (invulnerable, without its bar) and engages when the scroll halts, the anchor at y 196; phase 3 lifts it off the anchor in 3 s (invulnerable, eased) to x 240, y 120, where it sways; the stump stays (see *Phases*) |
-| Attack | see *Phases*: phase 1: each turret pod fires a violet orb (150 px/s, `medium` = 6) every 1.6 s, the four staggered: the inner pods (2 and 3) `aimed` at the ship, the outer ones (1 and 4) straight down the screen (`aim: down`); the two mortar roots `lob` acid every 8 s each, staggered: a lime marker on the ship's position 1 s ahead, a ship inside the 40 px impact circle takes `heavy` = 10, then a ring of 10 bullets (110 px/s, `small` = 4); phase 2: the maw spits a 9-way `fan` (spread 80°, 140 px/s, `medium` = 6) every 2.5 s; phase 3: the free spire's `laser-sweep` from the core, a beam 300 px long sweeping a 120° arc over 1.2 s, centred on the ship's bearing when the 0.6 s telegraph starts (the six crimson emitters charge), `laser` = 8 once per sweep, every 5 s; between the sweeps a 14-bullet `ring` (120 px/s, `small` = 4) |
+| Attack | see *Phases*: phase 1: each turret pod fires a violet orb (150 px/s, `medium` = 6) straight down its column every 1.6 s, the four staggered (`aim: down`; safe lanes between the columns); every 2 s the next living pod in turn glows 0.6 s and fires an `aimed` orb at the ship instead; the two mortar roots `lob` acid every 8 s each, staggered: a lime marker on the ship's position 1 s ahead, a ship inside the 40 px impact circle takes `heavy` = 10, then a ring of 10 bullets (110 px/s, `small` = 4); phase 2: the maw spits a 7-way `fan` (spread 80°, 140 px/s, `medium` = 6) every 3 s; phase 3: the free spire's `laser-sweep` from the core, a beam 300 px long sweeping a 120° arc over 1.2 s, centred on the ship's bearing when the 0.6 s telegraph starts (the six crimson emitters charge), `laser` = 8 once per sweep, every 5 s; between the sweeps a 14-bullet `ring` (120 px/s, `small` = 4) |
 | Formations | solo set piece (the maw launches Wraiths in phase 2) |
 | Weak points | lime maw (×2), lime spire core (×2) (the maw in phase 2, the core in phase 3) |
-| Effective traits | `anti-ground`, `rear`, `piercing` |
-| Credits | 372 (score 3720 × chain) (pods and mortar roots 31 each, maw 62, core 124: the spec's ratios; × 1.6 × Level 14's `bounty_scale` 0.76 it pays 452, 26.8 % of budget(14) = 1,687) |
+| Effective traits | `homing`, `anti-ground`, `rear` |
+| Credits | 768 (score 7680 × chain) (pods and mortar roots 64 each, maw 128, core 256: the spec's ratios; × 1.6 × Level 14's `bounty_scale` 0.40 it pays 492, 29.2 % of budget(14) = 1,687; 482 at 0.81 until step WB, 452 at 0.76 until round 40) |
 | Death | `huge`: the spire cracks open, chained explosions over 3 s, the canopy above withers and light breaks through (the `boss-destroyed` event starts the level's daylight); credit shower |
 | First level / used in | L14; L14 only (an echo version in the L49 boss rush) |
-| Difficulty hooks | hard: the lob's ring of 12, the sweep 180°, the maw launches 3 Wraiths |
+| Difficulty hooks | hard: the lob's ring of 12, the sweep 180°, the maw launches 2 Wraiths |
 <!-- /data -->
 
 **The measured fight (H10 = a, `SiegeSpireTest`).** The autopilot with the balance plan's Level 14 fit (the front at L4, two Micro-missile Pods at L2, the Tail Gun at L2, Armour Mk III, Rook's Autocannon) on a fixture arena, five seeds: with the spec's HP (6,690) the fight lasted ≈ 76 s at medium (the roots ≈ 42 s, the maw ≈ 12 s, the free spire ≈ 21 s): the plan's DPS on the roots (`anti-ground` from Rook) and on the ×2 maw and core is well above the paper's 0.6 × 80. Every HP was scaled ×1.8 (pod 370 → 665, mortar root 430 → 775, maw 1,600 → 2,880, core 2,750 → 4,950; total 12,040): **medium 126.1–131.7 s, mean 129.5 s** (the roots ≈ 72 s, the maw ≈ 21 s with three launches of two Wraiths, the lift and the free spire ≈ 36 s; remeasured in step H6 after pod 1's offset was fixed: it was 132.4 s with the pod off its root), every seed inside the act-boss window of 90–180 s; **the par is 130 s**. Easy (×0.75 HP): 93–98 s, every seed won. Hard (×1.3 HP, the ring of 12, the 180° sweep, 3 Wraiths a launch): 190–205 s on the four seeds won, one seed lost (the autopilot is worn down in the roots phase); the hard fight is longer than the window because the autopilot lines up over every launched Wraith. The paper estimate at 0.6 × the reference DPS (the ease, the lift, the delays and the parts' HP at their multipliers, `BalanceTest`, `tools/balance.py`): 174 s, inside the window. In Level 14 itself (seed 2185) the fight lasted 97 s on easy, 136 s on medium and 204 s on hard, all won on the first attempt. **Round 34, P2 (the kinder Spire):** with the outer pods firing straight down and the lobs every 8 s the roots fell faster (the autopilot dodges less), so the roots' HP went up ×1.04 (pods 690, mortar roots 800; total 12,190): **medium mean 130.4 s**, the par stays 130 s; easy mean 96.1 s, hard 182–195 s, mean 190.1 s, all five seeds won on both.
+
+**Round 40 (proposals 4a–4c of the Act 2 playtest, approved 2026-10-18; step CB).** The user: "There's no way to evade that much blasts. Also, what weapons should I use? My L4 pulse cannon takes ages to break a single root." All four pods fire straight down their columns (x 79 / 181 / 299 / 401 at the halt) with safe lanes between, and **one pod at a time aims**: every 2.0 s the next living pod in turn glows 0.6 s and fires one orb at the ship (`aim_turns`); the maw's fan 9 → **7** orbs every 2.5 → **3.0 s**; **one Wraith a launch** (hard 2), at most 2 alive; the roots **690 / 800 → 460 / 530** (total 10,730); the weapon hint is homing (Level 14's traits `homing`, `anti-ground`; Varga and Rook say it). Measured (`SiegeSpireTest`, five seeds, medium): the plan's fit **102.9–104.1 s, mean 103.4 s** (the roots ≈ 48 s, the maw ≈ 20 s with three launches, the free spire ≈ 35 s), **2.5 / 0 / 0 hits a minute** by phase (round 34's tree: 5.1 / 8.3 / 0; the version the user played: 16.4 / 8.0 / 0); **the par 130 → 103 s**. The Pulse Cannon L4 with Rook's Autocannon and nothing else: **148–152 s** on four seeds (≈ 4.5 / 2–4 / 0–1 hits a minute), worn down in phase 2 on the fifth (no rear gun against the Wraiths; before: 211 s for the roots alone, ≈ 347 s in all). The user's own fit (the Pulse Cannon L4, a Micro-missile Pod L2, the Bomb Rack L3, the Side Splitter): **120–121 s**, at most 4.3 hits a minute. Easy mean 78.3 s, hard 143.7–147.3 s (mean 145.6 s), every seed won on both. The paper estimate: 147 s, inside the window.
 
 ### Phases
 
@@ -52,8 +54,8 @@ The boss is one anchored arena boss with one HP bar and no slam lanes (the model
 
 | Phase | Ends at | Behaviour |
 |---|---|---|
-| 1 — Roots | roots 4 360 → 0 | Turret pods fire violet orbs (150 px/s, `medium` = 6) every 1.6 s each, staggered: the inner pods (2 and 3) `aimed` at the ship, the outer ones (1 and 4) straight down the screen (round 34, P2); mortar roots **`lob`** acid every 8 s (round 34, P2: was 4 s), staggered between the two (marker 1.0 s on the ship's position at the throw, then the flight and a 10-bullet ring at the impact; hard: a ring of 12). The roots are `ground` parts: all weapons hit them, `anti-ground` ×2. |
-| 2 — Maw | maw 2 880 → 0 | The claw crown opens (the maw is exposed from the phase's start, a lime ×2 weak spot) and the maw launches **2 Wraiths every 8 s** (hard 3) and spits a 9-bullet `fan` (spread 80°, 140 px/s) every 2.5 s. The launched Wraiths are ambushes (H3 = a, below). Destroyed roots stay dead. The maw's death drops an overdrive. |
+| 1 — Roots | roots 2 900 → 0 | Turret pods fire violet orbs (150 px/s, `medium` = 6) every 1.6 s each, staggered, **straight down their columns** (round 40; round 34's P2 did it for the outer pods 1 and 4), with safe lanes between; every 2.0 s the next living pod in turn (1, 2, 3, 4, …) **glows 0.6 s** and fires one orb `aimed` at the ship instead (its aim turn, round 40); mortar roots **`lob`** acid every 8 s (round 34, P2: was 4 s), staggered between the two (marker 1.0 s on the ship's position at the throw, then the flight and a 10-bullet ring at the impact; hard: a ring of 12). The roots are `ground` parts: all weapons hit them, `anti-ground` ×2. |
+| 2 — Maw | maw 2 880 → 0 | The claw crown opens (the maw is exposed from the phase's start, a lime ×2 weak spot) and the maw launches **a Wraith every 8 s** (hard 2; 2 and 3 until round 40) and spits a 7-bullet `fan` (spread 80°, 140 px/s) every 3.0 s (9 every 2.5 s until round 40). The launched Wraiths are ambushes (H3 = a, below). Destroyed roots stay dead. The maw's death drops an overdrive. |
 | 3 — Free spire | core 4 950 → 0 | A **lift** (H4 = a): the whole boss lifts off its anchor to a station in the upper half over ≈ 3 s (invulnerable, as moves are), its core turning to `air` (a ship touching it takes contact damage, `huge` 25) and the pose to the free spire; the tear-free shockwave is an event (a ring of dust and debris drawn by the game, no collision) and drops one armour patch at the start. The stump and the debris stay at the anchor as scenery (drawn from the boss's state, not as a backdrop piece). The spire then drifts across the upper half at 50 px/s (sway ±100 px) firing a telegraphed **`sweep`** (below) every 5 s and `ring`s of 14 in between; the core is a lime ×2 weak spot. |
 
 #### Attacks added for this boss (H5 = a)
@@ -63,17 +65,17 @@ The boss is one anchored arena boss with one HP bar and no slam lanes (the model
 
 #### The maw's Wraiths (H3 = a)
 
-A launched [Wraith](../../air/wraith/README.md) starts **cloaked** at the maw's centre, swoops down one of the launch lanes past the ship (spread evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three; C7 in round 34), re-enters from the **bottom edge** after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10. For each re-entry the sim adds the **3 s bottom-edge warning** (computed from the launch tick, deterministic) and counts the bottom edge as a rear wave for Rook (Trail formation, his rear bark). **At most 4 Wraiths from the maw are alive at once.** They are counted as the level's enemies and pay the normal Wraith bounty (see below).
+A launched [Wraith](../../air/wraith/README.md) starts **cloaked** at the maw's centre, swoops down one of the launch lanes past the ship (spread evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three; C7 in round 34), re-enters from the **bottom edge** after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10. For each re-entry the sim adds the **3 s bottom-edge warning** (computed from the launch tick, deterministic) and counts the bottom edge as a rear wave for Rook (Trail formation, his rear bark). **At most 2 Wraiths from the maw are alive at once** (4 until round 40). They are counted as the level's enemies and pay the normal Wraith bounty (see below).
 
 ### Arena
 
-Geneva Concord under the Vrell canopy ([Level 14](../../../campaign/act-2-homefront/level-14-siege-spire/README.md)). The length is **measured** (H10 = a, see *Stat block*): the autopilot's fights on the balance plan's fit over five seeds, the HP tuned (not the attacks, ×1.8 on every part) to a mean of 129.5 s at medium (remeasured in step H6), every seed in the act-boss window of 90–180 s; the par is the measured mean, 130 s. The boss bar `SIEGE SPIRE` (the long bar) appears at the arena start, t=108, together with the warning, the sting and the checkpoint (none on hard). The arena section runs 108–250 s (the level clock halts at its end while the Spire lives, a kill jumps it there); the level continues with a 12 s daylight section after the kill.
+Geneva Concord under the Vrell canopy ([Level 14](../../../campaign/act-2-homefront/level-14-siege-spire/README.md)). The length is **measured** (H10 = a, see *Stat block*): the autopilot's fights on the balance plan's fit over five seeds, the HP tuned (not the attacks, ×1.8 on every part) to a mean of 129.5 s at medium (remeasured in step H6), every seed in the act-boss window of 90–180 s; the par is the measured mean, 130 s (round 40: **103 s** with the lighter roots). The boss bar `SIEGE SPIRE` (the long bar) appears at the arena start, t=108, together with the warning, the sting and the checkpoint (none on hard). The arena section runs 108–250 s (the level clock halts at its end while the Spire lives, a kill jumps it there); the level continues with a 12 s daylight section after the kill.
 
 ### Behaviour
 
 - The boss teaches the Act 2 lessons in order: ground targets (roots), rear awareness (Wraiths), then dodging in the open.
 - Wraiths launched here use their own spec (rust with blue-violet veins) and pay the normal
-  [Wraith](../../air/wraith/README.md) bounty (30 in Act 1 terms, paid × 1.6 × the level's `bounty_scale`) on top of the boss bounty; levels budget them at the expected count (4 launches of 2; see
+  [Wraith](../../air/wraith/README.md) bounty (30 in Act 1 terms, paid × 1.6 × the level's `bounty_scale`) on top of the boss bounty; levels budget them at the expected count (3 launches of 1 at medium since round 40, 3 of 2 before; see
   [economy](../../../systems/economy/README.md#sources)).
 
 ## Concept art
@@ -94,10 +96,13 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
 - [x] The maw (exposed in phase 2), its 9-bullet fan, and the Wraith launches as ambush plans with the dynamic bottom-edge warning, Rook's Trail and at most 4 alive (M5 part H, step H3)
 - [x] Tear-free lift: invulnerable ≈ 3 s, core to `air`, shockwave event, armour patch, the stump; the airborne drift, `ring`s of 14 and the `sweep` (hard 180°) (M5 part H, step H3)
 - [x] `data.yaml` with the stat block loaded and the global difficulty multipliers applied (M5 part H, step H4)
-- [x] The fight measured over five seeds (mean 129.5 s, every seed 90–180 s), the HP tuned, the par (130 s) and the bounty (452 as paid, 26.8 %) set; `SiegeSpireTest` (M5 part H, step H4)
+- [x] The fight measured over five seeds (mean 129.5 s, every seed 90–180 s), the HP tuned, the par (130 s) and the bounty (452 as paid, 26.8 %) set; `SiegeSpireTest` (M5 part H, step H4; step WB: 768 in Act 1 terms, 492 as paid, 29.2 %)
 - [x] Death effect, bounty and score per this spec; the canopy's death handing over to the daylight (M5 part H, steps H4 and H6: the death frames over the 3 s chain with the chained bursts, the screen flash and the credit shower; `SpireLooks`, `Level14LooksTest`, `LevelScreenPartHTest`)
 - [x] The presentation in the game (M5 part H, step H6, `SpireLooks`): the roots alive and withered, the trunk with the crown opening as the maw is exposed, the turret pods turned toward the ship, the mortar pods opening for their lobs, the husks, the hit flashes, the maw's bloom at each launch, the lift frames gliding from the trunk to the station over the stump, the tear-free shockwave (a dust ring and shards), the free spire turning, its emitters charging through the sweep's telegraph, the telegraph line and the beam, its shadow
 - [x] Production art: sprites, the death chain, the stump, the shockwave debris, the intel silhouette (M5 part H, step H5; the death redone in step K3; approved as final in round 34)
+- [x] Round 40 (4a), the simulation and the looks: the aim turns (`BossSpec.AimTurns`: one pod at a time, its glow, the `AIM_TELL` event; step BS1), the pod's aim glow and charge sound (step KG: `SpireAimLooksTest`)
+- [x] Round 40 (4a–4c), the data: every pod `aim: down` with `aim_turns: {every: 2.0, glow: 0.6}`, the maw's fan 7 every 3.0 s, one Wraith a launch (hard 2) and at most 2 alive, the roots 460 / 530, traits `homing`, `anti-ground`, `rear`; measured at most 5 hits a minute in every phase, the Pulse Cannon alone inside 180 s, the par 103 s (step CB: `SiegeSpireTest`, `PartHUnitsDataTest`, `Level14Test`)
+- [ ] Round 40 (4c): the voices of Varga's new briefing page and Rook's line at the halt rendered (a VOX step; `VoiceFilesTest`)
 
 ## Decisions
 
@@ -171,3 +176,14 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
   evenly; the spec above now says so), C8 (the bounty at 26.8 %), C9 (the HP ×1.8, now ×1.04 on the
   roots after P2) and H1–H10 accepted, P2 as above. `design: approved`, `art: final`, `implementation:
   done`.
+- 2026-10-19 (step CB, round 40, approved proposals 4a–4c of 2026-10-18): the data as listed in
+  *Stat block*'s round 40 paragraph and the Implementation items. Judgement calls, pending the user's
+  review: hard's Wraiths 3 → 2 a launch (with medium's 2 → 1); the stat block's traits keep `rear`
+  (the Wraiths) and swap `piercing` for `homing`; the par 103 s from the measured mean (4b's estimate
+  was ≈ 105 s); the roots kept at 4b's 460 / 530, since the Pulse Cannon alone ends the fight in
+  148–152 s (the brief's ≤ 180 s).
+- 2026-10-19 (step WB, pending the user's review): the bounty **372 → 768** in Act 1 terms (pods and
+  mortar roots 31 → 64, maw 62 → 128, core 124 → 256, the spec's ratios kept), as Level 14's L10-style
+  waves took its `bounty_scale` from 0.81 to 0.40: every part pays what it did, 492 = **29.2 %** of
+  budget(14) (`SiegeSpireTest`, `BalanceTest`'s 20–40 %); the fight is unchanged. The score per kill
+  follows the bounty (× 10).

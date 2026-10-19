@@ -99,7 +99,7 @@ class SiegeDataTest {
         // the allies with HP are unchanged
         AlliesData.Ally relay = CONTENT.allies().allies().get("nansen-relay");
         assertFalse(relay.countsHits());
-        assertEquals(240, relay.hp());
+        assertEquals(260, relay.hp());
         assertEquals("nansen-relay", relay.spriteName("nansen-relay"));
         assertEquals(0, relay.damagedBy().hitsPerBomb());
     }

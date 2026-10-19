@@ -45,11 +45,14 @@ final class IntelPanel {
     private static final int SPEAKER_PORTRAIT = 72;
 
     private static final int TEXT_X = INNER + SPEAKER_PORTRAIT + 10;
+    /** The fields' rows, a line apart, when they fit above Varga's quote. */
     private static final int STEP = 14;
     /** The label font's lines, the teaser's and Varga's quote's. */
     static final int LINE = 12;
     /** The top of the quote's last line: this far above the panel's bottom edge. */
     static final int QUOTE_FOOT = 10;
+    /** The label font's ink below a line's top, with its shadow. */
+    private static final int LABEL_INK = 10;
 
     private static final int VALUE_CHARS = (RIGHT - VALUE_X) / 8;
     /** The characters of a line of Varga's quote, across the panel. */
@@ -127,8 +130,69 @@ final class IntelPanel {
         return INNER + BODY_CELL * name.length() + NAME_GAP <= RIGHT - CHIP_WIDTH;
     }
 
-    /** The intel on a level with its teaser, laid out on {@code canvas}. */
+    /**
+     * The intel on a level with its teaser, laid out on {@code canvas}. The fields' rows run {@link #STEP}
+     * apart; on a level whose fields would run into Varga's quote at the foot (Level 14's eight enemy types
+     * at sensor L2 after the Act 2 wave rework), the rows close up a pixel at a time to {@link #LINE}, and
+     * if that is not enough either, the enemy names end on "+N MORE" in as many lines as fit.
+     */
     static void layout(Canvas canvas, Intel level, BriefingPage teaser, String levelKey) {
+        List<String> lines = quote(level);
+        int quote = Y + HEIGHT - QUOTE_FOOT - LINE * (lines.size() - 1);
+        fields(canvas, level, teaser, levelKey, rows(level, teaser, levelKey, quote));
+        for (String part : lines) {
+            canvas.quote(part, INNER, quote);
+            quote += LINE;
+        }
+    }
+
+    /** The fields' row spacing, and the most lines of enemy names. */
+    private record Rows(int step, int names) {}
+
+    /** Draws nothing: the fields are measured by where their last row lands. */
+    private static final Canvas MEASURE = new Canvas() {
+        @Override
+        public void text(String text, Color colour, int x, int y, boolean body) {}
+
+        @Override
+        public void portrait(BriefingPage teaser, int x, int y, int size) {}
+
+        @Override
+        public void picture(String name, int x, int y, int size) {}
+
+        @Override
+        public void chip(String text, int x, int y, int width, int height) {}
+
+        @Override
+        public void bar(Color colour, int x, int y, int width, int height) {}
+
+        @Override
+        public void inset(int x, int y, int width, int height) {}
+
+        @Override
+        public void fill(Color colour, float x, int y, float width, int height) {}
+    };
+
+    /** The roomiest rows whose last one ends above the quote's top line at {@code quote}. */
+    private static Rows rows(Intel level, BriefingPage teaser, String levelKey, int quote) {
+        for (int step = STEP; step >= LINE; step--) {
+            Rows rows = new Rows(step, Integer.MAX_VALUE);
+            if (fields(MEASURE, level, teaser, levelKey, rows) <= quote) {
+                return rows;
+            }
+        }
+        for (int names = enemyNames(level.enemies(), Integer.MAX_VALUE).size() - 1; names > 1; names--) {
+            Rows rows = new Rows(LINE, names);
+            if (fields(MEASURE, level, teaser, levelKey, rows) <= quote) {
+                return rows;
+            }
+        }
+        return new Rows(LINE, 1);
+    }
+
+    /** The teaser, the level's name and the fields; returns the bottom of the last row's ink. */
+    private static int fields(Canvas canvas, Intel level, BriefingPage teaser, String levelKey, Rows rows) {
+        int step = rows.step();
         int portraitY = Y + 26;
         canvas.portrait(teaser, INNER, portraitY, SPEAKER_PORTRAIT);
         canvas.text(Speaker.plate(teaser.speaker()), Glass.AMBER, TEXT_X, portraitY, false);
@@ -153,20 +217,22 @@ final class IntelPanel {
                 Field.SETTING,
                 "SETTING",
                 List.of(Names.of(level.profile().setting())),
-                y);
+                y,
+                step);
         y = field(
                 canvas,
                 level,
                 Field.LAYERS,
                 "LAYERS",
                 List.of(joined(level.profile().layers())),
-                y);
+                y,
+                step);
         if (level.shows(Field.DIRECTIONS)) {
             List<String> shares = level.directions().entrySet().stream()
                     .sorted(java.util.Map.Entry.comparingByKey())
                     .map(entry -> direction(entry.getKey()) + " " + entry.getValue() + " %")
                     .toList();
-            y = field(canvas, level, Field.DIRECTIONS, "FROM", packed(shares), y);
+            y = field(canvas, level, Field.DIRECTIONS, "FROM", packed(shares), y, step);
         } else {
             y = field(
                     canvas,
@@ -174,16 +240,18 @@ final class IntelPanel {
                     Field.MAIN_DIRECTION,
                     "FROM",
                     List.of(direction(level.mainDirection()) + " (MAIN)"),
-                    y);
+                    y,
+                    step);
         }
-        y = density(canvas, level, y);
+        y = density(canvas, level, y, step);
         y = field(
                 canvas,
                 level,
                 Field.HAZARDS,
                 "HAZARDS",
                 List.of(joinedOrNone(level.profile().hazards())),
-                y);
+                y,
+                step);
         if (level.profile().objective().isPresent()) {
             y = field(
                     canvas,
@@ -191,7 +259,8 @@ final class IntelPanel {
                     Field.OBJECTIVE,
                     "OBJECTIVE",
                     List.of(Names.of(level.profile().objective().get())),
-                    y);
+                    y,
+                    step);
         }
         y = field(
                 canvas,
@@ -199,24 +268,20 @@ final class IntelPanel {
                 Field.SPECIALS,
                 "SPECIALS",
                 List.of(level.profile().specials().map(Names::of).orElse("NO LIMIT")),
-                y);
-        y = boss(canvas, level, y);
-        y = enemies(canvas, level, y);
-        y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y);
+                y,
+                step);
+        y = boss(canvas, level, y, step);
+        y = enemies(canvas, level, y, step, rows.names());
+        y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y, step);
         y = field(
                 canvas,
                 level,
                 Field.TRAITS,
                 "RECOMMEND",
                 List.of(joined(level.profile().traits())),
-                y);
-        waves(canvas, level, y);
-        List<String> lines = quote(level);
-        int quote = Y + HEIGHT - QUOTE_FOOT - LINE * (lines.size() - 1);
-        for (String part : lines) {
-            canvas.quote(part, INNER, quote);
-            quote += LINE;
-        }
+                y,
+                step);
+        return waves(canvas, level, y, step) - step + LABEL_INK;
     }
 
     /** Varga's line for the intel's sensor level, in quotes, wrapped to the panel's width. */
@@ -224,31 +289,52 @@ final class IntelPanel {
         return Words.wrap(Names.of("\"" + intel.varga() + "\""), QUOTE_CHARS);
     }
 
-    private static int field(Canvas canvas, Intel intel, Field field, String label, List<String> values, int y) {
+    private static int field(
+            Canvas canvas, Intel intel, Field field, String label, List<String> values, int y, int step) {
         canvas.text(label, Glass.LABEL, INNER, y, false);
         if (!intel.shows(field)) {
             canvas.text("-- SENSOR L" + field.sensor(), Glass.DIM, VALUE_X, y, false);
-            return y + STEP;
+            return y + step;
         }
         for (String value : values) {
             canvas.text(value, Glass.CYAN, VALUE_X, y, false);
-            y += STEP;
+            y += step;
         }
         return y;
     }
 
-    /** The enemy types' sensor portraits in a row, their names below. */
-    private static int enemies(Canvas canvas, Intel intel, int y) {
-        List<String> names = Words.wrap(Names.of(String.join(", ", intel.enemies())), VALUE_CHARS);
+    /** The enemy types' sensor portraits in a row, their names below in at most {@code lines} lines. */
+    private static int enemies(Canvas canvas, Intel intel, int y, int step, int lines) {
+        List<String> names = enemyNames(intel.enemies(), lines);
         if (!intel.shows(Field.ENEMIES)) {
-            return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y);
+            return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y, step);
         }
         int x = VALUE_X;
         for (String enemy : intel.enemies().subList(0, Math.min(intel.enemies().size(), PORTRAITS))) {
             canvas.picture("intel/" + Portraits.slug(enemy), x, y, PORTRAIT);
             x += PORTRAIT + PICTURE_GAP;
         }
-        return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y + PORTRAIT + PICTURE_GAP);
+        return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y + PORTRAIT + PICTURE_GAP, step);
+    }
+
+    /**
+     * The enemy types' names wrapped to the value column in at most {@code lines} lines: as many as fit
+     * and "+N MORE" for the rest when they do not all fit.
+     */
+    private static List<String> enemyNames(List<String> enemies, int lines) {
+        List<String> all = Words.wrap(Names.of(String.join(", ", enemies)), VALUE_CHARS);
+        if (all.size() <= lines) {
+            return all;
+        }
+        for (int shown = enemies.size() - 1; shown > 0; shown--) {
+            String more = "+" + (enemies.size() - shown) + " MORE";
+            List<String> capped =
+                    Words.wrap(Names.of(String.join(", ", enemies.subList(0, shown)) + ", " + more), VALUE_CHARS);
+            if (capped.size() <= lines) {
+                return capped;
+            }
+        }
+        return List.of("+" + enemies.size() + " TYPES");
     }
 
     /**
@@ -257,9 +343,9 @@ final class IntelPanel {
      * boss row's {@code NONE} where the level has no boss. Below sensor L2 the row names the level
      * that shows it, and nothing tells of a contact.
      */
-    private static int boss(Canvas canvas, Intel intel, int y) {
+    private static int boss(Canvas canvas, Intel intel, int y, int step) {
         String boss = intel.profile().boss();
-        int next = field(canvas, intel, Field.BOSS, "BOSS", List.of(Names.of(boss)), y);
+        int next = field(canvas, intel, Field.BOSS, "BOSS", List.of(Names.of(boss)), y, step);
         if (!intel.shows(Field.BOSS)) {
             return next;
         }
@@ -277,7 +363,7 @@ final class IntelPanel {
             int line = next;
             for (String text : Words.wrap(Names.of(contact.label()), CONTACT_CHARS)) {
                 canvas.text(text, Glass.CYAN, VALUE_X, line, false);
-                line += STEP;
+                line += step;
             }
             top = Math.max(line, top + SILHOUETTE + PICTURE_GAP);
             next = top;
@@ -299,9 +385,9 @@ final class IntelPanel {
         return lines;
     }
 
-    private static int density(Canvas canvas, Intel intel, int y) {
+    private static int density(Canvas canvas, Intel intel, int y, int step) {
         if (!intel.shows(Field.DENSITY)) {
-            return field(canvas, intel, Field.DENSITY, "DENSITY", List.of(), y);
+            return field(canvas, intel, Field.DENSITY, "DENSITY", List.of(), y, step);
         }
         canvas.text("DENSITY", Glass.LABEL, INNER, y, false);
         int density = intel.profile().density();
@@ -309,12 +395,12 @@ final class IntelPanel {
             canvas.bar(i < density ? Glass.AMBER : Glass.UNLIT, VALUE_X + i * 14, y, 12, 8);
         }
         canvas.text(density + "/5", Glass.CYAN, VALUE_X + 76, y, false);
-        return y + STEP;
+        return y + step;
     }
 
-    private static int waves(Canvas canvas, Intel intel, int y) {
+    private static int waves(Canvas canvas, Intel intel, int y, int step) {
         if (!intel.shows(Field.WAVES)) {
-            return field(canvas, intel, Field.WAVES, "WAVES", List.of(), y);
+            return field(canvas, intel, Field.WAVES, "WAVES", List.of(), y, step);
         }
         canvas.text("WAVES", Glass.LABEL, INNER, y, false);
         int width = RIGHT - VALUE_X;
@@ -351,7 +437,7 @@ final class IntelPanel {
                 canvas.fill(Glass.GREEN, (float) (VALUE_X + width * mark.from() / intel.seconds()), y + 3, 2, 6);
             }
         }
-        return y + STEP;
+        return y + step;
     }
 
     private static String direction(Entry entry) {

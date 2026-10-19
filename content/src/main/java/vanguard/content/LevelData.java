@@ -1766,6 +1766,12 @@ public record LevelData(
         /** M5 part E: the attempt's first lane telegraph of the level's arena boss (once). */
         @JsonProperty("first-telegraph")
         FIRST_TELEGRAPH,
+        /**
+         * Round 40 (the reworked Harbour Kraken): the attempt's first lane telegraph of the level's arena boss on a
+         * lane holding a convoy ship a slam hurts (the teaching line: cut that lane's root); once.
+         */
+        @JsonProperty("first-ship-telegraph")
+        FIRST_SHIP_TELEGRAPH,
         /** M5 part E: the first of the level boss's {@code parts} the cue names shot off (once). */
         @JsonProperty("boss-part-destroyed")
         BOSS_PART_DESTROYED,

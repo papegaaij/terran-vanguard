@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../campaign]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Music
@@ -49,7 +49,7 @@ everywhere.
 | 26 | Game over | Hard-mode game over | Somber, main motif in minor | 0:20 | P3 | [game-over-r08-a](concept/game-over-r08-a.ogg) (chosen) |
 | 27 | Ending | Campaign ending | Main motif, orchestral | 3:00 | P3 | — |
 | 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
-| 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-a](concept/debrief-theme-r40-a.ogg) "Homeward" / [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (proposed, round 40) |
+| 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -88,7 +88,11 @@ Which level uses A or B is set per level in the [campaign](../../campaign/README
   fade-out tail that only players ignoring the loop points reach.
 - Level → boss: boss warning stinger replaces the level track (crossfade 0.5 s), then the boss
   track starts on the downbeat.
-- Level → debrief: 1 s fade, then the mission complete jingle.
+- Level → debrief: 1 s fade, then the mission complete jingle; track 29 "Stand Down" comes in on the
+  jingle's downbeat, 5.714 s after it starts (three bars at 126 BPM, while its last chord rings out),
+  and loops under the debrief and its act summary page. A debrief without the jingle (Level 13's
+  played inside the level) starts track 29 at once. Leaving the debrief fades it out over 0.5 s before
+  the next screen and its music (the hangar's, the mission select's, or the act outro's fanfare).
 - Death: level music cuts instantly (with a short low-pass sweep), then the mission failed sting.
 
 ### Intensity layers
@@ -454,16 +458,16 @@ Concept round 40 (step MUS-D, 2026-10-18) — two proposals for the new track 29
 under the debrief after the mission complete jingle (23): intro + loop + 2-bar fade tail, sample-exact
 `LOOPSTART` / `LOOPLENGTH`, −19 LUFS, both in D major so they follow the jingle's last chord; generator
 `tools/concept/audio/music_r40.py`, which also renders a 15 s "jingle → loop" listening aid for each (the
-jingle, then the loop from 5.714 s, three jingle bars at 126 BPM, both at their mastered levels). Not wired
-into the game: that follows the user's pick. Prompts:
+jingle, then the loop from 5.714 s, three jingle bars at 126 BPM, both at their mastered levels). The user
+picked b "Stand Down" (M.a = b), wired into the game on 2026-10-19 (see Implementation). Prompts:
 [concept/prompts.md](concept/prompts.md#round-40--track-29-debrief-two-proposals).
 
 | File | What | Status |
 |---|---|---|
-| [concept/debrief-theme-r40-a.ogg](concept/debrief-theme-r40-a.ogg) | Track 29 a "Homeward", 63 BPM (half the jingle's tempo), D major, 77.1 s (loop 8.57 s + 60.95 s): slow string and choir pads, a soft harp in eighths, low strings; humanity's motif slow on a solo horn, a solo string counter-melody in the B half; no beat | proposed (round 40) |
-| [concept/debrief-theme-r40-b.ogg](concept/debrief-theme-r40-b.ogg) | Track 29 b "Stand Down", 84 BPM, D major, 80.7 s (loop 6.43 s + 68.57 s): laid-back electronic, maj9 pads pumping on a soft kick, eighth-note pulses through a ping-pong delay, sub bass, brushes and shaker; the motif hinted on a glass lead, in full once in the drumless C section | proposed (round 40) |
-| [concept/debrief-join-r40-a.ogg](concept/debrief-join-r40-a.ogg) | Listening aid: the mission complete jingle → "Homeward", 15 s | proposed (round 40) |
-| [concept/debrief-join-r40-b.ogg](concept/debrief-join-r40-b.ogg) | Listening aid: the mission complete jingle → "Stand Down", 15 s | proposed (round 40) |
+| [concept/rejected/debrief-theme-r40-a.ogg](concept/rejected/debrief-theme-r40-a.ogg) | Track 29 a "Homeward", 63 BPM (half the jingle's tempo), D major, 77.1 s (loop 8.57 s + 60.95 s): slow string and choir pads, a soft harp in eighths, low strings; humanity's motif slow on a solo horn, a solo string counter-melody in the B half; no beat | rejected — round 40: b ("Stand Down") picked |
+| [concept/debrief-theme-r40-b.ogg](concept/debrief-theme-r40-b.ogg) | Track 29 b "Stand Down", 84 BPM, D major, 80.7 s (loop 6.43 s + 68.57 s): laid-back electronic, maj9 pads pumping on a soft kick, eighth-note pulses through a ping-pong delay, sub bass, brushes and shaker; the motif hinted on a glass lead, in full once in the drumless C section; `assets/music/debrief-theme.ogg` byte for byte | chosen (round 40, M.a = b) |
+| [concept/rejected/debrief-join-r40-a.ogg](concept/rejected/debrief-join-r40-a.ogg) | Listening aid: the mission complete jingle → "Homeward", 15 s | rejected — round 40: b picked |
+| [concept/debrief-join-r40-b.ogg](concept/debrief-join-r40-b.ogg) | Listening aid: the mission complete jingle → "Stand Down", 15 s | chosen (round 40, M.a = b) |
 
 ## Implementation
 
@@ -503,6 +507,12 @@ into the game: that follows the user's pick. Prompts:
       `Level12SoundsTest`) — built: `LevelMusic.sectionLevels`, the level moving linearly to a
       section's over 1 s as it starts, multiplied with the start level, the ducks and the fades; a
       restart starts at the first section's
+- [x] Track 29 "Stand Down" under the debrief (round 40 M.a = b, 2026-10-19): in the track map (29 →
+      `debrief-theme`, imported by `importPlaceholders`) and the sound test; from the jingle's
+      downbeat at 5.714 s (a sample-exact lead-in of silence on its stream), at once without the
+      jingle, looping with its `LOOPSTART` / `LOOPLENGTH` at the jingle's level (0.8) under the tally
+      and the act summary page, faded out over 0.5 s as the player leaves (`DebriefMusic`, `LeadIn`,
+      `DebriefScreen`; `DebriefMusicTest`)
 - [ ] Act 3 (approved in round 36, M7): track 8 "Red Dust Run" at full
       length with its base stem in the track map (part B); track 9, the B theme, with its base, full
       and motif stems (part E, Level 18); the `motif` list and the third, lockstep motif stream
@@ -710,3 +720,9 @@ into the game: that follows the user's pick. Prompts:
   rendered from the same pass ahead of the README's order, approved as it is (M.2): it stays in
   `assets/music/`. `art` stays `chosen` (the other Act 3 tracks are to come).
 - 2026-10-18 (user request; step MUS-D, **pending the user's review in round 40**): the debrief gets a music loop of its own after the 6 s mission complete jingle: new track 29 "Debrief" (P2), quiet (−19 LUFS), D major so it follows the jingle, not "Dry Dock" again. Two proposals: a "Homeward" (synth-orchestral, the motif on a solo horn) and b "Stand Down" (laid-back electronic, the motif hinted), each with a jingle → loop listening aid; the game wiring follows the pick.
+- 2026-10-19 (user, round 40 M.a = b): track 29 "Debrief" is b "Stand Down"; a "Homeward" and its
+  listening aid moved to `concept/rejected/`. Wired the same day (step MW, **pending the user's review**
+  for the judgement calls): the theme comes in on the jingle's downbeat (5.714 s), plays at the jingle's
+  level (0.8, so the handover sounds as the listening aid), carries on under the act summary page (which
+  had no music of its own after the jingle), and fades out over 0.5 s when the player leaves, the next
+  screen waiting for the fade; the act outro keeps its act-complete fanfare.

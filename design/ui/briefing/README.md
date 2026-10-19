@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Briefing screen
@@ -96,7 +96,7 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/briefing-images-final-r36-a.png](concept/briefing-images-final-r36-a.png) | Review sheet, M5 part H (round 36): Level 14's two 672×240 images (`level-14-spire-over-geneva`: Geneva Concord seen from the lake, the Jet d'Eau, the old town's roofs and Saint-Pierre's towers, the Siege Spire's trunk rising three kilometres out of the Concord rotunda into the canopy spread over the old town, the route along the lakefront and through the old town to the rotunda, Lancer and Rook going in first; `level-14-root-scan`: Varga's scan of the root grid, the final backdrop's Root Field through the hologram with its roots traced and the burst points marked, one burst in detail (the cracking paving's 1 s of dust, the root with its Spine Turret and Polyp Mortar), anti-ground for the roots, and a Wraith coming from behind once the crown opens) | chosen |
 | [concept/briefing-images-final-r38-a.png](concept/briefing-images-final-r38-a.png) | Review sheet, M7 part B (round 38): the Act 3 intro's four and Level 15's two 672×240 images (`act-3-arrival`: Mars in the transport's forward view with the colonies' beacons, most dark, Ares Landing lit; `act-3-mars-front`: the Mars front display, Hellas glowing, the spread north, the colonies marked; `act-3-colonists`: a dome-ring gun pit at dusk; `act-3-drop`: the drop bay over Mars; `level-15-descent-route`: the entry-corridor profile from the transport over Olympus Mons, the escarpment and the dunes to the rail line; `level-15-burrower-scan`: the Burrower scan) | chosen (round 38, F.8: approved as final) |
 | [concept/briefing-images-final-r39-a.png](concept/briefing-images-final-r39-a.png) | Review sheet, M7 part C (round 39): Level 16's two 672×240 images (`level-16-canyon-route`: the Valles on a CDF plot, the route's six sections, Ares Landing, an unlabelled black square on the north rim (Helix); `level-16-tendril-scan`: a gate with a beam burning through the tendril, a pair broken by an anchor kill, a Threadcrawler at the wall's foot) | chosen (round 39, F.6: approved as final) |
-| [concept/briefing-images-final-r40-a.png](concept/briefing-images-final-r40-a.png) | Level 17's briefing images (`level-17-ares-domes`, `level-17-choir-herald`; `tools/art/briefing_images.py`) | proposed (round 40) |
+| [concept/briefing-images-final-r40-a.png](concept/briefing-images-final-r40-a.png) | Level 17's briefing images (`level-17-ares-domes`, `level-17-choir-herald`; `tools/art/briefing_images.py`) | chosen (round 40, F.g: approved as final) |
 
 ## Implementation
 
@@ -288,3 +288,4 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 - 2026-10-18 (user decision, Act 2 playtest): every mission starts with its briefing, then the
   hangar: Continue, Load game and the mission select replay now open the briefing first (see the
   [screen flow](../README.md#screen-flow)).
+- 2026-10-19 (user, round 40, F.g): Level 17's two briefing images approved as final.

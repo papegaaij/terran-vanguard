@@ -115,17 +115,17 @@ class Level11Test {
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_377, Math.round(budget), "the typical haul's target, 700 × 1.07¹⁰");
         assertEquals(
-                110 * 5 + 96 * 2 + 28 * 10 + 19 * 12 + 4 * 15, kills, "Skitter, Mote, Driftjelly, Needler, Stinger");
+                103 * 5 + 120 * 2 + 28 * 10 + 68 * 12 + 10 * 15, kills, "Skitter, Mote, Driftjelly, Needler, Stinger");
         assertEquals(12 * 14, rafts, "twelve Reef Spitters at medium");
         assertEquals(8 * 10, salvage, "eight floating containers' small salvage");
-        assertEquals(216, kraken, "the Harbour Kraken: head 144 and two arms of 36");
+        assertEquals(300, kraken, "the Harbour Kraken: head 200 and four roots of 25");
         assertEquals(100, crates, "the sunken pod in Act 1 terms (pays 160)");
         assertEquals(100, secondary, "the convoy afloat in Act 1 terms (pays 160)");
         System.out.printf(
                 "Level 11 budget (Act 1 terms): kills %d, rafts %d, salvage %d, Kraken %d, crate %d, secondary %d:"
                         + " %d (budget %.0f)%n",
                 kills, rafts, salvage, kraken, crates, secondary, total, budget);
-        assertEquals(1_974, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
+        assertEquals(2_749, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
     }
 
     @Test
@@ -138,8 +138,8 @@ class Level11Test {
             from.merge(wave.entry(), wave.count(), Integer::sum);
         }
 
-        assertEquals(Map.of("driftjelly", 28, "mote-swarm", 96, "needler", 19, "skitter", 110, "stinger", 4), waves);
-        assertEquals(Map.of(WaveSpec.Entry.FRONT, 253, WaveSpec.Entry.SIDES, 4), from, "no rear waves");
+        assertEquals(Map.of("driftjelly", 28, "mote-swarm", 120, "needler", 68, "skitter", 103, "stinger", 10), waves);
+        assertEquals(Map.of(WaveSpec.Entry.FRONT, 325, WaveSpec.Entry.SIDES, 4), from, "no rear waves");
         assertEquals(
                 List.of(20.0, 65.0, 110.0, 160.0, 161.0, 176.0),
                 level.sections().stream().map(LevelScript.Section::end).toList());
@@ -189,13 +189,16 @@ class Level11Test {
         LevelData data = content.level(LEVEL);
         assertEquals(data.scrollAt(160) + Sortie.easeDistance(140), sortie.groundScroll(), 1e-6, "the halt scroll");
         assertEquals(
-                PlayField.HEIGHT - 78, piece.renderY(1), 1e-6, "Tiamat's centre 78 px below the top edge (round 33)");
+                PlayField.HEIGHT + 46,
+                piece.renderY(1),
+                1e-6,
+                "Tiamat's centre 46 px above the top edge (round 40; round 33: 78 px below it)");
         BackdropData.PlacedPiece platform = data.backdrop().placed().stream()
                 .filter(placed -> placed.piece().equals("platform-tiamat"))
                 .findFirst()
                 .orElseThrow();
         double screenY = data.pieceCentre(platform) - sortie.groundScroll();
-        assertEquals(PlayField.HEIGHT - 78, screenY, 0.1, "the backdrop's Platform Tiamat lies under the Kraken");
+        assertEquals(PlayField.HEIGHT + 46, screenY, 0.1, "the backdrop's Platform Tiamat lies under the Kraken");
         assertEquals(240, platform.x(), 1e-9);
     }
 
@@ -240,7 +243,7 @@ class Level11Test {
                         .hp(),
                 1e-9,
                 "hard: on its second");
-        assertEquals(552, naval.holdClear(), "after the Kraken they hold clear while Tiamat's deck passes");
+        assertEquals(676, naval.holdClear(), "after the Kraken they hold clear while Tiamat's deck passes (round 40)");
         assertTrue(naval.units().get(1).holds(), "Mbeki drops back off the bottom edge from lane 2");
         assertEquals(
                 5,
@@ -475,8 +478,8 @@ class Level11Test {
 
     /**
      * The radio script: the timed lines in time order (README Radio chatter, retimed to the 1 s rule),
-     * Rook's lines only while he flies, the arena's events (the first telegraph, the first slam arm
-     * severed, a ship's first hit and its sinking with its name as {@code {ally}}, the Kraken's death,
+     * Rook's lines only while he flies, the arena's events (the first telegraph, round 40's first telegraph
+     * on a ship's lane and the first arm root cut, a ship's first hit and its sinking with its name as {@code {ally}}, the Kraken's death,
      * the secondary), two level-end lines by the ships afloat and no mission-failed line.
      */
     @Test
@@ -497,6 +500,7 @@ class Level11Test {
         assertEquals(
                 Map.of(
                         LevelScript.CueTrigger.FIRST_TELEGRAPH, 1,
+                        LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH, 1,
                         LevelScript.CueTrigger.BOSS_PART_DESTROYED, 1,
                         LevelScript.CueTrigger.ALLY_HIT, 1,
                         LevelScript.CueTrigger.ALLY_LOST, 1,
@@ -723,8 +727,8 @@ class Level11Test {
     private static final double DECK_WIDTH = 208;
 
     private static final double DECK_HEIGHT = 152;
-    /** Its centre above the bottom edge at the halt (the Kraken's anchor), px. */
-    private static final double DECK_AT_HALT = PlayField.HEIGHT - 78;
+    /** Its centre above the bottom edge at the halt (the Kraken's anchor; round 40: 46 px above the top edge), px. */
+    private static final double DECK_AT_HALT = PlayField.HEIGHT + 46;
 
     /**
      * After the Kraken the ships hold clear of Platform Tiamat (2026-10-09): while its deck scrolls

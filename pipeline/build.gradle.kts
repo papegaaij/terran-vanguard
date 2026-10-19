@@ -240,6 +240,7 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         "boss-warning-r08-a.ogg=boss-warning.ogg",
         "choir-descends-full-r08-a.ogg=choir-descends.ogg",
         "act-complete-r08-a.ogg=act-complete.ogg",
+        "debrief-theme-r40-b.ogg=debrief-theme.ogg",
     )
 }
 

@@ -61,7 +61,8 @@ its id and checked against its size; headings and frames as <id>_<n>.png; wall t
   arcology                   ground tower: the Ndidi Arcology at the level's end, creep on its roof
   wall-low/-mid/-tall, wall-burnt, wall-neon-mid/-tall, wall-arcology   wall textures
   smoke-column-a/b/c         low-air: smoke plumes (static)
-  aircar-sedan_0..15, aircar-van_0..15, gunship_0..15   low-air traffic (D2 = a: scenery), round 30
+  aircar-sedan_0..15, aircar-van_0..15, gunship_0..15   traffic (D2 = a: scenery; the cars on ground, the
+                             gunships on low-air), round 30
                              variant A "wedge cars" (user choice): the wedge sedan, the box van and
                              the CDF gunship at 16 headings (l08_traffic.py, from the concept models
                              of tools/concept/props_r30.py, imported unchanged)
@@ -70,7 +71,9 @@ its id and checked against its size; headings and frames as <id>_<n>.png; wall t
                              review: its heading sets, composites of its streams as the game draws
                              them, and the motion (--review, or --traffic-review alone)
 
-**Traffic** (sections 1-3): one piece per craft, so one paint per piece (the sedan slate, the van
+**Traffic** (sections 1-3; the playtest of 2026-10-18: the cars are street traffic on `ground`, placed
+before every other ground piece so they pass under the cross highways and the towers lean over them;
+the gunships stay on `low-air`): one piece per craft, so one paint per piece (the sedan slate, the van
 beige); every moving piece counts once against the motion budget (two at a time), so the van lane
 carries sedans while the CDF gunship pair crosses section 2, and section 3's thinning stream
 alternates sedans and vans. Each stream is a placement with a path (its heading picks the frame:
@@ -1758,9 +1761,10 @@ PIECES = {      # id -> (layer, (w, h), extra spec, mid-size, note)
     "smoke-column-a": ("low-air", (150, 200), {}, False, "smoke plumes over the fires (static)"),
     "smoke-column-b": ("low-air", (130, 180), {}, False, None),
     "smoke-column-c": ("low-air", (170, 210), {}, False, None),
-    "aircar-sedan": ("low-air", (24, 24), {"headings": 16}, False,
-                     "civilian wedge sedan (round 30 a), slate; 16 headings, 0 nose up, clockwise"),
-    "aircar-van": ("low-air", (28, 28), {"headings": 16}, False, "civilian box van (round 30 a), beige"),
+    "aircar-sedan": ("ground", (24, 24), {"headings": 16}, False,
+                     "civilian wedge sedan (round 30 a), slate; 16 headings, 0 nose up, clockwise; street traffic "
+                     "on the ground (playtest 2026-10-18: under the cross highways)"),
+    "aircar-van": ("ground", (28, 28), {"headings": 16}, False, "civilian box van (round 30 a), beige; street traffic"),
     "gunship": ("low-air", (44, 44), {"headings": 16}, False, "CDF gunship (round 30 a), twin ducted fans"),
 }
 for _id, (_x, _cy, _w, _h, _units) in STRUCTURES.items():
@@ -2022,7 +2026,7 @@ def stream(t0, t1, x, down, every, own, kind="aircar-sedan", legs=None, times=No
     (or ``times`` copies). ``legs`` [(heading index of 16, s), ...] instead flies those headings at
     ``own`` px/s, the last one until it has left the screen (a turning or slanting craft)."""
     w, h = PIECES[kind][1]
-    f = FACTORS["low-air"]
+    f = FACTORS[PIECES[kind][0]]                 # the cars on the ground (street traffic), the gunships on low-air
     centre = scroll_at(t0) * f + SCREEN + h / 2 + 1
     t_place = t_at((centre - MID) / f)
     count = times or max(1, int((t1 - t0) / every) + 1)
@@ -2071,6 +2075,13 @@ def split_lane(t0, t1, x, every, own, kinds_at):
     return out
 
 
+# Section 3's first sedan enters once it cannot catch the seam's cross highway before that leaves the
+# bottom edge (a ground car is faster than the ground: one that reached it would drive out from under it
+# onto section 2's blocks): the highway's top edge leaves at its t + (540 - (270 - 46)) / 140 = 69.19,
+# where the car's bottom edge (250 px/s on the screen) must still be above the bottom edge.
+SECTION3_TRAFFIC = 67.2
+
+
 def traffic_placements():
     """D2 = a: the traffic is scenery. Section 1: CDF gunships heading home (south and south-west,
     down the screen). Section 2: sedans fleeing south over the west avenue's fast lane, vans in its
@@ -2092,9 +2103,9 @@ def traffic_placements():
         stream(7.5, 7.5, 380, True, 1, 60, "gunship", legs=[(8, 0.8), (9, 0.8), (10, 1.0)]),
         stream(12.6, 60.0, x1 - 6, True, 0.9, 110),
         *split_lane(13.2, 60.0, x1 + 6, 1.7, 110, van_or_sedan),
-        stream(14.0, 58.0, x2 + 6, False, 2.6, 60),
+        stream(14.0, 58.0, x2 - 8, False, 2.6, 60),      # west of the landing pad's roof, which reaches x 252
         *pair,
-        stream(66.0, 101.0, 216, True, 4.8, 110),
+        stream(SECTION3_TRAFFIC, 101.0, 216, True, 4.8, 110),
         stream(68.4, 104.0, 216, True, 4.8, 110, "aircar-van"),
     ]
     out[0] = out[0][:4] + ("1-3: traffic on low-air (D2 = a: scenery, shots pass through), round 30 variant A",)
@@ -2136,11 +2147,13 @@ def all_pieces(pl=None):
 
 
 def ordered_placements(pl):
-    """Draw order on a layer: later over earlier. Flat structures first (cross highways over the
-    tiles), then the walk roofs, the burnt blocks, the fires, the neon; towers are drawn by height
-    by the game anyway; low-air: the smoke under the traffic."""
-    ground = [p for p in pl["fixed"]] + pl["burnt"] + pl["fires"] + pl["neon"] + pl["towers"]
-    low = pl["smoke"] + pl["traffic"]
+    """Draw order on a layer: later over earlier. The street traffic first (the playtest of 2026-10-18:
+    the cars pass under the cross highways, and the towers, drawn after the flat pieces, over both), then
+    the flat structures (cross highways over the tiles), the walk roofs, the burnt blocks, the fires, the
+    neon; towers are drawn by the game after the flat pieces; low-air: the smoke under the gunships."""
+    cars = [p for p in pl["traffic"] if PIECES[p[0]][0] == "ground"]
+    ground = cars + [p for p in pl["fixed"]] + pl["burnt"] + pl["fires"] + pl["neon"] + pl["towers"]
+    low = pl["smoke"] + [p for p in pl["traffic"] if PIECES[p[0]][0] != "ground"]
     return ground + low
 
 

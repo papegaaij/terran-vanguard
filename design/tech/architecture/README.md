@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Architecture
@@ -363,7 +363,7 @@ first entry of a part's model list is the starter (price 0, `start`).
   `field` wave (see *Level*); `terrain`'s **`drift`** (px/s along its nest's `current`: a raft on
   the water). Built in step E2c (`BossSpec.Arena`, `SlamArena`; `KrakenTest`, `SlamArenaTest`), the
   `lanes` loaded and checked since step E2b for a level's convoy (`EnemyData.Lanes`): for an arena boss the movement **`anchored`** (`y`, px below the top edge where its
-  centre stops when the scroll halts; no descent, no `hover` or `straight`): it is placed on the ground layer
+  centre stops when the scroll halts, negative above it (round 40: the Kraken's −46); no descent, no `hover` or `straight`): it is placed on the ground layer
   that far up the scroll from the halt (the halt scroll: the scroll at the arena's start plus the
   ease, `Sortie.easeDistance`), scrolls in with the ground invulnerable and without its bar
   (`SetPiece.approaching()`), arrives at its `t` (the arena's start: the bar, the sting, the boss
@@ -378,13 +378,17 @@ first entry of a part's model list is the starter (price 0, `start`).
   ends laid along its lane from the lanes' top to 24 px above the bottom edge, its segments evenly
   spaced; they are the part's own hit boxes, not armour; only a part an arm of the `lanes` names). In the `boss` block: **`lanes`**
   (`count`, `width` px from the play field's left edge, lane 1 first; `arms`, each slam arm's part
-  name → the lanes it owns, E5 = a; only for an anchored boss, with a `slam`) and **`slam`** (`telegraph`, `rise`, `awash`, `sink` s;
+  name → the lanes it owns, E5 = a; only for an anchored boss, with a `slam`; round 40: **`rooted: true`**, every arm a
+  rooted one-lane arm whose part is its root, a `ground` part that stays at its offset, always hittable, the lanes
+  running from the roots' lower edge, a cut root ending its lane's slams, and **`raised`**, the root's damage
+  multiplier while its arm is raised, only with `rooted`; `BossSpec.Lanes.rooted`, `KrakenTest`) and **`slam`** (`telegraph`, `rise`, `awash`, `sink` s;
+  round 40's optional **`volley`**, the lanes a volley slams at medium, one per arm when not given;
   `damage`, the impact's class on the ship and the escort in the lane, once per slam; `splash`
   `count`, `speed`, `bullet`: from evenly spaced points along the arm, out to either side in turn,
   15° down; `choose: alternate`, the player's lane and the lane of the convoy unit
   nearest the player's x in turn, a tie to the lower lane, a choice in a severed arm's half going to
   the other choice or the living half's lane nearest the player; the hooks `telegraph` and `lanes`,
-  hard's 0.8 s and three lanes a volley, a second lane of one arm 0.5 s after its first; the arm on
+  hard's 1.1 s (0.8 until round 40) and three lanes a volley, a second lane of one arm 0.5 s after its first; the arm on
   `ground` from its rise until its sink starts); per phase
   `until` may give **`slams`** (how many impacts end it) and, with its `parts` instead of a `left`, **`below`** (the share of their
   HP under which it ends), beside `seconds` and `parts`/`left`, the first met ending it (a phase that
@@ -823,7 +827,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   that can be damaged afloat, failed at the first sinking; only with a `convoy` and a `boss`; the
   debrief's row counts the units afloat. Radio events **`ally-hit`** (each convoy unit's first hit,
   `{ally}` its name; it starts again for each unit, as `ally-lost`), **`first-telegraph`** (the
-  attempt's first lane telegraph, `TELEGRAPH`; once; only with a boss with lanes; built in step E2c) and
+  attempt's first lane telegraph, `TELEGRAPH`; once; only with a boss with lanes; built in step E2c),
+  **`first-ship-telegraph`** (round 40: the attempt's first telegraph on a lane holding a convoy ship a slam
+  hurts; once; only with a boss with lanes and a convoy; `CueTrigger.FIRST_SHIP_TELEGRAPH`) and
   **`boss-part-destroyed`** (with `parts`, names of the level boss's parts other than its vital one:
   the first of them shot off; once; built in step E2c); `ally-lost` also for a naval convoy unit sinking; a `level-end` cue's `allies`
   counts a naval convoy's damageable units afloat. A naval convoy's `{ally}` is the unit's `name`
@@ -922,7 +928,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   an attack's **`staggered: true`** (aimed or mortar, only a boss's fired by several parts: part k of n
   k × interval ÷ n after the first; `Attack.stagger`); a part's **`aim: down`** (round 34, P2: the part
   fires its `aimed` attack straight down the screen instead of at the ship, the Siege Spire's pods 1 and
-  3; `Attack.down`, `BossActions.down`); a window spawn's **`ambush: {most}`** (an ambush
+  3; `Attack.down`, `BossActions.down`); an aimed boss attack's **`aim_turns: {every, glow}`** (round 40, the
+  Siege Spire's pods: every `every` s the next living part in turn fires one shot at the ship after glowing
+  `glow` s, the others firing as the attack says between; only an aimed attack that does not rotate, only a
+  boss's; `BossSpec.AimTurns`, `SiegeSpireTest`); a window spawn's **`ambush: {most}`** (an ambush
   launch flying its enemy's rear-ambush path: only a unit with the `ambush` and `hover` movements; no
   `arc` or `glide`; `Spawn.ambushMost`); an anchored boss without `lanes` (`Lanes.NONE`), its parts'
   layers `sub`/`ground` as before (the core reaches `air` by the move), its phase **`move`** a lift

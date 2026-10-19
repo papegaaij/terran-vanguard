@@ -2,7 +2,7 @@
 title: Shellback
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../polyp-mortar, ../../../allies, ../../../campaign/act-3-red-dust]
 updated: 2026-10-19
 ---
@@ -125,3 +125,4 @@ act's art track in its level's round.
   the body's 84 px box at the rear of the back, so a shot from below meets the body first and no forward shot reaches
   the vent while the Shellback walks down the screen (Level 17's autopilot shot none); pending the user's review in
   round 40 (the part's hit test, or the vent's place).
+- 2026-10-19 (user, round 40, F.c): the final art approved (`art: final`); R.a = a: a shot inside the vent's box hits the vent first, from any side (queued, Level 17's Implementation); R.e: a Shellback shot near the bottom rolls a shorter way (queued).

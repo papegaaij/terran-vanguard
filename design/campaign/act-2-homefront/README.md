@@ -22,10 +22,10 @@ Siege Spire, a Vrell citadel that has rooted itself in the heart of the UTC capi
 | [level-08-neon-skyline](level-08-neon-skyline/README.md) | Night megacity, Rook's first sortie on Lancer's wing, Creeper intro · front · density 3 | approved | done | final |
 | [level-09-arcology-fall](level-09-arcology-fall/README.md) | The act's first `destroy-targets`: six hardened hive nodes, hold zones, Ravager packs, the arcology collapse · front · density 3 | approved | done | final |
 | [level-10-evacuation-corridor](level-10-evacuation-corridor/README.md) | escort` of five shuttles at first light, first rear-heavy level (Wraith, Mote Swarm), one scripted loss · front and rear (a third from behind by threat) · density 3 | approved | done | final |
-| [level-11-atlantic-convoy](level-11-atlantic-convoy/README.md) | Naval layer (Driftjelly, Reef Spitter), `sub` shadows, mid-boss Harbour Kraken · front · density 3 | approved | done | final |
+| [level-11-atlantic-convoy](level-11-atlantic-convoy/README.md) | Naval layer (Driftjelly, Reef Spitter), `sub` shadows, mid-boss Harbour Kraken · front · density 3 | approved | in-progress | final |
 | [level-12-storm-front](level-12-storm-front/README.md) | Weather (rain, lightning, gusts), Lamprey intro, Varga sees the Vrell herd the storm · all · density 4 | approved | done | final |
 | [level-13-polar-relay](level-13-polar-relay/README.md) | defend` the Arctic relay for 180 s, Skimmer intro, whiteout · all edges · density 4 | approved | done | final |
-| [level-14-siege-spire](level-14-siege-spire/README.md) | Geneva Concord approach through the root field, act boss Siege Spire · front · density 4 | approved | done | final |
+| [level-14-siege-spire](level-14-siege-spire/README.md) | Geneva Concord approach through the root field, act boss Siege Spire · front · density 4 | approved | in-progress | final |
 
 ## Design
 

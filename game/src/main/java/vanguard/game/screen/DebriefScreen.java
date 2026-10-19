@@ -12,6 +12,7 @@ import vanguard.content.campaign.ActSummary;
 import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRoute;
 import vanguard.game.GameServices;
+import vanguard.game.audio.DebriefMusic;
 import vanguard.game.audio.Sfx;
 import vanguard.game.input.MenuInput;
 import vanguard.game.render.PixelScreen;
@@ -125,6 +126,8 @@ public final class DebriefScreen implements GameScreen {
     private final Optional<ActSummary> summary;
     /** Whether the act summary's page is shown. */
     private boolean summaryShown;
+    /** Track 29 under the debrief and its act summary page, after the jingle (round 40 M.a = b). */
+    private final DebriefMusic music;
 
     private final String grade;
     private final LevelResult.Rating rating;
@@ -201,6 +204,7 @@ public final class DebriefScreen implements GameScreen {
         if (jingle) {
             services.sfx.play(Sfx.MISSION_COMPLETE, JINGLE_VOLUME, 1, 0);
         }
+        music = DebriefMusic.start(services.audio, services.files, services.mixer, jingle);
     }
 
     private void addTally(LevelResult result) {
@@ -387,6 +391,11 @@ public final class DebriefScreen implements GameScreen {
     @Override
     public Transition update(float seconds) {
         campaign.play(seconds);
+        music.update(seconds);
+        if (music.leaving()) {
+            // The debrief's theme fades out before the next screen's music starts.
+            return music.gone() ? Transition.replace(onward()) : Transition.STAY;
+        }
         boolean done = summaryShown ? elapsed >= rows.size() * LINE_SECONDS : stamped;
         if (goesOn(services.menu)) {
             if (done && !summaryShown && summary.isPresent()) {
@@ -394,10 +403,8 @@ public final class DebriefScreen implements GameScreen {
                 return Transition.STAY;
             }
             if (done) {
-                return Transition.replace(
-                        campaign.replay().isPresent()
-                                ? MissionSelectScreen.afterReplay(services)
-                                : HangarScreen.afterLevel(services, campaign));
+                music.leave();
+                return music.gone() ? Transition.replace(onward()) : Transition.STAY;
             }
             elapsed = rows.size() * LINE_SECONDS + (summaryShown ? 0 : STAMP_DELAY_SECONDS);
         } else {
@@ -415,6 +422,13 @@ public final class DebriefScreen implements GameScreen {
             services.sfx.play(Sfx.GRADE_STAMP, 1, 1, 0);
         }
         return Transition.STAY;
+    }
+
+    /** The screen after the debrief: the mission select after a replay, else the act outro or the hangar. */
+    private GameScreen onward() {
+        return campaign.replay().isPresent()
+                ? MissionSelectScreen.afterReplay(services)
+                : HangarScreen.afterLevel(services, campaign);
     }
 
     /** The act summary's page: "ACT I COMPLETE", its rows appearing as the tally's did. */
@@ -549,9 +563,10 @@ public final class DebriefScreen implements GameScreen {
         return String.format(Locale.ROOT, "%,d", value).replace(',', ' ');
     }
 
-    /** Skipping the debrief must not leave the jingle playing over the next screen's music. */
+    /** Skipping the debrief must not leave the jingle or its theme playing over the next screen's music. */
     @Override
     public void dispose() {
         services.sfx.stop(Sfx.MISSION_COMPLETE);
+        music.close();
     }
 }

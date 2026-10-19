@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/naval/skimmer, ../../../enemies/ground/scuttler, ../../../enemies/air/stinger, ../../../enemies/ground/polyp-mortar, ../../../allies, ../../../systems/economy]
-updated: 2026-10-12
+updated: 2026-10-19
 ---
 
 # Level 13 – Polar Relay
@@ -81,7 +81,7 @@ The directions are counted by each wave's `from` (`cross` waves split evenly ove
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (Scuttlers on the floes, the Polyp Mortars, the Skimmers on the leads, naval surface), `air` |
-| Attack directions | front 46% · sides 29% · rear 25% (a `defend` level: **excepted** from the campaign's "at least ~60 % of waves enter from the top edge" rule; the `cross` waves split evenly over the four edges) |
+| Attack directions | front 53% · sides 32% · rear 15% (a `defend` level: **excepted** from the campaign's "at least ~60 % of waves enter from the top edge" rule; the `cross` waves split evenly over the four edges) |
 | Density | 4 |
 | Recommended traits | `spread`, `rear`; `side` helps too (three traits do not fit the intel panel) |
 | Hazards | Whiteout (edge visibility, final push); the relay must survive |
@@ -108,7 +108,7 @@ The directions are counted by each wave's `from` (`cross` waves split evenly ove
 ### Nansen Relay
 
 The [Nansen Relay](../../../allies/README.md#nansen-relay) (footprint 96×96, hit box 80×80, integrity
-240 at medium as tuned below, damage rules in the allies spec) stands on the `ground` layer at play-field
+260 at medium as tuned below (240 until the L10-style waves of 2026-10-19), damage rules in the allies spec) stands on the `ground` layer at play-field
 **x = 240** (the centre; the draft's "x = 480 in screen coordinates" was the 960-wide screen), y = 290
 from the bottom (y-up). It is `follows: ground`: it scrolls in at the top edge during the approach
 (**entering at t ≈ 37 at 140 px/s**; the draft's "appearing at the top at t≈34" was not possible) and
@@ -138,6 +138,9 @@ synchronisation's end):
 | Easy | 48–56 | **340** (draft 900) | 84–86 % | 8 of 8 |
 | Medium | 112–124 | **240** (draft 600) | 48–53 % (median 50 %) | 7 of 8 |
 | Hard | 386–410 | **520** (draft 450) | 21–26 % | 0 of 8 |
+| *Since 2026-10-19 (L10-style waves):* Easy | 56–64 | **340** | 81–84 % | 8 of 8 |
+| Medium | 126–158 | **260** | 39–52 % (median 48 %; the test seed 50 %) | 3 of 8 |
+| Hard | 420–456 | **560** | 19–25 % | 0 of 8 |
 
 Nearly all of it is the Scuttlers' fans in arc (switching the hook off kind by kind, measured before
 the popcorn's last retiming: on medium the Scuttlers ≈ all of it, the Skimmers ≈ 4, the mortar floe and
@@ -174,9 +177,11 @@ hurts it; the bullets still hurt the ship, so the player can body-block (as the 
 
 Approach at **140 px/s**, then the scroll **halts** for the defend phase, then resumes for the
 exit. Total ≈ 235 s: 40 s approach, 180 s halted, 15 s exit. While halted, the loose floes and brash
-ice keep drifting at 6 px/s inside the open water's margins (they keep out of the lanes) and the
-open water in the leads moves gently. Motion budget: the drifting floes with their waterline foam
-and, in phase 3, the whiteout banks are the strong elements; the fog wisps stay faint.
+ice drift **east at 10 px/s with the mortars' floe**, one current (the user's playtest of 2026-10-18:
+"either all icebergs drift and they all drift in the same direction, or none drift at all"), along
+the halt's north and south margins, never over the relay's floe; the water under them stands still.
+Motion budget: the drifting floes (at most two at a time besides the mortars' floe) and, in phase 3,
+the whiteout banks are the strong elements; the fog wisps stay faint.
 
 ### The halt
 
@@ -197,7 +202,7 @@ and no `arena`, allowed only with a `defend` primary.
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
 | 1. Pack Ice | 0–40 | 0–5,460 | 140 | light | `deep`: dark open water under the ice. `ground`: white-blue ice floes with open leads, teal submerged ice edges, waterline foam (Water rules), an abandoned research hut (the secret), the relay entering at the top at t≈37. `low-air`: thin fog wisps. Low sun, long cool shadows. | Skimmer introduction during the approach; the scroll eases to 0 over t=38–40, arriving at the relay. |
-| 2. First Light | 40–100 | 5,460–5,460 | 0 | light | `ground`: Nansen Relay at the centre on its floe, the lanes (leads) cut round it, loose floes drifting slowly, Skimmer wakes in the leads. | Learn to guard a point: boats from all edges. |
+| 2. First Light | 40–100 | 5,460–5,460 | 0 | light | `ground`: Nansen Relay at the centre on its floe, the lanes (leads) cut round it, loose floes drifting east with the mortars' floe, Skimmer wakes in the leads. | Learn to guard a point: boats from all edges. |
 | 3. Floe Walkers | 100–160 | 5,460–5,460 | 0 | light, medium peak 140–160 | `ground`: as above, with Scuttlers striding across the floes from the sides. `low-air`: fog thickening at the edges from t=140. | Walkers with armoured fronts: hit them from the side; side attackers. |
 | 4. Whiteout | 160–220 | 5,460–5,460 | 0 | medium, heavy peak 176–188 | `low-air`: whiteout banks rolling in from the side edges, 25–40 % coverage at the edges, the centre around the relay kept readable. `high-air`: snow streaks (≤ 40 %) falling on the real clock. | The final push in poor visibility; edge warnings still show through the whiteout. |
 | 5. Grid Online | 220–235 | 5,460–7,420 | 140 | clear | `ground`: the relay's lights coming on in sequence, then floes and open sea northward. | Release; level end. |
@@ -210,9 +215,9 @@ The scroll column is the data's, with the 2 s eases (the approach ≈ 5,460 px t
 ground-space polyline given by its wave (as a walker's path), at 180 px/s with the 40 px / 1.2 s weave
 as an offset, facing its velocity (16 headings). The lanes scroll with the ground in the approach and
 stand still in the halt. The backdrop generator reads the lanes and **cuts the leads along them**; the
-relay's floe and the leads are fixed in the halt, and the 6 px/s drift is loose floes and brash ice
-inside the open water's margins, keeping out of the lanes (the leads do not drift: over 180 s that
-would be 1,080 px).
+relay's floe and the leads are fixed in the halt, and the drift is loose floes and brash ice moving
+east at the mortars' floe's 10 px/s along the halt's north and south margins (the leads do not drift:
+over 180 s that would be 1,800 px).
 
 **Water and ice (G5 = a).** `water: true` covers the whole play field (as Levels 11 and 12, E1), so a
 torpedo also reaches a Scuttler on a floe. The presentation goes **by unit, not by place** (a level
@@ -232,7 +237,8 @@ Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Data in **Act 1 terms** with a
 `bounty_scale` (see *Credit budget*); returning units use the act HP factor from the
 [balancing basis](../../../enemies/README.md#balancing-basis) (Scuttler, Mantis; none for the Skimmer,
-its first level); HP values live in the enemy specs only. Every side and rear wave gets the **3 s**
+its first level), and since the L10-style waves of 2026-10-19 the Needler (12) and the Stinger (18)
+capped at ×3 (`small_act_hp`); HP values live in the enemy specs only. Every side and rear wave gets the **3 s**
 edge warning (the draft's "1.5 s" was superseded on 2026-10-02), the whiteout's too.
 
 **Density (G3 = a).** The level counts from the launch to the end of the clock (≈ 231 s: the halt is
@@ -241,6 +247,22 @@ needs ≈ 196 units instead of the draft's 82. The extra **114** are **unhooked 
 (Skitter streams, Needler pairs and lines) from all edges, so the relay's load stays with the authored
 hooked waves; the t=20 introduction stays alone and the 3 s pacing rule holds (`PacingTest`: no empty
 screen over 3 s). Rule changes: none (a `defend` level's density is the act minimum).
+
+**L10-style waves** (the user's Act 2 playtest, 2026-10-18/19, P.e "yes, all", as step CA did Levels
+08–09): through the halt a wave about every 2.5 s, the next entering while the last is still on the
+screen: the popcorn streams of 6 at 1 s (were 4 at 2–2.5 s) and **Needler groups of 4 from every edge**
+between them (V-wings and lines from the front, lines from the rear, pincers from the sides; the
+existing lines of 3 now 4 but t=132's), so that something always fires; the Needlers stay unhooked (they aim at
+the player). Unchanged: every Skimmer wave and Scuttler walk (the leads and the rubble are cut along
+their lanes and paths), the t=20 introduction alone, the crosses, the Mantis pincers, the circle above
+the relay, the Stingers' dives, the rear lines, the snake up from the rear; the exit stays the release.
+Measured on the attempt that completes the level from the end of the launch, the plan's fit
+(`PacingTest`, `ActFloorTest`): medium **2.7 enemies on the screen, 25.0 shots a minute**, two pauses
+over 2 s (the calm before the introduction and the release; was 14); hard 2.8 and 50.9 (its Needler
+groups 2), two; easy 1.6 and 10.2. Before: medium 1.1 and 17.0, hard 1.6 and 42.5 (with 10 pauses).
+The guarding pilot has more to shoot, so more hooked fire reaches the relay (medium lost 122–158 of
+240 over the 8 seeds, none kept half): the integrity is retuned to **260 medium** (the ally's own) and
+**560 hard** (the table above), easy unchanged.
 
 Directions are by `from`; `cross` waves (new formation) send groups from **all four edges**, n per
 edge, each unit on its own lane, entering together with an edge warning on every edge.
@@ -259,60 +281,101 @@ walk toward the relay, stop ≈ 150 px short and turn along it (the relay in arc
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
 | 5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | The first targets over the pack ice |
-| 11 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 8 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 11 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 20 | 1 | convoy | [Skimmer](../../../enemies/naval/skimmer/README.md) | 3 | front | **New.** Weaves along a lead between the floes; nothing else on screen |
-| 24 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | After the introduction |
+| 24 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | After the introduction |
+| 27 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 30 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 33 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 33 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 35 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 37 | 1 | pincer | [Needler](../../../enemies/air/needler/README.md) | 2 | sides | |
-| 40 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
-| 48 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | rear | |
-| 51.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 40 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
+| 42.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 45 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | right side | |
+| 48 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 51.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 53.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 56 | 2 | cross | [Skimmer](../../../enemies/naval/skimmer/README.md) | 4 | all edges | First all-edge wave, one from each edge; Rook: "pick a direction" |
-| 58.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 58.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 61 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 63.5 | 2 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
+| 66 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
 | 68 | 2 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side |
 | 70.5 | 2 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 6 | rear | |
-| 74 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 81.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 72.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 74 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 76.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 79 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | |
+| 81.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 84 | 2 | convoy | [Skimmer](../../../enemies/naval/skimmer/README.md) | 4 | rear | Along the lead below the relay |
-| 88 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | left side | |
-| 93 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 95.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | right side | |
-| 100.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 86 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 88 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | |
+| 90.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 93 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 95.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | right side | |
+| 98 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 100.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 102.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 104 | 3 | pincer | [Scuttler](../../../enemies/ground/scuttler/README.md) | 4 | sides | Walk across the floes toward the relay and turn along it, 2 + 2 (the relay in arc for a fan or two); claws armoured from the front |
-| 108 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | rear | |
-| 112 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 106 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 108 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 110 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | right side | |
+| 112 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 114.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 116.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | |
 | 118 | 3 | cross | [Skimmer](../../../enemies/naval/skimmer/README.md) | 4 | all edges | Hard: 2 per edge (8) |
-| 121 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
+| 121 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
 | 124 | 3 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | Hold at the edges and sweep; the first one drops an overdrive |
-| 128 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 126 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 128 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 130 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
 | 132 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 135 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 135 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 137.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 140 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 12 | rear | Up from the rear on one path |
+| 142.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 144.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 146 | 3 | convoy | [Skimmer](../../../enemies/naval/skimmer/README.md) | 4 | left side | |
-| 150 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 148 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 150 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 152.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 154 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
 | 156 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | They dive at the **relay**, not the player (`always`; easy: at the player) |
-| 158.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
+| 158.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
+| 161 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 164 | 4 | pincer | [Scuttler](../../../enemies/ground/scuttler/README.md) | 4 | sides | |
-| 168 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | rear | |
-| 172 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 166 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
+| 168 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 170 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
+| 172 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 174 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 176 | 4 | cross | [Skimmer](../../../enemies/naval/skimmer/README.md) | 8 | all edges | Into the whiteout, 2 from each edge |
+| 178 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 180 | 4 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 6 | rear | |
+| 182 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
 | 184 | 4 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | |
+| 186 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
 | 188 | 4 | circle | [Needler](../../../enemies/air/needler/README.md) | 6 | front | Orbits **above the relay** (a circle centre `at`, 150 px from the top), then breaks toward the player |
-| 192 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
+| 190 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | left side | |
+| 192 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
+| 194 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 196 | 4 | convoy | [Scuttler](../../../enemies/ground/scuttler/README.md) | 3 | front | Walks down the main floe |
-| 200 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | rear | |
+| 198 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | right side | |
+| 200 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | rear | |
+| 202 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 204 | 4 | cross | [Skimmer](../../../enemies/naval/skimmer/README.md) | 4 | all edges | |
-| 206 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
+| 206 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 208 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 210 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The last push: diving at the relay one after another; hard: in pairs (0.4 s between pairs) |
-| 213 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
+| 213 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
+| 214.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 216 | 4 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 6 | rear | |
 
-Totals: Skitter 111 · Needler 41 · Skimmer 31 · Scuttler 11 · Mantis 4 · Stinger 8.
+Totals: Skitter 210 · Needler 172 · Skimmer 31 · Scuttler 11 · Mantis 4 · Stinger 8.
 <!-- /data -->
 
-Medium has 208 units (≈ 54 a minute over the 230 s from the launch: `DensityTest`), easy 160, hard 260:
+Since 2026-10-19 medium has 438 units. Before, medium had 208 units (≈ 54 a minute over the 230 s from the launch: `DensityTest`), easy 160, hard 260:
 12 more than the draft's plan (196), as the pacing rule needs the popcorn as streams of 4 at 2–2.5 s
 intervals every 3–5 s rather than streams of 6 at 1 s (the plan fit's guns clear a short stream in
 seconds), with a stream at t=24 after the introduction and the intro's Skimmers three on easy too. The
@@ -413,8 +476,9 @@ grid online as a power-up chain; the Skimmer's flip-and-sink reuses the water ex
 Budget(13) = 700 × 1.07¹² ≈ **1,577**, the typical haul's target
 ([economy](../../../systems/economy/README.md#per-level-budget)), not a perfect collection (the
 draft's 2,252 was the old perfect-run curve). The level's **`bounty_scale`** puts the typical haul on
-it: **0.67** (the plan: 0.6–0.7 at ≈ 190 units), the typical haul 1,606 (+1.8 %, `TypicalHaulTest`:
-±5 %); the popcorn is cheap (Skitter, Needler) so the scale stays at its lower end.
+it: **0.33** since the L10-style waves of 2026-10-19 (the typical haul 1,539, −2.4 %,
+`TypicalHaulTest`: ±5 %; 0.34 rounds the Needler's pay up to 7 and lands at +6.7 %); 0.67 before, for
+208 units (the plan: 0.6–0.7 at ≈ 190 units, the typical haul 1,606, +1.8 %).
 **The data keeps Act 1 terms** (default): the stat-block bounties (Skitter 5, Needler 12, Stinger 15,
 Mantis 30, Skimmer 14, Scuttler 25, Polyp Mortar 15), the hut's cache **110** and the secondary
 **95**; the code pays each × the act factor 1.6 (bounties also × the scale), rounded per kill. The
@@ -424,12 +488,12 @@ secret and the secondary at 50 %.
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 111 × 5 + Needler 41 × 12 + Skimmer 31 × 14 + Scuttler 11 × 25 + Mantis 4 × 30 + Stinger 8 × 15 | 2,106 | 1,416 |
-| Ground targets: Polyp Mortar 2 × 15 | 32 | 26 |
+| Kills: Skitter 210 × 5 + Needler 172 × 12 + Skimmer 31 × 14 + Scuttler 11 × 25 + Mantis 4 × 30 + Stinger 8 × 15 | 2,150 | 1,362 |
+| Ground targets: Polyp Mortar 2 × 15 | 16 | 13 |
 | Secret: research hut cache (hidden crate, 7% of budget) | 176 | 88 |
 | Secondary: keep the relay at 50 % or more | 152 | 76 |
-| **Total** (bounty scale 0.67) | **2,466** | **1,606** |
-| Budget(n) = the typical haul's target; typical +2 %, perfect 1.56 × budget | | 1,577 |
+| **Total** (bounty scale 0.33) | **2,494** | **1,539** |
+| Budget(n) = the typical haul's target; typical -2 %, perfect 1.58 × budget | | 1,577 |
 <!-- /data -->
 
 **Balance plan** (default): the plan's L13 visit is as written (Armour Mk III, both Micro-missile Pods
@@ -442,7 +506,7 @@ kill and a relay-outcome check on the autopilot. Rook does not guard the relay (
 - **Easy**: relay integrity 340 (tuned, see *Nansen Relay*); the introduction's three Skimmers (an authored count); the whiteout peak lasts 6 s (presentation,
   step G6: the data's peak is medium's 176–188); the Stingers dive at the player
   instead of the relay (`stinger` unhooked); Skimmer HP and bursts per their spec.
-- **Hard**: relay integrity 520 (tuned; hard's hook load is 3.4 × medium's); the t=118 cross has 2 Skimmers per edge; the t=210 Stingers
+- **Hard**: relay integrity 560 (520 until 2026-10-19; tuned; hard's hook load is 3.4 × medium's); the Needler groups of the L10-style waves are 2 (medium 4; with 3 the autopilot lost the ship ten times in the Floe Walkers); the t=118 cross has 2 Skimmers per edge; the t=210 Stingers
   dive in pairs; the Skimmers fire 2-shot bursts (one attack under `alternate`); the Scuttlers' fan
   is 7-way. Hard may lose the secondary, never the relay (G2).
 
@@ -484,7 +548,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
       `Sortie.scrollAt`, `LevelScript.Section.rampSeconds`, `TimedHaltTest`); the data's `ramp`, the eased
       `LevelData.scrollAt` and the validator's rules in G4 (`PartGChecks`, `PartGLevelKeysTest`)
 - [x] `defend` primary on the escort's machinery: the relay `follows: ground`, integrity (tuned: 240 /
-      340 / 520), no regeneration, hit flash, smoke below 50 %, dark at 0, mission failed, no primary credits
+      340 / 520; 260 / 340 / 560 since the L10-style waves of 2026-10-19), no regeneration, hit flash, smoke below 50 %, dark at 0, mission failed, no primary credits
       (M5 part G, steps G3, G4 and G6) — simulation in G3 (`LevelScript.Defend`, `Convoy`'s defend mode,
       `DefendTest`), the data and loader in G4 (`objectives.defend`, `PartGRules.defend`, `Level13Test`);
       the presentation in G6 (`RelayLooks`: the state frames, the hit flash, smoke below 50 %, fire below
@@ -518,7 +582,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
       production sprite and lights; the Skimmer's production sprite; the drone and the hut (M5 part G, G2, G5, G6)
       — the backdrop in G5 (`tools/art/backdrop_l13.py`, the data's `backdrop` block and the sections'
       `tiles`; see *Concept art*): the ground one unique strip of four pieces with the halt's frame and
-      the leads cut along every lane, the drifting water, the loose ice and the mortars' floe on paths,
+      the leads cut along every lane, the drifting water (still since 2026-10-19), the loose ice and the mortars' floe on paths (all east since 2026-10-19),
       fog light/medium and the whiteout (look b since round 34) as the atmosphere's banks; the snow, the banks' roll on
       the real clock and easy's 6 s peak are G6's
 - [x] Research hut secret (110 in Act 1 terms) and the two supply drones (a presentation arc releasing the
@@ -546,7 +610,11 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
       `image` once the texts fit four lines, `BriefingLayoutTest`; both pages carry their images,
       checked in step K8)
 - [x] Typical haul at medium within ±5 % of budget(13) = 1,577 with the level's `bounty_scale`
-      (`TypicalHaulTest`: 1,606 at 0.67, +1.8 %) (M5 part G, G4)
+      (`TypicalHaulTest`: 1,606 at 0.67, +1.8 %; 1,539 at 0.33, −2.4 %, since 2026-10-19) (M5 part G, G4)
+- [x] The user's Act 2 playtest (2026-10-18/19): the floes all drift east at 10 px/s, none over the relay's
+      floe, the mortars' floe 40 px higher (`backdrop_l13.py --check`); L10-style waves with the Needlers'
+      capped act HP factor, `PacingTest`'s Act 2 rule and `ActFloorTest` pass, the level out of their
+      pending list (step WA)
 - [x] Easy/hard variations as in *Difficulty notes* (easy's 6 s whiteout peak is presentation: the
       backdrop item); `Level13Test`, `PartGLevelKeysTest`, `PartGUnitsDataTest` (M5 part G, G4)
 - [x] Captures and round 35 (M5 part G, G7 and G8; reviewed in the combined round 34)
@@ -729,3 +797,28 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   level's failure line (the failed screen showed Okafor's neutral portrait); the line re-rendered with
   the grim settings (`tools/art/voice.py`, `okafor/7f735b28f819.ogg`, Whisper and pitch checked; the
   old `49386929d4bb.ogg` deleted, round 34's link updated).
+- 2026-10-19: The user's playtest (2026-10-18: "The icebergs have very strange drift patterns. They can't all
+  drift in different directions like that. … I also noticed they sometimes drift through the platform
+  partially"; the user's choice: all drift east at 10 px/s, re-pathed off the relay's floe, the mortars'
+  floe up 30 px): every floe now drifts **east at 10 px/s** along the halt's north and south margins,
+  and `backdrop_l13.py --check` fails if a floe's opaque pixels touch the relay's floe (before: up to
+  850 px at t≈86, 260 at t≈188; now none). The mortars and their floe moved up **40 px** (y up 480/440,
+  the floe's centre 80 px below the top), not 30: at 30 the floe still grazed the relay floe's north
+  tongue by 88 px. Each floe keeps its own look without a game change: the old `loose-ice` (8 headings,
+  a look per direction) became eight pieces, `mortar-floe` and `loose-ice-a` .. `-g`, of 2 headings
+  each with the same image twice (an east-bound path shows frame 1). As the motion budget counts moving
+  pieces by name, the **water no longer drifts** (it drifted 3 px/s west, under the east-bound floes),
+  and the floes are timed so that at most two move on the screen at once. Pending the user's review:
+  the still water, the 40 px.
+- 2026-10-19: The user's Act 2 playtest, P.e "yes, all" (as step CA did Levels 08–09): the waves
+  **rewritten L10-style** in the halt (a wave about every 2.5 s, Skitter streams of 6 at 1 s and
+  Needler groups of 4 from every edge between them; 438 units at medium, was 208) with every Skimmer,
+  Scuttler, Mantis, Stinger and set-piece wave unchanged; the Needler (12 HP) and the Stinger (18) take
+  the capped act HP factor here (`small_act_hp.levels` + 12, 13; without it 2.0 enemies on the screen).
+  Medium 2.7 on the screen and 25.0 shots a minute (was 1.1 and 17.0), two pauses over 2 s (was 14);
+  hard 2.8 and 50.9 with Needler groups of 2; `bounty_scale` 0.67 → 0.33 (typical haul 1,539,
+  −2.4 %). The guarding pilot has more to shoot, so the relay lost 122–158 of 240 on medium (none of
+  the 8 seeds kept half) and up to 504 of 520 on hard: the integrity is retuned to **260 medium** (the
+  ally's `hp`) and **560 hard** (medium's median seed 48 %, 3 of 8 keep half; hard 19–25 %). Pending
+  the user's review: the number of units, the integrity; the test edits (the level's totals and
+  integrity, `PacingTest.PENDING_ACT_TWO_RULE`) are the main agent's.

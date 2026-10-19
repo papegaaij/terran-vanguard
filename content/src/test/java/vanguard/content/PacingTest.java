@@ -106,14 +106,7 @@ class PacingTest {
      * 10, L12 22, L13 14, L14 12, L15 17, L16 15, L17 15): they keep Act 1's rule until their waves are reworked,
      * pending the user's review. Remove a level once it passes.
      */
-    static final Set<String> PENDING_ACT_TWO_RULE = Set.of(
-            Level11Test.LEVEL,
-            Level12Test.LEVEL,
-            Level13Test.LEVEL,
-            Level14Test.LEVEL,
-            Level15Test.LEVEL,
-            Level16Test.LEVEL,
-            Level17Test.LEVEL);
+    static final Set<String> PENDING_ACT_TWO_RULE = Set.of(Level15Test.LEVEL, Level16Test.LEVEL, Level17Test.LEVEL);
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right
@@ -182,7 +175,8 @@ class PacingTest {
     /**
      * What the player saw on the attempt that completes the level, from the end of its launch: the empty stretches
      * as [from, to] in real seconds since the attempt's start, the mean number of enemies on the screen, and the
-     * enemy shots a minute (one per {@code ENEMY_FIRED} event: a fan or a burst counts once).
+     * enemy shots a minute (one per {@code ENEMY_FIRED} event: a fan or a burst counts once), both outside a boss
+     * fight (step WB).
      */
     record Flight(List<double[]> empty, double meanOnScreen, double shotsPerMinute) {}
 
@@ -215,7 +209,9 @@ class PacingTest {
             if (sortie.launching()) {
                 continue;
             }
-            if (sortie.flying()) {
+            // A boss fight has its own tests of what it fires (KrakenTest, SiegeSpireTest): the floor's means are the
+            // level's around it (step WB, pending the user's review).
+            if (sortie.flying() && !bossFight(sortie)) {
                 seconds += SimStep.SECONDS;
                 flown++;
                 onScreen += enemiesOnScreen(sortie);
@@ -234,6 +230,17 @@ class PacingTest {
             stretches.add(new double[] {emptySince, sortie.realSeconds()});
         }
         return new Flight(stretches, (double) onScreen / flown, shots / (seconds / 60));
+    }
+
+    /** Whether a boss (a set piece) is engaged and alive: its fight, left out of the floor's means. */
+    private static boolean bossFight(Sortie sortie) {
+        for (int i = 0; i < sortie.setPieceCount(); i++) {
+            SetPiece piece = sortie.setPiece(i);
+            if (piece.engaged() && !piece.destroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** The live enemies whose hitbox overlaps the play field (set pieces, tendrils and chains not counted). */

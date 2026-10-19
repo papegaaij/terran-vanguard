@@ -3,7 +3,7 @@ title: Air enemies
 design: approved
 implementation: in-progress
 art: chosen
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 # Air enemies
@@ -32,7 +32,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [wraith](wraith/README.md) | Cloaked manta that decloaks behind the player (L10) | approved | done | final |
 | [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | done | final |
 | [lamprey](lamprey/README.md) | Homing eel that latches and drains the shield (L12) | approved | done | final |
-| [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | chosen |
+| [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
 | [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | not-started | chosen |
 | [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
 
@@ -138,8 +138,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; g
 | [concept/rejected/choir-herald-r36-a.gif](concept/rejected/choir-herald-r36-a.gif) | Choir Herald A — with six Needler escorts in a circle; one escort shot through its ring, then the Herald dies and the rings fade (motion) | rejected — round 36: b (seraph) picked |
 | [concept/choir-herald-r36-b.png](concept/choir-herald-r36-b.png) | Choir Herald B, seraph — bone seraph with a floating halo crest and segmented violet rings (sheet) | chosen (round 36, U.3) |
 | [concept/choir-herald-r36-b.gif](concept/choir-herald-r36-b.gif) | Choir Herald B — the same scene as A (motion) | chosen (round 36, U.3) |
-| [concept/choir-herald-final-r40-a.png](concept/choir-herald-final-r40-a.png) | Choir Herald final sprites (`tools/art/siege_units.py`, the chosen seraph b): wing beat, crest bloom, segmented ring 0-6, absorb flash, thread, aura circle (sheet) | proposed (round 40) |
-| [concept/choir-herald-final-r40-a.gif](concept/choir-herald-final-r40-a.gif) | Choir Herald final: four ringed Needlers, one ring draining, the Herald dies and the rings collapse, 10 fps | proposed (round 40) |
+| [concept/choir-herald-final-r40-a.png](concept/choir-herald-final-r40-a.png) | Choir Herald final sprites (`tools/art/siege_units.py`, the chosen seraph b): wing beat, crest bloom, segmented ring 0-6, absorb flash, thread, aura circle (sheet) | chosen (round 40, F.b: approved as final) |
+| [concept/choir-herald-final-r40-a.gif](concept/choir-herald-final-r40-a.gif) | Choir Herald final: four ringed Needlers, one ring draining, the Herald dies and the rings collapse, 10 fps | chosen (round 40, F.b: approved as final) |
 | [concept/ghost-drone-r36-a.png](concept/ghost-drone-r36-a.png) | Ghost Drone A, facet dart — grey human-built drone with the U.5 fix (2×2 px red eye, white wing-tip running lights, additive glow), 16 headings, next to a Talon and the player (sheet) | chosen (round 36, U.4; re-rendered with U.5) |
 | [concept/ghost-drone-r36-a.gif](concept/ghost-drone-r36-a.gif) | Ghost Drone A with the U.5 eye and running lights — line abreast, then a pincer, over dusty Mars plains (motion) | chosen (round 36, U.4; re-rendered with U.5) |
 | [concept/rejected/ghost-drone-r36-b.png](concept/rejected/ghost-drone-r36-b.png) | Ghost Drone B, crescent — grey drone with a forward-swept wing (sheet) | rejected — round 36: a (facet dart) picked |

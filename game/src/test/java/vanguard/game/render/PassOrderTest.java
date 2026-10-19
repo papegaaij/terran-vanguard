@@ -148,7 +148,9 @@ class PassOrderTest {
     void thePlayFieldIsDrawnInItsPassOrder() throws IOException {
         List<String> expected =
                 ORDER.lines().map(String::strip).filter(line -> !line.isEmpty()).toList();
-        assertEquals(String.join("\n", expected), String.join("\n", passes(drawBody(Files.readString(SOURCE)))));
+        assertEquals(
+                String.join("\n", expected),
+                String.join("\n", passes(drawBody(Files.readString(SOURCE).replace("\r\n", "\n")))));
     }
 
     /** The body of {@code draw(...)}, without its line comments. */

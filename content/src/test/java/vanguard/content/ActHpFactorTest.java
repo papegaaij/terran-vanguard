@@ -56,14 +56,15 @@ class ActHpFactorTest {
 
     /**
      * The user's Act 2 playtest (2026-10-18, PT2-B 2c): the returning {@code small} units the basis lists in {@code
-     * small_act_hp}, the Needler and the Stinger, get the factor capped at ×3 in its levels (08–09), so a Needler
+     * small_act_hp}, the Needler and the Stinger, get the factor capped at ×3 in its levels (08–09, 11–14), so a Needler
      * takes two bolts of the Pulse Cannon there; from Level 10 on (the user's reference) they keep their HP.
      */
     @Test
     void theListedSmallUnitsGetTheFactorCappedAtThreeInTheListedLevels() {
         assertEquals(
                 List.of("needler", "stinger"), CONTENT.enemyBasis().smallActHp().units());
-        assertEquals(List.of(8, 9), CONTENT.enemyBasis().smallActHp().levels());
+        assertEquals(
+                List.of(8, 9, 11, 12, 13, 14), CONTENT.enemyBasis().smallActHp().levels());
         // The Needler (4 HP, L01, reference 20): ×60/20 = 3 at L08, ×63/20 capped at 3 at L09.
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 8), 1e-12);
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 9), 1e-12);
@@ -71,9 +72,11 @@ class ActHpFactorTest {
         // The Stinger (6 HP, L02, reference 26): 6 × 60/26 = 13.8 → 14 at L08, 6 × 63/26 = 14.5 → 15 at L09.
         assertEquals(14, at("stinger", Difficulty.MEDIUM, 2, 8).hp());
         assertEquals(15, at("stinger", Difficulty.MEDIUM, 2, 9).hp());
-        // Not from Level 10 on, not in Act 1, and not for the small units the basis does not list.
+        // Levels 11 to 14 with their L10-style waves too (steps WA and WB): capped at ×3 again.
+        assertEquals(12, at("needler", Difficulty.MEDIUM, 2, 11).hp());
+        assertEquals(12, at("needler", Difficulty.MEDIUM, 2, 14).hp());
+        // Not in Level 10 (the user's reference), not in Act 1, and not for the small units the basis does not list.
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 2, 10));
-        assertEquals(4, at("needler", Difficulty.MEDIUM, 2, 14).hp());
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 1, 7));
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "spine-turret", 2, 8));
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "lamprey", 2, 14));

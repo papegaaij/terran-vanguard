@@ -6,7 +6,7 @@
 # (concept/backdrop-proposal.yaml, tools/art/backdrop_l12.py --proposal, which reads this file).
 scroll_speed: 140     # the chosen storm scene's swell
 launch_seconds: 5     # flying in from the bottom edge with Rook in his slot, as in Levels 08-11
-bounty_scale: 0.75    # every bounty × 0.75: the typical haul on budget(12) (M5 part F, step 4)
+bounty_scale: 0.30    # every bounty × 0.30: the typical haul on budget(12) (0.75 before the L10-style waves of 2026-10-19)
 water: true           # open sea throughout: kills on the play field play the water burst (no `sub` units here)
 drop_factor: 1.5      # shield cells: each enemy's drop `every` ÷ 1.5 (the Needler's 4th kill → 3rd) against the Lamprey drain
 control_prompts: []
@@ -32,7 +32,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Recommended traits: '`homing`, `spread`; `side` / `rear` / `area` help against a latched Lamprey'
     Hazards: Wind gusts (sideways push), low visibility (rain, cloud banks), lightning flashes
     Boss / mid-boss: 'none (finale: breakout from the storm, attacks from all sides)'
-    Sensor-suite detail: '**none**: ocean storm, `air` + `low-air`, front. **L1**: + the directions, density {density}, hazards "wind, low visibility", the objective `{objective}`. **L2**: + Lamprey (new), Whirl Seed, Needler, Wraith, Mantis, Spore Bomber, Skitter portraits. **L3**: + `homing` and `spread` highlighted; the timeline strip marks the storm wall (125–150 s) and the eye (150–175 s); 1 secret.'
+    Sensor-suite detail: '**none**: ocean storm, `air` + `low-air`, front. **L1**: + the directions, density {density}, hazards "wind, low visibility", the objective `{objective}`. **L2**: + Lamprey (new), Whirl Seed, Needler, Stinger, Wraith, Mantis, Spore Bomber, Skitter portraits. **L3**: + `homing` and `spread` highlighted; the timeline strip marks the storm wall (125–150 s) and the eye (150–175 s); 1 secret.'
 
 sections:  # back to back from t = 0; tiles: the backdrop's tile sets (tools/art/backdrop_l12.py --proposal); peak: another atmosphere inside the section
   - name: Squall Line
@@ -117,66 +117,112 @@ weather:  # M5 part F: the first level with weather; the eye (section 5) has non
   occlusion: true   # F1 = a: the banks on low-air hide that layer's bodies (draw order only)
   rain: [[0, 0], [10, 0], [13, 0.25], [25, 0.4], [125, 0.4], [130, 1], [145, 1], [150, 0], [175, 0], [178, 0.4], [190, 0.3], [200, 0.1], [205, 0]]   # [t, density]: presentation only
 
-# Act 2 popcorn (Skitter streams of 4 and snakes of 6, Whirl clusters of 6, Needler lines of 3) round the set
-# pieces, from t=7 (the act's minimum: at least 50 a minute; the pacing rule: no empty screen over 3 s).
-# The t=32 introduction alone: the popcorn before it leaves the screen first and nothing enters until t=40.
+# L10-style waves (the user's Act 2 playtest, 2026-10-18/19, P.e "yes, all"; as step CA did Levels 08-09):
+# a wave about every 2.5 s, the next entering while the last is still on the screen, Skitter streams and
+# snakes and Whirl clusters between Needler groups, with Spore Bomber lines under the scud banks (returning
+# medium units) so that something always fires. Kept: the t=32 introduction alone (the popcorn before it
+# leaves the screen first and nothing enters until t=38), the Lamprey swarms, the seeds on the wind at t=46
+# (Rook's line at 44), the canister's beat (t=98.5-104: the skitters beside it, the lightning reveal's
+# bombers, the Wraiths' overdrive), the Mantis pincers, the eye's circle (Varga's line at 157) and its
+# Wraiths, hard's Mantis pincer in the eye; waves now run to t=214, so the breakout fills its section.
 # Skitters cannot stream in from the rear (only chasers do), so the rear share is the Wraiths' and the
 # Lampreys'. A whirl cluster on the wind is released just outside the left edge (at: x < 0).
 waves:
-  - {t: 7, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25, notes: The first targets in the squall}
-  - {t: 11, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
-  - {t: 15, formation: line abreast, enemy: needler, count: 3, from: front, notes: Through the demonstration gust at t=16}
-  - {t: 18.5, formation: stream, enemy: skitter, count: 4, from: sides, edge: left, interval: 1.25}
-  - {t: 23, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [300, 110]}
-  - {t: 26.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1, notes: Gone before the Lamprey introduction}
+  - {t: 6.5, formation: stream, enemy: skitter, count: 6, from: front, edge: right, interval: 1, notes: The first targets in the squall}
+  - {t: 9, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 11.5, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 14, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}, notes: Through the demonstration gust at t=16}
+  - {t: 16.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 19, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [300, 110]}
+  - {t: 21.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 24, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 26.5, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 1, notes: Gone before the Lamprey introduction}
   - {t: 32, formation: stream, enemy: lamprey, count: 3, from: front, interval: 1.5, notes: "**New.** One at a time, 1.5 s apart, nothing else on screen; the first latch shows the shake-off prompt"}
-  - {t: 38, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: 6 s after the introduction}
-  - {t: 40, formation: V-wing, enemy: needler, count: 5, from: front}
-  - {t: 43, formation: stream, enemy: skitter, count: 4, from: sides, edge: right, interval: 1.25}
+  - {t: 38, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1, notes: 6 s after the introduction}
+  - {t: 40, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 42.5, formation: column, enemy: stinger, count: 4, from: front, hard: {count: 3}}
   - {t: 46, formation: whirl cluster, enemy: whirl-seed, count: 6, from: sides, edge: left, at: [-16, 150], notes: Released just outside the left edge; the wind bends their spiral to the right}
-  - {t: 50, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
-  - {t: 54, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 48, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}, notes: 'Under the scud banks (`low-air`); spores rise to the play plane'}
+  - {t: 50.5, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 51.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 53, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
+  - {t: 55.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: Laser sweeps across the rain}
   - {t: 58, formation: swarm, enemy: lamprey, count: 4, from: front}
-  - {t: 61, formation: stream, enemy: skitter, count: 4, from: sides, edge: right, interval: 1.25}
-  - {t: 64, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: 'Under the scud banks (`low-air`); spores rise to the play plane'}
-  - {t: 70, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 60.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 63, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 65.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}, notes: '`low-air`'}
+  - {t: 68, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 69.25, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
+  - {t: 70.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
   - {t: 73, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [140, 120]}
-  - {t: 76, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
-  - {t: 80, formation: stream, enemy: skitter, count: 10, from: front, edge: alternating, interval: 0.75}
-  - {t: 84, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 75.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}
+  - {t: 78, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 80.5, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.75}
+  - {t: 81.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 83, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: '2 per side, hold {hold} s'}
+  - {t: 85.5, formation: column, enemy: stinger, count: 4, from: front, hard: {count: 3}}
   - {t: 88, formation: swarm, enemy: lamprey, count: 5, from: sides, notes: Entering with the lightning flash at t=87}
-  - {t: 92, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 90.5, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 91.75, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
+  - {t: 93, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
   - {t: 96, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [240, 110]}
-  - {t: 98.5, formation: stream, enemy: skitter, count: 4, from: sides, edge: right, interval: 1.25, notes: Beside the drifting canister}
-  - {t: 101.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: 'The lightning reveal: the right one flies into the tall bank on the right (the canister''s cover), seen through it in the t=103.5 flash'}
+  - {t: 98.5, formation: stream, enemy: skitter, count: 6, from: sides, edge: right, interval: 1.25, notes: Beside the drifting canister}
+  - {t: 99.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 101.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}, notes: 'The lightning reveal: the right one flies into the tall bank on the right (the canister''s cover), seen through it in the t=103.5 flash'}
   - {t: 104, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: The first one drops an overdrive}
-  - {t: 108, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
+  - {t: 106.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 109, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 110.25, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
   - {t: 112, formation: stream, enemy: lamprey, count: 4, from: rear, interval: 1.5}
-  - {t: 117, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 114.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
+  - {t: 117, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
   - {t: 120, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: '2 per side, hold {hold} s'}
-  - {t: 122, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - {t: 122.5, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 1}
+  - {t: 123.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - {t: 124, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: Laser sweeps across the rain}
-  - {t: 128, formation: stream, enemy: skitter, count: 4, from: sides, edge: alternating, interval: 1.25}
+  - {t: 127, formation: column, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 129.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
   - {t: 132, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [240, 100]}
+  - {t: 134.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
   - {t: 136, formation: swarm, enemy: lamprey, count: 6, from: front, easy: {count: 4}, notes: Out of the heavy rain; easy 4}
+  - {t: 138.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}
   - {t: 140, formation: whirl cluster, enemy: whirl-seed, count: 6, from: sides, edge: left, at: [-16, 140], notes: On the wind with the wall's drift}
-  - {t: 143, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
-  - {t: 146, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: '`low-air`'}
-  - {t: 150, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: Into the eye}
-  - {t: 155, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 143, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 144.25, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
+  - {t: 146, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}, notes: '`low-air`'}
+  - {t: 148.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 150.5, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 1, notes: Into the eye}
+  - {t: 151.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 153, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
+  - {t: 155.5, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 156.75, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
   - {t: 158, formation: circle, enemy: needler, count: 8, from: front, hold: 8, clockwise: true, notes: "Orbits the eye's centre clockwise with the storm for {hold} s before breaking; the leader drops an overdrive"}
   - {t: 162.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: As the circle breaks}
   - {t: 166, formation: rear ambush, enemy: wraith, count: 3, from: rear}
-  - {t: 169.5, formation: stream, enemy: skitter, count: 5, from: sides, edge: alternating, interval: 1.25}
+  - {t: 169.5, formation: stream, enemy: skitter, count: 6, from: sides, edge: alternating, interval: 1.25}
   - {t: 170, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, skip: [easy, medium], notes: '**Hard only**'}
-  - {t: 176, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
-  - {t: 180, formation: stream, enemy: skitter, count: 4, from: sides, edge: alternating, interval: 1.25}
-  - {t: 183, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 170.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 172, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 175, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 176.25, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
+  - {t: 178, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
+  - {t: 180.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6}
+  - {t: 183, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: '2 per side, hold {hold} s'}
   - {t: 186, formation: swarm, enemy: lamprey, count: 5, from: rear}
-  - {t: 190, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
-  - {t: 194, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [240, 110]}
+  - {t: 188.5, formation: snake, enemy: skitter, count: 8, from: front, edge: right}
+  - {t: 189.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 191, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}, notes: '`low-air`'}
+  - {t: 193.5, formation: whirl cluster, enemy: whirl-seed, count: 6, from: front, at: [240, 110]}
   - {t: 196, formation: V-wing, enemy: needler, count: 5, from: front}
-  - {t: 199.5, formation: stream, enemy: skitter, count: 4, from: sides, edge: alternating, interval: 1.25, notes: The last wave}
+  - {t: 199, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 201.5, formation: snake, enemy: skitter, count: 8, from: front, edge: left}
+  - {t: 202.75, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 2}}
+  - {t: 204, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 3}}
+  - {t: 206.5, formation: rear ambush, enemy: wraith, count: 2, from: rear}
+  - {t: 209, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 211.5, formation: snake, enemy: skitter, count: 8, from: front, edge: right, notes: Out of the storm as it thins}
+  - {t: 212.75, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 214, formation: stream, enemy: skitter, count: 6, from: front, edge: alternating, interval: 1, notes: The last wave}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x
   - target: drifting canister

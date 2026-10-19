@@ -1,17 +1,17 @@
 ---
 title: Harbour Kraken
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../allies]
-updated: 2026-10-09
+updated: 2026-10-19
 ---
 
 # Harbour Kraken
 
 ## Summary
 
-The Act 2 mid-boss: a rust cephalopod wrapped around an offshore UTC platform. Its arms slam telegraphed lanes while the head lurks below; when it surfaces crown-first, its lime eyes open as weak points and it fires fans.
+The Act 2 mid-boss: a rust cephalopod wrapped around an offshore UTC platform. Four arms rooted at its mantle's rim slam telegraphed lanes while the head lurks below; a cut root ends its lane's slams for good. When the head surfaces crown-first, its lime eyes open as weak points and it fires fans.
 
 ## Design
 
@@ -23,40 +23,47 @@ Values are first-draft balancing numbers at **medium**, in [data.yaml](data.yaml
 | Field | Value |
 |---|---|
 | Faction | Vrell |
-| Layer | `ground` (the sea's surface); each part's **current layer**: `sub` while submerged, `ground` while surfaced; the slam arms are `ground` from their rise until they sink |
+| Layer | `ground` (the sea's surface); each part's **current layer**: `sub` while submerged, `ground` while surfaced; the slam arms are `ground` from their rise until they sink; the four roots always `ground` (round 40) |
 | Size tier | `huge` |
 | Size | 344×424 px, hitbox 208×152 (the grip overlay and the head: the mantle with the arm roots ≈ 250 px long, 130 px wide); the hitbox is Platform Tiamat's deck (a backdrop piece; no armour: shots fly over it) |
-| Parts | head/mantle (`vital`; the lime eyes a weak spot on it, ×2 while open), left and right slam arm (`destroyable`; runtime chains of 13 segments, E7 = a), the gripping arms (a drawn overlay on the platform) and the idle arms (`sub` shadows) |
+| Parts | head/mantle (`vital`; the lime eyes a weak spot on it, ×2 while open), four arm roots (`destroyable`, `ground`, one over each lane at the mantle's rim; each root's slam arm a runtime chain of 13 segments, E7 = a, round 40), the gripping arms (a drawn overlay on the platform) |
 | Orientation | `32 angles` (slam-arm segments; the head pre-rendered surfacing frames) |
-| HP | head 1,700 (×0.5 on the mantle, ×2 on the open eyes; tuned to a ≈ 60 s fight, E6 = a); slam arm 350 each; total 2400 (easy 1800 / hard 3120, from the global multipliers) |
-| Armour / shield | submerged parts: only `anti-sub` and the Smart Bomb ([layer rules](../../README.md#layer-rules)); surfaced head: mantle ×0.5, eyes ×2 while open |
+| HP | head 3,400 (×0.5 on the mantle, ×2 on the open eyes; round 40 re-measured from the proposal's 1,400 to keep the ≈ 60 s fight, E6 = a); root 200 each (×2 while its arm is raised); total 4200 (easy 3150 / hard 5460, from the global multipliers) |
+| Armour / shield | submerged head: only `anti-sub` and the Smart Bomb ([layer rules](../../README.md#layer-rules)); surfaced head: mantle ×0.5, eyes ×2 while open; the roots always on the surface, ×2 while their arm is raised |
 | Speed | 0 px/s (anchored) |
-| Movement | anchored: it scrolls in with the platform (invulnerable, without its bar) and engages when the scroll halts, the platform's centre at y 78; the head surfaces and dives, the arms slam (see *Phases* and *Lanes and slams*) |
-| Attack | see *Phases*; the slams: telegraph 1 s, rise 0.5 s, impact `heavy` = 10 on the ship and Rook in the lane plus 6 `small` splash bullets (120 px/s), awash 1.5 s, sink 0.6 s; a 7-orb `fan` from the beak (spread 70°, 140 px/s, `medium` = 6) every 2 s while the eyes are open, each after a 0.5 s crimson beak glow |
+| Movement | anchored: it scrolls in with the platform (invulnerable, without its bar) and engages when the scroll halts, the platform's centre at y -46; the head surfaces and dives, the rooted arms slam (see *Phases* and *Lanes and slams*) |
+| Attack | see *Phases*; the slams: telegraph 1.4 s, rise 0.5 s, impact `heavy` = 10 on the ship and Rook in the lane plus 6 `small` splash bullets (120 px/s), awash 1.5 s, sink 0.6 s; a 5-orb `fan` from the beak (spread 80°, 120 px/s, `medium` = 6) every 2.5 s while the eyes are open, each after a 0.8 s crimson beak glow |
 | Formations | solo set piece (a Driftjelly field released in the arena) |
 | Weak points | lime eyes (×2) (only while open) |
 | Effective traits | `anti-sub`, `anti-ground`, `forward` |
-| Credits | 216 (score 2160 × chain) (arms 36 each, head 144; paid × 1.6 × Level 11's `bounty_scale` of 0.6: 208, 15 % of budget(11) = 1,377) |
+| Credits | 300 (score 3000 × chain) (roots 25 each, head 200; paid × 1.6 × Level 11's `bounty_scale` of 0.43: 207, 15 % of budget(11) = 1,377) |
 | Death | `huge` water-surface variant: the head sinks in a churning foam ring, the gripping arms slide off the platform, spray, credit shower |
 | First level / used in | L11; mid-boss of L11 only |
-| Difficulty hooks | hard: lane telegraph 0.8 s; phase 3 slams three lanes |
+| Difficulty hooks | hard: lane telegraph 1.1 s; phase 3 slams three lanes |
 <!-- /data -->
 
 ### Phases
 
+Round 40 (proposal 3a of the Act 2 playtest, approved 2026-10-18; the art round 40 A.a): four rooted
+arms, everything 124 px up the screen. The round-33 fight (two arms owning two lanes each, the head
+76 px from the ship band) is in the Decisions log.
+
 | Phase | Ends at | Behaviour |
 |---|---|---|
-| 1 — Slams | 3 slams or 20 s, or both slam arms severed | Head submerged. The slam cycle (see *Lanes and slams*), one slam at a time: a lane churns and flashes for 1.0 s (red dashed telegraph), a slam arm rises base-to-tip and slams it, lies awash 1.5 s (hittable) and sinks; the next telegraph starts when it has sunk. |
-| 2 — Head up | the head's HP below 40 % | Cycle: the head surfaces crown-first (2 s, swell and foam), the eyes open for 8 s; the beak glows crimson 0.5 s before each 7-orb `fan` (spread 70°, 140 px/s, `medium` = 6) every 2 s; then it dives and one slam follows. Its first surfacing releases the arena's Driftjelly field. |
-| 3 — Two lanes | the head's HP at 0 | The head stays up, eyes open, fanning every 2 s; every 4 s two lanes are telegraphed and slammed at once, one by each living arm (hard three). A shield cell drops as it begins. |
+| 1 — Arms | two of the four roots cut, or 25 s | Head submerged. The slam cycle (see *Lanes and slams*), one slam at a time: a lane churns and flashes for 1.4 s (red dashed telegraph; its root rears and glows, taking ×2), the root's arm rises base-to-tip and slams the lane, lies awash 1.5 s and sinks; the next telegraph starts when it has sunk. The roots are always on the surface: shoot them any time. |
+| 2 — Head up | the head's HP below 40 % | Cycle: the head surfaces crown-first (2 s, swell and foam), the eyes open for 8 s; the beak glows crimson 0.8 s before each 5-orb `fan` (spread 80°, 120 px/s, `medium` = 6) every 2.5 s; then it dives and one slam follows. Its first surfacing releases the arena's Driftjelly field. |
+| 3 — Living roots | the head's HP at 0 | The head stays up, eyes open, fanning every 2.5 s; every 4 s the living roots slam two lanes at once, the player's and a cargo ship's (hard three). A shield cell drops as it begins. |
 
 ### Arena
 
 [Atlantic convoy (L11)](../../../campaign/act-2-homefront/level-11-atlantic-convoy/README.md): the
-scroll halts with Platform Tiamat at the top of the play field; four lanes of 120 px run the full
-height below it (lane 1 at the left edge); the [convoy's cargo ships](../../../allies/README.md#convoy-cargo-ship)
+scroll halts with Platform Tiamat's centre 46 px above the top edge (its deck y −122 to 30; round
+40, 78 px below it before); the head's centre is at y 170 (the mantle 70–270, the beak at 268), the
+four roots sit at the mantle's rim at y 210 over the lane centres (sockets x 60 / 154 / 326 / 420,
+40 × 40 targets), and four lanes of 120 px run from the roots' lower edge (y 230) to the bottom edge
+(lane 1 at the left edge); the [convoy's cargo ships](../../../allies/README.md#convoy-cargo-ship)
 hold lanes 1, 2 and 4 in the lower band (the level's secondary objective). Target duration 45–75 s
-at medium, tuned to **≈ 60 s** (E6 = a, see *Duration*).
+at medium, tuned to **≈ 55 s** (E6 = a, see *Duration*).
 
 ### Behaviour
 
@@ -65,56 +72,56 @@ at medium, tuned to **≈ 60 s** (E6 = a, see *Duration*).
   without its bar and silent. It **arrives at the arena's start** (its `t`), as the scroll begins to
   ease to a halt over 1 s: the bar appears (the short mid-boss bar), the mini-boss sting plays and the
   boss checkpoint is recorded; it **engages at the halt**, 1 s later (invulnerable until then, as a
-  boss in its descent). Its centre (Platform Tiamat's) is then 78 px below the top edge (110 until
-  round 33): it lies on
+  boss in its descent). Its centre (Platform Tiamat's) is then 46 px above the top edge (110 until
+  round 33, 78 until round 40): it lies on
   the ground at the halt scroll, which is the scroll at the arena's start plus the ease (68.8 px at
-  140 px/s), and the level's platform piece must be placed at the same ground position. The level's
+  140 px/s), and the level's platform piece must be placed at the same ground position (the halt
+  scroll + 586 px). The level's
   foreshadowing (the passing shape at t≈55, the mantle shadow under the platform in section 4) is
   scenery, not the boss.
-- **Lanes and slams** (user decision E5 = a): each slam arm **owns a half**: the left arm lanes 1–2,
-  the right arm lanes 3–4. A slam is made by the arm whose half holds the chosen lane.
-  - **The cycle**: the telegraph, a red dashed churn along the lane, 1.0 s (hard 0.8 s); the arm
-    rises base-to-tip out of the water at the platform (≈ 0.5 s, a first value) and slams down the
-    lane: at the **impact** the ship and Rook take `heavy` = 10 if their hit box overlaps the lane
-    (once per slam), a cargo ship in the lane takes one hit, and a line of 6 splash bullets
-    (`small`, 120 px/s) fans out from along the arm (from six evenly spaced points, out to the left
-    and the right in turn, 15° below the horizontal); then the arm lies **awash** for 1.5 s (on
-    `ground`: every weapon that reaches the ground hits it, `anti-ground` ×2; no contact) and
-    sinks (≈ 0.6 s, a first value) back to `sub`. The arm is `ground` from its rise until its sink
-    starts; only the impact hurts. The lanes run from the deck's lower edge (y 154) to the bottom
-    edge; from its rise the arm lies along its lane's centre line, its 13 segments evenly from the
-    lane's top to its tip 24 px above the bottom edge (each segment one of the arm's hit boxes); at
-    rest it lies under the water by its root.
-  - **Lane choice**: the slams alternate between the lane the player is in and the lane of the
-    surviving cargo ship nearest the player's x (default; a tie goes to the lower-numbered lane);
-    with no ship left every slam targets the player's lane. A slam in a lane holding both the
-    player and a ship hits both.
-  - **Severed arms**: an arm destroyed in its awash window (or by torpedoes while submerged) makes
-    its half **safe** for the rest of the fight. A choice that falls in a severed half goes to the
-    other choice if that lies in the living half, else the living arm slams its half's lane nearest
-    the player. With both arms severed nothing slams: phase 1 ends, phase 2 skips its slam, phase 3
-    only fans. Cutting the left arm saves Halvorsen's and Mbeki's lanes, the right arm
-    Saint-Laurent's.
-  - **Phase 3**: each living arm slams once per volley: the player's lane and the nearest ship's
-    lane, each by its half's arm; when both fall in one half (or are the same lane), the other arm
-    slams its own half's lane nearest the player. **Hard**'s third lane is the next-nearest ship's
-    lane (without one, the lane beside the player's): an arm whose half holds two targets slams its
-    second lane 0.5 s after its first. With one arm left it slams only its half (hard: twice, 0.5 s
-    apart). The first volley comes 1 s after the phase begins, then one every 4 s; an arm whose
-    cycle still runs (an earlier slam not yet sunk) sits a volley out.
+- **Lanes and slams** (round 40; E5 = a gave each of two arms a half until then): **one rooted arm a
+  lane**. Each arm's **root** (`root 1`–`root 4`, 200 HP each, `ground`) sits in its socket at the
+  mantle's rim over its lane and is **always hittable**, also while the head is under the water; it
+  takes **×2 while its arm is raised** (from its telegraph until it has sunk: the tell) and its
+  arm's segments carry the hits to it while the arm lies along the lane. **Cutting a root ends its
+  lane's slams for good.**
+  - **The cycle**: the telegraph, a red dashed churn along the lane with the root rearing and
+    glowing, 1.4 s (hard 1.1 s); the arm rises base-to-tip out of the water from its root (0.5 s)
+    and slams down the lane: at the **impact** the ship and Rook take `heavy` = 10 if their hit box
+    overlaps the lane (once per slam), a cargo ship in the lane takes one hit, and a line of 6
+    splash bullets (`small`, 120 px/s) fans out from along the arm (from six evenly spaced points,
+    out to the left and the right in turn, 15° below the horizontal); then the arm lies **awash** for
+    1.5 s and sinks (0.6 s). The arm is `ground` from its rise until its sink starts; only the impact
+    hurts. From its rise the arm lies along its lane's centre line, its 13 segments evenly from the
+    root's lower edge (y 230) to its tip 24 px above the bottom edge; at rest it lies under the water
+    (not drawn).
+  - **Lane choice**: single slams alternate between the lane the player is in and the lane of the
+    surviving cargo ship nearest the player's x, among the lanes whose root lives; a choice whose
+    root is cut goes to the other, else to the living root nearest the player. With no ship left
+    every slam targets the player's lane. A slam in a lane holding both the player and a ship hits
+    both.
+  - **Phase 3**: a volley every 4 s (the first 1 s after the phase begins) slams the player's lane
+    (if its root lives) and fills up to **2 lanes** (hard 3) with the living cargo ships' lanes
+    nearest the player, then the living lanes nearest the player; an arm whose cycle still runs sits
+    the volley out. With every root cut nothing slams: phase 3 only fans.
+  - **The teaching**: Okafor's line at the first telegraph on a cargo ship's lane
+    (`first-ship-telegraph`): "The arms are rooted at the rim. Cut a root and that lane is safe!";
+    Rook's at the first root cut.
 - **Ship damage**: a slam in a lane with a cargo ship is one hit; a ship survives three slams
   (smoke and a list from the first) and sinks on its fourth (easy: survives four; hard: sinks on
-  its second; retuned 2026-10-09). Cutting the arm whose half holds the ships first is what keeps
-  them: every slam in the left half strikes a ship's lane. Ships take no other damage from
-  the Kraken (splash bullets and fans travel on the player's plane). See
+  its second; retuned 2026-10-09). Cutting the roots over lanes 1, 2 and 4 keeps them: roots 1 and 2
+  guard Halvorsen and Mbeki, root 4 Saint-Laurent. Ships take no other damage from the Kraken
+  (splash bullets and fans travel on the player's plane). See
   [allies](../../../allies/README.md#convoy-cargo-ship).
 - **The head**: submerged in phase 1 (`sub`: only torpedoes and the Smart Bomb reach it, so a
   player with the optional Torpedo Pod can damage it, a reward for buying `anti-sub` early). It
   surfaces crown-first over 2 s (its layer flips to `ground` at the midpoint), its eyes open (the
   weak spot ×2 while open; the mantle ×0.5 elsewhere on the head, also under the water), and dives
   the reverse way over 1.5 s. A shot under an open eye flies on to it (the hit counts the eye on
-  its line ahead). The fans leave from the beak (the head's lower edge); the first one 0.5 s after
-  the eyes open, the glow running from the opening, then one every 2 s. When phase 3 begins mid-dive
+  its line ahead). The fans leave from the beak (the head's lower edge, y 268 at the halt: about
+  200 px, 1.4 s of flight, above the ship band); the first one 0.8 s after the eyes open, the glow
+  running from the opening, then one every 2.5 s (round 40: 7 orbs over 70° at 140 px/s every 2 s
+  before; the 5 orbs over 80° leave gaps of about 70 px at the ship band). When phase 3 begins mid-dive
   the head turns round and rises again.
 - **The arena's jelly field** (default): as the head first starts to surface the Kraken releases 6
   [Driftjellies](../../naval/driftjelly/README.md) as a `field` over lanes 1 and 4 (three each, in
@@ -156,6 +163,20 @@ the dive; nothing under the water) is **57.4 s**: the ease 1 s, phase 1 9.7 s (i
 slam cycles to the third impact), phase 2 33.7 s (2.2 surfacing cycles of 15.1 s with the slam after
 each dive), phase 3 13.0 s.
 
+
+**Round 40 (step CB, pending the user's review).** The rooted fight with the proposal's numbers (the
+head 1,400, total 2,200) lasted only **26 s** for the autopilot (the root-first pilot 36 s): with the
+head in open view, 200 px above the ship band, and five slow orbs a fan, the eyes take the whole open
+window and phase 2 ends in the first surfacing. The head was **re-measured to 3,400** (total 4,200):
+over five seeds at medium the first pilot (the eyes while the head is up, else the nearest root)
+kills it in **52.8 s**, the root-first pilot (`Autopilot.ArenaPlay.ARMS`: the roots over the ships'
+lanes first) in **56.6 s**, phase 1 ending after ≈ 9.5 s on two roots cut; **both keep all three
+cargo ships on every seed**, taking 0–2 hits a fight; easy 38.5 / 40.7 s, hard 67.8 / 70.7 s (every
+seed won; on hard the root-first pilot keeps all three on every seed, the first pilot on one). **The
+par is 55 s.** The window-aware estimate counts the open window at the eyes' ×2 for rooted arms (the
+head in open view; the mean with the mantle's ×0.5 before): **72.3 s** at 42 DPS, inside 45–75 s
+(the ease 1 s, phase 1 the delay and two roots, 10.5 s, phase 2 and 3 the rest).
+
 ### How it is built
 
 User decision **E7 = a** (the atlas budget: one unit on at most one 2048² page):
@@ -193,8 +214,8 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
 |---|---|---|
 | [concept/harbour-kraken-final-r33-a.png](concept/harbour-kraken-final-r33-a.png) | Final sprites (`tools/art/harbour_kraken.py`): the plain head for the `sub` pass, the surfaced head with its eye and beak frames and collar, the 2 s surfacing (`harbour-kraken-surface_0..11`), the slam-arm segments at 7 tapers and the tips at 32 headings, foam clumps, the grip overlay and its under-water stretch, the idle and foreshadow shadows, the death (sinking head, sliding grip, burst) and the severed arm's pop; in play on sea and platform stand-ins | chosen |
 | [concept/harbour-kraken-final-r33-a.gif](concept/harbour-kraken-final-r33-a.gif) | The concept's choreography with the final sprites: a slam, the head surfacing crown first, eyes open, beak glow, the dive, then the death | chosen |
-| [concept/harbour-kraken-r40-a.png](concept/harbour-kraken-r40-a.png) | Round 40 proposal a, the L11 rework (four rooted arms, everything 124 px up; `tools/art/harbour_kraken.py --r40`): the halt at 1x with the root targets, eyes and beak marked, in-play stills, the four root sockets (intact, hit, raised with its glow, cut and oozing, sinking) and the arms' under-water reach | proposed |
-| [concept/harbour-kraken-r40-a.gif](concept/harbour-kraken-r40-a.gif) | Round 40 proposal a in play: lane 2's tell, slam and cut, the head surfacing with its beak glow, lane 4's tell and slam, the death (ships and lane marks are stand-ins) | proposed |
+| [concept/harbour-kraken-r40-a.png](concept/harbour-kraken-r40-a.png) | Round 40 proposal a, the L11 rework (four rooted arms, everything 124 px up; `tools/art/harbour_kraken.py --r40`): the halt at 1x with the root targets, eyes and beak marked, in-play stills, the four root sockets (intact, hit, raised with its glow, cut and oozing, sinking) and the arms' under-water reach | chosen (round 40, A.a: approved) |
+| [concept/harbour-kraken-r40-a.gif](concept/harbour-kraken-r40-a.gif) | Round 40 proposal a in play: lane 2's tell, slam and cut, the head surfacing with its beak glow, lane 4's tell and slam, the death (ships and lane marks are stand-ins) | chosen (round 40, A.a: approved) |
 | [slam-r33-a.png](../../../art-direction/concept/slam-r33-a.png), [slam-r33-a.gif](../../../art-direction/concept/slam-r33-a.gif) | Lane telegraph and slam, variant a "edge dashes + spray sheets" (`tools/art/water_fx.py`; kept in art-direction's concept directory) | chosen |
 | [slam-r33-b.png](../../../art-direction/concept/rejected/slam-r33-b.png), [slam-r33-b.gif](../../../art-direction/concept/rejected/slam-r33-b.gif) | Variant b "lane boil, chevrons, rollers" (`tools/art/water_fx.py --variant b`) | rejected |
 
@@ -218,7 +239,8 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
 - [x] HP tuned to a ≈ 60 s fight at medium with the autopilot (E6 = a); `BalanceTest`'s
       window-aware duration and its share after `bounty_scale`; `par` from the measured fight;
       the autopilot avoiding telegraphed lanes (`KrakenTest`) (M5 part E, step E2c; the share,
-      15 % at Level 11's `bounty_scale` of 0.6 with the bounty of 216, 2026-10-09)
+      15 % at Level 11's `bounty_scale` of 0.6 with the bounty of 216, 2026-10-09; 0.43 with 300 since
+      step WB)
 - [x] An arm-first autopilot (`Autopilot.ArenaPlay.ARMS`) keeps all three cargo ships afloat most
       of the time at medium in a ≈ 60 s fight (`KrakenTest`) (M5 part E, 2026-10-09)
 - [x] Water-surface interaction per the art-direction water rules; the arms as chains with
@@ -227,6 +249,21 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
 - [x] The lane telegraph and slam look (round 33's a/b) (M5 part E, steps E1b and E3c: either
       variant drawn from the sizes the atlas holds)
 - [x] Death effect, bounty and score per this spec (M5 part E, steps E2c and E3c)
+- [x] Round 40, the simulation: rooted one-lane arms (`BossSpec.Lanes.rooted`, the raised ×2, a cut
+      root's lane safe, single slams and volleys among the living roots), the `FIRST_SHIP_TELEGRAPH`
+      cue (step BS1: `KrakenRootsTest`)
+- [x] Round 40, the looks and sounds: the root sockets (intact, hit, raised with its glow, cut,
+      sinking), the arms from the sockets, the r40 head position (steps ART-K and KG:
+      `KrakenRootsLooksTest`)
+- [x] Round 40, the data: four roots at the sockets (200 HP, `ground`), `lanes.rooted` and `raised`,
+      a volley's 2 lanes (`slam.volley`), the anchor at −46 (the loader takes a centre above the top
+      edge), phase 1 Arms (two roots cut or 25 s), the fan 5 × 80° at 120 px/s every 2.5 s after a
+      0.8 s glow, the telegraph 1.4 s (hard 1.1 s), the head re-measured to 3,400 for the ≈ 55 s
+      fight; the rooted autopilot plays; Level 11's platform piece, `hold_clear` and the teaching
+      line (step CB: `KrakenTest`, `Level11Test`, `BalanceTest`, `PartEUnitsDataTest`)
+- [ ] Round 40: the voice of Okafor's new line (`first-ship-telegraph`) rendered (a VOX step;
+      `VoiceFilesTest`)
+- [ ] Round 40: a Level 11 capture of the reworked fight for the user's review
 
 ## Decisions
 
@@ -358,3 +395,19 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
   the retaken Kraken capture was accepted, hard kept as built ("hard is supposed to be hard"). The
   stat block's numbers and the build choices (f)–(k), (o), (q), (r) and (u) accepted. `design:
   approved`, `art: final`; every Implementation item is ticked, so the implementation is `done`.
+- 2026-10-19 (user, round 40, A.a): the r40 Kraken approved and chosen (four rooted arms, everything 124 px up; the layout changes for the data, the platform anchor -46 and the sockets at x 60 / 154 / 326 / 420, accepted); build choices A.aa-A.af (aimed orb turns, raised-arm double damage, cut-root lanes, glow, reused sounds, cut-root chain) all yes. `art` stays `final`; step CB puts r40 in Levels 11 and 14.
+- 2026-10-19 (step CB, round 40 data; pending the user's review where marked): the reworked fight in
+  the data as approved (3a, A.aa–A.af). Measured with the autopilot and the plan's Level 11 fit, the
+  proposal's head of **1,400** made a **26 s** fight (the arm-first pilot 36 s): with the head in open
+  view and the thin fans the eyes take the whole open window, so phase 2 ended in the first
+  surfacing. **The head is re-measured to 3,400** (total 4,200; pending review) for the mid-boss's
+  ≈ 60 s (E6 = a): see *Duration*; the par 60 → **55**. `BalanceTest`/`tools/balance.py` count the
+  open window at the eyes' ×2 for rooted arms (the mean of eyes and mantle before). The bounty stays
+  216 (roots 18 each, the head 144). A volley slams **2 lanes** at medium (`slam.volley`; one per arm
+  otherwise, which would be 4); hard's telegraph **1.1 s** (0.8 before, with medium's 1.0 → 1.4;
+  pending review). Rook's root line reuses his calamari line (no new voice); Okafor's teaching line
+  needs its voice (VOX step).
+- 2026-10-19 (step WB, pending the user's review): the bounty **216 → 300** in Act 1 terms (head 144 →
+  200, the roots 18 → 25, still 1 : 8), as Level 11's L10-style waves took its `bounty_scale` from 0.6
+  to 0.43: every part pays what it did, 207 = **15 %** of budget(11) (`KrakenTest`); the fight is
+  unchanged.

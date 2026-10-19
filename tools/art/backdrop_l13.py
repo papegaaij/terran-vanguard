@@ -32,17 +32,21 @@ the seam, where the exit's tile set begins (the ground at 6,000 px).
 
 **Layers** (factors as Levels 11 and 12): `deep` 0.85: `arctic-water`, the dark arctic swell (round
 09's stops, calm), drifting 3 px/s to the left on the real clock (the open water in the leads moves
-gently in the halt); `ground` 1.0: the strip in sections 1-4, `open-floes` (looser floes, open sea) in
+gently in the halt; still since the playtest of 2026-10-18, see the loose ice); `ground` 1.0: the strip in sections 1-4, `open-floes` (looser floes, open sea) in
 the exit; `low-air` 1.5: the atmosphere's banks: `fog-wisps` (light, ~10 %), `fog-banks` (medium:
 thicker at the edges, ~20 %), `whiteout` (heavy: whiteout_l13 look b's curtain at the peak, from both
 side edges, the centre clear; 480 x 540, its noise's period); no high-air tiles (the snow is the game's,
-on the real clock). **Loose ice**: one piece `loose-ice` (8 headings: each heading frame a different
-floe or brash cluster, frame 2, heading east, the mortar floe) on straight paths at 6 px/s in the halt's
-open water outside the lanes, and the Polyp Mortars' floe drifting in from the left at the data's
-10 px/s (t=66), the mortars standing on it. **Motion budget** (BackdropCheck: at most two strongly
-animated elements): the drifting water and the loose ice; the fog and the whiteout are static in the
-data (they cross-fade over the 4 s ramp); a real-clock roll of the whiteout banks, the snow and easy's
-6 s peak are the game's (step G6).
+on the real clock). **Loose ice** (the user's Act 2 playtest, 2026-10-18: "either all icebergs drift and
+they all drift in the same direction, or none drift at all"; they also slid over the relay's floe): every
+floe drifts **east at the mortars' 10 px/s**, one current, along the north and south margins of the halt,
+clear of the relay's floe (--check fails if a floe's opaque pixels touch it); the Polyp Mortars' floe drifts
+in from the left at the data's 10 px/s (t=66), the mortars standing on it. Each look is a piece of its own
+(`mortar-floe`, `loose-ice-a` .. `-g`: 2 headings, both the same image, an east-bound path shows frame 1),
+so the floes keep their different shapes without a per-placement frame in the game. **Motion budget**
+(BackdropCheck: at most two strongly animated elements, counted by piece): the water no longer drifts
+(it drifted west under floes drifting east), so two floes may cross at once; they are timed so that never
+three pieces move on the screen; the fog and the whiteout are static in the data (they cross-fade over the
+4 s ramp); a real-clock roll of the whiteout banks, the snow and easy's 6 s peak are the game's (step G6).
 
 Outputs (assets/backdrop/level-13/):
   pack-ice-1 .. pack-ice-4   ground pieces 480x1536: the approach and the halt's frame (one render)
@@ -50,7 +54,8 @@ Outputs (assets/backdrop/level-13/):
   arctic-water               deep tile set 480x960, drifting: the dark water under the ice
   fog-wisps, fog-banks       low-air tile sets 480x960: light and medium fog
   whiteout                   low-air tile set 480x540: the heavy peak's banks (whiteout_l13 look b)
-  loose-ice                  ground piece 96x112, 8 headings: drifting floes and brash, the mortar floe
+  mortar-floe, loose-ice-a..g   ground pieces 96x112, 2 headings (one image twice): the mortars' floe and
+                             seven drifting floes and brash clusters, all east-bound
   design/campaign/.../level-13-polar-relay/concept/backdrop-final-r35-a.png/.gif   review: the
                        images, composites as the game draws them (stand-ins for the units), the GIF the
                        ease into the halt and the whiteout's ramp
@@ -101,8 +106,8 @@ ATMOSPHERE = {
     "heavy": {"banks": "whiteout", "haze": 0.14},            # the whiteout's peak: banks from both side edges
 }
 RAMP = 4                                # README: the whiteout's 4 s ramps
-WATER_DRIFT = -3.0                      # px/s: the water under the ice drifts left (real clock)
-LOOSE_SPEED = 6.0                       # px/s: the loose floes and brash in the halt (README)
+WATER_DRIFT = 0.0                       # px/s: the water under the ice (was -3, west, under east-bound floes)
+LOOSE_SPEED = 10.0                      # px/s east: the loose floes and brash in the halt, the mortars' floe's current
 
 # --------------------------------------------------------------------------- the level's data
 
@@ -623,7 +628,10 @@ def whiteout(w, h):
 
 LOOSE = (96, 112)
 LOOSE_HEADINGS = 8
-MORTAR_FRAME = 2                         # heading east (90 deg): the mortar floe drifts right
+MORTAR_FRAME = 2                         # the mortar floe's look among the eight frames
+LOOK_HEADINGS = 2                        # each look a piece of 2 headings, the same image twice (east shows frame 1)
+LOOKS = {"mortar-floe": MORTAR_FRAME, "loose-ice-a": 7, "loose-ice-b": 1, "loose-ice-c": 0, "loose-ice-d": 3,
+         "loose-ice-e": 6, "loose-ice-f": 4, "loose-ice-g": 5}   # piece -> frame of loose_frames()
 
 
 def loose_frames():
@@ -666,8 +674,8 @@ def loose_frames():
 
 TILE_SETS = {   # id -> (layer, height, drift, note)
     "arctic-water": ("deep", TILE_H, WATER_DRIFT, "the dark arctic water under the ice (r09's stops, the swell damped by "
-                                                   "the pack), opaque, every section; drifting left on the real clock: "
-                                                   "the leads' water moves in the halt"),
+                                                   "the pack), opaque, every section; still (it drifted west under the "
+                                                   "east-bound floes; playtest 2026-10-18)"),
     "open-floes": ("ground", TILE_H, None, "the exit: looser floes and open sea northward (translucent water, alpha >= 3); "
                                            "open water where it begins at the halt's top edge"),
     "fog-wisps": ("low-air", TILE_H, None, "light: thin pale fog wisps, ~10 %"),
@@ -679,23 +687,32 @@ SECTION_TILES = [["arctic-water", "open-floes"] if i >= EXIT else ["arctic-water
 PIECE_IDS = [f"pack-ice-{k}" for k in range(1, PIECES_N + 1)]
 PIECES = {      # id -> (layer, (w, h), extra spec, note)
     **{pid: ("ground", (W, PIECE_H), {}, None) for pid in PIECE_IDS},
-    "loose-ice": ("ground", LOOSE, {"headings": LOOSE_HEADINGS},
-                  "8 headings, each a different floe or brash cluster; heading 2 (east) the mortars' floe"),
+    **{pid: ("ground", LOOSE, {"headings": LOOK_HEADINGS},
+             "the mortars' floe (2 headings, one image)" if pid == "mortar-floe" else
+             "a drifting floe or brash cluster of its own look (2 headings, one image)" if pid == "loose-ice-a" else None)
+       for pid in LOOKS},
 }
 PIECE_IDS_NOTE = ("the approach and the halt's frame, one render cut in four (the leads along the lanes, the relay's "
                   "and the hut's floes)")
 
+FLOE_OFF = LOOSE[0] / 2 + 10                # a floe's centre this far outside a side edge is off the screen
+
+
 def loose_paths():
-    """The loose floes' straight paths at 6 px/s in the halt (frame, from, to in screen px, start t,
-    repeats, every s): the halt's open water is the leads (the lanes fill the ring round the relay's
-    floe), so they drift along the leads' outer margins: westward along the south lead, down the west
-    lead, up the east lead, north-eastward across the south-east corner (found by --check's search
-    for straight lines with the least ice under them)."""
+    """The loose floes' paths (piece, row y, start t, from x, to x in screen px): all east at LOOSE_SPEED,
+    one current with the mortars' floe (the playtest of 2026-10-18), along the halt's north band (above the
+    relay's floe, the mortars' floe's row) and its south band (below it), rows where no look's opaque
+    pixels reach the relay's floe (--check). Two are in place when the halt begins and drift off; the
+    others enter at the left edge one after another, so at most two floes (pieces) move at once with the
+    mortars' floe and none crosses another's band while it is there."""
     return [
-        (6, (540, 472), (-60, 472), 40.0, 2, 100.0),
-        (4, (66, -60), (66, 600), 46.0, 1, 0.0),
-        (0, (422, 600), (422, -60), 96.0, 1, 0.0),
-        (1, (190, 574), (508, 256), 150.0, 1, 0.0),
+        ("loose-ice-a", 482, HALT_FROM, 150, W + FLOE_OFF),          # south, in place at the halt, off at ≈ 79
+        ("loose-ice-b", 66, HALT_FROM, 330, W + FLOE_OFF),           # north, off at ≈ 61 before the mortars' floe
+        ("loose-ice-c", 462, 79.5, -FLOE_OFF, W + FLOE_OFF),         # south, after a
+        ("loose-ice-d", 90, 122.0, -FLOE_OFF, W + FLOE_OFF),         # north, after the mortars' floe
+        ("loose-ice-e", 486, 139.5, -FLOE_OFF, W + FLOE_OFF),        # south, after c
+        ("loose-ice-f", 70, 182.0, -FLOE_OFF, W + FLOE_OFF),         # north, after d; scrolls off after the halt
+        ("loose-ice-g", 460, 199.5, -FLOE_OFF, W + FLOE_OFF),        # south, after e; scrolls off after the halt
     ]
 
 
@@ -741,19 +758,17 @@ def strip_placements():
     return out
 
 
-def path_entry(frame, a, b, t0, speed_):
-    """A placement of loose-ice in the halt (its place at HALT_FROM: the screen's centre) with a
+def path_entry(piece, a, b, t0, speed_):
+    """A placement of a floe piece in the halt (its place at HALT_FROM: the screen's centre) with a
     straight path a -> b (screen px, y down) from t0 at speed_."""
-    del frame
     dist = math.hypot(b[0] - a[0], b[1] - a[1])
     t1 = t0 + dist / speed_
-    return {"piece": "loose-ice", "t": HALT_FROM, "x": W // 2,
+    return {"piece": piece, "t": HALT_FROM, "x": W // 2,
             "path": [[r4(t0), r4(a[0] - W / 2), r4(MID - a[1])], [r4(t1), r4(b[0] - W / 2), r4(MID - b[1])]]}
 
 
-def heading_frame(a, b):
-    deg = math.degrees(math.atan2(b[0] - a[0], -(b[1] - a[1]))) % 360
-    return int(math.floor(deg * LOOSE_HEADINGS / 360 + 0.5)) % LOOSE_HEADINGS
+def heading_deg(a, b):
+    return math.degrees(math.atan2(b[0] - a[0], -(b[1] - a[1]))) % 360
 
 
 def placements():
@@ -762,19 +777,17 @@ def placements():
         out.append((e, f"{PIECE_IDS_NOTE}: ground {TOP_G - STRIP_H + i * PIECE_H}-{TOP_G - STRIP_H + (i + 1) * PIECE_H} "
                        "(exact rows: re-run --proposal after the data moves a section end)" if i == 0 else None))
     y, (t0, x0), (t1, x1) = floe_path()
-    floe = {"piece": "loose-ice", "t": HALT_FROM, "x": W // 2,
+    floe = {"piece": "mortar-floe", "t": HALT_FROM, "x": W // 2,
             "path": [[r4(t0), r4(x0 - W / 2), r4(MID - y)], [r4(t1), r4(x1 - W / 2), r4(MID - y)]]}
-    assert heading_frame((x0, y), (x1, y)) == MORTAR_FRAME
+    assert heading_deg((x0, y), (x1, y)) == 90
     out.append((floe, f"the mortars' floe (heading east): in from the {'left' if FLOE_LEFT else 'right'} at {FLOE_DRIFT:g} px/s, "
                       f"its centre at the mortars' spawn ({-MORTAR_HALF}, {y:g} below the top) at t {FLOE_T:g}"))
     first = True
-    for frame, a, b, t0, count, every in loose_paths():
-        e = path_entry(frame, a, b, t0, LOOSE_SPEED)
-        assert heading_frame(a, b) == frame, (frame, heading_frame(a, b))
-        if count > 1:
-            e["repeat"] = {"count": count, "every": every}
-        out.append((e, "the loose ice drifting 6 px/s in the halt's open water, outside the lanes (each direction its "
-                       "own heading frame)" if first else None))
+    for piece, y, t0, xa, xb in loose_paths():
+        e = path_entry(piece, (xa, y), (xb, y), t0, LOOSE_SPEED)
+        assert heading_deg((xa, y), (xb, y)) == 90, piece
+        out.append((e, f"the loose ice drifting east at {LOOSE_SPEED:g} px/s with the mortars' floe (one current, "
+                       "playtest 2026-10-18), clear of the relay's floe, each floe its own look" if first else None))
         first = False
     return out
 
@@ -894,9 +907,10 @@ def write_all(backdrop, wanted):
         if not wanted or set(PIECE_IDS) & wanted:
             for k, pid in enumerate(PIECE_IDS, 1):
                 save(pid, strip_piece(k))
-        if not wanted or "loose-ice" in wanted:
-            for k in range(LOOSE_HEADINGS):
-                save(f"loose-ice_{k}", loose_ice(*LOOSE, k))
+        for pid, k in LOOKS.items():
+            if not wanted or pid in wanted:
+                for h in range(LOOK_HEADINGS):
+                    save(f"{pid}_{h}", loose_ice(*LOOSE, k))
         for name, size, fut in futures:
             img = fut.result()
             if img.size != size:
@@ -1235,7 +1249,7 @@ def check_layout(backdrop):
     if top or of_seam > 0.01:
         problems.append("ice at the seam where open-floes begins")
     for e in expanded(backdrop):
-        if e["piece"] != "loose-ice":
+        if e["piece"] not in LOOKS:
             continue
         p = e["path"]
         bad = 0
@@ -1248,6 +1262,54 @@ def check_layout(backdrop):
                 bad += d < 0.75
         if bad and e["path"][0][0] != floe_path()[1][0]:
             print(f"  loose ice from t {p[0][0]:g}: {bad} of 21 samples inside a lane")
+    return problems
+
+
+def relay_floe():
+    """The relay's floe in the halt's frame (rows = screen y in the halt): the strip's ice connected to the
+    relay's place."""
+    ice = strip_field()["ice"][:SCREEN]
+    floe = np.zeros_like(ice)
+    floe[int(RELAY_R), int(RELAY_X)] = True
+    while True:
+        grown = floe.copy()
+        grown[1:] |= floe[:-1]
+        grown[:-1] |= floe[1:]
+        grown[:, 1:] |= floe[:, :-1]
+        grown[:, :-1] |= floe[:, 1:]
+        grown &= ice
+        if (grown == floe).all():
+            return floe
+        floe = grown
+
+
+def check_floes(backdrop):
+    """The playtest's floes (2026-10-18): every moving floe drifts east at one speed, and none of its opaque
+    pixels touches the relay's floe while the ground stands (it scrolls with the floe afterwards)."""
+    problems = []
+    floe = relay_floe()
+    worst = {}
+    for e in expanded(backdrop):
+        if e["piece"] not in LOOKS:
+            continue
+        (t0, x0, y0), (t1, x1, y1) = e["path"][0], e["path"][-1]
+        speed_ = (x1 - x0) / (t1 - t0)
+        if y1 != y0 or abs(speed_ - LOOSE_SPEED) > 0.01 or len(e["path"]) != 2:
+            problems.append(f"{e['piece']}: not east at {LOOSE_SPEED:g} px/s ({speed_:.2f}, dy {y1 - y0:g})")
+        mask = cached(f"{e['piece']}_1")[..., 3] > 8
+        h, w = mask.shape
+        for t in np.arange(max(HALT_FROM, t0), min(HALT_TO, t1) + 0.01, 0.5):
+            x, top, _, _ = piece_screen(backdrop, e, HALT_SCROLL, t)
+            a0, a1, c0, c1 = max(0, top), min(SCREEN, top + h), max(0, x), min(W, x + w)
+            if a0 >= a1 or c0 >= c1:
+                continue
+            n = int((mask[a0 - top:a1 - top, c0 - x:c1 - x] & floe[a0:a1, c0:c1]).sum())
+            if n > worst.get(e["piece"], (0, 0))[0]:
+                worst[e["piece"]] = (n, t)
+    print("  floes on the relay's floe (opaque px, worst): " + (", ".join(f"{k} {n} at t {t:g}" for k, (n, t)
+                                                                            in worst.items()) or "none"))
+    for k, (n, t) in worst.items():
+        problems.append(f"{k}: {n} opaque px over the relay's floe at t {t:g}")
     return problems
 
 
@@ -1337,8 +1399,8 @@ def check_fog():
 
 
 def run_checks(backdrop):
-    problems = (check_layout(backdrop) + check_tiles(backdrop) + check_seams_between_pieces() + check_budget(backdrop)
-                + check_fog())
+    problems = (check_layout(backdrop) + check_floes(backdrop) + check_tiles(backdrop) + check_seams_between_pieces()
+                + check_budget(backdrop) + check_fog())
     for p in problems:
         print("PROBLEM:", p)
     if not problems:
@@ -1378,11 +1440,11 @@ def review(backdrop):
     for pid in PIECE_IDS:
         im = load(pid)
         items.append((f"{pid} 480x{PIECE_H}", im.resize((im.width // 4, im.height // 4), Image.BOX)))
-    lo = [load(f"loose-ice_{k}") for k in range(LOOSE_HEADINGS)]
+    lo = [load(f"{pid}_1") for pid in LOOKS]
     row = Image.new("RGBA", (LOOSE[0] * 4 + 12, LOOSE[1] * 2 + 4))
     for k, im in enumerate(lo):
         row.alpha_composite(im, ((k % 4) * (LOOSE[0] + 4), (k // 4) * (LOOSE[1] + 4)))
-    items.append(("loose-ice 8 headings (2: the mortar floe)", row))
+    items.append(("mortar-floe, loose-ice-a..g (all east)", row))
     width, x, y, row_h = 1640, 16, 44, 0
     rows = []
     for name, im in items:
@@ -1448,7 +1510,7 @@ def main(argv):
         return
     wanted = {a for a in argv if not a.startswith("--")}
     names = set(backdrop["tile_sets"]) | set(backdrop["pieces"])
-    known = set(GENERATORS) | set(PIECE_IDS) | {"loose-ice"}
+    known = set(GENERATORS) | set(PIECE_IDS) | set(LOOKS)
     if names - known or wanted - known:
         raise SystemExit(f"no generator for {sorted((names | wanted) - known)}")
     if "--check" in argv:
@@ -1457,7 +1519,7 @@ def main(argv):
     if "--review" not in argv:
         write_all(backdrop, wanted)
         if not wanted:
-            keep = {f"{n}" for n in backdrop["tile_sets"]} | set(PIECE_IDS) | {f"loose-ice_{k}" for k in range(LOOSE_HEADINGS)}
+            keep = {f"{n}" for n in backdrop["tile_sets"]} | set(PIECE_IDS) | {f"{pid}_{h}" for pid in LOOKS for h in range(LOOK_HEADINGS)}
             for f in OUT.glob("*.png"):
                 if f.stem not in keep:
                     f.unlink()

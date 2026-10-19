@@ -56,7 +56,7 @@ class PartHUnitsDataTest {
                 .spawns()
                 .orElseThrow()
                 .getFirst();
-        assertEquals(4, wraiths.ambush().orElseThrow().most());
+        assertEquals(2, wraiths.ambush().orElseThrow().most(), "round 40 (4a): 4 -> 2");
         assertEquals(14, spire.firstLevel());
         assertTrue(spire.movement().anchored().isPresent());
         assertEquals(100, spire.movement().sine().orElseThrow().amplitude());
@@ -80,8 +80,8 @@ class PartHUnitsDataTest {
                 SPIRE,
                 text -> replace(
                         text,
-                        "enemy: wraith, count: 2, speed: 200, ambush:",
-                        "enemy: skitter, count: 2, speed: 200, ambush:"),
+                        "enemy: wraith, count: 1, speed: 200, ambush:",
+                        "enemy: skitter, count: 1, speed: 200, ambush:"),
                 "an ambush launch flies its enemy's rear-ambush path: 'skitter'");
         assertProblem(
                 SPIRE,
@@ -89,7 +89,7 @@ class PartHUnitsDataTest {
                 "an anchored boss sways only after a phase's move lifts it");
         assertProblem(
                 SPIRE,
-                text -> replace(text, "ambush: {most: 4}}", "ambush: {most: 4}, arc: 40}"),
+                text -> replace(text, "ambush: {most: 2}}", "ambush: {most: 2}, arc: 40}"),
                 "an ambush launch flies its enemy's rear path: no arc or glide");
     }
 

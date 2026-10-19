@@ -1105,13 +1105,55 @@ public final class Autopilot {
         var arena = boss.arena().orElseThrow();
         double shipX = sortie.ship().x();
         double half = HULL_X + LANE_GAP;
-        double wanted = play == ArenaPlay.ARMS ? armsFirstX(sortie, boss, shipX) : exposedX(boss, shipX);
+        double wanted = arena.rooted()
+                ? rootedX(sortie, boss, shipX, play)
+                : play == ArenaPlay.ARMS ? armsFirstX(sortie, boss, shipX) : exposedX(boss, shipX);
         double targetX = clearOfLanes(arena, wanted, half, shipX);
         if (laneUnder(arena, arena.telegraphed(), shipX, half) > 0) {
             // Out of the lane first, toward the nearer side clear of it (the target's x is beside it).
             targetX = clearOfLanes(arena, shipX, half, shipX);
         }
         return bossMove(sortie, targetX, ARENA_Y, arena);
+    }
+
+    /**
+     * Round 40 (the rooted arms, design/enemies/bosses/harbour-kraken): what to line up under. Arm-first, the
+     * nearest living root over a lane holding a convoy ship a slam can still sink, its lane not telegraphed; then
+     * (both plays) the surfaced head's eye clear of the telegraphed lanes while it is up; else the nearest living
+     * root clear of them (the roots are always on the surface); else the head (waiting for it).
+     */
+    private static double rootedX(Sortie sortie, SetPiece boss, double shipX, ArenaPlay play) {
+        var arena = boss.arena().orElseThrow();
+        if (play == ArenaPlay.ARMS) {
+            double x = nearestRootX(boss, shipX, shipLanes(sortie));
+            if (!Double.isNaN(x)) {
+                return x;
+            }
+        }
+        if (arena.surfaceState() == vanguard.sim.SlamArena.SurfaceState.UP) {
+            return clearEyeX(boss, shipX);
+        }
+        double x = nearestRootX(boss, shipX, ~0);
+        return Double.isNaN(x) ? exposedX(boss, shipX) : x;
+    }
+
+    /** Round 40: the x of the living root nearest the ship over one of {@code lanes} not telegraphed; NaN without. */
+    private static double nearestRootX(SetPiece boss, double shipX, int lanes) {
+        var arena = boss.arena().orElseThrow();
+        double best = Double.NaN;
+        for (int a = 0; a < arena.armCount(); a++) {
+            int part = arena.armPart(a);
+            if (boss.partWrecked(part)
+                    || (arena.armLanes(a) & lanes) == 0
+                    || (arena.armLanes(a) & arena.telegraphed()) != 0) {
+                continue;
+            }
+            double x = boss.partX(part);
+            if (Double.isNaN(best) || Math.abs(x - shipX) < Math.abs(best - shipX)) {
+                best = x;
+            }
+        }
+        return best;
     }
 
     /**

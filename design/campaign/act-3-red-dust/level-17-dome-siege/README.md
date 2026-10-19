@@ -2,7 +2,7 @@
 title: Level 17 – Dome Siege
 design: approved
 implementation: in-progress
-art: proposed
+art: chosen
 depends-on: [../../../enemies/air/choir-herald, ../../../enemies/ground/shellback, ../../../enemies/air/spore-bomber, ../../../enemies/air/dust-kite, ../../../allies, ../../../player/wingmen, ../../../world/mars]
 updated: 2026-10-19
 ---
@@ -382,12 +382,12 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r40-a.png](concept/backdrop-final-r40-a.png) | Level 17 backdrop final (`tools/art/backdrop_l17.py`): the play field at twelve times with the domes, and the main pieces (sheet) | proposed (round 40) |
-| [concept/backdrop-final-r40-a.gif](concept/backdrop-final-r40-a.gif) | Level 17 backdrop final: the whole level flown at 0.5x, 10 fps | proposed (round 40) |
-| [concept/l17-props-final-r40-a.png](concept/l17-props-final-r40-a.png) | The seed-vault secret (`tools/art/siege_units.py`): the collapsed greenhouse frame (whole, hit, badly hit, lifted), the capsule and its glow (sheet) | proposed (round 40) |
-| [concept/l17-props-final-r40-a.gif](concept/l17-props-final-r40-a.gif) | The frame shot apart and the capsule popping free, 10 fps | proposed (round 40) |
-| [concept/level-17-capture-r40-a.png](concept/level-17-capture-r40-a.png) | Capture of the game (step D5): twenty frames of the medium run with the plan's fit and Rook (and four of a hard run without firing), the last the debrief | proposed (round 40) |
-| [concept/level-17-capture-r40-a.mp4](concept/level-17-capture-r40-a.mp4) | Capture of the game with its sound: the whole medium run, then the hard run's domes cracking and breaking and the Herald's rings | proposed (round 40) |
+| [concept/backdrop-final-r40-a.png](concept/backdrop-final-r40-a.png) | Level 17 backdrop final (`tools/art/backdrop_l17.py`): the play field at twelve times with the domes, and the main pieces (sheet) | chosen (round 40, F.d / F.e: approved as final) |
+| [concept/backdrop-final-r40-a.gif](concept/backdrop-final-r40-a.gif) | Level 17 backdrop final: the whole level flown at 0.5x, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
+| [concept/l17-props-final-r40-a.png](concept/l17-props-final-r40-a.png) | The seed-vault secret (`tools/art/siege_units.py`): the collapsed greenhouse frame (whole, hit, badly hit, lifted), the capsule and its glow (sheet) | chosen (round 40, F.d / F.e: approved as final) |
+| [concept/l17-props-final-r40-a.gif](concept/l17-props-final-r40-a.gif) | The frame shot apart and the capsule popping free, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
+| [concept/level-17-capture-r40-a.png](concept/level-17-capture-r40-a.png) | Capture of the game (step D5): twenty frames of the medium run with the plan's fit and Rook (and four of a hard run without firing), the last the debrief | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
+| [concept/level-17-capture-r40-a.mp4](concept/level-17-capture-r40-a.mp4) | Capture of the game with its sound: the whole medium run, then the hard run's domes cracking and breaking and the Herald's rings | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
 
 ## Implementation
 
@@ -428,7 +428,20 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 - [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on
       every difficulty (`--escort none` too) (step D5: the variations are in; `Level17Test`'s autopilot
       flies every difficulty without Rook only, the capture flew medium with him)
-- [x] Production art and captures for part D's round (steps ART-D and D5; pending round 40)
+- [x] Production art and captures for part D's round (steps ART-D and D5; round 40: the art approved as final, `art`
+      stays `chosen` until the dome-break redo (S.b) and the part D fixes below land)
+- [ ] Part D fixes (round 40 K.a, the user's note: "The second shell creature rolls over a dome and again some time
+      later. That shouldn't happen. The radio about the shield formation is too late, it is spoken after they are all
+      destroyed. The shell creatures seem too strong. None are destroyed."): the Shellbacks no longer roll over a dome
+      twice, the shield-formation radio line is spoken before the Herald's shields are shot, the Shellbacks are
+      weaker so a careful pilot destroys them
+- [ ] R.a: a shot inside the Shellback vent's hit box hits the vent first, from any side (the radio's "Hit the lime vent")
+- [ ] R.b: re-measure the dome secondary with the autopilot over several seeds after R.a (it was 0 / 8 on medium and hard)
+- [ ] R.c: route the Shellbacks' walks between the domes, not across their glass
+- [ ] R.d: the first Choir Herald (t=55.5) enters higher or slower so its rings are seen
+- [ ] R.e: a Shellback shot near the bottom of the screen rolls a shorter way, so its belly window shows
+- [ ] R.f (decided: keep): the dome `ally-hit` / `ally-lost` lines stay event lines (wait for a gap, dropped after 6 s)
+- [ ] The dome-break sound redone as a rumble from a cave-in or collapse recording (S.b, step AUD-S)
 
 ## Open questions
 
@@ -497,3 +510,12 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   and the inner ring's times, which `Level17Test` pins, unchanged). The capture (medium, the plan's fit,
   Rook, no `--invulnerable`) survived with armour untouched, 190 / 196 kills, the secret, every dome hit
   once and none lost: DOMES UNTOUCHED 0 / 5.
+- 2026-10-19 (user, round 40, phone page): the final art approved (F.d backdrop, F.e props: `art: chosen`, to `final` once the
+  dome-break redo and the fixes land), the sounds accepted except the dome break (S.b: "It needs a rumble. Look in the
+  online database for cave in or collapse sounds."), the voices (V.a), the retimed radio (C.a) and the build choices
+  (B.a-B.e) accepted. The capture K.a came back with a note: "The second shell creature rolls over a dome and again some
+  time later. That shouldn't happen. The radio about the shield formation is too late, it is spoken after they are all
+  destroyed. The shell creatures seem too strong. None are destroyed." Decided and queued (see Implementation): R.a = a
+  (a shot inside the vent's box hits the vent first), R.b re-measure the secondary after R.a, R.c route the walks between
+  the domes, R.d the first Herald enters higher or slower, R.e roll a shorter way near the bottom, R.f keep the dome lines
+  as they are.

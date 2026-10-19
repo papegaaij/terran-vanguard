@@ -107,6 +107,16 @@ public final class BalancePlan {
     }
 
     /**
+     * The user, 2026-10-19: how far below the expert's bound an act's end credits may lie on a difficulty: hard
+     * may fall {@code hard_under} short (hard is tighter on purpose); the others {@link #expertTolerance()}.
+     */
+    public double expertUnderTolerance(Difficulty difficulty) {
+        return difficulty == Difficulty.HARD
+                ? expert.path("hard_under").asDouble(expertTolerance())
+                : expertTolerance();
+    }
+
+    /**
      * Round 34, P3 = A: a perfect run of level {@code key} as {@code difficulty} builds it (its
      * formation sizes), before the difficulty's credit income (the credit-budget table's perfect run).
      */

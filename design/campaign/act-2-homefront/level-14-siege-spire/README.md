@@ -1,10 +1,10 @@
 ---
 title: Level 14 – Siege Spire
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../enemies/bosses/siege-spire]
-updated: 2026-10-12
+updated: 2026-10-19
 ---
 
 # Level 14 – Siege Spire
@@ -18,7 +18,8 @@ and through the old town, where the Spire's roots burst out of the streets and g
 Concord rotunda where the trunk stands. There they fight the act boss, the
 [Siege Spire](../../../enemies/bosses/siege-spire/README.md). The boss sums up the act: ground
 targets first, then attacks from the rear, then dodging in the open. 108 seconds of approach at
-140 px/s, then the boss fight (tuned to about 135 s, measured in the content step), then a 12 s
+140 px/s, then the boss fight (tuned to about 135 s, measured in the content step; round 40: about
+103 s with the lighter roots), then a 12 s
 daylight section, a 25 px/s drift.
 
 **Status (M5 part H, step H4).** The level's [data.yaml](data.yaml) exists and the marked tables
@@ -45,8 +46,8 @@ in concept round 36:
 > along the lakefront and through the old town to the rotunda. Destroy it. Aegis Actual out."
 >
 > **Dr. Varga:** "The Vrell fight as one, and I believe the Spire binds them. Its roots run
-> under the old town and grow guns where they break the surface. Kill the roots and the trunk
-> starves. Bring anti-ground and something that pierces. When the crown opens, look behind you."
+> under the old town and grow guns where they break the surface. Missiles find the root guns
+> while you dodge; bombs crack them. When the crown opens, look behind you."
 <!-- /data -->
 
 *Images* (production art straight away, H8 = a; [briefing images](../../../ui/briefing/README.md)):
@@ -84,12 +85,12 @@ edge waves, so they are not in the numbers.
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (the roots, the root-burst growths, the hive nodes, Creepers, Ravagers), `air`, `high-air` (cloaked Wraiths under the canopy) |
-| Attack directions | front 88% · sides 8% · rear 4% (the approach by its waves; in the boss fight the maw's Wraiths loop round to the rear) |
+| Attack directions | front 88% · sides 9% · rear 2% (the approach by its waves; in the boss fight the maw's Wraiths loop round to the rear) |
 | Density | 4 |
-| Recommended traits | `anti-ground`, `piercing`; `rear` helps against the Wraiths (three traits do not fit the intel panel) |
+| Recommended traits | `homing`, `anti-ground`; `rear` helps against the Wraiths (three traits do not fit the intel panel) |
 | Hazards | Root bursts (telegraphed by dust, ground layer, no collision); low light under the canopy |
 | Boss / mid-boss | Act boss [Siege Spire](../../../enemies/bosses/siege-spire/README.md) |
-| Sensor-suite detail | **none**: Geneva Concord, `ground` + `air` + `high-air`, front. **L1**: + the directions, density 4, hazard "root bursts", the objective `DESTROY THE SIEGE SPIRE`. **L2**: + Creeper, Ravager, Hive Node, Wraith, Needler, Skitter, Spine Turret, Polyp Mortar portraits; the boss's name and silhouette (`siege-spire`). **L3**: + `anti-ground` and `piercing` highlighted; the timeline strip marks the root field (60–95 s) and the boss (108 s); 1 secret. |
+| Sensor-suite detail | **none**: Geneva Concord, `ground` + `air` + `high-air`, front. **L1**: + the directions, density 4, hazard "root bursts", the objective `DESTROY THE SIEGE SPIRE`. **L2**: + Creeper, Ravager, Hive Node, Wraith, Needler, Skitter, Spine Turret, Polyp Mortar portraits; the boss's name and silhouette (`siege-spire`). **L3**: + `homing` and `anti-ground` highlighted; the timeline strip marks the root field (60–95 s) and the boss (108 s); 1 secret. |
 <!-- /data -->
 
 ## Objective
@@ -145,58 +146,83 @@ scroll.
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Returning units use the
 act HP factor from the [balancing basis](../../../enemies/README.md#balancing-basis) (the Creeper
-40; Hive Node, Ravager and Wraith at their L14 values; none for the Siege Spire, whose first
-level this is, nor for the small units); HP values live in the enemy specs only.
+40; Hive Node, Ravager, Wraith, Mantis and Spore Bomber at their L14 values; none for the Siege Spire,
+whose first level this is; of the small units only the Needler and the Stinger, capped at ×3, since
+step WB: `small_act_hp`); HP values live in the enemy specs only.
 
-**Density and pacing.** The draft had no enemies before t=24 and 42 units up to the arena. The
-level has popcorn (Skitters, Needlers) from t=7, a wave every 3–3.5 s, from the front and the sides,
-and the two rear ambushes as authored. The introduction of the root bursts keeps a quiet window: no
-wave enters from t=62 until t=67 (the first burst's dust at 63). At medium **112 units** reach the
-field before the arena (95 in waves, 17 ground units with the growths; easy 81, hard 142), **67.6 a
-minute** from the launch to the arena (`DensityTest`, at least 50), and the screen is never empty for
-long (`PacingTest`). The t=82 Wraiths enter from the rear on medium and hard; on easy a Needler V-wing
-from the front replaces them (a Wraith flies only the rear ambush).
+**Density and pacing** (step WB, 2026-10-19, the user's P.e "yes, all" of round 40: the L10-style
+waves steps CA and WA gave Levels 08–09 and 12–13). A wave about every **2.5 s** from t=5.5 to the
+arena, the next entering while the last is still on the screen: Needler groups of 4–5 (12 HP: they live
+to fire) and Stinger columns of 3 between Skitter streams and snakes, and returning medium units that
+stay and fire: four Creeper convoys of 5 up the streets (the draft's two of 3 enlarged, two new in the
+root field and on the avenue), three Spore Bomber lines and two Mantis pincers. Kept: the Ravager pack
+out of the crater (t=72), the two rear Wraith ambushes, the ground targets and the root bursts. The
+introduction of the root bursts keeps a quiet window: no wave enters from t=59 (a Spore Bomber line
+that lingers to t≈62) until t=66 (the first burst's dust at 63; 67 before, when the screen stood empty
+for 2 s once the first growths died). At medium **181 units in 43 waves** (4.2 a wave) before the arena,
+**≈ 106 a minute** (`DensityTest`, at least 50). The Act 2 rules (`PacingTest`, `ActFloorTest`, flown
+with the plan's fit; the floor leaves out the Spire's fight, which has its own tests): at medium **2.76
+enemies on the screen, 23.3 enemy shots a minute, 1 pause over 2 s** (the daylight), at hard 3.31, 39.3
+and 1 (before: medium 0.53, 3.1 and 12; hard 0.94, 8.3 and 4). Hard is harder by its levers (HP, fire
+rate, formation sizes, the growths' earlier first shot, the extra turret nest) with the Needler and
+Stinger groups one smaller and the late Spore Bomber lines of 2 (`hard: {count}`). The t=82 Wraiths
+enter from the rear on medium and hard; on easy a Needler V-wing from the front replaces them (a Wraith
+flies only the rear ambush).
 
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 7 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (right) | Popcorn over the lake |
-| 10.5 | 1 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front | Popcorn |
-| 14 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Over the bridges |
-| 16.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | Popcorn from the sides |
-| 21 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | Over the rooftops |
-| 24.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (left) | |
-| 28 | 2 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | Along the Rue du Rhône |
-| 31 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 34 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 37.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | Weaves between the cathedral towers |
-| 41 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (right) | Over the cathedral square's turret nest |
-| 44.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 47.5 | 2 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | Down from the cathedral hill |
-| 51 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | |
-| 54.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Over the Place du Molard |
-| 59 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Gone before the first root burst |
-| 67 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (left) | After the first burst's quiet window |
-| 69.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 5.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | Popcorn over the lake as the launch ends |
+| 8 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 10.5 | 1 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front | |
+| 13 | 1 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Over the bridges |
+| 15.5 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 18 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | Over the rooftops |
+| 20.5 | 2 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | Returning: one from each side, edge warnings; sweeps for 6 s |
+| 23 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 25.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 28 | 2 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Along the Rue du Rhône |
+| 28.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 31 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 33.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | |
+| 36 | 2 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s |
+| 38.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Weaves between the cathedral towers |
+| 40.5 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Over the cathedral square's turret nest |
+| 43 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 45.5 | 2 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | |
+| 47.5 | 2 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Down from the cathedral hill |
+| 48 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 50.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 53 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
+| 55.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Over the Place du Molard |
+| 58.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | The last before the first root burst; no wave enters from t=59 until t=66 |
+| 66 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (left) | After the first burst's quiet window |
+| 68.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 72 | 3 | pack | [Ravager](../../../enemies/ground/ravager/README.md) | 4 | front | Out of a root-burst crater; the leader drops an overdrive |
-| 76 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 5 | front (right) | |
-| 79.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 74.5 | 3 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 77 | 3 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Up a street broken by the roots |
+| 77 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 79.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | |
 | 82 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked on `high-air` under the canopy; Rook's rear bark (not scripted); easy: a Needler V-wing from the front instead |
 | 82 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Easy only: instead of the rear Wraiths |
-| 85.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 88.5 | 3 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front | |
-| 91.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 95.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | Popcorn from the sides on the avenues |
-| 99 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 102 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 84.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
+| 87 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
+| 89.5 | 3 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
+| 92 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 94.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 97 | 4 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Up an avenue toward the rotunda |
+| 97 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | sides (alternating edges) | Popcorn from the sides on the avenues |
+| 99.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 102 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 104 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | The last wave before the Spire |
-| 108 | 5 | boss | [Siege Spire](../../../enemies/bosses/siege-spire/README.md) | 1 | front (anchored at the rotunda, scrolls in with the ground) | At the halt (the warning, the bar and the boss checkpoint); phase 2: the maw launches 2 Wraiths every 8 s (hard 3) as ambushes that loop to the rear |
+| 105.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 108 | 5 | boss | [Siege Spire](../../../enemies/bosses/siege-spire/README.md) | 1 | front (anchored at the rotunda, scrolls in with the ground) | At the halt (the warning, the bar and the boss checkpoint); phase 2: the maw launches a Wraith every 8 s (hard 2) as ambushes that loop to the rear, at most 2 alive |
 
-Totals: Skitter 55 · Needler 30 · Creeper 6 · Ravager 4 · Wraith 4 · Siege Spire 1.
+Totals: Skitter 57 · Needler 62 · Stinger 21 · Mantis 4 · Creeper 20 · Spore Bomber 9 · Ravager 4 · Wraith 4 · Siege Spire 1.
 <!-- /data -->
 
-The maw's launches in the fight (2 Wraiths every 8 s, hard 3; three launches in the measured medium
-fight) are ambush plans, not edge waves: the bottom-edge warning and Rook's Trail formation apply
+The maw's launches in the fight (a Wraith every 8 s, hard 2, at most 2 alive, round 40; 2 and 3
+before; three launches in the measured medium fight) are ambush plans, not edge waves: the bottom-edge warning and Rook's Trail formation apply
 (the boss row's notes).
 
 ## Ground targets
@@ -277,6 +303,7 @@ The Choir's text line is voiced as in the earlier levels (the portrait frame ful
 | t=62 | Okafor | "Roots surfacing in the streets! They're growing guns." |
 | t=96 | The Choir (distorted) | "[the Choir sings]" |
 | t=102 | Varga | "It's singing to the whole city. Lancer, that's the Spire." |
+| t=110 (At the halt (round 40, 4c: the weapon hint)) | Rook | "Missiles on the roots, I'll keep the flyers off you." |
 | Phase 2 (`boss-phase` Maw) | Varga | "The crown is opening. It's launching flyers, and they'll loop behind you." |
 | Phase 3 (`boss-phase` Free spire) | Okafor | "It's tearing loose! Stay on it, Lancer!" |
 | Phase 3, queued after Okafor's line | Rook | "Roots and all. Somebody call a gardener." |
@@ -301,7 +328,16 @@ attacks live in the spec. Arena notes for this level:
   the start** (no creep, H1 = a).
 - Phase 2: the maw's Wraiths come at the player from the bottom edge as ambushes (H3 = a): the
   sim adds the 3 s bottom-edge warning before each re-entry, Rook switches to his Trail formation
-  and calls each launch (bark priority 2), at most 4 alive at once.
+  and calls each launch (bark priority 2), at most 2 alive at once (round 40: one a launch, 4 alive
+  before).
+- **Round 40** (proposals 4a–4c, step CB): the pods fire down their columns with safe lanes between
+  and take turns to aim (a 0.6 s glow, one pod every 2.0 s); the maw's fan 7 orbs every 3.0 s; the
+  roots 460 / 530 HP. The weapon hint is homing: the traits `homing`, `anti-ground`, Varga's briefing
+  ("Missiles find the root guns while you dodge; bombs crack them."), the intel's L3 ("Homing
+  missiles reach every root.") and Rook at the halt ("Missiles on the roots, I'll keep the flyers off
+  you.", t=110). Measured: the plan's fit 103.4 s with 2.5 / 0 / 0 hits a minute by phase, the
+  Pulse Cannon L4 alone 148–152 s, the user's playtest fit about 120 s
+  ([Siege Spire](../../../enemies/bosses/siege-spire/README.md#stat-block)); the par 103 s.
 - Phase 3: the freed spire lifts off its anchor over ≈ 3 s, rises to `air` and drifts across the
   upper half (H4 = a); the withered stump and the shockwave debris stay on the ground layer as
   scenery, with no collision (the stump is drawn from the boss's state, not as a backdrop
@@ -310,11 +346,12 @@ attacks live in the spec. Arena notes for this level:
   strike by the [specials](../../../player/specials/README.md) rules.
 - The boss checkpoint is recorded at the arrival, t=108, on easy and medium, per the
   [retry](../../../systems/retry/README.md) rules; there is none on hard.
-- Bounty: **452 as paid** (26.8 % of the budget; 372 in Act 1 terms: pods and mortar roots 31 each,
-  maw 62, core 124 at the spec's ratios 60:60:120:240), see *Credit budget*. The maw's Wraiths pay
+- Bounty: **492 as paid** (29.2 % of the budget at step WB's scale of 0.40; 482 and 28.6 % at round 40's
+  0.81, 452 and 26.8 % before; 768 in Act 1 terms since step WB, 372 before: pods and mortar roots 64
+  each, maw 128, core 256 at the spec's ratios 60:60:120:240), see *Credit budget*. The maw's Wraiths pay
   their own bounty.
 - The fight's length is **measured** (H10 = a; the [Siege Spire](../../../enemies/bosses/siege-spire/README.md#stat-block)):
-  the autopilot's fights on the plan's fit over five seeds, the HP ×1.8 the spec's, a mean of 129.5 s
+  the autopilot's fights on the plan's fit over five seeds, the HP ×1.8 the spec's, a mean of 129.5 s (round 40: 103.4 s, the par 103 s)
   at medium (every seed 126.1–131.7 s; remeasured in step H6 after pod 1's offset fix), the par 130 s. Flown in this level (seed 2185) the fight
   lasted 97 s on easy, 136 s on medium and 204 s on hard.
 
@@ -350,34 +387,42 @@ Budget(14) = 700 × 1.07¹³ ≈ **1,687**, the typical haul's target
 draft's 2,410 was the old perfect-run curve with Act-2-scaled amounts. **The data keeps Act 1 terms**
 (Skitter 5, Needler 12, Creeper 22, Ravager 18, Wraith 30, Hive Node 45, Spine Turret 12, Polyp
 Mortar 15, the car's crate 88, the secondary 63); the code pays each × the act factor 1.6, and
-bounties also × the level's **`bounty_scale` 0.76**, which puts the typical haul on the budget within
-±5 % (`TypicalHaulTest`). The maw's Wraiths are budgeted at the measured fight's count (three launches
-of 2, the boss's `spawns`), the node-spawned Skitters at one release per node.
+bounties also × the level's **`bounty_scale` 0.40** (0.76 until round 40, 0.81 until step WB), which
+puts the typical haul on the budget within ±5 % (`TypicalHaulTest`; step WB: 1,744, +3.4 %; the perfect
+run 2,458, 1.46 ×). The maw's Wraiths are budgeted at the measured fight's count (three launches
+of 1 since round 40, of 2 before; the boss's `spawns`), the node-spawned Skitters at one release per node.
 
 **The Spire's share (step H4, pending the user's review): 452 paid = 26.8 % of the budget**, not the
 planned ≈ 506 (30 %). The typical haul sits on the budget and a perfect run must earn at least 1.4 ×
 it (`TypicalHaulTest`): the boss pays the same in both, so every credit it takes off the scaled kills
 narrows the gap between them; at 30 % the perfect run falls short (≈ 1.39 ×), at 26.8 % it reaches
-1.42 ×. The act boss's share stays inside its tolerance (20–40 %, `BalanceTest`).
+1.42 ×. The act boss's share stays inside its tolerance (20–40 %, `BalanceTest`). **Round 40:** with
+one Wraith a launch the perfect run fell to 2,289 (1.36 ×) at the scale of 0.76; the scale went to
+**0.81** (the typical haul 1,722, +2.1 %; the perfect run 2,400, 1.42 ×), so the Spire paid **482
+= 28.6 %** of the budget (pending the user's review). **Step WB (2026-10-19, pending the user's
+review):** the L10-style waves carry about twice the bounties, so the scale fell to **0.40**; at the
+old 372 the Spire would have paid 238 (14 %, under the act boss's 20 % floor), so its bounty doubled to
+**768** (pods and mortar roots 64, maw 128, core 256): every part pays what it did, **492 = 29.2 %**.
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 55 × 5 + Needler 30 × 12 + Creeper 6 × 22 + Ravager 4 × 18 + Wraith 4 × 30 + released Skitter 4 × 5 | 1,198 | 769 |
-| Ground targets: Spine Turret 7 × 12 + Hive Node 2 × 45 + Polyp Mortar 4 × 15 | 287 | 230 |
-| Boss: Siege Spire (pods 4 × 31 + mortars 2 × 31 + maw 62 + core 124) | 454 | 454 |
-| Boss spawns: Wraith 6 × 30 (a typical fight) | 216 | 130 |
+| Kills: Skitter 57 × 5 + Needler 62 × 12 + Stinger 21 × 15 + Mantis 4 × 30 + Creeper 20 × 22 + Spore Bomber 9 × 25 + Ravager 4 × 18 + Wraith 4 × 30 + released Skitter 4 × 5 | 1,513 | 973 |
+| Ground targets: Spine Turret 7 × 12 + Hive Node 2 × 45 + Polyp Mortar 4 × 15 | 154 | 123 |
+| Boss: Siege Spire (pods 4 × 64 + mortars 2 × 64 + maw 128 + core 256) | 492 | 492 |
+| Boss spawns: Wraith 3 × 30 (a typical fight) | 57 | 34 |
 | Secret: armoured car (hidden crate, 5% of budget) | 141 | 70 |
 | Secondary: destroy every root-burst growth | 101 | 50 |
-| **Total** (bounty scale 0.76) | **2,397** | **1,703** |
-| Budget(n) = the typical haul's target; typical +1 %, perfect 1.42 × budget | | 1,687 |
+| **Total** (bounty scale 0.4) | **2,458** | **1,744** |
+| Budget(n) = the typical haul's target; typical +3 %, perfect 1.46 × budget | | 1,687 |
 <!-- /data -->
 
 ## Difficulty notes
 
 - **Easy**: the root-burst growths are Spine Turrets only (the secondary counts 4); a Needler V-wing
   from the front replaces the t=82 Wraiths (a Wraith flies only the rear ambush); the boss ×0.75.
-- **Hard**: a second Spine Turret nest beside the hive nodes; root bursts grow 1.0 s after the
+- **Hard**: the Needler and Stinger groups one smaller and the Spore Bomber lines at t=58.5 and 79.5
+  of 2 (`hard: {count}`, step WB); a second Spine Turret nest beside the hive nodes; root bursts grow 1.0 s after the
   telegraph instead of 1.5 s; the boss ×1.3 and its hard-mode hooks from the spec (3 Wraiths per
   launch, a 180° sweep, a ring of 12 for the lob). There is no boss checkpoint on hard.
 
@@ -429,6 +474,10 @@ else approved as final and accepted, the Spire's death after a redo.
 - [x] Wave script matches the *Waves* table: at least 50 enemies a minute at medium from t=8 to
       the arena (`DensityTest`), no empty screen over 3 s on every difficulty (`PacingTest`)
       (M5 part H, step H4)
+- [x] L10-style waves (round 40 P.e): at medium and hard at most 3 empty stretches over 2 s
+      (`PacingTest`'s Act 2 rule), at medium ≥ 2.5 enemies on the screen and ≥ 10 enemy shots a
+      minute outside the boss fight (`ActFloorTest`), the typical haul on the budget and the Spire's
+      share about 30 % (step WB, 2026-10-19)
 - [x] Boss arena per the arena notes: all six roots from the start, the maw's ambush launches
       with the dynamic bottom-edge warning and Rook's Trail, the lift-off, the stump, the
       checkpoint at t=108 on easy and medium and none on hard (`Level14Test`) (M5 part H, steps H3
@@ -467,6 +516,11 @@ else approved as final and accepted, the Spire's death after a redo.
 - [x] Easy/hard variations as in *Difficulty notes* (M5 part H, step H4)
 - [x] Captures for concept round 36: the approach, a burst, the Wraiths' rear entries, the three
       phases, the lift-off, the death and the daylight, the act end (M5 part H, step H7)
+- [x] Round 40 (4a–4c, step CB): the kinder Spire's data (its README), the traits `homing`,
+      `anti-ground`, Varga's briefing page and intel L3 with the homing hint, Rook's line at the halt,
+      the maw's Wraiths budgeted at 3 (`Level14Test`, `SiegeSpireTest`, `TypicalHaulTest`)
+- [ ] Round 40: Varga's new briefing page and Rook's halt line voiced (a VOX step), a capture of the
+      kinder fight for the user's review
 
 ## Open questions
 
@@ -645,3 +699,24 @@ else approved as final and accepted, the Spire's death after a redo.
 - 2026-10-12: Step K10: the intel strip's boss mark at 108 s (the *Sensor-suite detail*) built, a red
   tick the strip's depth drawn over the waves (the same for every level with a boss, see
   [hangar](../../../ui/hangar/README.md)); every item ticked, `implementation: done`.
+- 2026-10-19 (step CB, round 40; the user approved proposals 4a, 4b and 4c on 2026-10-18): the kinder
+  Spire in the data (its README), the weapon hint `homing` (traits `homing`, `anti-ground` instead of
+  `anti-ground`, `piercing`; Varga's page: "Missiles find the root guns while you dodge; bombs crack
+  them." instead of "Bring anti-ground and something that pierces. Kill the roots and the trunk
+  starves." (the page holds 4 lines; she says the second at t=31.5 anyway); intel L3 "Homing missiles
+  reach every root."; Rook at t=110 "Missiles on the roots, I'll keep the flyers off you."), the
+  maw's Wraiths budgeted at 3 launches of 1, the `bounty_scale` 0.76 → **0.81** so a perfect run keeps
+  1.4 × the budget (typical 1,722, +2.1 %; perfect 2,400, 1.42 ×; the Spire paid 482, 28.6 %).
+  Pending the user's review: the scale, Rook's line at t=110 (the halt eases over t=108–109), intel
+  L3 drops "When the crown opens, look behind you." (Varga's page keeps it). L14 stays in `PacingTest.PENDING_ACT_TWO_RULE` (its waves next).
+- 2026-10-19 (step WB, round 40 P.e "yes, all", pending the user's review): the waves rewritten
+  L10-style (43 waves, 181 enemies before the arena at medium, a wave about every 2.5 s: Needler and
+  Stinger groups, Skitters, four Creeper convoys of 5, Spore Bomber lines, Mantis pincers round the kept
+  Ravager pack, Wraith ambushes, ground targets and root bursts), so the level passes `PacingTest`'s Act
+  2 rule and `ActFloorTest`: medium 0.53 → 2.76 enemies on the screen, 3.1 → 23.3 shots a minute, 12 → 1
+  pauses over 2 s; hard 0.94 → 3.31, 8.3 → 39.3, 4 → 1. The root bursts' quiet window now t=59–66 (was
+  62–67). The Needler and the Stinger get the capped act HP factor here (`small_act_hp` levels 11 and 14
+  added). `bounty_scale` 0.81 → 0.40 (typical 1,744, +3.4 %; perfect 2,458, 1.46 ×) and the Spire's
+  bounty 372 → 768, so its parts pay what they did (29.2 % of the budget; `BalanceTest`'s 20–40 %).
+  The floor leaves out the boss fight (the Spire is a set piece, not an enemy on the screen; it has its
+  own tests). L14 leaves `PacingTest.PENDING_ACT_TWO_RULE`.

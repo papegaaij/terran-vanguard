@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Voice
@@ -1072,3 +1072,11 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   lines never overlap (the closest, t=80.5 → 88.5, leave 3.6 s). Built in the step's snapshot only, to hand to
   the content and game owners: `VoiceLines.radio` expands `{ally}` by `level.groundAllies()`' names, and
   `LevelScreen.allyName` (now `RadioEvents.allyName`) names a ground ally as a naval one (`sortie.groundAllies()`).
+- 2026-10-19: step VOX2 (**pending the user's review**): the round-40 Act 2 rework's new lines rendered with
+  the cast and respellings unchanged — Level 11 Okafor on `first-ship-telegraph` ("The arms are rooted at the
+  rim. Cut a root and that lane is safe!"; one seed retried for a 1.5 s pause), Level 14 Rook at t=110
+  ("Missiles on the roots, I'll keep the flyers off you.") and Varga's trimmed briefing page 2 (seed pinned:
+  the key's seed jumped to about 450 Hz on the closing "you"; the pin is the steadiest of six). Rook's calamari
+  line kept its text, so its take stays; the old page 2 take (`varga/0e226d3a4ff2.ogg`) is deleted. Pitch on
+  the unfiltered takes: Okafor 143 Hz median (a rise to about 250 Hz on "Cut a"), Rook 151, Varga 194;
+  Whisper reads every line back as written ("Vrel" for Vrell).

@@ -96,7 +96,7 @@ class Level13Test {
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_577, Math.round(budget), "the typical haul's target, 700 × 1.07¹²");
         assertEquals(
-                111 * 5 + 41 * 12 + 8 * 15 + 4 * 30 + 31 * 14 + 11 * 25,
+                210 * 5 + 172 * 12 + 8 * 15 + 4 * 30 + 31 * 14 + 11 * 25,
                 kills,
                 "Skitter, Needler, Stinger, Mantis, Skimmer, Scuttler");
         assertEquals(2 * 15, ground, "the mortar floe's two Polyp Mortars");
@@ -105,7 +105,7 @@ class Level13Test {
         System.out.printf(
                 "Level 13 budget (Act 1 terms): kills %d, ground %d, crate %d, secondary %d: %d (budget %.0f)%n",
                 kills, ground, crates, secondary, total, budget);
-        assertEquals(0.67, content.level(LEVEL).bounties());
+        assertEquals(0.33, content.level(LEVEL).bounties());
     }
 
     @Test
@@ -118,15 +118,15 @@ class Level13Test {
         assertEquals(
                 Map.of(
                         "mantis", 4,
-                        "needler", 41,
+                        "needler", 172,
                         "scuttler", 11,
                         "skimmer", 31,
-                        "skitter", 111,
+                        "skitter", 210,
                         "stinger", 8),
                 waves);
         assertEquals(2, level.groundUnits().size(), "the mortar floe");
         assertEquals(
-                208,
+                438,
                 waves.values().stream().mapToInt(Integer::intValue).sum()
                         + level.groundUnits().size());
         assertEquals(
@@ -196,8 +196,8 @@ class Level13Test {
         assertEquals(
                 switch (difficulty) {
                     case EASY -> 340.0;
-                    case MEDIUM -> 240.0;
-                    case HARD -> 520.0;
+                    case MEDIUM -> 260.0;
+                    case HARD -> 560.0;
                 },
                 defend.ally().hp());
         assertEquals(LevelScript.HookMode.ALTERNATE, defend.mode("skimmer"));

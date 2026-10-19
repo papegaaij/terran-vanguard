@@ -293,9 +293,11 @@ ARENA_EASE = 1.0  # s: an arena boss's bar appears as the scroll eases into the 
 def arena_seconds(e, dps):
     """M5 part E (E6 = a): an arena boss's fight at the effective dps, its exposure windows counted
     (BalanceTest.arenaSeconds): the ease into the halt; a phase ending on slams lasts its delay and its
-    slams (the last to its impact), at most its seconds; a phase ending on a share of its parts' HP
+    slams (the last to its impact), at most its seconds; a phase without a surfacing (round 40, the rooted
+    Kraken's Arms) cuts its parts down to its left, the cheapest first, at most its seconds; a phase ending on a
+    share of its parts' HP
     takes that HP in cycles of its surfacing (rise, open, dive, a slam cycle after the dive) at the mean
-    of the part's own and its spots' multiplier while open, its own over half the rise and the dive; the
+    of the part's own and its spots' multiplier while open (round 40, rooted arms: its spots'), its own over half the rise and the dive; the
     last phase takes the rest with the part kept up."""
     boss = e["boss"]
     if "slam" not in boss:
@@ -311,11 +313,23 @@ def arena_seconds(e, dps):
             slams = phase.get("delay", 0) + (until["slams"] - 1) * cycle + slam["telegraph"] + slam["rise"]
             seconds += min(slams, until.get("seconds", float("inf")))
             continue
+        if "surface" not in phase:
+            # Round 40 (the rooted Kraken's Arms): its always-hittable parts cut down to `left`, the cheapest
+            # first at their own multiplier, its delay first, at most its seconds.
+            names = sorted(until["parts"], key=lambda n: left[n] / parts[n].get("multiplier", 1))
+            cut = names[:len(names) - until.get("left", 0)]
+            spent = phase.get("delay", 0) + sum(left[n] / (dps * parts[n].get("multiplier", 1)) for n in cut)
+            seconds += min(spent, until.get("seconds", float("inf")))
+            for n in cut:
+                left[n] = 0
+            continue
         surface = phase["surface"]
         part = parts[surface["part"]]
         own = part.get("multiplier", 1)
         spot = max([s["multiplier"] for s in part.get("spots", [])] or [own])
-        opened = (own + spot) / 2
+        # Round 40: the rooted Kraken's head sits in open view above the lanes and its fans are evadable, so the
+        # open window goes to the eyes; before, the eyes and the mantle took about equal shares.
+        opened = spot if boss["lanes"].get("rooted") else (own + spot) / 2
         names = until["parts"]
         need = sum(left[n] for n in names)
         full = sum(parts[n]["hp"] for n in names)

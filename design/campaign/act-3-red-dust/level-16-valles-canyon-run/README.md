@@ -2,9 +2,9 @@
 title: Level 16 – Valles Canyon Run
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../enemies/ground/tendril-anchor, ../../../enemies/ground/threadcrawler, ../../../enemies/air/dust-kite, ../../../player/weapons/ion-beam, ../../../player/wingmen, ../../../world/mars, ../../../art-direction]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Level 16 – Valles Canyon Run
@@ -525,19 +525,19 @@ Mk III generator it needs).
 
 Production art of M7 part C (step ART-C, round 39; notes in [concept/prompts.md](concept/prompts.md)).
 The backdrop is approved as final except the walls' and islands' rendering and textures, which are
-being redone to look like a real canyon (round 39 R.1, step CW, for round 40); until then `art: chosen`:
+being redone to look like a real canyon (round 39 R.1, step CW, for round 40); until then `art: chosen` (round 40: the redo approved as final, `art: final`):
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r39-a.png](concept/backdrop-final-r39-a.png) | Production backdrop (`tools/art/backdrop_l16.py`): the tile sets (the Noctis plateau and its chasms, the canyon floor, the rapids' riverbed, the Eos chaos, the plateau at 1.25), the wall and foot textures, the islands' faces and tops, the seam pieces, the cliff road, the Helix station, the arches, the dust; composites with the walls projected as the game will (sheet) | chosen (round 39, F.1: approved as final except the walls' and islands' look, R.1 redo for round 40) |
-| [concept/backdrop-final-r39-a.gif](concept/backdrop-final-r39-a.gif) | The canyon mouth, the fork's mesa and the rapids' pillar, 10 fps | chosen (round 39, F.1: approved as final except the walls' and islands' look, R.1 redo for round 40) |
+| [concept/backdrop-final-r39-a.png](concept/backdrop-final-r39-a.png) | Production backdrop (`tools/art/backdrop_l16.py`): the tile sets (the Noctis plateau and its chasms, the canyon floor, the rapids' riverbed, the Eos chaos, the plateau at 1.25), the wall and foot textures, the islands' faces and tops, the seam pieces, the cliff road, the Helix station, the arches, the dust; composites with the walls projected as the game will (sheet) | chosen (round 39, F.1: approved as final except the walls' and islands' look, R.1 redo for round 40); the redo approved as final in round 40 (W.a) |
+| [concept/backdrop-final-r39-a.gif](concept/backdrop-final-r39-a.gif) | The canyon mouth, the fork's mesa and the rapids' pillar, 10 fps | chosen (round 39, F.1: approved as final except the walls' and islands' look, R.1 redo for round 40); the redo approved as final in round 40 (W.a) |
 | [concept/l16-props-final-r39-a.png](concept/l16-props-final-r39-a.png) | Props (`tools/art/canyon_units.py`): the Candor relay hut hit by hit and its beacon, the cargo rovers (intact, damaged, wreck), the wall spark and its dust (sheet) | chosen (round 39, F.2: approved as final) |
 | [concept/l16-props-final-r39-a.gif](concept/l16-props-final-r39-a.gif) | The same props in motion | chosen (round 39, F.2: approved as final) |
 | [concept/level-16-capture-r39-a.png](concept/level-16-capture-r39-a.png) | Game capture (step C5, medium, the plan's L16 ship with the Orbital Lance as its special, Rook): the mouth's walls rising from flat, gate 1 dormant → flare → anchor kill, the Lance burning gate 2, a wall touch, the fork and the relay hut, a crawler's pore wave, the pillar, the rovers, the Helix station, the narrows' gates, the outflow's crawler and Burrowers, the debrief with BARRIERS 9 / 9 (sheet) | chosen (round 39, K.1: accepted) |
 | [concept/level-16-capture-r39-a.mp4](concept/level-16-capture-r39-a.mp4) | The whole run with the game's sound (t −1 to 230; radio as text, no voices yet) | chosen (round 39, K.1: accepted) |
-| [concept/canyon-redo-r40-a.png](concept/canyon-redo-r40-a.png) | Game capture of the canyon redo (step CW, medium, `--invulnerable`): the mouth, full height, a burnt habitat on the red cliff, the fork's mesa as a butte, the pillar, the Helix station, the narrows (sheet of eight at 1:1) | proposed (round 40) |
-| [concept/canyon-redo-r40-a.mp4](concept/canyon-redo-r40-a.mp4) | The same run cut to 59 s with the game's sound: the mouth, the fork, the pillar, the Helix station, the narrows | proposed (round 40) |
-| [concept/canyon-redo-compare-r40-a.png](concept/canyon-redo-compare-r40-a.png) | Before (round 39's capture) and after at the same level times: full height, the fork's mesa, the pillar, the narrows | proposed (round 40) |
+| [concept/canyon-redo-r40-a.png](concept/canyon-redo-r40-a.png) | Game capture of the canyon redo (step CW, medium, `--invulnerable`): the mouth, full height, a burnt habitat on the red cliff, the fork's mesa as a butte, the pillar, the Helix station, the narrows (sheet of eight at 1:1) | chosen (round 40, W.a: approved as final) |
+| [concept/canyon-redo-r40-a.mp4](concept/canyon-redo-r40-a.mp4) | The same run cut to 59 s with the game's sound: the mouth, the fork, the pillar, the Helix station, the narrows | chosen (round 40, W.a: approved as final) |
+| [concept/canyon-redo-compare-r40-a.png](concept/canyon-redo-compare-r40-a.png) | Before (round 39's capture) and after at the same level times: full height, the fork's mesa, the pillar, the narrows | chosen (round 40, W.a: approved as final) |
 
 ## Implementation
 
@@ -665,3 +665,4 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   `WallProjection`). Pending the user's review (round 40): where a wall stands near the field's edge
   (most of sections 2-4) only its inner gorge and first bench are on screen, so it still reads as a
   band; the buttes show mostly their pale caps.
+- 2026-10-19 (user, round 40, W.a): the canyon walls' redo approved as final (`art: final`); W.b the redo's defaults (a)-(f) all yes, W.c Varga's t=47 line accepted, W.d the fork's right channel kept.

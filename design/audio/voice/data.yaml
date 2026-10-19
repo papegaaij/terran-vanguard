@@ -66,6 +66,7 @@ speakers:
       febdaf698bba: 267115454   # Level 09 briefing page 2 "The nodes are hardened…": the key's seed read "the streets and packs" both ways
       a86c85a4cc53: 77391054    # Level 10 briefing page 2 "The Vrell hunt…": the key's seed read "The rail hunt" but with a prompt through the filter; the pin reads "Vrell" with a prompt both ways
       ec548c3af77b: 118220431   # Level 10 secret "That ferry's hold…": the key's seed read "berry's" through the filter; the pin "ferries" every way
+      d04034114ff1: 22000222    # Level 14 briefing page 2 "The Vrell fight as one…" (round 40, trimmed): the key's seed jumped high (about 450 Hz) on the closing "you"; the pin is the steadiest of six and reads "Vrel"
   rook:
     names: [Rook]
     ref: ref-rook

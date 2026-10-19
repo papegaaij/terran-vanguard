@@ -2,7 +2,7 @@
 title: Choir Herald
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../campaign/act-3-red-dust]
 updated: 2026-10-19
 ---
@@ -114,3 +114,4 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
   `ring` named `song` (hard 12 every 3.2 s through the attack hook). Defaults of the gap check: its escorts orbit
   it at 0.8 × the radius (`escort_radius`, 72 px) so they stay ringed; the aura rings units on every layer; the
   hover's drift a `sine` of 32 px over 10 s (20 px/s at its fastest); it exits up (`exit: back`).
+- 2026-10-19 (user, round 40, F.b): the final art approved (`art: final`); the aura and Shellback build choices (round 40 B.c) accepted.

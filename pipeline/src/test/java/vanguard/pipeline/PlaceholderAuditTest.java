@@ -151,7 +151,11 @@ class PlaceholderAuditTest {
             Map.entry("sfx/shellback-curl-r40-a.ogg", ROUND_40),
             Map.entry("sfx/shellback-roll-r40-a.ogg", ROUND_40),
             Map.entry("sfx/shellback-uncurl-r40-a.ogg", ROUND_40),
-            Map.entry("sfx/mars-colony-r40-a.ogg", ROUND_40)));
+            Map.entry("sfx/mars-colony-r40-a.ogg", ROUND_40),
+            Map.entry(
+                    "music/debrief-theme.ogg",
+                    "track 29 \"Stand Down\", chosen in round 40 (M.a = b): the concept file, rendered by"
+                            + " tools/concept/audio/music_r40.py")));
 
     private final Content content = ContentLoader.fromClasspath();
 

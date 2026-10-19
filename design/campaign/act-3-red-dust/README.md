@@ -31,8 +31,8 @@ marked tables; the outro joins it in part H.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [level-15-olympus-descent](level-15-olympus-descent/README.md) | Act 3's opener: the descent through the cloud deck past Olympus Mons to the colony rail line; introduces the Burrower and the Dust Kite | approved | in-progress | final |
-| [level-16-valles-canyon-run](level-16-valles-canyon-run/README.md) | The canyon run east to Ares Landing: terrain collision, a fork, tendril barriers and the Threadcrawler; the Helix station untouched on the rim | approved | in-progress | chosen |
-| [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | in-progress | proposed |
+| [level-16-valles-canyon-run](level-16-valles-canyon-run/README.md) | The canyon run east to Ares Landing: terrain collision, a fork, tendril barriers and the Threadcrawler; the Helix station untouched on the rim | approved | in-progress | final |
+| [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | in-progress | chosen |
 | [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | not-started | none |
 | [level-19-foundry-of-tharsis](level-19-foundry-of-tharsis/README.md) | Tharsis foundry: grey Warden Tanks on conveyors, furnace vents, turrets that fire after you pass; mid-boss Revenant Walker and the hint-2 wreck crawl | approved | not-started | none |
 | [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | not-started | none |

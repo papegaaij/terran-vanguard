@@ -36,8 +36,9 @@ class KrakenRootsLooksTest {
     @Test
     void onlyARootedKrakenGetsTheRoundFortyLook() {
         assertTrue(KrakenLooks.rooted(RoundFortyFixture.kraken()));
-        var oldFight = ArenaFixture.level().setPieces().getFirst();
-        assertFalse(KrakenLooks.rooted(oldFight), "the old fight keeps round 33's look");
+        // Level 11's data is rooted since step CB (2026-10-19): the level's Kraken takes the round 40 look.
+        var levelFight = ArenaFixture.level().setPieces().getFirst();
+        assertTrue(KrakenLooks.rooted(levelFight), "Level 11's Kraken has the rooted arms");
     }
 
     @Test

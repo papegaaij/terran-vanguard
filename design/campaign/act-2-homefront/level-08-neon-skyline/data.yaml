@@ -20,7 +20,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     l2: "New one: the Creeper, a walker. It fans five shots at you every three seconds. Turrets and mortars sit on the low roofs."
     l3: "Anti-ground hits Creepers twice as hard. One cache: under the flickering billboard. Three hits bring it down."
   notes:
-    Dominant layers: '`ground` (Creepers on the streets and low roofs, turret nests, mortars), `air`; `low-air` carries the traffic lanes (scenery, no enemies)'
+    Dominant layers: '`ground` (Creepers on the streets and low roofs, turret nests, mortars), `air`; the streets carry the civilian traffic and `low-air` the CDF gunships (scenery, no enemies)'
     Attack directions: '{directions} by enemy count (two Needler pincers, the Mantis pincers and the finale''s side stream)'
     Density: '{density}'
     Recommended traits: '{traits}'
@@ -46,8 +46,8 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets; peak: a h
     tiles: [gulf, avenues]
     notes:
       layers:
-        ground: the harbour's last container yards, then two tree-lined avenues as lanes, low roofs, parks, the landing pad on a low roof; the first perspective towers rising along the avenues.
-        low-air: streams of civilian aircars fleeing south (scenery; no searchlights, as the streams on the two avenues fill the motion budget), a CDF gunship pair.
+        ground: the harbour's last container yards, then two tree-lined avenues as lanes, low roofs, parks, the landing pad on a low roof; the first perspective towers rising along the avenues; streams of civilian cars fleeing south along the avenues, under the cross highways (scenery; no searchlights, as the streams fill the motion budget).
+        low-air: a CDF gunship pair.
         high-air: thin mist.
       purpose: Rook shoots what the player shoots; his first kill; the first turret nest.
   - name: Rooftop Crawl
@@ -57,7 +57,7 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets; peak: a h
     notes:
       layers:
         ground: the boulevard and side streets with their lamp lines, blocks of low roofs, rooftop gardens, water tanks, the ramps and ledges the Creepers follow; perspective towers rising between them.
-        low-air: thin fog banks lit amber by the avenue lamps; traffic thinning.
+        low-air: thin fog banks lit amber by the avenue lamps; the street traffic thinning on the boulevard.
       purpose: 'Creeper introduction: one alone, then convoys. The billboard secret.'
   - name: Smoke District
     end: 160
@@ -359,8 +359,8 @@ backdrop:
     smoke-column-a: {layer: low-air, size: [150, 200]}   # smoke plumes over the fires (static)
     smoke-column-b: {layer: low-air, size: [130, 180]}
     smoke-column-c: {layer: low-air, size: [170, 210]}
-    aircar-sedan: {layer: low-air, size: [24, 24], headings: 16}   # civilian wedge sedan (round 30 a), slate; 16 headings, 0 nose up, clockwise
-    aircar-van: {layer: low-air, size: [28, 28], headings: 16}   # civilian box van (round 30 a), beige
+    aircar-sedan: {layer: ground, size: [24, 24], headings: 16}   # civilian wedge sedan (round 30 a), slate; 16 headings, 0 nose up, clockwise; street traffic on the ground (playtest 2026-10-18: under the cross highways)
+    aircar-van: {layer: ground, size: [28, 28], headings: 16}   # civilian box van (round 30 a), beige; street traffic
     gunship: {layer: low-air, size: [44, 44], headings: 16}   # CDF gunship (round 30 a), twin ducted fans
     landing-pad: {layer: ground, size: [228, 220], mid_size: true}   # the t=44 turret nest's landing pad on a low roof
     roof-nest: {layer: ground, size: [228, 220], mid_size: true}   # the t=88 turret nest's low roof by the boulevard
@@ -421,6 +421,15 @@ backdrop:
     tower-84x72-h135-b: {layer: ground, size: [84, 72], tower: {height: 1.35, wall: wall-tall}}
     arcology: {layer: ground, size: [200, 180], tower: {height: 1.5, wall: wall-arcology, shade: 0.5}, mid_size: true}   # the Ndidi Arcology (a tower, h 1.5), creep on its roof and upper floors
   placed:
+    # 1-3: street traffic on the ground (the playtest of 2026-10-18: the cars pass under the cross highways,
+    # placed before them, and the towers lean over both), round 30 variant A; D2 = a: scenery, shots pass over them
+    - {piece: aircar-sedan, t: 14.621, x: 106, path: [[12.6, 0, 0], [15.17, 0, -282.9]], repeat: {count: 53, every: 0.9}}
+    - {piece: aircar-van, t: 15.236, x: 118, path: [[13.2, 0, 0], [15.79, 0, -284.7]], repeat: {count: 12, every: 1.7}}
+    - {piece: aircar-sedan, t: 35.621, x: 118, path: [[33.6, 0, 0], [36.17, 0, -282.9]], repeat: {count: 4, every: 1.7}}
+    - {piece: aircar-van, t: 42.436, x: 118, path: [[40.4, 0, 0], [42.99, 0, -284.7]], repeat: {count: 12, every: 1.7}}
+    - {piece: aircar-sedan, t: 16.021, x: 244, path: [[14, 0, 0], [21.4, 0, 444]], repeat: {count: 17, every: 2.6}}
+    - {piece: aircar-sedan, t: 69.221, x: 216, path: [[67.2, 0, 0], [69.77, 0, -282.9]], repeat: {count: 8, every: 4.8}}
+    - {piece: aircar-van, t: 70.436, x: 216, path: [[68.4, 0, 0], [70.99, 0, -284.7]], repeat: {count: 8, every: 4.8}}
     # 1. On the Wing: the harbour (cranes on the quay, a ship at the pier)
     - {piece: quay-crane, t: 0.43, x: 173}
     - {piece: container-ship, t: 4.58, x: 120}
@@ -888,14 +897,11 @@ backdrop:
     - {piece: tower-68x64-h060-burnt, t: 121.843, x: 43}
     - {piece: tower-56x56-h060-burnt, t: 121.843, x: 436}
     - {piece: tower-56x56-h060-burnt, t: 122.529, x: 43}
-    - {piece: tower-68x64-h060-burnt, t: 122.529, x: 131}
     - {piece: tower-84x72-h060-burnt, t: 122.529, x: 338}
     - {piece: tower-68x64-h060-burnt, t: 123.214, x: 338}
     - {piece: tower-56x56-h085-burnt, t: 123.214, x: 436}
     - {piece: tower-68x64-h085-burnt, t: 124.586, x: 43}
-    - {piece: tower-56x56-h085-burnt, t: 124.586, x: 131}
     - {piece: tower-68x64-h085-burnt, t: 124.586, x: 436}
-    - {piece: tower-56x56-h060-burnt, t: 125.271, x: 131}
     - {piece: tower-68x64-h085-burnt, t: 125.957, x: 131}
     - {piece: tower-56x56-h085-burnt, t: 126.643, x: 131}
     - {piece: tower-68x64-h085-burnt, t: 127.329, x: 43}
@@ -1127,16 +1133,9 @@ backdrop:
     - {piece: smoke-column-b, t: 162.24, x: 340}
     - {piece: smoke-column-c, t: 167.79, x: 398}
     - {piece: smoke-column-a, t: 172.97, x: 408}
-    # 1-3: traffic on low-air (D2 = a: scenery, shots pass through), round 30 variant A
+    # 1: the CDF gunships on low-air (D2 = a: scenery, shots pass through), round 30 variant A
     - {piece: gunship, t: 2.05, x: 330, path: [[0.5, 0, 0], [3.16, 0, -159.7]]}
     - {piece: gunship, t: 5.55, x: 300, path: [[4, 0, 0], [6.71, -62.1, -150]]}
     - {piece: gunship, t: 9.05, x: 380, path: [[7.5, 0, 0], [8.3, 0, -48], [9.1, -18.4, -92.3], [9.94, -54.1, -128.1]]}
-    - {piece: aircar-sedan, t: 14.097, x: 106, path: [[12.6, 0, 0], [14.8, 0, -242]], repeat: {count: 53, every: 0.9}}
-    - {piece: aircar-van, t: 14.708, x: 118, path: [[13.2, 0, 0], [15.41, 0, -243.4]], repeat: {count: 13, every: 1.7}}
-    - {piece: aircar-sedan, t: 36.797, x: 118, path: [[35.3, 0, 0], [37.5, 0, -242]], repeat: {count: 3, every: 1.7}}
-    - {piece: aircar-van, t: 41.908, x: 118, path: [[40.4, 0, 0], [42.61, 0, -243.4]], repeat: {count: 12, every: 1.7}}
-    - {piece: aircar-sedan, t: 15.497, x: 258, path: [[14, 0, 0], [18.7, 0, 282.2]], repeat: {count: 17, every: 2.6}}
     - {piece: gunship, t: 37.55, x: 420, path: [[36, 0, 0], [38.71, -62.1, -150]]}
     - {piece: gunship, t: 38.75, x: 446, path: [[37.2, 0, 0], [39.91, -62.1, -150]]}
-    - {piece: aircar-sedan, t: 67.497, x: 216, path: [[66, 0, 0], [68.2, 0, -242]], repeat: {count: 8, every: 4.8}}
-    - {piece: aircar-van, t: 69.908, x: 216, path: [[68.4, 0, 0], [70.61, 0, -243.4]], repeat: {count: 8, every: 4.8}}

@@ -93,17 +93,17 @@ class Level12Test {
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_473, Math.round(budget), "the typical haul's target, 700 × 1.07¹¹");
         assertEquals(
-                111 * 5 + 43 * 12 + 42 * 3 + 27 * 12 + 6 * 25 + 5 * 30 + 2 * 30,
+                153 * 5 + 180 * 12 + 28 * 15 + 42 * 3 + 27 * 12 + 15 * 25 + 11 * 30 + 6 * 30,
                 kills,
-                "Skitter, Needler, Whirl Seed, Lamprey, Spore Bomber, Wraith, Mantis");
+                "Skitter, Needler, Stinger, Whirl Seed, Lamprey, Spore Bomber, Wraith, Mantis");
         assertTrue(level.groundUnits().isEmpty(), "no ground targets");
         assertEquals(130, crates, "the drifting canister in Act 1 terms (pays 208)");
         assertEquals(75, secondary, "the three sondes in Act 1 terms (pays 120)");
         System.out.printf(
                 "Level 12 budget (Act 1 terms): kills %d, crate %d, secondary %d: %d (budget %.0f)%n",
                 kills, crates, secondary, total, budget);
-        assertEquals(2_086, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
-        assertEquals(0.75, content.level(LEVEL).bounties());
+        assertEquals(4_885, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
+        assertEquals(0.30, content.level(LEVEL).bounties());
     }
 
     @Test
@@ -119,15 +119,16 @@ class Level12Test {
         assertEquals(
                 Map.of(
                         "lamprey", 27,
-                        "mantis", 2,
-                        "needler", 43,
-                        "skitter", 111,
-                        "spore-bomber", 6,
+                        "mantis", 6,
+                        "needler", 180,
+                        "skitter", 153,
+                        "spore-bomber", 15,
+                        "stinger", 28,
                         "whirl-seed", 42,
-                        "wraith", 5),
+                        "wraith", 11),
                 waves);
         assertEquals(
-                Map.of(WaveSpec.Entry.FRONT, 166, WaveSpec.Entry.SIDES, 56, WaveSpec.Entry.REAR, 14),
+                Map.of(WaveSpec.Entry.FRONT, 395, WaveSpec.Entry.SIDES, 47, WaveSpec.Entry.REAR, 20),
                 from,
                 "the rear only the Wraiths and the Lampreys (skitters do not stream in from the rear)");
         assertEquals(
@@ -137,12 +138,12 @@ class Level12Test {
         assertTrue(level.setPieces().isEmpty());
         assertTrue(level.water(), "open sea throughout");
         assertEquals(
-                4,
+                8,
                 SimSpecs.level(content, LEVEL, Difficulty.HARD).waves().stream()
                         .filter(wave -> wave.enemy().slug().equals("mantis"))
                         .mapToInt(WaveSpec::count)
                         .sum(),
-                "hard's Mantis pincer in the eye");
+                "the Mantis pincers at t=55.5, 124 and 180.5 and hard's in the eye");
     }
 
     /** The Lampreys' waves: the t=32 introduction, the chaser swarms and the rear stream; the t=136 swarm's easy 4. */

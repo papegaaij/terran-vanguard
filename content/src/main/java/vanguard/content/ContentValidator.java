@@ -878,6 +878,25 @@ final class ContentValidator {
                 problem(enemy, "boss.lanes.arms", "'" + part + "' is no slam chain's part (motion: slam)");
             }
         }
+        // Round 40: a rooted arm's root stays on the surface (always hittable).
+        if (lanes.map(EnemyData.Lanes::isRooted).orElse(false)) {
+            for (String part : arms.keySet()) {
+                int index = enemy.partIndex(part);
+                if (index >= 0
+                        && !parts.get(index).layer().orElse(enemy.layer()).equals("ground")) {
+                    problem(enemy, "boss.lanes.arms", "a rooted arm's root '" + part + "' is a ground part");
+                }
+            }
+        }
+        // Round 40: aim turns are a boss's (its parts take turns).
+        for (EnemyData.Attack attack : enemy.attacks()) {
+            if (attack.aimTurns().isPresent() && enemy.boss().isEmpty()) {
+                problem(
+                        enemy,
+                        "attacks." + attack.name().orElse(attack.pattern()) + ".aim_turns",
+                        "only a boss's parts take aim turns");
+            }
+        }
         if (enemy.boss().isEmpty()) {
             return;
         }
@@ -1443,6 +1462,13 @@ final class ContentValidator {
             LevelData.CueEvent event = cue.event().orElse(null);
             if (event == LevelData.CueEvent.FIRST_TELEGRAPH && !lanes) {
                 problem(level, "radio[" + i + "].event", "first-telegraph in a level without a boss with lanes");
+            }
+            if (event == LevelData.CueEvent.FIRST_SHIP_TELEGRAPH
+                    && (!lanes || level.convoy().isEmpty())) {
+                problem(
+                        level,
+                        "radio[" + i + "].event",
+                        "first-ship-telegraph in a level without a boss with lanes and a convoy");
             }
             if (event == LevelData.CueEvent.BOSS_PART_DESTROYED) {
                 for (String part : cue.parts().orElse(List.of())) {

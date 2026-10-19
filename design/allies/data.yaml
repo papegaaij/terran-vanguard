@@ -67,7 +67,7 @@ nansen-relay:             # Level 13's defend primary (M5 part G, user decisions
   layer: ground
   size: [96, 96]          # sprite px: the footprint (dish array, mast, prefab modules, the helipad)
   hitbox: [80, 80]        # inside the footprint
-  hp: 240                 # integrity at medium (600 in the draft; tuned in M5 part G, step G4, G2 = a: the guarding autopilot's median seed ends at half of it); the level sets the difficulty variants
+  hp: 260                 # integrity at medium (600 in the draft; tuned in M5 part G, step G4, G2 = a: the guarding autopilot's median seed ends at half of it; 240 until Level 13's L10-style waves of 2026-10-19 made it lose 122-158); the level sets the difficulty variants
   damaged_by:             # only attacks the target-the-objective hook aims at it (G1 = a)
     objective_aimed: true # relay-aimed shots and fans (alternate, in-arc, always); shots aimed at the ship pass over it
     claws: 0

@@ -99,8 +99,9 @@ class Level14LooksTest {
     }
 
     @Test
-    void twoTurretPodsFireStraightDown() {
-        // Round 34 P2 (step K2): pods 1 and 4 fire straight down (the data's `aim: down`); they face down.
+    void everyTurretPodFiresStraightDown() {
+        // Round 34 P2 (step K2), then the Act 2 playtest's 4a (step CB, 2026-10-19): all four pods fire straight
+        // down (the data's `aim: down`, one at a time aiming in its aim turn); they face down.
         LevelScript.SetPieceSpec spire = SCRIPT.setPieces().stream()
                 .filter(LevelScript.SetPieceSpec::isBoss)
                 .findFirst()
@@ -113,7 +114,7 @@ class Level14LooksTest {
                 }
             }
         }
-        assertEquals(2, down.size(), "two pods fire down: " + down);
+        assertEquals(4, down.size(), "all four pods fire down: " + down);
         down.forEach(p -> assertTrue(
                 spire.parts().get(p).name().startsWith("pod"),
                 spire.parts().get(p).name()));

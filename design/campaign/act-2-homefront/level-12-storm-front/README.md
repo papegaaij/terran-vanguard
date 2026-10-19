@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/lamprey, ../../../enemies/air/whirl-seed, ../../../player/wingmen, ../../../player/weapons/proximity-mines]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Level 12 – Storm Front
@@ -69,12 +69,12 @@ front and the sides (step 4, pending the user's review in the combined round).
 | Field | Value |
 |---|---|
 | Dominant layers | `air`, `low-air` (Spore Bombers and the canister under the cloud banks) |
-| Attack directions | front 70% · sides 24% · rear 6% |
+| Attack directions | front 85% · sides 10% · rear 4% |
 | Density | 4 |
 | Recommended traits | `homing`, `spread`; `side` / `rear` / `area` help against a latched Lamprey |
 | Hazards | Wind gusts (sideways push), low visibility (rain, cloud banks), lightning flashes |
 | Boss / mid-boss | none (finale: breakout from the storm, attacks from all sides) |
-| Sensor-suite detail | **none**: ocean storm, `air` + `low-air`, front. **L1**: + the directions, density 4, hazards "wind, low visibility", the objective `SONDES 3`. **L2**: + Lamprey (new), Whirl Seed, Needler, Wraith, Mantis, Spore Bomber, Skitter portraits. **L3**: + `homing` and `spread` highlighted; the timeline strip marks the storm wall (125–150 s) and the eye (150–175 s); 1 secret. |
+| Sensor-suite detail | **none**: ocean storm, `air` + `low-air`, front. **L1**: + the directions, density 4, hazards "wind, low visibility", the objective `SONDES 3`. **L2**: + Lamprey (new), Whirl Seed, Needler, Stinger, Wraith, Mantis, Spore Bomber, Skitter portraits. **L3**: + `homing` and `spread` highlighted; the timeline strip marks the storm wall (125–150 s) and the eye (150–175 s); 1 secret. |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (the data's `varga`; draft texts for round 34, fitting
@@ -176,9 +176,10 @@ the first level with one. The eye (section 5) has none of it: no rain, gusts or 
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Of the returning units the
 `medium` ones (Spore Bomber ×2.28, Mantis ×1.40, Wraith ×1.11 at reference DPS 73) get the
-[act HP factor](../../../enemies/README.md#balancing-basis); the `tiny` and `small` ones (Whirl
-Seed, Needler, Skitter) keep their HP; the Lamprey is new here (none). HP values live in the enemy
-specs only.
+[act HP factor](../../../enemies/README.md#balancing-basis); of the `small` ones the Needler (12)
+and the Stinger (17) get it capped at ×3 since the L10-style waves of 2026-10-19 (`small_act_hp`);
+the `tiny` ones (Whirl Seed, Skitter) keep their HP; the Lamprey is new here (none). HP values live
+in the enemy specs only.
 
 - **Lampreys** fly the [Lamprey](../../../enemies/air/lamprey/README.md#behaviour) chase from their
   entry. A **`swarm`** of Lampreys is a swarm of chasers (user decision **F9 = a**): the swarm's
@@ -189,9 +190,25 @@ specs only.
   (with its edge warning), and its spiral's centre drifts with the wind as the seeds do.
 - **The Needler circle in the eye** (t=158) orbits **clockwise** for 8 s before breaking (a wave
   `hold`; the orbit's sense set by the wave, step 3 checks the built sense).
-- **Density and pacing** (stated defaults): at least **50 enemies a minute** at medium over the
-  level (`DensityTest`) and no empty screen over **3 s** of real time (`PacingTest`, every
-  difficulty). The draft's 111 units over 205 s (≈ 33 a minute) are too few: the table keeps the
+- **L10-style waves** (the user's Act 2 playtest, 2026-10-18/19, P.e "yes, all", as step CA did
+  Levels 08–09): a wave about every 2.5 s from t=6.5 to t=214, the next entering while the last is
+  still on the screen; Needler V-wings and lines of 4–5 (a second group 1.25 s after most Skitter
+  waves), Stinger V-wings and columns of 4, Skitter streams of 6 and snakes of 8, Whirl clusters of 6,
+  Spore Bomber lines of 3, Mantis pincers at t=55.5, 124 and 180.5, Wraith ambushes at t=75.5, 104,
+  138.5, 166 and 206.5, so that something always fires. **462 units at medium** (Needlers 39 %,
+  Skitters 33 %). Kept: the t=32 introduction alone, every Lamprey wave, the seeds on the wind (t=46,
+  140), the canister's beat (t=98.5–104), the eye's circle and its Wraiths, hard's Mantis pincer.
+  Measured on the attempt that completes the level from the end of the launch, the plan's fit
+  (`PacingTest`, `ActFloorTest`): medium **2.7 enemies on the screen, 17.7 shots a minute**, one pause
+  over 2 s (the introduction's, 2.5 s); hard 2.7 and 19.7, one; easy 1.4 and 2.0 (Act 1's rule: one
+  over 3 s). Before: medium 0.7 and 1.1 with 22 pauses over 2 s, hard 1.1 and 8.2 with 14, and a
+  14 s empty tail. **Hard** is harder by its levers, not by more units: its Needler V-wings and
+  Stinger groups are one smaller than medium's, its Needler lines two smaller, its Spore Bomber lines
+  2 (with groups only one smaller the autopilot lost the ship three times in the campaign playthrough;
+  hard here stays under Level 10's hard 5.6 and 39).
+- **Density and pacing before** (stated defaults of M5 part F): at least **50 enemies a minute** at
+  medium over the level (`DensityTest`) and no empty screen over **3 s** of real time (`PacingTest`,
+  every difficulty). The draft's 111 units over 205 s (≈ 33 a minute) are too few: the table keeps the
   set pieces and step 4 filled the gaps with **popcorn from L12's own roster**: Skitter
   streams of 4 (3 just before a quiet moment) and snakes of 6, Whirl clusters of 6 and Needler lines
   of 3, a wave every 3–4 s from t=7, from the front and the sides. **236 units at medium (≈ 70 a
@@ -206,62 +223,103 @@ specs only.
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
-| 7 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | The first targets in the squall |
-| 11 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
-| 15 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Through the demonstration gust at t=16 |
-| 18.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | left side | |
-| 23 | 1 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
-| 26.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Gone before the Lamprey introduction |
+| 6.5 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | The first targets in the squall |
+| 9 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 11.5 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 14 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | Through the demonstration gust at t=16 |
+| 16.5 | 1 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
+| 19 | 1 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
+| 21.5 | 1 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 24 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 26.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Gone before the Lamprey introduction |
 | 32 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front | **New.** One at a time, 1.5 s apart, nothing else on screen; the first latch shows the shake-off prompt |
-| 38 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | 6 s after the introduction |
+| 38 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | 6 s after the introduction |
 | 40 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 43 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | right side | |
+| 42.5 | 2 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
 | 46 | 2 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | left side | Released just outside the left edge; the wind bends their spiral to the right |
-| 50 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
-| 54 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 48 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | Under the scud banks (`low-air`); spores rise to the play plane |
+| 50.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 51.75 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 53 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 55.5 | 2 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | Laser sweeps across the rain |
 | 58 | 2 | swarm | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | front | |
-| 61 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | right side | |
-| 64 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | Under the scud banks (`low-air`); spores rise to the play plane |
-| 70 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 60.5 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 63 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
+| 65.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | `low-air` |
+| 68 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 69.25 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 70.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 73 | 2 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
-| 76 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
-| 80 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 10 | front (alternating edges) | |
-| 84 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 75.5 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | |
+| 78 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 80.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (alternating edges) | |
+| 81.75 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 83 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s |
+| 85.5 | 3 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
 | 88 | 3 | swarm | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | sides | Entering with the lightning flash at t=87 |
-| 92 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
+| 90.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 91.75 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 93 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 96 | 3 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
-| 98.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | right side | Beside the drifting canister |
-| 101.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | The lightning reveal: the right one flies into the tall bank on the right (the canister's cover), seen through it in the t=103.5 flash |
+| 98.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | right side | Beside the drifting canister |
+| 99.75 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 101.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | The lightning reveal: the right one flies into the tall bank on the right (the canister's cover), seen through it in the t=103.5 flash |
 | 104 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | The first one drops an overdrive |
-| 108 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
+| 106.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 109 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 110.25 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 112 | 3 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | rear | |
-| 117 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 114.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 117 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
 | 120 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s |
-| 122 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
+| 122.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | |
+| 123.75 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 124 | 3 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | Laser sweeps across the rain |
-| 128 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
+| 127 | 4 | column | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
+| 129.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 132 | 4 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
+| 134.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 136 | 4 | swarm | [Lamprey](../../../enemies/air/lamprey/README.md) | 6 | front | Out of the heavy rain; easy 4 |
+| 138.5 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | |
 | 140 | 4 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | left side | On the wind with the wall's drift |
-| 143 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
-| 146 | 4 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | `low-air` |
-| 150 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Into the eye |
-| 155 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 143 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 144.25 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 146 | 4 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | `low-air` |
+| 148.5 | 4 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 150.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | Into the eye |
+| 151.75 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 153 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 155.5 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 156.75 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 158 | 5 | circle | [Needler](../../../enemies/air/needler/README.md) | 8 | front | Orbits the eye's centre clockwise with the storm for 8 s before breaking; the leader drops an overdrive |
 | 162.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | As the circle breaks |
 | 166 | 5 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 3 | rear | |
-| 169.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | sides (alternating edges) | |
+| 169.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | sides (alternating edges) | |
 | 170 | 5 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | **Hard only** |
-| 176 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
-| 180 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | |
-| 183 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
+| 170.75 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 172 | 5 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 175 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 176.25 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 178 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 180.5 | 6 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | |
+| 183 | 6 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s |
 | 186 | 6 | swarm | [Lamprey](../../../enemies/air/lamprey/README.md) | 5 | rear | |
-| 190 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
-| 194 | 6 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
+| 188.5 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | |
+| 189.75 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 191 | 6 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | `low-air` |
+| 193.5 | 6 | whirl cluster | [Whirl Seed](../../../enemies/air/whirl-seed/README.md) | 6 | front | |
 | 196 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 199.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | sides (alternating edges) | The last wave |
+| 199 | 6 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
+| 201.5 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (left) | |
+| 202.75 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 204 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 206.5 | 6 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | |
+| 209 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
+| 211.5 | 6 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 8 | front (right) | Out of the storm as it thins |
+| 212.75 | 6 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 214 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (alternating edges) | The last wave |
 
-Totals: Skitter 111 · Needler 43 · Whirl Seed 42 · Lamprey 27 · Spore Bomber 6 · Wraith 5 · Mantis 2.
+Totals: Skitter 153 · Needler 180 · Stinger 28 · Whirl Seed 42 · Lamprey 27 · Spore Bomber 15 · Mantis 6 · Wraith 11.
 <!-- /data -->
 
 The set pieces at medium are the draft's table: Lamprey 27 · Whirl Seed 30 · Needler 25 · Wraith 5 ·
@@ -374,10 +432,10 @@ sounds are checked in the capture.
 Budget(12) = 700 × 1.07¹¹ ≈ **1,473**, the typical haul's target
 ([economy](../../../systems/economy/README.md#per-level-budget)), not a perfect collection. **The
 data keeps Act 1 terms** (stated default): the stat-block bounties (Lamprey 12, Whirl Seed 3,
-Needler 12, Wraith 30, Spore Bomber 25, Skitter 5, Mantis 30), the canister's crate 130 and the
-secondary 75; the code pays each × the act factor 1.6 (bounties also × the level's
-**`bounty_scale`** **0.75**, fitted by `TypicalHaulTest`: the typical haul 1,512, +2.6 %; 1,476
-before round 36's reveal pair, the scale kept as the haul stays within ±5 %). Spores are
+Needler 12, Stinger 15, Wraith 30, Spore Bomber 25, Skitter 5, Mantis 30), the canister's crate 130
+and the secondary 75; the code pays each × the act factor 1.6 (bounties also × the level's
+**`bounty_scale`** **0.30** since the L10-style waves of 2026-10-19, fitted by `TypicalHaulTest`:
+the typical haul 1,486, +0.9 %; 0.75 before, for 236 units). Spores are
 not budgeted (their number depends on how long the bombers live). The step-1 estimate (≈ 0.9 at 50
 a minute) assumed less popcorn; at 70 a minute the scale is lower. The draft's 2,105 was the old
 perfect-run curve with Act-2-scaled amounts (Lamprey 19, canister 210).
@@ -385,11 +443,11 @@ perfect-run curve with Act-2-scaled amounts (Lamprey 19, canister 210).
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 111 × 5 + Needler 43 × 12 + Whirl Seed 42 × 3 + Lamprey 27 × 12 + Spore Bomber 6 × 25 + Wraith 5 × 30 + Mantis 2 × 30 | 2,246 | 1,348 |
+| Kills: Skitter 153 × 5 + Needler 180 × 12 + Stinger 28 × 15 + Whirl Seed 42 × 3 + Lamprey 27 × 12 + Spore Bomber 15 × 25 + Mantis 6 × 30 + Wraith 11 × 30 | 2,204 | 1,322 |
 | Secret: drifting canister (hidden crate, 9% of budget) | 208 | 104 |
 | Secondary: fly through all three sondes | 120 | 60 |
-| **Total** (bounty scale 0.75) | **2,574** | **1,512** |
-| Budget(n) = the typical haul's target; typical +3 %, perfect 1.75 × budget | | 1,473 |
+| **Total** (bounty scale 0.3) | **2,532** | **1,486** |
+| Budget(n) = the typical haul's target; typical +1 %, perfect 1.72 × budget | | 1,473 |
 <!-- /data -->
 
 **Balance plan** (stated default): the L12 visit as written (sells both wing pods, buys two
@@ -406,7 +464,8 @@ pending the user's review; the plan upgrades the rear only at L14.
 - **Easy**: gusts push at 25 px/s with a 1.5 s telegraph; the storm wall has no steady drift;
   the t=136 Lamprey swarm has 4.
 - **Hard**: gusts push at 55 px/s and also come at t=34 and t=72; a Mantis pincer joins the eye
-  at t=170; the canister needs five hits; two Lampreys can latch at once, draining 12/s (the
+  at t=170; the Needler V-wings and Stinger groups are one smaller than medium's, the Needler lines
+  two smaller and the Spore Bomber lines 2 (the L10-style waves of 2026-10-19); the canister needs five hits; two Lampreys can latch at once, draining 12/s (the
   [Lamprey](../../../enemies/air/lamprey/README.md)'s hooks).
 
 ## Concept art
@@ -484,7 +543,11 @@ backdrop generator imports for the chosen one; briefs in [concept/prompts.md](co
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their
       images (M5 part F, steps 4 and 5)
 - [x] Typical haul at medium within ±5 % of budget(12) = 1,473 with the level's `bounty_scale`
-      (`TypicalHaulTest`) (M5 part F, step 4)
+      (`TypicalHaulTest`) (M5 part F, step 4; 0.30 since 2026-10-19)
+- [x] The user's Act 2 playtest (2026-10-18/19, P.e): L10-style waves, a wave about every 2.5 s,
+      Needlers and Stingers with the capped act HP factor; `PacingTest`'s Act 2 rule (at most 3 pauses
+      over 2 s at medium and hard) and `ActFloorTest` (≥ 2.5 enemies on the screen, ≥ 10 shots a minute
+      at medium) pass, the level out of their pending list (step WA)
 - [x] Balance plan: the L12 visit refits Rook's Autocannon; the autopilot shakes off latches,
       leans against the gusts after their telegraph and takes the sondes; it flies the level to its
       end with Rook on every difficulty; `BalanceTest`'s Lamprey time to kill and drain check (M5
@@ -670,3 +733,17 @@ backdrop generator imports for the chosen one; briefs in [concept/prompts.md](co
   a voice still speaking when the debrief takes over, and `RadioTimelineTest` checks every level's
   closing voices end inside the outro. The extension leaves a quiet exit of 13–15 s after the last wave
   (`PacingTest`: the level's second longer pause on easy and medium, inside the rule's two).
+- 2026-10-19: The user's Act 2 playtest, P.e "yes, all" (Levels 11–14's waves too, as step CA did
+  Levels 08–09): the waves **rewritten L10-style**, a wave about every 2.5 s from t=6.5 to t=214 (so
+  the breakout's quiet 14 s tail is gone), 462 units at medium in 94 waves (236 in 57), Needlers the
+  bulk (39 %, Skitters 33 %), Stingers new to the level (V-wings and columns of 4), more Spore Bomber
+  lines (3 a line), Mantis pincers at t=55.5 and 180.5 and Wraith ambushes at t=75.5, 138.5 and 206.5
+  added; every set piece, hold, radio time and story beat kept (the t=32 introduction alone, the
+  Lampreys, the seeds on the wind, the canister's beat, the eye's circle). The Needler (12 HP) and the
+  Stinger (17) take the capped act HP factor here (`small_act_hp.levels` + 12, 13): without it the
+  plan's fit kills them before their first shot (1.7 enemies on the screen, 4 shots a minute). Medium
+  2.7 on the screen and 17.7 shots a minute (was 0.7 and 1.1), one pause over 2 s (was 22); hard 2.7
+  and 19.7 with its groups one or two smaller; the directions now front 85 · sides 10 · rear 4 % (was
+  70 · 24 · 6: side Skitter streams gave way to Stingers); `bounty_scale` 0.75 → 0.30 (typical haul 1,486, +0.9 %). The
+  test edits (the level's totals, `PacingTest.PENDING_ACT_TWO_RULE`) are the main agent's. Pending
+  the user's review: the Stingers in the storm, the Needler HP, the number of units.

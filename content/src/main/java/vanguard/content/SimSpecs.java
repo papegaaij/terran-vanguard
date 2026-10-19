@@ -1125,7 +1125,9 @@ public final class SimSpecs {
                     // M5 part H: the pods' orbs, each pod on its own clock.
                     attack.staggered().orElse(false),
                     Optional.empty(),
-                    down));
+                    down,
+                    // Round 40: the Siege Spire's pods take turns to aim, each after a glow.
+                    attack.aimTurns().map(turns -> new BossSpec.AimTurns(turns.every(), turns.glow()))));
         }
         Map<String, Integer> spawnCounts = hook.flatMap(EnemyData.Hook::spawns).orElse(Map.of());
         List<BossSpec.Phase> phases = new ArrayList<>();
@@ -1325,7 +1327,24 @@ public final class SimSpecs {
                 arms.add(new BossSpec.Arm(partIndex(enemy, part), mask));
             });
             double top = PlayField.HEIGHT - anchored.y() - enemy.hitbox().height() / 2;
-            lanes = new BossSpec.Lanes(data.count(), data.width(), top, arms);
+            if (data.isRooted()) {
+                // Round 40 (the reworked Harbour Kraken): the lanes run from the roots' lower edge down.
+                double lowest = Double.NEGATIVE_INFINITY;
+                for (String part : data.arms().orElse(Map.of()).keySet()) {
+                    EnemyData.PartData root = partList.get(partIndex(enemy, part));
+                    lowest = Math.max(
+                            lowest,
+                            anchored.y() - root.offset().y() + root.hitbox().height() / 2);
+                }
+                top = PlayField.HEIGHT - lowest;
+            }
+            lanes = new BossSpec.Lanes(
+                    data.count(),
+                    data.width(),
+                    top,
+                    arms,
+                    data.isRooted(),
+                    data.raised().orElse(1.0));
             EnemyData.SlamData cycle = script.slam().orElseThrow();
             DifficultyData levers = content.difficulty();
             slam = new BossSpec.Slam(
@@ -1337,7 +1356,7 @@ public final class SimSpecs {
                     cycle.splash().count(),
                     cycle.splash().speed() * levers.enemyBulletSpeed().of(difficulty),
                     bulletDamage(content, cycle.splash().bullet()),
-                    hook.flatMap(EnemyData.Hook::lanes).orElse(Math.max(1, arms.size())),
+                    hook.flatMap(EnemyData.Hook::lanes).or(cycle::volley).orElse(Math.max(1, arms.size())),
                     BossSpec.Slam.SECOND_SECONDS);
         }
         List<Layer> layers = new ArrayList<>();
@@ -2447,6 +2466,7 @@ public final class SimSpecs {
                         case FIRST_LOOP_BACK -> LevelScript.CueTrigger.FIRST_LOOP_BACK;
                         case ALLY_HIT -> LevelScript.CueTrigger.ALLY_HIT;
                         case FIRST_TELEGRAPH -> LevelScript.CueTrigger.FIRST_TELEGRAPH;
+                        case FIRST_SHIP_TELEGRAPH -> LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH;
                         case BOSS_PART_DESTROYED -> LevelScript.CueTrigger.BOSS_PART_DESTROYED;
                         case FIRST_LATCH -> LevelScript.CueTrigger.FIRST_LATCH;
                         case ALLY_BELOW -> LevelScript.CueTrigger.ALLY_BELOW;

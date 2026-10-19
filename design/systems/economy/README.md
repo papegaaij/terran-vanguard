@@ -176,8 +176,9 @@ the typical player (18 131 / 14 669 / 10 857 credits on easy / medium / hard). T
 designed reward for near-perfect play, about half from collection and half from grades, not a fault
 of the economy. The test checks it against the **expert's bound**: the starting credits plus each
 level's perfect run × the difficulty's income × 0.9, with a +25 % grade bonus, less the purchases and
-repairs it paid (`expert` in balance-plan.yaml); every act's end must lie within ±15 % of it (today
-+1.6 % / +3.3 % on medium after Acts 1 / 2, easy +5.7 % / +6.0 %, hard −5.6 % / −10.6 %). An expert
+repairs it paid (`expert` in balance-plan.yaml); every act's end must lie within ±15 % of it, on hard
+between −25 % and +15 % (after the Act 2 wave rework of 2026-10-19, Act 2 ends easy +3.5 %, medium +1.2 %, hard
+−21.6 %). An expert
 earns ≈ 1.77 × the typical income and could max out everything around Acts 6–7, a typical B player
 about 70 % of it; to watch at Act 3.
 - Rook's guns, their upgrades (60 % of the player's prices, see
@@ -235,7 +236,7 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   difficulty with the plan's purchases, credits carried from level to level, Rook from Level 08 with
   his repairs after the ship's; Act 2 added in M5 part I)
 - [x] Round 34 P3 = A: the static sheet with the typical player's B grade bonus and Rook's repair
-  estimate (`tools/balance.py` and `BalanceTest` agree), `ActPlaythroughTest`'s act ends within ±15 %
+  estimate (`tools/balance.py` and `BalanceTest` agree), `ActPlaythroughTest`'s act ends within ±15 % (hard −25 %)
   of the expert's bound
 
 ## Open questions
@@ -398,3 +399,6 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   typical haul, round 37 R.1's act factor reverted) and the Act 3 re-plan stand as built, including hard keeping
   the Pulse Cannon L4 when the beam is refused at L18 (about 7 100 banked by the L21 visit); the hard plan
   is not changed.
+- 2026-10-19 (user, after the Act 2 wave rework): the hard playthrough may end an act up to 25 % under the
+  expert's bound (`expert.hard_under`); over-earning stays capped at +15 %, easy and medium keep ±15 %. Hard is
+  tighter on purpose: its smaller firing groups and the Spire's half-paying hard Wraiths put Act 2 at −21.6 %.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../player, ../../enemies, ../../ui]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Sound effects
@@ -207,7 +207,7 @@ gate. P2–P3, one loop per setting in the [world](../../world/README.md).
 | Mars entry | `mars-entry` (Act 3: Level 15 in sections 1–2, the descent through the thin air; crossfading to `mars-dust` over 2 s at section 3; M7 part B: `Sfx.AMBIENCE_MARS_ENTRY`) | the [entry roar](#act-3-sounds-approved-round-36) of round 38: the chosen [a](concept/entry-roar-r38-a.ogg) "recorded roar", a seamless 12 s loop (S.3 = a, 2026-10-14) |
 | Mars dust wind | `mars-dust` (Act 3: Level 15 from section 3, Levels 20 and 21; M7 part B: `Sfx.AMBIENCE_MARS_DUST`) | the chosen [a](concept/mars-dust-r38-a.ogg) "recorded dust wind" of round 38, a seamless 16 s loop (S.4 = a, 2026-10-14) |
 | Mars canyon | `mars-canyon` (Act 3: Level 16, the dust wind with a canyon howl; M7 part C) | the chosen [a](concept/mars-canyon-r39-a.ogg) of round 39, a synthesized dust wind with a resonant canyon howl, a seamless 16 s loop (S.5, 2026-10-18) |
-| Mars colony | `mars-colony` (Act 3: Level 17, the plains wind, the domes' air-plant hum, a distant rail clank) | proposed in round 40: [a](concept/mars-colony-r40-a.ogg) — synthesized plains wind, air-plant hum (60 Hz partials) and a distant rail clank, seamless 16 s loop (the game plays it until the pick) |
+| Mars colony | `mars-colony` (Act 3: Level 17, the plains wind, the domes' air-plant hum, a distant rail clank) | round 40, accepted: [a](concept/mars-colony-r40-a.ogg) — synthesized plains wind, air-plant hum (60 Hz partials) and a distant rail clank, seamless 16 s loop (accepted in round 40, S.l) |
 | Mars dust storm | `mars-storm` (Act 3: Level 18 from t=25, swelling in the storm walls, +3 dB as Level 13's whiteout; in the eye a crossfade to `mars-dust` and back over 4 s, as Level 12's eye) | [a](concept/dust-storm-bed-r36-a.ogg) — "recorded front", a sandstorm over a furious low howl, seamless 16 s loop (round 36, S.5 = a) |
 | Mars foundry | `mars-foundry` (Act 3: Level 19, conveyor rumble, a far furnace roar, a slow hammer, the plateau wind) | — (part F's round) |
 
@@ -230,7 +230,7 @@ that builds it (M7 parts A–H), as Act 2 did. A sound that reuses a chosen file
 | Entry roar | Level 15 sections 1–2, the descent through the thin air (a loop) | A high thin wind roar over the hull, rising as the air thickens, crossfading into `mars-dust` at section 3 | round 38: a, chosen ([entry-roar-r38-a](concept/entry-roar-r38-a.ogg), a seamless 12 s loop; the rise is the game's level ramp) | P2 |
 | Relay hut door | Level 16's secret: the hut opened | Reuse the crate's metal burst; no new file unless the round asks | — | P3 |
 | Dome hit | A dome of Level 17 takes a hit (`ALLY_HIT`) | Thick glass under stress: a heavy knock, a creak running round the dome and a fine crackle of stress lines; no shatter; 1.2 s | round 40 (M7 part D): [a](concept/dome-hit-r40-a.ogg), a glass knock, a creak round the dome and a fine stress-line crackle, 1.2 s | P1 |
-| Dome break | A dome breaks (`ALLY_LOST`) | A long glass cave-in: a crack, the panes going in a cascade, air rushing out in a falling hiss, a steel frame groan; 3–4 s, under the ally-loss sound | round 40: [a](concept/dome-break-r40-a.ogg), a crack, a cascade of panes, air rushing out and a steel-frame groan, 3.6 s | P1 |
+| Dome break | A dome breaks (`ALLY_LOST`) | A long glass cave-in: a crack, the panes going in a cascade, air rushing out in a falling hiss, a steel frame groan; 3–4 s, under the ally-loss sound | round 40: [a](concept/dome-break-r40-a.ogg), a crack, a cascade of panes, air rushing out and a steel-frame groan, 3.6 s (user: "doesn't sound as a cave in, needs a rumble"); redone: [b](concept/dome-break-r40-b.ogg) a recorded structure collapse with a deep rumble, shattering panes and a sub thump, [c](concept/dome-break-r40-c.ogg) a heavy rubble crash over a ground rumble with smashing glass, 2.4 s each (pending the user's pick, round 41; the game keeps playing a until then) | P1 |
 | Distant flak | Level 17's militia guns (t≈160) and Level 20's rim guns | Reuse the frigate's chosen distant flak ([a](concept/frigate-flak-r33-a.ogg)) | — | P2 |
 | Conveyor belts | Level 19, the belts under the tanks (a loop while belts are on screen) | Folded into the `mars-foundry` bed rather than a sound per belt | part F | P3 |
 | Furnace vent | Level 19's vents: the tell (the glow) and the burst | Tell: a rising gas roar, 1.0 s; burst: a fire blast roaring out and dying, 1.5 s; no pop at the start | part F | P2 |
@@ -804,18 +804,20 @@ alone (no file); b adds a crack layer over it. The game ships the eruption and t
 | [concept/tendril-break-r39-a.ogg](concept/tendril-break-r39-a.ogg) | synthesized (no source) — tendril break a: a whip-crack and a falling harmonic whine (2.4 → 0.55 kHz, fading out), 0.9 s (−17 dB) | chosen (round 39, S.3) |
 | [concept/crawler-walk-r39-a.ogg](concept/crawler-walk-r39-a.ogg) | synthesized (no source) — Threadcrawler walk a: twelve legs in two rows, 2–6 ms noise ticks at 8.4 steps a second over a rock rustle, seamless 3.0 s loop (−36 dB) | chosen (round 39, S.4) |
 | [concept/mars-canyon-r39-a.ogg](concept/mars-canyon-r39-a.ogg) | synthesized (no source) — `mars-canyon` a: a dust wind with a resonant canyon howl (260–420 Hz plus an octave voice) breathing with the gusts, seamless 16.0 s loop (−36 dB) | chosen (round 39, S.5) |
-| [concept/dome-hit-r40-a.ogg](concept/dome-hit-r40-a.ogg) | synthesized (no source) — `dome-hit` a: a 70–190 Hz knock and a glass tick, a creak (resonance 0.7 → 1.4 kHz) panned round the field, 60 stress-line grains; no shatter, 1.2 s (−18 dB) | proposed (round 40) |
+| [concept/dome-hit-r40-a.ogg](concept/dome-hit-r40-a.ogg) | synthesized (no source) — `dome-hit` a: a 70–190 Hz knock and a glass tick, a creak (resonance 0.7 → 1.4 kHz) panned round the field, 60 stress-line grains; no shatter, 1.2 s (−18 dB) | chosen (round 40, S.a: accepted) |
 | [concept/dome-break-r40-a.ogg](concept/dome-break-r40-a.ogg) | synthesized (no source) — `dome-break` a: a crack, ~400 glass grains thinning out, a hiss falling 6 → 1.2 kHz and a sawtooth frame groan sinking 150 → 85 Hz, 3.6 s (−16 dB) | proposed (round 40) |
-| [concept/herald-song-r40-a.ogg](concept/herald-song-r40-a.ogg) | synthesized (no source) — `herald-song` a: three voices (a fifth apart) singing an 'ah' (formants 800/1150/2900 Hz), F3 → A3 → E3 with a slow vibrato, 1.9 s (−20 dB) | proposed (round 40) |
-| [concept/herald-aura-r40-a.ogg](concept/herald-aura-r40-a.ogg) | synthesized (no source) — `herald-aura` a: six steady partials at 1.9–4.6 kHz with slow swells over a faint 5–9 kHz air, seamless 4.0 s loop (−40 dB) | proposed (round 40) |
-| [concept/aura-absorb-r40-a.ogg](concept/aura-absorb-r40-a.ogg) | synthesized (no source) — `aura-absorb` a: a glassy ping of four inharmonic partials (2.1–6.1 kHz), 0.4 s (−22 dB) | proposed (round 40) |
-| [concept/aura-collapse-r40-a.ogg](concept/aura-collapse-r40-a.ogg) | synthesized (no source) — `aura-collapse` a: five sustained voices sliding a fourth down over 1.6 s with a fading sheet of ring-glass pings, 2.0 s (−18 dB) | proposed (round 40) |
-| [concept/shellback-walk-r40-a.ogg](concept/shellback-walk-r40-a.ogg) | synthesized (no source) — `shellback-walk` a: four padded footfalls (60–160 Hz thud, 300–900 Hz pad) and clacking plates, seamless 3.2 s loop (−34 dB) | proposed (round 40) |
-| [concept/shellback-lob-r40-a.ogg](concept/shellback-lob-r40-a.ogg) | synthesized (no source) — `shellback-lob` a: an 80–260 Hz cough thump and a short pressure hiss (300–1800 Hz), 0.6 s (−17 dB) | proposed (round 40) |
-| [concept/shellback-curl-r40-a.ogg](concept/shellback-curl-r40-a.ogg) | synthesized (no source) — `shellback-curl` a: eleven staggered plate scrapes (band noise 0.6–2.5 kHz) ending in a heavy clack, 0.8 s (−20 dB) | proposed (round 40) |
-| [concept/shellback-roll-r40-a.ogg](concept/shellback-roll-r40-a.ogg) | synthesized (no source) — `shellback-roll` a: a 40–140 Hz rumble and a gritty rock-crush noise on 2.5 turns a loop, seamless 2.5 s loop (−30 dB) | proposed (round 40) |
-| [concept/shellback-uncurl-r40-a.ogg](concept/shellback-uncurl-r40-a.ogg) | synthesized (no source) — `shellback-uncurl` a: the plate scrapes in reverse order, a looser clack and a short exhale of grit, 0.7 s (−22 dB) | proposed (round 40) |
-| [concept/mars-colony-r40-a.ogg](concept/mars-colony-r40-a.ogg) | synthesized (no source) — `mars-colony` a: a thin plains wind, the domes' air-plant hum (60 Hz and partials 2–6, steady) and a distant rail clank, seamless 16.0 s loop (−36 dB) | proposed (round 40) |
+| [concept/dome-break-r40-b.ogg](concept/dome-break-r40-b.ogg) | Freesound (CC0, [CREDITS.md](../../../CREDITS.md)) — `dome-break` b: collapse.wav (metalfortress) with Glass Shatter 2 (Greg_Surr) and a synthesized 55 → 38 Hz sub thump, 2.4 s (−16 dB) | proposed (round 40, redo) |
+| [concept/dome-break-r40-c.ogg](concept/dome-break-r40-c.ogg) | Freesound (CC0, [CREDITS.md](../../../CREDITS.md)) — `dome-break` c: Building Collapse (craigsmith, low-passed) over Earth's Crust Depressing (bevibeldesign, 180 Hz low-pass) with Glass Smash (dwswords), 2.4 s (−16 dB) | proposed (round 40, redo) |
+| [concept/herald-song-r40-a.ogg](concept/herald-song-r40-a.ogg) | synthesized (no source) — `herald-song` a: three voices (a fifth apart) singing an 'ah' (formants 800/1150/2900 Hz), F3 → A3 → E3 with a slow vibrato, 1.9 s (−20 dB) | chosen (round 40, S.c: accepted) |
+| [concept/herald-aura-r40-a.ogg](concept/herald-aura-r40-a.ogg) | synthesized (no source) — `herald-aura` a: six steady partials at 1.9–4.6 kHz with slow swells over a faint 5–9 kHz air, seamless 4.0 s loop (−40 dB) | chosen (round 40, S.d: accepted) |
+| [concept/aura-absorb-r40-a.ogg](concept/aura-absorb-r40-a.ogg) | synthesized (no source) — `aura-absorb` a: a glassy ping of four inharmonic partials (2.1–6.1 kHz), 0.4 s (−22 dB) | chosen (round 40, S.e: accepted) |
+| [concept/aura-collapse-r40-a.ogg](concept/aura-collapse-r40-a.ogg) | synthesized (no source) — `aura-collapse` a: five sustained voices sliding a fourth down over 1.6 s with a fading sheet of ring-glass pings, 2.0 s (−18 dB) | chosen (round 40, S.f: accepted) |
+| [concept/shellback-walk-r40-a.ogg](concept/shellback-walk-r40-a.ogg) | synthesized (no source) — `shellback-walk` a: four padded footfalls (60–160 Hz thud, 300–900 Hz pad) and clacking plates, seamless 3.2 s loop (−34 dB) | chosen (round 40, S.g: accepted) |
+| [concept/shellback-lob-r40-a.ogg](concept/shellback-lob-r40-a.ogg) | synthesized (no source) — `shellback-lob` a: an 80–260 Hz cough thump and a short pressure hiss (300–1800 Hz), 0.6 s (−17 dB) | chosen (round 40, S.h: accepted) |
+| [concept/shellback-curl-r40-a.ogg](concept/shellback-curl-r40-a.ogg) | synthesized (no source) — `shellback-curl` a: eleven staggered plate scrapes (band noise 0.6–2.5 kHz) ending in a heavy clack, 0.8 s (−20 dB) | chosen (round 40, S.i: accepted) |
+| [concept/shellback-roll-r40-a.ogg](concept/shellback-roll-r40-a.ogg) | synthesized (no source) — `shellback-roll` a: a 40–140 Hz rumble and a gritty rock-crush noise on 2.5 turns a loop, seamless 2.5 s loop (−30 dB) | chosen (round 40, S.j: accepted) |
+| [concept/shellback-uncurl-r40-a.ogg](concept/shellback-uncurl-r40-a.ogg) | synthesized (no source) — `shellback-uncurl` a: the plate scrapes in reverse order, a looser clack and a short exhale of grit, 0.7 s (−22 dB) | chosen (round 40, S.k: accepted) |
+| [concept/mars-colony-r40-a.ogg](concept/mars-colony-r40-a.ogg) | synthesized (no source) — `mars-colony` a: a thin plains wind, the domes' air-plant hum (60 Hz and partials 2–6, steady) and a distant rail clank, seamless 16.0 s loop (−36 dB) | chosen (round 40, S.l: accepted) |
 
 ## Implementation
 
@@ -1333,3 +1335,4 @@ alone (no file); b adds a crack layer over it. The game ships the eruption and t
   `chosen`; the game already ships them. B.4 (b), (d), (e) kept: the scrape at −2 dB panned at the contact, the
   unit loops and the tendril hum's 0.4 while dormant with 0.2 s fades, the crawler's cut as the Coilwyrm's rip at
   pitch 0.8, −3 dB.
+- 2026-10-19 (user, round 40): the dome hit, the Herald's song, aura, absorb and collapse, the Shellback's walk, lob, curl, roll and uncurl and the `mars-colony` ambience accepted (S.a, S.c-S.l, `chosen`); the dome break (S.b) is a redo: "It needs a rumble. Look in the online database for cave in or collapse sounds." (step AUD-S).

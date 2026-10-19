@@ -34,8 +34,9 @@ typical_grade_bonus: 0.1
 escort_repair_points_per_level: 10
 # The expert's bound (ActPlaythroughTest): the test autopilot collects about 0.9 of a perfect run and
 # earns A / A+ grades (+25 %); its credits at each act's end lie within ±15 % of starting credits +
-# Σ round(perfect × income × collection) × (1 + grade_bonus) − its purchases − its repairs.
-expert: {collection: 0.9, grade_bonus: 0.25, tolerance: 0.15}
+# Σ round(perfect × income × collection) × (1 + grade_bonus) − its purchases − its repairs. On hard the act's end
+# may lie up to hard_under below it (the user, 2026-10-19: hard is tighter on purpose; over-earning stays capped).
+expert: {collection: 0.9, grade_bonus: 0.25, tolerance: 0.15, hard_under: 0.25}
 plan:
   "01":
     start: {front: [pulse-cannon, 1], generator: 0, shield: 0, armor: 0, engine: 0}

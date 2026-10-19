@@ -16,6 +16,8 @@ public final class Tracks {
     public static final int BOSS_WARNING = 22;
     /** Track 24, "Act Complete": the fanfare under the first page of an act outro (Level 07's Act 1 outro). */
     public static final int ACT_COMPLETE = 24;
+    /** Track 29, "Stand Down": loops under the debrief after the mission complete jingle ({@link DebriefMusic}). */
+    public static final int DEBRIEF = 29;
 
     /**
      * Where the boss track starts under the warning: track 22 is three bars at 150 BPM (4.8 s); its
@@ -40,7 +42,8 @@ public final class Tracks {
             Map.entry(23, "mission-complete"),
             Map.entry(ACT_COMPLETE, "act-complete"),
             Map.entry(25, "mission-failed"),
-            Map.entry(26, "game-over"));
+            Map.entry(26, "game-over"),
+            Map.entry(DEBRIEF, "debrief-theme"));
 
     private Tracks() {}
 

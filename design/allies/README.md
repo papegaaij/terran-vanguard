@@ -21,7 +21,7 @@ equipment, see [wingmen](../player/wingmen/README.md).
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [ares-landing-dome](ares-landing-dome/README.md) | Level 17's greenhouse domes: `ground`, scrolling with the ground, broken by hits (3; easy 4, hard 2) from hooked bomb runs, hooked lobs and rolls; never fails the mission | review | done | chosen |
+| [ares-landing-dome](ares-landing-dome/README.md) | Level 17's greenhouse domes: `ground`, scrolling with the ground, broken by hits (3; easy 4, hard 2) from hooked bomb runs, hooked lobs and rolls; never fails the mission | review | done | final |
 
 ## Design
 
@@ -122,7 +122,7 @@ ground`, `damaged_by` `objective_aimed`, `dives: 10` and `lobs: true`); the tabl
 | Property | Value |
 |---|---|
 | Size / layer | footprint 96×96 px on `ground`: dish array, mast, prefab modules, a helipad; **hit box 80×80** inside the footprint |
-| Integrity | **240** at medium (the draft's 600), **340 easy / 520 hard** (the draft's 900 / 450): tuned in Level 13's content step with the guarding autopilot over 8 seeds (G2 = a: medium never loses it and keeps half in about half the seeds, easy nearly always, hard never loses it; hard's hook load is 3.4 × medium's), pending the user's review; no regeneration; a bar in the objective tracker |
+| Integrity | **260** at medium since Level 13's L10-style waves of 2026-10-19 (240 before; the draft's 600), **340 easy / 560 hard** (520 before; the draft's 900 / 450): tuned in Level 13's content step with the guarding autopilot over 8 seeds (G2 = a: medium never loses it and keeps half in about half the seeds, easy nearly always, hard never loses it; hard's hook load is 3.4 × medium's), pending the user's review; no regeneration; a bar in the objective tracker |
 | Follows | `follows: ground` (new): it scrolls with the ground, enters at the top edge during the approach and stops where the ground halts |
 | Damaged by | Only attacks **aimed at the relay** through the [target-the-objective hook](../enemies/README.md#target-the-objective-hook) (the attack's normal damage class; a diver's hit is 10, once as it crosses the footprint). Shots aimed at the player that cross it do nothing, and the relay-aimed bullets still hurt the ship, so the player can body-block. Relay-aimed bullets have the normal enemy look. Keys: `damaged_by: objective-aimed, dives, lobs` |
 | Feedback | a white hit flash per hit; **smoke below 50 %**; at grid online (t=220) its lights come on in sequence |

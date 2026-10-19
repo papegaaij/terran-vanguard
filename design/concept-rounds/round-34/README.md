@@ -673,7 +673,7 @@ points (the a/b and one-version files are also on the board's cards).
 | L13 | relay below 25 % | Okafor | "Lancer, the relay is failing. Everything else can wait." | [play](../../../assets/voice/okafor/b6f615cc246d.ogg) |
 | L13 | secret research hut cache | Varga | "A CDF research cache. Somebody left that hut in a hurry." — pinned take; LISTEN: "hut" | [play](../../../assets/voice/varga/bc756d169e74.ogg) |
 | L14 | briefing page 1 | Okafor | "Lancer, Aegis Actual. Something grew out of Geneva Concord two nights ago: the Siege Spire, three…" | [play](../../../assets/voice/okafor/67dbf1110958.ogg) |
-| L14 | briefing page 2 | Varga | "The Vrell fight as one, and I believe the Spire binds them. Its roots run under the old town and grow…" | [play](../../../assets/voice/varga/0e226d3a4ff2.ogg) |
+| L14 | briefing page 2 | Varga | "The Vrell fight as one, and I believe the Spire binds them. Its roots run under the old town and grow…" | [play](../../../assets/voice/varga/d04034114ff1.ogg) (trimmed in round 40 and re-rendered, step VOX2) |
 | L14 | t=1 | Okafor | "All units, Aegis Actual. Everything the Coalition has left is in the air over Geneva tonight. Make it count." | [play](../../../assets/voice/okafor/1c2c3e042a52.ogg) |
 | L14 | t=13 | Hammer Lead | "Hammer flight on station. Call your targets, Aegis." — pinned take; LISTEN: "flight" | [play](../../../assets/voice/hammer-lead/4a0877190476.ogg) |
 | L14 | t=21 | Rook | "Lancer, whatever happens in there, I'm on your wing. As usual." | [play](../../../assets/voice/rook/0e06f6d30260.ogg) |

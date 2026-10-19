@@ -219,10 +219,10 @@ class ActPlaythroughTest {
                 report(difficulty, ACT_ENDS.indexOf(level) + 1, visits, campaign);
                 double off = (campaign.credits() - bound) / (double) bound;
                 System.out.printf(
-                        "Expert's bound at the act's end: %d credits; the playthrough %+.1f %% (at most ±%.0f %%)%n",
-                        bound, 100 * off, 100 * plan.expertTolerance());
+                        "Expert's bound at the act's end: %d credits; the playthrough %+.1f %% (−%.0f %% … +%.0f %%)%n",
+                        bound, 100 * off, 100 * plan.expertUnderTolerance(difficulty), 100 * plan.expertTolerance());
                 assertTrue(
-                        Math.abs(off) <= plan.expertTolerance(),
+                        off >= -plan.expertUnderTolerance(difficulty) && off <= plan.expertTolerance(),
                         difficulty + ": Act " + (ACT_ENDS.indexOf(level) + 1) + " ends with " + campaign.credits()
                                 + " credits, the expert's bound is " + bound);
                 visits.clear();

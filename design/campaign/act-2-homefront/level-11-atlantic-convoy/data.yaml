@@ -7,7 +7,7 @@
 # (concept/backdrop-proposal.yaml, tools/art/backdrop_l11.py --proposal, which reads this file).
 scroll_speed: 140     # the chosen ocean scene's slower swell
 launch_seconds: 5     # flying in from the bottom edge with Rook in his slot, as in Levels 08-10
-bounty_scale: 0.6     # every bounty × 0.6: the typical haul on budget(11) (M5 part E, step E3a)
+bounty_scale: 0.43     # every bounty × 0.43: the typical haul on budget(11) (0.6 before the L10-style waves of 2026-10-19, step WB; the Kraken's bounty rose to match)
 water: true           # E1 = a: the whole play field is water (the torpedo runs; kills and landing blasts splash)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
@@ -24,7 +24,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     l2: "New: Driftjellies and Reef Spitters. And something huge."
     l3: Anti-ground for rafts. Torpedoes for the sunken cache.
   notes:
-    Dominant layers: '`ground` (naval surface: rafts, surfaced jellies, the Kraken''s arms and head when up), `sub` (submerged jellies, the Kraken below, a sunken pod), `air`'
+    Dominant layers: '`ground` (naval surface: rafts, surfaced jellies, the Kraken''s arm roots, its slamming arms and its head when up), `sub` (submerged jellies, the Kraken below, a sunken pod), `air`'
     Attack directions: '{directions}'
     Density: '{density}'
     Recommended traits: '`spread`, `anti-ground`; `anti-sub` optional (submerged jellies, the sunken pod, the Kraken''s head in phase 1), not `required`'
@@ -80,8 +80,8 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (tools/art
     tiles: [swell, chop]
     notes:
       layers:
-        ground: platform Tiamat at the top of the play field, four lanes of 120 px below it, the three cargo ships in lanes 1, 2 and 4 in the lower band.
-        sub: the Kraken's mantle, head and idle arms under the surface.
+        ground: platform Tiamat at the top edge (mostly above it), the Kraken's four arm roots at the mantle's rim (y 210), four lanes of 120 px below them, the three cargo ships in lanes 1, 2 and 4 in the lower band.
+        sub: the Kraken's mantle and head under the surface.
       purpose: The mid-boss (≈ 60 s at medium); the scroll stays halted while it lives, and section 6 starts at its death.
   - name: Open Water
     end: 176
@@ -103,23 +103,32 @@ boss:  # the mid-boss: anchored to Platform Tiamat, it scrolls in with the platf
     from: front (anchored to Platform Tiamat, scrolls in with it)
     waves: 'At the halt (the bar, the sting, the boss checkpoint); releases a Driftjelly field of 6 in lanes 1 and 4 at its first surfacing'
 
-# Act 2 popcorn (Skitter streams and snakes, Needler lines, small Mote Swarms) round the set pieces, a
-# wave every 2.5-3.5 s (the act's minimum: at least 50 a minute; the pacing rule: no empty screen over
-# 3 s). No rear waves (front 90 / sides 10, default). The two introductions keep a quiet window: no
-# other wave enters for 3 s after the first jelly field (t=22) or the first raft nest (t=70). A `field`
-# wave's x and size give its area (its bottom edge enters at the top edge at t), scrolling with the sea
-# and drifting along its current (° from straight down). Swarm routes: [x, y] points of the leader
-# point, y px below the top edge, starting outside the play field.
+# L10-style waves (the user's Act 2 playtest, 2026-10-18/19, P.e "yes, all"; as steps CA and WA did Levels
+# 08-09 and 12-13; step WB): a wave about every 2.5 s from t=5.5, the next entering while the last is still
+# on the screen; Skitter streams of 4 (1.25 s apart) and snakes of 5, Mote Swarms of 8 down a lane or across
+# the lower band, and Needler groups of 4 (12 HP here: `small_act_hp`) between them, so that something always
+# fires; a few Stinger V-wings. Hard: the Needler groups one smaller and the Mote Swarms at 8 (`hard:
+# {count}`), the units' hard hooks on top. Kept as they were: the four jelly fields, the raft nests, the pincer, the ten-Skitter
+# stream (8 now), the t=84 Stinger V-wing's overdrive, the Rook and Atlas lines' moments. No rear waves
+# (front 99 % by count, the pincer from the sides). The two introductions keep their quiet window: no
+# other wave enters for 3.5 s after the first jelly field (t=22) or the first raft nest (t=70). The
+# exit after the Kraken stays the release (the last wave at t=166.5). A `field` wave's x and size give
+# its area (its bottom edge enters at the top edge at t), scrolling with the sea and drifting along its
+# current (° from straight down). Swarm routes: [x, y] points of the leader point, y px below the top
+# edge, starting outside the play field.
 waves:
-  - {t: 7, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25, notes: Over the convoy at its stations; the first targets}
-  - t: 11.5
+  - {t: 5.5, formation: stream, enemy: skitter, count: 6, from: front, edge: right, interval: 0.75, notes: Over the convoy at its stations; the first targets}
+  - {t: 8, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 10.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[50, -60], [50, 330], [130, 460], [100, 620]]]   # down the left lane, a curl at the ship's height, out at the bottom-left
-  - {t: 15, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
-  - {t: 18.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: Gone before the first jelly field}
+    hard: {count: 8}
+  - {t: 13, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - {t: 15.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 18, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1, notes: Gone before the first jelly field}
   - t: 22
     formation: field
     enemy: driftjelly
@@ -129,22 +138,33 @@ waves:
     size: [400, 200]
     notes: "**New.** Alone (no other wave until t=25.5); the ring fires only when the ship is within 96 px; about half of them start submerged"
   - {t: 25.5, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25}
-  - t: 29
+  - t: 28
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[430, -60], [430, 330], [350, 460], [380, 620]]]   # down the right lane, out at the bottom-right
-  - {t: 32, formation: V-wing, enemy: needler, count: 5, from: front}
-  - {t: 36, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
-  - {t: 40, formation: snake, enemy: skitter, count: 8, from: front, edge: right, notes: Weaves above the jelly field}
-  - t: 44
+    hard: {count: 8}
+  - {t: 30.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 33, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
+  - t: 35.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[430, -60], [430, 330], [350, 460], [380, 620]]]   # down the right lane, out at the bottom-right
+    hard: {count: 8}
+  - {t: 38, formation: snake, enemy: skitter, count: 8, from: front, edge: right, notes: Weaves above the jelly field}
+  - {t: 40.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 43
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[60, -60], [45, 300], [160, 430], [330, 450], [430, 620]]]   # down the left lane, across the lower band, out at the bottom-right
-  - {t: 47, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25}
+    hard: {count: 8}
+  - {t: 45.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 48, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25}
   - t: 50
     formation: field
     enemy: driftjelly
@@ -155,35 +175,48 @@ waves:
     current: 20
     easy: {count: 6}
     notes: Denser field, drifting to the right; easy 6
-  - {t: 54, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
+  - {t: 52.5, formation: V-wing, enemy: stinger, count: 3, from: front}
   - t: 55.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[50, -60], [50, 330], [130, 460], [100, 620]]]   # down the left lane, a curl at the ship's height, out at the bottom-left
+    hard: {count: 8}
     notes: Down the left lane as the huge shape slides under the convoy (Rook's line at t=55)
-  - {t: 59, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
-  - {t: 62.5, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 58, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
+  - {t: 60.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 63
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[420, -60], [435, 300], [320, 430], [150, 450], [50, 620]]]   # down the right lane, across the lower band, out at the bottom-left
+    hard: {count: 8}
   - {t: 66, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1, notes: Gone before the first raft nest}
   - {t: 73.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: After the lone raft nest's quiet window}
-  - t: 77
+  - t: 76
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[430, -60], [430, 330], [350, 460], [380, 620]]]   # down the right lane, out at the bottom-right
-  - {t: 80.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+    hard: {count: 8}
+  - {t: 78.5, formation: snake, enemy: skitter, count: 5, from: front, edge: left}
+  - {t: 81, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - {t: 84, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The leader drops an overdrive}
-  - {t: 87.5, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25}
-  - t: 91
+  - {t: 86.5, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25}
+  - {t: 89, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 91.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[50, -60], [50, 330], [130, 460], [100, 620]]]   # down the left lane, a curl at the ship's height, out at the bottom-left
+    hard: {count: 8}
     notes: Over the reef line before the sunken pod
-  - {t: 94.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: Over the sunken pod's reef line}
+  - {t: 94, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: Over the sunken pod's reef line}
+  - {t: 96.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - t: 100
     formation: field
     enemy: driftjelly
@@ -194,37 +227,51 @@ waves:
     current: -20
     easy: {count: 6}
     notes: Between the reef lines, with the second raft nest, drifting to the left; easy 6
-  - t: 103.5
+  - t: 102.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[420, -60], [435, 300], [320, 430], [150, 450], [50, 620]]]   # down the right lane, across the lower band, out at the bottom-left
-  - {t: 107, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25}
-  - {t: 110.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: Over the first floating containers}
-  - t: 114
+    hard: {count: 8}
+  - {t: 105, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25}
+  - {t: 107.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 110.5, formation: snake, enemy: skitter, count: 5, from: front, edge: left, notes: Over the first floating containers}
+  - t: 113
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[50, -60], [50, 330], [130, 460], [100, 620]]]   # down the left lane, a curl at the ship's height, out at the bottom-left
-  - {t: 116.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: Over the floating containers}
+    hard: {count: 8}
+  - {t: 115, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: Over the floating containers}
   - {t: 118, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: "2 per side, hold {hold} s; Rook's flank bark"}
-  - {t: 121.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
-  - t: 125
+  - t: 120.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[420, -60], [435, 300], [320, 430], [150, 450], [50, 620]]]   # down the right lane, across the lower band, out at the bottom-left
+    hard: {count: 8}
+  - t: 123
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[430, -60], [430, 330], [350, 460], [380, 620]]]   # down the right lane, out at the bottom-right
-  - {t: 130.5, formation: line abreast, enemy: needler, count: 3, from: front, notes: Beside the burning freighter}
-  - {t: 134, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
-  - t: 137.5
+    hard: {count: 8}
+  - {t: 125.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 128, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
+  - {t: 130.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: Beside the burning freighter}
+  - {t: 133, formation: snake, enemy: skitter, count: 5, from: front, edge: right}
+  - t: 135.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[50, -60], [50, 330], [130, 460], [100, 620]]]   # down the left lane, a curl at the ship's height, out at the bottom-left
+    hard: {count: 8}
+  - {t: 138, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - t: 140
     formation: field
     enemy: driftjelly
@@ -233,23 +280,28 @@ waves:
     x: 240
     size: [400, 220]
     notes: Among the flotsam
-  - {t: 143.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
-  - {t: 146, formation: stream, enemy: skitter, count: 10, from: front, edge: alternating, interval: 0.75}
+  - {t: 142.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
+  - {t: 145, formation: stream, enemy: skitter, count: 8, from: front, edge: alternating, interval: 0.75}
+  - {t: 148, formation: V-wing, enemy: stinger, count: 3, from: front}
   - t: 150.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[60, -60], [45, 300], [160, 430], [330, 450], [430, 620]]]   # down the left lane, across the lower band, out at the bottom-right
-  - {t: 154, formation: V-wing, enemy: needler, count: 4, from: front}
-  - {t: 157, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1, notes: The last wave before Tiamat enters at the top}
-  - {t: 163, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: "Over open water, after the Kraken"}
+    hard: {count: 8}
+  - {t: 153, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 155.5, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 2}}
+  - {t: 157.5, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25, notes: The last wave before Tiamat enters at the top}
+  - {t: 161.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: "Over open water, after the Kraken"}
+  - {t: 164, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - t: 166.5
     formation: swarm
     enemy: mote-swarm
     count: 8
     from: front
     paths: [[[50, -60], [50, 330], [130, 460], [100, 620]]]   # down the left lane, a curl at the ship's height, out at the bottom-left
+    hard: {count: 8}
     notes: The last wave
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x; containers keep to the gaps between the convoy's hulls (hulls at x 130, 240, 350, 56 px wide); a raft's 84 px base does not fit a 54 px gap, so the rafts keep to the flanks (x <= 58 or >= 430, drift included)
@@ -338,7 +390,8 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 146.5, speaker: Varga, line: "The contact is rising under the platform. Lancer, it's holding on to it."}
   - {t: 158, speaker: Rook, requires: escort, line: "Here comes the big one."}
   - {event: first-telegraph, speaker: Okafor, line: "Watch the churning water. That's where the arms come down.", notes: {trigger: "First lane telegraph (`first-telegraph`)"}}
-  - {event: boss-part-destroyed, parts: [left arm, right arm], speaker: Rook, requires: escort, line: "Tell the cook we're having calamari.", notes: {trigger: "First slam arm severed (`boss-part-destroyed`, the slam arms)"}}
+  - {event: first-ship-telegraph, speaker: Okafor, line: "The arms are rooted at the rim. Cut a root and that lane is safe!", notes: {trigger: "First telegraph on a cargo ship's lane (`first-ship-telegraph`, round 40)"}}
+  - {event: boss-part-destroyed, parts: [root 1, root 2, root 3, root 4], speaker: Rook, requires: escort, line: "Tell the cook we're having calamari.", notes: {trigger: "First arm root cut (`boss-part-destroyed`, the roots)"}}
   - {event: ally-hit, speaker: Atlas Control, portrait: generic-cdf, line: "The {ally} is hit! Taking on water, but holding!", notes: {trigger: "A cargo ship's first hit (`ally-hit`)"}}
   - {event: ally-lost, speaker: Atlas Control, portrait: generic-cdf, line: "We've lost the {ally}. Crew in the water. Ruyter is picking them up.", notes: {trigger: "A cargo ship sinks (`ally-lost`)"}}
   - {event: boss-destroyed, speaker: Varga, line: "It's letting go of the platform. It's sinking. Good.", notes: {trigger: "Kraken destroyed (`boss-destroyed`)"}}
@@ -358,7 +411,7 @@ convoy:  # a naval convoy outside the objectives (design/allies): stations px fr
     - {ally: escort-frigate, name: Ruyter, station: [240, 480], leaves: true}   # CDFS Ruyter drops back off the bottom edge at the halt and returns after the Kraken
   glide: 3       # s to the lanes at the halt and back to the stations after the Kraken, on the real steps
   lane_y: 450    # a cargo ship's centre in its lane, in the lower band (y 390-510)
-  hold_clear: 552   # px the sea scrolls after the Kraken before the units glide back to their stations: Platform Tiamat's deck (its top edge 538 px above the bottom edge at the halt, round 33) has passed the bottom edge; meanwhile each holds in its lane (lanes 1 and 4 lie clear of the deck), away or at its hold point
+  hold_clear: 676   # px the sea scrolls after the Kraken before the units glide back to their stations: Platform Tiamat's deck (its top edge 662 px above the bottom edge at the halt, round 40; 538 in round 33) has passed the bottom edge; meanwhile each holds in its lane (lanes 1 and 4 lie clear of the deck), away or at its hold point
   easy: {hp: 5}  # easy: a cargo ship survives three slams and sinks on the fourth
   hard: {hp: 2}  # hard: it survives one and sinks on the second
 
@@ -480,5 +533,5 @@ backdrop:
     - {piece: lifeboat, t: 153, x: 52}
     - {piece: freighter-smoke, t: 127.31, x: 450}
     - {piece: burning-freighter, t: 128, x: 432}
-    # 4-6. Platform Tiamat: at the halt its centre is at (240, 78) (ground position 22,930.83 px, the simulation's halt scroll + 462; t = the open-water speed's time to scroll 260.83 px past the data's scroll at the arena; round 33: 32 px higher, the Kraken's head off the deck's south edge)
-    - {piece: platform-tiamat, t: 162.863, x: 240}
+    # 4-6. Platform Tiamat: at the halt its centre is at (240, -46) (ground position 23,054.83 px, the simulation's halt scroll + 586; t = the open-water speed's time to scroll 384.83 px past the data's scroll at the arena; round 33: 32 px higher, the Kraken's head off the deck's south edge; round 40: 124 px higher again, the Kraken's rooted arms)
+    - {piece: platform-tiamat, t: 163.749, x: 240}

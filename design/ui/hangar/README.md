@@ -179,7 +179,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r36-a.png](concept/intel-final-r36-a.png) | Review sheet (M5 part H batch, `tools/art/intel.py`, round 36): the 40×40 boss silhouette of Level 14's Siege Spire (`boss-siege-spire`), the rooted body as the arena first shows it (the production trunk, six roots and pods of `tools/art/siege_spire.py` placed by its pivots), at 1× and 3× | chosen |
 | [concept/intel-final-r38-a.png](concept/intel-final-r38-a.png) | Review sheet (M7 part B batch, `tools/art/intel.py`, round 38): the 30×30 intel portraits of Level 15's Burrower and Dust Kite, from the production sprites | chosen (round 38, F.5: approved as final) |
 | [concept/intel-final-r39-a.png](concept/intel-final-r39-a.png) | Review sheet (M7 part C batch, `tools/art/intel.py`, round 39): the 30×30 intel portraits of Level 16's Tendril Anchor and Threadcrawler, from the production models of `tools/art/canyon_units.py` | chosen (round 39, F.5: approved as final) |
-| [concept/intel-final-r40-a.png](concept/intel-final-r40-a.png) | Intel portraits of Level 17's Choir Herald and Shellback (`tools/art/intel.py`) | proposed (round 40) |
+| [concept/intel-final-r40-a.png](concept/intel-final-r40-a.png) | Intel portraits of Level 17's Choir Herald and Shellback (`tools/art/intel.py`) | chosen (round 40, F.f: approved as final) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -582,3 +582,11 @@ release's end, which writes that autosave.
   items seems odd at this point"): fitting and unfitting what the campaign owns stays and is kept;
   buying, selling, upgrading, bays and repairs are gone from it. The buyable and locked rows are
   hidden rather than greyed, with `REPLAY: REFIT ONLY` on the message line (pending the user's review).
+- 2026-10-19 (user, round 40, F.f): the Choir Herald's and the Shellback's intel pictures approved as final.
+- 2026-10-19 (step IP, pending the user's review): the intel's fields close up on a busy level instead of
+  running into Varga's line. After the Act 2 wave rework Level 14 at sensor L2/L3 names eight enemy types
+  (Stingers, Mantises and Spore Bombers joined), four lines instead of two, and with the boss silhouette its
+  WAVES row ran 6 px into the quote. `IntelPanel` now measures the fields first: their rows stay 14 px apart
+  where they fit (every other level, unchanged), else close up a pixel at a time to 12 px (Level 14: 13 px),
+  and only if that is not enough the enemy names end on `+N MORE` in as many lines as fit. Tests:
+  `IntelPanelLayoutTest.aBusyLevelsRowsCloseUpAndKeepEveryName`, `tooManyEnemyTypesEndOnMore`.

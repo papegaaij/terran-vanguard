@@ -2,7 +2,7 @@
 title: Ares Landing dome
 design: review
 implementation: done
-art: chosen
+art: final
 depends-on: [../../enemies, ../../enemies/air/spore-bomber, ../../enemies/ground/shellback, ../../ui/hud, ../../world/mars, ../../campaign/act-3-red-dust/level-17-dome-siege]
 updated: 2026-10-19
 ---
@@ -58,8 +58,8 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/ares-dome-final-r40-a.png](concept/ares-dome-final-r40-a.png) | Ares Landing dome final sprites (`tools/art/siege_units.py`, from `mars_r36.dome_a`, MA.3 = a): 120 px and Eden 144 px, breathing loop, cracks 1-3, flicker, white flash, cave-in, dust plume, HUD pip (sheet) | proposed (round 40) |
-| [concept/ares-dome-final-r40-a.gif](concept/ares-dome-final-r40-a.gif) | Ares Landing dome final: Bradbury taking three hits and caving in beside an untouched Eden, 10 fps | proposed (round 40) |
+| [concept/ares-dome-final-r40-a.png](concept/ares-dome-final-r40-a.png) | Ares Landing dome final sprites (`tools/art/siege_units.py`, from `mars_r36.dome_a`, MA.3 = a): 120 px and Eden 144 px, breathing loop, cracks 1-3, flicker, white flash, cave-in, dust plume, HUD pip (sheet) | chosen (round 40, F.a: approved as final) |
+| [concept/ares-dome-final-r40-a.gif](concept/ares-dome-final-r40-a.gif) | Ares Landing dome final: Bradbury taking three hits and caving in beside an untouched Eden, 10 fps | chosen (round 40, F.a: approved as final) |
 
 ## Implementation
 
@@ -87,3 +87,4 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - 2026-10-18 (M7 part D, step D2): this document written from Level 17's approved spec, its numbers in
   [data.yaml](../data.yaml) (`ares-landing-dome`: `hits: 3`, `damaged_by` `bombs: 1`, `lobs: true`,
   `rolls: 1`); the roster row replaced by the Contents row; the defaults above pending round 40.
+- 2026-10-19 (user, round 40, F.a): the final art approved (`art: final`); the dome's defaults (round 40 B.b) accepted.
