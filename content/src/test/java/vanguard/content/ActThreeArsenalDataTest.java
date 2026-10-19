@@ -276,7 +276,11 @@ class ActThreeArsenalDataTest {
 
     @Test
     void noUnitOfActsOneAndTwoIsAMachineButAStatBlockCanSayOne() {
-        assertTrue(CONTENT.enemies().values().stream().noneMatch(EnemyData::isMachine));
+        // M7 part E: the Ghost Drone (Level 18) is the first machine; no unit of Acts 1 and 2 is one.
+        assertTrue(CONTENT.enemies().values().stream()
+                .filter(enemy -> enemy.firstLevel() <= 14)
+                .noneMatch(EnemyData::isMachine));
+        assertTrue(CONTENT.enemy("ghost-drone").isMachine());
 
         List<DataFile> files = DesignTree.dataFiles().stream()
                 .map(f -> f.path().equals(SKITTER)

@@ -10,7 +10,6 @@ import static vanguard.game.audio.FlightSounds.LAMPREY_LATCH_LEVEL;
 import static vanguard.game.audio.FlightSounds.LAMPREY_SHAKE_LEVEL;
 import static vanguard.game.audio.FlightSounds.PLAYER_DAMAGE;
 import static vanguard.game.audio.FlightSounds.SIEGE_LEVEL;
-import static vanguard.game.audio.FlightSounds.UNIT_FADE_STEPS;
 import static vanguard.game.audio.FlightSounds.UNIT_LOOP_LEVEL;
 
 import java.util.EnumSet;
@@ -89,6 +88,8 @@ final class UnitCues extends SoundFamily {
     }
 
     private final EnemyLooks[] looks;
+    /** M7 part E: Level 18's units, whose volleys are a grit spiral's hiss or a drone's burst. */
+    private final StormCues storm;
     /** The Vrell screech as a large unit enters the screen, at most one every 3 s. */
     private final ScreechCue screech = new ScreechCue(SimStep.ticks(ScreechCue.THROTTLE_SECONDS));
     /** M5 part D: a Mote Swarm's rush of wings as it enters the screen. */
@@ -102,9 +103,10 @@ final class UnitCues extends SoundFamily {
     /** This step's step (the absorb's spacing). */
     private long now;
 
-    UnitCues(SoundMix mix, EnemyLooks[] looks) {
+    UnitCues(SoundMix mix, EnemyLooks[] looks, StormCues storm) {
         super(mix);
         this.looks = looks;
+        this.storm = storm;
     }
 
     @Override
@@ -134,6 +136,8 @@ final class UnitCues extends SoundFamily {
                 } else if (firedBy(events.x(i), events.y(i), Unit.HERALD)) {
                     // M7 part D: the Choir Herald's song with its ring (round 40 a), not a gun's report.
                     bank.play(Sfx.HERALD_SONG, SIEGE_LEVEL, 1, pan);
+                } else if (storm.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M7 part E: a Dust Devil's grit spiral or a Ghost Drone's burst (StormCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))
@@ -263,9 +267,15 @@ final class UnitCues extends SoundFamily {
 
     /** M7 part D: whether the unit nearest (x, y), where a volley or lob left, is a {@code unit}. */
     private boolean firedBy(double x, double y, Unit unit) {
+        Enemy nearest = firer(x, y);
+        return nearest != null && unit.is(nearest.spec());
+    }
+
+    /** M7 part E: the unit nearest (x, y), where a volley or lob left; null when none is within reach. */
+    private Enemy firer(double x, double y) {
         Sortie watched = mix.watched;
         if (watched == null) {
-            return false;
+            return null;
         }
         Enemy nearest = null;
         double best = FIRED_REACH;
@@ -277,7 +287,7 @@ final class UnitCues extends SoundFamily {
                 nearest = enemy;
             }
         }
-        return nearest != null && unit.is(nearest.spec());
+        return nearest;
     }
 
     /** M7 part C: whether the level's enemy kind {@code kind} is a Threadcrawler's part (head, segment or tail). */
@@ -404,25 +414,6 @@ final class UnitCues extends SoundFamily {
 
     /** M7 part C: moves a unit loop's level toward {@code target} by a fade step, starting or stopping it. */
     private void fadeLoop(Sfx loop, float target, float pan) {
-        float level = unitLevels[loop.ordinal()];
-        if (target <= 0 && level <= 0) {
-            if (bank.looping(loop)) {
-                bank.stop(loop);
-            }
-            return;
-        }
-        if (!bank.looping(loop)) {
-            level = 0;
-            bank.loop(loop, 0);
-        }
-        float step = UNIT_LOOP_LEVEL / UNIT_FADE_STEPS;
-        level = target > level ? Math.min(target, level + step) : Math.max(target, level - step);
-        unitLevels[loop.ordinal()] = level;
-        if (level <= 0) {
-            bank.stop(loop);
-            return;
-        }
-        bank.loopVolume(loop, level);
-        bank.loopPan(loop, pan);
+        unitLevels[loop.ordinal()] = fadeLoop(loop, unitLevels[loop.ordinal()], target, pan);
     }
 }

@@ -16,7 +16,8 @@ import org.junit.jupiter.api.Test;
 
 /**
  * M7 part D, the Shellback's crush (design/enemies/ground/shellback, Curl and roll; design/allies, Ares Landing
- * dome): a rolling ball over a standing dome's hit box deals the dome's {@code rolls} hits once per roll,
+ * dome): a rolling ball touching a standing dome's footprint (round 40: not only its hit box) deals the dome's {@code
+ * rolls} hits once per roll,
  * whatever the hook says; destructible ground objects in its path are destroyed (a crate's drop still falls,
  * no bounty); never a hardened object or a trigger, never an enemy; a walking Shellback crushes nothing.
  */
@@ -133,6 +134,24 @@ class RollCrushTest {
         assertEquals(0, crushed[0], "dome A");
         assertEquals(1, sortie.ally(0).hitsTaken(), "its rolls: one hit");
         assertTrue(sortie.ally(0).alive());
+    }
+
+    /**
+     * Round 40 R.c: walking up 90 px beside dome A (its body clear of the glass, the hit box), the ball touches the
+     * dome's footprint (its ring): one hit; 100 px beside it, the ball misses the footprint.
+     */
+    @Test
+    void aRollBesideADomeGrazesItsFootprint() {
+        for (double dx : new double[] {90, 100}) {
+            WaveSpec beside =
+                    SiegeSpecs.walker(A_T, SHELLBACK, new WaveSpec.At(A_X + dx, 300), new WaveSpec.At(A_X + dx, -3000));
+            Sortie sortie = SiegeSpecs.sortie(
+                    level(List.of(beside), Optional.of(SiegeSpecs.hookedDomes()), List.of(), List.of()));
+            Enemy shellback = enter(sortie, true);
+            int[] crushed = rollThrough(sortie, shellback);
+            assertEquals(dx == 90 ? 1 : 0, crushed.length, dx + " px beside it");
+            assertEquals(dx == 90 ? 1 : 0, sortie.ally(0).hitsTaken());
+        }
     }
 
     @Test

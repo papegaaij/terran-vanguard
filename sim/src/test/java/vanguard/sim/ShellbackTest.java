@@ -19,7 +19,9 @@ import org.junit.jupiter.api.Test;
  * hurting both, its loss silencing the mortar for good and paying its part bounty), the vent's lob every 4 s
  * after its 0.5 s swell, and its curl-roll once at 40 % body HP: curling 0.6 s and rolling 2.5 s along its path
  * at 140 px/s armoured (every damage glances, its hit box the ball), uncurling 0.6 s, its belly taking ×1.5 for
- * 1.5 s, then walking on; an EMP stun pauses it. Bounties: body first the whole 48, vent first 12 + 40.
+ * 1.5 s, then walking on; an EMP stun pauses it. Bounties: body first the whole 48, vent first 12 + 40. Round 40:
+ * a shot or beam from any side whose line crosses the vent hits the vent first (R.a); with a belly row a roll down
+ * the screen ends early so its belly shows at that row (R.e).
  */
 class ShellbackTest {
     private static final int FIRE = Command.FIRE.bit();
@@ -145,6 +147,94 @@ class ShellbackTest {
         }
         assertFalse(shellback.partAlive());
         assertTrue(shellback.hp() > 110, "the body burns only once the vent is gone: " + shellback.hp());
+    }
+
+    /**
+     * One Shellback at t=0 walking down from {@code depth} below the top edge at x 240 (its vent on its back, away from
+     * the ship), with {@code spec}.
+     */
+    private static Sortie walkingDown(double depth, EnemySpec spec, Loadout loadout) {
+        LevelScript level = SiegeSpecs.level(
+                List.of(SiegeSpecs.walker(0, spec, new WaveSpec.At(240, depth), new WaveSpec.At(240, 3000))),
+                List.of(),
+                LevelScript.Secondary.NONE,
+                Optional.empty());
+        return new Sortie(1, loadout, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
+    }
+
+    /** Round 40 R.a: walking down at the ship, its vent behind its head; a shot from below still hits the vent first. */
+    @Test
+    void shotsFromBelowHitTheVentOnItsBackFirst() {
+        Sortie sortie =
+                walkingDown(60, SHELLBACK, TestSpecs.loadout(new Armament.Mount(Armament.Slot.FRONT, HEAVY, HEAVY)));
+        Enemy shellback = shellback(sortie);
+        assertTrue(shellback.partY() > shellback.y(), "the vent lies behind it, away from the ship");
+        boolean off = false;
+        for (int i = 0; i < SimStep.ticks(1.5) && !off; i++) {
+            sortie.step(FIRE);
+            off = sortie.events().count(SimEvents.Type.UNIT_PART_DESTROYED) > 0;
+            assertEquals(120, shellback.hp(), "the vent takes the shots first");
+        }
+        assertTrue(off, "the vent is shot off from below");
+        sortie.step(FIRE);
+        for (int i = 0; i < SimStep.ticks(0.5) && shellback.hp() == 120; i++) {
+            sortie.step(FIRE);
+        }
+        assertTrue(shellback.hp() < 120, "then the body takes them");
+    }
+
+    /** Round 40 R.a: a shot over the body that will not cross the vent hits the body. */
+    @Test
+    void aShotBesideTheVentHitsTheBody() {
+        Sortie sortie = walkingDown(60, SHELLBACK, TestSpecs.LOADOUT);
+        Enemy shellback = shellback(sortie);
+        assertTrue(PlayerFire.segmentCrossesBox(0, 0, 0, 100, 10, 50, 14, 14), "straight up through the box");
+        assertFalse(PlayerFire.segmentCrossesBox(0, 0, 0, 100, 20, 50, 14, 14), "beside it");
+        assertFalse(PlayerFire.segmentCrossesBox(0, 0, 0, 30, 0, 50, 14, 14), "short of it");
+        assertTrue(PlayerFire.segmentCrossesBox(0, 0, 100, 100, 50, 50, 14, 14), "diagonally");
+        assertTrue(PlayerFire.segmentCrossesBox(100, 50, -100, 0, 0, 50, 14, 14), "from the side");
+        assertEquals(1, shellback.partShare());
+    }
+
+    /** Round 40 R.a: a beam from below burns over the body to the vent first. */
+    @Test
+    void aBeamFromBelowBurnsTheVentFirst() {
+        Sortie sortie = walkingDown(60, SHELLBACK, TestSpecs.loadout(PartASpecs.beamMount(5)));
+        Enemy shellback = shellback(sortie);
+        for (int i = 0; i < SimStep.ticks(2) && shellback.partAlive(); i++) {
+            sortie.step(FIRE);
+        }
+        assertFalse(shellback.partAlive());
+        assertTrue(shellback.hp() > 110, "the body burns only once the vent is gone: " + shellback.hp());
+    }
+
+    /**
+     * Round 40 R.e: with a belly row, a roll drifting down the screen ends early where the scroll alone would carry it
+     * below that row before its uncurl ends, so its belly shows at the row; one walking up rolls its full time (above).
+     */
+    @Test
+    void aRollDownTheScreenEndsEarlySoItsBellyShowsAtItsRow() {
+        EnemySpec.Roll roll = new EnemySpec.Roll(0.4, 0.6, 2.5, 140, 0.6, 1.5, 1.5, new Hitbox(72, 72), 200);
+        EnemySpec spec = SHELLBACK.withRoll(Optional.of(roll));
+        Sortie sortie = walkingDown(60, spec, TestSpecs.LOADOUT);
+        sortie.step(Command.NONE);
+        Enemy shellback = SiegeSpecs.find(sortie, spec);
+        assertNotNull(shellback);
+        shellback.damage(72);
+        assertSame(Enemy.CurlPhase.CURLING, shellback.curlPhase());
+        int rolling = 0;
+        while (shellback.curlPhase() != Enemy.CurlPhase.UNCURLING) {
+            sortie.step(Command.NONE);
+            rolling += shellback.curlPhase() == Enemy.CurlPhase.ROLLING ? 1 : 0;
+        }
+        assertTrue(rolling > 0 && rolling < SimStep.ticks(roll.rollSeconds()), "a shorter roll: " + rolling);
+        double scroll = SiegeSpecs.SPEED / SimStep.PER_SECOND;
+        double belly = shellback.y() - scroll * SimStep.ticks(roll.uncurlSeconds());
+        assertTrue(belly <= 200 && belly > 200 - 2 * (140 + SiegeSpecs.SPEED) / SimStep.PER_SECOND, "at " + belly);
+        while (shellback.curlPhase() != Enemy.CurlPhase.BELLY) {
+            sortie.step(Command.NONE);
+        }
+        assertEquals(belly, shellback.y(), 1e-6, "its belly shows at the row");
     }
 
     @Test

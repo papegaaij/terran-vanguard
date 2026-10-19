@@ -13,8 +13,9 @@ import vanguard.sim.EnemySpec;
  * on, a returning unit of tier {@code medium} or larger flies with its HP times the reference DPS at
  * the level over that at its first level, on every part and segment, rounded once with the
  * difficulty's HP lever; the Needler and the Stinger ({@code small}) the same capped at ×3 in Levels 08–09 (the
- * user's Act 2 playtest, 2026-10-18); the other {@code tiny} and {@code small} units, Act 1's levels and the
- * bounties stay as they are.
+ * user's Act 2 playtest, 2026-10-18), 11–14 and 18 (M7 part E); the other {@code tiny} and {@code small} units, Act 1's levels and the
+ * bounties stay as they are. M7 part E (step E5): from Level 18 on, the beam era, every {@code small} unit's HP is doubled
+ * on top ({@code beam_era_hp}).
  */
 class ActHpFactorTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
@@ -64,7 +65,8 @@ class ActHpFactorTest {
         assertEquals(
                 List.of("needler", "stinger"), CONTENT.enemyBasis().smallActHp().units());
         assertEquals(
-                List.of(8, 9, 11, 12, 13, 14), CONTENT.enemyBasis().smallActHp().levels());
+                List.of(8, 9, 11, 12, 13, 14, 18),
+                CONTENT.enemyBasis().smallActHp().levels());
         // The Needler (4 HP, L01, reference 20): ×60/20 = 3 at L08, ×63/20 capped at 3 at L09.
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 8), 1e-12);
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 9), 1e-12);
@@ -75,6 +77,12 @@ class ActHpFactorTest {
         // Levels 11 to 14 with their L10-style waves too (steps WA and WB): capped at ×3 again.
         assertEquals(12, at("needler", Difficulty.MEDIUM, 2, 11).hp());
         assertEquals(12, at("needler", Difficulty.MEDIUM, 2, 14).hp());
+        // M7 part E: Level 18 with its waves to the Act 2+ floor (reference 88): the Needler ×88/20 capped at 3 = 12,
+        // the Stinger 6 × 88/26 = 20.3 capped at ×3 = 18, both doubled by the beam era (step E5) to 24 and 36; Levels
+        // 15-17 keep theirs until their own rework.
+        assertEquals(24, at("needler", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(36, at("stinger", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 3, 17));
         // Not in Level 10 (the user's reference), not in Act 1, and not for the small units the basis does not list.
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 2, 10));
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 1, 7));
@@ -135,5 +143,38 @@ class ActHpFactorTest {
                 SimSpecs.enemy(CONTENT, "skitter", Difficulty.MEDIUM, Optional.empty())
                         .hp(),
                 at("skitter", Difficulty.MEDIUM, 3, 21).hp());
+    }
+
+    /**
+     * M7 part E, step E5 (the user's "tougher, not more" of 2026-10-19): from Level 18 on, where the balance plan fits
+     * the Ion Beam, a {@code small} unit takes the basis's {@code beam_era_hp} factor (×2) on top of its act HP factor,
+     * its own first level included; {@code tiny} and {@code medium} units (the Dust Devil, whose vanes already gate its
+     * time to kill, and the Wraith, set for the rear gun) and Levels 15–17 keep theirs; the bounty is unchanged.
+     */
+    @Test
+    void fromLevelEighteenTheBeamEraDoublesTheSmallUnits() {
+        EnemyBasisData.BeamEraHp era = CONTENT.enemyBasis().beamEraHp();
+        assertEquals(18, era.fromLevel());
+        assertEquals(2, era.factor());
+        assertEquals(List.of(Tier.SMALL), era.tiers());
+        // The Ghost Drone (small, new at L18, 14 HP): ×2 at its own first level.
+        assertEquals(2, SimSpecs.actHpFactor(CONTENT, "ghost-drone", 3, 18), 1e-12);
+        assertEquals(28, at("ghost-drone", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(
+                Math.rint(28 * 1.3), at("ghost-drone", Difficulty.HARD, 3, 18).hp());
+        // A small unit outside small_act_hp (the Spine Turret, 8 HP): 16 at L18 and after, 8 at L17.
+        assertEquals(16, at("spine-turret", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(16, at("spine-turret", Difficulty.MEDIUM, 3, 21).hp());
+        assertEquals(8, at("spine-turret", Difficulty.MEDIUM, 3, 17).hp());
+        // Tiny and medium units keep theirs: the Dust Kite 1, the Dust Devil 52, the Wraith 16 × 88/66.
+        assertEquals(1, at("dust-kite", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(52, at("dust-devil", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(
+                Math.rint(16 * 88.0 / 66),
+                at("wraith", Difficulty.MEDIUM, 3, 18).hp());
+        assertEquals(
+                SimSpecs.enemy(CONTENT, "ghost-drone", Difficulty.MEDIUM, Optional.empty())
+                        .bounty(),
+                at("ghost-drone", Difficulty.MEDIUM, 3, 18).bounty());
     }
 }

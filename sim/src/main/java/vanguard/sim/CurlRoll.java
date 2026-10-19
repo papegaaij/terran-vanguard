@@ -51,10 +51,12 @@ final class CurlRoll {
     }
 
     /**
-     * One step of the curl-roll of {@code unit} after its walk: curling, rolling along its path at {@code
-     * roll}'s speed, uncurling, its belly; the roll's start and the uncurl are reported to {@code events}.
+     * One step of the curl-roll of {@code unit} after its walk, the ground having scrolled {@code groundScroll} px
+     * in it: curling, rolling along its path at {@code roll}'s speed, uncurling, its belly; the roll's start and the
+     * uncurl are reported to {@code events}. Round 40 R.e: a roll drifting down the screen ends early where its
+     * belly would show below the roll's belly row ({@link #shortened}).
      */
-    void step(Enemy unit, EnemySpec.Roll roll, SimEvents events) {
+    void step(Enemy unit, EnemySpec.Roll roll, SimEvents events, double groundScroll) {
         curlTicks++;
         switch (curlPhase) {
             case CURLING -> {
@@ -66,7 +68,7 @@ final class CurlRoll {
             }
             case ROLLING -> {
                 unit.walk(roll.rollSpeed());
-                if (curlTicks >= SimStep.ticks(roll.rollSeconds())) {
+                if (curlTicks >= SimStep.ticks(roll.rollSeconds()) || shortened(unit, roll, groundScroll)) {
                     curlPhase = Enemy.CurlPhase.UNCURLING;
                     curlTicks = 0;
                     events.add(SimEvents.Type.UNCURLED, unit.x(), unit.y(), unit.kind());
@@ -88,6 +90,20 @@ final class CurlRoll {
                 // Not reached: the walk steps itself.
             }
         }
+    }
+
+    /**
+     * Round 40 R.e (design/enemies/ground/shellback, Curl and roll): whether {@code unit}'s roll ends now, short of
+     * its time: it drifts down the screen (its roll's own speed down plus the scroll's {@code groundScroll} px a
+     * step) and the scroll alone would carry it below the roll's belly row before its uncurl ends, so it uncurls
+     * here and its belly shows at that row or higher. Never with a belly row of 0.
+     */
+    static boolean shortened(Enemy unit, EnemySpec.Roll roll, double groundScroll) {
+        if (roll.bellyRow() <= 0) {
+            return false;
+        }
+        double down = Trig.cos(unit.facing()) * roll.rollSpeed() * SimStep.SECONDS + groundScroll;
+        return down > 0 && unit.y() - groundScroll * SimStep.ticks(roll.uncurlSeconds()) <= roll.bellyRow();
     }
 
     /** Where it is in its curl-roll. */

@@ -51,6 +51,8 @@ import vanguard.sim.SimStep;
  *     frame from the decloak; empty for none
  * @param naval M5 part E: how it meets the water ({@link NavalLooks}): a naval unit's under-water body
  *     and surfacing steps, and every unit's kill bursts on and under the water by its size tier
+ * @param collapse M7 part E: a vortex's funnel collapsing where it died (the Dust Devil's {@code -collapse},
+ *     tools/art/storm_units.py), solid, under its death pieces (the grit cloud); no frames for none
  */
 public record EnemyLooks(
         Array<AtlasRegion> frames,
@@ -75,7 +77,8 @@ public record EnemyLooks(
         Array<AtlasRegion> leapGlow,
         Array<AtlasRegion> cloak,
         Array<AtlasRegion> decloak,
-        NavalLooks naval) {
+        NavalLooks naval,
+        DeathEffect collapse) {
     /** Vrell organic motion runs at 8-12 fps: 10 fps. */
     private static final double ORGANIC_FPS = 10;
     /**
@@ -121,6 +124,20 @@ public record EnemyLooks(
      */
     private static final java.util.Map<String, Tier> DEATH_TIERS =
             java.util.Map.of("hive-node", Tier.LARGE, "ravager", Tier.SMALL);
+    /**
+     * M7 part E: a unit whose death sounds other than its rung's two files (design/audio/sfx): the Ghost Drone's
+     * mechanical break-up is the {@code small} rung's Ghost Drone entry (round 41 a, proposed): it must sound built,
+     * not grown.
+     */
+    private static final java.util.Map<String, Sfx> DEATH_SOUNDS =
+            java.util.Map.of("ghost-drone", Sfx.GHOST_DRONE_DEATH);
+    /** A unit's explosion sound, its rung's first or {@code second} file (both its own for a unit with one). */
+    static Sfx explosionSound(String slug, Tier tier, boolean second) {
+        return DEATH_SOUNDS.getOrDefault(slug, Sfx.explosion(tier, second));
+    }
+
+    /** M7 part E: a vortex's collapse plays at 10 fps (its 8 frames over 0.8 s). */
+    static final int COLLAPSE_FRAME_TICKS = 6;
 
     public EnemyLooks {
         if (frames.size % headings != 0) {
@@ -228,8 +245,8 @@ public record EnemyLooks(
                         DEATH_TIERS.containsKey(slug) ? sprites.explosionLarge : sprites.frames("explosion-medium");
                     default -> sprites.frames("explosion-medium");
                 },
-                chain ? chainBurst : Sfx.explosion(tier, false),
-                chain ? chainBurst : Sfx.explosion(tier, true),
+                chain ? chainBurst : explosionSound(slug, tier, false),
+                chain ? chainBurst : explosionSound(slug, tier, true),
                 sprites.has(slug + "-flare") ? sprites.frames(slug + "-flare") : none,
                 remains(sprites, slug, none),
                 death(sprites, slug, DEATH_GLOW, tier, true, walker),
@@ -250,7 +267,11 @@ public record EnemyLooks(
                 walker && sprites.has(slug + "-leap-glow") ? sprites.frames(slug + "-leap-glow") : none,
                 sprites.has(slug + "-cloak") ? sprites.frames(slug + "-cloak") : none,
                 sprites.has(slug + "-decloak") ? sprites.frames(slug + "-decloak") : none,
-                NavalLooks.of(sprites, slug, tier));
+                NavalLooks.of(sprites, slug, tier),
+                new DeathEffect(
+                        sprites.has(slug + "-collapse") ? sprites.frames(slug + "-collapse") : none,
+                        COLLAPSE_FRAME_TICKS,
+                        0));
     }
 
     /**

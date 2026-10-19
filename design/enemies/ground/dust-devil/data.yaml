@@ -1,0 +1,67 @@
+# Dust Devil stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part E, step E2 (Level 18): the spin cycle (`vortex`: closed on `ground` with the armoured `vanes`, the rise, open
+# on `low-air`), the radial `pull` on the ship and the pickups, and the grit `spiral` fired only `while: open` (a
+# non-boss spiral). Loaded and checked in step E2 by content's EnemyData and StormChecks, mapped for the simulation in
+# step E4 (sim: step E1). Defaults of the gap check, pending the user's review in round 41: the wander's amplitude
+# (60 px either side of the wave's path), a wave of two or three a `pack` (each on its own path, the cycles offset
+# 0.8 s), easy's longer window lengthening the cycle (2.8 s) rather than shortening the closed time, the closed vanes
+# glancing on the core's hit box.
+name: Dust Devil
+faction: Vrell
+layer: ground     # while closed; `low-air` while risen and open (the `vortex` block)
+tier: medium
+size: [72, 72]    # sprite px (the concept); the grit swirl drawn about 150 px across
+hitbox: [26, 26]  # the core's: hittable while open; closed, shots on it glance off the vanes
+parts: single
+orientation: radial
+hp: 52
+armour: vanes     # closed: every shot glances off (grey spark), a blast excepted (round 36 Q.22e); open: none
+speed: 50         # px/s along its wander (plus scroll)
+movement: {}      # its wander is the vortex's, round its wave's path (scrolling with the ground)
+vortex:
+  closed: 1.4           # s closed on the ground, spinning in its swirl (armoured vanes)
+  rise: 0.4             # s rising: the tell (the swirl tightens and brightens)
+  open: 0.8             # s open on low-air: the lime core exposed, the grit spiral firing
+  offset: 0.8           # s between two units' cycles in a wave, so the windows alternate
+  wander_speed: 50      # px/s
+  wander_amplitude: 60  # px either side of its wave's path (seeded)
+  keep_away: 90         # px: never closer to the ship's centre (it slides round the ship)
+pull:
+  ship_radius: 130      # px: the ship within it drifts toward the centre ...
+  ship_speed: 35        # ... at 35 px/s at the centre, fading to 0 at the edge (the ship flies 250-315)
+  pickup_radius: 170    # px: loose pickups within it are drawn in ...
+  pickup_speed: 90      # ... at 90 px/s and held until it dies
+attacks:
+  - pattern: spiral
+    name: grit
+    bullet: small
+    arms: 2
+    turn_rate: 180       # °/s
+    interval: 0.16       # s between two bullets of an arm: 5 per arm per 0.8 s window
+    speed: 110           # px/s
+    while: open
+    notes:
+      text: 'while open: a {arms}-arm `{pattern}` of grit rotating {turn_rate}°/s, a bullet per arm every {interval} s (5 per arm per window), slow {speed} px/s, `{bullet}` {damage}'
+formations:
+  - {name: single}
+  - {name: pack, size: [2, 3]}   # each on its own path, the cycles offset 0.8 s
+weak_points:
+  - {name: the lime core (open only)}
+drops: []
+traits: [spread, homing]
+bounty: 26
+first_level: 18
+difficulty:
+  easy: {vortex: {open: 1.0}, pull: {ship_speed: 25}}
+  hard: {attacks: {grit: {arms: 3}}, pull: {ship_speed: 45}}
+notes:
+  layer: ' while closed; `low-air` while risen and open (the "ground → low-air" of the roster)'
+  size: '(the concept; the hitbox the core''s, hittable while open); the grit swirl drawn ≈ 150 px across'
+  orientation: '(5-fold: 8 frames cover 72° of spin; an open frame set)'
+  armour: 'closed: shots spark off the `vanes` with a grey flash, a blast (Smart Bomb, Airstrike) excepted; open: none'
+  speed: along its wander (plus scroll)
+  movement: 'a seeded wander ({vortex.wander_speed} px/s, up to {vortex.wander_amplitude} px either side of its path) over the ground with `spin`, never closer than {vortex.keep_away} px to the ship; a 2.6 s cycle: {vortex.closed} s closed on the ground, {vortex.rise} s rise, {vortex.open} s open on `low-air`, sinks back at the start of the next cycle. **Pull**: on the ship within {pull.ship_radius} px, {pull.ship_speed} px/s at the centre fading to 0 at the edge; on loose pickups within {pull.pickup_radius} px, {pull.pickup_speed} px/s (the inverse of the Magnet; with a fitted Magnet the stronger pull wins), held until it dies'
+  formations: (each on its own wander, cycles offset {vortex.offset} s)
+  death: the funnel collapses, a `medium` burst and a grit cloud that drops every pickup it held
+  used_in: introduced in Level 18 (Dust Storm); the act HP factor of a `medium` unit where it returns
+  difficulty: 'easy: window 1.0 s, pull 25 px/s; hard: 3-arm spiral, pull 45 px/s'

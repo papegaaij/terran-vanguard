@@ -49,6 +49,7 @@ import vanguard.game.render.PodPivots;
 import vanguard.game.render.ScreenFlash;
 import vanguard.game.render.SecretGlints;
 import vanguard.game.render.SetPieceWrecks;
+import vanguard.game.render.StormLooks;
 import vanguard.game.render.TargetingOverlay;
 import vanguard.game.render.ThreatArrows;
 import vanguard.game.render.WaveBanners;
@@ -286,8 +287,8 @@ public final class LevelScreen implements GameScreen {
                 level,
                 sortie.script(),
                 levelKey);
-        // M5 part G: easy's shorter whiteout (Level 13), in the backdrop and the snow.
-        renderer.easy(easy);
+        // M5 part G: easy's shorter whiteout (Level 13), in the backdrop and the snow; M7 part E: the storm's radii.
+        renderer.difficulty(difficulty);
         // M7 part D: Level 17's domes, each in its sprite set.
         renderer.groundAllies(sortie.script(), services.content.allies());
         militiaFlak = level.flak().map(MilitiaFlak::new).orElse(null);
@@ -371,7 +372,9 @@ public final class LevelScreen implements GameScreen {
         music.sectionLevels(level.music()::sectionLevel);
         // M5 part G: the jingle inside the level (Level 13's "Grid sync complete"), the wind in the whiteout.
         level.music().jingle().ifPresent(jingle -> music.jingle(jingle.t(), jingle.fadeSeconds()));
-        music.ambienceLevels(t -> AtmosphereRamp.ambienceDb(level, easy, t));
+        // M7 part E: the dust storm's bed swelling as the view closes in (Level 18), and track 9's motif layer.
+        music.ambienceLevels(t -> AtmosphereRamp.ambienceDb(level, easy, t) + StormLooks.swellDb(level, difficulty, t));
+        music.motif(services.files.internal(Tracks.motifPath(theme)), level.music()::motifOn);
     }
 
     /** M5 part D: the level's {@code music.ambience_changes} as the music's crossfades, each to its setting's loop. */

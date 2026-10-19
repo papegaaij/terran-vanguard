@@ -102,7 +102,7 @@ class Level17Test {
                     difficulty == Difficulty.EASY ? LevelScript.HookMode.NONE : LevelScript.HookMode.ALTERNATE,
                     allies.mode("shellback"));
             assertEquals(LevelScript.HookMode.NONE, allies.mode("choir-herald"));
-            assertEquals(160, allies.bombRow());
+            assertEquals(220, allies.bombRow(), "round 40 R.b: from 160");
             assertEquals(40, allies.bombSlot());
             LevelScript.Secondary secondary = level.secondary();
             assertTrue(secondary.untouched());
@@ -257,19 +257,20 @@ class Level17Test {
     }
 
     /**
-     * The Shellback: the body 120 HP and 40 credits (whole 48 by its first bonus 8), the vent 24 HP and 12 at 15 px
-     * towards its tail, silencing the mortar; the roll once at 40 %: curl 0.6 s, roll 2.5 s (hard 3.0) at 140 px/s,
-     * uncurl 0.6 s, the belly 1.5 s at ×1.5, a 72 px ball; the mortar lobs every 4.0 s (easy 5.0, hard 3.2).
+     * The Shellback (round 40 K.a: weaker): the body 90 HP and 40 credits (whole 48 by its first bonus 8), the vent 16
+     * HP and 12 at 15 px towards its tail, silencing the mortar; the roll once at 40 %: curl 0.4 s, roll 2.5 s (hard
+     * 3.0) at 140 px/s, uncurl 0.4 s, the belly 1.5 s at ×1.5 shown at the 200 px row or higher (R.e), a 72 px ball;
+     * the mortar lobs every 4.0 s (easy 5.0, hard 3.2).
      */
     @Test
     void theShellbacksVentAndRoll() {
         for (Difficulty difficulty : Difficulty.values()) {
             EnemySpec shellback = enemy(SimSpecs.level(content, LEVEL, difficulty), "shellback");
-            assertEquals(content.difficulty().enemyHp(120, difficulty), shellback.hp(), 1e-9);
+            assertEquals(content.difficulty().enemyHp(90, difficulty), shellback.hp(), 1e-9);
             assertEquals(40, shellback.bounty());
             EnemySpec.UnitPart vent = shellback.part().orElseThrow();
             assertEquals("vent", vent.name());
-            assertEquals(content.difficulty().enemyHp(24, difficulty), vent.hp(), 1e-9);
+            assertEquals(content.difficulty().enemyHp(16, difficulty), vent.hp(), 1e-9);
             assertEquals(12, vent.bounty());
             assertEquals(8, vent.firstBonus());
             assertEquals(0, vent.dx());
@@ -278,11 +279,12 @@ class Level17Test {
             assertTrue(vent.silencesGun());
             EnemySpec.Roll roll = shellback.roll().orElseThrow();
             assertEquals(0.4, roll.belowShare());
-            assertEquals(0.6, roll.curlSeconds());
+            assertEquals(0.4, roll.curlSeconds());
             assertEquals(difficulty == Difficulty.HARD ? 3.0 : 2.5, roll.rollSeconds());
             assertEquals(140, roll.rollSpeed());
-            assertEquals(0.6, roll.uncurlSeconds());
+            assertEquals(0.4, roll.uncurlSeconds());
             assertEquals(1.5, roll.bellySeconds());
+            assertEquals(200, roll.bellyRow());
             assertEquals(1.5, roll.bellyFactor());
             assertEquals(72, roll.ball().width());
             assertTrue(shellback.walker().isPresent());
@@ -306,6 +308,91 @@ class Level17Test {
             assertTrue(enemy(SimSpecs.level(content, LEVEL, difficulty), "needler")
                     .part()
                     .isEmpty());
+        }
+    }
+
+    /**
+     * Round 40 R.d and K.a: the first Herald (t=55.5) comes in at 50 px/s (half its own 100) with its Needlers, and
+     * Varga's line about the rings is the {@code first-ring} cue: it starts in the step the Herald first rings a unit,
+     * as it reaches the top edge, over a second before the autopilot (the Herald first) can shoot it down. Printed per
+     * seed: the first ring, the line's start and the Herald's death.
+     */
+    @Test
+    void theFirstHeraldComesInSlowlyAndVargasLineStartsAtItsFirstRing() {
+        LevelScript script = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
+        List<WaveSpec> at55 = script.waves().stream().filter(w -> w.t() == 55.5).toList();
+        assertEquals(2, at55.size());
+        at55.forEach(wave -> assertEquals(
+                java.util.Optional.of(50.0), wave.speed(), wave.enemy().slug()));
+        int cue = -1;
+        for (int i = 0; i < script.radio().size(); i++) {
+            if (script.radio().get(i).trigger() == LevelScript.CueTrigger.FIRST_RING) {
+                cue = i;
+            }
+        }
+        assertTrue(cue >= 0 && script.radio().get(cue).line().contains("See the rings?"));
+        StringBuilder report = new StringBuilder("Level 17 first Herald (first ring, Varga's line, death):");
+        for (long seed = 1; seed <= 4; seed++) {
+            Sortie sortie = sortie(content, seed, Difficulty.MEDIUM);
+            int heraldKind =
+                    sortie.enemyKinds().stream().map(EnemySpec::slug).toList().indexOf("choir-herald");
+            double ring = -1;
+            double line = -1;
+            double death = -1;
+            int steps = 0;
+            while (death < 0 && steps++ < MAX_STEPS && sortie.levelSeconds() < 80) {
+                sortie.step(Autopilot.commands(sortie));
+                SimEvents events = sortie.events();
+                for (int i = 0; i < events.size(); i++) {
+                    if (events.type(i) == SimEvents.Type.RING_SUNG && ring < 0) {
+                        ring = sortie.levelSeconds();
+                    } else if (events.type(i) == SimEvents.Type.RADIO && events.value(i) == cue) {
+                        line = sortie.levelSeconds();
+                    } else if (events.type(i) == SimEvents.Type.ENEMY_DESTROYED && events.value(i) == heraldKind) {
+                        death = sortie.levelSeconds();
+                    }
+                }
+            }
+            report.append(String.format(" seed %d: %.2f, %.2f, %.2f;", seed, ring, line, death));
+            assertTrue(ring > 55.5 && ring < 58, "seed " + seed + ": the first ring as the Herald comes in: " + ring);
+            assertEquals(ring, line, 1e-9, "seed " + seed + ": the line at the first ring");
+            assertTrue(death < 0 || death - line > 1, "seed " + seed + ": the line before its death: " + death);
+        }
+        System.out.println(report);
+    }
+
+    /**
+     * Round 40 R.c: every Shellback walks between the domes on every difficulty (the autopilot flying, so they walk
+     * their whole paths or die): while it walks its body's hit box never overlaps a standing dome's hit box (glass).
+     */
+    @Test
+    void theShellbacksWalkBetweenTheDomes() {
+        for (Difficulty difficulty : Difficulty.values()) {
+            Sortie sortie = sortie(content, 3, difficulty, true);
+            int steps = 0;
+            int walkSteps = 0;
+            while (!sortie.complete() && steps++ < MAX_STEPS) {
+                sortie.step(0);
+                for (int i = 0; i < sortie.enemyCount(); i++) {
+                    Enemy e = sortie.enemy(i);
+                    if (!e.spec().slug().equals("shellback") || e.curlPhase() != Enemy.CurlPhase.WALK) {
+                        continue;
+                    }
+                    walkSteps++;
+                    for (int k = 0; k < sortie.allyCount(); k++) {
+                        AllySpec dome = sortie.allySpec(k);
+                        boolean over = Math.abs(e.renderX(1) - sortie.ally(k).renderX(1))
+                                        < (e.hitbox().width() + dome.hitbox().width()) / 2
+                                && Math.abs(e.renderY(1) - sortie.ally(k).renderY(1))
+                                        < (e.hitbox().height() + dome.hitbox().height()) / 2;
+                        assertFalse(
+                                over,
+                                difficulty + ": a Shellback at t=" + sortie.levelSeconds() + " walks over "
+                                        + DOMES.get(k));
+                    }
+                }
+            }
+            assertTrue(walkSteps > 1000, difficulty + ": the Shellbacks walked");
         }
     }
 
@@ -377,9 +464,10 @@ class Level17Test {
     }
 
     /**
-     * The t=46.5 Shellback walking behind Lowell (the autopilot keeping the bombers off Lowell until it is on the
-     * screen), shot to 40 % and then left alone, curls (0.6 s), rolls (2.5 s, unless it leaves the bottom edge
-     * first: it rolls down the screen at 140 px/s on top of the scroll), and its roll crushes Lowell once.
+     * The t=46.5 Shellback walking down beside Lowell (round 40 R.c: 90 px to its left, the autopilot keeping the
+     * bombers off Lowell until it is on the screen), shot to 40 % and then left alone, curls (0.4 s), rolls (2.5 s,
+     * or round 40 R.e shorter: it uncurls where its belly shows at the 200 px row) and its ball grazes Lowell's
+     * footprint: one hit. Walking it never overlaps Lowell's glass (its hit box).
      */
     @Test
     void aShellbacksRollCrushesTheDomeAheadOfIt() {
@@ -417,7 +505,25 @@ class Level17Test {
             }
             if (shellback != null) {
                 Enemy.CurlPhase phase = shellback.curlPhase();
+                if (!starts.containsKey(phase) && phase == Enemy.CurlPhase.BELLY) {
+                    trace.append(String.format(" belly at y %.0f", shellback.renderY(1)));
+                    assertTrue(
+                            shellback.renderY(1) > 190, "its belly shows at the 200 px row: " + shellback.renderY(1));
+                }
                 starts.putIfAbsent(phase, sortie.levelSeconds());
+                if (phase == Enemy.CurlPhase.WALK) {
+                    AllySpec lowell = sortie.allySpec(1);
+                    boolean over = Math.abs(shellback.renderX(1)
+                                            - sortie.ally(1).renderX(1))
+                                    < (shellback.hitbox().width()
+                                                    + lowell.hitbox().width())
+                                            / 2
+                            && Math.abs(shellback.renderY(1) - sortie.ally(1).renderY(1))
+                                    < (shellback.hitbox().height()
+                                                    + lowell.hitbox().height())
+                                            / 2;
+                    assertFalse(over, "it walks beside Lowell's glass");
+                }
             }
             SimEvents events = sortie.events();
             for (int i = 0; i < events.size(); i++) {
@@ -429,14 +535,11 @@ class Level17Test {
         System.out.println(
                 "Level 17 Shellback behind Lowell, phase starts: " + starts + ", crushed " + crushed + ";" + trace);
         double curl = starts.get(Enemy.CurlPhase.CURLING);
-        assertEquals(0.6, starts.get(Enemy.CurlPhase.ROLLING) - curl, 2 * SimStep.SECONDS);
-        // Rolling down the screen at 140 px/s on top of the scroll it may leave the bottom edge before it uncurls.
-        if (starts.containsKey(Enemy.CurlPhase.UNCURLING)) {
-            assertEquals(
-                    2.5,
-                    starts.get(Enemy.CurlPhase.UNCURLING) - starts.get(Enemy.CurlPhase.ROLLING),
-                    2 * SimStep.SECONDS);
-        }
+        assertEquals(0.4, starts.get(Enemy.CurlPhase.ROLLING) - curl, 2 * SimStep.SECONDS);
+        // Round 40 R.e: rolling down the screen near the bottom, it uncurls early, so its belly shows.
+        double rolled = starts.get(Enemy.CurlPhase.UNCURLING) - starts.get(Enemy.CurlPhase.ROLLING);
+        assertTrue(rolled > 0 && rolled < 2.5, "a shorter roll: " + rolled);
+        assertTrue(starts.containsKey(Enemy.CurlPhase.BELLY));
         assertEquals(List.of(1), crushed, "Lowell, once");
     }
 
@@ -476,6 +579,7 @@ class Level17Test {
         radio.forEach(cue -> assertFalse(cue.line().isBlank()));
         assertEquals(
                 List.of(
+                        LevelScript.CueTrigger.FIRST_RING,
                         LevelScript.CueTrigger.ALLY_HIT,
                         LevelScript.CueTrigger.ALLY_LOST,
                         LevelScript.CueTrigger.SECONDARY_OBJECTIVE,
@@ -503,6 +607,7 @@ class Level17Test {
     @Test
     void theAutopilotFliesTheLevelAndKeepsTheDomesAboutHalfTheTime() {
         StringBuilder report = new StringBuilder("Level 17 autopilot over " + SEEDS + " seeds:");
+        int easyMet = 0;
         for (Difficulty difficulty : Difficulty.values()) {
             int met = 0;
             int kept = 0;
@@ -513,12 +618,24 @@ class Level17Test {
             int rollHits = 0;
             int lobHits = 0;
             int vents = 0;
+            int shellbacks = 0;
+            int shellbacksKilled = 0;
             StringBuilder seedOne = new StringBuilder();
             StringBuilder firsts = new StringBuilder();
+            Map<Long, int[]> byEntry = new TreeMap<>();
             for (long seed = 1; seed <= SEEDS; seed++) {
                 Sortie sortie = sortie(content, seed, difficulty);
+                int shellbackKind = sortie.enemyKinds().stream()
+                        .map(EnemySpec::slug)
+                        .toList()
+                        .indexOf("shellback");
+                shellbacks += SimSpecs.level(content, LEVEL, difficulty).waves().stream()
+                        .filter(wave -> wave.enemy().slug().equals("shellback"))
+                        .mapToInt(WaveSpec::count)
+                        .sum();
                 int steps = 0;
                 int attempt = sortie.attempt();
+                Map<Integer, double[]> walkers = new java.util.HashMap<>();
                 double firstHit = -1;
                 String firstBy = "";
                 while (!sortie.complete() && steps++ < MAX_STEPS) {
@@ -526,6 +643,7 @@ class Level17Test {
                         sortie.retry(sortie.ship().defences().maxArmour());
                     }
                     sortie.step(Autopilot.commands(sortie));
+                    trackShellbacks(sortie, walkers, byEntry);
                     SimEvents events = sortie.events();
                     boolean bomb = false;
                     boolean crush = false;
@@ -533,6 +651,7 @@ class Level17Test {
                         switch (events.type(i)) {
                             case RING_ABSORBED -> absorbs++;
                             case UNIT_PART_DESTROYED -> vents++;
+                            case ENEMY_DESTROYED -> shellbacksKilled += events.value(i) == shellbackKind ? 1 : 0;
                             case BOMB_DROPPED -> bomb = true;
                             case ROLL_CRUSHED -> crush = events.value(i) >= 0;
                             case ALLY_HIT -> {
@@ -573,12 +692,12 @@ class Level17Test {
                 credits += sortie.result().credits().total();
             }
             if (difficulty == Difficulty.EASY) {
-                assertTrue(met > 0, "easy: the domes can be kept untouched (the Shellbacks unhooked)");
+                easyMet = met;
             }
             report.append(String.format(
                     "%n  %s: secondary met %d/%d, domes untouched %.1f of 5, ring absorbs %.0f per run, credits %.0f,"
-                            + " retries %d; dome hits by bombs %d, lobs %d, rolls %d; vents shot %d; first hits:%s;"
-                            + " seed 1's hits:%s",
+                            + " retries %d; dome hits by bombs %d, lobs %d, rolls %d; vents shot %d; Shellbacks killed"
+                            + " %d/%d (killed/walked by entry second %s); first hits:%s; seed 1's hits:%s",
                     difficulty,
                     met,
                     SEEDS,
@@ -590,10 +709,40 @@ class Level17Test {
                     lobHits,
                     rollHits,
                     vents,
+                    shellbacksKilled,
+                    shellbacks,
+                    byEntry.entrySet().stream()
+                            .map(e -> e.getKey() + ": " + e.getValue()[0] + "/" + e.getValue()[1])
+                            .toList(),
                     firsts,
                     seedOne));
         }
         System.out.println(report);
+        assertTrue(easyMet > 0, "easy: the domes can be kept untouched (the Shellbacks unhooked)");
+    }
+
+    /**
+     * Follows the Shellbacks of {@code sortie} by serial ({entry second, last height}); one that is gone counts in
+     * {@code byEntry} under its entry second as {killed, walked}: killed when it was last seen on the screen.
+     */
+    static void trackShellbacks(Sortie sortie, Map<Integer, double[]> walkers, Map<Long, int[]> byEntry) {
+        java.util.Set<Integer> seen = new java.util.HashSet<>();
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy e = sortie.enemy(i);
+            if (e.spec().slug().equals("shellback") && e.hp() > 0) {
+                walkers.computeIfAbsent(e.serial(), k -> new double[] {sortie.levelSeconds(), 0})[1] = e.renderY(1);
+                seen.add(e.serial());
+            }
+        }
+        for (var it = walkers.entrySet().iterator(); it.hasNext(); ) {
+            var entry = it.next();
+            if (!seen.contains(entry.getKey())) {
+                int[] counts = byEntry.computeIfAbsent(Math.round(entry.getValue()[0]), k -> new int[2]);
+                counts[0] += entry.getValue()[1] > -30 ? 1 : 0;
+                counts[1]++;
+                it.remove();
+            }
+        }
     }
 
     @Test

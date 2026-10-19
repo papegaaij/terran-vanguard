@@ -139,3 +139,4 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   is headed `REFIT` and the message line reads `REPLAY: REFIT ONLY`; the launch no longer warns
   about the ship's armour (the replay flies at full armour), but still about Rook's (a replay does
   not repair him, and the replay hangar cannot).
+- 2026-10-19 (user, round 41, P.g): the replay hangar as built, refit only (owned items fitted and unfitted and kept; buying, selling, upgrading and repairs off).

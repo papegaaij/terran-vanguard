@@ -316,3 +316,18 @@ wing-beat loop, the crest's additive violet bloom, the segmented shield ring (0-
 flash, the faint dashed aura circle (90 px) and the thread strip. The GIF plays a Herald with four Needlers
 orbiting in its ring: threads to each, one escort's ring draining segment by segment under fire, then the
 Herald dies and the rings collapse over 0.3 s.
+
+## ghost-drone-final-r41-a
+
+Round 41, production art (M7 part E batch, step ART-E; straight to production from the chosen concept
+ghost-drone-r36-a, U.4 = a "facet dart" with the U.5 lamps, the model `ghost_a`, its lamp offsets and its
+`ghost_glow` of `tools/concept/enemies_r36.py` unchanged). Not a mockup: the review sheet (`.png`) and a loop
+(`.gif`) of the files in `assets/sprites/` (held in `build/art-held/sprites/` until the data claims the slug),
+rendered by [tools/art/storm_units.py](../../../../tools/art/storm_units.py) (`python3 tools/art/storm_units.py
+ghost`): 16 headings at 40 px with one 28-colour palette and a neutral grey rim, the 2×2 red eye and the white
+wing-tip pixels set after the palette step; the additive glow frames per heading (the eye's red bloom, the tips'
+white halos); the EMP lights-out set; the 0.3 s red glint tell centred on the eye (`assets/pivots/ghost-drone.json`);
+the mechanical death (white-amber sparks, a black smoke puff, grey fragments falling). The GIF plays a line abreast
+dropping into its lanes and strafing out, one shot down, then a 2 + 2 pincer, each firing its glint-told 3-shot
+burst, over the Level 18 storm plain with the chosen radius look b (R 170): outside the radius the drones are dark
+silhouettes with only the red eye and the white tips showing.

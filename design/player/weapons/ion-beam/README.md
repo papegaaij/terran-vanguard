@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy, ../../../enemies]
-updated: 2026-10-14
+updated: 2026-10-19
 ---
 
 # Ion Beam
@@ -67,6 +67,13 @@ at L21). Against it:
 | 2 | 80 | 90 | the L18 visit (80 vs reference ≈ 88) |
 | 3 | 100 | 110 | from the L19 visit (100 vs reference ≈ 92) |
 | 4–5 | 125–150 | — | not in Act 3 (power, see below) |
+
+The single-target number undersells the beam against small units: it burns the first target in its column
+from the step it touches, with no flight time and no miss, so a small unit dies far sooner after its entry
+than its HP ÷ DPS says. From the plan's first beam (Level 18) the enemies therefore double every `small` unit's
+HP (**beam-era HP**, the user's "tougher, not more" of 2026-10-19; see the
+[balancing basis](../../../enemies/README.md#balancing-basis)): a killed small unit lives about as long on the
+screen as on Level 10.
 
 ### Beam rules
 
@@ -250,3 +257,5 @@ dust and scorch mark, and the glance spark; the heat tint on the target is the g
 - 2026-10-14 (user: budget(n) is the absolute typical haul; round 37 R.1 reverted; M7 part B, step B3): the
   balance plan buys the beam at L2 at the L18 visit and raises it to L3 at L19 again (A2's hand plan),
   the Tail Gun L3 at L20 and Composite III at L21; hard keeps the Pulse Cannon (pending the user's review).
+- 2026-10-19 (M7 part E, step E5; the user's "tougher, not more"): the enemies' beam-era HP (×2 on `small` units
+  from Level 18, the plan's first beam) answers the beam's instant reach; the beam's own numbers are unchanged.

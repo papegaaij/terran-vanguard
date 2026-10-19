@@ -317,7 +317,8 @@ public final class SpecialSlot {
                 if (enemy.partAlive() && enemy.damagePart(smartBomb.damage(), true)) {
                     hits.unitPartDestroyed(j);
                 }
-                if (enemy.damage(smartBomb.damage(), true)) {
+                // M7 part E (Q.22e): a blast, which a closed vortex's vanes let through.
+                if (enemy.damage(smartBomb.damage(), true, true)) {
                     hits.enemyDestroyed(j);
                 }
             }
@@ -744,7 +745,8 @@ public final class SpecialSlot {
                 // M7 part D: a blast covering a unit part hurts it too (the Shellback's vent).
                 hits.unitPartDestroyed(j);
             }
-            if (amount > 0 && enemy.damage(amount, true)) {
+            // M7 part E (Q.22e): a blast, which a closed vortex's vanes let through.
+            if (amount > 0 && enemy.damage(amount, true, true)) {
                 hits.enemyDestroyed(j);
             }
         }

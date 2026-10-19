@@ -3,7 +3,7 @@ title: Act 2 – Homefront
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Act 2 – Homefront
@@ -219,7 +219,7 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
 
 - [ ] All 7 levels promoted to draft level documents and implemented: Levels 08–11 done; Levels
       12–14 built and accepted in the combined concept round 34 (M5 parts F–H, 2026-10-12); the user's
-      playthrough of the act (round 34's P9) still open.
+      playthrough of the act (round 34's P9) still open. Round 41 (2026-10-19) accepted the build of the rework (Kraken and Spire fights, waves, voices, debrief music, intel panel, refit-only replay hangar); only the playthrough remains.
       Acts 1–2 flown as one campaign on every difficulty by `ActPlaythroughTest` (M5 part I).
 - [x] Weather system (rain, lightning, wind gusts and drift) for L12 — M5 part F ([Level 12](level-12-storm-front/README.md#weather); `WindTest`, `Level12Test`, `Level12LooksTest`).
 - [x] Halted-scroll `defend` mode for L13 — M5 part G ([Level 13](level-13-polar-relay/README.md#the-halt); `TimedHaltTest`, `DefendTest`, `Level13Test`).
@@ -308,3 +308,4 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
   wave with at most 40 % Skitters cut back once the plan's fit died on hard, pending the user's review), the Ravager slowed and kept out of Level 09's
   holds, the Needler and the Stinger given the act HP factor capped at ×3 in those two levels, and the
   Act 2+ pacing rule and floor (`PacingTest`, `ActFloorTest`; Levels 11–14 left pending below it).
+- 2026-10-19 (user, round 41): the Act 2 finish built after round 40 accepted: the Kraken and Spire fights (P.a), Levels 08, 12 and 13 (P.b), Levels 11 and 14's waves (P.c), the new voices (P.d), the debrief music (P.e), the intel panel (P.f) and the refit-only replay hangar (P.g, as built). The build is accepted; the user's own playthrough of the act is still open.

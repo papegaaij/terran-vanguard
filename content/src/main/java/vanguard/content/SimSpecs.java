@@ -1758,7 +1758,9 @@ public final class SimSpecs {
      * small} one listed in the basis's {@code small_act_hp} (the Needler and the Stinger) gets the same
      * capped at its {@code cap} in its {@code levels} (08–09; the user's Act 2 playtest, 2026-10-18); the
      * other {@code tiny} and
-     * {@code small} units, Act 1's levels and a unit's own first level get 1. Its bounty is unchanged
+     * {@code small} units, Act 1's levels and a unit's own first level get 1. M7 part E (step E5): from the basis's
+     * {@code beam_era_hp.from_level} on (Level 18, where the plan fits the Ion Beam) a unit of its tiers (not a boss)
+     * takes its {@code factor} on top, its own first level included. Its bounty is unchanged
      * (the act factor scales the credits).
      */
     public static double actHpFactor(Content content, String slug, int act, int level) {
@@ -1766,6 +1768,13 @@ public final class SimSpecs {
     }
 
     private static double actHpFactor(Content content, EnemyData enemy, InLevel inLevel) {
+        // M7 part E (step E5, the user's "tougher, not more" of 2026-10-19): the beam era's factor on top.
+        double era =
+                enemy.boss().isPresent() ? 1 : content.enemyBasis().beamEraHp().of(enemy.tier(), inLevel.level());
+        return era * returningFactor(content, enemy, inLevel);
+    }
+
+    private static double returningFactor(Content content, EnemyData enemy, InLevel inLevel) {
         EnemyBasisData.SmallActHp small = content.enemyBasis().smallActHp();
         boolean smallUnit = enemy.tier() == Tier.SMALL
                 && small.units().stream()
@@ -1965,16 +1974,21 @@ public final class SimSpecs {
         // M7 part B: a burrow (the Burrower) and a triggered swoop (the Dust Kite); M7 part C: a link (the Tendril
         // Anchor).
         // M7 part D: an aura (the Choir Herald), a unit part and a curl-roll (the Shellback).
-        return SiegeRules.unit(
-                content,
+        // M7 part E: a spin cycle and a pull (the Dust Devil), a lane strafe (the Ghost Drone) (StormRules).
+        return StormRules.unit(
                 enemy,
                 difficulty,
-                actHp,
-                TerrainRules.anchor(
+                SiegeRules.unit(
                         content,
                         enemy,
                         difficulty,
-                        MarsRules.kite(enemy, hook, MarsRules.burrower(content, enemy, hook, difficulty, machine))));
+                        actHp,
+                        TerrainRules.anchor(
+                                content,
+                                enemy,
+                                difficulty,
+                                MarsRules.kite(
+                                        enemy, hook, MarsRules.burrower(content, enemy, hook, difficulty, machine)))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */
@@ -2329,29 +2343,36 @@ public final class SimSpecs {
                         hook.flatMap(EnemyData.Hook::ring).orElse(lob.ring()),
                         bulletDamage(content, lob.ringBullet())));
         // M7 part D: a ring (the Choir Herald's song) is a fan round the whole circle (SiegeRules.ring).
-        return SiegeRules.ring(
+        // M7 part E: a spiral fired while open (the Dust Devil's grit) and a pass-triggered burst (the Ghost Drone's).
+        return StormRules.gun(
+                content,
                 enemy,
                 attack,
                 difficulty,
-                new EnemyGun(
-                        interval(content, attack, hook, difficulty),
-                        attack.firstShotDelay().orElse(0.0),
-                        burst,
-                        attack.speed().orElseThrow() * levers.enemyBulletSpeed().of(difficulty),
-                        damage,
-                        hook.flatMap(EnemyData.Hook::leadsTargetIn)
-                                .map(in -> in.contains("circle"))
-                                .orElse(false),
-                        fan,
-                        Math.toRadians(attack.spread().orElse(0.0)),
-                        attack.turnRate().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
-                        attack.arc().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
-                        mine,
-                        mortar,
-                        // M5 part D: the stat block's burst gap (the Wraith's 0.12 s).
-                        attack.burstGap().orElse(EnemyGun.BURST_GAP_SECONDS),
-                        // M5 part D: its bursts straight up the screen as a fixed fan (the Wraith's).
-                        attack.aim().filter("up"::equals).isPresent()));
+                SiegeRules.ring(
+                        enemy,
+                        attack,
+                        difficulty,
+                        new EnemyGun(
+                                interval(content, attack, hook, difficulty),
+                                attack.firstShotDelay().orElse(0.0),
+                                burst,
+                                attack.speed().orElseThrow()
+                                        * levers.enemyBulletSpeed().of(difficulty),
+                                damage,
+                                hook.flatMap(EnemyData.Hook::leadsTargetIn)
+                                        .map(in -> in.contains("circle"))
+                                        .orElse(false),
+                                fan,
+                                Math.toRadians(attack.spread().orElse(0.0)),
+                                attack.turnRate().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
+                                attack.arc().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
+                                mine,
+                                mortar,
+                                // M5 part D: the stat block's burst gap (the Wraith's 0.12 s).
+                                attack.burstGap().orElse(EnemyGun.BURST_GAP_SECONDS),
+                                // M5 part D: its bursts straight up the screen as a fixed fan (the Wraith's).
+                                attack.aim().filter("up"::equals).isPresent())));
     }
 
     /**
@@ -2473,6 +2494,8 @@ public final class SimSpecs {
                         case FIRST_SURFACING -> LevelScript.CueTrigger.FIRST_SURFACING;
                         // M7 part C: the canyon's first wall touch (Level 16).
                         case FIRST_WALL_CONTACT -> LevelScript.CueTrigger.FIRST_WALL_CONTACT;
+                        // M7 part D, round 40 K.a: the first Herald's first ring (Level 17).
+                        case FIRST_RING -> LevelScript.CueTrigger.FIRST_RING;
                     })
                     .orElse(LevelScript.CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

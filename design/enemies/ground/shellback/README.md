@@ -25,8 +25,10 @@ in [data.yaml](data.yaml) (M7 part D, step D2), with the body and vent as parts,
 and its hook of the [schemas](../../../tech/architecture/README.md#data-file-schemas); the table is
 rendered from it. HP is in damage units (a Pulse Cannon L1 shot
 does 2). Set at its first level from the proposed Act 3 reference DPS (M18 = a, approved in round 36:
-L17 = 84): the body's 120 HP is 1.4 s and the vent 0.3 s; with the roll's armoured 2.5 s a
-focused kill takes 3–4 s. As a `large` unit it gets the act HP factor wherever it returns.
+L17 = 84) and made weaker in round 40 (K.a: "The shell creatures seem too strong. None are
+destroyed."): the body's 90 HP is 1.1 s and the vent's 16 0.2 s; with the curl, the roll and the
+uncurl armoured, a focused kill takes 2–3 s. As a `large` unit it gets the act HP factor wherever
+it returns.
 
 <!-- data: stat-block -->
 | Field | Value |
@@ -37,10 +39,10 @@ focused kill takes 3–4 s. As a `large` unit it gets the act HP factor wherever
 | Size | 112×112 px, hitbox 84×84 (the concept); vent hitbox 28×28 at the rear of the back; rolled ball 72×72 |
 | Parts | body (`vital`), mortar vent (`destroyable`: kills the mortar) |
 | Orientation | `16 angles` (16 headings × 6 heavy-walk frames; curl and uncurl frames; the ball rolls with 8 frames per band pair at 16 headings) |
-| HP | body 120 · vent 24; 144 (easy 108 / hard 187, from the global multipliers) |
+| HP | body 90 · vent 16 (round 40: from 120 · 24); 106 (easy 80 / hard 138, from the global multipliers) |
 | Armour / shield | none while walking; fully `armoured` while curled and rolling (shots spark off, grey flash); the body takes ×1.5 for 1.5 s while it uncurls (the belly) |
 | Speed | 24 px/s walk (plus scroll); roll 140 px/s |
-| Movement | `walk` along an authored ground path, turning at 45°/s; once, at ≤ 40 % body HP, it curls (0.6 s), rolls 2.5 s along its path (`spin`), uncurls (0.6 s) and walks on |
+| Movement | `walk` along an authored ground path, turning at 45°/s; once, at ≤ 40 % body HP, it curls (0.4 s), rolls 2.5 s along its path (`spin`), uncurls (0.4 s) and walks on |
 | Attack | `mortar` from the vent every 4 s: the vent swells 0.5 s (tell), the impact marked on the ground 1.2 s ahead at the ship's position, a direct hit `heavy` 10, then a `ring` of 8 (slow 110 px/s, `small` 4); none while curled |
 | Formations | single, convoy (a pair: a `convoy` of 2 walking 3 s apart, so their rolls never overlap) |
 | Weak points | the lime vent (a destroyable part), the belly while it uncurls (×1.5) |
@@ -59,14 +61,19 @@ focused kill takes 3–4 s. As a `large` unit it gets the act HP factor wherever
 - **Mortar.** The [Polyp Mortar](../polyp-mortar/README.md)'s lob from the vent: the vent swells
   for 0.5 s (tell), the blob arcs, the impact is marked on the ground 1.2 s ahead (≥ 1 s rule),
   a direct hit is `heavy` 10, the burst a ring of 8. Destroying the vent stops the mortar for good
-  and pays its part bounty; the body walks on.
-- **Curl and roll** (once). When the body falls to 40 % HP it tucks head and legs in (0.6 s,
-  already armoured), rolls **2.5 s** along its path at 140 px/s, then uncurls (0.6 s). While
-  curled every shot sparks off with a grey flash, so the player learns to wait. The roll
-  **crushes ground targets in its path** (our reading of the roster, for review): ally structures
-  (the domes in L17, per the ally's spec: one `heavy` hit per roll), destructible scenery and
-  ground crates (a crate's drop still falls); never other enemies, never the ship (it stays on
-  `ground`).
+  and pays its part bounty; the body walks on. The vent on its back is seen from above: a shot over
+  the shell whose line of flight crosses the vent's box (a beam whose column crosses it) hits the
+  vent first, from any side (round 40 R.a).
+- **Curl and roll** (once). When the body falls to 40 % HP it tucks head and legs in (0.4 s,
+  already armoured), rolls **2.5 s** along its path at 140 px/s, then uncurls (0.4 s; both 0.6 s
+  until round 40). While curled every shot sparks off with a grey flash, so the player learns to
+  wait. Near the bottom it rolls a shorter way (round 40 R.e, `belly_row` 200 px): drifting down
+  the screen, the roll ends where the scroll would carry it below that row before its uncurl ends,
+  so its belly shows at the row or higher. The roll **crushes ground targets in its path** (our
+  reading of the roster, for review): ally structures (the domes in L17, per the ally's spec: one
+  hit per roll where the ball touches the dome's footprint, its ring; round 40 R.c), destructible
+  scenery and ground crates (a crate's drop still falls); never other enemies, never the ship (it
+  stays on `ground`).
 - **Belly window.** For 1.5 s after it uncurls its pale belly shows and the body takes ×1.5,
   marked by the lime glow along the belly seam.
 - **Code fit.** `walk` and the mortar exist; the curl-roll (a timed state on the path, an
@@ -92,9 +99,11 @@ act's art track in its level's round.
 
 ## Implementation
 
-- [x] Body and vent parts with their HP; the vent's loss stops the mortar (`ShellbackTest`; in Level 17 no shot from below reaches the rear vent, open in round 40)
+- [x] Body and vent parts with their HP; the vent's loss stops the mortar (`ShellbackTest`; round 40 R.a: a shot whose line crosses the vent hits it first, from any side, so a shot from below reaches the rear vent)
 - [x] `walk` with the heavy gait; mortar every 4.0 s with a 0.5 s vent swell and a 1.2 s impact marker (`ShellbackTest`, `ShellbackLooksTest`)
 - [x] Curl-roll once at ≤ 40 %: armoured while curled, 2.5 s roll at 140 px/s along its path, uncurl (`ShellbackTest`)
+- [x] Round 40 (step D6): weaker (body 90, vent 16, curl and uncurl 0.4 s), the shorter roll near the bottom
+  (`belly_row`), the crush where the ball touches a dome's footprint (`ShellbackTest`, `RollCrushTest`, `Level17Test`)
 - [x] Crushing: ally structures (one `heavy` hit per roll), destructible scenery and crates in its path (`RollCrushTest`)
 - [x] Belly window: ×1.5 for 1.5 s after the uncurl (`ShellbackTest`)
 - [x] Death, husk, part and whole bounties (`ShellbackTest`, `ShellbackLooksTest`)
@@ -126,3 +135,8 @@ act's art track in its level's round.
   the vent while the Shellback walks down the screen (Level 17's autopilot shot none); pending the user's review in
   round 40 (the part's hit test, or the vent's place).
 - 2026-10-19 (user, round 40, F.c): the final art approved (`art: final`); R.a = a: a shot inside the vent's box hits the vent first, from any side (queued, Level 17's Implementation); R.e: a Shellback shot near the bottom rolls a shorter way (queued).
+- 2026-10-19 (step D6, round 40 K.a, R.a, R.c, R.e; pending the user's review): weaker so a careful pilot destroys
+  it: body 120 → 90, vent 24 → 16, curl and uncurl 0.6 → 0.4 s (Level 17's autopilot kills 37 of 40 at medium over
+  8 seeds, was 8); a shot whose line crosses the vent hits the vent first, from any side; the roll's new `belly_row`
+  (200 px above the bottom edge) ends a roll drifting down the screen early so its belly shows; the roll crushes a
+  dome where the ball touches its footprint (the ring), and its walks pass between the domes (Level 17's paths).

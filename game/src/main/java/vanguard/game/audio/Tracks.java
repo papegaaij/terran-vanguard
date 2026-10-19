@@ -36,6 +36,7 @@ public final class Tracks {
             Map.entry(6, "homefront"),
             Map.entry(7, "firestorm"),
             Map.entry(8, "red-dust-run"),
+            Map.entry(9, "grey-signal"),
             Map.entry(BOSS_VRELL, "choir-descends"),
             Map.entry(21, "miniboss-sting"),
             Map.entry(BOSS_WARNING, "boss-warning"),
@@ -65,5 +66,13 @@ public final class Tracks {
     /** A level theme's base stem ({@code music/coalition-rising-base.ogg}): the theme's own file when it has no stems. */
     public static String basePath(String name) {
         return "music/" + name + "-base.ogg";
+    }
+
+    /**
+     * M7 part E: a level theme's motif stem ({@code music/grey-signal-motif.ogg}, track 9's Vorne motif), a third
+     * stream sample-aligned with its base stem and full mix; only a theme with a motif layer has one.
+     */
+    public static String motifPath(String name) {
+        return "music/" + name + "-motif.ogg";
     }
 }

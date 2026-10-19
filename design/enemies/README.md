@@ -393,10 +393,11 @@ the same; no elite variants. **`tiny` and `small` units keep their HP**, so the 
 popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels are unchanged.
 **Exception, the Needler and the Stinger** (the user's Act 2 playtest, 2026-10-18: "the missiles take
 out most enemies with a single shot"): the `small` units listed in the basis's `small_act_hp`
-([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09
-and 11–14**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
-L12 and 18 at L13; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
-units keep their HP. Level 10 and Act 3 keep 4 and 6: applied there, the autopilot's Level 10
+([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09,
+11–14 and 18**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
+L12 and 18 at L13 and L18; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
+units keep their HP. Level 18 (M7 part E) joins with its waves built to the Act 2+ floor (the user's decision
+of 2026-10-19); Levels 15–17 join with their own rework. Level 10 and the rest of Act 3 keep 4 and 6: applied there, the autopilot's Level 10
 escort fell to 2 of 4 shuttles home at medium (D2 = a asks for 3) and Level 11's hard runs stopped
 completing (with the old waves). Levels 11–14 took it with their L10-style waves (steps WA and WB,
 2026-10-19): without it the plan's fit kills the Needlers before their first shot (Level 12: 4 shots a
@@ -407,6 +408,28 @@ act factor already scales them). The time-to-kill check of `BalanceTest` covers 
 every level they return in. Examples at Act 2 levels: Spore Bomber (L03) ×60/32 = ×1.88 at L08,
 Mantis (L06) ×80/52 = ×1.54 at L14, Scuttler (L04) ×76/38 = ×2 at L13. The reference DPS curve is
 extended act by act as levels are written.
+
+**Beam-era HP** (the user's decision of 2026-10-19, "tougher, not more"; M7 part E, step E5): from the
+level where the [balance plan](../player/balance-plan.yaml) first fits the Ion Beam, **Level 18**, every
+**`small`** unit (bosses aside) takes **×2** on its HP on top of the act HP factor, its own first level included
+(`beam_era_hp` in [data.yaml](data.yaml): `from_level`, `factor`, `tiers`); bounties are unchanged. The beam
+burns the first target in its column every step from the moment it touches, so the plan's fit kills a small
+unit far sooner than its single-target DPS against the reference says: on Level 18's first waves (≈ 90 units
+a minute, Level 10's density) a killed small unit lived **0.9 s** on the screen, against **1.6 s** on Level 10
+with its plan's fit (the user's reference, "as it should be"), and most died before they fired. Measured
+there, ×1.5 gives 1.1 s, **×2 1.5 s** and ×2.5 1.9 s. The rule, checked by `BeamEraHpTest` on every mapped
+level from Level 18 on: a killed small unit lives **0.9–1.5×** Level 10's time on the screen (medium, plan's
+fit); Level 18 as built: 2.05 s (1.28×: the busier screen shares the beam). Examples at L18: the Needler 4 ×3
+(capped) ×2 = 24 HP, the Stinger 36, the Ghost Drone 14 → 28, the Spine Turret 8 → 16. The `tiny` units stay
+one-shot fodder (more HP would not slow a beam that kills a 1-HP unit in one step), and the `medium` and larger
+ones keep the act factor alone: the Dust Devil's armoured vanes already gate its time to kill (doubled, the
+autopilot killed none at hard), the Wraith's HP is set for the rear gun, which the beam does not replace, and
+a bigger unit's time to kill depends less on the beam's instant reach (pending a measurement on the levels
+that fly them). `BalanceTest` judges these units' time to kill at the reference DPS × the factor;
+`tools/balance.py` prints them and fails when the plan's first Ion Beam moves off `from_level`. Levels 15–17 fly
+the Pulse Cannon and keep their HP (their small units live 0.6–0.9 s: their P.e rework takes `small_act_hp`
+like Act 2's); a later level gets the factor by its number, and a Needler or Stinger there keeps 24 / 36 HP only
+when the level also joins `small_act_hp.levels` (else 8 / 12).
 
 **Damage to the player** (shield first, overflow to armour; collisions split half/half — see
 [shields](../player/shields/README.md)):
@@ -616,6 +639,10 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       waves, ground units, broods, set pieces and a boss's parts and launched units; tests
       `ActHpFactorTest`, `BalanceTest.everyReturningUnitKeepsItsTimeToKillInActTwo`;
       `tools/balance.py` prints the returning units' HP and time to kill at Levels 08–14)
+- [x] The beam-era HP factor (M7 part E, step E5: `beam_era_hp`, ×2 on `small` units from Level 18, where the
+      plan fits the Ion Beam; `SimSpecs.actHpFactor`, the validator's check, `ActHpFactorTest`,
+      `BeamEraHpTest` (a killed small unit's time on the screen 0.9–1.5× Level 10's), `BalanceTest`'s time to
+      kill at the reference × the factor, `tools/balance.py`'s beam-era table and plan check)
 - [x] Target-the-objective hook: per-level unit/wave configuration, mode `nearest` (Level 04's
       convoy; `LevelScript`, `EnemyBullet`).
 - [x] The modes `alternate`, `in-arc` and `always` (M5 part G, Level 13, the first level that uses
@@ -802,3 +829,14 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   user's P.e "yes, all"): Needler 12 HP there; with it Level 14 measures 2.8 enemies on the screen and 23
   shots a minute at medium, Level 11 2.9 and 14 (the floor: 2.5 and 10), and Level 11's hard run keeps
   all three ships afloat (pending the user's review).
+- 2026-10-19: `small_act_hp.levels` extended to Level 18 (M7 part E, step E2; the user's decision of 2026-10-19:
+  Level 18 meets the Act 2+ pacing and floor rules, round 40 P.e "all later levels"): Needler 12, Stinger 18 HP
+  there, with its waves of firing groups; Levels 15–17 join with their own P.e rework (pending the user's review
+  in round 41).
+- 2026-10-19: **Beam-era HP** (the user's decision of 2026-10-19, "tougher, not more": raise the HP for the beam era
+  so units live long enough to shoot back, instead of step E4's 605 enemies on Level 18; later levels follow the
+  same rule; M7 part E, step E5): `beam_era_hp` ×2 on `small` units from Level 18 (the plan's first Ion Beam), set
+  so a killed small unit lives as long on the screen as on Level 10 (0.9 s → 1.5 s at Level 10's density, Level 10
+  1.6 s). Built for `small` only: doubled, the Dust Devil (vanes) went unkilled at hard and the Wraith broke its
+  rear check; `tiny` gains nothing against the beam (pending the user's review in round 41).
+- 2026-10-19 (user, round 41): the beam-era HP (B.e, `small` units ×2 from Level 18) accepted, all yes.

@@ -1,0 +1,59 @@
+# Ghost Drone stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part E, step E2 (Level 18): the `lane_strafe` movement (drop to a lane, bank, strafe across), the burst fired
+# once per pass by its `trigger` (within 60 px of the ship's x) after the eye-glint `tell`, each shot re-aimed
+# (`reaim`), the hard `second_pass`, and the intel's "unclassified" silhouette until Level 18 is first flown. Loaded
+# and checked in step E2 by content's EnemyData and StormChecks, mapped for the simulation in step E4 (sim: step E3).
+# Defaults of the gap check, pending the user's review in round 41: the lane strafe a movement of the simulation (not
+# authored paths: the split and the second pass are rules of the unit).
+name: Ghost Drone
+faction: Unmarked (Ascendancy)
+layer: air
+tier: small
+size: [40, 40]    # sprite px
+hitbox: [28, 24]
+parts: single
+orientation: 16 angles
+hp: 14
+armour: none
+speed: 180        # px/s, the descent
+machine: true     # the EMP Burst stuns it 3 s: it drifts on its line and fires nothing
+movement:
+  lane_strafe:
+    descent_speed: 180    # px/s down to its lane
+    strafe_speed: 150     # px/s across
+    lane_depth: [120, 220]   # px below the top edge
+    lane_spacing: 40      # px between a wave's lanes
+attacks:
+  - pattern: aimed
+    name: burst
+    bullet: small
+    speed: 210            # px/s, fast
+    burst: 3
+    burst_gap: 0.15       # s between the shots
+    trigger: {within_x: 60}   # once per pass, when it passes within 60 px of the ship's x
+    tell: 0.3             # s of the red eye glint before the first shot
+    reaim: true           # each shot aimed at the ship anew
+    notes:
+      text: 'one {burst}-shot `burst` per pass, fired when it is within {trigger.within_x} px of the ship''s x: a {tell} s red glint on its sensor eye (the tell), then the shots {burst_gap} s apart, each re-aimed at the ship; fast {speed} px/s, `{bullet}` {damage}'
+formations:
+  - {name: line abreast, size: [3, 5]}   # the lanes 40 px apart; splits half left, half right
+  - {name: pincer, size: [4]}            # 2 + 2 entering from the sides at their lanes, warned 3 s ahead
+weak_points:
+  - {name: the red sensor eye}
+drops: []
+traits: [forward, spread, homing]
+bounty: 14
+first_level: 18
+intel: {unclassified_until_flown: true}   # round 36 Q.22h: "unclassified" until Level 18 is first flown
+difficulty:
+  easy: {attacks: {burst: {burst: 2}}}
+  hard: {attacks: {burst: {burst: 4}}, second_pass: true}
+notes:
+  orientation: (it banks into the strafe and faces its direction of travel)
+  speed: descent; strafe {movement.lane_strafe.strafe_speed} px/s
+  movement: 'enters at the top, drops to its lane ({movement.lane_strafe.lane_depth.0}–{movement.lane_strafe.lane_depth.1} px below the top edge) and `strafe`s across to the far side; pincer pairs enter from the sides at their lane (edge-warned 3 s ahead)'
+  formations: (the lanes {movement.lane_strafe.lane_spacing} px apart)
+  weak_points: (drawn only)
+  death: '`small` mechanical burst: sparks, a puff of black smoke, grey fragments (no Vrell ichor)'
+  used_in: introduced in Level 18 (Dust Storm), hint 1 of the twist; as a `small` unit it keeps its HP in every later level
+  difficulty: 'easy: 2-shot burst; hard: 4-shot burst and a second pass for line-abreast drones that survive (they turn at the edge and strafe back once)'

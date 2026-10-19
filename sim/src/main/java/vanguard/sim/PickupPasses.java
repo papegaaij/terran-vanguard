@@ -124,15 +124,89 @@ final class PickupPasses {
     void driftPickups() {
         double distance = rules.pickups().driftSpeed() * SimStep.SECONDS;
         boolean pulling = magnetStep > 0 && s.flying();
+        boolean vortices = s.force.pulls();
         for (int i = pickups.size() - 1; i >= 0; i--) {
             Pickup pickup = pickups.get(i);
-            boolean stays = pulling && pickup.within(ship.x(), ship.y(), magnetRadius)
-                    ? pickup.pull(ship.x(), ship.y(), magnetStep)
-                    : pickup.drift(distance);
+            if (vortices && pickup.heldBy() >= 0) {
+                // M7 part E: a held pickup circles its holder (released at its death, carried off at its escape).
+                Enemy holder = s.force.bySerial(pickup.heldBy());
+                if (holder != null) {
+                    pickup.circle(holder.x(), holder.y());
+                    continue;
+                }
+                pickup.release(pickupTicks);
+            }
+            boolean magnet = pulling && pickup.within(ship.x(), ship.y(), magnetRadius);
+            Enemy vortex = vortices ? strongestPull(pickup) : null;
+            boolean stays;
+            if (vortex != null
+                    && (!magnet || vortex.spec().pull().get().pickupSpeed() * SimStep.SECONDS > magnetStep)) {
+                // M7 part E: the stronger pull wins (the magnet a tie); a pickup it draws in close enough is held.
+                stays = pickup.pull(
+                        vortex.x(), vortex.y(), vortex.spec().pull().get().pickupSpeed() * SimStep.SECONDS);
+                if (pickup.within(vortex.x(), vortex.y(), Pickup.HOLD_RADIUS)) {
+                    pickup.hold(vortex.serial(), vortex.x(), vortex.y());
+                    stays = true;
+                }
+            } else {
+                stays = magnet ? pickup.pull(ship.x(), ship.y(), magnetStep) : pickup.drift(distance);
+            }
             if (!stays) {
                 pickups.free(i);
             } else if (canyon != null) {
                 slideOffRock(pickup);
+            }
+        }
+    }
+
+    /**
+     * M7 part E: the unit whose pull reaches {@code pickup} with the most speed (the first of equals); null for
+     * none. A unit pulls while on the play field and not stunned by the EMP Burst.
+     */
+    private Enemy strongestPull(Pickup pickup) {
+        Enemy strongest = null;
+        double most = 0;
+        Pool<Enemy> enemies = s.force.enemies();
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.spec().pull().isEmpty()
+                    || enemy.empStunned()
+                    || !PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
+                continue;
+            }
+            EnemySpec.Pull pull = enemy.spec().pull().get();
+            if (pull.pickupSpeed() > most && pickup.within(enemy.x(), enemy.y(), pull.pickupRadius())) {
+                strongest = enemy;
+                most = pull.pickupSpeed();
+            }
+        }
+        return strongest;
+    }
+
+    /**
+     * M7 part E (design/enemies/ground/dust-devil, Death): unit {@code holder} died: the pickups it held are loose
+     * again where they circled, each with a whole pickup life ({@link SimEvents.Type#PICKUPS_RELEASED} at it, with
+     * how many, when there was one).
+     */
+    void release(Enemy holder) {
+        int released = 0;
+        for (int i = 0; i < pickups.size(); i++) {
+            Pickup pickup = pickups.get(i);
+            if (pickup.heldBy() == holder.serial()) {
+                pickup.release(pickupTicks);
+                released++;
+            }
+        }
+        if (released > 0) {
+            events.add(SimEvents.Type.PICKUPS_RELEASED, holder.x(), holder.y(), released);
+        }
+    }
+
+    /** M7 part E: unit {@code holder} left the screen alive: the pickups it held go with it. */
+    void carryOff(Enemy holder) {
+        for (int i = pickups.size() - 1; i >= 0; i--) {
+            if (pickups.get(i).heldBy() == holder.serial()) {
+                pickups.free(i);
             }
         }
     }
@@ -197,6 +271,10 @@ final class PickupPasses {
         double radius = rules.pickups().collectionRadius();
         for (int i = pickups.size() - 1; i >= 0; i--) {
             Pickup pickup = pickups.get(i);
+            if (pickup.heldBy() >= 0) {
+                // M7 part E: a held pickup is out of reach until its holder dies.
+                continue;
+            }
             double dx = pickup.x() - ship.x();
             double dy = pickup.y() - ship.y();
             if (dx * dx + dy * dy <= radius * radius) {

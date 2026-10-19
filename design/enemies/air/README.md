@@ -33,7 +33,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | done | final |
 | [lamprey](lamprey/README.md) | Homing eel that latches and drains the shield (L12) | approved | done | final |
 | [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
-| [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | not-started | chosen |
+| [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | in-progress | final |
 | [dust-kite](dust-kite/README.md) | Tiny Martian popcorn glider that rams (L15, M10 = b) | approved | in-progress | final |
 
 ## Roster
@@ -150,6 +150,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; g
 | [concept/dust-kite-r36-b.gif](concept/dust-kite-r36-b.gif) | Dust Kite B — the same scene as A (motion) | chosen (round 36, U.7) |
 | [concept/dust-kite-final-r38-a.png](concept/dust-kite-final-r38-a.png) | Dust Kite final sprites (`tools/art/dust_kite.py`): 16 headings × 4 membrane-flex frames, death spark and dust puff (sheet) | chosen (round 38, F.4: approved as final) |
 | [concept/dust-kite-final-r38-a.gif](concept/dust-kite-final-r38-a.gif) | Dust Kite final: stream, V-wing and swarm from the production frames (motion) | chosen (round 38, F.4: approved as final) |
+| [concept/ghost-drone-final-r41-a.png](concept/ghost-drone-final-r41-a.png) | Ghost Drone final sprites (`tools/art/storm_units.py`, the chosen facet dart a with the U.5 lamps): 16 headings, additive eye/tip glow, EMP lights-out, the glint tell, sparks and smoke death, in / out of the radius (sheet) | chosen (round 41) |
+| [concept/ghost-drone-final-r41-a.gif](concept/ghost-drone-final-r41-a.gif) | Ghost Drone final: a line abreast and a pincer strafing with their glint-told bursts over the storm plain, look b R 170, 15 fps | chosen (round 41) |
 
 ## Implementation
 

@@ -1917,3 +1917,28 @@ Use: the Shellback uncurls. Brief: the plates opening. Why: the curl's scrapes i
 
 ### mars-colony-r40-a — synthesized
 Use: ambience `mars-colony` (Level 17). Brief: the plains wind, the domes' air-plant hum, a distant rail clank. Why: a thinner wind than `mars-dust` (circular noise 100 Hz–2.4 kHz) with slow gusts, a steady 60 Hz hum with partials 2–6, and three soft 900 Hz metal tick pairs per loop, far off. Edit: seamless 16.0 s loop, −36 dB band RMS.
+
+## Concept round 41 (M7 part E, Level 18 "Dust Storm")
+
+All seven are synthesized by `tools/concept/audio/sfx_r41.py` (nothing for CREDITS.md); no bubbly, popping or squelching layers. Proposed (round 41), option a each, pending the user's review. Levels as round 40.
+
+### devil-spin-r41-a — synthesized
+Use: the nearest Dust Devil's spin (a loop). Brief: a whirling wind roar with grit. Why: a band-noise roar whose resonance turns 3 times a loop (channels half a turn apart), a 50–130 Hz rumble, 3–8 kHz grit; 3.0 s seamless loop, −32 dB band RMS. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### devil-open-r41-a — synthesized
+Use: the vanes parting (0.4 s rise and opening). Brief: a gust and a low hollow tone. Why: a rising band-noise gust, five 1–3 kHz vane scrapes, a 110/165/220 Hz hollow tone with a slow attack; 0.7 s, −20 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### devil-spiral-r41-a — synthesized
+Use: the grit spiral (enemy small shot). Brief: a grit hiss. Why: a 2–7 kHz grit hiss with a resonance wandering 3.5 → 1.8 kHz, panned across, 14 sand ticks; 0.45 s, −22 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### ghost-drone-drop-r41-a — synthesized
+Use: the Ghost Drone dropping into the lane. Brief: a clean turbine whine descending; built, not grown. Why: a harmonic set gliding 1100 → 520 Hz, smooth attack, faint air hiss; 0.9 s, −24 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### ghost-drone-glint-r41-a — synthesized
+Use: the 0.3 s eye glint. Brief: a short electronic lock tick. Why: two inharmonic pings (2.6 and 3.9 kHz, 2 ms attack, 60 ms decay); 0.15 s, −24 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### ghost-drone-burst-r41-a — synthesized
+Use: the Ghost Drone's burst. Brief: three dry precise shots (human guns, not Vrell). Why: a snap, a 1.5–4 kHz crack and a 150–400 Hz body each, 65 ms apart, no tail; 0.35 s, −21 dB (the −4 dBFS ceiling limits the level). Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+### ghost-drone-death-r41-a — synthesized
+Use: the Ghost Drone's death, `small` explosion rung. Brief: a mechanical break-up, sparks and metal. Why: a dry 100–300 Hz thud and snap, nine inharmonic metal pieces, 70 spark grains of 2.5–9 kHz, no fireball rumble; 0.8 s, −19 dB. Edit: ceiling −4 dBFS (loops −1 dBFS).

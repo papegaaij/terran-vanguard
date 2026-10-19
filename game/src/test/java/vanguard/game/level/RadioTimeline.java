@@ -71,6 +71,7 @@ abstract class RadioTimeline {
     static final String LEVEL_15 = "act-3-red-dust/level-15-olympus-descent";
     static final String LEVEL_16 = "act-3-red-dust/level-16-valles-canyon-run";
     static final String LEVEL_17 = "act-3-red-dust/level-17-dome-siege";
+    static final String LEVEL_18 = "act-3-red-dust/level-18-dust-storm";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -298,9 +299,24 @@ abstract class RadioTimeline {
                                 new Event(159, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         // M7 part D: Level 17's events: the domes' first hits and losses by name (Bradbury enters at t=38,
         // Lowell 46, Schiaparelli 104, Burroughs 110, Eden 126; the hooked bombers from t=36.5, the t=46.5
-        // Shellback's lobs and roll on Lowell), the seed vault under its frame (t≈76), the untouched
-        // secondary as Eden passes (t≈135.8) in a run without a hit, and a run that loses every dome
+        // Shellback's lobs and roll on Lowell), the first Herald's first ring (round 40: Varga's line, t≈55.8), the
+        // seed vault under its frame (t≈76), the untouched secondary as Eden passes (t≈135.8) in a run without a
+        // hit, and a run that loses every dome
         runs.put(LEVEL_17, level17Runs());
+        // M7 part E: Level 18's events: the rover wreck (x 60, t≈90) shot as it enters under Rook's t=86 line, just
+        // before Varga's t=93 line or late as it passes; the kill-ratio secondary judged at the level's end (t=183)
+        runs.put(
+                LEVEL_18,
+                List.of(
+                        List.of(),
+                        List.of(new Event(89.5, CueTrigger.SECRET, "rover wreck")),
+                        List.of(
+                                new Event(92, CueTrigger.SECRET, "rover wreck"),
+                                new Event(183, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(
+                                new Event(96, CueTrigger.SECRET, "rover wreck"),
+                                new Event(183, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(183, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         return runs;
     }
 
@@ -310,12 +326,14 @@ abstract class RadioTimeline {
         return List.of(
                 List.of(),
                 List.of(
+                        new Event(55.8, CueTrigger.FIRST_RING, ""),
                         new Event(76.5, CueTrigger.SECRET, "seed vault"),
                         new Event(136, CueTrigger.SECONDARY_OBJECTIVE, "")),
                 List.of(
                         Event.named(41, hit, "Bradbury"),
                         Event.named(47, hit, "Lowell"),
                         Event.named(50, lost, "Lowell"),
+                        new Event(55.8, CueTrigger.FIRST_RING, ""),
                         new Event(78, CueTrigger.SECRET, "seed vault")),
                 List.of(
                         Event.named(48.5, hit, "Lowell"),

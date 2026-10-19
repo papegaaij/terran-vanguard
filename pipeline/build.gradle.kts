@@ -182,7 +182,8 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // the Choir Herald's song, aura, absorb and collapse, the Shellback's walk, lob, curl, roll and uncurl,
         // the `mars-colony` ambience; all synthesized).
         "dome-hit-r40-a.ogg",
-        "dome-break-r40-a.ogg",
+        // The dome break: round 40's redo c, chosen in round 41 (S.h, 2026-10-19).
+        "dome-break-r40-c.ogg",
         "herald-song-r40-a.ogg",
         "herald-aura-r40-a.ogg",
         "aura-absorb-r40-a.ogg",
@@ -193,6 +194,18 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "shellback-roll-r40-a.ogg",
         "shellback-uncurl-r40-a.ogg",
         "mars-colony-r40-a.ogg",
+        // M7 part E, Level 18: the `mars-storm` bed chosen in round 36 (S.5 = a, "recorded front": a sandstorm over
+        // a furious low howl, CC0 + CC-BY, seamless 16 s loop).
+        "dust-storm-bed-r36-a.ogg",
+        // M7 part E, Level 18: round 41's unit proposals, option a until the user's choice (the Dust Devil's spin
+        // loop, opening and grit spiral, the Ghost Drone's drop, glint, burst and death; all synthesized).
+        "devil-spin-r41-a.ogg",
+        "devil-open-r41-a.ogg",
+        "devil-spiral-r41-a.ogg",
+        "ghost-drone-drop-r41-a.ogg",
+        "ghost-drone-glint-r41-a.ogg",
+        "ghost-drone-burst-r41-a.ogg",
+        "ghost-drone-death-r41-a.ogg",
     )
 }
 
@@ -241,6 +254,11 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         "choir-descends-full-r08-a.ogg=choir-descends.ogg",
         "act-complete-r08-a.ogg=act-complete.ogg",
         "debrief-theme-r40-b.ogg=debrief-theme.ogg",
+        // M7 part E: track 9 "Grey Signal" (round 41 a, proposed) and its base and motif stems, one render,
+        // sample-aligned (LOOPSTART 349272, LOOPLENGTH 7451136).
+        "grey-signal-r41-a.ogg=grey-signal.ogg",
+        "grey-signal-base-r41-a.ogg=grey-signal-base.ogg",
+        "grey-signal-motif-r41-a.ogg=grey-signal-motif.ogg",
     )
 }
 

@@ -109,13 +109,13 @@ pips and the debrief's row `DOMES UNTOUCHED n / 5`; `{ally}` is the dome's name 
 The five domes (the data's `allies.units`: each enters at the top edge at its t, its bottom edge
 there, and scrolls with the ground; the times below are from the scroll without the 2 s eases):
 
-| Dome | x (px) | Section | Enters the top edge | Centre passes y≈160 | Leaves the bottom edge |
+| Dome | x (px) | Section | Enters the top edge | Centre passes y≈220 (the bombers' row) | Leaves the bottom edge |
 |---|---|---|---|---|---|
-| Bradbury | 130 | 2 (80 px/s) | t=38 | t≈40.8 | t≈46.3 |
-| Lowell | 350 | 2 | t=46 | t≈48.8 | t≈54.3 |
-| Schiaparelli | 110 | 4 (70 px/s) | t=104 | t≈107.1 | t≈113.4 |
-| Burroughs | 370 | 4 | t=110 | t≈113.1 | t≈119.4 |
-| Eden (144 px) | 240 | 4 | t=126 | t≈129.3 | t≈135.8 |
+| Bradbury | 130 | 2 (80 px/s) | t=38 | t≈41.5 | t≈46.3 |
+| Lowell | 350 | 2 | t=46 | t≈49.5 | t≈54.3 |
+| Schiaparelli | 110 | 4 (70 px/s) | t=104 | t≈108.0 | t≈113.4 |
+| Burroughs | 370 | 4 | t=110 | t≈114.0 | t≈119.4 |
+| Eden (144 px) | 240 | 4 | t=126 | t≈130.2 | t≈135.8 |
 
 (x from the play field's left edge, y below its top edge.)
 
@@ -123,14 +123,14 @@ there, and scrolls with the ground; the times below are from the scroll without 
 
 Per unit type (the data's `allies.targeted_by`, as Level 13's: every Spore Bomber and Shellback wave
 is hooked, the hooked rows in *Waves*; easy unhooks the Shellbacks); the popcorn, the Needlers, the
-Stingers, the Mantises, the Herald and the ground nests are never hooked. The hooked bombers hold the
-row 160 px below the top edge (`bomb_row`), a wave's bombers on x slots 40 px apart round the dome's
-x (`bomb_slot`).
+Stingers, the Mantises, the Herald and the ground nests are never hooked. The hooked bombers from the
+front hold the row 220 px below the top edge (`bomb_row`; 160 until round 40 R.b), a wave's bombers on x
+slots 40 px apart round the dome's x (`bomb_slot`); the side pairs keep their entry row, 140 px.
 
 | Units | Mode | Exact rule (our reading, for review) |
 |---|---|---|
-| Spore Bombers (hooked waves) | `always` | The bomber's `strafe` holds a row at y≈140–200 and steers (at its 45 px/s) to the x of the next dome coming down; when the dome's footprint passes beneath it, it drops its load: **one hit**, once per bomber. It then flies on, laying its normal spore mines on the ship's plane. Each hooked wave enters ≈ 5 s before its dome's centre reaches the bombers' row: the kill window |
-| Shellbacks (hooked) | `alternate` | Every second mortar lob goes at the nearest dome while it is closer than the ship (the marker on the dome, 1.2 s ahead); a direct hit is one hit. Destroying the vent ends it. Its **roll** (once, at ≤ 40 % body HP, 350 px along its path) crosses a dome below it when it curls within 350 px: the player who wounds a Shellback just behind a dome should finish it, or wait until it is past |
+| Spore Bombers (hooked waves) | `always` | The bomber's `strafe` holds a row at y≈140–220 and steers (at its 45 px/s) to the x of the next dome coming down; when the dome's footprint passes beneath it, it drops its load: **one hit**, once per bomber. It then flies on, laying its normal spore mines on the ship's plane. Each hooked wave enters ≈ 5 s before its dome's centre reaches the bombers' row: the kill window |
+| Shellbacks (hooked) | `alternate` | Every second mortar lob goes at the nearest dome while it is closer than the ship (the marker on the dome, 1.2 s ahead); a direct hit is one hit. Destroying the vent ends it; a shot whose line crosses the vent hits it first, from any side (round 40 R.a). The walks pass **between the domes** (round 40 R.c): down a dome's ring lane, the body clear of the glass (its hit box), then aside before coming level. Its **roll** (once, at ≤ 40 % body HP, up to 350 px along its path, shorter near the bottom: R.e) crushes a dome whose **footprint** the ball touches, one hit per roll: set off on the ring lane behind a dome, it grazes the dome's ring. The player who wounds a Shellback just behind a dome should wait until it has stepped aside, then finish it |
 | Choir Herald | — | Not hooked itself; at t=124 it holds over Eden's lane and its aura rings the hooked bombers beside it (a bomber's 63 HP plus a 40 ring) |
 
 ## Layout
@@ -194,18 +194,18 @@ with a `bounty_scale` (see *Credit budget*).
 | 26.5 | 1 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | Gone before the Shellback's quiet window |
 | 30.5 | 2 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | front | **New.** Alone until t=34 (no dome on the screen yet: nothing for its hooked mortar); Varga's line at t=29 |
 | 34 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | Down the left edge, clear of the bombers |
-| 35.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | **Hooked** (`always`): hang at y≈160 over Bradbury's lane (x 130); Bradbury's centre passes their row at t≈40.8; Varga's line at t=36.5 |
+| 35.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | **Hooked** (`always`): hang at y≈220 over Bradbury's lane (x 130); Bradbury's centre passes their row at t≈41.5; Varga's line at t=36.5 |
 | 38.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Down the right lane |
 | 42 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | |
 | 43.5 | 2 | stream | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | right side | **Hooked**: in at y 140 from the right edge, 1 s apart, over Lowell (x 350; its centre passes at t≈48.8); warned 3 s ahead |
-| 46.5 | 2 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | front | **Hooked**: walks down 160 px behind Lowell; a roll within 350 px of the dome reaches it |
+| 46.5 | 2 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | front | **Hooked**: walks down beside Lowell's ring from 130 px behind it, then steps aside between the domes; a roll set off before it steps aside grazes the ring |
 | 48.5 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
 | 52 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Gone before the Herald's quiet window; Lowell leaves at t≈54.3 |
-| 55.5 | 2 | carrier + escorts | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Needler](../../../enemies/air/needler/README.md) | 1 + 4 | front | **New.** The Herald with 4 Needlers in `orbit`, ringed while inside its 90 px; alone until t=59 (no dome on the screen); Varga's line at t=55.5 |
+| 55.5 | 2 | carrier + escorts | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Needler](../../../enemies/air/needler/README.md) | 1 + 4 | front | **New.** The Herald with 4 Needlers in `orbit`, ringed while inside its 90 px, in at 50 px/s (round 40); alone until t=59 (no dome on the screen); Varga's line at its first ring |
 | 59 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (right) | |
 | 62.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
 | 66 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 69.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
+| 69 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 72.5 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Over the burnt outer greenhouses |
 | 77 | 3 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 8 | front | **The Helix beat**: the swarm's route bends round the compound's fence (x 300–460) and closes up below it; nothing fires on the compound |
 | 81.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (left) | Down the left half, away from the compound |
@@ -214,14 +214,14 @@ with a `bounty_scale` (see *Credit budget*).
 | 91.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 95 | 3 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | One per edge, hover 6 s; Rook's flank bark at t=95 |
 | 100 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | The inner ring comes into view |
-| 102 | 4 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | **Hooked**: over Schiaparelli (x 110; its centre passes at t≈107.1) |
+| 102 | 4 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | **Hooked**: over Schiaparelli (x 110; its centre passes their row at t≈108.0) |
 | 105.5 | 4 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | Down the right half |
 | 108.5 | 4 | stream | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | right side | **Hooked**: over Burroughs (x 370; its centre passes at t≈113.1); warned 3 s ahead |
-| 111 | 4 | convoy | [Shellback](../../../enemies/ground/shellback/README.md) | 2 | front | **Hooked**: walk down 3 s apart behind Burroughs; their rolls never overlap |
+| 111 | 4 | convoy | [Shellback](../../../enemies/ground/shellback/README.md) | 2 | front | **Hooked**: walk down 3 s apart beside Burroughs' ring, then step aside between the domes; their rolls never overlap |
 | 114.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
 | 118 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
 | 121 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Gone before the Herald holds over Eden's lane |
-| 124 | 4 | carrier + escorts + line abreast | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 1 + 3 | front | The Herald holds over Eden's lane (x 240) with three **hooked** bombers under its rings (a line abreast on its slots, inside the 90 px): over Eden (its centre passes at t≈129.3); Varga's line at t=123 |
+| 124 | 4 | carrier + escorts + line abreast | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 1 + 3 | front | The Herald holds over Eden's lane (x 240) with three **hooked** bombers under its rings (a line abreast on its slots, inside the 90 px): over Eden (its centre passes their row at t≈130.2); Varga's line at t=123 |
 | 126 | 4 | stream | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | left side | Hard only: an extra **hooked** pair from the left edge over Eden, warned |
 | 127.5 | 4 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | right side | **Hooked**: walks in from the right edge toward Eden; warned 3 s ahead |
 | 127.5 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | Clear of the Herald's ring |
@@ -283,7 +283,9 @@ timed line holds the radio for the longer of its voice and its text, 5 s for the
 for each page before it with the text typed at 30 characters a second, then 0.4 s of silence; no
 timed line more than 1 s late). The times below start every line after the one before has closed
 (as text; the voiced check runs when the takes exist). Event lines drop after 6 s. Rook's lines
-carry `requires: escort`; his one dry joke is at t=143.
+carry `requires: escort`; his one dry joke is at t=143. Varga's line about the Herald's rings is the
+event `first-ring` (round 40 K.a; it was timed at t=57.5 and came after the Herald was shot): it starts
+in the step the first Herald rings its escorts as it reaches the top edge (t≈55.8).
 
 **The colony's voice: Ares Control**, [Level 15](../level-15-olympus-descent/README.md#radio-chatter)'s
 speaker (no new speaker here): the colonist who runs Ares Landing's flight control and, in the
@@ -300,7 +302,6 @@ prompts for both.
 | t=29 | Varga | "Shelled walker. Hit the lime vent; when it curls up, wait." |
 | t=36.5 | Varga | "Bombers on the domes! Get them before they're over the glass." |
 | t=47 | Generic colonial (Ares Control) | "Bradbury and Lowell grow our food, Aegis. Every pane counts." |
-| t=57.5 | Varga | "That flyer is singing shields onto the others. See the rings? Kill the singer first." |
 | t=71 | Generic colonial (Ares Control) | "Outer greenhouses are gone. The inner ring is still sealed." |
 | t=78 | Varga | "Commander, they have not touched a single Helix facility. Not one." |
 | t=88.5 | Okafor | "Not on this channel, Doctor." |
@@ -310,6 +311,7 @@ prompts for both.
 | t=130.5 | Generic colonial (Ares Control) | "Eden is under you. Everything we grow is under that glass." |
 | t=143 | Rook | "If we save the greenhouse, I'm owed a tomato." |
 | t=150 | Okafor | "Ares Landing holds. Clear the spaceport, Aegis, then set down." |
+| The first Herald's first ring (`first-ring`, round 40) | Varga | "That flyer is singing shields onto the others. See the rings? Kill the singer first." |
 | A dome's first hit (`ally-hit`) | Generic colonial (Ares Control) | "{ally} is hit! The glass is holding... for now." |
 | A dome breaks (`ally-lost`) | Generic colonial (Ares Control) | "We've lost {ally}. Its people are below. Its crops aren't." |
 | Secondary met (`secondary-objective`) | Generic colonial (Ares Control) | "Five domes, not a crack. Fine. Earth can stay for dinner." |
@@ -404,9 +406,10 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 - [x] Secondary `untouched` "No dome hit": failed at the first hit, met when Eden leaves; 100 in
       Act 1 terms; the `DOMES` tracker and the debrief row `DOMES UNTOUCHED n / 5` (`UntouchedTest`,
       `LevelScreenSiegeTest`; both in the capture)
-- [ ] The dome secondary measured with the autopilot over several seeds, as Level 11's convoy: the
+- [x] The dome secondary measured with the autopilot over several seeds, as Level 11's convoy: the
       hits per dome and the hooked waves tuned so a careful pilot keeps every dome about half the
-      time at medium (step D4 measured it: 8/8 on easy, 0/8 at medium and hard; see Decisions)
+      time at medium (step D4 measured it: 8/8 on easy, 0/8 at medium and hard; step D6 after round
+      40's fixes, the bombers' row 160 → 220: easy 8/8, medium 5/8, hard 5/8; `Level17Test`)
 - [x] Wave script: ≥ 55 enemies a minute at medium (`DensityTest`: 70.4), no empty screen over 3 s
       (`PacingTest`), the two quiet windows (`Level17Test`), edge warnings for the side waves
 - [x] The Helix compound set piece (backdrop) with the t=77 swarm's route bending round it
@@ -430,17 +433,28 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
       flies every difficulty without Rook only, the capture flew medium with him)
 - [x] Production art and captures for part D's round (steps ART-D and D5; round 40: the art approved as final, `art`
       stays `chosen` until the dome-break redo (S.b) and the part D fixes below land)
-- [ ] Part D fixes (round 40 K.a, the user's note: "The second shell creature rolls over a dome and again some time
+- [x] Part D fixes (round 40 K.a, the user's note: "The second shell creature rolls over a dome and again some time
       later. That shouldn't happen. The radio about the shield formation is too late, it is spoken after they are all
       destroyed. The shell creatures seem too strong. None are destroyed."): the Shellbacks no longer roll over a dome
       twice, the shield-formation radio line is spoken before the Herald's shields are shot, the Shellbacks are
-      weaker so a careful pilot destroys them
-- [ ] R.a: a shot inside the Shellback vent's hit box hits the vent first, from any side (the radio's "Hit the lime vent")
-- [ ] R.b: re-measure the dome secondary with the autopilot over several seeds after R.a (it was 0 / 8 on medium and hard)
-- [ ] R.c: route the Shellbacks' walks between the domes, not across their glass
-- [ ] R.d: the first Choir Herald (t=55.5) enters higher or slower so its rings are seen
-- [ ] R.e: a Shellback shot near the bottom of the screen rolls a shorter way, so its belly window shows
-- [ ] R.f (decided: keep): the dome `ally-hit` / `ally-lost` lines stay event lines (wait for a gap, dropped after 6 s)
+      weaker so a careful pilot destroys them (step D6: one roll per Shellback, its walk clear of the glass,
+      `theShellbacksWalkBetweenTheDomes`; the line on the Herald's first ring, `first-ring`,
+      `theFirstHeraldComesInSlowlyAndVargasLineStartsAtItsFirstRing`; body 90, vent 16, curl and uncurl 0.4 s:
+      the autopilot kills 40/40 on easy, 37/40 at medium, 30/40 on hard over 8 seeds)
+- [x] R.a: a shot inside the Shellback vent's hit box hits the vent first, from any side (the radio's "Hit the lime vent")
+      (step D6: a bolt over the body whose line of flight crosses the vent's box, a beam whose column crosses it;
+      `ShellbackTest`; the autopilot shoots every vent at medium, 40/40)
+- [x] R.b: re-measure the dome secondary with the autopilot over several seeds after R.a (it was 0 / 8 on medium and hard;
+      step D6: with R.a, R.c-R.e and the weaker Shellback still 0/8 at medium, every first hit a bomb on Eden; the bombers'
+      row 160 → 200 → 220 in two passes: medium 3/8, then 4/8; with the t=69 swarm (below) medium 5/8, hard 5/8, easy 8/8)
+- [x] R.c: route the Shellbacks' walks between the domes, not across their glass (step D6: the t=46.5 and t=111 paths
+      down the dome's ring lane, then aside; `SiegeChecks`' walk rule, `SiegeDataTest`; `theShellbacksWalkBetweenTheDomes`)
+- [x] R.d: the first Choir Herald (t=55.5) enters higher or slower so its rings are seen (step D6: in at 50 px/s, the
+      wave's `speed`; its first ring at t≈55.8, the autopilot shooting it first downs it at t≈57.4)
+- [x] R.e: a Shellback shot near the bottom of the screen rolls a shorter way, so its belly window shows (step D6: the
+      roll's `belly_row` 200 px; `ShellbackTest`, `aShellbacksRollCrushesTheDomeAheadOfIt`)
+- [x] R.f (decided: keep): the dome `ally-hit` / `ally-lost` lines stay event lines (wait for a gap, dropped after 6 s)
+      (unchanged; `RadioTimelineLevel17Test`)
 - [ ] The dome-break sound redone as a rumble from a cave-in or collapse recording (S.b, step AUD-S)
 
 ## Open questions
@@ -519,3 +533,21 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   (a shot inside the vent's box hits the vent first), R.b re-measure the secondary after R.a, R.c route the walks between
   the domes, R.d the first Herald enters higher or slower, R.e roll a shorter way near the bottom, R.f keep the dome lines
   as they are.
+- 2026-10-19 (step D6, round 40's fixes, pending the user's review): **K.a / R.c** the rule chosen: a Shellback
+  walks between the domes (its body's hit box never over a dome's hit box, the glass; `SiegeChecks` checks every
+  walker with a roll), and its roll, once per Shellback, crushes a dome whose **footprint** (the concrete ring) the
+  ball touches, one hit (the dome's `rolls: crossing its footprint`; it was the hit box). The t=46.5 and t=111
+  Shellbacks walk down the dome's ring lane 90 px to its left from 130 px behind it, then step aside 50 px short of
+  level: a roll set off on the ring lane grazes the ring, one set off after the step aside misses it, so a careful
+  pilot shoots the vent, waits for the step aside and finishes it (a walk beside the dome all the way would keep the
+  threat for its whole pass at 24 px/s); the t=127.5 path never comes near Eden (its lobs remain). The convoy's
+  `interval: 3` now applies (walkers ignored it: 1.5 s). **K.a** weaker: body 120 → 90, vent 24 → 16, curl and
+  uncurl 0.6 → 0.4 s; Varga's ring line the new event `first-ring`. **R.a**: a shot over the body whose line of
+  flight crosses the vent's box (a beam whose column crosses it) hits the vent. **R.d**: the first Herald's wave
+  in at 50 px/s (its `speed`). **R.e**: the roll's new `belly_row` (200 px): a roll drifting down the screen ends
+  where the scroll would carry it below that row before its uncurl ends. **R.b**: medium 0/8 → bombers' row
+  (`bomb_row`) 160 → 200 (3/8) → 220 (4/8; hard 3/8, easy 8/8); then the t=69.5 Mote Swarm moved to t=69 for
+  `PacingTest` on easy (the autopilot clears the t=66 Needlers sooner now: 3.0 s empty), and the final runs give
+  medium 5/8, hard 5/8, easy 8/8 (the autopilot is chaotic: a 0.5 s move changes its runs). The dome table and the hooked waves' notes
+  give the centres' times at the new row.
+- 2026-10-19 (user, round 41): Level 17's round 40 fixes (L.a, step D6, (a)-(g)) accepted, all yes. S.h = c: the dome-break redo is option c (the low-passed building collapse over a crust rumble with glass smash); step FXS wires it, so its checklist item stays open until then.

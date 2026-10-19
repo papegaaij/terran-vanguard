@@ -30,7 +30,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [tendril-anchor](tendril-anchor/README.md) | Wall anchor pairs with a damaging tendril barrier; beam burns through (L16) | approved | done | final |
 | [threadcrawler](threadcrawler/README.md) | Ground centipede chain on canyon floors and walls, travelling spore wave (L16) | approved | done | final |
 | [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | final |
-| [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | not-started | chosen |
+| [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | not-started | chosen |
 
 ## Roster
@@ -145,6 +145,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian
 | [concept/shellback-final-r40-a.png](concept/shellback-final-r40-a.png) | Shellback final sprites (`tools/art/siege_units.py`, the chosen r05 a): 16 headings × 6 walk, curl, roll, vent swell and burst vent, belly glow, husk (sheet) | chosen (round 40, F.c: approved as final) |
 | [concept/shellback-final-r40-a.gif](concept/shellback-final-r40-a.gif) | Shellback final: walk, vent swell, curl, roll, uncurl with the belly glowing, 10 fps | chosen (round 40, F.c: approved as final) |
 | [concept/warden-tank-r36-a.gif](concept/warden-tank-r36-a.gif) | Warden Tank, unmarked grey — on a dirt road on Mars (motion) | chosen (round 36, U.6: the unmarked grey livery) |
+| [concept/dust-devil-final-r41-a.png](concept/dust-devil-final-r41-a.png) | Dust Devil final sprites (`tools/art/storm_units.py`, the chosen r06 a): closed spin, rise, open with the lime core, core glow, grit swirls, in / out of the radius, collapse, death light, grit cloud (sheet) | chosen (round 41) |
+| [concept/dust-devil-final-r41-a.gif](concept/dust-devil-final-r41-a.gif) | Dust Devil final: two devils cycling on the eye's dry lake, the grit spiral, pickups pulled in, one killed in its window, 15 fps | chosen (round 41) |
 
 ## Implementation
 

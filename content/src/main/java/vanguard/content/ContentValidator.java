@@ -36,6 +36,7 @@ final class ContentValidator {
         checkItems();
         checkWingmen();
         checkSmallActHp();
+        checkBeamEraHp();
         content.enemies().values().forEach(this::checkEnemy);
         content.levels().values().forEach(this::checkLevel);
         content.levels().forEach(this::checkAct);
@@ -57,6 +58,23 @@ final class ContentValidator {
             if (!content.enemyBasis().referenceDps().containsKey(level)) {
                 problem(content.enemyBasis(), "small_act_hp.levels", "Level " + level + " has no reference DPS");
             }
+        }
+    }
+
+    /**
+     * M7 part E (step E5): the basis's {@code beam_era_hp} starts at a level with a reference DPS and lists size tiers
+     * below {@code huge} (the set pieces keep the HP their arenas set).
+     */
+    private void checkBeamEraHp() {
+        EnemyBasisData.BeamEraHp era = content.enemyBasis().beamEraHp();
+        if (!content.enemyBasis().referenceDps().containsKey(era.fromLevel())) {
+            problem(
+                    content.enemyBasis(),
+                    "beam_era_hp.from_level",
+                    "Level " + era.fromLevel() + " has no reference DPS");
+        }
+        if (era.tiers().isEmpty() || era.tiers().contains(Tier.HUGE)) {
+            problem(content.enemyBasis(), "beam_era_hp.tiers", "one or more tiers below huge");
         }
     }
 
@@ -238,6 +256,7 @@ final class ContentValidator {
         PartHChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         TerrainChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         SiegeChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
+        StormChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         enemy.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
                 .flatMap(EnemyData.Hook::leadsTargetIn)
@@ -584,6 +603,7 @@ final class ContentValidator {
         PartHChecks.level(content, level, (field, message) -> problem(level, field, message));
         TerrainChecks.level(content, level, (field, message) -> problem(level, field, message));
         SiegeChecks.level(content, level, (field, message) -> problem(level, field, message));
+        StormChecks.level(content, level, (field, message) -> problem(level, field, message));
         checkArenaLevel(level);
         new BackdropCheck(level, (field, message) -> problem(level, field, message)).run();
     }
@@ -1508,6 +1528,12 @@ final class ContentValidator {
                 .anyMatch(wave -> wave.loopBack().isPresent()
                         && wave.groupList().stream()
                                 .anyMatch(group -> group.formation().equals("swarm")));
+        // M7 part D: an aura enemy (the Choir Herald) in a wave.
+        boolean sings = level.waves().stream()
+                .flatMap(wave -> wave.groupList().stream())
+                .anyMatch(group -> content.enemies().containsKey(group.enemy())
+                        && content.enemy(group.enemy()).attacks().stream()
+                                .anyMatch(attack -> attack.aura().isPresent()));
         // M7 part B: a burrowing enemy (the Burrower) in a wave.
         boolean burrows = level.waves().stream()
                 .flatMap(wave -> wave.groupList().stream())
@@ -1527,6 +1553,8 @@ final class ContentValidator {
                 problem(level, field, "first-loop-back in a level without a swarm that loops back");
             } else if (event == LevelData.CueEvent.FIRST_SURFACING && !burrows) {
                 problem(level, field, "first-surfacing in a level without a burrowing enemy");
+            } else if (event == LevelData.CueEvent.FIRST_RING && !sings) {
+                problem(level, field, "first-ring in a level without an aura enemy");
             }
         }
         if (!level.noSurfaceZones().isEmpty() && !burrows) {

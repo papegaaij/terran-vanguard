@@ -4,7 +4,9 @@ import vanguard.sim.Command;
 import vanguard.sim.Debris;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyBullet;
+import vanguard.sim.EnemySpec;
 import vanguard.sim.GroundObject;
+import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.Lob;
 import vanguard.sim.Mine;
@@ -246,11 +248,17 @@ public final class Autopilot {
             if (!enemy.cloaked()
                     && !enemy.growing()
                     && enemy.layer().touchable()
+                    && !closedVortex(enemy)
                     && y < PlayField.HEIGHT - 10
                     && y > shipY + 40
                     && (lowest == null || y < lowest.renderY(1))) {
                 lowest = enemy;
             }
+        }
+        Enemy core = openVortex(sortie, shipY);
+        if (core != null) {
+            // M7 part E: a Dust Devil rising or open (Level 18): its core in the short window, from below its pull.
+            lowest = core;
         }
         Enemy maw = burrower(sortie, shipY);
         if (maw != null) {
@@ -359,6 +367,39 @@ public final class Autopilot {
             targetY = Math.clamp(sondes.y(sonde), 40, Math.max(40, targetY));
         }
         return commands | steer(shipX, shipY, clearOfRail(sortie, leanX(sortie, targetX)), targetY);
+    }
+
+    /**
+     * M7 part E (design/campaign Level 18; Varga: "Shoot the core when the spin opens"): a Dust Devil with its vanes
+     * closed is no target (every shot glances off, and lining up under it holds the ship in its pull); a rising one
+     * is, and one in the second half of its closed time, so the ship stands under it when the core opens ({@link
+     * #openVortex}: the lowest of them above the ship comes first).
+     */
+    /** M7 part E: from this share of a Dust Devil's closed time on it lines up under it for the window. */
+    private static final double VORTEX_LINE_UP = 0.5;
+
+    private static Enemy openVortex(Sortie sortie, double shipY) {
+        Enemy best = null;
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            double y = enemy.renderY(1);
+            if (enemy.spec().vortex().isPresent()
+                    && enemy.hp() > 0
+                    && !closedVortex(enemy)
+                    && y < PlayField.HEIGHT - 10
+                    && y > shipY + 40
+                    && (best == null || y < best.renderY(1))) {
+                best = enemy;
+            }
+        }
+        return best;
+    }
+
+    private static boolean closedVortex(Enemy enemy) {
+        return enemy.spec().vortex().isPresent()
+                && enemy.armoured()
+                && enemy.vortexPhase() != Enemy.VortexPhase.RISING
+                && !(enemy.vortexPhase() == Enemy.VortexPhase.CLOSED && enemy.vortexProgress() > VORTEX_LINE_UP);
     }
 
     /**
@@ -787,8 +828,11 @@ public final class Autopilot {
         return best;
     }
 
-    /** M7 part D: a Shellback's roll reaches a dome whose centre lies within this many px of it (350 px + margins). */
-    private static final double ROLL_REACH = 450;
+    /** M7 part D: px of margin round a Shellback's roll's reach of a dome's footprint. */
+    private static final double ROLL_MARGIN = 8;
+
+    /** M7 part D, round 40 R.a: the ship within this many px of a standing vent's x shoots the vent only. */
+    private static final double VENT_ALIGNED = 6;
 
     /** M7 part D: half the width of the ship's fire column the autopilot keeps a Shellback out of, px. */
     private static final double FIRE_COLUMN = 70;
@@ -809,21 +853,38 @@ public final class Autopilot {
                     || enemy.renderY(1) > PlayField.HEIGHT + 40) {
                 continue;
             }
-            if (domeInReach(sortie, enemy)) {
+            if (domeInReach(sortie, enemy) && !(enemy.partAlive() && Math.abs(enemy.partX() - shipX) < VENT_ALIGNED)) {
+                // round 40 R.a: under its standing vent the shots hit the vent first, which sets off no roll
                 return true;
             }
         }
         return false;
     }
 
-    /** M7 part D: whether a standing dome lies within {@code enemy}'s roll's reach. */
+    /**
+     * M7 part D: whether a standing dome lies within {@code enemy}'s roll's reach if it curled now: its ball (rolling
+     * down its path, here taken as straight down the screen) would touch the dome's footprint before the roll ends,
+     * at its full length or (round 40 R.e) where its belly row ends it near the bottom.
+     */
     private static boolean domeInReach(Sortie sortie, Enemy enemy) {
+        EnemySpec.Roll roll = enemy.spec().roll().orElseThrow();
+        double scroll = sortie.groundSpeed();
+        double start = enemy.renderY(1) - scroll * roll.curlSeconds();
+        double drop = roll.rollSeconds() * (roll.rollSpeed() + scroll);
+        if (roll.bellyRow() > 0) {
+            drop = Math.min(drop, Math.max(0, start - roll.bellyRow() - scroll * roll.uncurlSeconds()));
+        }
+        double length = drop * roll.rollSpeed() / (roll.rollSpeed() + scroll);
         for (int k = 0; k < sortie.allyCount(); k++) {
-            if (sortie.ally(k).alive()
-                    && Math.hypot(
-                                    sortie.ally(k).renderX(1) - enemy.renderX(1),
-                                    sortie.ally(k).renderY(1) - enemy.renderY(1))
-                            < ROLL_REACH) {
+            if (!sortie.ally(k).alive()) {
+                continue;
+            }
+            Hitbox footprint = sortie.allySpec(k).size();
+            double reachX = (roll.ball().width() + footprint.width()) / 2 + ROLL_MARGIN;
+            double reachY = (roll.ball().height() + footprint.height()) / 2 + ROLL_MARGIN;
+            double dx = sortie.ally(k).renderX(1) - enemy.renderX(1);
+            double dy = sortie.ally(k).renderY(1) - enemy.renderY(1);
+            if (Math.abs(dx) < reachX && dy < reachY && dy > -(length + reachY)) {
                 return true;
             }
         }
@@ -880,7 +941,7 @@ public final class Autopilot {
                 }
             } else if (enemy.spec().roll().isPresent()
                     && !enemy.armoured()
-                    && !(rollPending(enemy) && domeInReach(sortie, enemy))
+                    && !(rollPending(enemy) && domeInReach(sortie, enemy) && !enemy.partAlive())
                     && (shellback == null || y < shellback.renderY(1))) {
                 shellback = enemy;
             }

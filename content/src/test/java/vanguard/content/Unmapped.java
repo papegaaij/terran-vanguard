@@ -8,7 +8,10 @@ import java.util.Set;
  * crawlers and its {@code first-wall-contact} cue ({@link TerrainRules}). M7 part D (step D2): Level 17 Dome Siege
  * (its {@code allies} block, the {@code untouched} secondary, a pickup's {@code dropped_by.enemy}, {@code flak}) and
  * the Choir Herald ({@code aura}) and the Shellback ({@code roll}, a non-boss unit's parts), until step D4 mapped them
- * ({@link SiegeRules}). Empty: every level and stat block is mapped.
+ * ({@link SiegeRules}). M7 part E (step E2): Level 18 Dust Storm (its {@code visibility}, the music's {@code motif})
+ * and the Dust Devil ({@code vortex}, {@code pull}, the {@code while: open} spiral, the {@code vanes}) and the Ghost
+ * Drone ({@code lane_strafe}, the pass {@code trigger}, {@code tell}, {@code reaim}, {@code second_pass}), until step
+ * E4 mapped them ({@link StormRules}).
  */
 final class Unmapped {
     /** Why a test leaves a level out. */

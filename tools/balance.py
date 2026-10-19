@@ -26,7 +26,9 @@ the balancing basis (design/enemies/README.md); a deviation is listed, marked wh
 accepted exception (the Coilwyrm's bounty, user decision 2026-10-05; the Ravager's and the Wraith's
 times to kill, M5 parts C and D); BalanceTest holds the same ACCEPTED list and the rear checks the
 user accepted (round 34 P4, REAR_PENDING). Per level with a rear ambush (M5 part D, D7 = a): each ambush unit's HP against the
-plan's rear DPS and its decloak flash plus hold; BalanceTest checks HP / rear DPS <= 0.6 x that.
+plan's rear DPS and its decloak flash plus hold; BalanceTest checks HP / rear DPS <= 0.6 x that. M7 part E (step
+E5): the beam era's table (beam_era_hp: the small units' HP doubled from Level 18, where the plan fits the Ion Beam;
+a problem when the plan's first Ion Beam is at another level).
 
 Exit status: 1 when the plan overspends, exceeds the power, buys an item before its unlock or
 over a special's most charges, or the DPS leaves its band (other than the accepted exception).
@@ -419,7 +421,8 @@ def act_hp_report(ref, levels=ACT_2, act=2):
     """The act HP factor (design/enemies, Balancing basis; D5 = c of M5 part A): every returning
     medium-or-larger unit's HP (and the listed small ones', capped) (parts summed, medium) and time to kill at the act's levels after its
     first; BalanceTest checks the same."""
-    print(f"\nReturning units in Act {act} (act HP factor = reference DPS at the level / at the first level):")
+    print(f"\nReturning units in Act {act} (act HP factor = reference DPS at the level / at the first level; "
+          "from the beam era on × its factor, the time to kill at the reference DPS × that factor):")
     print("Enemy            | Tier     | First | " + " | ".join(f"L{n:02d} HP / TTK" for n in levels))
     for slug in enemy_slugs():
         e = enemy(slug)
@@ -430,9 +433,40 @@ def act_hp_report(ref, levels=ACT_2, act=2):
             if n <= e["first_level"] or n not in ref or not gets_act_hp(e, n):
                 cells.append(f"{'-':>12}")
                 continue
-            hp = e["hp"] * act_hp_factor(e, ref[n] / ref[e["first_level"]])
-            cells.append(f"{hp:5.0f} {hp / ref[n]:4.2f} s")
+            hp = e["hp"] * act_hp_factor(e, ref[n] / ref[e["first_level"]]) * beam_era(e, n)
+            cells.append(f"{hp:5.0f} {hp / (ref[n] * beam_era(e, n)):4.2f} s")
         print(f"{e['name']:16} | {e['tier']:8} | L{e['first_level']:02d}   | " + " | ".join(cells))
+
+
+def beam_era_report(ref):
+    """M7 part E, step E5: every unit of the beam era's tiers at the level before it and in the beam era's levels
+    (HP at medium with every factor; BeamEraHpTest measures their time on the screen against Level 10's)."""
+    era = load("enemies/data.yaml")["beam_era_hp"]
+    levels = [n for n in range(era["from_level"] - 1, ACT_3.stop) if n in ref]
+    print(f"\nBeam era (from L{era['from_level']:02d}, the plan's Ion Beam): × {era['factor']:g} on "
+          f"{', '.join(era['tiers'])} units, HP at medium / time to kill at the reference DPS × the factor:")
+    print("Enemy            | Tier     | First | " + " | ".join(f"L{n:02d} HP / TTK" for n in levels))
+    for slug in enemy_slugs():
+        e = enemy(slug)
+        if "boss" in e or e["tier"] not in era["tiers"] or e["first_level"] > levels[-1]:
+            continue
+        cells = []
+        for n in levels:
+            if n < e["first_level"]:
+                cells.append(f"{'-':>12}")
+                continue
+            hp = level_hp(e, n, ref)
+            cells.append(f"{hp:5.0f} {hp / (ref[n] * beam_era(e, n)):4.2f} s")
+        print(f"{e['name']:16} | {e['tier']:8} | L{e['first_level']:02d}   | " + " | ".join(cells))
+
+
+def beam_era_problems(data):
+    """The beam era starts at the first visit whose plan fits the Ion Beam in front (step E5)."""
+    era = load("enemies/data.yaml")["beam_era_hp"]
+    first = next((n for n, st in apply_plan(data) if st["slots"].get("front", ("",))[0] == "ion-beam"), None)
+    if first != era["from_level"]:
+        return [f"beam_era_hp.from_level {era['from_level']} but the plan fits the Ion Beam from L{first}"]
+    return []
 
 
 def enemy_report(data, ref):
@@ -517,6 +551,8 @@ def report(data):
     enemy_report(data, ref)
     act_hp_report(ref)
     act_hp_report(ref, ACT_3, 3)
+    beam_era_report(ref)
+    problems += beam_era_problems(data)
     print("\nAccepted: " + ("none" if not accepted else "\n  " + "\n  ".join(accepted)))
     print("\nProblems: " + ("none" if not problems else "\n  " + "\n  ".join(problems)))
     return 1 if problems else 0
@@ -572,11 +608,19 @@ def act_hp_factor(e, ratio):
 def level_hp(e, n, ref):
     """A unit's HP at medium in Level n: with the act HP factor for a returning medium-or-larger unit (or
     a small one in the basis's small_act_hp) from Act 2 on (reference DPS at the level / at its first
-    level), rounded as the game does."""
+    level) and the beam era's factor (beam_era), rounded as the game does."""
     factor = 1
     if n >= ACT_2.start and gets_act_hp(e, n) and n > e["first_level"] and n in ref and e["first_level"] in ref:
         factor = act_hp_factor(e, ref[n] / ref[e["first_level"]])
-    return difficulty_hp(e["hp"] * factor, 1)
+    return difficulty_hp(e["hp"] * factor * beam_era(e, n), 1)
+
+
+def beam_era(e, n):
+    """M7 part E, step E5 (the user's "tougher, not more" of 2026-10-19): the basis's beam_era_hp factor on a unit
+    of its tiers (not a boss) from its from_level on, its own first level included; else 1. BalanceTest judges
+    such a unit's time to kill at the reference DPS times the same factor."""
+    era = load("enemies/data.yaml")["beam_era_hp"]
+    return era["factor"] if n >= era["from_level"] and e["tier"] in era["tiers"] and "boss" not in e else 1
 
 
 def ambush_lines(d, rear, n, ref):
@@ -603,9 +647,10 @@ def ambush_lines(d, rear, n, ref):
     for slug in dict.fromkeys(g["enemy"] for w in level["waves"] for g in w.get("groups", [w]) if "latch" in enemy(g["enemy"])):
         e = enemy(slug)
         latch = e["latch"]
-        ttk = e["hp"] / (rear * latch["damage_factor"]) if rear else float("inf")
+        hp = level_hp(e, n, ref)
+        ttk = hp / (rear * latch["damage_factor"]) if rear else float("inf")
         within = latch["shake"]["within"]
-        lines.append(f"  latched check {e['name']}: {e['hp']:g} HP / (rear {rear:.1f} DPS x {latch['damage_factor']:g}) "
+        lines.append(f"  latched check {e['name']}: {hp:g} HP / (rear {rear:.1f} DPS x {latch['damage_factor']:g}) "
                      f"= {ttk:.2f} s of its {within:g} s shake-off ({ttk / within:.2f}, at most {LATCHED_SHARE})")
         if not ttk <= LATCHED_SHARE * within:
             slow.append(f"rear DPS {rear:.1f} too low for a latched {e['name']} ({ttk:.2f} s)")

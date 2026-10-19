@@ -229,3 +229,12 @@ Round 40, production art (M7 part D batch, step ART-D): the 30×30 intel portrai
 (facing down, its crest lit) and Shellback (walking down, its vent swollen), from the production models of
 `tools/art/siege_units.py`, rendered by [tools/art/intel.py](../../../../tools/art/intel.py)
 (`python3 tools/art/intel.py choir-herald shellback`).
+
+## intel-final-r41-a
+
+Round 41, production art (M7 part E batch, step ART-E): the 30×30 intel portraits of Level 18's Dust Devil (in its
+rise, the vanes parting on the lime core) and Ghost Drone (nose down, its red eye), from the production models of
+`tools/art/storm_units.py`, and the sensor-L2 picture `unclassified-ghost-drone` shown while the drone is
+`unclassified_until_flown` ("unclassified, small, air": the outline only in the boss silhouettes' style, broken by
+sensor noise), rendered by [tools/art/intel.py](../../../../tools/art/intel.py) (`python3 tools/art/intel.py
+dust-devil ghost-drone unclassified-ghost-drone`).

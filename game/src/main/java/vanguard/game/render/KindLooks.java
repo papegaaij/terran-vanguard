@@ -8,7 +8,8 @@ import vanguard.sim.Sortie;
 /**
  * The registry of the looks that follow the sortie's enemy kinds (M5 part F, M7 parts B to D): the
  * Lampreys' latch poses, the Burrowers, the Tendril Anchors, the Threadcrawler, the Choir Herald's aura
- * and the Shellbacks, each built once from the first sortie that asks for it.
+ * and the Shellbacks, M7 part E's Dust Devils and Ghost Drones, each built once from the first sortie that asks
+ * for it.
  */
 final class KindLooks {
     /** M5 part F: per enemy kind its latch poses (the Lamprey's), null for a kind without; built at the first draw. */
@@ -30,6 +31,12 @@ final class KindLooks {
 
     /** M7 part D: the Shellback's curl, roll, belly and vent (built with the first sortie). */
     private ShellbackLooks shellbacks;
+
+    /** M7 part E: the Dust Devils' spin, rise, open core and grit swirls (built with the first sortie). */
+    private VortexLooks vortices;
+
+    /** M7 part E: the Ghost Drones' dark lamps under the EMP and their eye glints (built with the first sortie). */
+    private GhostDroneLooks ghostDrones;
 
     private final Sprites sprites;
     private final Files files;
@@ -78,6 +85,22 @@ final class KindLooks {
         return shellbacks;
     }
 
+    /** M7 part E: the vortices' looks for the sortie's enemy kinds, built once. */
+    VortexLooks vortices(Sortie sortie) {
+        if (vortices == null) {
+            vortices = new VortexLooks(sprites, sortie.enemyKinds());
+        }
+        return vortices;
+    }
+
+    /** M7 part E: the lane strafers' looks for the sortie's enemy kinds, built once. */
+    GhostDroneLooks ghostDrones(Sortie sortie) {
+        if (ghostDrones == null) {
+            ghostDrones = new GhostDroneLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return ghostDrones;
+    }
+
     /** M5 part F: the latch poses of the sortie's enemy kinds (the Lamprey's), null where a kind has none. */
     private LampreyLooks[] lampreyLooks(Sortie sortie) {
         List<EnemySpec> kinds = sortie.enemyKinds();
@@ -116,6 +139,12 @@ final class KindLooks {
         }
         if (shellbacks != null) {
             shellbacks.restart();
+        }
+        if (vortices != null) {
+            vortices.restart();
+        }
+        if (ghostDrones != null) {
+            ghostDrones.restart();
         }
     }
 }

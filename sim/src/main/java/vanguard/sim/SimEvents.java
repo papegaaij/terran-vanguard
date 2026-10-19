@@ -514,7 +514,32 @@ public final class SimEvents {
          * its one aimed shot ({@link BossSpec.AimTurns}; at the part); value: the part's index. The glow
          * runs while {@link SetPiece#partAimGlowing(int)}.
          */
-        AIM_TELL;
+        AIM_TELL,
+        /**
+         * M7 part D, round 40 K.a: a singing Choir Herald rang a unit that carried no ring of its (at the unit;
+         * design/enemies/air/choir-herald): the radio's {@code first-ring} cue; value: the unit's kind.
+         */
+        RING_SUNG,
+        /**
+         * M7 part E: a vortex started to rise (at it; design/enemies/ground/dust-devil): the tell before its core
+         * opens, the swirl tightening and the spin speeding up; value: its kind.
+         */
+        VORTEX_RISING,
+        /** M7 part E: a vortex opened on {@code low-air} (at it): its core is hittable and its spiral fires; value: its kind. */
+        VORTEX_OPENED,
+        /** M7 part E: a vortex closed and sinks back to the {@code ground} (at it); value: its kind. */
+        VORTEX_CLOSED,
+        /**
+         * M7 part E: a destroyed unit with a pull dropped the pickups it held (at it; the Dust Devil's grit cloud);
+         * value: how many.
+         */
+        PICKUPS_RELEASED,
+        /**
+         * M7 part E: a lane strafer's pass trigger fired (at it; design/enemies/air/ghost-drone): the red glint on
+         * its sensor eye, the tell its gun's {@link EnemyGun#tellSeconds()} before the burst's first shot; value:
+         * its kind. Each shot of the burst is an {@link #ENEMY_FIRED}.
+         */
+        EYE_GLINT;
 
         private static final Type[] VALUES = values();
     }

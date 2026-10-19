@@ -94,7 +94,7 @@ what building it brings up. The architecture's new kinds come with the parts tha
 | **B** Level 15 + Act 3 intro — **done** (round 38 closed; the user's playthrough open) | Act 3 `data.yaml` (title card, four pages, images), the Act 2 → 3 handover and the release saves at the L15 hangar playing the intro once (L.6); L15 data; the descent (clouds on `high-air`); Burrower and the `BURIED` layer; Olympus backdrop; Ares Control's lines rendered (cast in round 36, Thomas A) with the respelling list, his radio portrait (C.1 = b) | A | 38 |
 | **C** Level 16 — **done** except the canyon walls' look (round 39 closed; R.1's wall redo in progress, to round 40) | Terrain: walls, islands, contact, shots vs rock, Rook and paths; the canyon walls rising toward the camera with the collision at their foot (MA.1 = b); Tendril Anchor (`link`, beam vs tendril); Threadcrawler (ground chain along the walls' foot); Valles backdrop | B | 39 |
 | **D** Level 17 — **built**, pending round 40 | Choir Herald (`aura`); Shellback (walk, mortar, curl-roll crush); the Ares Landing dome as its own [allies](../../allies/README.md) document (Q.25b; the geodesic glass look, MA.3 = a) and its secondary; Helix compound set piece; Ares Landing backdrop | B | 40 |
-| **E** Level 18 | Dust-storm visibility (the soft ragged falloff, MA.2 = b); Ghost Drone (hint 1; the eye and running lights, U.5); Dust Devil (pull, spiral, core window); plains backdrop; **track 9** "Grey Signal", the Act 3 B theme, with its motif stem (moved here from part G: Level 18 needs it first) | B | 41 |
+| **E** Level 18 — **done** except three fixes (step FXS: the backdrop's horizontal line F.c, the Dust Devil's one-second disappearance K.a, the air units' dust-coloured silhouettes R.b) and the dome-break wiring; round 41 closed 2026-10-19 | Dust-storm visibility (the soft ragged falloff, MA.2 = b); Ghost Drone (hint 1; the eye and running lights, U.5); Dust Devil (pull, spiral, core window); plains backdrop; **track 9** "Grey Signal", the Act 3 B theme, with its motif stem (moved here from part G: Level 18 needs it first) | B | 41 |
 | **F** Level 19 | Revenant Walker mid-boss (the "Strider heavy" biped; hint 2, wreck beat); Warden Tank unmarked (hull + turret); conveyors, furnace vents, rear-firing turrets; Tharsis foundry backdrop; Vorne's motif layer | C or D (walkers) | 42 |
 | **G** Level 20 | Reverse scroll (signed scroll, TOP warnings, rules by travel direction); Mote Swarm pursuit; Rear-guard drone (its bay's weapons document); Hellas rim backdrop; track 8 for the retreat | A, B | 43 |
 | **H** Level 21 + act end | Dust Colossus (the "Sinkhole colony": breach points, mouths, suction, ring); slow arena; Choir's first words; Act 3 outro and summary; Hellas basin backdrop | B (burrow), G | 44 |
@@ -534,3 +534,15 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
   canyon walls to look like a real canyon (the Grand Canyon from above): their rendering and textures are redone
   in step CW (in progress) for round 40; R.4: Level 16's hint changed (no beam promised), the Act 3 economy kept.
   M7 part C is **done** except R.1's redo, pending the user's playthrough; M7 stays open.
+- 2026-10-19: M7 part E (Level 18 Dust Storm) **built** (the user away; every default pending the user's review in
+  concept [round 41](../../concept-rounds/round-41/README.md)): the Dust Devil (vortex cycle, pull on the ship and
+  the pickups, held pickups, the grit spiral, the blast flag) and the Ghost Drone (lane strafe, pass-triggered
+  burst with the eye glint, hard's second pass) in the simulation; Level 18's data at the Act 2+ floor (the
+  user's decision) with the beam-era HP (`beam_era_hp`, the user's "tougher, not more"; 301 enemies, about 101 a
+  minute); `StormRules`, `StormChecks`; the storm look (`StormLooks`), the units' looks, the unclassified intel,
+  track 9 "Grey Signal" with its motif stem, seven sounds, nineteen voices, the production art; the capture.
+- 2026-10-19 (user, round 41 closed): everything accepted or approved as final (Ghost Drone and Dust Devil `art: final`;
+  track 9, sounds, voices, the build choices, Level 17's fixes, the Act 2 finish) except three notes: the backdrop's
+  horizontal line at about 5 s (F.c, redo), the Dust Devil vanishing for a second at 24 s in the capture (K.a) and the
+  air units' silhouettes sharing the dust's colour (R.b), plus S.h = c (dome-break c). M7 part E is done except step FXS's
+  fixes; Level 18 stays `art: chosen` until they land. Act 2: the build is accepted, the user's own playthrough is open.

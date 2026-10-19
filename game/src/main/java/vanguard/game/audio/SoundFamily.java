@@ -44,4 +44,31 @@ abstract class SoundFamily {
     static float pan(double x) {
         return SoundMix.pan(x);
     }
+
+    /**
+     * M7 part C: moves a unit loop's level from {@code level} toward {@code target} by a fade step (0.2 s from none to
+     * {@link FlightSounds#UNIT_LOOP_LEVEL}), starting or stopping it, panned to {@code pan}; returns its new level.
+     */
+    final float fadeLoop(Sfx loop, float level, float target, float pan) {
+        if (target <= 0 && level <= 0) {
+            if (bank.looping(loop)) {
+                bank.stop(loop);
+            }
+            return 0;
+        }
+        float now = level;
+        if (!bank.looping(loop)) {
+            now = 0;
+            bank.loop(loop, 0);
+        }
+        float step = FlightSounds.UNIT_LOOP_LEVEL / FlightSounds.UNIT_FADE_STEPS;
+        now = target > now ? Math.min(target, now + step) : Math.max(target, now - step);
+        if (now <= 0) {
+            bank.stop(loop);
+            return 0;
+        }
+        bank.loopVolume(loop, now);
+        bank.loopPan(loop, pan);
+        return now;
+    }
 }

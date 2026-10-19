@@ -24,6 +24,8 @@ public final class HangarView implements Disposable {
     private final LoadoutPanel loadout;
     private final IntelPanel intel;
     private final TestFirePanel testFire;
+    /** M7 part E: the stat blocks, for the units the intel keeps unclassified. */
+    private final Content content;
 
     public HangarView(Files files, Glass glass, Sprites sprites, Catalogue catalogue, Content content) {
         map = new TacticalMap(files);
@@ -31,6 +33,7 @@ public final class HangarView implements Disposable {
         shop = new ShopPanel(glass, icons, content, catalogue);
         loadout = new LoadoutPanel(glass, sprites.ship.get(sprites.ship.size / 2), icons, catalogue);
         intel = new IntelPanel(glass, sprites);
+        this.content = content;
         testFire = new TestFirePanel(glass, content, new TestFireView(sprites, new PodPivots(files)), sprites.pixel);
     }
 
@@ -53,7 +56,15 @@ public final class HangarView implements Disposable {
         shop.draw(batch, state, next.map(Intel::markedTraits).orElse(List.of()));
         testFire.draw(batch);
         loadout.draw(batch, state);
-        intel.draw(batch, state.hangar().campaign().nextLevel(), next, teaser, levelKey.orElse(""));
+        int nextLevel = state.hangar().campaign().nextLevel();
+        intel.draw(
+                batch,
+                nextLevel,
+                next,
+                teaser,
+                levelKey.orElse(""),
+                next.map(level -> IntelPanel.unclassified(content, level.enemies(), nextLevel))
+                        .orElse(java.util.Map.of()));
     }
 
     @Override

@@ -314,9 +314,42 @@ class IntelPanelLayoutTest {
         });
     }
 
+    /**
+     * M7 part E (round 36 Q.22h): before the campaign has flown Level 18, its intel shows the Ghost Drone as an
+     * "unclassified, small, air" silhouette, unnamed, from sensor L2; once Level 18 is flown (a later level, or the
+     * replay hangar's campaign) by its portrait and name. A unit without the flag is never unclassified.
+     */
+    @Test
+    void theGhostDroneStaysUnclassifiedUntilLevel18IsFlown() {
+        String level = CONTENT.levelKey(18).orElseThrow();
+        BriefingPage teaser = CONTENT.level(level).briefing().teaser();
+        Intel intel = Intel.of(CONTENT, level, 2);
+        assertTrue(intel.enemies().contains("Ghost Drone"), "Level 18 flies it: " + intel.enemies());
+        Map<String, String> unclassified = IntelPanel.unclassified(CONTENT, intel.enemies(), 18);
+        assertEquals(Map.of("Ghost Drone", "Unclassified small air"), unclassified);
+        assertEquals(Map.of(), IntelPanel.unclassified(CONTENT, intel.enemies(), 19), "flown: classified");
+        assertEquals(
+                Map.of(), IntelPanel.unclassified(CONTENT, List.of("Dust Devil"), 18), "the Dust Devil is not kept");
+        Measure measure = assertFits(intel, teaser, level, "Level 18 unclassified: ", unclassified);
+        List<String> parts = measure.parts.stream().map(Box::what).toList();
+        assertTrue(parts.contains("intel/unclassified-ghost-drone"), "its silhouette: " + parts);
+        assertFalse(parts.contains("intel/ghost-drone"), "not its portrait");
+        assertTrue(parts.stream().noneMatch(part -> part.contains("GHOST")), "nor its name: " + parts);
+        assertTrue(parts.stream().anyMatch(part -> part.contains("UNCLASSIFIED")), "but its size and layer");
+        Measure flown = assertFits(intel, teaser, level, "Level 18 flown: ", Map.of());
+        List<String> named = flown.parts.stream().map(Box::what).toList();
+        assertFalse(named.contains("intel/unclassified-ghost-drone"), "flown: no silhouette");
+        assertTrue(String.join(" ", named).contains("GHOST"), "flown: named " + named);
+    }
+
     private static Measure assertFits(Intel intel, BriefingPage teaser, String level, String where) {
+        return assertFits(intel, teaser, level, where, Map.of());
+    }
+
+    private static Measure assertFits(
+            Intel intel, BriefingPage teaser, String level, String where, Map<String, String> unclassified) {
         Measure measure = new Measure();
-        IntelPanel.layout(measure, intel, teaser, level);
+        IntelPanel.layout(measure, intel, teaser, level, unclassified);
         List<Box> all = new ArrayList<>(measure.parts);
         all.addAll(measure.quote);
         for (Box box : all) {

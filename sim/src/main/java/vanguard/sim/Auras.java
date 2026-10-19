@@ -12,8 +12,11 @@ package vanguard.sim;
 final class Auras {
     private Auras() {}
 
-    /** One step of the rings of every Herald in {@code enemies}. */
-    static void step(Pool<Enemy> enemies) {
+    /**
+     * One step of the rings of every Herald in {@code enemies}; each ring a Herald claims is a {@link
+     * SimEvents.Type#RING_SUNG} in {@code events} (round 40 K.a: the radio's {@code first-ring}).
+     */
+    static void step(Pool<Enemy> enemies, SimEvents events) {
         int size = enemies.size();
         for (int i = 0; i < size; i++) {
             enemies.get(i).auraRing().scratch();
@@ -50,6 +53,7 @@ final class Auras {
                 Enemy unit = enemies.get(i);
                 if (!unit.auraRing().fedNow() && !unit.auraRing().pausedNow() && unit.inAura(herald, radius)) {
                     unit.claimRing(herald);
+                    events.add(SimEvents.Type.RING_SUNG, unit.x(), unit.y(), unit.kind());
                 }
             }
         }

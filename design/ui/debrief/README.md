@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/scoring, ../../systems/economy, ../../systems/saves]
-updated: 2026-10-12
+updated: 2026-10-19
 ---
 
 # Debrief screen
@@ -154,3 +154,4 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - 2026-10-12 (user, round 35): the game over screen accepted as built, with its differences from
   game-over-r08-a (C2: `GAME OVER` in the red heading font, SHIPS LOST instead of CREDITS SPENT,
   Okafor's voiced line, the footer, `SP` instead of `.`), Q2 = a, Q4 and Q5; `design: approved`.
+- 2026-10-19 (user, round 41, P.e): the debrief music wiring accepted (track 29 "Stand Down" at 0.8 after the jingle, under the act summary, 0.5 s fade, a cut jingle on an early exit).

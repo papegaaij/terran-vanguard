@@ -761,6 +761,9 @@ final class EventEffects {
     /** As above, on the ground or (a pouncer shot in the air) on the play field. */
     private void death(int kind, double x, double y, boolean onGround) {
         EnemyLooks look = looks[kind];
+        // M7 part E: a Dust Devil's funnel collapses under its grit cloud.
+        EnemyLooks.DeathEffect collapse = look.collapse();
+        start(pieces, collapse.frames(), collapse.ticksPerFrame(), x, y, collapse.delayTicks(), onGround);
         EnemyLooks.DeathEffect deathPieces = look.deathPieces();
         start(pieces, deathPieces.frames(), deathPieces.ticksPerFrame(), x, y, deathPieces.delayTicks(), onGround);
         start(effects, look.explosion(), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);

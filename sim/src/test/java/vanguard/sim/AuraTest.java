@@ -44,7 +44,7 @@ class AuraTest {
         for (int i = 0; i < pool.size(); i++) {
             pool.get(i).move(Ship.START_X, Ship.START_Y, scroll);
         }
-        Auras.step(pool);
+        Auras.step(pool, events);
     }
 
     private void steps(int count) {
@@ -65,6 +65,8 @@ class AuraTest {
         Enemy far = add(PartASpecs.dummy(Layer.GROUND, 100), 200 + 95);
         Enemy other = add(STILL_HERALD, 140);
         step(300);
+        assertEquals(
+                2, events.count(SimEvents.Type.RING_SUNG), "round 40 K.a: a ring sung on each (the first-ring cue)");
         assertEquals(herald.serial(), near.ringFeeder());
         assertEquals(40, near.ringMax(), "its HP 100, capped at 40");
         assertEquals(40.0 / fillTicks(), near.ring(), 1e-9, "filling from the step it entered");
@@ -72,7 +74,9 @@ class AuraTest {
         assertEquals(-1, far.ringFeeder(), "95 px off: outside the 90 px radius");
         assertEquals(-1, other.ringFeeder(), "never on another Herald");
         assertEquals(-1, herald.ringFeeder(), "never on itself");
-        steps(fillTicks() / 2 - 1);
+        step(0);
+        assertEquals(0, events.count(SimEvents.Type.RING_SUNG), "the rings held are not sung again");
+        steps(fillTicks() / 2 - 2);
         assertEquals(0.5, near.ringShare(), 1e-9);
         steps(fillTicks() / 2);
         assertEquals(40, near.ring(), 1e-9, "full after 0.5 s");

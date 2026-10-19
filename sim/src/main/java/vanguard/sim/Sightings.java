@@ -2,7 +2,7 @@ package vanguard.sim;
 
 /**
  * The radio's first-sighting cues of a {@link Sortie}: once per attempt, the first pounce (M5 part C),
- * decloak and loop-back (M5 part D) and Burrower surfacing (M7 part B) seen in a step's events start
+ * decloak and loop-back (M5 part D), Burrower surfacing (M7 part B) and Herald ring (M7 part D) seen in a step's events start
  * their cues. The boss checkpoint keeps a copy ({@link #copyFrom}).
  */
 final class Sightings {
@@ -16,6 +16,8 @@ final class Sightings {
     private boolean loopBackSeen;
     /** M7 part B: whether a Burrower surfaced in this attempt (the radio's {@code first-surfacing}). */
     private boolean surfacingSeen;
+    /** M7 part D, round 40 K.a: whether a Herald sang a ring in this attempt (the radio's {@code first-ring}). */
+    private boolean ringSeen;
 
     /** With {@code events} and {@code radio} null: a copy for the boss checkpoint, never stepped. */
     Sightings(SimEvents events, Radio radio) {
@@ -41,6 +43,10 @@ final class Sightings {
             surfacingSeen = true;
             radio.cue(LevelScript.CueTrigger.FIRST_SURFACING, "");
         }
+        if (!ringSeen && events.count(SimEvents.Type.RING_SUNG) > 0) {
+            ringSeen = true;
+            radio.cue(LevelScript.CueTrigger.FIRST_RING, "");
+        }
     }
 
     /** A new attempt: nothing seen. */
@@ -49,6 +55,7 @@ final class Sightings {
         decloakSeen = false;
         loopBackSeen = false;
         surfacingSeen = false;
+        ringSeen = false;
     }
 
     /** Takes over what {@code other} has seen. */
@@ -57,6 +64,7 @@ final class Sightings {
         decloakSeen = other.decloakSeen;
         loopBackSeen = other.loopBackSeen;
         surfacingSeen = other.surfacingSeen;
+        ringSeen = other.ringSeen;
     }
 
     /** Each sighting only once seen, so the levels without it hash as before. */
@@ -70,6 +78,10 @@ final class Sightings {
         }
         if (surfacingSeen) {
             // M7 part B: only once a Burrower surfaced, so the other levels hash as before.
+            hash.add(1);
+        }
+        if (ringSeen) {
+            // M7 part D: only once a Herald sang a ring, so the other levels hash as before.
             hash.add(1);
         }
     }

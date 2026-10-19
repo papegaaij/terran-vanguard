@@ -67,6 +67,8 @@ import vanguard.sim.PlayField;
  *     target-the-objective hook that goes for them; none if not given
  * @param flak M7 part D, presentation (Level 17's militia flak guns at the spaceport): flak bursts on {@code low-air}
  *     from a time on, hitting nothing; none if not given
+ * @param visibility M7 part E, presentation (design/campaign Level 18, Visibility in the storm; M6 = a): the dust
+ *     storm's view radius round the ship by level time; the simulation never reads it; full view if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -110,7 +112,8 @@ public record LevelData(
         Optional<List<NoSurface>> noSurface,
         Optional<TerrainBlock> terrain,
         Optional<GroundAllies> allies,
-        Optional<Flak> flak) {
+        Optional<Flak> flak,
+        Optional<Visibility> visibility) {
     public LevelData {
         launch.ifPresent(kind -> Check.that(LAUNCH_DROP.equals(kind), "launch: only 'drop', was '" + kind + "'"));
         noSurface = noSurface.map(List::copyOf);
@@ -1792,7 +1795,14 @@ public record LevelData(
          * it plays in the next free gap or goes stale; only in a level with {@code terrain}.
          */
         @JsonProperty("first-wall-contact")
-        FIRST_WALL_CONTACT
+        FIRST_WALL_CONTACT,
+        /**
+         * M7 part D, round 40 K.a (design/campaign Level 17, Radio chatter): the attempt's first aura ring a Choir
+         * Herald sings onto a unit, as soon as it is on the play field with its escorts round it (once); only in a
+         * level with an aura enemy.
+         */
+        @JsonProperty("first-ring")
+        FIRST_RING
     }
 
     /**
@@ -2197,6 +2207,117 @@ public record LevelData(
     }
 
     /**
+     * M7 part E, presentation (design/campaign Level 18, Visibility in the storm; M6 = a, MA.2 = b): the dust storm's
+     * clear radius round the ship. {@code radii} names the radii, px ({@code deep} 170, {@code wall} 150 at medium);
+     * {@code ramps} ease the radius by level time, each from the radius before it (full view before the first) to its
+     * {@code radius} (a name of {@code radii} or {@link #FULL}) over {@code [from, to]} s (smoothstep); {@code
+     * falloff} is the soft ragged edge's width, px, centred on the radius (broken by the look's drifting noise
+     * fields); {@code easy} and {@code hard} give the radii on those difficulties instead (by name). A look only:
+     * nothing in the simulation changes (ground and {@code low-air} drawn only inside it, {@code air} fading to
+     * silhouettes outside it, bullets, telegraphs, pickups and the HUD always drawn).
+     */
+    public record Visibility(
+            Map<String, Double> radii,
+            List<Ramp> ramps,
+            double falloff,
+            Optional<Map<String, Double>> easy,
+            Optional<Map<String, Double>> hard) {
+        /** The full view's name in a ramp: no radius. */
+        public static final String FULL = "full";
+
+        public Visibility {
+            radii = Map.copyOf(radii);
+            ramps = List.copyOf(ramps);
+            easy = easy.map(Map::copyOf);
+            hard = hard.map(Map::copyOf);
+            Check.that(!radii.isEmpty(), "radii: at least one radius");
+            Check.that(!radii.containsKey(FULL), "radii: '" + FULL + "' is the full view, not a radius");
+            radii.forEach((name, radius) -> Check.positive("radii." + name, radius));
+            Check.positive("falloff", falloff);
+            Check.notEmpty("ramps", ramps);
+            Map<String, Double> named = radii;
+            for (int i = 0; i < ramps.size(); i++) {
+                Ramp ramp = ramps.get(i);
+                Check.that(
+                        ramp.radius().equals(FULL) || named.containsKey(ramp.radius()),
+                        "ramps[" + i + "].radius: one of radii or '" + FULL + "', was '" + ramp.radius() + "'");
+                Check.that(
+                        i == 0 || ramp.from() >= ramps.get(i - 1).to(),
+                        "ramps[" + i + "]: after the ramp before it, in time order, not overlapping");
+            }
+            for (var change : List.of(easy, hard)) {
+                change.ifPresent(map -> map.forEach((name, radius) -> {
+                    Check.that(named.containsKey(name), "easy/hard: '" + name + "' is not one of radii");
+                    Check.positive(name, radius);
+                }));
+            }
+        }
+
+        /** One ease of the radius: to {@code radius} (a name, or {@link #FULL}) over {@code [from, to]} s. */
+        public record Ramp(double from, double to, String radius) {
+            public Ramp {
+                Check.notNegative("from", from);
+                Check.that(to > from, "to: after from");
+            }
+        }
+
+        /**
+         * The full view as a radius, px: the play field's diagonal plus the falloff, so that no point of the field
+         * lies in the edge.
+         */
+        public double fullRadius() {
+            return Math.hypot(PlayField.WIDTH, PlayField.HEIGHT) + falloff;
+        }
+
+        /** The radius named {@code name} on {@code difficulty}, px ({@link #FULL}: {@link #fullRadius()}). */
+        public double radius(String name, Difficulty difficulty) {
+            if (name.equals(FULL)) {
+                return fullRadius();
+            }
+            Optional<Map<String, Double>> change =
+                    switch (difficulty) {
+                        case EASY -> easy;
+                        case HARD -> hard;
+                        case MEDIUM -> Optional.empty();
+                    };
+            return change.map(map -> map.get(name)).orElse(radii.get(name));
+        }
+
+        /** The radius at level time {@code t} at medium, px ({@link #radiusAt(double, Difficulty)}). */
+        public double radiusAt(double t) {
+            return radiusAt(t, Difficulty.MEDIUM);
+        }
+
+        /**
+         * The radius at level time {@code t} on {@code difficulty}, px: the full view ({@link #fullRadius()}) before
+         * the first ramp, each ramp easing (smoothstep) from the radius before it to its own.
+         */
+        public double radiusAt(double t, Difficulty difficulty) {
+            double radius = fullRadius();
+            for (Ramp ramp : ramps) {
+                double target = radius(ramp.radius(), difficulty);
+                if (t <= ramp.from()) {
+                    return radius;
+                }
+                if (t < ramp.to()) {
+                    double x = (t - ramp.from()) / (ramp.to() - ramp.from());
+                    return radius + (target - radius) * x * x * (3 - 2 * x);
+                }
+                radius = target;
+            }
+            return radius;
+        }
+
+        /** The smallest radius on {@code difficulty}, px. */
+        public double smallest(Difficulty difficulty) {
+            return radii.keySet().stream()
+                    .mapToDouble(name -> radius(name, difficulty))
+                    .min()
+                    .orElseThrow();
+        }
+    }
+
+    /**
      * The road on the ground layer (Level 04): a curve through {@code points}, one {@code [t, x]}
      * each ({@code t} when it passes the middle of the screen, as for placed backdrop pieces),
      * drawn as a ribbon {@code width} px wide with the backdrop image {@code texture}
@@ -2580,7 +2701,72 @@ public record LevelData(
             Optional<Duck> duck,
             Optional<List<AmbienceChange>> ambienceChanges,
             Optional<Map<Integer, Double>> sectionDb,
-            Optional<Jingle> jingle) {
+            Optional<Jingle> jingle,
+            Optional<Motif> motif) {
+        /**
+         * M7 part E (design/campaign Level 18, Music; track 9's motif stem): the motif layer plays over the theme from
+         * level time {@code from} on, in every section the theme plays except those {@code sections} turns off
+         * ({@code {4: false}}: Level 18's eye); a section listed {@code true} plays it as well.
+         */
+        public record Motif(double from, Map<Integer, Boolean> sections) {
+            public Motif {
+                Check.notNegative("from", from);
+                sections = Map.copyOf(sections);
+                sections.keySet()
+                        .forEach(section -> Check.that(section >= 1, "sections: count from 1, was " + section));
+            }
+
+            /** Whether the motif plays at level time {@code t} in section {@code section} (1-based). */
+            public boolean on(int section, double t) {
+                return t >= from && sections.getOrDefault(section, true);
+            }
+        }
+
+        /** Without M7 part E's motif layer. */
+        public Music(
+                int track,
+                int startSection,
+                Optional<Double> startDb,
+                int fullSection,
+                Optional<Map<Integer, Stems>> stems,
+                String ambience,
+                String endJingle,
+                Optional<String> bossSting,
+                Optional<Double> ambienceFrom,
+                Optional<VoiceLoop> voiceLoop,
+                Optional<String> bossWarning,
+                Optional<String> bossTrack,
+                Optional<List<FullOn>> fullOn,
+                Optional<Duck> duck,
+                Optional<List<AmbienceChange>> ambienceChanges,
+                Optional<Map<Integer, Double>> sectionDb,
+                Optional<Jingle> jingle) {
+            this(
+                    track,
+                    startSection,
+                    startDb,
+                    fullSection,
+                    stems,
+                    ambience,
+                    endJingle,
+                    bossSting,
+                    ambienceFrom,
+                    voiceLoop,
+                    bossWarning,
+                    bossTrack,
+                    fullOn,
+                    duck,
+                    ambienceChanges,
+                    sectionDb,
+                    jingle,
+                    Optional.empty());
+        }
+
+        /** M7 part E: whether the motif layer plays at level time {@code t} in section {@code section}. */
+        public boolean motifOn(int section, double t) {
+            return motif.map(m -> m.on(section, t)).orElse(false);
+        }
+
         /** M5 part G: the jingle inside the level at {@code t}, the theme fading out over {@code fade} s first. */
         public record Jingle(double t, Optional<Double> fade) {
             public Jingle {
@@ -2629,6 +2815,7 @@ public record LevelData(
                     duck,
                     ambienceChanges,
                     sectionDb,
+                    Optional.empty(),
                     Optional.empty());
         }
 

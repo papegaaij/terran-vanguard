@@ -33,7 +33,7 @@ marked tables; the outro joins it in part H.
 | [level-15-olympus-descent](level-15-olympus-descent/README.md) | Act 3's opener: the descent through the cloud deck past Olympus Mons to the colony rail line; introduces the Burrower and the Dust Kite | approved | in-progress | final |
 | [level-16-valles-canyon-run](level-16-valles-canyon-run/README.md) | The canyon run east to Ares Landing: terrain collision, a fork, tendril barriers and the Threadcrawler; the Helix station untouched on the rim | approved | in-progress | final |
 | [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | in-progress | chosen |
-| [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | not-started | none |
+| [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | in-progress | chosen |
 | [level-19-foundry-of-tharsis](level-19-foundry-of-tharsis/README.md) | Tharsis foundry: grey Warden Tanks on conveyors, furnace vents, turrets that fire after you pass; mid-boss Revenant Walker and the hint-2 wreck crawl | approved | not-started | none |
 | [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | not-started | none |
 | [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | not-started | none |
@@ -236,6 +236,11 @@ be in `enemies/data.yaml` before any Act 3 level data). The levels' drafts use t
 
 The `tiny` and `small` units (Dust Kite, Skitter, Needler, Stinger, Mote Swarm, Ghost Drone,
 Tendril Anchor, Spine Turret, Polyp Mortar) keep their HP. The level documents list the waves.
+Since 2026-10-19 two exceptions: Level 18 joins the basis's `small_act_hp` (Needler 12, Stinger 18), and from
+Level 18, where the plan fits the Ion Beam, every `small` unit's HP is doubled on top (**beam-era HP**, the user's
+"tougher, not more"; Needler 24, Stinger 36, Ghost Drone 28, Spine Turret 16, Polyp Mortar 20 at L18; see the
+[balancing basis](../../enemies/README.md#balancing-basis)). Levels 15–17 fly the Pulse Cannon and keep theirs
+until their own rework.
 
 ### Density and threat profile
 
@@ -272,7 +277,7 @@ level that ends above 75 a minute records why in its Decisions, as Act 2's did.
 | [L15](level-15-olympus-descent/README.md) | 3 | 262 in 185 s, **85** | ≈ 197, **≈ 64** | Done: 200 in 185 s, **≈ 65**; smaller popcorn waves (Kite V-wings 7 → 4, snakes 6 → 4, streams 5 → 3; Skitter snakes 6 → 4, its streams 4 → 3); the Burrower fields and the set pieces unchanged | 0.36 → **0.42** |
 | [L16](level-16-valles-canyon-run/README.md) | 4 | 279 in 185 s, **90** | ≈ 215, **≈ 70** | Done: 215 in 185 s, **≈ 70**; smaller Dust Kite and Skitter waves, only pairs in the narrows (t=140–148, 180 px); the gates and the crawlers unchanged | 0.45 → **0.54** (also closes the draft's −3 % gap) |
 | [L17](level-17-dome-siege/README.md) | 4 | 247 in 167 s, **89** | ≈ 195, **≈ 70** | Done: 196 in 167 s, **≈ 70**; fewer Dust Kites, Mote Swarms (the Helix swarm 10 → 8) and Skitters; the hooked waves, Shellbacks and Heralds unchanged; its open question corrected (thinning the popcorn *raises* the scale) | 0.55 → **0.60** |
-| [L18](level-18-dust-storm/README.md) | 3 | 149 in 178 s, **50** | keep, **≈ 50** | None (the breather) | 0.92, kept (round 36) |
+| [L18](level-18-dust-storm/README.md) | 3 | 149 in 178 s, **50** | keep, **≈ 50** | Changed 2026-10-19 (the user: the Act 2+ floor, "tougher, not more"): 301 in 178 s, **≈ 101**, with the beam era's HP; the breather by threat, not by count | 0.92 → **0.37** |
 | [L19](level-19-foundry-of-tharsis/README.md) | 4 | 159 in 166 s, **58** | ≈ 172, **≈ 62** | Done: 172 in 166 s, **≈ 62**; 13 more small units as cadence fill in sections 2–4 (threes of Kites or Skitters), none over the wreck crawl; the walker's bounty 262 (14.8 %) | 0.53 → **0.52** |
 | [L20](level-20-retreat-from-hellas/README.md) | 4 | 178 in 167 s, **64** | keep, **≈ 64** | None | 0.95, kept (round 36) |
 | [L21](level-21-dust-colossus/README.md) | 4 | 107 in 97 s, **66** | keep, **≈ 66** | None | 0.80 (the boss's share is open in L21) |

@@ -109,3 +109,14 @@ road round Schiaparelli, Burroughs and Eden, the spaceport, red Vrell vectors co
 five sections on the route; east of the burnt greenhouses a small black compound with a gold edge, unlabelled)
 and `level-17-choir-herald` (Varga: a Choir Herald with its crest lit, the dashed aura and threads to three
 ringed Needlers, one ring drained; an inset of a Shellback mid-curl with its lime vent marked).
+
+## briefing-images-final-r41-a
+
+Round 41, production art (M7 part E batch, step ART-E): Level 18's two 672×240 briefing images, rendered by
+[tools/art/briefing_images.py](../../../../tools/art/briefing_images.py) (`python3 tools/art/briefing_images.py
+level-18-storm-front level-18-visibility r41`): `level-18-storm-front` (Okafor: an orbital weather view of the
+northern plains, north to the left: the storm front as a rust wall bowed south with its calm eye, Vrell markers in
+the dust, its drift toward Ares Landing's domes at its southern edge, the sweep route with the six sections) and
+`level-18-visibility` (Varga: the storm's look from the level's own textures: the ship in its clear radius, the
+ground fading into the veil through the ragged edge, Dust Kites and a Needler outside as dark silhouettes keeping
+their glow, their orbs crisp, a homing trail finding one; no Ghost Drone, whose first sight is the level's hint).

@@ -480,17 +480,44 @@ first entry of a part's model list is the starter (price 0, `start`).
   (`radius`, `refill`: the Herald's easy 75 px and 15 %/s, hard 105 px). A unit's **`roll`** block (`below`,
   the share of its body's HP, its vital part's, at which it curls once; `curl`, s; `seconds` and `speed`, the
   roll along its walk path; `uncurl`, s; `belly_seconds` and `belly_factor`, the damage factor on its body
-  after the uncurl; `ball`, the rolled ball's size and hit box): fully armoured while curled, no attack, the
-  roll crushes the ground objects in its path (an ally's `rolls`, destructible scenery, crates; never enemies or
-  the ship); only on a `ground` walker, the ball inside its sprite; the hook **`roll`** (`seconds`: hard's
+  after the uncurl; `ball`, the rolled ball's size and hit box; optional `belly_row`, px above the bottom
+  edge: a roll drifting down the screen ends early where the scroll would carry it below that row before its
+  uncurl ends, round 40 R.e): fully armoured while curled, no attack, the roll crushes the ground objects in its
+  path (an ally's `rolls` where the ball touches its footprint, destructible scenery, crates; never enemies or
+  the ship); a shot whose line of flight crosses a standing unit part's box hits the part first, from any side
+  (round 40 R.a); only on a `ground` walker, the ball inside its sprite; the hook **`roll`** (`seconds`: hard's
   3.0). A `part_list` on a unit that is not a boss (the Shellback's `vital` body and `destroyable` vent, the
   vent's `attack: mortar`: its loss silences the mortar): the parts' HP and bounties add up to the unit's, a
   vital part's `first_bonus` pays a body-first kill its whole (the Shellback's 40 + 8 = 48; the vent first
   52). The Dust Kite's **`flock`** (moved forward from part E: Level 17's swarm) makes it fly `swarm` waves
   too: a unit with a flock flies only swarms unless its stat block lists other formations.
+  M7 part E, for the [Dust Devil](../../enemies/ground/dust-devil/README.md) and the
+  [Ghost Drone](../../enemies/air/ghost-drone/README.md) (Level 18; loaded and checked in step E2 by content's
+  `EnemyData` and `StormChecks`, mapped in step E4, flown from steps E1/E3; the defaults pending the user's review
+  in round 41): a unit's **`vortex`** (the spin cycle: `closed`, `rise` and `open`, s: closed on `ground` with
+  the armour **`vanes`**, every shot glancing off, a blast (Smart Bomb, Airstrike) excepted; rising, the tell;
+  open on `low-air`, the core hittable; it sinks back at the next cycle's start; `offset`, s between two units'
+  cycles in a wave; `wander_speed`, px/s, and `wander_amplitude`, px either side of its wave's path, seeded;
+  `keep_away`, px from the ship's centre; only on a `ground` unit, with `vanes` and only with them; the hook
+  **`vortex`** (`open`: easy's 1.0 s window); a **`pull`** (`ship_radius` and `ship_speed`: the ship within the
+  radius drifts toward the centre at the speed at the centre, fading to 0 at the edge; `pickup_radius` and
+  `pickup_speed`: loose pickups drawn in and held until the unit dies, released then; only with a vortex; the
+  hook **`pull`** (`ship_speed`: easy 25, hard 45)); an attack's **`while: open`** (it fires only in the open
+  window; a `spiral` on a unit that is not a boss has it: the grit spiral, `arms`, `turn_rate` °/s, `interval`
+  between two bullets of an arm). The movement **`lane_strafe`** (`descent_speed` and `strafe_speed`, px/s;
+  `lane_depth` `[min, max]`, px below the top edge; `lane_spacing`, px between a wave's lanes: a front entry drops
+  to its lane, banks and strafes across, a line abreast splitting half left, half right, a pincer entering at its
+  lane from the sides; only on an `air` unit; the hook **`second_pass`**: hard's line-abreast survivors strafe back
+  once); an aimed attack's pass **`trigger`** (`within_x`, px: its burst fires once per pass when the ship's x
+  comes that close, no `interval`; only with a lane strafe), **`tell`** (s of the eye glint before the first shot;
+  only with a trigger) and **`reaim`** (every shot of the burst aimed anew; only with a `burst`). A unit's
+  **`intel`** (`unclassified_until_flown`: the hangar intel shows an "unclassified" silhouette of its layer and
+  size until its first level has been flown; it first flies in its `first_level`, in no level before it).
   Basis (`enemies/data.yaml`): `reference_dps` per level (Levels 01–21 since M7 part A), `bullet_damage`, `contact_damage`
   per tier, `small_act_hp` (`cap`, `units`, `levels`: the `small` units that get the act HP factor, capped, in those levels; the user's Act 2
-  playtest, 2026-10-18), `formations` (name: description).
+  playtest, 2026-10-18), `beam_era_hp` (`from_level`, `factor`, `tiers`: from that level on, the units of those
+  tiers (bosses aside, below `huge`) take the factor on their HP on top of the act HP factor; M7 part E, step E5),
+  `formations` (name: description).
 - **Level** (`campaign/<act>/<level>/data.yaml`): `scroll_speed`, `launch_seconds`, optional
   `bounty_scale` (default 1: a factor on every bounty paid in the level, after the act factor and
   the difficulty's income, before the one rounding per payout; see the economy), optional
@@ -521,7 +548,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   wave's `paths`, one list of
   `[x, y]` points per unit in screen coordinates at the wave's `t` (y below the top edge, points
   may lie outside the play field), which then scroll with the ground; a `pincer` with one path
-  mirrors it for every second unit, other walker formations repeat it 1.5 s apart), a mixed wave
+  mirrors it for every second unit, other walker formations repeat it the wave's `interval` apart, 1.5 s
+  without one), a mixed wave
   lists `groups` (a `carrier + escorts` wave lists the carrier's group first)
   instead; `set_pieces` (an `enemy` with a `part_list` and its `passes`, each a `name`, `section`,
   `layer`, fixed `heading` (° from straight down, positive to the right) and a `path` of
@@ -1006,13 +1034,29 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   block's); a hooked mortar's objective lob lands where its ally will be (ground space, the marker on the
   ground). The secondary **`untouched: true`** (none of the level's ground allies hit; its tracker `label`,
   Level 17's `DOMES`; failed at the first hit, met when the last ally leaves the bottom edge; only with
-  `allies`). A pickup's **`dropped_by.enemy`** (a wave's carrier counted among that enemy's units of the wave
+  `allies`); a walker with a `roll` walks its paths between the allies, its body's hit box never over an
+  ally's (`SiegeChecks`, round 40 R.c). The radio event **`first-ring`** (the attempt's first aura ring a
+  Herald sings onto a unit; only with an aura enemy; round 40 K.a). A pickup's **`dropped_by.enemy`** (a wave's carrier counted among that enemy's units of the wave
   only: Level 17's Herald among its bombers). **`flak`** (presentation: `from` s, a burst on `low-air` every
   `every` s over the lower field, hitting nothing: Level 17's militia guns). The music's ambience
   `mars-colony`. The validator: the allies' footprints inside the play field and clear of one another on the
   ground, `targeted_by` naming known enemies, `bomb_row` on the play field, no ground target within 100 px of
   the `helix-compound` backdrop placement, a `dropped_by.enemy` flying in its wave. The intel's wave strip
   marks the sections the ground allies enter in as phases (`Intel.Mark.Kind.PHASE`).
+  M7 part E, for [Level 18](../../campaign/act-3-red-dust/level-18-dust-storm/README.md) (loaded and checked
+  in step E2 by content's `LevelData` and `StormChecks`, mapped in step E4, drawn from step G1; the defaults
+  pending the user's review in round 41): **`visibility`** (presentation only, as `flak`; the simulation never reads
+  it: the dust storm's clear radius round the ship, M6 = a, MA.2 = b): `radii` (names: px, Level 18's `deep` 170
+  and `wall` 150), `ramps` (each `{from, to, radius}`: from `from` to `to` s the radius eases (smoothstep) from the
+  one before it, the full view before the first, to `radius`, a name of `radii` or `full`; in time order, not
+  overlapping, inside the level), `falloff` (px, the soft ragged edge centred on the radius, broken by the look's
+  drifting noise fields), `easy` / `hard` (the radii by name on those difficulties); `LevelData.Visibility.radiusAt(t)`
+  (and `radiusAt(t, difficulty)`) gives the radius, `full` as the field's diagonal plus the falloff. The validator:
+  every radius on every difficulty at least the pull on the ship (`ship_radius`) of every unit the level flies on it.
+  The music's **`motif`** (`from`, level time, and `sections` `{n: false}`: track 9's motif stem over the theme
+  from `from` on, in every section the theme plays except those turned off; `Music.motifOn(section, t)`; `from`
+  inside a section the theme plays). The ambience `mars-storm`. The Dust Devils' pairs and trio fly as a `pack`,
+  each wandering round its own path (the path its centre line).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.List;
 import vanguard.content.AlliesData;
+import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.sim.BossSpec;
 import vanguard.sim.Enemy;
@@ -154,6 +155,8 @@ public final class LevelRenderer {
 
     /** M5 part F: the level's weather looks (Level 12's rain, lightning, gusts, hidden glows and eye). */
     private final WeatherLooks weather;
+    /** M7 part E: the level's dust storm (Level 18's visibility mask, veil and silhouettes); null without one. */
+    private final StormLooks storm;
 
     /** M7 part C: the wall touch's sparks and the ship's flash, the stopped shots' sparks at rock. */
     private final CanyonLooks canyonLooks;
@@ -256,6 +259,7 @@ public final class LevelRenderer {
         this.font = font;
         this.water = script.water() ? new WaterLooks() : null;
         this.weather = new WeatherLooks(sprites, level, levelKey);
+        this.storm = StormLooks.of(sprites, level, levelKey);
         this.level = level;
         this.relay = RelayLooks.of(sprites, flash, script, name -> pivots(files, name));
         this.drones = DroneLooks.of(sprites, level);
@@ -272,11 +276,15 @@ public final class LevelRenderer {
 
     /**
      * M5 part G: the difficulty's presentation: on {@code easy} a peak with an easy length (Level 13's
-     * whiteout, 6 s) in the backdrop and the snow.
+     * whiteout, 6 s) in the backdrop and the snow; M7 part E: the dust storm's radii (Level 18).
      */
-    public void easy(boolean easy) {
+    public void difficulty(Difficulty difficulty) {
+        boolean easy = difficulty == Difficulty.EASY;
         backdrop.easy(easy);
         snow = SnowLooks.of(level, easy, sprites.pixel);
+        if (storm != null) {
+            storm.difficulty(difficulty);
+        }
     }
 
     /**
@@ -300,6 +308,9 @@ public final class LevelRenderer {
     /** Frees the light map and the generated textures. */
     public void dispose() {
         farside.dispose();
+        if (storm != null) {
+            storm.dispose();
+        }
         shadows.dispose();
         if (water != null) {
             water.dispose();
@@ -359,6 +370,8 @@ public final class LevelRenderer {
             auras.stepped(sortie);
         }
         kinds.shellbacks(sortie).stepped(sortie);
+        kinds.vortices(sortie).stepped(sortie);
+        kinds.ghostDrones(sortie).stepped(sortie);
     }
 
     /** M5 part E: the renderer's own effects advance one simulation step (with the screen's). */
@@ -523,7 +536,9 @@ public final class LevelRenderer {
         }
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.GROUND);
         luna.drawSled(batch, sortie, scroll, alpha);
-        luna.drawMarkers(batch, sortie, alpha);
+        if (storm == null) {
+            luna.drawMarkers(batch, sortie, alpha);
+        }
         ground.drawGround(batch, sortie, alpha);
         convoy.drawConvoy(batch, sortie, alpha, play.whiteFlash);
         if (relay != null) {
@@ -550,6 +565,8 @@ public final class LevelRenderer {
         boolean overHull = units.bossOffPlane(sortie);
         // M7 part C: a killed Threadcrawler's husk under the ground units, the crawler and its pores with them.
         kinds.crawlers(sortie).drawHusks(batch, scroll);
+        // M7 part E: the Dust Devils' grit swirls on the ground under the ground units (and under an open one).
+        kinds.vortices(sortie).drawSwirls(batch, sortie, alpha);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
         kinds.crawlers(sortie).drawChains(batch, sortie, alpha, looks, units.unitFlash);
         kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
@@ -593,6 +610,13 @@ public final class LevelRenderer {
         weather.drawOverBanks(batch, seconds, play.whiteFlash);
         drawRevealed(batch, sortie, alpha);
         drawHiddenGlows(batch, sortie, alpha);
+        if (storm != null) {
+            // M7 part E: the dust storm's veil over the ground and low-air outside the radius round the ship, an
+            // open Dust Devil's core glowing through it, the mortars' markers over it (always drawn).
+            storm.drawVeil(batch, sortie, alpha, seconds, clock.real());
+            storm.drawHiddenGlows(batch, sortie, alpha, clock.real());
+            luna.drawMarkers(batch, sortie, alpha);
+        }
         setPieces.drawBossShadows(batch, sortie, alpha);
         units.drawUnitGlows(batch, sortie, alpha);
         // M5 part D: the scripted loss's glow under the air layer, then the shuttles under the flyers.
@@ -612,6 +636,13 @@ public final class LevelRenderer {
             auras.drawRings(batch, sortie, alpha, false);
         }
         units.drawChains(batch, sortie, alpha);
+        if (storm != null) {
+            // M7 part E: the air units outside the radius as silhouettes in the dust keeping their lights, then glows.
+            storm.drawSilhouettes(batch, sortie, alpha, units);
+        } else {
+            // M7 part E: the air units' lights (the Ghost Drone's eye and running lights, its glint) in every level.
+            units.drawAirGlows(batch, sortie, alpha);
+        }
         farside.drawSweeps(batch, sortie, alpha);
         luna.drawBlobs(batch, sortie, alpha);
         player.drawAirstrike(batch, sortie, alpha);
@@ -627,10 +658,18 @@ public final class LevelRenderer {
         }
         props.drawSondes(batch, sortie, alpha);
         props.drawPickups(batch, sortie, alpha);
+        if (storm != null) {
+            // M7 part E: a faint glint on the pickups the dust would hide.
+            storm.drawPickupGlints(batch, sortie, alpha);
+        }
         player.drawShots(batch, sortie, alpha, false);
         Wingman rook = sortie.wingman().orElse(null);
         if (rook != null) {
             wingmanLooks.draw(batch, rook, sortie.tick(), alpha, play.whiteFlash);
+            if (storm != null) {
+                // M7 part E: Rook outside the radius, a silhouette with his running lights.
+                storm.drawWingman(batch, rook, alpha, wingmanLooks);
+            }
         }
         if (sortie.flying()) {
             player.drawShip(batch, sortie, alpha, shieldShimmer);
@@ -832,6 +871,12 @@ public final class LevelRenderer {
             // M5 part G: a lane walker (the Skimmer) is a boat on the water: its sub body, wake and
             // surface frames are drawn with the ground units, under the low-air banks, without a drop shadow.
             if (enemy.grounded() || enemy.walking() || enemy.laneWalking()) {
+                return GROUND;
+            }
+            // M7 part E: a vortex (the Dust Devil) closed, rising or sinking is on the ground layer, drawn with the
+            // ground units under the dust storm's veil like its open self on low-air (round 41 K.a: drawn with the
+            // flyers it showed over the veil as a dark silhouette and vanished into the dust as it opened).
+            if (layer == Layer.GROUND && enemy.spec().vortex().isPresent()) {
                 return GROUND;
             }
             return layer == Layer.LOW_AIR ? LOW_AIR : AIR;

@@ -101,14 +101,15 @@ class ShellbackLooksTest {
         double walkedAtRoll = Double.NaN;
         double rolled = 0;
         Enemy shellback = null;
-        // The ship's column is its path: its fire brings the body down to 40 % and it curls.
+        // The ship's column is its path: once the vent has swelled for its first lob, its fire takes the vent (round
+        // 40 R.a: shots from below hit the vent on its back first), then brings the body down to 40 % and it curls.
         for (int i = 0;
                 i < SimStep.ticks(40)
                         && (phases.isEmpty()
                                 || phases.getLast() != Enemy.CurlPhase.WALK
                                 || !phases.contains(Enemy.CurlPhase.BELLY));
                 i++) {
-            sortie.step(Command.FIRE.bit());
+            sortie.step(tells > 0 ? Command.FIRE.bit() : Command.NONE);
             Enemy now = SiegeUnitsFixture.find(sortie, SiegeUnitsFixture.SHELLBACK);
             shellback = now == null ? shellback : now;
             if (now == null) {

@@ -203,6 +203,8 @@ final class UnitPasses {
                 // In its air window the leap's glow goes with the body, over the low-air layer.
                 drawLeapGlow(batch, enemy, look, alpha);
             }
+            // M7 part E: an open Dust Devil's lime core over its body.
+            kinds.vortices(sortie).drawCore(batch, enemy, sortie.tick(), alpha);
             if (enemy.paused() && !look.flare().isEmpty()) {
                 batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
                 AtlasRegion flare = look.flare().get((int) (sortie.tick() / FLARE_FRAME_TICKS % look.flare().size));
@@ -293,6 +295,15 @@ final class UnitPasses {
         AtlasRegion curled = kinds.shellbacks(sortie).frame(enemy);
         if (curled != null) {
             return curled;
+        }
+        // M7 part E: a Dust Devil spinning closed, rising, open or sinking; a Ghost Drone's dark lamps under the EMP.
+        AtlasRegion vortex = kinds.vortices(sortie).frame(enemy);
+        if (vortex != null) {
+            return vortex;
+        }
+        AtlasRegion stunned = kinds.ghostDrones(sortie).frame(enemy);
+        if (stunned != null) {
+            return stunned;
         }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
@@ -710,6 +721,64 @@ final class UnitPasses {
                 weather.drawGlow(batch, enemy.renderX(alpha), enemy.renderY(alpha), real);
             }
         }
+    }
+
+    /**
+     * M7 part E, the dust storm's silhouette pass ({@link StormLooks#drawSilhouettes}): each {@code air} unit's frame
+     * at its place again, at the batch's shader and its entry fade (each frame's texture handed to the storm first,
+     * its edge's softening); a unit decloaking, growing, in a chain or latched is left as it is.
+     */
+    void drawAirSilhouettes(SpriteBatch batch, Sortie sortie, float alpha, StormLooks storm) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            if (Depth.of(enemy) != Depth.AIR
+                    || enemy.chain() != null
+                    || enemy.latched()
+                    || enemy.growing()
+                    || enemy.decloak(alpha) < 1) {
+                continue;
+            }
+            AtlasRegion frame = enemyFrame(sortie, enemy, i, alpha);
+            storm.texelOf(batch, frame.getTexture());
+            batch.setColor(1, 1, 1, kiteFade.opacity(enemy, sortie.tick(), alpha));
+            drawCentred(batch, frame, enemy.renderX(alpha), enemy.renderY(alpha));
+        }
+        batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * M7 part E: the {@code air} units' {@code -glow} frames (the Ghost Drone's red eye and white running lights;
+     * tools/art/storm_units.py), additive over their bodies at the heading and frame drawn, dark while an EMP stuns a
+     * machine, then the Ghost Drones' eye glints ({@link GhostDroneLooks}); in every level after the air units, in
+     * the dust storm after its silhouette pass, so they light the silhouettes outside the radius.
+     */
+    void drawAirGlows(SpriteBatch batch, Sortie sortie, float alpha) {
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            EnemyLooks look = looks[enemy.kind()];
+            if (Depth.of(enemy) != Depth.AIR
+                    || look.glow().isEmpty()
+                    || look.glow().size % look.headings() != 0
+                    || look.iris()
+                    || enemy.walking()
+                    || enemy.chain() != null
+                    || enemy.latched()
+                    || enemy.decloak(alpha) < 1) {
+                continue;
+            }
+            float glow = ArsenalLooks.glowShare(enemy) * kiteFade.opacity(enemy, sortie.tick(), alpha);
+            if (glow <= 0) {
+                continue;
+            }
+            batch.setColor(1, 1, 1, glow);
+            AtlasRegion frame = look.glowFrame(enemy.facing(), look.step(sortie.tick(), i, enemy.burstSeconds()));
+            drawCentred(batch, frame, enemy.renderX(alpha), enemy.renderY(alpha));
+        }
+        batch.setColor(Color.WHITE);
+        // The Ghost Drones' eye glints before their bursts, through the dust like their lights.
+        kinds.ghostDrones(sortie).drawGlints(batch, sortie, alpha);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /** M7 part B: after each simulation step, the Dust Kites' entry fades follow it. */

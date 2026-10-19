@@ -26,7 +26,15 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      tools/art/canyon_units.py, the anchor's cone pointing down at its full pulse, and the
                      Threadcrawler's head nose down with its first segment trailing); choir-herald, shellback
                      (Level 17, M7 part D batch: the production models of tools/art/siege_units.py, the
-                     Herald facing down with its crest lit, the Shellback walking down, its vent swollen)
+                     Herald facing down with its crest lit, the Shellback walking down, its vent swollen);
+                     dust-devil, ghost-drone (Level 18, M7 part E batch: the production models of
+                     tools/art/storm_units.py, the Dust Devil in its rise with the lime core showing, the
+                     Ghost Drone nose down with its red eye)
+  unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
+                     (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
+                     Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
+                     like a boss silhouette, broken by sensor noise (rows torn sideways, dropped pixels):
+                     "unclassified, small, air" until Level 18 is first flown
   boss-<boss>.png    40x40 sensor silhouette of a boss of Act 1: gorgon-frigate (L05 mid-boss),
                      brood-carrier (L07) (UI batch); leviathan (L03's set piece, the threat
                      profile's "unknown huge contact", M4 part C batch); harbour-kraken (L11's
@@ -48,6 +56,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r38-a.png   review sheet of the M7 part B batch's
   design/ui/hangar/concept/intel-final-r39-a.png   review sheet of the M7 part C batch's
   design/ui/hangar/concept/intel-final-r40-a.png   review sheet of the M7 part D batch's
+  design/ui/hangar/concept/intel-final-r41-a.png   review sheet of the M7 part E batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -96,6 +105,7 @@ import mote_swarm  # noqa: E402  (the Mote's production model)
 import ravager  # noqa: E402  (the Ravager's production model)
 import siege_units  # noqa: E402  (the Choir Herald's and the Shellback's production models)
 import skimmer  # noqa: E402  (the Skimmer's production model and headings)
+import storm_units  # noqa: E402  (the Dust Devil's and the Ghost Drone's production models)
 import vrell_l03  # noqa: E402  (the Whirl Seed's production model)
 import vrell_l04  # noqa: E402  (the Brood Pod's and the Scuttler's production models)
 import wraith  # noqa: E402  (the Wraith's production model)
@@ -125,12 +135,15 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "skimmer": "M5 part G batch", "boss-siege-spire": "M5 part H batch",
            "burrower": "M7 part B batch", "dust-kite": "M7 part B batch",
            "tendril-anchor": "M7 part C batch", "threadcrawler": "M7 part C batch",
-           "choir-herald": "M7 part D batch", "shellback": "M7 part D batch"}
+           "choir-herald": "M7 part D batch", "shellback": "M7 part D batch",
+           "dust-devil": "M7 part E batch", "ghost-drone": "M7 part E batch",
+           "unclassified-ghost-drone": "M7 part E batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
           "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
-          "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40"}
+          "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
+          "M7 part E batch": "r41"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -162,7 +175,11 @@ ENEMIES = {
     "threadcrawler": canyon_units.threadcrawler_intel_model,
     "choir-herald": siege_units.herald_intel_model,
     "shellback": siege_units.shellback_intel_model,
+    "dust-devil": storm_units.devil_intel_model,
+    "ghost-drone": storm_units.ghost_intel_model,
 }
+# units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
+UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}
 BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire")
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it
 
@@ -316,17 +333,44 @@ def silhouette(slug):
     return Image.fromarray(card.astype(np.uint8), "RGB").convert("RGBA")
 
 
+def unclassified(slug):
+    """The sensor's picture of a unit it cannot name: the model's outline at the portrait's scale (nose down),
+    filled flat in dark teal with the grid, a cyan rim, then broken by sensor noise: a few rows torn sideways
+    by a pixel or two, dropped pixels along the rim, a noise speckle over the plate."""
+    scene, mats = UNCLASSIFIED[slug]()
+    hi = sdf.render(scene, mats, (PORTRAIT * 8, PORTRAIT * 8), e3.EXTENT * 1.06)
+    shape = np.array(artkit.native(hi, 8, crisp=0))[..., 3] > 127
+    rng = np.random.default_rng(4501)
+    for y in rng.choice(PORTRAIT, 6, replace=False):
+        shape[y] = np.roll(shape[y], int(rng.choice((-2, -1, 1, 2))))
+    card = plate(PORTRAIT)
+    yy, xx = np.mgrid[0:PORTRAIT, 0:PORTRAIT]
+    card[shape] = SHAPE
+    card[shape & ((xx % 5 == 2) | (yy % 5 == 2))] = SHAPE * 0.6 + SCAN * 0.25
+    pad = np.pad(shape, 1)
+    rim = shape & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
+    rim &= rng.random(rim.shape) > 0.18
+    card[rim] = SCAN
+    speck = rng.random((PORTRAIT, PORTRAIT)) > 0.94
+    card[speck] = card[speck] * 0.5 + SCAN * 0.3
+    img = Image.fromarray(np.clip(card, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+    return artkit.quantize_set([img], 16)[0]
+
+
 def render(job):
     kind, slug = job
+    if kind == "unclassified":
+        return unclassified(slug)
     return portrait(slug) if kind == "enemy" else silhouette(slug)
 
 
 def picture_name(job):
     kind, slug = job
-    return f"boss-{slug}" if kind == "boss" else slug
+    return f"boss-{slug}" if kind == "boss" else f"unclassified-{slug}" if kind == "unclassified" else slug
 
 
-JOBS = [("enemy", slug) for slug in list(ENEMIES) + list(HI)] + [("boss", slug) for slug in BOSSES]
+JOBS = ([("enemy", slug) for slug in list(ENEMIES) + list(HI)] + [("boss", slug) for slug in BOSSES]
+        + [("unclassified", slug) for slug in UNCLASSIFIED])
 
 
 def batch_of(name):

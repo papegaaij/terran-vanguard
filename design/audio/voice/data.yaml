@@ -49,6 +49,8 @@ speakers:
       111125288031: 66006       # game over "Lancer is down…" (M6 part B): picked of eight auditioned seeds; the key's seed read "age is wing" for "Aegis Wing"
       100852a91877: 16842982    # Level 16 t=1 "Aegis, canyon mouth ahead…": the key's seed read "Canyon Martha Head" through the filter
       1cc5abef7b71: 30201466    # Level 17 t=88.5 "Not on this channel, Doctor.": the key's seed dipped to about 130 Hz and jumped high (p90 220 Hz); the pin stays near her 155 Hz
+      0b7d21583672: 32968030    # Level 18 briefing page 1 "A storm front is crossing…": the key's seed read "Sweet pick" for "Sweep it" both ways and jumped high (about 300 Hz) on it
+      487c90a16e48: 53747679    # Level 18 t=78 "Later, Doctor.…": the key's seed sat low (median about 128 Hz); the pin stays near her 160 Hz
   varga:
     names: [Varga]
     ref: ref-varga
@@ -63,6 +65,10 @@ speakers:
       4e10c065c26c: 81881299    # Level 16 t=114 "That's the Helix research station…": the key's seed read "Rell all rounded"; the pin reads "Vrell" (of five seeds)
       ccd2cc769c8b: 214804611   # Level 17 t=29 "Shelled walker…": the key's seed jumped an octave (about 480 Hz) on a quarter of the line
       7c8aa087882e: 130607078   # Level 17 t=123 "Singer with bombers…": the key's seed jumped high (p90 about 360 Hz); the pin is the steadiest of six
+      5f832c8318ee: 123032321   # Level 18 t=41 "Vortex organisms…": the key's seed jumped an octave (about 500 Hz) on "pull"; the only steady one of six
+      5ab56876a311: 31675379    # Level 18 t=56 "We're in the thick of it…": the key's seed jumped an octave (about 500 Hz) on "it"
+      9c3fe80acbcb: 132616425   # Level 18 briefing page 2 "In the dust…": every seed (15 tried) jumps high on "not shapes"; the pin holds it shortest
+      906ac709736e: 151432304   # Level 18 t=71 "That's not Vrell. That signature is... ours?" (the act's key read, pinned as the voice design asks): the key's own seed, median about 210 Hz, no jump, a 0.18 s beat before "ours" rising to about 270 Hz; reads "ours"
       febdaf698bba: 267115454   # Level 09 briefing page 2 "The nodes are hardened…": the key's seed read "the streets and packs" both ways
       a86c85a4cc53: 77391054    # Level 10 briefing page 2 "The Vrell hunt…": the key's seed read "The rail hunt" but with a prompt through the filter; the pin reads "Vrell" with a prompt both ways
       ec548c3af77b: 118220431   # Level 10 secret "That ferry's hold…": the key's seed read "berry's" through the filter; the pin "ferries" every way

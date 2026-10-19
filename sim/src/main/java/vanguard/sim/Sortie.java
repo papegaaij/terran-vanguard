@@ -678,7 +678,9 @@ public final class Sortie {
         } else if (flying()) {
             double fromX = ship.x();
             double fromY = ship.y();
-            ship.fly(commands, push);
+            // M7 part E: the Dust Devils' pull adds to the wind's push (exactly 0 without a unit with a pull).
+            force.pull(fromX, fromY);
+            ship.fly(commands, push + force.pullX(), force.pullY());
             if (ship.dashStarted()) {
                 // M7 part A: the thruster burst and the afterimages, from where the dash started.
                 events.add(SimEvents.Type.DASH, fromX, fromY, ship.dashEighth());
@@ -691,6 +693,7 @@ public final class Sortie {
         if (launching() || !flying()) {
             // M7 part A: a beam runs only while the ship flies.
             fire.ceaseBeams();
+            force.noPull();
         }
         if (wingman != null) {
             wingman.wind(push);
@@ -2052,6 +2055,19 @@ public final class Sortie {
     /** M5 part F: the level's wind and lightning (its push, the gust telegraph, the next flash). */
     public Wind wind() {
         return wind;
+    }
+
+    /**
+     * M7 part E (design/enemies/ground/dust-devil, Pull): the Dust Devils' pull on the ship in this step, px/s to
+     * the right; 0 without one (and while the ship does not fly).
+     */
+    public double pullX() {
+        return force.pullX();
+    }
+
+    /** M7 part E: the Dust Devils' pull on the ship in this step, px/s up the screen; 0 without one. */
+    public double pullY() {
+        return force.pullY();
     }
 
     /** M5 part F: the wind's push this step, px/s to the right; 0 without weather. */

@@ -42,6 +42,10 @@ import java.util.function.IntToDoubleFunction;
  * hum) fades out over {@value #BOSS_AMBIENCE_OUT_SECONDS} s at the kill while the megacity's own
  * ambience rises over {@value #BOSS_AMBIENCE_IN_SECONDS} s.
  *
+ * <p>M7 part E (Level 18): a theme's motif stem ({@link #motif}: track 9's Vorne motif, a third sample-aligned stream
+ * added on top of the stems' crossfade) plays while its cue asks for it (the level's {@code music.motif}: from the
+ * Ghost Drones' first sight, off in the eye), in over 2 s, out over 4 s ({@link StemMix}).
+ *
  * <p>An act boss (Level 07) has its own music: at its arrival the theme crossfades out over 0.5 s
  * while the boss warning (track 22) starts, and the boss track (track 18) comes in on the downbeat
  * after the warning's bars ({@link BossCue}); at the kill it fades out in a second, leaving the
@@ -186,6 +190,19 @@ public final class LevelMusic implements Disposable {
     private Sound loopSound;
     private long loopId = -1;
 
+    /** M7 part E: whether the motif layer plays at a section (1-based) and level time (the level's {@code music.motif}). */
+    @FunctionalInterface
+    public interface MotifCue {
+        boolean on(int section, double levelSeconds);
+    }
+
+    /** M7 part E: the theme's motif stem, null without one, and its cue. */
+    private FileHandle motifFile;
+
+    private MotifCue motifCue = (section, t) -> false;
+    /** M7 part E: whether the cue asked for the motif at the last update. */
+    private boolean motifOn;
+
     /**
      * @param base the theme's base stem
      * @param full the theme's full mix, sample-aligned with the base stem
@@ -272,6 +289,21 @@ public final class LevelMusic implements Disposable {
         jingleAt = t;
         jingleFade = (float) fade;
         return this;
+    }
+
+    /**
+     * M7 part E: the theme's motif stem ({@code file}, sample-aligned with the base stem and the full mix; ignored when
+     * it does not exist) and when it plays.
+     */
+    public LevelMusic motif(FileHandle file, MotifCue cue) {
+        motifFile = file;
+        motifCue = cue;
+        return this;
+    }
+
+    /** M7 part E: whether the motif layer was asked for at the last update, for the tests. */
+    boolean motifOn() {
+        return motifOn;
     }
 
     /** M5 part G: the ambience's level by the level time, dB (Level 13's whiteout peak, +3). */
@@ -404,6 +436,7 @@ public final class LevelMusic implements Disposable {
         boolean wasIntense = intense;
         intense = runTimeFull;
         boolean wanted = fullMix.test(section) || runTimeFull;
+        motifOn = motifCue.on(section, levelSeconds);
         if (levelSeconds >= ambienceFrom && fade < 0 && music.isPresent()) {
             fadeOut();
         }
@@ -421,11 +454,16 @@ public final class LevelMusic implements Disposable {
             StemMix mix = StemMix.of(
                     new VorbisFile(base.readBytes()),
                     new VorbisFile(full.readBytes()),
+                    motifFile != null && motifFile.exists() ? new VorbisFile(motifFile.readBytes()) : null,
                     CROSSFADE_SECONDS,
-                    wanted ? 1 : 0);
+                    wanted ? 1 : 0,
+                    motifOn);
             stemTarget = wanted ? 1 : 0;
             stems = Optional.of(mix);
             music = Optional.of(MusicStreamer.play(audio, mix, MUSIC_VOLUME * rise, mixer));
+        }
+        if (stems.isPresent()) {
+            stems.get().motif(motifOn);
         }
         float share = wanted ? 1 : 0;
         if (stems.isPresent() && share != stemTarget) {

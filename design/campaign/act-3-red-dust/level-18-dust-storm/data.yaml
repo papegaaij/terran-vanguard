@@ -1,0 +1,511 @@
+# Level 18 – Dust Storm: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M7 part E, step E2, from the README's
+# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M7 part E (loaded and checked in step E2 by content's LevelData and StormChecks, mapped for the
+# simulation in step E4, flown from steps E1/E3, drawn by step G1): the presentation key `visibility` (the dust
+# storm's radius round the ship and its ramps; the simulation never reads it), the music's `motif` (track 9's motif
+# stem from hint 1, off in the eye) and the ambience `mars-storm`; the Dust Devil's and the Ghost Drone's own blocks
+# are in their stat blocks.
+# The user's decision (2026-10-19): Level 18 meets the Act 2+ pacing and floor rules (PacingTest's Act 2 rule,
+# ActFloorTest: 2.5 enemies on the screen and 10 enemy shots a minute with the plan's fit at medium) and joins
+# `small_act_hp` (the Needler 12 HP, the Stinger 18): it stays the act's breather by threat (no boss, light groups, the
+# calm eye in clear air), not by count. Defaults of the gap check built here (§1.5), pending the user's review in
+# round 41: the anchor waves kept at their times (the Dust Devils at 41.5/77/116.5/138.5, the Ghost Drones at
+# 69.5/87.5/131.5/145.5/166.5, the rear entries at 52/94.5/152.5, the Needler pincers at 80.5/159.5, the radio beats),
+# filled to a wave about every 2.5 s (the eye included) with long-lived, firing, light groups (Needler line abreasts
+# of 3-4, Stinger V-wings of 3, Dust Kite swarms of 6-7 that stay on the screen) and more spine/mortar nests along
+# the pipelines; a ground nest on the screen in the hint-1 window (69.5-73.5, no Vrell air); the Needler pincers 2 per
+# edge; the Skitters' rear entries line abreasts from the rear (the `rear ambush` formation is the Wraith's); a Dust
+# Devil pair or trio a `pack`, each on its own path (its wander's centre line); hard: the firing groups one unit
+# smaller (as Act 2's reworks), easy thinned by the formation lever. Step E4 tuned the waves to the floor (605
+# enemies); the user's "tougher, not more" (2026-10-19) replaced that: step E5 rebuilt them from E2's plan with the
+# beam era's HP (design/enemies `beam_era_hp`: small units ×2 from Level 18): Needler lines and Stinger V-wings one
+# larger, E2's short Dust Kite V-wings and streams Stinger groups of 3, four light groups in the widest gaps.
+# The backdrop is step ART-E's (tools/art/backdrop_l18.py --proposal, merged in step E4): tile sets north-plain,
+# storm-plain, dry-lake; atmospheres 1 clear with the medium peak 20-25, 2 medium, 3 heavy, 4 light, 5 heavy, 6 light.
+scroll_speed: 150     # the clear plains and the clearing; the front and the storm set their own
+launch_seconds: 5     # from the bottom edge over the northern plains
+bounty_scale: 0.37    # every bounty × 0.37: the typical haul on budget(18) 2,211 (step E5 with the beam era's HP, ≈ 101 a minute: typical 2,186, −1.1 %; 0.38 steps to +4.3 % as the rounded bounties step)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Mars, northern plains
+  layers: [air, ground]
+  density: 3
+  traits: [homing, spread]
+  hazards: [dust storm, half blind]   # "low visibility" overflowed the intel panel (step E4); Varga's "half blind"
+  boss: none
+  objective: SWEEP THE STORM   # the OBJECTIVE field from sensor L1
+  varga:
+    none: A dust storm on the plains. You'll fly half blind.
+    l1: From every side, rear too. Ground vortices that pull.
+    l2: "New: Dust Devils. And contacts I can't classify."
+    l3: Homing sees through dust. Spread for the kites.
+  notes:
+    Dominant layers: '`air` (popcorn, Needler and Stinger groups, Ghost Drones, Wraiths), `ground` and `low-air` (Dust Devils, which rise to `low-air` when open; mortar and turret nests)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'Dust storm: visibility drops to a radius round the ship; Dust Devils pull the ship and the pickups'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: storm plains, `air` + `ground`, front · L1: + directions (all), density {density}, hazard "dust storm, half blind", the objective `{objective}` and the secondary `KILL RATIO 65 %` · L2: + Dust Devil (new), Dust Kite, Skitter, Needler, Stinger, Mote Swarm, Wraith portraits, and a silhouette "unclassified, small, `air`" (the Ghost Drone stays unnamed before its first sight) · L3: + `homing` and `spread` highlighted, the wave strip marking the eye, 1 secret'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); tiles and atmospheres ART-E's (tools/art/backdrop_l18.py)
+  - name: Open Plains
+    end: 25
+    atmosphere: clear
+    peak: {atmosphere: medium, from: 20, to: 25}   # the front's leading streaks
+    tiles: [north-plain]
+    notes:
+      layers:
+        deep: rust plain to the horizon, the storm wall standing on it.
+        ground: dry channels, a buried pipeline, wind ripples.
+        high-air: the front's leading streaks from t=20.
+      purpose: Popcorn from t=6; the storm seen coming.
+      visibility: full
+  - name: Storm Front
+    end: 55
+    speed: 140
+    ramp: 2
+    atmosphere: medium
+    tiles: [north-plain]
+    notes:
+      layers:
+        high-air: the dust wall passing over the screen from the top edge (t=28), streaks ≤ 40 %.
+        ground: the plain dimming into dust outside the radius.
+      purpose: The radius ramps in; the Dust Devils alone (t=41.5).
+      visibility: full → 170 px over t=28–36
+  - name: Deep Storm
+    end: 110
+    speed: 120
+    ramp: 2
+    atmosphere: heavy
+    tiles: [storm-plain]
+    notes:
+      layers:
+        ground: as section 2 at full strength; a militia rover wreck half buried at x 60 (t≈90, the secret), its red beacon visible only inside the radius; the pipeline's spine-turret nests.
+      purpose: Ghost Drones (hint 1, t=69.5); the first rear entries.
+      visibility: 170 px
+  - name: The Eye
+    end: 130
+    speed: 120
+    atmosphere: light
+    tiles: [dry-lake]
+    notes:
+      layers:
+        deep: the sky clear overhead, the storm's walls round the field.
+        ground: a dry lake bed, a Polyp Mortar floe (t≈125).
+      purpose: A breather in clear air; the Dust Devil's core window learnt in plain sight.
+      visibility: 170 → full over t=110–114; full; full → 150 over t=130–134
+  - name: Back Wall
+    end: 170
+    speed: 120
+    atmosphere: heavy
+    tiles: [storm-plain]
+    notes:
+      layers:
+        high-air: the storm's back wall, denser than the front, streaks at 40 %.
+        ground: the plain gone outside the radius.
+      purpose: Ghost Drone pincers and lines with Dust Devils; the hardest stretch.
+      visibility: 150 px
+  - name: Clearing
+    end: 183
+    speed: 150
+    ramp: 2
+    atmosphere: light
+    tiles: [north-plain]
+    notes:
+      layers:
+        ground: the dust thinning, the plain and the domes of Ares Landing on the horizon.
+      purpose: Release; level end.
+      visibility: 150 → full over t=170–176
+
+# The dust storm (M6 = a, MA.2 = b; a look only: the simulation never reads it). The radius round the ship by level
+# time at medium, each ramp easing from the radius before it (full view before the first) to its own; easy and hard
+# their own radii. The Dust Devil's pull (130 px) always lies inside it (StormChecks).
+visibility:
+  radii: {deep: 170, wall: 150}   # px: the deep storm (sections 2-3), the back wall (sections 5-6)
+  ramps:
+    - {from: 28, to: 36, radius: deep}    # into the front: 8 s
+    - {from: 110, to: 114, radius: full}  # into the eye: 4 s
+    - {from: 130, to: 134, radius: wall}  # into the back wall: 4 s
+    - {from: 170, to: 176, radius: full}  # out over the clearing: 6 s
+  falloff: 120    # px: the soft ragged edge, centred on the radius, broken by two drifting noise fields (look b)
+  easy: {deep: 200, wall: 180}
+  hard: {deep: 150, wall: 130}
+
+# A wave about every 2.5 s from t=6 (the eye included; step E5: four more in the widest gaps), keeping the approved
+# table's anchor waves at their times; the side and rear waves warned 3 s ahead at their edge (the warnings draw above
+# the dust). Quiet windows: no other wave
+# for 3.5 s after the first Dust Devils (t=41.5, the armoured devils hold the screen) and after the first Ghost Drones
+# (t=69.5, no Vrell air: a spine-turret nest on the ground holds the screen). The Dust Devils' paths are the centre
+# lines of their wander, ground positions at the wave's t ([x, y] px, y below the top edge), as a walker's.
+waves:
+  - {t: 6, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: left, interval: 1.25, notes: "Clear sky; the storm wall on the horizon"}
+  - {t: 8.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 11, formation: snake, enemy: skitter, count: 4, from: front, edge: right}
+  - {t: 13.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - {t: 16, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 18.5
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[240, -60], [230, 200], [300, 360], [260, 620]]]   # down the middle, swinging right
+  - {t: 21, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - {t: 23.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 26, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left, notes: "The storm front reaches the top edge at t=28"}
+  - {t: 28.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "In the ramp"}
+  - {t: 31, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - t: 33
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[300, -60], [310, 300], [250, 460], [280, 620]]]   # down the right half
+    notes: Teal glow in the thickening dust
+  - {t: 35, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - {t: 37.5, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: right, interval: 1.25, notes: "Gone before the Dust Devils' quiet window"}
+  - {t: 39.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - t: 41.5
+    formation: pack
+    enemy: dust-devil
+    count: 2
+    from: front
+    paths: [[[140, -40], [190, 640]], [[340, -40], [290, 640]]]   # two centre lines down the plain, closing in
+    notes: "**New.** A pair, alone until t=45 (ground, cycles 0.8 s apart); Varga's line at t=41"
+  - t: 45
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half, clear of the devils' middle
+  - {t: 47.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 50, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - {t: 52, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "The first rear entry, warned 3 s ahead; Rook's bark at t=49"}
+  - {t: 54.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 57, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25, notes: "Radius 170 from here"}
+  - {t: 59.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 62, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
+  - {t: 64, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1}
+  - {t: 65.5, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25, notes: "Gone before the Ghost Drones' quiet window"}
+  - {t: 67.5, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}}
+  - {t: 69.5, formation: line abreast, enemy: ghost-drone, count: 3, from: front, notes: "**New, hint 1.** Alone until t=73.5, no Vrell air on the screen (a spine-turret nest on the ground); Varga's line at t=71, Okafor's at t=78"}
+  - {t: 73.5, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25}
+  - {t: 75, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 77
+    formation: pack
+    enemy: dust-devil
+    count: 2
+    from: front
+    paths: [[[180, -40], [130, 640]], [[320, -40], [360, 640]]]
+    notes: Pull with the kites crossing
+  - {t: 78.75, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - {t: 80.5, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: "2 per edge; warned 3 s ahead"}
+  - t: 83
+    formation: swarm
+    enemy: dust-kite
+    count: 7
+    from: front
+    paths: [[[360, -60], [350, 200], [290, 380], [330, 620]]]   # down the right half
+  - {t: 85.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - {t: 87.5, formation: line abreast, enemy: ghost-drone, count: 4, from: front, notes: "Rook's line at t=86"}
+  - t: 90
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[110, -60], [100, 300], [160, 460], [120, 620]]]   # down the left lane, over the buried rover
+    notes: Over the buried rover (the secret)
+  - {t: 92.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 94.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked: `homing` hits them before the decloak; warned 3 s ahead"}
+  - {t: 96.5, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: right, interval: 1.25}
+  - {t: 99, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 101.5, formation: V-wing, enemy: stinger, count: 5, from: front, hard: {count: 4}, notes: "The leader drops an overdrive"}
+  - {t: 104, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - t: 106.5
+    formation: swarm
+    enemy: dust-kite
+    count: 7
+    from: front
+    paths: [[[200, -60], [190, 220], [260, 380], [220, 620]]]   # down the middle
+  - {t: 109, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 111.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}, notes: "**The Eye**: radius opens over 4 s; a breather"}
+  - {t: 114, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 116.5
+    formation: single
+    enemy: dust-devil
+    count: 1
+    from: front
+    paths: [[[240, -40], [240, 640]]]   # down the middle of the dry lake
+    notes: "In clear air: the core window learnt"
+  - {t: 119, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25, notes: "The supply drone's armour patch at t=118"}
+  - {t: 121.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 124, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 126.5
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[380, -60], [390, 220], [320, 380], [360, 620]]]   # down the right half, clear of the floe
+  - {t: 128.5, formation: stream, enemy: skitter, count: 3, from: front, edge: right, interval: 1, notes: "The back wall reaches the top edge at t=130"}
+  - {t: 130, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}}
+  - {t: 131.5, formation: pincer, enemy: ghost-drone, count: 4, from: sides, notes: "2 + 2 at their lanes; warned 3 s ahead; radius 150"}
+  - {t: 133.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
+  - {t: 136, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 138.5
+    formation: pack
+    enemy: dust-devil
+    count: 3
+    from: front
+    paths: [[[110, -40], [150, 640]], [[240, -40], [240, 640]], [[370, -40], [330, 640]]]
+    hard: {count: 3}   # at most three on the screen (the stat block), not the formation lever's four
+    notes: "Three roaming, cycles offset 0.8 s; the last drops a shield cell"
+  - {t: 141, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25}
+  - {t: 143, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 145.5, formation: line abreast, enemy: ghost-drone, count: 4, from: front, notes: "Splits half left, half right; Rook's line at t=146"}
+  - t: 148
+    formation: swarm
+    enemy: dust-kite
+    count: 6
+    from: front
+    paths: [[[140, -60], [150, 220], [210, 380], [170, 620]]]   # down the left half
+  - {t: 150, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair from the rear, warned"}
+  - {t: 150.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 152.5, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "Warned 3 s ahead"}
+  - {t: 155, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - {t: 157.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 159.5, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: "2 per edge; warned 3 s ahead"}
+  - {t: 162, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
+  - {t: 164, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 166.5, formation: line abreast, enemy: ghost-drone, count: 3, from: front}
+  - {t: 169, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: alternating, interval: 1.25, notes: "The dust thins over t=170–176"}
+  - {t: 171.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 173.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - {t: 176, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "The last wave"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (step ART-E's positions; its pipelines and ridges under them)
+  - target: pipeline nest
+    section: 1
+    enemy: spine-turret
+    count: 2
+    at: [[8.3, 150], [8.7, 330]]   # on the half-buried pipeline crossing the plain (pipeline-a passes the middle at t≈10.1)
+    notes:
+      target: Spine Turret pair on the half-buried pipeline (t≈8)
+      effect: Bounty {bounty} each
+  - target: front nest
+    section: 2
+    enemy: spine-turret
+    count: 2
+    at: [[32.3, 140], [32.7, 340]]   # on the pipeline again (pipeline-b passes the middle at t≈34.2)
+    notes:
+      target: Spine Turret pair on the pipeline in the front (t≈32)
+      effect: Bounty {bounty} each; their shots always visible
+  - target: channel mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 2
+    at: [[47, 120], [47.4, 160]]   # in a dry channel (dry-channel)
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) pair in a dry channel (t≈47), in the ramp'
+      effect: Bounty {bounty} each; their markers always visible
+  - target: hint nest
+    section: 3
+    enemy: spine-turret
+    count: 5
+    at: [[68.8, 160], [69.2, 320], [69.6, 240], [70, 200], [70.4, 280]]   # on the pipeline ridge (pipeline-ridge, t≈71.3); step E4: 5 (was 3) to hold the screen through the window
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on the pipeline (t≈69), on the screen through the hint-1 window'
+      effect: Bounty; the screen is never empty while the Ghost Drones fly alone
+  - target: ridge nest
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[88, 300], [88.4, 340], [88.8, 380]]   # on the pipeline ridge (pipeline-ridge)
+    notes:
+      target: Spine Turret nest ×{count} on a pipeline ridge (t≈88), seen only inside the radius
+      effect: Bounty {bounty} each; their shots always visible
+  - target: rover wreck
+    section: 3
+    layer: ground
+    size: [64, 48]
+    sprite: rover-wreck   # step ART-E: the militia rover half buried in a drift, its red beacon (rover-wreck-beacon)
+    hp: 20
+    reveals: rover wreck
+    at: [[90, 60]]   # at the left edge of the deep storm
+    notes:
+      target: 'Militia rover wreck (`ground` trigger, {hp} HP, t≈90, x 60)'
+      effect: 'The secret: frees a crate worth 100 (256)'
+  - target: storm mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[103, 140], [103.4, 340]]
+    notes:
+      target: Polyp Mortar pair in the deep storm (t≈103)
+      effect: Bounty; their markers always visible
+  - target: lake floe
+    section: 4
+    enemy: polyp-mortar
+    count: 3
+    at: [[125, 200], [125.4, 250], [125.8, 225]]   # on the dry lake bed (vrell-growth)
+    notes:
+      target: Polyp Mortar floe ×{count} on the dry lake bed (t≈125), in the eye
+      effect: Bounty
+  - target: back-wall pipeline
+    section: 5
+    enemy: spine-turret
+    count: 2
+    at: [[149.2, 120], [149.6, 360]]   # on the pipeline (pipeline-b passes the middle at t≈151.4)
+    notes:
+      target: Spine Turret pair on the pipeline in the back wall (t≈149)
+      effect: Bounty
+  - target: wall nest
+    section: 5
+    enemy: spine-turret
+    count: 3
+    at: [[160, 140], [160.4, 180], [160.8, 220]]   # on the second pipeline ridge
+    notes:
+      target: Spine Turret nest ×{count} (t≈160), in the back wall
+      effect: Bounty
+
+secrets:
+  - name: rover wreck
+    crate: 100   # Act 1 terms: pays 256 with the act factor
+    radio: {speaker: Varga, line: "Militia supply pod. Someone was out here before the storm."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 101.5, unit: first}}    # the leader of the t=101.5 Stinger V-wing
+  - {pickup: shield cell, dropped_by: {wave: 138.5, unit: last}}   # the last Dust Devil of the t=138.5 pack at its death, with whatever the pack held
+
+drops:  # an Ares militia supply drone (the CDF supply drone's presentation, as Level 17's) releases an armour patch in the eye
+  - {t: 118, x: 240, y: 380, pickup: armour patch, sprite: supply-drone}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
+  - {t: 1, speaker: Okafor, line: "Storm front on the northern plains, Lancer. Vrell are moving inside it. Sweep it before it reaches Ares Landing."}
+  - {t: 14, speaker: Rook, requires: escort, line: "Can't see a thing in there. Sounds like home."}
+  - {t: 22, speaker: Varga, line: "The front hits in a few seconds. Past your wingtips you'll see glow, not shapes. Bullets always show."}
+  - {t: 41, speaker: Varga, line: "Vortex organisms. They pull. Shoot the core when the spin opens."}
+  - {t: 49, speaker: Rook, requires: escort, line: "Six o'clock, Lancer! Coming up behind!"}
+  - {t: 56, speaker: Varga, line: "We're in the thick of it. Trust the glow and the warnings."}
+  - {t: 71, speaker: Varga, line: "That's not Vrell. That signature is... ours?"}
+  - {t: 78, speaker: Okafor, line: "Later, Doctor. Eyes on the storm."}
+  - {t: 86, speaker: Rook, requires: escort, line: "Grey ones fire straight. Watch for the red eye."}
+  - {t: 93, speaker: Varga, line: "Cloakers at your back. Homing finds them before they show."}
+  - {t: 111.5, speaker: Varga, line: "We're in the eye. Clear sky for a minute. Enjoy it."}
+  - {t: 127.5, speaker: Okafor, line: "Back wall of the storm ahead. It's thicker than the first."}
+  - {t: 146, speaker: Rook, requires: escort, line: "Grey drones on both flanks. Same red eyes."}
+  - {t: 168, speaker: Okafor, line: "Clear air ahead, Lancer. Bring it home."}
+  - {event: secondary-objective, speaker: Okafor, line: "Clean sweep. Nothing in that storm will reach the domes.", notes: {trigger: Secondary met (at the end)}}
+  - {event: level-end, speaker: Okafor, line: "The front is breaking up over the plains. Come home, Aegis."}
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, credits: 100, name: Clean sweep}   # at least 65 % of the level's enemies, judged at the end (100 in Act 1 terms: pays 256)
+
+music:
+  track: 9            # Act 3 B "Grey Signal" (audio/music track list)
+  start_section: 2    # the plains wind alone in section 1, the base stem from the front
+  full_section: 5     # the full mix with the motif in the back wall
+  stems: {4: base, 6: base}   # the base stem in the eye and out over the clearing
+  motif: {from: 69.5, sections: {4: false}}   # Vorne's motif layer from the Ghost Drones' first sight (hint 1), off in the eye
+  ambience: mars-dust   # the plains wind in section 1
+  ambience_changes:
+    - {section: 2, ambience: mars-storm, crossfade: 3}   # the recorded front (round 36 S.5 = a) from t=25
+    - {section: 4, ambience: mars-dust, crossfade: 4}    # the eye: a light wind
+    - {section: 5, ambience: mars-storm, crossfade: 4}   # the back wall
+    - {section: 6, ambience: mars-dust, crossfade: 4}    # the clearing
+  end_jingle: mission-complete
+
+difficulty: {}  # the radii are in visibility (easy 200 / 180, hard 150 / 130); hard's extra Wraith pair is its wave (skip); the firing groups' hard counts are in their waves; the formation lever sizes the rest; the stat blocks' hooks apply (the Ghost Drone's 2- and 4-shot bursts and hard second pass, the Dust Devil's easy window and pull, hard spiral and pull, the Wraith's hard hold)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-18-storm-front, line: "A storm front is crossing the northern plains with Vrell inside it. Sweep it before it reaches Ares Landing. And Lancer: what Doctor Varga said about the Helix compound stays in this room."}
+    - {speaker: Varga, image: level-18-visibility, line: "In the dust you'll see glow, not shapes, past a few ship-lengths. The Vrell glow; bullets always show. Homing guns find what your eyes can't."}
+  teaser: {speaker: Rook, line: "Sandstorm on the plains. Bring homing, or bring luck. I'm bringing both."}
+
+backdrop:
+  # Presentation only: Dust Storm (tools/art/backdrop_l18.py, from mars-storm-plains-r36-a and the radius look b).
+  # The ground is opaque; no deep layer (the README's horizon and the storm wall standing on it cannot show
+  # under a top-down ground: the wall is the high-air front passing over, the domes Ares Landing's outskirts
+  # ahead at the end; pending round 41). The storm's veil and tongues (storm-veil, storm-veil-drift,
+  # storm-tongues-a/-b in the same folder) are StormLooks' textures, not backdrop pieces.
+  # Seams and the eye's walls sit at exact rows: re-run `backdrop_l18.py --proposal` after the data moves a section.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2}   # far unused (no deep layer: the ground is opaque); high-air 2.0 as ART-E built and rendered it (E2's placeholder had 2.2; step E4 took ART-E's)
+  ramp: 3
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {haze: 0.04}   # section 1 before the front: haze only
+    light: {banks: dust-wisps, haze: 0.08}   # the eye and the clearing: light wind, thin wisps
+    medium: {banks: dust-wisps, wisps: dust-streaks, haze: 0.12}   # the front's streaks (section 1's peak 20-25) and section 2
+    heavy: {banks: dust-banks, wisps: dust-streaks, haze: 0.16}   # the deep storm and the back wall: dust banks and streaks
+  tile_sets:
+    north-plain: {layer: ground, height: 960}   # sections 1, 2, 6: the northern plain's rust flats, dry channels, wind ripples
+    storm-plain: {layer: ground, height: 960}   # sections 3, 5: the plain under drifted dust sheets, lit flat by the storm
+    dry-lake: {layer: ground, height: 960}   # section 4, the eye: a pale cracked lake bed, salt crusts
+    dust-wisps: {layer: low-air, height: 960, drift: 6}   # light and medium: thin dust wisps, at most 30 %
+    dust-banks: {layer: low-air, height: 960, drift: 10}   # heavy: dust banks, at most 38 %
+    dust-streaks: {layer: high-air, height: 960, drift: 24}   # medium and heavy (the atmosphere's wisps): driven dust streaks, at most 40 %
+  pieces:
+    seam-storm: {layer: ground, size: [480, 320]}   # section 3's seam: the plain into the storm plain (exact rows)
+    seam-lake-in: {layer: ground, size: [480, 320]}   # section 4's seam: the storm plain onto the dry lake (exact rows)
+    seam-lake-out: {layer: ground, size: [480, 320]}   # section 5's seam: the dry lake back into the storm plain (exact rows)
+    seam-clearing: {layer: ground, size: [480, 320]}   # section 6's seam: the storm plain into the clear plain (exact rows)
+    pipeline-a: {layer: ground, size: [480, 200]}   # the half-buried terraforming pipeline crossing the field, rising to the right
+    pipeline-b: {layer: ground, size: [480, 200]}   # the same pipeline falling to the right (its own lighting)
+    pipeline-ridge: {layer: ground, size: [280, 240]}   # the pipeline along a low ridge: the spine-turret nests stand on it
+    dry-channel: {layer: ground, size: [140, 360]}   # a wider dry channel: the Polyp Mortar pair's
+    vrell-growth: {layer: ground, size: [160, 144]}   # Vrell nest growth, violet with teal veins (under the eye's mortar floe)
+    ares-outskirts: {layer: ground, size: [480, 480]}   # Ares Landing's edge ahead: road, rail line, greenhouses, three outer domes
+    eye-wall-left: {layer: low-air, size: [120, 960]}   # the storm's wall round the eye, left edge (tiles along itself, exact rows)
+    eye-wall-right: {layer: low-air, size: [120, 960]}   # the storm's wall round the eye, right edge (tiles along itself, exact rows)
+    storm-front: {layer: high-air, size: [480, 420]}   # the front's billowing edge passing over the screen, at most 50 %
+    storm-back-wall: {layer: high-air, size: [480, 480]}   # the back wall, denser and darker, at most 60 %
+  placed:
+    # the section seam under seam-storm (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-storm, t: 57.0833, x: 240}
+    # the section seam under seam-lake-in (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-lake-in, t: 112.25, x: 240}
+    # the section seam under seam-lake-out (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-lake-out, t: 132.25, x: 240}
+    # the section seam under seam-clearing (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-clearing, t: 172, x: 240}
+    # 1, 2, 5. the half-buried pipeline under the spine-turret pairs (fitted so the pipe runs under both)
+    - {piece: pipeline-a, t: 10.167, x: 240}
+    - {piece: pipeline-a, t: 34.286, x: 240}
+    - {piece: pipeline-a, t: 151.484, x: 240}
+    # 1, 3. the pipeline elsewhere on the plain (clear of the nests and of the rover at x 60)
+    - {piece: pipeline-b, t: 19.133, x: 240}
+    - {piece: pipeline-b, t: 79.417, x: 240}
+    # 2. the dry channel of the Polyp Mortar pair
+    - {piece: dry-channel, t: 49.014, x: 140}
+    # 3, 5. the pipeline ridges under the spine-turret nests (centred on each nest)
+    - {piece: pipeline-ridge, t: 71.283, x: 240}
+    - {piece: pipeline-ridge, t: 90.483, x: 340}
+    - {piece: pipeline-ridge, t: 162.483, x: 180}
+    # 3, 4. Vrell nest growth under the mortars
+    - {piece: vrell-growth, t: 105.083, x: 140}
+    - {piece: vrell-growth, t: 105.483, x: 340}
+    - {piece: vrell-growth, t: 127.483, x: 225}
+    # 6. Ares Landing's outskirts ahead at the level's end (its domes on screen from t~180)
+    - {piece: ares-outskirts, t: 182.867, x: 240}
+    # 4. the storm's walls round the eye (low-air, exact rows: the copies join)
+    - {piece: eye-wall-left, t: 106.062, x: 60}
+    - {piece: eye-wall-right, t: 106.062, x: 420}
+    - {piece: eye-wall-left, t: 111.988, x: 60}
+    - {piece: eye-wall-right, t: 111.988, x: 420}
+    - {piece: eye-wall-left, t: 117.914, x: 60}
+    - {piece: eye-wall-right, t: 117.914, x: 420}
+    - {piece: eye-wall-left, t: 123.84, x: 60}
+    - {piece: eye-wall-right, t: 123.84, x: 420}
+    - {piece: eye-wall-left, t: 129.765, x: 60}
+    - {piece: eye-wall-right, t: 129.765, x: 420}
+    - {piece: eye-wall-left, t: 135.691, x: 60}
+    - {piece: eye-wall-right, t: 135.691, x: 420}
+    # 2. the front passing over the screen: its leading edge enters at the top at t=28 (high-air)
+    - {piece: storm-front, t: 29.714, x: 240}
+    # 5. the back wall passing over at t=130 (high-air)
+    - {piece: storm-back-wall, t: 132.125, x: 240}
+  # Section tiles (`sections[].tiles`): 1: [north-plain]; 2: [north-plain]; 3: [storm-plain]; 4: [dry-lake]; 5: [storm-plain]; 6: [north-plain]
+  # Atmospheres: 1 clear with the medium peak 20-25 (the front's streaks); 2 medium; 3 heavy; 4 light; 5 heavy; 6 light.
+  # Ground-target positions used (the level's data, else the README): pipeline nest [(8.3, 150.0), (8.7, 330.0)]; front nest [(32.3, 140.0), (32.7, 340.0)]; channel mortars [(47.0, 120.0), (47.4, 160.0)]; hint nest [(68.8, 160.0), (69.2, 320.0), (69.6, 240.0)]; ridge nest [(88.0, 300.0), (88.4, 340.0), (88.8, 380.0)]; rover wreck [(90.0, 60.0)]; storm mortars [(103.0, 140.0), (103.4, 340.0)]; lake floe [(125.0, 200.0), (125.4, 250.0), (125.8, 225.0)]; back-wall pipeline [(149.2, 120.0), (149.6, 360.0)]; wall nest [(160.0, 140.0), (160.4, 180.0), (160.8, 220.0)]

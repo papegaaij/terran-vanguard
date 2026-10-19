@@ -47,6 +47,18 @@ class PlaceholderAuditTest {
             "M7 part D's Level 17 sounds: round 40's proposals (option a until the user's pick),"
                     + " synthesized by tools/concept/audio/sfx_r40.py";
 
+    private static final String ROUND_40_DOME =
+            "M7 part D's dome break: round 40's redo c, chosen in round 41 (S.h, user 2026-10-19): the concept"
+                    + " file, mixed from CC0 Freesound originals by tools/concept/audio/sfx_r40_dome_break.py";
+
+    private static final String ROUND_41 =
+            "M7 part E's Level 18 unit sounds: round 41's proposals (option a until the user's pick),"
+                    + " synthesized by tools/concept/audio/sfx_r41.py";
+
+    private static final String ROUND_41_MUSIC =
+            "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
+                    + " files, rendered by tools/concept/audio/music_r41.py";
+
     private static final String ROUND_38 =
             "M7 part B's Level 15 sounds: the Burrower's eruption chosen in round 36 and round 38's picks"
                     + " (user 2026-10-14), the concept files from CC0/CC-BY originals or"
@@ -141,7 +153,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/mars-canyon-r39-a.ogg", ROUND_38),
             // M7 part D, Level 17: round 40's proposals (a until the pick), synthesized by sfx_r40.py
             Map.entry("sfx/dome-hit-r40-a.ogg", ROUND_40),
-            Map.entry("sfx/dome-break-r40-a.ogg", ROUND_40),
+            Map.entry("sfx/dome-break-r40-c.ogg", ROUND_40_DOME),
             Map.entry("sfx/herald-song-r40-a.ogg", ROUND_40),
             Map.entry("sfx/herald-aura-r40-a.ogg", ROUND_40),
             Map.entry("sfx/aura-absorb-r40-a.ogg", ROUND_40),
@@ -152,6 +164,21 @@ class PlaceholderAuditTest {
             Map.entry("sfx/shellback-roll-r40-a.ogg", ROUND_40),
             Map.entry("sfx/shellback-uncurl-r40-a.ogg", ROUND_40),
             Map.entry("sfx/mars-colony-r40-a.ogg", ROUND_40),
+            // M7 part E, Level 18: the `mars-storm` bed and track 9 with its two stems
+            Map.entry(
+                    "sfx/dust-storm-bed-r36-a.ogg",
+                    "M7 part E's `mars-storm` bed, chosen in round 36 (S.5 = a): the concept file, built from"
+                            + " CC0/CC-BY originals by tools/concept/audio/sfx_r36b.py"),
+            Map.entry("sfx/devil-spin-r41-a.ogg", ROUND_41),
+            Map.entry("sfx/devil-open-r41-a.ogg", ROUND_41),
+            Map.entry("sfx/devil-spiral-r41-a.ogg", ROUND_41),
+            Map.entry("sfx/ghost-drone-drop-r41-a.ogg", ROUND_41),
+            Map.entry("sfx/ghost-drone-glint-r41-a.ogg", ROUND_41),
+            Map.entry("sfx/ghost-drone-burst-r41-a.ogg", ROUND_41),
+            Map.entry("sfx/ghost-drone-death-r41-a.ogg", ROUND_41),
+            Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
+            Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
+            Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),
             Map.entry(
                     "music/debrief-theme.ogg",
                     "track 29 \"Stand Down\", chosen in round 40 (M.a = b): the concept file, rendered by"

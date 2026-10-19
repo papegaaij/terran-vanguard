@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import vanguard.content.BriefingPage;
 import vanguard.content.Content;
+import vanguard.content.EnemyData;
 import vanguard.content.LevelData.Entry;
 import vanguard.content.campaign.Intel;
 import vanguard.content.campaign.Intel.Field;
@@ -25,7 +27,9 @@ import vanguard.game.ui.Words;
  * the sensor level, and the threat profile's fields; a field the sensor level does not show names
  * the level that would (design/player/systems, Sensor levels and hangar intel); from sensor L2 the
  * enemy types show their sensor portraits, a boss its silhouette and a set piece its silhouette as
- * an unknown contact of its size tier (tools/art/intel.py). Varga's line for the sensor level (one
+ * an unknown contact of its size tier (tools/art/intel.py); M7 part E: a unit kept {@code
+ * unclassified_until_flown} shows, until the campaign has flown its first level, as an "unclassified" silhouette of
+ * its size and layer ({@code intel/unclassified-<slug>}) named by them alone (round 36 Q.22h). Varga's line for the sensor level (one
  * per level, the vaguer the lower the sensor) closes the panel, its last line at the panel's foot.
  * Without a built next level the panel says so.
  *
@@ -104,8 +108,16 @@ final class IntelPanel {
 
     /**
      * @param teaser the level's hangar teaser, with its intel
+     * @param unclassified M7 part E: the enemy types still unclassified, by name, with what the intel calls them
+     *     ({@link #unclassified})
      */
-    void draw(SpriteBatch batch, int number, Optional<Intel> intel, Optional<BriefingPage> teaser, String levelKey) {
+    void draw(
+            SpriteBatch batch,
+            int number,
+            Optional<Intel> intel,
+            Optional<BriefingPage> teaser,
+            String levelKey,
+            Map<String, String> unclassified) {
         glass.panel(batch, X, Y, WIDTH, HEIGHT, 0.86f);
         glass.header(batch, String.format(Locale.ROOT, "INTEL - L%02d", number), INNER, RIGHT, Y + 10);
         Canvas canvas = new Screen(batch);
@@ -115,7 +127,28 @@ final class IntelPanel {
             canvas.text("FOLLOWS IN A LATER RELEASE.", Glass.LABEL, INNER, Y + 64, false);
             return;
         }
-        layout(canvas, intel.get(), teaser.get(), levelKey);
+        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified);
+    }
+
+    /** M7 part E: an unclassified unit's sensor picture: its silhouette of its size and layer (tools/art/intel.py). */
+    static final String UNCLASSIFIED_PICTURE = "intel/unclassified-";
+
+    /**
+     * M7 part E (round 36 Q.22h): of {@code enemies} (by name) the ones whose stat block keeps them {@code
+     * unclassified_until_flown} while the campaign, whose next level is {@code nextLevel}, has not flown their first
+     * level (a replay hangar's campaign has flown the level it replays), each with what the intel calls it instead:
+     * {@code Unclassified small air}.
+     */
+    static Map<String, String> unclassified(Content content, List<String> enemies, int nextLevel) {
+        Map<String, String> found = new java.util.LinkedHashMap<>();
+        for (EnemyData enemy : content.enemies().values()) {
+            if (enemy.unclassifiedUntilFlown() && nextLevel <= enemy.firstLevel() && enemies.contains(enemy.name())) {
+                found.put(
+                        enemy.name(),
+                        "Unclassified " + enemy.tier().name().toLowerCase(Locale.ROOT) + " " + enemy.layer());
+            }
+        }
+        return Map.copyOf(found);
     }
 
     /** The sensor level's chip beside the level's name. */
@@ -137,9 +170,15 @@ final class IntelPanel {
      * if that is not enough either, the enemy names end on "+N MORE" in as many lines as fit.
      */
     static void layout(Canvas canvas, Intel level, BriefingPage teaser, String levelKey) {
+        layout(canvas, level, teaser, levelKey, Map.of());
+    }
+
+    /** As above, with the enemy types still unclassified ({@link #unclassified}) as their silhouettes. */
+    static void layout(
+            Canvas canvas, Intel level, BriefingPage teaser, String levelKey, Map<String, String> unclassified) {
         List<String> lines = quote(level);
         int quote = Y + HEIGHT - QUOTE_FOOT - LINE * (lines.size() - 1);
-        fields(canvas, level, teaser, levelKey, rows(level, teaser, levelKey, quote));
+        fields(canvas, level, teaser, levelKey, rows(level, teaser, levelKey, quote, unclassified), unclassified);
         for (String part : lines) {
             canvas.quote(part, INNER, quote);
             quote += LINE;
@@ -174,16 +213,21 @@ final class IntelPanel {
     };
 
     /** The roomiest rows whose last one ends above the quote's top line at {@code quote}. */
-    private static Rows rows(Intel level, BriefingPage teaser, String levelKey, int quote) {
+    private static Rows rows(
+            Intel level, BriefingPage teaser, String levelKey, int quote, Map<String, String> unclassified) {
         for (int step = STEP; step >= LINE; step--) {
             Rows rows = new Rows(step, Integer.MAX_VALUE);
-            if (fields(MEASURE, level, teaser, levelKey, rows) <= quote) {
+            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified) <= quote) {
                 return rows;
             }
         }
-        for (int names = enemyNames(level.enemies(), Integer.MAX_VALUE).size() - 1; names > 1; names--) {
+        for (int names = enemyNames(shown(level.enemies(), unclassified), Integer.MAX_VALUE)
+                                .size()
+                        - 1;
+                names > 1;
+                names--) {
             Rows rows = new Rows(LINE, names);
-            if (fields(MEASURE, level, teaser, levelKey, rows) <= quote) {
+            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified) <= quote) {
                 return rows;
             }
         }
@@ -191,7 +235,13 @@ final class IntelPanel {
     }
 
     /** The teaser, the level's name and the fields; returns the bottom of the last row's ink. */
-    private static int fields(Canvas canvas, Intel level, BriefingPage teaser, String levelKey, Rows rows) {
+    private static int fields(
+            Canvas canvas,
+            Intel level,
+            BriefingPage teaser,
+            String levelKey,
+            Rows rows,
+            Map<String, String> unclassified) {
         int step = rows.step();
         int portraitY = Y + 26;
         canvas.portrait(teaser, INNER, portraitY, SPEAKER_PORTRAIT);
@@ -271,7 +321,7 @@ final class IntelPanel {
                 y,
                 step);
         y = boss(canvas, level, y, step);
-        y = enemies(canvas, level, y, step, rows.names());
+        y = enemies(canvas, level, y, step, rows.names(), unclassified);
         y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y, step);
         y = field(
                 canvas,
@@ -304,17 +354,46 @@ final class IntelPanel {
     }
 
     /** The enemy types' sensor portraits in a row, their names below in at most {@code lines} lines. */
-    private static int enemies(Canvas canvas, Intel intel, int y, int step, int lines) {
-        List<String> names = enemyNames(intel.enemies(), lines);
+    private static int enemies(
+            Canvas canvas, Intel intel, int y, int step, int lines, Map<String, String> unclassified) {
+        List<String> names = enemyNames(shown(intel.enemies(), unclassified), lines);
         if (!intel.shows(Field.ENEMIES)) {
             return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y, step);
         }
         int x = VALUE_X;
-        for (String enemy : intel.enemies().subList(0, Math.min(intel.enemies().size(), PORTRAITS))) {
-            canvas.picture("intel/" + Portraits.slug(enemy), x, y, PORTRAIT);
+        List<String> pictured = pictured(intel.enemies(), unclassified);
+        for (String enemy : pictured.subList(0, Math.min(pictured.size(), PORTRAITS))) {
+            // M7 part E: an unclassified unit's silhouette instead of its portrait.
+            String picture = unclassified.containsKey(enemy) ? UNCLASSIFIED_PICTURE : "intel/";
+            canvas.picture(picture + Portraits.slug(enemy), x, y, PORTRAIT);
             x += PORTRAIT + PICTURE_GAP;
         }
         return field(canvas, intel, Field.ENEMIES, "ENEMIES", names, y + PORTRAIT + PICTURE_GAP, step);
+    }
+
+    /**
+     * M7 part E: the enemy types in the order of their pictures: the unclassified ones' silhouettes first (the row
+     * shows {@value #PORTRAITS} pictures; the silhouette is the level's warning), then the others in order of
+     * appearance.
+     */
+    private static List<String> pictured(List<String> enemies, Map<String, String> unclassified) {
+        if (unclassified.isEmpty()) {
+            return enemies;
+        }
+        List<String> order = new ArrayList<>();
+        enemies.stream().filter(unclassified::containsKey).forEach(order::add);
+        enemies.stream().filter(name -> !unclassified.containsKey(name)).forEach(order::add);
+        return order;
+    }
+
+    /** M7 part E: the enemy types' names as the intel shows them: an unclassified one by its size and layer. */
+    private static List<String> shown(List<String> enemies, Map<String, String> unclassified) {
+        if (unclassified.isEmpty()) {
+            return enemies;
+        }
+        return enemies.stream()
+                .map(name -> unclassified.getOrDefault(name, name))
+                .toList();
     }
 
     /**

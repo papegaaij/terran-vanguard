@@ -322,10 +322,11 @@ public enum Sfx {
      */
     DOME_HIT("sfx/dome-hit-r40-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M7 part D: a dome breaking ({@code ALLY_LOST} on a ground ally; round 40 a, proposed: a crack, a cascade of
-     * panes, air rushing out and a steel-frame groan, 3.6 s), under the radio's ally-loss line.
+     * M7 part D: a dome breaking ({@code ALLY_LOST} on a ground ally; round 40's redo c, chosen in round 41 (S.h):
+     * a low-passed building collapse over a deep crust rumble with smashing glass, 2.4 s, from CC0 Freesound
+     * originals), under the radio's ally-loss line.
      */
-    DOME_BREAK("sfx/dome-break-r40-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    DOME_BREAK("sfx/dome-break-r40-c.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
      * M7 part D: the Choir Herald's song with its ring of bullets (round 40 a, proposed: three voices a fifth apart
      * singing an "ah", F3 A3 E3, 1.9 s), instead of a gun's report.
@@ -359,6 +360,29 @@ public enum Sfx {
     SHELLBACK_ROLL("sfx/shellback-roll-r40-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /** M7 part D: a Shellback uncurling (round 40 a, proposed: the plates opening, 0.7 s). */
     SHELLBACK_UNCURL("sfx/shellback-uncurl-r40-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part E: the Dust Devil's spin (round 41 a, proposed: a whirling wind roar over a rumble and grit, a seamless
+     * 3.0 s loop): one loop for the nearest Dust Devil on screen, panned to it.
+     */
+    DEVIL_SPIN("sfx/devil-spin-r41-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part E: a Dust Devil's rise and opening (round 41 a, proposed: a gust, vane scrapes and a hollow tone, 0.7
+     * s), from the start of its 0.4 s rise, the tell.
+     */
+    DEVIL_OPEN("sfx/devil-open-r41-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part E: a Dust Devil's grit spiral (round 41 a, proposed: a turning grit hiss, 0.45 s), for its volleys. */
+    DEVIL_SPIRAL("sfx/devil-spiral-r41-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part E: a Ghost Drone dropping into its lane (round 41 a, proposed: a clean turbine whine, 0.9 s). */
+    GHOST_DRONE_DROP("sfx/ghost-drone-drop-r41-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part E: a Ghost Drone's 0.3 s eye glint before its burst (round 41 a, proposed: a lock tick, 0.15 s). */
+    GHOST_DRONE_GLINT("sfx/ghost-drone-glint-r41-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part E: a Ghost Drone's burst (round 41 a, proposed: three dry shots, 0.35 s), once at its first shot. */
+    GHOST_DRONE_BURST("sfx/ghost-drone-burst-r41-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part E: a Ghost Drone's death (round 41 a, proposed: a dry bang, flung metal and sparks, 0.8 s): the {@code
+     * small} rung's Ghost Drone entry ({@code EnemyLooks}).
+     */
+    GHOST_DRONE_DEATH("sfx/ghost-drone-death-r41-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /** M7 part B: a Burrower's 0.4 s dive, the grain slide (round 38 b, the user's pick of 2026-10-14). */
     BURROW_DIVE("sfx/burrow-dive-r38-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M5 part H: a burst's growths growing in, a stretching creak set with a dull knock at 1.45 s (round 36 a, one proposal). */
@@ -470,6 +494,11 @@ public enum Sfx {
      * and a distant rail clank, a seamless 16 s loop): Level 17 from its start.
      */
     AMBIENCE_MARS_COLONY("sfx/mars-colony-r40-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M7 part E: the Martian dust storm (round 36 a, chosen, "recorded front": a sandstorm over a furious low howl, a
+     * seamless 16 s loop): Level 18 in the storm, swelling as the view closes in ({@code StormLooks#swellDb}).
+     */
+    AMBIENCE_MARS_STORM("sfx/dust-storm-bed-r36-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -560,6 +589,7 @@ public enum Sfx {
             case "mars-dust" -> AMBIENCE_MARS_DUST;
             case "mars-canyon" -> AMBIENCE_MARS_CANYON;
             case "mars-colony" -> AMBIENCE_MARS_COLONY;
+            case "mars-storm" -> AMBIENCE_MARS_STORM;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

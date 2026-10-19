@@ -63,6 +63,12 @@ final class EnemyForce {
     private final boolean auras;
     /** M7 part D: whether a kind of the level has a curl-roll (its ball crushes ground targets). */
     private final boolean rollers;
+    /** M7 part E: whether a kind of the level has a pull (the ship and the pickups are pulled only then). */
+    private final boolean pulls;
+    /** M7 part E: the pull on the ship in this step, px/s (y up); 0 without one. */
+    private double pullX;
+
+    private double pullY;
 
     private final Pool<EnemyBullet> bullets = new Pool<>(BULLET_CAPACITY, EnemyBullet::new, EnemyBullet[]::new);
     private final Pool<Mine> mines = new Pool<>(MINE_CAPACITY, Mine::new, Mine[]::new);
@@ -232,6 +238,7 @@ final class EnemyForce {
         kinds = List.copyOf(distinct);
         auras = kinds.stream().anyMatch(kind -> kind.aura().isPresent());
         rollers = kinds.stream().anyMatch(kind -> kind.roll().isPresent());
+        pulls = kinds.stream().anyMatch(kind -> kind.pull().isPresent());
         segmentKinds = new int[kinds.size()];
         tailKinds = new int[kinds.size()];
         regrownKinds = new int[kinds.size()];
@@ -941,6 +948,10 @@ final class EnemyForce {
                 pulse(enemy, ship, firing);
             } else if (enemy.burrowing()) {
                 burrow(enemy, ship, firing);
+            } else if (enemy.vortex()) {
+                vortex(enemy, ship, firing);
+            } else if (enemy.laneStrafer()) {
+                passTrigger(enemy, ship, firing);
             } else if (enemy.trigger() && firing) {
                 EnemyGun gun = enemy.spec().gun().orElseThrow();
                 if (gun.mine().isPresent()) {
@@ -958,14 +969,16 @@ final class EnemyForce {
         }
         if (auras) {
             // M7 part D: the Heralds' rings after the moves (the hits of this step meet this step's rings).
-            Auras.step(enemies);
+            Auras.step(enemies, events);
         }
     }
 
     /**
-     * M7 part D (design/enemies/ground/shellback, Curl and roll; design/allies): a rolling ball over a standing
-     * ground ally's hit box crushes it: one hit per roll per ally (its {@link AllySpec#rolls()}), whatever the
-     * hook says (easy's unhooked Shellbacks crush too), applied with the step's other hooked hits.
+     * M7 part D (design/enemies/ground/shellback, Curl and roll; design/allies): a rolling ball touching a standing
+     * ground ally's footprint crushes it: one hit per roll per ally (its {@link AllySpec#rolls()}), whatever the
+     * hook says (easy's unhooked Shellbacks crush too), applied with the step's other hooked hits. Round 40 R.c:
+     * the footprint (a dome's concrete ring), not the hit box (its glass), so a walk routed beside a dome, its body
+     * clear of the glass, still lets a roll along it hit the dome once.
      */
     private void crush(Enemy enemy) {
         Hitbox ball = enemy.hitbox();
@@ -973,7 +986,7 @@ final class EnemyForce {
             Ally ally = convoy.get(k);
             if (enemy.crushedAlly(k)
                     || !ally.alive()
-                    || !ball.overlaps(enemy.x(), enemy.y(), convoy.spec(k).hitbox(), ally.x(), ally.y())) {
+                    || !ball.overlaps(enemy.x(), enemy.y(), convoy.spec(k).size(), ally.x(), ally.y())) {
                 continue;
             }
             enemy.markCrushed(k);
@@ -985,6 +998,148 @@ final class EnemyForce {
     /** M7 part D: whether a kind of the level has a curl-roll (the sortie's ground objects can be crushed). */
     boolean rollers() {
         return rollers;
+    }
+
+    /**
+     * M7 part E, a vortex's step after its move (design/enemies/ground/dust-devil): its rise's, opening's and
+     * closing's events, and while it is open its spiral's volleys when due (while {@code firing}, on the play
+     * field; none while the ship is closer than bullets may spawn): a bullet per arm, the arms evenly round,
+     * one {@link SimEvents.Type#ENEMY_FIRED} per volley (a fan counts once).
+     */
+    private void vortex(Enemy enemy, Ship ship, boolean firing) {
+        VortexCycle cycle = enemy.vortexCycle();
+        int now = cycle.now();
+        if (now == 0) {
+            return;
+        }
+        if ((now & VortexCycle.NOW_CLOSED) != 0) {
+            events.add(SimEvents.Type.VORTEX_CLOSED, enemy.x(), enemy.y(), enemy.kind());
+        }
+        if ((now & VortexCycle.NOW_RISING) != 0) {
+            events.add(SimEvents.Type.VORTEX_RISING, enemy.x(), enemy.y(), enemy.kind());
+        }
+        if ((now & VortexCycle.NOW_OPENED) != 0) {
+            events.add(SimEvents.Type.VORTEX_OPENED, enemy.x(), enemy.y(), enemy.kind());
+        }
+        if ((now & VortexCycle.NOW_SPIRAL) == 0
+                || !firing
+                || !PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
+            return;
+        }
+        double dx = ship.x() - enemy.x();
+        double dy = ship.y() - enemy.y();
+        if (dx * dx + dy * dy < NO_FIRE_DISTANCE * NO_FIRE_DISTANCE || bullets.size() >= rules.bulletBudget()) {
+            return;
+        }
+        EnemyGun gun = enemy.spec().gun().orElseThrow();
+        int arms = gun.spiral().orElseThrow().arms();
+        for (int k = 0; k < arms && bullets.size() < rules.bulletBudget(); k++) {
+            double angle = cycle.spiralAngle() + 2 * StrictMath.PI * k / arms;
+            bullets.obtain()
+                    .fire(
+                            enemy.x(),
+                            enemy.y(),
+                            Trig.cos(angle) * gun.bulletSpeed(),
+                            Trig.sin(angle) * gun.bulletSpeed(),
+                            gun.damage());
+        }
+        events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) gun.damage());
+    }
+
+    /**
+     * M7 part E, a lane strafer's gun (design/enemies/air/ghost-drone): its pass trigger's step; while {@code
+     * firing} its eye's {@link SimEvents.Type#EYE_GLINT} and, on the play field, its burst's shots, each an aimed
+     * shot at the ship (or its hooked target) as {@link #fire} fires it, one {@link SimEvents.Type#ENEMY_FIRED} each;
+     * a burst that is not re-aimed follows its first shot's line.
+     */
+    private void passTrigger(Enemy enemy, Ship ship, boolean firing) {
+        if (enemy.spec().gun().isEmpty()) {
+            return;
+        }
+        EnemyGun gun = enemy.spec().gun().get();
+        LaneStrafing strafe = enemy.laneStrafing();
+        boolean onField = PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox());
+        int now = strafe.fire(gun, ship.x(), onField);
+        if (now == 0 || !firing) {
+            return;
+        }
+        if ((now & LaneStrafing.NOW_GLINT) != 0) {
+            events.add(SimEvents.Type.EYE_GLINT, enemy.x(), enemy.y(), enemy.kind());
+        }
+        if ((now & LaneStrafing.NOW_SHOT) == 0 || !onField) {
+            return;
+        }
+        int target = target(enemy, ship);
+        if (gun.reaim() || strafe.firstShot()) {
+            double aimX = target < 0 ? ship.x() : convoy.get(target).x();
+            double aimY = target < 0 ? ship.y() : convoy.get(target).y();
+            // Radians clockwise from straight down, as a barrel's aim.
+            strafe.lockAim(StrictMath.atan2(enemy.x() - aimX, enemy.y() - aimY));
+            fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false);
+        } else {
+            fire(enemy.x(), enemy.y(), gun, false, strafe.lockedAim(), ship, target, true);
+        }
+    }
+
+    /** M7 part E: whether a kind of the level has a pull (design/enemies/ground/dust-devil). */
+    boolean pulls() {
+        return pulls;
+    }
+
+    /**
+     * M7 part E (design/enemies/ground/dust-devil, Pull): works out the pull on the ship at (shipX, shipY) for this
+     * step: per unit with a pull on the play field, not stunned by the EMP Burst, its speed at the ship's distance
+     * toward its centre; the pulls of several units add up. Exactly 0 without a unit with a pull in the level.
+     */
+    void pull(double shipX, double shipY) {
+        pullX = 0;
+        pullY = 0;
+        if (!pulls) {
+            return;
+        }
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.spec().pull().isEmpty()
+                    || enemy.empStunned()
+                    || !PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
+                continue;
+            }
+            double dx = enemy.x() - shipX;
+            double dy = enemy.y() - shipY;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+            double speed = enemy.spec().pull().get().shipSpeedAt(distance);
+            if (speed > 0 && distance > 0) {
+                pullX += dx / distance * speed;
+                pullY += dy / distance * speed;
+            }
+        }
+    }
+
+    /** M7 part E: no pull on the ship in this step (it does not fly). */
+    void noPull() {
+        pullX = 0;
+        pullY = 0;
+    }
+
+    /** M7 part E: the pull on the ship in this step, px/s to the right; 0 without one. */
+    double pullX() {
+        return pullX;
+    }
+
+    /** M7 part E: the pull on the ship in this step, px/s up the screen; 0 without one. */
+    double pullY() {
+        return pullY;
+    }
+
+    /** M7 part E: the unit with {@code serial} in flight; null when there is none (it died or left). */
+    Enemy bySerial(int serial) {
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.serial() == serial) {
+                return enemy;
+            }
+        }
+        return null;
     }
 
     /**

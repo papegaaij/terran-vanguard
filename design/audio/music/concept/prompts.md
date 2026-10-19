@@ -1024,3 +1024,58 @@ motif, calm and a little proud, instrumental, seamless loop."*
 
 - `debrief-join-r40-a.ogg`, `debrief-join-r40-b.ogg`: listening aids, the jingle → each loop, 15 s (1 s fade
   out).
+
+## music-r41-a — track 9 "Grey Signal" and its three stems
+
+Brief (M7 part E, step MUS-E; pending the user's review in round 41): track 9 "Grey Signal" (Act 3 B:
+Levels 18, 19 and the Level 21 approach) at about 3:00 from the chosen round-36 sketch
+[act3-b-theme-r36-b](act3-b-theme-r36-b.ogg), as the music README's
+[*Track 9 brief*](../README.md#track-9-the-act-3-b-theme-brief) asks: 125 BPM, D minor, 10 % swing, dusty dub
+techno, Vorne's motif as an intercepted radio whistle; three stems (base, full, motif) from one render so
+they line up; −14 LUFS, true peak ≤ −1 dBTP, intro + seamless loop with `LOOPSTART` / `LOOPLENGTH`; no
+bubbly or popping layers. Generator `tools/concept/audio/music_r41.py` (deterministic, ~5 min); it follows
+how `music_r38.py` built track 8 and its base stem.
+
+Composition: the sketch's 4-bar intro (wind, the stabs closed and opening, the sub, the kick from bar 2),
+then an 88-bar loop of eleven 8-bar sections on `Dm9 Dm9 B♭maj7 B♭maj7 Gm9 Gm9 A7(♭9) A7(♭9)`: A (the
+groove: kick, sub, rimshots, swung 16th hats, the stabs opening 800 → 1500 Hz), B (+ track 8's hand drums),
+B2 (+ a fourth stab, the pad up), C (the breakdown, `Dm9 Dm9 B♭maj7 A7(♭9)` twice: stabs, pad and held sub
+alone, the wind swelling, the hand drums and a kick fill back in), D and D2 (the full groove, open hats,
+the stabs wide open), E (new, "dust": `Gm9 Gm9 Dm9 Dm9 B♭maj7 B♭maj7 A7 A7`, the kit through a 700 Hz
+low-pass as track 8's storm, no hats, the hand drums forward, held sub, closed stabs, the wind swelling),
+F (the build: kick, then rimshots, then hats; the stabs opening; a riser and a rimshot roll), D3 (the
+climax), A3 (the groove with hand drums) and T (the turn: open hats and hand drums out, the stabs closing
+back to A's 800 Hz). The sketch's voices, chains and seeds, except the chord stab: resonance q 1.1 (the
+sketch 1.8) and an 80 ms filter envelope (50 ms), so it cannot read as a resonant bloop, and its mix gain
+1 dB up to keep the sketch's 250 Hz – 2 kHz balance (measured per section against the sketch).
+
+Stems (the round-11 method): one render, every group through the full mix's own chain, linked mastering
+(the full mix's gain for all three files, the encoder's peak correction too), so they share length, gain
+and loop comments: **base** kick, sub, pad, shaker and hand drums, the wind; **full** the base plus the
+hats, rimshots, stabs, crashes and risers; **motif** Vorne's motif alone (D4 F4 A4 C♯5 on the sketch's
+whistle through the 700 Hz – 2.6 kHz radio band-pass over a 2-bar static swell, no crackle), one statement
+on each section's first D minor bar (≈ 15.4 s apart) and two more in the breakdown and the climax, none
+in the intro; the game adds it on top of the base/full crossfade. Its level is set by measurement: the
+statements 19 dB under the full mix in the same 2-bar windows, 17 dB in the breakdown.
+
+**Measured** (not listened to): full mix 180.72 s, `LOOPSTART` 349272 (7.920 s, step 2 of the loop's
+first bar), `LOOPLENGTH` 7451136 (168.960 s = 88 bars), −14.0 LUFS, −1.4 dBTP, seam 0.50; base stem −14.4
+LUFS (−0.4 LU: the kick, sub and pad carry most of the loudness, the split is the stabs, hats and
+rimshots), −1.8 dBTP, seam 0.32; motif stem −33.2 LUFS, −21.2 dBTP, seam 0.04, its statements 18.4–18.8 dB
+under the full mix (16.8 in the breakdown); full + motif summed −14.0 LUFS, −1.3 dBTP. All three the same
+length and loop points. Loudness per section in the sheet.
+
+**AI prompt**: *"Dusty dub techno level theme for a 1990s sci-fi shooter on Mars, 125 BPM, D minor,
+syncopated minor-ninth chord stabs with ping-pong delay and long reverb, deep sub bass, rimshots and swung
+hi-hats, Middle-Eastern hand drums and shaker, a dark pad, desert wind swelling in the breakdowns, a faint
+whistled four-note motif heard through radio static like an intercepted transmission, hypnotic, about
+three minutes, instrumental, seamless loop."*
+
+- `grey-signal-r41-a.ogg`, `grey-signal-base-r41-a.ogg`, `grey-signal-motif-r41-a.ogg`: the full mix and
+  its two stems.
+- `grey-signal-seam-r41-a.ogg`, `grey-signal-base-seam-r41-a.ogg`, `grey-signal-motif-seam-r41-a.ogg`:
+  listening aids, the last 8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades).
+- `grey-signal-motif-mix-r41-a.ogg`: listening aid, the full mix with the motif stem on top, loop bars
+  17–40 (46.1 s).
+- `music-r41-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
+  points (amber), the measured numbers and a per-section loudness table.

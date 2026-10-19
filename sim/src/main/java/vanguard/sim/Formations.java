@@ -167,6 +167,14 @@ final class Formations {
             planner.lanes();
             return;
         }
+        if (wave.enemy().laneStrafe().isPresent()) {
+            planner.laneStrafes();
+            return;
+        }
+        if (wave.enemy().vortex().isPresent()) {
+            planner.vortices();
+            return;
+        }
         if (wave.enemy().walker().isPresent()) {
             planner.walkers();
             return;
@@ -251,6 +259,90 @@ final class Formations {
                     };
             for (int i = 0; i < wave.count(); i++) {
                 add(i, wave.t() + i * spacing, path, speed(enemy().speed()), 0, Optional.empty(), Spawn.Exit.DOWN);
+            }
+        }
+
+        /**
+         * M7 part E (design/enemies/air/ghost-drone): lane strafers entering together, whatever the formation, unit
+         * i on lane i ({@link EnemySpec.LaneStrafe#depth}). From the front: a single unit at the authored point (its
+         * x and its lane's depth) or in the front column, more evenly across ((i + 1) × 480 ÷ (n + 1)), each just
+         * above the top edge; a unit left of the centre strafes to the right, one right of it to the left, one on it
+         * by its place (even: right), so a line abreast splits half and half, crossing. From the sides: alternately
+         * from the left and the right edge (from one edge for {@code left} or {@code right}), just outside it at its
+         * lane. Its path runs from its start to its lane's point beyond its bank, where {@link LaneStrafing} reads
+         * its lane and its direction; it flies by its strafe, not along the path.
+         */
+        void laneStrafes() {
+            EnemySpec.LaneStrafe strafe = enemy().laneStrafe().orElseThrow();
+            int count = wave.count();
+            double halfWidth = enemy().hitbox().width() / 2;
+            double halfHeight = enemy().hitbox().height() / 2;
+            for (int i = 0; i < count; i++) {
+                FlightPath path;
+                if (wave.entry() == Entry.SIDES) {
+                    boolean left =
+                            switch (wave.edge()) {
+                                case LEFT -> true;
+                                case RIGHT -> false;
+                                case NONE, ALTERNATING -> i % 2 == 0;
+                            };
+                    double y = HEIGHT - strafe.depth(i, count);
+                    double startX = left ? -halfWidth - 1 : WIDTH + halfWidth + 1;
+                    path = FlightPath.through(startX, y, WIDTH - startX, y);
+                } else {
+                    requireFront();
+                    double x;
+                    double depth = strafe.depth(i, count);
+                    if (count == 1 && wave.at().isPresent()) {
+                        x = wave.at().get().x();
+                        depth = wave.at().get().depth();
+                    } else if (count == 1) {
+                        x = frontColumn();
+                    } else {
+                        x = (i + 1) * WIDTH / (count + 1);
+                    }
+                    int dir = x < WIDTH / 2 ? 1 : x > WIDTH / 2 ? -1 : i % 2 == 0 ? 1 : -1;
+                    double y = HEIGHT - depth;
+                    double r = EnemySpec.LaneStrafe.BANK_RADIUS;
+                    path = FlightPath.through(x, HEIGHT + halfHeight, x, y + r, x + dir * r, y);
+                }
+                add(i, wave.t(), path, strafe.descentSpeed(), 0, Optional.empty(), Spawn.Exit.DOWN);
+            }
+        }
+
+        /**
+         * M7 part E (design/enemies/ground/dust-devil): vortices entering together at the top edge, whatever the
+         * formation, each on its own centre line: its path's first x when the wave has paths (one per unit, the
+         * last reused), else the authored point's x for a single unit, else the front column for one and evenly
+         * across for more ((i + 1) × 480 ÷ (n + 1)); its centre just above the top edge. Its {@link VortexCycle}
+         * moves it from there (its swirl, its cycle offset by its place in the wave).
+         */
+        void vortices() {
+            requireFront();
+            int count = wave.count();
+            double half = enemy().hitbox().height() / 2;
+            for (int i = 0; i < count; i++) {
+                double x;
+                if (!wave.paths().isEmpty()) {
+                    x = wave.paths()
+                            .get(Math.min(i, wave.paths().size() - 1))
+                            .getFirst()
+                            .x();
+                } else if (count == 1 && wave.at().isPresent()) {
+                    x = wave.at().get().x();
+                } else if (count == 1) {
+                    x = frontColumn();
+                } else {
+                    x = (i + 1) * WIDTH / (count + 1);
+                }
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(x, HEIGHT + half, x, -half),
+                        speed(enemy().speed()),
+                        0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
             }
         }
 
@@ -745,8 +837,8 @@ final class Formations {
          * i (wrapping); a pincer with a single path mirrors it about the centre line for every
          * second unit and sends each further pair {@link #CONVOY_INTERVAL_SECONDS} later; a pack (M5
          * part C) needs a path per unit and sends them {@link #PACK_INTERVAL_SECONDS} apart; any other
-         * formation (a convoy, a single) sends its units one after another {@link
-         * #CONVOY_INTERVAL_SECONDS} apart. These planners are separate from the air formations of the
+         * formation (a convoy, a single) sends its units one after another its wave's interval apart
+         * ({@link #CONVOY_INTERVAL_SECONDS} without one; M7 part D). These planners are separate from the air formations of the
          * same names.
          */
         void walkers() {
@@ -768,7 +860,8 @@ final class Formations {
                 } else if (wave.formation() == WaveSpec.Formation.PACK) {
                     delay = i * PACK_INTERVAL_SECONDS;
                 } else {
-                    delay = i * CONVOY_INTERVAL_SECONDS;
+                    // M7 part D, round 40: a convoy's own interval (Level 17's Shellback pair, 3 s apart).
+                    delay = i * wave.intervalSeconds().orElse(CONVOY_INTERVAL_SECONDS);
                 }
                 double x = path.x(0);
                 double y = path.y(0);

@@ -1,10 +1,10 @@
 ---
 title: Ghost Drone
 design: approved
-implementation: not-started
-art: chosen
+implementation: in-progress
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../player/specials, ../../../story/twist, ../../../campaign/act-3-red-dust]
-updated: 2026-10-13
+updated: 2026-10-19
 ---
 
 # Ghost Drone
@@ -19,15 +19,16 @@ first sight of it in the Level 18 dust storm is **hint 1** of the twist.
 
 ### Stat block
 
-Hand-written draft numbers at **medium** (M19: no `data.yaml` until its level is built; see the
+Numbers at **medium**, rendered from [data.yaml](data.yaml) (M7 part E; see the
 [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot
 does 2). Set at its first level from the proposed Act 3 reference DPS (M18 = a, approved in round 36:
 L18 = 88): 14 HP is a time-to-kill of 0.16 s. As a `small` unit it keeps its HP in every later
 level.
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
-| Faction | Unmarked (Ascendancy) |
+| Faction | Unmarked (Ascendancy) (machine: the EMP Burst stuns it longest) |
 | Layer | `air` |
 | Size tier | `small` |
 | Size | 40×40 px, hitbox 28×24 |
@@ -35,16 +36,17 @@ level.
 | Orientation | `16 angles` (it banks into the strafe and faces its direction of travel) |
 | HP | 14 (easy 10 / hard 18, from the global multipliers) |
 | Armour / shield | none |
-| Speed | descent 180 px/s; strafe 150 px/s |
+| Speed | 180 px/s descent; strafe 150 px/s |
 | Movement | enters at the top, drops to its lane (120–220 px below the top edge) and `strafe`s across to the far side; pincer pairs enter from the sides at their lane (edge-warned 3 s ahead) |
-| Attack | one 3-shot `burst` per pass, fired when it is within 60 px of the ship's x: the shots 0.15 s apart, each re-aimed at the ship; fast 210 px/s, `small` 4 |
-| Formations | line abreast (3–5, the lanes 40 px apart), pincer (2 + 2) |
+| Attack | one 3-shot `burst` per pass, fired when it is within 60 px of the ship's x: a 0.3 s red glint on its sensor eye (the tell), then the shots 0.15 s apart, each re-aimed at the ship; fast 210 px/s, `small` 4 |
+| Formations | line abreast (3–5), pincer (4) (the lanes 40 px apart) |
 | Weak points | the red sensor eye (drawn only) |
-| Effective traits | `forward`, `spread`, `homing`, EMP Burst (a machine: stunned 3 s, see [specials](../../../player/specials/README.md)) |
+| Effective traits | `forward`, `spread`, `homing` |
 | Credits | 14 (score 140 × chain) |
 | Death | `small` mechanical burst: sparks, a puff of black smoke, grey fragments (no Vrell ichor) |
-| First level | L18 (Dust Storm) |
+| First level / used in | L18; introduced in Level 18 (Dust Storm), hint 1 of the twist; as a `small` unit it keeps its HP in every later level |
 | Difficulty hooks | easy: 2-shot burst; hard: 4-shot burst and a second pass for line-abreast drones that survive (they turn at the edge and strafe back once) |
+<!-- /data -->
 
 ### Behaviour
 
@@ -82,18 +84,20 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 |---|---|---|
 | [../concept/ghost-drone-r36-a.png](../concept/ghost-drone-r36-a.png) | Ghost Drone A, facet dart — grey human-built drone with the U.5 fix (2×2 px red eye, white wing-tip running lights, additive glow), 16 headings, next to a Talon and the player (sheet) | chosen (round 36, U.4; re-rendered with U.5) |
 | [../concept/ghost-drone-r36-a.gif](../concept/ghost-drone-r36-a.gif) | Ghost Drone A with the U.5 eye and running lights — line abreast, then a pincer, over dusty Mars plains (motion) | chosen (round 36, U.4; re-rendered with U.5) |
+| [../concept/ghost-drone-final-r41-a.png](../concept/ghost-drone-final-r41-a.png) | Ghost Drone final sprites (`tools/art/storm_units.py`, the chosen facet dart a with the U.5 lamps): 16 headings, additive eye/tip glow, EMP lights-out, the glint tell, sparks and smoke death, in / out of the radius (sheet) | chosen (round 41: approved as final) |
+| [../concept/ghost-drone-final-r41-a.gif](../concept/ghost-drone-final-r41-a.gif) | Ghost Drone final: a line abreast and a pincer strafing with their glint-told bursts over the storm plain, look b R 170, 15 fps | chosen (round 41: approved as final) |
 | [../concept/rejected/ghost-drone-r36-b.png](../concept/rejected/ghost-drone-r36-b.png) | Ghost Drone B, crescent — grey drone with a forward-swept wing (sheet) | rejected — round 36: a (facet dart) picked |
 | [../concept/rejected/ghost-drone-r36-b.gif](../concept/rejected/ghost-drone-r36-b.gif) | Ghost Drone B — the same scene as A (motion) | rejected — round 36: a (facet dart) picked |
 
 ## Implementation
 
-- [ ] Descent to a lane, banked `strafe` across, exit at the far side; side entries edge-warned
-- [ ] One 3-shot re-aimed burst per pass within 60 px of the ship's x, 0.3 s eye glint tell
-- [ ] Hard: survivors of a line abreast strafe back once
-- [ ] EMP stun 3 s (machine)
-- [ ] Mechanical death, bounty and score
-- [ ] Data file with the stat block (when Level 18 is built)
-- [ ] Production art (round of part E)
+- [x] Descent to a lane, banked `strafe` across, exit at the far side; side entries edge-warned
+- [x] One 3-shot re-aimed burst per pass within 60 px of the ship's x, 0.3 s eye glint tell
+- [x] Hard: survivors of a line abreast strafe back once
+- [x] EMP stun 3 s (machine)
+- [x] Mechanical death, bounty and score (step E3; step EG2: `GhostDroneLooks` sparks and smoke, the death sound; in the capture)
+- [x] Data file with the stat block ([data.yaml](data.yaml), M7 part E step E2; mapped for the simulation in step E4: `StormRules`, flown in `Level18Test`)
+- [x] Production art (round of part E): step ART-E, in the game (EG1, EG2), approved as final in round 41; seen in [Level 18's capture](../../../campaign/act-3-red-dust/level-18-dust-storm/concept/level-18-capture-r41-a.mp4)
 
 ## Open questions
 
@@ -108,3 +112,9 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 - 2026-10-12 (merge): the round-36 a/b proposals are listed under Concept art (`art: proposed`).
 - 2026-10-13 (user, round 36): approved (D.16). Q.22h yes: the intel shows "unidentified contacts" until Level 18 is first flown. U.4 = a: the facet dart chosen, the crescent (b) rejected and moved to `../concept/rejected/`. U.5 accepted: the chosen sprite gets an emissive red eye (≥ 2×2 px) and two white wing-tip running lights (additive glow), made by the art step that updates `enemies_r36.py`.
 - 2026-10-13: U.5 done in the concept art: `ghost-drone-r36-a.png/.gif` re-rendered by `enemies_r36.py ghost-drone-a` (a 2×2 px red eye and one white pixel per wing tip set after the palette step, plus the additive glow layer `ghost_glow`); the production sprite (with its additive glow frames) follows in the art step.
+- 2026-10-19 (M7 part E, step E2): the stat block moved into [data.yaml](data.yaml) (the table is rendered
+  from it): the `lane_strafe` movement, the burst's pass `trigger` (`within_x: 60`), its `tell` and
+  `reaim`, the hard `second_pass`, `machine: true` and `intel: {unclassified_until_flown: true}`. Default
+  of the gap check, pending the user's review in round 41: the lane strafe a movement of the simulation,
+  not authored paths.
+- 2026-10-19 (user, round 41): the final art approved (F.a/F.b, `art: final`); the build choices of the gap check accepted (B.b/B.c: all yes); the sounds and the intel picture accepted.

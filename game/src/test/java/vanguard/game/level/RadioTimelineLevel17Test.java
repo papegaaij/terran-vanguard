@@ -47,6 +47,48 @@ class RadioTimelineLevel17Test extends RadioTimeline {
     }
 
     /**
+     * Round 40 K.a: Varga's line about the Herald's rings is the {@code first-ring} event. In every run with it and no
+     * dome line queued before it, with each fit, voiced, it opens within a second of the first ring (t≈55.8), while
+     * the Herald still sings; behind a dome's lines it waits like them, or is dropped as stale (printed).
+     */
+    @Test
+    void vargasRingLineOpensAtTheFirstRing() {
+        int clear = 0;
+        java.util.Set<String> waited = new java.util.TreeSet<>();
+        for (Difficulty difficulty : Difficulty.values()) {
+            LevelScript script = SimSpecs.level(CONTENT, LEVEL_17, difficulty);
+            for (List<Event> events : RUNS.get(LEVEL_17)) {
+                Event ring = events.stream()
+                        .filter(event -> event.trigger() == CueTrigger.FIRST_RING)
+                        .findFirst()
+                        .orElse(null);
+                if (ring == null) {
+                    continue;
+                }
+                boolean domes = events.stream().anyMatch(event -> !event.ally().isEmpty() && event.t() < ring.t());
+                for (int fitted : FITS) {
+                    List<Played> lines = play(script, events, fitted, true).stream()
+                            .filter(line -> line.cue().trigger() == CueTrigger.FIRST_RING)
+                            .toList();
+                    assertEquals(1, lines.size(), difficulty + ", fit " + fitted);
+                    java.util.Optional<Double> opened = lines.getFirst().opened();
+                    if (!domes) {
+                        assertTrue(
+                                opened.orElseThrow() - ring.t() <= 1,
+                                difficulty + ", fit " + fitted + ": opened at " + opened);
+                        clear++;
+                    } else if (opened.isEmpty() || opened.get() - ring.t() > 1) {
+                        waited.add(opened.map(t -> String.format("opened at t=%.1f", t))
+                                .orElse("dropped as stale"));
+                    }
+                }
+            }
+        }
+        assertTrue(clear > 0);
+        waited.forEach(line -> System.out.println("Level 17 ring line behind the dome lines: " + line));
+    }
+
+    /**
      * In every run, with each fit, voiced: a dome's event sets off its line once, with its name. Event lines
      * wait for a gap and are dropped as stale after 6 s (Bradbury's first hit under Varga's bomber warning,
      * say): the dropped ones are printed for the user, the rest open.

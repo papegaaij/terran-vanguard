@@ -67,6 +67,13 @@ import java.util.Optional;
  * @param part M7 part D: its destroyable part, on a unit that is not a boss (design/enemies/ground/shellback,
  *     the mortar vent); {@link #hp()} and {@link #bounty()} are then the body's
  * @param roll M7 part D: a walker's curl-roll (design/enemies/ground/shellback)
+ * @param vortex M7 part E: its vortex cycle (design/enemies/ground/dust-devil): closed on {@code ground}, it
+ *     rises and opens on {@link Layer#LOW_AIR}; it wanders round its centre line and its vanes are armoured
+ *     while it is not open
+ * @param pull M7 part E: its radial pull on the ship and on the loose pickups (the Dust Devil); the pickups it
+ *     reaches are held until its death
+ * @param laneStrafe M7 part E: its lane strafe (design/enemies/air/ghost-drone): it drops to its lane, banks and
+ *     strafes across; its gun fires one burst per pass by its pass trigger ({@link EnemyGun#passWithinX()})
  */
 public record EnemySpec(
         String slug,
@@ -112,7 +119,10 @@ public record EnemySpec(
         Optional<Crawl> crawl,
         Optional<Aura> aura,
         Optional<UnitPart> part,
-        Optional<Roll> roll) {
+        Optional<Roll> roll,
+        Optional<Vortex> vortex,
+        Optional<Pull> pull,
+        Optional<LaneStrafe> laneStrafe) {
     public EnemySpec {
         if (latch.isPresent() && chase.isEmpty()) {
             throw new IllegalArgumentException(slug + ": a unit that latches chases the ship first");
@@ -146,6 +156,225 @@ public record EnemySpec(
         if (roll.isPresent() && walker.isEmpty()) {
             throw new IllegalArgumentException(slug + ": a curl-roll is a walker's");
         }
+        if (vortex.isPresent()
+                && (layer != Layer.GROUND
+                        || walker.isPresent()
+                        || chain.isPresent()
+                        || burrow.isPresent()
+                        || submerge.isPresent()
+                        || flock.isPresent())) {
+            throw new IllegalArgumentException(slug
+                    + ": a vortex is a plain ground unit's (not a walker's, a chain's, a burrower's or a flock's)");
+        }
+        if (laneStrafe.isPresent()
+                && (layer != Layer.AIR
+                        || walker.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || vortex.isPresent()
+                        || swoop.isPresent()
+                        || chase.isPresent()
+                        || spiral.isPresent())) {
+            throw new IllegalArgumentException(slug
+                    + ": a lane strafe is a plain air unit's (not a walker's, a chain's, a flock's, a swooper's or a"
+                    + " chaser's)");
+        }
+        if (laneStrafe.isPresent() && gun.isPresent() && Double.isNaN(gun.get().passWithinX())) {
+            throw new IllegalArgumentException(slug + ": a lane strafer's gun fires by a pass trigger");
+        }
+    }
+
+    /** The constructor of M7 part E's Dust Devil (step E1): without the Ghost Drone's lane strafe. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            Optional<UnitPart> part,
+            Optional<Roll> roll,
+            Optional<Vortex> vortex,
+            Optional<Pull> pull) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                Optional.empty());
+    }
+
+    /** The constructor of M7 part D: without M7 part E's vortex and pull. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            Optional<UnitPart> part,
+            Optional<Roll> roll) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                Optional.empty(),
+                Optional.empty());
     }
 
     /** The constructor of M7 part C: without M7 part D's aura, unit part and curl-roll. */
@@ -369,7 +598,10 @@ public record EnemySpec(
                 crawl,
                 aura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /**
@@ -421,7 +653,10 @@ public record EnemySpec(
                 crawl,
                 withAura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /**
@@ -473,7 +708,169 @@ public record EnemySpec(
                 crawl,
                 aura,
                 withUnitPart,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
+    }
+
+    /** M7 part E: this ground unit with its vortex cycle (design/enemies/ground/dust-devil); empty for none. */
+    public EnemySpec withVortex(Optional<Vortex> withVortex) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                withVortex,
+                pull,
+                laneStrafe);
+    }
+
+    /** M7 part E: this unit with its radial pull on the ship and the pickups (the Dust Devil); empty for none. */
+    public EnemySpec withPull(Optional<Pull> withPull) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                withPull,
+                laneStrafe);
+    }
+
+    /**
+     * M7 part E: this air unit with its lane strafe (design/enemies/air/ghost-drone); empty for none. Its gun, if
+     * any, needs a pass trigger ({@link EnemyGun#passWithinX()}).
+     */
+    public EnemySpec withLaneStrafe(Optional<LaneStrafe> withLaneStrafe) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                withLaneStrafe);
     }
 
     /** M7 part D: this walker with its curl-roll (design/enemies/ground/shellback); empty for none. */
@@ -522,7 +919,10 @@ public record EnemySpec(
                 crawl,
                 aura,
                 part,
-                withRoll);
+                withRoll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /** M7 part C: this chain's head with its {@code crawl} (design/enemies/ground/threadcrawler); empty for none. */
@@ -571,7 +971,10 @@ public record EnemySpec(
                 withCrawl,
                 aura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /** The constructor of M7 part A: without the burrows and swoops of Level 15 (M7 part B). */
@@ -854,7 +1257,10 @@ public record EnemySpec(
                 crawl,
                 aura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /**
@@ -906,7 +1312,10 @@ public record EnemySpec(
                 crawl,
                 aura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /** M7 part B: this unit with its {@code burrow} (design/enemies/ground/burrower); empty for none. */
@@ -955,7 +1364,10 @@ public record EnemySpec(
                 crawl,
                 aura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /** M7 part B: this unit with its {@code swoop} (design/enemies/air/dust-kite); empty for none. */
@@ -1004,7 +1416,10 @@ public record EnemySpec(
                 crawl,
                 aura,
                 part,
-                roll);
+                roll,
+                vortex,
+                pull,
+                laneStrafe);
     }
 
     /**
@@ -1904,8 +2319,11 @@ public record EnemySpec(
      * the path's end), uncurls for {@code uncurlSeconds} and shows its belly for {@code bellySeconds}, taking
      * {@code bellyFactor} × the damage, then walks on. From the curl's start to the uncurl's end its hit box is
      * the {@code ball}, every damage glances off and its gun waits; it stands while it curls, uncurls and
-     * shows its belly. The rolling ball crushes ground allies (one hit per roll per ally) and destructible
-     * ground objects in its path, never enemies or the ship.
+     * shows its belly. The rolling ball crushes ground allies (one hit per roll per ally, round 40: where the
+     * ball touches the ally's footprint) and destructible ground objects in its path, never enemies or the ship.
+     * Round 40 R.e: while it drifts down the screen, a roll ends early once the scroll would carry it below {@code
+     * bellyRow} px above the bottom edge before its uncurl ends, so its belly shows at that row or higher (0: never
+     * early).
      */
     public record Roll(
             double belowShare,
@@ -1915,11 +2333,117 @@ public record EnemySpec(
             double uncurlSeconds,
             double bellySeconds,
             double bellyFactor,
-            Hitbox ball) {
+            Hitbox ball,
+            double bellyRow) {
         public Roll {
             if (!(belowShare > 0 && belowShare < 1) || !(rollSpeed > 0) || !(bellyFactor >= 1)) {
                 throw new IllegalArgumentException("a roll starts below a share of the HP: " + belowShare);
             }
+            if (!(bellyRow >= 0 && bellyRow < PlayField.HEIGHT)) {
+                throw new IllegalArgumentException("a roll's belly row lies on the play field: " + bellyRow);
+            }
+        }
+
+        /** A roll that always runs its full time (no belly row). */
+        public Roll(
+                double belowShare,
+                double curlSeconds,
+                double rollSeconds,
+                double rollSpeed,
+                double uncurlSeconds,
+                double bellySeconds,
+                double bellyFactor,
+                Hitbox ball) {
+            this(belowShare, curlSeconds, rollSeconds, rollSpeed, uncurlSeconds, bellySeconds, bellyFactor, ball, 0);
+        }
+    }
+
+    /**
+     * M7 part E, a vortex cycle (design/enemies/ground/dust-devil): a cycle of {@code closedSeconds} closed on
+     * {@code ground} (its first part sinking after an opening), {@code riseSeconds} rising (the tell), then {@code
+     * openSeconds} open on {@link Layer#LOW_AIR}, its core hittable and its spiral gun firing; then it closes and
+     * sinks again. The units of a wave start their cycles {@code offsetSeconds} apart (by their place in the
+     * wave). It wanders a seeded swirl at {@code wanderSpeed} px/s at most {@code wanderAmplitude} px either side
+     * of its centre line, which scrolls with the ground, and never comes closer than {@code keepAway} px to the
+     * ship's centre (it slides round the ship).
+     */
+    public record Vortex(
+            double closedSeconds,
+            double riseSeconds,
+            double openSeconds,
+            double offsetSeconds,
+            double wanderSpeed,
+            double wanderAmplitude,
+            double keepAway) {
+        public Vortex {
+            if (!(closedSeconds > 0) || !(riseSeconds >= 0) || !(openSeconds > 0)) {
+                throw new IllegalArgumentException(
+                        "a vortex is closed and open a while: " + closedSeconds + ", " + openSeconds);
+            }
+            if (!(offsetSeconds >= 0) || !(wanderSpeed >= 0) || !(wanderAmplitude >= 0) || !(keepAway >= 0)) {
+                throw new IllegalArgumentException("a vortex's offset, wander and keep-away are 0 or more");
+            }
+        }
+
+        /** The whole cycle, s. */
+        public double cycleSeconds() {
+            return closedSeconds + riseSeconds + openSeconds;
+        }
+    }
+
+    /**
+     * M7 part E, a lane strafe (design/enemies/air/ghost-drone): a unit entering at the top drops straight down at
+     * {@code descentSpeed} px/s to its lane, banks 90° (a quarter turn of {@link #BANK_RADIUS} px, its speed
+     * easing to the strafe's) and strafes across at {@code strafeSpeed} px/s at a fixed height toward the far side
+     * from where it entered, leaving through that side edge; a unit entering from a side edge strafes in at its
+     * lane and leaves through the opposite edge. A wave's lanes lie {@code laneSpacing} px apart from the top of
+     * {@code laneDepth} (px below the top edge), closer when the wave has more units than the band holds at that
+     * spacing, unit i on lane i. With {@code secondPass} (hard) a unit that entered at the top turns at the far
+     * edge (a half turn of {@link #RETURN_RADIUS} px toward the bottom) and strafes back once, its gun's pass
+     * trigger armed again, leaving through the edge it came from.
+     */
+    public record LaneStrafe(
+            double descentSpeed, double strafeSpeed, Range laneDepth, double laneSpacing, boolean secondPass) {
+        /** The radius of the bank from the descent into the strafe, px (pending round 41). */
+        public static final double BANK_RADIUS = 24;
+        /**
+         * The radius of the second pass's half turn at the edge, px: the strafe back runs twice this lower (one
+         * lane of the approved 40 px spacing; pending round 41).
+         */
+        public static final double RETURN_RADIUS = 20;
+
+        public LaneStrafe {
+            if (!(descentSpeed > 0) || !(strafeSpeed > 0)) {
+                throw new IllegalArgumentException("a lane strafe flies: " + descentSpeed + ", " + strafeSpeed);
+            }
+            if (!(laneDepth.min() > 0) || !(laneDepth.max() < PlayField.HEIGHT) || !(laneSpacing >= 0)) {
+                throw new IllegalArgumentException("a lane strafe's lanes lie on the play field: " + laneDepth);
+            }
+        }
+
+        /** The depth of lane {@code lane} of a wave of {@code lanes} units, px below the top edge. */
+        public double depth(int lane, int lanes) {
+            double step = lanes > 1 ? Math.min(laneSpacing, (laneDepth.max() - laneDepth.min()) / (lanes - 1)) : 0;
+            return laneDepth.min() + lane * step;
+        }
+    }
+
+    /**
+     * M7 part E, a radial pull toward the unit's centre (design/enemies/ground/dust-devil): on the ship within
+     * {@code shipRadius} px, {@code shipSpeed} px/s at the centre fading evenly to 0 at the edge, added to the
+     * ship's step; on the loose pickups within {@code pickupRadius} px at {@code pickupSpeed} px/s (a fitted
+     * Pickup magnet's pull wins where it is the stronger). A pickup that reaches the centre is held.
+     */
+    public record Pull(double shipRadius, double shipSpeed, double pickupRadius, double pickupSpeed) {
+        public Pull {
+            if (!(shipRadius >= 0) || !(shipSpeed >= 0) || !(pickupRadius >= 0) || !(pickupSpeed >= 0)) {
+                throw new IllegalArgumentException("a pull's radii and speeds are 0 or more");
+            }
+        }
+
+        /** Its speed on the ship at {@code distance} px from the centre, px/s; 0 at the edge and beyond. */
+        public double shipSpeedAt(double distance) {
+            return distance >= shipRadius ? 0 : shipSpeed * (1 - distance / shipRadius);
         }
     }
 

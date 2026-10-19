@@ -83,6 +83,11 @@ public final class FlightPath {
         return xs[xs.length - 1];
     }
 
+    /** M7 part E: the y of its last point (up). */
+    double endY() {
+        return ys[ys.length - 1];
+    }
+
     /** M5 part G: the x of its first point. */
     double startX() {
         return xs[0];

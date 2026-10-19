@@ -13,23 +13,24 @@ size: [112, 112]  # sprite px (the concept)
 hitbox: [84, 84]  # the body's
 parts: multi
 part_list:  # offsets in its own frame (facing down the screen: dx right, dy up towards its tail)
-  - {name: body, offset: [0, 0], hitbox: [84, 84], hp: 120, kind: vital, bounty: 40, first_bonus: 8}       # first_bonus: a body-first kill pays the whole 48
-  - {name: vent, offset: [0, 15], hitbox: [28, 28], hp: 24, kind: destroyable, bounty: 12, attack: mortar}  # the lime mortar vent at the rear of the back (15 px: the production sprite's vent, assets/pivots/shellback.json, step D4): its loss stops the mortar
+  - {name: body, offset: [0, 0], hitbox: [84, 84], hp: 90, kind: vital, bounty: 40, first_bonus: 8}       # first_bonus: a body-first kill pays the whole 48
+  - {name: vent, offset: [0, 15], hitbox: [28, 28], hp: 16, kind: destroyable, bounty: 12, attack: mortar}  # the lime mortar vent at the rear of the back (15 px: the production sprite's vent, assets/pivots/shellback.json, step D4): its loss stops the mortar
 orientation: 16 angles
-hp: 144           # the parts' sum: body 120, vent 24
+hp: 106           # the parts' sum: body 90, vent 16 (round 40 K.a: weaker, from 120 and 24)
 armour: none while walking; fully `armoured` while curled and rolling (shots spark off, grey flash); the body takes ×1.5 for 1.5 s while it uncurls (the belly)
 speed: 24         # px/s walking, on top of the scroll
 movement:
   walk: {speed: 24, turn_rate: 45, stride: 32}   # px/s, °/s, px of ground per 6-frame heavy-walk cycle
 roll:
   below: 0.4          # once, when the body falls to 40 % of its HP
-  curl: 0.6           # s tucking in (already armoured)
+  curl: 0.4           # s tucking in (already armoured; round 40 K.a: from 0.6)
   seconds: 2.5        # s rolling along its walk path ...
   speed: 140          # ... at 140 px/s (350 px)
-  uncurl: 0.6         # s
+  uncurl: 0.4         # s (round 40 K.a: from 0.6)
   belly_seconds: 1.5  # s after the uncurl ...
   belly_factor: 1.5   # ... its body takes 1.5x
   ball: [72, 72]      # px, the rolled ball (its hit box while curled)
+  belly_row: 200      # px above the bottom edge (round 40 R.e): a roll drifting down the screen ends early so its belly shows at this row or higher
 attacks:
   - pattern: mortar
     name: mortar
@@ -57,7 +58,7 @@ notes:
   size: (the concept); vent hitbox 28×28 at the rear of the back; rolled ball {roll.ball.0}×{roll.ball.1}
   parts: 'body (`vital`), mortar vent (`destroyable`: kills the mortar)'
   orientation: (16 headings × 6 heavy-walk frames; curl and uncurl frames; the ball rolls with 8 frames per band pair at 16 headings)
-  hp: 'body 120 · vent 24;'
+  hp: 'body 90 · vent 16 (round 40: from 120 · 24);'
   speed: walk (plus scroll); roll {roll.speed} px/s
   movement: '`walk` along an authored ground path, turning at {movement.walk.turn_rate}°/s; once, at ≤ 40 % body HP, it curls ({roll.curl} s), rolls {roll.seconds} s along its path (`spin`), uncurls ({roll.uncurl} s) and walks on'
   formations: '(a pair: a `convoy` of 2 walking 3 s apart, so their rolls never overlap)'

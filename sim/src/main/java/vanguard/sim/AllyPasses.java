@@ -98,8 +98,9 @@ final class AllyPasses {
             Pool<Enemy> enemies = force.enemies();
             for (int j = 0; j < enemies.size() && !s.failed; j++) {
                 Enemy enemy = enemies.get(j);
-                // M7 part B: a Burrower is up on the screen, not on the road: it claws nothing.
-                if (enemy.layer() != Layer.GROUND || enemy.grounded() || enemy.burrowing()) {
+                // M7 part B: a Burrower is up on the screen, not on the road: it claws nothing; M7 part E: nor a
+                // vortex.
+                if (enemy.layer() != Layer.GROUND || enemy.grounded() || enemy.burrowing() || enemy.vortex()) {
                     continue;
                 }
                 for (int k = 0; k < convoy.size() && !s.failed; k++) {

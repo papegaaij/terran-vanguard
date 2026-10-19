@@ -231,6 +231,7 @@ final class SiegeRules {
                 roll.uncurl(),
                 roll.bellySeconds(),
                 roll.bellyFactor(),
-                new Hitbox(roll.ball().width(), roll.ball().height()));
+                new Hitbox(roll.ball().width(), roll.ball().height()),
+                roll.bellyRow().orElse(0.0));
     }
 }

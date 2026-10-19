@@ -54,6 +54,7 @@ class VoiceFilesTest {
             "act-3-red-dust/level-15-olympus-descent",
             "act-3-red-dust/level-16-valles-canyon-run",
             "act-3-red-dust/level-17-dome-siege",
+            "act-3-red-dust/level-18-dust-storm",
             "act-3-red-dust briefing",
             "specials",
             "armour",

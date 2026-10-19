@@ -77,7 +77,7 @@ class SiegeDataTest {
         assertFalse(ALLIES.hooks("shellback", Difficulty.EASY), "easy: the Shellbacks lob only at the ship");
         assertTrue(ALLIES.hooks("shellback", Difficulty.HARD));
         assertFalse(ALLIES.hooks("needler", Difficulty.MEDIUM), "not listed: never hooked");
-        assertEquals(160, ALLIES.bombRow());
+        assertEquals(220, ALLIES.bombRow(), "round 40 R.b: from 160");
         assertEquals(40, ALLIES.bombSlot());
         assertEquals(Optional.of(4), ALLIES.change(Difficulty.EASY).flatMap(LevelData.AlliesChange::hits));
         assertEquals(Optional.of(2), ALLIES.change(Difficulty.HARD).flatMap(LevelData.AlliesChange::hits));
@@ -166,10 +166,10 @@ class SiegeDataTest {
                 parts.stream().map(EnemyData.PartData::kind).toList());
         assertEquals(Optional.of(8), parts.getFirst().firstBonus(), "a body-first kill pays the whole 48");
         assertEquals(Optional.of("mortar"), parts.getLast().attack(), "the vent's loss silences the mortar");
-        assertEquals(144, shellback.hp());
+        assertEquals(106, shellback.hp(), "round 40 K.a: body 90, vent 16");
         assertEquals(52, shellback.bounty());
         EnemyData.Roll roll = shellback.roll().orElseThrow();
-        assertEquals(new EnemyData.Roll(0.4, 0.6, 2.5, 140, 0.6, 1.5, 1.5, new Size(72, 72)), roll);
+        assertEquals(new EnemyData.Roll(0.4, 0.4, 2.5, 140, 0.4, 1.5, 1.5, new Size(72, 72), Optional.of(200.0)), roll);
         assertEquals(350, roll.length());
         EnemyData.Hook hard =
                 shellback.difficulty().flatMap(EnemyData.Hooks::hard).orElseThrow();
@@ -217,7 +217,7 @@ class SiegeDataTest {
         assertProblem(PATH, "name: Lowell, at: [46, 350]", "name: Lowell, at: [39, 150]", "overlaps Bradbury's");
         assertProblem(
                 PATH, "name: Bradbury, at: [38, 130]", "name: Bradbury, at: [38, 40]", "lies inside the play field");
-        assertProblem(PATH, "bomb_row: 160", "bomb_row: 600", "the bombers' row lies on the play field");
+        assertProblem(PATH, "bomb_row: 220", "bomb_row: 600", "the bombers' row lies on the play field");
         assertProblem(PATH, "{spore-bomber: always,", "{spore-bombr: always,", "unknown enemy 'spore-bombr'");
         assertProblem(
                 PATH, "unit: first, enemy: choir-herald", "unit: first, enemy: mantis", "'mantis' flies in no wave");
@@ -231,6 +231,24 @@ class SiegeDataTest {
                 "{piece: helix-compound, t: 81.5, x: 380}",
                 "{piece: helix-compound, t: 92, x: 220}",
                 "within 100.0 px of the Helix compound");
+        // Round 40 R.c: the walks pass between the domes; Lowell's old lane ran across its glass.
+        assertProblem(
+                PATH,
+                "paths: [[[260, -150], [260, -70], [220, 0], [220, 640]]]",
+                "paths: [[[350, -180], [350, 640]]]",
+                "walks over Lowell's hit box");
+        // the convoy's second unit enters 3 s later, its path 210 px higher on the ground
+        assertProblem(
+                PATH,
+                "paths: [[[280, -120], [280, -40], [240, 30], [240, 640]]]",
+                "paths: [[[300, -120], [300, 640]]]",
+                "entering at t=111.0 walks over Burroughs's hit box");
+        // Round 40 K.a: a first-ring line needs an aura enemy.
+        assertProblem(
+                LEVEL_16,
+                "(hired, fitted and not ejected)\n",
+                "(hired, fitted and not ejected)\n  - {event: first-ring, speaker: Varga, line: \"Rings.\"}\n",
+                "first-ring in a level without an aura enemy");
     }
 
     @Test

@@ -132,6 +132,15 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           ally's sprites, tools/art/siege_units.py); an unnamed black-and-gold compound
   level-17-choir-herald   L17 p2: Varga's scan of a Choir Herald, its crest lit, the dashed aura and threads to
                           three ringed Needlers; an inset of a Shellback mid-curl with its lime vent marked
+  level-18-storm-front    L18 p1 (M7 part E): Okafor's orbital weather view of the northern plains, north to the
+                          left: the storm front as a rust wall with its calm eye, Vrell inside it, its drift
+                          toward Ares Landing's domes at its southern edge, the sweep route through it with the
+                          level's six sections
+  level-18-visibility     L18 p2 (M7 part E): Varga's diagram of the storm's look (the chosen radius look b,
+                          from tools/art/backdrop_l18.py's storm plain, veil and tongue textures): the ship in
+                          its clear radius, the ground fading into the dust outside it, Dust Kites and a Needler
+                          as dark silhouettes keeping their glow, their bullets crisp at any range, a homing
+                          trail finding one; no Ghost Drone (its first sight is the level's hint)
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -146,6 +155,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r36-a.png   review sheet, L14 (M5 part H)
   design/ui/briefing/concept/briefing-images-final-r38-a.png   review sheet, Act 3 intro + L15 (M7 part B)
   design/ui/briefing/concept/briefing-images-final-r40-a.png   review sheet, L17 (M7 part D)
+  design/ui/briefing/concept/briefing-images-final-r41-a.png   review sheet, L18 (M7 part E)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -156,7 +166,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -164,7 +174,7 @@ creeper.py, enemy_bullets.py, weapon_fx.py, hive_node.py, ravager.py, wraith.py,
 shuttle.py, convoy_ships.py (switch the ship pair: its --variant b, then this script again),
 driftjelly.py, reef_spitter.py, harbour_kraken.py, backdrop_l11.py, l12_props.py and backdrop_l12.py, skimmer.py,
 relay.py, backdrop_l13.py, siege_spire.py, root_burst.py --assets, backdrop_l14.py, burrower.py and backdrop_l15.py, whose sprites
-and pieces it shows); the review sheet written is the open round's (r38) unless
+and pieces it shows); the review sheet written is the open round's (r41) unless
 a round is named.
 """
 import json
@@ -196,7 +206,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r40"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r41"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -3766,6 +3776,157 @@ def drop():
     return b
 
 
+
+# --------------------------------------------------------------------------- Level 18 (M7 part E)
+
+SOURCE_M7E = artkit.source_note(SCRIPT, "M7 part E batch")
+L18 = ROOT / "assets" / "backdrop" / "level-18"
+DUST_HOLO = [(0.0, (60, 30, 18)), (0.4, (132, 78, 44)), (0.75, (196, 140, 90)), (1.0, (236, 196, 146))]
+
+
+def storm_front_l18():
+    """L18 p1: Okafor's orbital weather view of the northern plains, north to the left: the storm front as a
+    rust wall bowed toward the south with the calm eye inside, Vrell markers in it, its drift toward Ares
+    Landing's domes at its southern edge; the sweep route through the storm with the six sections."""
+    b = Board()
+    x0, x1 = 16, 468
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= 18) & (b.yy < H - 10)
+    tex = raster.fbm(W, H, 24, 4601, octaves=4, period=False)
+    fine = raster.fbm(W, H, 6, 4603, octaves=2, period=False)
+    ground = raster.ramp(MARS_HOLO, np.clip(0.4 + 0.3 * (tex - 0.5) + 0.12 * (fine - 0.5), 0, 1))
+    b.base = np.where(box[..., None], ground, b.base)
+    # the storm: a swirl of dust (north-west of the domes), its front bowed toward them, the calm eye within
+    sx, sy, ex, ey = 236, 118, 250, 112
+    ang = np.arctan2(b.yy - sy, (b.xx - sx) * 0.62)
+    r = np.hypot((b.xx - sx) * 0.62, b.yy - sy) / 100
+    swirl = raster.fbm(W, H, 18, 4605, octaves=4, period=False)
+    arms = 0.5 + 0.5 * np.sin(3 * ang + 7 * r + 3 * (swirl - 0.5))
+    front = (b.xx - (sx + 128 - 30 * ((b.yy - sy) / 90) ** 2)) / 14
+    dens = np.clip((1.25 - r) * 1.6, 0, 1) * np.clip(-front, 0, 1) * (0.55 + 0.45 * arms) + np.clip(1 - np.abs(front), 0, 1) * 0.5 * (r < 1.25)
+    eye = np.hypot(b.xx - ex, (b.yy - ey) * 1.15)
+    calm = np.clip((eye - 16) / 10, 0, 1)
+    dens = np.clip(dens * calm + 0.25 * (swirl - 0.5), 0, 1) * box
+    dust = raster.ramp(DUST_HOLO, np.clip(0.3 + 0.7 * dens + 0.15 * (fine - 0.5), 0, 1))
+    b.base = b.base * (1 - dens[..., None] * 0.9) + dust * dens[..., None] * 0.9
+    b.title("NORTHERN PLAINS - A STORM FRONT WITH VRELL IN IT")
+    b.label(W - 10, 9, "SWEEP IT BEFORE IT REACHES THE DOMES", AMBER, right=True)
+    b.draw.rectangle([x0, 18, x1 - 1, H - 11], outline=CYAN_DIM + (180,))
+    b.arrow(46, 30, 26, 30, CYAN, size=3, dashed=False)
+    b.label(50, 27, "N", CYAN)
+    b.ring(ex, ey, 18, 16, colour=CYAN, alpha=200)
+    tag(b, ex - 10, ey - 4, "EYE", CYAN)
+    tag(b, sx - 150, 32, "STORM FRONT", AMBER)
+    b.line([(sx - 100, 42), (sx - 40, 70)], AMBER, 1)
+    for k in range(3):                                           # its drift toward the domes
+        b.arrow(sx + 140, 70 + 50 * k, sx + 178, 74 + 50 * k, AMBER, size=3)
+    tag(b, sx + 134, 30, "MOVING SOUTH", AMBER)
+    rng = np.random.default_rng(4607)                            # Vrell inside the dust
+    for _ in range(9):
+        a, rr = rng.uniform(0, 6.28), rng.uniform(30, 92)
+        vx, vy = sx + math.cos(a) * rr / 0.62, sy + math.sin(a) * rr * 0.8
+        if math.hypot(vx - ex, vy - ey) > 26 and x0 + 8 < vx < sx + 120:
+            b.marker(vx, vy, "chevron", RED, 4)
+    # Ares Landing's domes at the storm's southern edge (the ally's sprite, small)
+    for k, (dx, dy) in enumerate(((432, 70), (446, 112), (430, 160), (452, 186))):
+        b.glow(dx, dy, 12, (20, 120, 50), 0.8)
+        b.sprite(held_frame("ares-dome_1", 16 / 120), dx, dy)
+    tag(b, 392, 200, "ARES LANDING", GREEN)
+    # the sweep route north to south through the storm, the sections numbered
+    route = [(x0 + 6, 121), (x1 - 52, 121)]
+    b.dashed(route, AMBER, 1, 3, 4)
+    for n, x in enumerate((44, 112, 190, 252, 316, 384), 1):
+        b.draw.rectangle([x - 4, 228 - 5, x + 4, 228 + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(x - 2, 228 - 3, str(n), AMBER)
+    b.sprite(scaled_sprite("ship_2", 0.5), 30, 121)
+    px = 480
+    b.line([(px - 6, 26), (px - 6, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "NORTH TO SOUTH", WHITE)
+    rows = [("1", "OPEN PLAINS"), ("2", "STORM FRONT"), ("3", "DEEP STORM"), ("4", "THE EYE"), ("5", "BACK WALL"),
+            ("6", "CLEARING")]
+    for i, (n, name) in enumerate(rows):
+        y = 46 + 13 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, CYAN)
+    b.line([(px, 128), (W - 12, 128)], CYAN_DIM, 1, 120)
+    b.label(px, 136, "SWEEP THE STORM", AMBER)
+    b.label(px, 150, "KILL RATIO 65 %", GREEN)
+    b.label(px, 164, "INSIDE: A FEW", CYAN_DIM)
+    b.label(px, 174, "SHIP-LENGTHS OF VIEW", CYAN_DIM)
+    b.label(W - 10, H - 16, "CLEAR AIR IN THE EYE", CYAN_DIM, right=True)
+    return b
+
+
+def _l18(name):
+    return np.array(Image.open(L18 / f"{name}.png").convert("RGBA")).astype(np.float64)
+
+
+def visibility_l18():
+    """L18 p2: Varga's diagram of the storm's look (radius look b), from the level's own textures: the ship in
+    its clear radius, the plain fading into the rust veil through the ragged falloff, Dust Kites and a
+    Needler outside as dark silhouettes that keep their teal glow, their orbs crisp at any range, a homing
+    trail curving onto one; the radius and the falloff marked."""
+    import mars_r36 as m36
+    b = Board()
+    x1 = 456
+    yy, xx = b.yy, b.xx
+    ground = _l18("storm-plain")[..., :3]
+    veil = _l18("storm-veil")[..., :3]
+    ta, tb = _l18("storm-tongues-a")[..., 3] / 255, _l18("storm-tongues-b")[..., 3] / 255
+    g = ground[(yy.astype(int) + 300) % ground.shape[0], xx.astype(int) % ground.shape[1]]
+    v_ = veil[(yy.astype(int) + 100) % veil.shape[0], xx.astype(int) % veil.shape[1]]
+    na = ta[yy.astype(int) % ta.shape[0], xx.astype(int) % ta.shape[1]]
+    nb = tb[(yy.astype(int) + 90) % tb.shape[0], (xx.astype(int) + 40) % tb.shape[1]]
+    sx, sy, R = 196, 150, 74
+    d = np.hypot(xx - sx, yy - sy)
+    from render import sdf
+    vis = sdf.smoothstep(R + 30, R - 36, d + 40 * (na - 0.5) + 24 * (nb - 0.5))
+    field = g * 0.85 + np.array((176, 118, 74)) * 0.15
+    img = field * vis[..., None] + v_ * (1 - vis[..., None])
+    box = (xx >= 16) & (xx < x1) & (yy >= 18) & (yy < H - 10)
+    b.base = np.where(box[..., None], img * 0.92, b.base)
+    b.title("SENSOR SCAN - THE DUST STORM: GLOW, NOT SHAPES")
+    b.label(W - 10, 9, "BULLETS ALWAYS SHOW", AMBER, right=True)
+    b.draw.rectangle([16, 18, x1 - 1, H - 11], outline=CYAN_DIM + (180,))
+    b.ring(sx, sy, R, colour=WHITE, alpha=150)
+    b.ring(sx, sy, R + 30, colour=CYAN_DIM, alpha=110)
+    b.line([(sx, sy), (sx + R * 0.71, sy - R * 0.71)], WHITE, 1, 200)
+    tag(b, sx + R * 0.71 + 4, sy - R * 0.71 - 12, "CLEAR RADIUS", WHITE)
+    tag(b, sx + R + 34, sy + 8, "RAGGED EDGE", CYAN_DIM)
+    b.sprite(scaled_sprite("ship_2", 1.0), sx, sy)
+    for k in range(3):                                           # the ship's bolts up the screen
+        b.draw.rectangle([sx - 11, sy - 40 - 26 * k, sx - 9, sy - 30 - 26 * k], fill=(120, 220, 255, 255))
+        b.draw.rectangle([sx + 9, sy - 40 - 26 * k, sx + 11, sy - 30 - 26 * k], fill=(120, 220, 255, 255))
+    # Vrell outside the radius: dark silhouettes keeping their glow (mars_r36.silhouette, the look's rule)
+    kite, needler = asset("dust-kite_0"), asset("needler_0")
+    units = [(kite, 70, 52), (kite, 104, 40), (kite, 330, 60), (needler, 372, 112), (kite, 64, 200)]
+    for sp, ux, uy in units:
+        b.sprite(m36.silhouette(sp), ux, uy)
+    orb = asset("orb_0")
+    for ox, oy in ((96, 76), (118, 98), (346, 92), (362, 132), (300, 150)):  # their orbs: crisp at any range
+        b.sprite(orb, ox, oy)
+    # a homing trail curving out of the radius onto one silhouette
+    pts = [(sx + 14, sy - 20), (sx + 60, sy - 70), (sx + 120, sy - 92), (330, 66)]
+    b.dashed(pts, GREEN, 1, 3, 3)
+    tag(b, 236, 24, "HOMING FINDS THEM", GREEN)
+    tag(b, 24, 24, "VRELL GLOW", CYAN)
+    tag(b, 24, H - 26, "THE GROUND IS GONE", AMBER)
+    tag(b, 324, H - 26, "BULLETS: FULL CONTRAST", AMBER)
+    px = 466
+    b.line([(px - 6, 26), (px - 6, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "IN THE DUST", WHITE)
+    b.label(px, 46, "INSIDE: ALL OF IT", CYAN)
+    b.label(px, 60, "OUTSIDE: GLOW ONLY", CYAN)
+    b.label(px, 74, "GROUND: GONE", CYAN)
+    b.label(px, 88, "BULLETS: ALWAYS", AMBER)
+    b.line([(px, 104), (W - 12, 104)], CYAN_DIM, 1, 120)
+    b.label(px, 112, "EVERYTHING IS HITTABLE", GREEN)
+    b.label(px, 126, "HOMING LOCKS WHAT", GREEN)
+    b.label(px, 136, "YOUR EYES CAN'T", GREEN)
+    b.label(px, 156, "DEEP STORM 170", CYAN_DIM)
+    b.label(px, 166, "BACK WALL 150", CYAN_DIM)
+    b.label(px, 180, "THE EYE: CLEAR", CYAN_DIM)
+    return b
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -3818,6 +3979,8 @@ IMAGES = {
     "level-16-tendril-scan": tendril_scan,
     "level-17-ares-domes": ares_domes,
     "level-17-choir-herald": herald_scan,
+    "level-18-storm-front": storm_front_l18,
+    "level-18-visibility": visibility_l18,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -3836,7 +3999,8 @@ BATCHES = {
     "r36": (list(IMAGES)[39:41], "M5 PART H"),
     "r38": (list(IMAGES)[41:47], "M7 PART B"),
     "r39": (list(IMAGES)[47:49], "M7 PART C"),
-    "r40": (list(IMAGES)[49:], "M7 PART D"),
+    "r40": (list(IMAGES)[49:51], "M7 PART D"),
+    "r41": (list(IMAGES)[51:], "M7 PART E"),
 }
 
 
@@ -3852,6 +4016,7 @@ def build(names):
                   else SOURCE_M7B if name in BATCHES["r38"][0]
                   else SOURCE_M7C if name in BATCHES["r39"][0]
                   else SOURCE_M7D if name in BATCHES["r40"][0]
+                  else SOURCE_M7E if name in BATCHES["r41"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

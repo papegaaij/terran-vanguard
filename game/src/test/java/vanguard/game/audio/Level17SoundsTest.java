@@ -40,7 +40,9 @@ class Level17SoundsTest {
     void everySoundHasItsFile() {
         for (Sfx sfx : List.of(Sfx.DOME_HIT, Sfx.DOME_BREAK, Sfx.AMBIENCE_MARS_COLONY)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r40-a.ogg"), sfx + ": round 40's proposal a");
+            // The dome break is round 40's redo c, chosen in round 41 (S.h); the others round 40's a.
+            String option = sfx == Sfx.DOME_BREAK ? "-r40-c.ogg" : "-r40-a.ogg";
+            assertTrue(sfx.path().endsWith(option), sfx + ": round 40's " + option);
         }
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_MARS_COLONY.priority());
         assertTrue(Files.isRegularFile(ASSETS.resolve(Sfx.BOMB_SHOT.path())), "the reused whistle");

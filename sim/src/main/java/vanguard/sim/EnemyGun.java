@@ -27,6 +27,17 @@ import java.util.Optional;
  *     the ring's
  * @param burstGapSeconds M5 part D: the gap between the shots of a burst (the stat block's {@code
  *     burst_gap}; {@link #BURST_GAP_SECONDS} when it has none)
+ * @param up M5 part D: a burst fired straight up the screen as a fixed fan (the Wraith)
+ * @param spiral M7 part E: a spiral gun on a unit that is not a boss (design/enemies/ground/dust-devil), fired
+ *     only while the unit's vortex is open (a unit without a vortex never fires it): its arms turn and each fires a bullet at its interval, at the
+ *     attack's bullet speed and damage ({@code intervalSeconds}, {@code burst} and the fan are not read)
+ * @param passWithinX M7 part E, a pass trigger (design/enemies/air/ghost-drone; a lane strafer's gun): one burst
+ *     per pass, started when the unit, strafing on the play field, is within this many px of the ship's x
+ *     ({@code intervalSeconds} and {@code firstShotDelay} are not read); NaN for a gun without one
+ * @param tellSeconds M7 part E: a pass trigger's tell, the time from the trigger (the {@link
+ *     SimEvents.Type#EYE_GLINT} event) to the burst's first shot; 0 for none
+ * @param reaim M7 part E: a pass trigger's burst aims each shot at the ship anew; otherwise its shots follow the
+ *     first one's line (every other aimed burst already aims each of its shots anew)
  */
 public record EnemyGun(
         double intervalSeconds,
@@ -42,7 +53,11 @@ public record EnemyGun(
         Optional<MineSpec> mine,
         Optional<MortarSpec> mortar,
         double burstGapSeconds,
-        boolean up) {
+        boolean up,
+        Optional<SpiralSpec> spiral,
+        double passWithinX,
+        double tellSeconds,
+        boolean reaim) {
     public EnemyGun {
         if (!(burstGapSeconds > 0)) {
             throw new IllegalArgumentException("a burst's shots are apart in time: " + burstGapSeconds);
@@ -50,6 +65,163 @@ public record EnemyGun(
         if (up && (fan != 1 || mine.isPresent() || mortar.isPresent() || Double.isFinite(turnRate))) {
             throw new IllegalArgumentException("only an aimed burst goes straight up");
         }
+        if (spiral.isPresent() && (up || mine.isPresent() || mortar.isPresent())) {
+            throw new IllegalArgumentException("a spiral gun fires its arms, not up, a mine or a lob");
+        }
+        if (!Double.isNaN(passWithinX)
+                && (!(passWithinX >= 0)
+                        || up
+                        || mine.isPresent()
+                        || mortar.isPresent()
+                        || spiral.isPresent()
+                        || Double.isFinite(turnRate))) {
+            throw new IllegalArgumentException(
+                    "a pass trigger fires an aimed burst within 0 px or more: " + passWithinX);
+        }
+        if (!(tellSeconds >= 0)) {
+            throw new IllegalArgumentException("a tell lasts 0 s or more: " + tellSeconds);
+        }
+    }
+
+    /** An attack without M7 part E's pass trigger (every unit before the Ghost Drone). */
+    public EnemyGun(
+            double intervalSeconds,
+            double firstShotDelay,
+            int burst,
+            double bulletSpeed,
+            double damage,
+            boolean leadsTargetInCircle,
+            int fan,
+            double spreadRadians,
+            double turnRate,
+            double arcRadians,
+            Optional<MineSpec> mine,
+            Optional<MortarSpec> mortar,
+            double burstGapSeconds,
+            boolean up,
+            Optional<SpiralSpec> spiral) {
+        this(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                Double.NaN,
+                0,
+                false);
+    }
+
+    /**
+     * M7 part E: this aimed burst fired by a pass trigger (design/enemies/air/ghost-drone): once per pass within
+     * {@code withinX} px of the ship's x, {@code tell} s after its {@link SimEvents.Type#EYE_GLINT}, each shot
+     * re-aimed when {@code reaimed}; see {@link #passWithinX()}.
+     */
+    public EnemyGun withPassTrigger(double withinX, double tell, boolean reaimed) {
+        return new EnemyGun(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                withinX,
+                tell,
+                reaimed);
+    }
+
+    /** M7 part E: whether it fires by a pass trigger ({@link #passWithinX()} is a number). */
+    public boolean passTrigger() {
+        return !Double.isNaN(passWithinX);
+    }
+
+    /** An attack without a spiral (every unit before M7 part E). */
+    public EnemyGun(
+            double intervalSeconds,
+            double firstShotDelay,
+            int burst,
+            double bulletSpeed,
+            double damage,
+            boolean leadsTargetInCircle,
+            int fan,
+            double spreadRadians,
+            double turnRate,
+            double arcRadians,
+            Optional<MineSpec> mine,
+            Optional<MortarSpec> mortar,
+            double burstGapSeconds,
+            boolean up) {
+        this(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                Optional.empty());
+    }
+
+    /**
+     * M7 part E, a spiral gun on a unit that is not a boss (design/enemies/ground/dust-devil, the grit spiral):
+     * {@code arms} arms evenly round, turning at {@code turnRadiansPerSecond} (negative: clockwise), each firing
+     * a bullet every {@code intervalSeconds} while the unit's vortex is open; the first volley goes at the ship
+     * as it opens.
+     */
+    public record SpiralSpec(int arms, double turnRadiansPerSecond, double intervalSeconds) {
+        public SpiralSpec {
+            if (arms < 1 || !(intervalSeconds > 0) || !Double.isFinite(turnRadiansPerSecond)) {
+                throw new IllegalArgumentException("a spiral has arms and fires at an interval: " + arms);
+            }
+        }
+    }
+
+    /** M7 part E: this attack as a spiral gun ({@code spiral}); empty for an attack without one. */
+    public EnemyGun withSpiral(Optional<SpiralSpec> withSpiral) {
+        return new EnemyGun(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                withSpiral,
+                passWithinX,
+                tellSeconds,
+                reaim);
     }
 
     /** An attack that is not fired straight up (every unit but the Wraith). */

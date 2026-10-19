@@ -165,7 +165,7 @@ final class WingmanLooks {
         hitTick = tick;
     }
 
-    private AtlasRegion frame(Wingman rook) {
+    AtlasRegion frame(Wingman rook) {
         int bank = Math.clamp(rook.bank() + BANKS / 2, 0, hull.size - 1);
         return hull.get(bank);
     }

@@ -150,6 +150,10 @@ final class ObjectivePasses {
         if (s.groundPasses.rock != null && enemy.grounded()) {
             s.groundPasses.throwRocks(x, y);
         }
+        if (spec.pull().isPresent()) {
+            // M7 part E: a Dust Devil's grit cloud drops every pickup it held.
+            s.pickupPasses.release(enemy);
+        }
         if (enemy.carried().isPresent()) {
             s.pickupPasses.drop(enemy.carried().get(), enemy.x(), enemy.y());
         }
@@ -352,6 +356,10 @@ final class ObjectivePasses {
      */
     void escaped(Enemy enemy) {
         String slug = enemy.spec().slug();
+        if (enemy.spec().pull().isPresent()) {
+            // M7 part E: a Dust Devil that escapes carries off the pickups it held.
+            s.pickupPasses.carryOff(enemy);
+        }
         if (links != null && enemy.spec().link().isPresent()) {
             // M7 part C: a gate's anchor left the screen: a tendril still standing is lost.
             links.anchorGone(enemy, false);

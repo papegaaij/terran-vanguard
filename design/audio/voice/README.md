@@ -473,6 +473,11 @@ level).
       the user's review in round 40). Open: `VoiceLines.radio` and the game's `{ally}` name must read a ground
       ally's name (the dome lines are keyed by it), and `RadioTimelineTest` gets Level 17's runs once the level
       is mapped (step D4)
+- [x] Level 18's lines (14 timed with Rook's four, `requires: escort`; the rover wreck's secret, the secondary's
+      and the level end's lines; the two briefing pages: 19 files) rendered with the cast speakers (Okafor,
+      Varga, Rook); six takes pinned (five re-rendered, Varga's t=71 hint line pinned to its own seed);
+      `VoiceFilesTest` covers Level 18 (M7 part E, step VOX-E, 2026-10-19; pending the user's review in round
+      41). Open: `RadioTimelineTest` gets Level 18's runs once the level is mapped (step E4)
 - [x] A line that is only a stage direction plays its speaker's `stage` sound (speaker table) on
       the voice bus, found by `VoiceLines.radioVoice` for the game and RadioTimelineTest; the
       Choir's is round 29's option b (the sung "ah" F3 to E3), copied by
@@ -1080,3 +1085,16 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   line kept its text, so its take stays; the old page 2 take (`varga/0e226d3a4ff2.ogg`) is deleted. Pitch on
   the unfiltered takes: Okafor 143 Hz median (a rise to about 250 Hz on "Cut a"), Rook 151, Varga 194;
   Whisper reads every line back as written ("Vrel" for Vrell).
+- 2026-10-19: M7 part E, step VOX-E (accepted by the user in round 41): Level 18's 17 voiced lines (Rook's
+  four `requires: escort`) and its two briefing pages rendered by `tools/art/voice.py`, 19 files; Airees as
+  approved ("Ares Landing" read back as "Aries Landing" plain and "Ares Landing" with the name prompt, as in Level
+  17), "Vrell" as "Vrel"/"rail" plain and "Vrell" with the prompt. Pins (6): Okafor's briefing page 1 (the key's
+  seed read "Sweet pick" for "Sweep it" both ways) and t=78 "Later, Doctor." (the key's seed sat at about 128 Hz);
+  Varga's t=41 and t=56 (octave jumps on "pull" and "it") and her briefing page 2 (every one of 15 seeds jumps
+  high on "not shapes"; the pin holds it about 0.1 s); Varga's t=71 hint line pinned to the key's own seed as the
+  voice design asks (median about 210 Hz, no jump, a 0.18 s beat before "ours", rising to about 270 Hz at the
+  end; reads "ours", not "hours"; seed 204667219 was the runner-up with a 0.24 s beat). Two kept takes were
+  retried for a pause over 0.8 s (Rook's t=86, Okafor's level end). Pitch on the unfiltered takes: Okafor 146-180 Hz median (180 on the secondary's line), Varga 193-235, Rook
+  139-160. Whisper hears "Militia supply pod" (the secret) as "Malicious supply pod" in all seven seeds tried,
+  with "militia" in the prompt too; the take is kept, to be heard in the round. No radio retime: the timed lines
+  never overlap (the closest, t=71 → 78 and t=86 → 93, leave about 3.5 s).

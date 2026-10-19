@@ -40,13 +40,14 @@ review in round 40); the table is hand-written. Level 17 places the domes (the l
 | Levels | [L17 Dome Siege](../../campaign/act-3-red-dust/level-17-dome-siege/README.md): Bradbury, Lowell, Schiaparelli, Burroughs and Eden |
 
 **The hook at the domes** (the level's `targeted_by`, per unit type): a hooked bomber (`always`)
-holds the level's `bomb_row` (Level 17: 160 px below the top edge) and steers at its own speed to the
+holds the level's `bomb_row` (Level 17: 220 px below the top edge; 160 until round 40 R.b) and steers at its own speed to the
 x of the next dome coming down, a wave's bombers on x slots `bomb_slot` apart (40 px) round the dome's
 x; when the dome's footprint passes beneath it, it drops its load (one hit) and flies on, laying its
 normal spore mines on the ship's plane. A hooked mortar (`alternate`) lobs every second shell at the
 nearest dome while that dome is closer than the ship, aimed where the dome will be when the shell
-lands (the marker on the ground, 1.2 s ahead). A roll crosses a dome below the roller's path whether
-the roller is hooked or not.
+lands (the marker on the ground, 1.2 s ahead). A roll hurts a dome whose footprint the ball touches
+(its concrete ring, round 40 R.c; the hit box is the glass), whether the roller is hooked or not; the
+level's walks pass between the domes, never over the glass.
 
 ## Concept art
 
@@ -88,3 +89,6 @@ Prompts: [concept/prompts.md](concept/prompts.md).
   [data.yaml](../data.yaml) (`ares-landing-dome`: `hits: 3`, `damaged_by` `bombs: 1`, `lobs: true`,
   `rolls: 1`); the roster row replaced by the Contents row; the defaults above pending round 40.
 - 2026-10-19 (user, round 40, F.a): the final art approved (`art: final`); the dome's defaults (round 40 B.b) accepted.
+- 2026-10-19 (step D6, round 40 R.b, R.c; pending the user's review): a roll hits a dome where the ball touches its
+  footprint (the ring), as `rolls` says, not only its hit box (the glass), so a Shellback walking beside the glass
+  can still graze it once; Level 17's `bomb_row` 160 → 220 for the dome secondary (medium 5/8 over 8 seeds).

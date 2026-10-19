@@ -3701,7 +3701,13 @@ public record LevelScript(
          * boss on a lane holding a convoy ship a slam hurts (the teaching line: cut that lane's root); once.
          * No subject. Its {@link #FIRST_TELEGRAPH} cues start as well when it is the first telegraph.
          */
-        FIRST_SHIP_TELEGRAPH;
+        FIRST_SHIP_TELEGRAPH,
+        /**
+         * M7 part D, round 40 K.a (design/campaign Level 17, the Herald's line): the attempt's first aura ring a
+         * Choir Herald sings onto a unit ({@link SimEvents.Type#RING_SUNG}: as soon as it is on the play field with
+         * its escorts round it); once. No subject.
+         */
+        FIRST_RING;
 
         /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
         public static final String PART_SEPARATOR = "|";

@@ -23,15 +23,45 @@ public final class StemMix implements PcmStream {
 
     private short[] fullChunk = new short[0];
 
+    /** M7 part E: the motif layer comes in over this long (design/audio/music, Vorne's motif layer). */
+    static final double MOTIF_IN_SECONDS = 2;
+    /** M7 part E: the motif layer goes out over this long. */
+    static final double MOTIF_OUT_SECONDS = 4;
+    /** M7 part E: the motif stem, null for a theme without one. */
+    private final PcmStream motif;
+
+    private short[] motifChunk = new short[0];
+    /** M7 part E: the motif's level, 0..1, where it goes and its pace per frame in and out. */
+    private float motifLevel;
+
+    private volatile float motifTarget;
+    private final float motifIn;
+    private final float motifOut;
+
     /** @param fadeSeconds how long a whole crossfade takes */
     StemMix(PcmStream base, PcmStream full, double fadeSeconds) {
+        this(base, full, null, fadeSeconds);
+    }
+
+    /**
+     * M7 part E: with a motif stem (null for none) added on top of the crossfade, silent until {@link #motif}.
+     *
+     * @param fadeSeconds how long a whole crossfade takes
+     */
+    StemMix(PcmStream base, PcmStream full, PcmStream motif, double fadeSeconds) {
         if (base.channels() != full.channels() || base.sampleRate() != full.sampleRate()) {
             throw new IllegalArgumentException("the stems differ in format");
         }
+        if (motif != null && (motif.channels() != base.channels() || motif.sampleRate() != base.sampleRate())) {
+            throw new IllegalArgumentException("the motif stem differs in format");
+        }
         this.base = base;
         this.full = full;
+        this.motif = motif;
         stepPerFrame = (float) (1 / (fadeSeconds * base.sampleRate()));
         step = stepPerFrame;
+        motifIn = (float) (1 / (MOTIF_IN_SECONDS * base.sampleRate()));
+        motifOut = (float) (1 / (MOTIF_OUT_SECONDS * base.sampleRate()));
     }
 
     /**
@@ -40,13 +70,48 @@ public final class StemMix implements PcmStream {
      * @param fullShare where the mix starts: 0 = the base stem alone, 1 = the full mix
      */
     static StemMix of(VorbisFile base, VorbisFile full, double fadeSeconds, float fullShare) {
+        return of(base, full, null, fadeSeconds, fullShare, false);
+    }
+
+    /**
+     * M7 part E: the stems of a theme with its motif stem (null for none), which must be sample-aligned with them
+     * too.
+     *
+     * @param motifOn whether the motif starts at its full level (else silent)
+     */
+    static StemMix of(
+            VorbisFile base, VorbisFile full, VorbisFile motif, double fadeSeconds, float fullShare, boolean motifOn) {
         if (base.frameCount() != full.frameCount() || !base.loopPoints().equals(full.loopPoints())) {
             throw new IllegalArgumentException("the stems are not sample-aligned");
         }
-        StemMix stems = new StemMix(LoopingStream.of(base), LoopingStream.of(full), fadeSeconds);
+        if (motif != null
+                && (motif.frameCount() != base.frameCount()
+                        || !motif.loopPoints().equals(base.loopPoints()))) {
+            throw new IllegalArgumentException("the motif stem is not sample-aligned");
+        }
+        StemMix stems = new StemMix(
+                LoopingStream.of(base),
+                LoopingStream.of(full),
+                motif == null ? null : LoopingStream.of(motif),
+                fadeSeconds);
         stems.target = fullShare;
         stems.mix = fullShare;
+        stems.motifTarget = motifOn ? 1 : 0;
+        stems.motifLevel = stems.motifTarget;
         return stems;
+    }
+
+    /** M7 part E: whether the theme has a motif stem. */
+    public boolean hasMotif() {
+        return motif != null;
+    }
+
+    /**
+     * M7 part E: the motif layer comes in (over {@value #MOTIF_IN_SECONDS} s) or goes out (over {@value
+     * #MOTIF_OUT_SECONDS} s); nothing without a motif stem.
+     */
+    public void motif(boolean on) {
+        motifTarget = on ? 1 : 0;
     }
 
     /** Crossfades towards {@code share} of the full mix: 0 = the base stem alone, 1 = the full mix. */
@@ -75,18 +140,36 @@ public final class StemMix implements PcmStream {
         short[] f = fullChunk;
         base.read(b);
         full.read(f);
+        short[] m = motifChunk;
+        if (motif != null) {
+            if (m.length != out.length) {
+                m = new short[out.length];
+                motifChunk = m;
+            }
+            // Read even while silent: the motif stays sample-aligned with the other two.
+            motif.read(m);
+        }
         int channels = channels();
         float goal = target;
         float pace = step;
+        float motifGoal = motif == null ? 0 : motifTarget;
         for (int frame = 0; frame < out.length / channels; frame++) {
             if (mix < goal) {
                 mix = Math.min(goal, mix + pace);
             } else if (mix > goal) {
                 mix = Math.max(goal, mix - pace);
             }
+            if (motifLevel < motifGoal) {
+                motifLevel = Math.min(motifGoal, motifLevel + motifIn);
+            } else if (motifLevel > motifGoal) {
+                motifLevel = Math.max(motifGoal, motifLevel - motifOut);
+            }
             for (int c = 0; c < channels; c++) {
                 int i = frame * channels + c;
                 float sample = b[i] + (f[i] - b[i]) * mix;
+                if (motifLevel > 0) {
+                    sample += m[i] * motifLevel;
+                }
                 out[i] = (short) Math.clamp(Math.round(sample), Short.MIN_VALUE, Short.MAX_VALUE);
             }
         }
@@ -106,5 +189,8 @@ public final class StemMix implements PcmStream {
     public void close() {
         base.close();
         full.close();
+        if (motif != null) {
+            motif.close();
+        }
     }
 }

@@ -1,8 +1,10 @@
 package vanguard.content;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Optional;
+import vanguard.sim.PlayField;
 
 /**
  * design/enemies/&lt;category&gt;/&lt;slug&gt;/data.yaml: an enemy's stat block at medium
@@ -20,6 +22,10 @@ import java.util.Optional;
  *     EMP Burst); false (biomechanical, Vrell) when not given
  * @param roll M7 part D: its curl-roll (the Shellback): once, badly hurt, it curls into an armoured ball, rolls along
  *     its walk path and uncurls with its belly exposed
+ * @param vortex M7 part E: its spin cycle (the Dust Devil): closed on {@code ground} with armoured vanes, it rises
+ *     and opens on {@code low-air} once a cycle, and wanders round its wave's path
+ * @param pull M7 part E: it pulls the ship and the loose pickups toward its centre (the Dust Devil)
+ * @param intel M7 part E: what the hangar intel shows of it (the Ghost Drone's "unclassified" silhouette)
  */
 public record EnemyData(
         String name,
@@ -50,7 +56,10 @@ public record EnemyData(
         Optional<Submerge> submerge,
         Optional<Latch> latch,
         Optional<Boolean> machine,
-        Optional<Roll> roll) {
+        Optional<Roll> roll,
+        Optional<Vortex> vortex,
+        Optional<Pull> pull,
+        Optional<Intel> intel) {
     public EnemyData {
         Layers.of(layer);
         Check.positive("hp", hp);
@@ -65,7 +74,8 @@ public record EnemyData(
      * its walk path at {@code speed} px/s as a ball of {@code ball} px (its hit box; fully armoured: shots spark off;
      * it crushes the ground objects in its path), uncurls over {@code uncurl} s and walks on; for {@code
      * belly_seconds} s after it uncurls its body takes {@code belly_factor} × the damage (the belly). No attack while
-     * curled.
+     * curled. Round 40 R.e: with {@code belly_row} (px above the bottom edge), a roll drifting down the screen ends
+     * early so its belly shows at that row or higher.
      */
     public record Roll(
             double below,
@@ -75,7 +85,8 @@ public record EnemyData(
             double uncurl,
             double bellySeconds,
             double bellyFactor,
-            Size ball) {
+            Size ball,
+            Optional<Double> bellyRow) {
         public Roll {
             Check.that(below > 0 && below < 1, "below: a share of its HP between 0 and 1, was " + below);
             Check.positive("curl", curl);
@@ -84,12 +95,120 @@ public record EnemyData(
             Check.positive("uncurl", uncurl);
             Check.notNegative("belly_seconds", bellySeconds);
             Check.that(bellyFactor >= 1, "belly_factor: 1 or more, was " + bellyFactor);
+            bellyRow.ifPresent(row -> Check.that(
+                    row > 0 && row < PlayField.HEIGHT,
+                    "belly_row: px above the bottom edge, on the play field, was " + row));
         }
 
         /** The px it rolls: {@code seconds × speed}. */
         public double length() {
             return seconds * speed;
         }
+    }
+
+    /**
+     * M7 part E, the spin cycle (design/enemies/ground/dust-devil): a cycle of {@code closed} s closed on {@code
+     * ground} (the vanes {@code armoured}: every shot glances off, a blast excepted), {@code rise} s rising (the
+     * tell), {@code open} s open on {@code low-air} (the core hittable, its {@code while: open} attack firing), then
+     * it sinks back at the next cycle's start; unit i of a wave runs its cycle {@code i × offset} s later. It wanders
+     * at {@code wander_speed} px/s up to {@code wander_amplitude} px either side of its wave's path (seeded), scrolling
+     * with the ground, never closer than {@code keep_away} px to the ship's centre.
+     */
+    public record Vortex(
+            double closed,
+            double rise,
+            double open,
+            double offset,
+            double wanderSpeed,
+            double wanderAmplitude,
+            double keepAway) {
+        public Vortex {
+            Check.positive("closed", closed);
+            Check.positive("rise", rise);
+            Check.positive("open", open);
+            Check.notNegative("offset", offset);
+            Check.positive("wander_speed", wanderSpeed);
+            Check.notNegative("wander_amplitude", wanderAmplitude);
+            Check.notNegative("keep_away", keepAway);
+        }
+
+        /** One cycle, s: closed, rise and open. */
+        public double cycle() {
+            return closed + rise + open;
+        }
+
+        /** The cycle with another open window, s (a difficulty's {@link VortexChange}). */
+        public Vortex withOpen(double seconds) {
+            return new Vortex(closed, rise, seconds, offset, wanderSpeed, wanderAmplitude, keepAway);
+        }
+    }
+
+    /** M7 part E: a difficulty's change to a spin cycle: its open window instead (the Dust Devil's easy 1.0 s). */
+    public record VortexChange(Optional<Double> open) {
+        public VortexChange {
+            open.ifPresent(t -> Check.positive("open", t));
+        }
+    }
+
+    /**
+     * M7 part E, the radial pull (design/enemies/ground/dust-devil): the ship within {@code ship_radius} px of its
+     * centre drifts toward it at {@code ship_speed} px/s at the centre, fading to 0 at the edge (never a trap against
+     * the ship's speed); a loose pickup within {@code pickup_radius} px is drawn in at {@code pickup_speed} px/s (the
+     * Magnet's inverse; with a fitted Magnet the stronger pull wins) and held until the unit dies (released then) or
+     * leaves the screen (carried off).
+     */
+    public record Pull(double shipRadius, double shipSpeed, double pickupRadius, double pickupSpeed) {
+        public Pull {
+            Check.positive("ship_radius", shipRadius);
+            Check.positive("ship_speed", shipSpeed);
+            Check.positive("pickup_radius", pickupRadius);
+            Check.positive("pickup_speed", pickupSpeed);
+        }
+
+        /** The pull with another speed on the ship, px/s (a difficulty's {@link PullChange}). */
+        public Pull withShipSpeed(double speed) {
+            return new Pull(shipRadius, speed, pickupRadius, pickupSpeed);
+        }
+    }
+
+    /** M7 part E: a difficulty's change to a pull: its speed on the ship instead (the Dust Devil's easy 25, hard 45). */
+    public record PullChange(Optional<Double> shipSpeed) {
+        public PullChange {
+            shipSpeed.ifPresent(s -> Check.positive("ship_speed", s));
+        }
+    }
+
+    /**
+     * M7 part E, what the hangar intel shows (design/enemies/air/ghost-drone, round 36 Q.22h): with {@code
+     * unclassified_until_flown} the intel shows an "unclassified" silhouette of its layer and size instead of its
+     * portrait and name until its first level has been flown once.
+     */
+    public record Intel(boolean unclassifiedUntilFlown) {}
+
+    /** M7 part E: whether the intel keeps it unclassified until its first level has been flown. */
+    public boolean unclassifiedUntilFlown() {
+        return intel.map(Intel::unclassifiedUntilFlown).orElse(false);
+    }
+
+    /** M7 part E: its spin cycle on {@code difficulty}: the stat block's with the difficulty's open window. */
+    public Optional<Vortex> vortex(Difficulty difficulty) {
+        Optional<Double> open = hook(difficulty).flatMap(Hook::vortex).flatMap(VortexChange::open);
+        return vortex.map(cycle -> open.map(cycle::withOpen).orElse(cycle));
+    }
+
+    /** M7 part E: its pull on {@code difficulty}: the stat block's with the difficulty's speed on the ship. */
+    public Optional<Pull> pull(Difficulty difficulty) {
+        Optional<Double> speed = hook(difficulty).flatMap(Hook::pull).flatMap(PullChange::shipSpeed);
+        return pull.map(p -> speed.map(p::withShipSpeed).orElse(p));
+    }
+
+    /** The difficulty's hook: easy's, hard's, none at medium. */
+    private Optional<Hook> hook(Difficulty difficulty) {
+        return switch (difficulty) {
+            case EASY -> difficulty().flatMap(Hooks::easy);
+            case HARD -> difficulty().flatMap(Hooks::hard);
+            case MEDIUM -> Optional.empty();
+        };
     }
 
     /** M7 part D: a difficulty's change to a curl-roll: its roll time instead (the Shellback's hard 3.0 s). */
@@ -175,6 +294,17 @@ public record EnemyData(
             return text.filter("hardened"::equals).isPresent();
         }
 
+        /**
+         * M7 part E: whether it is {@code vanes} (design/enemies/ground/dust-devil): while its spin cycle is closed
+         * every shot glances off, a blast (the Smart Bomb, the Airstrike) excepted (round 36 Q.22e); open, none.
+         */
+        public boolean vanes() {
+            return text.filter(VANES::equals).isPresent();
+        }
+
+        /** M7 part E: the closed vanes' armour. */
+        public static final String VANES = "vanes";
+
         /** The armour written as a text. */
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public static Armour of(String text) {
@@ -189,6 +319,7 @@ public record EnemyData(
      * @param chase M5 part F: it homes on the ship from its entry, then flies straight on (the Lamprey)
      * @param burrow M7 part B: it travels under the sand and surfaces near the ship (the Burrower)
      * @param crawl M7 part C: its head crawls a wave's ground path (the Threadcrawler; the wave's {@code crawl})
+     * @param laneStrafe M7 part E: it drops to a lane and strafes across the screen (the Ghost Drone)
      */
     public record Movement(
             Optional<Snake> snake,
@@ -209,7 +340,27 @@ public record EnemyData(
             Optional<Anchored> anchored,
             Optional<Chase> chase,
             Optional<Burrow> burrow,
-            Optional<Crawl> crawl) {}
+            Optional<Crawl> crawl,
+            Optional<LaneStrafe> laneStrafe) {}
+
+    /**
+     * M7 part E, the {@code lane_strafe} movement (design/enemies/air/ghost-drone): a front entry drops straight down
+     * at {@code descent_speed} px/s to its lane ({@code lane_depth} px below the top edge, a wave's lanes {@code
+     * lane_spacing} px apart), banks 90° and strafes across at {@code strafe_speed} px/s, leaving through the far
+     * side edge; a line abreast splits half left, half right; a side entry (a pincer, warned at its edge) strafes in
+     * at its lane. The hook {@code second_pass} (hard): a line abreast's survivors turn at the edge and strafe back
+     * once.
+     */
+    public record LaneStrafe(double descentSpeed, double strafeSpeed, Span laneDepth, double laneSpacing) {
+        public LaneStrafe {
+            Check.positive("descent_speed", descentSpeed);
+            Check.positive("strafe_speed", strafeSpeed);
+            Check.that(
+                    laneDepth.min() > 0 && laneDepth.max() < PlayField.HEIGHT,
+                    "lane_depth: px below the top edge, on the play field");
+            Check.positive("lane_spacing", laneSpacing);
+        }
+    }
 
     /**
      * M7 part C, the {@code crawl} movement (design/enemies/ground/threadcrawler): a ground chain's head crawls its
@@ -826,6 +977,12 @@ public record EnemyData(
      *     {@code aimed} attack fired by several parts takes turns to aim, one part at a time, each after a glow
      *     (the tell); between its turns a part fires as the attack says ({@code aim: down}: straight down its
      *     column); not with {@code rotate}
+     * @param whileState M7 part E ({@code while}, design/enemies/ground/dust-devil): the state of its unit it fires
+     *     in, {@code open} (a spin cycle's open window: the Dust Devil's grit spiral); always if not given
+     * @param trigger M7 part E (design/enemies/air/ghost-drone): an aimed attack fired once per pass, its burst when
+     *     the ship's x comes within {@code within_x} px of the unit's, instead of on an interval
+     * @param tell M7 part E: s of the tell before the burst's first shot (the Ghost Drone's red eye glint)
+     * @param reaim M7 part E: every shot of the burst is aimed at the ship anew (not the first shot's line)
      */
     public record Attack(
             String pattern,
@@ -858,8 +1015,22 @@ public record EnemyData(
             Optional<Pores> pores,
             Optional<List<String>> only,
             Optional<Aura> aura,
-            Optional<AimTurns> aimTurns) {
+            Optional<AimTurns> aimTurns,
+            @JsonProperty("while") Optional<String> whileState,
+            Optional<Trigger> trigger,
+            Optional<Double> tell,
+            Optional<Boolean> reaim) {
+        /** M7 part E: {@code while: open}, a spin cycle's open window. */
+        public static final String WHILE_OPEN = "open";
+
         public Attack {
+            whileState.ifPresent(state -> Check.that(
+                    WHILE_OPEN.equals(state), "while: only 'open' (a spin cycle's window), was '" + state + "'"));
+            Check.that(
+                    trigger.isEmpty() || (pattern.equals("aimed") && interval.isEmpty()),
+                    "a triggered attack is aimed and fires once per pass, no interval");
+            tell.ifPresent(t -> Check.positive("tell", t));
+            Check.that(reaim.isEmpty() || burst.isPresent(), "only a burst re-aims its shots (reaim needs a burst)");
             Check.that(pattern.equals("aura") == aura.isPresent(), "an aura attack has its aura, the others none");
             Check.that(
                     !pattern.equals("aura")
@@ -977,6 +1148,26 @@ public record EnemyData(
         public boolean firesOn(Difficulty difficulty) {
             return only.map(names -> names.stream().map(Difficulty::of).anyMatch(difficulty::equals))
                     .orElse(true);
+        }
+
+        /** M7 part E: whether it fires only while its unit's spin cycle is open ({@code while: open}). */
+        public boolean whileOpen() {
+            return whileState.filter(WHILE_OPEN::equals).isPresent();
+        }
+
+        /** M7 part E: the pass trigger's reach, px ({@code trigger.within_x}); NaN without a trigger. */
+        public double passWithinX() {
+            return trigger.map(Trigger::withinX).orElse(Double.NaN);
+        }
+    }
+
+    /**
+     * M7 part E, a pass trigger (design/enemies/air/ghost-drone): the attack fires its burst once per pass, when the
+     * ship's centre comes within {@code within_x} px of the unit's x.
+     */
+    public record Trigger(double withinX) {
+        public Trigger {
+            Check.positive("within_x", withinX);
         }
     }
 
@@ -1587,6 +1778,10 @@ public record EnemyData(
      * @param pores M7 part C: a pore wave's rest or every other pore instead (the Threadcrawler's easy and hard)
      * @param aura M7 part D: an aura's radius or refill instead (the Choir Herald's easy 75 px and 15 %/s, hard 105 px)
      * @param roll M7 part D: a curl-roll's roll time instead (the Shellback's hard 3.0 s)
+     * @param vortex M7 part E: a spin cycle's open window instead (the Dust Devil's easy 1.0 s)
+     * @param pull M7 part E: a pull's speed on the ship instead (the Dust Devil's easy 25, hard 45 px/s)
+     * @param secondPass M7 part E: a lane strafe's line-abreast survivors turn at the edge and strafe back once (the
+     *     Ghost Drone's hard)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -1612,7 +1807,10 @@ public record EnemyData(
             Optional<Double> swoopSpeed,
             Optional<PoresChange> pores,
             Optional<AuraChange> aura,
-            Optional<RollChange> roll) {
+            Optional<RollChange> roll,
+            Optional<VortexChange> vortex,
+            Optional<PullChange> pull,
+            Optional<Boolean> secondPass) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

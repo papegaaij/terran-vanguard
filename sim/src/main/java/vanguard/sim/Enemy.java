@@ -49,7 +49,32 @@ public final class Enemy implements Hashed {
          * for the domes): to its row, steering over its dome, then (its load spent, or no dome left) straight
          * down.
          */
-        BOMB
+        BOMB,
+        /**
+         * M7 part E: a vortex in its cycle (design/enemies/ground/dust-devil), placed by its {@link VortexCycle}: it
+         * swirls round its centre line with the ground and leaves at the bottom.
+         */
+        VORTEX,
+        /**
+         * M7 part E: a lane strafer (design/enemies/air/ghost-drone), placed by its {@link LaneStrafing}: down to its
+         * lane, across, and (hard) back once.
+         */
+        STRAFE
+    }
+
+    /**
+     * M7 part E: where a lane strafer is in its flight (design/enemies/air/ghost-drone; {@link
+     * EnemySpec.LaneStrafe}), for the presentation and the tests; {@link #DESCENT} for any other unit.
+     */
+    public enum StrafePhase {
+        /** Dropping straight down from the top edge to its lane. */
+        DESCENT,
+        /** Banking 90° from the descent into the strafe. */
+        BANK,
+        /** Strafing across at its lane's height (a side entry from its start); its pass trigger armed once. */
+        STRAFE,
+        /** Hard's second pass: its half turn at the far edge, then strafing back once; its pass trigger armed again. */
+        RETURN
     }
 
     /**
@@ -131,6 +156,22 @@ public final class Enemy implements Hashed {
         UNCURLING,
         /** Its belly showing where it stands: the body takes the belly factor. */
         BELLY
+    }
+
+    /**
+     * M7 part E: where a vortex is in its cycle (design/enemies/ground/dust-devil; {@link EnemySpec.Vortex}), for
+     * the presentation and the tests; {@link #CLOSED} for any other unit. It is on {@link Layer#LOW_AIR} and its
+     * core hittable only while {@link #OPEN}; in every other phase it is on {@code ground}, its vanes armoured.
+     */
+    public enum VortexPhase {
+        /** Closed on the ground, spinning fast (and before its first cycle, its wave's offset). */
+        CLOSED,
+        /** Rising: the tell before it opens (the swirl tightens and brightens, the spin speeds up). */
+        RISING,
+        /** Open on {@code low-air}: its core exposed and hittable, its spiral firing. */
+        OPEN,
+        /** Closed again and sinking back to the ground (the first part of its closed time after an opening). */
+        SINKING
     }
 
     /** A walker is at a waypoint this close to it and heads for the next. */
@@ -401,6 +442,10 @@ public final class Enemy implements Hashed {
     private final CurlRoll curlRoll = new CurlRoll();
     /** M7 part D: a Herald's steps into its hover, for its side-to-side drift. */
     private int hoverTicks;
+    /** M7 part E: a vortex's cycle (design/enemies/ground/dust-devil; hashed only with a vortex). */
+    private final VortexCycle vortexCycle = new VortexCycle();
+    /** M7 part E: a lane strafer's flight and pass trigger (design/enemies/air/ghost-drone; hashed only with one). */
+    private final LaneStrafing laneStrafing = new LaneStrafing();
 
     /** A unit whose events go nowhere (for tests that fly one on its own). */
     Enemy() {
@@ -504,6 +549,25 @@ public final class Enemy implements Hashed {
             long seed = plan.field().isPresent() ? plan.field().get().seed() : 0x9E3779B97F4A7C15L * (unitSerial + 1L);
             burrowing.start(spec.burrow().get(), x, y, seed, SurfaceZones.NONE);
         }
+        if (spec.vortex().isPresent()) {
+            // M7 part E: a vortex starts closed where it appears; its centre line is its entry's x.
+            phase = Phase.VORTEX;
+            facing = 0;
+            EnemyGun.SpiralSpec spiralGun =
+                    spec.gun().isPresent() && spec.gun().get().spiral().isPresent()
+                            ? spec.gun().get().spiral().get()
+                            : null;
+            vortexCycle.start(
+                    spec.vortex().get(), spiralGun, x, y, 0x5DEECE66DL ^ (0x9E3779B97F4A7C15L * (unitSerial + 1L)));
+        }
+        if (spec.laneStrafe().isPresent() && phase == Phase.ENTER) {
+            // M7 part E: a lane strafer flies by its strafe from its planned path's start toward its end.
+            phase = Phase.STRAFE;
+            laneStrafing.start(spec.laneStrafe().get(), path.startX(), path.startY(), path.endX(), path.endY());
+            x = prevX = laneStrafing.x();
+            y = prevY = laneStrafing.y();
+            facing = laneStrafing.phase() == StrafePhase.DESCENT ? 0 : heading(laneStrafing.side(), 0);
+        }
         if (spec.chase().isPresent() && phase == Phase.ENTER) {
             // M5 part F: a chaser flies in along its path; its chase starts its delay after its entry.
             latchPhase = LatchPhase.ENTER;
@@ -598,6 +662,8 @@ public final class Enemy implements Hashed {
         partHp.clear();
         curlRoll.clear();
         hoverTicks = 0;
+        vortexCycle.clear();
+        laneStrafing.clear();
     }
 
     /**
@@ -848,6 +914,8 @@ public final class Enemy implements Hashed {
     /** M7 part B: its place in its wave (from 0): a swoop bends left for an even place, right for an odd one. */
     void wavePlace(int place) {
         swooping.wavePlace(place);
+        // M7 part E: a vortex's cycle starts its place times the wave's offset later.
+        vortexCycle.wavePlace(place);
     }
 
     /** M7 part B: whether it is in its swoop (design/enemies/air/dust-kite). */
@@ -1027,6 +1095,23 @@ public final class Enemy implements Hashed {
                 turn();
                 return on;
             }
+            case VORTEX -> {
+                // M7 part E: its swirl round its centre line, scrolling with the ground, kept off the ship.
+                boolean on = vortexCycle.step(shipX, shipY, groundScroll, box.height() / 2);
+                x = vortexCycle.x();
+                y = vortexCycle.y();
+                return on;
+            }
+            case STRAFE -> {
+                // M7 part E: down to its lane, across it and (hard) back once; gone once off the play field.
+                laneStrafing.step();
+                x = laneStrafing.x();
+                y = laneStrafing.y();
+                turn();
+                boolean on = PlayField.overlaps(x, y, box);
+                entered |= on;
+                return on || !entered;
+            }
             case SWOOP -> {
                 swooping.step(spec.swoop().orElseThrow());
                 x = swooping.x();
@@ -1112,7 +1197,7 @@ public final class Enemy implements Hashed {
                     if (curlRoll.phase() == CurlPhase.WALK) {
                         walk();
                     } else {
-                        curlRoll.step(this, spec.roll().orElseThrow(), events);
+                        curlRoll.step(this, spec.roll().orElseThrow(), events, groundScroll);
                     }
                     pouncing.waitStep();
                 }
@@ -1283,6 +1368,13 @@ public final class Enemy implements Hashed {
                 // M7 part B: up (only then can the EMP reach it) it is fixed on the screen; its timers wait.
                 return true;
             }
+            case VORTEX -> {
+                // M7 part E: its cycle and swirl wait (it stays as it is, open or closed); it scrolls with the ground.
+                boolean on = vortexCycle.stunned(groundScroll, box.height() / 2);
+                x = vortexCycle.x();
+                y = vortexCycle.y();
+                return on;
+            }
             default -> {
                 x += stunDx;
                 y += stunDy;
@@ -1298,6 +1390,13 @@ public final class Enemy implements Hashed {
                     case SWOOP -> {
                         // M7 part B: its curve drifts with it.
                         swooping.drift(stunDx, stunDy);
+                    }
+                    case STRAFE -> {
+                        // M7 part E: it drifts on its line; its flight resumes from there.
+                        laneStrafing.drift(stunDx, stunDy);
+                        boolean on = PlayField.overlaps(x, y, box);
+                        entered |= on;
+                        return on || !entered;
                     }
                     default -> {
                         // It flies on its velocity, which carries on from where it drifted to.
@@ -1686,6 +1785,10 @@ public final class Enemy implements Hashed {
         }
         if (pouncing.inAir()) {
             return Layer.AIR;
+        }
+        if (phase == Phase.VORTEX) {
+            // M7 part E: risen on low-air while open, on the ground otherwise.
+            return vortexCycle.open() ? Layer.LOW_AIR : spec.layer();
         }
         // M5 part D: a cloaked unit is on its decloaked layer from its flash's start on.
         if (spec.cloak().isPresent() && decloakedPhase()) {
@@ -2133,22 +2236,29 @@ public final class Enemy implements Hashed {
 
     /** Takes damage from a shot; returns whether it was destroyed. */
     boolean damage(double amount) {
-        return damage(amount, false);
+        return damage(amount, false, false);
+    }
+
+    /** As {@link #damage(double, boolean, boolean)}, not a blast (shots, beams, the Lance, rams, weapon blasts). */
+    boolean damage(double amount, boolean fromAbove) {
+        return damage(amount, fromAbove, false);
     }
 
     /**
      * Takes damage; returns whether it was destroyed. {@code fromAbove} marks damage that comes
      * down from above (bomb and shell blasts, the Airstrike): it ignores the frontal armour of a
      * walker such as the Scuttler (design/player/specials, decisions), which reads it once that
-     * armour exists.
+     * armour exists. M7 part E: {@code blast} marks the specials' blasts (the Smart Bomb's ring and the
+     * Airstrike's bombs; Q.22e), which a vortex's closed vanes let through; a curled shell still glances them off.
      */
-    boolean damage(double amount, boolean fromAbove) {
+    boolean damage(double amount, boolean fromAbove, boolean blast) {
         if (growTicks > 0) {
             // M5 part H: a root burst's growth takes no damage while it grows.
             return false;
         }
-        if (armoured()) {
-            // M7 part D: a curled shell glances off everything, blasts and the Lance included.
+        if (curlRoll.armoured() || (vanesClosed() && !blast)) {
+            // M7 part D: a curled shell glances off everything, blasts and the Lance included; M7 part E: a
+            // closed vortex's vanes glance off all but the specials' blasts.
             glancedOff();
             return false;
         }
@@ -2319,6 +2429,14 @@ public final class Enemy implements Hashed {
         }
         if (spec.aura().isPresent()) {
             hash.add(hoverTicks);
+        }
+        // M7 part E's vortices add theirs; earlier units hash as before.
+        if (phase == Phase.VORTEX) {
+            vortexCycle.addTo(hash);
+        }
+        // M7 part E's lane strafers add theirs; earlier units hash as before.
+        if (phase == Phase.STRAFE) {
+            laneStrafing.addTo(hash);
         }
     }
 
@@ -2512,7 +2630,7 @@ public final class Enemy implements Hashed {
     /** Its hit box: its stat block's, or a chain member's own. */
     public Hitbox hitbox() {
         // M7 part D: curled, its hit box is the ball.
-        return armoured() ? spec.roll().get().ball() : box;
+        return curlRoll.armoured() ? spec.roll().get().ball() : box;
     }
 
     /**
@@ -2847,9 +2965,40 @@ public final class Enemy implements Hashed {
 
     // ---- M7 part D: the curl-roll (design/enemies/ground/shellback) ----
 
-    /** M7 part D: whether it is curled: armoured against every damage, its hit box the ball. */
+    /**
+     * M7 part D: whether it is curled: armoured against every damage, its hit box the ball. M7 part E: or a vortex
+     * that is not open: its vanes glance off every shot (the specials' blasts excepted, see {@link #damage(double,
+     * boolean, boolean)}).
+     */
     public boolean armoured() {
-        return curlRoll.armoured();
+        return curlRoll.armoured() || vanesClosed();
+    }
+
+    /** M7 part E: whether it is a vortex whose vanes are closed (it is not open). */
+    private boolean vanesClosed() {
+        return phase == Phase.VORTEX && !vortexCycle.open();
+    }
+
+    // ---- M7 part E: the vortex cycle (design/enemies/ground/dust-devil) ----
+
+    /** M7 part E: where its vortex is in its cycle; {@link VortexPhase#CLOSED} for a unit without one. */
+    public VortexPhase vortexPhase() {
+        return phase == Phase.VORTEX ? vortexCycle.phase() : VortexPhase.CLOSED;
+    }
+
+    /** M7 part E: how far into its vortex's current phase it is, 0 to 1; 0 for a unit without one. */
+    public double vortexProgress() {
+        return phase == Phase.VORTEX ? vortexCycle.progress() : 0;
+    }
+
+    /** M7 part E: whether it is a vortex in its cycle (its stat block has a vortex). */
+    boolean vortex() {
+        return phase == Phase.VORTEX;
+    }
+
+    /** M7 part E: its vortex's cycle, for the {@link EnemyForce}'s events and spiral. */
+    VortexCycle vortexCycle() {
+        return vortexCycle;
     }
 
     /** A damage glanced off its curled shell: the grey flash's event (spaced like the absorb's). */
@@ -2914,5 +3063,32 @@ public final class Enemy implements Hashed {
     /** M5 part D: its place in its flock, from 0 in entry order. */
     public int member() {
         return member;
+    }
+
+    // ---- M7 part E: the lane strafe (design/enemies/air/ghost-drone) ----
+
+    /** M7 part E: where its lane strafe is in its flight; {@link StrafePhase#DESCENT} for a unit without one. */
+    public StrafePhase strafePhase() {
+        return phase == Phase.STRAFE ? laneStrafing.phase() : StrafePhase.DESCENT;
+    }
+
+    /** M7 part E: whether it is a lane strafer in its flight (its stat block has a lane strafe). */
+    public boolean laneStrafer() {
+        return phase == Phase.STRAFE;
+    }
+
+    /** M7 part E: a lane strafer's direction now, 1 to the right and -1 to the left; 0 for any other unit. */
+    public int strafeSide() {
+        return phase == Phase.STRAFE ? laneStrafing.side() : 0;
+    }
+
+    /** M7 part E: whether a lane strafer's eye glints now (its pass trigger's tell runs before its burst). */
+    public boolean eyeGlinting() {
+        return phase == Phase.STRAFE && laneStrafing.glinting();
+    }
+
+    /** M7 part E: its lane strafe, for the {@link EnemyForce}'s pass trigger. */
+    LaneStrafing laneStrafing() {
+        return laneStrafing;
     }
 }

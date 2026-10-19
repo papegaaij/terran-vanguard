@@ -91,10 +91,19 @@ public final class Ship {
      * exactly 0 changes nothing.
      */
     void fly(int commands, double wind) {
+        fly(commands, wind, 0);
+    }
+
+    /**
+     * As {@link #fly(int, double)}; M7 part E: also pushed {@code pushY} px/s up the screen (the Dust Devils'
+     * pull, whose sideways part is in {@code wind}), added to the position like the wind; exactly 0 changes
+     * nothing.
+     */
+    void fly(int commands, double wind, double pushY) {
         if (thrusters != null) {
             thrusters.command(commands);
             if (thrusters.dashing()) {
-                dash(wind);
+                dash(wind, pushY);
                 return;
             }
         }
@@ -110,6 +119,9 @@ public final class Ship {
         y += vy * SimStep.SECONDS;
         if (wind != 0) {
             x += wind * SimStep.SECONDS;
+        }
+        if (pushY != 0) {
+            y += pushY * SimStep.SECONDS;
         }
         double margin = spec.edgeLimit();
         if (x < margin || x > PlayField.WIDTH - margin) {
@@ -129,12 +141,15 @@ public final class Ship {
      * distance along its direction, the ship's own velocity set aside (it keeps it for afterwards), the
      * wind's push as ever; the play field's edges clamp it.
      */
-    private void dash(double wind) {
+    private void dash(double wind, double pushY) {
         x += thrusters.stepX();
         y += thrusters.stepY();
         thrusters.moved();
         if (wind != 0) {
             x += wind * SimStep.SECONDS;
+        }
+        if (pushY != 0) {
+            y += pushY * SimStep.SECONDS;
         }
         double margin = spec.edgeLimit();
         x = Math.clamp(x, margin, PlayField.WIDTH - margin);

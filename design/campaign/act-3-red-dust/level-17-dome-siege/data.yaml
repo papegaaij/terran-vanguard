@@ -102,7 +102,7 @@ allies:
     - {ally: ares-landing-dome, name: Burroughs, at: [110, 370]}
     - {ally: ares-landing-dome, name: Eden, at: [126, 240], size: [144, 144], sprite: ares-dome-eden}   # the largest
   targeted_by: {spore-bomber: always, shellback: alternate}   # the popcorn, the Needlers, the Stingers, the Mantises, the Herald and the nests are never hooked
-  bomb_row: 160    # px below the top edge: a hooked bomber holds this row and steers (at its 45 px/s) to the next dome's x
+  bomb_row: 220    # px below the top edge (round 40 R.b: from 160): a hooked bomber holds this row and steers (at its 45 px/s) to the next dome's x
   bomb_slot: 40    # px between a hooked wave's bombers' x slots round the dome's x
   easy: {hits: 4, targeted_by: {shellback: none}}   # a dome breaks on its 4th hit; the Shellbacks' mortar lobs only at the ship (their roll still crushes)
   hard: {hits: 2}
@@ -132,7 +132,7 @@ waves:
     paths: [[[240, -60], [220, 160], [260, 360], [240, 640]]]   # down the middle of the plain
     notes: "**New.** Alone until t=34 (no dome on the screen yet: nothing for its hooked mortar); Varga's line at t=29"
   - {t: 34, formation: stream, enemy: dust-kite, count: 3, from: front, edge: left, interval: 1.25, notes: "Down the left edge, clear of the bombers"}
-  - {t: 35.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "**Hooked** (`always`): hang at y≈160 over Bradbury's lane (x 130); Bradbury's centre passes their row at t≈40.8; Varga's line at t=36.5"}
+  - {t: 35.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "**Hooked** (`always`): hang at y≈220 over Bradbury's lane (x 130); Bradbury's centre passes their row at t≈41.5; Varga's line at t=36.5"}
   - t: 38.5
     formation: swarm
     enemy: mote-swarm
@@ -147,8 +147,8 @@ waves:
     enemy: shellback
     count: 1
     from: front
-    paths: [[[350, -180], [350, 640]]]   # down Lowell's lane, 160 px behind its centre (at y≈-20 at t=46.5)
-    notes: "**Hooked**: walks down 160 px behind Lowell; a roll within 350 px of the dome reaches it"
+    paths: [[[260, -150], [260, -70], [220, 0], [220, 640]]]   # round 40 R.c: down Lowell's ring lane (its centre x 350, y≈-20 at t=46.5; 90 px to its left: the body clear of the glass, the ball touching the ring) from 130 px behind it, then aside 50 px short of level, between the domes
+    notes: "**Hooked**: walks down beside Lowell's ring from 130 px behind it, then steps aside between the domes; a roll set off before it steps aside grazes the ring"
   - {t: 48.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 52, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Gone before the Herald's quiet window; Lowell leaves at t≈54.3"}
   - t: 55.5
@@ -156,11 +156,12 @@ waves:
       - {formation: carrier + escorts, enemy: choir-herald, count: 1}
       - {formation: carrier + escorts, enemy: needler, count: 4}
     from: front
-    notes: "**New.** The Herald with 4 Needlers in `orbit`, ringed while inside its 90 px; alone until t=59 (no dome on the screen); Varga's line at t=55.5"
+    speed: 50   # round 40 R.d: in at half its 100 px/s, so its rings are seen before it holds
+    notes: "**New.** The Herald with 4 Needlers in `orbit`, ringed while inside its 90 px, in at 50 px/s (round 40); alone until t=59 (no dome on the screen); Varga's line at its first ring"
   - {t: 59, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25}
   - {t: 62.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
   - {t: 66, formation: line abreast, enemy: needler, count: 4, from: front}
-  - t: 69.5
+  - t: 69   # round 40 (step D6): from 69.5, for PacingTest on easy (the autopilot now clears the t=66 Needlers sooner)
     formation: swarm
     enemy: mote-swarm
     count: 6
@@ -185,7 +186,7 @@ waves:
     paths: [[[240, -60], [250, 300], [170, 460], [200, 620]]]   # down the middle, out at the bottom
   - {t: 95, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "One per edge, hover {hold} s; Rook's flank bark at t=95"}
   - {t: 100, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: "The inner ring comes into view"}
-  - {t: 102, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "**Hooked**: over Schiaparelli (x 110; its centre passes at t≈107.1)"}
+  - {t: 102, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "**Hooked**: over Schiaparelli (x 110; its centre passes their row at t≈108.0)"}
   - {t: 105.5, formation: V-wing, enemy: dust-kite, count: 3, from: front, notes: "Down the right half"}
   - {t: 108.5, formation: stream, enemy: spore-bomber, count: 2, from: sides, edge: right, interval: 1, paths: [[[-40, 140], [120, 140]]], notes: "**Hooked**: over Burroughs (x 370; its centre passes at t≈113.1); warned 3 s ahead"}
   - t: 111
@@ -194,8 +195,8 @@ waves:
     count: 2
     from: front
     interval: 3
-    paths: [[[370, -150], [370, 640]]]   # down Burroughs' lane, 160 px behind its centre (at y≈10 at t=111), 3 s apart
-    notes: "**Hooked**: walk down 3 s apart behind Burroughs; their rolls never overlap"
+    paths: [[[280, -120], [280, -40], [240, 30], [240, 640]]]   # round 40 R.c: down Burroughs' ring lane (its centre x 370, y≈10 at t=111; 90 px to its left) from 130 px behind it, then aside 50 px short of level; the second, 3 s later, steps aside 260 px behind it
+    notes: "**Hooked**: walk down 3 s apart beside Burroughs' ring, then step aside between the domes; their rolls never overlap"
   - {t: 114.5, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25}
   - {t: 118, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
   - {t: 121, formation: line abreast, enemy: needler, count: 4, from: front, notes: "Gone before the Herald holds over Eden's lane"}
@@ -204,7 +205,7 @@ waves:
       - {formation: carrier + escorts, enemy: choir-herald, count: 1}
       - {formation: line abreast, enemy: spore-bomber, count: 3}   # a plain hooked wave beside the Herald (step D4: a bomb run never applies to escorts), slots ±40 px round Eden's x
     from: front
-    notes: "The Herald holds over Eden's lane (x 240) with three **hooked** bombers under its rings (a line abreast on its slots, inside the 90 px): over Eden (its centre passes at t≈129.3); Varga's line at t=123"
+    notes: "The Herald holds over Eden's lane (x 240) with three **hooked** bombers under its rings (a line abreast on its slots, inside the 90 px): over Eden (its centre passes their row at t≈130.2); Varga's line at t=123"
   - {t: 126, formation: stream, enemy: spore-bomber, count: 2, from: sides, edge: left, interval: 1, paths: [[[-40, 140], [120, 140]]], skip: [easy, medium], notes: "Hard only: an extra **hooked** pair from the left edge over Eden, warned"}
   - t: 127.5
     formation: single
@@ -308,7 +309,6 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 29, speaker: Varga, line: "Shelled walker. Hit the lime vent; when it curls up, wait."}
   - {t: 36.5, speaker: Varga, line: "Bombers on the domes! Get them before they're over the glass."}
   - {t: 47, speaker: Ares Control, portrait: generic-colonial, line: "Bradbury and Lowell grow our food, Aegis. Every pane counts."}
-  - {t: 57.5, speaker: Varga, line: "That flyer is singing shields onto the others. See the rings? Kill the singer first."}
   - {t: 71, speaker: Ares Control, portrait: generic-colonial, line: "Outer greenhouses are gone. The inner ring is still sealed."}
   - {t: 78, speaker: Varga, line: "Commander, they have not touched a single Helix facility. Not one."}
   - {t: 88.5, speaker: Okafor, line: "Not on this channel, Doctor."}
@@ -318,6 +318,7 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 130.5, speaker: Ares Control, portrait: generic-colonial, line: "Eden is under you. Everything we grow is under that glass."}
   - {t: 143, speaker: Rook, requires: escort, line: "If we save the greenhouse, I'm owed a tomato."}
   - {t: 150, speaker: Okafor, line: "Ares Landing holds. Clear the spaceport, Aegis, then set down."}
+  - {event: first-ring, speaker: Varga, line: "That flyer is singing shields onto the others. See the rings? Kill the singer first.", notes: {trigger: "The first Herald's first ring (`first-ring`, round 40)"}}
   - {event: ally-hit, speaker: Ares Control, portrait: generic-colonial, line: "{ally} is hit! The glass is holding... for now.", notes: {trigger: "A dome's first hit (`ally-hit`)"}}
   - {event: ally-lost, speaker: Ares Control, portrait: generic-colonial, line: "We've lost {ally}. Its people are below. Its crops aren't.", notes: {trigger: "A dome breaks (`ally-lost`)"}}
   - {event: secondary-objective, speaker: Ares Control, portrait: generic-colonial, line: "Five domes, not a crack. Fine. Earth can stay for dinner.", notes: {trigger: "Secondary met (`secondary-objective`)"}}

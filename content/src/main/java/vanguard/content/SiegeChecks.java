@@ -12,7 +12,9 @@ import vanguard.sim.PlayField;
  * unit's on the ground, its {@code targeted_by} (and the easy/hard modes) naming known enemies, its {@code bomb_row}
  * on the play field; an {@code untouched} secondary only with ground allies; no ground target or secret trigger within
  * {@value #COMPOUND_CLEARANCE} px of the {@value #COMPOUND} backdrop placement (the Helix compound: nothing in the
- * level touches it); a pickup's {@code dropped_by.enemy} one of its wave's enemies.
+ * level touches it); a pickup's {@code dropped_by.enemy} one of its wave's enemies; round 40 R.c: a walker with a
+ * curl-roll (the Shellback) walks its paths between the ground allies, its body's hit box never over an ally's hit
+ * box (a dome's glass; its roll still crushes a dome whose footprint the ball touches, in the simulation).
  *
  * <p>A unit's: an {@code aura} on an {@code air} unit that is not a boss, at most one, its hooks only with it; a
  * {@code roll} only on a ground walker, its ball inside the sprite, its hook only with it; a non-boss unit's parts
@@ -72,6 +74,7 @@ final class SiegeChecks {
             problem.accept("objectives.secondary.untouched", "an untouched secondary judges the level's ground allies");
         }
         level.allies().ifPresent(allies -> allies(content, level, allies, problem));
+        level.allies().ifPresent(allies -> walks(content, level, allies, problem));
         compound(content, level, problem);
         for (int i = 0; i < level.pickups().size(); i++) {
             LevelData.PlacedPickup pickup = level.pickups().get(i);
@@ -127,6 +130,86 @@ final class SiegeChecks {
                 }
             }
         }
+    }
+
+    /** A walker's paths are sampled this many px apart (on each segment, its ends included). */
+    static final double WALK_SAMPLE = 2;
+
+    /**
+     * Round 40 R.c (design/campaign Level 17, What goes for the domes): every walker with a curl-roll walks its wave's
+     * paths between the ground allies: at no point of a path (on the ground: a path's points are the ground under
+     * them at the unit's entry, a convoy's units {@code interval} s apart, 1.5 s without one) does its body's hit box
+     * overlap an ally's hit box (a dome's glass) on its row of the ground.
+     */
+    private static void walks(
+            Content content, LevelData level, LevelData.GroundAllies allies, BiConsumer<String, String> problem) {
+        for (int w = 0; w < level.waves().size(); w++) {
+            LevelData.Wave wave = level.waves().get(w);
+            if (wave.paths().isEmpty()) {
+                continue;
+            }
+            for (LevelData.Group group : wave.groupList()) {
+                if (!content.enemies().containsKey(group.enemy())) {
+                    continue;
+                }
+                EnemyData enemy = content.enemy(group.enemy());
+                if (enemy.roll().isEmpty() || enemy.movement().walk().isEmpty()) {
+                    continue;
+                }
+                List<List<Point>> paths = wave.paths().get();
+                for (int i = 0; i < group.count(); i++) {
+                    double t = wave.t() + i * wave.interval().orElse(CONVOY_INTERVAL);
+                    List<Point> path = paths.get(i % paths.size());
+                    String crossed = crossedAlly(content, level, allies, enemy.hitbox(), path, level.scrollAt(t));
+                    if (crossed != null) {
+                        problem.accept(
+                                "waves[" + w + "].paths",
+                                "the " + group.enemy() + " entering at t=" + t + " walks over " + crossed
+                                        + "'s hit box (round 40 R.c: its walk passes between the domes)");
+                    }
+                }
+            }
+        }
+    }
+
+    /** A walker convoy's units enter this many s apart without the wave's {@code interval} (the simulation's). */
+    static final double CONVOY_INTERVAL = 1.5;
+
+    /**
+     * The name of the first ground ally whose hit box a body of {@code body} walking {@code path} (its points the
+     * ground under them while the ground has scrolled {@code scroll} px) overlaps; null for none.
+     */
+    static String crossedAlly(
+            Content content,
+            LevelData level,
+            LevelData.GroundAllies allies,
+            Size body,
+            List<Point> path,
+            double scroll) {
+        for (LevelData.GroundAlly unit : allies.units()) {
+            AlliesData.Ally spec = content.allies().allies().get(unit.ally());
+            if (spec == null) {
+                continue;
+            }
+            Size glass = unit.hitbox(spec);
+            double row = level.placementRow(unit.at().t(), unit.size(spec).height());
+            double reachX = (body.width() + glass.width()) / 2;
+            double reachRow = (body.height() + glass.height()) / 2;
+            for (int j = 0; j < path.size(); j++) {
+                Point from = path.get(j);
+                Point to = path.get(Math.min(j + 1, path.size() - 1));
+                double length = Math.hypot(to.x() - from.x(), to.y() - from.y());
+                int samples = Math.max(1, (int) Math.ceil(length / WALK_SAMPLE));
+                for (int s = 0; s <= samples; s++) {
+                    double x = from.x() + (to.x() - from.x()) * s / samples;
+                    double y = from.y() + (to.y() - from.y()) * s / samples;
+                    if (Math.abs(x - unit.at().x()) < reachX && Math.abs(scroll - y - row) < reachRow) {
+                        return unit.name();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private static void checkModes(

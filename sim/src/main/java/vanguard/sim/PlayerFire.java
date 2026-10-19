@@ -998,9 +998,13 @@ final class PlayerFire {
             boolean damageable =
                     (weapon.antiGround() || !enemy.spec().hardened()) && !enemy.glances(0, 1) && !enemy.growing();
             if (enemy.partAlive()) {
-                // M7 part D: a unit part first, so a tie goes to it (the Shellback's vent).
+                // M7 part D: a unit part first, so a tie goes to it (the Shellback's vent); round 40 R.a: a column
+                // through the part burns over the body to it (the vent on the back of the shell is seen from above).
                 double partY = columnContact(x, half, fromY, enemy.partX(), enemy.partY(), enemy.partBox());
-                consider(damageable ? CAST_ENEMY : CAST_BLOCKED, partY, layer, j, 0);
+                if (partY < limit) {
+                    consider(damageable ? CAST_ENEMY : CAST_BLOCKED, partY, layer, j, 0);
+                    continue;
+                }
             }
             consider(damageable ? CAST_ENEMY : CAST_BLOCKED, y, layer, j, -1);
         }
@@ -1114,11 +1118,13 @@ final class PlayerFire {
                         || (enemy.latched() && !hitsLatched(shot.mount()))) {
                     continue;
                 }
-                // M7 part D: a unit part is tested before the body (the Shellback's vent).
+                // M7 part D: a unit part is tested before the body (the Shellback's vent); round 40 R.a: a shot over
+                // the body whose line of flight crosses the part's box hits the part, from any side.
+                boolean onBody = weapon.size().overlaps(shot.x(), shot.y(), enemy.hitbox(), enemy.x(), enemy.y());
                 boolean onPart = enemy.partAlive()
-                        && weapon.size().overlaps(shot.x(), shot.y(), enemy.partBox(), enemy.partX(), enemy.partY());
-                if ((!onPart && !weapon.size().overlaps(shot.x(), shot.y(), enemy.hitbox(), enemy.x(), enemy.y()))
-                        || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
+                        && (weapon.size().overlaps(shot.x(), shot.y(), enemy.partBox(), enemy.partX(), enemy.partY())
+                                || (onBody && towardPart(shot, weapon.size(), enemy)));
+                if ((!onPart && !onBody) || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
                     continue;
                 }
                 if ((enemy.spec().hardened() && !weapon.antiGround())
@@ -1149,6 +1155,65 @@ final class PlayerFire {
                 }
             }
         }
+    }
+
+    /**
+     * M7 part D, round 40 R.a (design/enemies/ground/shellback, the lime vent): whether {@code shot}, of {@code
+     * size}, over {@code enemy}'s body, flies on into the box of its standing unit part before it leaves the body:
+     * its line of flight from where it is, as far as the body's box is wide and tall, crosses the part's box grown by
+     * the shot's half size. Such a shot hits the part first, from any side (the vent on the back of the shell is seen
+     * from above). Allocates nothing.
+     */
+    static boolean towardPart(Shot shot, Hitbox size, Enemy enemy) {
+        double vx = shot.vx();
+        double vy = shot.vy();
+        double speed = Math.hypot(vx, vy);
+        if (speed == 0) {
+            return false;
+        }
+        Hitbox body = enemy.hitbox();
+        double reach = body.width() + body.height();
+        Hitbox part = enemy.partBox();
+        return segmentCrossesBox(
+                shot.x(),
+                shot.y(),
+                vx / speed * reach,
+                vy / speed * reach,
+                enemy.partX(),
+                enemy.partY(),
+                (part.width() + size.width()) / 2,
+                (part.height() + size.height()) / 2);
+    }
+
+    /**
+     * Whether the segment from (x, y) to (x + dx, y + dy) crosses the box of half sizes {@code halfW} by {@code
+     * halfH} round (bx, by) (the slab test; touching edges do not count).
+     */
+    static boolean segmentCrossesBox(
+            double x, double y, double dx, double dy, double bx, double by, double halfW, double halfH) {
+        double enter = 0;
+        double leave = 1;
+        if (dx == 0) {
+            if (Math.abs(x - bx) >= halfW) {
+                return false;
+            }
+        } else {
+            double a = (bx - halfW - x) / dx;
+            double b = (bx + halfW - x) / dx;
+            enter = Math.max(enter, Math.min(a, b));
+            leave = Math.min(leave, Math.max(a, b));
+        }
+        if (dy == 0) {
+            if (Math.abs(y - by) >= halfH) {
+                return false;
+            }
+        } else {
+            double a = (by - halfH - y) / dy;
+            double b = (by + halfH - y) / dy;
+            enter = Math.max(enter, Math.min(a, b));
+            leave = Math.min(leave, Math.max(a, b));
+        }
+        return enter < leave;
     }
 
     /**

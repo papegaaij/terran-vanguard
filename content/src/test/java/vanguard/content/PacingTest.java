@@ -150,7 +150,8 @@ class PacingTest {
      * a of M5 part D; Level 11: the front at L4 and Rook's Mortar again, M5 part E; Level 12: two Micro-missile Pods
      * and Rook's Autocannon, M5 part F; Level 13: Armour Mk III and the pods at level 2, M5 part G; Level 14: the
      * Tail Gun at L2, M5 part H; Level 15: Level 14's, M7 part B; M7 part C: Level 16 with its plan's fit (Level
-     * 15's) and Rook; M7 part D: Level 17 with its plan's fit (Level 16's)).
+     * 15's) and Rook; M7 part D: Level 17 with its plan's fit (Level 16's); M7 part E: Level 18 with its plan's fit,
+     * the Ion Beam at L2 in front).
      */
     static Loadout planLoadout(String key, Difficulty difficulty) {
         BiFunction<Content, Difficulty, Loadout> plan = PLAN_FITS.get(key);
@@ -170,7 +171,8 @@ class PacingTest {
             Map.entry(Level14Test.LEVEL, Level14Test::planLoadout),
             Map.entry(Level15Test.LEVEL, Level15Test::planLoadout),
             Map.entry(Level16Test.LEVEL, Level16Test::planLoadout),
-            Map.entry(Level17Test.LEVEL, Level17Test::planLoadout));
+            Map.entry(Level17Test.LEVEL, Level17Test::planLoadout),
+            Map.entry(Level18Test.LEVEL, Level18Test::planLoadout));
 
     /**
      * What the player saw on the attempt that completes the level, from the end of its launch: the empty stretches

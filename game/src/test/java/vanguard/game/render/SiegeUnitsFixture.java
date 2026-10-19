@@ -267,7 +267,8 @@ public final class SiegeUnitsFixture {
                     none,
                     none,
                     none,
-                    dry);
+                    dry,
+                    noDeath);
         }
         return looks;
     }

@@ -30,7 +30,7 @@ everywhere.
 | 6 | Act 2 A: Earth surface | Levels 08–14 | Urgent breakbeat, orchestral hits, choir; the main motif as a 16th riff | 3:00 | P2 | [earth-theme-r03-a](concept/earth-theme-r03-a.ogg) "Homefront" (chosen); full length: [homefront-full-r08-a](concept/homefront-full-r08-a.ogg) (chosen) |
 | 7 | Act 2 B: Earth surface | Levels 08–14, incl. the L12 storm (no separate storm variant) | Urgent breakbeat, orchestral hits | 3:00 | P2 | [act2-b-theme-r08-a](concept/act2-b-theme-r08-a.ogg) "Firestorm" (chosen) |
 | 8 | Act 3 A: Mars | Levels 15–17 and 20 (see *Act 3 music*) | Dusty breakbeat, desert-scale (phrygian dominant) lead | 3:00 | P2 | [mars-theme-r02-a](concept/mars-theme-r02-a.ogg) "Red Dust Run" (chosen) |
-| 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | — (brief in *Act 3 music*; proposed in round 36) |
+| 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | sketch [act3-b-theme-r36-b](concept/act3-b-theme-r36-b.ogg) "Grey Signal" (chosen); full length with base, full and motif stems: [grey-signal-r41-a](concept/grey-signal-r41-a.ogg) (proposed, round 41) |
 | 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen) |
 | 11 | Act 4 B: Europa | Levels 22–28 | Muffled ambient-dnb, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | — |
 | 12 | Act 5 A: Asteroid belt | Levels 29–35 | Driving industrial, metallic percussion, Vorne's motif in the open | 3:00 | P3 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
@@ -468,6 +468,28 @@ picked b "Stand Down" (M.a = b), wired into the game on 2026-10-19 (see Implemen
 | [concept/debrief-theme-r40-b.ogg](concept/debrief-theme-r40-b.ogg) | Track 29 b "Stand Down", 84 BPM, D major, 80.7 s (loop 6.43 s + 68.57 s): laid-back electronic, maj9 pads pumping on a soft kick, eighth-note pulses through a ping-pong delay, sub bass, brushes and shaker; the motif hinted on a glass lead, in full once in the drumless C section; `assets/music/debrief-theme.ogg` byte for byte | chosen (round 40, M.a = b) |
 | [concept/rejected/debrief-join-r40-a.ogg](concept/rejected/debrief-join-r40-a.ogg) | Listening aid: the mission complete jingle → "Homeward", 15 s | rejected — round 40: b picked |
 | [concept/debrief-join-r40-b.ogg](concept/debrief-join-r40-b.ogg) | Listening aid: the mission complete jingle → "Stand Down", 15 s | chosen (round 40, M.a = b) |
+
+Concept round 41 (M7 part E, step MUS-E, 2026-10-19; pending the user's review) — track 9 "Grey Signal" at
+full length with its three stems, from the chosen round-36 sketch b, by the new generator
+`tools/concept/audio/music_r41.py`: the sketch's 4-bar intro and an 88-bar loop of eleven 8-bar sections
+on its material (A groove, B and B2 with track 8's hand drums, the breakdown C, D and D2 full, the new
+"dust" section E with the kit muffled and the wind swelling, the build F, the climax D3, A3, and the turn T
+closing the stabs back into A); one render, the stems through the full mix's own chains and linked
+mastering, so all three share length, gain and `LOOPSTART` / `LOOPLENGTH` (sample-aligned). The chord
+stab's resonance is lowered (q 1.1, not the sketch's 1.8) so it cannot read as a "bloop". Measured only,
+not listened to. Concept files, no `SOURCE` comment and not in `assets/` yet (the game step wires them).
+Prompts: [concept/prompts.md](concept/prompts.md#music-r41-a--track-9-grey-signal-and-its-three-stems).
+
+| File | What | Status |
+|---|---|---|
+| [concept/grey-signal-r41-a.ogg](concept/grey-signal-r41-a.ogg) | #9 "Grey Signal" full mix at full length: 180.7 s, loop 349272 + 7451136 samples (7.92 s + 168.96 s, 88 bars at 125 BPM), −14.0 LUFS, −1.4 dBTP, seam 0.50 | chosen (round 41) |
+| [concept/grey-signal-base-r41-a.ogg](concept/grey-signal-base-r41-a.ogg) | #9 base stem (kick, sub, pad, shaker and hand drums, the wind): same length, loop and gain, −14.4 LUFS (−0.4 LU), −1.8 dBTP, seam 0.32 | chosen (round 41) |
+| [concept/grey-signal-motif-r41-a.ogg](concept/grey-signal-motif-r41-a.ogg) | #9 motif stem, Vorne's motif as the intercepted whistle alone (13 statements: one per 8 bars, two more in the breakdown and the climax): same length, loop and gain, −33.2 LUFS; its statements 18.7 dB under the full mix (16.8 in the breakdown) | chosen (round 41) |
+| [concept/grey-signal-seam-r41-a.ogg](concept/grey-signal-seam-r41-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 41) |
+| [concept/grey-signal-base-seam-r41-a.ogg](concept/grey-signal-base-seam-r41-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 41) |
+| [concept/grey-signal-motif-seam-r41-a.ogg](concept/grey-signal-motif-seam-r41-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 41) |
+| [concept/grey-signal-motif-mix-r41-a.ogg](concept/grey-signal-motif-mix-r41-a.ogg) | Listening aid: the full mix with the motif stem on top as Level 18 plays them, loop bars 17–40 (B2, the breakdown, D; 46.1 s) | chosen (round 41) |
+| [concept/music-r41-a.png](concept/music-r41-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, the motif against the full mix) | chosen (round 41) |
 
 ## Implementation
 

@@ -804,7 +804,8 @@ class BalanceTest {
      * tier {@code medium} or larger (and the basis's {@code small_act_hp} units, the factor capped at ×3: the user's Act
      * 2 playtest, 2026-10-18), built by {@link SimSpecs#enemy} for each Act 2 and (M7 part A) Act 3
      * level after its first (Levels 08–21, as far as the reference DPS curve goes), keeps its time to kill inside its
-     * size class's target at that level's reference DPS (its parts' and segments' HP summed; 1 HP of
+     * size class's target at that level's reference DPS (M7 part E: times the beam era's factor for its tier from
+     * Level 18 on, {@code beam_era_hp}) (its parts' and segments' HP summed; 1 HP of
      * rounding allowed). Units already off target at their first level are left to {@link
      * #everyEnemyFitsTheBalancingBasis}.
      */
@@ -847,12 +848,15 @@ class BalanceTest {
                                         + chain.tail().hp())
                                 .orElse(0.0);
                 checked++;
-                if (hp < target[0] * reference - 1 || hp > target[1] * reference + 1) {
+                // M7 part E (step E5): in the beam era the plan's fit kills as the reference DPS times the era's
+                // factor (the factor that doubles the small units' HP there), so the time to kill is judged at that.
+                double dps = reference * CONTENT.enemyBasis().beamEraHp().of(enemy.tier(), level);
+                if (hp < target[0] * dps - 1 || hp > target[1] * dps + 1) {
                     found.put(
                             entry.getKey() + " L" + level,
                             String.format(
                                     "HP %.0f / %.1f DPS = %.2f s, target %s-%s s",
-                                    hp, reference, hp / reference, target[0], target[1]));
+                                    hp, dps, hp / dps, target[0], target[1]));
                 }
             }
         }

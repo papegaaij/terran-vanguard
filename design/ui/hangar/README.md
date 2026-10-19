@@ -180,6 +180,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r38-a.png](concept/intel-final-r38-a.png) | Review sheet (M7 part B batch, `tools/art/intel.py`, round 38): the 30×30 intel portraits of Level 15's Burrower and Dust Kite, from the production sprites | chosen (round 38, F.5: approved as final) |
 | [concept/intel-final-r39-a.png](concept/intel-final-r39-a.png) | Review sheet (M7 part C batch, `tools/art/intel.py`, round 39): the 30×30 intel portraits of Level 16's Tendril Anchor and Threadcrawler, from the production models of `tools/art/canyon_units.py` | chosen (round 39, F.5: approved as final) |
 | [concept/intel-final-r40-a.png](concept/intel-final-r40-a.png) | Intel portraits of Level 17's Choir Herald and Shellback (`tools/art/intel.py`) | chosen (round 40, F.f: approved as final) |
+| [concept/intel-final-r41-a.png](concept/intel-final-r41-a.png) | Intel portraits of Level 18's Dust Devil and Ghost Drone and the `unclassified-ghost-drone` sensor picture (`tools/art/intel.py`) | chosen (round 41) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -590,3 +591,4 @@ release's end, which writes that autosave.
   where they fit (every other level, unchanged), else close up a pixel at a time to 12 px (Level 14: 13 px),
   and only if that is not enough the enemy names end on `+N MORE` in as many lines as fit. Tests:
   `IntelPanelLayoutTest.aBusyLevelsRowsCloseUpAndKeepEveryName`, `tooManyEnemyTypesEndOnMore`.
+- 2026-10-19 (user, round 41): the intel pictures (F.e) approved as final; the intel panel's closing rows and "+N MORE" (P.f) accepted.

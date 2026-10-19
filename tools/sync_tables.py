@@ -312,7 +312,8 @@ def stat_block(d):
         ["Parts", parts],
         ["Orientation", f"`{e['orientation']}`" + suffix("orientation")],
         ["HP", f"{hp_text} (easy {hp('easy')} / hard {hp('hard')}, from the global multipliers)"],
-        ["Armour / shield", e["armour"]],
+        # M7 part E: an armour written as a key (the Dust Devil's `vanes`) is told by its notes
+        ["Armour / shield", fill(notes["armour"], values) if "armour" in notes else e["armour"]],
         ["Speed", f"{num(e['speed'])} px/s" + suffix("speed")],
         ["Movement", fill(notes["movement"], values)],
         ["Attack", attacks or fill(notes["attack"], values)],
@@ -505,10 +506,13 @@ def level_sections(d):
     rows = []
     for i, (s, (start, end, px0, px1, speed)) in enumerate(zip(level["sections"], sections(level)), start=1):
         layers = " ".join(f"`{layer}`: {text}" for layer, text in s["notes"]["layers"].items())
+        # M7 part E: a level with a dust storm's `visibility` shows each section's radius at medium (its notes)
+        storm = [s["notes"]["visibility"]] if "visibility" in level else []
         rows.append([f"{i}. {s['name']}", f"{start}–{end}", f"{grouped(px0, ',')}–{grouped(px1, ',')}", num(speed),
-                     atmosphere_text(s), layers, s["notes"]["purpose"]])
-    return table(["Section", "t (s)", "Scroll (px)", "Speed (px/s)", "Atmosphere", "Layers and content", "Purpose"],
-                 rows)
+                     atmosphere_text(s)] + storm + [layers, s["notes"]["purpose"]])
+    storm_head = ["Visibility (medium)"] if "visibility" in level else []
+    return table(["Section", "t (s)", "Scroll (px)", "Speed (px/s)", "Atmosphere"] + storm_head
+                 + ["Layers and content", "Purpose"], rows)
 
 
 BACKDROP_LAYERS = ["deep", "far", "ground", "low-air", "high-air"]

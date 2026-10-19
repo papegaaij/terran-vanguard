@@ -274,3 +274,17 @@ mockup: the review sheet and a loop of the files in `assets/sprites/`, rendered 
 swell glow and its burst stump (placed by `assets/pivots/shellback.json`), the husk. The GIF plays a
 Shellback walking down Level 17's colony ground, swelling its vent for a lob, curling, rolling, uncurling with
 the belly glowing, walking on.
+
+## dust-devil-final-r41-a
+
+Round 41, production art (M7 part E batch, step ART-E; straight to production from the chosen round-06 concept
+dust-devil-r06-a, the model `dust_devil` of `tools/concept/render/r06_models.py` unchanged). Not a mockup: the
+review sheet (`.png`) and a loop (`.gif`) of the files in `assets/sprites/` (held in `build/art-held/sprites/`
+until the data claims the slug), rendered by [tools/art/storm_units.py](../../../../tools/art/storm_units.py)
+(`python3 tools/art/storm_units.py devil`): the 72 px funnel's spin (8 frames = 72°, 5-fold), the 0.4 s rise as
+the vanes part (3 steps × 8), the open set with the lime core, one 40-colour palette over the three; the core's
+additive glow; the ochre grit swirl (152 px, three arms, a 12-frame loop) and its tightened, brightened version
+for the rise tell and the window; the collapse, the lime death light and the grit cloud. The GIF plays two devils
+on the eye's dry lake (clear air) through their 2.6 s cycles 0.8 s apart: the swirl tightening, the core opening
+with its 2-arm grit spiral, loose pickups drawn in and circling, one devil shot in its window, collapsing and
+dropping what it held.

@@ -10,6 +10,7 @@ import java.util.Map;
  * @param bulletDamage damage to the player per bullet class
  * @param contactDamage damage of touching an enemy, per size tier
  * @param smallActHp the returning {@code small} units that get the act HP factor, and its cap for them
+ * @param beamEraHp M7 part E: the HP factor of the beam era, from the level the balance plan fits the Ion Beam
  * @param formations the formation names with their descriptions
  */
 public record EnemyBasisData(
@@ -17,6 +18,7 @@ public record EnemyBasisData(
         List<BulletDamage> bulletDamage,
         Map<Tier, Double> contactDamage,
         SmallActHp smallActHp,
+        BeamEraHp beamEraHp,
         Map<String, String> formations) {
     public EnemyBasisData {
         referenceDps = Map.copyOf(referenceDps);
@@ -39,6 +41,27 @@ public record EnemyBasisData(
         /** Whether the cap applies to {@code slug} in Level {@code level}. */
         public boolean applies(String slug, int level) {
             return units.contains(slug) && levels.contains(level);
+        }
+    }
+
+    /**
+     * M7 part E (the user's decision of 2026-10-19, "tougher, not more"; step E5): from Level {@code fromLevel} on, the
+     * first level the balance plan fits the Ion Beam, a unit of one of the listed {@code tiers} (bosses aside) takes
+     * {@code factor} on its HP on top of the act HP factor, its own first level included: the beam burns the first
+     * target in its column every step from the moment it touches, so the plan's fit kills a standard unit far sooner
+     * than its single-target DPS against the reference says, and the factor gives the units back Level 10's time on the
+     * screen (the user's reference) so they live long enough to shoot back. Its bounty is unchanged.
+     */
+    public record BeamEraHp(int fromLevel, double factor, List<Tier> tiers) {
+        public BeamEraHp {
+            Check.that(fromLevel >= 1, "beam_era_hp.from_level: at least 1");
+            Check.that(factor >= 1, "beam_era_hp.factor: at least 1");
+            tiers = List.copyOf(tiers);
+        }
+
+        /** The factor on a unit of {@code tier} in Level {@code level}: {@link #factor} from {@link #fromLevel}, else 1. */
+        public double of(Tier tier, int level) {
+            return level >= fromLevel && tiers.contains(tier) ? factor : 1;
         }
     }
 

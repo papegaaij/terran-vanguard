@@ -63,7 +63,8 @@ class TypicalHaulTest {
                         Map.entry(14, 2_458),
                         Map.entry(15, 2_697),
                         Map.entry(16, 3_021),
-                        Map.entry(17, 3_289)),
+                        Map.entry(17, 3_289),
+                        Map.entry(18, 3_567)),
                 perfect);
     }
 
