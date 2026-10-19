@@ -41,8 +41,9 @@ import vanguard.game.ui.Glass;
  * The mouse reaches the same places ({@link HangarPointer}); a frame with a key press ignores it.
  *
  * <p>The replay hangar (the user's decision of 2026-10-18: a mission select's replay goes briefing,
- * hangar, level) works on the real campaign of the save the replay was started from: what is bought,
- * sold and fitted there is kept, and the credits spent are spent. Its top bar says {@code REPLAY L05}
+ * hangar, level) works on the real campaign of the save the replay was started from and is refit only
+ * (the user's correction of 2026-10-19): the owned items are fitted and unfitted and that is kept, but
+ * nothing is bought, sold, upgraded or repaired ({@link HangarState#refitOnly()}). Its top bar says {@code REPLAY L05}
  * instead of {@code BEFORE L05} and its launch {@code > REPLAY}; it opens without an autosave (a save
  * was just loaded), and its launch writes the campaign as the hangar left it to the autosave, of which
  * the flight is then a replay ({@link Campaign#replay}): full armour, unlimited retries, nothing earned,
@@ -95,7 +96,7 @@ public final class HangarScreen implements GameScreen {
                 : CampaignRoute.launch(services.content, campaign);
         // A special's free charges at its unlock (the first Airstrike charge), before the autosave.
         List<Campaign.FreeCharges> given = campaign.giveFreeCharges(services.content.specials());
-        state = new HangarState(new Hangar(services.catalogue, campaign), nextLevel.isPresent());
+        state = new HangarState(new Hangar(services.catalogue, campaign), nextLevel.isPresent(), replay.isPresent());
         for (Campaign.FreeCharges free : given) {
             state.notice(HangarState.freeChargesNotice(free));
         }
@@ -162,7 +163,8 @@ public final class HangarScreen implements GameScreen {
 
     /**
      * A mission select's replay (the user's decision of 2026-10-18): the level's mission briefing, then the
-     * replay hangar on the save's real campaign, then the level as a replay.
+     * replay hangar on the save's real campaign (refit only, the user's correction of 2026-10-19), then the
+     * level as a replay.
      *
      * @param slot the slot the save was read from
      */

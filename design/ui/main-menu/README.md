@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../systems/saves, ../../systems/difficulty]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Main menu
@@ -105,8 +105,6 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 
 ## Open questions
 
-- Final title: *Terran Vanguard* is the working title (logo D); confirm before release. Kept for
-  now (round 35, Q11); the user settles it, with the repository's name, before the `v0.1` tag.
 - Attract-mode demo after idle: worth it? It needs a recorded input playback system. Not in v0.1
   (round 35, Q12).
 
@@ -168,3 +166,4 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
   directly: the next level's mission briefing comes first, then the hangar (see the
   [screen flow](../README.md#screen-flow)); the Missions item's replay goes briefing, hangar, level
   too ([mission select](../mission-select/README.md)).
+- 2026-10-19 (user): Q11 settled: the title is *Terran Vanguard* (logo D), the repository `terran-vanguard`.

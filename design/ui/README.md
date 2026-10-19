@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../art-direction, ../systems]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # User interface
@@ -68,7 +68,8 @@ mission briefing (an act intro that is still due, the `act-intro:N` story flag o
 [saves](../systems/saves/README.md), plays first, as before), then the hangar, which does not
 autosave right after a load (except after such an act intro, to keep its flag). A mission select
 replay opens that level's mission briefing (without its act's intro) and then the replay hangar
-on the real campaign ([mission select](mission-select/README.md)). Only the debug starts
+on the real campaign, which only refits: no buying, selling, upgrading or repairing (user
+correction 2026-10-19, [mission select](mission-select/README.md)). Only the debug starts
 (`--level`, `--loadout` …) go straight into the level.
 
 ### Shared UI rules
@@ -267,4 +268,7 @@ Production art, UI batch part U3 (concept round 13): the bitmap fonts rendered b
   the level: Continue and Load game open the next level's briefing (an act intro that is due first)
   instead of the hangar, and a mission select replay opens the level's briefing and the replay
   hangar instead of the level. Screen flow updated; details in
+  [mission select](mission-select/README.md#decisions).
+- 2026-10-19 (user correction of 2026-10-18): the replay hangar is refit only: fitting what the
+  campaign owns stays, buying, selling, upgrading and repairs are gone from it. Details in
   [mission select](mission-select/README.md#decisions).

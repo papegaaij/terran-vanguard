@@ -38,7 +38,8 @@ import vanguard.sim.WingmanSpec;
  * M7 part A: a utility slot's shop ends with its bay row ({@link HangarState#bayRow()}: the third
  * bay for sale with its {@code BUY} chip, or in the bought bay's own shop its {@code SELL} chip), and a
  * cooldown special's detail shows its cooldown. The rows and chips double as the mouse's hit regions
- * ({@link HangarPointer}).
+ * ({@link HangarPointer}). The replay hangar's drawer (refit only, the user's correction of 2026-10-19) is
+ * headed {@code REFIT} and lists only the owned items, or says the slot has none.
  */
 final class ShopPanel {
     static final int X = 16;
@@ -73,10 +74,14 @@ final class ShopPanel {
 
     void draw(SpriteBatch batch, HangarState state, List<String> markedTraits) {
         glass.panel(batch, X, Y, WIDTH, HEIGHT, 0.86f);
-        glass.header(batch, "SHOP - " + Names.slot(state.slot()), INNER, RIGHT, Y + 10);
+        glass.header(
+                batch, (state.refitOnly() ? "REFIT - " : "SHOP - ") + Names.slot(state.slot()), INNER, RIGHT, Y + 10);
         List<Offer> rows = state.rows();
         int count = state.rowCount();
         boolean shop = state.focus() == HangarState.Focus.SHOP;
+        if (count == 0 && state.refitOnly()) {
+            glass.shadowed(batch, glass.fonts.label, "NOTHING OWNED FOR THIS SLOT", Glass.DIM, INNER, ROWS_Y);
+        }
         for (int i = state.top(); i < Math.min(count, state.top() + HangarState.VISIBLE_ROWS); i++) {
             int y = ROWS_Y + (i - state.top()) * ROW;
             if (i < rows.size()) {

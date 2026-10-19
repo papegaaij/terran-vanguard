@@ -36,6 +36,11 @@ import vanguard.sim.WingmanSpec;
  * <p>The mouse ({@link HangarPointer}) reaches the same places directly: {@code point...} select a
  * slot, a row, a choice, a command, a repair line or the repair points, and the wheel scrolls the
  * shop list.
+ *
+ * <p>The replay hangar is refit only (the user's correction of 2026-10-19, design/ui/mission-select): its
+ * rows are the owned items alone with their {@code FIT} and {@code UNFIT} choices, the bay row and the
+ * repair are gone, and nothing that spends or returns credits can be made ({@link #REFIT_ONLY}); Rook's
+ * side stays.
  */
 public final class HangarState {
     /**
@@ -98,8 +103,14 @@ public final class HangarState {
         LAUNCH
     }
 
+    /** The replay hangar's message line while nothing else is shown, and its refusal. */
+    public static final String REFIT_ONLY = "REPLAY: REFIT ONLY";
+
     private final Hangar hangar;
     private final boolean launchable;
+    /** The replay hangar: refitting with what the campaign owns, nothing bought, sold, upgraded or repaired. */
+    private final boolean refitOnly;
+
     private int slot;
     private int row;
     private int top;
@@ -114,8 +125,28 @@ public final class HangarState {
 
     /** @param launchable whether the next level is built */
     public HangarState(Hangar hangar, boolean launchable) {
+        this(hangar, launchable, false);
+    }
+
+    /**
+     * @param launchable whether the next level is built
+     * @param refitOnly the replay hangar (the user's correction of 2026-10-19): only the owned items are
+     *     fitted and unfitted; nothing that costs or returns credits
+     */
+    public HangarState(Hangar hangar, boolean launchable, boolean refitOnly) {
         this.hangar = hangar;
         this.launchable = launchable;
+        this.refitOnly = refitOnly;
+    }
+
+    /** Whether this is the replay hangar, which only refits. */
+    public boolean refitOnly() {
+        return refitOnly;
+    }
+
+    /** Whether an action is a refit, which the replay hangar allows: fitting or unfitting an owned item. */
+    public static boolean refit(Action action) {
+        return action == Action.FIT || action == Action.UNFIT;
     }
 
     public Hangar hangar() {
@@ -158,7 +189,7 @@ public final class HangarState {
      */
     public Optional<Hangar.BayOffer> bayRow() {
         LoadoutSlot shown = slot();
-        if (shown.kind() != ItemKind.UTILITY) {
+        if (refitOnly || shown.kind() != ItemKind.UTILITY) {
             return Optional.empty();
         }
         List<Hangar.BayOffer> lines = hangar.bays();
@@ -228,9 +259,33 @@ public final class HangarState {
         return hangar.campaign().gear().escort().side();
     }
 
-    /** The shop rows for the selected slot. */
+    /**
+     * The shop rows for the selected slot; in the replay hangar only the fitted and owned items, each with
+     * its refit choices alone.
+     */
     public List<Offer> rows() {
-        return hangar.shop(slot());
+        List<Offer> shop = hangar.shop(slot());
+        if (!refitOnly) {
+            return shop;
+        }
+        return shop.stream()
+                .filter(offer -> offer.state() == Hangar.State.FITTED || offer.state() == Hangar.State.OWNED)
+                .map(HangarState::refitChoices)
+                .toList();
+    }
+
+    /** A row with only its refit choices (its {@code FIT} or {@code UNFIT}). */
+    private static Offer refitChoices(Offer offer) {
+        return new Offer(
+                offer.item(),
+                offer.state(),
+                offer.level(),
+                offer.owned(),
+                offer.bought(),
+                offer.isNew(),
+                offer.choices().stream()
+                        .filter(choice -> refit(choice.action()))
+                        .toList());
     }
 
     public int row() {
@@ -264,7 +319,7 @@ public final class HangarState {
     public boolean enabled(Command candidate) {
         return switch (candidate) {
             case UNDO -> hangar.canUndo();
-            case REPAIR -> hangar.missingArmour() > 0 || hangar.escortMissingArmour() > 0;
+            case REPAIR -> !refitOnly && (hangar.missingArmour() > 0 || hangar.escortMissingArmour() > 0);
             case SAVE -> true;
             case LAUNCH -> launchable;
         };
@@ -317,9 +372,12 @@ public final class HangarState {
         return free.fitted() ? charges + ", FITTED" : charges;
     }
 
-    /** What the last transaction did or why it was refused, or the visit's notice. */
+    /**
+     * What the last transaction did or why it was refused, or the visit's notice; in the replay hangar
+     * {@link #REFIT_ONLY} while there is nothing else to say.
+     */
     public String message() {
-        return message;
+        return refitOnly && message.isEmpty() ? REFIT_ONLY : message;
     }
 
     public Outcome nextSlot() {
@@ -574,7 +632,7 @@ public final class HangarState {
         return switch (command) {
             case UNDO -> {
                 hangar.undo();
-                message = "UNDONE - FULL REFUND";
+                message = refitOnly ? "UNDONE" : "UNDONE - FULL REFUND";
                 // An undone bay purchase closes its slot again.
                 keepSlot();
                 afterChange(Optional.empty());
@@ -696,6 +754,10 @@ public final class HangarState {
 
     /** Makes the sale the screen asked about. */
     public Outcome sell() {
+        if (refitOnly) {
+            message = REFIT_ONLY;
+            return Outcome.REFUSED;
+        }
         if (baySelected()) {
             return sellBay();
         }
@@ -708,6 +770,10 @@ public final class HangarState {
     }
 
     private Outcome apply(Offer offer, Choice made) {
+        if (refitOnly && !refit(made.action())) {
+            message = REFIT_ONLY;
+            return Outcome.REFUSED;
+        }
         if (!hangar.apply(slot(), offer, made.action())) {
             message = refusal(made);
             return Outcome.REFUSED;
@@ -792,7 +858,8 @@ public final class HangarState {
                     .filter(trait -> !hangar.fittedTraits().contains(trait))
                     .forEach(trait -> warnings.add("NO " + trait.toUpperCase(Locale.ROOT) + " WEAPON FITTED"));
         });
-        if (hangar.campaign().armour() < hangar.campaign().maxArmour() / 2) {
+        // A replay flies at full armour (design/ui/mission-select), so the replay hangar does not warn.
+        if (!refitOnly && hangar.campaign().armour() < hangar.campaign().maxArmour() / 2) {
             warnings.add("ARMOUR BELOW 50 %");
         }
         Campaign campaign = hangar.campaign();

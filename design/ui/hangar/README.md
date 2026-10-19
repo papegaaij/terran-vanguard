@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Hangar
@@ -204,7 +204,12 @@ Light Drone Bay, EMP Burst, Orbital Lance and Shield Overcharge. Round 37 chose 
 hangar through the next level's briefing; that hangar does not autosave as it opens (a save was
 just loaded), except after an act intro that was due, whose story flag the autosave keeps. A
 mission select replay reaches the **replay hangar** through the level's briefing: the same hangar
-on the real campaign (purchases, sales, fitting and repairs are kept, the credits spent are spent),
+on the real campaign, but **refit only** (user correction 2026-10-19): the owned items are fitted
+and unfitted (and Rook's side set), which the campaign keeps; nothing is bought, sold, upgraded or
+repaired. Its drawer reads `REFIT - <SLOT>` and lists only the owned items with their `FIT` /
+`UNFIT` chips (no buyable, locked or bay rows; `NOTHING OWNED FOR THIS SLOT` when there are none),
+the message line reads `REPLAY: REFIT ONLY`, and REPAIR is greyed and skipped by the keys and the
+mouse; the launch does not warn about the ship's armour (a replay flies at full armour). It comes
 with `REPLAY L05 - <NAME>` in its top bar instead of `BEFORE L05`, the replayed level's intel, and
 `> REPLAY` on the launch chip. Its launch writes the campaign to the autosave and flies a replay of
 it ([mission select](../mission-select/README.md)).
@@ -218,6 +223,7 @@ release's end, which writes that autosave.
 
 - [x] Tabs/panels as above with keyboard and gamepad navigation
 - [x] Replay hangar (user decision 2026-10-18): reached through the level's briefing from the mission select, on the real campaign, `REPLAY L05` header and `> REPLAY` launch, the campaign autosaved at launch (`HangarScreen.replay`, `replayFlight`; `MissionFlowTest`)
+- [x] Replay hangar refit only (user correction 2026-10-19): owned rows with FIT / UNFIT alone, no bay row or repair, buys and sales refused (`HangarState` `refitOnly`, `REFIT_ONLY`; `MissionFlowTest`)
 - [x] Mouse navigation — M6 part A (`HangarPointer`, `HangarPointerTest`; see *Design*), accepted by the user in concept round 35
 - [x] Slot selection filters the shop; owned/buyable/locked sorting
 - [x] Power bar with projected load and refusal
@@ -572,3 +578,7 @@ release's end, which writes that autosave.
   the next level's briefing; the mission select replay gets the replay hangar (`REPLAY L05`
   header, `> REPLAY` launch; its changes kept in the campaign, written to the autosave at launch,
   the latter pending the user's review).
+- 2026-10-19 (user correction of the 2026-10-18 choice): the replay hangar is refit only ("purchasing
+  items seems odd at this point"): fitting and unfitting what the campaign owns stays and is kept;
+  buying, selling, upgrading, bays and repairs are gone from it. The buyable and locked rows are
+  hidden rather than greyed, with `REPLAY: REFIT ONLY` on the message line (pending the user's review).

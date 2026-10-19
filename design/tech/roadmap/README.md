@@ -120,8 +120,8 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
       Level 14 and the act end, done, the combined concept round 34 closed on 2026-10-12; part I, the
       close-out, built, the voice listen-through done; open: the user's playthrough of Act 2 and the
       `sub` layer's CI check on three OSes after the push)
-- [ ] M6 Acts 1–2 release: done except Q11 (the final title and the repository's name) and the
-      `v0.1` tag (next week: the merge and the tag wait until the commits can be signed); concept
+- [ ] M6 Acts 1–2 release: done except the `v0.1` tag (Q11 settled 2026-10-19: *Terran Vanguard*,
+      repository `terran-vanguard`; merged into main as signed a45e75e); concept
       round 35 closed on 2026-10-12, every part accepted as built (part A, mouse support on every
       out-of-game screen with the glass pointer, [ui](../../ui/README.md#mouse); part B, the high
       scores and the release's end, [scoring](../../systems/scoring/README.md#high-scores); part C,

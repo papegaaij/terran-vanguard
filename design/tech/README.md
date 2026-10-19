@@ -127,7 +127,7 @@ RTX 2070) and built and tested by CI on all three OSes:
 
 The spike's code and `spike/RESULTS.md` with the full numbers are kept under the tag
 `spike-libgdx` (`git checkout spike-libgdx`); its branch was deleted after M3. CI run:
-[36916102595](https://github.com/papegaaij/conceptgame/actions/runs/36916102595).
+[36916102595](https://github.com/papegaaij/terran-vanguard/actions/runs/36916102595).
 
 | # | Result |
 |---|---|

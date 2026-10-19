@@ -266,7 +266,9 @@ After the user's playtest of Levels 08-14 (2026-10-18): what was built; the **An
 
 **Build choices (row B.f)** — the flow fix, step FLOW (each yes/no):
 - **(a)** Briefings skip the act title card and intro once shown.
-- **(b)** The replay hangar autosaves at launch (the real campaign; a REPLAY header and chip).
+- **(b)** The replay hangar autosaves at launch (the real campaign; a REPLAY header and chip). Since the
+  user's correction of 2026-10-19 it is refit only: owned items fitted and unfitted and kept, nothing
+  bought, sold, upgraded or repaired (`REFIT` drawer, `REPLAY: REFIT ONLY`).
 - **(c)** The labels on the briefing and replay screens.
 - **(d)** The game-over footer now reads "…CONTINUE RETURNS TO THE BRIEFING BEFORE THIS MISSION."
 

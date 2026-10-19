@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Mission select
@@ -57,8 +57,12 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   the **replay hangar** → the level as a replay → debrief → mission select. The briefing's Back
   asks to quit to the main menu, as every briefing's does.
 - **The replay hangar** is the normal [hangar](../hangar/README.md) on the **real campaign** of the
-  save the replay was started from: what is bought, sold, fitted or repaired there is kept, and the
-  credits spent are really spent. Its top bar reads `REPLAY L05 - <NAME>` instead of
+  save the replay was started from, **refit only** (user correction 2026-10-19): the owned weapons,
+  utility modules, core parts, special and Rook's guns are fitted and unfitted, and Rook's side set,
+  and that is kept in the campaign; nothing is bought, sold, upgraded or repaired, so its credits
+  never change. Its shop drawer is headed `REFIT`, lists only the owned items with their `FIT` /
+  `UNFIT` choices (no bay row; `NOTHING OWNED FOR THIS SLOT` for an empty list), its message line
+  reads `REPLAY: REFIT ONLY`, and the REPAIR command is greyed and skipped. Its top bar reads `REPLAY L05 - <NAME>` instead of
   `BEFORE L05`, its intel is the replayed level's, and its launch chip reads `> REPLAY`. It opens
   without an autosave (a save was just loaded, as after Continue); its **launch** writes the
   campaign as the hangar left it to the autosave, and the flight is a replay of that autosave; its
@@ -100,8 +104,12 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
       `CampaignRoute.missionBriefing`) and then the replay hangar on the real campaign
       (`HangarScreen.replay`: `REPLAY L05` header, `> REPLAY` launch, the campaign written to the
       autosave at launch, the flight `HangarScreen.replayFlight`) — 2026-10-18
-- [x] Tests: `MissionFlowTest` (a purchase in the replay hangar is kept, the replay still earns
-      nothing and keeps the progress), `CampaignRouteTest` (the replay's briefing without the act
+- [x] The replay hangar is refit only (`HangarState` with `refitOnly`: owned rows with their FIT /
+      UNFIT choices, no bay row, no repair, buys and sales refused with `REPLAY: REFIT ONLY`) —
+      2026-10-19
+- [x] Tests: `MissionFlowTest` (the replay hangar refuses buying, selling, upgrading and repairing
+      and leaves the credits alone, a refit in it is kept, the campaign's hangar still buys, the
+      replay still earns nothing and keeps the progress), `CampaignRouteTest` (the replay's briefing without the act
       intro)
 
 ## Open questions
@@ -123,3 +131,11 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   title card and intro pages; the replay hangar opens without an autosave and writes the autosave
   at launch, which the flight then replays and into which its better grade goes; the header reads
   `REPLAY L05` and the launch `> REPLAY`.
+- 2026-10-19 (user correction of the 2026-10-18 choice): "You will need to go through the briefing
+  and the shop, but purchasing items seems odd at this point. I think we should restrict this to
+  refitting only." The replay hangar now only refits with what the campaign owns (kept in the
+  campaign as before); buying, selling, upgrading, bays and repairs are gone from it. Built choices
+  (pending the user's review): the buyable and locked rows are hidden rather than greyed, the drawer
+  is headed `REFIT` and the message line reads `REPLAY: REFIT ONLY`; the launch no longer warns
+  about the ship's armour (the replay flies at full armour), but still about Rook's (a replay does
+  not repair him, and the replay hangar cannot).
