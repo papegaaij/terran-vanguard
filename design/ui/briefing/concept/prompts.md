@@ -120,3 +120,22 @@ the dust, its drift toward Ares Landing's domes at its southern edge, the sweep 
 `level-18-visibility` (Varga: the storm's look from the level's own textures: the ship in its clear radius, the
 ground fading into the veil through the ragged edge, Dust Kites and a Needler outside as dark silhouettes keeping
 their glow, their orbs crisp, a homing trail finding one; no Ghost Drone, whose first sight is the level's hint).
+
+## briefing-images-final-r42-a
+
+Round 42, production art (M7 part F batch, step ART-F4): Level 19's two 672×240 briefing images and Level 20's
+filed plate, rendered by [tools/art/briefing_images.py](../../../../tools/art/briefing_images.py) (`python3
+tools/art/briefing_images.py level-19-tharsis-works level-19-rear-arcs level-20-filed-plate r42`, after
+`tools/art/l19_props.py`, `tools/art/warden_tank.py` and `tools/art/revenant_walker.py`, whose sprites it reads
+from `assets/` or `build/art-held/`): `level-19-tharsis-works` (Okafor: the Tharsis Foundry on a CDF site plan,
+north to the left: the slag fields, the two conveyor halls with their belts, the furnace row with its stacks and
+vent rows, the yard gate, the casting yard and the south gate; the smelter tower with "200 CREW"; red Vrell vectors
+into the works and grey, unlabelled contacts on the conveyor lines; the six sections on the route),
+`level-19-rear-arcs` (Varga, over the level's own hall floor: a gantry turret on its cradle with its arc up the
+line, silent while the ship is below it, firing once passed; a Warden Tank riding a belt, its turret tracking back
+at the ship, its rear plate circled "×1.5"; the casting yard's thermal in the corner, one large blurred contact made
+from the walker's sprites) and `level-20-filed-plate` (Varga, shared with Level 19's wreck: the Revenant Walker's
+flank plate close up, rendered from `revenant_walker.py`'s wreck model with the plate found by a probe render, the
+serial field filed to bright bare metal in bands of hand-file strokes; an assay strip clipped beside it, its stock
+match "HELIX TF-7" circled in red pen; "for the Commander only").
+

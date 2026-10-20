@@ -10,9 +10,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -74,11 +78,11 @@ class BossLevelTest {
     @Test
     void theFrigateArrivesAtItsTimeOverTheArena() {
         LevelScript level = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
-        LevelScript.Section arena = level.sections().get(4);
+        Section arena = level.sections().get(4);
         assertTrue(arena.arena());
         assertEquals(30, arena.speed(), 1e-9);
         assertEquals(205, arena.end(), 1e-9);
-        LevelScript.SetPieceSpec frigate = level.setPieces().getFirst();
+        SetPieceSpec frigate = level.setPieces().getFirst();
         BossSpec boss = frigate.boss().orElseThrow();
         assertEquals("gorgon-frigate", frigate.slug());
         assertEquals(150, boss.arriveSeconds(), 1e-9);
@@ -120,7 +124,7 @@ class BossLevelTest {
         double killedAt = -1;
         double sectionSixAt = -1;
         List<Integer> phases = new ArrayList<>();
-        int frigateDown = cueIndex(sortie.script(), LevelScript.CueTrigger.BOSS_DESTROYED);
+        int frigateDown = cueIndex(sortie.script(), CueTrigger.BOSS_DESTROYED);
         boolean frigateDownPlayed = false;
         while (!sortie.complete() && steps++ < MAX_STEPS) {
             if (!sortie.flying()) {
@@ -167,13 +171,13 @@ class BossLevelTest {
     @Test
     void levelFivesBossDestroyedLineIsAboutTheFrigate() {
         LevelScript level = SimSpecs.level(ContentLoader.fromClasspath(), KEY, Difficulty.MEDIUM);
-        LevelScript.RadioCue cue = level.radio().get(cueIndex(level, LevelScript.CueTrigger.BOSS_DESTROYED));
+        RadioCue cue = level.radio().get(cueIndex(level, CueTrigger.BOSS_DESTROYED));
         assertEquals("gorgon-frigate", cue.subject());
         assertTrue(cue.line().startsWith("Frigate down."));
     }
 
     /** The index of the level's first radio cue on {@code trigger}. */
-    static int cueIndex(LevelScript level, LevelScript.CueTrigger trigger) {
+    static int cueIndex(LevelScript level, CueTrigger trigger) {
         for (int i = 0; i < level.radio().size(); i++) {
             if (level.radio().get(i).trigger() == trigger) {
                 return i;

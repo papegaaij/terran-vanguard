@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.Road;
 import vanguard.sim.SimStep;
@@ -257,6 +257,7 @@ final class ContentValidator {
         TerrainChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         SiegeChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         StormChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
+        FoundryChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         enemy.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
                 .flatMap(EnemyData.Hook::leadsTargetIn)
@@ -604,6 +605,7 @@ final class ContentValidator {
         TerrainChecks.level(content, level, (field, message) -> problem(level, field, message));
         SiegeChecks.level(content, level, (field, message) -> problem(level, field, message));
         StormChecks.level(content, level, (field, message) -> problem(level, field, message));
+        FoundryChecks.level(content, level, (field, message) -> problem(level, field, message));
         checkArenaLevel(level);
         new BackdropCheck(level, (field, message) -> problem(level, field, message)).run();
     }
@@ -871,8 +873,9 @@ final class ContentValidator {
         List<EnemyData.PartData> parts = enemy.partList().orElse(List.of());
         for (int i = 0; i < parts.size(); i++) {
             EnemyData.PartData part = parts.get(i);
-            if (!anchored && (part.layer().isPresent() || part.spots().isPresent())) {
-                problem(enemy, "part_list[" + i + "]", "only an anchored boss's parts have a layer or spots");
+            // M7 part F: or a walking boss's (the Revenant Walker's vents).
+            if (!enemy.arenaBoss() && (part.layer().isPresent() || part.spots().isPresent())) {
+                problem(enemy, "part_list[" + i + "]", "only an arena boss's parts have a layer or spots");
             }
         }
         List<EnemyData.ChainData> chains = enemy.chains().orElse(List.of());
@@ -929,9 +932,16 @@ final class ContentValidator {
                     || phase.release().isPresent()
                     || phase.drop().isPresent()
                     || phase.until().slams().isPresent()
-                    || phase.until().below().isPresent();
-            if (arena && !anchored) {
-                problem(enemy, field, "only an anchored boss's phases slam, surface, release or drop");
+                    || phase.until().below().isPresent()
+                    || phase.until().share().isPresent();
+            if (arena && !enemy.arenaBoss()) {
+                problem(enemy, field, "only an arena boss's phases slam, surface, release, drop or end on a share");
+            }
+            if ((phase.slamming().isPresent()
+                            || phase.surface().isPresent()
+                            || phase.release().isPresent())
+                    && !anchored) {
+                problem(enemy, field, "only an anchored boss's phases slam, surface or release");
             }
             if (phase.slamming().isPresent() && lanes.isEmpty()) {
                 problem(enemy, field + ".slamming", "a phase slams only with the boss's lanes");
@@ -1433,8 +1443,8 @@ final class ContentValidator {
                 .map(LevelData.BossPlacement::enemy)
                 .filter(content.enemies()::containsKey)
                 .map(content::enemy);
-        boolean anchored =
-                boss.map(enemy -> enemy.movement().anchored().isPresent()).orElse(false);
+        // M7 part F: a walking boss (the Revenant Walker) is fought in a halted arena too.
+        boolean anchored = boss.map(EnemyData::arenaBoss).orElse(false);
         List<LevelData.Section> sections = level.sections();
         for (int i = 0; i < sections.size(); i++) {
             LevelData.Section section = sections.get(i);
@@ -1477,11 +1487,19 @@ final class ContentValidator {
         }
         boolean lanes =
                 boss.flatMap(EnemyData::boss).flatMap(EnemyData.BossData::lanes).isPresent();
+        // M7 part F: a walking boss's first flame tell is its first telegraph (the radio's first-telegraph).
+        boolean telegraphs = lanes
+                || boss.flatMap(EnemyData::boss)
+                        .flatMap(EnemyData.BossData::cone)
+                        .isPresent();
         for (int i = 0; i < level.radio().size(); i++) {
             LevelData.RadioCue cue = level.radio().get(i);
             LevelData.CueEvent event = cue.event().orElse(null);
-            if (event == LevelData.CueEvent.FIRST_TELEGRAPH && !lanes) {
-                problem(level, "radio[" + i + "].event", "first-telegraph in a level without a boss with lanes");
+            if (event == LevelData.CueEvent.FIRST_TELEGRAPH && !telegraphs) {
+                problem(
+                        level,
+                        "radio[" + i + "].event",
+                        "first-telegraph in a level without a boss with lanes or a flame cone");
             }
             if (event == LevelData.CueEvent.FIRST_SHIP_TELEGRAPH
                     && (!lanes || level.convoy().isEmpty())) {
@@ -1949,7 +1967,7 @@ final class ContentValidator {
         if (level.road().isPresent()) {
             problem(level, "road", "an air escort follows no road");
         }
-        List<LevelScript.Station> stations = convoy.stations().orElseThrow().stream()
+        List<ObjectiveSpec.Station> stations = convoy.stations().orElseThrow().stream()
                 .map(PartDRules::station)
                 .toList();
         double w = ally.hitbox().width();

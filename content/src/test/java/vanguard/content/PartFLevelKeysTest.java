@@ -8,6 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.DropSpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
 import vanguard.sim.WaveSpec;
@@ -45,8 +49,8 @@ class PartFLevelKeysTest {
     @Test
     void theWeatherIsTheDifficultysWind() {
         for (Difficulty difficulty : Difficulty.values()) {
-            LevelScript.Weather weather =
-                    SimSpecs.level(CONTENT, KEY, difficulty).weather().orElseThrow();
+            HazardSpec.Weather weather =
+                    SimSpecs.level(CONTENT, KEY, difficulty).hazards().weather().orElseThrow();
             boolean hard = difficulty == Difficulty.HARD;
             boolean easy = difficulty == Difficulty.EASY;
             assertEquals(easy ? 25 : hard ? 55 : 40, weather.push(), difficulty.name());
@@ -54,16 +58,16 @@ class PartFLevelKeysTest {
             assertEquals(2.5, weather.gustSeconds());
             assertEquals(0.25, weather.rampSeconds());
             List<Double> gusts =
-                    weather.gusts().stream().map(LevelScript.Gust::t).toList();
+                    weather.gusts().stream().map(HazardSpec.Gust::t).toList();
             assertEquals(
                     hard
                             ? List.of(16.0, 34.0, 52.0, 72.0, 90.0, 118.0, 126.0, 132.0, 138.0, 144.0, 182.0)
                             : List.of(16.0, 52.0, 90.0, 118.0, 126.0, 132.0, 138.0, 144.0, 182.0),
                     gusts,
                     "hard's extra gusts in time order");
-            assertTrue(weather.gusts().stream().allMatch(LevelScript.Gust::fromLeft), "the storm's wind");
+            assertTrue(weather.gusts().stream().allMatch(HazardSpec.Gust::fromLeft), "the storm's wind");
             assertEquals(
-                    easy ? List.of() : List.of(new LevelScript.Drift(125, 150, 20, true)),
+                    easy ? List.of() : List.of(new HazardSpec.Drift(125, 150, 20, true)),
                     weather.drifts(),
                     "the storm wall's drift, none on easy");
             assertEquals(
@@ -108,20 +112,17 @@ class PartFLevelKeysTest {
     @Test
     void theSondesTheCanisterAndThePickups() {
         LevelScript level = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM);
-        LevelScript.Sondes sondes = level.sondes().orElseThrow();
+        HazardSpec.Sondes sondes = level.hazards().sondes().orElseThrow();
         assertEquals(60, sondes.speed());
         assertEquals(36, sondes.radius());
         assertEquals(
-                List.of(
-                        new LevelScript.Sonde(60, 400),
-                        new LevelScript.Sonde(110, 70),
-                        new LevelScript.Sonde(165, 390)),
+                List.of(new HazardSpec.Sonde(60, 400), new HazardSpec.Sonde(110, 70), new HazardSpec.Sonde(165, 390)),
                 sondes.at());
-        assertTrue(level.secondary().sondes(), "collect: sondes");
-        assertEquals(75, level.secondary().credits());
-        assertEquals("SONDES", level.secondary().label());
+        assertTrue(level.objectives().secondary().sondes(), "collect: sondes");
+        assertEquals(75, level.objectives().secondary().credits());
+        assertEquals("SONDES", level.objectives().secondary().label());
 
-        LevelScript.GroundObjectSpec canister = level.groundObjects().getFirst();
+        GroundObjectSpec canister = level.groundObjects().getFirst();
         assertEquals(1, level.groundObjects().size());
         assertTrue(canister.lowAir());
         assertEquals(-24, canister.driftX());
@@ -135,8 +136,10 @@ class PartFLevelKeysTest {
                         .getFirst()
                         .hits());
 
-        assertEquals(1.5, level.dropFactor());
-        assertEquals(List.of(new LevelScript.PlacedPickup(152, 300, PickupType.ARMOUR_PATCH)), level.placedPickups());
+        assertEquals(1.5, level.drops().dropFactor());
+        assertEquals(
+                List.of(new DropSpec.PlacedPickup(152, 300, PickupType.ARMOUR_PATCH)),
+                level.drops().placedPickups());
         assertEquals(
                 2,
                 level.waves().stream()
@@ -159,7 +162,7 @@ class PartFLevelKeysTest {
         assertEquals(
                 1,
                 SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).radio().stream()
-                        .filter(cue -> cue.trigger() == LevelScript.CueTrigger.FIRST_LATCH)
+                        .filter(cue -> cue.trigger() == CueTrigger.FIRST_LATCH)
                         .count());
         LevelData.Music music = data.music();
         assertEquals(0, music.sectionLevel(4));

@@ -7,10 +7,14 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
 import vanguard.sim.AllySpec;
+import vanguard.sim.DropSpec;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.Hitbox;
-import vanguard.sim.LevelScript;
+import vanguard.sim.HookMode;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
+import vanguard.sim.SideEntry;
 import vanguard.sim.WaveSpec;
 
 /**
@@ -29,14 +33,14 @@ final class PartGRules {
      * integrity the difficulty's {@code hp}), where it stands, its start and duration, and the hook mode
      * per enemy slug (the difficulty's merged over {@code targeted_by}; {@code none} left out).
      */
-    static LevelScript.Defend defend(Content content, LevelData.Defend defend, Difficulty difficulty) {
-        Map<String, LevelScript.HookMode> modes = new TreeMap<>();
+    static ObjectiveSpec.Defend defend(Content content, LevelData.Defend defend, Difficulty difficulty) {
+        Map<String, HookMode> modes = new TreeMap<>();
         defend.modes(difficulty).forEach((slug, mode) -> {
             if (mode != LevelData.HookMode.NONE) {
                 modes.put(slug, mode(mode));
             }
         });
-        return new LevelScript.Defend(
+        return new ObjectiveSpec.Defend(
                 ally(content, defend.ally(), defend.change(difficulty).flatMap(LevelData.DefendChange::hp)),
                 defend.at().x(),
                 defend.at().y(),
@@ -75,13 +79,13 @@ final class PartGRules {
     }
 
     /** The simulation's hook mode for the data's. */
-    static LevelScript.HookMode mode(LevelData.HookMode mode) {
+    static HookMode mode(LevelData.HookMode mode) {
         return switch (mode) {
-            case NONE -> LevelScript.HookMode.NONE;
-            case NEAREST -> LevelScript.HookMode.NEAREST;
-            case ALTERNATE -> LevelScript.HookMode.ALTERNATE;
-            case IN_ARC -> LevelScript.HookMode.IN_ARC;
-            case ALWAYS -> LevelScript.HookMode.ALWAYS;
+            case NONE -> HookMode.NONE;
+            case NEAREST -> HookMode.NEAREST;
+            case ALTERNATE -> HookMode.ALTERNATE;
+            case IN_ARC -> HookMode.IN_ARC;
+            case ALWAYS -> HookMode.ALWAYS;
         };
     }
 
@@ -115,26 +119,23 @@ final class PartGRules {
     }
 
     /** A unit of a nest entering at a side edge: its placement's {@code [t, y]}, y up, drifting across. */
-    static LevelScript.GroundUnit fromSide(
-            LevelData.Placement placement, LevelData.SideEntry side, EnemySpec enemy, int group) {
-        return LevelScript.GroundUnit.fromSide(
+    static GroundUnit fromSide(LevelData.Placement placement, LevelData.SideEntry side, EnemySpec enemy, int group) {
+        return GroundUnit.fromSide(
                 placement.t(),
                 enemy,
                 group,
-                new LevelScript.SideEntry(side.from() == LevelData.WindSide.LEFT, placement.x(), side.drift()));
+                new SideEntry(side.from() == LevelData.WindSide.LEFT, placement.x(), side.drift()));
     }
 
     /** The pickups released at a point (the data's {@code drops}) beside the ones placed at a time and x, in time order. */
-    static List<LevelScript.PlacedPickup> placedPickups(
-            List<LevelScript.PlacedPickup> placed,
-            List<LevelData.Drop> drops,
-            Function<Pickup, PickupType> pickupType) {
+    static List<DropSpec.PlacedPickup> placedPickups(
+            List<DropSpec.PlacedPickup> placed, List<LevelData.Drop> drops, Function<Pickup, PickupType> pickupType) {
         return java.util.stream.Stream.concat(
                         placed.stream(),
                         drops.stream()
-                                .map(drop -> new LevelScript.PlacedPickup(
+                                .map(drop -> new DropSpec.PlacedPickup(
                                         drop.t(), drop.x(), drop.y(), pickupType.apply(drop.pickup()))))
-                .sorted(Comparator.comparingDouble(LevelScript.PlacedPickup::t))
+                .sorted(Comparator.comparingDouble(DropSpec.PlacedPickup::t))
                 .toList();
     }
 

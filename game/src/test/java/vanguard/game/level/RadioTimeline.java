@@ -16,8 +16,13 @@ import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
 import vanguard.content.voice.VoiceLines;
 import vanguard.game.audio.VorbisFile;
+import vanguard.game.settings.GameplaySettings;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelScript;
-import vanguard.sim.LevelScript.CueTrigger;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
 import vanguard.sim.SimStep;
 
 /**
@@ -72,6 +77,7 @@ abstract class RadioTimeline {
     static final String LEVEL_16 = "act-3-red-dust/level-16-valles-canyon-run";
     static final String LEVEL_17 = "act-3-red-dust/level-17-dome-siege";
     static final String LEVEL_18 = "act-3-red-dust/level-18-dust-storm";
+    static final String LEVEL_19 = "act-3-red-dust/level-19-foundry-of-tharsis";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -87,18 +93,18 @@ abstract class RadioTimeline {
      */
     static final Set<String> UNVOICED = Set.of();
 
-    static final int ESCORT = LevelScript.RadioCue.FITTED_ESCORT;
+    static final int ESCORT = RadioCue.FITTED_ESCORT;
 
     /** The fits a cue can require: neither, a special, a homing weapon, both; each with and without the escort flying. */
     static final int[] FITS = {
         0,
-        LevelScript.RadioCue.FITTED_SPECIAL,
-        LevelScript.RadioCue.FITTED_HOMING,
-        LevelScript.RadioCue.FITTED_SPECIAL | LevelScript.RadioCue.FITTED_HOMING,
+        RadioCue.FITTED_SPECIAL,
+        RadioCue.FITTED_HOMING,
+        RadioCue.FITTED_SPECIAL | RadioCue.FITTED_HOMING,
         ESCORT,
-        ESCORT | LevelScript.RadioCue.FITTED_SPECIAL,
-        ESCORT | LevelScript.RadioCue.FITTED_HOMING,
-        ESCORT | LevelScript.RadioCue.FITTED_SPECIAL | LevelScript.RadioCue.FITTED_HOMING
+        ESCORT | RadioCue.FITTED_SPECIAL,
+        ESCORT | RadioCue.FITTED_HOMING,
+        ESCORT | RadioCue.FITTED_SPECIAL | RadioCue.FITTED_HOMING
     };
 
     /**
@@ -115,13 +121,11 @@ abstract class RadioTimeline {
     static final Map<String, Set<Double>> FOLLOWING = Map.of(LEVEL_01, Set.of(161.0));
 
     /**
-     * Closing lines whose voice may run this many seconds past the outro (cut by the debrief): Level
-     * 06's Rook answers Okafor's level-end line, and with the settlement log's line just before the end
-     * (t=182) his last 0.3 s fall after the 15 s; pending the user's review (fix 2026-10-18: a second
-     * more of Level 06's last section would fit it).
+     * Closing lines whose voice may run this many seconds past the debrief's takeover: none since step RX
+     * (2026-10-19), as the outro waits for the closing lines to be heard ({@link Outro}). Level 06's Rook
+     * line, which answers Okafor's level-end line, had 0.35 s here while the outro ended at 15 s sharp.
      */
-    static final Map<String, Double> OUTRO_ALLOWANCE =
-            Map.of(LEVEL_06 + ", Rook's line \"...Copy. Aegis Two, heading home.\"", 0.35);
+    static final Map<String, Double> OUTRO_ALLOWANCE = Map.of();
 
     /** Okafor's low-armour line, queued urgent by the game at the first armour hit to 15 % or below. */
     static final LevelData.RadioLine LOW_ARMOUR = CONTENT.armour().radio();
@@ -158,7 +162,7 @@ abstract class RadioTimeline {
      * when the level clock reached its time, for a timed cue), with its {@code text} as shown (M7 part D:
      * a repeating event cue is played once per event, each with its ally's name).
      */
-    record Played(LevelScript.RadioCue cue, Optional<Double> opened, double due, String text) {
+    record Played(RadioCue cue, Optional<Double> opened, double due, String text) {
         /** How late a timed line opened after the level clock reached its time, real seconds. */
         double late() {
             return opened.orElseThrow() - due;
@@ -260,7 +264,9 @@ abstract class RadioTimeline {
                                 new Event(215, CueTrigger.BOSS_PHASE, "Free spire"),
                                 new Event(249, CueTrigger.BOSS_DESTROYED, "siege-spire"))));
         // M7 part B: Level 15's events: the first Burrower surfacing in the first field (t=68) or later, the
-        // drop pod's rubble at the cliff's foot early or late, the secondary at the level end
+        // drop pod's rubble at the cliff's foot early or late, the kill-ratio secondary judged at the level's end
+        // (t=190, with the level-end line, as the game queues it: step RX; it was t=185 before, which left the
+        // radio free for the level-end line and hid the playtest's cut, 2026-10-19)
         runs.put(
                 LEVEL_15,
                 List.of(
@@ -268,14 +274,14 @@ abstract class RadioTimeline {
                         List.of(
                                 new Event(68.5, CueTrigger.FIRST_SURFACING, ""),
                                 new Event(126, CueTrigger.SECRET, "drop pod"),
-                                new Event(185, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                                new Event(190, CueTrigger.SECONDARY_OBJECTIVE, "")),
                         List.of(
                                 new Event(71, CueTrigger.FIRST_SURFACING, ""),
                                 new Event(131, CueTrigger.SECRET, "drop pod")),
                         List.of(
                                 new Event(81, CueTrigger.FIRST_SURFACING, ""),
                                 new Event(108, CueTrigger.SECRET, "drop pod"),
-                                new Event(185, CueTrigger.SECONDARY_OBJECTIVE, ""))));
+                                new Event(190, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         // M7 part C: Level 16's events: the first wall touch at the mouth, under Ares Control's line, just before
         // the fork's line or in the rapids; the relay hut in the left channel (t≈71) early or late; the secondary
         // as the last barrier (gate 6, t=152-153.5) breaks, early or late (t=159), before the Choir's song (t=166)
@@ -317,6 +323,30 @@ abstract class RadioTimeline {
                                 new Event(96, CueTrigger.SECRET, "rover wreck"),
                                 new Event(183, CueTrigger.SECONDARY_OBJECTIVE, "")),
                         List.of(new Event(183, CueTrigger.SECONDARY_OBJECTIVE, ""))));
+        // M7 part F: Level 19's events: the payroll safe (x 60, t≈52) shot as it enters or a little later, then the
+        // arena's lines after the halt at t=133 (as Level 11's: the test's clock runs on): the walker's first flame
+        // tell,
+        // a pod lost and its death in a fast, a medium and a slow fight, and the grey tanks' secondary at the end
+        runs.put(
+                LEVEL_19,
+                List.of(
+                        List.of(),
+                        List.of(new Event(52.5, CueTrigger.SECRET, "payroll safe")),
+                        List.of(
+                                new Event(54, CueTrigger.SECRET, "payroll safe"),
+                                new Event(136, CueTrigger.FIRST_TELEGRAPH, ""),
+                                new Event(150, CueTrigger.BOSS_PART_DESTROYED, "left pod"),
+                                new Event(190, CueTrigger.BOSS_DESTROYED, "revenant-walker")),
+                        List.of(
+                                new Event(140, CueTrigger.FIRST_TELEGRAPH, ""),
+                                new Event(165, CueTrigger.BOSS_PART_DESTROYED, "right pod"),
+                                new Event(172, CueTrigger.SECONDARY_OBJECTIVE, ""),
+                                new Event(205, CueTrigger.BOSS_DESTROYED, "revenant-walker")),
+                        List.of(
+                                new Event(138, CueTrigger.FIRST_TELEGRAPH, ""),
+                                new Event(170, CueTrigger.BOSS_PART_DESTROYED, "left pod"),
+                                new Event(185, CueTrigger.BOSS_PART_DESTROYED, "right pod"),
+                                new Event(215, CueTrigger.BOSS_DESTROYED, "revenant-walker"))));
         return runs;
     }
 
@@ -496,7 +526,7 @@ abstract class RadioTimeline {
 
     /** The real seconds each hold lasts to fly a level with: {@link #HOLD_SECONDS}, or NaN for a level without holds. */
     static double[] holdSeconds(LevelScript script) {
-        return script.holds().isEmpty() ? new double[] {Double.NaN} : HOLD_SECONDS;
+        return script.objectives().holds().isEmpty() ? new double[] {Double.NaN} : HOLD_SECONDS;
     }
 
     /** The level this class checks, one of {@link #RUNS}' keys. */
@@ -527,7 +557,7 @@ abstract class RadioTimeline {
                             List<Played> played =
                                     play(script, events, fitted, false, Double.NaN, new double[1], side, hold);
                             for (Played line : played) {
-                                LevelScript.RadioCue cue = line.cue();
+                                RadioCue cue = line.cue();
                                 if (cue.trigger() != CueTrigger.TIME || !cue.allowedWith(fitted)) {
                                     continue;
                                 }
@@ -567,7 +597,7 @@ abstract class RadioTimeline {
                         for (double hold : holdSeconds(script)) {
                             for (Played line :
                                     play(script, events, fitted, true, Double.NaN, new double[1], side, hold)) {
-                                LevelScript.RadioCue cue = line.cue();
+                                RadioCue cue = line.cue();
                                 if (cue.trigger() != CueTrigger.TIME || !cue.allowedWith(fitted)) {
                                     continue;
                                 }
@@ -600,74 +630,150 @@ abstract class RadioTimeline {
     }
 
     /**
-     * The outro ends at the latest {@link LevelData#OUTRO_SECONDS} after the level's end, when the
-     * debrief takes over and cuts the voice on the radio: in every run with the voices, every level-end
-     * line opens, and every line that opens (the level-end line, a closing line still in flight) has
-     * finished speaking by then. (Level 12's level-end line opened at 218.1 with Rook flying and the
-     * sondes met late in the eye, and its last 4.7 s played over the debrief: playtest 2026-10-18.)
-     * The level-end lines for one count of convoy units home start, each count in turn; a run whose
-     * events come after the level's end is left out (the arena's events after a halted clock: Level
-     * 11's Kraken dies 15 s before its end, which the test's running clock does not model).
+     * One voiced run of the level to its end and through the outro: the run's settings, what played and
+     * the real second the level clock reached the level's end ({@code ended}), when the flight ends
+     * ({@code LEVEL_COMPLETE}) and the outro starts. {@code home} is the count of convoy units home the
+     * level-end lines are chosen for.
      */
-    @Test
-    void closingLineVoicesEndWithinTheOutro() {
-        Map<String, Double> cut = new java.util.TreeMap<>();
-        Map<String, String> example = new java.util.HashMap<>();
-        List<List<Event>> runs = levelRuns();
+    record EndRun(
+            Difficulty difficulty,
+            List<Event> events,
+            int fitted,
+            String side,
+            double hold,
+            int home,
+            List<Played> played,
+            double ended,
+            double bark,
+            double handover) {
+        /** Whether {@code cue} can start in this run: the fit allows it, and a level-end line is this run's count's. */
+        boolean allows(RadioCue cue) {
+            return cue.allowedWith(fitted)
+                    && (cue.trigger() != CueTrigger.LEVEL_END || (home >= cue.alliesMin() && home <= cue.alliesMax()));
+        }
+
+        @Override
+        public String toString() {
+            return difficulty + ", " + events + ", fit " + fitted + ", " + side
+                    + (Double.isNaN(hold) ? "" : ", holds " + hold + " s") + ", " + home + " home"
+                    + (Double.isNaN(bark) ? "" : ", Rook's bark " + bark + " s before the end");
+        }
+    }
+
+    /**
+     * When Rook's bark is queued before the level's end in a run with him flying, seconds before it (NaN:
+     * none): a bark that opens as the level ends holds the radio while the closing lines wait (the user's
+     * playtest of 2026-10-19, Level 15: "the last message is cut short"). Each run with him is played
+     * without one and with one at each of these times.
+     */
+    static final double[] BARKS_BEFORE_END = {Double.NaN, 0.5, 3};
+
+    static final double[] NO_BARK = {Double.NaN};
+
+    /**
+     * The bark played before the end ({@link #BARKS_BEFORE_END}): of Rook's event barks (the eject bark is urgent and ends his
+     * flight) the one longest on the radio, its text time or its voice.
+     */
+    static Barks.Line longestBarkLine() {
+        return LongestBark.LINE;
+    }
+
+    /** Read on first use: the voices' lengths ({@link #VOICE_SECONDS}) are set up after the fields above. */
+    private static final class LongestBark {
+        static final Barks.Line LINE = longestBark();
+    }
+
+    private static Barks.Line longestBark() {
+        Barks.Line longest = null;
+        float most = -1;
+        for (vanguard.content.WingmenData.Bark bark : CONTENT.wingmen().barks().triggers()) {
+            for (String text : bark.lines()) {
+                Barks.Line line = new Barks.Line(
+                        Barks.Trigger.KILL_STREAK,
+                        CONTENT.wingmen().barks().speaker(),
+                        bark.expression().slug(),
+                        bark.shouted(),
+                        text);
+                if (bark.trigger().equals("rook-ejects")) {
+                    continue;
+                }
+                float seconds = barkMessage(line).seconds(GameplaySettings.DEFAULT_TEXT_SPEED);
+                if (seconds > most) {
+                    most = seconds;
+                    longest = line;
+                }
+            }
+        }
+        return longest;
+    }
+
+    /** {@code line} as the radio shows it, with its voice. */
+    static RadioQueue.Message barkMessage(Barks.Line line) {
+        return new RadioQueue.Message(
+                line.speaker(),
+                line.speaker(),
+                line.expression(),
+                RadioQueue.wrap(line.text()),
+                false,
+                Optional.empty(),
+                voiceSeconds(line.speaker(), line.text(), line.expression()));
+    }
+
+    /** Per level, its {@link #endRuns()}: both outro checks read them, so the runs are played once per fork. */
+    static final Map<String, List<EndRun>> END_RUNS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * Every voiced run of this level to its end: each difficulty, run of events, fit, side, hold length and
+     * count of convoy units home (the level-end lines for each count start, each count in turn). A run whose
+     * events come after the level's end is left out (one at the end itself, a secondary judged then, stays) (the arena's events after a halted clock: Level 11's
+     * Kraken dies 15 s before its end, which the test's running clock does not model).
+     */
+    List<EndRun> endRuns() {
+        return END_RUNS.computeIfAbsent(level, key -> playEndRuns(key, levelRuns()));
+    }
+
+    private static List<EndRun> playEndRuns(String level, List<List<Event>> runs) {
+        List<EndRun> endRuns = new ArrayList<>();
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript script = SimSpecs.level(CONTENT, level, difficulty);
             int[] homes = script.radio().stream()
                     .filter(cue -> cue.trigger() == CueTrigger.LEVEL_END)
-                    .mapToInt(LevelScript.RadioCue::alliesMin)
+                    .mapToInt(RadioCue::alliesMin)
                     .distinct()
                     .toArray();
             for (List<Event> events : runs) {
-                if (events.stream().anyMatch(event -> event.t() >= script.seconds())) {
+                if (events.stream().anyMatch(event -> event.t() > script.seconds())) {
                     continue;
                 }
                 for (int fitted : FITS) {
                     for (String side : SIDES) {
                         for (double hold : holdSeconds(script)) {
                             for (int home : homes) {
-                                double[] ended = {Double.NaN};
-                                List<Played> played = play(
-                                        script,
-                                        events,
-                                        fitted,
-                                        true,
-                                        Double.NaN,
-                                        new double[1],
-                                        side,
-                                        hold,
-                                        home,
-                                        ended);
-                                double handOver = ended[0] + LevelData.OUTRO_SECONDS;
-                                for (Played line : played) {
-                                    LevelScript.RadioCue cue = line.cue();
-                                    if (!cue.allowedWith(fitted)
-                                            || (cue.trigger() == CueTrigger.LEVEL_END
-                                                    && (home < cue.alliesMin() || home > cue.alliesMax()))) {
-                                        continue;
-                                    }
-                                    String where =
-                                            String.format("%s, %s's line \"%s\"", level, cue.speaker(), cue.line());
-                                    if (cue.trigger() == CueTrigger.LEVEL_END) {
-                                        assertTrue(
-                                                line.opened().isPresent(),
-                                                where + " plays (" + difficulty + ", " + events + ", fit " + fitted
-                                                        + ")");
-                                    }
-                                    if (line.opened().isEmpty()) {
-                                        continue;
-                                    }
-                                    double over = line.opened().get()
-                                            + voiceSeconds(cue.speaker(), line.text(), cue.expression())
-                                            - handOver;
-                                    if (over > OUTRO_ALLOWANCE.getOrDefault(where, 0.0)
-                                            && over > cut.getOrDefault(where, 0.0)) {
-                                        cut.put(where, over);
-                                        example.put(where, difficulty + ", " + events + ", fit " + fitted);
-                                    }
+                                for (double bark : (fitted & ESCORT) != 0 ? BARKS_BEFORE_END : NO_BARK) {
+                                    double[] ended = {Double.NaN, Double.NaN};
+                                    List<Played> played = play(
+                                            script,
+                                            events,
+                                            fitted,
+                                            true,
+                                            Double.NaN,
+                                            new double[1],
+                                            side,
+                                            hold,
+                                            home,
+                                            ended,
+                                            bark);
+                                    endRuns.add(new EndRun(
+                                            difficulty,
+                                            events,
+                                            fitted,
+                                            side,
+                                            hold,
+                                            home,
+                                            played,
+                                            ended[0],
+                                            bark,
+                                            ended[1]));
                                 }
                             }
                         }
@@ -675,10 +781,171 @@ abstract class RadioTimeline {
                 }
             }
         }
+        return endRuns;
+    }
+
+    /** Where a line is, for the messages and {@link #OUTRO_ALLOWANCE}: the level, the speaker and the line. */
+    static String where(String level, RadioCue cue) {
+        return String.format("%s, %s's line \"%s\"", level, cue.speaker(), cue.line());
+    }
+
+    /**
+     * The outro ends {@link LevelData#OUTRO_SECONDS} after the level's end, or once the closing lines
+     * have been heard if that is later ({@link Outro}), when the debrief takes over and cuts the voice on
+     * the radio: in every run with the voices, every level-end line opens, and every line that opens (the
+     * level-end line, a closing line still in flight) has finished speaking by then. (Level 12's level-end
+     * line opened at 218.1 with Rook flying and the sondes met late in the eye, and its last 4.7 s played
+     * over the debrief: playtest 2026-10-18. Level 15's, with a bark of Rook's on the radio as the level
+     * ended: playtest 2026-10-19.) The outro runs at most {@link #MAX_OUTRO_OVERRUN} past its 15 s, so the
+     * backdrop the level holds until then (checked to {@link LevelData#outroEnd}) is not left far behind.
+     */
+    @Test
+    void closingLineVoicesEndWithinTheOutro() {
+        Map<String, Double> cut = new java.util.TreeMap<>();
+        Map<String, String> example = new java.util.HashMap<>();
+        double overrun = 0;
+        String overrunRun = "";
+        for (EndRun run : endRuns()) {
+            assertTrue(!Double.isNaN(run.handover()), level + ": the debrief takes over within a minute (" + run + ")");
+            double handOver = run.handover();
+            if (handOver - run.ended() - LevelData.OUTRO_SECONDS > overrun) {
+                overrun = handOver - run.ended() - LevelData.OUTRO_SECONDS;
+                overrunRun = run.toString();
+            }
+            for (Played line : run.played()) {
+                RadioCue cue = line.cue();
+                if (!run.allows(cue)) {
+                    continue;
+                }
+                String where = where(level, cue);
+                if (cue.trigger() == CueTrigger.LEVEL_END) {
+                    assertTrue(line.opened().isPresent(), where + " plays (" + run + ")");
+                }
+                if (line.opened().isEmpty()) {
+                    continue;
+                }
+                double over =
+                        line.opened().get() + voiceSeconds(cue.speaker(), line.text(), cue.expression()) - handOver;
+                if (over > OUTRO_ALLOWANCE.getOrDefault(where, 0.0) && over > cut.getOrDefault(where, 0.0)) {
+                    cut.put(where, over);
+                    example.put(where, run.toString());
+                }
+            }
+        }
         StringBuilder lines = new StringBuilder();
         cut.forEach((line, over) -> lines.append(
                 String.format("%n%s: its voice runs %.1f s past the outro (e.g. %s)", line, over, example.get(line))));
         assertTrue(cut.isEmpty(), "voices cut by the debrief:" + lines);
+        if (overrun > 0) {
+            System.out.printf(
+                    "%s: the outro runs %.1f s past its %.0f s (e.g. %s)%n",
+                    level, overrun, LevelData.OUTRO_SECONDS, overrunRun);
+        }
+        assertTrue(
+                overrun <= MAX_OUTRO_OVERRUN,
+                String.format(
+                        "%s: the outro runs %.1f s past its %.0f s (e.g. %s)",
+                        level, overrun, LevelData.OUTRO_SECONDS, overrunRun));
+    }
+
+    /**
+     * How far past {@link LevelData#OUTRO_SECONDS} the outro may run to let the closing lines be heard (step
+     * RX: at most 2.1 s, Level 15 with a bark of Rook's as it ends and its secondary judged then). The
+     * backdrops hold 3 s past {@link LevelData#outroEnd} except Levels 01 and 02 (an edge of the earth-limb or
+     * the Vrell glow), whose outros never run over.
+     */
+    static final double MAX_OUTRO_OVERRUN = 3;
+
+    /**
+     * Levels whose radio lines do not all end in time today (the user's playtest of 2026-10-19: "On level 15
+     * or 16, the last message is cut short ... Can't you add a test that prevents this from happening on any
+     * level?"): {@link #everyRadioLineEndsBeforeTheLevelDoes} prints their late lines instead of failing,
+     * until the content step FX-C retimes their data (briefs/fxc-from-fxg.md lists each line, its end, the
+     * level's end and the seconds needed) and takes the level out of this set. Pending the user's review. None left: step FX-C lengthened Level 10's last section to t=201 and Level 13's to t=239.
+     */
+    static final Set<String> LINES_END_PENDING = Set.of();
+
+    /** How far past its limit a line may end: one step, the clocks' grain. */
+    static final double LINE_END_SLACK = SimStep.SECONDS;
+
+    /**
+     * How long a line speaks once it opens: its rendered voice take (assets/voice), or for a line without a
+     * take the text-time rule, the time the radio shows it at the default text speed (typed out page by
+     * page, each page held, the last one longest).
+     */
+    static double speaks(RadioCue cue, String text) {
+        float voice = voiceSeconds(cue.speaker(), text, cue.expression());
+        if (voice > 0) {
+            return voice;
+        }
+        return new RadioQueue.Message(
+                        cue.speaker(),
+                        cue.portrait(),
+                        cue.expression(),
+                        RadioQueue.wrap(text),
+                        cue.distorted(),
+                        Optional.empty(),
+                        0)
+                .seconds(GameplaySettings.DEFAULT_TEXT_SPEED);
+    }
+
+    /** A radio line that ends too late: when it ends and its limit (real seconds), with the run that shows it. */
+    record LateLine(String where, boolean timed, double ends, double limit, double levelEnd, String run) {
+        double needed() {
+            return ends - limit;
+        }
+    }
+
+    /**
+     * The user's rule (playtest 2026-10-19: the last radio message was cut short; "the level should be
+     * extended to play the entire message in full"): in every voiced run every radio line that opens
+     * finishes speaking ({@link #speaks}: its voice take, or its text time without one) before the level
+     * is over. A timed line belongs to the flight: it ends before the level clock reaches the level's end
+     * (when the flight ends, {@code LEVEL_COMPLETE}, and the outro starts). The other lines (the level-end
+     * lines, a met secondary's, a boss's death, an event line in the last seconds) may run on into the
+     * outro, but end before the debrief takes over ({@link Outro}: the radio idle, or {@link
+     * LevelData#OUTRO_SECONDS} after the level's end once no closing line is left to be heard; the
+     * debrief cuts a voice still speaking), within {@link #OUTRO_ALLOWANCE}. Step RX: a run with Rook
+     * flying is also played with his longest bark just before the end ({@link #BARKS_BEFORE_END}). Every level with data has a subclass of this class (see
+     * {@link RadioTimelineLevelsTest}), so this holds for each level.
+     */
+    @Test
+    void everyRadioLineEndsBeforeTheLevelDoes() {
+        Map<String, LateLine> late = new java.util.TreeMap<>();
+        for (EndRun run : endRuns()) {
+            for (Played line : run.played()) {
+                RadioCue cue = line.cue();
+                if (!run.allows(cue) || line.opened().isEmpty()) {
+                    continue;
+                }
+                String where = where(level, cue);
+                boolean timed = cue.trigger() == CueTrigger.TIME;
+                double limit = timed ? run.ended() : run.handover() + OUTRO_ALLOWANCE.getOrDefault(where, 0.0);
+                double ends = line.opened().get() + speaks(cue, line.text());
+                LateLine before = late.get(where);
+                if (ends - limit > LINE_END_SLACK && (before == null || ends - limit > before.needed())) {
+                    late.put(where, new LateLine(where, timed, ends, limit, run.ended(), run.toString()));
+                }
+            }
+        }
+        StringBuilder lines = new StringBuilder();
+        for (LateLine line : late.values()) {
+            lines.append(String.format(
+                    "%n%s (%s line) ends at %.1f s, the %s at %.1f s (level end %.1f s): %.1f s more needed (e.g. %s)",
+                    line.where(),
+                    line.timed() ? "timed" : "outro",
+                    line.ends(),
+                    line.timed() ? "level's end" : "debrief",
+                    line.limit(),
+                    line.levelEnd(),
+                    line.needed(),
+                    line.run()));
+        }
+        if (LINES_END_PENDING.contains(level)) {
+            System.out.println("pending (LINES_END_PENDING): radio lines that end too late:" + lines);
+            return;
+        }
+        assertTrue(late.isEmpty(), "radio lines that end after the level does:" + lines);
     }
 
     /**
@@ -701,7 +968,7 @@ abstract class RadioTimeline {
                 assertTrue(
                         opened[0] - at <= 2 * SimStep.SECONDS, where + "the line opens at once, not at " + opened[0]);
                 for (Played line : played) {
-                    LevelScript.RadioCue cue = line.cue();
+                    RadioCue cue = line.cue();
                     if (cue.trigger() != CueTrigger.TIME || !cue.allowedWith(fitted)) {
                         continue;
                     }
@@ -719,17 +986,17 @@ abstract class RadioTimeline {
     }
 
     /** The voice length of a radio line from its rendered file with Rook on {@code side}, 0 without one. */
-    static float voiceSeconds(LevelScript.RadioCue cue, String side) {
+    static float voiceSeconds(RadioCue cue, String side) {
         return voiceSeconds(cue.speaker(), text(cue, side), cue.expression());
     }
 
     /** A cue's line as shown: the third convoy unit's number word, Rook's {@code side}. */
-    static String text(LevelScript.RadioCue cue, String side) {
+    static String text(RadioCue cue, String side) {
         return VoiceLines.sideLine(VoiceLines.allyLine(cue.line(), 2), side);
     }
 
     /** M7 part D: a cue's line as shown with {@code ally} for {@code {ally}} (a dome's name); "" as {@link #text}. */
-    static String text(LevelScript.RadioCue cue, String side, String ally) {
+    static String text(RadioCue cue, String side, String ally) {
         return ally.isEmpty() ? text(cue, side) : VoiceLines.sideLine(cue.line().replace(VoiceLines.ALLY, ally), side);
     }
 
@@ -762,8 +1029,7 @@ abstract class RadioTimeline {
      * Whether one of {@code events} has set off the event cue by {@code scriptTick} (the level
      * clock), an event in a hold by {@code realTick} with hold {@code k} started at {@code holdStarts[k]}.
      */
-    static boolean setOff(
-            List<Event> events, LevelScript.RadioCue cue, int scriptTick, int realTick, int[] holdStarts) {
+    static boolean setOff(List<Event> events, RadioCue cue, int scriptTick, int realTick, int[] holdStarts) {
         return events.stream()
                 .anyMatch(event -> event.trigger() == cue.trigger()
                         && event.subject().equals(cue.subject())
@@ -806,20 +1072,22 @@ abstract class RadioTimeline {
         if (Double.isNaN(seconds)) {
             return runs;
         }
-        for (LevelScript.Hold hold : script.holds()) {
+        for (ObjectiveSpec.Hold hold : script.objectives().holds()) {
             double start = Double.POSITIVE_INFINITY;
-            for (LevelScript.GroundUnit unit : script.groundUnits()) {
+            for (GroundUnit unit : script.groundUnits()) {
                 if (unit.group() >= 0 && hold.waitsFor(unit.group())) {
                     double speed = sectionSpeed(script, unit.t());
                     start = Math.min(start, unit.t() + (unit.enemy().hitbox().height() / 2 + hold.depth()) / speed);
                 }
             }
-            boolean collapse =
-                    script.collapse().map(c -> c.groups().equals(hold.groups())).orElse(false);
+            boolean collapse = script.objectives()
+                    .collapse()
+                    .map(c -> c.groups().equals(hold.groups()))
+                    .orElse(false);
             double extra = collapse
-                    ? script.collapse().get().warningSeconds()
-                            + script.collapse().get().dropSeconds()
-                            + script.collapse().get().settleSeconds()
+                    ? script.objectives().collapse().get().warningSeconds()
+                            + script.objectives().collapse().get().dropSeconds()
+                            + script.objectives().collapse().get().settleSeconds()
                     : 0;
             runs.add(new HoldRun(
                     start, hold.speed() / sectionSpeed(script, start), hold.rampSeconds(), seconds + extra, collapse));
@@ -828,7 +1096,7 @@ abstract class RadioTimeline {
     }
 
     static double sectionSpeed(LevelScript script, double t) {
-        for (LevelScript.Section section : script.sections()) {
+        for (Section section : script.sections()) {
             if (t < section.end()) {
                 return section.speed();
             }
@@ -903,21 +1171,60 @@ abstract class RadioTimeline {
             double holdSeconds,
             int allies,
             double[] endedAt) {
+        return play(
+                script,
+                events,
+                fitted,
+                voiced,
+                lowArmourAt,
+                lowArmourOpened,
+                side,
+                holdSeconds,
+                allies,
+                endedAt,
+                Double.NaN);
+    }
+
+    /**
+     * As above, with Rook's {@link #longestBarkLine} queued as an event line {@code barkBefore} seconds
+     * before the level's end (level clock; NaN for none, and none without him flying). At the level's
+     * end the radio plays out the closing lines ({@link RadioQueue#outro}) and the outro runs as the
+     * game's ({@link Outro}): {@code endedAt[1]}, if there is room for it, gets the real second the
+     * debrief takes over (NaN if not within a minute).
+     */
+    static List<Played> play(
+            LevelScript script,
+            List<Event> events,
+            int fitted,
+            boolean voiced,
+            double lowArmourAt,
+            double[] lowArmourOpened,
+            String side,
+            double holdSeconds,
+            int allies,
+            double[] endedAt,
+            double barkBefore) {
+        Outro outro = new Outro();
+        int barkTick = Double.isNaN(barkBefore) || (fitted & ESCORT) == 0
+                ? Integer.MAX_VALUE
+                : SimStep.ticks(script.seconds() - barkBefore);
+        boolean barked = false;
         int lowArmourTick = Double.isNaN(lowArmourAt) ? -1 : SimStep.ticks(lowArmourAt);
         List<String> lowArmourLines = RadioQueue.wrap(LOW_ARMOUR.line());
         RadioSchedule schedule = new RadioSchedule(script, fitted & ~ESCORT);
         boolean escort = (fitted & ESCORT) != 0;
         RadioQueue radio = new RadioQueue();
-        List<LevelScript.RadioCue> cues = script.radio();
+        List<RadioCue> cues = script.radio();
         boolean[] fired = new boolean[cues.size()];
         // M7 part D: the events of repeating triggers, each setting off its cues once
         boolean[] eventFired = new boolean[events.size()];
         List<Queued> queued = new ArrayList<>();
         int end = SimStep.ticks(script.seconds());
         // M5 part D: the scripted loss's time (Level 10's lance), never without one
-        int lanceTick = script.escort()
-                .flatMap(LevelScript.Escort::air)
-                .flatMap(LevelScript.Air::scriptedLoss)
+        int lanceTick = script.objectives()
+                .escort()
+                .flatMap(ObjectiveSpec.Escort::air)
+                .flatMap(ObjectiveSpec.Air::scriptedLoss)
                 .map(loss -> SimStep.ticks(loss.t()))
                 .orElse(Integer.MAX_VALUE);
         List<HoldRun> holds = holdRuns(script, holdSeconds);
@@ -929,6 +1236,10 @@ abstract class RadioTimeline {
         int afterEnd = -1;
         for (int tick = 1; afterEnd < 0 || tick <= afterEnd; tick++) {
             double seconds = (double) tick / SimStep.PER_SECOND;
+            // The game's frame: the outro first, then the simulation's step and the radio.
+            if (outro.update((float) SimStep.SECONDS, radio) && endedAt.length > 1 && Double.isNaN(endedAt[1])) {
+                endedAt[1] = seconds - SimStep.SECONDS;
+            }
             double rate = 1;
             boolean collapsing = false;
             for (int h = 0; h < holds.size(); h++) {
@@ -949,10 +1260,27 @@ abstract class RadioTimeline {
             if (scriptTick >= end && afterEnd < 0) {
                 afterEnd = tick + SimStep.ticks(60);
                 endedAt[0] = seconds;
+                // LEVEL_COMPLETE: the outro starts and the radio plays out the closing lines.
+                outro.start();
+                radio.outro();
+            }
+            if (!barked && scriptTick >= barkTick && scriptTick < end) {
+                barked = true;
+                Barks.Line line = longestBarkLine();
+                RadioQueue.Message bark = barkMessage(line);
+                radio.add(
+                        bark.speaker(),
+                        bark.portrait(),
+                        bark.expression(),
+                        line.text(),
+                        false,
+                        line.priority(),
+                        Optional.empty(),
+                        voiced ? bark.voiceSeconds() : 0);
             }
             double scriptSeconds = (double) scriptFixed / 65536 * SimStep.SECONDS;
             for (int i = 0; i < cues.size(); i++) {
-                LevelScript.RadioCue cue = cues.get(i);
+                RadioCue cue = cues.get(i);
                 // a fired or disallowed cue never queues again: skip it before asking whether it is due; a
                 // repeating trigger's cue is queued by each of its events below
                 if (fired[i] || !cue.allowedWith(fitted) || cue.trigger().repeats()) {
@@ -983,7 +1311,7 @@ abstract class RadioTimeline {
                 }
                 eventFired[e] = true;
                 for (int i = 0; i < cues.size(); i++) {
-                    LevelScript.RadioCue cue = cues.get(i);
+                    RadioCue cue = cues.get(i);
                     if (cue.trigger() == event.trigger()
                             && cue.subject().equals(event.subject())
                             && cue.allowedWith(fitted)) {
@@ -1039,13 +1367,7 @@ abstract class RadioTimeline {
 
     /** Queues cue {@code i} with {@code text} on {@code radio} as the game does, due at {@code due}. */
     private static Queued queue(
-            RadioQueue radio,
-            RadioSchedule schedule,
-            LevelScript.RadioCue cue,
-            int i,
-            String text,
-            double due,
-            boolean voiced) {
+            RadioQueue radio, RadioSchedule schedule, RadioCue cue, int i, String text, double due, boolean voiced) {
         radio.add(
                 cue.speaker(),
                 cue.portrait(),

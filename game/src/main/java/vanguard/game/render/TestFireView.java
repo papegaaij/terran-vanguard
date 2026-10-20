@@ -198,7 +198,7 @@ public final class TestFireView {
             switch (events.type(i)) {
                 case SHOT_FIRED -> {
                     Array<AtlasRegion> splash = weapons.dropSplash(events.value(i));
-                    if (splash != null && sortie.script().water()) {
+                    if (splash != null && sortie.script().ground().water()) {
                         water.start(splash, WATER_FRAME_TICKS, x, y);
                     }
                 }
@@ -280,7 +280,7 @@ public final class TestFireView {
         Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
         Gdx.gl.glScissor(boxX + 1, PixelScreen.HEIGHT - boxY - boxHeight + 1, boxWidth - 2, boxHeight - 2);
         batch.setTransformMatrix(transform);
-        boolean sea = sortie.script().water();
+        boolean sea = sortie.script().ground().water();
         if (sea) {
             drawWater(batch, boxWidth / SCALE, boxHeight / SCALE, centreX, centreY);
         }
@@ -497,7 +497,7 @@ public final class TestFireView {
             Shot shot = sortie.shot(i);
             if (weapons.look(shot.mount()).glowingShot != glowing
                     || (shot.weapon().delivery() == WeaponSpec.Delivery.TORPEDO
-                            && sortie.script().water())) {
+                            && sortie.script().ground().water())) {
                 continue;
             }
             AtlasRegion sprite = weapons.sprite(shot);

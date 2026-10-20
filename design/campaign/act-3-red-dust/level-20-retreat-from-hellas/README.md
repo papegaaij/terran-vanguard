@@ -4,7 +4,7 @@ design: approved
 implementation: not-started
 art: none
 depends-on: [../../../enemies/air/mote-swarm, ../../../enemies/air/dust-kite, ../../../enemies/ground/burrower, ../../../enemies/ground/dust-devil, ../../../enemies/bosses/dust-colossus, ../../../player/wingmen, ../../../player/weapons/rear-lance, ../../../story/characters/rook, ../../../world/mars]
-updated: 2026-10-13
+updated: 2026-10-19
 ---
 
 # Level 20 – Retreat from Hellas
@@ -368,6 +368,10 @@ mood still in [mars](../../../world/mars/README.md), round 36 MA.4):
 - the two briefing images (the filed plate reuses the walker's wreck render from Level 19);
 - the round's captures: the turnabout, a lunge, a bottom ambush under the swarm, Rook's quiet beat in
   the lull, the climb over the rim.
+
+Varga's page image `level-20-filed-plate` was produced early with Level 19's batch (round 42, the walker wreck's
+plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-images-final-r42-a.png); pending the
+user's review.
 
 ## Implementation
 

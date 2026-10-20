@@ -27,9 +27,9 @@ final class GroundPasses {
     /** The mass-driver sleds; null without them. */
     private final Sled sled;
     /** The level's darkness; null in a lit level. */
-    private final LevelScript.Darkness darkness;
+    private final HazardSpec.Darkness darkness;
     /** The chunk a thrown rock is; null in a level without rocks. */
-    final LevelScript.DebrisSpec rock;
+    final HazardSpec.DebrisSpec rock;
     /** A secret's crate or data core: the level's own life for it. */
     private final int crateTicks;
     /** Per secret, the triggers spent that reveal it together (Level 03's lifeboat lights). */
@@ -75,11 +75,11 @@ final class GroundPasses {
         this.debris = debris;
         this.sled = sled;
         this.crateTicks = crateTicks;
-        darkness = script.darkness().orElse(null);
-        rock = script.rocks().map(LevelScript.RockSpec::chunk).orElse(null);
+        darkness = script.hazards().darkness().orElse(null);
+        rock = script.hazards().rocks().map(HazardSpec.RockSpec::chunk).orElse(null);
         secretTriggersSpent = new int[script.secrets()];
         int destructibleGroups = 0;
-        for (LevelScript.GroundObjectSpec object : script.groundObjects()) {
+        for (GroundObjectSpec object : script.groundObjects()) {
             destructibleGroups = Math.max(destructibleGroups, object.group() + 1);
         }
         groupDemolished = new int[destructibleGroups];
@@ -100,7 +100,7 @@ final class GroundPasses {
      */
     void light() {
         double seconds = s.levelSeconds();
-        List<LevelScript.Darkness.Flare> flares = darkness.flares();
+        List<HazardSpec.Darkness.Flare> flares = darkness.flares();
         for (int i = 0; i < flares.size(); i++) {
             if (s.clockTicked && SimStep.ticks(flares.get(i).t()) == s.levelTick && !s.complete) {
                 events.add(SimEvents.Type.FLARE_FIRED, flares.get(i).x(), darkness.flareY(i, seconds), i);
@@ -115,7 +115,7 @@ final class GroundPasses {
     }
 
     void placeGroundObjects() {
-        List<LevelScript.GroundObjectSpec> objects = script.groundObjects();
+        List<GroundObjectSpec> objects = script.groundObjects();
         while (nextGroundObject < objects.size()
                 && SimStep.ticks(objects.get(nextGroundObject).t()) <= s.levelTick) {
             GroundObject object = ground.obtain();
@@ -131,11 +131,11 @@ final class GroundPasses {
      * clearance: then it enters as far to the side, away from the ship.
      */
     void placeDebris() {
-        List<LevelScript.DebrisSpec> specs = script.debris();
+        List<HazardSpec.DebrisSpec> specs = script.hazards().debris();
         while (nextDebris < specs.size() && SimStep.ticks(specs.get(nextDebris).t()) <= s.levelTick) {
             Debris chunk = debris.obtain();
             if (chunk != null) {
-                LevelScript.DebrisSpec spec = specs.get(nextDebris);
+                HazardSpec.DebrisSpec spec = specs.get(nextDebris);
                 chunk.place(spec, nextDebris, clearOfShip(spec));
             }
             nextDebris++;
@@ -143,7 +143,7 @@ final class GroundPasses {
     }
 
     /** Where a chunk enters: its x, or moved sideways away from the ship to its clearance. */
-    private double clearOfShip(LevelScript.DebrisSpec spec) {
+    private double clearOfShip(HazardSpec.DebrisSpec spec) {
         double dy = PlayField.HEIGHT + spec.size().height() / 2 - ship.y();
         double dx = spec.x() - ship.x();
         double clearance = spec.clearance();
@@ -191,7 +191,7 @@ final class GroundPasses {
             Hitbox ball = enemy.hitbox();
             for (int j = ground.size() - 1; j >= 0; j--) {
                 GroundObject object = ground.get(j);
-                LevelScript.GroundObjectSpec spec = object.spec();
+                GroundObjectSpec spec = object.spec();
                 if (!object.hittable()
                         || spec.trigger()
                         || spec.submerged()
@@ -219,7 +219,7 @@ final class GroundPasses {
      */
     void demolish(int index, boolean paid) {
         GroundObject object = ground.get(index);
-        LevelScript.GroundObjectSpec spec = object.spec();
+        GroundObjectSpec spec = object.spec();
         events.add(
                 SimEvents.Type.GROUND_DESTROYED,
                 object.x(),
@@ -254,7 +254,7 @@ final class GroundPasses {
      * together, counts towards it and the last one reveals it.
      */
     void released(GroundObject trigger) {
-        LevelScript.GroundObjectSpec spec = trigger.spec();
+        GroundObjectSpec spec = trigger.spec();
         if (spec.secretTriggers() > 1 && ++secretTriggersSpent[spec.secretIndex()] < spec.secretTriggers()) {
             return;
         }
@@ -263,7 +263,7 @@ final class GroundPasses {
 
     private void revealSecret(GroundObject trigger) {
         objectives.secretFound();
-        LevelScript.GroundObjectSpec spec = trigger.spec();
+        GroundObjectSpec spec = trigger.spec();
         events.add(SimEvents.Type.SECRET_FOUND, trigger.x(), trigger.y());
         Pickup crate = pickups.obtain();
         if (spec.core().isPresent()) {
@@ -276,7 +276,7 @@ final class GroundPasses {
         if (crate != null) {
             crate.drop(PickupType.HIDDEN_CRATE, spec.crateCredits(), trigger.x(), trigger.y(), crateTicks);
         }
-        radio.cue(LevelScript.CueTrigger.SECRET, spec.secret());
+        radio.cue(CueTrigger.SECRET, spec.secret());
     }
 
     /**
@@ -284,7 +284,7 @@ final class GroundPasses {
      * spec's least and most, each drifting in a random direction; none when it lies close to the ship.
      */
     void throwRocks(double x, double y) {
-        LevelScript.RockSpec spec = script.rocks().orElseThrow();
+        HazardSpec.RockSpec spec = script.hazards().rocks().orElseThrow();
         int count = spec.min() + rng.nextInt(spec.max() - spec.min() + 1);
         double dx = ship.x() - x;
         double dy = ship.y() - y;

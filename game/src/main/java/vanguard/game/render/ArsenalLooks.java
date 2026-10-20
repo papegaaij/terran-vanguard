@@ -16,8 +16,8 @@ import vanguard.sim.Drones;
 import vanguard.sim.EmpSpec;
 import vanguard.sim.Enemy;
 import vanguard.sim.Layer;
-import vanguard.sim.LevelScript;
 import vanguard.sim.PlayField;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Ship;
 import vanguard.sim.ShipSpec;
 import vanguard.sim.SimEvents;
@@ -470,12 +470,12 @@ public final class ArsenalLooks {
 
     /** The set piece's index of a {@link #heatTarget} on a part, else -1. */
     static int heatPiece(int target) {
-        return target >= Beam.PART_TARGET ? (target - Beam.PART_TARGET) / LevelScript.SetPieceSpec.MAX_PARTS : -1;
+        return target >= Beam.PART_TARGET ? (target - Beam.PART_TARGET) / SetPieceSpec.MAX_PARTS : -1;
     }
 
     /** The part's index of a {@link #heatTarget} on a part, else -1. */
     static int heatPart(int target) {
-        return target >= Beam.PART_TARGET ? (target - Beam.PART_TARGET) % LevelScript.SetPieceSpec.MAX_PARTS : -1;
+        return target >= Beam.PART_TARGET ? (target - Beam.PART_TARGET) % SetPieceSpec.MAX_PARTS : -1;
     }
 
     /** The x a beam burning a ground object burns at, for the object's heat tint; NaN for none. */

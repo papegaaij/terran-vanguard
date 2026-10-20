@@ -214,19 +214,13 @@ final class PartCSpecs {
     }
 
     /** A one-section level at {@code speed} px/s with these waves and ground units; nothing else. */
-    static LevelScript level(double seconds, double speed, List<WaveSpec> waves, List<LevelScript.GroundUnit> units) {
-        return new LevelScript(
-                9,
-                2,
-                0,
-                List.of(new LevelScript.Section(seconds, speed)),
-                waves,
-                List.of(),
-                units,
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    static LevelScript level(double seconds, double speed, List<WaveSpec> waves, List<GroundUnit> units) {
+        return LevelScript.builder(9, 2)
+                .sections(List.of(new Section(seconds, speed)))
+                .waves(waves)
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     /** A walker wave of {@code count} on {@code paths} (screen points: x, px below the top edge). */

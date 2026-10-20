@@ -26,6 +26,9 @@ import vanguard.sim.PlayField;
  *     and opens on {@code low-air} once a cycle, and wanders round its wave's path
  * @param pull M7 part E: it pulls the ship and the loose pickups toward its centre (the Dust Devil)
  * @param intel M7 part E: what the hangar intel shows of it (the Ghost Drone's "unclassified" silhouette)
+ * @param turret M7 part F: its turret turns on its own, toward the ship, and fires its burst along its aim (the Warden
+ *     Tank)
+ * @param rearPlate M7 part F: its thin rear plate (the Warden Tank): direct shots from behind do more to its body
  */
 public record EnemyData(
         String name,
@@ -59,7 +62,9 @@ public record EnemyData(
         Optional<Roll> roll,
         Optional<Vortex> vortex,
         Optional<Pull> pull,
-        Optional<Intel> intel) {
+        Optional<Intel> intel,
+        Optional<Turret> turret,
+        Optional<RearPlate> rearPlate) {
     public EnemyData {
         Layers.of(layer);
         Check.positive("hp", hp);
@@ -184,6 +189,77 @@ public record EnemyData(
      * portrait and name until its first level has been flown once.
      */
     public record Intel(boolean unclassifiedUntilFlown) {}
+
+    /**
+     * M7 part F, an independent turret (design/enemies/ground/warden-tank): it turns at {@code turn_rate} °/s toward
+     * the ship all round, independent of the hull; once its gun is ready and its aim is within {@code within}° of the
+     * ship it stops for {@code lock} s (the tell) and fires its burst along its aim.
+     */
+    public record Turret(double turnRate, double lock, double within) {
+        public Turret {
+            Check.positive("turn_rate", turnRate);
+            Check.notNegative("lock", lock);
+            Check.notNegative("within", within);
+        }
+    }
+
+    /**
+     * M7 part F, a thin rear plate (design/enemies/ground/warden-tank): a direct shot arriving within {@code arc}° of
+     * its rear (flying along its facing) does {@code multiplier} × its damage to the body (the Scuttler's front arc
+     * reversed).
+     */
+    public record RearPlate(double arc, double multiplier) {
+        public RearPlate {
+            Check.that(arc > 0 && arc <= 180, "arc: degrees each side of the rear, 0-180, was " + arc);
+            Check.positive("multiplier", multiplier);
+        }
+    }
+
+    /** M7 part F: a difficulty's change to a turret: its turn rate instead, °/s (the Warden Tank's hard 160). */
+    public record TurretChange(Optional<Double> turnRate) {
+        public TurretChange {
+            turnRate.ifPresent(r -> Check.positive("turn_rate", r));
+        }
+    }
+
+    /** M7 part F: a difficulty's change to homing missiles: their turn rate instead, °/s (the walker's hard 120). */
+    public record HomingChange(Optional<Double> turnRate) {
+        public HomingChange {
+            turnRate.ifPresent(r -> Check.positive("turn_rate", r));
+        }
+    }
+
+    /**
+     * M7 part F: a difficulty's change to a walking boss's flame cone: its length (px), swivel (°) or tell (s)
+     * instead (the walker's hard 170 px and 35°, easy 0.8 s).
+     */
+    public record ConeChange(Optional<Double> length, Optional<Double> swivel, Optional<Double> tell) {
+        public ConeChange {
+            length.ifPresent(l -> Check.positive("length", l));
+            swivel.ifPresent(w -> Check.notNegative("swivel", w));
+            tell.ifPresent(t -> Check.notNegative("tell", t));
+        }
+    }
+
+    /** M7 part F: whether it is a walking boss (movement {@code stride}: the Revenant Walker). */
+    public boolean walks() {
+        return movement.stride().isPresent();
+    }
+
+    /**
+     * Whether it is an arena boss, fought in a halted arena: anchored (M5 part E, the Harbour Kraken, the Siege Spire)
+     * or walking its passes there (M7 part F, the Revenant Walker).
+     */
+    public boolean arenaBoss() {
+        return movement.anchored().isPresent() || walks();
+    }
+
+    /** M7 part F: its turret on {@code difficulty}: the stat block's with the difficulty's turn rate. */
+    public Optional<Turret> turret(Difficulty difficulty) {
+        Optional<Double> rate = hook(difficulty).flatMap(Hook::turret).flatMap(TurretChange::turnRate);
+        return turret.map(
+                t -> rate.map(r -> new Turret(r, t.lock(), t.within())).orElse(t));
+    }
 
     /** M7 part E: whether the intel keeps it unclassified until its first level has been flown. */
     public boolean unclassifiedUntilFlown() {
@@ -320,6 +396,7 @@ public record EnemyData(
      * @param burrow M7 part B: it travels under the sand and surfaces near the ship (the Burrower)
      * @param crawl M7 part C: its head crawls a wave's ground path (the Threadcrawler; the wave's {@code crawl})
      * @param laneStrafe M7 part E: it drops to a lane and strafes across the screen (the Ghost Drone)
+     * @param stride M7 part F: a walking boss's passes across its halted arena (the Revenant Walker)
      */
     public record Movement(
             Optional<Snake> snake,
@@ -341,7 +418,112 @@ public record EnemyData(
             Optional<Chase> chase,
             Optional<Burrow> burrow,
             Optional<Crawl> crawl,
-            Optional<LaneStrafe> laneStrafe) {}
+            Optional<LaneStrafe> laneStrafe,
+            Optional<Stride> stride) {}
+
+    /**
+     * M7 part F, a walking boss's passes (design/enemies/bosses/revenant-walker, Passes): it crosses its halted arena
+     * in passes from edge to edge, entering from the {@code edges} in turn ({@code top}, {@code bottom}, {@code left},
+     * {@code right}; the first {@code top}, its intro), a vertical pass on one of {@code lanes_x} (px from the left
+     * edge), a horizontal one on one of {@code lanes_y} (px below the top edge); {@code off_screen} s off the screen between
+     * two passes under the next edge's warning; a turn round takes {@code turn} s; it walks at {@code speeds} px/s by
+     * phase (the last for later phases). {@code beside_lane}: in its first phase it takes the lane beside the ship's;
+     * {@code turn_in_place}: in its last phase it turns round on the spot at a pass's end instead of leaving.
+     */
+    public record Stride(
+            List<Double> lanesX,
+            List<Double> lanesY,
+            List<String> edges,
+            double offScreen,
+            double turn,
+            List<Double> speeds,
+            boolean besideLane,
+            boolean turnInPlace) {
+        /** The entry edges a stride knows. */
+        public static final List<String> EDGES = List.of("top", "bottom", "left", "right");
+
+        public Stride {
+            lanesX = List.copyOf(lanesX);
+            lanesY = List.copyOf(lanesY);
+            edges = List.copyOf(edges);
+            speeds = List.copyOf(speeds);
+            Check.notEmpty("lanes_x", lanesX);
+            Check.notEmpty("lanes_y", lanesY);
+            Check.notEmpty("edges", edges);
+            Check.notEmpty("speeds", speeds);
+            Check.that(edges.getFirst().equals("top"), "edges: the first pass enters from the top (its intro)");
+            edges.forEach(
+                    edge -> Check.that(EDGES.contains(edge), "edges: top, bottom, left or right, was '" + edge + "'"));
+            lanesX.forEach(x -> Check.that(x > 0 && x < PlayField.WIDTH, "lanes_x: on the play field, was " + x));
+            lanesY.forEach(y -> Check.that(y > 0 && y < PlayField.HEIGHT, "lanes_y: on the play field, was " + y));
+            speeds.forEach(v -> Check.positive("speeds", v));
+            Check.notNegative("off_screen", offScreen);
+            Check.positive("turn", turn);
+        }
+    }
+
+    /**
+     * M7 part F, a walking boss's front plate (design/enemies/bosses/revenant-walker): a box of {@code hitbox} (its
+     * width across the heading, its height along it) {@code ahead} px in front of {@code part}'s centre along its
+     * heading; every shot meeting it glances off and it stops the Ion Beam while the part lives (no HP, not in the
+     * bar).
+     */
+    public record Plate(String part, Size hitbox, double ahead) {
+        public Plate {
+            Check.notNegative("ahead", ahead);
+        }
+    }
+
+    /**
+     * M7 part F, a walking boss's rear flame cone (design/enemies/bosses/revenant-walker, Attacks): from its flamer
+     * {@code behind} px behind its centre, {@code length} px long, {@code half_angle}° each side of its axis
+     * (against its heading); it starts when the ship or Rook is behind it within {@code length + reach_behind} px,
+     * at most once every {@code cooldown} s: a {@code tell} s tell (from its second phase on swivelling up to {@code
+     * swivel}° toward the ship), then a {@code burn} s burn hitting for the {@code bullet} class's damage once per
+     * burn; after the burn its vents (its spots {@code while: open}) open for {@code vents} s. Round 43 (K.a of round 42):
+     * from its second phase on a burn keeps turning toward the ship at up to {@code track} °/s within its swivel (none
+     * without it).
+     */
+    public record Cone(
+            double length,
+            double halfAngle,
+            double reachBehind,
+            double cooldown,
+            double tell,
+            double burn,
+            double vents,
+            double swivel,
+            String bullet,
+            double behind,
+            Optional<Double> track) {
+        public Cone {
+            track.ifPresent(t -> Check.notNegative("track", t));
+            Check.positive("length", length);
+            Check.that(halfAngle > 0 && halfAngle < 90, "half_angle: degrees, 0-90, was " + halfAngle);
+            Check.notNegative("reach_behind", reachBehind);
+            Check.notNegative("cooldown", cooldown);
+            Check.notNegative("tell", tell);
+            Check.positive("burn", burn);
+            Check.notNegative("vents", vents);
+            Check.notNegative("swivel", swivel);
+        }
+    }
+
+    /**
+     * M7 part F, homing missiles (design/enemies/bosses/revenant-walker, Attacks): an aimed attack's shots fly at its
+     * speed turning toward the ship at up to {@code turn_rate} °/s, fizzle after {@code life} s, have {@code hp} (every
+     * shot reaching the air hits them), at most {@code most} alive at once; the firing part's hatch opens {@code
+     * hatch} s before each salvo (the tell).
+     */
+    public record Homing(double turnRate, double life, double hp, int most, double hatch) {
+        public Homing {
+            Check.notNegative("turn_rate", turnRate);
+            Check.positive("life", life);
+            Check.positive("hp", hp);
+            Check.positive("most", most);
+            Check.notNegative("hatch", hatch);
+        }
+    }
 
     /**
      * M7 part E, the {@code lane_strafe} movement (design/enemies/air/ghost-drone): a front entry drops straight down
@@ -580,16 +762,25 @@ public record EnemyData(
      * {@code arc} ° over {@code duration} s after a {@code telegraph} of s. The eye is at {@code
      * origin} {@code [in, down]} px from the unit's centre: toward the field (mirrored on the right
      * edge) and down the screen; the centre when it is left out. The beam, its hit test and its
-     * telegraph start there.
+     * telegraph start there. Round 41 (a boss's sweep only, the Siege Spire's; the user's playtest 2026-10-19:
+     * "you are forced to keep moving"): with {@code lead} ° the arc starts that far beside the ship's bearing on the
+     * side the beam comes from (the telegraph's line) and sweeps through the ship; left out, centred on the bearing.
      */
     public record Sweep(
-            double arc, double duration, double telegraph, double length, double width, Optional<Point> origin) {
+            double arc,
+            double duration,
+            double telegraph,
+            double length,
+            double width,
+            Optional<Point> origin,
+            Optional<Double> lead) {
         public Sweep {
             Check.positive("arc", arc);
             Check.positive("duration", duration);
             Check.notNegative("telegraph", telegraph);
             Check.positive("length", length);
             Check.positive("width", width);
+            lead.ifPresent(degrees -> Check.that(degrees >= 0 && degrees <= arc, "lead: 0 to the arc's °"));
         }
     }
 
@@ -983,6 +1174,9 @@ public record EnemyData(
      *     the ship's x comes within {@code within_x} px of the unit's, instead of on an interval
      * @param tell M7 part E: s of the tell before the burst's first shot (the Ghost Drone's red eye glint)
      * @param reaim M7 part E: every shot of the burst is aimed at the ship anew (not the first shot's line)
+     * @param parts M7 part F: a boss's parts that fire it, besides those naming it as their {@code attack} (the
+     *     walker's pods fire one salvo pattern in its first phase, another later)
+     * @param homing M7 part F: an aimed attack's shots are homing missiles (the walker's pods)
      */
     public record Attack(
             String pattern,
@@ -1019,7 +1213,9 @@ public record EnemyData(
             @JsonProperty("while") Optional<String> whileState,
             Optional<Trigger> trigger,
             Optional<Double> tell,
-            Optional<Boolean> reaim) {
+            Optional<Boolean> reaim,
+            Optional<List<String>> parts,
+            Optional<Homing> homing) {
         /** M7 part E: {@code while: open}, a spin cycle's open window. */
         public static final String WHILE_OPEN = "open";
 
@@ -1031,6 +1227,12 @@ public record EnemyData(
                     "a triggered attack is aimed and fires once per pass, no interval");
             tell.ifPresent(t -> Check.positive("tell", t));
             Check.that(reaim.isEmpty() || burst.isPresent(), "only a burst re-aims its shots (reaim needs a burst)");
+            parts.ifPresent(list -> Check.notEmpty("parts", list));
+            Check.that(
+                    homing.isEmpty()
+                            || (pattern.equals("aimed")
+                                    && aim.filter("up"::equals).isEmpty()),
+                    "only an aimed attack fires homing missiles (not straight up)");
             Check.that(pattern.equals("aura") == aura.isPresent(), "an aura attack has its aura, the others none");
             Check.that(
                     !pattern.equals("aura")
@@ -1101,9 +1303,12 @@ public record EnemyData(
             Check.that(pattern.equals("mine") == mine.isPresent(), "a mine attack has its mine, the others none");
             Check.that(
                     pattern.equals("mortar") == mortar.isPresent(), "a mortar attack has its mortar, the others none");
+            // Round 43: a boss's fan may come in a burst too (the walker's chin and flank guns; FoundryChecks).
             Check.that(
-                    pattern.equals("aimed") || (burst.isEmpty() && burstGap.isEmpty() && rotate.isEmpty()),
-                    "only an aimed attack has a burst, a burst gap or rotates");
+                    pattern.equals("aimed")
+                            || (pattern.equals("fan") && rotate.isEmpty())
+                            || (burst.isEmpty() && burstGap.isEmpty() && rotate.isEmpty()),
+                    "only an aimed attack (or a boss's fan) has a burst, a burst gap or rotates");
             burst.ifPresent(b -> Check.positive("burst", b));
             burstGap.ifPresent(g -> Check.positive("burst_gap", g));
             Check.that(pattern.equals("spiral") == arms.isPresent(), "a spiral has its arms, the others none");
@@ -1373,6 +1578,8 @@ public record EnemyData(
      *     {@code hitbox} are the arrival pose), which a phase's {@code move} turns it into
      * @param lanes M5 part E: an arena boss's slam lanes (the Harbour Kraken)
      * @param slam M5 part E: its slam cycle (only with lanes)
+     * @param plate M7 part F: a walking boss's front plate (the Revenant Walker)
+     * @param cone M7 part F: a walking boss's rear flame cone (the Revenant Walker)
      */
     public record BossData(
             String kind,
@@ -1383,7 +1590,9 @@ public record EnemyData(
             Optional<Double> deathSeconds,
             Optional<List<PoseData>> poses,
             Optional<Lanes> lanes,
-            Optional<SlamData> slam) {
+            Optional<SlamData> slam,
+            Optional<Plate> plate,
+            Optional<Cone> cone) {
         public BossData {
             Check.that(
                     kind.equals("boss") || kind.equals("mid-boss"),
@@ -1616,7 +1825,8 @@ public record EnemyData(
             Optional<Integer> left,
             Optional<Double> seconds,
             Optional<Integer> slams,
-            Optional<Double> below) {
+            Optional<Double> below,
+            Optional<Share> share) {
         public Until {
             Check.that(
                     parts.isPresent() || seconds.isPresent() || slams.isPresent(), "until has parts, seconds or slams");
@@ -1629,6 +1839,22 @@ public record EnemyData(
             seconds.ifPresent(s -> Check.positive("seconds", s));
             slams.ifPresent(n -> Check.positive("slams", n));
             below.ifPresent(b -> Check.that(b > 0 && b < 1, "below is a share between 0 and 1, was " + b));
+            Check.that(
+                    share.isEmpty() || (parts.isPresent() && below.isEmpty()),
+                    "until has a share beside its parts (and a left), not with a below");
+        }
+    }
+
+    /**
+     * M7 part F (design/enemies/bosses/revenant-walker, Phases): a phase's second end beside its parts' {@code left}:
+     * once {@code parts} hold less than {@code below} of their HP (the walker's first phase: both pods gone, or the
+     * hull below 60 %).
+     */
+    public record Share(List<String> parts, double below) {
+        public Share {
+            parts = List.copyOf(parts);
+            Check.notEmpty("parts", parts);
+            Check.that(below > 0 && below < 1, "below is a share between 0 and 1, was " + below);
         }
     }
 
@@ -1782,6 +2008,9 @@ public record EnemyData(
      * @param pull M7 part E: a pull's speed on the ship instead (the Dust Devil's easy 25, hard 45 px/s)
      * @param secondPass M7 part E: a lane strafe's line-abreast survivors turn at the edge and strafe back once (the
      *     Ghost Drone's hard)
+     * @param turret M7 part F: a turret's turn rate instead (the Warden Tank's hard 160°/s)
+     * @param homing M7 part F: homing missiles' turn rate instead (the Revenant Walker's hard 120°/s)
+     * @param cone M7 part F: a flame cone's length, swivel or tell instead (the Revenant Walker's hard and easy)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -1810,7 +2039,10 @@ public record EnemyData(
             Optional<RollChange> roll,
             Optional<VortexChange> vortex,
             Optional<PullChange> pull,
-            Optional<Boolean> secondPass) {
+            Optional<Boolean> secondPass,
+            Optional<TurretChange> turret,
+            Optional<HomingChange> homing,
+            Optional<ConeChange> cone) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

@@ -30,7 +30,7 @@ public final class Sondes {
     private final double radius;
     private int collected;
 
-    Sondes(Optional<LevelScript.Sondes> spec) {
+    Sondes(Optional<HazardSpec.Sondes> spec) {
         int n = spec.map(s -> s.at().size()).orElse(0);
         starts = new int[n];
         xs = new double[n];
@@ -40,8 +40,8 @@ public final class Sondes {
             starts[i] = SimStep.ticks(spec.get().at().get(i).t());
             xs[i] = spec.get().at().get(i).x();
         }
-        step = spec.map(LevelScript.Sondes::speed).orElse(0.0) * SimStep.SECONDS;
-        radius = spec.map(LevelScript.Sondes::radius).orElse(0.0);
+        step = spec.map(HazardSpec.Sondes::speed).orElse(0.0) * SimStep.SECONDS;
+        radius = spec.map(HazardSpec.Sondes::radius).orElse(0.0);
     }
 
     /**

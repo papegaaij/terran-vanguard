@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * M7 part C, the level's tendril gates (design/enemies/ground/tendril-anchor, the {@code link} attack; M9 =
- * a): per {@link LevelScript.Gate} pair that has entered, its {@link Tendril} between the centres of its two
+ * a): per {@link GroundSpec.Gate} pair that has entered, its {@link Tendril} between the centres of its two
  * anchors (ground units the {@link EnemyForce} lets in and moves). A tendril is dormant for its link's
  * dormancy, then its touch hurts the ship and Rook (each with its own cooldown, shared by every tendril; the
  * ship is not pushed). Either anchor's death breaks it for good; a beam crossing it damages it on its way past
@@ -37,7 +37,7 @@ public final class Links {
         void lost(Tendril tendril);
     }
 
-    private final LevelScript.Gate[] gates;
+    private final GroundSpec.Gate[] gates;
     private final int[] dormantTicks;
     private final SimEvents events;
     private final Outcome outcome;
@@ -45,8 +45,8 @@ public final class Links {
     private int shipCooldown;
     private int rookCooldown;
 
-    Links(List<LevelScript.Gate> levelGates, SimEvents events, Outcome outcome) {
-        gates = levelGates.toArray(LevelScript.Gate[]::new);
+    Links(List<GroundSpec.Gate> levelGates, SimEvents events, Outcome outcome) {
+        gates = levelGates.toArray(GroundSpec.Gate[]::new);
         dormantTicks = new int[gates.length];
         for (int g = 0; g < gates.length; g++) {
             dormantTicks[g] =

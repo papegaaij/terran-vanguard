@@ -12,7 +12,7 @@ import vanguard.content.ContentLoader;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.game.ui.Fonts;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.SimStep;
 import vanguard.sim.WarningEdge;
@@ -68,14 +68,15 @@ class WaveBannersTest {
      */
     @Test
     void withAnAirEscortTheBandClearsTheShuttleStations() {
-        LevelScript.Escort escort = SimSpecs.level(
+        ObjectiveSpec.Escort escort = SimSpecs.level(
                         ContentLoader.fromClasspath(),
                         "act-2-homefront/level-10-evacuation-corridor",
                         Difficulty.MEDIUM)
+                .objectives()
                 .escort()
                 .orElseThrow();
         double highest = 0;
-        for (LevelScript.Station station : escort.air().orElseThrow().stations()) {
+        for (ObjectiveSpec.Station station : escort.air().orElseThrow().stations()) {
             highest = Math.max(
                     highest,
                     station.y()

@@ -16,7 +16,12 @@ import vanguard.content.SimSpecs;
 import vanguard.content.WingmenData;
 import vanguard.content.voice.VoiceLines;
 import vanguard.game.level.Barks.Trigger;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SimStep;
 import vanguard.sim.WaveSpec;
 
@@ -146,6 +151,23 @@ class BarksTest {
         assertFalse(barks.fire(Trigger.REAR_WAVE, 99.5), "the scripted line is still on the radio");
         assertTrue(barks.fire(Trigger.REAR_WAVE, 83.9));
         assertEquals(1, queued.size());
+    }
+
+    /** The playtest of 2026-10-19: no bark holds the level-end lines back in the outro, where the debrief cuts them. */
+    @Test
+    void onceTheLevelIsWonTheWaitingBarkIsWithdrawnAndNoneFires() {
+        Barks barks = barks(15);
+        busy();
+        assertTrue(barks.fire(Trigger.KILL_STREAK, 5));
+        RadioQueue.Message streak = lastQueued;
+
+        barks.levelComplete();
+
+        assertFalse(radio.waiting(streak), "the waiting bark left the queue");
+        assertFalse(barks.fire(Trigger.BOSS_WARNING, 30), "no bark in the outro");
+        assertFalse(barks.fire(Trigger.OVERDRIVE, 40));
+        barks.reset(0);
+        assertTrue(barks.fire(Trigger.OVERDRIVE, 50), "a new attempt barks again");
     }
 
     @Test
@@ -458,8 +480,8 @@ class BarksTest {
 
     @Test
     void ofTakesTheEscortFlagFromTheCue() {
-        var line = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.TIME,
+        var line = new RadioCue(
+                CueTrigger.TIME,
                 60,
                 "",
                 "Rook",
@@ -470,20 +492,13 @@ class BarksTest {
                 false,
                 0,
                 Integer.MAX_VALUE,
-                LevelScript.RadioCue.FITTED_ESCORT,
+                RadioCue.FITTED_ESCORT,
                 0);
-        var script = new LevelScript(
-                9,
-                2,
-                0,
-                List.of(new LevelScript.Section(150, 200)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(line),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        var script = LevelScript.builder(9, 2)
+                .sections(List.of(new Section(150, 200)))
+                .radio(List.of(line))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         Barks barks = Barks.of(DATA, script, 0, radio, bark -> {
             queued.add(bark);
             return radio.add(

@@ -10,12 +10,12 @@ import java.util.List;
  * road as a wreck. The units are allocated up front, so stepping does not allocate.
  *
  * <p>M5 part D, an air escort (design/allies, evacuation shuttle; Level 10; {@link
- * LevelScript.Air}): the units stand on their pads until the liftoff, lift off to their stations,
+ * ObjectiveSpec.Air}): the units stand on their pads until the liftoff, lift off to their stations,
  * fly them with the lane sway on the level clock, and climb out off the top edge; the scripted
  * loss's unit is lost at its time without counting as a loss the player could have prevented.
  *
  * <p>M5 part E, a naval convoy outside the objectives (design/allies, convoy cargo ship and escort
- * frigate; Level 11; {@link LevelScript.Naval}): its units hold screen-space stations from the
+ * frigate; Level 11; {@link ObjectiveSpec.Naval}): its units hold screen-space stations from the
  * start; when the scroll halts in the boss's arena each glides (smoothstep, on the real steps) to its
  * lane or off the bottom edge; when the halt ends they hold clear (a unit with a hold point glides
  * there) until the sea has scrolled the convoy's hold, Level 11's Platform Tiamat passing them, and
@@ -24,19 +24,19 @@ import java.util.List;
  * flak bursts are timed here on the real steps ({@link SimEvents.Type#ALLY_FLAK}), hitting nothing.
  *
  * <p>M5 part G, a {@code defend} primary's ally (design/allies, Nansen Relay; Level 13; {@link
- * LevelScript.Defend}): one unit standing on the ground, {@code follows: ground}: it scrolls with the
+ * ObjectiveSpec.Defend}): one unit standing on the ground, {@code follows: ground}: it scrolls with the
  * ground and stands at its place when the ground has scrolled as far as at the defend's start (Level 13:
  * the timed halt); a lost unit lies there as a wreck. The target-the-objective hook's modes aim at it
  * ({@link #objective()}) until its synchronisation is over ({@link #defended()}).
  *
  * <p>M7 part D, ground allies outside the objectives (design/allies, Ares Landing dome; Level 17; {@link
- * LevelScript.GroundAllies}): each unit stands on the ground, {@code follows: ground}, its footprint's lower
+ * ObjectiveSpec.GroundAllies}): each unit stands on the ground, {@code follows: ground}, its footprint's lower
  * edge entering the top edge at its time, and scrolls through with the ground; a broken unit lies there as a
  * wreck. The hook aims at them per unit ({@link #nextDome}, {@link #nearestCloser}, {@link #objective(double,
  * double)}); they never fail the mission.
  */
 final class Convoy {
-    private final LevelScript.Escort escort;
+    private final ObjectiveSpec.Escort escort;
     private final Road road;
     private final Ally[] allies;
     private final int[] enterTicks;
@@ -45,7 +45,7 @@ final class Convoy {
     private int firstHit = -1;
     private int firstLost = -1;
     /** M5 part D: the air escort; null for a ground convoy. */
-    private final LevelScript.Air air;
+    private final ObjectiveSpec.Air air;
     /** M5 part D: the scripted loss's unit; -1 for none. */
     private final int scripted;
     /** M5 part D: the units the player can save (every unit but the scripted loss's). */
@@ -70,7 +70,7 @@ final class Convoy {
     private boolean scriptedLost;
 
     /** M5 part E: the naval convoy; null for an escort's convoy. */
-    private final LevelScript.Naval naval;
+    private final ObjectiveSpec.Naval naval;
     /** M5 part E: per naval unit, where its glide started (y up). */
     private final double[] fromX;
 
@@ -96,7 +96,7 @@ final class Convoy {
     static final int BACK = 2;
     /**
      * M5 part E: the halt ended, the naval units hold clear (in their lanes, away or at their hold
-     * points) until the sea has scrolled the convoy's {@link LevelScript.Naval#holdClear()}.
+     * points) until the sea has scrolled the convoy's {@link ObjectiveSpec.Naval#holdClear()}.
      */
     static final int HOLD = 3;
     /** M5 part E: a flak burst is this far above its frigate at the least, px. */
@@ -106,12 +106,12 @@ final class Convoy {
     /** M5 part E: ... and this far to either side of it at the most, px. */
     private static final double FLAK_SIDE = 100;
 
-    Convoy(LevelScript.Escort escort, Road road) {
+    Convoy(ObjectiveSpec.Escort escort, Road road) {
         this(escort, road, List.of());
     }
 
     /** M5 part G: the defend primary; null for another convoy. */
-    private final LevelScript.Defend defend;
+    private final ObjectiveSpec.Defend defend;
     /** M5 part G: the ground's scroll at the defend's start, where the ally stands at its place. */
     private final double standScroll;
     /** M5 part G: whether the defend's synchronisation is over: nothing aims at the ally or hurts it any more. */
@@ -121,7 +121,7 @@ final class Convoy {
      * M5 part G: a defend primary's ally, standing at its place when the ground has scrolled {@code
      * scroll} px.
      */
-    Convoy(LevelScript.Defend defend, double scroll) {
+    Convoy(ObjectiveSpec.Defend defend, double scroll) {
         ground = null;
         groundY = new double[0];
         this.defend = defend;
@@ -151,7 +151,7 @@ final class Convoy {
     }
 
     /** M7 part D: the ground allies; null for another convoy. */
-    private final LevelScript.GroundAllies ground;
+    private final ObjectiveSpec.GroundAllies ground;
     /** M7 part D: per ground ally, its centre's height with the ground unscrolled (y up). */
     private final double[] groundY;
 
@@ -159,7 +159,7 @@ final class Convoy {
      * M7 part D: the ground allies {@code allies}, unit {@code k} standing with its centre at {@code
      * standY[k]} (y up) with the ground unscrolled.
      */
-    Convoy(LevelScript.GroundAllies allies, double[] standY) {
+    Convoy(ObjectiveSpec.GroundAllies allies, double[] standY) {
         ground = allies;
         groundY = standY.clone();
         defend = null;
@@ -199,12 +199,12 @@ final class Convoy {
      * M7 part D: where ground ally {@code unit}'s centre stands with the ground unscrolled (y up), given the
      * ground scrolled by its entry ({@code scrollAtEntry}): its footprint's lower edge at the top edge then.
      */
-    static double standY(LevelScript.GroundAlly unit, double scrollAtEntry) {
+    static double standY(ObjectiveSpec.GroundAlly unit, double scrollAtEntry) {
         return scrollAtEntry + PlayField.HEIGHT + unit.ally().size().height() / 2;
     }
 
     /** M5 part E: a naval convoy (Level 11), every unit at its station. */
-    Convoy(LevelScript.Naval naval) {
+    Convoy(ObjectiveSpec.Naval naval) {
         ground = null;
         groundY = new double[0];
         defend = null;
@@ -241,7 +241,7 @@ final class Convoy {
      * @param sections the level's sections: an air escort's pads scroll with the ground at their
      *     speeds until the liftoff
      */
-    Convoy(LevelScript.Escort escort, Road road, List<LevelScript.Section> sections) {
+    Convoy(ObjectiveSpec.Escort escort, Road road, List<Section> sections) {
         this.escort = escort;
         ground = null;
         groundY = new double[0];
@@ -278,7 +278,7 @@ final class Convoy {
         int loss = Integer.MAX_VALUE;
         int glow = Integer.MAX_VALUE;
         if (air != null && air.scriptedLoss().isPresent()) {
-            LevelScript.ScriptedLoss scriptedLoss = air.scriptedLoss().get();
+            ObjectiveSpec.ScriptedLoss scriptedLoss = air.scriptedLoss().get();
             loss = SimStep.ticks(scriptedLoss.t());
             glow = SimStep.ticks(scriptedLoss.t() - scriptedLoss.glow());
         }
@@ -293,7 +293,7 @@ final class Convoy {
      * The ground scrolled in the first {@code ticks} steps at the sections' speeds (as {@link
      * Sortie} scrolls outside a hold or an arena).
      */
-    private static double scrolled(List<LevelScript.Section> sections, int ticks) {
+    private static double scrolled(List<Section> sections, int ticks) {
         double distance = 0;
         int section = 0;
         for (int tick = 0; tick < ticks && !sections.isEmpty(); tick++) {
@@ -314,7 +314,7 @@ final class Convoy {
         }
         if (ground != null) {
             for (int k = 0; k < allies.length; k++) {
-                LevelScript.GroundAlly unit = ground.units().get(k);
+                ObjectiveSpec.GroundAlly unit = ground.units().get(k);
                 allies[k].resetStanding(unit.x(), groundY[k], unit.ally().hp());
             }
             lost = 0;
@@ -342,7 +342,7 @@ final class Convoy {
             if (air == null) {
                 ally.reset(startY, escort.ally().hp());
             } else if (air.liftoff().isPresent()) {
-                LevelScript.Pad pad = air.liftoff().get().pads().get(k);
+                ObjectiveSpec.Pad pad = air.liftoff().get().pads().get(k);
                 ally.resetAir(
                         Ally.State.PAD,
                         pad.x(),
@@ -350,7 +350,7 @@ final class Convoy {
                         escort.ally().hp(),
                         0);
             } else {
-                LevelScript.Station station = air.stations().get(k);
+                ObjectiveSpec.Station station = air.stations().get(k);
                 ally.resetAir(
                         Ally.State.FLYING,
                         station.xAt(0),
@@ -425,7 +425,7 @@ final class Convoy {
     /** M5 part E: back to the level start, every naval unit at its station, afloat and unhit. */
     private void resetNaval() {
         for (int k = 0; k < allies.length; k++) {
-            LevelScript.NavalUnit unit = naval.units().get(k);
+            ObjectiveSpec.NavalUnit unit = naval.units().get(k);
             allies[k].resetNaval(unit.x(), unit.y(), unit.ally().hp());
             glideTicks[k] = 0;
             fromX[k] = unit.x();
@@ -482,7 +482,7 @@ final class Convoy {
         int glide = Math.max(1, SimStep.ticks(naval.glideSeconds()));
         for (int k = 0; k < allies.length; k++) {
             Ally ally = allies[k];
-            LevelScript.NavalUnit unit = naval.units().get(k);
+            ObjectiveSpec.NavalUnit unit = naval.units().get(k);
             switch (ally.state()) {
                 case GLIDING -> {
                     double s = Math.min(1, (double) ++glideTicks[k] / glide);
@@ -537,7 +537,7 @@ final class Convoy {
 
     /** Where unit {@code k}'s glide ends: its lane, below the bottom edge, its hold point or (back) its station. */
     private double targetX(int k) {
-        LevelScript.NavalUnit unit = naval.units().get(k);
+        ObjectiveSpec.NavalUnit unit = naval.units().get(k);
         if (arena == HOLD) {
             return unit.holdX();
         }
@@ -545,7 +545,7 @@ final class Convoy {
     }
 
     private double targetY(int k) {
-        LevelScript.NavalUnit unit = naval.units().get(k);
+        ObjectiveSpec.NavalUnit unit = naval.units().get(k);
         if (arena == HOLD) {
             return unit.holdY();
         }
@@ -578,7 +578,7 @@ final class Convoy {
     }
 
     /** M5 part E: the naval convoy's spec; null for an escort's convoy. */
-    LevelScript.Naval navalSpec() {
+    ObjectiveSpec.Naval navalSpec() {
         return naval;
     }
 
@@ -604,7 +604,7 @@ final class Convoy {
     }
 
     /** M5 part G: the defend primary; null for another convoy. */
-    LevelScript.Defend defendSpec() {
+    ObjectiveSpec.Defend defendSpec() {
         return defend;
     }
 
@@ -696,7 +696,7 @@ final class Convoy {
     }
 
     /** M7 part D: the ground allies' spec; null for another convoy. */
-    LevelScript.GroundAllies groundSpec() {
+    ObjectiveSpec.GroundAllies groundSpec() {
         return ground;
     }
 
@@ -705,6 +705,17 @@ final class Convoy {
         int count = 0;
         for (Ally ally : allies) {
             if (ally.ticksSinceHit() == Integer.MAX_VALUE) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /** Round 41: the ground allies not broken in this attempt. */
+    int standing() {
+        int count = 0;
+        for (Ally ally : allies) {
+            if (ally.alive()) {
                 count++;
             }
         }
@@ -788,11 +799,11 @@ final class Convoy {
         double seconds = levelTick * SimStep.SECONDS;
         for (int k = 0; k < allies.length; k++) {
             Ally ally = allies[k];
-            LevelScript.Station station = air.stations().get(k);
+            ObjectiveSpec.Station station = air.stations().get(k);
             boolean held = k == scripted && !scriptedLost;
             switch (ally.state()) {
                 case PAD -> {
-                    LevelScript.Pad pad = air.liftoff().orElseThrow().pads().get(k);
+                    ObjectiveSpec.Pad pad = air.liftoff().orElseThrow().pads().get(k);
                     if (levelTick < liftTick) {
                         ally.fly(pad.x(), pad.y() + liftScroll - groundScroll, 0, true);
                         break;
@@ -824,7 +835,12 @@ final class Convoy {
      * untouchable until it is there, and after that while {@code held} (the scripted loss's unit).
      */
     private void lift(
-            Ally ally, LevelScript.Pad pad, LevelScript.Station station, int levelTick, double seconds, boolean held) {
+            Ally ally,
+            ObjectiveSpec.Pad pad,
+            ObjectiveSpec.Station station,
+            int levelTick,
+            double seconds,
+            boolean held) {
         double s = Math.min(1, (double) (levelTick - liftTick) / liftTicks);
         double e = s * s * (3 - 2 * s);
         double x = pad.x() + (station.xAt(seconds) - pad.x()) * e;
@@ -836,7 +852,7 @@ final class Convoy {
     }
 
     /** A unit climbing out: from its station up off the top edge, speeding up (s²); home at the end. */
-    private void climb(Ally ally, LevelScript.Station station, int levelTick, double seconds) {
+    private void climb(Ally ally, ObjectiveSpec.Station station, int levelTick, double seconds) {
         double s = Math.min(1, (double) (levelTick - climbTick) / climbTicks);
         double from = station.yAt(seconds);
         if (s >= 1) {
@@ -1011,7 +1027,7 @@ final class Convoy {
     }
 
     /** The escort objective's spec; null for a naval convoy (M5 part E). */
-    LevelScript.Escort escort() {
+    ObjectiveSpec.Escort escort() {
         return escort;
     }
 

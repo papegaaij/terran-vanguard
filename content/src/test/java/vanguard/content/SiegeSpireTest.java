@@ -16,9 +16,12 @@ import vanguard.sim.BossSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -56,28 +59,16 @@ class SiegeSpireTest {
     /** The seeds the autopilot's fight is measured on. */
     static final long[] SEEDS = {2185, 11, 77, 1301, 4242};
 
-    static LevelScript.SetPieceSpec spire(Difficulty difficulty) {
+    static SetPieceSpec spire(Difficulty difficulty) {
         return SimSpecs.boss(CONTENT, new LevelData.BossPlacement(SLUG, ARENA, PlayField.WIDTH / 2.0, 2), difficulty);
     }
 
     static LevelScript level(Difficulty difficulty) {
-        return new LevelScript(
-                14,
-                2,
-                0,
-                List.of(
-                        new LevelScript.Section(ARENA, 140),
-                        new LevelScript.Section(ARENA + 200, 0, true),
-                        new LevelScript.Section(ARENA + 212, 140)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                LevelScript.Secondary.NONE,
-                List.of(),
-                List.of(),
-                List.of(spire(difficulty)));
+        return LevelScript.builder(14, 2)
+                .sections(List.of(
+                        new Section(ARENA, 140), new Section(ARENA + 200, 0, true), new Section(ARENA + 212, 140)))
+                .setPieces(List.of(spire(difficulty)))
+                .build();
     }
 
     /**
@@ -293,7 +284,7 @@ class SiegeSpireTest {
 
     @Test
     void theStatBlockMapsToAnAnchoredArenaBossWithoutLanes() {
-        LevelScript.SetPieceSpec spec = spire(Difficulty.MEDIUM);
+        SetPieceSpec spec = spire(Difficulty.MEDIUM);
         BossSpec boss = spec.boss().orElseThrow();
         assertTrue(boss.anchored());
         assertFalse(boss.midBoss(), "the act boss's long bar");
@@ -302,7 +293,7 @@ class SiegeSpireTest {
         assertEquals(Layer.GROUND, boss.layer());
         assertEquals(
                 List.of("pod 1", "pod 2", "pod 3", "pod 4", "mortar left", "mortar right", "maw", "core", "trunk"),
-                spec.parts().stream().map(LevelScript.PartSpec::name).toList());
+                spec.parts().stream().map(PartSpec::name).toList());
         assertEquals(List.of(TRUNK), boss.armoured(), "the trunk: shots glance off it, it stays as the stump");
         assertTrue(spec.parts().get(CORE).vital());
         assertEquals(2, spec.parts().get(MAW).multiplier(), "the lime maw ×2");
@@ -310,7 +301,7 @@ class SiegeSpireTest {
         assertEquals(460, spec.parts().get(POD_1).hp(), "round 40 (4b): 690 -> 460");
         assertEquals(530, spec.parts().get(MORTAR_LEFT).hp(), "round 40 (4b): 800 -> 530");
         assertEquals(2880, spec.parts().get(MAW).hp());
-        assertEquals(4950, spec.parts().get(CORE).hp());
+        assertEquals(3450, spec.parts().get(CORE).hp(), "round 41: 4950 -> 3450 with the leading sweep");
         assertEquals(PAR, boss.parSeconds(), "the par: the measured mean");
 
         BossSpec.Arena arena = boss.arena().orElseThrow();
@@ -340,13 +331,20 @@ class SiegeSpireTest {
         BossSpec.Attack sweep = boss.attacks().get(3);
         assertEquals(BossSpec.Pattern.SWEEP, sweep.pattern(), "the free spire's laser sweep (H5 = a)");
         assertEquals(Math.toRadians(120), sweep.sweep().orElseThrow().arcRadians(), 1e-9);
-        assertEquals(0.6, sweep.sweep().orElseThrow().telegraphSeconds());
+        assertEquals(0.8, sweep.sweep().orElseThrow().telegraphSeconds(), "round 41: 0.6 -> 0.8");
+        assertEquals(600, sweep.sweep().orElseThrow().length(), "round 41: 300 -> 600, every corner of the field");
+        assertEquals(
+                Math.toRadians(12),
+                sweep.sweep().orElseThrow().leadRadians(),
+                1e-9,
+                "round 41: the arc starts 12° beside the ship's bearing, so a still ship is swept");
         assertEquals(8, sweep.sweep().orElseThrow().damage(), "`laser`");
         assertEquals(List.of(), sweep.parts(), "fired by the part its phase ends on, the core");
         assertEquals(14, boss.attacks().get(4).count(), "the ring of 14");
 
         BossSpec.Phase roots = boss.phases().get(0);
         assertEquals(ROOTS, roots.untilParts());
+        assertEquals(1.5, roots.delaySeconds(), "round 41: no fire under the warning banner, the first orb ≈4 s in");
         BossSpec.Phase maw = boss.phases().get(1);
         assertEquals(List.of(MAW), maw.exposes());
         BossSpec.Windows windows = maw.windows().orElseThrow();
@@ -395,7 +393,7 @@ class SiegeSpireTest {
             Fight fight = fight(seed, Difficulty.MEDIUM);
             System.out.printf("Spire medium seed %d: %s%n", seed, fight);
             assertTrue(fight.killed(), "killed: " + fight);
-            assertTrue(fight.seconds() >= 90 && fight.seconds() <= 180, "the act-boss window: " + fight);
+            assertTrue(LevelMetrics.inBossWindow(false, fight.seconds()), "the act-boss window: " + fight);
             assertTrue(fight.lifted() && fight.launched() >= 2 && fight.sweeps() >= 1, "every phase: " + fight);
             for (int phase = 0; phase < 3; phase++) {
                 assertTrue(
@@ -475,7 +473,9 @@ class SiegeSpireTest {
         List<Double> aimedAt = new ArrayList<>();
         List<Integer> tells = new ArrayList<>();
         List<Double> tellAt = new ArrayList<>();
-        for (int i = 0; i < SimStep.ticks(10.5) && sortie.flying(); i++) {
+        double firstOrb = -1;
+        // Round 41: the Roots phase holds its fire 1.5 s after the halt (no fire under the warning banner).
+        for (int i = 0; i < SimStep.ticks(12) && sortie.flying(); i++) {
             sortie.step(0);
             double t = (i + 1) * SimStep.SECONDS;
             for (int pod : values(sortie, SimEvents.Type.AIM_TELL)) {
@@ -496,6 +496,9 @@ class SiegeSpireTest {
                     if (Math.hypot(dx, dy) > 3) {
                         continue;
                     }
+                    if (firstOrb < 0) {
+                        firstOrb = t;
+                    }
                     if (Math.abs(Math.abs(bullet.heading()) - Math.PI) < 1e-9) {
                         down++;
                     } else {
@@ -510,6 +513,7 @@ class SiegeSpireTest {
             }
         }
         assertTrue(down >= 8, down + " straight down");
+        assertTrue(firstOrb >= 1.5, "round 41: no orb before the Roots phase's 1.5 s delay, the first at " + firstOrb);
         assertEquals(List.of(0, 1, 2, 3, 0), aimed.subList(0, 5), "the pods aim in turn");
         for (int k = 1; k < aimed.size(); k++) {
             assertEquals(2.0, aimedAt.get(k) - aimedAt.get(k - 1), 0.05, "an aimed orb every 2.0 s");

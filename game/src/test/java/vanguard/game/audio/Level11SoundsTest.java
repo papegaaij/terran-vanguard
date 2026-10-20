@@ -115,7 +115,7 @@ class Level11SoundsTest {
                     new EnemyLooks[0],
                     sortie.armament(),
                     sortie.script().setPieces().stream()
-                            .map(vanguard.sim.LevelScript.SetPieceSpec::slug)
+                            .map(vanguard.sim.SetPieceSpec::slug)
                             .toList());
             sounds.naval(sortie.navalConvoy());
             sounds.slamCycle(slam.telegraphSeconds(), slam.riseSeconds(), slam.secondSeconds());

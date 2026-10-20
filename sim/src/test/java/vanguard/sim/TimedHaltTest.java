@@ -24,7 +24,7 @@ class TimedHaltTest {
 
     @Test
     void theScrollEasesToAHaltOverTheLastTwoSecondsAndTheClockRunsOn() {
-        List<LevelScript.Section> sections = PartGSpecs.sections();
+        List<Section> sections = PartGSpecs.sections();
         int halt = SimStep.ticks(40);
         int ease = SimStep.ticks(2);
         assertEquals(APPROACH, Sortie.timedHaltSpeed(sections, 0));
@@ -52,7 +52,7 @@ class TimedHaltTest {
 
     @Test
     void theScrollEasesBackUpOverTheFirstTwoSecondsAfterTheHalt() {
-        List<LevelScript.Section> sections = PartGSpecs.sections();
+        List<Section> sections = PartGSpecs.sections();
         int end = SimStep.ticks(220);
         int ease = SimStep.ticks(2);
         double before = 0;
@@ -107,23 +107,19 @@ class TimedHaltTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> PartGSpecs.level(
-                        List.of(
-                                new LevelScript.Section(40, APPROACH),
-                                new LevelScript.Section(220, 0),
-                                new LevelScript.Section(260, 0, true)),
+                        List.of(new Section(40, APPROACH), new Section(220, 0), new Section(260, 0, true)),
                         List.of(),
                         List.of(),
                         List.of(),
                         Optional.empty(),
-                        LevelScript.Secondary.NONE,
+                        Secondary.NONE,
                         List.of()));
-        assertEquals(LevelScript.Section.TIMED_HALT_RAMP_SECONDS, new LevelScript.Section(10, 0).rampSeconds());
+        assertEquals(Section.TIMED_HALT_RAMP_SECONDS, new Section(10, 0).rampSeconds());
     }
 
     @Test
     void aLevelWithoutATimedHaltScrollsAtItsSectionsSpeeds() {
-        List<LevelScript.Section> sections =
-                List.of(new LevelScript.Section(10, 120), new LevelScript.Section(20, 150));
+        List<Section> sections = List.of(new Section(10, 120), new Section(20, 150));
         assertEquals(120, Sortie.timedHaltSpeed(sections, SimStep.ticks(9.99)));
         assertEquals(150, Sortie.timedHaltSpeed(sections, SimStep.ticks(10)));
         assertEquals(150, Sortie.timedHaltSpeed(sections, SimStep.ticks(25)), "the last section's speed past the end");

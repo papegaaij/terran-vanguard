@@ -52,8 +52,8 @@ class CollapseTest {
 
     private static final double FOOT = (BAND_BOTTOM + BAND_TOP) / 2;
 
-    private static LevelScript.Collapse collapse(double bottom, double top) {
-        return new LevelScript.Collapse(List.of(0), 1.5, 1.5, 1, 100, 390, 6, FOOT_X, bottom, top);
+    private static ObjectiveSpec.Collapse collapse(double bottom, double top) {
+        return new ObjectiveSpec.Collapse(List.of(0), 1.5, 1.5, 1, 100, 390, 6, FOOT_X, bottom, top);
     }
 
     /**
@@ -64,32 +64,32 @@ class CollapseTest {
      * px further up the ground: outside the band, though within the blast's reach. 240 px of scroll
      * later (t = 7) the first ones lie 225 px below the top edge, inside the band.
      */
-    private static LevelScript level(List<LevelScript.RadioCue> radio) {
+    private static LevelScript level(List<RadioCue> radio) {
         return LevelClockSpecs.level(
                 40,
                 SPEED,
                 List.of(),
                 List.of(
-                        new LevelScript.GroundUnit(1, 240, NODE, 0),
-                        new LevelScript.GroundUnit(1, 60, NEAR, -1),
-                        new LevelScript.GroundUnit(1, 300, FLYER, -1),
-                        new LevelScript.GroundUnit(1, 400, FAR, -1),
-                        new LevelScript.GroundUnit(1, 470, BEYOND, -1),
-                        new LevelScript.GroundUnit(4, 60, OUTSIDE, -1)),
+                        new GroundUnit(1, 240, NODE, 0),
+                        new GroundUnit(1, 60, NEAR, -1),
+                        new GroundUnit(1, 300, FLYER, -1),
+                        new GroundUnit(1, 400, FAR, -1),
+                        new GroundUnit(1, 470, BEYOND, -1),
+                        new GroundUnit(4, 60, OUTSIDE, -1)),
                 List.of("Node C1"),
-                new LevelScript.Secondary(0.8, 50),
+                new Secondary(0.8, 50),
                 radio,
                 List.of(),
                 Optional.of(collapse(BAND_BOTTOM, BAND_TOP)));
     }
 
     /** A sortie that flies to t = 7 and destroys the node: the collapse starts at the next step. */
-    private static Sortie atTheCollapse(List<LevelScript.RadioCue> radio) {
+    private static Sortie atTheCollapse(List<RadioCue> radio) {
         return atTheCollapse(radio, 7);
     }
 
     /** A sortie that flies to {@code t} and destroys the node: the collapse starts at the next step. */
-    private static Sortie atTheCollapse(List<LevelScript.RadioCue> radio, double t) {
+    private static Sortie atTheCollapse(List<RadioCue> radio, double t) {
         Sortie sortie = new Sortie(
                 1, TestSpecs.LOADOUT, level(radio), TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
         while (sortie.levelSeconds() < t) {
@@ -105,7 +105,7 @@ class CollapseTest {
 
     @Test
     void itLeansDropsAndItsBlastKillsOutwardFromTheFoot() {
-        Sortie sortie = atTheCollapse(List.of(LevelClockSpecs.cue(LevelScript.CueTrigger.COLLAPSE, 0, 0)));
+        Sortie sortie = atTheCollapse(List.of(LevelClockSpecs.cue(CueTrigger.COLLAPSE, 0, 0)));
         assertFalse(sortie.collapseStarted());
         sortie.step(Command.NONE);
 
@@ -168,7 +168,7 @@ class CollapseTest {
     /** The blast's front: eased out, three quarters of the way at half its time. */
     @Test
     void theBlastsRadiusEasesOut() {
-        LevelScript.Collapse collapse = collapse(BAND_BOTTOM, BAND_TOP);
+        ObjectiveSpec.Collapse collapse = collapse(BAND_BOTTOM, BAND_TOP);
         assertEquals(100, collapse.blastRadius(0), 1e-9);
         assertEquals(100 + 290 * 0.75, collapse.blastRadius(0.5), 1e-9);
         assertEquals(390, collapse.blastRadius(1), 1e-9);
@@ -263,11 +263,11 @@ class CollapseTest {
                 40,
                 150,
                 List.of(),
-                List.of(new LevelScript.GroundUnit(1, 240, NODE, 0)),
+                List.of(new GroundUnit(1, 240, NODE, 0)),
                 List.of("Node C1"),
-                new LevelScript.Secondary(0.8, 50),
+                new Secondary(0.8, 50),
                 List.of(),
-                List.of(new LevelScript.Hold(List.of(0), 200, HOLD_SPEED, 1)),
+                List.of(new ObjectiveSpec.Hold(List.of(0), 200, HOLD_SPEED, 1)),
                 // The band: about 80–260 px below the top edge when the node is destroyed, so it stays on
                 // the screen through the 270 px the hold scrolls until the dust has settled.
                 Optional.of(collapse(780, 960)));

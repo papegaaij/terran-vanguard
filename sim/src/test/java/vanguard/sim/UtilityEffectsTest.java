@@ -49,7 +49,7 @@ class UtilityEffectsTest {
 
     @Test
     void theScannerAddsItsShareToASecretsHiddenCrateButNotToBounties() {
-        var beacon = new LevelScript.GroundObjectSpec(
+        var beacon = new GroundObjectSpec(
                 0, Ship.START_X, new Hitbox(12, 12), 0, 0, Optional.empty(), 3, 80, "beacon cache", false);
         int[] expected = {80, 88, 96};
         double[] bonus = {0, 0.1, 0.2};

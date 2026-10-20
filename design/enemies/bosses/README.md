@@ -3,7 +3,7 @@ title: Bosses
 design: approved
 implementation: done
 art: chosen
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # Bosses
@@ -24,7 +24,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [brood-carrier](brood-carrier/README.md) | Act 1 boss: living carrier, overhead pass, broadside bays, core (L07) | approved | done | final |
 | [harbour-kraken](harbour-kraken/README.md) | Act 2 mid-boss: cephalopod around a platform, lane slams, surfacing head (L11) | approved | in-progress | final |
 | [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | approved | in-progress | final |
-| [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | not-started | chosen |
+| [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | not-started | chosen |
 
 ## Roster
@@ -108,7 +108,7 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
 | [concept/revenant-walker-r36-a.gif](concept/revenant-walker-r36-a.gif) | Revenant Walker A — strides through the foundry; front guns kill the launchers, rear guns the back reactor once it is below the ship; the wreck and the plate's glint (motion) | chosen (round 36, B.1) |
 | [concept/rejected/revenant-walker-r36-b.png](concept/rejected/revenant-walker-r36-b.png) | Revenant Walker B "Siege crawler" — low four-legged hull with a dozer prow, two vertical-launch blocks (2×4 cells), twin-nozzle rear flamer barbette, reactor under radiator fins; the wreck with its plate cut off by torch (sheet) | rejected — round 36: a (Strider heavy, biped) picked |
 | [concept/rejected/revenant-walker-r36-b.gif](concept/rejected/revenant-walker-r36-b.gif) | Revenant Walker B — the same fight as A (motion) | rejected — round 36: a (Strider heavy, biped) picked |
-| [concept/revenant-walker-final-r42-a.png](concept/revenant-walker-final-r42-a.png), [.gif](concept/revenant-walker-final-r42-a.gif) | Revenant Walker production art (`tools/art/revenant_walker.py`, step ART-F1; held in `build/art-held/` until the walker's `data.yaml` claims the root `revenant-walker`): 8 headings × 8-frame walk, the hull with the front plate and chin cannon, the two reactor vents (shut / open / overheated), the shoulder pods (16 aim headings, hatch tell) and stubs, the flamer (32 aims) and pilot light, the 6-step topple and the wreck with the serial plate ground blank, the homing missile, its smoke puffs and the flame-cone puffs; the pass, the cone and the topple over the foundry yard in the GIF; pending the user's review | proposed |
+| [concept/revenant-walker-final-r42-a.png](concept/revenant-walker-final-r42-a.png), [.gif](concept/revenant-walker-final-r42-a.gif) | Revenant Walker production art (`tools/art/revenant_walker.py`, step ART-F1; held in `build/art-held/` until the walker's `data.yaml` claims the root `revenant-walker`): 8 headings × 8-frame walk, the hull with the front plate and chin cannon, the two reactor vents (shut / open / overheated), the shoulder pods (16 aim headings, hatch tell) and stubs, the flamer (32 aims) and pilot light, the 6-step topple and the wreck with the serial plate ground blank, the homing missile, its smoke puffs and the flame-cone puffs; the pass, the cone and the topple over the foundry yard in the GIF | chosen (round 42, F.a: approved as final) |
 | [concept/rejected/dust-colossus-r36-a.png](concept/rejected/dust-colossus-r36-a.png) | Dust Colossus A "Rearing maw" — segmented slate worm arching out of a cracking sand dome; three jaw plates around rings of teeth and a lime throat; furrow and bulge tell, breach, rings, suction (sheet) | rejected — round 36: b (Sinkhole colony) picked |
 | [concept/rejected/dust-colossus-r36-a.gif](concept/rejected/dust-colossus-r36-a.gif) | Dust Colossus A — breaches at the edges of the slow-scrolling Hellas arena in turn (motion) | rejected — round 36: b (Sinkhole colony) picked |
 | [concept/dust-colossus-r36-b.png](concept/dust-colossus-r36-b.png) | Dust Colossus B "Sinkhole colony" — the ground collapses into a funnel; four bone mandibles unfold around a lime throat, violet-lit vein ridges under the sand (sheet) | chosen (round 36, B.2) |
@@ -154,3 +154,4 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
   promoted from the roster to draft specs; concept round 36 proposes an a/b of each, pending the
   user's review.
 - 2026-10-13 (user, round 36): the Revenant Walker and the Dust Colossus approved (D.18, D.19). Picks: the walker **a** (the "Strider heavy" biped), the Colossus **b** (the "Sinkhole colony"); the rejected variants moved to `concept/rejected/`.
+- 2026-10-20 (user, round 42): the Revenant Walker's production art approved as final (F.a): its row `chosen`, the walker `art: final`.

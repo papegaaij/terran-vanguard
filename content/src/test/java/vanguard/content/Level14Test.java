@@ -12,10 +12,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.DropSpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PickupType;
+import vanguard.sim.RadioCue;
+import vanguard.sim.RootBurst;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
@@ -61,17 +68,17 @@ class Level14Test {
                 .mapToInt(unit -> unit.enemy().bounty())
                 .sum();
         int boss = level.setPieces().getFirst().parts().stream()
-                .mapToInt(LevelScript.PartSpec::bounty)
+                .mapToInt(PartSpec::bounty)
                 .sum();
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int secondary = level.secondary().credits();
+        int secondary = level.objectives().secondary().credits();
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_687, Math.round(budget), "the typical haul's target, 700 × 1.07¹³");
         assertEquals(
-                57 * 5 + 62 * 12 + 20 * 22 + 4 * 18 + 4 * 30 + 4 * 30 + 9 * 25 + 21 * 15,
+                57 * 5 + 58 * 12 + 20 * 22 + 4 * 18 + 4 * 30 + 4 * 30 + 9 * 25 + 18 * 15,
                 kills,
                 "Skitter, Needler, Creeper, Ravager, Wraith, Mantis, Spore Bomber, Stinger");
         assertEquals(
@@ -108,7 +115,7 @@ class Level14Test {
                         "mantis",
                         4,
                         "needler",
-                        62,
+                        58,
                         "ravager",
                         4,
                         "skitter",
@@ -116,18 +123,18 @@ class Level14Test {
                         "spore-bomber",
                         9,
                         "stinger",
-                        21,
+                        18,
                         "wraith",
                         4),
                 waves);
         Map<String, Integer> ground = new TreeMap<>();
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             ground.merge(unit.enemy().slug(), 1, Integer::sum);
         }
         assertEquals(Map.of("spine-turret", 7, "hive-node", 2, "polyp-mortar", 4), ground);
         assertEquals(
                 List.of(20.0, 60.0, 95.0, 108.0, 250.0, 262.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         Map<Difficulty, Integer> enemies = new TreeMap<>();
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript at = SimSpecs.level(content, LEVEL, difficulty);
@@ -148,14 +155,18 @@ class Level14Test {
     void theSpireArrivesAtTheArenaStartWithTheWarning() {
         LevelData data = content.level(LEVEL);
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.Section arena = level.sections().get(4);
+        Section arena = level.sections().get(4);
         assertTrue(arena.arena());
         assertEquals(0, arena.speed());
         assertEquals(25, level.sections().get(5).speed(), "the daylight drifts (steps H7b, H9)");
         BossSpec boss = level.setPieces().getFirst().boss().orElseThrow();
         assertTrue(boss.anchored(), "an arena boss without lanes (H1 = a)");
         assertEquals(0, boss.arena().orElseThrow().lanes().count());
-        assertEquals(108, boss.arriveSeconds(), "the arena's start, the warning and the checkpoint (the default)");
+        assertEquals(108, boss.arriveSeconds(), "the arena's start and the checkpoint (the default)");
+        assertEquals(7.5, boss.incomingSeconds(), "round 41: the warning 7.5 s ahead, over the quiet approach");
+        assertTrue(
+                level.waves().stream().allMatch(wave -> wave.t() <= 97.5),
+                "round 41: the last wave enters at t=97.5, before the warning (t=100.5)");
         assertEquals("SIEGE SPIRE", boss.barName());
         assertFalse(boss.midBoss(), "the act boss's long bar");
         assertEquals("reach-end", data.objectives().primary());
@@ -179,7 +190,7 @@ class Level14Test {
     void theRootBurstsGrowTheSecondarysGroup() {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
-            List<LevelScript.GroundUnit> growths = level.groundUnits().stream()
+            List<GroundUnit> growths = level.groundUnits().stream()
                     .filter(unit -> unit.burst().isPresent())
                     .toList();
             assertEquals(difficulty == Difficulty.EASY ? 4 : 8, growths.size(), difficulty + ": the growths");
@@ -189,14 +200,14 @@ class Level14Test {
                             .map(unit -> unit.burst().orElseThrow().t())
                             .distinct()
                             .toList());
-            for (LevelScript.GroundUnit unit : growths) {
-                LevelScript.RootBurst burst = unit.burst().orElseThrow();
+            for (GroundUnit unit : growths) {
+                RootBurst burst = unit.burst().orElseThrow();
                 assertEquals(burst.t() + 1.0, unit.t(), 1e-9, "the growths appear after the 1 s telegraph");
                 assertEquals(difficulty == Difficulty.HARD ? 0.5 : 0.75, burst.firstShotSeconds());
                 assertEquals(0, unit.group(), "the secondary's group roots");
                 assertTrue(difficulty != Difficulty.EASY || unit.enemy().slug().equals("spine-turret"));
             }
-            assertEquals(List.of("roots"), level.secondary().groups());
+            assertEquals(List.of("roots"), level.objectives().secondary().groups());
         }
     }
 
@@ -204,29 +215,31 @@ class Level14Test {
     void theRadioThePickupsAndTheBriefing() {
         LevelData data = content.level(LEVEL);
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.CueTrigger> events = level.radio().stream()
-                .map(LevelScript.RadioCue::trigger)
-                .filter(trigger -> trigger != LevelScript.CueTrigger.TIME)
+        List<CueTrigger> events = level.radio().stream()
+                .map(RadioCue::trigger)
+                .filter(trigger -> trigger != CueTrigger.TIME)
                 .toList();
         assertEquals(
                 List.of(
-                        LevelScript.CueTrigger.BOSS_PHASE,
-                        LevelScript.CueTrigger.BOSS_PHASE,
-                        LevelScript.CueTrigger.BOSS_PHASE,
-                        LevelScript.CueTrigger.BOSS_DESTROYED,
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE,
-                        LevelScript.CueTrigger.LEVEL_END,
-                        LevelScript.CueTrigger.SECRET),
+                        CueTrigger.BOSS_PHASE,
+                        CueTrigger.BOSS_PHASE,
+                        CueTrigger.BOSS_PHASE,
+                        CueTrigger.BOSS_DESTROYED,
+                        CueTrigger.SECONDARY_OBJECTIVE,
+                        CueTrigger.LEVEL_END,
+                        CueTrigger.SECRET),
                 events,
                 "the arena's lines are events; the car's line as its secret is found");
         assertEquals(
                 List.of(PickupType.OVERDRIVE),
-                level.partDrops().stream().map(LevelScript.PartDrop::pickup).toList(),
+                level.drops().partDrops().stream()
+                        .map(DropSpec.PartDrop::pickup)
+                        .toList(),
                 "the maw's overdrive");
         assertEquals(
                 List.of(PickupType.ARMOUR_PATCH),
-                level.placedPickups().stream()
-                        .map(LevelScript.PlacedPickup::pickup)
+                level.drops().placedPickups().stream()
+                        .map(DropSpec.PlacedPickup::pickup)
                         .toList(),
                 "the supply drone's patch");
         assertEquals(2, data.briefing().pages().size(), "Okafor's and Varga's pages");

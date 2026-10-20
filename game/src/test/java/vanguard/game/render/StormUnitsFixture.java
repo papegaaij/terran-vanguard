@@ -7,6 +7,9 @@ import vanguard.content.SimSpecs;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
 
@@ -45,18 +48,11 @@ public final class StormUnitsFixture {
                 Optional.empty(),
                 Optional.empty(),
                 List.of());
-        LevelScript level = new LevelScript(
-                18,
-                3,
-                0,
-                List.of(new LevelScript.Section(LENGTH, speed)),
-                List.of(wave),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        LevelScript level = LevelScript.builder(18, 3)
+                .sections(List.of(new Section(LENGTH, speed)))
+                .waves(List.of(wave))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         return new Sortie(
                 1,
                 SimSpecs.starterLoadout(DomesFixture.CONTENT, Difficulty.MEDIUM),

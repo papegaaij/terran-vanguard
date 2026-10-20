@@ -14,7 +14,7 @@ final class WallContact {
     private double nx;
     private double ny;
 
-    WallContact(LevelScript.TerrainSpec spec) {
+    WallContact(GroundSpec.TerrainSpec spec) {
         pushTicks = Math.max(1, SimStep.ticks(spec.pushSeconds()));
         pushStep = spec.push() / pushTicks;
         cooldownTicks = SimStep.ticks(spec.cooldownSeconds());

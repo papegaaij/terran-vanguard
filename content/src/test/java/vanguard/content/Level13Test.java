@@ -13,11 +13,20 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.DropSpec;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundUnit;
+import vanguard.sim.HookMode;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
+import vanguard.sim.SideEntry;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -90,7 +99,7 @@ class Level13Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int secondary = level.secondary().credits();
+        int secondary = level.objectives().secondary().credits();
         int total = kills + ground + crates + secondary;
 
         double budget = content.economy().budget().of(level.number());
@@ -130,10 +139,10 @@ class Level13Test {
                 waves.values().stream().mapToInt(Integer::intValue).sum()
                         + level.groundUnits().size());
         assertEquals(
-                List.of(40.0, 100.0, 160.0, 220.0, 235.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
-        assertTrue(level.sections().stream().noneMatch(LevelScript.Section::arena), "no boss");
-        assertTrue(level.water(), "water: true over the whole field (G5 = a)");
+                List.of(40.0, 100.0, 160.0, 220.0, 239.0),
+                level.sections().stream().map(Section::end).toList());
+        assertTrue(level.sections().stream().noneMatch(Section::arena), "no boss");
+        assertTrue(level.ground().water(), "water: true over the whole field (G5 = a)");
         assertTrue(content.level(LEVEL).navalSplashOnly(), "the water splash only on a naval unit");
         Map<Difficulty, Integer> enemies = new TreeMap<>();
         for (Difficulty difficulty : Difficulty.values()) {
@@ -182,8 +191,8 @@ class Level13Test {
     @ParameterizedTest
     @EnumSource(Difficulty.class)
     void theRelayIsDefended(Difficulty difficulty) {
-        LevelScript.Defend defend =
-                SimSpecs.level(content, LEVEL, difficulty).defend().orElseThrow();
+        ObjectiveSpec.Defend defend =
+                SimSpecs.level(content, LEVEL, difficulty).objectives().defend().orElseThrow();
         assertEquals("nansen-relay", defend.ally().slug());
         assertEquals(240, defend.x());
         assertEquals(290, defend.y());
@@ -200,18 +209,18 @@ class Level13Test {
                     case HARD -> 560.0;
                 },
                 defend.ally().hp());
-        assertEquals(LevelScript.HookMode.ALTERNATE, defend.mode("skimmer"));
-        assertEquals(LevelScript.HookMode.IN_ARC, defend.mode("scuttler"));
-        assertEquals(LevelScript.HookMode.ALWAYS, defend.mode("polyp-mortar"));
+        assertEquals(HookMode.ALTERNATE, defend.mode("skimmer"));
+        assertEquals(HookMode.IN_ARC, defend.mode("scuttler"));
+        assertEquals(HookMode.ALWAYS, defend.mode("polyp-mortar"));
         assertEquals(
-                difficulty == Difficulty.EASY ? LevelScript.HookMode.NONE : LevelScript.HookMode.ALWAYS,
+                difficulty == Difficulty.EASY ? HookMode.NONE : HookMode.ALWAYS,
                 defend.mode("stinger"),
                 "easy: the Stingers dive at the player");
-        assertEquals(LevelScript.HookMode.NONE, defend.mode("skitter"), "the popcorn is never hooked");
-        assertEquals(LevelScript.HookMode.NONE, defend.mode("needler"));
-        assertEquals(LevelScript.HookMode.NONE, defend.mode("mantis"));
-        LevelScript.Secondary secondary =
-                SimSpecs.level(content, LEVEL, difficulty).secondary();
+        assertEquals(HookMode.NONE, defend.mode("skitter"), "the popcorn is never hooked");
+        assertEquals(HookMode.NONE, defend.mode("needler"));
+        assertEquals(HookMode.NONE, defend.mode("mantis"));
+        Secondary secondary =
+                SimSpecs.level(content, LEVEL, difficulty).objectives().secondary();
         assertTrue(secondary.byIntegrity());
         assertEquals(0.5, secondary.integrity());
     }
@@ -256,12 +265,12 @@ class Level13Test {
                 difficulty == Difficulty.HARD ? Optional.of(0.4) : Optional.empty(),
                 column.pairSeconds(),
                 "hard's Stingers in pairs");
-        List<LevelScript.GroundUnit> floe = level.groundUnits();
+        List<GroundUnit> floe = level.groundUnits();
         assertEquals(2, floe.size());
-        for (LevelScript.GroundUnit unit : floe) {
+        for (GroundUnit unit : floe) {
             assertEquals("polyp-mortar", unit.enemy().slug());
             assertEquals(66, unit.t());
-            LevelScript.SideEntry side = unit.side().orElseThrow();
+            SideEntry side = unit.side().orElseThrow();
             assertTrue(side.fromLeft());
             assertEquals(10, side.drift());
         }
@@ -303,34 +312,34 @@ class Level13Test {
     void theRadioScriptHasItsEvents() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         List<Double> timed = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
-                .map(LevelScript.RadioCue::t)
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
+                .map(RadioCue::t)
                 .toList();
         assertEquals(
                 List.of(1.0, 13.0, 24.0, 36.0, 47.5, 58.5, 102.0, 154.0, 162.0, 172.0, 179.0, 218.0, 233.5), timed);
-        Map<LevelScript.CueTrigger, Integer> events = new TreeMap<>();
-        for (LevelScript.RadioCue cue : level.radio()) {
-            if (cue.trigger() != LevelScript.CueTrigger.TIME) {
+        Map<CueTrigger, Integer> events = new TreeMap<>();
+        for (RadioCue cue : level.radio()) {
+            if (cue.trigger() != CueTrigger.TIME) {
                 events.merge(cue.trigger(), 1, Integer::sum);
             }
         }
         assertEquals(
                 Map.of(
-                        LevelScript.CueTrigger.ALLY_BELOW, 2,
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE, 1,
-                        LevelScript.CueTrigger.SECRET, 1,
-                        LevelScript.CueTrigger.LEVEL_END, 1,
-                        LevelScript.CueTrigger.MISSION_FAILED, 1),
+                        CueTrigger.ALLY_BELOW, 2,
+                        CueTrigger.SECONDARY_OBJECTIVE, 1,
+                        CueTrigger.SECRET, 1,
+                        CueTrigger.LEVEL_END, 1,
+                        CueTrigger.MISSION_FAILED, 1),
                 events);
         assertEquals(
                 List.of("0.5", "0.25"),
                 level.radio().stream()
-                        .filter(cue -> cue.trigger() == LevelScript.CueTrigger.ALLY_BELOW)
-                        .map(LevelScript.RadioCue::subject)
+                        .filter(cue -> cue.trigger() == CueTrigger.ALLY_BELOW)
+                        .map(RadioCue::subject)
                         .toList());
         assertTrue(level.radio().stream()
                 .filter(cue -> cue.speaker().equals("Rook"))
-                .allMatch(cue -> (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0));
+                .allMatch(cue -> (cue.requires() & RadioCue.FITTED_ESCORT) != 0));
         assertFalse(content.voices().uncast("Nansen"), "Nansen is cast (round 34, 13.4e = a: Patrick Eaton)");
     }
 
@@ -347,10 +356,10 @@ class Level13Test {
                 List.of("Okafor", "Varga"),
                 data.briefing().pages().stream().map(BriefingPage::speaker).toList());
         assertEquals("Rook", data.briefing().teaser().speaker());
-        List<LevelScript.PlacedPickup> placed =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).placedPickups();
+        List<DropSpec.PlacedPickup> placed =
+                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).drops().placedPickups();
         assertEquals(2, placed.size(), "the supply drones' patches");
-        for (LevelScript.PlacedPickup patch : placed) {
+        for (DropSpec.PlacedPickup patch : placed) {
             assertEquals(PickupType.ARMOUR_PATCH, patch.pickup());
             assertTrue(patch.atPoint(), "released at a point over the relay");
             assertEquals(240, patch.x());
@@ -358,7 +367,7 @@ class Level13Test {
         }
         assertEquals(
                 List.of(162.0, 202.0),
-                placed.stream().map(LevelScript.PlacedPickup::t).toList());
+                placed.stream().map(DropSpec.PlacedPickup::t).toList());
         assertTrue(data.music().jingle().isPresent(), "the jingle at t=218 (G8 = a)");
         assertFalse(data.music().debriefJingle());
     }

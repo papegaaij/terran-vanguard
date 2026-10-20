@@ -62,20 +62,13 @@ class TorpedoTest {
     }
 
     /** Units coming down with the scroll (130 px/s) from the top edge, over water or over land. */
-    static LevelScript units(boolean water, LevelScript.GroundUnit... units) {
-        return new LevelScript(
-                        1,
-                        1,
-                        0,
-                        List.of(new LevelScript.Section(60, 130)),
-                        List.of(),
-                        List.of(),
-                        List.of(units),
-                        0,
-                        List.of(),
-                        new LevelScript.Secondary(0.8, 50),
-                        List.of())
-                .withWater(water);
+    static LevelScript units(boolean water, GroundUnit... units) {
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(60, 130)))
+                .groundUnits(List.of(units))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .ground(GroundSpec.NONE.withWater(water))
+                .build();
     }
 
     static EnemySpec dummy(Layer layer, double hp) {
@@ -167,7 +160,7 @@ class TorpedoTest {
     void itStrikesSubAndGroundUnitsAtFullDamageButPassesUnderFlyers() {
         for (Layer layer : List.of(Layer.SUB, Layer.GROUND)) {
             // 20 HP: one torpedo of 12.5 leaves it standing (no ×2 on the ground), the second sinks it.
-            var sortie = sortie(units(true, new LevelScript.GroundUnit(0, POD_X, dummy(layer, 20), -1)), TORPEDO);
+            var sortie = sortie(units(true, new GroundUnit(0, POD_X, dummy(layer, 20), -1)), TORPEDO);
             run(sortie, SimStep.ticks(1), Command.NONE);
             sortie.step(FIRE);
             assertEquals(1, count(sortie, SimStep.ticks(1.2), Command.NONE, SimEvents.Type.ENEMY_HIT), layer.name());
@@ -179,7 +172,7 @@ class TorpedoTest {
             assertEquals(1, sortie.kills(), layer.name());
         }
         for (Layer layer : List.of(Layer.LOW_AIR, Layer.AIR, Layer.HIGH_AIR)) {
-            var sortie = sortie(units(true, new LevelScript.GroundUnit(0, POD_X, dummy(layer, 20), -1)), TORPEDO);
+            var sortie = sortie(units(true, new GroundUnit(0, POD_X, dummy(layer, 20), -1)), TORPEDO);
             run(sortie, SimStep.ticks(1), Command.NONE);
             sortie.step(FIRE);
             assertEquals(0, count(sortie, SimStep.ticks(1.5), Command.NONE, SimEvents.Type.ENEMY_HIT), layer.name());
@@ -190,7 +183,7 @@ class TorpedoTest {
     @Test
     void itSteersAtMostItsTurnRateTowardsASubUnitInItsCone() {
         // 80 px right of the pod's line, about 450 px ahead: 10 degrees off, inside the 30 either side.
-        var sortie = sortie(units(true, new LevelScript.GroundUnit(0, POD_X + 80, dummy(Layer.SUB, 10), -1)), TORPEDO);
+        var sortie = sortie(units(true, new GroundUnit(0, POD_X + 80, dummy(Layer.SUB, 10), -1)), TORPEDO);
         run(sortie, SimStep.ticks(0.5), Command.NONE);
         sortie.step(FIRE);
         Shot torpedo = sortie.shot(0);
@@ -215,8 +208,7 @@ class TorpedoTest {
     @Test
     void aUnitOutsideItsConeOrAFlyerIsNoTarget() {
         // 250 px to the right about 400 px ahead: 32 degrees off, outside the cone.
-        var outside =
-                sortie(units(true, new LevelScript.GroundUnit(0, POD_X + 250, dummy(Layer.SUB, 10), -1)), TORPEDO);
+        var outside = sortie(units(true, new GroundUnit(0, POD_X + 250, dummy(Layer.SUB, 10), -1)), TORPEDO);
         run(outside, SimStep.ticks(1), Command.NONE);
         outside.step(FIRE);
         Shot torpedo = outside.shot(0);
@@ -224,8 +216,7 @@ class TorpedoTest {
         run(outside, SimStep.ticks(0.5), Command.NONE);
         assertEquals(0, torpedo.heading(), 1e-12);
 
-        var flyer =
-                sortie(units(true, new LevelScript.GroundUnit(0, POD_X + 60, dummy(Layer.LOW_AIR, 10), -1)), TORPEDO);
+        var flyer = sortie(units(true, new GroundUnit(0, POD_X + 60, dummy(Layer.LOW_AIR, 10), -1)), TORPEDO);
         run(flyer, SimStep.ticks(0.5), Command.NONE);
         flyer.step(FIRE);
         assertEquals(-1, flyer.shot(0).target());
@@ -236,8 +227,7 @@ class TorpedoTest {
     @Test
     void withoutATargetAsItIsFiredItRunsStraightPastOneThatComesLater() {
         // Fired before the unit is on the field: it does not look again.
-        var sortie =
-                sortie(units(true, new LevelScript.GroundUnit(0.3, POD_X + 80, dummy(Layer.SUB, 10), -1)), TORPEDO);
+        var sortie = sortie(units(true, new GroundUnit(0.3, POD_X + 80, dummy(Layer.SUB, 10), -1)), TORPEDO);
         sortie.step(FIRE);
         Shot torpedo = sortie.shot(0);
         run(sortie, SimStep.ticks(0.8), Command.NONE);
@@ -254,11 +244,11 @@ class TorpedoTest {
                         new Armament.Mount(Armament.Slot.RIGHT_WING, TORPEDO, TORPEDO)),
                 units(
                         true,
-                        new LevelScript.GroundUnit(2, POD_X, dummy(Layer.SUB, 200), -1),
-                        new LevelScript.GroundUnit(4, POD_X + 60, dummy(Layer.GROUND, 200), -1),
-                        new LevelScript.GroundUnit(6, POD_X - 40, dummy(Layer.SUB, 200), -1),
-                        new LevelScript.GroundUnit(8, POD_X + 20, dummy(Layer.AIR, 200), -1),
-                        new LevelScript.GroundUnit(10, POD_X, dummy(Layer.SUB, 200), -1)),
+                        new GroundUnit(2, POD_X, dummy(Layer.SUB, 200), -1),
+                        new GroundUnit(4, POD_X + 60, dummy(Layer.GROUND, 200), -1),
+                        new GroundUnit(6, POD_X - 40, dummy(Layer.SUB, 200), -1),
+                        new GroundUnit(8, POD_X + 20, dummy(Layer.AIR, 200), -1),
+                        new GroundUnit(10, POD_X, dummy(Layer.SUB, 200), -1)),
                 TestSpecs.RULES.withInvulnerableShip(),
                 TestSpecs.FULL_ARMOUR);
 

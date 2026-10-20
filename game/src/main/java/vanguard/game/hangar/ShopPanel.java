@@ -91,6 +91,9 @@ final class ShopPanel {
             } else {
                 drawSideRow(batch, state, y, shop && i == state.row());
             }
+            if (state.hovers(HangarState.Target.ROW, i) && !(shop && i == state.row())) {
+                hover(batch, X + 4, y - 5, WIDTH - 8, ROW - 2);
+            }
         }
         if (count > HangarState.VISIBLE_ROWS) {
             String more =
@@ -108,10 +111,10 @@ final class ShopPanel {
         }
         boolean shopFocus = state.focus() == HangarState.Focus.SHOP;
         if (state.baySelected()) {
-            drawBay(batch, state.bayRow().orElseThrow(), shopFocus, DETAIL_Y);
+            drawBay(batch, state.bayRow().orElseThrow(), shopFocus, state.hovers(HangarState.Target.BAY, 0), DETAIL_Y);
         }
         Optional<String> refused = shopFocus
-                ? state.choice().filter(choice -> !choice.allowed()).map(HangarState::refusal)
+                ? state.previewChoice().filter(choice -> !choice.allowed()).map(HangarState::refusal)
                 : Optional.empty();
         if (shopFocus && state.baySelected()) {
             refused = state.bayRow().flatMap(Hangar.BayOffer::refusal).map(HangarState::bayRefusal);
@@ -192,6 +195,8 @@ final class ShopPanel {
                     true);
             if (on && !shop) {
                 glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
+            } else if (!on && state.hovers(HangarState.Target.SIDE, side.ordinal())) {
+                hover(batch, chip.x(), chip.y(), chip.width(), chip.height());
             }
         }
     }
@@ -235,7 +240,7 @@ final class ShopPanel {
     }
 
     /** M7 part A: the bay row's detail: what the bay is, what selling it asks, and its one chip. */
-    private void drawBay(SpriteBatch batch, Hangar.BayOffer line, boolean shop, int y) {
+    private void drawBay(SpriteBatch batch, Hangar.BayOffer line, boolean shop, boolean hovered, int y) {
         drawBayGlyph(batch, RIGHT - 24, y - 6, 24);
         glass.shadowed(batch, glass.fonts.body, Names.slot(line.bay().slot()), Glass.AMBER, INNER, y);
         glass.shadowed(batch, glass.fonts.label, BAY_WHAT, Glass.WHITE, INNER, y + 24);
@@ -255,6 +260,8 @@ final class ShopPanel {
                 allowed);
         if (shop && !allowed) {
             glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
+        } else if (!shop && hovered) {
+            hover(batch, chip.x(), chip.y(), chip.width(), chip.height());
         }
     }
 
@@ -417,8 +424,18 @@ final class ShopPanel {
                     choice.allowed());
             if (on && !choice.allowed()) {
                 glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
+            } else if (!on && state.hovers(HangarState.Target.CHOICE, i)) {
+                hover(batch, chip.x(), chip.y(), chip.width(), chip.height());
             }
         }
+    }
+
+    /**
+     * The hover look (design/ui/hangar, Mouse): a cyan outline, distinct from the selection's amber bar
+     * and chips, on what the pointer rests on.
+     */
+    private void hover(SpriteBatch batch, float x, float y, float width, float height) {
+        glass.outline(batch, Glass.CYAN, x, y, width, height);
     }
 
     /** The selected item's detail starts here, under its header. */

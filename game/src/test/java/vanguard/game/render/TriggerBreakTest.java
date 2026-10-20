@@ -14,13 +14,13 @@ import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.Hitbox;
-import vanguard.sim.LevelScript;
 
 /** Only a trigger whose spent frame is a wreck (Level 08's billboard) breaks as it is spent. */
 class TriggerBreakTest {
-    private static LevelScript.GroundObjectSpec object(int hits, String look) {
-        return new LevelScript.GroundObjectSpec(
+    private static GroundObjectSpec object(int hits, String look) {
+        return new GroundObjectSpec(
                 0,
                 240,
                 new Hitbox(72, 40),
@@ -42,9 +42,7 @@ class TriggerBreakTest {
         assertTrue(TriggerBreak.breaks(object(3, "billboard")));
         assertFalse(TriggerBreak.breaks(object(3, "survey-cache")), "shot open");
         assertFalse(TriggerBreak.breaks(object(2, "data-core-terminal")), "its core released");
-        assertFalse(
-                TriggerBreak.breaks(object(3, LevelScript.GroundObjectSpec.CARGO_CONTAINER)),
-                "the beacon or a trigger light");
+        assertFalse(TriggerBreak.breaks(object(3, GroundObjectSpec.CARGO_CONTAINER)), "the beacon or a trigger light");
         assertFalse(TriggerBreak.breaks(object(0, "billboard")), "a destructible breaks by its own event");
     }
 
@@ -58,7 +56,7 @@ class TriggerBreakTest {
                 continue;
             }
             for (Difficulty difficulty : Difficulty.values()) {
-                for (LevelScript.GroundObjectSpec spec :
+                for (GroundObjectSpec spec :
                         SimSpecs.level(content, key.get(), difficulty).groundObjects()) {
                     if (TriggerBreak.breaks(spec)) {
                         breaking.add(spec.look());

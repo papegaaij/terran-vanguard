@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import vanguard.sim.Enemy;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Sortie;
 
@@ -45,7 +46,7 @@ final class RootBurstLooks {
         puff = sprites.frames("root-burst-puff");
         root = sprites.frames("root-burst-root");
         int count = 0;
-        for (LevelScript.GroundUnit unit : script.groundUnits()) {
+        for (GroundUnit unit : script.groundUnits()) {
             if (unit.burst().isPresent()) {
                 count = Math.max(count, unit.burst().get().index() + 1);
             }
@@ -53,7 +54,7 @@ final class RootBurstLooks {
         start = new double[count];
         telegraph = new double[count];
         java.util.Arrays.fill(start, Double.NaN);
-        for (LevelScript.GroundUnit unit : script.groundUnits()) {
+        for (GroundUnit unit : script.groundUnits()) {
             unit.burst().ifPresent(burst -> {
                 start[burst.index()] = burst.t();
                 telegraph[burst.index()] = burst.telegraphSeconds();

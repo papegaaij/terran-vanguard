@@ -135,16 +135,13 @@ final class PartGSpecs {
     }
 
     /** Level 13's sections: the approach to 40 s, the timed halt to 220 s (2 s eases), the exit to 235 s. */
-    static List<LevelScript.Section> sections() {
-        return List.of(
-                new LevelScript.Section(40, APPROACH),
-                new LevelScript.Section(220, 0, false, 2),
-                new LevelScript.Section(235, APPROACH));
+    static List<Section> sections() {
+        return List.of(new Section(40, APPROACH), new Section(220, 0, false, 2), new Section(235, APPROACH));
     }
 
     /** The relay's defend primary with the hook {@code modes}. */
-    static LevelScript.Defend defend(AllySpec ally, Map<String, LevelScript.HookMode> modes) {
-        return new LevelScript.Defend(ally, RELAY_X, RELAY_Y, SYNC_START, SYNC_SECONDS, modes);
+    static ObjectiveSpec.Defend defend(AllySpec ally, Map<String, HookMode> modes) {
+        return new ObjectiveSpec.Defend(ally, RELAY_X, RELAY_Y, SYNC_START, SYNC_SECONDS, modes);
     }
 
     /** A wave of {@code count} {@code enemy} at {@code t} on {@code lanes} (lane walkers). */
@@ -156,58 +153,27 @@ final class PartGSpecs {
 
     /** A level of Level 13's shape with these waves, ground units, radio and objectives, nothing else. */
     static LevelScript level(
-            List<LevelScript.Section> sections,
+            List<Section> sections,
             List<WaveSpec> waves,
-            List<LevelScript.GroundUnit> units,
-            List<LevelScript.RadioCue> radio,
-            Optional<LevelScript.Defend> defend,
-            LevelScript.Secondary secondary,
-            List<LevelScript.PlacedPickup> placed) {
-        return new LevelScript(
-                13,
-                2,
-                0,
-                sections,
-                waves,
-                List.of(),
-                units,
-                0,
-                radio,
-                secondary,
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                true,
-                Optional.empty(),
-                Optional.empty(),
-                Optional.empty(),
-                1,
-                placed,
-                defend);
+            List<GroundUnit> units,
+            List<RadioCue> radio,
+            Optional<ObjectiveSpec.Defend> defend,
+            Secondary secondary,
+            List<DropSpec.PlacedPickup> placed) {
+        return LevelScript.builder(13, 2)
+                .sections(sections)
+                .waves(waves)
+                .groundUnits(units)
+                .radio(radio)
+                .objectives(ObjectiveSpec.NONE.withSecondary(secondary).withDefend(defend))
+                .ground(GroundSpec.NONE.withWater(true))
+                .drops(DropSpec.NONE.withPlacedPickups(placed))
+                .build();
     }
 
     /** Level 13's shape with the relay hooked by {@code modes}, the waves and units, no radio or secondary. */
-    static LevelScript level(
-            Map<String, LevelScript.HookMode> modes, List<WaveSpec> waves, List<LevelScript.GroundUnit> units) {
-        return level(
-                sections(),
-                waves,
-                units,
-                List.of(),
-                Optional.of(defend(RELAY, modes)),
-                LevelScript.Secondary.NONE,
-                List.of());
+    static LevelScript level(Map<String, HookMode> modes, List<WaveSpec> waves, List<GroundUnit> units) {
+        return level(sections(), waves, units, List.of(), Optional.of(defend(RELAY, modes)), Secondary.NONE, List.of());
     }
 
     static Sortie sortie(LevelScript level) {

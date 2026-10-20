@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # Art direction
@@ -691,3 +691,7 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
   the plateau. Variant a (the rim at 1.0 as the collision line, the faces dropping to the floor at
   0.6, as the chosen scene r03-c draws it) rejected: b reads as flying inside the canyon. Cliffs
   seen from above keep the old rule.
+- 2026-10-20 (round 42, step GFX, pending the user's review): the 2026-10-09 hit-flash rule now holds for the
+  Revenant Walker and the Siege Spire's crown, pods and maw too (at most one flash every 0.25 s, a 0.3 blend
+  towards white, none on a part that is beam-hot). The Siege Spire's death flash is a local glow (190 px round
+  the core, the flash-reduction setting applies); the Brood Carrier keeps its full-field flash.

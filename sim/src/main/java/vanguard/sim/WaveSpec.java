@@ -62,6 +62,9 @@ public record WaveSpec(
         List<List<At>> lanes,
         Optional<Double> pairSeconds) {
     public WaveSpec {
+        if (edge == Edge.TOP || edge == Edge.BOTTOM) {
+            throw new IllegalArgumentException("a wave enters from no top or bottom edge: " + edge);
+        }
         carried = List.copyOf(carried);
         paths = paths.stream().map(List::copyOf).toList();
         lanes = lanes.stream().map(List::copyOf).toList();
@@ -531,7 +534,16 @@ public record WaveSpec(
         NONE,
         LEFT,
         RIGHT,
-        ALTERNATING
+        ALTERNATING,
+        /** M7 part F: only a walking boss's entry edge ({@link BossSpec.Stride#edgeCycle()}); no wave's. */
+        TOP,
+        /** M7 part F: only a walking boss's entry edge ({@link BossSpec.Stride#edgeCycle()}); no wave's. */
+        BOTTOM;
+
+        /** M7 part F: whether it names one screen edge (a walking boss's entry: top, bottom, left or right). */
+        public boolean screenEdge() {
+            return this == TOP || this == BOTTOM || this == LEFT || this == RIGHT;
+        }
     }
 
     /**

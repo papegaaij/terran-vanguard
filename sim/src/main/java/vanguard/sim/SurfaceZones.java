@@ -3,7 +3,7 @@ package vanguard.sim;
 import java.util.List;
 
 /**
- * M7 part B: the level's no-surface zones ({@link LevelScript.NoSurface}; design/campaign Level 15) in
+ * M7 part B: the level's no-surface zones ({@link GroundSpec.NoSurface}; design/campaign Level 15) in
  * ground space, placed by the scroll at their times ({@link Sortie#scrollAt}), and the ground's scroll now,
  * which the sortie sets every step: where a Burrower may not surface. Derived from the script and the
  * scroll, so nothing of it is hashed.
@@ -33,8 +33,9 @@ final class SurfaceZones {
 
     /** The zones of {@code script} (M7 part C: and its rock); {@link #NONE} without any. */
     static SurfaceZones of(LevelScript script) {
-        List<LevelScript.NoSurface> zones = script.noSurface();
-        Terrain rock = script.terrain().map(LevelScript.TerrainSpec::terrain).orElse(null);
+        List<GroundSpec.NoSurface> zones = script.ground().noSurface();
+        Terrain rock =
+                script.ground().terrain().map(GroundSpec.TerrainSpec::terrain).orElse(null);
         if (zones.isEmpty() && rock == null) {
             return NONE;
         }
@@ -44,7 +45,7 @@ final class SurfaceZones {
         double[] near = new double[n];
         double[] far = new double[n];
         for (int i = 0; i < n; i++) {
-            LevelScript.NoSurface zone = zones.get(i);
+            GroundSpec.NoSurface zone = zones.get(i);
             left[i] = zone.left();
             right[i] = zone.right();
             near[i] = Sortie.scrollAt(script, zone.from());

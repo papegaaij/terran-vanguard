@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../world/mars, ../../../player/wingmen, ../../../systems/economy]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Level 15 – Olympus Descent
@@ -405,6 +405,8 @@ level's data. The briefing images are on the
 | [concept/l15-props-final-r38-a.gif](concept/l15-props-final-r38-a.gif) | The same props in motion | chosen (round 38, F.2: approved as final) |
 | [concept/level-15-capture-r38-a.png](concept/level-15-capture-r38-a.png) | Game capture, M7 part B (round 38): twenty frames of a whole medium run with the plan's L15 fit and Rook, no `--invulnerable` (the drop under the transport, the cloud deck's close-over, the first Burrower's bulge, ring and dive, a field under Dust Kites, Lycus Survey Station, the drop pod's rubble, the pincer, the dune field, the rail line, the debrief: 198 / 200, secret 1 / 1, A+) | chosen (round 38, K.1: accepted) |
 | [concept/level-15-capture-r38-a.mp4](concept/level-15-capture-r38-a.mp4) | The same run as a video with the game's sound, t −1 to 232 (the level through the debrief into the hangar) | chosen (round 38, K.1: accepted) |
+| [concept/level-15-end-r42-a.mp4](concept/level-15-end-r42-a.mp4) | Check capture of the level's end (round 42, medium, the test autopilot): the last 25 s and the hand-over to the debrief with the closing lines heard in full (39 s with sound) | chosen (round 42, K.d: accepted) |
+| [concept/level-15-end-r42-a.png](concept/level-15-end-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.d: accepted) |
 
 ## Implementation
 
@@ -529,3 +531,4 @@ level's data. The briefing images are on the
   200 → 306 enemies (≈ 65 → 99 a minute), 1.42 → 2.68 on the screen, 10.7 → 17.2 shots a minute, 17 → 1 pauses
   over 2 s; hard 251 → 388, 2.34 → 4.79 on the screen, 21.1 → 43.5 shots, 9 → 0 pauses; easy 152 → 227, 1 pause
   over 3 s. `bounty_scale` 0.42 → 0.26 (typical 1,796, −0.5 %; perfect 2,833).
+- 2026-10-20: round 42 closed: the rework to the Act 2+ rules (R.a, kept) and the radio outro fix with its check capture (K.d, T.3) accepted by the user.

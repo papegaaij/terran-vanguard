@@ -38,6 +38,12 @@ import java.util.Optional;
  *     SimEvents.Type#EYE_GLINT} event) to the burst's first shot; 0 for none
  * @param reaim M7 part E: a pass trigger's burst aims each shot at the ship anew; otherwise its shots follow the
  *     first one's line (every other aimed burst already aims each of its shots anew)
+ * @param homing M7 part F (design/enemies/bosses/revenant-walker, homing missiles): a boss's aimed shots of this
+ *     gun are homing {@link Missile}s instead of bullets ({@code bulletSpeed} their speed, {@code damage} a hit's);
+ *     empty for every other gun
+ * @param arcFacingRadians M7 part F (design/enemies/ground/spine-turret, Turned arc): the direction its {@code
+ *     arcRadians} is measured from, radians clockwise from straight down; 0 (straight down) for every turret before
+ *     Level 19, {@code PI} for a turret that faces up the screen ({@code arc: up}); its barrel starts along it
  */
 public record EnemyGun(
         double intervalSeconds,
@@ -57,8 +63,13 @@ public record EnemyGun(
         Optional<SpiralSpec> spiral,
         double passWithinX,
         double tellSeconds,
-        boolean reaim) {
+        boolean reaim,
+        Optional<HomingSpec> homing,
+        double arcFacingRadians) {
     public EnemyGun {
+        if (!Double.isFinite(arcFacingRadians)) {
+            throw new IllegalArgumentException("an arc faces a direction: " + arcFacingRadians);
+        }
         if (!(burstGapSeconds > 0)) {
             throw new IllegalArgumentException("a burst's shots are apart in time: " + burstGapSeconds);
         }
@@ -81,6 +92,168 @@ public record EnemyGun(
         if (!(tellSeconds >= 0)) {
             throw new IllegalArgumentException("a tell lasts 0 s or more: " + tellSeconds);
         }
+        if (homing.isPresent() && (up || mine.isPresent() || mortar.isPresent() || spiral.isPresent() || fan != 1)) {
+            throw new IllegalArgumentException("a homing gun fires single missiles, not up, a fan, a mine or a lob");
+        }
+    }
+
+    /** An attack without M7 part F's homing missiles (every gun before the Revenant Walker's pods). */
+    public EnemyGun(
+            double intervalSeconds,
+            double firstShotDelay,
+            int burst,
+            double bulletSpeed,
+            double damage,
+            boolean leadsTargetInCircle,
+            int fan,
+            double spreadRadians,
+            double turnRate,
+            double arcRadians,
+            Optional<MineSpec> mine,
+            Optional<MortarSpec> mortar,
+            double burstGapSeconds,
+            boolean up,
+            Optional<SpiralSpec> spiral,
+            double passWithinX,
+            double tellSeconds,
+            boolean reaim) {
+        this(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tellSeconds,
+                reaim,
+                Optional.empty());
+    }
+
+    /** An attack whose arc faces straight down (every turret before M7 part F's {@code arc: up}). */
+    public EnemyGun(
+            double intervalSeconds,
+            double firstShotDelay,
+            int burst,
+            double bulletSpeed,
+            double damage,
+            boolean leadsTargetInCircle,
+            int fan,
+            double spreadRadians,
+            double turnRate,
+            double arcRadians,
+            Optional<MineSpec> mine,
+            Optional<MortarSpec> mortar,
+            double burstGapSeconds,
+            boolean up,
+            Optional<SpiralSpec> spiral,
+            double passWithinX,
+            double tellSeconds,
+            boolean reaim,
+            Optional<HomingSpec> homing) {
+        this(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tellSeconds,
+                reaim,
+                homing,
+                0);
+    }
+
+    /**
+     * M7 part F (design/enemies/ground/spine-turret, Turned arc): this turret's arc measured from {@code
+     * facingRadians} (clockwise from straight down; {@code PI}: {@code arc: up}) instead of straight down.
+     */
+    public EnemyGun withArcFacing(double facingRadians) {
+        return new EnemyGun(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tellSeconds,
+                reaim,
+                homing,
+                facingRadians);
+    }
+
+    /**
+     * M7 part F, a homing missile (design/enemies/bosses/revenant-walker, Attacks): it flies at the gun's bullet
+     * speed and turns toward the ship at up to {@code turnRadiansPerSecond}; after {@code lifeSeconds} it fizzles.
+     * It has {@code hp} (every shot of the player's and Rook's that reaches the air hits it, the Ion Beam too) and
+     * at most {@code mostAlive} of them fly at once (a launch beyond that is left out). A pod's hatch opens {@code
+     * hatchSeconds} before its salvo (the tell, {@link SimEvents.Type#POD_HATCH}).
+     */
+    public record HomingSpec(
+            double turnRadiansPerSecond, double lifeSeconds, double hp, int mostAlive, double hatchSeconds) {
+        public HomingSpec {
+            if (!(turnRadiansPerSecond >= 0)
+                    || !(lifeSeconds > 0)
+                    || !(hp > 0)
+                    || mostAlive < 1
+                    || !(hatchSeconds >= 0)) {
+                throw new IllegalArgumentException("a homing missile turns, lives, has HP and a cap");
+            }
+        }
+    }
+
+    /** M7 part F: this attack firing homing missiles ({@code withHoming}); empty for bullets. */
+    public EnemyGun withHoming(Optional<HomingSpec> withHoming) {
+        return new EnemyGun(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tellSeconds,
+                reaim,
+                withHoming,
+                arcFacingRadians);
     }
 
     /** An attack without M7 part E's pass trigger (every unit before the Ghost Drone). */
@@ -145,7 +318,9 @@ public record EnemyGun(
                 spiral,
                 withinX,
                 tell,
-                reaimed);
+                reaimed,
+                homing,
+                arcFacingRadians);
     }
 
     /** M7 part E: whether it fires by a pass trigger ({@link #passWithinX()} is a number). */
@@ -221,7 +396,9 @@ public record EnemyGun(
                 withSpiral,
                 passWithinX,
                 tellSeconds,
-                reaim);
+                reaim,
+                homing,
+                arcFacingRadians);
     }
 
     /** An attack that is not fired straight up (every unit but the Wraith). */

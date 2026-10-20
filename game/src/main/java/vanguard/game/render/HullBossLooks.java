@@ -11,8 +11,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.Arrays;
-import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 
 /**
  * A boss with one long hull that turns (the Brood Carrier, design/enemies/bosses/brood-carrier, D1 of
@@ -101,7 +102,7 @@ final class HullBossLooks implements Disposable {
 
     private final Color scratch = new Color();
 
-    HullBossLooks(Sprites sprites, FlashShader flash, LevelScript.SetPieceSpec spec, JsonValue pivots) {
+    HullBossLooks(Sprites sprites, FlashShader flash, SetPieceSpec spec, JsonValue pivots) {
         String slug = spec.slug();
         pixel = sprites.pixel;
         this.flash = flash;
@@ -256,7 +257,7 @@ final class HullBossLooks implements Disposable {
         double angle = BossPose.angle(piece, turn);
         tint.set(batch.getColor());
         for (int p = 0; p < piece.partCount(); p++) {
-            LevelScript.PartSpec part = piece.spec().parts().get(p);
+            PartSpec part = piece.spec().parts().get(p);
             // At the pose's ends the simulation's offsets: its hit boxes, already at the altitude's
             // scale; the placeholder's turn turns the data offsets.
             double px = x + (between ? BossPose.turnedX(part, angle) * scale : piece.partOffsetX(p));

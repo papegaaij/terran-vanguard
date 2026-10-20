@@ -102,7 +102,7 @@ final class ObjectivePasses {
             return;
         }
         escortKilled = true;
-        radio.cue(LevelScript.CueTrigger.ESCORT_FIRST_KILL, "");
+        radio.cue(CueTrigger.ESCORT_FIRST_KILL, "");
     }
 
     void destroy(int index) {
@@ -191,7 +191,7 @@ final class ObjectivePasses {
         }
         enemies.free(index);
         if (kills == 1) {
-            radio.cue(LevelScript.CueTrigger.FIRST_KILL, spec.slug());
+            radio.cue(CueTrigger.FIRST_KILL, spec.slug());
         }
         if (group >= 0) {
             decided(group, objectives.groupUnitDestroyed(group), x, y);
@@ -206,7 +206,7 @@ final class ObjectivePasses {
      * the nearest, at least 1 (Level 12's shield cells; the factor 1 elsewhere leaves it).
      */
     private int dropEvery(int every) {
-        double factor = script.dropFactor();
+        double factor = script.drops().dropFactor();
         return factor == 1 ? every : Math.max(1, (int) Math.round(every / factor));
     }
 
@@ -237,7 +237,7 @@ final class ObjectivePasses {
                 payPart(piece, p);
             }
         }
-        LevelScript.SetPieceSpec spec = piece.spec();
+        SetPieceSpec spec = piece.spec();
         events.add(SimEvents.Type.SET_PIECE_DESTROYED, piece.x(), piece.y(), k);
         tally.countKill();
         if (spec.drop().isPresent()) {
@@ -248,13 +248,23 @@ final class ObjectivePasses {
                     Math.clamp(piece.y(), half, PlayField.HEIGHT - half));
         }
         piece.destroy();
-        radio.cue(LevelScript.CueTrigger.FIRST_KILL, spec.slug());
+        radio.cue(CueTrigger.FIRST_KILL, spec.slug());
         if (spec.isBoss()) {
             events.add(SimEvents.Type.BOSS_DESTROYED, piece.x(), piece.y(), bossCredits(spec));
-            radio.cue(LevelScript.CueTrigger.BOSS_DESTROYED, spec.slug());
+            if (piece.stride().isPresent()) {
+                // M7 part F: the walker topples along its heading; its wreck stays.
+                events.add(
+                        SimEvents.Type.BOSS_WRECK,
+                        piece.x(),
+                        piece.y(),
+                        piece.stride().get().heading());
+            }
+            radio.cue(CueTrigger.BOSS_DESTROYED, spec.slug());
             if (s.arenaEndTicks >= 0 && s.levelTick >= s.arenaStartTicks && s.levelTick < s.arenaEndTicks - 1) {
                 s.arenaJump = true;
             }
+            // M7 part F: an arena that holds after its boss keeps the clock halted over the death chain and the hold.
+            s.bossDownInArena(piece.boss().orElseThrow());
             // M5 part E (user decision E8 = a): an afloat objective is decided at the boss's death.
             if (objectives.bossDownAfloat()) {
                 paySecondary();
@@ -274,9 +284,9 @@ final class ObjectivePasses {
      * parts objective counts it.
      */
     private void shotOff(int k, SetPiece piece, int part) {
-        List<LevelScript.PartDrop> drops = script.partDrops();
+        List<DropSpec.PartDrop> drops = script.drops().partDrops();
         for (int d = 0; d < drops.size(); d++) {
-            LevelScript.PartDrop drop = drops.get(d);
+            DropSpec.PartDrop drop = drops.get(d);
             if (partDropPiece[d] == k && among(drop.parts(), part) && wrecked(piece, drop.parts()) == drop.dropsAt()) {
                 double half = EnemyGun.BULLET.width();
                 s.pickupPasses.drop(
@@ -285,13 +295,13 @@ final class ObjectivePasses {
                         Math.clamp(piece.partY(part), half, PlayField.HEIGHT - half));
             }
         }
-        if (k == partsPiece && among(script.secondary().parts(), part) && objectives.partShotOff()) {
+        if (k == partsPiece && among(script.objectives().secondary().parts(), part) && objectives.partShotOff()) {
             paySecondary();
         }
         if (piece.spec().isBoss() && !piece.spec().parts().get(part).vital()) {
             // M5 part E: the radio's boss-part-destroyed (the first of the parts its cue names).
             radio.cue(
-                    LevelScript.CueTrigger.BOSS_PART_DESTROYED,
+                    CueTrigger.BOSS_PART_DESTROYED,
                     piece.spec().parts().get(part).name());
         }
     }
@@ -315,9 +325,9 @@ final class ObjectivePasses {
     }
 
     /** What a boss's parts paid together, after the credit factor: the credit shower's number. */
-    private int bossCredits(LevelScript.SetPieceSpec spec) {
+    private int bossCredits(SetPieceSpec spec) {
         // Indexed: a for-each would allocate an iterator whenever a boss is wrecked.
-        List<LevelScript.PartSpec> parts = spec.parts();
+        List<PartSpec> parts = spec.parts();
         int credits = 0;
         for (int i = 0; i < parts.size(); i++) {
             credits += (int) Math.rint(parts.get(i).bounty() * rules.scoring().creditFactor());
@@ -332,11 +342,11 @@ final class ObjectivePasses {
 
     /** The secondary objective is met: its credits, its event and its line. */
     void paySecondary() {
-        int credits = script.secondary().credits();
+        int credits = script.objectives().secondary().credits();
         tally.earn(CreditSource.OBJECTIVES, credits);
         tally.scoreValue(credits);
         events.add(SimEvents.Type.OBJECTIVE_MET, ship.x(), ship.y());
-        radio.cue(LevelScript.CueTrigger.SECONDARY_OBJECTIVE, "");
+        radio.cue(CueTrigger.SECONDARY_OBJECTIVE, "");
     }
 
     /**
@@ -367,7 +377,7 @@ final class ObjectivePasses {
         if (enemy.group() >= 0) {
             int group = enemy.group();
             int state = objectives.groupUnitEscaped(group);
-            if (!script.targets().isEmpty()) {
+            if (!script.objectives().targets().isEmpty()) {
                 // A battery whose unit got away can no longer be destroyed: the mission fails at once.
                 failTargets(group);
             } else {
@@ -377,7 +387,7 @@ final class ObjectivePasses {
         if (objectives.escapeLost(slug, enemy.tag())) {
             events.add(SimEvents.Type.OBJECTIVE_FAILED, enemy.x(), enemy.y());
         }
-        radio.cue(LevelScript.CueTrigger.ENEMY_ESCAPED, slug);
+        radio.cue(CueTrigger.ENEMY_ESCAPED, slug);
     }
 
     /**
@@ -389,31 +399,31 @@ final class ObjectivePasses {
         String name = script.groups().get(group);
         if (state == Objectives.CLEARED && !groupCalled[group]) {
             groupCalled[group] = true;
-            if (script.targets().isEmpty()) {
-                int credits = script.secondary().credits();
+            if (script.objectives().targets().isEmpty()) {
+                int credits = script.objectives().secondary().credits();
                 tally.earn(CreditSource.OBJECTIVES, credits);
                 tally.scoreValue(credits);
             }
             // Indexed: a for-each would allocate an iterator whenever a group is cleared.
-            List<LevelScript.GroupDrop> drops = script.groupDrops();
+            List<DropSpec.GroupDrop> drops = script.drops().groupDrops();
             for (int i = 0; i < drops.size(); i++) {
-                LevelScript.GroupDrop drop = drops.get(i);
+                DropSpec.GroupDrop drop = drops.get(i);
                 if (drop.group() == group) {
                     s.pickupPasses.drop(drop.pickup(), x, y);
                 }
             }
             events.add(SimEvents.Type.GROUP_CLEARED, ship.x(), ship.y(), group);
-            radio.cue(LevelScript.CueTrigger.GROUP_CLEARED, name);
+            radio.cue(CueTrigger.GROUP_CLEARED, name);
             if (objectives.secondaryMet()) {
                 events.add(SimEvents.Type.OBJECTIVE_MET, ship.x(), ship.y());
-                radio.cue(LevelScript.CueTrigger.SECONDARY_OBJECTIVE, "");
+                radio.cue(CueTrigger.SECONDARY_OBJECTIVE, "");
             }
         } else if (state == Objectives.LOST && !groupCalled[group]) {
             groupCalled[group] = true;
             events.add(SimEvents.Type.GROUP_LOST, ship.x(), ship.y(), group);
-            radio.cue(LevelScript.CueTrigger.GROUP_LOST, name);
+            radio.cue(CueTrigger.GROUP_LOST, name);
             if (objectives.groupsLost() == 1) {
-                radio.cue(LevelScript.CueTrigger.FIRST_GROUP_LOST, "");
+                radio.cue(CueTrigger.FIRST_GROUP_LOST, "");
             }
         }
     }
@@ -436,7 +446,7 @@ final class ObjectivePasses {
         s.failed = true;
         s.failedGroup = group;
         events.add(SimEvents.Type.PRIMARY_FAILED, ship.x(), ship.y(), group);
-        radio.cue(LevelScript.CueTrigger.MISSION_FAILED, "");
+        radio.cue(CueTrigger.MISSION_FAILED, "");
     }
 
     /**

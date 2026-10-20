@@ -12,14 +12,19 @@ import org.junit.jupiter.api.Test;
 import vanguard.sim.Allocations;
 import vanguard.sim.AllySpec;
 import vanguard.sim.Command;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.HookMode;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
 import vanguard.sim.Rules;
+import vanguard.sim.Secondary;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -65,19 +70,20 @@ class Level17Test {
     void theDomesPerDifficulty() {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
-            LevelScript.GroundAllies allies = level.groundAllies().orElseThrow();
+            ObjectiveSpec.GroundAllies allies =
+                    level.objectives().groundAllies().orElseThrow();
             assertEquals(
                     DOMES,
-                    allies.units().stream().map(LevelScript.GroundAlly::name).toList());
+                    allies.units().stream().map(ObjectiveSpec.GroundAlly::name).toList());
             assertEquals(
                     List.of(38.0, 46.0, 104.0, 110.0, 126.0),
                     allies.units().stream()
-                            .map(LevelScript.GroundAlly::enterSeconds)
+                            .map(ObjectiveSpec.GroundAlly::enterSeconds)
                             .toList());
             assertEquals(
                     List.of(130.0, 350.0, 110.0, 370.0, 240.0),
-                    allies.units().stream().map(LevelScript.GroundAlly::x).toList());
-            for (LevelScript.GroundAlly unit : allies.units()) {
+                    allies.units().stream().map(ObjectiveSpec.GroundAlly::x).toList());
+            for (ObjectiveSpec.GroundAlly unit : allies.units()) {
                 AllySpec dome = unit.ally();
                 boolean eden = unit.name().equals("Eden");
                 assertEquals("ares-landing-dome", dome.slug());
@@ -97,20 +103,20 @@ class Level17Test {
                 assertEquals(0, dome.dives());
                 assertFalse(dome.objectiveAimed() || dome.bullets() || dome.contact());
             }
-            assertEquals(LevelScript.HookMode.ALWAYS, allies.mode("spore-bomber"));
-            assertEquals(
-                    difficulty == Difficulty.EASY ? LevelScript.HookMode.NONE : LevelScript.HookMode.ALTERNATE,
-                    allies.mode("shellback"));
-            assertEquals(LevelScript.HookMode.NONE, allies.mode("choir-herald"));
+            assertEquals(HookMode.ALWAYS, allies.mode("spore-bomber"));
+            assertEquals(difficulty == Difficulty.EASY ? HookMode.NONE : HookMode.ALTERNATE, allies.mode("shellback"));
+            assertEquals(HookMode.NONE, allies.mode("choir-herald"));
             assertEquals(220, allies.bombRow(), "round 40 R.b: from 160");
             assertEquals(40, allies.bombSlot());
-            LevelScript.Secondary secondary = level.secondary();
-            assertTrue(secondary.untouched());
+            assertEquals(2.5, allies.bombRunIn(), "round 41: 2.5 s on the play field before a bomber may drop");
+            Secondary secondary = level.objectives().secondary();
+            assertTrue(secondary.standing(), "round 41: \"No dome lost\" (was untouched)");
+            assertFalse(secondary.untouched());
             assertEquals(100, secondary.credits());
             assertEquals("DOMES", secondary.label());
-            assertTrue(level.convoy().isEmpty()
-                    && level.escort().isEmpty()
-                    && level.defend().isEmpty());
+            assertTrue(level.objectives().convoy().isEmpty()
+                    && level.objectives().escort().isEmpty()
+                    && level.objectives().defend().isEmpty());
         }
     }
 
@@ -200,7 +206,10 @@ class Level17Test {
         }
     }
 
-    /** The units per kind at medium, as the README's credit budget counts them. */
+    /**
+     * The units per kind at medium, as the README's credit budget counts them (step PE17: the waves to the Act 2+
+     * rules, with six Burrower fields and Stinger streams for the popcorn).
+     */
     @Test
     void theWavesFlyTheReadmesUnits() {
         Map<String, Integer> units = new TreeMap<>();
@@ -209,11 +218,12 @@ class Level17Test {
         }
         assertEquals(
                 Map.of(
-                        "dust-kite", 72,
+                        "dust-kite", 56,
                         "mote-swarm", 30,
-                        "skitter", 24,
-                        "needler", 18,
-                        "stinger", 12,
+                        "skitter", 12,
+                        "needler", 17,
+                        "stinger", 35,
+                        "burrower", 23,
                         "spore-bomber", 12,
                         "shellback", 5,
                         "mantis", 4,
@@ -326,7 +336,7 @@ class Level17Test {
                 java.util.Optional.of(50.0), wave.speed(), wave.enemy().slug()));
         int cue = -1;
         for (int i = 0; i < script.radio().size(); i++) {
-            if (script.radio().get(i).trigger() == LevelScript.CueTrigger.FIRST_RING) {
+            if (script.radio().get(i).trigger() == CueTrigger.FIRST_RING) {
                 cue = i;
             }
         }
@@ -403,7 +413,8 @@ class Level17Test {
     /**
      * Left alone (the ship never fires, nothing hits it), the hooked bombers fly their runs and break domes (each dome
      * before a hooked Shellback's second lob, its first at a dome, could land), every dome takes at most its hits, the
-     * mission never fails and the secondary fails at the first hit.
+     * mission never fails and the secondary (round 41: "No dome lost") fails when the first dome breaks: on medium and
+     * hard one does.
      */
     @Test
     void leftAloneTheBombersAndShellbacksBreakTheDomes() {
@@ -456,7 +467,9 @@ class Level17Test {
             assertTrue(lobs > 0, difficulty + ": the Shellbacks lob: " + hits);
             // Left alone the bombers break each dome before a Shellback's second lob (its first at a dome) lands.
             assertTrue(difficulty != Difficulty.EASY || lobHits == 0, difficulty + ": unhooked on easy: " + hits);
-            assertTrue(hits.failed() && !sortie.result().secondaryMet(), difficulty + ": the secondary fails");
+            assertEquals(lost > 0, hits.failed(), difficulty + ": the secondary fails at a lost dome: " + hits);
+            assertEquals(lost == 0, sortie.result().secondaryMet(), difficulty + ": " + hits);
+            assertTrue(difficulty == Difficulty.EASY || lost > 0, difficulty + ": left alone a dome breaks: " + hits);
             assertTrue(hits.untouched() < 5);
             assertEquals(0, rollHits, difficulty + ": nothing is shot, nothing curls");
         }
@@ -561,36 +574,34 @@ class Level17Test {
     /** The radio's data: the timed lines in order and at least 4 s apart; Rook's three lines only while he flies. */
     @Test
     void theRadiosData() {
-        List<LevelScript.RadioCue> radio =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).radio();
-        List<LevelScript.RadioCue> timed = radio.stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
-                .toList();
+        List<RadioCue> radio = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).radio();
+        List<RadioCue> timed =
+                radio.stream().filter(cue -> cue.trigger() == CueTrigger.TIME).toList();
         for (int i = 1; i < timed.size(); i++) {
             assertTrue(
                     timed.get(i).t() - timed.get(i - 1).t() >= 4,
                     timed.get(i - 1).t() + " and " + timed.get(i).t());
         }
         List<Double> rook = timed.stream()
-                .filter(cue -> (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0)
-                .map(LevelScript.RadioCue::t)
+                .filter(cue -> (cue.requires() & RadioCue.FITTED_ESCORT) != 0)
+                .map(RadioCue::t)
                 .toList();
         assertEquals(List.of(14.0, 95.0, 143.0), rook);
         radio.forEach(cue -> assertFalse(cue.line().isBlank()));
         assertEquals(
                 List.of(
-                        LevelScript.CueTrigger.FIRST_RING,
-                        LevelScript.CueTrigger.ALLY_HIT,
-                        LevelScript.CueTrigger.ALLY_LOST,
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE,
-                        LevelScript.CueTrigger.LEVEL_END),
+                        CueTrigger.FIRST_RING,
+                        CueTrigger.ALLY_HIT,
+                        CueTrigger.ALLY_LOST,
+                        CueTrigger.SECONDARY_OBJECTIVE,
+                        CueTrigger.LEVEL_END),
                 radio.stream()
-                        .map(LevelScript.RadioCue::trigger)
-                        .filter(trigger -> trigger != LevelScript.CueTrigger.TIME)
-                        .filter(trigger -> trigger != LevelScript.CueTrigger.SECRET)
+                        .map(RadioCue::trigger)
+                        .filter(trigger -> trigger != CueTrigger.TIME)
+                        .filter(trigger -> trigger != CueTrigger.SECRET)
                         .toList());
         assertTrue(radio.stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.ALLY_HIT)
+                .filter(cue -> cue.trigger() == CueTrigger.ALLY_HIT)
                 .allMatch(cue -> cue.line().contains("{ally}")));
     }
 
@@ -600,17 +611,19 @@ class Level17Test {
     /**
      * The autopilot (the Herald first, the hooked bombers before their dome, a Shellback's vent and belly, never a
      * curled one) flies the level to its end with the plan's fit on every difficulty, over {@link #SEEDS} seeds.
-     * Printed per difficulty: the dome secondary's rate (the README's "about half the runs"), the domes kept, the
-     * rings' absorbs, the credits, the attempts, the domes' hits by source and the vents shot. Rook does not fly (the
-     * plan's fit has no escort). On easy (the Shellbacks unhooked) the domes are kept at least once.
+     * Printed per difficulty: the dome secondary's rate, the domes untouched and standing, the rings' absorbs, the
+     * credits, the attempts, the domes' hits by source, the vents shot and the first dome lost per run. Rook does not
+     * fly (the plan's fit has no escort). Round 41 ("No dome lost", the bombers' 2.5 s run-in; the user's playtest
+     * 2026-10-19): met in most runs on easy and medium, and possible on hard.
      */
     @Test
-    void theAutopilotFliesTheLevelAndKeepsTheDomesAboutHalfTheTime() {
+    void theAutopilotFliesTheLevelAndKeepsTheDomesStandingInMostRuns() {
         StringBuilder report = new StringBuilder("Level 17 autopilot over " + SEEDS + " seeds:");
-        int easyMet = 0;
+        Map<Difficulty, Integer> metBy = new TreeMap<>();
         for (Difficulty difficulty : Difficulty.values()) {
             int met = 0;
             int kept = 0;
+            int standing = 0;
             int absorbs = 0;
             int retries = 0;
             long credits = 0;
@@ -622,6 +635,7 @@ class Level17Test {
             int shellbacksKilled = 0;
             StringBuilder seedOne = new StringBuilder();
             StringBuilder firsts = new StringBuilder();
+            StringBuilder losses = new StringBuilder();
             Map<Long, int[]> byEntry = new TreeMap<>();
             for (long seed = 1; seed <= SEEDS; seed++) {
                 Sortie sortie = sortie(content, seed, difficulty);
@@ -638,6 +652,8 @@ class Level17Test {
                 Map<Integer, double[]> walkers = new java.util.HashMap<>();
                 double firstHit = -1;
                 String firstBy = "";
+                double firstLost = -1;
+                String lostDome = "";
                 while (!sortie.complete() && steps++ < MAX_STEPS) {
                     if (!sortie.flying() || sortie.primaryFailed()) {
                         sortie.retry(sortie.ship().defences().maxArmour());
@@ -654,6 +670,12 @@ class Level17Test {
                             case ENEMY_DESTROYED -> shellbacksKilled += events.value(i) == shellbackKind ? 1 : 0;
                             case BOMB_DROPPED -> bomb = true;
                             case ROLL_CRUSHED -> crush = events.value(i) >= 0;
+                            case ALLY_LOST -> {
+                                if (firstLost < 0) {
+                                    firstLost = sortie.levelSeconds();
+                                    lostDome = DOMES.get(events.value(i));
+                                }
+                            }
                             case ALLY_HIT -> {
                                 if (bomb) {
                                     bombHits++;
@@ -680,28 +702,33 @@ class Level17Test {
                     if (sortie.attempt() != attempt) {
                         attempt = sortie.attempt();
                         firstHit = -1;
+                        firstLost = -1;
                     }
                 }
                 if (firstHit >= 0) {
                     firsts.append(String.format(" %.0f %s;", firstHit, firstBy));
                 }
+                if (firstLost >= 0) {
+                    losses.append(String.format(" %.0f %s;", firstLost, lostDome));
+                }
                 assertTrue(sortie.complete(), difficulty + " seed " + seed);
                 met += sortie.result().secondaryMet() ? 1 : 0;
                 kept += sortie.alliesUntouched();
+                standing += sortie.alliesStanding();
                 retries += sortie.attempt() - 1;
                 credits += sortie.result().credits().total();
             }
-            if (difficulty == Difficulty.EASY) {
-                easyMet = met;
-            }
+            metBy.put(difficulty, met);
             report.append(String.format(
-                    "%n  %s: secondary met %d/%d, domes untouched %.1f of 5, ring absorbs %.0f per run, credits %.0f,"
-                            + " retries %d; dome hits by bombs %d, lobs %d, rolls %d; vents shot %d; Shellbacks killed"
-                            + " %d/%d (killed/walked by entry second %s); first hits:%s; seed 1's hits:%s",
+                    "%n  %s: secondary met %d/%d, domes untouched %.1f, standing %.1f of 5, ring absorbs %.0f per run,"
+                            + " credits %.0f, retries %d; dome hits by bombs %d, lobs %d, rolls %d; vents shot %d;"
+                            + " Shellbacks killed %d/%d (killed/walked by entry second %s); first hits:%s; first"
+                            + " losses:%s; seed 1's hits:%s",
                     difficulty,
                     met,
                     SEEDS,
                     kept / (double) SEEDS,
+                    standing / (double) SEEDS,
                     absorbs / (double) SEEDS,
                     credits / (double) SEEDS,
                     retries,
@@ -715,10 +742,13 @@ class Level17Test {
                             .map(e -> e.getKey() + ": " + e.getValue()[0] + "/" + e.getValue()[1])
                             .toList(),
                     firsts,
+                    losses,
                     seedOne));
         }
         System.out.println(report);
-        assertTrue(easyMet > 0, "easy: the domes can be kept untouched (the Shellbacks unhooked)");
+        assertTrue(metBy.get(Difficulty.EASY) > SEEDS / 2, "easy: no dome lost in most runs " + metBy);
+        assertTrue(metBy.get(Difficulty.MEDIUM) > SEEDS / 2, "medium: no dome lost in most runs " + metBy);
+        assertTrue(metBy.get(Difficulty.HARD) > 0, "hard: no dome lost is possible " + metBy);
     }
 
     /**

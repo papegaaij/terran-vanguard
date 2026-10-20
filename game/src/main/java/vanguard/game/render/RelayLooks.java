@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import vanguard.sim.Ally;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.Sortie;
 
 /**
@@ -119,10 +120,10 @@ final class RelayLooks {
             FlashShader flash,
             LevelScript script,
             java.util.function.Function<String, JsonValue> pivots) {
-        if (script.defend().isEmpty()) {
+        if (script.objectives().defend().isEmpty()) {
             return null;
         }
-        LevelScript.Defend defend = script.defend().get();
+        ObjectiveSpec.Defend defend = script.objectives().defend().get();
         String slug = defend.ally().slug();
         if (!sprites.has(slug)) {
             return null;

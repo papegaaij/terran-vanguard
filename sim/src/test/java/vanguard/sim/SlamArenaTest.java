@@ -28,13 +28,10 @@ class SlamArenaTest {
             2, 0, 1, 140, 6, false, 7, Math.toRadians(70), Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 
     /** The test Kraken: medium has two lanes a volley, hard three ({@code volleyLanes}). */
-    static LevelScript.SetPieceSpec kraken(int volleyLanes) {
-        var head = new LevelScript.PartSpec(
-                "head", 0, -152, new Hitbox(130, 200), 100, true, 124, Optional.empty(), 0, 0.5);
-        var left = new LevelScript.PartSpec(
-                "left arm", -54, -262, new Hitbox(26, 26), 30, false, 31, Optional.empty(), 0, 1);
-        var right = new LevelScript.PartSpec(
-                "right arm", 54, -262, new Hitbox(26, 26), 30, false, 31, Optional.empty(), 0, 1);
+    static SetPieceSpec kraken(int volleyLanes) {
+        var head = new PartSpec("head", 0, -152, new Hitbox(130, 200), 100, true, 124, Optional.empty(), 0, 0.5);
+        var left = new PartSpec("left arm", -54, -262, new Hitbox(26, 26), 30, false, 31, Optional.empty(), 0, 1);
+        var right = new PartSpec("right arm", 54, -262, new Hitbox(26, 26), 30, false, 31, Optional.empty(), 0, 1);
         var fan = new BossSpec.Attack("beak-fan", BossSpec.Pattern.FAN, FAN, 0.15, false, 7, 0, 0, 0, List.of(HEAD));
         var slams = new BossSpec.Phase(
                 "Slams",
@@ -113,7 +110,7 @@ class SlamArenaTest {
                 List.of(
                         new BossSpec.Spot("left eye", HEAD, -41.5, -52.5, new Hitbox(28, 28), 2, true),
                         new BossSpec.Spot("right eye", HEAD, 41.5, -52.5, new Hitbox(28, 28), 2, true)));
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "test-kraken",
                 new Hitbox(344, 380),
                 new Hitbox(208, 152),
@@ -148,25 +145,16 @@ class SlamArenaTest {
 
     /** The arena level: 3 s at 140 px/s, the arena of 1 s at speed 0, 10 s after it; with a naval convoy when asked. */
     static LevelScript level(int volleyLanes, boolean convoy) {
-        LevelScript level = new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(
-                                new LevelScript.Section(ARRIVE, SPEED),
-                                new LevelScript.Section(ARRIVE + 1, 0, true),
-                                new LevelScript.Section(ARRIVE + 11, SPEED)),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(),
-                        LevelScript.Secondary.NONE,
-                        List.of(),
-                        List.of(),
-                        List.of(kraken(volleyLanes)))
-                .withWater(true);
-        return convoy ? level.withConvoy(NavalConvoyTest.convoy(NavalConvoyTest.CARGO)) : level;
+        LevelScript level = LevelScript.builder(11, 2)
+                .sections(List.of(
+                        new Section(ARRIVE, SPEED), new Section(ARRIVE + 1, 0, true), new Section(ARRIVE + 11, SPEED)))
+                .setPieces(List.of(kraken(volleyLanes)))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
+        return convoy
+                ? TestSpecs.withObjectives(
+                        level, o -> o.withConvoy(Optional.of(NavalConvoyTest.convoy(NavalConvoyTest.CARGO))))
+                : level;
     }
 
     private static Sortie sortie(LevelScript level, Rules rules) {

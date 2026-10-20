@@ -151,6 +151,17 @@ final class IntelPanel {
         return Map.copyOf(found);
     }
 
+    /** M7 part F: the level's enemy types (by name) with its boss, which may be kept unclassified too. */
+    static List<String> withBoss(Intel level) {
+        String boss = level.profile().boss();
+        if (boss.equals("none") || level.enemies().contains(boss)) {
+            return level.enemies();
+        }
+        List<String> all = new ArrayList<>(level.enemies());
+        all.add(boss);
+        return all;
+    }
+
     /** The sensor level's chip beside the level's name. */
     private static final int CHIP_WIDTH = 84;
     /** The body font's cell, px; the label font's is 8. */
@@ -299,7 +310,8 @@ final class IntelPanel {
                 level,
                 Field.HAZARDS,
                 "HAZARDS",
-                List.of(joinedOrNone(level.profile().hazards())),
+                // M7 part F: wrapped to the value column (Level 19's "furnace vents, rear-firing turrets").
+                Words.wrap(joinedOrNone(level.profile().hazards()), VALUE_CHARS),
                 y,
                 step);
         if (level.profile().objective().isPresent()) {
@@ -320,7 +332,7 @@ final class IntelPanel {
                 List.of(level.profile().specials().map(Names::of).orElse("NO LIMIT")),
                 y,
                 step);
-        y = boss(canvas, level, y, step);
+        y = boss(canvas, level, y, step, unclassified);
         y = enemies(canvas, level, y, step, rows.names(), unclassified);
         y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y, step);
         y = field(
@@ -420,11 +432,13 @@ final class IntelPanel {
      * The boss's name, with its sensor silhouette at the row's right end; below it each set piece as
      * an unknown contact of its size tier ("UNKNOWN HUGE CONTACT") with its silhouette, beside the
      * boss row's {@code NONE} where the level has no boss. Below sensor L2 the row names the level
-     * that shows it, and nothing tells of a contact.
+     * that shows it, and nothing tells of a contact. M7 part F: a boss kept {@code unclassified_until_flown} is named
+     * by what the intel calls it instead ("unclassified huge ground", Level 19's walker: unnamed before the fight).
      */
-    private static int boss(Canvas canvas, Intel intel, int y, int step) {
+    private static int boss(Canvas canvas, Intel intel, int y, int step, Map<String, String> unclassified) {
         String boss = intel.profile().boss();
-        int next = field(canvas, intel, Field.BOSS, "BOSS", List.of(Names.of(boss)), y, step);
+        String name = unclassified.getOrDefault(boss, boss);
+        int next = field(canvas, intel, Field.BOSS, "BOSS", Words.wrap(Names.of(name), VALUE_CHARS), y, step);
         if (!intel.shows(Field.BOSS)) {
             return next;
         }

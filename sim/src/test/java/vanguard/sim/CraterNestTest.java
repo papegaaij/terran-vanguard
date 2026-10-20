@@ -47,52 +47,37 @@ class CraterNestTest {
             Optional.empty(),
             true);
 
-    private static final LevelScript.SledSpec SLED =
-            new LevelScript.SledSpec(432, 24, 2, 5, 30, 1.5, 0.4, 15, "stuck sled");
-    private static final LevelScript.RockSpec ROCKS =
-            new LevelScript.RockSpec(2, 3, 40, 60, 2.5, new Hitbox(16, 16), 1, 6, 72);
+    private static final HazardSpec.SledSpec SLED =
+            new HazardSpec.SledSpec(432, 24, 2, 5, 30, 1.5, 0.4, 15, "stuck sled");
+    private static final HazardSpec.RockSpec ROCKS =
+            new HazardSpec.RockSpec(2, 3, 40, 60, 2.5, new Hitbox(16, 16), 1, 6, 72);
 
     private static LevelScript level(
-            List<LevelScript.GroundUnit> units,
-            List<LevelScript.GroundObjectSpec> objects,
+            List<GroundUnit> units,
+            List<GroundObjectSpec> objects,
             List<String> targets,
-            Optional<LevelScript.SledSpec> sled,
-            Optional<LevelScript.RockSpec> rocks,
-            List<LevelScript.GroupDrop> drops) {
-        return new LevelScript(
-                5,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 150)),
-                List.of(),
-                objects,
-                units,
-                (int) objects.stream()
-                        .filter(LevelScript.GroundObjectSpec::trigger)
-                        .count(),
-                List.of(new LevelScript.RadioCue(
-                        LevelScript.CueTrigger.MISSION_FAILED,
-                        0,
-                        "",
-                        "Okafor",
-                        "{group} is behind you.",
-                        false,
-                        "grim")),
-                new LevelScript.Secondary(0, 40, List.of(), "", List.of("polyp-mortar"), "NEST"),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                targets,
-                sled,
-                rocks,
-                drops);
+            Optional<HazardSpec.SledSpec> sled,
+            Optional<HazardSpec.RockSpec> rocks,
+            List<DropSpec.GroupDrop> drops) {
+        return LevelScript.builder(5, 1)
+                .sections(List.of(new Section(40, 150)))
+                .groundObjects(objects)
+                .groundUnits(units)
+                .secrets(
+                        (int) objects.stream().filter(GroundObjectSpec::trigger).count())
+                .radio(List.of(new RadioCue(
+                        CueTrigger.MISSION_FAILED, 0, "", "Okafor", "{group} is behind you.", false, "grim")))
+                .objectives(ObjectiveSpec.NONE
+                        .withSecondary(new Secondary(0, 40, List.of(), "", List.of("polyp-mortar"), "NEST"))
+                        .withTargets(targets))
+                .hazards(HazardSpec.NONE.withSled(sled).withRocks(rocks))
+                .drops(DropSpec.NONE.withGroupDrops(drops))
+                .build();
     }
 
     private static LevelScript mortarAt(double x) {
         return level(
-                List.of(new LevelScript.GroundUnit(0, x, MORTAR, -1)),
+                List.of(new GroundUnit(0, x, MORTAR, -1)),
                 List.of(),
                 List.of(),
                 Optional.empty(),
@@ -202,7 +187,7 @@ class CraterNestTest {
 
     @Test
     void theStuckSledsClampTakesHitsOnlyWhileTheRailIsDark() {
-        LevelScript.GroundObjectSpec clamp = new LevelScript.GroundObjectSpec(
+        GroundObjectSpec clamp = new GroundObjectSpec(
                 0, 432, new Hitbox(40, 28), 0, 0, Optional.empty(), 3, 65, "stuck sled", false, 0, 1, Optional.empty());
         LevelScript level = level(List.of(), List.of(clamp), List.of(), Optional.of(SLED), Optional.empty(), List.of());
         Sortie sortie = sortie(level);
@@ -224,7 +209,7 @@ class CraterNestTest {
     @Test
     void aBatteryUnitThatGetsAwayFailsThePrimaryAtOnce() {
         LevelScript level = level(
-                List.of(new LevelScript.GroundUnit(0, 40, MORTAR, 0), new LevelScript.GroundUnit(0, 440, MORTAR, 0)),
+                List.of(new GroundUnit(0, 40, MORTAR, 0), new GroundUnit(0, 440, MORTAR, 0)),
                 List.of(),
                 List.of("Battery A"),
                 Optional.empty(),
@@ -241,8 +226,7 @@ class CraterNestTest {
                     failedAt = sortie.levelSeconds();
                     assertEquals(0, events.value(e));
                 } else if (events.type(e) == SimEvents.Type.RADIO) {
-                    line = sortie.script().radio().get(events.value(e)).trigger()
-                            == LevelScript.CueTrigger.MISSION_FAILED;
+                    line = sortie.script().radio().get(events.value(e)).trigger() == CueTrigger.MISSION_FAILED;
                 }
             }
         }
@@ -266,12 +250,12 @@ class CraterNestTest {
     @Test
     void aClearedBatteryDropsItsPickupWhereItsLastUnitDiedAndPaysNoGroupCredits() {
         LevelScript level = level(
-                List.of(new LevelScript.GroundUnit(0, Ship.START_X, MORTAR, 0)),
+                List.of(new GroundUnit(0, Ship.START_X, MORTAR, 0)),
                 List.of(),
                 List.of("Battery A"),
                 Optional.empty(),
                 Optional.of(ROCKS),
-                List.of(new LevelScript.GroupDrop(0, PickupType.ARMOUR_PATCH)));
+                List.of(new DropSpec.GroupDrop(0, PickupType.ARMOUR_PATCH)));
         Sortie sortie =
                 new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
         int cleared = 0;

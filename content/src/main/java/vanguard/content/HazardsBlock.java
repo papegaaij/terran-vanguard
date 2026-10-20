@@ -1,0 +1,329 @@
+package vanguard.content;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import vanguard.sim.PlayField;
+
+/**
+ * The level's hazards: the {@code cranes}, the mass-driver {@code sleds}, the low-gravity {@code rocks}, the {@code
+ * tows}, the {@code debris} field, and the conveyor {@code belts} and furnace {@code vents}.
+ *
+ * <p>It only holds the block's types (and their logic): {@link LevelData} implements it, so the rest of the game keeps
+ * naming them as members of {@code LevelData} ({@code LevelData.Sleds}).
+ */
+public sealed interface HazardsBlock permits LevelData {
+    /**
+     * The mass-driver sleds (design/world/luna, hazards): from {@code first} s every {@code period}
+     * s until {@code until} a sled shoots up the rail at {@code x}, a line {@code width} px wide, on
+     * the screen for {@code run} s after the rail {@code lights} chased; contact {@code damage}. The
+     * trigger that reveals the {@code clamp} secret can only be hit while the rail is dark.
+     */
+    public record Sleds(
+            double x,
+            double width,
+            double first,
+            double period,
+            double until,
+            double lights,
+            double run,
+            double damage,
+            Optional<String> clamp,
+            Optional<SledChange> easy,
+            Optional<SledChange> hard) {
+        public Sleds {
+            Check.positive("width", width);
+            Check.positive("period", period);
+            Check.positive("run", run);
+            Check.positive("damage", damage);
+            Check.that(period > lights + run, "a sled's period holds its lights and its run");
+        }
+    }
+
+    /** A difficulty's sled period. */
+    public record SledChange(double period) {
+        public SledChange {
+            Check.positive("period", period);
+        }
+    }
+
+    /**
+     * Rocks a destroyed ground unit throws in low gravity (Level 05): {@code count} {@code [min,
+     * max]} of them, drifting at {@code speed} {@code [min, max]} px/s in a random direction on the
+     * air layer, gone after {@code life} s; {@code hp}, contact {@code damage}, no credits; none
+     * within {@code clearance} px of the ship; none on easy unless {@code onEasy}.
+     */
+    public record Rocks(
+            LevelData.Count count,
+            Span speed,
+            double life,
+            Size size,
+            double hp,
+            double damage,
+            double clearance,
+            Optional<Boolean> onEasy) {
+        public Rocks {
+            Check.positive("life", life);
+            Check.positive("hp", hp);
+        }
+    }
+
+    /**
+     * A crane hazard ({@code sim.HazardSpec.CraneSpec}): an arm of {@code length} x {@code width}
+     * px hanging from ({@code x}, {@code y}) above the top edge, swinging between {@code from} and
+     * {@code to} (degrees from straight down, positive to the right) at the {@code swings} times,
+     * each swing {@code swing_seconds} long after a {@code telegraph} of blinking lights; contact
+     * {@code damage}; a clamp at its tip that {@code reveals} a secret after {@code hits} hits.
+     */
+    public record CraneData(
+            String name,
+            double x,
+            double y,
+            double length,
+            double width,
+            double from,
+            double to,
+            List<Double> swings,
+            double swingSeconds,
+            double telegraph,
+            double damage,
+            Optional<Clamp> clamp,
+            Optional<Swings> easy,
+            Optional<Swings> hard) {
+        public CraneData {
+            Check.positive("length", length);
+            Check.positive("width", width);
+            Check.notEmpty("swings", swings);
+            Check.positive("swing_seconds", swingSeconds);
+            Check.positive("telegraph", telegraph);
+            Check.positive("damage", damage);
+        }
+    }
+
+    /** A crane's clamp: {@code hits} hits while the arm swings release the secret it {@code reveals}. */
+    public record Clamp(int hits, String reveals) {
+        public Clamp {
+            Check.positive("hits", hits);
+        }
+    }
+
+    /** A difficulty's swing times. */
+    public record Swings(List<Double> swings) {
+        public Swings {
+            Check.notEmpty("swings", swings);
+        }
+    }
+
+    /**
+     * Part G: a friendly craft drifting on the air layer that tows a secret's crate on a cable
+     * (Level 07's lifeboat tow). The {@code boat} (its sprite box, px) enters at the top edge at
+     * {@code t} with its centre at {@code x} and drifts at {@code drift} {@code [x, y]} px/s (y up: a
+     * negative y drifts down the screen); the {@code pod} (its box) hangs at {@code tether}
+     * {@code [dx, dy]} px from the boat's centre (y up: a positive dy trails above it). Shots and
+     * bullets pass the boat and the pod, and the ship flies under them; only the {@code cable}, a hit
+     * box midway between the two, takes the player's shots: {@code hits} of them cut it and the pod
+     * falls free as the crate of the secret it {@code reveals}.
+     */
+    public record Tow(
+            double t, double x, Point drift, Size boat, Size pod, Point tether, Size cable, int hits, String reveals) {
+        public Tow {
+            Check.notNegative("t", t);
+            Check.that(drift.y() < 0, "drift: a tow drifts down the screen (a negative y)");
+            Check.positive("hits", hits);
+        }
+    }
+
+    /**
+     * The debris field (design/world/earth-orbit, hazards): drifting wreck chunks on the air layer
+     * that block shots and enemy bullets. Each placed chunk enters at the top edge at its time.
+     *
+     * @param chunks the chunk kinds by name; the sprite of {@code large-a} is {@code debris-large-a}
+     * @param clearance a chunk never enters closer to the ship than this, px (it moves sideways)
+     * @param placed in time order
+     * @param maxLarge the most large chunks on the screen at once (checked by the loader on every difficulty)
+     * @param easy which large chunks are left out on easy
+     * @param hard how much faster they drift on hard
+     */
+    public record DebrisField(
+            Map<String, Chunk> chunks,
+            double clearance,
+            List<PlacedChunk> placed,
+            Optional<Integer> maxLarge,
+            Optional<DebrisEasy> easy,
+            Optional<DebrisHard> hard) {
+        public DebrisField {
+            Check.notEmpty("chunks", new ArrayList<>(chunks.keySet()));
+            Check.notNegative("clearance", clearance);
+            for (int i = 1; i < placed.size(); i++) {
+                Check.that(
+                        placed.get(i).t() >= placed.get(i - 1).t(),
+                        "placed[" + i + "]: chunks are listed in time order");
+            }
+        }
+
+        /** The chunks entering on {@code difficulty}, in time order. */
+        public List<PlacedChunk> placedOn(Difficulty difficulty) {
+            if (difficulty != Difficulty.EASY || easy.isEmpty()) {
+                return placed;
+            }
+            int every = easy.get().leaveOutLarge();
+            List<PlacedChunk> kept = new ArrayList<>();
+            int large = 0;
+            for (PlacedChunk chunk : placed) {
+                if (chunks.get(chunk.chunk()).large() && ++large % every == 0) {
+                    continue;
+                }
+                kept.add(chunk);
+            }
+            return kept;
+        }
+
+        /** The factor on the drift on {@code difficulty}. */
+        public double driftFactor(Difficulty difficulty) {
+            return difficulty == Difficulty.HARD
+                    ? hard.map(DebrisHard::driftFactor).orElse(1.0)
+                    : 1;
+        }
+    }
+
+    /**
+     * A chunk kind: a large one is indestructible and deals contact {@code damage} (once per
+     * second), a small one breaks after {@code hp} damage and pays nothing.
+     */
+    public record Chunk(Size size, Optional<Double> damage, Optional<Double> hp) {
+        public Chunk {
+            Check.that(damage.isPresent() != hp.isPresent(), "give damage (a large chunk) or hp (a small one)");
+            damage.ifPresent(d -> Check.positive("damage", d));
+            hp.ifPresent(h -> Check.positive("hp", h));
+        }
+
+        public boolean large() {
+            return damage.isPresent();
+        }
+    }
+
+    /** A chunk entering at the top edge at {@code t} at {@code x}, drifting at {@code drift} [x, y] px/s (y up: negative is down). */
+    public record PlacedChunk(double t, double x, String chunk, Point drift) {
+        public PlacedChunk {
+            Check.notNegative("t", t);
+            Check.that(drift.y() < 0, "drift: a chunk drifts down the screen (a negative y)");
+        }
+    }
+
+    /** On easy every {@code leaveOutLarge}-th large chunk is left out. */
+    public record DebrisEasy(int leaveOutLarge) {
+        public DebrisEasy {
+            Check.that(leaveOutLarge >= 2, "leave_out_large: 2 or more");
+        }
+    }
+
+    /** On hard the chunks drift {@code driftFactor} times as fast. */
+    public record DebrisHard(double driftFactor) {
+        public DebrisHard {
+            Check.positive("drift_factor", driftFactor);
+        }
+    }
+
+    /**
+     * M7 part F (design/campaign Level 19, Conveyors): the level's conveyor belts, each run {@code width} px wide
+     * running up the screen at {@code speed} px/s relative to the ground (negative: down).
+     */
+    public record Belts(double width, double speed, List<BeltRun> runs) {
+        public Belts {
+            runs = List.copyOf(runs);
+            Check.positive("width", width);
+            Check.notEmpty("runs", runs);
+            Check.that(speed != 0, "speed: a belt moves");
+        }
+    }
+
+    /**
+     * M7 part F: a belt run centred on {@code x} px from the left edge, from where its bottom end enters at the top
+     * edge (level time {@code from}) to where its top end leaves at the bottom edge (level time {@code to}), as the
+     * backdrop's belt pieces lie (tools/art/backdrop_l19.py's proposal lists them).
+     */
+    public record BeltRun(double x, double from, double to) {
+        public BeltRun {
+            Check.that(x > 0 && x < PlayField.WIDTH, "x: on the play field, was " + x);
+            Check.notNegative("from", from);
+            Check.that(to > from, "to: after from");
+        }
+    }
+
+    /**
+     * M7 part F (design/campaign Level 19, Hazards): the furnace vents: grates {@code width} px square in {@code rows};
+     * each row, from the time it enters at the top edge, fires every {@code period} s as a ripple, grate i glowing
+     * {@code tell} s from {@code i × ripple} s into the cycle, then its flame column standing {@code burn} s, hitting
+     * the ship and Rook whatever their layer once per burst for the {@code bullet} class's damage; {@code easy} and
+     * {@code hard} change the tell, period and ripple. Cold from the arena on.
+     */
+    public record Vents(
+            double width,
+            double tell,
+            double burn,
+            double period,
+            double ripple,
+            String bullet,
+            Optional<VentChange> easy,
+            Optional<VentChange> hard,
+            List<VentRowData> rows) {
+        public Vents {
+            rows = List.copyOf(rows);
+            Check.positive("width", width);
+            Check.notNegative("tell", tell);
+            Check.positive("burn", burn);
+            Check.positive("period", period);
+            Check.notNegative("ripple", ripple);
+            Check.notEmpty("rows", rows);
+            for (int i = 1; i < rows.size(); i++) {
+                Check.that(rows.get(i).t() >= rows.get(i - 1).t(), "rows[" + i + "]: listed in time order");
+            }
+        }
+
+        /** The tell on {@code difficulty}, s. */
+        public double tellOn(Difficulty difficulty) {
+            return change(difficulty).flatMap(VentChange::tell).orElse(tell);
+        }
+
+        /** The period on {@code difficulty}, s. */
+        public double periodOn(Difficulty difficulty) {
+            return change(difficulty).flatMap(VentChange::period).orElse(period);
+        }
+
+        /** The ripple on {@code difficulty}, s. */
+        public double rippleOn(Difficulty difficulty) {
+            return change(difficulty).flatMap(VentChange::ripple).orElse(ripple);
+        }
+
+        private Optional<VentChange> change(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy;
+                case MEDIUM -> Optional.empty();
+                case HARD -> hard;
+            };
+        }
+    }
+
+    /** M7 part F: a difficulty's change to the vents: their tell, period or ripple instead, s. */
+    public record VentChange(Optional<Double> tell, Optional<Double> period, Optional<Double> ripple) {
+        public VentChange {
+            tell.ifPresent(v -> Check.notNegative("tell", v));
+            period.ifPresent(v -> Check.positive("period", v));
+            ripple.ifPresent(v -> Check.notNegative("ripple", v));
+        }
+    }
+
+    /**
+     * M7 part F: a vent row entering at the top edge at level time {@code t}, its grates at {@code xs} px from the
+     * left in ripple order (the first fires first).
+     */
+    public record VentRowData(double t, List<Double> xs) {
+        public VentRowData {
+            xs = List.copyOf(xs);
+            Check.notNegative("t", t);
+            Check.notEmpty("xs", xs);
+            xs.forEach(x -> Check.that(x > 0 && x < PlayField.WIDTH, "xs: on the play field, was " + x));
+        }
+    }
+}

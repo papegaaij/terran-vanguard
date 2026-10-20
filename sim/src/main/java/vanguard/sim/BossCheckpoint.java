@@ -54,7 +54,7 @@ final class BossCheckpoint {
         LevelScript script = s.script;
         tally = new Tally(s.rules.scoring());
         objectives = new Objectives(
-                script.secondary(),
+                script.objectives().secondary(),
                 script.groups().size(),
                 s.force.kinds().size(),
                 s.enemyTotal(),
@@ -68,7 +68,7 @@ final class BossCheckpoint {
         towCuts = new int[s.tows.length];
         towCrates = new boolean[s.tows.length];
         holdState = new int[s.holdZones.holdState.length];
-        naval = script.convoy().map(Convoy::new).orElse(null);
+        naval = script.objectives().convoy().map(Convoy::new).orElse(null);
     }
 
     /** Records the sortie's state now. */
@@ -158,6 +158,7 @@ final class BossCheckpoint {
         ground.nextDebris = nextDebris;
         s.streamReleased = streamReleased;
         s.resetArena();
+        s.vents.restore(s.levelTick, s.groundScroll);
         s.bossPasses.clearLaunchWarnings();
         s.complete = false;
         s.wrecked = false;

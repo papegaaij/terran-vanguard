@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import vanguard.sim.EnemySpec;
 import vanguard.sim.LevelScript;
-import vanguard.sim.WaveSpec;
 
 /**
  * The campaign's minimum density (design/campaign, Difficulty curve): every level reaches its
@@ -23,7 +21,7 @@ class DensityTest {
 
     static final int LAST_WARM_UP = 3;
 
-    private static final Content CONTENT = ContentLoader.fromClasspath();
+    private static final Content CONTENT = LevelMetrics.CONTENT;
 
     static Stream<String> levels() {
         return CONTENT.levels().keySet().stream()
@@ -35,37 +33,13 @@ class DensityTest {
     void theLevelReachesItsMinimumDensity(String key) {
         LevelScript level = SimSpecs.level(CONTENT, key, Difficulty.MEDIUM);
         double density = perMinute(level);
-        int minimum = level.number() <= LAST_WARM_UP ? WARM_UP_MINIMUM : ACT_MINIMUM[level.act() - 1];
+        int minimum = LevelMetrics.densityMinimum(level);
         System.out.printf("Density %s: %.1f enemies per minute (minimum %d)%n", key, density, minimum);
         assertTrue(density >= minimum, key + ": " + density + " enemies per minute, minimum " + minimum);
     }
 
     /** The level's enemies per minute of scroll, from the end of the launch to its first arena. */
     static double perMinute(LevelScript level) {
-        double end = level.seconds();
-        double start = 0;
-        for (LevelScript.Section section : level.sections()) {
-            if (section.arena()) {
-                end = start;
-                break;
-            }
-            start = section.end();
-        }
-        int enemies = 0;
-        for (WaveSpec wave : level.waves()) {
-            if (wave.t() < end) {
-                int released = wave.enemy().brood().map(EnemySpec.Brood::count).orElse(0)
-                        + wave.enemy().spawner().map(EnemySpec.Spawner::count).orElse(0);
-                enemies += wave.count() * (1 + released);
-            }
-        }
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
-            if (unit.t() < end) {
-                // M5 part C: a periodic spawner (Level 09's Hive Nodes) counts one release
-                enemies +=
-                        1 + unit.enemy().spawner().map(EnemySpec.Spawner::count).orElse(0);
-            }
-        }
-        return enemies / ((end - level.launchSeconds()) / 60);
+        return LevelMetrics.density(level).perMinute();
     }
 }

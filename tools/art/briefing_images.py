@@ -141,6 +141,19 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           its clear radius, the ground fading into the dust outside it, Dust Kites and a Needler
                           as dark silhouettes keeping their glow, their bullets crisp at any range, a homing
                           trail finding one; no Ghost Drone (its first sight is the level's hint)
+  level-19-tharsis-works  L19 p1 (M7 part F): Okafor's CDF site plan of the Tharsis Foundry, north to the left: the
+                          slag fields, the two conveyor halls and their belts, the furnace row (stacks, vent rows),
+                          the yard gate, the casting yard, the south gate; the smelter tower with its 200 crew; red
+                          Vrell vectors and grey, unlabelled contacts on the conveyor lines; the six sections
+  level-19-rear-arcs      L19 p2 (M7 part F): Varga's diagram over the level's hall floor: a gantry turret on its
+                          cradle (tools/art/l19_props.py) with its arc up the line, silent above the ship, firing once
+                          passed; a Warden Tank (tools/art/warden_tank.py) riding a belt, its turret tracking back
+                          at the ship, its rear plate circled; the casting yard's thermal: one large blurred contact
+                          (the walker's sprites blurred)
+  level-20-filed-plate    L20 p2 (M7 part F batch, shared with Level 19's wreck): the Revenant Walker's flank plate
+                          close up, rendered from tools/art/revenant_walker.py's wreck model (the plate found by a
+                          probe render), the serial field filed to bright bare metal with hand-file strokes; an
+                          assay strip clipped beside it, the stock match circled in red pen
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -156,6 +169,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r38-a.png   review sheet, Act 3 intro + L15 (M7 part B)
   design/ui/briefing/concept/briefing-images-final-r40-a.png   review sheet, L17 (M7 part D)
   design/ui/briefing/concept/briefing-images-final-r41-a.png   review sheet, L18 (M7 part E)
+  design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -166,7 +180,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -174,7 +188,7 @@ creeper.py, enemy_bullets.py, weapon_fx.py, hive_node.py, ravager.py, wraith.py,
 shuttle.py, convoy_ships.py (switch the ship pair: its --variant b, then this script again),
 driftjelly.py, reef_spitter.py, harbour_kraken.py, backdrop_l11.py, l12_props.py and backdrop_l12.py, skimmer.py,
 relay.py, backdrop_l13.py, siege_spire.py, root_burst.py --assets, backdrop_l14.py, burrower.py and backdrop_l15.py, whose sprites
-and pieces it shows); the review sheet written is the open round's (r41) unless
+and pieces it shows); the review sheet written is the open round's (r42) unless
 a round is named.
 """
 import json
@@ -206,7 +220,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r41"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r42"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -3927,6 +3941,346 @@ def visibility_l18():
     b.label(px, 180, "THE EYE: CLEAR", CYAN_DIM)
     return b
 
+SOURCE_M7F = artkit.source_note(SCRIPT, "M7 part F batch")
+L19 = ROOT / "assets" / "backdrop" / "level-19"
+THERMAL = [(0.0, (8, 4, 20)), (0.3, (70, 10, 60)), (0.55, (200, 40, 20)), (0.8, (255, 160, 40)), (1.0, (255, 250, 210))]
+
+
+def _l19(name):
+    return Image.open(L19 / f"{name}.png").convert("RGBA")
+
+
+def tharsis_works():
+    """L19 p1: Okafor's CDF site plan of the Tharsis Foundry, north to the left: the slag fields, the two
+    conveyor halls with their belts, the furnace row between the smelter stacks, the yard approach and its gate,
+    the casting yard and the south gate; the smelter tower marked with its crew count; red Vrell vectors into
+    the works and grey, unlabelled contacts on the conveyor lines; the level's sections along the route."""
+    b = Board()
+    x0, x1 = 16, 468
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= 18) & (b.yy < H - 10)
+    tex = raster.fbm(W, H, 24, 4901, octaves=4, period=False)
+    fine = raster.fbm(W, H, 6, 4903, octaves=2, period=False)
+    ground = raster.ramp(MARS_HOLO, np.clip(0.36 + 0.28 * (tex - 0.5) + 0.12 * (fine - 0.5), 0, 1))
+    b.base = np.where(box[..., None], ground, b.base)
+    # slag in the fields (north and south): dark clinker with glowing cracks
+    for lo, hi in ((x0, 98), (412, x1)):
+        zone = box & (b.xx >= lo) & (b.xx < hi)
+        slag = zone & (tex < 0.47)
+        b.base = np.where(slag[..., None], b.base * 0.55, b.base)
+        crack = zone & (np.abs(fine - 0.5) < 0.012)
+        b.base = np.where(crack[..., None], b.base * 0.5 + np.array((255, 120, 30)) * 0.5, b.base)
+    # the buildings as plan outlines over darker floors
+    floors = [(104, 34, 196, 104), (104, 138, 196, 208),          # the two conveyor halls
+              (206, 26, 294, 216),                                 # the furnace row
+              (350, 30, 404, 212)]                                 # the casting yard
+    for fx0, fy0, fx1, fy1 in floors:
+        zone = (b.xx >= fx0) & (b.xx < fx1) & (b.yy >= fy0) & (b.yy < fy1)
+        b.base = np.where(zone[..., None], b.base * 0.62 + np.array((30, 34, 44)) * 0.38, b.base)
+        b.draw.rectangle([fx0, fy0, fx1 - 1, fy1 - 1], outline=GREY + (220,))
+    for gx in range(354, 404, 10):                                 # the casting yard's slabs
+        for gy in range(34, 210, 12):
+            b.draw.rectangle([gx, gy, gx + 7, gy + 8], outline=(80, 92, 110, 150))
+    for cy in (78, 168):                                           # molten channels across the yard
+        b.line([(352, cy), (402, cy)], (255, 120, 40), 1, 200)
+    # the belts: lines along the route (they run up the screen = south), arrows on them
+    belts = [((104, 196), 62), ((104, 196), 80), ((104, 196), 162), ((104, 196), 184),   # x 140/340 in each hall
+             ((206, 294), 121), ((296, 350), 70), ((296, 350), 172), ((404, 440), 121)]
+    for (bx0, bx1), by in belts:
+        b.line([(bx0, by), (bx1, by)], (150, 140, 120), 3, 200)
+        b.line([(bx0, by), (bx1, by)], (40, 38, 36), 1, 230)
+        for ax in range(bx0 + 12, bx1 - 4, 26):
+            b.draw.polygon([(ax + 3, by), (ax - 1, by - 2), (ax - 1, by + 2)], fill=AMBER + (220,))
+    # the furnace row: stacks (rings with the glow) and the vent rows between them
+    for sx in (218, 250, 282):
+        for sy in (52, 192):
+            b.glow(sx, sy, 6, (255, 110, 30), 0.9)
+            b.ring(sx, sy, 7, colour=GREY, alpha=230)
+    for vx in (230, 262):
+        for vy in list(range(40, 110, 10)) + list(range(136, 208, 10)):
+            b.draw.rectangle([vx - 2, vy - 2, vx + 2, vy + 2], fill=(255, 140, 40, 210))
+    tag(b, 212, 108, "VENTS", AMBER)
+    # the yard gate (a wall across the approach with its gate and belt slots) and the south gate
+    b.line([(346, 26), (346, 64)], WHITE, 2, 220)
+    b.line([(346, 76), (346, 112)], WHITE, 2, 220)
+    b.line([(346, 130), (346, 166)], WHITE, 2, 220)
+    b.line([(346, 178), (346, 216)], WHITE, 2, 220)
+    b.line([(440, 22), (440, 112)], WHITE, 2, 220)
+    b.line([(440, 130), (440, 222)], WHITE, 2, 220)
+    tag(b, 300, 24, "YARD GATE", CYAN_DIM)
+    tag(b, 412, 24, "SOUTH GATE", CYAN_DIM)
+    tag(b, 106, 24, "CONVEYOR HALLS", CYAN_DIM)
+    tag(b, 22, 24, "SLAG FIELDS", CYAN_DIM)
+    tag(b, 354, 104, "CASTING YARD", CYAN_DIM)
+    # the smelter tower: east of the route (the play field's left), the crews sealed in it
+    tx, ty = 294, 200
+    b.glow(tx, ty, 16, (255, 120, 30), 0.7)
+    b.ring(tx, ty, 13, colour=WHITE, alpha=230, width=2)
+    b.ring(tx, ty, 7, colour=AMBER, alpha=230)
+    tag(b, tx - 64, ty + 16, "SMELTER TOWER", WHITE)
+    big(b, tx + 17, ty - 6, "200", GREEN)
+    tag(b, tx + 18, ty + 10, "CREW", GREEN)
+    # red Vrell vectors into the works
+    for sx_, sy_, ex_, ey_ in ((70, 10, 120, 46), (170, 10, 216, 40), (250, 236, 262, 214), (320, 10, 360, 44),
+                               (60, 236, 108, 196)):
+        b.arrow(sx_, sy_, ex_, ey_, RED, size=3)
+    rng = np.random.default_rng(4911)
+    for _ in range(10):
+        vx, vy = rng.uniform(26, 340), rng.uniform(36, 206)
+        if not any(abs(vy - by) < 8 for _, by in belts):
+            b.marker(vx, vy, "chevron", RED, 3)
+    # grey, unlabelled contacts on the conveyor lines (no tag: the display does not know them)
+    for cx_, cy_ in ((128, 62), (166, 80), (142, 162), (184, 184), (232, 121), (270, 121), (318, 70), (330, 172)):
+        b.draw.rectangle([cx_ - 4, cy_ - 3, cx_ + 4, cy_ + 3], fill=(150, 156, 162, 255), outline=(220, 226, 232, 255))
+        b.draw.rectangle([cx_ - 1, cy_ - 1, cx_ + 1, cy_ + 1], fill=(60, 64, 70, 255))
+    # the route, the sections numbered, the ship at the start
+    route = [(x0 + 6, 121), (x1 - 6, 121)]
+    b.dashed(route, AMBER, 1, 3, 4)
+    for n, x in enumerate((56, 150, 250, 322, 378, 452), 1):
+        b.draw.rectangle([x - 4, 228 - 5, x + 4, 228 + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(x - 2, 228 - 3, str(n), AMBER)
+    b.sprite(scaled_sprite("ship_2", 0.5), 30, 121)
+    b.title("THARSIS FOUNDRY - SITE PLAN")
+    b.label(W - 10, 9, "GET THE CREWS OUT", AMBER, right=True)
+    b.draw.rectangle([x0, 18, x1 - 1, H - 11], outline=CYAN_DIM + (180,))
+    b.arrow(46, 40, 26, 40, CYAN, size=3, dashed=False)
+    b.label(50, 37, "N", CYAN)
+    px = 480
+    b.line([(px - 6, 26), (px - 6, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "NORTH TO SOUTH", WHITE)
+    rows = [("1", "SLAG FIELDS"), ("2", "CONVEYOR HALLS"), ("3", "FURNACE ROW"), ("4", "YARD APPROACH"),
+            ("5", "CASTING YARD"), ("6", "SOUTH GATE")]
+    for i, (n, name) in enumerate(rows):
+        y = 46 + 13 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, CYAN)
+    b.line([(px, 128), (W - 12, 128)], CYAN_DIM, 1, 120)
+    b.label(px, 136, "CLEAR THE FOUNDRY", AMBER)
+    b.label(px, 150, "NO GREY TANK LEAVES", GREEN)
+    b.label(px, 160, "12 OF 14", GREEN)
+    b.label(px, 176, "VRELL IN THE LOWER WORKS", RED)
+    b.label(px, 186, "GREY CONTACTS: UNKNOWN", GREY)
+    b.label(W - 10, H - 16, "CREWS SEALED IN", CYAN_DIM, right=True)
+    return b
+
+
+def floor_panel(b, x0, y0, w, h, dy, scale=0.5, dim=0.7):
+    """A strip of Level 19's hall floor (its production tile) as the display's background, dimmed."""
+    tile = np.array(_l19("hall-floor"))[..., :3].astype(np.float64)
+    small = np.array(Image.fromarray(tile.astype(np.uint8)).resize((round(tile.shape[1] * scale),
+                                                                     round(tile.shape[0] * scale)), Image.BOX))
+    sx = (small.shape[1] - w) // 2 + 36
+    crop = small[(np.arange(h)[:, None] + dy) % small.shape[0], (np.arange(w)[None, :] + sx) % small.shape[1]]
+    b.base[y0:y0 + h, x0:x0 + w] = crop * dim + np.array((6, 14, 30)) * (1 - dim)
+    b.draw.rectangle([x0, y0, x0 + w - 1, y0 + h - 1], outline=CYAN_DIM + (180,))
+
+
+def arc_wedge(b, x, y, up=True, length=56, half=80, colour=RED):
+    """A turret's firing arc: the facing (up) +-``half`` degrees, dashed edges and a faint arc."""
+    base = -90 if up else 90
+    for a in (base - half, base + half):
+        r = math.radians(a)
+        b.dashed([(x, y), (x + math.cos(r) * length, y + math.sin(r) * length)], colour, 1, 3, 3)
+    b.arc(x, y, length, length, base - half, base + half, colour, 150)
+
+
+def nest(b, x, y, aim, scale=0.6):
+    b.sprite(held_frame("gantry-cradle", scale), x, y)
+    b.sprite(scaled_sprite(f"spine-turret_{aim}", scale), x, y)
+
+
+def aim32(x0, y0, x1, y1, n=32):
+    ang = math.atan2(y1 - y0, x1 - x0) - math.pi / 2
+    return int(round((ang % (2 * math.pi)) / (2 * math.pi / n))) % n
+
+
+def rear_arcs():
+    """L19 p2: Varga's diagram: a gantry turret's firing arc pointing up the line, silent while the ship is below it
+    and firing once it has passed; a Warden Tank riding a belt with its turret tracking backwards, its thin rear
+    plate circled; a large blurred thermal blob in the casting yard in the corner."""
+    b = Board()
+    gantry = held_frame("gantry", 0.5)
+    pw, ph, py = 124, 206, 22
+    for i, (gx, label) in enumerate(((16, "1 ABOVE YOU: SILENT"), (148, "2 PASSED: IT FIRES"))):
+        floor_panel(b, gx, py, pw, ph, 120 + 90 * i)
+        cx = gx + pw // 2
+        gy = py + (62 if i == 0 else 176)
+        b.sprite(gantry.crop((60, 0, 60 + pw - 2, gantry.height)), cx, gy)
+        ny = gy - 16
+        ship = (cx + 14, py + (176 if i == 0 else 70))
+        arc_wedge(b, cx, ny, length=48 if i == 0 else 92, colour=RED if i else GREY)
+        nest(b, cx, ny, 16 if i == 0 else aim32(cx, ny, *ship))
+        b.sprite(scaled_sprite("ship_2", 0.6), *ship)
+        if i:
+            a = math.atan2(ship[1] - ny, ship[0] - cx)
+            for d in (24, 44, 64):
+                b.sprite(asset("orb_0"), cx + math.cos(a) * d, ny + math.sin(a) * d)
+        tag(b, gx + 4, py + 4, label, RED if i else CYAN)
+    tag(b, 20, py + 124, "FACES UP", GREY)
+    tag(b, 20, py + 134, "THE LINE", GREY)
+    # the Warden Tank on its belt: hull up the belt, turret tracking back down at the ship, the rear plate circled
+    tx0, tw = 280, 160
+    floor_panel(b, tx0, py, tw, ph, 300)
+    belt = np.array(_l19("belt-plates_0").resize((48, 288), Image.BOX))
+    bx = tx0 + 28
+    belt_img = Image.fromarray(belt[40:40 + ph - 2], "RGBA")
+    b.sprite(held_frame_img(belt_img), bx, py + ph // 2)
+    hull = held_frame("warden-tank_16", 0.8)
+    tank = (bx, py + 74)
+    ship = (tx0 + 118, py + 176)
+    aim = aim32(*tank, *ship)
+    b.sprite(hull, *tank)
+    b.sprite(held_frame(f"warden-tank-turret_{aim * 2}", 0.8), *tank)
+    rear = (tank[0], tank[1] + 21)
+    b.ring(rear[0], rear[1], 14, 6, colour=AMBER, alpha=255, width=1)
+    b.line([(rear[0] + 14, rear[1] + 2), (tx0 + 92, py + 112)], AMBER, 1)
+    tag(b, tx0 + 66, py + 114, "REAR PLATE", AMBER)
+    tag(b, tx0 + 66, py + 124, "X1.5", AMBER)
+    b.arrow(bx + 32, py + 176, bx + 32, py + 146, CYAN, size=3, dashed=False)
+    tag(b, bx + 38, py + 160, "BELT", CYAN)
+    b.arrow(tank[0] + 34, tank[1] - 30, tank[0] + 34, tank[1] - 4, GREY, size=3, dashed=False)
+    tag(b, tx0 + 82, py + 30, "IT PASSES YOU", GREY)
+    b.dashed([tank, ship], RED, 1, 3, 3)
+    b.sprite(scaled_sprite("ship_2", 0.6), *ship)
+    tag(b, bx + 30, py + 4, "GREY TANK", WHITE)
+    tag(b, bx + 52, py + 186, "TURRET", RED)
+    tag(b, bx + 52, py + 196, "TRACKS BACK", RED)
+    # the corner: the casting yard's thermal, one large blurred contact
+    ix0, iy0, iw, ih = 452, 128, 210, 98
+    legs = held_asset("revenant-walker-legs_0")
+    hullw = held_asset("revenant-walker_0")
+    comp = Image.new("RGBA", legs.size, (0, 0, 0, 0))
+    comp.alpha_composite(hullw, ((legs.width - hullw.width) // 2, (legs.height - hullw.height) // 2))
+    comp.alpha_composite(legs)
+    from PIL import ImageFilter
+    blob = np.array(comp.split()[3].resize((90, 90), Image.BOX).filter(ImageFilter.GaussianBlur(5))).astype(np.float64) / 255
+    heat = np.zeros((ih, iw))
+    hx, hy = 120, 6
+    heat[hy:hy + 90, hx:hx + 90] = blob
+    noise = raster.fbm(iw, ih, 5, 4931, octaves=3, period=False)
+    heat = np.clip(heat * 1.25 + 0.16 * (noise - 0.5) + 0.12, 0, 1)
+    b.base[iy0:iy0 + ih, ix0:ix0 + iw] = raster.ramp(THERMAL, heat * 0.95)
+    b.draw.rectangle([ix0, iy0, ix0 + iw - 1, iy0 + ih - 1], outline=CYAN_DIM + (200,))
+    tag(b, ix0 + 4, iy0 + 4, "CASTING YARD - THERMAL", WHITE)
+    tag(b, ix0 + 4, iy0 + ih - 24, "ONE CONTACT", AMBER)
+    tag(b, ix0 + 4, iy0 + ih - 13, "LARGE. UNKNOWN", AMBER)
+    b.bracket(ix0 + hx + 2, iy0 + hy + 2, ix0 + hx + 88, iy0 + hy + 88, AMBER)
+    b.title("SENSOR SCAN - THEY FIRE AFTER YOU PASS")
+    b.label(W - 10, 9, "REAR GUNS, LANCER", AMBER, right=True)
+    px = 456
+    b.label(px, 30, "GANTRY TURRETS", WHITE)
+    b.label(px, 42, "FACE UP THE LINE:", CYAN)
+    b.label(px, 52, "SILENT ABOVE YOU,", CYAN)
+    b.label(px, 62, "FIRING AFTER YOU PASS", CYAN)
+    b.label(px, 78, "GREY TANKS RIDE THE BELTS", WHITE)
+    b.label(px, 88, "THIN REAR PLATE", CYAN)
+    b.label(px, 104, "REAR + ANTI-GROUND", GREEN)
+    return b
+
+
+def held_frame_img(img, colours=32):
+    a = np.array(img).astype(np.float64)
+    a[..., 3] = np.where(a[..., 3] >= 128, 255, 0)
+    return artkit.quantize_set([Image.fromarray(a.astype(np.uint8), "RGBA")], colours)[0]
+
+
+def _file_strokes(cx, cy):
+    """Bare metal worked with a hand file: bands of fine straight strokes, each band at its own slight angle (the
+    file's passes), a few deeper scratches across them."""
+    def f(p, n):
+        x, y = p[:, 0] - cx, p[:, 1] - cy
+        band = np.floor((x + 0.4) / 0.045)
+        ang = 0.12 * np.sin(band * 2.3) + 0.05
+        u = -np.sin(ang) * x + np.cos(ang) * y
+        fine = 0.5 + 0.5 * np.sin(u * 1400 + band * 1.7)
+        coarse = 0.5 + 0.5 * np.sin(u * 310 + 3 * np.sin(x * 40))
+        deep = np.abs(np.sin((y - 0.35 * x) * 160)) > 0.996
+        return np.clip(0.88 + 0.16 * fine * coarse + 0.08 * np.sin(x * 90 + band) - 0.35 * deep, 0.6, 1.3)
+    return f
+
+
+def plate_render(size, extent):
+    """The Revenant Walker's wreck (tools/art/revenant_walker.py's model, heading 0) around its serial plate, rendered
+    close: the plate found with a probe render, the plate's material worked with a hand file."""
+    import revenant_walker as rw
+    from bosses_r36 import W_PLATE
+    from dataclasses import replace
+    from render import sdf
+    from render.sdf import Material
+    scene = rw.topple_scene(1.0, wreck=True)
+    mats = rw.mats(vent=0.0, wreck=True)
+    probe = [Material((0, 0, 0), emission=(1, 1, 1) if i == W_PLATE else (0, 0, 0)) for i in range(len(mats))]
+    ext0, n0 = 3.9, 140
+    pr = sdf.render(scene, probe, (n0, n0), ext0, shadows=False)
+    ys, xs = np.nonzero(pr[..., 0] > 0.5)
+    cx, cy = (xs.mean() + 0.5 - n0 / 2) * ext0 / n0, -(ys.mean() + 0.5 - n0 / 2) * ext0 / n0
+    mats[W_PLATE] = replace(mats[W_PLATE], albedo=(0.9, 0.9, 0.88), pattern=_file_strokes(cx, cy))
+    ss = 2
+    hi = sdf.render(scene, mats, (size[0] * ss, size[1] * ss), extent, center=(cx + 0.06, cy - 0.02))
+    img = sprite.to_image(sprite.downsample(hi, ss), 0.5)
+    return sprite.sharpen(img, 50), (cx, cy)
+
+
+def filed_plate():
+    """L20 p2: the Revenant Walker's flank plate close up (Level 19's wreck render): the serial field filed to bright
+    bare metal, the file strokes catching the light; an assay strip clipped beside it, one line circled by hand."""
+    b = Board()
+    rx, ry, rw_, rh = 16, 20, 420, 210
+    photo, _ = plate_render((rw_, rh), 0.78)
+    photo = artkit.quantize_set([photo], 64)[0]
+    bg = np.array(photo).astype(np.float64)
+    a = bg[..., 3:4] / 255
+    region = b.base[ry:ry + rh, rx:rx + rw_]
+    b.base[ry:ry + rh, rx:rx + rw_] = bg[..., :3] * a + region * (1 - a)
+    b.draw.rectangle([rx, ry, rx + rw_ - 1, ry + rh - 1], outline=CYAN_DIM + (200,))
+    # the serial field and the callouts (the plate sits left of the render's centre: centre - 0.06 units)
+    k = rw_ / 0.78
+    px_, py_ = rx + rw_ / 2 - 0.06 * k, ry + rh / 2 - 0.02 * k
+    b.bracket(px_ - 62, py_ - 34, px_ + 62, py_ + 34, AMBER, arm=8)
+    tag(b, px_ - 62, py_ - 48, "SERIAL FIELD", AMBER)
+    b.line([(px_ + 30, py_ + 14), (rx + 300, ry + rh - 30)], WHITE, 1, 200)
+    tag(b, rx + 300, ry + rh - 28, "FILED BY HAND", WHITE)
+    tag(b, rx + 300, ry + rh - 17, "NOT WORN", WHITE)
+    tag(b, rx + 6, ry + 6, "WRECK 19-A, FLANK, CLOSE", CYAN)
+    # the assay strip, clipped beside the photo, slightly askew
+    sw, sh = 92, 196
+    strip = Image.new("RGBA", (sw, sh), (226, 222, 204, 255))
+    d = ImageDraw.Draw(strip)
+    for yy in range(0, sh, 2):
+        d.line([(0, yy), (sw, yy)], fill=(218, 214, 196, 255))
+    ink = (40, 44, 60, 255)
+    lines = ["ASSAY 19-A", "FLANK PLATE", "", "FE   61.8", "CR   18.2", "NI    9.4", "MO    3.1", "MN    1.7",
+             "TI    0.9", "V     0.4", "", "GRAIN: CAST", "ROLLED", "", "STOCK MATCH", "HELIX TF-7", "97.2 %"]
+    for i, text in enumerate(lines):
+        raster.draw_text(strip, 6, 14 + 10 * i, text, ink)
+    d.rectangle([sw // 2 - 14, 0, sw // 2 + 14, 7], fill=(150, 156, 166, 255), outline=(80, 84, 96, 255))
+    ring = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))                # her pen: a wobbly loop round the match
+    rd = ImageDraw.Draw(ring)
+    cy0 = 14 + 10 * 15 + 1.5
+    pts = [(sw / 2 + math.cos(t) * (44 + 2 * math.sin(3 * t)) + 2 * math.sin(7 * t),
+            cy0 + 2 + math.sin(t) * (6.5 + 1.0 * math.cos(5 * t))) for t in np.linspace(0.3, 2 * math.pi + 0.9, 60)]
+    rd.line(pts, fill=(200, 30, 40, 255), width=1)
+    strip.alpha_composite(ring)
+    strip = strip.rotate(-3, resample=Image.NEAREST, expand=True)
+    sa = np.array(strip)
+    sa[..., 3] = np.where(sa[..., 3] >= 128, 255, 0)
+    strip = artkit.quantize_set([Image.fromarray(sa, "RGBA")], 16)[0]
+    b.sprite(strip, 494, 126)
+    px = 548
+    b.label(px, 30, "THE PLATE", WHITE)
+    b.label(px, 44, "SERIAL FIELD", CYAN)
+    b.label(px, 54, "FILED BLANK", CYAN)
+    b.label(px, 64, "BY HAND", CYAN)
+    b.label(px, 82, "NO COLOURS", GREY)
+    b.label(px, 92, "NO NUMBERS", GREY)
+    b.label(px, 110, "THE ALLOY", WHITE)
+    b.label(px, 120, "READS AS HELIX", AMBER)
+    b.label(px, 130, "FOUNDRY STOCK", AMBER)
+    b.title("REVENANT WALKER - FLANK PLATE")
+    b.label(W - 10, 9, "FOR THE COMMANDER ONLY", RED, right=True)
+    b.label(W - 10, H - 16, "DR. VARGA", CYAN_DIM, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -3981,6 +4335,9 @@ IMAGES = {
     "level-17-choir-herald": herald_scan,
     "level-18-storm-front": storm_front_l18,
     "level-18-visibility": visibility_l18,
+    "level-19-tharsis-works": tharsis_works,
+    "level-19-rear-arcs": rear_arcs,
+    "level-20-filed-plate": filed_plate,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -4000,7 +4357,8 @@ BATCHES = {
     "r38": (list(IMAGES)[41:47], "M7 PART B"),
     "r39": (list(IMAGES)[47:49], "M7 PART C"),
     "r40": (list(IMAGES)[49:51], "M7 PART D"),
-    "r41": (list(IMAGES)[51:], "M7 PART E"),
+    "r41": (list(IMAGES)[51:53], "M7 PART E"),
+    "r42": (list(IMAGES)[53:], "M7 PART F"),
 }
 
 
@@ -4017,6 +4375,7 @@ def build(names):
                   else SOURCE_M7C if name in BATCHES["r39"][0]
                   else SOURCE_M7D if name in BATCHES["r40"][0]
                   else SOURCE_M7E if name in BATCHES["r41"][0]
+                  else SOURCE_M7F if name in BATCHES["r42"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

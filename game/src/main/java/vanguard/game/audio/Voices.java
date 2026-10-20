@@ -31,6 +31,11 @@ public final class Voices implements Mixer.Listener {
     private long id = -1;
     private float left;
     private boolean paused;
+    /**
+     * Whether the line started in this frame: the frame's time passed before it, so the next update
+     * does not count it (it stopped the voice one frame before its end).
+     */
+    private boolean started;
 
     public Voices(Audio audio, Files files, Mixer mixer, Content content) {
         this.audio = audio;
@@ -80,10 +85,15 @@ public final class Voices implements Mixer.Listener {
         id = sound.play(mixer.gain(Bus.VOICE));
         left = voice.seconds();
         paused = false;
+        started = true;
     }
 
     /** Counts the playing line down; it ends by itself after its length. */
     public void update(float seconds) {
+        if (started) {
+            started = false;
+            return;
+        }
         if (sound != null && !paused) {
             left -= seconds;
             if (left <= 0) {

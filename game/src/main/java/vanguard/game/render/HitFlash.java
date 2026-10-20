@@ -14,6 +14,11 @@ final class HitFlash {
     static final int TICKS = 2;
     /** The least steps from one flash's start to the next (0.25 s). */
     static final int COOLDOWN_TICKS = 15;
+    /**
+     * Round 42: a large boss part's flash blends only this far towards white (the Kraken's {@code PART_FLASH}): a
+     * subtle blink, not a white silhouette (the Revenant Walker's parts, the Siege Spire's crown, pods and maw).
+     */
+    static final float PART_FLASH = 0.3f;
 
     private static final long NEVER = Long.MIN_VALUE / 2;
 

@@ -12,9 +12,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
@@ -59,7 +62,7 @@ class Level04Test {
         int turrets = level.groundUnits().stream()
                 .mapToInt(unit -> unit.enemy().bounty())
                 .sum();
-        LevelScript.Escort escort = level.escort().orElseThrow();
+        ObjectiveSpec.Escort escort = level.objectives().escort().orElseThrow();
         int convoy = escort.stations().size() * escort.credits();
         int drops = (int) level.groundObjects().stream()
                         .filter(object -> object.drop()
@@ -76,7 +79,7 @@ class Level04Test {
                 + convoy
                 + drops
                 + crates
-                + level.secondary().credits();
+                + level.objectives().secondary().credits();
 
         assertEquals(
                 815, kills, "the density rework: 60 Skitters × 5 for the 35 of the pacing filler, 2 Needlers fewer");
@@ -94,13 +97,13 @@ class Level04Test {
         for (WaveSpec wave : level.waves()) {
             totals.merge(wave.enemy().slug(), wave.count(), Integer::sum);
         }
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             totals.merge(unit.enemy().slug(), 1, Integer::sum);
         }
 
         assertEquals(Map.of("brood-pod", 6, "needler", 10, "scuttler", 8, "skitter", 75, "spine-turret", 13), totals);
-        assertEquals("brood-pod", level.secondary().escapes());
-        assertEquals(50, level.secondary().credits());
+        assertEquals("brood-pod", level.objectives().secondary().escapes());
+        assertEquals(50, level.objectives().secondary().credits());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(6, sortie.escapesTotal());
         assertEquals(6 + 10 + 8 + 75 + 13 + 36, sortie.enemyTotal(), "the released Skitters count");
@@ -126,7 +129,7 @@ class Level04Test {
                     case MEDIUM -> 60;
                     case HARD -> 45;
                 },
-                level.escort().orElseThrow().ally().hp(),
+                level.objectives().escort().orElseThrow().ally().hp(),
                 1e-9);
         assertEquals(difficulty == Difficulty.HARD ? 8 : 6, brood.count());
         assertEquals(difficulty == Difficulty.EASY ? 10 : 8, brood.afterSeconds(), 1e-9);
@@ -143,11 +146,11 @@ class Level04Test {
     @Test
     void theDugoutIsHardenedAndHidesTheCacheAndTheSupplyDropAddsACharge() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec dugout = level.groundObjects().stream()
+        GroundObjectSpec dugout = level.groundObjects().stream()
                 .filter(object -> object.secretIndex() >= 0)
                 .findFirst()
                 .orElseThrow();
-        LevelScript.GroundObjectSpec drop = level.groundObjects().stream()
+        GroundObjectSpec drop = level.groundObjects().stream()
                 .filter(object -> object.bonusDrop().isPresent())
                 .findFirst()
                 .orElseThrow();

@@ -24,6 +24,8 @@ final class EnemyFire {
             new Pool<>(EnemyForce.BULLET_CAPACITY, EnemyBullet::new, EnemyBullet[]::new);
     private final Pool<Mine> mines = new Pool<>(MINE_CAPACITY, Mine::new, Mine[]::new);
     private final Pool<Lob> lobs = new Pool<>(LOB_CAPACITY, Lob::new, Lob[]::new);
+    /** M7 part F: the bosses' homing missiles (the Revenant Walker's pods). */
+    private final Missiles missiles;
     /** M5 part G: the direct hits of the lobs aimed at the objective that landed on it in the last {@link #moveLobs}. */
     private double objectiveDamage;
 
@@ -32,6 +34,7 @@ final class EnemyFire {
         this.rules = rules;
         this.events = events;
         this.hook = hook;
+        missiles = new Missiles(events);
     }
 
     /** Back to the level start: no bullets, spores or lobs. */
@@ -39,6 +42,12 @@ final class EnemyFire {
         Pools.clear(bullets);
         Pools.clear(mines);
         Pools.clear(lobs);
+        missiles.reset();
+    }
+
+    /** M7 part F: the homing missiles in flight. */
+    Missiles missiles() {
+        return missiles;
     }
 
     Pool<EnemyBullet> bullets() {
@@ -343,10 +352,10 @@ final class EnemyFire {
     void lob(Enemy enemy, EnemyGun gun, Ship ship) {
         Lob lob = lobs.obtain();
         if (lob != null) {
-            LevelScript.HookMode mode = hook.mode(enemy.kind());
-            int target = mode == LevelScript.HookMode.ALWAYS
+            HookMode mode = hook.mode(enemy.kind());
+            int target = mode == HookMode.ALWAYS
                     ? hook.convoy().objective(enemy.x(), enemy.y())
-                    : mode == LevelScript.HookMode.ALTERNATE ? hook.alternate(enemy, ship) : -1;
+                    : mode == HookMode.ALTERNATE ? hook.alternate(enemy, ship) : -1;
             if (target >= 0 && hook.groundHook()) {
                 // M7 part D: the marker on the dome, in ground space: it scrolls with the dome.
                 lob.launchOnGround(

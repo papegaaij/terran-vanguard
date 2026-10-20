@@ -188,26 +188,18 @@ class AuraTest {
     // --- in a sortie --------------------------------------------------------------------------
 
     /** A level at 60 px/s of these ground units and ground objects. */
-    private static LevelScript level(List<LevelScript.GroundUnit> units) {
-        return new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 60)),
-                List.of(),
-                List.of(),
-                units,
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static LevelScript level(List<GroundUnit> units) {
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(40, 60)))
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     /** The target and a Herald 70 px to its right, both fixed to the ground and entering together. */
     private static LevelScript ringedTarget(EnemySpec target) {
         return level(List.of(
-                new LevelScript.GroundUnit(0, Ship.START_X, target, -1),
-                new LevelScript.GroundUnit(0, Ship.START_X + 70, STILL_HERALD, -1)));
+                new GroundUnit(0, Ship.START_X, target, -1), new GroundUnit(0, Ship.START_X + 70, STILL_HERALD, -1)));
     }
 
     private static EnemySpec target(Layer layer) {

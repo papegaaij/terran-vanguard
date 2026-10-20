@@ -1985,3 +1985,161 @@ Use: the conveyor belts (a loop while belts are on screen; the plan folds them i
 
 ### mars-foundry-r42-a — synthesized
 Use: ambience `mars-foundry` (Level 19). Brief: conveyor rumble, a far furnace roar, a slow hammer, the plateau wind. Why: a 35–180 Hz conveyor rumble, an 80–900 Hz furnace roar (peaking at 240 Hz) breathing slowly, a distant hammer every 4.0 s (a low-passed thud and ring with two hall echoes) and a plains wind on slow gusts; 16.0 s seamless loop, −36 dB band RMS like every ambience loop. Edit: ceiling −4 dBFS (loops −1 dBFS).
+
+## Concept round 43 (M7 part F, Level 19: the walker's and the tank's sounds from the database)
+
+The user (round 42): "You should really stop trying to make these sounds yourself. Use the database." Every file is cut from **Freesound originals** (CC0 or CC-BY, each in [CREDITS.md](../../../../CREDITS.md)) by `tools/concept/audio/sfx_r43.py`: cut, slowed, layered, faded and levelled, nothing synthesized; big and heavy sources, nothing bubbly or popping, every blast with a ramped attack. An a/b pair each, proposed (round 43), pending the user's review; the game keeps the round-42 files until the pick. Levels as round 42: one-shots on the loudest 100 ms of the 200 Hz–5 kHz band under a −4 dBFS ceiling (the death −1.5 dBFS), loops by the whole loop's band RMS. The walker's pod missile stays the chosen [enemy-missile-r08-a](enemy-missile-r08-a.ogg) (nothing new).
+
+### walker-hatch-r43-a — "AIRBrst-Samsung Galaxy Smartphone, CU_Truck, Air Brakes, Released_Nicholas Judy_TDC" by designerschoice + "Closing large metal door-001" by AudioPapkin
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/designerschoice/sounds/803052/> (AIRBrst-Samsung Galaxy Smartphone, CU_Truck, Air Brakes, Released_Nicholas Judy_TDC by designerschoice, CC-BY 4.0), <https://freesound.org/people/AudioPapkin/sounds/814976/> (Closing large metal door-001 by AudioPapkin, CC0 1.0). Use: a pod's hatch flipping open, 0.4 s before its salvo (the tell).
+Brief: round 42: "That's not a hatch, that's a pop. Isn't this supposed to be a heavy thing?" A heavy armoured hatch: a hydraulic latch and a metal lid. Why: air brakes releasing and a large metal door slamming.
+Edit: 1.05 s, the loudest 100 ms band −20.1 dB, peak −4.1 dBFS, −16.2 LUFS.
+
+### walker-hatch-r43-b — "Air (or steam) pressure release" by brunoboselli + "G45-30-Submarine Hatch Opening.wav" by craigsmith + "Big Structure Collision Heard from Inside" by Osvoldon
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438732/> (G45-30-Submarine Hatch Opening.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0). Use: a pod's hatch flipping open, 0.4 s before its salvo (the tell).
+Brief: round 42: "That's not a hatch, that's a pop. Isn't this supposed to be a heavy thing?" A heavy armoured hatch: a hydraulic latch and a metal lid. Why: a submarine hatch's metal clank and creak over a steam pressure release, a deep impact under the clank.
+Edit: 1.01 s, the loudest 100 ms band −20.1 dB, peak −8.4 dBFS, −21.0 LUFS.
+
+### walker-flame-tell-r43-a — "Venting.wav" by Sea Fury
+
+Proposed (round 43).
+Source: <https://freesound.org/people/Sea%20Fury/sounds/48710/> (Venting.wav by Sea Fury, CC-BY 3.0). Use: the flamer's 0.6 s tell.
+Brief: round 42: "way too small. Search in the database for large venting.". Why: a huge gas vent opening.
+Edit: 0.87 s, the loudest 100 ms band −20.6 dB, peak −4.3 dBFS, −15.7 LUFS.
+
+### walker-flame-tell-r43-b — "steam_safety_valve.wav" by Engineer_815
+
+Proposed (round 43).
+Source: <https://freesound.org/people/Engineer_815/sounds/493558/> (steam_safety_valve.wav by Engineer_815, CC0 1.0). Use: the flamer's 0.6 s tell.
+Brief: round 42: "way too small. Search in the database for large venting.". Why: a 1000 hp boiler's safety valve opening, slowed to 0.85.
+Edit: 0.84 s, the loudest 100 ms band −20.1 dB, peak −6.2 dBFS, −15.8 LUFS.
+
+### walker-flame-r43-a — "Flamethrower_Weapon_Long_Bursts.wav" by AslakHostaker
+
+Proposed (round 43).
+Source: <https://freesound.org/people/AslakHostaker/sounds/395039/> (Flamethrower_Weapon_Long_Bursts.wav by AslakHostaker, CC0 1.0). Use: the flame cone, a loop while it burns.
+Brief: round 42: "Also too small. Search for large gas burns or large flamethrower". Why: a flamethrower's long burst, slowed to 0.85.
+Edit: seamless 4 s LOOP, band RMS −28.1 dB, peak −11.8 dBFS, −22.7 LUFS.
+
+### walker-flame-r43-b — "Flamethrower" by pugaeme
+
+Proposed (round 43).
+Source: <https://freesound.org/people/pugaeme/sounds/396890/> (Flamethrower by pugaeme, CC-BY 3.0). Use: the flame cone, a loop while it burns.
+Brief: round 42: "Also too small. Search for large gas burns or large flamethrower". Why: a flamethrower's deep roar.
+Edit: seamless 4 s LOOP, band RMS −28.0 dB, peak −8.8 dBFS, −21.1 LUFS.
+
+### vent-tell-r43-a — "gas vuur dakwerken gasbrander luchtballon.wav" by NickPeeters
+
+Proposed (round 43).
+Source: <https://freesound.org/people/NickPeeters/sounds/243763/> (gas vuur dakwerken gasbrander luchtballon.wav by NickPeeters, CC0 1.0). Use: a furnace vent's 1.0 s tell (the glow).
+Brief: round 42: "Same thing": a large furnace or gas vent. Why: a balloon burner's roar swelling in.
+Edit: 1.05 s, the loudest 100 ms band −20.3 dB, peak −4.1 dBFS, −17.7 LUFS.
+
+### vent-tell-r43-b — "Hot air balloon burner" by YannSauvin
+
+Proposed (round 43).
+Source: <https://freesound.org/people/YannSauvin/sounds/778358/> (Hot air balloon burner by YannSauvin, CC0 1.0). Use: a furnace vent's 1.0 s tell (the glow).
+Brief: round 42: "Same thing": a large furnace or gas vent. Why: a brighter balloon burner's roar swelling in.
+Edit: 1.05 s, the loudest 100 ms band −20.1 dB, peak −7.6 dBFS, −19.0 LUFS.
+
+### vent-burst-r43-a — "Flame Burst" by magnuswaker + "gas vuur dakwerken gasbrander luchtballon.wav" by NickPeeters
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/magnuswaker/sounds/592572/> (Flame Burst by magnuswaker, CC0 1.0), <https://freesound.org/people/NickPeeters/sounds/243763/> (gas vuur dakwerken gasbrander luchtballon.wav by NickPeeters, CC0 1.0). Use: the vent's burst.
+Brief: round 42: "Same thing": a big fire blast. Why: a deep flame burst with the end of a gas burner's burn, dying away.
+Edit: 1.60 s, the loudest 100 ms band −19.3 dB, peak −4.4 dBFS, −13.2 LUFS.
+
+### vent-burst-r43-b — "Fire - Effects - Swooshes - Bursts, evolving" by GregorQuendel
+
+Proposed (round 43).
+Source: <https://freesound.org/people/GregorQuendel/sounds/421879/> (Fire - Effects - Swooshes - Bursts, evolving by GregorQuendel, CC-BY 4.0). Use: the vent's burst.
+Brief: round 42: "Same thing": a big fire blast. Why: a fire burst roaring out.
+Edit: 1.60 s, the loudest 100 ms band −19.8 dB, peak −4.2 dBFS, −11.3 LUFS.
+
+### tank-tracks-r43-a — "t26_moving_01.wav" by greatmganga
+
+Proposed (round 43).
+Source: <https://freesound.org/people/greatmganga/sounds/329800/> (t26_moving_01.wav by greatmganga, CC0 1.0). Use: the Warden Tank's tracks, a loop (the nearest tank).
+Brief: round 42: "Search for sounds of a real tank driving". Why: a T-26 tank driving, tracks and engine.
+Edit: seamless 4 s LOOP, band RMS −32.1 dB, peak −13.3 dBFS, −24.6 LUFS.
+
+### tank-tracks-r43-b — "tank bulldozer tracked vehicle sound effect atmo" by Garuda1982
+
+Proposed (round 43).
+Source: <https://freesound.org/people/Garuda1982/sounds/541240/> (tank bulldozer tracked vehicle sound effect atmo by Garuda1982, CC-BY 4.0). Use: the Warden Tank's tracks, a loop (the nearest tank).
+Brief: round 42: "Search for sounds of a real tank driving". Why: a tracked bulldozer driving.
+Edit: seamless 4 s LOOP, band RMS −32.1 dB, peak −13.8 dBFS, −26.2 LUFS.
+
+### tank-turret-r43-a — "Tank or Tower Turret Moving and Turning" by qubodup
+
+Proposed (round 43).
+Source: <https://freesound.org/people/qubodup/sounds/171657/> (Tank or Tower Turret Moving and Turning by qubodup, CC0 1.0). Use: the Warden Tank's turret slew.
+Brief: a real heavy turret traverse. Why: a real artillery turret re-aligning.
+Edit: 0.80 s, the loudest 100 ms band −23.0 dB, peak −12.2 dBFS, −21.6 LUFS.
+
+### tank-turret-r43-b — "Factory_Crane_Roll.wav" by mickyman5000
+
+Proposed (round 43).
+Source: <https://freesound.org/people/mickyman5000/sounds/340634/> (Factory_Crane_Roll.wav by mickyman5000, CC0 1.0). Use: the Warden Tank's turret slew.
+Brief: a real heavy turret traverse. Why: a factory overhead crane rolling.
+Edit: 0.90 s, the loudest 100 ms band −23.1 dB, peak −9.8 dBFS, −19.5 LUFS.
+
+### tank-burst-r43-a — "Tank Firing" by qubodup
+
+Proposed (round 43).
+Source: <https://freesound.org/people/qubodup/sounds/168707/> (Tank Firing by qubodup, CC0 1.0). Use: the Warden Tank's burst after the 0.3 s hold (3 shots 0.15 s apart: the medium burst).
+Brief: round 42: "Not a heavy cannon. Not even a small cannon.". Why: a tank cannon firing three shots 0.15 s apart.
+Edit: 1.18 s, the loudest 100 ms band −17.0 dB, peak −4.1 dBFS, −13.3 LUFS.
+
+### tank-burst-r43-b — "Guns & Explosions Album - Autocannon - Shot 1.wav" by OGsoundFX
+
+Proposed (round 43).
+Source: <https://freesound.org/people/OGsoundFX/sounds/423108/> (Guns & Explosions Album - Autocannon - Shot 1.wav by OGsoundFX, CC-BY 4.0). Use: the Warden Tank's burst after the 0.3 s hold (3 shots 0.15 s apart: the medium burst).
+Brief: round 42: "Not a heavy cannon. Not even a small cannon.". Why: a heavy artillery shot, three shots 0.15 s apart.
+Edit: 1.38 s, the loudest 100 ms band −17.9 dB, peak −4.1 dBFS, −12.7 LUFS.
+
+### walker-vent-hit-r43-a — "Big stereo metal hit" by LPA134
+
+Proposed (round 43).
+Source: <https://freesound.org/people/LPA134/sounds/329515/> (Big stereo metal hit by LPA134, CC0 1.0). Use: a hit on the Revenant Walker's open reactor vents (new).
+Brief: a heavy hit on hot metal. Why: a big hit on a lift door.
+Edit: 0.55 s, the loudest 100 ms band −20.5 dB, peak −4.1 dBFS, −13.2 LUFS.
+
+### walker-vent-hit-r43-b — "Old_Truck_Metal_Squeaks-Creaks-Rattle-Impact_Hollow_Impact_Soft_Squeak" by dilsun + "steam_burst.wav" by pengo_au
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/dilsun/sounds/508272/> (Old_Truck_Metal_Squeaks-Creaks-Rattle-Impact_Hollow_Impact_Soft_Squeak by dilsun, CC0 1.0), <https://freesound.org/people/pengo_au/sounds/90143/> (steam_burst.wav by pengo_au, CC0 1.0). Use: a hit on the Revenant Walker's open reactor vents (new).
+Brief: a heavy hit on hot metal. Why: a hollow metal impact with a burst of steam.
+Edit: 0.52 s, the loudest 100 ms band −19.2 dB, peak −4.1 dBFS, −19.6 LUFS.
+
+### walker-death-r43-a — "S17-28 Large explosion with debris.wav" by craigsmith + "S10-13 Large hard metal crash; optical.wav" by craigsmith + "Big Structure Collision Heard from Inside" by Osvoldon
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/craigsmith/sounds/674899/> (S17-28 Large explosion with debris.wav by craigsmith, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/675462/> (S10-13 Large hard metal crash; optical.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0). Use: the Revenant Walker's death, the `huge` rung (5–6 s): it topples over 2 s with chained explosions and the hull lands (new).
+Brief: a giant machine collapsing: explosion and metal. Why: a large explosion with debris, the hull landing with a massive impact and a metal crash.
+Edit: 5.60 s, the loudest 100 ms band −13.5 dB, peak −1.6 dBFS, −14.8 LUFS.
+
+### walker-death-r43-b — "Huge Explosion" by florianreichelt + "massive explosion" by Hugofski + "Car Crash (with Glass)" by magnuswaker + "Sounds For Earthquakes - Radiator Metal Rumbling.wav" by RutgerMuller
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/florianreichelt/sounds/459973/> (Huge Explosion by florianreichelt, CC0 1.0), <https://freesound.org/people/Hugofski/sounds/177556/> (massive explosion by Hugofski, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/592388/> (Car Crash (with Glass) by magnuswaker, CC0 1.0), <https://freesound.org/people/RutgerMuller/sounds/51097/> (Sounds For Earthquakes - Radiator Metal Rumbling.wav by RutgerMuller, CC0 1.0). Use: the Revenant Walker's death, the `huge` rung (5–6 s): it topples over 2 s with chained explosions and the hull lands (new).
+Brief: a giant machine collapsing: explosion and metal. Why: two chained blasts, the final boom with a car crash's metal and a radiator rumbling.
+Edit: 5.60 s, the loudest 100 ms band −14.9 dB, peak −1.8 dBFS, −13.3 LUFS.
+
+### walker-wreck-settle-r43-a — "Metallic Groan" by hinchinbrook + "Clicking Engine Cooldown" by CmdRobot
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0), <https://freesound.org/people/CmdRobot/sounds/539514/> (Clicking Engine Cooldown by CmdRobot, CC0 1.0). Use: the wreck settling under the crawl after the death (new).
+Brief: a huge metal hulk settling: creaks, and ticking as it cools. Why: a bunker door's low metallic groan, slowed to 0.85, over an engine cooling.
+Edit: 5.00 s, the loudest 100 ms band −23.9 dB, peak −15.4 dBFS, −24.4 LUFS.
+
+### walker-wreck-settle-r43-b — "Creaking Metal - Slow" by EagleStealthTeam + "Clicking Engine Cooldown" by CmdRobot
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0), <https://freesound.org/people/CmdRobot/sounds/539514/> (Clicking Engine Cooldown by CmdRobot, CC0 1.0). Use: the wreck settling under the crawl after the death (new).
+Brief: a huge metal hulk settling: creaks, and ticking as it cools. Why: a giant metal structure creaking, over an engine cooling.
+Edit: 5.00 s, the loudest 100 ms band −23.9 dB, peak −16.9 dBFS, −25.4 LUFS.

@@ -135,6 +135,8 @@ final class PlayerFire {
     private int overdriveTicks;
     /** M7 part C: the level's rock and the scroll now; null in a level without terrain. */
     private Canyon canyon;
+    /** M7 part F: the enemies' homing missiles, which shots and the beam bring down; null until the sortie sets them. */
+    private Missiles missiles;
     /** M7 part C: the level's tendril gates, which a beam burns on its way past; null without. */
     private Links links;
     /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
@@ -178,6 +180,16 @@ final class PlayerFire {
     /** M7 part C: the level's tendril gates (design/enemies/ground/tendril-anchor); null without. */
     void links(Links gates) {
         links = gates;
+    }
+
+    /** M7 part F: the enemies' homing missiles (the sortie's, from its enemy force). */
+    void missiles(Missiles flying) {
+        missiles = flying;
+    }
+
+    /** M7 part F: the enemies' homing missiles; null before the sortie sets them. */
+    Missiles missiles() {
+        return missiles;
     }
 
     /** The level's rock; null without terrain. */
@@ -513,7 +525,9 @@ final class PlayerFire {
                     if (enemy.damagePart(shot.damage() * groundFactor(weapon, layer), false)) {
                         hits.unitPartDestroyed(j, shot.mount());
                     }
-                } else if (enemy.damage(shot.damage() * groundFactor(weapon, layer))) {
+                } else if (enemy.damage(
+                        shot.damage() * groundFactor(weapon, layer) * enemy.rearFactor(shot.vx(), shot.vy()))) {
+                    // M7 part F: a direct shot into a rear plate does its multiplier (the Warden Tank's).
                     hits.enemyDestroyed(j, shot.mount());
                 }
                 if (spent) {
@@ -626,6 +640,38 @@ final class PlayerFire {
     }
 
     /**
+     * M7 part F: shots that reach the air (bolts, missiles, homing shots, Rook's) hit the enemies' homing
+     * missiles: each takes the shot's damage and is brought down at 0 HP ({@link Missiles#SHOT_DOWN}).
+     */
+    void hitMissiles() {
+        if (missiles == null || missiles.size() == 0) {
+            return;
+        }
+        for (int i = shots.size() - 1; i >= 0; i--) {
+            Shot shot = shots.get(i);
+            WeaponSpec weapon = shot.weapon();
+            if (weapon.delivery().landing() || !weapon.delivery().reaches(Layer.AIR)) {
+                continue;
+            }
+            for (int j = missiles.size() - 1; j >= 0; j--) {
+                Missile missile = missiles.get(j);
+                if (!weapon.size().overlaps(shot.x(), shot.y(), Missile.BOX, missile.x(), missile.y())) {
+                    continue;
+                }
+                events.add(SimEvents.Type.ENEMY_HIT, shot.x(), shot.y(), shot.mount());
+                boolean spent = shot.pierced();
+                if (missile.damage(shot.damage())) {
+                    missiles.destroy(j, Missiles.SHOT_DOWN);
+                }
+                if (spent) {
+                    shots.free(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
      * Bolts and missiles that reach a set piece's layer hit its living parts; what touches its
      * armoured body (a boss's in its current pose) instead glances off, as does a shot on a part
      * that takes no damage now (a boss's fire-only turrets, a shut window). A boss on high air is
@@ -640,7 +686,7 @@ final class PlayerFire {
             if (!piece.present()) {
                 continue;
             }
-            List<LevelScript.PartSpec> parts = piece.spec().parts();
+            List<PartSpec> parts = piece.spec().parts();
             boolean overhead = Homing.overhead(piece);
             boolean anchored = piece.arena().isPresent();
             for (int i = shots.size() - 1; i >= 0; i--) {
@@ -651,7 +697,14 @@ final class PlayerFire {
                         || (overhead && homing.overhead(shot.target()) != k)) {
                     continue;
                 }
-                int lockedPart = overhead ? (shot.target() - PART_SERIAL) % LevelScript.SetPieceSpec.MAX_PARTS : -1;
+                int lockedPart = overhead ? (shot.target() - PART_SERIAL) % SetPieceSpec.MAX_PARTS : -1;
+                if (piece.plateTouches(weapon.size(), shot.x(), shot.y())
+                        && (!anchored || weapon.delivery().reaches(piece.layer()))) {
+                    // M7 part F: a walking boss's front plate turns every shot that meets it.
+                    events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
+                    shots.free(i);
+                    continue;
+                }
                 boolean gone = false;
                 for (int p = 0; p < parts.size() && piece.present(); p++) {
                     if (overhead && p != lockedPart) {
@@ -662,7 +715,7 @@ final class PlayerFire {
                             || (anchored && !weapon.delivery().reaches(partLayer))
                             || !piece.partTouches(p, weapon.size(), shot.x(), shot.y())
                             || !piece.partOnField(p)
-                            || (weapon.pierce() > 1 && shot.struck(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p))) {
+                            || (weapon.pierce() > 1 && shot.struck(-1 - k * SetPieceSpec.MAX_PARTS - p))) {
                         continue;
                     }
                     if (piece.partShielded(p)) {
@@ -711,7 +764,7 @@ final class PlayerFire {
     private static boolean partAhead(SetPiece piece, Shot shot) {
         double dirX = Trig.sin(shot.heading());
         double dirY = Trig.cos(shot.heading());
-        List<LevelScript.PartSpec> parts = piece.spec().parts();
+        List<PartSpec> parts = piece.spec().parts();
         for (int p = 0; p < parts.size(); p++) {
             Hitbox box = parts.get(p).box();
             double px = piece.partX(p);

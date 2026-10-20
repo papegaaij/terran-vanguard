@@ -318,7 +318,7 @@ public final class SimEvents {
         /**
          * M5 part H: a root burst's telegraph starts (at its ground point then, after the move away from
          * the ship; design/campaign Level 14, Hazards): the paving cracks and dust rises; value: the
-         * burst's {@link LevelScript.RootBurst#index()}. The point scrolls with the ground ({@link
+         * burst's {@link RootBurst#index()}. The point scrolls with the ground ({@link
          * Sortie#burstCount()} and its accessors).
          */
         ROOT_BURST_TELEGRAPH,
@@ -539,7 +539,52 @@ public final class SimEvents {
          * its sensor eye, the tell its gun's {@link EnemyGun#tellSeconds()} before the burst's first shot; value:
          * its kind. Each shot of the burst is an {@link #ENEMY_FIRED}.
          */
-        EYE_GLINT;
+        EYE_GLINT,
+        /**
+         * Round 41 (the 2026-10-19 playtest, Level 14): a boss with {@link BossSpec#incomingSeconds()} is that
+         * long from its arrival on the level clock (at it: off the screen still, an anchored boss where it lies
+         * on the ground); the game's warning box (the klaxon, the banner) goes here instead of at its {@link
+         * #BOSS_ARRIVED}, so it is shown before the boss is reached. Value: the set piece's index. Not
+         * repeated by a retry from the boss checkpoint (recorded just before the arrival).
+         */
+        BOSS_INCOMING,
+        /**
+         * M7 part F (design/enemies/bosses/revenant-walker): a walking boss's pod opened its hatch, the tell its
+         * gun's {@link EnemyGun.HomingSpec#hatchSeconds()} before its homing salvo (at the pod); value: the pod's part
+         * index. The hatch stays open while {@link SetPiece#partHatchOpen(int)}.
+         */
+        POD_HATCH,
+        /** M7 part F: a homing missile was launched (at its start); value: its {@link Missile#serial()}. */
+        MISSILE_LAUNCHED,
+        /**
+         * M7 part F: a homing missile is gone (where it was); value: why, {@link Missiles#SHOT_DOWN}, {@link
+         * Missiles#STRUCK} (it burst on the ship's or Rook's hull; the hit is the defences' events) or {@link
+         * Missiles#FIZZLED}.
+         */
+        MISSILE_DESTROYED,
+        /** M7 part F: a walking boss's flame cone starts its tell (at its flamer): the pilot light, the hiss. */
+        CONE_TELL,
+        /** M7 part F: a walking boss's flame cone starts to burn (at its flamer). */
+        CONE_BURN,
+        /** M7 part F: a walking boss's foot came down (at its centre): the stomp, the dust and slag puffs. */
+        WALKER_STEP,
+        /**
+         * M7 part F: a walking boss was destroyed (at its centre, with its {@link #BOSS_DESTROYED}):
+         * it topples along its heading and its wreck stays on the ground, scrolling with it; value: its
+         * heading, 0–7 ({@link StrideArena#heading()}).
+         */
+        BOSS_WRECK,
+        /**
+         * M7 part F: a furnace vent's grate starts to glow (design/campaign Level 19, Hazards; at the grate): its
+         * tell; value: the grate's number in the level ({@link FurnaceVents#grate(int, int)}).
+         */
+        VENT_TELL,
+        /** M7 part F: a furnace vent's flame column stands up (at the grate); value: the grate's number. */
+        VENT_BURST,
+        /**
+         * M7 part F: a furnace vent's flame hit the ship (value 0) or Rook (value 1), at him: once per burst each.
+         */
+        VENT_HIT;
 
         private static final Type[] VALUES = values();
     }

@@ -130,6 +130,8 @@ final class Beams {
      * #CAST_BLOCKED}.
      */
     private static final int CAST_ARMOUR = 6;
+    /** M7 part F: an enemy's homing missile. */
+    private static final int CAST_MISSILE = 7;
 
     /** M7 part A: the beam cast's nearest find: its kind, height, layer, index (and part) so far. */
     private int castKind;
@@ -207,13 +209,14 @@ final class Beams {
                         if (enemy.damagePart(damage, false)) {
                             hits.unitPartDestroyed(castIndex, m);
                         }
-                    } else if (enemy.damage(damage)) {
+                    } else if (enemy.damage(damage * enemy.rearFactor(0, 1))) {
+                        // M7 part F: the beam goes up the screen: from behind a rear plate facing up it does more.
                         hits.enemyDestroyed(castIndex, m);
                     }
                 }
                 case CAST_PART -> {
                     SetPiece piece = setPieces[castIndex];
-                    beam.target = PART_SERIAL + castIndex * LevelScript.SetPieceSpec.MAX_PARTS + castPart;
+                    beam.target = PART_SERIAL + castIndex * SetPieceSpec.MAX_PARTS + castPart;
                     if (piece.damagePartAt(castPart, damage, beam.x, castY, 0, 1)) {
                         hits.partDestroyed(castIndex, castPart, m);
                     }
@@ -221,6 +224,12 @@ final class Beams {
                 case CAST_SPORE -> {
                     if (spores.get(castIndex).damage(damage)) {
                         hits.mineDestroyed(castIndex);
+                    }
+                }
+                case CAST_MISSILE -> {
+                    Missiles missiles = fire.missiles();
+                    if (missiles.get(castIndex).damage(damage)) {
+                        missiles.destroy(castIndex, Missiles.SHOT_DOWN);
                     }
                 }
                 case CAST_GROUND -> {
@@ -300,6 +309,10 @@ final class Beams {
             if (!piece.present() || (!anchored && !delivery.reaches(piece.layer()))) {
                 continue;
             }
+            if (!anchored || delivery.reaches(piece.layer())) {
+                // M7 part F: a walking boss's front plate stops it, first so that a tie with its hull goes to it.
+                consider(CAST_ARMOUR, piece.plateColumn(x, half, fromY), piece.layer(), k, -1);
+            }
             boolean partInColumn = false;
             for (int p = 0; p < piece.partCount(); p++) {
                 Layer partLayer = piece.partLayer(p);
@@ -340,9 +353,22 @@ final class Beams {
                 }
             }
         }
+        Missiles missiles = fire.missiles();
+        if (missiles != null && delivery.reaches(Layer.AIR)) {
+            // M7 part F: the enemies' homing missiles.
+            for (int j = 0; j < missiles.size(); j++) {
+                Missile missile = missiles.get(j);
+                consider(
+                        CAST_MISSILE,
+                        columnContact(x, half, fromY, missile.x(), missile.y(), Missile.BOX),
+                        Layer.AIR,
+                        j,
+                        -1);
+            }
+        }
         for (int j = 0; j < ground.size(); j++) {
             GroundObject object = ground.get(j);
-            LevelScript.GroundObjectSpec spec = object.spec();
+            GroundObjectSpec spec = object.spec();
             if (!object.hittable() || spec.submerged()) {
                 continue;
             }

@@ -44,19 +44,13 @@ class BurrowTest {
     }
 
     /** One section of {@code seconds} at 150 px/s over land, with the waves and the radio cues. */
-    static LevelScript level(double seconds, List<LevelScript.RadioCue> radio, WaveSpec... waves) {
-        return new LevelScript(
-                15,
-                3,
-                0,
-                List.of(new LevelScript.Section(seconds, 150)),
-                List.of(waves),
-                List.of(),
-                List.of(),
-                0,
-                radio,
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    static LevelScript level(double seconds, List<RadioCue> radio, WaveSpec... waves) {
+        return LevelScript.builder(15, 3)
+                .sections(List.of(new Section(seconds, 150)))
+                .waves(List.of(waves))
+                .radio(radio)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     static Sortie sortie(long seed, LevelScript level) {
@@ -296,8 +290,9 @@ class BurrowTest {
     @Test
     void aSpotInANoSurfaceZoneMovesBesideItAndWithNoRoomTheSurfacingIsSkipped() {
         // The left half of the field is a zone for the whole level: every bulge lies right of it.
-        LevelScript half = level(60, List.of(), field(0, burrower(), 3))
-                .withNoSurface(List.of(new LevelScript.NoSurface(0, 80, -100, 240)));
+        LevelScript half = TestSpecs.withGround(
+                level(60, List.of(), field(0, burrower(), 3)),
+                g -> g.withNoSurface(List.of(new GroundSpec.NoSurface(0, 80, -100, 240))));
         Sortie sortie = sortie(13, half);
         int bulges = 0;
         for (int i = 0; i < SimStep.ticks(50); i++) {
@@ -313,8 +308,9 @@ class BurrowTest {
         assertTrue(bulges > 0);
 
         // The whole field is a zone: no surfacing at all, each counted; it leaves after three.
-        LevelScript all = level(60, List.of(), field(0, burrower(), 1))
-                .withNoSurface(List.of(new LevelScript.NoSurface(0, 80, -100, 600)));
+        LevelScript all = TestSpecs.withGround(
+                level(60, List.of(), field(0, burrower(), 1)),
+                g -> g.withNoSurface(List.of(new GroundSpec.NoSurface(0, 80, -100, 600))));
         Trace trace = trace(sortie(13, all), SimStep.ticks(30));
         assertTrue(trace.bulges().isEmpty());
         assertTrue(trace.escaped() > 0, "three skipped surfacings, then away");
@@ -322,28 +318,18 @@ class BurrowTest {
 
     @Test
     void noSurfaceZonesAreNotForLevelsWithAnArena() {
-        List<LevelScript.NoSurface> zones = List.of(new LevelScript.NoSurface(0, 10, 0, 100));
-        LevelScript level = new LevelScript(
-                15,
-                3,
-                0,
-                List.of(new LevelScript.Section(10, 150), new LevelScript.Section(20, 0, true)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
-        assertThrows(IllegalArgumentException.class, () -> level.withNoSurface(zones));
+        List<GroundSpec.NoSurface> zones = List.of(new GroundSpec.NoSurface(0, 10, 0, 100));
+        LevelScript level = LevelScript.builder(15, 3)
+                .sections(List.of(new Section(10, 150), new Section(20, 0, true)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
+        assertThrows(IllegalArgumentException.class, () -> TestSpecs.withGround(level, g -> g.withNoSurface(zones)));
     }
 
     @Test
     void theRadiosFirstSurfacingStartsOnceOnTheAttemptsFirstSurfacing() {
-        LevelScript level = level(
-                60,
-                List.of(LevelClockSpecs.cue(LevelScript.CueTrigger.FIRST_SURFACING, 0, 0)),
-                field(0, burrower(), 3));
+        LevelScript level =
+                level(60, List.of(LevelClockSpecs.cue(CueTrigger.FIRST_SURFACING, 0, 0)), field(0, burrower(), 3));
         Sortie sortie = sortie(5, level);
         int lines = 0;
         int firstSurfacing = -1;
@@ -364,8 +350,9 @@ class BurrowTest {
 
     @Test
     void aFieldOfBurrowersDoesNotAllocate() {
-        LevelScript level = level(60, List.of(), field(0, burrower(), 6))
-                .withNoSurface(List.of(new LevelScript.NoSurface(2, 6, 0, 200)));
+        LevelScript level = TestSpecs.withGround(
+                level(60, List.of(), field(0, burrower(), 6)),
+                g -> g.withNoSurface(List.of(new GroundSpec.NoSurface(2, 6, 0, 200))));
         long allocated = Allocations.least(() -> sortie(5, level), sortie -> {
             for (int i = 0; i < SimStep.ticks(40); i++) {
                 sortie.step(Command.FIRE.bit());

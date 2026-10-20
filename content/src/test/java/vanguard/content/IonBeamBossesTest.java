@@ -12,6 +12,7 @@ import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PlayField;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
@@ -30,26 +31,14 @@ class IonBeamBossesTest {
     /** An arena with only {@code slug}, arriving at the centre (SiegeSpireTest's sections). */
     private static Sortie arena(String slug) {
         double arena = SiegeSpireTest.ARENA;
-        LevelScript level = new LevelScript(
-                14,
-                2,
-                0,
-                List.of(
-                        new LevelScript.Section(arena, 140),
-                        new LevelScript.Section(arena + 200, 0, true),
-                        new LevelScript.Section(arena + 212, 140)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                LevelScript.Secondary.NONE,
-                List.of(),
-                List.of(),
-                List.of(SimSpecs.boss(
+        LevelScript level = LevelScript.builder(14, 2)
+                .sections(List.of(
+                        new Section(arena, 140), new Section(arena + 200, 0, true), new Section(arena + 212, 140)))
+                .setPieces(List.of(SimSpecs.boss(
                         CONTENT,
                         new LevelData.BossPlacement(slug, arena, PlayField.WIDTH / 2.0, 2),
-                        Difficulty.MEDIUM)));
+                        Difficulty.MEDIUM)))
+                .build();
         Loadout loadout =
                 ActThreeArsenalFlightTest.loadout(new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "ion-beam", 3));
         return new Sortie(

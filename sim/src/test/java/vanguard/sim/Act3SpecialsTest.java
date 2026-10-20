@@ -234,27 +234,11 @@ class Act3SpecialsTest {
                         new WaveSpec.At(PlayField.WIDTH / 2.0, 300),
                         new WaveSpec.At(PlayField.WIDTH / 2.0, 700))),
                 Optional.empty());
-        LevelScript level = new LevelScript(
-                6,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 130)),
-                List.of(chain),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "mantis", List.of(), ""),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty());
+        LevelScript level = LevelScript.builder(6, 1)
+                .sections(List.of(new Section(40, 130)))
+                .waves(List.of(chain))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "mantis", List.of(), "")))
+                .build();
         return new Sortie(
                 1,
                 TestSpecs.LOADOUT.withSpecial(special),
@@ -385,30 +369,22 @@ class Act3SpecialsTest {
                 plain.drift());
     }
 
-    private static LevelScript targets(List<LevelScript.SetPieceSpec> pieces) {
+    private static LevelScript targets(List<SetPieceSpec> pieces) {
         double t = 0;
-        List<LevelScript.GroundUnit> units = List.of(
-                new LevelScript.GroundUnit(t, Ship.START_X, target("in-air", Layer.AIR, false), -1),
-                new LevelScript.GroundUnit(t, Ship.START_X + 10, target("in-hardened", Layer.GROUND, true), -1),
-                new LevelScript.GroundUnit(t, Ship.START_X - 10, target("in-high", Layer.HIGH_AIR, false), -1),
-                new LevelScript.GroundUnit(t, Ship.START_X + 60, target("out", Layer.GROUND, false), -1));
-        return new LevelScript(
-                4,
-                1,
-                0,
-                List.of(new LevelScript.Section(60, 30)),
-                List.of(),
-                List.of(),
-                units,
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(),
-                pieces);
+        List<GroundUnit> units = List.of(
+                new GroundUnit(t, Ship.START_X, target("in-air", Layer.AIR, false), -1),
+                new GroundUnit(t, Ship.START_X + 10, target("in-hardened", Layer.GROUND, true), -1),
+                new GroundUnit(t, Ship.START_X - 10, target("in-high", Layer.HIGH_AIR, false), -1),
+                new GroundUnit(t, Ship.START_X + 60, target("out", Layer.GROUND, false), -1));
+        return LevelScript.builder(4, 1)
+                .sections(List.of(new Section(60, 30)))
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .setPieces(pieces)
+                .build();
     }
 
-    private static Sortie lanceSortie(List<LevelScript.SetPieceSpec> pieces) {
+    private static Sortie lanceSortie(List<SetPieceSpec> pieces) {
         return new Sortie(
                 1,
                 TestSpecs.LOADOUT.withSpecial(lance(2)),
@@ -471,24 +447,20 @@ class Act3SpecialsTest {
     }
 
     /** A set piece holding over the start: a weak point (×2) right above the ship, its vital core aside. */
-    private static LevelScript.SetPieceSpec gunship() {
-        return new LevelScript.SetPieceSpec(
+    private static SetPieceSpec gunship() {
+        return new SetPieceSpec(
                 "gunship",
                 new Hitbox(300, 100),
                 new Hitbox(260, 60),
                 0,
                 List.of(
-                        new LevelScript.PartSpec(
-                                "eye", 0, 0, new Hitbox(30, 30), 5000, false, 10, Optional.empty(), 0, 2),
-                        new LevelScript.PartSpec(
-                                "core", 120, 0, new Hitbox(30, 30), 5000, true, 10, Optional.empty(), 0, 1)),
-                List.of(LevelScript.Pass.flight(
+                        new PartSpec("eye", 0, 0, new Hitbox(30, 30), 5000, false, 10, Optional.empty(), 0, 2),
+                        new PartSpec("core", 120, 0, new Hitbox(30, 30), 5000, true, 10, Optional.empty(), 0, 1)),
+                List.of(Pass.flight(
                         "hold",
                         Layer.AIR,
                         0,
-                        List.of(
-                                new LevelScript.Waypoint(0, Ship.START_X, 400),
-                                new LevelScript.Waypoint(60, Ship.START_X, 400)))),
+                        List.of(new Waypoint(0, Ship.START_X, 400), new Waypoint(60, Ship.START_X, 400)))),
                 Optional.empty());
     }
 

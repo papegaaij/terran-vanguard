@@ -17,6 +17,8 @@ import vanguard.content.SimSpecs;
 import vanguard.content.campaign.Intel;
 import vanguard.game.ui.Fonts;
 import vanguard.sim.LevelScript;
+import vanguard.sim.Secondary;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Sortie;
 
 /**
@@ -33,7 +35,7 @@ class PartHHudTest {
     void theRootsTrackerCountsTheGrowthsOfTheDifficulty() {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript script = SimSpecs.level(CONTENT, KEY, difficulty);
-            LevelScript.Secondary secondary = script.secondary();
+            Secondary secondary = script.objectives().secondary();
             assertTrue(secondary.byGroups(), "a groups secondary");
             assertEquals("ROOTS", secondary.label().toUpperCase(Locale.ROOT), "the label from the data");
             Sortie sortie = new Sortie(
@@ -68,8 +70,8 @@ class PartHHudTest {
 
     @Test
     void theBossBarNamesTheSpire() {
-        LevelScript.SetPieceSpec boss = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).setPieces().stream()
-                .filter(LevelScript.SetPieceSpec::isBoss)
+        SetPieceSpec boss = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).setPieces().stream()
+                .filter(SetPieceSpec::isBoss)
                 .findFirst()
                 .orElseThrow();
         assertEquals("SIEGE SPIRE", boss.boss().orElseThrow().barName());

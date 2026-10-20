@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/bosses/siege-spire]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Level 14 – Siege Spire
@@ -85,7 +85,7 @@ edge waves, so they are not in the numbers.
 | Field | Value |
 |---|---|
 | Dominant layers | `ground` (the roots, the root-burst growths, the hive nodes, Creepers, Ravagers), `air`, `high-air` (cloaked Wraiths under the canopy) |
-| Attack directions | front 88% · sides 9% · rear 2% (the approach by its waves; in the boss fight the maw's Wraiths loop round to the rear) |
+| Attack directions | front 88% · sides 10% · rear 2% (the approach by its waves; in the boss fight the maw's Wraiths loop round to the rear) |
 | Density | 4 |
 | Recommended traits | `homing`, `anti-ground`; `rear` helps against the Wraiths (three traits do not fit the intel panel) |
 | Hazards | Root bursts (telegraphed by dust, ground layer, no collision); low light under the canopy |
@@ -113,7 +113,14 @@ Approach at **140 px/s** (the chosen Geneva scene), **108 s** of it, with **the 
 fired 1.5 s later (0.75 s since step H7b), and at 140 px/s it would by then have scrolled 350 px from its burst, out of the
 player's reach before the bottom edge; at 80 px/s it stands about 3 s on the screen once it fires).
 The **boss arrives at t=108**: the arena section starts then, with speed 0, and the boss warning, the
-boss's arrival (its bar, the sting, track 22) and the boss checkpoint are one moment. **The 15 px/s
+boss's arrival (its bar, the sting, track 22) and the boss checkpoint are one moment. **Round 41** (the
+user's playtest 2026-10-19: "put a small pause in between the last enemies and the fly towards it; show the
+warning box before you reach it"; pending the user's review): the warning (box, klaxon, track 22) opens
+**7.5 s before the arrival**, at t=100.5 (`boss.incoming`), and closes before the Spire's roots enter the top
+edge (t≈105.5); the last wave enters at t=97.5 (two waves dropped, four moved earlier, see *Waves*), so the
+autopilot's screen is empty from about t=101.5 (medium) or 102.5 (hard) until the roots appear, and the Spire
+holds its fire 1.5 s after the halt (its Roots phase's `delay`); the bar and the checkpoint stay at the
+arrival. A retry from the boss checkpoint warns at the arrival as before. **The 15 px/s
 creep of boss phase 1 in the approved spec is dropped** (H1 = a, pending the user's review): the
 built anchored arena needs speed 0, and all six roots stand on the screen from the start. "In turn"
 comes from the staggered fire (pods 0.4 s apart, each every 1.6 s, the mortar roots every 8 s since
@@ -207,18 +214,16 @@ flies only the rear ambush).
 | 82 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Easy only: instead of the rear Wraiths |
 | 84.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
 | 87 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
+| 89 | 3 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Up an avenue toward the rotunda (round 41: from t=97, its last Creeper off the screen before the quiet approach) |
 | 89.5 | 3 | column | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 92 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
 | 94.5 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 97 | 4 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Up an avenue toward the rotunda |
-| 97 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | sides (alternating edges) | Popcorn from the sides on the avenues |
-| 99.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
-| 102 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
-| 104 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | The last wave before the Spire |
-| 105.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
+| 95 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Round 41: from t=104, so that they are back out of the bottom edge before the quiet approach |
+| 95.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 5 | sides (alternating edges) | Popcorn from the sides on the avenues (round 41: from t=97) |
+| 97.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | The last wave before the Spire (round 41: from t=99.5; the t=102 Stinger V-wing and the t=105.5 Needler line made way for the quiet approach: the screen quiet from about t=103 while the warning shows, until the Spire's roots enter at t≈105.5) |
 | 108 | 5 | boss | [Siege Spire](../../../enemies/bosses/siege-spire/README.md) | 1 | front (anchored at the rotunda, scrolls in with the ground) | At the halt (the warning, the bar and the boss checkpoint); phase 2: the maw launches a Wraith every 8 s (hard 2) as ambushes that loop to the rear, at most 2 alive |
 
-Totals: Skitter 57 · Needler 62 · Stinger 21 · Mantis 4 · Creeper 20 · Spore Bomber 9 · Ravager 4 · Wraith 4 · Siege Spire 1.
+Totals: Skitter 57 · Needler 58 · Stinger 18 · Mantis 4 · Creeper 20 · Spore Bomber 9 · Ravager 4 · Wraith 4 · Siege Spire 1.
 <!-- /data -->
 
 The maw's launches in the fight (a Wraith every 8 s, hard 2, at most 2 alive, round 40; 2 and 3
@@ -276,7 +281,7 @@ with the voiced lengths of step H6): the draft's clash at t=106/107/108 on top o
 warning is gone, with the Choir at t=96 and Varga at t=102; **Rook's t=108 line "Here comes the
 big one" is the boss-warning bark** (his AI says it at the warning, so the scripted copy is
 dropped), and so is the draft's t=80 "Six o'clock, Lancer!" (his rear bark covers the t=82 and
-t=104 ambushes). Okafor's opening line holds the radio for about 12 s, so Hammer Lead speaks at
+t=95 ambushes; t=104 until round 41). Okafor's opening line holds the radio for about 12 s, so Hammer Lead speaks at
 t=13 (his flight passes at t=16), Rook at t=21 and Varga's canopy line at t=31.5. The arena's lines are **events** (the
 level clock is halted): `boss-phase` (phases 2 and 3), `boss-destroyed` and
 `secondary-objective`; a phase's lines queue as `PHASE` lines (step H7b): they wait for a gap like
@@ -321,8 +326,9 @@ line plays when its secret is found.
 Act boss: [Siege Spire](../../../enemies/bosses/siege-spire/README.md). Its phases, HP and
 attacks live in the spec. Arena notes for this level:
 
-- The arena starts at t=108 with the boss warning, the boss bar and the checkpoint in one
-  moment: the warning (track 22) plays on arrival, and the boss theme starts after it. The
+- The arena starts at t=108 with the boss bar and the checkpoint; the warning (track 22) opens
+  7.5 s ahead, at t=100.5 (round 41; on arrival until then and on a retry from the checkpoint), and
+  the boss theme starts after it. The
   trunk stands in the Concord rotunda at the top of the arena; the four turret-pod roots and
   two mortar roots break out along the avenues radiating from it, **all six on the screen from
   the start** (no creep, H1 = a).
@@ -358,8 +364,8 @@ attacks live in the spec. Arena notes for this level:
 ## Music & ambience
 
 The Act 2 B theme "Firestorm" (track 7 in the [track list](../../../audio/music/README.md#track-list))
-for the approach: the base stem from section 2, the full mix from section 4. At the arena start,
-t=108, the boss warning (track 22) plays and the Vrell boss theme "The Choir Descends" (track 18)
+for the approach: the base stem from section 2, the full mix from section 4. At t=100.5, 7.5 s before
+the arena start (round 41; at the arena start, t=108, until then), the boss warning (track 22) plays and the Vrell boss theme "The Choir Descends" (track 18)
 starts after it and runs through the fight, fading at the kill. The daylight section has **no
 music**, and there is no mid-level jingle. After the kill the debrief plays the `mission-complete`
 jingle as every level does, and the act complete fanfare (track 24) plays under the first outro
@@ -389,7 +395,8 @@ draft's 2,410 was the old perfect-run curve with Act-2-scaled amounts. **The dat
 Mortar 15, the car's crate 88, the secondary 63); the code pays each × the act factor 1.6, and
 bounties also × the level's **`bounty_scale` 0.40** (0.76 until round 40, 0.81 until step WB), which
 puts the typical haul on the budget within ±5 % (`TypicalHaulTest`; step WB: 1,744, +3.4 %; the perfect
-run 2,458, 1.46 ×). The maw's Wraiths are budgeted at the measured fight's count (three launches
+run 2,458, 1.46 ×; round 41, without the two dropped approach waves: 1,707, +1.2 %; the perfect run 2,396,
+1.42 ×). The maw's Wraiths are budgeted at the measured fight's count (three launches
 of 1 since round 40, of 2 before; the boss's `spawns`), the node-spawned Skitters at one release per node.
 
 **The Spire's share (step H4, pending the user's review): 452 paid = 26.8 % of the budget**, not the
@@ -407,14 +414,14 @@ old 372 the Spire would have paid 238 (14 %, under the act boss's 20 % floor), s
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Skitter 57 × 5 + Needler 62 × 12 + Stinger 21 × 15 + Mantis 4 × 30 + Creeper 20 × 22 + Spore Bomber 9 × 25 + Ravager 4 × 18 + Wraith 4 × 30 + released Skitter 4 × 5 | 1,513 | 973 |
+| Kills: Skitter 57 × 5 + Needler 58 × 12 + Stinger 18 × 15 + Mantis 4 × 30 + Creeper 20 × 22 + Spore Bomber 9 × 25 + Ravager 4 × 18 + Wraith 4 × 30 + released Skitter 4 × 5 | 1,451 | 936 |
 | Ground targets: Spine Turret 7 × 12 + Hive Node 2 × 45 + Polyp Mortar 4 × 15 | 154 | 123 |
 | Boss: Siege Spire (pods 4 × 64 + mortars 2 × 64 + maw 128 + core 256) | 492 | 492 |
 | Boss spawns: Wraith 3 × 30 (a typical fight) | 57 | 34 |
 | Secret: armoured car (hidden crate, 5% of budget) | 141 | 70 |
 | Secondary: destroy every root-burst growth | 101 | 50 |
-| **Total** (bounty scale 0.4) | **2,458** | **1,744** |
-| Budget(n) = the typical haul's target; typical +3 %, perfect 1.46 × budget | | 1,687 |
+| **Total** (bounty scale 0.4) | **2,396** | **1,707** |
+| Budget(n) = the typical haul's target; typical +1 %, perfect 1.42 × budget | | 1,687 |
 <!-- /data -->
 
 ## Difficulty notes
@@ -452,6 +459,8 @@ else approved as final and accepted, the Spire's death after a redo.
 | [concept/level-14-capture-fixes-r36-a.png](concept/level-14-capture-fixes-r36-a.png), [.mp4](concept/level-14-capture-fixes-r36-a.mp4) | Supplementary capture of the step H7b fixes (step H8; the level time burnt in): Hammer flight at x 130 clear of the car, the growths' first shot about 290 px above the bottom edge, the radio at the roots' end and the boss arrival (Rook's warning bark, his phase-3 line), the free spire over the ash stump, the withering 3 s after the kill, the daylight's 40 px/s drift; the bottom row a run **without `--invulnerable`** on the balance plan's L14 fit (cores included) with Rook, lost five times in the Spire fight ([recipe](concept/prompts.md#level-14-capture-fixes-r36-a)) | chosen |
 | [concept/level-14-capture-daylight-r36-a.png](concept/level-14-capture-daylight-r36-a.png), [.mp4](concept/level-14-capture-daylight-r36-a.mp4) | Supplementary clip of the step H9 changes (step CF; 47 s with sound, the level time burnt in, and a sheet; `--invulnerable`): Okafor's root-grid line at the roots' end (≈ 95) ahead of the Choir (≈ 105) and Varga (≈ 111), the CDF supply drone carrying the armour patch in from the bottom edge (t 96.5–103), the kill (≈ 194.5) and the daylight at 25 px/s: the stump on the screen through the beams, its last root tips leaving at ≈ 215.3 (≈ 21 s after the kill), the debrief at ≈ 217.5 ([recipe](concept/prompts.md#level-14-capture-daylight-r36-a)) | chosen |
 | [concept/act-2-outro-capture-r36-a.png](concept/act-2-outro-capture-r36-a.png) | Capture of the act end from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15 ([recipe](concept/prompts.md#act-2-outro-capture-r36-a)) | chosen |
+| [concept/level-14-fixes-r42-a.mp4](concept/level-14-fixes-r42-a.mp4) | Check capture of the playtest fixes (round 42, medium, the plan's L14 fit, the test autopilot): the last waves, the quiet gap, the Siege Spire warning box before it arrives, its sweeps, its death and the scroll resuming (144 s with sound) | chosen (round 42, K.b: accepted) |
+| [concept/level-14-fixes-r42-a.png](concept/level-14-fixes-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.b: accepted) |
 
 ## Implementation
 
@@ -519,6 +528,11 @@ else approved as final and accepted, the Spire's death after a redo.
 - [x] Round 40 (4a–4c, step CB): the kinder Spire's data (its README), the traits `homing`,
       `anti-ground`, Varga's briefing page and intel L3 with the homing hint, Rook's line at the halt,
       the maw's Wraiths budgeted at 3 (`Level14Test`, `SiegeSpireTest`, `TypicalHaulTest`)
+- [x] Round 41 (the user's playtest 2026-10-19; steps FX-S2, FX-G and FX-C, pending the user's review): the
+      warning 7.5 s before the arrival (`boss.incoming`), the quiet approach (the t=102 and t=105.5 waves
+      dropped; the convoy, the side stream, the Wraiths and the Needler line earlier), the Roots phase's 1.5 s
+      delay, the leading sweep (the Spire's README) (`Level14Test`, `SiegeSpireTest`, `PacingTest`,
+      `TypicalHaulTest`; the game's `BossWarningBoxTest`)
 - [ ] Round 40: Varga's new briefing page and Rook's halt line voiced (a VOX step), a capture of the
       kinder fight for the user's review
 
@@ -720,3 +734,14 @@ else approved as final and accepted, the Spire's death after a redo.
   bounty 372 → 768, so its parts pay what they did (29.2 % of the budget; `BalanceTest`'s 20–40 %).
   The floor leaves out the boss fight (the Spire is a set piece, not an enemy on the screen; it has its
   own tests). L14 leaves `PacingTest.PENDING_ACT_TWO_RULE`.
+- 2026-10-19 (round 41, the user's playtest; steps FX-S2, FX-G and FX-C, pending the user's review): **the
+  approach to the Spire gets a pause and the warning comes first.** The boss block's `incoming: 7.5` opens the
+  warning box, the klaxon and track 22 at t=100.5, closing (5 s) before the Spire's roots enter the top edge;
+  the Roots phase holds its fire 1.5 s after the halt. The t=102 Stinger V-wing and the t=105.5 Needler line are
+  dropped (Needler 62 → 58, Stinger 21 → 18 at medium), the Creeper convoy moves from t=97 to 89, the side
+  stream 97 → 95.5, the rear Wraiths 104 → 95 and the Needler line 99.5 → 97.5 (the last wave), so the
+  autopilot's screen is empty from t≈101.5 (medium), 102.5 (hard) or earlier (easy) to the roots' entry
+  (t≈105.5); with the 5 s box over the warning, the last enemies can still be on the screen for its first
+  1–2 s. The typical haul 1,707 (+1.2 %), the perfect run 2,396 (1.42 ×), `bounty_scale` 0.40 kept. With the
+  Spire's leading sweep (its README) the fight at medium stays at its par (101.9 s mean, par 103 s).
+- 2026-10-20: round 42 closed: the playtest fixes (T.1 approach, T.2 sweep, T.5 death) and their check capture (K.b) accepted by the user, every sub-choice yes; the sweep is not clipped to the play field (T.2 d).

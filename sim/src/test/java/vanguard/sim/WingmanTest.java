@@ -528,21 +528,14 @@ class WingmanTest {
                 Optional.empty(),
                 false);
         double x = Ship.START_X - 64;
-        return new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(30, 130)),
-                List.of(),
-                List.of(),
-                List.of(
-                        new LevelScript.GroundUnit(0.5, x, husk, -1),
-                        new LevelScript.GroundUnit(1.0, x, husk, -1),
-                        new LevelScript.GroundUnit(1.5, x, husk, -1)),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(30, 130)))
+                .groundUnits(List.of(
+                        new GroundUnit(0.5, x, husk, -1),
+                        new GroundUnit(1.0, x, husk, -1),
+                        new GroundUnit(1.5, x, husk, -1)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     @Test
@@ -571,7 +564,7 @@ class WingmanTest {
     void heLobsHisMortarOntoTheGroundTargetThePlayerIsOver() {
         double hp = 1_000_000;
         LevelScript level = PartCSpecs.level(
-                20, 60, List.of(), List.of(new LevelScript.GroundUnit(0, Ship.START_X, PartCSpecs.nodeTarget(hp), -1)));
+                20, 60, List.of(), List.of(new GroundUnit(0, Ship.START_X, PartCSpecs.nodeTarget(hp), -1)));
         WingmanSpec rook = new WingmanSpec(WingmanSpec.Side.LEFT, 80, CRAFT, AI, PartCSpecs.mortar());
         Sortie sortie = new Sortie(
                 1,

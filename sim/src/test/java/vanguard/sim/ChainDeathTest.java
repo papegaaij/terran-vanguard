@@ -37,27 +37,11 @@ class ChainDeathTest {
     }
 
     private static Sortie sortie() {
-        LevelScript level = new LevelScript(
-                6,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 130)),
-                List.of(chainWave(PlayField.WIDTH / 2.0)),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "mantis", List.of(), ""),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty());
+        LevelScript level = LevelScript.builder(6, 1)
+                .sections(List.of(new Section(40, 130)))
+                .waves(List.of(chainWave(PlayField.WIDTH / 2.0)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "mantis", List.of(), "")))
+                .build();
         return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
 

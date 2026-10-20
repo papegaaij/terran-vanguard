@@ -35,53 +35,53 @@ class ShuttleEscortTest {
             "evacuation-shuttle", new Hitbox(64, 40), new Hitbox(48, 28), HP, false, 0, 0.5, 0, true, true, 5, 60, 3);
 
     /** Level 10's stations (x, px below the top edge; period, phase) with the 16 × 4 px sway. */
-    static final List<LevelScript.Station> STATIONS = List.of(
+    static final List<ObjectiveSpec.Station> STATIONS = List.of(
             station(240, 165, 9, 0),
             station(168, 215, 11, 0.25),
             station(312, 215, 10, 0.5),
             station(168, 270, 12, 0.75),
             station(312, 270, 8, 0.1));
 
-    private static final List<LevelScript.Pad> PADS =
+    private static final List<ObjectiveSpec.Pad> PADS =
             List.of(pad(240, 400), pad(176, 440), pad(304, 440), pad(176, 490), pad(304, 490));
 
-    private static LevelScript.Station station(double x, double below, double period, double phase) {
-        return new LevelScript.Station(x, PlayField.HEIGHT - below, 16, 4, period, phase);
+    private static ObjectiveSpec.Station station(double x, double below, double period, double phase) {
+        return new ObjectiveSpec.Station(x, PlayField.HEIGHT - below, 16, 4, period, phase);
     }
 
-    private static LevelScript.Pad pad(double x, double below) {
-        return new LevelScript.Pad(x, PlayField.HEIGHT - below);
+    private static ObjectiveSpec.Pad pad(double x, double below) {
+        return new ObjectiveSpec.Pad(x, PlayField.HEIGHT - below);
     }
 
-    static LevelScript.Escort escort() {
-        return LevelScript.Escort.air(
+    static ObjectiveSpec.Escort escort() {
+        return ObjectiveSpec.Escort.air(
                 SHUTTLE,
-                new LevelScript.Air(
+                new ObjectiveSpec.Air(
                         STATIONS,
-                        Optional.of(new LevelScript.Liftoff(LIFT_T, LIFT_SECONDS, PADS)),
-                        Optional.of(new LevelScript.Climb(CLIMB_T, CLIMB_SECONDS)),
-                        Optional.of(new LevelScript.ScriptedLoss(THREE, LOSS_T, GLOW))),
+                        Optional.of(new ObjectiveSpec.Liftoff(LIFT_T, LIFT_SECONDS, PADS)),
+                        Optional.of(new ObjectiveSpec.Climb(CLIMB_T, CLIMB_SECONDS)),
+                        Optional.of(new ObjectiveSpec.ScriptedLoss(THREE, LOSS_T, GLOW))),
                 PAY);
     }
 
     /** The radio cues the tests listen for, by index. */
-    private static final List<LevelScript.CueTrigger> CUES = List.of(
-            LevelScript.CueTrigger.FIRST_ALLY_HIT,
-            LevelScript.CueTrigger.FIRST_ALLY_LOST,
-            LevelScript.CueTrigger.ALLY_LOST,
-            LevelScript.CueTrigger.SCRIPTED_LOSS,
-            LevelScript.CueTrigger.MISSION_FAILED,
-            LevelScript.CueTrigger.FIRST_DECLOAK,
-            LevelScript.CueTrigger.FIRST_LOOP_BACK);
+    private static final List<CueTrigger> CUES = List.of(
+            CueTrigger.FIRST_ALLY_HIT,
+            CueTrigger.FIRST_ALLY_LOST,
+            CueTrigger.ALLY_LOST,
+            CueTrigger.SCRIPTED_LOSS,
+            CueTrigger.MISSION_FAILED,
+            CueTrigger.FIRST_DECLOAK,
+            CueTrigger.FIRST_LOOP_BACK);
 
-    private static List<LevelScript.RadioCue> radio() {
-        List<LevelScript.RadioCue> cues = new ArrayList<>();
-        for (LevelScript.CueTrigger trigger : CUES) {
-            cues.add(new LevelScript.RadioCue(trigger, 0, "", "Okafor", trigger.name(), false, "neutral"));
+    private static List<RadioCue> radio() {
+        List<RadioCue> cues = new ArrayList<>();
+        for (CueTrigger trigger : CUES) {
+            cues.add(new RadioCue(trigger, 0, "", "Okafor", trigger.name(), false, "neutral"));
         }
         for (int home = 1; home <= 4; home++) {
-            cues.add(new LevelScript.RadioCue(
-                    LevelScript.CueTrigger.LEVEL_END,
+            cues.add(new RadioCue(
+                    CueTrigger.LEVEL_END,
                     0,
                     "",
                     "Okafor",
@@ -97,22 +97,13 @@ class ShuttleEscortTest {
     }
 
     static LevelScript level(List<WaveSpec> waves) {
-        return new LevelScript(
-                10,
-                1,
-                0,
-                List.of(new LevelScript.Section(END, SPEED)),
-                waves,
-                List.of(),
-                List.of(),
-                0,
-                radio(),
-                new LevelScript.Secondary(0.8, 0),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.of(escort()),
-                Optional.empty());
+        return LevelScript.builder(10, 1)
+                .sections(List.of(new Section(END, SPEED)))
+                .waves(waves)
+                .radio(radio())
+                .objectives(
+                        ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 0)).withEscort(Optional.of(escort())))
+                .build();
     }
 
     private static Sortie sortie(List<WaveSpec> waves) {
@@ -139,7 +130,7 @@ class ShuttleEscortTest {
     }
 
     /** How often the cue {@code trigger} started. */
-    private static long cued(List<Seen> seen, LevelScript.CueTrigger trigger) {
+    private static long cued(List<Seen> seen, CueTrigger trigger) {
         return seen.stream()
                 .filter(s -> s.type() == SimEvents.Type.RADIO && s.value() == CUES.indexOf(trigger))
                 .count();
@@ -179,7 +170,7 @@ class ShuttleEscortTest {
             double t = sortie.levelSeconds();
             for (int k = 0; k < 5; k++) {
                 Ally ally = sortie.ally(k);
-                LevelScript.Station station = STATIONS.get(k);
+                ObjectiveSpec.Station station = STATIONS.get(k);
                 assertEquals(Ally.State.FLYING, ally.state());
                 assertEquals(station.xAt(t), ally.x(), 1e-9, "unit " + k);
                 assertEquals(station.yAt(t), ally.y(), 1e-9, "unit " + k);
@@ -189,7 +180,7 @@ class ShuttleEscortTest {
             }
         }
         // The sway: a 16 px figure-eight round x, 4 px round y; the bank follows the sideways speed.
-        LevelScript.Station one = STATIONS.getFirst();
+        ObjectiveSpec.Station one = STATIONS.getFirst();
         double t = sortie.levelSeconds();
         assertEquals(
                 one.x() + 16 * Math.sin(2 * Math.PI * t / 9), sortie.ally(0).x(), 1e-6);
@@ -251,7 +242,7 @@ class ShuttleEscortTest {
         assertEquals(HP, hp(sortie, 1), 1e-9, "Lifeline Two above it is not hit: the bullet is spent");
         assertEquals(0, sortie.bulletCount());
         assertEquals(1, count(seen, SimEvents.Type.ALLY_HIT));
-        assertEquals(1, cued(seen, LevelScript.CueTrigger.FIRST_ALLY_HIT));
+        assertEquals(1, cued(seen, CueTrigger.FIRST_ALLY_HIT));
         assertTrue(sortie.ally(3).ticksSinceHit() < SimStep.ticks(0.5), "its hit flash's clock");
     }
 
@@ -339,7 +330,7 @@ class ShuttleEscortTest {
         assertEquals(THREE, glow.getFirst().value());
         assertEquals(LOSS_T, loss.getFirst().seconds(), 1e-9);
         assertEquals(THREE, loss.getFirst().value());
-        assertEquals(1, cued(seen, LevelScript.CueTrigger.SCRIPTED_LOSS));
+        assertEquals(1, cued(seen, CueTrigger.SCRIPTED_LOSS));
 
         Ally three = sortie.ally(THREE);
         assertEquals(Ally.State.WRECK, three.state());
@@ -351,8 +342,8 @@ class ShuttleEscortTest {
         assertEquals(x, sortie.ally(THREE).x(), 1e-12, "the sim keeps it where it was lost");
 
         assertEquals(0, count(seen, SimEvents.Type.ALLY_LOST), "no loss event");
-        assertEquals(0, cued(seen, LevelScript.CueTrigger.FIRST_ALLY_LOST), "no loss cue");
-        assertEquals(0, cued(seen, LevelScript.CueTrigger.ALLY_LOST));
+        assertEquals(0, cued(seen, CueTrigger.FIRST_ALLY_LOST), "no loss cue");
+        assertEquals(0, cued(seen, CueTrigger.ALLY_LOST));
         assertEquals(-1, sortie.firstAllyLost());
         assertEquals(-1, sortie.lastAllyLost());
         assertEquals(4, sortie.saveableAlliesAlive(), "it does not count");
@@ -383,17 +374,17 @@ class ShuttleEscortTest {
         assertEquals(0, sortie.saveableAlliesAlive());
         assertTrue(sortie.ally(THREE).alive(), "Lifeline Three is still flying");
         assertEquals(1, count(seen, SimEvents.Type.PRIMARY_FAILED));
-        assertEquals(1, cued(seen, LevelScript.CueTrigger.MISSION_FAILED));
-        assertEquals(1, cued(seen, LevelScript.CueTrigger.FIRST_ALLY_LOST));
-        assertEquals(4, cued(seen, LevelScript.CueTrigger.ALLY_LOST), "on every loss, the first too");
+        assertEquals(1, cued(seen, CueTrigger.MISSION_FAILED));
+        assertEquals(1, cued(seen, CueTrigger.FIRST_ALLY_LOST));
+        assertEquals(4, cued(seen, CueTrigger.ALLY_LOST), "on every loss, the first too");
         assertEquals(0, sortie.firstAllyLost());
         // The first loss's cues: first-ally-lost's before ally-lost's.
         List<Integer> radio = seen.stream()
                 .filter(s -> s.type() == SimEvents.Type.RADIO)
                 .map(Seen::value)
                 .toList();
-        assertTrue(radio.indexOf(CUES.indexOf(LevelScript.CueTrigger.FIRST_ALLY_LOST))
-                < radio.indexOf(CUES.indexOf(LevelScript.CueTrigger.ALLY_LOST)));
+        assertTrue(radio.indexOf(CUES.indexOf(CueTrigger.FIRST_ALLY_LOST))
+                < radio.indexOf(CUES.indexOf(CueTrigger.ALLY_LOST)));
 
         List<Seen> after = run(sortie, LOSS_T + 1);
         assertEquals(0, count(after, SimEvents.Type.SCRIPTED_LOSS), "the failed level has no lance");
@@ -454,16 +445,15 @@ class ShuttleEscortTest {
 
         assertEquals(2, count(seen, SimEvents.Type.DECLOAK));
         assertTrue(count(seen, SimEvents.Type.LOOP_BACK) >= 1);
-        assertEquals(1, cued(seen, LevelScript.CueTrigger.FIRST_DECLOAK));
-        assertEquals(1, cued(seen, LevelScript.CueTrigger.FIRST_LOOP_BACK));
+        assertEquals(1, cued(seen, CueTrigger.FIRST_DECLOAK));
+        assertEquals(1, cued(seen, CueTrigger.FIRST_LOOP_BACK));
         double decloak = seen.stream()
                 .filter(s -> s.type() == SimEvents.Type.DECLOAK)
                 .findFirst()
                 .orElseThrow()
                 .seconds();
         double cue = seen.stream()
-                .filter(s -> s.type() == SimEvents.Type.RADIO
-                        && s.value() == CUES.indexOf(LevelScript.CueTrigger.FIRST_DECLOAK))
+                .filter(s -> s.type() == SimEvents.Type.RADIO && s.value() == CUES.indexOf(CueTrigger.FIRST_DECLOAK))
                 .findFirst()
                 .orElseThrow()
                 .seconds();

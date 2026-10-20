@@ -238,3 +238,14 @@ rise, the vanes parting on the lime core) and Ghost Drone (nose down, its red ey
 `unclassified_until_flown` ("unclassified, small, air": the outline only in the boss silhouettes' style, broken by
 sensor noise), rendered by [tools/art/intel.py](../../../../tools/art/intel.py) (`python3 tools/art/intel.py
 dust-devil ghost-drone unclassified-ghost-drone`).
+
+## intel-final-r42-a
+
+Round 42, production art (M7 part F batch, step ART-F3, pending the user's review): the 30×30 intel portraits of
+Level 19's Warden Tank (the Act 3 grey hull driving down, the turret aimed along it) and Revenant Walker (walking
+down, pods aimed ahead, the flamer at rest; scaled to fit), from the production models of
+`tools/art/warden_tank.py` and `tools/art/revenant_walker.py`, and the 40×40 contact silhouette
+`boss-revenant-walker`, the "unclassified, huge, `ground`" contact of Level 19's sensor L2: the production
+walker's outline at heading 0 in the boss silhouettes' style, broken by the unclassified pictures' sensor noise
+(torn rows, dropped rim pixels, speckle). Rendered by [tools/art/intel.py](../../../../tools/art/intel.py)
+(`python3 tools/art/intel.py warden-tank revenant-walker boss-revenant-walker`).

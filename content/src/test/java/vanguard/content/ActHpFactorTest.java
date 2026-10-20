@@ -13,7 +13,7 @@ import vanguard.sim.EnemySpec;
  * on, a returning unit of tier {@code medium} or larger flies with its HP times the reference DPS at
  * the level over that at its first level, on every part and segment, rounded once with the
  * difficulty's HP lever; the Needler and the Stinger ({@code small}) the same capped at ×3 in Levels 08–09 (the
- * user's Act 2 playtest, 2026-10-18), 11–14, 15 (step PE15), 16 (step PE16) and 18 (M7 part E); the other {@code tiny} and {@code small} units, Act 1's levels and the
+ * user's Act 2 playtest, 2026-10-18), 11–14, 15 (step PE15), 16 (step PE16), 17 (step PE17) and 18 (M7 part E); the other {@code tiny} and {@code small} units, Act 1's levels and the
  * bounties stay as they are. M7 part E (step E5): from Level 18 on, the beam era, every {@code small} unit's HP is doubled
  * on top ({@code beam_era_hp}).
  */
@@ -65,7 +65,7 @@ class ActHpFactorTest {
         assertEquals(
                 List.of("needler", "stinger"), CONTENT.enemyBasis().smallActHp().units());
         assertEquals(
-                List.of(8, 9, 11, 12, 13, 14, 15, 16, 18),
+                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19),
                 CONTENT.enemyBasis().smallActHp().levels());
         // The Needler (4 HP, L01, reference 20): ×60/20 = 3 at L08, ×63/20 capped at 3 at L09.
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 8), 1e-12);
@@ -78,8 +78,7 @@ class ActHpFactorTest {
         assertEquals(12, at("needler", Difficulty.MEDIUM, 2, 11).hp());
         assertEquals(12, at("needler", Difficulty.MEDIUM, 2, 14).hp());
         // M7 part E: Level 18 with its waves to the Act 2+ floor (reference 88): the Needler ×88/20 capped at 3 = 12,
-        // the Stinger 6 × 88/26 = 20.3 capped at ×3 = 18, both doubled by the beam era (step E5) to 24 and 36; Levels
-        // 17 keeps theirs until its own rework.
+        // the Stinger 6 × 88/26 = 20.3 capped at ×3 = 18, both doubled by the beam era (step E5) to 24 and 36.
         assertEquals(24, at("needler", Difficulty.MEDIUM, 3, 18).hp());
         assertEquals(36, at("stinger", Difficulty.MEDIUM, 3, 18).hp());
         // Step PE15: Level 15 with its waves to the Act 2+ floor (reference 76, pulse era): the Needler ×76/20 capped
@@ -89,7 +88,10 @@ class ActHpFactorTest {
         // Step PE16: Level 16 the same (pulse era).
         assertEquals(12, at("needler", Difficulty.MEDIUM, 3, 16).hp());
         assertEquals(18, at("stinger", Difficulty.MEDIUM, 3, 16).hp());
-        assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 3, 17));
+        // Step PE17: Level 17 the same (reference 84, pulse era): the Needler ×84/20 capped at 3 = 12, the Stinger
+        // 6 × 84/26 = 19.4 capped at ×3 = 18.
+        assertEquals(12, at("needler", Difficulty.MEDIUM, 3, 17).hp());
+        assertEquals(18, at("stinger", Difficulty.MEDIUM, 3, 17).hp());
         // Not in Level 10 (the user's reference), not in Act 1, and not for the small units the basis does not list.
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 2, 10));
         assertEquals(1, SimSpecs.actHpFactor(CONTENT, "needler", 1, 7));

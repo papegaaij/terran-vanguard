@@ -342,6 +342,30 @@ class IntelPanelLayoutTest {
         assertTrue(String.join(" ", named).contains("GHOST"), "flown: named " + named);
     }
 
+    /**
+     * M7 part F: Level 19's intel at sensor L2: its two hazards wrapped to the value column, the walker's "huge,
+     * ground" contact silhouette at the boss row; a boss kept unclassified is named by its size and layer alone
+     * (design/campaign Level 19: the walker unnamed before the fight), and the boss is offered to that check.
+     */
+    @Test
+    void levelNineteensWalkerShowsItsSilhouetteAndAnUnclassifiedBossIsUnnamed() {
+        String level = CONTENT.levelKey(19).orElseThrow();
+        BriefingPage teaser = CONTENT.level(level).briefing().teaser();
+        Intel intel = Intel.of(CONTENT, level, 2);
+        assertTrue(IntelPanel.withBoss(intel).contains("Revenant Walker"), "the boss is checked too");
+        assertFalse(intel.enemies().contains("Revenant Walker"), "not an enemy type of the row");
+        Measure named = assertFits(intel, teaser, level, "Level 19: ");
+        List<String> parts = named.parts.stream().map(Box::what).toList();
+        assertTrue(parts.contains("intel/boss-revenant-walker"), "its contact silhouette: " + parts);
+        assertTrue(parts.stream().anyMatch(part -> part.contains("FURNACE VENTS")), "the hazards: " + parts);
+        Measure unnamed = assertFits(
+                intel, teaser, level, "Level 19 unclassified: ", Map.of("Revenant Walker", "Unclassified huge ground"));
+        List<String> texts = unnamed.parts.stream().map(Box::what).toList();
+        assertTrue(texts.stream().noneMatch(part -> part.contains("REVENANT")), "unnamed: " + texts);
+        assertTrue(texts.stream().anyMatch(part -> part.contains("UNCLASSIFIED HUGE")), "its size and layer: " + texts);
+        assertTrue(texts.contains("intel/boss-revenant-walker"), "with its silhouette");
+    }
+
     private static Measure assertFits(Intel intel, BriefingPage teaser, String level, String where) {
         return assertFits(intel, teaser, level, where, Map.of());
     }

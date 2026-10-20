@@ -99,6 +99,7 @@ boss:  # the act boss: anchored at the Concord rotunda, it scrolls in with the g
   t: 108
   x: 240
   section: 5
+  incoming: 7.5   # round 41 (the user's playtest 2026-10-19, "show the warning box before you reach it"): the warning box, the klaxon and the warning track open 7.5 s before the halt (t=100.5), over the quiet approach, and close (5 s) before the Spire's roots enter the top edge (≈2.5 s before the halt); a retry from the boss checkpoint warns at the halt
   notes:
     from: front (anchored at the rotunda, scrolls in with the ground)
     waves: 'At the halt (the warning, the bar and the boss checkpoint); phase 2: the maw launches a Wraith every 8 s (hard 2) as ambushes that loop to the rear, at most 2 alive'
@@ -111,8 +112,12 @@ boss:  # the act boss: anchored at the Concord rotunda, it scrolls in with the g
 # the streets (four, two of them the draft's convoys of 3), Spore Bomber lines and Mantis pincers. Hard: the
 # Needler and Stinger groups one smaller and the late Spore Bomber lines 2 (`hard: {count}`), the units' and
 # the roots' hard hooks on top. Kept as they were: the Ravager pack out of the crater (t=72, the overdrive),
-# the two rear Wraith ambushes (t=82 with easy's Needler V-wing, t=104), the ground targets and the root
-# bursts. The root bursts' introduction keeps its quiet window: no wave enters from t=59 (a Spore Bomber
+# the two rear Wraith ambushes (t=82 with easy's Needler V-wing, t=104; round 41: t=95), the ground targets and
+# the root bursts. Round 41 (the user's playtest 2026-10-19: "put a small pause in between the last enemies and the
+# fly towards it; show the warning box before you reach it"; step FX-C, pending the user's review): the t=102 Stinger
+# V-wing and the t=105.5 Needler line dropped, the last waves earlier (the convoy from t=97 to 89, the side stream
+# 97 to 95.5, the Wraiths 104 to 95, the Needler line 99.5 to 97.5, the last), so the screen is quiet from about
+# t=103 while the warning shows (t=100.5-105.5) until the Spire's roots enter the top edge (about t=105.5). The root bursts' introduction keeps its quiet window: no wave enters from t=59 (a Spore Bomber
 # line that lingers to t≈62) until t=66 (the first burst's dust at 63; 67 before, which left the screen
 # empty for 2 s once the first growths died). Nothing enters in the fight or the daylight.
 waves:
@@ -180,21 +185,19 @@ waves:
   - {t: 82, formation: V-wing, enemy: needler, count: 3, from: front, skip: [medium, hard], notes: "Easy only: instead of the rear Wraiths"}
   - {t: 84.5, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
   - {t: 87, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, hard: {count: 2}}
-  - {t: 89.5, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}}
-  - {t: 92, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
-  - {t: 94.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
-  - t: 97
+  - t: 89
     formation: convoy
     enemy: creeper
     count: 5
     from: front
     paths: [[[110, -40], [110, -150], [190, -260], [190, -800]]]   # up an avenue toward the rotunda
-    notes: Up an avenue toward the rotunda
-  - {t: 97, formation: stream, enemy: skitter, count: 5, from: sides, edge: alternating, interval: 1, notes: Popcorn from the sides on the avenues}
-  - {t: 99.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
-  - {t: 102, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 3}}
-  - {t: 104, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: The last wave before the Spire}
-  - {t: 105.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+    notes: "Up an avenue toward the rotunda (round 41: from t=97, its last Creeper off the screen before the quiet approach)"
+  - {t: 89.5, formation: column, enemy: stinger, count: 3, from: front, hard: {count: 3}}
+  - {t: 92, formation: snake, enemy: skitter, count: 6, from: front, edge: left}
+  - {t: 94.5, formation: V-wing, enemy: needler, count: 5, from: front, hard: {count: 4}}
+  - {t: 95, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Round 41: from t=104, so that they are back out of the bottom edge before the quiet approach"}
+  - {t: 95.5, formation: stream, enemy: skitter, count: 5, from: sides, edge: alternating, interval: 1, notes: "Popcorn from the sides on the avenues (round 41: from t=97)"}
+  - {t: 97.5, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}, notes: "The last wave before the Spire (round 41: from t=99.5; the t=102 Stinger V-wing and the t=105.5 Needler line made way for the quiet approach: the screen quiet from about t=103 while the warning shows, until the Spire's roots enter at t≈105.5)"}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x
   - target: armoured car

@@ -23,9 +23,9 @@ public final class Wind {
     private final boolean present;
     private int nextFlash;
 
-    Wind(Optional<LevelScript.Weather> weather) {
+    Wind(Optional<HazardSpec.Weather> weather) {
         present = weather.isPresent();
-        LevelScript.Weather w = weather.orElse(null);
+        HazardSpec.Weather w = weather.orElse(null);
         int gusts = w == null ? 0 : w.gusts().size();
         gustStarts = new int[gusts];
         gustSigns = new int[gusts];
@@ -42,7 +42,7 @@ public final class Wind {
         driftEnds = new int[drifts];
         driftPushes = new double[drifts];
         for (int i = 0; i < drifts; i++) {
-            LevelScript.Drift drift = w.drifts().get(i);
+            HazardSpec.Drift drift = w.drifts().get(i);
             driftStarts[i] = SimStep.ticks(drift.start());
             driftEnds[i] = SimStep.ticks(drift.end());
             driftPushes[i] = drift.fromLeft() ? drift.push() : -drift.push();

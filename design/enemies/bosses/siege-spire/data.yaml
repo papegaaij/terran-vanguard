@@ -28,10 +28,10 @@ part_list:  # offset [dx, dy] px from the anchor, dy up; the pods and mortars si
   - {name: mortar left, offset: [-101.3, -126.9], hitbox: [36, 36], hp: 530, kind: destroyable, bounty: 64, attack: acid}   # root 4
   - {name: mortar right, offset: [101.3, 126.9], hitbox: [36, 36], hp: 530, kind: destroyable, bounty: 64, attack: acid}    # root 1
   - {name: maw, offset: [0, 68], hitbox: [60, 44], hp: 2880, kind: destroyable, bounty: 128, attack: spit, multiplier: 2}   # the lime maw in the claw crown (×2)
-  - {name: core, offset: [0, 110], hitbox: [60, 60], hp: 4950, kind: vital, bounty: 256, multiplier: 2}   # the lime core, inside the trunk until the lift (×2)
+  - {name: core, offset: [0, 110], hitbox: [60, 60], hp: 3450, kind: vital, bounty: 256, multiplier: 2}   # the lime core, inside the trunk until the lift (×2); round 41: 4950 -> 3450, as the leading sweep makes the ship leave its firing spot every 5 s (the free spire's phase as long as before)
   - {name: trunk, offset: [0, 125], hitbox: [80, 90], kind: armoured}   # the upper trunk above the maw: shots glance off it; it stays at the anchor (the stump)
 orientation: 32 angles
-hp: 10730            # the parts' sum; the trunk is armoured (round 34, P2: the roots ×1.04 for the thinner fire; round 40: the roots 690/800 -> 460/530)
+hp: 9230             # the parts' sum; the trunk is armoured (round 34, P2: the roots ×1.04 for the thinner fire; round 40: the roots 690/800 -> 460/530; round 41: the core 4950 -> 3450)
 armour: 'trunk armoured (shots glance off it; it stays as the stump); the roots and the maw are ground parts (all weapons, `anti-ground` ×2); the maw ×2 and the core ×2; invulnerable during the lift'
 speed: 0            # anchored: it scrolls in with the ground and stays where the scroll halts; 50 px/s at most once free
 movement:
@@ -69,9 +69,9 @@ attacks:
     name: sweep
     bullet: laser       # once per sweep
     interval: 2.5       # s of its turn in the alternation with the ring: a sweep every 5 s
-    sweep: {arc: 120, duration: 1.2, telegraph: 0.6, length: 300, width: 8, origin: [0, 0]}   # °, s, s, px, px; from the core, centred on the ship's bearing at the telegraph
+    sweep: {arc: 120, duration: 1.2, telegraph: 0.8, length: 600, width: 8, origin: [0, 0], lead: 12}   # °, s, s, px, px, °; from the core, the arc starting 12° beside the ship's bearing at the telegraph (round 41, the user's playtest 2026-10-19 "forced to keep moving": was centred on the bearing, 300 px long, a 0.6 s telegraph; step FX-S2's tested numbers, pending the user's review)
     notes:
-      text: 'phase 3: the free spire''s `{pattern}` from the core, a beam {sweep.length} px long sweeping a {sweep.arc}° arc over {sweep.duration} s, centred on the ship''s bearing when the {sweep.telegraph} s telegraph starts (the six crimson emitters charge), `{bullet}` = {damage} once per sweep, every 5 s'
+      text: 'phase 3: the free spire''s `{pattern}` from the core, a beam {sweep.length} px long (it reaches every corner of the field) sweeping a {sweep.arc}° arc over {sweep.duration} s; the arc starts {sweep.lead}° beside the ship''s bearing when the {sweep.telegraph} s telegraph starts (the six crimson emitters charge, the line on the side the beam comes from) and sweeps through the ship, alternating direction: a ship that stays still is hit, one that crosses the line before the beam fires is safe behind it; `{bullet}` = {damage} once per sweep, every 5 s'
   - pattern: ring
     name: ring
     bullet: small
@@ -105,6 +105,7 @@ boss:
     - name: Roots
       until: {parts: [pod 1, pod 2, pod 3, pod 4, mortar left, mortar right]}
       attacks: [orbs, acid]
+      delay: 1.5    # s after the halt before its first orb and lob (round 41, the user's playtest 2026-10-19: no fire while the warning banner shows; the first orb about 4 s after the arrival)
     - name: Maw
       until: {parts: [maw]}
       exposes: [maw]
@@ -127,7 +128,7 @@ notes:
   size: '(the rooted body: the trunk ≈ 180 × 240 px with its lean, the roots ≈ 380 px across); the free spire {boss.poses.0.hitbox.0}×{boss.poses.0.hitbox.1} hitbox, drawn 244 px'
   parts: '4 root turret pods (`destroyable`, `ground`), 2 acid-mortar roots (`destroyable`, `ground`), the launch maw (`destroyable`, ×2, exposed in phase 2 only), the spire core (`vital`, ×2, exposed in phase 3, `air` after the lift), the trunk (`armoured`: shots glance, no HP, not in the bar; it stays at the anchor as the stump)'
   orientation: (the turret pods; the free spire 16 pre-rendered headings over its six-fold symmetry)
-  hp: 'turret pod 460 each (1,840); mortar root 530 each (1,060); maw 2,880 (×2); core 4,950 (×2); the spec''s ×1.8, tuned to the measured fight (H10 = a; round 34, P2: the roots ×1.04 again with the thinner phase-1 fire; round 40: the roots −33 %, so a Pulse-only fight ends in time); total'
+  hp: 'turret pod 460 each (1,840); mortar root 530 each (1,060); maw 2,880 (×2); core 3,450 (×2); the spec''s ×1.8, tuned to the measured fight (H10 = a; round 34, P2: the roots ×1.04 again with the thinner phase-1 fire; round 40: the roots −33 %, so a Pulse-only fight ends in time; round 41: the core −30 %, as dodging the leading sweep costs the free spire''s phase about 30 % of its fire); total'
   speed: '(anchored); the free spire sways ±{movement.sine.amplitude} px, 50 px/s at most'
   movement: 'anchored at the Concord rotunda: it scrolls in with the ground (invulnerable, without its bar) and engages when the scroll halts, the anchor at y {movement.anchored.y}; phase 3 lifts it off the anchor in 3 s (invulnerable, eased) to x 240, y 120, where it sways; the stump stays (see *Phases*)'
   attack_prefix: 'see *Phases*: '

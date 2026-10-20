@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.Section;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
 
@@ -50,8 +52,7 @@ class PartGLevelKeysTest {
         assertTrue(data.sections().get(3).timedHalt());
         assertFalse(data.sections().get(0).timedHalt());
         assertEquals(2, data.sections().get(1).rampSeconds());
-        List<LevelScript.Section> sections =
-                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).sections();
+        List<Section> sections = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).sections();
         assertTrue(sections.get(1).timedHalt());
         assertFalse(sections.get(1).arena());
         assertEquals(2, sections.get(3).rampSeconds());
@@ -69,8 +70,10 @@ class PartGLevelKeysTest {
         assertEquals(LevelData.HookMode.IN_ARC, defend.targetedBy().get("scuttler"));
         assertEquals(LevelData.HookMode.NONE, defend.modes(Difficulty.EASY).get("stinger"));
         assertEquals(LevelData.HookMode.ALWAYS, defend.modes(Difficulty.HARD).get("stinger"));
-        LevelScript.Defend easy =
-                SimSpecs.level(CONTENT, KEY, Difficulty.EASY).defend().orElseThrow();
+        ObjectiveSpec.Defend easy = SimSpecs.level(CONTENT, KEY, Difficulty.EASY)
+                .objectives()
+                .defend()
+                .orElseThrow();
         assertFalse(easy.targetedBy().containsKey("stinger"), "none is left out");
         assertTrue(CONTENT.allies().allies().get("nansen-relay").standing());
     }

@@ -17,6 +17,7 @@ import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Fitted;
 import vanguard.content.campaign.Hangar;
+import vanguard.content.campaign.Hangar.Offer;
 import vanguard.content.campaign.LoadoutSlot;
 import vanguard.content.campaign.SaveFormat;
 import vanguard.content.campaign.SaveGame;
@@ -80,14 +81,133 @@ class HangarPointerTest {
     }
 
     @Test
-    void hoveringAShopRowSelectsItAsDownDoes() {
+    void hoveringAShopRowOnlyHighlightsItAndAClickSelectsItAsDownDoes() {
         HangarState byKeys = state(campaign(2, 1000, 60), true);
         HangarState byMouse = state(campaign(2, 1000, 60), true);
         byKeys.down();
 
-        assertEquals(Outcome.MOVED, hover(byMouse, ShopPanel.row(1)).outcome());
+        assertEquals(Outcome.NONE, hover(byMouse, ShopPanel.row(1)).outcome());
+        assertEquals(0, byMouse.row(), "hover never moves the selection (playtest 2026-10-19)");
+        assertEquals(Optional.of(new HangarState.Hover(HangarState.Target.ROW, 1)), byMouse.hover());
+
+        assertEquals(Outcome.MOVED, click(byMouse, ShopPanel.row(1)).outcome());
         assertEquals(byKeys.row(), byMouse.row());
         assertEquals(byKeys.selected(), byMouse.selected());
+    }
+
+    /**
+     * The user's playtest finding (2026-10-19): select a weapon with a click, move the mouse over the
+     * other rows and the command bar down to its upgrade chip, and click it: the clicked weapon is the
+     * one upgraded.
+     */
+    @Test
+    void theClickedRowStaysSelectedWhileThePointerTravelsToItsChoices() {
+        HangarState state = state(campaign(2, 5000, 60), true);
+        int row = rowWithChoices(state);
+        assertTrue(row > 0, "the travel passes another row");
+        click(state, ShopPanel.row(row));
+        Offer clicked = state.selected().orElseThrow();
+        for (int shown = row - 1; shown >= 0; shown--) {
+            hover(state, ShopPanel.row(shown));
+        }
+        for (Command command : Command.values()) {
+            hover(state, HangarPointer.command(command));
+        }
+        for (Box slot : LoadoutPanel.slots(false, false).values()) {
+            hover(state, slot);
+        }
+        for (int shown = 0; shown < HangarState.VISIBLE_ROWS; shown++) {
+            hover(state, ShopPanel.row(shown));
+        }
+
+        assertEquals(row, state.row());
+        assertEquals(Focus.SHOP, state.focus());
+        assertEquals(clicked, state.selected().orElseThrow());
+        assertEquals(
+                Outcome.NONE, hover(state, ShopPanel.choiceChip(clicked, 1)).outcome());
+        assertEquals(0, state.choice().map(clicked.choices()::indexOf).orElseThrow(), "hover leaves the choice");
+        assertEquals(
+                Optional.of(clicked.choices().get(1)),
+                state.previewChoice(),
+                "the test fire and the power bar preview the choice under the pointer");
+
+        assertTrue(click(state, ShopPanel.choiceChip(clicked, 1)).confirm());
+        assertEquals(clicked.choices().get(1), state.choice().orElseThrow());
+    }
+
+    @Test
+    void movingOffAChoiceEndsItsPreviewAndAKeyTakesTheHoverOff() {
+        HangarState state = state(campaign(2, 5000, 60), true);
+        int row = rowWithChoices(state);
+        click(state, ShopPanel.row(row));
+        Offer offer = state.selected().orElseThrow();
+        hover(state, ShopPanel.choiceChip(offer, 1));
+        assertEquals(Optional.of(offer.choices().get(1)), state.previewChoice());
+
+        mouse.move(-50, -50);
+        hangarPointer.update(state, mouse.pointer);
+        assertEquals(Optional.empty(), state.hover());
+        assertEquals(state.choice(), state.previewChoice());
+
+        hover(state, ShopPanel.choiceChip(offer, 1));
+        state.hover(Optional.empty());
+        assertEquals(state.choice(), state.previewChoice());
+    }
+
+    @Test
+    void aClickOnAChoiceWhileTheCommandBarHasTheFocusMakesIt() {
+        Campaign keyed = campaign(2, 1000, 60);
+        Campaign clicked = campaign(2, 1000, 60);
+        HangarState byKeys = state(keyed, true);
+        HangarState byMouse = state(clicked, true);
+        byMouse.up();
+        assertEquals(Focus.COMMANDS, byMouse.focus());
+
+        assertEquals(Outcome.DONE, byKeys.confirm());
+        assertTrue(click(byMouse, ShopPanel.choiceChip(byMouse.selected().orElseThrow(), 0))
+                .confirm());
+        assertEquals(Focus.SHOP, byMouse.focus());
+        assertEquals(Outcome.DONE, byMouse.confirm());
+        assertEquals(keyed.loadout(), clicked.loadout());
+    }
+
+    @Test
+    void hoveringACommandOrASlotOnlyHighlightsIt() {
+        HangarState state = state(campaign(2, 1000, 60), true);
+        LoadoutSlot slot = state.slot();
+
+        assertEquals(
+                Outcome.NONE,
+                hover(state, HangarPointer.command(Command.LAUNCH)).outcome());
+        assertEquals(Focus.SHOP, state.focus());
+        assertTrue(state.hovers(HangarState.Target.COMMAND, Command.LAUNCH.ordinal()));
+        hover(state, HangarPointer.command(Command.UNDO));
+        assertEquals(Optional.empty(), state.hover(), "a disabled command gets no hover look");
+
+        LoadoutSlot other = HangarState.SLOTS.get(2);
+        hover(state, LoadoutPanel.slots(false, false).get(other));
+        assertEquals(slot, state.slot());
+        assertTrue(state.hovers(HangarState.Target.SLOT, state.slots().indexOf(other)));
+    }
+
+    @Test
+    void theReplayHangarRefitsWithClicksToo() {
+        Campaign campaign = campaign(2, 5000, 60);
+        HangarState shop = state(campaign, true);
+        rowWithChoices(shop);
+        HangarState refit = new HangarState(new Hangar(CATALOGUE, campaign), true, true);
+        for (int row = 0; row < refit.rowCount(); row++) {
+            click(refit, ShopPanel.row(row));
+            Offer offer = refit.selected().orElseThrow();
+            if (offer.choices().isEmpty()) {
+                continue;
+            }
+            hover(refit, ShopPanel.row((row + 1) % Math.min(refit.rowCount(), HangarState.VISIBLE_ROWS)));
+            assertEquals(row, refit.row(), "hover keeps the replay hangar's selection too");
+            assertTrue(click(refit, ShopPanel.choiceChip(offer, 0)).confirm());
+            return;
+        }
+        throw new AssertionError("no refit choice in the replay hangar");
     }
 
     @Test
@@ -120,7 +240,7 @@ class HangarPointerTest {
     }
 
     @Test
-    void hoveringAChoiceHighlightsItAsRightDoes() {
+    void aClickOnAChoiceSelectsItAsRightDoes() {
         HangarState byKeys = state(campaign(2, 5000, 60), true);
         HangarState byMouse = state(campaign(2, 5000, 60), true);
         int row = rowWithChoices(byKeys);
@@ -132,12 +252,10 @@ class HangarPointerTest {
             byKeys.up();
         }
         byKeys.right();
-        hover(byMouse, ShopPanel.row(row));
+        click(byMouse, ShopPanel.row(row));
 
-        assertEquals(
-                Outcome.MOVED,
-                hover(byMouse, ShopPanel.choiceChip(byMouse.selected().orElseThrow(), 1))
-                        .outcome());
+        assertTrue(click(byMouse, ShopPanel.choiceChip(byMouse.selected().orElseThrow(), 1))
+                .confirm());
         assertEquals(byKeys.choice(), byMouse.choice());
     }
 

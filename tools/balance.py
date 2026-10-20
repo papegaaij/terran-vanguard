@@ -43,6 +43,8 @@ ONBOARDING = {1, 2, 3}           # accepted: about 1.5x the reference DPS (desig
 DPS_BAND = (0.75, 1.33)
 ONBOARDING_HIGH = 1.75
 EFFECTIVE = 0.6                  # bosses and set pieces: effective DPS 0.6 x reference
+WALKER_EFFICIENCY = 1.08         # M7 part F: a walking boss's share of the effective DPS that lands; step F4 measured 1.39 (52.7 s at 3,740 HP; the paper's 0.68 was on the screen 80 %, half of it facing its plate); round 43's rework (far more fire, the bigger cone) 1.08 (57.1 s at 3,170 HP)
+WALKER_INTRO = 4                 # s of a walking boss's intro pass before it can be hit (the walker's spec)
 SHARE_TOLERANCE = 1 / 3          # a boss's or set piece's bounty share: "about" its target
 # Deviations from the balancing basis the user accepted (BalanceTest.ACCEPTED holds the same list).
 ACCEPTED = {
@@ -363,8 +365,16 @@ def laneless_seconds(e, dps):
     return seconds
 
 
+def walker_seconds(e, dps):
+    """M7 part F: a walking boss's paper fight at dps: its intro, then its HP at the walker's efficiency."""
+    return WALKER_INTRO + e["hp"] / (dps * WALKER_EFFICIENCY)
+
+
 def boss_seconds(e, dps):
-    """A boss's fight at dps: its HP over it, an arena boss's window-aware (arena_seconds)."""
+    """A boss's fight at dps: its HP over it, an arena boss's window-aware (arena_seconds), a walking one's
+    with its passes (walker_seconds)."""
+    if "stride" in e.get("movement", {}):
+        return walker_seconds(e, dps)
     return arena_seconds(e, dps) if "anchored" in e.get("movement", {}) else e["hp"] / dps
 
 
@@ -381,8 +391,8 @@ def ttk_problem(e, ref):
     else:
         lo, hi = {"small": (0, 0.3), "medium": (0.4, 1.5), "large": (1, 3), "huge": (20, 40)}[e["tier"]]
     dps = r * (EFFECTIVE if boss_or_set_piece(e) else 1)
-    if "anchored" in e.get("movement", {}):
-        seconds = arena_seconds(e, dps)
+    if "anchored" in e.get("movement", {}) or "stride" in e.get("movement", {}):
+        seconds = boss_seconds(e, dps)
         if seconds < lo or seconds > hi:
             return f"window-aware {seconds:.1f} s at {dps:.1f} DPS, target {lo:g}-{hi:g} s"
         return None

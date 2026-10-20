@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-13
+updated: 2026-10-19
 ---
 
 # Wingmen and drones
@@ -246,6 +246,7 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
 - The **eject bark is urgent**: it cuts a bark of his that waits or is on the radio and plays at
   once like the Airstrike's call (an urgent line already on the radio finishes first), and no other
   bark replaces it.
+- No bark once the level is won.
 - After he ejects, trigger 5 can no longer fire; the others still do (he watches the scope from
   his pod).
 - The level documents' scripted "Six o'clock" and "flank" lines (L08 t=92, L13 t=82 and t=122,
@@ -713,3 +714,4 @@ built were accepted in concept round 28.
   convergence 140 px, block, break and rebuild; the disc drone of G.2 = a) and the rear-guard drone
   (its bay gets a weapons document in part G). M17 = a kept: Rook flies all seven Act 3 levels from
   the escort slot, no new gun; his Level 20 quiet beat plays without `requires: escort` (Q.20d).
+- 2026-10-19: Rook makes no bark once the level is won.

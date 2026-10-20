@@ -11,13 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundSpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -71,7 +77,7 @@ class Level15Test {
         assertEquals(84 * 4 + 37 * 5 + 73 * 12 + 56 * 15 + 4 * 25 + 27 * 24 + 8 * 18 + 3 * 22, kills);
         assertEquals(4 * 15 + 10 * 12, ground, "the Polyp Mortars and the Spine Turrets");
         assertEquals(100, crates, "the drop pod's crate in Act 1 terms (pays 256)");
-        assertEquals(80, level.secondary().credits(), "clear the slopes, in Act 1 terms (pays 205)");
+        assertEquals(80, level.objectives().secondary().credits(), "clear the slopes, in Act 1 terms (pays 205)");
         assertEquals(
                 0.26, content.level(LEVEL).bounties(), "fitted by TypicalHaulTest (step PE15: typical 1,796, -0.5 %)");
     }
@@ -86,7 +92,7 @@ class Level15Test {
                 waves.merge(wave.enemy().slug(), wave.count(), Integer::sum);
             }
             Map<String, Integer> ground = new TreeMap<>();
-            for (LevelScript.GroundUnit unit : level.groundUnits()) {
+            for (GroundUnit unit : level.groundUnits()) {
                 ground.merge(unit.enemy().slug(), 1, Integer::sum);
             }
             if (difficulty == Difficulty.MEDIUM) {
@@ -124,13 +130,13 @@ class Level15Test {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         assertEquals(
                 List.of(30.0, 65.0, 115.0, 150.0, 190.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         assertEquals(
                 List.of(190.0, 170.0, 150.0, 150.0, 160.0),
-                level.sections().stream().map(LevelScript.Section::speed).toList());
+                level.sections().stream().map(Section::speed).toList());
         assertEquals(
                 List.of(0.0, 1.0, 1.0, 0.0, 1.0),
-                level.sections().stream().map(LevelScript.Section::easeSeconds).toList());
+                level.sections().stream().map(Section::easeSeconds).toList());
         assertTrue(level.launchDrop());
         assertEquals(5, level.launchSeconds());
         // The README's scroll column: the eased changes run a few px past the round numbers.
@@ -223,13 +229,13 @@ class Level15Test {
     @Test
     void theNoSurfaceZonesCoverTheStationTheCliffAndTheRailLine() {
         LevelData data = content.level(LEVEL);
-        List<LevelScript.NoSurface> zones =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).noSurface();
+        List<GroundSpec.NoSurface> zones =
+                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).ground().noSurface();
         assertEquals(data.noSurfaceZones().size(), zones.size());
         assertEquals(5, zones.size());
         for (int i = 0; i < zones.size(); i++) {
             LevelData.NoSurface placed = data.noSurfaceZones().get(i);
-            LevelScript.NoSurface zone = zones.get(i);
+            GroundSpec.NoSurface zone = zones.get(i);
             assertEquals(placed.x() - placed.size().width() / 2.0, zone.left(), 1e-9);
             assertEquals(placed.x() + placed.size().width() / 2.0, zone.right(), 1e-9);
             double centre = data.scrollAt(placed.t());
@@ -238,10 +244,11 @@ class Level15Test {
             assertEquals(
                     centre + placed.size().height() / 2.0 - PlayField.HEIGHT / 2.0, data.scrollAt(zone.to()), 0.01);
         }
-        LevelScript.NoSurface rail = zones.getLast();
+        GroundSpec.NoSurface rail = zones.getLast();
         assertTrue(rail.from() > 180 && rail.to() < 190, "the rail line crosses the top edge before the end");
         assertTrue(
                 SimSpecs.level(content, "act-2-homefront/level-14-siege-spire", Difficulty.MEDIUM)
+                        .ground()
                         .noSurface()
                         .isEmpty(),
                 "only with Burrowers");
@@ -251,7 +258,7 @@ class Level15Test {
     void theRubbleTheRadioAndThePickups() {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
-            LevelScript.GroundObjectSpec rubble = level.groundObjects().stream()
+            GroundObjectSpec rubble = level.groundObjects().stream()
                     .filter(object -> object.secretIndex() >= 0)
                     .findFirst()
                     .orElseThrow();
@@ -260,16 +267,16 @@ class Level15Test {
             assertEquals(1, level.secrets());
         }
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.CueTrigger> events = level.radio().stream()
-                .map(LevelScript.RadioCue::trigger)
-                .filter(trigger -> trigger != LevelScript.CueTrigger.TIME)
+        List<CueTrigger> events = level.radio().stream()
+                .map(RadioCue::trigger)
+                .filter(trigger -> trigger != CueTrigger.TIME)
                 .toList();
         assertEquals(
                 List.of(
-                        LevelScript.CueTrigger.FIRST_SURFACING,
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE,
-                        LevelScript.CueTrigger.LEVEL_END,
-                        LevelScript.CueTrigger.SECRET),
+                        CueTrigger.FIRST_SURFACING,
+                        CueTrigger.SECONDARY_OBJECTIVE,
+                        CueTrigger.LEVEL_END,
+                        CueTrigger.SECRET),
                 events,
                 "the first surfacing's, the secondary's, the end's and the secret's lines are events");
         assertEquals(
@@ -299,35 +306,39 @@ class Level15Test {
                 burrower = k;
             }
         }
-        int steps = 0;
-        int attempt = sortie.attempt();
-        String deaths = "";
-        int surfaced = 0;
-        int killed = 0;
-        int escaped = 0;
-        int secrets = 0;
-        int firstSurfacing = 0;
-        int firstSurfacingCue = cueIndex(sortie.script(), LevelScript.CueTrigger.FIRST_SURFACING);
-        while (!sortie.complete() && steps++ < MAX_STEPS) {
-            double t = sortie.levelSeconds();
-            Level04Test.step(sortie);
-            if (sortie.attempt() != attempt) {
-                attempt = sortie.attempt();
-                deaths += String.format("%.0f ", t);
-                surfaced = killed = escaped = secrets = firstSurfacing = 0;
+        int firstSurfacingCue = cueIndex(sortie.script(), CueTrigger.FIRST_SURFACING);
+        int kind = burrower;
+        Watch watch = new Watch();
+        watch.t = sortie.levelSeconds();
+        LevelMetrics.fly(sortie, MAX_STEPS, new LevelMetrics.Probe() {
+            @Override
+            public void newAttempt() {
+                watch.deaths += String.format("%.0f ", watch.t);
+                watch.surfaced = watch.killed = watch.escaped = watch.secrets = watch.firstSurfacing = 0;
             }
-            SimEvents events = sortie.events();
-            for (int i = 0; i < events.size(); i++) {
-                switch (events.type(i)) {
-                    case BURROW_SURFACED -> surfaced++;
-                    case BURROW_ESCAPED -> escaped++;
-                    case ENEMY_DESTROYED -> killed += events.value(i) == burrower ? 1 : 0;
-                    case SECRET_FOUND -> secrets++;
-                    case RADIO -> firstSurfacing += events.value(i) == firstSurfacingCue ? 1 : 0;
-                    default -> {}
+
+            @Override
+            public void stepped(Sortie flown, int step) {
+                SimEvents events = flown.events();
+                for (int i = 0; i < events.size(); i++) {
+                    switch (events.type(i)) {
+                        case BURROW_SURFACED -> watch.surfaced++;
+                        case BURROW_ESCAPED -> watch.escaped++;
+                        case ENEMY_DESTROYED -> watch.killed += events.value(i) == kind ? 1 : 0;
+                        case SECRET_FOUND -> watch.secrets++;
+                        case RADIO -> watch.firstSurfacing += events.value(i) == firstSurfacingCue ? 1 : 0;
+                        default -> {}
+                    }
                 }
+                watch.t = flown.levelSeconds(); // the next step's start: where a loss is reported
             }
-        }
+        });
+        String deaths = watch.deaths;
+        int surfaced = watch.surfaced;
+        int killed = watch.killed;
+        int escaped = watch.escaped;
+        int secrets = watch.secrets;
+        int firstSurfacing = watch.firstSurfacing;
         LevelResult result = sortie.result();
         System.out.printf(
                 "Level 15 %s: attempt %d%s, real %.1f s, Burrowers surfaced %d times, killed %d, escaped %d (%.0f %%"
@@ -355,8 +366,19 @@ class Level15Test {
         assertEquals(1, firstSurfacing, "the first-surfacing line once");
     }
 
+    /** What {@link #theAutopilotFliesTheLevelToItsEnd} counts on the attempt that completes the level. */
+    private static final class Watch {
+        double t;
+        String deaths = "";
+        int surfaced;
+        int killed;
+        int escaped;
+        int secrets;
+        int firstSurfacing;
+    }
+
     /** The index of the script's first radio cue with {@code trigger}; -1 for none. */
-    private static int cueIndex(LevelScript script, LevelScript.CueTrigger trigger) {
+    private static int cueIndex(LevelScript script, CueTrigger trigger) {
         for (int i = 0; i < script.radio().size(); i++) {
             if (script.radio().get(i).trigger() == trigger) {
                 return i;

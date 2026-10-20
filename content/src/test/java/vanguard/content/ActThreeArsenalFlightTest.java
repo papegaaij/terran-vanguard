@@ -12,11 +12,15 @@ import vanguard.sim.Command;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -55,19 +59,12 @@ class ActThreeArsenalFlightTest {
     }
 
     /** The test range with {@code units}, flown with Level 01's rules ({@code invulnerable}: nothing hits the ship). */
-    static Sortie range(Loadout loadout, boolean invulnerable, LevelScript.GroundUnit... units) {
-        LevelScript level = new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(3600, SCROLL)),
-                List.of(),
-                List.of(),
-                List.of(units),
-                0,
-                List.of(),
-                new LevelScript.Secondary(1, 0),
-                List.of());
+    static Sortie range(Loadout loadout, boolean invulnerable, GroundUnit... units) {
+        LevelScript level = LevelScript.builder(1, 1)
+                .sections(List.of(new Section(3600, SCROLL)))
+                .groundUnits(List.of(units))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(1, 0)))
+                .build();
         vanguard.sim.Rules rules = SimSpecs.rules(CONTENT, Level01Test.LEVEL, Difficulty.MEDIUM);
         return new Sortie(
                 1,
@@ -98,8 +95,8 @@ class ActThreeArsenalFlightTest {
                 true);
     }
 
-    static LevelScript.GroundUnit at(double x, EnemySpec spec) {
-        return new LevelScript.GroundUnit(0, x, spec, -1);
+    static GroundUnit at(double x, EnemySpec spec) {
+        return new GroundUnit(0, x, spec, -1);
     }
 
     /** The unit on the field whose spec is {@code spec}; empty when it is not (yet, or any more). */

@@ -154,8 +154,7 @@ class BeamTest {
     void hardenedGroundIsPassedOverWithAGlance() {
         EnemySpec bunker = PartCSpecs.hardenedTarget(1000);
         EnemySpec air = dummy(Layer.AIR, 1000);
-        var container =
-                new LevelScript.GroundObjectSpec(0, X, new Hitbox(32, 24), 50, 5, Optional.empty(), 0, 0, "", true);
+        var container = new GroundObjectSpec(0, X, new Hitbox(32, 24), 50, 5, Optional.empty(), 0, 0, "", true);
         var sortie = sortie(units(List.of(container), unit(0, X, bunker), unit(0.8, X, air)), beamMount(1));
         burnUntilHit(sortie, air);
         assertEquals(1000, find(sortie, bunker).hp());
@@ -167,8 +166,7 @@ class BeamTest {
 
     @Test
     void aDestructibleGroundObjectBurnsAndAKillPaysAsAShot() {
-        var container =
-                new LevelScript.GroundObjectSpec(0, X, new Hitbox(32, 24), 3, 5, Optional.empty(), 0, 0, "", false);
+        var container = new GroundObjectSpec(0, X, new Hitbox(32, 24), 3, 5, Optional.empty(), 0, 0, "", false);
         var sortie = sortie(units(List.of(container)), beamMount(1));
         int destroyed = 0;
         for (int i = 0; i < SimStep.ticks(6) && destroyed == 0; i++) {

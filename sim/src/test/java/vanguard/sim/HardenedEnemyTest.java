@@ -19,8 +19,7 @@ class HardenedEnemyTest {
 
     /** The target scrolls in at 130 px/s above the ship's column and passes under the ship after about 3.6 s. */
     private static LevelScript level() {
-        return PartCSpecs.level(
-                20, 130, List.of(), List.of(new LevelScript.GroundUnit(0, Ship.START_X, hardenedTarget(HP), -1)));
+        return PartCSpecs.level(20, 130, List.of(), List.of(new GroundUnit(0, Ship.START_X, hardenedTarget(HP), -1)));
     }
 
     private static Sortie sortie(Loadout loadout) {

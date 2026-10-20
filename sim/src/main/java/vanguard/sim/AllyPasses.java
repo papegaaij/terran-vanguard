@@ -42,15 +42,15 @@ final class AllyPasses {
         this.objectives = objectives;
         this.rules = rules;
         List<String> subjects = new java.util.ArrayList<>();
-        for (LevelScript.RadioCue cue : script.radio()) {
-            if (cue.trigger() == LevelScript.CueTrigger.ALLY_BELOW && !subjects.contains(cue.subject())) {
+        for (RadioCue cue : script.radio()) {
+            if (cue.trigger() == CueTrigger.ALLY_BELOW && !subjects.contains(cue.subject())) {
                 subjects.add(cue.subject());
             }
         }
         belowSubjects = subjects.toArray(String[]::new);
         belowShares = new double[belowSubjects.length];
         for (int i = 0; i < belowShares.length; i++) {
-            belowShares[i] = LevelScript.CueTrigger.share(belowSubjects[i]);
+            belowShares[i] = CueTrigger.share(belowSubjects[i]);
         }
         belowFired = new boolean[belowShares.length];
     }
@@ -135,7 +135,8 @@ final class AllyPasses {
     /**
      * M7 part D: ground ally {@code k} takes {@code hits}: its hit event, the attempt's first hit's line and
      * each unit's first hit's {@code ally-hit} line ({@link Sortie#lastAllyHit()}), an untouched secondary failed at
-     * the first hit; when it breaks, the loss's event and lines. It never fails the mission.
+     * the first hit; when it breaks, the loss's event and lines (round 41: a standing secondary failed at the first
+     * one). It never fails the mission.
      */
     private void hurtGround(int k, double hits) {
         Ally ally = convoy.get(k);
@@ -144,10 +145,10 @@ final class AllyPasses {
         boolean broken = convoy.damage(k, hits);
         events.add(SimEvents.Type.ALLY_HIT, ally.x(), ally.y(), k);
         if (first) {
-            radio.cue(LevelScript.CueTrigger.FIRST_ALLY_HIT, "");
+            radio.cue(CueTrigger.FIRST_ALLY_HIT, "");
         }
         if (firstOfUnit) {
-            radio.cue(LevelScript.CueTrigger.ALLY_HIT, "");
+            radio.cue(CueTrigger.ALLY_HIT, "");
         }
         if (objectives.allyHit()) {
             events.add(SimEvents.Type.OBJECTIVE_FAILED, ally.x(), ally.y());
@@ -156,10 +157,14 @@ final class AllyPasses {
             return;
         }
         events.add(SimEvents.Type.ALLY_LOST, ally.x(), ally.y(), k);
-        if (convoy.firstLost() == k && convoy.lostSaveable() == 1) {
-            radio.cue(LevelScript.CueTrigger.FIRST_ALLY_LOST, "");
+        if (objectives.allyLost()) {
+            // Round 41: a standing secondary ("No dome lost") fails at the first one broken.
+            events.add(SimEvents.Type.OBJECTIVE_FAILED, ally.x(), ally.y());
         }
-        radio.cue(LevelScript.CueTrigger.ALLY_LOST, "");
+        if (convoy.firstLost() == k && convoy.lostSaveable() == 1) {
+            radio.cue(CueTrigger.FIRST_ALLY_LOST, "");
+        }
+        radio.cue(CueTrigger.ALLY_LOST, "");
     }
 
     /**
@@ -215,7 +220,7 @@ final class AllyPasses {
             if (!belowFired[i] && share < belowShares[i]) {
                 belowFired[i] = true;
                 events.add(SimEvents.Type.ALLY_BELOW, ally.x(), ally.y(), (int) Math.round(belowShares[i] * 100));
-                radio.cue(LevelScript.CueTrigger.ALLY_BELOW, belowSubjects[i]);
+                radio.cue(CueTrigger.ALLY_BELOW, belowSubjects[i]);
             }
         }
         if (objectives.integrityLeft(share)) {
@@ -288,7 +293,7 @@ final class AllyPasses {
         }
         if (convoy.lossDue(s.levelTick)) {
             events.add(SimEvents.Type.SCRIPTED_LOSS, ally.x(), ally.y(), k);
-            radio.cue(LevelScript.CueTrigger.SCRIPTED_LOSS, "");
+            radio.cue(CueTrigger.SCRIPTED_LOSS, "");
         }
     }
 
@@ -310,7 +315,7 @@ final class AllyPasses {
             events.add(SimEvents.Type.ALLY_HIT, ally.x(), ally.y(), k);
         }
         if (first) {
-            radio.cue(LevelScript.CueTrigger.FIRST_ALLY_HIT, "");
+            radio.cue(CueTrigger.FIRST_ALLY_HIT, "");
         }
         if (convoy.defend()) {
             belowShares(ally);
@@ -320,9 +325,9 @@ final class AllyPasses {
         }
         events.add(SimEvents.Type.ALLY_LOST, ally.x(), ally.y(), k);
         if (convoy.firstLost() == k && convoy.lostSaveable() == 1) {
-            radio.cue(LevelScript.CueTrigger.FIRST_ALLY_LOST, "");
+            radio.cue(CueTrigger.FIRST_ALLY_LOST, "");
         }
-        radio.cue(LevelScript.CueTrigger.ALLY_LOST, "");
+        radio.cue(CueTrigger.ALLY_LOST, "");
         if (convoy.allLost()) {
             // M5 part G: a defend primary's too.
             if ((convoy.air() || convoy.defend()) && rules.invulnerableShip()) {
@@ -331,7 +336,7 @@ final class AllyPasses {
             }
             s.failed = true;
             events.add(SimEvents.Type.PRIMARY_FAILED, ship.x(), ship.y());
-            radio.cue(LevelScript.CueTrigger.MISSION_FAILED, "");
+            radio.cue(CueTrigger.MISSION_FAILED, "");
         }
     }
 
@@ -367,19 +372,19 @@ final class AllyPasses {
         boolean sunk = convoy.damage(k, damage);
         events.add(SimEvents.Type.ALLY_HIT, ally.x(), ally.y(), k);
         if (first) {
-            radio.cue(LevelScript.CueTrigger.FIRST_ALLY_HIT, "");
+            radio.cue(CueTrigger.FIRST_ALLY_HIT, "");
         }
         if (firstOfUnit) {
-            radio.cue(LevelScript.CueTrigger.ALLY_HIT, "");
+            radio.cue(CueTrigger.ALLY_HIT, "");
         }
         if (!sunk) {
             return;
         }
         events.add(SimEvents.Type.ALLY_LOST, ally.x(), ally.y(), k);
         if (convoy.firstLost() == k && convoy.lostSaveable() == 1) {
-            radio.cue(LevelScript.CueTrigger.FIRST_ALLY_LOST, "");
+            radio.cue(CueTrigger.FIRST_ALLY_LOST, "");
         }
-        radio.cue(LevelScript.CueTrigger.ALLY_LOST, "");
+        radio.cue(CueTrigger.ALLY_LOST, "");
         if (objectives.sunk()) {
             events.add(SimEvents.Type.OBJECTIVE_FAILED, ally.x(), ally.y());
         }

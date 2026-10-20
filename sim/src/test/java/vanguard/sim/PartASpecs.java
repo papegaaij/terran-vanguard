@@ -82,29 +82,22 @@ final class PartASpecs {
     }
 
     /** A level of units moving down with the scroll (130 px/s) from the top edge. */
-    static LevelScript units(LevelScript.GroundUnit... units) {
+    static LevelScript units(GroundUnit... units) {
         return units(List.of(), units);
     }
 
-    static LevelScript units(List<LevelScript.GroundObjectSpec> ground, LevelScript.GroundUnit... units) {
-        return new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(60, 130)),
-                List.of(),
-                ground,
-                List.of(units),
-                (int) ground.stream()
-                        .filter(LevelScript.GroundObjectSpec::trigger)
-                        .count(),
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    static LevelScript units(List<GroundObjectSpec> ground, GroundUnit... units) {
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(60, 130)))
+                .groundObjects(ground)
+                .groundUnits(List.of(units))
+                .secrets((int) ground.stream().filter(GroundObjectSpec::trigger).count())
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
-    static LevelScript.GroundUnit unit(double t, double x, EnemySpec spec) {
-        return new LevelScript.GroundUnit(t, x, spec, -1);
+    static GroundUnit unit(double t, double x, EnemySpec spec) {
+        return new GroundUnit(t, x, spec, -1);
     }
 
     /** A target that neither moves on its own nor fires, with {@code box} on {@code layer}. */

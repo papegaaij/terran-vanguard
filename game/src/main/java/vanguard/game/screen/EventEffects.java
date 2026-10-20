@@ -26,8 +26,9 @@ import vanguard.game.render.SetPieceDeath;
 import vanguard.game.render.SetPieceWrecks;
 import vanguard.game.render.TriggerBreak;
 import vanguard.game.render.WeaponLooks;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.Layer;
-import vanguard.sim.LevelScript;
+import vanguard.sim.Missiles;
 import vanguard.sim.PlayField;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimEvents;
@@ -96,6 +97,9 @@ final class EventEffects {
     private static final int PETAL_FRAME_TICKS = 6;
 
     private final Array<AtlasRegion> explosionMedium;
+
+    /** M7 part F: a fizzled missile's puff. */
+    private final Array<AtlasRegion> explosionTiny;
 
     /** Each set piece's death cloud, its slug's {@code -ichor} frames, by index in the script; empty for none. */
     private final List<Array<AtlasRegion>> deathClouds;
@@ -183,6 +187,7 @@ final class EventEffects {
                 .toList();
         glance = services.sprites.frames("ballistic-impact");
         explosionMedium = services.sprites.frames("explosion-medium");
+        explosionTiny = optionalFrames(services, "explosion-tiny");
         ripple = optionalFrames(services, "water-ripple");
         armPop = optionalFrames(services, "harbour-kraken-arm-death");
         deathClouds = sortie.script().setPieces().stream()
@@ -319,12 +324,21 @@ final class EventEffects {
                         services.sprites.explosionSmall, TINY_EXPLOSION_FRAME_TICKS, x, y, 0, sortie.groundScroll());
             case PART_DESTROYED -> {
                 if (!arenaPartDown(events.value(i), x, y)) {
-                    effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
+                    if (arenaBoss()) {
+                        // Round 41 (the 2026-10-19 playtest): an anchored boss's part (the Spire's core in its
+                        // kill step) bursts on the ground and scrolls away with its wreck once the scroll resumes.
+                        effects.startOnGround(
+                                explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y, 0, sortie.groundScroll());
+                    } else {
+                        effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
+                    }
                 }
             }
             case SET_PIECE_DESTROYED -> {
                 if (LevelRenderer.spire(sortie.setPiece(events.value(i)))) {
                     spireDeath(events.value(i), x, y);
+                } else if (sortie.setPiece(events.value(i)).stride().isPresent()) {
+                    walkerDeath(events.value(i), x, y);
                 } else if (sortie.setPiece(events.value(i)).arena().isPresent()) {
                     arenaDeath(events.value(i), x, y);
                 } else {
@@ -376,8 +390,7 @@ final class EventEffects {
                 // A trigger whose spent frame is a wreck (Level 08's billboard topples) bursts in a
                 // destructible's small explosion; its spent frame stays as the wreck (TriggerBreak).
                 // M7 part C: the relay hut's door bursts the same way, its burst frame staying.
-                LevelScript.GroundObjectSpec spent =
-                        sortie.script().groundObjects().get(events.value(i));
+                GroundObjectSpec spent = sortie.script().groundObjects().get(events.value(i));
                 if (TriggerBreak.breaks(spent) || TriggerBreak.doorBursts(spent)) {
                     effects.startOnGround(
                             services.sprites.explosionSmall,
@@ -432,6 +445,13 @@ final class EventEffects {
             }
             // M5 part H, step H7b: the boss's credit shower after its chained bursts.
             case BOSS_DESTROYED -> creditShower(events.value(i), x, y);
+            // M7 part F: a homing missile shot down or burst on a hull bursts small; one whose life ran out puffs out.
+            case MISSILE_DESTROYED ->
+                effects.start(
+                        events.value(i) == Missiles.FIZZLED ? explosionTiny : services.sprites.explosionSmall,
+                        TINY_EXPLOSION_FRAME_TICKS,
+                        x,
+                        y);
             case WINGMAN_EJECTED -> effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
             case SHIP_DESTROYED -> effects.start(services.sprites.explosionLarge, LARGE_EXPLOSION_FRAME_TICKS, x, y);
             default -> {}
@@ -664,6 +684,16 @@ final class EventEffects {
         return false;
     }
 
+    /** Whether the level has an anchored arena boss (the Kraken, the Siege Spire), whose parts lie on the ground. */
+    private boolean arenaBoss() {
+        for (int k = 0; k < sortie.setPieceCount(); k++) {
+            if (sortie.setPiece(k).arena().isPresent()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** M5 part H: the Siege Spire's chained bursts over its free spire, this many over its death chain. */
     static final int SPIRE_DEATH_BURSTS = 14;
 
@@ -674,11 +704,14 @@ final class EventEffects {
      * M5 part H: the Siege Spire's death (design/enemies/bosses/siege-spire, Death: {@code huge}, "the
      * spire cracks open, chained explosions over 3 s"): its death frames where it died ({@link
      * LevelRenderer}, from its wreck's age), {@code medium} bursts spiralling out over the free spire
-     * through the chain with their sounds, then {@code large} blasts at its core, the screen flash and the
-     * credit shower; the canopy's withering and the daylight follow on the wreck's clock.
+     * through the chain with their sounds, then {@code large} blasts at its core, the death flash (round 42: local,
+     * round its core) and the credit shower; the canopy's withering and the daylight follow on the wreck's clock. Round 41 (the
+     * 2026-10-19 playtest: "some parts of it kept moving with the ship up"): the bursts and blasts lie on
+     * the ground, so they scroll away with the wreck and its stump once the scroll resumes after the kill.
      */
     private void spireDeath(int k, double x, double y) {
         SetPiece piece = sortie.setPiece(k);
+        double scroll = sortie.groundScroll();
         int chain = LevelRenderer.chainTicks(piece);
         showerDelay = chain;
         wrecks.start(k, x, y, 1, 1, false);
@@ -688,7 +721,7 @@ final class EventEffects {
             double reach = SPIRE_DEATH_RADIUS * (0.25 + 0.75 * n / (SPIRE_DEATH_BURSTS - 1.0));
             double px = x + Math.cos(angle) * reach;
             double py = y + Math.sin(angle) * reach;
-            effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, px, py, at, 1, 1);
+            effects.startOnGround(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, px, py, at, scroll);
             if (n % 2 == 0) {
                 chainSounds.play(
                         n % 4 == 0 ? Sfx.EXPLOSION_MEDIUM_A : Sfx.EXPLOSION_MEDIUM_B,
@@ -698,14 +731,62 @@ final class EventEffects {
                         at);
             }
         }
-        effects.start(services.sprites.explosionLarge, LARGE_EXPLOSION_FRAME_TICKS, x, y, chain, 1, 1);
-        effects.start(services.sprites.explosionLarge, LARGE_EXPLOSION_FRAME_TICKS, x - 30, y + 24, chain + 4, 1, 1);
-        effects.start(services.sprites.explosionLarge, LARGE_EXPLOSION_FRAME_TICKS, x + 34, y - 18, chain + 8, 1, 1);
+        Array<AtlasRegion> large = services.sprites.explosionLarge;
+        effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, x, y, chain, scroll);
+        effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, x - 30, y + 24, chain + 4, scroll);
+        effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, x + 34, y - 18, chain + 8, scroll);
         chainSounds.play(sounds.deathBlast(k), 1, 1, pan(x), chain);
         chainSounds.play(Sfx.EXPLOSION_LARGE_C, 1, 0.9f, pan(x), chain + 3);
         if (LevelRenderer.flashesAtDeath(piece)) {
-            screenFlash.start(chain);
+            // Round 42: a white glow round its core, not the whole field washed white for most of a second.
+            screenFlash.startAt(chain, x, y);
         }
+    }
+
+    /** M7 part F: the walker's chained bursts over its topple, this many over its death. */
+    static final int WALKER_DEATH_BURSTS = 10;
+
+    /** M7 part F: they lie within this of its centre, px (its hull is 110×120), drifting forward as it falls. */
+    static final double WALKER_DEATH_RADIUS = 55;
+
+    /**
+     * M7 part F: the walker's death (design/enemies/bosses/revenant-walker, Death: the {@code huge} machine variant):
+     * its topple over its 2 s death and then its wreck where it fell (WalkerLooks), {@code medium} bursts over its hull
+     * through the topple with their sounds, drifting forward along its heading as it falls, then {@code large} blasts
+     * where the hull lands and the credit shower; no screen flash (a mid-boss). The bursts lie on the ground, so they
+     * scroll away with the wreck once the scroll resumes.
+     */
+    private void walkerDeath(int k, double x, double y) {
+        SetPiece piece = sortie.setPiece(k);
+        double scroll = sortie.groundScroll();
+        int chain = LevelRenderer.chainTicks(piece);
+        showerDelay = chain;
+        double heading = piece.stride().orElseThrow().headingRadians();
+        double forwardX = -Math.sin(heading);
+        double forwardY = -Math.cos(heading);
+        for (int n = 0; n < WALKER_DEATH_BURSTS; n++) {
+            int at = n * chain / WALKER_DEATH_BURSTS;
+            double angle = n * 2.4;
+            double reach = WALKER_DEATH_RADIUS * (0.3 + 0.7 * ((n * 7) % WALKER_DEATH_BURSTS) / WALKER_DEATH_BURSTS);
+            double fall = 40.0 * n / WALKER_DEATH_BURSTS;
+            double px = x + Math.cos(angle) * reach + forwardX * fall;
+            double py = y + Math.sin(angle) * reach + forwardY * fall;
+            effects.startOnGround(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, px, py, at, scroll);
+            if (n % 2 == 0) {
+                chainSounds.play(
+                        n % 4 == 0 ? Sfx.EXPLOSION_MEDIUM_A : Sfx.EXPLOSION_MEDIUM_B,
+                        CHAIN_SOUND_VOLUME,
+                        0.8f + 0.1f * (n % 3),
+                        pan(px),
+                        at);
+            }
+        }
+        Array<AtlasRegion> large = services.sprites.explosionLarge;
+        double landX = x + forwardX * 40;
+        double landY = y + forwardY * 40;
+        effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, landX, landY, chain, scroll);
+        effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, landX - 28, landY + 20, chain + 4, scroll);
+        chainSounds.play(sounds.deathBlast(k), 1, 1, pan(landX), chain);
     }
 
     /**

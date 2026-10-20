@@ -99,9 +99,9 @@ class PickupMagnetTest {
     @Test
     void groundObjectsInItsReachAreNotPulled() {
         // A secret's beacon and a container scroll past the ship's column a little to each side.
-        var beacon = new LevelScript.GroundObjectSpec(
+        var beacon = new GroundObjectSpec(
                 0, Ship.START_X - 30, new Hitbox(12, 12), 0, 0, Optional.empty(), 3, 80, "beacon cache", false);
-        var container = new LevelScript.GroundObjectSpec(
+        var container = new GroundObjectSpec(
                 0, Ship.START_X + 30, new Hitbox(32, 24), 3, 5, Optional.of(PickupType.SMALL_SALVAGE), 0, 0, "", false);
         var level = level(20, List.of(), List.of(beacon, container), List.of());
         Sortie pulling = sortie(level, Optional.of(L1));

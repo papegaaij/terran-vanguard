@@ -147,6 +147,28 @@ final class BossPasses implements SetPiece.BossActions {
         return 0;
     }
 
+    /** M7 part F: the walking boss's next entry edge's warning bit while it is off the screen, else 0. */
+    int strideWarnings() {
+        int edges = 0;
+        for (SetPiece piece : setPieces) {
+            if (piece.stride().isPresent() && piece.present() && !piece.destroyed()) {
+                edges |= piece.stride().get().warning();
+            }
+        }
+        return edges;
+    }
+
+    /** M7 part F: the bottom edge's bit while a walking boss walks up the screen (a rear wave for Rook), else 0. */
+    int strideRear() {
+        int edges = 0;
+        for (SetPiece piece : setPieces) {
+            if (piece.stride().isPresent() && piece.present() && !piece.destroyed()) {
+                edges |= piece.stride().get().rear();
+            }
+        }
+        return edges;
+    }
+
     /** M5 part H: no launched unit's warning runs (a new attempt, a retry from the boss on an empty field). */
     void clearLaunchWarnings() {
         Arrays.fill(warningStarts, 0);
@@ -271,7 +293,20 @@ final class BossPasses implements SetPiece.BossActions {
                 if (piece.arena().isPresent()) {
                     piece.ground(s.groundScroll, s.scrollHalted());
                 }
+                if (piece.stride().isPresent()) {
+                    // M7 part F: its passes' lanes and its cone read where the ship and Rook are.
+                    boolean rook = wingman != null && !wingman.ejected();
+                    piece.strideTargets(ship.x(), ship.y(), rook ? wingman.x() : 0, rook ? wingman.y() : 0, rook);
+                }
                 piece.update(s.levelTick);
+                if (piece.stride().isPresent() && piece.stride().get().footfall() && !piece.destroyed()) {
+                    events.add(SimEvents.Type.WALKER_STEP, piece.x(), piece.y(), k);
+                }
+                BossSpec boss = piece.boss().get();
+                if (boss.incomingSeconds() > 0 && s.clockTicked && s.levelTick == incomingTick(boss)) {
+                    // Round 41: the warning ahead of the arrival (the level clock moves at most a step a step).
+                    events.add(SimEvents.Type.BOSS_INCOMING, piece.x(), piece.y(), k);
+                }
                 if (piece.bossTicks() == 0) {
                     events.add(SimEvents.Type.BOSS_ARRIVED, piece.x(), piece.y(), k);
                 } else if (piece.swayTicks() == 0) {
@@ -288,11 +323,19 @@ final class BossPasses implements SetPiece.BossActions {
                 if (objectives.escapeLost(piece.slug(), "")) {
                     events.add(SimEvents.Type.OBJECTIVE_FAILED, piece.x(), piece.y());
                 }
-                radio.cue(LevelScript.CueTrigger.ENEMY_ESCAPED, piece.slug());
+                radio.cue(CueTrigger.ENEMY_ESCAPED, piece.slug());
             } else if (!onPlane && piece.onPlane()) {
                 events.add(SimEvents.Type.SET_PIECE_DESCENDED, piece.x(), piece.y(), k);
             }
         }
+    }
+
+    /**
+     * Round 41: the level clock's step of {@code boss}'s {@link SimEvents.Type#BOSS_INCOMING}: its {@link
+     * BossSpec#incomingSeconds()} before its arrival, at the first step at the earliest.
+     */
+    static int incomingTick(BossSpec boss) {
+        return Math.max(1, SimStep.ticks(boss.arriveSeconds()) - SimStep.ticks(boss.incomingSeconds()));
     }
 
     /** The set pieces' living parts fire their guns while on the player's layer. */
@@ -307,7 +350,7 @@ final class BossPasses implements SetPiece.BossActions {
                 }
                 continue;
             }
-            List<LevelScript.PartSpec> parts = piece.spec().parts();
+            List<PartSpec> parts = piece.spec().parts();
             for (int p = 0; p < parts.size(); p++) {
                 if (piece.trigger(p) && firing) {
                     force.fireFrom(
@@ -344,10 +387,12 @@ final class BossPasses implements SetPiece.BossActions {
             events.add(SimEvents.Type.SPIRE_LIFT, piece.stumpX(), piece.stumpY(), bossPhase);
         }
         if (timedOut(piece, boss, bossPhase - 1)) {
-            radio.cue(LevelScript.CueTrigger.BOSS_TIMEOUT, name);
+            radio.cue(CueTrigger.BOSS_TIMEOUT, name);
         }
-        radio.cue(LevelScript.CueTrigger.BOSS_PHASE, name);
-        if (k == partsPiece && bossPhase > script.secondary().beforePhase() && objectives.partsSurvived()) {
+        radio.cue(CueTrigger.BOSS_PHASE, name);
+        if (k == partsPiece
+                && bossPhase > script.objectives().secondary().beforePhase()
+                && objectives.partsSurvived()) {
             events.add(SimEvents.Type.OBJECTIVE_FAILED, piece.x(), piece.y());
         }
     }
@@ -375,7 +420,34 @@ final class BossPasses implements SetPiece.BossActions {
 
     @Override
     public void aimed(double x, double y, EnemyGun gun) {
+        if (gun.homing().isPresent()) {
+            // M7 part F: a homing gun launches a missile (the Revenant Walker's pods).
+            force.missiles().launch(x, y, gun, ship.x(), ship.y());
+            return;
+        }
         force.fireFrom(x, y, gun, ship);
+    }
+
+    @Override
+    public void along(double x, double y, double aim, EnemyGun gun) {
+        force.fireAlong(x, y, gun, aim, ship);
+    }
+
+    @Override
+    public void hatch(int part, double x, double y) {
+        events.add(SimEvents.Type.POD_HATCH, x, y, part);
+    }
+
+    @Override
+    public void coneTell(double x, double y) {
+        events.add(SimEvents.Type.CONE_TELL, x, y);
+        // M7 part F (step F4): the walker's first flame tell is its fight's first telegraph (Varga's line).
+        radio.cue(CueTrigger.FIRST_TELEGRAPH, "");
+    }
+
+    @Override
+    public void coneBurn(double x, double y) {
+        events.add(SimEvents.Type.CONE_BURN, x, y);
     }
 
     @Override
@@ -422,10 +494,10 @@ final class BossPasses implements SetPiece.BossActions {
     public void telegraph(int lane) {
         SlamArena arena = arenaBoss.arena().orElseThrow();
         events.add(SimEvents.Type.TELEGRAPH, arena.laneWidth() * (lane - 0.5), arena.laneTop(), lane);
-        radio.cue(LevelScript.CueTrigger.FIRST_TELEGRAPH, "");
+        radio.cue(CueTrigger.FIRST_TELEGRAPH, "");
         if ((shipLanes() & (1 << lane)) != 0) {
             // Round 40: the first telegraph on a convoy ship's lane (the root hint).
-            radio.cue(LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH, "");
+            radio.cue(CueTrigger.FIRST_SHIP_TELEGRAPH, "");
         }
     }
 

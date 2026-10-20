@@ -15,12 +15,18 @@ import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
 import vanguard.sim.Command;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -88,7 +94,7 @@ class Level09Test {
         }
         int ground = 0;
         int released = 0;
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             ground += unit.enemy().bounty();
             // one opening per node: its Skitters pay their own bounty
             released += unit.enemy()
@@ -99,7 +105,11 @@ class Level09Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int total = kills + ground + released + crates + level.secondary().credits();
+        int total = kills
+                + ground
+                + released
+                + crates
+                + level.objectives().secondary().credits();
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_203, Math.round(budget), "the typical haul's target, 700 × 1.07⁸");
@@ -110,11 +120,11 @@ class Level09Test {
         assertEquals(6 * 45 + 7 * 12 + 4 * 15, ground, "Hive Node 6 × 45 + Spine Turret 7 × 12 + Polyp Mortar 4 × 15");
         assertEquals(12 * 5, released, "one opening of 2 Skitters per node");
         assertEquals(100, crates, "the cocoon cache in Act 1 terms (pays 160)");
-        assertEquals(63, level.secondary().credits(), "in Act 1 terms (pays 101)");
+        assertEquals(63, level.objectives().secondary().credits(), "in Act 1 terms (pays 101)");
         System.out.printf(
                 "Level 09 budget (Act 1 terms): kills %d, ground %d, node Skitters %d, crate %d, secondary %d: %d"
                         + " (budget %.0f)%n",
-                kills, ground, released, crates, level.secondary().credits(), total, budget);
+                kills, ground, released, crates, level.objectives().secondary().credits(), total, budget);
         assertEquals(3_779, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
     }
 
@@ -122,7 +132,7 @@ class Level09Test {
     void theEnemiesAreTheReadmesTotals() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         Map<String, Integer> ground = new TreeMap<>();
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             ground.merge(unit.enemy().slug(), 1, Integer::sum);
         }
         Map<String, Integer> waves = new TreeMap<>();
@@ -150,7 +160,7 @@ class Level09Test {
                 waves);
         assertEquals(
                 List.of(20.0, 58.0, 96.0, 138.0, 186.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         assertEquals(NODES, level.groups(), "the primary's named targets");
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(8, sortie.escapesTotal(), "the two bridge packs");
@@ -192,8 +202,8 @@ class Level09Test {
                     case MEDIUM -> 30;
                     case HARD -> 40;
                 };
-        assertEquals(3, level.holds().size());
-        for (LevelScript.Hold hold : level.holds()) {
+        assertEquals(3, level.objectives().holds().size());
+        for (ObjectiveSpec.Hold hold : level.objectives().holds()) {
             assertEquals(speed, hold.speed());
             assertEquals(200, hold.depth());
             assertEquals(1, hold.rampSeconds());
@@ -209,7 +219,7 @@ class Level09Test {
                 .count();
         assertEquals(difficulty == Difficulty.HARD ? 9 : 7, turrets, "hard: the cluster C pair");
         EnemySpec node = level.groundUnits().stream()
-                .map(LevelScript.GroundUnit::enemy)
+                .map(GroundUnit::enemy)
                 .filter(enemy -> enemy.slug().equals("hive-node"))
                 .findFirst()
                 .orElseThrow();
@@ -233,16 +243,18 @@ class Level09Test {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         assertEquals(
                 List.of(List.of(0, 1), List.of(2, 3), List.of(4, 5)),
-                level.holds().stream().map(LevelScript.Hold::groups).toList());
+                level.objectives().holds().stream()
+                        .map(ObjectiveSpec.Hold::groups)
+                        .toList());
         for (int g = 0; g < NODES.size(); g++) {
             int group = g;
-            List<LevelScript.GroundUnit> units = level.groundUnits().stream()
+            List<GroundUnit> units = level.groundUnits().stream()
                     .filter(unit -> unit.group() == group)
                     .toList();
             assertEquals(1, units.size(), NODES.get(g));
             assertEquals("hive-node", units.getFirst().enemy().slug());
         }
-        LevelScript.Collapse collapse = level.collapse().orElseThrow();
+        ObjectiveSpec.Collapse collapse = level.objectives().collapse().orElseThrow();
         assertEquals(List.of(4, 5), collapse.groups());
         assertEquals(1.5, collapse.warningSeconds(), "the lean");
         assertEquals(1.5, collapse.dropSeconds(), "the drop: the impact 3 s after the warning starts");
@@ -267,7 +279,7 @@ class Level09Test {
     @Test
     void theCocoonHidesTheCacheAndTheWavesCarryThePickups() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec cocoon = level.groundObjects().stream()
+        GroundObjectSpec cocoon = level.groundObjects().stream()
                 .filter(o -> o.secret().equals("cocoon cache"))
                 .findFirst()
                 .orElseThrow();
@@ -296,12 +308,12 @@ class Level09Test {
     @Test
     void theRadioScriptIsRetimedWithTheNewEvents() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.RadioCue> timed = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
+        List<RadioCue> timed = level.radio().stream()
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
                 .toList();
         assertEquals(
                 List.of(1.0, 8.5, 24.0, 58.0, 95.0, 107.0, 140.0, 152.5),
-                timed.stream().map(LevelScript.RadioCue::t).toList());
+                timed.stream().map(RadioCue::t).toList());
         for (int i = 1; i < timed.size(); i++) {
             assertTrue(
                     timed.get(i).t() - timed.get(i - 1).t() >= 6,

@@ -65,3 +65,21 @@ tasks.test {
     systemProperty("vanguard.assetsDir", rootProject.layout.projectDirectory.dir("assets").asFile.absolutePath)
     inputs.files(rootProject.fileTree("assets/voice")).withPropertyName("voice")
 }
+
+/**
+ * A level's numbers for tuning (LevelReport, CLAUDE.md Tools): ./gradlew :content:levelReport -Plevel=19
+ * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp]
+ * [-Pjson]. It runs on the test classes and reads the design data at run time: a data.yaml edit needs no recompile.
+ */
+tasks.register<JavaExec>("levelReport") {
+    group = "verification"
+    description = "Prints a level's pacing, floor, haul, boss and beam-era numbers (-Plevel=<n>)."
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass = "vanguard.content.LevelReport"
+    maxHeapSize = "2g"
+    systemProperty("vanguard.designDir", rootProject.layout.projectDirectory.dir("design").asFile.absolutePath)
+    val options = listOf("level", "difficulty", "seeds", "fit", "parts").mapNotNull { name ->
+        providers.gradleProperty(name).orNull?.let { listOf("--$name", it) }
+    }.flatten()
+    args(options + if (providers.gradleProperty("json").isPresent) listOf("--json") else listOf())
+}

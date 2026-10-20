@@ -1,7 +1,7 @@
 package vanguard.sim;
 
 /**
- * A tow in play ({@link LevelScript.TowSpec}, part G: Level 07's lifeboat tow): a friendly craft
+ * A tow in play ({@link ObjectiveSpec.TowSpec}, part G: Level 07's lifeboat tow): a friendly craft
  * drifting down the screen on the air layer with a pod on a cable. Its place follows the level
  * time, so a retry replays it exactly. Shots, bullets and the ship pass the boat and the pod; the
  * cable counts the player's hits while the pod hangs on it, and the last one cuts it.
@@ -23,7 +23,7 @@ public final class Tow implements Hashed {
     /** The height (px above the bottom edge, y up) at or below which the crate falls out of a loose pod. */
     static final double RELEASE_Y = 160;
 
-    private final LevelScript.TowSpec spec;
+    private final ObjectiveSpec.TowSpec spec;
     private final int startTick;
     private double x;
     private double y;
@@ -42,7 +42,7 @@ public final class Tow implements Hashed {
     /** The level tick it was last placed for. */
     private int tick;
 
-    Tow(LevelScript.TowSpec spec) {
+    Tow(ObjectiveSpec.TowSpec spec) {
         this.spec = spec;
         startTick = SimStep.ticks(spec.t());
         reset();
@@ -142,7 +142,7 @@ public final class Tow implements Hashed {
         hash.add(x).add(y).add(present ? 1 : 0).add(hitsLeft).add(cutTick).add(crateDue ? 1 : 0);
     }
 
-    public LevelScript.TowSpec spec() {
+    public ObjectiveSpec.TowSpec spec() {
         return spec;
     }
 

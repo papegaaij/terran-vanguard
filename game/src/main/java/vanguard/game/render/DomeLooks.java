@@ -83,11 +83,11 @@ final class DomeLooks {
      *     list is short or a set is missing
      */
     static DomeLooks of(Sprites sprites, LevelScript script, List<String> names) {
-        if (script.groundAllies().isEmpty()) {
+        if (script.objectives().groundAllies().isEmpty()) {
             return null;
         }
         Map<String, Look> byName = new HashMap<>();
-        Look[] sets = new Look[script.groundAllies().get().units().size()];
+        Look[] sets = new Look[script.objectives().groundAllies().get().units().size()];
         for (int k = 0; k < sets.length; k++) {
             String name = k < names.size() && sprites.has(names.get(k)) ? names.get(k) : DEFAULT_SET;
             if (!sprites.has(name)) {

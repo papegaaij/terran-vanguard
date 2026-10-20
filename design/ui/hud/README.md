@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # HUD
@@ -111,7 +111,8 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
   [enemies](../../enemies/README.md#bullet-readability-rules)). The banner's band sits across the
   upper play field (its middle 164 px below the top edge); in a level with an air escort
   (Level 10) it sits higher, 97–127 px below the top edge, so it never covers the shuttle band
-  (stations from 140 px down).
+  (stations from 140 px down). The boss warning banner opens at the boss's lead warning when it has
+  one, and closes early rather than hide a boss that fights under it.
 - Level 12's **gust telegraph** (planned, M5 part F) is a weather look, not an edge warning: the
   wind streaks brighten and an arrow shows at the upwind edge 1.0 s ahead (easy 1.5 s), drawn
   unlike the flashing edge-warning arrows so the two are never confused
@@ -604,3 +605,5 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
   special or a name over 10 characters (C2); step A6's HUD choices kept (B.5 a, b: the 28-dot cooldown
   ring with the overcharge's white arc, the dash pip right of the shield's label plate); R.4 (d) fixed:
   the READY flash and the dash pip's white state last 0.2 s of game time (step A8).
+- 2026-10-19: The boss warning banner opens at the boss's lead warning when it has one, and closes early rather than hide a boss that fights under it.
+- 2026-10-20: round 42 closed: the barks after the win (`Barks.levelComplete()`, R.h) accepted by the user.

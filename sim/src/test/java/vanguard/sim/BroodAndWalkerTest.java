@@ -103,20 +103,11 @@ class BroodAndWalkerTest {
     }
 
     private static Sortie sortie(double seconds, List<WaveSpec> waves) {
-        LevelScript level = new LevelScript(
-                4,
-                1,
-                0,
-                List.of(new LevelScript.Section(seconds, 120)),
-                waves,
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "brood-pod"),
-                List.of(),
-                List.of(),
-                List.of());
+        LevelScript level = LevelScript.builder(4, 1)
+                .sections(List.of(new Section(seconds, 120)))
+                .waves(waves)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "brood-pod")))
+                .build();
         return new Sortie(1, LOADOUT, level, RULES, FULL_ARMOUR);
     }
 

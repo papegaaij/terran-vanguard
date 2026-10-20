@@ -23,7 +23,8 @@ class RockStopsTest {
     private static final double SCROLL_SPEED = 130;
 
     private static LevelScript withRock(LevelScript level, Terrain terrain) {
-        return level.withTerrain(Optional.of(new LevelScript.TerrainSpec(terrain, 10, 28, 0.12, 0.5)));
+        return TestSpecs.withGround(
+                level, g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(terrain, 10, 28, 0.12, 0.5))));
     }
 
     /** A block island over x from–to and rows low–high. */

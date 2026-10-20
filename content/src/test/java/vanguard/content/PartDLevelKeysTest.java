@@ -10,8 +10,11 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.AllySpec;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
 
 /**
  * M5 part D's level keys (design/tech/architecture, Data file schemas; Level 10's air escort with its
@@ -131,25 +134,26 @@ class PartDLevelKeysTest {
                 data.stations().orElseThrow().get(2));
 
         LevelScript medium = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
-        LevelScript.Escort escort = medium.escort().orElseThrow();
-        LevelScript.Air air = escort.air().orElseThrow();
+        ObjectiveSpec.Escort escort = medium.objectives().escort().orElseThrow();
+        ObjectiveSpec.Air air = escort.air().orElseThrow();
         assertEquals(5, escort.units());
         assertEquals(4, escort.saveable());
         assertEquals(2, escort.scriptedUnit(), "Lifeline Three, from 0");
         assertEquals(25, escort.credits());
         assertEquals(List.of(), escort.targetedBy());
         assertEquals(
-                new LevelScript.Station(312, PlayField.HEIGHT - 215, 16, 4, 10, 0.5),
+                new ObjectiveSpec.Station(312, PlayField.HEIGHT - 215, 16, 4, 10, 0.5),
                 air.stations().get(2));
         assertEquals(PlayField.HEIGHT - 215.0, escort.stations().get(2), "the stations' heights, y up");
-        LevelScript.Liftoff liftoff = air.liftoff().orElseThrow();
+        ObjectiveSpec.Liftoff liftoff = air.liftoff().orElseThrow();
         assertEquals(1, liftoff.t());
         assertEquals(6, liftoff.seconds());
         assertEquals(
-                new LevelScript.Pad(176, PlayField.HEIGHT - 490), liftoff.pads().get(3));
-        assertEquals(Optional.of(new LevelScript.Climb(196, 2)), air.climb());
-        assertEquals(Optional.of(new LevelScript.ScriptedLoss(2, 118, 2)), air.scriptedLoss());
-        assertTrue(medium.road().isEmpty(), "no road");
+                new ObjectiveSpec.Pad(176, PlayField.HEIGHT - 490),
+                liftoff.pads().get(3));
+        assertEquals(Optional.of(new ObjectiveSpec.Climb(196, 2)), air.climb());
+        assertEquals(Optional.of(new ObjectiveSpec.ScriptedLoss(2, 118, 2)), air.scriptedLoss());
+        assertTrue(medium.ground().road().isEmpty(), "no road");
 
         AllySpec shuttle = escort.ally();
         assertEquals("evacuation-shuttle", shuttle.slug());
@@ -165,6 +169,7 @@ class PartDLevelKeysTest {
         assertEquals(
                 180,
                 SimSpecs.level(content, KEY, Difficulty.EASY)
+                        .objectives()
                         .escort()
                         .orElseThrow()
                         .ally()
@@ -172,6 +177,7 @@ class PartDLevelKeysTest {
         assertEquals(
                 90,
                 SimSpecs.level(content, KEY, Difficulty.HARD)
+                        .objectives()
                         .escort()
                         .orElseThrow()
                         .ally()
@@ -184,11 +190,8 @@ class PartDLevelKeysTest {
         LevelData level = content.level(KEY);
         LevelScript medium = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
 
-        for (LevelScript.CueTrigger trigger : List.of(
-                LevelScript.CueTrigger.ALLY_LOST,
-                LevelScript.CueTrigger.SCRIPTED_LOSS,
-                LevelScript.CueTrigger.FIRST_DECLOAK,
-                LevelScript.CueTrigger.FIRST_LOOP_BACK)) {
+        for (CueTrigger trigger : List.of(
+                CueTrigger.ALLY_LOST, CueTrigger.SCRIPTED_LOSS, CueTrigger.FIRST_DECLOAK, CueTrigger.FIRST_LOOP_BACK)) {
             assertEquals(
                     1,
                     medium.radio().stream()
@@ -196,15 +199,14 @@ class PartDLevelKeysTest {
                             .count(),
                     trigger.name());
         }
-        assertTrue(LevelScript.CueTrigger.ALLY_LOST.repeats());
-        assertFalse(LevelScript.CueTrigger.FIRST_ALLY_LOST.repeats());
+        assertTrue(CueTrigger.ALLY_LOST.repeats());
+        assertFalse(CueTrigger.FIRST_ALLY_LOST.repeats());
         assertTrue(medium.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.FIRST_LOOP_BACK
-                        && cue.requires() == LevelScript.RadioCue.FITTED_ESCORT));
+                .anyMatch(cue ->
+                        cue.trigger() == CueTrigger.FIRST_LOOP_BACK && cue.requires() == RadioCue.FITTED_ESCORT));
         assertTrue(medium.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.LEVEL_END
-                        && cue.alliesMin() == 4
-                        && cue.alliesMax() == 4));
+                .anyMatch(
+                        cue -> cue.trigger() == CueTrigger.LEVEL_END && cue.alliesMin() == 4 && cue.alliesMax() == 4));
 
         LevelData.Music music = level.music();
         assertEquals(Optional.of(new LevelData.Music.Duck(LevelData.Music.DuckOn.SCRIPTED_LOSS, -6, 3)), music.duck());
@@ -240,8 +242,9 @@ class PartDLevelKeysTest {
         assertFalse(convoy.air());
         assertEquals(5, convoy.units());
         assertEquals(5, convoy.saveable());
-        LevelScript.Escort escort = SimSpecs.level(
+        ObjectiveSpec.Escort escort = SimSpecs.level(
                         content, "act-1-first-contact/level-04-tranquility-run", Difficulty.MEDIUM)
+                .objectives()
                 .escort()
                 .orElseThrow();
         assertTrue(escort.air().isEmpty());

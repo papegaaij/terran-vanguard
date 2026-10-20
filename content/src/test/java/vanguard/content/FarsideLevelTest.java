@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.SimEvents;
@@ -165,33 +167,38 @@ class FarsideLevelTest {
 
     @Test
     void theDarknessTheDarkCacheAndTheDataCoreAreRead() {
-        LevelScript.Darkness medium =
-                SimSpecs.level(content, KEY, Difficulty.MEDIUM).darkness().orElseThrow();
+        HazardSpec.Darkness medium = SimSpecs.level(content, KEY, Difficulty.MEDIUM)
+                .hazards()
+                .darkness()
+                .orElseThrow();
         assertEquals(200, medium.headlightLength(), 1e-9);
         assertEquals(Math.toRadians(60), medium.headlightAngle(), 1e-9);
         assertEquals(2, medium.flares().size());
         assertEquals(8, medium.flareSeconds(), 1e-9);
-        LevelScript.Darkness easy =
-                SimSpecs.level(content, KEY, Difficulty.EASY).darkness().orElseThrow();
+        HazardSpec.Darkness easy = SimSpecs.level(content, KEY, Difficulty.EASY)
+                .hazards()
+                .darkness()
+                .orElseThrow();
         assertEquals(260, easy.headlightLength(), 1e-9);
         assertEquals(12, easy.flareSeconds(), 1e-9);
         assertEquals(
                 1,
                 SimSpecs.level(content, KEY, Difficulty.HARD)
+                        .hazards()
                         .darkness()
                         .orElseThrow()
                         .flares()
                         .size());
 
-        List<LevelScript.GroundObjectSpec> objects =
+        List<GroundObjectSpec> objects =
                 SimSpecs.level(content, KEY, Difficulty.MEDIUM).groundObjects();
-        LevelScript.GroundObjectSpec cache = objects.stream()
+        GroundObjectSpec cache = objects.stream()
                 .filter(o -> o.secret().equals("survey cache"))
                 .findFirst()
                 .orElseThrow();
         assertTrue(cache.dark());
         assertTrue(cache.core().isEmpty());
-        LevelScript.GroundObjectSpec terminal = objects.stream()
+        GroundObjectSpec terminal = objects.stream()
                 .filter(o -> o.secret().equals("settlement log"))
                 .findFirst()
                 .orElseThrow();

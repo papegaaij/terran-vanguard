@@ -14,11 +14,17 @@ import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Ally;
 import vanguard.sim.Armament;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -88,7 +94,7 @@ class Level10Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        LevelScript.Escort escort = level.escort().orElseThrow();
+        ObjectiveSpec.Escort escort = level.objectives().escort().orElseThrow();
         int escortPay = escort.saveable() * escort.credits();
         int total = kills + crates + escortPay;
 
@@ -98,7 +104,7 @@ class Level10Test {
         assertEquals(0, level.groundUnits().size(), "no ground enemies");
         assertEquals(100, crates, "the ferry cache in Act 1 terms (pays 160)");
         assertEquals(4 * 25, escortPay, "four saveable shuttles home × 25 in Act 1 terms (pays 40 each)");
-        assertEquals(0, level.secondary().credits(), "no secondary (D5 = a)");
+        assertEquals(0, level.objectives().secondary().credits(), "no secondary (D5 = a)");
         System.out.printf(
                 "Level 10 budget (Act 1 terms): kills %d, crate %d, escort %d: %d (budget %.0f)%n",
                 kills, crates, escortPay, total, budget);
@@ -118,9 +124,9 @@ class Level10Test {
         assertEquals(Map.of("mote-swarm", 80, "needler", 47, "skitter", 169, "stinger", 11, "wraith", 11), waves);
         assertEquals(Map.of(WaveSpec.Entry.FRONT, 262, WaveSpec.Entry.REAR, 52, WaveSpec.Entry.SIDES, 4), from);
         assertEquals(
-                List.of(20.0, 70.0, 130.0, 175.0, 200.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
-        assertTrue(level.holds().isEmpty(), "no holds: script time is real time");
+                List.of(20.0, 70.0, 130.0, 175.0, 201.0),
+                level.sections().stream().map(Section::end).toList());
+        assertTrue(level.objectives().holds().isEmpty(), "no holds: script time is real time");
         assertTrue(level.groups().isEmpty());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(318, sortie.enemyTotal());
@@ -179,7 +185,7 @@ class Level10Test {
                     case MEDIUM -> 120;
                     case HARD -> 90;
                 };
-        assertEquals(armour, level.escort().orElseThrow().ally().hp(), 1e-9, "the shuttles' armour");
+        assertEquals(armour, level.objectives().escort().orElseThrow().ally().hp(), 1e-9, "the shuttles' armour");
     }
 
     /**
@@ -190,25 +196,26 @@ class Level10Test {
     @Test
     void theShuttlesAreAnAirEscortWithLifelineThreeTheScriptedLoss() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.Escort escort = level.escort().orElseThrow();
-        LevelScript.Air air = escort.air().orElseThrow();
+        ObjectiveSpec.Escort escort = level.objectives().escort().orElseThrow();
+        ObjectiveSpec.Air air = escort.air().orElseThrow();
         assertEquals("evacuation-shuttle", escort.ally().slug());
         assertEquals(5, escort.units());
         assertEquals(4, escort.saveable());
         assertEquals(2, escort.scriptedUnit(), "Lifeline Three, from 0");
         assertEquals(25, escort.credits());
-        assertEquals(Optional.of(new LevelScript.ScriptedLoss(2, 118, 2)), air.scriptedLoss());
-        assertEquals(Optional.of(new LevelScript.Climb(196, 2)), air.climb());
-        LevelScript.Liftoff liftoff = air.liftoff().orElseThrow();
+        assertEquals(Optional.of(new ObjectiveSpec.ScriptedLoss(2, 118, 2)), air.scriptedLoss());
+        assertEquals(Optional.of(new ObjectiveSpec.Climb(196, 2)), air.climb());
+        ObjectiveSpec.Liftoff liftoff = air.liftoff().orElseThrow();
         assertEquals(1, liftoff.t());
         assertEquals(6, liftoff.seconds());
         assertEquals(
-                new LevelScript.Pad(240, PlayField.HEIGHT - 400), liftoff.pads().getFirst());
+                new ObjectiveSpec.Pad(240, PlayField.HEIGHT - 400),
+                liftoff.pads().getFirst());
         assertEquals(
-                new LevelScript.Station(240, PlayField.HEIGHT - 165, 16, 4, 9, 0),
+                new ObjectiveSpec.Station(240, PlayField.HEIGHT - 165, 16, 4, 9, 0),
                 air.stations().getFirst());
-        assertTrue(level.road().isEmpty(), "no road");
-        assertEquals(LevelScript.Secondary.NONE, level.secondary());
+        assertTrue(level.ground().road().isEmpty(), "no road");
+        assertEquals(Secondary.NONE, level.objectives().secondary());
         LevelData data = content.level(LEVEL);
         assertEquals(List.of("rear"), data.threatProfile().requiredTraits());
         assertEquals(
@@ -224,7 +231,7 @@ class Level10Test {
     @Test
     void theFerryHatchHidesTheCacheAndTheNeedlersCarryThePickups() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec hatch = level.groundObjects().stream()
+        GroundObjectSpec hatch = level.groundObjects().stream()
                 .filter(o -> o.secret().equals("ferry cache"))
                 .findFirst()
                 .orElseThrow();
@@ -309,7 +316,7 @@ class Level10Test {
      */
     @Test
     void aCrateDroppedAtTheTopEdgeReachesTheStartLineWithinItsLife() {
-        LevelScript.GroundObjectSpec hatch = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).groundObjects().stream()
+        GroundObjectSpec hatch = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).groundObjects().stream()
                 .filter(o -> o.secret().equals("ferry cache"))
                 .findFirst()
                 .orElseThrow();
@@ -383,7 +390,7 @@ class Level10Test {
                 SimSpecs.level(content, LEVEL, Difficulty.MEDIUM),
                 SimSpecs.rules(content, LEVEL, Difficulty.MEDIUM).withInvulnerableShip(),
                 loadout.plating().maxArmour());
-        LevelScript.GroundObjectSpec spec = sortie.script().groundObjects().stream()
+        GroundObjectSpec spec = sortie.script().groundObjects().stream()
                 .filter(o -> o.secret().equals("ferry cache"))
                 .findFirst()
                 .orElseThrow();
@@ -431,12 +438,12 @@ class Level10Test {
     @Test
     void theRadioScriptHasItsEventsAndFourLevelEndLines() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.RadioCue> timed = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
+        List<RadioCue> timed = level.radio().stream()
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
                 .toList();
         assertEquals(
                 List.of(1.0, 12.0, 24.0, 32.0, 116.0, 131.5, 139.0, 180.0, 188.5, 196.0),
-                timed.stream().map(LevelScript.RadioCue::t).toList());
+                timed.stream().map(RadioCue::t).toList());
         List<LevelData.RadioCue> cues = content.level(LEVEL).radio();
         for (LevelData.RadioCue cue : cues) {
             if (cue.speaker().equals("Rook")) {
@@ -460,7 +467,7 @@ class Level10Test {
         assertEquals(
                 List.of(4, 3, 2, 1),
                 level.radio().stream()
-                        .filter(cue -> cue.trigger() == LevelScript.CueTrigger.LEVEL_END)
+                        .filter(cue -> cue.trigger() == CueTrigger.LEVEL_END)
                         .map(cue -> {
                             assertEquals(cue.alliesMin(), cue.alliesMax());
                             return cue.alliesMin();
@@ -563,11 +570,10 @@ class Level10Test {
                     case PRIMARY_FAILED -> failedAt = sortie.levelSeconds();
                     case SCRIPTED_LOSS -> throw new AssertionError("the lance before the fail");
                     case RADIO -> {
-                        LevelScript.CueTrigger trigger =
-                                level.radio().get(events.value(i)).trigger();
-                        if (trigger == LevelScript.CueTrigger.ALLY_LOST) {
+                        CueTrigger trigger = level.radio().get(events.value(i)).trigger();
+                        if (trigger == CueTrigger.ALLY_LOST) {
                             allyLostCues++;
-                        } else if (trigger == LevelScript.CueTrigger.MISSION_FAILED) {
+                        } else if (trigger == CueTrigger.MISSION_FAILED) {
                             failedCues++;
                         }
                     }
@@ -600,30 +606,31 @@ class Level10Test {
     /** Flies the level with the autopilot, recording the events. */
     private static Run watch(Sortie sortie) {
         Run run = new Run();
-        int steps = 0;
-        int attempt = sortie.attempt();
-        while (!sortie.complete() && steps++ < MAX_STEPS) {
-            Level04Test.step(sortie);
-            if (sortie.attempt() != attempt) {
-                attempt = sortie.attempt();
+        LevelMetrics.fly(sortie, MAX_STEPS, new LevelMetrics.Probe() {
+            @Override
+            public void newAttempt() {
                 run.lost = "";
                 run.scriptedLosses = 0;
             }
-            SimEvents events = sortie.events();
-            for (int i = 0; i < events.size(); i++) {
-                switch (events.type(i)) {
-                    case SECRET_FOUND -> run.secrets++;
-                    case DECLOAK -> run.decloaks++;
-                    case LOOP_BACK -> run.loopBacks++;
-                    case SCRIPTED_LOSS -> {
-                        run.scriptedLosses++;
-                        run.scriptedLossAt = sortie.levelSeconds();
+
+            @Override
+            public void stepped(Sortie flown, int step) {
+                SimEvents events = flown.events();
+                for (int i = 0; i < events.size(); i++) {
+                    switch (events.type(i)) {
+                        case SECRET_FOUND -> run.secrets++;
+                        case DECLOAK -> run.decloaks++;
+                        case LOOP_BACK -> run.loopBacks++;
+                        case SCRIPTED_LOSS -> {
+                            run.scriptedLosses++;
+                            run.scriptedLossAt = flown.levelSeconds();
+                        }
+                        case ALLY_LOST -> run.lost += flown.lastAllyLost();
+                        default -> {}
                     }
-                    case ALLY_LOST -> run.lost += sortie.lastAllyLost();
-                    default -> {}
                 }
             }
-        }
+        });
         return run;
     }
 

@@ -14,9 +14,13 @@ import vanguard.content.SimSpecs;
 import vanguard.game.render.EnemyLooks;
 import vanguard.game.settings.AudioSettings;
 import vanguard.sim.Command;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -49,7 +53,7 @@ class TriggerBreakSoundsTest {
 
     /** Shoots a three-hit trigger with {@code look} until it is spent; the blasts, large and small crumbles playing in that step. */
     private static int[] spend(String look) {
-        var trigger = new LevelScript.GroundObjectSpec(
+        var trigger = new GroundObjectSpec(
                 0,
                 PlayField.WIDTH / 2.0,
                 new Hitbox(72, 40),
@@ -64,18 +68,12 @@ class TriggerBreakSoundsTest {
                 1,
                 Optional.empty(),
                 look);
-        var script = new LevelScript(
-                8,
-                2,
-                0,
-                List.of(new LevelScript.Section(20, 130)),
-                List.of(),
-                List.of(trigger),
-                List.of(),
-                1,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        var script = LevelScript.builder(8, 2)
+                .sections(List.of(new Section(20, 130)))
+                .groundObjects(List.of(trigger))
+                .secrets(1)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         String key = CONTENT.levelKey(1).orElseThrow();
         var sortie = new Sortie(
                 1,

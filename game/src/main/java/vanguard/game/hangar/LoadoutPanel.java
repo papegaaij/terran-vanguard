@@ -164,7 +164,19 @@ final class LoadoutPanel {
             batch.setColor(Color.WHITE);
         }
         drawTiles(batch, hangar, state.slot());
-        drawPower(batch, hangar, state.choice());
+        drawHover(batch, state);
+        drawPower(batch, hangar, state.previewChoice());
+    }
+
+    /** The hover look on the slot the pointer rests on, unless it is the selected one. */
+    private void drawHover(SpriteBatch batch, HangarState state) {
+        state.hover()
+                .filter(over -> over.target() == HangarState.Target.SLOT)
+                .map(over -> state.slots().get(over.index()))
+                .filter(slot -> slot != state.slot())
+                .map(slot -> slots(state.hangar().escortHired(), state.slots().contains(LoadoutSlot.UTILITY_3))
+                        .get(slot))
+                .ifPresent(box -> glass.outline(batch, Glass.CYAN, box.x(), box.y(), box.width(), box.height()));
     }
 
     private void drawCallout(SpriteBatch batch, Hangar hangar, Callout callout, boolean selected) {

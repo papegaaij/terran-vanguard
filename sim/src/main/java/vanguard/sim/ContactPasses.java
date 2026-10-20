@@ -31,7 +31,7 @@ final class ContactPasses {
      * M7 part C: the level's rock and what touching it does (Level 16); null (and the contacts null)
      * without terrain.
      */
-    private final LevelScript.TerrainSpec terrainSpec;
+    private final GroundSpec.TerrainSpec terrainSpec;
     /** M7 part C: the rock with the scroll now; null without terrain. */
     private final Canyon canyon;
 
@@ -44,7 +44,7 @@ final class ContactPasses {
 
     ContactPasses(
             Sortie s,
-            LevelScript.TerrainSpec terrainSpec,
+            GroundSpec.TerrainSpec terrainSpec,
             Canyon canyon,
             Ship ship,
             PlayerFire fire,
@@ -197,7 +197,7 @@ final class ContactPasses {
     private void cutTow(Tow tow) {
         objectives.secretFound();
         events.add(SimEvents.Type.SECRET_FOUND, towPodX(tow), towPodY(tow));
-        radio.cue(LevelScript.CueTrigger.SECRET, tow.spec().secret());
+        radio.cue(CueTrigger.SECRET, tow.spec().secret());
         if (tow.releaseCrate()) {
             dropTowCrate(tow);
         }
@@ -264,13 +264,13 @@ final class ContactPasses {
     /** A crane's clamp let go: its secret's crate drops from the hook. */
     private void releaseCrate(Crane crane) {
         objectives.secretFound();
-        LevelScript.CraneSpec spec = crane.spec();
+        HazardSpec.CraneSpec spec = crane.spec();
         events.add(SimEvents.Type.SECRET_FOUND, crane.tipX(), crane.tipY());
         Pickup crate = pickups.obtain();
         if (crate != null) {
             crate.drop(PickupType.HIDDEN_CRATE, spec.crateCredits(), crane.tipX(), crane.tipY(), crateTicks);
         }
-        radio.cue(LevelScript.CueTrigger.SECRET, spec.secret());
+        radio.cue(CueTrigger.SECRET, spec.secret());
     }
 
     /** M7 part C (design/campaign Level 16, What walls stop): enemy bullets stop at rock with a spark. */
@@ -312,7 +312,7 @@ final class ContactPasses {
                     events.add(SimEvents.Type.WALL_CONTACT, ship.x() - nx * 18, ship.y() - ny * 18, side);
                     if (!wallContactSeen) {
                         wallContactSeen = true;
-                        radio.cue(LevelScript.CueTrigger.FIRST_WALL_CONTACT, "");
+                        radio.cue(CueTrigger.FIRST_WALL_CONTACT, "");
                     }
                     if (!s.complete && !s.failed && !rules.invulnerableShip() && !ship.evading()) {
                         double lost = ship.defences().armourLost();

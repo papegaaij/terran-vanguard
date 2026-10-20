@@ -185,31 +185,15 @@ class FarsideTest {
     }
 
     private static LevelScript level(
-            List<WaveSpec> waves,
-            List<LevelScript.GroundObjectSpec> objects,
-            int secrets,
-            Optional<LevelScript.Darkness> darkness) {
-        return new LevelScript(
-                6,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 130)),
-                waves,
-                objects,
-                List.of(),
-                secrets,
-                List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "mantis", List.of(), ""),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                darkness);
+            List<WaveSpec> waves, List<GroundObjectSpec> objects, int secrets, Optional<HazardSpec.Darkness> darkness) {
+        return LevelScript.builder(6, 1)
+                .sections(List.of(new Section(40, 130)))
+                .waves(waves)
+                .groundObjects(objects)
+                .secrets(secrets)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "mantis", List.of(), "")))
+                .hazards(HazardSpec.NONE.withDarkness(darkness))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -495,11 +479,11 @@ class FarsideTest {
         assertTrue(left.x() + 300 < PlayField.WIDTH - 100);
     }
 
-    private static final LevelScript.Darkness DARK = new LevelScript.Darkness(
+    private static final HazardSpec.Darkness DARK = new HazardSpec.Darkness(
             2,
             200,
             Math.toRadians(60),
-            List.of(new LevelScript.Darkness.Flare(8, 360, 200)),
+            List.of(new HazardSpec.Darkness.Flare(8, 360, 200)),
             8,
             120,
             40,
@@ -507,8 +491,8 @@ class FarsideTest {
             0.1);
 
     /** A dark survey cache at x, entering at the top edge at t=0.5 (3 hits). */
-    private static LevelScript.GroundObjectSpec cache(double x) {
-        return new LevelScript.GroundObjectSpec(
+    private static GroundObjectSpec cache(double x) {
+        return new GroundObjectSpec(
                 0.5,
                 x,
                 new Hitbox(28, 22),
@@ -641,7 +625,7 @@ class FarsideTest {
 
     @Test
     void aDataCoreDropsFromItsTerminalAndIsRecordedWhenCollected() {
-        LevelScript.GroundObjectSpec terminal = new LevelScript.GroundObjectSpec(
+        GroundObjectSpec terminal = new GroundObjectSpec(
                 0.5,
                 Ship.START_X,
                 new Hitbox(30, 30),

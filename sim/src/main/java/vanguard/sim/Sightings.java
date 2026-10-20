@@ -29,23 +29,23 @@ final class Sightings {
     void step() {
         if (!pounced && events.count(SimEvents.Type.POUNCE) > 0) {
             pounced = true;
-            radio.cue(LevelScript.CueTrigger.FIRST_POUNCE, "");
+            radio.cue(CueTrigger.FIRST_POUNCE, "");
         }
         if (!decloakSeen && events.count(SimEvents.Type.DECLOAK) > 0) {
             decloakSeen = true;
-            radio.cue(LevelScript.CueTrigger.FIRST_DECLOAK, "");
+            radio.cue(CueTrigger.FIRST_DECLOAK, "");
         }
         if (!loopBackSeen && events.count(SimEvents.Type.LOOP_BACK) > 0) {
             loopBackSeen = true;
-            radio.cue(LevelScript.CueTrigger.FIRST_LOOP_BACK, "");
+            radio.cue(CueTrigger.FIRST_LOOP_BACK, "");
         }
         if (!surfacingSeen && events.count(SimEvents.Type.BURROW_SURFACED) > 0) {
             surfacingSeen = true;
-            radio.cue(LevelScript.CueTrigger.FIRST_SURFACING, "");
+            radio.cue(CueTrigger.FIRST_SURFACING, "");
         }
         if (!ringSeen && events.count(SimEvents.Type.RING_SUNG) > 0) {
             ringSeen = true;
-            radio.cue(LevelScript.CueTrigger.FIRST_RING, "");
+            radio.cue(CueTrigger.FIRST_RING, "");
         }
     }
 

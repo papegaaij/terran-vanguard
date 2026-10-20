@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import vanguard.sim.AllySpec;
 import vanguard.sim.Hitbox;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 
 /**
@@ -21,15 +21,16 @@ final class PartERules {
      * point (y up; NaN without one); the glide, the lanes' height (y up), the level boss's lanes (none
      * without them) and the scroll the units hold clear for after the halt.
      */
-    static LevelScript.Naval convoy(Content content, LevelData level, LevelData.Convoy convoy, Difficulty difficulty) {
+    static ObjectiveSpec.Naval convoy(
+            Content content, LevelData level, LevelData.Convoy convoy, Difficulty difficulty) {
         Optional<LevelData.AllyChange> change =
                 switch (difficulty) {
                     case EASY -> convoy.easy();
                     case MEDIUM -> Optional.empty();
                     case HARD -> convoy.hard();
                 };
-        List<LevelScript.NavalUnit> units = convoy.units().stream()
-                .map(unit -> new LevelScript.NavalUnit(
+        List<ObjectiveSpec.NavalUnit> units = convoy.units().stream()
+                .map(unit -> new ObjectiveSpec.NavalUnit(
                         ally(content, unit.ally(), change),
                         unit.name(),
                         unit.station().x(),
@@ -39,7 +40,7 @@ final class PartERules {
                         unit.hold().map(hold -> PlayField.HEIGHT - hold.y()).orElse(Double.NaN)))
                 .toList();
         Optional<EnemyData.Lanes> lanes = lanes(content, level);
-        return new LevelScript.Naval(
+        return new ObjectiveSpec.Naval(
                 units,
                 convoy.glide(),
                 PlayField.HEIGHT - convoy.laneY().orElse(PlayField.HEIGHT / 2.0),

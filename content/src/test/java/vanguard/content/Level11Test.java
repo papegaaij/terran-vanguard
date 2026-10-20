@@ -15,13 +15,21 @@ import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
 import vanguard.sim.Command;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.GroundObject;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -104,12 +112,12 @@ class Level11Test {
                         .count()
                 * content.player().pickups().salvage().credits().small();
         int kraken = level.setPieces().getFirst().parts().stream()
-                .mapToInt(LevelScript.PartSpec::bounty)
+                .mapToInt(PartSpec::bounty)
                 .sum();
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int secondary = level.secondary().credits();
+        int secondary = level.objectives().secondary().credits();
         int total = kills + rafts + salvage + kraken + crates + secondary;
 
         double budget = content.economy().budget().of(level.number());
@@ -142,7 +150,7 @@ class Level11Test {
         assertEquals(Map.of(WaveSpec.Entry.FRONT, 325, WaveSpec.Entry.SIDES, 4), from, "no rear waves");
         assertEquals(
                 List.of(20.0, 65.0, 110.0, 160.0, 161.0, 176.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         assertTrue(level.sections().get(4).arena(), "section 5 is the arena");
         assertEquals(0, level.sections().get(4).speed(), "where the scroll halts");
         assertEquals(12, level.groundUnits().size(), "three raft nests at medium");
@@ -150,7 +158,7 @@ class Level11Test {
                 15,
                 SimSpecs.level(content, LEVEL, Difficulty.HARD).groundUnits().size(),
                 "hard's extra nest");
-        assertTrue(level.water(), "E1 = a: the whole play field is water");
+        assertTrue(level.ground().water(), "E1 = a: the whole play field is water");
         assertTrue(level.groups().isEmpty(), "no objectives' groups");
     }
 
@@ -174,7 +182,7 @@ class Level11Test {
     void theKrakenIsTheAnchoredMidBossOfTheArena() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         assertEquals(1, level.setPieces().size());
-        LevelScript.SetPieceSpec kraken = level.setPieces().getFirst();
+        SetPieceSpec kraken = level.setPieces().getFirst();
         BossSpec boss = kraken.boss().orElseThrow();
         assertTrue(boss.anchored());
         assertTrue(boss.midBoss());
@@ -205,25 +213,27 @@ class Level11Test {
     /** The naval convoy (README, The convoy): four hulls at their stations, three to lanes 1, 2, 4. */
     @Test
     void theConvoyHoldsItsStationsAndTakesItsLanes() {
-        LevelScript.Naval naval =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).convoy().orElseThrow();
+        ObjectiveSpec.Naval naval = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM)
+                .objectives()
+                .convoy()
+                .orElseThrow();
         assertEquals(
                 List.of("Halvorsen", "Mbeki", "Saint-Laurent", "Ruyter"),
-                naval.units().stream().map(LevelScript.NavalUnit::name).toList());
+                naval.units().stream().map(ObjectiveSpec.NavalUnit::name).toList());
         assertEquals(
                 List.of(1, 2, 4, 0),
-                naval.units().stream().map(LevelScript.NavalUnit::lane).toList(),
+                naval.units().stream().map(ObjectiveSpec.NavalUnit::lane).toList(),
                 "the frigate leaves at the halt");
         assertEquals(
                 List.of(130.0, 240.0, 350.0, 240.0),
-                naval.units().stream().map(LevelScript.NavalUnit::x).toList());
+                naval.units().stream().map(ObjectiveSpec.NavalUnit::x).toList());
         assertEquals(
                 List.of(
                         PlayField.HEIGHT - 380.0,
                         PlayField.HEIGHT - 350.0,
                         PlayField.HEIGHT - 380.0,
                         PlayField.HEIGHT - 480.0),
-                naval.units().stream().map(LevelScript.NavalUnit::y).toList());
+                naval.units().stream().map(ObjectiveSpec.NavalUnit::y).toList());
         assertEquals(3, naval.glideSeconds());
         assertEquals(PlayField.HEIGHT - 450.0, naval.laneY());
         assertEquals(3, naval.damageable(), "the three cargo ships, not the frigate");
@@ -235,6 +245,7 @@ class Level11Test {
         assertEquals(
                 2,
                 SimSpecs.level(content, LEVEL, Difficulty.HARD)
+                        .objectives()
                         .convoy()
                         .orElseThrow()
                         .units()
@@ -248,6 +259,7 @@ class Level11Test {
         assertEquals(
                 5,
                 SimSpecs.level(content, LEVEL, Difficulty.EASY)
+                        .objectives()
                         .convoy()
                         .orElseThrow()
                         .units()
@@ -257,8 +269,8 @@ class Level11Test {
                 1e-9,
                 "easy: on its fifth");
 
-        LevelScript.Secondary secondary =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).secondary();
+        Secondary secondary =
+                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).objectives().secondary();
         assertTrue(secondary.afloat(), "E8 = a: all three afloat at the Kraken's death");
         assertEquals(100, secondary.credits());
         assertEquals("CONVOY", secondary.label());
@@ -268,7 +280,7 @@ class Level11Test {
     @ParameterizedTest
     @EnumSource(Difficulty.class)
     void theSunkenPodCountsHits(Difficulty difficulty) {
-        LevelScript.GroundObjectSpec pod = SimSpecs.level(content, LEVEL, difficulty).groundObjects().stream()
+        GroundObjectSpec pod = SimSpecs.level(content, LEVEL, difficulty).groundObjects().stream()
                 .filter(o -> o.secret().equals("sunken pod"))
                 .findFirst()
                 .orElseThrow();
@@ -362,7 +374,7 @@ class Level11Test {
                 SimSpecs.level(content, LEVEL, difficulty),
                 SimSpecs.rules(content, LEVEL, difficulty).withInvulnerableShip(),
                 loadout.plating().maxArmour());
-        LevelScript.GroundObjectSpec pod = sortie.script().groundObjects().stream()
+        GroundObjectSpec pod = sortie.script().groundObjects().stream()
                 .filter(o -> o.secret().equals("sunken pod"))
                 .findFirst()
                 .orElseThrow();
@@ -403,12 +415,11 @@ class Level11Test {
      */
     @Test
     void theLastFloatingContainerDropsTheArmourPatch() {
-        List<LevelScript.GroundObjectSpec> containers =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).groundObjects().stream()
-                        .filter(o -> o.look().equals("floating-container"))
-                        .toList();
+        List<GroundObjectSpec> containers = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).groundObjects().stream()
+                .filter(o -> o.look().equals("floating-container"))
+                .toList();
         assertEquals(8, containers.size());
-        for (LevelScript.GroundObjectSpec container : containers) {
+        for (GroundObjectSpec container : containers) {
             assertEquals(3, container.hp(), 1e-9);
             assertEquals(Optional.of(PickupType.SMALL_SALVAGE), container.drop());
             assertEquals(0, container.group());
@@ -486,35 +497,34 @@ class Level11Test {
     void theRadioScriptHasTheArenaEventsAndTwoLevelEndLines() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         List<Double> timed = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
-                .map(LevelScript.RadioCue::t)
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
+                .map(RadioCue::t)
                 .toList();
         assertEquals(List.of(1.0, 14.0, 21.5, 34.0, 55.0, 62.5, 70.5, 110.0, 140.0, 146.5, 158.0), timed);
         assertTrue(timed.stream().allMatch(t -> t < 160), "every timed line before the halt");
-        Map<LevelScript.CueTrigger, Integer> events = new TreeMap<>();
-        for (LevelScript.RadioCue cue : level.radio()) {
-            if (cue.trigger() != LevelScript.CueTrigger.TIME) {
+        Map<CueTrigger, Integer> events = new TreeMap<>();
+        for (RadioCue cue : level.radio()) {
+            if (cue.trigger() != CueTrigger.TIME) {
                 events.merge(cue.trigger(), 1, Integer::sum);
             }
         }
         assertEquals(
                 Map.of(
-                        LevelScript.CueTrigger.FIRST_TELEGRAPH, 1,
-                        LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH, 1,
-                        LevelScript.CueTrigger.BOSS_PART_DESTROYED, 1,
-                        LevelScript.CueTrigger.ALLY_HIT, 1,
-                        LevelScript.CueTrigger.ALLY_LOST, 1,
-                        LevelScript.CueTrigger.BOSS_DESTROYED, 1,
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE, 1,
-                        LevelScript.CueTrigger.SECRET, 1,
-                        LevelScript.CueTrigger.LEVEL_END, 2),
+                        CueTrigger.FIRST_TELEGRAPH, 1,
+                        CueTrigger.FIRST_SHIP_TELEGRAPH, 1,
+                        CueTrigger.BOSS_PART_DESTROYED, 1,
+                        CueTrigger.ALLY_HIT, 1,
+                        CueTrigger.ALLY_LOST, 1,
+                        CueTrigger.BOSS_DESTROYED, 1,
+                        CueTrigger.SECONDARY_OBJECTIVE, 1,
+                        CueTrigger.SECRET, 1,
+                        CueTrigger.LEVEL_END, 2),
                 events);
         assertTrue(level.radio().stream()
                 .filter(cue -> cue.speaker().equals("Rook"))
-                .allMatch(cue -> (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0));
+                .allMatch(cue -> (cue.requires() & RadioCue.FITTED_ESCORT) != 0));
         assertTrue(level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.ALLY_HIT
-                        || cue.trigger() == LevelScript.CueTrigger.ALLY_LOST)
+                .filter(cue -> cue.trigger() == CueTrigger.ALLY_HIT || cue.trigger() == CueTrigger.ALLY_LOST)
                 .allMatch(cue -> cue.line().contains("{ally}")));
     }
 
@@ -611,7 +621,7 @@ class Level11Test {
                 "Level 11 %s on %d seeds: Kraken mean %.1f s, ships afloat %d of %d, secondary met %d%s%n",
                 difficulty, KrakenTest.SEEDS.length, mean, afloat, 3 * KrakenTest.SEEDS.length, met, text);
         if (difficulty == Difficulty.MEDIUM) {
-            assertTrue(mean >= 45 && mean <= 75, "the mid-boss window at medium: " + mean);
+            assertTrue(LevelMetrics.inBossWindow(true, mean), "the mid-boss window at medium: " + mean);
         }
     }
 
@@ -719,7 +729,7 @@ class Level11Test {
                 difficulty, KrakenTest.SEEDS.length, mean, afloat, 3 * KrakenTest.SEEDS.length, met, text);
         if (difficulty == Difficulty.MEDIUM) {
             assertTrue(met >= 3, "most of the time at medium: " + met);
-            assertTrue(mean >= 45 && mean <= 75, "the mid-boss window at medium: " + mean);
+            assertTrue(LevelMetrics.inBossWindow(true, mean), "the mid-boss window at medium: " + mean);
         }
     }
 
@@ -773,7 +783,7 @@ class Level11Test {
             }
         }
         assertTrue(checked, "the deck scrolled through after the Kraken");
-        LevelScript.Naval naval = sortie.script().convoy().orElseThrow();
+        ObjectiveSpec.Naval naval = sortie.script().objectives().convoy().orElseThrow();
         for (int k = 0; k < sortie.allyCount(); k++) {
             if (sortie.ally(k).alive()) {
                 assertEquals(

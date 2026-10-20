@@ -11,8 +11,9 @@ import com.badlogic.gdx.utils.JsonValue;
 import java.util.ArrayList;
 import java.util.List;
 import vanguard.sim.BossSpec;
-import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 
 /**
  * A boss in its production sprites (the Gorgon Frigate, tools/art/gorgon_frigate.py, pivots in
@@ -66,7 +67,7 @@ final class BossLooks {
      * @param spec the level's boss, or null when it has none (only the bar is then drawable)
      * @param pivots the boss's pivot file, or null
      */
-    BossLooks(Sprites sprites, FlashShader flash, LevelScript.SetPieceSpec spec, JsonValue pivots) {
+    BossLooks(Sprites sprites, FlashShader flash, SetPieceSpec spec, JsonValue pivots) {
         this.flash = flash;
         this.bar = new BossBar(sprites);
         String slug = spec == null ? null : spec.slug();
@@ -229,7 +230,7 @@ final class BossLooks {
     }
 
     /** A chain's rest direction from its anchor to its part, radians counter-clockwise (y up). */
-    private static double rest(BossSpec.Chain chain, LevelScript.PartSpec end) {
+    private static double rest(BossSpec.Chain chain, PartSpec end) {
         return Math.atan2(end.dy() - chain.fromDy(), end.dx() - chain.fromDx());
     }
 

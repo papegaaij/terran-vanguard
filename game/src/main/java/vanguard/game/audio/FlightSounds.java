@@ -26,7 +26,8 @@ import vanguard.sim.WarningEdge;
  * which screech.
  *
  * <p>Each event type belongs to one family ({@link SoundFamily}): the player's side ({@link PlayerCues}),
- * the bosses ({@link BossCues}), the enemy units ({@link UnitCues}, Level 18's in {@link StormCues}), the allies ({@link AllyCues}), the
+ * the bosses ({@link BossCues}; Level 19's walker in {@link WalkerCues}), the enemy units ({@link UnitCues}, Level 18's in
+ * {@link StormCues}, Level 19's tanks, vents and belts in {@link FoundryCues}), the allies ({@link AllyCues}), the
  * arsenal ({@link ArsenalCues}) and the levels' own ({@link LevelCues}); they share one {@link SoundMix},
  * and this class routes the events to them in their order and keeps the order of the watched states.
  */
@@ -55,6 +56,10 @@ public final class FlightSounds {
     private final UnitCues units;
     /** M7 part E: Level 18's units: the Dust Devil's spin, opening and spiral, the Ghost Drone's drop, glint and burst. */
     private final StormCues storm;
+    /** M7 part F: the Revenant Walker's (Level 19). */
+    private final WalkerCues walker;
+    /** M7 part F: Level 19's Warden Tanks, furnace vents and belts. */
+    private final FoundryCues foundry;
     /** The convoy, the relay, the domes, Rook, the scripted loss's lance and the tows. */
     private final AllyCues allies;
     /** The specials and the Act 3 arsenal, its held loops. */
@@ -111,7 +116,10 @@ public final class FlightSounds {
         Sfx.HERALD_AURA,
         Sfx.SHELLBACK_WALK,
         Sfx.SHELLBACK_ROLL,
-        Sfx.DEVIL_SPIN
+        Sfx.DEVIL_SPIN,
+        Sfx.WALKER_FLAME,
+        Sfx.TANK_TRACKS,
+        Sfx.BELT_RUMBLE
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -161,11 +169,13 @@ public final class FlightSounds {
         bosses = new BossCues(mix, setPieces);
         player = new PlayerCues(mix, armament, wingman, bosses);
         storm = new StormCues(mix);
-        units = new UnitCues(mix, looks, storm);
+        walker = new WalkerCues(mix);
+        foundry = new FoundryCues(mix);
+        units = new UnitCues(mix, looks, storm, foundry);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix);
-        all = new SoundFamily[] {player, bosses, units, storm, allies, arsenal, levels};
+        all = new SoundFamily[] {player, bosses, units, storm, walker, foundry, allies, arsenal, levels};
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
                 if (families[type.ordinal()] != null) {
@@ -511,6 +521,8 @@ public final class FlightSounds {
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
+        walker.watch(sortie);
+        foundry.watch(sortie);
         levels.watchWeather(sortie);
         allies.watchDrones(sortie);
         mix.watched = sortie;
@@ -549,6 +561,8 @@ public final class FlightSounds {
             }
             units.silence(loop);
             storm.silence(loop);
+            walker.silence(loop);
+            foundry.silence(loop);
         }
     }
 

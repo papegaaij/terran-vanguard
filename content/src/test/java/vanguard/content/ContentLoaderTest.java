@@ -44,6 +44,7 @@ class ContentLoaderTest {
                         "polyp-mortar",
                         "ravager",
                         "reef-spitter",
+                        "revenant-walker",
                         "scuttler",
                         "shellback",
                         "siege-spire",
@@ -54,6 +55,7 @@ class ContentLoaderTest {
                         "stinger",
                         "tendril-anchor",
                         "threadcrawler",
+                        "warden-tank",
                         "whirl-seed",
                         "wraith"),
                 content.enemies().keySet().stream().sorted().toList());
@@ -119,7 +121,7 @@ class ContentLoaderTest {
                 SKITTER,
                 text -> text.replace("orientation: 16 angles", "orientation: 12 angles"),
                 "design/enemies/air/skitter/data.yaml:",
-                "orientation must be fixed, ±30° tilt, 16 angles, 32 angles or radial, was '12 angles'");
+                "orientation must be fixed, ±30° tilt, 8 angles, 16 angles, 32 angles or radial, was '12 angles'");
     }
 
     @Test
@@ -161,7 +163,7 @@ class ContentLoaderTest {
                 LEVEL_01,
                 text -> text.replaceFirst("enemy: needler", "enemy: neddler"),
                 "design/" + LEVEL_01
-                        + ": waves[2].enemy: unknown enemy 'neddler' (known: brood-carrier, brood-pod, burrower, choir-herald, coilwyrm, creeper, driftjelly, dust-devil, dust-kite, ghost-drone, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, scuttler, shellback, siege-spire, skimmer, skitter, spine-turret, spore-bomber, stinger, tendril-anchor, threadcrawler, whirl-seed, wraith)");
+                        + ": waves[2].enemy: unknown enemy 'neddler' (known: brood-carrier, brood-pod, burrower, choir-herald, coilwyrm, creeper, driftjelly, dust-devil, dust-kite, ghost-drone, gorgon-frigate, harbour-kraken, hive-node, lamprey, leviathan, mantis, mote-swarm, needler, polyp-mortar, ravager, reef-spitter, revenant-walker, scuttler, shellback, siege-spire, skimmer, skitter, spine-turret, spore-bomber, stinger, tendril-anchor, threadcrawler, warden-tank, whirl-seed, wraith)");
     }
 
     @Test

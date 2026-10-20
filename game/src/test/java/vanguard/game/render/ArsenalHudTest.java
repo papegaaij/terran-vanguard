@@ -15,7 +15,7 @@ import vanguard.content.ContentLoader;
 import vanguard.content.SpecialsData;
 import vanguard.game.ui.Fonts;
 import vanguard.sim.Beam;
-import vanguard.sim.LevelScript;
+import vanguard.sim.SetPieceSpec;
 
 /**
  * M7 part A's HUD and looks (design/ui/hud; design/player/specials, Cooldown specials and the HUD ring;
@@ -129,7 +129,7 @@ class ArsenalHudTest {
 
     @Test
     void aSetPiecesPartIsTheBeamsHeatTargetByPieceAndPart() {
-        int target = Beam.PART_TARGET + 2 * LevelScript.SetPieceSpec.MAX_PARTS + 5;
+        int target = Beam.PART_TARGET + 2 * SetPieceSpec.MAX_PARTS + 5;
         assertEquals(2, ArsenalLooks.heatPiece(target));
         assertEquals(5, ArsenalLooks.heatPart(target));
         assertEquals(-1, ArsenalLooks.heatPiece(17), "an enemy's serial");

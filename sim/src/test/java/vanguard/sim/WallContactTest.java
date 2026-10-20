@@ -27,10 +27,11 @@ class WallContactTest {
             List.of());
 
     static LevelScript canyon(Terrain terrain) {
-        LevelScript.RadioCue cue = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.FIRST_WALL_CONTACT, 0, "", "Rook", "Careful, the walls!", false, "neutral");
-        return TestSpecs.level(30, List.of(), List.of(), List.of(cue))
-                .withTerrain(Optional.of(new LevelScript.TerrainSpec(terrain, DAMAGE, 28, 0.12, 0.5)));
+        RadioCue cue =
+                new RadioCue(CueTrigger.FIRST_WALL_CONTACT, 0, "", "Rook", "Careful, the walls!", false, "neutral");
+        return TestSpecs.withGround(
+                TestSpecs.level(30, List.of(), List.of(), List.of(cue)),
+                g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(terrain, DAMAGE, 28, 0.12, 0.5))));
     }
 
     private static double health(Sortie sortie) {
@@ -154,7 +155,7 @@ class WallContactTest {
     void aLevelWithoutTerrainHasNoneAndTerrainOnlyChangesTheHashWhereItIs() {
         LevelScript plain = TestSpecs.level(30, List.of());
         Sortie without = TestSpecs.sortie(plain);
-        Sortie emptied = TestSpecs.sortie(plain.withTerrain(Optional.empty()));
+        Sortie emptied = TestSpecs.sortie(TestSpecs.withGround(plain, g -> g.withTerrain(Optional.empty())));
         assertNull(without.terrain());
         Sortie with = TestSpecs.sortie(canyon(CANYON));
         for (int step = 0; step < 60; step++) {
@@ -170,8 +171,9 @@ class WallContactTest {
     void scrapingAlongTheWallsWhileFiringDoesNotAllocate() {
         WaveSpec vee = TestSpecs.wave(
                 0.5, WaveSpec.Formation.V_WING, TestSpecs.NEEDLER, 5, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
-        LevelScript level = TestSpecs.level(30, List.of(vee))
-                .withTerrain(Optional.of(new LevelScript.TerrainSpec(CANYON, DAMAGE, 28, 0.12, 0.5)));
+        LevelScript level = TestSpecs.withGround(
+                TestSpecs.level(30, List.of(vee)),
+                g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(CANYON, DAMAGE, 28, 0.12, 0.5))));
         long allocated = Allocations.least(
                 () -> new Sortie(
                         1,

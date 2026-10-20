@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Hangar
@@ -135,11 +135,14 @@ Swapping the plating keeps the damage: the missing armour points stay missing (S
 Composite I 61/80), with at least 1 point left. Repair is a separate choice.
 
 **Mouse** (M6 part A, see [ui](../README.md#mouse)): hovering a shop row, a choice chip or a
-command of the top bar highlights it as the keys would (so the test fire and the power bar's
-projection follow the pointer); a click on a choice chip or an enabled command makes it as Enter
-does (selling and launching still ask); a click on a weapon mount's callout, Rook's callout or a
-module tile selects that slot as Q / E do (by click only, so moving across the schematic does not
-switch the shop list); a click on Rook's `LEFT` / `RIGHT` chip sets his side; the wheel over the
+command of the top bar only gives it the hover look (a cyan outline) and never selects or
+focuses it; a click selects a shop row or a slot, a click on a choice chip or an enabled command
+makes it as Enter does (selling and launching still ask), and a click on a chip while the command
+bar has the focus gives the focus back to the shop; a click on a weapon mount's callout, Rook's
+callout or a module tile selects that slot as Q / E do (by click only, so moving across the
+schematic does not switch the shop list); while the pointer rests on one of the selected row's
+choices the test fire and the power bar preview it (pending the user's review); a key press takes
+the hover look off; a click on Rook's `LEFT` / `RIGHT` chip sets his side; the wheel over the
 shop list scrolls it. While the repair panel is open only it takes the mouse: a click on the
 `SHIP` or `ROOK` line picks it, a click or a drag on the slider sets the points and a click on the
 repair button repairs; the right button closes it, and elsewhere asks to quit as Esc does.
@@ -181,6 +184,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r39-a.png](concept/intel-final-r39-a.png) | Review sheet (M7 part C batch, `tools/art/intel.py`, round 39): the 30×30 intel portraits of Level 16's Tendril Anchor and Threadcrawler, from the production models of `tools/art/canyon_units.py` | chosen (round 39, F.5: approved as final) |
 | [concept/intel-final-r40-a.png](concept/intel-final-r40-a.png) | Intel portraits of Level 17's Choir Herald and Shellback (`tools/art/intel.py`) | chosen (round 40, F.f: approved as final) |
 | [concept/intel-final-r41-a.png](concept/intel-final-r41-a.png) | Intel portraits of Level 18's Dust Devil and Ghost Drone and the `unclassified-ghost-drone` sensor picture (`tools/art/intel.py`) | chosen (round 41) |
+| [concept/intel-final-r42-a.png](concept/intel-final-r42-a.png) | Intel portraits of Level 19's Warden Tank (Act 3 grey) and Revenant Walker and the `boss-revenant-walker` "unclassified, huge" contact silhouette with sensor noise (`tools/art/intel.py`) | chosen (round 42, F.e: approved as final) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -592,3 +596,5 @@ release's end, which writes that autosave.
   and only if that is not enough the enemy names end on `+N MORE` in as many lines as fit. Tests:
   `IntelPanelLayoutTest.aBusyLevelsRowsCloseUpAndKeepEveryName`, `tooManyEnemyTypesEndOnMore`.
 - 2026-10-19 (user, round 41): the intel pictures (F.e) approved as final; the intel panel's closing rows and "+N MORE" (P.f) accepted.
+- 2026-10-19 (user's playtest): hover only gives a row, chip, slot or command the hover look and never selects; a click selects, a click on a choice or command makes it; a chip click returns the focus from the command bar to the shop; a key press takes the hover look off. Replaces round 35's A.1 choice "shop rows, chips and commands by hover". While the pointer rests on one of the selected row's choices the test fire and power bar preview it (pending the user's review).
+- 2026-10-20: round 42 closed: the Level 19 intel pictures (F.e) approved as final by the user; the shop's mouse handling (T.6: the selection stays with the clicked item) accepted.

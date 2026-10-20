@@ -490,9 +490,9 @@ beat, where the compound is the set piece ([Act 3 story beats](../README.md)).
 | t=126 | Okafor | "Eyes on the canyon, Doctor." |
 | t=146 | Generic colonial (Ares Control) | "Eos outflow ahead. You're nearly through, Aegis." |
 | Secondary met (`secondary-objective`) | Generic colonial (Ares Control) | "Every barrier down. The road east is open." |
-| t=166 | The Choir (distorted) | "[the Choir sings]" |
-| t=173 | Varga | "The singing is louder out east. Toward Ares Landing." |
-| t=180 | Okafor | "Ares Landing has you on its scopes. Bring it home." |
+| t=168 | The Choir (distorted) | "[the Choir sings]" |
+| t=175 | Varga | "The singing is louder out east. Toward Ares Landing." |
+| t=182 | Okafor | "Ares Landing has you on its scopes. Bring it home." |
 | Level end | Okafor | "Canyon run complete. The domes are yours to hold now. Get some sleep." |
 <!-- /data -->
 
@@ -500,8 +500,8 @@ The relay hut's line (the secret's, Ares Control): "That's our relay cache. Take
 
 The secret's line has the gap from Okafor's t=60 line (closing ≈ t=67) to Varga at t=81 (the hut
 is in reach at t≈71–74); the secondary's line the gap after t=146's close (≈ t=153) before the
-Choir at t=166 (gate 6 is decided at t≈155, as late as t≈159: a closing line takes a free radio at once
-and holds it about 7 s).
+Choir at t=168 (gate 6 is decided at t≈155, as late as t≈159: a closing line takes a free radio at once
+and holds it about 7 s; it still fits when a bark holds the radio until t≈160.7).
 
 ## Boss / mid-boss
 
@@ -723,3 +723,8 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   2.9 → 13.9 shots a minute, 15 → 1 pauses over 2 s; hard 264 → 374, 1.78 → 4.38 on the screen, 11.0 → 43.8
   shots, 10 → 1 pauses; easy 165 → 297, no pause over 3 s. `bounty_scale` 0.54 → 0.27 (typical 1,926, −0.3 %;
   perfect 3,074).
+- 2026-10-19 (M7 part F, step F4): the Choir t=166 → 168, Varga's reply 173 → 175 and Okafor's 180 → 182 (it
+  ends ≈ t=188, before the level end at 190). Step RX's live run queued the secondary's voiced line (6.8 s) at
+  154.65 with the radio busy, and it found no gap before the Choir nor between the three close lines, so it opened
+  at 187.28; now it fits before the Choir whenever the radio frees by t≈160.7 (RadioTimeline's Level 16 runs green
+  with the new times). Pending the user's review.

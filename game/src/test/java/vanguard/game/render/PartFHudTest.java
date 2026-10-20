@@ -16,8 +16,8 @@ import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
 import vanguard.game.ui.Fonts;
-import vanguard.sim.LevelScript;
 import vanguard.sim.PlayField;
+import vanguard.sim.Secondary;
 import vanguard.sim.Sortie;
 
 /**
@@ -45,8 +45,8 @@ class PartFHudTest {
 
     @Test
     void theSondesTrackerFitsItsWellAndCountsTheLevelsSondes() {
-        LevelScript.Secondary secondary =
-                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).secondary();
+        Secondary secondary =
+                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).objectives().secondary();
         assertTrue(secondary.sondes(), "collect: sondes");
         assertEquals("SONDES", secondary.label());
         for (String count : List.of("0 / 3", "3 / 3", "DONE", "FAILED")) {

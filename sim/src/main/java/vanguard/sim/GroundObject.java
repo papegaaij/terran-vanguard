@@ -6,7 +6,7 @@ package vanguard.sim;
  * counts the steps since its last hit, which its hit flash and damage state are drawn from.
  */
 public final class GroundObject implements Hashed {
-    private LevelScript.GroundObjectSpec spec;
+    private GroundObjectSpec spec;
     private int serial;
     /** M5 part F: where it is across; only a drifting trigger on {@code low-air} moves sideways. */
     private double x;
@@ -21,7 +21,7 @@ public final class GroundObject implements Hashed {
     private boolean shut;
 
     /** @param index its place in the level's list of ground objects, unique in an attempt */
-    void place(LevelScript.GroundObjectSpec objectSpec, int index) {
+    void place(GroundObjectSpec objectSpec, int index) {
         serial = index;
         spec = objectSpec;
         x = prevX = objectSpec.x();
@@ -111,7 +111,7 @@ public final class GroundObject implements Hashed {
         return y;
     }
 
-    public LevelScript.GroundObjectSpec spec() {
+    public GroundObjectSpec spec() {
         return spec;
     }
 

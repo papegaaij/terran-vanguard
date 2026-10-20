@@ -151,3 +151,7 @@ white-yellow core → orange → red) are 2D/model frames for the game to place.
 - **Brief:** as [revenant-walker-r36-a](#revenant-walker-r36-a) (prompt, negative prompt, palette); no markings, no insignia.
 - **Generator:** `python3 tools/art/revenant_walker.py` (`--review` rebuilds this sheet and GIF from the
   written frames); the sprite names and frame layout are in the generator's docstring.
+- **Fixes (step ART-F3, 2026-10-19):** the open hatch now shows the six missile cells lit red (raised out of
+  their recesses in a hot red material of their own; ART-F1's open frames read as grey at play size), so the
+  0.4 s tell reads; the topple and wreck frames are rendered at the quality bar's 4x like the other sets
+  (ART-F1 had them at 2x). Sheet and GIF regenerated.

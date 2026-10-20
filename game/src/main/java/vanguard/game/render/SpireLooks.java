@@ -10,9 +10,10 @@ import com.badlogic.gdx.utils.JsonValue;
 import java.util.Arrays;
 import vanguard.sim.BossSpec;
 import vanguard.sim.EnemySpec;
-import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimStep;
 
 /**
@@ -26,7 +27,8 @@ import vanguard.sim.SimStep;
  * pod is destroyed; the trunk with its claw crown shut, opening as the maw is exposed (phase 2) and open
  * from then on, or from the lift on the stump (the torn socket) in its place; the pods at the root tips,
  * the four turrets turned toward the ship at the nearest of 32 headings, the two mortars opening for a
- * lob, a destroyed pod's husk, a hit pod flashing white; the maw's lime bloom pulsing while it is open
+ * lob, a destroyed pod's husk, a hit pod flashing a third of the way to white (round 42: every hit flash here
+ * {@link HitFlash#PART_FLASH}, at most once each 0.25 s); the maw's lime bloom pulsing while it is open
  * and flaring at each launch. Over the ground units ({@link #drawShockwave}): the tear-free shockwave
  * at the lift, a ring of dust running out from the stump and slate shards thrown out. On the play plane
  * ({@link #drawAir}): the free spire tearing loose (its lift frames, gliding from the trunk to its
@@ -180,7 +182,7 @@ final class SpireLooks {
     private SpireLooks(
             Sprites sprites,
             FlashShader flash,
-            LevelScript.SetPieceSpec spec,
+            SetPieceSpec spec,
             JsonValue pivots,
             Array<AtlasRegion> tear,
             Array<AtlasRegion> beams) {
@@ -256,7 +258,7 @@ final class SpireLooks {
     static SpireLooks of(
             Sprites sprites,
             FlashShader flash,
-            LevelScript.SetPieceSpec boss,
+            SetPieceSpec boss,
             JsonValue pivots,
             Array<AtlasRegion> tear,
             Array<AtlasRegion> beams) {
@@ -382,7 +384,13 @@ final class SpireLooks {
                     : pods.get(podFrame(firesDown[p], shipX - px, shipY - py));
             double aim = stumped ? -1 : aimShare(piece, p);
             if (!stumped && hits.on(p, tick, piece.partTicksSinceHit(p))) {
-                flash.draw(batch, frame, Math.round(X0 + px), Math.round(py), Color.WHITE, whiteFlash);
+                flash.draw(
+                        batch,
+                        frame,
+                        Math.round(X0 + px),
+                        Math.round(py),
+                        Color.WHITE,
+                        HitFlash.PART_FLASH * whiteFlash);
             } else if (aim >= 0) {
                 flash.draw(
                         batch,
@@ -413,7 +421,8 @@ final class SpireLooks {
                 batch.setColor(Color.WHITE);
             }
             if (hits.on(maw, tick, piece.partTicksSinceHit(maw))) {
-                batch.setColor(whiteFlash, whiteFlash, whiteFlash, 1);
+                float hit = HitFlash.PART_FLASH * whiteFlash;
+                batch.setColor(hit, hit, hit, 1);
                 centred(batch, mawGlow.get(mawGlow.size - 1), mx, my);
                 batch.setColor(Color.WHITE);
             }
@@ -601,7 +610,8 @@ final class SpireLooks {
         int heading = freeHeading(tick - liftTick, free.size);
         AtlasRegion frame = free.get(heading);
         if (core >= 0 && hits.on(core, tick, piece.partTicksSinceHit(core))) {
-            flash.draw(batch, frame, Math.round(X0 + x), Math.round(y), Color.WHITE, whiteFlash);
+            // Round 42: a third of the way to white, not the whole star turning into a white blob over the sweeps.
+            flash.draw(batch, frame, Math.round(X0 + x), Math.round(y), Color.WHITE, HitFlash.PART_FLASH * whiteFlash);
         } else {
             centred(batch, frame, x, y);
         }
@@ -801,11 +811,11 @@ final class SpireLooks {
     }
 
     /** The destroyable part whose offset (x right, y up) lies nearest (x, y); -1 for none within 40 px. */
-    static int nearestPart(java.util.List<LevelScript.PartSpec> parts, double x, double y) {
+    static int nearestPart(java.util.List<PartSpec> parts, double x, double y) {
         int best = -1;
         double nearest = 40;
         for (int p = 0; p < parts.size(); p++) {
-            LevelScript.PartSpec part = parts.get(p);
+            PartSpec part = parts.get(p);
             double d = Math.hypot(part.dx() - x, part.dy() - y);
             if (d < nearest) {
                 nearest = d;
@@ -815,7 +825,7 @@ final class SpireLooks {
         return best;
     }
 
-    private static int partNamed(java.util.List<LevelScript.PartSpec> parts, String name) {
+    private static int partNamed(java.util.List<PartSpec> parts, String name) {
         for (int p = 0; p < parts.size(); p++) {
             if (parts.get(p).name().equals(name)) {
                 return p;
@@ -824,7 +834,7 @@ final class SpireLooks {
         return -1;
     }
 
-    private static int vitalPart(java.util.List<LevelScript.PartSpec> parts) {
+    private static int vitalPart(java.util.List<PartSpec> parts) {
         for (int p = 0; p < parts.size(); p++) {
             if (parts.get(p).vital()) {
                 return p;

@@ -2,17 +2,10 @@ package vanguard.content;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import vanguard.sim.Enemy;
-import vanguard.sim.Hitbox;
-import vanguard.sim.Loadout;
-import vanguard.sim.PlayField;
-import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
@@ -37,7 +30,7 @@ class BeamEraHpTest {
     static final int REFERENCE_LEVEL = 10;
 
     private static final int MAX_STEPS = 60 * 60 * 20;
-    private static final Content CONTENT = ContentLoader.fromClasspath();
+    private static final Content CONTENT = LevelMetrics.CONTENT;
 
     static Stream<String> levels() {
         return IntStream.rangeClosed(CONTENT.enemyBasis().beamEraHp().fromLevel(), 50)
@@ -65,64 +58,11 @@ class BeamEraHpTest {
      * the attempt that completes the level at medium with the plan's fit.
      */
     static double smallLife(String key) {
-        Loadout loadout = PacingTest.planLoadout(key, Difficulty.MEDIUM);
-        Sortie sortie = new Sortie(
-                2185,
-                loadout,
-                SimSpecs.level(CONTENT, key, Difficulty.MEDIUM),
-                SimSpecs.rules(CONTENT, key, Difficulty.MEDIUM),
-                loadout.plating().maxArmour());
-        Map<Integer, int[]> entered = new HashMap<>(); // serial → {entry step, last step, on the screen last}
-        int attempt = sortie.attempt();
-        int step = 0;
-        int killed = 0;
-        long lived = 0;
-        while (!sortie.complete() && step++ < MAX_STEPS) {
-            Level04Test.step(sortie);
-            if (sortie.attempt() != attempt) {
-                attempt = sortie.attempt();
-                entered.clear();
-                killed = 0;
-                lived = 0;
-            }
-            for (int i = 0; i < sortie.enemyCount(); i++) {
-                Enemy enemy = sortie.enemy(i);
-                EnemyData data = CONTENT.enemies().get(enemy.spec().slug()); // a chain's members have no stat block
-                if (data == null || data.tier() != Tier.SMALL) {
-                    continue;
-                }
-                boolean on = onScreen(
-                        enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox());
-                int[] track = entered.get(enemy.serial());
-                if (track == null && on) {
-                    entered.put(enemy.serial(), new int[] {step, step, 1});
-                } else if (track != null) {
-                    track[1] = step;
-                    track[2] = on ? 1 : 0;
-                }
-            }
-            for (var it = entered.values().iterator(); it.hasNext(); ) {
-                int[] track = it.next();
-                if (track[1] == step) {
-                    continue;
-                }
-                // Gone this step: killed if it was on the screen, else it left.
-                if (track[2] == 1) {
-                    killed++;
-                    lived += track[1] - track[0];
-                }
-                it.remove();
-            }
-        }
-        assertTrue(sortie.complete(), key + " completes");
-        assertTrue(killed > 0, key + ": small units killed");
-        return lived * SimStep.SECONDS / killed;
-    }
-
-    private static boolean onScreen(double x, double y, Hitbox box) {
-        return x + box.width() / 2 > 0
-                && x - box.width() / 2 < PlayField.WIDTH
-                && y + box.height() / 2 > 0
-                && y - box.height() / 2 < PlayField.HEIGHT;
+        Sortie sortie = LevelMetrics.sortie(
+                CONTENT, key, Difficulty.MEDIUM, PacingTest.planLoadout(key, Difficulty.MEDIUM), LevelMetrics.SEED);
+        LevelMetrics.SmallLife life = new LevelMetrics.SmallLife(CONTENT);
+        assertTrue(LevelMetrics.fly(sortie, MAX_STEPS, life), key + " completes");
+        assertTrue(life.killed() > 0, key + ": small units killed");
+        return life.seconds();
     }
 }

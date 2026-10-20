@@ -133,7 +133,7 @@ def timed_halt(i):
 
 
 def ramp_seconds(i):
-    return float(SECTIONS[i].get("ramp", 2.0))   # LevelScript.Section.TIMED_HALT_RAMP_SECONDS
+    return float(SECTIONS[i].get("ramp", 2.0))   # Section.TIMED_HALT_RAMP_SECONDS
 
 
 def _ease_in(u):

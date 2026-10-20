@@ -1,7 +1,7 @@
 package vanguard.sim;
 
 /**
- * A crane hazard in play ({@link LevelScript.CraneSpec}): its arm's angle follows the level time,
+ * A crane hazard in play ({@link HazardSpec.CraneSpec}): its arm's angle follows the level time,
  * so a retry replays it exactly. Folded along the gantry (out of the play field) until the
  * telegraph before its first swing, it is lowered to its first angle while its lights blink, swings
  * between its two angles at the scripted times (easing in and out), rests at the end of each swing,
@@ -19,7 +19,7 @@ public final class Crane implements Hashed {
 
     private static final double FOLDED = StrictMath.PI / 2;
 
-    private final LevelScript.CraneSpec spec;
+    private final HazardSpec.CraneSpec spec;
     private final int[] swingStarts;
     private final int swingTicks;
     private final int telegraphTicks;
@@ -31,7 +31,7 @@ public final class Crane implements Hashed {
     private int hitCooldown;
     private int clampHitsLeft;
 
-    Crane(LevelScript.CraneSpec spec) {
+    Crane(HazardSpec.CraneSpec spec) {
         this.spec = spec;
         swingStarts = new int[spec.swings().size()];
         for (int i = 0; i < swingStarts.length; i++) {
@@ -137,7 +137,7 @@ public final class Crane implements Hashed {
         if (hitCooldown > 0) {
             return false;
         }
-        hitCooldown = SimStep.ticks(LevelScript.CraneSpec.HIT_INTERVAL_SECONDS);
+        hitCooldown = SimStep.ticks(HazardSpec.CraneSpec.HIT_INTERVAL_SECONDS);
         return true;
     }
 
@@ -154,7 +154,7 @@ public final class Crane implements Hashed {
         hash.add(angle).add(hitCooldown).add(clampHitsLeft);
     }
 
-    public LevelScript.CraneSpec spec() {
+    public HazardSpec.CraneSpec spec() {
         return spec;
     }
 

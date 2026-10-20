@@ -48,8 +48,8 @@ final class LevelClockSpecs {
     static final EnemySpec NODE = groundUnit("node", Layer.GROUND, 64, new Hitbox(56, 56), 45);
 
     /** A cue of {@code trigger} at {@code t} (0 for an event) requiring the {@code requires} bits. */
-    static LevelScript.RadioCue cue(LevelScript.CueTrigger trigger, double t, int requires) {
-        return new LevelScript.RadioCue(
+    static RadioCue cue(CueTrigger trigger, double t, int requires) {
+        return new RadioCue(
                 trigger,
                 t,
                 "",
@@ -95,37 +95,23 @@ final class LevelClockSpecs {
             double seconds,
             double speed,
             List<WaveSpec> waves,
-            List<LevelScript.GroundUnit> units,
+            List<GroundUnit> units,
             List<String> targets,
-            LevelScript.Secondary secondary,
-            List<LevelScript.RadioCue> radio,
-            List<LevelScript.Hold> holds,
-            Optional<LevelScript.Collapse> collapse) {
-        return new LevelScript(
-                9,
-                2,
-                0,
-                List.of(new LevelScript.Section(seconds, speed)),
-                waves,
-                List.of(),
-                units,
-                0,
-                radio,
-                secondary,
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                targets,
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(),
-                List.of(),
-                holds,
-                collapse);
+            Secondary secondary,
+            List<RadioCue> radio,
+            List<ObjectiveSpec.Hold> holds,
+            Optional<ObjectiveSpec.Collapse> collapse) {
+        return LevelScript.builder(9, 2)
+                .sections(List.of(new Section(seconds, speed)))
+                .waves(waves)
+                .groundUnits(units)
+                .radio(radio)
+                .objectives(ObjectiveSpec.NONE
+                        .withSecondary(secondary)
+                        .withTargets(targets)
+                        .withHolds(holds)
+                        .withCollapse(collapse))
+                .build();
     }
 
     /** Steps with {@code commands} until an event of {@code type}; returns the steps taken. */

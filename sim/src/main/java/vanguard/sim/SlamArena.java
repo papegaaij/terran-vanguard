@@ -689,7 +689,7 @@ public final class SlamArena implements Hashed {
      * Whether the point (px, py) relative to a box's centre, or the line ahead of it along (dx, dy)
      * within {@link #REACH}, lies in the box of half sizes (hw, hh).
      */
-    private static boolean ahead(double px, double py, double dx, double dy, double hw, double hh) {
+    static boolean ahead(double px, double py, double dx, double dy, double hw, double hh) {
         double enter = 0;
         double leave = REACH;
         for (int axis = 0; axis < 2; axis++) {

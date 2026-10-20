@@ -32,16 +32,15 @@ class KrakenRootsTest {
     static final double TELEGRAPH = 1.4;
 
     /** The test Kraken; phase 1 ends once at most {@code rootsLeft} roots live (the proposal: 2) or after 25 s. */
-    static LevelScript.SetPieceSpec kraken(int rootsLeft) {
-        List<LevelScript.PartSpec> parts = new ArrayList<>();
-        parts.add(new LevelScript.PartSpec(
-                "head", 0, -150, new Hitbox(130, 200), 300, true, 124, Optional.empty(), 0, 0.5));
+    static SetPieceSpec kraken(int rootsLeft) {
+        List<PartSpec> parts = new ArrayList<>();
+        parts.add(new PartSpec("head", 0, -150, new Hitbox(130, 200), 300, true, 124, Optional.empty(), 0, 0.5));
         List<BossSpec.Arm> arms = new ArrayList<>();
         List<BossSpec.Chain> chains = new ArrayList<>();
         for (int lane = 1; lane <= 4; lane++) {
             double dx = (lane - 0.5) * 120 - PlayField.WIDTH / 2.0;
-            parts.add(new LevelScript.PartSpec(
-                    "root " + lane, dx, -190, new Hitbox(40, 40), 200, false, 36, Optional.empty(), 0, 1));
+            parts.add(
+                    new PartSpec("root " + lane, dx, -190, new Hitbox(40, 40), 200, false, 36, Optional.empty(), 0, 1));
             arms.add(new BossSpec.Arm(lane, 1 << lane));
             chains.add(new BossSpec.Chain("arm " + lane, dx * 0.6, -170, lane, 13, new Hitbox(30, 30), 0.1, 0, true));
         }
@@ -119,7 +118,7 @@ class KrakenRootsTest {
                 new BossSpec.Slam(TELEGRAPH, 0.5, 1.5, 0.6, 10, 6, 120, 4, 2, 0.5),
                 List.of(Layer.SUB, Layer.GROUND, Layer.GROUND, Layer.GROUND, Layer.GROUND),
                 List.of());
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "test-kraken",
                 new Hitbox(344, 380),
                 new Hitbox(208, 152),
@@ -150,32 +149,21 @@ class KrakenRootsTest {
 
     /** The arena level with the naval convoy (cargo ships in lanes 1, 2 and 4) and the root hint on the radio. */
     static LevelScript level(int rootsLeft) {
-        return new LevelScript(
-                        11,
-                        2,
+        return LevelScript.builder(11, 2)
+                .sections(List.of(
+                        new Section(ARRIVE, SPEED), new Section(ARRIVE + 1, 0, true), new Section(ARRIVE + 11, SPEED)))
+                .radio(List.of(new RadioCue(
+                        CueTrigger.FIRST_SHIP_TELEGRAPH,
                         0,
-                        List.of(
-                                new LevelScript.Section(ARRIVE, SPEED),
-                                new LevelScript.Section(ARRIVE + 1, 0, true),
-                                new LevelScript.Section(ARRIVE + 11, SPEED)),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(new LevelScript.RadioCue(
-                                LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH,
-                                0,
-                                "",
-                                "okafor",
-                                "Cut a root and that lane is safe!",
-                                false,
-                                "")),
-                        LevelScript.Secondary.NONE,
-                        List.of(),
-                        List.of(),
-                        List.of(kraken(rootsLeft)))
-                .withWater(true)
-                .withConvoy(NavalConvoyTest.convoy(NavalConvoyTest.CARGO));
+                        "",
+                        "okafor",
+                        "Cut a root and that lane is safe!",
+                        false,
+                        "")))
+                .setPieces(List.of(kraken(rootsLeft)))
+                .ground(GroundSpec.NONE.withWater(true))
+                .objectives(ObjectiveSpec.NONE.withConvoy(Optional.of(NavalConvoyTest.convoy(NavalConvoyTest.CARGO))))
+                .build();
     }
 
     private static Sortie sortie() {

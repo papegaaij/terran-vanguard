@@ -247,66 +247,39 @@ final class SiegeSpecs {
     }
 
     /** The three domes with the hook {@code modes}. */
-    static LevelScript.GroundAllies domes(Map<String, LevelScript.HookMode> modes) {
-        return new LevelScript.GroundAllies(
+    static ObjectiveSpec.GroundAllies domes(Map<String, HookMode> modes) {
+        return new ObjectiveSpec.GroundAllies(
                 List.of(
-                        new LevelScript.GroundAlly(DOME, "Bradbury", A_X, A_T),
-                        new LevelScript.GroundAlly(DOME, "Lowell", B_X, B_T),
-                        new LevelScript.GroundAlly(EDEN, "Eden", EDEN_X, EDEN_T)),
+                        new ObjectiveSpec.GroundAlly(DOME, "Bradbury", A_X, A_T),
+                        new ObjectiveSpec.GroundAlly(DOME, "Lowell", B_X, B_T),
+                        new ObjectiveSpec.GroundAlly(EDEN, "Eden", EDEN_X, EDEN_T)),
                 modes,
                 BOMB_ROW,
                 BOMB_SLOT);
     }
 
     /** The bombers hooked {@code always}. */
-    static LevelScript.GroundAllies hookedDomes() {
-        return domes(Map.of("spore-bomber", LevelScript.HookMode.ALWAYS));
+    static ObjectiveSpec.GroundAllies hookedDomes() {
+        return domes(Map.of("spore-bomber", HookMode.ALWAYS));
     }
 
     /** The level with these waves, ground units, secondary and ground allies. */
     static LevelScript level(
             List<WaveSpec> waves,
-            List<LevelScript.GroundUnit> units,
-            LevelScript.Secondary secondary,
-            Optional<LevelScript.GroundAllies> allies) {
-        return new LevelScript(
-                        17,
-                        3,
-                        0,
-                        List.of(new LevelScript.Section(LENGTH, SPEED)),
-                        waves,
-                        List.of(),
-                        units,
-                        0,
-                        List.of(),
-                        secondary,
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        Optional.empty(),
-                        false,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        1,
-                        List.of(),
-                        Optional.empty())
-                .withGroundAllies(allies);
+            List<GroundUnit> units,
+            Secondary secondary,
+            Optional<ObjectiveSpec.GroundAllies> allies) {
+        return LevelScript.builder(17, 3)
+                .sections(List.of(new Section(LENGTH, SPEED)))
+                .waves(waves)
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(secondary).withGroundAllies(allies))
+                .build();
     }
 
     /** The level with the hooked domes and these waves, no secondary. */
     static LevelScript level(List<WaveSpec> waves) {
-        return level(waves, List.of(), LevelScript.Secondary.NONE, Optional.of(hookedDomes()));
+        return level(waves, List.of(), Secondary.NONE, Optional.of(hookedDomes()));
     }
 
     /** A wave of {@code count} bombers at {@code t}. */

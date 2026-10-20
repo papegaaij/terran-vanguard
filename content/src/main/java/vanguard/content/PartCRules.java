@@ -3,7 +3,7 @@ package vanguard.content;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 
 /**
  * M5 part C's level rules for the simulation (design/campaign, Level 09 Arcology Fall; user
@@ -14,10 +14,10 @@ final class PartCRules {
     private PartCRules() {}
 
     /** The level's hold zones at {@code difficulty}: each one's groups, depth, speed and ease. */
-    static List<LevelScript.Hold> holds(LevelData level, Difficulty difficulty) {
-        List<LevelScript.Hold> holds = new ArrayList<>();
+    static List<ObjectiveSpec.Hold> holds(LevelData level, Difficulty difficulty) {
+        List<ObjectiveSpec.Hold> holds = new ArrayList<>();
         for (LevelData.Hold hold : level.holds().orElse(List.of())) {
-            holds.add(new LevelScript.Hold(
+            holds.add(new ObjectiveSpec.Hold(
                     groups(level, hold.groups(), "holds"), hold.y(), hold.speedOn(difficulty), hold.ramp()));
         }
         return holds;
@@ -28,10 +28,10 @@ final class PartCRules {
      * the dust's seconds time the hold over its groups (it lasts until the dust settles), the rest of
      * the dust and the rubble are presentation only.
      */
-    static Optional<LevelScript.Collapse> collapse(LevelData level) {
+    static Optional<ObjectiveSpec.Collapse> collapse(LevelData level) {
         return level.collapse().map(collapse -> {
             LevelData.Band band = level.collapseBand().orElseThrow();
-            return new LevelScript.Collapse(
+            return new ObjectiveSpec.Collapse(
                     groups(level, collapse.groups(), "collapse"),
                     collapse.warning(),
                     collapse.drop(),

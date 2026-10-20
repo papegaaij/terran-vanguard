@@ -30,8 +30,9 @@ class RookCanyonTest {
     }
 
     private static Sortie sortie(Terrain terrain) {
-        LevelScript level = TestSpecs.level(30, List.of())
-                .withTerrain(Optional.of(new LevelScript.TerrainSpec(terrain, 10, 28, 0.12, 0.5)));
+        LevelScript level = TestSpecs.withGround(
+                TestSpecs.level(30, List.of()),
+                g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(terrain, 10, 28, 0.12, 0.5))));
         return WingmanTest.sortie(level, WingmanSpec.Side.RIGHT);
     }
 

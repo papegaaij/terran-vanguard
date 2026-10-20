@@ -59,13 +59,13 @@ class NavalConvoyTest {
             2);
 
     /** Level 11's convoy: three cargo ships in lanes 1, 2 and 4 and the frigate that leaves; 3 s glides. */
-    static LevelScript.Naval convoy(AllySpec cargo) {
-        return new LevelScript.Naval(
+    static ObjectiveSpec.Naval convoy(AllySpec cargo) {
+        return new ObjectiveSpec.Naval(
                 List.of(
-                        new LevelScript.NavalUnit(cargo, "Halvorsen", 130, PlayField.HEIGHT - 380, 1),
-                        new LevelScript.NavalUnit(cargo, "Mbeki", 240, PlayField.HEIGHT - 350, 2),
-                        new LevelScript.NavalUnit(cargo, "Saint-Laurent", 350, PlayField.HEIGHT - 380, 4),
-                        new LevelScript.NavalUnit(FRIGATE, "Ruyter", 240, PlayField.HEIGHT - 480, 0)),
+                        new ObjectiveSpec.NavalUnit(cargo, "Halvorsen", 130, PlayField.HEIGHT - 380, 1),
+                        new ObjectiveSpec.NavalUnit(cargo, "Mbeki", 240, PlayField.HEIGHT - 350, 2),
+                        new ObjectiveSpec.NavalUnit(cargo, "Saint-Laurent", 350, PlayField.HEIGHT - 380, 4),
+                        new ObjectiveSpec.NavalUnit(FRIGATE, "Ruyter", 240, PlayField.HEIGHT - 480, 0)),
                 3,
                 PlayField.HEIGHT - 450,
                 4,
@@ -73,11 +73,11 @@ class NavalConvoyTest {
     }
 
     /** A one-part boss over the ship that does not fire, settled before the halt. */
-    static LevelScript.SetPieceSpec boss() {
-        var core = new LevelScript.PartSpec("core", 0, 0, new Hitbox(80, 80), 40, true, 100, Optional.empty(), 0, 1);
+    static SetPieceSpec boss() {
+        var core = new PartSpec("core", 0, 0, new Hitbox(80, 80), 40, true, 100, Optional.empty(), 0, 1);
         var phase =
                 new BossSpec.Phase("Core", List.of(0), 0, List.of(), false, Optional.empty(), List.of(), Double.NaN);
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "test-kraken",
                 new Hitbox(200, 200),
                 new Hitbox(120, 120),
@@ -101,45 +101,30 @@ class NavalConvoyTest {
                         List.of(phase))));
     }
 
-    private static LevelScript.RadioCue cue(LevelScript.CueTrigger trigger, String line, int min, int max) {
-        return new LevelScript.RadioCue(
-                trigger, 0, "", "Atlas Control", line, false, "neutral", "Atlas Control", false, min, max);
+    private static RadioCue cue(CueTrigger trigger, String line, int min, int max) {
+        return new RadioCue(trigger, 0, "", "Atlas Control", line, false, "neutral", "Atlas Control", false, min, max);
     }
 
-    static LevelScript level(LevelScript.Secondary secondary, AllySpec cargo, List<WaveSpec> waves) {
-        return new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(
-                                new LevelScript.Section(2, 130),
-                                new LevelScript.Section(ARENA_END, 30, true),
-                                new LevelScript.Section(ARENA_END + 10, 130)),
-                        waves,
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(
-                                cue(LevelScript.CueTrigger.ALLY_HIT, "The {ally} is hit!", 0, Integer.MAX_VALUE),
-                                cue(LevelScript.CueTrigger.ALLY_LOST, "We've lost the {ally}.", 0, Integer.MAX_VALUE),
-                                cue(
-                                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE,
-                                        "All three hulls afloat.",
-                                        0,
-                                        Integer.MAX_VALUE),
-                                cue(LevelScript.CueTrigger.LEVEL_END, "Atlas-Seven is through.", 1, 3),
-                                cue(LevelScript.CueTrigger.LEVEL_END, "We lost Atlas-Seven.", 0, 0),
-                                cue(LevelScript.CueTrigger.FIRST_ALLY_HIT, "First hit.", 0, Integer.MAX_VALUE)),
-                        secondary,
-                        List.of(),
-                        List.of(),
-                        List.of(boss()))
-                .withWater(true)
-                .withConvoy(convoy(cargo));
+    static LevelScript level(Secondary secondary, AllySpec cargo, List<WaveSpec> waves) {
+        return LevelScript.builder(11, 2)
+                .sections(List.of(
+                        new Section(2, 130), new Section(ARENA_END, 30, true), new Section(ARENA_END + 10, 130)))
+                .waves(waves)
+                .radio(List.of(
+                        cue(CueTrigger.ALLY_HIT, "The {ally} is hit!", 0, Integer.MAX_VALUE),
+                        cue(CueTrigger.ALLY_LOST, "We've lost the {ally}.", 0, Integer.MAX_VALUE),
+                        cue(CueTrigger.SECONDARY_OBJECTIVE, "All three hulls afloat.", 0, Integer.MAX_VALUE),
+                        cue(CueTrigger.LEVEL_END, "Atlas-Seven is through.", 1, 3),
+                        cue(CueTrigger.LEVEL_END, "We lost Atlas-Seven.", 0, 0),
+                        cue(CueTrigger.FIRST_ALLY_HIT, "First hit.", 0, Integer.MAX_VALUE)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(secondary).withConvoy(Optional.of(convoy(cargo))))
+                .setPieces(List.of(boss()))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
     }
 
     static LevelScript level() {
-        return level(LevelScript.Secondary.afloat(100, "CONVOY"), CARGO, List.of());
+        return level(Secondary.afloat(100, "CONVOY"), CARGO, List.of());
     }
 
     private static Sortie sortie(LevelScript level, Rules rules) {
@@ -451,32 +436,21 @@ class NavalConvoyTest {
         assertNotEquals(a.stateHash(), b.stateHash(), "a hit is in the hash");
 
         LevelScript plain = level();
-        LevelScript without = new LevelScript(
-                plain.number(),
-                plain.act(),
-                plain.launchSeconds(),
-                plain.sections(),
-                plain.waves(),
-                plain.groundObjects(),
-                plain.groundUnits(),
-                plain.secrets(),
-                plain.radio(),
-                new LevelScript.Secondary(0.8, 50),
-                plain.cranes(),
-                plain.debris(),
-                plain.setPieces(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                Optional.empty(),
-                List.of(),
-                Optional.empty(),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.empty(),
-                true);
+        LevelScript without = LevelScript.builder(plain.number(), plain.act())
+                .launchSeconds(plain.launchSeconds())
+                .sections(plain.sections())
+                .waves(plain.waves())
+                .groundObjects(plain.groundObjects())
+                .groundUnits(plain.groundUnits())
+                .secrets(plain.secrets())
+                .radio(plain.radio())
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .hazards(HazardSpec.NONE
+                        .withCranes(plain.hazards().cranes())
+                        .withDebris(plain.hazards().debris()))
+                .setPieces(plain.setPieces())
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
         Sortie none = sortie(without, TestSpecs.RULES.withInvulnerableShip());
         assertFalse(none.navalConvoy());
         assertEquals(0, none.allyCount());
@@ -488,8 +462,7 @@ class NavalConvoyTest {
     void driftjelliesSwapInTheHaltedArenaOnTheRealSteps() {
         var field = DriftjellyTest.field(3, DriftjellyTest.jelly(), 6, new WaveSpec.Field(240, 400, 120, 50, 0));
         Sortie sortie = sortie(
-                level(LevelScript.Secondary.afloat(100, "CONVOY"), CARGO, List.of(field)),
-                TestSpecs.RULES.withInvulnerableShip());
+                level(Secondary.afloat(100, "CONVOY"), CARGO, List.of(field)), TestSpecs.RULES.withInvulnerableShip());
         untilHalt(sortie);
         double halted = sortie.levelSeconds();
         int swaps = 0;
@@ -522,13 +495,13 @@ class NavalConvoyTest {
     void aNavalConvoysUnitsTakeLanesOfItsArena() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new LevelScript.Naval(convoy(CARGO).units(), 3, 90, 3, 120),
+                () -> new ObjectiveSpec.Naval(convoy(CARGO).units(), 3, 90, 3, 120),
                 "Saint-Laurent's lane 4 of 3");
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new LevelScript.Naval(convoy(CARGO).units(), 3, 90, 5, 120),
+                () -> new ObjectiveSpec.Naval(convoy(CARGO).units(), 3, 90, 5, 120),
                 "five 120 px lanes leave the play field");
-        assertFalse(LevelScript.Secondary.afloat(100, "CONVOY").none());
+        assertFalse(Secondary.afloat(100, "CONVOY").none());
         assertTrue(CARGO.damageable());
         assertFalse(FRIGATE.damageable());
     }

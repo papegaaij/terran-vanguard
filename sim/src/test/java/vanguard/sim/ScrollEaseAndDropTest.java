@@ -13,32 +13,25 @@ import org.junit.jupiter.api.Test;
  * review). Without an ease a section's speed changes at once and the launch rises from below, as before.
  */
 class ScrollEaseAndDropTest {
-    private static final List<LevelScript.Section> EASED = List.of(
-            new LevelScript.Section(10, 190),
-            new LevelScript.Section(20, 170, false, LevelScript.Section.TIMED_HALT_RAMP_SECONDS, 1),
-            new LevelScript.Section(30, 150, false, LevelScript.Section.TIMED_HALT_RAMP_SECONDS, 1));
+    private static final List<Section> EASED = List.of(
+            new Section(10, 190),
+            new Section(20, 170, false, Section.TIMED_HALT_RAMP_SECONDS, 1),
+            new Section(30, 150, false, Section.TIMED_HALT_RAMP_SECONDS, 1));
 
-    private static LevelScript level(List<LevelScript.Section> sections, double launch) {
-        return new LevelScript(
-                15,
-                3,
-                launch,
-                sections,
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static LevelScript level(List<Section> sections, double launch) {
+        return LevelScript.builder(15, 3)
+                .launchSeconds(launch)
+                .sections(sections)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     @Test
     void onlyAMovingSectionEasesIn() {
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.Section(10, 0, false, 2, 1));
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.Section(10, 0, true, 2, 1));
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.Section(10, 150, false, 2, -1));
-        assertEquals(0, new LevelScript.Section(10, 150).easeSeconds(), "no ease by default");
+        assertThrows(IllegalArgumentException.class, () -> new Section(10, 0, false, 2, 1));
+        assertThrows(IllegalArgumentException.class, () -> new Section(10, 0, true, 2, 1));
+        assertThrows(IllegalArgumentException.class, () -> new Section(10, 150, false, 2, -1));
+        assertEquals(0, new Section(10, 150).easeSeconds(), "no ease by default");
     }
 
     @Test
@@ -58,7 +51,7 @@ class ScrollEaseAndDropTest {
         assertEquals(170, Sortie.timedHaltSpeed(EASED, start + n));
         assertEquals(170, Sortie.timedHaltSpeed(EASED, start + n - 1), 1e-9, "at its speed by the ease's end");
 
-        List<LevelScript.Section> instant = List.of(new LevelScript.Section(10, 190), new LevelScript.Section(20, 170));
+        List<Section> instant = List.of(new Section(10, 190), new Section(20, 170));
         assertEquals(170, Sortie.timedHaltSpeed(instant, start), "without an ease at once");
     }
 
@@ -81,7 +74,9 @@ class ScrollEaseAndDropTest {
 
     @Test
     void aDropLaunchComesDownFromAboveTheTopEdgeToTheStartWithTheWingmanInHisSlot() {
-        LevelScript level = level(List.of(new LevelScript.Section(30, 190)), 5).withLaunchDrop(true);
+        LevelScript level = level(List.of(new Section(30, 190)), 5).toBuilder()
+                .launchDrop(true)
+                .build();
         Sortie sortie = new Sortie(
                 1,
                 TestSpecs.LOADOUT.withWingman(WingmanTest.rook(WingmanSpec.Side.LEFT)),
@@ -104,11 +99,7 @@ class ScrollEaseAndDropTest {
         assertEquals(Ship.START_Y, sortie.ship().y(), 1e-6);
 
         Sortie rail = new Sortie(
-                1,
-                TestSpecs.LOADOUT,
-                level(List.of(new LevelScript.Section(30, 190)), 5),
-                TestSpecs.RULES,
-                TestSpecs.FULL_ARMOUR);
+                1, TestSpecs.LOADOUT, level(List.of(new Section(30, 190)), 5), TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
         assertTrue(rail.ship().y() < 0, "without the drop it rises from below");
     }
 }

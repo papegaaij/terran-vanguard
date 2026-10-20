@@ -8,8 +8,8 @@ import vanguard.sim.Sortie;
 /**
  * The registry of the looks that follow the sortie's enemy kinds (M5 part F, M7 parts B to D): the
  * Lampreys' latch poses, the Burrowers, the Tendril Anchors, the Threadcrawler, the Choir Herald's aura
- * and the Shellbacks, M7 part E's Dust Devils and Ghost Drones, each built once from the first sortie that asks
- * for it.
+ * and the Shellbacks, M7 part E's Dust Devils and Ghost Drones, M7 part F's Warden Tanks, each built once from the
+ * first sortie that asks for it.
  */
 final class KindLooks {
     /** M5 part F: per enemy kind its latch poses (the Lamprey's), null for a kind without; built at the first draw. */
@@ -37,6 +37,9 @@ final class KindLooks {
 
     /** M7 part E: the Ghost Drones' dark lamps under the EMP and their eye glints (built with the first sortie). */
     private GhostDroneLooks ghostDrones;
+
+    /** M7 part F: the turret units' turrets, flashes and wrecks (built with the first sortie). */
+    private TankLooks tanks;
 
     private final Sprites sprites;
     private final Files files;
@@ -101,6 +104,14 @@ final class KindLooks {
         return ghostDrones;
     }
 
+    /** M7 part F: the turret units' looks for the sortie's enemy kinds, built once. */
+    TankLooks tanks(Sortie sortie) {
+        if (tanks == null) {
+            tanks = new TankLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return tanks;
+    }
+
     /** M5 part F: the latch poses of the sortie's enemy kinds (the Lamprey's), null where a kind has none. */
     private LampreyLooks[] lampreyLooks(Sortie sortie) {
         List<EnemySpec> kinds = sortie.enemyKinds();
@@ -145,6 +156,9 @@ final class KindLooks {
         }
         if (ghostDrones != null) {
             ghostDrones.restart();
+        }
+        if (tanks != null) {
+            tanks.restart();
         }
     }
 }

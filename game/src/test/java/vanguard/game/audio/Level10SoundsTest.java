@@ -23,7 +23,7 @@ import vanguard.content.SimSpecs;
 import vanguard.game.settings.AudioSettings;
 import vanguard.sim.Enemy;
 import vanguard.sim.Flock;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
@@ -56,10 +56,11 @@ class Level10SoundsTest {
 
     @Test
     void theLanceStartsSoItsImpactLandsOnTheHit() throws IOException {
-        LevelScript.ScriptedLoss loss = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM)
+        ObjectiveSpec.ScriptedLoss loss = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM)
+                .objectives()
                 .escort()
-                .flatMap(LevelScript.Escort::air)
-                .flatMap(LevelScript.Air::scriptedLoss)
+                .flatMap(ObjectiveSpec.Escort::air)
+                .flatMap(ObjectiveSpec.Air::scriptedLoss)
                 .orElseThrow();
         assertEquals(118, loss.t(), 1e-9);
         assertEquals(1.2, FlightSounds.LANCE_IMPACT_SECONDS, 1e-9, "round 32's lance a: the impact 1.2 s in");

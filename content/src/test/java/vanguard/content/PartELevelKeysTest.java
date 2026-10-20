@@ -52,7 +52,7 @@ class PartELevelKeysTest {
         assertEquals(List.of("containers"), SimSpecs.destructibleGroups(content.level(KEY)));
         assertTrue(content.level(KEY).objectives().groups().isEmpty(), "the objectives never count it");
         LevelScript level = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
-        assertTrue(level.groupDrops().isEmpty(), "not an objectives' group drop");
+        assertTrue(level.drops().groupDrops().isEmpty(), "not an objectives' group drop");
         assertTrue(level.groundObjects().stream()
                 .filter(o -> o.group() == 0)
                 .allMatch(o -> o.groupSize() == 8 && o.groupDrop().equals(Optional.of(PickupType.ARMOUR_PATCH))));

@@ -513,11 +513,11 @@ class BalanceTest {
             }
             vanguard.sim.LevelScript level = SimSpecs.level(CONTENT, key.get(), Difficulty.MEDIUM);
             double scroll = CONTENT.level(key.get()).scrollSpeed();
-            for (vanguard.sim.LevelScript.Hold hold : level.holds()) {
+            for (vanguard.sim.ObjectiveSpec.Hold hold : level.objectives().holds()) {
                 holds++;
                 double hp = 0;
                 double half = 0;
-                for (vanguard.sim.LevelScript.GroundUnit unit : level.groundUnits()) {
+                for (vanguard.sim.GroundUnit unit : level.groundUnits()) {
                     if (hold.groups().contains(unit.group())) {
                         hp += unit.enemy().hp();
                         half = Math.max(half, unit.enemy().hitbox().height() / 2);
@@ -675,7 +675,12 @@ class BalanceTest {
                 Level13Test.Run run = Level13Test.watch(sortie);
                 assertTrue(sortie.complete(), difficulty + " seed " + seed + ": the level completes");
                 shares.add(String.format("%.0f", 100 * run.integrity));
-                double integrity = sortie.script().defend().orElseThrow().ally().hp();
+                double integrity = sortie.script()
+                        .objectives()
+                        .defend()
+                        .orElseThrow()
+                        .ally()
+                        .hp();
                 damage.add(String.format("%.0f", (1 - run.integrity) * integrity));
                 met += sortie.result().secondaryMet() ? 1 : 0;
                 lostShips += sortie.attempt() - 1;
@@ -894,7 +899,7 @@ class BalanceTest {
                     : Optional.of("HP " + enemy.hp() + ": not one hit of the starting gun (" + shot + ")");
         }
         double[] target = enemy.boss()
-                .map(boss -> boss.kind().equals("mid-boss") ? new double[] {45, 75} : new double[] {90, 180})
+                .map(boss -> LevelMetrics.bossWindow(boss.kind().equals("mid-boss")))
                 .orElseGet(() -> switch (enemy.tier()) {
                     case SMALL -> new double[] {0, 0.3};
                     case MEDIUM -> new double[] {0.4, 1.5};
@@ -902,9 +907,10 @@ class BalanceTest {
                     default -> new double[] {20, 40};
                 });
         double dps = reference * (enemy.boss().isPresent() || enemy.tier() == Tier.HUGE ? EFFECTIVE : 1);
-        if (enemy.movement().anchored().isPresent()) {
-            // M5 part E (E6 = a): an arena boss's parts are exposed in windows; its duration counts them.
-            double seconds = arenaSeconds(enemy, dps);
+        if (enemy.movement().anchored().isPresent() || enemy.walks()) {
+            // M5 part E (E6 = a): an arena boss's parts are exposed in windows; its duration counts them. M7 part F: a
+            // walking boss's passes (walkerSeconds).
+            double seconds = enemy.walks() ? walkerSeconds(enemy, dps) : arenaSeconds(enemy, dps);
             return seconds < target[0] || seconds > target[1]
                     ? Optional.of(String.format(
                             "window-aware %.1f s at %.1f DPS, target %s-%s s", seconds, dps, target[0], target[1]))
@@ -932,6 +938,25 @@ class BalanceTest {
      * equally; round 40, rooted arms: its weak spots'), while it rises or dives on the surface (half of each) its own, under the water nothing
      * (the plan has no Torpedo Pod); the last phase takes the rest with its part kept up.
      */
+    /** M7 part F: a walking boss's paper fight at {@code dps}: its intro, then its HP at {@link #WALKER_EFFICIENCY}. */
+    static double walkerSeconds(EnemyData enemy, double dps) {
+        return WALKER_INTRO_SECONDS + enemy.hp() / (dps * WALKER_EFFICIENCY);
+    }
+
+    /**
+     * M7 part F (design/enemies/bosses/revenant-walker, Duration and HP): the share of the effective DPS that lands on a
+     * walking boss, and its intro pass's seconds before it can be hit. The paper's ≈ 0.68 (on the screen ≈ 80 % of
+     * the time, about half of it facing its plate) is replaced by step F4's measurement: the autopilot's fight with the
+     * plan's fit lasts 52.7 s at 3,740 HP (the back takes the whole fit, the vents ×2, Rook's Mortar's and the pods'
+     * {@code anti-ground} ×2), so 1.39 (tools/balance.py's {@code WALKER_EFFICIENCY}; pending the user's review). Round 43
+     * (the rework, K.a of round 42: far more fire, the bigger cone): the autopilot dodges more and stands off further,
+     * 57.1 s at 3,170 HP, so 1.08.
+     */
+    static final double WALKER_EFFICIENCY = 1.08;
+
+    /** M7 part F: a walking boss's intro pass before it can be hit, s (the walker's spec; tools/balance.py). */
+    static final double WALKER_INTRO_SECONDS = 4;
+
     static double arenaSeconds(EnemyData enemy, double dps) {
         EnemyData.BossData boss = enemy.boss().orElseThrow();
         if (boss.slam().isEmpty()) {

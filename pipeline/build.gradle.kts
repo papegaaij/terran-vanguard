@@ -206,6 +206,22 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "ghost-drone-glint-r41-a.ogg",
         "ghost-drone-burst-r41-a.ogg",
         "ghost-drone-death-r41-a.ogg",
+        // M7 part F, Level 19: round 42's proposals, option a until the user's choice (the Revenant Walker's stomp,
+        // hatch, pod missile, flamer tell and flame loop; the furnace vents' tell and burst; the Warden Tank's tracks,
+        // turret slew, burst and death; the belt loop; the `mars-foundry` ambience; all synthesized).
+        "walker-stomp-r42-a.ogg",
+        "walker-hatch-r42-a.ogg",
+        "walker-missile-r42-a.ogg",
+        "walker-flame-tell-r42-a.ogg",
+        "walker-flame-r42-a.ogg",
+        "vent-tell-r42-a.ogg",
+        "vent-burst-r42-a.ogg",
+        "tank-tracks-r42-a.ogg",
+        "tank-turret-r42-a.ogg",
+        "tank-burst-r42-a.ogg",
+        "tank-death-r42-a.ogg",
+        "belt-rumble-r42-a.ogg",
+        "mars-foundry-r42-a.ogg",
     )
 }
 

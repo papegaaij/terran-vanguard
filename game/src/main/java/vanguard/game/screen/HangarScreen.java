@@ -245,6 +245,16 @@ public final class HangarScreen implements GameScreen {
             return Transition.STAY;
         }
         Outcome outcome = Outcome.NONE;
+        if (input.previousTab()
+                || input.nextTab()
+                || input.up()
+                || input.down()
+                || input.left()
+                || input.right()
+                || input.confirm()) {
+            // The last device used owns the look: a key takes the mouse's hover off.
+            state.hover(Optional.empty());
+        }
         if (input.previousTab()) {
             outcome = state.previousSlot();
         } else if (input.nextTab()) {
@@ -446,10 +456,21 @@ public final class HangarScreen implements GameScreen {
                 launch.height(),
                 on(Command.LAUNCH),
                 state.enabled(Command.LAUNCH));
+        drawCommandHover(batch, glass);
     }
 
     private boolean on(Command command) {
         return state.focus() == Focus.COMMANDS && state.command() == command;
+    }
+
+    /** The hover look on the command the pointer rests on (design/ui/hangar, Mouse), unless it is selected. */
+    private void drawCommandHover(SpriteBatch batch, Glass glass) {
+        for (Command command : Command.values()) {
+            if (!on(command) && state.hovers(HangarState.Target.COMMAND, command.ordinal())) {
+                Box chip = HangarPointer.command(command);
+                glass.outline(batch, Glass.CYAN, chip.x(), chip.y(), chip.width(), chip.height());
+            }
+        }
     }
 
     private String hints() {

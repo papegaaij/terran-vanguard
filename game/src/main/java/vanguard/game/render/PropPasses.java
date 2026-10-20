@@ -16,6 +16,7 @@ import java.util.Map;
 import vanguard.sim.Crane;
 import vanguard.sim.Debris;
 import vanguard.sim.EnemyBullet;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Mine;
 import vanguard.sim.Pickup;
@@ -89,7 +90,7 @@ final class PropPasses {
         mine = sprites.has("spore-mine") ? sprites.frames("spore-mine") : null;
         rocks = sprites.has("rock") ? sprites.frames("rock") : null;
         bullets = new BulletLooks(sprites);
-        sonde = script.sondes().isPresent() && sprites.has(SONDE) ? sprites.frames(SONDE) : new Array<>(0);
+        sonde = script.hazards().sondes().isPresent() && sprites.has(SONDE) ? sprites.frames(SONDE) : new Array<>(0);
     }
 
     /**
@@ -180,7 +181,7 @@ final class PropPasses {
             if (!crane.present()) {
                 continue;
             }
-            LevelScript.CraneSpec spec = crane.spec();
+            HazardSpec.CraneSpec spec = crane.spec();
             double angle = crane.renderAngle(alpha);
             int k = craneLooks.index(angle);
             AtlasRegion arm = craneLooks.arm(k);

@@ -88,7 +88,7 @@ Chosen concept: [polyp-mortar-r04-a.png](../concept/polyp-mortar-r04-a.png) (lis
       `-tatters` pieces, the rocks, and the acid splash decal `polyp-mortar-splash` left on the
       ground for 10 s: fresh 1 s, 7 s, fading 2 s; all final in round 21)
 - [x] `always` hook: the lob, marker and direct hit on the relay, the ring on the ship only (M5 part G, steps G3 and G4, Level 13) — simulation done in G3 (`Lob.objectiveAimed`, `HookModesTest`); the level's table is G4's
-- [x] A floe entering at a side edge with a drift carrying two mortars (M5 part G, G3 and G4) — simulation done in G3 (`LevelScript.SideEntry`, `GroundUnit.fromSide`, the side edge warned 3 s ahead, `CrossTest`); the floe's data and look are G4's and G6's
+- [x] A floe entering at a side edge with a drift carrying two mortars (M5 part G, G3 and G4) — simulation done in G3 (`SideEntry`, `GroundUnit.fromSide`, the side edge warned 3 s ahead, `CrossTest`); the floe's data and look are G4's and G6's
 - [x] Glow frames (the lime mouth) for Level 06's darkness — M4 part F (`polyp-mortar-glow_*`, drawn additively by `EnemyLooks`; final in round 23)
 
 ## Decisions

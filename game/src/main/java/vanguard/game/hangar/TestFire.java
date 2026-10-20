@@ -12,12 +12,17 @@ import vanguard.sim.Armament;
 import vanguard.sim.Command;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundSpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.Rules;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 import vanguard.sim.WeaponSpec;
@@ -242,23 +247,16 @@ public final class TestFire {
                 Optional.empty(),
                 true);
         double climb = CLIMB_TICKS * SimStep.SECONDS;
-        List<LevelScript.GroundUnit> dummies = new ArrayList<>();
+        List<GroundUnit> dummies = new ArrayList<>();
         for (int i = 0; i < LANES.length; i++) {
-            dummies.add(new LevelScript.GroundUnit(climb + ENTRIES[i], SHIP_X + line + LANES[i], dummy, -1));
+            dummies.add(new GroundUnit(climb + ENTRIES[i], SHIP_X + line + LANES[i], dummy, -1));
         }
-        return new LevelScript(
-                        1,
-                        1,
-                        0,
-                        List.of(new LevelScript.Section(LEVEL_SECONDS, SCROLL)),
-                        List.of(),
-                        List.of(),
-                        dummies,
-                        0,
-                        List.of(),
-                        new LevelScript.Secondary(1, 0),
-                        List.of())
-                .withWater(torpedoes);
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(LEVEL_SECONDS, SCROLL)))
+                .groundUnits(dummies)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(1, 0)))
+                .ground(GroundSpec.NONE.withWater(torpedoes))
+                .build();
     }
 
     /** The ship climbs to its height without firing; the dummies enter right after. */

@@ -105,9 +105,12 @@ class SiegeDataTest {
     }
 
     @Test
-    void theSecondaryKeepsTheDomesUntouched() {
+    void theSecondaryKeepsTheDomesStanding() {
         LevelData.Secondary secondary = LEVEL.objectives().secondary().orElseThrow();
-        assertTrue(secondary.keepsAlliesUntouched());
+        assertTrue(secondary.keepsAlliesStanding(), "round 41: \"No dome lost\" (was untouched, \"No dome hit\")");
+        assertFalse(secondary.keepsAlliesUntouched());
+        assertEquals(Optional.of("No dome lost"), secondary.name());
+        assertEquals(Optional.of(2.5), LEVEL.allies().orElseThrow().bombRunIn(), "round 41: the bombers' run-in");
         assertEquals(Optional.of("DOMES"), secondary.label());
         assertEquals(100, secondary.credits());
         assertEquals("reach-end", LEVEL.objectives().primary());
@@ -123,7 +126,7 @@ class SiegeDataTest {
         assertTrue(LEVEL.pickups().getFirst().carrier().enemy().isEmpty());
         assertEquals(new LevelData.Flak(160, 1.5), LEVEL.flak().orElseThrow());
         assertEquals("mars-colony", LEVEL.music().ambience());
-        assertEquals(0.60, LEVEL.bounties());
+        assertEquals(0.40, LEVEL.bounties(), "step PE17: from 0.60 with the reworked waves (TypicalHaulTest)");
         assertEquals(172, LEVEL.seconds());
         LevelData.Drop drop = LEVEL.released().getFirst();
         assertEquals(100, drop.t());
@@ -226,6 +229,17 @@ class SiegeDataTest {
                 "secondary: {links: true,",
                 "secondary: {untouched: true,",
                 "an untouched secondary judges the level's ground allies");
+        assertProblem(
+                LEVEL_16,
+                "secondary: {links: true,",
+                "secondary: {standing: true,",
+                "a standing secondary judges the level's ground allies");
+        assertProblem(
+                PATH,
+                "secondary: {standing: true,",
+                "secondary: {standing: true, untouched: true,",
+                "give kill_ratio, groups, escapes, kill_all, parts, afloat, collect, integrity, links, untouched or"
+                        + " standing");
         assertProblem(
                 PATH,
                 "{piece: helix-compound, t: 81.5, x: 380}",

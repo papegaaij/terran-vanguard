@@ -542,9 +542,9 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 126, speaker: Okafor, line: "Eyes on the canyon, Doctor."}
   - {t: 146, speaker: Ares Control, portrait: generic-colonial, line: "Eos outflow ahead. You're nearly through, Aegis."}
   - {event: secondary-objective, speaker: Ares Control, portrait: generic-colonial, line: "Every barrier down. The road east is open.", notes: {trigger: "Secondary met (`secondary-objective`)"}}
-  - {t: 166, speaker: The Choir, distorted: true, line: "[the Choir sings]"}   # step VOX-C: 162 -> 166, past the secondary's line when gate 6 is decided as late as t=159
-  - {t: 173, speaker: Varga, line: "The singing is louder out east. Toward Ares Landing."}   # step VOX-C: 169.5 -> 173, after the Choir
-  - {t: 180, speaker: Okafor, line: "Ares Landing has you on its scopes. Bring it home."}
+  - {t: 168, speaker: The Choir, distorted: true, line: "[the Choir sings]"}   # step VOX-C: 162 -> 166, past the secondary's line when gate 6 is decided as late as t=159; step F4: 166 -> 168, so the secondary's voiced line (6.8 s) still fits before it when a bark holds the radio until t≈160.7 (step RX's live run: queued 154.65, opened 187.28)
+  - {t: 175, speaker: Varga, line: "The singing is louder out east. Toward Ares Landing."}   # step VOX-C: 169.5 -> 173, after the Choir; step F4: 173 -> 175 with it
+  - {t: 182, speaker: Okafor, line: "Ares Landing has you on its scopes. Bring it home."}   # step F4: 180 -> 182 with them (ends ≈ 188, before the level end at 190)
   - {event: level-end, speaker: Okafor, line: "Canyon run complete. The domes are yours to hold now. Get some sleep."}
 
 objectives:

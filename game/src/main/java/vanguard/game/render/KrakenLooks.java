@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import java.util.Arrays;
-import vanguard.sim.LevelScript;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SlamArena;
 
 /**
@@ -326,7 +326,7 @@ final class KrakenLooks {
      * The looks of the level's arena boss, if it is one with its production sprites and pivots
      * (the Harbour Kraken); null otherwise.
      */
-    static KrakenLooks of(Sprites atlas, FlashShader flash, LevelScript.SetPieceSpec boss, JsonValue pivots) {
+    static KrakenLooks of(Sprites atlas, FlashShader flash, SetPieceSpec boss, JsonValue pivots) {
         if (boss == null
                 || pivots == null
                 || boss.boss().flatMap(spec -> spec.arena()).isEmpty()
@@ -347,7 +347,7 @@ final class KrakenLooks {
     static final String ROOT_SPRITE = "harbour-kraken-root-r40-a";
 
     /** Round 40: whether the boss's arms are rooted, so the r40 a look draws it (round 33's look otherwise). */
-    static boolean rooted(LevelScript.SetPieceSpec boss) {
+    static boolean rooted(SetPieceSpec boss) {
         return boss.boss()
                 .flatMap(spec -> spec.arena())
                 .map(arena -> arena.lanes().rooted())

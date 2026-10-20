@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Architecture
@@ -103,7 +103,10 @@ README), and the tables in the README are **rendered from the data**:
   10's visit refits Rook's Autocannon, `[escort, autocannon]`) and `BalanceTest`'s **rear check**
   (the Wraith's HP ÷ the plan's rear DPS at most 0.6 × its decloak flash + hold at medium).
 - **Loading.** `content` reads the files with Jackson 3 (YAML) into Java records, one per file
-  (`ShipData`, `EnemyData`, `LevelData`, …), gathered in `Content` by `ContentLoader`. Every
+  (`ShipData`, `EnemyData`, `LevelData`, …), gathered in `Content` by `ContentLoader`. A level's
+  nested records are declared per data block in sealed `*Block` interfaces that `LevelData`
+  implements (`WavesBlock`, `RadioBlock`, `ObjectivesBlock`, …), so they are still named
+  `LevelData.Wave` and so on; a new block's records go in its block file. Every
   record component is required unless its type is `Optional`; unknown keys are rejected; ranges
   are checked in the records' compact constructors; `ContentValidator` checks across files
   (a wave's enemy and formation exist, an attack's bullet class exists, availability keys
@@ -115,7 +118,16 @@ README), and the tables in the README are **rendered from the data**:
   part of the jar and the bundles; editing one needs a rebuild, no asset step.
 - **Simulation specs.** `sim` defines the records it runs on (`ShipSpec`, `PulseCannon`,
   `ShieldModel`, `Plating`, `Loadout`, `EnemySpec`, `LevelScript`, `Rules`) and knows nothing
-  about data files; `content`'s `SimSpecs` builds them from the loaded records at a difficulty,
+  about data files. `LevelScript` holds the level-wide parts (scroll sections, waves, ground objects and units, set
+  pieces, secrets, radio cues) and four sub-records, each validating its own parts: `ObjectiveSpec` (secondary,
+  targets, escort, defend, naval convoy, ground allies, tows, holds, collapse), `GroundSpec` (road, water,
+  terrain, gates, no-surface zones, belts), `HazardSpec` (cranes, debris, sleds, rocks, vents, darkness, weather,
+  sondes) and `DropSpec` (group and part drops, placed pickups, drop factor); their feature types are nested in
+  them, the types shared across concerns (`Section`, `Secondary`, `RadioCue`, `CueTrigger`, `HookMode`,
+  `GroundUnit`, `RootBurst`, `SideEntry`, `GroundObjectSpec`, `SetPieceSpec`, `PartSpec`, `Pass`, `Waypoint`)
+  are top-level `vanguard.sim` types. `LevelScript` keeps the checks across the sub-records and builds with
+  `LevelScript.builder(number, act)` / `toBuilder()`, whose setters take the level-wide parts and each sub-record
+  whole (a caller reads `level.hazards().vents()` and changes one part with the sub-record's wither); `content`'s `SimSpecs` builds them from the loaded records at a difficulty,
   with the difficulty levers applied. The dependency stays
   `content → sim`, so the simulation keeps no YAML, Jackson or file access.
 - Balance checks (budget per level, DPS against the reference, time to kill, bounty) are
@@ -513,6 +525,31 @@ first entry of a part's model list is the starter (price 0, `start`).
   only with a trigger) and **`reaim`** (every shot of the burst aimed anew; only with a `burst`). A unit's
   **`intel`** (`unclassified_until_flown`: the hangar intel shows an "unclassified" silhouette of its layer and
   size until its first level has been flown; it first flies in its `first_level`, in no level before it).
+  M7 part F, for the [Warden Tank](../../enemies/ground/warden-tank/README.md) and the
+  [Revenant Walker](../../enemies/bosses/revenant-walker/README.md) (Level 19; loaded, checked and mapped in step F2
+  by content's `EnemyData`, `FoundryChecks` and `FoundryRules`, flown from steps F1/F3; the defaults pending the
+  user's review in round 42): a unit's **`turret`** (`turn_rate` °/s, `lock` s, `within` °: the turret turns all
+  round toward the ship independent of the hull, stops `lock` s once ready and within `within`° of the ship and
+  fires its burst along its aim; only on a `walk` unit that is not a boss, with one aimed attack; the hook
+  **`turret`** (`turn_rate`: hard's 160)) and **`rear_plate`** (`arc` °, `multiplier`: direct shots arriving within
+  `arc`° of its rear do ×`multiplier` to the body; only on a `walk` unit); the turret part is a `part_list` part
+  as the Shellback's vent. The orientation **`8 angles`** (a walking boss's body). A walking boss's movement
+  **`stride`** (`lanes_x`, px from the left; `lanes_y`, px below the top edge; `edges`, the entry edges in turn
+  from `top`, `bottom`, `left`, `right`, the first `top`; `off_screen` s between passes under the next edge's
+  warning; `turn` s for a turn round; `speeds` px/s by phase; `beside_lane`, `turn_in_place`: the first phase's
+  lane beside the ship's, the last phase turning on the spot; only on a boss without an anchor, hover or
+  descent: it is an arena boss as an anchored one is). A boss's **`plate`** (`part`, `hitbox` across × along the
+  heading, `ahead` px: the front plate every shot glances off, the Ion Beam stopped) and **`cone`** (`length` px,
+  `half_angle` °, `reach_behind` px, `cooldown`, `tell`, `burn`, `vents` s, `swivel` °, `bullet` class, `behind`
+  px, optional `track` °/s (round 43: from its second phase the burn keeps turning toward the ship within the
+  swivel): the rear flame cone; both only with a stride; the hook **`cone`** (`length`, `swivel`, `tell`)). An aimed
+  attack's **`homing`** (`turn_rate` °/s, `life` s, `hp`, `most` alive, `hatch` s of the hatch tell: its shots are
+  homing missiles; a boss's; the hook **`homing`** (`turn_rate`)); a boss attack's **`parts`** (the parts that fire
+  it besides those naming it as their `attack`: the walker's pods fire one salvo pattern in phase 1, another
+  later) and **`aim: facing`** (a walking boss's aimed or `fan` attack fired along its heading; round 43: a fan of
+  2 over 180° leaves its flanks). Round 43: a boss's **`fan`** may take a `burst` and `burst_gap` (the walker's chin
+  and flank guns; no other unit's fan). A phase's **`until.share`**
+  (`parts`, `below`: a second end beside its parts' `left`, once those parts hold less than `below` of their HP).
   Basis (`enemies/data.yaml`): `reference_dps` per level (Levels 01–21 since M7 part A), `bullet_damage`, `contact_damage`
   per tier, `small_act_hp` (`cap`, `units`, `levels`: the `small` units that get the act HP factor, capped, in those levels; the user's Act 2
   playtest, 2026-10-18), `beam_era_hp` (`from_level`, `factor`, `tiers`: from that level on, the units of those
@@ -533,7 +570,8 @@ first entry of a part's model list is the starter (price 0, `start`).
   {atmosphere: heavy, from: 176, to: 188, easy: 6, ambience_db: 3}`), `arena: true` for the
   boss's arena (the level clock halts at its end while the boss lives and jumps to its end at an
   earlier death; at most one, only with a `boss`); scroll distances are derived); `boss` (`enemy`
-  with a `boss` script, `t` it arrives, `x` of its centre, `section`); `waves` in time order, one row each (`t`,
+  with a `boss` script, `t` it arrives, `x` of its centre, `section`, optional `incoming` (round 41: s before `t`
+  the boss warning opens, `BossSpec.incomingSeconds`; Level 14's 7.5)); `waves` in time order, one row each (`t`,
   `formation`, `enemy` slug, `count`, `from` `front`/`sides`/`rear`, `edge`
   `left`/`right`/`alternating` (`sides` without an edge enters from both side edges), optional
   `hold`, `warning`, `break_group`, `speed` (px/s instead of the enemy's own), `interval` (s
@@ -755,7 +793,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   10's popcorn round the shuttle band: `paths` also on a **`stream`** wave (one route, flown by its
   units from the left edge, mirrored by those from the right; without it the stream's shape as
   before). Built (M5 part D, step D4) for Level 10: the **air escort** (D1, D2, D4, D5;
-  `LevelScript.Air`, flown by `Convoy`): an `escort`
+  `ObjectiveSpec.Air`, flown by `Convoy`): an `escort`
   block whose ally `follows: lanes` gives **`stations`** instead of `y`, an optional **`liftoff`**
   instead of `enter`, no `hook` and no road (`content` rejects each mix):
   `stations`, one per unit, the leading unit first, each `at` `[x, y]` (px from the play field's
@@ -787,7 +825,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   counts the saveable units (home of 4). With the debug option `--invulnerable` losing every saveable
   unit does not fail an air escort (so a capture sees the level to its end). A level may have **no
   secondary objective** (Level 10, D5 = a: `objectives` without `secondary`): the simulation then
-  has `LevelScript.Secondary.NONE` (`none()`: never met, paid or cued). Radio event **`ally-lost`**
+  has `Secondary.NONE` (`none()`: never met, paid or cued). Radio event **`ally-lost`**
   (every loss the player could have
   prevented, `{ally}` its number word, `Sortie.lastAllyLost()`, whose `ALLY_LOST` event comes before
   the cue's `RADIO` event in the same step; also on the first, after `first-ally-lost`'s cue; unlike
@@ -808,7 +846,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   looping swarm and, for `scripted-loss`, the scripted loss).
   M5 part E, for [Level 11](../../campaign/act-2-homefront/level-11-atlantic-convoy/README.md)
   (user decisions E1–E10 of 2026-10-08 and the stated defaults): **`water: true`** (E1 = a; default
-  false; built in step E2a, `LevelScript.water()`): the whole play field is water (Levels 11–13): the
+  false; built in step E2a, `GroundSpec.water()`): the whole play field is water (Levels 11–13): the
   torpedo runs only here, every kill on the play field is a water kill (splash, sinking, no crater or
   wreck) and landing blasts splash (presentation), and a fitted torpedo pod elsewhere is idle and
   reads `NO WATER`. Built in step E2c: a section's **`speed: 0`**, only on the `arena` of a level whose boss is
@@ -834,7 +872,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   while it is still to be freed (in its target pick beside units and parts, 2026-10-09); a
   trigger's **`easy` / `hard`** change may give its `hits` (Level 11's pod: 3, hard 5; built in step
   E3a). Built in
-  step E2b (`LevelScript.Naval`, flown by `Convoy`; `Sortie.slamAllies(lane)` for step E2c's slams): a
+  step E2b (`ObjectiveSpec.Naval`, flown by `Convoy`; `Sortie.slamAllies(lane)` for step E2c's slams): a
   **`convoy`** block, a naval convoy outside the objectives (it never fails the mission and is
   rejected beside an `escort` primary): `units` in order, each an `ally` slug (one that `follows:
   stations`), a **`name`** (what `{ally}` becomes in a line: "Halvorsen"), its `station` `[x, y]`
@@ -952,7 +990,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   (`PartHChecks`); a burst without growths (the Ravager crater) is the backdrop's, not data. Boss
   attacks from parts: the enemy **`mortar`** pattern is the boss lob (`BossSpec.Pattern.LOB`: its
   `mortar` block, the hook `ring`), **`laser-sweep`** the boss sweep (`Pattern.SWEEP`: its `sweep` block,
-  the hook `sweep_arc`; its `interval` the turn in an alternation; fired by the part its phase ends on),
+  the hook `sweep_arc`; its `interval` the turn in an alternation; fired by the part its phase ends on; round 41:
+  an optional `lead` in the `sweep` block, ° from 0 to the arc, puts the arc's first edge, the telegraph's line,
+  that far beside the ship's bearing on the side the beam comes from instead of centring the arc on it,
+  `EnemySpec.Sweep.withLead`; the Siege Spire's 12),
   an attack's **`staggered: true`** (aimed or mortar, only a boss's fired by several parts: part k of n
   k × interval ÷ n after the first; `Attack.stagger`); a part's **`aim: down`** (round 34, P2: the part
   fires its `aimed` attack straight down the screen instead of at the ship, the Siege Spire's pods 1 and
@@ -968,7 +1009,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   secondary may name its tracker `label` (`ROOTS n/8`). The stump is presentation (the boss's state), not
   a key. A **daylight section after an arena** is an ordinary section (no new key). The act end needs no
   new key: the Act 2 `outro` is the Act 1 schema (`music`, `pages`). M5 part H (H3) in the simulation:
-  `LevelScript.RootBurst` + `GroundUnit.fromBurst` (telegraph point in ground space, 60 px ship
+  `RootBurst` + `GroundUnit.fromBurst` (telegraph point in ground space, 60 px ship
   clearance, invulnerable silent growth, groups counted from the script); boss patterns `LOB` (mortar
   gun) and `SWEEP` (`EnemySpec.Sweep` on the attack), `Attack.stagger`; window `Spawn.ambushMost`
   (planned rear paths in `Launches`, a ring of 8 real-step bottom warnings, entry REAR from re-entry,
@@ -1030,11 +1071,15 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   slug>: <mode>}` as a defend's, per unit type (every wave of a listed enemy is hooked); `bomb_row` (px below
   the top edge: the row a hooked bomber holds while it steers to the next ally coming down, at its own speed,
   and drops one bomb run as the ally's footprint passes beneath it) and `bomb_slot` (px between a hooked
-  wave's bombers' x slots round the ally's x); `easy` / `hard`: `hits` and `targeted_by` merged over the
+  wave's bombers' x slots round the ally's x); optional `bomb_run_in` (round 41: s a hooked bomber flies on the
+  play field before it may drop, over an ally before then it keeps its load and steers on; `GroundAllies.
+  withBombRunIn`; Level 17's 2.5); `easy` / `hard`: `hits` and `targeted_by` merged over the
   block's); a hooked mortar's objective lob lands where its ally will be (ground space, the marker on the
   ground). The secondary **`untouched: true`** (none of the level's ground allies hit; its tracker `label`,
-  Level 17's `DOMES`; failed at the first hit, met when the last ally leaves the bottom edge; only with
-  `allies`); a walker with a `roll` walks its paths between the allies, its body's hit box never over an
+  `DOMES` until round 41; failed at the first hit, met when the last ally leaves the bottom edge; only with
+  `allies`) or (round 41) **`standing: true`** (none of them broken, hits allowed: Level 17's "No dome lost";
+  failed when the first breaks, met when the last leaves the bottom edge; only with `allies`, never with
+  `untouched`; `Secondary.standing`); a walker with a `roll` walks its paths between the allies, its body's hit box never over an
   ally's (`SiegeChecks`, round 40 R.c). The radio event **`first-ring`** (the attempt's first aura ring a
   Herald sings onto a unit; only with an aura enemy; round 40 K.a). A pickup's **`dropped_by.enemy`** (a wave's carrier counted among that enemy's units of the wave
   only: Level 17's Herald among its bombers). **`flak`** (presentation: `from` s, a burst on `low-air` every
@@ -1057,6 +1102,22 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   from `from` on, in every section the theme plays except those turned off; `Music.motifOn(section, t)`; `from`
   inside a section the theme plays). The ambience `mars-storm`. The Dust Devils' pairs and trio fly as a `pack`,
   each wandering round its own path (the path its centre line).
+  M7 part F, for [Level 19](../../campaign/act-3-red-dust/level-19-foundry-of-tharsis/README.md) (loaded, checked
+  and mapped in step F2 by content's `LevelData`, `FoundryChecks` and `FoundryRules`, flown from step F3, drawn
+  from step G2; the defaults pending the user's review in round 42): **`belts`** (`width` px, `speed` px/s up the
+  screen relative to the ground, `runs` each `{x, from, to}`: the run's bottom end enters at the top edge at level
+  time `from`, its top end leaves at the bottom edge at `to`, where the backdrop's belt pieces lie; the simulation's
+  `GroundSpec.Belt` gets the ground distances `scrollAt(from) + 270` and `scrollAt(to) − 270`; ground units on a
+  belt ride it; no standing nest is placed on a belt's column while it passes). **`vents`** (`width` px, `tell`,
+  `burn`, `period`, `ripple` s, `bullet` class, `easy` / `hard` changing `tell`, `period`, `ripple`, `rows` each
+  `{t, xs}`: a row enters at the top edge at `t` and fires every period as a ripple from its first x; the period
+  holds the whole ripple on every difficulty, the grates apart and on the field, every row before the arena).
+  A ground target's **`arc: up`** (an enemy nest turned 180°: its guns' facing up the screen; only on a unit that
+  fires within an arc). A section's **`hold_after_boss`** (s, an arena's: the clock stays halted after the boss's
+  death chain); a moving section right after an arena with a `ramp` eases up from the halt over it (the wreck
+  crawl). The secondary's **`allowed`** (an `escapes` objective's units that may get away; with it the objective
+  may name its counter `label`). The music's `stems` value **`motif`** (the theme's stems silent, the motif layer
+  alone; `Music.motifAlone(section)`; only with the music's `motif`). The ambience `mars-foundry`.
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the
@@ -2013,3 +2074,10 @@ compiles, and the allocation tests then see allocations that escape analysis oth
   the atlases in parallel from that file and is cacheable (inputs hashed by relative path), so an unchanged tree
   restores it from the build cache; duplicate-frame entries are sorted by name and index and backdrop pages are
   numbered in folder order, so the output is byte-reproducible.
+- 2026-10-19 (refactor step LS-3, refactor-levelscript.md; pending the user's review): `LevelScript` is split into
+  four sub-records (`ObjectiveSpec`, `GroundSpec`, `HazardSpec`, `DropSpec`, each with a `NONE` and one-line
+  withers) and 13 top-level types; it keeps 15 components and the cross-concern checks. Steps LS-4/LS-5 moved the
+  callers to the sub-record accessors and withers (`level.ground().belts()`, `level.toBuilder().ground(...)`) and
+  deleted the temporary delegate accessors, flat builder setters and level-wide withers; only `withGates` stays on
+  `LevelScript` (it also adds the anchors to the ground units). The vents' and placed pickups' time sorts and every check's wording are kept (golden replays unchanged).
+- 2026-10-20: round 42 closed: the refactors (X.a a-h: `LevelScript`, `LevelData`'s `*Block` interfaces, `SimSpecs`'s rules classes, the autopilot's plays, the simulation split, the level-metrics tool) and the Level 19 schema defaults (`turret`, `belts`, vents, `arc: up`; B.a-B.d) approved by the user, all yes.

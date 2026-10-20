@@ -141,8 +141,7 @@ class SkimmerTest {
     void laneWalkersDoNotAllocate() {
         WaveSpec convoy = lanes(
                 42, WaveSpec.Formation.CONVOY, PartGSpecs.SKIMMER, 4, List.of(lane(-40, 300, 260, 200, 520, 300)));
-        LevelScript level =
-                PartGSpecs.level(Map.of("skimmer", LevelScript.HookMode.ALTERNATE), List.of(convoy), List.of());
+        LevelScript level = PartGSpecs.level(Map.of("skimmer", HookMode.ALTERNATE), List.of(convoy), List.of());
         long allocated = Allocations.least(() -> PartGSpecs.untouchable(level), sortie -> {
             for (int i = 0; i < SimStep.ticks(50); i++) {
                 sortie.step(Command.NONE);

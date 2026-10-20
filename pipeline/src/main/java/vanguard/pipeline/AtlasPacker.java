@@ -2,6 +2,7 @@ package vanguard.pipeline;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import javax.imageio.ImageIO;
 
 /**
  * Packs the sprite frames in {@code assets/} into the game's texture atlases (build output, never
@@ -37,6 +40,10 @@ import java.util.stream.Stream;
  * write them. The output is the same for the same frames, whatever the thread timing or the order in
  * which the file system lists the folders.
  *
+ * <p>M7 part F: the frames of a few large sprites the game only ever draws centred ({@link #CENTRED_CROP}) are cropped
+ * on their way into the atlas, each frame by the same margin on both sides down to its visible pixels, so its centre
+ * stays its centre and the game draws it unchanged; the source art keeps its size.
+ *
  * <p>Usage: {@code AtlasPacker <spritesDir> <backdropDir> <claimsFile> <outputDir>}
  */
 public final class AtlasPacker {
@@ -44,6 +51,15 @@ public final class AtlasPacker {
     private static final Pattern FRAME = Pattern.compile("(_\\d+)?(\\.9)?\\.png$");
 
     private static final String BACKDROP = "backdrop";
+
+    /**
+     * M7 part F: the sprites cropped about their centre in the atlas (design/art-direction/production, Budgets: ≤ 6
+     * pages a level, the boss included): the Revenant Walker's legs, topple and wreck, 248 and 280 px frames whose
+     * corners are empty (the walk's and the fall's reach), drawn only centred (WalkerLooks); Level 19 fits its 6 pages
+     * with them cropped.
+     */
+    static final Set<String> CENTRED_CROP =
+            Set.of("revenant-walker-legs", "revenant-walker-topple", "revenant-walker-wreck");
 
     private AtlasPacker() {}
 
@@ -164,13 +180,56 @@ public final class AtlasPacker {
                 if (atlases == null) {
                     throw new IllegalStateException("no claim for sprite " + file + "; rerun SpriteClaims");
                 }
+                BufferedImage cropped =
+                        CENTRED_CROP.contains(spriteName(file)) ? centredCrop(ImageIO.read(frame.toFile())) : null;
                 for (String atlas : atlases) {
                     Path target = staging.resolve(atlas);
                     Files.createDirectories(target);
-                    Files.copy(frame, target.resolve(file));
+                    if (cropped != null) {
+                        ImageIO.write(cropped, "png", target.resolve(file).toFile());
+                    } else {
+                        Files.copy(frame, target.resolve(file));
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * A frame cropped by the same margin on its left and right (and on its top and bottom) down to its visible
+     * pixels: the largest margins that cut none of them, so the crop keeps the frame's centre; an empty frame keeps a
+     * pixel or two at its centre.
+     */
+    static BufferedImage centredCrop(BufferedImage image) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int left = width;
+        int right = -1;
+        int top = height;
+        int bottom = -1;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (image.getRGB(x, y) >>> 24 != 0) {
+                    left = Math.min(left, x);
+                    right = Math.max(right, x);
+                    top = Math.min(top, y);
+                    bottom = Math.max(bottom, y);
+                }
+            }
+        }
+        int marginX = right < 0 ? (width - 1) / 2 : Math.min(left, width - 1 - right);
+        int marginY = bottom < 0 ? (height - 1) / 2 : Math.min(top, height - 1 - bottom);
+        if (marginX == 0 && marginY == 0) {
+            return image;
+        }
+        BufferedImage cropped =
+                new BufferedImage(width - 2 * marginX, height - 2 * marginY, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < cropped.getHeight(); y++) {
+            for (int x = 0; x < cropped.getWidth(); x++) {
+                cropped.setRGB(x, y, image.getRGB(x + marginX, y + marginY));
+            }
+        }
+        return cropped;
     }
 
     /**

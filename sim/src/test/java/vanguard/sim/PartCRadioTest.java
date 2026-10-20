@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
  * hold, once, and {@code first-pounce} the attempt's first pounce, once.
  */
 class PartCRadioTest {
-    private static final int ESCORT = LevelScript.RadioCue.FITTED_ESCORT;
+    private static final int ESCORT = RadioCue.FITTED_ESCORT;
 
     private static LevelScript timedLines() {
         return LevelClockSpecs.level(
@@ -26,8 +26,8 @@ class PartCRadioTest {
                 List.of(),
                 List.of(),
                 List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(cue(LevelScript.CueTrigger.TIME, 1, ESCORT), cue(LevelScript.CueTrigger.TIME, 2, ESCORT)),
+                new Secondary(0.8, 50),
+                List.of(cue(CueTrigger.TIME, 1, ESCORT), cue(CueTrigger.TIME, 2, ESCORT)),
                 List.of(),
                 Optional.empty());
     }
@@ -81,11 +81,11 @@ class PartCRadioTest {
                 40,
                 150,
                 List.of(),
-                List.of(new LevelScript.GroundUnit(2, 240, NODE, 0), new LevelScript.GroundUnit(4, 240, NODE, 1)),
+                List.of(new GroundUnit(2, 240, NODE, 0), new GroundUnit(4, 240, NODE, 1)),
                 List.of("Node A", "Node B"),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(cue(LevelScript.CueTrigger.HOLD_START, 0, 0)),
-                List.of(new LevelScript.Hold(List.of(0), 200, 30, 1), new LevelScript.Hold(List.of(1), 200, 30, 1)),
+                new Secondary(0.8, 50),
+                List.of(cue(CueTrigger.HOLD_START, 0, 0)),
+                List.of(new ObjectiveSpec.Hold(List.of(0), 200, 30, 1), new ObjectiveSpec.Hold(List.of(1), 200, 30, 1)),
                 Optional.empty());
         Sortie sortie =
                 new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
@@ -131,10 +131,8 @@ class PartCRadioTest {
                                 new WaveSpec.At(PlayField.WIDTH + 200, PlayField.HEIGHT - 96 - 150))))),
                 List.of(),
                 List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(
-                        cue(LevelScript.CueTrigger.FIRST_POUNCE, 0, 0),
-                        cue(LevelScript.CueTrigger.FIRST_POUNCE, 0, ESCORT)),
+                new Secondary(0.8, 50),
+                List.of(cue(CueTrigger.FIRST_POUNCE, 0, 0), cue(CueTrigger.FIRST_POUNCE, 0, ESCORT)),
                 List.of(),
                 Optional.empty());
         Sortie sortie =

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
  * debrief's count of the domes never hit; a retry starts it over.
  */
 class UntouchedTest {
-    private static final LevelScript.Secondary UNTOUCHED = LevelScript.Secondary.untouched(100, "DOMES");
+    private static final Secondary UNTOUCHED = Secondary.untouched(100, "DOMES");
     /** Eden's footprint leaves the bottom edge: its centre 72 px below it. */
     private static final double EDEN_GONE = SiegeSpecs.EDEN_T + (PlayField.HEIGHT + 144) / SiegeSpecs.SPEED;
 
@@ -94,11 +94,11 @@ class UntouchedTest {
         assertFalse(UNTOUCHED.byEscapes());
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new LevelScript.Secondary(
+                () -> new Secondary(
                         0.5, 100, List.of(), "", List.of(), "DOMES", "", List.of(), -1, "", false, false, 0, false,
                         true));
         LevelScript without = SiegeSpecs.level(List.of(), List.of(), UNTOUCHED, Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> SiegeSpecs.sortie(without));
-        assertFalse(new LevelScript.Secondary(0.5, 100).untouched(), "the shorter constructors are not untouched");
+        assertFalse(new Secondary(0.5, 100).untouched(), "the shorter constructors are not untouched");
     }
 }

@@ -10,10 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.PartSpec;
+import vanguard.sim.Pass;
 import vanguard.sim.PickupType;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -46,9 +51,8 @@ class Level03Test {
         int kills = level.waves().stream()
                 .mapToInt(wave -> wave.count() * wave.enemy().bounty())
                 .sum();
-        int setPieces = level.setPieces().stream()
-                .mapToInt(LevelScript.SetPieceSpec::bounty)
-                .sum();
+        int setPieces =
+                level.setPieces().stream().mapToInt(SetPieceSpec::bounty).sum();
         int drops = (int) level.setPieces().stream()
                         .filter(piece -> piece.drop()
                                 .filter(PickupType.LARGE_SALVAGE::equals)
@@ -58,7 +62,11 @@ class Level03Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int total = kills + setPieces + drops + crates + level.secondary().credits();
+        int total = kills
+                + setPieces
+                + drops
+                + crates
+                + level.objectives().secondary().credits();
 
         assertEquals(790, kills);
         assertEquals(113, setPieces);
@@ -77,9 +85,9 @@ class Level03Test {
         assertEquals(Map.of("needler", 9, "skitter", 54, "spore-bomber", 10, "stinger", 6, "whirl-seed", 24), totals);
         assertEquals(
                 List.of("leviathan"),
-                level.setPieces().stream().map(LevelScript.SetPieceSpec::slug).toList());
-        assertEquals("spore-bomber", level.secondary().escapes());
-        assertEquals(50, level.secondary().credits());
+                level.setPieces().stream().map(SetPieceSpec::slug).toList());
+        assertEquals("spore-bomber", level.objectives().secondary().escapes());
+        assertEquals(50, level.objectives().secondary().credits());
         assertEquals(10, sortie(content, 1, Difficulty.MEDIUM).escapesTotal());
     }
 
@@ -104,13 +112,12 @@ class Level03Test {
     @ParameterizedTest
     @EnumSource(Difficulty.class)
     void theLeviathanHoldsThirtySecondsOrTwentyFourOnHard(Difficulty difficulty) {
-        LevelScript.SetPieceSpec leviathan =
+        SetPieceSpec leviathan =
                 SimSpecs.level(content, LEVEL, difficulty).setPieces().getFirst();
-        LevelScript.Pass second = leviathan.passes().get(1);
+        Pass second = leviathan.passes().get(1);
 
         assertEquals(difficulty == Difficulty.HARD ? 24 : 30, second.leaveAt() - second.descendAt(), 1e-9);
-        int hp = (int)
-                leviathan.parts().stream().mapToDouble(LevelScript.PartSpec::hp).sum();
+        int hp = (int) leviathan.parts().stream().mapToDouble(PartSpec::hp).sum();
         assertEquals(
                 switch (difficulty) {
                     case EASY -> 382;
@@ -125,11 +132,11 @@ class Level03Test {
 
     @Test
     void theVentsFireStaggeredAndTheFinsEveryFourSeconds() {
-        LevelScript.SetPieceSpec leviathan =
+        SetPieceSpec leviathan =
                 SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).setPieces().getFirst();
         List<Double> firsts = leviathan.parts().stream()
                 .filter(part -> part.gun().isPresent())
-                .map(LevelScript.PartSpec::firstShotSeconds)
+                .map(PartSpec::firstShotSeconds)
                 .toList();
 
         List<Double> expected = List.of(0.6, 1.2, 1.8, 2.4, 4.0, 4.0);
@@ -156,9 +163,9 @@ class Level03Test {
     @ParameterizedTest
     @EnumSource(Difficulty.class)
     void easyLeavesOutEverySecondLargeChunkAndHardDriftsThemFaster(Difficulty difficulty) {
-        List<LevelScript.DebrisSpec> debris =
-                SimSpecs.level(content, LEVEL, difficulty).debris();
-        long large = debris.stream().filter(LevelScript.DebrisSpec::large).count();
+        List<HazardSpec.DebrisSpec> debris =
+                SimSpecs.level(content, LEVEL, difficulty).hazards().debris();
+        long large = debris.stream().filter(HazardSpec.DebrisSpec::large).count();
         double fastest = debris.stream()
                 .mapToDouble(chunk -> Math.hypot(chunk.vx(), chunk.vy()))
                 .max()
@@ -167,16 +174,15 @@ class Level03Test {
         assertEquals(difficulty == Difficulty.EASY ? 5 : 10, large);
         assertEquals(10, debris.size() - large, "every small chunk on every difficulty");
         assertTrue(fastest <= (difficulty == Difficulty.HARD ? 60 : 40), "fastest " + fastest);
-        assertTrue(debris.stream().filter(LevelScript.DebrisSpec::large).allMatch(chunk -> chunk.damage() == 15));
+        assertTrue(debris.stream().filter(HazardSpec.DebrisSpec::large).allMatch(chunk -> chunk.damage() == 15));
         assertTrue(debris.stream().filter(chunk -> !chunk.large()).allMatch(chunk -> chunk.hp() == 6));
     }
 
     @Test
     void theFourLifeboatLightsRevealOneCrateTogether() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.GroundObjectSpec> lights = level.groundObjects().stream()
-                .filter(LevelScript.GroundObjectSpec::trigger)
-                .toList();
+        List<GroundObjectSpec> lights =
+                level.groundObjects().stream().filter(GroundObjectSpec::trigger).toList();
 
         assertEquals(4, lights.size());
         assertTrue(lights.stream()

@@ -67,22 +67,14 @@ class GroundAndDiveTest {
             true);
 
     private static LevelScript level(
-            List<WaveSpec> waves,
-            List<LevelScript.GroundUnit> units,
-            LevelScript.Secondary secondary,
-            List<LevelScript.CraneSpec> cranes) {
-        return new LevelScript(
-                2,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 140)),
-                waves,
-                List.of(),
-                units,
-                0,
-                List.of(),
-                secondary,
-                cranes);
+            List<WaveSpec> waves, List<GroundUnit> units, Secondary secondary, List<HazardSpec.CraneSpec> cranes) {
+        return LevelScript.builder(2, 1)
+                .sections(List.of(new Section(40, 140)))
+                .waves(waves)
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(secondary))
+                .hazards(HazardSpec.NONE.withCranes(cranes))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -98,7 +90,7 @@ class GroundAndDiveTest {
         var sortie = unhit(level(
                 List.of(wave(0, WaveSpec.Formation.SINGLE, STINGER, 1, FRONT, NONE)),
                 List.of(),
-                new LevelScript.Secondary(0.8, 50),
+                new Secondary(0.8, 50),
                 List.of()));
         int fired = 0;
         int bullets = 0;
@@ -127,8 +119,8 @@ class GroundAndDiveTest {
 
     @Test
     void aTurretScrollsWithTheGroundTurnsItsBarrelAndFallsSilentOncePassed() {
-        var units = List.of(new LevelScript.GroundUnit(0, Ship.START_X + 120, TURRET, -1));
-        var sortie = unhit(level(List.of(), units, new LevelScript.Secondary(0.8, 50), List.of()));
+        var units = List.of(new GroundUnit(0, Ship.START_X + 120, TURRET, -1));
+        var sortie = unhit(level(List.of(), units, new Secondary(0.8, 50), List.of()));
         sortie.step(Command.NONE);
         Enemy turret = sortie.enemy(0);
         double y = turret.renderY(1);
@@ -154,10 +146,8 @@ class GroundAndDiveTest {
 
     @Test
     void aDockIsClearedWhenAllItsTurretsAreDestroyedAndPays() {
-        var units = List.of(
-                new LevelScript.GroundUnit(0, Ship.START_X, TURRET, 0),
-                new LevelScript.GroundUnit(0.3, Ship.START_X, TURRET, 0));
-        var sortie = unhit(level(List.of(), units, new LevelScript.Secondary(0, 25, List.of("Dock One")), List.of()));
+        var units = List.of(new GroundUnit(0, Ship.START_X, TURRET, 0), new GroundUnit(0.3, Ship.START_X, TURRET, 0));
+        var sortie = unhit(level(List.of(), units, new Secondary(0, 25, List.of("Dock One")), List.of()));
 
         int cleared = 0;
         for (int i = 0; i < SimStep.ticks(5); i++) {
@@ -173,10 +163,8 @@ class GroundAndDiveTest {
 
     @Test
     void aDockIsLostWhenItsLastTurretLeavesTheScreenAlive() {
-        var units =
-                List.of(new LevelScript.GroundUnit(0, 40, TURRET, 0), new LevelScript.GroundUnit(0, 440, TURRET, 1));
-        var sortie = unhit(
-                level(List.of(), units, new LevelScript.Secondary(0, 25, List.of("Dock One", "Dock Two")), List.of()));
+        var units = List.of(new GroundUnit(0, 40, TURRET, 0), new GroundUnit(0, 440, TURRET, 1));
+        var sortie = unhit(level(List.of(), units, new Secondary(0, 25, List.of("Dock One", "Dock Two")), List.of()));
 
         int lost = 0;
         for (int i = 0; i < SimStep.ticks(6); i++) {
@@ -190,15 +178,14 @@ class GroundAndDiveTest {
         assertEquals(0, sortie.credits());
     }
 
-    private static LevelScript.CraneSpec crane(List<Double> swings) {
-        return new LevelScript.CraneSpec(
+    private static HazardSpec.CraneSpec crane(List<Double> swings) {
+        return new HazardSpec.CraneSpec(
                 240, 550, 260, 16, Math.toRadians(-45), Math.toRadians(45), swings, 2.5, 1.5, 15, 3, 80, "crane cache");
     }
 
     @Test
     void theCraneIsFoldedAwayThenSwingsBetweenItsAnglesAndFoldsAgain() {
-        var sortie = sortie(
-                level(List.of(), List.of(), new LevelScript.Secondary(0.8, 50), List.of(crane(List.of(4.0, 9.0)))));
+        var sortie = sortie(level(List.of(), List.of(), new Secondary(0.8, 50), List.of(crane(List.of(4.0, 9.0)))));
         Crane arm = sortie.crane(0);
 
         runTo(sortie, 2);
@@ -216,9 +203,9 @@ class GroundAndDiveTest {
     @Test
     void theArmStopsShotsAndHitsTheShipAtMostOncePerSecond() {
         // A crane whose arm hangs straight down over the ship's column after its swing to 0 degrees.
-        var spec = new LevelScript.CraneSpec(
+        var spec = new HazardSpec.CraneSpec(
                 240, 550, 500, 16, Math.toRadians(-45), 0, List.of(1.6), 0.5, 1.5, 15, 3, 80, "crane cache");
-        var sortie = sortie(level(List.of(), List.of(), new LevelScript.Secondary(0.8, 50), List.of(spec)));
+        var sortie = sortie(level(List.of(), List.of(), new Secondary(0.8, 50), List.of(spec)));
 
         int glanced = 0;
         int shieldHits = 0;
@@ -235,7 +222,7 @@ class GroundAndDiveTest {
     @Test
     void threeHitsOnTheClampDuringASwingDropTheCrate() {
         // A swing of a few degrees keeps the clamp over the ship's column while it swings.
-        var spec = new LevelScript.CraneSpec(
+        var spec = new HazardSpec.CraneSpec(
                 240,
                 550,
                 240,
@@ -249,7 +236,7 @@ class GroundAndDiveTest {
                 3,
                 80,
                 "crane cache");
-        var sortie = unhit(level(List.of(), List.of(), new LevelScript.Secondary(0.8, 50), List.of(spec)));
+        var sortie = unhit(level(List.of(), List.of(), new Secondary(0.8, 50), List.of(spec)));
 
         int clampHits = 0;
         int found = 0;

@@ -9,9 +9,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.Armament;
 import vanguard.sim.Command;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.DropSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PickupType;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.Tow;
@@ -97,20 +102,20 @@ class LevelRulesTest {
     void theRulesReachTheSimulation() {
         LevelScript level = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
 
-        LevelScript.TowSpec tow = level.tows().getFirst();
+        ObjectiveSpec.TowSpec tow = level.objectives().tows().getFirst();
         assertEquals(75, tow.crateCredits());
         assertEquals("tow cache", tow.secret());
         assertEquals(3, tow.hits());
         assertEquals(60, tow.podDy(), 1e-9);
         assertEquals(-60, tow.vy(), 1e-9);
 
-        LevelScript.PartDrop drop = level.partDrops().getFirst();
+        DropSpec.PartDrop drop = level.drops().partDrops().getFirst();
         assertEquals("gorgon-frigate", drop.slug());
         assertEquals(List.of(0, 1, 2), drop.parts());
         assertEquals(1, drop.dropsAt());
         assertEquals(PickupType.OVERDRIVE, drop.pickup());
 
-        LevelScript.Secondary secondary = level.secondary();
+        Secondary secondary = level.objectives().secondary();
         assertTrue(secondary.byParts());
         assertTrue(secondary.byEscapes(), "the HUD counts the parts as it counts escapers");
         assertEquals("gorgon-frigate", secondary.partsOf());
@@ -118,15 +123,14 @@ class LevelRulesTest {
         assertEquals(1, secondary.beforePhase());
         assertEquals("HEADS", secondary.label());
 
-        LevelScript.RadioCue homing = cueAt(level, 151);
-        assertEquals(LevelScript.RadioCue.FITTED_HOMING, homing.requires());
+        RadioCue homing = cueAt(level, 151);
+        assertEquals(RadioCue.FITTED_HOMING, homing.requires());
         assertEquals(0, homing.requiresNot());
         assertFalse(homing.requiresSpecial());
-        LevelScript.RadioCue noHoming = cueAt(level, 153);
+        RadioCue noHoming = cueAt(level, 153);
         assertEquals(0, noHoming.requires());
-        assertEquals(LevelScript.RadioCue.FITTED_HOMING, noHoming.requiresNot());
-        LevelScript.RadioCue timeout =
-                level.radio().get(BossLevelTest.cueIndex(level, LevelScript.CueTrigger.BOSS_TIMEOUT));
+        assertEquals(RadioCue.FITTED_HOMING, noHoming.requiresNot());
+        RadioCue timeout = level.radio().get(BossLevelTest.cueIndex(level, CueTrigger.BOSS_TIMEOUT));
         assertEquals("Core", timeout.subject());
 
         assertEquals(4, pincer(level).holdSeconds().orElseThrow(), 1e-9);
@@ -206,8 +210,7 @@ class LevelRulesTest {
         assertFalse(radioLines.get(without).contains(cueAt(without.script(), 151)));
         assertTrue(radioLines.get(with).contains(cueAt(with.script(), 151)));
         assertFalse(radioLines.get(with).contains(cueAt(with.script(), 153)));
-        LevelScript.RadioCue timeout =
-                with.script().radio().get(BossLevelTest.cueIndex(with.script(), LevelScript.CueTrigger.BOSS_TIMEOUT));
+        RadioCue timeout = with.script().radio().get(BossLevelTest.cueIndex(with.script(), CueTrigger.BOSS_TIMEOUT));
         assertFalse(
                 radioLines.get(with).contains(timeout), "the frigate's phases end on their parts, never on a timeout");
     }
@@ -220,15 +223,14 @@ class LevelRulesTest {
     void aPhaseThatTimesOutStartsItsTimeoutLine() {
         Sortie sortie = fly(content("Last head", true), false);
         LevelScript script = sortie.script();
-        LevelScript.RadioCue timeout =
-                script.radio().get(BossLevelTest.cueIndex(script, LevelScript.CueTrigger.BOSS_TIMEOUT));
-        List<LevelScript.RadioCue> started = radioLines.get(sortie);
+        RadioCue timeout = script.radio().get(BossLevelTest.cueIndex(script, CueTrigger.BOSS_TIMEOUT));
+        List<RadioCue> started = radioLines.get(sortie);
         assertTrue(started.contains(timeout), "the timeout line starts");
         assertTrue(sortie.secondaryFailed(), "a head outlived the last-head phase");
     }
 
     /** The radio cues each flown sortie started. */
-    private final java.util.Map<Sortie, List<LevelScript.RadioCue>> radioLines = new java.util.IdentityHashMap<>();
+    private final java.util.Map<Sortie, List<RadioCue>> radioLines = new java.util.IdentityHashMap<>();
 
     /**
      * Flies the level on medium with the autopilot to its end, retrying from the boss checkpoint
@@ -237,7 +239,7 @@ class LevelRulesTest {
      */
     private Sortie fly(Content level, boolean homing) {
         Sortie sortie = homing ? homingSortie(level) : BossLevelTest.sortie(level, 2185, Difficulty.MEDIUM);
-        List<LevelScript.RadioCue> started = new ArrayList<>();
+        List<RadioCue> started = new ArrayList<>();
         int headsOff = 0;
         int steps = 0;
         while (!sortie.complete() && steps++ < MAX_STEPS) {
@@ -304,17 +306,17 @@ class LevelRulesTest {
                 starter.plating().maxArmour());
     }
 
-    private static LevelScript.RadioCue cueAt(LevelScript level, double t) {
+    private static RadioCue cueAt(LevelScript level, double t) {
         return level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME && cue.t() == t)
+                .filter(cue -> cue.trigger() == CueTrigger.TIME && cue.t() == t)
                 .findFirst()
                 .orElseThrow();
     }
 
     private static int secretCue(LevelScript level, String secret) {
         for (int i = 0; i < level.radio().size(); i++) {
-            LevelScript.RadioCue cue = level.radio().get(i);
-            if (cue.trigger() == LevelScript.CueTrigger.SECRET && cue.subject().equals(secret)) {
+            RadioCue cue = level.radio().get(i);
+            if (cue.trigger() == CueTrigger.SECRET && cue.subject().equals(secret)) {
                 return i;
             }
         }

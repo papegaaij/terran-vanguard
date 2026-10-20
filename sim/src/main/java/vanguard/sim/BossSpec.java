@@ -8,7 +8,7 @@ import java.util.Optional;
  * A boss's script at one difficulty (design/enemies/bosses): it arrives at {@code arriveSeconds} on
  * the level clock on {@code layer}, descends from above the top edge at {@code descentSpeed} px/s
  * until its centre is at {@code hoverY}, then holds there with a sideways sine until it is killed.
- * Its parts (heads, core, sacs) are those of its {@link LevelScript.SetPieceSpec}; the
+ * Its parts (heads, core, sacs) are those of its {@link SetPieceSpec}; the
  * {@link Chain}s hang parts on articulated necks that bend toward the player. Its {@link Phase}s
  * run in order, each ending on how many of a set of parts are still alive or on its timer; a phase
  * may start with a {@link Move} (a descent to another layer and a turn into another {@link Pose}),
@@ -40,6 +40,15 @@ import java.util.Optional;
  *     game; 0 for the mid-boss's quick chain
  * @param arena M5 part E: the anchored arena boss's lanes, slams, part layers and weak spots; empty
  *     for a boss that descends
+ * @param incomingSeconds round 41 (the 2026-10-19 playtest, Level 14): with more than 0, a {@link
+ *     SimEvents.Type#BOSS_INCOMING} this long before its arrival on the level clock (the warning box shown
+ *     before the boss is reached); 0 for none (every boss before it)
+ * @param stride M7 part F (design/enemies/bosses/revenant-walker): a walking arena boss's passes ({@link
+ *     StrideArena}); empty for every other boss. It needs an {@code arena} (no lanes: its part layers and its
+ *     weak spots, the vents)
+ * @param plate M7 part F: a walking boss's front plate, which turns every shot and the beam on its heading side;
+ *     empty for none
+ * @param cone M7 part F: a walking boss's rear flame cone; empty for none
  */
 public record BossSpec(
         double arriveSeconds,
@@ -59,7 +68,11 @@ public record BossSpec(
         List<Integer> armoured,
         List<Pose> poses,
         double deathSeconds,
-        Optional<Arena> arena) {
+        Optional<Arena> arena,
+        double incomingSeconds,
+        Optional<Stride> stride,
+        Optional<Plate> plate,
+        Optional<Cone> cone) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -75,7 +88,8 @@ public record BossSpec(
                 || !(descentSpeed > 0 || arena.isPresent())
                 || !(sinePeriod > 0)
                 || !(parSeconds > 0)
-                || deathSeconds < 0) {
+                || deathSeconds < 0
+                || !(incomingSeconds >= 0)) {
             throw new IllegalArgumentException(barName + ": a boss has phases, a descent, a sway period and a par");
         }
         for (Phase phase : phases) {
@@ -89,6 +103,216 @@ public record BossSpec(
                 throw new IllegalArgumentException(barName + ": phase " + phase.name() + " turns into no pose");
             }
         }
+        if (stride.isPresent() && (arena.isEmpty() || arena.get().lanes().count() > 0)) {
+            throw new IllegalArgumentException(barName + ": a walking boss has an arena without lanes");
+        }
+        if (stride.isPresent() && phases.stream().anyMatch(phase -> phase.move().isPresent())) {
+            throw new IllegalArgumentException(barName + ": a walking boss has no phase moves");
+        }
+        if (stride.isEmpty() && (plate.isPresent() || cone.isPresent())) {
+            throw new IllegalArgumentException(barName + ": only a walking boss has a front plate or a flame cone");
+        }
+    }
+
+    /** Without M7 part F's stride, plate and cone (every boss before the Revenant Walker). */
+    public BossSpec(
+            double arriveSeconds,
+            double x,
+            double hoverY,
+            double descentSpeed,
+            double sineAmplitude,
+            double sinePeriod,
+            Layer layer,
+            boolean midBoss,
+            String barName,
+            double parSeconds,
+            List<Chain> chains,
+            List<Attack> attacks,
+            List<Phase> phases,
+            boolean engagesOnArrival,
+            List<Integer> armoured,
+            List<Pose> poses,
+            double deathSeconds,
+            Optional<Arena> arena,
+            double incomingSeconds) {
+        this(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** Without round 41's incoming warning. */
+    public BossSpec(
+            double arriveSeconds,
+            double x,
+            double hoverY,
+            double descentSpeed,
+            double sineAmplitude,
+            double sinePeriod,
+            Layer layer,
+            boolean midBoss,
+            String barName,
+            double parSeconds,
+            List<Chain> chains,
+            List<Attack> attacks,
+            List<Phase> phases,
+            boolean engagesOnArrival,
+            List<Integer> armoured,
+            List<Pose> poses,
+            double deathSeconds,
+            Optional<Arena> arena) {
+        this(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                0);
+    }
+
+    /** Round 41: this boss with its {@link SimEvents.Type#BOSS_INCOMING} {@code seconds} before its arrival (0: none). */
+    public BossSpec withIncomingSeconds(double seconds) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                seconds,
+                stride,
+                plate,
+                cone);
+    }
+
+    /** M7 part F: this boss walking {@code withStride}'s passes (an arena boss without lanes); empty: none. */
+    public BossSpec withStride(Optional<Stride> withStride) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                withStride,
+                plate,
+                cone);
+    }
+
+    /** M7 part F: this walking boss with {@code withPlate} as its front plate; empty: none. */
+    public BossSpec withPlate(Optional<Plate> withPlate) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                withPlate,
+                cone);
+    }
+
+    /** M7 part F: this walking boss with {@code withCone} as its rear flame cone; empty: none. */
+    public BossSpec withCone(Optional<Cone> withCone) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                withCone);
+    }
+
+    /** M7 part F: whether it walks passes ({@link StrideArena}): the Revenant Walker. */
+    public boolean walks() {
+        return stride.isPresent();
     }
 
     /** A boss that descends (Levels 05–07): no arena. */
@@ -271,7 +495,7 @@ public record BossSpec(
      *     and first delay are not read (the gun's interval is); empty for other patterns
      * @param down round 34 (P2, the kinder Siege Spire): the parts of {@code parts} that fire this
      *     {@link Pattern#AIMED} attack straight down the screen instead of at the ship (a part's {@code
-     *     aim: down}); empty for others
+     *     aim: down}); round 43: a walking boss's {@link Pattern#FAN} too, along its heading; empty for others
      * @param aimTurns round 40 (the Siege Spire's lanes, proposal 4a of the Act 2 playtest): its parts
      *     take turns to aim, one at a time ({@link AimTurns}); empty for none
      */
@@ -297,8 +521,10 @@ public record BossSpec(
                 throw new IllegalArgumentException(
                         name + ": only an aimed attack that does not rotate takes aim turns");
             }
-            if (!down.isEmpty() && (pattern != Pattern.AIMED || !parts.containsAll(down))) {
-                throw new IllegalArgumentException(name + ": only an aimed attack's own parts fire straight down");
+            if (!down.isEmpty()
+                    && (!(pattern == Pattern.AIMED || pattern == Pattern.FAN) || !parts.containsAll(down))) {
+                throw new IllegalArgumentException(
+                        name + ": only an aimed or fan attack's own parts fire straight down");
             }
             if (pattern == Pattern.LOB && gun.mortar().isEmpty()) {
                 throw new IllegalArgumentException(name + ": a lob fires a mortar");
@@ -527,7 +753,13 @@ public record BossSpec(
      * apart (alternating sides, or all from one): the first when the boss settles, then every
      * {@code everySeconds} while its phase lasts.
      */
-    public record Stream(EnemySpec enemy, int count, double everySeconds, double intervalSeconds, WaveSpec.Edge edge) {}
+    public record Stream(EnemySpec enemy, int count, double everySeconds, double intervalSeconds, WaveSpec.Edge edge) {
+        public Stream {
+            if (edge == WaveSpec.Edge.TOP || edge == WaveSpec.Edge.BOTTOM) {
+                throw new IllegalArgumentException("a stream comes from the side edges: " + edge);
+            }
+        }
+    }
 
     /**
      * A part layout: each part's offset from the centre in this pose (px, x right, y up, on the play
@@ -867,6 +1099,158 @@ public record BossSpec(
             if (count < 1 || lanes.isEmpty()) {
                 throw new IllegalArgumentException("a release has units and lanes");
             }
+        }
+    }
+
+    /**
+     * M7 part F, a walking boss's passes (design/enemies/bosses/revenant-walker, Passes; {@link StrideArena}): it
+     * crosses the halted arena in passes, each from one edge to the opposite one and off the screen, entering from
+     * the edges of {@code edgeCycle} in turn (the first, {@link WaveSpec.Edge#TOP}, is its intro); a vertical pass
+     * walks one of {@code laneXs}, a horizontal one one of {@code laneYs} (px from the left, px up from the bottom
+     * edge). Between two passes it is off the screen for {@code offSeconds}, under the next entry edge's warning (a
+     * top entry has none). Its walking speed is {@code phaseSpeeds} of its phase (the last for later phases).
+     * {@code besideLaneFirstPhase}: in its first phase a pass takes the lane beside the ship's (the lane nearest the
+     * ship moved one toward the field's centre; from the centre lane left and right in turn), later the ship's
+     * own. {@code turnInPlaceLastPhase}: its last phase overheats: its vents stay open, it no longer leaves the
+     * arena but turns round on the spot at a pass's end over {@code turnSeconds} (its flame cone, after its tell,
+     * burning through the turn) and walks back in the ship's lane.
+     *
+     * <p>The arrays are the record's own (not copied on access): do not change them.
+     *
+     * @param edgeCycle {@link WaveSpec.Edge#TOP}, {@link WaveSpec.Edge#BOTTOM}, {@link WaveSpec.Edge#LEFT} or
+     *     {@link WaveSpec.Edge#RIGHT}, the first {@code TOP}
+     */
+    public record Stride(
+            double[] laneXs,
+            double[] laneYs,
+            List<WaveSpec.Edge> edgeCycle,
+            double offSeconds,
+            double turnSeconds,
+            double[] phaseSpeeds,
+            boolean besideLaneFirstPhase,
+            boolean turnInPlaceLastPhase) {
+        public Stride {
+            laneXs = laneXs.clone();
+            laneYs = laneYs.clone();
+            phaseSpeeds = phaseSpeeds.clone();
+            edgeCycle = List.copyOf(edgeCycle);
+            if (laneXs.length == 0
+                    || laneYs.length == 0
+                    || phaseSpeeds.length == 0
+                    || edgeCycle.isEmpty()
+                    || edgeCycle.getFirst() != WaveSpec.Edge.TOP
+                    || !(offSeconds >= 0)
+                    || !(turnSeconds > 0)) {
+                throw new IllegalArgumentException(
+                        "a stride has lanes, speeds, an edge cycle from the top, an off time and a turn time");
+            }
+            for (WaveSpec.Edge edge : edgeCycle) {
+                if (!edge.screenEdge()) {
+                    throw new IllegalArgumentException("a stride enters from a screen edge: " + edge);
+                }
+            }
+            for (double speed : phaseSpeeds) {
+                if (!(speed > 0)) {
+                    throw new IllegalArgumentException("a stride walks at a speed: " + speed);
+                }
+            }
+            for (double lane : laneXs) {
+                if (!(lane > 0 && lane < PlayField.WIDTH)) {
+                    throw new IllegalArgumentException("a vertical lane on the play field: " + lane);
+                }
+            }
+            for (double lane : laneYs) {
+                if (!(lane > 0 && lane < PlayField.HEIGHT)) {
+                    throw new IllegalArgumentException("a horizontal lane on the play field: " + lane);
+                }
+            }
+        }
+
+        /** Its speed in phase {@code phase}, px/s (the last one for later phases). */
+        public double speed(int phase) {
+            return phaseSpeeds[Math.min(phase, phaseSpeeds.length - 1)];
+        }
+    }
+
+    /**
+     * M7 part F, a walking boss's front plate (design/enemies/bosses/revenant-walker, Parts): a box of {@code box}
+     * (its width across the heading, its height along it, as when it faces straight down) whose centre lies {@code
+     * ahead} px from part {@code part}'s centre along its heading. Every shot that meets it glances off ({@link
+     * SimEvents.Type#SHOT_GLANCED}) and it stops the Ion Beam (its {@code blocked} contact), on every layer, while
+     * the part lives; no HP, not in the bar, no blasts stopped.
+     */
+    public record Plate(int part, Hitbox box, double ahead) {
+        public Plate {
+            if (part < 0 || !(box.width() > 0) || !(box.height() > 0)) {
+                throw new IllegalArgumentException("a plate covers a part with a box");
+            }
+        }
+    }
+
+    /**
+     * M7 part F, a walking boss's rear flame cone (design/enemies/bosses/revenant-walker, Attacks; built on the
+     * sweep's beam test with a cone instead of a line): from its flamer {@code originBehind} px behind its centre,
+     * {@code length} px long, {@code halfAngleRadians} each side of its axis, which points against its heading. It
+     * starts when the ship or Rook is behind it within {@code length + reachBehind} px of the flamer, at most once
+     * per {@code cooldownSeconds} (tell start to tell start): a tell of {@code tellSeconds} (in its later phases the
+     * axis swivels up to {@code swivelRadians} toward the ship meanwhile), then a burn of {@code burnSeconds} that
+     * deals {@code damage} to the ship and to Rook once per burn each; after the burn its vents open for {@code
+     * ventSeconds} (its {@link Spot}s with {@code whileOpen}). Round 43 (the walker's rework, K.a of round 42): in its
+     * later phases a burn keeps turning toward the ship at up to {@code trackRadiansPerSecond}, within its swivel either
+     * side of its back (0: the burn holds the tell's axis).
+     */
+    public record Cone(
+            double length,
+            double halfAngleRadians,
+            double reachBehind,
+            double cooldownSeconds,
+            double tellSeconds,
+            double burnSeconds,
+            double ventSeconds,
+            double swivelRadians,
+            double damage,
+            double originBehind,
+            double trackRadiansPerSecond) {
+        public Cone {
+            if (!(length > 0)
+                    || !(halfAngleRadians > 0 && halfAngleRadians < StrictMath.PI / 2)
+                    || !(reachBehind >= 0)
+                    || !(cooldownSeconds >= 0)
+                    || !(tellSeconds >= 0)
+                    || !(burnSeconds > 0)
+                    || !(ventSeconds >= 0)
+                    || !(swivelRadians >= 0)
+                    || !(damage >= 0)
+                    || !Double.isFinite(originBehind)
+                    || !(trackRadiansPerSecond >= 0)) {
+                throw new IllegalArgumentException("a flame cone has a length, an angle, a tell, a burn and a damage");
+            }
+        }
+
+        /** A cone whose burn holds the tell's axis (no tracking). */
+        public Cone(
+                double length,
+                double halfAngleRadians,
+                double reachBehind,
+                double cooldownSeconds,
+                double tellSeconds,
+                double burnSeconds,
+                double ventSeconds,
+                double swivelRadians,
+                double damage,
+                double originBehind) {
+            this(
+                    length,
+                    halfAngleRadians,
+                    reachBehind,
+                    cooldownSeconds,
+                    tellSeconds,
+                    burnSeconds,
+                    ventSeconds,
+                    swivelRadians,
+                    damage,
+                    originBehind,
+                    0);
         }
     }
 }

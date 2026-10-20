@@ -64,7 +64,9 @@ class BackdropAssetsTest {
     /**
      * A set piece on an opaque layer lies over the layer's tile set, so wherever one of its edges
      * crosses the screen the piece has to be transparent along it; otherwise the tiles show
-     * through as a gap beyond the edge (Level 01's Earth limb in the outro).
+     * through as a gap beyond the edge (Level 01's Earth limb in the outro). M7 part F: unless another
+     * piece on the layer covers the pixels just beyond the edge with its own (Level 19's conveyor belts:
+     * the copies of a belt's plates join edge to edge, and a drum housing covers each run's ends).
      */
     @Test
     void opaqueLayersShowNoSetPieceEdgeUntilTheDebrief() throws IOException {
@@ -73,6 +75,7 @@ class BackdropAssetsTest {
             LevelData level = entry.getValue();
             BackdropData backdrop = level.backdrop();
             Path folder = BACKDROP.resolve(Backdrop.folder(entry.getKey(), entry.getValue()));
+            List<Laid> laid = new ArrayList<>();
             for (BackdropData.PlacedPiece placed : backdrop.placements()) {
                 BackdropData.Piece spec = backdrop.pieces().get(placed.piece());
                 // A tower's roof lies over its own walls, not over the tiles; a face patch (M7 part C) is
@@ -80,12 +83,91 @@ class BackdropAssetsTest {
                 if (spec.layer() == backdrop.base()
                         && !spec.isTower()
                         && !WallProjection.FACE_PATCHES.contains(placed.piece())) {
-                    for (BufferedImage image : images(folder, placed.piece(), spec)) {
-                        assertNoEdgeOnScreen(level, placed, spec, image);
-                    }
+                    laid.add(new Laid(placed, spec, images(folder, placed.piece(), spec)));
+                }
+            }
+            for (Laid piece : laid) {
+                for (BufferedImage image : piece.images()) {
+                    assertNoEdgeOnScreen(level, piece.placed(), piece.spec(), image, laid);
                 }
             }
         }
+    }
+
+    /** M7 part F: a piece laid on the opaque layer, with its images (an animated piece's frames). */
+    private record Laid(BackdropData.PlacedPiece placed, BackdropData.Piece spec, List<BufferedImage> images) {
+        /** Its left edge on the layer at {@code t}, px, as Backdrop draws it. */
+        long left(double t) {
+            return Math.round(placed.x() + placed.offsetX(t) - spec.imageWidth() / 2.0);
+        }
+
+        /** Its bottom edge on the layer (without the scroll) at {@code t}, px, as Backdrop draws it. */
+        long bottom(LevelData level, double t) {
+            return Math.round(level.pieceCentre(placed) - spec.imageHeight() / 2.0) + Math.round(placed.offsetY(t));
+        }
+
+        /** Whether every one of its images is opaque at the layer's point (x, y) at {@code t}. */
+        boolean covers(LevelData level, double t, long x, long y) {
+            long column = x - left(t);
+            long row = bottom(level, t) + spec.imageHeight() - 1 - y;
+            if (column < 0 || column >= spec.imageWidth() || row < 0 || row >= spec.imageHeight()) {
+                return false;
+            }
+            int c = (int) (placed.mirrored() ? spec.imageWidth() - 1 - column : column);
+            for (BufferedImage image : images) {
+                if (alpha(image, c, (int) row) == 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * M7 part F: whether another laid piece covers the layer's pixels just beyond an edge of {@code image} (placed
+     * at {@code left}, {@code bottom} on the layer) wherever the edge is opaque: {@code dx}, {@code dy} step from the
+     * edge's row or column out of the piece (bottom 0, -1; top 0, 1; left -1, 0; right 1, 0); a pixel along the edge
+     * beside it counts too (dithered sides).
+     */
+    private static boolean coveredBeyond(
+            LevelData level,
+            double t,
+            BackdropData.PlacedPiece self,
+            BufferedImage image,
+            long left,
+            long bottom,
+            int dx,
+            int dy,
+            List<Laid> laid) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int count = dy != 0 ? width : height;
+        for (int i = 0; i < count; i++) {
+            int column = dy != 0 ? i : dx < 0 ? 0 : width - 1;
+            int row = dy != 0 ? (dy < 0 ? height - 1 : 0) : i;
+            int c = self.mirrored() ? width - 1 - column : column;
+            if (alpha(image, c, row) == 0) {
+                continue;
+            }
+            long x = left + column + dx;
+            long y = bottom + height - 1 - row + dy;
+            // The silhouettes' sides are dithered a pixel in and out from row to row (the drum housing's and the
+            // plates' rails): a pixel beside the one beyond the edge, along the edge, covers it as well.
+            boolean covered = false;
+            for (Laid other : laid) {
+                if (other.placed() != self
+                        && (other.covers(level, t, x, y)
+                                || other.covers(level, t, x + dy, y + dx)
+                                || other.covers(level, t, x - dy, y - dx))) {
+                    covered = true;
+                    break;
+                }
+            }
+            if (!covered) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -140,7 +222,11 @@ class BackdropAssetsTest {
     }
 
     private static void assertNoEdgeOnScreen(
-            LevelData level, BackdropData.PlacedPiece placed, BackdropData.Piece spec, BufferedImage image) {
+            LevelData level,
+            BackdropData.PlacedPiece placed,
+            BackdropData.Piece spec,
+            BufferedImage image,
+            List<Laid> laid) {
         int width = image.getWidth();
         int height = image.getHeight();
         long bottom = Math.round(level.pieceCentre(placed) - height / 2.0);
@@ -159,20 +245,29 @@ class BackdropAssetsTest {
                 to = width - from;
                 from = reflected;
             }
-            if (inside(y, PlayField.HEIGHT) && opaqueRow(image, height - 1, from, to)) {
+            // M7 part F: the layer's place of the piece (without the scroll), for the pieces covering an edge.
+            long layerBottom = y + Math.round(level.scrollAt(t) * factor);
+            if (inside(y, PlayField.HEIGHT)
+                    && opaqueRow(image, height - 1, from, to)
+                    && !coveredBeyond(level, t, placed, image, x, layerBottom, 0, -1, laid)) {
                 edges.add("bottom");
             }
-            if (inside(y + height, PlayField.HEIGHT) && opaqueRow(image, 0, from, to)) {
+            if (inside(y + height, PlayField.HEIGHT)
+                    && opaqueRow(image, 0, from, to)
+                    && !coveredBeyond(level, t, placed, image, x, layerBottom, 0, 1, laid)) {
                 edges.add("top");
             }
             int low = (int) Math.max(0, y);
             int high = (int) Math.min(PlayField.HEIGHT, y + height);
             int first = placed.mirrored() ? width - 1 : 0;
-            if (inside(x, PlayField.WIDTH) && opaqueColumn(image, first, y + height - high, y + height - low)) {
+            if (inside(x, PlayField.WIDTH)
+                    && opaqueColumn(image, first, y + height - high, y + height - low)
+                    && !coveredBeyond(level, t, placed, image, x, layerBottom, -1, 0, laid)) {
                 edges.add("left");
             }
             if (inside(x + width, PlayField.WIDTH)
-                    && opaqueColumn(image, width - 1 - first, y + height - high, y + height - low)) {
+                    && opaqueColumn(image, width - 1 - first, y + height - high, y + height - low)
+                    && !coveredBeyond(level, t, placed, image, x, layerBottom, 1, 0, laid)) {
                 edges.add("right");
             }
             if (!edges.isEmpty()) {

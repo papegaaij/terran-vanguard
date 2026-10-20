@@ -103,6 +103,24 @@ public final class HangarState {
         LAUNCH
     }
 
+    /**
+     * What the mouse pointer rests on (design/ui/hangar, Mouse; the user's playtest of 2026-10-19): drawn with
+     * the hover look, a cyan outline, and never the selection, so moving the mouse from a clicked row to its
+     * choices keeps that row selected. {@code index} is the shop row, the choice, the {@link Command}'s or
+     * {@link WingmanSpec.Side}'s ordinal or the slot's index in {@link #slots()}; 0 for the bay chip.
+     */
+    public record Hover(Target target, int index) {}
+
+    /** What a {@link Hover} is over. */
+    public enum Target {
+        ROW,
+        CHOICE,
+        COMMAND,
+        SLOT,
+        SIDE,
+        BAY
+    }
+
     /** The replay hangar's message line while nothing else is shown, and its refusal. */
     public static final String REFIT_ONLY = "REPLAY: REFIT ONLY";
 
@@ -122,6 +140,8 @@ public final class HangarState {
     private String message = "";
     /** M7 part A: the notice the message line shows until the next move, empty once it is gone. */
     private String notice = "";
+    /** What the pointer rests on, if anything. */
+    private Optional<Hover> hover = Optional.empty();
 
     /** @param launchable whether the next level is built */
     public HangarState(Hangar hangar, boolean launchable) {
@@ -306,6 +326,37 @@ public final class HangarState {
     public Optional<Choice> choice() {
         return selected().filter(offer -> !offer.choices().isEmpty()).map(offer -> offer.choices()
                 .get(Math.min(choice, offer.choices().size() - 1)));
+    }
+
+    /** What the mouse pointer rests on: drawn with the hover look, never selected by it. */
+    public Optional<Hover> hover() {
+        return hover;
+    }
+
+    /** Sets what the pointer rests on; empty once a key is used (the last device used owns the look). */
+    public void hover(Optional<Hover> over) {
+        hover = over;
+    }
+
+    /** Whether the pointer rests on this target and index. */
+    public boolean hovers(Target target, int index) {
+        return hover.filter(h -> h.target() == target && h.index() == index).isPresent();
+    }
+
+    /**
+     * The choice the test fire and the power bar preview: the selected row's choice under the pointer
+     * while it rests on one of its chips, else the selected choice. The selection itself stays.
+     */
+    public Optional<Choice> previewChoice() {
+        Optional<Offer> offer = selected();
+        if (focus == Focus.SHOP && offer.isPresent() && hover.isPresent()) {
+            Hover over = hover.get();
+            List<Choice> choices = offer.get().choices();
+            if (over.target() == Target.CHOICE && over.index() < choices.size()) {
+                return Optional.of(choices.get(over.index()));
+            }
+        }
+        return choice();
     }
 
     public Focus focus() {
@@ -510,7 +561,19 @@ public final class HangarState {
         return moved(selectSlot(index));
     }
 
-    /** The mouse: the pointer on a shop row selects it (the focus goes to the shop). */
+    /**
+     * The mouse: a click on the selected row's detail (a choice, a side or the bay chip) gives the focus
+     * back to the shop when the command bar had it; false while the repair panel is open.
+     */
+    public boolean pointShop() {
+        if (focus == Focus.REPAIR) {
+            return false;
+        }
+        focus = Focus.SHOP;
+        return true;
+    }
+
+    /** The mouse: a click on a shop row selects it (the focus goes to the shop); hovering only highlights it. */
     public Outcome pointRow(int index) {
         if (focus == Focus.REPAIR || index < 0 || index >= rowCount()) {
             return Outcome.NONE;
@@ -525,7 +588,7 @@ public final class HangarState {
         return moved(Outcome.MOVED);
     }
 
-    /** The mouse: the pointer on one of the selected row's choices highlights it, as left / right do. */
+    /** The mouse: a click on one of the selected row's choices selects it, as left / right do (the click then confirms). */
     public Outcome pointChoice(int index) {
         int choices = selected().map(offer -> offer.choices().size()).orElse(0);
         if (focus != Focus.SHOP || index < 0 || index >= choices || index == Math.min(choice, choices - 1)) {
@@ -533,11 +596,6 @@ public final class HangarState {
         }
         choice = index;
         return moved(Outcome.MOVED);
-    }
-
-    /** Whether the bay row's chip shows: the bay row is selected and the shop has the focus (its click confirms). */
-    public boolean bayChipShown() {
-        return focus == Focus.SHOP && baySelected();
     }
 
     /** The mouse: a click on the side row's LEFT or RIGHT chip sets Rook's side. */
@@ -548,7 +606,7 @@ public final class HangarState {
         return side(side);
     }
 
-    /** The mouse: the pointer on an enabled command of the command bar highlights it. */
+    /** The mouse: a click on an enabled command of the command bar selects it (the click then confirms). */
     public Outcome pointCommand(Command chosen) {
         if (focus == Focus.REPAIR || !enabled(chosen) || focus == Focus.COMMANDS && command == chosen) {
             return Outcome.NONE;

@@ -1,7 +1,7 @@
 package vanguard.game.render;
 
 import java.util.Set;
-import vanguard.sim.LevelScript;
+import vanguard.sim.GroundObjectSpec;
 
 /**
  * Which triggers break like a destructible on the hit that spends them (design/tech/architecture,
@@ -18,7 +18,7 @@ public final class TriggerBreak {
     private TriggerBreak() {}
 
     /** Whether {@code spec} is a trigger that breaks apart on the hit that spends it. */
-    public static boolean breaks(LevelScript.GroundObjectSpec spec) {
+    public static boolean breaks(GroundObjectSpec spec) {
         return spec.trigger() && WRECKED_WHEN_SPENT.contains(spec.look());
     }
 
@@ -51,7 +51,7 @@ public final class TriggerBreak {
     private static final Set<String> DOOR_BURSTS = Set.of("relay-hut");
 
     /** M7 part C: whether {@code spec} is a trigger whose door bursts open on the hit that spends it. */
-    public static boolean doorBursts(LevelScript.GroundObjectSpec spec) {
+    public static boolean doorBursts(GroundObjectSpec spec) {
         return spec.trigger() && DOOR_BURSTS.contains(spec.look());
     }
 

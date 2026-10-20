@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Optional;
 import vanguard.sim.Ally;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.Sortie;
 
 /**
@@ -44,7 +45,7 @@ final class LossLooks {
     /** Variant b's glow starts at this scale and grows to 1 over the glow. */
     static final float GLOW_SCALE_B = 0.55f;
 
-    private final Optional<LevelScript.ScriptedLoss> loss;
+    private final Optional<ObjectiveSpec.ScriptedLoss> loss;
     private final Array<AtlasRegion> glow;
     private final Array<AtlasRegion> lance;
     private final Array<AtlasRegion> flash;
@@ -52,7 +53,7 @@ final class LossLooks {
     private final boolean spear;
 
     LossLooks(Sprites sprites, LevelScript script) {
-        loss = script.escort().flatMap(LevelScript.Escort::air).flatMap(LevelScript.Air::scriptedLoss);
+        loss = script.objectives().escort().flatMap(ObjectiveSpec.Escort::air).flatMap(ObjectiveSpec.Air::scriptedLoss);
         glow = sprites.has("cloud-glow") ? sprites.frames("cloud-glow") : new Array<>();
         lance = sprites.has("lance") ? sprites.frames("lance") : new Array<>();
         flash = sprites.has("lance-flash") ? sprites.frames("lance-flash") : new Array<>();
@@ -109,7 +110,7 @@ final class LossLooks {
         if (loss.isEmpty() || glow.isEmpty() || sortie.scriptedAlly() < 0) {
             return;
         }
-        LevelScript.ScriptedLoss spec = loss.get();
+        ObjectiveSpec.ScriptedLoss spec = loss.get();
         double tau = seconds - (spec.t() - spec.glow());
         float strength = intensity(tau, spec.glow());
         if (strength <= 0) {

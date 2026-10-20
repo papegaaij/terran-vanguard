@@ -90,6 +90,8 @@ final class UnitCues extends SoundFamily {
     private final EnemyLooks[] looks;
     /** M7 part E: Level 18's units, whose volleys are a grit spiral's hiss or a drone's burst. */
     private final StormCues storm;
+    /** M7 part F: Level 19's turret units, whose burst plays once ({@link FoundryCues#fired}). */
+    private final FoundryCues foundry;
     /** The Vrell screech as a large unit enters the screen, at most one every 3 s. */
     private final ScreechCue screech = new ScreechCue(SimStep.ticks(ScreechCue.THROTTLE_SECONDS));
     /** M5 part D: a Mote Swarm's rush of wings as it enters the screen. */
@@ -103,10 +105,11 @@ final class UnitCues extends SoundFamily {
     /** This step's step (the absorb's spacing). */
     private long now;
 
-    UnitCues(SoundMix mix, EnemyLooks[] looks, StormCues storm) {
+    UnitCues(SoundMix mix, EnemyLooks[] looks, StormCues storm, FoundryCues foundry) {
         super(mix);
         this.looks = looks;
         this.storm = storm;
+        this.foundry = foundry;
     }
 
     @Override
@@ -138,6 +141,8 @@ final class UnitCues extends SoundFamily {
                     bank.play(Sfx.HERALD_SONG, SIEGE_LEVEL, 1, pan);
                 } else if (storm.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M7 part E: a Dust Devil's grit spiral or a Ghost Drone's burst (StormCues).
+                } else if (foundry.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M7 part F: a Warden Tank's burst, once at its first shot (FoundryCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))

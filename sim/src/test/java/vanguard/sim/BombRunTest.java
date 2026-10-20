@@ -143,7 +143,7 @@ class BombRunTest {
                 List.of(SiegeSpecs.bombers(
                         0, WaveSpec.Formation.LINE_ABREAST, 3, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)),
                 List.of(),
-                LevelScript.Secondary.NONE,
+                Secondary.NONE,
                 Optional.of(SiegeSpecs.domes(Map.of())));
         Sortie sortie = SiegeSpecs.sortie(level);
         while (sortie.levelSeconds() < 15) {

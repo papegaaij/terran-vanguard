@@ -4,7 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.WingmanSpec;
 
 /**
@@ -33,8 +38,8 @@ class RadioScheduleTest {
 
     @Test
     void aTimedLineThatRequiresASpecialIsDueOnlyWithOne() {
-        var hammer = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.TIME,
+        var hammer = new RadioCue(
+                CueTrigger.TIME,
                 60,
                 "",
                 "Okafor",
@@ -45,18 +50,11 @@ class RadioScheduleTest {
                 true,
                 0,
                 Integer.MAX_VALUE);
-        var script = new LevelScript(
-                4,
-                1,
-                0,
-                List.of(new LevelScript.Section(100, 120)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(hammer),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        var script = LevelScript.builder(4, 1)
+                .sections(List.of(new Section(100, 120)))
+                .radio(List.of(hammer))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
 
         assertEquals(10, new RadioSchedule(script, true).untilTimed(50), 1e-4);
         assertEquals(Float.POSITIVE_INFINITY, new RadioSchedule(script, false).untilTimed(50));
@@ -64,8 +62,8 @@ class RadioScheduleTest {
 
     /** A timed Rook line at {@code t} that requires the escort (M5 part C: {@code requires: escort}). */
     private static LevelScript script(double t, int requires) {
-        var line = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.TIME,
+        var line = new RadioCue(
+                CueTrigger.TIME,
                 t,
                 "",
                 "Rook",
@@ -78,29 +76,22 @@ class RadioScheduleTest {
                 Integer.MAX_VALUE,
                 requires,
                 0);
-        return new LevelScript(
-                9,
-                1,
-                0,
-                List.of(new LevelScript.Section(150, 200)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(line),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        return LevelScript.builder(9, 1)
+                .sections(List.of(new Section(150, 200)))
+                .radio(List.of(line))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     @Test
     void anEscortLineCountsOnlyWhileHeFlies() {
-        var schedule = new RadioSchedule(script(60, LevelScript.RadioCue.FITTED_ESCORT), 0);
+        var schedule = new RadioSchedule(script(60, RadioCue.FITTED_ESCORT), 0);
         assertEquals(10, schedule.untilTimed(50, 1, true), 1e-4);
         assertEquals(Float.POSITIVE_INFINITY, schedule.untilTimed(50, 1, false));
         assertEquals(
                 true,
                 RadioSchedule.needsEscort(
-                        script(60, LevelScript.RadioCue.FITTED_ESCORT).radio().getFirst()));
+                        script(60, RadioCue.FITTED_ESCORT).radio().getFirst()));
         assertEquals(false, RadioSchedule.needsEscort(script(60, 0).radio().getFirst()));
     }
 

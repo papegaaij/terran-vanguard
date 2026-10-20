@@ -63,7 +63,7 @@ public final class HangarView implements Disposable {
                 next,
                 teaser,
                 levelKey.orElse(""),
-                next.map(level -> IntelPanel.unclassified(content, level.enemies(), nextLevel))
+                next.map(level -> IntelPanel.unclassified(content, IntelPanel.withBoss(level), nextLevel))
                         .orElse(java.util.Map.of()));
     }
 

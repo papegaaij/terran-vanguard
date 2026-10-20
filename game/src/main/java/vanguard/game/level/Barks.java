@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import vanguard.content.WingmenData;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.RadioCue;
 import vanguard.sim.SimStep;
 import vanguard.sim.WaveSpec;
 
@@ -121,6 +123,8 @@ public final class Barks {
     private RadioQueue.Message waiting;
     private int waitingPriority;
     private boolean ejected;
+    /** The level is won: the outro's radio is the closing lines', so no bark fires (see {@link #levelComplete}). */
+    private boolean over;
     /** The player's armour latch: below the share since the last bark; null before the first step. */
     private Boolean playerLow;
 
@@ -204,7 +208,7 @@ public final class Barks {
             boolean specialFitted,
             RadioQueue radio,
             Function<Line, RadioQueue.Message> queue) {
-        return of(data, script, specialFitted ? LevelScript.RadioCue.FITTED_SPECIAL : 0, radio, queue);
+        return of(data, script, specialFitted ? RadioCue.FITTED_SPECIAL : 0, radio, queue);
     }
 
     /**
@@ -217,12 +221,12 @@ public final class Barks {
             int fitted,
             RadioQueue radio,
             Function<Line, RadioQueue.Message> queue) {
-        List<LevelScript.RadioCue> rook = script.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
+        List<RadioCue> rook = script.radio().stream()
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
                 .filter(cue -> cue.speaker().equals(data.speaker()))
-                .filter(cue -> cue.allowedWith(fitted | LevelScript.RadioCue.FITTED_ESCORT))
+                .filter(cue -> cue.allowedWith(fitted | RadioCue.FITTED_ESCORT))
                 .toList();
-        double[] timed = rook.stream().mapToDouble(LevelScript.RadioCue::t).toArray();
+        double[] timed = rook.stream().mapToDouble(RadioCue::t).toArray();
         boolean[] escortOnly = new boolean[rook.size()];
         for (int i = 0; i < escortOnly.length; i++) {
             escortOnly[i] = RadioSchedule.needsEscort(rook.get(i));
@@ -290,6 +294,7 @@ public final class Barks {
         }
         waiting = null;
         ejected = false;
+        over = false;
         reentryCount = 0;
         playerLow = null;
         overdrives = -1;
@@ -318,6 +323,21 @@ public final class Barks {
             radio.withdraw(waiting);
             waiting = null;
         }
+    }
+
+    /**
+     * The level is won and its outro starts (the user's playtest of 2026-10-19: the last radio message cut
+     * short at the end of Level 15 or 16): a bark that still waits is withdrawn and none fires after it, so
+     * no bark of his (a kill streak in the last seconds, an overdrive pickup) holds the level-end lines back
+     * towards the outro's cap, where the debrief cuts the voice that still speaks. A bark already on the
+     * radio finishes.
+     */
+    public void levelComplete() {
+        over = true;
+        if (waiting != null && radio.waiting(waiting)) {
+            radio.withdraw(waiting);
+        }
+        waiting = null;
     }
 
     /** A boss's warning starts (an act boss's warning, a mid-boss's sting). */
@@ -459,7 +479,7 @@ public final class Barks {
      */
     public boolean fire(Trigger trigger, double t) {
         WingmenData.Bark bark = barks[trigger.ordinal()];
-        if (bark == null) {
+        if (bark == null || over) {
             return false;
         }
         boolean eject = trigger == Trigger.ROOK_EJECTS;

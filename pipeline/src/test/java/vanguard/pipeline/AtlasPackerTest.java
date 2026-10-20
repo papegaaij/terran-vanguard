@@ -117,6 +117,28 @@ class AtlasPackerTest {
         assertArrayEquals(first, Files.readAllBytes(output.resolve("backdrop.atlas")));
     }
 
+    /**
+     * M7 part F: a large sprite drawn only centred (the Revenant Walker's legs, topple and wreck) goes into its atlas
+     * cropped by the same margin on both sides down to its visible pixels, so its centre stays its centre.
+     */
+    @Test
+    void aCentredCropKeepsTheFramesCentre() {
+        BufferedImage frame = new BufferedImage(12, 10, BufferedImage.TYPE_INT_ARGB);
+        frame.setRGB(4, 3, 0xff112233);
+        frame.setRGB(6, 5, 0xff445566);
+        BufferedImage cropped = AtlasPacker.centredCrop(frame);
+        // x: 4 empty columns on the left, 5 on the right: 4 off each side; y: 3 above, 4 below: 3 off each.
+        assertEquals(12 - 2 * 4, cropped.getWidth());
+        assertEquals(10 - 2 * 3, cropped.getHeight());
+        assertEquals(0xff112233, cropped.getRGB(0, 0));
+        assertEquals(0xff445566, cropped.getRGB(2, 2));
+        BufferedImage empty = AtlasPacker.centredCrop(new BufferedImage(8, 6, BufferedImage.TYPE_INT_ARGB));
+        assertEquals(2, empty.getWidth(), "an empty frame keeps its centre");
+        assertEquals(2, empty.getHeight());
+        assertTrue(AtlasPacker.CENTRED_CROP.containsAll(
+                List.of("revenant-walker-legs", "revenant-walker-topple", "revenant-walker-wreck")));
+    }
+
     private static void image(Path file, int argb) throws IOException {
         Files.createDirectories(file.getParent());
         BufferedImage image = new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB);

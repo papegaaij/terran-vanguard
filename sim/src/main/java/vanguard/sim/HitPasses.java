@@ -92,6 +92,13 @@ final class HitPasses {
                 }
             }
         }
+        missilesAndConesHitWingman(hull, x, y);
+        if (wingman.ejected()) {
+            return;
+        }
+        if (s.vents.grates() > 0 && ventsHitWingman(hull, x, y)) {
+            return;
+        }
         Pool<Enemy> enemies = force.enemies();
         double ram = wingman.spec().craft().ramDamage();
         wingman.beginContacts();
@@ -238,12 +245,27 @@ final class HitPasses {
         }
     }
 
+    /** M7 part F: a burning furnace vent hits the ship whatever its layer, once per burst (a collision's damage). */
+    void hitByVents() {
+        FurnaceVents vents = s.vents;
+        Hull hull = ship.spec().hull();
+        for (int g = vents.strike(hull, ship.x(), ship.y(), FurnaceVents.SHIP, 0);
+                g >= 0;
+                g = vents.strike(hull, ship.x(), ship.y(), FurnaceVents.SHIP, g + 1)) {
+            events.add(SimEvents.Type.VENT_HIT, ship.x(), ship.y(), 0);
+            double lost = ship.defences().armourLost();
+            if (damaged(lost, ship.defences().takeCollision(vents.damage(g), events, ship.x(), ship.y()))) {
+                return;
+            }
+        }
+    }
+
     /** A large debris chunk touching the hull deals its contact damage, at most once per its interval. */
     void hitByDebris() {
         Hull hull = ship.spec().hull();
         for (int d = 0; d < debris.size(); d++) {
             Debris chunk = debris.get(d);
-            LevelScript.DebrisSpec spec = chunk.spec();
+            HazardSpec.DebrisSpec spec = chunk.spec();
             if (spec.damage() > 0
                     && hull.overlaps(ship.x(), ship.y(), spec.size(), chunk.x(), chunk.y())
                     && chunk.strike()) {
@@ -265,7 +287,7 @@ final class HitPasses {
     void hitBySetPieces() {
         Hull hull = ship.spec().hull();
         for (SetPiece piece : setPieces) {
-            LevelScript.SetPieceSpec spec = piece.spec();
+            SetPieceSpec spec = piece.spec();
             if (piece.present()
                     && piece.onPlane()
                     && hull.overlaps(ship.x(), ship.y(), piece.body(), piece.x(), piece.y())
@@ -337,6 +359,91 @@ final class HitPasses {
                 if (damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()))) {
                     return;
                 }
+            }
+        }
+        if (missilesHit(hull)) {
+            return;
+        }
+        coneBurnsShip(hull);
+    }
+
+    /** M7 part F: a homing missile bursts on the hull, dealing its damage; returns whether it wrecked the ship. */
+    private boolean missilesHit(Hull hull) {
+        Missiles missiles = force.missiles();
+        for (int i = missiles.size() - 1; i >= 0; i--) {
+            Missile missile = missiles.get(i);
+            if (hull.overlaps(ship.x(), ship.y(), Missile.BOX, missile.x(), missile.y())) {
+                double damage = missile.damage();
+                missiles.destroy(i, Missiles.STRUCK);
+                double lost = ship.defences().armourLost();
+                if (damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** M7 part F: a walking boss's burning flame cone touching the hull deals its damage, once per burn. */
+    private void coneBurnsShip(Hull hull) {
+        for (SetPiece piece : setPieces) {
+            StrideArena stride = piece.stride().orElse(null);
+            if (stride == null
+                    || !piece.present()
+                    || piece.destroyed()
+                    || stride.coneHit(StrideArena.CONE_SHIP)
+                    || !stride.coneTouches(hull, ship.x(), ship.y())) {
+                continue;
+            }
+            stride.markConeHit(StrideArena.CONE_SHIP);
+            double lost = ship.defences().armourLost();
+            double damage = piece.boss().orElseThrow().cone().orElseThrow().damage();
+            if (damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()))) {
+                return;
+            }
+        }
+    }
+
+    /** M7 part F: a burning furnace vent hits Rook whatever his layer, once per burst; returns whether he ejected. */
+    private boolean ventsHitWingman(Hull hull, double x, double y) {
+        FurnaceVents vents = s.vents;
+        for (int g = vents.strike(hull, x, y, FurnaceVents.ROOK, 0);
+                g >= 0;
+                g = vents.strike(hull, x, y, FurnaceVents.ROOK, g + 1)) {
+            events.add(SimEvents.Type.VENT_HIT, x, y, 1);
+            if (wingman.hit(vents.damage(g), ship.x(), ship.y(), events)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M7 part F: homing missiles burst on Rook's hull and a burning flame cone burns him once per burn. */
+    private void missilesAndConesHitWingman(Hull hull, double x, double y) {
+        Missiles missiles = force.missiles();
+        for (int i = missiles.size() - 1; i >= 0; i--) {
+            Missile missile = missiles.get(i);
+            if (hull.overlaps(x, y, Missile.BOX, missile.x(), missile.y())) {
+                double damage = missile.damage();
+                missiles.destroy(i, Missiles.STRUCK);
+                if (wingman.hit(damage, ship.x(), ship.y(), events)) {
+                    return;
+                }
+            }
+        }
+        for (SetPiece piece : setPieces) {
+            StrideArena stride = piece.stride().orElse(null);
+            if (stride == null
+                    || !piece.present()
+                    || piece.destroyed()
+                    || stride.coneHit(StrideArena.CONE_WINGMAN)
+                    || !stride.coneTouches(hull, x, y)) {
+                continue;
+            }
+            stride.markConeHit(StrideArena.CONE_WINGMAN);
+            double damage = piece.boss().orElseThrow().cone().orElseThrow().damage();
+            if (wingman.hit(damage, ship.x(), ship.y(), events)) {
+                return;
             }
         }
     }

@@ -393,11 +393,11 @@ the same; no elite variants. **`tiny` and `small` units keep their HP**, so the 
 popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels are unchanged.
 **Exception, the Needler and the Stinger** (the user's Act 2 playtest, 2026-10-18: "the missiles take
 out most enemies with a single shot"): the `small` units listed in the basis's `small_act_hp`
-([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09,
-11–16 and 18**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
-L12 and 18 at L13, L15, L16 and L18; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
+([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09
+and 11–18**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
+L12 and 18 at L13 and L15–L18; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
 units keep their HP. Level 18 (M7 part E) joins with its waves built to the Act 2+ floor (the user's decision
-of 2026-10-19), Levels 15 and 16 with their reworks (steps PE15 and PE16); Level 17 joins with its own. Level 10 and the rest of Act 3 keep 4 and 6: applied there, the autopilot's Level 10
+of 2026-10-19), Levels 15, 16 and 17 with their reworks (steps PE15, PE16 and PE17). Level 10 and the rest of Act 3 keep 4 and 6: applied there, the autopilot's Level 10
 escort fell to 2 of 4 shuttles home at medium (D2 = a asks for 3) and Level 11's hard runs stopped
 completing (with the old waves). Levels 11–14 took it with their L10-style waves (steps WA and WB,
 2026-10-19): without it the plan's fit kills the Needlers before their first shot (Level 12: 4 shots a
@@ -428,7 +428,7 @@ a bigger unit's time to kill depends less on the beam's instant reach (pending a
 that fly them). `BalanceTest` judges these units' time to kill at the reference DPS × the factor;
 `tools/balance.py` prints them and fails when the plan's first Ion Beam moves off `from_level`. Levels 15–17 fly
 the Pulse Cannon and take no beam-era factor (their small units lived 0.6–0.9 s: their P.e rework takes `small_act_hp`
-like Act 2's, Level 15's in step PE15 and Level 16's in step PE16); a later level gets the factor by its number, and a Needler or Stinger there keeps 24 / 36 HP only
+like Act 2's: Level 15's in step PE15, Level 16's in step PE16 and Level 17's in step PE17); a later level gets the factor by its number, and a Needler or Stinger there keeps 24 / 36 HP only
 when the level also joins `small_act_hp.levels` (else 8 / 12).
 
 **Damage to the player** (shield first, overflow to armour; collisions split half/half — see
@@ -843,4 +843,12 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   so a killed small unit lives as long on the screen as on Level 10 (0.9 s → 1.5 s at Level 10's density, Level 10
   1.6 s). Built for `small` only: doubled, the Dust Devil (vanes) went unkilled at hard and the Wraith broke its
   rear check; `tiny` gains nothing against the beam (pending the user's review in round 41).
+- 2026-10-19: `small_act_hp.levels` extended to Level 19 (M7 part F, step F2; the gap check's default, pending
+  the user's review in round 42): Needler 12, Stinger 18 HP there, then ×2 by `beam_era_hp` (24 and 36), with its
+  waves re-planned to the Act 2+ floor (light firing groups instead of popcorn).
 - 2026-10-19 (user, round 41): the beam-era HP (B.e, `small` units ×2 from Level 18) accepted, all yes.
+- 2026-10-19: `small_act_hp.levels` extended to Levels 16 and 17 (steps PE16 and PE17, the user's round 40 P.e
+  "all later levels"): Needler 12, Stinger 18 HP there, with their waves to the Act 2+ floor; Level 17 measures
+  2.60 enemies on the screen and 15.1 shots a minute at medium, most of the shots from its Burrower fields' rings
+  (the plan's fit still kills a Needler group before its first shot). Every Act 2-3 level from 11 to 18 is listed
+  now; Level 10 (the user's reference) is not (pending the user's review).

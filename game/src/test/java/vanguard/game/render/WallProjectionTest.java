@@ -308,6 +308,7 @@ class WallProjectionTest {
         LevelData level = ContentLoader.fromClasspath().level(key);
         WallProjection.Looks looks = WallProjection.Looks.of(level);
         Terrain terrain = SimSpecs.level(ContentLoader.fromClasspath(), key, Difficulty.MEDIUM)
+                .ground()
                 .terrain()
                 .orElseThrow()
                 .terrain();

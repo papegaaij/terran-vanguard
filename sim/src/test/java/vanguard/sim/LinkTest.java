@@ -48,19 +48,11 @@ class LinkTest {
                 .withLink(Optional.of(LINK));
     }
 
-    static LevelScript level(double speed, LevelScript.Secondary secondary, LevelScript.Gate... gates) {
-        return new LevelScript(
-                        1,
-                        3,
-                        0,
-                        List.of(new LevelScript.Section(60, speed)),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(),
-                        secondary,
-                        List.of())
+    static LevelScript level(double speed, Secondary secondary, GroundSpec.Gate... gates) {
+        return LevelScript.builder(1, 3)
+                .sections(List.of(new Section(60, speed)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(secondary))
+                .build()
                 .withGates(List.of(gates));
     }
 
@@ -103,25 +95,24 @@ class LinkTest {
     void theGatesAnchorsJoinTheGroundUnitsInTimeOrder() {
         EnemySpec turret = PartASpecs.dummy(Layer.GROUND, 10);
         LevelScript level = PartASpecs.units(PartASpecs.unit(0.5, 50, turret), PartASpecs.unit(3, 60, turret))
-                .withGates(List.of(new LevelScript.Gate(1, 100, 380, ANCHOR)));
-        List<LevelScript.GroundUnit> units = level.groundUnits();
+                .withGates(List.of(new GroundSpec.Gate(1, 100, 380, ANCHOR)));
+        List<GroundUnit> units = level.groundUnits();
         assertEquals(4, units.size());
         assertEquals(
-                List.of(0.5, 1.0, 1.0, 3.0),
-                units.stream().map(LevelScript.GroundUnit::t).toList());
+                List.of(0.5, 1.0, 1.0, 3.0), units.stream().map(GroundUnit::t).toList());
         assertEquals(100, units.get(1).x());
         assertEquals(380, units.get(2).x());
-        assertEquals(1, level.gates().size());
-        // A later wither keeps them.
-        assertEquals(1, level.withLaunchDrop(true).gates().size());
+        assertEquals(1, level.ground().gates().size());
+        // A later rebuild keeps them.
+        assertEquals(
+                1, level.toBuilder().launchDrop(true).build().ground().gates().size());
         assertNull(PartASpecs.sortie(PartASpecs.units(), pulse()).links(), "no links without gates");
     }
 
     @Test
     void aTendrilIsDormantForASecondThenTouchesTheShipFor6WithItsCooldown() {
         // At 30 px/s the band reaches the ship's hull (held at the top) 0.93 s after the pair entered.
-        Sortie sortie = sortie(
-                level(30, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(2, 100, 380, ANCHOR)), pulse());
+        Sortie sortie = sortie(level(30, new Secondary(0.8, 50), new GroundSpec.Gate(2, 100, 380, ANCHOR)), pulse());
         int entered = -1;
         int flared = -1;
         List<Integer> touches = new ArrayList<>();
@@ -161,8 +152,7 @@ class LinkTest {
     @Test
     void killingAnAnchorBreaksItForGoodAndMeetsTheLinksObjective() {
         Sortie sortie = sortie(
-                level(130, LevelScript.Secondary.links(80, "BARRIERS"), new LevelScript.Gate(0.5, 100, 380, ANCHOR)),
-                pulse());
+                level(130, Secondary.links(80, "BARRIERS"), new GroundSpec.Gate(0.5, 100, 380, ANCHOR)), pulse());
         assertEquals(1, sortie.escapesTotal(), "a links objective counts the gate's pairs");
         while (sortie.links().size() == 0 || sortie.links().get(0).dormant()) {
             sortie.step(Command.NONE);
@@ -192,7 +182,7 @@ class LinkTest {
     @Test
     void aBeamBurnsItThroughAndGoesOnPastIt() {
         Sortie sortie = sortie(
-                level(130, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(0.5, 100, 380, ANCHOR)),
+                level(130, new Secondary(0.8, 50), new GroundSpec.Gate(0.5, 100, 380, ANCHOR)),
                 PartASpecs.beamMount(1));
         int burns = 0;
         int burning = 0;
@@ -225,8 +215,7 @@ class LinkTest {
 
     @Test
     void otherShotsPassThroughIt() {
-        Sortie sortie = sortie(
-                level(130, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(0.5, 100, 380, ANCHOR)), pulse());
+        Sortie sortie = sortie(level(130, new Secondary(0.8, 50), new GroundSpec.Gate(0.5, 100, 380, ANCHOR)), pulse());
         boolean past = false;
         for (int step = 0; step < SimStep.ticks(3); step++) {
             sortie.step(FIRE);
@@ -249,9 +238,10 @@ class LinkTest {
                 Optional.empty(),
                 Optional.empty(),
                 List.of(new Terrain.Island(new double[] {200, 280, 280, 200}, new double[] {200, 200, 2_200, 2_200})));
-        LevelScript level = level(130, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(1, 100, 380, ANCHOR))
-                .withTerrain(Optional.of(new LevelScript.TerrainSpec(block, 10, 28, 0.12, 0.5)));
-        assertEquals(1, level.gates().size(), "the terrain keeps the gates");
+        LevelScript level = TestSpecs.withGround(
+                level(130, new Secondary(0.8, 50), new GroundSpec.Gate(1, 100, 380, ANCHOR)),
+                g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(block, 10, 28, 0.12, 0.5))));
+        assertEquals(1, level.ground().gates().size(), "the terrain keeps the gates");
         Sortie sortie = sortie(level, PartASpecs.beamMount(1));
         boolean both = false;
         for (int step = 0; step < SimStep.ticks(3); step++) {
@@ -275,8 +265,9 @@ class LinkTest {
                 List.of(new Terrain.Island(
                         new double[] {340, 480, 480, 340}, new double[] {foot, foot, foot + 2_000, foot + 2_000})));
         Sortie sortie = sortie(
-                level(130, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(1, 100, 400, ANCHOR))
-                        .withTerrain(Optional.of(new LevelScript.TerrainSpec(block, 10, 28, 0.12, 0.5))),
+                TestSpecs.withGround(
+                        level(130, new Secondary(0.8, 50), new GroundSpec.Gate(1, 100, 400, ANCHOR)),
+                        g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(block, 10, 28, 0.12, 0.5)))),
                 PartASpecs.beamMount(1));
         while (sortie.ship().x() < 400) {
             sortie.step(Command.RIGHT.bit());
@@ -297,9 +288,9 @@ class LinkTest {
         Sortie sortie = sortie(
                 level(
                         130,
-                        LevelScript.Secondary.links(80, "BARRIERS"),
-                        new LevelScript.Gate(0.5, 100, 380, ANCHOR),
-                        new LevelScript.Gate(2, 120, 360, ANCHOR)),
+                        Secondary.links(80, "BARRIERS"),
+                        new GroundSpec.Gate(0.5, 100, 380, ANCHOR),
+                        new GroundSpec.Gate(2, 120, 360, ANCHOR)),
                 pulse());
         assertEquals(2, sortie.escapesTotal());
         int failed = 0;
@@ -319,8 +310,7 @@ class LinkTest {
     @Test
     void rookHoldsBelowAStandingTendril() {
         Sortie sortie = WingmanTest.sortie(
-                level(130, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(1.5, 60, 420, ANCHOR)),
-                WingmanSpec.Side.RIGHT);
+                level(130, new Secondary(0.8, 50), new GroundSpec.Gate(1.5, 60, 420, ANCHOR)), WingmanSpec.Side.RIGHT);
         Hitbox box = sortie.wingman().orElseThrow().hull().parts().getFirst().box();
         // He flies before the ground scrolls in a step: the tendril may have come one step's scroll closer.
         double lag = 130 * SimStep.SECONDS;
@@ -348,19 +338,12 @@ class LinkTest {
     void rookTargetsTheNearerAnchorFirst() {
         // A decoy nearer to him enters after the gate.
         EnemySpec decoy = PartASpecs.dummy(Layer.GROUND, 1e6);
-        LevelScript level = new LevelScript(
-                        1,
-                        3,
-                        0,
-                        List.of(new LevelScript.Section(60, 130)),
-                        List.of(),
-                        List.of(),
-                        List.of(PartASpecs.unit(1.3, 290, decoy)),
-                        0,
-                        List.of(),
-                        new LevelScript.Secondary(0.8, 50),
-                        List.of())
-                .withGates(List.of(new LevelScript.Gate(1, 60, 320, ANCHOR)));
+        LevelScript level = LevelScript.builder(1, 3)
+                .sections(List.of(new Section(60, 130)))
+                .groundUnits(List.of(PartASpecs.unit(1.3, 290, decoy)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build()
+                .withGates(List.of(new GroundSpec.Gate(1, 60, 320, ANCHOR)));
         Sortie sortie = WingmanTest.sortie(level, WingmanSpec.Side.RIGHT);
         int onAnchor = 0;
         int onDecoy = 0;
@@ -384,8 +367,7 @@ class LinkTest {
     @Test
     void onHardTheAnchorsFireTheirAimedOrbs() {
         EnemySpec armed = anchor(Optional.of(TestSpecs.NEEDLER_GUN));
-        Sortie sortie = sortie(
-                level(130, new LevelScript.Secondary(0.8, 50), new LevelScript.Gate(0.5, 100, 380, armed)), pulse());
+        Sortie sortie = sortie(level(130, new Secondary(0.8, 50), new GroundSpec.Gate(0.5, 100, 380, armed)), pulse());
         int fired = 0;
         for (int step = 0; step < SimStep.ticks(3); step++) {
             sortie.step(Command.NONE);
@@ -401,14 +383,15 @@ class LinkTest {
                 Optional.of(new Terrain.Wall(new double[] {-1_000, 100_000}, new double[] {40, 40})),
                 Optional.of(new Terrain.Wall(new double[] {-1_000, 100_000}, new double[] {440, 440})),
                 List.of());
-        LevelScript level = level(
+        LevelScript level = TestSpecs.withGround(
+                level(
                         130,
-                        LevelScript.Secondary.links(80, "BARRIERS"),
-                        new LevelScript.Gate(0.5, 80, 400, ANCHOR),
-                        new LevelScript.Gate(2, 90, 390, ANCHOR),
-                        new LevelScript.Gate(3.5, 80, 400, anchor(Optional.of(TestSpecs.NEEDLER_GUN))),
-                        new LevelScript.Gate(5, 90, 390, ANCHOR))
-                .withTerrain(Optional.of(new LevelScript.TerrainSpec(canyon, 10, 28, 0.12, 0.5)));
+                        Secondary.links(80, "BARRIERS"),
+                        new GroundSpec.Gate(0.5, 80, 400, ANCHOR),
+                        new GroundSpec.Gate(2, 90, 390, ANCHOR),
+                        new GroundSpec.Gate(3.5, 80, 400, anchor(Optional.of(TestSpecs.NEEDLER_GUN))),
+                        new GroundSpec.Gate(5, 90, 390, ANCHOR)),
+                g -> g.withTerrain(Optional.of(new GroundSpec.TerrainSpec(canyon, 10, 28, 0.12, 0.5))));
         long allocated = Allocations.least(
                 () -> new Sortie(
                         1,

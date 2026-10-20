@@ -13,9 +13,14 @@ import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundUnit;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WarningEdge;
@@ -82,7 +87,11 @@ class Level06Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int total = kills + ground + medium + crates + level.secondary().credits();
+        int total = kills
+                + ground
+                + medium
+                + crates
+                + level.objectives().secondary().credits();
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(982, Math.round(budget), "the typical haul's target");
@@ -94,14 +103,14 @@ class Level06Test {
                         .sum());
         assertEquals(210, ground, "Spine Turret 10 × 12 + Polyp Mortar 6 × 15");
         assertEquals(135, crates, "the survey cache; the data core pays none");
-        assertEquals(50, level.secondary().credits());
+        assertEquals(50, level.objectives().secondary().credits());
         System.out.printf(
                 "Level 06 budget: kills %d, ground %d, ore cart %d, crate %d, secondary %d: %d of %.0f (%+.1f %%)%n",
                 kills,
                 ground,
                 medium,
                 crates,
-                level.secondary().credits(),
+                level.objectives().secondary().credits(),
                 total,
                 budget,
                 100 * (total - budget) / budget);
@@ -112,7 +121,7 @@ class Level06Test {
     void theEnemiesAreTheReadmesTotals() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         Map<String, Integer> ground = new TreeMap<>();
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             ground.merge(unit.enemy().slug(), 1, Integer::sum);
         }
         Map<String, Integer> waves = new TreeMap<>();
@@ -122,10 +131,10 @@ class Level06Test {
 
         assertEquals(Map.of("polyp-mortar", 6, "spine-turret", 10), ground);
         assertEquals(Map.of("coilwyrm", 4, "mantis", 8, "needler", 20, "skitter", 122, "stinger", 12), waves);
-        assertEquals("mantis", level.secondary().escapes());
+        assertEquals("mantis", level.objectives().secondary().escapes());
         assertEquals(
                 List.of(25.0, 70.0, 110.0, 160.0, 190.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(8, sortie.escapesTotal(), "every Mantis");
         assertEquals(122 + 8 + 20 + 12 + 4 + 16, sortie.enemyTotal(), "a Coilwyrm counts once");
@@ -154,7 +163,7 @@ class Level06Test {
         }
         assertEquals(difficulty == Difficulty.HARD ? 6 : 4, coilwyrms, "hard: the pair crossing at t=146");
         assertEquals(difficulty == Difficulty.HARD ? 0 : 1, skitterSnakesAt146, "replaced on hard");
-        LevelScript.Darkness darkness = level.darkness().orElseThrow();
+        HazardSpec.Darkness darkness = level.hazards().darkness().orElseThrow();
         assertEquals(difficulty == Difficulty.HARD ? 2 : 3, darkness.flares().size(), "hard: no t=112 flare");
         assertEquals(difficulty == Difficulty.EASY ? 12 : 8, darkness.flareSeconds(), 1e-9);
         assertEquals(difficulty == Difficulty.EASY ? 260 : 200, darkness.headlightLength(), 1e-9);
@@ -193,7 +202,7 @@ class Level06Test {
         }
         List<Double> six = sortie.script().radio().stream()
                 .filter(cue -> cue.speaker().equals("Rook") && cue.line().matches("(?s).*(six|round).*"))
-                .map(LevelScript.RadioCue::t)
+                .map(RadioCue::t)
                 .toList();
         System.out.printf("Level 06 rear warnings from %s s; Rook's calls at %s s%n", starts, six);
         assertEquals(3, starts.size(), "two loop-backs and the rear entry");
@@ -205,14 +214,14 @@ class Level06Test {
     @Test
     void theSurveyCacheIsDarkAndTheTerminalHoldsTheDataCore() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec cache = level.groundObjects().stream()
+        GroundObjectSpec cache = level.groundObjects().stream()
                 .filter(o -> o.secret().equals("survey cache"))
                 .findFirst()
                 .orElseThrow();
         assertTrue(cache.dark());
         assertEquals(3, cache.hits());
         assertEquals(135, cache.crateCredits());
-        LevelScript.GroundObjectSpec terminal = level.groundObjects().stream()
+        GroundObjectSpec terminal = level.groundObjects().stream()
                 .filter(o -> o.secret().equals("settlement log"))
                 .findFirst()
                 .orElseThrow();

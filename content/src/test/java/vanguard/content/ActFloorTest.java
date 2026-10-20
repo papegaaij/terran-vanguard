@@ -32,7 +32,7 @@ class ActFloorTest {
      */
     static final Set<String> PENDING = PacingTest.PENDING_ACT_TWO_RULE;
 
-    private static final Content CONTENT = ContentLoader.fromClasspath();
+    private static final Content CONTENT = LevelMetrics.CONTENT;
 
     static Stream<String> levels() {
         return IntStream.rangeClosed(FIRST_LEVEL, 50)
@@ -45,7 +45,7 @@ class ActFloorTest {
     @ParameterizedTest
     @MethodSource("levels")
     void theScreenIsBusyAndTheEnemiesFire(String key) {
-        PacingTest.Flight flight =
+        LevelMetrics.Flight flight =
                 PacingTest.fly(key, Difficulty.MEDIUM, PacingTest.planLoadout(key, Difficulty.MEDIUM));
         System.out.printf(
                 "Floor %s: %.2f enemies on the screen, %.1f shots a minute%n",

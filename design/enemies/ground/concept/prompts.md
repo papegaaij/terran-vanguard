@@ -288,3 +288,24 @@ for the rise tell and the window; the collapse, the lime death light and the gri
 on the eye's dry lake (clear air) through their 2.6 s cycles 0.8 s apart: the swirl tightening, the core opening
 with its 2-arm grit spiral, loose pickups drawn in and circling, one devil shot in its window, collapsing and
 dropping what it held.
+
+## warden-tank-final-r42-a
+
+Round 42, production art (M7 part F batch, step ART-F3, pending the user's review; straight to production from
+the chosen round-36 concept warden-tank-r36-a: the round-05 model of `tools/concept/render/archetype_models.py`
+in the unmarked grey livery of `tools/concept/enemies_r36.py`, no gold, no accent, the red sensors, the hex
+panelling and the neutral grey rim kept, at the concept's 76 px scale). Not a mockup: the review sheet (`.png`)
+and a loop (`.gif`) of the files in `build/art-held/sprites/` (they go to `assets/sprites/` once the tank's
+`data.yaml` claims the root `warden-tank`), rendered by [tools/art/warden_tank.py](../../../../tools/art/warden_tank.py)
+(`python3 tools/art/warden_tank.py`): the hull in 16 headings × 2 tread frames, the turret in 32 aims at rest and
+in recoil (the barrel slid ~5 px back), the additive muzzle flash (32 aims × 2 ages), the torn turret ring left
+when the turret is shot off (embers in the breech well), and the burnt grey wreck in 16 headings (engine deck
+blown, the dead turret knocked askew with its barrel snapped, no markings). The 0.3 s tell is the turret
+stopping, so it has no frames. The GIF plays a convoy of three riding a foundry belt down the screen (40 px/s
+drive plus the 40 px/s belt), the turrets tracking the ship and firing 3-shot bursts with flash and recoil,
+back up the screen once the ship has passed; one loses its turret (the stub), one is destroyed and its wreck
+rides on.
+
+- **Brief:** as [warden-tank-r36-a](#warden-tank-r36-a); no markings, no insignia, no faction rim.
+- **Generator:** `python3 tools/art/warden_tank.py` (`--review` rebuilds this sheet and GIF from the written
+  frames); the sprite names and frame layout are in the generator's docstring.

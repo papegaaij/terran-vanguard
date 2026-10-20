@@ -2,6 +2,7 @@ package vanguard.sim;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * Specs with the Level 01 numbers at medium for the rule tests here: the starter loadout, the
@@ -161,24 +162,35 @@ final class TestSpecs {
     }
 
     static LevelScript level(
-            double seconds,
-            List<WaveSpec> waves,
-            List<LevelScript.GroundObjectSpec> ground,
-            List<LevelScript.RadioCue> radio) {
-        return new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(seconds, 130)),
-                waves,
-                ground,
-                List.of(),
-                (int) ground.stream()
-                        .filter(LevelScript.GroundObjectSpec::trigger)
-                        .count(),
-                radio,
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+            double seconds, List<WaveSpec> waves, List<GroundObjectSpec> ground, List<RadioCue> radio) {
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(seconds, 130)))
+                .waves(waves)
+                .groundObjects(ground)
+                .secrets((int) ground.stream().filter(GroundObjectSpec::trigger).count())
+                .radio(radio)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
+    }
+
+    /** {@code level} with its objectives changed by {@code change}. */
+    static LevelScript withObjectives(LevelScript level, UnaryOperator<ObjectiveSpec> change) {
+        return level.toBuilder().objectives(change.apply(level.objectives())).build();
+    }
+
+    /** {@code level} with its ground changed by {@code change}. */
+    static LevelScript withGround(LevelScript level, UnaryOperator<GroundSpec> change) {
+        return level.toBuilder().ground(change.apply(level.ground())).build();
+    }
+
+    /** {@code level} with its hazards changed by {@code change}. */
+    static LevelScript withHazards(LevelScript level, UnaryOperator<HazardSpec> change) {
+        return level.toBuilder().hazards(change.apply(level.hazards())).build();
+    }
+
+    /** {@code level} with its drops changed by {@code change}. */
+    static LevelScript withDrops(LevelScript level, UnaryOperator<DropSpec> change) {
+        return level.toBuilder().drops(change.apply(level.drops())).build();
     }
 
     static Sortie sortie(LevelScript level) {
@@ -229,16 +241,15 @@ final class TestSpecs {
      * spiral of {@code arms} arms and its 16-ring together, every surviving pair opening every 6 s
      * (2 Skitters per pair).
      */
-    static LevelScript.SetPieceSpec carrier(boolean spawns, int arms) {
+    static SetPieceSpec carrier(boolean spawns, int arms) {
         Hitbox sac = new Hitbox(30, 30);
         var parts = List.of(
-                new LevelScript.PartSpec("sac a left", -50, -60, sac, 20, false, 25, Optional.empty(), 0, 1.5),
-                new LevelScript.PartSpec("sac a right", 50, -60, sac, 20, false, 25, Optional.empty(), 0, 1.5),
-                new LevelScript.PartSpec("sac b left", -50, 40, sac, 20, false, 25, Optional.empty(), 0, 1.5),
-                new LevelScript.PartSpec("sac b right", 50, 40, sac, 20, false, 25, Optional.empty(), 0, 1.5),
-                new LevelScript.PartSpec("core", 0, 100, new Hitbox(50, 50), 30, true, 50, Optional.empty(), 0, 2),
-                new LevelScript.PartSpec(
-                        "mandibles", 0, -140, new Hitbox(24, 24), 1, false, 0, Optional.empty(), 0, 1));
+                new PartSpec("sac a left", -50, -60, sac, 20, false, 25, Optional.empty(), 0, 1.5),
+                new PartSpec("sac a right", 50, -60, sac, 20, false, 25, Optional.empty(), 0, 1.5),
+                new PartSpec("sac b left", -50, 40, sac, 20, false, 25, Optional.empty(), 0, 1.5),
+                new PartSpec("sac b right", 50, 40, sac, 20, false, 25, Optional.empty(), 0, 1.5),
+                new PartSpec("core", 0, 100, new Hitbox(50, 50), 30, true, 50, Optional.empty(), 0, 2),
+                new PartSpec("mandibles", 0, -140, new Hitbox(24, 24), 1, false, 0, Optional.empty(), 0, 1));
         var noseDown = new BossSpec.Pose(
                 "arrival",
                 new Hitbox(100, 300),
@@ -349,7 +360,7 @@ final class TestSpecs {
                         BossSpec.PHASE_DELAY_SECONDS,
                         Optional.empty(),
                         Optional.of(new BossSpec.Windows(pairs, 6, 2, 0, true, timeout))));
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "test-carrier",
                 new Hitbox(120, 320),
                 new Hitbox(100, 300),
@@ -378,23 +389,11 @@ final class TestSpecs {
     }
 
     /** A level of a short approach, the carrier's 200 s arena and 10 s after it, without radio. */
-    static LevelScript carrierLevel(LevelScript.SetPieceSpec carrier) {
-        return new LevelScript(
-                7,
-                1,
-                0,
-                List.of(
-                        new LevelScript.Section(2, 130),
-                        new LevelScript.Section(200, 20, true),
-                        new LevelScript.Section(210, 130)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(),
-                List.of(carrier));
+    static LevelScript carrierLevel(SetPieceSpec carrier) {
+        return LevelScript.builder(7, 1)
+                .sections(List.of(new Section(2, 130), new Section(200, 20, true), new Section(210, 130)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .setPieces(List.of(carrier))
+                .build();
     }
 }

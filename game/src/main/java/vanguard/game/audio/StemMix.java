@@ -38,6 +38,17 @@ public final class StemMix implements PcmStream {
     private final float motifIn;
     private final float motifOut;
 
+    /**
+     * M7 part F: the stems (the base stem and the full mix together) go out over this long for the motif layer alone
+     * (design/campaign Level 19's crawl, {@code stems: motif}) and come back as long.
+     */
+    static final double STEMS_FADE_SECONDS = 2;
+    /** M7 part F: the stems' level under the motif, 0..1, where it goes and its pace per frame. */
+    private float stemsLevel = 1;
+
+    private volatile float stemsTarget = 1;
+    private final float stemsPace;
+
     /** @param fadeSeconds how long a whole crossfade takes */
     StemMix(PcmStream base, PcmStream full, double fadeSeconds) {
         this(base, full, null, fadeSeconds);
@@ -62,6 +73,7 @@ public final class StemMix implements PcmStream {
         step = stepPerFrame;
         motifIn = (float) (1 / (MOTIF_IN_SECONDS * base.sampleRate()));
         motifOut = (float) (1 / (MOTIF_OUT_SECONDS * base.sampleRate()));
+        stemsPace = (float) (1 / (STEMS_FADE_SECONDS * base.sampleRate()));
     }
 
     /**
@@ -114,6 +126,19 @@ public final class StemMix implements PcmStream {
         motifTarget = on ? 1 : 0;
     }
 
+    /**
+     * M7 part F: the stems play ({@code on}) or go silent under the motif layer alone (over {@value
+     * #STEMS_FADE_SECONDS} s either way); the motif layer is not touched (a stems-only gain, risk 6).
+     */
+    public void stems(boolean on) {
+        stemsTarget = on ? 1 : 0;
+    }
+
+    /** M7 part F: the stems' level now, 0..1, for the tests. */
+    float stemsLevel() {
+        return stemsLevel;
+    }
+
     /** Crossfades towards {@code share} of the full mix: 0 = the base stem alone, 1 = the full mix. */
     public void fadeTo(float share) {
         step = stepPerFrame;
@@ -153,6 +178,7 @@ public final class StemMix implements PcmStream {
         float goal = target;
         float pace = step;
         float motifGoal = motif == null ? 0 : motifTarget;
+        float stemsGoal = stemsTarget;
         for (int frame = 0; frame < out.length / channels; frame++) {
             if (mix < goal) {
                 mix = Math.min(goal, mix + pace);
@@ -164,9 +190,14 @@ public final class StemMix implements PcmStream {
             } else if (motifLevel > motifGoal) {
                 motifLevel = Math.max(motifGoal, motifLevel - motifOut);
             }
+            if (stemsLevel < stemsGoal) {
+                stemsLevel = Math.min(stemsGoal, stemsLevel + stemsPace);
+            } else if (stemsLevel > stemsGoal) {
+                stemsLevel = Math.max(stemsGoal, stemsLevel - stemsPace);
+            }
             for (int c = 0; c < channels; c++) {
                 int i = frame * channels + c;
-                float sample = b[i] + (f[i] - b[i]) * mix;
+                float sample = (b[i] + (f[i] - b[i]) * mix) * stemsLevel;
                 if (motifLevel > 0) {
                     sample += m[i] * motifLevel;
                 }

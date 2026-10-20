@@ -10,10 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -72,7 +77,7 @@ class Level08Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int total = kills + ground + crates + level.secondary().credits();
+        int total = kills + ground + crates + level.objectives().secondary().credits();
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_124, Math.round(budget), "the typical haul's target, 700 × 1.07⁷");
@@ -82,10 +87,10 @@ class Level08Test {
                 "Skitter, Needler, Stinger, Spore Bomber, Mantis, Creeper");
         assertEquals(9 * 12 + 3 * 15, ground, "Spine Turret 9 × 12 + Polyp Mortar 3 × 15");
         assertEquals(100, crates, "the billboard cache in Act 1 terms (pays 160)");
-        assertEquals(56, level.secondary().credits(), "in Act 1 terms (pays 90)");
+        assertEquals(56, level.objectives().secondary().credits(), "in Act 1 terms (pays 90)");
         System.out.printf(
                 "Level 08 budget (Act 1 terms): kills %d, ground %d, crate %d, secondary %d: %d (budget %.0f)%n",
-                kills, ground, crates, level.secondary().credits(), total, budget);
+                kills, ground, crates, level.objectives().secondary().credits(), total, budget);
         assertEquals(3_708, total, "before the act factor and bounty_scale (TypicalHaulTest checks the paid run)");
     }
 
@@ -93,7 +98,7 @@ class Level08Test {
     void theEnemiesAreTheReadmesTotals() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         Map<String, Integer> ground = new TreeMap<>();
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             ground.merge(unit.enemy().slug(), 1, Integer::sum);
         }
         Map<String, Integer> waves = new TreeMap<>();
@@ -105,10 +110,10 @@ class Level08Test {
         assertEquals(
                 Map.of("creeper", 19, "mantis", 4, "needler", 98, "skitter", 157, "spore-bomber", 9, "stinger", 45),
                 waves);
-        assertEquals("creeper", level.secondary().escapes());
+        assertEquals("creeper", level.objectives().secondary().escapes());
         assertEquals(
                 List.of(10.0, 65.0, 115.0, 160.0, 200.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(19, sortie.escapesTotal(), "every Creeper");
         assertEquals(344, sortie.enemyTotal());
@@ -184,7 +189,7 @@ class Level08Test {
     @Test
     void theBillboardHidesTheCacheAndTheConvoyAndTheColumnCarryThePickups() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec billboard = level.groundObjects().stream()
+        GroundObjectSpec billboard = level.groundObjects().stream()
                 .filter(o -> o.secret().equals("billboard cache"))
                 .findFirst()
                 .orElseThrow();
@@ -210,8 +215,8 @@ class Level08Test {
     @Test
     void theRadioScriptHasRooksLinesAndTheTimedLinesSpaced() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.RadioCue> timed = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
+        List<RadioCue> timed = level.radio().stream()
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
                 .toList();
         for (int i = 1; i < timed.size(); i++) {
             assertTrue(
@@ -219,7 +224,7 @@ class Level08Test {
                     "t=" + timed.get(i - 1).t() + " and t=" + timed.get(i).t() + " too close");
         }
         assertTrue(level.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.ESCORT_FIRST_KILL
+                .anyMatch(cue -> cue.trigger() == CueTrigger.ESCORT_FIRST_KILL
                         && cue.speaker().equals("Rook")));
         assertTrue(timed.stream().anyMatch(cue -> cue.line().contains("{side}")));
         assertEquals(
@@ -309,7 +314,7 @@ class Level08Test {
                 switch (events.type(i)) {
                     case SECRET_FOUND -> secrets++;
                     case RADIO -> {
-                        if (script.radio().get(events.value(i)).trigger() == LevelScript.CueTrigger.ESCORT_FIRST_KILL) {
+                        if (script.radio().get(events.value(i)).trigger() == CueTrigger.ESCORT_FIRST_KILL) {
                             rooksFirstKill++;
                             firstKillAt = sortie.levelSeconds();
                         }

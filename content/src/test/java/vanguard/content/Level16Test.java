@@ -11,11 +11,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.Terrain;
@@ -57,7 +61,7 @@ class Level16Test {
     void theCanyonAndItsContactPerDifficulty() {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
-            LevelScript.TerrainSpec terrain = level.terrain().orElseThrow();
+            GroundSpec.TerrainSpec terrain = level.ground().terrain().orElseThrow();
             assertEquals(difficulty == Difficulty.EASY ? 6 : 10, terrain.damage(), difficulty + ": heavy, easy medium");
             assertEquals(28, terrain.push());
             assertEquals(0.12, terrain.pushSeconds());
@@ -67,10 +71,10 @@ class Level16Test {
             assertEquals(2, rock.islands(), "the fork mesa and the rock pillar");
         }
         assertEquals(
-                LevelScript.CueTrigger.FIRST_WALL_CONTACT,
+                CueTrigger.FIRST_WALL_CONTACT,
                 SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).radio().stream()
-                        .map(LevelScript.RadioCue::trigger)
-                        .filter(trigger -> trigger == LevelScript.CueTrigger.FIRST_WALL_CONTACT)
+                        .map(RadioCue::trigger)
+                        .filter(trigger -> trigger == CueTrigger.FIRST_WALL_CONTACT)
                         .findFirst()
                         .orElseThrow());
     }
@@ -82,12 +86,13 @@ class Level16Test {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
             times.put(
-                    difficulty, level.gates().stream().map(LevelScript.Gate::t).toList());
+                    difficulty,
+                    level.ground().gates().stream().map(GroundSpec.Gate::t).toList());
             long anchors = level.groundUnits().stream()
                     .filter(unit -> unit.enemy().link().isPresent())
                     .count();
-            assertEquals(2L * level.gates().size(), anchors, difficulty + ": each gate's two anchors once");
-            assertTrue(level.secondary().links(), "the secondary: every tendril broken");
+            assertEquals(2L * level.ground().gates().size(), anchors, difficulty + ": each gate's two anchors once");
+            assertTrue(level.objectives().secondary().links(), "the secondary: every tendril broken");
         }
         assertEquals(List.of(34.0, 46.0, 57.0, 132.0, 133.5, 144.0, 152.0), times.get(Difficulty.EASY));
         assertEquals(List.of(34.0, 46.0, 57.0, 58.5, 132.0, 133.5, 144.0, 152.0, 153.5), times.get(Difficulty.MEDIUM));
@@ -101,6 +106,7 @@ class Level16Test {
         Map<Difficulty, Double> tendril = new TreeMap<>();
         for (Difficulty difficulty : Difficulty.values()) {
             EnemySpec anchor = SimSpecs.level(content, LEVEL, difficulty)
+                    .ground()
                     .gates()
                     .getFirst()
                     .anchor();
@@ -177,13 +183,13 @@ class Level16Test {
     void theHutAndTheRovers() {
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
-            List<LevelScript.GroundObjectSpec> huts = level.groundObjects().stream()
+            List<GroundObjectSpec> huts = level.groundObjects().stream()
                     .filter(object -> object.hits() > 0)
                     .toList();
             assertEquals(1, huts.size());
             assertEquals(difficulty == Difficulty.HARD ? 5 : 3, huts.getFirst().hits());
             assertEquals("relay-hut", huts.getFirst().look());
-            List<LevelScript.GroundObjectSpec> rovers = level.groundObjects().stream()
+            List<GroundObjectSpec> rovers = level.groundObjects().stream()
                     .filter(object -> object.look().equals("canyon-rover"))
                     .toList();
             assertEquals(4, rovers.size());
@@ -206,8 +212,8 @@ class Level16Test {
         List<String> unreachable = new ArrayList<>();
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
-            Terrain rock = level.terrain().orElseThrow().terrain();
-            for (LevelScript.Gate gate : level.gates()) {
+            Terrain rock = level.ground().terrain().orElseThrow().terrain();
+            for (GroundSpec.Gate gate : level.ground().gates()) {
                 double half = gate.anchor().hitbox().width() / 2;
                 for (double x : new double[] {gate.leftX(), gate.rightX()}) {
                     double seconds = reachableSeconds(data, rock, gate.t(), x, half);

@@ -67,7 +67,7 @@ final class PickupPasses {
         cores = new LevelResult.DataCore[script.secrets()];
         coresCollected = new boolean[script.secrets()];
         secretNames = new String[script.secrets()];
-        for (LevelScript.GroundObjectSpec object : script.groundObjects()) {
+        for (GroundObjectSpec object : script.groundObjects()) {
             if (object.secretIndex() >= 0) {
                 secretNames[object.secretIndex()] = object.secret();
                 cores[object.secretIndex()] = object.core().orElse(null);
@@ -77,9 +77,9 @@ final class PickupPasses {
         magnetRadius = loadout.magnet().map(Magnet::radius).orElse(0.0);
         magnetStep = loadout.magnet().map(Magnet::pullSpeed).orElse(0.0) * SimStep.SECONDS;
         salvageFactor = 1 + loadout.salvageBonus();
-        placedTicks = new int[script.placedPickups().size()];
+        placedTicks = new int[script.drops().placedPickups().size()];
         for (int i = 0; i < placedTicks.length; i++) {
-            placedTicks[i] = SimStep.ticks(script.placedPickups().get(i).t());
+            placedTicks[i] = SimStep.ticks(script.drops().placedPickups().get(i).t());
         }
     }
 
@@ -256,7 +256,7 @@ final class PickupPasses {
      */
     void placePickups() {
         while (nextPlaced < placedTicks.length && placedTicks[nextPlaced] <= s.levelTick) {
-            LevelScript.PlacedPickup placed = script.placedPickups().get(nextPlaced++);
+            DropSpec.PlacedPickup placed = script.drops().placedPickups().get(nextPlaced++);
             if (drop(placed.pickup(), placed.x(), placed.y())) {
                 events.add(
                         SimEvents.Type.PICKUP_PLACED,
@@ -295,7 +295,7 @@ final class PickupPasses {
             case SPECIAL_CHARGE -> special.collect();
             case DATA_CORE -> {
                 coresCollected[pickup.credits()] = true;
-                radio.cue(LevelScript.CueTrigger.SECRET, secretNames[pickup.credits()]);
+                radio.cue(CueTrigger.SECRET, secretNames[pickup.credits()]);
             }
         }
         events.add(

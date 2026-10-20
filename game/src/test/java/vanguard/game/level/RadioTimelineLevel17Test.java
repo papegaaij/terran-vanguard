@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.content.voice.VoiceLines;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
-import vanguard.sim.LevelScript.CueTrigger;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.RadioCue;
 
 /**
  * {@link RadioTimeline}'s checks for Level 17 (M7 part D), with and without Rook (every run is played with
@@ -27,16 +29,16 @@ class RadioTimelineLevel17Test extends RadioTimeline {
     @Test
     void everyDomeLineIsVoicedByItsName() {
         LevelScript script = SimSpecs.level(CONTENT, LEVEL_17, Difficulty.MEDIUM);
-        List<String> names = script.groundAllies().orElseThrow().units().stream()
-                .map(LevelScript.GroundAlly::name)
+        List<String> names = script.objectives().groundAllies().orElseThrow().units().stream()
+                .map(ObjectiveSpec.GroundAlly::name)
                 .toList();
         assertEquals(DOMES, names, "Level 17's domes");
         for (CueTrigger trigger : List.of(CueTrigger.ALLY_HIT, CueTrigger.ALLY_LOST)) {
-            List<LevelScript.RadioCue> cues = script.radio().stream()
+            List<RadioCue> cues = script.radio().stream()
                     .filter(cue -> cue.trigger() == trigger)
                     .toList();
             assertEquals(1, cues.size(), "one " + trigger + " line");
-            LevelScript.RadioCue cue = cues.getFirst();
+            RadioCue cue = cues.getFirst();
             assertTrue(cue.line().contains(VoiceLines.ALLY), trigger + " names the dome");
             for (String name : names) {
                 String text = text(cue, SIDES.getFirst(), name);

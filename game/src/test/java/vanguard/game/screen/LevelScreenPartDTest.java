@@ -10,7 +10,7 @@ import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.game.audio.LevelMusic;
 import vanguard.game.audio.Sfx;
-import vanguard.sim.LevelScript;
+import vanguard.sim.CueTrigger;
 
 /**
  * M5 part D's wiring in the level screen: Level 10's ambience change from its music block, the
@@ -30,9 +30,9 @@ class LevelScreenPartDTest {
 
     @Test
     void rooksFlockLineAndFirstKillCountForHisBarksSpacing() {
-        assertTrue(LevelScreen.scriptedForBarks(LevelScript.CueTrigger.ESCORT_FIRST_KILL));
-        assertTrue(LevelScreen.scriptedForBarks(LevelScript.CueTrigger.FIRST_LOOP_BACK));
-        assertFalse(LevelScreen.scriptedForBarks(LevelScript.CueTrigger.FIRST_DECLOAK));
-        assertFalse(LevelScreen.scriptedForBarks(LevelScript.CueTrigger.TIME));
+        assertTrue(LevelScreen.scriptedForBarks(CueTrigger.ESCORT_FIRST_KILL));
+        assertTrue(LevelScreen.scriptedForBarks(CueTrigger.FIRST_LOOP_BACK));
+        assertFalse(LevelScreen.scriptedForBarks(CueTrigger.FIRST_DECLOAK));
+        assertFalse(LevelScreen.scriptedForBarks(CueTrigger.TIME));
     }
 }

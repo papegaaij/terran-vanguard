@@ -1,0 +1,197 @@
+# Revenant Walker stat block and boss script at medium: the stat block is rendered into README.md.
+# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part F, step F2 (Level 19's mid-boss; approved in round 36, D.18 and B.1 = a): a walking arena boss. It walks
+# passes across the halted casting yard (`movement.stride`), its front plate turning every shot from ahead
+# (`boss.plate`), its rear flame cone burning whoever slips behind it (`boss.cone`), its shoulder pods firing homing
+# missiles (an attack's `homing`). Loaded, checked and mapped for the simulation in step F2 (content's EnemyData,
+# FoundryChecks, FoundryRules; sim: step F1's StrideArena). All offsets are px from its centre as it faces straight
+# down, dx right, dy up (toward its back), as assets/pivots/revenant-walker.json gives them (y down there); the
+# simulation turns them with its 8 headings.
+# Step F4 (pending the user's review in round 42): HP 3,740 (hull 2,720, pods 510) and par 53 from the autopilot's
+# measured fight (F2's paper 2,200); the bounty recomputed for Level 19's measured `bounty_scale` of 0.28 (495: hull
+# 395, pods 50 each, ≈ 15 %); the pods at the art's mounts (±53 px); unclassified in the intel until flown; the plate stops the Ion Beam; the missiles 2 HP for every
+# shot, the beam's too; the walker's lanes_y below the top edge (the level data's convention).
+# Round 43, step WR (K.a of round 42, the user: "The walker looks like a real easy target. It needs to do a lot more
+# shooting and the flame needs to be bigger."; pending the user's review in round 43): the chin fires fans in bursts in
+# every phase, new flank guns (a fan of 2 over 180° along its heading: one bullet out of each flank), bigger and
+# faster salvos, a fiercer phase 3; the cone 240 px ±32° (swivel 35°) whose burn tracks the ship from phase 2; the HP
+# re-measured: 3,170 (hull 2,310, pods 430), par 57.
+name: Revenant Walker
+faction: Unmarked
+layer: ground       # it walks on the yard: no contact with the ship or Rook; all weapons hit it, `anti-ground` ×2
+tier: huge
+size: [170, 190]    # drawn: the hull on two reverse-knee legs; its larger half (95 px) sets how far off an edge it walks
+hitbox: [110, 120]  # the hull's
+parts: multi
+part_list:  # offset [dx, dy] px from its centre facing straight down, dy up toward its back
+  - name: hull
+    offset: [0, 0]
+    hitbox: [110, 120]
+    hp: 2310            # round 43: 2,720 -> 2,310 (the fight re-measured after the rework)
+    kind: vital
+    bounty: 395         # step F2: 210 -> 315 with Level 19's scale 0.52 -> 0.35; step F4: 395 with the measured 0.28
+    spots:              # the hot-amber reactor vents on its back: ×2 while open (after each burn; always in phase 3)
+      - {name: vents, offset: [0, 45], hitbox: [50, 24], multiplier: 2, while: open}
+  - {name: left pod, offset: [-53, -4], hitbox: [36, 36], hp: 430, kind: destroyable, bounty: 50}    # the shoulder pod on the screen's left as it faces down; step F4: at the art's pod mount (assets/pivots/revenant-walker.json, was ±73, 0)
+  - {name: right pod, offset: [53, -4], hitbox: [36, 36], hp: 430, kind: destroyable, bounty: 50}
+orientation: 8 angles
+hp: 3170            # the parts' sum: hull 2,310, pods 430 each (round 43: was 3,740 = 2,720 + 2 × 510)
+armour: 'front plate'
+speed: 45           # px/s in phase 1 (55 in phase 2, 60 in phase 3)
+movement:
+  stride:
+    lanes_x: [120, 240, 360]   # px from the left edge: the vertical passes' lanes
+    lanes_y: [200, 330]        # px below the top edge: the horizontal passes' lanes
+    edges: [top, bottom, left, top, bottom, right]   # the entry edges in turn (then again); the first, top, is its intro
+    off_screen: 3       # s off the screen between two passes, under the next entry edge's warning
+    turn: 1.5           # s a turn round on the spot takes (phase 3)
+    speeds: [45, 55, 60]   # px/s by phase
+    beside_lane: true   # phase 1: the lane beside the ship's
+    turn_in_place: true # phase 3: it turns round on the spot at a pass's end and walks back in the ship's lane
+attacks:   # round 43 (step WR, K.a of round 42: "It needs to do a lot more shooting"): every phase fires pods, chin and flank guns
+  - pattern: aimed
+    name: salvo-stride
+    bullet: medium      # a missile's hit
+    burst: 3            # missiles a salvo, one 0.2 s after the other (round 43: 2 -> 3)
+    burst_gap: 0.2
+    interval: 3.5       # s: one pod at a time, alternating (round 43: 3 -> 3.5 with salvos of 3: the random dodge within bounds)
+    speed: 110          # px/s
+    rotate: true
+    parts: [left pod, right pod]
+    homing: {turn_rate: 90, life: 4, hp: 2, most: 8, hatch: 0.4}   # °/s, s, HP (shootable), at most alive (round 43: 6 -> 8), s of the hatch tell
+    notes:
+      text: 'phase 1: the pods take turns firing `homing` missile salvos of {burst}, one {burst_gap} s after the other, every {interval} s ({speed} px/s, turning {homing.turn_rate}°/s, {homing.life} s life, {homing.hp} HP each, at most {homing.most} alive, `{bullet}` = {damage}; the hatch opens {homing.hatch} s before: the tell)'
+  - pattern: aimed
+    name: salvo
+    bullet: medium
+    burst: 3
+    burst_gap: 0.2
+    interval: 3         # s per pod, the two staggered by half of it (round 43: 4 -> 3)
+    speed: 110
+    staggered: true
+    parts: [left pod, right pod]
+    homing: {turn_rate: 90, life: 4, hp: 2, most: 8, hatch: 0.4}
+    notes:
+      text: 'from phase 2 each living pod fires salvos of {burst} every {interval} s, staggered'
+  - pattern: fan
+    name: chin-stride
+    bullet: small
+    count: 3            # round 43: a fan of 3 in a burst of 2 (was a single shot's burst of 3)
+    spread: 30
+    burst: 2
+    burst_gap: 0.2
+    interval: 2         # round 43: 2.5 -> 2
+    speed: 150
+    aim: facing         # phase 1: along its heading (the lane it walks), not at the ship
+    parts: [hull]
+    notes:
+      text: 'the chin cannon''s `fan` of {count} over {spread}° in a `burst` of {burst} ({burst_gap} s apart, {speed} px/s, `{bullet}` = {damage}) every {interval} s, along its heading in phase 1'
+  - pattern: fan
+    name: chin
+    bullet: small
+    count: 3
+    spread: 24
+    burst: 3
+    burst_gap: 0.15
+    interval: 1.8
+    speed: 160
+    parts: [hull]
+    notes:
+      text: 'phase 2: `aimed` at the ship ({count} over {spread}°, {speed} px/s)'
+  - pattern: fan
+    name: chin-overheat
+    bullet: small
+    count: 5
+    spread: 40
+    burst: 3
+    burst_gap: 0.15
+    interval: 2.4
+    speed: 170
+    parts: [hull]
+    notes:
+      text: 'phase 3: {count} over {spread}° every {interval} s ({speed} px/s)'
+  - pattern: fan
+    name: broadside
+    bullet: small
+    count: 2            # one bullet out of each flank: a fan of 2 over 180° along its heading
+    spread: 180
+    burst: 3
+    burst_gap: 0.25
+    interval: 2.2
+    speed: 120
+    aim: facing
+    parts: [hull]
+    notes:
+      text: 'the hull''s **flank guns** (round 43): a `burst` of {burst} out of both flanks, square to its heading ({burst_gap} s apart, {speed} px/s, `{bullet}` = {damage}) every {interval} s in phases 1 and 2: a dashed line across the lanes beside its own'
+  - pattern: fan
+    name: broadside-overheat
+    bullet: small
+    count: 2
+    spread: 180
+    burst: 4
+    burst_gap: 0.2
+    interval: 2.2
+    speed: 130
+    aim: facing
+    parts: [hull]
+    notes:
+      text: '{burst} every {interval} s in phase 3 ({speed} px/s)'
+formations:
+  - {name: solo set piece}
+weak_points:
+  - {name: hot-amber reactor vents (while open), multiplier: 2}
+drops: []           # phase 3's shield cell is its drop
+traits: [rear, anti-ground, homing, side]
+bounty: 495         # the parts' sum: hull 395, pods 50 each (step F4; ≈ 15 % of budget(19) at Level 19's measured 0.28)
+first_level: 19
+intel: {unclassified_until_flown: true}   # step F4 (G1's request): unnamed before the fight, "unclassified" in the hangar intel until Level 19 is first flown (part E's key)
+difficulty:   # round 43: easy clearly gentler, hard fiercer
+  easy: {attacks: {salvo-stride: {burst: 2}, salvo: {burst: 2}, chin-stride: {burst: 1}, broadside: {burst: 2}, broadside-overheat: {burst: 3}}, cone: {tell: 0.8, length: 210}}
+  hard: {attacks: {salvo-stride: {burst: 4}, chin: {count: 5}, broadside: {burst: 4}, broadside-overheat: {burst: 6}}, homing: {turn_rate: 120}, cone: {length: 270, swivel: 45}}
+boss:
+  kind: mid-boss
+  bar_name: REVENANT WALKER
+  par: 57           # s from the boss bar appearing to the kill: the Boss rush bonus (round 43: the autopilot's measured mean after the rework, 57.1 s; step F4: 53)
+  death_seconds: 2  # the topple: the legs buckle, it falls forward along its heading; the wreck stays (scenery)
+  plate: {part: hull, hitbox: [110, 30], ahead: 45}   # the front plate: across the heading 110 px, along it 30, its centre 45 px ahead of the hull's
+  cone:   # the rear flame cone, pointing against its heading (round 43, K.a: "the flame needs to be bigger")
+    length: 240         # px (round 43: 150 -> 240)
+    half_angle: 32      # ° each side of its axis (round 43: 22 -> 32)
+    reach_behind: 40    # px: it fires when the ship or Rook is within length + 40 px behind it
+    cooldown: 3         # s, tell start to tell start
+    tell: 0.6           # s: the pilot light flares blue-white
+    burn: 1.5           # s
+    vents: 2            # s the reactor vents stay open after each burn (×2)
+    swivel: 35          # ° toward the ship during the tell, from phase 2 on (round 43: 25 -> 35)
+    track: 40           # °/s: from phase 2 on the burn keeps turning toward the ship, within the swivel (round 43)
+    bullet: heavy       # the burn's hit, once per burn
+    behind: 50          # px: the flamer behind its centre
+  phases:
+    - name: Stride
+      until: {parts: [left pod, right pod], share: {parts: [hull], below: 0.6}}   # both pods gone, or the hull below 60 %
+      attacks: [salvo-stride, chin-stride, broadside]
+      delay: 1          # s after the halt before its first salvo and burst
+    - name: Hunt
+      until: {parts: [hull], below: 0.3}
+      attacks: [salvo, chin, broadside]
+      delay: 1
+    - name: Overheat
+      until: {parts: [hull]}
+      attacks: [salvo, chin-overheat, broadside-overheat]
+      delay: 1
+      drop: shield cell   # as the phase begins
+notes:
+  layer: ' (it walks on the yard: no contact with the ship or Rook; all weapons hit it, `anti-ground` ×2)'
+  size: '(the hull ≈ 110×120 on two reverse-knee legs, a biped: B.1 = a); hitboxes: hull 110×120, front plate {boss.plate.hitbox.0}×{boss.plate.hitbox.1} on the heading side, each pod 36×36 on a shoulder (±53 px, the art''s mounts), the vents 50×24 on the back'
+  parts: 'hull (`vital`; the bar); front plate (shots glance, no HP, not in the bar, covers the hull from the heading side); left and right missile pod (`destroyable`, on the shoulders, outside the plate''s cover); the reactor vents (a weak spot on the hull''s back, ×2 while open); the rear flamer (a hardpoint under the vents, not destroyable); the legs (drawn, no hitbox)'
+  orientation: (45° steps; the passes walk the 4 cardinal ones, the turns use the diagonals) × an 8-frame walk cycle; pods snap to the ship's bearing (16 headings)
+  hp: hull 2,310; pods 430 each; total
+  armour: 'the front plate turns every shot that meets it from ahead (it stops the Ion Beam too); the back and the pods take full damage; the vents ×2 while open ({boss.cone.vents} s after each burn, always in phase 3)'
+  speed: (phase 1), 55 px/s (phase 2), 60 px/s (phase 3); turns 90° in 1.5 s
+  movement: '`walk` in **passes** across the halted casting yard (see *Passes*); off the screen {movement.stride.off_screen} s between passes, under an edge warning'
+  attack_prefix: 'the rear **flame cone** ({boss.cone.length} px, ±{boss.cone.half_angle}°, a {boss.cone.tell} s tell, a {boss.cone.burn} s burn, `heavy` = 10 once per burn, at most every {boss.cone.cooldown} s; from phase 2 its burn follows the ship at {boss.cone.track}°/s; see *Attacks*); '
+  weak_points: '(exposed machinery: they glow heat orange when open)'
+  bounty: ' in Act 1 terms (hull 395, pods 50 each); × 2.56 (Act 3 factor 1.6²) × Level 19''s `bounty_scale` of 0.28 it pays **355 = 15.0 % of budget(19) = 2,366** (see *Bounty*)'
+  death: '`huge` machine variant: the legs buckle, it topples forward along its heading over {boss.death_seconds} s with chained explosions, the hull lands as a smoking **wreck** that stays (scenery) for the hint-2 beat; credit shower; no screen flash (act bosses only)'
+  used_in: mid-boss of L19 only
+  difficulty: 'hard: salvos of 4 in phase 1, missiles turn 120°/s, the phase-2 chin fan of 5, flank bursts of 4 (6 in phase 3), the flame cone 270 px, the swivel ±45°; easy: salvos of 2, single chin fans in phase 1, flank bursts of 2 (3 in phase 3), the flame cone 210 px, its tell 0.8 s'

@@ -57,7 +57,7 @@ class ShellbackTest {
         LevelScript level = SiegeSpecs.level(
                 List.of(SiegeSpecs.walker(0, SHELLBACK, new WaveSpec.At(240, depth), new WaveSpec.At(240, -3000))),
                 List.of(),
-                LevelScript.Secondary.NONE,
+                Secondary.NONE,
                 Optional.empty());
         return new Sortie(1, loadout, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
@@ -157,7 +157,7 @@ class ShellbackTest {
         LevelScript level = SiegeSpecs.level(
                 List.of(SiegeSpecs.walker(0, spec, new WaveSpec.At(240, depth), new WaveSpec.At(240, 3000))),
                 List.of(),
-                LevelScript.Secondary.NONE,
+                Secondary.NONE,
                 Optional.empty());
         return new Sortie(1, loadout, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }

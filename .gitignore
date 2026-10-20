@@ -10,7 +10,10 @@ build/
 /*-gaps*.md
 /act2-playtest.md
 /pt2-*.md
+/pt3-*.md
 /econ-review.md
 /refactor-plan.md
+/refactor-*.md
 /*.log
 /.claude/worktrees/
+/next-steps.md

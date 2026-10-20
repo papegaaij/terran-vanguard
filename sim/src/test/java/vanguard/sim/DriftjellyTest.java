@@ -90,19 +90,12 @@ class DriftjellyTest {
 
     /** One section of {@code seconds} scrolling at {@code speed} px/s with the waves, over water. */
     static LevelScript level(double seconds, double speed, WaveSpec... waves) {
-        return new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(new LevelScript.Section(seconds, speed)),
-                        List.of(waves),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(),
-                        new LevelScript.Secondary(0.8, 50),
-                        List.of())
-                .withWater(true);
+        return LevelScript.builder(11, 2)
+                .sections(List.of(new Section(seconds, speed)))
+                .waves(List.of(waves))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
     }
 
     private static Sortie sortie(long seed, LevelScript level) {

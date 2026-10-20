@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Terrain;
 
@@ -55,10 +56,10 @@ final class TerrainRules {
     }
 
     /** The level's terrain and its contact at {@code difficulty} (easy's 6, else 10), or empty without one. */
-    static Optional<LevelScript.TerrainSpec> terrain(LevelData level, Difficulty difficulty) {
+    static Optional<GroundSpec.TerrainSpec> terrain(LevelData level, Difficulty difficulty) {
         return level.terrain().map(block -> {
             TerrainBlock.Contact contact = block.contact();
-            return new LevelScript.TerrainSpec(
+            return new GroundSpec.TerrainSpec(
                     terrain(block),
                     contact.damage().of(difficulty),
                     contact.push(),
@@ -67,7 +68,7 @@ final class TerrainRules {
         });
     }
 
-    /** Whether a ground target is a linked nest (the gates' anchor pairs), mapped as {@link LevelScript.Gate}s. */
+    /** Whether a ground target is a linked nest (the gates' anchor pairs), mapped as {@link GroundSpec.Gate}s. */
     static boolean linked(LevelData.GroundTarget target) {
         return target.link().isPresent();
     }
@@ -87,7 +88,7 @@ final class TerrainRules {
         return spec.withLink(Optional.of(new EnemySpec.Link(
                 content.difficulty().enemyHp(link.hp(), difficulty),
                 link.dormant(),
-                SimSpecs.bulletDamage(content, attack.get().bullet().orElseThrow()),
+                UnitRules.bulletDamage(content, attack.get().bullet().orElseThrow()),
                 link.cooldown(),
                 link.band(),
                 link.burntBounty())));
@@ -97,8 +98,8 @@ final class TerrainRules {
      * The level's gates at {@code difficulty}: each linked nest's placements (the difficulty's list) paired in order,
      * left before right at the same time, with the nest's unit ({@code anchors} maps a slug to its spec).
      */
-    static List<LevelScript.Gate> gates(LevelData level, Difficulty difficulty, Function<String, EnemySpec> anchors) {
-        List<LevelScript.Gate> gates = new ArrayList<>();
+    static List<GroundSpec.Gate> gates(LevelData level, Difficulty difficulty, Function<String, EnemySpec> anchors) {
+        List<GroundSpec.Gate> gates = new ArrayList<>();
         for (LevelData.GroundTarget target : level.groundTargets()) {
             if (!linked(target)) {
                 continue;
@@ -121,7 +122,7 @@ final class TerrainRules {
                 if (left.t() != right.t()) {
                     throw new IllegalArgumentException(target.target() + ": a pair's anchors enter together");
                 }
-                gates.add(new LevelScript.Gate(left.t(), left.x(), right.x(), anchor));
+                gates.add(new GroundSpec.Gate(left.t(), left.x(), right.x(), anchor));
             }
         }
         return gates;
@@ -151,7 +152,7 @@ final class TerrainRules {
                 .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": a crawling chain fires its pores"));
         EnemyData.Pores pores = attack.pores().orElseThrow();
         Optional<EnemyData.PoresChange> change =
-                SimSpecs.hook(enemy, difficulty).flatMap(EnemyData.Hook::pores);
+                UnitRules.hook(enemy, difficulty).flatMap(EnemyData.Hook::pores);
         double[] scrolls = new double[path.size()];
         double[] xs = new double[path.size()];
         for (int i = 0; i < path.size(); i++) {
@@ -172,7 +173,7 @@ final class TerrainRules {
                         pores.glow(),
                         attack.speed().orElseThrow()
                                 * content.difficulty().enemyBulletSpeed().of(difficulty),
-                        SimSpecs.bulletDamage(content, attack.bullet().orElseThrow()),
+                        UnitRules.bulletDamage(content, attack.bullet().orElseThrow()),
                         change.flatMap(EnemyData.PoresChange::everyOther).orElse(pores.alternate())),
                 cut)));
     }
@@ -181,11 +182,11 @@ final class TerrainRules {
     static LevelScript script(
             LevelData level, Difficulty difficulty, LevelScript script, Function<String, EnemySpec> anchors) {
         LevelScript out = script;
-        Optional<LevelScript.TerrainSpec> terrain = terrain(level, difficulty);
+        Optional<GroundSpec.TerrainSpec> terrain = terrain(level, difficulty);
         if (terrain.isPresent()) {
-            out = out.withTerrain(terrain);
+            out = out.toBuilder().ground(out.ground().withTerrain(terrain)).build();
         }
-        List<LevelScript.Gate> gates = gates(level, difficulty, anchors);
+        List<GroundSpec.Gate> gates = gates(level, difficulty, anchors);
         if (!gates.isEmpty()) {
             out = out.withGates(gates);
         }

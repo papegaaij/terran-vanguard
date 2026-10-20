@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
@@ -50,10 +51,11 @@ class Level02Test {
                                 ? salvage
                                 : 0))
                 .sum();
-        int crates = level.cranes().stream()
-                .mapToInt(LevelScript.CraneSpec::crateCredits)
+        int crates = level.hazards().cranes().stream()
+                .mapToInt(HazardSpec.CraneSpec::crateCredits)
                 .sum();
-        int docks = level.secondary().credits() * level.secondary().groups().size();
+        int docks = level.objectives().secondary().credits()
+                * level.objectives().secondary().groups().size();
         int total = kills + turrets + pods + crates + docks;
 
         // The budget is the typical haul now (TypicalHaulTest); a perfect run earns well above it.
@@ -69,7 +71,7 @@ class Level02Test {
         assertEquals(24, level.groundUnits().size(), "24 Spine Turrets");
         assertEquals(
                 List.of("Dock One", "Dock Two", "Dock Three", "Dock Four"),
-                level.secondary().groups());
+                level.objectives().secondary().groups());
     }
 
     @ParameterizedTest
@@ -90,7 +92,7 @@ class Level02Test {
                     level.groundUnits().stream()
                             .filter(unit -> unit.group() == group)
                             .count(),
-                    level.secondary().groups().get(dock));
+                    level.objectives().secondary().groups().get(dock));
         }
     }
 
@@ -105,8 +107,8 @@ class Level02Test {
                     case HARD -> 3;
                 };
 
-        assertEquals(expected, level.cranes().getFirst().swings().size());
-        assertEquals(80, level.cranes().getFirst().crateCredits());
+        assertEquals(expected, level.hazards().cranes().getFirst().swings().size());
+        assertEquals(80, level.hazards().cranes().getFirst().crateCredits());
     }
 
     @ParameterizedTest

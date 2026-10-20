@@ -31,7 +31,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [threadcrawler](threadcrawler/README.md) | Ground centipede chain on canyon floors and walls, travelling spore wave (L16) | approved | done | final |
 | [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | final |
 | [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
-| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | not-started | chosen |
+| [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | in-progress | final |
 
 ## Roster
 
@@ -147,6 +147,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian
 | [concept/warden-tank-r36-a.gif](concept/warden-tank-r36-a.gif) | Warden Tank, unmarked grey — on a dirt road on Mars (motion) | chosen (round 36, U.6: the unmarked grey livery) |
 | [concept/dust-devil-final-r41-a.png](concept/dust-devil-final-r41-a.png) | Dust Devil final sprites (`tools/art/storm_units.py`, the chosen r06 a): closed spin, rise, open with the lime core, core glow, grit swirls, in / out of the radius, collapse, death light, grit cloud (sheet) | chosen (round 41) |
 | [concept/dust-devil-final-r41-a.gif](concept/dust-devil-final-r41-a.gif) | Dust Devil final: two devils cycling on the eye's dry lake, the grit spiral, pickups pulled in, one killed in its window, 15 fps | chosen (round 41) |
+| [concept/warden-tank-final-r42-a.png](concept/warden-tank-final-r42-a.png) | Warden Tank final sprites, Act 3 grey (`tools/art/warden_tank.py`, the chosen r36 a; held in `build/art-held/` until the tank's `data.yaml` claims the root `warden-tank`): hull 16 headings × 2 tread frames, turret 32 aims at rest / recoil, muzzle flash, turret stub, burnt grey wreck 16 headings (sheet); pending the user's review | proposed |
+| [concept/warden-tank-final-r42-a.gif](concept/warden-tank-final-r42-a.gif) | Warden Tank final: a convoy of three riding a foundry belt, turrets tracking and firing 3-shot bursts (flash, recoil), back up the screen after the ship passes; a turret shot off, a wreck riding on, 20 fps; pending the user's review | proposed |
 
 ## Implementation
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 
@@ -54,9 +55,9 @@ class WaterKeysTest {
         assertTrue(content.level(KEY).overWater());
 
         LevelScript script = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
-        assertTrue(script.water());
-        List<LevelScript.GroundObjectSpec> triggers = script.groundObjects().stream()
-                .filter(LevelScript.GroundObjectSpec::trigger)
+        assertTrue(script.ground().water());
+        List<GroundObjectSpec> triggers = script.groundObjects().stream()
+                .filter(GroundObjectSpec::trigger)
                 .toList();
         assertEquals(1, triggers.size());
         assertTrue(triggers.getFirst().submerged());
@@ -75,11 +76,14 @@ class WaterKeysTest {
             boolean water =
                     key.equals(Level11Test.LEVEL) || key.equals(Level12Test.LEVEL) || key.equals(Level13Test.LEVEL);
             assertEquals(water, content.level(key).overWater(), key);
-            assertEquals(water, SimSpecs.level(content, key, Difficulty.MEDIUM).water(), key);
+            assertEquals(
+                    water,
+                    SimSpecs.level(content, key, Difficulty.MEDIUM).ground().water(),
+                    key);
             assertEquals(
                     key.equals(Level11Test.LEVEL),
                     SimSpecs.level(content, key, Difficulty.MEDIUM).groundObjects().stream()
-                            .anyMatch(LevelScript.GroundObjectSpec::submerged),
+                            .anyMatch(GroundObjectSpec::submerged),
                     key);
         }
         assertEquals(Layer.SUB, Layers.of("sub"));

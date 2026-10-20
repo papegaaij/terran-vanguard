@@ -222,7 +222,7 @@ final class WaveSchedule {
         return switch (wave.edge()) {
             case LEFT -> WarningEdge.LEFT.bit();
             case RIGHT -> WarningEdge.RIGHT.bit();
-            case NONE, ALTERNATING -> WarningEdge.LEFT.bit() | WarningEdge.RIGHT.bit();
+            case NONE, ALTERNATING, TOP, BOTTOM -> WarningEdge.LEFT.bit() | WarningEdge.RIGHT.bit();
         };
     }
 

@@ -55,6 +55,10 @@ class PlaceholderAuditTest {
             "M7 part E's Level 18 unit sounds: round 41's proposals (option a until the user's pick),"
                     + " synthesized by tools/concept/audio/sfx_r41.py";
 
+    private static final String ROUND_42 =
+            "M7 part F's Level 19 sounds: round 42's proposals (option a until the user's pick),"
+                    + " synthesized by tools/concept/audio/sfx_r42.py";
+
     private static final String ROUND_41_MUSIC =
             "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
                     + " files, rendered by tools/concept/audio/music_r41.py";
@@ -176,6 +180,20 @@ class PlaceholderAuditTest {
             Map.entry("sfx/ghost-drone-glint-r41-a.ogg", ROUND_41),
             Map.entry("sfx/ghost-drone-burst-r41-a.ogg", ROUND_41),
             Map.entry("sfx/ghost-drone-death-r41-a.ogg", ROUND_41),
+            // M7 part F, Level 19: round 42's unit, vent and belt sounds and the `mars-foundry` bed
+            Map.entry("sfx/walker-stomp-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/walker-hatch-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/walker-missile-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/walker-flame-tell-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/walker-flame-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/vent-tell-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/vent-burst-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/tank-tracks-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/tank-turret-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/tank-burst-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/tank-death-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/belt-rumble-r42-a.ogg", ROUND_42),
+            Map.entry("sfx/mars-foundry-r42-a.ogg", ROUND_42),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

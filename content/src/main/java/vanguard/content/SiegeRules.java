@@ -9,7 +9,10 @@ import vanguard.sim.AllySpec;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Hitbox;
+import vanguard.sim.HookMode;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.Secondary;
 
 /**
  * M7 part D's rules for the simulation (step D4; design/campaign Level 17 Dome Siege, design/allies/ares-landing-dome,
@@ -39,28 +42,29 @@ final class SiegeRules {
      * as its HP, the hits a bomb run, a lob and a roll deal; the hook's modes on that difficulty (a {@code none} left
      * out), the bomb row and slots. Empty without an {@code allies} block.
      */
-    static Optional<LevelScript.GroundAllies> allies(Content content, LevelData level, Difficulty difficulty) {
+    static Optional<ObjectiveSpec.GroundAllies> allies(Content content, LevelData level, Difficulty difficulty) {
         return level.allies().map(allies -> {
             Optional<Integer> hits = allies.change(difficulty).flatMap(LevelData.AlliesChange::hits);
-            List<LevelScript.GroundAlly> units = new ArrayList<>();
+            List<ObjectiveSpec.GroundAlly> units = new ArrayList<>();
             for (LevelData.GroundAlly unit : allies.units()) {
                 AlliesData.Ally ally = content.allies().allies().get(unit.ally());
                 if (ally == null) {
                     throw new IllegalArgumentException("no ally '" + unit.ally() + "'");
                 }
-                units.add(new LevelScript.GroundAlly(
+                units.add(new ObjectiveSpec.GroundAlly(
                         ally(unit, ally, hits),
                         unit.name(),
                         unit.at().x(),
                         unit.at().t()));
             }
-            Map<String, LevelScript.HookMode> modes = new TreeMap<>();
+            Map<String, HookMode> modes = new TreeMap<>();
             allies.modes(difficulty).forEach((slug, mode) -> {
                 if (mode != LevelData.HookMode.NONE) {
                     modes.put(slug, PartGRules.mode(mode));
                 }
             });
-            return new LevelScript.GroundAllies(units, modes, allies.bombRow(), allies.bombSlot());
+            return new ObjectiveSpec.GroundAllies(units, modes, allies.bombRow(), allies.bombSlot())
+                    .withBombRunIn(allies.bombRunIn().orElse(0.0));
         });
     }
 
@@ -95,17 +99,28 @@ final class SiegeRules {
 
     /** {@code script} with the level's ground allies, when it has them. */
     static LevelScript script(Content content, LevelData level, Difficulty difficulty, LevelScript script) {
-        Optional<LevelScript.GroundAllies> allies = allies(content, level, difficulty);
-        return allies.isPresent() ? script.withGroundAllies(allies) : script;
+        Optional<ObjectiveSpec.GroundAllies> allies = allies(content, level, difficulty);
+        return allies.isPresent()
+                ? script.toBuilder()
+                        .objectives(script.objectives().withGroundAllies(allies))
+                        .build()
+                : script;
     }
 
-    /** The {@code untouched} secondary (Level 17's "No dome hit"): failed at the first hit on any ground ally. */
-    static Optional<LevelScript.Secondary> secondary(LevelData.Secondary secondary) {
+    /**
+     * The ground allies' secondary: {@code untouched} (failed at the first hit on any ground ally) or round 41's
+     * {@code standing} (Level 17's "No dome lost": failed when the first breaks).
+     */
+    static Optional<Secondary> secondary(LevelData.Secondary secondary) {
+        if (secondary.keepsAlliesStanding()) {
+            return Optional.of(
+                    Secondary.standing(secondary.credits(), secondary.label().orElseThrow()));
+        }
         if (!secondary.keepsAlliesUntouched()) {
             return Optional.empty();
         }
-        return Optional.of(LevelScript.Secondary.untouched(
-                secondary.credits(), secondary.label().orElseThrow()));
+        return Optional.of(
+                Secondary.untouched(secondary.credits(), secondary.label().orElseThrow()));
     }
 
     /**
@@ -118,7 +133,7 @@ final class SiegeRules {
             return gun;
         }
         int count = attack.name()
-                .flatMap(name -> SimSpecs.hook(enemy, difficulty)
+                .flatMap(name -> UnitRules.hook(enemy, difficulty)
                         .flatMap(EnemyData.Hook::attacks)
                         .map(changes -> changes.get(name)))
                 .flatMap(EnemyData.AttackChange::count)
@@ -169,7 +184,7 @@ final class SiegeRules {
      * {@code first_bonus}) and its curl-roll (the hook's roll time). A unit without them is returned as it is.
      */
     static EnemySpec unit(Content content, EnemyData enemy, Difficulty difficulty, double actHp, EnemySpec spec) {
-        Optional<EnemyData.Hook> hook = SimSpecs.hook(enemy, difficulty);
+        Optional<EnemyData.Hook> hook = UnitRules.hook(enemy, difficulty);
         EnemySpec out = spec;
         Optional<EnemyData.Aura> aura = enemy.aura();
         if (aura.isPresent()) {

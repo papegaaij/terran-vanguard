@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
  * ring at the ship only), and {@code none} (easy's Stingers).
  */
 class HookModesTest {
-    private static final LevelScript.HookMode ALTERNATE = LevelScript.HookMode.ALTERNATE;
-    private static final LevelScript.HookMode ALWAYS = LevelScript.HookMode.ALWAYS;
+    private static final HookMode ALTERNATE = HookMode.ALTERNATE;
+    private static final HookMode ALWAYS = HookMode.ALWAYS;
 
     /** A unit with {@code gun} that hovers 30 s {@code depth} px below the top edge, hooked as a "skimmer". */
     private static EnemySpec hoverer(EnemyGun gun, double depth) {
@@ -138,7 +138,7 @@ class HookModesTest {
         WaveSpec wave = TestSpecs.wave(
                 50, WaveSpec.Formation.SINGLE, PartGSpecs.SCUTTLER, 1, WaveSpec.Entry.SIDES, WaveSpec.Edge.LEFT);
         Sortie sortie = PartGSpecs.untouchable(PartGSpecs.level(
-                Map.of("scuttler", LevelScript.HookMode.IN_ARC),
+                Map.of("scuttler", HookMode.IN_ARC),
                 List.of(new WaveSpec(
                         wave.t(),
                         wave.formation(),
@@ -170,7 +170,7 @@ class HookModesTest {
         WaveSpec base = TestSpecs.wave(
                 50, WaveSpec.Formation.SINGLE, PartGSpecs.SCUTTLER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         Sortie sortie = PartGSpecs.untouchable(PartGSpecs.level(
-                Map.of("scuttler", LevelScript.HookMode.IN_ARC),
+                Map.of("scuttler", HookMode.IN_ARC),
                 List.of(new WaveSpec(
                         base.t(),
                         base.formation(),
@@ -243,8 +243,7 @@ class HookModesTest {
 
     @Test
     void alwaysLobsAtTheRelayTheDirectHitOnItTheRingAtTheShipOnly() {
-        LevelScript.GroundUnit floe = LevelScript.GroundUnit.fromSide(
-                50, CraterNestTest.MORTAR, -1, new LevelScript.SideEntry(true, 420, 10));
+        GroundUnit floe = GroundUnit.fromSide(50, CraterNestTest.MORTAR, -1, new SideEntry(true, 420, 10));
         Sortie sortie =
                 PartGSpecs.untouchable(PartGSpecs.level(Map.of("polyp-mortar", ALWAYS), List.of(), List.of(floe)));
         runTo(sortie, 50);
@@ -273,8 +272,7 @@ class HookModesTest {
     @Test
     void hookedAttacksDoNotAllocate() {
         EnemySpec unit = hoverer(EnemyGun.aimed(1, 0.2, 2, 150, 4, false), 200);
-        LevelScript.GroundUnit floe = LevelScript.GroundUnit.fromSide(
-                45, CraterNestTest.MORTAR, -1, new LevelScript.SideEntry(true, 420, 10));
+        GroundUnit floe = GroundUnit.fromSide(45, CraterNestTest.MORTAR, -1, new SideEntry(true, 420, 10));
         LevelScript level = PartGSpecs.level(
                 Map.of("skimmer", ALTERNATE, "polyp-mortar", ALWAYS, "stinger", ALWAYS),
                 List.of(

@@ -127,12 +127,12 @@ final class TestFirePanel {
         return offer.level() + (upgrading(state) ? 1 : 0);
     }
 
-    /** Whether the highlighted choice is an upgrade that has a next level. */
+    /** Whether the highlighted choice (or the one the pointer rests on) is an upgrade that has a next level. */
     static boolean upgrading(HangarState state) {
         if (state.focus() != HangarState.Focus.SHOP) {
             return false;
         }
-        Optional<Choice> choice = state.choice();
+        Optional<Choice> choice = state.previewChoice();
         return choice.isPresent()
                 && choice.get().action() == Action.UPGRADE
                 && !choice.get().refusal().filter(Refusal.MAX_LEVEL::equals).isPresent();

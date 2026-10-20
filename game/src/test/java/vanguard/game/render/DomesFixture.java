@@ -9,7 +9,11 @@ import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.sim.AllySpec;
 import vanguard.sim.Hitbox;
+import vanguard.sim.HookMode;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
 
@@ -63,12 +67,12 @@ public final class DomesFixture {
     /** The level: the three domes, the untouched secondary, and {@code bombers} hooked bombers over Bradbury (0: none). */
     public static LevelScript level(int bombers) {
         AllySpec dome = dome(120, HITS);
-        LevelScript.GroundAllies domes = new LevelScript.GroundAllies(
+        ObjectiveSpec.GroundAllies domes = new ObjectiveSpec.GroundAllies(
                 List.of(
-                        new LevelScript.GroundAlly(dome, NAMES.get(0), 130, 5),
-                        new LevelScript.GroundAlly(dome, NAMES.get(1), 350, 14),
-                        new LevelScript.GroundAlly(dome(144, HITS), NAMES.get(2), 240, 23)),
-                Map.of("spore-bomber", LevelScript.HookMode.ALWAYS),
+                        new ObjectiveSpec.GroundAlly(dome, NAMES.get(0), 130, 5),
+                        new ObjectiveSpec.GroundAlly(dome, NAMES.get(1), 350, 14),
+                        new ObjectiveSpec.GroundAlly(dome(144, HITS), NAMES.get(2), 240, 23)),
+                Map.of("spore-bomber", HookMode.ALWAYS),
                 160,
                 40);
         List<WaveSpec> waves = bombers > 0
@@ -86,21 +90,13 @@ public final class DomesFixture {
                         Optional.empty(),
                         List.of()))
                 : List.of();
-        return new LevelScript(
-                        17,
-                        3,
-                        0,
-                        List.of(new LevelScript.Section(LENGTH, SPEED)),
-                        waves,
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(),
-                        LevelScript.Secondary.untouched(100, "DOMES"),
-                        List.of(),
-                        List.of(),
-                        List.of())
-                .withGroundAllies(Optional.of(domes));
+        return LevelScript.builder(17, 3)
+                .sections(List.of(new Section(LENGTH, SPEED)))
+                .waves(waves)
+                .objectives(ObjectiveSpec.NONE
+                        .withSecondary(Secondary.untouched(100, "DOMES"))
+                        .withGroundAllies(Optional.of(domes)))
+                .build();
     }
 
     public static Sortie sortie(int bombers) {

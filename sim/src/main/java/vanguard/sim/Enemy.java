@@ -231,6 +231,13 @@ public final class Enemy implements Hashed {
     private double aim;
     /** Whether the ship is inside a turret's arc this step. */
     private boolean inArc;
+    /**
+     * M7 part F: a turret's lock (design/enemies/ground/warden-tank): steps left before its burst while it has
+     * stopped turning (the tell); -1 while it turns. Hashed only with a turret.
+     */
+    private int turretLock = -1;
+    /** M7 part F: how far its turret's aim was off its target in this step's turn, radians (set and read within the step). */
+    private double turretOff = Double.POSITIVE_INFINITY;
 
     private int diveTicks;
     private boolean diveFired;
@@ -518,6 +525,11 @@ public final class Enemy implements Hashed {
             x = prevX = walkPath.x(0);
             y = prevY = walkPath.y(0);
             facing = walkPath.points() > 1 ? heading(walkPath.x(1) - x, walkPath.y(1) - y) : StrictMath.PI;
+            turretLock = -1;
+            if (spec.turret().isPresent()) {
+                // M7 part F: the turret starts along the hull.
+                aim = facing;
+            }
             // The first volleys come half an interval after it walks onto the screen.
             volleyTicks =
                     spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().intervalSeconds() / 2) : 0;
@@ -791,8 +803,9 @@ public final class Enemy implements Hashed {
         hp = spec.hp();
         partHp.start(spec);
         ticksSinceHit = Integer.MAX_VALUE;
-        aim = 0;
-        facing = 0;
+        // M7 part F: a turret whose arc faces up the screen ({@code arc: up}) starts along it; 0 for any other.
+        aim = spec.gun().isPresent() ? spec.gun().get().arcFacingRadians() : 0;
+        facing = aim;
         inArc = false;
         burstLeft = 0;
         leadsTarget = false;
@@ -811,7 +824,7 @@ public final class Enemy implements Hashed {
      * edge at its {@code side}'s height and drifting across at its drift on top of the scroll; its wave
      * counts as a side entry (the wingman's formation).
      */
-    void rootAtSide(EnemySpec enemySpec, int enemyKind, LevelScript.SideEntry side, int unitSerial, int inGroup) {
+    void rootAtSide(EnemySpec enemySpec, int enemyKind, SideEntry side, int unitSerial, int inGroup) {
         root(enemySpec, enemyKind, 0, unitSerial, inGroup);
         double half = box.width() / 2;
         x = prevX = side.fromLeft() ? -half : PlayField.WIDTH + half;
@@ -1127,6 +1140,7 @@ public final class Enemy implements Hashed {
                 turn();
                 boolean on = PlayField.overlaps(x, y, box);
                 entered |= on;
+                bombRun.flown(on);
                 return on || (!entered && y + box.height() / 2 > 0);
             }
             case SPIRAL -> {
@@ -1200,6 +1214,9 @@ public final class Enemy implements Hashed {
                         curlRoll.step(this, spec.roll().orElseThrow(), events, groundScroll);
                     }
                     pouncing.waitStep();
+                }
+                if (spec.turret().isPresent()) {
+                    turnTurret(aimX, aimY);
                 }
                 boolean on = PlayField.overlaps(x, y, box);
                 entered |= on;
@@ -1969,9 +1986,19 @@ public final class Enemy implements Hashed {
      * dome's x plus {@code offset} (its slot in its wave), instead of its path.
      */
     void bombRun(double rowY, double offset) {
+        bombRun(rowY, offset, 0);
+    }
+
+    /** Round 41: as {@link #bombRun(double, double)}, its load held for its first {@code runIn} steps on the play field. */
+    void bombRun(double rowY, double offset, int runIn) {
         phase = Phase.BOMB;
-        bombRun.start(rowY, offset, x);
+        bombRun.start(rowY, offset, x, runIn);
         entered = false;
+    }
+
+    /** Round 41: whether its bomb run's run-in is over, so it may drop its load over its dome. */
+    boolean bombArmed() {
+        return bombRun.armed();
     }
 
     /** M7 part D: the ground ally its bomb run steers to this step ({@code dome}, -1 for none), standing at {@code domeX}. */
@@ -2045,7 +2072,11 @@ public final class Enemy implements Hashed {
         }
         EnemyGun gun = spec.gun().get();
         double wanted = heading(shipX - x, shipY - y);
-        if (Math.abs(wanted) > gun.arcRadians()) {
+        // M7 part F: the arc is measured from its facing (straight down, or up the screen for {@code arc: up}).
+        double off = gun.arcFacingRadians() == 0
+                ? wanted
+                : Math.IEEEremainder(wanted - gun.arcFacingRadians(), 2 * StrictMath.PI);
+        if (Math.abs(off) > gun.arcRadians()) {
             return;
         }
         inArc = true;
@@ -2053,6 +2084,118 @@ public final class Enemy implements Hashed {
         double most = gun.turnRate() * SimStep.SECONDS;
         aim = Math.IEEEremainder(aim + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
         facing = aim;
+    }
+
+    /**
+     * M7 part F (design/enemies/ground/warden-tank): its turret turns toward (targetX, targetY) by at most its
+     * turn rate, all round, while the unit is on the screen and its gun is not quiet; it holds while it is
+     * locked for its burst (the tell) and through the burst.
+     */
+    private void turnTurret(double targetX, double targetY) {
+        turretOff = Double.POSITIVE_INFINITY;
+        if (gunQuiet() || !PlayField.overlaps(x, y, box)) {
+            return;
+        }
+        double wanted = heading(targetX - x, targetY - y);
+        if (turretLock < 0 && burstLeft == 0) {
+            double most = spec.turret().orElseThrow().turnRate() * SimStep.SECONDS;
+            double delta = Math.IEEEremainder(wanted - aim, 2 * StrictMath.PI);
+            aim = Math.IEEEremainder(aim + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
+        }
+        turretOff = Math.abs(Math.IEEEremainder(wanted - aim, 2 * StrictMath.PI));
+    }
+
+    /**
+     * M7 part F: a turret's gun (design/enemies/ground/warden-tank): its interval counts down from its last burst's
+     * start less the lock; once it is ready and the turret's aim is within the turret's angle of the target, the
+     * turret locks for its lock time (the tell) and then fires the burst along its aim, its shots the burst gap
+     * apart; so a turret that stays on its target fires a burst every interval. Silent while the unit is off the
+     * screen or its gun is quiet (its turret part shot off). Returns whether a shot goes now.
+     */
+    private boolean turretTrigger() {
+        if (spec.gun().isEmpty() || gunQuiet() || !PlayField.overlaps(x, y, box)) {
+            turretLock = -1;
+            burstLeft = 0;
+            return false;
+        }
+        EnemyGun gun = spec.gun().get();
+        if (volleyTicks > 0) {
+            // From its last burst's start (the burst's own steps count too).
+            volleyTicks--;
+        }
+        if (burstLeft > 0) {
+            if (--burstTicks > 0) {
+                return false;
+            }
+            burstLeft--;
+            burstTicks = SimStep.ticks(gun.burstGapSeconds());
+            return true;
+        }
+        EnemySpec.Turret turret = spec.turret().orElseThrow();
+        if (turretLock < 0) {
+            if (volleyTicks > 0 || turretOff > turret.withinRadians()) {
+                return false;
+            }
+            turretLock = SimStep.ticks(turret.lockSeconds());
+            if (turretLock > 0) {
+                return false;
+            }
+        } else if (--turretLock > 0) {
+            return false;
+        }
+        turretLock = -1;
+        volleyTicks = Math.max(1, SimStep.ticks(gun.intervalSeconds()) - SimStep.ticks(turret.lockSeconds()));
+        burstLeft = gun.burst() - 1;
+        burstTicks = SimStep.ticks(gun.burstGapSeconds());
+        return true;
+    }
+
+    /**
+     * M7 part F: its turret's aim, radians clockwise from straight down (design/enemies/ground/warden-tank: drawn on
+     * its own over the hull, which faces its path); the hull's {@link #facing()} for a unit without a turret.
+     */
+    public double turretAim() {
+        return spec.turret().isPresent() ? aim : facing;
+    }
+
+    /** M7 part F: whether its turret has stopped turning for its burst (the tell, then the burst); false without one. */
+    public boolean turretLocked() {
+        return spec.turret().isPresent() && (turretLock >= 0 || burstLeft > 0);
+    }
+
+    /**
+     * M7 part F (design/enemies/ground/warden-tank, the rear plate): the factor a direct shot flying at (shotVx,
+     * shotVy) does to its body: its rear plate's multiplier when the shot arrives within the plate's half arc of
+     * its rear (flies along its facing), 1 otherwise and for a unit without a rear plate.
+     */
+    double rearFactor(double shotVx, double shotVy) {
+        if (spec.rearPlate().isEmpty() || walkPath == null) {
+            return 1;
+        }
+        double length = Math.sqrt(shotVx * shotVx + shotVy * shotVy);
+        if (length == 0) {
+            return 1;
+        }
+        EnemySpec.RearPlate plate = spec.rearPlate().get();
+        // The facing as a direction (y up): a shot from behind flies along it.
+        double along = -(shotVx * Trig.sin(facing) + shotVy * Trig.cos(facing)) / length;
+        return along >= Trig.cos(plate.halfArcRadians()) ? plate.multiplier() : 1;
+    }
+
+    /**
+     * M7 part F (design/campaign Level 19, Conveyors): a belt carries it {@code dy} px up the screen in this step (a
+     * ground unit standing or walking on it).
+     */
+    void ride(double dy) {
+        y += dy;
+    }
+
+    /**
+     * M7 part F: whether a belt under it would carry it: a unit on the ground layer standing (a ground unit) or walking
+     * (not in a pounce's leap).
+     */
+    boolean rides() {
+        return (phase == Phase.GROUND || phase == Phase.WALK) && layer() == Layer.GROUND && !pouncing.leaping();
     }
 
     /** The direction of a movement (y up) in radians clockwise from straight down the screen. */
@@ -2154,6 +2297,9 @@ public final class Enemy implements Hashed {
             }
             volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
             return true;
+        }
+        if (phase == Phase.WALK && spec.turret().isPresent()) {
+            return turretTrigger();
         }
         if (phase == Phase.WALK) {
             // A walker's fan, along its facing, while it is on the screen (M7 part D: not while it is
@@ -2437,6 +2583,10 @@ public final class Enemy implements Hashed {
         // M7 part E's lane strafers add theirs; earlier units hash as before.
         if (phase == Phase.STRAFE) {
             laneStrafing.addTo(hash);
+        }
+        // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
+        if (spec.turret().isPresent()) {
+            hash.add(turretLock);
         }
     }
 

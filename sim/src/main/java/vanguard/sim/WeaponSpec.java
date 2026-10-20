@@ -279,7 +279,7 @@ public record WeaponSpec(
          * steering at most its turn rate towards the nearest {@code sub} or {@code ground} unit in its
          * cone, until it has run its range; it strikes the first {@code sub} or {@code ground} target
          * it touches (units, destructibles, a sunken trigger) at full damage, never a flyer. Only in a
-         * level over water ({@link LevelScript#water()}): elsewhere its mount fires nothing.
+         * level over water ({@link GroundSpec#water()}): elsewhere its mount fires nothing.
          */
         TORPEDO,
         /**

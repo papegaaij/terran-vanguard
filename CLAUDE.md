@@ -123,6 +123,14 @@ design tree; this list is only a reminder.
   per-level numbers); the same checks run as JUnit tests (`BalanceTest`, `ActPlaythroughTest`).
   It exits 0; the L01–L03 DPS gap, the Coilwyrm's bounty and the Level 12 Wraith rear check
   (accepted by the user in round 34) are printed as accepted exceptions.
+- `./gradlew :content:levelReport -Plevel=19` – a level's numbers for tuning, computed by the tests' own code
+  (`LevelMetrics`, so tool and tests agree; `LevelReportTest` checks it): per difficulty the enemies and their rate,
+  the mean on the screen and shots a minute, the empty gaps over 2 s with the pacing rule, the Act 2+ floor, the
+  typical haul vs the budget with the `bounty_scale` that would hit it, the autopilot's wins, retries, secondary and
+  boss fights vs par and window, and the beam era's small-unit time on the screen vs Level 10. Options:
+  `-Pdifficulty=easy,medium,hard`, `-Pseeds=3`, `-Pfit=test|plan|user` (default: each measure with its test's fit),
+  `-Pparts=pacing,floor,haul,boss,secondary,hp`, `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
+  time (no recompile after a data.yaml edit) and runs the flights in parallel: a few seconds a level.
 - `tools/concept/` – reproducible generators for concept mockups (Python 3 + PIL + numpy,
   ffmpeg for audio/GIF encoding). Each script documents its outputs at the top.
 - `tools/art/` – production generators for final assets (see

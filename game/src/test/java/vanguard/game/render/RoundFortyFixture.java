@@ -8,10 +8,15 @@ import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
 import vanguard.sim.BossSpec;
+import vanguard.sim.GroundSpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PlayField;
+import vanguard.sim.Section;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Sortie;
 
 /**
@@ -44,7 +49,7 @@ public final class RoundFortyFixture {
     private RoundFortyFixture() {}
 
     /** The rooted Kraken (the slug the game draws: {@code harbour-kraken}). */
-    static LevelScript.SetPieceSpec kraken() {
+    static SetPieceSpec kraken() {
         BossSpec.Attack fan = SimSpecs.boss(
                         CONTENT,
                         new LevelData.BossPlacement("harbour-kraken", ARRIVE, PlayField.WIDTH / 2.0, 2),
@@ -53,15 +58,14 @@ public final class RoundFortyFixture {
                 .orElseThrow()
                 .attacks()
                 .getFirst();
-        List<LevelScript.PartSpec> parts = new ArrayList<>();
-        parts.add(new LevelScript.PartSpec(
-                "head", 0, -216, new Hitbox(130, 200), 300, true, 124, Optional.empty(), 0, 0.5));
+        List<PartSpec> parts = new ArrayList<>();
+        parts.add(new PartSpec("head", 0, -216, new Hitbox(130, 200), 300, true, 124, Optional.empty(), 0, 0.5));
         List<BossSpec.Arm> arms = new ArrayList<>();
         List<BossSpec.Chain> chains = new ArrayList<>();
         double[] mantleDx = {-34.6, -12.4, 12.4, 34.6};
         double[] mantleDy = {-326.6, -333, -333, -326.6};
         for (int lane = 1; lane <= 4; lane++) {
-            parts.add(new LevelScript.PartSpec(
+            parts.add(new PartSpec(
                     "root " + lane,
                     SOCKET_DX[lane - 1],
                     SOCKET_DY,
@@ -136,7 +140,7 @@ public final class RoundFortyFixture {
                 new BossSpec.Slam(TELEGRAPH, 0.5, 1.5, 0.6, 10, 6, 120, 4, 2, 0.5),
                 List.of(Layer.SUB, Layer.GROUND, Layer.GROUND, Layer.GROUND, Layer.GROUND),
                 List.of());
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "harbour-kraken",
                 new Hitbox(344, 380),
                 new Hitbox(208, 152),
@@ -167,31 +171,19 @@ public final class RoundFortyFixture {
 
     /** The rooted Kraken's arena over water with the convoy, flown with the starter loadout, the ship invulnerable. */
     public static Sortie kraken(int seed) {
-        LevelScript level = new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(
-                                new LevelScript.Section(ARRIVE, SPEED),
-                                new LevelScript.Section(ARRIVE + 1, 0, true),
-                                new LevelScript.Section(ARRIVE + 30, SPEED)),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(),
-                        LevelScript.Secondary.NONE,
-                        List.of(),
-                        List.of(),
-                        List.of(kraken()))
-                .withWater(true)
-                .withConvoy(ArenaFixture.convoy());
+        LevelScript level = LevelScript.builder(11, 2)
+                .sections(List.of(
+                        new Section(ARRIVE, SPEED), new Section(ARRIVE + 1, 0, true), new Section(ARRIVE + 30, SPEED)))
+                .setPieces(List.of(kraken()))
+                .objectives(ObjectiveSpec.NONE.withConvoy(Optional.of(ArenaFixture.convoy())))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
         return sortie(level, seed);
     }
 
     /** The Spire of the data with its orbs' aim turns. */
-    static LevelScript.SetPieceSpec spire() {
-        LevelScript.SetPieceSpec base = SimSpecs.boss(
+    static SetPieceSpec spire() {
+        SetPieceSpec base = SimSpecs.boss(
                 CONTENT,
                 new LevelData.BossPlacement("siege-spire", ARRIVE, PlayField.WIDTH / 2.0, 2),
                 Difficulty.MEDIUM);
@@ -238,7 +230,7 @@ public final class RoundFortyFixture {
                 b.poses(),
                 b.deathSeconds(),
                 b.arena());
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 base.slug(),
                 base.size(),
                 base.body(),
@@ -251,23 +243,13 @@ public final class RoundFortyFixture {
 
     /** The Spire's arena: {@link #ARRIVE} s at 140 px/s, then the halt. */
     public static Sortie spire(int seed) {
-        LevelScript level = new LevelScript(
-                14,
-                2,
-                0,
-                List.of(
-                        new LevelScript.Section(ARRIVE, SPEED),
-                        new LevelScript.Section(ARRIVE + 200, 0, true),
-                        new LevelScript.Section(ARRIVE + 210, SPEED)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                LevelScript.Secondary.NONE,
-                List.of(),
-                List.of(),
-                List.of(spire()));
+        LevelScript level = LevelScript.builder(14, 2)
+                .sections(List.of(
+                        new Section(ARRIVE, SPEED),
+                        new Section(ARRIVE + 200, 0, true),
+                        new Section(ARRIVE + 210, SPEED)))
+                .setPieces(List.of(spire()))
+                .build();
         return sortie(level, seed);
     }
 

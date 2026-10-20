@@ -83,30 +83,26 @@ class SporeDriftTest {
     private static LevelScript level(
             double seconds,
             List<WaveSpec> waves,
-            List<LevelScript.GroundObjectSpec> ground,
-            List<LevelScript.RadioCue> radio,
-            LevelScript.Secondary secondary,
-            List<LevelScript.DebrisSpec> debris,
-            List<LevelScript.SetPieceSpec> setPieces,
+            List<GroundObjectSpec> ground,
+            List<RadioCue> radio,
+            Secondary secondary,
+            List<HazardSpec.DebrisSpec> debris,
+            List<SetPieceSpec> setPieces,
             int secrets) {
-        return new LevelScript(
-                3,
-                1,
-                0,
-                List.of(new LevelScript.Section(seconds, 130)),
-                waves,
-                ground,
-                List.of(),
-                secrets,
-                radio,
-                secondary,
-                List.of(),
-                debris,
-                setPieces);
+        return LevelScript.builder(3, 1)
+                .sections(List.of(new Section(seconds, 130)))
+                .waves(waves)
+                .groundObjects(ground)
+                .secrets(secrets)
+                .radio(radio)
+                .objectives(ObjectiveSpec.NONE.withSecondary(secondary))
+                .hazards(HazardSpec.NONE.withDebris(debris))
+                .setPieces(setPieces)
+                .build();
     }
 
     private static LevelScript level(double seconds, List<WaveSpec> waves) {
-        return level(seconds, waves, List.of(), List.of(), new LevelScript.Secondary(0.8, 50), List.of(), List.of(), 0);
+        return level(seconds, waves, List.of(), List.of(), new Secondary(0.8, 50), List.of(), List.of(), 0);
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -246,9 +242,9 @@ class SporeDriftTest {
 
     @Test
     void aConvoyTurnsAcrossAtItsStrafeHeightAndOneGettingAwayFailsTheObjective() {
-        var escaped = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.ENEMY_ESCAPED, 0, "spore-bomber", "Okafor", "One got past.", false, "grim");
-        var secondary = new LevelScript.Secondary(0, 50, List.of(), "spore-bomber");
+        var escaped =
+                new RadioCue(CueTrigger.ENEMY_ESCAPED, 0, "spore-bomber", "Okafor", "One got past.", false, "grim");
+        var secondary = new Secondary(0, 50, List.of(), "spore-bomber");
         var sortie = sortie(level(
                 40,
                 List.of(wave(0, WaveSpec.Formation.CONVOY, BOMBER, 3, FRONT, NONE)),
@@ -285,7 +281,7 @@ class SporeDriftTest {
 
     @Test
     void destroyingEveryUnitOfAnEscapesObjectiveMeetsIt() {
-        var secondary = new LevelScript.Secondary(0, 50, List.of(), "spore-bomber");
+        var secondary = new Secondary(0, 50, List.of(), "spore-bomber");
         var sortie = sortie(level(
                 30,
                 List.of(wave(0, WaveSpec.Formation.SINGLE, BOMBER, 1, FRONT, NONE)),
@@ -306,13 +302,12 @@ class SporeDriftTest {
 
     // --- debris ----------------------------------------------------------------------------------
 
-    private static LevelScript.DebrisSpec chunk(double t, double x, Hitbox size, double vy, double hp, double damage) {
-        return new LevelScript.DebrisSpec(t, x, hp > 1e9 ? "large-a" : "small-a", size, 0, vy, hp, damage, 120);
+    private static HazardSpec.DebrisSpec chunk(double t, double x, Hitbox size, double vy, double hp, double damage) {
+        return new HazardSpec.DebrisSpec(t, x, hp > 1e9 ? "large-a" : "small-a", size, 0, vy, hp, damage, 120);
     }
 
-    private static LevelScript debrisLevel(List<WaveSpec> waves, LevelScript.DebrisSpec... chunks) {
-        return level(
-                30, waves, List.of(), List.of(), new LevelScript.Secondary(0.8, 50), List.of(chunks), List.of(), 0);
+    private static LevelScript debrisLevel(List<WaveSpec> waves, HazardSpec.DebrisSpec... chunks) {
+        return level(30, waves, List.of(), List.of(), new Secondary(0.8, 50), List.of(chunks), List.of(), 0);
     }
 
     @Test
@@ -399,19 +394,12 @@ class SporeDriftTest {
 
     @Test
     void triggersThatShareASecretRevealItWhenTheLastIsShot() {
-        var light1 = new LevelScript.GroundObjectSpec(
+        var light1 = new GroundObjectSpec(
                 0, Ship.START_X, new Hitbox(12, 12), 0, 0, Optional.empty(), 1, 75, "lifeboat rack", false, 0, 2);
-        var light2 = new LevelScript.GroundObjectSpec(
+        var light2 = new GroundObjectSpec(
                 1, Ship.START_X, new Hitbox(12, 12), 0, 0, Optional.empty(), 1, 75, "lifeboat rack", false, 0, 2);
         var sortie = sortie(level(
-                20,
-                List.of(),
-                List.of(light1, light2),
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(),
-                1));
+                20, List.of(), List.of(light1, light2), List.of(), new Secondary(0.8, 50), List.of(), List.of(), 1));
 
         int foundEarly = run(sortie, 1, Command.FIRE.bit(), SimEvents.Type.SECRET_FOUND);
         int found = run(sortie, 2, Command.FIRE.bit(), SimEvents.Type.SECRET_FOUND);
@@ -425,24 +413,21 @@ class SporeDriftTest {
     // --- the set piece -----------------------------------------------------------------------------
 
     /** A vital core on the body's centre line, a side part off its right flank with a gun; 80 credits in all. */
-    private static LevelScript.SetPieceSpec piece(Hitbox body, double leaveAt, Optional<EnemyGun> gun) {
-        var core = new LevelScript.PartSpec("core", 0, 50, new Hitbox(40, 40), 10, true, 60, Optional.empty(), 0);
-        var side = new LevelScript.PartSpec("side", 80, 0, new Hitbox(30, 30), 4, false, 20, gun, 0.5);
-        var high = LevelScript.Pass.flight(
-                "cross",
-                Layer.HIGH_AIR,
-                0,
-                List.of(new LevelScript.Waypoint(0, 240, 700), new LevelScript.Waypoint(3, 240, -200)));
-        var low = new LevelScript.Pass(
+    private static SetPieceSpec piece(Hitbox body, double leaveAt, Optional<EnemyGun> gun) {
+        var core = new PartSpec("core", 0, 50, new Hitbox(40, 40), 10, true, 60, Optional.empty(), 0);
+        var side = new PartSpec("side", 80, 0, new Hitbox(30, 30), 4, false, 20, gun, 0.5);
+        var high =
+                Pass.flight("cross", Layer.HIGH_AIR, 0, List.of(new Waypoint(0, 240, 700), new Waypoint(3, 240, -200)));
+        var low = new Pass(
                 "descend",
                 Layer.AIR,
                 0,
-                List.of(new LevelScript.Waypoint(4, 240, 800), new LevelScript.Waypoint(5, 240, 400)),
+                List.of(new Waypoint(4, 240, 800), new Waypoint(5, 240, 400)),
                 5,
                 1,
                 leaveAt,
                 200);
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "leviathan",
                 new Hitbox(300, 480),
                 body,
@@ -452,22 +437,14 @@ class SporeDriftTest {
                 Optional.of(PickupType.LARGE_SALVAGE));
     }
 
-    private static LevelScript pieceLevel(LevelScript.SetPieceSpec piece, LevelScript.RadioCue... cues) {
-        return level(
-                30,
-                List.of(),
-                List.of(),
-                List.of(cues),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(piece),
-                0);
+    private static LevelScript pieceLevel(SetPieceSpec piece, RadioCue... cues) {
+        return level(30, List.of(), List.of(), List.of(cues), new Secondary(0.8, 50), List.of(), List.of(piece), 0);
     }
 
     @Test
     void aSetPieceFliesItsPassesAndEscapesAfterTheLast() {
-        var escaped = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.ENEMY_ESCAPED, 0, "leviathan", "Varga", "It's leaving.", false, "neutral");
+        var escaped =
+                new RadioCue(CueTrigger.ENEMY_ESCAPED, 0, "leviathan", "Varga", "It's leaving.", false, "neutral");
         var sortie = sortie(pieceLevel(piece(new Hitbox(100, 200), 12, Optional.empty()), escaped));
         SetPiece leviathan = sortie.setPiece(0);
         assertEquals(1, sortie.enemyTotal());
@@ -566,8 +543,7 @@ class SporeDriftTest {
 
     @Test
     void destroyingTheVitalPartDestroysTheRestForTheFullBountyAndDropsLargeSalvage() {
-        var down = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.FIRST_KILL, 0, "leviathan", "Ring Control", "It's down.", false, "neutral");
+        var down = new RadioCue(CueTrigger.FIRST_KILL, 0, "leviathan", "Ring Control", "It's down.", false, "neutral");
         var sortie = sortie(pieceLevel(piece(new Hitbox(100, 200), 20, Optional.empty()), down));
         run(sortie, 6.5, Command.NONE, SimEvents.Type.RADIO);
 
@@ -648,7 +624,7 @@ class SporeDriftTest {
                                 Optional.of(new WaveSpec.At(240, 100)))),
                 List.of(),
                 List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "spore-bomber"),
+                new Secondary(0, 50, List.of(), "spore-bomber"),
                 List.of(
                         chunk(0.5, 120, new Hitbox(96, 80), -30, INFINITE, 15),
                         chunk(1, 360, new Hitbox(32, 28), -30, 6, 0)),

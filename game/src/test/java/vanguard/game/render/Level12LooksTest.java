@@ -22,6 +22,7 @@ import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
@@ -93,8 +94,8 @@ class Level12LooksTest {
         assertEquals(0, WeatherLooks.revealAt(0.5, 0.5), 1e-6);
         assertTrue(LEVEL.weather().orElseThrow().occludes(), "F1 = a: Level 12's banks hide the low-air bodies");
         LevelScript script = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec canister = script.groundObjects().stream()
-                .filter(LevelScript.GroundObjectSpec::lowAir)
+        GroundObjectSpec canister = script.groundObjects().stream()
+                .filter(GroundObjectSpec::lowAir)
                 .findFirst()
                 .orElseThrow();
         assertEquals("supply-canister", canister.look());

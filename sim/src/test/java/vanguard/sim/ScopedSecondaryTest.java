@@ -29,7 +29,7 @@ class ScopedSecondaryTest {
                 List.of(tagged(column(1), "bridge"), column(3), tagged(column(5), "bridge")),
                 List.of(),
                 List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "skitter", List.of(), "", "", List.of(), -1, "bridge"),
+                new Secondary(0, 50, List.of(), "skitter", List.of(), "", "", List.of(), -1, "bridge"),
                 List.of(),
                 List.of(),
                 Optional.empty());

@@ -8,7 +8,7 @@ import java.util.List;
  * each pass's path with the pass's fixed heading; its parts are hit boxes at fixed offsets around
  * it that take the hits, fire while it is on the player's layer and stay wrecked once destroyed.
  * Its position is a function of the level time, so a restart only resets the parts. One instance
- * per {@link LevelScript.SetPieceSpec}, made when the sortie is.
+ * per {@link SetPieceSpec}, made when the sortie is.
  *
  * <p>A boss ({@link BossSpec}, design/enemies/bosses) is a set piece without passes: it arrives on
  * the level clock, descends (taking no damage), settles and sways; its chains hang parts on necks
@@ -101,6 +101,24 @@ public final class SetPiece implements Hashed {
          * Spire's pods), at (x, y).
          */
         default void aimTell(int part, double x, double y) {}
+
+        /**
+         * M7 part F: one volley of {@code gun} from (x, y) along {@code aim} (radians clockwise from straight
+         * down; a walking boss's chin burst along its heading, its parts' {@code aim: down}); by default a bullet
+         * at its speed and damage.
+         */
+        default void along(double x, double y, double aim, EnemyGun gun) {
+            bullet(x, y, StrictMath.atan2(-Trig.cos(aim), -Trig.sin(aim)), gun.bulletSpeed(), gun.damage());
+        }
+
+        /** M7 part F: part {@code part}'s hatch opens at (x, y), its homing salvo's tell ({@link EnemyGun.HomingSpec}). */
+        default void hatch(int part, double x, double y) {}
+
+        /** M7 part F: a walking boss's flame cone starts its tell at its flamer (x, y). */
+        default void coneTell(double x, double y) {}
+
+        /** M7 part F: a walking boss's flame cone starts to burn at its flamer (x, y). */
+        default void coneBurn(double x, double y) {}
     }
 
     /** How a boss moves now (design/enemies/bosses, the poses of part G). */
@@ -117,7 +135,7 @@ public final class SetPiece implements Hashed {
         TURN
     }
 
-    private final LevelScript.SetPieceSpec spec;
+    private final SetPieceSpec spec;
     private final double extent;
     private final double[] partHp;
     private final int[] partTicksSinceHit;
@@ -225,6 +243,11 @@ public final class SetPiece implements Hashed {
     private double anchorGround;
     /** M5 part E: the ground's scroll this step and whether the scroll has halted in the arena. */
     private double groundScroll;
+    /**
+     * Round 41: how far the ground scrolled in this step ({@link #ground}), which a destroyed arena boss
+     * moves down with; derived from the sortie's scroll every step, so not hashed.
+     */
+    private double groundStep;
 
     private boolean halted;
     /** M5 part E: an arena boss scrolling in with the ground before it arrives (no bar, no damage). */
@@ -276,12 +299,19 @@ public final class SetPiece implements Hashed {
     private double shipAtX;
 
     private double shipAtY;
+    /** M7 part F: a walking boss's passes, plate, vents and cone; null for any other. */
+    private final StrideArena stride;
+    /** {@link #stride} for the presentation, made once. */
+    private final java.util.Optional<StrideArena> strideView;
+    /** M7 part F: per part, the steps its hatch stays open (its homing salvo's tell and the salvo); 0 shut. */
+    private final int[] hatchTicks;
+
     /** M5 part H: a sweep's beam hit the ship ({@link #sweepHit}). */
     static final int SWEPT_SHIP = 1;
     /** M5 part H: a sweep's beam hit the wingman. */
     static final int SWEPT_WINGMAN = 2;
 
-    SetPiece(LevelScript.SetPieceSpec spec) {
+    SetPiece(SetPieceSpec spec) {
         this.spec = spec;
         extent = Math.max(spec.size().width(), spec.size().height()) / 2;
         int parts = spec.parts().size();
@@ -342,7 +372,7 @@ public final class SetPiece implements Hashed {
             segmentCount += chain.segments();
         }
         for (int p = 0; p < parts; p++) {
-            LevelScript.PartSpec part = spec.parts().get(p);
+            PartSpec part = spec.parts().get(p);
             reach = Math.max(reach, (Math.abs(poseDy[0][p]) + part.box().height() / 2) * scale);
         }
         entryY = PlayField.HEIGHT + reach;
@@ -379,6 +409,9 @@ public final class SetPiece implements Hashed {
                 ? new SlamArena(this, boss, boss.arena().get(), parts)
                 : null;
         arenaView = java.util.Optional.ofNullable(arena);
+        stride = boss != null && boss.stride().isPresent() ? new StrideArena(this, boss, spec) : null;
+        strideView = java.util.Optional.ofNullable(stride);
+        hatchTicks = new int[parts];
         boolean moves = false;
         boolean sweeping = false;
         for (int f = 0; f < phases; f++) {
@@ -482,6 +515,13 @@ public final class SetPiece implements Hashed {
                 arena.reset();
                 y = prevY = anchorGround - groundScroll;
             }
+            java.util.Arrays.fill(hatchTicks, 0);
+            if (stride != null) {
+                // M7 part F: off the screen above the top edge until it arrives.
+                stride.reset();
+                x = prevX = stride.x();
+                y = prevY = stride.y();
+            }
             placeChains();
         }
     }
@@ -500,6 +540,7 @@ public final class SetPiece implements Hashed {
      * by an arena boss as it moves (before {@link #update}).
      */
     void ground(double scroll, boolean halt) {
+        groundStep = scroll - groundScroll;
         groundScroll = scroll;
         halted = halt;
     }
@@ -539,9 +580,9 @@ public final class SetPiece implements Hashed {
             return false;
         }
         double t = levelTick * SimStep.SECONDS;
-        List<LevelScript.Pass> passes = spec.passes();
+        List<Pass> passes = spec.passes();
         while (pass < passes.size()) {
-            LevelScript.Pass current = passes.get(pass);
+            Pass current = passes.get(pass);
             if (t < current.start()) {
                 present = false;
                 return false;
@@ -572,8 +613,8 @@ public final class SetPiece implements Hashed {
     }
 
     /** Places it on {@code pass} at {@code t}; returns false once the pass is over. */
-    private boolean place(LevelScript.Pass current, double t) {
-        List<LevelScript.Waypoint> path = current.path();
+    private boolean place(Pass current, double t) {
+        List<Waypoint> path = current.path();
         if (!current.descends()) {
             if (t > path.getLast().t()) {
                 return false;
@@ -602,17 +643,17 @@ public final class SetPiece implements Hashed {
     }
 
     /** Its centre on the path at {@code t}: between the waypoints around it, at the last one after it. */
-    private void along(List<LevelScript.Waypoint> path, double t) {
-        LevelScript.Waypoint last = path.getLast();
+    private void along(List<Waypoint> path, double t) {
+        Waypoint last = path.getLast();
         if (t >= last.t()) {
             x = last.x();
             y = last.y();
             return;
         }
         for (int i = 1; i < path.size(); i++) {
-            LevelScript.Waypoint to = path.get(i);
+            Waypoint to = path.get(i);
             if (t < to.t()) {
-                LevelScript.Waypoint from = path.get(i - 1);
+                Waypoint from = path.get(i - 1);
                 double p = Math.max(0, (t - from.t()) / (to.t() - from.t()));
                 x = from.x() + (to.x() - from.x()) * p;
                 y = from.y() + (to.y() - from.y()) * p;
@@ -624,7 +665,7 @@ public final class SetPiece implements Hashed {
     /** It reached the player's layer: every living part's gun starts on its first-shot time. */
     private void arm() {
         for (int p = 0; p < partHp.length; p++) {
-            LevelScript.PartSpec part = spec.parts().get(p);
+            PartSpec part = spec.parts().get(p);
             volleyTicks[p] = SimStep.ticks(part.firstShotSeconds()) + 1;
             burstLeft[p] = 0;
             burstTicks[p] = 0;
@@ -633,7 +674,7 @@ public final class SetPiece implements Hashed {
 
     /** Whether part {@code p} fires a shot this step: it lives, has a gun and the unit is on the player's layer. */
     boolean trigger(int p) {
-        LevelScript.PartSpec part = spec.parts().get(p);
+        PartSpec part = spec.parts().get(p);
         if (!present || !onPlane || partHp[p] <= 0 || part.gun().isEmpty()) {
             return false;
         }
@@ -661,9 +702,18 @@ public final class SetPiece implements Hashed {
      */
     private void moveBoss(int levelTick) {
         if (destroyed) {
+            if (arena != null) {
+                // Round 41 (the 2026-10-19 playtest): a dead arena boss, the free spire too, falls to the
+                // ground and scrolls away with it, with its stump, so every part's place moves with the ground.
+                y -= groundStep;
+            }
             return;
         }
         prevAltitude = altitude;
+        if (stride != null) {
+            moveStride(levelTick);
+            return;
+        }
         if (arena != null) {
             moveAnchored(levelTick);
             return;
@@ -744,6 +794,55 @@ public final class SetPiece implements Hashed {
             swayTicks = 0;
             engaged = true;
             startPhase();
+        }
+    }
+
+    /**
+     * M7 part F: a walking boss arrives on its time off the top edge and walks its passes ({@link StrideArena});
+     * it settles and engages once its hull is wholly on the screen (invulnerable until then).
+     */
+    private void moveStride(int levelTick) {
+        if (bossTicks < 0) {
+            if (levelTick < SimStep.ticks(boss.arriveSeconds())) {
+                return;
+            }
+            present = true;
+            layer = boss.layer();
+            onPlane = layer.collidesWithPlayer();
+            altitude = prevAltitude = 0;
+            stride.arrive(phase);
+            x = prevX = stride.x();
+            y = prevY = stride.y();
+        } else {
+            stride.step(phase);
+            x = stride.x();
+            y = stride.y();
+        }
+        bossTicks++;
+        if (swayTicks >= 0) {
+            swayTicks++;
+        } else if (wholeOnField(stride.hull())) {
+            swayTicks = 0;
+            engaged = true;
+            startPhase();
+        }
+    }
+
+    /** M7 part F: whether part {@code p}'s box lies wholly on the play field. */
+    private boolean wholeOnField(int p) {
+        Hitbox box = box(p);
+        double px = partX(p);
+        double py = partY(p);
+        return px - box.width() / 2 >= 0
+                && px + box.width() / 2 <= PlayField.WIDTH
+                && py - box.height() / 2 >= 0
+                && py + box.height() / 2 <= PlayField.HEIGHT;
+    }
+
+    /** M7 part F: the walking boss reads where the ship and Rook are ({@code rookIn}: he flies) before it moves. */
+    void strideTargets(double shipX, double shipY, double rookX, double rookY, boolean rookIn) {
+        if (stride != null) {
+            stride.targets(shipX, shipY, rookX, rookY, rookIn);
         }
     }
 
@@ -841,6 +940,9 @@ public final class SetPiece implements Hashed {
             if (openTicks[p] > 0) {
                 openTicks[p]--;
             }
+            if (hatchTicks[p] > 0) {
+                hatchTicks[p]--;
+            }
         }
         if (moveTicks >= 0) {
             return;
@@ -865,6 +967,10 @@ public final class SetPiece implements Hashed {
             }
         }
         BossSpec.Phase current = boss.phases().get(phase);
+        if (stride != null) {
+            // M7 part F: the flame cone and the vents after the walk.
+            stride.act(phase, actions, firing);
+        }
         if (arena != null) {
             boolean fans = arena.step(current, shipX, actions, firing);
             placeChains();
@@ -1191,10 +1297,52 @@ public final class SetPiece implements Hashed {
             }
         }
         if (--attackTicks[a] > 0) {
+            if (stride != null && attack.gun().homing().isPresent()) {
+                hatchTell(a, attack, current, actions, firing);
+            }
             return;
         }
         attackTicks[a] = Math.max(1, SimStep.ticks(interval(attack, current)));
         volley(a, current, actions, firing);
+    }
+
+    /**
+     * M7 part F: a homing attack's salvo is its gun's hatch time away: the hatch of each part that will fire it
+     * opens (the tell), until its salvo's last missile has left: the next part in turn of a staggered or rotating
+     * attack, else every living one; a part off the field does not.
+     */
+    private void hatchTell(int a, BossSpec.Attack attack, BossSpec.Phase current, BossActions actions, boolean firing) {
+        int hatch = SimStep.ticks(attack.gun().homing().orElseThrow().hatchSeconds());
+        if (hatch <= 0 || attackTicks[a] != hatch || !firing) {
+            return;
+        }
+        int open = hatch + (attack.gun().burst() - 1) * Math.max(1, SimStep.ticks(attack.burstGapSeconds())) + 1;
+        List<Integer> parts = firingParts(attack, current);
+        if (attack.stagger()) {
+            openHatch(parts.get(attackNext[a] % parts.size()), open, actions);
+            return;
+        }
+        for (int i = 0; i < parts.size(); i++) {
+            int p = parts.get((attack.rotate() ? attackNext[a] + i : i) % parts.size());
+            if (partHp[p] > 0) {
+                openHatch(p, open, actions);
+                if (attack.rotate()) {
+                    return;
+                }
+            }
+        }
+    }
+
+    private void openHatch(int p, int open, BossActions actions) {
+        if (partHp[p] > 0 && partOnField(p)) {
+            hatchTicks[p] = open;
+            actions.hatch(p, partX(p), partY(p));
+        }
+    }
+
+    /** M7 part F: whether part {@code p}'s hatch is open (its homing salvo's tell and the salvo). */
+    public boolean partHatchOpen(int p) {
+        return hatchTicks[p] > 0;
     }
 
     /**
@@ -1299,6 +1447,10 @@ public final class SetPiece implements Hashed {
     }
 
     private void fireFrom(int a, int p, BossSpec.Attack attack, BossActions actions) {
+        if (stride != null && !partOnField(p)) {
+            // M7 part F: a walking boss fires only from parts on the screen.
+            return;
+        }
         if (attack.pattern() == BossSpec.Pattern.LOB) {
             // M5 part H: the mortar root's lob at the ship's position now.
             actions.lob(partX(p), partY(p), attack.gun());
@@ -1319,6 +1471,9 @@ public final class SetPiece implements Hashed {
                     attack.count(),
                     attack.gun().bulletSpeed(),
                     attack.gun().damage());
+        } else if (attack.firesDown(p) && stride != null) {
+            // M7 part F: a walking boss's "down" is along its heading (its chin burst in its first phase).
+            actions.along(partX(p), fireY, stride.headingRadians(), attack.gun());
         } else if (attack.firesDown(p)) {
             // Round 34, P2: this part fires its aimed attack straight down (the kinder Siege Spire's pods).
             actions.down(partX(p), fireY, attack.gun());
@@ -1342,6 +1497,10 @@ public final class SetPiece implements Hashed {
         sweepPart[a] = p;
         sweepCentre[a] = StrictMath.atan2(-(shipAtX - ox), -(shipAtY - oy));
         sweepDirection[a] = sweepsStarted[a] % 2 == 0 ? 1 : -1;
+        if (sweep.leads()) {
+            // Round 41: the first edge lies its lead from the ship's bearing, on the side the beam comes from.
+            sweepCentre[a] += sweepDirection[a] * (sweep.arcRadians() / 2 - sweep.leadRadians());
+        }
         sweepsStarted[a]++;
         sweepTicks[a] = 0;
         sweepHits[a] = 0;
@@ -1478,7 +1637,7 @@ public final class SetPiece implements Hashed {
                     switch (stream.edge()) {
                         case LEFT -> true;
                         case RIGHT -> false;
-                        case NONE, ALTERNATING -> streamUnits % 2 == 0;
+                        case NONE, ALTERNATING, TOP, BOTTOM -> streamUnits % 2 == 0;
                     };
             streamUnits++;
             if (firing) {
@@ -1499,7 +1658,7 @@ public final class SetPiece implements Hashed {
             if (chain.slam()) {
                 continue;
             }
-            LevelScript.PartSpec end = spec.parts().get(chain.part());
+            PartSpec end = spec.parts().get(chain.part());
             double restX = end.dx() - chain.fromDx();
             double restY = end.dy() - chain.fromDy();
             double target = 0;
@@ -1524,7 +1683,7 @@ public final class SetPiece implements Hashed {
     private void placeChains() {
         for (int c = 0; c < chainStart.length; c++) {
             BossSpec.Chain chain = boss.chains().get(c);
-            LevelScript.PartSpec end = spec.parts().get(chain.part());
+            PartSpec end = spec.parts().get(chain.part());
             if (chain.slam() && arena != null && arena.chainArm(c) >= 0 && arena.armLane(arena.chainArm(c)) > 0) {
                 laySlamChain(c, chain, arena.armLane(arena.chainArm(c)));
                 continue;
@@ -1660,8 +1819,7 @@ public final class SetPiece implements Hashed {
         if (lifted && stays[p]) {
             return Double.POSITIVE_INFINITY;
         }
-        double nearest = PlayerFire.columnContact(
-                cx, halfWidth, fromY, partX(p), partY(p), spec.parts().get(p).box());
+        double nearest = PlayerFire.columnContact(cx, halfWidth, fromY, partX(p), partY(p), box(p));
         int c = slamChain(p);
         if (c < 0) {
             return nearest;
@@ -1692,7 +1850,7 @@ public final class SetPiece implements Hashed {
             // M5 part H: the stump is scenery: shots fly over it.
             return false;
         }
-        if (size.overlaps(sx, sy, spec.parts().get(p).box(), partX(p), partY(p))) {
+        if (size.overlaps(sx, sy, box(p), partX(p), partY(p))) {
             return true;
         }
         int c = slamChain(p);
@@ -1714,8 +1872,7 @@ public final class SetPiece implements Hashed {
         if (lifted && stays[p]) {
             return false;
         }
-        if (PlayerFire.inBlast(
-                bx, by, radius, partX(p), partY(p), spec.parts().get(p).box())) {
+        if (PlayerFire.inBlast(bx, by, radius, partX(p), partY(p), box(p))) {
             return true;
         }
         int c = slamChain(p);
@@ -1734,7 +1891,7 @@ public final class SetPiece implements Hashed {
 
     /** Whether part {@code p} overlaps the play field (its hit box, or a slam arm's segment). */
     boolean partOnField(int p) {
-        if (PlayField.overlaps(partX(p), partY(p), spec.parts().get(p).box())) {
+        if (PlayField.overlaps(partX(p), partY(p), box(p))) {
             return true;
         }
         int c = slamChain(p);
@@ -1749,6 +1906,21 @@ public final class SetPiece implements Hashed {
             }
         }
         return false;
+    }
+
+    /** Part {@code p}'s hit box now: its spec's, M7 part F a walking boss's turned with its heading. */
+    private Hitbox box(int p) {
+        return stride != null ? stride.partBox(p) : spec.parts().get(p).box();
+    }
+
+    /** M7 part F: whether a shot of {@code size} at (sx, sy) meets a walking boss's front plate (it glances). */
+    boolean plateTouches(Hitbox size, double sx, double sy) {
+        return stride != null && stride.plateTouches(size, sx, sy);
+    }
+
+    /** M7 part F: where a beam's column first touches a walking boss's front plate; +∞ for none. */
+    double plateColumn(double cx, double halfWidth, double fromY) {
+        return stride == null ? Double.POSITIVE_INFINITY : stride.plateColumn(cx, halfWidth, fromY);
     }
 
     /**
@@ -1793,6 +1965,13 @@ public final class SetPiece implements Hashed {
         }
         partTicksSinceHit[p] = 0;
         boolean alive = partHp[p] > 0;
+        if (stride != null) {
+            // M7 part F: the vents, turned with the heading, open after each burn.
+            partHp[p] -= amount
+                    * stride.multiplier(
+                            p, hx, hy, dirX, dirY, spec.parts().get(p).multiplier());
+            return alive && partHp[p] <= 0;
+        }
         partHp[p] -= amount
                 * arena.multiplier(
                         p,
@@ -1841,6 +2020,10 @@ public final class SetPiece implements Hashed {
         destroyed = true;
         present = false;
         onPlane = false;
+        if (stride != null) {
+            // M7 part F: its cone goes cold as it topples.
+            stride.died();
+        }
     }
 
     /** The body touching the ship: whether it deals its contact damage now (at most once per its interval). */
@@ -1848,7 +2031,7 @@ public final class SetPiece implements Hashed {
         if (hitCooldown > 0) {
             return false;
         }
-        hitCooldown = SimStep.ticks(LevelScript.SetPieceSpec.HIT_INTERVAL_SECONDS);
+        hitCooldown = SimStep.ticks(SetPieceSpec.HIT_INTERVAL_SECONDS);
         return true;
     }
 
@@ -1926,6 +2109,13 @@ public final class SetPiece implements Hashed {
                     hash.add(stay ? 1 : 0);
                 }
             }
+            if (stride != null) {
+                // M7 part F: only a walking boss (Level 19) hashes these.
+                stride.addTo(hash);
+                for (int ticks : hatchTicks) {
+                    hash.add(ticks);
+                }
+            }
             if (aims) {
                 // Round 40: only a boss with aim turns hashes these.
                 for (int a = 0; a < aimTicks.length; a++) {
@@ -1954,7 +2144,7 @@ public final class SetPiece implements Hashed {
         return y;
     }
 
-    public LevelScript.SetPieceSpec spec() {
+    public SetPieceSpec spec() {
         return spec;
     }
 
@@ -1979,6 +2169,11 @@ public final class SetPiece implements Hashed {
     /** M5 part E: an arena boss's lanes, slams and surfacing; empty for any other. */
     public java.util.Optional<SlamArena> arena() {
         return arenaView;
+    }
+
+    /** M7 part F: a walking boss's passes, plate, vents and flame cone; empty for any other. */
+    public java.util.Optional<StrideArena> stride() {
+        return strideView;
     }
 
     /**
@@ -2041,7 +2236,7 @@ public final class SetPiece implements Hashed {
         return escaped;
     }
 
-    /** The index of the pass it flies (or will fly next) in {@link LevelScript.SetPieceSpec#passes()}. */
+    /** The index of the pass it flies (or will fly next) in {@link SetPieceSpec#passes()}. */
     public int pass() {
         return pass;
     }
@@ -2197,10 +2392,14 @@ public final class SetPiece implements Hashed {
         if (partChain[p] >= 0 && !rootPart(p)) {
             return tipX[partChain[p]];
         }
+        if (stride != null) {
+            // M7 part F: a walking boss's offsets turn with its heading.
+            return stride.turnX(poseDx[pose][p], poseDy[pose][p]);
+        }
         if (boss != null) {
             return poseDx[pose][p] * scale();
         }
-        LevelScript.PartSpec part = spec.parts().get(p);
+        PartSpec part = spec.parts().get(p);
         return part.dx() * cos + part.dy() * sin;
     }
 
@@ -2212,10 +2411,13 @@ public final class SetPiece implements Hashed {
         if (partChain[p] >= 0 && !rootPart(p)) {
             return tipY[partChain[p]];
         }
+        if (stride != null) {
+            return stride.turnY(poseDx[pose][p], poseDy[pose][p]);
+        }
         if (boss != null) {
             return poseDy[pose][p] * scale();
         }
-        LevelScript.PartSpec part = spec.parts().get(p);
+        PartSpec part = spec.parts().get(p);
         return -part.dx() * sin + part.dy() * cos;
     }
 

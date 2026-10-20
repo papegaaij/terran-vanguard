@@ -11,7 +11,9 @@ import java.util.Set;
  * ({@link SiegeRules}). M7 part E (step E2): Level 18 Dust Storm (its {@code visibility}, the music's {@code motif})
  * and the Dust Devil ({@code vortex}, {@code pull}, the {@code while: open} spiral, the {@code vanes}) and the Ghost
  * Drone ({@code lane_strafe}, the pass {@code trigger}, {@code tell}, {@code reaim}, {@code second_pass}), until step
- * E4 mapped them ({@link StormRules}).
+ * E4 mapped them ({@link StormRules}). M7 part F (step F2): Level 19 Foundry of Tharsis's keys and its two units' are
+ * mapped ({@link FoundryRules}); the tests that fly or tune the level left it out until step F4 gave the autopilot its
+ * walker play and its vent dodging ({@link Autopilot}).
  */
 final class Unmapped {
     /** Why a test leaves a level out. */

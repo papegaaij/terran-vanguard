@@ -13,12 +13,20 @@ import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.GroundSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.SlamArena;
@@ -59,7 +67,7 @@ class KrakenTest {
     /** The seeds the autopilot's fight is measured on. */
     static final long[] SEEDS = {2185, 11, 77, 1301, 4242};
 
-    static LevelScript.SetPieceSpec kraken(Difficulty difficulty) {
+    static SetPieceSpec kraken(Difficulty difficulty) {
         return SimSpecs.boss(CONTENT, new LevelData.BossPlacement(SLUG, ARENA, PlayField.WIDTH / 2.0, 2), difficulty);
     }
 
@@ -69,7 +77,7 @@ class KrakenTest {
     static final double HARD_SHIP_HP = 2;
 
     /** Level 11's convoy: three cargo ships to lanes 1, 2 and 4 and the frigate that leaves (README, Convoy). */
-    static LevelScript.Naval convoy(Difficulty difficulty) {
+    static ObjectiveSpec.Naval convoy(Difficulty difficulty) {
         Optional<LevelData.AllyChange> easy = difficulty == Difficulty.EASY
                 ? Optional.of(new LevelData.AllyChange(EASY_SHIP_HP))
                 : difficulty == Difficulty.HARD
@@ -77,53 +85,39 @@ class KrakenTest {
                         : Optional.empty();
         var cargo = PartERules.ally(CONTENT, "cargo-ship", easy);
         var frigate = PartERules.ally(CONTENT, "escort-frigate", Optional.empty());
-        return new LevelScript.Naval(
+        return new ObjectiveSpec.Naval(
                 List.of(
-                        new LevelScript.NavalUnit(cargo, "Halvorsen", 130, PlayField.HEIGHT - 380, 1),
-                        new LevelScript.NavalUnit(cargo, "Mbeki", 240, PlayField.HEIGHT - 350, 2),
-                        new LevelScript.NavalUnit(cargo, "Saint-Laurent", 350, PlayField.HEIGHT - 380, 4),
-                        new LevelScript.NavalUnit(frigate, "Ruyter", 240, PlayField.HEIGHT - 480, 0)),
+                        new ObjectiveSpec.NavalUnit(cargo, "Halvorsen", 130, PlayField.HEIGHT - 380, 1),
+                        new ObjectiveSpec.NavalUnit(cargo, "Mbeki", 240, PlayField.HEIGHT - 350, 2),
+                        new ObjectiveSpec.NavalUnit(cargo, "Saint-Laurent", 350, PlayField.HEIGHT - 380, 4),
+                        new ObjectiveSpec.NavalUnit(frigate, "Ruyter", 240, PlayField.HEIGHT - 480, 0)),
                 3,
                 PlayField.HEIGHT - 450,
                 4,
                 120);
     }
 
-    static LevelScript.RadioCue cue(LevelScript.CueTrigger trigger, String subject, String line) {
-        return new LevelScript.RadioCue(trigger, 0, subject, "Atlas Control", line, false, "neutral");
+    static RadioCue cue(CueTrigger trigger, String subject, String line) {
+        return new RadioCue(trigger, 0, subject, "Atlas Control", line, false, "neutral");
     }
 
     static LevelScript level(Difficulty difficulty) {
-        return new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(
-                                new LevelScript.Section(ARENA, 140),
-                                new LevelScript.Section(ARENA + 1, 0, true),
-                                new LevelScript.Section(ARENA + 16, 140)),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(
-                                cue(LevelScript.CueTrigger.FIRST_TELEGRAPH, "", "Lane's boiling!"),
-                                cue(LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH, "", "Cut a root!"),
-                                cue(
-                                        LevelScript.CueTrigger.BOSS_PART_DESTROYED,
-                                        String.join(
-                                                LevelScript.CueTrigger.PART_SEPARATOR,
-                                                "root 1",
-                                                "root 2",
-                                                "root 3",
-                                                "root 4"),
-                                        "Root's off!")),
-                        LevelScript.Secondary.afloat(100, "CONVOY"),
-                        List.of(),
-                        List.of(),
-                        List.of(kraken(difficulty)))
-                .withWater(true)
-                .withConvoy(convoy(difficulty));
+        return LevelScript.builder(11, 2)
+                .sections(
+                        List.of(new Section(ARENA, 140), new Section(ARENA + 1, 0, true), new Section(ARENA + 16, 140)))
+                .radio(List.of(
+                        cue(CueTrigger.FIRST_TELEGRAPH, "", "Lane's boiling!"),
+                        cue(CueTrigger.FIRST_SHIP_TELEGRAPH, "", "Cut a root!"),
+                        cue(
+                                CueTrigger.BOSS_PART_DESTROYED,
+                                String.join(CueTrigger.PART_SEPARATOR, "root 1", "root 2", "root 3", "root 4"),
+                                "Root's off!")))
+                .objectives(ObjectiveSpec.NONE
+                        .withSecondary(Secondary.afloat(100, "CONVOY"))
+                        .withConvoy(Optional.of(convoy(difficulty))))
+                .setPieces(List.of(kraken(difficulty)))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
     }
 
     /**
@@ -175,7 +169,7 @@ class KrakenTest {
 
     @Test
     void theStatBlockMapsToAnAnchoredArenaBoss() {
-        LevelScript.SetPieceSpec spec = kraken(Difficulty.MEDIUM);
+        SetPieceSpec spec = kraken(Difficulty.MEDIUM);
         BossSpec boss = spec.boss().orElseThrow();
         assertTrue(boss.anchored());
         assertTrue(boss.midBoss());
@@ -186,8 +180,7 @@ class KrakenTest {
                 boss.hoverY(),
                 "the platform's centre 46 px above the top edge (round 40)");
         assertEquals(Layer.GROUND, boss.layer(), "the sea's surface; its parts have their own");
-        List<String> names =
-                spec.parts().stream().map(LevelScript.PartSpec::name).toList();
+        List<String> names = spec.parts().stream().map(PartSpec::name).toList();
         assertEquals(List.of("head", "root 1", "root 2", "root 3", "root 4"), names);
         assertTrue(spec.parts().get(HEAD).vital());
         assertEquals(0.5, spec.parts().get(HEAD).multiplier(), "the mantle");
@@ -198,7 +191,7 @@ class KrakenTest {
         assertEquals(HEAD_HP, spec.parts().get(HEAD).hp(), "tuned to a ≈ 60 s fight (E6 = a; round 40)");
         double[] socketX = {60, 154, 326, 420};
         for (int lane = 1; lane <= 4; lane++) {
-            LevelScript.PartSpec root = spec.parts().get(lane);
+            PartSpec root = spec.parts().get(lane);
             assertEquals(200, root.hp(), "root " + lane);
             assertEquals(socketX[lane - 1] - PlayField.WIDTH / 2.0, root.dx(), "the sockets of the r40 art");
             assertEquals(-256, root.dy(), "y 210 at the halt");
@@ -364,7 +357,7 @@ class KrakenTest {
         LevelScript level = SimSpecs.level(content, "act-1-first-contact/level-05-crater-nest", Difficulty.MEDIUM);
         assertTrue(level.setPieces().getFirst().boss().orElseThrow().anchored());
         assertTrue(level.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.BOSS_PART_DESTROYED
+                .anyMatch(cue -> cue.trigger() == CueTrigger.BOSS_PART_DESTROYED
                         && cue.subject().equals("root 1|root 4")));
 
         assertProblem(
@@ -404,7 +397,7 @@ class KrakenTest {
                 "only an anchored boss has lanes");
         assertProblem(
                 files(KRAKEN, text -> edit(text, "  anchored: {y: -46}", "  hover: {y: 78}")),
-                "only an anchored boss's parts have a layer or spots");
+                "only an arena boss's parts have a layer or spots");
         assertProblem(
                 files(KRAKEN, text -> edit(text, "      slamming: chain ", "      slamming: volley ")),
                 "a volley, and only it, has its every");
@@ -508,9 +501,9 @@ class KrakenTest {
             three |= kraken.phase() >= 2;
             released |= sortie.enemyCount() >= jellies + 6;
             for (int cue : values(sortie, SimEvents.Type.RADIO)) {
-                telegraphLine |= sortie.script().radio().get(cue).trigger() == LevelScript.CueTrigger.FIRST_TELEGRAPH;
-                partLine |= sortie.script().radio().get(cue).trigger() == LevelScript.CueTrigger.BOSS_PART_DESTROYED;
-                shipLine |= sortie.script().radio().get(cue).trigger() == LevelScript.CueTrigger.FIRST_SHIP_TELEGRAPH;
+                telegraphLine |= sortie.script().radio().get(cue).trigger() == CueTrigger.FIRST_TELEGRAPH;
+                partLine |= sortie.script().radio().get(cue).trigger() == CueTrigger.BOSS_PART_DESTROYED;
+                shipLine |= sortie.script().radio().get(cue).trigger() == CueTrigger.FIRST_SHIP_TELEGRAPH;
             }
             if (!sortie.flying()) {
                 break;
@@ -554,7 +547,7 @@ class KrakenTest {
             Fight fight = fight(seed, Difficulty.MEDIUM);
             System.out.printf("Kraken medium seed %d: %s%n", seed, fight);
             assertTrue(fight.killed(), "killed: " + fight);
-            assertTrue(fight.seconds() >= 45 && fight.seconds() <= 75, "the mid-boss window: " + fight);
+            assertTrue(LevelMetrics.inBossWindow(true, fight.seconds()), "the mid-boss window: " + fight);
             assertTrue(fight.phaseTwo() && fight.phaseThree() && fight.released(), "every phase: " + fight);
             assertTrue(fight.telegraphLine(), "first-telegraph");
             assertTrue(fight.shipLine(), "first-ship-telegraph");
@@ -621,7 +614,7 @@ class KrakenTest {
                 }
                 if (difficulty == Difficulty.MEDIUM) {
                     assertTrue(fight.killed(), "killed: " + fight);
-                    assertTrue(fight.seconds() >= 45 && fight.seconds() <= 75, "the mid-boss window: " + fight);
+                    assertTrue(LevelMetrics.inBossWindow(true, fight.seconds()), "the mid-boss window: " + fight);
                     assertTrue(fight.hitsPerMinute() <= 5, "evadable: " + fight);
                 }
             }

@@ -189,6 +189,10 @@ public final class Wingman {
     private Canyon canyon;
     /** M7 part C: the level's tendril gates (a standing tendril is a wall to him); null without. */
     private Links links;
+    /** M7 part F: the level's furnace vents; null without. */
+    private FurnaceVents vents;
+    /** M7 part F: where his goal moves clear of the walker's flame cone and the furnace vents (made once). */
+    private final RookHazards hazards;
 
     private int targetWait;
     private int cooldown;
@@ -207,6 +211,7 @@ public final class Wingman {
         hull = new Hull(List.of(new Hull.Part(0, 0, craft.hitbox())));
         accelerationStep = craft.speed() / craft.accelerationSeconds() * SimStep.SECONDS;
         limit = craft.edgeLimit();
+        hazards = new RookHazards(craft.hitbox(), limit);
         WingmanSpec.Ai ai = spec.ai();
         tanHalfCone = StrictMath.tan(ai.coneHalfAngle());
         podStep = craft.podSpeed() * SimStep.SECONDS;
@@ -310,6 +315,14 @@ public final class Wingman {
         glided = Math.min(glideTicks, glided + 1);
         evading = clearOfBodies(enemies, shipX, shipY, shipX + slotX() + dodgeX, shipY + slotY() + dodgeY);
         evading |= clearOfLanes(setPieces);
+        if (setPieces.length > 0 || vents != null) {
+            // M7 part F: out of the walker's cone while it tells or burns, and off the glowing or burning vents.
+            if (hazards.clear(goalX, goalY, setPieces, vents)) {
+                goalX = hazards.x();
+                goalY = hazards.y();
+                evading = true;
+            }
+        }
         move(shipX, shipY);
         steerBank();
     }
@@ -337,6 +350,14 @@ public final class Wingman {
      */
     void links(Links gates) {
         links = gates;
+    }
+
+    /**
+     * M7 part F (design/campaign Level 19, Hazards): the level's furnace vents; he keeps his goal off a grate that
+     * glows or burns ({@link RookHazards}).
+     */
+    void vents(FurnaceVents furnaceVents) {
+        vents = furnaceVents;
     }
 
     /** M7 part C: he keeps this far below a standing tendril's line (his hull's edge to the line), px. */
@@ -496,7 +517,7 @@ public final class Wingman {
             if (!piece.present()) {
                 continue;
             }
-            List<LevelScript.PartSpec> parts = piece.spec().parts();
+            List<PartSpec> parts = piece.spec().parts();
             for (int p = 0; p < parts.size(); p++) {
                 double px = piece.partX(p);
                 double py = piece.partY(p);
@@ -508,12 +529,14 @@ public final class Wingman {
                         || !inCone(px - x, py - y)) {
                     continue;
                 }
-                int serial = PlayerFire.PART_SERIAL + k * LevelScript.SetPieceSpec.MAX_PARTS + p;
+                int serial = PlayerFire.PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
                 targetSeen |= serial == target;
                 double distance = (px - x) * (px - x) + (py - y) * (py - y);
-                if (3 < bestRank || (bestRank == 3 && distance < bestDistance)) {
+                // M7 part F: a walking boss's pods (its parts that are not vital) before its hull.
+                int rank = piece.stride().isPresent() && parts.get(p).vital() ? 4 : 3;
+                if (rank < bestRank || (rank == bestRank && distance < bestDistance)) {
                     best = serial;
-                    bestRank = 3;
+                    bestRank = rank;
                     bestDistance = distance;
                 }
             }

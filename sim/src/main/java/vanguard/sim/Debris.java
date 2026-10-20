@@ -6,7 +6,7 @@ package vanguard.sim;
  * small one breaks. It counts the steps since its last hit for its hit flash. Pooled.
  */
 public final class Debris implements Hashed {
-    private LevelScript.DebrisSpec spec;
+    private HazardSpec.DebrisSpec spec;
     private int serial;
     private double x;
     private double y;
@@ -21,7 +21,7 @@ public final class Debris implements Hashed {
     private int life = -1;
 
     /** Enters at the top edge at {@code atX}; {@code index} is its place in the level's list, unique in an attempt. */
-    void place(LevelScript.DebrisSpec debrisSpec, int index, double atX) {
+    void place(HazardSpec.DebrisSpec debrisSpec, int index, double atX) {
         spec = debrisSpec;
         serial = index;
         x = prevX = atX;
@@ -39,7 +39,7 @@ public final class Debris implements Hashed {
      * after {@code lifeTicks} steps. {@code index} is unique in an attempt.
      */
     void toss(
-            LevelScript.DebrisSpec debrisSpec,
+            HazardSpec.DebrisSpec debrisSpec,
             int index,
             double atX,
             double atY,
@@ -89,7 +89,7 @@ public final class Debris implements Hashed {
         if (hitCooldown > 0) {
             return false;
         }
-        hitCooldown = SimStep.ticks(LevelScript.DebrisSpec.HIT_INTERVAL_SECONDS);
+        hitCooldown = SimStep.ticks(HazardSpec.DebrisSpec.HIT_INTERVAL_SECONDS);
         return true;
     }
 
@@ -109,7 +109,7 @@ public final class Debris implements Hashed {
         return y;
     }
 
-    public LevelScript.DebrisSpec spec() {
+    public HazardSpec.DebrisSpec spec() {
         return spec;
     }
 

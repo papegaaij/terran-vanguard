@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/wraith, ../../../enemies/air/mote-swarm, ../../../allies, ../../../player/wingmen]
-updated: 2026-10-08
+updated: 2026-10-19
 ---
 
 # Level 10 – Evacuation Corridor
@@ -18,7 +18,7 @@ out. Cloaked [Wraiths](../../../enemies/air/wraith/README.md) pass overhead, dec
 player and fire up the screen through the shuttle band, and
 [Mote Swarm](../../../enemies/air/mote-swarm/README.md) flocks sweep past and loop back from below:
 about a third of the threat comes from behind. One shuttle, Lifeline Three, is lost in a scripted
-event at t=118; every other loss is up to the player. 200 s at 190 px/s, the fastest scroll so far;
+event at t=118; every other loss is up to the player. 201 s at 190 px/s, the fastest scroll so far;
 no boss.
 
 ## Briefing
@@ -183,7 +183,7 @@ User decision D4 = a, as the draft wrote it:
 
 Ground scroll speed **190 px/s** (a chase level per the
 [art direction](../../../art-direction/README.md#parallax-layer-model)), the launch the first 5 s.
-Total **200 s ≈ 38,000 px**. L10 has no hold zones, so script time is real time. **Time of day**
+Total **201 s ≈ 38,000 px** (200 s until round 41: the last section 1 s longer so Lifeline One's t=196 line ends before the level does). L10 has no hold zones, so script time is real time. **Time of day**
 (user decision D11 = a): **first light**, as Level 09's end line promises: the sprawl at dawn in
 section 1, the morning sky over the lagoon in section 5. Motion budget: the strong elements are the
 fast-moving ground and the smoke columns of section 3; the refugee traffic on the roads is static
@@ -196,7 +196,7 @@ or crawls; the helicopters and the sea mist are the moving scenery.
 | 2. Refugee Roads | 20–70 | 3,800–13,300 | 190 | clear | `ground`: suburbs, highways jammed with stalled traffic and refugee columns (lights only, no figures at this scale), parks and football pitches. `low-air`: CDF helicopters heading the other way. | Mote Swarm and Wraith introductions, each in a safe situation first; the first rear waves. |
 | 3. The Corridor | 70–130 | 13,300–24,700 | 190 | medium | `ground`: a maglev viaduct between two infested districts, creep on both sides. `low-air`: smoke columns. `deep`: the cloud deck. The loss's glow (the lander) pulses over Lifeline Three at t 116–118, drawn under the air layer. `high-air`: smoke wisps (≤ 40 %). | Rear pressure builds; the scripted loss at t=118. |
 | 4. Coast Road | 130–175 | 24,700–33,250 | 190 | light, medium peak 160–175 | `ground`: the lagoon shore and the coast road, fishing piers, sandbars, the capsized ferry with its blinking hatch. `low-air`: sea-mist banks rolling in from the right. | Mixed front and rear waves, the crossing swarms; the ferry secret. |
-| 5. Orbital Corridor | 175–200 | 33,250–38,000 | 190 | clear | `deep`: the open lagoon and the sea under the morning sky. `ground`: shallow water, buoys. | The shuttles' engines flare and they climb off the top of the screen (t 196–198); the finale (a Wraith ambush) and the release. |
+| 5. Orbital Corridor | 175–201 | 33,250–38,190 | 190 | clear | `deep`: the open lagoon and the sea under the morning sky. `ground`: shallow water, buoys. | The shuttles' engines flare and they climb off the top of the screen (t 196–198); the finale (a Wraith ambush) and the release. |
 <!-- /data -->
 
 ## Waves
@@ -656,3 +656,7 @@ with the production art approved as final. Prompts and generator notes:
   captures, the voiced lines, the texts, the part D numbers and decisions and every build choice
   accepted as built, among them sections 1–3's night-navy (21a) and a near-dead shuttle's bar in the
   climb-out (21o); the texts approved, so `design: approved`.
+- 2026-10-19 (round 41, step FX-C; the game's new all-levels radio test, `RadioTimeline.everyRadioLineEndsBeforeTheLevelDoes`,
+  after the user's playtest "the last message is cut short"; pending the user's review): the Orbital Corridor ends
+  at **t=201** (was 200), so Lifeline One's t=196 line (ending at 200.1 s at the latest) finishes before the level
+  does. The waves, the shuttles' climb and the hauls are unchanged.

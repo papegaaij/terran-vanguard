@@ -19,6 +19,13 @@ final class BombRun {
 
     private double bombOffset;
     private double bombX;
+    /**
+     * Round 41: the steps it must fly on the play field before it may drop (its run-in; 0 for none) and the
+     * steps it has flown there (hashed only with a run-in, so a level without one hashes as before).
+     */
+    private int runInTicks;
+
+    private int runTicks;
     /** Its place after the last {@link #step} (not hashed: the unit's own position is). */
     private double x;
 
@@ -32,6 +39,8 @@ final class BombRun {
         bombRowY = 0;
         bombOffset = 0;
         bombX = 0;
+        runInTicks = 0;
+        runTicks = 0;
     }
 
     /** Hashed once it flies a run, with the unit's {@code entered}. */
@@ -43,11 +52,21 @@ final class BombRun {
                     .add(bombOffset)
                     .add(bombX)
                     .add(entered ? 1 : 0);
+            if (runInTicks > 0) {
+                hash.add(runTicks);
+            }
         }
     }
 
     /** Starts the run of a unit at {@code unitX}: to its row at {@code rowY} (y up), its slot {@code offset} across. */
     void start(double rowY, double offset, double unitX) {
+        start(rowY, offset, unitX, 0);
+    }
+
+    /** Round 41: as {@link #start(double, double, double)}, dropping only after {@code runIn} steps on the play field. */
+    void start(double rowY, double offset, double unitX, int runIn) {
+        runInTicks = runIn;
+        runTicks = 0;
         bombing = true;
         bombDome = -1;
         bombSpent = false;
@@ -62,6 +81,18 @@ final class BombRun {
         if (dome >= 0) {
             bombX = Math.clamp(domeX + bombOffset, half, PlayField.WIDTH - half);
         }
+    }
+
+    /** Round 41: one step of its run flown on the play field ({@code onField}), toward its run-in. */
+    void flown(boolean onField) {
+        if (onField && runTicks < runInTicks) {
+            runTicks++;
+        }
+    }
+
+    /** Round 41: whether its run-in is over, so it may drop its load (always without one). */
+    boolean armed() {
+        return runTicks >= runInTicks;
     }
 
     /** It dropped its load over its dome: it flies on straight down. */

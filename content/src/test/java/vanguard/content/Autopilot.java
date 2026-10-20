@@ -1,23 +1,13 @@
 package vanguard.content;
 
 import vanguard.sim.Command;
-import vanguard.sim.Debris;
 import vanguard.sim.Enemy;
-import vanguard.sim.EnemyBullet;
-import vanguard.sim.EnemySpec;
 import vanguard.sim.GroundObject;
-import vanguard.sim.Hitbox;
-import vanguard.sim.Layer;
-import vanguard.sim.Lob;
-import vanguard.sim.Mine;
 import vanguard.sim.Pickup;
 import vanguard.sim.PlayField;
 import vanguard.sim.SetPiece;
-import vanguard.sim.SimStep;
 import vanguard.sim.Sondes;
 import vanguard.sim.Sortie;
-import vanguard.sim.Tendril;
-import vanguard.sim.Terrain;
 
 /**
  * A simple pilot for headless runs of a whole level: fires all the time, lines up under the lowest
@@ -52,19 +42,17 @@ import vanguard.sim.Terrain;
  * sent at it before its dive, then a walker with it in its arc, then the hooked unit nearest it (lower
  * than itself: it drops below the unit to shoot it), and with nothing hooked on the screen it holds
  * station under the ally, in the way of what comes up at it from below; ground units, which cannot ram,
- * are not dodged there. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * are not dodged there. The plays live beside it: {@link DodgePlay}, {@link TargetPlay}, {@link HazardPlay},
+ * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay} and the moves' {@link MovePlanner}. It
+ * reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
-    private static final double CRUISE_Y = 110;
-    private static final double DANGER = 70;
-    private static final double DEAD_ZONE = 4;
+    static final double CRUISE_Y = 110;
+
     /** Its cruise height over a convoy (the column spans y = 118-526). */
     private static final double CONVOY_CRUISE = 220;
-    /** How far it keeps from a lit rail (Level 05's sleds), px. */
-    private static final double RAIL_CLEARANCE = 44;
-    /** How close a chain member may come before it slips aside (Level 06), px. */
-    private static final double CHAIN_DX = 52;
+
     /**
      * Its height while a battery unit is its target (Level 05): low, so a unit scrolling down stays
      * above it, in its line of fire, as long as possible.
@@ -73,40 +61,19 @@ public final class Autopilot {
 
     /** Level 09: the bombs' fall, s (design/player/weapons/bomb-rack): it leads a node by the scroll over it. */
     private static final double BOMB_FALL = 0.5;
-    /**
-     * Level 09: a hardened target this close to the bottom edge, px, with more HP than {@link
-     * #STRIKE_HP} gets the Airstrike, if one is fitted and charged.
-     */
-    private static final double STRIKE_LOW = 170;
-
-    private static final double STRIKE_HP = 15;
-    /** The Airstrike's bombers fly this far either side of the ship's x (design/player/specials). */
-    private static final double STRIKE_OFFSET = 64;
-    /** Two targets this far apart sideways, px, both lie under one strike's two bombers. */
-    private static final double STRIKE_PAIR_MIN = 80;
-
-    private static final double STRIKE_PAIR_MAX = 190;
 
     /** Level 10: how far it keeps above a holding Wraith it lines up over, px. */
-    private static final double AMBUSH_ABOVE = 55;
+    static final double AMBUSH_ABOVE = 55;
+
     /** Level 10: its height over a Wraith still cloaked below it, px: clear of the highest hold point and the decloak. */
     private static final double AMBUSH_WAIT = 135;
-    /** Level 10: the Airstrike goes to an ambush of at least this many Wraiths (the larger ones, later in the level). */
-    private static final int STRIKE_AMBUSH = 3;
+
     /** Level 10: with an air escort it keeps out of the side lanes, where the Wraiths leave, px from either edge. */
     private static final double SIDE_LANE = 96;
 
-    private static final double CHAIN_ABOVE = 120;
-    private static final double CHAIN_BELOW = 70;
-
     /** M5 part F: while latched it holds each direction of its shake this long, s (4 reversals in about 0.4 s). */
     private static final double SHAKE_SECONDS = 0.1;
-    /** M5 part F: in a gust (from its telegraph on) it aims this far upwind of its target, px. */
-    private static final double LEAN = 12;
-    /** M5 part F: ... and keeps at least this far from the downwind edge, px. */
-    private static final double DOWNWIND_EDGE = 70;
-    /** M5 part G: a walker counts as aiming at the defended ally while it lies this far either side of its facing, rad. */
-    private static final double GUARD_ARC = Math.toRadians(60);
+
     /** M5 part G: it drops this far below a hooked unit lower than its cruise to shoot it, px. */
     private static final double GUARD_BELOW = 70;
 
@@ -145,18 +112,6 @@ public final class Autopilot {
         RIGHT
     }
 
-    /** M7 part C: the half width of the ship's hull kept off rock, px, and the margin beyond it. */
-    private static final double HULL_HALF = 18;
-
-    /** M7 part C: the margin beyond the hull it keeps from rock, px (an anchor at a wall's foot stays in reach). */
-    private static final double ROCK_MARGIN = 8;
-
-    /** M7 part C: how far ahead it looks at the rock coming down at its height, s (walls move ≤ 115 px/s). */
-    private static final double ROCK_AHEAD = 0.6;
-
-    /** M7 part C: the half height of the hull it checks the rock over, px. */
-    private static final double HULL_HALF_HEIGHT = 22;
-
     /** M7 part C: how low it holds while a standing tendril comes down at it, px. */
     private static final double TENDRIL_HOLD = 40;
 
@@ -180,16 +135,19 @@ public final class Autopilot {
 
     /**
      * One step's commands, an arena boss played as {@code play} says and (M7 part C) the canyon's split taken by
-     * {@code channel}: in a canyon it keeps its hull {@link #ROCK_MARGIN} px off the rock at its height now and over
-     * the next {@link #ROCK_AHEAD} s, whatever else it does.
+     * {@code channel}: in a canyon it keeps its hull {@link HazardPlay#ROCK_MARGIN} px off the rock at its height now and over
+     * the next {@link HazardPlay#ROCK_AHEAD} s, whatever else it does.
      */
     public static int commands(Sortie sortie, ArenaPlay play, Channel channel) {
         int commands = pilot(sortie, play);
-        if (sortie.groundAllies() && rollThreat(sortie)) {
+        if (sortie.groundAllies() && SiegePlay.rollThreat(sortie)) {
             // M7 part D: a wounded Shellback's roll would crush a dome: no shot at it until the dome is out of reach.
             commands &= ~Command.FIRE.bit();
         }
-        return sortie.terrain() == null ? commands : canyon(sortie, commands, channel);
+        if (sortie.vents().grates() > 0) {
+            commands = HazardPlay.ventFilter(sortie, commands);
+        }
+        return sortie.terrain() == null ? commands : HazardPlay.canyon(sortie, commands, channel);
     }
 
     private static int pilot(Sortie sortie, ArenaPlay play) {
@@ -201,35 +159,39 @@ public final class Autopilot {
             boolean left = ((long) Math.floor(sortie.realSeconds() / SHAKE_SECONDS)) % 2 == 0;
             return commands | (left ? Command.LEFT.bit() : Command.RIGHT.bit());
         }
-        double lob = lobThreat(sortie, shipX, shipY);
+        double lob = DodgePlay.lobThreat(sortie, shipX, shipY);
         if (lob != 0) {
             return commands | (lob < 0 ? Command.LEFT.bit() : Command.RIGHT.bit());
         }
-        double coil = chainThreat(sortie, shipX, shipY);
+        double coil = DodgePlay.chainThreat(sortie, shipX, shipY);
         if (coil != 0) {
             return commands | (coil < 0 ? Command.LEFT.bit() : Command.RIGHT.bit());
         }
-        double hazard = hazard(sortie, shipX, shipY);
+        double hazard = DodgePlay.hazard(sortie, shipX, shipY);
         if (hazard != 0) {
             return commands | (hazard < 0 ? Command.LEFT.bit() : Command.RIGHT.bit()) | Command.DOWN.bit();
         }
-        SetPiece kraken = arenaBoss(sortie);
-        if (kraken != null) {
-            return commands | arenaMove(sortie, kraken, play);
+        SetPiece walking = WalkerPlay.walkingBoss(sortie);
+        if (walking != null) {
+            return commands | WalkerPlay.walkerMove(sortie, walking);
         }
-        SetPiece spire = rootedBoss(sortie);
+        SetPiece kraken = KrakenPlay.arenaBoss(sortie);
+        if (kraken != null) {
+            return commands | KrakenPlay.arenaMove(sortie, kraken, play);
+        }
+        SetPiece spire = SpirePlay.rootedBoss(sortie);
         if (spire != null) {
-            return commands | spireMove(sortie, spire);
+            return commands | SpirePlay.spireMove(sortie, spire);
         }
         SetPiece piece = descended(sortie);
         if (piece != null && piece.boss().isPresent()) {
-            return commands | bossMove(sortie, vitalX(piece), Math.min(CRUISE_Y, bodyBottom(piece) - 70));
+            return commands | MovePlanner.bossMove(sortie, vitalX(piece), Math.min(CRUISE_Y, bodyBottom(piece) - 70));
         }
-        double threat = threat(sortie, shipX, shipY);
+        double threat = DodgePlay.threat(sortie, shipX, shipY);
         if (threat != 0) {
             // With an air escort a threat may come from below (a Wraith's burst, a looping swarm, a Wraith
             // holding at the bottom edge): no lower then, nor below its cruise.
-            int vertical = sortie.airEscort() && (shipY < CRUISE_Y || fromBelow(sortie, shipX, shipY))
+            int vertical = sortie.airEscort() && (shipY < CRUISE_Y || DodgePlay.fromBelow(sortie, shipX, shipY))
                     ? 0
                     : Command.DOWN.bit();
             return commands | (threat < 0 ? Command.LEFT.bit() : Command.RIGHT.bit()) | vertical;
@@ -237,7 +199,8 @@ public final class Autopilot {
         double targetX = shipX;
         double targetY = cruise(sortie);
         if (piece != null) {
-            return commands | steer(shipX, shipY, vitalX(piece), Math.min(CRUISE_Y, bodyBottom(piece) - 70));
+            return commands
+                    | MovePlanner.steer(shipX, shipY, vitalX(piece), Math.min(CRUISE_Y, bodyBottom(piece) - 70));
         }
         Enemy lowest = null;
         for (int i = 0; i < sortie.enemyCount(); i++) {
@@ -248,62 +211,62 @@ public final class Autopilot {
             if (!enemy.cloaked()
                     && !enemy.growing()
                     && enemy.layer().touchable()
-                    && !closedVortex(enemy)
+                    && !TargetPlay.closedVortex(enemy)
                     && y < PlayField.HEIGHT - 10
                     && y > shipY + 40
                     && (lowest == null || y < lowest.renderY(1))) {
                 lowest = enemy;
             }
         }
-        Enemy core = openVortex(sortie, shipY);
+        Enemy core = TargetPlay.openVortex(sortie, shipY);
         if (core != null) {
             // M7 part E: a Dust Devil rising or open (Level 18): its core in the short window, from below its pull.
             lowest = core;
         }
-        Enemy maw = burrower(sortie, shipY);
+        Enemy maw = TargetPlay.burrower(sortie, shipY);
         if (maw != null) {
             // M7 part B: a Burrower bulging or up (Level 15): under its spot before it breaks out, to hit it in
             // its window; its ring's bullets are dodged as any.
             lowest = maw;
         }
-        Enemy behind = rearAmbusher(sortie, shipY);
+        Enemy behind = TargetPlay.rearAmbusher(sortie, shipY);
         if (behind != null) {
             lowest = behind;
-            targetY = holding(behind) ? behind.renderY(1) + AMBUSH_ABOVE : AMBUSH_WAIT;
-            int pair = ambushPair(sortie);
+            targetY = TargetPlay.holding(behind) ? behind.renderY(1) + AMBUSH_ABOVE : AMBUSH_WAIT;
+            int pair = TargetPlay.ambushPair(sortie);
             if (pair >= 0) {
                 Enemy a = sortie.enemy(pair / 1024);
                 Enemy b = sortie.enemy(pair % 1024);
                 double strikeX = (a.renderX(1) + b.renderX(1)) / 2;
                 boolean rising = a.ambushPhase() == Enemy.AmbushPhase.RISE && b.ambushPhase() == Enemy.AmbushPhase.RISE;
-                if (rising && Math.abs(strikeX - shipX) <= 3 * DEAD_ZONE) {
+                if (rising && Math.abs(strikeX - shipX) <= 3 * MovePlanner.DEAD_ZONE) {
                     return commands | Command.SPECIAL.bit();
                 }
-                return commands | steer(shipX, shipY, strikeX, AMBUSH_WAIT);
+                return commands | MovePlanner.steer(shipX, shipY, strikeX, AMBUSH_WAIT);
             }
         }
-        Enemy battery = battery(sortie, shipY);
+        Enemy battery = TargetPlay.battery(sortie, shipY);
         if (battery != null) {
             lowest = battery;
             targetY = Math.min(targetY, BATTERY_Y);
         }
-        Enemy growth = growth(sortie, shipY);
+        Enemy growth = TargetPlay.growth(sortie, shipY);
         if (growth != null) {
             // M5 part H: a root burst's growth (Level 14's secondary) before it scrolls past, from low down,
             // waiting under it while it grows.
             lowest = growth;
             targetY = Math.min(targetY, BATTERY_Y);
         }
-        Enemy node = hardenedTarget(sortie);
+        Enemy node = TargetPlay.hardenedTarget(sortie);
         if (node != null) {
             lowest = node;
             targetY = Math.max(40, node.renderY(1) - sortie.groundSpeed() * BOMB_FALL);
         }
-        Enemy head = chainHead(sortie, shipY);
+        Enemy head = TargetPlay.chainHead(sortie, shipY);
         if (head != null) {
             lowest = head;
         }
-        Enemy anchor = gateAnchor(sortie, shipX, shipY);
+        Enemy anchor = TargetPlay.gateAnchor(sortie, shipX, shipY);
         if (anchor != null) {
             // M7 part C: a gate's anchor before its tendril reaches the ship, holding low meanwhile (Level 16).
             lowest = anchor;
@@ -311,8 +274,9 @@ public final class Autopilot {
         }
         // M7 part D: Level 17's domes: the hooked bomber about to reach its dome, the Choir Herald, any hooked
         // bomber, a Shellback's vent or belly (never while it is armoured), instead of a convoy's threat.
-        Enemy walker = sortie.groundAllies() ? siegeTarget(sortie, shipY) : convoyThreat(sortie, shipY);
-        Enemy guard = guardTarget(sortie);
+        Enemy walker =
+                sortie.groundAllies() ? SiegePlay.siegeTarget(sortie, shipY) : TargetPlay.convoyThreat(sortie, shipY);
+        Enemy guard = TargetPlay.guardTarget(sortie);
         if (guard != null) {
             // M5 part G: the defended ally's attackers first, from below them.
             walker = guard;
@@ -323,24 +287,24 @@ public final class Autopilot {
         } else if (lowest != null) {
             targetX = lowest.renderX(1);
         } else {
-            GroundObject ground = lowestGround(sortie, shipY);
+            GroundObject ground = TargetPlay.lowestGround(sortie, shipY);
             Pickup pickup = sortie.pickupCount() > 0 ? sortie.pickup(0) : null;
             if (pickup != null) {
                 targetX = pickup.renderX();
                 targetY = Math.max(40, pickup.renderY(1) - 10);
             } else if (ground != null) {
                 targetX = ground.renderX();
-            } else if (guarding(sortie)) {
+            } else if (TargetPlay.guarding(sortie)) {
                 // M5 part G: nothing to shoot: on station under the defended ally.
                 targetX = sortie.ally(0).renderX(1);
             }
         }
-        if (node != null && strikeDue(sortie, node)) {
-            double strikeX = strikeX(sortie, node);
-            if (Math.abs(strikeX - shipX) <= DEAD_ZONE) {
+        if (node != null && TargetPlay.strikeDue(sortie, node)) {
+            double strikeX = TargetPlay.strikeX(sortie, node);
+            if (Math.abs(strikeX - shipX) <= MovePlanner.DEAD_ZONE) {
                 return commands | Command.SPECIAL.bit();
             }
-            return commands | steer(shipX, shipY, strikeX, targetY);
+            return commands | MovePlanner.steer(shipX, shipY, strikeX, targetY);
         }
         if ((lowest != null || walker != null) && behind == null && sortie.pickupCount() > 0) {
             Pickup pickup = sortie.pickup(0);
@@ -349,8 +313,9 @@ public final class Autopilot {
                 targetY = Math.max(40, pickup.renderY(1) - 10);
             }
         }
-        GroundObject cache =
-                (sortie.airEscort() || sortie.terrain() != null) && behind == null ? secretTarget(sortie, shipY) : null;
+        GroundObject cache = (sortie.airEscort() || sortie.terrain() != null) && behind == null
+                ? TargetPlay.secretTarget(sortie, shipY)
+                : null;
         if (cache != null) {
             // Level 10's ferry hatch (2026-10-08: 50 HP): it lines up under it to shoot it open; M7 part C: Level 16's
             // relay hut (in the left channel; the rock keeps a pilot in the right one from it).
@@ -359,421 +324,16 @@ public final class Autopilot {
         if (sortie.airEscort()) {
             targetX = Math.clamp(targetX, SIDE_LANE, PlayField.WIDTH - SIDE_LANE);
         }
-        int sonde = sondeToTake(sortie, shipY);
+        int sonde = TargetPlay.sondeToTake(sortie, shipY);
         if (sonde >= 0 && behind == null) {
             // M5 part F: the weather sondes (Level 12's secondary): under it, waiting at its height or the cruise's.
             Sondes sondes = sortie.sondes();
             targetX = sondes.x(sonde);
             targetY = Math.clamp(sondes.y(sonde), 40, Math.max(40, targetY));
         }
-        return commands | steer(shipX, shipY, clearOfRail(sortie, leanX(sortie, targetX)), targetY);
-    }
-
-    /**
-     * M7 part E (design/campaign Level 18; Varga: "Shoot the core when the spin opens"): a Dust Devil with its vanes
-     * closed is no target (every shot glances off, and lining up under it holds the ship in its pull); a rising one
-     * is, and one in the second half of its closed time, so the ship stands under it when the core opens ({@link
-     * #openVortex}: the lowest of them above the ship comes first).
-     */
-    /** M7 part E: from this share of a Dust Devil's closed time on it lines up under it for the window. */
-    private static final double VORTEX_LINE_UP = 0.5;
-
-    private static Enemy openVortex(Sortie sortie, double shipY) {
-        Enemy best = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double y = enemy.renderY(1);
-            if (enemy.spec().vortex().isPresent()
-                    && enemy.hp() > 0
-                    && !closedVortex(enemy)
-                    && y < PlayField.HEIGHT - 10
-                    && y > shipY + 40
-                    && (best == null || y < best.renderY(1))) {
-                best = enemy;
-            }
-        }
-        return best;
-    }
-
-    private static boolean closedVortex(Enemy enemy) {
-        return enemy.spec().vortex().isPresent()
-                && enemy.armoured()
-                && enemy.vortexPhase() != Enemy.VortexPhase.RISING
-                && !(enemy.vortexPhase() == Enemy.VortexPhase.CLOSED && enemy.vortexProgress() > VORTEX_LINE_UP);
-    }
-
-    /**
-     * M5 part F: the weather sonde to fly through: the lowest one drifting on the screen; -1 for none
-     * (a level without sondes has none).
-     */
-    private static int sondeToTake(Sortie sortie, double shipY) {
-        Sondes sondes = sortie.sondes();
-        int best = -1;
-        for (int i = 0; i < sondes.count(); i++) {
-            if (sondes.state(i) == Sondes.DRIFTING
-                    && sondes.y(i) < PlayField.HEIGHT - 20
-                    && (best < 0 || sondes.y(i) < sondes.y(best))) {
-                best = i;
-            }
-        }
-        return best;
-    }
-
-    /**
-     * M5 part F: a target's x in a gust, from its telegraph on (Level 12's wind): a little upwind, and
-     * clear of the downwind edge, so the push does not pin the ship there; the target as it is in calm air
-     * and in a level without weather.
-     */
-    private static double leanX(Sortie sortie, double targetX) {
-        if (!sortie.wind().present()) {
-            return targetX;
-        }
-        double push = sortie.windPush();
-        int telegraph = sortie.wind().telegraph(SimStep.ticks(sortie.levelSeconds()));
-        int from = telegraph != 0 ? telegraph : (int) Math.signum(push);
-        if (from == 0) {
-            return targetX;
-        }
-        double leaned = targetX - from * LEAN;
-        return from > 0 ? Math.min(leaned, PlayField.WIDTH - DOWNWIND_EDGE) : Math.max(leaned, DOWNWIND_EDGE);
-    }
-
-    /**
-     * Level 10: the rear-ambush unit (a Wraith) to line up over: the nearest sideways of those in
-     * their flash or hold below the ship, else of those still cloaked below the bottom edge or
-     * rising to their hold (their lane is known); null without one.
-     */
-    private static Enemy rearAmbusher(Sortie sortie, double shipY) {
-        double shipX = sortie.ship().x();
-        Enemy nearest = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            Enemy.AmbushPhase phase = enemy.ambushPhase();
-            boolean coming = phase == Enemy.AmbushPhase.GAP || phase == Enemy.AmbushPhase.RISE;
-            if ((holding(enemy) || coming)
-                    && enemy.renderY(1) < shipY
-                    && (nearest == null
-                            || (holding(enemy) && !holding(nearest))
-                            || (holding(enemy) == holding(nearest)
-                                    && Math.abs(enemy.renderX(1) - shipX) < Math.abs(nearest.renderX(1) - shipX)))) {
-                nearest = enemy;
-            }
-        }
-        return nearest;
-    }
-
-    /**
-     * Level 10: the pair of units of a Wraith ambush of at least {@link #STRIKE_AMBUSH} to call the
-     * Airstrike on, if one is fitted, charged and ready: two of its units {@link
-     * #STRIKE_PAIR_MIN}–{@link #STRIKE_PAIR_MAX} px apart still cloaked below the bottom edge or
-     * rising, the pair whose midpoint lies nearest the ship (each bomber then flies up one's lane;
-     * the bombs burst low on the screen just as they decloak there), as {@code first × 1024 +
-     * second} (their indices); -1 for none. It is called once both rise.
-     */
-    private static int ambushPair(Sortie sortie) {
-        var special = sortie.special();
-        if (!special.fitted() || !special.name().equals("Airstrike") || !special.ready() || special.charges() <= 0) {
-            return -1;
-        }
-        int coming = 0;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            if (coming(sortie.enemy(i))) {
-                coming++;
-            }
-        }
-        if (coming < STRIKE_AMBUSH) {
-            return -1;
-        }
-        double shipX = sortie.ship().x();
-        int best = -1;
-        double bestDistance = Double.POSITIVE_INFINITY;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy a = sortie.enemy(i);
-            if (!coming(a)) {
-                continue;
-            }
-            for (int j = 0; j < sortie.enemyCount(); j++) {
-                Enemy b = sortie.enemy(j);
-                double dx = b.renderX(1) - a.renderX(1);
-                double distance = Math.abs((a.renderX(1) + b.renderX(1)) / 2 - shipX);
-                if (coming(b) && dx >= STRIKE_PAIR_MIN && dx <= STRIKE_PAIR_MAX && distance < bestDistance) {
-                    bestDistance = distance;
-                    best = i * 1024 + j;
-                }
-            }
-        }
-        return best;
-    }
-
-    /** Level 10: a rear-ambush unit still cloaked below the bottom edge or rising to its hold point. */
-    private static boolean coming(Enemy enemy) {
-        return enemy.ambushPhase() == Enemy.AmbushPhase.GAP || enemy.ambushPhase() == Enemy.AmbushPhase.RISE;
-    }
-
-    /**
-     * Level 05: the lowest unit of a destroy-targets group (a battery) on the screen above the ship,
-     * which must die before it leaves; null without one.
-     */
-    private static Enemy battery(Sortie sortie, double shipY) {
-        if (sortie.script().targets().isEmpty()) {
-            return null;
-        }
-        Enemy lowest = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double y = enemy.renderY(1);
-            if (enemy.groupIndex() >= 0
-                    && y < PlayField.HEIGHT - 10
-                    && y > shipY + 20
-                    && (lowest == null || y < lowest.renderY(1))) {
-                lowest = enemy;
-            }
-        }
-        return lowest;
-    }
-
-    /**
-     * Level 09: the lowest hardened unit of a destroy-targets group on the screen (a Hive Node: only
-     * {@code anti-ground} deliveries crack it, so it flies over it); null without one.
-     */
-    private static Enemy hardenedTarget(Sortie sortie) {
-        if (sortie.script().targets().isEmpty()) {
-            return null;
-        }
-        Enemy lowest = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double y = enemy.renderY(1);
-            if (enemy.groupIndex() >= 0
-                    && enemy.spec().hardened()
-                    && y < PlayField.HEIGHT - 20
-                    && y > 20
-                    && (lowest == null || y < lowest.renderY(1))) {
-                lowest = enemy;
-            }
-        }
-        return lowest;
-    }
-
-    /**
-     * Level 09: whether to call the Airstrike on a hardened target about to get away (low on the
-     * screen with HP left): only with an Airstrike fitted, charged and not already flying.
-     */
-    private static boolean strikeDue(Sortie sortie, Enemy node) {
-        var special = sortie.special();
-        return special.fitted()
-                && special.name().equals("Airstrike")
-                && special.ready()
-                && special.charges() > 0
-                && node.renderY(1) < STRIKE_LOW
-                && node.hp() > STRIKE_HP;
-    }
-
-    /**
-     * Where to call the strike: with another hardened target of a group on the screen
-     * {@link #STRIKE_PAIR_MIN}–{@link #STRIKE_PAIR_MAX} px to its side, midway between the two (each
-     * bomber then flies over one); otherwise {@link #STRIKE_OFFSET} to its side, toward the centre.
-     */
-    private static double strikeX(Sortie sortie, Enemy node) {
-        double x = node.renderX(1);
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy other = sortie.enemy(i);
-            double dx = Math.abs(other.renderX(1) - x);
-            if (other != node
-                    && other.groupIndex() >= 0
-                    && other.spec().hardened()
-                    && other.renderY(1) < PlayField.HEIGHT - 20
-                    && dx >= STRIKE_PAIR_MIN
-                    && dx <= STRIKE_PAIR_MAX) {
-                return (x + other.renderX(1)) / 2;
-            }
-        }
-        return x < PlayField.WIDTH / 2.0 ? x + STRIKE_OFFSET : x - STRIKE_OFFSET;
-    }
-
-    /** Level 06: the lowest head of a segment chain on the screen above the ship; null without one. */
-    private static Enemy chainHead(Sortie sortie, double shipY) {
-        Enemy lowest = null;
-        for (int c = 0; c < sortie.chainCount(); c++) {
-            Enemy head = sortie.chain(c).member(0);
-            if (head == null) {
-                continue;
-            }
-            double x = head.renderX(1);
-            double y = head.renderY(1);
-            if (x > 0
-                    && x < PlayField.WIDTH
-                    && y < PlayField.HEIGHT - 10
-                    && y > shipY + 60
-                    && (lowest == null || y < lowest.renderY(1))) {
-                lowest = head;
-            }
-        }
-        return lowest;
-    }
-
-    /**
-     * Level 06: with a member of a segment chain close above, beside or below, the side whose
-     * position 50 px away lies farther from every member (negative = left); 0 when none is close.
-     */
-    private static double chainThreat(Sortie sortie, double shipX, double shipY) {
-        boolean close = false;
-        for (int c = 0; c < sortie.chainCount() && !close; c++) {
-            var chain = sortie.chain(c);
-            if (chain.ground()) {
-                // M7 part C: a crawling chain (the Threadcrawler) is on the ground and cannot ram.
-                continue;
-            }
-            for (int k = 0; k < chain.size(); k++) {
-                Enemy member = chain.member(k);
-                if (member != null
-                        && Math.abs(member.renderX(1) - shipX) < CHAIN_DX
-                        && member.renderY(1) - shipY > -CHAIN_BELOW
-                        && member.renderY(1) - shipY < CHAIN_ABOVE) {
-                    close = true;
-                    break;
-                }
-            }
-        }
-        if (!close) {
-            return 0;
-        }
-        if (shipX < 60) {
-            return 1;
-        }
-        if (shipX > PlayField.WIDTH - 60) {
-            return -1;
-        }
-        return chainClearance(sortie, shipX - 50, shipY) > chainClearance(sortie, shipX + 50, shipY) ? -1 : 1;
-    }
-
-    /**
-     * M7 part C: the anchor to shoot of the lowest standing gate coming down above the ship (Level 16): the live
-     * anchor nearer the ship; null for none.
-     */
-    private static Enemy gateAnchor(Sortie sortie, double shipX, double shipY) {
-        if (sortie.links() == null) {
-            return null;
-        }
-        Tendril lowest = null;
-        for (int i = 0; i < sortie.links().size(); i++) {
-            Tendril tendril = sortie.links().get(i);
-            double y = Math.min(tendril.ay(), tendril.by());
-            if (tendril.standing()
-                    && y > shipY
-                    && y < PlayField.HEIGHT + 20
-                    && (lowest == null || y < Math.min(lowest.ay(), lowest.by()))) {
-                lowest = tendril;
-            }
-        }
-        if (lowest == null) {
-            return null;
-        }
-        Enemy best = null;
-        double bestDistance = Double.POSITIVE_INFINITY;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            if (enemy.spec().link().isEmpty()) {
-                continue;
-            }
-            double x = enemy.renderX(1);
-            double y = enemy.renderY(1);
-            boolean a = Math.hypot(x - lowest.ax(), y - lowest.ay()) < 4;
-            boolean b = Math.hypot(x - lowest.bx(), y - lowest.by()) < 4;
-            double distance = Math.abs(x - shipX);
-            if ((a || b) && distance < bestDistance) {
-                best = enemy;
-                bestDistance = distance;
-            }
-        }
-        return best;
-    }
-
-    /**
-     * M7 part C: {@code commands} kept off the rock (Level 16): the span of the channel it flies (the {@code channel}
-     * side where rock splits the canyon) at its hull's height now and over the next {@link #ROCK_AHEAD} s, less the
-     * hull and {@link #ROCK_MARGIN}; a move out of it is dropped, and outside it it moves back in.
-     */
-    private static int canyon(Sortie sortie, int commands, Channel channel) {
-        Terrain terrain = sortie.terrain();
-        double shipX = sortie.ship().x();
-        double shipY = sortie.ship().y();
-        double scroll = sortie.groundScroll();
-        double speed = sortie.groundSpeed();
-        double lo = Double.NEGATIVE_INFINITY;
-        double hi = Double.POSITIVE_INFINITY;
-        for (double ahead = 0; ahead <= ROCK_AHEAD + 1e-9; ahead += 0.1) {
-            double at = scroll + speed * ahead;
-            for (double dy = -HULL_HALF_HEIGHT; dy <= HULL_HALF_HEIGHT; dy += HULL_HALF_HEIGHT) {
-                double[] span = channelSpan(terrain, at, shipY + dy, channel);
-                lo = Math.max(lo, span[0]);
-                hi = Math.min(hi, span[1]);
-            }
-        }
-        double margin = HULL_HALF + ROCK_MARGIN;
-        if (hi - lo < 2 * margin) {
-            // The rock moves faster than the look-ahead allows: the span at its height now.
-            double[] span = channelSpan(terrain, scroll, shipY, channel);
-            lo = span[0];
-            hi = span[1];
-            margin = Math.min(margin, (hi - lo) / 2);
-        }
-        double left = lo + margin;
-        double right = hi - margin;
-        int horizontal = Command.LEFT.bit() | Command.RIGHT.bit();
-        if (shipX < left - DEAD_ZONE) {
-            return (commands & ~horizontal) | Command.RIGHT.bit();
-        }
-        if (shipX > right + DEAD_ZONE) {
-            return (commands & ~horizontal) | Command.LEFT.bit();
-        }
-        if (Command.LEFT.in(commands) && shipX <= left) {
-            return commands & ~Command.LEFT.bit();
-        }
-        if (Command.RIGHT.in(commands) && shipX >= right) {
-            return commands & ~Command.RIGHT.bit();
-        }
-        return commands;
-    }
-
-    /**
-     * M7 part C: the flyable span {@code [left, right]} at play-field height {@code y} of the channel the pilot takes:
-     * the leftmost or the rightmost one where rock splits the canyon; the field's edges where there is no wall.
-     */
-    private static double[] channelSpan(Terrain terrain, double scroll, double y, Channel channel) {
-        double row = Terrain.row(scroll, y);
-        double left = terrain.leftAt(row);
-        double right = terrain.rightAt(row);
-        left = Double.isNaN(left) ? 0 : left;
-        right = Double.isNaN(right) ? PlayField.WIDTH : right;
-        double x = channel == Channel.LEFT ? left + 0.5 : right - 0.5;
-        double from = terrain.spanLeft(scroll, y, x);
-        double to = terrain.spanRight(scroll, y, x);
-        return Double.isNaN(from) ? new double[] {left, right} : new double[] {from, to};
-    }
-
-    /** The distance from (x, y) to the nearest chain member, the vertical counted at 0.7. */
-    private static double chainClearance(Sortie sortie, double x, double y) {
-        double nearest = Double.POSITIVE_INFINITY;
-        for (int c = 0; c < sortie.chainCount(); c++) {
-            var chain = sortie.chain(c);
-            for (int k = 0; k < chain.size(); k++) {
-                Enemy member = chain.member(k);
-                if (member != null) {
-                    nearest = Math.min(nearest, Math.hypot(member.renderX(1) - x, 0.7 * (member.renderY(1) - y)));
-                }
-            }
-        }
-        return nearest;
-    }
-
-    /** Level 05: while the rail is lit (lights or a sled), a target beside the rail rather than on it. */
-    private static double clearOfRail(Sortie sortie, double targetX) {
-        if (sortie.sled().isEmpty() || !sortie.sled().get().lit()) {
-            return targetX;
-        }
-        double rail = sortie.sled().get().spec().x();
-        return Math.abs(targetX - rail) < RAIL_CLEARANCE ? rail - RAIL_CLEARANCE : targetX;
+        return commands
+                | MovePlanner.steer(
+                        shipX, shipY, DodgePlay.clearOfRail(sortie, HazardPlay.leanX(sortie, targetX)), targetY);
     }
 
     /**
@@ -793,996 +353,13 @@ public final class Autopilot {
         return CRUISE_Y;
     }
 
-    /**
-     * With a convoy, the ground enemy on the screen above the ship that is closest to a convoy unit
-     * (a turret or a walker about to fire at it or claw it); null without one.
-     */
-    private static Enemy convoyThreat(Sortie sortie, double shipY) {
-        if (sortie.allyCount() == 0) {
-            return null;
-        }
-        Enemy best = null;
-        double bestDistance = Double.POSITIVE_INFINITY;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double x = enemy.renderX(1);
-            double y = enemy.renderY(1);
-            if (enemy.layer() != Layer.GROUND
-                    || y > PlayField.HEIGHT - 10
-                    || y < shipY - 20
-                    || x < 0
-                    || x > PlayField.WIDTH) {
-                continue;
-            }
-            for (int k = 0; k < sortie.allyCount(); k++) {
-                if (sortie.ally(k).alive()) {
-                    double distance = Math.hypot(
-                            sortie.ally(k).renderX(1) - x, sortie.ally(k).renderY(1) - y);
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        best = enemy;
-                    }
-                }
-            }
-        }
-        return best;
-    }
-
-    /** M7 part D: px of margin round a Shellback's roll's reach of a dome's footprint. */
-    private static final double ROLL_MARGIN = 8;
-
-    /** M7 part D, round 40 R.a: the ship within this many px of a standing vent's x shoots the vent only. */
-    private static final double VENT_ALIGNED = 6;
-
-    /** M7 part D: half the width of the ship's fire column the autopilot keeps a Shellback out of, px. */
-    private static final double FIRE_COLUMN = 70;
-
-    /**
-     * M7 part D (design/campaign Level 17; Varga: "when it curls up, wait"): whether a Shellback that has not rolled
-     * yet stands in the ship's fire column above it while a standing dome lies within its roll's reach, so that
-     * shooting it would set off a roll into the dome.
-     */
-    private static boolean rollThreat(Sortie sortie) {
-        double shipX = sortie.ship().x();
-        double shipY = sortie.ship().y();
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            if (!rollPending(enemy)
-                    || Math.abs(enemy.renderX(1) - shipX) > FIRE_COLUMN
-                    || enemy.renderY(1) < shipY
-                    || enemy.renderY(1) > PlayField.HEIGHT + 40) {
-                continue;
-            }
-            if (domeInReach(sortie, enemy) && !(enemy.partAlive() && Math.abs(enemy.partX() - shipX) < VENT_ALIGNED)) {
-                // round 40 R.a: under its standing vent the shots hit the vent first, which sets off no roll
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * M7 part D: whether a standing dome lies within {@code enemy}'s roll's reach if it curled now: its ball (rolling
-     * down its path, here taken as straight down the screen) would touch the dome's footprint before the roll ends,
-     * at its full length or (round 40 R.e) where its belly row ends it near the bottom.
-     */
-    private static boolean domeInReach(Sortie sortie, Enemy enemy) {
-        EnemySpec.Roll roll = enemy.spec().roll().orElseThrow();
-        double scroll = sortie.groundSpeed();
-        double start = enemy.renderY(1) - scroll * roll.curlSeconds();
-        double drop = roll.rollSeconds() * (roll.rollSpeed() + scroll);
-        if (roll.bellyRow() > 0) {
-            drop = Math.min(drop, Math.max(0, start - roll.bellyRow() - scroll * roll.uncurlSeconds()));
-        }
-        double length = drop * roll.rollSpeed() / (roll.rollSpeed() + scroll);
-        for (int k = 0; k < sortie.allyCount(); k++) {
-            if (!sortie.ally(k).alive()) {
-                continue;
-            }
-            Hitbox footprint = sortie.allySpec(k).size();
-            double reachX = (roll.ball().width() + footprint.width()) / 2 + ROLL_MARGIN;
-            double reachY = (roll.ball().height() + footprint.height()) / 2 + ROLL_MARGIN;
-            double dx = sortie.ally(k).renderX(1) - enemy.renderX(1);
-            double dy = sortie.ally(k).renderY(1) - enemy.renderY(1);
-            if (Math.abs(dx) < reachX && dy < reachY && dy > -(length + reachY)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /** M7 part D: a walker with a curl-roll still to come (above its roll's share of its HP, walking). */
-    private static boolean rollPending(Enemy enemy) {
-        return enemy.spec().roll().isPresent()
-                && enemy.hp() > 0
-                && enemy.curlPhase() == Enemy.CurlPhase.WALK
-                && enemy.hp()
-                        > enemy.spec().roll().get().belowShare() * enemy.spec().hp();
-    }
-
-    /** M7 part D: a hooked bomber whose dome is within this many px of its row is shot before the Herald. */
-    private static final double BOMB_URGENT = 200;
-
-    /**
-     * M7 part D (design/campaign Level 17): the unit to shoot first round the domes: a hooked bomber whose dome is
-     * within {@link #BOMB_URGENT} px of reaching its row, then the Choir Herald (its rings on everything near it),
-     * then the hooked bomber whose dome comes nearest, then a Shellback walking or showing its belly (its vent sits
-     * on its back, so shooting the body from below takes the vent first); a curled or rolling one is waited out.
-     * Null when none of them is on the screen above the ship.
-     */
-    private static Enemy siegeTarget(Sortie sortie, double shipY) {
-        Enemy herald = null;
-        Enemy bomber = null;
-        double bomberGap = Double.POSITIVE_INFINITY;
-        Enemy shellback = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double x = enemy.renderX(1);
-            double y = enemy.renderY(1);
-            if (x < 8 || x > PlayField.WIDTH - 8 || y > PlayField.HEIGHT - 10 || y < shipY + 20 || enemy.hp() <= 0) {
-                continue;
-            }
-            if (enemy.spec().aura().isPresent()) {
-                herald = enemy;
-            } else if (enemy.bombRun() >= 0 && !enemy.bombSpent()) {
-                // when it drops: once its dome's hit box reaches its row and it has steered over the dome
-                int dome = enemy.bombRun();
-                double reach = sortie.ally(dome).renderY(1)
-                        - sortie.allySpec(dome).hitbox().height() / 2
-                        - y;
-                double across = Math.abs(sortie.ally(dome).renderX(1) - x)
-                        - sortie.allySpec(dome).hitbox().width() / 2;
-                double gap = Math.max(
-                        reach,
-                        across * sortie.groundSpeed() / Math.max(1, enemy.spec().speed()));
-                if (gap < bomberGap) {
-                    bomberGap = gap;
-                    bomber = enemy;
-                }
-            } else if (enemy.spec().roll().isPresent()
-                    && !enemy.armoured()
-                    && !(rollPending(enemy) && domeInReach(sortie, enemy) && !enemy.partAlive())
-                    && (shellback == null || y < shellback.renderY(1))) {
-                shellback = enemy;
-            }
-        }
-        if (bomber != null && bomberGap < BOMB_URGENT) {
-            return bomber;
-        }
-        if (herald != null) {
-            return herald;
-        }
-        return bomber != null ? bomber : shellback;
-    }
-
-    /** M5 part G: whether it guards a defended ally now (the synchronisation running, the ally standing). */
-    private static boolean guarding(Sortie sortie) {
-        return sortie.defending()
-                && sortie.defendStarted()
-                && sortie.defendSecondsLeft() > 0
-                && sortie.allyCount() > 0
-                && sortie.ally(0).alive();
-    }
-
-    /**
-     * M5 part G (design/campaign Level 13): while it guards the defended ally, the hooked unit on the screen to
-     * shoot first: a mortar lobbing at the ally, then a diver sent at it before its dive is past, then a walker
-     * with the ally within {@link #GUARD_ARC} of its facing, then any other hooked unit; nearest the ally
-     * within a rank. Null when nothing hooked is on the screen.
-     */
-    private static Enemy guardTarget(Sortie sortie) {
-        if (!guarding(sortie)) {
-            return null;
-        }
-        vanguard.sim.LevelScript.Defend defend = sortie.script().defend().orElseThrow();
-        double allyX = sortie.ally(0).renderX(1);
-        double allyY = sortie.ally(0).renderY(1);
-        Enemy best = null;
-        double bestScore = Double.POSITIVE_INFINITY;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double x = enemy.renderX(1);
-            double y = enemy.renderY(1);
-            if (x < 8 || x > PlayField.WIDTH - 8 || y < 10 || y > PlayField.HEIGHT - 10 || enemy.cloaked()) {
-                continue;
-            }
-            if (defend.mode(enemy.spec().slug()) == vanguard.sim.LevelScript.HookMode.NONE) {
-                continue;
-            }
-            double distance = Math.hypot(x - allyX, y - allyY);
-            int rank;
-            if (enemy.spec().gun().flatMap(vanguard.sim.EnemyGun::mortar).isPresent()) {
-                rank = 0;
-            } else if (enemy.spec().dive().isPresent()) {
-                // a diver sent at the ally: until its dive has crossed it
-                if (enemy.diving() && y < allyY - 40) {
-                    continue;
-                }
-                rank = 1;
-            } else if (enemy.walking()) {
-                double toAlly = Math.atan2(-(allyX - x), -(allyY - y));
-                double off = Math.abs(Math.IEEEremainder(toAlly - enemy.facing(), 2 * Math.PI));
-                rank = off <= GUARD_ARC ? 2 : 3;
-            } else {
-                rank = 3;
-            }
-            double score = rank * 10_000 + distance;
-            if (score < bestScore) {
-                bestScore = score;
-                best = enemy;
-            }
-        }
-        return best;
-    }
-
-    private static int steer(double shipX, double shipY, double targetX, double targetY) {
-        int commands = 0;
-        if (targetX < shipX - DEAD_ZONE) {
-            commands |= Command.LEFT.bit();
-        } else if (targetX > shipX + DEAD_ZONE) {
-            commands |= Command.RIGHT.bit();
-        }
-        if (targetY < shipY - DEAD_ZONE) {
-            commands |= Command.DOWN.bit();
-        } else if (targetY > shipY + DEAD_ZONE) {
-            commands |= Command.UP.bit();
-        }
-        return commands;
-    }
-
-    /** M5 part E: its height in an arena with slam lanes, px (low: the fans have room to spread). */
-    private static final double ARENA_Y = 70;
-    /** M5 part E: the planner counts a lane as struck from this long before its impact, s (a margin). */
-    private static final double LANE_WARNING = 0.15;
-    /** M5 part E: it keeps this far beside a telegraphed lane, px. */
-    private static final double LANE_GAP = 6;
-
-    /**
-     * M5 part H: the lowest root-burst growth on the screen above the ship (growing or grown), which must
-     * die before it scrolls off for the roots objective; null without one.
-     */
-    private static Enemy growth(Sortie sortie, double shipY) {
-        Enemy lowest = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double y = enemy.renderY(1);
-            if (enemy.rootBurst() >= 0
-                    && y < PlayField.HEIGHT - 10
-                    && y > shipY + 15
-                    && (lowest == null || y < lowest.renderY(1))) {
-                lowest = enemy;
-            }
-        }
-        return lowest;
-    }
-
-    /** M5 part H: its height under the airborne Siege Spire, px: out of the sweep's reach below the core. */
-    private static final double SWEEP_Y = 60;
-
-    /** M5 part H: the present arena boss without lanes (Level 14's Siege Spire), alive; null without one. */
-    private static SetPiece rootedBoss(Sortie sortie) {
-        for (int i = 0; i < sortie.setPieceCount(); i++) {
-            SetPiece piece = sortie.setPiece(i);
-            if (piece.present()
-                    && !piece.destroyed()
-                    && piece.arena().isPresent()
-                    && piece.arena().get().laneCount() == 0) {
-                return piece;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * M5 part H, the Siege Spire (decisions H1–H5 = a): the boss planner toward its lowest part that takes
-     * damage now (a root, then the maw, then the free core), below it; a launched Wraith holding (or about to
-     * hold) below the ship first, from above it, for the rear gun; under the airborne spire it keeps low,
-     * out of the sweep's reach. The lobs' markers are sidestepped before this (as Level 05's).
-     */
-    private static int spireMove(Sortie sortie, SetPiece boss) {
-        double shipX = sortie.ship().x();
-        double shipY = sortie.ship().y();
-        int lobber = lobbingPart(boss);
-        double targetX = boss.lifting() ? shipX : lobber >= 0 ? boss.partX(lobber) : vitalX(boss);
-        Enemy behind = holdingBelow(sortie, shipY, targetX);
-        if (behind != null) {
-            return bossMove(sortie, behind.renderX(1), behind.renderY(1) + AMBUSH_ABOVE);
-        }
-        double lowest = lobber >= 0 ? boss.partY(lobber) : lowestPart(boss);
-        double targetY = boss.lifted() ? SWEEP_Y : Math.min(CRUISE_Y, lowest - 70);
-        return bossMove(sortie, Math.clamp(targetX, 40, PlayField.WIDTH - 40), Math.max(40, targetY));
-    }
-
-    /**
-     * M5 part H: the living part that lobs (a mortar root) that takes damage now, the lowest first: the lobs'
-     * markers and rings cost the most, so those roots go first; -1 without one.
-     */
-    private static int lobbingPart(SetPiece boss) {
-        var attacks = boss.boss().orElseThrow().attacks();
-        int best = -1;
-        // Indexed: a for-each would allocate an iterator in the allocation measurements.
-        for (int a = 0; a < attacks.size(); a++) {
-            var attack = attacks.get(a);
-            if (attack.pattern() != vanguard.sim.BossSpec.Pattern.LOB) {
-                continue;
-            }
-            for (int k = 0; k < attack.parts().size(); k++) {
-                int p = attack.parts().get(k);
-                if (!boss.partWrecked(p) && !boss.partShielded(p) && (best < 0 || boss.partY(p) < boss.partY(best))) {
-                    best = p;
-                }
-            }
-        }
-        return best;
-    }
-
-    /**
-     * M5 part H: a launched Wraith in its flash or hold below the ship, the one nearest {@code x} (the part it
-     * shoots at), to line up over for the rear gun; null without one.
-     */
-    private static Enemy holdingBelow(Sortie sortie, double shipY, double x) {
-        Enemy nearest = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            if (holding(enemy)
-                    && enemy.renderY(1) < shipY
-                    && (nearest == null || Math.abs(enemy.renderX(1) - x) < Math.abs(nearest.renderX(1) - x))) {
-                nearest = enemy;
-            }
-        }
-        return nearest;
-    }
-
-    /** M5 part H: the height of the lowest part that takes damage now, px up; the boss's centre without one. */
-    private static double lowestPart(SetPiece boss) {
-        double lowest = Double.POSITIVE_INFINITY;
-        for (int p = 0; p < boss.partCount(); p++) {
-            if (!boss.partWrecked(p) && !boss.partShielded(p) && !boss.partArmoured(p)) {
-                lowest = Math.min(lowest, boss.partY(p));
-            }
-        }
-        return Double.isInfinite(lowest) ? boss.renderY(1) : lowest;
-    }
-
-    /** M5 part E: the present arena boss with slam lanes (engaged or arriving); null without one. */
-    private static SetPiece arenaBoss(Sortie sortie) {
-        for (int i = 0; i < sortie.setPieceCount(); i++) {
-            SetPiece piece = sortie.setPiece(i);
-            if (piece.present()
-                    && piece.arena().isPresent()
-                    && piece.arena().get().laneCount() > 0) {
-                return piece;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * M5 part E: the move in an arena with slam lanes: the boss planner toward what is exposed, kept
-     * beside every telegraphed lane (out of the one it is in first), a move that is still in a lane
-     * when it strikes counting as a hit.
-     */
-    private static int arenaMove(Sortie sortie, SetPiece boss, ArenaPlay play) {
-        var arena = boss.arena().orElseThrow();
-        double shipX = sortie.ship().x();
-        double half = HULL_X + LANE_GAP;
-        double wanted = arena.rooted()
-                ? rootedX(sortie, boss, shipX, play)
-                : play == ArenaPlay.ARMS ? armsFirstX(sortie, boss, shipX) : exposedX(boss, shipX);
-        double targetX = clearOfLanes(arena, wanted, half, shipX);
-        if (laneUnder(arena, arena.telegraphed(), shipX, half) > 0) {
-            // Out of the lane first, toward the nearer side clear of it (the target's x is beside it).
-            targetX = clearOfLanes(arena, shipX, half, shipX);
-        }
-        return bossMove(sortie, targetX, ARENA_Y, arena);
-    }
-
-    /**
-     * Round 40 (the rooted arms, design/enemies/bosses/harbour-kraken): what to line up under. Arm-first, the
-     * nearest living root over a lane holding a convoy ship a slam can still sink, its lane not telegraphed; then
-     * (both plays) the surfaced head's eye clear of the telegraphed lanes while it is up; else the nearest living
-     * root clear of them (the roots are always on the surface); else the head (waiting for it).
-     */
-    private static double rootedX(Sortie sortie, SetPiece boss, double shipX, ArenaPlay play) {
-        var arena = boss.arena().orElseThrow();
-        if (play == ArenaPlay.ARMS) {
-            double x = nearestRootX(boss, shipX, shipLanes(sortie));
-            if (!Double.isNaN(x)) {
-                return x;
-            }
-        }
-        if (arena.surfaceState() == vanguard.sim.SlamArena.SurfaceState.UP) {
-            return clearEyeX(boss, shipX);
-        }
-        double x = nearestRootX(boss, shipX, ~0);
-        return Double.isNaN(x) ? exposedX(boss, shipX) : x;
-    }
-
-    /** Round 40: the x of the living root nearest the ship over one of {@code lanes} not telegraphed; NaN without. */
-    private static double nearestRootX(SetPiece boss, double shipX, int lanes) {
-        var arena = boss.arena().orElseThrow();
-        double best = Double.NaN;
-        for (int a = 0; a < arena.armCount(); a++) {
-            int part = arena.armPart(a);
-            if (boss.partWrecked(part)
-                    || (arena.armLanes(a) & lanes) == 0
-                    || (arena.armLanes(a) & arena.telegraphed()) != 0) {
-                continue;
-            }
-            double x = boss.partX(part);
-            if (Double.isNaN(best) || Math.abs(x - shipX) < Math.abs(best - shipX)) {
-                best = x;
-            }
-        }
-        return best;
-    }
-
-    /**
-     * What to line up under: an arm out of the water (rising or awash) in a lane not about to be
-     * slammed, the nearest; else the surfaced head's nearer eye; else the head (waiting for it).
-     */
-    private static double exposedX(SetPiece boss, double shipX) {
-        var arena = boss.arena().orElseThrow();
-        double best = Double.NaN;
-        for (int a = 0; a < arena.armCount(); a++) {
-            int lane = arena.armLane(a);
-            if (lane == 0 || boss.partWrecked(arena.armPart(a)) || boss.partLayer(arena.armPart(a)) != Layer.GROUND) {
-                continue;
-            }
-            double x = arena.laneWidth() * (lane - 0.5);
-            if ((arena.telegraphed() & (1 << lane)) == 0
-                    && (Double.isNaN(best) || Math.abs(x - shipX) < Math.abs(best - shipX))) {
-                best = x;
-            }
-        }
-        if (!Double.isNaN(best)) {
-            return best;
-        }
-        int head = arena.surfacePart() >= 0 ? arena.surfacePart() : vitalPart(boss);
-        if (head < 0) {
-            return shipX;
-        }
-        double x = boss.partX(head);
-        // The eyes sit either side of the head's centre (the data's weak spots).
-        double eye = EYE_DX;
-        return Math.abs(shipX - (x - eye)) <= Math.abs(shipX - (x + eye)) ? x - eye : x + eye;
-    }
-
-    /**
-     * M5 part E, {@link ArenaPlay#ARMS}: what to line up under. The arm to cut is the living one
-     * guarding the most ships afloat (the fewer HP on a tie). While it must be cut: an arm lying awash
-     * past its impact, that one first; else (between single slams) beside the lane an arm is about to
-     * strike (the clamp beside the telegraphed lanes puts it there), that one first; else, while the
-     * head's window is open, its eye clear of the telegraphed lanes; else the bait: where the next slam
-     * costs least. Once a safe place exists it only baits and plays the head (its eyes also while it
-     * rises); with a cut out of reach, as {@link ArenaPlay#EYES}.
-     */
-    private static double armsFirstX(Sortie sortie, SetPiece boss, double shipX) {
-        var arena = boss.arena().orElseThrow();
-        int cut = armToCut(sortie, boss);
-        if (cut < 0) {
-            return exposedX(boss, shipX);
-        }
-        boolean volleys = volleys(boss);
-        // Once some place keeps every slam off the ships (the other arm severed and a free lane), the
-        // arm need not be cut: it baits there and shoots the head.
-        boolean guard = !safePlace(sortie, boss, volleys);
-        if (guard && !cuttable(sortie, boss, cut)) {
-            // The ships in its half are lost anyway: as the first pilot (an arm when exposed, else the head).
-            return exposedX(boss, shipX);
-        }
-        double x = guard ? awashX(boss, cut) : Double.NaN;
-        for (int a = 0; guard && a < arena.armCount() && Double.isNaN(x); a++) {
-            x = awashX(boss, a);
-        }
-        if (!Double.isNaN(x)) {
-            return x;
-        }
-        if (guard && !volleys) {
-            x = strikingX(boss, cut);
-            for (int a = 0; a < arena.armCount() && Double.isNaN(x); a++) {
-                x = strikingX(boss, a);
-            }
-            if (!Double.isNaN(x)) {
-                return x;
-            }
-        }
-        var head = arena.surfaceState();
-        if ((head == vanguard.sim.SlamArena.SurfaceState.UP
-                        || (head == vanguard.sim.SlamArena.SurfaceState.RISING && !guard))
-                && (!volleys || arena.telegraphed() != 0)) {
-            return clearEyeX(boss, shipX);
-        }
-        return baitX(sortie, boss, guard ? cut : -1, shipX);
-    }
-
-    /** Whether some place keeps the next slam (or volley) off every convoy ship afloat. */
-    private static boolean safePlace(Sortie sortie, SetPiece boss, boolean volley) {
-        var arena = boss.arena().orElseThrow();
-        for (int lane = 1; lane <= arena.laneCount(); lane++) {
-            for (int place = 0; place < 3; place++) {
-                double x = (lane - 0.5) * arena.laneWidth() + (place - 1) * (arena.laneWidth() / 2 - HULL_X - LANE_GAP);
-                double cost = volley ? volleyCost(sortie, boss, -1, x) : singleCost(sortie, boss, -1, x);
-                if (cost <= 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /** The damage it reckons to deal an arm lying awash once, for {@link #cuttable}. */
-    private static final double CUT_PER_SLAM = 70;
-    /** ... and the slams beyond the ships' spare ones it allows for (the free lanes' and the last one's). */
-    private static final double CUT_SLACK = 2;
-
-    /**
-     * Whether arm {@code cut} can be cut before its half's ships afloat have taken their last slam but
-     * one: the slams its HP take at {@link #CUT_PER_SLAM} against the slams they can spare (each slam
-     * in its half, all of them ships' lanes, is one the arm lies awash in). Otherwise the ships are lost
-     * anyway and it plays the head.
-     */
-    private static boolean cuttable(Sortie sortie, SetPiece boss, int cut) {
-        var arena = boss.arena().orElseThrow();
-        double spare = 0;
-        for (int k = 0; k < sortie.allyCount(); k++) {
-            int lane = sortie.allyLane(k);
-            if (lane > 0 && (arena.armLanes(cut) & (1 << lane)) != 0 && slammable(sortie, k)) {
-                spare += Math.max(0, slamsLeft(sortie, k) - 1);
-            }
-        }
-        return Math.ceil(boss.partHp(arena.armPart(cut)) / CUT_PER_SLAM) <= spare + CUT_SLACK;
-    }
-
-    /** The surfaced head's eye whose line is clear of the telegraphed lanes, the nearer if both are (or neither is). */
-    private static double clearEyeX(SetPiece boss, double shipX) {
-        var arena = boss.arena().orElseThrow();
-        double left = eye(boss, -1);
-        double right = eye(boss, 1);
-        if (Double.isNaN(left) || Double.isNaN(right)) {
-            return exposedX(boss, shipX);
-        }
-        double half = HULL_X + LANE_GAP;
-        boolean leftClear = laneUnder(arena, arena.telegraphed(), left, half) == 0;
-        boolean rightClear = laneUnder(arena, arena.telegraphed(), right, half) == 0;
-        if (leftClear != rightClear) {
-            return leftClear ? left : right;
-        }
-        return Math.abs(shipX - left) <= Math.abs(shipX - right) ? left : right;
-    }
-
-    /** Whether the boss's phase now slams in volleys (the head stays up between them). */
-    private static boolean volleys(SetPiece boss) {
-        var phases = boss.boss().orElseThrow().phases();
-        return boss.phase() < phases.size()
-                && phases.get(boss.phase()).arena().slamming() == vanguard.sim.BossSpec.Slamming.VOLLEY;
-    }
-
-    /** The x of arm {@code a}'s lane while it lies out of the water past its impact; NaN otherwise. */
-    private static double awashX(SetPiece boss, int a) {
-        var arena = boss.arena().orElseThrow();
-        int lane = arena.armLane(a);
-        if (lane == 0
-                || boss.partWrecked(arena.armPart(a))
-                || boss.partLayer(arena.armPart(a)) != Layer.GROUND
-                || (arena.telegraphed() & (1 << lane)) != 0) {
-            return Double.NaN;
-        }
-        return arena.laneWidth() * (lane - 0.5);
-    }
-
-    /** The x of the lane arm {@code a} is about to strike (telegraphed or rising); NaN otherwise. */
-    private static double strikingX(SetPiece boss, int a) {
-        var arena = boss.arena().orElseThrow();
-        var state = arena.armState(a);
-        if (boss.partWrecked(arena.armPart(a))
-                || (state != vanguard.sim.SlamArena.ArmState.TELEGRAPH
-                        && state != vanguard.sim.SlamArena.ArmState.RISE)) {
-            return Double.NaN;
-        }
-        return arena.laneWidth() * (arena.armFirstLane(a) - 0.5);
-    }
-
-    /**
-     * The living slam arm guarding the most convoy ships afloat (the fewer HP on a tie); -1 when both
-     * are severed or no living arm's half holds a ship afloat.
-     */
-    private static int armToCut(Sortie sortie, SetPiece boss) {
-        var arena = boss.arena().orElseThrow();
-        int best = -1;
-        int bestShips = -1;
-        for (int a = 0; a < arena.armCount(); a++) {
-            int part = arena.armPart(a);
-            if (boss.partWrecked(part)) {
-                continue;
-            }
-            int ships = Integer.bitCount(shipLanes(sortie) & arena.armLanes(a));
-            if (ships > bestShips || (ships == bestShips && boss.partHp(part) < boss.partHp(arena.armPart(best)))) {
-                best = a;
-                bestShips = ships;
-            }
-        }
-        // With no ship afloat in a living arm's half there is nothing left to guard: the head first.
-        return bestShips > 0 ? best : -1;
-    }
-
-    /** The lanes holding a convoy ship a slam can still sink, bit {@code n} for lane {@code n}. */
-    private static int shipLanes(Sortie sortie) {
-        int mask = 0;
-        for (int k = 0; k < sortie.allyCount(); k++) {
-            if (slammable(sortie, k) && sortie.allyLane(k) > 0) {
-                mask |= 1 << sortie.allyLane(k);
-            }
-        }
-        return mask;
-    }
-
-    private static boolean slammable(Sortie sortie, int k) {
-        return sortie.ally(k).alive() && sortie.allySpec(k).slams() > 0;
-    }
-
-    /** The slams convoy ship {@code k} still takes before it sinks (0 when it cannot be slammed). */
-    private static double slamsLeft(Sortie sortie, int k) {
-        if (!slammable(sortie, k)) {
-            return 0;
-        }
-        return (sortie.allySpec(k).hp() - sortie.ally(k).hitsTaken())
-                / sortie.allySpec(k).slams();
-    }
-
-    /**
-     * Where the next slam (or volley) costs least while arm {@code cut} lives. It weighs a few places
-     * (each lane's centre and edges, the surfaced head's eyes): the lanes the boss's rules would slam
-     * from there (design/enemies/bosses/harbour-kraken: a single slam takes the ship's lane or the
-     * convoy ship's nearest it in turn, a choice in a severed half going to the other; a volley takes
-     * both, an arm with no target its half's lane nearest the ship), each lane by what its ship afloat
-     * would lose (a ship on its last slam far more), less a little for each slam of the arm to cut
-     * (cut there when it lies awash), plus a little for the way there.
-     */
-    private static double baitX(Sortie sortie, SetPiece boss, int cut, double shipX) {
-        var arena = boss.arena().orElseThrow();
-        boolean volley = volleys(boss);
-        double best = shipX;
-        double bestScore = Double.POSITIVE_INFINITY;
-        int lanes = arena.laneCount();
-        for (int c = 0; c < 3 * lanes + 2; c++) {
-            double x;
-            if (c < 3 * lanes) {
-                int lane = c / 3 + 1;
-                int place = c % 3;
-                x = (lane - 0.5) * arena.laneWidth() + (place - 1) * (arena.laneWidth() / 2 - HULL_X - LANE_GAP);
-            } else {
-                x = eye(boss, c == 3 * lanes ? -1 : 1);
-                if (Double.isNaN(x)) {
-                    continue;
-                }
-            }
-            double score = volley ? volleyCost(sortie, boss, cut, x) : singleCost(sortie, boss, cut, x);
-            score += Math.abs(x - shipX) / BAIT_TRAVEL;
-            if (c >= 3 * lanes && arena.surfaceState() == vanguard.sim.SlamArena.SurfaceState.UP) {
-                score -= BAIT_EYE;
-            }
-            if (score < bestScore) {
-                bestScore = score;
-                best = x;
-            }
-        }
-        return best;
-    }
-
-    /** It weighs a place's way there at one point per this many px. */
-    private static final double BAIT_TRAVEL = 120;
-    /** An open eye to shoot while it waits is worth this many points. */
-    private static final double BAIT_EYE = 2.5;
-    /** A slam of the arm to cut is worth this many points (it lies awash, ready to be cut). */
-    private static final double BAIT_CUT = 3;
-
-    /** The x of the surfaced head's eye on {@code side} (-1 left, 1 right) while it is rising or up; NaN otherwise. */
-    private static double eye(SetPiece boss, int side) {
-        var arena = boss.arena().orElseThrow();
-        var state = arena.surfaceState();
-        if (arena.surfacePart() < 0
-                || (state != vanguard.sim.SlamArena.SurfaceState.UP
-                        && state != vanguard.sim.SlamArena.SurfaceState.RISING)) {
-            return Double.NaN;
-        }
-        return boss.partX(arena.surfacePart()) + side * EYE_DX;
-    }
-
-    /** A single slam from x: the worse of its two choices (the alternate rule's turn is not known). */
-    private static double singleCost(Sortie sortie, SetPiece boss, int cut, double x) {
-        var arena = boss.arena().orElseThrow();
-        int player = arena.laneOf(x);
-        int ship = nearestShipLane(sortie, arena, x);
-        double worst = Double.NEGATIVE_INFINITY;
-        for (int turn = 0; turn < 2; turn++) {
-            int first = turn == 0 || ship == 0 ? player : ship;
-            int other = turn == 0 ? ship : player;
-            int lane = first;
-            int arm = livingOwner(boss, first);
-            if (arm < 0 && other > 0 && livingOwner(boss, other) >= 0) {
-                lane = other;
-                arm = livingOwner(boss, other);
-            }
-            if (arm < 0) {
-                arm = firstLivingArm(boss);
-                lane = arm < 0 ? 0 : nearestOwnedLane(arena, arm, x);
-            }
-            double cost = slamCost(sortie, lane) - (arm == cut ? BAIT_CUT : 0);
-            worst = Math.max(worst, cost);
-        }
-        return worst;
-    }
-
-    /** A volley from x: the ship's lane and the nearest convoy ship's, each by its living owner; an arm without one, its lane nearest x. */
-    private static double volleyCost(Sortie sortie, SetPiece boss, int cut, double x) {
-        var arena = boss.arena().orElseThrow();
-        int player = arena.laneOf(x);
-        int ship = nearestShipLane(sortie, arena, x);
-        double cost = 0;
-        for (int a = 0; a < arena.armCount(); a++) {
-            if (boss.partWrecked(arena.armPart(a))) {
-                continue;
-            }
-            int mine = arena.armLanes(a);
-            int lane = (mine & (1 << player)) != 0 ? player : ship > 0 && (mine & (1 << ship)) != 0 ? ship : 0;
-            if (lane == 0) {
-                lane = nearestOwnedLane(arena, a, x);
-            }
-            cost += slamCost(sortie, lane) - (a == cut ? BAIT_CUT : 0);
-        }
-        return cost;
-    }
-
-    /** What a slam in {@code lane} costs: what its ship afloat loses, a ship on its last slam far more; 0 without one. */
-    private static double slamCost(Sortie sortie, int lane) {
-        double cost = 0;
-        for (int k = 0; k < sortie.allyCount(); k++) {
-            if (lane > 0 && sortie.allyLane(k) == lane && slammable(sortie, k)) {
-                cost = Math.max(cost, slamsLeft(sortie, k) <= 1 ? 100 : 10 - slamsLeft(sortie, k));
-            }
-        }
-        return cost;
-    }
-
-    /** The lane of the convoy ship afloat nearest x (the lower on a tie); 0 for none. */
-    private static int nearestShipLane(Sortie sortie, vanguard.sim.SlamArena arena, double x) {
-        int ships = shipLanes(sortie);
-        int best = 0;
-        double bestDistance = Double.POSITIVE_INFINITY;
-        for (int lane = 1; lane <= arena.laneCount(); lane++) {
-            double distance = Math.abs((lane - 0.5) * arena.laneWidth() - x);
-            if ((ships & (1 << lane)) != 0 && distance < bestDistance) {
-                bestDistance = distance;
-                best = lane;
-            }
-        }
-        return best;
-    }
-
-    /** Arm {@code a}'s lane whose centre is nearest x (the lower on a tie). */
-    private static int nearestOwnedLane(vanguard.sim.SlamArena arena, int a, double x) {
-        int best = 0;
-        double bestDistance = Double.POSITIVE_INFINITY;
-        for (int lane = 1; lane <= arena.laneCount(); lane++) {
-            double distance = Math.abs((lane - 0.5) * arena.laneWidth() - x);
-            if ((arena.armLanes(a) & (1 << lane)) != 0 && distance < bestDistance) {
-                bestDistance = distance;
-                best = lane;
-            }
-        }
-        return best;
-    }
-
-    /** The living arm that owns {@code lane}; -1 for none. */
-    private static int livingOwner(SetPiece boss, int lane) {
-        var arena = boss.arena().orElseThrow();
-        for (int a = 0; a < arena.armCount(); a++) {
-            if ((arena.armLanes(a) & (1 << lane)) != 0 && !boss.partWrecked(arena.armPart(a))) {
-                return a;
-            }
-        }
-        return -1;
-    }
-
-    private static int firstLivingArm(SetPiece boss) {
-        var arena = boss.arena().orElseThrow();
-        for (int a = 0; a < arena.armCount(); a++) {
-            if (!boss.partWrecked(arena.armPart(a))) {
-                return a;
-            }
-        }
-        return -1;
-    }
-
-    /** M5 part E: the Kraken's eyes lie this far either side of its head's centre, px (its data's spots). */
-    private static final double EYE_DX = 41.5;
-
-    private static int vitalPart(SetPiece boss) {
+    static int vitalPart(SetPiece boss) {
         for (int p = 0; p < boss.partCount(); p++) {
             if (boss.spec().parts().get(p).vital()) {
                 return p;
             }
         }
         return -1;
-    }
-
-    /** A telegraphed lane the hull (half width {@code half}) at x overlaps; 0 for none. */
-    private static int laneUnder(vanguard.sim.SlamArena arena, int mask, double x, double half) {
-        for (int lane = 1; lane <= arena.laneCount(); lane++) {
-            double left = (lane - 1) * arena.laneWidth();
-            if ((mask & (1 << lane)) != 0 && x + half > left && x - half < left + arena.laneWidth()) {
-                return lane;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * An x beside every telegraphed lane: x itself when clear, else beside the run of telegraphed
-     * lanes it lies in, on the side nearer {@code from} that is on the play field.
-     */
-    private static double clearOfLanes(vanguard.sim.SlamArena arena, double x, double half, double from) {
-        int mask = arena.telegraphed();
-        int lane = laneUnder(arena, mask, x, half);
-        if (lane == 0) {
-            return x;
-        }
-        int lo = lane;
-        int hi = lane;
-        while (lo > 1 && (mask & (1 << (lo - 1))) != 0) {
-            lo--;
-        }
-        while (hi < arena.laneCount() && (mask & (1 << (hi + 1))) != 0) {
-            hi++;
-        }
-        double left = (lo - 1) * arena.laneWidth() - half;
-        double right = hi * arena.laneWidth() + half;
-        boolean leftOk = left >= 30;
-        boolean rightOk = right <= PlayField.WIDTH - 30;
-        if (leftOk && (!rightOk || Math.abs(left - from) <= Math.abs(right - from))) {
-            return left;
-        }
-        return rightOk ? right : x;
-    }
-
-    /** The moves the boss-fight planner weighs: stay, the four sides, the four diagonals. */
-    private static final int[] MOVES = {
-        0,
-        Command.LEFT.bit(),
-        Command.RIGHT.bit(),
-        Command.UP.bit(),
-        Command.DOWN.bit(),
-        Command.LEFT.bit() | Command.UP.bit(),
-        Command.RIGHT.bit() | Command.UP.bit(),
-        Command.LEFT.bit() | Command.DOWN.bit(),
-        Command.RIGHT.bit() | Command.DOWN.bit()
-    };
-
-    private static final double DIAGONAL = Math.sqrt(0.5);
-    private static final double[] MOVE_X = {0, -1, 1, 0, 0, -DIAGONAL, DIAGONAL, -DIAGONAL, DIAGONAL};
-    private static final double[] MOVE_Y = {0, 0, 0, 1, -1, DIAGONAL, DIAGONAL, -DIAGONAL, -DIAGONAL};
-    /** How far ahead the planner looks, s, in samples of {@link #SAMPLE} s. */
-    private static final int SAMPLES = 12;
-
-    private static final double SAMPLE = 0.05;
-    /** The ship's hull from its centre, px, with a small bullet's radius added. */
-    private static final double HULL_X = 22;
-
-    private static final double HULL_Y = 25;
-    /** A move is safe when nothing comes closer to the hull than this in the look-ahead, px. */
-    private static final double SAFE = 6;
-    /** The band of the field it prefers while it dodges a boss, px from the left. */
-    private static final double BAND_LEFT = 130;
-
-    private static final double BAND_RIGHT = PlayField.WIDTH - 130.0;
-
-    /**
-     * In a boss fight: the move toward the boss's vital part ({@code targetX}, {@code targetY}) if
-     * no bullet or air enemy comes too close to the hull while it flies it for the next 0.6 s (each
-     * flying straight on, the ship at full speed); otherwise the safe move that keeps nearest the
-     * target and the field's centre band (it keeps away from the edges, where an aimed burst traps
-     * it); with no safe move, the one that keeps farthest from them.
-     */
-    private static int bossMove(Sortie sortie, double targetX, double targetY) {
-        return bossMove(sortie, targetX, targetY, null);
-    }
-
-    /** As {@link #bossMove(Sortie, double, double)}; with {@code lanes} (M5 part E) a move into a lane about to be slammed is a hit. */
-    private static int bossMove(Sortie sortie, double targetX, double targetY, vanguard.sim.SlamArena lanes) {
-        double shipX = sortie.ship().x();
-        double shipY = sortie.ship().y();
-        int wanted = steer(shipX, shipY, targetX, targetY);
-        int best = -1;
-        double bestScore = Double.NEGATIVE_INFINITY;
-        int clearest = 0;
-        double clearestDistance = Double.NEGATIVE_INFINITY;
-        for (int m = 0; m < MOVES.length; m++) {
-            double clearance = clearance(sortie, MOVE_X[m], MOVE_Y[m], lanes);
-            if (clearance > clearestDistance) {
-                clearestDistance = clearance;
-                clearest = m;
-            }
-            if (clearance < SAFE) {
-                continue;
-            }
-            if (MOVES[m] == wanted) {
-                return wanted;
-            }
-            double x = ahead(shipX, MOVE_X[m], sortie, true);
-            double y = ahead(shipY, MOVE_Y[m], sortie, false);
-            double score = -Math.abs(x - targetX)
-                    - 0.5 * Math.abs(y - targetY)
-                    - 2 * Math.max(0, Math.max(BAND_LEFT - x, x - BAND_RIGHT));
-            if (score > bestScore) {
-                bestScore = score;
-                best = m;
-            }
-        }
-        return MOVES[best >= 0 ? best : clearest];
-    }
-
-    /** Where a move takes the ship in two samples, inside its bounds. */
-    private static double ahead(double from, double direction, Sortie sortie, boolean horizontal) {
-        double margin = sortie.ship().spec().edgeLimit();
-        double to = from + direction * sortie.ship().spec().speed() * 2 * SAMPLE;
-        return Math.clamp(to, margin, (horizontal ? PlayField.WIDTH : PlayField.HEIGHT) - margin);
-    }
-
-    /**
-     * The closest any enemy bullet or air enemy comes to the hull's box over the look-ahead while
-     * the ship flies (dx, dy) at full speed, px (0 = a hit).
-     */
-    private static double clearance(Sortie sortie, double dx, double dy, vanguard.sim.SlamArena lanes) {
-        double speed = sortie.ship().spec().speed();
-        double margin = sortie.ship().spec().edgeLimit();
-        double x0 = sortie.ship().x();
-        double y0 = sortie.ship().y();
-        double nearest = Double.POSITIVE_INFINITY;
-        for (int k = 1; k <= SAMPLES; k++) {
-            double t = k * SAMPLE;
-            double x = Math.clamp(x0 + dx * speed * t, margin, PlayField.WIDTH - margin);
-            double y = Math.clamp(y0 + dy * speed * t, margin, PlayField.HEIGHT - margin);
-            double steps = t / SimStep.SECONDS;
-            if (lanes != null && y - HULL_Y < lanes.laneTop()) {
-                for (int lane = 1; lane <= lanes.laneCount(); lane++) {
-                    double left = (lane - 1) * lanes.laneWidth();
-                    if (lanes.untilImpact(lane) <= t + LANE_WARNING
-                            && x + HULL_X + LANE_GAP > left
-                            && x - HULL_X - LANE_GAP < left + lanes.laneWidth()) {
-                        return 0;
-                    }
-                }
-            }
-            for (int i = 0; i < sortie.bulletCount(); i++) {
-                EnemyBullet bullet = sortie.bullet(i);
-                double bx = bullet.renderX(1) + (bullet.renderX(1) - bullet.renderX(0)) * steps;
-                double by = bullet.renderY(1) + (bullet.renderY(1) - bullet.renderY(0)) * steps;
-                nearest = Math.min(nearest, gap(bx - x, by - y, HULL_X, HULL_Y));
-            }
-            for (int i = 0; i < sortie.enemyCount(); i++) {
-                Enemy enemy = sortie.enemy(i);
-                // M7 part B: nor a buried one (it touches nothing).
-                if (enemy.layer() == Layer.GROUND || !enemy.layer().touchable()) {
-                    continue;
-                }
-                double ex = enemy.renderX(1) + (enemy.renderX(1) - enemy.renderX(0)) * steps;
-                double ey = enemy.renderY(1) + (enemy.renderY(1) - enemy.renderY(0)) * steps;
-                nearest = Math.min(
-                        nearest,
-                        gap(
-                                ex - x,
-                                ey - y,
-                                HULL_X + enemy.hitbox().width() / 2,
-                                HULL_Y + enemy.hitbox().height() / 2));
-            }
-        }
-        return nearest;
-    }
-
-    /** The distance between a point (dx, dy) from a box's centre and the box (halfW, halfH); 0 inside. */
-    private static double gap(double dx, double dy, double halfW, double halfH) {
-        return Math.hypot(Math.max(0, Math.abs(dx) - halfW), Math.max(0, Math.abs(dy) - halfH));
     }
 
     /** A set piece on the player's layer, or null. */
@@ -1800,7 +377,7 @@ public final class Autopilot {
      * Where to line up under a set piece: its vital part, while it lives, else its centre; under a
      * boss, its lowest part that takes damage now (a head, then the core).
      */
-    private static double vitalX(SetPiece piece) {
+    static double vitalX(SetPiece piece) {
         if (piece.boss().isPresent()) {
             int lowest = -1;
             for (int p = 0; p < piece.partCount(); p++) {
@@ -1822,202 +399,5 @@ public final class Autopilot {
 
     private static double bodyBottom(SetPiece piece) {
         return piece.renderY(1) - piece.spec().body().height() / 2;
-    }
-
-    /**
-     * Level 05: the side to slip to out of a mortar's marker, sideways only and toward the battery
-     * it is shooting at if there is one (it keeps its line); 0 when no marker lies under it.
-     */
-    private static double lobThreat(Sortie sortie, double shipX, double shipY) {
-        for (int i = 0; i < sortie.lobCount(); i++) {
-            Lob lob = sortie.lob(i);
-            double dx = lob.targetX() - shipX;
-            double dy = lob.targetY() - shipY;
-            double reach = lob.impactRadius() + 30;
-            if (dx * dx + dy * dy < reach * reach) {
-                Enemy battery = battery(sortie, shipY);
-                if (battery != null && Math.abs(battery.renderX(1) - lob.targetX()) > reach) {
-                    return battery.renderX(1) < shipX ? -1 : 1;
-                }
-                return away(dx, shipX);
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * The side to dodge a lit rail, a rising spore or large debris to: negative = left, positive =
-     * right, 0 = nothing close.
-     */
-    private static double hazard(Sortie sortie, double shipX, double shipY) {
-        if (sortie.sled().isPresent() && sortie.sled().get().lit()) {
-            double dx = sortie.sled().get().spec().x() - shipX;
-            if (Math.abs(dx) < RAIL_CLEARANCE) {
-                return dx >= 0 ? -1 : 1;
-            }
-        }
-        for (int i = 0; i < sortie.mineCount(); i++) {
-            Mine mine = sortie.mine(i);
-            double dx = mine.renderX(1) - shipX;
-            double dy = mine.renderY(1) - shipY;
-            if (mine.rising() > 0.5 && Math.abs(dx) < 26 && dy > -16 && dy < DANGER) {
-                return away(dx, shipX);
-            }
-        }
-        for (int i = 0; i < sortie.debrisCount(); i++) {
-            Debris chunk = sortie.debris(i);
-            double dx = chunk.renderX(1) - shipX;
-            double dy = chunk.renderY(1) - shipY;
-            double halfW = chunk.spec().size().width() / 2;
-            double halfH = chunk.spec().size().height() / 2;
-            if ((chunk.large() || chunk.thrown())
-                    && Math.abs(dx) < halfW + 30
-                    && dy > -halfH - 20
-                    && dy < halfH + DANGER) {
-                return away(dx, shipX);
-            }
-        }
-        return 0;
-    }
-
-    /** The side to dodge bullets and rammers to: negative = left, positive = right, 0 = nothing close. */
-    private static double threat(Sortie sortie, double shipX, double shipY) {
-        // Level 05: with a battery unit on the screen it holds its line and dodges only the closest bullets.
-        boolean holding = battery(sortie, shipY) != null || hardenedTarget(sortie) != null;
-        double bulletDx = holding ? 18 : 24;
-        double bulletDy = holding ? 40 : DANGER;
-        boolean fromBelow = sortie.airEscort();
-        for (int i = 0; i < sortie.bulletCount(); i++) {
-            EnemyBullet bullet = sortie.bullet(i);
-            double dx = bullet.renderX(1) - shipX;
-            double dy = bullet.renderY(1) - shipY;
-            if (Math.abs(dx) < bulletDx && dy > -10 && dy < bulletDy) {
-                return away(dx, shipX);
-            }
-            // Level 10: a Wraith's burst comes up the screen from below.
-            if (fromBelow
-                    && Math.abs(dx) < bulletDx
-                    && dy <= -10
-                    && dy > -DANGER
-                    && bullet.renderY(1) > bullet.renderY(0)) {
-                return away(dx, shipX);
-            }
-        }
-        // Level 05: the batteries' units lie on the ground and cannot ram, so it flies over them; M5 part G:
-        // so do Level 13's boats and walkers round the relay.
-        boolean overGround = !sortie.script().targets().isEmpty() || sortie.defending();
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            // M7 part B: a buried Burrower touches nothing; it is not dodged.
-            if ((overGround && enemy.layer() == Layer.GROUND)
-                    || !enemy.layer().touchable()
-                    || enemy.cloaked()
-                    || holding(enemy)) {
-                continue;
-            }
-            double dx = enemy.renderX(1) - shipX;
-            double dy = enemy.renderY(1) - shipY;
-            // Level 10: a wide body (a Wraith on its way out) is dodged by its width.
-            double reach = fromBelow ? Math.max(30, enemy.hitbox().width() / 2 + HULL_X + 4) : 30;
-            if (Math.abs(dx) < reach && Math.abs(dy) < DANGER) {
-                if (enemy.ambushPhase() == Enemy.AmbushPhase.EXIT) {
-                    // it leaves for the side lane nearer its hold point: toward the middle, out of its way
-                    return enemy.renderX(1) <= PlayField.WIDTH / 2.0 ? 1 : -1;
-                }
-                return away(dx, shipX);
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * M7 part B: the Burrower to line up under (Level 15): of those bulging or up above the ship, the one whose
-     * window closes first (a bulging one's after an up one's); null for none.
-     */
-    private static Enemy burrower(Sortie sortie, double shipY) {
-        Enemy best = null;
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            Enemy.BurrowPhase phase = enemy.burrowPhase();
-            if ((phase == Enemy.BurrowPhase.BULGE || phase == Enemy.BurrowPhase.SURFACED)
-                    && enemy.burrowSpotY() > shipY + 40
-                    && (best == null
-                            || (phase == Enemy.BurrowPhase.SURFACED
-                                    && best.burrowPhase() == Enemy.BurrowPhase.BULGE))) {
-                best = enemy;
-            }
-        }
-        return best;
-    }
-
-    /** Level 10: a rear-ambush unit at its hold point (flashing or holding): it stays put, so it is lined up over, not dodged. */
-    private static boolean holding(Enemy enemy) {
-        return enemy.ambushPhase() == Enemy.AmbushPhase.DECLOAK || enemy.ambushPhase() == Enemy.AmbushPhase.HOLD;
-    }
-
-    /** Level 10: whether a rammer or a rising bullet is close below the ship (then it dodges sideways only). */
-    private static boolean fromBelow(Sortie sortie, double shipX, double shipY) {
-        for (int i = 0; i < sortie.bulletCount(); i++) {
-            EnemyBullet bullet = sortie.bullet(i);
-            double dy = bullet.renderY(1) - shipY;
-            if (Math.abs(bullet.renderX(1) - shipX) < 30 && dy < 0 && dy > -DANGER) {
-                return true;
-            }
-        }
-        for (int i = 0; i < sortie.enemyCount(); i++) {
-            Enemy enemy = sortie.enemy(i);
-            double dy = enemy.renderY(1) - shipY;
-            if (!enemy.cloaked()
-                    && enemy.layer().touchable()
-                    && Math.abs(enemy.renderX(1) - shipX) < 40
-                    && dy < 0
-                    && dy > -DANGER - 30) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static double away(double dx, double shipX) {
-        if (shipX < 60) {
-            return 1;
-        }
-        if (shipX > PlayField.WIDTH - 60) {
-            return -1;
-        }
-        return dx >= 0 ? -1 : 1;
-    }
-
-    /**
-     * Level 10: a destructible on the ground that hides a secret (the ferry hatch), above the ship and
-     * not yet past the screen's middle, where its crate can still drift down to the ship; null for none.
-     */
-    private static GroundObject secretTarget(Sortie sortie, double shipY) {
-        for (int i = 0; i < sortie.groundObjectCount(); i++) {
-            GroundObject object = sortie.groundObject(i);
-            double y = object.renderY(1);
-            if (!object.spent()
-                    && object.spec().secretIndex() >= 0
-                    && y > Math.max(shipY + 30, PlayField.HEIGHT / 2.0)
-                    && y < PlayField.HEIGHT + object.spec().size().height()) {
-                return object;
-            }
-        }
-        return null;
-    }
-
-    private static GroundObject lowestGround(Sortie sortie, double shipY) {
-        GroundObject lowest = null;
-        for (int i = 0; i < sortie.groundObjectCount(); i++) {
-            GroundObject object = sortie.groundObject(i);
-            double y = object.renderY(1);
-            if (!object.spent()
-                    && y > shipY + 30
-                    && y < PlayField.HEIGHT
-                    && (lowest == null || y < lowest.renderY(1))) {
-                lowest = object;
-            }
-        }
-        return lowest;
     }
 }

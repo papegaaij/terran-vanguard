@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
@@ -62,9 +63,9 @@ class Level01Test {
                                 : 0))
                 .sum();
         int crates = level.groundObjects().stream()
-                .mapToInt(LevelScript.GroundObjectSpec::crateCredits)
+                .mapToInt(GroundObjectSpec::crateCredits)
                 .sum();
-        int total = kills + ground + crates + level.secondary().credits();
+        int total = kills + ground + crates + level.objectives().secondary().credits();
 
         // The budget is the typical haul now (TypicalHaulTest); a perfect run earns well above it.
         assertEquals(1_000, total, "kills " + kills + ", ground " + ground + ", crates " + crates);

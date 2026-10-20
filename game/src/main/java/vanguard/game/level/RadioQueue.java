@@ -29,6 +29,12 @@ import vanguard.game.ui.Words;
  * <p>A spoken line (design/audio/voice) holds its subtitle until its voice ends: a page stays up at
  * least until the voice has reached the page's end (in characters), the last page until the voice
  * is over, so a line is on the radio for the longer of its text time and its voice.
+ *
+ * <p>Once the level is won ({@link #outro}) the radio belongs to the closing lines (the user's playtest
+ * of 2026-10-19: Level 15's level-end line was cut short by the debrief): no event or phase line queues
+ * or waits any more, and a line that is no closing line closes as soon as its voice has ended, without
+ * holding its text, so the closing lines open sooner; {@link #closingLeft} tells the outro whether a
+ * closing line still has to be heard.
  */
 public final class RadioQueue {
     public static final int LINE_CHARS = 22;
@@ -167,6 +173,8 @@ public final class RadioQueue {
     private float opened;
     private float gap;
     private float charsPerSecond = GameplaySettings.DEFAULT_TEXT_SPEED;
+    /** Whether the level is won: the radio plays out its closing lines ({@link #outro}). */
+    private boolean outro;
 
     /** The typing speed: the Gameplay tab's text speed. */
     public void charsPerSecond(float speed) {
@@ -195,6 +203,9 @@ public final class RadioQueue {
             Optional<String> voice,
             float voiceSeconds) {
         Message message = new Message(speaker, portrait, expression, wrap(line), distorted, voice, voiceSeconds);
+        if (outro && (priority == Priority.EVENT || priority == Priority.PHASE)) {
+            return message;
+        }
         boolean free = current.isEmpty() && queue.isEmpty();
         queue.add(new Waiting(message, priority, priority == Priority.CLOSING && free));
         return message;
@@ -258,6 +269,34 @@ public final class RadioQueue {
         queue.clear();
         current = Optional.empty();
         gap = 0;
+        outro = false;
+    }
+
+    /**
+     * The level is won: from now on the radio plays out its closing lines. The event and phase lines
+     * still waiting are dropped and new ones are not queued, and a spoken line on the radio that is no
+     * closing line (a bark, a timed line, a call's reply) closes once its voice has ended (a bark of
+     * Rook's as the level ends no longer holds the level-end line back by its text time).
+     */
+    public void outro() {
+        outro = true;
+        queue.removeIf(waiting -> waiting.priority == Priority.EVENT || waiting.priority == Priority.PHASE);
+    }
+
+    /**
+     * Whether a closing line still has to be heard: one waits (or was interrupted and waits to play
+     * again), or one is on the radio and its voice still speaks (without a voice: its text is not yet
+     * typed out). The outro does not hand over to the debrief before it is heard in full.
+     */
+    public boolean closingLeft() {
+        if (queue.stream().anyMatch(waiting -> waiting.priority == Priority.CLOSING)) {
+            return true;
+        }
+        if (current.isEmpty() || currentPriority != Priority.CLOSING) {
+            return false;
+        }
+        Message message = current.get();
+        return message.voiceSeconds() > 0 ? opened < message.voiceSeconds() : untilClosed() == Float.POSITIVE_INFINITY;
     }
 
     /** An update with no timed line ahead. */
@@ -302,6 +341,14 @@ public final class RadioQueue {
         }
         opened += seconds;
         Message message = current.get();
+        if (outro
+                && currentPriority != Priority.CLOSING
+                && message.voiceSeconds() > 0
+                && opened >= message.voiceSeconds()) {
+            current = Optional.empty();
+            gap = GAP_SECONDS;
+            return Change.CLOSED;
+        }
         int length = message.length(page);
         if (typed < length) {
             int before = (int) typed;

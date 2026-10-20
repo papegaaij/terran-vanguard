@@ -29,7 +29,10 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      Herald facing down with its crest lit, the Shellback walking down, its vent swollen);
                      dust-devil, ghost-drone (Level 18, M7 part E batch: the production models of
                      tools/art/storm_units.py, the Dust Devil in its rise with the lime core showing, the
-                     Ghost Drone nose down with its red eye)
+                     Ghost Drone nose down with its red eye); warden-tank, revenant-walker (Level 19, M7
+                     part F batch: the production models of tools/art/warden_tank.py, the grey hull driving
+                     down with the turret aimed along it, and tools/art/revenant_walker.py, walking down in
+                     walk phase 0 with its pods aimed ahead and the flamer at rest, scaled to fit)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -41,7 +44,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      mid-boss, M5 part E batch: the head and mantle of the `harbour-kraken-sub` sprite);
                      siege-spire (L14's act boss, M5 part H batch: the rooted body as the arena first
                      shows it, the production trunk, roots and pods of tools/art/siege_spire.py placed by
-                     its pivots)
+                     its pivots); revenant-walker (L19's mid-boss, M7 part F batch: the "unclassified,
+                     huge, ground" contact, the production walker's sprites at heading 0 placed by
+                     its pivots, broken by the unclassified pictures' sensor noise)
   design/ui/hangar/concept/intel-final-r13-a.png   review sheet of the UI batch's pictures
   design/ui/hangar/concept/intel-final-r16-a.png   review sheet of the M4 part C batch's
   design/ui/hangar/concept/intel-final-r17-a.png   review sheet of the M4 part D batch's
@@ -57,6 +62,7 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
   design/ui/hangar/concept/intel-final-r39-a.png   review sheet of the M7 part C batch's
   design/ui/hangar/concept/intel-final-r40-a.png   review sheet of the M7 part D batch's
   design/ui/hangar/concept/intel-final-r41-a.png   review sheet of the M7 part E batch's
+  design/ui/hangar/concept/intel-final-r42-a.png   review sheet of the M7 part F batch's
 
 The names are the enemy's or boss's name as a slug (vanguard.game.render.Portraits.slug). A
 portrait is the unit's chosen round-04 model (tools/concept/enemies_r04.py, imported unchanged) in
@@ -97,6 +103,7 @@ import coilwyrm  # noqa: E402  (the Coilwyrm's production models)
 import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import creeper  # noqa: E402  (the Creeper's production model)
 import reef_spitter  # noqa: E402  (the Reef Spitter's production gun and raft models)
+import revenant_walker  # noqa: E402  (the Revenant Walker's production models and sprites)
 import hive_node  # noqa: E402  (the Hive Node's production model)
 import lamprey  # noqa: E402  (the Lamprey's production model)
 import leviathan  # noqa: E402  (the Leviathan's production model)
@@ -107,6 +114,7 @@ import siege_units  # noqa: E402  (the Choir Herald's and the Shellback's produc
 import skimmer  # noqa: E402  (the Skimmer's production model and headings)
 import storm_units  # noqa: E402  (the Dust Devil's and the Ghost Drone's production models)
 import vrell_l03  # noqa: E402  (the Whirl Seed's production model)
+import warden_tank  # noqa: E402  (the Warden Tank's production model, Act 3 grey)
 import vrell_l04  # noqa: E402  (the Brood Pod's and the Scuttler's production models)
 import wraith  # noqa: E402  (the Wraith's production model)
 
@@ -137,13 +145,15 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "tendril-anchor": "M7 part C batch", "threadcrawler": "M7 part C batch",
            "choir-herald": "M7 part D batch", "shellback": "M7 part D batch",
            "dust-devil": "M7 part E batch", "ghost-drone": "M7 part E batch",
-           "unclassified-ghost-drone": "M7 part E batch"}
+           "unclassified-ghost-drone": "M7 part E batch",
+           "warden-tank": "M7 part F batch", "revenant-walker": "M7 part F batch",
+           "boss-revenant-walker": "M7 part F batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
           "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
-          "M7 part E batch": "r41"}
+          "M7 part E batch": "r41", "M7 part F batch": "r42"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -177,10 +187,14 @@ ENEMIES = {
     "shellback": siege_units.shellback_intel_model,
     "dust-devil": storm_units.devil_intel_model,
     "ghost-drone": storm_units.ghost_intel_model,
+    "warden-tank": warden_tank.intel_model,
+    "revenant-walker": lambda: walker_model(),
 }
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}
-BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire")
+BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire", "revenant-walker")
+# silhouettes of contacts the intel cannot classify: drawn with the unclassified pictures' sensor noise
+NOISY = {"revenant-walker"}
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it
 
 PLATE = np.array([4, 16, 28], float)
@@ -211,6 +225,51 @@ def coilwyrm_model():
             out.append((d * k, m))
         return sdf.union(*out[::-1])
     return scene, mats
+
+
+def walker_model(k=0.84):
+    """The Revenant Walker walking down (heading 0, walk phase 0): legs, hull, the two pods aimed ahead and
+    the flamer at rest against the heading, the production models of tools/art/revenant_walker.py scaled by
+    ``k`` to fit the portrait."""
+    rw = revenant_walker
+    legs, torso, pod, flamer = rw.legs_scene(0.0), rw.torso_scene(0, True), rw.pod_scene(0), rw.flamer_scene()
+    rot = rw.model_rotation(rw.heading(0))
+
+    def model(p):
+        parts = [legs(p), torso(p)]
+        for side in (1, -1):
+            parts.append(pod(p - sdf.vec(side * rw.PODS[0], rw.PODS[1], 0)))
+        parts.append(flamer(rotate_z(p - sdf.vec(*rw.FLAMER_AT, 0), np.pi)))
+        return sdf.union(*parts)
+
+    def scene(p):
+        d, m = model(rotate_z(p, rot) / k)
+        return d * k, m
+    return scene, model_space_materials(rw.mats(), rot)
+
+
+def walker_mask():
+    """The production walker at heading 0 as the game assembles it (legs, hull, pods, flamer at rest,
+    tools/art/revenant_walker.walker_draw), the outline only."""
+    rw = revenant_walker
+    s = {name: rw.load(name) for name in rw.SET_NAMES}
+    img, _ = rw.walker_draw(Image.new("RGBA", (300, 300), (0, 0, 0, 0)), s, 150, 150, 0, 0)
+    return np.array(img)[..., 3] > 127
+
+
+def sensor_noise(rim, n, seed):
+    """The unclassified pictures' noise past the torn rows (``tear``): dropped rim pixels, and the mask of
+    a speckle over the plate."""
+    rng = np.random.default_rng(seed)
+    rim &= rng.random(rim.shape) > 0.18
+    return rim, rng.random((n, n)) > 0.94
+
+
+def tear(shape, n, rows, seed):
+    rng = np.random.default_rng(seed)
+    for y in rng.choice(n, rows, replace=False):
+        shape[y] = np.roll(shape[y], int(rng.choice((-2, -1, 1, 2))))
+    return shape
 
 
 def plate(n):
@@ -313,7 +372,7 @@ def spire_mask():
 
 def silhouette(slug):
     mask = {"gorgon-frigate": gorgon_mask, "brood-carrier": carrier_mask, "leviathan": leviathan_mask,
-            "harbour-kraken": kraken_mask, "siege-spire": spire_mask}[slug]()
+            "harbour-kraken": kraken_mask, "siege-spire": spire_mask, "revenant-walker": walker_mask}[slug]()
     ys, xs = np.nonzero(mask)
     mask = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     inner = SILHOUETTE - 6
@@ -323,12 +382,20 @@ def silhouette(slug):
     shape = np.zeros((SILHOUETTE, SILHOUETTE), bool)
     y0, x0 = (SILHOUETTE - size[1]) // 2, (SILHOUETTE - size[0]) // 2
     shape[y0:y0 + size[1], x0:x0 + size[0]] = small
+    if slug in NOISY:
+        shape = tear(shape, SILHOUETTE, 7, 4219)
     card = plate(SILHOUETTE)
     yy, xx = np.mgrid[0:SILHOUETTE, 0:SILHOUETTE]
     card[shape] = SHAPE
     card[shape & ((xx % 5 == 2) | (yy % 5 == 2))] = SHAPE * 0.6 + SCAN * 0.25
     pad = np.pad(shape, 1)
     rim = shape & ~(pad[:-2, 1:-1] & pad[2:, 1:-1] & pad[1:-1, :-2] & pad[1:-1, 2:])
+    if slug in NOISY:
+        rim, speck = sensor_noise(rim, SILHOUETTE, 4220)
+        card[rim] = SCAN
+        card[speck] = card[speck] * 0.5 + SCAN * 0.3
+        img = Image.fromarray(np.clip(card, 0, 255).astype(np.uint8), "RGB").convert("RGBA")
+        return artkit.quantize_set([img], 16)[0]
     card[rim] = SCAN
     return Image.fromarray(card.astype(np.uint8), "RGB").convert("RGBA")
 

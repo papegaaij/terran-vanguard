@@ -185,7 +185,8 @@ final class LunaLooks {
 
     /** Whether the unit belongs to a group of the level's destroy-targets primary (a battery). */
     static boolean target(Sortie sortie, Enemy enemy) {
-        return enemy.groupIndex() >= 0 && !sortie.script().targets().isEmpty();
+        return enemy.groupIndex() >= 0
+                && !sortie.script().objectives().targets().isEmpty();
     }
 
     /** A one-pixel outline of {@code frame} centred on (x, y) in the objective colour, drawn under it. */

@@ -102,19 +102,12 @@ class Act2WeaponsTest {
     }
 
     /** A level of units moving down with the scroll (130 px/s) from the top edge, as the test fire's dummies. */
-    private static LevelScript units(LevelScript.GroundUnit... units) {
-        return new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(60, 130)),
-                List.of(),
-                List.of(),
-                List.of(units),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static LevelScript units(GroundUnit... units) {
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(60, 130)))
+                .groundUnits(List.of(units))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     private static EnemySpec dummy(Layer layer, double hp) {
@@ -178,7 +171,7 @@ class Act2WeaponsTest {
     @Test
     void aTurretSlewsAtItsRateAfterAUnitPassingBesideTheShipAndHitsItBehind() {
         var sortie = sortie(
-                units(new LevelScript.GroundUnit(0, Ship.START_X + 70, dummy(Layer.GROUND, 1000), -1)),
+                units(new GroundUnit(0, Ship.START_X + 70, dummy(Layer.GROUND, 1000), -1)),
                 mount(Armament.Slot.RIGHT_WING, SWIVEL));
         double most = 0;
         double previous = sortie.turretHeading(0);
@@ -209,8 +202,8 @@ class Act2WeaponsTest {
         double podX = Ship.START_X + 16;
         var sortie = sortie(
                 units(
-                        new LevelScript.GroundUnit(0, podX, dummy(Layer.GROUND, 1e6), -1),
-                        new LevelScript.GroundUnit(0, podX + 150, dummy(Layer.GROUND, 1e6), -1)),
+                        new GroundUnit(0, podX, dummy(Layer.GROUND, 1e6), -1),
+                        new GroundUnit(0, podX + 150, dummy(Layer.GROUND, 1e6), -1)),
                 mount(Armament.Slot.RIGHT_WING, SWIVEL));
         boolean flank = false;
         for (int i = 0; i < SimStep.ticks(4); i++) {
@@ -287,14 +280,14 @@ class Act2WeaponsTest {
         // Both pass the mine's column; only the low flyer sets it off, and the blast reaches the
         // ground unit 30 px beside it.
         var ground = sortie(
-                units(new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.GROUND, 5), -1)),
+                units(new GroundUnit(0, Ship.START_X, dummy(Layer.GROUND, 5), -1)),
                 mount(Armament.Slot.REAR, mines(10, 1)));
         assertEquals(0, count(ground, SimStep.ticks(6), FIRE, SimEvents.Type.BLAST));
 
         var both = sortie(
                 units(
-                        new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.LOW_AIR, 5), -1),
-                        new LevelScript.GroundUnit(0, Ship.START_X + 30, dummy(Layer.GROUND, 5), -1)),
+                        new GroundUnit(0, Ship.START_X, dummy(Layer.LOW_AIR, 5), -1),
+                        new GroundUnit(0, Ship.START_X + 30, dummy(Layer.GROUND, 5), -1)),
                 mount(Armament.Slot.REAR, mines(10, 1)));
         int blasts = count(both, SimStep.ticks(6), FIRE, SimEvents.Type.BLAST);
         assertEquals(1, blasts);
@@ -305,7 +298,7 @@ class Act2WeaponsTest {
     void aMineIgnoresAFlyerUntilItArms() {
         // A flyer hovering right behind the drop point: the mine waits for its arming delay.
         var sortie = sortie(
-                units(new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.LOW_AIR, 1000), -1)),
+                units(new GroundUnit(0, Ship.START_X, dummy(Layer.LOW_AIR, 1000), -1)),
                 mount(Armament.Slot.REAR, mines(10, 1)));
         // The unit is at the drop point after about (540 - 72) / 130 = 3.6 s; drop just before.
         run(sortie, SimStep.ticks(3.5), Command.NONE);

@@ -13,8 +13,11 @@ import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.Intel;
 import vanguard.sim.Command;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.RadioCue;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -87,7 +90,7 @@ class ConvoyLevelTest {
         Content content = content();
 
         LevelScript medium = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
-        LevelScript.Escort escort = medium.escort().orElseThrow();
+        ObjectiveSpec.Escort escort = medium.objectives().escort().orElseThrow();
         assertEquals(List.of(390.0, 306.0, 222.0, 138.0, 54.0), escort.stations());
         assertEquals(60, escort.ally().hp());
         assertEquals(30, escort.ally().maxHeadingDegrees());
@@ -96,6 +99,7 @@ class ConvoyLevelTest {
         assertEquals(
                 90,
                 SimSpecs.level(content, KEY, Difficulty.EASY)
+                        .objectives()
                         .escort()
                         .orElseThrow()
                         .ally()
@@ -103,24 +107,26 @@ class ConvoyLevelTest {
         assertEquals(
                 1,
                 SimSpecs.level(content, KEY, Difficulty.HARD)
+                        .objectives()
                         .escort()
                         .orElseThrow()
                         .ally()
                         .hp());
-        assertEquals(240, medium.road().orElseThrow().x(0));
-        assertEquals(300, medium.road().orElseThrow().x(content.level(KEY).scrollAt(60)), 1e-9);
+        assertEquals(240, medium.ground().road().orElseThrow().x(0));
+        assertEquals(
+                300, medium.ground().road().orElseThrow().x(content.level(KEY).scrollAt(60)), 1e-9);
 
-        List<LevelScript.RadioCue> radio = medium.radio();
-        LevelScript.RadioCue allFive = radio.stream()
+        List<RadioCue> radio = medium.radio();
+        RadioCue allFive = radio.stream()
                 .filter(cue -> cue.line().startsWith("All five"))
                 .findFirst()
                 .orElseThrow();
-        assertEquals(LevelScript.CueTrigger.LEVEL_END, allFive.trigger());
+        assertEquals(CueTrigger.LEVEL_END, allFive.trigger());
         assertEquals(5, allFive.alliesMin());
         assertEquals(5, allFive.alliesMax());
-        assertTrue(radio.stream().anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.MISSION_FAILED));
-        assertTrue(radio.stream().anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.FIRST_ALLY_LOST));
-        assertTrue(radio.stream().anyMatch(LevelScript.RadioCue::requiresSpecial));
+        assertTrue(radio.stream().anyMatch(cue -> cue.trigger() == CueTrigger.MISSION_FAILED));
+        assertTrue(radio.stream().anyMatch(cue -> cue.trigger() == CueTrigger.FIRST_ALLY_LOST));
+        assertTrue(radio.stream().anyMatch(RadioCue::requiresSpecial));
 
         Intel intel = Intel.of(content, KEY, 1);
         assertEquals(Optional.of("ESCORT 5 CRAWLERS"), intel.profile().objective());

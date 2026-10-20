@@ -13,7 +13,7 @@ import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.sim.Ally;
 import vanguard.sim.Enemy;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.Sortie;
 
 /**
@@ -84,10 +84,11 @@ class Level10LooksTest {
     @Test
     void theShuttlesLiftOffFlyTheirStationsAndLifelineThreeIsLostToTheLance() {
         Sortie sortie = sortie();
-        LevelScript.ScriptedLoss loss = sortie.script()
+        ObjectiveSpec.ScriptedLoss loss = sortie.script()
+                .objectives()
                 .escort()
-                .flatMap(LevelScript.Escort::air)
-                .flatMap(LevelScript.Air::scriptedLoss)
+                .flatMap(ObjectiveSpec.Escort::air)
+                .flatMap(ObjectiveSpec.Air::scriptedLoss)
                 .orElseThrow();
         int scripted = sortie.scriptedAlly();
         assertEquals(2, scripted, "Lifeline Three");

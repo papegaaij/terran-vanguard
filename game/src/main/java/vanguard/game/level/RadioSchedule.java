@@ -3,7 +3,9 @@ package vanguard.game.level;
 import java.util.Comparator;
 import java.util.List;
 import vanguard.content.voice.VoiceLines;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.RadioCue;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 import vanguard.sim.WeaponSpec;
@@ -29,22 +31,22 @@ public final class RadioSchedule {
 
     /** @param specialFitted whether a special is fitted: the timed cues that require one play only then */
     public RadioSchedule(LevelScript script, boolean specialFitted) {
-        this(script, specialFitted ? LevelScript.RadioCue.FITTED_SPECIAL : 0);
+        this(script, specialFitted ? RadioCue.FITTED_SPECIAL : 0);
     }
 
     /**
-     * @param fitted what is fitted ({@link LevelScript.RadioCue#FITTED_SPECIAL}, {@link
-     *     LevelScript.RadioCue#FITTED_HOMING} bits): the timed cues that require something else never
+     * @param fitted what is fitted ({@link RadioCue#FITTED_SPECIAL}, {@link
+     *     RadioCue#FITTED_HOMING} bits): the timed cues that require something else never
      *     play; those that require the escort are asked about at each {@link #untilTimed(double,
      *     double, boolean)}
      */
     public RadioSchedule(LevelScript script, int fitted) {
         this.script = script;
-        int withEscort = fitted | LevelScript.RadioCue.FITTED_ESCORT;
-        List<LevelScript.RadioCue> cues = script.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
+        int withEscort = fitted | RadioCue.FITTED_ESCORT;
+        List<RadioCue> cues = script.radio().stream()
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
                 .filter(cue -> cue.allowedWith(withEscort))
-                .sorted(Comparator.comparingDouble(LevelScript.RadioCue::t))
+                .sorted(Comparator.comparingDouble(RadioCue::t))
                 .toList();
         timed = cues.stream().mapToInt(cue -> SimStep.ticks(cue.t())).toArray();
         escortOnly = new boolean[cues.size()];
@@ -54,17 +56,17 @@ public final class RadioSchedule {
     }
 
     /** Whether a cue plays only while an escort flies ({@code requires: escort}). */
-    public static boolean needsEscort(LevelScript.RadioCue cue) {
-        return (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0;
+    public static boolean needsEscort(RadioCue cue) {
+        return (cue.requires() & RadioCue.FITTED_ESCORT) != 0;
     }
 
     /**
-     * What a sortie's ship has fitted, as the radio's {@link LevelScript.RadioCue#FITTED_SPECIAL} and
-     * {@link LevelScript.RadioCue#FITTED_HOMING} bits (a weapon with homing or turret delivery), as the
+     * What a sortie's ship has fitted, as the radio's {@link RadioCue#FITTED_SPECIAL} and
+     * {@link RadioCue#FITTED_HOMING} bits (a weapon with homing or turret delivery), as the
      * simulation's radio asks for them.
      */
     public static int fitted(Sortie sortie) {
-        int fitted = sortie.special().fitted() ? LevelScript.RadioCue.FITTED_SPECIAL : 0;
+        int fitted = sortie.special().fitted() ? RadioCue.FITTED_SPECIAL : 0;
         for (int m = 0; m < sortie.armament().size(); m++) {
             if (!sortie.armament().mount(m).fires()) {
                 // M7 part A: a Deflector Pod fires nothing.
@@ -72,7 +74,7 @@ public final class RadioSchedule {
             }
             WeaponSpec.Delivery delivery = sortie.armament().mount(m).weapon().delivery();
             if (delivery == WeaponSpec.Delivery.HOMING || delivery == WeaponSpec.Delivery.TURRET) {
-                fitted |= LevelScript.RadioCue.FITTED_HOMING;
+                fitted |= RadioCue.FITTED_HOMING;
             }
         }
         return fitted;

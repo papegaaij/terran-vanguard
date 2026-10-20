@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-12
+updated: 2026-10-19
 ---
 
 # Spine Turret
@@ -88,7 +88,9 @@ Production art for concept round 15 (M4 part B, the Level 02 batch), review file
 - [x] Stat block values loaded from data; global difficulty multipliers applied
 - [x] Death effect, bounty and score per this spec
 - [x] Glow frames (the violet barrel root) for Level 06's darkness — M4 part F (`spine-turret-glow_*`, drawn additively by `EnemyLooks`; final in round 23)
-- [ ] The `arc` placement parameter (`down` default, `up` turned 180°) — **later: Act 3** (Levels 19 and 20)
+- [x] The `arc` placement parameter (`down` default, `up` turned 180°) — M7 part F: a ground target's `arc: up`
+      (loaded and checked by content, step F2: only on a nest whose unit fires within an arc), the gun's
+      facing in the simulation (`EnemyGun.arcFacingRadians`, step F3); Level 19's gantry nests; Level 20 later
 
 ## Decisions
 
@@ -111,3 +113,5 @@ Production art for concept round 15 (M4 part B, the Level 02 batch), review file
 - 2026-10-12 (overnight design phase, pending the user's review): the `arc` placement parameter
   (`arc: up` turns the facing and the silence arc 180°) for Level 19's up-facing nests and Level 20's
   reverse scroll; its item is tagged for Act 3, so the document stays `done`.
+- 2026-10-19 (M7 part F, step F2): the `arc` placement parameter built as a ground target's `arc: up` (left out:
+  down), mapped to the gun's facing (π); Level 19's gantry nests use it.

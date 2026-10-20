@@ -19,7 +19,7 @@ import vanguard.game.ui.Glass;
 import vanguard.game.ui.Menu;
 import vanguard.game.ui.Speaker;
 import vanguard.game.ui.Words;
-import vanguard.sim.LevelScript;
+import vanguard.sim.RadioCue;
 
 /**
  * The mission failed screen (design/systems/retry, chosen mission-failed-r08-a) over the frozen
@@ -78,11 +78,7 @@ public final class MissionFailedScreen implements GameScreen {
                         cue.speaker(), Expression.valueOf(cue.expression().toUpperCase(Locale.ROOT)), services.sprites))
                 .orElseGet(() -> Speaker.of("Okafor", Expression.GRIM, services.sprites));
         lines = Words.wrap(
-                level.failureLine()
-                        .map(LevelScript.RadioCue::line)
-                        .orElse(DEFAULT_LINE)
-                        .toUpperCase(Locale.ROOT),
-                LINE_CHARS);
+                level.failureLine().map(RadioCue::line).orElse(DEFAULT_LINE).toUpperCase(Locale.ROOT), LINE_CHARS);
         // The level's own line is spoken too (design/audio/voice); the default line has no voice.
         level.failureLine()
                 .flatMap(cue -> services.voices.radio(cue.speaker(), cue.line(), cue.expression()))

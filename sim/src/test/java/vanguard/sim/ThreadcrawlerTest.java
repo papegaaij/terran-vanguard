@@ -105,19 +105,12 @@ class ThreadcrawlerTest {
     }
 
     static LevelScript level(double speed, EnemySpec crawler) {
-        return new LevelScript(
-                1,
-                3,
-                0,
-                List.of(new LevelScript.Section(60, speed)),
-                List.of(TestSpecs.wave(
-                        0.5, WaveSpec.Formation.SNAKE, crawler, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        return LevelScript.builder(1, 3)
+                .sections(List.of(new Section(60, speed)))
+                .waves(List.of(TestSpecs.wave(
+                        0.5, WaveSpec.Formation.SNAKE, crawler, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     /**
@@ -376,12 +369,9 @@ class ThreadcrawlerTest {
         Sortie wyrm = new Sortie(
                 1,
                 TestSpecs.LOADOUT,
-                new LevelScript(
-                        6,
-                        1,
-                        0,
-                        List.of(new LevelScript.Section(40, 130)),
-                        List.of(new WaveSpec(
+                LevelScript.builder(6, 1)
+                        .sections(List.of(new Section(40, 130)))
+                        .waves(List.of(new WaveSpec(
                                 1,
                                 WaveSpec.Formation.SNAKE,
                                 FarsideTest.COILWYRM,
@@ -396,13 +386,9 @@ class ThreadcrawlerTest {
                                 List.of(),
                                 Optional.empty(),
                                 List.of(List.of(new WaveSpec.At(240, -60), new WaveSpec.At(240, 700))),
-                                Optional.empty())),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(),
-                        new LevelScript.Secondary(0.8, 50),
-                        List.of()),
+                                Optional.empty())))
+                        .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                        .build(),
                 TestSpecs.RULES,
                 TestSpecs.FULL_ARMOUR);
         stepUntilChain(wyrm);
@@ -417,21 +403,14 @@ class ThreadcrawlerTest {
     @Test
     void crawlersDoNotAllocate() {
         EnemySpec spec = crawler(12, PORES, new double[] {0, 5_000}, new double[] {200, 200});
-        LevelScript level = new LevelScript(
-                1,
-                3,
-                0,
-                List.of(new LevelScript.Section(60, 80)),
-                List.of(
+        LevelScript level = LevelScript.builder(1, 3)
+                .sections(List.of(new Section(60, 80)))
+                .waves(List.of(
                         TestSpecs.wave(
                                 0.5, WaveSpec.Formation.SNAKE, spec, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE),
-                        TestSpecs.wave(5, WaveSpec.Formation.SNAKE, spec, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+                        TestSpecs.wave(5, WaveSpec.Formation.SNAKE, spec, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         long allocated = Allocations.least(
                 () -> new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR), sortie -> {
                     for (int i = 0; i < 600; i++) {

@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
-import vanguard.sim.LevelScript;
+import vanguard.sim.GroundUnit;
+import vanguard.sim.RootBurst;
 
 /**
  * M5 part H's level keys (design/tech/architecture, Data file schemas), on Level 14's own data: the
@@ -50,15 +51,15 @@ class PartHLevelKeysTest {
         LevelData.RootBurst first = block.bursts().getFirst();
         assertEquals(List.of("spine-turret", "polyp-mortar"), first.growthsOn(Difficulty.MEDIUM));
         assertEquals(List.of("spine-turret"), first.growthsOn(Difficulty.EASY));
-        List<LevelScript.GroundUnit> growths = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).groundUnits().stream()
+        List<GroundUnit> growths = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).groundUnits().stream()
                 .filter(unit -> unit.burst().isPresent())
                 .toList();
-        LevelScript.GroundUnit turret = growths.getFirst();
-        LevelScript.GroundUnit mortar = growths.get(1);
+        GroundUnit turret = growths.getFirst();
+        GroundUnit mortar = growths.get(1);
         assertEquals(first.x() - 26, turret.x(), 1e-9, "the growths 52 px apart, centred on the burst");
         assertEquals(first.x() + 26, mortar.x(), 1e-9);
         assertEquals("polyp-mortar", mortar.enemy().slug());
-        LevelScript.RootBurst burst = turret.burst().orElseThrow();
+        RootBurst burst = turret.burst().orElseThrow();
         assertEquals(0, burst.index());
         assertEquals(first.y(), burst.depth());
         assertEquals(3, growths.getLast().burst().orElseThrow().index());
@@ -95,7 +96,10 @@ class PartHLevelKeysTest {
         assertEquals("ROOTS", secondary.label().orElseThrow());
         assertEquals(
                 "ROOTS",
-                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).secondary().label());
+                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM)
+                        .objectives()
+                        .secondary()
+                        .label());
     }
 
     @Test

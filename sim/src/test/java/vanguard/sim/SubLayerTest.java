@@ -26,31 +26,24 @@ class SubLayerTest {
     private static final int SPECIAL = Command.SPECIAL.bit();
 
     /** Units and ground objects coming down with the scroll (130 px/s) over water. */
-    private static LevelScript water(List<LevelScript.GroundObjectSpec> ground, LevelScript.GroundUnit... units) {
-        return new LevelScript(
-                        1,
-                        1,
-                        0,
-                        List.of(new LevelScript.Section(60, 130)),
-                        List.of(),
-                        ground,
-                        List.of(units),
-                        (int) ground.stream()
-                                .filter(LevelScript.GroundObjectSpec::trigger)
-                                .count(),
-                        List.of(),
-                        new LevelScript.Secondary(0.8, 50),
-                        List.of())
-                .withWater(true);
+    private static LevelScript water(List<GroundObjectSpec> ground, GroundUnit... units) {
+        return LevelScript.builder(1, 1)
+                .sections(List.of(new Section(60, 130)))
+                .groundObjects(ground)
+                .groundUnits(List.of(units))
+                .secrets((int) ground.stream().filter(GroundObjectSpec::trigger).count())
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
     }
 
-    private static LevelScript water(LevelScript.GroundUnit... units) {
+    private static LevelScript water(GroundUnit... units) {
         return water(List.of(), units);
     }
 
     /** A trigger of {@code hits} entering at {@code t}, under the water or on the ground. */
-    private static LevelScript.GroundObjectSpec trigger(double t, double x, Hitbox size, int hits, boolean submerged) {
-        return new LevelScript.GroundObjectSpec(
+    private static GroundObjectSpec trigger(double t, double x, Hitbox size, int hits, boolean submerged) {
+        return new GroundObjectSpec(
                 t,
                 x,
                 size,
@@ -64,7 +57,7 @@ class SubLayerTest {
                 0,
                 1,
                 Optional.empty(),
-                LevelScript.GroundObjectSpec.CARGO_CONTAINER,
+                GroundObjectSpec.CARGO_CONTAINER,
                 false,
                 Optional.empty(),
                 submerged);
@@ -131,7 +124,7 @@ class SubLayerTest {
         var sortie = new Sortie(
                 1,
                 TestSpecs.LOADOUT,
-                water(new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.SUB, 10), -1)),
+                water(new GroundUnit(0, Ship.START_X, dummy(Layer.SUB, 10), -1)),
                 TestSpecs.RULES,
                 TestSpecs.FULL_ARMOUR);
         assertEquals(0, count(sortie, SimStep.ticks(4), FIRE, SimEvents.Type.ENEMY_HIT));
@@ -143,7 +136,7 @@ class SubLayerTest {
     @Test
     void homingMissilesAndTurretsNeverPickAUnitUnderTheWater() {
         var homing = sortie(
-                water(new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.SUB, 10), -1)),
+                water(new GroundUnit(0, Ship.START_X, dummy(Layer.SUB, 10), -1)),
                 TestSpecs.HOMING,
                 Armament.Slot.FRONT);
         for (int i = 0; i < SimStep.ticks(3.5); i++) {
@@ -174,7 +167,7 @@ class SubLayerTest {
                 0,
                 List.of(muzzle(16, -3, 0)));
         var turret = sortie(
-                water(new LevelScript.GroundUnit(0, Ship.START_X + 70, dummy(Layer.SUB, 10), -1)),
+                water(new GroundUnit(0, Ship.START_X + 70, dummy(Layer.SUB, 10), -1)),
                 swivel,
                 Armament.Slot.RIGHT_WING);
         assertEquals(0, count(turret, SimStep.ticks(5), FIRE, SimEvents.Type.SHOT_FIRED), "it holds fire");
@@ -204,8 +197,8 @@ class SubLayerTest {
         // The submerged unit passes under the ship at 3.5 s, the ground one at 5 s.
         var sortie = sortie(
                 water(
-                        new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.SUB, 5), -1),
-                        new LevelScript.GroundUnit(1.5, Ship.START_X, dummy(Layer.GROUND, 5), -1)),
+                        new GroundUnit(0, Ship.START_X, dummy(Layer.SUB, 5), -1),
+                        new GroundUnit(1.5, Ship.START_X, dummy(Layer.GROUND, 5), -1)),
                 bombs,
                 Armament.Slot.RIGHT_WING);
         assertTrue(count(sortie, SimStep.ticks(4), FIRE, SimEvents.Type.BLAST) > 0);
@@ -241,8 +234,8 @@ class SubLayerTest {
         // The low flyer sets the mine off; the submerged unit 30 px beside it is in the blast.
         var sortie = sortie(
                 water(
-                        new LevelScript.GroundUnit(0, Ship.START_X, dummy(Layer.LOW_AIR, 5), -1),
-                        new LevelScript.GroundUnit(0, Ship.START_X + 30, dummy(Layer.SUB, 5), -1)),
+                        new GroundUnit(0, Ship.START_X, dummy(Layer.LOW_AIR, 5), -1),
+                        new GroundUnit(0, Ship.START_X + 30, dummy(Layer.SUB, 5), -1)),
                 mines,
                 Armament.Slot.REAR);
         int blasts = 0;
@@ -265,7 +258,7 @@ class SubLayerTest {
         var sortie = sortie(
                 water(
                         List.of(trigger(0.5, Ship.START_X + 100, new Hitbox(30, 30), 4, true)),
-                        new LevelScript.GroundUnit(0, Ship.START_X - 80, dummy(Layer.SUB, 100), -1)),
+                        new GroundUnit(0, Ship.START_X - 80, dummy(Layer.SUB, 100), -1)),
                 TestSpecs.LOADOUT.withSpecial(new SpecialSpec("Smart Bomb", 1, 3, 0.1, bomb)));
         run(sortie, SimStep.ticks(1.5), Command.NONE);
         sortie.step(SPECIAL);
@@ -281,8 +274,8 @@ class SubLayerTest {
         var sortie = sortie(
                 water(
                         List.of(trigger(200 / 130.0, Ship.START_X, new Hitbox(120, 60), 1, true)),
-                        new LevelScript.GroundUnit(0, Ship.START_X, wide(Layer.SUB), -1),
-                        new LevelScript.GroundUnit(100 / 130.0, Ship.START_X, wide(Layer.GROUND), -1)),
+                        new GroundUnit(0, Ship.START_X, wide(Layer.SUB), -1),
+                        new GroundUnit(100 / 130.0, Ship.START_X, wide(Layer.GROUND), -1)),
                 TestSpecs.LOADOUT.withSpecial(new SpecialSpec("Airstrike", 1, 4, 0.1, spec)));
         while (sortie.levelSeconds() < 2.4) {
             sortie.step(Command.NONE);
@@ -330,8 +323,7 @@ class SubLayerTest {
     void rookSkipsAUnitUnderTheWater() {
         // Right ahead of him in his slot on the left (as WingmanTest's ground units).
         var sub = WingmanTest.sortie(
-                water(new LevelScript.GroundUnit(0, Ship.START_X - 64, dummy(Layer.SUB, 1000), -1)),
-                WingmanSpec.Side.LEFT);
+                water(new GroundUnit(0, Ship.START_X - 64, dummy(Layer.SUB, 1000), -1)), WingmanSpec.Side.LEFT);
         for (int i = 0; i < SimStep.ticks(3.5); i++) {
             sub.step(Command.NONE);
             assertEquals(-1, sub.wingman().orElseThrow().target());
@@ -339,8 +331,7 @@ class SubLayerTest {
         assertEquals(1000, find(sub, Layer.SUB).hp());
 
         var ground = WingmanTest.sortie(
-                water(new LevelScript.GroundUnit(0, Ship.START_X - 64, dummy(Layer.GROUND, 1000), -1)),
-                WingmanSpec.Side.LEFT);
+                water(new GroundUnit(0, Ship.START_X - 64, dummy(Layer.GROUND, 1000), -1)), WingmanSpec.Side.LEFT);
         boolean picked = false;
         for (int i = 0; i < SimStep.ticks(3.5); i++) {
             ground.step(Command.NONE);

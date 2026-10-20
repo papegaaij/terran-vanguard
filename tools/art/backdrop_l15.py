@@ -163,7 +163,7 @@ def speed(i):
 
 
 def ease(i):
-    """Section i's ease-in (M7 part B, LevelScript.Section.easeSeconds): from the section before's speed
+    """Section i's ease-in (M7 part B, Section.easeSeconds): from the section before's speed
     to its own over its first `ease` s, smoothstep; only between two moving sections."""
     if i == 0 or speed(i) == 0 or speed(i - 1) == 0 or SECTIONS[i].get("arena"):
         return 0.0

@@ -108,17 +108,16 @@ class WeaponsTest {
         return new Sortie(1, loadout(mounts), level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
     }
 
-    private static LevelScript ground(LevelScript.GroundObjectSpec... objects) {
+    private static LevelScript ground(GroundObjectSpec... objects) {
         return level(30, List.of(), List.of(objects), List.of());
     }
 
-    private static LevelScript.GroundObjectSpec container(double x, double hp, boolean hardened) {
-        return new LevelScript.GroundObjectSpec(0, x, new Hitbox(32, 24), hp, 5, Optional.empty(), 0, 0, "", hardened);
+    private static GroundObjectSpec container(double x, double hp, boolean hardened) {
+        return new GroundObjectSpec(0, x, new Hitbox(32, 24), hp, 5, Optional.empty(), 0, 0, "", hardened);
     }
 
-    private static LevelScript.GroundObjectSpec beacon(double x) {
-        return new LevelScript.GroundObjectSpec(
-                0, x, new Hitbox(12, 12), 0, 0, Optional.empty(), 99, 80, "cache", false);
+    private static GroundObjectSpec beacon(double x) {
+        return new GroundObjectSpec(0, x, new Hitbox(12, 12), 0, 0, Optional.empty(), 99, 80, "cache", false);
     }
 
     /** Steps with fire held; returns the events of {@code type} per mount. */
@@ -285,7 +284,7 @@ class WeaponsTest {
     }
 
     /** The distinct x of the mortar's blasts over a ground object coming down the screen. */
-    private static List<Double> blastColumns(LevelScript.GroundObjectSpec object) {
+    private static List<Double> blastColumns(GroundObjectSpec object) {
         var sortie = sortie(ground(object), front(MORTAR));
         List<Double> columns = new ArrayList<>();
         for (int i = 0; i < SimStep.ticks(5); i++) {

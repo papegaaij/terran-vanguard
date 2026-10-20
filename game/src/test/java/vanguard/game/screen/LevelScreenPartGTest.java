@@ -17,7 +17,9 @@ import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.content.voice.VoiceLines;
 import vanguard.game.level.RadioQueue;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.RadioCue;
 import vanguard.sim.Sortie;
 
 /**
@@ -80,8 +82,8 @@ class LevelScreenPartGTest {
                 continue;
             }
             LevelScript script = SimSpecs.level(CONTENT, key.get(), Difficulty.MEDIUM);
-            for (LevelScript.RadioCue cue : script.radio()) {
-                if (cue.trigger() != LevelScript.CueTrigger.MISSION_FAILED) {
+            for (RadioCue cue : script.radio()) {
+                if (cue.trigger() != CueTrigger.MISSION_FAILED) {
                     continue;
                 }
                 List<String> groups = cue.line().contains("{group}") ? script.groups() : List.of("");

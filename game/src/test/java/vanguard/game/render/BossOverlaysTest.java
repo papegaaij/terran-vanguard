@@ -31,4 +31,14 @@ class BossOverlaysTest {
         assertTrue(ScreenFlash.opacity(0.4) < ScreenFlash.OPACITY);
         assertEquals(0, ScreenFlash.opacity(ScreenFlash.HOLD_SECONDS + ScreenFlash.FADE_SECONDS));
     }
+
+    @Test
+    void theSpiresDeathFlashIsLocal() {
+        ScreenFlash flash = new ScreenFlash();
+        flash.startAt(10, 240, 300);
+        assertTrue(flash.local(), "round 42: a glow round where it died");
+        assertTrue(ScreenFlash.LOCAL_RADIUS * 2 < vanguard.sim.PlayField.HEIGHT, "not the whole field");
+        flash.start(10);
+        assertFalse(flash.local(), "the other act bosses' flash over the field");
+    }
 }

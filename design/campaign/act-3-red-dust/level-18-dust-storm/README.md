@@ -137,7 +137,7 @@ what (rejected b, the Darkness rule, and c, hiding bullets; the layer rule of
   cannot read well, not that it alone can hit. A kill outside the radius shows its burst through
   the dust.
 - **Code fit**: Level 06's darkness and Level 13's whiteout are the patterns
-  (`LevelScript.Darkness`, the whiteout's `AtmosphereRamp`): a screen-space mask in presentation,
+  (`HazardSpec.Darkness`, the whiteout's `AtmosphereRamp`): a screen-space mask in presentation,
   after the `low-air` layer and before `air`, with the air units' silhouette pass.
 - **Rook** flies as anywhere else (his AI reads the simulation, not the look).
 

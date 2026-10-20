@@ -13,11 +13,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.DropSpec;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PickupType;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -87,7 +91,7 @@ class Level12Test {
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int secondary = level.secondary().credits();
+        int secondary = level.objectives().secondary().credits();
         int total = kills + crates + secondary;
 
         double budget = content.economy().budget().of(level.number());
@@ -133,10 +137,10 @@ class Level12Test {
                 "the rear only the Wraiths and the Lampreys (skitters do not stream in from the rear)");
         assertEquals(
                 List.of(25.0, 75.0, 125.0, 150.0, 175.0, 218.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
-        assertTrue(level.sections().stream().noneMatch(LevelScript.Section::arena), "no boss");
+                level.sections().stream().map(Section::end).toList());
+        assertTrue(level.sections().stream().noneMatch(Section::arena), "no boss");
         assertTrue(level.setPieces().isEmpty());
-        assertTrue(level.water(), "open sea throughout");
+        assertTrue(level.ground().water(), "open sea throughout");
         assertEquals(
                 8,
                 SimSpecs.level(content, LEVEL, Difficulty.HARD).waves().stream()
@@ -200,27 +204,27 @@ class Level12Test {
     void theRadioScriptHasItsEvents() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         List<Double> timed = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
-                .map(LevelScript.RadioCue::t)
+                .filter(cue -> cue.trigger() == CueTrigger.TIME)
+                .map(RadioCue::t)
                 .toList();
         assertEquals(
                 List.of(2.0, 14.0, 30.0, 44.0, 58.0, 86.0, 128.0, 149.5, 157.0, 169.5, 176.0, 182.5, 200.0), timed);
-        Map<LevelScript.CueTrigger, Integer> events = new TreeMap<>();
-        for (LevelScript.RadioCue cue : level.radio()) {
-            if (cue.trigger() != LevelScript.CueTrigger.TIME) {
+        Map<CueTrigger, Integer> events = new TreeMap<>();
+        for (RadioCue cue : level.radio()) {
+            if (cue.trigger() != CueTrigger.TIME) {
                 events.merge(cue.trigger(), 1, Integer::sum);
             }
         }
         assertEquals(
                 Map.of(
-                        LevelScript.CueTrigger.FIRST_LATCH, 1,
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE, 1,
-                        LevelScript.CueTrigger.SECRET, 1,
-                        LevelScript.CueTrigger.LEVEL_END, 1),
+                        CueTrigger.FIRST_LATCH, 1,
+                        CueTrigger.SECONDARY_OBJECTIVE, 1,
+                        CueTrigger.SECRET, 1,
+                        CueTrigger.LEVEL_END, 1),
                 events);
         assertTrue(level.radio().stream()
                 .filter(cue -> cue.speaker().equals("Rook"))
-                .allMatch(cue -> (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0));
+                .allMatch(cue -> (cue.requires() & RadioCue.FITTED_ESCORT) != 0));
     }
 
     @Test
@@ -238,8 +242,8 @@ class Level12Test {
         assertEquals("Rook", data.briefing().teaser().speaker());
         assertEquals(
                 Optional.of(PickupType.ARMOUR_PATCH),
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).placedPickups().stream()
-                        .map(LevelScript.PlacedPickup::pickup)
+                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).drops().placedPickups().stream()
+                        .map(DropSpec.PlacedPickup::pickup)
                         .findFirst());
     }
 

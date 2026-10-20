@@ -9,7 +9,8 @@ import vanguard.game.audio.Voices;
 import vanguard.game.level.Barks;
 import vanguard.game.level.RadioQueue;
 import vanguard.game.level.RadioSchedule;
-import vanguard.sim.LevelScript;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.RadioCue;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -29,13 +30,16 @@ final class RadioEvents {
     private RadioQueue.Message secondaryLine;
 
     /** The level's line for its failed primary objective, once it failed in this attempt. */
-    private Optional<LevelScript.RadioCue> failureLine = Optional.empty();
+    private Optional<RadioCue> failureLine = Optional.empty();
 
     /**
      * A secondary's line that opened at most this long before a boss's warning is still cut (M5 part
      * H, step H7b): the warning would otherwise talk over its first words.
      */
     private static final float SECONDARY_DROP_SECONDS = 1.5f;
+
+    /** Round 41: the set pieces warned of ahead of their arrival ({@code BOSS_INCOMING}) in this attempt. */
+    private final java.util.Set<Integer> announced = new java.util.HashSet<>();
 
     private final GameServices services;
     private final Sortie sortie;
@@ -53,7 +57,7 @@ final class RadioEvents {
     }
 
     /** The level's own line for the mission failed screen, when its primary objective failed (design/systems/retry). */
-    Optional<LevelScript.RadioCue> failureLine() {
+    Optional<RadioCue> failureLine() {
         return failureLine;
     }
 
@@ -72,16 +76,15 @@ final class RadioEvents {
             }
             // M5 part H, step H7b: a phase's line still waiting would come after the death.
             case BOSS_DESTROYED -> radio.withdrawAll(RadioQueue.Priority.PHASE);
+            // Round 41: a boss with a lead time is warned of at its BOSS_INCOMING, and its arrival then
+            // warns no more (a retry from the boss checkpoint has no lead warning: its arrival warns).
+            case BOSS_INCOMING -> {
+                announced.add(events.value(i));
+                bossWarning();
+            }
             case BOSS_ARRIVED -> {
-                // M5 part H, step H7b: the secondary's line that waited out the timed lines before
-                // the boss (Level 14's root grid behind the Choir and Varga) is dropped, not
-                // played over the warning; the HUD shows the objective done.
-                if (secondaryLine != null && radio.drop(secondaryLine, SECONDARY_DROP_SECONDS)) {
-                    services.voices.stop();
-                }
-                secondaryLine = null;
-                if (barks != null) {
-                    barks.bossWarning(sortie.realSeconds());
+                if (!announced.contains(events.value(i))) {
+                    bossWarning();
                 }
             }
             case SPECIAL_CALLED -> {
@@ -109,8 +112,8 @@ final class RadioEvents {
                         RadioQueue.Priority.URGENT);
             }
             case RADIO -> {
-                LevelScript.RadioCue cue = sortie.script().radio().get(events.value(i));
-                if (cue.trigger() == LevelScript.CueTrigger.MISSION_FAILED) {
+                RadioCue cue = sortie.script().radio().get(events.value(i));
+                if (cue.trigger() == CueTrigger.MISSION_FAILED) {
                     failureLine = Optional.of(failedGroupLine(cue));
                     return;
                 }
@@ -127,7 +130,7 @@ final class RadioEvents {
                         RadioSchedule.line(cue.line(), unit, allyName(unit), escortSide()),
                         cue.distorted(),
                         radioSchedule.priority(events.value(i)));
-                if (cue.trigger() == LevelScript.CueTrigger.SECONDARY_OBJECTIVE) {
+                if (cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE) {
                     secondaryLine = message;
                 }
             }
@@ -142,6 +145,7 @@ final class RadioEvents {
                 }
             }
             case SORTIE_RESTARTED -> {
+                announced.clear();
                 if (barks != null) {
                     barks.reset(SimStep.ticks(sortie.levelSeconds()));
                 }
@@ -151,13 +155,27 @@ final class RadioEvents {
         }
     }
 
+    /** A boss's warning starts: the radio's side of it. */
+    private void bossWarning() {
+        // M5 part H, step H7b: the secondary's line that waited out the timed lines before
+        // the boss (Level 14's root grid behind the Choir and Varga) is dropped, not
+        // played over the warning; the HUD shows the objective done.
+        if (secondaryLine != null && radio.drop(secondaryLine, SECONDARY_DROP_SECONDS)) {
+            services.voices.stop();
+        }
+        secondaryLine = null;
+        if (barks != null) {
+            barks.bossWarning(sortie.realSeconds());
+        }
+    }
+
     /** The failure line with the lost group's name in it ("Battery C is behind you"), when a group failed the level. */
-    private LevelScript.RadioCue failedGroupLine(LevelScript.RadioCue cue) {
+    private RadioCue failedGroupLine(RadioCue cue) {
         int group = sortie.failedGroup();
         if (group < 0) {
             return cue;
         }
-        return new LevelScript.RadioCue(
+        return new RadioCue(
                 cue.trigger(),
                 cue.t(),
                 cue.subject(),

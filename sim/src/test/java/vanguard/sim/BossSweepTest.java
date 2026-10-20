@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * {@code laser} = 8 once per sweep on the ship and on Rook; every 5 s in turn with the rings of 14.
  */
 class BossSweepTest {
-    private static Sortie freeSpire(LevelScript.SetPieceSpec spire, Loadout loadout, Rules rules) {
+    private static Sortie freeSpire(SetPieceSpec spire, Loadout loadout, Rules rules) {
         Sortie sortie = new Sortie(1, loadout, PartHSpecs.level(spire), rules, TestSpecs.FULL_ARMOUR);
         PartHSpecs.until(sortie, SimEvents.Type.BOSS_SETTLED, 5, 0);
         PartHSpecs.killRoots(sortie);

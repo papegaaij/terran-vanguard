@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Voice
@@ -361,6 +361,14 @@ the radio.
 - A missing voice file is not an error: the line shows as text with the blips, as today.
 - A stage-direction line (`[the Choir sings]`) plays its speaker's stage sound as its voice file:
   the subtitle is held until it ends and the music ducks under it.
+- **Level end (outro mode)**: when the level ends the radio switches to an outro mode. Waiting
+  messages and new event or phase lines are dropped. A voiced line that is not a closing line (a
+  Rook bark, a timed line, a call's reply) closes as soon as its voice ends, not after its text
+  time. The debrief still takes over 15 s after the level's end but waits while a closing line has
+  not been heard in full (longest overrun 2.1 s, Level 15). Backdrops hold 3 s past the outro's
+  end (not Levels 01 and 02). A voice is no longer clipped one frame early. The all-levels test
+  `RadioTimeline.everyRadioLineEndsBeforeTheLevelDoes` models the barks and the outro (overrun at
+  most 3 s).
 
 ### Build and CI
 
@@ -478,6 +486,12 @@ level).
       Varga, Rook); six takes pinned (five re-rendered, Varga's t=71 hint line pinned to its own seed);
       `VoiceFilesTest` covers Level 18 (M7 part E, step VOX-E, 2026-10-19; pending the user's review in round
       41). Open: `RadioTimelineTest` gets Level 18's runs once the level is mapped (step E4)
+- [x] Level 19's lines (18 timed with Rook's five, `requires: escort`; the walker's `first-telegraph` flame tell,
+      Rook's `boss-part-destroyed` and `boss-destroyed` lines; the payroll safe's secret, the secondary's and the
+      level end's lines; the two briefing pages: 25 new files, Okafor's "Not on this channel, Doctor." reusing Level
+      17's take) rendered with the cast speakers (Okafor, Varga, Rook, Ares Control); nine takes pinned;
+      `VoiceFilesTest` covers Level 19 (M7 part F, step VOX-F, 2026-10-19; pending the user's review in round
+      42). Open: `RadioTimelineTest` gets Level 19's runs once the level is mapped (step F4)
 - [x] A line that is only a stage direction plays its speaker's `stage` sound (speaker table) on
       the voice bus, found by `VoiceLines.radioVoice` for the game and RadioTimelineTest; the
       Choir's is round 29's option b (the sung "ah" F3 to E3), copied by
@@ -1098,3 +1112,23 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   139-160. Whisper hears "Militia supply pod" (the secret) as "Malicious supply pod" in all seven seeds tried,
   with "militia" in the prompt too; the take is kept, to be heard in the round. No radio retime: the timed lines
   never overlap (the closest, t=71 → 78 and t=86 → 93, leave about 3.5 s).
+- 2026-10-19: M7 part F, step VOX-F (**pending the user's review** in round 42): Level 19's 24 voiced lines (Rook's
+  seven `requires: escort`; Okafor's t=148.5 "Not on this channel, Doctor." has Level 17's key and take) and its two
+  briefing pages rendered by `tools/art/voice.py`, 25 new files; and Level 17's secondary line reworded for the "No dome
+  lost" secondary (domes may be hit, none may break; the user's decision 2026-10-19): "Five domes, not a crack."
+  became "All five domes still standing." (Ares Control, the rest of the line kept), rendered on its key's seed
+  (about 130 Hz, no jump); the old take and its pin are gone. "Tharsis" is spoken plain and read back right in every
+  take; "Vrell" reads "Vrel" (the key's seed of Okafor's t=1 read "The rail", pinned), "Aegis" right except one
+  level-end seed ("ages", pinned), "Helix" right. Pins (9): Okafor's t=1, t=88 ("Grade drones" both ways) and level
+  end; Varga's flame tell (an octave jump); Rook's t=45.5 (barely voiced), t=77 (an octave jump on a quarter of
+  it) and t=116 (a squeal at about 570 Hz); Ares Control's t=105 (high on 30 % of it) and t=155.5 ("We're coming
+  up"). Pitch on the unfiltered takes: Okafor 142-168 Hz median, Varga 181-209, Rook 125-181, Ares Control
+  110-130. Whisper hears Varga's "Grey tanks" (t=30) as "Great tanks" in all five seeds tried and Okafor's page 1
+  "crew are sealed" as "crew were sealed"; both takes kept, to be heard in the round. No radio retime: the timed
+  lines never overlap (the closest, t=38 → 45.5, leaves about 3 s).
+- 2026-10-19: The last radio message was cut short a few times (the user's playtest): the outro
+  handed over to the debrief at a fixed 15 s and stopped the voice, when a Rook bark or a secondary
+  judged at the level's end held the closing lines back. Fixed with the outro mode (see Playback).
+  **Pending the user's review**: the debrief waiting for a closing line (the user had asked for
+  the levels to be extended; Levels 10 and 13 were extended by 1 s and 4 s) and the 3 s overrun limit.
+- 2026-10-20: round 42 closed: Level 19's voices (V.a-V.i) and Level 17's reworded line (V.e) accepted by the user; the radio outro fix (T.3, R.g) and the post-win barks (R.h) accepted; Level 16's radio timing (R.k) accepted.

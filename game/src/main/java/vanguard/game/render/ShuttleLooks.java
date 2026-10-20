@@ -10,6 +10,7 @@ import java.util.Arrays;
 import vanguard.sim.Ally;
 import vanguard.sim.AllySpec;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -112,7 +113,7 @@ final class ShuttleLooks {
      */
     ShuttleLooks(Sprites sprites, FlashShader flash, LevelScript script, JsonValue pivots) {
         this.flash = flash;
-        LevelScript.Escort escort = script.escort().orElse(null);
+        ObjectiveSpec.Escort escort = script.objectives().escort().orElse(null);
         present = escort != null && escort.air().isPresent();
         spec = present ? escort.ally() : null;
         String slug = present ? spec.slug() : "";

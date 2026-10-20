@@ -6,8 +6,9 @@ import java.util.Optional;
 import vanguard.sim.BossSpec;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
-import vanguard.sim.LevelScript;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.PlayField;
+import vanguard.sim.RootBurst;
 
 /**
  * M5 part H's rules for the simulation (design/campaign Level 14 Siege Spire, design/enemies/bosses/siege-spire;
@@ -57,7 +58,7 @@ final class PartHRules {
                             lob.marker(),
                             lob.impact() / 2,
                             hook.flatMap(EnemyData.Hook::ring).orElse(lob.ring()),
-                            SimSpecs.bulletDamage(content, lob.ringBullet()))));
+                            UnitRules.bulletDamage(content, lob.ringBullet()))));
             return new BossSpec.Attack(
                     name,
                     pattern,
@@ -73,7 +74,7 @@ final class PartHRules {
                     Optional.empty());
         }
         EnemyData.Sweep sweep = attack.sweep().orElseThrow();
-        EnemySpec.Sweep beam = new EnemySpec.Sweep(
+        EnemySpec.Sweep centred = new EnemySpec.Sweep(
                 Math.toRadians(hook.flatMap(EnemyData.Hook::sweepArc).orElse(sweep.arc())),
                 sweep.duration(),
                 sweep.telegraph(),
@@ -84,6 +85,9 @@ final class PartHRules {
                 damage,
                 sweep.origin().map(Point::x).orElse(0.0),
                 sweep.origin().map(Point::y).orElse(0.0));
+        // Round 41: a lead puts the arc's first edge beside the ship's bearing, so a still ship is swept.
+        EnemySpec.Sweep beam =
+                sweep.lead().map(lead -> centred.withLead(Math.toRadians(lead))).orElse(centred);
         return new BossSpec.Attack(
                 name,
                 pattern,
@@ -105,31 +109,29 @@ final class PartHRules {
      * apart centred on its x, in the objectives' group the block names, firing first after the difficulty's
      * delay; each growth with the act HP factor of Level {@code number} of Act {@code act}.
      */
-    static List<LevelScript.GroundUnit> rootBurstUnits(
+    static List<GroundUnit> rootBurstUnits(
             Content content, LevelData level, Difficulty difficulty, int act, int number) {
         if (level.rootBursts().isEmpty()) {
             return List.of();
         }
         LevelData.RootBursts block = level.rootBursts().get();
         int group = level.objectives().groups().indexOf(block.group());
-        List<LevelScript.GroundUnit> units = new ArrayList<>();
+        List<GroundUnit> units = new ArrayList<>();
         for (int i = 0; i < block.bursts().size(); i++) {
             LevelData.RootBurst data = block.bursts().get(i);
-            LevelScript.RootBurst burst = burst(block, data, i, difficulty);
+            RootBurst burst = burst(block, data, i, difficulty);
             List<String> growths = data.growthsOn(difficulty);
             for (int g = 0; g < growths.size(); g++) {
                 EnemySpec enemy = SimSpecs.enemy(content, growths.get(g), difficulty, Optional.empty(), act, number);
-                units.add(LevelScript.GroundUnit.fromBurst(burst, dx(block, growths.size(), g), enemy, group));
+                units.add(GroundUnit.fromBurst(burst, dx(block, growths.size(), g), enemy, group));
             }
         }
         return units;
     }
 
     /** Burst {@code index} of the level for the simulation. */
-    static LevelScript.RootBurst burst(
-            LevelData.RootBursts block, LevelData.RootBurst data, int index, Difficulty difficulty) {
-        return new LevelScript.RootBurst(
-                index, data.t(), data.x(), data.y(), block.telegraph(), block.firstShotDelay(difficulty));
+    static RootBurst burst(LevelData.RootBursts block, LevelData.RootBurst data, int index, Difficulty difficulty) {
+        return new RootBurst(index, data.t(), data.x(), data.y(), block.telegraph(), block.firstShotDelay(difficulty));
     }
 
     /** Growth {@code g} of {@code n}'s place right of its burst's centre, px. */

@@ -22,12 +22,12 @@ import org.junit.jupiter.api.Test;
  * no bounty); never a hardened object or a trigger, never an enemy; a walking Shellback crushes nothing.
  */
 class RollCrushTest {
-    private static final LevelScript.GroundObjectSpec CRATE = new LevelScript.GroundObjectSpec(
+    private static final GroundObjectSpec CRATE = new GroundObjectSpec(
             A_T, A_X, new Hitbox(32, 24), 10, 5, Optional.of(PickupType.SHIELD_CELL), 0, 0, "", false);
-    private static final LevelScript.GroundObjectSpec BUNKER =
-            new LevelScript.GroundObjectSpec(A_T, A_X, new Hitbox(32, 24), 10, 5, Optional.empty(), 0, 0, "", true);
-    private static final LevelScript.GroundObjectSpec TRIGGER = new LevelScript.GroundObjectSpec(
-            A_T, A_X, new Hitbox(12, 12), 0, 0, Optional.empty(), 99, 80, "cache", false);
+    private static final GroundObjectSpec BUNKER =
+            new GroundObjectSpec(A_T, A_X, new Hitbox(32, 24), 10, 5, Optional.empty(), 0, 0, "", true);
+    private static final GroundObjectSpec TRIGGER =
+            new GroundObjectSpec(A_T, A_X, new Hitbox(12, 12), 0, 0, Optional.empty(), 99, 80, "cache", false);
 
     /**
      * The Shellback entering at dome A's time 300 px below the top edge at its x, walking up into it; it curls
@@ -39,52 +39,23 @@ class RollCrushTest {
 
     /** Dome A's level (with these allies, ground objects and ground units) and the Shellback walking into it. */
     private static LevelScript level(
-            Optional<LevelScript.GroundAllies> allies,
-            List<LevelScript.GroundObjectSpec> ground,
-            List<LevelScript.GroundUnit> units) {
+            Optional<ObjectiveSpec.GroundAllies> allies, List<GroundObjectSpec> ground, List<GroundUnit> units) {
         return level(List.of(intoDomeA()), allies, ground, units);
     }
 
     private static LevelScript level(
             List<WaveSpec> waves,
-            Optional<LevelScript.GroundAllies> allies,
-            List<LevelScript.GroundObjectSpec> ground,
-            List<LevelScript.GroundUnit> units) {
-        return new LevelScript(
-                        17,
-                        3,
-                        0,
-                        List.of(new LevelScript.Section(SiegeSpecs.LENGTH, SiegeSpecs.SPEED)),
-                        waves,
-                        ground,
-                        units,
-                        (int) ground.stream()
-                                .filter(LevelScript.GroundObjectSpec::trigger)
-                                .count(),
-                        List.of(),
-                        LevelScript.Secondary.NONE,
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        List.of(),
-                        Optional.empty(),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        Optional.empty(),
-                        false,
-                        Optional.empty(),
-                        Optional.empty(),
-                        Optional.empty(),
-                        1,
-                        List.of(),
-                        Optional.empty())
-                .withGroundAllies(allies);
+            Optional<ObjectiveSpec.GroundAllies> allies,
+            List<GroundObjectSpec> ground,
+            List<GroundUnit> units) {
+        return LevelScript.builder(17, 3)
+                .sections(List.of(new Section(SiegeSpecs.LENGTH, SiegeSpecs.SPEED)))
+                .waves(waves)
+                .groundObjects(ground)
+                .groundUnits(units)
+                .secrets((int) ground.stream().filter(GroundObjectSpec::trigger).count())
+                .objectives(ObjectiveSpec.NONE.withGroundAllies(allies))
+                .build();
     }
 
     /** Runs to the Shellback's entry and, with {@code curl}, sets off its curl at once; returns it. */
@@ -187,8 +158,8 @@ class RollCrushTest {
     @Test
     void neitherAHardenedObjectNorATriggerNorAnEnemyIsCrushed() {
         EnemySpec nest = PartASpecs.dummy(Layer.GROUND, 50, new Hitbox(40, 40), false);
-        Sortie sortie = SiegeSpecs.sortie(level(
-                Optional.empty(), List.of(BUNKER, TRIGGER), List.of(new LevelScript.GroundUnit(A_T, A_X, nest, -1))));
+        Sortie sortie = SiegeSpecs.sortie(
+                level(Optional.empty(), List.of(BUNKER, TRIGGER), List.of(new GroundUnit(A_T, A_X, nest, -1))));
         Enemy shellback = enter(sortie, true);
         assertEquals(0, rollThrough(sortie, shellback).length);
         assertEquals(2, sortie.groundObjectCount());

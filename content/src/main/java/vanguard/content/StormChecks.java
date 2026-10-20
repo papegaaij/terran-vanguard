@@ -97,9 +97,11 @@ final class StormChecks {
         });
     }
 
+    /** Whether a wave of {@code level} flies {@code slug}, or (M7 part F: the Revenant Walker) its boss is it. */
     private static boolean flies(LevelData level, String slug) {
         return level.waves().stream().flatMap(wave -> wave.groupList().stream()).anyMatch(group -> group.enemy()
-                .equals(slug));
+                        .equals(slug))
+                || level.boss().filter(boss -> boss.enemy().equals(slug)).isPresent();
     }
 
     /** A level's M7 part E keys. */

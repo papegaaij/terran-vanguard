@@ -18,34 +18,25 @@ import org.junit.jupiter.api.Test;
 class RootBurstTest {
     private static final double SPEED = 140;
     /** Burst 0 at t = 2 s, x 120, 200 px below the top edge; burst 1 at t = 5 s right under the ship's start x. */
-    private static final LevelScript.RootBurst FIRST = new LevelScript.RootBurst(0, 2, 120, 200, 1, 1.5);
+    private static final RootBurst FIRST = new RootBurst(0, 2, 120, 200, 1, 1.5);
 
-    private static final LevelScript.RootBurst UNDER_SHIP = new LevelScript.RootBurst(1, 5, Ship.START_X, 150, 1, 1.0);
+    private static final RootBurst UNDER_SHIP = new RootBurst(1, 5, Ship.START_X, 150, 1, 1.0);
 
-    private static LevelScript level(LevelScript.RootBurst... bursts) {
+    private static LevelScript level(RootBurst... bursts) {
         return level(SPEED, bursts);
     }
 
-    private static LevelScript level(double speed, LevelScript.RootBurst... bursts) {
-        List<LevelScript.GroundUnit> units = new ArrayList<>();
-        for (LevelScript.RootBurst burst : bursts) {
-            units.add(LevelScript.GroundUnit.fromBurst(burst, -24, GroundAndDiveTest.TURRET, 0));
-            units.add(LevelScript.GroundUnit.fromBurst(burst, 24, CraterNestTest.MORTAR, 0));
+    private static LevelScript level(double speed, RootBurst... bursts) {
+        List<GroundUnit> units = new ArrayList<>();
+        for (RootBurst burst : bursts) {
+            units.add(GroundUnit.fromBurst(burst, -24, GroundAndDiveTest.TURRET, 0));
+            units.add(GroundUnit.fromBurst(burst, 24, CraterNestTest.MORTAR, 0));
         }
-        return new LevelScript(
-                14,
-                2,
-                0,
-                List.of(new LevelScript.Section(40, speed)),
-                List.of(),
-                List.of(),
-                units,
-                0,
-                List.of(),
-                new LevelScript.Secondary(0, 50, List.of("roots")),
-                List.of(),
-                List.of(),
-                List.of());
+        return LevelScript.builder(14, 2)
+                .sections(List.of(new Section(40, speed)))
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of("roots"))))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -148,7 +139,7 @@ class RootBurstTest {
 
     @Test
     void aShotOnAGrowingGrowthGlancesOff() {
-        Sortie sortie = sortie(level(new LevelScript.RootBurst(0, 0.5, Ship.START_X - 70, 300, 0.5, 3)));
+        Sortie sortie = sortie(level(new RootBurst(0, 0.5, Ship.START_X - 70, 300, 0.5, 3)));
         PartHSpecs.until(sortie, SimEvents.Type.ROOT_BURST_GREW, 1.1, 0);
         Enemy turret = growths(sortie).get(0);
         double hp = turret.hp();
@@ -170,7 +161,7 @@ class RootBurstTest {
         int i = eventIndex(sortie, SimEvents.Type.ROOT_BURST_TELEGRAPH);
         assertEquals(Ship.START_X, sortie.ship().x(), 1e-9);
         assertEquals(
-                Ship.START_X + LevelScript.RootBurst.SHIP_CLEARANCE,
+                Ship.START_X + RootBurst.SHIP_CLEARANCE,
                 sortie.events().x(i),
                 1e-9,
                 "60 px from the ship, toward the field's middle on a tie");
@@ -191,10 +182,10 @@ class RootBurstTest {
 
     @Test
     void aBurstLiesOneToFourHundredPixelsBelowTheTopEdge() {
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.RootBurst(0, 1, 100, 99, 1, 1.5));
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.RootBurst(0, 1, 100, 401, 1, 1.5));
-        new LevelScript.RootBurst(0, 1, 100, 100, 1, 1.5);
-        new LevelScript.RootBurst(0, 1, 100, 400, 1, 1.5);
+        assertThrows(IllegalArgumentException.class, () -> new RootBurst(0, 1, 100, 99, 1, 1.5));
+        assertThrows(IllegalArgumentException.class, () -> new RootBurst(0, 1, 100, 401, 1, 1.5));
+        new RootBurst(0, 1, 100, 100, 1, 1.5);
+        new RootBurst(0, 1, 100, 400, 1, 1.5);
     }
 
     @Test

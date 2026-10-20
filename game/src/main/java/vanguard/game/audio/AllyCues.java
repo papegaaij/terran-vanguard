@@ -146,10 +146,11 @@ final class AllyCues extends SoundFamily {
     void watchLance(Sortie sortie) {
         if (Double.isNaN(lanceHit)) {
             lanceHit = sortie.script()
+                    .objectives()
                     .escort()
-                    .flatMap(vanguard.sim.LevelScript.Escort::air)
-                    .flatMap(vanguard.sim.LevelScript.Air::scriptedLoss)
-                    .map(vanguard.sim.LevelScript.ScriptedLoss::t)
+                    .flatMap(vanguard.sim.ObjectiveSpec.Escort::air)
+                    .flatMap(vanguard.sim.ObjectiveSpec.Air::scriptedLoss)
+                    .map(vanguard.sim.ObjectiveSpec.ScriptedLoss::t)
                     .orElse(Double.POSITIVE_INFINITY);
         }
         double now = sortie.levelSeconds();

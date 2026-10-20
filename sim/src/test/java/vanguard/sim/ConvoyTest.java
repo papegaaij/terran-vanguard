@@ -52,34 +52,27 @@ class ConvoyTest {
         return new AllySpec("civilian-crawler", new Hitbox(40, 72), new Hitbox(32, 64), hp, true, 10, 0.5, 30);
     }
 
-    private static LevelScript.Escort escort(double hp, List<String> hooked) {
-        return new LevelScript.Escort(
+    private static ObjectiveSpec.Escort escort(double hp, List<String> hooked) {
+        return new ObjectiveSpec.Escort(
                 crawler(hp), COLUMN.stream().map(y -> PlayField.HEIGHT - y).toList(), 4, 1, 84, 30, hooked);
     }
 
     private static LevelScript level(
             double seconds,
-            LevelScript.Escort escort,
+            ObjectiveSpec.Escort escort,
             Road road,
             List<WaveSpec> waves,
-            List<LevelScript.GroundUnit> units,
-            List<LevelScript.RadioCue> radio) {
-        return new LevelScript(
-                4,
-                1,
-                0,
-                List.of(new LevelScript.Section(seconds, SPEED)),
-                waves,
-                List.of(),
-                units,
-                0,
-                radio,
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(),
-                List.of(),
-                Optional.of(escort),
-                Optional.of(road));
+            List<GroundUnit> units,
+            List<RadioCue> radio) {
+        return LevelScript.builder(4, 1)
+                .sections(List.of(new Section(seconds, SPEED)))
+                .waves(waves)
+                .groundUnits(units)
+                .radio(radio)
+                .objectives(
+                        ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)).withEscort(Optional.of(escort)))
+                .ground(GroundSpec.NONE.withRoad(Optional.of(road)))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -142,7 +135,7 @@ class ConvoyTest {
 
     @Test
     void onlyShotsTheHookAimsAtTheConvoyHurtIt() {
-        var units = List.of(new LevelScript.GroundUnit(6, 150, GroundAndDiveTest.TURRET, -1));
+        var units = List.of(new GroundUnit(6, 150, GroundAndDiveTest.TURRET, -1));
         Sortie hooked = sortie(level(60, escort(60, List.of("spine-turret")), ROAD, List.of(), units, List.of()));
         Sortie ignored = sortie(level(60, escort(60, List.of()), ROAD, List.of(), units, List.of()));
 
@@ -179,13 +172,13 @@ class ConvoyTest {
         var walker = TestSpecs.wave(12, WaveSpec.Formation.SINGLE, WALKER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         var needlers = TestSpecs.wave(
                 16, WaveSpec.Formation.SINGLE, TestSpecs.NEEDLER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
-        List<LevelScript.RadioCue> radio = List.of(
-                cue(LevelScript.CueTrigger.FIRST_ALLY_HIT, "Crawler {ally} is hit!"),
-                cue(LevelScript.CueTrigger.FIRST_ALLY_LOST, "We lost {ally}."),
-                cue(LevelScript.CueTrigger.MISSION_FAILED, "The convoy is gone, Lancer. Pull back."),
-                cue(LevelScript.CueTrigger.LEVEL_END, "Home."));
+        List<RadioCue> radio = List.of(
+                cue(CueTrigger.FIRST_ALLY_HIT, "Crawler {ally} is hit!"),
+                cue(CueTrigger.FIRST_ALLY_LOST, "We lost {ally}."),
+                cue(CueTrigger.MISSION_FAILED, "The convoy is gone, Lancer. Pull back."),
+                cue(CueTrigger.LEVEL_END, "Home."));
         Sortie sortie = sortie(level(25, escort(5, List.of()), STRAIGHT, List.of(walker, needlers), List.of(), radio));
-        List<LevelScript.CueTrigger> cues = new ArrayList<>();
+        List<CueTrigger> cues = new ArrayList<>();
         int failures = 0;
         double armourAtFailure = -1;
         for (int i = 0; i < SimStep.ticks(30); i++) {
@@ -204,12 +197,7 @@ class ConvoyTest {
         assertTrue(sortie.primaryFailed());
         assertEquals(0, sortie.alliesAlive());
         assertEquals(1, failures);
-        assertEquals(
-                List.of(
-                        LevelScript.CueTrigger.FIRST_ALLY_HIT,
-                        LevelScript.CueTrigger.FIRST_ALLY_LOST,
-                        LevelScript.CueTrigger.MISSION_FAILED),
-                cues);
+        assertEquals(List.of(CueTrigger.FIRST_ALLY_HIT, CueTrigger.FIRST_ALLY_LOST, CueTrigger.MISSION_FAILED), cues);
         assertEquals(0, sortie.firstAllyHit());
         assertEquals(0, sortie.firstAllyLost());
         assertTrue(sortie.flying(), "no wreck: the ship flies on");
@@ -227,19 +215,18 @@ class ConvoyTest {
         assertEquals(0, sortie.credits());
     }
 
-    private static LevelScript.RadioCue cue(LevelScript.CueTrigger trigger, String line) {
-        return new LevelScript.RadioCue(trigger, 0, "", "Okafor", line, false, "neutral");
+    private static RadioCue cue(CueTrigger trigger, String line) {
+        return new RadioCue(trigger, 0, "", "Okafor", line, false, "neutral");
     }
 
-    private static LevelScript.RadioCue end(int min, int max, String line) {
-        return new LevelScript.RadioCue(
-                LevelScript.CueTrigger.LEVEL_END, 0, "", "Okafor", line, false, "neutral", "Okafor", false, min, max);
+    private static RadioCue end(int min, int max, String line) {
+        return new RadioCue(CueTrigger.LEVEL_END, 0, "", "Okafor", line, false, "neutral", "Okafor", false, min, max);
     }
 
     @Test
     void eachUnitHomePaysAndTheLevelEndLineFitsTheOutcome() {
         var walker = TestSpecs.wave(12, WaveSpec.Formation.SINGLE, WALKER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
-        List<LevelScript.RadioCue> radio = List.of(end(5, 5, "All five."), end(1, 4, "Most."));
+        List<RadioCue> radio = List.of(end(5, 5, "All five."), end(1, 4, "Most."));
         Sortie all = sortie(level(20, escort(60, List.of()), ROAD, List.of(), List.of(), radio));
         // 8 HP: the walker destroys every unit it passes.
         Sortie none = sortie(level(20, escort(8, List.of()), STRAIGHT, List.of(walker), List.of(), radio));
@@ -293,7 +280,7 @@ class ConvoyTest {
                 false);
         var walker = TestSpecs.wave(12, WaveSpec.Formation.SINGLE, slow, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         Road split = new Road(56, new double[] {-1000, 2000, 2150, 9000}, new double[] {340, 340, 240, 240});
-        List<LevelScript.RadioCue> radio = List.of(end(5, 5, "All five."), end(1, 4, "Most."));
+        List<RadioCue> radio = List.of(end(5, 5, "All five."), end(1, 4, "Most."));
         Sortie sortie = sortie(level(21, escort(8, List.of()), split, List.of(walker), List.of(), radio));
 
         List<Integer> lines = endLines(sortie);
@@ -306,8 +293,8 @@ class ConvoyTest {
 
     @Test
     void aCueThatRequiresASpecialStaysSilentWithoutOne() {
-        var hammer = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.TIME,
+        var hammer = new RadioCue(
+                CueTrigger.TIME,
                 1,
                 "",
                 "Okafor",
@@ -318,7 +305,7 @@ class ConvoyTest {
                 true,
                 0,
                 Integer.MAX_VALUE);
-        var plain = cue(LevelScript.CueTrigger.TIME, "Five crawlers.");
+        var plain = cue(CueTrigger.TIME, "Five crawlers.");
         Sortie sortie = sortie(level(10, escort(60, List.of()), ROAD, List.of(), List.of(), List.of(hammer, plain)));
 
         List<Integer> lines = endLines(sortie);
@@ -328,7 +315,7 @@ class ConvoyTest {
 
     @Test
     void theSameRunGivesTheSameStateHash() {
-        var units = List.of(new LevelScript.GroundUnit(6, 150, GroundAndDiveTest.TURRET, -1));
+        var units = List.of(new GroundUnit(6, 150, GroundAndDiveTest.TURRET, -1));
         var walker = TestSpecs.wave(12, WaveSpec.Formation.SINGLE, WALKER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         LevelScript script = level(30, escort(60, List.of("spine-turret")), ROAD, List.of(walker), units, List.of());
         Sortie first = sortie(script);
@@ -352,8 +339,8 @@ class ConvoyTest {
     @Test
     void theConvoyDoesNotAllocate() {
         var units = List.of(
-                new LevelScript.GroundUnit(6, 150, GroundAndDiveTest.TURRET, -1),
-                new LevelScript.GroundUnit(9, 330, GroundAndDiveTest.TURRET, -1));
+                new GroundUnit(6, 150, GroundAndDiveTest.TURRET, -1),
+                new GroundUnit(9, 330, GroundAndDiveTest.TURRET, -1));
         var walker = TestSpecs.wave(12, WaveSpec.Formation.SINGLE, WALKER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         LevelScript script = level(30, escort(60, List.of("spine-turret")), ROAD, List.of(walker), units, List.of());
         List<Sortie> flown = new ArrayList<>();

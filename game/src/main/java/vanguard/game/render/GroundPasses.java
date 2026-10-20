@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import vanguard.sim.GroundObject;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -97,7 +98,7 @@ final class GroundPasses {
         this.weather = weather;
         String light = Backdrop.folder(levelKey) + "lifeboat-light";
         triggerLight = sprites.hasBackdrop(light) ? sprites.backdrop(light, 1).first() : null;
-        for (LevelScript.GroundObjectSpec spec : script.groundObjects()) {
+        for (GroundObjectSpec spec : script.groundObjects()) {
             String look = spec.look();
             if (sprites.has(look + "-collar")) {
                 groundCollars.computeIfAbsent(look, name -> sprites.frames(name + "-collar"));
@@ -107,7 +108,7 @@ final class GroundPasses {
             }
             if (!spec.trigger()) {
                 groundLooks.computeIfAbsent(look, sprites::frames);
-            } else if (!look.equals(LevelScript.GroundObjectSpec.CARGO_CONTAINER) && sprites.has(look)) {
+            } else if (!look.equals(GroundObjectSpec.CARGO_CONTAINER) && sprites.has(look)) {
                 triggerLooks.add(look);
                 groundLooks.computeIfAbsent(look, sprites::frames);
                 String glow = sprites.has(look + "-glow")

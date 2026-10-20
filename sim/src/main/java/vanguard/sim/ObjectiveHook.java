@@ -17,7 +17,7 @@ final class ObjectiveHook {
      * Per enemy kind, its hook mode ({@code nearest} for an escort's hooked kinds; M5 part G: a defend
      * primary's modes); null without a convoy.
      */
-    private LevelScript.HookMode[] modes;
+    private HookMode[] modes;
     /**
      * M7 part D: per convoy unit, the hits the hooked attacks dealt it since the last {@link EnemyForce#move} began
      * (bomb runs, the direct hits of the lobs aimed at it, D3's rolls), which the sortie applies; empty
@@ -49,18 +49,18 @@ final class ObjectiveHook {
      */
     void hook(Convoy target, List<String> slugs) {
         convoy = target;
-        modes = new LevelScript.HookMode[kinds.size()];
+        modes = new HookMode[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
-            modes[k] = slugs.contains(kinds.get(k).slug()) ? LevelScript.HookMode.NEAREST : LevelScript.HookMode.NONE;
+            modes[k] = slugs.contains(kinds.get(k).slug()) ? HookMode.NEAREST : HookMode.NONE;
         }
     }
 
     /**
      * M5 part G (design/campaign Level 13, What hurts the relay; user decision G1 = a): the hook of a
-     * defend primary, {@code target} its ally, each enemy kind in its {@link LevelScript.Defend#mode
+     * defend primary, {@code target} its ally, each enemy kind in its {@link ObjectiveSpec.Defend#mode
      * mode}.
      */
-    void hook(Convoy target, LevelScript.Defend defend) {
+    void hook(Convoy target, ObjectiveSpec.Defend defend) {
         hook(target, defend.targetedBy());
     }
 
@@ -68,11 +68,11 @@ final class ObjectiveHook {
      * The hook of {@code target} with each enemy kind in its mode in {@code targetedBy} (not listed: not
      * hooked): a defend primary's (M5 part G) or (M7 part D) the ground allies'.
      */
-    void hook(Convoy target, java.util.Map<String, LevelScript.HookMode> targetedBy) {
+    void hook(Convoy target, java.util.Map<String, HookMode> targetedBy) {
         convoy = target;
-        modes = new LevelScript.HookMode[kinds.size()];
+        modes = new HookMode[kinds.size()];
         for (int k = 0; k < kinds.size(); k++) {
-            modes[k] = targetedBy.getOrDefault(kinds.get(k).slug(), LevelScript.HookMode.NONE);
+            modes[k] = targetedBy.getOrDefault(kinds.get(k).slug(), HookMode.NONE);
         }
         allyHits = target.groundAllies() ? new double[target.size()] : new double[0];
     }
@@ -105,7 +105,7 @@ final class ObjectiveHook {
      */
     boolean bombs(Enemy enemy, Spawn spawn) {
         return groundHook()
-                && mode(enemy.kind()) == LevelScript.HookMode.ALWAYS
+                && mode(enemy.kind()) == HookMode.ALWAYS
                 && enemy.spec().gun().isPresent()
                 && enemy.spec().gun().get().mine().isPresent()
                 && spawn.escort().isEmpty()
@@ -116,9 +116,9 @@ final class ObjectiveHook {
                 && enemy.spec().burrow().isEmpty();
     }
 
-    /** The hook mode of enemy kind {@code kind}; {@link LevelScript.HookMode#NONE} without a convoy. */
-    LevelScript.HookMode mode(int kind) {
-        return modes == null ? LevelScript.HookMode.NONE : modes[kind];
+    /** The hook mode of enemy kind {@code kind}; {@link HookMode#NONE} without a convoy. */
+    HookMode mode(int kind) {
+        return modes == null ? HookMode.NONE : modes[kind];
     }
 
     /**
@@ -148,15 +148,15 @@ final class ObjectiveHook {
      * (units without the hook, fans and mines always aim at the ship).
      */
     int target(Enemy enemy, Ship ship) {
-        LevelScript.HookMode mode = mode(enemy.kind());
-        if (mode == LevelScript.HookMode.ALWAYS) {
+        HookMode mode = mode(enemy.kind());
+        if (mode == HookMode.ALWAYS) {
             // M5 part G: every attack of the unit (a fan, a lob, a turret's barrel) at the objective.
             return enemy.spec().gun().isPresent()
                             && enemy.spec().gun().get().mine().isEmpty()
                     ? convoy.objective(enemy.x(), enemy.y())
                     : -1;
         }
-        if (mode != LevelScript.HookMode.NEAREST || enemy.spec().gun().isEmpty()) {
+        if (mode != HookMode.NEAREST || enemy.spec().gun().isEmpty()) {
             return -1;
         }
         EnemyGun gun = enemy.spec().gun().get();

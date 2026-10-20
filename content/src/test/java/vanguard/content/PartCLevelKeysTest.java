@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 import org.junit.jupiter.api.Test;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.RadioCue;
 import vanguard.sim.WaveSpec;
 
 /**
@@ -76,17 +79,29 @@ class PartCLevelKeysTest {
         LevelScript medium = SimSpecs.level(content, KEY, Difficulty.MEDIUM);
 
         assertEquals(
-                List.of(new LevelScript.Hold(List.of(0), 200, 30, 1), new LevelScript.Hold(List.of(1), 200, 30, 1)),
-                medium.holds());
+                List.of(new ObjectiveSpec.Hold(List.of(0), 200, 30, 1), new ObjectiveSpec.Hold(List.of(1), 200, 30, 1)),
+                medium.objectives().holds());
         assertEquals(
                 20,
-                SimSpecs.level(content, KEY, Difficulty.EASY).holds().getFirst().speed());
+                SimSpecs.level(content, KEY, Difficulty.EASY)
+                        .objectives()
+                        .holds()
+                        .getFirst()
+                        .speed());
         assertEquals(
                 40,
-                SimSpecs.level(content, KEY, Difficulty.HARD).holds().getFirst().speed());
+                SimSpecs.level(content, KEY, Difficulty.HARD)
+                        .objectives()
+                        .holds()
+                        .getFirst()
+                        .speed());
         assertEquals(
                 30,
-                SimSpecs.level(content, KEY, Difficulty.HARD).holds().getLast().speed());
+                SimSpecs.level(content, KEY, Difficulty.HARD)
+                        .objectives()
+                        .holds()
+                        .getLast()
+                        .speed());
         // The band: the footprint of Level 08's arcology (placed once, 180 px deep) on the ground.
         BackdropData.PlacedPiece arcology = level.backdrop().placements().stream()
                 .filter(p -> p.piece().equals("arcology"))
@@ -95,28 +110,27 @@ class PartCLevelKeysTest {
         double centre = level.pieceCentre(arcology);
         double half = level.backdrop().pieces().get("arcology").size().height() / 2;
         assertEquals(
-                Optional.of(new LevelScript.Collapse(
+                Optional.of(new ObjectiveSpec.Collapse(
                         List.of(1), 1.5, 1.5, 1, 100, 390, 6, arcology.x(), centre - half, centre + half)),
-                medium.collapse());
+                medium.objectives().collapse());
         LevelData.Collapse collapse = level.collapse().orElseThrow();
         assertEquals(new LevelData.Dust(LevelData.Atmosphere.HEAVY, 6), collapse.dust());
         assertEquals("cross-highway", collapse.rubble());
 
-        assertEquals("roofs", medium.secondary().tag());
+        assertEquals("roofs", medium.objectives().secondary().tag());
         List<WaveSpec> tagged =
                 medium.waves().stream().filter(w -> w.tag().equals("roofs")).toList();
         assertEquals(1, tagged.size());
         assertEquals("creeper", tagged.getFirst().enemy().slug());
 
+        assertTrue(
+                medium.radio().stream().anyMatch(cue -> cue.trigger() == CueTrigger.HOLD_START && cue.requires() == 0));
         assertTrue(medium.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.HOLD_START && cue.requires() == 0));
+                .anyMatch(cue -> cue.trigger() == CueTrigger.COLLAPSE && cue.requires() == RadioCue.FITTED_ESCORT));
         assertTrue(medium.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.COLLAPSE
-                        && cue.requires() == LevelScript.RadioCue.FITTED_ESCORT));
-        assertTrue(medium.radio().stream()
-                .anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.TIME
+                .anyMatch(cue -> cue.trigger() == CueTrigger.TIME
                         && cue.t() == 8.5
-                        && cue.requires() == LevelScript.RadioCue.FITTED_ESCORT));
+                        && cue.requires() == RadioCue.FITTED_ESCORT));
 
         assertTrue(level.music().fullOn(LevelData.Music.FullOn.HOLD));
         assertTrue(level.music().fullOn(LevelData.Music.FullOn.COLLAPSE));
@@ -128,7 +142,9 @@ class PartCLevelKeysTest {
         Content content = ContentLoader.load(DesignTree.dataFiles());
         LevelData level = content.level(KEY);
 
-        assertEquals(List.of(), SimSpecs.level(content, KEY, Difficulty.MEDIUM).holds());
+        assertEquals(
+                List.of(),
+                SimSpecs.level(content, KEY, Difficulty.MEDIUM).objectives().holds());
         assertTrue(level.collapse().isEmpty());
         assertTrue(!level.music().fullOn(LevelData.Music.FullOn.HOLD));
         assertEquals(List.of(), level.threatProfile().requiredTraits());

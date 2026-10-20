@@ -6,8 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
-import vanguard.sim.LevelScript.CueTrigger;
 
 /** {@link RadioTimeline}'s checks for Level 03 and its own tests. */
 class RadioTimelineLevel03Test extends RadioTimeline {

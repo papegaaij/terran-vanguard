@@ -105,7 +105,7 @@ final class Latches {
         events.add(SimEvents.Type.LAMPREY_LATCHED, enemy.x(), enemy.y(), spot);
         if (!latchSeen) {
             latchSeen = true;
-            radio.cue(LevelScript.CueTrigger.FIRST_LATCH, "");
+            radio.cue(CueTrigger.FIRST_LATCH, "");
         }
     }
 

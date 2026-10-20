@@ -5,7 +5,11 @@ import vanguard.content.LevelData;
 /**
  * The outro after a won level (design/ui/hud, Radio): the scroll runs on under the radio, and the
  * debrief takes over once the radio has shown its last message (the level-end line and whatever
- * is still queued), at the latest {@link LevelData#OUTRO_SECONDS} after the level's end.
+ * is still queued), at the latest {@link LevelData#OUTRO_SECONDS} after the level's end, unless a
+ * closing line (the level-end line, a met secondary's) has not been heard in full by then: the outro
+ * waits for its voice ({@link RadioQueue#closingLeft}). The user's playtest of 2026-10-19: with a bark
+ * of Rook's on the radio as Level 15 ended, its secondary's line and level-end line no longer fitted
+ * in the 15 s and the debrief cut the level-end line short.
  */
 public final class Outro {
     /** Seconds since the level's end; negative while the level is flown. */
@@ -36,6 +40,6 @@ public final class Outro {
             return false;
         }
         elapsed += seconds;
-        return radio.idle() || elapsed >= LevelData.OUTRO_SECONDS;
+        return radio.idle() || (elapsed >= LevelData.OUTRO_SECONDS && !radio.closingLeft());
     }
 }

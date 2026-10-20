@@ -8,7 +8,7 @@ import java.util.List;
  * they enter with the ground units.
  */
 final class RootBursts {
-    private final List<LevelScript.GroundUnit> groundUnits;
+    private final List<GroundUnit> groundUnits;
     private final SimEvents events;
     /**
      * M5 part H, the root bursts (design/campaign Level 14, Hazards; decision H2 = a): per ground unit
@@ -33,7 +33,7 @@ final class RootBursts {
     private double burstScroll;
     private double burstScrollStep;
 
-    RootBursts(List<LevelScript.GroundUnit> groundUnits, SimEvents events) {
+    RootBursts(List<GroundUnit> groundUnits, SimEvents events) {
         this.groundUnits = groundUnits;
         this.events = events;
         burstSlot = new int[groundUnits.size()];
@@ -49,18 +49,18 @@ final class RootBursts {
         burstFirst = new boolean[bursting];
         int b = 0;
         for (int i = 0; i < groundUnits.size(); i++) {
-            LevelScript.GroundUnit unit = groundUnits.get(i);
+            GroundUnit unit = groundUnits.get(i);
             if (unit.burst().isEmpty()) {
                 continue;
             }
-            LevelScript.RootBurst burst = unit.burst().get();
+            RootBurst burst = unit.burst().get();
             burstSlot[i] = b;
             burstUnit[b] = i;
             burstTelegraphTicks[b] = SimStep.ticks(burst.t());
             boolean first = true;
             double foot = 0;
             for (int j = 0; j < groundUnits.size(); j++) {
-                LevelScript.GroundUnit other = groundUnits.get(j);
+                GroundUnit other = groundUnits.get(j);
                 if (other.burst().isPresent() && other.burst().get().index() == burst.index()) {
                     first &= j >= i;
                     foot = Math.max(
@@ -86,7 +86,7 @@ final class RootBursts {
      * M5 part H, the root bursts' telegraphs (design/campaign Level 14, Hazards; decision H2 = a), before
      * {@link EnemyForce#spawn} in a step: every burst whose time has come and whose telegraph has not started in
      * this attempt starts it now, moved away from the ship at {@code shipX} when its centre lies closer
-     * than {@link LevelScript.RootBurst#SHIP_CLEARANCE} (its event once per burst); {@code groundScroll}
+     * than {@link RootBurst#SHIP_CLEARANCE} (its event once per burst); {@code groundScroll}
      * is the ground's scroll after this step's {@code scrollStep}.
      */
     void bursts(int levelTick, double shipX, double groundScroll, double scrollStep, int nextGround) {
@@ -102,7 +102,7 @@ final class RootBursts {
 
     /** M5 part H: burst slot {@code b}'s telegraph starts: its move away from the ship, its point, its event. */
     private void telegraph(int b) {
-        LevelScript.RootBurst burst = groundUnits.get(burstUnit[b]).burst().orElseThrow();
+        RootBurst burst = groundUnits.get(burstUnit[b]).burst().orElseThrow();
         burstShift[b] = clearOfShip(burst.x(), burstFoot[b], burstShipX);
         burstBase[b] = PlayField.HEIGHT - burst.depth() + burstScroll;
         burstTelegraphed[b] = true;
@@ -117,12 +117,12 @@ final class RootBursts {
 
     /**
      * M5 part H: how far a burst centred at {@code x}, its growths reaching {@code foot} px either side,
-     * moves sideways so that it lies {@link LevelScript.RootBurst#SHIP_CLEARANCE} px from the ship at
+     * moves sideways so that it lies {@link RootBurst#SHIP_CLEARANCE} px from the ship at
      * {@code shipX}: 0 when it does already; else away from the ship (a burst right under it toward the
      * field's middle), to the other side when the field has no room there, kept on the field.
      */
     static double clearOfShip(double x, double foot, double shipX) {
-        double clearance = LevelScript.RootBurst.SHIP_CLEARANCE;
+        double clearance = RootBurst.SHIP_CLEARANCE;
         double d = x - shipX;
         if (Math.abs(d) >= clearance) {
             return 0;
@@ -155,7 +155,7 @@ final class RootBursts {
     }
 
     /** M5 part H: slot {@code b}'s burst. */
-    LevelScript.RootBurst burstOf(int b) {
+    RootBurst burstOf(int b) {
         return groundUnits.get(burstUnit[b]).burst().orElseThrow();
     }
 
@@ -183,14 +183,14 @@ final class RootBursts {
      * M5 part H: ground unit {@code index} ({@code unit}, a root burst's growth) enters as {@code enemy} of kind
      * {@code kind} with the serial {@code serial}.
      */
-    void grow(int index, LevelScript.GroundUnit unit, Enemy enemy, int kind, int serial) {
+    void grow(int index, GroundUnit unit, Enemy enemy, int kind, int serial) {
         // M5 part H: a root burst's growth stands at its burst's point, which scrolled since the telegraph.
         int b = burstSlot[index];
         if (!burstTelegraphed[b]) {
             // Its telegraph fell before a boss checkpoint the attempt restarted from: it starts now.
             telegraph(b);
         }
-        LevelScript.RootBurst burst = unit.burst().get();
+        RootBurst burst = unit.burst().get();
         enemy.root(unit.enemy(), kind, unit.x(), serial, unit.group());
         // The ground units scroll by this step's distance after they are let in.
         double y = burstBase[b] - burstScroll + burstScrollStep;

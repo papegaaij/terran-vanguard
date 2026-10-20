@@ -74,18 +74,11 @@ class VortexTest {
     }
 
     static Sortie sortie(double scroll, Loadout loadout, WaveSpec... waves) {
-        LevelScript level = new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, scroll)),
-                List.of(waves),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        LevelScript level = LevelScript.builder(1, 1)
+                .sections(List.of(new Section(40, scroll)))
+                .waves(List.of(waves))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         return new Sortie(1, loadout, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
 

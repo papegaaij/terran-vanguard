@@ -5,7 +5,9 @@
 # simulation in step D4, flown from steps D1/D3): the level's `allies` block (the five Ares Landing domes, scrolling
 # through with the ground, and the target-the-objective hook that goes for them: `targeted_by`, `bomb_row`,
 # `bomb_slot`, the easy/hard `hits`), the secondary `untouched`, a pickup's `dropped_by.enemy`, the presentation key
-# `flak` and the ambience `mars-colony`.
+# `flak` and the ambience `mars-colony`. Round 41 (the user's playtest 2026-10-19, "both"; step FX-C): the secondary
+# `standing` instead of `untouched` ("No dome lost": hits allowed, failed when a dome breaks) and the hooked bombers'
+# `bomb_run_in` (they fly 2.5 s on the play field before they may drop).
 # Defaults of the gap check built here, pending the user's review in round 40: the hook per unit type (every Spore
 # Bomber wave `always`, every Shellback `alternate`: the t=30.5 Shellback walks while no dome is on the screen, so it
 # has nothing to lob at); the hooked bombers hold a row 160 px below the top edge, a wave's bombers on x slots 40 px
@@ -15,7 +17,7 @@
 # The backdrop is step ART-D's Ares Landing backdrop (tools/art/backdrop_l17.py), merged in step D4.
 scroll_speed: 130     # the approach and the spaceport; the dome sections and the compound set their own
 launch_seconds: 5     # from the rail line north of the colony (scenery)
-bounty_scale: 0.60    # every bounty × 0.60: the typical haul on budget(17) 2,067 (round 36, Q.17c; TypicalHaulTest in step D4)
+bounty_scale: 0.40    # every bounty × 0.40: the typical haul on budget(17) 2,067 (TypicalHaulTest; step PE17: from 0.60 of round 36, Q.17c, with the reworked waves)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
   setting: Mars, Ares Landing
@@ -31,13 +33,13 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     l2: "New: a shelled walker and a singing flyer."
     l3: Spread for the bombers, anti-ground for the shells.
   notes:
-    Dominant layers: '`air` (bombers, the Herald and its escorts, popcorn), `ground` (Shellbacks, spine-turret nests, Polyp Mortars, the domes)'
+    Dominant layers: '`air` (bombers, the Herald and its escorts, Stinger streams, popcorn), `ground` (Shellbacks, Burrower fields, spine-turret nests, Polyp Mortars, the domes)'
     Attack directions: '{directions}'
     Density: '{density}'
     Recommended traits: '{traits}'
     Hazards: Bombers and Shellbacks going for the domes (the secondary); Shellback spore mortars
     Boss / mid-boss: none
-    Sensor-suite detail: 'none: Ares Landing, `air` + `ground`, front · L1: + directions (sides), density {density}, hazard "dome attacks", the objective `{objective}` and the secondary `NO DOME HIT` · L2: + Shellback (new), Choir Herald (new), Spore Bomber, Mantis, Dust Kite, Skitter, Needler, Stinger portraits · L3: + `spread` and `anti-ground` highlighted, the wave strip marking the two dome sections, 1 secret'
+    Sensor-suite detail: 'none: Ares Landing, `air` + `ground`, front · L1: + directions (sides), density {density}, hazard "dome attacks", the objective `{objective}` and the secondary `NO DOME LOST` · L2: + Shellback (new), Choir Herald (new), Spore Bomber, Burrower, Mantis, Dust Kite, Skitter, Needler, Stinger portraits · L3: + `spread` and `anti-ground` highlighted, the wave strip marking the two dome sections, 1 secret'
 
 sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); tiles: step ART-D's Ares Landing sets (merged in step D4)
   - name: Rail Approach
@@ -49,7 +51,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
         deep: rust plain, Olympus Mons on the horizon.
         ground: the rail line from the north with a stranded freight train, a spine-turret nest on the embankment (t≈18), wind-blown dust drifts.
         low-air: thin dust wisps.
-      purpose: Popcorn from t=6; the first ground targets.
+      purpose: Popcorn from t=6, a Burrower field under the plain (t=9); the first ground targets.
   - name: Outer Domes
     end: 72
     speed: 80
@@ -59,7 +61,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: Bradbury (x 130) and Lowell (x 350) on their rings, greenhouse annexes, rail spurs, Vrell nest growth creeping up to the rings; a Polyp Mortar floe at t≈64.
-      purpose: The Shellback alone (t=30.5), the first hooked bombers, the Herald alone (t=55.5).
+      purpose: The Shellback alone (t=30.5), the first hooked bombers, the Herald alone (t=55.5); a Burrower field in the nest growth after Lowell (t=60).
   - name: Helix Compound
     end: 98
     speed: 110
@@ -70,7 +72,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: the burnt outer greenhouses (collapsed frames, the secret's capsule at t≈76), then the **Helix compound** at x 300–460 (t≈78–85) black-and-gold, lit, a landing pad, its perimeter fence clean, no Vrell growth within 100 px while everything round it burns; a rail yard with a spine-turret nest (t≈90).
-      purpose: The Helix beat (the t=77 swarm bends round the compound); Mantis flankers.
+      purpose: The Helix beat (the t=77 swarm bends round the compound); a Burrower field after it (t=86); Mantis flankers.
   - name: Inner Ring
     end: 140
     speed: 70
@@ -80,7 +82,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: Schiaparelli (x 110), Burroughs (x 370), then Eden (x 240, the largest, its glass lit brightest); the ring road, airlocks, militia gun pits (unmanned); a Polyp Mortar floe at t≈117.
-      purpose: The hooked waves at their densest; the second Herald over Eden; the secondary judged at t≈135.8.
+      purpose: The hooked waves at their densest, a Burrower field between the domes (t=112, never on one); the second Herald over Eden; the secondary judged at t≈135.8.
   - name: Spaceport
     end: 172
     speed: 130
@@ -90,7 +92,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     notes:
       layers:
         ground: the spaceport's pads and hangars, a spine-turret nest on the apron (t≈150), the militia's flak guns opening up at t≈160 (presentation).
-      purpose: Release; level end.
+      purpose: Release, with two Burrower fields (t=137.5 as Eden leaves, t=161.5 through the apron); level end.
 
 # The domes (design/allies/ares-landing-dome; M16 = a): each enters at the top edge at `at` [t, x] (its bottom edge
 # there) and scrolls through with the ground; they never fail the mission. The hook goes for them per unit type.
@@ -101,14 +103,25 @@ allies:
     - {ally: ares-landing-dome, name: Schiaparelli, at: [104, 110]}
     - {ally: ares-landing-dome, name: Burroughs, at: [110, 370]}
     - {ally: ares-landing-dome, name: Eden, at: [126, 240], size: [144, 144], sprite: ares-dome-eden}   # the largest
-  targeted_by: {spore-bomber: always, shellback: alternate}   # the popcorn, the Needlers, the Stingers, the Mantises, the Herald and the nests are never hooked
+  targeted_by: {spore-bomber: always, shellback: alternate}   # the popcorn, the Needlers, the Stingers, the Mantises, the Herald, the Burrowers and the nests are never hooked
   bomb_row: 220    # px below the top edge (round 40 R.b: from 160): a hooked bomber holds this row and steers (at its 45 px/s) to the next dome's x
   bomb_slot: 40    # px between a hooked wave's bombers' x slots round the dome's x
+  bomb_run_in: 2.5  # s a hooked bomber flies on the play field before it may drop (round 41: it dropped at once, the t=124 bombers on Eden as they entered); over a dome before then it keeps its load and steers on to the next
   easy: {hits: 4, targeted_by: {shellback: none}}   # a dome breaks on its 4th hit; the Shellbacks' mortar lobs only at the ship (their roll still crushes)
   hard: {hits: 2}
 
 # Popcorn in small waves (Dust Kite streams and V-wings of 3, long V-wings and snakes of 4, Mote Swarms of 6, Skitter
-# snakes of 4), a wave every 3-3.5 s from t=6; no rear waves; the side waves warned 3 s ahead at their edge. The
+# snakes of 4), a wave every 3-3.5 s from t=6; no rear waves; the side waves warned 3 s ahead at their edge.
+# Step PE17 (the user's round 40 P.e "all later levels" and "tougher, not more", pending the user's review): the waves
+# to the Act 2+ rules (PacingTest's 2 s rule at medium and hard, ActFloorTest's floor) with long-lived, firing groups
+# rather than more popcorn: six Burrower fields (t=9, 60, 86, 112, 137.5, 161.5; never while an outer dome or a quiet
+# window is on the screen, the inner field kept off the domes and the compound by `no_surface`; hard one fewer each),
+# whose rings give most of the shots (the t=9.5 V-wing and the t=88 stream made way for two of them), and nine Stinger
+# streams of 3 (13, 26.5, 48.5, 71, 79.5, 105.5, 141.5, 152, 165.5) for three Skitter waves, five Dust Kite waves
+# and the t=81.5 Stinger V-wing; the t=121
+# Needler line of 4 a line of 3 at t=119.5 (hard 2: with `small_act_hp` and the inner field it outlived the Herald's
+# arrival, and the bombers broke Eden in every medium run); moved: the t=42 V-wing to 40.5, the t=84.5 snake to 83.5 (left edge),
+# the t=100 snake to 99, the t=159 V-wing to 157.5; added the t=74 Kite stream and the t=168 V-wing. The
 # formation lever makes the 3-bomber waves (t=102, t=124) two on easy and four on hard. The side pairs of bombers
 # (t=43.5, 108.5, hard's 126) are streams on a route in at the row 140 px below the top edge (written from the left,
 # mirrored for the right edge), 1 s apart (step D4: a side column needs a hovering or diving unit; a hooked bomber
@@ -118,12 +131,12 @@ allies:
 # Walker paths are the ground positions at the wave's t ([x, y] px, y below the top edge), as Level 04's.
 waves:
   - {t: 6, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25, notes: "The first targets, over the rail line"}
-  - {t: 9.5, formation: V-wing, enemy: dust-kite, count: 3, from: front}
-  - {t: 13, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Along the rail line"}
+  - {t: 9, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], hard: {count: 3}, notes: "Under the rust plain (buried, ahead of the ship); gone before the Shellback's quiet window"}
+  - {t: 13, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25, notes: "Along the rail line"}
   - {t: 16.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 19.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Over the spine-turret nest on the embankment"}
   - {t: 23, formation: V-wing, enemy: stinger, count: 4, from: front, notes: "The leader drops an overdrive"}
-  - {t: 26.5, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: "Gone before the Shellback's quiet window"}
+  - {t: 26.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, notes: "Gone before the Shellback's quiet window"}
   - t: 30.5
     formation: single
     enemy: shellback
@@ -140,7 +153,7 @@ waves:
     from: front
     paths: [[[390, -60], [400, 300], [350, 460], [380, 620]]]   # down the right lane, out at the bottom-right
     notes: Down the right lane
-  - {t: 42, formation: V-wing, enemy: dust-kite, count: 3, from: front}
+  - {t: 40.5, formation: V-wing, enemy: dust-kite, count: 3, from: front}
   - {t: 43.5, formation: stream, enemy: spore-bomber, count: 2, from: sides, edge: right, interval: 1, paths: [[[-40, 140], [120, 140]]], notes: "**Hooked**: in at y 140 from the right edge, 1 s apart, over Lowell (x 350; its centre passes at t≈48.8); warned 3 s ahead"}
   - t: 46.5
     formation: single
@@ -149,7 +162,7 @@ waves:
     from: front
     paths: [[[260, -150], [260, -70], [220, 0], [220, 640]]]   # round 40 R.c: down Lowell's ring lane (its centre x 350, y≈-20 at t=46.5; 90 px to its left: the body clear of the glass, the ball touching the ring) from 130 px behind it, then aside 50 px short of level, between the domes
     notes: "**Hooked**: walks down beside Lowell's ring from 130 px behind it, then steps aside between the domes; a roll set off before it steps aside grazes the ring"
-  - {t: 48.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 48.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 52, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Gone before the Herald's quiet window; Lowell leaves at t≈54.3"}
   - t: 55.5
     groups:
@@ -159,6 +172,7 @@ waves:
     speed: 50   # round 40 R.d: in at half its 100 px/s, so its rings are seen before it holds
     notes: "**New.** The Herald with 4 Needlers in `orbit`, ringed while inside its 90 px, in at 50 px/s (round 40); alone until t=59 (no dome on the screen); Varga's line at its first ring"
   - {t: 59, formation: stream, enemy: dust-kite, count: 3, from: front, edge: right, interval: 1.25}
+  - {t: 60, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], hard: {count: 3}, notes: "In the nest growth between the outer domes, after Lowell has left"}
   - {t: 62.5, formation: V-wing, enemy: dust-kite, count: 4, from: front}
   - {t: 66, formation: line abreast, enemy: needler, count: 4, from: front}
   - t: 69   # round 40 (step D6): from 69.5, for PacingTest on easy (the autopilot now clears the t=66 Needlers sooner)
@@ -167,7 +181,8 @@ waves:
     count: 6
     from: front
     paths: [[[90, -60], [80, 300], [130, 460], [100, 620]]]   # down the left lane, out at the bottom-left
-  - {t: 72.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Over the burnt outer greenhouses"}
+  - {t: 71, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Over the burnt outer greenhouses"}
+  - {t: 74, formation: stream, enemy: dust-kite, count: 3, from: front, edge: left, interval: 1.25, notes: "Down the left edge before the Helix beat"}
   - t: 77
     formation: swarm
     enemy: dust-kite
@@ -175,9 +190,9 @@ waves:
     from: front
     paths: [[[230, -60], [240, 140], [255, 300], [280, 420], [380, 480], [440, 540], [500, 620]]]   # down beside the compound's fence (x 300-460), then closing up below it, off at the bottom-right
     notes: "**The Helix beat**: the swarm's route bends round the compound's fence (x 300–460) and closes up below it; nothing fires on the compound"
-  - {t: 81.5, formation: V-wing, enemy: stinger, count: 4, from: front, edge: left, notes: "Down the left half, away from the compound"}
-  - {t: 84.5, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "After the compound has passed"}
-  - {t: 88, formation: stream, enemy: dust-kite, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 79.5, formation: stream, enemy: stinger, count: 3, from: front, edge: left, interval: 1.25, notes: "Down the left edge, away from the compound"}
+  - {t: 83.5, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: "Down the left edge as the compound passes"}
+  - {t: 86, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], hard: {count: 3}, notes: "After the compound has passed"}
   - t: 91.5
     formation: swarm
     enemy: mote-swarm
@@ -185,9 +200,9 @@ waves:
     from: front
     paths: [[[240, -60], [250, 300], [170, 460], [200, 620]]]   # down the middle, out at the bottom
   - {t: 95, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "One per edge, hover {hold} s; Rook's flank bark at t=95"}
-  - {t: 100, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: "The inner ring comes into view"}
+  - {t: 99, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: "The inner ring comes into view"}
   - {t: 102, formation: line abreast, enemy: spore-bomber, count: 3, from: front, notes: "**Hooked**: over Schiaparelli (x 110; its centre passes their row at t≈108.0)"}
-  - {t: 105.5, formation: V-wing, enemy: dust-kite, count: 3, from: front, notes: "Down the right half"}
+  - {t: 105.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, notes: "Down the right edge"}
   - {t: 108.5, formation: stream, enemy: spore-bomber, count: 2, from: sides, edge: right, interval: 1, paths: [[[-40, 140], [120, 140]]], notes: "**Hooked**: over Burroughs (x 370; its centre passes at t≈113.1); warned 3 s ahead"}
   - t: 111
     formation: convoy
@@ -197,9 +212,10 @@ waves:
     interval: 3
     paths: [[[280, -120], [280, -40], [240, 30], [240, 640]]]   # round 40 R.c: down Burroughs' ring lane (its centre x 370, y≈10 at t=111; 90 px to its left) from 130 px behind it, then aside 50 px short of level; the second, 3 s later, steps aside 260 px behind it
     notes: "**Hooked**: walk down 3 s apart beside Burroughs' ring, then step aside between the domes; their rolls never overlap"
+  - {t: 112, formation: field, enemy: burrower, count: 3, from: front, x: 240, size: [400, 200], hard: {count: 2}, notes: "In the nest growth between the inner domes; none surfaces on a dome (`no_surface`)"}
   - {t: 114.5, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25}
   - {t: 118, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
-  - {t: 121, formation: line abreast, enemy: needler, count: 4, from: front, notes: "Gone before the Herald holds over Eden's lane"}
+  - {t: 119.5, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}, notes: "Gone before the Herald holds over Eden's lane"}
   - t: 124
     groups:
       - {formation: carrier + escorts, enemy: choir-herald, count: 1}
@@ -223,20 +239,23 @@ waves:
     from: front
     paths: [[[420, -60], [430, 300], [360, 460], [390, 620]]]   # down the right lane, clear of Eden's lane
   - {t: 134.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "One per edge, hover {hold} s; Eden leaves at t≈135.8 and the secondary is judged"}
+  - {t: 137.5, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], hard: {count: 3}, notes: "As Eden leaves, on into the spaceport"}
   - {t: 138, formation: V-wing, enemy: dust-kite, count: 4, from: front}
-  - {t: 141.5, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25, notes: "Over the spaceport"}
+  - {t: 141.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, notes: "Over the spaceport"}
   - {t: 145, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
   - {t: 148.5, formation: line abreast, enemy: needler, count: 3, from: front}
-  - {t: 152, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 152, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
   - t: 155.5
     formation: swarm
     enemy: mote-swarm
     count: 6
     from: front
     paths: [[[240, -60], [230, 300], [310, 460], [280, 620]]]   # down the middle over the apron
-  - {t: 159, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 157.5, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 161.5, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 220], hard: {count: 3}, notes: "Up through the apron's cracked slabs"}
   - {t: 162, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right}
-  - {t: 165.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: "The last wave"}
+  - {t: 165.5, formation: stream, enemy: stinger, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 168, formation: V-wing, enemy: dust-kite, count: 3, from: front, notes: "The last wave"}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x; none within 100 px of the Helix compound (x 300-460, t≈78-85)
   - target: embankment nest
@@ -291,6 +310,12 @@ ground_targets:  # at: [t, x], when it enters at the top edge and its x; none wi
       target: Spine Turret nest ×{count} on the spaceport apron (t≈150)
       effect: Bounty
 
+no_surface:  # step PE17: where no Burrower surfaces (t = the centre passing the middle of the screen, as a backdrop piece): the Helix compound, and the inner domes' footprints with their aprons (as their dome-apron pieces)
+  - {t: 81.5, x: 380, size: [184, 264]}   # the Helix compound (helix-compound): nothing touches it
+  - {t: 108.714, x: 110, size: [184, 184]}   # Schiaparelli
+  - {t: 114.714, x: 370, size: [184, 184]}   # Burroughs
+  - {t: 130.886, x: 240, size: [216, 216]}   # Eden
+
 secrets:
   - name: seed vault
     crate: 100   # Act 1 terms: pays 256 with the act factor
@@ -321,12 +346,12 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {event: first-ring, speaker: Varga, line: "That flyer is singing shields onto the others. See the rings? Kill the singer first.", notes: {trigger: "The first Herald's first ring (`first-ring`, round 40)"}}
   - {event: ally-hit, speaker: Ares Control, portrait: generic-colonial, line: "{ally} is hit! The glass is holding... for now.", notes: {trigger: "A dome's first hit (`ally-hit`)"}}
   - {event: ally-lost, speaker: Ares Control, portrait: generic-colonial, line: "We've lost {ally}. Its people are below. Its crops aren't.", notes: {trigger: "A dome breaks (`ally-lost`)"}}
-  - {event: secondary-objective, speaker: Ares Control, portrait: generic-colonial, line: "Five domes, not a crack. Fine. Earth can stay for dinner.", notes: {trigger: "Secondary met (`secondary-objective`)"}}
+  - {event: secondary-objective, speaker: Ares Control, portrait: generic-colonial, line: "All five domes still standing. Fine. Earth can stay for dinner.", notes: {trigger: "Secondary met (`secondary-objective`)"}}
   - {event: level-end, speaker: Okafor, line: "The domes are behind you and the colony is breathing. Good work, Aegis."}
 
 objectives:
   primary: reach-end   # the domes never fail the mission (a broken dome loses its crops, not lives)
-  secondary: {untouched: true, label: DOMES, credits: 100, name: No dome hit}   # failed at the first hit on any dome, met when Eden leaves the bottom edge (t≈135.8); 100 in Act 1 terms: pays 256
+  secondary: {standing: true, label: DOMES, credits: 100, name: No dome lost}   # round 41 (the user's playtest 2026-10-19: was `untouched`, "No dome hit"): hits allowed, failed when the first dome breaks, met when Eden leaves the bottom edge (t≈135.8); 100 in Act 1 terms: pays 256
 
 music:
   track: 8            # Act 3 A "Red Dust Run" (audio/music track list)

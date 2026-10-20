@@ -25,7 +25,8 @@ import vanguard.content.LevelData;
  * its own (cranes, debris, sleds, rocks, the darkness's flares, the tows' lifeboat, pod and cable, the
  * collapse's dust puffs, the scripted loss's glow and lance, the weather's looks and sondes, the root
  * bursts' cracks, dust and roots; M7 part D: the ground allies' sprite sets and their pip, a trigger look's
- * contents, the militia flak's puffs). A
+ * contents, the militia flak's puffs; M7 part F: the furnace vents' grates and fire, the gantries and cradles of the
+ * up-facing nests, a trigger look's surround, a foundry's ingots and rovers). A
  * sprite belongs to a root when its name is the root or starts with the root and a hyphen
  * ({@code leviathan} owns {@code leviathan-fin-left}). The shared roots are the weapons, the specials
  * and the game's own effects ({@link #GAME_WIDE}); an enemy no level uses yet goes in its first level's
@@ -121,6 +122,30 @@ final class SpriteUse {
      */
     static final Map<String, String> TRIGGER_CONTENTS = Map.of("greenhouse-frame", "seed-capsule");
 
+    /**
+     * M7 part F: a ground target look standing inside another sprite of its own (the game's {@code
+     * FoundryLooks.TRIGGER_SURROUNDS}): Level 19's payroll safe inside the shift office.
+     */
+    static final Map<String, String> TRIGGER_SURROUNDS = Map.of("payroll-safe", "shift-office");
+
+    /**
+     * M7 part F: a level with furnace {@code vents} draws their grates, heat glow, flame and smoke, {@code
+     * furnace-vent*} (tools/art/l19_props.py; the game's FoundryLooks).
+     */
+    static final String VENT_ROOT = "furnace-vent";
+
+    /**
+     * M7 part F: a level with up-facing nests ({@code arc: up}) draws the steel truss gantry under them and each
+     * nest's cradle, {@code gantry} and {@code gantry-cradle}.
+     */
+    static final String GANTRY_ROOT = "gantry";
+
+    /**
+     * M7 part F: a level with conveyor {@code belts} is a foundry: the ingot stacks and the pallets riding its last
+     * belt run, and the crews' rovers leaving its smelter tower ({@code ingot-*}, {@code crew-rover*}).
+     */
+    static final List<String> FOUNDRY_ROOTS = List.of("ingot", "crew-rover");
+
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
 
@@ -206,6 +231,11 @@ final class SpriteUse {
             }
             // M7 part D: a look over contents with sprites of their own (Level 17's seed-vault capsule).
             target.sprite().map(TRIGGER_CONTENTS::get).ifPresent(roots::add);
+            // M7 part F: a look inside a surround of its own (Level 19's payroll safe in the shift office).
+            target.sprite().map(TRIGGER_SURROUNDS::get).ifPresent(roots::add);
+            if (target.arc().isPresent()) {
+                roots.add(GANTRY_ROOT);
+            }
         }
         List<String> open = new ArrayList<>(enemies);
         while (!open.isEmpty()) {
@@ -255,6 +285,9 @@ final class SpriteUse {
             roots.add(GROUND_PIP);
         });
         level.flak().ifPresent(flak -> roots.add(FLAK_ROOT));
+        // M7 part F: the furnace vents' looks, a foundry's ingots and rovers.
+        level.vents().ifPresent(vents -> roots.add(VENT_ROOT));
+        level.belts().ifPresent(belts -> roots.addAll(FOUNDRY_ROOTS));
         // M5 part H: a level with root bursts draws their cracks, dust and roots.
         if (!level.bursts().isEmpty()) {
             roots.add(ROOT_BURST_ROOT);

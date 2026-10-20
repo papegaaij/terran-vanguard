@@ -19,9 +19,12 @@ final class Objectives {
     static final int LOST = 2;
 
     private final boolean byGroups;
-    private final LevelScript.Secondary secondary;
+    private final Secondary secondary;
     private final int escapesTotal;
     private int escapesDestroyed;
+    /** M7 part F: the units of an escapes objective that got away (counted only with escapes allowed). */
+    private int escapesLost;
+
     private boolean escapesFailed;
     private final int[] killsByKind;
     private final int requiredKills;
@@ -37,7 +40,10 @@ final class Objectives {
     private boolean afloatFailed;
     /** M5 part G: whether the defended ally dropped below an integrity objective's share. */
     private boolean integrityFailed;
-    /** M7 part D: whether a ground ally was hit, which fails an untouched objective. */
+    /**
+     * M7 part D: whether a ground ally was hit, which fails an untouched objective; round 41: or broken, which
+     * fails a standing one.
+     */
     private boolean untouchedFailed;
 
     /**
@@ -48,13 +54,7 @@ final class Objectives {
      * @param escapesTotal the units of the enemies of an escapes or kill-all objective the level
      *     sends, or the boss parts of a parts objective
      */
-    Objectives(
-            LevelScript.Secondary secondary,
-            int groups,
-            int kinds,
-            int units,
-            List<LevelScript.GroundUnit> groundUnits,
-            int escapesTotal) {
+    Objectives(Secondary secondary, int groups, int kinds, int units, List<GroundUnit> groundUnits, int escapesTotal) {
         this.secondary = secondary;
         byGroups = secondary.byGroups();
         this.escapesTotal = escapesTotal;
@@ -64,7 +64,7 @@ final class Objectives {
         groupDestroyed = new int[groups];
         groupEscaped = new int[groups];
         groupState = new int[groups];
-        for (LevelScript.GroundUnit unit : groundUnits) {
+        for (GroundUnit unit : groundUnits) {
             if (unit.group() >= 0) {
                 groupUnits[unit.group()]++;
             }
@@ -81,6 +81,7 @@ final class Objectives {
         groupsCleared = other.groupsCleared;
         groupsLost = other.groupsLost;
         escapesDestroyed = other.escapesDestroyed;
+        escapesLost = other.escapesLost;
         escapesFailed = other.escapesFailed;
         secondaryMet = other.secondaryMet;
         afloatFailed = other.afloatFailed;
@@ -98,6 +99,7 @@ final class Objectives {
         groupsCleared = 0;
         groupsLost = 0;
         escapesDestroyed = 0;
+        escapesLost = 0;
         escapesFailed = false;
         secondaryMet = false;
         afloatFailed = false;
@@ -117,16 +119,31 @@ final class Objectives {
         return true;
     }
 
-    /** M7 part D: the last ground ally left the bottom edge; returns whether that met an untouched objective (none hit). */
+    /**
+     * Round 41 (design/campaign Level 17, "No dome lost"): a ground ally broke; returns whether that failed a
+     * standing objective (the first one broken, before the last of them left the screen).
+     */
+    boolean allyLost() {
+        if (!secondary.standing() || untouchedFailed || secondaryMet) {
+            return false;
+        }
+        untouchedFailed = true;
+        return true;
+    }
+
+    /**
+     * M7 part D: the last ground ally left the bottom edge; returns whether that met an untouched objective (none
+     * hit) or (round 41) a standing one (none broken).
+     */
     boolean alliesPassed() {
-        if (!secondary.untouched() || untouchedFailed || secondaryMet) {
+        if (!secondary.byGroundAllies() || untouchedFailed || secondaryMet) {
             return false;
         }
         secondaryMet = true;
         return true;
     }
 
-    /** M7 part D: whether an untouched objective failed (a ground ally was hit). */
+    /** M7 part D: whether an untouched objective failed (a ground ally was hit); round 41: or a standing one (one broke). */
     boolean untouchedFailed() {
         return untouchedFailed;
     }
@@ -193,11 +210,27 @@ final class Objectives {
             return false;
         }
         escapesDestroyed++;
-        if (escapesDestroyed == escapesTotal) {
-            secondaryMet = true;
-            return true;
+        if (escapesDestroyed >= escapesNeeded()) {
+            return meet();
         }
         return false;
+    }
+
+    /**
+     * The units of an escapes objective it needs destroyed: all of them, or with escapes allowed all but those (round
+     * 42: met as soon as it can no longer fail, so Level 19's GREY TANKS turns DONE at the twelfth, not when the last
+     * two are decided).
+     */
+    private int escapesNeeded() {
+        return escapesTotal - secondary.escapesAllowed();
+    }
+
+    private boolean meet() {
+        if (secondaryMet) {
+            return false;
+        }
+        secondaryMet = true;
+        return true;
     }
 
     /** A part of a parts objective was shot off; returns whether that met the objective. */
@@ -274,8 +307,31 @@ final class Objectives {
         if (!secondary.counts(slug, tag) || escapesFailed || secondaryMet) {
             return false;
         }
+        if (secondary.escapesAllowed() > 0) {
+            // M7 part F ("12 of 14"): the allowed ones get away without failing it; the one past them fails it.
+            escapesLost++;
+            if (escapesLost <= secondary.escapesAllowed()) {
+                return false;
+            }
+        }
         escapesFailed = true;
         return true;
+    }
+
+    /**
+     * M7 part F: the level is complete; returns whether an escapes objective with escapes allowed is met then (no more
+     * than the allowed units got away, the rest undecided or destroyed). Asked once, at the end.
+     */
+    boolean escapesAtEnd() {
+        if (secondary.escapesAllowed() == 0 || escapesFailed || secondaryMet) {
+            return false;
+        }
+        return meet();
+    }
+
+    /** M7 part F: the units of an escapes objective that got away in this attempt (with escapes allowed; else 0). */
+    int escapesLost() {
+        return escapesLost;
     }
 
     int escapesDestroyed() {
@@ -395,9 +451,13 @@ final class Objectives {
             // M5 part G: only with an integrity objective, so the other levels hash as before.
             hash.add(integrityFailed ? 1 : 0);
         }
-        if (secondary.untouched()) {
-            // M7 part D: only with an untouched objective, so the other levels hash as before.
+        if (secondary.byGroundAllies()) {
+            // M7 part D: only with an untouched (round 41: or standing) objective, so the other levels hash as before.
             hash.add(untouchedFailed ? 1 : 0);
+        }
+        if (secondary.escapesAllowed() > 0) {
+            // M7 part F: only with escapes allowed, so the other levels hash as before.
+            hash.add(escapesLost);
         }
     }
 }

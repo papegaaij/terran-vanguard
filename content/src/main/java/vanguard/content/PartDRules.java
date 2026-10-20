@@ -1,7 +1,7 @@
 package vanguard.content;
 
 import java.util.List;
-import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 
 /**
@@ -14,27 +14,27 @@ final class PartDRules {
     private PartDRules() {}
 
     /** The air escort of {@code escort} (its {@code stations} present). */
-    static LevelScript.Air air(LevelData.Escort escort) {
-        List<LevelScript.Station> stations = escort.stations().orElseThrow().stream()
+    static ObjectiveSpec.Air air(LevelData.Escort escort) {
+        List<ObjectiveSpec.Station> stations = escort.stations().orElseThrow().stream()
                 .map(PartDRules::station)
                 .toList();
-        return new LevelScript.Air(
+        return new ObjectiveSpec.Air(
                 stations,
                 escort.liftoff()
-                        .map(liftoff -> new LevelScript.Liftoff(
+                        .map(liftoff -> new ObjectiveSpec.Liftoff(
                                 liftoff.t(),
                                 liftoff.seconds(),
                                 liftoff.pads().stream()
-                                        .map(pad -> new LevelScript.Pad(pad.x(), PlayField.HEIGHT - pad.y()))
+                                        .map(pad -> new ObjectiveSpec.Pad(pad.x(), PlayField.HEIGHT - pad.y()))
                                         .toList())),
-                escort.climb().map(climb -> new LevelScript.Climb(climb.t(), climb.seconds())),
+                escort.climb().map(climb -> new ObjectiveSpec.Climb(climb.t(), climb.seconds())),
                 escort.scriptedLoss()
-                        .map(loss -> new LevelScript.ScriptedLoss(loss.unit() - 1, loss.t(), loss.glow())));
+                        .map(loss -> new ObjectiveSpec.ScriptedLoss(loss.unit() - 1, loss.t(), loss.glow())));
     }
 
-    /** A station: its point turned y up; the sway as the data gives it (down the screen, see {@link LevelScript.Station}). */
-    static LevelScript.Station station(LevelData.Station station) {
-        return new LevelScript.Station(
+    /** A station: its point turned y up; the sway as the data gives it (down the screen, see {@link ObjectiveSpec.Station}). */
+    static ObjectiveSpec.Station station(LevelData.Station station) {
+        return new ObjectiveSpec.Station(
                 station.at().x(),
                 PlayField.HEIGHT - station.at().y(),
                 station.sway().x(),

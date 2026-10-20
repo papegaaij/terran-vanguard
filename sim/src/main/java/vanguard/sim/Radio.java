@@ -11,16 +11,16 @@ import java.util.List;
  * its range.
  */
 final class Radio {
-    private final List<LevelScript.RadioCue> cues;
+    private final List<RadioCue> cues;
     private final boolean[] fired;
     private final SimEvents events;
     private final Ship ship;
-    /** What is fitted, as {@link LevelScript.RadioCue#FITTED_SPECIAL} and {@link LevelScript.RadioCue#FITTED_HOMING} bits. */
+    /** What is fitted, as {@link RadioCue#FITTED_SPECIAL} and {@link RadioCue#FITTED_HOMING} bits. */
     private final int fitted;
     /** M5 part C: the escort in the escort slot (Rook); null without one. */
     private Wingman escort;
 
-    Radio(List<LevelScript.RadioCue> cues, SimEvents events, Ship ship, int fitted) {
+    Radio(List<RadioCue> cues, SimEvents events, Ship ship, int fitted) {
         this.cues = cues;
         this.fired = new boolean[cues.size()];
         this.events = events;
@@ -30,14 +30,14 @@ final class Radio {
 
     /** What {@code armament} and {@code special} fit, as the radio cues' requirement bits. */
     static int fitted(Armament armament, SpecialSlot special) {
-        int fitted = special.fitted() ? LevelScript.RadioCue.FITTED_SPECIAL : 0;
+        int fitted = special.fitted() ? RadioCue.FITTED_SPECIAL : 0;
         for (int m = 0; m < armament.size(); m++) {
             if (!armament.mount(m).fires()) {
                 continue;
             }
             WeaponSpec.Delivery delivery = armament.mount(m).weapon().delivery();
             if (delivery == WeaponSpec.Delivery.HOMING || delivery == WeaponSpec.Delivery.TURRET) {
-                fitted |= LevelScript.RadioCue.FITTED_HOMING;
+                fitted |= RadioCue.FITTED_HOMING;
             }
         }
         return fitted;
@@ -71,11 +71,8 @@ final class Radio {
     /** Starts the time cues that are due at {@code levelTick}. */
     void byTime(int levelTick) {
         for (int i = 0; i < cues.size(); i++) {
-            LevelScript.RadioCue cue = cues.get(i);
-            if (!fired[i]
-                    && cue.trigger() == LevelScript.CueTrigger.TIME
-                    && SimStep.ticks(cue.t()) <= levelTick
-                    && allowed(cue)) {
+            RadioCue cue = cues.get(i);
+            if (!fired[i] && cue.trigger() == CueTrigger.TIME && SimStep.ticks(cue.t()) <= levelTick && allowed(cue)) {
                 start(i);
             }
         }
@@ -83,16 +80,16 @@ final class Radio {
 
     /**
      * Starts the cues of an event; {@code subject} is the enemy slug or secret name it is about. The
-     * cues of a {@link LevelScript.CueTrigger#repeats() repeating} event (M5 part D: {@code ally-lost})
+     * cues of a {@link CueTrigger#repeats() repeating} event (M5 part D: {@code ally-lost})
      * start every time.
      */
-    void cue(LevelScript.CueTrigger trigger, String subject) {
+    void cue(CueTrigger trigger, String subject) {
         boolean again = trigger.repeats();
         for (int i = 0; i < cues.size(); i++) {
-            LevelScript.RadioCue cue = cues.get(i);
+            RadioCue cue = cues.get(i);
             if ((again || !fired[i])
                     && cue.trigger() == trigger
-                    && (trigger == LevelScript.CueTrigger.BOSS_PART_DESTROYED
+                    && (trigger == CueTrigger.BOSS_PART_DESTROYED
                             ? among(cue.subject(), subject)
                             : cue.subject().equals(subject))
                     && allowed(cue)) {
@@ -103,20 +100,20 @@ final class Radio {
 
     /**
      * Whether {@code name} is one of the names in {@code list}, separated by {@link
-     * LevelScript.CueTrigger#PART_SEPARATOR} (M5 part E: a {@code boss-part-destroyed} cue's parts);
+     * CueTrigger#PART_SEPARATOR} (M5 part E: a {@code boss-part-destroyed} cue's parts);
      * without allocating.
      */
     static boolean among(String list, String name) {
         int from = 0;
         while (from <= list.length()) {
-            int end = list.indexOf(LevelScript.CueTrigger.PART_SEPARATOR, from);
+            int end = list.indexOf(CueTrigger.PART_SEPARATOR, from);
             if (end < 0) {
                 end = list.length();
             }
             if (end - from == name.length() && list.regionMatches(from, name, 0, name.length())) {
                 return true;
             }
-            from = end + LevelScript.CueTrigger.PART_SEPARATOR.length();
+            from = end + CueTrigger.PART_SEPARATOR.length();
         }
         return false;
     }
@@ -124,9 +121,9 @@ final class Radio {
     /** Starts the level-end cues for {@code home} convoy units at the end (0 without a convoy). */
     void end(int home) {
         for (int i = 0; i < cues.size(); i++) {
-            LevelScript.RadioCue cue = cues.get(i);
+            RadioCue cue = cues.get(i);
             if (!fired[i]
-                    && cue.trigger() == LevelScript.CueTrigger.LEVEL_END
+                    && cue.trigger() == CueTrigger.LEVEL_END
                     && home >= cue.alliesMin()
                     && home <= cue.alliesMax()
                     && allowed(cue)) {
@@ -135,9 +132,9 @@ final class Radio {
         }
     }
 
-    private boolean allowed(LevelScript.RadioCue cue) {
+    private boolean allowed(RadioCue cue) {
         boolean flying = escort != null && !escort.ejected();
-        return cue.allowedWith(fitted | (flying ? LevelScript.RadioCue.FITTED_ESCORT : 0));
+        return cue.allowedWith(fitted | (flying ? RadioCue.FITTED_ESCORT : 0));
     }
 
     private void start(int index) {

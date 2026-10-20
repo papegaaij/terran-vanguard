@@ -345,7 +345,7 @@ public final class SpecialSlot {
                         || !within(px, py, radius)) {
                     continue;
                 }
-                if (strike(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p, smartBomb.damage())
+                if (strike(-1 - k * SetPieceSpec.MAX_PARTS - p, smartBomb.damage())
                         && piece.damagePart(p, smartBomb.bossPartDamage())) {
                     hits.partDestroyed(k, p);
                 }
@@ -525,7 +525,7 @@ public final class SpecialSlot {
         }
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
-            LevelScript.GroundObjectSpec spec = object.spec();
+            GroundObjectSpec spec = object.spec();
             if (!object.hittable()
                     || spec.submerged()
                     || !PlayField.overlaps(object.x(), object.y(), spec.size())
@@ -552,8 +552,7 @@ public final class SpecialSlot {
                         || piece.partColumn(p, lanceX, half, 0) == Double.POSITIVE_INFINITY) {
                     continue;
                 }
-                double amount =
-                        capped(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p, partDamage, lance.bossPartCap());
+                double amount = capped(-1 - k * SetPieceSpec.MAX_PARTS - p, partDamage, lance.bossPartCap());
                 if (amount > 0 && piece.damagePartFlat(p, amount)) {
                     hits.partDestroyed(k, p);
                 }
@@ -752,7 +751,7 @@ public final class SpecialSlot {
         }
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
-            LevelScript.GroundObjectSpec spec = object.spec();
+            GroundObjectSpec spec = object.spec();
             if (!object.hittable()
                     || spec.submerged()
                     || !PlayerFire.inBlast(x, y, radius, object.x(), object.y(), spec.size())) {
@@ -785,7 +784,7 @@ public final class SpecialSlot {
                         || !piece.partInBlast(p, x, y, radius)) {
                     continue;
                 }
-                double amount = deal(-1 - k * LevelScript.SetPieceSpec.MAX_PARTS - p, layer);
+                double amount = deal(-1 - k * SetPieceSpec.MAX_PARTS - p, layer);
                 if (amount > 0 && piece.damagePartAt(p, amount, x, y)) {
                     hits.partDestroyed(k, p);
                 }

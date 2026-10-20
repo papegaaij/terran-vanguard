@@ -8,7 +8,7 @@ import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
-import vanguard.sim.LevelScript;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.Sortie;
 
 /**
@@ -21,7 +21,7 @@ class LevelScreenPartFTest {
 
     @Test
     void rooksFirstLatchLineCountsForHisBarksSpacing() {
-        assertTrue(LevelScreen.scriptedForBarks(LevelScript.CueTrigger.FIRST_LATCH));
+        assertTrue(LevelScreen.scriptedForBarks(CueTrigger.FIRST_LATCH));
     }
 
     @Test

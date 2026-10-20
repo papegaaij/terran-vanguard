@@ -10,15 +10,19 @@ import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PickupType;
+import vanguard.sim.RadioCue;
 import vanguard.sim.Range;
 import vanguard.sim.Rules;
+import vanguard.sim.Section;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -83,10 +87,10 @@ class Level18Test {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         assertEquals(
                 List.of(25.0, 55.0, 110.0, 130.0, 170.0, 183.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         assertEquals(
                 List.of(150.0, 140.0, 120.0, 120.0, 120.0, 150.0),
-                level.sections().stream().map(LevelScript.Section::speed).toList());
+                level.sections().stream().map(Section::speed).toList());
         assertEquals(18, level.number());
         assertEquals(3, level.act());
         assertEquals(5, level.launchSeconds());
@@ -236,7 +240,7 @@ class Level18Test {
     @Test
     void theSecretPickupsAndTheSecondary() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        List<LevelScript.GroundObjectSpec> rover = level.groundObjects().stream()
+        List<GroundObjectSpec> rover = level.groundObjects().stream()
                 .filter(object -> object.crateCredits() > 0)
                 .toList();
         assertEquals(1, rover.size());
@@ -259,10 +263,11 @@ class Level18Test {
                 .orElseThrow();
         assertEquals(List.of(new WaveSpec.Carried(PickupType.SHIELD_CELL, WaveSpec.Carried.LAST)), lastPack.carried());
         assertTrue(
-                level.placedPickups().stream().anyMatch(p -> p.t() == 118 && p.pickup() == PickupType.ARMOUR_PATCH),
+                level.drops().placedPickups().stream()
+                        .anyMatch(p -> p.t() == 118 && p.pickup() == PickupType.ARMOUR_PATCH),
                 "the supply drone's armour patch in the eye");
-        assertEquals(0.65, level.secondary().killRatio());
-        assertEquals(100, level.secondary().credits());
+        assertEquals(0.65, level.objectives().secondary().killRatio());
+        assertEquals(100, level.objectives().secondary().credits());
     }
 
     /**
@@ -342,11 +347,9 @@ class Level18Test {
     /** The radio's data: the timed lines in order and at least 4 s apart; Rook's four lines only while he flies. */
     @Test
     void theRadiosData() {
-        List<LevelScript.RadioCue> radio =
-                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).radio();
-        List<LevelScript.RadioCue> timed = radio.stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME)
-                .toList();
+        List<RadioCue> radio = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).radio();
+        List<RadioCue> timed =
+                radio.stream().filter(cue -> cue.trigger() == CueTrigger.TIME).toList();
         for (int i = 1; i < timed.size(); i++) {
             assertTrue(
                     timed.get(i).t() - timed.get(i - 1).t() >= 4,
@@ -356,18 +359,15 @@ class Level18Test {
         assertEquals(
                 List.of(14.0, 49.0, 86.0, 146.0),
                 timed.stream()
-                        .filter(cue -> (cue.requires() & LevelScript.RadioCue.FITTED_ESCORT) != 0)
-                        .map(LevelScript.RadioCue::t)
+                        .filter(cue -> (cue.requires() & RadioCue.FITTED_ESCORT) != 0)
+                        .map(RadioCue::t)
                         .toList());
         radio.forEach(cue -> assertFalse(cue.line().isBlank()));
         assertEquals(
-                List.of(
-                        LevelScript.CueTrigger.SECONDARY_OBJECTIVE,
-                        LevelScript.CueTrigger.LEVEL_END,
-                        LevelScript.CueTrigger.SECRET),
+                List.of(CueTrigger.SECONDARY_OBJECTIVE, CueTrigger.LEVEL_END, CueTrigger.SECRET),
                 radio.stream()
-                        .map(LevelScript.RadioCue::trigger)
-                        .filter(trigger -> trigger != LevelScript.CueTrigger.TIME)
+                        .map(RadioCue::trigger)
+                        .filter(trigger -> trigger != CueTrigger.TIME)
                         .toList());
     }
 
@@ -397,25 +397,24 @@ class Level18Test {
                         .map(EnemySpec::slug)
                         .toList()
                         .indexOf("dust-devil");
-                int steps = 0;
-                while (!sortie.complete() && steps++ < MAX_STEPS) {
-                    if (!sortie.flying() || sortie.primaryFailed()) {
-                        sortie.retry(sortie.ship().defences().maxArmour());
-                    }
-                    sortie.step(Autopilot.commands(sortie));
-                    SimEvents events = sortie.events();
-                    glanced += events.count(SimEvents.Type.SHOT_GLANCED);
+                int[] seen = new int[2]; // shots glanced, devils killed
+                boolean complete = LevelMetrics.fly(sortie, MAX_STEPS, (flown, step) -> {
+                    SimEvents events = flown.events();
+                    seen[0] += events.count(SimEvents.Type.SHOT_GLANCED);
                     for (int i = 0; i < events.size(); i++) {
                         if (events.type(i) == SimEvents.Type.ENEMY_DESTROYED && events.value(i) == devilKind) {
-                            devilsKilled++;
+                            seen[1]++;
                         }
                     }
-                }
-                assertTrue(sortie.complete(), difficulty + " seed " + seed);
-                met += sortie.result().secondaryMet() ? 1 : 0;
-                retries += sortie.attempt() - 1;
+                });
+                glanced += seen[0];
+                devilsKilled += seen[1];
+                assertTrue(complete, difficulty + " seed " + seed);
+                LevelMetrics.Run run = LevelMetrics.Run.of(sortie);
+                met += run.secondaryMet() ? 1 : 0;
+                retries += run.retries();
                 secrets += sortie.result().secretsFound();
-                credits += sortie.result().credits().total();
+                credits += run.credits();
                 ratio += sortie.result().kills() / (double) sortie.result().enemies();
             }
             report.append(String.format(

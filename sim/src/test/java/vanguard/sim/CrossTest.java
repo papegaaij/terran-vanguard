@@ -26,7 +26,7 @@ class CrossTest {
             List.of(new WaveSpec.At(360, PlayField.HEIGHT + 40), new WaveSpec.At(360, -100)),
             List.of(new WaveSpec.At(-40, 350), new WaveSpec.At(540, 350)));
 
-    private static Sortie sortie(List<WaveSpec> waves, List<LevelScript.GroundUnit> units) {
+    private static Sortie sortie(List<WaveSpec> waves, List<GroundUnit> units) {
         return PartGSpecs.untouchable(PartGSpecs.level(Map.of(), waves, units));
     }
 
@@ -132,8 +132,7 @@ class CrossTest {
 
     @Test
     void aGroundUnitFromASideDriftsAcrossWarnedAhead() {
-        LevelScript.GroundUnit floe = LevelScript.GroundUnit.fromSide(
-                66, CraterNestTest.MORTAR, -1, new LevelScript.SideEntry(true, 400, 10));
+        GroundUnit floe = GroundUnit.fromSide(66, CraterNestTest.MORTAR, -1, new SideEntry(true, 400, 10));
         Sortie sortie = sortie(List.of(), List.of(floe));
         runTo(sortie, 63.5);
         assertEquals(WarningEdge.LEFT.bit(), sortie.edgeWarnings());
@@ -153,8 +152,7 @@ class CrossTest {
     @Test
     void aGroundUnitShotOnItsFloeHandsItsDriftToItsRemains() {
         // Step G8: the mortars' wreck stayed at the left edge while their floe drifted on.
-        LevelScript.GroundUnit floe = LevelScript.GroundUnit.fromSide(
-                66, CraterNestTest.MORTAR, -1, new LevelScript.SideEntry(true, 400, 10));
+        GroundUnit floe = GroundUnit.fromSide(66, CraterNestTest.MORTAR, -1, new SideEntry(true, 400, 10));
         Sortie sortie = sortie(List.of(), List.of(floe));
         runTo(sortie, 68);
         double x = sortie.enemy(0).x();

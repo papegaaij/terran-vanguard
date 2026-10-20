@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Implementation roadmap
@@ -95,7 +95,7 @@ what building it brings up. The architecture's new kinds come with the parts tha
 | **C** Level 16 — **done** except the canyon walls' look (round 39 closed; R.1's wall redo in progress, to round 40) | Terrain: walls, islands, contact, shots vs rock, Rook and paths; the canyon walls rising toward the camera with the collision at their foot (MA.1 = b); Tendril Anchor (`link`, beam vs tendril); Threadcrawler (ground chain along the walls' foot); Valles backdrop | B | 39 |
 | **D** Level 17 — **built**, pending round 40 | Choir Herald (`aura`); Shellback (walk, mortar, curl-roll crush); the Ares Landing dome as its own [allies](../../allies/README.md) document (Q.25b; the geodesic glass look, MA.3 = a) and its secondary; Helix compound set piece; Ares Landing backdrop | B | 40 |
 | **E** Level 18 — **done** except three fixes (step FXS: the backdrop's horizontal line F.c, the Dust Devil's one-second disappearance K.a, the air units' dust-coloured silhouettes R.b) and the dome-break wiring; round 41 closed 2026-10-19 | Dust-storm visibility (the soft ragged falloff, MA.2 = b); Ghost Drone (hint 1; the eye and running lights, U.5); Dust Devil (pull, spiral, core window); plains backdrop; **track 9** "Grey Signal", the Act 3 B theme, with its motif stem (moved here from part G: Level 18 needs it first) | B | 41 |
-| **F** Level 19 | Revenant Walker mid-boss (the "Strider heavy" biped; hint 2, wreck beat); Warden Tank unmarked (hull + turret); conveyors, furnace vents, rear-firing turrets; Tharsis foundry backdrop; Vorne's motif layer | C or D (walkers) | 42 |
+| **F** Level 19 — **done** except the walker rework (round 42 K.a) and the round 43 sounds; round 42 closed 2026-10-20 | Revenant Walker mid-boss (the "Strider heavy" biped; hint 2, wreck beat); Warden Tank unmarked (hull + turret); conveyors, furnace vents, rear-firing turrets; Tharsis foundry backdrop; Vorne's motif layer | C or D (walkers) | 42 |
 | **G** Level 20 | Reverse scroll (signed scroll, TOP warnings, rules by travel direction); Mote Swarm pursuit; Rear-guard drone (its bay's weapons document); Hellas rim backdrop; track 8 for the retreat | A, B | 43 |
 | **H** Level 21 + act end | Dust Colossus (the "Sinkhole colony": breach points, mouths, suction, ring); slow arena; Choir's first words; Act 3 outro and summary; Hellas basin backdrop | B (burrow), G | 44 |
 | **I** Close-out | `ActPlaythroughTest`/`BalanceTest` through Act 3, variety as built, later tags → Act 4, voice listen-through, the user's playthrough | all | 45 |
@@ -546,3 +546,13 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
   horizontal line at about 5 s (F.c, redo), the Dust Devil vanishing for a second at 24 s in the capture (K.a) and the
   air units' silhouettes sharing the dust's colour (R.b), plus S.h = c (dome-break c). M7 part E is done except step FXS's
   fixes; Level 18 stays `art: chosen` until they land. Act 2: the build is accepted, the user's own playthrough is open.
+- 2026-10-19: M7 part F (Level 19 Foundry of Tharsis) **built** overnight (the user away; every default pending the user's
+  review in concept [round 42](../../concept-rounds/round-42/README.md)): the Revenant Walker (a stride arena, homing
+  missiles, the flame cone, the vents), the Warden Tank (turret, rear plate), conveyor belts, furnace vents and up-facing
+  nests in the simulation; Level 19's data (the Act 2+ floor, the beam-era HP, Rook's mortar), the looks, thirteen sounds,
+  25 voices, the production art; together with the fixes of the user's six playtest findings, Levels 15-17 on the Act 2+
+  rules and the refactors (`SimSpecs`, `LevelData`, `Autopilot`, `LevelScript`, the sim split, the level-metrics tool).
+  M7 part F is done except the walker's death and the crawl seen live and the user's review of round 42.
+- 2026-10-20: round 42 closed: part F's art approved as final, everything else accepted. M7 part F is done except the
+  walker rework (K.a: it must shoot a lot more and the flame must be bigger, step WR) and the round 43 sounds (S.b and
+  S.d-S.j redone from the free database, S.c = r08-a, S.n the walker's vent hit, death and wreck settle).

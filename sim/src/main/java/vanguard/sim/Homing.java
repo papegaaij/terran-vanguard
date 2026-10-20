@@ -97,7 +97,7 @@ final class Homing {
                     continue;
                 }
                 double d = distanceSquared(x, y, targetX, targetY);
-                int serial = PART_SERIAL + k * LevelScript.SetPieceSpec.MAX_PARTS + p;
+                int serial = PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
                 if (d <= nearest) {
                     nearest = d;
                     nearestSerial = serial;
@@ -162,7 +162,7 @@ final class Homing {
         if (target < PART_SERIAL) {
             return -1;
         }
-        int piece = (target - PART_SERIAL) / LevelScript.SetPieceSpec.MAX_PARTS;
+        int piece = (target - PART_SERIAL) / SetPieceSpec.MAX_PARTS;
         return piece < setPieces.length && overhead(setPieces[piece]) ? piece : -1;
     }
 
@@ -203,7 +203,7 @@ final class Homing {
 
     /** M5 part E: a sunken trigger still to be freed, on the field: what a torpedo seeks besides units and parts. */
     private static boolean sunkenTrigger(GroundObject object) {
-        LevelScript.GroundObjectSpec spec = object.spec();
+        GroundObjectSpec spec = object.spec();
         return spec.trigger()
                 && spec.submerged()
                 && object.hittable()
@@ -219,8 +219,8 @@ final class Homing {
             return false;
         }
         if (target >= PART_SERIAL) {
-            int piece = (target - PART_SERIAL) / LevelScript.SetPieceSpec.MAX_PARTS;
-            int part = (target - PART_SERIAL) % LevelScript.SetPieceSpec.MAX_PARTS;
+            int piece = (target - PART_SERIAL) / SetPieceSpec.MAX_PARTS;
+            int part = (target - PART_SERIAL) % SetPieceSpec.MAX_PARTS;
             if (piece >= setPieces.length || !partTarget(setPieces[piece], part)) {
                 return false;
             }
@@ -296,7 +296,7 @@ final class Homing {
                                 ? distanceSquared(shot.x(), shot.y(), targetX, targetY) <= best
                                 : inCone(shot, targetX, targetY, best))) {
                     best = distanceSquared(shot.x(), shot.y(), targetX, targetY);
-                    nearest = PART_SERIAL + k * LevelScript.SetPieceSpec.MAX_PARTS + p;
+                    nearest = PART_SERIAL + k * SetPieceSpec.MAX_PARTS + p;
                     nearestX = targetX;
                     nearestY = targetY;
                 }

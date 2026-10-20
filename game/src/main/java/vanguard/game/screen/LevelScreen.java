@@ -55,12 +55,16 @@ import vanguard.game.render.ThreatArrows;
 import vanguard.game.render.WaveBanners;
 import vanguard.game.render.WeaponLooks;
 import vanguard.game.settings.Settings;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.FixedStepClock;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelResult;
-import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
+import vanguard.sim.RadioCue;
 import vanguard.sim.Rules;
+import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Shot;
 import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
@@ -160,6 +164,10 @@ public final class LevelScreen implements GameScreen {
     private final EdgeWarnings warnings;
     /** An act boss's warning banner, its death's screen flash and the chain's bursts' sounds. */
     private final BossBanner banner;
+    /** The set piece the banner announces, -1 before one. */
+    private int bannerPiece = -1;
+    /** Round 41: the set pieces warned of ahead of their arrival ({@code BOSS_INCOMING}) in this attempt. */
+    private final java.util.Set<Integer> announced = new java.util.HashSet<>();
     /** The wave warning banner of a side or rear wave's edge warning (design/ui/hud). */
     private final WaveBanners waveBanners;
     /** The sensor suite's threat arrows, with a sensor suite at L2+ (design/player/systems); null without. */
@@ -247,9 +255,7 @@ public final class LevelScreen implements GameScreen {
                 services.sfx,
                 looks,
                 sortie.armament(),
-                sortie.script().setPieces().stream()
-                        .map(LevelScript.SetPieceSpec::slug)
-                        .toList(),
+                sortie.script().setPieces().stream().map(SetPieceSpec::slug).toList(),
                 sortie.wingman().map(Wingman::gun));
         // M5 part E: Level 11's sounds: ships on the convoy, the Kraken's slam cycle for its sound's timing.
         sounds.naval(sortie.navalConvoy());
@@ -274,8 +280,9 @@ public final class LevelScreen implements GameScreen {
                 .findFirst()
                 .ifPresent(slam -> sounds.slamCycle(slam.telegraphSeconds(), slam.riseSeconds(), slam.secondSeconds()));
         sounds.flareSeconds(sortie.script()
+                .hazards()
                 .darkness()
-                .map(LevelScript.Darkness::flareSeconds)
+                .map(HazardSpec.Darkness::flareSeconds)
                 .orElse(0.0));
         renderer = new LevelRenderer(
                 services.sprites,
@@ -375,6 +382,8 @@ public final class LevelScreen implements GameScreen {
         // M7 part E: the dust storm's bed swelling as the view closes in (Level 18), and track 9's motif layer.
         music.ambienceLevels(t -> AtmosphereRamp.ambienceDb(level, easy, t) + StormLooks.swellDb(level, difficulty, t));
         music.motif(services.files.internal(Tracks.motifPath(theme)), level.music()::motifOn);
+        // M7 part F: the sections that play the motif layer alone over the ambience (Level 19's crawl).
+        music.motifAlone(level.music()::motifAlone);
     }
 
     /** M5 part D: the level's {@code music.ambience_changes} as the music's crossfades, each to its setting's loop. */
@@ -442,7 +451,7 @@ public final class LevelScreen implements GameScreen {
     }
 
     /** The level's own line for the mission failed screen, when its primary objective failed (design/systems/retry). */
-    Optional<LevelScript.RadioCue> failureLine() {
+    Optional<RadioCue> failureLine() {
         return radioEvents.failureLine();
     }
 
@@ -563,6 +572,7 @@ public final class LevelScreen implements GameScreen {
                 barks.clock(sortie.levelSeconds(), sortie.realSeconds(), sortie.scriptRate());
             }
             react(sortie.events());
+            closeBannerOverFight();
             militiaFlak();
             renderer.stepped(sortie);
             if (latchPrompt != null) {
@@ -689,15 +699,20 @@ public final class LevelScreen implements GameScreen {
             eventEffects.react(events, i);
             switch (events.type(i)) {
                 case BOSS_DESTROYED -> music.bossDown();
+                case BOSS_INCOMING -> {
+                    // Round 41 (the 2026-10-19 playtest, Level 14): a boss with a lead time is announced that
+                    // long before it arrives, so its warning box shows before the boss is reached.
+                    announced.add(events.value(i));
+                    warnBoss(events.value(i));
+                }
                 case BOSS_ARRIVED -> {
-                    if (music.bossArrived()) {
-                        // An act boss: the warning track with the klaxon and the banner (design/ui/hud).
-                        services.sfx.play(Sfx.KLAXON, KLAXON_VOLUME, 1, 0);
-                        sortie.setPiece(events.value(i))
-                                .boss()
-                                .ifPresent(boss -> banner.show(boss.barName(), sortie.tick()));
-                    } else if (level.music().bossSting().isPresent()) {
-                        music.sting(Sfx.MINIBOSS_STING);
+                    if (announced.contains(events.value(i))) {
+                        // Announced ahead: no second warning, and the box does not stay over the boss.
+                        if (bannerPiece == events.value(i)) {
+                            banner.close(sortie.tick());
+                        }
+                    } else {
+                        warnBoss(events.value(i));
                     }
                 }
                 case SHIP_DESTROYED -> {
@@ -724,6 +739,10 @@ public final class LevelScreen implements GameScreen {
                     services.voices.stop();
                     warnings.clear();
                     banner.clear();
+                    bannerPiece = -1;
+                    // A retry from the boss checkpoint (recorded just before the arrival) has no lead
+                    // warning again: the arrival warns.
+                    announced.clear();
                     waveBanners.clear();
                     screenFlash.clear();
                     chainSounds.clear();
@@ -765,6 +784,12 @@ public final class LevelScreen implements GameScreen {
                 case LEVEL_COMPLETE -> {
                     music.fadeOut();
                     outro.start();
+                    // The radio plays out the closing lines (the user's playtest of 2026-10-19).
+                    radio.outro();
+                    if (barks != null) {
+                        // The outro's radio is the level-end lines': no bark of Rook's holds them back.
+                        barks.levelComplete();
+                    }
                 }
                 default -> {}
             }
@@ -772,10 +797,52 @@ public final class LevelScreen implements GameScreen {
     }
 
     /**
+     * A boss's warning (design/ui/hud), at its arrival or (round 41) its lead time before: an act boss's
+     * warning track with the klaxon and the banner, a mid-boss's sting.
+     */
+    private void warnBoss(int piece) {
+        if (music.bossArrived()) {
+            services.sfx.play(Sfx.KLAXON, KLAXON_VOLUME, 1, 0);
+            sortie.setPiece(piece).boss().ifPresent(boss -> {
+                banner.show(boss.barName(), sortie.tick());
+                bannerPiece = piece;
+            });
+        } else if (level.music().bossSting().isPresent()) {
+            music.sting(Sfx.MINIBOSS_STING);
+        }
+    }
+
+    /**
+     * The warning box never hides a boss that fights (the 2026-10-19 playtest: the Siege Spire fired from
+     * under it): once the boss it announces is engaged with a living part under the band, it closes.
+     */
+    private void closeBannerOverFight() {
+        if (bannerPiece >= 0 && banner.showing(sortie.tick()) && fightsUnderBanner(sortie.setPiece(bannerPiece))) {
+            banner.close(sortie.tick());
+        }
+    }
+
+    /** How far a boss part reaches up and down from its centre, for {@link #fightsUnderBanner}. */
+    static final double PART_REACH = 32;
+
+    /** Whether {@code piece} is engaged (its phases run, its guns fire) with a living part under the warning band. */
+    static boolean fightsUnderBanner(SetPiece piece) {
+        if (!piece.engaged() || piece.destroyed()) {
+            return false;
+        }
+        for (int p = 0; p < piece.partCount(); p++) {
+            if (!piece.partWrecked(p) && BossBanner.under(piece.partY(p), PART_REACH)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * The convoy unit a cue's line names ({@code {ally}}): the first hit's, the first lost's, and (M5
      * part D) for {@code ally-lost} the one lost last; -1 for a cue about none.
      */
-    static int cueUnit(LevelScript.CueTrigger trigger, Sortie sortie) {
+    static int cueUnit(CueTrigger trigger, Sortie sortie) {
         return switch (trigger) {
             case FIRST_ALLY_HIT -> sortie.firstAllyHit();
             case FIRST_ALLY_LOST -> sortie.firstAllyLost();
@@ -792,13 +859,13 @@ public final class LevelScreen implements GameScreen {
      * the first boss part shot off (M5 part E, Level 11's severed slam arm) and the first latch (M5
      * part F, Level 12).
      */
-    static boolean scriptedForBarks(LevelScript.CueTrigger trigger) {
-        return trigger == LevelScript.CueTrigger.ESCORT_FIRST_KILL
-                || trigger == LevelScript.CueTrigger.FIRST_LOOP_BACK
+    static boolean scriptedForBarks(CueTrigger trigger) {
+        return trigger == CueTrigger.ESCORT_FIRST_KILL
+                || trigger == CueTrigger.FIRST_LOOP_BACK
                 // M5 part E: his line on the first slam arm severed (Level 11's calamari).
-                || trigger == LevelScript.CueTrigger.BOSS_PART_DESTROYED
+                || trigger == CueTrigger.BOSS_PART_DESTROYED
                 // M5 part F: his line on the first latch (Level 12's passenger).
-                || trigger == LevelScript.CueTrigger.FIRST_LATCH;
+                || trigger == CueTrigger.FIRST_LATCH;
     }
 
     private static final float KLAXON_VOLUME = 0.8f;
@@ -934,7 +1001,7 @@ public final class LevelScreen implements GameScreen {
                 name,
                 launchBalance,
                 newBest,
-                !sortie.script().secondary().none(),
+                !sortie.script().objectives().secondary().none(),
                 debriefCount(sortie),
                 level.music().debriefJingle());
     }
@@ -944,38 +1011,43 @@ public final class LevelScreen implements GameScreen {
      * AFLOAT n / 3}, M5 part E), the weather sondes collected ({@code SONDES n / 3}, M5 part F), the relay's
      * integrity ({@code RELAY n %}, M5 part G), a labelled group's units destroyed ({@code ROOTS n / 8}, M5
      * part H), the tendrils broken ({@code BARRIERS BROKEN n / 9}, M7 part C), the ground allies never hit ({@code
-     * DOMES UNTOUCHED n / 5}, M7 part D); none else.
+     * DOMES UNTOUCHED n / 5}, M7 part D) or, for a standing secondary, still standing ({@code DOMES STANDING n /
+     * 5}, round 41); none else.
      */
     static DebriefScreen.Hulls debriefCount(Sortie sortie) {
         if (sortie.groundAllies()) {
-            // M7 part D: the domes never hit of all (Level 17), after the tracker's label.
-            String label = sortie.script().secondary().label();
+            // M7 part D: the domes never hit of all (Level 17), after the tracker's label; round 41: the domes
+            // still standing of all when the secondary is a standing one ("No dome lost").
+            String label = sortie.script().objectives().secondary().label();
+            boolean standing = sortie.script().objectives().secondary().standing();
             return new DebriefScreen.Hulls(
-                    (label.isEmpty() ? "DOMES" : label.toUpperCase(Locale.ROOT)) + " " + DebriefScreen.UNTOUCHED,
-                    sortie.alliesUntouched(),
+                    (label.isEmpty() ? "DOMES" : label.toUpperCase(Locale.ROOT)) + " "
+                            + (standing ? DebriefScreen.STANDING : DebriefScreen.UNTOUCHED),
+                    standing ? sortie.alliesStanding() : sortie.alliesUntouched(),
                     sortie.allyCount());
         }
         if (sortie.navalConvoy()) {
             return new DebriefScreen.Hulls(sortie.alliesAfloat(), sortie.damageableAllies());
         }
-        if (sortie.sondes().count() > 0 && sortie.script().secondary().sondes()) {
+        if (sortie.sondes().count() > 0
+                && sortie.script().objectives().secondary().sondes()) {
             return new DebriefScreen.Hulls(
                     DebriefScreen.SONDES,
                     sortie.sondes().collected(),
                     sortie.sondes().count());
         }
-        if (sortie.script().secondary().links() && sortie.escapesTotal() > 0) {
+        if (sortie.script().objectives().secondary().links() && sortie.escapesTotal() > 0) {
             // M7 part C: the gates' tendrils broken of all the level's (Level 16's BARRIERS BROKEN n / 9).
             return new DebriefScreen.Hulls(
                     DebriefScreen.BARRIERS_BROKEN, sortie.escapesDestroyed(), sortie.escapesTotal());
         }
-        if (sortie.defending() && sortie.script().secondary().integrity() > 0) {
+        if (sortie.defending() && sortie.script().objectives().secondary().integrity() > 0) {
             // M5 part G: the relay's integrity left (Level 13's RELAY n %).
             return DebriefScreen.Hulls.share(
                     DebriefScreen.RELAY, percent(sortie.ally(0).hpShare()));
         }
-        String label = sortie.script().secondary().label();
-        if (sortie.script().secondary().byGroups() && !label.isEmpty() && sortie.groupUnits(0) > 0) {
+        String label = sortie.script().objectives().secondary().label();
+        if (sortie.script().objectives().secondary().byGroups() && !label.isEmpty() && sortie.groupUnits(0) > 0) {
             // M5 part H: a labelled group of units destroyed of all (Level 14's ROOTS n / 8).
             return new DebriefScreen.Hulls(
                     label.toUpperCase(Locale.ROOT), sortie.groupUnitsDestroyed(0), sortie.groupUnits(0));

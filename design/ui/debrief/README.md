@@ -67,6 +67,10 @@ Total credits = balance at level start + credits earned + grade bonus.)
   version 2, see [saves](../../systems/saves/README.md)) shows dashes and is left out of the
   totals, which then say so (`6 OF 7 MISSIONS RECORDED`). A replay from mission select has no act
   summary.
+- **Secondary objective row**: shows the objective's result; the Level 17 "No dome lost" secondary
+  reads `DOMES STANDING n / 5` (the number of domes still standing at the end).
+- **Hand-over from the level**: the debrief takes over 15 s after the level's end, but waits while a
+  closing radio line has not been heard in full (see [Voice](../../audio/voice/README.md#playback)).
 
 ## Concept art
 
@@ -155,3 +159,6 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
   game-over-r08-a (C2: `GAME OVER` in the red heading font, SHIPS LOST instead of CREDITS SPENT,
   Okafor's voiced line, the footer, `SP` instead of `.`), Q2 = a, Q4 and Q5; `design: approved`.
 - 2026-10-19 (user, round 41, P.e): the debrief music wiring accepted (track 29 "Stand Down" at 0.8 after the jingle, under the act summary, 0.5 s fade, a cut jingle on an early exit).
+- 2026-10-19: The Level 17 debrief's secondary row reads `DOMES STANDING n / 5` for the "No dome lost"
+  secondary (user decision, "Both"). The hand-over from the level waits for a closing radio line
+  that has not been heard in full (the radio outro fix, see Voice); **pending the user's review**.

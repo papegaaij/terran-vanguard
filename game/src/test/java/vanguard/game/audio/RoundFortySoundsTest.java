@@ -39,7 +39,7 @@ class RoundFortySoundsTest {
                     new EnemyLooks[0],
                     sortie.armament(),
                     sortie.script().setPieces().stream()
-                            .map(vanguard.sim.LevelScript.SetPieceSpec::slug)
+                            .map(vanguard.sim.SetPieceSpec::slug)
                             .toList());
         }
 

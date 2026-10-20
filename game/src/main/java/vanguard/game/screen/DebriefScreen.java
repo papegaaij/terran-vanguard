@@ -281,6 +281,9 @@ public final class DebriefScreen implements GameScreen {
     /** M7 part D: the ground allies never hit, after their tracker's label (Level 17's {@code DOMES UNTOUCHED n / 5}). */
     public static final String UNTOUCHED = "UNTOUCHED";
 
+    /** Round 41: the ground allies still standing, after their tracker's label (Level 17's {@code DOMES STANDING n / 5}). */
+    public static final String STANDING = "STANDING";
+
     /**
      * M5 part E: the afloat secondary's row (design/ui/debrief, Level 11): {@code HULLS AFLOAT 3 / 3}
      * with the objective's credits when it was met (all hulls afloat at the boss's death), none when not.

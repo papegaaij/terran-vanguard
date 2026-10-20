@@ -13,6 +13,7 @@ import vanguard.sim.EnemySpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
+import vanguard.sim.Secondary;
 
 /**
  * A level's credits at medium from its data (design/systems/economy, per-level budget): a perfect
@@ -40,12 +41,17 @@ record TypicalHaul(int perfect, double typical, double budget) {
      * difficulty's credit income; BalanceTest's hard sheet.
      */
     static TypicalHaul of(Content content, String key, Difficulty difficulty) {
+        return of(content, key, difficulty, content.level(key).bounties());
+    }
+
+    /** The same with the bounties × {@code bountyScale} instead of the level's {@code bounty_scale} (the report's fit). */
+    static TypicalHaul of(Content content, String key, Difficulty difficulty, double bountyScale) {
         LevelData data = content.level(key);
         LevelScript level = SimSpecs.level(content, key, difficulty);
         EconomyData economy = content.economy();
         EconomyData.TypicalPlayer rate = economy.typicalPlayer();
         double factor = Math.pow(economy.actFactor(), level.act() - 1);
-        Sum sum = new Sum(factor, factor * data.bounties());
+        Sum sum = new Sum(factor, factor * bountyScale);
         PlayerData.Credits salvage = content.player().pickups().salvage().credits();
 
         for (var wave : level.waves()) {
@@ -99,11 +105,11 @@ record TypicalHaul(int perfect, double typical, double budget) {
             }
         }
         // Each saveable unit home pays (M5 part D: not the scripted loss's, Level 10's Lifeline Three).
-        level.escort().ifPresent(escort -> sum.pay(escort.saveable(), escort.credits(), rate.primary()));
+        level.objectives().escort().ifPresent(escort -> sum.pay(escort.saveable(), escort.credits(), rate.primary()));
         for (var secret : data.secrets()) {
             sum.pay(1, secret.crate(), rate.secrets());
         }
-        LevelScript.Secondary secondary = level.secondary();
+        Secondary secondary = level.objectives().secondary();
         int payouts = secondary.byGroups() ? secondary.groups().size() : 1;
         sum.pay(payouts, secondary.credits(), rate.secondary());
 

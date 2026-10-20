@@ -178,10 +178,10 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 - [x] HUD objective tracker hookup (pips or integrity bar) (the crawler's pips; the relay's integrity bar with Level 13)
 - [x] Specs above loaded from data; level overrides (difficulty HP, positions) from the level
 - [x] Civilian crawler: follows the road curve with 7 headings; hit only by crawler-aimed shots and pass-through claws (10/s)
-- [x] Evacuation shuttle, simulation and data (M5 part D, Level 10; `vanguard.sim.Convoy` with `LevelScript.Air`, `ShuttleEscortTest`): an `air` escort holding stations in a band with the lane sway, no road (D1 = a); hit by every enemy bullet and `air` contact, once per contact, small rammers destroyed and paid (D2 = a); untouchable windows (the pads and the liftoff, the climb-out, a scripted loss: fire and contact pass through); lost units kept where they were lost; the keys `bullets`, `contact`, `banks` and `glide` read
+- [x] Evacuation shuttle, simulation and data (M5 part D, Level 10; `vanguard.sim.Convoy` with `ObjectiveSpec.Air`, `ShuttleEscortTest`): an `air` escort holding stations in a band with the lane sway, no road (D1 = a); hit by every enemy bullet and `air` contact, once per contact, small rammers destroyed and paid (D2 = a); untouchable windows (the pads and the liftoff, the climb-out, a scripted loss: fire and contact pass through); lost units kept where they were lost; the keys `bullets`, `contact`, `banks` and `glide` read
 - [x] Evacuation shuttle, presentation (M5 part D, the game): the liftoff's scale, the banking frames, smoke below 50 %; the glide into `far` when lost; its armour bars in the tracker (D3 = a); production sprite (round 32's a)
 - [x] Convoy cargo ship and escort frigate, simulation and data (M5 part E, step E2b, Level 11;
-      `vanguard.sim.Convoy` with `LevelScript.Naval`, `NavalConvoyTest`):
+      `vanguard.sim.Convoy` with `ObjectiveSpec.Naval`, `NavalConvoyTest`):
       `follows: stations` (screen-space stations at the scroll speed, the glide to the arena lanes
       and back, the frigate's exit and return; the hold clear of the boss's platform before the way
       back, `hold_clear` and `hold`, 2026-10-09); `damaged_by: slams` (one hit per slam in its lane,
@@ -195,7 +195,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 - [x] Nansen Relay, simulation and data (M5 part G, steps G3 and G4, Level 13): `follows: ground`,
       integrity without regeneration (tuned in G4: 240 / 340 / 520), hit box 80×80, `damaged_by:
       objective_aimed, dives, lobs` with the hook's exact modes, the failed `defend` primary, the 50 % smoke
-      state, the threshold events; in [data.yaml](data.yaml) — simulation in G3 (`LevelScript.Defend`,
+      state, the threshold events; in [data.yaml](data.yaml) — simulation in G3 (`ObjectiveSpec.Defend`,
       `Convoy`'s defend mode, `AllySpec.dives`/`lobs`, `DefendTest`, `HookModesTest`), the data and loader
       in G4 (`AlliesData`, `PartGRules.ally`, `PartGUnitsDataTest`, `BalanceTest.theAutopilotKeepsTheRelay`)
 - [x] Nansen Relay, presentation (M5 part G, steps G5 and G6): the sprite with its states (a/b in
@@ -206,7 +206,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
       `PartGHudTest`)
 - [x] CDF supply drone (M5 part G, steps G3 to G6, Level 13; part H, Level 14): a pickup released at a
       point in the field, the drone's arc from the helipad as presentation, the sprite (one version) —
-      the point drop in the simulation done in G3 (`LevelScript.PlacedPickup` with a y,
+      the point drop in the simulation done in G3 (`DropSpec.PlacedPickup` with a y,
       `SimEvents.Type.PICKUP_PLACED`), the level's `drops` with the drone's `sprite` and its sprites in
       `assets/` (claimed by the drops) in G4; Level 13's drone arc in G6 (`DroneLooks`: 4 s up from the
       relay's helipad to the drop, the patch in its bay, back with its clamps open; its launch sound);

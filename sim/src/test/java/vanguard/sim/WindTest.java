@@ -14,9 +14,8 @@ import org.junit.jupiter.api.Test;
  */
 class WindTest {
     /** Level 12's medium numbers: gusts of 40 px/s for 2.5 s with 0.25 s ramps, telegraphed 1 s ahead. */
-    static LevelScript.Weather storm(
-            List<LevelScript.Gust> gusts, List<LevelScript.Drift> drifts, List<Double> flashes) {
-        return new LevelScript.Weather(gusts, 2.5, 0.25, 40, 1.0, drifts, flashes);
+    static HazardSpec.Weather storm(List<HazardSpec.Gust> gusts, List<HazardSpec.Drift> drifts, List<Double> flashes) {
+        return new HazardSpec.Weather(gusts, 2.5, 0.25, 40, 1.0, drifts, flashes);
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -25,7 +24,7 @@ class WindTest {
 
     @Test
     void aGustRampsUpHoldsAndRampsDownAndIsTelegraphedAhead() {
-        Wind wind = new Wind(Optional.of(storm(List.of(new LevelScript.Gust(2, true)), List.of(), List.of())));
+        Wind wind = new Wind(Optional.of(storm(List.of(new HazardSpec.Gust(2, true)), List.of(), List.of())));
         int start = SimStep.ticks(2);
         assertEquals(0, wind.push(start - 1));
         assertEquals(0, wind.push(start));
@@ -35,7 +34,7 @@ class WindTest {
         assertEquals(0, wind.telegraph(start - SimStep.ticks(1) - 1));
         assertEquals(1, wind.telegraph(start - SimStep.ticks(1)));
         assertEquals(0, wind.telegraph(start + SimStep.ticks(0.5)));
-        Wind right = new Wind(Optional.of(storm(List.of(new LevelScript.Gust(2, false)), List.of(), List.of())));
+        Wind right = new Wind(Optional.of(storm(List.of(new HazardSpec.Gust(2, false)), List.of(), List.of())));
         assertEquals(-40, right.push(start + SimStep.ticks(1)), 1e-9);
         assertEquals(-1, right.telegraph(start - 1));
     }
@@ -43,7 +42,7 @@ class WindTest {
     @Test
     void aDriftAddsToTheGusts() {
         Wind wind = new Wind(Optional.of(storm(
-                List.of(new LevelScript.Gust(5, true)), List.of(new LevelScript.Drift(4, 10, 20, true)), List.of())));
+                List.of(new HazardSpec.Gust(5, true)), List.of(new HazardSpec.Drift(4, 10, 20, true)), List.of())));
         assertEquals(20, wind.push(SimStep.ticks(4.5)), 1e-9);
         assertEquals(60, wind.push(SimStep.ticks(6)), 1e-9);
         assertEquals(0, wind.push(SimStep.ticks(10)));
@@ -60,8 +59,9 @@ class WindTest {
 
     @Test
     void theGustPushesTheShipWithoutBankingIt() {
-        LevelScript level = TestSpecs.level(10, List.of())
-                .withWeather(storm(List.of(new LevelScript.Gust(1, true)), List.of(), List.of()));
+        LevelScript level = TestSpecs.withHazards(
+                TestSpecs.level(10, List.of()),
+                h -> h.withWeather(Optional.of(storm(List.of(new HazardSpec.Gust(1, true)), List.of(), List.of()))));
         Sortie sortie = sortie(level);
         double x = sortie.ship().x();
         for (int i = 0; i < SimStep.ticks(5); i++) {
@@ -75,8 +75,10 @@ class WindTest {
 
     @Test
     void theEdgesStillClampThePushedShip() {
-        LevelScript level = TestSpecs.level(30, List.of())
-                .withWeather(storm(List.of(), List.of(new LevelScript.Drift(0, 30, 400, true)), List.of()));
+        LevelScript level = TestSpecs.withHazards(
+                TestSpecs.level(30, List.of()),
+                h -> h.withWeather(
+                        Optional.of(storm(List.of(), List.of(new HazardSpec.Drift(0, 30, 400, true)), List.of()))));
         Sortie sortie = sortie(level);
         for (int i = 0; i < SimStep.ticks(5); i++) {
             sortie.step(Command.NONE);
@@ -89,8 +91,10 @@ class WindTest {
         WaveSpec lamprey = TestSpecs.wave(
                 0, WaveSpec.Formation.SINGLE, LampreyTest.LAMPREY, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
         LevelScript calm = TestSpecs.level(30, List.of(lamprey));
-        LevelScript windy =
-                calm.withWeather(storm(List.of(), List.of(new LevelScript.Drift(0, 30, 30, false)), List.of()));
+        LevelScript windy = TestSpecs.withHazards(
+                calm,
+                h -> h.withWeather(
+                        Optional.of(storm(List.of(), List.of(new HazardSpec.Drift(0, 30, 30, false)), List.of()))));
         Sortie still = sortie(calm);
         Sortie blown = sortie(windy);
         // The ship holds against the drift by steering, so both ships stay put for a while: compare one step.
@@ -148,8 +152,10 @@ class WindTest {
                 Optional.empty(),
                 "");
         LevelScript calm = TestSpecs.level(30, List.of(cluster));
-        LevelScript windy =
-                calm.withWeather(storm(List.of(), List.of(new LevelScript.Drift(0, 30, 40, true)), List.of()));
+        LevelScript windy = TestSpecs.withHazards(
+                calm,
+                h -> h.withWeather(
+                        Optional.of(storm(List.of(), List.of(new HazardSpec.Drift(0, 30, 40, true)), List.of()))));
         Sortie still = sortie(calm);
         Sortie blown = sortie(windy);
         for (int i = 0; i < 120; i++) {
@@ -167,8 +173,9 @@ class WindTest {
 
     @Test
     void lightningRaisesItsEventsAndIsHashedOnlyWithWeather() {
-        LevelScript level =
-                TestSpecs.level(10, List.of()).withWeather(storm(List.of(), List.of(), List.of(1.0, 1.0, 3.0)));
+        LevelScript level = TestSpecs.withHazards(
+                TestSpecs.level(10, List.of()),
+                h -> h.withWeather(Optional.of(storm(List.of(), List.of(), List.of(1.0, 1.0, 3.0)))));
         Sortie sortie = sortie(level);
         int flashes = 0;
         int last = -1;
@@ -185,7 +192,9 @@ class WindTest {
         }
         assertEquals(3, flashes);
         Sortie plain = sortie(TestSpecs.level(10, List.of()));
-        Sortie calm = sortie(TestSpecs.level(10, List.of()).withWeather(storm(List.of(), List.of(), List.of())));
+        Sortie calm = sortie(TestSpecs.withHazards(
+                TestSpecs.level(10, List.of()),
+                h -> h.withWeather(Optional.of(storm(List.of(), List.of(), List.of())))));
         plain.step(Command.NONE);
         calm.step(Command.NONE);
         assertTrue(plain.stateHash() != calm.stateHash(), "a weather level hashes its flash counter");
@@ -210,11 +219,12 @@ class WindTest {
 
     @Test
     void theWindDoesNotAllocate() {
-        LevelScript level = TestSpecs.level(30, List.of())
-                .withWeather(storm(
-                        List.of(new LevelScript.Gust(1, true), new LevelScript.Gust(4, false)),
-                        List.of(new LevelScript.Drift(2, 8, 20, true)),
-                        List.of(1.5, 3.0, 6.0)));
+        LevelScript level = TestSpecs.withHazards(
+                TestSpecs.level(30, List.of()),
+                h -> h.withWeather(Optional.of(storm(
+                        List.of(new HazardSpec.Gust(1, true), new HazardSpec.Gust(4, false)),
+                        List.of(new HazardSpec.Drift(2, 8, 20, true)),
+                        List.of(1.5, 3.0, 6.0)))));
         long allocated = Allocations.least(() -> sortie(level), sortie -> {
             for (int i = 0; i < 600; i++) {
                 sortie.step(Command.NONE);

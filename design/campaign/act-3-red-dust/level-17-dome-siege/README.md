@@ -3,8 +3,8 @@ title: Level 17 – Dome Siege
 design: approved
 implementation: in-progress
 art: chosen
-depends-on: [../../../enemies/air/choir-herald, ../../../enemies/ground/shellback, ../../../enemies/air/spore-bomber, ../../../enemies/air/dust-kite, ../../../allies, ../../../player/wingmen, ../../../world/mars]
-updated: 2026-10-19
+depends-on: [../../../enemies/air/choir-herald, ../../../enemies/ground/shellback, ../../../enemies/air/spore-bomber, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../allies, ../../../player/wingmen, ../../../world/mars]
+updated: 2026-10-20
 ---
 
 # Level 17 – Dome Siege
@@ -17,7 +17,7 @@ but the five greenhouse domes that feed it stand in the open, and Vrell
 [Shellback](../../../enemies/ground/shellback/README.md) beasts go for the glass. The level
 introduces the Shellback and the [Choir Herald](../../../enemies/air/choir-herald/README.md), a
 support flyer that sings shield rings onto its escorts, and the domes as a new ally (M16 = a): the
-secondary objective is that no dome is hit. On the way between the outer domes and the inner ring
+secondary objective is that no dome is lost (round 41: hits allowed; it was "no dome hit"). On the way between the outer domes and the inner ring
 the Vrell sweep past the untouched Helix compound. 172 s: two slow dome sections (80 and 70 px/s)
 framed by faster approach, compound and spaceport sections.
 
@@ -65,13 +65,13 @@ Rendered from the data; directions are counted by each wave's `from` (the intel'
 <!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `air` (bombers, the Herald and its escorts, popcorn), `ground` (Shellbacks, spine-turret nests, Polyp Mortars, the domes) |
+| Dominant layers | `air` (bombers, the Herald and its escorts, Stinger streams, popcorn), `ground` (Shellbacks, Burrower fields, spine-turret nests, Polyp Mortars, the domes) |
 | Attack directions | front 95% · sides 5% |
 | Density | 4 |
 | Recommended traits | `spread`, `anti-ground` |
 | Hazards | Bombers and Shellbacks going for the domes (the secondary); Shellback spore mortars |
 | Boss / mid-boss | none |
-| Sensor-suite detail | none: Ares Landing, `air` + `ground`, front · L1: + directions (sides), density 4, hazard "dome attacks", the objective `REACH THE SPACEPORT` and the secondary `NO DOME HIT` · L2: + Shellback (new), Choir Herald (new), Spore Bomber, Mantis, Dust Kite, Skitter, Needler, Stinger portraits · L3: + `spread` and `anti-ground` highlighted, the wave strip marking the two dome sections, 1 secret |
+| Sensor-suite detail | none: Ares Landing, `air` + `ground`, front · L1: + directions (sides), density 4, hazard "dome attacks", the objective `REACH THE SPACEPORT` and the secondary `NO DOME LOST` · L2: + Shellback (new), Choir Herald (new), Spore Bomber, Burrower, Mantis, Dust Kite, Skitter, Needler, Stinger portraits · L3: + `spread` and `anti-ground` highlighted, the wave strip marking the two dome sections, 1 secret |
 <!-- /data -->
 
 *Varga's intel line* per sensor-suite level (in the data's `threat_profile.varga`; they must fit `IntelPanelLayoutTest`, two lines beside the rows, as Level 11's):
@@ -87,12 +87,14 @@ Rendered from the data; directions are counted by each wave's `from` (the intel'
 
 - **Primary** `reach-end`: reach the spaceport. The domes never fail the mission: a broken dome
   loses its crops, not lives (the colonists are below ground).
-- **Secondary** "No dome hit" (M16 = a; the roster's "no bomber reaches the domes", widened to every
-  attack that can hit a dome, our reading): **failed** at once at the first hit on any dome, **met**
-  when the last dome (Eden) leaves the bottom edge (t≈135.8) untouched. Pays **100** credits in Act 1
-  terms (256 in Act 3, the act factor 2.56); the typical haul counts the economy's secondary share
-  (50 %). Kind: a new `untouched` (the ally group took no hit), next to Level 11's `afloat` and Level
-  13's `integrity` ([schemas](../../../tech/architecture/README.md#data-file-schemas), for the build).
+- **Secondary** "No dome lost" (round 41, the user's playtest 2026-10-19, "both": the secondary and the
+  bombers' run-in below; pending the user's review): **failed** when the first dome breaks, **met** when the
+  last dome (Eden) leaves the bottom edge (t≈135.8) with all five standing; hits are allowed. Pays **100**
+  credits in Act 1 terms (256 in Act 3, the act factor 2.56); the typical haul counts the economy's secondary
+  share (50 %). Kind: `standing` (round 41), next to `untouched` (the ally group took no hit: M16 = a's "No dome
+  hit", the roster's "no bomber reaches the domes" widened to every attack that can hit a dome, which the
+  autopilot met 4 of 8 times at medium and never on hard), Level 11's `afloat` and Level 13's `integrity`
+  ([schemas](../../../tech/architecture/README.md#data-file-schemas), for the build).
 
 ### The Ares Landing domes (new ally, M16 = a)
 
@@ -123,9 +125,12 @@ there, and scrolls with the ground; the times below are from the scroll without 
 
 Per unit type (the data's `allies.targeted_by`, as Level 13's: every Spore Bomber and Shellback wave
 is hooked, the hooked rows in *Waves*; easy unhooks the Shellbacks); the popcorn, the Needlers, the
-Stingers, the Mantises, the Herald and the ground nests are never hooked. The hooked bombers from the
+Stingers, the Mantises, the Herald, the Burrowers and the ground nests are never hooked. The hooked bombers from the
 front hold the row 220 px below the top edge (`bomb_row`; 160 until round 40 R.b), a wave's bombers on x
-slots 40 px apart round the dome's x (`bomb_slot`); the side pairs keep their entry row, 140 px.
+slots 40 px apart round the dome's x (`bomb_slot`); the side pairs keep their entry row, 140 px. Round 41
+(pending the user's review): a hooked bomber flies **2.5 s on the play field before it may drop**
+(`bomb_run_in`); over a dome before then it keeps its load and steers on to the next one (the t=124 bombers
+dropped on Eden as they entered, before the player could reach them).
 
 | Units | Mode | Exact rule (our reading, for review) |
 |---|---|---|
@@ -146,11 +151,11 @@ sections' `ramp`); the scroll column includes the eases.
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. Rail Approach | 0–30 | 0–3,900 | 130 | light | `deep`: rust plain, Olympus Mons on the horizon. `ground`: the rail line from the north with a stranded freight train, a spine-turret nest on the embankment (t≈18), wind-blown dust drifts. `low-air`: thin dust wisps. | Popcorn from t=6; the first ground targets. |
-| 2. Outer Domes | 30–72 | 3,900–7,310 | 80 | light | `ground`: Bradbury (x 130) and Lowell (x 350) on their rings, greenhouse annexes, rail spurs, Vrell nest growth creeping up to the rings; a Polyp Mortar floe at t≈64. | The Shellback alone (t=30.5), the first hooked bombers, the Herald alone (t=55.5). |
-| 3. Helix Compound | 72–98 | 7,310–10,140 | 110 | light, medium peak 72–80 | `ground`: the burnt outer greenhouses (collapsed frames, the secret's capsule at t≈76), then the **Helix compound** at x 300–460 (t≈78–85) black-and-gold, lit, a landing pad, its perimeter fence clean, no Vrell growth within 100 px while everything round it burns; a rail yard with a spine-turret nest (t≈90). | The Helix beat (the t=77 swarm bends round the compound); Mantis flankers. |
-| 4. Inner Ring | 98–140 | 10,140–13,120 | 70 | light | `ground`: Schiaparelli (x 110), Burroughs (x 370), then Eden (x 240, the largest, its glass lit brightest); the ring road, airlocks, militia gun pits (unmanned); a Polyp Mortar floe at t≈117. | The hooked waves at their densest; the second Herald over Eden; the secondary judged at t≈135.8. |
-| 5. Spaceport | 140–172 | 13,120–17,220 | 130 | clear | `ground`: the spaceport's pads and hangars, a spine-turret nest on the apron (t≈150), the militia's flak guns opening up at t≈160 (presentation). | Release; level end. |
+| 1. Rail Approach | 0–30 | 0–3,900 | 130 | light | `deep`: rust plain, Olympus Mons on the horizon. `ground`: the rail line from the north with a stranded freight train, a spine-turret nest on the embankment (t≈18), wind-blown dust drifts. `low-air`: thin dust wisps. | Popcorn from t=6, a Burrower field under the plain (t=9); the first ground targets. |
+| 2. Outer Domes | 30–72 | 3,900–7,310 | 80 | light | `ground`: Bradbury (x 130) and Lowell (x 350) on their rings, greenhouse annexes, rail spurs, Vrell nest growth creeping up to the rings; a Polyp Mortar floe at t≈64. | The Shellback alone (t=30.5), the first hooked bombers, the Herald alone (t=55.5); a Burrower field in the nest growth after Lowell (t=60). |
+| 3. Helix Compound | 72–98 | 7,310–10,140 | 110 | light, medium peak 72–80 | `ground`: the burnt outer greenhouses (collapsed frames, the secret's capsule at t≈76), then the **Helix compound** at x 300–460 (t≈78–85) black-and-gold, lit, a landing pad, its perimeter fence clean, no Vrell growth within 100 px while everything round it burns; a rail yard with a spine-turret nest (t≈90). | The Helix beat (the t=77 swarm bends round the compound); a Burrower field after it (t=86); Mantis flankers. |
+| 4. Inner Ring | 98–140 | 10,140–13,120 | 70 | light | `ground`: Schiaparelli (x 110), Burroughs (x 370), then Eden (x 240, the largest, its glass lit brightest); the ring road, airlocks, militia gun pits (unmanned); a Polyp Mortar floe at t≈117. | The hooked waves at their densest, a Burrower field between the domes (t=112, never on one); the second Herald over Eden; the secondary judged at t≈135.8. |
+| 5. Spaceport | 140–172 | 13,120–17,220 | 130 | clear | `ground`: the spaceport's pads and hangars, a spine-turret nest on the apron (t≈150), the militia's flak guns opening up at t≈160 (presentation). | Release, with two Burrower fields (t=137.5 as Eden leaves, t=161.5 through the apron); level end. |
 <!-- /data -->
 
 **Helix compound** (story beat L16–17, [twist](../../../story/twist/README.md)): a backdrop set piece,
@@ -168,15 +173,29 @@ with a `bounty_scale` (see *Credit budget*).
 
 - **Act HP factor** ([balancing basis](../../../enemies/README.md#balancing-basis)) from the proposed
   reference DPS 84 at L17 (M18 = a, round 36): **Spore Bomber** (L03, 32) ×2.63 → 63 HP,
-  **Mantis** (L06, 52) ×1.62 → 42 HP. The Dust Kite, Skitter, Needler, Stinger, Mote Swarm, Spine
-  Turret and Polyp Mortar are `tiny`/`small` and keep their HP; the Shellback and the Choir Herald
-  are new here.
-- **Density and pacing** (§1.7): **196 enemies** (waves 179 + ground targets 17) over the 167 s from
-  the launch, **≈ 70 a minute** at medium (≥ 55, the act's band 60–72,
-  [Act 3](../README.md#density-and-threat-profile)); a wave every 3–3.5 s from t=6, the popcorn in
-  small waves (Dust Kite streams and V-wings of 3, the long V-wings and snakes of 4, Mote Swarms of
-  6, Skitter snakes of 4) so the hooked waves read against less noise; no rear waves, the
-  side waves warned 3 s ahead at their edge (`WarningEdge`). Front 95 % by count. The two new units
+  **Mantis** (L06, 52) ×1.62 → 42 HP, **Burrower** (L15, 44) ×84/76 → 49 HP (step PE17). The Dust Kite,
+  Skitter, Mote Swarm, Spine Turret and Polyp Mortar are `tiny`/`small` and keep their HP; the **Needler**
+  and the **Stinger** take the factor capped at ×3 (`small_act_hp`, step PE17): 12 and 18 HP. The
+  Shellback and the Choir Herald are new here.
+- **Density and pacing** (§1.7; step PE17, the user's round 40 P.e "all later levels" and "tougher, not
+  more", pending the user's review): **213 enemies** (waves 196 + ground targets 17) over the 167 s from
+  the launch, **≈ 77 a minute** at medium (≥ 55; above the act's band 60–72,
+  [Act 3](../README.md#density-and-threat-profile); Levels 15 and 16 landed at 99 and 119); a wave every
+  3–3.5 s from t=6, the popcorn in small waves (Dust Kite streams and V-wings of 3, the long V-wings and
+  snakes of 4, Mote Swarms of 6, Skitter snakes of 4) so the hooked waves read against less noise; no
+  rear waves, the side waves warned 3 s ahead at their edge (`WarningEdge`). The Act 2+ rules hold: at
+  medium and hard no pause over 2 s (`PacingTest`; before: 14 and 10 with `small_act_hp`, 17 and 9
+  without) and, with the plan's fit at medium, **2.60 enemies on the screen and 15.1 enemy shots a
+  minute** (`ActFloorTest`: 2.5 and 10; before: 1.09 and 0.4). The floor comes from long-lived, firing
+  groups rather than more popcorn: **six Burrower fields** of 4 (the inner one 3; hard one fewer each)
+  at t=9, 60, 86, 112, 137.5 and 161.5, buried ahead of the ship and surfacing to fire their rings
+  (most of the shots), never while an outer dome or a new unit's quiet window is on the screen; the
+  inner one between Schiaparelli, Burroughs and Eden, kept off their footprints (and the Helix
+  compound) by the data's `no_surface`; and **nine Stinger streams** of 3 in place of three Skitter
+  waves, five Dust Kite waves and the t=81.5 Stinger V-wing. The pulse-era fit (two Micro-missile Pods,
+  Rook's Autocannon) kills a Needler circle or line before its first shot, so circles were tried and
+  dropped. Hard: 249 enemies, **3.38 on the screen**, 21.9 shots a minute; easy 165, one pause over 3 s
+  (the end). Front 95 % by count. The two new units
   each get a **quiet window**: no other wave enters for 3.5 s after the Shellback (t=30.5) or after
   the Herald (t=55.5), and the popcorn before each leaves the screen first, with no dome on the
   screen.
@@ -186,58 +205,64 @@ with a `bounty_scale` (see *Credit budget*).
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
 | 6 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (right) | The first targets, over the rail line |
-| 9.5 | 1 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | |
-| 13 | 1 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Along the rail line |
+| 9 | 1 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | Under the rust plain (buried, ahead of the ship); gone before the Shellback's quiet window |
+| 13 | 1 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | Along the rail line |
 | 16.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 19.5 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Over the spine-turret nest on the embankment |
 | 23 | 1 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive |
-| 26.5 | 1 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | Gone before the Shellback's quiet window |
+| 26.5 | 1 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | Gone before the Shellback's quiet window |
 | 30.5 | 2 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | front | **New.** Alone until t=34 (no dome on the screen yet: nothing for its hooked mortar); Varga's line at t=29 |
 | 34 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | Down the left edge, clear of the bombers |
 | 35.5 | 2 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | **Hooked** (`always`): hang at y≈220 over Bradbury's lane (x 130); Bradbury's centre passes their row at t≈41.5; Varga's line at t=36.5 |
 | 38.5 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Down the right lane |
-| 42 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | |
+| 40.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | |
 | 43.5 | 2 | stream | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | right side | **Hooked**: in at y 140 from the right edge, 1 s apart, over Lowell (x 350; its centre passes at t≈48.8); warned 3 s ahead |
 | 46.5 | 2 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | front | **Hooked**: walks down beside Lowell's ring from 130 px behind it, then steps aside between the domes; a roll set off before it steps aside grazes the ring |
-| 48.5 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
+| 48.5 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
 | 52 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Gone before the Herald's quiet window; Lowell leaves at t≈54.3 |
 | 55.5 | 2 | carrier + escorts | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Needler](../../../enemies/air/needler/README.md) | 1 + 4 | front | **New.** The Herald with 4 Needlers in `orbit`, ringed while inside its 90 px, in at 50 px/s (round 40); alone until t=59 (no dome on the screen); Varga's line at its first ring |
 | 59 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (right) | |
+| 60 | 2 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | In the nest growth between the outer domes, after Lowell has left |
 | 62.5 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
 | 66 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 69 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
-| 72.5 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Over the burnt outer greenhouses |
+| 71 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | Over the burnt outer greenhouses |
+| 74 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | Down the left edge before the Helix beat |
 | 77 | 3 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 8 | front | **The Helix beat**: the swarm's route bends round the compound's fence (x 300–460) and closes up below it; nothing fires on the compound |
-| 81.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (left) | Down the left half, away from the compound |
-| 84.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | After the compound has passed |
-| 88 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | |
+| 79.5 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (left) | Down the left edge, away from the compound |
+| 83.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | Down the left edge as the compound passes |
+| 86 | 3 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | After the compound has passed |
 | 91.5 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 95 | 3 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | One per edge, hover 6 s; Rook's flank bark at t=95 |
-| 100 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | The inner ring comes into view |
+| 99 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | The inner ring comes into view |
 | 102 | 4 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | **Hooked**: over Schiaparelli (x 110; its centre passes their row at t≈108.0) |
-| 105.5 | 4 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | Down the right half |
+| 105.5 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | Down the right edge |
 | 108.5 | 4 | stream | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | right side | **Hooked**: over Burroughs (x 370; its centre passes at t≈113.1); warned 3 s ahead |
 | 111 | 4 | convoy | [Shellback](../../../enemies/ground/shellback/README.md) | 2 | front | **Hooked**: walk down 3 s apart beside Burroughs' ring, then step aside between the domes; their rolls never overlap |
+| 112 | 4 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 3 | front | In the nest growth between the inner domes; none surfaces on a dome (`no_surface`) |
 | 114.5 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
 | 118 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
-| 121 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Gone before the Herald holds over Eden's lane |
+| 119.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Gone before the Herald holds over Eden's lane |
 | 124 | 4 | carrier + escorts + line abreast | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 1 + 3 | front | The Herald holds over Eden's lane (x 240) with three **hooked** bombers under its rings (a line abreast on its slots, inside the 90 px): over Eden (its centre passes their row at t≈130.2); Varga's line at t=123 |
 | 126 | 4 | stream | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | left side | Hard only: an extra **hooked** pair from the left edge over Eden, warned |
 | 127.5 | 4 | single | [Shellback](../../../enemies/ground/shellback/README.md) | 1 | right side | **Hooked**: walks in from the right edge toward Eden; warned 3 s ahead |
 | 127.5 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (left) | Clear of the Herald's ring |
 | 131 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
 | 134.5 | 4 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | One per edge, hover 6 s; Eden leaves at t≈135.8 and the secondary is judged |
+| 137.5 | 4 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | As Eden leaves, on into the spaceport |
 | 138 | 4 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
-| 141.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | Over the spaceport |
+| 141.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | Over the spaceport |
 | 145 | 5 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (left) | |
 | 148.5 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
-| 152 | 5 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
+| 152 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
 | 155.5 | 5 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | |
-| 159 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
+| 157.5 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
+| 161.5 | 5 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | Up through the apron's cracked slabs |
 | 162 | 5 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
-| 165.5 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | The last wave |
+| 165.5 | 5 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (alternating edges) | |
+| 168 | 5 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front | The last wave |
 
-Totals: Dust Kite 72 · Skitter 24 · Needler 18 · Stinger 12 · Shellback 5 · Spore Bomber 12 · Mote Swarm 30 · Choir Herald 2 · Mantis 4.
+Totals: Dust Kite 56 · Burrower 23 · Stinger 35 · Needler 17 · Shellback 5 · Spore Bomber 12 · Mote Swarm 30 · Skitter 12 · Choir Herald 2 · Mantis 4.
 <!-- /data -->
 
 ## Ground targets
@@ -314,7 +339,7 @@ prompts for both.
 | The first Herald's first ring (`first-ring`, round 40) | Varga | "That flyer is singing shields onto the others. See the rings? Kill the singer first." |
 | A dome's first hit (`ally-hit`) | Generic colonial (Ares Control) | "{ally} is hit! The glass is holding... for now." |
 | A dome breaks (`ally-lost`) | Generic colonial (Ares Control) | "We've lost {ally}. Its people are below. Its crops aren't." |
-| Secondary met (`secondary-objective`) | Generic colonial (Ares Control) | "Five domes, not a crack. Fine. Earth can stay for dinner." |
+| Secondary met (`secondary-objective`) | Generic colonial (Ares Control) | "All five domes still standing. Fine. Earth can stay for dinner." |
 | Level end | Okafor | "The domes are behind you and the colony is breathing. Good work, Aegis." |
 <!-- /data -->
 
@@ -349,20 +374,20 @@ Budget(17) = 700 × 1.07¹⁶ ≈ **2,067**, the typical haul's target
 ([economy](../../../systems/economy/README.md#per-level-budget)). The data keeps **Act 1 terms**
 (Dust Kite 4, Skitter 5, Needler 12, Stinger 15, Mote 2, Spore Bomber 25, Choir Herald 30, Mantis
 30, Shellback 48 whole, Spine Turret 12, Polyp Mortar 15, the crate 100, the secondary 100); the
-code pays each × the act factor **2.56**, bounties also × the scale. A **`bounty_scale` of 0.60**
-puts the typical haul at **2,063 (−0.2 %)**. That is above the gap analysis's 0.3–0.5 expectation
-(M12): with the popcorn thinned to the act's band the haul rests on fewer kills, so each has to pay
-more (the draft's 89 a minute needed 0.55); accepted in round 36 (Q.17c). No boss or mid-boss.
+code pays each × the act factor **2.56**, bounties also × the scale. A **`bounty_scale` of 0.40**
+(step PE17, from round 36's 0.60, Q.17c, with the reworked waves: the Burrowers pay 24 each) puts the
+typical haul at **2,048 (−0.9 %**, `TypicalHaulTest`; the table's model −2 %), the perfect run at
+3,145. No boss or mid-boss.
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Dust Kite 72 × 4 + Skitter 24 × 5 + Needler 18 × 12 + Stinger 12 × 15 + Shellback 5 × 52 by parts (48 whole) + Spore Bomber 12 × 25 + Mote Swarm 30 × 2 + Choir Herald 2 × 30 + Mantis 4 × 30 | 2,441 | 1,520 |
-| Ground targets: Spine Turret 11 × 12 + Polyp Mortar 6 × 15 | 336 | 269 |
+| Kills: Dust Kite 56 × 4 + Burrower 23 × 24 + Stinger 35 × 15 + Needler 17 × 12 + Shellback 5 × 52 by parts (48 whole) + Spore Bomber 12 × 25 + Mote Swarm 30 × 2 + Skitter 12 × 5 + Choir Herald 2 × 30 + Mantis 4 × 30 | 2,411 | 1,599 |
+| Ground targets: Spine Turret 11 × 12 + Polyp Mortar 6 × 15 | 222 | 178 |
 | Secret: seed vault (hidden crate, 5% of budget) | 256 | 128 |
-| Secondary: no dome hit | 256 | 128 |
-| **Total** (bounty scale 0.6) | **3,289** | **2,044** |
-| Budget(n) = the typical haul's target; typical -1 %, perfect 1.59 × budget | | 2,067 |
+| Secondary: no dome lost | 256 | 128 |
+| **Total** (bounty scale 0.4) | **3,145** | **2,032** |
+| Budget(n) = the typical haul's target; typical -2 %, perfect 1.52 × budget | | 2,067 |
 <!-- /data -->
 
 Whole-unit Shellback bounty (48) is used; a player who kills the vent first earns 52 (the part
@@ -375,8 +400,9 @@ level expects `spread` and `anti-ground` and is flyable without either.
   the ship; their roll still crushes); the three-bomber waves (t=102, t=124) have two; the Herald's
   and Shellback's easy hooks from their specs.
 - **Hard**: a dome breaks on its 2nd hit; an extra hooked Spore Bomber pair from the left edge over
-  Eden (t≈126, warned); the other waves by the formation lever; the Herald's radius 105 px and the
-  Shellback's longer roll from their specs.
+  Eden (t≈126, warned); the other waves by the formation lever, trimmed by hand on the Burrower fields
+  (one fewer each) and the t=119.5 Needler line (2) for at most ~3.5 enemies on the screen (step PE17:
+  3.38); the Herald's radius 105 px and the Shellback's longer roll from their specs.
 
 ## Concept art
 
@@ -390,6 +416,8 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 | [concept/l17-props-final-r40-a.gif](concept/l17-props-final-r40-a.gif) | The frame shot apart and the capsule popping free, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
 | [concept/level-17-capture-r40-a.png](concept/level-17-capture-r40-a.png) | Capture of the game (step D5): twenty frames of the medium run with the plan's fit and Rook (and four of a hard run without firing), the last the debrief | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
 | [concept/level-17-capture-r40-a.mp4](concept/level-17-capture-r40-a.mp4) | Capture of the game with its sound: the whole medium run, then the hard run's domes cracking and breaking and the Herald's rings | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
+| [concept/level-17-fixes-r42-a.mp4](concept/level-17-fixes-r42-a.mp4) | Check capture of the dome fixes (round 42, medium, the plan's L17 fit, the test autopilot): the dome sections with the bombers' run-ins, a dome turning yellow and still counting, the debrief `DOMES STANDING 5 / 5` (172 s with sound) | chosen (round 42, K.c: accepted) |
+| [concept/level-17-fixes-r42-a.png](concept/level-17-fixes-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.c: accepted) |
 
 ## Implementation
 
@@ -406,12 +434,25 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 - [x] Secondary `untouched` "No dome hit": failed at the first hit, met when Eden leaves; 100 in
       Act 1 terms; the `DOMES` tracker and the debrief row `DOMES UNTOUCHED n / 5` (`UntouchedTest`,
       `LevelScreenSiegeTest`; both in the capture)
+- [x] Round 41 (the user's playtest 2026-10-19, "both"; steps FX-S2 and FX-C): the secondary `standing` "No
+      dome lost" (a broken dome fails it, hits do not; `DomesStandingTest`, `SiegeDataTest`) and the hooked
+      bombers' `bomb_run_in: 2.5`; the autopilot over 8 seeds meets it 8/8 on easy, 8/8 on medium and 1/8 on
+      hard (every hard loss Eden at t≈129) (`Level17Test`)
+- [x] The debrief row `DOMES STANDING n / 5` (`Sortie.alliesStanding()`) instead of `DOMES UNTOUCHED` (step RX,
+      `LevelScreenSiegeTest`), and the secondary's radio line reworded and voiced for hits allowed: "All five domes
+      still standing. Fine. Earth can stay for dinner." (step VOX-F, 2026-10-19; pending the user's review)
 - [x] The dome secondary measured with the autopilot over several seeds, as Level 11's convoy: the
       hits per dome and the hooked waves tuned so a careful pilot keeps every dome about half the
       time at medium (step D4 measured it: 8/8 on easy, 0/8 at medium and hard; step D6 after round
-      40's fixes, the bombers' row 160 → 220: easy 8/8, medium 5/8, hard 5/8; `Level17Test`)
-- [x] Wave script: ≥ 55 enemies a minute at medium (`DensityTest`: 70.4), no empty screen over 3 s
+      40's fixes, the bombers' row 160 → 220: easy 8/8, medium 5/8, hard 5/8; `Level17Test`; step PE17 with
+      the reworked waves: easy 8/8, medium 4/8, hard 0/8, every first hit a bomb on Eden at t≈129; the old waves
+      with `small_act_hp` alone, on today's simulation: 8/8, 8/8, 1/8)
+- [x] Wave script: ≥ 55 enemies a minute at medium (`DensityTest`: 76.5), no empty screen over 3 s
       (`PacingTest`), the two quiet windows (`Level17Test`), edge warnings for the side waves
+- [x] The Act 2+ rules (round 40 P.e): ≤ 3 pauses over 2 s at medium and hard (`PacingTest`: 0 and 0), ≥ 2.5
+      enemies on the screen and ≥ 10 shots a minute at medium with the plan's fit (`ActFloorTest`: 2.60, 15.1),
+      the Needler and the Stinger in `small_act_hp` (`ActHpFactorTest`), the dome secondary re-measured
+      (`Level17Test`) — step PE17
 - [x] The Helix compound set piece (backdrop) with the t=77 swarm's route bending round it
       (`SiegeChecks`' clearance, `SiegeDataTest`; the compound in the capture)
 - [x] Ground targets, the seed-vault secret (20 HP trigger, crate 100), the supply drone's armour
@@ -425,7 +466,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
       (`IntelPanelLayoutTest`); the Shellback's and Herald's portraits
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(17) = 2,067 with the level's `bounty_scale` (`TypicalHaulTest`:
-      2,068, +0.1 %; the perfect run 3,289)
+      2,048 at 0.40, −0.9 %; the perfect run 3,145; step PE17)
 - [x] Music: "Red Dust Run"'s stems by section; the `mars-colony` ambience; the dome and Herald sounds
       (`Level17SoundsTest`)
 - [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on
@@ -551,3 +592,30 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   medium 5/8, hard 5/8, easy 8/8 (the autopilot is chaotic: a 0.5 s move changes its runs). The dome table and the hooked waves' notes
   give the centres' times at the new row.
 - 2026-10-19 (user, round 41): Level 17's round 40 fixes (L.a, step D6, (a)-(g)) accepted, all yes. S.h = c: the dome-break redo is option c (the low-passed building collapse over a crust rumble with glass smash); step FXS wires it, so its checklist item stays open until then.
+- 2026-10-19 (step PE17; the user's round 40 P.e "all later levels" and "tougher, not more"; pending the user's
+  review): the waves reworked to the Act 2+ rules. The five domes, the hooked bomber waves, the Shellbacks, the
+  Heralds, the Helix beat, the Mantis pincers, the quiet windows, the ground targets, the pickups' carriers and the
+  radio keep their times. Added: six **Burrower fields** (t=9, 60, 86, 112, 137.5, 161.5; 4 each, the inner one
+  3, hard one fewer each; the t=9.5 V-wing and the t=88 stream made way), the inner one kept off the domes and
+  the compound by a `no_surface` block (new in this level); nine **Stinger streams** of 3 for three Skitter waves,
+  five Dust Kite waves and the t=81.5 V-wing; a Kite stream at t=74 and a V-wing at t=168. Moved: the t=42 V-wing
+  to 40.5, the t=84.5 snake to 83.5 (left edge), the t=100 snake to 99, the t=159 V-wing to 157.5; the t=121
+  Needler line of 4 became 3 at t=119.5 (hard 2), else it outlived the t=124 Herald's arrival and Eden broke in
+  every medium run. Needler circles (Level 16's) were tried first: the plan's fit kills them before their first
+  shot here (medium 1.8 shots a minute), so the Burrowers' rings carry the floor. The Needler and the Stinger
+  joined `small_act_hp` (12 and 18 HP). Medium 196 → 213 enemies (≈ 70 → 77 a minute), 1.09 → 2.60 on the
+  screen, 0.4 → 15.1 shots a minute, 17 → 0 pauses over 2 s; hard 240 → 249, 1.58 → 3.38 on the screen, 0.7 →
+  21.9 shots, 9 → 0 pauses; easy 154 → 165, 2 → 1 pause over 3 s. `bounty_scale` 0.60 → 0.40 (typical 2,048,
+  −0.9 %; perfect 3,145). The dome secondary with the autopilot (8 seeds): easy 8/8, medium 4/8 (the README's
+  "about half"), hard 0/8, every first hit the t=124 bombers on Eden, before step FX-C's bomber run-in and "No
+  dome lost". Burrowers on the colony ground and the spaceport apron (t=161.5 "through the cracked slabs") are a
+  setting stretch for the user's review.
+- 2026-10-19 (round 41, the user's playtest: "both"; steps FX-S2 and FX-C, pending the user's review): the
+  secondary becomes **"No dome lost"** (`standing: true`: failed when a dome breaks, hits allowed; was
+  `untouched`, "No dome hit") and the hooked bombers fly **2.5 s on the play field before they may drop**
+  (`bomb_run_in`). The autopilot over 8 seeds: easy 8/8, medium 8/8 (4/8 under the old rule), hard 1/8 (0/8);
+  every hard failure is Eden breaking at t≈129 under the t=124 bombers. Left alone, easy now loses no dome (the
+  secondary is met; 4 hits break a dome there), medium loses 3 and hard 4. The radio's secondary line ("Five
+  domes, not a crack.") was reworded by step VOX-F: "All five domes still standing. Fine. Earth can stay for
+  dinner.", with a new take (pending the user's review).
+- 2026-10-20: round 42 closed: the rework to the Act 2+ rules (R.c) and the dome fixes with their check capture (K.c, T.4: both fixes, every sub-choice yes) accepted by the user; the hard dome rate (R.i) kept.

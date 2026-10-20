@@ -26,7 +26,7 @@ final class HoldZones {
     /** What the collapse's blast destroys is handed here, as an Airstrike's kills. */
     private final PlayerFire.Hits hits;
     /** M5 part C: the hold zones, their ease in steps and their state ({@link #HOLD_WAITING} ...). */
-    final LevelScript.Hold[] holds;
+    final ObjectiveSpec.Hold[] holds;
 
     private final int[] holdRampTicks;
     final int[] holdState;
@@ -41,7 +41,7 @@ final class HoldZones {
     /** Whether a hold started in this attempt (the radio's {@code hold-start} is the first one's). */
     boolean holdStarted;
     /** M5 part C: the collapse; null without one. */
-    final LevelScript.Collapse collapse;
+    final ObjectiveSpec.Collapse collapse;
 
     /**
      * The collapse's warning (the lean) in steps; the impact, the blast's end and the dust's settling,
@@ -77,7 +77,7 @@ final class HoldZones {
         this.radio = radio;
         this.objectives = objectives;
         this.hits = hits;
-        holds = script.holds().toArray(LevelScript.Hold[]::new);
+        holds = script.objectives().holds().toArray(ObjectiveSpec.Hold[]::new);
         holdRampTicks = new int[holds.length];
         holdState = new int[holds.length];
         holdOfGroup = new int[script.groups().size()];
@@ -88,7 +88,7 @@ final class HoldZones {
                 holdOfGroup[group] = h;
             }
         }
-        collapse = script.collapse().orElse(null);
+        collapse = script.objectives().collapse().orElse(null);
         collapseWarningTicks = collapse == null ? 0 : SimStep.ticks(collapse.warningSeconds());
         collapseImpactTicks =
                 collapse == null ? 0 : collapseWarningTicks + Math.max(1, SimStep.ticks(collapse.dropSeconds()));
@@ -196,7 +196,7 @@ final class HoldZones {
                 events.add(SimEvents.Type.HOLD_START, ship.x(), ship.y(), h);
                 if (!holdStarted) {
                     holdStarted = true;
-                    radio.cue(LevelScript.CueTrigger.HOLD_START, "");
+                    radio.cue(CueTrigger.HOLD_START, "");
                 }
                 return;
             }
@@ -231,7 +231,7 @@ final class HoldZones {
             if (!s.complete && groupsDecided(collapse.groups(), true)) {
                 collapseTicks = 0;
                 events.add(SimEvents.Type.COLLAPSE_WARNING, ship.x(), ship.y());
-                radio.cue(LevelScript.CueTrigger.COLLAPSE, "");
+                radio.cue(CueTrigger.COLLAPSE, "");
             }
             return;
         }

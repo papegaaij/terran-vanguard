@@ -23,12 +23,10 @@ class BossTest {
     private static final double ARENA_END = 32;
     private static final double BEND = Math.toRadians(30);
 
-    private static LevelScript.SetPieceSpec boss() {
-        var left = new LevelScript.PartSpec(
-                "left head", -80, -170, new Hitbox(36, 36), 20, false, 30, Optional.empty(), 0, 1.5);
-        var right = new LevelScript.PartSpec(
-                "right head", 80, -170, new Hitbox(36, 36), 20, false, 30, Optional.empty(), 0, 1.5);
-        var core = new LevelScript.PartSpec("core", 0, 10, new Hitbox(60, 60), 30, true, 110, Optional.empty(), 0, 2);
+    private static SetPieceSpec boss() {
+        var left = new PartSpec("left head", -80, -170, new Hitbox(36, 36), 20, false, 30, Optional.empty(), 0, 1.5);
+        var right = new PartSpec("right head", 80, -170, new Hitbox(36, 36), 20, false, 30, Optional.empty(), 0, 1.5);
+        var core = new PartSpec("core", 0, 10, new Hitbox(60, 60), 30, true, 110, Optional.empty(), 0, 2);
         var burst = new BossSpec.Attack(
                 "head-burst",
                 BossSpec.Pattern.AIMED,
@@ -91,7 +89,7 @@ class BossTest {
         var chains = List.of(
                 new BossSpec.Chain("left neck", -60, -50, LEFT_HEAD, 5, new Hitbox(22, 22), 0.12, BEND),
                 new BossSpec.Chain("right neck", 60, -50, RIGHT_HEAD, 5, new Hitbox(22, 22), 0.12, BEND));
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "test-frigate",
                 new Hitbox(300, 320),
                 new Hitbox(200, 120),
@@ -116,39 +114,16 @@ class BossTest {
     }
 
     private static LevelScript level() {
-        return new LevelScript(
-                5,
-                1,
-                0,
-                List.of(
-                        new LevelScript.Section(2, 130),
-                        new LevelScript.Section(ARENA_END, 30, true),
-                        new LevelScript.Section(ARENA_END + 10, 130)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(
-                        new LevelScript.RadioCue(
-                                LevelScript.CueTrigger.BOSS_PHASE,
-                                0,
-                                "Last head",
-                                "Rook",
-                                "One left!",
-                                false,
-                                "neutral"),
-                        new LevelScript.RadioCue(
-                                LevelScript.CueTrigger.BOSS_DESTROYED,
-                                0,
-                                "test-frigate",
-                                "Okafor",
-                                "Down.",
-                                false,
-                                "neutral")),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(),
-                List.of(boss()));
+        return LevelScript.builder(5, 1)
+                .sections(List.of(
+                        new Section(2, 130), new Section(ARENA_END, 30, true), new Section(ARENA_END + 10, 130)))
+                .radio(List.of(
+                        new RadioCue(CueTrigger.BOSS_PHASE, 0, "Last head", "Rook", "One left!", false, "neutral"),
+                        new RadioCue(
+                                CueTrigger.BOSS_DESTROYED, 0, "test-frigate", "Okafor", "Down.", false, "neutral")))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .setPieces(List.of(boss()))
+                .build();
     }
 
     private static final Rules RUSH_RULES = new Rules(
@@ -397,7 +372,7 @@ class BossTest {
     /** A Skitter line straight above the ship at the start, the boss at 5 s. */
     private static LevelScript killLevel() {
         LevelScript level = level();
-        LevelScript.SetPieceSpec boss = boss();
+        SetPieceSpec boss = boss();
         BossSpec late = boss.boss().orElseThrow();
         late = new BossSpec(
                 ARRIVE + 4,
@@ -416,20 +391,12 @@ class BossTest {
         List<WaveSpec> waves = new ArrayList<>();
         waves.add(TestSpecs.wave(
                 0.2, WaveSpec.Formation.LINE_ABREAST, TestSpecs.SKITTER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE));
-        return new LevelScript(
-                level.number(),
-                level.act(),
-                0,
-                level.sections(),
-                waves,
-                List.of(),
-                List.of(),
-                0,
-                level.radio(),
-                level.secondary(),
-                List.of(),
-                List.of(),
-                List.of(new LevelScript.SetPieceSpec(
+        return LevelScript.builder(level.number(), level.act())
+                .sections(level.sections())
+                .waves(waves)
+                .radio(level.radio())
+                .objectives(ObjectiveSpec.NONE.withSecondary(level.objectives().secondary()))
+                .setPieces(List.of(new SetPieceSpec(
                         boss.slug(),
                         boss.size(),
                         boss.body(),
@@ -437,7 +404,8 @@ class BossTest {
                         boss.parts(),
                         List.of(),
                         Optional.empty(),
-                        Optional.of(late))));
+                        Optional.of(late))))
+                .build();
     }
 
     @Test

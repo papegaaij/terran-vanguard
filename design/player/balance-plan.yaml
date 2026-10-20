@@ -66,6 +66,6 @@ plan:
   "16": {core: [[generator, 2]]}   # Mk III "Fusion" (14 MW): any beam needs it
   "17": {}                         # saving: the beam at L1 (5 000 less the Pulse Cannon's 1 260) is short, and an L1 beam (65) would be a downgrade from the Pulse L4's 77
   "18": {buy: [[front, ion-beam]], sell_owned: [[front, pulse-cannon]], upgrade: [[front, 2]]}   # the beam bought at L2 (6 250); the Pulse Cannon L4 it replaced sold: 12.5 of 14 MW
-  "19": {upgrade: [[front, 3]]}    # beam L3 (2 500): 13.5 of 14 MW (M11)
+  "19": {upgrade: [[front, 3]], fit: [[escort, mortar]]}    # beam L3 (2 500): 13.5 of 14 MW (M11); M7 part F (step F2, the gap check's default, pending the user's review in round 42): Rook's owned Mortar again for the Warden Tanks, the nests and the walker (Level 19 asks `anti-ground`)
   "20": {upgrade: [[rear, 3]]}     # Tail Gun L3 (600): 14 of 14 MW
   "21": {core: [[armor, 3]]}       # Composite III (3 000)

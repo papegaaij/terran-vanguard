@@ -10,11 +10,15 @@ import vanguard.game.audio.Sfx;
 import vanguard.sim.Command;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundUnit;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.Range;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
 
@@ -148,23 +152,17 @@ public final class SiegeUnitsFixture {
 
     private SiegeUnitsFixture() {}
 
-    private static LevelScript level(List<WaveSpec> waves, List<LevelScript.GroundUnit> units) {
+    private static LevelScript level(List<WaveSpec> waves, List<GroundUnit> units) {
         return level(waves, units, SPEED);
     }
 
-    private static LevelScript level(List<WaveSpec> waves, List<LevelScript.GroundUnit> units, double speed) {
-        return new LevelScript(
-                17,
-                3,
-                0,
-                List.of(new LevelScript.Section(LENGTH, speed)),
-                waves,
-                List.of(),
-                units,
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static LevelScript level(List<WaveSpec> waves, List<GroundUnit> units, double speed) {
+        return LevelScript.builder(17, 3)
+                .sections(List.of(new Section(LENGTH, speed)))
+                .waves(waves)
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -192,7 +190,7 @@ public final class SiegeUnitsFixture {
                 Optional.empty(),
                 Optional.empty(),
                 List.of());
-        return sortie(level(List.of(herald), List.of(new LevelScript.GroundUnit(0, TARGET_X, TARGET, -1))));
+        return sortie(level(List.of(herald), List.of(new GroundUnit(0, TARGET_X, TARGET, -1))));
     }
 
     /** A Shellback at t=0 walking straight down the ship's column. */

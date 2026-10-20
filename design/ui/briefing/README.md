@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Briefing screen
@@ -98,6 +98,7 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/briefing-images-final-r39-a.png](concept/briefing-images-final-r39-a.png) | Review sheet, M7 part C (round 39): Level 16's two 672×240 images (`level-16-canyon-route`: the Valles on a CDF plot, the route's six sections, Ares Landing, an unlabelled black square on the north rim (Helix); `level-16-tendril-scan`: a gate with a beam burning through the tendril, a pair broken by an anchor kill, a Threadcrawler at the wall's foot) | chosen (round 39, F.6: approved as final) |
 | [concept/briefing-images-final-r40-a.png](concept/briefing-images-final-r40-a.png) | Level 17's briefing images (`level-17-ares-domes`, `level-17-choir-herald`; `tools/art/briefing_images.py`) | chosen (round 40, F.g: approved as final) |
 | [concept/briefing-images-final-r41-a.png](concept/briefing-images-final-r41-a.png) | Level 18's briefing images (`level-18-storm-front`, `level-18-visibility`; `tools/art/briefing_images.py`) | chosen (round 41) |
+| [concept/briefing-images-final-r42-a.png](concept/briefing-images-final-r42-a.png) | Level 19's briefing images and Level 20's filed plate (`level-19-tharsis-works`, `level-19-rear-arcs`, `level-20-filed-plate`; `tools/art/briefing_images.py`, step ART-F4) | chosen (round 42, F.f: approved as final) |
 
 ## Implementation
 
@@ -290,3 +291,4 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
   hangar: Continue, Load game and the mission select replay now open the briefing first (see the
   [screen flow](../README.md#screen-flow)).
 - 2026-10-19 (user, round 40, F.g): Level 17's two briefing images approved as final.
+- 2026-10-20: round 42 closed: Level 19's briefing images and Level 20's filed plate approved as final by the user (F.f).

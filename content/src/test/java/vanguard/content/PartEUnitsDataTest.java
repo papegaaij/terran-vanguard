@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.AllySpec;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.WaveSpec;
 
@@ -237,7 +239,7 @@ class PartEUnitsDataTest {
                 .filter(unit -> unit.enemy().slug().equals("reef-spitter"))
                 .allMatch(unit -> Math.abs(unit.currentRadians() - Math.toRadians(30)) < 1e-12));
 
-        LevelScript.Naval convoy = medium.convoy().orElseThrow();
+        ObjectiveSpec.Naval convoy = medium.objectives().convoy().orElseThrow();
         assertEquals(4, convoy.units().size());
         assertEquals(3, convoy.glideSeconds());
         assertEquals(PlayField.HEIGHT - 450, convoy.laneY());
@@ -245,7 +247,7 @@ class PartEUnitsDataTest {
         assertEquals(120, convoy.laneWidth());
         assertEquals(60, convoy.laneX(1));
         assertEquals(3, convoy.damageable());
-        LevelScript.NavalUnit halvorsen = convoy.units().getFirst();
+        ObjectiveSpec.NavalUnit halvorsen = convoy.units().getFirst();
         assertEquals("Halvorsen", halvorsen.name());
         assertEquals(130, halvorsen.x());
         assertEquals(PlayField.HEIGHT - 380, halvorsen.y());
@@ -255,6 +257,7 @@ class PartEUnitsDataTest {
         assertEquals(
                 3,
                 SimSpecs.level(content, LEVEL_05_KEY, Difficulty.EASY)
+                        .objectives()
                         .convoy()
                         .orElseThrow()
                         .units()
@@ -263,12 +266,12 @@ class PartEUnitsDataTest {
                         .hp(),
                 "easy: three slams");
 
-        assertTrue(medium.secondary().afloat());
-        assertEquals(100, medium.secondary().credits());
-        assertEquals("CONVOY", medium.secondary().label());
-        assertTrue(medium.radio().stream().anyMatch(cue -> cue.trigger() == LevelScript.CueTrigger.ALLY_HIT));
+        assertTrue(medium.objectives().secondary().afloat());
+        assertEquals(100, medium.objectives().secondary().credits());
+        assertEquals("CONVOY", medium.objectives().secondary().label());
+        assertTrue(medium.radio().stream().anyMatch(cue -> cue.trigger() == CueTrigger.ALLY_HIT));
         assertTrue(level.convoy().isPresent());
-        assertTrue(medium.escort().isEmpty());
+        assertTrue(medium.objectives().escort().isEmpty());
     }
 
     @Test

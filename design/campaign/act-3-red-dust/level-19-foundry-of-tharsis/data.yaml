@@ -1,0 +1,726 @@
+# Level 19 – Foundry of Tharsis: the level script, rendered into README.md (briefing, threat profile, layout, waves,
+# ground targets, radio, credit budget). Times are seconds from the level start. M7 part F, step F2, from the README's
+# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M7 part F (loaded, checked and mapped in step F2 by content's LevelData, FoundryChecks and FoundryRules;
+# flown from steps F1/F3, drawn by steps G1/G2): the conveyor `belts` (runs up the screen at 40 px/s that carry ground
+# units), the furnace `vents` (rows of grates firing as a ripple), a nest's `arc: up` (the gantry nests turned 180°),
+# the arena's `hold_after_boss` (the wreck beat), the crawl section's ease from the halt (its `ramp`), the secondary's
+# `allowed` (12 of 14 grey tanks), the music's `stems: motif` (the motif layer alone over the crawl) and the ambience
+# `mars-foundry`; the Warden Tank's and the Revenant Walker's own blocks are in their stat blocks.
+# Defaults of the gap check built here (§1.5, pending the user's review in round 42): the level meets the Act 2+ pacing
+# and floor rules by density (PacingTest's Act 2 rule, ActFloorTest), not by an exception: the approved anchor waves
+# kept at their times (the Warden Tanks at 30.5/41/76/107.5 and the south gate's pair, the Creepers at 55/125, the
+# Herald at 69, the Shellbacks at 83, the Ravagers at 93.5, the Ghost Drones at 58.5/90/159.5, the rear entries at
+# 23.5/48/79.5/100.5/118/156, the radio beats, the quiet windows after the first tanks and the first vent row, held by
+# ground units on the screen); between them a wave about every 2.5 s with light firing groups (Needler line abreasts of
+# 3-4, Stinger V-wings and streams of 3-4: the beam era's HP, `small_act_hp` + `beam_era_hp`, Needler 24, Stinger 36)
+# in place of the approved popcorn streams, more up-facing spine nests under the gantries (t≈36, 70, 88, 110, 152);
+# the crawl's kites as Dust Kite swarms at the edges, so the wreck in the middle reads. Hard: the firing groups one
+# smaller (as Levels 17-18), its extra nest and Wraith pair; easy by the formation lever. The `bounty_scale` and the
+# walker's bounty are the paper values (§1.5): step F4 sets them from the measured run.
+# The backdrop is step ART-F2's (tools/art/backdrop_l19.py --proposal, merged in step F2): seams and belts at exact rows.
+scroll_speed: 150     # the open slag fields and the run-out; the halls, the furnace row and the yard approach set their own
+launch_seconds: 5     # from the bottom edge over the slag fields
+bounty_scale: 0.28    # every bounty × 0.28: the typical haul on budget(19) 2,366 (step F4, from the floor's measured waves; step F2's paper 0.35)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Mars, Tharsis Foundry
+  layers: [ground, air]
+  density: 4
+  traits: [anti-ground, rear]
+  hazards: [furnace vents, rear-firing turrets]
+  boss: Revenant Walker
+  objective: CLEAR THE FOUNDRY   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Tharsis Foundry. Vrell and grey machines together.
+    l1: Front and rear. Turrets that fire after you pass.
+    l2: "New: grey tanks. And one huge contact, unknown."
+    l3: Rear guns for the turrets. Anti-ground for tanks.
+  notes:
+    Dominant layers: '`ground` (Warden Tanks, Creepers, Ravagers, Shellbacks, turret and mortar nests, the walker), `air` (Needler and Stinger groups, popcorn, Ghost Drones, Wraiths, a Choir Herald)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Furnace vents flaring from the floor; conveyors carrying ground units; turrets that fire after the ship passes
+    Boss / mid-boss: 'Mid-boss: Revenant Walker (unnamed before the fight)'
+    Sensor-suite detail: 'none: Tharsis industrial zone, `ground` + `air`, front · L1: + directions (front, rear), density {density}, hazards "furnace vents" and "rear-firing turrets", the objective `{objective}` and the secondary `GREY TANKS 12/14` · L2: + Warden Tank (new), Dust Kite, Skitter, Needler, Stinger, Ghost Drone, Wraith, Creeper, Ravager, Shellback, Choir Herald portraits, and a silhouette "unclassified, huge, `ground`" (the walker) · L3: + `anti-ground` and `rear` highlighted, the wave strip marking the casting-yard halt, 1 secret'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); tiles and atmospheres ART-F2's (tools/art/backdrop_l19.py)
+  - name: Slag Fields
+    end: 24
+    atmosphere: light
+    tiles: [slag-field]
+    notes:
+      layers:
+        ground: slag heaps, the smelter tower at the left edge (from above), an ore gantry across the field (t≈18) with a turret nest under it.
+        low-air: stack smoke (~15 %).
+      purpose: 'Popcorn and light groups from t=6; the first up-facing turret nest taught.'
+  - name: Conveyor Halls
+    end: 64
+    speed: 130
+    ramp: 2
+    atmosphere: light
+    tiles: [hall-floor]
+    notes:
+      layers:
+        ground: two roofless halls, conveyor belts at x 140 and 340 running up the screen, gantries over them; the shift office at the left wall (the secret, t≈52).
+      purpose: 'Warden Tanks alone first (t=30.5), then on both belts.'
+  - name: Furnace Row
+    end: 104
+    speed: 130
+    atmosphere: medium
+    tiles: [furnace-floor]
+    notes:
+      layers:
+        ground: rows of furnace vent grates across the floor between smelter stacks, one belt at x 240 between the rows, slag pools glowing orange.
+        low-air: heat shimmer above the grates.
+      purpose: 'The vents introduced alone (t≈64.5), then with waves; the Choir Herald; Shellbacks on the furnace road.'
+  - name: Yard Approach
+    end: 132
+    speed: 120
+    ramp: 2
+    atmosphere: light
+    tiles: [yard-apron]
+    notes:
+      layers:
+        ground: the casting yard's two feed belts (x 100 and 380), two vent rows, the yard gate with a turret gantry (t≈115); the yard's slab floor enters at the top at the end.
+      purpose: 'Mixed waves; the last tanks before the yard.'
+  - name: Casting Yard
+    end: 133   # the scroll eases to a halt over the arena's first second; the level clock halts here while the walker lives
+    speed: 0
+    arena: true
+    hold_after_boss: 1   # s the clock stays halted after the walker's 2 s death chain (the wreck beat)
+    atmosphere: light
+    tiles: [casting-yard]
+    notes:
+      layers:
+        ground: 'the casting yard filling the field: cast slabs, cooling moulds, molten channels (scenery, no damage), the vents cold.'
+      purpose: 'The mid-boss (≈ 60 s at medium); the scroll halted while it lives.'
+  - name: The Wreck
+    end: 145
+    speed: 20
+    ramp: 2   # eased up from the halt over 2 s, then 10 s at the crawl
+    atmosphere: light
+    tiles: [casting-yard]
+    notes:
+      layers:
+        ground: as section 5; the walker's **wreck** smoking where it fell, the filed plate turned up.
+      purpose: 'Hint 2: the crawl past the wreck with Varga''s line and Okafor''s cut.'
+  - name: South Gate
+    end: 172
+    speed: 150
+    ramp: 2
+    atmosphere: clear
+    tiles: [slag-field]
+    notes:
+      layers:
+        ground: the outbound belt, ingot stacks, the south gate and the plateau beyond; the crews' rovers leaving the tower (t≈160, scenery).
+      purpose: 'Release; level end.'
+
+boss:  # the mid-boss: it walks in from the top edge as the scroll halts (its intro pass) and walks its passes across the yard
+  enemy: revenant-walker
+  t: 132
+  x: 240
+  section: 5
+  incoming: 3   # the boss warning 3 s before the halt (round 41's key; the walker's first pass needs no edge warning)
+  notes:
+    from: top (its intro pass)
+    waves: 'At the halt (the bar, the mini-boss sting, the boss checkpoint); its passes from every edge per its spec, with their edge warnings; no other waves in the arena'
+
+# The conveyor belts (design/campaign Level 19, Conveyors): 48 px wide, running up the screen at 40 px/s relative to the
+# ground; each run from where its bottom end enters at the top edge to where its top end leaves at the bottom edge
+# (ART-F2's belt pieces, tools/art/backdrop_l19.py --proposal: the runs lie where the pieces are drawn). Ground units on
+# a belt ride it; the ship, Rook, pickups and bullets fly above. No nest stands on a belt (FoundryChecks).
+belts:
+  width: 48
+  speed: 40
+  runs:
+    - {x: 140, from: 26.77, to: 67.85}    # section 2, the halls' first belt
+    - {x: 340, from: 26.77, to: 67.85}    # section 2, the second
+    - {x: 240, from: 66.77, to: 108.08}   # section 3, between the vent rows
+    - {x: 100, from: 107.67, to: 147.73}  # section 4, the casting yard's feed belts (they run on under the halt)
+    - {x: 380, from: 107.67, to: 147.73}
+    - {x: 240, from: 147.72, to: 173.72}  # section 7, the outbound belt to the south gate
+
+# The furnace vents (design/campaign Level 19, Hazards; Level 05's sleds the model): rows of grates 44 px across, each
+# firing as a ripple from its first x every period: a grate glows for the tell, then its flame column stands for the
+# burn, hitting the ship and Rook whatever their layer for `heavy` 10, once per burst; enemies and bullets pass. Cold
+# from the arena on. Hard's ripple 0.3 s (step F2's default, pending round 42: 0.4 s would not fit a row of 4 into
+# hard's 3 s period with its 0.9 s tell).
+vents:
+  width: 44
+  tell: 1.2
+  burn: 1.0
+  period: 3.5
+  ripple: 0.4
+  bullet: heavy
+  easy: {tell: 1.6, period: 5}
+  hard: {tell: 0.9, period: 3, ripple: 0.3}
+  rows:
+    - {t: 64.5, xs: [110, 175, 305, 370]}   # the first row, alone: no wave reaches it (the mortar pair holds the screen)
+    - {t: 72, xs: [370, 305, 175, 110]}
+    - {t: 80.5, xs: [110, 175, 305, 370]}
+    - {t: 87, xs: [370, 305, 175, 110]}
+    - {t: 96, xs: [110, 175, 305, 370]}
+    - {t: 112.5, xs: [180, 240, 300]}       # section 4: between the feed belts
+    - {t: 122.5, xs: [300, 240, 180]}
+
+# A wave about every 2.5 s from t=6 (§1.5), keeping the approved table's anchor waves at their times; the rear waves
+# warned 3 s ahead at the bottom edge. Quiet windows: no other wave for 3.5 s after the first Warden Tanks (t=30.5, the
+# tanks hold the screen) and after the first vent row (t≈64.5: the mortar pair by the stacks holds it). The walkers'
+# paths are ground positions at the wave's t ([x, y] px, y below the top edge): a Warden Tank drives up its belt (its
+# path runs up the screen; the belt's 40 px/s and its own 40 against the scroll: 50 px/s down the screen in the halls),
+# rear plate first toward the ship. The crawl (section 6) carries only Dust Kite swarms along the field's edges.
+waves:
+  - {t: 6, formation: stream, enemy: dust-kite, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 8.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 11, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: right, interval: 1.25}
+  - {t: 13.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Varga's line on the gantry nests at t=14"}
+  - {t: 16, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Over the ore gantry's up-facing nest (t≈18)"}
+  - t: 18.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[360, -60], [350, 200], [290, 380], [330, 620]]]   # down the right half, clear of the ore gantry's nest
+  - {t: 21, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: alternating, interval: 1.25}
+  - {t: 23.5, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "The first rear entry, warned 3 s ahead"}
+  - {t: 26, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - {t: 28, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Gone before the tanks' quiet window"}
+  - t: 30.5
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths: [[[140, -40], [140, -5000]]]   # up the belt at x 140, rear first toward the ship
+    notes: "**New.** Alone until t=34 on the belt at x 140; Varga's line at t=30"
+  - {t: 34, formation: snake, enemy: dust-kite, count: 4, from: front, edge: left}
+  - {t: 36, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Over the first conveyor gantry's nest (t≈36)"}
+  - {t: 39.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - t: 41
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths: [[[140, -40], [140, -5000]]]
+    notes: "2 on the belt at x 140, then 1 on x 340 1.5 s later"
+  - t: 42.5
+    formation: single
+    enemy: warden-tank
+    count: 1
+    from: front
+    paths: [[[340, -40], [340, -5000]]]
+  - {t: 44, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor (fills 42.5-46)"}
+  - {t: 46, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Over the slag pit's mortars"}
+  - {t: 48, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked; warned 3 s ahead (Rook's bark at t=45.5); act HP factor"}
+  - {t: 51.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Past the shift office (the secret)"}
+  - {t: 53, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 55
+    formation: convoy
+    enemy: creeper
+    count: 3
+    from: front
+    paths: [[[240, -40], [240, -150], [230, -250], [230, -800]]]   # up the hall floor road between the two belts
+    notes: "On the hall floor road between the belts; act HP factor"
+  - t: 56.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[60, -60], [70, 200], [120, 380], [80, 620]]]   # down the left edge over the hall wall
+  - {t: 58.5, formation: line abreast, enemy: ghost-drone, count: 3, from: front, notes: "Over the second conveyor gantry's nest (t≈60); Ares Control's line at t=57.5"}
+  - {t: 62, formation: snake, enemy: skitter, count: 4, from: front, edge: right, notes: "Gone before the vents' quiet window"}
+  - {t: 65.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "After the first vent row's flare (t≈64.5)"}
+  - t: 69
+    groups:
+      - {formation: carrier + escorts, enemy: choir-herald, count: 1}
+      - {formation: carrier + escorts, enemy: needler, count: 4}
+    from: front
+    speed: 50   # in at half its 100 px/s, so its rings are seen before it holds (as Level 17's)
+    notes: "The escorts in `orbit`, ringed; act HP factor; Varga's line at t=66"
+  - t: 71.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[420, -60], [410, 200], [360, 380], [400, 620]]]   # down the right edge beside the stacks
+  - {t: 73.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
+  - t: 76
+    formation: convoy
+    enemy: warden-tank
+    count: 3
+    from: front
+    interval: 1.5
+    paths: [[[240, -40], [240, -5000]]]   # up the belt at x 240 between the vent rows
+    notes: Between the vent rows
+  - {t: 78, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
+  - {t: 79.5, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "Warned 3 s ahead (Rook's bark at t=77)"}
+  - {t: 81.5, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: alternating, interval: 1.25}
+  - t: 83
+    formation: convoy
+    enemy: shellback
+    count: 2
+    from: front
+    interval: 3
+    paths: [[[150, -60], [150, 200], [130, 400], [150, 640]]]   # down the furnace road west of the belt, 3 s apart (their rolls never overlap)
+    notes: "On the furnace road; act HP factor"
+  - {t: 84.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Over the Shellbacks"}
+  - {t: 88.5, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}, notes: "Over the furnace gantry's nest (t≈88); Okafor's line at t=88"}
+  - {t: 90, formation: line abreast, enemy: ghost-drone, count: 4, from: front}
+  - t: 92
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[300, -60], [310, 200], [370, 380], [330, 620]]]   # down the right half
+  - t: 93.5
+    formation: pack
+    enemy: ravager
+    count: 4
+    from: front
+    hard: {count: 4}   # four paths: the formation lever's hard five would need a fifth
+    paths:   # round the slag pool's mortars, splitting half to each side
+      - [[300, -30], [300, 90], [560, 0]]
+      - [[340, -30], [350, 100], [580, 10]]
+      - [[180, -30], [170, 90], [-80, 0]]
+      - [[140, -30], [130, 110], [-100, 20]]
+    notes: "Round the slag pool's mortars; act HP factor"
+  - {t: 97, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "The leader drops an overdrive; Rook's bark at t=97.5"}
+  - {t: 99, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
+  - {t: 100.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Warned 3 s ahead"}
+  - {t: 104, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: "Ares Control's line at t=105"}
+  - {t: 105.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - t: 107.5
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths: [[[100, -40], [100, -5000]]]   # up the feed belt at x 100
+    notes: "2 + 2 on the feed belts"
+  - t: 107.5
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths: [[[380, -40], [380, -5000]]]   # up the feed belt at x 380
+  - {t: 109, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1, notes: "Beside the feed belts"}
+  - {t: 111.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}
+  - {t: 114.5, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}, notes: "Over the yard gate's nest (t≈115)"}
+  - {t: 118, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "Warned 3 s ahead"}
+  - {t: 120, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}}
+  - t: 121.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[200, -60], [190, 220], [260, 380], [220, 620]]]   # down the middle, over the supply drone's patch
+    notes: The supply drone's armour patch at t=122
+  - {t: 123.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
+  - t: 125
+    formation: convoy
+    enemy: creeper
+    count: 3
+    from: front
+    paths: [[[240, -40], [240, -150], [250, -250], [250, -800]]]   # up the yard apron between the feed belts
+    notes: Act HP factor
+  - {t: 126.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 128.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Gone before the halt"}
+  - {t: 130, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair before the yard, warned"}
+  - t: 133.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[40, -60], [50, 200], [30, 400], [50, 620]]]   # down the left edge: the wreck in the middle reads
+    notes: "The crawl: kite swarms along the edges only"
+  - t: 136
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[440, -60], [430, 200], [450, 400], [430, 620]]]   # down the right edge
+  - t: 138.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[40, -60], [50, 200], [30, 400], [50, 620]]]
+    notes: "Varga's hint line at t=137"
+  - t: 141
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[440, -60], [430, 200], [450, 400], [430, 620]]]
+  - t: 143.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[40, -60], [50, 200], [30, 400], [50, 620]]]
+    notes: The scroll picks up at t=145
+  - {t: 145.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 147.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
+  - t: 149
+    formation: convoy
+    enemy: warden-tank
+    count: 2
+    from: front
+    interval: 1.5
+    paths: [[[240, -40], [240, -5000]]]   # up the outbound belt at x 240
+    notes: The last two tanks
+  - {t: 151, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 153.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
+  - {t: 156, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Warned 3 s ahead"}
+  - {t: 158, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
+  - {t: 159.5, formation: line abreast, enemy: ghost-drone, count: 3, from: front}
+  - t: 161.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[140, -60], [150, 220], [210, 380], [170, 620]]]   # down the left half, clear of the outbound belt
+  - {t: 163, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Okafor's line at t=163"}
+  - {t: 166.5, formation: V-wing, enemy: dust-kite, count: 3, from: front, notes: "The last wave"}
+
+  - {t: 167.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the run-out"}
+  - {t: 169.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the run-out"}
+ground_targets:  # at: [t, x], when it enters at the top edge and its x; no nest stands on a belt (FoundryChecks)
+  - target: ore gantry nest
+    section: 1
+    enemy: spine-turret
+    count: 3
+    arc: up
+    at: [[17.6, 120], [18, 240], [18.4, 360]]   # under the ore gantry (a prop, step G2), their cradles pointing up the line
+    notes:
+      target: 'Up-facing [Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} under the ore gantry (t≈18)'
+      effect: Bounty {bounty} each; fire only after the ship has passed
+  - target: hall gantry nest
+    section: 2
+    enemy: spine-turret
+    count: 2
+    arc: up
+    at: [[35.8, 60], [36.2, 240]]   # under the first conveyor gantry, beside the belts
+    notes:
+      target: Up-facing Spine Turret nest ×{count} under the first conveyor gantry (t≈36)
+      effect: Bounty
+  - target: hall wall mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 2
+    at: [[31.5, 70], [31.9, 410]]   # step F4: in the slag pits by the first hall's walls, clear of the belts: they hold the screen in the tanks' quiet window
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) pair by the hall walls (t≈31.5)'
+      effect: Bounty {bounty} each
+  - target: slag pit mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 2
+    at: [[46, 70], [46.4, 410]]   # in the slag pits outside the halls, clear of the belts
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) pair in the slag pits (t≈46)'
+      effect: Bounty {bounty} each
+  - target: payroll safe
+    section: 2
+    layer: ground
+    size: [36, 32]
+    sprite: payroll-safe   # step ART-F4: the squat safe in the shift office, its door lamp blinking green (payroll-safe-glow)
+    hp: 20
+    reveals: payroll safe
+    at: [[52, 60]]   # in the shift office at the first hall's left wall
+    notes:
+      target: 'Foundry payroll safe in the shift office (`ground` trigger, {hp} HP, t≈52, x 60)'
+      effect: 'The secret: frees a crate worth 100 (256)'
+  - target: conveyor gantry nest
+    section: 2
+    enemy: spine-turret
+    count: 3
+    arc: up
+    at: [[59.6, 70], [60, 240], [60.4, 410]]   # under the second conveyor gantry, beside the belts
+    notes:
+      target: Up-facing Spine Turret nest ×{count} under a conveyor gantry (t≈60)
+      effect: Bounty
+  - target: stack mortars
+    section: 2
+    enemy: polyp-mortar
+    count: 2
+    at: [[63, 80], [63.4, 400]]   # by the first smelter stacks: the screen held through the first vent row's quiet window
+    notes:
+      target: Polyp Mortar pair by the first smelter stacks (t≈63), on the screen through the first vent row's window
+      effect: Bounty
+  - target: furnace gantry nest
+    section: 3
+    enemy: spine-turret
+    count: 2
+    arc: up
+    at: [[69.8, 140], [70.2, 340]]   # under the furnace row's first gantry, beside the belt
+    notes:
+      target: Up-facing Spine Turret nest ×{count} under a furnace gantry (t≈70)
+      effect: Bounty
+  - target: stack nest
+    section: 3
+    enemy: spine-turret
+    count: 4
+    arc: up
+    at: [[79.6, 50], [79.6, 430], [80.4, 90], [80.4, 390]]   # on the smelter stacks, 2 + 2 either side of the row
+    notes:
+      target: Up-facing Spine Turret nest ×{count} on the smelter stacks, 2 + 2 either side of the row (t≈80)
+      effect: Bounty
+  - target: row gantry nest
+    section: 3
+    enemy: spine-turret
+    count: 3
+    arc: up
+    at: [[87.6, 110], [88, 175], [88.4, 360]]   # under the furnace row's second gantry
+    notes:
+      target: Up-facing Spine Turret nest ×{count} under a furnace gantry (t≈88)
+      effect: Bounty
+  - target: slag pool floe
+    section: 3
+    enemy: polyp-mortar
+    count: 3
+    at: [[95, 100], [95.4, 160], [95.8, 130]]   # by the slag pool, west of the belt
+    notes:
+      target: Polyp Mortar floe ×{count} by the slag pool (t≈95)
+      effect: Bounty
+  - target: late furnace nest
+    section: 3
+    enemy: spine-turret
+    count: 2
+    arc: up
+    at: [[100, 340], [100.4, 400]]
+    hard:
+      at: [[100, 340], [100.4, 400], [99.6, 60], [100, 120], [100.4, 180]]   # hard: an extra up-facing nest of 3
+    notes:
+      target: Up-facing Spine Turret nest ×{count} at the furnace row's end (t≈100; hard +3)
+      effect: Bounty
+  - target: feed belt nest
+    section: 4
+    enemy: spine-turret
+    count: 2
+    arc: up
+    at: [[109.8, 200], [110.2, 280]]   # under the feed belts' gantry, between the belts
+    notes:
+      target: Up-facing Spine Turret nest ×{count} under the feed belts' gantry (t≈110)
+      effect: Bounty
+  - target: yard gate nest
+    section: 4
+    enemy: spine-turret
+    count: 3
+    arc: up
+    at: [[114.6, 170], [115, 240], [115.4, 310]]   # under the yard gate's turret gantry
+    notes:
+      target: Up-facing Spine Turret nest ×{count} under the yard gate (t≈115)
+      effect: Bounty
+  - target: outbound nest
+    section: 7
+    enemy: spine-turret
+    count: 2
+    arc: up
+    at: [[152, 120], [152.4, 360]]   # under the outbound belt's gantry, beside the belt
+    notes:
+      target: Up-facing Spine Turret nest ×{count} by the outbound belt (t≈152)
+      effect: Bounty
+  - target: south gate mortars
+    section: 7
+    enemy: polyp-mortar
+    count: 2
+    at: [[155, 100], [155.4, 380]]
+    notes:
+      target: Polyp Mortar pair at the south gate (t≈155)
+      effect: Bounty
+
+secrets:
+  - name: payroll safe
+    crate: 100   # Act 1 terms: pays 256 with the act factor
+    radio: {speaker: Ares Control, portrait: generic-colonial, line: "That's the foundry payroll. The crews say keep it."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 97, unit: first}}   # the leader of the t=97 Stinger V-wing
+
+drops:  # an Ares militia supply drone (the CDF supply drone's presentation, as Levels 17-18) releases an armour patch before the yard
+  - {t: 122, x: 240, y: 380, pickup: armour patch, sprite: supply-drone}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected); the arena's lines are events (the level clock is halted)
+  - {t: 1, speaker: Okafor, line: "Tharsis Foundry, Lancer. The Vrell hold the lower works, and the grey machines are with them. Clear it to the casting yard."}
+  - {t: 14, speaker: Varga, line: "Gantry turrets ahead face up the line. They fire once you're past."}
+  - {t: 22.5, speaker: Ares Control, portrait: generic-colonial, line: "Two hundred foundry crew are sealed in the smelter tower."}
+  - {t: 30, speaker: Varga, line: "Grey tanks on the conveyors. Their back plates are thin."}
+  - {t: 38, speaker: Rook, requires: escort, line: "Tanks on a conveyor belt. Someone hates walking."}
+  - {t: 45.5, speaker: Rook, requires: escort, line: "Six o'clock! Cloakers!"}
+  - {t: 57.5, speaker: Ares Control, portrait: generic-colonial, line: "Furnace row is next. The vents still fire. Watch for the glow."}
+  - {t: 66, speaker: Varga, line: "A singer with escorts. Kill it and their shields go with it."}
+  - {t: 77, speaker: Rook, requires: escort, line: "Coming up behind, Lancer!"}
+  - {t: 88, speaker: Okafor, line: "Grey drones again, same as the storm. Keep your spacing."}
+  - {t: 97.5, speaker: Rook, requires: escort, line: "Cloakers on six again!"}
+  - {t: 105, speaker: Ares Control, portrait: generic-colonial, line: "Something big walked into the casting yard an hour ago. It isn't one of ours."}
+  - {t: 116, speaker: Rook, requires: escort, line: "Behind us!"}
+  - {t: 124.5, speaker: Okafor, line: "Casting yard ahead. Whatever is in there, Lancer, put it down."}
+  - {event: first-telegraph, speaker: Varga, line: "It burns what's behind it. Stay out of the cone, then hit the vents.", notes: {trigger: "First flame tell (`first-telegraph`)"}}
+  - {event: boss-part-destroyed, parts: [left pod, right pod], speaker: Rook, requires: escort, line: "Pod's gone. One more.", notes: {trigger: "First missile pod destroyed (`boss-part-destroyed`)"}}
+  - {event: boss-destroyed, speaker: Rook, requires: escort, line: "Walker's down. No colours, no numbers.", notes: {trigger: "Walker destroyed (`boss-destroyed`)"}}
+  - {t: 137, speaker: Varga, line: "Lancer, the serial plates are filed off. By hand. And that alloy is Helix foundry stock."}
+  - {t: 148.5, speaker: Okafor, line: "Not on this channel, Doctor."}
+  - {t: 155.5, speaker: Ares Control, portrait: generic-colonial, line: "Tower to Aegis: the yard is clear. We're coming out."}
+  - {t: 163, speaker: Okafor, line: "South gate ahead. Last of them, Lancer."}
+  - {event: secondary-objective, speaker: Okafor, line: "Not one grey tank left the foundry. Good.", notes: {trigger: Secondary met (at the end)}}
+  - {event: level-end, speaker: Okafor, line: "Tharsis is breathing again. Come home, Aegis."}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: warden-tank, allowed: 2, label: GREY TANKS, credits: 100, name: Stop 12 of the 14 grey tanks}   # at least 12 of the 14 Warden Tanks destroyed before they leave the screen, failed at the third away (100 in Act 1 terms: pays 256)
+
+music:
+  track: 9            # Act 3 B "Grey Signal" (audio/music track list)
+  start_section: 2    # the foundry ambience alone in section 1, the base stem from the halls
+  full_section: 3     # the full mix from the furnace row
+  stems: {6: motif, 7: base}   # the crawl: the motif layer alone over the ambience (hint 2 in the music); the base stem to the end
+  motif: {from: 132, sections: {7: false}}   # Vorne's motif layer as a faint layer under the walker fight and alone over the crawl, not in the run-out
+  ambience: mars-foundry   # conveyor rumble, a far furnace roar, a slow hammer, the plateau wind
+  end_jingle: mission-complete
+  boss_sting: miniboss-sting   # track 21 at the arena halt, when the boss bar appears, then the track again
+
+difficulty: {}  # the vents' easy and hard tell, period and ripple are in `vents`; hard's extra nest and Wraith pair are in their entries; the firing groups' hard counts are in their waves; the formation lever sizes the rest; the stat blocks' hooks apply (the Warden Tank's 2- and 4-shot bursts and hard turret, the walker's easy and hard hooks)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-19-tharsis-works, line: "Tharsis Foundry went quiet two days ago. The Vrell hold the lower works, and those grey machines are with them. Two hundred crew are sealed in the smelter tower. Get them out."}
+    - {speaker: Varga, image: level-19-rear-arcs, line: "Grey tanks ride the conveyors, and the gantry turrets face up the line: they fire after you pass. Rear guns, Lancer. And something large is in the casting yard."}
+  teaser: {speaker: Rook, line: "A foundry full of grey tanks. Bring something that shoots backwards."}
+
+backdrop:
+  # Presentation only: Foundry of Tharsis (tools/art/backdrop_l19.py, from mars-tharsis-foundry-r36-a).
+  # The ground is opaque; no deep layer (the README's horizon tower is drawn from above at the left edge,
+  # pending round 42). Seams and belt copies sit at exact rows: re-run `backdrop_l19.py --proposal`
+  # after the data moves a section (the belts' times below then move too).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2}   # far and high-air unused (no deep layer: the ground is opaque; no high-air art), given as the loader asks (step F2, as Level 18's)
+  ramp: 3
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {haze: 0.04}   # the south gate's run-out: haze only
+    light: {banks: stack-smoke, haze: 0.06}   # slag fields, halls, approach, yard: thin stack smoke
+    medium: {banks: furnace-smoke, haze: 0.1}   # the furnace row: warmer, denser smoke
+  tile_sets:
+    slag-field: {layer: ground, height: 960}   # sections 1, 7: basalt slag, low heaps, rust stains, glowing cracks
+    hall-floor: {layer: ground, height: 960}   # section 2: the two roofless halls' slab floors, low walls, column stubs
+    furnace-floor: {layer: ground, height: 960}   # section 3: riveted iron plates, slag pools glowing at the edges
+    yard-apron: {layer: ground, height: 960}   # section 4: packed slag, ruts, two rail pairs under the edges
+    casting-yard: {layer: ground, height: 960}   # sections 5, 6 (the arena): cast slabs, cooling moulds, molten channels
+    stack-smoke: {layer: low-air, height: 960, drift: 6}   # light: thin stack smoke, at most 28 %
+    furnace-smoke: {layer: low-air, height: 960, drift: 8}   # medium (the furnace row): warmer, denser smoke, at most 36 %
+  pieces:
+    seam-halls: {layer: ground, size: [480, 320]}   # section 2's seam: the slag field into the halls (exact rows)
+    seam-furnaces: {layer: ground, size: [480, 320]}   # section 3's seam: the halls into the furnace row (exact rows)
+    seam-apron: {layer: ground, size: [480, 320]}   # section 4's seam: the furnace row onto the yard apron (exact rows)
+    seam-yard: {layer: ground, size: [480, 320]}   # section 5's seam: the apron into the casting yard (exact rows)
+    seam-south: {layer: ground, size: [480, 320]}   # section 7's seam: the casting yard back onto the slag field (exact rows)
+    belt-plates: {layer: ground, size: [80, 480], frames: 4, fps: 10}   # a conveyor's moving plates, rails, rollers and low walls (40 px/s up; exact rows)
+    belt-end: {layer: ground, size: [80, 48]}   # the drum housing at a belt run's end
+    smelter-tower: {layer: ground, size: [200, 200]}   # the smelter tower from above (the crew's refuge), at the left edge
+    smelter-stack: {layer: ground, size: [96, 96]}   # a furnace stack, its throat glowing
+    slag-heap: {layer: ground, size: [160, 128]}   # a black slag heap, glowing veins at its crest
+    yard-gate: {layer: ground, size: [480, 96]}   # the casting yard's wall: the gate and the two belt slots
+    south-gate: {layer: ground, size: [480, 480]}   # the outer wall with the open south gate, the rust plateau beyond
+  placed:
+    # the section seam under seam-halls (exact rows; re-run after the data moves a section's start)
+    - {piece: seam-halls, t: 25.9231, x: 240}
+    - {piece: seam-furnaces, t: 66.0769, x: 240}
+    - {piece: seam-apron, t: 106.167, x: 240}
+    - {piece: seam-yard, t: 146.064, x: 240}
+    - {piece: seam-south, t: 147.667, x: 240}
+    # 1, 7. the smelter tower at the left edge (the README's horizon tower, from above; pending round 42)
+    - {piece: smelter-tower, t: 9.133, x: 30}
+    - {piece: smelter-tower, t: 155.133, x: 30}
+    # 1, 7. slag heaps
+    - {piece: slag-heap, t: 4.373, x: 390}
+    - {piece: slag-heap, t: 15.373, x: 250}
+    - {piece: slag-heap, t: 21.373, x: 420}
+    - {piece: slag-heap, t: 150.373, x: 380}
+    - {piece: slag-heap, t: 159.373, x: 160}
+    # 3. the furnace row's stacks at the edges
+    - {piece: smelter-stack, t: 67.708, x: 40}
+    - {piece: smelter-stack, t: 72.708, x: 440}
+    - {piece: smelter-stack, t: 77.708, x: 40}
+    - {piece: smelter-stack, t: 82.708, x: 440}
+    - {piece: smelter-stack, t: 87.708, x: 40}
+    - {piece: smelter-stack, t: 92.708, x: 440}
+    - {piece: smelter-stack, t: 97.708, x: 40}
+    - {piece: smelter-stack, t: 102.708, x: 440}
+    # 4. the yard gate: its wall enters at the top at t=115 (the turret gantry is a prop)
+    - {piece: yard-gate, t: 116.85, x: 240}
+    # belts (exact rows, the copies join): section 2 at x 140, 10 copies
+    - {piece: belt-plates, t: 30.6923, x: 140}
+    - {piece: belt-plates, t: 34.3846, x: 140}
+    - {piece: belt-plates, t: 38.0769, x: 140}
+    - {piece: belt-plates, t: 41.7692, x: 140}
+    - {piece: belt-plates, t: 45.4615, x: 140}
+    - {piece: belt-plates, t: 49.1538, x: 140}
+    - {piece: belt-plates, t: 52.8462, x: 140}
+    - {piece: belt-plates, t: 56.5385, x: 140}
+    - {piece: belt-plates, t: 60.2308, x: 140}
+    - {piece: belt-plates, t: 63.9231, x: 140}
+    - {piece: belt-end, t: 28.938, x: 140}
+    - {piece: belt-end, t: 65.677, x: 140}
+    # belts (exact rows, the copies join): section 2 at x 340, 10 copies
+    - {piece: belt-plates, t: 30.6923, x: 340}
+    - {piece: belt-plates, t: 34.3846, x: 340}
+    - {piece: belt-plates, t: 38.0769, x: 340}
+    - {piece: belt-plates, t: 41.7692, x: 340}
+    - {piece: belt-plates, t: 45.4615, x: 340}
+    - {piece: belt-plates, t: 49.1538, x: 340}
+    - {piece: belt-plates, t: 52.8462, x: 340}
+    - {piece: belt-plates, t: 56.5385, x: 340}
+    - {piece: belt-plates, t: 60.2308, x: 340}
+    - {piece: belt-plates, t: 63.9231, x: 340}
+    - {piece: belt-end, t: 28.938, x: 340}
+    - {piece: belt-end, t: 65.677, x: 340}
+    # belts (exact rows, the copies join): section 3 at x 240, 10 copies
+    - {piece: belt-plates, t: 70.6923, x: 240}
+    - {piece: belt-plates, t: 74.3846, x: 240}
+    - {piece: belt-plates, t: 78.0769, x: 240}
+    - {piece: belt-plates, t: 81.7692, x: 240}
+    - {piece: belt-plates, t: 85.4615, x: 240}
+    - {piece: belt-plates, t: 89.1538, x: 240}
+    - {piece: belt-plates, t: 92.8462, x: 240}
+    - {piece: belt-plates, t: 96.5385, x: 240}
+    - {piece: belt-plates, t: 100.231, x: 240}
+    - {piece: belt-plates, t: 103.923, x: 240}
+    - {piece: belt-end, t: 68.938, x: 240}
+    - {piece: belt-end, t: 105.734, x: 240}
+    # belts (exact rows, the copies join): section 4 at x 100, 6 copies
+    - {piece: belt-plates, t: 111.917, x: 100}
+    - {piece: belt-plates, t: 115.917, x: 100}
+    - {piece: belt-plates, t: 119.917, x: 100}
+    - {piece: belt-plates, t: 123.917, x: 100}
+    - {piece: belt-plates, t: 127.917, x: 100}
+    - {piece: belt-plates, t: 131.917, x: 100}
+    - {piece: belt-end, t: 110.017, x: 100}
+    - {piece: belt-end, t: 144.9, x: 100}
+    # belts (exact rows, the copies join): section 4 at x 380, 6 copies
+    - {piece: belt-plates, t: 111.917, x: 380}
+    - {piece: belt-plates, t: 115.917, x: 380}
+    - {piece: belt-plates, t: 119.917, x: 380}
+    - {piece: belt-plates, t: 123.917, x: 380}
+    - {piece: belt-plates, t: 127.917, x: 380}
+    - {piece: belt-plates, t: 131.917, x: 380}
+    - {piece: belt-end, t: 110.017, x: 380}
+    - {piece: belt-end, t: 144.9, x: 380}
+    # belts (exact rows, the copies join): section 7 at x 240, 7 copies
+    - {piece: belt-plates, t: 151.12, x: 240}
+    - {piece: belt-plates, t: 154.32, x: 240}
+    - {piece: belt-plates, t: 157.52, x: 240}
+    - {piece: belt-plates, t: 160.72, x: 240}
+    - {piece: belt-plates, t: 163.92, x: 240}
+    - {piece: belt-plates, t: 167.12, x: 240}
+    - {piece: belt-plates, t: 170.32, x: 240}
+    - {piece: belt-end, t: 149.6, x: 240}
+    # 7. the south gate and the plateau beyond (its top 40 px above the view at the level's end)
+    - {piece: south-gate, t: 172.467, x: 240}
+  # Section tiles (`sections[].tiles`): 1: [slag-field]; 2: [hall-floor]; 3: [furnace-floor]; 4: [yard-apron]; 5: [casting-yard]; 6: [casting-yard]; 7: [slag-field]
+  # Atmospheres: 1, 2 light; 3 medium; 4, 5, 6 light; 7 clear.
+  # Belt runs drawn (x, the run's bottom enters at the top at t .. its top leaves below at t), for the
+  # data's Belt specs (48 px wide, 40 px/s up): x 140 t 26.77-67.85; x 340 t 26.77-67.85; x 240 t 66.77-108.08; x 100 t 107.67-147.73; x 380 t 107.67-147.73; x 240 t 147.72-173.72

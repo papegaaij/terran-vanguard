@@ -70,20 +70,11 @@ class CreeperTest {
 
     /** A slow-scrolling level, so the convoy stays on the screen; nothing hurts the ship. */
     private static Sortie sortie(List<WaveSpec> waves) {
-        LevelScript level = new LevelScript(
-                8,
-                2,
-                0,
-                List.of(new LevelScript.Section(30, 5)),
-                waves,
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0, 50, List.of(), "creeper"),
-                List.of(),
-                List.of(),
-                List.of());
+        LevelScript level = LevelScript.builder(8, 2)
+                .sections(List.of(new Section(30, 5)))
+                .waves(waves)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0, 50, List.of(), "creeper")))
+                .build();
         return new Sortie(1, LOADOUT, level, RULES.withInvulnerableShip(), FULL_ARMOUR);
     }
 

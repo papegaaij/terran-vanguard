@@ -59,7 +59,7 @@ import java.util.Optional;
  * @param swoop M7 part B: its swoop across the ship's lane once it nears the ship's row (design/enemies/
  *     air/dust-kite)
  * @param link M7 part C: the tendril it spans with its partner in a gate (design/enemies/ground/
- *     tendril-anchor): a {@link LevelScript.Gate}'s anchor
+ *     tendril-anchor): a {@link GroundSpec.Gate}'s anchor
  * @param crawl M7 part C: the ground path its chain's head crawls and the pore wave of its segments
  *     (design/enemies/ground/threadcrawler); a chain's head only
  * @param aura M7 part D: the shield rings it sings onto the other units near it (design/enemies/air/
@@ -74,6 +74,10 @@ import java.util.Optional;
  *     reaches are held until its death
  * @param laneStrafe M7 part E: its lane strafe (design/enemies/air/ghost-drone): it drops to its lane, banks and
  *     strafes across; its gun fires one burst per pass by its pass trigger ({@link EnemyGun#passWithinX()})
+ * @param turret M7 part F: its turret, turning independently of its hull (design/enemies/ground/warden-tank): its
+ *     gun's bursts go along the turret's aim ({@link Enemy#turretAim()}), in any direction; a walker's with a gun
+ * @param rearPlate M7 part F: its thin rear plate (the Warden Tank's): direct shots arriving within its half arc of
+ *     its rear do its multiplier to the body; a walker's
  */
 public record EnemySpec(
         String slug,
@@ -122,8 +126,16 @@ public record EnemySpec(
         Optional<Roll> roll,
         Optional<Vortex> vortex,
         Optional<Pull> pull,
-        Optional<LaneStrafe> laneStrafe) {
+        Optional<LaneStrafe> laneStrafe,
+        Optional<Turret> turret,
+        Optional<RearPlate> rearPlate) {
     public EnemySpec {
+        if (turret.isPresent() && (walker.isEmpty() || gun.isEmpty() || chain.isPresent())) {
+            throw new IllegalArgumentException(slug + ": a turret is a walker's with a gun (the Warden Tank)");
+        }
+        if (rearPlate.isPresent() && walker.isEmpty()) {
+            throw new IllegalArgumentException(slug + ": a rear plate is a walker's (its facing is its path's)");
+        }
         if (latch.isPresent() && chase.isEmpty()) {
             throw new IllegalArgumentException(slug + ": a unit that latches chases the ship first");
         }
@@ -181,6 +193,242 @@ public record EnemySpec(
         }
         if (laneStrafe.isPresent() && gun.isPresent() && Double.isNaN(gun.get().passWithinX())) {
             throw new IllegalArgumentException(slug + ": a lane strafer's gun fires by a pass trigger");
+        }
+    }
+
+    /** The constructor of M7 part E's Ghost Drone (step E2): without M7 part F's turret and rear plate. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            Optional<UnitPart> part,
+            Optional<Roll> roll,
+            Optional<Vortex> vortex,
+            Optional<Pull> pull,
+            Optional<LaneStrafe> laneStrafe) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** M7 part F: this walker with its turret (design/enemies/ground/warden-tank); empty for none. */
+    public EnemySpec withTurret(Optional<Turret> withTurretSpec) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                withTurretSpec,
+                rearPlate);
+    }
+
+    /** M7 part F: this walker with its rear plate (design/enemies/ground/warden-tank); empty for none. */
+    public EnemySpec withRearPlate(Optional<RearPlate> withPlate) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                turret,
+                withPlate);
+    }
+
+    /**
+     * M7 part F, a turret turning independently of its unit's hull (design/enemies/ground/warden-tank): it turns
+     * toward its target (the ship, or the objective the hook picks) at {@code turnRate} radians per second all
+     * round, while the unit is on the screen; once its gun is ready and its aim is within {@code withinRadians} of
+     * the target it stops turning for {@code lockSeconds} (the tell) and then fires its burst along its aim.
+     */
+    public record Turret(double turnRate, double lockSeconds, double withinRadians) {
+        public Turret {
+            if (!(turnRate > 0) || !(lockSeconds >= 0) || !(withinRadians >= 0)) {
+                throw new IllegalArgumentException("a turret turns, locks 0 s or more and aims within an angle");
+            }
+        }
+    }
+
+    /**
+     * M7 part F, a walker's thin rear plate (design/enemies/ground/warden-tank): a direct shot (a bolt, a missile,
+     * a beam) arriving within {@code halfArcRadians} of its rear (flying along its facing) does {@code multiplier}
+     * × its damage to the body; a unit part's damage is its own.
+     */
+    public record RearPlate(double halfArcRadians, double multiplier) {
+        public RearPlate {
+            if (!(halfArcRadians >= 0) || !(halfArcRadians <= StrictMath.PI) || !(multiplier > 0)) {
+                throw new IllegalArgumentException("a rear plate has an arc and a multiplier");
+            }
         }
     }
 
@@ -601,7 +849,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /**
@@ -656,7 +906,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /**
@@ -711,7 +963,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** M7 part E: this ground unit with its vortex cycle (design/enemies/ground/dust-devil); empty for none. */
@@ -763,7 +1017,9 @@ public record EnemySpec(
                 roll,
                 withVortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** M7 part E: this unit with its radial pull on the ship and the pickups (the Dust Devil); empty for none. */
@@ -815,7 +1071,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 withPull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /**
@@ -870,7 +1128,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                withLaneStrafe);
+                withLaneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** M7 part D: this walker with its curl-roll (design/enemies/ground/shellback); empty for none. */
@@ -922,7 +1182,9 @@ public record EnemySpec(
                 withRoll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** M7 part C: this chain's head with its {@code crawl} (design/enemies/ground/threadcrawler); empty for none. */
@@ -974,7 +1236,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** The constructor of M7 part A: without the burrows and swoops of Level 15 (M7 part B). */
@@ -1260,7 +1524,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /**
@@ -1315,7 +1581,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** M7 part B: this unit with its {@code burrow} (design/enemies/ground/burrower); empty for none. */
@@ -1367,7 +1635,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /** M7 part B: this unit with its {@code swoop} (design/enemies/air/dust-kite); empty for none. */
@@ -1419,7 +1689,9 @@ public record EnemySpec(
                 roll,
                 vortex,
                 pull,
-                laneStrafe);
+                laneStrafe,
+                turret,
+                rearPlate);
     }
 
     /**
@@ -1476,7 +1748,7 @@ public record EnemySpec(
      * starts to swim: {@code aheadMin}–{@code aheadMax} px above the ship's centre and within ±{@code
      * across} px of its x (seeded), kept {@code edgeMargin} px inside the play field's edges and at least
      * {@code clearance} px from the ship's centre (checked again as the bulge starts); outside the level's
-     * no-surface zones ({@link LevelScript.NoSurface}): the nearest allowed point, else that surfacing is
+     * no-surface zones ({@link GroundSpec.NoSurface}): the nearest allowed point, else that surfacing is
      * skipped (it still counts).
      */
     public record SurfaceSpot(double aheadMin, double aheadMax, double across, double edgeMargin, double clearance) {
@@ -1992,6 +2264,12 @@ public record EnemySpec(
      * if it ends before the hover does. The eye, where the beam and its telegraph start, is
      * {@code originIn} px from the unit's centre toward the field (mirrored on the right edge) and
      * {@code originDown} px down the screen.
+     *
+     * <p>Round 41 (the 2026-10-19 playtest, the Siege Spire's sweep; a boss's only): with a {@code
+     * leadRadians}, the arc is not centred on the ship's bearing at the telegraph but starts that far from it
+     * on the side the beam comes from, so the telegraph's line lies just beside the ship: a ship that crosses
+     * it before the beam fires is behind the beam (safe), one that stands still or moves the other way is
+     * swept. NaN (the default) centres the arc on the bearing.
      */
     public record Sweep(
             double arcRadians,
@@ -2003,7 +2281,60 @@ public record EnemySpec(
             double firstDelaySeconds,
             double damage,
             double originIn,
-            double originDown) {
+            double originDown,
+            double leadRadians) {
+        public Sweep {
+            if (!Double.isNaN(leadRadians) && !(leadRadians >= 0 && leadRadians <= arcRadians)) {
+                throw new IllegalArgumentException("a sweep's lead lies within its arc: " + leadRadians);
+            }
+        }
+
+        /** A sweep centred on the ship's bearing (without round 41's lead). */
+        public Sweep(
+                double arcRadians,
+                double sweepSeconds,
+                double telegraphSeconds,
+                double length,
+                double width,
+                double intervalSeconds,
+                double firstDelaySeconds,
+                double damage,
+                double originIn,
+                double originDown) {
+            this(
+                    arcRadians,
+                    sweepSeconds,
+                    telegraphSeconds,
+                    length,
+                    width,
+                    intervalSeconds,
+                    firstDelaySeconds,
+                    damage,
+                    originIn,
+                    originDown,
+                    Double.NaN);
+        }
+
+        /** Round 41: this sweep with its first edge {@code radians} from the ship's bearing (NaN: centred). */
+        public Sweep withLead(double radians) {
+            return new Sweep(
+                    arcRadians,
+                    sweepSeconds,
+                    telegraphSeconds,
+                    length,
+                    width,
+                    intervalSeconds,
+                    firstDelaySeconds,
+                    damage,
+                    originIn,
+                    originDown,
+                    radians);
+        }
+
+        /** Round 41: whether its arc starts {@link #leadRadians()} from the ship's bearing (else centred on it). */
+        public boolean leads() {
+            return !Double.isNaN(leadRadians);
+        }
 
         /** A sweep from the unit's centre. */
         public Sweep(
@@ -2125,7 +2456,7 @@ public record EnemySpec(
 
     /**
      * M7 part C, a gate's tendril (design/enemies/ground/tendril-anchor, the {@code link} attack; M9 = a): the
-     * line between the centres of the two anchors of a {@link LevelScript.Gate}. It is dormant (harmless, a
+     * line between the centres of the two anchors of a {@link GroundSpec.Gate}. It is dormant (harmless, a
      * flickering thread) for {@code dormantSeconds} after the pair enters at the top edge, then its touch
      * deals {@code contactDamage} to the ship (shield first) or Rook, with {@code cooldownSeconds} of its
      * own cooldown per craft (the ship is not pushed), for a hull within {@code band}/2 px of the line.

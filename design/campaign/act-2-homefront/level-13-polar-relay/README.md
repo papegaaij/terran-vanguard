@@ -176,7 +176,7 @@ hurts it; the bullets still hurt the ship, so the player can body-block (as the 
 ## Layout
 
 Approach at **140 px/s**, then the scroll **halts** for the defend phase, then resumes for the
-exit. Total ≈ 235 s: 40 s approach, 180 s halted, 15 s exit. While halted, the loose floes and brash
+exit. Total ≈ 239 s: 40 s approach, 180 s halted, 19 s exit (15 s until round 41: 4 s longer so Okafor's t=233.5 line ends before the level does). While halted, the loose floes and brash
 ice drift **east at 10 px/s with the mortars' floe**, one current (the user's playtest of 2026-10-18:
 "either all icebergs drift and they all drift in the same direction, or none drift at all"), along
 the halt's north and south margins, never over the relay's floe; the water under them stands still.
@@ -205,7 +205,7 @@ and no `arena`, allowed only with a `defend` primary.
 | 2. First Light | 40–100 | 5,460–5,460 | 0 | light | `ground`: Nansen Relay at the centre on its floe, the lanes (leads) cut round it, loose floes drifting east with the mortars' floe, Skimmer wakes in the leads. | Learn to guard a point: boats from all edges. |
 | 3. Floe Walkers | 100–160 | 5,460–5,460 | 0 | light, medium peak 140–160 | `ground`: as above, with Scuttlers striding across the floes from the sides. `low-air`: fog thickening at the edges from t=140. | Walkers with armoured fronts: hit them from the side; side attackers. |
 | 4. Whiteout | 160–220 | 5,460–5,460 | 0 | medium, heavy peak 176–188 | `low-air`: whiteout banks rolling in from the side edges, 25–40 % coverage at the edges, the centre around the relay kept readable. `high-air`: snow streaks (≤ 40 %) falling on the real clock. | The final push in poor visibility; edge warnings still show through the whiteout. |
-| 5. Grid Online | 220–235 | 5,460–7,420 | 140 | clear | `ground`: the relay's lights coming on in sequence, then floes and open sea northward. | Release; level end. |
+| 5. Grid Online | 220–239 | 5,460–7,980 | 140 | clear | `ground`: the relay's lights coming on in sequence, then floes and open sea northward. | Release; level end. |
 <!-- /data -->
 
 The scroll column is the data's, with the 2 s eases (the approach ≈ 5,460 px to the halt, the exit
@@ -545,24 +545,24 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
 
 - [x] Timed halt: a `speed: 0` section without an arena (only with a `defend` primary), the clock
       running, the 2 s eases (M5 part G, steps G3 and G4) — simulation in G3 (`Sortie.timedHaltSpeed`,
-      `Sortie.scrollAt`, `LevelScript.Section.rampSeconds`, `TimedHaltTest`); the data's `ramp`, the eased
+      `Sortie.scrollAt`, `Section.rampSeconds`, `TimedHaltTest`); the data's `ramp`, the eased
       `LevelData.scrollAt` and the validator's rules in G4 (`PartGChecks`, `PartGLevelKeysTest`)
 - [x] `defend` primary on the escort's machinery: the relay `follows: ground`, integrity (tuned: 240 /
       340 / 520; 260 / 340 / 560 since the L10-style waves of 2026-10-19), no regeneration, hit flash, smoke below 50 %, dark at 0, mission failed, no primary credits
-      (M5 part G, steps G3, G4 and G6) — simulation in G3 (`LevelScript.Defend`, `Convoy`'s defend mode,
+      (M5 part G, steps G3, G4 and G6) — simulation in G3 (`ObjectiveSpec.Defend`, `Convoy`'s defend mode,
       `DefendTest`), the data and loader in G4 (`objectives.defend`, `PartGRules.defend`, `Level13Test`);
       the presentation in G6 (`RelayLooks`: the state frames, the hit flash, smoke below 50 %, fire below
       25 %, dark with its smoke column at 0, the lights' sequence at the sync's end; `Level13LooksTest`)
 - [x] Hook modes `alternate`, `in-arc` and `always` with the exact rules above, per kind and per
       difficulty (easy: Stingers unhooked); popcorn never hooked (M5 part G, steps G3 and G4) — simulation
-      in G3 (`LevelScript.HookMode`, `EnemyForce`, `HookModesTest`); the data's `targeted_by` with its easy
+      in G3 (`HookMode`, `EnemyForce`, `HookModesTest`); the data's `targeted_by` with its easy
       change in G4 (`Level13Test.theRelayIsDefended`)
 - [x] Skimmer lane walker with the weave, 16 headings, entering from any edge (M5 part G, G3, G4) —
       simulation in G3 (`WaveSpec.lanes`, `SkimmerTest`), the waves' `lanes` in G4
 - [x] `cross` formation (n per edge, each on its own lane) with edge warnings on every edge (M5 part G, G3;
       `WaveSpec.Formation.CROSS`, `CrossTest`)
 - [x] A ground unit entering at a side edge with a drift (the mortar floe), the circle's centre `at`,
-      hard's Stinger pairs (M5 part G, G3, G4) — simulation in G3 (`LevelScript.SideEntry`,
+      hard's Stinger pairs (M5 part G, G3, G4) — simulation in G3 (`SideEntry`,
       `WaveSpec.at` on a circle, `WaveSpec.pairSeconds`, `CrossTest`); the data's `side`, `at` and `pairs`
       in G4
 - [x] Wave script matches *Waves*: ≥ 50 units a minute at medium (`DensityTest`: 54.3), no empty screen
@@ -587,7 +587,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
       the real clock and easy's 6 s peak are G6's
 - [x] Research hut secret (110 in Act 1 terms) and the two supply drones (a presentation arc releasing the
       patch at a point) (M5 part G, G3, G4, G5, G6) — the point drop in the simulation done in G3
-      (`LevelScript.PlacedPickup` with a y, `SimEvents.Type.PICKUP_PLACED`); the hut trigger, its secret and
+      (`DropSpec.PlacedPickup` with a y, `SimEvents.Type.PICKUP_PLACED`); the hut trigger, its secret and
       the `drops` with the drone's sprite in the data, the hut's and the drone's sprites in `assets/` in G4;
       the drone's arc in G6 (`DroneLooks`: 4 s from the relay's helipad to the drop, the patch in its
       bay, back with its clamps open, the sides alternating; its launch sound as the arc starts); the
@@ -822,3 +822,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   ally's `hp`) and **560 hard** (medium's median seed 48 %, 3 of 8 keep half; hard 19–25 %). Pending
   the user's review: the number of units, the integrity; the test edits (the level's totals and
   integrity, `PacingTest.PENDING_ACT_TWO_RULE`) are the main agent's.
+- 2026-10-19 (round 41, step FX-C; the game's new all-levels radio test, `RadioTimeline.everyRadioLineEndsBeforeTheLevelDoes`,
+  after the user's playtest "the last message is cut short"; pending the user's review): the Grid Online exit ends
+  at **t=239** (was 235), so Okafor's t=233.5 line (ending at 238.2 s at the latest) finishes before the level
+  does. The waves, the halt and the hauls are unchanged.

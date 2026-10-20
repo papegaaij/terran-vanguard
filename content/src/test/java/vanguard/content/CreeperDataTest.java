@@ -9,9 +9,10 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import vanguard.content.voice.VoiceLines;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.EnemyGun;
 import vanguard.sim.EnemySpec;
-import vanguard.sim.LevelScript;
+import vanguard.sim.RadioCue;
 
 /**
  * M5 part B's data mechanics: the Creeper (design/enemies/ground/creeper) as a walker with a fan
@@ -82,8 +83,8 @@ class CreeperDataTest {
         Content content = ContentLoader.load(
                 replace(LEVEL_01, "  - {t: 18, speaker: Okafor", cue + "  - {t: 18, speaker: Okafor"));
 
-        LevelScript.RadioCue loaded = SimSpecs.level(content, LEVEL_01_KEY, Difficulty.MEDIUM).radio().stream()
-                .filter(radio -> radio.trigger() == LevelScript.CueTrigger.ESCORT_FIRST_KILL)
+        RadioCue loaded = SimSpecs.level(content, LEVEL_01_KEY, Difficulty.MEDIUM).radio().stream()
+                .filter(radio -> radio.trigger() == CueTrigger.ESCORT_FIRST_KILL)
                 .findFirst()
                 .orElseThrow();
         assertEquals("", loaded.subject());

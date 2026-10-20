@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
  * the step its secret is found if it is the last; the presentation breaks a toppling one with it.
  */
 class TriggerSpentTest {
-    private static LevelScript.GroundObjectSpec light(double t, int triggers) {
-        return new LevelScript.GroundObjectSpec(
+    private static GroundObjectSpec light(double t, int triggers) {
+        return new GroundObjectSpec(
                 t,
                 Ship.START_X,
                 new Hitbox(12, 12),
@@ -32,19 +32,13 @@ class TriggerSpentTest {
                 triggers);
     }
 
-    private static Sortie sortie(List<LevelScript.GroundObjectSpec> ground) {
-        var script = new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(20, 130)),
-                List.of(),
-                ground,
-                List.of(),
-                1,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static Sortie sortie(List<GroundObjectSpec> ground) {
+        var script = LevelScript.builder(1, 1)
+                .sections(List.of(new Section(20, 130)))
+                .groundObjects(ground)
+                .secrets(1)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         return new Sortie(1, LOADOUT, script, RULES, FULL_ARMOUR);
     }
 

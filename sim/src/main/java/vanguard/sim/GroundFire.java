@@ -67,7 +67,7 @@ final class GroundFire {
         events.add(SimEvents.Type.BLAST, x, y, shot.mount());
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
-            LevelScript.GroundObjectSpec spec = object.spec();
+            GroundObjectSpec spec = object.spec();
             if (object.hittable()
                     && !spec.submerged()
                     && (weapon.antiGround() || !spec.hardened())
@@ -128,7 +128,7 @@ final class GroundFire {
             }
             for (int j = ground.size() - 1; j >= 0; j--) {
                 GroundObject object = ground.get(j);
-                LevelScript.GroundObjectSpec spec = object.spec();
+                GroundObjectSpec spec = object.spec();
                 if (!object.hittable()
                         || (spec.submerged() && weapon.delivery() != WeaponSpec.Delivery.TORPEDO)
                         // M5 part F: a drifting trigger on low-air is above the water a torpedo runs in.
@@ -165,7 +165,7 @@ final class GroundFire {
         events.add(SimEvents.Type.BLAST, x, y, shot.mount());
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
-            LevelScript.GroundObjectSpec spec = object.spec();
+            GroundObjectSpec spec = object.spec();
             if (object.hittable()
                     && !spec.submerged()
                     && !spec.lowAir()
@@ -230,7 +230,7 @@ final class GroundFire {
                     && inBlast(x, y, trigger, piece.x(), piece.y(), piece.body())) {
                 return true;
             }
-            List<LevelScript.PartSpec> parts = piece.spec().parts();
+            List<PartSpec> parts = piece.spec().parts();
             for (int p = 0; p < parts.size(); p++) {
                 double px = piece.partX(p);
                 double py = piece.partY(p);
@@ -263,7 +263,7 @@ final class GroundFire {
         events.add(SimEvents.Type.BLAST, x, y, mine.mount());
         for (int j = ground.size() - 1; j >= 0; j--) {
             GroundObject object = ground.get(j);
-            LevelScript.GroundObjectSpec spec = object.spec();
+            GroundObjectSpec spec = object.spec();
             if (object.hittable()
                     && !spec.submerged()
                     && (weapon.antiGround() || !spec.hardened())
@@ -293,7 +293,7 @@ final class GroundFire {
             if (!piece.present()) {
                 continue;
             }
-            List<LevelScript.PartSpec> parts = piece.spec().parts();
+            List<PartSpec> parts = piece.spec().parts();
             for (int p = 0; p < parts.size() && piece.present(); p++) {
                 // M5 part E: on the part's own layer (an arena boss's part under the water is out of reach).
                 if (blastReaches(piece.partLayer(p))

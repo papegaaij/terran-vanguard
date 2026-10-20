@@ -16,8 +16,10 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import vanguard.sim.Enemy;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PlayField;
+import vanguard.sim.Section;
 import vanguard.sim.SimStep;
 import vanguard.sim.SmartBombSpec;
 import vanguard.sim.Sortie;
@@ -83,7 +85,7 @@ public final class FarsideLooks implements Disposable {
     /** The beam's knots run out a frame every 3 steps (20 fps, 4 px a frame); the tip spark too. */
     private static final int BEAM_FRAME_TICKS = 3;
 
-    private final LevelScript.Darkness darkness;
+    private final HazardSpec.Darkness darkness;
     private final FrameBuffer lightMap;
     private final Texture radialTexture;
     private final TextureRegion radial;
@@ -145,7 +147,7 @@ public final class FarsideLooks implements Disposable {
                 }
             });
         }
-        darkness = script.darkness().orElse(null);
+        darkness = script.hazards().darkness().orElse(null);
         radialTexture = radialTexture();
         radial = new TextureRegion(radialTexture);
         if (darkness == null) {
@@ -157,7 +159,7 @@ public final class FarsideLooks implements Disposable {
         lightMap = new FrameBuffer(Pixmap.Format.RGBA8888, PlayField.WIDTH, PlayField.HEIGHT, false);
         lightProjection.setToOrtho2D(0, 0, PlayField.WIDTH, PlayField.HEIGHT);
         coneTexture = coneTexture(darkness.headlightLength(), darkness.headlightAngle());
-        List<LevelScript.Darkness.Light> lights = darkness.lights();
+        List<HazardSpec.Darkness.Light> lights = darkness.lights();
         lightScroll = new double[lights.size()];
         for (int i = 0; i < lights.size(); i++) {
             lightScroll[i] = scrollAt(script.sections(), lights.get(i).t());
@@ -165,10 +167,10 @@ public final class FarsideLooks implements Disposable {
     }
 
     /** The ground scroll at {@code t} seconds: the sections' speeds over time. */
-    private static double scrollAt(List<LevelScript.Section> sections, double t) {
+    private static double scrollAt(List<Section> sections, double t) {
         double scroll = 0;
         double start = 0;
-        for (LevelScript.Section section : sections) {
+        for (Section section : sections) {
             double end = Math.min(t, section.end());
             if (end > start) {
                 scroll += (end - start) * section.speed();
@@ -242,10 +244,10 @@ public final class FarsideLooks implements Disposable {
         batch.setProjectionMatrix(lightProjection);
         batch.begin();
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-        List<LevelScript.Darkness.Light> lights = darkness.lights();
+        List<HazardSpec.Darkness.Light> lights = darkness.lights();
         batch.setColor(LAMP);
         for (int i = 0; i < lights.size(); i++) {
-            LevelScript.Darkness.Light light = lights.get(i);
+            HazardSpec.Darkness.Light light = lights.get(i);
             double y = PlayField.HEIGHT + light.radius() - (scroll - lightScroll[i]);
             if (y + light.radius() > 0 && y - light.radius() < PlayField.HEIGHT) {
                 pool(batch, light.x(), y, light.radius());

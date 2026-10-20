@@ -1,15 +1,22 @@
 package vanguard.game.render;
 
 import java.util.List;
+import java.util.Optional;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
 import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
 import vanguard.sim.AllySpec;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.GroundSpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.Sortie;
 
 /**
@@ -71,49 +78,40 @@ public final class ArenaFixture {
                 2);
     }
 
-    static LevelScript.Naval convoy() {
+    static ObjectiveSpec.Naval convoy() {
         AllySpec cargo = cargo();
-        return new LevelScript.Naval(
+        return new ObjectiveSpec.Naval(
                 List.of(
-                        new LevelScript.NavalUnit(cargo, SHIPS.get(0), 130, PlayField.HEIGHT - 380, 1),
-                        new LevelScript.NavalUnit(cargo, SHIPS.get(1), 240, PlayField.HEIGHT - 350, 2),
-                        new LevelScript.NavalUnit(cargo, SHIPS.get(2), 350, PlayField.HEIGHT - 380, 4),
-                        new LevelScript.NavalUnit(frigate(), SHIPS.get(3), 240, PlayField.HEIGHT - 480, 0)),
+                        new ObjectiveSpec.NavalUnit(cargo, SHIPS.get(0), 130, PlayField.HEIGHT - 380, 1),
+                        new ObjectiveSpec.NavalUnit(cargo, SHIPS.get(1), 240, PlayField.HEIGHT - 350, 2),
+                        new ObjectiveSpec.NavalUnit(cargo, SHIPS.get(2), 350, PlayField.HEIGHT - 380, 4),
+                        new ObjectiveSpec.NavalUnit(frigate(), SHIPS.get(3), 240, PlayField.HEIGHT - 480, 0)),
                 3,
                 PlayField.HEIGHT - 450,
                 4,
                 120);
     }
 
-    static LevelScript.RadioCue cue(LevelScript.CueTrigger trigger, String subject, String line) {
-        return new LevelScript.RadioCue(trigger, 0, subject, "Atlas Control", line, false, "neutral");
+    static RadioCue cue(CueTrigger trigger, String subject, String line) {
+        return new RadioCue(trigger, 0, subject, "Atlas Control", line, false, "neutral");
     }
 
     public static LevelScript level() {
-        return new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(
-                                new LevelScript.Section(ARENA, 140),
-                                new LevelScript.Section(ARENA + 1, 0, true),
-                                new LevelScript.Section(ARENA + 16, 140)),
-                        List.of(),
-                        List.of(),
-                        List.of(),
-                        0,
-                        List.of(
-                                cue(LevelScript.CueTrigger.FIRST_TELEGRAPH, "", "Lane's boiling!"),
-                                cue(LevelScript.CueTrigger.ALLY_HIT, "", "The {ally} is hit!")),
-                        LevelScript.Secondary.afloat(100, "CONVOY"),
-                        List.of(),
-                        List.of(),
-                        List.of(SimSpecs.boss(
-                                CONTENT,
-                                new LevelData.BossPlacement("harbour-kraken", ARENA, PlayField.WIDTH / 2.0, 2),
-                                Difficulty.MEDIUM)))
-                .withWater(true)
-                .withConvoy(convoy());
+        return LevelScript.builder(11, 2)
+                .sections(
+                        List.of(new Section(ARENA, 140), new Section(ARENA + 1, 0, true), new Section(ARENA + 16, 140)))
+                .radio(List.of(
+                        cue(CueTrigger.FIRST_TELEGRAPH, "", "Lane's boiling!"),
+                        cue(CueTrigger.ALLY_HIT, "", "The {ally} is hit!")))
+                .objectives(ObjectiveSpec.NONE
+                        .withSecondary(Secondary.afloat(100, "CONVOY"))
+                        .withConvoy(Optional.of(convoy())))
+                .ground(GroundSpec.NONE.withWater(true))
+                .setPieces(List.of(SimSpecs.boss(
+                        CONTENT,
+                        new LevelData.BossPlacement("harbour-kraken", ARENA, PlayField.WIDTH / 2.0, 2),
+                        Difficulty.MEDIUM)))
+                .build();
     }
 
     /** The arena flown with the starter loadout and the ship invulnerable (it holds still without input). */

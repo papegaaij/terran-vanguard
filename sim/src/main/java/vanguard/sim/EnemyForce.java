@@ -6,7 +6,7 @@ import java.util.Optional;
 
 /**
  * The level's enemies: the units entering by the {@link WaveSchedule} and the units fixed to the
- * ground ({@link LevelScript.GroundUnit}, entering at the top edge with the scroll), flying or
+ * ground ({@link GroundUnit}, entering at the top edge with the scroll), flying or
  * scrolling and firing at the ship, and their bullets. What a kill earns is the {@link Sortie}'s.
  */
 final class EnemyForce {
@@ -41,7 +41,7 @@ final class EnemyForce {
     private final Escapes escapes;
     private final List<EnemySpec> kinds;
     private final WaveSchedule waves;
-    private final List<LevelScript.GroundUnit> groundUnits;
+    private final List<GroundUnit> groundUnits;
     private final int[] groundKinds;
     private final int[] groundTicks;
     /** M5 part E: each ground unit's current as a direction (x, y up), for a drifting raft. */
@@ -110,7 +110,7 @@ final class EnemyForce {
     /** Plans the waves with {@code rng}, which also spreads the aimed shots later. */
     EnemyForce(
             List<WaveSpec> waveSpecs,
-            List<LevelScript.GroundUnit> groundUnits,
+            List<GroundUnit> groundUnits,
             SplitMix64 rng,
             Rules rules,
             SimEvents events,
@@ -121,7 +121,7 @@ final class EnemyForce {
     /** @param extraKinds enemies that enter outside the waves (a boss's streams), among the kinds too */
     EnemyForce(
             List<WaveSpec> waveSpecs,
-            List<LevelScript.GroundUnit> groundUnits,
+            List<GroundUnit> groundUnits,
             List<EnemySpec> extraKinds,
             SplitMix64 rng,
             Rules rules,
@@ -136,7 +136,7 @@ final class EnemyForce {
      */
     EnemyForce(
             List<WaveSpec> waveSpecs,
-            List<LevelScript.GroundUnit> groundUnits,
+            List<GroundUnit> groundUnits,
             List<EnemySpec> extraKinds,
             SplitMix64 rng,
             Rules rules,
@@ -150,7 +150,7 @@ final class EnemyForce {
         enemies = new Pool<>(ENEMY_CAPACITY, () -> new Enemy(events), Enemy[]::new);
         List<EnemySpec> distinct = new ArrayList<>(
                 waveSpecs.stream().map(WaveSpec::enemy).distinct().toList());
-        for (LevelScript.GroundUnit unit : groundUnits) {
+        for (GroundUnit unit : groundUnits) {
             if (!distinct.contains(unit.enemy())) {
                 distinct.add(unit.enemy());
             }
@@ -222,7 +222,7 @@ final class EnemyForce {
         sideWarningEnds = new int[sides];
         sideWarningEdges = new int[sides];
         int w = 0;
-        for (LevelScript.GroundUnit unit : groundUnits) {
+        for (GroundUnit unit : groundUnits) {
             if (unit.side().isPresent()) {
                 sideWarningStarts[w] = SimStep.ticks(unit.t() - WaveSchedule.EDGE_WARNING_SECONDS);
                 sideWarningEnds[w] = SimStep.ticks(unit.t());
@@ -237,13 +237,13 @@ final class EnemyForce {
         objectiveHook.hook(target, slugs);
     }
 
-    /** M5 part G: the hook of a defend primary ({@link ObjectiveHook#hook(Convoy, LevelScript.Defend)}). */
-    void hook(Convoy target, LevelScript.Defend defend) {
+    /** M5 part G: the hook of a defend primary ({@link ObjectiveHook#hook(Convoy, ObjectiveSpec.Defend)}). */
+    void hook(Convoy target, ObjectiveSpec.Defend defend) {
         objectiveHook.hook(target, defend);
     }
 
     /** The hook of {@code target} with each enemy kind in its mode in {@code targetedBy}. */
-    void hook(Convoy target, java.util.Map<String, LevelScript.HookMode> targetedBy) {
+    void hook(Convoy target, java.util.Map<String, HookMode> targetedBy) {
         objectiveHook.hook(target, targetedBy);
     }
 
@@ -320,11 +320,11 @@ final class EnemyForce {
                 }
                 if (objectiveHook.bombs(enemy, spawn)) {
                     // M7 part D: a front entry descends to the bomb row, a side entry keeps its entry row.
-                    LevelScript.GroundAllies allies = objectiveHook.convoy().groundSpec();
+                    ObjectiveSpec.GroundAllies allies = objectiveHook.convoy().groundSpec();
                     double row =
                             waves.lastEntry() == WaveSpec.Entry.SIDES ? enemy.y() : PlayField.HEIGHT - allies.bombRow();
                     double slot = (waves.lastPlace() - (waves.lastWaveSize() - 1) / 2.0) * allies.bombSlot();
-                    enemy.bombRun(row, slot);
+                    enemy.bombRun(row, slot, SimStep.ticks(allies.bombRunIn()));
                 }
             }
             if (spawn.enemy().brood().isPresent() || spawn.enemy().aura().isPresent()) {
@@ -334,7 +334,7 @@ final class EnemyForce {
             spawned++;
         }
         while (nextGround < groundTicks.length && groundTicks[nextGround] <= levelTick) {
-            LevelScript.GroundUnit unit = groundUnits.get(nextGround);
+            GroundUnit unit = groundUnits.get(nextGround);
             Enemy enemy = enemies.obtain();
             if (enemy != null && unit.burst().isPresent()) {
                 rootBursts.grow(nextGround, unit, enemy, groundKinds[nextGround], spawned);
@@ -469,17 +469,17 @@ final class EnemyForce {
      * ground units (the first unused unit at its time and x of its anchor's kind, as {@link
      * LevelScript#withGates} adds them) start its tendril as they enter.
      */
-    void links(Links levelLinks, List<LevelScript.Gate> gates) {
+    void links(Links levelLinks, List<GroundSpec.Gate> gates) {
         links = levelLinks;
         gateOf = new int[groundUnits.size()];
         java.util.Arrays.fill(gateOf, -1);
         for (int g = 0; g < gates.size(); g++) {
-            LevelScript.Gate gate = gates.get(g);
+            GroundSpec.Gate gate = gates.get(g);
             for (int side = 0; side < 2; side++) {
                 double x = side == 0 ? gate.leftX() : gate.rightX();
                 int found = -1;
                 for (int i = 0; i < groundUnits.size() && found < 0; i++) {
-                    LevelScript.GroundUnit unit = groundUnits.get(i);
+                    GroundUnit unit = groundUnits.get(i);
                     if (gateOf[i] < 0
                             && unit.t() == gate.t()
                             && unit.x() == x
@@ -537,9 +537,8 @@ final class EnemyForce {
             double aimX = target < 0 ? ship.x() : convoy.get(target).x();
             double aimY = target < 0 ? ship.y() : convoy.get(target).y();
             // M5 part G: a diver under the always hook dives at the objective while it can be aimed at.
-            int dive = objectiveHook.mode(enemy.kind()) == LevelScript.HookMode.ALWAYS
-                    ? convoy.objective(enemy.x(), enemy.y())
-                    : -1;
+            int dive =
+                    objectiveHook.mode(enemy.kind()) == HookMode.ALWAYS ? convoy.objective(enemy.x(), enemy.y()) : -1;
             boolean flying = dive < 0
                     ? enemy.move(ship.x(), ship.y(), groundScroll, aimX, aimY, wind)
                     : enemy.move(
@@ -552,8 +551,13 @@ final class EnemyForce {
                             convoy.get(dive).x(),
                             convoy.get(dive).y(),
                             true);
-            if (flying && !stunned && enemy.bombRun() >= 0 && convoy.over(enemy.bombRun(), enemy.x(), enemy.y())) {
-                // M7 part D: over its dome's hit box: it drops its load, one hit, and flies on down.
+            if (flying
+                    && !stunned
+                    && enemy.bombRun() >= 0
+                    && enemy.bombArmed()
+                    && convoy.over(enemy.bombRun(), enemy.x(), enemy.y())) {
+                // M7 part D: over its dome's hit box: it drops its load, one hit, and flies on down (round 41: once
+                // its run-in is over).
                 int dome = enemy.bombRun();
                 enemy.dropBomb();
                 events.add(SimEvents.Type.BOMB_DROPPED, enemy.x(), enemy.y(), dome);
@@ -618,7 +622,7 @@ final class EnemyForce {
                     guns.lob(enemy, gun, ship);
                 } else if (gun.up()) {
                     guns.fireUp(enemy, gun);
-                } else if (objectiveHook.mode(enemy.kind()) == LevelScript.HookMode.ALTERNATE) {
+                } else if (objectiveHook.mode(enemy.kind()) == HookMode.ALTERNATE) {
                     guns.fireAt(enemy, ship, objectiveHook.alternate(enemy, ship));
                 } else {
                     guns.fireAt(enemy, ship, objectiveHook.target(enemy, ship));
@@ -740,6 +744,21 @@ final class EnemyForce {
      * while the ship is behind it.
      */
     private void fireWalker(Enemy enemy, Ship ship, boolean firing) {
+        if (enemy.spec().turret().isPresent()) {
+            // M7 part F (design/enemies/ground/warden-tank): its turret's bursts along the turret's aim, any way.
+            if (enemy.trigger() && firing) {
+                guns.fire(
+                        enemy.partX(),
+                        enemy.partY(),
+                        enemy.spec().gun().orElseThrow(),
+                        false,
+                        enemy.turretAim(),
+                        ship,
+                        -1,
+                        true);
+            }
+            return;
+        }
         boolean fan = enemy.volleyGroup() >= 0 ? enemy.staggeredVolley(volleyClocks) : enemy.trigger();
         boolean spit = enemy.spit(ship.x(), ship.y());
         if (enemy.landedNow()) {
@@ -756,8 +775,7 @@ final class EnemyForce {
             guns.lob(enemy, enemy.spec().gun().get(), ship);
         } else if (fan) {
             boolean atShip = enemy.spec().walker().orElseThrow().fanAtShip();
-            int inArc =
-                    objectiveHook.mode(enemy.kind()) == LevelScript.HookMode.IN_ARC ? objectiveHook.inArc(enemy) : -1;
+            int inArc = objectiveHook.mode(enemy.kind()) == HookMode.IN_ARC ? objectiveHook.inArc(enemy) : -1;
             if (inArc >= 0) {
                 // M5 part G: the objective within its armour's arc: the fan centred on it, aimed at it.
                 guns.fire(enemy.x(), enemy.y(), enemy.spec().gun().orElseThrow(), false, 0, ship, inArc, false);
@@ -775,7 +793,7 @@ final class EnemyForce {
         }
         if (spit) {
             EnemyGun gun = enemy.spec().walker().orElseThrow().spit().orElseThrow();
-            int target = objectiveHook.mode(enemy.kind()) == LevelScript.HookMode.NEAREST
+            int target = objectiveHook.mode(enemy.kind()) == HookMode.NEAREST
                     ? objectiveHook.convoy().nearest(enemy.x(), enemy.y(), ship.x(), ship.y())
                     : -1;
             guns.fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false);
@@ -891,7 +909,7 @@ final class EnemyForce {
     }
 
     /** M5 part H: slot {@code b}'s burst. */
-    LevelScript.RootBurst burstOf(int b) {
+    RootBurst burstOf(int b) {
         return rootBursts.burstOf(b);
     }
 
@@ -987,6 +1005,19 @@ final class EnemyForce {
         guns.dropMine(gun, x, y, angle);
     }
 
+    /** M7 part F: the homing missiles in flight ({@link EnemyFire#missiles()}). */
+    Missiles missiles() {
+        return guns.missiles();
+    }
+
+    /**
+     * M7 part F: {@code gun}'s volley from (x, y) along {@code aim} (radians clockwise from straight down), as an
+     * aimed one otherwise (a walking boss's chin burst along its heading).
+     */
+    void fireAlong(double x, double y, EnemyGun gun, double aim, Ship ship) {
+        guns.fire(x, y, gun, false, aim, ship, -1, true);
+    }
+
     /** Drifts the spores ({@link EnemyFire#moveMines}). */
     void moveMines(Ship ship) {
         guns.moveMines(ship);
@@ -1080,7 +1111,7 @@ final class EnemyForce {
     /** The units of the enemy {@code slug} the level sends, flying and on the ground. */
     int unitsOf(String slug) {
         int count = waves.unitsOf(slug);
-        for (LevelScript.GroundUnit unit : groundUnits) {
+        for (GroundUnit unit : groundUnits) {
             count += unit.enemy().slug().equals(slug) ? 1 : 0;
         }
         for (EnemySpec kind : kinds) {

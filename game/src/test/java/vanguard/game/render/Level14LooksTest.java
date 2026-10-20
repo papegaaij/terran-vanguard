@@ -21,7 +21,11 @@ import vanguard.content.ContentLoader;
 import vanguard.content.Difficulty;
 import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
+import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
+import vanguard.sim.RootBurst;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimStep;
 
 /**
@@ -61,8 +65,8 @@ class Level14LooksTest {
 
     @Test
     void everyRootsPodSitsOnItsPartOfTheData() {
-        LevelScript.SetPieceSpec boss = SCRIPT.setPieces().stream()
-                .filter(LevelScript.SetPieceSpec::isBoss)
+        SetPieceSpec boss = SCRIPT.setPieces().stream()
+                .filter(SetPieceSpec::isBoss)
                 .findFirst()
                 .orElseThrow();
         assertEquals(SpireLooks.SLUG, boss.slug());
@@ -76,7 +80,7 @@ class Level14LooksTest {
             int part = SpireLooks.nearestPart(
                     boss.parts(), root.get("pod").getFloat(0), -root.get("pod").getFloat(1));
             assertTrue(part >= 0, "root " + r + "'s pod has its part");
-            LevelScript.PartSpec spec = boss.parts().get(part);
+            PartSpec spec = boss.parts().get(part);
             assertEquals(root.get("pod").getFloat(0), spec.dx(), 0.5, "root " + r + " x");
             assertEquals(-root.get("pod").getFloat(1), spec.dy(), 0.5, "root " + r + " y (up)");
             assertEquals(root.getString("kind").equals("mortar"), spec.name().startsWith("mortar"), spec.name());
@@ -102,8 +106,8 @@ class Level14LooksTest {
     void everyTurretPodFiresStraightDown() {
         // Round 34 P2 (step K2), then the Act 2 playtest's 4a (step CB, 2026-10-19): all four pods fire straight
         // down (the data's `aim: down`, one at a time aiming in its aim turn); they face down.
-        LevelScript.SetPieceSpec spire = SCRIPT.setPieces().stream()
-                .filter(LevelScript.SetPieceSpec::isBoss)
+        SetPieceSpec spire = SCRIPT.setPieces().stream()
+                .filter(SetPieceSpec::isBoss)
                 .findFirst()
                 .orElseThrow();
         Set<Integer> down = new HashSet<>();
@@ -179,7 +183,7 @@ class Level14LooksTest {
 
     @Test
     void aRootBurstCracksRisesInDustAndBreaksOut() {
-        List<LevelScript.RootBurst> bursts = SCRIPT.groundUnits().stream()
+        List<RootBurst> bursts = SCRIPT.groundUnits().stream()
                 .flatMap(unit -> unit.burst().stream())
                 .distinct()
                 .toList();
@@ -217,7 +221,7 @@ class Level14LooksTest {
     @Test
     void theArmouredCarsCreepClearsHitByHit() {
         assertFrames("armoured-car", 8);
-        LevelScript.GroundObjectSpec car = SCRIPT.groundObjects().stream()
+        GroundObjectSpec car = SCRIPT.groundObjects().stream()
                 .filter(object -> object.look().equals("armoured-car"))
                 .findFirst()
                 .orElseThrow();

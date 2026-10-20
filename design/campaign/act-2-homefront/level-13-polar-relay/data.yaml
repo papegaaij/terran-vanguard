@@ -78,7 +78,7 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (the halt'
         high-air: snow streaks (≤ 40 %) falling on the real clock.
       purpose: The final push in poor visibility; edge warnings still show through the whiteout.
   - name: Grid Online
-    end: 235
+    end: 239   # round 41 (step FX-C): from 235, so Okafor's t=233.5 line ends (238.2 s at the latest) before the level does
     atmosphere: clear
     tiles: [arctic-water, open-floes]
     notes:
@@ -93,7 +93,7 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (the halt'
 # and the Scuttler walks (the leads and the rubble are cut along their lanes and paths), the t=20
 # introduction alone (nothing else enters from t=12 to 24), the crosses, the Mantis pincers, the circle
 # above the relay, the Stingers' dives at the relay, the rear Needler lines and Skitter lines, the snake
-# up from the rear. The exit (t=220-235) stays the release, with no wave.
+# up from the rear. The exit (t=220-239) stays the release, with no wave.
 # Skitters reach the rear as a line abreast or on a snake's path (only chasers stream in from the rear); a
 # V-wing enters only from the front.
 # The Skimmers' lanes in the halt run along the leads round the relay's floe: the north lead (y ≈ 95), the

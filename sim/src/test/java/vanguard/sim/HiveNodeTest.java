@@ -19,8 +19,7 @@ import org.junit.jupiter.api.Test;
 class HiveNodeTest {
     /** The node scrolls in at 30 px/s above the ship's column: its centre on the field from about 0.93 s, 96 px above the ship at 15 s. */
     private static Sortie sortie(EnemySpec node) {
-        LevelScript level =
-                PartCSpecs.level(20, 30, List.of(), List.of(new LevelScript.GroundUnit(0, Ship.START_X, node, -1)));
+        LevelScript level = PartCSpecs.level(20, 30, List.of(), List.of(new GroundUnit(0, Ship.START_X, node, -1)));
         return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
 

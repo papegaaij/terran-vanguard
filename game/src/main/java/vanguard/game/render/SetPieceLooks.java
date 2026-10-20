@@ -6,7 +6,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
+import vanguard.sim.SetPieceSpec;
 
 /**
  * A huge set piece's sprites (tools/art/leviathan.py): the second pass's body facing down in its
@@ -39,11 +40,11 @@ final class SetPieceLooks {
     final SetPieceDeath death;
 
     /** @param pivots the parsed pivot file ({@code {"down": {"<part>": [[dx, dy], ...]}}}), or null */
-    SetPieceLooks(Sprites sprites, LevelScript.SetPieceSpec spec, JsonValue pivots) {
+    SetPieceLooks(Sprites sprites, SetPieceSpec spec, JsonValue pivots) {
         String slug = spec.slug();
         down = sprites.frames(slug + "-down");
         cross = sprites.frames(slug + "-cross");
-        List<LevelScript.PartSpec> parts = spec.parts();
+        List<PartSpec> parts = spec.parts();
         this.pivots = new int[parts.size()][][];
         AtlasRegion glowRegion = null;
         int glowAt = -1;

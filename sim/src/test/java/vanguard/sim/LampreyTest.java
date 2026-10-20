@@ -225,8 +225,7 @@ class LampreyTest {
 
     @Test
     void theFirstLatchStartsItsRadioLineOnce() {
-        LevelScript.RadioCue line = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.FIRST_LATCH, 0, "", "rook", "Shake it off!", false, "neutral");
+        RadioCue line = new RadioCue(CueTrigger.FIRST_LATCH, 0, "", "rook", "Shake it off!", false, "neutral");
         LevelScript level = TestSpecs.level(30, List.of(lampreyAt(0)), List.of(), List.of(line));
         Sortie sortie = new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
         int started = 0;

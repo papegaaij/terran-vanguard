@@ -1,0 +1,65 @@
+# Warden Tank stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M7 part F, step F2 (Level 19): a tracked walker with an independent turret (a destroyable part that silences its gun,
+# turning on its own toward the ship: `turret`) and a thin rear plate (`rear_plate`). Loaded, checked and mapped for the
+# simulation in step F2 (content's EnemyData, FoundryChecks, FoundryRules; sim: step F3). Credits: a hull-first kill pays
+# the whole 26 (the hull's 20 and its first_bonus 6); the turret first pays 28 (turret 8, hull 20). Act 3 livery: unmarked
+# grey (round 36 U.6). Defaults pending the user's review in round 42: the turret's 22×22 hit box at the hull's centre
+# is tested before the hull (the Shellback's vent rule), so shots from above reach the turret first; the rear plate
+# faces the ship while a tank drives up a belt toward it (step F2's fix: the README said "after it passes").
+name: Warden Tank
+faction: Unmarked
+layer: ground
+tier: medium
+size: [64, 64]    # the unit's size and hit-box basis (the production sprites are 76×76 with the hull ≈ 57×52)
+hitbox: [46, 56]  # the hull's
+parts: multi
+part_list:  # offsets in its own frame (facing down the screen: dx right, dy up towards its tail)
+  - {name: hull, offset: [0, 0], hitbox: [46, 56], hp: 64, kind: vital, bounty: 20, first_bonus: 6}         # first_bonus: a hull-first kill pays the whole 26
+  - {name: turret, offset: [0, 0], hitbox: [22, 22], hp: 20, kind: destroyable, bounty: 8, attack: burst}  # on the hull's centre (assets/pivots/warden-tank.json); its loss silences the gun
+orientation: 16 angles
+hp: 84            # the parts' sum: hull 64, turret 20
+armour: none; the rear hull plate takes ×1.5 from behind
+machine: true     # the EMP Burst stuns it 3 s (design/player/specials)
+speed: 40         # px/s along its path, on top of the scroll (and the belt's 40 on a conveyor)
+movement:
+  walk: {speed: 40, turn_rate: 60, stride: 18}   # px/s, °/s, px of ground per tread cycle (2 tread frames ≈ 9 px apart)
+turret:  # turns all round toward the ship, independent of the hull; still for `lock` s before each burst (the tell)
+  turn_rate: 120  # °/s
+  lock: 0.3       # s
+  within: 10      # ° from the ship before it locks
+rear_plate: {arc: 50, multiplier: 1.5}   # direct shots arriving within ±50° of its rear do ×1.5 to the hull
+attacks:
+  - pattern: aimed
+    name: burst
+    bullet: medium
+    burst: 3
+    burst_gap: 0.15     # s between the shots of a burst
+    interval: 2.5       # s from one burst's start to the next
+    speed: 160          # px/s
+    notes:
+      text: 'a {burst}-shot `burst` every {interval} s, the shots {burst_gap} s apart along the turret''s aim once it is within {turret.within}° of the ship (the turret still {turret.lock} s first: the tell), standard {speed} px/s, `{bullet}` {damage}; it fires in any direction, up the screen too'
+formations:
+  - {name: convoy, size: [2, 4]}
+weak_points:
+  - {name: the rear hull plate (from behind), multiplier: 1.5}
+  - {name: the turret (a destroyable part)}
+drops: []
+traits: [anti-ground, rear]
+bounty: 28        # the parts' sum: hull 20, turret 8 (whole 26 by the hull's first_bonus)
+first_level: 19
+difficulty:
+  easy: {burst: 2, attacks: {burst: {interval: 3.0}}}
+  hard: {burst: 4, attacks: {burst: {interval: 2.0}}, turret: {turn_rate: 160}}
+notes:
+  size: (the concept; the production sprites 76×76); turret hitbox 22×22 on the hull's centre
+  parts: 'hull (`vital`), turret (`destroyable`: silences its gun)'
+  orientation: (the hull, 2 tread frames); the turret `32 angles`, each with its own heading
+  hp: 'hull 64 · turret 20;'
+  armour: 'the rear hull plate is the weak point: direct shots arriving within ±{rear_plate.arc}° of its rear do ×{rear_plate.multiplier} to the hull (the Scuttler''s arc rule reversed); a tank driving up a belt toward the ship shows it its rear plate'
+  speed: along its path (plus scroll; plus the conveyor's speed when on one)
+  movement: '`walk` (tracked) along an authored road or conveyor path, turning at {movement.walk.turn_rate}°/s; the turret turns at {turret.turn_rate}°/s toward the ship independently'
+  formations: '(one path, 1.5 s apart)'
+  bounty: '; whole (hull first) 26; parts: hull 20, turret 8 (28)'
+  death: '`medium` mechanical explosion with sparks and smoke; the burnt hull stays as a wreck (grey, no markings)'
+  used_in: introduced in Level 19 (Foundry of Tharsis); returns L39, L41 (Act 6) in Ascendancy livery
+  difficulty: 'easy: 2-shot burst every 3.0 s; hard: 4-shot burst every 2.0 s, turret 160°/s'

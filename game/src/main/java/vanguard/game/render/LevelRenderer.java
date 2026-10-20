@@ -21,6 +21,7 @@ import vanguard.sim.EnemySpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelScript;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Ship;
 import vanguard.sim.ShipSpec;
 import vanguard.sim.SimStep;
@@ -139,6 +140,13 @@ public final class LevelRenderer {
     private final KrakenLooks kraken;
     /** M5 part H: the anchored boss without lanes (the Siege Spire) and its canopy's death; null without it. */
     private final SpireLooks spire;
+    /** M7 part F: the walking boss (the Revenant Walker), its cone, missiles and wreck; null without it. */
+    private final WalkerLooks walker;
+    /**
+     * M7 part F: Level 19's foundry looks (the vents' grates and fire, the gantries and the nests' cradles, the shift
+     * office, the ingots and pallets, the crews' rovers); null without them.
+     */
+    private final FoundryLooks foundry;
     /** M5 part H: the level's root bursts (Level 14); null without them. */
     private final RootBurstLooks rootBursts;
     /**
@@ -209,8 +217,8 @@ public final class LevelRenderer {
         SetPieceLooks[] setPieceLooks = script.setPieces().stream()
                 .map(spec -> spec.isBoss() ? null : new SetPieceLooks(sprites, spec, pivots(files, spec.slug())))
                 .toArray(SetPieceLooks[]::new);
-        LevelScript.SetPieceSpec boss = script.setPieces().stream()
-                .filter(LevelScript.SetPieceSpec::isBoss)
+        SetPieceSpec boss = script.setPieces().stream()
+                .filter(SetPieceSpec::isBoss)
                 .findFirst()
                 .orElse(null);
         JsonValue bossPivots = boss == null ? null : pivots(files, boss.slug());
@@ -228,13 +236,17 @@ public final class LevelRenderer {
                 sprites.hasBackdrop(folder + "daylight-beams")
                         ? sprites.backdrop(folder + "daylight-beams", 2)
                         : new Array<>(0));
+        walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
+        foundry = FoundryLooks.of(sprites, level, script);
         rootBursts = RootBurstLooks.of(sprites, script);
         List<EnemySpec> launches =
                 boss == null ? List.of() : boss.boss().map(BossSpec::spawnKinds).orElse(List.of());
         String sledRun = Backdrop.folder(levelKey, level) + "sled-run";
         luna = new LunaLooks(
                 sprites,
-                script.sled().isPresent() && sprites.hasBackdrop(sledRun) ? sprites.backdrop(sledRun, 30) : null,
+                script.hazards().sled().isPresent() && sprites.hasBackdrop(sledRun)
+                        ? sprites.backdrop(sledRun, 30)
+                        : null,
                 flash);
         this.backdrop = new Backdrop(sprites, level, levelKey);
         canyon = WallProjection.Looks.of(level);
@@ -246,7 +258,8 @@ public final class LevelRenderer {
                 sprites,
                 flash,
                 script,
-                script.escort()
+                script.objectives()
+                        .escort()
                         .map(escort -> pivots(files, escort.ally().slug()))
                         .orElse(null));
         this.loss = new LossLooks(sprites, script);
@@ -257,7 +270,7 @@ public final class LevelRenderer {
         this.wingmanLooks = new WingmanLooks(sprites, files, flash);
         this.shadows = new Shadows();
         this.font = font;
-        this.water = script.water() ? new WaterLooks() : null;
+        this.water = script.ground().water() ? new WaterLooks() : null;
         this.weather = new WeatherLooks(sprites, level, levelKey);
         this.storm = StormLooks.of(sprites, level, levelKey);
         this.level = level;
@@ -335,6 +348,12 @@ public final class LevelRenderer {
         if (spire != null) {
             spire.reset();
         }
+        if (walker != null) {
+            walker.reset();
+        }
+        if (foundry != null) {
+            foundry.restart();
+        }
         units.restart();
         convoy.reset();
         if (relay != null) {
@@ -372,6 +391,13 @@ public final class LevelRenderer {
         kinds.shellbacks(sortie).stepped(sortie);
         kinds.vortices(sortie).stepped(sortie);
         kinds.ghostDrones(sortie).stepped(sortie);
+        if (walker != null) {
+            walker.stepped(sortie);
+        }
+        if (foundry != null) {
+            foundry.stepped(sortie);
+        }
+        kinds.tanks(sortie).stepped(sortie);
     }
 
     /** M5 part E: the renderer's own effects advance one simulation step (with the screen's). */
@@ -518,6 +544,10 @@ public final class LevelRenderer {
         convoy.drawRoad(batch, Math.round(scroll));
         // With Level 09's collapse's shadow, heap and base dust under the towers (CollapseLooks).
         backdrop.drawGroundPieces(batch, scroll, clock);
+        if (foundry != null) {
+            // M7 part F: the vents' grates, the office, the ingots, the gantries and cradles, the rovers on the ground.
+            foundry.drawGround(batch, sortie, scroll, seconds, clock.real());
+        }
         shadows.endGround(batch);
         // M5 part F: the eye's light shaft on the calm sea, under the ground objects.
         weather.drawShaft(batch, seconds);
@@ -535,6 +565,11 @@ public final class LevelRenderer {
             rootBursts.drawGround(batch, sortie, seconds, scroll);
         }
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.GROUND);
+        if (walker != null) {
+            // M7 part F: the walking boss on the ground (its legs, hull, vents, flamer and pods), or its topple and
+            // wreck.
+            walker.drawGround(batch, sortie, alpha, scroll, play);
+        }
         luna.drawSled(batch, sortie, scroll, alpha);
         if (storm == null) {
             luna.drawMarkers(batch, sortie, alpha);
@@ -559,6 +594,8 @@ public final class LevelRenderer {
         arsenal.drawGround(batch, scroll);
         arsenal.drawGroundGlow(batch, scroll, sortie.tick());
         debris.draw(batch, scroll);
+        // M7 part F: the Warden Tanks' wrecks, scrolling with the ground and riding their belts.
+        kinds.tanks(sortie).drawWrecks(batch, scroll);
         // M7 part B: the Burrowers' craters and filling holes on the ground, under the ground units.
         kinds.burrowers(sortie).drawGround(batch, sortie.tick(), alpha, scroll);
         surfaceWater.draw(batch, scroll);
@@ -572,6 +609,8 @@ public final class LevelRenderer {
         kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
         // M7 part D: a Shellback's dead vent, vent swell and belly glow; the ground units' aura rings.
         kinds.shellbacks(sortie).drawOver(batch, sortie, alpha);
+        // M7 part F: the Warden Tanks' turrets (or torn rings) on their hulls, their muzzle flashes.
+        kinds.tanks(sortie).drawOver(batch, sortie, alpha);
         AuraLooks auras = kinds.aura(sortie);
         if (auras != null) {
             auras.drawRings(batch, sortie, alpha, true);
@@ -581,6 +620,14 @@ public final class LevelRenderer {
             rootBursts.drawDust(batch, sortie, seconds, scroll);
         }
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SHOCKWAVE);
+        if (walker != null) {
+            // M7 part F: the walker's flame cone (its tell's outline, its burn) and pilot light over the ground units.
+            walker.drawCone(batch, sortie, alpha, clock.real());
+        }
+        if (foundry != null) {
+            // M7 part F: the vents' heat glow over the tell, the flame column over the burn, the smoke after it.
+            foundry.drawFire(batch, sortie, scroll);
+        }
         ground.drawGlints(batch, sortie, alpha);
         // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
         setPieces.drawKraken(batch, sortie, wrecks, alpha, scroll, false);
@@ -736,6 +783,10 @@ public final class LevelRenderer {
         props.drawMines(batch, sortie, alpha);
         // M5 part H: the Spire's sweep, its telegraph line and beam, with the bullets.
         setPieces.drawSpire(batch, sortie, wrecks, alpha, scroll, SpirePass.SWEEP);
+        if (walker != null) {
+            // M7 part F: the homing missiles over their smoke trails, with the bullets.
+            walker.drawMissiles(batch, sortie, alpha);
+        }
         props.drawBullets(batch, sortie, alpha);
         screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);
         warnings.draw(batch, sortie.tick(), alpha);

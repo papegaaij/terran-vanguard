@@ -31,17 +31,17 @@ class HoldClockTest {
         return level(Optional.empty());
     }
 
-    private static LevelScript level(Optional<LevelScript.Collapse> collapse) {
+    private static LevelScript level(Optional<ObjectiveSpec.Collapse> collapse) {
         return LevelClockSpecs.level(
                 40,
                 SPEED,
                 List.of(TestSpecs.wave(
                         6, WaveSpec.Formation.SINGLE, TestSpecs.SKITTER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE)),
-                List.of(new LevelScript.GroundUnit(2, 240, NODE, 0)),
+                List.of(new GroundUnit(2, 240, NODE, 0)),
                 List.of("Node A"),
-                new LevelScript.Secondary(0.8, 50),
+                new Secondary(0.8, 50),
                 List.of(),
-                List.of(new LevelScript.Hold(List.of(0), DEPTH, HOLD_SPEED, 1)),
+                List.of(new ObjectiveSpec.Hold(List.of(0), DEPTH, HOLD_SPEED, 1)),
                 collapse);
     }
 
@@ -191,7 +191,7 @@ class HoldClockTest {
     void aHoldOverACollapsesGroupsEndsAtOnceWhenATargetGetsAway() {
         // The hold waits for the collapse's dust only when the collapse starts (its groups cleared).
         LevelScript level =
-                level(Optional.of(new LevelScript.Collapse(List.of(0), 1.5, 1.5, 1, 100, 390, 6, 240, 420, 620)));
+                level(Optional.of(new ObjectiveSpec.Collapse(List.of(0), 1.5, 1.5, 1, 100, 390, 6, 240, 420, 620)));
         Sortie sortie = new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
         until(sortie, SimEvents.Type.HOLD_START, SimStep.ticks(10), Command.NONE);
         until(sortie, SimEvents.Type.PRIMARY_FAILED, SimStep.ticks(30), Command.NONE);
@@ -208,10 +208,10 @@ class HoldClockTest {
                 40,
                 SPEED,
                 List.of(),
-                List.of(new LevelScript.GroundUnit(2, 240, PartCSpecs.hiveNode(2, 96), 0)),
+                List.of(new GroundUnit(2, 240, PartCSpecs.hiveNode(2, 96), 0)),
                 List.of("Node A1"),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(LevelClockSpecs.cue(LevelScript.CueTrigger.MISSION_FAILED, 0, 0)),
+                new Secondary(0.8, 50),
+                List.of(LevelClockSpecs.cue(CueTrigger.MISSION_FAILED, 0, 0)),
                 List.of(),
                 Optional.empty());
         Sortie sortie = new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);

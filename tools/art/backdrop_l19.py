@@ -27,7 +27,7 @@ run's ends); `smelter-tower` (200x200); `smelter-stack` (96x96); `slag-heap` (16
 open gate, the plateau beyond, at the level's end).
 
 Belt runs (x, from the README): section 2 at 140 and 340, 3 at 240, 4 at 100 and 380, 7 the outbound belt
-at 240 up to the south gate. The proposal lists each run's times for the data step's `Belt` specs.
+at 240 through the south gate's opening, its top end under the plateau. The proposal lists each run's times for the data step's `Belt` specs.
 
 Outputs: assets/backdrop/level-19/*.png; the review sheet and GIF
 design/campaign/act-3-red-dust/level-19-foundry-of-tharsis/concept/backdrop-final-r42-a.png/.gif;
@@ -120,7 +120,9 @@ def speed(i):
 
 
 def ease(i):
-    if i == 0 or speed(i) == 0 or speed(i - 1) == 0 or speed(i) == speed(i - 1):
+    # M7 part F (step F2): the section after the arena (the wreck crawl) eases up from the halt over its ramp, as
+    # LevelData.scrollAt and the simulation (step F3) do.
+    if i == 0 or speed(i) == 0 or speed(i) == speed(i - 1):
         return 0.0
     return float(SECTIONS[i].get("ease", SECTIONS[i].get("ramp", 0)) or 0)
 
@@ -661,7 +663,7 @@ def belt_runs():
         for x in xs:
             runs.append((s, x, hi - n * BELT[1], n))
     lo = seam("ground", 6) + 60
-    hi = gate_wall_pos() + 4
+    hi = gate_wall_pos() + 8
     n = (hi - lo) // BELT[1]
     runs.append((6, 240, hi - n * BELT[1], n))
     return runs
@@ -673,8 +675,9 @@ def gate_top():
 
 
 def gate_wall_pos():
-    """The south gate's wall foot (layer position) where the outbound belt ends under it."""
-    return gate_top() - (330 + 34)
+    """Where the outbound belt ends (layer position): through the gate's opening (rows 330..364, transparent)
+    and 8 px under the plateau's edge at row 330, so the gate covers the run's top end (no drum housing)."""
+    return gate_top() - 330
 
 
 def placements():

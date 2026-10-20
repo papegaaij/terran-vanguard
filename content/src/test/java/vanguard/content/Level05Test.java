@@ -12,11 +12,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
+import vanguard.sim.DropSpec;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundObjectSpec;
+import vanguard.sim.GroundUnit;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PickupType;
+import vanguard.sim.Section;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -78,9 +85,8 @@ class Level05Test {
         int ground = level.groundUnits().stream()
                 .mapToInt(unit -> unit.enemy().bounty())
                 .sum();
-        LevelScript.SetPieceSpec frigate = level.setPieces().getFirst();
-        int parts =
-                frigate.parts().stream().mapToInt(LevelScript.PartSpec::bounty).sum();
+        SetPieceSpec frigate = level.setPieces().getFirst();
+        int parts = frigate.parts().stream().mapToInt(PartSpec::bounty).sum();
         // The budget counts the two Skitter streams of a medium-par fight.
         int streams = 2 * 6 * 5;
         int small = content.player().pickups().salvage().credits().small();
@@ -94,14 +100,14 @@ class Level05Test {
                 + streams
                 + small
                 + crates
-                + level.secondary().credits();
+                + level.objectives().secondary().credits();
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(918, Math.round(budget), "the typical haul's target");
         assertEquals(402, ground, "Polyp Mortar 14 × 15 + Spine Turret 16 × 12");
         assertEquals(200, parts, "heads 3 × 30 + core 110");
         assertEquals(65, crates);
-        assertEquals(40, level.secondary().credits());
+        assertEquals(40, level.objectives().secondary().credits());
         System.out.printf(
                 "Level 05 budget: kills %d, released %d, ground %d, frigate %d + streams %d, supply %d, crate %d,"
                         + " secondary %d: %d of %.0f (%+.1f %%)%n",
@@ -112,7 +118,7 @@ class Level05Test {
                 streams,
                 small,
                 crates,
-                level.secondary().credits(),
+                level.objectives().secondary().credits(),
                 total,
                 budget,
                 100 * (total - budget) / budget);
@@ -124,7 +130,7 @@ class Level05Test {
     void theEnemiesAreTheReadmesTotals() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         Map<String, Integer> ground = new TreeMap<>();
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             ground.merge(unit.enemy().slug(), 1, Integer::sum);
         }
         Map<String, Integer> waves = new TreeMap<>();
@@ -136,20 +142,24 @@ class Level05Test {
         assertEquals(12, waves.get("needler"));
         assertEquals(10, waves.get("stinger"));
         assertEquals(3, waves.get("brood-pod"));
-        assertEquals(List.of("Battery A", "Battery B", "Battery C", "Battery D"), level.targets());
-        assertEquals(List.of("polyp-mortar", "spine-turret"), level.secondary().killAll());
-        assertEquals("NEST", level.secondary().label());
+        assertEquals(
+                List.of("Battery A", "Battery B", "Battery C", "Battery D"),
+                level.objectives().targets());
+        assertEquals(
+                List.of("polyp-mortar", "spine-turret"),
+                level.objectives().secondary().killAll());
+        assertEquals("NEST", level.objectives().secondary().label());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM);
         assertEquals(30, sortie.escapesTotal(), "every mortar and turret");
         assertEquals(4, sortie.groupCount());
-        LevelScript.SetPieceSpec frigate = level.setPieces().getFirst();
+        SetPieceSpec frigate = level.setPieces().getFirst();
         assertEquals("gorgon-frigate", frigate.slug());
         assertEquals(150, frigate.boss().orElseThrow().arriveSeconds(), 1e-9);
         assertTrue(level.sections().get(4).arena());
         assertEquals(30, level.sections().get(4).speed(), 1e-9);
         assertEquals(
                 List.of(35.0, 75.0, 125.0, 150.0, 205.0, 215.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
     }
 
     @ParameterizedTest
@@ -158,19 +168,19 @@ class Level05Test {
         LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
         int[] units = new int[4];
         int[] mortars = new int[4];
-        for (LevelScript.GroundUnit unit : level.groundUnits()) {
+        for (GroundUnit unit : level.groundUnits()) {
             if (unit.group() >= 0) {
                 units[unit.group()]++;
                 mortars[unit.group()] += unit.enemy().slug().equals("polyp-mortar") ? 1 : 0;
             }
         }
         EnemySpec mortar = level.groundUnits().stream()
-                .map(LevelScript.GroundUnit::enemy)
+                .map(GroundUnit::enemy)
                 .filter(enemy -> enemy.slug().equals("polyp-mortar"))
                 .findFirst()
                 .orElseThrow();
         var lob = mortar.gun().orElseThrow().mortar().orElseThrow();
-        LevelScript.SledSpec sled = level.sled().orElseThrow();
+        HazardSpec.SledSpec sled = level.hazards().sled().orElseThrow();
 
         int battery = difficulty == Difficulty.EASY ? 2 : 4;
         assertEquals(battery, units[0]);
@@ -190,27 +200,30 @@ class Level05Test {
                 1e-9);
         assertEquals(432, sled.x(), 1e-9);
         assertEquals(15, sled.damage(), 1e-9);
-        assertEquals(difficulty != Difficulty.EASY, level.rocks().isPresent(), "no low-gravity debris on easy");
+        assertEquals(
+                difficulty != Difficulty.EASY, level.hazards().rocks().isPresent(), "no low-gravity debris on easy");
     }
 
     @Test
     void theStuckSledTheSupplyCanisterAndBatteryCsPatch() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.GroundObjectSpec clamp = level.groundObjects().stream()
-                .filter(LevelScript.GroundObjectSpec::trigger)
+        GroundObjectSpec clamp = level.groundObjects().stream()
+                .filter(GroundObjectSpec::trigger)
                 .findFirst()
                 .orElseThrow();
-        LevelScript.GroundObjectSpec supply = level.groundObjects().stream()
+        GroundObjectSpec supply = level.groundObjects().stream()
                 .filter(object -> object.bonusDrop().isPresent())
                 .findFirst()
                 .orElseThrow();
 
         assertEquals(3, clamp.hits());
         assertEquals(65, clamp.crateCredits());
-        assertEquals("stuck sled", level.sled().orElseThrow().clampSecret());
+        assertEquals("stuck sled", level.hazards().sled().orElseThrow().clampSecret());
         assertEquals(Optional.of(PickupType.SPECIAL_CHARGE), supply.bonusDrop());
         assertTrue(supply.t() + (540 + 24) / 150.0 < 150, "the canister leaves before the frigate");
-        assertEquals(List.of(new LevelScript.GroupDrop(2, PickupType.ARMOUR_PATCH)), level.groupDrops());
+        assertEquals(
+                List.of(new DropSpec.GroupDrop(2, PickupType.ARMOUR_PATCH)),
+                level.drops().groupDrops());
     }
 
     @ParameterizedTest

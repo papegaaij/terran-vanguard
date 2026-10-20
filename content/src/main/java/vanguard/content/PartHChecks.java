@@ -2,7 +2,7 @@ package vanguard.content;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import vanguard.sim.LevelScript;
+import vanguard.sim.RootBurst;
 
 /**
  * M5 part H's checks (design/campaign Level 14 Siege Spire, design/enemies/bosses/siege-spire; decisions
@@ -23,7 +23,11 @@ final class PartHChecks {
             String field = "attacks[" + i + "]";
             if (attack.staggered().orElse(false)) {
                 long firing = enemy.partList().orElse(List.of()).stream()
-                        .filter(part -> part.attack().equals(attack.name()))
+                        .filter(part -> part.attack().equals(attack.name())
+                                // M7 part F: or listed by the attack (the walker's pods' salvos).
+                                || attack.parts()
+                                        .filter(list -> list.contains(part.name()))
+                                        .isPresent())
                         .count();
                 if (enemy.boss().isEmpty() || firing < 2) {
                     problem.accept(field + ".staggered", "only a boss's attack fired by several parts is staggered");
@@ -84,10 +88,10 @@ final class PartHChecks {
         for (int i = 0; i < block.bursts().size(); i++) {
             LevelData.RootBurst burst = block.bursts().get(i);
             String field = "root_bursts.bursts[" + i + "]";
-            if (burst.y() < LevelScript.RootBurst.MIN_DEPTH || burst.y() > LevelScript.RootBurst.MAX_DEPTH) {
+            if (burst.y() < RootBurst.MIN_DEPTH || burst.y() > RootBurst.MAX_DEPTH) {
                 problem.accept(
                         field + ".y",
-                        "a burst lies " + LevelScript.RootBurst.MIN_DEPTH + "–" + LevelScript.RootBurst.MAX_DEPTH
+                        "a burst lies " + RootBurst.MIN_DEPTH + "–" + RootBurst.MAX_DEPTH
                                 + " px below the top edge, was " + burst.y());
             }
             if (burst.t() >= level.seconds()) {

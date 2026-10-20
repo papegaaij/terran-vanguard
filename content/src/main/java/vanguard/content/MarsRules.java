@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.GroundSpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.PlayField;
 import vanguard.sim.Range;
+import vanguard.sim.Section;
 
 /**
  * M7 part B's rules for the simulation (design/campaign Level 15 Olympus Descent, design/enemies/ground/burrower,
@@ -58,7 +60,7 @@ final class MarsRules {
                 .orElse(attack.count().orElseThrow());
         double speed = attack.speed().orElseThrow()
                 * content.difficulty().enemyBulletSpeed().of(difficulty);
-        double damage = SimSpecs.bulletDamage(content, attack.bullet().orElseThrow());
+        double damage = UnitRules.bulletDamage(content, attack.bullet().orElseThrow());
         List<EnemySpec.BurrowRing> rings = new ArrayList<>();
         for (EnemyData.Ring ring : change.flatMap(EnemyData.BurrowChange::rings).orElse(burrow.rings())) {
             rings.add(new EnemySpec.BurrowRing(ring.count().orElse(count), speed, damage, ring.at()));
@@ -105,9 +107,9 @@ final class MarsRules {
      * The level's sections for the simulation: a timed halt with its {@code ramp} (the default 2 s if not given),
      * a moving section after the first easing in over its {@code ramp} ({@link LevelData.Section#easeSeconds()}).
      */
-    static List<LevelScript.Section> sections(LevelData level) {
+    static List<Section> sections(LevelData level) {
         List<LevelData.Section> sections = level.sections();
-        List<LevelScript.Section> out = new ArrayList<>();
+        List<Section> out = new ArrayList<>();
         for (int i = 0; i < sections.size(); i++) {
             LevelData.Section section = sections.get(i);
             double speed = section.speed().orElse(level.scrollSpeed());
@@ -115,12 +117,18 @@ final class MarsRules {
             boolean afterMoving = i > 0
                     && !sections.get(i - 1).isArena()
                     && sections.get(i - 1).speed().orElse(level.scrollSpeed()) > 0;
-            out.add(new LevelScript.Section(
+            // M7 part F (Level 19's wreck crawl): a moving section right after an arena with its own ramp eases up
+            // from the halt over it (no other level gives one there: their 1 s ramp stays).
+            boolean afterArena =
+                    i > 0 && sections.get(i - 1).isArena() && section.ramp().isPresent();
+            out.add(new Section(
                     section.end(),
                     speed,
                     section.isArena(),
                     section.rampSeconds(),
-                    afterMoving ? section.easeSeconds() : 0));
+                    afterMoving || afterArena ? section.easeSeconds() : 0,
+                    // M7 part F: an arena's hold after its boss's death chain (Level 19's wreck beat).
+                    section.holdAfterBossSeconds()));
         }
         return out;
     }
@@ -132,15 +140,15 @@ final class MarsRules {
      * top edge half a play field's height of scroll before it passes the middle (the inverse of {@link
      * LevelData#scrollAt}, from 0 s on).
      */
-    static List<LevelScript.NoSurface> noSurface(LevelData level) {
-        List<LevelScript.NoSurface> zones = new ArrayList<>();
+    static List<GroundSpec.NoSurface> noSurface(LevelData level) {
+        List<GroundSpec.NoSurface> zones = new ArrayList<>();
         for (LevelData.NoSurface zone : level.noSurfaceZones()) {
             double centre = level.scrollAt(zone.t());
             double half = zone.size().height() / 2.0;
             double from = timeAtScroll(level, centre - half - PlayField.HEIGHT / 2.0);
             double to = timeAtScroll(level, centre + half - PlayField.HEIGHT / 2.0);
             double halfWidth = zone.size().width() / 2.0;
-            zones.add(new LevelScript.NoSurface(from, to, zone.x() - halfWidth, zone.x() + halfWidth));
+            zones.add(new GroundSpec.NoSurface(from, to, zone.x() - halfWidth, zone.x() + halfWidth));
         }
         return zones;
     }
@@ -170,10 +178,12 @@ final class MarsRules {
     static LevelScript script(LevelData level, LevelScript script) {
         LevelScript out = script;
         if (!level.noSurfaceZones().isEmpty()) {
-            out = out.withNoSurface(noSurface(level));
+            out = out.toBuilder()
+                    .ground(out.ground().withNoSurface(noSurface(level)))
+                    .build();
         }
         if (level.dropLaunch()) {
-            out = out.withLaunchDrop(true);
+            out = out.toBuilder().launchDrop(true).build();
         }
         return out;
     }

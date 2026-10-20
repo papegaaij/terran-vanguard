@@ -78,26 +78,25 @@ final class PartHSpecs {
         return new EnemySpec.Sweep(Math.toRadians(arcDegrees), 1.0, 0.6, 600, 14, 5, 0, 8, 0, 20);
     }
 
-    static LevelScript.PartSpec part(String name, double dx, double dy, double hp, int bounty, boolean vital) {
-        return new LevelScript.PartSpec(
-                name, dx, dy, new Hitbox(48, 48), hp, vital, bounty, Optional.empty(), 0, vital ? 2 : 1);
+    static PartSpec part(String name, double dx, double dy, double hp, int bounty, boolean vital) {
+        return new PartSpec(name, dx, dy, new Hitbox(48, 48), hp, vital, bounty, Optional.empty(), 0, vital ? 2 : 1);
     }
 
     /** The test Spire at medium: 2 Wraiths a launch, a ring of 10 for the lob, a 120° sweep. */
-    static LevelScript.SetPieceSpec spire() {
+    static SetPieceSpec spire() {
         return spire(2, 10, 120);
     }
 
     /** The test Spire with {@code wraiths} a launch (hard 3), lobs ringing {@code ring} (hard 12) and a sweep of {@code arc}°. */
-    static LevelScript.SetPieceSpec spire(int wraiths, int ring, double arc) {
-        List<LevelScript.PartSpec> parts = List.of(
+    static SetPieceSpec spire(int wraiths, int ring, double arc) {
+        List<PartSpec> parts = List.of(
                 part("pod 1", -170, -150, 20, 25, false),
                 part("pod 2", -90, -230, 20, 25, false),
                 part("pod 3", 90, -230, 20, 25, false),
                 part("pod 4", 170, -150, 20, 25, false),
                 part("mortar left", -190, -40, 20, 25, false),
                 part("mortar right", 190, -40, 20, 25, false),
-                new LevelScript.PartSpec("trunk", 0, 90, new Hitbox(120, 120), 1, false, 0, Optional.empty(), 0, 1),
+                new PartSpec("trunk", 0, 90, new Hitbox(120, 120), 1, false, 0, Optional.empty(), 0, 1),
                 part("maw", 0, 20, 40, 50, false),
                 part("core", 0, 150, 60, 100, true));
         var attacks = List.of(
@@ -200,7 +199,7 @@ final class PartHSpecs {
                         Optional.of(PickupType.ARMOUR_PATCH)));
         List<BossSpec.Offset> rooted = new ArrayList<>();
         List<BossSpec.Offset> freed = new ArrayList<>();
-        for (LevelScript.PartSpec part : parts) {
+        for (PartSpec part : parts) {
             rooted.add(new BossSpec.Offset(part.dx(), part.dy()));
             freed.add(
                     part.name().equals("core") ? new BossSpec.Offset(0, 0) : new BossSpec.Offset(part.dx(), part.dy()));
@@ -219,7 +218,7 @@ final class PartHSpecs {
                         Layer.GROUND,
                         Layer.GROUND),
                 List.of());
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 "test-spire",
                 new Hitbox(440, 440),
                 new Hitbox(440, 440),
@@ -251,24 +250,14 @@ final class PartHSpecs {
     }
 
     /** The arena level: {@link #ARRIVE} s at {@link #SPEED}, the arena of 200 s at speed 0, 10 s after it. */
-    static LevelScript level(LevelScript.SetPieceSpec spire) {
-        return new LevelScript(
-                14,
-                2,
-                0,
-                List.of(
-                        new LevelScript.Section(ARRIVE, SPEED),
-                        new LevelScript.Section(ARRIVE + 200, 0, true),
-                        new LevelScript.Section(ARRIVE + 210, SPEED)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                LevelScript.Secondary.NONE,
-                List.of(),
-                List.of(),
-                List.of(spire));
+    static LevelScript level(SetPieceSpec spire) {
+        return LevelScript.builder(14, 2)
+                .sections(List.of(
+                        new Section(ARRIVE, SPEED),
+                        new Section(ARRIVE + 200, 0, true),
+                        new Section(ARRIVE + 210, SPEED)))
+                .setPieces(List.of(spire))
+                .build();
     }
 
     static Sortie sortie(LevelScript level, Rules rules) {

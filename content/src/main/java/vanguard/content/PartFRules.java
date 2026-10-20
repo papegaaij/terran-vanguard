@@ -5,8 +5,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import vanguard.sim.DropSpec;
 import vanguard.sim.EnemySpec;
-import vanguard.sim.LevelScript;
+import vanguard.sim.HazardSpec;
 import vanguard.sim.PickupType;
 
 /**
@@ -73,13 +74,13 @@ final class PartFRules {
      * at 0), the lightning's times. None when the block has neither wind nor lightning (rain and occlusion
      * alone are presentation).
      */
-    static Optional<LevelScript.Weather> weather(LevelData level, LevelData.Weather weather, Difficulty difficulty) {
+    static Optional<HazardSpec.Weather> weather(LevelData level, LevelData.Weather weather, Difficulty difficulty) {
         if (weather.gusts().isEmpty()
                 && weather.drift().isEmpty()
                 && weather.lightning().isEmpty()) {
             return Optional.empty();
         }
-        List<LevelScript.Gust> gusts = new ArrayList<>();
+        List<HazardSpec.Gust> gusts = new ArrayList<>();
         double seconds = 1;
         double ramp = 0;
         double push = 0;
@@ -96,14 +97,14 @@ final class PartFRules {
             change.flatMap(LevelData.GustChange::extra).ifPresent(at::addAll);
             at.sort(Comparator.comparingDouble(LevelData.GustAt::t));
             for (LevelData.GustAt gust : at) {
-                gusts.add(new LevelScript.Gust(gust.t(), gust.from() == LevelData.WindSide.LEFT));
+                gusts.add(new HazardSpec.Gust(gust.t(), gust.from() == LevelData.WindSide.LEFT));
             }
             seconds = data.seconds();
             ramp = data.ramp();
             push = change.flatMap(LevelData.GustChange::push).orElse(data.push());
             telegraph = change.flatMap(LevelData.GustChange::telegraph).orElse(data.telegraph());
         }
-        List<LevelScript.Drift> drifts = new ArrayList<>();
+        List<HazardSpec.Drift> drifts = new ArrayList<>();
         weather.drift().ifPresent(drift -> {
             Optional<LevelData.DriftChange> change =
                     switch (difficulty) {
@@ -114,7 +115,7 @@ final class PartFRules {
             double drifting = change.map(LevelData.DriftChange::push).orElse(drift.push());
             if (drifting > 0) {
                 int index = drift.section() - 1;
-                drifts.add(new LevelScript.Drift(
+                drifts.add(new HazardSpec.Drift(
                         level.sectionStart(index),
                         level.sections().get(index).end(),
                         drifting,
@@ -122,26 +123,26 @@ final class PartFRules {
             }
         });
         List<Double> flashes = weather.lightning().map(LevelData.Lightning::at).orElse(List.of());
-        return Optional.of(new LevelScript.Weather(gusts, seconds, ramp, push, telegraph, drifts, flashes));
+        return Optional.of(new HazardSpec.Weather(gusts, seconds, ramp, push, telegraph, drifts, flashes));
     }
 
     /** The level's weather sondes for the simulation. */
-    static LevelScript.Sondes sondes(LevelData.SondesData sondes) {
-        return new LevelScript.Sondes(
+    static HazardSpec.Sondes sondes(LevelData.SondesData sondes) {
+        return new HazardSpec.Sondes(
                 sondes.speed(),
                 sondes.radius(),
                 sondes.at().stream()
-                        .map(at -> new LevelScript.Sonde(at.t(), at.x()))
+                        .map(at -> new HazardSpec.Sonde(at.t(), at.x()))
                         .toList());
     }
 
     /** The pickups placed at a time and x (not a carrier's), in time order. */
-    static List<LevelScript.PlacedPickup> placedPickups(
+    static List<DropSpec.PlacedPickup> placedPickups(
             List<LevelData.PlacedPickup> placed, Function<Pickup, PickupType> pickupType) {
         return placed.stream()
-                .map(p -> new LevelScript.PlacedPickup(
+                .map(p -> new DropSpec.PlacedPickup(
                         p.at().orElseThrow().t(), p.at().orElseThrow().x(), pickupType.apply(p.pickup())))
-                .sorted(Comparator.comparingDouble(LevelScript.PlacedPickup::t))
+                .sorted(Comparator.comparingDouble(DropSpec.PlacedPickup::t))
                 .toList();
     }
 }

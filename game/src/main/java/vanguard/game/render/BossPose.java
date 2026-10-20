@@ -1,7 +1,7 @@
 package vanguard.game.render;
 
 import vanguard.sim.BossSpec;
-import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
 import vanguard.sim.SetPiece;
 
 /**
@@ -93,12 +93,12 @@ final class BossPose {
     }
 
     /** Part {@code p}'s data offset (its nose-down offset) turned by {@code angle}: x right. */
-    static double turnedX(LevelScript.PartSpec part, double angle) {
+    static double turnedX(PartSpec part, double angle) {
         return part.dx() * Math.cos(angle) - part.dy() * Math.sin(angle);
     }
 
     /** Part {@code p}'s data offset turned by {@code angle}: y up. */
-    static double turnedY(LevelScript.PartSpec part, double angle) {
+    static double turnedY(PartSpec part, double angle) {
         return part.dx() * Math.sin(angle) + part.dy() * Math.cos(angle);
     }
 }

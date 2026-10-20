@@ -21,7 +21,7 @@ import java.util.Locale;
 import vanguard.game.level.PromptTexts;
 import vanguard.game.level.RadioQueue;
 import vanguard.sim.Ally;
-import vanguard.sim.LevelScript;
+import vanguard.sim.Secondary;
 import vanguard.sim.Sortie;
 
 /**
@@ -142,9 +142,9 @@ final class MissionPanel {
         frame++;
         if (groupsLabel == null) {
             groupsLabel = groupsLabel(sortie.script().groups());
-            LevelScript.Secondary secondary = sortie.script().secondary();
+            Secondary secondary = sortie.script().objectives().secondary();
             escapesLabel = secondary.label().isEmpty() ? escapesLabel(secondary.escapes()) : secondary.label();
-            sortie.script().escort().ifPresent(escort -> {
+            sortie.script().objectives().escort().ifPresent(escort -> {
                 alliesLabel = escapesLabel(escort.ally().slug());
                 String pip = escort.ally().slug() + "-pip";
                 allyPip = sprites.has(pip) ? sprites.region(pip) : null;
@@ -168,7 +168,7 @@ final class MissionPanel {
                 }
             }
         }
-        boolean targets = !sortie.script().targets().isEmpty();
+        boolean targets = !sortie.script().objectives().targets().isEmpty();
         boolean naval = sortie.navalConvoy();
         boolean ground = sortie.groundAllies();
         boolean defend = sortie.defending();
@@ -194,7 +194,7 @@ final class MissionPanel {
             drawShuttleTracker(batch, sortie);
         } else if (two) {
             drawTwoTrackers(batch, sortie);
-        } else if (!sortie.script().secondary().none()) {
+        } else if (!sortie.script().objectives().secondary().none()) {
             // M5 part D: a level without a secondary objective (Secondary.NONE) and no primary
             // tracker shows none.
             drawTracker(batch, sortie);
@@ -369,7 +369,7 @@ final class MissionPanel {
                 kit.fill(batch, pip, left, bottom, ALLY_PIP_WIDTH, LINE);
             }
         }
-        if (!sortie.script().secondary().none()) {
+        if (!sortie.script().objectives().secondary().none()) {
             drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
         }
     }
@@ -491,7 +491,7 @@ final class MissionPanel {
         int barWidth = X + PAD + TEXT_WIDTH - countdownWidth - RELAY_GAP - barLeft;
         int barBottom = y - Math.round(kit.body.getCapHeight() / 2) - RELAY_BAR_HEIGHT / 2;
         double share = lost ? 0 : ally.hpShare();
-        double tick = sortie.script().secondary().integrity();
+        double tick = sortie.script().objectives().secondary().integrity();
         Color bar = relayBar(lost, ally.ticksSinceHit() < ALLY_HIT_TICKS, share, tick, since);
         kit.bar(
                 batch,
@@ -541,7 +541,7 @@ final class MissionPanel {
         }
         Color colour = flash || failFlash ? HudKit.LCD : met ? SUCCESS : failed ? LOST : HudKit.LABEL;
         int y = wellTop - TEXT_DROP;
-        String label = sortie.script().secondary().label();
+        String label = sortie.script().objectives().secondary().label();
         kit.text(
                 batch,
                 kit.body,
@@ -808,7 +808,7 @@ final class MissionPanel {
                 kit.fill(batch, letter, left - 1, y - LINE / 2 - 1, step - MARK_GAP, 2);
             }
         }
-        if (!sortie.script().secondary().none()) {
+        if (!sortie.script().objectives().secondary().none()) {
             drawSecondary(batch, sortie, wellTop - LINE, MissionLayout.TWO_LINE_WELL - LINE);
         }
     }
@@ -830,7 +830,8 @@ final class MissionPanel {
         boolean flash = metFrame >= 0 && frame - metFrame < FLASH_FRAMES && (frame - metFrame) / 8 % 2 == 0;
         boolean failFlash =
                 failedFrame >= 0 && frame - failedFrame < FLASH_FRAMES && (frame - failedFrame) / 8 % 2 == 0;
-        if (sortie.script().secondary().sondes() || sortie.script().secondary().links()) {
+        if (sortie.script().objectives().secondary().sondes()
+                || sortie.script().objectives().secondary().links()) {
             // M5 part F: each sonde collected flashes the tracker green once (Level 12's SONDES n / 3); M7
             // part C: each tendril broken, the same (Level 16's BARRIERS n / 9).
             int collected = sortie.escapesDestroyed();
@@ -849,16 +850,22 @@ final class MissionPanel {
                 ? HudKit.LCD
                 : sortie.secondaryMet() ? SUCCESS : sortie.secondaryFailed() ? LOST : HudKit.LABEL;
         int y = wellTop - TEXT_DROP;
-        if (sortie.script().secondary().byGroups()) {
+        if (sortie.script().objectives().secondary().byGroups()) {
             drawGroups(batch, sortie, colour, y);
             return;
         }
         if (sortie.secondaryByEscapes()) {
-            // "Nothing gets through" (Level 03): the escapers destroyed of all the level sends.
+            // "Nothing gets through" (Level 03): the escapers destroyed of all the level sends; M7 part F: of those it
+            // needs when some may get away (Level 19's GREY TANKS n / 12 of the 14).
             kit.text(batch, kit.body, escapesLabel, colour, X + PAD, y, TEXT_WIDTH);
             String count = sortie.secondaryMet()
                     ? "DONE"
-                    : sortie.secondaryFailed() ? "FAILED" : sortie.escapesDestroyed() + " / " + sortie.escapesTotal();
+                    : sortie.secondaryFailed()
+                            ? "FAILED"
+                            : escapesCount(
+                                    sortie.escapesDestroyed(),
+                                    sortie.escapesTotal(),
+                                    sortie.script().objectives().secondary().escapesAllowed());
             kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
             return;
         }
@@ -866,6 +873,14 @@ final class MissionPanel {
         kit.text(batch, kit.body, "KILLS", colour, X + PAD, y, TEXT_WIDTH);
         String count = sortie.secondaryMet() ? "DONE" : sortie.kills() + " / " + sortie.requiredKills();
         kit.textRight(batch, kit.body, count, colour, X + PAD, y, TEXT_WIDTH);
+    }
+
+    /**
+     * An escapes objective's count: the units destroyed of all the level sends ("3 / 14"), or, when {@code allowed} of
+     * them may get away, of those it needs ("3 / 12": Level 19's 12 of the 14 grey tanks).
+     */
+    static String escapesCount(int destroyed, int total, int allowed) {
+        return destroyed + " / " + Math.max(0, total - allowed);
     }
 
     /** M5 part F: a sonde's collection flashes the tracker green for this many frames, switching every 8. */
@@ -881,7 +896,7 @@ final class MissionPanel {
      * when cleared, red when lost.
      */
     private void drawGroups(SpriteBatch batch, Sortie sortie, Color colour, int y) {
-        String label = sortie.script().secondary().label();
+        String label = sortie.script().objectives().secondary().label();
         if (!label.isEmpty() && sortie.groupUnits(0) > 0) {
             // M5 part H: a group of units with its own label counts them (Level 14's ROOTS n / 8).
             kit.text(batch, kit.body, label.toUpperCase(Locale.ROOT), colour, X + PAD, y, TEXT_WIDTH);

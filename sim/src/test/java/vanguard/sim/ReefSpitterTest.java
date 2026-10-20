@@ -58,20 +58,13 @@ class ReefSpitterTest {
                 drift);
     }
 
-    private static LevelScript level(LevelScript.GroundUnit... units) {
-        return new LevelScript(
-                        11,
-                        2,
-                        0,
-                        List.of(new LevelScript.Section(30, 130)),
-                        List.of(),
-                        List.of(),
-                        List.of(units),
-                        0,
-                        List.of(),
-                        new LevelScript.Secondary(0.8, 50),
-                        List.of())
-                .withWater(true);
+    private static LevelScript level(GroundUnit... units) {
+        return LevelScript.builder(11, 2)
+                .sections(List.of(new Section(30, 130)))
+                .groundUnits(List.of(units))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .ground(GroundSpec.NONE.withWater(true))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level) {
@@ -87,7 +80,7 @@ class ReefSpitterTest {
     @Test
     void aRaftDriftsAlongItsNestsCurrentOnTopOfTheScroll() {
         // 90°: straight to the right, across the scroll.
-        Sortie sortie = sortie(level(new LevelScript.GroundUnit(0, 200, spitter(10), -1, Math.toRadians(90))));
+        Sortie sortie = sortie(level(new GroundUnit(0, 200, spitter(10), -1, Math.toRadians(90))));
         sortie.step(0);
         Enemy raft = sortie.enemy(0);
         double x = raft.x();
@@ -101,7 +94,7 @@ class ReefSpitterTest {
 
     @Test
     void withoutACurrentItDriftsStraightDownWithTheSea() {
-        Sortie sortie = sortie(level(new LevelScript.GroundUnit(0, 200, spitter(10), -1)));
+        Sortie sortie = sortie(level(new GroundUnit(0, 200, spitter(10), -1)));
         sortie.step(0);
         Enemy raft = sortie.enemy(0);
         double x = raft.x();
@@ -113,7 +106,7 @@ class ReefSpitterTest {
 
     @Test
     void aTurretThatDoesNotDriftStaysOnItsGroundPoint() {
-        Sortie sortie = sortie(level(new LevelScript.GroundUnit(0, 200, spitter(0), -1, Math.toRadians(90))));
+        Sortie sortie = sortie(level(new GroundUnit(0, 200, spitter(0), -1, Math.toRadians(90))));
         sortie.step(0);
         Enemy turret = sortie.enemy(0);
         double x = turret.x();
@@ -125,7 +118,7 @@ class ReefSpitterTest {
 
     @Test
     void aRaftThatDriftsOffASideEdgeIsGone() {
-        Sortie sortie = sortie(level(new LevelScript.GroundUnit(0, 470, spitter(10), -1, Math.toRadians(90))));
+        Sortie sortie = sortie(level(new GroundUnit(0, 470, spitter(10), -1, Math.toRadians(90))));
         sortie.step(0);
         assertEquals(1, sortie.enemyCount());
         steps(sortie, SimStep.ticks(1));
@@ -137,7 +130,7 @@ class ReefSpitterTest {
     @Test
     void itFiresItsThreeWayFanAtTheShipEvery2Point4Seconds() {
         // To the left of the ship, so its second volley is not too close to fire.
-        Sortie sortie = sortie(level(new LevelScript.GroundUnit(0, 60, spitter(10), -1)));
+        Sortie sortie = sortie(level(new GroundUnit(0, 60, spitter(10), -1)));
         int volleys = 0;
         int last = -1;
         for (int tick = 1; tick <= SimStep.ticks(4.2); tick++) {
@@ -163,9 +156,9 @@ class ReefSpitterTest {
 
     @Test
     void driftingChangesTheHashOnlyForAUnitThatDrifts() {
-        Sortie still = sortie(level(new LevelScript.GroundUnit(0, 200, spitter(0), -1)));
-        Sortie stillAgain = sortie(level(new LevelScript.GroundUnit(0, 200, spitter(0), -1, Math.toRadians(45))));
-        Sortie drifting = sortie(level(new LevelScript.GroundUnit(0, 200, spitter(10), -1, Math.toRadians(45))));
+        Sortie still = sortie(level(new GroundUnit(0, 200, spitter(0), -1)));
+        Sortie stillAgain = sortie(level(new GroundUnit(0, 200, spitter(0), -1, Math.toRadians(45))));
+        Sortie drifting = sortie(level(new GroundUnit(0, 200, spitter(10), -1, Math.toRadians(45))));
         steps(still, 60);
         steps(stillAgain, 60);
         steps(drifting, 60);

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import vanguard.game.level.RadioSchedule;
 import vanguard.game.render.ArenaFixture;
-import vanguard.sim.LevelScript;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WingmanSpec;
@@ -20,7 +20,7 @@ class LevelScreenPartETest {
     @Test
     void theAllyHitCueNamesTheShipHitLast() {
         Sortie sortie = ArenaFixture.sortie();
-        assertEquals(-1, LevelScreen.cueUnit(LevelScript.CueTrigger.ALLY_HIT, sortie), "before any hit");
+        assertEquals(-1, LevelScreen.cueUnit(CueTrigger.ALLY_HIT, sortie), "before any hit");
         int hit = -1;
         for (int t = 0; t < 60 * 60 && hit < 0; t++) {
             sortie.step(0);
@@ -32,7 +32,7 @@ class LevelScreenPartETest {
             }
         }
         assertTrue(hit >= 0, "a slam hit a ship in a minute");
-        assertEquals(hit, LevelScreen.cueUnit(LevelScript.CueTrigger.ALLY_HIT, sortie));
+        assertEquals(hit, LevelScreen.cueUnit(CueTrigger.ALLY_HIT, sortie));
         String line = RadioSchedule.line("The {ally} is hit!", hit, sortie.allyName(hit), WingmanSpec.Side.LEFT);
         assertEquals("The " + ArenaFixture.SHIPS.get(hit) + " is hit!", line);
     }
@@ -45,7 +45,7 @@ class LevelScreenPartETest {
 
     @Test
     void rooksArmLineCountsForHisBarksSpacing() {
-        assertTrue(LevelScreen.scriptedForBarks(LevelScript.CueTrigger.BOSS_PART_DESTROYED));
+        assertTrue(LevelScreen.scriptedForBarks(CueTrigger.BOSS_PART_DESTROYED));
     }
 
     @Test

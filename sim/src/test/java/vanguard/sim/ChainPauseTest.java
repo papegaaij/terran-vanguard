@@ -33,20 +33,13 @@ class ChainPauseTest {
 
     /** A turret in the ship's line of fire at 0 s, and a tough one far to the left at 10 s. */
     private static Sortie sortie() {
-        LevelScript level = new LevelScript(
-                1,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 130)),
-                List.of(),
-                List.of(),
-                List.of(
-                        new LevelScript.GroundUnit(0, Ship.START_X, turret("ahead", 5), -1),
-                        new LevelScript.GroundUnit(10, 60, turret("aside", 1000), -1)),
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+        LevelScript level = LevelScript.builder(1, 1)
+                .sections(List.of(new Section(40, 130)))
+                .groundUnits(List.of(
+                        new GroundUnit(0, Ship.START_X, turret("ahead", 5), -1),
+                        new GroundUnit(10, 60, turret("aside", 1000), -1)))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
         return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES.withInvulnerableShip(), TestSpecs.FULL_ARMOUR);
     }
 

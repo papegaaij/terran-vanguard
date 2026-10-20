@@ -12,6 +12,11 @@ import org.junit.jupiter.api.Test;
  * (design/systems/economy, per-level budget; user decision 2026-10-04).
  */
 class TypicalHaulTest {
+    /** The most the typical haul may be off its budget, as a share of it. */
+    static final double TOLERANCE = 0.05;
+    /** A perfect run earns at least this many budgets. */
+    static final double PERFECT_BUDGETS = 1.4;
+
     private final Content content = ContentLoader.fromClasspath();
 
     @Test
@@ -27,7 +32,7 @@ class TypicalHaulTest {
                     100 * haul.offBudget(),
                     haul.perfect(),
                     haul.perfect() / haul.budget());
-            if (Math.abs(haul.offBudget()) > 0.05) {
+            if (Math.abs(haul.offBudget()) > TOLERANCE) {
                 off.append(String.format(" Level %02d: typical %.0f vs %.0f;", number, haul.typical(), haul.budget()));
             }
         });
@@ -36,8 +41,8 @@ class TypicalHaulTest {
 
     @Test
     void aPerfectRunEarnsWellAboveTheBudget() {
-        hauls().forEach((number, haul) ->
-                assertTrue(haul.perfect() >= 1.4 * haul.budget(), "Level " + number + ": perfect " + haul.perfect()));
+        hauls().forEach((number, haul) -> assertTrue(
+                haul.perfect() >= PERFECT_BUDGETS * haul.budget(), "Level " + number + ": perfect " + haul.perfect()));
     }
 
     @Test
@@ -60,11 +65,12 @@ class TypicalHaulTest {
                         Map.entry(11, 2_043),
                         Map.entry(12, 2_532),
                         Map.entry(13, 2_494),
-                        Map.entry(14, 2_458),
+                        Map.entry(14, 2_396),
                         Map.entry(15, 2_833),
                         Map.entry(16, 3_074),
-                        Map.entry(17, 3_289),
-                        Map.entry(18, 3_567)),
+                        Map.entry(17, 3_145),
+                        Map.entry(18, 3_567),
+                        Map.entry(19, 3_561)),
                 perfect);
     }
 

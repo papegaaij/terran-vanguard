@@ -135,7 +135,7 @@ public final class Tendril {
         return bAlive;
     }
 
-    /** Its gate pair's index in the level's {@link LevelScript#gates()}: unique in an attempt. */
+    /** Its gate pair's index in the level's {@link GroundSpec#gates()}: unique in an attempt. */
     public int serial() {
         return serial;
     }

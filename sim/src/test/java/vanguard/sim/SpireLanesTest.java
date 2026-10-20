@@ -22,8 +22,8 @@ class SpireLanesTest {
     static final double GLOW = 0.6;
 
     /** The test Spire with the pods' lanes and aim turns, {@code wraiths} a launch and at most {@code most} alive. */
-    static LevelScript.SetPieceSpec spire(int wraiths, int most) {
-        LevelScript.SetPieceSpec base = PartHSpecs.spire(wraiths, 10, 120);
+    static SetPieceSpec spire(int wraiths, int most) {
+        SetPieceSpec base = PartHSpecs.spire(wraiths, 10, 120);
         BossSpec b = base.boss().orElseThrow();
         List<BossSpec.Attack> attacks = new ArrayList<>(b.attacks());
         attacks.set(
@@ -112,7 +112,7 @@ class SpireLanesTest {
                 b.poses(),
                 b.deathSeconds(),
                 b.arena());
-        return new LevelScript.SetPieceSpec(
+        return new SetPieceSpec(
                 base.slug(),
                 base.size(),
                 base.body(),

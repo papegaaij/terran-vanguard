@@ -78,12 +78,12 @@ class GroundAlliesTest {
     @Test
     void alternateSendsEverySecondLobAtTheNearestDomeItsMarkerScrollingWithIt() {
         // A mortar at the dome's x, entering at t=2: its first lob goes at the ship, its second at the dome.
-        LevelScript.GroundUnit mortar = new LevelScript.GroundUnit(2, A_X, CraterNestTest.MORTAR, -1);
+        GroundUnit mortar = new GroundUnit(2, A_X, CraterNestTest.MORTAR, -1);
         LevelScript level = SiegeSpecs.level(
                 List.of(),
                 List.of(mortar),
-                LevelScript.Secondary.NONE,
-                Optional.of(SiegeSpecs.domes(Map.of("polyp-mortar", LevelScript.HookMode.ALTERNATE))));
+                Secondary.NONE,
+                Optional.of(SiegeSpecs.domes(Map.of("polyp-mortar", HookMode.ALTERNATE))));
         Sortie sortie = SiegeSpecs.sortie(level);
         // The ship keeps to the bottom right, far from the dome's lane.
         int away = Command.of(Command.RIGHT, Command.DOWN);
@@ -139,41 +139,33 @@ class GroundAlliesTest {
         LevelScript level = SiegeSpecs.level(List.of());
         assertThrows(
                 IllegalArgumentException.class,
-                () -> level.withDefend(PartGSpecs.defend(PartGSpecs.RELAY, Map.of()), LevelScript.Secondary.NONE));
-        LevelScript arena = new LevelScript(
-                17,
-                3,
-                0,
-                List.of(new LevelScript.Section(10, 80), new LevelScript.Section(20, 80, true, 0)),
-                List.of(),
-                List.of(),
-                List.of(),
-                0,
-                List.of(),
-                LevelScript.Secondary.NONE,
-                List.of(),
-                List.of(),
-                List.of());
+                () -> TestSpecs.withObjectives(level, o -> o.withSecondary(Secondary.NONE)
+                        .withDefend(Optional.of(PartGSpecs.defend(PartGSpecs.RELAY, Map.of())))));
+        LevelScript arena = LevelScript.builder(17, 3)
+                .sections(List.of(new Section(10, 80), new Section(20, 80, true, 0)))
+                .build();
         assertThrows(
-                IllegalArgumentException.class, () -> arena.withGroundAllies(Optional.of(SiegeSpecs.hookedDomes())));
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.GroundAlly(SiegeSpecs.DOME, "Off", -1, 5));
-        assertThrows(IllegalArgumentException.class, () -> new LevelScript.GroundAllies(List.of(), Map.of(), 160, 40));
+                IllegalArgumentException.class,
+                () -> TestSpecs.withObjectives(arena, o -> o.withGroundAllies(Optional.of(SiegeSpecs.hookedDomes()))));
+        assertThrows(IllegalArgumentException.class, () -> new ObjectiveSpec.GroundAlly(SiegeSpecs.DOME, "Off", -1, 5));
+        assertThrows(
+                IllegalArgumentException.class, () -> new ObjectiveSpec.GroundAllies(List.of(), Map.of(), 160, 40));
     }
 
     @Test
     void aLevelWithGroundAlliesStepsDeterministicallyWithoutAllocating() {
-        LevelScript.GroundUnit mortar = new LevelScript.GroundUnit(2, A_X, CraterNestTest.MORTAR, -1);
+        GroundUnit mortar = new GroundUnit(2, A_X, CraterNestTest.MORTAR, -1);
         LevelScript level = SiegeSpecs.level(
                 List.of(
                         SiegeSpecs.bombers(
                                 1, WaveSpec.Formation.LINE_ABREAST, 3, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE),
                         SiegeSpecs.walker(4, 300)),
                 List.of(mortar),
-                LevelScript.Secondary.untouched(100, "DOMES"),
+                Secondary.untouched(100, "DOMES"),
                 Optional.of(SiegeSpecs.domes(Map.of(
-                        "spore-bomber", LevelScript.HookMode.ALWAYS,
-                        "polyp-mortar", LevelScript.HookMode.ALTERNATE,
-                        "shellback", LevelScript.HookMode.ALTERNATE))));
+                        "spore-bomber", HookMode.ALWAYS,
+                        "polyp-mortar", HookMode.ALTERNATE,
+                        "shellback", HookMode.ALTERNATE))));
         Sortie one = SiegeSpecs.sortie(level);
         Sortie two = SiegeSpecs.sortie(level);
         for (int i = 0; i < SimStep.ticks(25); i++) {

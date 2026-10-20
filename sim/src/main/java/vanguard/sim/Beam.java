@@ -101,7 +101,7 @@ public final class Beam {
 
     /**
      * The target it burns: an enemy's {@link Enemy#serial()}, or a set piece's part as {@link
-     * #PART_TARGET} + piece × {@link LevelScript.SetPieceSpec#MAX_PARTS} + part; -1 for
+     * #PART_TARGET} + piece × {@link SetPieceSpec#MAX_PARTS} + part; -1 for
      * anything else (a ground object, a spore mine, nothing).
      */
     public int target() {

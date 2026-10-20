@@ -14,13 +14,21 @@ import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
 import vanguard.sim.BossSpec;
+import vanguard.sim.CueTrigger;
+import vanguard.sim.DropSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelResult;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
+import vanguard.sim.ObjectiveSpec;
+import vanguard.sim.PartSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.PlayField;
+import vanguard.sim.RadioCue;
+import vanguard.sim.Secondary;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
+import vanguard.sim.SetPieceSpec;
 import vanguard.sim.SimEvents;
 import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
@@ -92,26 +100,36 @@ class Level07Test {
                     .map(brood -> wave.count() * brood.count() * brood.enemy().bounty())
                     .orElse(0);
         }
-        LevelScript.SetPieceSpec carrier = level.setPieces().getFirst();
-        int parts =
-                carrier.parts().stream().mapToInt(LevelScript.PartSpec::bounty).sum();
+        SetPieceSpec carrier = level.setPieces().getFirst();
+        int parts = carrier.parts().stream().mapToInt(PartSpec::bounty).sum();
         // the window launches of a typical fight (boss.notes.spawns): 41 Skitters, 8 Needlers
         int spawns = 41 * 5 + 8 * 12;
         int crates = content.level(LEVEL).secrets().stream()
                 .mapToInt(LevelData.Secret::crate)
                 .sum();
-        int total =
-                kills + released + parts + spawns + crates + level.secondary().credits();
+        int total = kills
+                + released
+                + parts
+                + spawns
+                + crates
+                + level.objectives().secondary().credits();
 
         double budget = content.economy().budget().of(level.number());
         assertEquals(1_051, Math.round(budget), "the typical haul's target");
         assertEquals(450, parts, "bays 8 × 25, core 250; the mandibles pay nothing");
         assertEquals(4 * 6 * 5, released, "the four Brood Pods' Skitters");
         assertEquals(75, crates, "the lifeboat tow");
-        assertEquals(50, level.secondary().credits());
+        assertEquals(50, level.objectives().secondary().credits());
         System.out.printf(
                 "Level 07 budget: kills %d, released %d, carrier %d, spawns %d, crate %d, secondary %d: %d of %.0f%n",
-                kills, released, parts, spawns, crates, level.secondary().credits(), total, budget);
+                kills,
+                released,
+                parts,
+                spawns,
+                crates,
+                level.objectives().secondary().credits(),
+                total,
+                budget);
         assertEquals(1_972, total, "before the bounty_scale (TypicalHaulTest checks the scaled run)");
     }
 
@@ -134,7 +152,7 @@ class Level07Test {
         assertTrue(level.groundUnits().isEmpty(), "the picket is wreckage");
         assertEquals(
                 List.of(30.0, 70.0, 100.0, 235.0, 270.0),
-                level.sections().stream().map(LevelScript.Section::end).toList());
+                level.sections().stream().map(Section::end).toList());
         assertTrue(level.sections().get(3).arena());
         assertEquals(20, level.sections().get(3).speed(), 1e-9);
         assertEquals(40, level.sections().get(4).speed(), 1e-9);
@@ -143,7 +161,7 @@ class Level07Test {
 
     @Test
     void theCarrierFliesItsScript() {
-        LevelScript.SetPieceSpec carrier =
+        SetPieceSpec carrier =
                 SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).setPieces().getFirst();
         BossSpec boss = carrier.boss().orElseThrow();
         assertEquals("brood-carrier", carrier.slug());
@@ -160,10 +178,7 @@ class Level07Test {
                 boss.poses().stream().map(BossSpec.Pose::name).toList(),
                 "exactly two poses, nose-down first");
         assertEquals(List.of(carrier.parts().size() - 1), boss.armoured(), "the mandibles are fire-only");
-        assertEquals(
-                3_840,
-                carrier.parts().stream().mapToDouble(LevelScript.PartSpec::hp).sum() - 1,
-                1e-9);
+        assertEquals(3_840, carrier.parts().stream().mapToDouble(PartSpec::hp).sum() - 1, 1e-9);
 
         // part_list tail to head: nose-down, every part lies further down the hull than the one before
         for (int p = 1; p < carrier.parts().size(); p++) {
@@ -277,42 +292,42 @@ class Level07Test {
     @Test
     void theLevelsRulesReachTheSimulation() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        LevelScript.TowSpec tow = level.tows().getFirst();
+        ObjectiveSpec.TowSpec tow = level.objectives().tows().getFirst();
         assertEquals("lifeboat tow", tow.secret());
         assertEquals(75, tow.crateCredits());
         assertEquals(3, tow.hits());
         assertTrue(tow.vy() < 0, "it drifts down the screen");
 
-        LevelScript.PartDrop drop = level.partDrops().getFirst();
+        DropSpec.PartDrop drop = level.drops().partDrops().getFirst();
         assertEquals("brood-carrier", drop.slug());
         assertEquals(SACS.size(), drop.parts().size());
         assertEquals(1, drop.dropsAt(), "the first sac destroyed");
         assertEquals(PickupType.OVERDRIVE, drop.pickup());
 
-        LevelScript.Secondary secondary = level.secondary();
+        Secondary secondary = level.objectives().secondary();
         assertTrue(secondary.byParts());
         assertEquals(SACS.size(), secondary.parts().size());
         assertEquals(1, secondary.beforePhase(), "before the broadside ends");
         assertEquals("BAYS", secondary.label());
 
-        List<LevelScript.RadioCue> at107 = level.radio().stream()
-                .filter(cue -> cue.trigger() == LevelScript.CueTrigger.TIME && cue.t() == 107)
+        List<RadioCue> at107 = level.radio().stream()
+                .filter(cue -> cue.trigger() == CueTrigger.TIME && cue.t() == 107)
                 .toList();
         assertEquals(2, at107.size());
-        int homing = LevelScript.RadioCue.FITTED_HOMING;
+        int homing = RadioCue.FITTED_HOMING;
         assertEquals(1, at107.stream().filter(cue -> cue.allowedWith(homing)).count(), "one line with missiles");
         assertEquals(1, at107.stream().filter(cue -> cue.allowedWith(0)).count(), "one without");
         assertEquals(
                 4,
                 level.radio().stream()
-                        .filter(cue -> cue.trigger() == LevelScript.CueTrigger.BOSS_DESTROYED)
+                        .filter(cue -> cue.trigger() == CueTrigger.BOSS_DESTROYED)
                         .filter(cue -> cue.subject().equals("brood-carrier"))
                         .count(),
                 "the four closing lines");
         assertEquals(
                 1,
                 level.radio().stream()
-                        .filter(cue -> cue.trigger() == LevelScript.CueTrigger.BOSS_TIMEOUT)
+                        .filter(cue -> cue.trigger() == CueTrigger.BOSS_TIMEOUT)
                         .count(),
                 "Okafor's timeout line");
     }
@@ -401,8 +416,8 @@ class Level07Test {
                     case BOSS_DESTROYED -> killed = boss.killSeconds();
                     case SECRET_FOUND -> secrets++;
                     case RADIO -> {
-                        LevelScript.RadioCue cue = sortie.script().radio().get(events.value(i));
-                        if (cue.trigger() == LevelScript.CueTrigger.TIME && cue.t() == 107) {
+                        RadioCue cue = sortie.script().radio().get(events.value(i));
+                        if (cue.trigger() == CueTrigger.TIME && cue.t() == 107) {
                             lines107.add(cue.line());
                         }
                     }

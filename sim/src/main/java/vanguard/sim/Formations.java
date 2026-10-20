@@ -284,7 +284,7 @@ final class Formations {
                             switch (wave.edge()) {
                                 case LEFT -> true;
                                 case RIGHT -> false;
-                                case NONE, ALTERNATING -> i % 2 == 0;
+                                case NONE, ALTERNATING, TOP, BOTTOM -> i % 2 == 0;
                             };
                     double y = HEIGHT - strafe.depth(i, count);
                     double startX = left ? -halfWidth - 1 : WIDTH + halfWidth + 1;
@@ -718,7 +718,7 @@ final class Formations {
                         switch (wave.edge()) {
                             case LEFT -> true;
                             case RIGHT -> false;
-                            case NONE, ALTERNATING -> i % 2 == 0;
+                            case NONE, ALTERNATING, TOP, BOTTOM -> i % 2 == 0;
                         };
                 add(
                         i,
@@ -1093,7 +1093,7 @@ final class Formations {
                     switch (wave.edge()) {
                         case LEFT -> WIDTH / 4;
                         case RIGHT -> WIDTH * 3 / 4;
-                        case NONE, ALTERNATING -> WIDTH / 2;
+                        case NONE, ALTERNATING, TOP, BOTTOM -> WIDTH / 2;
                     };
             double across = HEIGHT + 2 * (OUTSIDE + reach);
             double speed = speed(enemy().speed());
@@ -1121,7 +1121,7 @@ final class Formations {
                                 switch (wave.edge()) {
                                     case LEFT -> true;
                                     case RIGHT -> false;
-                                    case NONE, ALTERNATING -> i % 2 == 0;
+                                    case NONE, ALTERNATING, TOP, BOTTOM -> i % 2 == 0;
                                 };
                         cx = left ? -OUTSIDE - reach : WIDTH + OUTSIDE + reach;
                         cy = HEIGHT * 2 / 3;

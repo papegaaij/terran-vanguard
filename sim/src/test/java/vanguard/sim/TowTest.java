@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
  */
 class TowTest {
     /** Level 07's lifeboat: from x 130 at t 22, drifting (12, -45) px/s, the pod 70 px behind the boat. */
-    private static final LevelScript.TowSpec LIFEBOAT = new LevelScript.TowSpec(
+    private static final ObjectiveSpec.TowSpec LIFEBOAT = new ObjectiveSpec.TowSpec(
             22, 130, 12, -45, new Hitbox(72, 36), new Hitbox(32, 32), 0, 70, new Hitbox(16, 40), 3, 75, "lifeboat tow");
 
     private static int tick(double seconds) {

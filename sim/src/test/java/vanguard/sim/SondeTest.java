@@ -15,24 +15,30 @@ import org.junit.jupiter.api.Test;
  * level's drop factor, a placed pickup and the drifting canister on {@code low-air}.
  */
 class SondeTest {
-    private static final LevelScript.Secondary COLLECT = LevelScript.Secondary.sondes(75, "SONDES");
+    private static final Secondary COLLECT = Secondary.sondes(75, "SONDES");
 
     private static Sortie sortie(LevelScript level) {
         return new Sortie(1, TestSpecs.LOADOUT, level, TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
     }
 
     private static LevelScript sondes(double... xs) {
-        List<LevelScript.Sonde> at = new java.util.ArrayList<>();
+        List<HazardSpec.Sonde> at = new java.util.ArrayList<>();
         for (int i = 0; i < xs.length; i++) {
-            at.add(new LevelScript.Sonde(1 + i, xs[i]));
+            at.add(new HazardSpec.Sonde(1 + i, xs[i]));
         }
-        return TestSpecs.level(30, List.of()).withSondes(new LevelScript.Sondes(60, 36, at), COLLECT);
+        LevelScript level = TestSpecs.level(30, List.of());
+        return level.toBuilder()
+                .objectives(level.objectives().withSecondary(COLLECT))
+                .hazards(level.hazards().withSondes(Optional.of(new HazardSpec.Sondes(60, 36, at))))
+                .build();
     }
 
     @Test
     void sondesDriftDownUnpushedAndTheShipCollectsThemWithinTheRadius() {
-        LevelScript level = sondes(Ship.START_X, Ship.START_X)
-                .withWeather(WindTest.storm(List.of(), List.of(new LevelScript.Drift(0, 30, 40, true)), List.of()));
+        LevelScript level = TestSpecs.withHazards(
+                sondes(Ship.START_X, Ship.START_X),
+                h -> h.withWeather(Optional.of(
+                        WindTest.storm(List.of(), List.of(new HazardSpec.Drift(0, 30, 40, true)), List.of()))));
         Sortie sortie = sortie(level);
         Sondes sondes = sortie.sondes();
         int collected = 0;
@@ -99,7 +105,8 @@ class SondeTest {
     private static int shieldCells(double factor) {
         WaveSpec line = TestSpecs.wave(
                 0, WaveSpec.Formation.LINE_ABREAST, TestSpecs.NEEDLER, 3, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
-        Sortie sortie = sortie(TestSpecs.level(30, List.of(line)).withPickups(factor, List.of()));
+        Sortie sortie = sortie(TestSpecs.withDrops(TestSpecs.level(30, List.of(line)), d -> d.withDropFactor(factor)
+                .withPlacedPickups(List.of())));
         sortie.step(Command.NONE);
         assertEquals(3, sortie.enemyCount());
         for (int k = 0; k < 3; k++) {
@@ -114,8 +121,8 @@ class SondeTest {
 
     @Test
     void aPlacedPickupEntersAtTheTopEdgeAtItsTime() {
-        LevelScript level = TestSpecs.level(30, List.of())
-                .withPickups(1, List.of(new LevelScript.PlacedPickup(1, 100, PickupType.ARMOUR_PATCH)));
+        LevelScript level = TestSpecs.withDrops(TestSpecs.level(30, List.of()), d -> d.withDropFactor(1)
+                .withPlacedPickups(List.of(new DropSpec.PlacedPickup(1, 100, PickupType.ARMOUR_PATCH))));
         Sortie sortie = sortie(level);
         for (int i = 0; i < SimStep.ticks(1) - 1; i++) {
             sortie.step(Command.NONE);
@@ -130,11 +137,13 @@ class SondeTest {
 
     @Test
     void theDriftingCanisterDriftsInScreenSpaceAndTakesItsHits() {
-        LevelScript.GroundObjectSpec canister = new LevelScript.GroundObjectSpec(
+        GroundObjectSpec canister = new GroundObjectSpec(
                         0, Ship.START_X, new Hitbox(24, 24), 0, 0, Optional.empty(), 3, 130, "canister", false)
                 .drifting(-10, -40);
-        LevelScript level = TestSpecs.level(30, List.of(), List.of(canister), List.of())
-                .withWeather(WindTest.storm(List.of(), List.of(new LevelScript.Drift(0, 30, 40, true)), List.of()));
+        LevelScript level = TestSpecs.withHazards(
+                TestSpecs.level(30, List.of(), List.of(canister), List.of()),
+                h -> h.withWeather(Optional.of(
+                        WindTest.storm(List.of(), List.of(new HazardSpec.Drift(0, 30, 40, true)), List.of()))));
         Sortie sortie = sortie(level);
         sortie.step(Command.NONE);
         GroundObject object = sortie.groundObject(0);

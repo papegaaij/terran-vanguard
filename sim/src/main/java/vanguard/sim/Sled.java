@@ -8,7 +8,7 @@ package vanguard.sim;
  * time, so a retry replays it exactly.
  */
 public final class Sled implements Hashed {
-    private final LevelScript.SledSpec spec;
+    private final HazardSpec.SledSpec spec;
     private final int firstTicks;
     private final int periodTicks;
     private final int untilTicks;
@@ -22,7 +22,7 @@ public final class Sled implements Hashed {
     /** The launch whose sled already struck the ship; -1 for none. */
     private int struck = -1;
 
-    Sled(LevelScript.SledSpec spec) {
+    Sled(HazardSpec.SledSpec spec) {
         this.spec = spec;
         firstTicks = SimStep.ticks(spec.firstSeconds());
         periodTicks = Math.max(1, SimStep.ticks(spec.periodSeconds()));
@@ -106,7 +106,7 @@ public final class Sled implements Hashed {
         hash.add(launch).add(struck);
     }
 
-    public LevelScript.SledSpec spec() {
+    public HazardSpec.SledSpec spec() {
         return spec;
     }
 }

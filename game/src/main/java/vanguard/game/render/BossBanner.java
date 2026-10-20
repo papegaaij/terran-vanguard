@@ -16,8 +16,10 @@ import vanguard.sim.SimStep;
  * The boss warning banner (design/ui/hud, chosen concept edge-warnings-r09-a, panel C): a band across
  * the play field with scrolling yellow-and-black hazard stripes along its edges, a large red
  * {@code WARNING} that blinks and the boss's name in amber, "BROOD CARRIER APPROACHING". It opens
- * when an act boss arrives with its warning track and klaxon, and clears after 5 s, growing in and
- * out over 0.2 s. It sits on the HUD layer above everything in the play field. Drawn in code until
+ * when an act boss arrives with its warning track and klaxon (round 41, the 2026-10-19 playtest: a boss
+ * with a lead time opens it that long before it arrives, so it shows before the boss is reached), and
+ * clears after 5 s, growing in and out over 0.2 s; it closes early ({@link #close}) rather than hide a
+ * boss that already fights under its band. It sits on the HUD layer above everything in the play field. Drawn in code until
  * its production art; geometry in play-field pixels.
  */
 public final class BossBanner implements Disposable {
@@ -65,6 +67,39 @@ public final class BossBanner implements Disposable {
     public void show(String barName, long tick) {
         name = barName.toUpperCase(Locale.ROOT) + " APPROACHING";
         since = tick;
+    }
+
+    /** The band's lower and upper edge (play-field y, up), fully open. */
+    static final float BAND_BOTTOM = CENTRE_Y - HEIGHT / 2f;
+
+    static final float BAND_TOP = CENTRE_Y + HEIGHT / 2f;
+
+    /** Whether something centred at play-field {@code y}, reaching {@code reach} px up and down, lies under the band. */
+    public static boolean under(double y, double reach) {
+        return y + reach > BAND_BOTTOM && y - reach < BAND_TOP;
+    }
+
+    /** Whether it shows at {@code tick} (open, opening or closing). */
+    public boolean showing(long tick) {
+        return since >= 0 && visible((tick - since) * SimStep.SECONDS);
+    }
+
+    /**
+     * Closes it early from {@code tick} on: it grows out over its last 0.2 s now, as at the end of its 5 s
+     * (one already closing goes on as it was).
+     */
+    public void close(long tick) {
+        if (showing(tick)) {
+            since = closedSince(since, tick);
+        }
+    }
+
+    /**
+     * The opening tick that makes a banner opened at {@code since} grow out from {@code tick} on: as if it
+     * opened 4.8 s before, unless it is closing already.
+     */
+    static long closedSince(long since, long tick) {
+        return Math.min(since, tick - SimStep.ticks(SECONDS - GROW_SECONDS));
     }
 
     /** No banner, as when the level restarts. */

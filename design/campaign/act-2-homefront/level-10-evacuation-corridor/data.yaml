@@ -74,7 +74,7 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (tools/art
         low-air: sea-mist banks rolling in from the right.
       purpose: Mixed front and rear waves, the crossing swarms; the ferry secret.
   - name: Orbital Corridor
-    end: 200
+    end: 201   # round 41 (step FX-C): from 200, so Lifeline One's t=196 line ends (200.1 s at the latest) before the level does
     atmosphere: clear
     tiles: [morning-sky, open-lagoon]
     notes:

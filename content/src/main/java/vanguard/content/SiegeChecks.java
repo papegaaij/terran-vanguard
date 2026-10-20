@@ -2,6 +2,7 @@ package vanguard.content;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import vanguard.sim.PlayField;
 
@@ -10,11 +11,12 @@ import vanguard.sim.PlayField;
  * air/choir-herald and ground/shellback). A level's {@code allies} block: every unit an ally that scrolls with the
  * ground ({@code follows: ground}) and counts hits, its footprint inside the play field and clear of every other
  * unit's on the ground, its {@code targeted_by} (and the easy/hard modes) naming known enemies, its {@code bomb_row}
- * on the play field; an {@code untouched} secondary only with ground allies; no ground target or secret trigger within
- * {@value #COMPOUND_CLEARANCE} px of the {@value #COMPOUND} backdrop placement (the Helix compound: nothing in the
- * level touches it); a pickup's {@code dropped_by.enemy} one of its wave's enemies; round 40 R.c: a walker with a
- * curl-roll (the Shellback) walks its paths between the ground allies, its body's hit box never over an ally's hit
- * box (a dome's glass; its roll still crushes a dome whose footprint the ball touches, in the simulation).
+ * on the play field; an {@code untouched} or (round 41) {@code standing} secondary only with ground allies; no ground
+ * target or secret trigger within {@value #COMPOUND_CLEARANCE} px of the {@value #COMPOUND} backdrop placement (the
+ * Helix compound: nothing in the level touches it); a pickup's {@code dropped_by.enemy} one of its wave's enemies;
+ * round 40 R.c: a walker with a curl-roll (the Shellback) walks its paths between the ground allies, its body's hit
+ * box never over an ally's hit box (a dome's glass; its roll still crushes a dome whose footprint the ball touches, in
+ * the simulation).
  *
  * <p>A unit's: an {@code aura} on an {@code air} unit that is not a boss, at most one, its hooks only with it; a
  * {@code roll} only on a ground walker, its ball inside the sprite, its hook only with it; a non-boss unit's parts
@@ -66,12 +68,15 @@ final class SiegeChecks {
 
     /** A level's M7 part D keys. */
     static void level(Content content, LevelData level, BiConsumer<String, String> problem) {
-        boolean untouched = level.objectives()
-                .secondary()
-                .map(LevelData.Secondary::keepsAlliesUntouched)
-                .orElse(false);
-        if (untouched && level.allies().isEmpty()) {
+        Optional<LevelData.Secondary> secondary = level.objectives().secondary();
+        if (secondary.map(LevelData.Secondary::keepsAlliesUntouched).orElse(false)
+                && level.allies().isEmpty()) {
             problem.accept("objectives.secondary.untouched", "an untouched secondary judges the level's ground allies");
+        }
+        // Round 41: Level 17's "No dome lost" (a broken ally fails it, a hit does not).
+        if (secondary.map(LevelData.Secondary::keepsAlliesStanding).orElse(false)
+                && level.allies().isEmpty()) {
+            problem.accept("objectives.secondary.standing", "a standing secondary judges the level's ground allies");
         }
         level.allies().ifPresent(allies -> allies(content, level, allies, problem));
         level.allies().ifPresent(allies -> walks(content, level, allies, problem));

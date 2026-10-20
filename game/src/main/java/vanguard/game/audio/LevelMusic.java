@@ -202,6 +202,11 @@ public final class LevelMusic implements Disposable {
     private MotifCue motifCue = (section, t) -> false;
     /** M7 part E: whether the cue asked for the motif at the last update. */
     private boolean motifOn;
+    /**
+     * M7 part F: whether a section (1-based) plays the motif layer alone, the stems silent (the level's {@code stems:
+     * motif}, Level 19's crawl).
+     */
+    private IntPredicate motifAlone = section -> false;
 
     /**
      * @param base the theme's base stem
@@ -300,6 +305,22 @@ public final class LevelMusic implements Disposable {
         motifCue = cue;
         return this;
     }
+
+    /**
+     * M7 part F: the sections that play the motif layer alone over the ambience (the stems faded out under it, the
+     * motif on whatever its cue).
+     */
+    public LevelMusic motifAlone(IntPredicate alone) {
+        motifAlone = alone;
+        return this;
+    }
+
+    /** M7 part F: whether the stems were asked to play at the last update (not the motif alone), for the tests. */
+    boolean stemsOn() {
+        return stemsOn;
+    }
+
+    private boolean stemsOn = true;
 
     /** M7 part E: whether the motif layer was asked for at the last update, for the tests. */
     boolean motifOn() {
@@ -436,7 +457,8 @@ public final class LevelMusic implements Disposable {
         boolean wasIntense = intense;
         intense = runTimeFull;
         boolean wanted = fullMix.test(section) || runTimeFull;
-        motifOn = motifCue.on(section, levelSeconds);
+        stemsOn = !motifAlone.test(section);
+        motifOn = motifCue.on(section, levelSeconds) || !stemsOn;
         if (levelSeconds >= ambienceFrom && fade < 0 && music.isPresent()) {
             fadeOut();
         }
@@ -464,6 +486,7 @@ public final class LevelMusic implements Disposable {
         }
         if (stems.isPresent()) {
             stems.get().motif(motifOn);
+            stems.get().stems(stemsOn);
         }
         float share = wanted ? 1 : 0;
         if (stems.isPresent() && share != stemTarget) {

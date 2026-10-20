@@ -25,18 +25,14 @@ import org.junit.jupiter.api.Test;
  * drones' patches appear at their point.
  */
 class DefendTest {
-    private static final LevelScript.Secondary HALF = LevelScript.Secondary.integrity(0.5, 95, "INTEGRITY");
+    private static final Secondary HALF = Secondary.integrity(0.5, 95, "INTEGRITY");
 
-    private static LevelScript.RadioCue below(String share) {
-        return new LevelScript.RadioCue(
-                LevelScript.CueTrigger.ALLY_BELOW, 0, share, "nansen", "Below " + share, false, "grim");
+    private static RadioCue below(String share) {
+        return new RadioCue(CueTrigger.ALLY_BELOW, 0, share, "nansen", "Below " + share, false, "grim");
     }
 
     private static LevelScript level(
-            AllySpec relay,
-            List<LevelScript.RadioCue> radio,
-            LevelScript.Secondary secondary,
-            List<LevelScript.PlacedPickup> placed) {
+            AllySpec relay, List<RadioCue> radio, Secondary secondary, List<DropSpec.PlacedPickup> placed) {
         return PartGSpecs.level(
                 PartGSpecs.sections(),
                 List.of(),
@@ -48,7 +44,7 @@ class DefendTest {
     }
 
     private static LevelScript level() {
-        return level(RELAY, List.of(), LevelScript.Secondary.NONE, List.of());
+        return level(RELAY, List.of(), Secondary.NONE, List.of());
     }
 
     /** A relay-aimed bullet arriving at the relay's centre from the right this step (dealing {@code damage}). */
@@ -95,9 +91,9 @@ class DefendTest {
 
     @Test
     void losingTheRelayFailsTheMissionButNotWithTheDebugOption() {
-        List<LevelScript.RadioCue> radio = List.of(new LevelScript.RadioCue(
-                LevelScript.CueTrigger.MISSION_FAILED, 0, "", "okafor", "Nansen is gone.", false, "grim"));
-        Sortie sortie = PartGSpecs.sortie(level(PartGSpecs.relay(10), radio, LevelScript.Secondary.NONE, List.of()));
+        List<RadioCue> radio =
+                List.of(new RadioCue(CueTrigger.MISSION_FAILED, 0, "", "okafor", "Nansen is gone.", false, "grim"));
+        Sortie sortie = PartGSpecs.sortie(level(PartGSpecs.relay(10), radio, Secondary.NONE, List.of()));
         runTo(sortie, 50);
         hitRelay(sortie, 12);
         assertTrue(sortie.primaryFailed());
@@ -106,8 +102,7 @@ class DefendTest {
         assertEquals(1, count(sortie, SimEvents.Type.RADIO));
         assertFalse(sortie.ally(0).alive());
 
-        Sortie debug =
-                PartGSpecs.untouchable(level(PartGSpecs.relay(10), radio, LevelScript.Secondary.NONE, List.of()));
+        Sortie debug = PartGSpecs.untouchable(level(PartGSpecs.relay(10), radio, Secondary.NONE, List.of()));
         runTo(debug, 50);
         hitRelay(debug, 12);
         assertFalse(debug.primaryFailed(), "--invulnerable sees the level to its end");
@@ -117,7 +112,7 @@ class DefendTest {
 
     @Test
     void theAllyBelowCuesFireOncePerShareAndTheIntegritySecondaryFailsAtOnce() {
-        List<LevelScript.RadioCue> radio = List.of(below("0.5"), below("0.25"));
+        List<RadioCue> radio = List.of(below("0.5"), below("0.25"));
         Sortie sortie = PartGSpecs.sortie(level(PartGSpecs.relay(100), radio, HALF, List.of()));
         runTo(sortie, 50);
         hitRelay(sortie, 40);
@@ -140,8 +135,8 @@ class DefendTest {
 
     @Test
     void theSynchronisationCompletesAtItsEndMeetingTheSecondaryAndTheRelayIsSafeAfterIt() {
-        LevelScript.RadioCue met = new LevelScript.RadioCue(
-                LevelScript.CueTrigger.SECONDARY_OBJECTIVE, 0, "", "nansen", "Holding above half.", false, "neutral");
+        RadioCue met =
+                new RadioCue(CueTrigger.SECONDARY_OBJECTIVE, 0, "", "nansen", "Holding above half.", false, "neutral");
         Sortie sortie = PartGSpecs.sortie(level(RELAY, List.of(met), HALF, List.of()));
         runTo(sortie, 39);
         assertEquals(178, sortie.defendSecondsLeft(), 1e-9, "the countdown waits for the start");
@@ -178,7 +173,7 @@ class DefendTest {
 
     @Test
     void aRetryStandsTheRelayUpAgainWithFullIntegrity() {
-        List<LevelScript.RadioCue> radio = List.of(below("0.5"));
+        List<RadioCue> radio = List.of(below("0.5"));
         Sortie sortie = PartGSpecs.sortie(level(PartGSpecs.relay(100), radio, HALF, List.of()));
         runTo(sortie, 50);
         hitRelay(sortie, 60);
@@ -194,8 +189,8 @@ class DefendTest {
 
     @Test
     void theSupplyDronesPatchAppearsAtItsPointAndDriftsAsAnyPickup() {
-        LevelScript.PlacedPickup patch = new LevelScript.PlacedPickup(162, 240, 380, PickupType.ARMOUR_PATCH);
-        Sortie sortie = PartGSpecs.untouchable(level(RELAY, List.of(), LevelScript.Secondary.NONE, List.of(patch)));
+        DropSpec.PlacedPickup patch = new DropSpec.PlacedPickup(162, 240, 380, PickupType.ARMOUR_PATCH);
+        Sortie sortie = PartGSpecs.untouchable(level(RELAY, List.of(), Secondary.NONE, List.of(patch)));
         assertTrue(patch.atPoint());
         runTo(sortie, 161.98);
         assertEquals(0, sortie.pickupCount());
@@ -225,14 +220,13 @@ class DefendTest {
                         List.of(),
                         List.of(below("0.5")),
                         Optional.empty(),
-                        LevelScript.Secondary.NONE,
+                        Secondary.NONE,
                         List.of()),
                 "an ally-below cue needs a defend primary");
         assertThrows(IllegalArgumentException.class, () -> level(RELAY, List.of(below("half")), HALF, List.of()));
         assertThrows(
-                IllegalArgumentException.class,
-                () -> new LevelScript.PlacedPickup(1, 240, 600, PickupType.ARMOUR_PATCH));
-        assertFalse(new LevelScript.PlacedPickup(1, 240, PickupType.ARMOUR_PATCH).atPoint());
+                IllegalArgumentException.class, () -> new DropSpec.PlacedPickup(1, 240, 600, PickupType.ARMOUR_PATCH));
+        assertFalse(new DropSpec.PlacedPickup(1, 240, PickupType.ARMOUR_PATCH).atPoint());
     }
 
     @Test
@@ -249,7 +243,7 @@ class DefendTest {
 
     @Test
     void defendingDoesNotAllocate() {
-        List<LevelScript.RadioCue> radio = List.of(below("0.5"), below("0.25"));
+        List<RadioCue> radio = List.of(below("0.5"), below("0.25"));
         LevelScript level = level(PartGSpecs.relay(100), radio, HALF, List.of());
         long allocated = Allocations.least(() -> PartGSpecs.sortie(level), sortie -> {
             for (int i = 0; i < SimStep.ticks(46); i++) {

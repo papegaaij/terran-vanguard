@@ -142,7 +142,8 @@ final class ConvoyLooks {
             String levelKey,
             Function<String, JsonValue> pivots) {
         this.flash = flash;
-        ships = script.convoy()
+        ships = script.objectives()
+                .convoy()
                 .map(naval -> naval.units().stream()
                         .map(unit -> Ship.of(
                                 sprites,
@@ -156,7 +157,7 @@ final class ConvoyLooks {
                 ? 1
                 : Math.max(1, script.sections().getFirst().speed());
         shipSmoke = sprites.has("ship-smoke") ? sprites.frames("ship-smoke") : null;
-        road = script.road();
+        road = script.ground().road();
         pixel = sprites.pixel;
         String image = level.road()
                 .flatMap(LevelData.Road::texture)
@@ -166,7 +167,8 @@ final class ConvoyLooks {
                 ? sprites.backdrop(image, 1).first()
                 : null;
         // M5 part D: an air escort's units are drawn by ShuttleLooks.
-        String slug = script.escort()
+        String slug = script.objectives()
+                .escort()
                 .filter(escort -> escort.air().isEmpty())
                 .map(escort -> escort.ally().slug())
                 .orElse("");
@@ -176,8 +178,10 @@ final class ConvoyLooks {
         smoke = sprites.explosionSmall;
         fire = sprites.has("engine-flame") ? sprites.frames("engine-flame") : null;
         headings = drawn ? wrecks.size : 1;
-        double most =
-                script.escort().map(escort -> escort.ally().maxHeadingDegrees()).orElse(0.0);
+        double most = script.objectives()
+                .escort()
+                .map(escort -> escort.ally().maxHeadingDegrees())
+                .orElse(0.0);
         step = headings > 1 ? 2 * most / (headings - 1) : 1;
     }
 
@@ -265,7 +269,8 @@ final class ConvoyLooks {
             } else {
                 draw(batch, frame, x, y);
             }
-            if (ally.hpShare() < sortie.script().escort().orElseThrow().ally().smokeBelow()) {
+            if (ally.hpShare()
+                    < sortie.script().objectives().escort().orElseThrow().ally().smokeBelow()) {
                 drawSmoke(batch, x, y + 12, tick + k * 5L);
             }
         }

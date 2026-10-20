@@ -383,6 +383,60 @@ public enum Sfx {
      * small} rung's Ghost Drone entry ({@code EnemyLooks}).
      */
     GHOST_DRONE_DEATH("sfx/ghost-drone-death-r41-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part F: a Revenant Walker's footfall (round 42 a, proposed: a dull heavy stomp, a leg clank and a hydraulic
+     * hiss, 1.0 s), at each foot that comes down.
+     */
+    WALKER_STOMP("sfx/walker-stomp-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a walker's pod hatch opening 0.4 s before its salvo, the tell (round 42 a, proposed: a latch tick, a
+     * pneumatic hiss and a hinge clack, 0.45 s).
+     */
+    WALKER_HATCH("sfx/walker-hatch-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: one homing missile leaving a walker's pod (round 42 a, proposed: an ignition crack and a rocket whoosh
+     * sliding away, 0.8 s).
+     */
+    WALKER_MISSILE("sfx/walker-missile-r42-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part F: the walker's flamer's tell (round 42 a, proposed: a gas hiss rising, 0.7 s). */
+    WALKER_FLAME_TELL("sfx/walker-flame-tell-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: the walker's flame cone burning (round 42 a, proposed: a roaring, flickering flame, a seamless 2.0 s
+     * loop), faded in and out with the burn.
+     */
+    WALKER_FLAME("sfx/walker-flame-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: the Warden Tank's tracks (round 42 a, proposed: a tread grind with track-link ticks, a diesel hum and a
+     * faint turbine whine, a seamless 2.0 s loop): one loop for the nearest tank on screen, panned to it.
+     */
+    TANK_TRACKS("sfx/tank-tracks-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part F: a Warden Tank's turret slewing onto the ship (round 42 a, proposed: a servo whine, 0.6 s). */
+    TANK_TURRET("sfx/tank-turret-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a Warden Tank's burst (round 42 a, proposed: a heavy autocannon, four rounds, 0.75 s), once at the
+     * first shot of each burst instead of the shots' reports.
+     */
+    TANK_BURST("sfx/tank-burst-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a Warden Tank's death (round 42 a, proposed: a hull explosion, a metal clang, debris and sparks, 1.8
+     * s): the {@code medium} rung's Warden Tank entry ({@code EnemyLooks}).
+     */
+    TANK_DEATH("sfx/tank-death-r42-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M7 part F: a furnace vent's tell (round 42 a, proposed: a rising gas roar over a deepening rumble, 1.05 s), as a
+     * row's grates start to glow; a ripple's grates share one.
+     */
+    VENT_TELL("sfx/vent-tell-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a furnace vent's burst (round 42 a, proposed: a fire blast with a 40 ms attack, no pop, roaring out
+     * and dying, 1.5 s), as its flame column stands up.
+     */
+    VENT_BURST("sfx/vent-burst-r42-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a conveyor belt's rumble (round 42 a, proposed: a roller rumble, plate seams knocking and a motor
+     * hum, a seamless 2.4 s loop): one quiet loop while a belt runs on the screen, under the {@code mars-foundry} bed.
+     */
+    BELT_RUMBLE("sfx/belt-rumble-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /** M7 part B: a Burrower's 0.4 s dive, the grain slide (round 38 b, the user's pick of 2026-10-14). */
     BURROW_DIVE("sfx/burrow-dive-r38-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M5 part H: a burst's growths growing in, a stretching creak set with a dull knock at 1.45 s (round 36 a, one proposal). */
@@ -499,6 +553,11 @@ public enum Sfx {
      * seamless 16 s loop): Level 18 in the storm, swelling as the view closes in ({@code StormLooks#swellDb}).
      */
     AMBIENCE_MARS_STORM("sfx/dust-storm-bed-r36-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M7 part F: the Tharsis foundry (round 42 a, proposed: a conveyor rumble, a far furnace roar, a slow distant
+     * hammer and the plateau wind, a seamless 16 s loop): Level 19 from its start.
+     */
+    AMBIENCE_MARS_FOUNDRY("sfx/mars-foundry-r42-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -590,6 +649,7 @@ public enum Sfx {
             case "mars-canyon" -> AMBIENCE_MARS_CANYON;
             case "mars-colony" -> AMBIENCE_MARS_COLONY;
             case "mars-storm" -> AMBIENCE_MARS_STORM;
+            case "mars-foundry" -> AMBIENCE_MARS_FOUNDRY;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

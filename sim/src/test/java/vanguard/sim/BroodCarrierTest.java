@@ -87,7 +87,7 @@ class BroodCarrierTest {
         final Recorder actions = new Recorder();
         int tick;
 
-        Rig(LevelScript.SetPieceSpec spec) {
+        Rig(SetPieceSpec spec) {
             piece = new SetPiece(spec);
         }
 

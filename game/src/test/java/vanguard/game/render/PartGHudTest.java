@@ -16,6 +16,7 @@ import vanguard.content.Difficulty;
 import vanguard.content.SimSpecs;
 import vanguard.game.ui.Fonts;
 import vanguard.sim.LevelScript;
+import vanguard.sim.ObjectiveSpec;
 import vanguard.sim.Sortie;
 
 /**
@@ -46,7 +47,7 @@ class PartGHudTest {
     @Test
     void theCountdownRunsFromTheSynchronisationsLengthToZero() {
         LevelScript script = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM);
-        LevelScript.Defend defend = script.defend().orElseThrow();
+        ObjectiveSpec.Defend defend = script.objectives().defend().orElseThrow();
         assertEquals(178, defend.duration(), 1e-9, "t=40 to the sync's end at t=218");
         assertEquals("2:58", MissionPanel.countdown(defend.duration()));
         assertEquals("1:00", MissionPanel.countdown(60));
@@ -80,7 +81,8 @@ class PartGHudTest {
 
     @Test
     void theIntegrityLineFitsItsWell() {
-        var secondary = SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).secondary();
+        var secondary =
+                SimSpecs.level(CONTENT, KEY, Difficulty.MEDIUM).objectives().secondary();
         assertEquals(0.5, secondary.integrity(), 1e-9);
         assertEquals("INTEGRITY", secondary.label().toUpperCase(java.util.Locale.ROOT));
         assertEquals("> 50 %", MissionPanel.integrityStatus(false, false, 0.5), "drawn as ≥ 50 %");

@@ -54,6 +54,31 @@ class SpriteUseTest {
         assertTrue(atlases.get("skitter").size() > 1, atlases.toString());
     }
 
+    /**
+     * M7 part F: Level 19's foundry looks are claimed by its data: the furnace vents' grates and fire by its {@code
+     * vents}, the gantry and the nests' cradles by its up-facing nests ({@code arc: up}), the shift office by the
+     * payroll safe's look, the ingots and the crews' rovers by its belts.
+     */
+    @Test
+    void level19sFoundryClaimsItsProps() {
+        List<String> props = List.of(
+                "furnace-vent",
+                "furnace-vent-glow",
+                "furnace-vent-flame",
+                "furnace-vent-smoke",
+                "gantry",
+                "gantry-cradle",
+                "shift-office",
+                "ingot-stack-a",
+                "ingot-pallet",
+                "crew-rover",
+                "crew-rover-lights");
+        Map<String, Set<String>> atlases = SpriteUse.atlases(content, props);
+        for (String prop : props) {
+            assertEquals(Set.of("level-19"), atlases.get(prop), prop);
+        }
+    }
+
     @Test
     void aLevelsTowsClaimTheLifeboatSprites() {
         Map<String, Set<String>> atlases =

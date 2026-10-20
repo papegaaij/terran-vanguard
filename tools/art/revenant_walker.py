@@ -15,8 +15,10 @@ What changed from the concept (to the README's spec, pending the user's review):
   the hull; a destroyed pod leaves a torn stub;
 * the flamer is the concept's turret, 32 aim headings (the game turns it: rest against the heading,
   the phase-2 swivel, the phase-3 sweep).
-* the topple and wreck frames (280 px) are rendered at 2x instead of the quality bar's 4x (render
-  time: 56 frames at 4x took longer than the step had; pending the user's review).
+* step ART-F3 fixes (round 42 open items): the pod's open hatch shows its six missile cells lit red
+  (raised out of the lid recesses, a hot red material of their own: the 0.4 s tell reads at play
+  size), and the topple and wreck frames are rendered at the quality bar's 4x like the rest (ART-F1
+  had them at 2x).
 
 Headings as tools/art/README.md: heading k turns k x 360/n degrees clockwise from straight down
 (8 body headings: 2 = facing left, 4 = up, 6 = right); every heading is its own render under the fixed
@@ -104,7 +106,8 @@ PLATE_AT = r36.A_PLATE                     # the serial plate on the front deck
 VENTS_AT = (0.0, -0.40)
 VENT_X, VENT_HALF = 0.125, (0.095, 0.15)
 CHIN = (0.0, 1.02)
-NOZZLE = (0.0, 0.54)                       # in the flamer's own frame
+NOZZLE = (0.0, 0.54)
+W_HOT = W_SCORCH + 2                       # mats() appends it after the concept's 11 slots                       # in the flamer's own frame
 FRONT_PLATE = [(0.0, 0.76), (0.0, 0.94), (0.5, 0.8), (0.67, 0.2), (0.57, 0.12), (0.44, 0.64)]
 
 
@@ -122,6 +125,8 @@ def screen(local, k, n=HEADINGS):
 
 def mats(vent=0.15, cells=0.0, pilot=0.3, wreck=False, overheat=False):
     m = r36.walker_mats(vent=vent, cells=cells, pilot=pilot, wreck=wreck, plate_c=PLATE_AT)
+    m.append(Material((0.12, 0.02, 0.02), emission=(2.6, 0.5, 0.3),     # W_HOT: a lit missile cell
+                      emission_pattern=lambda p, n: 0.75 + 0.25 * np.clip(1.4 - 9 * np.abs(((p[:, 1] * 13) % 1.0) - 0.5), 0, 1)))
     if overheat:
         m[W_VENT] = Material((0.1, 0.08, 0.06), emission=(1.6, 1.15, 0.7),
                              emission_pattern=lambda p, n: 0.55 + 0.45 * (np.sin(p[:, 0] * 60) > 0))
@@ -239,8 +244,8 @@ def pod_scene(hatch=0):
                  (sd_box(p, (0, -0.3, 1.45), (0.17, 0.04, 0.02), 0.01), W_LIGHT)]
         for cx in (-0.1, 0.1):
             for cy in (-0.16, 0.04, 0.24):
-                if hatch:
-                    items += [(sd_box(p, (cx, cy, 1.41), (0.065, 0.075, 0.03), 0.01), W_SENSOR),
+                if hatch:                    # lid flipped up at the side, the cell's nose lit (the tell)
+                    items += [(sd_box(p, (cx, cy, 1.43), (0.072, 0.082, 0.04), 0.012), W_HOT),
                               (sd_box(p, (cx + np.sign(cx) * 0.09, cy, 1.5), (0.012, 0.075, 0.05), 0.005), W_LIGHT)]
                 else:
                     items.append((sd_box(p, (cx, cy, 1.43), (0.07, 0.08, 0.02), 0.01), W_CELL))
@@ -272,8 +277,11 @@ def topple_scene(u, wreck=False):
 
 # =========================================================================== render jobs
 
+REV = {"pod": 2, "topple": 2, "wreck": 2}  # ART-F3: the lit hatch, the death frames at 4x
+
+
 def _job_key(job):
-    return hashlib.sha1(repr(job).encode()).hexdigest()[:20]
+    return hashlib.sha1((repr(job) + f"/{REV.get(job[0], 1)}").encode()).hexdigest()[:20]
 
 
 def model_for(job):
@@ -331,11 +339,7 @@ def render_job(job):
     rot = model_rotation(h)
     scene = (lambda p, s=scene0, r=rot: s(sdf.rotate_z(p, r) + sdf.vec(ox, oy, 0)))
     scale = 25.3 if job[0] == "missile" else S
-    if job[0] in ("topple", "wreck"):        # 2x: the 280 px death frames (time; pending review)
-        factor = 2
-        hi = sdf.render(scene, model_space_materials(m, rot), (size * factor, size * factor), size / scale)
-    else:
-        hi, factor = artkit.render_hi(scene, model_space_materials(m, rot), (size, size), size / scale)
+    hi, factor = artkit.render_hi(scene, model_space_materials(m, rot), (size, size), size / scale)
     img = artkit.native(hi, factor)
     CACHE.mkdir(parents=True, exist_ok=True)
     img.save(path)

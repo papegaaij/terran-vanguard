@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.BossSpec;
 import vanguard.sim.Layer;
-import vanguard.sim.LevelScript;
 import vanguard.sim.PlayField;
+import vanguard.sim.SetPieceSpec;
 
 /**
  * The boss keys of M4 part G read from data and mapped by {@link SimSpecs#boss}: a minimal Brood
@@ -120,13 +120,13 @@ class BroodCarrierDataTest {
         return ContentLoader.load(files);
     }
 
-    private static LevelScript.SetPieceSpec carrier(Difficulty difficulty) {
+    private static SetPieceSpec carrier(Difficulty difficulty) {
         return SimSpecs.boss(load(CARRIER), new LevelData.BossPlacement("test-carrier", 100, 240, 4), difficulty);
     }
 
     @Test
     void theBossScriptMapsOntoTheEngine() {
-        LevelScript.SetPieceSpec spec = carrier(Difficulty.MEDIUM);
+        SetPieceSpec spec = carrier(Difficulty.MEDIUM);
         BossSpec boss = spec.boss().orElseThrow();
         assertEquals(Layer.HIGH_AIR, boss.layer());
         assertTrue(boss.engagesOnArrival());

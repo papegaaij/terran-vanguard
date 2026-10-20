@@ -96,7 +96,7 @@ final class Launches {
         double[] partX = new double[parts];
         double[] partY = new double[parts];
         for (int p = 0; p < parts; p++) {
-            LevelScript.PartSpec part = piece.spec().parts().get(p);
+            PartSpec part = piece.spec().parts().get(p);
             BossSpec.Offset offset = boss.poses().isEmpty()
                     ? new BossSpec.Offset(part.dx(), part.dy())
                     : boss.poses().getFirst().offsets().get(p);

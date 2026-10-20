@@ -12,7 +12,7 @@ import vanguard.sim.Chain;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Hitbox;
-import vanguard.sim.LevelScript;
+import vanguard.sim.PartSpec;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
@@ -214,7 +214,7 @@ public final class TargetingOverlay {
         double scale = piece.boss().isPresent() ? piece.scale() : 1;
         batch.setColor(colour.set(LIME).mul(1, 1, 1, pulse));
         for (int p = 0; p < piece.partCount(); p++) {
-            LevelScript.PartSpec part = piece.spec().parts().get(p);
+            PartSpec part = piece.spec().parts().get(p);
             if (part.multiplier() == 1 || piece.partWrecked(p) || piece.partArmoured(p) || piece.partShielded(p)) {
                 continue;
             }

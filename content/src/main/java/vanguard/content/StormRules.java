@@ -30,7 +30,7 @@ final class StormRules {
      */
     static EnemyGun gun(
             Content content, EnemyData enemy, EnemyData.Attack attack, Difficulty difficulty, EnemyGun gun) {
-        Optional<EnemyData.AttackChange> change = attack.name().flatMap(name -> SimSpecs.hook(enemy, difficulty)
+        Optional<EnemyData.AttackChange> change = attack.name().flatMap(name -> UnitRules.hook(enemy, difficulty)
                 .flatMap(EnemyData.Hook::attacks)
                 .map(changes -> changes.get(name)));
         if (attack.pattern().equals(SPIRAL)) {
@@ -103,7 +103,7 @@ final class StormRules {
         Optional<EnemyData.LaneStrafe> strafe = enemy.movement().laneStrafe();
         if (strafe.isPresent()) {
             EnemyData.LaneStrafe lanes = strafe.get();
-            boolean secondPass = SimSpecs.hook(enemy, difficulty)
+            boolean secondPass = UnitRules.hook(enemy, difficulty)
                     .flatMap(EnemyData.Hook::secondPass)
                     .orElse(false);
             out = out.withLaneStrafe(Optional.of(new EnemySpec.LaneStrafe(

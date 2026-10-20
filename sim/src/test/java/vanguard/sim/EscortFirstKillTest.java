@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test;
  * once; the flag goes into the state hash and the boss checkpoint.
  */
 class EscortFirstKillTest {
-    private static final LevelScript.RadioCue SPLASH = new LevelScript.RadioCue(
-            LevelScript.CueTrigger.ESCORT_FIRST_KILL, 0, "", "Rook", "Splash one.", false, "neutral", "Rook");
-    private static final LevelScript.RadioCue PLAYER_FIRST = new LevelScript.RadioCue(
-            LevelScript.CueTrigger.FIRST_KILL, 0, "husk", "Okafor", "Good kill.", false, "neutral", "Okafor");
+    private static final RadioCue SPLASH =
+            new RadioCue(CueTrigger.ESCORT_FIRST_KILL, 0, "", "Rook", "Splash one.", false, "neutral", "Rook");
+    private static final RadioCue PLAYER_FIRST =
+            new RadioCue(CueTrigger.FIRST_KILL, 0, "husk", "Okafor", "Good kill.", false, "neutral", "Okafor");
 
     private static final EnemySpec HUSK = new EnemySpec(
             "husk",
@@ -39,27 +39,21 @@ class EscortFirstKillTest {
             false);
 
     /** Ground units in a column at {@code x}, from {@code t} every half second. */
-    private static List<LevelScript.GroundUnit> column(double x, double t, int count) {
-        List<LevelScript.GroundUnit> units = new ArrayList<>();
+    private static List<GroundUnit> column(double x, double t, int count) {
+        List<GroundUnit> units = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            units.add(new LevelScript.GroundUnit(t + 0.5 * i, x, HUSK, -1));
+            units.add(new GroundUnit(t + 0.5 * i, x, HUSK, -1));
         }
         return units;
     }
 
-    private static LevelScript level(List<LevelScript.GroundUnit> units) {
-        return new LevelScript(
-                8,
-                2,
-                0,
-                List.of(new LevelScript.Section(30, 130)),
-                List.of(),
-                List.of(),
-                units,
-                0,
-                List.of(SPLASH, PLAYER_FIRST),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static LevelScript level(List<GroundUnit> units) {
+        return LevelScript.builder(8, 2)
+                .sections(List.of(new Section(30, 130)))
+                .groundUnits(units)
+                .radio(List.of(SPLASH, PLAYER_FIRST))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     private static Sortie withRook(LevelScript level) {
@@ -142,24 +136,14 @@ class EscortFirstKillTest {
 
     @Test
     void theBossCheckpointKeepsIt() {
-        LevelScript.SetPieceSpec carrier = TestSpecs.carrier(false, 2);
-        LevelScript level = new LevelScript(
-                8,
-                2,
-                0,
-                List.of(
-                        new LevelScript.Section(2, 130),
-                        new LevelScript.Section(200, 20, true),
-                        new LevelScript.Section(210, 130)),
-                List.of(),
-                List.of(),
-                List.of(new LevelScript.GroundUnit(0.05, Ship.START_X - 64, HUSK, -1)),
-                0,
-                List.of(SPLASH),
-                new LevelScript.Secondary(0.8, 50),
-                List.of(),
-                List.of(),
-                List.of(carrier));
+        SetPieceSpec carrier = TestSpecs.carrier(false, 2);
+        LevelScript level = LevelScript.builder(8, 2)
+                .sections(List.of(new Section(2, 130), new Section(200, 20, true), new Section(210, 130)))
+                .groundUnits(List.of(new GroundUnit(0.05, Ship.START_X - 64, HUSK, -1)))
+                .radio(List.of(SPLASH))
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .setPieces(List.of(carrier))
+                .build();
         Sortie sortie = withRook(level);
         int started = 0;
         while (!sortie.bossCheckpoint()) {

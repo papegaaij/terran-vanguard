@@ -42,19 +42,13 @@ class AirstrikeTest {
                 true);
     }
 
-    private static LevelScript level(List<LevelScript.GroundUnit> units, List<LevelScript.GroundObjectSpec> ground) {
-        return new LevelScript(
-                4,
-                1,
-                0,
-                List.of(new LevelScript.Section(40, 130)),
-                List.of(),
-                ground,
-                units,
-                0,
-                List.of(),
-                new LevelScript.Secondary(0.8, 50),
-                List.of());
+    private static LevelScript level(List<GroundUnit> units, List<GroundObjectSpec> ground) {
+        return LevelScript.builder(4, 1)
+                .sections(List.of(new Section(40, 130)))
+                .groundObjects(ground)
+                .groundUnits(units)
+                .objectives(ObjectiveSpec.NONE.withSecondary(new Secondary(0.8, 50)))
+                .build();
     }
 
     private static Sortie sortie(LevelScript level, int charges) {
@@ -68,10 +62,10 @@ class AirstrikeTest {
 
     /** One target per layer, 100 px apart, all on the field from 2.4 s and the lowest until 4.3 s. */
     private static LevelScript layers() {
-        List<LevelScript.GroundUnit> units = new ArrayList<>();
+        List<GroundUnit> units = new ArrayList<>();
         Layer[] layers = {Layer.GROUND, Layer.LOW_AIR, Layer.AIR, Layer.HIGH_AIR};
         for (int k = 0; k < layers.length; k++) {
-            units.add(new LevelScript.GroundUnit(k * 100 / 130.0, Ship.START_X, target(layers[k], 1000, 10), -1));
+            units.add(new GroundUnit(k * 100 / 130.0, Ship.START_X, target(layers[k], 1000, 10), -1));
         }
         return level(units, List.of());
     }
@@ -126,8 +120,8 @@ class AirstrikeTest {
         var sortie = sortie(
                 level(
                         List.of(
-                                new LevelScript.GroundUnit(3, Ship.START_X, target(Layer.GROUND, 1000, 10), -1),
-                                new LevelScript.GroundUnit(2.6, Ship.START_X, target(Layer.AIR, 1000, 10), -1)),
+                                new GroundUnit(3, Ship.START_X, target(Layer.GROUND, 1000, 10), -1),
+                                new GroundUnit(2.6, Ship.START_X, target(Layer.AIR, 1000, 10), -1)),
                         List.of()),
                 2);
         callAt(sortie, 2.4);
@@ -236,8 +230,8 @@ class AirstrikeTest {
         var sortie = sortie(
                 level(
                         List.of(
-                                new LevelScript.GroundUnit(0, Ship.START_X, target(Layer.GROUND, 50, 12), -1),
-                                new LevelScript.GroundUnit(0.4, Ship.START_X, target(Layer.LOW_AIR, 50, 12), -1)),
+                                new GroundUnit(0, Ship.START_X, target(Layer.GROUND, 50, 12), -1),
+                                new GroundUnit(0.4, Ship.START_X, target(Layer.LOW_AIR, 50, 12), -1)),
                         List.of()),
                 1);
         callAt(sortie, 2);
@@ -251,8 +245,8 @@ class AirstrikeTest {
 
     @Test
     void hardenedGroundObjectsTakeTheBlasts() {
-        var bunker = new LevelScript.GroundObjectSpec(
-                0, Ship.START_X, new Hitbox(120, 40), 250, 30, Optional.empty(), 0, 0, "", true);
+        var bunker =
+                new GroundObjectSpec(0, Ship.START_X, new Hitbox(120, 40), 250, 30, Optional.empty(), 0, 0, "", true);
         var sortie = sortie(level(List.of(), List.of(bunker)), 1);
         callAt(sortie, 2);
         runTo(sortie, 4, Command.NONE);
