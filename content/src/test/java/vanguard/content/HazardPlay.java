@@ -68,17 +68,15 @@ final class HazardPlay {
         for (double ahead = 0; ahead <= ROCK_AHEAD + 1e-9; ahead += 0.1) {
             double at = scroll + speed * ahead;
             for (double dy = -HULL_HALF_HEIGHT; dy <= HULL_HALF_HEIGHT; dy += HULL_HALF_HEIGHT) {
-                double[] span = channelSpan(terrain, at, shipY + dy, channel);
-                lo = Math.max(lo, span[0]);
-                hi = Math.min(hi, span[1]);
+                lo = Math.max(lo, channelLeft(terrain, at, shipY + dy, channel));
+                hi = Math.min(hi, channelRight(terrain, at, shipY + dy, channel));
             }
         }
         double margin = HULL_HALF + ROCK_MARGIN;
         if (hi - lo < 2 * margin) {
             // The rock moves faster than the look-ahead allows: the span at its height now.
-            double[] span = channelSpan(terrain, scroll, shipY, channel);
-            lo = span[0];
-            hi = span[1];
+            lo = channelLeft(terrain, scroll, shipY, channel);
+            hi = channelRight(terrain, scroll, shipY, channel);
             margin = Math.min(margin, (hi - lo) / 2);
         }
         double left = lo + margin;
@@ -100,19 +98,43 @@ final class HazardPlay {
     }
 
     /**
-     * M7 part C: the flyable span {@code [left, right]} at play-field height {@code y} of the channel the pilot takes:
-     * the leftmost or the rightmost one where rock splits the canyon; the field's edges where there is no wall.
+     * M7 part C: the left edge of the flyable span at play-field height {@code y} of the channel the pilot takes (see
+     * {@link #channelX}); the wall's line, or the field's edge, where there is no rock split. Each edge on its own
+     * rather than a {@code double[]} pair: the allocation tests measure the autopilot's steps too, and such an array
+     * only vanishes once C2 has inlined this; the 3-core macOS runner measured C1 code, 21 arrays a step (CI,
+     * 2026-10-20).
      */
-    private static double[] channelSpan(Terrain terrain, double scroll, double y, Autopilot.Channel channel) {
-        double row = Terrain.row(scroll, y);
-        double left = terrain.leftAt(row);
-        double right = terrain.rightAt(row);
-        left = Double.isNaN(left) ? 0 : left;
-        right = Double.isNaN(right) ? PlayField.WIDTH : right;
-        double x = channel == Autopilot.Channel.LEFT ? left + 0.5 : right - 0.5;
-        double from = terrain.spanLeft(scroll, y, x);
-        double to = terrain.spanRight(scroll, y, x);
-        return Double.isNaN(from) ? new double[] {left, right} : new double[] {from, to};
+    private static double channelLeft(Terrain terrain, double scroll, double y, Autopilot.Channel channel) {
+        double from = terrain.spanLeft(scroll, y, channelX(terrain, scroll, y, channel));
+        return Double.isNaN(from) ? wallLeft(terrain, scroll, y) : from;
+    }
+
+    /** M7 part C: the right edge of the span {@link #channelLeft} gives the left edge of. */
+    private static double channelRight(Terrain terrain, double scroll, double y, Autopilot.Channel channel) {
+        double to = terrain.spanRight(scroll, y, channelX(terrain, scroll, y, channel));
+        return Double.isNaN(to) ? wallRight(terrain, scroll, y) : to;
+    }
+
+    /**
+     * M7 part C: an x in the channel the pilot takes at play-field height {@code y}: the leftmost or the rightmost
+     * one where rock splits the canyon.
+     */
+    private static double channelX(Terrain terrain, double scroll, double y, Autopilot.Channel channel) {
+        return channel == Autopilot.Channel.LEFT
+                ? wallLeft(terrain, scroll, y) + 0.5
+                : wallRight(terrain, scroll, y) - 0.5;
+    }
+
+    /** M7 part C: the left wall's line at play-field height {@code y}; the field's left edge where there is none. */
+    private static double wallLeft(Terrain terrain, double scroll, double y) {
+        double left = terrain.leftAt(Terrain.row(scroll, y));
+        return Double.isNaN(left) ? 0 : left;
+    }
+
+    /** M7 part C: the right wall's line at play-field height {@code y}; the field's right edge where there is none. */
+    private static double wallRight(Terrain terrain, double scroll, double y) {
+        double right = terrain.rightAt(Terrain.row(scroll, y));
+        return Double.isNaN(right) ? PlayField.WIDTH : right;
     }
 
     /** M7 part F: a furnace vent's grate counts as hot from this share of its tell on (it burns within ≈ 0.6 s). */
