@@ -35,8 +35,8 @@ marked tables; the outro joins it in part H.
 | [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | in-progress | chosen |
 | [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | in-progress | chosen |
 | [level-19-foundry-of-tharsis](level-19-foundry-of-tharsis/README.md) | Tharsis foundry: grey Warden Tanks on conveyors, furnace vents, turrets that fire after you pass; mid-boss Revenant Walker and the hint-2 wreck crawl | approved | in-progress | final |
-| [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | in-progress | proposed |
-| [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | not-started | none |
+| [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | in-progress | final |
+| [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | in-progress | proposed |
 
 ## Design
 
@@ -137,29 +137,34 @@ The title card and the pages live in the act's [data.yaml](data.yaml) (`levels`,
 page 1). It carries the beat the L21 draft hands over: the Vrell leave Mars, and Varga tracks their
 fleet to Europa. Level 21's closing radio already has the Choir's words, Varga's "*that was not
 singing*" and Okafor's "*Log everything*", so the outro does not repeat them; page 3 only answers
-the Choir's "*we are going*". Texts (approved in round 36):
+the Choir's "*we are going*". Texts (approved in round 36); the pages live in the act's [data.yaml](data.yaml)
+(`outro`, M7 part H, step PH2) and are rendered here:
 
+<!-- data: act-outro-pages -->
 | Page | Speaker | Image |
 |---|---|---|
 | 1 | Commander Okafor (grim) | `act-3-outro-hellas`: the Hellas basin at dawn, the Colossus's collapsed crater, the last spore trails climbing out of the frame |
 | 2 | Commander Okafor | `act-3-outro-domes`: Ares Landing's domes at night with every pane lit, colonists on the ring road looking up |
 | 3 | Dr. Varga (grim) | `act-3-outro-europa`: Varga's tracking plot: the Vrell fleet's courses off Mars bending toward Jupiter and converging on Europa; in a corner of her screen a minimised window with the walker's filed plate (the quiet thread, unexplained) |
 | 4 | Commander Okafor (fierce) | `act-3-outro-aegis`: Aegis Wing on Ares Landing's spaceport apron, ground crews refitting the Stormhawks, Jupiter a bright point in the dusk sky |
+<!-- /data -->
 
+<!-- data: act-outro -->
 > **Commander Okafor:** "The Colossus is dead. Within a day the Vrell lifted off from every site
-> on Mars: the basin, the plains, the foundry. Ares Landing opened its shelters this morning, for
-> the first time in six weeks."
+> on Mars: the basin, the plains, the foundry. Ares Landing opened its shelters this morning,
+> for the first time in six weeks."
 >
-> **Commander Okafor:** "The colonists have not forgiven Earth for coming late, and they are right
-> not to. But last night every dome in Ares Landing burned its lights for Aegis Wing. Take that
-> with you."
+> **Commander Okafor:** "The colonists have not forgiven Earth for coming late, and they are
+> right not to. But last night every dome in Ares Landing burned its lights for Aegis Wing. Take
+> that with you."
 >
-> **Dr. Varga:** "I tracked their fleet off Mars. It is not going home. Every course bends toward
-> Jupiter and ends at one moon: Europa. It told us '*we are going*'. Now we know where."
+> **Dr. Varga:** "I tracked their fleet off Mars. It is not going home. Every course bends
+> toward Jupiter and ends at one moon: Europa. It told us '*we are going*'. Now we know where."
 >
-> **Commander Okafor:** "Europa means Thera Deep and Conamara Station, and Conamara reports tremors
-> under the ice. We refit, and we follow them. Aegis Wing leaves Mars in four days. Aegis Actual
-> out."
+> **Commander Okafor:** "Europa means Thera Deep and Conamara Station, and Conamara reports
+> tremors under the ice. We refit, and we follow them. Aegis Wing leaves Mars in four days.
+> Aegis Actual out."
+<!-- /data -->
 
 The outro sets up [Act 4](../act-4-deep-water/README.md) (Conamara Station's tremors, L22) without
 pre-empting its intro. It keeps the Helix thread where Act 3 leaves it: Okafor says nothing about
@@ -384,9 +389,9 @@ ART-B, as Act 2's); the intro's four images are on the
 
 - [ ] All 7 levels promoted to level documents (done 2026-10-12, approved in round 36) and
       implemented (M7 parts B–H).
-- [ ] Act data file: `levels: [15, 21]`, the title card, the four intro pages and the four outro
+- [x] Act data file: `levels: [15, 21]`, the title card, the four intro pages and the four outro
       pages with their images and expressions, rendered into *Act intro and outro* as marked
-      tables (part B for the intro: done in step B2; part H for the outro).
+      tables (part B for the intro: done in step B2; part H for the outro: done in step PH2, with `next_act` for the release's end).
 - [ ] The title card's still (`tools/art/act_stills.py act-3` from Level 15's backdrop) and lettering;
       the eight briefing images (`tools/art/briefing_images.py`). Part B: the still, the lettering and the
       intro's four images (step ART-B, round 38, pending the user's review); the outro's four in part H.
@@ -457,3 +462,6 @@ ART-B, as Act 2's); the intro's four images are on the
   spec wins), C2 (a fork wave flies the widest channel) and C3 (flyer shadows on the walls) accepted; R.4: the
   level's hint changed, not the economy: no beam promised at Level 16, its traits `forward`, `piercing` (the
   balance plan still buys the Ion Beam at Level 18). The walls' look is being redone (R.1, for round 40).
+- 2026-10-20 (step PH2, M7 part H): the outro's four pages in the act's data (rendered above, the approved text
+  unchanged) and `next_act: {act: ACT IV, name: DEEP WATER, setting: EUROPA}` for the release's end (H.7d: "ACTS I-III
+  COMPLETE", "ACT IV - DEEP WATER. EUROPA. COMING SOON."; the hangar before L22 "ACT IV - DEEP WATER: COMING SOON").

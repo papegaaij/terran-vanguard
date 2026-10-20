@@ -79,14 +79,14 @@ class Level20Test {
     /**
      * The two pursuits per difficulty: the entry and the refills by the formation lever (8 + 2, 10 + 3, 12 + 4), eight
      * refills before the first break-off at t=108 and three before the second at t=163, the Mote Swarm's lunge cadence
-     * and tell by its hooks (easy 8 s and 1.2 s, medium 6 s and 0.8 s, hard 4.5 s), the band and the lag its
+     * and tell by its hooks (easy 5.5 s and 1.2 s, medium 4 s and 0.8 s, hard 3 s: round 43 Q.1), the band and the lag its
      * defaults.
      */
     @Test
     void thePursuitsMapPerDifficulty() {
         int[] entry = {8, 10, 12};
         int[] refill = {2, 3, 4};
-        double[] every = {8, 6, 4.5};
+        double[] every = {5.5, 4, 3};
         double[] tell = {1.2, 0.8, 0.8};
         for (Difficulty difficulty : Difficulty.values()) {
             List<WaveSpec> pursuits = SimSpecs.level(content, LEVEL, difficulty).waves().stream()
@@ -104,7 +104,7 @@ class Level20Test {
                 assertEquals(tell[d], pursuit.tellSeconds(), difficulty + " tell");
                 assertEquals(50, pursuit.bandTop());
                 assertEquals(150, pursuit.bandBottom());
-                assertEquals(90, pursuit.lagSpeed());
+                assertEquals(30, pursuit.lagSpeed(), "round 43 Q.1");
             }
             assertEquals(
                     List.of(108.0, 163.0),

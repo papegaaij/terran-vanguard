@@ -2,7 +2,7 @@
 title: Rear-guard Drone Bay
 design: review
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [.., ../../wingmen, ../light-drone-bay, ../../generator, ../../../systems/economy, ../../../campaign/act-3-red-dust/level-20-retreat-from-hellas]
 updated: 2026-10-20
 ---
@@ -92,11 +92,11 @@ drone's disc with a forked twin gun and blue fins, 16 gun headings: the trail fi
 
 | File | What | Status |
 |---|---|---|
-| [concept/rear-guard-drone-final-r43-a.png](concept/rear-guard-drone-final-r43-a.png) | Production review: the rear-guard drone (16 gun headings), the rear-docked bay pod on every bank frame, the pair trailing, firing back, blocking, one breaking and rebuilt (sheet) | proposed |
-| [concept/rear-guard-drone-final-r43-a.gif](concept/rear-guard-drone-final-r43-a.gif) | The same in motion: the pair trailing 40 px behind with the 0.15 s lag, firing back, blocking bullets from behind, one breaking and rebuilt at its dock (motion) | proposed |
-| [concept/rear-guard-icon-final-r43-a.png](concept/rear-guard-icon-final-r43-a.png) | The bay's hangar icon, small and large (sheet) | proposed |
-| [concept/rear-guard-drone-testfire-r43-a.mp4](concept/rear-guard-drone-testfire-r43-a.mp4) | The hangar shop before Level 20 (a test save, 9 000 CR), L WING, the list row "REAR-GUARD BAY" (NEW, 2 400) selected, the SELECTED name "REAR-GUARD DRONE BAY L1" in full: its test-fire box at L1, the drone trailing the ship and firing back at the dummies as they pass behind. Silent. 12 s | proposed (round 43) |
-| [concept/rear-guard-drone-testfire-r43-a.png](concept/rear-guard-drone-testfire-r43-a.png) | Six test-fire frames at 2× + the shop screen at 1:1 | proposed (round 43) |
+| [concept/rear-guard-drone-final-r43-a.png](concept/rear-guard-drone-final-r43-a.png) | Production review: the rear-guard drone (16 gun headings), the rear-docked bay pod on every bank frame, the pair trailing, firing back, blocking, one breaking and rebuilt (sheet) | chosen (round 43: approved as final) |
+| [concept/rear-guard-drone-final-r43-a.gif](concept/rear-guard-drone-final-r43-a.gif) | The same in motion: the pair trailing 40 px behind with the 0.15 s lag, firing back, blocking bullets from behind, one breaking and rebuilt at its dock (motion) | chosen (round 43: approved as final) |
+| [concept/rear-guard-icon-final-r43-a.png](concept/rear-guard-icon-final-r43-a.png) | The bay's hangar icon, small and large (sheet) | chosen (round 43: approved as final) |
+| [concept/rear-guard-drone-testfire-r43-a.mp4](concept/rear-guard-drone-testfire-r43-a.mp4) | The hangar shop before Level 20 (a test save, 9 000 CR), L WING, the list row "REAR-GUARD BAY" (NEW, 2 400) selected, the SELECTED name "REAR-GUARD DRONE BAY L1" in full: its test-fire box at L1, the drone trailing the ship and firing back at the dummies as they pass behind. Silent. 12 s | chosen (round 43: accepted) |
+| [concept/rear-guard-drone-testfire-r43-a.png](concept/rear-guard-drone-testfire-r43-a.png) | Six test-fire frames at 2× + the shop screen at 1:1 | chosen (round 43: accepted) |
 
 ## Implementation
 
@@ -127,3 +127,7 @@ drone's disc with a forked twin gun and blue fins, 16 gun headings: the trail fi
 - 2026-10-20 (M7 part G, step G4): the trail station mapped; the simulation flies the bay
   (`SimSpecs.flies` true). Still not in the balance plan, so no level test fits it.
 - 2026-10-20 (step R43): the art is in the game (the sprites, the pod, the icon, the looks of step GB); the document and the art are rows B.d and F.c-F.d of [round 43](../../../concept-rounds/round-43/README.md), pending the user's review (`design` stays `review`).
+- 2026-10-20 (user, round 43, closed): the document approved with the build choices B.d (a)-(d) (the drone flies at
+  every level, not in the balance plan, the numbers as the wingmen table, the shop sells it from the visit before
+  Level 20); the drone, the bay pod and the hangar icon approved as final (F.c, F.d: `art: final`, their concept rows
+  `chosen`); the test-fire capture (K.c, K.d) accepted.

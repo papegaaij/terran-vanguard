@@ -2,7 +2,8 @@ package vanguard.sim;
 
 /**
  * M7 part F (design/player/wingmen, Rook; design/campaign Level 19): where Rook's goal moves to keep clear of the
- * walking boss's flame cone while it tells or burns, and of the furnace vents that glow or burn. Each Wingman holds
+ * walking boss's flame cone while it tells or burns, and of the furnace vents that glow or burn; M7 part H: of a
+ * breaching boss's bite circle and its eruption's marker. Each Wingman holds
  * one, made once; it allocates nothing per step. After {@link #clear} the goal is ({@link #x()}, {@link #y()}).
  */
 final class RookHazards {
@@ -47,6 +48,13 @@ final class RookHazards {
         for (SetPiece piece : setPieces) {
             if (piece.stride().isPresent() && piece.present() && !piece.destroyed()) {
                 moved |= clearOfCone(piece);
+                // Round 44: out of the stomp's ring and off the rail lance's line.
+                moved |= clearOfStomp(piece.stride().get().strikes());
+                moved |= clearOfLance(piece.stride().get().strikes());
+            }
+            if (piece.breach().isPresent() && piece.present() && !piece.destroyed()) {
+                // M7 part H, step H3: out of the bite circle of a telling, risen or open mouth and out of a marker.
+                moved |= clearOfBreach(piece.breach().get());
             }
         }
         if (vents != null) {
@@ -99,6 +107,79 @@ final class RookHazards {
             tx = Math.clamp(tx, limit, PlayField.WIDTH - limit);
             ty = Math.clamp(ty, limit, PlayField.HEIGHT - limit);
             if (!inCone(tx, ty, ax, ay, ux, uy, cone.length(), tan, margin)) {
+                gx = tx;
+                gy = ty;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M7 part H, step H3: out of a breaching boss's bite circle from its tell to its snap (at the point it breaches
+     * at), and out of an eruption's marker (or the bite circle the mouth then opens with, the larger) until it erupts.
+     */
+    private boolean clearOfBreach(BreachArena breach) {
+        BreachArena.Phase phase = breach.phase();
+        if (phase == BreachArena.Phase.BURIED || phase == BreachArena.Phase.DIVE) {
+            return false;
+        }
+        double radius = breach.marker() ? Math.max(breach.markerRadius(), breach.biteRadius()) : breach.biteRadius();
+        return clearOfCircle(breach.mouthX(), breach.mouthY(), radius);
+    }
+
+    /** Round 44: out of a bracing or expanding stomp's full ring, straight away from its centre (or across it). */
+    private boolean clearOfStomp(StrideStrikes strikes) {
+        if (strikes.stompPhase() == StrideStrikes.StompPhase.IDLE) {
+            return false;
+        }
+        return clearOfCircle(strikes.ringX(), strikes.ringY(), strikes.stompRadius());
+    }
+
+    /** Out of the circle of {@code radius} about (cx, cy) (his hull's edge {@link #GAP} outside it), straight away from its centre (or across it). */
+    private boolean clearOfCircle(double cx, double cy, double radius) {
+        double out = radius + Math.max(halfW, halfH) + GAP;
+        double dx = gx - cx;
+        double dy = gy - cy;
+        double d = Math.sqrt(dx * dx + dy * dy);
+        if (d >= out) {
+            return false;
+        }
+        double ux = d > 1e-6 ? dx / d : 0;
+        double uy = d > 1e-6 ? dy / d : -1;
+        for (int side = 1; side >= -1; side -= 2) {
+            double tx = Math.clamp(cx + ux * side * (out + 1), limit, PlayField.WIDTH - limit);
+            double ty = Math.clamp(cy + uy * side * (out + 1), limit, PlayField.HEIGHT - limit);
+            if ((tx - cx) * (tx - cx) + (ty - cy) * (ty - cy) >= out * out) {
+                gx = tx;
+                gy = ty;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Round 44: off a charging or firing rail lance's line, across it to the side the goal is on. */
+    private boolean clearOfLance(StrideStrikes strikes) {
+        if (strikes.lancePhase() == StrideStrikes.LancePhase.IDLE) {
+            return false;
+        }
+        double ox = strikes.lanceX();
+        double oy = strikes.lanceY();
+        double ux = strikes.lanceDirX();
+        double uy = strikes.lanceDirY();
+        double clear = strikes.lanceWidth() / 2 + Math.max(halfW, halfH) + GAP;
+        double along = (gx - ox) * ux + (gy - oy) * uy;
+        double lateral = (gx - ox) * uy - (gy - oy) * ux;
+        if (along < -clear || Math.abs(lateral) >= clear) {
+            return false;
+        }
+        double side = lateral >= 0 ? 1 : -1;
+        for (int attempt = 0; attempt < 2; attempt++) {
+            double s = attempt == 0 ? side : -side;
+            double tx = Math.clamp(ox + ux * along + uy * s * (clear + 1), limit, PlayField.WIDTH - limit);
+            double ty = Math.clamp(oy + uy * along - ux * s * (clear + 1), limit, PlayField.HEIGHT - limit);
+            if (Math.abs((tx - ox) * uy - (ty - oy) * ux) >= clear) {
                 gx = tx;
                 gy = ty;
                 return true;

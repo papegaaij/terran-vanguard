@@ -950,9 +950,10 @@ class BalanceTest {
      * plan's fit lasts 52.7 s at 3,740 HP (the back takes the whole fit, the vents ×2, Rook's Mortar's and the pods'
      * {@code anti-ground} ×2), so 1.39 (tools/balance.py's {@code WALKER_EFFICIENCY}; pending the user's review). Round 43
      * (the rework, K.a of round 42: far more fire, the bigger cone): the autopilot dodges more and stands off further,
-     * 57.1 s at 3,170 HP, so 1.08.
+     * 57.1 s at 3,170 HP, so 1.08. Round 44 (the pods armoured while shut, the rail lance, the stomp: far more
+     * dodging, the pods hit only in their windows): 50.8 s at 1,350 HP, so 0.52.
      */
-    static final double WALKER_EFFICIENCY = 1.08;
+    static final double WALKER_EFFICIENCY = 0.52;
 
     /** M7 part F: a walking boss's intro pass before it can be hit, s (the walker's spec; tools/balance.py). */
     static final double WALKER_INTRO_SECONDS = 4;

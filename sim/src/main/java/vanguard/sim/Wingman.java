@@ -192,6 +192,10 @@ public final class Wingman {
     private int target;
     /** M5 part F: the level's wind this step, px/s to the right. */
     private double wind;
+    /** M7 part H: a breaching boss's suction on him this step, px/s to the right and up (0 without one). */
+    private double pullX;
+
+    private double pullY;
     /** M7 part C: the level's rock and the scroll now; null in a level without terrain. */
     private Canyon canyon;
     /** M7 part C: the level's tendril gates (a standing tendril is a wall to him); null without. */
@@ -342,6 +346,12 @@ public final class Wingman {
      */
     void wind(double pxPerSecond) {
         wind = pxPerSecond;
+    }
+
+    /** M7 part H: a breaching boss's suction on him for his next {@link #fly}, px/s to the right and up. */
+    void pull(double rightPerSecond, double upPerSecond) {
+        pullX = rightPerSecond;
+        pullY = upPerSecond;
     }
 
     /**
@@ -1024,6 +1034,11 @@ public final class Wingman {
             wantedX = ex / distance * speed;
             wantedY = ey / distance * speed;
         }
+        if (pullX != 0 || pullY != 0) {
+            // M7 part H, step H3: he flies against a breaching boss's suction, so he holds his goal.
+            wantedX -= pullX;
+            wantedY -= pullY;
+        }
         double dvx = wantedX - vx;
         double dvy = wantedY - vy;
         double change = Math.sqrt(dvx * dvx + dvy * dvy);
@@ -1039,6 +1054,11 @@ public final class Wingman {
         if (wind != 0) {
             // M5 part F: the level's wind pushes him as it pushes the player (design/player/wingmen).
             x += wind * SimStep.SECONDS;
+        }
+        if (pullX != 0 || pullY != 0) {
+            // M7 part H: a breaching boss's suction drags him toward its open mouth.
+            x += pullX * SimStep.SECONDS;
+            y += pullY * SimStep.SECONDS;
         }
         keepClear(shipX, shipY);
     }

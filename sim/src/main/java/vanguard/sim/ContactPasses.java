@@ -249,7 +249,8 @@ final class ContactPasses {
                     break;
                 }
             }
-            if (broken) {
+            if (broken || chunk.pulled()) {
+                // M7 part H (the user's round 43 answer H.7c): a breaching boss's rocks stop no enemy bullets.
                 continue;
             }
             for (int i = bullets.size() - 1; i >= 0; i--) {

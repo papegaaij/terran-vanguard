@@ -43,7 +43,7 @@ ONBOARDING = {1, 2, 3}           # accepted: about 1.5x the reference DPS (desig
 DPS_BAND = (0.75, 1.33)
 ONBOARDING_HIGH = 1.75
 EFFECTIVE = 0.6                  # bosses and set pieces: effective DPS 0.6 x reference
-WALKER_EFFICIENCY = 1.08         # M7 part F: a walking boss's share of the effective DPS that lands; step F4 measured 1.39 (52.7 s at 3,740 HP; the paper's 0.68 was on the screen 80 %, half of it facing its plate); round 43's rework (far more fire, the bigger cone) 1.08 (57.1 s at 3,170 HP)
+WALKER_EFFICIENCY = 0.52         # M7 part F: a walking boss's share of the effective DPS that lands; step F4 measured 1.39 (52.7 s at 3,740 HP; the paper's 0.68 was on the screen 80 %, half of it facing its plate); round 43's rework (far more fire, the bigger cone) 1.08 (57.1 s at 3,170 HP); round 44 (pods armoured while shut, the rail lance, the stomp) 0.52 (50.8 s at 1,350 HP)
 WALKER_INTRO = 4                 # s of a walking boss's intro pass before it can be hit (the walker's spec)
 SHARE_TOLERANCE = 1 / 3          # a boss's or set piece's bounty share: "about" its target
 # Deviations from the balancing basis the user accepted (BalanceTest.ACCEPTED holds the same list).

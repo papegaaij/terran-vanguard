@@ -113,7 +113,19 @@ class PartBDataTest {
         assertEquals(
                 List.of("Okafor", "Varga", "Okafor", "Okafor"),
                 act.briefing().stream().map(BriefingPage::speaker).toList());
-        assertTrue(act.outro().isEmpty(), "the outro comes in part H");
+        // M7 part H (step PH2): the act's outro after Level 21, four pages with act-complete under the first, and the
+        // act after it named for the release's end (H.7d).
+        ActData.Outro outro = act.outro().orElseThrow();
+        assertEquals(Optional.of("act-complete"), outro.music());
+        assertEquals(
+                List.of("Okafor", "Okafor", "Varga", "Okafor"),
+                outro.pages().stream().map(BriefingPage::speaker).toList());
+        assertEquals(
+                List.of("act-3-outro-hellas", "act-3-outro-domes", "act-3-outro-europa", "act-3-outro-aegis"),
+                outro.pages().stream().map(page -> page.image().orElseThrow()).toList());
+        ActData.NextAct next = act.nextAct().orElseThrow();
+        assertEquals("ACT IV - DEEP WATER. EUROPA. COMING SOON.", next.comingSoon());
+        assertEquals("ACT IV - DEEP WATER: COMING SOON", next.hangarLine());
     }
 
     /** The speed changes are eased over 1 s (the moving sections' ramp): each adds half its change × 1 s. */

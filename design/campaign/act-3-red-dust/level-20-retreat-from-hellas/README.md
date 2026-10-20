@@ -2,7 +2,7 @@
 title: Level 20 – Retreat from Hellas
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/air/mote-swarm, ../../../enemies/air/dust-kite, ../../../enemies/ground/burrower, ../../../enemies/ground/dust-devil, ../../../enemies/bosses/dust-colossus, ../../../player/wingmen, ../../../player/weapons/rear-lance, ../../../story/characters/rook, ../../../world/mars]
 updated: 2026-10-20
 ---
@@ -168,9 +168,9 @@ block (with its easy and hard hooks); each pursuit wave's `pursuit` block gives 
 (`break_at`) and its refills:
 
 - **Band**: its leader holds a band **50–150 px below the top edge** (behind the ship by travel),
-  following the ship's x with a lag (90 px/s sideways). The flock keeps the spec's boids (separation
+  following the ship's x with a lag (**30 px/s** sideways; round 43 Q.1, was 90). The flock keeps the spec's boids (separation
   18 px).
-- **Lunge**: every **6 s** a 0.8 s tell (the flock contracts into a tight ball ≈ 60 px across,
+- **Lunge**: every **4 s** (round 43 Q.1, was 6; a tell due while the flock is out of the band waits) a 0.8 s tell (the flock contracts into a tight ball ≈ 60 px across,
   brightens, a rising hum), then the leader dives straight down the ship's lane at **240 px/s** to
   140 px below where the ship was at the tell's start, and climbs back to the band at 200 px/s, the
   members re-forming round it. The dive does not home: a side step dodges it.
@@ -205,6 +205,13 @@ block (with its easy and hard hooks); each pursuit wave's `pursuit` block gives 
   still melts the entry flock and most refills. The approved pursuit numbers stay. The data levers
   measured, not applied (pending the user's review in round 43): the band's lag at 30 px/s gives 0.87
   at medium (3–6 lunges with motes), a lunge every 4 s gives 0.94 (6–7 of 27).
+- **Both levers applied** (the user's round 43 Q.1; step LQ): the lag 30 px/s and a lunge every 4 s (easy 5.5,
+  hard 3), measured together (`levelReport`, the plan's fit, 3 seeds): motes on the screen at medium 0.77 →
+  **1.03** (easy 0.35 → 0.44, hard 1.03 → 1.68), lunges with motes 2–4 of 18 → **8–9 of 27–28** a run (easy 1 of
+  13 → 3–5 of 19–20, hard 6–7 of 23–24 → 16–21 of 33–35). The floor at medium 3.38 → 3.67 on the screen and 34.5 →
+  35.6 shots a minute; gaps over 2 s 2 → 0 (easy 1, hard 0); the haul unchanged (typical 2,525, `bounty_scale`
+  0.83); the autopilot wins every seed on every difficulty with the secondary met. A small unit lives 2.53× Level
+  10's time (was 2.48×; the limit raised to 2.6×, pending the user's review: see *Decisions*).
 
 ## Waves
 
@@ -350,6 +357,8 @@ The Burrowers and Dust Devils are waves; they are counted with the ground units 
   is never a trap against the ship's speed.
 - No terrain collision (the terraces and the rim road are the `ground` layer's look, not walls); no
   wind.
+- **The travelling ridge** (scenery, nothing hits it): the data's `ridge` key places its pass (t=12, 8 s across
+  from the left edge, 70 px below the top edge; round 43 Q.4).
 
 ## Secrets and pickups
 
@@ -453,9 +462,9 @@ into contact threats it must dodge and shoot once they pass).
 
 ## Difficulty notes
 
-- **Easy**: the swarm 8 on entry, refills of 2, a lunge every 8 s with a 1.2 s tell; the TOP warning
+- **Easy**: the swarm 8 on entry, refills of 2, a lunge every 5.5 s with a 1.2 s tell; the TOP warning
   4 s ahead; the Burrowers' ring of 8 and the Dust Devils' weaker pull (their specs).
-- **Hard**: the swarm 12 on entry, refills of 4, a lunge every 4.5 s; the Burrowers' second ring and
+- **Hard**: the swarm 12 on entry, refills of 4, a lunge every 3 s; the Burrowers' second ring and
   the Dust Devils' 3-arm spiral (their specs); an extra Wraith pair from the top at t≈80 (TOP-warned);
   the Wraiths' hard hooks; the firing groups (Needler lines, Stinger V-wings) one unit smaller.
 
@@ -468,18 +477,18 @@ TOP edge warning, the rear-guard drone (ART-G2) and the round's captures.
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r43-a.png](concept/backdrop-final-r43-a.png) | Level 20 backdrop final (`tools/art/backdrop_l20.py`): one strip keyed by strip row, run both ways: the basin floor's salt flats and dune sea with the Vrell staging grounds and the t≈42 dune ridge, the terraces, the upper terrace's pillars, the rim road's switchbacks with abandoned militia crawlers, the rim's lip with the militia's flak guns and the rust plain beyond; the play field at twelve times (no units or props), the strip at 1/40, the pieces and seams (sheet) | proposed (round 43) |
-| [concept/backdrop-final-r43-a.gif](concept/backdrop-final-r43-a.gif) | Level 20 backdrop final: the whole level flown at 0.5x, the ground moving up the screen after the turn, 10 fps | proposed (round 43) |
-| [concept/l20-props-final-r43-a.png](concept/l20-props-final-r43-a.png) | Level 20 props final (`tools/art/l20_props.py`): the travelling ridge (lengths, head, tail in 16 headings, the crest glow, sand slides; shared with Level 21's Dust Colossus) crossing the floor at t=12-20; the emergency cache (intact, hit, opened) and its strobe; Okafor's briefing image `level-20-hellas-fallback` (sheet) | proposed (round 43) |
-| [concept/l20-props-final-r43-a.gif](concept/l20-props-final-r43-a.gif) | Level 20 props final: the ridge crossing near the top edge over the backdrop, its cracks pulsing, 10 fps | proposed (round 43) |
-| [concept/level-20-capture-r43-a.mp4](concept/level-20-capture-r43-a.mp4) | Level 20 whole run with sound, the plan's fit, test autopilot (level t ≈ mp4 time + 1 s): the strike and the Dust Colossus ridge crossing, the turnabout (the scroll easing to zero ≈ 0:21 and reversing, LEFT/RIGHT, TOP "! REAR" and bottom "! AHEAD" warnings), the pursuit swarm entering at 0:23 (pale-rimmed motes, readable on the sand) and melting under the beam within a second or two (each refill too), the warning box handing over without an empty frame, Rook's "Up top!" lines (0:56, 1:38, 2:23), the Wraiths from the rear, the dune-ridge, terrace and rim-road nests and mortars, the emergency cache passing on its ledge at 1:32–1:36 (not opened: SECRETS 0 / 1; no strobe halo is drawn, see the cache-strobe rows), the swarm dropping back, the lull with the supply drone and armour patch, the second pursuit, the rim guns and their flak (from 2:39 a bright orange-cored pop every 1.5 s in the top band, ~0.1 s, then a small dark smudge), the debrief (A, 167 / 197, Thin them out met). 205 s | proposed (round 43) |
-| [concept/level-20-capture-r43-a.png](concept/level-20-capture-r43-a.png) | 20-tile sheet of that run (HUD left panel + field) + a row of 1:1 crops: the swarm's tell ring and its lunge (from the swarm run), the rear-guard drone and its amber shot (from the drone run), a flak burst, the emergency cache, the Colossus ridge, the rim guns | proposed (round 43) |
-| [concept/level-20-swarm-r43-a.mp4](concept/level-20-swarm-r43-a.mp4) | Demonstration of the pursuit swarm only: the same fit but the autopilot's fire held (snapshot hook) and no Rook, so the motes live: the entry under the TOP warning, the band at the top following the ship, tells (the flock bunches, glows white-hot and a pale ring flashes round it, readable at play size: 0:16.5, 0:22.5, 0:28.5), lunges down the lane (pale-rimmed motes, no dark shadow flock) and climbs back, refills joining, the break-off climbing off the top at 1:33, the lull's start. Not a normal run: the ship never fires. 105 s | proposed (round 43) |
-| [concept/level-20-swarm-r43-a.png](concept/level-20-swarm-r43-a.png) | 12-tile sheet of that run (field only) + 1:1 crops of two tells and a lunge | proposed (round 43) |
-| [concept/level-20-drone-r43-a.mp4](concept/level-20-drone-r43-a.mp4) | Level 20 t≈15–63 with the Rear-guard Drone Bay L1 in place of the left Micro-Missile Pod (the plan does not fit it): the drone trailing below the ship through the turnabout and the first pursuit, swinging out in turns, firing straight back with the Tail Gun: the drone now a small pale-rimmed dot, its shot amber against the Tail Gun's twin cyan-white bolts. 48 s | proposed (round 43) |
-| [concept/level-20-drone-r43-a.png](concept/level-20-drone-r43-a.png) | 6-tile sheet of that excerpt + four 1:1 crops of the drone | proposed (round 43) |
-| [concept/level-20-cache-strobe-r43-a.mp4](concept/level-20-cache-strobe-r43-a.mp4) | **Snapshot-patched build, not the live game:** the emergency cache passing (t≈92–98) with GFX2's strobe halo drawn: the live game never loads the cache's `-glow` frames, because it is a destructible (`hp: 20`, no `hits`) and `GroundPasses` loads glow frames only for triggers, so `StrobeHalo` is never reached (a bug for the next game step). With the glow frames loaded the yellow halo pulses twice a second and reads at play scale. With sound, 6 s | proposed (round 43) |
-| [concept/level-20-cache-strobe-r43-a.png](concept/level-20-cache-strobe-r43-a.png) | Two field frames of that clip (lamp lit, dark) + five 1:1 crops of the cache, lit and dark | proposed (round 43) |
+| [concept/backdrop-final-r43-a.png](concept/backdrop-final-r43-a.png) | Level 20 backdrop final (`tools/art/backdrop_l20.py`): one strip keyed by strip row, run both ways: the basin floor's salt flats and dune sea with the Vrell staging grounds and the t≈42 dune ridge, the terraces, the upper terrace's pillars, the rim road's switchbacks with abandoned militia crawlers, the rim's lip with the militia's flak guns and the rust plain beyond; the play field at twelve times (no units or props), the strip at 1/40, the pieces and seams (sheet) | chosen (round 43: approved as final) |
+| [concept/backdrop-final-r43-a.gif](concept/backdrop-final-r43-a.gif) | Level 20 backdrop final: the whole level flown at 0.5x, the ground moving up the screen after the turn, 10 fps | chosen (round 43: approved as final) |
+| [concept/l20-props-final-r43-a.png](concept/l20-props-final-r43-a.png) | Level 20 props final (`tools/art/l20_props.py`): the travelling ridge (lengths, head, tail in 16 headings, the crest glow, sand slides; shared with Level 21's Dust Colossus) crossing the floor at t=12-20; the emergency cache (intact, hit, opened) and its strobe; Okafor's briefing image `level-20-hellas-fallback` (sheet) | chosen (round 43: approved as final) |
+| [concept/l20-props-final-r43-a.gif](concept/l20-props-final-r43-a.gif) | Level 20 props final: the ridge crossing near the top edge over the backdrop, its cracks pulsing, 10 fps | chosen (round 43: approved as final) |
+| [concept/level-20-capture-r43-a.mp4](concept/level-20-capture-r43-a.mp4) | Level 20 whole run with sound, the plan's fit, test autopilot (level t ≈ mp4 time + 1 s): the strike and the Dust Colossus ridge crossing, the turnabout (the scroll easing to zero ≈ 0:21 and reversing, LEFT/RIGHT, TOP "! REAR" and bottom "! AHEAD" warnings), the pursuit swarm entering at 0:23 (pale-rimmed motes, readable on the sand) and melting under the beam within a second or two (each refill too), the warning box handing over without an empty frame, Rook's "Up top!" lines (0:56, 1:38, 2:23), the Wraiths from the rear, the dune-ridge, terrace and rim-road nests and mortars, the emergency cache passing on its ledge at 1:32–1:36 (not opened: SECRETS 0 / 1; no strobe halo is drawn, see the cache-strobe rows), the swarm dropping back, the lull with the supply drone and armour patch, the second pursuit, the rim guns and their flak (from 2:39 a bright orange-cored pop every 1.5 s in the top band, ~0.1 s, then a small dark smudge), the debrief (A, 167 / 197, Thin them out met). 205 s | chosen (round 43: accepted) |
+| [concept/level-20-capture-r43-a.png](concept/level-20-capture-r43-a.png) | 20-tile sheet of that run (HUD left panel + field) + a row of 1:1 crops: the swarm's tell ring and its lunge (from the swarm run), the rear-guard drone and its amber shot (from the drone run), a flak burst, the emergency cache, the Colossus ridge, the rim guns | chosen (round 43: accepted) |
+| [concept/level-20-swarm-r43-a.mp4](concept/level-20-swarm-r43-a.mp4) | Demonstration of the pursuit swarm only: the same fit but the autopilot's fire held (snapshot hook) and no Rook, so the motes live: the entry under the TOP warning, the band at the top following the ship, tells (the flock bunches, glows white-hot and a pale ring flashes round it, readable at play size: 0:16.5, 0:22.5, 0:28.5), lunges down the lane (pale-rimmed motes, no dark shadow flock) and climbs back, refills joining, the break-off climbing off the top at 1:33, the lull's start. Not a normal run: the ship never fires. 105 s | chosen (round 43: accepted) |
+| [concept/level-20-swarm-r43-a.png](concept/level-20-swarm-r43-a.png) | 12-tile sheet of that run (field only) + 1:1 crops of two tells and a lunge | chosen (round 43: accepted) |
+| [concept/level-20-drone-r43-a.mp4](concept/level-20-drone-r43-a.mp4) | Level 20 t≈15–63 with the Rear-guard Drone Bay L1 in place of the left Micro-Missile Pod (the plan does not fit it): the drone trailing below the ship through the turnabout and the first pursuit, swinging out in turns, firing straight back with the Tail Gun: the drone now a small pale-rimmed dot, its shot amber against the Tail Gun's twin cyan-white bolts. 48 s | chosen (round 43: accepted) |
+| [concept/level-20-drone-r43-a.png](concept/level-20-drone-r43-a.png) | 6-tile sheet of that excerpt + four 1:1 crops of the drone | chosen (round 43: accepted) |
+| [concept/level-20-cache-strobe-r43-a.mp4](concept/level-20-cache-strobe-r43-a.mp4) | **Snapshot-patched build, not the live game:** the emergency cache passing (t≈92–98) with GFX2's strobe halo drawn: the live game never loads the cache's `-glow` frames, because it is a destructible (`hp: 20`, no `hits`) and `GroundPasses` loads glow frames only for triggers, so `StrobeHalo` is never reached (a bug for the next game step). With the glow frames loaded the yellow halo pulses twice a second and reads at play scale. With sound, 6 s | chosen (round 43: accepted) |
+| [concept/level-20-cache-strobe-r43-a.png](concept/level-20-cache-strobe-r43-a.png) | Two field frames of that clip (lamp lit, dark) + five 1:1 crops of the cache, lit and dark | chosen (round 43: accepted) |
 
 Varga's page image `level-20-filed-plate` was produced early with Level 19's batch (round 42, the walker wreck's
 plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-images-final-r42-a.png); pending the
@@ -491,7 +500,7 @@ user's review.
       turnabout's 4 s ease through zero), waves with travel-relative `from`, the pursuits' blocks, the
       BOTTOM lessons' `warning`, ground targets, radio, budget, threat profile, briefing, the strip
       backdrop (step ART-G1's), music with the basin rumble's `ambience_layers`, the rim flak's
-      `band: top`; loaded and checked by content's `LevelData` and `RetreatChecks` (test
+      `band: top`, the travelling ridge's `ridge` key (round 43 Q.4); loaded and checked by content's `LevelData` and `RetreatChecks` (test
       `RetreatKeysTest`); mapped for the simulation in step G4 (`RetreatRules`: the pursuit's block from
       the Mote Swarm's defaults, the wave and the hooks, its refills by the formation lever)
 - [x] Reverse scroll (M5 = a): `LevelData.Section` accepts negative speeds; entry edges and routes
@@ -505,7 +514,7 @@ user's review.
       the rear-wave bark's `top_lines`, step G2), out of the lane during a lunge's tell; the quiet beat
       line without `requires: escort` (decided in round 36, Q.20d; in the data)
 - [x] Wave script: ≥ 55 enemies a minute at medium (`DensityTest`, 70.8 measured), the Act 2+ rules
-      (`PacingTest`'s Act 2 rule, `ActFloorTest`; `BeamEraHpTest` with a reversed level's 2.5×), ≥ 60 % of
+      (`PacingTest`'s Act 2 rule, `ActFloorTest`; `BeamEraHpTest` with a reversed level's 2.6×), ≥ 60 % of
       waves ahead by travel (`Level20Test`), the act HP factor for the Burrower, Dust Devil and Wraith,
       `small_act_hp` (Level 20 in its levels since step G2) — the data written in step G2, measured and
       tuned in step G4 (two passes, pending round 43)
@@ -591,3 +600,22 @@ user's review.
   secondary met 3/3; the haul unchanged (typical 2,525, `bounty_scale` 0.83). No data tuned: the lag
   and cadence levers are in *The pursuit swarm*, pending the user's review in round 43.
 - 2026-10-20 (M7 part G, step R43): the code and tests of part G are in (reverse scroll, TOP warnings, the pursuit, Rook's retreat play, the kill ratio, the voiced radio: those Implementation items ticked); the art, the voices, the captures, the build choices and five questions (the swarm's levers, the beam-era limit, turrets as seekers, the ridge's data key, the hangar's and briefing's art status) are in [round 43](../../../concept-rounds/round-43/README.md), pending the user's review.
+- 2026-10-20 (user, round 43, closed): the backdrop (F.a), the props (F.b) and Okafor's briefing image
+  `level-20-hellas-fallback` (F.e) approved as final (`art: final`, their concept rows `chosen`); the voices (V.a-V.g),
+  the captures (K.a-K.d) and the build choices (B.a-B.g, every sub-choice) accepted as built. Q.1 **both levers** (the
+  mote swarm's band lag 90 to 30 px/s and a lunge every 4 s, data only; to be applied and re-measured), Q.2 the beam-era
+  limit for a reversed level accepted, Q.3 yes (turrets count as seekers), Q.4 the travelling ridge's pass gets a data
+  key (to build), Q.5 final for the approved items only. The sounds: `basin-rumble` **a**, `swarm-hum` **a**,
+  `swarm-lunge` **a** chosen (S.l-S.n). See [round 43](../../../concept-rounds/round-43/README.md).
+- 2026-10-20 (round 43 Q.1, step LQ): **both levers applied** in the Mote Swarm's `pursuit` block (the lag 30 px/s, a
+  lunge every 4 s; the easy and hard hooks 5.5 s and 3 s, keeping the medium cadence's ratio: our reading, pending the
+  user's review) and re-measured together: motes on the screen at medium 0.77 → 1.03, lunges with motes 2–4 → 8–9 a
+  run, the floor 3.67 and 35.6 shots a minute, no gap over 2 s at medium, the haul unchanged, the autopilot wins
+  everywhere (see *The pursuit swarm*). The motes now held in the beam's column take some of its time, so a small unit
+  lives **2.53×** Level 10's time (was 2.48×, over Q.2's 2.5): `BeamEraHpTest`'s limit for a reversed level raised to
+  **2.6×**, pending the user's review (the other way out: lower the Needler's and Stinger's HP on this level).
+- 2026-10-20 (round 43 Q.4, step LQ): the travelling ridge's pass is the level key **`ridge`** `{t: 12, seconds: 8,
+  from: left, to: right, depth: 70}` (the [schemas](../../../tech/architecture/README.md#data-file-schemas)), read by
+  the game's `RidgeLooks` instead of the `basin-rumble` layer's start; the approved track moved into it unchanged
+  (the head off the left edge 70 px below the top at t=12, off the right edge 8 s later, the tail gone at t=27).
+  Level 21's ridge pass uses the same key, from the right edge.

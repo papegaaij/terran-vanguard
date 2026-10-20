@@ -206,24 +206,27 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "ghost-drone-glint-r41-a.ogg",
         "ghost-drone-burst-r41-a.ogg",
         "ghost-drone-death-r41-a.ogg",
-        // M7 part F, Level 19: round 42's proposals, option a until the user's choice (the Revenant Walker's stomp,
-        // hatch, pod missile, flamer tell and flame loop; the furnace vents' tell and burst; the Warden Tank's tracks,
-        // turret slew, burst and death; the belt loop; the `mars-foundry` ambience; all synthesized).
+        // M7 part F, Level 19: round 42's proposals still standing, option a (the Revenant Walker's stomp, the Warden
+        // Tank's death, the belt loop, the `mars-foundry` ambience; all synthesized).
         "walker-stomp-r42-a.ogg",
-        "walker-hatch-r42-a.ogg",
-        "walker-missile-r42-a.ogg",
-        "walker-flame-tell-r42-a.ogg",
-        "walker-flame-r42-a.ogg",
-        "vent-tell-r42-a.ogg",
-        "vent-burst-r42-a.ogg",
-        "tank-tracks-r42-a.ogg",
-        "tank-turret-r42-a.ogg",
-        "tank-burst-r42-a.ogg",
         "tank-death-r42-a.ogg",
         "belt-rumble-r42-a.ogg",
         "mars-foundry-r42-a.ogg",
-        // M7 part G, Level 20: round 43's proposals, option a until the user's choice (the basin rumble under the
-        // ridge, the pursuit swarm's band hum and its lunge's rising hum; built from CC0 Freesound originals).
+        // Round 43's picks (the user, 2026-10-20; built from CC0/CC-BY Freesound originals, CREDITS.md): the walker's
+        // hatch b, flamer tell a, flame loop b, vent hit a, death a and wreck settle a; the furnace vents' tell a and
+        // burst a; the Warden Tank's tracks a, turret a and burst a. The walker's pod missile plays the chosen enemy
+        // missile launch (r08 a, final). Level 20 (M7 part G): the basin rumble a, the pursuit swarm's hum a and lunge a.
+        "walker-hatch-r43-b.ogg",
+        "walker-flame-tell-r43-a.ogg",
+        "walker-flame-r43-b.ogg",
+        "walker-vent-hit-r43-a.ogg",
+        "walker-death-r43-a.ogg",
+        "walker-wreck-settle-r43-a.ogg",
+        "vent-tell-r43-a.ogg",
+        "vent-burst-r43-a.ogg",
+        "tank-tracks-r43-a.ogg",
+        "tank-turret-r43-a.ogg",
+        "tank-burst-r43-a.ogg",
         "basin-rumble-r43-a.ogg",
         "swarm-hum-r43-a.ogg",
         "swarm-lunge-r43-a.ogg",

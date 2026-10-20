@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * The level's {@code weather}, {@code sondes}, {@code darkness} and {@code flak}: wind, lightning and rain, the
- * sondes to fly through, the headlight, flares and lights of a dark level, and the flak bursts over a field.
+ * The level's {@code weather}, {@code sondes}, {@code darkness}, {@code flak} and {@code ridge}: wind, lightning and
+ * rain, the sondes to fly through, the headlight, flares and lights of a dark level, the flak bursts over a field and
+ * the travelling ridge on the ground.
  *
  * <p>It only holds the block's types (and their logic): {@link LevelData} implements it, so the rest of the game keeps
  * naming them as members of {@code LevelData} ({@code LevelData.Weather}).
@@ -248,5 +249,34 @@ public sealed interface WeatherBlock permits LevelData {
     public enum FlakBand {
         LOWER,
         TOP
+    }
+
+    /**
+     * M7 part G, presentation (design/campaign Level 20, Layout, section 1; Level 21's ridge pass; round 43 Q.4): the
+     * Dust Colossus's travelling ridge, scenery on the ground that nothing hits. Its head surfaces off the {@code from}
+     * edge at level time {@code t}, {@code depth} px below the top edge, and crosses the field to off the {@code to}
+     * edge in {@code seconds} s on a slow S up the strip; the body follows on the head's track and the ridge shows until
+     * its tail is off that edge too. The simulation never reads it.
+     */
+    public record Ridge(double t, double seconds, RidgeEdge from, RidgeEdge to, double depth) {
+        public Ridge {
+            Check.notNegative("ridge.t", t);
+            Check.positive("ridge.seconds", seconds);
+            Check.that(from != to, "ridge: from and to are opposite edges, both were " + from);
+            Check.that(
+                    depth >= 0 && depth < vanguard.sim.PlayField.HEIGHT,
+                    "ridge.depth: px below the top edge, inside the play field, was " + depth);
+        }
+
+        /** Whether the head runs from the right edge to the left (Level 21's), the other way round to Level 20's. */
+        public boolean leftward() {
+            return from == RidgeEdge.RIGHT;
+        }
+    }
+
+    /** M7 part G: the side edges a ridge crosses between. */
+    public enum RidgeEdge {
+        LEFT,
+        RIGHT
     }
 }

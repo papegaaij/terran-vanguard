@@ -11,8 +11,16 @@ import java.util.Optional;
  *
  * @param levels the act's first and last level, by their global numbers
  * @param outro the act-end outro, if the act has one yet
+ * @param nextAct M7 part H (the user's round 43 answer H.7d): the act after this one as the release's end and the
+ *     hangar before its first level name it while it is not built yet ({@code ACT IV - DEEP WATER. EUROPA. COMING
+ *     SOON.}); given by the release's last act
  */
-public record ActData(Levels levels, TitleCard titleCard, List<BriefingPage> briefing, Optional<Outro> outro) {
+public record ActData(
+        Levels levels,
+        TitleCard titleCard,
+        List<BriefingPage> briefing,
+        Optional<Outro> outro,
+        Optional<NextAct> nextAct) {
     public ActData {
         Check.notEmpty("briefing", briefing);
     }
@@ -39,6 +47,29 @@ public record ActData(Levels levels, TitleCard titleCard, List<BriefingPage> bri
      * @param line the settings and the date under the title
      */
     public record TitleCard(String act, String name, String line) {}
+
+    /**
+     * M7 part H: the next act, not built yet, as the release's end names it.
+     *
+     * @param act its number as its title card will show it, {@code ACT IV}
+     * @param name its title, {@code DEEP WATER}
+     * @param setting where it plays, {@code EUROPA}
+     */
+    public record NextAct(String act, String name, String setting) {
+        public NextAct {
+            Check.that(!act.isBlank() && !name.isBlank() && !setting.isBlank(), "next_act: act, name and setting");
+        }
+
+        /** The release end's line: {@code ACT IV - DEEP WATER. EUROPA. COMING SOON.} */
+        public String comingSoon() {
+            return act + " - " + name + ". " + setting + ". COMING SOON.";
+        }
+
+        /** The hangar's line before its first level: {@code ACT IV - DEEP WATER: COMING SOON}. */
+        public String hangarLine() {
+            return act + " - " + name + ": COMING SOON";
+        }
+    }
 
     /**
      * The act-end outro (design/campaign, Act intro and outro): briefing pages shown after the

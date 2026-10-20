@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import vanguard.content.LevelData;
+import vanguard.content.WeatherBlock;
 import vanguard.sim.Command;
 import vanguard.sim.Enemy;
 import vanguard.sim.Flock;
@@ -19,8 +20,8 @@ import vanguard.sim.Sortie;
 /**
  * M7 part G (design/campaign Level 20; step GB): the pursuit swarm's lunge tell (its members brightening through the
  * tell, cooling along the dive), the rear-guard drone's look on its trail (its gun straight back, frame 8 of 16,
- * swinging a frame as it lags), the rim guns' flak in the top band, and the travelling ridge: surfacing with the basin
- * rumble at t=12, crossing near the top edge ahead of the strike, its body the last 900 px of the head's track laid on
+ * swinging a frame as it lags), the rim guns' flak in the top band, and the travelling ridge: surfacing at its key's
+ * t=12 (round 43 Q.4), crossing near the top edge ahead of the strike, its body the last 900 px of the head's track laid on
  * the ground, gone by the right edge. The flight needs Level 20 mapped (step G4).
  */
 class Level20LooksTest {
@@ -70,9 +71,9 @@ class Level20LooksTest {
     }
 
     @Test
-    void theRidgeSurfacesWithTheRumbleAndOnlyInLevel20() {
-        assertEquals(12, RidgeLooks.start(RetreatFixture.level()).orElseThrow(), 1e-9);
-        assertTrue(RidgeLooks.start(FoundryFixture.level()).isEmpty(), "Level 19 has no ridge (no basin-rumble layer)");
+    void theRidgeSurfacesAtItsKeyAndOnlyInLevel20() {
+        assertEquals(12, RetreatFixture.level().ridge().orElseThrow().t(), 1e-9, "the ridge key (round 43 Q.4)");
+        assertTrue(FoundryFixture.level().ridge().isEmpty(), "Level 19 has no ridge key");
         for (String part : new String[] {"", "-head", "-tail", "-glow"}) {
             for (int k = 0; k < RidgeLooks.HEADINGS; k++) {
                 assertTrue(
@@ -91,10 +92,10 @@ class Level20LooksTest {
     @Test
     void theRidgeCrossesNearTheTopEdgeOnItsTrack() {
         LevelData level = RetreatFixture.level();
-        RidgeLooks ridge = RidgeLooks.track(12, level.scrollAt(12));
-        assertFalse(ridge.shows(11.9), "before the rumble");
+        RidgeLooks ridge = RidgeLooks.track(level.ridge().orElseThrow(), level.scrollAt(12));
+        assertFalse(ridge.shows(11.9), "before its t");
         assertEquals(0, ridge.layOut(12, level.scrollAt(12)));
-        assertTrue(RidgeLooks.headX(0) < 0, "surfacing off the left edge");
+        assertTrue(ridge.headX(0) < 0, "surfacing off the left edge");
         for (double t = 13; t <= 19; t += 0.5) {
             int points = ridge.layOut(t, level.scrollAt(t));
             assertTrue(points >= 1 && points <= RidgeLooks.MAX_POINTS, t + ": " + points);
@@ -107,7 +108,7 @@ class Level20LooksTest {
             }
         }
         assertEquals(RidgeLooks.MAX_POINTS, ridge.layOut(19.5, level.scrollAt(19.5)), "its whole length by then");
-        assertTrue(RidgeLooks.headX(8) > PlayField.WIDTH, "the head off the right edge by the turnabout");
+        assertTrue(ridge.headX(8) > PlayField.WIDTH, "the head off the right edge by the turnabout");
         double scroll = level.scrollAt(16);
         ridge.layOut(16, scroll);
         int laid = ridge.layOut(16, scroll);
@@ -118,12 +119,34 @@ class Level20LooksTest {
         assertEquals(tailY - 100, ridge.y(laid - 1), 1e-9);
         ridge.layOut(16, scroll - 100);
         assertEquals(headY + 100, ridge.y(0), 1e-9, "and up with it reversed");
-        double end = 12 + RidgeLooks.END_SECONDS;
+        double end = ridge.end();
+        assertEquals(27, end, 1e-9, "the head's 8 s and the tail's 7 s");
         int points = ridge.layOut(end, level.scrollAt(end));
         for (int i = 0; i < points; i++) {
             assertTrue(ridge.x(i) > PlayField.WIDTH + 40, "the tail past the right edge at the end: " + ridge.x(i));
         }
         assertFalse(ridge.shows(end));
+    }
+
+    /**
+     * Round 43 Q.4: Level 20's key keeps the approved track (the review GIF's path: {@code -40 + 70u + 30 sin(u / 1.3)}
+     * across, {@code 470 + 124u - 60 sin(u / 1.6)} up the strip); the same pass from the right edge (Level 21's) is its
+     * mirror, and a deeper one runs lower by the difference.
+     */
+    @Test
+    void theKeyKeepsLevel20sTrackAndMirrorsFromTheRight() {
+        RidgeLooks level20 = RidgeLooks.track(RetreatFixture.level().ridge().orElseThrow(), 0);
+        RidgeLooks mirrored = RidgeLooks.track(
+                new LevelData.Ridge(12, 8, WeatherBlock.RidgeEdge.RIGHT, WeatherBlock.RidgeEdge.LEFT, 170), 0);
+        for (double u = 0; u <= 15; u += 0.25) {
+            assertEquals(-40 + 70 * u + 30 * Math.sin(u / 1.3), level20.headX(u), 1e-9, "x at " + u);
+            assertEquals(470 + 124 * u - 60 * Math.sin(u / 1.6), level20.headRow(u), 1e-9, "row at " + u);
+            assertEquals(PlayField.WIDTH - level20.headX(u), mirrored.headX(u), 1e-9);
+            assertEquals(level20.headRow(u) - 100, mirrored.headRow(u), 1e-9);
+            int heading = level20.heading(u);
+            assertEquals(
+                    Math.floorMod(RidgeLooks.HEADINGS - heading, RidgeLooks.HEADINGS), mirrored.heading(u), u + "");
+        }
     }
 
     @Test

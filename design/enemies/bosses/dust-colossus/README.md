@@ -1,10 +1,10 @@
 ---
 title: Dust Colossus
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust, ../../../story/characters/the-choir]
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # Dust Colossus
@@ -16,39 +16,41 @@ scrolling arena and breaches at the edges of the play field, front, sides and re
 anywhere under the ship. Each breach raises a mouth (the weak point) that fires rings, sucks the
 ship and loose rock toward it and bites. As it dies, the Choir speaks its first words.
 
-**Status: approved in concept round 36 (user, 2026-10-13).** Numbers are hand-written tables at
-medium (no `data.yaml` until M7 part H builds it); every choice below follows the gap analysis's
+**Status: approved in concept round 36 (user, 2026-10-13).** The numbers live in [data.yaml](data.yaml)
+since M7 part H (step PH2); every choice below follows the gap analysis's
 recommended options; the look is variant **b**, the "Sinkhole colony" (B.2).
 
 ## Design
 
 ### Stat block
 
-Draft numbers at **medium**; HP in damage units (a Pulse Cannon L1 shot does 2), bullet classes and
-contact damage from the [balancing basis](../../README.md#balancing-basis). The reference DPS used is
+Numbers at **medium**, rendered from [data.yaml](data.yaml) (M7 part H, step PH2); HP in damage units (a Pulse
+Cannon L1 shot does 2), bullet classes and contact damage from the [balancing basis](../../README.md#balancing-basis). The reference DPS used is
 the **proposed** Level 21 value of **100** (M18 = a: ≈ 76 at Level 15 rising to ≈ 100 at Level 21;
 accepted in round 36, confirmed by the Act 3 balance plan in part A).
 
+<!-- data: stat-block -->
 | Field | Value |
 |---|---|
 | Faction | Vrell |
-| Layer | the body is always **`buried`** (M7 = a: a new layer after `sub`; nothing hits it, not even the Smart Bomb; no contact); a mouth is `buried` until the middle of its rise, then `ground` (all weapons, `anti-ground` ×2) until the middle of its dive; the phase-2 spine vents `ground` while up |
+| Layer | `buried` (the body: nothing hits it, not even the Smart Bomb; no contact); a mouth is `buried` until the middle of its rise, then `ground` (all weapons, `anti-ground` ×2) until the middle of its dive; the phase-2 spine vents `ground` while up |
 | Size tier | `huge` |
-| Size | the mouth ≈ 150 px across (hitbox a 120 px circle; at an edge about two thirds of it on the screen); the body ≈ 900 px long under the sand, seen only as a travelling ridge; each spine vent 40×40 |
+| Size | 228×228 px, hitbox 120×120 (the mouth ≈ 150 px across, a 120 px circle; at an edge about two thirds of it on the screen; the body ≈ 900 px long under the sand, seen only as a travelling ridge; each spine vent 40×40) |
 | Parts | the mouth (`vital`; the bar): the lips ×0.5, the lime **gullet** a weak spot ×2 while open; three spine vents (`destroyable`, phase 2, outside the bar); the body (`buried`, drawn as the ridge) |
-| Orientation | the mouth in 5 poses: breaching from the left, right, top and bottom edges (leaning into the field) and straight up in the middle (phase 3), each with its rise, open, bite and dive frames |
-| HP | mouth **5,600**; spine vents 280 each (840); total 6,440 (easy 4,830 / hard 8,372, from the global multipliers) |
+| Orientation | `fixed` (the mouth breaching from the left, right, top and bottom edges, leaning into the field, and straight up in the middle in phase 3, each with its rise, open, bite and dive frames) |
+| HP | mouth 5,600; spine vents 280 each (840); total 6440 (easy 4830 / hard 8372, from the global multipliers) |
 | Armour / shield | `buried` between breaches and during the first half of a rise and the second half of a dive; the lips ×0.5; the gullet ×2 while the mouth is open |
-| Speed | the arena scrolls at **20 px/s**; the mouths do not move once risen |
+| Speed | 0 px/s (the mouths do not move once risen; the arena crawls at 20 px/s) |
 | Movement | `burrow` with fixed **breach points** around the field (see *Breaches*); between breaches its ridge runs under the sand from the last breach point toward the next |
-| Attack | rings and fans from the gullet, the **suction**, the **bite**, debris; phase 3's eruption (see *Phases*) |
-| Formations | solo set piece (debris rocks in phases 2–3) |
-| Weak points | the lime gullet (×2 while open) |
+| Attack | the **suction** (45 px/s within 120 px, falling off to 0 at 360 px); the **bite** (a 0.8 s tell, then `heavy` = 10 within 70 px, once); debris in phases 2-3; phase 3's **eruption** (a 45 px marker on the ship, `heavy` = 10 after 1.5 s; see *Phases*); phase 1: the gullet fires a ring of 12 (`small` = 4, 100 px/s) every 2.5 s while open, each after a 0.5 s lime glow; phase 2: rings of 14 (110 px/s) every 2.5 s; with a 5-way `fan` (spread 50°, 130 px/s, `small`) at the ship between the rings; phase 3: the mouth standing in the field fires a 2-arm `spiral` (4 bullets a second per arm, 120 px/s, `small`) while it stands open; phase 2: each living spine vent vents an aimed 3-round `burst` (130 px/s, `small`) every 3 s while the mouth is open |
+| Formations | solo set piece |
+| Weak points | lime gullet (while open) (×2) |
 | Effective traits | `anti-ground`, `side`, `rear`, `homing` |
-| Credits | **300** in Act 1 terms (mouth 264, spine vents 12 each); × 2.56 × Level 21's `bounty_scale` of 0.80 (estimate) it pays **614 = 22.7 % of budget(21) = 2,709** (see *Bounty*) |
+| Credits | 320 (score 3200 × chain) in Act 1 terms (mouth 284, spine vents 12 each); × 2.56 × Level 21's `bounty_scale` of 0.75 (paper) it pays **614 = 22.7 % of budget(21) = 2,709** (see *Bounty*) |
 | Death | `huge`: the last mouth rears up and shudders, the sand splits along the whole ridge, chained eruptions of dust and lime ichor over 3 s, the mouth sinks into a collapsing crater; screen flash at the chain's end (an act boss); credit shower; the Choir speaks (see *The Choir's first words*) |
 | First level / used in | L21; L21 only (an echo version in the L49 boss rush) |
 | Difficulty hooks | hard: rings of 16, the bite's tell 0.6 s, the pull 55 px/s, phase 3's marker 1.2 s, the spiral's three arms; easy: the pull 30 px/s, the bite's tell 1.0 s, phase 3's marker 1.8 s |
+<!-- /data -->
 
 ### Breaches
 
@@ -148,8 +150,9 @@ Lessons from Act 2 that the build must apply (M7 part H):
 
 An act boss aims at ≈ **30 %** of its level's budget (band 20–40 %). Data is in Act 1 terms: **bounty =
 share × budget(21) ÷ (2.56 × `bounty_scale`)**. [Level 21](../../../campaign/act-3-red-dust/level-21-dust-colossus/README.md)
-sets its `bounty_scale` at **0.80** (estimate), and the boss there is **300** (mouth 264, vents 12
-each), paid 300 × 2.56 × 0.80 = **614 = 22.7 %** of budget(21) = 2,709.
+sets its `bounty_scale` at **0.75** (step PH2's paper value), and the boss there is **320** (mouth 284,
+vents 12 each), paid 320 × 2.56 × 0.75 = **614 = 22.7 %** of budget(21) = 2,709 (H.5; step H4
+recomputes it from the measured scale).
 
 **Why 22.7 %, not 30 %** (accepted in round 36, Q.21a), as the [Siege Spire](../siege-spire/README.md)'s
 26.8 %: a perfect run must earn at least **1.4 × the budget** (`TypicalHaulTest`), and the boss pays
@@ -201,12 +204,15 @@ and a lime throat; and [b "Sinkhole colony"](../concept/dust-colossus-r36-b.png)
 ([GIF](../concept/dust-colossus-r36-b.gif)), the ground collapsing into a funnel, four bone mandibles
 unfolding around a lime throat, violet-lit vein ridges under the sand.
 
+Production art: [dust-colossus-final-r44-a.png](../concept/dust-colossus-final-r44-a.png) ([GIF](../concept/dust-colossus-final-r44-a.gif)), `tools/art/dust_colossus.py` (sprite names and frame layout in its docstring; held in `build/art-held/` until this part's `data.yaml` claims the root), prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r44-a); pending the user's review in round 44.
+
 ## Implementation
 
 - [ ] The `buried` layer (M7 = a; appended after `sub` so the ordinals and replay hashes stay): nothing
       hits it, not even the Smart Bomb; no contact
-- [ ] Stat block and boss script in a `data.yaml` (breach points, the cycle, phases, par), loaded;
-      global difficulty multipliers applied (M7 part H)
+- [x] Stat block and boss script in a `data.yaml` (breach points, the cycle, phases, par), loaded;
+      global difficulty multipliers applied (M7 part H, step PH2: `movement.breach`, `boss.suction`,
+      `vents`, `eruption`, `debris` and the hooks, checked by `ColossusChecks`, mapped by `ColossusRules`)
 - [ ] Breaches: the tell, the dynamic edge warning 3 s ahead, rise, open, bite, dive; the points per
       phase; the layer flips at the middles; the bottom breach as a rear wave for Rook
 - [ ] The suction (a radial pull on the ship, Rook and debris) and the debris rocks as hazards
@@ -247,3 +253,10 @@ unfolding around a lime throat, violet-lit vein ridges under the sand.
   colony" chosen (a funnel collapsing in the sand, four bone mandibles round a lime throat, violet
   vein ridges); the *Look* follows it. The "Rearing maw" worm (a) rejected and moved to
   `../concept/rejected/`.
+- 2026-10-20 (user, round 43, part H's answers that touch the boss): phase 1's calibration band is **0.8-1.2x the Kraken's 11.4 per 10 s** with the random-dodge harness (H.4); the boss keeps its **22.7 % bounty share** while the perfect run stays at least 1.4x (H.5); the arena tile repeats at 512 px, section 6's tiles start at the next seam and the collapsed crater and the furrow are props placed at the kill (H.6); the suction pulls no pickups, debris stops the player's shots but not the enemy's bullets and a phase-2 point is fixed when its edge warning starts, 3 s before the rise, the front one at its tell (H.7 b, c, h). The level's own answers are in [Level 21](../../../campaign/act-3-red-dust/level-21-dust-colossus/README.md#decisions).
+- 2026-10-20: production art made (step ART-H2): 72 px/unit (the mandibles' open reach trimmed to 1.5 units for the one-page budget), five poses (edge breaches leaning 30° into the field on the body's neck), the bulge cracks violet as concept b; pending the user's review in round 44.
+- 2026-10-20 (step PH2, M7 part H; pending the user's review in round 44): the `data.yaml`: the spec's paper HP (5,600 +
+  3 × 280) and par 130 for step H4 to measure; the bounty 320 (mouth 284) for the 22.7 % share at Level 21's paper scale
+  0.75; the points in screen space, turned into the simulation's frame by `ColossusRules`; defaults: the gullet's box
+  70×70, the vents' aimed bursts `small` at 130 px/s, the spiral's arms turning 90°/s, the debris accelerating at
+  60 px/s² (sim step H3's suggestion), the hard rings of 16 in both phases.

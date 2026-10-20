@@ -33,8 +33,8 @@ weak_points: []
 drops: []
 pursuit:   # M7 part G (Level 20, The pursuit swarm; first values approved in round 36 Q.20): the `pursuit` formation's defaults; a wave's `pursuit` block may change them
   band: [50, 150]     # px below the top edge: the leader point's band (behind the ship once the scroll is reversed)
-  lag: 90             # px/s: the leader follows the ship's x this fast sideways
-  lunge_every: 6      # s from one lunge's tell to the next
+  lag: 30             # px/s: the leader follows the ship's x this fast sideways (round 43 Q.1: 90 to 30, the band lags so the beam meets it less)
+  lunge_every: 4      # s from one lunge's tell to the next (round 43 Q.1: 6 to 4; a tell due while the flock is out of the band waits for it)
   tell: 0.8           # s: the flock contracts into a ball, brightens, a rising hum
   ball: 60            # px across, the contracted flock
   dive: 240           # px/s straight down the ship's lane (no homing)
@@ -44,8 +44,8 @@ pursuit:   # M7 part G (Level 20, The pursuit swarm; first values approved in ro
   refill_every: 10    # s
   break_speed: 200    # px/s: at its break-off the leader climbs off the top edge, the members follow alive
 difficulty:
-  easy: {pursuit: {lunge_every: 8, tell: 1.2}}
-  hard: {pursuit: {lunge_every: 4.5}}
+  easy: {pursuit: {lunge_every: 5.5, tell: 1.2}}   # round 43 Q.1: the medium cadence's ratio kept (was 8 against 6)
+  hard: {pursuit: {lunge_every: 3}}                # round 43 Q.1: as easy (was 4.5 against 6)
 seekers_ignore: true   # M7 part G (user decision 2026-10-20, "Homing ignores motes"): no homing shot, turret or Rook picks a mote as a target; direct fire (the rear guns against the pursuit) still hits
 traits: [spread, area, rear]
 bounty: 2
@@ -59,4 +59,4 @@ notes:
   bounty: ' per mote; a swarm of 20 pays 40'
   death: '`tiny` ember puff'
   used_in: returns in Act 3 (L20, as the pursuing swarm)
-  difficulty: 'flock size via the global formation lever; hard: two loop-backs (level data); the pursuit (Level 20): easy a lunge every 8 s with a 1.2 s tell, hard every 4.5 s'
+  difficulty: 'flock size via the global formation lever; hard: two loop-backs (level data); the pursuit (Level 20): easy a lunge every 5.5 s with a 1.2 s tell, hard every 3 s'

@@ -1,10 +1,10 @@
 ---
 title: Level 21 – Dust Colossus
 design: approved
-implementation: not-started
-art: none
+implementation: in-progress
+art: proposed
 depends-on: [../../../enemies/bosses/dust-colossus, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../world/mars, ../../../systems/economy]
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # Level 21 – Dust Colossus
@@ -22,14 +22,15 @@ order.
 
 **Status: approved in concept round 36 (user, 2026-10-13).** Written in the overnight design
 phase (2026-10-12) from the act roster and the gap analysis's recommended answers, all kept or
-accepted in the round. The numbers are still hand-written tables (M19: no `data.yaml` yet); M7
-part H moves them into the level's data and turns these tables into marked ones.
+accepted in the round. M7 part H (step PH2, 2026-10-20) moved the numbers into the level's
+[data.yaml](data.yaml) with round 43's answers (H.1–H.7): the tables below are rendered from it.
 
 ## Briefing
 
 Two pages, as every level since Level 08, each one screen with its image (`BriefingLayoutTest`),
 at most four lines of text so the image fits. Texts (approved in round 36):
 
+<!-- data: briefing -->
 > **Commander Okafor:** "No more running. Every Vrell attack on Mars came out of the Hellas
 > basin, and Doctor Varga thinks she knows why. We go down there and end it. Ares Landing is
 > counting on you, Lancer."
@@ -37,6 +38,7 @@ at most four lines of text so the image fits. Texts (approved in round 36):
 > **Dr. Varga:** "The song comes from under the basin floor. It's one organism, the size of a
 > colony. It breaches where the sand bulges, from any side, even behind you. The throat glows
 > lime. Bring side and rear guns."
+<!-- /data -->
 
 *Images* (production art straight away, as in Act 2; [briefing images](../../../ui/briefing/README.md),
 `tools/art/briefing_images.py`): Okafor's page `level-21-hellas-basin` (the basin on a CDF plot:
@@ -48,22 +50,26 @@ lines drawn in).
 
 *Hangar teaser* (shop screen before L21, Rook, not voiced):
 
+<!-- data: teaser -->
 > **Rook:** "Something big under Hellas. Bring side guns, rear guns. Bring all the guns."
+<!-- /data -->
 
 ## Threat profile
 
-Hand table. Directions by each wave's `from`, counted by enemy (the intel's rule); the
+Rendered from the data. Directions by each wave's `from`, counted by enemy (the intel's rule); the
 fight's breaches are not edge waves and are not in the numbers.
 
+<!-- data: threat-profile -->
 | Field | Value |
 |---|---|
-| Dominant layers | `ground` (Burrowers when surfaced, Dust Devils, Shellbacks, turret nests and mortars, the Colossus's mouths), `buried` (Burrowers under the sand and the Colossus's body: nothing hits them), `air` (Dust Kites, Mantises, Wraiths, the Choir Herald); `low-air` (risen Dust Devils, the dust haze) |
-| Attack directions | front 75 % · sides 12 % · rear 12 % (the approach by its waves; in the fight the mouths breach from all four edges) |
+| Dominant layers | `ground` (Burrowers when surfaced, Dust Devils, Shellbacks, turret nests and mortars, the Colossus's mouths), `buried` (Burrowers under the sand and the Colossus's body: nothing hits them), `air` (Dust Kites, Needler and Stinger groups, Mantises, Wraiths, the Choir Herald, the Mote stream); `low-air` (risen Dust Devils, the dust haze) |
+| Attack directions | front 75% · sides 12% · rear 12% (the approach by its waves; in the fight the mouths breach from all four edges) |
 | Density | 4 |
-| Recommended traits | `anti-ground`, `rear`; `side` is in Varga's L3 line (three traits do not fit the intel panel, as Level 14) |
+| Recommended traits | `anti-ground`, `rear` |
 | Hazards | The Colossus's suction and the debris rocks (the arena); the ridge pass (scenery) |
 | Boss / mid-boss | Act boss [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md) |
 | Sensor-suite detail | **none**: Hellas basin, `ground` + `air`, all directions. **L1**: + the directions, density 4, hazard "suction", the objective `DESTROY THE DUST COLOSSUS`. **L2**: + Burrower, Dust Devil, Shellback, Choir Herald, Dust Kite, Mantis, Wraith, Needler portraits; the boss's name and silhouette (`dust-colossus`). **L3**: + `anti-ground` and `rear` highlighted; the timeline strip marks the ridge pass (64–72 s) and the boss (105 s); 1 secret. |
+<!-- /data -->
 
 *Varga's intel line* per sensor-suite level (fitting the panel is `IntelPanelLayoutTest`'s):
 
@@ -90,8 +96,9 @@ fight's breaches are not edge waves and are not in the numbers.
 
 Normal pace for the approach, slowing toward the hollow: **160 px/s** on the rim, **170** down the
 inner wall, **150** over the dune sea, **140** in the lime hollow (each change eased over 1 s),
-then the arena eases down to **20 px/s** over 2 s from t=103 (the boss spec's crawl). The level
-starts on the rim (no launch: the wing takes off from the line it held in Level 20). Rook flies
+then the arena eases down to **20 px/s** over its first 2 s, t=105–107 (the boss spec's crawl; H.7a:
+the arena's `ramp`). The level starts with the usual 5 s launch from the bottom edge over the rim's
+CDF line (H.7g). Rook flies
 from the escort slot (M17 = a); `--escort none` flies the level without him.
 
 **The arena crawls; the level clock halts** (round 36): the arena section starts at
@@ -101,16 +108,20 @@ for the whole fight; the level clock halts at the arena section's end (t=245) wh
 lives, and a kill jumps it there (Level 07's and 14's `arenaJump`). The tile hides both: a long
 fight (hard, a weak loadout) keeps crawling past t=245 without running out of ground, and the
 kill's jump moves no visible ground. The craters the mouths leave scroll on with the tile. The
-settling-dust section's strip starts at the tile's seam.
+settling-dust section's settled floor starts at the next 512 px seam (H.6; the game lays it, with
+the collapsed crater and the furrow at the kill). In the data the arena is a section of speed 20 with
+`arena: true` and a `ramp`; it crawls because the level's boss breaches (content's `ColossusRules`).
 
+<!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. Hellas Rim | 0–22 | 0–3,520 | 160 | light, haze | `ground`: the rim's edge, the CDF line held at the end of the retreat (emplacements, burnt-out walkers and haulers, scorched pads), then the first terraces of the inner wall. `low-air`: dust streaks off the rim. | The take-off from the line; popcorn from t=6. |
-| 2. Inner Wall | 22–50 | 3,520–8,280 | 170 | light | `ground`: terraced slopes falling into the basin, landslide fans of red sand, a CDF hauler's wreck, the survey crawler under a slide on a ledge (the secret). `low-air`: thin dust. | Burrowers on the dune fans, the first nest, the Mantis pincer. |
-| 3. Dune Sea | 50–78 | 8,280–12,480 | 150 | medium | `ground`: the basin floor, long dune crests, old breach craters filling with sand. **The ridge pass** (t≈64–72): the Colossus's back runs under the dunes from the right edge to the left across the upper half, a travelling ridge with a dust haze. `low-air`: dust devils' trails. | Dust Devils, the first rear ambush; the ridge pass teaches the arena's read. |
-| 4. Lime Hollow | 78–105 | 12,480–16,260 | 140 | medium, dust | `ground`: the basin's lowest point, a lime-veined crust cracked in rings round the centre, Vrell growths, sinkholes. `low-air`: dust haze lit lime from below. | The Herald with escorts, the last nests, two rear waves; the Choir's song. |
-| 5. Dust Colossus | 105–245 | 16,260–19,060 (then the tile) | 20 | dust | `ground`: the hollow's floor as the seamless tile; the breaches' bulges, craters and the ridge; the debris rocks (phases 2–3). | The boss fight (≈ 130 s at medium, the spec's par); the warning, the arrival and the checkpoint at t=105. |
-| 6. Settling Dust | 245–277 | 19,060–19,860 | 25 | clearing | `ground`: the collapsed crater, the ridge's sunken furrow, the dust falling out of the air. `high-air`: far off over the basin, Vrell shapes and spore trails lifting off and climbing out of the frame (scenery, ≤ 40 %). | Release; no enemies, no music; the act end's lines. |
+| 1. Hellas Rim | 0–22 | 0–3,520 | 160 | light | `ground`: the rim's edge, the CDF line held at the end of the retreat (emplacements, burnt-out walkers and crawlers, scorched pads), then the first slope of the inner wall. `low-air`: dust streaks off the rim. | The launch over the line; popcorn from t=6. |
+| 2. Inner Wall | 22–50 | 3,520–8,275 | 170 | light | `ground`: terraced slopes falling into the basin, landslide fans of red sand, a CDF hauler's wreck (the turret nest on it), the survey crawler under a slide on a tread (the secret). `low-air`: thin dust. | Burrowers on the dune fans, the first nest, the Mantis pincer. |
+| 3. Dune Sea | 50–78 | 8,275–12,485 | 150 | medium | `ground`: the basin floor, long dune crests, old breach craters filling with sand. **The ridge pass** (t≈64–72): the Colossus's back runs under the dunes from the right edge to the left across the upper half, a travelling ridge with a dust haze. `low-air`: ochre dust banks, the dust devils' trails. | Dust Devils, the first rear ambush; the ridge pass teaches the arena's read. |
+| 4. Lime Hollow | 78–105 | 12,485–16,270 | 140 | heavy | `ground`: the basin's lowest point, a lime-veined crust cracked in rings round the centre, Vrell growths, sinkholes. `low-air`: dust haze lit lime from below. | The Herald with escorts, the last nests, two rear waves; the Choir's song, then the screen clears. |
+| 5. Dust Colossus | 105–245 | 16,270–19,190 | 20 | heavy | `ground`: the hollow's floor as the seamless tile (512 px); the breaches' bulges, craters and the ridge; the debris rocks (phases 2–3). | The boss fight (≈ 130 s at medium, the spec's par); the warning, the arrival and the checkpoint at t=105. |
+| 6. Settling Dust | 245–277 | 19,190–19,988 | 25 | clear | `ground`: the collapsed crater, the ridge's sunken furrow, the dust falling out of the air (the settled floor from the next 512 px seam, H.6). `high-air`: far off over the basin, Vrell shapes and spore trails lifting off and climbing out of the frame (scenery, ≤ 40 %). | Release; no enemies, no music; the act end's lines. |
+<!-- /data -->
 
 About 105 s of approach (16,260 px), the fight, and 32 s of settling dust. Motion budget: the
 strong elements are the dust on the rim and the slides in sections 1–2, the ridge pass in section
@@ -125,11 +136,23 @@ The backdrop's look comes from the chosen Mars scenes of round 02/03
 
 Formation names from the [formation vocabulary](../../../enemies/README.md). The returning
 `medium` and larger units get the act HP factor (reference DPS 100 at L21, M18 = a; the ratio to
-their first level's): Burrower 44 → 58, Dust Devil 52 → 59, Shellback body 120 → 143 and vent
-24 → 29, Choir Herald 60 → 71, Mantis 26 → 50, Wraith 16 → 24, Spore Bomber 24 → 75; the `tiny` and
-`small` ones keep their HP.
+their first level's): Burrower 44 → 58, Dust Devil 52 → 59, Shellback ≈ 126 (its round-40 rework:
+106 at Level 17; the earlier "143 + 29" is stale), Choir Herald 60 → 71, Mantis 26 → 50, Wraith
+16 → 24, Spore Bomber 24 → 75. The `small` ones take the beam era's ×2 (`beam_era_hp`, from Level 18)
+and the Needler and the Stinger also `small_act_hp` (Level 21 joined its levels in step PH2): Needler
+24, Stinger 36, Spine Turret 16, Polyp Mortar 20; the `tiny` ones (Dust Kite, Skitter, Mote) keep theirs.
 
-- **Density and pacing** (§1.7, my choice for review): **107 enemies at medium** (the waves' 97 and
+- **Round 43, H.1–H.3** ("tougher, not more", count-neutral as Level 20; step PH2): the Kite V-wings
+  (t=9.5, 30) fly as Kite swarms that loop on the screen (Level 15's fix), the t=64 stream as a long
+  loop that holds the ridge pass; four Kite streams and snakes became firing groups (Needler line
+  abreasts of 4 at t=20 and 54, Stinger streams of 4 at t=26.5 and 91: in the beam a 1 HP Kite dies in
+  a tick, a 24/36 HP Needler or Stinger stays and fires); the t=101 Stinger V-wing is dropped (H.3: the
+  screen clears while the Choir sings, no incoming box), its four folded into the t=16.5 Needler line
+  (3 → 4), the t=26.5 stream and the t=44 V-wing (4 → 5). Kites 35 → 20, Needlers 11 → 20, Stingers
+  8 → 13: **96 waves' units + 10 ground targets = 106 at medium**. Hard: the firing groups one smaller,
+  a third Wraith in each ambush, the centre turret pair; easy: the formation lever and the t=61
+  Needler V-wing. Step H4 measures the floor and the gaps (`PacingTest`, `ActFloorTest`).
+- **Density and pacing** (§1.7, round 36): **107 enemies at medium** (the waves' 97 and
   the 10 turrets and mortars) over the 97 s from t=8 to the arena, **≈ 66 a minute**: the act's
   minimum of 55 plus what the 3 s rule needs, about Level 14's 67.6 for the other act finale, and
   inside the act's band of 60–72 ([Act 3](../README.md#density-and-threat-profile), which brought
@@ -145,52 +168,53 @@ their first level's): Burrower 44 → 58, Dust Devil 52 → 59, Shellback body 1
   hollow's crust is the spec's "dust or regolith"; the nests' rocks are no-surface zones (Level
   15's proposal).
 
+<!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
 | 6 | 1 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (alternating edges) | Popcorn over the rim line |
-| 9.5 | 1 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
+| 9.5 | 1 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | H.1: the approved V-wing as a swarm that loops on the screen |
 | 13 | 1 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (left) | |
-| 16.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Over the wrecks of the retreat |
-| 20 | 1 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | Down the first terraces |
-| 23 | 2 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 3 | front (buried) | On the dune fans; act HP factor (58) |
-| 26.5 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | |
-| 30 | 2 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
-| 33.5 | 2 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | 1 per side; edge warnings; act HP factor (50) |
+| 16.5 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Over the wrecks of the retreat |
+| 20 | 1 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Down the first slope; a firing group in place of the approved Kite snake (H.1) |
+| 23 | 2 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 3 | front | On the dune fans; act HP factor |
+| 26.5 | 2 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (alternating edges) | A firing group in place of the approved Kite stream (H.1) |
+| 30 | 2 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | H.1: the approved V-wing as a looping swarm |
+| 33.5 | 2 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | 1 per side; edge warnings; act HP factor |
 | 37 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (right) | Over the hauler's nest |
-| 40.5 | 2 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front (buried) | Below the survey crawler's ledge |
-| 44 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive |
-| 47 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | sides (alternating edges) | Popcorn from the sides; edge warnings |
-| 50.5 | 3 | swarm | [Dust Devil](../../../enemies/ground/dust-devil/README.md) | 2 | front | Roaming the dune sea; act HP factor (59) |
-| 54 | 3 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (left) | |
-| 57.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | With the dune-crest mortars; act HP factor (75) |
-| 61 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; BOTTOM warning; Rook's rear bark; act HP factor (24) |
-| 64 | 3 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (alternating edges) | Over the ridge pass; no wave until t=70.5 |
-| 70.5 | 3 | pair | [Shellback](../../../enemies/ground/shellback/README.md) | 2 | front | Lumbering after the ridge; act HP factor (143 + 29) |
+| 40.5 | 2 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | Below the survey crawler's tread |
+| 44 | 2 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 5 | front | The leader drops an overdrive |
+| 47 | 2 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | sides | Popcorn from the sides; edge warnings |
+| 50.5 | 3 | pack | [Dust Devil](../../../enemies/ground/dust-devil/README.md) | 2 | front | Roaming the dune sea; act HP factor |
+| 54 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | A firing group in place of the approved Kite snake (H.1) |
+| 57.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | With the dune-crest mortars; act HP factor |
+| 61 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; BOTTOM warning; Rook's rear bark; act HP factor; easy: a Needler V-wing from the front instead |
+| 61 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Easy only: instead of the rear Wraiths (Level 14's rule) |
+| 64 | 3 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Over the ridge pass (H.1: a looping swarm); no wave until t=70.5 |
+| 70.5 | 3 | convoy | [Shellback](../../../enemies/ground/shellback/README.md) | 2 | front | Lumbering after the ridge; act HP factor |
 | 74 | 3 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | 1 per side; edge warnings |
 | 77.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | |
 | 80.5 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | 2 per side, hold 4 s; edge warnings |
-| 84 | 4 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front (buried) | Between the hollow's nests |
-| 87.5 | 4 | carrier + escorts | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Needler](../../../enemies/air/needler/README.md) | 1 + 4 | front | The escorts in `orbit` under its rings; act HP factor (71) |
-| 91 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | |
+| 84 | 4 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 4 | front | Between the hollow's nests |
+| 87.5 | 4 | carrier + escorts | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Needler](../../../enemies/air/needler/README.md) | 1 + 4 | front | The escorts in `orbit` under its rings; act HP factor |
+| 91 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (right) | A firing group in place of the approved Kite snake (H.1) |
 | 94 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | BOTTOM warning; Rook's rear bark |
-| 97.5 | 4 | stream | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | rear | The last of Level 20's pursuers catching up; BOTTOM warning |
-| 101 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The last wave before the Colossus |
-| 105 | 5 | boss | [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md) | 1 | the edges (breach points) | At the arena's start: the warning, the bar and the checkpoint; the breaches as in its spec |
+| 97.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | rear | The last of Level 20's pursuers catching up; BOTTOM warning; the last wave before the Colossus (H.3: the t=101 V-wing dropped) |
+| 105 | 5 | boss | [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md) | 1 | the edges (breach points) | At the arena's start: the warning, the bar and the checkpoint; the breaches as in its spec; no other waves in the arena |
 
-Totals at medium: Dust Kite 35 · Burrower 11 · Needler 11 · Skitter 9 · Mote 8 · Stinger 8 ·
-Mantis 4 · Wraith 4 · Spore Bomber 2 · Dust Devil 2 · Shellback 2 · Choir Herald 1 (97), plus the
-ground targets' 6 Spine Turrets and 4 Polyp Mortars.
+Totals: Dust Kite 20 · Skitter 9 · Needler 20 · Burrower 11 · Stinger 13 · Mantis 4 · Dust Devil 2 · Spore Bomber 2 · Wraith 4 · Shellback 2 · Choir Herald 1 · Mote Swarm 8 · Dust Colossus 1.
+<!-- /data -->
 
 ## Ground targets
 
+<!-- data: ground-targets -->
 | Section | Target | Effect |
 |---|---|---|
-| 2 | [Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×3 on the CDF hauler's wreck (t≈36) | Bounty |
-| 2 | Landslide over the Hellas survey crawler on a ledge (t≈44, x≈80) | The secret (see below) |
-| 3 | [Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×2 on a dune crest (t≈57) | With the Spore Bombers: area denial before the ridge pass |
-| 4 | Spine Turret nest ×3 on the lime crust (t≈84) | Bounty; the t=84 Burrowers surface between them |
+| 2 | [Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×3 on the CDF hauler's wreck (t≈36) | Bounty 12 each |
+| 2 | Landslide over the Hellas survey crawler on a tread (`ground` trigger, 20 HP, t≈44, x 80) | The secret: frees a crate worth 100 (256) |
+| 3 | [Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×2 on a dune crest (t≈57) | Bounty 15 each; with the Spore Bombers: area denial before the ridge pass |
+| 4 | Spine Turret nest ×3 on the lime crust (t≈84; hard: + a pair at the hollow's centre, t≈99); hard ×5 | Bounty; the t=84 Burrowers surface between them |
 | 4 | Polyp Mortar ×2 on the hollow's lip (t≈92) | Bounty |
-| 4 | Spine Turret pair at the hollow's centre (t≈99), **hard only** | Bounty |
+<!-- /data -->
 
 ## Hazards
 
@@ -242,28 +266,28 @@ closing rule). Text model from the kill (K): the Choir from K to ≈ K+6.0 (its 
 Okafor to ≈ K+19.3, Ares Control to ≈ K+26.7, Okafor's closing line to ≈ K+34; the settling-dust
 section (32 s) is sized to them.
 
+<!-- data: radio -->
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Aegis, no more running. Every Vrell on Mars came out of that basin. Today we go in after them." |
 | t=13 | Rook | "On your {side}, Lancer. Let's finish this." |
-| t=21 | Ares Control | "Ares Control, Aegis. All of Mars is listening today." |
+| t=21 | Generic colonial (Ares Control) | "Ares Control, Aegis. All of Mars is listening today." |
 | t=37 | Varga | "Burrowers on the wall. And the song is coming from the floor." |
-| Crawler uncovered (the secret) | Ares Control | "Our survey crawler, missing since spring. Take what's aboard." |
 | t=53 | Okafor | "Basin floor ahead. Keep your speed up and your eyes on the sand." |
 | t=65.5 | Varga | "That ridge isn't a dune, Lancer. It's moving under the sand." |
 | t=74 | Okafor | "Whatever it is, it's heading for the hollow. So are we." |
-| t=84 | Ares Control | "Our seismographs just went off the scale, Aegis." |
+| t=84 | Generic colonial (Ares Control) | "Our seismographs just went off the scale, Aegis." |
 | t=97.5 | The Choir (distorted) | "[the Choir sings]" |
-| t=105 (the boss warning) | Rook | His boss-warning bark (his AI, not scripted; Level 14's rule) |
-| t=111 | Varga | "It's coming up! Hit the lime in its throat when it opens." |
+| t=111 (t=111 (the first tell; the arena's clock runs)) | Varga | "It's coming up! Hit the lime in its throat when it opens." |
 | Phase 2 (`boss-phase` Hunting) | Okafor | "It's hunting you now, Lancer. Keep moving and mind the pull." |
 | Phase 2, queued after Okafor's line | Rook | "Remember the moles, Lancer? I take it back." |
 | Phase 3 (`boss-phase` Breaching anywhere) | Varga | "It's under you! Move when the ground cracks!" |
-| Colossus destroyed (`boss-destroyed`, the chain's start) | The Choir (speech) | "…many… we are many… we are going…" |
+| Colossus destroyed (`boss-destroyed`, the chain's start): the Choir speaks, with its layering on speech | The Choir (distorted) | "…many… we are many… we are going…" |
 | After the chain and the flash (`CLOSING`) | Varga | "Commander… that was not singing. Those were words." |
 | Then (`CLOSING`) | Okafor | "I heard it, Doctor. Log everything." |
-| Then (`CLOSING`) | Ares Control | "Clear sky over every dome, Aegis. Dinner's on Ares Landing." |
+| Then (`CLOSING`) | Generic colonial (Ares Control) | "Clear sky over every dome, Aegis. Dinner's on Ares Landing." |
 | Level end (the closing line, `CLOSING`) | Okafor | "Mars holds. They're pulling off the planet. Come home, Aegis." |
+<!-- /data -->
 
 Timeline check (text): t=1 closes ≈ 12.4, t=13 ≈ 20.4, t=21 ≈ 28.1, t=37 ≈ 44.4; the secret's line
 has the gap from ≈ 44.4 to Okafor at t=53 (the crawler is in reach at t≈44–49; an event line waits
@@ -303,9 +327,10 @@ HP and attacks live in the spec. Arena notes for this level:
   [retry](../../../systems/retry/README.md) rules; there is none on hard.
 - The fight's length is **measured** (the spec): the autopilot on the balance plan's Level 21 fit
   over five seeds, every seed 90–180 s, the par the measured mean (draft 130 s).
-- **Bounty: 300 in Act 1 terms** (mouth 264, spine vents 12 each), paid **614 = 22.7 %** of the
-  budget at this level's scale 0.80, instead of the spec's 790 (30 %) at an assumed scale of 0.40:
-  see *Credit budget* (pending; the spec's own note says this level's scale decides the share).
+- **Bounty: 320 in Act 1 terms** (mouth 284, spine vents 12 each), paid **614 = 22.7 %** of the
+  budget at this level's paper scale 0.75 (H.5: the share kept while the perfect run stays ≥ 1.4 ×;
+  300 at 0.80 before), instead of the spec's 790 (30 %) at an assumed scale of 0.40: see *Credit
+  budget*; step H4 recomputes it from the measured scale.
 
 ## Music & ambience
 
@@ -353,21 +378,22 @@ Budget(21) = 700 × 1.07²⁰ ≈ **2,709**, the typical haul's target
 the ground units and targets, half the secret and the secondary, the boss at 100 %. Amounts in
 **Act 1 terms** (Dust Kite 4, Skitter 5, Needler 12, Stinger 15, Mote 2, Spore Bomber 25, Mantis
 30, Wraith 30, Choir Herald 30, Burrower 24, Dust Devil 26, Shellback 48 whole, Spine Turret 12,
-Polyp Mortar 15, the boss 300, the crate 100, the secondary 100), each paid × the act factor
-**2.56**, bounties also × the level's scale. A **`bounty_scale` of 0.80** (estimate) puts the
-typical haul on the budget: paid per kill Dust Kite 8, Skitter 10, Needler 25, Stinger 31, Mote 4,
-Spore Bomber 51, Mantis, Wraith and Herald 61, Burrower 49, Dust Devil 53, Shellback 98, Spine
-Turret 25, Polyp Mortar 31; the Colossus 614.
+Polyp Mortar 15, the boss 320, the crate 100, the secondary 100), each paid × the act factor
+**2.56**, bounties also × the level's scale. With round 43's swaps (more Needlers and Stingers, fewer
+Kites) a **`bounty_scale` of 0.75** (step PH2's paper value, m7h-gaps §1.4; step H4 sets the measured
+one) puts the typical haul on the budget (+1.4 %), the perfect run at 1.45 ×; the Colossus pays 614.
 
+<!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills, air: Dust Kite 35 × 4 + Skitter 9 × 5 + Needler 11 × 12 + Stinger 8 × 15 + Mote 8 × 2 + Spore Bomber 2 × 25 + Mantis 4 × 30 + Wraith 4 × 30 + Choir Herald 1 × 30 = 773 | 1,583 | 950 |
-| Ground: Burrower 11 × 24 + Dust Devil 2 × 26 + Shellback 2 × 48 + Spine Turret 6 × 12 + Polyp Mortar 4 × 15 = 544 | 1,114 | 891 |
-| Boss: Dust Colossus (mouth 264 + spine vents 3 × 12 = 300) | 614 | 614 |
-| Secret: survey crawler (hidden crate 100, 9 % of budget) | 256 | 128 |
-| Secondary: clear the basin (65 % of the enemies) | 256 | 128 |
-| **Total** (bounty scale 0.80, act factor 2.56) | **3,823** | **2,711** |
-| Budget(21) = the typical haul's target; typical +0.1 %, perfect 1.41 × budget | | 2,709 |
+| Kills: Dust Kite 20 × 4 + Skitter 9 × 5 + Needler 20 × 12 + Burrower 11 × 24 + Stinger 13 × 15 + Mantis 4 × 30 + Dust Devil 2 × 26 + Spore Bomber 2 × 25 + Wraith 4 × 30 + Shellback 2 × 52 by parts (48 whole) + Choir Herald 1 × 30 + Mote Swarm 8 × 2 | 2,543 | 1,674 |
+| Ground targets: Spine Turret 6 × 12 + Polyp Mortar 4 × 15 | 254 | 203 |
+| Boss: Dust Colossus (mouth 284 + vents 3 × 12) | 614 | 614 |
+| Secret: survey crawler (hidden crate, 4% of budget) | 256 | 128 |
+| Secondary: clear the basin | 256 | 128 |
+| **Total** (bounty scale 0.75) | **3,923** | **2,747** |
+| Budget(n) = the typical haul's target; typical +1 %, perfect 1.45 × budget | | 2,709 |
+<!-- /data -->
 
 **Why the boss pays 22.7 %, not 30 %** (accepted in round 36, Q.21a; as Level 14's 26.8 %): a perfect
 run must earn at least 1.4 × the budget (`TypicalHaulTest`), and the boss pays the same in both
@@ -376,7 +402,7 @@ holds up to a share of about 24.8 %; at the spec's 30 % (scale ≈ 0.71, the bos
 terms) the perfect run reaches only ≈ 1.38 ×. 22.7 % is inside the act boss's 20–40 % band
 (`BalanceTest`). To raise it, the level would need a larger secret or more air bounty (e.g. Stinger
 and Mantis waves for Kites), not more density: the bound depends on the mix, not the count. The
-scale (0.80) is above M12's 0.3–0.5, as Levels 17–18's (0.55 and 0.92): the density rests on cheap
+scale (0.75) is above M12's 0.3–0.5, as Levels 17–18's (0.55 and 0.92): the density rests on cheap
 Kites and the boss's share is small.
 
 **Balance plan** (part A's Act 3 plan, M18 = a): the level expects `anti-ground` and wing or rear
@@ -397,17 +423,22 @@ alone, at a longer fight; the fight's measurement uses the plan's Level 21 fit.
 
 ## Concept art
 
-None yet (`art: none`). The level will need, in M7 part H's round (production straight away, as
-Act 2's levels did; the boss's own art is step A-bosses' and part H's):
+Production art of M7 part H's round 44 (step ART-H1; the mood from the Hellas mood still in
+[mars](../../../world/mars/README.md), round 36 MA.4, in Level 20's style), pending the user's review. Prompts:
+[concept/prompts.md](concept/prompts.md). The arena's tile repeats every 512 px and section 6's settled floor
+starts at the next 512 px seam, its seam piece, the collapsed crater and the furrow laid by the game at the kill
+(round 43, H.6); the ridge pass is drawn by the game from Level 20's `colossus-ridge` sprites.
 
-- the production backdrop: the rim with the CDF line and the wrecks of the retreat, the inner
-  wall's terraces and landslides, the dune sea with old breach craters, the lime hollow's cracked
-  crust and sinkholes, the arena's **seamless basin tile** (≥ 2,800 px or a loop) with the craters
-  the mouths leave, the settling-dust strip from the tile's seam, the Vrell lifting off on
-  `high-air`; the ridge pass's look (the travelling ridge and haze, drawn by the game, shared with
-  the boss's ridge);
-- the props: the survey crawler under its slide (cleared frames, the crate), the CDF hauler's
-  wreck;
+| File | What | Status |
+|---|---|---|
+| [concept/backdrop-final-r44-a.png](concept/backdrop-final-r44-a.png) | Level 21 backdrop final (`tools/art/backdrop_l21.py`): the CDF line on the rim (pads, berm, gun pits) and the retreat's wrecks down the basin wall, the inner wall's terraces with landslide fans of red sand and the CDF hauler's wreck, the dune sea with old breach craters and the mortars' crest, the lime hollow's crust cracked in rings and lit lime from below with sinkholes and Vrell growth, the arena's 512 px basin floor, and after a kill at t=235 the settled floor from the next seam with the collapsed crater, the furrow and the Vrell lifting off on high-air; the play field at twenty times (no units), the pieces (sheet) | proposed |
+| [concept/backdrop-final-r44-a.gif](concept/backdrop-final-r44-a.gif) | Level 21 backdrop final: the approach, the arena's start and the settling dust after the kill flown at 0.5x, 10 fps | proposed |
+| [concept/l21-props-final-r44-a.png](concept/l21-props-final-r44-a.png) | Level 21 props final (`tools/art/l21_props.py`): the survey crawler under its slide (buried, hit, cleared with the crate) and on its ledge at t=44, the CDF hauler's wreck with the turret nest's deck spots, the ridge pass over the dune sea from Level 20's ridge sprites (sheet) | proposed |
+| [concept/l21-props-final-r44-a.gif](concept/l21-props-final-r44-a.gif) | Level 21 props final: the ridge pass at t=63-74 and the crawler's three states on its ledge, 10 fps | proposed |
+
+Still to come in part H: the boss's sprites (ART-H2), the two briefing images and the Act 3 outro's four
+images (ART-H3) and the round's captures:
+
 - the two briefing images; the Act 3 outro's four images (the Act 3 README lists them);
 - the round's captures: the approach at medium with the plan's fit, the ridge pass, each of the
   three phases (an edge breach with its warning, the hunting breaches with the spine vents, a
@@ -416,8 +447,10 @@ Act 2's levels did; the boss's own art is step A-bosses' and part H's):
 
 ## Implementation
 
-- [ ] Level data `data.yaml` (M7 part H) with the sections, waves, ground targets, radio, budget,
-      threat profile, briefing, backdrop and music; this README's tables become marked tables
+- [x] Level data `data.yaml` (M7 part H) with the sections, waves, ground targets, radio, budget,
+      threat profile, briefing, backdrop and music; this README's tables become marked tables (step
+      PH2; loaded, checked by `ColossusChecks` and mapped by `ColossusRules`, `ColossusKeysTest`; the
+      flown tests leave it out until step H4, `Unmapped`)
 - [ ] Reference DPS 100 at L21 and the Act 3 balance plan's Level 21 fit (M18) before the data;
       the act HP factor for the returning `medium`+ units listed in *Waves*
 - [ ] Scroll timeline and sections as in *Layout*; the arena at 20 px/s on a seamless tile on real
@@ -489,3 +522,25 @@ Act 2's levels did; the boss's own art is step A-bosses' and part H's):
   share 22.7 % (300 in Act 1 terms at scale 0.80), the arena's crawl as a seamless tile with the clock
   halting at t=245, the 65 % kill-ratio secondary, Vorne's motif muted, the five closing lines (≈ 34
   s, the debrief waits), ≈ 66 enemies a minute. The Colossus is the "Sinkhole colony" (B.2 = b).
+- 2026-10-20 (user, round 43, H.1-H.7, so part H starts decided; see [round 43](../../../concept-rounds/round-43/README.md#parts-hs-questions)): **H.1** yes: count-neutral swaps as Level 20 (Kite V-wings
+  become swarms, 3-4 Kite groups become Needler/Stinger firing groups, about 107 enemies and 66 a minute), more only if
+  the measured floor fails. **H.2** keep Rook's Autocannon at Level 21. **H.3** yes: drop the t=101 Stinger V-wing (or fold
+  its four into earlier groups) so the screen clears while the Choir sings, no incoming box (the warning stays at
+  t=105), using the third allowed gap. **H.4** phase 1's calibration band is 0.8-1.2x the Kraken's 11.4 per 10 s with the
+  random-dodge harness. **H.5** yes: the boss keeps its 22.7 % share (bounty = 0.227 x 2,709 / (2.56 x scale), about 320
+  at 0.75) while the perfect run stays at least 1.4x. **H.6** the arena tile repeats at 512 px and section 6's tiles start
+  at the next seam (at most 20 s); the collapsed crater and the furrow are props placed at the kill. **H.7** all yes:
+  (a) the ease 140 to 20 over the arena's first 2 s (t=105-107), (b) the suction pulls no pickups, (c) debris stops the
+  player's shots, not the enemy's bullets, (d) the release's end reads "ACTS I-III COMPLETE" and "ACT IV - DEEP WATER.
+  EUROPA. COMING SOON.", Continue "...AT THE END OF ACT III", the next act's name from a `next_act` key in Act 3's data,
+  (e) the Level 3 strip's boss mark is the boss's silhouette at its time, drawn for Level 14 too, (f) the ridge pass as a
+  level key `ridge {t, seconds, from, to, depth}` read by `RidgeLooks` (Q.4: Level 20's track moved into its data), (g)
+  the usual 5 s launch from the bottom edge over the rim's CDF line, (h) a phase-2 point is fixed when its edge warning
+  starts (3 s before the rise), the front one at its tell.
+- 2026-10-20 (step PH2, M7 part H; pending the user's review in round 44): the level's `data.yaml` from the approved
+  tables with round 43's answers: the arena a section of speed 20 with a 2 s `ramp` that crawls because its boss
+  breaches; the waves count-neutral (96 + 10 = 106, the t=101 V-wing folded in), the ridge pass on the `ridge` key
+  (t=64, 8 s, right to left, 150 px down), the usual 5 s launch, `bounty_scale` 0.75 and the boss 320 (paper values for
+  step H4). Defaults: the survey crawler's slide 20 HP on every difficulty (hard 28 needs a trigger's hard key), no
+  no-surface zones yet (the simulation refuses them in a level with an arena), the basin rumble from t=64 with a 30 s
+  swell, cut at the kill.

@@ -61,7 +61,7 @@ they belong to; a round only collects them.
 | [round-40](round-40/README.md) | M7 part D (Level 17 Dome Siege) final art, sounds, voices and capture; the Level 16 canyon redo; the Act 2 playtest rework (Harbour Kraken art, Levels 08/09, refactors, build speed); debrief music (closed 2026-10-19) | approved | n/a | chosen |
 | [round-41](round-41/README.md) | M7 part E (Level 18 Dust Storm) final art, track 9, sounds, voices, capture and build choices; the dome-break redo; Level 17's round 40 fixes; the Act 2 finish (Kraken and Spire data, waves, voices, debrief music, intel panel, refit-only replay hangar) | approved | n/a | chosen |
 | [round-42](round-42/README.md) | M7 part F (Level 19 Foundry of Tharsis) final art, sounds, voices, capture and build choices; the overnight playtest fixes (Spire, radio outro, domes, shop mouse); Levels 15-17's rework; the refactors (closed 2026-10-20) | approved | n/a | chosen |
-| [round-43](round-43/README.md) | The walker's rework, the Freesound sounds, M7 part G (Level 20) final art, voices, capture and build choices with five questions, part H's questions (open since 2026-10-20) | review | n/a | proposed |
+| [round-43](round-43/README.md) | The walker's rework, the Freesound sounds, M7 part G (Level 20) final art, voices, capture and build choices with five questions, part H's questions (closed 2026-10-20) | approved | n/a | chosen |
 
 ## Design
 

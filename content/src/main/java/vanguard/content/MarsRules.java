@@ -105,10 +105,14 @@ final class MarsRules {
 
     /**
      * The level's sections for the simulation: a timed halt with its {@code ramp} (the default 2 s if not given),
-     * a moving section after the first easing in over its {@code ramp} ({@link LevelData.Section#easeSeconds()}).
+     * a moving section after the first easing in over its {@code ramp} ({@link LevelData.Section#easeSeconds()}); M7
+     * part H: a moving arena of a breaching boss crawls ({@link Section#crawls()}), easing in over its {@code ramp}.
      */
-    static List<Section> sections(LevelData level) {
+    static List<Section> sections(Content content, LevelData level) {
         List<LevelData.Section> sections = level.sections();
+        // M7 part H (Level 21): a moving arena crawls (its ground scrolls on while the clock is held) when the level's
+        // boss breaches (ColossusRules).
+        boolean breaching = ColossusRules.breaching(content, level);
         List<Section> out = new ArrayList<>();
         for (int i = 0; i < sections.size(); i++) {
             LevelData.Section section = sections.get(i);
@@ -129,7 +133,8 @@ final class MarsRules {
                     section.rampSeconds(),
                     afterMoving || afterArena ? section.easeSeconds() : 0,
                     // M7 part F: an arena's hold after its boss's death chain (Level 19's wreck beat).
-                    section.holdAfterBossSeconds()));
+                    section.holdAfterBossSeconds(),
+                    breaching && section.isArena() && speed > 0));
         }
         return out;
     }

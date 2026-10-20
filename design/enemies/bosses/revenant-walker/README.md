@@ -36,20 +36,20 @@ at Level 21; accepted in round 36, confirmed by the Act 3 balance plan in part A
 | Layer | `ground` (it walks on the yard: no contact with the ship or Rook; all weapons hit it, `anti-ground` ×2) |
 | Size tier | `huge` |
 | Size | 170×190 px, hitbox 110×120 (the hull ≈ 110×120 on two reverse-knee legs, a biped: B.1 = a); hitboxes: hull 110×120, front plate 110×30 on the heading side, each pod 36×36 on a shoulder (±53 px, the art's mounts), the vents 50×24 on the back |
-| Parts | hull (`vital`; the bar); front plate (shots glance, no HP, not in the bar, covers the hull from the heading side); left and right missile pod (`destroyable`, on the shoulders, outside the plate's cover); the reactor vents (a weak spot on the hull's back, ×2 while open); the rear flamer (a hardpoint under the vents, not destroyable); the legs (drawn, no hitbox) |
+| Parts | hull (`vital`; the bar); front plate (shots glance, no HP, not in the bar, covers the hull from the heading side); left and right missile pod (`destroyable`, on the shoulders, outside the plate's cover; round 44: armoured while its hatch is shut, until the overheat); the back-mounted rail lance (not destroyable); the reactor vents (a weak spot on the hull's back, ×2 while open); the rear flamer (a hardpoint under the vents, not destroyable); the legs (drawn, no hitbox) |
 | Orientation | `8 angles` (45° steps; the passes walk the 4 cardinal ones, the turns use the diagonals) × an 8-frame walk cycle; pods snap to the ship's bearing (16 headings) |
-| HP | hull 2,310; pods 430 each; total 3170 (easy 2378 / hard 4121, from the global multipliers) |
-| Armour / shield | the front plate turns every shot that meets it from ahead (it stops the Ion Beam too); the back and the pods take full damage; the vents ×2 while open (2 s after each burn, always in phase 3) |
+| HP | hull 1,190; pods 80 each; total 1350 (easy 1012 / hard 1755, from the global multipliers) |
+| Armour / shield | the front plate turns every shot that meets it from ahead (it stops the Ion Beam too); a pod turns every shot while its hatch is shut (round 44: only its 0.4 s hatch tell and its salvo open it; from phase 3 the hatches jam open); the back takes full damage; the vents ×2 while open (2 s after each burn, always in phase 3) |
 | Speed | 45 px/s (phase 1), 55 px/s (phase 2), 60 px/s (phase 3); turns 90° in 1.5 s |
 | Movement | `walk` in **passes** across the halted casting yard (see *Passes*); off the screen 3 s between passes, under an edge warning |
-| Attack | the rear **flame cone** (240 px, ±32°, a 0.6 s tell, a 1.5 s burn, `heavy` = 10 once per burn, at most every 3 s; from phase 2 its burn follows the ship at 40°/s; see *Attacks*); phase 1: the pods take turns firing `homing` missile salvos of 3, one 0.2 s after the other, every 3.5 s (110 px/s, turning 90°/s, 4 s life, 2 HP each, at most 8 alive, `medium` = 6; the hatch opens 0.4 s before: the tell); from phase 2 each living pod fires salvos of 3 every 3 s, staggered; the chin cannon's `fan` of 3 over 30° in a `burst` of 2 (0.2 s apart, 150 px/s, `small` = 4) every 2 s, along its heading in phase 1; phase 2: `aimed` at the ship (3 over 24°, 160 px/s); phase 3: 5 over 40° every 2.4 s (170 px/s); the hull's **flank guns** (round 43): a `burst` of 3 out of both flanks, square to its heading (0.25 s apart, 120 px/s, `small` = 4) every 2.2 s in phases 1 and 2: a dashed line across the lanes beside its own; 4 every 2.2 s in phase 3 (130 px/s) |
+| Attack | the rear **flame cone** (240 px, ±32°, a 0.6 s tell, a 1.5 s burn, `heavy` = 10 once per burn, at most every 3 s; from phase 2 its burn follows the ship at 40°/s; see *Attacks*); the back-mounted **rail lance** once both pods are gone and in phase 3 (round 44: a 1 s charge, a glowing line from its back through where the ship was, then a 0.3 s shot along it, `heavy` = 10 once a shot, every 4 s, 3 s in phase 3); the **stomp** (round 44: the ship or Rook within 90 px of its centre: a 0.5 s brace, then a ring out to 110 px over 0.3 s, `medium` = 6 once a stomp, at most every 4 s); phase 1: the pods take turns firing `homing` missile salvos of 3, one 0.2 s after the other, every 3.5 s (110 px/s, turning 90°/s, 4 s life, 2 HP each, at most 8 alive, `medium` = 6; the hatch opens 0.4 s before: the tell); from phase 2 each living pod fires salvos of 3 every 4 s, staggered; the chin cannon's `fan` of 3 over 30° in a `burst` of 2 (0.2 s apart, 150 px/s, `small` = 4) every 2 s, along its heading in phase 1; phase 2: `aimed` at the ship (3 over 24°, 160 px/s); phase 3: 5 over 40° every 2.4 s (170 px/s); the hull's **flank guns** (round 43): a `burst` of 3 out of both flanks, square to its heading (0.25 s apart, 120 px/s, `small` = 4) every 2.2 s in phases 1 and 2: a dashed line across the lanes beside its own; 4 every 2.2 s in phase 3 (130 px/s) |
 | Formations | solo set piece |
 | Weak points | hot-amber reactor vents (while open) (×2) (exposed machinery: they glow heat orange when open) |
 | Effective traits | `rear`, `anti-ground`, `homing`, `side` |
 | Credits | 495 (score 4950 × chain) in Act 1 terms (hull 395, pods 50 each); × 2.56 (Act 3 factor 1.6²) × Level 19's `bounty_scale` of 0.28 it pays **355 = 15.0 % of budget(19) = 2,366** (see *Bounty*) |
 | Death | `huge` machine variant: the legs buckle, it topples forward along its heading over 2 s with chained explosions, the hull lands as a smoking **wreck** that stays (scenery) for the hint-2 beat; credit shower; no screen flash (act bosses only) |
 | First level / used in | L19; mid-boss of L19 only |
-| Difficulty hooks | hard: salvos of 4 in phase 1, missiles turn 120°/s, the phase-2 chin fan of 5, flank bursts of 4 (6 in phase 3), the flame cone 270 px, the swivel ±45°; easy: salvos of 2, single chin fans in phase 1, flank bursts of 2 (3 in phase 3), the flame cone 210 px, its tell 0.8 s |
+| Difficulty hooks | hard: missiles turn 120°/s, the phase-2 chin fan of 5, flank bursts of 4 (6 in phase 3), the flame cone 270 px, the swivel ±45° (round 44: its salvos of 4 in phase 1 dropped, the armoured pods fire longer); easy: salvos of 2, single chin fans in phase 1, flank bursts of 2 (3 in phase 3), the flame cone 210 px, its tell 0.8 s, the lance's charge 1.3 s every 5 s (3.8 s), the stomp's brace 0.7 s |
 <!-- /data -->
 
 ### Attacks
@@ -63,7 +63,12 @@ data's.
   one missile 0.2 s after the other: 110 px/s, turn rate 90°/s, 4 s life then they fizzle, `medium` = 6
   on a hit, **shootable** (2 HP; homing shots, bolts and Rook all hit them), a grey smoke trail. At most
   8 alive. A pod's hatch flips open 0.4 s before its salvo (the tell). Phase 1: salvos of **3**, the pods
-  taking turns, one every 3.5 s; from phase 2 each living pod every 3 s, staggered.
+  taking turns, one every 3.5 s; from phase 2 each living pod every 4 s, staggered (round 43: 3 s; round 44:
+  4 s, the armoured pods live longer). **Round 44: a pod is armoured while its hatch is shut**: shots glance off
+  it and it stops the Ion Beam, as the front plate does; only its 0.4 s tell and its salvo (≈ 0.8 s at medium)
+  open it to fire. From phase 3 the hatches jam open as the reactor overheats. A pod has 80 HP: the plan's fit
+  lined up on an open hatch deals ≈ 50–85 in a window, a typical (partly lined-up) window less, so a pod falls in
+  ≈ 2–3 open windows.
 - **Chin cannon** (`fan` in a `burst`): phase 1 a fan of 3 over 30° twice, 0.2 s apart, every 2 s,
   **along its heading** (not aimed: it sweeps the lane it walks, so the first phase stays readable); phase 2
   a fan of 3 over 24° three times, **aimed**, every 2 s; phase 3 a fan of **5 over 40°** three times every
@@ -83,6 +88,21 @@ data's.
   **vents open for 2 s** (the weak spot, ×2): the reward for staying behind it, just outside the cone. The
   flame is drawn above the ground layer, bright and opaque enough to read over the foundry's orange glow;
   its puffs grow with its length and their number with its area (`WalkerLooks`).
+- **Rail lance** (round 44, the user in round 43: "When both missile hatches are destroyed, the walker is
+  mostly toothless … something else for the longer range"): a lance on its back wakes **once both pods are
+  gone, and in phase 3** (pods or not). A second after it wakes, and then every **4 s** (**3 s** in phase 3),
+  while it walks on the screen, it **charges for 1 s**: a red line glows from its back through the
+  point where the ship was as the charge began, out to the field's edge, pulsing brighter as the charge runs
+  out; then it **fires for 0.3 s** along that line: a bright beam 14 px wide, `heavy` = 10 once a shot to the
+  ship and to Rook where it touches them (a white-hot core in a red glow; red to keep it apart from the Ion Beam's
+  blue and the flame's orange), a small white-hot flash where it hits (never the screen). The line
+  pivots on its point as the walker walks on: a ship that stays put is hit at any range, one that keeps moving
+  is not. Rook steps off the line while it charges or fires.
+- **Stomp shockwave** (round 44, the user in round 43, W.e: "stomp shockwave"): the ship or Rook within
+  **90 px** of its centre starts a **0.5 s brace** (the legs brace, a dusty ring marks the ground at the
+  stomp's reach, its rim brightening), then it stomps: a ring of dust expands from where it stands to
+  **110 px** over 0.3 s, `medium` = 6 once a stomp to whoever it reaches; at most one every **4 s**. No more
+  safe spot over or against it (its guns do not fire within 72 px of it). Rook keeps out of the ring.
 
 ### Passes
 
@@ -115,13 +135,13 @@ one, then steps off the screen.
 | Phase | Ends at | Behaviour |
 |---|---|---|
 | 1 — Stride | both pods destroyed, or the hull below 60 % | Passes at 45 px/s in the lane beside the ship. The pods fire **salvos of 3, one pod at a time**, alternating, every 3.5 s; the chin's fans along its heading; the flank guns; the flamer behind it. |
-| 2 — Hunt | the hull below 30 % | Passes at 55 px/s in the ship's lane. Each living pod fires salvos of 3 every 3 s, staggered; the chin's fans are `aimed`; the flank guns; the flamer **swivels ±35°** toward the ship during its tell and its burn follows the ship. A destroyed pod stays dead (its shoulder sparks). |
-| 3 — Overheat | the hull at 0 | The reactor overheats: the vents **stay open** (×2 for the rest of the fight) and glow white-orange. It stops leaving the yard: at the end of a pass it **turns round on the spot** (1.5 s) and walks back in the ship's lane at 60 px/s; **the flamer burns through the whole turn**, sweeping its cone through 180° behind it (the tell 0.6 s before the turn starts). Fiercer guns: the chin's fans of 5 over 40°, the flank guns' bursts of 4; living pods keep their phase-2 salvos. A **shield cell** drops as the phase begins. |
+| 2 — Hunt | the hull below 30 % | Passes at 55 px/s in the ship's lane. Each living pod fires salvos of 3 every 4 s, staggered (still armoured while shut); with both pods gone the **rail lance** charges and fires every 4 s; the chin's fans are `aimed`; the flank guns; the flamer **swivels ±35°** toward the ship during its tell and its burn follows the ship. A destroyed pod stays dead (its shoulder sparks). |
+| 3 — Overheat | the hull at 0 | The reactor overheats: the vents **stay open** (×2 for the rest of the fight) and glow white-orange. It stops leaving the yard: at the end of a pass it **turns round on the spot** (1.5 s) and walks back in the ship's lane at 60 px/s; **the flamer burns through the whole turn**, sweeping its cone through 180° behind it (the tell 0.6 s before the turn starts). Fiercer guns: the chin's fans of 5 over 40°, the flank guns' bursts of 4; living pods keep their phase-2 salvos, their hatches jammed open (no armour). The **rail lance** wakes whatever the pods, every 3 s. A **shield cell** drops as the phase begins. |
 
 ### Duration and HP
 
 Target: the mid-boss window **45–75 s** at medium, aimed at ≈ 60 s; the **par** is the measured mean:
-**57 s** (round 43's rework, below; step F4: 53 s).
+**51 s** (round 44, below; round 43's rework: 57 s; step F4: 53 s).
 
 Paper estimate (the window-aware method of the Kraken's `BalanceTest` check): the effective boss DPS
 is 0.6 × 92 = **55.2**. The walker is on the screen ≈ 80 % of the time (3 s off per ≈ 15 s pass), and
@@ -153,6 +173,24 @@ measure): **≈ 100** (phase 1 ≈ 125, phase 2 ≈ 120) against **41** before (
 flank bursts, but the autopilot's phase 3 lasts ≈ 10 s and much of it hugs the walker, inside the 72 px within
 which no gun fires (hard: ≈ 185, phase 3 ≈ 240). The random dodger now loses **21.0** per 10 s of phase 1 against
 the Kraken's 11.4 (×1.84; the test asks for 1.3–2×). `WALKER_EFFICIENCY` 1.39 → **1.08** (57.1 s at 3,170 HP).
+
+**Re-measured after round 44 (step WR2, pending the user's review in round 44).** The armoured pods (hit only in
+their windows), the rail lance (a dodge every 4 s, every 3 s in phase 3) and the stomp (no more hugging it) cut the
+autopilot's damage hard: at hull 2,310 with pods of 100 the fight ran ≈ 96 s. The autopilot learnt the new rules:
+in phase 1 it shoots a pod whose hatch is open (else it lines up on the nearer one), on a horizontal pass it lines
+up on the back half past the lower pod (shut, it stops the shots from below) and takes the open lower pod; off the
+line of a charging lance and out of a bracing stomp's ring at once; from phase 2 it waits for a bottom entry between
+two lanes. The HP were then set inside a plateau (the length steps with the passes): **1,350** (hull 1,190, pods 80),
+the fixture **46–59 s** on five seeds (mean 50.8 s), the par **51**; in the level 50–59 s at medium on the level
+test's three seeds (one of five seeds at 80 s: a down pass at the ship and a horizontal pass with a pod alive), no
+retries at medium; easy 32–33 s; hard ≈ 104 s in the fixture on average, all won (in the level 95–131 s, 2 retries
+over 3 runs, round 43: 1; with hard's own faster lance and stomp and its salvos of 4 the ship arrived at the walker
+with half its armour and died in the fight: 5 retries, and the pacing test's hard run did not finish, so hard keeps
+medium's lance and stomp and its phase-1 salvos of 3). Hull 1,180 gives a 48.6 s mean, 1,200 puts one fixture seed at
+79 s. Phase 2's salvos every 4 s per pod (3 s) and the lance's 4 s / 3 s and the stomp's 4 s cooldown are the tuned
+levers (first tries: 3.5 / 2.5 / 3 s). The random dodger now loses **23.7** per 10 s of phase 1 (the stomp catches
+it straying over the walker; the Kraken 11.4, ×2.1; the test now asks for 1.3–2.2×). `WALKER_EFFICIENCY` 1.08 →
+**0.52** (50.8 s at 1,350 HP).
 
 Lessons from Act 2 that the build must apply (M7 part F):
 - **Measure, then tune the HP, not the attacks** (Harbour Kraken E6, Siege Spire H10): the autopilot
@@ -270,6 +308,15 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
       bursts in every phase, the flank guns, bigger salvos, a fiercer phase 3, the cone 240 px ±32° with the
       tracking burn, the drawing scaled to it; the HP re-measured (3,170), the par 57 (`RevenantWalkerSimTest`,
       `FoundryKeysTest`, `RevenantWalkerTest`)
+- [x] Round 44 (step WR2, the user in round 43, W.a/W.e; pending the user's review in round 44): the pods armoured
+      while their hatch is shut (`boss.hatch_armour`, until phase 3), the back-mounted rail lance once both pods are
+      gone and in phase 3 (`boss.lance`: the charge's line, the shot, its flash), the stomp shockwave (`boss.stomp`:
+      the brace's ring, the expanding ring); Rook and the autopilot keep clear of both; the HP re-measured (1,350),
+      the par 51 (`StrideStrikes`, `RevenantWalkerSimTest`, `FoundryKeysTest`, `RevenantWalkerTest`, `StrikeLooks`);
+      their own sounds still to come (placeholders: the Mantis's charge-up and sweep, the hatch and footfall pitched
+      down)
+- [x] Round 43's sound picks played (step WR2 for SNDI): the hatch, the missile, the flame's tell and loop, the vent hit
+      on the open vents, its own death, the wreck's groan as the topple lands
 - [x] Death: the topple, the chained explosions, the credit shower, the wreck left as scenery with its
       filed plate; the hint-2 crawl and its radio (the user accepted them in the round-42 capture, N.c)
 - [x] Production art (≤ one atlas page): 8 headings × the walk cycle, pods, the flame cone and its
@@ -340,3 +387,16 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   pods 430), par 53 → **57**; the random dodger's phase 1 21.0 per 10 s (Kraken 11.4); the shots a minute ≈ 100
   against 41. Rejected: a mortar on its back (the shared lob draws Level 14's lime acid, wrong for a foundry
   machine); a forward flame wash in phase 3 (the 180° turning burn already sweeps a half disc of 240 px).
+- 2026-10-20 (user, round 43, W.a and W.e; built in step WR2, pending the user's review in round 44): "The first
+  missile hatch is destroyed before the walker has a chance of ever using it. That's too easy. When both missile
+  hatches are destroyed, the walker is mostly toothless. Can't you add something else that keeps the final part
+  interesting?" and "stomp shockwave … And as noted above, something else for the longer range." Decided with the
+  user: **the pods armoured until open** (only the hatch's tell and salvo take damage; shots glance, the beam stops;
+  the step adds: from phase 3 the hatches jam open, so the overheat never stalls on a pod), pod HP 430 → **80**
+  (≈ 2–3 open windows); **a back-mounted rail lance** once both pods are gone and in phase 3 (a 1 s charge line
+  through where the ship was, a 0.3 s `heavy` shot along it, every 4 s, 3 s in phase 3; first tried at 3.5 / 2.5 s);
+  **the stomp shockwave** within 90 px (a 0.5 s brace with a ground ring, a ring out to 110 px, `medium`, at most
+  every 4 s). Re-tuned: hull 2,310 → **1,190**, par 57 → **51**, phase 2's salvos every 4 s per pod (3 s); hard keeps
+  medium's lance and stomp and drops its phase-1 salvos of 4 (the walker otherwise drained the ship before the level's
+  end), easy's lance charge 1.3 s every 5 / 3.8 s and stomp brace 0.7 s.
+  The sounds of the lance and the stomp are placeholders (nothing synthesized) until the next sound round.

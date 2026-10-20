@@ -270,9 +270,9 @@ final class HitPasses {
                     && hull.overlaps(ship.x(), ship.y(), spec.size(), chunk.x(), chunk.y())
                     && chunk.strike()) {
                 double lost = ship.defences().armourLost();
-                boolean thrown = chunk.thrown();
+                boolean thrown = chunk.thrown() || chunk.pulled();
                 if (thrown) {
-                    // A thrown rock breaks on the hull.
+                    // A thrown rock (M7 part H: or a pulled one) breaks on the hull.
                     events.add(SimEvents.Type.DEBRIS_DESTROYED, chunk.x(), chunk.y());
                     debris.free(d--);
                 }
@@ -364,7 +364,10 @@ final class HitPasses {
         if (missilesHit(hull)) {
             return;
         }
-        coneBurnsShip(hull);
+        if (coneBurnsShip(hull)) {
+            return;
+        }
+        strikesHitShip(hull);
     }
 
     /** M7 part F: a homing missile bursts on the hull, dealing its damage; returns whether it wrecked the ship. */
@@ -384,8 +387,41 @@ final class HitPasses {
         return false;
     }
 
-    /** M7 part F: a walking boss's burning flame cone touching the hull deals its damage, once per burn. */
-    private void coneBurnsShip(Hull hull) {
+    /**
+     * Round 44: a walking boss's firing rail lance touching the hull, or its stomp's ring reaching the ship, deals its
+     * damage, once a shot or a stomp each.
+     */
+    private void strikesHitShip(Hull hull) {
+        for (SetPiece piece : setPieces) {
+            StrideArena stride = piece.stride().orElse(null);
+            if (stride == null || !piece.present() || piece.destroyed()) {
+                continue;
+            }
+            StrideStrikes strikes = stride.strikes();
+            if (!strikes.lanceHit(StrideStrikes.SHIP) && strikes.lanceTouches(hull, ship.x(), ship.y())) {
+                strikes.markLanceHit(StrideStrikes.SHIP);
+                events.add(SimEvents.Type.LANCE_HIT, ship.x(), ship.y(), StrideStrikes.SHIP);
+                double lost = ship.defences().armourLost();
+                if (damaged(lost, ship.defences().takeShot(strikes.lanceDamage(), events, ship.x(), ship.y()))) {
+                    return;
+                }
+            }
+            if (!strikes.stompHit(StrideStrikes.SHIP) && strikes.stompReaches(ship.x(), ship.y())) {
+                strikes.markStompHit(StrideStrikes.SHIP);
+                events.add(SimEvents.Type.STOMP_HIT, ship.x(), ship.y(), StrideStrikes.SHIP);
+                double lost = ship.defences().armourLost();
+                if (damaged(lost, ship.defences().takeShot(strikes.stompDamage(), events, ship.x(), ship.y()))) {
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * M7 part F: a walking boss's burning flame cone touching the hull deals its damage, once per burn; returns whether
+     * it wrecked the ship.
+     */
+    private boolean coneBurnsShip(Hull hull) {
         for (SetPiece piece : setPieces) {
             StrideArena stride = piece.stride().orElse(null);
             if (stride == null
@@ -399,9 +435,10 @@ final class HitPasses {
             double lost = ship.defences().armourLost();
             double damage = piece.boss().orElseThrow().cone().orElseThrow().damage();
             if (damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()))) {
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /** M7 part F: a burning furnace vent hits Rook whatever his layer, once per burst; returns whether he ejected. */
@@ -444,6 +481,28 @@ final class HitPasses {
             double damage = piece.boss().orElseThrow().cone().orElseThrow().damage();
             if (wingman.hit(damage, ship.x(), ship.y(), events)) {
                 return;
+            }
+        }
+        for (SetPiece piece : setPieces) {
+            StrideArena stride = piece.stride().orElse(null);
+            if (stride == null || !piece.present() || piece.destroyed()) {
+                continue;
+            }
+            // Round 44: the rail lance and the stomp hit him as they hit the ship.
+            StrideStrikes strikes = stride.strikes();
+            if (!strikes.lanceHit(StrideStrikes.WINGMAN) && strikes.lanceTouches(hull, x, y)) {
+                strikes.markLanceHit(StrideStrikes.WINGMAN);
+                events.add(SimEvents.Type.LANCE_HIT, x, y, StrideStrikes.WINGMAN);
+                if (wingman.hit(strikes.lanceDamage(), ship.x(), ship.y(), events)) {
+                    return;
+                }
+            }
+            if (!strikes.stompHit(StrideStrikes.WINGMAN) && strikes.stompReaches(x, y)) {
+                strikes.markStompHit(StrideStrikes.WINGMAN);
+                events.add(SimEvents.Type.STOMP_HIT, x, y, StrideStrikes.WINGMAN);
+                if (wingman.hit(strikes.stompDamage(), ship.x(), ship.y(), events)) {
+                    return;
+                }
             }
         }
     }

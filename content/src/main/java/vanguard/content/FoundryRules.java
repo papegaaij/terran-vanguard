@@ -109,9 +109,66 @@ final class FoundryRules {
 
     /**
      * A walking boss's passes for the simulation: the lanes ({@code lanes_y} turned from px below the top edge to px
-     * up from the bottom edge), the entry edges, the off and turn times, the speeds by phase.
+     * up from the bottom edge), the entry edges, the off and turn times, the speeds by phase; round 44: with its
+     * script's hatch armour, rail lance and stomp at the hook's difficulty (its charge, intervals, tell and cooldown
+     * instead).
      */
-    static BossSpec.Stride stride(EnemyData.Stride stride) {
+    static BossSpec.Stride stride(
+            Content content,
+            EnemyData enemy,
+            EnemyData.BossData script,
+            EnemyData.Stride stride,
+            Optional<EnemyData.Hook> hook) {
+        Optional<BossSpec.Lance> lance = script.lance().map(data -> lance(content, enemy, script, data, hook));
+        Optional<BossSpec.Stomp> stomp = script.stomp().map(data -> {
+            Optional<EnemyData.StompChange> change = hook.flatMap(EnemyData.Hook::stomp);
+            return new BossSpec.Stomp(
+                    data.reach(),
+                    data.radius(),
+                    change.flatMap(EnemyData.StompChange::tell).orElse(data.tell()),
+                    data.expand(),
+                    change.flatMap(EnemyData.StompChange::cooldown).orElse(data.cooldown()),
+                    UnitRules.bulletDamage(content, data.bullet()));
+        });
+        return passes(stride).withStrikes(script.hatchArmour().orElse(false), lance, stomp);
+    }
+
+    private static BossSpec.Lance lance(
+            Content content,
+            EnemyData enemy,
+            EnemyData.BossData script,
+            EnemyData.Lance data,
+            Optional<EnemyData.Hook> hook) {
+        Optional<EnemyData.LanceChange> change = hook.flatMap(EnemyData.Hook::lance);
+        List<Integer> parts = new ArrayList<>();
+        for (String part : data.after()) {
+            int index = enemy.partIndex(part);
+            if (index < 0) {
+                throw new IllegalArgumentException(enemy.name() + ": no part '" + part + "' for its lance");
+            }
+            parts.add(index);
+        }
+        int from = script.phases().size();
+        if (data.fromPhase().isPresent()) {
+            for (int f = 0; f < script.phases().size(); f++) {
+                if (script.phases().get(f).name().equals(data.fromPhase().get())) {
+                    from = f;
+                }
+            }
+        }
+        return new BossSpec.Lance(
+                parts,
+                from,
+                change.flatMap(EnemyData.LanceChange::charge).orElse(data.charge()),
+                data.fire(),
+                change.flatMap(EnemyData.LanceChange::interval).orElse(data.interval()),
+                change.flatMap(EnemyData.LanceChange::lastInterval).orElse(data.lastInterval()),
+                data.width(),
+                UnitRules.bulletDamage(content, data.bullet()),
+                data.behind());
+    }
+
+    private static BossSpec.Stride passes(EnemyData.Stride stride) {
         return new BossSpec.Stride(
                 stride.lanesX().stream().mapToDouble(Double::doubleValue).toArray(),
                 stride.lanesY().stream().mapToDouble(y -> PlayField.HEIGHT - y).toArray(),

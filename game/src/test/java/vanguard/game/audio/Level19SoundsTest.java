@@ -48,7 +48,11 @@ class Level19SoundsTest {
                 Sfx.BELT_RUMBLE,
                 Sfx.AMBIENCE_MARS_FOUNDRY)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r42-a.ogg"), sfx + ": round 42's proposal a");
+            // Round 43's picks (the user, 2026-10-20) replaced the tracks, turret, burst and vents; the death, the belt
+            // and the bed stay round 42's a.
+            boolean picked = List.of(Sfx.TANK_TRACKS, Sfx.TANK_TURRET, Sfx.TANK_BURST, Sfx.VENT_TELL, Sfx.VENT_BURST)
+                    .contains(sfx);
+            assertTrue(sfx.path().endsWith(picked ? "-r43-a.ogg" : "-r42-a.ogg"), sfx + ": " + sfx.path());
         }
         assertEquals(Sfx.AMBIENCE_MARS_FOUNDRY, Sfx.ambience("mars-foundry"));
         assertEquals("mars-foundry", FoundryFixture.level().music().ambience(), "Level 19's bed");

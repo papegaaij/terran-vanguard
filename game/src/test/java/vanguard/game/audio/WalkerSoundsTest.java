@@ -36,11 +36,69 @@ class WalkerSoundsTest {
     @Test
     void everyWalkerSoundHasItsFile() {
         for (Sfx sfx : List.of(
-                Sfx.WALKER_STOMP, Sfx.WALKER_HATCH, Sfx.WALKER_MISSILE, Sfx.WALKER_FLAME_TELL, Sfx.WALKER_FLAME)) {
+                Sfx.WALKER_STOMP,
+                Sfx.WALKER_HATCH,
+                Sfx.WALKER_MISSILE,
+                Sfx.WALKER_FLAME_TELL,
+                Sfx.WALKER_FLAME,
+                Sfx.WALKER_VENT_HIT,
+                Sfx.WALKER_DEATH,
+                Sfx.WALKER_WRECK_SETTLE)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r42-a.ogg"), sfx + ": round 42's proposal a");
         }
+        // Round 43's picks (the user, 2026-10-20); the stomp stays round 42's a, the missile is the chosen r08 launch.
+        assertEquals("sfx/walker-stomp-r42-a.ogg", Sfx.WALKER_STOMP.path());
+        assertEquals("sfx/walker-hatch-r43-b.ogg", Sfx.WALKER_HATCH.path());
+        assertEquals("sfx/enemy-missile-r08-a.ogg", Sfx.WALKER_MISSILE.path());
+        assertEquals("sfx/walker-flame-tell-r43-a.ogg", Sfx.WALKER_FLAME_TELL.path());
+        assertEquals("sfx/walker-flame-r43-b.ogg", Sfx.WALKER_FLAME.path());
+        assertEquals("sfx/walker-vent-hit-r43-a.ogg", Sfx.WALKER_VENT_HIT.path());
+        assertEquals("sfx/walker-death-r43-a.ogg", Sfx.WALKER_DEATH.path());
+        assertEquals("sfx/walker-wreck-settle-r43-a.ogg", Sfx.WALKER_WRECK_SETTLE.path());
+        assertEquals(Sfx.Priority.EXPLOSION, Sfx.WALKER_DEATH.priority(), "its death on the explosion rung");
         assertEquals(1f, WalkerCues.WALKER_LEVEL, "levelled in their files");
+    }
+
+    @Test
+    void aVentHitSoundsAtMostOnceEachFifteenHundredths() {
+        assertTrue(WalkerCues.ventHitDue(Long.MIN_VALUE / 2, 0), "the first");
+        assertFalse(WalkerCues.ventHitDue(100, 100 + WalkerCues.VENT_HIT_GAP_STEPS - 1), "a beam's next tick");
+        assertTrue(WalkerCues.ventHitDue(100, 100 + SimStep.ticks(0.15)));
+        assertTrue(WalkerCues.ventHitDue(100, 5), "after a restart the clock starts again");
+    }
+
+    /**
+     * Round 44: the rail lance's charge and shot, the stomp's brace and shockwave (placeholders: the Mantis's charge-up
+     * and sweep, the hatch and the footfall pitched down), once its pods are gone; its death its own, the wreck's groan
+     * as the topple lands.
+     */
+    @Test
+    void theLanceChargesAndFiresTheStompBracesAndItsDeathAndWreckSoundTheirOwn() {
+        Sortie sortie = WalkerFixture.sortie();
+        FlightSounds sounds = new FlightSounds(
+                bank, SiegeUnitsFixture.quietLooks(sortie), sortie.armament(), List.of("revenant-walker"));
+        assertTrue(until(sortie, sounds, 20, type -> type == SimEvents.Type.BOSS_SETTLED), "it engaged");
+        var walker = WalkerFixture.walker(sortie);
+        vanguard.sim.WalkerHooks.damage(sortie, 0, WalkerFixture.LEFT_POD, 1000);
+        vanguard.sim.WalkerHooks.damage(sortie, 0, WalkerFixture.RIGHT_POD, 1000);
+        assertTrue(until(sortie, sounds, 6, type -> type == SimEvents.Type.LANCE_CHARGE), "the lance charges");
+        assertTrue(bank.playing(Sfx.MANTIS_TELEGRAPH) > 0, "its charge-up");
+        assertTrue(until(sortie, sounds, 2, type -> type == SimEvents.Type.LANCE_FIRE), "the lance fires");
+        assertTrue(bank.playing(Sfx.MANTIS_SWEEP) > 0, "its shot");
+        boolean braced = false;
+        for (int t = 0; t < SimStep.ticks(30) && !braced; t++) {
+            var stride = walker.stride().orElseThrow();
+            int commands = stride.offScreen() ? Command.NONE : steer(sortie, walker.renderX(1), walker.renderY(1));
+            run(sortie, sounds, commands, 1);
+            braced = stride.strikes().stompPhase() != vanguard.sim.StrideStrikes.StompPhase.IDLE;
+        }
+        assertTrue(braced, "it braces for a stomp with the ship over it");
+        assertTrue(bank.playing(Sfx.WALKER_HATCH) > 0, "the brace");
+        vanguard.sim.WalkerHooks.destroy(sortie, 0, WalkerFixture.HULL);
+        sounds.play(sortie.events());
+        assertTrue(bank.playing(Sfx.WALKER_DEATH) > 0, "its own death");
+        run(sortie, sounds, Command.NONE, SimStep.ticks(2.2));
+        assertTrue(bank.playing(Sfx.WALKER_WRECK_SETTLE) > 0, "the wreck's groan as it lands");
     }
 
     @Test

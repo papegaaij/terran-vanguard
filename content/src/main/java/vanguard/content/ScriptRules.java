@@ -62,7 +62,7 @@ final class ScriptRules {
         LevelScript script = LevelScript.builder(levelKey(levelKey, 2), levelKey(levelKey, 1))
                 .launchSeconds(level.launchSeconds())
                 // M5 part G: a timed halt's sections with their ramp; M7 part B: a moving section's ease.
-                .sections(MarsRules.sections(level))
+                .sections(MarsRules.sections(content, level))
                 .waves(waves)
                 .groundObjects(GroundRules.groundObjects(level, difficulty, carried))
                 .groundUnits(GroundRules.groundUnits(content, level, difficulty, inLevel))

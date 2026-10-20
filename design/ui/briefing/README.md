@@ -99,6 +99,8 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/briefing-images-final-r40-a.png](concept/briefing-images-final-r40-a.png) | Level 17's briefing images (`level-17-ares-domes`, `level-17-choir-herald`; `tools/art/briefing_images.py`) | chosen (round 40, F.g: approved as final) |
 | [concept/briefing-images-final-r41-a.png](concept/briefing-images-final-r41-a.png) | Level 18's briefing images (`level-18-storm-front`, `level-18-visibility`; `tools/art/briefing_images.py`) | chosen (round 41) |
 | [concept/briefing-images-final-r42-a.png](concept/briefing-images-final-r42-a.png) | Level 19's briefing images and Level 20's filed plate (`level-19-tharsis-works`, `level-19-rear-arcs`, `level-20-filed-plate`; `tools/art/briefing_images.py`, step ART-F4) | chosen (round 42, F.f: approved as final) |
+| [concept/briefing-images-final-r44-a.png](concept/briefing-images-final-r44-a.png) | Review sheet, M7 part H (round 44): Level 21's two 672×240 images (`level-21-hellas-basin`: the basin on a CDF plot, the CDF line held on the rim, the inner wall's terraces, the dune sea with a moving seismic contact, the lime hollow with seismic rings, the descent route and five sections; `level-21-colossus-scan`: Varga's seismic cut with the body under the sand, the ridge and a breaching mouth, beside a breach from above at the left edge with the gullet, the bite circle and the suction; `tools/art/briefing_images.py`, step ART-H3) | proposed |
+| [concept/act3-outro-final-r44-a.png](concept/act3-outro-final-r44-a.png) | Review sheet, M7 part H (round 44): the Act 3 outro's four 672×240 images (`act-3-outro-hellas`: the basin at dawn, the collapsed crater, the last spore trails; `act-3-outro-domes`: Ares Landing's domes at night, every pane lit, colonists on the ring road looking up; `act-3-outro-europa`: Varga's plot of the courses off Mars converging on Europa, the filed plate in a minimised window; `act-3-outro-aegis`: Aegis Wing refitting on the spaceport apron at dusk, Jupiter a bright point; `tools/art/outro_l21_images.py`, step ART-H3) | proposed |
 
 ## Implementation
 
@@ -292,3 +294,5 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
   [screen flow](../README.md#screen-flow)).
 - 2026-10-19 (user, round 40, F.g): Level 17's two briefing images approved as final.
 - 2026-10-20: round 42 closed: Level 19's briefing images and Level 20's filed plate approved as final by the user (F.f).
+- 2026-10-20: round 43 closed: Okafor's `level-20-hellas-fallback` image approved as final by the user (F.e; it is listed with Level 20's art). `art` stays `chosen`: Q.5, the rest of the briefing art moves to final only item by item, as the user approves it (an audit step lists what is left for the next round).
+- 2026-10-20: Level 21's briefing images and the Act 3 outro's four images made as production art (step ART-H3); pending the user's review in round 44.

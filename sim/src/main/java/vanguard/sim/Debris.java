@@ -19,6 +19,14 @@ public final class Debris implements Hashed {
     private double vy;
     /** A thrown rock's steps left; -1 for a chunk drifting through. */
     private int life = -1;
+    /** M7 part H: a rock pulled toward a breaching boss's mouth ({@link #pull}). */
+    private boolean pulled;
+    /** Where a pulled rock flies to (the mouth's centre), its speed and its gain each second. */
+    private double toX;
+
+    private double toY;
+    private double speed;
+    private double acceleration;
 
     /** Enters at the top edge at {@code atX}; {@code index} is its place in the level's list, unique in an attempt. */
     void place(HazardSpec.DebrisSpec debrisSpec, int index, double atX) {
@@ -32,6 +40,7 @@ public final class Debris implements Hashed {
         vx = debrisSpec.vx();
         vy = debrisSpec.vy();
         life = -1;
+        pulled = false;
     }
 
     /**
@@ -53,10 +62,41 @@ public final class Debris implements Hashed {
         life = lifeTicks;
     }
 
-    /** Drifts one step; returns false once it has left the screen through the bottom or a side edge. */
+    /**
+     * M7 part H (design/enemies/bosses/dust-colossus, Suction and debris): torn loose at (atX, atY), it flies straight
+     * for (targetX, targetY) at {@code startSpeed} px/s, gaining {@code gain} px/s each second, until it is
+     * swallowed {@link PulledDebris#SWALLOW} px from there. {@code index} is unique in an attempt.
+     */
+    void pull(
+            HazardSpec.DebrisSpec debrisSpec,
+            int index,
+            double atX,
+            double atY,
+            double targetX,
+            double targetY,
+            double startSpeed,
+            double gain) {
+        place(debrisSpec, index, atX);
+        y = prevY = atY;
+        vx = 0;
+        vy = 0;
+        pulled = true;
+        toX = targetX;
+        toY = targetY;
+        speed = startSpeed;
+        acceleration = gain;
+    }
+
+    /**
+     * Drifts one step; returns false once it has left the screen through the bottom or a side edge (M7 part H: or a
+     * pulled rock was swallowed).
+     */
     boolean move() {
         prevX = x;
         prevY = y;
+        if (pulled) {
+            return pulledMove();
+        }
         x += vx * SimStep.SECONDS;
         y += vy * SimStep.SECONDS;
         if (life >= 0 && --life < 0) {
@@ -70,6 +110,28 @@ public final class Debris implements Hashed {
         }
         Hitbox size = spec.size();
         return y + size.height() / 2 > 0 && x + size.width() / 2 > 0 && x - size.width() / 2 < PlayField.WIDTH;
+    }
+
+    private boolean pulledMove() {
+        speed += acceleration * SimStep.SECONDS;
+        double dx = toX - x;
+        double dy = toY - y;
+        double d = Math.sqrt(dx * dx + dy * dy);
+        double step = speed * SimStep.SECONDS;
+        if (d <= step + PulledDebris.SWALLOW) {
+            return false;
+        }
+        vx = dx / d * speed;
+        vy = dy / d * speed;
+        x += vx * SimStep.SECONDS;
+        y += vy * SimStep.SECONDS;
+        if (hitCooldown > 0) {
+            hitCooldown--;
+        }
+        if (ticksSinceHit < Integer.MAX_VALUE) {
+            ticksSinceHit++;
+        }
+        return true;
     }
 
     /** Whether a box of {@code box} around (bx, by) touches it. */
@@ -99,6 +161,10 @@ public final class Debris implements Hashed {
         if (life >= 0) {
             hash.add(life).add(vx).add(vy);
         }
+        if (pulled) {
+            // M7 part H: only a breaching boss's rocks (Level 21) hash these.
+            hash.add(toX).add(toY).add(speed).add(acceleration);
+        }
     }
 
     double x() {
@@ -121,6 +187,16 @@ public final class Debris implements Hashed {
     /** Whether it is a thrown rock, which rises and vanishes. */
     public boolean thrown() {
         return life >= 0;
+    }
+
+    /** M7 part H: whether it is a rock pulled toward a breaching boss's mouth (it stops shots, not bullets). */
+    public boolean pulled() {
+        return pulled;
+    }
+
+    /** M7 part H: a pulled rock's speed now, px/s (0 for any other chunk). */
+    public double pullSpeed() {
+        return pulled ? speed : 0;
     }
 
     /** A thrown rock's steps left; -1 for a chunk drifting through. */

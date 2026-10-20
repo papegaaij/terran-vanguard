@@ -77,8 +77,8 @@ class RetreatKeysTest {
         EnemyData motes = CONTENT.enemy("mote-swarm");
         EnemyData.Pursuit defaults = motes.pursuit().orElseThrow();
         assertEquals(new Span(50, 150), defaults.band());
-        assertEquals(90, defaults.lag());
-        assertEquals(6, defaults.lungeEvery());
+        assertEquals(30, defaults.lag(), "round 43 Q.1: 90 to 30");
+        assertEquals(4, defaults.lungeEvery(), "round 43 Q.1: 6 to 4");
         assertEquals(0.8, defaults.tell());
         assertEquals(60, defaults.ball());
         assertEquals(240, defaults.dive());
@@ -91,13 +91,13 @@ class RetreatKeysTest {
                 .flatMap(EnemyData.Hooks::easy)
                 .flatMap(EnemyData.Hook::pursuit)
                 .orElseThrow();
-        assertEquals(Optional.of(8.0), easy.lungeEvery());
+        assertEquals(Optional.of(5.5), easy.lungeEvery());
         assertEquals(Optional.of(1.2), easy.tell());
         EnemyData.PursuitChange hard = motes.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
                 .flatMap(EnemyData.Hook::pursuit)
                 .orElseThrow();
-        assertEquals(Optional.of(4.5), hard.lungeEvery());
+        assertEquals(Optional.of(3.0), hard.lungeEvery());
         // The entry and the refills by the formation lever: 8 + 2 on easy, 12 + 4 on hard.
         assertEquals(8, CONTENT.difficulty().formationSize(10, Difficulty.EASY));
         assertEquals(2, CONTENT.difficulty().formationSize(3, Difficulty.EASY));
@@ -244,10 +244,7 @@ class RetreatKeysTest {
                 "the zones cover rows");
         assertProblem(replace(MOTES, "  - {name: pursuit, size: [8, 12]}", ""), "its formations do not list");
         assertProblem(
-                replace(
-                        MOTES,
-                        "  hard: {pursuit: {lunge_every: 4.5}}",
-                        "  hard: {pursuit: {lunge_every: 4.5, dive: 3}}"),
+                replace(MOTES, "  hard: {pursuit: {lunge_every: 3}}", "  hard: {pursuit: {lunge_every: 3, dive: 3}}"),
                 "dive");
         assertProblem(
                 replace("player/weapons/rear-guard-drone-bay/data.yaml", "traits: [rear]", "traits: [forward]"),
@@ -331,6 +328,26 @@ class RetreatKeysTest {
                     return new DataFile(path, f.text().replace(from, to));
                 })
                 .toList();
+    }
+
+    @Test
+    void theRidgePassIsALevelKey() {
+        // Round 43 Q.4: the travelling ridge's pass is its own key, no longer tied to the basin rumble's layer start.
+        WeatherBlock.Ridge ridge = level().ridge().orElseThrow();
+        assertEquals(12, ridge.t());
+        assertEquals(8, ridge.seconds());
+        assertEquals(WeatherBlock.RidgeEdge.LEFT, ridge.from());
+        assertEquals(WeatherBlock.RidgeEdge.RIGHT, ridge.to());
+        assertFalse(ridge.leftward());
+        assertEquals(70, ridge.depth());
+        assertTrue(CONTENT.level("act-3-red-dust/level-19-foundry-of-tharsis")
+                .ridge()
+                .isEmpty());
+        String key = "ridge: {t: 12, seconds: 8, from: left, to: right, depth: 70}";
+        assertProblem(replace(LEVEL, key, "ridge: {t: 12, seconds: 8, from: left, to: left, depth: 70}"), "opposite");
+        assertProblem(replace(LEVEL, key, "ridge: {t: 12, seconds: 0, from: left, to: right, depth: 70}"), "seconds");
+        assertProblem(replace(LEVEL, key, "ridge: {t: 12, seconds: 8, from: left, to: right, depth: 540}"), "depth");
+        assertProblem(replace(LEVEL, key, "ridge: {t: 12, seconds: 8, from: top, to: right, depth: 70}"), "ridge");
     }
 
     @Test

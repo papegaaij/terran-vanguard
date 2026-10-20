@@ -46,7 +46,8 @@ import vanguard.sim.StrideArena;
  * nozzle, deep orange at its end) and the flame puffs streaming from the nozzle along the axis over it (round 42: the
  * puffs alone read as sparse sparks). With the bullets ({@link #drawMissiles}): the homing missiles at the nearest of
  * their 16 headings, drawn half again as large and brightened with a hot exhaust, over their long grey smoke trails
- * (round 42: tiny grey streaks).
+ * (round 42: tiny grey streaks). Round 44: the rail lance and the stomp ({@link StrikeLooks}), the stomp's rings with
+ * the cone, the lance with the missiles.
  */
 final class WalkerLooks {
     /** The body's headings (45° steps clockwise from straight down). */
@@ -137,6 +138,9 @@ final class WalkerLooks {
     private final VertexFills fills;
     private final ConeShade coneShade = new ConeShade();
     private final HitFlash hits = new HitFlash();
+    /** Round 44: its rail lance and stomp. */
+    private final StrikeLooks strikes;
+
     private final Array<AtlasRegion> legs;
     private final Array<AtlasRegion> hull;
     private final Array<AtlasRegion> plate;
@@ -208,6 +212,7 @@ final class WalkerLooks {
     private WalkerLooks(Sprites sprites, FlashShader flash, SetPieceSpec boss, JsonValue pivots) {
         this.flash = flash;
         fills = new VertexFills(sprites.pixel);
+        strikes = new StrikeLooks(fills);
         heat = new double[boss.parts().size()];
         String slug = boss.slug();
         legs = sprites.frames(slug + "-legs");
@@ -304,6 +309,7 @@ final class WalkerLooks {
         nextPuff = 0;
         Arrays.fill(heat, 0);
         hits.reset();
+        strikes.reset();
     }
 
     // --- the frames --------------------------------------------------------------------------------
@@ -391,6 +397,7 @@ final class WalkerLooks {
         }
         StrideArena stride = piece.stride().orElseThrow();
         heat(sortie, piece);
+        strikes.stepped(sortie);
         SimEvents events = sortie.events();
         for (int i = 0; i < events.size(); i++) {
             switch (events.type(i)) {
@@ -674,6 +681,9 @@ final class WalkerLooks {
             return;
         }
         StrideArena stride = piece.stride().orElseThrow();
+        // Round 44: the stomp's ground ring and its shockwave, under the flame.
+        strikes.drawStomp(
+                batch, piece, piece.renderX(alpha) - piece.renderX(1), piece.renderY(alpha) - piece.renderY(1));
         if (stride.offScreen() || coneLength <= 0) {
             return;
         }
@@ -865,6 +875,13 @@ final class WalkerLooks {
         }
         batch.setColor(Color.WHITE);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        // Round 44: the rail lance's charge and shot, and its hits' flashes, with the bullets.
+        strikes.drawLance(batch, sortie, walker(sortie), realSeconds(sortie));
+    }
+
+    /** The real seconds the lance's charge pulses by: the simulation's own clock (the screen's is not at hand here). */
+    private static double realSeconds(Sortie sortie) {
+        return sortie.tick() * SimStep.SECONDS;
     }
 
     /** The cause a missile's end shows: a burst where it was shot down or struck, a puff of smoke where it fizzled. */

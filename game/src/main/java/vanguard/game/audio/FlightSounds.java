@@ -176,7 +176,7 @@ public final class FlightSounds {
         walker = new WalkerCues(mix);
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry);
+        units = new UnitCues(mix, looks, storm, foundry, walker);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix);

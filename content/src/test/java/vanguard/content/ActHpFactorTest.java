@@ -65,7 +65,7 @@ class ActHpFactorTest {
         assertEquals(
                 List.of("needler", "stinger"), CONTENT.enemyBasis().smallActHp().units());
         assertEquals(
-                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20),
+                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21), // M7 part H: Level 21 (step PH2)
                 CONTENT.enemyBasis().smallActHp().levels());
         // The Needler (4 HP, L01, reference 20): ×60/20 = 3 at L08, ×63/20 capped at 3 at L09.
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 8), 1e-12);

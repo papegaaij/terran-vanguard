@@ -2189,3 +2189,133 @@ Proposed (round 43).
 Sources: <https://freesound.org/people/jakobthiesen/sounds/207685/> (Large Swarm of Buzzing Flies.wav by jakobthiesen, CC-BY 3.0), <https://freesound.org/people/Electroviolence/sounds/234547/> (Big Swoosh by Electroviolence, CC0 1.0). Use: a lunge: the swarm's 0.6 s tell (the ball contracts and brightens) and its dive.
 Brief: a rising hum and a rush, 0.6 s, no pop. Why: the fly swarm of hum b swelling in and gliding up, a big swoosh rushing in at its end.
 Edit: 0.80 s, the loudest 100 ms band −20.9 dB, peak −4.1 dBFS, −16.5 LUFS.
+
+## Concept round 44 (M7 part H, Level 21: the Dust Colossus, and the walker's rail lance and stomp shockwave, from the database)
+
+The user (round 42): "You should really stop trying to make these sounds yourself. Use the database." Every file is cut from **Freesound originals** (CC0 or CC-BY, each in [CREDITS.md](../../../../CREDITS.md)) by `tools/concept/audio/sfx_r44.py` (cut, slowed or gliding, layered, filtered, faded, panned and levelled; nothing synthesized), big and heavy sources, nothing bubbly or popping, every blast with a ramped attack. An a/b pair each, proposed (round 44), pending the user's review; nothing is in the game until the pick (the walker's lance and shockwave play WR2's placeholders). Levels as round 43: one-shots on the loudest 100 ms of the 200 Hz–5 kHz band under a −4 dBFS ceiling (the Colossus's death −1.5 dBFS, the `huge` rung), but at most the accepted round-43 sounds' loudness (the tells −16 LUFS, the rest −14 LUFS: the rumbles are nearly all below 200 Hz and would otherwise reach the band level only through the limiter); the suction loop by its band RMS (−28 dB, the walker's flame loop); the ridge pass by its loudness (−20 LUFS, 8 LU over the `basin-rumble` bed it plays over, which stays the basin's bed on Level 21: the ridge pass is a separate one-shot on top).
+
+### colossus-bulge-r44-a — "Cracking Earthquake (cracking soil, cracking stone)" by uagadugu + "sand pour on sand FF662.aif" by martinimeniscus
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/uagadugu/sounds/222521/> (Cracking Earthquake (cracking soil, cracking stone) by uagadugu, CC0 1.0), <https://freesound.org/people/martinimeniscus/sounds/199332/> (sand pour on sand FF662.aif by martinimeniscus, CC0 1.0). Use: a breach's 2.0 s tell: the sand bulges and cracks at the breach point (each breach, and phase 3's marker under the ship).
+Brief: the Burrower's rumble, far bigger and longer; a low rumble, no popping (§1.7 breach bulge). Why: an earthquake's cracking soil and stone swelling in, sand pouring off the bulge.
+Edit: 2.10 s, the loudest 100 ms band −24.2 dB, peak −4.0 dBFS, −16.0 LUFS.
+
+### colossus-bulge-r44-b — "Large, Low Rumble.wav" by duckduckpony + "Guterton - Heavy Stone Grind" by guterton.wav + "Flowing Sand" by SteveMeli
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0), <https://freesound.org/people/guterton.wav/sounds/760672/> (Guterton - Heavy Stone Grind by guterton.wav, CC-BY 4.0), <https://freesound.org/people/SteveMeli/sounds/215006/> (Flowing Sand by SteveMeli, CC-BY 3.0). Use: a breach's 2.0 s tell: the sand bulges and cracks at the breach point (each breach, and phase 3's marker under the ship).
+Brief: the Burrower's rumble, far bigger and longer; a low rumble, no popping (§1.7 breach bulge). Why: a large low rumble's crescendo with a heavy stone grind and sand flowing.
+Edit: 2.10 s, the loudest 100 ms band −22.4 dB, peak −4.1 dBFS, −16.3 LUFS.
+
+### colossus-eruption-r44-a — "superhero_earth_impact_hit_07062025" by Artninja + "Deep Roar Echo 2.wav" by noahpardo + "avl04.wav" by blaukreuz
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/Artninja/sounds/815336/> (superhero_earth_impact_hit_07062025 by Artninja, CC-BY 4.0), <https://freesound.org/people/noahpardo/sounds/345735/> (Deep Roar Echo 2.wav by noahpardo, CC0 1.0), <https://freesound.org/people/blaukreuz/sounds/162668/> (avl04.wav by blaukreuz, CC0 1.0). Use: the mouth breaching (the 1.5 s rise) and phase 3's eruption under the ship.
+Brief: a mountain of sand erupting with a roar (§1.7 eruption). Why: an earth impact's boom, a deep creature roar rising out of it, rock and sand pouring back.
+Edit: 2.60 s, the loudest 100 ms band −17.4 dB, peak −4.1 dBFS, −15.9 LUFS.
+
+### colossus-eruption-r44-b — "massive explosion" by Hugofski + "Deep Monster Roar 2.wav" by MisterSegev + "Landslide.wav" by bikesnbassboi + "avl02.wav" by blaukreuz + "sand pour on sand FF662.aif" by martinimeniscus
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/Hugofski/sounds/177556/> (massive explosion by Hugofski, CC0 1.0), <https://freesound.org/people/MisterSegev/sounds/207746/> (Deep Monster Roar 2.wav by MisterSegev, CC-BY 4.0), <https://freesound.org/people/bikesnbassboi/sounds/543837/> (Landslide.wav by bikesnbassboi, CC-BY 4.0), <https://freesound.org/people/blaukreuz/sounds/162670/> (avl02.wav by blaukreuz, CC0 1.0), <https://freesound.org/people/martinimeniscus/sounds/199332/> (sand pour on sand FF662.aif by martinimeniscus, CC0 1.0). Use: the mouth breaching (the 1.5 s rise) and phase 3's eruption under the ship.
+Brief: a mountain of sand erupting with a roar (§1.7 eruption). Why: a massive explosion's boom, a deep monster roar and a landslide's roar, sand pouring back.
+Edit: 2.60 s, the loudest 100 ms band −19.9 dB, peak −4.1 dBFS, −14.4 LUFS.
+
+### colossus-suction-r44-a — "fireplace air rush into chimney steady wind current hum.flac" by kyles + "G56-22-Sandstorm.wav" by craigsmith
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/kyles/sounds/454020/> (fireplace air rush into chimney steady wind current hum.flac by kyles, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438877/> (G56-22-Sandstorm.wav by craigsmith, CC0 1.0). Use: the suction, a loop while a mouth is open and pulling.
+Brief: a deep inhaling roar with sand streaming, a seamless loop (§1.7 suction draw). Why: air rushing into a chimney (a deep steady draw) under a sandstorm.
+Edit: seamless 4.0 s LOOP, band RMS −28.1 dB, peak −9.9 dBFS, −22.5 LUFS.
+
+### colossus-suction-r44-b — "motor industrial turbine large fan blades spin sorta.flac" by kyles + "Monster Inhale.wav" by ecfike + "Flowing Sand" by SteveMeli
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/kyles/sounds/453476/> (motor industrial turbine large fan blades spin sorta.flac by kyles, CC0 1.0), <https://freesound.org/people/ecfike/sounds/132865/> (Monster Inhale.wav by ecfike, CC0 1.0), <https://freesound.org/people/SteveMeli/sounds/215006/> (Flowing Sand by SteveMeli, CC-BY 3.0). Use: the suction, a loop while a mouth is open and pulling.
+Brief: a deep inhaling roar with sand streaming, a seamless loop (§1.7 suction draw). Why: a large industrial turbine's fan slowed to 0.8, a monster's inhale under it, sand flowing.
+Edit: seamless 4.0 s LOOP, band RMS −28.1 dB, peak −9.1 dBFS, −22.2 LUFS.
+
+### colossus-bite-r44-a — "Big Structure Collision Heard from Inside" by Osvoldon + "Horror / Zombie - Biting on bones" by Breviceps + "Scraping and Clunking Large Stone 1.wav" by F.M.Audio
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/Breviceps/sounds/445987/> (Horror / Zombie - Biting on bones by Breviceps, CC0 1.0), <https://freesound.org/people/F.M.Audio/sounds/572754/> (Scraping and Clunking Large Stone 1.wav by F.M.Audio, CC-BY 4.0). Use: the bite's snap after its 0.8 s tell.
+Brief: a heavy jaw snap with grinding chitin (§1.7 bite snap). Why: a massive structure's deep impact with bones crunching, slowed to 0.6, and a large stone scraping.
+Edit: 0.90 s, the loudest 100 ms band −18.9 dB, peak −4.3 dBFS, −17.0 LUFS.
+
+### colossus-bite-r44-b — "superhero_earth_impact_hit_07062025" by Artninja + "Bone Crunch/Crack 2 (Mixed)" by EvanBoyerman + "Guterton - Heavy Stone Grind" by guterton.wav
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/Artninja/sounds/815336/> (superhero_earth_impact_hit_07062025 by Artninja, CC-BY 4.0), <https://freesound.org/people/EvanBoyerman/sounds/369601/> (Bone Crunch/Crack 2 (Mixed) by EvanBoyerman, CC-BY 3.0), <https://freesound.org/people/guterton.wav/sounds/760672/> (Guterton - Heavy Stone Grind by guterton.wav, CC-BY 4.0). Use: the bite's snap after its 0.8 s tell.
+Brief: a heavy jaw snap with grinding chitin (§1.7 bite snap). Why: an earth impact's boom with a bone crack slowed to 0.55 and a heavy stone grind after it.
+Edit: 1.00 s, the loudest 100 ms band −20.3 dB, peak −4.2 dBFS, −14.0 LUFS.
+
+### colossus-death-r44-a — "NPX Deep Roar Echo 1.wav" by noahpardo + "S17-28 Large explosion with debris.wav" by craigsmith + "superhero_earth_impact_hit_07062025" by Artninja + "massive explosion" by Hugofski + "rock_avalanche_w_rumbling_sound_01092026" by Artninja
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/noahpardo/sounds/345736/> (NPX Deep Roar Echo 1.wav by noahpardo, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/674899/> (S17-28 Large explosion with debris.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Artninja/sounds/815336/> (superhero_earth_impact_hit_07062025 by Artninja, CC-BY 4.0), <https://freesound.org/people/Hugofski/sounds/177556/> (massive explosion by Hugofski, CC0 1.0), <https://freesound.org/people/Artninja/sounds/841540/> (rock_avalanche_w_rumbling_sound_01092026 by Artninja, CC-BY 4.0). Use: the Dust Colossus's death, the `huge` rung of the act boss: chained eruptions over 3 s and the crater collapsing.
+Brief: a collapse into the sand, a long subsiding roar under the `huge` rung, dry throughout (§1.7 death collapse). Why: a deep roar shuddering, chained eruptions, then a rock avalanche's rumble subsiding.
+Edit: 6.10 s, the loudest 100 ms band −13.3 dB, peak −1.7 dBFS, −14.2 LUFS.
+
+### colossus-death-r44-b — "Deep Monster Roar 2.wav" by MisterSegev + "Deep Boom" by Za-Games + "building_collapse04_enclosed_space.wav" by onteca + "Landslide.wav" by bikesnbassboi + "avl02.wav" by blaukreuz
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/MisterSegev/sounds/207746/> (Deep Monster Roar 2.wav by MisterSegev, CC-BY 4.0), <https://freesound.org/people/Za-Games/sounds/539968/> (Deep Boom by Za-Games, CC0 1.0), <https://freesound.org/people/onteca/sounds/197770/> (building_collapse04_enclosed_space.wav by onteca, CC-BY 3.0), <https://freesound.org/people/bikesnbassboi/sounds/543837/> (Landslide.wav by bikesnbassboi, CC-BY 4.0), <https://freesound.org/people/blaukreuz/sounds/162670/> (avl02.wav by blaukreuz, CC0 1.0). Use: the Dust Colossus's death, the `huge` rung of the act boss: chained eruptions over 3 s and the crater collapsing.
+Brief: a collapse into the sand, a long subsiding roar under the `huge` rung, dry throughout (§1.7 death collapse). Why: a deep monster roar, a building collapsing and two deep booms over a landslide, rock pouring in.
+Edit: 6.00 s, the loudest 100 ms band −15.9 dB, peak −1.7 dBFS, −14.3 LUFS.
+
+### colossus-ridge-r44-a — "Train, Subway, Pass By, Under Bridge Perspective" by Kinoton + "Flowing Sand" by SteveMeli
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/Kinoton/sounds/368650/> (Train, Subway, Pass By, Under Bridge Perspective by Kinoton, CC0 1.0), <https://freesound.org/people/SteveMeli/sounds/215006/> (Flowing Sand by SteveMeli, CC-BY 3.0). Use: the ridge pass on Level 21 (t≈64–72): the Colossus's back moving under the sand past the ship, over the basin bed.
+Brief: a travelling rumble panned across the field with sand hissing off the ridge, 6–8 s (§1.7 ridge rumble; the `basin-rumble` bed stays under it). Why: a subway train passing under a bridge, sand flowing off the ridge, panned left to right.
+Edit: 7.00 s, −20.0 LUFS, the loudest 100 ms band −21.4 dB, peak −5.7 dBFS.
+
+### colossus-ridge-r44-b — "Large, Low Rumble.wav" by duckduckpony + "Guterton - Heavy Stone Grind" by guterton.wav + "sand pour on sand FF662.aif" by martinimeniscus
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0), <https://freesound.org/people/guterton.wav/sounds/760672/> (Guterton - Heavy Stone Grind by guterton.wav, CC-BY 4.0), <https://freesound.org/people/martinimeniscus/sounds/199332/> (sand pour on sand FF662.aif by martinimeniscus, CC0 1.0). Use: the ridge pass on Level 21 (t≈64–72): the Colossus's back moving under the sand past the ship, over the basin bed.
+Brief: a travelling rumble panned across the field with sand hissing off the ridge, 6–8 s (§1.7 ridge rumble; the `basin-rumble` bed stays under it). Why: a large low rumble passing, a heavy stone grind and sand pouring, panned right to left.
+Edit: 7.00 s, −20.0 LUFS, the loudest 100 ms band −24.6 dB, peak −5.6 dBFS.
+
+### walker-lance-charge-r44-a — "charging power" by JavierZumer + "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/JavierZumer/sounds/257229/> (charging power by JavierZumer, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0). Use: the Revenant Walker's rail lance (step WR2): its 1 s charge tell, the glowing line across the ship's lane.
+Brief: a heavy charge rising for 1 s, nothing synthesized (WR2: a placeholder plays until the pick). Why: a power charge rising, its pitch gliding up, a Tesla coil's sparking swelling under it.
+Edit: 1.05 s, the loudest 100 ms band −20.0 dB, peak −10.5 dBFS, −21.2 LUFS.
+
+### walker-lance-charge-r44-b — "high-voltage-discharge-2.wav" by follytowers + "S16-18 Tesla coil sparking and humming.wav" by craigsmith + "Large, Low Rumble.wav" by duckduckpony
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/follytowers/sounds/415962/> (high-voltage-discharge-2.wav by follytowers, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0), <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0). Use: the Revenant Walker's rail lance (step WR2): its 1 s charge tell, the glowing line across the ship's lane.
+Brief: a heavy charge rising for 1 s, nothing synthesized (WR2: a placeholder plays until the pick). Why: a high-voltage discharge's buzz swelling and gliding up, a Tesla coil's sparks on top, a low rumble rising.
+Edit: 1.05 s, the loudest 100 ms band −22.7 dB, peak −4.2 dBFS, −16.2 LUFS.
+
+### walker-lance-shot-r44-a — "Railgun - Extremely LOUD Cannon" by qubodup
+
+Proposed (round 44).
+Source: <https://freesound.org/people/qubodup/sounds/162260/> (Railgun - Extremely LOUD Cannon by qubodup, CC0 1.0). Use: the rail lance's heavy line shot down the screen after the charge.
+Brief: a heavy rail shot, big and heavy (WR2). Why: a real railgun (an extremely loud cannon).
+Edit: 1.60 s, the loudest 100 ms band −16.2 dB, peak −6.4 dBFS, −15.8 LUFS.
+
+### walker-lance-shot-r44-b — "shipboard_railgun.mp3" by deleted_user_1941307 + "Taser/High Voltage discharge" by The_Chemical_Workshop
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/deleted_user_1941307/sounds/155790/> (shipboard_railgun.mp3 by deleted_user_1941307, CC0 1.0), <https://freesound.org/people/The_Chemical_Workshop/sounds/403252/> (Taser/High Voltage discharge by The_Chemical_Workshop, CC0 1.0). Use: the rail lance's heavy line shot down the screen after the charge.
+Brief: a heavy rail shot, big and heavy (WR2). Why: a shipboard railgun's heavy boom with a high-voltage discharge's crack on its attack.
+Edit: 1.60 s, the loudest 100 ms band −17.7 dB, peak −4.2 dBFS, −15.0 LUFS.
+
+### walker-shockwave-r44-a — "Giant Walking.wav" by facklere + "Explosion and Shockwave 1" by qubodup
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/facklere/sounds/458042/> (Giant Walking.wav by facklere, CC0 1.0), <https://freesound.org/people/qubodup/sounds/855245/> (Explosion and Shockwave 1 by qubodup, CC0 1.0). Use: the walker's stomp shockwave (step WR2): the stomp after its 0.5 s tell and the ring expanding out to 110 px.
+Brief: a ground slam and a low boom (WR2). Why: a giant's footfall and an explosion's shockwave rolling out of it.
+Edit: 1.60 s, the loudest 100 ms band −18.7 dB, peak −4.1 dBFS, −15.7 LUFS.
+
+### walker-shockwave-r44-b — "Giant step" by DasWaff + "loudthump.wav" by 777hr1 + "Big Structure Collision Heard from Inside" by Osvoldon + "building_collapse04_enclosed_space.wav" by onteca
+
+Proposed (round 44).
+Sources: <https://freesound.org/people/DasWaff/sounds/721601/> (Giant step by DasWaff, CC0 1.0), <https://freesound.org/people/777hr1/sounds/663057/> (loudthump.wav by 777hr1, CC-BY 4.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/onteca/sounds/197770/> (building_collapse04_enclosed_space.wav by onteca, CC-BY 3.0). Use: the walker's stomp shockwave (step WR2): the stomp after its 0.5 s tell and the ring expanding out to 110 px.
+Brief: a ground slam and a low boom (WR2). Why: a giant's step, a loud thump and a massive structure's deep impact rolling out, rubble shaken loose.
+Edit: 1.48 s, the loudest 100 ms band −20.9 dB, peak −4.2 dBFS, −14.3 LUFS.

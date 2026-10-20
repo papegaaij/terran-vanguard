@@ -159,6 +159,15 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           terrace, the terraces as contours, the floor with the Vrell staging grounds; the strike
                           route in (solid), the fallback back up the terraces and the road (dashed), the sections
                           (shown on the level's props review, l20-props-final-r43-a; no briefing sheet of its own)
+  level-21-hellas-basin   L21 p1 (M7 part H batch): Okafor's CDF plot of the Hellas basin, north up: the rim with
+                          the CDF line held at the end of the retreat, the inner wall's terraces as contours, the
+                          dune sea's crests with a moving seismic contact, the lime hollow at the lowest point with
+                          seismic rings centred on it; the descent route and the five sections
+  level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
+                          the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
+                          the lime gullet) beside a breach seen from above at the field's left edge: the Dust
+                          Colossus's mouth (tools/concept/bosses_r36.py's chosen model b, rendered here) with its
+                          gullet, the bite circle and the suction's lines toward it, the ship for scale
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -175,6 +184,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r40-a.png   review sheet, L17 (M7 part D)
   design/ui/briefing/concept/briefing-images-final-r41-a.png   review sheet, L18 (M7 part E)
   design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
+  design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -185,7 +195,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -193,7 +203,7 @@ creeper.py, enemy_bullets.py, weapon_fx.py, hive_node.py, ravager.py, wraith.py,
 shuttle.py, convoy_ships.py (switch the ship pair: its --variant b, then this script again),
 driftjelly.py, reef_spitter.py, harbour_kraken.py, backdrop_l11.py, l12_props.py and backdrop_l12.py, skimmer.py,
 relay.py, backdrop_l13.py, siege_spire.py, root_burst.py --assets, backdrop_l14.py, burrower.py and backdrop_l15.py, whose sprites
-and pieces it shows); the review sheet written is the open round's (r42) unless
+and pieces it shows); the review sheet written is the open round's (r44) unless
 a round is named.
 """
 import json
@@ -225,7 +235,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r42"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r44"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -4375,6 +4385,249 @@ def hellas_fallback():
     return b
 
 
+SOURCE_M7H = artkit.source_note(SCRIPT, "M7 part H batch")
+LIME_DIM = (110, 170, 50)
+HB_C = (300.0, 206.0)                                          # the basin plot: the lime hollow, the lowest point
+HB_RIM, HB_WALL, HB_DUNE, HB_HOLLOW = 184.0, 150.0, 108.0, 40.0   # radii: the rim, the wall's foot, the dunes, the hollow
+
+
+def hb_at(r, ang):
+    """A point of the basin plot at radius r and angle ang (degrees, 0 = east, 90 = north)."""
+    a = math.radians(ang)
+    return HB_C[0] + r * math.cos(a), HB_C[1] - r * math.sin(a)
+
+
+def hellas_basin():
+    """L21 p1: Okafor's CDF plot of the Hellas basin, north up: the plateau outside the rim, the rim with the CDF
+    line held at the end of the retreat, the inner wall's terraces as contours, the dune sea's crests with a moving
+    seismic contact, the lime hollow at the lowest point with seismic rings centred on it; the descent route in from
+    the north rim and the five sections."""
+    b = Board()
+    x0, x1, top, bot = 16, 468, 18, H - 10
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= top) & (b.yy < bot)
+    tex = raster.fbm(W, H, 24, 5101, octaves=4, period=False)
+    fine = raster.fbm(W, H, 6, 5103, octaves=2, period=False)
+    ang = np.arctan2(-(b.yy - HB_C[1]), b.xx - HB_C[0])
+    r = np.hypot(b.xx - HB_C[0], b.yy - HB_C[1]) + 3 * np.sin(ang * 7) + 2 * np.sin(ang * 13 + 1)
+    elev = np.clip((r - HB_DUNE) / (HB_RIM - HB_DUNE), 0, 1)       # 0 on the floor .. 1 at the rim
+    ground = raster.ramp(MARS_HOLO, np.clip(0.22 + 0.42 * elev + 0.22 * (tex - 0.5) + 0.1 * (fine - 0.5), 0, 1))
+    plateau = raster.ramp(MARS_HOLO, np.clip(0.5 + 0.25 * (tex - 0.5), 0, 1)) * 0.85
+    ground = np.where((r > HB_RIM)[..., None], plateau, ground)
+    crest = np.abs(np.sin((b.yy + 9 * np.sin(b.xx / 23.0) + 4 * np.sin(b.xx / 7.0)) / 5.0)) > 0.93   # the dunes
+    ground = np.where((crest & (r < HB_DUNE) & (r > HB_HOLLOW + 6))[..., None], ground * 1.35, ground)
+    vein = np.abs(np.sin(ang * 9 + 6 * (fine - 0.5))) < 0.06                               # the hollow's lime veins
+    hollow = r < HB_HOLLOW
+    ground = np.where(hollow[..., None], raster.ramp([(0.0, (26, 24, 14)), (1.0, (90, 96, 40))],
+                                                     np.clip(0.4 + 0.5 * (tex - 0.5), 0, 1)), ground)
+    ground = np.where((hollow & vein)[..., None], np.array([150, 210, 70.0]), ground)
+    b.base = np.where(box[..., None], ground, b.base)
+    b.glow(*HB_C, 22, (60, 90, 20), 0.8)
+    # the rim, the terraces as contours, the wall's foot
+    angs = np.arange(0, 181, 2)
+    def arc(rad, wob=0.0):
+        pts = []
+        for a in angs:
+            x, y = hb_at(rad + wob * (3 * math.sin(math.radians(a) * 7) + 2 * math.sin(math.radians(a) * 13 + 1)), a)
+            if x0 <= x < x1 and top <= y < bot:
+                pts.append((x, y))
+        return pts
+    b.line(arc(HB_RIM, -1), WHITE, 2, 255)
+    for k, rad in enumerate((172, 162, 152)):
+        b.line(arc(rad, -1), CYAN_DIM, 1, 190 - 30 * k)
+    b.line(arc(HB_DUNE + 4, -1), CYAN_DIM, 1, 110)
+    for k, rad in enumerate((12, 22, 33, 46, 60)):                 # the seismic rings on the lowest point
+        b.ring(*HB_C, rad, colour=LIME, alpha=220 - 30 * k)
+    # the CDF line held on the north rim (the retreat's end), the wrecks below it
+    for a in (121, 127, 133, 139, 145):
+        gx, gy = hb_at(HB_RIM + 1, a)
+        b.marker(gx, gy, "square", GREEN, 3)
+    for a, rr in ((124, 174), (136, 168), (142, 176)):
+        b.marker(*hb_at(rr, a), "cross", GREY, 2)
+    tag(b, 30, 30, "CDF LINE - HELD", GREEN)
+    tag(b, 30, 41, "WHERE THE RETREAT ENDED", CYAN_DIM)
+    b.line([(126, 38), (*hb_at(HB_RIM + 6, 136),)], GREEN, 1, 160)
+    # the Vrell: growths and contacts on the floor, thickest toward the hollow
+    rng = np.random.default_rng(5111)
+    for _ in range(18):
+        rr, a = rng.uniform(20, 70), rng.uniform(0, 180)
+        b.glow(*hb_at(rr, a), rng.uniform(3, 6), (150, 70, 200), 0.5)
+    for _ in range(10):
+        rr, a = rng.uniform(46, 120), rng.uniform(15, 165)
+        x, y = hb_at(rr, a)
+        if top + 8 < y < bot - 6:
+            b.marker(x, y, "chevron", RED, 3)
+    # a moving seismic contact under the dune sea (the ridge pass): a lime dashed trace with its heading
+    trace = [hb_at(88, a) for a in range(30, 72, 4)]
+    b.dashed(trace, LIME, 1, 4, 3)
+    b.arrow(*trace[-2], *trace[-1], LIME, size=3, dashed=False)
+    tag(b, 346, 100, "SEISMIC - MOVING", LIME)
+    tag(b, HB_C[0] + 52, HB_C[1] - 30, "LOWEST POINT", LIME)
+    # the descent route from the rim down the inner wall, over the dune sea into the hollow
+    route = [hb_at(HB_RIM + 14, 116), hb_at(HB_RIM - 4, 114), hb_at(160, 110), hb_at(140, 106), hb_at(118, 102),
+             hb_at(96, 98), hb_at(70, 96), hb_at(44, 94), hb_at(18, 92)]
+    b.line(route, CYAN, 2, 230)
+    b.arrow(*route[-2], *route[-1], CYAN, size=3, dashed=False)
+    b.marker(*HB_C, "diamond", AMBER, 4)
+    tag(b, 276, 26, "IN FROM THE RIM", CYAN)
+    tag(b, 150, 120, "INNER WALL", CYAN_DIM)
+    tag(b, 202, 176, "DUNE SEA", CYAN_DIM)
+    tag(b, 24, 196, "LIME HOLLOW", LIME)
+    b.line([(88, 199), (HB_C[0] - 42, HB_C[1] - 5)], LIME_DIM, 1, 160)
+    for n, (rr, a) in enumerate(((HB_RIM - 2, 106), (152, 100), (100, 92), (56, 88), (26, 70)), 1):
+        sx, sy = hb_at(rr, a)
+        sx += 14
+        b.draw.rectangle([sx - 4, sy - 5, sx + 4, sy + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(sx - 2, sy - 3, str(n), AMBER)
+    b.sprite(scaled_sprite("ship_2", 0.5), *hb_at(HB_RIM + 8, 117))
+    b.title("HELLAS BASIN - RIM TO THE LOWEST POINT")
+    b.label(W - 10, 9, "NO MORE RUNNING", AMBER, right=True)
+    b.draw.rectangle([x0, top, x1 - 1, bot - 1], outline=CYAN_DIM + (180,))
+    b.arrow(452, 46, 452, 26, CYAN, size=3, dashed=False)
+    b.label(449, 50, "N", CYAN)
+    px = 480
+    b.line([(px - 6, 26), (px - 6, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "CDF TERRAIN PLOT", WHITE)
+    rows = [("1", "HELLAS RIM"), ("2", "INNER WALL"), ("3", "DUNE SEA"), ("4", "LIME HOLLOW"), ("5", "THE SOURCE")]
+    for i, (n, name) in enumerate(rows):
+        y = 46 + 12 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, LIME if n == "5" else CYAN)
+    b.line([(px, 112), (W - 12, 112)], CYAN_DIM, 1, 120)
+    b.label(px, 120, "EVERY VRELL ATTACK", RED)
+    b.label(px, 130, "ON MARS CAME FROM HERE", RED)
+    b.label(px, 146, "THE SONG: UNDER THE FLOOR", LIME)
+    b.label(px, 162, "WE GO DOWN THERE", AMBER)
+    b.label(px, 172, "AND END IT", AMBER)
+    b.label(W - 10, H - 16, "ARES LANDING IS COUNTING ON YOU", CYAN_DIM, right=True)
+    return b
+
+
+def colossus_sprite(size=104, open_=1.0):
+    """The Dust Colossus's mouth from above, open: round 36's chosen model (tools/concept/bosses_r36.py, variant b:
+    the bone mandibles, the palps, the lime throat in its ring of teeth), rendered here at ``size`` px (the play
+    field's mouth is ~150 px across)."""
+    import bosses_r36 as b36
+    from render import enemy_rigs
+    ms = enemy_rigs.ModelSpaceAngleSprites(lambda rise=1.0, open_=0.0: b36.colossus_b(rise, open_), size, 4,
+                                           extent=300 / b36.C_S, factor=3, colors=48)
+    return held_frame_img(ms.frame(0, rise=1.0, open_=open_), 48)
+
+
+def colossus_scan():
+    """L21 p2: Varga's seismic cut through the basin floor: the surface with the ridge the body raises, the body
+    under the sand (one organism, colony-sized, violet-veined segments), a mouth breaching at the cut's left edge
+    with the lime gullet; beside it a breach seen from above at the field's left edge: the mouth with its gullet,
+    the bite circle, the suction's lines toward it and the ship for scale."""
+    b = Board()
+    # ---- the seismic cut
+    cx0, cx1, ctop, cbot = 16, 376, 22, H - 10
+    surf = 86 + 2.5 * np.sin(b.xx / 13.0) + 1.5 * np.sin(b.xx / 5.0 + 1)
+    ridge = 14 * np.exp(-((b.xx - 206) / 70) ** 4)                 # the ridge its back raises
+    surf = surf - ridge
+    cut = (b.xx >= cx0) & (b.xx < cx1) & (b.yy >= ctop) & (b.yy < cbot)
+    tex = raster.fbm(W, H, 18, 5201, octaves=4, period=False)
+    depth = np.clip((b.yy - surf) / (cbot - 86), 0, 1)
+    strata = 0.5 + 0.5 * np.sin((b.yy - 0.3 * surf) / 4.0 + 3 * tex)
+    sand = raster.ramp(MARS_HOLO, np.clip(0.62 - 0.45 * depth + 0.12 * (strata - 0.5) + 0.15 * (tex - 0.5), 0, 1))
+    under = cut & (b.yy > surf)
+    b.base = np.where(under[..., None], sand, b.base)
+    # the body: a long chain of segments under the ridge, its veins violet, curving up into the breach at the left
+    seg = [(326 - 21 * i, 150 - 26 * math.exp(-((326 - 21 * i - 206) / 90) ** 2)) for i in range(12)]
+    seg += [(84, 146), (66, 134), (52, 118), (44, 102)]
+    sd = np.full((H, W), 1e9)
+    seam = np.zeros((H, W), bool)
+    for i, (sx, sy) in enumerate(seg):
+        rr = 22.0 if i < 12 else 17.0 - 2.5 * (i - 12)
+        d = np.hypot((b.xx - sx) / 1.15, b.yy - sy) - rr
+        seam |= (np.abs(d) < 0.7) & (d < sd + 2.5) & (sd < 0)    # a segment's front edge over the one behind it
+        sd = np.minimum(sd, d)
+    body = (sd < 0) & cut
+    veins = np.abs(np.sin(b.xx / 6.0 + 4 * tex) * np.cos(b.yy / 5.0)) < 0.08
+    shade = np.clip(0.5 - sd / 20, 0.3, 1.2)
+    flesh = np.array([62, 36, 78.0]) * shade[..., None]
+    flesh = np.where((veins | seam)[..., None], np.array([150, 80, 200.0]), flesh)
+    b.base = np.where(body[..., None], flesh, b.base)
+    b.base += (np.exp(-(sd / 1.8) ** 2) * cut)[..., None] * np.array([90, 40, 120.0])
+    b.glow(206, 140, 120, (40, 14, 60), 0.6)
+    # the breach at the left edge: the funnel in the surface and the mouth's lime gullet at its top
+    fill(b, [(22, 80), (60, 80), (52, 98), (30, 98)], (20, 12, 22), 0.9)
+    b.glow(41, 84, 10, (120, 200, 40), 1.0)
+    b.glow(41, 84, 3, (200, 255, 120), 1.0)
+    # the surface line, the ridge's dust haze, the depth ticks
+    xs = np.arange(cx0, cx1, 2)
+    sline = [(x, 86 + 2.5 * math.sin(x / 13.0) + 1.5 * math.sin(x / 5.0 + 1) - 14 * math.exp(-((x - 206) / 70) ** 4))
+             for x in xs if not 22 <= x <= 60]
+    b.line([p for p in sline if p[0] < 22], WHITE, 1, 220)
+    b.line([p for p in sline if p[0] > 60], WHITE, 1, 220)
+    b.glow(206, 66, 40, (70, 46, 30), 0.5)
+    for i, y in enumerate((86, 124, 162, 200)):                    # the depth ticks on the cut's right edge
+        b.line([(cx1 - 6, y), (cx1 - 1, y)], CYAN, 1, 200)
+        b.label(cx1 - 9, y - 3, f"{i * 150} M", CYAN_DIM, right=True)
+    tag(b, 172, 46, "RIDGE - ITS BACK", WHITE)
+    b.line([(206, 56), (206, 70)], WHITE, 1, 180)
+    tag(b, 150, 196, "ONE ORGANISM - COLONY-SIZED", VIOLET)
+    tag(b, 150, 207, "NOTHING REACHES IT DOWN HERE", GREY)
+    tag(b, 64, 58, "BREACH", LIME)
+    b.line([(66, 66), (46, 80)], LIME, 1, 200)
+    b.draw.rectangle([cx0, ctop, cx1 - 1, cbot - 1], outline=CYAN_DIM + (180,))
+    tag(b, cx0 + 4, ctop + 4, "SEISMIC CUT - HELLAS FLOOR", CYAN)
+    # ---- a breach from above, at the field's left edge
+    fx0, fx1, ftop, fbot = 388, 556, 22, H - 10
+    fw, fh = fx1 - fx0, fbot - ftop
+    field = (b.xx >= fx0) & (b.xx < fx1) & (b.yy >= ftop) & (b.yy < fbot)
+    dunes = 0.5 + 0.5 * np.sin((b.yy + 8 * np.sin(b.xx / 19.0)) / 6.0)
+    floor = raster.ramp(MARS_HOLO, np.clip(0.5 + 0.18 * (dunes - 0.5) + 0.2 * (tex - 0.5), 0, 1))
+    b.base = np.where(field[..., None], floor, b.base)
+    mx, my = fx0 + 18, ftop + 86                                    # the mouth, two thirds on the screen
+    k = 104 / 150                                                   # the sprite's px per play-field px
+    dm = np.hypot(b.xx - mx, b.yy - my)
+    b.base = np.where((field & (dm < 64))[..., None], b.base * (0.45 + 0.55 * np.clip((dm - 30) / 34, 0, 1))[..., None],
+                      b.base)                                       # the funnel
+    for a in range(-60, 61, 24):                                    # the suction's lines toward the mouth
+        ca, sa = math.cos(math.radians(a)), math.sin(math.radians(a))
+        r0, r1 = min(150, (my - ftop - 6) / max(1e-6, -sa) if sa < 0 else (fbot - 6 - my) / max(1e-6, sa)), 62
+        b.dashed([(mx + ca * r0, my + sa * r0), (mx + ca * r1, my + sa * r1)], CYAN_DIM, 1, 3, 3)
+        b.arrow(mx + ca * (r1 + 6), my + sa * (r1 + 6), mx + ca * r1, my + sa * r1, CYAN_DIM, size=2, dashed=False)
+    mouth = colossus_sprite()
+    full = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    full.alpha_composite(mouth, (int(mx - mouth.width / 2), int(my - mouth.height / 2)))
+    clip = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    clip.paste(full.crop((fx0, ftop, fx1, fbot)), (fx0, ftop))
+    b.sprites.append((clip, 0, 0))
+    b.arc(mx, my, 70 * k, 70 * k, -108, 108, RED, 230)               # the bite circle (70 px), clipped to the field
+    ship = scaled_sprite("ship_2", 0.5)
+    b.sprite(ship, fx0 + 120, ftop + 150)
+    b.draw.rectangle([fx0, ftop, fx1 - 1, fbot - 1], outline=CYAN_DIM + (180,))
+    for i in range(3):                                              # the edge warning, 3 s ahead
+        y0 = ftop + 132 + 12 * i
+        b.draw.polygon([(fx0 + 2, y0), (fx0 + 8, y0 - 4), (fx0 + 8, y0 + 4)], fill=AMBER + (230,))
+    tag(b, fx0 + 12, ftop + 136, "LEFT - 3 S", AMBER)
+    tag(b, fx0 + 4, ftop + 4, "A BREACH, FROM ABOVE", CYAN)
+    tag(b, fx0 + 62, ftop + 40, "BITE CIRCLE", RED)
+    tag(b, fx0 + 70, ftop + 104, "SUCTION", CYAN)
+    tag(b, fx0 + 4, fbot - 14, "GULLET - LIME", LIME)
+    b.line([(fx0 + 20, fbot - 16), (mx + 2, my + 8)], LIME, 1, 200)
+    # ---- the notes
+    px = 566
+    b.line([(px - 5, 26), (px - 5, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "IT BREACHES", WHITE)
+    b.label(px, 40, "WHERE THE", WHITE)
+    b.label(px, 50, "SAND BULGES", AMBER)
+    b.label(px, 66, "ANY SIDE", CYAN)
+    b.label(px, 76, "EVEN BEHIND", RED)
+    b.label(px, 92, "THROAT: LIME", LIME)
+    b.label(px, 102, "THE WEAK SPOT", LIME)
+    b.label(px, 118, "IT PULLS YOU", CYAN)
+    b.label(px, 128, "IN - THEN", CYAN)
+    b.label(px, 138, "IT BITES", RED)
+    b.label(px, 154, "BRING SIDE", AMBER)
+    b.label(px, 164, "AND REAR GUNS", AMBER)
+    b.title("DUST COLOSSUS - SEISMIC SCAN")
+    b.label(W - 10, 9, "THE SONG COMES FROM UNDER THE FLOOR", LIME, right=True)
+    b.label(W - 10, H - 16, "DR. VARGA", CYAN_DIM, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -4433,6 +4686,8 @@ IMAGES = {
     "level-19-rear-arcs": rear_arcs,
     "level-20-filed-plate": filed_plate,
     "level-20-hellas-fallback": hellas_fallback,
+    "level-21-hellas-basin": hellas_basin,
+    "level-21-colossus-scan": colossus_scan,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -4454,7 +4709,8 @@ BATCHES = {
     "r40": (list(IMAGES)[49:51], "M7 PART D"),
     "r41": (list(IMAGES)[51:53], "M7 PART E"),
     "r42": (list(IMAGES)[53:56], "M7 PART F"),
-    "r43": (list(IMAGES)[56:], "M7 PART G"),
+    "r43": (list(IMAGES)[56:57], "M7 PART G"),
+    "r44": (list(IMAGES)[57:], "M7 PART H"),
 }
 
 
@@ -4473,6 +4729,7 @@ def build(names):
                   else SOURCE_M7E if name in BATCHES["r41"][0]
                   else SOURCE_M7F if name in BATCHES["r42"][0]
                   else SOURCE_M7G if name in BATCHES["r43"][0]
+                  else SOURCE_M7H if name in BATCHES["r44"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

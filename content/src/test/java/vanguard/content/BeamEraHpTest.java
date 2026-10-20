@@ -33,9 +33,11 @@ class BeamEraHpTest {
      * a second, and the homing pods), not into the beam, which the factor was set for: the gap check planned them to
      * stay 2–4 s and fire (m7g-gaps §1.5, "tougher, not more"). Measured with the tuned waves and the retreat play: 2.3×
      * (Level 18's waves on the beam: 1.0×); without {@code small_act_hp} it is still 1.9×, flown at the bottom edge
-     * under everything (the beam's play, against the level's design) 1.6×.
+     * under everything (the beam's play, against the level's design) 1.6×. 2.5 accepted by the user in round 43 (Q.2) at
+     * 2.48×; the swarm's two levers (round 43 Q.1: the band's lag 30 px/s, a lunge every 4 s) keep motes alive in the
+     * beam's column, which then serves them too: 2.53× (step LQ), so 2.6, pending the user's review.
      */
-    static final double REVERSED_MOST = 2.5;
+    static final double REVERSED_MOST = 2.6;
 
     /** The user's reference level. */
     static final int REFERENCE_LEVEL = 10;

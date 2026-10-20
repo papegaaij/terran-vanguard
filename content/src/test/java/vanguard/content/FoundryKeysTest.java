@@ -147,8 +147,7 @@ class FoundryKeysTest {
             assertEquals(
                     switch (difficulty) {
                         case EASY -> 2;
-                        case MEDIUM -> 3;
-                        case HARD -> 4;
+                        case MEDIUM, HARD -> 3; // round 44: hard's 4 dropped (the armoured pods fire longer)
                     },
                     strideSalvo.gun().burst());
             EnemyGun.HomingSpec homing = strideSalvo.gun().homing().orElseThrow();
@@ -187,6 +186,37 @@ class FoundryKeysTest {
             assertEquals(0.3, phases.get(1).arena().below());
             assertEquals(List.of(0), phases.get(2).untilParts());
             assertTrue(phases.get(2).arena().drop().isPresent(), "the shield cell");
+
+            // Round 44 (the user in round 43, W.a/W.e): the pods armoured while shut, the rail lance, the stomp.
+            BossSpec.Stride strikes = boss.stride().orElseThrow();
+            assertTrue(strikes.hatchArmour());
+            BossSpec.Lance lance = strikes.lance().orElseThrow();
+            assertEquals(List.of(1, 2), lance.afterParts(), "once both pods are gone");
+            assertEquals(2, lance.fromPhase(), "and in the overheat");
+            assertEquals(difficulty == Difficulty.EASY ? 1.3 : 1, lance.chargeSeconds());
+            assertEquals(0.3, lance.fireSeconds());
+            assertEquals(
+                    switch (difficulty) {
+                        case EASY -> 5.0;
+                        case MEDIUM, HARD -> 4.0;
+                    },
+                    lance.intervalSeconds());
+            assertEquals(
+                    switch (difficulty) {
+                        case EASY -> 3.8;
+                        case MEDIUM, HARD -> 3.0;
+                    },
+                    lance.lastIntervalSeconds());
+            assertEquals(14, lance.width());
+            assertEquals(10, lance.damage(), "heavy");
+            assertEquals(20, lance.originBehind());
+            BossSpec.Stomp stomp = strikes.stomp().orElseThrow();
+            assertEquals(90, stomp.reach());
+            assertEquals(110, stomp.radius());
+            assertEquals(difficulty == Difficulty.EASY ? 0.7 : 0.5, stomp.tellSeconds());
+            assertEquals(0.3, stomp.expandSeconds());
+            assertEquals(4, stomp.cooldownSeconds());
+            assertEquals(6, stomp.damage(), "medium");
         }
     }
 
@@ -324,6 +354,17 @@ class FoundryKeysTest {
                         "    parts: [hull]\n    notes:\n      text: 'phase 2: `aimed`",
                         "    parts: [head]\n    notes:\n      text: 'phase 2: `aimed`"),
                 "head");
+        // Round 44: the lance and the stomp name what they need.
+        assertProblem(replace(WALKER, "    after: [left pod, right pod]", "    after: [left pod, tail]"), "tail");
+        assertProblem(replace(WALKER, "    from_phase: Overheat", "    from_phase: Meltdown"), "Meltdown");
+        assertProblem(
+                replace(WALKER, "    bullet: heavy\n    behind: 20", "    bullet: rivet\n    behind: 20"), "rivet");
+        assertProblem(
+                replace(
+                        WALKER,
+                        "    cooldown: 4         # s, tell start to tell start\n    bullet: medium",
+                        "    cooldown: 0.5\n    bullet: medium"),
+                "cooldown");
     }
 
     private static BossSpec.Attack attack(BossSpec boss, String name) {

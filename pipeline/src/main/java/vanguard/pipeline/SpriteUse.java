@@ -147,12 +147,10 @@ final class SpriteUse {
     static final List<String> FOUNDRY_ROOTS = List.of("ingot", "crew-rover");
 
     /**
-     * M7 part G: a level with the {@code basin-rumble} ambience layer draws the travelling ridge that rumbles (Level
-     * 20's, the game's RidgeLooks; the Dust Colossus's body, Level 21's boss reuses it), {@code colossus-ridge*}
-     * (tools/art/l20_props.py).
+     * M7 part G: a level with a {@code ridge} key draws the travelling ridge (Level 20's, the game's RidgeLooks; the
+     * Dust Colossus's body, Level 21's ridge pass and boss reuse it), {@code colossus-ridge*} (tools/art/l20_props.py;
+     * round 43 Q.4: the key, no longer the {@code basin-rumble} ambience layer).
      */
-    static final String RIDGE_LAYER = "basin-rumble";
-
     static final String RIDGE_ROOT = "colossus-ridge";
 
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
@@ -297,11 +295,8 @@ final class SpriteUse {
         // M7 part F: the furnace vents' looks, a foundry's ingots and rovers.
         level.vents().ifPresent(vents -> roots.add(VENT_ROOT));
         level.belts().ifPresent(belts -> roots.addAll(FOUNDRY_ROOTS));
-        // M7 part G: the travelling ridge with its rumble.
-        if (level.music().ambienceLayers().orElse(List.of()).stream()
-                .anyMatch(layer -> layer.ambience().equals(RIDGE_LAYER))) {
-            roots.add(RIDGE_ROOT);
-        }
+        // M7 part G: the travelling ridge (its ridge key).
+        level.ridge().ifPresent(ridge -> roots.add(RIDGE_ROOT));
         // M5 part H: a level with root bursts draws their cracks, dust and roots.
         if (!level.bursts().isEmpty()) {
             roots.add(ROOT_BURST_ROOT);

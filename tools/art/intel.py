@@ -46,7 +46,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      shows it, the production trunk, roots and pods of tools/art/siege_spire.py placed by
                      its pivots); revenant-walker (L19's mid-boss, M7 part F batch: the "unclassified,
                      huge, ground" contact, the production walker's sprites at heading 0 placed by
-                     its pivots, broken by the unclassified pictures' sensor noise)
+                     its pivots, broken by the unclassified pictures' sensor noise); dust-colossus (L21's act
+                     boss, M7 part H batch: the open mouth of tools/art/dust_colossus.py as phase 3 shows it,
+                     straight up, the outline only)
   design/ui/hangar/concept/intel-final-r13-a.png   review sheet of the UI batch's pictures
   design/ui/hangar/concept/intel-final-r16-a.png   review sheet of the M4 part C batch's
   design/ui/hangar/concept/intel-final-r17-a.png   review sheet of the M4 part D batch's
@@ -102,6 +104,7 @@ import canyon_units  # noqa: E402  (the Tendril Anchor's and the Threadcrawler's
 import coilwyrm  # noqa: E402  (the Coilwyrm's production models)
 import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import creeper  # noqa: E402  (the Creeper's production model)
+import dust_colossus  # noqa: E402  (the Dust Colossus's production sprites)
 import reef_spitter  # noqa: E402  (the Reef Spitter's production gun and raft models)
 import revenant_walker  # noqa: E402  (the Revenant Walker's production models and sprites)
 import hive_node  # noqa: E402  (the Hive Node's production model)
@@ -147,13 +150,13 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "dust-devil": "M7 part E batch", "ghost-drone": "M7 part E batch",
            "unclassified-ghost-drone": "M7 part E batch",
            "warden-tank": "M7 part F batch", "revenant-walker": "M7 part F batch",
-           "boss-revenant-walker": "M7 part F batch"}
+           "boss-revenant-walker": "M7 part F batch", "boss-dust-colossus": "M7 part H batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
           "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
-          "M7 part E batch": "r41", "M7 part F batch": "r42"}
+          "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -192,7 +195,8 @@ ENEMIES = {
 }
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}
-BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire", "revenant-walker")
+BOSSES = ("gorgon-frigate", "brood-carrier", "leviathan", "harbour-kraken", "siege-spire", "revenant-walker",
+          "dust-colossus")
 # silhouettes of contacts the intel cannot classify: drawn with the unclassified pictures' sensor noise
 NOISY = {"revenant-walker"}
 # portraits that are not one model: name -> the 8x render (an RGBA array), as sdf.render gives it
@@ -372,7 +376,8 @@ def spire_mask():
 
 def silhouette(slug):
     mask = {"gorgon-frigate": gorgon_mask, "brood-carrier": carrier_mask, "leviathan": leviathan_mask,
-            "harbour-kraken": kraken_mask, "siege-spire": spire_mask, "revenant-walker": walker_mask}[slug]()
+            "harbour-kraken": kraken_mask, "siege-spire": spire_mask, "revenant-walker": walker_mask,
+            "dust-colossus": dust_colossus.intel_mask}[slug]()
     ys, xs = np.nonzero(mask)
     mask = mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
     inner = SILHOUETTE - 6

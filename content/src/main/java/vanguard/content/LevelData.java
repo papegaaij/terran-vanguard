@@ -74,6 +74,8 @@ import vanguard.sim.PlayField;
  * @param belts M7 part F (design/campaign Level 19, Conveyors): the conveyor belts on the ground that carry ground
  *     units; none if not given
  * @param vents M7 part F (design/campaign Level 19, Hazards): the furnace vent rows; none if not given
+ * @param ridge M7 part G, presentation (Level 20's travelling ridge, Level 21's ridge pass; round 43 Q.4): the Dust
+ *     Colossus's ridge crossing the ground; none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -120,7 +122,8 @@ public record LevelData(
         Optional<Flak> flak,
         Optional<Visibility> visibility,
         Optional<Belts> belts,
-        Optional<Vents> vents)
+        Optional<Vents> vents,
+        Optional<Ridge> ridge)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,

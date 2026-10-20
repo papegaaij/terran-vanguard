@@ -79,7 +79,9 @@ class RevenantWalkerTest {
             double phaseOneDamage,
             boolean flying,
             double[] phaseSeconds,
-            int[] phaseShots) {
+            int[] phaseShots,
+            int lanceHits,
+            int stompHits) {
         /**
          * Round 43: its shots a minute in phase {@code phase} (0–2), as the level report counts them (one per {@code
          * ENEMY_FIRED} event: a fan or a burst's shot counts once) plus one per homing missile.
@@ -102,14 +104,17 @@ class RevenantWalkerTest {
         @Override
         public String toString() {
             return String.format(
-                    "%.1f s%s, damage %.0f (armour %.0f), cone hits %d, missile hits %d, phase 1 %.1f s (lost %.0f,"
-                            + " %.1f per 10 s), phases 2 and 3 %.1f + %.1f s, shots a minute %.0f (%.0f / %.0f / %.0f)%s",
+                    "%.1f s%s, damage %.0f (armour %.0f), cone hits %d, missile hits %d, lance hits %d, stomp hits %d,"
+                            + " phase 1 %.1f s (lost %.0f, %.1f per 10 s), phases 2 and 3 %.1f + %.1f s, shots a minute"
+                            + " %.0f (%.0f / %.0f / %.0f)%s",
                     seconds,
                     killed ? "" : " NOT KILLED",
                     damage,
                     armourLost,
                     coneHits,
                     missileHits,
+                    lanceHits,
+                    stompHits,
                     phaseOneSeconds,
                     phaseOneDamage,
                     phaseOneLostPerTen(),
@@ -140,6 +145,8 @@ class RevenantWalkerTest {
         double phaseOneDamage = 0;
         double[] phaseSeconds = new double[3];
         int[] phaseShots = new int[3];
+        int lanceHits = 0;
+        int stompHits = 0;
         for (int i = 0; i < SimStep.ticks(seconds) && !boss.destroyed() && sortie.flying(); i++) {
             double shield = sortie.ship().defences().shield();
             double armour = sortie.ship().defences().armour();
@@ -160,7 +167,15 @@ class RevenantWalkerTest {
                 }
             }
             missileHits += struck && lost > 0 ? 1 : 0;
-            coneHits += burning && lost >= 10 && !struck ? 1 : 0;
+            int lance = 0;
+            int stomp = 0;
+            for (int e = 0; e < events.size(); e++) {
+                lance += events.type(e) == SimEvents.Type.LANCE_HIT && events.value(e) == 1 ? 1 : 0;
+                stomp += events.type(e) == SimEvents.Type.STOMP_HIT && events.value(e) == 1 ? 1 : 0;
+            }
+            lanceHits += lance;
+            stompHits += stomp;
+            coneHits += burning && lost >= 10 && !struck && lance == 0 && stomp == 0 ? 1 : 0;
             if (boss.engaged() && boss.phase() == 0) {
                 phaseOneTicks++;
                 phaseOneDamage += lost;
@@ -183,16 +198,20 @@ class RevenantWalkerTest {
                 phaseOneDamage,
                 sortie.flying(),
                 phaseSeconds,
-                phaseShots);
+                phaseShots,
+                lanceHits,
+                stompHits);
     }
 
     /**
      * The par: the autopilot's measured mean at medium (step F4: 52.7 s with the HP at 3,740 and the pods at the art's
      * mounts, ±53 px; the fight's length steps with the passes, 56.5 s at 3,900 and 68.0 s at 3,980, so the HP sit
      * inside a plateau). Round 43's rework (far more fire, the bigger cone): 57.1 s at 3,170 (hull 2,310, pods 430);
-     * 47 s at 2,800, 80 s and more at 3,740.
+     * 47 s at 2,800, 80 s and more at 3,740. Round 44 (the pods armoured while shut, the rail lance, the stomp): 50.8 s
+     * at 1,350 (hull 1,190, pods 80; the length steps with the passes: 48.6 s at hull 1,180, 1,200 puts one seed at 79 s);
+     * 96 s at hull 2,310 with pods of 100.
      */
-    static final double PAR = 57;
+    static final double PAR = 51;
 
     @Test
     void theStatBlockMapsToAWalkingMidBossWithItsPar() {
@@ -242,8 +261,8 @@ class RevenantWalkerTest {
     }
 
     /**
-     * Easy is won on every seed; hard (×1.3 HP, salvos of 4, wider chin fans, longer flank bursts, the longer cone and
-     * swivel) on most.
+     * Easy is won on every seed; hard (×1.3 HP, wider chin fans, longer flank bursts, the longer cone and swivel; round
+     * 44: medium's salvos, lance and stomp) on most.
      */
     @ParameterizedTest
     @EnumSource(
@@ -298,8 +317,11 @@ class RevenantWalkerTest {
      */
     static final double FIERCER = 1.3;
 
-    /** Round 43: ... and less than this times. */
-    static final double AT_MOST = 2;
+    /**
+     * Round 43: ... and less than this times (round 44: 2 -> 2.2, the stomp punishing a dodger that strays over it; 23.8
+     * against 11.4, pending the user's review in round 44).
+     */
+    static final double AT_MOST = 2.2;
 
     /** The calibration harness's driver: a new way of the nine every this many s. */
     static final double DODGE_SECONDS = 0.4;

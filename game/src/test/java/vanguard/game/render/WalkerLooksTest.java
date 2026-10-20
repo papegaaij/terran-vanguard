@@ -110,6 +110,20 @@ class WalkerLooksTest {
         assertTrue(WalkerLooks.TRAIL_FRAME_TICKS * 6 * SimStep.SECONDS >= 0.8, "a trail that lasts most of a second");
     }
 
+    /**
+     * Round 44: the rail lance's charge brightens as it runs out and its shot fades over its last two thirds; its hit
+     * is a small flash (a disc of {@link StrikeLooks#HIT_RADIUS}), never the screen (the round-42 flash rule).
+     */
+    @Test
+    void theLanceChargesBrighterItsShotFadesAndItsHitFlashesSmall() {
+        assertTrue(StrikeLooks.chargeStrength(0) < 0.5f, "faint at first");
+        assertEquals(1f, StrikeLooks.chargeStrength(1), 1e-6);
+        assertEquals(1f, StrikeLooks.shotFade(0.2), 1e-6, "full at once");
+        assertEquals(0f, StrikeLooks.shotFade(1), 1e-6);
+        assertTrue(StrikeLooks.HIT_RADIUS < 40, "a small flash");
+        assertTrue(StrikeLooks.HIT_TICKS <= SimStep.ticks(0.3));
+    }
+
     @Test
     void itTopplesOverItsDeathAndLeavesItsWreck() {
         int death = SimStep.ticks(2);

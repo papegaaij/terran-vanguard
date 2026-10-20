@@ -385,7 +385,8 @@ HP, attacks and wreck beat live in the spec. Arena notes for this level:
   static** (it is not Vrell).
 - No other waves in the arena: the passes and their edge warnings are the fight (measured by step F4:
   52.7 s in the fixture, 55–57 s in the level at medium, the par 53; the walker's HP 3,740; round 43's rework,
-  far more fire and a bigger flame: 57.1 s in the fixture, ≈ 61 s in the level, the par 57, HP 3,170).
+  far more fire and a bigger flame: 57.1 s in the fixture, ≈ 61 s in the level, the par 57, HP 3,170; round 44's
+  armoured pods, rail lance and stomp: 50.8 s in the fixture, 50–59 s in the level, the par 51, HP 1,350).
 - **Bounty**: recomputed with Level 19's `bounty_scale` of 0.35 (below): **395** in Act 1 terms
   (hull 315, pods 40 each), paid 395 × 2.56 × 0.35 = **354 = 15.0 %** of budget(19); step F4 sets the
   final value from the measured scale (pending round 42).
@@ -464,6 +465,8 @@ Production art of M7 part F's round 42 (step ART-F2), pending the user's review.
 | [concept/level-19-capture-r42-a.png](concept/level-19-capture-r42-a.png) | 20-frame sheet of that run and a row of 1:1 crops (the walker front and back, a Warden Tank, a vent row) | proposed (round 42) |
 | [concept/level-19-walker-r43-a.mp4](concept/level-19-walker-r43-a.mp4) | Check capture of the reworked walker fight with sound (round 43, step WR: medium, the plan's fit with Rook's Mortar, the test autopilot): the bar at the halt, the chin's fans and the flank guns, the salvos, the 240 px cone's tell and burn, phase 3 and the topple (83 s) | proposed (round 43) |
 | [concept/level-19-walker-r43-a.png](concept/level-19-walker-r43-a.png) | 12-frame sheet of that fight (the play field, times in s of the run) | proposed (round 43) |
+| [concept/level-19-walker-r44-a.mp4](concept/level-19-walker-r44-a.mp4) | Check capture of the walker fight after round 44 (step WR2: medium, the plan's fit with Rook's Mortar, the test autopilot, sound; 94 s, the fight 72 s): the pods' hatches and salvos, the stomp's brace ring, the cone, the red rail lance's charge line and shot once both pods are gone and in phase 3, the topple and the wreck; the lance's and the stomp's sounds are placeholders | proposed (round 44) |
+| [concept/level-19-walker-r44-a.png](concept/level-19-walker-r44-a.png) | 12-frame sheet of that fight (the play field, times in s of the clip) | proposed (round 44) |
 
 The level will need (part F's production-art round; the mood comes from the Tharsis
 foundry mood still in [mars](../../../world/mars/README.md) and the walker's chosen concept a, the
@@ -585,3 +588,8 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   guns, the 240 px cone that tracks the ship; HP 3,170, par 57); the level re-measured: the fight ≈ 61 s at medium,
   no retries, the haul unchanged (+1.4 %). A check capture of the fight is in *Concept art* (pending the user's
   review in round 43).
+- 2026-10-20 (round 44, step WR2; the user in round 43, W.a/W.e): the walker's pods armoured until open, its rail lance
+  once both pods are gone and in phase 3, its stomp shockwave (its spec; HP 1,350, par 51); the level re-measured:
+  the fight 50–59 s at medium on the level test's seeds, no retries at medium, the floor and the haul unchanged
+  (+1.4 %); hard is won with 2 retries over 3 runs (round 43: 1; hard keeps medium's lance, stomp and phase-1
+  salvos, or the walker drained the ship before the level's end; pending the user's review). A check capture of the fight is in *Concept art* (pending the user's review in round 44).

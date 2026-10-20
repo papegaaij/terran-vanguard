@@ -11,6 +11,8 @@ dependencies {
     implementation(libs.gdx.backend.lwjgl3)
     implementation(libs.gdx.controllers.core)
     testImplementation(libs.junit.jupiter.params)
+    // Round 44: the walker's test hooks (WalkerHooks: a part damaged or destroyed outright).
+    testImplementation(testFixtures(project(":sim")))
 }
 
 tasks.test {

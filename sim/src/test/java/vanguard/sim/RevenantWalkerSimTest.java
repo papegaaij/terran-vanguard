@@ -217,6 +217,38 @@ class RevenantWalkerSimTest {
                 .build();
     }
 
+    /** Round 44: the test rail lance: after both pods or from the last phase, a 1 s charge, a 0.3 s shot, every 3.5 s (2.5 s). */
+    static final BossSpec.Lance LANCE =
+            new BossSpec.Lance(List.of(LEFT_POD, RIGHT_POD), 2, 1, 0.3, 3.5, 2.5, 14, 10, 20);
+    /** Round 44: the test stomp: within 90 px, a 0.5 s tell, a ring to 110 px over 0.3 s, every 3 s at most, 6. */
+    static final BossSpec.Stomp STOMP = new BossSpec.Stomp(90, 110, 0.5, 0.3, 3, 6);
+
+    /** Round 44: the test walker with its pods armoured while shut, the rail lance and the stomp. */
+    static SetPieceSpec striking(boolean attacks) {
+        SetPieceSpec base = walker(attacks, 6);
+        BossSpec boss = base.boss().orElseThrow();
+        BossSpec armed = boss.withStride(
+                Optional.of(boss.stride().orElseThrow().withStrikes(true, Optional.of(LANCE), Optional.of(STOMP))));
+        return new SetPieceSpec(
+                base.slug(),
+                base.size(),
+                base.body(),
+                base.contactDamage(),
+                base.parts(),
+                base.passes(),
+                base.drop(),
+                Optional.of(armed));
+    }
+
+    /** Round 44: the arena level with the striking walker. */
+    static LevelScript strikingLevel(boolean attacks) {
+        return LevelScript.builder(19, 2)
+                .sections(List.of(
+                        new Section(ARRIVE, SPEED), new Section(ARRIVE + 1, 0, true), new Section(ARRIVE + 11, SPEED)))
+                .setPieces(List.of(striking(attacks)))
+                .build();
+    }
+
     private static Sortie sortie(LevelScript level, Rules rules) {
         return new Sortie(1, TestSpecs.LOADOUT, level, rules, TestSpecs.FULL_ARMOUR);
     }
@@ -872,6 +904,214 @@ class RevenantWalkerSimTest {
     private static void until(Sortie sortie, SimEvents.Type type, double seconds, int commands, Runnable first) {
         first.run();
         until(sortie, type, seconds, commands);
+    }
+
+    /**
+     * Round 44 (the user in round 43, W.a: "The first missile hatch is destroyed before the walker has a chance of ever
+     * using it"): with hatch armour a pod takes damage only while its hatch is open (the tell and its salvo); shut it is
+     * shielded (shots glance off it and it stops the beam, as the front plate); without it a pod is always open.
+     */
+    @Test
+    void withHatchArmourAPodTakesDamageOnlyWhileItsHatchIsOpen() {
+        Sortie plain = sortie(true, TestSpecs.RULES.withInvulnerableShip());
+        until(plain, SimEvents.Type.BOSS_SETTLED, 8, 0);
+        assertFalse(boss(plain).partShielded(LEFT_POD), "without hatch armour a shut pod takes damage");
+        assertFalse(boss(plain).partHatchArmoured(LEFT_POD));
+
+        Sortie sortie = sortie(strikingLevel(true), TestSpecs.RULES.withInvulnerableShip());
+        until(sortie, SimEvents.Type.BOSS_SETTLED, 8, 0);
+        SetPiece boss = boss(sortie);
+        assertTrue(boss.partHatchArmoured(LEFT_POD) && boss.partHatchArmoured(RIGHT_POD));
+        assertFalse(boss.partHatchArmoured(HULL), "the hull fires no homing salvo");
+        assertFalse(boss.partHatchOpen(LEFT_POD));
+        assertTrue(boss.partShielded(LEFT_POD), "shut: armoured");
+        assertTrue(boss.partShielded(RIGHT_POD));
+        assertFalse(boss.partShielded(HULL));
+        assertEquals(List.of(LEFT_POD), until(sortie, SimEvents.Type.POD_HATCH, 6, 0));
+        assertFalse(boss.partShielded(LEFT_POD), "open over its tell and salvo: it takes damage");
+        assertTrue(boss.partShielded(RIGHT_POD), "the other pod stays shut");
+        int open = 0;
+        while (boss.partHatchOpen(LEFT_POD)) {
+            assertFalse(boss.partShielded(LEFT_POD));
+            sortie.step(0);
+            open++;
+        }
+        assertEquals(SimStep.ticks(0.4) + SimStep.ticks(0.2) + 1, open, "the 0.4 s tell and a salvo of 2, 0.2 s apart");
+        assertTrue(boss.partShielded(LEFT_POD), "shut again");
+    }
+
+    /**
+     * Round 44 (W.a: "When both missile hatches are destroyed, the walker is mostly toothless"): the rail lance wakes
+     * once both pods are gone; a second later it charges for 1 s (the line from its back through where the ship was),
+     * then fires along that line: the ship that stayed is hit once, for its damage; the next charge comes 3.5 s after
+     * the last one.
+     */
+    @Test
+    void theRailLanceWakesWithBothPodsGoneAndHitsTheShipThatStays() {
+        Sortie sortie = sortie(strikingLevel(false), TestSpecs.RULES);
+        until(sortie, SimEvents.Type.BOSS_SETTLED, 8, 0);
+        SetPiece boss = boss(sortie);
+        StrideStrikes strikes = stride(sortie).strikes();
+        steps(sortie, 2, 0);
+        assertEquals(StrideStrikes.LancePhase.IDLE, strikes.lancePhase(), "asleep while the pods live");
+        boss.damagePart(LEFT_POD, 1000);
+        boss.damagePart(RIGHT_POD, 1000);
+        int wake = 0;
+        do {
+            sortie.step(0);
+            wake++;
+        } while (values(sortie, SimEvents.Type.LANCE_CHARGE).isEmpty() && wake < SimStep.ticks(3));
+        assertEquals(SimStep.ticks(1), wake, "a second after it wakes");
+        assertEquals(StrideStrikes.LancePhase.CHARGE, strikes.lancePhase());
+        double toX = sortie.ship().x() - strikes.lanceX();
+        double toY = sortie.ship().y() - strikes.lanceY();
+        double d = Math.sqrt(toX * toX + toY * toY);
+        assertEquals(toX / d, strikes.lanceDirX(), 1e-9, "through the ship");
+        assertEquals(toY / d, strikes.lanceDirY(), 1e-9);
+        assertEquals(boss.y() + 20, strikes.lanceY(), 1e-9, "the lance 20 px behind its centre");
+        int charge = 0;
+        double lost = 0;
+        int hits = 0;
+        boolean fired;
+        do {
+            double before = health(sortie);
+            sortie.step(0);
+            charge++;
+            fired = !values(sortie, SimEvents.Type.LANCE_FIRE).isEmpty();
+            hits += values(sortie, SimEvents.Type.LANCE_HIT).size();
+            lost += hits > 0 ? before - health(sortie) : 0;
+            assertTrue(fired || hits == 0, "the charge does not hurt");
+        } while (!fired && charge < SimStep.ticks(2));
+        assertEquals(SimStep.ticks(1), charge, "a 1 s charge");
+        // The shot's steps after the one it fired in: it hurts in that one and the next ones up to 0.3 s.
+        int fire = 0;
+        while (strikes.lancePhase() == StrideStrikes.LancePhase.FIRE) {
+            double before = health(sortie);
+            sortie.step(0);
+            fire++;
+            int hit = values(sortie, SimEvents.Type.LANCE_HIT).size();
+            hits += hit;
+            lost += hit > 0 ? before - health(sortie) : 0;
+        }
+        assertEquals(SimStep.ticks(0.3), fire, "a 0.3 s shot");
+        assertEquals(1, hits, "once a shot");
+        assertEquals(10, lost, 1e-9, "its damage");
+        int next = SimStep.ticks(1) + SimStep.ticks(0.3);
+        while (values(sortie, SimEvents.Type.LANCE_CHARGE).isEmpty() && next < SimStep.ticks(6)) {
+            sortie.step(0);
+            next++;
+        }
+        assertEquals(SimStep.ticks(3.5), next, "every 3.5 s");
+    }
+
+    /** Round 44: the ship that moves off the line during the charge is not hit; in the last phase the lance is awake. */
+    @Test
+    void aShipThatMovesOffTheLineIsMissedAndTheLastPhaseWakesTheLance() {
+        Sortie sortie = sortie(strikingLevel(false), TestSpecs.RULES);
+        until(sortie, SimEvents.Type.BOSS_SETTLED, 8, 0);
+        SetPiece boss = boss(sortie);
+        boss.damagePart(HULL, HULL_HP * 0.75);
+        until(sortie, SimEvents.Type.BOSS_PHASE, 0.1, 0);
+        assertEquals(2, boss.phase());
+        assertFalse(boss.partWrecked(LEFT_POD) || boss.partWrecked(RIGHT_POD), "the pods live");
+        until(sortie, SimEvents.Type.LANCE_CHARGE, 1.5, 0);
+        int hits = 0;
+        for (int i = 0; i < SimStep.ticks(1.5); i++) {
+            sortie.step(Command.RIGHT.bit());
+            hits += values(sortie, SimEvents.Type.LANCE_HIT).size();
+        }
+        assertEquals(0, hits, "moved off its line");
+        int next = SimStep.ticks(1.5);
+        while (values(sortie, SimEvents.Type.LANCE_CHARGE).isEmpty() && next < SimStep.ticks(6)) {
+            sortie.step(0);
+            next++;
+        }
+        assertEquals(SimStep.ticks(2.5), next, "every 2.5 s in its last phase");
+    }
+
+    /**
+     * Round 44 (W.e: "stomp shockwave"): the ship within 90 px of its centre starts a 0.5 s tell, then the ring expands
+     * to 110 px and hits it once; a ship that flies out during the tell is not hit; at most one stomp every 3 s.
+     */
+    @Test
+    void theStompBracesForTheShipCloseByAndItsRingHitsOnce() {
+        Sortie sortie = sortie(strikingLevel(false), TestSpecs.RULES);
+        until(sortie, SimEvents.Type.BOSS_SETTLED, 8, 0);
+        SetPiece boss = boss(sortie);
+        StrideStrikes strikes = stride(sortie).strikes();
+        steerTo(sortie, 120, 0);
+        until(sortie, SimEvents.Type.STOMP_TELL, 15, 0);
+        double dx = sortie.ship().x() - boss.x();
+        double dy = sortie.ship().y() - boss.y();
+        assertTrue(Math.sqrt(dx * dx + dy * dy) <= 90, "within 90 px");
+        assertEquals(StrideStrikes.StompPhase.TELL, strikes.stompPhase());
+        double before = health(sortie);
+        int tell = 0;
+        do {
+            sortie.step(0);
+            tell++;
+        } while (values(sortie, SimEvents.Type.STOMP).isEmpty() && tell < SimStep.ticks(2));
+        assertEquals(SimStep.ticks(0.5), tell, "a 0.5 s tell");
+        assertEquals(before, health(sortie), 1e-9, "the tell does not hurt");
+        int hits = values(sortie, SimEvents.Type.STOMP_HIT).size();
+        double lost = hits > 0 ? before - health(sortie) : 0;
+        double radius = 0;
+        while (strikes.stompPhase() == StrideStrikes.StompPhase.RING) {
+            radius = strikes.ringRadius();
+            double was = health(sortie);
+            sortie.step(0);
+            int hit = values(sortie, SimEvents.Type.STOMP_HIT).size();
+            hits += hit;
+            lost += hit > 0 ? was - health(sortie) : 0;
+        }
+        assertEquals(110, radius, 1e-9, "out to 110 px");
+        assertEquals(1, hits, "once a stomp");
+        assertEquals(6, lost, 1e-9, "its damage");
+        int again = 0;
+        while (values(sortie, SimEvents.Type.STOMP_TELL).isEmpty() && again < SimStep.ticks(6)) {
+            sortie.step(0);
+            again++;
+        }
+        assertTrue(again >= SimStep.ticks(3) - SimStep.ticks(0.5) - SimStep.ticks(0.3) - 1, "its cooldown: " + again);
+        // Flies out during the tell: the ring misses.
+        hits = 0;
+        for (int i = 0; i < SimStep.ticks(1); i++) {
+            sortie.step(Command.RIGHT.bit());
+            hits += values(sortie, SimEvents.Type.STOMP_HIT).size();
+        }
+        assertEquals(0, hits, "out of its ring");
+    }
+
+    @Test
+    void theStrikesAreDeterministicAndAllocateNothing() {
+        Sortie a = sortie(strikingLevel(true), TestSpecs.RULES);
+        Sortie b = sortie(strikingLevel(true), TestSpecs.RULES);
+        for (int i = 0; i < SimStep.ticks(60); i++) {
+            if (i == SimStep.ticks(9)) {
+                for (Sortie s : List.of(a, b)) {
+                    s.setPiece(0).damagePart(LEFT_POD, 1000);
+                    s.setPiece(0).damagePart(RIGHT_POD, 1000);
+                }
+            }
+            int commands = (i / 50) % 2 == 0 ? Command.LEFT.bit() | FIRE : Command.RIGHT.bit();
+            a.step(commands);
+            b.step(commands);
+        }
+        assertEquals(a.stateHash(), b.stateHash());
+        long allocated = Allocations.least(
+                () -> {
+                    Sortie sortie = sortie(strikingLevel(true), TestSpecs.RULES.withInvulnerableShip());
+                    steps(sortie, 8, 0);
+                    sortie.setPiece(0).damagePart(LEFT_POD, 1000);
+                    sortie.setPiece(0).damagePart(RIGHT_POD, 1000);
+                    return sortie;
+                },
+                sortie -> {
+                    for (int i = 0; i < SimStep.ticks(40); i++) {
+                        sortie.step(FIRE | ((i / 40) % 2 == 0 ? Command.LEFT.bit() : Command.RIGHT.bit()));
+                    }
+                });
+        assertEquals(0, allocated, "the lance and the stomp allocate nothing per step");
     }
 
     @Test

@@ -1,5 +1,6 @@
 # Act 3 – Red Dust: its levels and the act intro (title card and the four intro pages), rendered into
-# README.md (Act intro and outro). The outro after Level 21 comes in M7 part H. M7 part B, step B2.
+# README.md (Act intro and outro), and its act-end outro after Level 21 (M7 part H, step PH2: the four approved pages,
+# the text unchanged, one paragraph each, each with its image). M7 part B, step B2.
 # Schema: ../../tech/architecture/README.md#data-file-schemas
 levels: [15, 21]
 
@@ -13,3 +14,13 @@ briefing:  # three pages by Commander Okafor, one by Dr. Varga (approved in roun
   - {speaker: Varga, image: act-3-mars-front, line: "The Vrell came down in the Hellas basin, in the south, and spread north from there. They have changed for Mars: they swim through the sand and ride the dust storms. They are learning this planet faster than we did."}
   - {speaker: Okafor, image: act-3-colonists, line: "The colonists asked Earth for help long before the Gate opened, and got committees. They will not thank us for coming late. They don't have to. We fly for them anyway."}
   - {speaker: Okafor, expression: fierce, image: act-3-drop, line: "We go in from the west, past Olympus Mons, and take the canyons back one at a time. Drop in ninety minutes. Mission briefing follows. Aegis Actual out."}
+
+outro:  # after the Level 21 debrief with the act summary (Level 14's order, H6 = a; approved in round 36), each page voiced and with its image (tools/art/outro_l21_images.py)
+  music: act-complete  # track 24 under the first page, played once
+  pages:
+    - {speaker: Okafor, expression: grim, image: act-3-outro-hellas, line: "The Colossus is dead. Within a day the Vrell lifted off from every site on Mars: the basin, the plains, the foundry. Ares Landing opened its shelters this morning, for the first time in six weeks.", notes: {image: "the Hellas basin at dawn, the Colossus's collapsed crater, the last spore trails climbing out of the frame"}}
+    - {speaker: Okafor, image: act-3-outro-domes, line: "The colonists have not forgiven Earth for coming late, and they are right not to. But last night every dome in Ares Landing burned its lights for Aegis Wing. Take that with you.", notes: {image: "Ares Landing's domes at night with every pane lit, colonists on the ring road looking up"}}
+    - {speaker: Varga, expression: grim, image: act-3-outro-europa, line: "I tracked their fleet off Mars. It is not going home. Every course bends toward Jupiter and ends at one moon: Europa. It told us '*we are going*'. Now we know where.", notes: {image: "Varga's tracking plot: the Vrell fleet's courses off Mars bending toward Jupiter and converging on Europa; in a corner of her screen a minimised window with the walker's filed plate (the quiet thread, unexplained)"}}
+    - {speaker: Okafor, expression: fierce, image: act-3-outro-aegis, line: "Europa means Thera Deep and Conamara Station, and Conamara reports tremors under the ice. We refit, and we follow them. Aegis Wing leaves Mars in four days. Aegis Actual out.", notes: {image: "Aegis Wing on Ares Landing's spaceport apron, ground crews refitting the Stormhawks, Jupiter a bright point in the dusk sky"}}
+
+next_act: {act: ACT IV, name: DEEP WATER, setting: EUROPA}   # the release ends after this act (H.7d): "ACT IV - DEEP WATER. EUROPA. COMING SOON." on the release's end, "ACT IV - DEEP WATER: COMING SOON" in the hangar before L22

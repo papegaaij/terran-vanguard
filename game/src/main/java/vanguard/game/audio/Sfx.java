@@ -385,53 +385,74 @@ public enum Sfx {
     GHOST_DRONE_DEATH("sfx/ghost-drone-death-r41-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
      * M7 part F: a Revenant Walker's footfall (round 42 a, proposed: a dull heavy stomp, a leg clank and a hydraulic
-     * hiss, 1.0 s), at each foot that comes down.
+     * hiss, 1.0 s), at each foot that comes down. Round 44: pitched down, its stomp's shockwave (a placeholder).
      */
     WALKER_STOMP("sfx/walker-stomp-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part F: a walker's pod hatch opening 0.4 s before its salvo, the tell (round 42 a, proposed: a latch tick, a
-     * pneumatic hiss and a hinge clack, 0.45 s).
+     * M7 part F: a walker's pod hatch opening 0.4 s before its salvo, the tell (round 43 b, the user's pick of
+     * 2026-10-20: a submarine hatch's clank and creak over a steam release, a deep impact under the clank, 1.01 s).
+     * Round 44: pitched down, the legs bracing for a stomp (a placeholder until its own sound).
      */
-    WALKER_HATCH("sfx/walker-hatch-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    WALKER_HATCH("sfx/walker-hatch-r43-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part F: one homing missile leaving a walker's pod (round 42 a, proposed: an ignition crack and a rocket whoosh
-     * sliding away, 0.8 s).
+     * M7 part F: one homing missile leaving a walker's pod (round 43: the chosen enemy missile launch of round 42, S.c,
+     * the user's pick of 2026-10-20).
      */
-    WALKER_MISSILE("sfx/walker-missile-r42-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
-    /** M7 part F: the walker's flamer's tell (round 42 a, proposed: a gas hiss rising, 0.7 s). */
-    WALKER_FLAME_TELL("sfx/walker-flame-tell-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    WALKER_MISSILE("sfx/enemy-missile-r08-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /** M7 part F: the walker's flamer's tell (round 43 a, the user's pick of 2026-10-20: a huge gas vent opening, 0.85 s). */
+    WALKER_FLAME_TELL("sfx/walker-flame-tell-r43-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part F: the walker's flame cone burning (round 42 a, proposed: a roaring, flickering flame, a seamless 2.0 s
-     * loop), faded in and out with the burn.
+     * M7 part F: the walker's flame cone burning (round 43 b, the user's pick of 2026-10-20: a flamethrower's deep roar,
+     * a seamless 4 s loop), faded in and out with the burn.
      */
-    WALKER_FLAME("sfx/walker-flame-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    WALKER_FLAME("sfx/walker-flame-r43-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part F: the Warden Tank's tracks (round 42 a, proposed: a tread grind with track-link ticks, a diesel hum and a
-     * faint turbine whine, a seamless 2.0 s loop): one loop for the nearest tank on screen, panned to it.
+     * Round 43 (SNDI): a hit on the walker's open reactor vents (round 43 a, the user's pick of 2026-10-20: a big stereo
+     * metal hit, 0.55 s), instead of the plain hit, at most one each 0.15 s.
      */
-    TANK_TRACKS("sfx/tank-tracks-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
-    /** M7 part F: a Warden Tank's turret slewing onto the ship (round 42 a, proposed: a servo whine, 0.6 s). */
-    TANK_TURRET("sfx/tank-turret-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    WALKER_VENT_HIT("sfx/walker-vent-hit-r43-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part F: a Warden Tank's burst (round 42 a, proposed: a heavy autocannon, four rounds, 0.75 s), once at the
-     * first shot of each burst instead of the shots' reports.
+     * Round 43 (SNDI): the walker's death (round 43 a, the user's pick of 2026-10-20: a large explosion with debris, the
+     * hull landing with a massive impact at ≈ 1.85 s and a metal crash, 5.6 s), its rung instead of the generic blast;
+     * the impact lands with the 2 s topple.
      */
-    TANK_BURST("sfx/tank-burst-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    WALKER_DEATH("sfx/walker-death-r43-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * Round 43 (SNDI): the walker's wreck settling (round 43 a, the user's pick of 2026-10-20: a bunker door's low
+     * metallic groan over an engine cooling and ticking, 5.0 s, quiet by design), once as the topple lands, under the
+     * hint-2 crawl.
+     */
+    WALKER_WRECK_SETTLE("sfx/walker-wreck-settle-r43-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: the Warden Tank's tracks (round 43 a, the user's pick of 2026-10-20: a T-26 tank driving, tracks and
+     * engine, a seamless 4 s loop): one loop for the nearest tank on screen, panned to it.
+     */
+    TANK_TRACKS("sfx/tank-tracks-r43-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a Warden Tank's turret slewing onto the ship (round 43 a, the user's pick of 2026-10-20: an artillery
+     * turret re-aligning, 0.8 s).
+     */
+    TANK_TURRET("sfx/tank-turret-r43-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part F: a Warden Tank's burst (round 43 a, the user's pick of 2026-10-20: a tank cannon, three shots 0.15 s
+     * apart, 1.18 s), once at the first shot of each burst instead of the shots' reports.
+     */
+    TANK_BURST("sfx/tank-burst-r43-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M7 part F: a Warden Tank's death (round 42 a, proposed: a hull explosion, a metal clang, debris and sparks, 1.8
      * s): the {@code medium} rung's Warden Tank entry ({@code EnemyLooks}).
      */
     TANK_DEATH("sfx/tank-death-r42-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M7 part F: a furnace vent's tell (round 42 a, proposed: a rising gas roar over a deepening rumble, 1.05 s), as a
-     * row's grates start to glow; a ripple's grates share one.
+     * M7 part F: a furnace vent's tell (round 43 a, the user's pick of 2026-10-20: a balloon burner's roar swelling in,
+     * 1.05 s), as a row's grates start to glow; a ripple's grates share one.
      */
-    VENT_TELL("sfx/vent-tell-r42-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    VENT_TELL("sfx/vent-tell-r43-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part F: a furnace vent's burst (round 42 a, proposed: a fire blast with a 40 ms attack, no pop, roaring out
-     * and dying, 1.5 s), as its flame column stands up.
+     * M7 part F: a furnace vent's burst (round 43 a, the user's pick of 2026-10-20: a deep flame burst, a gas burner's
+     * burn dying away, 1.6 s), as its flame column stands up.
      */
-    VENT_BURST("sfx/vent-burst-r42-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    VENT_BURST("sfx/vent-burst-r43-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M7 part F: a conveyor belt's rumble (round 42 a, proposed: a roller rumble, plate seams knocking and a motor
      * hum, a seamless 2.4 s loop): one quiet loop while a belt runs on the screen, under the {@code mars-foundry} bed.

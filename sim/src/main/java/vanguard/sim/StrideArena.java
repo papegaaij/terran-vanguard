@@ -144,6 +144,8 @@ public final class StrideArena implements Hashed {
     private int coneHits;
 
     private int ventTicks;
+    /** Round 44: its rail lance and stomp (none without them in its stride). */
+    private final StrideStrikes strikes;
 
     StrideArena(SetPiece piece, BossSpec boss, SetPieceSpec setPiece) {
         this.piece = piece;
@@ -179,6 +181,7 @@ public final class StrideArena implements Hashed {
         for (int i = 0; i < spotBoxes.length; i++) {
             spotBoxes[i] = turnings(spots.get(i).box());
         }
+        strikes = new StrideStrikes(this, piece, spec, phases);
         reset();
     }
 
@@ -213,6 +216,9 @@ public final class StrideArena implements Hashed {
         forced = false;
         coneHits = 0;
         ventTicks = 0;
+        if (strikes != null) {
+            strikes.reset();
+        }
     }
 
     /** It was destroyed: its cone goes cold, its vents shut (its heading and place stay for the wreck). */
@@ -222,6 +228,7 @@ public final class StrideArena implements Hashed {
         forced = false;
         ventTicks = 0;
         footfall = false;
+        strikes.died();
     }
 
     /** Where the ship and Rook are now ({@code rookIn}: Rook flies); the passes' lanes and the cone read them. */
@@ -423,6 +430,9 @@ public final class StrideArena implements Hashed {
         if (coneSince < Integer.MAX_VALUE / 2) {
             coneSince++;
         }
+        boolean walking = gait == Gait.WALK || gait == Gait.HOLD || gait == Gait.TURN;
+        // Round 44: the rail lance and the stomp, while it walks on the screen with its hull on it.
+        strikes.act(phase, actions, firing && walking && PlayField.overlaps(x, y, partBoxes[hull][0]));
         if (cone == null) {
             return;
         }
@@ -727,6 +737,30 @@ public final class StrideArena implements Hashed {
         return !piece.destroyed() && (ventTicks > 0 || overheats(piece.phase()));
     }
 
+    /**
+     * Round 43 (the vent-hit sound): whether (px, py) lies on its open vents (a {@code while: open} spot's box turned with
+     * its heading, grown by {@code margin} px each side) while they are open.
+     */
+    public boolean onOpenVents(double px, double py, double margin) {
+        if (!ventsOpen()) {
+            return false;
+        }
+        int turning = turning();
+        for (int i = 0; i < spots.size(); i++) {
+            BossSpec.Spot spot = spots.get(i);
+            if (!spot.whileOpen()) {
+                continue;
+            }
+            Hitbox box = spotBoxes[i][turning];
+            double sx = piece.partX(spot.part()) + turnX(spot.dx(), spot.dy());
+            double sy = piece.partY(spot.part()) + turnY(spot.dx(), spot.dy());
+            if (Math.abs(px - sx) <= box.width() / 2 + margin && Math.abs(py - sy) <= box.height() / 2 + margin) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** The plate's centre (its box turned with the heading: {@link #plateBox()}), px from the left. */
     public double plateX() {
         return plate == null ? x : piece.partX(plate.part()) + turnX(0, -plate.ahead());
@@ -764,6 +798,42 @@ public final class StrideArena implements Hashed {
         return hull;
     }
 
+    double shipX() {
+        return shipX;
+    }
+
+    double shipY() {
+        return shipY;
+    }
+
+    double rookX() {
+        return rookX;
+    }
+
+    double rookY() {
+        return rookY;
+    }
+
+    /** Whether Rook flies. */
+    boolean rookIn() {
+        return rook;
+    }
+
+    /** Round 44: its rail lance and stomp (their phases idle without them in its stride). */
+    public StrideStrikes strikes() {
+        return strikes;
+    }
+
+    /** Round 44: whether it overheats now (its last phase with {@link BossSpec.Stride#turnInPlaceLastPhase()}). */
+    boolean overheating() {
+        return overheats(piece.phase());
+    }
+
+    /** Round 44: whether a part that fires a homing attack takes damage only while its hatch is open. */
+    boolean hatchArmour() {
+        return spec.hatchArmour();
+    }
+
     @Override
     public void addTo(StateHash hash) {
         hash.add(gait.ordinal())
@@ -788,5 +858,6 @@ public final class StrideArena implements Hashed {
                 .add(forced ? 1 : 0)
                 .add(coneHits)
                 .add(ventTicks);
+        strikes.addTo(hash);
     }
 }

@@ -1,6 +1,7 @@
 package vanguard.game.audio;
 
 import static vanguard.game.audio.FlightSounds.EXPLOSIONS;
+import static vanguard.game.audio.FlightSounds.PLAYER_DAMAGE;
 import static vanguard.game.audio.FlightSounds.UNIT_LOOP_LEVEL;
 
 import java.util.EnumSet;
@@ -19,7 +20,14 @@ import vanguard.sim.StrideArena;
  * steps (a salvo's missiles 0.2 s apart each sound, two pods firing in one step do not stack); a missile shot down
  * bursts on the {@code tiny} rung (one that burst on a hull is the hull's hit, one that ran out of life just goes); the
  * flamer's rising hiss with the cone's tell, and the flame's roar as one loop while the cone burns, panned to its
- * flamer and faded in and out over 0.2 s. Its death is the boss's chained death (the large rung of a mid-boss).
+ * flamer and faded in and out over 0.2 s. Its death is the boss's chained death on its own rung ({@link
+ * Sfx#WALKER_DEATH}, {@code BossCues}); the wreck's groan ({@link Sfx#WALKER_WRECK_SETTLE}) once as the topple lands; a
+ * hit on its open vents a metal hit of its own ({@link Sfx#WALKER_VENT_HIT}, at most one each {@value
+ * #VENT_HIT_GAP_SECONDS} s) instead of the plain hit ({@link #ventHit}, asked by {@code UnitCues}).
+ *
+ * <p>Round 44 (step WR2), placeholders until their own sounds (nothing synthesized): the rail lance's charge is the
+ * Mantis's charge-up ({@link Sfx#MANTIS_TELEGRAPH}, lower) and its shot the Mantis's sweep ({@link Sfx#MANTIS_SWEEP},
+ * lower and heavier); the stomp's brace is the hatch's clank pitched down, its shockwave the footfall pitched down.
  */
 final class WalkerCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(
@@ -28,10 +36,27 @@ final class WalkerCues extends SoundFamily {
             SimEvents.Type.MISSILE_LAUNCHED,
             SimEvents.Type.MISSILE_DESTROYED,
             SimEvents.Type.CONE_TELL,
-            SimEvents.Type.CONE_BURN);
+            SimEvents.Type.CONE_BURN,
+            SimEvents.Type.LANCE_CHARGE,
+            SimEvents.Type.LANCE_FIRE,
+            SimEvents.Type.STOMP_TELL,
+            SimEvents.Type.STOMP,
+            SimEvents.Type.BOSS_WRECK);
 
     /** The one-shots are levelled in their files (−19 to −22 dB, as round 41's) and play as they are. */
     static final float WALKER_LEVEL = 1f;
+    /** Round 44: the placeholders' pitches: the lance's charge and shot, the stomp's brace and shockwave. */
+    static final float LANCE_CHARGE_PITCH = 0.8f;
+
+    static final float LANCE_FIRE_PITCH = 0.7f;
+    static final float STOMP_TELL_PITCH = 0.7f;
+    static final float STOMP_PITCH = 0.75f;
+    /** A hit on the open vents sounds at most once each this many s. */
+    static final double VENT_HIT_GAP_SECONDS = 0.15;
+
+    static final int VENT_HIT_GAP_STEPS = SimStep.ticks(VENT_HIT_GAP_SECONDS);
+    /** A hit this close to the open vents' box counts as on them, px (a shot stops at the hull's edge). */
+    static final double VENT_HIT_REACH = 10;
     /** Missiles launched within this many steps of the last launch sound share it. */
     static final int MISSILE_GAP_STEPS = SimStep.ticks(0.1);
 
@@ -39,6 +64,8 @@ final class WalkerCues extends SoundFamily {
     private long lastLaunch = Long.MIN_VALUE / 2;
 
     private long now;
+    /** The step of the last vent hit's sound. */
+    private long lastVentHit = Long.MIN_VALUE / 2;
     /** The flame loop's level now (its fade). */
     private float flameLevel;
 
@@ -73,9 +100,57 @@ final class WalkerCues extends SoundFamily {
                 }
             }
             case CONE_TELL -> bank.play(Sfx.WALKER_FLAME_TELL, WALKER_LEVEL, pitch(0.02), pan);
+            case LANCE_CHARGE -> bank.play(Sfx.MANTIS_TELEGRAPH, PLAYER_DAMAGE, LANCE_CHARGE_PITCH * pitch(0.02), pan);
+            case LANCE_FIRE -> bank.play(Sfx.MANTIS_SWEEP, PLAYER_DAMAGE, LANCE_FIRE_PITCH * pitch(0.02), pan);
+            case STOMP_TELL -> bank.play(Sfx.WALKER_HATCH, WALKER_LEVEL, STOMP_TELL_PITCH * pitch(0.02), pan);
+            case STOMP -> bank.play(Sfx.WALKER_STOMP, PLAYER_DAMAGE, STOMP_PITCH * pitch(0.02), pan);
+            // The topple lands its death's seconds later: the wreck's groan, under the hint-2 crawl.
+            case BOSS_WRECK -> later(Sfx.WALKER_WRECK_SETTLE, WALKER_LEVEL, 1, pan, toppleSteps());
             // The burn's roar is the loop (watch).
             default -> {}
         }
+    }
+
+    /** The watched walker's topple (its death's seconds) in steps; 2 s without one. */
+    private int toppleSteps() {
+        Sortie watched = mix.watched;
+        if (watched != null) {
+            for (int k = 0; k < watched.setPieceCount(); k++) {
+                SetPiece piece = watched.setPiece(k);
+                if (piece.stride().isPresent()) {
+                    return SimStep.ticks(piece.boss().orElseThrow().deathSeconds());
+                }
+            }
+        }
+        return SimStep.ticks(2);
+    }
+
+    /**
+     * Round 43: whether a hit at (x, y) lands on a walker's open vents ({@code UnitCues} then plays nothing of its own):
+     * its metal hit plays, at most once each {@value #VENT_HIT_GAP_SECONDS} s.
+     */
+    boolean ventHit(double x, double y, float pan) {
+        Sortie watched = mix.watched;
+        if (watched == null) {
+            return false;
+        }
+        for (int k = 0; k < watched.setPieceCount(); k++) {
+            SetPiece piece = watched.setPiece(k);
+            StrideArena stride = piece.stride().orElse(null);
+            if (stride != null && !piece.destroyed() && stride.onOpenVents(x, y, VENT_HIT_REACH)) {
+                if (ventHitDue(lastVentHit, now)) {
+                    bank.play(Sfx.WALKER_VENT_HIT, WALKER_LEVEL, pitch(0.04), pan);
+                    lastVentHit = now;
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Whether a vent hit sounds at step {@code now} after the last one at {@code last}. */
+    static boolean ventHitDue(long last, long now) {
+        return now - last >= VENT_HIT_GAP_STEPS || now < last;
     }
 
     /** Whether a missile's launch sounds at step {@code now} after the last launch sound at {@code last}. */

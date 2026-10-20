@@ -154,6 +154,10 @@ final class BossPasses implements SetPiece.BossActions {
             if (piece.stride().isPresent() && piece.present() && !piece.destroyed()) {
                 edges |= piece.stride().get().warning();
             }
+            if (piece.breach().isPresent() && piece.present() && !piece.destroyed()) {
+                // M7 part H: a breaching boss's next side or rear point.
+                edges |= piece.breach().get().warning();
+            }
         }
         return edges;
     }
@@ -164,6 +168,10 @@ final class BossPasses implements SetPiece.BossActions {
         for (SetPiece piece : setPieces) {
             if (piece.stride().isPresent() && piece.present() && !piece.destroyed()) {
                 edges |= piece.stride().get().rear();
+            }
+            if (piece.breach().isPresent() && piece.present() && !piece.destroyed()) {
+                // M7 part H: a rear breach (design/enemies/bosses/dust-colossus: a rear wave for Rook).
+                edges |= piece.breach().get().rear();
             }
         }
         return edges;
@@ -292,6 +300,10 @@ final class BossPasses implements SetPiece.BossActions {
             if (piece.boss().isPresent()) {
                 if (piece.arena().isPresent()) {
                     piece.ground(s.groundScroll, s.scrollHalted());
+                }
+                if (piece.breach().isPresent()) {
+                    // M7 part H: its next point may follow the ship.
+                    piece.breachTargets(ship.x(), ship.y());
                 }
                 if (piece.stride().isPresent()) {
                     // M7 part F: its passes' lanes and its cone read where the ship and Rook are.
@@ -448,6 +460,64 @@ final class BossPasses implements SetPiece.BossActions {
     @Override
     public void coneBurn(double x, double y) {
         events.add(SimEvents.Type.CONE_BURN, x, y);
+    }
+
+    @Override
+    public void lanceCharge(double x, double y) {
+        events.add(SimEvents.Type.LANCE_CHARGE, x, y);
+    }
+
+    @Override
+    public void lanceFire(double x, double y) {
+        events.add(SimEvents.Type.LANCE_FIRE, x, y);
+    }
+
+    @Override
+    public void stompTell(double x, double y) {
+        events.add(SimEvents.Type.STOMP_TELL, x, y);
+    }
+
+    @Override
+    public void stomp(double x, double y) {
+        events.add(SimEvents.Type.STOMP, x, y);
+    }
+
+    @Override
+    public void breach(SimEvents.Type type, double x, double y, int value) {
+        events.add(type, x, y, value);
+    }
+
+    /**
+     * M7 part H: the bite snaps at (x, y): the ship (unless it cannot be hurt) and Rook with their centres within
+     * {@code radius} take {@code damage} (the Kraken slam's impact rule: once, at the snap).
+     */
+    @Override
+    public int bite(double x, double y, double radius, double damage) {
+        int hit = 0;
+        if (s.flying() && !s.complete && !s.failed && !rules.invulnerableShip()) {
+            if (!ship.evading() && within(ship.x(), ship.y(), x, y, radius)) {
+                hit |= BreachArena.BITE_SHIP;
+                double lost = ship.defences().armourLost();
+                hitPasses.damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
+            }
+            if (wingman != null && !wingman.ejected() && within(wingman.x(), wingman.y(), x, y, radius)) {
+                hit |= BreachArena.BITE_WINGMAN;
+                wingman.hit(damage, ship.x(), ship.y(), events);
+            }
+        }
+        return hit;
+    }
+
+    /** M7 part H, step H3: a breaching boss tears a rock loose toward its mouth (the simulation's random numbers). */
+    @Override
+    public void tearLoose(PulledDebris rocks, double mouthX, double mouthY) {
+        rocks.tear(s.debris, s.rng, mouthX, mouthY);
+    }
+
+    private static boolean within(double px, double py, double x, double y, double radius) {
+        double dx = px - x;
+        double dy = py - y;
+        return dx * dx + dy * dy <= radius * radius;
     }
 
     @Override

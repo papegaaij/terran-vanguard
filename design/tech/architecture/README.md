@@ -551,7 +551,14 @@ first entry of a part's model list is the starter (price 0, `start`).
   heading, `ahead` px: the front plate every shot glances off, the Ion Beam stopped) and **`cone`** (`length` px,
   `half_angle` °, `reach_behind` px, `cooldown`, `tell`, `burn`, `vents` s, `swivel` °, `bullet` class, `behind`
   px, optional `track` °/s (round 43: from its second phase the burn keeps turning toward the ship within the
-  swivel): the rear flame cone; both only with a stride; the hook **`cone`** (`length`, `swivel`, `tell`)). An aimed
+  swivel): the rear flame cone; both only with a stride; the hook **`cone`** (`length`, `swivel`, `tell`)). Round 44
+  (the walker, round 43 W.a/W.e): a boss's **`hatch_armour`** (`true`: the parts firing its homing attacks take damage
+  only while their hatch is open, until an overheating last phase), **`lance`** (`after`, the parts whose loss wakes
+  it; `from_phase`, a phase's name from which it is awake anyway; `charge`, `fire`, `interval`, `last_interval` s;
+  `width` px; `bullet` class; `behind` px: a rail lance charging a line from its back through where the ship was,
+  then a shot along it) and **`stomp`** (`reach`, `radius` px, `tell`, `expand`, `cooldown` s, `bullet`: a shockwave
+  ring when the ship or Rook comes within its reach), all three only with a stride; the hooks **`lance`**
+  (`charge`, `interval`, `last_interval`) and **`stomp`** (`tell`, `cooldown`). An aimed
   attack's **`homing`** (`turn_rate` °/s, `life` s, `hp`, `most` alive, `hatch` s of the hatch tell: its shots are
   homing missiles; a boss's; the hook **`homing`** (`turn_rate`)); a boss attack's **`parts`** (the parts that fire
   it besides those naming it as their `attack`: the walker's pods fire one salvo pattern in phase 1, another
@@ -1159,7 +1166,33 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   level time, `fade_in`, `fade_out` s: a second ambience loop over the level's own; Level 20's basin rumble;
   `AmbienceLayer.level(t)`). The flak's **`band: top`** (bursts in the top band instead of over the lower field;
   `Flak.bandOrDefault()`). The rear-wave bark's **`top_lines`** (the wingmen data's "Up top!" variants in a
-  reversed section).
+  reversed section). The level's **`ridge`** (presentation, round 43 Q.4: the Dust Colossus's
+  travelling ridge, Levels 20 and 21): `t` (level time the head surfaces), `seconds` (the head's crossing, > 0),
+  `from` and `to` (`left` / `right`, opposite edges) and `depth` (px below the top edge the head surfaces, inside the
+  field); `LevelData.Ridge`, read by the game's `RidgeLooks` (the track's S and run up the strip are its constants;
+  the tail follows 7 s after the head) and the pipeline's `SpriteUse`.
+  M7 part H (step PH2; design/campaign Level 21, design/enemies/bosses/dust-colossus): a **moving arena's `ramp`** (an
+  arena of speed > 0 with `arena: true`; only in a level whose boss breaches, `ColossusChecks`): the arena eases in
+  from the section before it over `ramp` s (Level 21's 140 → 20 over 2 s, `Section.easeSeconds()`), and it
+  **crawls** (`ColossusRules`: a moving arena of a breaching boss → the simulation's `Section.crawl`: its ground
+  scrolls on while the level clock is held at its end, a kill's jump moves the clock only). A breaching boss's stat
+  block (`ColossusBlock`): its body's `layer: buried`, a part's `layer` may be `buried` (the mouth until its rise, the
+  vents until they rise with it); **`movement.breach`** (`tell`, `rise`, `open`, `bite_tell`, `dive`, `buried` s,
+  `buried` ≥ `tell`; `warn` s of a side or rear point's edge warning; `intro` s from the arrival to the first tell;
+  optional `glow` s before each ring, 0.5; `points` `{front, left, right, rear}` each `[x, y]` px from the left and
+  below the top edge; `follow` the same four, each `[min, max]` of the ship's x (front, rear) or y below the top edge
+  (the sides) a following phase clamps to; `orders`, one per boss phase in order, each `{phase, points, follow}` with
+  `points` from `front`, `left`, `right`, `rear` or `under` (alone); `bite {radius, bullet}`) — only on a boss without
+  an anchor, stride, hover or descent; the boss's **`suction`** (`speed` px/s within `inner` px, falling off to 0 at
+  `outer`), **`vents`** (`parts`, the destroyable vent parts; `distances` px from the mouth along the ridge; `attack`,
+  the vents' burst; `phase`), **`eruption`** (`marker` s, `radius` px, `bullet`, `inset` px, `open`, `buried` s,
+  `phase`) and **`debris`** (`every` {phase name: s}, `size` [min, max] px, `hp`, `speed` px/s, `acceleration`
+  px/s², `layer`, `contact` size tier), all only with a breach; the hooks **`breach`** (`bite_tell`), **`suction`**
+  (`speed`), **`eruption`** (`marker`). `ColossusRules` maps them to `BossSpec.Breach` (the points turned into the
+  simulation's frame, y up from the bottom edge), `Suction`, `Vents` (the burst as the attack's index; the vents rise
+  only in a phase listing that attack), `Eruption` and `DebrisFlow` (the time by phase index, 0 for none). An act's
+  **`next_act`** (`act`, `name`, `setting`: the act after the release's last, not built yet, as the release's end and
+  the hangar name it; `ActData.NextAct.comingSoon()`, `hangarLine()`).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

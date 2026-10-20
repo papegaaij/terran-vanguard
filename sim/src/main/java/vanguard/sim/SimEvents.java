@@ -568,6 +568,21 @@ public final class SimEvents {
         CONE_BURN,
         /** M7 part F: a walking boss's foot came down (at its centre): the stomp, the dust and slag puffs. */
         WALKER_STEP,
+        /** Round 44: a walking boss's rail lance starts its charge (at the lance): the line glows, the charge whine. */
+        LANCE_CHARGE,
+        /** Round 44: the rail lance fires along its line (at the lance). */
+        LANCE_FIRE,
+        /**
+         * Round 44: the rail lance's shot hit the ship or Rook (at the one hit; the damage is the defences' events); value:
+         * {@code 1} the ship, {@code 2} Rook.
+         */
+        LANCE_HIT,
+        /** Round 44: a walking boss's legs brace for a stomp (at its centre): the ground ring's mark. */
+        STOMP_TELL,
+        /** Round 44: it stomps (at its centre): the shockwave's ring expands from there. */
+        STOMP,
+        /** Round 44: the stomp's ring reached the ship or Rook (at the one hit); value: {@code 1} the ship, {@code 2} Rook. */
+        STOMP_HIT,
         /**
          * M7 part F: a walking boss was destroyed (at its centre, with its {@link #BOSS_DESTROYED}):
          * it topples along its heading and its wreck stays on the ground, scrolling with it; value: its
@@ -596,7 +611,34 @@ public final class SimEvents {
          * M7 part G: a pursuit breaks off (at its leader point): it climbs off the top, its motes following alive;
          * value: its flock's serial.
          */
-        PURSUIT_BREAK;
+        PURSUIT_BREAK,
+        /**
+         * M7 part H (design/enemies/bosses/dust-colossus, Breaches): a breach's tell starts (at the breach point): the
+         * sand bulges and cracks, a dust ring, a low rumble; value: its {@link BreachArena.Pose} ordinal.
+         */
+        BREACH_TELL,
+        /** M7 part H: the mouth breaches (at its centre): its rise starts; value: its {@link BreachArena.Pose} ordinal. */
+        BREACH_RISE,
+        /** M7 part H: the bite's tell (at the mouth): the teeth flash, the jaws start to close; value: the pose ordinal. */
+        BITE_TELL,
+        /**
+         * M7 part H: the jaws snap shut (at the mouth); value: what the bite circle caught, bit {@code 1} the ship, bit
+         * {@code 2} Rook (0: nothing).
+         */
+        BITE_SNAP,
+        /** M7 part H: the mouth dives back under the sand (at its centre); value: its {@link BreachArena.Pose} ordinal. */
+        BREACH_DIVE,
+        /**
+         * M7 part H, step H3: an erupting under point's marker is placed (at its centre, on the ship; it erupts after
+         * the eruption's marker time; it replaces the tell's {@link #BREACH_TELL}); value: the {@link BreachArena.Pose#UNDER}
+         * ordinal.
+         */
+        ERUPTION_MARKER,
+        /**
+         * M7 part H, step H3: the marker erupts, the mouth up and open at once (at its centre; it replaces the rise's
+         * {@link #BREACH_RISE}); value: what it caught, {@code 1} the ship, {@code 2} Rook (0: nothing).
+         */
+        ERUPTION;
 
         private static final Type[] VALUES = values();
     }

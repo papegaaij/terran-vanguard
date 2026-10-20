@@ -139,3 +139,43 @@ flank plate close up, rendered from `revenant_walker.py`'s wreck model with the 
 serial field filed to bright bare metal in bands of hand-file strokes; an assay strip clipped beside it, its stock
 match "HELIX TF-7" circled in red pen; "for the Commander only").
 
+
+## briefing-images-final-r44-a
+
+Round 44, production art (M7 part H batch, step ART-H3): Level 21's two 672×240 briefing images, rendered by
+[tools/art/briefing_images.py](../../../../tools/art/briefing_images.py) (`python3 tools/art/briefing_images.py
+level-21-hellas-basin level-21-colossus-scan r44`; the Colossus's mouth is rendered in the script from
+`tools/concept/bosses_r36.py`'s chosen model b, so it needs no other generator first): `level-21-hellas-basin`
+(Okafor: the Hellas basin on a CDF terrain plot, north up: the plateau outside the rim, the rim with the CDF line held
+where the Level 20 retreat ended and the wrecks below it, the inner wall's terraces as contours, the dune sea's crests
+with a moving lime seismic contact (the ridge pass), the lime hollow at the lowest point with its veins and the
+seismic rings centred on it; the descent route in from the north rim and the five sections, the objective diamond on
+the source) and `level-21-colossus-scan` (Varga: a seismic cut through the basin floor with depth ticks, the body under
+the sand as one long violet-veined chain of segments, the ridge its back raises at the surface, a mouth breaching at
+the cut's left edge with the lime gullet glowing; beside it a breach seen from above at the field's left edge, two
+thirds on the screen: the mouth with its mandibles, palps and lime gullet in its funnel, the bite circle (70 px), the
+suction's lines toward it, the edge warning "LEFT - 3 S" and the ship for scale; her notes: breaches where the sand
+bulges, any side, even behind, the lime throat, the pull and the bite, side and rear guns). Artist brief: the Act 3
+display look (Mars ramp, cyan lines, lime for the Colossus's song and gullet, red for the threat); Okafor's page a map
+that reads "down to the lowest point", Varga's a diagram that teaches the breach in one look.
+
+## act3-outro-final-r44-a
+
+Round 44, production art (M7 part H batch, step ART-H3): the Act 3 outro's four 672×240 images, one per page, rendered
+by [tools/art/outro_l21_images.py](../../../../tools/art/outro_l21_images.py) (`python3 tools/art/outro_l21_images.py
+--assets` writes `assets/ui/briefing/act-3-outro-<name>.png` and this sheet; `--review` rebuilds the sheet from
+`assets/`), in the look of the Act 2 outro (`tools/art/outro_l14_images.py`, whose OutroBoard it imports):
+`act-3-outro-hellas` (Okafor: the Hellas basin at dawn from low over the floor, a heightfield of dunes hillshaded
+with cast shadows from the low sun in the east and set in perspective under the dust haze; the Colossus's collapsed
+crater with slumped terraces, the lime ichor pooled in its throat and the bone mandibles' tips sunk in the sand, the
+ridge's sunken furrow; the last spore trails climbing out of the frame from the far basin; lift-off from every site,
+the shelters open for the first time in six weeks), `act-3-outro-domes` (Okafor: Ares Landing's domes at night,
+every pane of the geodesic glass lit warm, the colonists on the ring road in front of them as silhouettes looking up,
+some waving; the stars and Phobos), `act-3-outro-europa` (Varga: her tracking plot, Mars at the left, Jupiter at the
+right in its own cream ramp; seven courses off Mars bending toward Jupiter and ending at Europa; in the corner a
+minimised window "WRECK 19-A.IMG" with the filed plate (a crop of `level-20-filed-plate`), unexplained) and
+`act-3-outro-aegis` (Okafor: Aegis Wing on Ares Landing's spaceport apron at dusk seen from the tower, the production
+Stormhawk and Ember sprites foreshortened on their pads, ground crews with work lights and a welder's spark, a crane
+lowering a pod over Lancer's mount, the domes on the horizon, Jupiter a bright point in the dusk sky; "4 DAYS").
+Artist brief: release after the fight (dawn, lights, a plot that points onward), the Helix thread kept quiet in one
+corner window.

@@ -56,12 +56,12 @@ class PlaceholderAuditTest {
                     + " synthesized by tools/concept/audio/sfx_r41.py";
 
     private static final String ROUND_42 =
-            "M7 part F's Level 19 sounds: round 42's proposals (option a until the user's pick),"
+            "M7 part F's Level 19 sounds: round 42's proposals still standing (option a until the user's pick),"
                     + " synthesized by tools/concept/audio/sfx_r42.py";
 
     private static final String ROUND_43 =
-            "M7 part G's Level 20 sounds: round 43's proposals (option a until the user's pick), mixed from CC0"
-                    + " Freesound originals (CREDITS.md)";
+            "round 43's picks (user 2026-10-20): Level 19's walker, vent and tank sounds and Level 20's, the"
+                    + " concept files mixed from CC0/CC-BY Freesound originals (CREDITS.md)";
 
     private static final String ROUND_41_MUSIC =
             "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
@@ -184,21 +184,23 @@ class PlaceholderAuditTest {
             Map.entry("sfx/ghost-drone-glint-r41-a.ogg", ROUND_41),
             Map.entry("sfx/ghost-drone-burst-r41-a.ogg", ROUND_41),
             Map.entry("sfx/ghost-drone-death-r41-a.ogg", ROUND_41),
-            // M7 part F, Level 19: round 42's unit, vent and belt sounds and the `mars-foundry` bed
+            // M7 part F, Level 19: round 42's stomp, tank death, belt loop and `mars-foundry` bed
             Map.entry("sfx/walker-stomp-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/walker-hatch-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/walker-missile-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/walker-flame-tell-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/walker-flame-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/vent-tell-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/vent-burst-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/tank-tracks-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/tank-turret-r42-a.ogg", ROUND_42),
-            Map.entry("sfx/tank-burst-r42-a.ogg", ROUND_42),
             Map.entry("sfx/tank-death-r42-a.ogg", ROUND_42),
             Map.entry("sfx/belt-rumble-r42-a.ogg", ROUND_42),
             Map.entry("sfx/mars-foundry-r42-a.ogg", ROUND_42),
-            // M7 part G, Level 20: round 43's basin rumble, swarm hum and lunge
+            // round 43's picks: Level 19's walker, vent and tank sounds; Level 20's basin rumble, swarm hum and lunge
+            Map.entry("sfx/walker-hatch-r43-b.ogg", ROUND_43),
+            Map.entry("sfx/walker-flame-tell-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/walker-flame-r43-b.ogg", ROUND_43),
+            Map.entry("sfx/walker-vent-hit-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/walker-death-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/walker-wreck-settle-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/vent-tell-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/vent-burst-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/tank-tracks-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/tank-turret-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/tank-burst-r43-a.ogg", ROUND_43),
             Map.entry("sfx/basin-rumble-r43-a.ogg", ROUND_43),
             Map.entry("sfx/swarm-hum-r43-a.ogg", ROUND_43),
             Map.entry("sfx/swarm-lunge-r43-a.ogg", ROUND_43),

@@ -1,0 +1,408 @@
+# Level 21 – Dust Colossus: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M7 part H, step PH2, from the README's
+# approved hand tables (round 36) and the user's round 43 answers (H.1-H.7). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# The arena CRAWLS (round 36): section 5 is an arena of speed 20 whose ground scrolls on at 20 px/s on the real steps
+# while the Dust Colossus lives (the level's boss breaches: content's ColossusRules makes a moving arena of a breaching
+# boss crawl); the level clock halts at its end (t=245) and a kill jumps it there without moving the ground. The
+# arena's `ramp` eases the scroll 140 -> 20 over its first 2 s (t=105-107, H.7a). Keys new in M7 part H: a moving
+# arena's `ramp` (only a breaching boss's), the ridge pass on `ridge` (round 43 Q.4 / H.7f; step LQ's key), the
+# Colossus's own blocks in its stat block; the Act 3 outro and `next_act` in the act's data.
+# The approach to the Act 2+ rules, "tougher, not more" (H.1, count-neutral as Level 20): the approved anchors kept at
+# their times (the three Burrower fields, both Mantis pincers and the side Kite stream with their edge warnings, the two
+# Wraith rear ambushes, the rear Mote stream, the Spore Bombers with the crest mortars, the Shellbacks, the Herald with
+# its escorts, the nests, the ridge pass window held by the t=64 Kites); the Kite V-wings fly as Kite swarms that loop
+# on the screen (Level 15's fix), four Kite streams and snakes became firing groups (Needler line abreasts of 4 at
+# t=20 and 54, Stinger streams at t=26.5 and 91: the beam era's HP, `small_act_hp` + `beam_era_hp`, Needler 24,
+# Stinger 36); the t=101 Stinger V-wing dropped (H.3: the screen clears while the Choir sings, no incoming box, the
+# warning at t=105), its four folded into the t=16.5 Needler line (3 -> 4), the t=26.5 Stinger stream (4) and the t=44
+# V-wing (4 -> 5). Kites 35 -> 20, Needlers 11 -> 20, Stingers 8 -> 13: 96 + 10 ground targets = 106 at medium over
+# t=8-105, ≈ 66 a minute. Hard: the firing groups one smaller (Levels 17-19), a third Wraith in each rear ambush, the
+# centre turret pair; easy by the formation lever, the t=61 Wraiths a Needler V-wing from the front (Level 14's rule).
+# The `bounty_scale` (0.75) and the boss's bounty (320, H.5's 22.7 %) are paper values: step H4 measures the haul and
+# the fight and sets them. Rook keeps Level 20's Autocannon (H.2: the balance plan's fit carries it).
+# The backdrop is step ART-H1's (tools/art/backdrop_l21.py --proposal, merged here): seams at exact rows.
+scroll_speed: 160     # the rim; the inner wall, the dune sea and the hollow set their own
+launch_seconds: 5     # the usual launch from the bottom edge over the rim's CDF line (H.7g)
+bounty_scale: 0.75    # every bounty × 0.75: the typical haul on budget(21) 2,709 (step PH2's paper value, m7h-gaps §1.4; step H4 sets the measured one)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Mars, Hellas basin
+  layers: [ground, air]
+  density: 4
+  traits: [anti-ground, rear]   # `side` is in Varga's L3 line (three traits do not fit the intel panel, as Level 14)
+  hazards: [suction]
+  boss: Dust Colossus
+  objective: DESTROY THE DUST COLOSSUS   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Hellas basin, Lancer. Every Vrell on Mars came out of it. Something is still down there.
+    l1: From every side, even behind you. It comes up where the sand bulges.
+    l2: Burrowers, dust devils, a singer. And something under the floor, colony-sized.
+    l3: Anti-ground, side and rear guns. Hit the lime when the throat opens.
+  notes:
+    Dominant layers: '`ground` (Burrowers when surfaced, Dust Devils, Shellbacks, turret nests and mortars, the Colossus''s mouths), `buried` (Burrowers under the sand and the Colossus''s body: nothing hits them), `air` (Dust Kites, Needler and Stinger groups, Mantises, Wraiths, the Choir Herald, the Mote stream); `low-air` (risen Dust Devils, the dust haze)'
+    Attack directions: '{directions} (the approach by its waves; in the fight the mouths breach from all four edges)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: The Colossus's suction and the debris rocks (the arena); the ridge pass (scenery)
+    Boss / mid-boss: 'Act boss [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md)'
+    Sensor-suite detail: '**none**: Hellas basin, `ground` + `air`, all directions. **L1**: + the directions, density {density}, hazard "suction", the objective `{objective}`. **L2**: + Burrower, Dust Devil, Shellback, Choir Herald, Dust Kite, Mantis, Wraith, Needler portraits; the boss''s name and silhouette (`dust-colossus`). **L3**: + `anti-ground` and `rear` highlighted; the timeline strip marks the ridge pass (64–72 s) and the boss (105 s); 1 secret.'
+
+sections:  # back to back from t = 0; each speed change eased (ramp: 1 s on the approach, the arena's 2 s); tiles and atmospheres ART-H1's (tools/art/backdrop_l21.py)
+  - name: Hellas Rim
+    end: 22
+    atmosphere: light
+    tiles: [rim-wall]
+    notes:
+      layers:
+        ground: the rim's edge, the CDF line held at the end of the retreat (emplacements, burnt-out walkers and crawlers, scorched pads), then the first slope of the inner wall.
+        low-air: dust streaks off the rim.
+      purpose: 'The launch over the line; popcorn from t=6.'
+  - name: Inner Wall
+    end: 50
+    speed: 170
+    ramp: 1
+    atmosphere: light
+    tiles: [inner-wall]
+    notes:
+      layers:
+        ground: terraced slopes falling into the basin, landslide fans of red sand, a CDF hauler's wreck (the turret nest on it), the survey crawler under a slide on a tread (the secret).
+        low-air: thin dust.
+      purpose: 'Burrowers on the dune fans, the first nest, the Mantis pincer.'
+  - name: Dune Sea
+    end: 78
+    speed: 150
+    ramp: 1
+    atmosphere: medium
+    tiles: [dune-sea]
+    notes:
+      layers:
+        ground: 'the basin floor, long dune crests, old breach craters filling with sand. **The ridge pass** (t≈64–72): the Colossus''s back runs under the dunes from the right edge to the left across the upper half, a travelling ridge with a dust haze.'
+        low-air: ochre dust banks, the dust devils' trails.
+      purpose: 'Dust Devils, the first rear ambush; the ridge pass teaches the arena''s read.'
+  - name: Lime Hollow
+    end: 105
+    speed: 140
+    ramp: 1
+    atmosphere: heavy
+    tiles: [hollow-crust]
+    notes:
+      layers:
+        ground: the basin's lowest point, a lime-veined crust cracked in rings round the centre, Vrell growths, sinkholes.
+        low-air: dust haze lit lime from below.
+      purpose: 'The Herald with escorts, the last nests, two rear waves; the Choir''s song, then the screen clears.'
+  - name: Dust Colossus
+    end: 245   # the level clock halts here while the Colossus lives, a kill jumps it here; the ground crawls on (the arena's tile repeats every 512 px)
+    speed: 20
+    ramp: 2    # eased 140 -> 20 over the arena's first 2 s (t=105-107, H.7a)
+    arena: true
+    atmosphere: heavy
+    tiles: [basin-floor]
+    notes:
+      layers:
+        ground: 'the hollow''s floor as the seamless tile (512 px); the breaches'' bulges, craters and the ridge; the debris rocks (phases 2–3).'
+      purpose: 'The boss fight (≈ 130 s at medium, the spec''s par); the warning, the arrival and the checkpoint at t=105.'
+  - name: Settling Dust
+    end: 277
+    speed: 25
+    ramp: 1
+    atmosphere: clear
+    tiles: [settled-floor]
+    notes:
+      layers:
+        ground: 'the collapsed crater, the ridge''s sunken furrow, the dust falling out of the air (the settled floor from the next 512 px seam, H.6).'
+        high-air: far off over the basin, Vrell shapes and spore trails lifting off and climbing out of the frame (scenery, ≤ 40 %).
+      purpose: 'Release; no enemies, no music; the act end''s lines.'
+
+boss:  # the act boss: the arena's start is its arrival (the warning, the bar, the boss checkpoint); its first tell after its 6 s intro (≈ t=111)
+  enemy: dust-colossus
+  t: 105
+  x: 240
+  section: 5
+  notes:
+    from: the edges (breach points)
+    waves: 'At the arena''s start: the warning, the bar and the checkpoint; the breaches as in its spec; no other waves in the arena'
+
+# A wave about every 3.5 s from t=6 (H.1), the side and rear waves warned 3 s ahead at their edge. Quiet windows: the
+# ridge pass (no wave enters from t=64 to t=70.5; the t=64 Kite swarm loops on the screen through it) and the pause
+# before the boss (nothing enters after the t=97.5 Mote stream: the screen clears while the Choir sings, H.3).
+waves:
+  - {t: 6, formation: stream, enemy: dust-kite, count: 4, from: front, edge: alternating, interval: 1.25, notes: Popcorn over the rim line}
+  - t: 9.5
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[300, -60], [290, 180], [160, 300], [120, 160], [230, 110], [300, 330], [200, 620]]]   # a loop over the rim line, down the middle (H.1: the V-wing as a looping swarm)
+    notes: "H.1: the approved V-wing as a swarm that loops on the screen"
+  - {t: 13, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 16.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: Over the wrecks of the retreat}
+  - {t: 20, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Down the first slope; a firing group in place of the approved Kite snake (H.1)"}
+  - {t: 23, formation: field, enemy: burrower, count: 3, from: front, x: 240, size: [400, 200], notes: "On the dune fans; act HP factor"}
+  - {t: 26.5, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: alternating, interval: 1.25, notes: "A firing group in place of the approved Kite stream (H.1)"}
+  - t: 30
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[160, -60], [170, 200], [320, 300], [360, 150], [250, 100], [180, 330], [280, 620]]]   # a loop down the inner wall's left half
+    notes: "H.1: the approved V-wing as a looping swarm"
+  - {t: 33.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "1 per side; edge warnings; act HP factor"}
+  - {t: 37, formation: stream, enemy: skitter, count: 3, from: front, edge: right, interval: 1.25, notes: "Over the hauler's nest"}
+  - {t: 40.5, formation: field, enemy: burrower, count: 4, from: front, x: 260, size: [360, 200], notes: "Below the survey crawler's tread"}
+  - {t: 44, formation: V-wing, enemy: stinger, count: 5, from: front, hard: {count: 4}, notes: The leader drops an overdrive}
+  - {t: 47, formation: stream, enemy: dust-kite, count: 4, from: sides, interval: 1.25, notes: "Popcorn from the sides; edge warnings"}
+  - t: 50.5
+    formation: pack
+    enemy: dust-devil
+    count: 2
+    from: front
+    paths: [[[140, -40], [190, 640]], [[340, -40], [290, 640]]]   # roaming the dune sea, closing in
+    notes: "Roaming the dune sea; act HP factor"
+  - {t: 54, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "A firing group in place of the approved Kite snake (H.1)"}
+  - {t: 57.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "With the dune-crest mortars; act HP factor"}
+  - {t: 61, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, skip: [easy], notes: "Cloaked; BOTTOM warning; Rook's rear bark; act HP factor; easy: a Needler V-wing from the front instead"}
+  - {t: 61, formation: V-wing, enemy: needler, count: 3, from: front, skip: [medium, hard], notes: "Easy only: instead of the rear Wraiths (Level 14's rule)"}
+  - t: 64
+    formation: swarm
+    enemy: dust-kite
+    count: 4
+    from: front
+    paths: [[[400, -60], [380, 160], [200, 260], [90, 170], [160, 60], [330, 120], [370, 320], [220, 440], [100, 620]]]   # a long loop that holds the screen through the ridge pass
+    notes: "Over the ridge pass (H.1: a looping swarm); no wave until t=70.5"
+  - t: 70.5
+    formation: convoy
+    enemy: shellback
+    count: 2
+    from: front
+    interval: 3
+    paths: [[[170, -60], [180, 200], [150, 400], [170, 640]]]   # lumbering down the dune sea after the ridge, 3 s apart (their rolls never overlap)
+    notes: "Lumbering after the ridge; act HP factor"
+  - {t: 74, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "1 per side; edge warnings"}
+  - {t: 77.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 80.5, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: "2 per side, hold {hold} s; edge warnings"}
+  - {t: 84, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 200], notes: "Between the hollow's nests"}
+  - t: 87.5
+    groups:
+      - {formation: carrier + escorts, enemy: choir-herald, count: 1}
+      - {formation: carrier + escorts, enemy: needler, count: 4}
+    from: front
+    speed: 50   # in at half its 100 px/s, so its rings are seen before it holds (as Levels 17 and 19)
+    notes: "The escorts in `orbit` under its rings; act HP factor"
+  - {t: 91, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: right, interval: 1.25, notes: "A firing group in place of the approved Kite snake (H.1)"}
+  - {t: 94, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, notes: "BOTTOM warning; Rook's rear bark"}
+  - t: 97.5
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: rear
+    paths: [[[110, 620], [150, 320], [330, 200], [380, -60]]]   # up from the bottom-left and out at the top-right: the last of Level 20's pursuers catching up
+    notes: "The last of Level 20's pursuers catching up; BOTTOM warning; the last wave before the Colossus (H.3: the t=101 V-wing dropped)"
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x
+  - target: hauler nest
+    section: 2
+    enemy: spine-turret
+    count: 3
+    at: [[35.93, 292], [35.97, 317], [36.02, 341]]   # on the CDF hauler's wreck's container roof (ART-H1's deck spots)
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on the CDF hauler''s wreck (t≈36)'
+      effect: Bounty {bounty} each
+  - target: survey crawler
+    section: 2
+    layer: ground
+    size: [64, 56]
+    sprite: survey-crawler   # step ART-H1: the colonial deep-survey crawler buried to its cab by a landslide (frames 0 buried, 1 hit, 2 cleared with the crate)
+    hp: 20
+    reveals: survey crawler
+    at: [[44, 80]]   # on an inner-wall tread at the left edge (104 rows from the nearest riser: l21_props.py --check)
+    notes:
+      target: 'Landslide over the Hellas survey crawler on a tread (`ground` trigger, {hp} HP, t≈44, x 80)'
+      effect: 'The secret: frees a crate worth 100 (256)'
+  - target: crest mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[56.93, 170], [56.93, 330]]   # on the dune crest's line (ART-H1's dune-crest piece, its crest at t≈56.93)
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×{count} on a dune crest (t≈57)'
+      effect: 'Bounty {bounty} each; with the Spore Bombers: area denial before the ridge pass'
+  - target: hollow nest
+    section: 4
+    enemy: spine-turret
+    count: 3
+    at: [[83.6, 150], [84, 240], [84.4, 330]]   # on the lime crust, clear of the sinkholes (t 81.6 x 384, t 88.4 x 96)
+    hard:
+      at: [[83.6, 150], [84, 240], [84.4, 330], [99, 200], [99.4, 280]]   # hard: the turret pair at the hollow's centre (t≈99), clear of the sinkholes at t 94.8 x 300 and t 101.4 x 420
+    notes:
+      target: 'Spine Turret nest ×{count} on the lime crust (t≈84; hard: + a pair at the hollow''s centre, t≈99)'
+      effect: Bounty; the t=84 Burrowers surface between them
+  - target: lip mortars
+    section: 4
+    enemy: polyp-mortar
+    count: 2
+    at: [[92, 120], [92.4, 360]]   # on the hollow's lip
+    notes:
+      target: Polyp Mortar ×{count} on the hollow's lip (t≈92)
+      effect: Bounty
+
+# No `no_surface` zones yet (pending): the nests' rocks (the hauler's wreck t 36 x 330 176×120, the dune crest t 57
+# x 250 380×128, the hollow nest's crust t 84 x 240 260×90, the lip mortars t 92.2 x 240 320×70) would keep the
+# Burrowers off them, but the simulation's LevelScript refuses no-surface zones in a level with an arena (holds and
+# arenas make the scroll's time depend on play); these all lie before the arena: a sim step may allow zones that end
+# before the first arena (step H4 adds them then).
+
+secrets:
+  - name: survey crawler
+    crate: 100   # Act 1 terms: pays 256 with the act factor
+    radio: {speaker: Ares Control, portrait: generic-colonial, line: "Our survey crawler, missing since spring. Take what's aboard."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 44, unit: first}}   # the leader of the t=44 Stinger V-wing
+
+drops:  # a CDF supply drone (Level 13's) flies in from the bottom edge at t≈86 between the rear waves, releases its armour patch and leaves the way it came; the boss's phase 3 drops the second
+  - {t: 89, x: 240, y: 380, pickup: armour patch, sprite: supply-drone}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies; the arena's clock runs (it crawls) until t=245, so t=111 is timed; the phase lines are PHASE lines, the death's four lines and the closing line CLOSING lines in order (the debrief waits for the last)
+  - {t: 1, speaker: Okafor, line: "Aegis, no more running. Every Vrell on Mars came out of that basin. Today we go in after them."}
+  - {t: 13, speaker: Rook, requires: escort, line: "On your {side}, Lancer. Let's finish this."}
+  - {t: 21, speaker: Ares Control, portrait: generic-colonial, line: "Ares Control, Aegis. All of Mars is listening today."}
+  - {t: 37, speaker: Varga, line: "Burrowers on the wall. And the song is coming from the floor."}
+  - {t: 53, speaker: Okafor, line: "Basin floor ahead. Keep your speed up and your eyes on the sand."}
+  - {t: 65.5, speaker: Varga, line: "That ridge isn't a dune, Lancer. It's moving under the sand."}
+  - {t: 74, speaker: Okafor, line: "Whatever it is, it's heading for the hollow. So are we."}
+  - {t: 84, speaker: Ares Control, portrait: generic-colonial, line: "Our seismographs just went off the scale, Aegis."}
+  - {t: 97.5, speaker: The Choir, distorted: true, line: "[the Choir sings]"}
+  - {t: 111, speaker: Varga, line: "It's coming up! Hit the lime in its throat when it opens.", notes: {trigger: "t=111 (the first tell; the arena's clock runs)"}}
+  - {event: boss-phase, phase: Hunting, speaker: Okafor, line: "It's hunting you now, Lancer. Keep moving and mind the pull.", notes: {trigger: "Phase 2 (`boss-phase` Hunting)"}}
+  - {event: boss-phase, phase: Hunting, speaker: Rook, requires: escort, line: "Remember the moles, Lancer? I take it back.", notes: {trigger: "Phase 2, queued after Okafor's line"}}
+  - {event: boss-phase, phase: Breaching anywhere, speaker: Varga, expression: fierce, line: "It's under you! Move when the ground cracks!", notes: {trigger: "Phase 3 (`boss-phase` Breaching anywhere)"}}
+  - {event: boss-destroyed, speaker: The Choir, distorted: true, line: "…many… we are many… we are going…", notes: {trigger: "Colossus destroyed (`boss-destroyed`, the chain's start): the Choir speaks, with its layering on speech"}}
+  - {event: boss-destroyed, speaker: Varga, line: "Commander… that was not singing. Those were words.", notes: {trigger: "After the chain and the flash (`CLOSING`)"}}
+  - {event: boss-destroyed, speaker: Okafor, line: "I heard it, Doctor. Log everything.", notes: {trigger: "Then (`CLOSING`)"}}
+  - {event: boss-destroyed, speaker: Ares Control, portrait: generic-colonial, line: "Clear sky over every dome, Aegis. Dinner's on Ares Landing.", notes: {trigger: "Then (`CLOSING`)"}}
+  - {event: level-end, speaker: Okafor, line: "Mars holds. They're pulling off the planet. Come home, Aegis.", notes: {trigger: "Level end (the closing line, `CLOSING`)"}}
+
+objectives:
+  primary: reach-end   # the arena makes the kill a condition of the level's end
+  secondary: {kill_ratio: 0.65, credits: 100, name: Clear the basin}   # at least 65 % of the level's enemies (the boss and its debris not counted), judged at the end; no radio line (100 in Act 1 terms: pays 256)
+
+music:
+  track: 9            # Act 3 B "Grey Signal" (audio/music track list); Vorne's motif layer stays muted (no `motif`: the Colossus is pure Vrell)
+  start_section: 2    # the rim's wind alone in section 1, the base stem from the inner wall
+  full_section: 3     # the full mix from the dune sea (the ridge pass)
+  ambience: mars-dust   # the Martian dust wind throughout (the calm over the settling dust: step HB)
+  ambience_layers:
+    - {ambience: basin-rumble, from: 64, to: 245, fade_in: 30, fade_out: 1}   # the seismic rumble bed from the ridge pass, swelling through the hollow into the fight; cut at the kill (the clock's jump to t=245)
+  end_jingle: mission-complete
+  boss_warning: boss-warning      # track 22 with the klaxon and the banner at the arena's start (t=105)
+  boss_track: choir-descends      # track 18 after the warning, fading out at the kill; the settling dust without music
+
+ridge: {t: 64, seconds: 8, from: right, to: left, depth: 150}   # presentation (round 43 Q.4 / H.7f): the ridge pass: the Colossus's back surfaces off the right edge at t=64, 150 px below the top edge, its head off the left edge at t=72 across the upper half, hitting nothing (Level 20's ridge sprites)
+
+difficulty: {}  # easy's Needler V-wing at t=61 and hard's centre turret pair and third Wraiths are in their entries; the firing groups' hard counts are in their waves; the formation lever sizes the rest (the Burrower fields one smaller on easy); the stat blocks' hooks apply (the Burrowers', the Dust Devils' pull, the Colossus's easy and hard hooks); the survey crawler's hard 28 HP waits for a trigger's hard key (pending)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-21-hellas-basin, line: "No more running. Every Vrell attack on Mars came out of the Hellas basin, and Doctor Varga thinks she knows why. We go down there and end it. Ares Landing is counting on you, Lancer."}
+    - {speaker: Varga, image: level-21-colossus-scan, line: "The song comes from under the basin floor. It's one organism, the size of a colony. It breaches where the sand bulges, from any side, even behind you. The throat glows lime. Bring side and rear guns."}
+  teaser: {speaker: Rook, line: "Something big under Hellas. Bring side guns, rear guns. Bring all the guns."}
+
+backdrop:
+  # Presentation only: Dust Colossus (tools/art/backdrop_l21.py, from mars-hellas-r36-a, Level 20's style).
+  # The ground is opaque; no deep layer. Seams sit at exact rows: re-render them (`backdrop_l21.py
+  # seam-wall seam-dunes seam-hollow seam-arena`) after the data moves a section. The arena's tile repeats
+  # every 512 px; section 6's starts at the next 512 px seam with seam-settle, and the collapsed crater and
+  # the furrow are laid at the kill: the game's (H.6), declared here without a placed entry.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2}   # far unused (no deep layer), given as the loader asks
+  ramp: 3
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {haze: 0.03}   # section 6, the settling dust: haze only (the heavy dust ramps out)
+    light: {banks: rim-dust, haze: 0.06}   # the rim and the inner wall: dust streaks off the rim
+    medium: {banks: basin-haze, haze: 0.09}   # the dune sea: ochre dust banks
+    heavy: {banks: hollow-dust, haze: 0.12}   # the lime hollow and the arena: dust lit lime from below
+  tile_sets:
+    rim-wall: {layer: ground, height: 960}   # section 1: the basin wall's upper slope, gullies, strata, the retreat's shell craters and scorch
+    inner-wall: {layer: ground, height: 960}   # section 2: the inner wall's terraces, four steps a tile, red sand from the slides on the treads
+    dune-sea: {layer: ground, height: 960}   # section 3: the dune sea, crests across the screen
+    hollow-crust: {layer: ground, height: 960}   # section 4: the lime hollow's crust, cracked in rings round the centre, veins lit lime
+    basin-floor: {layer: ground, height: 512}   # section 5, the arena: the hollow's floor, repeating every 512 px (H.6), lime veins
+    settled-floor: {layer: ground, height: 512}   # section 6: the same floor under fallen dust, from the next 512 px seam (the game's)
+    rim-dust: {layer: low-air, height: 960, drift: 10}   # light: dust streaks off the rim, at most 33 %
+    basin-haze: {layer: low-air, height: 960, drift: 6}   # medium: ochre dust banks, at most 26 %
+    hollow-dust: {layer: low-air, height: 960, drift: 8}   # heavy (the hollow, the arena): denser dust lit lime from below, at most 35 %
+  pieces:
+    rim-line: {layer: ground, size: [480, 960]}   # the start: the plain behind the CDF line, pads, berm and trench, the rim's crest, the slope (exact rows)
+    scorched-pad: {layer: ground, size: [96, 96]}   # a CDF landing pad behind the line, scorched by the last lift-off
+    cdf-gun-pit: {layer: ground, size: [64, 64]}   # an emplacement of the CDF line on the rim (backdrop_l17.gun_pit)
+    burnt-crawler-a: {layer: ground, size: [64, 64]}   # a burnt-out CDF crawler of the retreat
+    burnt-crawler-b: {layer: ground, size: [64, 64]}   # another, turned the other way
+    cdf-walker-wreck: {layer: ground, size: [72, 72]}   # a toppled, burnt-out militia walker
+    seam-wall: {layer: ground, size: [480, 320]}   # section 2's seam: the rim slope onto the inner wall's terraces (exact rows)
+    seam-dunes: {layer: ground, size: [480, 320]}   # section 3's seam: the last terrace onto the dune sea (exact rows)
+    seam-hollow: {layer: ground, size: [480, 320]}   # section 4's seam: the dune sea onto the hollow's crust (exact rows)
+    seam-arena: {layer: ground, size: [480, 320]}   # section 5's seam: the hollow's crust onto the arena's floor (exact rows)
+    seam-settle: {layer: ground, size: [480, 320]}   # section 6's seam, laid by the game at the next 512 px seam with the settled floor (no placed entry)
+    landslide-a: {layer: ground, size: [160, 200]}   # a landslide fan of red sand down the inner wall
+    landslide-b: {layer: ground, size: [128, 160]}   # a smaller landslide fan
+    cdf-hauler-wreck: {layer: ground, size: [176, 120]}   # the CDF hauler's wreck on the inner wall: the t~36 turret nest stands on it (tools/art/l21_props.py)
+    dune-crest: {layer: ground, size: [380, 128]}   # a sharp dune crest across the field: the t~57 mortars on it
+    old-crater-a: {layer: ground, size: [128, 128]}   # an old breach crater filling with sand
+    old-crater-b: {layer: ground, size: [96, 96]}   # a smaller old breach crater
+    sinkhole-a: {layer: ground, size: [112, 112]}   # a sinkhole in the hollow's crust, its throat lit lime from below
+    sinkhole-b: {layer: ground, size: [80, 80]}   # a smaller sinkhole
+    vrell-growth-a: {layer: ground, size: [160, 120]}   # Vrell growth in the hollow
+    vrell-growth-b: {layer: ground, size: [120, 100]}   # Vrell growth, smaller
+    colossus-sinkhole: {layer: ground, size: [224, 224]}   # the collapsed crater, laid by the game at the kill (H.6; no placed entry)
+    colossus-furrow: {layer: ground, size: [96, 96], headings: 16}   # the ridge's sunken furrow, lengths laid by the game along the ridge's last track at the kill (no placed entry)
+    vrell-liftoff: {layer: high-air, size: [40, 120], headings: 2}   # section 6: a Vrell shape climbing out of the frame on its spore trail (scenery)
+  placed:
+    # 1. the start: the CDF line on the rim (exact rows; its bottom below the screen at t=0)
+    - {piece: rim-line, t: 1.0625, x: 240}
+    - {piece: scorched-pad, t: -0.75, x: 110}
+    - {piece: scorched-pad, t: -0.5, x: 360}
+    - {piece: cdf-gun-pit, t: 0.662, x: 52}
+    - {piece: cdf-gun-pit, t: 0.7, x: 168}
+    - {piece: cdf-gun-pit, t: 0.675, x: 318}
+    - {piece: cdf-gun-pit, t: 0.712, x: 432}
+    # 1. the retreat's wrecks down the slope
+    - {piece: burnt-crawler-a, t: 6.4, x: 404}
+    - {piece: burnt-crawler-b, t: 9.8, x: 86}
+    - {piece: cdf-walker-wreck, t: 13.6, x: 300}
+    - {piece: burnt-crawler-a, t: 16.8, x: 150}
+    - {piece: cdf-walker-wreck, t: 19.2, x: 432}
+    - {piece: burnt-crawler-b, t: 21, x: 250}
+    # the section seams (exact rows; re-render them after the data moves a section)
+    - {piece: seam-wall, t: 23.6176, x: 240}
+    - {piece: seam-dunes, t: 51.7333, x: 240}
+    - {piece: seam-hollow, t: 79.8929, x: 240}
+    - {piece: seam-arena, t: 112.5, x: 240}
+    # 2. the inner wall: slides, the hauler's wreck (the turret nest on it), a crawler
+    - {piece: landslide-a, t: 25.4, x: 384}
+    - {piece: landslide-b, t: 29.6, x: 116}
+    - {piece: cdf-hauler-wreck, t: 36, x: 330}
+    - {piece: burnt-crawler-b, t: 39.2, x: 160}
+    - {piece: landslide-b, t: 41.2, x: 300}
+    - {piece: landslide-a, t: 47.6, x: 400}
+    # 3. the dune sea: old breach craters, the mortars' crest
+    - {piece: old-crater-a, t: 53.2, x: 120}
+    - {piece: dune-crest, t: 57, x: 250}
+    - {piece: old-crater-b, t: 61.6, x: 396}
+    - {piece: old-crater-a, t: 70.4, x: 330}
+    - {piece: old-crater-b, t: 75.6, x: 86}
+    # 4. the lime hollow: sinkholes and Vrell growth
+    - {piece: sinkhole-a, t: 81.6, x: 384}
+    - {piece: vrell-growth-a, t: 85, x: 236}
+    - {piece: sinkhole-b, t: 88.4, x: 96}
+    - {piece: sinkhole-a, t: 94.8, x: 300}
+    - {piece: vrell-growth-b, t: 97.2, x: 64}
+    - {piece: sinkhole-b, t: 101.4, x: 420}
+    # 6. the Vrell lifting off far over the basin (high-air, script time from t=245; the game shifts them by the kill's jump, pending HA)
+    - {piece: vrell-liftoff, t: 250.9, x: 120, path: [[248.5, 0, 0], [264.5, 0, 1280]]}
+    - {piece: vrell-liftoff, t: 254.4, x: 350, path: [[252, 0, 0], [268, 0, 1280]]}
+    - {piece: vrell-liftoff, t: 258.9, x: 210, path: [[256.5, 0, 0], [272.5, 0, 1280]]}
+    - {piece: vrell-liftoff, t: 263.4, x: 420, path: [[261, 0, 0], [277, 0, 1280]]}
+    - {piece: vrell-liftoff, t: 268.4, x: 70, path: [[266, 0, 0], [282, 0, 1280]]}
+  # Section tiles (`sections[].tiles`): 1: [rim-wall]; 2: [inner-wall]; 3: [dune-sea]; 4: [hollow-crust]; 5: [basin-floor]; 6: [settled-floor]
+  # Atmospheres: 1, 2 light; 3 medium; 4, 5 heavy; 6 clear.
+  # The survey crawler (t 44, x 80) lies on a tread of inner-wall; the hauler's wreck at t 36, x 330: its deck spots in briefs/l21-art-names.md.

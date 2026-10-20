@@ -155,3 +155,37 @@ white-yellow core → orange → red) are 2D/model frames for the game to place.
   their recesses in a hot red material of their own; ART-F1's open frames read as grey at play size), so the
   0.4 s tell reads; the topple and wreck frames are rendered at the quality bar's 4x like the other sets
   (ART-F1 had them at 2x). Sheet and GIF regenerated.
+
+# Round 44 — production art (M7 part H)
+
+## dust-colossus-final-r44-a
+
+**Production art, pending the user's review** (step ART-H2, 2026-10-20). The chosen round-36 b "Sinkhole
+colony" straight to production: the collar, the lime throat in its two rings of bone teeth, the four bone
+mandibles and the eight violet-tipped palps of `tools/concept/bosses_r36.py` (its polar fold, teeth and
+bone/violet/lime scheme imported unchanged), re-laid to the [Colossus's spec](../dust-colossus/README.md): drawn
+at 72 px per model unit (the collar ~115 px, the ring of teeth and palps ~150 px, the mandibles flung open
+~230 px; their open reach trimmed from the concept's 1.75 units to 1.5 to keep the boss on one atlas page), in
+**five poses**, each its own render: the four edge breaches lean 30° into the field and stand on the body's
+neck, which runs back under the sand toward its edge (its dark back and violet vein ridges show behind the
+collar, sand piled against it at the ground line); under the ship (phase 3) it stands straight up. Per pose
+the rise (two frames, sand sliding off the shut mandibles), the risen shut mouth, half open, open (the gullet
+lit lime), the bite's tell (teeth white-hot, the jaws closing), the snap (clenched past shut) and the dive (two
+frames, sand pouring over the collar into the throat); an additive gullet glow per pose. A mild perspective
+(camera 8 units up) makes what rises read larger. The death (always phase 3's upright mouth) rears up with
+the mandibles flung wide, shudders left and right with lime ichor bursting from the collar, and sinks with
+the mandibles limp under pouring sand (the collapsed crater is Level 21's `colossus-sinkhole` prop). The
+ground pieces are height fields lit like the Colossus ridge (`tools/art/l20_props.py`) in the basin floor's
+sand: the funnel (collapsing, a 3-frame loop of sand sliding in along spiral ridges with violet veins round
+it, refilling) and the crater that stays and scrolls on, the tell's bulge cracking with violet light, phase
+3's 90 px marker (a crack ring round a small bulge); the phase-2 spine vent (40 px: rising, up, venting,
+destroyed); the death's eruptions along the ridge (a dust plume, lime ichor flung out); four debris rocks in
+four tumble steps; the intel's sensor silhouette (`tools/art/intel.py`, the open upright mouth).
+
+- **Brief:** as [dust-colossus-r36-b](#dust-colossus-r36-b) (prompt, negative prompt, palette).
+- **Generator:** `python3 tools/art/dust_colossus.py` (`--review` rebuilds this sheet and GIF from the
+  written frames); the sprite names, frame layout and pivots are in the generator's docstring. The GIF plays
+  a left breach (phase 1: the ridge, the edge warning, the bulge, the rise, rings of 12 with the suction, the
+  bite and the dive), a rear breach with its three spine vents and the debris (phase 2), the marker and the
+  eruption under the ship with the two-arm spiral (phase 3), and the death, the ridge splitting in chained
+  eruptions and the flash, over Level 21's arena floor at 20 px/s (the open phases shortened).

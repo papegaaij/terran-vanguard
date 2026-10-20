@@ -1,0 +1,82 @@
+{
+ "source": "tools/art/dust_colossus.py (production art, M7 part H batch)",
+ "note": "per pose (0 front, 1 left, 2 right, 3 rear, 4 under): px from the mouth's centre (x right, y down); every mouth set (shut, mouth, gullet, death) and the funnel are centred on it",
+ "scale": 72.0,
+ "poses": [
+  "front",
+  "left",
+  "right",
+  "rear",
+  "under"
+ ],
+ "lean": [
+  [
+   0.0,
+   1.0
+  ],
+  [
+   1.0,
+   -0.0
+  ],
+  [
+   -1.0,
+   -0.0
+  ],
+  [
+   0.0,
+   -1.0
+  ],
+  [
+   0.0,
+   0.0
+  ]
+ ],
+ "gullet": [
+  [
+   36.7,
+   31.7
+  ],
+  [
+   36.7,
+   31.7
+  ],
+  [
+   36.7,
+   31.7
+  ],
+  [
+   36.7,
+   31.7
+  ],
+  [
+   35.3,
+   35.3
+  ]
+ ],
+ "gullet_note": "the gullet's semi-axes: across the lean, along it",
+ "neck": [
+  [
+   -0.0,
+   -18.3
+  ],
+  [
+   -18.3,
+   0.0
+  ],
+  [
+   18.3,
+   0.0
+  ],
+  [
+   -0.0,
+   18.3
+  ],
+  [
+   0.0,
+   0.0
+  ]
+ ],
+ "neck_note": "where the body leaves the sand behind a risen mouth: the ridge's head joins there",
+ "collar_radius": 57.6,
+ "funnel_radius": 104.0
+}

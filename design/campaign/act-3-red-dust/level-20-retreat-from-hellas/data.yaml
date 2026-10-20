@@ -368,6 +368,7 @@ music:
   end_jingle: mission-complete
 
 flak: {from: 160, every: 1.5, band: top}   # presentation: the rim guns firing up past the ship, bursts in the top band among the pursuers, hitting nothing (the frigate's flak sound, as Level 17's militia)
+ridge: {t: 12, seconds: 8, from: left, to: right, depth: 70}   # presentation (round 43 Q.4): the Dust Colossus's travelling ridge surfaces off the left edge at t=12, 70 px below the top edge, its head off the right edge 8 s later on a slow S up the strip, the tail gone by t≈27; hitting nothing (Level 21's ridge pass uses the same key)
 
 difficulty: {}  # the pursuit's easy and hard lunges and tells are in the Mote Swarm's hooks; the TOP warnings' easy 4 s are in their waves; hard's extra Wraith pair is its wave (skip); the firing pairs stay pairs on hard (step G4); the formation lever sizes the rest (the swarm 8 / 12 on entry, refills of 2 / 4); the stat blocks' hooks apply (the Burrowers' rings, the Dust Devils' pull and spiral, the Wraiths' hard hold)
 

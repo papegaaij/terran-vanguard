@@ -119,6 +119,38 @@ public final class SetPiece implements Hashed {
 
         /** M7 part F: a walking boss's flame cone starts to burn at its flamer (x, y). */
         default void coneBurn(double x, double y) {}
+
+        /** Round 44: a walking boss's rail lance starts its charge at (x, y). */
+        default void lanceCharge(double x, double y) {}
+
+        /** Round 44: the rail lance fires from (x, y). */
+        default void lanceFire(double x, double y) {}
+
+        /** Round 44: a walking boss braces for a stomp at (x, y). */
+        default void stompTell(double x, double y) {}
+
+        /** Round 44: it stomps at (x, y). */
+        default void stomp(double x, double y) {}
+
+        /**
+         * M7 part H: a breaching boss's cycle event {@code type} ({@link SimEvents.Type#BREACH_TELL}, {@code
+         * BREACH_RISE}, {@code BITE_TELL}, {@code BITE_SNAP}, {@code BREACH_DIVE}) at (x, y) with its {@code value}.
+         */
+        default void breach(SimEvents.Type type, double x, double y, int value) {}
+
+        /**
+         * M7 part H: a breaching boss's jaws snap at (x, y): the ship and Rook within {@code radius} px of it take
+         * {@code damage}; returns what it caught ({@link BreachArena#BITE_SHIP}, {@link BreachArena#BITE_WINGMAN} bits).
+         */
+        default int bite(double x, double y, double radius, double damage) {
+            return 0;
+        }
+
+        /**
+         * M7 part H, step H3: a breaching boss tears a rock of {@code rocks} loose toward its mouth at (mouthX,
+         * mouthY) ({@link PulledDebris#tear}).
+         */
+        default void tearLoose(PulledDebris rocks, double mouthX, double mouthY) {}
     }
 
     /** How a boss moves now (design/enemies/bosses, the poses of part G). */
@@ -162,6 +194,9 @@ public final class SetPiece implements Hashed {
     // A boss's state; the arrays are empty for a set piece flying passes.
     private final BossSpec boss;
     private final double maxHp;
+    /** The parts out of the boss bar: the fire-only ones (M7 part H: and a breaching boss's spine vents). */
+    private final boolean[] outOfBar;
+
     private final int[] partChain;
     private final int[] exposedFrom;
     private final int[] chainStart;
@@ -303,8 +338,17 @@ public final class SetPiece implements Hashed {
     private final StrideArena stride;
     /** {@link #stride} for the presentation, made once. */
     private final java.util.Optional<StrideArena> strideView;
+    /** M7 part H: a breaching boss's breach cycle, ridge and suction; null for any other. */
+    private final BreachArena breach;
+    /** {@link #breach} for the presentation, made once. */
+    private final java.util.Optional<BreachArena> breachView;
     /** M7 part F: per part, the steps its hatch stays open (its homing salvo's tell and the salvo); 0 shut. */
     private final int[] hatchTicks;
+    /**
+     * Round 44 (the user in round 43, W.a): per part, whether it takes damage only while its hatch is open (a walking
+     * boss with {@link BossSpec.Stride#hatchArmour()}: the parts that fire a homing attack, the pods); null for none.
+     */
+    private final boolean[] hatchArmoured;
 
     /** M5 part H: a sweep's beam hit the ship ({@link #sweepHit}). */
     static final int SWEPT_SHIP = 1;
@@ -327,9 +371,18 @@ public final class SetPiece implements Hashed {
                 armoured[p] = true;
             }
         }
+        outOfBar = armoured.clone();
+        if (boss != null && boss.vents().isPresent()) {
+            // M7 part H, step H3: the spine vents are out of the bar.
+            for (int p : boss.vents().get().parts()) {
+                if (p < parts) {
+                    outOfBar[p] = true;
+                }
+            }
+        }
         double hp = 0;
         for (int p = 0; p < parts; p++) {
-            hp += armoured[p] ? 0 : spec.parts().get(p).hp();
+            hp += outOfBar[p] ? 0 : spec.parts().get(p).hp();
         }
         maxHp = hp;
         partChain = new int[parts];
@@ -411,7 +464,10 @@ public final class SetPiece implements Hashed {
         arenaView = java.util.Optional.ofNullable(arena);
         stride = boss != null && boss.stride().isPresent() ? new StrideArena(this, boss, spec) : null;
         strideView = java.util.Optional.ofNullable(stride);
+        breach = boss != null && boss.breach().isPresent() ? new BreachArena(this, boss, spec) : null;
+        breachView = java.util.Optional.ofNullable(breach);
         hatchTicks = new int[parts];
+        hatchArmoured = stride != null && boss.stride().get().hatchArmour() ? hatchArmoured(boss, parts) : null;
         boolean moves = false;
         boolean sweeping = false;
         for (int f = 0; f < phases; f++) {
@@ -521,6 +577,12 @@ public final class SetPiece implements Hashed {
                 stride.reset();
                 x = prevX = stride.x();
                 y = prevY = stride.y();
+            }
+            if (breach != null) {
+                // M7 part H: buried above the top edge until it arrives.
+                breach.reset();
+                x = prevX = breach.mouthX();
+                y = prevY = breach.mouthY();
             }
             placeChains();
         }
@@ -710,6 +772,10 @@ public final class SetPiece implements Hashed {
             return;
         }
         prevAltitude = altitude;
+        if (breach != null) {
+            moveBreach(levelTick);
+            return;
+        }
         if (stride != null) {
             moveStride(levelTick);
             return;
@@ -825,6 +891,46 @@ public final class SetPiece implements Hashed {
             swayTicks = 0;
             engaged = true;
             startPhase();
+        }
+    }
+
+    /**
+     * M7 part H: a breaching boss arrives on its time (the bar), buried; its cycle runs on the real steps ({@link
+     * BreachArena}) and it engages when its intro is over (its first tell); its centre is its mouth's.
+     */
+    private void moveBreach(int levelTick) {
+        if (bossTicks < 0) {
+            if (levelTick < SimStep.ticks(boss.arriveSeconds())) {
+                return;
+            }
+            present = true;
+            layer = boss.layer();
+            onPlane = layer.collidesWithPlayer();
+            altitude = prevAltitude = 0;
+            breach.arrive();
+        } else {
+            breach.step(phase);
+        }
+        x = breach.mouthX();
+        y = breach.mouthY();
+        if (poseDx.length == BreachArena.POSES) {
+            // Its data's poses, one per breach point in the poses' order: the mouth's part layout at the point.
+            pose = fromPose = breach.pose().ordinal();
+        }
+        bossTicks++;
+        if (swayTicks >= 0) {
+            swayTicks++;
+        } else if (breach.engages()) {
+            swayTicks = 0;
+            engaged = true;
+            startPhase();
+        }
+    }
+
+    /** M7 part H: the breaching boss reads where the ship is before it moves (its next point may follow it). */
+    void breachTargets(double shipX, double shipY) {
+        if (breach != null) {
+            breach.targets(shipX, shipY);
         }
     }
 
@@ -967,6 +1073,18 @@ public final class SetPiece implements Hashed {
             }
         }
         BossSpec.Phase current = boss.phases().get(phase);
+        if (breach != null) {
+            // M7 part H: the breach's events and bite, then the phase's attacks from the open mouth.
+            breach.act(actions, firing);
+            breachAttacks(current, actions, firing);
+            if (current.windows().isPresent()) {
+                windows(current.windows().get(), shipX, shipY, actions, firing);
+            }
+            if (current.stream().isPresent()) {
+                stream(current.stream().get(), actions, firing);
+            }
+            return;
+        }
         if (stride != null) {
             // M7 part F: the flame cone and the vents after the walk.
             stride.act(phase, actions, firing);
@@ -996,6 +1114,45 @@ public final class SetPiece implements Hashed {
         }
         if (current.stream().isPresent()) {
             stream(current.stream().get(), actions, firing);
+        }
+    }
+
+    /**
+     * M7 part H: while the mouth is open the phase's first attack fires on the breach's ring times and its other
+     * attacks half an interval after each (a spiral among them runs on its own clock while the mouth is open).
+     */
+    private void breachAttacks(BossSpec.Phase current, BossActions actions, boolean firing) {
+        int fires = breach.fires();
+        boolean first = true;
+        for (int i = 0; i < current.attacks().size(); i++) {
+            int a = current.attacks().get(i);
+            if (boss.attacks().get(a).pattern() == BossSpec.Pattern.SPIRAL) {
+                // Step H3: from the glow's end while open, its first bullets at once.
+                if (breach.spiralStarts()) {
+                    spiralTicks[a] = 1;
+                }
+                if (breach.spiralling()) {
+                    runAttack(a, current, actions, firing);
+                }
+            } else if (breach.timed(a)) {
+                if ((fires & (first ? BreachArena.RING : BreachArena.OTHERS)) != 0) {
+                    volley(a, current, actions, firing);
+                }
+                first = false;
+            }
+        }
+        int burst = breach.ventBurst();
+        if (burst >= 0) {
+            // Step H3: the risen spine vents' aimed burst on its own clock while the mouth is open.
+            if (breach.opened()) {
+                attackTicks[burst] = SimStep.ticks(BreachArena.VENT_FIRST_SECONDS) + 1;
+                attackBurstLeft[burst] = 0;
+            }
+            if (breach.ventsFiring()) {
+                runAttack(burst, current, actions, firing);
+            } else {
+                attackBurstLeft[burst] = 0;
+            }
         }
     }
 
@@ -1037,7 +1194,10 @@ public final class SetPiece implements Hashed {
             return;
         }
         BossSpec.PhaseArena keys = boss.phases().get(phase).arena();
-        if (keys.drop().isPresent()) {
+        if (keys.drop().isPresent() && breach != null) {
+            // M7 part H, step H3: in the open field, not at the (maybe buried, edge) mouth.
+            actions.drop(keys.drop().get(), breach.dropX(), breach.dropY());
+        } else if (keys.drop().isPresent()) {
             int p = keys.surface().isPresent() ? keys.surface().get().part() : -1;
             actions.drop(keys.drop().get(), p < 0 ? x : partX(p), p < 0 ? y : partY(p));
         }
@@ -1447,6 +1607,10 @@ public final class SetPiece implements Hashed {
     }
 
     private void fireFrom(int a, int p, BossSpec.Attack attack, BossActions actions) {
+        if (breach != null && !arena.layer(p).touchable()) {
+            // M7 part H, step H3: a breaching boss fires from no buried part (a sunk spine vent).
+            return;
+        }
         if (stride != null && !partOnField(p)) {
             // M7 part F: a walking boss fires only from parts on the screen.
             return;
@@ -1740,7 +1904,35 @@ public final class SetPiece implements Hashed {
         if (!engaged || moveTicks >= 0 || armoured[p] || phase < exposedFrom[p]) {
             return true;
         }
+        if (breach != null && !arena.layer(p).touchable()) {
+            // M7 part H: a breaching boss's buried mouth: nothing touches it (the Lance and the Smart Bomb included).
+            return true;
+        }
+        if (hatchArmoured != null && hatchArmoured[p] && hatchTicks[p] == 0 && !stride.overheating()) {
+            // Round 44: a walking boss's pod is armoured while its hatch is shut (until it overheats).
+            return true;
+        }
         return windowed[phase][p] && openTicks[p] == 0;
+    }
+
+    /** Round 44: the parts that fire a homing attack (a walking boss's pods). */
+    private static boolean[] hatchArmoured(BossSpec boss, int parts) {
+        boolean[] out = new boolean[parts];
+        for (BossSpec.Attack attack : boss.attacks()) {
+            if (attack.gun().homing().isPresent()) {
+                for (int p : attack.parts()) {
+                    if (p >= 0 && p < parts) {
+                        out[p] = true;
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
+    /** Round 44: whether part {@code p} takes damage only while its hatch is open (a walking boss's pod). */
+    public boolean partHatchArmoured(int p) {
+        return hatchArmoured != null && hatchArmoured[p];
     }
 
     /** Whether part {@code p} is fire-only: it fires, never takes damage, is not in the bar and pays nothing. */
@@ -1965,6 +2157,13 @@ public final class SetPiece implements Hashed {
         }
         partTicksSinceHit[p] = 0;
         boolean alive = partHp[p] > 0;
+        if (breach != null) {
+            // M7 part H: the gullet's weak spots while the mouth is open.
+            partHp[p] -= amount
+                    * breach.multiplier(
+                            p, hx, hy, dirX, dirY, spec.parts().get(p).multiplier());
+            return alive && partHp[p] <= 0;
+        }
         if (stride != null) {
             // M7 part F: the vents, turned with the heading, open after each burn.
             partHp[p] -= amount
@@ -2023,6 +2222,10 @@ public final class SetPiece implements Hashed {
         if (stride != null) {
             // M7 part F: its cone goes cold as it topples.
             stride.died();
+        }
+        if (breach != null) {
+            // M7 part H: no suction, no bite.
+            breach.died();
         }
     }
 
@@ -2109,6 +2312,10 @@ public final class SetPiece implements Hashed {
                     hash.add(stay ? 1 : 0);
                 }
             }
+            if (breach != null) {
+                // M7 part H: only a breaching boss (Level 21) hashes these.
+                breach.addTo(hash);
+            }
             if (stride != null) {
                 // M7 part F: only a walking boss (Level 19) hashes these.
                 stride.addTo(hash);
@@ -2174,6 +2381,11 @@ public final class SetPiece implements Hashed {
     /** M7 part F: a walking boss's passes, plate, vents and flame cone; empty for any other. */
     public java.util.Optional<StrideArena> stride() {
         return strideView;
+    }
+
+    /** M7 part H: a breaching boss's breach cycle, ridge and suction; empty for any other. */
+    public java.util.Optional<BreachArena> breach() {
+        return breachView;
     }
 
     /**
@@ -2300,7 +2512,7 @@ public final class SetPiece implements Hashed {
     public double barShare() {
         double left = 0;
         for (int p = 0; p < partHp.length; p++) {
-            left += armoured[p] ? 0 : Math.max(0, partHp[p]);
+            left += outOfBar[p] ? 0 : Math.max(0, partHp[p]);
         }
         return left / maxHp;
     }
@@ -2396,6 +2608,10 @@ public final class SetPiece implements Hashed {
             // M7 part F: a walking boss's offsets turn with its heading.
             return stride.turnX(poseDx[pose][p], poseDy[pose][p]);
         }
+        if (breach != null && breach.ventOf(p) >= 0) {
+            // M7 part H, step H3: a spine vent where it rose along the ridge.
+            return breach.ventX(breach.ventOf(p)) - x;
+        }
         if (boss != null) {
             return poseDx[pose][p] * scale();
         }
@@ -2413,6 +2629,9 @@ public final class SetPiece implements Hashed {
         }
         if (stride != null) {
             return stride.turnY(poseDx[pose][p], poseDy[pose][p]);
+        }
+        if (breach != null && breach.ventOf(p) >= 0) {
+            return breach.ventY(breach.ventOf(p)) - y;
         }
         if (boss != null) {
             return poseDy[pose][p] * scale();

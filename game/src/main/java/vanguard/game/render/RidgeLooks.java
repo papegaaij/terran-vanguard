@@ -4,29 +4,25 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
-import java.util.List;
-import java.util.OptionalDouble;
 import vanguard.content.LevelData;
 import vanguard.sim.PlayField;
 
 /**
- * M7 part G, Level 20's travelling ridge (design/campaign Level 20, Layout, section 1: "from t≈12 a travelling ridge
- * (≈ 900 px, the Dust Colossus's body, scenery) crosses the floor near the top edge, dunes heaving"; the sprites of
- * tools/art/l20_props.py, shared with Level 21's boss body): presentation only, nothing hits it. The head surfaces at
- * the left edge near the top at the start of the level's {@code basin-rumble} ambience layer (the ridge's rumble; the
- * data has no key of the ridge's own) and runs ahead of the strike on its own track under the sand, a slow S up the
- * strip and across the field (the review GIF's path, made the game's); the body is the last {@value #LENGTH} px of the
- * head's track, so it slides along the track, which lies on the ground and scrolls with it, both ways. Drawn on the
- * ground layer, back to front: the tail where the track ends, a length every {@value #SPACING} px with the track's
- * heading there, the head at the front; the crest cracks' lime glow over each length, its alpha pulsing; a sand slide
- * puffing off a flank at the middle. It leaves by the right edge, the tail last, about {@value #END_SECONDS} s after
- * it surfaced. On the level clock and the ground scroll, so a restart or {@code --debug-speed} keeps in step; nothing
- * is allocated per frame.
+ * M7 part G, the Dust Colossus's travelling ridge (design/campaign Level 20, Layout, section 1: "from t≈12 a travelling
+ * ridge (≈ 900 px, the Dust Colossus's body, scenery) crosses the floor near the top edge, dunes heaving"; Level 21's
+ * ridge pass; the sprites of tools/art/l20_props.py): presentation only, nothing hits it. The level's {@code ridge} key
+ * places the pass (round 43 Q.4: its own key, no longer the start of the {@code basin-rumble} ambience layer): the head
+ * surfaces off its {@code from} edge at its {@code t}, {@code depth} px below the top edge, and runs on its own track
+ * under the sand, a slow S up the strip and across the field (the review GIF's path, made the game's), to off its
+ * {@code to} edge {@code seconds} s later; the body is the last {@value #LENGTH} px of the head's track, so it slides
+ * along the track, which lies on the ground and scrolls with it, both ways. Drawn on the ground layer, back to front:
+ * the tail where the track ends, a length every {@value #SPACING} px with the track's heading there, the head at the
+ * front; the crest cracks' lime glow over each length, its alpha pulsing; a sand slide puffing off a flank at the
+ * middle. It leaves by the {@code to} edge, the tail last, {@value #TAIL_SECONDS} s after the head. On the level clock
+ * and the ground scroll, so a restart or {@code --debug-speed} keeps in step; nothing is allocated per frame.
  */
 public final class RidgeLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
-    /** The ambience layer whose start the ridge surfaces at (vanguard.pipeline.SpriteUse claims its sprites with it). */
-    public static final String LAYER = "basin-rumble";
     /** The sprite root: lengths, {@code -head}, {@code -tail}, {@code -glow}, {@code -dust}. */
     public static final String ROOT = "colossus-ridge";
     /** The body's length along its track, px. */
@@ -37,8 +33,18 @@ public final class RidgeLooks {
     static final int MAX_POINTS = (int) (LENGTH / SPACING) + 1;
     /** The headings of the ridge's sprites: k × 22.5° clockwise from straight down. */
     static final int HEADINGS = 16;
-    /** After this long the tail is past the right edge: nothing more to draw. */
-    static final double END_SECONDS = 15;
+    /** This long after the head is off the far edge its tail is too (≈ the body's length at the track's speed). */
+    static final double TAIL_SECONDS = 7;
+    /** How far off the side edge the head surfaces and leaves, px. */
+    static final double MARGIN = 40;
+    /** The head's run up the strip, px/s of ground rows (a little slower than Level 20's strike at 140). */
+    static final double RUN = 124;
+    /** The track's S: across, its amplitude (px) and period (s per radian); up the strip, the same. */
+    static final double SWAY = 30;
+
+    static final double SWAY_PERIOD = 1.3;
+    static final double SURGE = 60;
+    static final double SURGE_PERIOD = 1.6;
     /** The track's sampling step while walking it back from the head, s of the head's run. */
     static final double SAMPLE_SECONDS = 0.01;
     /** The dust puffs' frame rate, and the glow's pulse (radians a second) and its range. */
@@ -49,6 +55,14 @@ public final class RidgeLooks {
     static final float PULSE_HIGH = 1f;
 
     private final double start;
+    /** The head's crossing time, s: from off the {@code from} edge to off the {@code to} edge. */
+    private final double crossing;
+    /** The head's mean speed across, px/s. */
+    private final double across;
+    /** Whether the head runs from the right edge to the left. */
+    private final boolean leftward;
+    /** Where the head surfaces, px above the bottom edge. */
+    private final double surface;
     /** The ground scroll at {@link #start}: the track's rows count from the bottom edge then. */
     private final double startScroll;
 
@@ -64,9 +78,9 @@ public final class RidgeLooks {
     private final int[] headings = new int[MAX_POINTS];
     private int points;
 
-    private RidgeLooks(Sprites sprites, double start, double startScroll) {
+    private RidgeLooks(Sprites sprites, LevelData.Ridge ridge, double startScroll) {
         this(
-                start,
+                ridge,
                 startScroll,
                 sprites.frames(ROOT),
                 optional(sprites, ROOT + "-head", sprites.frames(ROOT)),
@@ -76,14 +90,18 @@ public final class RidgeLooks {
     }
 
     private RidgeLooks(
-            double start,
+            LevelData.Ridge ridge,
             double startScroll,
             Array<AtlasRegion> lengths,
             Array<AtlasRegion> heads,
             Array<AtlasRegion> tails,
             Array<AtlasRegion> glows,
             Array<AtlasRegion> dust) {
-        this.start = start;
+        this.start = ridge.t();
+        this.crossing = ridge.seconds();
+        this.across = (PlayField.WIDTH + 2 * MARGIN) / ridge.seconds();
+        this.leftward = ridge.leftward();
+        this.surface = PlayField.HEIGHT - ridge.depth();
         this.startScroll = startScroll;
         this.lengths = lengths;
         this.heads = heads;
@@ -92,53 +110,48 @@ public final class RidgeLooks {
         this.dust = dust;
     }
 
-    /** The ridge's track alone (no sprites), surfacing at {@code start} with the ground at {@code startScroll}: for the tests. */
-    static RidgeLooks track(double start, double startScroll) {
+    /** The ridge's track alone (no sprites), its pass {@code ridge} with the ground at {@code startScroll}: for the tests. */
+    static RidgeLooks track(LevelData.Ridge ridge, double startScroll) {
         Array<AtlasRegion> none = new Array<>(0);
-        return new RidgeLooks(start, startScroll, none, none, none, none, none);
+        return new RidgeLooks(ridge, startScroll, none, none, none, none, none);
     }
 
-    /** The level's ridge, or null for a level without the {@link #LAYER} ambience layer (or without the sprites). */
+    /** The level's ridge, or null for a level without a {@code ridge} key (or without the sprites). */
     static RidgeLooks of(Sprites sprites, LevelData level) {
-        if (!sprites.has(ROOT) || sprites.frames(ROOT).size < HEADINGS) {
+        if (level.ridge().isEmpty() || !sprites.has(ROOT) || sprites.frames(ROOT).size < HEADINGS) {
             return null;
         }
-        OptionalDouble start = start(level);
-        return start.isPresent()
-                ? new RidgeLooks(sprites, start.getAsDouble(), level.scrollAt(start.getAsDouble()))
-                : null;
-    }
-
-    /** When the ridge surfaces: the start of the level's {@link #LAYER} ambience layer, if it has one. */
-    static OptionalDouble start(LevelData level) {
-        return level.music().ambienceLayers().orElse(List.of()).stream()
-                .filter(layer -> layer.ambience().equals(LAYER))
-                .mapToDouble(LevelData.Music.AmbienceLayer::from)
-                .findFirst();
+        LevelData.Ridge ridge = level.ridge().get();
+        return new RidgeLooks(sprites, ridge, level.scrollAt(ridge.t()));
     }
 
     private static Array<AtlasRegion> optional(Sprites sprites, String name, Array<AtlasRegion> fallback) {
         return sprites.has(name) ? sprites.frames(name) : fallback;
     }
 
-    /** The head's x on the play field {@code u} s after it surfaced: from off the left edge across, a slow S. */
-    static double headX(double u) {
-        return -40 + 70 * u + 30 * Math.sin(u / 1.3);
+    /**
+     * The head's x on the play field {@code u} s after it surfaced: from off the {@code from} edge across to off the
+     * {@code to} edge in the crossing time, a slow S (Level 20's: {@code -40 + 70u + 30 sin(u / 1.3)}).
+     */
+    double headX(double u) {
+        double along = -MARGIN + across * u + SWAY * Math.sin(u / SWAY_PERIOD);
+        return leftward ? PlayField.WIDTH - along : along;
     }
 
     /**
-     * The head's place on the ground {@code u} s after it surfaced, px above the bottom edge as it was then: near the
-     * top edge, running up the strip at about 124 px/s (a little slower than the strike's 140), a slow S.
+     * The head's place on the ground {@code u} s after it surfaced, px above the bottom edge as it was then: from its
+     * depth below the top edge, running up the strip at {@value #RUN} px/s, a slow S (Level 20's: {@code 470 + 124u -
+     * 60 sin(u / 1.6)}).
      */
-    static double headRow(double u) {
-        return 470 + 124 * u - 60 * Math.sin(u / 1.6);
+    double headRow(double u) {
+        return surface + RUN * u - SURGE * Math.sin(u / SURGE_PERIOD);
     }
 
     /** The head's heading index {@code u} s after it surfaced: its track's direction (k × 22.5° clockwise from down). */
-    static int heading(double u) {
-        double dx = 70 + 30 / 1.3 * Math.cos(u / 1.3);
-        double dy = 124 - 60 / 1.6 * Math.cos(u / 1.6);
-        return heading(dx, dy);
+    int heading(double u) {
+        double dx = across + SWAY / SWAY_PERIOD * Math.cos(u / SWAY_PERIOD);
+        double dy = RUN - SURGE / SURGE_PERIOD * Math.cos(u / SURGE_PERIOD);
+        return heading(leftward ? -dx : dx, dy);
     }
 
     /** The heading index of a direction ({@code dx} right, {@code dy} up): 0 down, 4 left, 8 up, 12 right. */
@@ -147,9 +160,14 @@ public final class RidgeLooks {
         return Math.floorMod((int) Math.round(turn / (2 * Math.PI) * HEADINGS), HEADINGS);
     }
 
-    /** Whether the ridge shows at level time {@code seconds}: from its start until the tail is past the right edge. */
+    /** Whether the ridge shows at level time {@code seconds}: from its start until the tail is past the far edge. */
     boolean shows(double seconds) {
-        return seconds > start && seconds < start + END_SECONDS;
+        return seconds > start && seconds < end();
+    }
+
+    /** The level time the tail is past the far edge: nothing more to draw. */
+    double end() {
+        return start + crossing + TAIL_SECONDS;
     }
 
     /**

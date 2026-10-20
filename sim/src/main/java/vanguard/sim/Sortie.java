@@ -131,6 +131,10 @@ public final class Sortie {
     private final BossCheckpoint checkpoint;
     /** M7 part F: whether a boss walks passes (Level 19's walker): only then are the homing missiles hashed. */
     private final boolean walks;
+    /** M7 part H: the breaching boss (Level 21's Dust Colossus); null without one. */
+    private final SetPiece breachBoss;
+    /** M7 part H: whether the arena crawls ({@link Section#crawls()}): its ground scrolls on while the clock is held. */
+    private final boolean crawling;
 
     /** The boss whose arrival records the checkpoint (the first boss); -1 without one. */
     private final int checkpointBoss;
@@ -298,8 +302,10 @@ public final class Sortie {
         int arenaEnd = -1;
         int arenaStart = -1;
         double arenaSpeedFound = 0;
+        boolean crawls = false;
         for (int i = 0; i < script.sections().size(); i++) {
             if (script.sections().get(i).arena()) {
+                crawls = script.sections().get(i).crawls();
                 arenaStart =
                         i == 0 ? 0 : SimStep.ticks(script.sections().get(i - 1).end());
                 arenaEnd = SimStep.ticks(script.sections().get(i).end());
@@ -309,6 +315,7 @@ public final class Sortie {
         arenaEndTicks = arenaEnd;
         arenaStartTicks = arenaStart;
         arenaSpeed = arenaSpeedFound;
+        crawling = crawls;
         double hold = 0;
         double easeOut = 0;
         for (int i = 0; i < script.sections().size(); i++) {
@@ -330,12 +337,27 @@ public final class Sortie {
         }
         arenaBoss = anchored;
         arenaFromSpeed = anchored == null ? 0 : arenaFromSpeed(script);
-        if (anchored != null) {
+        SetPiece breaching = null;
+        for (SetPiece piece : setPieces) {
+            if (breaching == null && piece.breach().isPresent()) {
+                breaching = piece;
+            }
+        }
+        breachBoss = breaching;
+        if (anchored != null && anchored.breach().isPresent()) {
+            // M7 part H: a breaching boss needs an arena (it may crawl); it is not anchored to the ground.
+            if (arenaStart < 0) {
+                throw new IllegalArgumentException("a breaching boss needs an arena");
+            }
+        } else if (anchored != null) {
             if (arenaStart < 0 || arenaSpeed != 0) {
                 throw new IllegalArgumentException("an anchored boss needs an arena of speed 0");
             }
             anchored.anchorAt(haltScroll(script, arenaFromSpeed)
                     + anchored.boss().orElseThrow().hoverY());
+        }
+        if (crawling && (anchored == null || anchored.breach().isEmpty())) {
+            throw new IllegalArgumentException("only a breaching boss's arena crawls");
         }
         Hitbox laneBox = anchored == null || anchored.arena().orElseThrow().laneCount() == 0
                 ? null
@@ -711,7 +733,10 @@ public final class Sortie {
         if (arenaJump) {
             // The boss died before the arena's end: the next section starts now.
             arenaJump = false;
-            groundScroll += (arenaEndTicks - 1 - levelTick) * arenaSpeed * SimStep.SECONDS;
+            if (!crawling) {
+                groundScroll += (arenaEndTicks - 1 - levelTick) * arenaSpeed * SimStep.SECONDS;
+            }
+            // M7 part H: a crawling arena's jump moves the clock only (the ground crawls on unbroken).
             levelTick = arenaEndTicks - 1;
             tickFraction = 0;
             rampFrom = arenaSpeed;
@@ -724,7 +749,13 @@ public final class Sortie {
         if (postBossHold > 0) {
             postBossHold--;
         }
-        if (held) {
+        if (held && crawling) {
+            // M7 part H: the clock is held, the ground crawls on at the arena's speed (and ramps on from it).
+            scrollStep = arenaSpeed * SimStep.SECONDS;
+            rampFrom = arenaSpeed;
+            rampTicks = 0;
+            clockStep = 0;
+        } else if (held) {
             scrollStep = 0;
             rampFrom = 0;
             rampTicks = 0;
@@ -763,7 +794,14 @@ public final class Sortie {
             double fromY = ship.y();
             // M7 part E: the Dust Devils' pull adds to the wind's push (exactly 0 without a unit with a pull).
             force.pull(fromX, fromY);
-            ship.fly(commands, push + force.pullX(), force.pullY());
+            if (breachBoss != null) {
+                // M7 part H: the breaching boss's suction adds to the wind and the devils' pull.
+                BreachArena breach = breachBoss.breach().orElseThrow();
+                breach.pull(fromX, fromY);
+                ship.fly(commands, push + force.pullX() + breach.pullX(), force.pullY() + breach.pullY());
+            } else {
+                ship.fly(commands, push + force.pullX(), force.pullY());
+            }
             if (ship.dashStarted()) {
                 // M7 part A: the thruster burst and the afterimages, from where the dash started.
                 events.add(SimEvents.Type.DASH, fromX, fromY, ship.dashEighth());
@@ -820,8 +858,8 @@ public final class Sortie {
         }
         bossPasses.flySetPieces();
         edgeWarnings = complete ? 0 : force.warnings(levelTick) | bossPasses.launchWarnings();
-        if (walks && !complete) {
-            // M7 part F: the walker's next entry edge.
+        if ((walks || breachBoss != null) && !complete) {
+            // M7 part F: the walker's next entry edge; M7 part H: the breaching boss's next side or rear point.
             edgeWarnings |= bossPasses.strideWarnings();
         }
         fire.move(scrollStep, force.enemies(), ground);
@@ -1030,6 +1068,11 @@ public final class Sortie {
         } else {
             wingman.lunge(Double.NaN, Double.NaN);
         }
+        if (breachBoss != null) {
+            // M7 part H: the breaching boss's suction pulls him as it pulls the ship.
+            BreachArena breach = breachBoss.breach().orElseThrow();
+            wingman.pull(breach.pullXAt(wingman.x(), wingman.y()), breach.pullYAt(wingman.x(), wingman.y()));
+        }
         wingman.fly(
                 ship.x(),
                 ship.y(),
@@ -1080,6 +1123,14 @@ public final class Sortie {
                 || (arenaStartTicks >= 0
                         && levelTick < arenaEndTicks
                         && levelTick - arenaStartTicks >= SimStep.ticks(ARENA_RAMP_SECONDS) - 1);
+    }
+
+    /**
+     * M7 part H: whether the level's arena crawls ({@link Section#crawls()}): its ground scrolls on at the arena's
+     * speed while the level clock is held, and the kill's jump moves the clock only.
+     */
+    public boolean crawling() {
+        return crawling;
     }
 
     /** Whether the level clock is halted in the arena now (the boss outlived its arena). */
@@ -1185,7 +1236,11 @@ public final class Sortie {
         }
         // M7 part B: a section that eases in from the one before (Level 15's speed changes).
         double speed = eased ? timedHaltSpeed(script.sections(), levelTick) : sectionSpeed();
-        if (arenaBoss != null && rampTicks < 0 && levelTick >= arenaStartTicks && levelTick < arenaEndTicks) {
+        if (arenaBoss != null
+                && !crawling
+                && rampTicks < 0
+                && levelTick >= arenaStartTicks
+                && levelTick < arenaEndTicks) {
             // M5 part E: into an arena of speed 0 the scroll eases to a halt over the ramp.
             int n = SimStep.ticks(ARENA_RAMP_SECONDS);
             speed = arenaFromSpeed * Math.max(0, n - 1 - (levelTick - arenaStartTicks)) / n;
@@ -1230,7 +1285,7 @@ public final class Sortie {
      * top one (behind) leaving him in Wing.
      */
     private int wingmanEdges() {
-        int edges = walks ? force.activeEdges() | bossPasses.strideRear() : force.activeEdges();
+        int edges = walks || breachBoss != null ? force.activeEdges() | bossPasses.strideRear() : force.activeEdges();
         return travel < 0 ? edges & ~WarningEdge.BOTTOM.bit() : edges;
     }
 

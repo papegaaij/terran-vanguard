@@ -389,8 +389,9 @@ def travelled(level, i, a, b):
     if speed and i > 0 and timed_halt(secs[i - 1]):
         ramp = min(secs[i - 1].get("ramp", 2), s["end"] - start)
         px -= speed * ramp * (ease_out(u(b, start, ramp)) - ease_out(u(a, start, ramp)))
-    elif speed and i > 0 and not timed_halt(s) and not s.get("arena") and s.get("ramp"):
-        # M7 part B: a moving section's ramp eases from the speed before it over its first `ramp` s
+    elif speed and i > 0 and not timed_halt(s) and (not s.get("arena") or s.get("speed")) and s.get("ramp"):
+        # M7 part B: a moving section's ramp eases from the speed before it over its first `ramp` s; M7 part H: a
+        # moving (crawling) arena's too (Level 21's 140 -> 20 over 2 s)
         ramp = min(s["ramp"], s["end"] - start)
         before = secs[i - 1].get("speed", level["scroll_speed"])
         px -= (speed - before) * ramp * (ease_out(u(b, start, ramp)) - ease_out(u(a, start, ramp)))

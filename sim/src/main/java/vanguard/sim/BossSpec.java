@@ -49,6 +49,14 @@ import java.util.Optional;
  * @param plate M7 part F: a walking boss's front plate, which turns every shot and the beam on its heading side;
  *     empty for none
  * @param cone M7 part F: a walking boss's rear flame cone; empty for none
+ * @param breach M7 part H (design/enemies/bosses/dust-colossus): a breaching arena boss's breach cycle ({@link
+ *     BreachArena}); empty for every other boss. It needs an {@code arena} without lanes (its part layers and its
+ *     weak spots: the gullet)
+ * @param suction M7 part H: a breaching boss's suction toward its open mouth; empty for none
+ * @param vents M7 part H, step H3: a breaching boss's spine vents, raised with its breaches; empty for none
+ * @param eruption M7 part H, step H3: a breaching boss's eruption at its under points (the marker); empty: an under
+ *     point runs the normal cycle
+ * @param debris M7 part H, step H3: the rocks a breaching boss tears loose toward its open mouth; empty for none
  */
 public record BossSpec(
         double arriveSeconds,
@@ -72,7 +80,12 @@ public record BossSpec(
         double incomingSeconds,
         Optional<Stride> stride,
         Optional<Plate> plate,
-        Optional<Cone> cone) {
+        Optional<Cone> cone,
+        Optional<Breach> breach,
+        Optional<Suction> suction,
+        Optional<Vents> vents,
+        Optional<Eruption> eruption,
+        Optional<DebrisFlow> debris) {
     /** The beat a later phase holds its fire by default in the data (the frigate's crown opening), s. */
     public static final double PHASE_DELAY_SECONDS = 1;
     /** How much larger a unit is drawn on {@code high-air} than on the play plane; a boss's part offsets grow with it. */
@@ -112,6 +125,141 @@ public record BossSpec(
         if (stride.isEmpty() && (plate.isPresent() || cone.isPresent())) {
             throw new IllegalArgumentException(barName + ": only a walking boss has a front plate or a flame cone");
         }
+        if (breach.isPresent()
+                && (arena.isEmpty()
+                        || arena.get().lanes().count() > 0
+                        || stride.isPresent()
+                        || phases.stream().anyMatch(phase -> phase.move().isPresent()))) {
+            throw new IllegalArgumentException(
+                    barName + ": a breaching boss has an arena without lanes, no stride and no phase moves");
+        }
+        if (suction.isPresent() && breach.isEmpty()) {
+            throw new IllegalArgumentException(barName + ": only a breaching boss sucks toward its mouth");
+        }
+        if ((vents.isPresent() || eruption.isPresent() || debris.isPresent()) && breach.isEmpty()) {
+            throw new IllegalArgumentException(
+                    barName + ": only a breaching boss has spine vents, an eruption or debris");
+        }
+        if (vents.isPresent()) {
+            Vents v = vents.get();
+            if (v.burst() >= attacks.size() || attacks.get(v.burst()).pattern() == Pattern.SPIRAL) {
+                throw new IllegalArgumentException(
+                        barName + ": the spine vents' burst is one of its attacks, no spiral");
+            }
+            List<Layer> layers = arena.orElseThrow().partLayers();
+            for (int p : v.parts()) {
+                if (p < layers.size() && layers.get(p) != Layer.BURIED) {
+                    throw new IllegalArgumentException(barName + ": a spine vent starts buried");
+                }
+            }
+        }
+    }
+
+    /** Without step H3's spine vents, eruption and debris (M7 part H, step H1). */
+    public BossSpec(
+            double arriveSeconds,
+            double x,
+            double hoverY,
+            double descentSpeed,
+            double sineAmplitude,
+            double sinePeriod,
+            Layer layer,
+            boolean midBoss,
+            String barName,
+            double parSeconds,
+            List<Chain> chains,
+            List<Attack> attacks,
+            List<Phase> phases,
+            boolean engagesOnArrival,
+            List<Integer> armoured,
+            List<Pose> poses,
+            double deathSeconds,
+            Optional<Arena> arena,
+            double incomingSeconds,
+            Optional<Stride> stride,
+            Optional<Plate> plate,
+            Optional<Cone> cone,
+            Optional<Breach> breach,
+            Optional<Suction> suction) {
+        this(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                suction,
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /** Without M7 part H's breach and suction (every boss before the Dust Colossus). */
+    public BossSpec(
+            double arriveSeconds,
+            double x,
+            double hoverY,
+            double descentSpeed,
+            double sineAmplitude,
+            double sinePeriod,
+            Layer layer,
+            boolean midBoss,
+            String barName,
+            double parSeconds,
+            List<Chain> chains,
+            List<Attack> attacks,
+            List<Phase> phases,
+            boolean engagesOnArrival,
+            List<Integer> armoured,
+            List<Pose> poses,
+            double deathSeconds,
+            Optional<Arena> arena,
+            double incomingSeconds,
+            Optional<Stride> stride,
+            Optional<Plate> plate,
+            Optional<Cone> cone) {
+        this(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                Optional.empty(),
+                Optional.empty());
     }
 
     /** Without M7 part F's stride, plate and cone (every boss before the Revenant Walker). */
@@ -226,7 +374,12 @@ public record BossSpec(
                 seconds,
                 stride,
                 plate,
-                cone);
+                cone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                debris);
     }
 
     /** M7 part F: this boss walking {@code withStride}'s passes (an arena boss without lanes); empty: none. */
@@ -253,7 +406,12 @@ public record BossSpec(
                 incomingSeconds,
                 withStride,
                 plate,
-                cone);
+                cone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                debris);
     }
 
     /** M7 part F: this walking boss with {@code withPlate} as its front plate; empty: none. */
@@ -280,7 +438,12 @@ public record BossSpec(
                 incomingSeconds,
                 stride,
                 withPlate,
-                cone);
+                cone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                debris);
     }
 
     /** M7 part F: this walking boss with {@code withCone} as its rear flame cone; empty: none. */
@@ -307,7 +470,177 @@ public record BossSpec(
                 incomingSeconds,
                 stride,
                 plate,
-                withCone);
+                withCone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                debris);
+    }
+
+    /** M7 part H: this boss breaching by {@code withBreach}'s cycle (an arena boss without lanes); empty: none. */
+    public BossSpec withBreach(Optional<Breach> withBreach) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                withBreach,
+                suction,
+                vents,
+                eruption,
+                debris);
+    }
+
+    /** M7 part H: this breaching boss with {@code withSuction} toward its open mouth; empty: none. */
+    public BossSpec withSuction(Optional<Suction> withSuction) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                withSuction,
+                vents,
+                eruption,
+                debris);
+    }
+
+    /** M7 part H, step H3: this breaching boss raising {@code withVents} with its breaches; empty: none. */
+    public BossSpec withVents(Optional<Vents> withVents) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                suction,
+                withVents,
+                eruption,
+                debris);
+    }
+
+    /** M7 part H, step H3: this breaching boss erupting under the ship at its under points; empty: none. */
+    public BossSpec withEruption(Optional<Eruption> withEruption) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                suction,
+                vents,
+                withEruption,
+                debris);
+    }
+
+    /** M7 part H, step H3: this breaching boss tearing debris loose toward its open mouth; empty: none. */
+    public BossSpec withDebris(Optional<DebrisFlow> withDebris) {
+        return new BossSpec(
+                arriveSeconds,
+                x,
+                hoverY,
+                descentSpeed,
+                sineAmplitude,
+                sinePeriod,
+                layer,
+                midBoss,
+                barName,
+                parSeconds,
+                chains,
+                attacks,
+                phases,
+                engagesOnArrival,
+                armoured,
+                poses,
+                deathSeconds,
+                arena,
+                incomingSeconds,
+                stride,
+                plate,
+                cone,
+                breach,
+                suction,
+                vents,
+                eruption,
+                withDebris);
+    }
+
+    /** M7 part H: whether it breaches ({@link BreachArena}): the Dust Colossus. */
+    public boolean breaches() {
+        return breach.isPresent();
     }
 
     /** M7 part F: whether it walks passes ({@link StrideArena}): the Revenant Walker. */
@@ -1115,6 +1448,11 @@ public record BossSpec(
      * arena but turns round on the spot at a pass's end over {@code turnSeconds} (its flame cone, after its tell,
      * burning through the turn) and walks back in the ship's lane.
      *
+     * <p>Round 44 (the user in round 43, W.a/W.e): {@code hatchArmour}: a part that fires a homing attack (a pod)
+     * takes damage only while its hatch is open (its salvo's tell and the salvo), shut it is armoured like the front
+     * plate, until its overheating last phase (the hatches jam open as the vents do); {@code lance}: its back-mounted rail lance ({@link Lance}); {@code stomp}: its stomp shockwave ({@link
+     * Stomp}).
+     *
      * <p>The arrays are the record's own (not copied on access): do not change them.
      *
      * @param edgeCycle {@link WaveSpec.Edge#TOP}, {@link WaveSpec.Edge#BOTTOM}, {@link WaveSpec.Edge#LEFT} or
@@ -1128,7 +1466,10 @@ public record BossSpec(
             double turnSeconds,
             double[] phaseSpeeds,
             boolean besideLaneFirstPhase,
-            boolean turnInPlaceLastPhase) {
+            boolean turnInPlaceLastPhase,
+            boolean hatchArmour,
+            Optional<Lance> lance,
+            Optional<Stomp> stomp) {
         public Stride {
             laneXs = laneXs.clone();
             laneYs = laneYs.clone();
@@ -1166,9 +1507,112 @@ public record BossSpec(
             }
         }
 
+        /** Without round 44's hatch armour, rail lance and stomp (step F1's walker). */
+        public Stride(
+                double[] laneXs,
+                double[] laneYs,
+                List<WaveSpec.Edge> edgeCycle,
+                double offSeconds,
+                double turnSeconds,
+                double[] phaseSpeeds,
+                boolean besideLaneFirstPhase,
+                boolean turnInPlaceLastPhase) {
+            this(
+                    laneXs,
+                    laneYs,
+                    edgeCycle,
+                    offSeconds,
+                    turnSeconds,
+                    phaseSpeeds,
+                    besideLaneFirstPhase,
+                    turnInPlaceLastPhase,
+                    false,
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
+        /** This stride with round 44's hatch armour, rail lance and stomp. */
+        public Stride withStrikes(boolean armour, Optional<Lance> withLance, Optional<Stomp> withStomp) {
+            return new Stride(
+                    laneXs,
+                    laneYs,
+                    edgeCycle,
+                    offSeconds,
+                    turnSeconds,
+                    phaseSpeeds,
+                    besideLaneFirstPhase,
+                    turnInPlaceLastPhase,
+                    armour,
+                    withLance,
+                    withStomp);
+        }
+
         /** Its speed in phase {@code phase}, px/s (the last one for later phases). */
         public double speed(int phase) {
             return phaseSpeeds[Math.min(phase, phaseSpeeds.length - 1)];
+        }
+    }
+
+    /**
+     * Round 44 (the user in round 43, W.a: "When both missile hatches are destroyed, the walker is mostly toothless"), a
+     * walking boss's back-mounted rail lance ({@link StrideArena}): once every part of {@code afterParts} is destroyed,
+     * or from phase {@code fromPhase} on (0-based; the phase count for never), while it walks on the screen it charges
+     * for {@code chargeSeconds}, a glowing line from its lance ({@code originBehind} px behind its centre) through
+     * where the ship was as the charge began, then fires a line shot along that line for {@code fireSeconds}: {@code
+     * damage} to the ship and to Rook once a shot each where the line, {@code width} px wide, touches them. A charge
+     * starts every {@code intervalSeconds} (charge start to charge start; {@code lastIntervalSeconds} in its last
+     * phase), the first a second after the lance wakes.
+     */
+    public record Lance(
+            List<Integer> afterParts,
+            int fromPhase,
+            double chargeSeconds,
+            double fireSeconds,
+            double intervalSeconds,
+            double lastIntervalSeconds,
+            double width,
+            double damage,
+            double originBehind) {
+        public Lance {
+            afterParts = List.copyOf(afterParts);
+            if (fromPhase < 0
+                    || !(chargeSeconds > 0)
+                    || !(fireSeconds > 0)
+                    || !(intervalSeconds >= chargeSeconds + fireSeconds)
+                    || !(lastIntervalSeconds >= chargeSeconds + fireSeconds)
+                    || !(width > 0)
+                    || !(damage >= 0)
+                    || !Double.isFinite(originBehind)) {
+                throw new IllegalArgumentException(
+                        "a rail lance has a charge, a shot, an interval holding both, a width and a damage");
+            }
+        }
+    }
+
+    /**
+     * Round 44 (the user in round 43, W.e: "stomp shockwave"), a walking boss's stomp ({@link StrideArena}): while it
+     * walks on the screen and the ship or Rook is within {@code reach} px of its centre, at most once per {@code
+     * cooldownSeconds} (tell start to tell start), its legs brace for {@code tellSeconds} (a ring marks the ground),
+     * then it stomps: a ring expands from its centre to {@code radius} px over {@code expandSeconds}, dealing {@code
+     * damage} once a stomp to the ship and to Rook when it reaches them.
+     */
+    public record Stomp(
+            double reach,
+            double radius,
+            double tellSeconds,
+            double expandSeconds,
+            double cooldownSeconds,
+            double damage) {
+        public Stomp {
+            if (!(reach > 0)
+                    || !(radius >= reach)
+                    || !(tellSeconds >= 0)
+                    || !(expandSeconds > 0)
+                    || !(cooldownSeconds >= tellSeconds + expandSeconds)
+                    || !(damage >= 0)) {
+                throw new IllegalArgumentException(
+                        "a stomp has a reach, a ring at least as wide, a tell, an expansion and a cooldown holding both");
+            }
         }
     }
 
@@ -1251,6 +1695,255 @@ public record BossSpec(
                     damage,
                     originBehind,
                     0);
+        }
+    }
+
+    /**
+     * M7 part H (design/enemies/bosses/dust-colossus, Breaches; the user's round 43 answers H.7), a breaching arena
+     * boss's cycle ({@link BreachArena}): its body stays {@code buried}; a mouth (its vital part) breaches at a {@link
+     * BreachArena.Pose point} in turn. A cycle: the <b>tell</b> ({@code tellSeconds}: the bulge at the point), the
+     * <b>rise</b> ({@code riseSeconds}; the mouth's layer {@code buried} → {@code ground} at its middle), <b>open</b>
+     * ({@code openSeconds}: the gullet's weak spots open, the suction runs, the phase's first attack fires {@code
+     * glowSeconds} after the open and then every its interval, the phase's other attacks half an interval after each),
+     * the <b>bite</b> ({@code biteTellSeconds}, then the snap: the ship or Rook within {@code biteRadius} px of the
+     * mouth's centre takes {@code biteDamage}, once), the <b>dive</b> ({@code diveSeconds}; back to {@code buried} at
+     * its middle), then {@code buriedSeconds} from the dive's end to the next rise (the next tell its last {@code
+     * tellSeconds}; at least the tell). A side or rear point is warned at its edge from {@code warnSeconds} before
+     * its rise; the next point is fixed then (a front or under point at its tell). The first tell starts {@code
+     * introSeconds} after the boss arrives.
+     *
+     * <p>{@code points}: the mouth's centre at {@link BreachArena.Pose#FRONT FRONT}, {@code LEFT}, {@code RIGHT} and
+     * {@code REAR}, in that order, in the simulation's frame (px from the left, px up from the bottom edge); {@code
+     * clamps}: per point, in the same order, the range a following phase's point takes the ship's coordinate in (x for
+     * the front and rear, y for the sides); {@code orders}: per boss phase (the last for later ones) the points in
+     * turn and whether they follow the ship. An {@link BreachArena.Pose#UNDER UNDER} point lies on the ship, {@link
+     * BreachArena#UNDER_INSET} px inside the edges at most (step H3's eruption replaces its cycle).
+     */
+    public record Breach(
+            double tellSeconds,
+            double riseSeconds,
+            double openSeconds,
+            double biteTellSeconds,
+            double diveSeconds,
+            double buriedSeconds,
+            double warnSeconds,
+            List<Point> points,
+            List<Clamp> clamps,
+            List<Order> orders,
+            double biteRadius,
+            double biteDamage,
+            double introSeconds,
+            double glowSeconds) {
+        /** The design's lime glow before each ring, s. */
+        public static final double GLOW_SECONDS = 0.5;
+
+        public Breach {
+            points = List.copyOf(points);
+            clamps = List.copyOf(clamps);
+            orders = List.copyOf(orders);
+            if (!(tellSeconds > 0)
+                    || !(riseSeconds > 0)
+                    || !(openSeconds > 0)
+                    || !(biteTellSeconds > 0)
+                    || !(diveSeconds > 0)
+                    || !(buriedSeconds >= 0)
+                    || !(warnSeconds >= 0)
+                    || !(biteRadius >= 0)
+                    || !(biteDamage >= 0)
+                    || !(introSeconds >= 0)
+                    || !(glowSeconds >= 0)) {
+                throw new IllegalArgumentException("a breach has a tell, a rise, an open, a bite and a dive");
+            }
+            if (points.size() != 4 || clamps.size() != 4 || orders.isEmpty()) {
+                throw new IllegalArgumentException("a breach has the four edge points, their clamps and an order");
+            }
+        }
+
+        /** With the design's {@link #GLOW_SECONDS} before each ring. */
+        public Breach(
+                double tellSeconds,
+                double riseSeconds,
+                double openSeconds,
+                double biteTellSeconds,
+                double diveSeconds,
+                double buriedSeconds,
+                double warnSeconds,
+                List<Point> points,
+                List<Clamp> clamps,
+                List<Order> orders,
+                double biteRadius,
+                double biteDamage,
+                double introSeconds) {
+            this(
+                    tellSeconds,
+                    riseSeconds,
+                    openSeconds,
+                    biteTellSeconds,
+                    diveSeconds,
+                    buriedSeconds,
+                    warnSeconds,
+                    points,
+                    clamps,
+                    orders,
+                    biteRadius,
+                    biteDamage,
+                    introSeconds,
+                    GLOW_SECONDS);
+        }
+
+        /** The order of boss phase {@code phase} (the last one for later phases). */
+        public Order order(int phase) {
+            return orders.get(Math.min(phase, orders.size() - 1));
+        }
+    }
+
+    /** M7 part H: a breach point's mouth centre, px from the left and px up from the bottom edge. */
+    public record Point(double x, double y) {
+        public Point {
+            if (!Double.isFinite(x) || !Double.isFinite(y)) {
+                throw new IllegalArgumentException("a breach point lies somewhere: " + x + ", " + y);
+            }
+        }
+    }
+
+    /** M7 part H: the range a following breach point takes the ship's coordinate in, px. */
+    public record Clamp(double min, double max) {
+        public Clamp {
+            if (!(min <= max)) {
+                throw new IllegalArgumentException("a clamp runs from its least to its most: " + min + ", " + max);
+            }
+        }
+
+        /** {@code value} within the range. */
+        public double apply(double value) {
+            return Math.clamp(value, min, max);
+        }
+    }
+
+    /** M7 part H: a boss phase's breach points in turn (repeating) and whether they follow the ship. */
+    public record Order(List<BreachArena.Pose> poses, boolean follow) {
+        public Order {
+            poses = List.copyOf(poses);
+            if (poses.isEmpty()) {
+                throw new IllegalArgumentException("a breach order has a point");
+            }
+        }
+    }
+
+    /**
+     * M7 part H (design/enemies/bosses/dust-colossus, Suction and debris): while a mouth is open (and through its
+     * bite's tell) the ship and Rook drift toward its centre at {@code speed} px/s within {@code innerRadius} px,
+     * falling off linearly to 0 at {@code outerRadius} px (the Dust Devil's {@link EnemySpec.Pull} fades from its
+     * centre; this one has a plateau); never past the centre.
+     */
+    public record Suction(double speed, double innerRadius, double outerRadius) {
+        public Suction {
+            if (!(speed >= 0) || !(innerRadius >= 0) || !(outerRadius > innerRadius)) {
+                throw new IllegalArgumentException("a suction has a speed and an inner radius inside its outer one");
+            }
+        }
+
+        /** Its speed at {@code distance} px from the mouth's centre, px/s. */
+        public double speedAt(double distance) {
+            if (distance <= innerRadius) {
+                return speed;
+            }
+            if (distance >= outerRadius) {
+                return 0;
+            }
+            return speed * (outerRadius - distance) / (outerRadius - innerRadius);
+        }
+    }
+
+    /**
+     * M7 part H, step H3 (design/enemies/bosses/dust-colossus, Phases: phase 2's spine vents): with each breach in a
+     * boss phase whose attacks include {@code burst} (an index into its attacks; the vents' aimed burst, its parts the
+     * vents) the living vents among {@code parts} rise with the mouth, at {@code distances} px from the mouth's centre
+     * toward the field's centre (the ridge's last stretch), {@code buried} → {@code ground} at the rise's middle and
+     * back at the dive's middle; a destroyed vent stays dead. While the mouth is open the burst fires from each
+     * risen living vent, its first {@link BreachArena#VENT_FIRST_SECONDS} after the open, then every its interval; the
+     * phase's ring and fan timing leaves it out. The vents are out of the boss bar.
+     */
+    public record Vents(List<Integer> parts, List<Double> distances, int burst) {
+        public Vents {
+            parts = List.copyOf(parts);
+            distances = List.copyOf(distances);
+            if (parts.isEmpty() || parts.size() != distances.size() || burst < 0) {
+                throw new IllegalArgumentException("spine vents have parts, a distance each and a burst");
+            }
+            for (int i = 0; i < parts.size(); i++) {
+                if (parts.get(i) < 0 || !(distances.get(i) >= 0)) {
+                    throw new IllegalArgumentException("a spine vent is a part at a distance from the mouth");
+                }
+            }
+        }
+    }
+
+    /**
+     * M7 part H, step H3 (design/enemies/bosses/dust-colossus, Phases: phase 3): an {@link BreachArena.Pose#UNDER
+     * UNDER} breach erupts instead of rising: its point is fixed on the ship ({@code inset} px inside the edges at
+     * most) as its marker appears ({@code radius} px; it does not follow), which erupts {@code markerSeconds} later:
+     * the mouth is up at once ({@code ground}), the ship or Rook inside the marker takes {@code damage}, once; it
+     * stands open {@code openSeconds}, then bites and dives as any breach, then lies {@code buriedSeconds} before the
+     * next marker.
+     */
+    public record Eruption(
+            double markerSeconds,
+            double radius,
+            double damage,
+            double inset,
+            double openSeconds,
+            double buriedSeconds) {
+        public Eruption {
+            if (!(markerSeconds > 0)
+                    || !(radius >= 0)
+                    || !(damage >= 0)
+                    || !(inset >= 0)
+                    || !(openSeconds > 0)
+                    || !(buriedSeconds >= 0)) {
+                throw new IllegalArgumentException("an eruption has a marker, a radius, a damage and an open time");
+            }
+        }
+    }
+
+    /**
+     * M7 part H, step H3 (design/enemies/bosses/dust-colossus, Suction and debris): while its mouth is open (through
+     * its bite's tell) a rock is torn loose every {@code everyByPhase} seconds of the boss phase (the last for later
+     * phases; 0: none) at a random point of the play field's edges in its far half from the mouth, {@code minSize} to
+     * {@code maxSize} px across ({@link #SIZES} sizes), {@code hp} HP, on the {@code air} layer; it flies straight for
+     * the mouth's centre at {@code startSpeed} px/s, gaining {@code acceleration} px/s each second, and is swallowed
+     * there ({@link PulledDebris#SWALLOW} px from it), even once the mouth has dived. It stops the player's shots (not
+     * the enemy's bullets: the user's round 43 answer H.7c), breaks on the hull dealing {@code contact}, pays nothing
+     * and is not an enemy. The suction pulls no pickups (H.7b).
+     */
+    public record DebrisFlow(
+            List<Double> everyByPhase,
+            double minSize,
+            double maxSize,
+            double hp,
+            double startSpeed,
+            double acceleration,
+            double contact) {
+        /** How many rock sizes there are, evenly from the least to the most. */
+        public static final int SIZES = 5;
+
+        public DebrisFlow {
+            everyByPhase = List.copyOf(everyByPhase);
+            if (everyByPhase.isEmpty()
+                    || everyByPhase.stream().anyMatch(every -> !(every >= 0))
+                    || !(minSize > 0)
+                    || !(maxSize >= minSize)
+                    || !(hp > 0)
+                    || !(startSpeed > 0)
+                    || !(acceleration >= 0)
+                    || !(contact >= 0)) {
+                throw new IllegalArgumentException("debris has its times, sizes, HP, speed and contact damage");
+            }
+        }
+
+        /** The seconds between two rocks in boss phase {@code phase} (the last one for later phases); 0: none. */
+        public double every(int phase) {
+            return everyByPhase.get(Math.min(phase, everyByPhase.size() - 1));
         }
     }
 }

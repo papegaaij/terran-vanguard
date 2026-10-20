@@ -70,7 +70,8 @@ public record EnemyData(
         Optional<Turret> turret,
         Optional<RearPlate> rearPlate,
         Optional<Pursuit> pursuit,
-        Optional<Boolean> seekersIgnore) {
+        Optional<Boolean> seekersIgnore)
+        implements ColossusBlock {
     public EnemyData {
         Layers.of(layer);
         Check.positive("hp", hp);
@@ -307,7 +308,27 @@ public record EnemyData(
      * or walking its passes there (M7 part F, the Revenant Walker).
      */
     public boolean arenaBoss() {
-        return movement.anchored().isPresent() || walks();
+        return movement.anchored().isPresent() || walks() || breaches();
+    }
+
+    /** M7 part H: whether it is a breaching boss (movement {@code breach}: the Dust Colossus). */
+    public boolean breaches() {
+        return movement.breach().isPresent();
+    }
+
+    /** M7 part H: its breach cycle on {@code difficulty}: the stat block's with the difficulty's bite tell. */
+    public Optional<Breach> breach(Difficulty difficulty) {
+        return movement.breach().map(cycle -> cycle.with(hook(difficulty).flatMap(Hook::breach)));
+    }
+
+    /** M7 part H: its suction on {@code difficulty}: the boss script's with the difficulty's speed. */
+    public Optional<Suction> suction(Difficulty difficulty) {
+        return boss.flatMap(BossData::suction).map(s -> s.with(hook(difficulty).flatMap(Hook::suction)));
+    }
+
+    /** M7 part H: its eruption on {@code difficulty}: the boss script's with the difficulty's marker time. */
+    public Optional<Eruption> eruption(Difficulty difficulty) {
+        return boss.flatMap(BossData::eruption).map(e -> e.with(hook(difficulty).flatMap(Hook::eruption)));
     }
 
     /** M7 part F: its turret on {@code difficulty}: the stat block's with the difficulty's turn rate. */
@@ -458,6 +479,7 @@ public record EnemyData(
      * @param crawl M7 part C: its head crawls a wave's ground path (the Threadcrawler; the wave's {@code crawl})
      * @param laneStrafe M7 part E: it drops to a lane and strafes across the screen (the Ghost Drone)
      * @param stride M7 part F: a walking boss's passes across its halted arena (the Revenant Walker)
+     * @param breach M7 part H: a breaching boss's cycle under its crawling arena (the Dust Colossus)
      */
     public record Movement(
             Optional<Snake> snake,
@@ -480,7 +502,8 @@ public record EnemyData(
             Optional<Burrow> burrow,
             Optional<Crawl> crawl,
             Optional<LaneStrafe> laneStrafe,
-            Optional<Stride> stride) {}
+            Optional<Stride> stride,
+            Optional<Breach> breach) {}
 
     /**
      * M7 part F, a walking boss's passes (design/enemies/bosses/revenant-walker, Passes): it crosses its halted arena
@@ -567,6 +590,71 @@ public record EnemyData(
             Check.positive("burn", burn);
             Check.notNegative("vents", vents);
             Check.notNegative("swivel", swivel);
+        }
+    }
+
+    /**
+     * Round 44 (the user in round 43, W.a; design/enemies/bosses/revenant-walker, Attacks): a walking boss's
+     * back-mounted rail lance. It wakes once every part of {@code after} is destroyed, or from phase {@code
+     * from_phase} (a phase's name) on; then, while it walks on the screen, it charges for {@code charge} s (the line from
+     * its lance, {@code behind} px behind its centre, through where the ship was) and fires along that line for {@code
+     * fire} s, {@code width} px wide, hitting for the {@code bullet} class's damage once a shot; a charge every {@code
+     * interval} s ({@code last_interval} in its last phase).
+     */
+    public record Lance(
+            List<String> after,
+            Optional<String> fromPhase,
+            double charge,
+            double fire,
+            double interval,
+            double lastInterval,
+            double width,
+            String bullet,
+            double behind) {
+        public Lance {
+            after = List.copyOf(after);
+            Check.that(!after.isEmpty() || fromPhase.isPresent(), "a rail lance wakes after parts or from a phase");
+            Check.positive("charge", charge);
+            Check.positive("fire", fire);
+            Check.that(interval >= charge + fire, "interval: holds the charge and the shot, was " + interval);
+            Check.that(
+                    lastInterval >= charge + fire, "last_interval: holds the charge and the shot, was " + lastInterval);
+            Check.positive("width", width);
+        }
+    }
+
+    /**
+     * Round 44 (the user in round 43, W.e): a walking boss's stomp shockwave: the ship or Rook within {@code reach} px of
+     * its centre starts a {@code tell} s tell (at most once every {@code cooldown} s), then a ring expands to {@code
+     * radius} px over {@code expand} s, hitting for the {@code bullet} class's damage once a stomp.
+     */
+    public record Stomp(double reach, double radius, double tell, double expand, double cooldown, String bullet) {
+        public Stomp {
+            Check.positive("reach", reach);
+            Check.that(radius >= reach, "radius: at least its reach, was " + radius);
+            Check.notNegative("tell", tell);
+            Check.positive("expand", expand);
+            Check.that(cooldown >= tell + expand, "cooldown: holds the tell and the ring, was " + cooldown);
+        }
+    }
+
+    /**
+     * Round 44: a difficulty's change to a walking boss's rail lance: its charge, interval or last phase's interval
+     * instead, s.
+     */
+    public record LanceChange(Optional<Double> charge, Optional<Double> interval, Optional<Double> lastInterval) {
+        public LanceChange {
+            charge.ifPresent(c -> Check.positive("charge", c));
+            interval.ifPresent(i -> Check.positive("interval", i));
+            lastInterval.ifPresent(i -> Check.positive("last_interval", i));
+        }
+    }
+
+    /** Round 44: a difficulty's change to a walking boss's stomp: its tell or cooldown instead, s. */
+    public record StompChange(Optional<Double> tell, Optional<Double> cooldown) {
+        public StompChange {
+            tell.ifPresent(t -> Check.notNegative("tell", t));
+            cooldown.ifPresent(c -> Check.positive("cooldown", c));
         }
     }
 
@@ -920,8 +1008,10 @@ public record EnemyData(
             aim.ifPresent(a -> Check.that(a.equals("down"), "a part's aim is down, was '" + a + "'"));
             Check.that(aim.isEmpty() || attack.isPresent(), "a part aimed down fires an attack");
             firstBonus.ifPresent(b -> Check.notNegative("first_bonus", b));
+            // M7 part H: or buried (a breaching boss's mouth until its rise, its vents until they rise with it).
             layer.ifPresent(l -> Check.that(
-                    l.equals("sub") || l.equals("ground"), "a part's layer is sub or ground, was '" + l + "'"));
+                    l.equals("sub") || l.equals("ground") || l.equals("buried"),
+                    "a part's layer is sub, ground or buried, was '" + l + "'"));
             Check.that(
                     kind.equals("destroyable") || kind.equals("vital") || kind.equals("armoured"),
                     "kind must be armoured, destroyable or vital, was '" + kind + "'");
@@ -1641,6 +1731,14 @@ public record EnemyData(
      * @param slam M5 part E: its slam cycle (only with lanes)
      * @param plate M7 part F: a walking boss's front plate (the Revenant Walker)
      * @param cone M7 part F: a walking boss's rear flame cone (the Revenant Walker)
+     * @param hatchArmour round 44: a walking boss's pods (the parts firing its homing attacks) take damage only while
+     *     their hatch is open
+     * @param lance round 44: a walking boss's back-mounted rail lance
+     * @param stomp round 44: a walking boss's stomp shockwave
+     * @param suction M7 part H: a breaching boss's pull toward its open mouth (the Dust Colossus)
+     * @param vents M7 part H: a breaching boss's spine vents
+     * @param eruption M7 part H: a breaching boss's eruption under the ship
+     * @param debris M7 part H: a breaching boss's debris rocks
      */
     public record BossData(
             String kind,
@@ -1653,7 +1751,14 @@ public record EnemyData(
             Optional<Lanes> lanes,
             Optional<SlamData> slam,
             Optional<Plate> plate,
-            Optional<Cone> cone) {
+            Optional<Cone> cone,
+            Optional<Boolean> hatchArmour,
+            Optional<Lance> lance,
+            Optional<Stomp> stomp,
+            Optional<Suction> suction,
+            Optional<Vents> vents,
+            Optional<Eruption> eruption,
+            Optional<DebrisData> debris) {
         public BossData {
             Check.that(
                     kind.equals("boss") || kind.equals("mid-boss"),
@@ -2073,6 +2178,9 @@ public record EnemyData(
      * @param homing M7 part F: homing missiles' turn rate instead (the Revenant Walker's hard 120°/s)
      * @param cone M7 part F: a flame cone's length, swivel or tell instead (the Revenant Walker's hard and easy)
      * @param pursuit M7 part G: a pursuit's time between lunges or tell instead (the Mote Swarm's easy and hard)
+     * @param breach M7 part H: a breach cycle's bite tell instead (the Dust Colossus's easy 1.0 s, hard 0.6 s)
+     * @param suction M7 part H: a suction's speed instead (the Dust Colossus's easy 30, hard 55 px/s)
+     * @param eruption M7 part H: an eruption's marker time instead (the Dust Colossus's easy 1.8 s, hard 1.2 s)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -2105,7 +2213,12 @@ public record EnemyData(
             Optional<TurretChange> turret,
             Optional<HomingChange> homing,
             Optional<ConeChange> cone,
-            Optional<PursuitChange> pursuit) {
+            Optional<PursuitChange> pursuit,
+            Optional<LanceChange> lance,
+            Optional<StompChange> stomp,
+            Optional<BreachChange> breach,
+            Optional<SuctionChange> suction,
+            Optional<EruptionChange> eruption) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

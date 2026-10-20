@@ -39,7 +39,7 @@ The numbers live in [data.yaml](data.yaml); the stat block is one mote's, a swar
 | Credits | 2 (score 20 × chain) per mote; a swarm of 20 pays 40 |
 | Death | `tiny` ember puff |
 | First level / used in | L10; returns in Act 3 (L20, as the pursuing swarm) |
-| Difficulty hooks | flock size via the global formation lever; hard: two loop-backs (level data); the pursuit (Level 20): easy a lunge every 8 s with a 1.2 s tell, hard every 4.5 s |
+| Difficulty hooks | flock size via the global formation lever; hard: two loop-backs (level data); the pursuit (Level 20): easy a lunge every 5.5 s with a 1.2 s tell, hard every 3 s |
 <!-- /data -->
 
 ### Behaviour
@@ -76,7 +76,8 @@ User decision D8 = a of M5 part D: **real flocking** (boids).
 - **Pursuit** (M7 part G, [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm);
   numbers approved there in round 36, Q.20): the `pursuit` formation's flock presses from behind in a
   reversed section. Its leader point holds a band 50–150 px below the top edge, follows the ship's x at
-  90 px/s, and every 6 s (easy 8, hard 4.5) lunges: a 0.8 s tell (easy 1.2; the flock contracts into a
+  30 px/s, and every 4 s (easy 5.5, hard 3; round 43 Q.1, were 90 px/s and 6 s, easy 8, hard 4.5) lunges
+  (a tell due while the flock is still out of the band waits for it): a 0.8 s tell (easy 1.2; the flock contracts into a
   60 px ball), a dive down the ship's lane at 240 px/s to 140 px below where the ship was, no homing, and a
   climb back at 200 px/s. Refills of 3 (the formation lever: easy 2, hard 4) join from the top edge every
   10 s while the flock has room; at its wave's break-off the leader climbs off the top at 200 px/s and the
@@ -148,3 +149,11 @@ The production files (M5 part D, straight to production per D10 = a; approved as
   2.69 (was 2.77). Level 20's numbers are in its
   [README](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm).
 - 2026-10-20 (step R43): the pursuit flies (steps PG3, G4, GB, SW; its Implementation item ticked); whether the swarm's data levers (band lag 30 px/s, a lunge every 4 s) are applied and whether the turrets count as seekers are questions Q.1 and Q.3 of [round 43](../../../concept-rounds/round-43/README.md), pending the user's review.
+- 2026-10-20 (user, round 43 Q.1 **both levers**; step LQ): the `pursuit` block's `lag` 90 → **30** px/s and
+  `lunge_every` 6 → **4** s, data only. The hooks keep the medium cadence's ratio (our reading, pending the user's
+  review): easy 8 → **5.5** s (tell 1.2 s), hard 4.5 → **3** s; a lunge, its dive and climb last longer than that,
+  so on hard the next tell follows as soon as the flock is back in the band. Measured together on Level 20
+  (`levelReport`, the plan's fit, 3 seeds): motes on the screen at medium 0.77 → **1.03** (easy 0.35 → 0.44, hard
+  1.03 → 1.68), lunges with motes 2–4 of 18 → **8–9 of 27–28** a run (easy 1 of 13 → 3–5 of 19–20, hard 6–7 of 23–24
+  → 16–21 of 33–35); the autopilot still wins every seed on every difficulty. Numbers in
+  [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm).

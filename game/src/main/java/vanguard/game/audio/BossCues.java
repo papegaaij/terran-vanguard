@@ -68,6 +68,8 @@ final class BossCues extends SoundFamily {
 
     /** Each set piece's death cry, by index in the script; null for none. */
     private final Sfx[] cries;
+    /** Round 43: each set piece's own death instead of its rung's blast, by index in the script; null for the rung's. */
+    private final Sfx[] deaths;
     /** Each set piece's own sounds, by index in the script; null for the generic ones. */
     private final BossSounds[] bossSounds;
     /** Whether a boss of the level brings its own phase sounds (its turn and its iris, not the generic phase blast). */
@@ -99,6 +101,7 @@ final class BossCues extends SoundFamily {
     BossCues(SoundMix mix, List<String> setPieces) {
         super(mix);
         cries = setPieces.stream().map(BossCues::cry).toArray(Sfx[]::new);
+        deaths = setPieces.stream().map(BossCues::death).toArray(Sfx[]::new);
         bossSounds = setPieces.stream().map(BossCues::bossSounds).toArray(BossSounds[]::new);
         ownPhaseSounds = Arrays.stream(bossSounds).anyMatch(Objects::nonNull);
     }
@@ -116,6 +119,11 @@ final class BossCues extends SoundFamily {
             case "harbour-kraken" -> Sfx.KRAKEN_DEATH;
             default -> null;
         };
+    }
+
+    /** Round 43: a set piece's own death instead of its rung's blast, or null: the Revenant Walker's (round 43 a). */
+    private static Sfx death(String slug) {
+        return "revenant-walker".equals(slug) ? Sfx.WALKER_DEATH : null;
     }
 
     /** A boss's own sounds, or null for the generic ones: the Brood Carrier's (round 25 a, provisional). */
@@ -221,7 +229,13 @@ final class BossCues extends SoundFamily {
             // rung as the chain starts (its huge blast ends the chain, deathBlast).
             case SET_PIECE_DESTROYED -> {
                 int k = events.value(i);
-                bank.play(finale(k) ? Sfx.EXPLOSION_LARGE_A : deathBlast(k), PLAYER_DAMAGE, pitch(0.03), pan);
+                Sfx own = k < deaths.length ? deaths[k] : null;
+                if (own != null) {
+                    // Round 43: the walker's own death (levelled in its file), its impact on the topple's landing.
+                    bank.play(own, 1, 1, pan);
+                } else {
+                    bank.play(finale(k) ? Sfx.EXPLOSION_LARGE_A : deathBlast(k), PLAYER_DAMAGE, pitch(0.03), pan);
+                }
                 // Levelled like the enemy sounds, so it sits under the burst (design/audio/sfx).
                 Sfx cry = cries[k];
                 if (cry != null) {

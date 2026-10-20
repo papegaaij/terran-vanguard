@@ -27,9 +27,21 @@ package vanguard.sim;
  * scroll runs reversed (the ground moves up the screen, the ship flies backwards toward the bottom); an ease runs
  * through zero as any other (Level 20's turnabout, +140 → −120 over 4 s). An arena never runs reversed; a timed halt
  * is 0.
+ *
+ * <p>M7 part H (design/campaign Level 21, the slowly scrolling arena): an arena of a speed above 0 that {@code
+ * crawl}s ({@link #crawls()}; a breaching boss's) keeps its ground scrolling at its speed on the real steps while the
+ * level clock is held at its end, and a kill's jump to its end moves the clock only, not the ground. It may ease in
+ * from the moving section before it over its {@code easeSeconds} as a moving section does (Level 21's 140 → 20 over
+ * 2 s). Any other arena of a speed above 0 (Levels 05 and 07) stops its ground while the clock is held, as before.
  */
 public record Section(
-        double end, double speed, boolean arena, double rampSeconds, double easeSeconds, double holdAfterBossSeconds) {
+        double end,
+        double speed,
+        boolean arena,
+        double rampSeconds,
+        double easeSeconds,
+        double holdAfterBossSeconds,
+        boolean crawl) {
     /** M5 part G: a timed halt's eases when its data gives no {@code ramp}, s. */
     public static final double TIMED_HALT_RAMP_SECONDS = 2;
 
@@ -40,13 +52,27 @@ public record Section(
         if (!(rampSeconds >= 0)) {
             throw new IllegalArgumentException("a section's ramp is 0 s or more: " + rampSeconds);
         }
-        if (!(easeSeconds >= 0) || (easeSeconds > 0 && (speed == 0 || arena))) {
+        if (crawl && !(arena && speed > 0)) {
+            throw new IllegalArgumentException("only an arena of a speed above 0 crawls: " + speed);
+        }
+        if (!(easeSeconds >= 0) || (easeSeconds > 0 && (speed == 0 || (arena && !crawl)))) {
             throw new IllegalArgumentException("only a moving section eases in, over 0 s or more: " + easeSeconds);
         }
         if (!(holdAfterBossSeconds >= 0) || (holdAfterBossSeconds > 0 && !arena)) {
             throw new IllegalArgumentException(
                     "only an arena holds the clock after its boss, 0 s or more: " + holdAfterBossSeconds);
         }
+    }
+
+    /** A section that does not crawl (without M7 part H's crawl). */
+    public Section(
+            double end,
+            double speed,
+            boolean arena,
+            double rampSeconds,
+            double easeSeconds,
+            double holdAfterBossSeconds) {
+        this(end, speed, arena, rampSeconds, easeSeconds, holdAfterBossSeconds, false);
     }
 
     /** A section without M7 part F's hold after the boss. */
@@ -71,6 +97,11 @@ public record Section(
     /** M7 part G: whether its scroll runs reversed (its speed is below 0). */
     public boolean reversed() {
         return speed < 0;
+    }
+
+    /** M7 part H: whether it is a crawling arena (its ground scrolls on while the level clock is held at its end). */
+    public boolean crawls() {
+        return crawl;
     }
 
     /** M5 part G: whether it is a timed halt (speed 0 without an arena). */

@@ -185,8 +185,9 @@ final class ContentValidator {
         if (enemy.layer().equals(SUB)) {
             problem(enemy, "layer", "a unit's stat block is not on sub: it dives from ground");
         }
-        // M7 part B: nor under the sand: a Burrower is buried only by its burrow movement.
-        if (enemy.layer().equals("buried")) {
+        // M7 part B: nor under the sand: a Burrower is buried only by its burrow movement. M7 part H: a breaching
+        // boss's body is (the Dust Colossus: ColossusChecks).
+        if (enemy.layer().equals("buried") && !enemy.breaches()) {
             problem(enemy, "layer", "a unit's stat block is not on buried: it burrows from ground");
         }
         enemy.cloak().ifPresent(cloak -> {
@@ -261,6 +262,7 @@ final class ContentValidator {
         SiegeChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         StormChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         FoundryChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
+        ColossusChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         RetreatChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         enemy.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
@@ -610,6 +612,7 @@ final class ContentValidator {
         SiegeChecks.level(content, level, (field, message) -> problem(level, field, message));
         StormChecks.level(content, level, (field, message) -> problem(level, field, message));
         FoundryChecks.level(content, level, (field, message) -> problem(level, field, message));
+        ColossusChecks.level(content, level, (field, message) -> problem(level, field, message));
         RetreatChecks.level(content, level, (field, message) -> problem(level, field, message));
         checkArenaLevel(level);
         new BackdropCheck(level, (field, message) -> problem(level, field, message)).run();
@@ -1469,7 +1472,8 @@ final class ContentValidator {
                                 + " defend primary");
             }
         }
-        if (anchored) {
+        // M7 part H: a breaching boss's arena crawls instead (ColossusChecks).
+        if (anchored && !boss.map(EnemyData::breaches).orElse(false)) {
             LevelData.BossPlacement placement = level.boss().orElseThrow();
             int arena = -1;
             for (int i = 0; i < sections.size(); i++) {

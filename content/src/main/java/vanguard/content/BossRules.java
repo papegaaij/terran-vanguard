@@ -336,7 +336,10 @@ final class BossRules {
                 .map(EnemyData.Anchored::y)
                 .or(() -> movement.hover().map(hover -> hover.y().min()))
                 .or(() -> movement.stride().map(stride -> 0.0))
-                .orElseThrow(() -> new IllegalArgumentException(slug + ": a boss hovers, is anchored or walks"));
+                // M7 part H: a breaching boss's mouth takes its breach points' places (ColossusRules).
+                .or(() -> movement.breach().map(breach -> 0.0))
+                .orElseThrow(
+                        () -> new IllegalArgumentException(slug + ": a boss hovers, is anchored, walks or breaches"));
         // The moves need the station before them: walk the phases with the place, layer and pose so far.
         double stationX = placement.x();
         double stationY = PlayField.HEIGHT - hoverY;
@@ -445,9 +448,16 @@ final class BossRules {
                                         : Optional.empty())
                         .withIncomingSeconds(placement.incoming().orElse(0.0))
                         // M7 part F: a walking boss's passes, front plate and flame cone (FoundryRules).
-                        .withStride(movement.stride().map(FoundryRules::stride))
+                        .withStride(movement.stride()
+                                .map(stride -> FoundryRules.stride(content, enemy, script, stride, hook)))
                         .withPlate(script.plate().map(plate -> FoundryRules.plate(enemy, plate)))
-                        .withCone(script.cone().map(cone -> FoundryRules.cone(content, cone, hook)))));
+                        .withCone(script.cone().map(cone -> FoundryRules.cone(content, cone, hook)))
+                        // M7 part H: a breaching boss's cycle and suction (ColossusRules).
+                        .withBreach(ColossusRules.breach(content, enemy, difficulty))
+                        .withSuction(ColossusRules.suction(enemy, difficulty))
+                        .withVents(ColossusRules.vents(enemy))
+                        .withEruption(ColossusRules.eruption(content, enemy, difficulty))
+                        .withDebris(ColossusRules.debris(content, enemy))));
     }
 
     /**

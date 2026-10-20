@@ -70,6 +70,7 @@ final class FoundryChecks {
                     problem.accept("boss.cone.bullet", "no bullet class '" + cone.bullet() + "'");
                 }
             });
+            strikes(content, enemy, script, problem);
             for (int i = 0; i < script.phases().size(); i++) {
                 int f = i;
                 script.phases().get(i).until().share().ifPresent(share -> share.parts()
@@ -121,7 +122,58 @@ final class FoundryChecks {
                     && enemy.boss().flatMap(EnemyData.BossData::cone).isEmpty()) {
                 problem.accept("difficulty.cone", "a flame cone's change without a flame cone");
             }
+            if (hook.flatMap(EnemyData.Hook::lance).isPresent()
+                    && enemy.boss().flatMap(EnemyData.BossData::lance).isEmpty()) {
+                problem.accept("difficulty.lance", "a rail lance's change without a rail lance");
+            }
+            if (hook.flatMap(EnemyData.Hook::stomp).isPresent()
+                    && enemy.boss().flatMap(EnemyData.BossData::stomp).isEmpty()) {
+                problem.accept("difficulty.stomp", "a stomp's change without a stomp");
+            }
         }
+    }
+
+    /**
+     * Round 44: a boss's {@code hatch_armour}, {@code lance} and {@code stomp} only with a stride; the armour only with
+     * a homing attack (its pods); the lance's {@code after} naming its parts, its {@code from_phase} one of its phases,
+     * the bullet classes known.
+     */
+    private static void strikes(
+            Content content, EnemyData enemy, EnemyData.BossData script, BiConsumer<String, String> problem) {
+        if (script.hatchArmour().orElse(false)) {
+            if (!enemy.walks()) {
+                problem.accept("boss.hatch_armour", "hatch armour is a walking boss's (movement stride)");
+            }
+            if (enemy.attacks().stream().noneMatch(attack -> attack.homing().isPresent())) {
+                problem.accept("boss.hatch_armour", "hatch armour shuts the hatches of homing attacks: it has none");
+            }
+        }
+        script.lance().ifPresent(lance -> {
+            if (!enemy.walks()) {
+                problem.accept("boss.lance", "a rail lance is a walking boss's (movement stride)");
+            }
+            for (String part : lance.after()) {
+                if (enemy.partIndex(part) < 0) {
+                    problem.accept("boss.lance.after", "no part '" + part + "'");
+                }
+            }
+            lance.fromPhase().ifPresent(name -> {
+                if (script.phases().stream().noneMatch(phase -> phase.name().equals(name))) {
+                    problem.accept("boss.lance.from_phase", "no phase '" + name + "'");
+                }
+            });
+            if (!bullet(content, lance.bullet())) {
+                problem.accept("boss.lance.bullet", "no bullet class '" + lance.bullet() + "'");
+            }
+        });
+        script.stomp().ifPresent(stomp -> {
+            if (!enemy.walks()) {
+                problem.accept("boss.stomp", "a stomp is a walking boss's (movement stride)");
+            }
+            if (!bullet(content, stomp.bullet())) {
+                problem.accept("boss.stomp.bullet", "no bullet class '" + stomp.bullet() + "'");
+            }
+        });
     }
 
     /** A level's M7 part F keys. */

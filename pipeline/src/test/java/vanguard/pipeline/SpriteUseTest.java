@@ -94,7 +94,7 @@ class SpriteUseTest {
                 "colossus-ridge-dust");
         Map<String, Set<String>> atlases = SpriteUse.atlases(content, ridge);
         for (String part : ridge) {
-            assertEquals(Set.of("level-20"), atlases.get(part), part);
+            assertEquals(Set.of("level-20", "level-21"), atlases.get(part), part); // both levels have a `ridge` key
         }
         Map<String, Set<String>> drone = SpriteUse.atlases(content, List.of("rear-guard-drone-bay-drone"));
         assertEquals(Set.of(SpriteUse.SHARED), drone.get("rear-guard-drone-bay-drone"));

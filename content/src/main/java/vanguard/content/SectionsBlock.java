@@ -79,10 +79,13 @@ public sealed interface SectionsBlock permits LevelData {
 
         /**
          * M7 part B: a moving section's ease from the speed before it, s: its {@code ramp}; 0 (instant) on a timed
-         * halt, an arena or a section without one.
+         * halt, a halted arena or a section without one. M7 part H (Level 21's crawling arena, 140 → 20 px/s over 2 s):
+         * a moving arena's {@code ramp} too (only a breaching boss's arena gives one: ColossusChecks).
          */
         public double easeSeconds() {
-            return timedHalt() || isArena() || speed.filter(s -> s == 0).isPresent() ? 0 : ramp.orElse(0.0);
+            return timedHalt() || speed.filter(s -> s == 0).isPresent() || (isArena() && speed.isEmpty())
+                    ? 0
+                    : ramp.orElse(0.0);
         }
 
         /**

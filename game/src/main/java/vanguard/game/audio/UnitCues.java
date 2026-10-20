@@ -104,12 +104,15 @@ final class UnitCues extends SoundFamily {
     private long lastAbsorb = Long.MIN_VALUE / 2;
     /** This step's step (the absorb's spacing). */
     private long now;
+    /** Round 43: the walker's sounds, asked whether a hit lands on its open vents; null in tests without it. */
+    private final WalkerCues walker;
 
-    UnitCues(SoundMix mix, EnemyLooks[] looks, StormCues storm, FoundryCues foundry) {
+    UnitCues(SoundMix mix, EnemyLooks[] looks, StormCues storm, FoundryCues foundry, WalkerCues walker) {
         super(mix);
         this.looks = looks;
         this.storm = storm;
         this.foundry = foundry;
+        this.walker = walker;
     }
 
     @Override
@@ -125,7 +128,12 @@ final class UnitCues extends SoundFamily {
     @Override
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
-            case ENEMY_HIT -> bank.play(alternate(Sfx.HIT_ORGANIC_A, Sfx.HIT_ORGANIC_B), HITS, pitch(0.05), pan);
+            case ENEMY_HIT -> {
+                // Round 43: a hit on the walker's open vents is its own metal hit (WalkerCues).
+                if (walker == null || !walker.ventHit(events.x(i), events.y(i), pan)) {
+                    bank.play(alternate(Sfx.HIT_ORGANIC_A, Sfx.HIT_ORGANIC_B), HITS, pitch(0.05), pan);
+                }
+            }
             case ENEMY_DESTROYED -> {
                 EnemyLooks kind = looks[events.value(i)];
                 bank.play(alternate(kind.explosionA(), kind.explosionB()), EXPLOSIONS, pitch(0.04), pan);
