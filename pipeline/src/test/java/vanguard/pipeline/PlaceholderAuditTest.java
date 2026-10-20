@@ -59,6 +59,10 @@ class PlaceholderAuditTest {
             "M7 part F's Level 19 sounds: round 42's proposals (option a until the user's pick),"
                     + " synthesized by tools/concept/audio/sfx_r42.py";
 
+    private static final String ROUND_43 =
+            "M7 part G's Level 20 sounds: round 43's proposals (option a until the user's pick), mixed from CC0"
+                    + " Freesound originals (CREDITS.md)";
+
     private static final String ROUND_41_MUSIC =
             "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
                     + " files, rendered by tools/concept/audio/music_r41.py";
@@ -194,6 +198,10 @@ class PlaceholderAuditTest {
             Map.entry("sfx/tank-death-r42-a.ogg", ROUND_42),
             Map.entry("sfx/belt-rumble-r42-a.ogg", ROUND_42),
             Map.entry("sfx/mars-foundry-r42-a.ogg", ROUND_42),
+            // M7 part G, Level 20: round 43's basin rumble, swarm hum and lunge
+            Map.entry("sfx/basin-rumble-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/swarm-hum-r43-a.ogg", ROUND_43),
+            Map.entry("sfx/swarm-lunge-r43-a.ogg", ROUND_43),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

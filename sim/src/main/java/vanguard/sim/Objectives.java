@@ -27,7 +27,10 @@ final class Objectives {
 
     private boolean escapesFailed;
     private final int[] killsByKind;
-    private final int requiredKills;
+    private int requiredKills;
+    /** The level's units as planned, for the kill ratio (M7 part G: less the pursuits' refills left out). */
+    private final int plannedUnits;
+
     private final int[] groupUnits;
     private final int[] groupDestroyed;
     private final int[] groupEscaped;
@@ -59,7 +62,8 @@ final class Objectives {
         byGroups = secondary.byGroups();
         this.escapesTotal = escapesTotal;
         killsByKind = new int[kinds];
-        requiredKills = byGroups || secondary.byEscapes() ? 0 : (int) Math.ceil(secondary.killRatio() * units - 1e-9);
+        plannedUnits = units;
+        requiredKills = required(units);
         groupUnits = new int[groups];
         groupDestroyed = new int[groups];
         groupEscaped = new int[groups];
@@ -433,6 +437,19 @@ final class Objectives {
 
     int requiredKills() {
         return requiredKills;
+    }
+
+    private int required(int units) {
+        return byGroups || secondary.byEscapes() ? 0 : (int) Math.ceil(secondary.killRatio() * units - 1e-9);
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, The pursuit swarm; the gap check's default, pending round 43): {@code
+     * skipped} planned units never entered (the pursuits' refill motes with no room in their flock): the kill ratio
+     * counts the level's units without them.
+     */
+    void unitsSkipped(int skipped) {
+        requiredKills = required(plannedUnits - skipped);
     }
 
     void addKillsTo(StateHash hash) {

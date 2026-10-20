@@ -437,6 +437,17 @@ public enum Sfx {
      * hum, a seamless 2.4 s loop): one quiet loop while a belt runs on the screen, under the {@code mars-foundry} bed.
      */
     BELT_RUMBLE("sfx/belt-rumble-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
+     * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
+     * point.
+     */
+    SWARM_HUM("sfx/swarm-hum-r43-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part G: the pursuit's lunge (round 43 a, proposed: the hum swelling in and gliding up, a whoosh rushing in at
+     * its end, 0.8 s, -20 dB; no pop): through the tell, its whoosh on the dive.
+     */
+    SWARM_LUNGE("sfx/swarm-lunge-r43-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M7 part B: a Burrower's 0.4 s dive, the grain slide (round 38 b, the user's pick of 2026-10-14). */
     BURROW_DIVE("sfx/burrow-dive-r38-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M5 part H: a burst's growths growing in, a stretching creak set with a dull knock at 1.45 s (round 36 a, one proposal). */
@@ -558,6 +569,11 @@ public enum Sfx {
      * hammer and the plateau wind, a seamless 16 s loop): Level 19 from its start.
      */
     AMBIENCE_MARS_FOUNDRY("sfx/mars-foundry-r42-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M7 part G: the basin rumble (round 43 a, proposed: an earthquake's deep earth rumble with rock grinding in it, a
+     * seamless 16 s loop, -28 LUFS): Level 20's ambience layer under the travelling ridge ({@code ambience_layers}).
+     */
+    AMBIENCE_BASIN_RUMBLE("sfx/basin-rumble-r43-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -650,6 +666,8 @@ public enum Sfx {
             case "mars-colony" -> AMBIENCE_MARS_COLONY;
             case "mars-storm" -> AMBIENCE_MARS_STORM;
             case "mars-foundry" -> AMBIENCE_MARS_FOUNDRY;
+            // M7 part G: an ambience layer over the setting's (Level 20's ridge), not a setting of its own.
+            case "basin-rumble" -> AMBIENCE_BASIN_RUMBLE;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

@@ -189,6 +189,12 @@ first entry of a part's model list is the starter (price 0, `start`).
   level and the overdrive then adds `drone_hits` (hits before it breaks) and `rebuild` (s). A drone
   bay's shots count as single-target hits; a deflector's DPS is 0. `SimSpecs.flies` is false for the
   three until their specs are mapped (step A4); the Rear Lance is a plain `standard` rear weapon.
+  M7 part G (the [Rear-guard Drone Bay](../../player/weapons/rear-guard-drone-bay/README.md); loaded and checked
+  in step G2 by content's `WeaponData` and `RetreatChecks`, flown from step G3, mapped in step G4): a drone's
+  **`station`** (`orbit`, the default, or `trail`); a trailing drone has `behind` (px behind the ship's centre),
+  `side` (px to its bay's side), `lag` (s it follows the ship with) and `fire: back` (straight back) instead of
+  `orbit`, `period` and `converge`; its bay is a wing `pod` with the `rear` trait. Step G4 maps the trail station
+  (`RetreatRules.trail` → `DroneSpec.trail`), so `SimSpecs.flies` is true for it.
 - **Enemy** (`enemies/<category>/<slug>/data.yaml`): the stat block of the
   [enemies](../../enemies/README.md#stat-block-template) template: `name`, `faction`, `layer`,
   `tier`, `size`, `hitbox`, `parts` (`single` or `multi`: a multi-part unit lists its
@@ -196,7 +202,10 @@ first entry of a part's model list is the starter (price 0, `start`).
   down (dx right, dy up towards the tail), a `hitbox`, `hp`, `kind` `destroyable`/`vital`/
   `armoured`, `bounty` and the `attack` it fires by name; the parts' HP and bounties add up to the
   unit's), `orientation`, `hp`, `armour`, `speed`, the optional `machine` (M7 part A: `true` for a
-  machine, which the EMP Burst stuns longest; every other unit is biomechanical), `movement` (one
+  machine, which the EMP Burst stuns longest; every other unit is biomechanical), the optional
+  `seekers_ignore` (M7 part G, user decision 2026-10-20: `true` for a unit no seeker picks as a target, the
+  Mote Swarm's motes: the player's homing shots and turrets and Rook pass it over; a shot that flies into it
+  still hits; mapped to `EnemySpec.seekersIgnore`), `movement` (one
   entry per pattern: `snake` `spacing`; `swoop` `radius`, `top_speed`; `straight` `speed`;
   `hover` `seconds`, `y`; `orbit` `radius`, `turn_rate`; `strafe` `y`, the height a convoy turns
   across at; `spiral_out` `seconds`, `turns`, `growth`, `drift`, `ricochets`;
@@ -550,6 +559,16 @@ first entry of a part's model list is the starter (price 0, `start`).
   2 over 180° leaves its flanks). Round 43: a boss's **`fan`** may take a `burst` and `burst_gap` (the walker's chin
   and flank guns; no other unit's fan). A phase's **`until.share`**
   (`parts`, `below`: a second end beside its parts' `left`, once those parts hold less than `below` of their HP).
+  M7 part G, for the [Mote Swarm](../../enemies/air/mote-swarm/README.md)'s pursuit (Level 20; loaded and checked
+  in step G2 by content's `EnemyData` and `RetreatChecks`, flown from step G3, mapped in step G4): a unit's
+  **`pursuit`** block, the `pursuit` formation's defaults (`band` `[top, bottom]` px below the top edge, the
+  leader point's band; `lag` px/s sideways after the ship; `lunge_every` and `tell` s; `ball` px, the flock
+  contracted in the tell; `dive` px/s down the ship's lane to `overshoot` px below where the ship was at the
+  tell's start, no homing; `climb` px/s back to the band; `refill` motes from the top edge every `refill_every`
+  s while the flock has room; `break_speed` px/s off the top edge at the break-off); only with a `flock` and
+  `pursuit` among its formations; the hook **`pursuit`** (`lunge_every`, `tell`: the Mote Swarm's easy 8 s and
+  1.2 s, hard 4.5 s). Mapped (step G4, `RetreatRules.pursuit`): the hook over the wave's `pursuit` block over the
+  unit's defaults; the entry and the `refill` sized by the formation lever.
   Basis (`enemies/data.yaml`): `reference_dps` per level (Levels 01–21 since M7 part A), `bullet_damage`, `contact_damage`
   per tier, `small_act_hp` (`cap`, `units`, `levels`: the `small` units that get the act HP factor, capped, in those levels; the user's Act 2
   playtest, 2026-10-18), `beam_era_hp` (`from_level`, `factor`, `tiers`: from that level on, the units of those
@@ -1118,6 +1137,29 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   crawl). The secondary's **`allowed`** (an `escapes` objective's units that may get away; with it the objective
   may name its counter `label`). The music's `stems` value **`motif`** (the theme's stems silent, the motif layer
   alone; `Music.motifAlone(section)`; only with the music's `motif`). The ambience `mars-foundry`.
+  M7 part G, for [Level 20](../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md) (loaded and checked
+  in step G2 by content's `LevelData` and `RetreatChecks`; flown from steps G1 and G3, mapped in step G4, drawn by
+  steps GA/GB; the defaults pending the user's review in round 43): a section's **negative `speed`** (M5 = a: the
+  ground moves up the screen and the direction of travel is down it, a reversed section, `Section.reversed()`;
+  never on an arena; its `ramp` eases from the speed before it, through zero at a turnabout;
+  `LevelData.travelAt(t)` the sign). A level that reverses never starts reversed and has no terrain, road, belts,
+  vents, water, holds, boss or arena, timed halt, convoy, ground allies or set pieces (the travel frame's scope).
+  **Entries by travel**: a wave's `from: front` is the edge ahead in the direction of travel (the bottom edge once
+  reversed), `rear` the edge behind (the top); its `paths`, `at` and a field's area are written in the travel
+  frame (y below the entry edge, as in a forward level) and the simulation flips the units that spawn while the
+  travel is reversed; a ground target's `at` is when it enters at its edge by travel, and it carries no `arc`
+  there (the frame turns a nest's arc). A front wave's **`warning`** without a `loop_back` only while the travel
+  is reversed: the BOTTOM lesson (its edge warning `warning` s ahead). The formation **`pursuit`** (one group of a
+  unit with a `pursuit` block, `from: rear` on every difficulty, entering while the travel is reversed, no
+  `paths`) with its wave's **`pursuit`** block: `break_at` (level time of the break-off, after its entry, before
+  the level's end, while still reversed; no two pursuits overlap), optional `refill`, `refill_every`,
+  `lunge_every`, `tell`, `band`, `lag`, `dive`, `overshoot`, `climb` (instead of the unit's); its refills, one
+  every `refill_every` s after its entry while before `break_at`, count in the density (a refill with no room in
+  the flock is not spawned and counts nowhere). The music's **`ambience_layers`** (each `ambience`, `from`, `to`
+  level time, `fade_in`, `fade_out` s: a second ambience loop over the level's own; Level 20's basin rumble;
+  `AmbienceLayer.level(t)`). The flak's **`band: top`** (bursts in the top band instead of over the lower field;
+  `Flak.bandOrDefault()`). The rear-wave bark's **`top_lines`** (the wingmen data's "Up top!" variants in a
+  reversed section).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the
@@ -1133,7 +1175,14 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   optional `mirror`, a `path` of `[t, dx, dy]` waypoints for a piece with headings, `overhead`
   for a ground piece's part above the road (a bridge's arches, a gate's blockhouse: drawn over
   the convoy and the ground objects and under the ground units, so the crawlers pass under it and
-  a turret placed on it stands on it); later pieces on a layer are drawn over earlier ones). A layer position is the layer's scroll (the ground's
+  a turret placed on it stands on it); later pieces on a layer are drawn over earlier ones). M7 part G (Level 20,
+  a level that flies back over ground it has shown): a **`strip`** (`origin`, the strip row at the screen's bottom
+  edge at t = 0; `zones`, back to back from the bottom up, each `{from, to, tiles}`: the tile sets over strip rows
+  `[from, to)`, at most one per layer and one on the base layer, together covering every row the screen shows over
+  the level and its outro): the ground's tile sets keyed by strip row (= `origin` + the ground scroll, signed;
+  a tile's pixel row is the strip row mod its height, from the image's bottom) instead of by section, whose
+  `tiles` are then empty; a ground piece of a strip level may be placed by **`row`** (its centre's strip row)
+  instead of `t` (no path, no repeat; `LevelData.pieceCentre` = row − origin). A layer position is the layer's scroll (the ground's
   scroll × its factor) plus the screen height; a section's tile set begins at the seam that enters
   at the top edge when the section starts. The images are `assets/backdrop/level-NN/<id>.png`
   (frames and headings `<id>_<n>.png`); `images: level-NN` takes them from another level's
@@ -1301,7 +1350,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   projectile's damage), `available`); `barks` (`speaker`, `spacing` s, and `triggers` in priority
   order: `trigger` (`boss-warning`, `rear-wave` with `ahead` s, `sides-wave`, `player-armour` and
   `rook-armour` with `below` (share), `rook-ejects`, `kill-streak` with `kills` and `seconds`,
-  `overdrive`), the portrait's `expression`, optional `shout`, and the variant `lines`). His repair
+  `overdrive`), the portrait's `expression`, optional `shout`, and the variant `lines`; M7 part G: the rear wave's
+  optional `top_lines`, its variants in a reversed section, where behind is the top of the screen). His repair
   cost is the difficulty's `repair_cost`.
 
 ### Presentation (`game`)
@@ -2081,3 +2131,15 @@ compiles, and the allocation tests then see allocations that escape analysis oth
   deleted the temporary delegate accessors, flat builder setters and level-wide withers; only `withGates` stays on
   `LevelScript` (it also adds the anchors to the ground units). The vents' and placed pickups' time sorts and every check's wording are kept (golden replays unchanged).
 - 2026-10-20: round 42 closed: the refactors (X.a a-h: `LevelScript`, `LevelData`'s `*Block` interfaces, `SimSpecs`'s rules classes, the autopilot's plays, the simulation split, the level-metrics tool) and the Level 19 schema defaults (`turret`, `belts`, vents, `arc: up`; B.a-B.d) approved by the user, all yes.
+- 2026-10-20: M7 part G step G2 (Level 20, pending the user's review in round 43): the reverse-scroll keys (a
+  section's negative `speed`, entries by travel, a front wave's `warning` as the BOTTOM lesson rather than a new
+  `warn` key), the `pursuit` formation (the unit's defaults, the wave's block with an explicit `break_at`), the
+  trailing drone (`station: trail`), the strip backdrop (`strip`, pieces by `row`), the music's `ambience_layers`,
+  the flak's `band: top` and the barks' `top_lines`; checked by `RetreatChecks` (and `BackdropCheck` for the strip).
+- 2026-10-20 (step C1G, the user's request): `:content:allocationTest` runs the zero-allocation tests
+  (`steppingAWholeLevelDoesNotAllocate`, `theFightAllocatesNothingPerStep`) once more in their own forks with
+  `-XX:TieredStopAtLevel=1`: C1 has no escape analysis, so an allocation that only C2 removes (`HazardPlay`'s
+  `double[2]`, which failed only on the 3-core macOS runner, CI 2026-10-20) fails on every machine. `check` depends on
+  it and it runs next to `test`; measured +34 s on `:content:check` wall time (4 m 42 s → 5 m 16 s, machine under
+  load), the task itself 62 s, alone 12 s of tests; with b239705 reverted it fails Level 16 (7.66 MB) while `test`
+  passes.

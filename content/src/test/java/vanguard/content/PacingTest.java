@@ -145,7 +145,8 @@ class PacingTest {
      * and Rook's Autocannon, M5 part F; Level 13: Armour Mk III and the pods at level 2, M5 part G; Level 14: the
      * Tail Gun at L2, M5 part H; Level 15: Level 14's, M7 part B; M7 part C: Level 16 with its plan's fit (Level
      * 15's) and Rook; M7 part D: Level 17 with its plan's fit (Level 16's); M7 part E: Level 18 with its plan's fit,
-     * the Ion Beam at L2 in front; M7 part F: Level 19 with its plan's fit, the beam at L3 and Rook's Mortar).
+     * the Ion Beam at L2 in front; M7 part F: Level 19 with its plan's fit, the beam at L3 and Rook's Mortar; M7 part
+     * G: Level 20 with its plan's fit, the Tail Gun at L3 and Rook's Autocannon).
      */
     static Loadout planLoadout(String key, Difficulty difficulty) {
         BiFunction<Content, Difficulty, Loadout> plan = PLAN_FITS.get(key);
@@ -167,7 +168,8 @@ class PacingTest {
             Map.entry(Level16Test.LEVEL, Level16Test::planLoadout),
             Map.entry(Level17Test.LEVEL, Level17Test::planLoadout),
             Map.entry(Level18Test.LEVEL, Level18Test::planLoadout),
-            Map.entry(Level19Test.LEVEL, Level19Test::planLoadout));
+            Map.entry(Level19Test.LEVEL, Level19Test::planLoadout),
+            Map.entry(Level20Test.LEVEL, Level20Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

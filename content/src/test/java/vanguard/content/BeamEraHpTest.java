@@ -19,13 +19,24 @@ import vanguard.sim.Sortie;
  * <p>The rule: on every mapped level from {@code beam_era_hp.from_level} on, flown at medium with the balance plan's
  * fit ({@link PacingTest#planLoadout}) on the attempt that completes it, a {@code small} unit the player kills lives on
  * the screen, from its entry to its death, between {@link #LEAST} and {@link #MOST} times as long as on Level 10 (the
- * level's crowding lengthens it: the beam serves one target at a time).
+ * level's crowding lengthens it: the beam serves one target at a time); a level with a reversed scroll, whose small
+ * units face the rear guns, at most {@link #REVERSED_MOST} times (M7 part G).
  */
 class BeamEraHpTest {
     /** The least ratio of a small unit's time on the screen to Level 10's. */
     static final double LEAST = 0.9;
     /** The most: tougher, not bullet sponges. */
     static final double MOST = 1.5;
+    /**
+     * M7 part G (step G4, pending the user's review in round 43): the most for a level with a reversed scroll (Level 20
+     * Retreat from Hellas). Its small units come up from the bottom edge into the rear guns (the plan's Tail Gun L3, 20
+     * a second, and the homing pods), not into the beam, which the factor was set for: the gap check planned them to
+     * stay 2–4 s and fire (m7g-gaps §1.5, "tougher, not more"). Measured with the tuned waves and the retreat play: 2.3×
+     * (Level 18's waves on the beam: 1.0×); without {@code small_act_hp} it is still 1.9×, flown at the bottom edge
+     * under everything (the beam's play, against the level's design) 1.6×.
+     */
+    static final double REVERSED_MOST = 2.5;
+
     /** The user's reference level. */
     static final int REFERENCE_LEVEL = 10;
 
@@ -48,9 +59,15 @@ class BeamEraHpTest {
         System.out.printf(
                 "Beam era %s: a killed small unit lives %.2f s on the screen, Level %02d %.2f s (%.2f×)%n",
                 key, life, REFERENCE_LEVEL, reference, life / reference);
+        double most = most(key);
         assertTrue(
-                life >= LEAST * reference && life <= MOST * reference,
+                life >= LEAST * reference && life <= most * reference,
                 key + ": " + life + " s vs Level " + REFERENCE_LEVEL + "'s " + reference + " s");
+    }
+
+    /** The most for the level: {@link #REVERSED_MOST} with a reversed scroll, else {@link #MOST}. */
+    static double most(String key) {
+        return SimSpecs.level(CONTENT, key, Difficulty.MEDIUM).reverses() ? REVERSED_MOST : MOST;
     }
 
     /**

@@ -69,8 +69,9 @@ final class Homing {
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             // M5 part E: never one under the water; M5 part F: nor a Lamprey latched onto the hull, which
-            // a turret's shots pass unless its mount may hit it.
+            // a turret's shots pass unless its mount may hit it. M7 part G: nor one the seekers ignore (a mote).
             if (!onField(enemy)
+                    || enemy.spec().seekersIgnore()
                     || !weapon.delivery().reaches(enemy.layer())
                     || (enemy.latched() && !fire.hitsLatched(m))) {
                 continue;
@@ -273,9 +274,11 @@ final class Homing {
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             // M5 part C: a hardened unit is no target unless the weapon is anti-ground; M5 part E:
-            // only one on a layer the shot reaches (a torpedo's sub and ground, a missile's the rest).
+            // only one on a layer the shot reaches (a torpedo's sub and ground, a missile's the rest). M7 part
+            // G (user decision 2026-10-20): never one the seekers ignore (a mote); a shot flying into it still hits.
             if (onField(enemy)
                     && !enemy.latched()
+                    && !enemy.spec().seekersIgnore()
                     && weapon.delivery().reaches(enemy.layer())
                     && (weapon.antiGround() || !enemy.spec().hardened())
                     && inCone(shot, enemy.x(), enemy.y(), best)) {

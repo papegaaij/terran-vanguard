@@ -68,12 +68,12 @@ tasks.test {
 
 /**
  * A level's numbers for tuning (LevelReport, CLAUDE.md Tools): ./gradlew :content:levelReport -Plevel=19
- * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp]
+ * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit]
  * [-Pjson]. It runs on the test classes and reads the design data at run time: a data.yaml edit needs no recompile.
  */
 tasks.register<JavaExec>("levelReport") {
     group = "verification"
-    description = "Prints a level's pacing, floor, haul, boss and beam-era numbers (-Plevel=<n>)."
+    description = "Prints a level's pacing, floor, haul, boss, beam-era and pursuit numbers (-Plevel=<n>)."
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass = "vanguard.content.LevelReport"
     maxHeapSize = "2g"
@@ -82,4 +82,26 @@ tasks.register<JavaExec>("levelReport") {
         providers.gradleProperty(name).orNull?.let { listOf("--$name", it) }
     }.flatten()
     args(options + if (providers.gradleProperty("json").isPresent) listOf("--json") else listOf())
+}
+
+/**
+ * The zero-allocation tests (Allocations) once more on C1 code only (-XX:TieredStopAtLevel=1): C1 has no escape
+ * analysis, so an allocation that only C2 removes (HazardPlay.channelSpan's double[2], CI on the 3-core macOS runner,
+ * 2026-10-20) fails here on every machine instead of on a slow one only. Its own forks, next to `test` in `check`.
+ */
+val allocationTest = tasks.register<Test>("allocationTest") {
+    group = "verification"
+    description = "Runs the zero-allocation tests on the C1 compiler only (no escape analysis)."
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    filter {
+        includeTestsMatching("*.steppingAWholeLevelDoesNotAllocate")
+        includeTestsMatching("*.theFightAllocatesNothingPerStep")
+    }
+    jvmArgs("-XX:TieredStopAtLevel=1")
+    systemProperty("vanguard.designDir", rootProject.layout.projectDirectory.dir("design").asFile.absolutePath)
+}
+
+tasks.check {
+    dependsOn(allocationTest)
 }

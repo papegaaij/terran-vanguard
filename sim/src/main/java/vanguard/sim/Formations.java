@@ -122,7 +122,9 @@ final class Formations {
                     && enemy.walker().isEmpty()
                     && enemy.chain().isEmpty()
                     && enemy.burrow().isEmpty()
-                    && enemy.layer() != Layer.GROUND;
+                    && enemy.layer() != Layer.GROUND
+                    // M7 part G: a pursuit follows the ship; its refills find their flock by its route.
+                    && wave.formation() != WaveSpec.Formation.PURSUIT;
         }
     }
 
@@ -206,6 +208,7 @@ final class Formations {
             case REAR_AMBUSH -> planner.rearAmbush();
             case FIELD -> planner.field();
             case CROSS -> planner.cross();
+            case PURSUIT -> planner.pursuit();
         }
     }
 
@@ -1076,6 +1079,88 @@ final class Formations {
                         Optional.empty(),
                         Optional.of(new Spawn.Swarm(route, i, x, y))));
             }
+        }
+
+        /**
+         * M7 part G, a pursuit (design/campaign Level 20, The pursuit swarm): {@code count} members of a flock in a
+         * seeded sunflower cloud above the top edge (a quarter of the width in from the wave's edge, the middle without
+         * one), its leader point coming down into the band at the climb speed; then the {@link Pursuit} flies it. Every
+         * {@code refillEvery} s after the wave's time, before its break-off, {@code refill} more members are planned as
+         * refills (counted in the density): each joins the flock from the top edge at the leader point's x as it
+         * enters, in a cloud of its own, and only while the flock has room. Planned in screen space: never flipped.
+         */
+        void pursuit() {
+            EnemySpec.FlockSpec flock = required(enemy().flock(), "a flock");
+            WaveSpec.Pursuit block = wave.pursuit().orElseThrow();
+            if (wave.count() > flock.max()) {
+                throw unsupported("a flock has at most " + flock.max() + " members, not " + wave.count());
+            }
+            double startX =
+                    switch (wave.edge()) {
+                        case LEFT -> WIDTH / 4;
+                        case RIGHT -> WIDTH * 3 / 4;
+                        case NONE, ALTERNATING, TOP, BOTTOM -> WIDTH / 2;
+                    };
+            double reach = flock.separation() * 0.6 * Math.sqrt(Math.max(wave.count(), block.refill()));
+            double startY = HEIGHT + OUTSIDE + reach;
+            double bandY = HEIGHT - (block.bandTop() + block.bandBottom()) / 2;
+            FlightPath path = FlightPath.through(startX, startY, startX, bandY);
+            double warning = Math.max(
+                    WaveSchedule.EDGE_WARNING_SECONDS, wave.warningSeconds().orElse(0.0));
+            Spawn.Route route = new Spawn.Route(
+                    path, List.of(), block.climbSpeed(), flock.diveSpeed(), 0, warning, Optional.of(block));
+            for (int i = 0; i < wave.count(); i++) {
+                double r = flock.separation() * 0.6 * Math.sqrt(i + 0.5);
+                double angle = i * GOLDEN_ANGLE + rng.range(-0.3, 0.3);
+                out.add(member(
+                        wave.t(),
+                        path,
+                        route,
+                        i,
+                        startX + r * StrictMath.cos(angle),
+                        startY + r * StrictMath.sin(angle),
+                        false));
+            }
+            int refills = block.refills(wave.t());
+            int member = wave.count();
+            for (int k = 1; k <= refills; k++) {
+                double t = wave.t() + k * block.refillEvery();
+                for (int i = 0; i < block.refill(); i++) {
+                    double r = flock.separation() * 0.6 * Math.sqrt(i + 0.5);
+                    double angle = i * GOLDEN_ANGLE + rng.range(-0.3, 0.3);
+                    out.add(member(
+                            t,
+                            path,
+                            route,
+                            member++,
+                            r * StrictMath.cos(angle),
+                            startY + r * StrictMath.sin(angle),
+                            true));
+                }
+            }
+        }
+
+        /** M7 part G: a pursuit's member {@code member} entering at {@code t} (a refill: see {@link Spawn.Swarm}). */
+        private Spawn member(
+                double t, FlightPath path, Spawn.Route route, int member, double x, double y, boolean refill) {
+            return new Spawn(
+                    SimStep.ticks(t),
+                    kind,
+                    enemy(),
+                    path,
+                    route.speed(),
+                    0,
+                    Optional.empty(),
+                    Spawn.Exit.DOWN,
+                    false,
+                    // The wave's carried pickups ride on the members entering with it.
+                    refill ? Optional.empty() : carried(member),
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.of(new Spawn.Swarm(route, member, x, y, refill)));
         }
 
         /**

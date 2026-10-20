@@ -219,15 +219,64 @@ public record WeaponData(
      * period} of one turn (clockwise), the {@code converge} point px ahead of the ship's centre its
      * shots aim at, the {@code fade_in} s of a rebuilt drone and what an {@code air} enemy's touch
      * does ({@code contact}). The hits it takes before it breaks and its rebuild time are per level.
+     *
+     * <p>M7 part G, the Rear-guard Drone Bay's drone (design/player/wingmen, Rear-guard drone): its {@code station}
+     * {@code trail} instead of the orbit: it flies {@code behind} px behind the ship's centre and {@code side} px to its
+     * bay's side, following the ship with a {@code lag} of that many s, and fires straight back ({@code fire: back});
+     * an orbiting drone ({@code station: orbit}, the default) has its {@code orbit}, {@code period} and {@code
+     * converge} instead.
      */
     public record Drone(
-            Size size, Size hitbox, double orbit, double period, double converge, double fadeIn, Contact contact) {
+            Size size,
+            Size hitbox,
+            Optional<Double> orbit,
+            Optional<Double> period,
+            Optional<Double> converge,
+            double fadeIn,
+            Contact contact,
+            Optional<Station> station,
+            Optional<Double> behind,
+            Optional<Double> side,
+            Optional<Double> lag,
+            Optional<Fire> fire) {
         public Drone {
-            Check.positive("orbit", orbit);
-            Check.positive("period", period);
-            Check.positive("converge", converge);
+            orbit.ifPresent(r -> Check.positive("orbit", r));
+            period.ifPresent(t -> Check.positive("period", t));
+            converge.ifPresent(d -> Check.positive("converge", d));
             Check.notNegative("fade_in", fadeIn);
+            behind.ifPresent(d -> Check.positive("behind", d));
+            side.ifPresent(d -> Check.notNegative("side", d));
+            lag.ifPresent(t -> Check.notNegative("lag", t));
+            boolean trails = station.orElse(Station.ORBIT) == Station.TRAIL;
+            Check.that(
+                    trails || (orbit.isPresent() && period.isPresent() && converge.isPresent()),
+                    "an orbiting drone has its orbit, period and converge");
+            Check.that(
+                    trails || (behind.isEmpty() && side.isEmpty() && lag.isEmpty() && fire.isEmpty()),
+                    "behind, side, lag and fire are a trailing drone's (station: trail)");
+            Check.that(
+                    !trails || (behind.isPresent() && side.isPresent() && lag.isPresent() && fire.isPresent()),
+                    "a trailing drone has its behind, side, lag and fire");
+            Check.that(
+                    !trails || (orbit.isEmpty() && period.isEmpty() && converge.isEmpty()),
+                    "orbit, period and converge are an orbiting drone's");
         }
+
+        /** M7 part G: whether it trails the ship ({@code station: trail}) rather than orbiting it. */
+        public boolean trails() {
+            return station.orElse(Station.ORBIT) == Station.TRAIL;
+        }
+    }
+
+    /** M7 part G: where a drone flies: round the ship ({@code orbit}, the light drone) or behind it ({@code trail}). */
+    public enum Station {
+        ORBIT,
+        TRAIL
+    }
+
+    /** M7 part G: where a trailing drone fires: straight back (180°, the rear-guard drone). */
+    public enum Fire {
+        BACK
     }
 
     /**

@@ -29,6 +29,10 @@ import vanguard.sim.PlayField;
  * @param turret M7 part F: its turret turns on its own, toward the ship, and fires its burst along its aim (the Warden
  *     Tank)
  * @param rearPlate M7 part F: its thin rear plate (the Warden Tank): direct shots from behind do more to its body
+ * @param pursuit M7 part G: its {@code pursuit} formation's defaults (the Mote Swarm in Level 20): a flock's band behind
+ *     the ship, its lunges, its refills and its break-off
+ * @param seekersIgnore M7 part G (user decision 2026-10-20, the Mote Swarm): {@code seekers_ignore: true}: the seekers
+ *     (the player's homing shots and turrets, Rook) never pick it as a target; false when not given
  */
 public record EnemyData(
         String name,
@@ -64,7 +68,9 @@ public record EnemyData(
         Optional<Pull> pull,
         Optional<Intel> intel,
         Optional<Turret> turret,
-        Optional<RearPlate> rearPlate) {
+        Optional<RearPlate> rearPlate,
+        Optional<Pursuit> pursuit,
+        Optional<Boolean> seekersIgnore) {
     public EnemyData {
         Layers.of(layer);
         Check.positive("hp", hp);
@@ -215,6 +221,56 @@ public record EnemyData(
         }
     }
 
+    /**
+     * M7 part G, the pursuit formation's defaults (design/enemies/air/mote-swarm; design/campaign Level 20, The pursuit
+     * swarm): the flock's leader point holds a {@code band} {@code [top, bottom]} px below the top edge (behind the ship
+     * once the scroll is reversed), following the ship's x at {@code lag} px/s; every {@code lunge_every} s a {@code
+     * tell} of that many s (the flock contracts into a {@code ball} px across), then the leader dives down the ship's
+     * lane at {@code dive} px/s to {@code overshoot} px below where the ship was at the tell's start (no homing) and
+     * climbs back to the band at {@code climb} px/s; {@code refill} motes join from the top edge every {@code
+     * refill_every} s while the flock has room; at its wave's break-off the leader climbs off the top edge at {@code
+     * break_speed} px/s and the members follow, alive. A wave's {@code pursuit} block may change any of them.
+     */
+    public record Pursuit(
+            Span band,
+            double lag,
+            double lungeEvery,
+            double tell,
+            double ball,
+            double dive,
+            double overshoot,
+            double climb,
+            int refill,
+            double refillEvery,
+            double breakSpeed) {
+        public Pursuit {
+            Check.that(band.min() >= 0 && band.max() > band.min(), "band: [top, bottom] px below the top edge");
+            Check.that(band.max() < PlayField.HEIGHT, "band: inside the play field");
+            Check.positive("lag", lag);
+            Check.positive("lunge_every", lungeEvery);
+            Check.positive("tell", tell);
+            Check.that(tell < lungeEvery, "tell: shorter than the time between lunges");
+            Check.positive("ball", ball);
+            Check.positive("dive", dive);
+            Check.notNegative("overshoot", overshoot);
+            Check.positive("climb", climb);
+            Check.notNegative("refill", refill);
+            Check.positive("refill_every", refillEvery);
+            Check.positive("break_speed", breakSpeed);
+        }
+    }
+
+    /**
+     * M7 part G: a difficulty's change to the pursuit formation: its time between lunges or its tell instead, s (the
+     * Mote Swarm's easy 8 s and 1.2 s, hard 4.5 s).
+     */
+    public record PursuitChange(Optional<Double> lungeEvery, Optional<Double> tell) {
+        public PursuitChange {
+            lungeEvery.ifPresent(s -> Check.positive("lunge_every", s));
+            tell.ifPresent(s -> Check.positive("tell", s));
+        }
+    }
+
     /** M7 part F: a difficulty's change to a turret: its turn rate instead, °/s (the Warden Tank's hard 160). */
     public record TurretChange(Optional<Double> turnRate) {
         public TurretChange {
@@ -349,6 +405,11 @@ public record EnemyData(
     /** M7 part A: whether its stat block marks it a machine ({@code machine: true}); a Vrell unit is not. */
     public boolean isMachine() {
         return machine.orElse(false);
+    }
+
+    /** M7 part G: whether the seekers ignore it ({@code seekers_ignore: true}); every seeker may pick it when not given. */
+    public boolean ignoredBySeekers() {
+        return seekersIgnore.orElse(false);
     }
 
     /** The movement patterns it uses, with their parameters (design/enemies/README.md, Movement pattern vocabulary). */
@@ -2011,6 +2072,7 @@ public record EnemyData(
      * @param turret M7 part F: a turret's turn rate instead (the Warden Tank's hard 160°/s)
      * @param homing M7 part F: homing missiles' turn rate instead (the Revenant Walker's hard 120°/s)
      * @param cone M7 part F: a flame cone's length, swivel or tell instead (the Revenant Walker's hard and easy)
+     * @param pursuit M7 part G: a pursuit's time between lunges or tell instead (the Mote Swarm's easy and hard)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -2042,7 +2104,8 @@ public record EnemyData(
             Optional<Boolean> secondPass,
             Optional<TurretChange> turret,
             Optional<HomingChange> homing,
-            Optional<ConeChange> cone) {
+            Optional<ConeChange> cone,
+            Optional<PursuitChange> pursuit) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

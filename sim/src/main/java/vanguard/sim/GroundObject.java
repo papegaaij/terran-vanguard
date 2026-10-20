@@ -22,17 +22,29 @@ public final class GroundObject implements Hashed {
 
     /** @param index its place in the level's list of ground objects, unique in an attempt */
     void place(GroundObjectSpec objectSpec, int index) {
+        place(objectSpec, index, false);
+    }
+
+    /**
+     * As {@link #place(GroundObjectSpec, int)}; M7 part G (design/campaign Level 20, Reverse scroll): {@code
+     * fromBottom}, it comes up from below the bottom edge with the reversed scroll instead.
+     */
+    void place(GroundObjectSpec objectSpec, int index, boolean fromBottom) {
         serial = index;
         spec = objectSpec;
         x = prevX = objectSpec.x();
-        y = prevY = PlayField.HEIGHT + objectSpec.size().height() / 2;
+        double half = objectSpec.size().height() / 2;
+        y = prevY = fromBottom ? -half : PlayField.HEIGHT + half;
         hp = objectSpec.hp();
         hitsLeft = objectSpec.hits();
         ticksSinceHit = Integer.MAX_VALUE;
         shut = false;
     }
 
-    /** Scrolls down by {@code distance}; returns false once it has left the bottom edge. */
+    /**
+     * Scrolls down by {@code distance}; returns false once it has left the bottom edge (M7 part G: or the top edge,
+     * scrolling up the screen with a negative {@code distance}).
+     */
     boolean scroll(double distance) {
         prevX = x;
         prevY = y;
@@ -46,6 +58,10 @@ public final class GroundObject implements Hashed {
             return PlayField.overlaps(x, y, spec.size()) || y - spec.size().height() / 2 >= PlayField.HEIGHT;
         }
         y -= distance;
+        if (distance < 0) {
+            // M7 part G: the reversed scroll carries it up and off the top edge.
+            return y - spec.size().height() / 2 < PlayField.HEIGHT;
+        }
         return y + spec.size().height() / 2 > 0;
     }
 

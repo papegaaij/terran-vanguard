@@ -147,6 +147,11 @@ def weapon_levels(d):
     if "drone" in w:
         head = ["Level", "Rate /s", "Damage", "Volley DPS", "Single-target DPS", "Drone breaks after", "Rebuild",
                 "Draw MW", "Upgrade cost"]
+        if w["drone"].get("station") == "trail":  # M7 part G: the rear-guard drone trails the ship, firing back
+            return table(head, drone_rows(w)) + "\n\n" + (
+                f"{generated} Values are per bay (one drone each). It flies {num(w['drone']['behind'])} px behind "
+                f"the ship and fires straight back, its one shot a volley, so every shot counts as a single-target "
+                f"hit. {od_note}")
         return table(head, drone_rows(w)) + "\n\n" + (
             f"{generated} Values are per bay (one drone each). Its shots aim at the convergence point "
             f"{num(w['drone']['converge'])} px ahead of the ship's centre, so every shot counts as a single-target "
@@ -431,11 +436,31 @@ def medium_waves(level):
     return [w for w in level["waves"] if "medium" not in w.get("skip", [])]
 
 
+def refills(wave):
+    """M7 part G: a pursuit's refills at medium, (how many, motes each): one every `refill_every` s after its entry
+    while before its break-off, each the wave's or its unit's `refill` (Level 20's swarms; the flock's room aside)."""
+    if "pursuit" not in wave:
+        return 0, 0
+    unit = load(f"{enemy_dir(wave['enemy'])}/data.yaml")["pursuit"]
+    every = wave["pursuit"].get("refill_every", unit["refill_every"])
+    each = wave["pursuit"].get("refill", unit["refill"])
+    n = 0
+    while wave["t"] + (n + 1) * every < wave["pursuit"]["break_at"]:
+        n += 1
+    return n, each
+
+
+def group_count(wave, g):
+    """A group's units at medium: its count, M7 part G: with a pursuit's refills."""
+    n, each = refills(wave)
+    return g["count"] + n * each
+
+
 def enemy_totals(level):
     totals = {}
     for wave in medium_waves(level):
         for g in groups(wave):
-            totals[g["enemy"]] = totals.get(g["enemy"], 0) + g["count"]
+            totals[g["enemy"]] = totals.get(g["enemy"], 0) + group_count(wave, g)
     return totals
 
 
@@ -467,14 +492,29 @@ def boss_streams(slug):
             for p in load(f"{enemy_dir(slug)}/data.yaml")["boss"]["phases"] if "streams" in p]
 
 
-def entry(wave):
+def reverses(level):
+    """M7 part G: whether a section scrolls backwards (a negative speed, Level 20's retreat)."""
+    return any(s.get("speed", level["scroll_speed"]) < 0 for s in level["sections"])
+
+
+def travel_at(level, t):
+    """M7 part G: the direction of travel at t, +1 while the ground scrolls down the screen, -1 while it scrolls up."""
+    return -1 if scroll_at(level, t + 0.001) < scroll_at(level, t) else 1
+
+
+def entry(wave, level=None):
     """Where a wave enters: `sides` alone means both side edges, one side reads "left side"; M5 part G: a
-    cross's `all` reads "all edges"."""
+    cross's `all` reads "all edges". M7 part G: in a level that scrolls backwards, front and rear read as the screen
+    edge with their meaning by travel ("bottom (ahead)", "top (behind)")."""
     edge = wave.get("edge")
     if wave["from"] == "all":
         return "all edges"
     if wave["from"] == "sides" and edge in ("left", "right"):
         return f"{edge} side"
+    if level is not None and reverses(level) and wave["from"] in ("front", "rear"):
+        top = (wave["from"] == "front") == (travel_at(level, wave["t"]) > 0)
+        side = f", {EDGES[edge]}" if edge else ""
+        return f"{'top' if top else 'bottom'} ({'ahead' if wave['from'] == 'front' else 'behind'}{side})"
     return wave["from"] + (f" ({EDGES[edge]})" if edge else "")
 
 
@@ -482,7 +522,7 @@ def directions(level):
     """The share of the level's enemies (medium) per entry direction, front · sides · rear."""
     counts = {"front": 0, "sides": 0, "rear": 0}
     for wave in medium_waves(level):
-        n = sum(g["count"] for g in groups(wave))
+        n = sum(group_count(wave, g) for g in groups(wave))
         if wave["from"] == "all":  # M5 part G: a cross from all four edges, split evenly (two are the sides)
             counts["front"] += n / 4
             counts["sides"] += n / 2
@@ -508,7 +548,15 @@ def level_sections(d):
         layers = " ".join(f"`{layer}`: {text}" for layer, text in s["notes"]["layers"].items())
         # M7 part E: a level with a dust storm's `visibility` shows each section's radius at medium (its notes)
         storm = [s["notes"]["visibility"]] if "visibility" in level else []
-        rows.append([f"{i}. {s['name']}", f"{start}–{end}", f"{grouped(px0, ',')}–{grouped(px1, ',')}", num(speed),
+        if reverses(level):  # M7 part G: signed scroll and speeds (Level 20), "2,800 → −3,110", "−130"
+            def signed(text):
+                return text.replace("-", "−")
+            scroll = f"{signed(grouped(px0, ','))} → {signed(grouped(px1, ','))}"
+            speed_text = signed(num(speed)) if speed < 0 else f"+{num(speed)}"
+        else:
+            scroll = f"{grouped(px0, ',')}–{grouped(px1, ',')}"
+            speed_text = num(speed)
+        rows.append([f"{i}. {s['name']}", f"{start}–{end}", scroll, speed_text,
                      atmosphere_text(s)] + storm + [layers, s["notes"]["purpose"]])
     storm_head = ["Visibility (medium)"] if "visibility" in level else []
     return table(["Section", "t (s)", "Scroll (px)", "Speed (px/s)", "Atmosphere"] + storm_head
@@ -653,9 +701,11 @@ def waves(d):
     rows = []
     for w in level["waves"]:
         gs = groups(w)
-        enter = entry(w)
+        enter = entry(w, level)
         rows.append((w["t"], [num(w["t"]), str(section_of(level, w["t"])), " + ".join(dict.fromkeys(g["formation"] for g in gs)),
-                              " + ".join(enemy_link(d, g["enemy"]) for g in gs), " + ".join(str(g["count"]) for g in gs),
+                              " + ".join(enemy_link(d, g["enemy"]) for g in gs),
+                              " + ".join(str(g["count"]) for g in gs)
+                              + (" + {} × {}".format(*refills(w)) if refills(w)[0] else ""),
                               enter, fill(w["notes"], w) if "notes" in w else ""]))
     # a set piece's passes, each a row at its window on screen (notes.t, "62–74")
     for piece in level.get("set_pieces", []):
@@ -838,7 +888,10 @@ def rook_barks(d):
         values = {k: (f"{round_half_up(v * 100)} %" if k == "below" else num(v)) for k, v in bark.items()
                   if k in ("ahead", "below", "kills", "seconds")}
         trigger = fill(bark["notes"]["trigger"], values) + (" (shouted)" if bark.get("shout") else "")
-        rows.append([str(i), trigger, " · ".join(f'"{line}"' for line in bark["lines"])])
+        variants = " · ".join(f'"{line}"' for line in bark["lines"])
+        if bark.get("top_lines"):  # M7 part G: the rear wave's variants in a reversed section (Level 20)
+            variants += "; in a reversed section, from the top: " + " · ".join(f'"{line}"' for line in bark["top_lines"])
+        rows.append([str(i), trigger, variants])
     return table(["Priority", "Trigger", f"Variants (speaker {barks['speaker']})"], rows)
 
 

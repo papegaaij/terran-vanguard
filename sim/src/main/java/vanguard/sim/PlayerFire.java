@@ -288,15 +288,17 @@ final class PlayerFire {
 
     /**
      * M7 part A: drone bay {@code m}'s gun fires one shot from its drone, aimed at the convergence point
-     * ahead of the ship's centre.
+     * ahead of the ship's centre; M7 part G: a rear-guard drone's straight back.
      */
     private void droneVolley(int m, WeaponSpec weapon) {
         double x = drones.x(m);
         double y = drones.y(m);
         Shot shot = shots.obtain();
         if (shot != null) {
-            double heading =
-                    StrictMath.atan2(ship.x() - x, ship.y() + drones.spec(m).converge() - y);
+            // M7 part G: a rear-guard drone fires straight back (down the screen).
+            double heading = drones.spec(m).fireBack()
+                    ? StrictMath.PI
+                    : StrictMath.atan2(ship.x() - x, ship.y() + drones.spec(m).converge() - y);
             shot.fire(weapon, m, x, y, heading);
         }
         events.add(SimEvents.Type.SHOT_FIRED, x, y, m);

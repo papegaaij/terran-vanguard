@@ -584,7 +584,19 @@ public final class SimEvents {
         /**
          * M7 part F: a furnace vent's flame hit the ship (value 0) or Rook (value 1), at him: once per burst each.
          */
-        VENT_HIT;
+        VENT_HIT,
+        /**
+         * M7 part G (design/campaign Level 20, The pursuit swarm): a pursuit's lunge starts its tell (at its leader
+         * point): the flock contracts into a ball, brightens, a rising hum; value: its flock's serial.
+         */
+        PURSUIT_TELL,
+        /** M7 part G: a pursuit's leader point dives down the ship's lane (at it); value: its flock's serial. */
+        PURSUIT_LUNGE,
+        /**
+         * M7 part G: a pursuit breaks off (at its leader point): it climbs off the top, its motes following alive;
+         * value: its flock's serial.
+         */
+        PURSUIT_BREAK;
 
         private static final Type[] VALUES = values();
     }

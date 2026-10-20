@@ -171,6 +171,8 @@ public record WingmenData(Rook rook, Guns guns, Barks barks) {
      * @param ahead s before the wave enters (the rear wave)
      * @param below the armour share it falls below (the armour triggers)
      * @param kills the kills of a streak within {@code seconds}
+     * @param topLines M7 part G (design/campaign Level 20, Reverse scroll): the rear wave's variants in a reversed
+     *     section, where "behind" is the top of the screen ("Up top!"); its {@code lines} elsewhere
      */
     public record Bark(
             String trigger,
@@ -180,11 +182,19 @@ public record WingmenData(Rook rook, Guns guns, Barks barks) {
             Optional<Double> ahead,
             Optional<Double> below,
             Optional<Integer> kills,
-            Optional<Double> seconds) {
+            Optional<Double> seconds,
+            Optional<List<String>> topLines) {
         public Bark {
             Check.notEmpty("lines", lines);
             lines = List.copyOf(lines);
             below.ifPresent(share -> Check.share("below", share));
+            topLines = topLines.map(List::copyOf);
+            topLines.ifPresent(top -> Check.notEmpty("top_lines", top));
+        }
+
+        /** M7 part G: the variants it picks from in a reversed section: its {@code top_lines}, else its lines. */
+        public List<String> linesReversed() {
+            return topLines.orElse(lines);
         }
 
         public boolean shouted() {

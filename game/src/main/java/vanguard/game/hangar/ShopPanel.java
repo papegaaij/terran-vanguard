@@ -152,15 +152,26 @@ final class ShopPanel {
             glass.diamond(batch, x - i * 10, y + 1);
         }
         Color colour = selected ? Glass.AMBER : locked ? Glass.DIM : Glass.WHITE;
-        glass.shadowed(
-                batch,
-                glass.fonts.label,
-                Names.of(offer.item().name()),
-                colour,
-                NAME_X,
-                y,
-                x - matches * 10 - NAME_X - 4);
+        int chars = rowChars(Fonts.width(glass.fonts.label, "M"), status, offer.isNew(), matches);
+        glass.shadowed(batch, glass.fonts.label, Names.fit(offer.item().name(), chars), colour, NAME_X, y);
     }
+
+    /**
+     * Step GFX2: the characters a row's name has, in a label font of {@code advance} px a glyph: from right of its
+     * icon to the marks left of its {@code status} (and its {@code NEW} tag), {@code matches} trait marks 10 px each.
+     */
+    static int rowChars(int advance, String status, boolean isNew, long matches) {
+        int x = RIGHT - status.length() * advance - 6 - (isNew ? 30 : 0);
+        return Math.max(0, (int) ((x - matches * 10 - NAME_X - 4) / advance));
+    }
+
+    /** Step GFX2: the characters the detail's heading has, in a body font of {@code advance} px: up to the icon. */
+    static int headingChars(int advance) {
+        return (RIGHT - DETAIL_ICON_GAP - INNER) / advance;
+    }
+
+    /** The detail's heading keeps this far from the panel's right edge: the large icon (24 px) and a gap. */
+    static final int DETAIL_ICON_GAP = 28;
 
     /** The escort's last row: Rook's side, {@code ROOK'S SIDE ... LEFT}. */
     private void drawSideRow(SpriteBatch batch, HangarState state, int y, boolean selected) {
@@ -291,7 +302,12 @@ final class ShopPanel {
         batch.setColor(Color.WHITE);
     }
 
-    private static String status(Offer offer) {
+    /** Step GFX2: the detail heading's level, {@code L3}; empty for an item without levels. */
+    static String level(Item item, int level) {
+        return item.maxLevel() > 1 ? "L" + level : "";
+    }
+
+    static String status(Offer offer) {
         String level = offer.item().maxLevel() > 1 ? "L" + offer.level() + " " : "";
         return switch (offer.state()) {
             case FITTED -> offer.item().kind() == ItemKind.SPECIAL ? "FITTED" : level + "FITTED";
@@ -304,11 +320,11 @@ final class ShopPanel {
 
     private void drawDetail(SpriteBatch batch, HangarState state, Offer offer, int y) {
         Item item = offer.item();
-        String level = item.maxLevel() > 1 ? "  L" + offer.level() : "";
         TextureRegion icon = icons.of(item).large();
         drawIcon(batch, icon, RIGHT - icon.getRegionWidth(), y - 6, offer.state() == State.LOCKED);
-        glass.shadowed(
-                batch, glass.fonts.body, Names.of(item.name()) + level, Glass.AMBER, INNER, y, RIGHT - 28 - INNER);
+        String heading = Names.heading(
+                item.name(), level(item, offer.level()), headingChars(Fonts.width(glass.fonts.body, "M")));
+        glass.shadowed(batch, glass.fonts.body, heading, Glass.AMBER, INNER, y);
         int traitX = INNER;
         for (String trait : item.traits()) {
             String text = "<" + trait.toUpperCase(Locale.ROOT) + ">";

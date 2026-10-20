@@ -28,8 +28,25 @@ movement:
 attacks: []       # contact only
 formations:
   - {name: swarm, size: [6, 24]}
+  - {name: pursuit, size: [8, 12]}   # M7 part G: Level 20's pursuing swarm, 10 on entry (easy 8, hard 12 by the formation lever) plus its refills
 weak_points: []
 drops: []
+pursuit:   # M7 part G (Level 20, The pursuit swarm; first values approved in round 36 Q.20): the `pursuit` formation's defaults; a wave's `pursuit` block may change them
+  band: [50, 150]     # px below the top edge: the leader point's band (behind the ship once the scroll is reversed)
+  lag: 90             # px/s: the leader follows the ship's x this fast sideways
+  lunge_every: 6      # s from one lunge's tell to the next
+  tell: 0.8           # s: the flock contracts into a ball, brightens, a rising hum
+  ball: 60            # px across, the contracted flock
+  dive: 240           # px/s straight down the ship's lane (no homing)
+  overshoot: 140      # px below where the ship was at the tell's start
+  climb: 200          # px/s back to the band
+  refill: 3           # motes joining from the top edge (easy 2, hard 4 by the formation lever), while the flock has room
+  refill_every: 10    # s
+  break_speed: 200    # px/s: at its break-off the leader climbs off the top edge, the members follow alive
+difficulty:
+  easy: {pursuit: {lunge_every: 8, tell: 1.2}}
+  hard: {pursuit: {lunge_every: 4.5}}
+seekers_ignore: true   # M7 part G (user decision 2026-10-20, "Homing ignores motes"): no homing shot, turret or Rook picks a mote as a target; direct fire (the rear guns against the pursuit) still hits
 traits: [spread, area, rear]
 bounty: 2
 first_level: 10
@@ -41,5 +58,5 @@ notes:
   weak_points: (dies in one hit)
   bounty: ' per mote; a swarm of 20 pays 40'
   death: '`tiny` ember puff'
-  used_in: returns in Act 3 (L20)
-  difficulty: 'flock size via the global formation lever; hard: two loop-backs (level data)'
+  used_in: returns in Act 3 (L20, as the pursuing swarm)
+  difficulty: 'flock size via the global formation lever; hard: two loop-backs (level data); the pursuit (Level 20): easy a lunge every 8 s with a 1.2 s tell, hard every 4.5 s'

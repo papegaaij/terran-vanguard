@@ -1,6 +1,7 @@
 package vanguard.game.render;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,6 +22,7 @@ class WaveBannersTest {
     private static final int LEFT = WarningEdge.LEFT.bit();
     private static final int RIGHT = WarningEdge.RIGHT.bit();
     private static final int REAR = WarningEdge.BOTTOM.bit();
+    private static final int TOP = WarningEdge.TOP.bit();
     private static final int BANNER_TICKS = SimStep.ticks(WaveBanners.SECONDS);
 
     private final WaveBanners banners = new WaveBanners(null, null, false);
@@ -35,12 +37,40 @@ class WaveBannersTest {
         assertEquals("WARNING — HOSTILES ON ALL SIDES", WaveBanners.text(REAR | LEFT | RIGHT));
     }
 
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): by travel. The top edge is the rear; a bottom warning that
+     * started while the scroll ran reversed is a wave from ahead (the lessons).
+     */
+    @Test
+    void inAReversedSectionTheTopIsTheRearAndTheBottomAhead() {
+        assertEquals("WARNING — HOSTILES FROM THE REAR", WaveBanners.text(TOP));
+        assertEquals("WARNING — HOSTILES FROM THE REAR AND LEFT", WaveBanners.text(TOP | LEFT));
+        assertEquals("WARNING — HOSTILES AHEAD", WaveBanners.text(REAR, true));
+        assertEquals("WARNING — HOSTILES AHEAD AND RIGHT", WaveBanners.text(REAR | RIGHT, true));
+        assertEquals("WARNING — HOSTILES AHEAD, LEFT AND RIGHT", WaveBanners.text(REAR | LEFT | RIGHT, true));
+        assertEquals("WARNING — HOSTILES AHEAD AND BEHIND", WaveBanners.text(REAR | TOP, true));
+        assertEquals("WARNING — HOSTILES FROM THE REAR", WaveBanners.text(REAR, false));
+        // The bottom's warning names the banner by the travel as it started.
+        banners.step(REAR, REAR, 0, true);
+        assertEquals("WARNING — HOSTILES AHEAD", banners.shown());
+        banners.clear();
+        banners.step(REAR, REAR, 0, false);
+        assertEquals("WARNING — HOSTILES FROM THE REAR", banners.shown());
+        banners.clear();
+        banners.step(TOP, TOP, 0, true);
+        assertEquals("WARNING — HOSTILES FROM THE REAR", banners.shown());
+    }
+
     @Test
     void everyBannerFitsItsBandInTheBodyFont() {
         BitmapFont.BitmapFontData body = new BitmapFont.BitmapFontData(
                 new FileHandle(new File(System.getProperty("vanguard.assetsDir"), Fonts.BODY_FILE)), false);
-        for (int edges = 1; edges < 8; edges++) {
-            String text = WaveBanners.text(edges);
+        // M7 part G: the top edge too, and the bottom named by travel.
+        for (int n = 1; n < 32; n++) {
+            if ((n & 15) == 0) {
+                continue;
+            }
+            String text = WaveBanners.text(n & 15, n >= 16);
             int width = 0;
             for (int i = 0; i < text.length(); i++) {
                 BitmapFont.Glyph glyph = body.getGlyph(text.charAt(i));
@@ -145,5 +175,49 @@ class WaveBannersTest {
         assertEquals(1, WaveBanners.opacity(1));
         assertTrue(WaveBanners.opacity(WaveBanners.SECONDS - 0.1) < 1);
         assertEquals(0, WaveBanners.opacity(WaveBanners.SECONDS));
+    }
+
+    /**
+     * Step GFX2 (the round 43 capture: the box was drawn empty for a moment while one warning handed over to the
+     * next): the box never shows without its text; a banner that follows another takes the open box over (no fade
+     * out, no opening again), and a banner opening from nothing has its text from its first frame.
+     */
+    @Test
+    void theBoxIsNeverEmpty() {
+        int handOver = -1;
+        String first = null;
+        for (long tick = 0; tick < 3 * BANNER_TICKS; tick++) {
+            int edges = (tick < 4 * BANNER_TICKS ? LEFT : 0) | (tick >= 30 ? RIGHT : 0);
+            int started = (tick == 0 ? LEFT : 0) | (tick == 30 ? RIGHT : 0);
+            banners.step(edges, started, tick);
+            if (tick == 0) {
+                first = banners.shown();
+                assertTrue(banners.openness(tick, 0) < 1, "it opens from nothing");
+            }
+            for (float alpha : new float[] {0, 0.5f}) {
+                if (banners.boxOpacity(tick, alpha) > 0) {
+                    assertFalse(banners.shown().isEmpty(), "the box at tick " + tick + " has its text");
+                }
+            }
+            if (handOver < 0 && !banners.shown().equals(first)) {
+                handOver = (int) tick;
+            }
+        }
+        assertEquals(BANNER_TICKS, handOver, "the right edge's banner follows the left's");
+        assertEquals("WARNING — HOSTILES FROM THE LEFT", first);
+        // Flown again: through the hand-over the box stays fully open and opaque.
+        banners.clear();
+        for (long tick = 0; tick < handOver + 20; tick++) {
+            banners.step(LEFT | (tick >= 30 ? RIGHT : 0), (tick == 0 ? LEFT : 0) | (tick == 30 ? RIGHT : 0), tick);
+            if (tick >= handOver - SimStep.ticks(WaveBanners.FADE_SECONDS)) {
+                assertEquals(1, banners.boxOpacity(tick, 0.5f), 1e-6, "no fade out at tick " + tick);
+                assertEquals(1, banners.openness(tick, 0.5f), 1e-6, "no opening again at tick " + tick);
+            }
+        }
+        assertEquals("WARNING — HOSTILES FROM THE RIGHT", banners.shown());
+        // A banner with nothing after it still fades out.
+        banners.clear();
+        banners.step(LEFT, LEFT, 0);
+        assertTrue(banners.boxOpacity(BANNER_TICKS - 2, 0) < 1, "the last banner fades out");
     }
 }

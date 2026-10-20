@@ -43,8 +43,8 @@ import vanguard.sim.Sortie;
  * than itself: it drops below the unit to shoot it), and with nothing hooked on the screen it holds
  * station under the ally, in the way of what comes up at it from below; ground units, which cannot ram,
  * are not dodged there. The plays live beside it: {@link DodgePlay}, {@link TargetPlay}, {@link HazardPlay},
- * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay} and the moves' {@link MovePlanner}. It
- * reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay}, {@link RetreatPlay} (M7 part G: the
+ * reversed scroll, Level 20) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -171,6 +171,13 @@ public final class Autopilot {
         if (hazard != 0) {
             return commands | (hazard < 0 ? Command.LEFT.bit() : Command.RIGHT.bit()) | Command.DOWN.bit();
         }
+        if (sortie.reversed()) {
+            // M7 part G: out of the pursuit's lunge before anything else (Level 20, RetreatPlay).
+            double lunge = RetreatPlay.lungeThreat(sortie, shipX, shipY);
+            if (lunge != 0) {
+                return commands | (lunge < 0 ? Command.LEFT.bit() : Command.RIGHT.bit());
+            }
+        }
         SetPiece walking = WalkerPlay.walkingBoss(sortie);
         if (walking != null) {
             return commands | WalkerPlay.walkerMove(sortie, walking);
@@ -186,6 +193,11 @@ public final class Autopilot {
         SetPiece piece = descended(sortie);
         if (piece != null && piece.boss().isPresent()) {
             return commands | MovePlanner.bossMove(sortie, vitalX(piece), Math.min(CRUISE_Y, bodyBottom(piece) - 70));
+        }
+        if (sortie.reversed()) {
+            // M7 part G: the retreat's middle band, the rear guns on what comes up from below, each move weighed
+            // against the bullets and units from both edges (RetreatPlay).
+            return commands | RetreatPlay.move(sortie, shipX, shipY);
         }
         double threat = DodgePlay.threat(sortie, shipX, shipY);
         if (threat != 0) {

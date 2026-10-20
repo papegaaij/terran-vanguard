@@ -26,8 +26,16 @@ Lance, Shield Overcharge) had no icon chosen in round 36: they are an a/b propos
 (``act3_symbol``); the user chose a (P.3 = a, 2026-10-13), written to assets/ and shown on
 design/ui/hangar/concept/act3-icons-r37-a.png, the rejected b on concept/rejected/act3-icons-r37-b.png.
 
+``--rear-guard`` (M7 part G batch, step ICON-G, concept round 43): only the Rear-guard Drone Bay's
+icon (``rear-guard-drone-bay.png``/``-large.png``, in the Light Drone Bay's style: the bay's drone model
+of tools/art/light_drone.py ``drone_rear``, here the trailing pair with their guns turned back, each
+firing a pulse bolt down the badge) and its review crop
+design/player/weapons/rear-guard-drone-bay/concept/rear-guard-icon-final-r43-a.png (beside the Light
+Drone Bay's icon); the other icons are left as they are. A full run renders it too, with the same
+Source note.
+
 Run: python3 tools/art/icons.py [--review] [--variant a|b]   (~20 s; --review only rebuilds the sheets,
---variant only that proposal sheet)
+--variant only that proposal sheet); python3 tools/art/icons.py --rear-guard [--review]   (~3 s)
 """
 import re
 import sys
@@ -309,6 +317,25 @@ def _drone():
     return model_symbol(scene, mats, 1.6, 0.0)
 
 
+def _rear_guard_pair():
+    """The Rear-guard Drone Bay: two of its drones (light_drone.drone_rear, gun at the model's +y)
+    trailing side by side with their guns turned back (down the badge), each firing a pulse bolt."""
+    import light_drone
+    scene, mats = light_drone.drone_rear()
+    one, _ = model_symbol(scene, mats, 2.6, 180.0)
+    spots = ((-0.44, 0.36), (0.44, 0.36))
+
+    def pair(p):
+        d, m = one(p - vec(*spots[0], 0.0))
+        for x, y in spots[1:]:
+            d2, m2 = one(p - vec(x, y, 0.0))
+            m = np.where(d2 < d, m2, m)
+            d = np.minimum(d, d2)
+        shots = np.min([bolt(p, (x, y - 0.5), (x, y - 1.06), 0.075) for x, y in spots], axis=0)
+        return union((d, m), (shots, M["shot"]))
+    return pair, mats
+
+
 def act3_symbol(symbol, v):
     """(scene, extra materials) of an Act 3 item's emblem in variant v, or None."""
     if symbol == "ion-beam":
@@ -379,6 +406,9 @@ def act3_symbol(symbol, v):
     return None
 
 
+G_BATCH = {"rear-guard-drone-bay": _rear_guard_pair}   # M7 part G (step ICON-G, round 43)
+G_SOURCE = artkit.source_note(SCRIPT, "M7 part G batch")
+G_CONCEPT = PLAYER / "weapons" / "rear-guard-drone-bay" / "concept"
 ACT3 = ("ion-beam", "rear-lance", "deflector-pod", "light-drone-bay", "special-emp-burst",
         "special-orbital-lance", "special-shield-overcharge")
 VARIANT = "a"
@@ -392,6 +422,9 @@ def emblem(symbol, grade):
     act3 = act3_symbol(symbol, VARIANT) if symbol in ACT3 else None
     if act3 is not None:
         inner, extra = act3
+        mats += extra
+    elif symbol in G_BATCH:
+        inner, extra = G_BATCH[symbol]()
         mats += extra
     elif symbol in MODELS:
         inner, extra = MODELS[symbol]()
@@ -443,7 +476,7 @@ def build():
             for suffix, size in SIZES.items()]
     with ProcessPoolExecutor() as pool:
         for job, img in zip(jobs, pool.map(render, jobs)):
-            artkit.save_png(img, OUT / f"{job[0]}.png", SOURCE)
+            artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE if job[1] in G_BATCH else SOURCE)
     print(f"{len(jobs)} icons ({len(jobs) // len(SIZES)} items x {len(SIZES)} sizes)")
 
 
@@ -506,8 +539,47 @@ def act3_review(v):
     print(f"review: {path.relative_to(ROOT)}")
 
 
+def build_g():
+    """The M7 part G batch only: writes its icons, leaves every other icon as it is."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    jobs = [(name + suffix, name, 0, size) for name in G_BATCH for suffix, size in SIZES.items()]
+    with ProcessPoolExecutor() as pool:
+        for job, img in zip(jobs, pool.map(render, jobs)):
+            artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE)
+    print(f"{len(jobs)} icons (M7 part G batch)")
+
+
+def review_g():
+    """Review crop: the Rear-guard Drone Bay's icon beside the Light Drone Bay's, at 1x and enlarged."""
+    labels = {name: label for name, label, _, _ in catalogue()}
+    names = ("rear-guard-drone-bay", "light-drone-bay")
+    cell = 350
+    sheet = raster.sheet(16 + len(names) * cell + 16, 60 + 112 + 12, "REAR-GUARD BAY ICON (FINAL R43)",
+                         "PRODUCTION ART, M7 PART G BATCH - R43")
+    raster.draw_text(sheet, 16, 38, "16X16 AT 1X AND 4X, 24X24 AT 1X AND 3X; THE LIGHT DRONE BAY'S FOR THE STYLE", raster.LABEL)
+    for i, name in enumerate(names):
+        x, y = 16 + i * cell, 56
+        small = Image.open(OUT / f"{name}.png").convert("RGBA")
+        large = Image.open(OUT / f"{name}-large.png").convert("RGBA")
+        plate_ = Image.new("RGBA", (cell - 8, 104), (6, 8, 26, 255))
+        plate_.alpha_composite(small, (2, 2))
+        plate_.alpha_composite(sprite.enlarge(small, 4), (22, 2))
+        plate_.alpha_composite(large, (92, 2))
+        plate_.alpha_composite(sprite.enlarge(large, 3), (120, 2))
+        sheet.alpha_composite(plate_, (x, y))
+        raster.draw_text(sheet, x + 2, y + 92, labels.get(name, name).upper()[:34], raster.LABEL_DIM)
+    path = G_CONCEPT / "rear-guard-icon-final-r43-a.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if "--rear-guard" in args:
+        if "--review" not in args:
+            build_g()
+        review_g()
+        sys.exit()
     if "--variant" in args:
         act3_review(args[args.index("--variant") + 1])
         sys.exit()

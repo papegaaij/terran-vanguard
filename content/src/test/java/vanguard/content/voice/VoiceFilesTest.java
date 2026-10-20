@@ -56,6 +56,7 @@ class VoiceFilesTest {
             "act-3-red-dust/level-17-dome-siege",
             "act-3-red-dust/level-18-dust-storm",
             "act-3-red-dust/level-19-foundry-of-tharsis",
+            "act-3-red-dust/level-20-retreat-from-hellas",
             "act-3-red-dust briefing",
             "specials",
             "armour",
@@ -70,9 +71,17 @@ class VoiceFilesTest {
 
     private static final Set<String> RESPELLED_OLD = Set.of();
 
+    /**
+     * Sources of a rendered prefix whose lines are new and wait for their files, until {@code tools/art/voice.py}
+     * renders them; empty again since M7 part G's step VOX-G rendered Rook's "Up top!" barks of a reversed section
+     * (the rear-wave bark's {@code top_lines}).
+     */
+    private static final Set<String> AWAITING = Set.of();
+
     private static boolean rendered(VoiceLines.VoiceLine line) {
         return RENDERED.stream().anyMatch(where -> line.source().startsWith(where))
-                && !RESPELLED.contains(line.source());
+                && !RESPELLED.contains(line.source())
+                && !AWAITING.contains(line.source());
     }
 
     @Test

@@ -1,6 +1,8 @@
 package vanguard.content;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -25,6 +27,8 @@ import vanguard.sim.PlayField;
  * @param placed the set pieces along the scroll; on a layer, later ones are drawn over earlier ones
  * @param images the folder of another level whose images it uses (e.g. {@code level-04}, for a level
  *     whose own art does not exist yet); its own folder when not given
+ * @param strip M7 part G (design/campaign Level 20, a level that flies back over ground it has shown): the ground's
+ *     tile sets keyed by the strip's row instead of by section ({@link Strip}); the sections then name no tiles
  */
 public record BackdropData(
         Map<BackdropLayer, Double> scrollFactors,
@@ -34,7 +38,8 @@ public record BackdropData(
         Map<String, TileSet> tileSets,
         Map<String, Piece> pieces,
         List<PlacedPiece> placed,
-        Optional<String> images) {
+        Optional<String> images,
+        Optional<Strip> strip) {
     public BackdropData {
         images.ifPresent(folder -> Check.that(folder.matches("level-\\d{2}"), "images: a level folder, level-NN"));
         Check.that(
@@ -67,6 +72,57 @@ public record BackdropData(
             }
         }
         return out;
+    }
+
+    /**
+     * M7 part G, the strip backdrop (design/campaign Level 20; m7g-gaps §1.7): the level's ground authored as one strip,
+     * {@code origin} px up it at the level start, so the strip row at the screen's bottom edge is {@code origin} + the
+     * ground's scroll distance ({@link LevelData#scrollAt}, signed: it falls in a reversed section). Its {@code zones}
+     * lie back to back from the bottom up and each names the tile sets drawn over its rows (at most one per layer, one on
+     * the base layer); together they cover every row the screen shows over the level. Pieces stay placed by time (a
+     * ground position, {@link LevelData#pieceCentre}).
+     */
+    public record Strip(double origin, List<Zone> zones) {
+        public Strip {
+            Check.notEmpty("zones", zones);
+            zones = List.copyOf(zones);
+            for (int i = 1; i < zones.size(); i++) {
+                Check.that(
+                        zones.get(i).from() == zones.get(i - 1).to(),
+                        "strip.zones: back to back from the bottom up, zone " + i
+                                + " starts where the one before ends");
+            }
+        }
+
+        /** The strip row at the screen's bottom edge when the ground has scrolled {@code scroll} px. */
+        public double row(double scroll) {
+            return origin + scroll;
+        }
+
+        /** The zone over strip row {@code row}: the last one starting at or below it (the first below the strip). */
+        public Zone zoneAt(double row) {
+            Zone at = zones.getFirst();
+            for (Zone zone : zones) {
+                if (zone.from() <= row) {
+                    at = zone;
+                }
+            }
+            return at;
+        }
+    }
+
+    /** M7 part G: a strip's stretch from row {@code from} up to {@code to} (px up the strip) and its tile sets. */
+    public record Zone(double from, double to, List<String> tiles) {
+        public Zone {
+            Check.that(to > from, "a zone ends above where it starts (to > from)");
+            Check.notEmpty("tiles", tiles);
+            tiles = List.copyOf(tiles);
+        }
+    }
+
+    /** M7 part G: whether the ground's tile sets are keyed by the strip's row ({@link Strip}). */
+    public boolean stripped() {
+        return strip.isPresent();
     }
 
     /** M7 part C: whether the level has a {@code plateau} layer (a canyon's, Level 16). */
@@ -253,6 +309,9 @@ public record BackdropData(
      * @param repeat the placement repeated along the scroll (a stream of traffic): {@code count}
      *     placements in all, each {@code every} seconds after the one before, its path shifted in
      *     time with it; see {@link BackdropData#placements()}
+     * @param row M7 part G (a {@link Strip} backdrop, Level 20): a ground piece placed by the strip row of its centre
+     *     instead of a time ({@code t} is then NaN): it lies there whichever way the level flies over it, see {@link
+     *     LevelData#pieceCentre}; no path and no repeat
      */
     public record PlacedPiece(
             String piece,
@@ -261,8 +320,39 @@ public record BackdropData(
             Optional<Boolean> mirror,
             Optional<List<Waypoint>> path,
             Optional<Boolean> overhead,
-            Optional<Repeat> repeat) {
+            Optional<Repeat> repeat,
+            Optional<Double> row) {
+        /** As the data writes it: a time {@code t} or (M7 part G) a strip {@code row}, one of the two. */
+        @JsonCreator
+        static PlacedPiece of(
+                @JsonProperty("piece") String piece,
+                @JsonProperty("t") Optional<Double> t,
+                @JsonProperty("x") double x,
+                @JsonProperty("mirror") Optional<Boolean> mirror,
+                @JsonProperty("path") Optional<List<Waypoint>> path,
+                @JsonProperty("overhead") Optional<Boolean> overhead,
+                @JsonProperty("repeat") Optional<Repeat> repeat,
+                @JsonProperty("row") Optional<Double> row) {
+            Check.that(t.isPresent() != row.isPresent(), "placed: give its t or (a strip's ground piece) its row");
+            return new PlacedPiece(piece, t.orElse(Double.NaN), x, mirror, path, overhead, repeat, row);
+        }
+
+        /** Placed by time, as before M7 part G. */
+        public PlacedPiece(
+                String piece,
+                double t,
+                double x,
+                Optional<Boolean> mirror,
+                Optional<List<Waypoint>> path,
+                Optional<Boolean> overhead,
+                Optional<Repeat> repeat) {
+            this(piece, t, x, mirror, path, overhead, repeat, Optional.empty());
+        }
+
         public PlacedPiece {
+            Check.that(
+                    row.isEmpty() || (path.isEmpty() && repeat.isEmpty()),
+                    "a piece placed by its strip row has no path and no repeat");
             path.ifPresent(points -> {
                 Check.that(points.size() >= 2, "path: give at least two waypoints");
                 for (int i = 1; i < points.size(); i++) {
@@ -283,7 +373,13 @@ public record BackdropData(
                             .map(p -> new Waypoint(p.t() + shift, p.dx(), p.dy()))
                             .toList()),
                     overhead,
-                    Optional.empty());
+                    Optional.empty(),
+                    row);
+        }
+
+        /** M7 part G: whether it is placed by its strip row (a {@link Strip} backdrop's ground piece). */
+        public boolean byRow() {
+            return row.isPresent();
         }
 
         /** How many placements it stands for: its repeat's count, else 1. */

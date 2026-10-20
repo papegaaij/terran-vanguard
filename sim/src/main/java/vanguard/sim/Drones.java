@@ -14,6 +14,11 @@ import java.util.List;
  * rebuilds it in the rebuild time, then it fades in, moving from its bay to its orbit, and is whole
  * again. Every attempt (and a boss retry) starts with whole drones; when the ship is wrecked they break
  * with it. During an overdrive the drone's overdrive numbers count (its hits to break, its rebuild).
+ *
+ * <p>M7 part G (design/player/wingmen, Rear-guard drone): a bay whose drone has the {@link DroneSpec.Station#TRAIL}
+ * station flies it behind the ship instead ({@code behind} px below the ship's centre, {@code side} px to its bay's
+ * side, whatever the scroll's direction), following with its lag so it swings out in a turn, and fires straight back;
+ * blocking, contacts, breaking and the rebuild are the light drone's.
  */
 public final class Drones {
     /** How many air enemies a drone can touch at once; more contacts are counted as new each step. */
@@ -38,6 +43,16 @@ public final class Drones {
     private final int[] touchingCounts;
     /** Steps since the attempt started: the orbit's clock. */
     private int orbitTicks;
+    /**
+     * M7 part G: per mount, a trailing drone's place on the play field (it follows its station with its lag) and
+     * whether it has one yet (placed at its station on the first step of an attempt).
+     */
+    private final double[] trailX;
+
+    private final double[] trailY;
+    private final boolean[] placed;
+    /** M7 part G: whether any bay's drone trails (only then are the trail places hashed). */
+    private final boolean trails;
 
     private boolean overdrive;
 
@@ -56,6 +71,14 @@ public final class Drones {
             }
         }
         any = found;
+        boolean trailing = false;
+        for (int m = 0; m < size; m++) {
+            trailing |= armament.mount(m).bay() && armament.mount(m).drone().station() == DroneSpec.Station.TRAIL;
+        }
+        trails = trailing;
+        trailX = new double[size];
+        trailY = new double[size];
+        placed = new boolean[size];
         taken = new int[size];
         rebuilding = new int[size];
         fading = new int[size];
@@ -74,6 +97,9 @@ public final class Drones {
         Arrays.fill(lasered, false);
         Arrays.fill(contactCounts, 0);
         Arrays.fill(touchingCounts, 0);
+        Arrays.fill(placed, false);
+        Arrays.fill(trailX, 0);
+        Arrays.fill(trailY, 0);
         orbitTicks = 0;
         overdrive = false;
     }
@@ -93,6 +119,9 @@ public final class Drones {
             if (!armament.mount(m).bay()) {
                 continue;
             }
+            if (station(m) == DroneSpec.Station.TRAIL) {
+                follow(m);
+            }
             if (rebuilding[m] > 0) {
                 if (--rebuilding[m] == 0) {
                     fading[m] = SimStep.ticks(spec(m).fadeInSeconds());
@@ -102,6 +131,36 @@ public final class Drones {
                 fading[m]--;
             }
         }
+    }
+
+    /**
+     * M7 part G: a trailing drone's step toward its station behind the ship (its bay's side, {@code behind} px below
+     * the ship's centre): a first-order lag of {@code lagSeconds} (0: on it), so it swings out as the ship turns.
+     */
+    private void follow(int m) {
+        DroneSpec drone = spec(m);
+        double toX = ship.x() + sideways(m);
+        double toY = ship.y() - drone.behind();
+        if (!placed[m] || drone.lagSeconds() <= 0) {
+            trailX[m] = toX;
+            trailY[m] = toY;
+            placed[m] = true;
+            return;
+        }
+        double share = Math.min(1, SimStep.SECONDS / drone.lagSeconds());
+        trailX[m] += (toX - trailX[m]) * share;
+        trailY[m] += (toY - trailY[m]) * share;
+    }
+
+    /** M7 part G: a trail station's offset right of the ship's centre: its bay's side. */
+    private double sideways(int m) {
+        double side = spec(m).side();
+        return armament.mount(m).slot() == Armament.Slot.LEFT_WING ? -side : side;
+    }
+
+    /** M7 part G: where mount {@code m}'s drone flies: its orbit or its trail behind the ship. */
+    public DroneSpec.Station station(int m) {
+        return armament.mount(m).drone().station();
     }
 
     /** Whether any drone bay is fitted. */
@@ -157,8 +216,14 @@ public final class Drones {
         return 1 - (double) rebuilding[m] / Math.max(1, SimStep.ticks(spec(m).rebuildSeconds()));
     }
 
-    /** Mount {@code m}'s drone's orbit angle, radians clockwise from straight up. */
+    /**
+     * Mount {@code m}'s drone's orbit angle, radians clockwise from straight up; M7 part G: a trailing drone's is
+     * straight back (π).
+     */
     public double angle(int m) {
+        if (station(m) == DroneSpec.Station.TRAIL) {
+            return StrictMath.PI;
+        }
         int period = Math.max(1, SimStep.ticks(spec(m).periodSeconds()));
         double start = armament.mount(m).slot() == Armament.Slot.LEFT_WING ? -StrictMath.PI / 2 : StrictMath.PI / 2;
         return start + 2 * StrictMath.PI * (orbitTicks % period) / period;
@@ -169,13 +234,18 @@ public final class Drones {
      * way from the bay (the mount's first muzzle) to the orbit.
      */
     public double offsetX(int m) {
-        double orbit = Trig.sin(angle(m)) * spec(m).orbit();
+        // M7 part G: a trailing drone's station is its place behind the ship, lagging.
+        double orbit = station(m) == DroneSpec.Station.TRAIL
+                ? (placed[m] ? trailX[m] - ship.x() : sideways(m))
+                : Trig.sin(angle(m)) * spec(m).orbit();
         return fadingIn(m) ? bayX(m) + (orbit - bayX(m)) * fadeIn(m) : orbit;
     }
 
     /** Mount {@code m}'s drone above the ship's centre, px (see {@link #offsetX}). */
     public double offsetY(int m) {
-        double orbit = Trig.cos(angle(m)) * spec(m).orbit();
+        double orbit = station(m) == DroneSpec.Station.TRAIL
+                ? (placed[m] ? trailY[m] - ship.y() : -spec(m).behind())
+                : Trig.cos(angle(m)) * spec(m).orbit();
         return fadingIn(m) ? bayY(m) + (orbit - bayY(m)) * fadeIn(m) : orbit;
     }
 
@@ -289,6 +359,10 @@ public final class Drones {
                     .add(contactCounts[m]);
             for (int i = 0; i < contactCounts[m]; i++) {
                 hash.add(contacts[m][i]);
+            }
+            if (trails && station(m) == DroneSpec.Station.TRAIL) {
+                // M7 part G: only a trailing drone adds its place, so the light drones' sorties hash as before.
+                hash.add(trailX[m]).add(trailY[m]).add(placed[m] ? 1 : 0);
             }
         }
     }

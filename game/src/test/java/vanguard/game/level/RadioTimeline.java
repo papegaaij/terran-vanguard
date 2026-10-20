@@ -78,12 +78,14 @@ abstract class RadioTimeline {
     static final String LEVEL_17 = "act-3-red-dust/level-17-dome-siege";
     static final String LEVEL_18 = "act-3-red-dust/level-18-dust-storm";
     static final String LEVEL_19 = "act-3-red-dust/level-19-foundry-of-tharsis";
+    static final String LEVEL_20 = "act-3-red-dust/level-20-retreat-from-hellas";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
 
     /**
-     * Levels whose lines are not rendered yet (none: Level 14's were rendered in M5 part H's step H6,
+     * Levels whose lines are not rendered yet (none now: Level 20's were rendered in M7 part G's step VOX-G,
+     * Level 14's in M5 part H's step H6,
      * Level 13's in M5 part G's step G6,
      * Level 12's in M5 part F's voice step, step 6, Level 11's in part E's, Level 10's in part D's,
      * Level 09's in part C's, Level 08's in M5 part B's step B9, Level 07's in M4 part G):
@@ -347,6 +349,17 @@ abstract class RadioTimeline {
                                 new Event(170, CueTrigger.BOSS_PART_DESTROYED, "left pod"),
                                 new Event(185, CueTrigger.BOSS_PART_DESTROYED, "right pod"),
                                 new Event(215, CueTrigger.BOSS_DESTROYED, "revenant-walker"))));
+        // M7 part G: Level 20's events: the emergency cache on its ledge (x 430, t≈92) shot as it enters or late as
+        // it rises past, and the kill-ratio secondary judged at the level's end (t=172)
+        runs.put(
+                LEVEL_20,
+                List.of(
+                        List.of(),
+                        List.of(new Event(93, CueTrigger.SECRET, "emergency cache")),
+                        List.of(
+                                new Event(96.5, CueTrigger.SECRET, "emergency cache"),
+                                new Event(172, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(172, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         return runs;
     }
 

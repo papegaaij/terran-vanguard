@@ -77,6 +77,11 @@ final class EnemyForce {
     private int flocksSpawned;
     /** The flock the members entering in this step join (a swarm's members enter together); null for none. */
     private Flock joining;
+    /**
+     * M7 part G: the pursuits' refill motes left out in this attempt because their flock had no room (or was gone):
+     * planned, they count nowhere ({@link #skipped()}).
+     */
+    private int skipped;
 
     private int spawned;
     private int nextGround;
@@ -106,6 +111,11 @@ final class EnemyForce {
     private Links links;
     /** M7 part C: per ground unit, its gate × 2 (+ 1 the right anchor); -1 for a unit that is no gate's anchor. */
     private int[] gateOf;
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): per ground unit, whether it is flipped ({@link
+     * TravelFrame}): one entering at the top edge with the scroll while it runs reversed comes up from the bottom.
+     */
+    private final boolean[] groundFlips;
 
     /** Plans the waves with {@code rng}, which also spreads the aimed shots later. */
     EnemyForce(
@@ -143,6 +153,23 @@ final class EnemyForce {
             SimEvents events,
             Escapes escapes,
             java.util.function.Function<WaveSpec, Optional<Formations.Span>> spans) {
+        this(waveSpecs, groundUnits, extraKinds, rng, rules, events, escapes, spans, t -> false);
+    }
+
+    /**
+     * @param reversedAt M7 part G: whether the scroll runs reversed at a level time, s ({@link Sortie#travelAt}{@code
+     *     < 0}): the waves at such a time and the ground units entering then are flipped ({@link TravelFrame})
+     */
+    EnemyForce(
+            List<WaveSpec> waveSpecs,
+            List<GroundUnit> groundUnits,
+            List<EnemySpec> extraKinds,
+            SplitMix64 rng,
+            Rules rules,
+            SimEvents events,
+            Escapes escapes,
+            java.util.function.Function<WaveSpec, Optional<Formations.Span>> spans,
+            java.util.function.DoublePredicate reversedAt) {
         this.rng = rng;
         this.rules = rules;
         this.events = events;
@@ -200,7 +227,7 @@ final class EnemyForce {
                             ? kinds.indexOf(spec.spawner().get().enemy())
                             : -1;
         }
-        this.waves = new WaveSchedule(waveSpecs, kinds, rng, spans);
+        this.waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt);
         volleyClocks = new int[waves.volleyClocks()];
         burrowers = new Burrowers(waves.burrowClocks(), enemies, events, guns);
         chainRules = new ChainRules(this, kinds, waves, enemies, events, escapes, guns);
@@ -209,7 +236,11 @@ final class EnemyForce {
         groundTicks = new int[groundUnits.size()];
         groundCurrentX = new double[groundUnits.size()];
         groundCurrentY = new double[groundUnits.size()];
+        groundFlips = new boolean[groundUnits.size()];
         for (int i = 0; i < groundUnits.size(); i++) {
+            GroundUnit unit = groundUnits.get(i);
+            // M7 part G: only a unit entering at the top edge with the scroll (not from a side, nor a root burst's).
+            groundFlips[i] = unit.side().isEmpty() && unit.burst().isEmpty() && reversedAt.test(unit.t());
             groundKinds[i] = kinds.indexOf(groundUnits.get(i).enemy());
             groundTicks[i] = SimStep.ticks(groundUnits.get(i).t());
             groundCurrentX[i] = StrictMath.sin(groundUnits.get(i).currentRadians());
@@ -273,6 +304,7 @@ final class EnemyForce {
         Pools.clear(flocks);
         flocksSpawned = 0;
         joining = null;
+        skipped = 0;
         waves.reset();
         spawned = 0;
         nextGround = 0;
@@ -307,6 +339,10 @@ final class EnemyForce {
             Enemy enemy = enemies.obtain();
             if (enemy != null) {
                 enemy.spawn(spawn, spawned);
+                if (waves.lastFlipped()) {
+                    // M7 part G: its wave entered while the scroll ran reversed.
+                    enemy.flip();
+                }
                 enemy.entered(waves.lastEntry());
                 enemy.tag(waves.lastTag());
                 enemy.volley(waves.lastVolleyGroup(), waves.lastVolleyUnit());
@@ -351,6 +387,10 @@ final class EnemyForce {
                         unit.group(),
                         groundCurrentX[nextGround],
                         groundCurrentY[nextGround]);
+                if (groundFlips[nextGround]) {
+                    // M7 part G: it comes up from the bottom edge with the reversed scroll.
+                    enemy.flip();
+                }
                 if (gateOf != null && gateOf[nextGround] >= 0) {
                     // M7 part C: a gate's anchor: its tendril starts with the pair.
                     links.anchored(gateOf[nextGround] >> 1, (gateOf[nextGround] & 1) == 1, enemy);
@@ -368,16 +408,30 @@ final class EnemyForce {
      */
     private void spawnMember(Spawn spawn) {
         Spawn.Swarm swarm = spawn.swarm().orElseThrow();
+        if (swarm.refill()) {
+            refill(spawn, swarm);
+            return;
+        }
         if (swarm.member() == 0) {
             joining = flocks.obtain();
             if (joining != null) {
-                joining.start(spawn.enemy().flock().orElseThrow(), flocksSpawned++, swarm.route(), waves.lastEntry());
+                joining.start(
+                        spawn.enemy().flock().orElseThrow(),
+                        flocksSpawned++,
+                        swarm.route(),
+                        waves.lastEntry(),
+                        waves.lastFlipped(),
+                        spawn.tick() * SimStep.SECONDS);
             }
         }
         if (joining != null) {
             Enemy enemy = enemies.obtain();
             if (enemy != null) {
                 enemy.join(joining, swarm.member(), spawn, spawned, swarm.x(), swarm.y(), joining.startFacing());
+                if (joining.flipped()) {
+                    // M7 part G: a member lives in its flock's frame.
+                    enemy.flip();
+                }
                 enemy.entered(waves.lastEntry());
                 enemy.tag(waves.lastTag());
                 joining.member(swarm.member(), enemy, swarm.x(), swarm.y());
@@ -387,14 +441,65 @@ final class EnemyForce {
     }
 
     /**
+     * M7 part G (design/campaign Level 20, The pursuit swarm): a pursuit's refill mote joins its wave's flock (the
+     * flock of its route) in a free slot, from the top edge at the leader point's x; with no room (or no flock) it is
+     * left out and counts nowhere ({@link #skipped()}).
+     */
+    private void refill(Spawn spawn, Spawn.Swarm swarm) {
+        Flock flock = null;
+        for (int f = 0; f < flocks.size(); f++) {
+            if (flocks.get(f).route() == swarm.route()) {
+                flock = flocks.get(f);
+                break;
+            }
+        }
+        int slot = flock == null ? -1 : flock.freeSlot();
+        Enemy enemy = slot < 0 ? null : enemies.obtain();
+        if (enemy == null) {
+            skipped++;
+        } else {
+            double x = Math.clamp(flock.leaderX() + swarm.x(), 0, PlayField.WIDTH);
+            enemy.join(flock, slot, spawn, spawned, x, swarm.y(), flock.joinFacing(x, swarm.y()));
+            enemy.entered(waves.lastEntry());
+            enemy.tag(waves.lastTag());
+            flock.join(enemy);
+        }
+        spawned++;
+    }
+
+    /**
+     * M7 part G: the pursuits' refill motes left out so far in this attempt (their flock was full): planned, they are
+     * taken off the level's units ({@link Sortie#enemyTotal()}) and so off the kill ratio's count.
+     */
+    int skipped() {
+        return skipped;
+    }
+
+    /**
      * M5 part D: the flocks fly a step; a loop-back raises its event; once a flock has flown its
      * course its members off the play field are gone (escaped), and those still on it a while later
      * too; a flock without members ends.
      */
     void moveFlocks() {
+        moveFlocks(Double.NaN, Double.NaN);
+    }
+
+    /**
+     * As {@link #moveFlocks()}; M7 part G: a pursuit steps toward the ship at ({@code shipX}, {@code shipY}) and raises
+     * its tell, lunge and break-off events (while it has members); NaN for none (a pursuit then holds its x).
+     */
+    void moveFlocks(double shipX, double shipY) {
         for (int f = flocks.size() - 1; f >= 0; f--) {
             Flock flock = flocks.get(f);
-            flock.advance(canyon);
+            if (flock.pursuing()) {
+                flock.advance(
+                        canyon,
+                        Double.isNaN(shipX) ? flock.leaderX() : shipX,
+                        Double.isNaN(shipY) ? flock.leaderY() : shipY);
+                pursuitEvents(flock);
+            } else {
+                flock.advance(canyon);
+            }
             if (flock.loopedBackNow() > 0) {
                 events.add(SimEvents.Type.LOOP_BACK, flock.leaderX(), flock.leaderY(), flock.loopedBackNow());
             }
@@ -409,10 +514,40 @@ final class EnemyForce {
                     }
                 }
             }
-            if (!flock.alive()) {
+            if (!flock.alive() && flock.ended()) {
                 flocks.free(f);
             }
         }
+    }
+
+    /** M7 part G: a pursuit's tell, lunge and break-off events of this step, only while its flock has members. */
+    private void pursuitEvents(Flock flock) {
+        Pursuit pursuit = flock.pursuit().orElseThrow();
+        if (!flock.alive()) {
+            return;
+        }
+        if (pursuit.brokeNow()) {
+            events.add(SimEvents.Type.PURSUIT_BREAK, pursuit.leaderX(), pursuit.leaderY(), flock.serial());
+        }
+        if (pursuit.toldNow()) {
+            events.add(SimEvents.Type.PURSUIT_TELL, pursuit.leaderX(), pursuit.leaderY(), flock.serial());
+        }
+        if (pursuit.lungedNow()) {
+            events.add(SimEvents.Type.PURSUIT_LUNGE, pursuit.leaderX(), pursuit.leaderY(), flock.serial());
+        }
+    }
+
+    /**
+     * M7 part G: the pursuit in flight (the first pursuit flock's, design/campaign Level 20), empty for none; no
+     * allocation.
+     */
+    java.util.Optional<Pursuit> pursuit() {
+        for (int f = 0; f < flocks.size(); f++) {
+            if (flocks.get(f).pursuing()) {
+                return flocks.get(f).pursuit();
+            }
+        }
+        return java.util.Optional.empty();
     }
 
     /** M5 part D: a flock's member was destroyed (before it is freed): it drops out of its flock. */
@@ -516,7 +651,7 @@ final class EnemyForce {
             moveChains(ship, firing);
         }
         if (flocks.size() > 0) {
-            moveFlocks();
+            moveFlocks(ship.x(), ship.y());
         }
         for (int g = 0; g < volleyClocks.length; g++) {
             if (volleyClocks[g] > 0) {
@@ -755,7 +890,8 @@ final class EnemyForce {
                         enemy.turretAim(),
                         ship,
                         -1,
-                        true);
+                        true,
+                        enemy.frame());
             }
             return;
         }
@@ -778,7 +914,16 @@ final class EnemyForce {
             int inArc = objectiveHook.mode(enemy.kind()) == HookMode.IN_ARC ? objectiveHook.inArc(enemy) : -1;
             if (inArc >= 0) {
                 // M5 part G: the objective within its armour's arc: the fan centred on it, aimed at it.
-                guns.fire(enemy.x(), enemy.y(), enemy.spec().gun().orElseThrow(), false, 0, ship, inArc, false);
+                guns.fire(
+                        enemy.x(),
+                        enemy.y(),
+                        enemy.spec().gun().orElseThrow(),
+                        false,
+                        0,
+                        ship,
+                        inArc,
+                        false,
+                        enemy.frame());
             } else {
                 guns.fire(
                         enemy.x(),
@@ -788,7 +933,8 @@ final class EnemyForce {
                         enemy.facing(),
                         ship,
                         -1,
-                        !atShip);
+                        !atShip,
+                        enemy.frame());
             }
         }
         if (spit) {
@@ -796,7 +942,7 @@ final class EnemyForce {
             int target = objectiveHook.mode(enemy.kind()) == HookMode.NEAREST
                     ? objectiveHook.convoy().nearest(enemy.x(), enemy.y(), ship.x(), ship.y())
                     : -1;
-            guns.fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false);
+            guns.fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false, enemy.frame());
         }
     }
 
@@ -818,12 +964,18 @@ final class EnemyForce {
      */
     private void fanOut(Enemy from, EnemySpec enemy, int count, double arc, double speed, Ship ship) {
         int kind = broodKinds[from.kind()];
-        double toShip = StrictMath.atan2(ship.y() - from.y(), ship.x() - from.x());
+        // M7 part G: worked out in the spawner's frame, which its units live in too.
+        TravelFrame frame = from.frame();
+        double fromY = from.frameY();
+        double toShip = StrictMath.atan2(frame.y(ship.y()) - fromY, ship.x() - from.x());
         for (int k = 0; k < count; k++) {
             double angle = count == 1 ? toShip : toShip - arc / 2 + k * arc / (count - 1);
             Enemy unit = enemies.obtain();
             if (unit != null) {
-                unit.hatch(enemy, kind, from.x(), from.y(), Trig.cos(angle) * speed, Trig.sin(angle) * speed, spawned);
+                unit.hatch(enemy, kind, from.x(), fromY, Trig.cos(angle) * speed, Trig.sin(angle) * speed, spawned);
+                if (frame.flipped()) {
+                    unit.flip();
+                }
             }
             spawned++;
         }
@@ -984,10 +1136,16 @@ final class EnemyForce {
 
     /** Back to a boss checkpoint: an empty field, the schedule where it was then. */
     void restore(int scheduleNext, int ground, int spawnedUnits) {
+        restore(scheduleNext, ground, spawnedUnits, 0);
+    }
+
+    /** As {@link #restore(int, int, int)}; M7 part G: with the refill motes left out by then ({@link #skipped()}). */
+    void restore(int scheduleNext, int ground, int spawnedUnits, int skippedUnits) {
         reset();
         waves.next(scheduleNext);
         nextGround = ground;
         spawned = spawnedUnits;
+        skipped = skippedUnits;
     }
 
     /** A set piece's part fires its gun from (x, y) at the ship, as a unit that aims at once. */
@@ -1076,8 +1234,12 @@ final class EnemyForce {
                     : enemy.flock() != null ? enemy.flock().entry() : enemy.entry();
             if (entry == WaveSpec.Entry.SIDES) {
                 edges |= WarningEdge.LEFT.bit() | WarningEdge.RIGHT.bit();
+            } else if (enemy.flock() != null && enemy.flock().pursuing()) {
+                // M7 part G: a pursuit's motes press from the top edge whatever their wave's entry.
+                edges |= WarningEdge.TOP.bit();
             } else if (entry == WaveSpec.Entry.REAR) {
-                edges |= WarningEdge.BOTTOM.bit();
+                // M7 part G: a flipped unit's rear is the screen's top.
+                edges |= enemy.flipped() ? WarningEdge.TOP.bit() : WarningEdge.BOTTOM.bit();
             }
         }
         return edges;

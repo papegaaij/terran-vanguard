@@ -73,6 +73,7 @@ public record LevelScript(
                 objectives.escort(),
                 objectives.convoy(),
                 objectives.defend());
+        checkReversed(sections, waves, setPieces, objectives, ground, hazards);
         if (objectives.secondary().sondes() && hazards.sondes().isEmpty()) {
             throw new IllegalArgumentException("a collect: sondes objective needs the level's sondes");
         }
@@ -332,6 +333,71 @@ public record LevelScript(
                 }
             }
         }
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll; scope: what Level 20 needs, pending the user's review): a
+     * level with a reversed section has nothing placed by the scroll's time or entering at the top edge with the ground
+     * but its waves, ground units, ground objects and placed pickups: no terrain, road, water, gates, no-surface zones or
+     * conveyor belts; no cranes, debris, sled, rocks, furnace vents, darkness or sondes; no holds, collapse, tows,
+     * escort, naval convoy, defend primary or ground allies; no set pieces, arena or timed halt; and no segment chain
+     * among its waves (a chain is never flipped).
+     */
+    private static void checkReversed(
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<SetPieceSpec> setPieces,
+            ObjectiveSpec objectives,
+            GroundSpec ground,
+            HazardSpec hazards) {
+        if (sections.stream().noneMatch(Section::reversed)) {
+            return;
+        }
+        String what = null;
+        if (ground.terrain().isPresent()
+                || ground.road().isPresent()
+                || ground.water()
+                || !ground.gates().isEmpty()
+                || !ground.noSurface().isEmpty()
+                || !ground.belts().isEmpty()) {
+            what = "terrain, road, water, gates, no-surface zones or belts";
+        } else if (!hazards.cranes().isEmpty()
+                || !hazards.debris().isEmpty()
+                || hazards.sled().isPresent()
+                || hazards.rocks().isPresent()
+                || !hazards.vents().isEmpty()
+                || hazards.darkness().isPresent()
+                || hazards.sondes().isPresent()) {
+            what = "cranes, debris, a sled, rocks, vents, darkness or sondes";
+        } else if (!objectives.holds().isEmpty()
+                || objectives.collapse().isPresent()
+                || !objectives.tows().isEmpty()
+                || objectives.escort().isPresent()
+                || objectives.convoy().isPresent()
+                || objectives.defend().isPresent()
+                || objectives.groundAllies().isPresent()) {
+            what = "holds, a collapse, tows, an escort, a naval convoy, a defend primary or ground allies";
+        } else if (!setPieces.isEmpty() || sections.stream().anyMatch(s -> s.arena() || s.timedHalt())) {
+            what = "set pieces, an arena or a timed halt";
+        } else if (waves.stream().anyMatch(wave -> wave.enemy().chain().isPresent())) {
+            what = "segment chains";
+        }
+        if (what != null) {
+            throw new IllegalArgumentException("a level with a reversed scroll has no " + what);
+        }
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): whether a section runs reversed (its speed below 0): its
+     * waves and ground units are flipped ({@link Sortie#travelAt}).
+     */
+    public boolean reverses() {
+        for (int i = 0; i < sections.size(); i++) {
+            if (sections.get(i).reversed()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** M5 part G: whether a section is a timed halt (speed 0 without an arena, Level 13's defend phase). */

@@ -122,7 +122,8 @@ final class PickupPasses {
      * too; the beacons, containers and other ground objects that release them are not pickups.
      */
     void driftPickups() {
-        double distance = rules.pickups().driftSpeed() * SimStep.SECONDS;
+        // M7 part G: with the scroll's sign (up the screen while it runs reversed).
+        double distance = s.travel() * rules.pickups().driftSpeed() * SimStep.SECONDS;
         boolean pulling = magnetStep > 0 && s.flying();
         boolean vortices = s.force.pulls();
         for (int i = pickups.size() - 1; i >= 0; i--) {

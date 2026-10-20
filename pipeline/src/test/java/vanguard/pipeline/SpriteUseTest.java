@@ -79,6 +79,27 @@ class SpriteUseTest {
         }
     }
 
+    /**
+     * M7 part G: Level 20's travelling ridge is claimed with its rumble (the {@code basin-rumble} ambience layer; the
+     * data has no ridge key), all its parts in Level 20's atlas; the rear-guard drone and its bay pod are a weapon's,
+     * shared.
+     */
+    @Test
+    void level20sRidgeIsClaimedByItsRumbleAndTheRearGuardDroneIsShared() {
+        List<String> ridge = List.of(
+                "colossus-ridge",
+                "colossus-ridge-head",
+                "colossus-ridge-tail",
+                "colossus-ridge-glow",
+                "colossus-ridge-dust");
+        Map<String, Set<String>> atlases = SpriteUse.atlases(content, ridge);
+        for (String part : ridge) {
+            assertEquals(Set.of("level-20"), atlases.get(part), part);
+        }
+        Map<String, Set<String>> drone = SpriteUse.atlases(content, List.of("rear-guard-drone-bay-drone"));
+        assertEquals(Set.of(SpriteUse.SHARED), drone.get("rear-guard-drone-bay-drone"));
+    }
+
     @Test
     void aLevelsTowsClaimTheLifeboatSprites() {
         Map<String, Set<String>> atlases =
@@ -173,7 +194,8 @@ class SpriteUseTest {
                 "greenhouse-frame")) {
             assertEquals(Set.of(level17), atlases.get(sprite), sprite);
         }
-        assertEquals(Set.of(SpriteUse.atlasOf(11), level17), atlases.get("escort-frigate-flak"));
+        // M7 part G: Level 20's rim guns fire the same flak (its flak block, band top).
+        assertEquals(Set.of(SpriteUse.atlasOf(11), level17, SpriteUse.atlasOf(20)), atlases.get("escort-frigate-flak"));
     }
 
     /**

@@ -102,8 +102,8 @@ final class CurlRoll {
         if (roll.bellyRow() <= 0) {
             return false;
         }
-        double down = Trig.cos(unit.facing()) * roll.rollSpeed() * SimStep.SECONDS + groundScroll;
-        return down > 0 && unit.y() - groundScroll * SimStep.ticks(roll.uncurlSeconds()) <= roll.bellyRow();
+        double down = Trig.cos(unit.frameFacing()) * roll.rollSpeed() * SimStep.SECONDS + groundScroll;
+        return down > 0 && unit.frameY() - groundScroll * SimStep.ticks(roll.uncurlSeconds()) <= roll.bellyRow();
     }
 
     /** Where it is in its curl-roll. */

@@ -24,7 +24,9 @@ import vanguard.sim.Terrain;
  * (a tower's walls lean between them); nothing is allocated per frame. The pieces' places along the
  * scroll and the atmosphere go by the level clock, their paths, animation frames and the tile sets'
  * drift by the real clock (M5 part C: moving scenery keeps its speed in a hold zone, see {@link
- * BackdropClock}).
+ * BackdropClock}). M7 part G: a strip backdrop (Level 20) keys the ground's tile sets by the strip's row instead
+ * ({@link #stripTiles}); every layer scrolls with the ground's signed distance, so in a reversed section new ground
+ * enters at the bottom edge and the set pieces leave by the top.
  */
 public final class Backdrop {
     private static final int WIDTH = PlayField.WIDTH;
@@ -59,6 +61,11 @@ public final class Backdrop {
     private final Tiles[][] tiles;
     /** Per layer and section: where the section's tile set begins on the layer. */
     private final long[][] seams;
+    /**
+     * Per layer: the rows its tile pixel rows count from, added to a layer row (0; M7 part G: a strip's origin on the
+     * ground layer, so a tile's pixel row is the strip row's, see {@link #stripTiles}).
+     */
+    private final long[] phase = new long[BackdropLayer.values().length];
 
     private final Piece[][] pieces;
     private final TowerProjection towers;
@@ -142,6 +149,7 @@ public final class Backdrop {
                 tiles[tileSet.layer().ordinal()][s] = tiles(sprites, folder, id, tileSet);
             }
         }
+        data.strip().ifPresent(keyed -> stripTiles(keyed, data));
         stretches = level.atmosphereStretches();
         looks = new Look[stretches.size()];
         for (int s = 0; s < looks.length; s++) {
@@ -171,6 +179,48 @@ public final class Backdrop {
                                 .orElse(null),
                         (float) look.haze()))
                 .orElse(null);
+    }
+
+    /**
+     * M7 part G, the strip backdrop (design/campaign Level 20, a level that flies back over ground it has shown;
+     * m7g-gaps §1.7): the layers its zones name tile sets on are keyed by the strip's row instead of by section. Strip
+     * row = origin + the ground's (signed) scroll + y, so on the ground layer a zone from strip row {@code from} begins
+     * at layer row {@code from - origin} (on another layer at that times its factor), whichever way the ground moves;
+     * the tile's pixel row is the strip row's ({@link #phase}). The zones replace the sections' tile sets on those
+     * layers (the sections name none with a strip).
+     */
+    private void stripTiles(BackdropData.Strip strip, BackdropData data) {
+        List<BackdropData.Zone> zones = strip.zones();
+        for (BackdropLayer layer : BackdropLayer.values()) {
+            int l = layer.ordinal();
+            Tiles[] keyed = new Tiles[zones.size()];
+            long[] starts = new long[zones.size()];
+            boolean any = false;
+            for (int z = 0; z < zones.size(); z++) {
+                BackdropData.Zone zone = zones.get(z);
+                starts[z] = z == 0 ? Long.MIN_VALUE : stripSeam(strip, z, factors[l]);
+                for (String id : zone.tiles()) {
+                    BackdropData.TileSet tileSet = data.tileSets().get(id);
+                    if (tileSet.layer() == layer) {
+                        keyed[z] = tiles(sprites, folder, id, tileSet);
+                        any = true;
+                    }
+                }
+            }
+            if (any) {
+                tiles[l] = keyed;
+                seams[l] = starts;
+                phase[l] = Math.round(strip.origin() * factors[l]);
+            }
+        }
+    }
+
+    /**
+     * M7 part G: where zone {@code zone} of a strip begins on a layer of scroll factor {@code factor}, in the layer's
+     * rows (0 at the screen's bottom edge at the level start, as {@link LevelData#pieceCentre} places the pieces).
+     */
+    static long stripSeam(BackdropData.Strip strip, int zone, double factor) {
+        return Math.round((strip.zones().get(zone).from() - strip.origin()) * factor);
     }
 
     /**
@@ -395,7 +445,7 @@ public final class Backdrop {
                 continue;
             }
             TextureRegion image = section.image();
-            int top = image.getRegionHeight() - 1 - (int) Math.floorMod(row, (long) image.getRegionHeight());
+            int top = image.getRegionHeight() - 1 - (int) Math.floorMod(row + phase[l], (long) image.getRegionHeight());
             clipped(batch, image, 0, top, WIDTH, 0, y, left, right);
         }
         for (Piece piece : pieces[l]) {
@@ -590,7 +640,8 @@ public final class Backdrop {
                         Math.max(seams[l][s], scroll),
                         Math.min(end, scroll + HEIGHT),
                         scroll,
-                        clock.real());
+                        clock.real(),
+                        phase[l]);
             }
         }
     }
@@ -600,22 +651,26 @@ public final class Backdrop {
         float alpha = batch.getColor().a;
         if (old != current && old != null) {
             batch.setColor(1, 1, 1, alpha * (1 - weight));
-            drawTiles(batch, old, scroll, scroll + HEIGHT, scroll, seconds);
+            drawTiles(batch, old, scroll, scroll + HEIGHT, scroll, seconds, 0);
         }
         if (current != null) {
             batch.setColor(1, 1, 1, old == current ? alpha : alpha * weight);
-            drawTiles(batch, current, scroll, scroll + HEIGHT, scroll, seconds);
+            drawTiles(batch, current, scroll, scroll + HEIGHT, scroll, seconds, 0);
         }
         batch.setColor(1, 1, 1, alpha);
     }
 
-    /** The rows {@code [from, to)} of a layer filled with a tile set that repeats from position 0, drifting by real {@code seconds}. */
-    private void drawTiles(SpriteBatch batch, Tiles tileSet, long from, long to, long scroll, double seconds) {
+    /**
+     * The rows {@code [from, to)} of a layer filled with a tile set that repeats from position {@code -phase} (0; M7
+     * part G: a strip's origin, so its pixel rows follow the strip row), drifting by real {@code seconds}.
+     */
+    private void drawTiles(
+            SpriteBatch batch, Tiles tileSet, long from, long to, long scroll, double seconds, long phase) {
         TextureRegion image = tileSet.image();
         int height = image.getRegionHeight();
         int shift = (int) Math.floorMod(Math.round(tileSet.drift() * seconds), (long) WIDTH);
         for (long row = from; row < to; ) {
-            int inTile = (int) Math.floorMod(row, (long) height);
+            int inTile = (int) Math.floorMod(row + phase, (long) height);
             int rows = (int) Math.min(height - inTile, to - row);
             float y = row - scroll;
             // The tile image's top row is its highest; a strip [inTile, inTile + rows) counts from its bottom.

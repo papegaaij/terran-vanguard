@@ -185,10 +185,23 @@ class BackdropAssetsTest {
                 continue;
             }
             Path folder = BACKDROP.resolve(Backdrop.folder(entry.getKey(), entry.getValue()));
-            for (LevelData.Section section : entry.getValue().sections()) {
-                String ground = tileOn(backdrop, section, BackdropLayer.GROUND);
-                String far = tileOn(backdrop, section, BackdropLayer.FAR);
-                assertTrue(ground != null, section.name() + ": no ground tile set");
+            // M7 part G: a strip backdrop (Level 20) names its tile sets per zone of the strip, not per section.
+            Map<String, List<String>> stretches = new java.util.LinkedHashMap<>();
+            if (backdrop.stripped()) {
+                List<BackdropData.Zone> zones = backdrop.strip().orElseThrow().zones();
+                for (int z = 0; z < zones.size(); z++) {
+                    stretches.put(
+                            entry.getKey() + " strip zone " + z, zones.get(z).tiles());
+                }
+            } else {
+                for (LevelData.Section section : entry.getValue().sections()) {
+                    stretches.put(entry.getKey() + " " + section.name(), section.tiles());
+                }
+            }
+            for (Map.Entry<String, List<String>> stretch : stretches.entrySet()) {
+                String ground = tileOn(backdrop, stretch.getValue(), BackdropLayer.GROUND);
+                String far = tileOn(backdrop, stretch.getValue(), BackdropLayer.FAR);
+                assertTrue(ground != null, stretch.getKey() + ": no ground tile set");
                 if (opaque(ImageIO.read(folder.resolve(ground + ".png").toFile()))) {
                     continue;
                 }
@@ -196,13 +209,13 @@ class BackdropAssetsTest {
                         far != null
                                 && opaque(ImageIO.read(
                                         folder.resolve(far + ".png").toFile())),
-                        section.name() + ": " + ground + " has openings but no opaque far tile set lies under them");
+                        stretch.getKey() + ": " + ground + " has openings but no opaque far tile set lies under them");
             }
         }
     }
 
-    private static String tileOn(BackdropData backdrop, LevelData.Section section, BackdropLayer layer) {
-        for (String id : section.tiles()) {
+    private static String tileOn(BackdropData backdrop, List<String> tiles, BackdropLayer layer) {
+        for (String id : tiles) {
             if (backdrop.tileSets().get(id).layer() == layer) {
                 return id;
             }

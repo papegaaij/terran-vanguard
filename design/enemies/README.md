@@ -259,6 +259,7 @@ that move in any direction must read from any angle:
 | `submerged ambush` | `sub` units that surface together around the player (Act 4: no Act 2 level uses it). |
 | `field` | Units scattered over an area that enters with the sea (scroll factor 1, surfaced or submerged) and drifts on the wave's current: a Driftjelly field of 6–12 (M5 part E). M7 part B: a Burrower field of 3–6 enters buried with the ground and burrows from there, its surfacings staggered. |
 | `swarm` | A loose cloud of 6–24 units with flocking behaviour round a leader point that flies an authored route, from the top or the bottom edge, often looping back from below (the Mote Swarm, M5 part D). Planned (M5 part F): a swarm of chasers (the Lamprey, 3–6) is a cloud at its entry edge (front, sides or rear) whose members each start their own chase after a seeded 0–0.6 s delay, without flocking. |
+| `pursuit` | A flock that presses from behind in a reversed section (M7 part G, Level 20): its leader point holds a band behind the ship (the top of the screen once the scroll is reversed), following its x with a lag, lunges down the ship's lane after a contracting tell, takes refills from the top edge while it has room and breaks off alive at a set time (the Mote Swarm, 8–12 on entry). |
 | `solo set piece` | One huge unit on its own, announced by radio (at most one per level). |
 | `whirl cluster` | A burst of 5–8 tiny spinners released from one point, spiralling outward and ricocheting. |
 <!-- /data -->

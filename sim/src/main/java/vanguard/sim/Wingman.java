@@ -171,6 +171,13 @@ public final class Wingman {
 
     /** Where he flies to this step: his slot plus a sidestep, moved clear of the enemies' bodies. */
     private double goalX;
+    /**
+     * M7 part G (design/campaign Level 20, Rook): the span of a pursuit's lunge he keeps his hull out of in this step,
+     * set before each {@link #fly} ({@link #lunge}); NaN for none. Not hashed: it follows the pursuit's state.
+     */
+    private double lungeLeft = Double.NaN;
+
+    private double lungeRight = Double.NaN;
 
     private double goalY;
 
@@ -315,6 +322,8 @@ public final class Wingman {
         glided = Math.min(glideTicks, glided + 1);
         evading = clearOfBodies(enemies, shipX, shipY, shipX + slotX() + dodgeX, shipY + slotY() + dodgeY);
         evading |= clearOfLanes(setPieces);
+        // M7 part G: out of a pursuit's lunge lane during its tell and its dive.
+        evading |= clearOfLunge();
         if (setPieces.length > 0 || vents != null) {
             // M7 part F: out of the walker's cone while it tells or burns, and off the glowing or burning vents.
             if (hazards.clear(goalX, goalY, setPieces, vents)) {
@@ -497,8 +506,10 @@ public final class Wingman {
             // column of the screen, which every enemy far ahead would be).
             boolean beside = dx * dx + dy * dy <= flankDistance * flankDistance;
             flank |= beside;
-            // M5 part C: on its current layer; a hardened unit only for an anti-ground gun.
+            // M5 part C: on its current layer; a hardened unit only for an anti-ground gun. M7 part G (user
+            // decision 2026-10-20): never one the seekers ignore (a mote), though it is a flank threat.
             if (!reaches(enemy.layer())
+                    || enemy.spec().seekersIgnore()
                     || (enemy.spec().hardened() && !spec.gun().antiGround())
                     || !inCone(dx, dy)) {
                 continue;
@@ -930,6 +941,42 @@ public final class Wingman {
             }
         }
         return moved;
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, Rook: "during a swarm lunge's tell his slot moves out of the ship's lane"):
+     * the span from {@code left} to {@code right} px that a pursuit's lunge sweeps in this step (its tell and its dive,
+     * {@link Pursuit#laneLeft()}, {@link Pursuit#laneRight()}); NaN for none. Set before every {@link #fly}.
+     */
+    void lunge(double left, double right) {
+        lungeLeft = left;
+        lungeRight = right;
+    }
+
+    /**
+     * M7 part G: the lunge's span (grown by his hull's half width and {@link #LANE_GAP}) is a wall he does not cross
+     * while it lasts: his goal stays on the side of it he is on (by his centre against the span's middle), or moves
+     * to the other side when the play field's margins leave no room on his; whether it moved.
+     */
+    private boolean clearOfLunge() {
+        if (Double.isNaN(lungeLeft)) {
+            return false;
+        }
+        double half = spec.craft().hitbox().width() / 2 + LANE_GAP;
+        double toLeft = lungeLeft - half;
+        double toRight = lungeRight + half;
+        boolean leftOk = toLeft >= limit;
+        boolean rightOk = toRight <= PlayField.WIDTH - limit;
+        boolean right = x >= (lungeLeft + lungeRight) / 2;
+        if (right ? goalX >= toRight : goalX <= toLeft) {
+            return false;
+        }
+        if (right ? rightOk || !leftOk : !leftOk && rightOk) {
+            goalX = toRight;
+        } else {
+            goalX = toLeft;
+        }
+        return true;
     }
 
     /**

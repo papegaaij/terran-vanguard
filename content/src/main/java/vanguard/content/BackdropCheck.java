@@ -48,6 +48,9 @@ final class BackdropCheck {
     }
 
     private boolean checkSections() {
+        if (backdrop.stripped()) {
+            return checkStrip();
+        }
         boolean ok = true;
         for (int i = 0; i < level.sections().size(); i++) {
             List<String> tiles = level.sections().get(i).tiles();
@@ -81,6 +84,61 @@ final class BackdropCheck {
                 }
             }
             ok &= resolved;
+        }
+        return ok;
+    }
+
+    /**
+     * M7 part G (Level 20): with a strip the sections name no tiles; every zone's tile sets resolve, one per layer and
+     * one on the base layer, and the zones cover every strip row the screen shows over the level and its outro.
+     */
+    private boolean checkStrip() {
+        BackdropData.Strip strip = backdrop.strip().orElseThrow();
+        boolean ok = true;
+        for (int i = 0; i < level.sections().size(); i++) {
+            if (!level.sections().get(i).tiles().isEmpty()) {
+                problem.accept("sections[" + i + "].tiles", "the backdrop's strip keys the tiles by row: none here");
+                ok = false;
+            }
+        }
+        for (int i = 0; i < strip.zones().size(); i++) {
+            List<String> tiles = strip.zones().get(i).tiles();
+            Set<BackdropLayer> layers = new TreeSet<>();
+            for (int j = 0; j < tiles.size(); j++) {
+                String field = "backdrop.strip.zones[" + i + "].tiles[" + j + "]";
+                BackdropData.TileSet tileSet = backdrop.tileSets().get(tiles.get(j));
+                if (tileSet == null) {
+                    ok = unknown(field, "tile set", tiles.get(j), backdrop.tileSets());
+                } else if (!layers.add(tileSet.layer())) {
+                    problem.accept(
+                            field, "a second tile set on " + tileSet.layer().key());
+                    ok = false;
+                }
+            }
+            if (ok && !layers.contains(backdrop.base())) {
+                problem.accept(
+                        "backdrop.strip.zones[" + i + "].tiles",
+                        "no tile set on " + backdrop.base().key() + ", which has to cover the whole screen");
+            }
+        }
+        double low = Double.POSITIVE_INFINITY;
+        double high = Double.NEGATIVE_INFINITY;
+        int steps = SimStep.ticks(level.outroEnd());
+        for (int step = 0; step <= steps; step++) {
+            double row = strip.row(level.scrollAt(step * SimStep.SECONDS));
+            low = Math.min(low, row);
+            high = Math.max(high, row + PlayField.HEIGHT);
+        }
+        if (strip.zones().getFirst().from() > low || strip.zones().getLast().to() < high) {
+            problem.accept(
+                    "backdrop.strip.zones",
+                    String.format(
+                            Locale.ROOT,
+                            "the zones cover rows %.0f-%.0f, the screen shows rows %.0f-%.0f over the level",
+                            strip.zones().getFirst().from(),
+                            strip.zones().getLast().to(),
+                            low,
+                            high));
         }
         return ok;
     }
@@ -337,6 +395,18 @@ final class BackdropCheck {
                 }
             }
         }
+        backdrop.strip().ifPresent(strip -> {
+            double bottom = strip.row(scroll);
+            for (BackdropData.Zone zone : strip.zones()) {
+                if (zone.from() < bottom + PlayField.HEIGHT && zone.to() > bottom) {
+                    for (String id : zone.tiles()) {
+                        if (backdrop.tileSets().get(id).drifts()) {
+                            animated.add(id);
+                        }
+                    }
+                }
+            }
+        });
         for (LevelData.Atmosphere atmosphere : atmospheresAt(t)) {
             backdrop.atmosphere()
                     .of(atmosphere)

@@ -34,6 +34,9 @@ final class ContentValidator {
 
     List<String> problems() {
         checkItems();
+        content.weapons()
+                .values()
+                .forEach(weapon -> RetreatChecks.weapon(weapon, (field, message) -> problem(weapon, field, message)));
         checkWingmen();
         checkSmallActHp();
         checkBeamEraHp();
@@ -258,6 +261,7 @@ final class ContentValidator {
         SiegeChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         StormChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
         FoundryChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message));
+        RetreatChecks.enemy(enemy, (field, message) -> problem(enemy, field, message));
         enemy.difficulty()
                 .flatMap(EnemyData.Hooks::hard)
                 .flatMap(EnemyData.Hook::leadsTargetIn)
@@ -606,6 +610,7 @@ final class ContentValidator {
         SiegeChecks.level(content, level, (field, message) -> problem(level, field, message));
         StormChecks.level(content, level, (field, message) -> problem(level, field, message));
         FoundryChecks.level(content, level, (field, message) -> problem(level, field, message));
+        RetreatChecks.level(content, level, (field, message) -> problem(level, field, message));
         checkArenaLevel(level);
         new BackdropCheck(level, (field, message) -> problem(level, field, message)).run();
     }
@@ -1342,10 +1347,15 @@ final class ContentValidator {
                 boolean chasers = enemy.movement().chase().isPresent() && flock.isEmpty();
                 swarm |= group.formation().equals("swarm") && !chasers;
                 // M7 part D: a unit with a flock that also lists other formations (the Dust Kite) flies those too.
-                boolean onlySwarms =
-                        enemy.formations().stream().allMatch(use -> use.name().equals("swarm"));
+                // M7 part G: a flock's pursuit (the Mote Swarm in Level 20) is a swarm of its own (RetreatChecks).
+                boolean onlySwarms = enemy.formations().stream()
+                        .allMatch(
+                                use -> use.name().equals("swarm") || use.name().equals(LevelData.Wave.PURSUIT));
+                boolean pursuit = group.formation().equals(LevelData.Wave.PURSUIT);
                 if (!chasers
-                        && (group.formation().equals("swarm") ? flock.isEmpty() : flock.isPresent() && onlySwarms)) {
+                        && (group.formation().equals("swarm")
+                                ? flock.isEmpty()
+                                : flock.isPresent() && onlySwarms && !pursuit)) {
                     problem(
                             level,
                             field + ".formation",

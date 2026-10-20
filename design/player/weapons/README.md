@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: chosen
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # Weapons
@@ -19,8 +19,9 @@ threat profiles recommend traits, and the hangar marks the weapons that have the
 ## Contents
 
 The weapons available by L14 (Acts 1–2) have full designs, plus the Act 3 weapons (Ion Beam, Rear
-Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13);
-later weapons are still roster rows below.
+Lance, Deflector Pod, Light Drone Bay; designed 2026-10-12, approved in concept round 36 on 2026-10-13)
+and the Rear-guard Drone Bay (M7 part G, 2026-10-20: its numbers approved with the drones in round 36,
+the document in review); later weapons are still roster rows below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -42,6 +43,7 @@ later weapons are still roster rows below.
 | [torpedo-pod](torpedo-pod/README.md) | Torpedo Pod — Wing (per pod), anti-sub; DPS 10 → 32; 1 000; L11 | approved | done | final |
 | [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | chosen |
 | [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
+| [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | review | in-progress | proposed |
 
 ## Design
 

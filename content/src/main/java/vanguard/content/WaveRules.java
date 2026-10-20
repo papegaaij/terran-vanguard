@@ -71,7 +71,7 @@ final class WaveRules {
             EnemySpec unit = wave.crawl()
                     .map(path -> TerrainRules.crawl(content, content.enemy(group.enemy()), difficulty, mapped, path))
                     .orElse(mapped);
-            out.add(PartGRules.lanesAndPairs(
+            WaveSpec spec = PartGRules.lanesAndPairs(
                     wave,
                     change,
                     new WaveSpec(
@@ -106,7 +106,12 @@ final class WaveRules {
                                     wave.tag().orElse(""),
                                     field(wave, unit))
                             // M5 part F: a circle's sense of orbit (Level 12's eye).
-                            .clockwise(wave.turnsClockwise())));
+                            .clockwise(wave.turnsClockwise()));
+            // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules).
+            out.add(
+                    wave.pursues()
+                            ? spec.withPursuit(RetreatRules.pursuit(content, wave, group.enemy(), difficulty))
+                            : spec);
         }
     }
 
@@ -159,6 +164,8 @@ final class WaveRules {
             case "rear ambush" -> WaveSpec.Formation.REAR_AMBUSH;
             case LevelData.Wave.FIELD -> WaveSpec.Formation.FIELD;
             case "cross" -> WaveSpec.Formation.CROSS;
+            // M7 part G: built as a swarm, then given its pursuit block (withPursuit sets the formation).
+            case LevelData.Wave.PURSUIT -> WaveSpec.Formation.SWARM;
             default -> throw new IllegalArgumentException("the formation '" + name + "' is not implemented yet");
         };
     }

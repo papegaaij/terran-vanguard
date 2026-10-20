@@ -492,6 +492,12 @@ level).
       17's take) rendered with the cast speakers (Okafor, Varga, Rook, Ares Control); nine takes pinned;
       `VoiceFilesTest` covers Level 19 (M7 part F, step VOX-F, 2026-10-19; pending the user's review in round
       42). Open: `RadioTimelineTest` gets Level 19's runs once the level is mapped (step F4)
+- [x] Level 20's lines (17 timed with Rook's five, four `requires: escort`; the emergency cache's secret, the secondary's and the level
+      end's lines; the two briefing pages: 22 files) and Rook's three "Up top!" barks of a reversed section (the
+      rear-wave bark's `top_lines`, source `wingmen barks rear-wave top`) rendered with the cast speakers (Okafor,
+      Varga, Rook, Ares Control); four takes pinned; `VoiceFilesTest` covers Level 20 and the top barks (M7 part G,
+      step VOX-G, 2026-10-20; pending the user's review). Open: `RadioTimelineTest` gets Level 20's runs once the
+      level is mapped
 - [x] A line that is only a stage direction plays its speaker's `stage` sound (speaker table) on
       the voice bus, found by `VoiceLines.radioVoice` for the game and RadioTimelineTest; the
       Choir's is round 29's option b (the sung "ah" F3 to E3), copied by
@@ -1132,3 +1138,13 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   **Pending the user's review**: the debrief waiting for a closing line (the user had asked for
   the levels to be extended; Levels 10 and 13 were extended by 1 s and 4 s) and the 3 s overrun limit.
 - 2026-10-20: round 42 closed: Level 19's voices (V.a-V.i) and Level 17's reworded line (V.e) accepted by the user; the radio outro fix (T.3, R.g) and the post-win barks (R.h) accepted; Level 16's radio timing (R.k) accepted.
+- 2026-10-20: M7 part G, step VOX-G (**pending the user's review**): Level 20's 22 voiced lines (Rook's four `requires:
+  escort` lines and his t=113 quiet beat, which plays without him) and Rook's three "Up top!" barks (`top_lines`, fierce,
+  shouted) rendered by `tools/art/voice.py`, 25 new files. "Hellas" is spoken plain (as on the Act 3 briefing's
+  page 2): Whisper hears HEL-us as "Heller's", "Helis" or "Hela's"; a respelled "Hellus" (three seeds on each of
+  the two short lines) read back no better, so no respelling. "Vrell" reads "Vrel", "Aegis" mostly "ages" (as on
+  earlier levels). Pins (4): Okafor's t=1 ("Ella's basin, ages"; the pin reads "Heller's basin, Aegis"), Rook's
+  t=98 (unvoiced), Ares Control's t=131 ("Aegis" swallowed) and the secret (a jump to about 570 Hz, "the rail").
+  Pitch on the unfiltered takes: Okafor 131-175 Hz median, Varga 185-213, Rook 140-162 on the radio lines and
+  216-301 on the shouted barks (inside the earlier shouted barks' 179-508), Ares Control 106-137. No radio retime:
+  the timed lines never overlap (the closest, t=20 → 27.5, leaves about 3.4 s).

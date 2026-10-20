@@ -224,12 +224,29 @@ public sealed interface WeatherBlock permits LevelData {
     /**
      * M7 part D, presentation (design/campaign Level 17, Layout: the militia's flak guns at the spaceport): from
      * {@code from} s on a flak burst on {@code low-air} every {@code every} s, over the lower field, hitting nothing
-     * (the escort frigate's flak, Level 11, without a ship).
+     * (the escort frigate's flak, Level 11, without a ship). M7 part G (Level 20, Over the Rim): with {@code band: top}
+     * the bursts fill the top band instead (the rim guns firing up past the ship at the pursuers).
      */
-    public record Flak(double from, double every) {
+    public record Flak(double from, double every, Optional<FlakBand> band) {
         public Flak {
             Check.notNegative("from", from);
             Check.positive("every", every);
         }
+
+        /** Over the lower field (Level 17's). */
+        public Flak(double from, double every) {
+            this(from, every, Optional.empty());
+        }
+
+        /** Where its bursts fall: its {@code band}, the lower field if not given. */
+        public FlakBand bandOrDefault() {
+            return band.orElse(FlakBand.LOWER);
+        }
+    }
+
+    /** M7 part G: where the flak bursts fall: over the lower field (Level 17's) or in the top band (Level 20's rim guns). */
+    public enum FlakBand {
+        LOWER,
+        TOP
     }
 }

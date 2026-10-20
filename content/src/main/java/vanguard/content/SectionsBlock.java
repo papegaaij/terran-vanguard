@@ -26,6 +26,9 @@ public sealed interface SectionsBlock permits LevelData {
      *     #easeSeconds()}); none if not given, the change instant as before; M7 part F (Level 19's wreck crawl): also
      *     on the moving section right after an arena, easing up from the halt
      * @param holdAfterBoss M7 part F: an arena's hold after its boss's death chain, s ({@link #holdAfterBossSeconds()})
+     * @param speed px/s; M7 part G (design/campaign Level 20, Reverse scroll; M5 = a): a moving section's speed may be
+     *     negative, the ground then moving up the screen (a reversed section, {@link #reversed()}); an arena or a timed
+     *     halt stays at 0
      */
     public record Section(
             String name,
@@ -53,8 +56,11 @@ public sealed interface SectionsBlock permits LevelData {
         public Section {
             Check.positive("end", end);
             // M5 part E: 0 only on the arena of a level whose boss is anchored (ContentValidator);
-            // M5 part G: or on a timed halt, only with a defend primary.
-            speed.ifPresent(s -> Check.notNegative("speed", s));
+            // M5 part G: or on a timed halt, only with a defend primary. M7 part G: negative on a moving section (the
+            // retreat's reversed scroll), never on an arena (RetreatChecks keeps the rest of the level's features out).
+            Check.that(
+                    speed.filter(s -> s < 0).isEmpty() || !arena.orElse(false),
+                    "speed: an arena stands (0); only a moving section scrolls backwards");
             ramp.ifPresent(r -> Check.positive("ramp", r));
             Check.that(
                     ramp.isEmpty() || speed.filter(s -> s == 0).isEmpty() || !arena.orElse(false),
@@ -90,6 +96,14 @@ public sealed interface SectionsBlock permits LevelData {
         /** M5 part G: a timed halt's eases, s: its {@code ramp}, 2 if not given. */
         public double rampSeconds() {
             return ramp.orElse(vanguard.sim.Section.TIMED_HALT_RAMP_SECONDS);
+        }
+
+        /**
+         * M7 part G (design/campaign Level 20, Reverse scroll): whether its speed is negative, the ground moving up the
+         * screen and the direction of travel down it.
+         */
+        public boolean reversed() {
+            return speed.filter(s -> s < 0).isPresent();
         }
 
         /**

@@ -60,6 +60,25 @@ final class PartCSpecs {
                 10);
     }
 
+    /**
+     * M7 part G (step SW): the bunker's size and place, not hardened; with {@code ignored} one the seekers pass over (the
+     * Mote Swarm's {@code seekers_ignore}).
+     */
+    static EnemySpec plainTarget(double hp, boolean ignored) {
+        return spec(
+                        "bunker",
+                        hp,
+                        new Hitbox(120, 60),
+                        0,
+                        true,
+                        Optional.empty(),
+                        false,
+                        Optional.empty(),
+                        Optional.empty(),
+                        10)
+                .withSeekersIgnore(ignored);
+    }
+
     /** A hardened target fixed to the ground at the Hive Node's size (56 px) that releases nothing. */
     static EnemySpec nodeTarget(double hp) {
         return spec(

@@ -166,7 +166,7 @@ class ActThreeArsenalFlightTest {
     @Test
     void theLightDroneOrbitsAndFiresItsBaysGunAtTheConvergencePoint() {
         WeaponData bay = CONTENT.weapon("light-drone-bay");
-        double converge = bay.drone().orElseThrow().converge();
+        double converge = bay.drone().orElseThrow().converge().orElseThrow();
         for (int level = 1; level <= 5; level++) {
             WeaponData.Level numbers = bay.levels().get(level - 1);
             double expected = numbers.rate() * numbers.damage();

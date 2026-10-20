@@ -1,0 +1,478 @@
+# Level 20 – Retreat from Hellas: the level script, rendered into README.md (briefing, threat profile, layout, waves,
+# ground targets, radio, credit budget). Times are seconds from the level start. M7 part G, step G2, from the README's
+# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M7 part G (loaded and checked in step G2 by content's LevelData and RetreatChecks; flown from steps G1
+# (the reverse scroll) and G3 (the pursuit), mapped in step G4, drawn by steps GA/GB): a section's **negative speed**
+# (the ground moving up the screen: the retreat; its `ramp` eases through zero at the turnabout), the `pursuit`
+# formation with its wave's `pursuit` block (`break_at`, the refills; the rest from the Mote Swarm's own `pursuit`
+# block), a front wave's `warning` in a reversed section (the three BOTTOM lessons), the music's `ambience_layers`
+# (the basin rumble), the flak's `band: top` (the rim guns) and the backdrop's `strip` (the ground keyed by strip row,
+# its pieces by `row`).
+# Entries are BY TRAVEL (M5 = a): `from: front` is the top edge in section 1 and the bottom edge once the scroll is
+# reversed (t > ~22.1), `from: rear` the top edge there. A wave's `paths` and `at` and a field's area are written in
+# the travel frame (as for a forward level: y below the entry edge); the simulation flips the units that spawn while
+# the travel is reversed. Ground targets enter at the bottom edge in a reversed section and carry no `arc` (the frame
+# turns a nest's arc).
+# Defaults of the gap check built here (m7g-gaps §1.5; the user's answers of 2026-10-20 §4), pending the user's review
+# in round 43: "tougher, not more", count-neutral: the approved anchors kept at their times (the pursuits at 24 and 124
+# with their refills and break-offs at 108 and 163, the BOTTOM lessons 27.5/31.5/35.5, the Burrower fields
+# 35.5/52.5/87/150, the Dust Devil pairs 44/133.5, the Wraith pairs 59/101/146.5 (hard + 80), the Stinger V at 71, the
+# Needler lines 48.5/79/141.5, the nests 42/85/140, the mortars 60/100, the cache 92, the patch 117, every radio beat);
+# 8 of the bottom popcorn threes turned into firing threes (Needler line abreasts at 40, 63, 94.5, 137.5; Stinger
+# V-wings at 56.5, 75, 129.5, 154: the beam era's HP, `small_act_hp` + `beam_era_hp`, Needler 24, Stinger 36, against
+# the rear guns); three spine nests ×3 added (t≈66 basin floor, ≈96 terrace step, ≈155 rim road); the lull's kite
+# pairs Dust Kite flocks of 4 at the edges (no PacingTest exception, the user's Q.1). Hard: the firing groups one
+# smaller, the extra Wraith pair; easy by the formation lever. Rook flies his Autocannon at this visit (the balance
+# plan's `fit` at "20", the user's Q.2).
+# Step G4 (measured with `levelReport -Plevel=20`, the plan's fit, its retreat play; two passes, pending the user's
+# review in round 43): the beam killed every forward wave and the pursuit on entry, so the screen was empty 8 times over
+# 2 s at medium (the strike, the turnabout, the swarm's entry, the lull). Added: three strike waves (t=11.5, 15, 18.5),
+# Needler pincers from the sides at 22.5 and 25.5 (through the turnabout and beside the swarm's entry) and the lull as
+# six kite flocks of 3, 2.5 s apart (110.5–123), not three of 4 (the homing missiles take a flock in about a second).
+# Count back to ≈ 197: the firing threes are pairs on every difficulty (the rear guns serve one unit at a time), the
+# Stinger V at 71 a three, the Burrower fields at 52.5, 87 and 150 pairs (the lesson at 35.5 stays a three).
+# The backdrop is step ART-G1's (tools/art/backdrop_l20.py --proposal, merged in step G2): a strip keyed by row.
+scroll_speed: 140     # the strike; the retreat's sections set their own (negative)
+launch_seconds: 5     # from the bottom edge over the basin floor
+bounty_scale: 0.83    # every bounty × 0.83: the typical haul on budget(20) 2,532 (step G4, from the tuned waves: levelReport's haul; step G2's paper value 0.77)
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Mars, Hellas basin
+  layers: [air, ground]
+  density: 4
+  traits: [rear, homing]
+  hazards: [reverse scroll, fallback under pursuit]
+  boss: none
+  objective: FALL BACK TO THE RIM   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Hellas basin. The Vrell are massing on the floor.
+    l1: If we fall back, the swarm will be on your nose.
+    l2: Swarms, Burrowers, Dust Devils. Cloakers too.
+    l3: Rear guns clear the road. Spread holds the swarm.
+  notes:
+    Dominant layers: '`air` (popcorn, Needler and Stinger groups, the pursuit swarm, Wraiths), `ground` (Burrowers, Dust Devils, turret and mortar nests)'
+    Attack directions: '{directions} (by travel: front = ahead, the bottom edge once reversed; rear = behind, the top)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'Reverse scroll from t≈22: the ground moves up the screen; a pursuing swarm lunging from the top'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: Hellas basin, `air` + `ground`, front · L1: + directions (all, "reverse scroll"), density {density}, hazard "fallback under pursuit", the objective `{objective}` and the secondary `KILL RATIO 65 %` · L2: + Mote Swarm, Dust Kite, Skitter, Needler, Stinger, Wraith, Burrower, Dust Devil portraits · L3: + `rear` and `homing` highlighted, the wave strip marking the turn and the lull, 1 secret'
+
+sections:  # back to back from t = 0; signed speeds (M5 = a): negative = the ground moves up the screen; each speed change eased (ramp: the turnabout 4 s through zero at ≈ 22.1, the retreat's 2 s, the rim's 8 s); the ground's tiles come from the backdrop's strip, by row
+  - name: The Strike
+    end: 20
+    atmosphere: light
+    tiles: []
+    notes:
+      layers:
+        ground: 'dunes, salt flats, the first Vrell growth; from t≈12 a **travelling ridge** (≈ 900 px, the [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md)''s body, scenery) crosses the floor near the top edge, dunes heaving.'
+      purpose: A short normal-scroll opener; the ridge foreshadows Level 21.
+  - name: Turnabout
+    end: 26
+    speed: -120
+    ramp: 4   # +140 → −120 over t=20–24, through zero at ≈ 22.1
+    atmosphere: medium
+    tiles: []
+    notes:
+      layers:
+        ground: as section 1; the ridge's wake boiling with Vrell at the top.
+      purpose: The reversal; the pursuit swarm enters from the top (t=24).
+  - name: Basin Floor
+    end: 70
+    speed: -130
+    ramp: 2
+    atmosphere: light
+    tiles: []
+    notes:
+      layers:
+        ground: 'the floor seen again, then new dunes; a dune ridge with a turret nest (t≈42), mortars in the salt flats (t≈60), a nest on the floor (t≈66).'
+      purpose: 'The first retreat: the swarm above, ambushes from below.'
+  - name: The Terraces
+    end: 108
+    speed: -120
+    ramp: 2
+    atmosphere: light
+    tiles: []
+    notes:
+      layers:
+        ground: 'the basin''s terrace steps rising from the bottom edge, sand on each step (Burrowers), turret nests on the steps (t≈85, 96), the outpost''s emergency cache on a ledge (t≈92), mortars (t≈100).'
+      purpose: Mixed; the swarm drops back at the end.
+  - name: The Lull
+    end: 124
+    speed: -100
+    ramp: 2
+    atmosphere: clear
+    tiles: []
+    notes:
+      layers:
+        ground: a wide upper terrace, wind-carved pillars.
+      purpose: 'A breather: Dust Kite flocks at the edges only; Rook''s quiet line; the armour patch.'
+  - name: Rim Road
+    end: 160
+    speed: -140
+    ramp: 2
+    atmosphere: light
+    tiles: []
+    notes:
+      layers:
+        ground: 'the rim road''s switchbacks coming up from the bottom, abandoned militia crawlers, turret nests on the road (t≈140, 155).'
+      purpose: The second pursuit, the last ambushes.
+  - name: Over the Rim
+    end: 172
+    speed: -60
+    ramp: 8   # −140 → −60 over t=160–168
+    atmosphere: clear
+    tiles: []
+    notes:
+      layers:
+        ground: 'the rim''s lip rising from the bottom, the militia guns firing up past the ship (flak bursts in the top band, scenery), the plain beyond.'
+      purpose: Release; the swarm breaks off; level end.
+
+# The waves: entries by travel (see the header). The pursuits enter from the top under the TOP warning (3 s ahead, easy
+# 4 s) and hold the screen between the bottom ambushes; the first three bottom entries after the turn carry the BOTTOM
+# warning as a lesson (`warning` on a front wave in a reversed section), the later ones are unwarned (the default edge).
+waves:
+  - {t: 6, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: Normal scroll}
+  - {t: 9.5, formation: V-wing, enemy: dust-kite, count: 3, from: front}
+  - {t: 11.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 0.8, notes: "Step G4: the strike's screen held (Act 2+ rule)"}
+  - {t: 13, formation: snake, enemy: skitter, count: 4, from: front, edge: left, notes: As the ridge starts to cross}
+  - {t: 15, formation: V-wing, enemy: dust-kite, count: 3, from: front, notes: "Step G4: the strike's screen held"}
+  - {t: 16.5, formation: line abreast, enemy: needler, count: 2, from: front}
+  - {t: 18.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 0.8, notes: "Step G4: the strike's screen held"}
+  - {t: 20.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 0.6, notes: "The swarm's vanguard out of the ridge's wake, all in before the turn; Okafor's order at t=20"}
+  - {t: 22.5, formation: pincer, enemy: needler, count: 2, from: sides, hold: 4, notes: "Step G4: through the turnabout, 1 per edge; warned 3 s ahead"}
+  - t: 24
+    formation: pursuit
+    enemy: mote-swarm
+    count: 10
+    from: rear
+    pursuit: {break_at: 108, refill: 3, refill_every: 10}   # refills at t=34, 44 … 104 (8), while the flock has room
+    easy: {warning: 4}
+    notes: "**Pursuit 1**: TOP warning from t=21; refills at t=34, 44 … 104; drops back at t=108"
+  - {t: 25.5, formation: pincer, enemy: needler, count: 2, from: sides, hold: 4, notes: "Step G4: beside the swarm's entry, 1 per edge; warned 3 s ahead"}
+  - {t: 27.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, warning: 3, notes: "The first bottom entry, BOTTOM-warned (lesson)"}
+  - {t: 31.5, formation: V-wing, enemy: dust-kite, count: 3, from: front, warning: 3, notes: BOTTOM-warned (lesson)}
+  - {t: 35.5, formation: field, enemy: burrower, count: 3, from: front, x: 240, size: [400, 200], warning: 3, notes: "Buried, below the ship; BOTTOM-warned (lesson); act HP factor"}
+  - {t: 40, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Over the dune ridge's nest (t≈42); a firing pair in place of the approved Skitter snake"}
+  - t: 44
+    formation: pack
+    enemy: dust-devil
+    count: 2
+    from: front
+    paths: [[[140, -40], [190, 640]], [[340, -40], [290, 640]]]   # two centre lines up the floor (by travel), closing in
+    notes: Their pull with the swarm above; act HP factor
+  - {t: 48.5, formation: line abreast, enemy: needler, count: 2, from: front}
+  - {t: 52.5, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200]}
+  - {t: 56.5, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved kite stream}
+  - {t: 59, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "Cloaked inside the swarm; TOP-warned (Rook's line at t=56); act HP factor"}
+  - {t: 63, formation: line abreast, enemy: needler, count: 2, from: front, notes: A firing pair in place of the approved kite snake}
+  - {t: 67, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Over the floor nest (t≈66)"}
+  - {t: 71, formation: V-wing, enemy: stinger, count: 3, from: front, notes: Up the first terrace; the leader drops an overdrive}
+  - {t: 75, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved kite stream}
+  - {t: 79, formation: line abreast, enemy: needler, count: 2, from: front}
+  - {t: 80, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair, TOP-warned"}
+  - {t: 83, formation: snake, enemy: dust-kite, count: 3, from: front, edge: right, notes: "Over the terrace nest (t≈85)"}
+  - {t: 87, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200], notes: In the terrace sand}
+  - {t: 90.5, formation: pincer, enemy: needler, count: 2, from: sides, hold: 4, notes: "1 per edge; warned 3 s ahead"}
+  - {t: 94.5, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Past the emergency cache (the secret, t≈92); a firing pair in place of the approved kite V-wing"}
+  - {t: 101, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "TOP-warned (Rook's line at t=98)"}
+  - {t: 104.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 108, formation: snake, enemy: skitter, count: 3, from: front, edge: left, notes: The swarm drops back off the top}
+  - t: 110.5
+    formation: swarm
+    enemy: dust-kite
+    count: 3
+    from: front
+    paths: [[[40, -60], [50, 200], [30, 400], [50, 620]]]   # along the left edge: the middle stays clear for Rook's line
+    notes: "**The lull**: kite flocks at the edges only (they never fire); step G4: six flocks 2.5 s apart (Act 2+ rule)"
+  - t: 113
+    formation: swarm
+    enemy: dust-kite
+    count: 3
+    from: front
+    paths: [[[440, -60], [430, 200], [450, 400], [430, 620]]]   # along the right edge
+    notes: "Rook's quiet line from t=113"
+  - t: 115.5
+    formation: swarm
+    enemy: dust-kite
+    count: 3
+    from: front
+    paths: [[[40, -60], [50, 200], [30, 400], [50, 620]]]   # along the left edge: the middle stays clear for Rook's line
+  - t: 118
+    formation: swarm
+    enemy: dust-kite
+    count: 3
+    from: front
+    paths: [[[440, -60], [430, 200], [450, 400], [430, 620]]]   # along the right edge
+    notes: The armour patch at t=117
+  - t: 120.5
+    formation: swarm
+    enemy: dust-kite
+    count: 3
+    from: front
+    paths: [[[40, -60], [50, 200], [30, 400], [50, 620]]]   # along the left edge: the middle stays clear for Rook's line
+  - t: 123
+    formation: swarm
+    enemy: dust-kite
+    count: 3
+    from: front
+    paths: [[[440, -60], [430, 200], [450, 400], [430, 620]]]   # along the right edge
+  - t: 124
+    formation: pursuit
+    enemy: mote-swarm
+    count: 10
+    from: rear
+    pursuit: {break_at: 163, refill: 3, refill_every: 10}   # refills at t=134, 144, 154
+    easy: {warning: 4}
+    notes: "**Pursuit 2**: TOP warning from t=121; refills at t=134, 144, 154; breaks off at t=163"
+  - {t: 125.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 129.5, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved Skitter snake}
+  - t: 133.5
+    formation: pack
+    enemy: dust-devil
+    count: 2
+    from: front
+    paths: [[[180, -40], [130, 640]], [[320, -40], [360, 640]]]   # up the road's switchback (by travel)
+    notes: "On the road's switchback; the last one drops a shield cell"
+  - {t: 137.5, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Over the road nest (t≈140); a firing pair in place of the approved kite V-wing"}
+  - {t: 141.5, formation: line abreast, enemy: needler, count: 2, from: front}
+  - {t: 146.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "TOP-warned (Rook's line at t=143.5)"}
+  - {t: 150, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200], notes: "In the road's drifts"}
+  - {t: 154, formation: V-wing, enemy: stinger, count: 2, from: front, notes: "Over the last road nest (t≈155); a firing pair in place of the approved kite snake"}
+  - {t: 157.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
+  - {t: 161, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: The rim guns open fire at t=160}
+  - {t: 164.5, formation: V-wing, enemy: dust-kite, count: 3, from: front, notes: The last wave}
+
+ground_targets:  # at: [t, x], when it enters at its edge by travel (the bottom edge in a reversed section) and its x; no `arc` key (the travel frame turns the nests' arcs)
+  - target: dune ridge nest
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[42, 200], [42.4, 240], [42.8, 280]]   # on the dune ridge's crest (ART-G1's dune-ridge piece sits on their centre row)
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on a dune ridge (t≈42), arcs by travel'
+      effect: Bounty {bounty} each; fire up at the ship while rising toward it
+  - target: salt flat mortars
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[60, 130], [60.4, 350]]
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) pair in the salt flats (t≈60)'
+      effect: Bounty {bounty} each; their markers on the ground ahead
+  - target: floor nest
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[65.6, 100], [66, 380], [66.4, 240]]   # step G2 (§1.5): ground rising during the first pursuit
+    notes:
+      target: Spine Turret nest ×{count} on the basin floor (t≈66)
+      effect: Bounty
+  - target: terrace nest
+    section: 4
+    enemy: spine-turret
+    count: 3
+    at: [[85, 120], [85.4, 160], [85.8, 200]]
+    notes:
+      target: Spine Turret nest ×{count} on a terrace step (t≈85)
+      effect: Bounty
+  - target: emergency cache
+    section: 4
+    layer: ground
+    size: [36, 32]
+    sprite: emergency-cache   # step ART-G1/GB: the half-buried militia shelter hatch with its yellow strobe (Level 01's container until it exists)
+    hp: 20
+    reveals: emergency cache
+    at: [[92, 430]]   # the right edge of a terrace ledge
+    notes:
+      target: 'Hellas Outpost emergency cache (`ground` trigger, {hp} HP, t≈92, x 430)'
+      effect: 'The secret: frees a crate worth 100 (256)'
+  - target: terrace step nest
+    section: 4
+    enemy: spine-turret
+    count: 3
+    at: [[95.6, 280], [96, 340], [96.4, 400]]   # step G2 (§1.5)
+    notes:
+      target: Spine Turret nest ×{count} on a higher terrace step (t≈96)
+      effect: Bounty
+  - target: terrace mortars
+    section: 4
+    enemy: polyp-mortar
+    count: 2
+    at: [[100.5, 300], [100.4, 360]]   # step G4 (ART-G1's note): the first at t=100.5, so the pair stands on the tread above the riser (row 8620), not on its face
+    notes:
+      target: Polyp Mortar pair on a terrace (t≈100)
+      effect: Bounty
+  - target: rim road nest
+    section: 6
+    enemy: spine-turret
+    count: 3
+    at: [[139.6, 124], [140, 72], [140.4, 120]]   # step G4 (ART-G1's note): on the rim road's left hairpin (the road's x at their rows 3900/3844/3788)
+    notes:
+      target: Spine Turret nest ×{count} on the rim road (t≈140)
+      effect: Bounty
+  - target: rim road last nest
+    section: 6
+    enemy: spine-turret
+    count: 3
+    at: [[154.6, 164], [155, 199], [155.4, 240]]   # step G2 (§1.5); step G4 (ART-G1's note): on the road's leg (its x at rows 1800/1744/1688)
+    notes:
+      target: Spine Turret nest ×{count} on the rim road's last bend (t≈155)
+      effect: Bounty
+
+secrets:
+  - name: emergency cache
+    crate: 100   # Act 1 terms: pays 256 with the act factor
+    radio: {speaker: Ares Control, portrait: generic-colonial, line: "Hellas Outpost's emergency cache. Better you than the Vrell."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 71, unit: first}}      # the leader of the t=71 Stinger V-wing
+  - {pickup: shield cell, dropped_by: {wave: 133.5, unit: last}}  # the last Dust Devil of the t=133.5 pair at its death, with whatever it held
+
+drops:  # an Ares militia supply drone (the CDF supply drone's presentation, flying up from the bottom edge in the reversed section) releases an armour patch in the lull
+  - {t: 117, x: 240, y: 300, pickup: armour patch, sprite: supply-drone}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected); his quiet beat plays without it (round 36, Q.20d)
+  - {t: 1, speaker: Okafor, line: "Hellas basin, Aegis. The Vrell are massing on the floor. Hit them before they move."}
+  - {t: 12.5, speaker: Varga, line: "The basin floor is moving. Something huge, under the sand."}
+  - {t: 20, speaker: Okafor, line: "All Aegis units, break off! Fall back to the rim!"}
+  - {t: 27.5, speaker: Varga, line: "Front guns on the swarm. Rear guns on what's ahead."}
+  - {t: 35, speaker: Ares Control, portrait: generic-colonial, line: "The rim road is open, Aegis. Our guns wait at the top."}
+  - {t: 47, speaker: Varga, line: "More Burrowers below you. Watch for the bulge."}
+  - {t: 56, speaker: Rook, requires: escort, line: "Up top! Cloakers in the swarm!"}
+  - {t: 64, speaker: Rook, requires: escort, line: "That swarm is not getting smaller, Lancer!"}
+  - {t: 75, speaker: Okafor, line: "Keep moving. Don't let them pin you on the terraces."}
+  - {t: 98, speaker: Rook, requires: escort, line: "Cloakers up top again!"}
+  - {t: 106, speaker: Varga, line: "The swarm is dropping back. They're regrouping."}
+  - {t: 113, speaker: Rook, line: "Lancer... if I don't come back from one of these, call my mum yourself. No form letters.", notes: {trigger: the quiet beat}}
+  - {t: 124.5, speaker: Varga, line: "They've found us again. Here they come."}
+  - {t: 131, speaker: Ares Control, portrait: generic-colonial, line: "Militia on the rim, Aegis. We can see your dust. Keep coming."}
+  - {t: 143.5, speaker: Rook, requires: escort, line: "Up top! More cloakers!"}
+  - {t: 152, speaker: Okafor, line: "The rim is right ahead, Lancer. Get over the lip."}
+  - {t: 160, speaker: Ares Control, portrait: generic-colonial, line: "Rim guns, open fire! Clear their tail!"}
+  - {event: secondary-objective, speaker: Okafor, line: "You thinned them on the way out. They'll remember that.", notes: {trigger: Secondary met (at the end)}}
+  - {event: level-end, speaker: Okafor, line: "We gave up the basin today. We will take it back. Come home, Aegis."}
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, credits: 100, name: Thin them out}   # at least 65 % of the level's enemies, judged at the end; the motes that break off alive count as not killed (100 in Act 1 terms: pays 256)
+
+music:
+  track: 8            # Act 3 A "Red Dust Run" (audio/music track list; round 36 Q.20e)
+  start_section: 1    # the base stem in the strike
+  full_section: 2     # the full mix from the turnabout (Okafor's order)
+  stems: {5: base}    # down to the base stem in the lull (Rook's quiet line), the full mix again from section 6
+  ambience: mars-dust   # Level 15's Martian dust wind
+  ambience_layers:
+    - {ambience: basin-rumble, from: 12, to: 40, fade_in: 2, fade_out: 12}   # the ridge's deep basin rumble (a low earth groan, step AUD-G), faded out by t=40
+  end_jingle: mission-complete
+
+flak: {from: 160, every: 1.5, band: top}   # presentation: the rim guns firing up past the ship, bursts in the top band among the pursuers, hitting nothing (the frigate's flak sound, as Level 17's militia)
+
+difficulty: {}  # the pursuit's easy and hard lunges and tells are in the Mote Swarm's hooks; the TOP warnings' easy 4 s are in their waves; hard's extra Wraith pair is its wave (skip); the firing pairs stay pairs on hard (step G4); the formation lever sizes the rest (the swarm 8 / 12 on entry, refills of 2 / 4); the stat blocks' hooks apply (the Burrowers' rings, the Dust Devils' pull and spiral, the Wraiths' hard hold)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-20-hellas-fallback, line: "We hit the Vrell staging grounds on the Hellas floor. If it turns, you fall back to the rim: nose to the enemy, rear guns clearing the road. Doctor Varga's walker report comes to me alone."}
+    - {speaker: Varga, image: level-20-filed-plate, line: "That walker's plate, Lancer. Filed by hand, not worn. I'm told to leave it. On the basin floor: Burrowers, Dust Devils, and swarms. A lot of swarms."}
+  teaser: {speaker: Rook, line: "Hellas. Big hole, lots of bugs. Pack a tail gun, just in case."}
+
+backdrop:
+  # Presentation only: Retreat from Hellas (tools/art/backdrop_l20.py, from mars-hellas-r36-a; step ART-G1's
+  # proposal briefs/l20-backdrop.yaml, merged in step G2). The ground is opaque; no deep layer (pending round 43).
+  # M7 part G: the ground is a STRIP keyed by strip row (strip row = strip.origin + the ground scroll + y, y counted
+  # up from the screen's bottom edge), not by section: Level 20 flies back over ground it has shown. A tile's pixel
+  # row is floorMod(strip row, height) from the image's bottom; ground pieces are placed by `row` (their centre's
+  # strip row), not `t`. The rows do not move with the data's timing; re-run `backdrop_l20.py --proposal` only to
+  # re-align the dune ridge with its nest (it reads the data).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2}   # far and high-air unused (no deep layer, no high-air art), given as the loader asks
+  ramp: 3
+  haze_colour: d6a670  # the butterscotch sky (mars_r36.SKY)
+  atmosphere:
+    clear: {haze: 0.04}   # the lull and over the rim: haze only
+    light: {banks: basin-haze, haze: 0.06}   # the floor, the terraces, the rim road: faint dust
+    medium: {banks: ridge-dust, haze: 0.09}   # the turnabout: the ridge's wake
+  strip:
+    origin: 15360   # the strip row at the screen's bottom edge at t=0 (row 0: the bottom edge at the end)
+    zones:   # the ground's tile set by strip row, [from, to); the ends lie beyond any scroll
+      - {from: -4800, to: 400, tiles: [rim-plain]}   # beyond the rim
+      - {from: 400, to: 6080, tiles: [rim-slope]}   # 6. the rim road's switchbacks
+      - {from: 6080, to: 7640, tiles: [upper-terrace]}   # 5. the lull
+      - {from: 7640, to: 12240, tiles: [terraces]}   # 4. the terraces
+      - {from: 12240, to: 14400, tiles: [basin-flats]}   # 3. the salt flats (the t~60 mortars)
+      - {from: 14400, to: 16200, tiles: [basin-dunes]}   # 3. the dune sea (the t~42 ridge)
+      - {from: 16200, to: 20160, tiles: [basin-flats]}   # 1-3. the staging grounds
+  tile_sets:
+    basin-flats: {layer: ground, height: 960}   # the basin floor's salt flats under drifted sand (the staging grounds, the mortars' flats)
+    basin-dunes: {layer: ground, height: 960}   # the dune sea, crests across the screen
+    terraces: {layer: ground, height: 960}   # the basin wall's terraces: four steps of layered rock a tile, sand on the treads
+    upper-terrace: {layer: ground, height: 960}   # the lull's wide upper terrace: wind-fluted bedrock pavement
+    rim-slope: {layer: ground, height: 960}   # the rocky slope below the rim with the rim road's switchbacks (two legs a tile)
+    rim-plain: {layer: ground, height: 960}   # beyond the rim: the rust plain
+    basin-haze: {layer: low-air, height: 960, drift: 5}   # light: faint ochre dust, at most 25 %
+    ridge-dust: {layer: low-air, height: 960, drift: 8}   # medium (the turnabout): the ridge's wake, at most 35 %
+  pieces:
+    seam-road: {layer: ground, size: [480, 320]}   # the upper terrace onto the rim slope and its road (exact rows)
+    seam-upper: {layer: ground, size: [480, 320]}   # the last terrace riser onto the upper terrace (exact rows)
+    seam-terraces: {layer: ground, size: [480, 320]}   # the salt flats onto the first terrace riser (exact rows)
+    seam-flats: {layer: ground, size: [480, 320]}   # the dune sea onto the salt flats (exact rows)
+    seam-dunes: {layer: ground, size: [480, 320]}   # the staging grounds' flats onto the dune sea (exact rows)
+    rim-lip: {layer: ground, size: [480, 320]}   # the rim's crest: the slope's lit face, the back slope onto the plain, the road's track (exact rows)
+    dune-ridge: {layer: ground, size: [400, 136]}   # a sharp dune ridge across the field: the t~42 turret nest on its crest
+    vrell-growth-a: {layer: ground, size: [160, 120]}   # Vrell growth on the staging grounds
+    vrell-growth-b: {layer: ground, size: [120, 96]}   # Vrell growth, smaller
+    vrell-growth-c: {layer: ground, size: [200, 140]}   # Vrell growth, larger
+    hellas-pillar-a: {layer: ground, size: [160, 160]}   # a wind-carved pillar on the upper terrace (cap rock, neck, shadow)
+    hellas-pillar-b: {layer: ground, size: [112, 112]}   # a smaller pillar
+    hellas-pillar-c: {layer: ground, size: [168, 160]}   # a twin pillar
+    militia-crawler-a: {layer: ground, size: [64, 64]}   # an abandoned militia crawler along road leg a (nose down-right)
+    militia-crawler-b: {layer: ground, size: [64, 64]}   # an abandoned militia crawler along road leg b (nose down-left)
+    militia-crawler-wreck: {layer: ground, size: [64, 64]}   # a burnt militia crawler off the road
+    rim-gun-a: {layer: ground, size: [64, 64], frames: 4, fps: 6}   # the militia's twin flak gun on the rim's lip, firing up (flash on frame 0)
+    rim-gun-b: {layer: ground, size: [64, 64], frames: 4, fps: 6}   # the same gun, its flash on frame 2
+  placed:   # ground pieces by strip row (their centre)
+    # the zone seams, centred on their boundaries (exact rows)
+    - {piece: seam-road, row: 6080, x: 240}
+    - {piece: seam-upper, row: 7640, x: 240}
+    - {piece: seam-terraces, row: 12240, x: 240}
+    - {piece: seam-flats, row: 14400, x: 240}
+    - {piece: seam-dunes, row: 16200, x: 240}
+    # 7. the rim's crest (its boundary row 400: the screen's top band at the level's end)
+    - {piece: rim-lip, row: 400, x: 240}
+    # 1-3. the Vrell staging grounds on the floor (the strike, seen again after the turn)
+    - {piece: vrell-growth-b, row: 15500, x: 63}
+    - {piece: vrell-growth-a, row: 15816, x: 109}
+    - {piece: vrell-growth-b, row: 16077, x: 421}
+    - {piece: vrell-growth-b, row: 16422, x: 310}
+    - {piece: vrell-growth-c, row: 16659, x: 348}
+    - {piece: vrell-growth-a, row: 16882, x: 388}
+    - {piece: vrell-growth-a, row: 17107, x: 112}
+    - {piece: vrell-growth-c, row: 17349, x: 415}
+    - {piece: vrell-growth-c, row: 17559, x: 303}
+    - {piece: vrell-growth-a, row: 17737, x: 65}
+    - {piece: vrell-growth-b, row: 17943, x: 91}
+    - {piece: vrell-growth-b, row: 18197, x: 363}
+    - {piece: vrell-growth-c, row: 18414, x: 95}
+    - {piece: vrell-growth-c, row: 18567, x: 431}
+    - {piece: vrell-growth-a, row: 18799, x: 311}
+    # 3. the dune ridge the t~42 turret nest stands on (its centre row: the nest's)
+    - {piece: dune-ridge, row: 15822, x: 240}
+    # 5. the lull's pillars, clear of the middle lane
+    - {piece: hellas-pillar-a, row: 7420, x: 64}
+    - {piece: hellas-pillar-c, row: 7180, x: 412}
+    - {piece: hellas-pillar-b, row: 6920, x: 120}
+    - {piece: hellas-pillar-a, row: 6700, x: 370}
+    - {piece: hellas-pillar-b, row: 6480, x: 44}
+    - {piece: hellas-pillar-c, row: 6300, x: 430}
+    - {piece: hellas-pillar-b, row: 7040, x: 296}
+    # 6. abandoned militia crawlers on the rim road
+    - {piece: militia-crawler-b, row: 5420, x: 298}
+    - {piece: militia-crawler-b, row: 3680, x: 195}
+    - {piece: militia-crawler-a, row: 2300, x: 324}
+    - {piece: militia-crawler-wreck, row: 4420, x: 446}
+    # 7. the militia's guns on the lip, firing up past the ship
+    - {piece: rim-gun-a, row: 370, x: 60}
+    - {piece: rim-gun-b, row: 370, x: 168}
+    - {piece: rim-gun-a, row: 370, x: 312}
+    - {piece: rim-gun-b, row: 370, x: 420}
+  # Atmospheres: 1 light; 2 medium; 3, 4 light; 5 clear; 6 light; 7 clear.

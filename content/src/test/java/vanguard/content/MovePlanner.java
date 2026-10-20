@@ -88,7 +88,7 @@ final class MovePlanner {
 
     static final double HULL_Y = 25;
     /** A move is safe when nothing comes closer to the hull than this in the look-ahead, px. */
-    private static final double SAFE = 6;
+    static final double SAFE = 6;
     /** The band of the field it prefers while it dodges a boss, px from the left. */
     static final double BAND_LEFT = 130;
 
@@ -140,7 +140,7 @@ final class MovePlanner {
     }
 
     /** Where a move takes the ship in two samples, inside its bounds. */
-    private static double ahead(double from, double direction, Sortie sortie, boolean horizontal) {
+    static double ahead(double from, double direction, Sortie sortie, boolean horizontal) {
         double margin = sortie.ship().spec().edgeLimit();
         double to = from + direction * sortie.ship().spec().speed() * 2 * SAMPLE;
         return Math.clamp(to, margin, (horizontal ? PlayField.WIDTH : PlayField.HEIGHT) - margin);
@@ -150,7 +150,7 @@ final class MovePlanner {
      * The closest any enemy bullet or air enemy comes to the hull's box over the look-ahead while
      * the ship flies (dx, dy) at full speed, px (0 = a hit).
      */
-    private static double clearance(Sortie sortie, double dx, double dy, vanguard.sim.SlamArena lanes) {
+    static double clearance(Sortie sortie, double dx, double dy, vanguard.sim.SlamArena lanes) {
         double speed = sortie.ship().spec().speed();
         double margin = sortie.ship().spec().edgeLimit();
         double x0 = sortie.ship().x();

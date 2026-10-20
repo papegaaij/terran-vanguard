@@ -123,9 +123,9 @@ class ActThreeArsenalDataTest {
 
         assertEquals(new Size(14, 14), drone.size());
         assertEquals(new Size(8, 8), drone.hitbox());
-        assertEquals(36, drone.orbit());
-        assertEquals(2.4, drone.period());
-        assertEquals(140, drone.converge());
+        assertEquals(java.util.Optional.of(36.0), drone.orbit());
+        assertEquals(java.util.Optional.of(2.4), drone.period());
+        assertEquals(java.util.Optional.of(140.0), drone.converge());
         assertEquals(0.3, drone.fadeIn());
         assertEquals(new WeaponData.Contact(4, 2, 2, 10), drone.contact());
         assertEquals(

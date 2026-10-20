@@ -129,7 +129,7 @@ design tree; this list is only a reminder.
   typical haul vs the budget with the `bounty_scale` that would hit it, the autopilot's wins, retries, secondary and
   boss fights vs par and window, and the beam era's small-unit time on the screen vs Level 10. Options:
   `-Pdifficulty=easy,medium,hard`, `-Pseeds=3`, `-Pfit=test|plan|user` (default: each measure with its test's fit),
-  `-Pparts=pacing,floor,haul,boss,secondary,hp`, `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
+  `-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit` (`pursuit`: motes on the screen and lunges, levels with a pursuit only), `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
   time (no recompile after a data.yaml edit) and runs the flights in parallel: a few seconds a level.
 - `tools/concept/` – reproducible generators for concept mockups (Python 3 + PIL + numpy,
   ffmpeg for audio/GIF encoding). Each script documents its outputs at the top.
@@ -150,6 +150,8 @@ versions in `gradle/libs.versions.toml`.
 
 - `./gradlew check` – compiles, checks the formatting and runs all tests. Run it before
   reporting code work; `./gradlew spotlessApply` fixes the formatting.
+  `check` also runs `:content:allocationTest`: the zero-allocation tests again on C1 only (`-XX:TieredStopAtLevel=1`, no
+  escape analysis), next to `test`, so an allocation only C2 removes fails on every machine (~1 minute of forks).
 - `./gradlew :desktop:run --args="--bench 3 --settings <file>"` – starts the game; `--bench <s>`
   exits after `<s>` seconds, `--settings` uses another settings file than the one in the
   platform's config directory; the save slots live in `saves/` next to the settings file. A debug

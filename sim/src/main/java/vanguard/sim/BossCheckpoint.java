@@ -27,6 +27,9 @@ final class BossCheckpoint {
     private int scheduleNext;
     private int nextGround;
     private int spawned;
+    /** M7 part G: the pursuits' refill motes left out by then. */
+    private int skipped;
+
     private int nextGroundObject;
     private int nextDebris;
     private double groundScroll;
@@ -97,6 +100,7 @@ final class BossCheckpoint {
         scheduleNext = s.force.scheduleNext();
         nextGround = s.force.nextGround();
         spawned = s.force.spawned();
+        skipped = s.force.skipped();
         nextGroundObject = ground.nextGroundObject;
         nextDebris = ground.nextDebris;
         groundScroll = s.groundScroll;
@@ -130,7 +134,8 @@ final class BossCheckpoint {
         s.bossRetry = false;
         s.fire.reset();
         s.special.restore(charges, chargesUsed, chargesFound);
-        s.force.restore(scheduleNext, nextGround, spawned);
+        // M7 part G: the kill ratio follows the force's skipped refills at the next step.
+        s.force.restore(scheduleNext, nextGround, spawned, skipped);
         Pools.clear(s.ground);
         Pools.clear(s.pickups);
         Pools.clear(s.debris);

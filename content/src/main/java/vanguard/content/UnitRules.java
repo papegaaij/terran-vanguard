@@ -279,7 +279,9 @@ final class UnitRules {
                         enemy.segmentChain().isPresent()
                                 ? ChainRules.withChain(content, enemy, spec, difficulty, actHp)
                                 : spec)
-                .withMachine(enemy.isMachine());
+                .withMachine(enemy.isMachine())
+                // M7 part G (user decision 2026-10-20): a unit the seekers ignore (the Mote Swarm's motes).
+                .withSeekersIgnore(enemy.ignoredBySeekers());
         // M7 part B: a burrow (the Burrower) and a triggered swoop (the Dust Kite); M7 part C: a link (the Tendril
         // Anchor).
         // M7 part D: an aura (the Choir Herald), a unit part and a curl-roll (the Shellback).

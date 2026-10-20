@@ -24,6 +24,8 @@ public final class HangarView implements Disposable {
     private final LoadoutPanel loadout;
     private final IntelPanel intel;
     private final TestFirePanel testFire;
+    /** Step GFX2: the test fire's view, freed with the hangar (its recolouring shader). */
+    private final TestFireView testFireView;
     /** M7 part E: the stat blocks, for the units the intel keeps unclassified. */
     private final Content content;
 
@@ -34,7 +36,8 @@ public final class HangarView implements Disposable {
         loadout = new LoadoutPanel(glass, sprites.ship.get(sprites.ship.size / 2), icons, catalogue);
         intel = new IntelPanel(glass, sprites);
         this.content = content;
-        testFire = new TestFirePanel(glass, content, new TestFireView(sprites, new PodPivots(files)), sprites.pixel);
+        testFireView = new TestFireView(sprites, new PodPivots(files));
+        testFire = new TestFirePanel(glass, content, testFireView, sprites.pixel);
     }
 
     /** Runs the test fire of the selected weapon. */
@@ -70,5 +73,6 @@ public final class HangarView implements Disposable {
     @Override
     public void dispose() {
         map.dispose();
+        testFireView.dispose();
     }
 }

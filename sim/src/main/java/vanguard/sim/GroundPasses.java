@@ -120,7 +120,8 @@ final class GroundPasses {
                 && SimStep.ticks(objects.get(nextGroundObject).t()) <= s.levelTick) {
             GroundObject object = ground.obtain();
             if (object != null) {
-                object.place(objects.get(nextGroundObject), nextGroundObject);
+                // M7 part G: up from the bottom edge while the scroll runs reversed.
+                object.place(objects.get(nextGroundObject), nextGroundObject, s.travel() < 0);
             }
             nextGroundObject++;
         }

@@ -78,6 +78,8 @@ import java.util.Optional;
  *     gun's bursts go along the turret's aim ({@link Enemy#turretAim()}), in any direction; a walker's with a gun
  * @param rearPlate M7 part F: its thin rear plate (the Warden Tank's): direct shots arriving within its half arc of
  *     its rear do its multiplier to the body; a walker's
+ * @param seekersIgnore M7 part G (user decision 2026-10-20, the Mote Swarm): the seekers never pick it as a target:
+ *     the player's homing shots and turrets, Rook's target; a shot that flies into it still hits
  */
 public record EnemySpec(
         String slug,
@@ -128,7 +130,8 @@ public record EnemySpec(
         Optional<Pull> pull,
         Optional<LaneStrafe> laneStrafe,
         Optional<Turret> turret,
-        Optional<RearPlate> rearPlate) {
+        Optional<RearPlate> rearPlate,
+        boolean seekersIgnore) {
     public EnemySpec {
         if (turret.isPresent() && (walker.isEmpty() || gun.isEmpty() || chain.isPresent())) {
             throw new IllegalArgumentException(slug + ": a turret is a walker's with a gun (the Warden Tank)");
@@ -194,6 +197,110 @@ public record EnemySpec(
         if (laneStrafe.isPresent() && gun.isPresent() && Double.isNaN(gun.get().passWithinX())) {
             throw new IllegalArgumentException(slug + ": a lane strafer's gun fires by a pass trigger");
         }
+    }
+
+    /** The constructor without M7 part G's {@code seekersIgnore}: every seeker may pick it. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            Optional<UnitPart> part,
+            Optional<Roll> roll,
+            Optional<Vortex> vortex,
+            Optional<Pull> pull,
+            Optional<LaneStrafe> laneStrafe,
+            Optional<Turret> turret,
+            Optional<RearPlate> rearPlate) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                turret,
+                rearPlate,
+                false);
     }
 
     /** The constructor of M7 part E's Ghost Drone (step E2): without M7 part F's turret and rear plate. */
@@ -348,7 +455,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 withTurretSpec,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** M7 part F: this walker with its rear plate (design/enemies/ground/warden-tank); empty for none. */
@@ -402,7 +510,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                withPlate);
+                withPlate,
+                seekersIgnore);
     }
 
     /**
@@ -851,7 +960,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /**
@@ -908,7 +1018,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /**
@@ -965,7 +1076,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** M7 part E: this ground unit with its vortex cycle (design/enemies/ground/dust-devil); empty for none. */
@@ -1019,7 +1131,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** M7 part E: this unit with its radial pull on the ship and the pickups (the Dust Devil); empty for none. */
@@ -1073,7 +1186,8 @@ public record EnemySpec(
                 withPull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /**
@@ -1130,7 +1244,8 @@ public record EnemySpec(
                 pull,
                 withLaneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** M7 part D: this walker with its curl-roll (design/enemies/ground/shellback); empty for none. */
@@ -1184,7 +1299,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** M7 part C: this chain's head with its {@code crawl} (design/enemies/ground/threadcrawler); empty for none. */
@@ -1238,7 +1354,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** The constructor of M7 part A: without the burrows and swoops of Level 15 (M7 part B). */
@@ -1526,7 +1643,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /**
@@ -1583,7 +1701,66 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
+    }
+
+    /**
+     * M7 part G: this unit as one the seekers ignore or not (its stat block's {@code seekers_ignore}; user decision
+     * 2026-10-20, the Mote Swarm): the player's homing shots and turrets and Rook never pick it as a target.
+     */
+    public EnemySpec withSeekersIgnore(boolean ignored) {
+        return new EnemySpec(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                part,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                turret,
+                rearPlate,
+                ignored);
     }
 
     /** M7 part B: this unit with its {@code burrow} (design/enemies/ground/burrower); empty for none. */
@@ -1637,7 +1814,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /** M7 part B: this unit with its {@code swoop} (design/enemies/air/dust-kite); empty for none. */
@@ -1691,7 +1869,8 @@ public record EnemySpec(
                 pull,
                 laneStrafe,
                 turret,
-                rearPlate);
+                rearPlate,
+                seekersIgnore);
     }
 
     /**

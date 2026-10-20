@@ -250,6 +250,23 @@ public record LevelData(
     }
 
     /**
+     * M7 part G (design/campaign Level 20, Reverse scroll; M5 = a): the direction of travel at {@code t}: +1 while the
+     * ground scrolls down the screen (or stands), −1 while it scrolls up (a reversed section, through its ease). At
+     * the turnabout's zero the sign just after it.
+     */
+    public int travelAt(double t) {
+        return scrollAt(t + TRAVEL_PROBE) < scrollAt(t) ? -1 : 1;
+    }
+
+    /** M7 part G: s ahead {@link #travelAt} looks for the ground's direction. */
+    private static final double TRAVEL_PROBE = 1e-3;
+
+    /** M7 part G: whether a section scrolls backwards (a negative speed: Level 20's retreat). */
+    public boolean hasReversal() {
+        return sections.stream().anyMatch(Section::reversed);
+    }
+
+    /**
      * The ground layer's scroll distance at {@code t} seconds, px; before the start and after the
      * end the first and the last section's speed carry on. M5 part G: around a timed halt (a section of
      * speed 0 without an arena) the scroll eases down to 0 over the halt's {@code ramp} before it and
@@ -262,9 +279,16 @@ public record LevelData(
 
     /**
      * Where the centre of a placed set piece lies on its layer: px from the screen's bottom edge
-     * at the level start, so that it passes the middle of the screen at its time.
+     * at the level start, so that it passes the middle of the screen at its time. M7 part G: a piece placed by its
+     * strip row lies at that row less the strip's origin (on the ground layer).
      */
     public double pieceCentre(BackdropData.PlacedPiece placed) {
+        if (placed.byRow()) {
+            // M7 part G: a strip's ground piece by its centre's strip row (the row at the bottom edge at the start:
+            // origin).
+            return placed.row().orElseThrow()
+                    - backdrop.strip().map(BackdropData.Strip::origin).orElse(0.0);
+        }
         BackdropLayer layer = backdrop.pieces().get(placed.piece()).layer();
         return scrollAt(placed.t()) * backdrop.factor(layer) + PlayField.HEIGHT / 2.0;
     }
@@ -467,6 +491,8 @@ public record LevelData(
      *     the collapse to the level's end
      * @param duck M5 part D: the theme's duck on a run-time event (Level 10's scripted loss)
      * @param ambienceChanges M5 part D: the ambience crossfading to another at a section's start
+     * @param ambienceLayers M7 part G: second ambience loops over the level's own for a while (Level 20's basin
+     *     rumble from t=12, faded out by t=40)
      * @param sectionDb M5 part F: the theme's level by section (1-based section: dB, at most 0), from that
      *     section until the next entry, over a 1 s ramp (Level 12's eye at -6); full where none is given
      * @param jingle M5 part G (user decision G8 = a): the {@code end_jingle} plays inside the level at
@@ -492,7 +518,77 @@ public record LevelData(
             Optional<List<AmbienceChange>> ambienceChanges,
             Optional<Map<Integer, Double>> sectionDb,
             Optional<Jingle> jingle,
-            Optional<Motif> motif) {
+            Optional<Motif> motif,
+            Optional<List<AmbienceLayer>> ambienceLayers) {
+
+        /** Without M7 part G's ambience layers. */
+        public Music(
+                int track,
+                int startSection,
+                Optional<Double> startDb,
+                int fullSection,
+                Optional<Map<Integer, Stems>> stems,
+                String ambience,
+                String endJingle,
+                Optional<String> bossSting,
+                Optional<Double> ambienceFrom,
+                Optional<VoiceLoop> voiceLoop,
+                Optional<String> bossWarning,
+                Optional<String> bossTrack,
+                Optional<List<FullOn>> fullOn,
+                Optional<Duck> duck,
+                Optional<List<AmbienceChange>> ambienceChanges,
+                Optional<Map<Integer, Double>> sectionDb,
+                Optional<Jingle> jingle,
+                Optional<Motif> motif) {
+            this(
+                    track,
+                    startSection,
+                    startDb,
+                    fullSection,
+                    stems,
+                    ambience,
+                    endJingle,
+                    bossSting,
+                    ambienceFrom,
+                    voiceLoop,
+                    bossWarning,
+                    bossTrack,
+                    fullOn,
+                    duck,
+                    ambienceChanges,
+                    sectionDb,
+                    jingle,
+                    motif,
+                    Optional.empty());
+        }
+
+        /**
+         * M7 part G, presentation (design/campaign Level 20, Music &amp; ambience: the basin rumble): a second ambience
+         * loop over the level's own from level time {@code from} to {@code to}, fading in over its first {@code
+         * fade_in} s and out over its last {@code fade_out} s.
+         */
+        public record AmbienceLayer(String ambience, double from, double to, double fadeIn, double fadeOut) {
+            public AmbienceLayer {
+                Check.that(!ambience.isEmpty(), "ambience: an ambience key");
+                Check.notNegative("from", from);
+                Check.that(to > from, "to: after from");
+                Check.notNegative("fade_in", fadeIn);
+                Check.notNegative("fade_out", fadeOut);
+                Check.that(fadeIn + fadeOut <= to - from, "fade_in + fade_out: within from-to");
+            }
+
+            /** Its level at level time {@code t}: 0 outside it, 0–1 over its fades (linear), 1 between them. */
+            public double level(double t) {
+                if (t <= from || t >= to) {
+                    return 0;
+                }
+                double in = fadeIn > 0 ? Math.min(1, (t - from) / fadeIn) : 1;
+                double out = fadeOut > 0 ? Math.min(1, (to - t) / fadeOut) : 1;
+                return Math.min(in, out);
+            }
+        }
+
         /**
          * M7 part E (design/campaign Level 18, Music; track 9's motif stem): the motif layer plays over the theme from
          * level time {@code from} on, in every section the theme plays except those {@code sections} turns off
@@ -781,6 +877,7 @@ public record LevelData(
         }
 
         public Music {
+            ambienceLayers = ambienceLayers.map(List::copyOf);
             Check.that(startSection <= fullSection, "full_section must not come before start_section");
             startDb.ifPresent(db -> Check.that(db <= 0, "start_db: must not be above full level"));
             ambienceFrom.ifPresent(t -> Check.positive("ambience_from", t));

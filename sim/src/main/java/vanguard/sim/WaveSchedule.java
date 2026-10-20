@@ -12,6 +12,15 @@ import java.util.Map;
  * readability rules: an arrow at that edge at least 3 s ahead), and at the bottom edge ahead of a
  * chain's or a swarm's loop-back and a rear ambush unit's re-entry. Built once per level; an
  * attempt walks through it with a cursor.
+ *
+ * <p>M7 part G (design/campaign Level 20, Reverse scroll; defaults pending the user's review): the units of a wave
+ * whose time falls in a reversed scroll ({@link Sortie#travelAt}{@code < 0}) are <em>flipped</em> ({@link
+ * TravelFrame}): planned as ever, they live in the mirrored frame, so a front entry comes in at the bottom edge and a
+ * rear one at the top. The edges warn by the screen: a flipped wave from the rear, a flipped re-entry (a rear ambush's,
+ * a swarm's loop-back) and a flipped cross unit from beyond the frame's bottom warn {@link WarningEdge#TOP}; a flipped
+ * front wave warns {@link WarningEdge#BOTTOM} only when it carries a {@code warningSeconds} (Level 20's lessons). A
+ * walker with frontal armour ({@code frontArc}) and a segment chain are never flipped, nor a pursuit, which enters at the
+ * top edge under a TOP warning whatever the scroll's direction.
  */
 final class WaveSchedule {
     /** The shortest edge warning. */
@@ -41,6 +50,9 @@ final class WaveSchedule {
     /** M7 part B: the number of burrow stagger clocks: one per Burrower wave. */
     private final int burrowClocks;
 
+    /** M7 part G: per planned unit, whether it is flipped (its wave's time falls in a reversed scroll). */
+    private final boolean[] flips;
+
     private final int[] warningStarts;
     private final int[] warningEnds;
     private final int[] warningEdges;
@@ -60,6 +72,19 @@ final class WaveSchedule {
             List<EnemySpec> kinds,
             SplitMix64 rng,
             java.util.function.Function<WaveSpec, java.util.Optional<Formations.Span>> spans) {
+        this(waves, kinds, rng, spans, t -> false);
+    }
+
+    /**
+     * @param reversedAt M7 part G: whether the scroll runs reversed at a level time, s ({@link Sortie#travelAt}{@code
+     *     < 0}); a wave at such a time is flipped
+     */
+    WaveSchedule(
+            List<WaveSpec> waves,
+            List<EnemySpec> kinds,
+            SplitMix64 rng,
+            java.util.function.Function<WaveSpec, java.util.Optional<Formations.Span>> spans,
+            java.util.function.DoublePredicate reversedAt) {
         this.kinds = kinds;
         List<Spawn> planned = new ArrayList<>();
         List<WaveSpec> warned = new ArrayList<>();
@@ -68,17 +93,23 @@ final class WaveSchedule {
         Map<Spawn, int[]> volleyOf = new IdentityHashMap<>();
         Map<Spawn, String> tagOf = new IdentityHashMap<>();
         Map<Spawn, int[]> placeOf = new IdentityHashMap<>();
+        Map<Spawn, Boolean> flipOf = new IdentityHashMap<>();
         int clocks = 0;
         int burrows = 0;
         for (WaveSpec wave : waves) {
             int before = planned.size();
             Formations.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
             boolean cross = wave.formation() == WaveSpec.Formation.CROSS;
+            boolean flipped = flips(wave) && reversedAt.test(wave.t());
             int crossEdges = 0;
             for (int i = before; i < planned.size(); i++) {
                 // M5 part G: a cross's unit enters from the edge its path (its lane) starts beyond.
                 int edge = cross ? startEdge(planned.get(i).path()) : 0;
-                crossEdges |= edge;
+                // M7 part G: a flipped unit's edges are the frame's: its frame's bottom is the screen's top.
+                crossEdges |= flipped ? onScreen(edge) : edge;
+                if (flipped) {
+                    flipOf.put(planned.get(i), Boolean.TRUE);
+                }
                 entryOf.put(planned.get(i), cross ? entryAt(edge) : wave.entry());
                 tagOf.put(planned.get(i), wave.tag());
                 placeOf.put(planned.get(i), new int[] {
@@ -95,14 +126,24 @@ final class WaveSchedule {
                 clocks++;
             }
             // M5 part D: a rear ambush enters at the top; it is warned ahead of its re-entry instead.
-            if (cross) {
+            if (wave.formation() == WaveSpec.Formation.PURSUIT) {
+                // M7 part G: a pursuit comes in at the top edge whatever the scroll's direction (screen space).
+                warned.add(wave);
+                warnedEdges.add(WarningEdge.TOP.bit());
+            } else if (cross) {
                 if (crossEdges != 0) {
                     warned.add(wave);
                     warnedEdges.add(crossEdges);
                 }
             } else if (wave.entry() != WaveSpec.Entry.FRONT && wave.formation() != WaveSpec.Formation.REAR_AMBUSH) {
                 warned.add(wave);
-                warnedEdges.add(edges(wave));
+                warnedEdges.add(flipped ? onScreen(edges(wave)) : edges(wave));
+            } else if (flipped
+                    && wave.entry() == WaveSpec.Entry.FRONT
+                    && wave.warningSeconds().isPresent()) {
+                // M7 part G: a front wave of a reversed scroll comes in at the bottom; warned only as a lesson.
+                warned.add(wave);
+                warnedEdges.add(WarningEdge.BOTTOM.bit());
             }
         }
         planned.sort(Comparator.comparingInt(Spawn::tick));
@@ -114,7 +155,9 @@ final class WaveSchedule {
         places = new int[spawns.length];
         waveSizes = new int[spawns.length];
         burrowGroups = new int[spawns.length];
+        flips = new boolean[spawns.length];
         for (int i = 0; i < spawns.length; i++) {
+            flips[i] = flipOf.containsKey(spawns[i]);
             int[] place = placeOf.getOrDefault(spawns[i], new int[] {0, -1, 1});
             places[i] = place[0];
             waveSizes[i] = place[2];
@@ -133,16 +176,18 @@ final class WaveSchedule {
         // M5 part D: so do a rear ambush unit's re-entry and every loop-back of a swarm's route.
         List<int[]> reentries = new ArrayList<>();
         for (Spawn spawn : planned) {
+            // M7 part G: a flipped unit re-enters from the frame's bottom: the screen's top.
+            int edge = flipOf.containsKey(spawn) ? WarningEdge.TOP.bit() : WarningEdge.BOTTOM.bit();
             if (spawn.ambush().isPresent()) {
                 int end = spawn.ambushReentryTick();
                 reentries.add(
-                        new int[] {end - SimStep.ticks(spawn.ambush().get().warningSeconds()), end});
+                        new int[] {end - SimStep.ticks(spawn.ambush().get().warningSeconds()), end, edge});
             }
             if (spawn.swarm().isPresent() && spawn.swarm().get().member() == 0) {
                 Spawn.Route route = spawn.swarm().get().route();
                 for (int k = 0; k < route.loops().size(); k++) {
                     int end = spawn.tick() + route.reentryAfter(k);
-                    reentries.add(new int[] {end - SimStep.ticks(route.warningSeconds()), end});
+                    reentries.add(new int[] {end - SimStep.ticks(route.warningSeconds()), end, edge});
                 }
             }
         }
@@ -169,8 +214,26 @@ final class WaveSchedule {
             int at = warned.size() + loops.size() + i;
             warningStarts[at] = reentries.get(i)[0];
             warningEnds[at] = reentries.get(i)[1];
-            warningEdges[at] = WarningEdge.BOTTOM.bit();
+            warningEdges[at] = reentries.get(i)[2];
         }
+    }
+
+    /**
+     * M7 part G: whether a wave's units may be flipped: not a walker with frontal armour (its glance arc reads the
+     * screen's shot directions), a segment chain (its members are placed by its own frame's history) or a pursuit.
+     */
+    private static boolean flips(WaveSpec wave) {
+        EnemySpec enemy = wave.enemy();
+        boolean armoured = enemy.walker().isPresent() && enemy.walker().get().frontArc() > 0;
+        // M7 part G: nor a pursuit: its flock flies in screen space (its band below the top edge).
+        return !armoured && enemy.chain().isEmpty() && wave.formation() != WaveSpec.Formation.PURSUIT;
+    }
+
+    /** M7 part G: a flipped unit's frame edges as the screen's: its frame's bottom is the screen's top. */
+    private static int onScreen(int frameEdges) {
+        return WarningEdge.BOTTOM.in(frameEdges)
+                ? (frameEdges & ~WarningEdge.BOTTOM.bit()) | WarningEdge.TOP.bit()
+                : frameEdges;
     }
 
     /**
@@ -249,6 +312,11 @@ final class WaveSchedule {
     /** The edge the wave of the unit {@link #due} returned last enters from. */
     WaveSpec.Entry lastEntry() {
         return entries[next - 1];
+    }
+
+    /** M7 part G: whether the unit {@link #due} returned last is flipped (its wave's time is in a reversed scroll). */
+    boolean lastFlipped() {
+        return flips[next - 1];
     }
 
     /** The volley clock of the unit {@link #due} returned last; -1 without one. */

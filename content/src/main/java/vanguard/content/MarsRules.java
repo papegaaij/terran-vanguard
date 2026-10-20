@@ -113,10 +113,11 @@ final class MarsRules {
         for (int i = 0; i < sections.size(); i++) {
             LevelData.Section section = sections.get(i);
             double speed = section.speed().orElse(level.scrollSpeed());
-            // The simulation eases only a section that follows a moving one (not an arena, not a halt).
+            // The simulation eases only a section that follows a moving one (not an arena, not a halt). M7 part G: a
+            // reversed section (a negative speed) moves too (Level 20's eases between its retreat speeds).
             boolean afterMoving = i > 0
                     && !sections.get(i - 1).isArena()
-                    && sections.get(i - 1).speed().orElse(level.scrollSpeed()) > 0;
+                    && sections.get(i - 1).speed().orElse(level.scrollSpeed()) != 0;
             // M7 part F (Level 19's wreck crawl): a moving section right after an arena with its own ramp eases up
             // from the halt over it (no other level gives one there: their 1 s ramp stays).
             boolean afterArena =

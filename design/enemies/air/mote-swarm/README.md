@@ -1,10 +1,10 @@
 ---
 title: Mote Swarm
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-08
+updated: 2026-10-20
 ---
 
 # Mote Swarm
@@ -33,13 +33,13 @@ The numbers live in [data.yaml](data.yaml); the stat block is one mote's, a swar
 | Speed | 200 px/s (flock cruise), 260 px/s diving after a loop-back |
 | Movement | `flock` (separation 18 px, alignment, cohesion) round a leader point that flies the wave's authored route at 200 px/s (`path`): it swirls in front, exits at the bottom-left or bottom-right, re-enters from the bottom 1.5 s later (the edge warning 3 s ahead, starting while it exits) and dives up through the player's lane |
 | Attack | `none` — contact (damage `tiny` = 6 per mote; destroyed by the impact) |
-| Formations | swarm (6–24) (a wave of motes; base 20, easy 16, hard 24 by the formation lever; Level 10 flies smaller ones too) |
+| Formations | swarm (6–24), pursuit (8–12) (a wave of motes; base 20, easy 16, hard 24 by the formation lever; Level 10 flies smaller ones too) |
 | Weak points | none (dies in one hit) |
 | Effective traits | `spread`, `area`, `rear` |
 | Credits | 2 (score 20 × chain) per mote; a swarm of 20 pays 40 |
 | Death | `tiny` ember puff |
-| First level / used in | L10; returns in Act 3 (L20) |
-| Difficulty hooks | flock size via the global formation lever; hard: two loop-backs (level data) |
+| First level / used in | L10; returns in Act 3 (L20, as the pursuing swarm) |
+| Difficulty hooks | flock size via the global formation lever; hard: two loop-backs (level data); the pursuit (Level 20): easy a lunge every 8 s with a 1.2 s tell, hard every 4.5 s |
 <!-- /data -->
 
 ### Behaviour
@@ -66,8 +66,22 @@ User decision D8 = a of M5 part D: **real flocking** (boids).
   are easy to build on a swarm, a score opportunity. Motes never fire; the swarm's danger is its
   loop-back path. A mote that touches the ship, Rook or a shuttle deals `tiny` contact (6) and is
   destroyed by the impact, as a rammer.
+- **Seekers ignore it** (user decision 2026-10-20, "Homing ignores motes"; the stat block's
+  `seekers_ignore: true`): no homing shot or torpedo locks onto a mote, no turret turns to one and Rook
+  never makes one his target; it is fought with direct fire. A shot that flies into a mote still hits it
+  (only the targeting changes). This holds in every level the swarm flies in (Levels 10, 11, 17, 18
+  and 20).
 - **Readability**: the leader routes keep the flock a readable cloud ("like starlings"), not a
   formation; the first values of the weights are tuned in the build for that.
+- **Pursuit** (M7 part G, [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm);
+  numbers approved there in round 36, Q.20): the `pursuit` formation's flock presses from behind in a
+  reversed section. Its leader point holds a band 50–150 px below the top edge, follows the ship's x at
+  90 px/s, and every 6 s (easy 8, hard 4.5) lunges: a 0.8 s tell (easy 1.2; the flock contracts into a
+  60 px ball), a dive down the ship's lane at 240 px/s to 140 px below where the ship was, no homing, and a
+  climb back at 200 px/s. Refills of 3 (the formation lever: easy 2, hard 4) join from the top edge every
+  10 s while the flock has room; at its wave's break-off the leader climbs off the top at 200 px/s and the
+  members follow, alive. The defaults are the stat block's `pursuit` block (with its easy and hard hooks);
+  a wave's `pursuit` block sets the break-off and may change the rest.
 
 ### Concept art
 
@@ -91,6 +105,9 @@ The production files (M5 part D, straight to production per D10 = a; approved as
 - [x] Death effect, bounty and score per this spec
 - [x] Production sprites (headings, flicker, ember puff) and intel portrait; the swarm sound
       (concept round 32's b)
+- [x] M7 part G: the `pursuit` formation (band, lag, lunge with its tell, refills, break-off) — its data
+      (the `pursuit` block and hooks, the formation listed) written in step G2 (`RetreatKeysTest`);
+      flown from step G3, mapped in step G4, its tell look and band hum in step GB
 
 ## Decisions
 
@@ -118,3 +135,16 @@ The production files (M5 part D, straight to production per D10 = a; approved as
   route, the motes removed 6 s after their route ends, `first-loop-back` at the re-entry) accepted.
   `design: approved`, `art: final`; every Implementation item is ticked, so the implementation is
   `done`.
+- 2026-10-20 (M7 part G, step G2): the `pursuit` formation's defaults added to the stat block (the Level 20
+  numbers approved in round 36) with its easy and hard hooks, and `pursuit` listed among its formations;
+  `implementation: in-progress` until the pursuit flies.
+- 2026-10-20 (user, after step G4 measured the pursuit melting under the homing pods and Rook):
+  **"Homing ignores motes"**: the seekers never target a mote, and direct fire still hits it. Step SW
+  added it as the stat block's `seekers_ignore: true` (the [schemas](../../../tech/architecture/README.md#data-file-schemas)),
+  honoured by the player's homing shots, torpedoes and turrets and by Rook. The turrets count as seekers
+  in our reading, pending the user's review in round 43. Levels 10, 11, 17 and 18 fly motes too. Their
+  measures moved a little and every rule still holds: Level 11 unchanged; Level 10's pacing flight at
+  medium 2.04 on the screen (was 1.89); Level 17's floor 2.59 (was 2.60, least 2.5); Level 18's floor
+  2.69 (was 2.77). Level 20's numbers are in its
+  [README](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm).
+- 2026-10-20 (step R43): the pursuit flies (steps PG3, G4, GB, SW; its Implementation item ticked); whether the swarm's data levers (band lag 30 px/s, a lunge every 4 s) are applied and whether the turrets count as seekers are questions Q.1 and Q.3 of [round 43](../../../concept-rounds/round-43/README.md), pending the user's review.

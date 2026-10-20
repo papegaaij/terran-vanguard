@@ -14,6 +14,11 @@ package vanguard.sim;
  * StrictMath#atan2} for the angles and the {@link Trig} table for their sines (StrictMath's sines
  * allocate), fixed arrays for at most {@link #MAX_MEMBERS} members. A destroyed member drops out
  * and the rest close up. Pooled.
+ *
+ * <p>M7 part G (design/campaign Level 20, The pursuit swarm): a {@code pursuit} wave's flock takes its leader point
+ * from its {@link Pursuit} (band, tell, dive, climb, break-off; in screen space, never flipped) instead of a route; its
+ * tell contracts it into a ball, its dive carries the ball along, its refills join it in free slots ({@link #freeSlot()}, {@link #join(Enemy)}), and it
+ * lives on without members until its last refill has come.
  */
 public final class Flock implements Hashed {
     /** The most members a flock has (at most 576 pair checks a step). */
@@ -38,6 +43,15 @@ public final class Flock implements Hashed {
      * left behind in a corner), s.
      */
     static final double LINGER_SECONDS = 6;
+    /**
+     * M7 part G: during a pursuit's tell the separation shrinks to this share and the pulls toward the leader point
+     * and the neighbours' centre grow by {@link #TELL_PULL}: the flock contracts into its ball.
+     */
+    static final double TELL_SEPARATION = 0.5;
+
+    static final double TELL_PULL = 3;
+    /** M7 part G: during a tell a member outside the ball moves in toward the leader point at up to this, px/s. */
+    static final double BALL_PULL = 120;
 
     private final Enemy[] members = new Enemy[MAX_MEMBERS];
     private final double[] px = new double[MAX_MEMBERS];
@@ -78,9 +92,51 @@ public final class Flock implements Hashed {
     private int doneTicks;
     /** The edge it entered from last: its wave's, the rear once it has looped back. */
     private WaveSpec.Entry entry = WaveSpec.Entry.FRONT;
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): the frame it flies in, its members' too: its leader
+     * point, route and members' places are that frame's ({@link TravelFrame}); the accessors give the screen's.
+     */
+    private TravelFrame frame = TravelFrame.SCREEN;
+    /**
+     * M7 part G (design/campaign Level 20, The pursuit swarm): whether its leader point is a {@link Pursuit}'s (a
+     * {@code pursuit} wave's flock) instead of flying its route; the pursuit, one per flock, reused, and its view.
+     */
+    private boolean pursuing;
+
+    private final Pursuit pursuit = new Pursuit();
+    private final java.util.Optional<Pursuit> pursuitView = java.util.Optional.of(pursuit);
 
     /** A wave's flock entering from {@code from}: the leader point at its route's start, no members yet. */
     void start(EnemySpec.FlockSpec flockSpec, int flockSerial, Spawn.Route flockRoute, WaveSpec.Entry from) {
+        start(flockSpec, flockSerial, flockRoute, from, false);
+    }
+
+    /**
+     * As {@link #start(EnemySpec.FlockSpec, int, Spawn.Route, WaveSpec.Entry)}; M7 part G: {@code flipped}, it flies
+     * in the mirrored frame (its wave entered while the scroll ran reversed), and so do its members.
+     */
+    void start(
+            EnemySpec.FlockSpec flockSpec,
+            int flockSerial,
+            Spawn.Route flockRoute,
+            WaveSpec.Entry from,
+            boolean flipped) {
+        start(flockSpec, flockSerial, flockRoute, from, flipped, 0);
+    }
+
+    /**
+     * As {@link #start(EnemySpec.FlockSpec, int, Spawn.Route, WaveSpec.Entry, boolean)}; M7 part G: a route with a
+     * pursuit starts its {@link Pursuit} at the route's start, its wave's time {@code t} s (for its break-off and its
+     * refills).
+     */
+    void start(
+            EnemySpec.FlockSpec flockSpec,
+            int flockSerial,
+            Spawn.Route flockRoute,
+            WaveSpec.Entry from,
+            boolean flipped,
+            double t) {
+        frame = TravelFrame.of(flipped);
         spec = flockSpec;
         serial = flockSerial;
         route = flockRoute;
@@ -103,6 +159,38 @@ public final class Flock implements Hashed {
         for (int i = 0; i < MAX_MEMBERS; i++) {
             members[i] = null;
         }
+        pursuing = route.pursuit().isPresent();
+        if (pursuing) {
+            pursuit.start(route.pursuit().get(), t, leaderX, leaderY);
+        }
+    }
+
+    /**
+     * M7 part G: the first free member slot (a gone member's, or a new one while fewer than {@link #MAX_MEMBERS}
+     * slots are used); -1 when the flock is full. A pursuit's refill joins only into a free slot.
+     */
+    int freeSlot() {
+        for (int i = 0; i < size; i++) {
+            if (members[i] == null) {
+                return i;
+            }
+        }
+        return size < MAX_MEMBERS ? size : -1;
+    }
+
+    /**
+     * M7 part G: {@code enemy}, joined to this flock in a free slot ({@link Enemy#join}, its member index that slot),
+     * becomes a member where it was placed, heading toward the leader point: a pursuit's refill.
+     */
+    void join(Enemy enemy) {
+        int index = enemy.member();
+        member(index, enemy, enemy.x(), enemy.frameY());
+        heading[index] = StrictMath.atan2(leaderY - py[index], leaderX - px[index]);
+    }
+
+    /** M7 part G: the facing (radians clockwise from straight down) of a member joining at (x, y): toward the leader point. */
+    double joinFacing(double x, double y) {
+        return StrictMath.atan2(-(leaderX - x), -(leaderY - y));
     }
 
     /**
@@ -136,14 +224,41 @@ public final class Flock implements Hashed {
      * the members are clamped to its flyable side (no damage) before they move to their places.
      */
     void advance(Canyon canyon) {
+        advance(canyon, leaderX, frame.y(leaderY));
+    }
+
+    /**
+     * As {@link #advance(Canyon)}; M7 part G: a pursuit's leader point steps toward the ship at ({@code shipX},
+     * {@code shipY}) on the screen instead of flying the route; during its tell the members contract into its ball.
+     */
+    void advance(Canyon canyon, double shipX, double shipY) {
         loopedBack = 0;
         ticks++;
-        flyLeader();
+        if (pursuing) {
+            pursuit.step(shipX, shipY);
+            leaderX = pursuit.leaderX();
+            leaderY = pursuit.leaderY();
+            leaderVx = pursuit.vx();
+            leaderVy = pursuit.vy();
+            if (doneTicks < 0 && pursuit.gone()) {
+                doneTicks = 0;
+            }
+        } else {
+            flyLeader();
+        }
         steer();
         double cruise = cruise();
+        // M7 part G: a pursuit's dive carries its ball along: every member moves with the leader point's step too.
+        boolean carried = pursuing && pursuit.phase() == Pursuit.Phase.DIVE;
+        double carryX = carried ? leaderVx * SimStep.SECONDS : 0;
+        double carryY = carried ? leaderVy * SimStep.SECONDS : 0;
         for (int i = 0; i < size; i++) {
             if (members[i] == null) {
                 continue;
+            }
+            if (carried) {
+                px[i] += carryX;
+                py[i] += carryY;
             }
             if (!members[i].empStunned()) {
                 // M7 part A: a member the EMP Burst stuns drifts on along its heading and pace.
@@ -155,6 +270,9 @@ public final class Flock implements Hashed {
             py[i] += Trig.sin(heading[i]) * step;
         }
         relax();
+        if (pursuing && pursuit.phase() == Pursuit.Phase.TELL) {
+            gather();
+        }
         if (canyon != null) {
             for (int i = 0; i < size; i++) {
                 if (members[i] != null) {
@@ -170,6 +288,25 @@ public final class Flock implements Hashed {
         }
         if (doneTicks >= 0) {
             doneTicks++;
+        }
+    }
+
+    /** M7 part G: during a tell the members outside the ball move in toward the leader point. */
+    private void gather() {
+        double ball = pursuit.spec().ballSize() / 2;
+        double most = BALL_PULL * SimStep.SECONDS;
+        for (int i = 0; i < size; i++) {
+            if (members[i] == null) {
+                continue;
+            }
+            double dx = leaderX - px[i];
+            double dy = leaderY - py[i];
+            double d = Math.sqrt(dx * dx + dy * dy);
+            if (d > ball) {
+                double pull = Math.min(d - ball, most);
+                px[i] += dx / d * pull;
+                py[i] += dy / d * pull;
+            }
         }
     }
 
@@ -260,13 +397,13 @@ public final class Flock implements Hashed {
             pace[i] = 1;
             // Twice: the second leaves no in-between position from where it was.
             members[i].chainTo(px[i], py[i], StrictMath.atan2(-Trig.cos(start), -Trig.sin(start)));
-            members[i].chainTo(px[i], py[i], members[i].facing());
+            members[i].chainTo(px[i], py[i], members[i].frameFacing());
         }
     }
 
     /** Pairs closer than the separation move apart by {@link #RELAX} of the shortfall, in entry order. */
     private void relax() {
-        double separation = spec.separation();
+        double separation = telling() ? spec.separation() * TELL_SEPARATION : spec.separation();
         for (int i = 0; i < size; i++) {
             if (members[i] == null) {
                 continue;
@@ -295,7 +432,18 @@ public final class Flock implements Hashed {
 
     /** The flock's cruise speed now: its speed, its dive speed after a loop-back. */
     private double cruise() {
+        if (pursuing) {
+            // M7 part G: the members keep up with a pursuit's break-off (its dive carries them).
+            return pursuit.phase() == Pursuit.Phase.BREAK
+                    ? Math.max(spec.speed(), pursuit.spec().breakSpeed())
+                    : spec.speed();
+        }
         return loops > 0 ? spec.diveSpeed() : spec.speed();
+    }
+
+    /** M7 part G: whether a pursuit's tell contracts the flock now. */
+    private boolean telling() {
+        return pursuing && pursuit.phase() == Pursuit.Phase.TELL;
     }
 
     /**
@@ -306,7 +454,10 @@ public final class Flock implements Hashed {
     private void steer() {
         double radius = spec.radius();
         double radius2 = radius * radius;
-        double separation = spec.separation();
+        boolean telling = telling();
+        double separation = telling ? spec.separation() * TELL_SEPARATION : spec.separation();
+        double leaderWeight = telling ? spec.leader() * TELL_PULL : spec.leader();
+        double cohesionWeight = telling ? spec.cohesion() * TELL_PULL : spec.cohesion();
         double most = spec.turnRate() * SimStep.SECONDS;
         for (int i = 0; i < size; i++) {
             if (members[i] == null) {
@@ -354,7 +505,7 @@ public final class Flock implements Hashed {
             double dirX = 0;
             double dirY = 0;
             if (toLeader > 0) {
-                double pull = spec.leader() * Math.min(1, toLeader / radius) / toLeader;
+                double pull = leaderWeight * Math.min(1, toLeader / radius) / toLeader;
                 dirX += toX * pull;
                 dirY += toY * pull;
             }
@@ -366,8 +517,8 @@ public final class Flock implements Hashed {
                 }
                 double cohesionX = (sumX / neighbours - px[i]) / radius;
                 double cohesionY = (sumY / neighbours - py[i]) / radius;
-                dirX += spec.cohesion() * cohesionX;
-                dirY += spec.cohesion() * cohesionY;
+                dirX += cohesionWeight * cohesionX;
+                dirY += cohesionWeight * cohesionY;
                 dirX += SEPARATION * sepX;
                 dirY += SEPARATION * sepY;
             }
@@ -428,7 +579,30 @@ public final class Flock implements Hashed {
     }
 
     public double leaderY() {
-        return leaderY;
+        return frame.y(leaderY);
+    }
+
+    /** M7 part G: whether it flies in the mirrored frame (its wave entered while the scroll ran reversed). */
+    public boolean flipped() {
+        return frame.flipped();
+    }
+
+    /** M7 part G: whether it is a {@code pursuit} wave's flock, its leader point a {@link Pursuit}'s. */
+    public boolean pursuing() {
+        return pursuing;
+    }
+
+    /** M7 part G: its pursuit, for a {@code pursuit} wave's flock; empty for any other (made once, no allocation). */
+    public java.util.Optional<Pursuit> pursuit() {
+        return pursuing ? pursuitView : java.util.Optional.empty();
+    }
+
+    /**
+     * M7 part G: whether it may end once it has no members: always, but a pursuit only once no refill will join it any
+     * more (it broke off, or its wave's last refill came).
+     */
+    boolean ended() {
+        return !pursuing || pursuit.refilled();
     }
 
     /** The loop-backs flown so far. */
@@ -455,6 +629,11 @@ public final class Flock implements Hashed {
         return spec;
     }
 
+    /** M7 part G: the route it flies, shared by its wave's members (a pursuit's refills find their flock by it). */
+    Spawn.Route route() {
+        return route;
+    }
+
     /** Unique among the flocks of an attempt. */
     int serial() {
         return serial;
@@ -476,6 +655,15 @@ public final class Flock implements Hashed {
                 .add(doneTicks)
                 .add(entry.ordinal())
                 .add(size);
+        if (frame.flipped()) {
+            // M7 part G: only a flipped flock adds the mark, so the other levels hash as before.
+            hash.add(1);
+        }
+        if (pursuing) {
+            // M7 part G: only a pursuit's flock adds its pursuit, so the other levels hash as before.
+            hash.add(2);
+            pursuit.addTo(hash);
+        }
         for (int i = 0; i < size; i++) {
             hash.add(members[i] == null ? -1 : members[i].serial())
                     .add(px[i])

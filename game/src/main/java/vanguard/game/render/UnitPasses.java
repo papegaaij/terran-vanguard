@@ -17,6 +17,8 @@ import vanguard.game.render.LevelRenderer.Launched;
 import vanguard.sim.Chain;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.Flock;
+import vanguard.sim.Pursuit;
 import vanguard.sim.SetPiece;
 import vanguard.sim.Ship;
 import vanguard.sim.Sortie;
@@ -72,6 +74,8 @@ final class UnitPasses {
     private final ShipLooks shipLooks;
     /** M5 part E: the surface's water effects, for a surfaced bell's ripple train. */
     private final Effects surfaceWater;
+    /** Step GFX2: the soft disc and ring for the pursuit swarm's rim light and tell ({@link PursuitLooks}). */
+    private final SoftGlow softGlow;
 
     UnitPasses(
             EnemyLooks[] looks,
@@ -83,7 +87,9 @@ final class UnitPasses {
             WeatherLooks weather,
             ShipLooks shipLooks,
             Effects surfaceWater,
-            List<EnemySpec> launches) {
+            List<EnemySpec> launches,
+            SoftGlow softGlow) {
+        this.softGlow = softGlow;
         this.looks = looks;
         this.flash = flash;
         this.play = play;
@@ -666,6 +672,10 @@ final class UnitPasses {
                 continue;
             }
             float shade = EnemyLooks.bodyOpacity(enemy.decloak(alpha)) * kiteFade.opacity(enemy, sortie.tick(), alpha);
+            if (PursuitLooks.pursuing(enemy.flock())) {
+                // Step GFX2: the pursuit swarm's shadows only faint (at 50 % they read as a second flock).
+                shade *= PursuitLooks.SHADOW_SHARE;
+            }
             if (shade < 1) {
                 batch.setColor(0, 0, 0, Shadows.OPACITY * shade);
             }
@@ -749,7 +759,8 @@ final class UnitPasses {
     /**
      * M7 part E: the {@code air} units' {@code -glow} frames (the Ghost Drone's red eye and white running lights;
      * tools/art/storm_units.py), additive over their bodies at the heading and frame drawn, dark while an EMP stuns a
-     * machine, then the Ghost Drones' eye glints ({@link GhostDroneLooks}); in every level after the air units, in
+     * machine, then a pursuit's lunge tell (M7 part G, {@link PursuitLooks}) and the Ghost Drones' eye glints ({@link
+     * GhostDroneLooks}); in every level after the air units, in
      * the dust storm after its silhouette pass, so they light the silhouettes outside the radius.
      */
     void drawAirGlows(SpriteBatch batch, Sortie sortie, float alpha) {
@@ -776,9 +787,66 @@ final class UnitPasses {
             drawCentred(batch, frame, enemy.renderX(alpha), enemy.renderY(alpha));
         }
         batch.setColor(Color.WHITE);
+        drawPursuitTell(batch, sortie, alpha);
         // The Ghost Drones' eye glints before their bursts, through the dust like their lights.
         kinds.ghostDrones(sortie).drawGlints(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /**
+     * M7 part G: a pursuit's lunge tell ({@link PursuitLooks}): each member of a pursuing flock drawn again over its
+     * body, additive (the batch is), in a warm white rising through the tell and fading along the dive. Step GFX2: and
+     * at play size: each member's pale teal rim light (a halo and its body lit) giving way to a reddish-white disc that
+     * grows with the tell, and one short ring widening round the ball through the tell's second part.
+     */
+    private void drawPursuitTell(SpriteBatch batch, Sortie sortie, float alpha) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            if (!PursuitLooks.pursuing(enemy.flock()) || Depth.of(enemy) != Depth.AIR) {
+                continue;
+            }
+            float glow = PursuitLooks.glow(enemy.flock());
+            double x = enemy.renderX(alpha);
+            double y = enemy.renderY(alpha);
+            float rim = PursuitLooks.rim(glow);
+            if (rim > 0) {
+                SoftGlow.tint(batch, PursuitLooks.RIM, PursuitLooks.RIM_ALPHA * rim);
+                softGlow.disc(batch, x, y, PursuitLooks.RIM_DIAMETER);
+                SoftGlow.tint(batch, PursuitLooks.RIM, PursuitLooks.RIM_BODY * rim);
+                drawCentred(batch, enemyFrame(sortie, enemy, i, alpha), x, y);
+            }
+            if (glow > 0) {
+                SoftGlow.tint(batch, PursuitLooks.TELL_DISC, PursuitLooks.tellDiscAlpha(glow));
+                softGlow.disc(batch, x, y, PursuitLooks.tellDisc(glow));
+                Color tint = PursuitLooks.TINT;
+                batch.setColor(tint.r, tint.g, tint.b, glow);
+                drawCentred(batch, enemyFrame(sortie, enemy, i, alpha), x, y);
+            }
+        }
+        for (int f = 0; f < sortie.flockCount(); f++) {
+            Flock flock = sortie.flock(f);
+            Pursuit pursuit = flock.pursuing() ? flock.pursuit().orElse(null) : null;
+            float ring = pursuit == null ? 0 : PursuitLooks.ringAlpha(pursuit.phase(), pursuit.progress());
+            if (ring <= 0) {
+                continue;
+            }
+            double sumX = 0;
+            double sumY = 0;
+            int members = 0;
+            for (int k = 0; k < flock.size(); k++) {
+                Enemy member = flock.member(k);
+                if (member != null) {
+                    sumX += member.renderX(alpha);
+                    sumY += member.renderY(alpha);
+                    members++;
+                }
+            }
+            if (members > 0) {
+                SoftGlow.tint(batch, PursuitLooks.TELL_DISC, ring);
+                softGlow.ring(batch, sumX / members, sumY / members, PursuitLooks.ringRadius(pursuit.progress()));
+            }
+        }
+        batch.setColor(Color.WHITE);
     }
 
     /** M7 part B: after each simulation step, the Dust Kites' entry fades follow it. */

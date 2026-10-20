@@ -12,6 +12,7 @@ import vanguard.sim.Beam;
 import vanguard.sim.Chain;
 import vanguard.sim.Defences;
 import vanguard.sim.Deflectors;
+import vanguard.sim.DroneSpec;
 import vanguard.sim.Drones;
 import vanguard.sim.EmpSpec;
 import vanguard.sim.Enemy;
@@ -40,7 +41,9 @@ import vanguard.sim.WeaponSpec;
  *       scrolling with the ground and fading over 0.8 s; the steady heat tint on its target is
  *       {@link LevelRenderer}'s ({@link #heatTarget});
  *   <li>the Light Drone Bay's drone on its orbit, facing its convergence point, flashing white as it
- *       absorbs a hit, fading in while its bay rebuilds it, its muzzle flash, its break and rebuild;
+ *       absorbs a hit, fading in while its bay rebuilds it, its muzzle flash, its break and rebuild; M7 part G: the
+ *       Rear-guard Drone Bay's drone on its trail behind the ship, its gun straight back (swinging a frame as it lags
+ *       in a turn), with the light drone's flash, fade, break, rebuild and HUD pips;
  *   <li>the Deflector Pod's field on its side while it holds a charge, brighter for a moment as one
  *       returns, and the catch flash where it catches a bullet;
  *   <li>the EMP Burst's ring (a band of quads round the circle like the Smart Bomb's, the 60×128 strip
@@ -163,6 +166,9 @@ public final class ArsenalLooks {
     private final AtlasRegion scorch;
     private final AtlasRegion scorchGlow;
     private final Array<AtlasRegion> droneFrames;
+    /** M7 part G: the rear-guard drone (tools/art/light_drone.py --rear), its gun at the heading; empty without it. */
+    private final Array<AtlasRegion> rearDroneFrames;
+
     private final Array<AtlasRegion> droneBreak;
     private final Array<AtlasRegion> droneRebuild;
     private final Array<Array<AtlasRegion>> catches = new Array<>();
@@ -237,6 +243,7 @@ public final class ArsenalLooks {
         scorch = optionalRegion("ion-beam-scorch");
         scorchGlow = optionalRegion("ion-beam-scorch-glow");
         droneFrames = optional("light-drone-bay-drone");
+        rearDroneFrames = optional(REAR_DRONE);
         droneBreak = optional("light-drone-bay-break");
         droneRebuild = optional("light-drone-bay-rebuild");
         Array<AtlasRegion> flashes = optional("deflector-pod-catch");
@@ -598,10 +605,14 @@ public final class ArsenalLooks {
             }
             double dx = drones.offsetX(m);
             double dy = drones.offsetY(m);
-            AtlasRegion frame = droneFrames.get(headingIndex(droneHeading(drones, m), DRONE_HEADINGS));
+            Array<AtlasRegion> frames = droneFrames(drones, m, droneFrames, rearDroneFrames);
+            AtlasRegion frame = frames.get(headingIndex(droneHeading(sortie, m), frames.size));
             float x = Math.round(X0 + ship.renderX(alpha) + dx);
             float y = Math.round(ship.renderY(alpha) + dy);
             float fade = (float) drones.fadeIn(m);
+            if (frames == rearDroneFrames) {
+                drawTrailOutline(batch, frame, x, y, fade);
+            }
             if (m < MAX_MOUNTS && droneFlash[m] > 0) {
                 flash.draw(batch, frame, x, y, Color.WHITE, whiteFlash);
             } else {
@@ -612,9 +623,62 @@ public final class ArsenalLooks {
         }
     }
 
-    /** A drone's heading, radians clockwise from up: towards its convergence point ahead of the ship. */
-    private static double droneHeading(Drones drones, int m) {
+    /**
+     * Step GFX2 (the round 43 capture: the rear-guard drone, a 14 px dot, hid among the Tail Gun's twin bolts): a
+     * trailing drone wears a 1 px outline in its shot's gold ({@link WeaponLooks#REAR_DRONE_SHOT}), its frame drawn
+     * flat in that colour one pixel up, down, left and right of it under its body, at this opacity.
+     */
+    static final float TRAIL_OUTLINE_ALPHA = 0.85f;
+
+    static final int[][] TRAIL_OUTLINE_OFFSETS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    /** Step GFX2: the trailing drone's outline round {@code frame} centred on the screen point (x, y). */
+    private void drawTrailOutline(SpriteBatch batch, AtlasRegion frame, float x, float y, float fade) {
+        Color gold = WeaponLooks.REAR_DRONE_SHOT;
+        flash.begin(batch, gold, 1);
+        batch.setColor(1, 1, 1, TRAIL_OUTLINE_ALPHA * fade);
+        float left = x - frame.getRegionWidth() / 2f;
+        float bottom = y - frame.getRegionHeight() / 2f;
+        for (int[] offset : TRAIL_OUTLINE_OFFSETS) {
+            batch.draw(frame, left + offset[0], bottom + offset[1]);
+        }
+        flash.end(batch);
+        batch.setColor(Color.WHITE);
+    }
+
+    /** M7 part G: the rear-guard drone's sprite root (16 headings of its gun, the light drone's convention). */
+    static final String REAR_DRONE = "rear-guard-drone-bay-drone";
+
+    /**
+     * M7 part G: the frames mount {@code m}'s drone is drawn with: the rear-guard drone's for a trail station (when its
+     * art exists), else the light drone's.
+     */
+    static Array<AtlasRegion> droneFrames(Drones drones, int m, Array<AtlasRegion> light, Array<AtlasRegion> rear) {
+        return drones.station(m) == DroneSpec.Station.TRAIL && rear.size > 0 ? rear : light;
+    }
+
+    /**
+     * A drone's heading, radians clockwise from up: an orbiting drone's towards its convergence point ahead of the
+     * ship; M7 part G: a trailing drone's gun straight back, swung by how far it lags beside its station ({@link
+     * #trailHeading}).
+     */
+    static double droneHeading(Sortie sortie, int m) {
+        Drones drones = sortie.drones();
+        if (drones.station(m) == DroneSpec.Station.TRAIL) {
+            DroneSpec spec = drones.spec(m);
+            double side = sortie.armament().mount(m).slot() == Armament.Slot.LEFT_WING ? -spec.side() : spec.side();
+            return drones.fadingIn(m) ? Math.PI : trailHeading(drones.offsetX(m) - side, spec.behind());
+        }
         return Math.atan2(-drones.offsetX(m), drones.spec(m).converge() - drones.offsetY(m));
+    }
+
+    /**
+     * M7 part G: a trailing drone's heading, radians clockwise from up, lagging {@code lagX} px right of its station
+     * {@code behind} px behind the ship: straight back (π, frame 8 of 16) on its station, its gun swinging out to the
+     * side it lags to in a turn.
+     */
+    static double trailHeading(double lagX, double behind) {
+        return Math.atan2(lagX, -Math.max(1, behind));
     }
 
     /**
@@ -699,7 +763,7 @@ public final class ArsenalLooks {
             }
             int frame = sortie.ticksSinceShot(m) / MUZZLE_FRAME_TICKS;
             if (drones.whole(m) && frame < sprites.pulseMuzzle.size) {
-                double heading = droneHeading(drones, m);
+                double heading = droneHeading(sortie, m);
                 drawScaled(
                         batch,
                         sprites.pulseMuzzle.get(frame),

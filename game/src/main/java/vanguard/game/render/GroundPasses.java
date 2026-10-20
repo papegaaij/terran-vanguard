@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 import vanguard.sim.GroundObject;
 import vanguard.sim.GroundObjectSpec;
 import vanguard.sim.LevelScript;
@@ -63,8 +64,8 @@ final class GroundPasses {
     private final Map<String, Array<AtlasRegion>> groundRises = new HashMap<>();
 
     /**
-     * A trigger look's {@code -glow} frames (the terminal's LEDs; the billboard's neon flicker, a loop
-     * by {@link GroundGlow}), drawn after the light pass until it is spent.
+     * A ground look's {@code -glow} frames (the terminal's LEDs; the billboard's neon flicker, a loop
+     * by {@link GroundGlow}; the emergency cache's strobe), drawn after the light pass until it is spent.
      */
     private final Map<String, Array<AtlasRegion>> groundGlows = new HashMap<>();
 
@@ -84,6 +85,8 @@ final class GroundPasses {
     private final FlashShader flash;
     private final PlayFrame play;
     private final WeatherLooks weather;
+    /** Step GFX2: the soft disc for a strobe's halo ({@link StrobeHalo}). */
+    private final SoftGlow softGlow;
 
     GroundPasses(
             Sprites sprites,
@@ -91,7 +94,9 @@ final class GroundPasses {
             PlayFrame play,
             WeatherLooks weather,
             LevelScript script,
-            String levelKey) {
+            String levelKey,
+            SoftGlow softGlow) {
+        this.softGlow = softGlow;
         this.sprites = sprites;
         this.flash = flash;
         this.play = play;
@@ -106,22 +111,39 @@ final class GroundPasses {
             if (spec.submerged() && sprites.has(look + "-rise")) {
                 groundRises.computeIfAbsent(look, name -> sprites.frames(name + "-rise"));
             }
+            String glow = glowName(spec, sprites::has);
+            if (glow != null) {
+                groundGlows.computeIfAbsent(look, name -> sprites.frames(glow));
+            }
             if (!spec.trigger()) {
                 groundLooks.computeIfAbsent(look, sprites::frames);
             } else if (!look.equals(GroundObjectSpec.CARGO_CONTAINER) && sprites.has(look)) {
                 triggerLooks.add(look);
                 groundLooks.computeIfAbsent(look, sprites::frames);
-                String glow = sprites.has(look + "-glow")
-                        ? look + "-glow"
-                        : LevelRenderer.TRIGGER_CONTENTS.getOrDefault(look, look) + "-glow";
-                if (sprites.has(glow)) {
-                    groundGlows.computeIfAbsent(look, name -> sprites.frames(glow));
-                }
                 if (sprites.has(look + "-glint")) {
                     groundGlints.computeIfAbsent(look, name -> sprites.frames(name + "-glint"));
                 }
             }
         }
+    }
+
+    /**
+     * The name of the {@code -glow} frames ground object {@code spec} is drawn with after the light pass, null for none:
+     * its look's own, or else those of the contents under it ({@link LevelRenderer#TRIGGER_CONTENTS}). Step CSF: a
+     * destructible (an HP target, no {@code hits}) gets its glow too, not only a trigger (Level 20's emergency cache and
+     * its strobe, Level 19's payroll safe, Level 17's seed-vault capsule); the plain cargo container has none.
+     *
+     * @param has whether the sprite pages hold frames of a name
+     */
+    static String glowName(GroundObjectSpec spec, Predicate<String> has) {
+        String look = spec.look();
+        if (look.equals(GroundObjectSpec.CARGO_CONTAINER) || !has.test(look)) {
+            return null;
+        }
+        String glow = has.test(look + "-glow")
+                ? look + "-glow"
+                : LevelRenderer.TRIGGER_CONTENTS.getOrDefault(look, look) + "-glow";
+        return has.test(glow) ? glow : null;
     }
 
     /**
@@ -264,6 +286,7 @@ final class GroundPasses {
                 int frame = GroundGlow.frame(
                         sortie.tick(), glow.size, groundLooks.get(object.spec().look()).size, object.damaged());
                 drawCentred(batch, glow.get(frame), object.renderX(), object.renderY(alpha));
+                drawStrobe(batch, object.spec().look(), frame, object.renderX(), object.renderY(alpha));
             }
             Array<AtlasRegion> glint = groundGlints.get(object.spec().look());
             if (glint != null && sortie.lit(object)) {
@@ -334,6 +357,15 @@ final class GroundPasses {
             int frame = GroundGlow.frame(
                     sortie.tick(), glow.size, groundLooks.get(object.spec().look()).size, object.damaged());
             drawCentred(batch, glow.get(frame), object.renderX(alpha), object.renderY(alpha));
+            drawStrobe(batch, object.spec().look(), frame, object.renderX(alpha), object.renderY(alpha));
+        }
+    }
+
+    /** Step GFX2: a strobe's halo round its lamp while glow frame {@code frame} lights it ({@link StrobeHalo}). */
+    private void drawStrobe(SpriteBatch batch, String look, int frame, double x, double y) {
+        StrobeHalo.Strobe strobe = StrobeHalo.of(look);
+        if (strobe != null) {
+            StrobeHalo.draw(batch, softGlow, strobe, frame, x, y);
         }
     }
 }

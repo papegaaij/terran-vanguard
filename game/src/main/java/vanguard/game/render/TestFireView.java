@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import java.util.Arrays;
 import vanguard.sim.Beam;
 import vanguard.sim.Deflectors;
@@ -40,7 +41,7 @@ import vanguard.sim.WeaponSpec;
  * with the catch flash where it takes a dummy's bullet; the dummies' bullets as the level's orbs.
  * Drawing allocates nothing.
  */
-public final class TestFireView {
+public final class TestFireView implements Disposable {
     /** Play-field px to box px. */
     public static final float SCALE = 0.5f;
     /** Steps an impact or explosion frame shows (the level's). */
@@ -97,6 +98,11 @@ public final class TestFireView {
 
     private final BulletLooks bullets;
     private final Array<AtlasRegion> droneFrames;
+    /** M7 part G: the rear-guard drone's frames (empty without its art). */
+    private final Array<AtlasRegion> rearDroneFrames;
+    /** Step GFX2: the flash shader recolouring the rear-guard drone's shots; null until the first. */
+    private FlashShader recolour;
+
     private final Array<AtlasRegion> beamContact;
     /** The catch flash by heading, each its six frames. */
     private final Array<Array<AtlasRegion>> catches = new Array<>();
@@ -124,6 +130,8 @@ public final class TestFireView {
         glance = sprites.frames("ballistic-impact");
         bullets = new BulletLooks(sprites);
         droneFrames = sprites.frames("light-drone-bay-drone");
+        rearDroneFrames =
+                sprites.has(ArsenalLooks.REAR_DRONE) ? sprites.frames(ArsenalLooks.REAR_DRONE) : new Array<>(0);
         beamContact = sprites.frames("ion-beam-contact-small");
         Array<AtlasRegion> flashes = sprites.frames("deflector-pod-catch");
         for (int heading = 0; heading < CATCH_HEADINGS; heading++) {
@@ -326,11 +334,12 @@ public final class TestFireView {
             }
             double dx = drones.offsetX(m);
             double dy = drones.offsetY(m);
-            double heading = Math.atan2(-dx, drones.spec(m).converge() - dy);
+            // M7 part G: a rear-guard drone trails behind the ship, its gun straight back.
+            Array<AtlasRegion> frames = ArsenalLooks.droneFrames(drones, m, droneFrames, rearDroneFrames);
             batch.setColor(1, 1, 1, (float) drones.fadeIn(m));
             drawScaled(
                     batch,
-                    droneFrames.get(headingIndex(heading, DRONE_HEADINGS)),
+                    frames.get(headingIndex(ArsenalLooks.droneHeading(sortie, m), frames.size)),
                     ship.renderX(alpha) + dx,
                     ship.renderY(alpha) + dy,
                     1);
@@ -495,12 +504,17 @@ public final class TestFireView {
     private void drawShots(SpriteBatch batch, Sortie sortie, float alpha, boolean glowing) {
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
-            if (weapons.look(shot.mount()).glowingShot != glowing
+            WeaponLooks.Look look = weapons.look(shot.mount());
+            if (look.glowingShot != glowing
                     || (shot.weapon().delivery() == WeaponSpec.Delivery.TORPEDO
                             && sortie.script().ground().water())) {
                 continue;
             }
             AtlasRegion sprite = weapons.sprite(shot);
+            // Step GFX2: the look's shot colour (the rear-guard drone's gold), as in the level.
+            if (look.recolour != null) {
+                recolourShader().beginRecolour(batch, look.recolour, WeaponLooks.RECOLOUR);
+            }
             double x = shot.renderX(alpha);
             double y = shot.renderY(alpha);
             switch (shot.weapon().delivery()) {
@@ -516,6 +530,26 @@ public final class TestFireView {
                     batch.setColor(Color.WHITE);
                 }
             }
+            if (look.recolour != null) {
+                recolourShader().end(batch);
+            }
+        }
+    }
+
+    /** Step GFX2: the flash shader for a recoloured shot (the rear-guard drone's gold), built at its first use. */
+    private FlashShader recolourShader() {
+        if (recolour == null) {
+            recolour = new FlashShader();
+        }
+        return recolour;
+    }
+
+    /** Step GFX2: frees the recolouring shader, if it was built. */
+    @Override
+    public void dispose() {
+        if (recolour != null) {
+            recolour.dispose();
+            recolour = null;
         }
     }
 

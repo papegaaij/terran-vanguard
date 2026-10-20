@@ -26,7 +26,7 @@ import vanguard.content.LevelData;
  * collapse's dust puffs, the scripted loss's glow and lance, the weather's looks and sondes, the root
  * bursts' cracks, dust and roots; M7 part D: the ground allies' sprite sets and their pip, a trigger look's
  * contents, the militia flak's puffs; M7 part F: the furnace vents' grates and fire, the gantries and cradles of the
- * up-facing nests, a trigger look's surround, a foundry's ingots and rovers). A
+ * up-facing nests, a trigger look's surround, a foundry's ingots and rovers; M7 part G: the travelling ridge). A
  * sprite belongs to a root when its name is the root or starts with the root and a hyphen
  * ({@code leviathan} owns {@code leviathan-fin-left}). The shared roots are the weapons, the specials
  * and the game's own effects ({@link #GAME_WIDE}); an enemy no level uses yet goes in its first level's
@@ -145,6 +145,15 @@ final class SpriteUse {
      * belt run, and the crews' rovers leaving its smelter tower ({@code ingot-*}, {@code crew-rover*}).
      */
     static final List<String> FOUNDRY_ROOTS = List.of("ingot", "crew-rover");
+
+    /**
+     * M7 part G: a level with the {@code basin-rumble} ambience layer draws the travelling ridge that rumbles (Level
+     * 20's, the game's RidgeLooks; the Dust Colossus's body, Level 21's boss reuses it), {@code colossus-ridge*}
+     * (tools/art/l20_props.py).
+     */
+    static final String RIDGE_LAYER = "basin-rumble";
+
+    static final String RIDGE_ROOT = "colossus-ridge";
 
     /** The look of a destructible ground target that names none (Level 01's cargo container). */
     private static final String DEFAULT_LOOK = "cargo-container";
@@ -288,6 +297,11 @@ final class SpriteUse {
         // M7 part F: the furnace vents' looks, a foundry's ingots and rovers.
         level.vents().ifPresent(vents -> roots.add(VENT_ROOT));
         level.belts().ifPresent(belts -> roots.addAll(FOUNDRY_ROOTS));
+        // M7 part G: the travelling ridge with its rumble.
+        if (level.music().ambienceLayers().orElse(List.of()).stream()
+                .anyMatch(layer -> layer.ambience().equals(RIDGE_LAYER))) {
+            roots.add(RIDGE_ROOT);
+        }
         // M5 part H: a level with root bursts draws their cracks, dust and roots.
         if (!level.bursts().isEmpty()) {
             roots.add(ROOT_BURST_ROOT);

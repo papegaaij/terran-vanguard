@@ -68,8 +68,10 @@ final class Burrowers {
         if (!cycle.waiting()) {
             return;
         }
-        if (!cycle.spotAllowed(ship.x(), ship.y())) {
-            cycle.repick(ship.x(), ship.y());
+        // M7 part G: its cycle runs in its frame (the ship's height brought into it).
+        double shipY = enemy.frame().y(ship.y());
+        if (!cycle.spotAllowed(ship.x(), shipY)) {
+            cycle.repick(ship.x(), shipY);
             return;
         }
         int group = enemy.burrowGroup();

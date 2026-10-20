@@ -13,7 +13,10 @@ import java.util.Set;
  * Drone ({@code lane_strafe}, the pass {@code trigger}, {@code tell}, {@code reaim}, {@code second_pass}), until step
  * E4 mapped them ({@link StormRules}). M7 part F (step F2): Level 19 Foundry of Tharsis's keys and its two units' are
  * mapped ({@link FoundryRules}); the tests that fly or tune the level left it out until step F4 gave the autopilot its
- * walker play and its vent dodging ({@link Autopilot}).
+ * walker play and its vent dodging ({@link Autopilot}). M7 part G (step G2): Level 20 Retreat from Hellas (its
+ * reversed sections, the {@code pursuit} formation, the BOTTOM lessons' {@code warning}) until steps G1 and G3 flew
+ * the reverse scroll and the pursuit and step G4 mapped them ({@link RetreatRules}) and gave the autopilot its retreat
+ * play ({@link RetreatPlay}).
  */
 final class Unmapped {
     /** Why a test leaves a level out. */

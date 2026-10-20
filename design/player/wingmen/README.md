@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Wingmen and drones
@@ -247,6 +247,10 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
   once like the Airstrike's call (an urgent line already on the radio finishes first), and no other
   bark replaces it.
 - No bark once the level is won.
+- **Reverse scroll (Level 20, M7 part G):** in a reversed section trigger 2 fires for the waves that
+  enter from the **top** (`rear` by travel: the pursuit swarms, the Wraiths) with its "Up top!"
+  variants (`top_lines`), and stays silent for the bottom entries, which are ahead by travel there
+  (pending the user's review in round 43).
 - After he ejects, trigger 5 can no longer fire; the others still do (he watches the scope from
   his pod).
 - The level documents' scripted "Six o'clock" and "flank" lines (L08 t=92, L13 t=82 and t=122,
@@ -271,7 +275,7 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
 | Priority | Trigger | Variants (speaker Rook) |
 |---|---|---|
 | 1 | Boss warning starts (an act boss's warning, a mid-boss's sting) | "Here comes the big one." · "Heads up. Something nasty's coming." · "Oh, I don't like the look of that." · "Big contact inbound. Stay loose, Lancer." |
-| 2 | A `rear` wave enters within 1.5 s (shouted) | "Six o'clock, Lancer!" · "Contacts on six! Why is it always six?" · "Check six, check six!" · "Behind us! They're on our tails!" |
+| 2 | A `rear` wave enters within 1.5 s (shouted) | "Six o'clock, Lancer!" · "Contacts on six! Why is it always six?" · "Check six, check six!" · "Behind us! They're on our tails!"; in a reversed section, from the top: "Up top, Lancer! They're on our tails!" · "Up top! Coming down on us!" · "Contacts up top! Keep moving!" |
 | 3 | A `sides` wave enters (shouted) | "Contacts on your flank!" · "Bandits coming in from the side!" · "Flank! Watch the edges, Lancer!" |
 | 4 | The player's armour falls below 30 % (again only after it was back at 30 % or more) | "You're smoking, Lancer. Ease off!" · "That hull won't take much more, Lancer!" · "Lancer, you're coming apart. Get clear!" |
 | 5 | Rook's armour falls below 30 % (once per attempt) | "Taking a beating over here!" · "I'm hit. I'm okay. I'm mostly okay!" · "Rook's hurting, Lancer. Hurting bad." |
@@ -352,7 +356,7 @@ Rook's repair cost per point is the difficulty's `repair_cost`, so it is not in 
 | Name | Slot | Summary | Draw | Price | Unlock | Design |
 |---|---|---|---|---|---|---|
 | Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
-| Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the Rear-guard Drone Bay; see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
+| Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md); see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
 | Heavy drone "Warden" | escort | Tough (armour 120), slow-firing cannon, draws enemy fire | 0 | 6 000 | L22 | idea |
 | Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | L29 | idea |
 
@@ -382,18 +386,10 @@ numbers (DPS 10 → 30, hits 8 → 12, rebuild 6 → 4 s) and its price are in t
 
 #### Rear-guard drone
 
-Act 3 (L20), approved in concept round 36 (user, 2026-10-13, D.26). Sold as a wing item, the
-**Rear-guard Drone Bay** (wing mount, `rear` (drone), 2 400 cr, draw 2 → 3 MW, unlock L20, upgrade
-costs 1 200 / 2 400 / 4 800 / 9 600); it has no weapons document yet (M7 part G gives it one, with
-Level 20).
-
-| Level | Rate /s | Damage | Rear DPS | Breaks after | Rebuild | Draw MW |
-|---|---|---|---|---|---|---|
-| 1 | 6 | 1.5 | 9.0 | 8 hits | 6 s | 2 |
-| 2 | 6 | 2 | 12.0 | 9 hits | 5.5 s | 2.5 |
-| 3 | 6 | 2.7 | 16.2 | 10 hits | 5 s | 2.5 |
-| 4 | 6 | 3.5 | 21.0 | 11 hits | 4.5 s | 3 |
-| 5 | 6 | 4.3 | 25.8 | 12 hits | 4 s | 3 |
+Act 3 (L20), approved in concept round 36 (user, 2026-10-13, D.26). The shop item, its per-level
+numbers (rear DPS 9 → 26, hits 8 → 12, rebuild 6 → 4 s, draw 2 → 3 MW) and its price (2 400 cr,
+unlock L20) are in the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md) (M7 part G,
+step G2; that document waits for the user's review in round 43); this is its behaviour.
 
 | Property | Value |
 |---|---|
@@ -475,7 +471,8 @@ built were accepted in concept round 28.
 - [ ] Warden heavy drone: formation, cannon, draw-fire rule — **later: Act 4** (the Warden unlocks at L22)
 - [ ] Drone behaviours: orbit, trail, block, rebuild — **later: Act 3** (light drone L15, rear-guard drone L20) and **later: Act 5** (hunter drone L29) — the Act 3 pair specified under *Light drone* and *Rear-guard drone* (draft); the light drone's
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
-  rear-guard drone's trail waits for part G
+  rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
+  step G2; flown from step G3, mapped in step G4)
 - [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4**
 
 - [x] Level 12 (M5 part F, step 3): the wind pushing him (positions, edges clamped); his shots
@@ -715,3 +712,8 @@ built were accepted in concept round 28.
   (its bay gets a weapons document in part G). M17 = a kept: Rook flies all seven Act 3 levels from
   the escort slot, no new gun; his Level 20 quiet beat plays without `requires: escort` (Q.20d).
 - 2026-10-19: Rook makes no bark once the level is won.
+- 2026-10-20 (M7 part G, step G2): the rear-guard drone's shop numbers moved to the new [Rear-guard Drone
+  Bay](../weapons/rear-guard-drone-bay/README.md) document, linked from here. Rook's rear bark in a
+  reversed section (Level 20, where "behind" is the top of the screen) gets three "Up top!" variants
+  (`top_lines` of the rear-wave trigger, rendered into the barks table), pending the user's review in
+  round 43; it stays silent for the bottom entries there.

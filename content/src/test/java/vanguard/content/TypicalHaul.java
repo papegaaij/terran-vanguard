@@ -55,7 +55,8 @@ record TypicalHaul(int perfect, double typical, double budget) {
         PlayerData.Credits salvage = content.player().pickups().salvage().credits();
 
         for (var wave : level.waves()) {
-            sum.bounty(wave.count(), wave.enemy().bounty(), rate(rate, wave.enemy()));
+            // M7 part G: a pursuit's refills too (LevelMetrics.planned, as tools/sync_tables.py).
+            sum.bounty(LevelMetrics.planned(wave), wave.enemy().bounty(), rate(rate, wave.enemy()));
             // M7 part D: a unit part pays its own bounty (the Shellback's vent: 40 + 12 by parts, as the README's
             // table)
             wave.enemy().part().ifPresent(part -> sum.bounty(wave.count(), part.bounty(), rate(rate, wave.enemy())));

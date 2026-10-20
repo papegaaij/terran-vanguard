@@ -21,7 +21,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -29,7 +29,8 @@ import vanguard.sim.Sortie;
  * ({@link ActFloorTest}), the typical haul against the budget, the {@code bounty_scale} that would hit it and the
  * perfect run ({@link TypicalHaulTest}), the autopilot over N seeds: wins, retries, the secondary met and the bosses'
  * fights against their par and window (the level tests' runs), and the beam era's small-unit time on the screen
- * against Level 10's ({@link BeamEraHpTest}). The fits: {@code test} (default) flies each measure with the fit its test
+ * against Level 10's ({@link BeamEraHpTest}), and (M7 part G) a pursuit swarm's motes on the screen and lunges over the
+ * same seeds' runs with the plan's fit ({@link LevelMetrics.PursuitWatch}). The fits: {@code test} (default) flies each measure with the fit its test
  * uses, {@code plan} and {@code user} fly every measure with the balance plan's or the user's Act 2 fit.
  */
 final class LevelReport {
@@ -42,7 +43,8 @@ final class LevelReport {
         HAUL,
         BOSS,
         SECONDARY,
-        HP
+        HP,
+        PURSUIT
     }
 
     enum Fit {
@@ -113,7 +115,8 @@ final class LevelReport {
             PacingRule rule,
             Measured floor,
             TypicalHaul haul,
-            List<LevelMetrics.Run> runs) {}
+            List<LevelMetrics.Run> runs,
+            List<LevelMetrics.PursuitRun> pursuits) {}
 
     /** A level's report. */
     record Level(
@@ -211,6 +214,19 @@ final class LevelReport {
             }
             runs.put(difficulty, list);
         }
+        // M7 part G: a pursuit swarm's motes and lunges, the same seeds with the plan's fit.
+        Map<Difficulty, List<Future<LevelMetrics.PursuitRun>>> pursuits = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<LevelMetrics.PursuitRun>> list = new ArrayList<>();
+            boolean chased =
+                    options.has(Part.PURSUIT) && LevelMetrics.hasPursuit(SimSpecs.level(content, key, difficulty));
+            for (long seed = 1; chased && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() -> LevelMetrics.pursuit(
+                        content, key, difficulty, loadout(content, key, difficulty, floorFit), s, AUTOPILOT_STEPS)));
+            }
+            pursuits.put(difficulty, list);
+        }
 
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
@@ -224,6 +240,10 @@ final class LevelReport {
             for (Future<LevelMetrics.Run> run : runs.get(difficulty)) {
                 done.add(run.get());
             }
+            List<LevelMetrics.PursuitRun> chases = new ArrayList<>();
+            for (Future<LevelMetrics.PursuitRun> chase : pursuits.get(difficulty)) {
+                chases.add(chase.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level),
@@ -236,7 +256,8 @@ final class LevelReport {
                             strict ? PacingTest.ACT_TWO_LONG_PAUSES : PacingTest.LONG_PAUSES),
                     floor == null ? null : floor.get(),
                     options.has(Part.HAUL) ? TypicalHaul.of(content, key, difficulty) : null,
-                    done));
+                    done,
+                    chases));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -441,6 +462,29 @@ final class LevelReport {
                     }
                 }
             }
+            if (!row.pursuits().isEmpty()) {
+                List<LevelMetrics.PursuitRun> chases = row.pursuits();
+                StringBuilder lunges = new StringBuilder();
+                for (LevelMetrics.PursuitRun chase : chases) {
+                    lunges.append(lunges.isEmpty() ? "" : " ")
+                            .append(chase.lungesWithMotes())
+                            .append('/')
+                            .append(chase.lunges());
+                }
+                line(
+                        out,
+                        "pursuit",
+                        "%.2f motes on the screen over %.0f s; lunges with motes/all a run: %s [plan fit]",
+                        chases.stream()
+                                .mapToDouble(LevelMetrics.PursuitRun::meanMotes)
+                                .average()
+                                .orElse(0),
+                        chases.stream()
+                                .mapToDouble(LevelMetrics.PursuitRun::seconds)
+                                .average()
+                                .orElse(0),
+                        lunges);
+            }
             if (medium && level.parts().contains(Part.HP) && row.floor() != null) {
                 double life = row.floor().smallLife();
                 double ratio = life / level.referenceSmallLife();
@@ -454,9 +498,9 @@ final class LevelReport {
                         level.referenceSmallLife(),
                         ratio,
                         BeamEraHpTest.LEAST,
-                        BeamEraHpTest.MOST,
+                        BeamEraHpTest.most(level.key()),
                         level.hpApplies()
-                                ? verdict(ratio >= BeamEraHpTest.LEAST && ratio <= BeamEraHpTest.MOST)
+                                ? verdict(ratio >= BeamEraHpTest.LEAST && ratio <= BeamEraHpTest.most(level.key()))
                                 : "before the beam era, no rule");
             }
         }
@@ -614,6 +658,17 @@ final class LevelReport {
                     runs.add(r);
                 }
                 d.put("autopilot", runs);
+            }
+            if (!row.pursuits().isEmpty()) {
+                List<Object> chases = new ArrayList<>();
+                for (LevelMetrics.PursuitRun chase : row.pursuits()) {
+                    chases.add(ordered(
+                            "seconds", round(chase.seconds()),
+                            "mean_motes", round(chase.meanMotes()),
+                            "lunges", chase.lunges(),
+                            "lunges_with_motes", chase.lungesWithMotes()));
+                }
+                d.put("pursuit", chases);
             }
             byDifficulty.put(row.difficulty().name().toLowerCase(Locale.ROOT), d);
         }

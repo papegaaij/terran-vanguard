@@ -220,10 +220,12 @@ record Spawn(
                                 member.route().speed(),
                                 member.route().diveSpeed(),
                                 member.route().gapSeconds(),
-                                member.route().warningSeconds()),
+                                member.route().warningSeconds(),
+                                member.route().pursuit()),
                         member.member(),
-                        Formations.Span.map(member.x(), l, r),
-                        member.y())),
+                        member.refill() ? member.x() : Formations.Span.map(member.x(), l, r),
+                        member.y(),
+                        member.refill())),
                 field,
                 chaseDelay,
                 lane);
@@ -284,7 +286,9 @@ record Spawn(
      * M5 part D, a swarm's route (design/enemies/air/mote-swarm): its leader point flies {@code path}
      * at {@code speed} px/s and on past its end; {@code gapSeconds} after the end of a path it
      * re-enters on the next of the {@code loops} at {@code diveSpeed} px/s (the bottom edge warned
-     * {@code warningSeconds} ahead), until the loops are flown. Shared by the members of a wave.
+     * {@code warningSeconds} ahead), until the loops are flown. Shared by the members of a wave. M7 part G: with a
+     * {@code pursuit} its leader point flies {@code path} only as its way in from the top edge; the {@link Pursuit}
+     * flies it from there (its band, lunges and break-off), and the wave's refills join the flock of this route.
      */
     record Route(
             FlightPath path,
@@ -292,9 +296,21 @@ record Spawn(
             double speed,
             double diveSpeed,
             double gapSeconds,
-            double warningSeconds) {
+            double warningSeconds,
+            Optional<WaveSpec.Pursuit> pursuit) {
         Route {
             loops = java.util.List.copyOf(loops);
+        }
+
+        /** A swarm's route without M7 part G's pursuit. */
+        Route(
+                FlightPath path,
+                java.util.List<FlightPath> loops,
+                double speed,
+                double diveSpeed,
+                double gapSeconds,
+                double warningSeconds) {
+            this(path, loops, speed, diveSpeed, gapSeconds, warningSeconds, Optional.empty());
         }
 
         /** The steps from the wave's start to loop-back {@code k} (from 0): its re-entry. */
@@ -309,9 +325,17 @@ record Spawn(
 
     /**
      * M5 part D, a swarm's member {@code member} (from 0, in entry order) of a flock flying {@code
-     * route}, starting at ({@code x}, {@code y}) in the seeded cloud round the route's first point.
+     * route}, starting at ({@code x}, {@code y}) in the seeded cloud round the route's first point. M7 part G: a
+     * pursuit's {@code refill} member joins the flock already in flight: {@code x} is its offset from the leader
+     * point's x as it enters, {@code y} its height above the top edge as planned; it enters only while the flock has
+     * room ({@link Flock#freeSlot()}).
      */
-    record Swarm(Route route, int member, double x, double y) {}
+    record Swarm(Route route, int member, double x, double y, boolean refill) {
+        /** A member entering with its wave (not M7 part G's refill). */
+        Swarm(Route route, int member, double x, double y) {
+            this(route, member, x, y, false);
+        }
+    }
 
     /** M5 part D: the level step an ambush unit re-enters at the bottom edge; -1 for any other unit. */
     int ambushReentryTick() {

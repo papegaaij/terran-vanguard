@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../act-2-homefront, ../../world/mars, ../../story/twist]
-updated: 2026-10-18
+updated: 2026-10-20
 ---
 
 # Act 3 – Red Dust
@@ -35,7 +35,7 @@ marked tables; the outro joins it in part H.
 | [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | in-progress | chosen |
 | [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | in-progress | chosen |
 | [level-19-foundry-of-tharsis](level-19-foundry-of-tharsis/README.md) | Tharsis foundry: grey Warden Tanks on conveyors, furnace vents, turrets that fire after you pass; mid-boss Revenant Walker and the hint-2 wreck crawl | approved | in-progress | final |
-| [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | not-started | none |
+| [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | in-progress | proposed |
 | [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | not-started | none |
 
 ## Design
@@ -279,7 +279,7 @@ level that ends above 75 a minute records why in its Decisions, as Act 2's did.
 | [L17](level-17-dome-siege/README.md) | 4 | 247 in 167 s, **89** | ≈ 195, **≈ 70** | Changed 2026-10-19 (round 40 P.e, the Act 2+ floor, step PE17): 213 in 167 s, **≈ 77**; six Burrower fields (kept off the domes), nine Stinger streams for Skitter/Kite waves (12/18 HP by `small_act_hp`); the domes, hooked bombers, Shellbacks, Heralds, Helix beat and radio unchanged (was 196, ≈ 70) | 0.55 → 0.60 → **0.40** |
 | [L18](level-18-dust-storm/README.md) | 3 | 149 in 178 s, **50** | keep, **≈ 50** | Changed 2026-10-19 (the user: the Act 2+ floor, "tougher, not more"): 301 in 178 s, **≈ 101**, with the beam era's HP; the breather by threat, not by count | 0.92 → **0.37** |
 | [L19](level-19-foundry-of-tharsis/README.md) | 4 | 159 in 166 s, **58** | ≈ 172, **≈ 62** | Changed 2026-10-19 (M7 part F, the Act 2+ floor and the beam era, steps F2/F4): 226 at medium (193 in waves + 33 ground), **≈ 107**; firing Needler/Stinger groups of 4, nests under the gantries, mortar pair in the tanks' quiet window; the walker 3,740 HP (par 53), bounty 495 (15.0 %) (was 172, ≈ 62; walker 262); pending round 42 | 0.53 → 0.52 → **0.28** |
-| [L20](level-20-retreat-from-hellas/README.md) | 4 | 178 in 167 s, **64** | keep, **≈ 64** | None | 0.95, kept (round 36) |
+| [L20](level-20-retreat-from-hellas/README.md) | 4 | 178 in 167 s, **64** | keep, **≈ 64** | Changed 2026-10-20 (M7 part G step G2, the Act 2+ floor and the beam era, count-neutral as the user's Q.4): 192 at medium (170 in waves incl. 53 motes + 22 ground), **≈ 69** on paper; eight popcorn threes as firing Needler/Stinger threes, three spine nests added, the lull's Dust Kite flocks at the edges. Step G4 (measured and tuned, two passes): **197** (175 + 22), **≈ 71** measured; three strike waves, two Needler pincers through the turnabout, the lull as six kite flocks of 3, the firing threes as pairs, three Burrower fields as pairs; pending round 43 | 0.95 → 0.77 (paper) → **0.83** (step G4, measured) |
 | [L21](level-21-dust-colossus/README.md) | 4 | 107 in 97 s, **66** | keep, **≈ 66** | None | 0.80 (the boss's share is open in L21) |
 
 The scales keep each level's typical haul on its budget (1,805 · 1,931 · 2,067 · 2,211 · 2,366 ·

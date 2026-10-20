@@ -206,12 +206,21 @@ abstract class BackdropSeams {
     /** The layer's rows [from, to) as one tile set and the layer's still set pieces draw them (ARGB, bottom row first). */
     int[][] composite(LevelData level, BackdropLayer layer, Path folder, String tileSet, long from, long to)
             throws IOException {
+        return composite(level, layer, folder, tileSet, from, to, 0);
+    }
+
+    /**
+     * As above, the tile's pixel rows counted from layer row {@code -phase} (M7 part G: a strip's origin, as {@code
+     * Backdrop} draws a strip's zones).
+     */
+    int[][] composite(LevelData level, BackdropLayer layer, Path folder, String tileSet, long from, long to, long phase)
+            throws IOException {
         BufferedImage tile = image(folder.resolve(tileSet + ".png"));
         int width = tile.getWidth();
         int height = tile.getHeight();
         int[][] rows = new int[(int) (to - from)][width];
         for (int r = 0; r < rows.length; r++) {
-            int y = height - 1 - (int) Math.floorMod(from + r, (long) height);
+            int y = height - 1 - (int) Math.floorMod(from + r + phase, (long) height);
             for (int x = 0; x < width; x++) {
                 rows[r][x] = tile.getRGB(x, y);
             }
@@ -287,6 +296,46 @@ abstract class BackdropSeams {
     static String tileOn(LevelData level, int section, BackdropLayer layer) {
         for (String id : level.sections().get(section).tiles()) {
             if (level.backdrop().tileSets().get(id).layer() == layer) {
+                return id;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Where a layer's tile set changes, as {@code Backdrop} draws it: at a section's seam, or (M7 part G, a strip
+     * backdrop, Level 20) at a zone's start on the strip, layer row (from - origin) x its factor, the tile's pixel rows
+     * then counted from the strip's origin ({@code phase}).
+     */
+    record Border(String below, String above, long seam, long phase) {}
+
+    static List<Border> borders(LevelData level, BackdropLayer layer) {
+        List<Border> borders = new ArrayList<>();
+        BackdropData backdrop = level.backdrop();
+        if (backdrop.stripped()) {
+            BackdropData.Strip strip = backdrop.strip().orElseThrow();
+            double factor = backdrop.factor(layer);
+            for (int z = 1; z < strip.zones().size(); z++) {
+                String below = tileOn(backdrop, strip.zones().get(z - 1).tiles(), layer);
+                String above = tileOn(backdrop, strip.zones().get(z).tiles(), layer);
+                borders.add(new Border(
+                        below,
+                        above,
+                        Math.round((strip.zones().get(z).from() - strip.origin()) * factor),
+                        Math.round(strip.origin() * factor)));
+            }
+            return borders;
+        }
+        for (int s = 1; s < level.sections().size(); s++) {
+            borders.add(new Border(
+                    tileOn(level, s - 1, layer), tileOn(level, s, layer), Math.round(level.seam(layer, s)), 0));
+        }
+        return borders;
+    }
+
+    private static String tileOn(BackdropData backdrop, List<String> tiles, BackdropLayer layer) {
+        for (String id : tiles) {
+            if (backdrop.tileSets().get(id).layer() == layer) {
                 return id;
             }
         }

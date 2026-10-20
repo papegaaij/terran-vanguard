@@ -21,7 +21,8 @@ final class WeaponRules {
      * and lobbed ground-only shots, proximity mines and (M5 part E) torpedoes, which run only in a
      * level over water. M7 part A: the Rear Lance flies (standard bolts), and the Ion Beam ({@code hits:
      * beam}), the Light Drone Bay (a {@code drone}) and the Deflector Pod ({@code hits: deflector}), each
-     * as its {@link #mount}.
+     * as its {@link #mount}. M7 part G: the Rear-guard Drone Bay too (its drone on the trail station, {@link
+     * RetreatRules#trail}).
      */
     static boolean flies(Content content, String weapon) {
         WeaponData data = content.weapon(weapon);
@@ -70,13 +71,16 @@ final class WeaponRules {
                 level.recharge().orElseThrow());
     }
 
-    /** M7 part A: the Light Drone Bay's drone at one level. */
+    /** M7 part A: the Light Drone Bay's drone at one level; M7 part G: a trailing drone's ({@link RetreatRules#trail}). */
     private static DroneSpec drone(WeaponData.Drone drone, WeaponData.Level level) {
+        if (drone.trails()) {
+            return RetreatRules.trail(drone, level);
+        }
         WeaponData.Contact contact = drone.contact();
         return new DroneSpec(
-                drone.orbit(),
-                drone.period(),
-                drone.converge(),
+                drone.orbit().orElseThrow(),
+                drone.period().orElseThrow(),
+                drone.converge().orElseThrow(),
                 level.droneHits().orElseThrow(),
                 level.rebuild().orElseThrow(),
                 drone.fadeIn(),

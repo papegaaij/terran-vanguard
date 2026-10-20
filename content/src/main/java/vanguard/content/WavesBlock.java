@@ -47,6 +47,8 @@ public sealed interface WavesBlock permits LevelData {
      *     points in the walls' rows (the level's {@code terrain}): its head starts at the first point at the wave's
      *     {@code t} with the body laid out straight behind it toward the lower rows (down-canyon), then crawls the
      *     path at its {@code crawl} speed on top of the scroll
+     * @param pursuit M7 part G (design/campaign Level 20, The pursuit swarm): a {@code pursuit} wave's level numbers
+     *     (its refills, its break-off and any change to its unit's {@code pursuit} defaults); only on a pursuit
      */
     public record Wave(
             double t,
@@ -74,7 +76,8 @@ public sealed interface WavesBlock permits LevelData {
             Optional<Double> current,
             Optional<Boolean> clockwise,
             Optional<List<List<Point>>> lanes,
-            Optional<List<TerrainBlock.GroundPoint>> crawl) {
+            Optional<List<TerrainBlock.GroundPoint>> crawl,
+            Optional<Pursuit> pursuit) {
         public Wave {
             crawl = crawl.map(List::copyOf);
             crawl.ifPresent(path -> Check.that(path.size() >= 2, "crawl: a ground path of two points or more"));
@@ -112,6 +115,12 @@ public sealed interface WavesBlock permits LevelData {
             Check.that(
                     field || (x.isEmpty() && size.isEmpty() && spacing.isEmpty() && current.isEmpty()),
                     "only a field wave has an x, a size, a spacing or a current");
+            boolean pursues = groups.orElseThrow().stream()
+                    .anyMatch(group -> group.formation().equals(PURSUIT));
+            Check.that(
+                    !pursues || (single && pursuit.isPresent() && paths.isEmpty() && lanes.isEmpty()),
+                    "a pursuit wave is one group with its pursuit block (break_at) and no paths");
+            Check.that(pursues || pursuit.isEmpty(), "only a pursuit wave has a pursuit block");
             Check.that(
                     clockwise.isEmpty()
                             || groups.orElseThrow().stream()
@@ -127,6 +136,14 @@ public sealed interface WavesBlock permits LevelData {
         /** M5 part E: the formation of units scattered over an area that enters with the sea. */
         public static final String FIELD = "field";
 
+        /** M7 part G: the formation of a flock that holds a band behind the ship and lunges (Level 20's swarm). */
+        public static final String PURSUIT = "pursuit";
+
+        /** M7 part G: whether it is a pursuit (a {@code pursuit} wave). */
+        public boolean pursues() {
+            return pursuit.isPresent();
+        }
+
         /** The wave's groups; one for a plain wave. */
         public List<Group> groupList() {
             return groups.orElseThrow();
@@ -136,6 +153,42 @@ public sealed interface WavesBlock permits LevelData {
         public boolean fliesOn(Difficulty difficulty) {
             return skip.map(names -> names.stream().map(Difficulty::of).noneMatch(difficulty::equals))
                     .orElse(true);
+        }
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, The pursuit swarm): a {@code pursuit} wave's numbers. Its flock enters from
+     * the top edge (from: rear, in a reversed section) at the wave's size, and {@code refill} more motes (the
+     * formation lever's share on easy and hard) join from the top edge every {@code refill_every} s after its entry
+     * while there is room in the flock, until {@code break_at} (level time), when the leader climbs off the top edge
+     * and the members follow, alive. Every other number is its unit's {@code pursuit} block's unless given here: the
+     * {@code band} (px below the top edge its leader holds), the sideways {@code lag} (px/s), {@code lunge_every} and
+     * {@code tell} (s), the {@code dive}'s and the {@code climb}'s speeds (px/s) and the dive's {@code overshoot}
+     * (px below the ship). The unit's difficulty hooks still apply on easy and hard.
+     */
+    public record Pursuit(
+            double breakAt,
+            Optional<Integer> refill,
+            Optional<Double> refillEvery,
+            Optional<Double> lungeEvery,
+            Optional<Double> tell,
+            Optional<Span> band,
+            Optional<Double> lag,
+            Optional<Double> dive,
+            Optional<Double> overshoot,
+            Optional<Double> climb) {
+        public Pursuit {
+            Check.positive("break_at", breakAt);
+            refill.ifPresent(n -> Check.notNegative("refill", n));
+            refillEvery.ifPresent(s -> Check.positive("refill_every", s));
+            lungeEvery.ifPresent(s -> Check.positive("lunge_every", s));
+            tell.ifPresent(s -> Check.positive("tell", s));
+            band.ifPresent(
+                    b -> Check.that(b.min() >= 0 && b.max() > b.min(), "band: [top, bottom] px below the top edge"));
+            lag.ifPresent(s -> Check.positive("lag", s));
+            dive.ifPresent(s -> Check.positive("dive", s));
+            overshoot.ifPresent(d -> Check.notNegative("overshoot", d));
+            climb.ifPresent(s -> Check.positive("climb", s));
         }
     }
 

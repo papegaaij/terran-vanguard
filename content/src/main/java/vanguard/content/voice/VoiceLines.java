@@ -51,6 +51,9 @@ public final class VoiceLines {
     /** The source of Rook's radio barks (design/player/wingmen, Radio barks), followed by the trigger. */
     public static final String BARKS = "wingmen barks";
 
+    /** M7 part G: the suffix of the source of a bark's variants in a reversed section ({@code wingmen barks rear-wave top}). */
+    public static final String TOP = "top";
+
     /** Bumped when the rendering changes in a way that must redo every line. */
     private static final String VERSION = "voice-1";
 
@@ -285,6 +288,19 @@ public final class VoiceLines {
                                 bark.shouted(),
                                 Filter.RADIO,
                                 BARKS + " " + bark.trigger()));
+            }
+            // M7 part G: the rear wave's variants in a reversed section ("Up top!", Level 20).
+            for (String text : bark.topLines().orElse(List.of())) {
+                add(
+                        lines,
+                        line(
+                                voices,
+                                barks.speaker(),
+                                text,
+                                bark.expression(),
+                                bark.shouted(),
+                                Filter.RADIO,
+                                BARKS + " " + bark.trigger() + " " + TOP));
             }
         }
         for (Map.Entry<String, ActData> act : new TreeMap<>(content.acts()).entrySet()) {

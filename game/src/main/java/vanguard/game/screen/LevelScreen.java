@@ -384,6 +384,15 @@ public final class LevelScreen implements GameScreen {
         music.motif(services.files.internal(Tracks.motifPath(theme)), level.music()::motifOn);
         // M7 part F: the sections that play the motif layer alone over the ambience (Level 19's crawl).
         music.motifAlone(level.music()::motifAlone);
+        // M7 part G: the ambience layers over the setting's loop (Level 20's basin rumble under the ridge).
+        music.ambienceLayers(ambienceLayers(level.music()));
+    }
+
+    /** M7 part G: the level's {@code music.ambience_layers}, each its sound at its level by the level time. */
+    static List<LevelMusic.AmbienceLayer> ambienceLayers(LevelData.Music music) {
+        return music.ambienceLayers().orElse(List.of()).stream()
+                .map(layer -> new LevelMusic.AmbienceLayer(Sfx.ambience(layer.ambience()), layer::level))
+                .toList();
     }
 
     /** M5 part D: the level's {@code music.ambience_changes} as the music's crossfades, each to its setting's loop. */
@@ -584,14 +593,21 @@ public final class LevelScreen implements GameScreen {
             }
             smokeTrails();
             sounds.watch(sortie);
-            int started = warnings.step(sortie.edgeWarnings(), sortie.tick());
+            // M7 part G: the warnings are named by travel (in a reversed section the top is the rear).
+            boolean reversed = sortie.reversed();
+            int started = warnings.step(sortie.edgeWarnings(), sortie.tick(), reversed);
             sounds.edgeWarnings(started);
-            if (barks != null && WarningEdge.BOTTOM.in(started)) {
+            if (barks != null && WarningEdge.TOP.in(started)) {
+                // M7 part G: a re-entry from the top in reversed travel (a Wraith, a swarm's loop-back) is a rear
+                // wave: "Up top!".
+                barks.reentry(SimStep.ticks(sortie.levelSeconds()), SimStep.ticks(sortie.realSeconds()), true);
+            } else if (barks != null && WarningEdge.BOTTOM.in(started) && !reversed) {
                 // M5 part D: a re-entry at the bottom edge (a Wraith, a swarm's loop-back) is a rear wave;
-                // M5 part H: timed on the real clock (the maw's launches in Level 14's halted arena).
+                // M5 part H: timed on the real clock (the maw's launches in Level 14's halted arena). M7 part G: in
+                // reversed travel a bottom warning is a lesson for a wave from ahead: no bark.
                 barks.reentry(SimStep.ticks(sortie.levelSeconds()), SimStep.ticks(sortie.realSeconds()));
             }
-            waveBanners.step(sortie.edgeWarnings(), started, sortie.tick());
+            waveBanners.step(sortie.edgeWarnings(), started, sortie.tick(), reversed);
         }
         if (launchPending && sortie.launching()) {
             sounds.launch();
@@ -620,7 +636,7 @@ public final class LevelScreen implements GameScreen {
 
     /**
      * M7 part D: the militia's flak over the spaceport (Level 17's {@code flak}): a burst due now puffs on {@code
-     * low-air} as the frigate's flak does, with its distant sound.
+     * low-air} as the frigate's flak does, with its distant sound; M7 part G: in the top band for Level 20's rim guns.
      */
     private void militiaFlak() {
         if (militiaFlak == null) {
@@ -631,10 +647,11 @@ public final class LevelScreen implements GameScreen {
             return;
         }
         double x = MilitiaFlak.x(burst);
-        double y = MilitiaFlak.y(burst);
+        double y = MilitiaFlak.y(burst, militiaFlak.band());
         if (flak.size > 0) {
             renderer.lowAir().start(flak, EventEffects.FLAK_FRAME_TICKS, x, y);
         }
+        renderer.militiaFlak(x, y, sortie.tick());
         sounds.militiaFlak(x);
     }
 

@@ -422,7 +422,7 @@ public final class Chain implements Hashed {
         place();
         for (int i = 0; i < size; i++) {
             if (members[i] != null) {
-                members[i].chainTo(members[i].x(), members[i].y(), members[i].facing());
+                members[i].chainTo(members[i].x(), members[i].frameY(), members[i].frameFacing());
             }
         }
     }
@@ -459,7 +459,7 @@ public final class Chain implements Hashed {
             int front = walked == 0 ? at : newer;
             double dx = hx[front] - hx[older];
             double dy = hy[front] - hy[older];
-            double heading = dx == 0 && dy == 0 ? member.facing() : StrictMath.atan2(-dx, -dy);
+            double heading = dx == 0 && dy == 0 ? member.frameFacing() : StrictMath.atan2(-dx, -dy);
             if (ground) {
                 // M7 part C: the history is in ground space; a stopped member stays where the cut left it.
                 if (i >= stoppedFrom) {

@@ -40,13 +40,47 @@ public final class FlashShader implements Disposable {
             }
             """;
 
+    /**
+     * Step GFX2: a glowing shot's art recoloured by its light: each texel's brightest channel times the colour, blended
+     * {@code u_flash.a} of the way from the art's own colour (its alpha kept), so the additive art's dark halo stays
+     * dark and its cyan body takes the colour (the rear-guard drone's gold bolt from the light drone's cyan art).
+     */
+    private static final String RECOLOUR_FRAGMENT = """
+            #ifdef GL_ES
+            precision mediump float;
+            #endif
+            varying vec4 v_color;
+            varying vec2 v_texCoords;
+            uniform sampler2D u_texture;
+            uniform vec4 u_flash;
+            void main() {
+                vec4 texel = v_color * texture2D(u_texture, v_texCoords);
+                float light = max(texel.r, max(texel.g, texel.b));
+                gl_FragColor = vec4(mix(texel.rgb, u_flash.rgb * light, u_flash.a), texel.a);
+            }
+            """;
+
     private final ShaderProgram program;
+    private final ShaderProgram recolour;
 
     public FlashShader() {
         program = new ShaderProgram(VERTEX, FRAGMENT);
         if (!program.isCompiled()) {
             throw new IllegalStateException("flash shader: " + program.getLog());
         }
+        recolour = new ShaderProgram(VERTEX, RECOLOUR_FRAGMENT);
+        if (!recolour.isCompiled()) {
+            throw new IllegalStateException("recolour shader: " + recolour.getLog());
+        }
+    }
+
+    /**
+     * Step GFX2: every draw until {@link #end} recoloured by its light towards {@code colour}, {@code amount} (0..1) of
+     * the way (a glowing shot drawn in another colour than its art's: the rear-guard drone's gold bolt).
+     */
+    public void beginRecolour(SpriteBatch batch, Color colour, float amount) {
+        batch.setShader(recolour);
+        recolour.setUniformf("u_flash", colour.r, colour.g, colour.b, amount);
     }
 
     /** Draws {@code region} centred on (x, y), blended by {@code amount} (0..1) towards {@code colour}. */
@@ -74,5 +108,6 @@ public final class FlashShader implements Disposable {
     @Override
     public void dispose() {
         program.dispose();
+        recolour.dispose();
     }
 }

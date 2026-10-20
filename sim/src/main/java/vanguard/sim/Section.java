@@ -22,6 +22,11 @@ package vanguard.sim;
  * real steps from the clock's resumption) instead of the arena's 1 s ramp. An arena's {@code
  * holdAfterBossSeconds} above 0 keeps the level clock halted after its boss dies until its death chain ({@link
  * BossSpec#deathSeconds()}) and then this long have passed (0: the clock goes on at once, as before).
+ *
+ * <p>M7 part G (design/campaign Level 20, Reverse scroll): a moving section's {@code speed} is signed: below 0 the
+ * scroll runs reversed (the ground moves up the screen, the ship flies backwards toward the bottom); an ease runs
+ * through zero as any other (Level 20's turnabout, +140 → −120 over 4 s). An arena never runs reversed; a timed halt
+ * is 0.
  */
 public record Section(
         double end, double speed, boolean arena, double rampSeconds, double easeSeconds, double holdAfterBossSeconds) {
@@ -29,6 +34,9 @@ public record Section(
     public static final double TIMED_HALT_RAMP_SECONDS = 2;
 
     public Section {
+        if (arena && speed < 0) {
+            throw new IllegalArgumentException("an arena's scroll does not run reversed: " + speed);
+        }
         if (!(rampSeconds >= 0)) {
             throw new IllegalArgumentException("a section's ramp is 0 s or more: " + rampSeconds);
         }
@@ -58,6 +66,11 @@ public record Section(
 
     public Section(double end, double speed) {
         this(end, speed, false);
+    }
+
+    /** M7 part G: whether its scroll runs reversed (its speed is below 0). */
+    public boolean reversed() {
+        return speed < 0;
     }
 
     /** M5 part G: whether it is a timed halt (speed 0 without an arena). */

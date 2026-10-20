@@ -222,6 +222,11 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "tank-death-r42-a.ogg",
         "belt-rumble-r42-a.ogg",
         "mars-foundry-r42-a.ogg",
+        // M7 part G, Level 20: round 43's proposals, option a until the user's choice (the basin rumble under the
+        // ridge, the pursuit swarm's band hum and its lunge's rising hum; built from CC0 Freesound originals).
+        "basin-rumble-r43-a.ogg",
+        "swarm-hum-r43-a.ogg",
+        "swarm-lunge-r43-a.ogg",
     )
 }
 

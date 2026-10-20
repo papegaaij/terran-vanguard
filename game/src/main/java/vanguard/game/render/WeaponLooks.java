@@ -1,5 +1,6 @@
 package vanguard.game.render;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import vanguard.sim.Armament;
@@ -32,6 +33,15 @@ public final class WeaponLooks {
 
     private static final int MINE_PULSE_TICKS = 4;
 
+    /**
+     * Step GFX2 (the round 43 capture: the rear-guard drone's bolts read as more of the Tail Gun's cyan ones): the
+     * rear-guard drone's pulse bolt is drawn in a warm gold, and its drone wears an outline of the same gold ({@link
+     * ArsenalLooks}), so the drone and its shots read as one, apart from the Tail Gun's.
+     */
+    static final Color REAR_DRONE_SHOT = new Color(1f, 0.72f, 0.28f, 1f);
+    /** Step GFX2: how far a recoloured shot is blended towards its colour (its white core keeps a little light). */
+    static final float RECOLOUR = 0.85f;
+
     /** The look of one mount. */
     static final class Look {
         /** By whole degree of heading (clockwise from up), the nearest drawn angle; one entry for one sprite. */
@@ -60,6 +70,11 @@ public final class WeaponLooks {
         Array<AtlasRegion> underImpact;
 
         Array<AtlasRegion> waterImpact;
+        /**
+         * Step GFX2: the colour its shots are recoloured towards ({@link #RECOLOUR} of the way, by the flash shader),
+         * null for their art's own: the rear-guard drone's gold ({@link #shotRecolour}).
+         */
+        Color recolour;
 
         Look(
                 AtlasRegion[] shots,
@@ -157,8 +172,9 @@ public final class WeaponLooks {
                 shots = overdrive = byHeading(sprites.frames("swivel-gun-shot"));
                 glowing = true;
             }
-            case "light-drone-bay" -> {
-                // M7 part A: the drone's small energy bolt, 32 headings (it aims at its convergence point).
+            case "light-drone-bay", "rear-guard-drone-bay" -> {
+                // M7 part A: the drone's small energy bolt, 32 headings (it aims at its convergence point); M7 part G:
+                // the rear-guard drone's pulse "drawn smaller" is the same bolt, fired straight back.
                 shots = overdrive = byHeading(sprites.frames("light-drone-bay-shot"));
                 glowing = true;
             }
@@ -220,6 +236,7 @@ public final class WeaponLooks {
                 impact(weapon.vfx(), sprites),
                 pod,
                 offsets);
+        look.recolour = shotRecolour(slug);
         if (slug.equals("proximity-mines")) {
             look.blast = sprites.frames("proximity-mines-blast");
         } else if (slug.equals("hornet-launcher")) {
@@ -232,6 +249,11 @@ public final class WeaponLooks {
             look.waterImpact = optional(sprites, "explosion-water-small");
         }
         return look;
+    }
+
+    /** Step GFX2: the colour weapon {@code slug}'s shots are recoloured to: the rear-guard drone's gold, else null. */
+    static Color shotRecolour(String slug) {
+        return slug.equals("rear-guard-drone-bay") ? REAR_DRONE_SHOT : null;
     }
 
     private static Array<AtlasRegion> optional(Sprites sprites, String name) {
@@ -247,6 +269,8 @@ public final class WeaponLooks {
             case "swivel-gun" -> "swivel";
             case "torpedo-pod" -> "torpedo";
             case "light-drone-bay" -> "drone-bay";
+            // M7 part G: the rear-guard drone's bay pod (tools/art/light_drone.py --rear).
+            case "rear-guard-drone-bay" -> "rear-guard-bay";
             default -> null;
         };
     }

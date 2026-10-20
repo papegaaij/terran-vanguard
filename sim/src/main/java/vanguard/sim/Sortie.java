@@ -226,6 +226,11 @@ public final class Sortie {
     boolean complete;
     /** Boss stream units and (M5 part C) periodic spawners' units let in in this attempt (they count among the enemies). */
     int streamReleased;
+    /**
+     * M7 part G: the pursuits' refill motes left out that the kill ratio knows of (not hashed: it follows the force's
+     * count at the next spawn, after a restart or a checkpoint too).
+     */
+    private int skippedSeen;
     /** Whether this attempt recorded the boss checkpoint. */
     private boolean checkpointTaken;
     /** Whether the next step restarts at the boss checkpoint. */
@@ -260,6 +265,11 @@ public final class Sortie {
     final int defendEndTicks;
     /** M5 part H: per root burst (in the level's order), its first growth's slot in the force's burst arrays. */
     private final int[] burstSlots;
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): the direction of travel, +1 or -1: the scroll's sign, the
+     * last non-zero one through the turnabout's zero. Follows the scroll (not hashed: the scroll decides it).
+     */
+    private int travel = 1;
 
     /** @param armour the ship's armour at the level start (design/systems/retry: not full, unless it was full) */
     public Sortie(long seed, Loadout loadout, LevelScript script, Rules rules, double armour) {
@@ -423,7 +433,9 @@ public final class Sortie {
                         streamReleased += units;
                     }
                 },
-                spans(script));
+                spans(script),
+                // M7 part G: the waves and the ground units of a reversed scroll are flipped.
+                script.reverses() ? t -> travelAt(script, t) < 0 : t -> false);
         force.canyon(canyon);
         fire.missiles(force.missiles());
         boolean walking = false;
@@ -720,6 +732,12 @@ public final class Sortie {
         } else {
             double speed = scrollSpeed();
             scrollStep = speed * SimStep.SECONDS;
+            if (speed > 0) {
+                travel = 1;
+            } else if (speed < 0) {
+                // M7 part G: the scroll runs reversed (it keeps its sign through a halt).
+                travel = -1;
+            }
             advanceClock(speed);
             if (rampTicks >= 0 && ++rampTicks >= rampLength) {
                 rampTicks = -1;
@@ -773,6 +791,11 @@ public final class Sortie {
                 force.bursts(levelTick, ship.x(), groundScroll, scrollStep);
             }
             force.spawn(levelTick);
+            if (force.skipped() != skippedSeen) {
+                // M7 part G: a pursuit's refill motes left out (no room in the flock) count nowhere.
+                skippedSeen = force.skipped();
+                objectives.unitsSkipped(skippedSeen);
+            }
             groundPasses.placeGroundObjects();
             groundPasses.placeDebris();
             radio.byTime(levelTick);
@@ -978,6 +1001,8 @@ public final class Sortie {
     }
 
     private void startAttempt(double armour) {
+        // M7 part G: the travel at the level start.
+        travel = travelAt(script.sections(), 0);
         ship.reset(armour);
         if (launchTicks > 0) {
             ship.launch(0, script.launchDrop());
@@ -998,11 +1023,19 @@ public final class Sortie {
             wingman.formUp(ship.x(), ship.y());
             return;
         }
+        // M7 part G: he keeps out of a pursuit's lunge lane during its tell and its dive.
+        java.util.Optional<Pursuit> chase = force.flocks().size() > 0 ? force.pursuit() : java.util.Optional.empty();
+        if (chase.isPresent() && chase.get().lunging()) {
+            wingman.lunge(chase.get().laneLeft(), chase.get().laneRight());
+        } else {
+            wingman.lunge(Double.NaN, Double.NaN);
+        }
         wingman.fly(
                 ship.x(),
                 ship.y(),
-                // M7 part F: the walker walking up the screen is a rear wave for him.
-                walks ? force.activeEdges() | bossPasses.strideRear() : force.activeEdges(),
+                // M7 part F: the walker walking up the screen is a rear wave for him. M7 part G (default pending the
+                // user's review): in a reversed scroll no bottom wave puts him in Trail (the bottom is ahead).
+                wingmanEdges(),
                 force.enemies(),
                 force.bullets(),
                 setPieces,
@@ -1190,6 +1223,59 @@ public final class Sortie {
 
     /** Out of the arena the scroll ramps up to the next section's speed over this time. */
     public static final double ARENA_RAMP_SECONDS = 1;
+
+    /**
+     * The active edges the wingman flies by ({@link EnemyForce#activeEdges()}); M7 part F: a walking boss's rear; M7
+     * part G: in a reversed scroll the bottom edge left out (the bottom is ahead: no Trail into the ahead waves), the
+     * top one (behind) leaving him in Wing.
+     */
+    private int wingmanEdges() {
+        int edges = walks ? force.activeEdges() | bossPasses.strideRear() : force.activeEdges();
+        return travel < 0 ? edges & ~WarningEdge.BOTTOM.bit() : edges;
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): the direction of travel now, +1 or -1: the scroll's sign,
+     * or the last non-zero sign through a zero of the scroll (the turnabout's); +1 before the scroll first moves.
+     */
+    public int travel() {
+        return travel;
+    }
+
+    /** M7 part G: whether the scroll runs reversed now ({@link #travel()} is -1): the ground moves up the screen. */
+    public boolean reversed() {
+        return travel < 0;
+    }
+
+    /**
+     * M7 part G: the direction of travel at level time {@code t} s of a level ({@link #travel()} at that time; a level
+     * with a reversed section has no holds nor arena, so its clock is the steps'): what plans the waves and ground
+     * units of a reversed scroll as flipped. +1 throughout a level without a reversed section.
+     */
+    public static int travelAt(LevelScript script, double t) {
+        return travelAt(script.sections(), SimStep.ticks(t));
+    }
+
+    /** M7 part G: {@link #travelAt(LevelScript, double)} at level step {@code tick}. */
+    static int travelAt(List<Section> sections, int tick) {
+        boolean reverses = false;
+        for (int i = 0; i < sections.size(); i++) {
+            reverses |= sections.get(i).speed() < 0;
+        }
+        if (!reverses) {
+            return 1;
+        }
+        for (int k = tick; k >= 0; k--) {
+            double speed = timedHaltSpeed(sections, k);
+            if (speed > 0) {
+                return 1;
+            }
+            if (speed < 0) {
+                return -1;
+            }
+        }
+        return 1;
+    }
 
     /**
      * M5 part G (design/campaign Level 13, The halt): the scroll's speed in px/s at level step {@code
@@ -1473,6 +1559,10 @@ public final class Sortie {
         if (force.flocks().size() > 0) {
             Pools.addAll(hash, force.flocks());
         }
+        if (force.skipped() > 0) {
+            // M7 part G: only once a pursuit's refill was left out, so the other levels hash as before.
+            hash.add(force.skipped());
+        }
         // M5 part B: the staggered walker waves' volley clocks (none before Level 08).
         force.addVolleyClocksTo(hash);
         pickupPasses.addCoresTo(hash);
@@ -1675,6 +1765,15 @@ public final class Sortie {
 
     public Chain chain(int index) {
         return force.chains().get(index);
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, The pursuit swarm): the pursuit in flight, its leader point's phase and place
+     * for the presentation and the autopilot (the first pursuit flock's; it lasts from its wave's entry until its last
+     * mote is gone after the break-off, or until it has no members and no refill left); empty for none. No allocation.
+     */
+    public java.util.Optional<Pursuit> pursuit() {
+        return force.pursuit();
     }
 
     /** M5 part D: the swarms in flight (design/enemies/air/mote-swarm); their members are among the enemies. */
@@ -2178,7 +2277,8 @@ public final class Sortie {
 
     /** Every enemy the level sends, its set pieces among them and the boss streams' units let in so far. */
     public int enemyTotal() {
-        return force.units() + setPieces.length + streamReleased;
+        // M7 part G: less the pursuits' refill motes left out (planned, they never entered).
+        return force.units() - force.skipped() + setPieces.length + streamReleased;
     }
 
     /** Kills needed for the secondary objective. */

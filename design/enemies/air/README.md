@@ -30,7 +30,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [mantis](mantis/README.md) | Side-entering laser sweeper (L06) | approved | done | final |
 | [coilwyrm](coilwyrm/README.md) | Segment-chain serpent that loops to the rear and regrows a head once (L06) | approved | done | final |
 | [wraith](wraith/README.md) | Cloaked manta that decloaks behind the player (L10) | approved | done | final |
-| [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | done | final |
+| [mote-swarm](mote-swarm/README.md) | Flock of tiny motes that loops round for a rear attack (L10) | approved | in-progress | final |
 | [lamprey](lamprey/README.md) | Homing eel that latches and drains the shield (L12) | approved | done | final |
 | [choir-herald](choir-herald/README.md) | Support flyer whose aura rings shield nearby enemies (L17) | approved | done | final |
 | [ghost-drone](ghost-drone/README.md) | Grey human-built strafing drone, hint 1 (L18) | approved | in-progress | final |

@@ -154,6 +154,11 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           close up, rendered from tools/art/revenant_walker.py's wreck model (the plate found by a
                           probe render), the serial field filed to bright bare metal with hand-file strokes; an
                           assay strip clipped beside it, the stock match circled in red pen
+  level-20-hellas-fallback  L20 p1 (M7 part G batch): Okafor's CDF terrain plot of the Hellas basin's north side,
+                          north up: the rim's lip with the militia's guns, the rim road's switchbacks, the upper
+                          terrace, the terraces as contours, the floor with the Vrell staging grounds; the strike
+                          route in (solid), the fallback back up the terraces and the road (dashed), the sections
+                          (shown on the level's props review, l20-props-final-r43-a; no briefing sheet of its own)
   design/ui/briefing/concept/briefing-images-final-r13-a.png   review sheet, Act 1 intro + L01-02
   design/ui/briefing/concept/briefing-images-final-r20-a.png   review sheet, L03-04 (M4 batch)
   design/ui/briefing/concept/briefing-images-final-r21-a.png   review sheet, L05 (M4 part E)
@@ -4281,6 +4286,95 @@ def filed_plate():
     return b
 
 
+SOURCE_M7G = artkit.source_note(SCRIPT, "M7 part G batch")
+
+
+def hellas_fallback():
+    """L20 p1: Okafor's CDF terrain plot of the Hellas basin's north side, north up: the rim's lip at the top with
+    the militia's guns on it, the rim road's switchbacks, the wide upper terrace, the terrace steps as contour
+    lines, the basin floor with the Vrell staging grounds; the strike route in (solid) and the fallback route back
+    up the terraces and the rim road (dashed); the level's sections along the fallback."""
+    b = Board()
+    x0, x1, top, bot = 16, 468, 18, H - 10
+    box = (b.xx >= x0) & (b.xx < x1) & (b.yy >= top) & (b.yy < bot)
+    tex = raster.fbm(W, H, 24, 5001, octaves=4, period=False)
+    fine = raster.fbm(W, H, 6, 5003, octaves=2, period=False)
+    wig = 4 * np.sin(b.xx / 37.0) + 3 * np.sin(b.xx / 13.0 + 1.0)
+    rim_y = 40 + wig                                               # the rim's lip
+    elev = np.clip((150 - b.yy + 0.6 * wig) / 110, 0, 1)          # 1 at the rim .. 0 on the floor
+    plain = b.yy < rim_y
+    ground = raster.ramp(MARS_HOLO, np.clip(0.3 + 0.32 * elev + 0.22 * (tex - 0.5) + 0.1 * (fine - 0.5), 0, 1))
+    floor = raster.ramp([(0.0, (30, 24, 20)), (1.0, (140, 112, 76))], np.clip(0.55 + 0.4 * (tex - 0.5), 0, 1))
+    ground = np.where((elev <= 0)[..., None], floor, ground)
+    ground = np.where(plain[..., None], raster.ramp(MARS_HOLO, np.clip(0.42 + 0.25 * (tex - 0.5), 0, 1)) * 0.8,
+                      ground)
+    b.base = np.where(box[..., None], ground, b.base)
+    # the rim's lip, the terrace steps as contours, the upper terrace's pillars
+    xs = np.arange(x0, x1, 2)
+    b.line([(x, 40 + 4 * np.sin(x / 37.0) + 3 * np.sin(x / 13.0 + 1.0)) for x in xs], WHITE, 2, 220)
+    for k, cy in enumerate((116, 126, 136, 146)):
+        b.line([(x, cy + 3 * np.sin(x / (21.0 + 4 * k) + k) + 2 * np.sin(x / 9.0 + 2 * k)) for x in xs], CYAN_DIM, 1, 200)
+    for px_, py_ in ((60, 100), (110, 94), (360, 98), (420, 104), (300, 92)):
+        b.ring(px_, py_, 2, colour=GREY, alpha=200)
+    # the staging grounds on the floor: Vrell growth, red contacts massing
+    rng = np.random.default_rng(5011)
+    for _ in range(22):
+        gx, gy = rng.uniform(250, 440), rng.uniform(170, 222)
+        b.glow(gx, gy, rng.uniform(3, 7), (150, 70, 200), 0.55)
+    for _ in range(14):
+        b.marker(rng.uniform(240, 450), rng.uniform(168, 222), "chevron", RED, 3)
+    b.bracket(236, 160, 456, 226, RED)
+    tag(b, 346, 150, "STAGING GROUNDS", RED)
+    # the rim road's switchbacks between the upper terrace and the lip (the fallback's last climb)
+    road = [(240, 92), (300, 84), (190, 74), (300, 64), (190, 54), (250, 44), (250, 34)]
+    for a_, b_ in zip(road[:-1], road[1:]):
+        b.line([a_, b_], (120, 100, 80), 3, 200)
+    # the strike route in (solid) and the fallback (dashed) back up the terraces and the road
+    b.line([(70, 22), (96, 70), (130, 128), (200, 176), (296, 194)], CYAN, 2, 230)
+    b.arrow(200, 176, 296, 194, CYAN, size=3, dashed=False)
+    tag(b, 78, 24, "STRIKE IN", CYAN)
+    fall = [(330, 192), (300, 160), (262, 134), (244, 112), (240, 92)] + road[1:]
+    b.dashed(fall, AMBER, 2, 4, 3)
+    b.arrow(250, 40, 250, 26, AMBER, size=3, dashed=False)
+    tag(b, 314, 108, "FALLBACK", AMBER)
+    # the militia's guns on the lip, firing over the road
+    for gx in (186, 222, 278, 316):
+        gy = 40 + 4 * np.sin(gx / 37.0) + 3 * np.sin(gx / 13.0 + 1.0)
+        b.marker(gx, gy, "square", GREEN, 3)
+    tag(b, 330, 30, "MILITIA GUNS", GREEN)
+    tag(b, 22, 24, "RIM", WHITE)
+    tag(b, 22, 100, "UPPER TERRACE", CYAN_DIM)
+    tag(b, 22, 128, "TERRACES", CYAN_DIM)
+    tag(b, 22, 200, "BASIN FLOOR", CYAN_DIM)
+    tag(b, 22, 60, "RIM ROAD", CYAN_DIM)
+    # the sections along the fallback
+    for n, (sx, sy) in enumerate(((300, 214), (318, 172), (286, 150), (252, 124), (226, 102), (178, 64), (262, 30)), 1):
+        b.draw.rectangle([sx - 4, sy - 5, sx + 4, sy + 5], fill=(10, 14, 30, 230), outline=AMBER + (255,))
+        b.label(sx - 2, sy - 3, str(n), AMBER)
+    b.sprite(scaled_sprite("ship_2", 0.5), 318, 196)
+    b.title("HELLAS BASIN - NORTH SIDE")
+    b.label(W - 10, 9, "FALL BACK TO THE RIM", AMBER, right=True)
+    b.draw.rectangle([x0, top, x1 - 1, bot - 1], outline=CYAN_DIM + (180,))
+    b.arrow(452, 46, 452, 26, CYAN, size=3, dashed=False)
+    b.label(449, 50, "N", CYAN)
+    px = 480
+    b.line([(px - 6, 26), (px - 6, H - 12)], CYAN_DIM, 1, 90)
+    b.label(px, 30, "TERRAIN PLOT", WHITE)
+    rows = [("1", "STRIKE"), ("2", "THE TURN"), ("3", "BASIN FLOOR"), ("4", "TERRACES"), ("5", "UPPER TERRACE"),
+            ("6", "RIM ROAD"), ("7", "OVER THE RIM")]
+    for i, (n, name) in enumerate(rows):
+        y = 46 + 12 * i
+        b.label(px, y, n, AMBER)
+        b.label(px + 12, y, name, CYAN)
+    b.line([(px, 134), (W - 12, 134)], CYAN_DIM, 1, 120)
+    b.label(px, 142, "NOSE TO THE ENEMY", AMBER)
+    b.label(px, 154, "REAR GUNS CLEAR THE ROAD", AMBER)
+    b.label(px, 170, "MILITIA COVER AT THE RIM", GREEN)
+    b.label(px, 186, "VRELL MASSING ON THE FLOOR", RED)
+    b.label(W - 10, H - 16, "IF IT TURNS", CYAN_DIM, right=True)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -4338,6 +4432,7 @@ IMAGES = {
     "level-19-tharsis-works": tharsis_works,
     "level-19-rear-arcs": rear_arcs,
     "level-20-filed-plate": filed_plate,
+    "level-20-hellas-fallback": hellas_fallback,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -4358,7 +4453,8 @@ BATCHES = {
     "r39": (list(IMAGES)[47:49], "M7 PART C"),
     "r40": (list(IMAGES)[49:51], "M7 PART D"),
     "r41": (list(IMAGES)[51:53], "M7 PART E"),
-    "r42": (list(IMAGES)[53:], "M7 PART F"),
+    "r42": (list(IMAGES)[53:56], "M7 PART F"),
+    "r43": (list(IMAGES)[56:], "M7 PART G"),
 }
 
 
@@ -4376,6 +4472,7 @@ def build(names):
                   else SOURCE_M7D if name in BATCHES["r40"][0]
                   else SOURCE_M7E if name in BATCHES["r41"][0]
                   else SOURCE_M7F if name in BATCHES["r42"][0]
+                  else SOURCE_M7G if name in BATCHES["r43"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

@@ -214,6 +214,13 @@ public final class Enemy implements Hashed {
      * fan (design/enemies/ground/scuttler).
      */
     private double facing;
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): the frame it lives in. Its own state (position, velocity,
+     * facing, aim, its cycles' state) is in this frame; the accessors and the events give the screen's, and the ship,
+     * its aim point and the ground's scroll come in converted ({@link TravelFrame}). {@link TravelFrame#SCREEN} for
+     * every unit not spawned in a reversed scroll.
+     */
+    private TravelFrame frame = TravelFrame.SCREEN;
 
     private double hp;
     /**
@@ -607,6 +614,7 @@ public final class Enemy implements Hashed {
 
     /** The fields of Level 04's spawners, escorts and walkers back to a plain unit's. */
     private void clearLevel04() {
+        frame = TravelFrame.SCREEN;
         entry = WaveSpec.Entry.FRONT;
         tag = "";
         chain = null;
@@ -690,7 +698,8 @@ public final class Enemy implements Hashed {
             escortRadius = aura.radius() * aura.escortRadiusShare();
         }
         centreX = circled != null ? circled.x : x;
-        centreY = circled != null ? circled.y : y;
+        // M7 part G: the carrier's height in this unit's frame.
+        centreY = circled != null ? frame.y(circled.y()) : y;
         x = prevX = centreX + escortRadius * Trig.cos(angle);
         y = prevY = centreY + escortRadius * Trig.sin(angle);
     }
@@ -976,7 +985,7 @@ public final class Enemy implements Hashed {
 
     /** M7 part B: the spot's height, px from the bottom edge. */
     public double burrowSpotY() {
-        return burrowing.spotY();
+        return frame.y(burrowing.spotY());
     }
 
     /** M7 part B: the level's no-surface zones its spots keep out of (set as it enters). */
@@ -1050,7 +1059,16 @@ public final class Enemy implements Hashed {
             double diveX,
             double diveY,
             boolean objective) {
-        boolean flying = fly(shipX, shipY, groundScroll, aimX, aimY, diveX, diveY, objective);
+        // M7 part G: the screen's points and scroll in its frame (unchanged for an unflipped unit).
+        boolean flying = fly(
+                shipX,
+                frame.y(shipY),
+                frame.scroll(groundScroll),
+                aimX,
+                frame.y(aimY),
+                diveX,
+                frame.y(diveY),
+                objective);
         if (flying && wind != 0) {
             if (spec.spiral().isPresent()) {
                 double push = wind * SimStep.SECONDS;
@@ -1106,14 +1124,14 @@ public final class Enemy implements Hashed {
                 x = burrowing.x();
                 y = burrowing.y();
                 turn();
-                return on;
+                return on && !carriedOffTop(groundScroll);
             }
             case VORTEX -> {
                 // M7 part E: its swirl round its centre line, scrolling with the ground, kept off the ship.
                 boolean on = vortexCycle.step(shipX, shipY, groundScroll, box.height() / 2);
                 x = vortexCycle.x();
                 y = vortexCycle.y();
-                return on;
+                return on && !carriedOffTop(groundScroll);
             }
             case STRAFE -> {
                 // M7 part E: down to its lane, across it and (hard) back once; gone once off the play field.
@@ -1154,7 +1172,7 @@ public final class Enemy implements Hashed {
             case LATCHED -> {
                 EnemySpec.Spot at = spec.latch().orElseThrow().spots().get(spot);
                 x = shipX + at.dx();
-                y = shipY + at.dy();
+                y = shipY + frame.vy(at.dy());
                 return true;
             }
             case STUNNED -> {
@@ -1196,7 +1214,7 @@ public final class Enemy implements Hashed {
                     }
                 }
                 track(aimX, aimY);
-                return y + box.height() / 2 > 0;
+                return y + box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }
             case WALK -> {
                 scrolled += groundScroll;
@@ -1220,12 +1238,12 @@ public final class Enemy implements Hashed {
                 }
                 boolean on = PlayField.overlaps(x, y, box);
                 entered |= on;
-                return on || (!entered && y + box.height() / 2 > 0);
+                return on || (!entered && y + box.height() / 2 > 0 && !carriedOffTop(groundScroll));
             }
             case ESCORT -> {
                 if (carrier != null) {
                     centreX = carrier.x;
-                    centreY = carrier.y;
+                    centreY = frame.y(carrier.y());
                 } else if (--breakTicks < 0) {
                     leave(shipX, shipY);
                     turn();
@@ -1358,12 +1376,12 @@ public final class Enemy implements Hashed {
             case LATCHED -> {
                 EnemySpec.Spot at = spec.latch().orElseThrow().spots().get(spot);
                 x = shipX + at.dx();
-                y = shipY + at.dy();
+                y = shipY + frame.vy(at.dy());
                 return true;
             }
             case GROUND -> {
                 y -= groundScroll;
-                return y + box.height() / 2 > 0;
+                return y + box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }
             case WALK -> {
                 scrolled += groundScroll;
@@ -1372,7 +1390,7 @@ public final class Enemy implements Hashed {
                 }
                 boolean on = PlayField.overlaps(x, y, box);
                 entered |= on;
-                return on || (!entered && y + box.height() / 2 > 0);
+                return on || (!entered && y + box.height() / 2 > 0 && !carriedOffTop(groundScroll));
             }
             case LANE -> {
                 scrolled += groundScroll;
@@ -1390,7 +1408,7 @@ public final class Enemy implements Hashed {
                 boolean on = vortexCycle.stunned(groundScroll, box.height() / 2);
                 x = vortexCycle.x();
                 y = vortexCycle.y();
-                return on;
+                return on && !carriedOffTop(groundScroll);
             }
             default -> {
                 x += stunDx;
@@ -1422,6 +1440,15 @@ public final class Enemy implements Hashed {
                 return phase != Phase.LEAVE || PlayField.overlaps(x, y, box);
             }
         }
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, the turnabout): whether the ground, scrolling up the screen in its frame
+     * this step ({@code groundScroll} below 0), has carried it off the top edge: a unit on the ground leaves by
+     * either edge. Never while the ground scrolls down, so an unreversed level steps as before.
+     */
+    private boolean carriedOffTop(double groundScroll) {
+        return groundScroll < 0 && y - box.height() / 2 >= PlayField.HEIGHT;
     }
 
     /**
@@ -1470,7 +1497,8 @@ public final class Enemy implements Hashed {
         latchPhase = LatchPhase.LATCHED;
         vx = vy = 0;
         x = shipX + offset.dx();
-        y = shipY + offset.dy();
+        // M7 part G: the spot on the hull, in its frame.
+        y = frame.y(shipY + offset.dy());
     }
 
     /**
@@ -1482,7 +1510,7 @@ public final class Enemy implements Hashed {
         EnemySpec.Spot offset = latch.spots().get(spot);
         double length = Math.sqrt(offset.dx() * offset.dx() + offset.dy() * offset.dy());
         double ux = length > 0 ? offset.dx() / length : 0;
-        double uy = length > 0 ? offset.dy() / length : -1;
+        double uy = length > 0 ? frame.vy(offset.dy()) / length : -1;
         vx = ux * latch.throwSpeed();
         vy = uy * latch.throwSpeed();
         facing = heading(ux, uy);
@@ -1743,7 +1771,8 @@ public final class Enemy implements Hashed {
      * play field (its centre at least half its hit box inside every edge; the second half of the leap
      * is then shorter), so a ship that holds still is touched and one that moves away is not.
      */
-    boolean pounce(double shipX, double shipY) {
+    boolean pounce(double shipX, double screenShipY) {
+        double shipY = frame.y(screenShipY);
         if (walkPath == null || spec.pounce().isEmpty() || !pouncing.ready() || !PlayField.overlaps(x, y, box)) {
             return false;
         }
@@ -1835,7 +1864,7 @@ public final class Enemy implements Hashed {
      * to during the telegraph (the iris shuts again without it).
      */
     int spawnStep(double shipX, double shipY) {
-        return spawnerIris.step(spec.spawner().orElseThrow(), x, y, shipX, shipY);
+        return spawnerIris.step(spec.spawner().orElseThrow(), x, y, shipX, frame.y(shipY));
     }
 
     /**
@@ -1855,7 +1884,8 @@ public final class Enemy implements Hashed {
      * Whether a direct shot flying at (shotVx, shotVy) glances off a walker's frontal armour: it
      * arrives from within the armour's arc of the walker's facing.
      */
-    boolean glances(double shotVx, double shotVy) {
+    boolean glances(double shotVx, double screenShotVy) {
+        double shotVy = frame.vy(screenShotVy);
         if (armoured()) {
             // M7 part D: a curled shell sparks off every shot.
             return true;
@@ -1876,7 +1906,8 @@ public final class Enemy implements Hashed {
      * Counts down a walker's spit while it is on the screen; returns whether it spits this step:
      * when it is ready and the ship at (shipX, shipY) is more than its away angle off its facing.
      */
-    boolean spit(double shipX, double shipY) {
+    boolean spit(double shipX, double screenShipY) {
+        double shipY = frame.y(screenShipY);
         if (walkPath == null || !PlayField.overlaps(x, y, box)) {
             return false;
         }
@@ -1992,7 +2023,7 @@ public final class Enemy implements Hashed {
     /** Round 41: as {@link #bombRun(double, double)}, its load held for its first {@code runIn} steps on the play field. */
     void bombRun(double rowY, double offset, int runIn) {
         phase = Phase.BOMB;
-        bombRun.start(rowY, offset, x, runIn);
+        bombRun.start(frame.y(rowY), offset, x, runIn);
         entered = false;
     }
 
@@ -2155,7 +2186,7 @@ public final class Enemy implements Hashed {
      * its own over the hull, which faces its path); the hull's {@link #facing()} for a unit without a turret.
      */
     public double turretAim() {
-        return spec.turret().isPresent() ? aim : facing;
+        return frame.facing(spec.turret().isPresent() ? aim : facing);
     }
 
     /** M7 part F: whether its turret has stopped turning for its burst (the tell, then the burst); false without one. */
@@ -2168,7 +2199,8 @@ public final class Enemy implements Hashed {
      * shotVy) does to its body: its rear plate's multiplier when the shot arrives within the plate's half arc of
      * its rear (flies along its facing), 1 otherwise and for a unit without a rear plate.
      */
-    double rearFactor(double shotVx, double shotVy) {
+    double rearFactor(double shotVx, double screenShotVy) {
+        double shotVy = frame.vy(screenShotVy);
         if (spec.rearPlate().isEmpty() || walkPath == null) {
             return 1;
         }
@@ -2187,7 +2219,7 @@ public final class Enemy implements Hashed {
      * ground unit standing or walking on it).
      */
     void ride(double dy) {
-        y += dy;
+        y += frame.vy(dy);
     }
 
     /**
@@ -2311,7 +2343,7 @@ public final class Enemy implements Hashed {
                         && !gunQuiet()
                         && PlayField.overlaps(x, y, box)) {
                     // M7 part D: the mortar vent swells before its lob (design/enemies/ground/shellback).
-                    events.add(SimEvents.Type.MORTAR_TELL, x, y, kind);
+                    events.add(SimEvents.Type.MORTAR_TELL, x, y(), kind);
                 }
                 return false;
             }
@@ -2465,6 +2497,11 @@ public final class Enemy implements Hashed {
                 .add(volleyTicks)
                 .add(burstLeft)
                 .add(burstTicks);
+        if (frame.flipped()) {
+            // M7 part G: its state is its frame's; only a flipped unit adds the mark, so the other levels hash as
+            // before.
+            hash.add(1);
+        }
         // Level 04's units add their state; the units of Levels 01-03 hash as before.
         if (spec.brood().isPresent()) {
             hash.add(broodTicks);
@@ -2604,8 +2641,40 @@ public final class Enemy implements Hashed {
         return x;
     }
 
+    /** Its height on the screen, px up from the bottom edge (M7 part G: its frame's mirrored for a flipped unit). */
     double y() {
+        return frame.y(y);
+    }
+
+    /**
+     * M7 part G: its height in its own frame ({@link TravelFrame}): what its flock and its chain place it by
+     * ({@link #chainTo}); {@link #y()} for an unflipped unit.
+     */
+    double frameY() {
         return y;
+    }
+
+    /** M7 part G: its facing in its own frame (its flock's, its chain's and its roll's); {@link #facing()} unflipped. */
+    double frameFacing() {
+        return facing;
+    }
+
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll; default pending the user's review): whether it was spawned
+     * while the scroll ran reversed and lives in the mirrored frame (its "ahead" the screen's bottom).
+     */
+    public boolean flipped() {
+        return frame.flipped();
+    }
+
+    /** M7 part G: from now on it lives in the mirrored frame (set as it enters, after its spawn placed it). */
+    void flip() {
+        frame = TravelFrame.FLIPPED;
+    }
+
+    /** M7 part G: its frame, to bring the screen's points into it (its own conversions are their own inverse). */
+    TravelFrame frame() {
+        return frame;
     }
 
     /**
@@ -2628,7 +2697,7 @@ public final class Enemy implements Hashed {
 
     /** A turret's barrel, radians clockwise from straight down. */
     double aim() {
-        return aim;
+        return frame.facing(aim);
     }
 
     /** Whether it is a ground unit. */
@@ -2643,7 +2712,7 @@ public final class Enemy implements Hashed {
 
     /** M5 part G: its drift up on top of the scroll, px/s; 0 for none. */
     public double driftY() {
-        return driftY;
+        return frame.vy(driftY);
     }
 
     /** Whether it is a diver in its pause before the dive (its telegraph). */
@@ -2673,7 +2742,7 @@ public final class Enemy implements Hashed {
      * flight, turning at most one 16-angle step per simulation step (art direction, Rotation).
      */
     public double facing() {
-        return facing;
+        return frame.facing(facing);
     }
 
     /** Position between the previous and the current step; {@code alpha} in [0, 1]. */
@@ -2683,7 +2752,7 @@ public final class Enemy implements Hashed {
 
     /** Position between the previous and the current step; {@code alpha} in [0, 1]. */
     public double renderY(double alpha) {
-        return prevY + (y - prevY) * alpha;
+        return frame.y(prevY + (y - prevY) * alpha);
     }
 
     /**
@@ -2699,7 +2768,9 @@ public final class Enemy implements Hashed {
         }
         boolean left = x < PlayField.WIDTH / 2.0;
         double inward = left ? -StrictMath.PI / 2 : StrictMath.PI / 2;
-        double bearing = heading(shipX - x - beamOffsetX(), shipY - y - beamOffsetY());
+        double bearing = heading(
+                shipX - x - beamOffsetX(),
+                shipY - y + spec.sweep().orElseThrow().originDown());
         sweepBeam.start(sweep, left ? Math.clamp(bearing, inward, 0) : Math.clamp(bearing, 0, inward));
     }
 
@@ -2729,19 +2800,19 @@ public final class Enemy implements Hashed {
 
     /** The sweep's centre, radians clockwise from straight down. */
     public double sweepCentre() {
-        return sweepBeam.centre();
+        return frame.facing(sweepBeam.centre());
     }
 
     /** The sweep's first edge: from straight inward's side, radians clockwise from straight down. */
     public double sweepFrom() {
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
-        return x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() - half : sweepBeam.centre() + half;
+        return frame.facing(x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() - half : sweepBeam.centre() + half);
     }
 
     /** The sweep's last edge, toward straight down. */
     public double sweepTo() {
         double half = spec.sweep().orElseThrow().arcRadians() / 2;
-        return x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() + half : sweepBeam.centre() - half;
+        return frame.facing(x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() + half : sweepBeam.centre() - half);
     }
 
     /**
@@ -2750,7 +2821,11 @@ public final class Enemy implements Hashed {
      */
     public double beam(double alpha) {
         double into = sweepBeam.into(spec.sweep().orElseThrow(), alpha);
-        return sweepFrom() + (sweepTo() - sweepFrom()) * Math.min(1, into);
+        double half = spec.sweep().orElseThrow().arcRadians() / 2;
+        double from = x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() - half : sweepBeam.centre() + half;
+        double to = x < PlayField.WIDTH / 2.0 ? sweepBeam.centre() + half : sweepBeam.centre() - half;
+        // M7 part G: along its frame's arc, then onto the screen.
+        return frame.facing(from + (to - from) * Math.min(1, into));
     }
 
     /**
@@ -2765,7 +2840,7 @@ public final class Enemy implements Hashed {
 
     /** The beam's origin from the unit's centre along y (up the field: its eye hangs below it). */
     public double beamOffsetY() {
-        return -spec.sweep().orElseThrow().originDown();
+        return frame.vy(-spec.sweep().orElseThrow().originDown());
     }
 
     /** Whether the current sweep hit the ship already. */
@@ -2952,7 +3027,7 @@ public final class Enemy implements Hashed {
         }
         double left = auraRing.spend(amount);
         if (absorbQuiet == 0) {
-            events.add(SimEvents.Type.RING_ABSORBED, x, y, kind);
+            events.add(SimEvents.Type.RING_ABSORBED, x, y(), kind);
             absorbQuiet = ABSORB_EVENT_GAP;
         }
         return left;
@@ -2976,7 +3051,8 @@ public final class Enemy implements Hashed {
             return false;
         }
         double dx = x - herald.x;
-        double dy = y - herald.y;
+        // M7 part G: on the screen (the Herald may live in the other frame).
+        double dy = y() - herald.y();
         return dx * dx + dy * dy <= radius * radius;
     }
 
@@ -3070,9 +3146,9 @@ public final class Enemy implements Hashed {
     /** M7 part D: its unit part's centre's height, px. */
     public double partY() {
         if (spec.part().isEmpty()) {
-            return y;
+            return y();
         }
-        return PartHp.y(spec.part().get(), y, facing);
+        return frame.y(PartHp.y(spec.part().get(), y, facing));
     }
 
     /** M7 part D: its unit part's hit box; its own without one. */
@@ -3154,7 +3230,7 @@ public final class Enemy implements Hashed {
     /** A damage glanced off its curled shell: the grey flash's event (spaced like the absorb's). */
     private void glancedOff() {
         if (absorbQuiet == 0) {
-            events.add(SimEvents.Type.SHOT_GLANCED, x, y, -1);
+            events.add(SimEvents.Type.SHOT_GLANCED, x, y(), -1);
             absorbQuiet = ABSORB_EVENT_GAP;
         }
     }
@@ -3174,7 +3250,7 @@ public final class Enemy implements Hashed {
     /** It starts its curl where it stands. */
     private void curl() {
         curlRoll.curl();
-        events.add(SimEvents.Type.CURLED, x, y, kind);
+        events.add(SimEvents.Type.CURLED, x, y(), kind);
     }
 
     /** M7 part D: where it is in its curl-roll; {@link CurlPhase#WALK} for a unit without one. */

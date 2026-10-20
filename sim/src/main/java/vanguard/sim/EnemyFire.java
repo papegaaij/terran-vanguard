@@ -87,6 +87,8 @@ final class EnemyFire {
         }
         EnemyGun gun = enemy.spec().gun().orElseThrow();
         int arms = gun.spiral().orElseThrow().arms();
+        // M7 part G: the spiral turns in the vortex's frame; its arms come out mirrored for a flipped one.
+        TravelFrame frame = enemy.frame();
         for (int k = 0; k < arms && bullets.size() < rules.bulletBudget(); k++) {
             double angle = cycle.spiralAngle() + 2 * StrictMath.PI * k / arms;
             bullets.obtain()
@@ -94,7 +96,7 @@ final class EnemyFire {
                             enemy.x(),
                             enemy.y(),
                             Trig.cos(angle) * gun.bulletSpeed(),
-                            Trig.sin(angle) * gun.bulletSpeed(),
+                            frame.vy(Trig.sin(angle) * gun.bulletSpeed()),
                             gun.damage());
         }
         events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) gun.damage());
@@ -129,9 +131,9 @@ final class EnemyFire {
             double aimY = target < 0 ? ship.y() : hook.convoy().get(target).y();
             // Radians clockwise from straight down, as a barrel's aim.
             strafe.lockAim(StrictMath.atan2(enemy.x() - aimX, enemy.y() - aimY));
-            fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false);
+            fire(enemy.x(), enemy.y(), gun, false, 0, ship, target, false, enemy.frame());
         } else {
-            fire(enemy.x(), enemy.y(), gun, false, strafe.lockedAim(), ship, target, true);
+            fire(enemy.x(), enemy.y(), gun, false, strafe.lockedAim(), ship, target, true, enemy.frame());
         }
     }
 
@@ -211,7 +213,8 @@ final class EnemyFire {
                 enemy.aim(),
                 ship,
                 target,
-                false);
+                false,
+                enemy.frame());
     }
 
     /**
@@ -232,7 +235,8 @@ final class EnemyFire {
                         enemy.x(),
                         enemy.y(),
                         Trig.cos(angle) * gun.bulletSpeed(),
-                        Trig.sin(angle) * gun.bulletSpeed(),
+                        // M7 part G: up its frame: down the screen for a flipped unit (a Wraith from the top).
+                        enemy.frame().vy(Trig.sin(angle) * gun.bulletSpeed()),
                         gun.damage());
         events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) gun.damage());
     }
@@ -265,6 +269,23 @@ final class EnemyFire {
      * @param alongAim whether the volley goes along {@code aim} (a walker's facing fan) whatever the gun
      */
     void fire(double x, double y, EnemyGun gun, boolean leads, double aim, Ship ship, int target, boolean alongAim) {
+        fire(x, y, gun, leads, aim, ship, target, alongAim, TravelFrame.SCREEN);
+    }
+
+    /**
+     * As {@link #fire(double, double, EnemyGun, boolean, double, Ship, int, boolean)} from a unit living in {@code
+     * frame}; M7 part G: a flipped unit's spread and fan turn the other way, so its volley is its frame's mirrored.
+     */
+    void fire(
+            double x,
+            double y,
+            EnemyGun gun,
+            boolean leads,
+            double aim,
+            Ship ship,
+            int target,
+            boolean alongAim,
+            TravelFrame frame) {
         double dx = ship.x() - x;
         double dy = ship.y() - y;
         double distance = Math.sqrt(dx * dx + dy * dy);
@@ -300,7 +321,7 @@ final class EnemyFire {
             double angle =
                     turn + (gun.fan() == 1 ? 0 : -gun.spreadRadians() / 2 + k * gun.spreadRadians() / (gun.fan() - 1));
             double cos = Trig.cos(angle);
-            double sin = Trig.sin(angle);
+            double sin = frame.vy(Trig.sin(angle));
             EnemyBullet bullet = bullets.obtain();
             bullet.fire(
                     x,

@@ -13,6 +13,7 @@ import vanguard.sim.Hitbox;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PlayField;
+import vanguard.sim.Pursuit;
 import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SimEvents;
@@ -231,6 +232,76 @@ final class LevelMetrics {
         }
     }
 
+    /**
+     * M7 part G (step SW): a pursuit swarm's life on the attempt that completes the level (Level 20): the seconds a
+     * pursuit flies, the mean number of its flock's members (units with a flock) on the screen over them, its lunges
+     * (each tell counts once) and those of them with motes on the screen at the tell's start (the leader point lunges
+     * on with an empty flock until a refill joins).
+     */
+    record PursuitRun(double seconds, double meanMotes, int lunges, int lungesWithMotes) {}
+
+    /** {@link PursuitRun}'s measure. */
+    static final class PursuitWatch implements Probe {
+        private int steps;
+        private long motes;
+        private int lunges;
+        private int lungesWithMotes;
+        private boolean telling;
+
+        @Override
+        public void newAttempt() {
+            steps = 0;
+            motes = 0;
+            lunges = 0;
+            lungesWithMotes = 0;
+            telling = false;
+        }
+
+        @Override
+        public void stepped(Sortie sortie, int step) {
+            var chase = sortie.pursuit();
+            if (chase.isEmpty()) {
+                telling = false;
+                return;
+            }
+            steps++;
+            int seen = 0;
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                if (enemy.spec().flock().isPresent()
+                        && onScreen(
+                                enemy.renderX(1), enemy.renderY(1), enemy.spec().hitbox())) {
+                    seen++;
+                }
+            }
+            motes += seen;
+            boolean tell = chase.get().phase() == Pursuit.Phase.TELL;
+            if (tell && !telling) {
+                lunges++;
+                lungesWithMotes += seen > 0 ? 1 : 0;
+            }
+            telling = tell;
+        }
+
+        PursuitRun run() {
+            return new PursuitRun(
+                    steps * SimStep.SECONDS, steps == 0 ? 0 : (double) motes / steps, lunges, lungesWithMotes);
+        }
+    }
+
+    /** Flies the autopilot as {@link #autopilot} and returns its pursuit's numbers; none if it never completes. */
+    static PursuitRun pursuit(
+            Content content, String key, Difficulty difficulty, Loadout loadout, long seed, int steps) {
+        PursuitWatch watch = new PursuitWatch();
+        fly(sortie(content, key, difficulty, loadout, seed), steps, watch);
+        return watch.run();
+    }
+
+    /** Whether the level flies a pursuit swarm (a wave with a {@code pursuit} block). */
+    static boolean hasPursuit(LevelScript level) {
+        return level.waves().stream().anyMatch(wave -> wave.pursuit().isPresent());
+    }
+
     /** Whether a boss (a set piece) is engaged and alive: its fight, left out of the floor's means. */
     private static boolean bossFight(Sortie sortie) {
         for (int i = 0; i < sortie.setPieceCount(); i++) {
@@ -336,7 +407,7 @@ final class LevelMetrics {
             if (wave.t() < end) {
                 int released = wave.enemy().brood().map(EnemySpec.Brood::count).orElse(0)
                         + wave.enemy().spawner().map(EnemySpec.Spawner::count).orElse(0);
-                waves += wave.count() * (1 + released);
+                waves += planned(wave) * (1 + released);
             }
         }
         int ground = 0;
@@ -348,6 +419,18 @@ final class LevelMetrics {
             }
         }
         return new Density(waves, ground, (end - level.launchSeconds()) / 60);
+    }
+
+    /**
+     * A wave's planned units: its count, and (M7 part G) a pursuit's refills, one group of {@code refill} every {@code
+     * refill_every} s before its break-off (Level 20's 10 + 8 × 3 at medium); the refills a full flock leaves out at
+     * run time still count, as in the README's tables.
+     */
+    static int planned(WaveSpec wave) {
+        return wave.count()
+                + wave.pursuit()
+                        .map(pursuit -> pursuit.refill() * pursuit.refills(wave.t()))
+                        .orElse(0);
     }
 
     /** {@link DensityTest}'s minimum for the level: the warm-up's or its act's. */

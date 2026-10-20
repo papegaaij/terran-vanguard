@@ -749,7 +749,7 @@ class BalanceTest {
             WeaponData weapon = CONTENT.weapon(slug);
             Armament.Slot slot = weapon.slot() == WeaponData.Slot.FRONT ? Armament.Slot.FRONT : Armament.Slot.LEFT_WING;
             double distance = weapon.drone()
-                    .map(WeaponData.Drone::converge)
+                    .flatMap(WeaponData.Drone::converge)
                     .orElse(CONTENT.weaponRules().singleTarget().distance());
             for (int level = 1; level <= weapon.levels().size(); level++) {
                 WeaponData.Level numbers = weapon.levels().get(level - 1);

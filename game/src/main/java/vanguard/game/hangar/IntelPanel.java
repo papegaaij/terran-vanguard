@@ -506,7 +506,9 @@ final class IntelPanel {
             switch (mark.kind()) {
                 case HAZARD -> canvas.fill(Glass.TRIM_LIGHT, left, y + 7, right - left, 2);
                 case PHASE -> canvas.fill(Glass.TRIM, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER -> {
+                // M7 part G: a lull (Level 20's upper terrace) as a dim band under the waves, a phase's look.
+                case LULL -> canvas.fill(Glass.TRIM, left + 1, y - 1, right - left - 2, 10);
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN -> {
                     // drawn over the waves, below
                 }
             }
@@ -528,6 +530,10 @@ final class IntelPanel {
             } else if (mark.kind() == Intel.Mark.Kind.CRAWLER) {
                 // M7 part C: a Threadcrawler as a green tick over the strip's lower half (a field's is full depth).
                 canvas.fill(Glass.GREEN, (float) (VALUE_X + width * mark.from() / intel.seconds()), y + 3, 2, 6);
+            } else if (mark.kind() == Intel.Mark.Kind.TURN) {
+                // M7 part G: the reverse scroll's turn (Level 20) as a white tick the strip's full depth and a pixel
+                // above and below it.
+                canvas.fill(Glass.WHITE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 12);
             }
         }
         return y + step;

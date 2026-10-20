@@ -4,7 +4,13 @@ package vanguard.sim;
 public enum WarningEdge {
     LEFT,
     RIGHT,
-    BOTTOM;
+    BOTTOM,
+    /**
+     * M7 part G (design/campaign Level 20, Reverse scroll): the top edge, for an entry from the top while the scroll
+     * runs reversed (behind the ship by travel: a rear wave, a re-entry, the pursuit swarms); bit 3, after the others,
+     * so their bits do not move.
+     */
+    TOP;
 
     /** The bit of this edge in {@link Sortie#edgeWarnings()}. */
     public int bit() {

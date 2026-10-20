@@ -43,6 +43,7 @@ barks:
       expression: fierce
       shout: true
       lines: ["Six o'clock, Lancer!", "Contacts on six! Why is it always six?", "Check six, check six!", "Behind us! They're on our tails!"]
+      top_lines: ["Up top, Lancer! They're on our tails!", "Up top! Coming down on us!", "Contacts up top! Keep moving!"]   # M7 part G: in a reversed section (Level 20) "behind" is the top of the screen
     - trigger: sides-wave
       notes: {trigger: "A `sides` wave enters"}
       expression: fierce

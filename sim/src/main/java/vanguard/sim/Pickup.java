@@ -63,12 +63,15 @@ public final class Pickup implements Hashed {
         return heldBy;
     }
 
-    /** Drifts down by {@code distance}; returns false once its time is up or it has left the screen. */
+    /**
+     * Drifts down by {@code distance}; returns false once its time is up or it has left the screen (M7 part G: by the
+     * top edge, drifting up with a negative {@code distance} in a reversed scroll).
+     */
     boolean drift(double distance) {
         prevX = x;
         prevY = y;
         y -= distance;
-        return --ticksLeft > 0 && y > 0;
+        return --ticksLeft > 0 && (distance < 0 ? y < PlayField.HEIGHT : y > 0);
     }
 
     /** M7 part C: slides {@code dx} px across, off rock (after its drift of the step). */

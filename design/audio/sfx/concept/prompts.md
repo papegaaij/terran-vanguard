@@ -2143,3 +2143,49 @@ Proposed (round 43).
 Sources: <https://freesound.org/people/EagleStealthTeam/sounds/172411/> (Creaking Metal - Slow by EagleStealthTeam, CC0 1.0), <https://freesound.org/people/CmdRobot/sounds/539514/> (Clicking Engine Cooldown by CmdRobot, CC0 1.0). Use: the wreck settling under the crawl after the death (new).
 Brief: a huge metal hulk settling: creaks, and ticking as it cools. Why: a giant metal structure creaking, over an engine cooling.
 Edit: 5.00 s, the loudest 100 ms band −23.9 dB, peak −16.9 dBFS, −25.4 LUFS.
+
+## Concept round 43, Level 20 (M7 part G: the basin rumble and the pursuing swarm, from the database)
+
+The same rule as Level 19's round-43 sounds above: every file is cut from **Freesound originals** (CC0 or CC-BY, each in [CREDITS.md](../../../../CREDITS.md)) by `tools/concept/audio/sfx_r43g.py` (cut, slowed or gliding, layered, filtered, faded and levelled; nothing synthesized), big and heavy sources, nothing bubbly or popping. An a/b pair each, proposed (round 43), pending the user's review. Levels: the basin rumble at the loudness of the ambience bed under it (`mars-foundry`, −28 LUFS: nearly all of a rumble's energy is below 200 Hz, so the beds' −36 dB band RMS would put it 6–9 LU over the bed), the swarm's hum as a unit's loop (the tank's tracks, −32 dB band RMS), the lunge as a tell (the loudest 100 ms of the band at −20 dB under −4 dBFS). The TOP warning reuses `ui-edge-warning` and the rim flak the chosen [frigate-flak-r33-a](frigate-flak-r33-a.ogg): nothing new.
+
+### basin-rumble-r43-a — "earth rumble.wav" by Reitanna
+
+Proposed (round 43).
+Source: <https://freesound.org/people/Reitanna/sounds/217657/> (earth rumble.wav by Reitanna, CC0 1.0). Use: the Hellas basin under Level 20 from the ridge (t=12) and under Level 21 from the ridge pass (t≈64) into the fight; a loop that can swell.
+Brief: a deep earth groan with grinding under it, a loop that can swell (§1.8: a low earth groan). Why: an earthquake's earth rumble, deep, with rock grinding in it.
+Edit: seamless 16.0 s LOOP, −28.0 LUFS, band RMS −42.2 dB, peak −12.9 dBFS.
+
+### basin-rumble-r43-b — "Earthquake_Rumble_Creaks_Groans_Dust.wav" by Cell31_Sound_Productions + "EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV" by metrostock99
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/Cell31_Sound_Productions/sounds/263461/> (Earthquake_Rumble_Creaks_Groans_Dust.wav by Cell31_Sound_Productions, CC-BY 4.0), <https://freesound.org/people/metrostock99/sounds/203281/> (EARTHQUAKE OR DISTANT SPACE SHUTTLE RUMBLE.WAV by metrostock99, CC0 1.0). Use: the Hellas basin under Level 20 from the ridge (t=12) and under Level 21 from the ridge pass (t≈64) into the fight; a loop that can swell.
+Brief: a deep earth groan with grinding under it, a loop that can swell (§1.8: a low earth groan). Why: an earthquake's rumble with creaks and groans, over a deep distant rumble.
+Edit: seamless 12.0 s LOOP, −28.1 LUFS, band RMS −34.3 dB, peak −10.6 dBFS.
+
+### swarm-hum-r43-a — "Swarm Drone.wav" by deerlord + "In the bee box2- swarm of bees_stereo" by Nordliecht
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/deerlord/sounds/516517/> (Swarm Drone.wav by deerlord, CC0 1.0), <https://freesound.org/people/Nordliecht/sounds/817927/> (In the bee box2- swarm of bees_stereo by Nordliecht, CC0 1.0). Use: the pursuing Mote Swarm's band on Level 20, a loop while the pursuit is on.
+Brief: the chosen swarm whoosh's insect chitter ([mote-swarm-r32-b](mote-swarm-r32-b.ogg)) stretched into a hum; big and heavy, nothing bubbly. Why: a designed swarm drone slowed to 0.85, over a bee box's hive hum.
+Edit: seamless 6.0 s LOOP, band RMS −32.2 dB, peak −13.0 dBFS, −23.9 LUFS.
+
+### swarm-hum-r43-b — "Large Swarm of Buzzing Flies.wav" by jakobthiesen + "Blowflies!" by kangaroovindaloo
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/jakobthiesen/sounds/207685/> (Large Swarm of Buzzing Flies.wav by jakobthiesen, CC-BY 3.0), <https://freesound.org/people/kangaroovindaloo/sounds/324590/> (Blowflies! by kangaroovindaloo, CC0 1.0). Use: the pursuing Mote Swarm's band on Level 20, a loop while the pursuit is on.
+Brief: the chosen swarm whoosh's insect chitter ([mote-swarm-r32-b](mote-swarm-r32-b.ogg)) stretched into a hum; big and heavy, nothing bubbly. Why: a large swarm of buzzing flies slowed to 0.8, over blowflies slowed to 0.9.
+Edit: seamless 6.0 s LOOP, band RMS −32.1 dB, peak −9.0 dBFS, −24.8 LUFS.
+
+### swarm-lunge-r43-a — "Swarm Drone.wav" by deerlord + "Powerfull Whooshes 2.wav" by Nic3_one
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/deerlord/sounds/516517/> (Swarm Drone.wav by deerlord, CC0 1.0), <https://freesound.org/people/Nic3_one/sounds/434869/> (Powerfull Whooshes 2.wav by Nic3_one, CC0 1.0). Use: a lunge: the swarm's 0.6 s tell (the ball contracts and brightens) and its dive.
+Brief: a rising hum and a rush, 0.6 s, no pop. Why: the swarm drone of hum a swelling in and gliding up, a powerful whoosh rushing in at its end.
+Edit: 0.80 s, the loudest 100 ms band −20.2 dB, peak −4.6 dBFS, −16.3 LUFS.
+
+### swarm-lunge-r43-b — "Large Swarm of Buzzing Flies.wav" by jakobthiesen + "Big Swoosh" by Electroviolence
+
+Proposed (round 43).
+Sources: <https://freesound.org/people/jakobthiesen/sounds/207685/> (Large Swarm of Buzzing Flies.wav by jakobthiesen, CC-BY 3.0), <https://freesound.org/people/Electroviolence/sounds/234547/> (Big Swoosh by Electroviolence, CC0 1.0). Use: a lunge: the swarm's 0.6 s tell (the ball contracts and brightens) and its dive.
+Brief: a rising hum and a rush, 0.6 s, no pop. Why: the fly swarm of hum b swelling in and gliding up, a big swoosh rushing in at its end.
+Edit: 0.80 s, the loudest 100 ms band −20.9 dB, peak −4.1 dBFS, −16.5 LUFS.

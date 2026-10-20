@@ -160,6 +160,10 @@ public final class LevelRenderer {
     private final Effects bubbles = Effects.solid();
     /** M5 part E: solid effects on low-air (the frigate's flak puffs over the convoy). */
     private final Effects lowAir = Effects.solid();
+    /** Step GFX2: the generated soft disc and ring (strobe halos, flak flashes, the pursuit swarm's glows). */
+    private final SoftGlow softGlow = new SoftGlow();
+    /** Step GFX2: the militia flak's flash cores over their puffs. */
+    private final FlakFlashes flakFlashes = new FlakFlashes();
 
     /** M5 part F: the level's weather looks (Level 12's rain, lightning, gusts, hidden glows and eye). */
     private final WeatherLooks weather;
@@ -189,6 +193,8 @@ public final class LevelRenderer {
     private DomeLooks domes;
     /** M5 part G: the supply drones carrying the drops; null without them. */
     private final DroneLooks drones;
+    /** M7 part G: Level 20's travelling ridge on the ground (null for another level). */
+    private final RidgeLooks ridge;
     /** M5 part G: the arctic setting's snow on high-air; null in another setting. */
     private SnowLooks snow;
 
@@ -276,12 +282,14 @@ public final class LevelRenderer {
         this.level = level;
         this.relay = RelayLooks.of(sprites, flash, script, name -> pivots(files, name));
         this.drones = DroneLooks.of(sprites, level);
+        this.ridge = RidgeLooks.of(sprites, level);
         this.snow = SnowLooks.of(level, false, sprites.pixel);
         this.arsenal = new ArsenalLooks(sprites, flash);
         this.canyonLooks = new CanyonLooks(sprites);
-        ground = new GroundPasses(sprites, flash, play, weather, script, levelKey);
+        ground = new GroundPasses(sprites, flash, play, weather, script, levelKey, softGlow);
         kinds = new KindLooks(sprites, files);
-        units = new UnitPasses(looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches);
+        units = new UnitPasses(
+                looks, flash, play, kinds, farside, luna, weather, shipLooks, surfaceWater, launches, softGlow);
         setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
@@ -320,6 +328,7 @@ public final class LevelRenderer {
 
     /** Frees the light map and the generated textures. */
     public void dispose() {
+        softGlow.dispose();
         farside.dispose();
         if (storm != null) {
             storm.dispose();
@@ -363,6 +372,7 @@ public final class LevelRenderer {
         underWater.clear();
         bubbles.clear();
         lowAir.clear();
+        flakFlashes.clear();
         arsenal.restart();
         canyonLooks.restart();
         kinds.restart();
@@ -431,6 +441,14 @@ public final class LevelRenderer {
     /** M5 part E: solid effects on low-air (the frigate's flak puffs). */
     public Effects lowAir() {
         return lowAir;
+    }
+
+    /**
+     * Step GFX2: a militia flak burst ({@link MilitiaFlak}) at the play-field point (x, y) at step {@code tick}: its
+     * flash core over the puff ({@link FlakFlashes}).
+     */
+    public void militiaFlak(double x, double y, long tick) {
+        flakFlashes.start(x, y, tick);
     }
 
     /** M5 part E: the escort frigate (convoy unit {@code k}) fired a flak burst at step {@code tick}: its bow gun flashes. */
@@ -544,6 +562,10 @@ public final class LevelRenderer {
         convoy.drawRoad(batch, Math.round(scroll));
         // With Level 09's collapse's shadow, heap and base dust under the towers (CollapseLooks).
         backdrop.drawGroundPieces(batch, scroll, clock);
+        if (ridge != null) {
+            // M7 part G: the travelling ridge (the Dust Colossus's body under the sand) on the ground, both ways.
+            ridge.draw(batch, seconds, scroll);
+        }
         if (foundry != null) {
             // M7 part F: the vents' grates, the office, the ingots, the gantries and cradles, the rovers on the ground.
             foundry.drawGround(batch, sortie, scroll, seconds, clock.real());
@@ -648,6 +670,7 @@ public final class LevelRenderer {
         units.drawEnemies(batch, sortie, alpha, Depth.LOW_AIR, Launched.ANY);
         blasts.draw(batch, scroll);
         lowAir.draw(batch, scroll);
+        flakFlashes.draw(batch, softGlow, sortie.tick(), alpha);
         if (collapse != null) {
             collapse.drawOver(batch);
         }

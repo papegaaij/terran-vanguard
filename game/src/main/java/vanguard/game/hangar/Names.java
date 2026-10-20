@@ -1,6 +1,7 @@
 package vanguard.game.hangar;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import vanguard.content.campaign.LoadoutSlot;
@@ -73,6 +74,73 @@ public final class Names {
         words.put("AIRSTRIKE", "STRIKE");
         words.put("STANDARD", "STD");
         return words;
+    }
+
+    /**
+     * Step GFX2: the shop's abbreviations, longest first, for a name too wide for its row or the detail's heading
+     * ({@link #fit}): the Act 3 names the round 43 capture saw cut.
+     */
+    private static final Map<String, String> SHOP_WORDS = shopWords();
+
+    private static Map<String, String> shopWords() {
+        Map<String, String> words = new LinkedHashMap<>();
+        words.put("REAR-GUARD DRONE BAY", "REAR-GUARD BAY");
+        words.put("SHIELD OVERCHARGE", "SHIELD OVRCHG");
+        words.put("MICRO-MISSILE", "MICRO-MSL");
+        words.put("PROXIMITY", "PROX.");
+        words.put("LAUNCHER", "LNCHR");
+        words.put("ASCENDANCY", "ASCEND.");
+        return words;
+    }
+
+    /**
+     * Step GFX2 (the round 43 capture: the shop cut "REAR-GUARD DRONE BAY" mid-word): an item's name in the shop, at
+     * most {@code chars} characters: the full name if it fits, else with the shop's abbreviations ({@code REAR-GUARD
+     * BAY}, {@code MICRO-MSL}, {@code SHIELD OVRCHG}), else the model without its nickname (abbreviated), else that cut
+     * at its last word that fits, or mid-word as the last resort.
+     */
+    public static String fit(String name, int chars) {
+        List<String> forms = forms(name);
+        for (String form : forms) {
+            if (form.length() <= chars) {
+                return form;
+            }
+        }
+        String model = forms.getLast();
+        int space = model.lastIndexOf(' ', chars);
+        return space > 0 ? model.substring(0, space) : model.substring(0, Math.max(0, chars));
+    }
+
+    /**
+     * Step GFX2: an item's uncut shop names, widest first: its full name, with the shop's abbreviations, its model
+     * (abbreviated).
+     */
+    static List<String> forms(String name) {
+        return List.of(of(name), shopAbbreviated(of(name)), shopAbbreviated(of(model(name))));
+    }
+
+    /**
+     * Step GFX2: the shop detail's heading, the item's name and its level ({@code L3}; empty for an item without
+     * levels), at most {@code chars} characters: two spaces before the level, one when the name needs it, the name
+     * {@link #fit} to what is left so that the level always shows.
+     */
+    public static String heading(String name, String level, int chars) {
+        if (level.isEmpty()) {
+            return fit(name, chars);
+        }
+        String full = of(name);
+        if (full.length() + 2 + level.length() <= chars) {
+            return full + "  " + level;
+        }
+        return fit(name, chars - 1 - level.length()) + " " + level;
+    }
+
+    private static String shopAbbreviated(String text) {
+        String shortened = text;
+        for (Map.Entry<String, String> word : SHOP_WORDS.entrySet()) {
+            shortened = shortened.replace(word.getKey(), word.getValue());
+        }
+        return shortened;
     }
 
     /** The model without its nickname: {@code Mk II} for {@code Mk II "Arc"}. */

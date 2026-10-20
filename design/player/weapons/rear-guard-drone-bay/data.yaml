@@ -1,0 +1,36 @@
+# Rear-guard Drone Bay: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# M7 part G (step G2): the drone (../../wingmen/README.md#rear-guard-drone) trails the ship and fires the levels' shots
+# straight back; each level adds the hits it takes before it breaks and its rebuild time. The numbers are the wingmen
+# document's table (approved in round 36, D.26), moved here; the trail station is flown from step G3, mapped in step G4.
+name: Rear-guard Drone Bay
+slot: wing
+traits: [rear]
+price: 2400
+unlock: 20
+draw: [2, 3]
+sfx: pulse   # pitched up and quieter, as the light drone's
+vfx: pulse   # smaller
+hits: standard
+speed: 900
+size: [3, 8]
+range: screen
+pod: true
+drone:
+  size: [14, 14]     # sprite px: the light drone's body with a rear-facing gun
+  hitbox: [8, 8]
+  station: trail     # behind the ship instead of the light drone's orbit
+  behind: 40         # px behind the ship's centre (below it on the screen, whatever the scroll's direction)
+  side: 12           # px to its bay's side: a pair flies side by side, 24 px apart
+  lag: 0.15          # s it follows the ship behind, so it swings out in a turn
+  fire: back         # straight back (180°), whenever the player fires
+  fade_in: 0.3       # s a rebuilt drone fades in at its bay
+  contact: {hits: 4, small_hits: 2, laser_hits: 2, damage: 10}  # as the light drone's
+levels:
+  - {pattern: [[0, 180]], rate: 6, damage: 1.5, drone_hits: 8, rebuild: 6}
+  - {pattern: [[0, 180]], rate: 6, damage: 2, drone_hits: 9, rebuild: 5.5}
+  - {pattern: [[0, 180]], rate: 6, damage: 2.7, drone_hits: 10, rebuild: 5}
+  - {pattern: [[0, 180]], rate: 6, damage: 3.5, drone_hits: 11, rebuild: 4.5}
+  - {pattern: [[0, 180]], rate: 6, damage: 4.3, drone_hits: 12, rebuild: 4}
+overdrive: {pattern: [[0, 180]], rate: 7, damage: 4.3, drone_hits: 12, rebuild: 4}
+notes:
+  layers_hit: '`air`, `low-air` and `ground` (hardened ground targets glance off); not `high-air`; the `sub` layer only in under-water mode, at 50 % ([layer rules](../../../enemies/README.md#layer-rules))'

@@ -20,6 +20,12 @@ import vanguard.sim.WarningEdge;
  * its edge over 0.2 s, then pulses smoothly between 45 % and 100 % on the 0.267 s flash cycle.
  * The geometry is the concept generator's ({@code tools/concept/ui_r11.py}, {@code variant_a}),
  * in play-field pixels.
+ *
+ * <p>M7 part G (design/campaign Level 20, Reverse scroll): the top edge's warning is the bottom's mirrored about the
+ * play field's middle row (the bar along the top edge, the chevrons pointing up out of it, the label right of the
+ * middle as far below the top edge as the bottom's sits above it). The labels go by travel: only an entry from behind
+ * in a reversed section warns the top edge, so it reads "! REAR"; a bottom warning that starts while the scroll runs
+ * reversed is one of the lessons for a wave from ahead and reads "! AHEAD" (latched as it starts).
  */
 public final class EdgeWarnings implements Disposable {
     static final Color WARN = Color.valueOf("FFC800");
@@ -41,6 +47,8 @@ public final class EdgeWarnings implements Disposable {
     private static final int LABEL_INSET = 84;
 
     private static final int REAR_LABEL_DX = 92;
+    /** The bottom label's top, px above the bottom edge (concept row H - 44). */
+    private static final int REAR_LABEL_TOP = 44;
     /** The glow: the bar grown by 6 px, at 150 / 255, blurred with a radius of 5 px. */
     private static final int GLOW_GROW = 6;
 
@@ -59,6 +67,8 @@ public final class EdgeWarnings implements Disposable {
     private final Texture rearGlow = glow(2 * REAR_HALF + 1, BAR);
     /** The tick each edge's warning started, or -1 while it shows none. */
     private final long[] since = new long[WarningEdge.values().length];
+    /** M7 part G: per edge whether its warning started while the scroll ran reversed ({@link #label}). */
+    private final boolean[] reversedAt = new boolean[WarningEdge.values().length];
 
     /** @param pixel a white pixel; @param font the label's font */
     public EdgeWarnings(TextureRegion pixel, BitmapFont font) {
@@ -73,6 +83,14 @@ public final class EdgeWarnings implements Disposable {
      * @return the edges whose warning started in this step, as {@link WarningEdge} bits
      */
     public int step(int edges, long tick) {
+        return step(edges, tick, false);
+    }
+
+    /**
+     * As {@link #step(int, long)}, M7 part G: {@code reversed} whether the scroll runs reversed now ({@code
+     * Sortie.reversed()}), which names a warning that starts ({@link #label}).
+     */
+    public int step(int edges, long tick, boolean reversed) {
         int started = 0;
         for (WarningEdge edge : WarningEdge.values()) {
             int i = edge.ordinal();
@@ -80,10 +98,25 @@ public final class EdgeWarnings implements Disposable {
                 since[i] = -1;
             } else if (since[i] < 0) {
                 since[i] = tick;
+                reversedAt[i] = reversed;
                 started |= edge.bit();
             }
         }
         return started;
+    }
+
+    /**
+     * The edge's label (M7 part G: by travel): "! LEFT", "! RIGHT"; the bottom's "! REAR", or "! AHEAD" for a warning
+     * that started while the scroll ran reversed (the lessons for the waves from ahead); the top's "! REAR" (only an
+     * entry from behind in a reversed section warns it).
+     */
+    static String label(WarningEdge edge, boolean reversed) {
+        return switch (edge) {
+            case LEFT -> "! LEFT";
+            case RIGHT -> "! RIGHT";
+            case BOTTOM -> reversed ? "! AHEAD" : "! REAR";
+            case TOP -> "! REAR";
+        };
     }
 
     /** Forgets every warning, as when the level restarts. */
@@ -110,23 +143,25 @@ public final class EdgeWarnings implements Disposable {
             long start = since[edge.ordinal()];
             if (start >= 0) {
                 double seconds = (tick - start + alpha) * SimStep.SECONDS;
-                draw(batch, edge, grow(seconds), pulse(seconds));
+                draw(batch, edge, reversedAt[edge.ordinal()], grow(seconds), pulse(seconds));
             }
         }
         batch.setColor(Color.WHITE);
     }
 
-    private void draw(SpriteBatch batch, WarningEdge edge, float grow, float opacity) {
-        boolean rear = edge == WarningEdge.BOTTOM;
+    private void draw(SpriteBatch batch, WarningEdge edge, boolean reversed, float grow, float opacity) {
+        // M7 part G: the top edge's warning is the bottom's mirrored about the middle row.
+        boolean top = edge == WarningEdge.TOP;
+        boolean rear = edge == WarningEdge.BOTTOM || top;
         int half = Math.round((rear ? REAR_HALF : SIDE_HALF) * grow);
         // Concept coordinates: x from the play field's left, y down from its top.
         int barX =
                 switch (edge) {
                     case LEFT -> 0;
                     case RIGHT -> W - BAR;
-                    case BOTTOM -> W / 2 - half;
+                    case BOTTOM, TOP -> W / 2 - half;
                 };
-        int barY = rear ? H - BAR : H / 2 - half;
+        int barY = top ? 0 : rear ? H - BAR : H / 2 - half;
         int barWidth = rear ? 2 * half + 1 : BAR;
         int barHeight = rear ? BAR : 2 * half + 1;
         Texture glow = rear ? rearGlow : sideGlow;
@@ -147,42 +182,54 @@ public final class EdgeWarnings implements Disposable {
                     chevron(batch, chevronLeft, W - 1 - depth - CHEVRON, H / 2f + SIDE_ROWS - CHEVRON, true);
                 }
                 case BOTTOM -> {
-                    float top = H - 1 - depth - CHEVRON;
-                    chevron(batch, chevronDown, W / 2f - REAR_ROWS - CHEVRON, top, false);
-                    chevron(batch, chevronDown, W / 2f + REAR_ROWS - CHEVRON, top, false);
+                    float row = H - 1 - depth - CHEVRON;
+                    chevron(batch, chevronDown, W / 2f - REAR_ROWS - CHEVRON, row, false);
+                    chevron(batch, chevronDown, W / 2f + REAR_ROWS - CHEVRON, row, false);
+                }
+                case TOP -> {
+                    // The bottom's chevron box [H - 1 - depth - 20, H - 1 - depth] mirrored: [depth, depth + 20].
+                    float row = depth;
+                    chevron(batch, chevronDown, W / 2f - REAR_ROWS - CHEVRON, row, false, true);
+                    chevron(batch, chevronDown, W / 2f + REAR_ROWS - CHEVRON, row, false, true);
                 }
             }
         }
-        label(batch, edge, opacity);
+        label(batch, edge, label(edge, reversed), opacity);
     }
 
-    private void label(SpriteBatch batch, WarningEdge edge, float opacity) {
-        String text =
-                switch (edge) {
-                    case LEFT -> "! LEFT";
-                    case RIGHT -> "! RIGHT";
-                    case BOTTOM -> "! REAR";
-                };
+    private void label(SpriteBatch batch, WarningEdge edge, String text, float opacity) {
         float width = text.length() * font.getData().getGlyph('M').xadvance;
         float x =
                 switch (edge) {
                     case LEFT -> LABEL_INSET;
                     case RIGHT -> W - LABEL_INSET - width;
-                    case BOTTOM -> W / 2f + REAR_LABEL_DX;
+                    case BOTTOM, TOP -> W / 2f + REAR_LABEL_DX;
                 };
-        float top = edge == WarningEdge.BOTTOM ? H - 44 : H / 2f - 7;
+        // The top's label mirrors the bottom's glyphs: as far below the top edge as those sit above the bottom edge.
+        float row =
+                switch (edge) {
+                    case BOTTOM -> H - REAR_LABEL_TOP;
+                    case TOP -> REAR_LABEL_TOP - Math.round(font.getCapHeight());
+                    case LEFT, RIGHT -> H / 2f - 7;
+                };
         font.setColor(SHADOW.r, SHADOW.g, SHADOW.b, opacity);
-        font.draw(batch, text, X0 + x + 1, H - top - 1);
+        font.draw(batch, text, X0 + x + 1, H - row - 1);
         font.setColor(WARN.r, WARN.g, WARN.b, opacity);
-        font.draw(batch, text, X0 + x, H - top);
+        font.draw(batch, text, X0 + x, H - row);
         font.setColor(Color.WHITE);
     }
 
     /** A chevron with its box's top-left corner at (x, y) in concept coordinates, mirrored for the right edge. */
     private static void chevron(SpriteBatch batch, Texture texture, float x, float y, boolean mirrored) {
+        chevron(batch, texture, x, y, mirrored, false);
+    }
+
+    /** As {@link #chevron(SpriteBatch, Texture, float, float, boolean)}, {@code flipped} upside down (the top edge's). */
+    private static void chevron(
+            SpriteBatch batch, Texture texture, float x, float y, boolean mirrored, boolean flipped) {
         float width = texture.getWidth();
         float height = texture.getHeight();
-        batch.draw(texture, X0 + x, H - y - height, width, height, 0, 0, (int) width, (int) height, mirrored, false);
+        batch.draw(texture, X0 + x, H - y - height, width, height, 0, 0, (int) width, (int) height, mirrored, flipped);
     }
 
     private static void draw(SpriteBatch batch, Texture texture, float x, float y, float width, float height) {

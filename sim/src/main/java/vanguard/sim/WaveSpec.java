@@ -39,6 +39,8 @@ import java.util.Optional;
  *     lane per unit); empty for other waves. M5 part G: also a {@code circle}'s centre is {@code at}
  * @param pairSeconds M5 part G (design/campaign Level 13, hard's t=210 Stingers): a {@code column}'s
  *     units enter in pairs side by side, the pairs this far apart; empty for one by one
+ * @param pursuit M7 part G (design/campaign Level 20, The pursuit swarm): a {@code pursuit} wave's band, lunges,
+ *     refills and break-off ({@link Pursuit}); empty for every other wave
  */
 public record WaveSpec(
         double t,
@@ -60,7 +62,8 @@ public record WaveSpec(
         Optional<Field> field,
         boolean clockwise,
         List<List<At>> lanes,
-        Optional<Double> pairSeconds) {
+        Optional<Double> pairSeconds,
+        Optional<Pursuit> pursuit) {
     public WaveSpec {
         if (edge == Edge.TOP || edge == Edge.BOTTOM) {
             throw new IllegalArgumentException("a wave enters from no top or bottom edge: " + edge);
@@ -76,6 +79,156 @@ public record WaveSpec(
         }
         if (field.isPresent() != (formation == Formation.FIELD)) {
             throw new IllegalArgumentException("a field wave has its area, other waves none");
+        }
+        if (pursuit.isPresent() != (formation == Formation.PURSUIT)) {
+            throw new IllegalArgumentException("a pursuit wave has its pursuit block, other waves none");
+        }
+        if (pursuit.isPresent() && !(pursuit.get().breakAt() > t)) {
+            throw new IllegalArgumentException(
+                    "a pursuit breaks off after it entered: " + pursuit.get().breakAt());
+        }
+    }
+
+    /** A wave without M7 part G's pursuit. */
+    public WaveSpec(
+            double t,
+            Formation formation,
+            EnemySpec enemy,
+            int count,
+            Entry entry,
+            Edge edge,
+            Optional<Double> holdSeconds,
+            Optional<Double> warningSeconds,
+            int breakGroup,
+            Optional<Double> speed,
+            Optional<Double> intervalSeconds,
+            List<Carried> carried,
+            Optional<At> at,
+            List<List<At>> paths,
+            Optional<LoopBack> loopBack,
+            String tag,
+            Optional<Field> field,
+            boolean clockwise,
+            List<List<At>> lanes,
+            Optional<Double> pairSeconds) {
+        this(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                Optional.empty());
+    }
+
+    /**
+     * M7 part G: this wave as a {@code pursuit} with {@code block} (its formation becomes {@link Formation#PURSUIT}).
+     */
+    public WaveSpec withPursuit(Pursuit block) {
+        return new WaveSpec(
+                t,
+                Formation.PURSUIT,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                Optional.of(block));
+    }
+
+    /**
+     * M7 part G, a pursuit wave's block (design/campaign Level 20, The pursuit swarm; design/enemies/air/mote-swarm's
+     * {@code pursuit} defaults with their easy and hard hooks, the difficulty's applied): its flock's leader point
+     * holds a band below the top edge whatever the scroll's direction (behind the ship in Level 20's reversed scroll),
+     * following the ship's x, and lunges down the ship's lane at a cadence; refills join from the top edge; it breaks
+     * off at a level time. The levers if the beam melts the swarm are {@code lungeEvery} and {@code lagSpeed} (the
+     * user's Q.3 of 2026-10-20), not the motes' HP or the refills.
+     *
+     * @param bandTop the band's top, px below the top edge (50)
+     * @param bandBottom the band's bottom, px below the top edge (150)
+     * @param lagSpeed px/s the leader point follows the ship's x sideways (90)
+     * @param lungeEvery s from one lunge's tell to the next (6; easy 8, hard 4.5)
+     * @param tellSeconds the tell before a dive: the flock contracts into a ball (0.8; easy 1.2)
+     * @param ballSize px across the contracted flock (60)
+     * @param diveSpeed px/s of the dive down the ship's lane, no homing (240)
+     * @param overshoot px below where the ship was at the tell's start the dive ends (140)
+     * @param climbSpeed px/s back to the band after a dive, and into it on entry (200)
+     * @param refill motes joining from the top edge each refill, while the flock has room (3; easy 2, hard 4)
+     * @param refillEvery s between two refills, from the wave's time (10)
+     * @param breakAt the level time of the break-off, s from the level start (a section's end)
+     * @param breakSpeed px/s the leader point climbs off the top at its break-off, the members following alive (200)
+     */
+    public record Pursuit(
+            double bandTop,
+            double bandBottom,
+            double lagSpeed,
+            double lungeEvery,
+            double tellSeconds,
+            double ballSize,
+            double diveSpeed,
+            double overshoot,
+            double climbSpeed,
+            int refill,
+            double refillEvery,
+            double breakAt,
+            double breakSpeed) {
+        public Pursuit {
+            if (!(bandTop >= 0) || !(bandBottom > bandTop) || !(bandBottom < PlayField.HEIGHT)) {
+                throw new IllegalArgumentException(
+                        "a pursuit's band lies below the top edge, its top above its bottom: " + bandTop + " to "
+                                + bandBottom);
+            }
+            if (!(lagSpeed >= 0) || !(lungeEvery > 0) || !(tellSeconds >= 0) || !(ballSize > 0)) {
+                throw new IllegalArgumentException(
+                        "a pursuit has a lag >= 0, a lunge cadence > 0, a tell >= 0 and a" + " ball > 0");
+            }
+            if (!(diveSpeed > 0) || !(overshoot >= 0) || !(climbSpeed > 0) || !(breakSpeed > 0)) {
+                throw new IllegalArgumentException(
+                        "a pursuit dives, climbs and breaks off at speeds > 0, its" + " overshoot >= 0");
+            }
+            if (refill < 0 || !(refillEvery > 0) || !(breakAt > 0)) {
+                throw new IllegalArgumentException("a pursuit's refills are >= 0 every > 0 s, its break-off > 0 s");
+            }
+        }
+
+        /** The refills a pursuit wave entering at {@code t} gets: one every {@code refillEvery} s before its break-off. */
+        public int refills(double t) {
+            if (refill == 0) {
+                return 0;
+            }
+            int k = 0;
+            // A refill due at the break-off itself does not come (the margin keeps a rounded t on the same side).
+            while (t + (k + 1) * refillEvery < breakAt - 1e-9) {
+                k++;
+            }
+            return k;
         }
     }
 
@@ -144,7 +297,8 @@ public record WaveSpec(
                 field,
                 clockwise,
                 walkerLanes,
-                pairSeconds);
+                pairSeconds,
+                pursuit);
     }
 
     /** M5 part G: this wave with its units entering in pairs {@code seconds} apart (see {@link #pairSeconds()}). */
@@ -169,7 +323,8 @@ public record WaveSpec(
                 field,
                 clockwise,
                 lanes,
-                Optional.of(seconds));
+                Optional.of(seconds),
+                pursuit);
     }
 
     /** M5 part G: this wave with {@code point} as its {@link #at()} (a whirl cluster's release point, a circle's centre). */
@@ -194,7 +349,8 @@ public record WaveSpec(
                 field,
                 clockwise,
                 lanes,
-                pairSeconds);
+                pairSeconds,
+                pursuit);
     }
 
     /** A wave without M5 part F's clockwise circle. */
@@ -259,7 +415,8 @@ public record WaveSpec(
                 field,
                 turning,
                 lanes,
-                pairSeconds);
+                pairSeconds,
+                pursuit);
     }
 
     /** A wave without M5 part E's field. */
@@ -519,7 +676,13 @@ public record WaveSpec(
          * starts); without lanes, {@code count} ÷ 4 units per edge, unit i from the top, the right, the
          * bottom and the left edge in turn, flying straight across. Every edge with a unit is warned.
          */
-        CROSS
+        CROSS,
+        /**
+         * M7 part G (design/campaign Level 20, The pursuit swarm): a flock whose leader point holds a band below the
+         * top edge, follows the ship and lunges down its lane, with refills from the top edge and a break-off
+         * ({@link WaveSpec#pursuit()}, flown by {@link vanguard.sim.Pursuit}). Its units are never flipped.
+         */
+        PURSUIT
     }
 
     /** The play-field edge a wave enters from. */

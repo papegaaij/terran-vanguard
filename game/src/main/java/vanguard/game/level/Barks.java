@@ -11,6 +11,7 @@ import vanguard.sim.CueTrigger;
 import vanguard.sim.LevelScript;
 import vanguard.sim.RadioCue;
 import vanguard.sim.SimStep;
+import vanguard.sim.Sortie;
 import vanguard.sim.WaveSpec;
 
 /**
@@ -42,6 +43,12 @@ import vanguard.sim.WaveSpec;
  * streak's window are measured in real seconds (M5 part C: in a hold zone the level clock slows to a
  * fifth, see {@link #clock}), and a timed Rook line that requires the escort ({@code requires:
  * escort}) counts only while he flies. Nothing here allocates per step except a queued bark.
+ *
+ * <p>M7 part G (design/campaign Level 20, Reverse scroll; design/player/wingmen, Radio barks): in a reversed section
+ * "behind" is the top of the screen. A rear wave whose time falls in reversed travel enters at the top and its bark
+ * says one of the rear-wave bark's {@code top_lines} ("Up top!"); a re-entry from the top (a TOP warning: a Wraith, a
+ * swarm's loop-back) too ({@link #reentry(int, int, boolean)}). The waves from ahead, which enter at the bottom edge
+ * there, stay silent, the lessons' BOTTOM warnings included (the screen does not report them).
  */
 public final class Barks {
     /** The triggers, by their id in design/player/wingmen/data.yaml. */
@@ -103,10 +110,14 @@ public final class Barks {
     private final boolean[] timedEscortOnly;
     /** The steps at which a rear wave's and a sides wave's bark fires, sorted. */
     private final int[] rearTicks;
+    /** M7 part G: per rear wave of {@link #rearTicks} whether it enters in reversed travel, from the top. */
+    private final boolean[] rearTop;
 
     private final int[] sidesTicks;
     /** M5 part D: the steps at which a re-entry's rear bark is due, {@link #reentryCount} of them. */
     private final int[] reentryTicks = new int[REENTRIES];
+    /** M7 part G: per re-entry of {@link #reentryTicks} whether it comes from the top (reversed travel). */
+    private final boolean[] reentryTop = new boolean[REENTRIES];
 
     private int reentryCount;
     /** The steps between a re-entry's warning start and its bark. */
@@ -156,8 +167,37 @@ public final class Barks {
             double[] sidesWaves,
             RadioQueue radio,
             Function<Line, RadioQueue.Message> queue) {
+        this(
+                data,
+                level,
+                timedRook,
+                timedEscortOnly,
+                rearWaves,
+                new boolean[rearWaves.length],
+                sidesWaves,
+                radio,
+                queue);
+    }
+
+    /**
+     * As above, M7 part G: {@code rearWavesTop} per rear wave whether it enters in reversed travel, at the top
+     * edge: its bark says one of the {@code top_lines}.
+     */
+    public Barks(
+            WingmenData.Barks data,
+            int level,
+            double[] timedRook,
+            boolean[] timedEscortOnly,
+            double[] rearWaves,
+            boolean[] rearWavesTop,
+            double[] sidesWaves,
+            RadioQueue radio,
+            Function<Line, RadioQueue.Message> queue) {
         if (timedEscortOnly.length != timedRook.length) {
             throw new IllegalArgumentException("one escort flag per timed Rook line");
+        }
+        if (rearWavesTop.length != rearWaves.length) {
+            throw new IllegalArgumentException("one top flag per rear wave");
         }
         this.data = data;
         this.level = level;
@@ -171,10 +211,15 @@ public final class Barks {
         this.timedRook = timedRook.clone();
         this.timedEscortOnly = timedEscortOnly.clone();
         double ahead = bark(Trigger.REAR_WAVE).flatMap(WingmenData.Bark::ahead).orElse(REAR_AHEAD_SECONDS);
-        rearTicks = Arrays.stream(rearWaves)
-                .mapToInt(t -> SimStep.ticks(Math.max(0, t - ahead)))
-                .sorted()
-                .toArray();
+        Integer[] order = new Integer[rearWaves.length];
+        Arrays.setAll(order, i -> i);
+        Arrays.sort(order, java.util.Comparator.comparingDouble(i -> rearWaves[i]));
+        rearTicks = new int[rearWaves.length];
+        rearTop = new boolean[rearWaves.length];
+        for (int k = 0; k < order.length; k++) {
+            rearTicks[k] = SimStep.ticks(Math.max(0, rearWaves[order[k]] - ahead));
+            rearTop[k] = rearWavesTop[order[k]];
+        }
         sidesTicks = Arrays.stream(sidesWaves).mapToInt(SimStep::ticks).sorted().toArray();
         reentryLead = SimStep.ticks(Math.max(0, REENTRY_WARNING_SECONDS - ahead));
         rearWarningTicks = SimStep.ticks(REENTRY_WARNING_SECONDS);
@@ -231,17 +276,23 @@ public final class Barks {
         for (int i = 0; i < escortOnly.length; i++) {
             escortOnly[i] = RadioSchedule.needsEscort(rook.get(i));
         }
+        // M5 part D: a rear ambush enters at the top; its bark keys to its re-entry (reentry()).
+        List<WaveSpec> rear = script.waves().stream()
+                .filter(wave -> wave.entry() == WaveSpec.Entry.REAR)
+                .filter(wave -> wave.formation() != WaveSpec.Formation.REAR_AMBUSH)
+                .toList();
+        // M7 part G: a rear wave whose time falls in reversed travel enters at the top ("Up top!").
+        boolean[] top = new boolean[rear.size()];
+        for (int i = 0; i < top.length; i++) {
+            top[i] = Sortie.travelAt(script, rear.get(i).t()) < 0;
+        }
         return new Barks(
                 data,
                 script.number(),
                 timed,
                 escortOnly,
-                // M5 part D: a rear ambush enters at the top; its bark keys to its re-entry (reentry()).
-                script.waves().stream()
-                        .filter(wave -> wave.entry() == WaveSpec.Entry.REAR)
-                        .filter(wave -> wave.formation() != WaveSpec.Formation.REAR_AMBUSH)
-                        .mapToDouble(WaveSpec::t)
-                        .toArray(),
+                rear.stream().mapToDouble(WaveSpec::t).toArray(),
+                top,
                 waves(script.waves(), WaveSpec.Entry.SIDES),
                 radio,
                 queue);
@@ -392,8 +443,9 @@ public final class Barks {
     public void step(int levelTick, double realSeconds, double playerArmourShare, int overdrivePickups) {
         double t = realSeconds;
         if (levelTick > lastTick) {
-            if (due(rearTicks, levelTick)) {
-                fire(Trigger.REAR_WAVE, t);
+            int rear = dueRear(levelTick);
+            if (rear >= 0) {
+                fire(Trigger.REAR_WAVE, t, rear > 0);
             }
             if (due(sidesTicks, levelTick)) {
                 fire(Trigger.SIDES_WAVE, t);
@@ -401,8 +453,9 @@ public final class Barks {
         }
         // M5 part H: a re-entry's bark is due on the real clock, so it fires while the level clock is
         // halted (the Siege Spire's maw launches in its arena).
-        if (dueReentry(SimStep.ticks(realSeconds))) {
-            fire(Trigger.REAR_WAVE, t);
+        int reentry = dueReentry(SimStep.ticks(realSeconds));
+        if (reentry >= 0) {
+            fire(Trigger.REAR_WAVE, t, reentry > 0);
         }
         lastTick = levelTick;
         boolean low = playerArmourShare < playerBelow;
@@ -437,6 +490,14 @@ public final class Barks {
      * part H: in a halted arena the level clock stands still while the warnings run on real steps).
      */
     public boolean reentry(int levelTick, int realTick) {
+        return reentry(levelTick, realTick, false);
+    }
+
+    /**
+     * As {@link #reentry(int, int)}, M7 part G: {@code top} for a re-entry from the top edge in reversed travel (a TOP
+     * warning: a Wraith's, a swarm's loop-back), whose bark says one of the {@code top_lines}.
+     */
+    public boolean reentry(int levelTick, int realTick, boolean top) {
         for (int tick : rearTicks) {
             if (tick >= levelTick && tick <= levelTick + rearWarningTicks) {
                 return false;
@@ -445,17 +506,34 @@ public final class Barks {
         if (reentryCount == REENTRIES) {
             return false;
         }
+        reentryTop[reentryCount] = top;
         reentryTicks[reentryCount++] = realTick + reentryLead;
         return true;
     }
 
-    /** Whether a re-entry's bark is due by {@code realTick}; the due ones are dropped. */
-    private boolean dueReentry(int realTick) {
-        boolean due = false;
+    /**
+     * Whether a re-entry's bark is due by {@code realTick}: -1 for none, 1 when one of the due ones comes from the top,
+     * else 0; the due ones are dropped.
+     */
+    private int dueReentry(int realTick) {
+        int due = -1;
         for (int i = reentryCount - 1; i >= 0; i--) {
             if (reentryTicks[i] <= realTick) {
-                due = true;
-                reentryTicks[i] = reentryTicks[--reentryCount];
+                due = Math.max(due, reentryTop[i] ? 1 : 0);
+                reentryCount--;
+                reentryTicks[i] = reentryTicks[reentryCount];
+                reentryTop[i] = reentryTop[reentryCount];
+            }
+        }
+        return due;
+    }
+
+    /** As {@link #due}, for the rear waves: -1 for none, 1 when one of the due ones enters from the top, else 0. */
+    private int dueRear(int levelTick) {
+        int due = -1;
+        for (int k = 0; k < rearTicks.length; k++) {
+            if (rearTicks[k] > lastTick && rearTicks[k] <= levelTick) {
+                due = Math.max(due, rearTop[k] ? 1 : 0);
             }
         }
         return due;
@@ -478,6 +556,14 @@ public final class Barks {
      * @return whether the bark was queued
      */
     public boolean fire(Trigger trigger, double t) {
+        return fire(trigger, t, false);
+    }
+
+    /**
+     * As {@link #fire(Trigger, double)}, M7 part G: {@code top} for a rear wave from the top in reversed travel: the
+     * bark's {@code top_lines} ({@link WingmenData.Bark#linesReversed}).
+     */
+    public boolean fire(Trigger trigger, double t, boolean top) {
         WingmenData.Bark bark = barks[trigger.ordinal()];
         if (bark == null || over) {
             return false;
@@ -500,7 +586,8 @@ public final class Barks {
             radio.withdraw(waiting);
         }
         int n = counts[trigger.ordinal()]++;
-        String text = bark.lines().get(Math.floorMod(level + n, bark.lines().size()));
+        List<String> lines = top ? bark.linesReversed() : bark.lines();
+        String text = lines.get(Math.floorMod(level + n, lines.size()));
         waiting =
                 queue.apply(new Line(trigger, data.speaker(), bark.expression().slug(), bark.shouted(), text));
         waitingPriority = priority;

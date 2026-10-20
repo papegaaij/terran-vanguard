@@ -148,10 +148,15 @@ final class PlayerPasses {
     void drawShots(SpriteBatch batch, Sortie sortie, float alpha, boolean glowing) {
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
-            if (weapons.look(shot.mount()).glowingShot != glowing || runsUnder(shot)) {
+            WeaponLooks.Look look = weapons.look(shot.mount());
+            if (look.glowingShot != glowing || runsUnder(shot)) {
                 continue;
             }
             AtlasRegion sprite = weapons.sprite(shot);
+            // Step GFX2: a look's shot colour (the rear-guard drone's gold) by the flash shader, for this shot only.
+            if (look.recolour != null) {
+                flash.beginRecolour(batch, look.recolour, WeaponLooks.RECOLOUR);
+            }
             double x = shot.renderX(alpha);
             double y = shot.renderY(alpha);
             switch (shot.weapon().delivery()) {
@@ -175,6 +180,9 @@ final class PlayerPasses {
                         drawCentred(batch, sprite, x, y);
                     }
                 }
+            }
+            if (look.recolour != null) {
+                flash.end(batch);
             }
         }
     }

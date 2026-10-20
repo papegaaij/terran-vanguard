@@ -108,7 +108,17 @@ public record Intel(
              */
             GATE,
             /** M7 part C: a crawling chain entering (the Threadcrawler's wave, a moment): the strip marks the crawlers. */
-            CRAWLER
+            CRAWLER,
+            /**
+             * M7 part G (design/campaign Level 20, Threat profile at L3): the moment the scroll turns (its travel's
+             * sign changes, the reverse scroll's start): the wave strip marks the turn.
+             */
+            TURN,
+            /**
+             * M7 part G: a lull after the turn (a section with a clear sky, haze only, short of the level's last: Level
+             * 20's upper terrace): the wave strip marks the lull.
+             */
+            LULL
         }
     }
 
@@ -190,7 +200,8 @@ public record Intel(
      * inside one (the whiteout); M5 part H: a level with root bursts marks its root field as a hazard;
      * step K10: a level with a boss (or mid-boss) marks its arrival; M7 part B: every wave of a burrowing unit (a
      * Burrower field) is marked at its time; M7 part D: a level with ground allies marks the sections they enter in
-     * (Level 17's two dome sections) as phases; none for another level.
+     * (Level 17's two dome sections) as phases; M7 part G: a reversed level its turn and lull ({@link #turnAndLull});
+     * none for another level.
      */
     static List<Mark> marks(Content content, LevelData level) {
         List<Mark> marks = new java.util.ArrayList<>();
@@ -232,6 +243,7 @@ public record Intel(
                 marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.CRAWLER));
             }
         }
+        turnAndLull(level, marks);
         // M7 part C: each gate (a linked nest) at its first pair.
         for (LevelData.GroundTarget target : level.groundTargets()) {
             if (target.link().isPresent() && !target.at().isEmpty()) {
@@ -240,6 +252,38 @@ public record Intel(
             }
         }
         return marks;
+    }
+
+    /** M7 part G: how finely {@link #turnAndLull} looks for the turn, s. */
+    private static final double TURN_STEP = 0.05;
+
+    /**
+     * M7 part G (design/campaign Level 20, Threat profile at L3: "the wave strip marking the turn and the lull"): a
+     * level with a reversed section marks the moment its travel first turns and, after it, every section with a clear
+     * sky short of the last (the breather; pending the user's review in round 43: the rule, not a data key).
+     */
+    private static void turnAndLull(LevelData level, List<Mark> marks) {
+        if (!level.hasReversal()) {
+            return;
+        }
+        int start = level.travelAt(0);
+        double turn = Double.NaN;
+        for (double t = TURN_STEP; t < level.seconds(); t += TURN_STEP) {
+            if (level.travelAt(t) != start) {
+                turn = Math.round(t * 10) / 10.0;
+                break;
+            }
+        }
+        if (Double.isNaN(turn)) {
+            return;
+        }
+        marks.add(new Mark(turn, turn, Mark.Kind.TURN));
+        for (int i = 0; i < level.sections().size() - 1; i++) {
+            LevelData.Section section = level.sections().get(i);
+            if (section.atmosphere() == LevelData.Atmosphere.CLEAR && level.sectionStart(i) >= turn) {
+                marks.add(new Mark(level.sectionStart(i), section.end(), Mark.Kind.LULL));
+            }
+        }
     }
 
     /** M5 part G: each timed halt's section and a heavy peak inside one. */

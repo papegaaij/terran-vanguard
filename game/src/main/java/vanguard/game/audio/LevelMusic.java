@@ -46,6 +46,10 @@ import java.util.function.IntToDoubleFunction;
  * added on top of the stems' crossfade) plays while its cue asks for it (the level's {@code music.motif}: from the
  * Ghost Drones' first sight, off in the eye), in over 2 s, out over 4 s ({@link StemMix}).
  *
+ * <p>M7 part G (Level 20): ambience layers over the setting's loop ({@link #ambienceLayers}: the basin rumble under
+ * the travelling ridge), each looping at its level by the level time (the level's {@code music.ambience_layers}: in
+ * and out over their fades), silent outside it.
+ *
  * <p>An act boss (Level 07) has its own music: at its arrival the theme crossfades out over 0.5 s
  * while the boss warning (track 22) starts, and the boss track (track 18) comes in on the downbeat
  * after the warning's bars ({@link BossCue}); at the kill it fades out in a second, leaving the
@@ -333,6 +337,45 @@ public final class LevelMusic implements Disposable {
         return this;
     }
 
+    /** M7 part G: an ambience layer over the setting's loop: its sound and its level (0–1) by the level time. */
+    public record AmbienceLayer(Sfx sound, DoubleUnaryOperator level) {}
+
+    /** M7 part G: the level's ambience layers ({@code music.ambience_layers}), and their levels at the last update. */
+    private List<AmbienceLayer> layers = List.of();
+
+    private float[] layerLevels = new float[0];
+
+    /** M7 part G: the level's ambience layers (Level 20's basin rumble), each looping at its level by the level time. */
+    public LevelMusic ambienceLayers(List<AmbienceLayer> layers) {
+        this.layers = List.copyOf(layers);
+        layerLevels = new float[layers.size()];
+        return this;
+    }
+
+    /** M7 part G: layer {@code i}'s level now (0–1), for the tests. */
+    float layerLevel(int i) {
+        return layerLevels[i];
+    }
+
+    /** M7 part G: each ambience layer follows its level by the level time: looping while above 0, stopped at 0. */
+    private void layers(double levelSeconds) {
+        for (int i = 0; i < layers.size(); i++) {
+            AmbienceLayer layer = layers.get(i);
+            float level = (float) Math.clamp(layer.level().applyAsDouble(levelSeconds), 0, 1);
+            if (level == layerLevels[i]) {
+                continue;
+            }
+            layerLevels[i] = level;
+            if (level <= 0) {
+                sfx.stop(layer.sound());
+            } else if (!sfx.looping(layer.sound())) {
+                sfx.loop(layer.sound(), AMBIENCE_VOLUME * level);
+            } else {
+                sfx.loopVolume(layer.sound(), AMBIENCE_VOLUME * level);
+            }
+        }
+    }
+
     /** M5 part G: the ambience's level now, linear (1 its own), for the tests. */
     float ambienceGain() {
         return ambienceGain;
@@ -464,6 +507,7 @@ public final class LevelMusic implements Disposable {
         }
         playJingle(levelSeconds);
         ambienceLevel(levelSeconds);
+        layers(levelSeconds);
         loop(section);
         if (music.isEmpty()
                 && !cut
@@ -769,6 +813,12 @@ public final class LevelMusic implements Disposable {
         sfx.stop(currentAmbience);
         if (fadingAmbience != null) {
             sfx.stop(fadingAmbience);
+        }
+        for (int i = 0; i < layers.size(); i++) {
+            if (layerLevels[i] > 0) {
+                sfx.stop(layers.get(i).sound());
+                layerLevels[i] = 0;
+            }
         }
     }
 }
