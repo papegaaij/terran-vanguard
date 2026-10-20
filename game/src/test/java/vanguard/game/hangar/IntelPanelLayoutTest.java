@@ -96,7 +96,18 @@ class IntelPanelLayoutTest {
         public void quote(String text, int x, int y) {
             quote.add(new Box("quote \"" + text + "\"", x, y, x + 8 * text.length(), y + LABEL_INK));
         }
+
+        /** M7 part H: the wave strip's pictures (the boss's silhouette at its arrival), over the strip. */
+        final List<StripMark> marks = new ArrayList<>();
+
+        @Override
+        public void mark(String name, float x, int y, int size) {
+            marks.add(new StripMark(name, x, y, size));
+        }
     }
+
+    /** M7 part H: a picture on the wave strip, its top left and size. */
+    private record StripMark(String name, float x, int y, int size) {}
 
     @Test
     void everyLevelsIntelFitsThePanelAtEverySensorLevel() {
@@ -256,35 +267,50 @@ class IntelPanelLayoutTest {
 
     /**
      * Level 14's strip at sensor L3 marks the Siege Spire's arrival at 108 s (its *Sensor-suite detail*;
-     * step K10): one red tick the strip's depth, inside the strip and over the waves; below L3 there is no
-     * strip, so no mark.
+     * step K10; M7 part H, the user's round 43 answer H.7e: the boss's silhouette at its time, drawn for Level 14
+     * too): its sensor silhouette centred on the time, across the strip's depth, inside the panel and above Varga's
+     * quote, and no red tick; below L3 there is no strip, so no mark.
      */
     @Test
     void level14sStripMarksTheBossAtItsArrival() {
+        assertStripSilhouette(14, "siege-spire", 108);
         String level = CONTENT.levelKey(14).orElseThrow();
-        Intel intel = Intel.of(CONTENT, level, 3);
-        Measure measure = new Measure();
-        IntelPanel.layout(measure, intel, CONTENT.level(level).briefing().teaser(), level);
-        Box strip = measure.parts.stream()
-                .filter(box -> box.what().equals("wave strip"))
-                .findFirst()
-                .orElseThrow();
-        List<Fill> boss = measure.fills.stream()
-                .filter(fill -> fill.colour().equals(Glass.ALERT))
-                .toList();
-        assertEquals(1, boss.size(), "one boss mark: " + boss);
-        Fill mark = boss.getFirst();
-        float x = (float) (strip.left() + 2 + (strip.right() - strip.left() - 4) * 108 / intel.seconds());
-        assertEquals(x, mark.x(), 0.01f, "at 108 s of " + intel.seconds());
-        assertTrue(
-                mark.y() > strip.top() && mark.y() + mark.height() < strip.bottom() && mark.height() >= 8,
-                "the strip's depth, inside it: " + mark + " in " + strip);
-        assertEquals(boss.getFirst(), measure.fills.getLast(), "drawn over the waves");
-
         Measure l2 = new Measure();
         IntelPanel.layout(
                 l2, Intel.of(CONTENT, level, 2), CONTENT.level(level).briefing().teaser(), level);
         assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(Glass.ALERT)), "no strip below L3");
+        assertTrue(l2.marks.isEmpty(), "no strip below L3");
+    }
+
+    /** M7 part H (H.7e): Level 21's strip at sensor L3 marks the Dust Colossus's silhouette at 105 s. */
+    @Test
+    void level21sStripMarksTheColossusSilhouetteAtItsArrival() {
+        assertStripSilhouette(21, "dust-colossus", 105);
+    }
+
+    private static void assertStripSilhouette(int number, String boss, double arrival) {
+        String level = CONTENT.levelKey(number).orElseThrow();
+        Intel intel = Intel.of(CONTENT, level, 3);
+        Measure measure = assertFits(intel, CONTENT.level(level).briefing().teaser(), level, level + ": ");
+        Box strip = measure.parts.stream()
+                .filter(box -> box.what().equals("wave strip"))
+                .findFirst()
+                .orElseThrow();
+        assertTrue(
+                measure.fills.stream().noneMatch(fill -> fill.colour().equals(Glass.ALERT)),
+                "the silhouette instead of the red tick");
+        assertEquals(1, measure.marks.size(), "one boss mark: " + measure.marks);
+        StripMark mark = measure.marks.getFirst();
+        assertEquals("intel/boss-" + boss, mark.name());
+        float x = (float) (strip.left() + 2 + (strip.right() - strip.left() - 4) * arrival / intel.seconds());
+        assertEquals(x + 1, mark.x() + mark.size() / 2f, 0.01f, "centred on " + arrival + " s of " + intel.seconds());
+        assertTrue(
+                mark.y() <= strip.top() + 2 && mark.y() + mark.size() >= strip.bottom() - 2,
+                "across the strip's depth: " + mark + " in " + strip);
+        assertTrue(
+                mark.x() >= IntelPanel.X && mark.x() + mark.size() <= RIGHT && mark.y() >= TOP,
+                "inside the panel: " + mark);
+        assertTrue(mark.y() + mark.size() <= measure.quote.getFirst().top(), "above Varga's quote: " + mark);
     }
 
     /**

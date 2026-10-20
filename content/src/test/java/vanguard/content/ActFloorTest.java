@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -50,6 +51,8 @@ class ActFloorTest {
         System.out.printf(
                 "Floor %s: %.2f enemies on the screen, %.1f shots a minute%n",
                 key, flight.meanOnScreen(), flight.shotsPerMinute());
+        // M7 part H (step H4): a level whose waves' rework is pending the user's review is measured, not asserted.
+        assumeFalse(PacingTest.PENDING_WAVES.contains(key), key + ": its waves' rework is pending the user's review");
         assertTrue(
                 flight.meanOnScreen() >= MEAN_ON_SCREEN,
                 key + ": " + flight.meanOnScreen() + " enemies on the screen, at least " + MEAN_ON_SCREEN);

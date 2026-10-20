@@ -43,7 +43,10 @@ class WalkerSoundsTest {
                 Sfx.WALKER_FLAME,
                 Sfx.WALKER_VENT_HIT,
                 Sfx.WALKER_DEATH,
-                Sfx.WALKER_WRECK_SETTLE)) {
+                Sfx.WALKER_WRECK_SETTLE,
+                Sfx.WALKER_LANCE_CHARGE,
+                Sfx.WALKER_LANCE_SHOT,
+                Sfx.WALKER_SHOCKWAVE)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
         }
         // Round 43's picks (the user, 2026-10-20); the stomp stays round 42's a, the missile is the chosen r08 launch.
@@ -56,6 +59,10 @@ class WalkerSoundsTest {
         assertEquals("sfx/walker-death-r43-a.ogg", Sfx.WALKER_DEATH.path());
         assertEquals("sfx/walker-wreck-settle-r43-a.ogg", Sfx.WALKER_WRECK_SETTLE.path());
         assertEquals(Sfx.Priority.EXPLOSION, Sfx.WALKER_DEATH.priority(), "its death on the explosion rung");
+        // Round 44's proposals, a each until the user's pick (step HB).
+        assertEquals("sfx/walker-lance-charge-r44-a.ogg", Sfx.WALKER_LANCE_CHARGE.path());
+        assertEquals("sfx/walker-lance-shot-r44-a.ogg", Sfx.WALKER_LANCE_SHOT.path());
+        assertEquals("sfx/walker-shockwave-r44-a.ogg", Sfx.WALKER_SHOCKWAVE.path());
         assertEquals(1f, WalkerCues.WALKER_LEVEL, "levelled in their files");
     }
 
@@ -68,9 +75,8 @@ class WalkerSoundsTest {
     }
 
     /**
-     * Round 44: the rail lance's charge and shot, the stomp's brace and shockwave (placeholders: the Mantis's charge-up
-     * and sweep, the hatch and the footfall pitched down), once its pods are gone; its death its own, the wreck's groan
-     * as the topple lands.
+     * Round 44: the rail lance's charge and shot (round 44's proposals, step HB), the stomp's brace (a placeholder: the
+     * hatch pitched down), once its pods are gone; its death its own, the wreck's groan as the topple lands.
      */
     @Test
     void theLanceChargesAndFiresTheStompBracesAndItsDeathAndWreckSoundTheirOwn() {
@@ -82,9 +88,9 @@ class WalkerSoundsTest {
         vanguard.sim.WalkerHooks.damage(sortie, 0, WalkerFixture.LEFT_POD, 1000);
         vanguard.sim.WalkerHooks.damage(sortie, 0, WalkerFixture.RIGHT_POD, 1000);
         assertTrue(until(sortie, sounds, 6, type -> type == SimEvents.Type.LANCE_CHARGE), "the lance charges");
-        assertTrue(bank.playing(Sfx.MANTIS_TELEGRAPH) > 0, "its charge-up");
+        assertTrue(bank.playing(Sfx.WALKER_LANCE_CHARGE) > 0, "its charge-up");
         assertTrue(until(sortie, sounds, 2, type -> type == SimEvents.Type.LANCE_FIRE), "the lance fires");
-        assertTrue(bank.playing(Sfx.MANTIS_SWEEP) > 0, "its shot");
+        assertTrue(bank.playing(Sfx.WALKER_LANCE_SHOT) > 0, "its shot");
         boolean braced = false;
         for (int t = 0; t < SimStep.ticks(30) && !braced; t++) {
             var stride = walker.stride().orElseThrow();

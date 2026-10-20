@@ -9,9 +9,12 @@
 # frame (y up from the bottom edge) once. Phase 2's spine vents (`boss.vents`), phase 3's eruption under the ship
 # (`boss.eruption`) and the debris rocks (`boss.debris`) are loaded and checked here and flown by sim step H3 (mapped in
 # step H4); until then the vents stay buried and phase 3 breaches by the normal cycle at the ship (BreachArena).
-# The HP is the spec's paper value (5,600 + 3 × 280); step H4 measures the fight (five seeds, 90-180 s) and tunes it and
-# the par. The bounty keeps the act boss's 22.7 % share of budget(21) at Level 21's paper scale 0.75 (H.5: 0.227 ×
-# 2,709 ÷ (2.56 × 0.75) ≈ 320), recomputed by H4 from the measured scale.
+# Step H4 measured the fight (DustColossusTest, five seeds, the plan's fit, Level 21's crawling arena): at the spec's HP
+# (5,600 + 3 × 280) the autopilot's medium fight lasts 101.7 s (100.9-103.1 on every seed, inside the act boss's window
+# 90-180 s), so the HP stays and the par is the measured mean, 102. The ring, the fan and the spiral name the mouth as
+# their firing part (`parts: [mouth]`): a phase that ends on an HP share names no part, and without it the gullet never
+# fired (step H4's finding). The bounty keeps the act boss's 22.7 % share of budget(21) at Level 21's measured scale
+# 0.74 (H.5: 0.227 × 2,709 ÷ (2.56 × 0.74) ≈ 325; the mouth the rest after the vents' 3 × 12).
 # Defaults of this step, pending the user's review in round 44: the gullet's box 70×70 (the art's semi-axes 36.7 ×
 # 31.7 px), the vents' aimed bursts `small` at 130 px/s, the spiral's arms turning 90°/s, the debris accelerating at
 # 60 px/s², the hard rings of 16 in both phases (the spec's "rings of 16"), the eruption's circle 45 px (90 across).
@@ -28,7 +31,7 @@ part_list:  # offset [dx, dy] px from the mouth's centre (the breach point), dy 
     hitbox: [120, 120]      # the mouth's circle (at an edge about two thirds of it on the screen)
     hp: 5600
     kind: vital
-    bounty: 284             # H.5: the share 22.7 % at Level 21's scale 0.75 (was 264 at 0.80)
+    bounty: 289             # H.5: the share 22.7 % at Level 21's measured scale 0.74 (step H4; 284 at the paper 0.75)
     multiplier: 0.5         # the lips (the mandibles)
     layer: buried           # until the middle of its rise, then `ground` until the middle of its dive (the simulation flips it)
     spots:
@@ -37,7 +40,7 @@ part_list:  # offset [dx, dy] px from the mouth's centre (the breach point), dy 
   - {name: vent 2, offset: [0, 0], hitbox: [40, 40], hp: 280, kind: destroyable, bounty: 12, layer: buried}
   - {name: vent 3, offset: [0, 0], hitbox: [40, 40], hp: 280, kind: destroyable, bounty: 12, layer: buried}
 orientation: fixed   # seen from above; the mouth's 5 poses are the art's (notes)
-hp: 6440            # the parts' sum: mouth 5,600, vents 280 each (the spec's paper values; step H4 tunes them from the measured fight)
+hp: 6440            # the parts' sum: mouth 5,600, vents 280 each (the spec's values: step H4's measured fight lies in the window with them)
 armour: 'buried between breaches'
 speed: 0            # the mouths do not move once risen; the arena crawls at 20 px/s (Level 21's)
 movement:
@@ -69,6 +72,7 @@ movement:
 attacks:
   - pattern: ring
     name: ring-12
+    parts: [mouth]      # step H4: the gullet fires it (a phase that ends on a share names no firing part)
     bullet: small
     count: 12
     interval: 2.5
@@ -77,6 +81,7 @@ attacks:
       text: 'phase 1: the gullet fires a ring of {count} (`{bullet}` = {damage}, {speed} px/s) every {interval} s while open, each after a 0.5 s lime glow'
   - pattern: ring
     name: ring-14
+    parts: [mouth]
     bullet: small
     count: 14
     interval: 2.5
@@ -85,6 +90,7 @@ attacks:
       text: 'phase 2: rings of {count} ({speed} px/s) every {interval} s'
   - pattern: fan
     name: fan
+    parts: [mouth]
     bullet: small
     count: 5
     spread: 50
@@ -94,6 +100,7 @@ attacks:
       text: 'with a {count}-way `{pattern}` (spread {spread}°, {speed} px/s, `{bullet}`) at the ship between the rings'
   - pattern: spiral
     name: spiral
+    parts: [mouth]
     bullet: small
     arms: 2
     interval: 0.25      # s between two bullets of an arm: 4 a second per arm
@@ -117,7 +124,7 @@ weak_points:
   - {name: lime gullet (while open), multiplier: 2}
 drops: []           # phase 3's armour patch is its drop
 traits: [anti-ground, side, rear, homing]
-bounty: 320         # the parts' sum: mouth 284, vents 12 each (H.5: 22.7 % of budget(21) at Level 21's scale 0.75)
+bounty: 325         # the parts' sum: mouth 289, vents 12 each (H.5: 22.7 % of budget(21) at Level 21's measured scale 0.74)
 first_level: 21
 difficulty:
   easy: {breach: {bite_tell: 1.0}, suction: {speed: 30}, eruption: {marker: 1.8}}
@@ -125,7 +132,7 @@ difficulty:
 boss:
   kind: boss        # the act boss: the long bar
   bar_name: DUST COLOSSUS
-  par: 130          # s from the bar to the kill: the Boss rush bonus (the spec's draft; step H4 sets the measured mean)
+  par: 102          # s from the bar to the kill: the Boss rush bonus (step H4: the autopilot's measured mean at medium, 101.7 s; the spec's draft 130)
   death_seconds: 3  # the chain: the last mouth rears up and shudders, the sand splits along the ridge, chained eruptions
   suction: {speed: 45, inner: 120, outer: 360}   # px/s toward the open mouth within 120 px, falling off linearly to 0 at 360 px; the ship and Rook (not bullets, not pickups: H.7b); the debris (boss.debris)
   vents:            # phase 2: the three spine vents rise with each mouth along the ridge toward the field's centre, sink with it; a destroyed vent stays dead
@@ -170,7 +177,7 @@ notes:
   speed: '(the mouths do not move once risen; the arena crawls at 20 px/s)'
   movement: '`burrow` with fixed **breach points** around the field (see *Breaches*); between breaches its ridge runs under the sand from the last breach point toward the next'
   attack_prefix: 'the **suction** ({boss.suction.speed} px/s within {boss.suction.inner} px, falling off to 0 at {boss.suction.outer} px); the **bite** (a {movement.breach.bite_tell} s tell, then `heavy` = 10 within {movement.breach.bite.radius} px, once); debris in phases 2-3; phase 3''s **eruption** (a {boss.eruption.radius} px marker on the ship, `heavy` = 10 after {boss.eruption.marker} s; see *Phases*); '
-  bounty: ' in Act 1 terms (mouth 284, spine vents 12 each); × 2.56 × Level 21''s `bounty_scale` of 0.75 (paper) it pays **614 = 22.7 % of budget(21) = 2,709** (see *Bounty*)'
+  bounty: ' in Act 1 terms (mouth 289, spine vents 12 each); × 2.56 × Level 21''s `bounty_scale` of 0.74 it pays **616 = 22.7 % of budget(21) = 2,709** (see *Bounty*)'
   death: '`huge`: the last mouth rears up and shudders, the sand splits along the whole ridge, chained eruptions of dust and lime ichor over {boss.death_seconds} s, the mouth sinks into a collapsing crater; screen flash at the chain''s end (an act boss); credit shower; the Choir speaks (see *The Choir''s first words*)'
   used_in: L21 only (an echo version in the L49 boss rush)
   difficulty: 'hard: rings of 16, the bite''s tell 0.6 s, the pull 55 px/s, phase 3''s marker 1.2 s, the spiral''s three arms; easy: the pull 30 px/s, the bite''s tell 1.0 s, phase 3''s marker 1.8 s'

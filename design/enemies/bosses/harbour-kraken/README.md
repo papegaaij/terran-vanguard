@@ -261,9 +261,9 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
       0.8 s glow, the telegraph 1.4 s (hard 1.1 s), the head re-measured to 3,400 for the ≈ 55 s
       fight; the rooted autopilot plays; Level 11's platform piece, `hold_clear` and the teaching
       line (step CB: `KrakenTest`, `Level11Test`, `BalanceTest`, `PartEUnitsDataTest`)
-- [ ] Round 40: the voice of Okafor's new line (`first-ship-telegraph`) rendered (a VOX step;
+- [x] Round 40: the voice of Okafor's new line (`first-ship-telegraph`) rendered (step VOX2, 2026-10-19;
       `VoiceFilesTest`)
-- [ ] Round 40: a Level 11 capture of the reworked fight for the user's review
+- [x] Round 40: a Level 11 capture of the reworked fight for the user's review (round 44, X.a and X.b)
 
 ## Decisions
 

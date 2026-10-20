@@ -18,12 +18,12 @@
 # V-wing (4 -> 5). Kites 35 -> 20, Needlers 11 -> 20, Stingers 8 -> 13: 96 + 10 ground targets = 106 at medium over
 # t=8-105, ≈ 66 a minute. Hard: the firing groups one smaller (Levels 17-19), a third Wraith in each rear ambush, the
 # centre turret pair; easy by the formation lever, the t=61 Wraiths a Needler V-wing from the front (Level 14's rule).
-# The `bounty_scale` (0.75) and the boss's bounty (320, H.5's 22.7 %) are paper values: step H4 measures the haul and
-# the fight and sets them. Rook keeps Level 20's Autocannon (H.2: the balance plan's fit carries it).
+# Step H4 measured the haul and the fight (the level report): the `bounty_scale` 0.74 puts the typical haul on
+# budget(21), the boss's bounty 325 keeps H.5's 22.7 %, the fight's par is its measured 102 s. Rook keeps Level 20's Autocannon (H.2: the balance plan's fit carries it).
 # The backdrop is step ART-H1's (tools/art/backdrop_l21.py --proposal, merged here): seams at exact rows.
 scroll_speed: 160     # the rim; the inner wall, the dune sea and the hollow set their own
 launch_seconds: 5     # the usual launch from the bottom edge over the rim's CDF line (H.7g)
-bounty_scale: 0.75    # every bounty × 0.75: the typical haul on budget(21) 2,709 (step PH2's paper value, m7h-gaps §1.4; step H4 sets the measured one)
+bounty_scale: 0.74    # every bounty × 0.74: the typical haul on budget(21) 2,709 (step H4's measured fit; step PH2's paper value 0.75)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
   setting: Mars, Hellas basin
@@ -100,7 +100,7 @@ sections:  # back to back from t = 0; each speed change eased (ramp: 1 s on the 
     notes:
       layers:
         ground: 'the hollow''s floor as the seamless tile (512 px); the breaches'' bulges, craters and the ridge; the debris rocks (phases 2–3).'
-      purpose: 'The boss fight (≈ 130 s at medium, the spec''s par); the warning, the arrival and the checkpoint at t=105.'
+      purpose: 'The boss fight (≈ 102 s at medium, its measured par); the warning, the arrival and the checkpoint at t=105.'
   - name: Settling Dust
     end: 277
     speed: 25

@@ -194,10 +194,6 @@ public final class BriefingScreen implements GameScreen {
      */
     record Onward(String next, String hint) {}
 
-    /** The NEXT panel of the last built act's outro. */
-    static final String RELEASE_END =
-            "THE END OF THIS RELEASE AND THE CREDITS. " + ReleaseEndScreen.NEXT_ACT + " IS COMING SOON.";
-
     /**
      * What follows the outro on the campaign's route ({@code CampaignRoute.beforeNextLevel}): the
      * next act's title card and briefing when the next level opens an act with data (Act 2 after
@@ -208,7 +204,7 @@ public final class BriefingScreen implements GameScreen {
     static Onward onward(Content content, OutroScript outro) {
         if (content.levelKey(outro.nextLevel()).isEmpty()) {
             // M6 part B (Q1 = a): the release's end, ReleaseEndScreen.
-            return new Onward(RELEASE_END, "ENTER TO THE END");
+            return new Onward(ReleaseTexts.outroNext(content), "ENTER TO THE END");
         }
         Optional<BriefingScript> briefing = Briefings.before(content, outro.nextLevel());
         if (briefing.isEmpty()) {

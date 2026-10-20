@@ -230,6 +230,19 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "basin-rumble-r43-a.ogg",
         "swarm-hum-r43-a.ogg",
         "swarm-lunge-r43-a.ogg",
+        // Round 44's proposals (M7 part H, step HB; CC0/CC-BY Freesound originals, CREDITS.md), option a until the
+        // user's pick: the Dust Colossus's bulge, eruption, suction loop, bite and death (Level 21) and the Revenant
+        // Walker's rail lance charge and shot and stomp shockwave. The ridge pass plays b: a's pan runs left to right,
+        // Level 21's ridge runs from the right edge to the left (b's way).
+        "colossus-bulge-r44-a.ogg",
+        "colossus-eruption-r44-a.ogg",
+        "colossus-suction-r44-a.ogg",
+        "colossus-bite-r44-a.ogg",
+        "colossus-death-r44-a.ogg",
+        "colossus-ridge-r44-b.ogg",
+        "walker-lance-charge-r44-a.ogg",
+        "walker-lance-shot-r44-a.ogg",
+        "walker-shockwave-r44-a.ogg",
     )
 }
 

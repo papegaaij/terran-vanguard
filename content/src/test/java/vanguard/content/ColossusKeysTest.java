@@ -58,8 +58,9 @@ class ColossusKeysTest {
         assertEquals(List.of(120.0, 200.0, 280.0), script.vents().orElseThrow().distances());
         assertEquals(1.2, script.debris().orElseThrow().every().get("Hunting"));
         assertEquals(0.8, script.debris().orElseThrow().every().get("Breaching anywhere"));
-        // H.5: the boss keeps its 22.7 % of budget(21) at the level's paper scale: 320 × 2.56 × 0.75 = 614.
-        assertEquals(320, colossus.bounty());
+        // H.5: the boss keeps its 22.7 % of budget(21) at the level's measured scale (step H4): 325 × 2.56 × 0.74 =
+        // 616.
+        assertEquals(325, colossus.bounty());
         assertEquals(6440, colossus.hp());
     }
 
@@ -153,7 +154,7 @@ class ColossusKeysTest {
         double last =
                 level.waves().stream().mapToDouble(LevelData.Wave::t).max().orElseThrow();
         assertEquals(97.5, last, "H.3: nothing enters after the Mote stream");
-        assertEquals(0.75, level.bountyScale().orElseThrow());
+        assertEquals(0.74, level.bountyScale().orElseThrow(), "step H4's measured fit (the paper 0.75)");
         WeatherBlock.Ridge ridge = level.ridge().orElseThrow();
         assertTrue(ridge.leftward());
         assertEquals(64, ridge.t());

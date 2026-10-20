@@ -21,7 +21,7 @@ import vanguard.sim.Sortie;
 /**
  * A level's numbers for tuning its waves, computed by the campaign-wide tests' own code ({@link LevelMetrics}) with
  * their rules' verdicts: {@code ./gradlew :content:levelReport -Plevel=19 [-Pdifficulty=easy,medium,hard] [-Pseeds=3]
- * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit] [-Pjson]}. It reads the design data at run time,
+ * [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus] [-Pjson]}. It reads the design data at run time,
  * so a data.yaml edit needs no recompile; the flights run in parallel.
  *
  * <p>Per difficulty: the enemies (waves + ground) and their rate ({@link DensityTest}), the mean on the screen and the
@@ -30,7 +30,8 @@ import vanguard.sim.Sortie;
  * perfect run ({@link TypicalHaulTest}), the autopilot over N seeds: wins, retries, the secondary met and the bosses'
  * fights against their par and window (the level tests' runs), and the beam era's small-unit time on the screen
  * against Level 10's ({@link BeamEraHpTest}), and (M7 part G) a pursuit swarm's motes on the screen and lunges over the
- * same seeds' runs with the plan's fit ({@link LevelMetrics.PursuitWatch}). The fits: {@code test} (default) flies each measure with the fit its test
+ * same seeds' runs with the plan's fit ({@link LevelMetrics.PursuitWatch}), and (M7 part H) a breaching boss's phases, the
+ * shield and armour lost in each, the bites and the eruptions that caught the ship ({@link LevelMetrics.ColossusWatch}). The fits: {@code test} (default) flies each measure with the fit its test
  * uses, {@code plan} and {@code user} fly every measure with the balance plan's or the user's Act 2 fit.
  */
 final class LevelReport {
@@ -44,7 +45,8 @@ final class LevelReport {
         BOSS,
         SECONDARY,
         HP,
-        PURSUIT
+        PURSUIT,
+        COLOSSUS
     }
 
     enum Fit {
@@ -116,7 +118,8 @@ final class LevelReport {
             Measured floor,
             TypicalHaul haul,
             List<LevelMetrics.Run> runs,
-            List<LevelMetrics.PursuitRun> pursuits) {}
+            List<LevelMetrics.PursuitRun> pursuits,
+            List<LevelMetrics.ColossusRun> colossi) {}
 
     /** A level's report. */
     record Level(
@@ -228,6 +231,20 @@ final class LevelReport {
             pursuits.put(difficulty, list);
         }
 
+        // M7 part H: a breaching boss's phases, losses, bites and eruptions, the same seeds with the plan's fit.
+        Map<Difficulty, List<Future<LevelMetrics.ColossusRun>>> colossi = new HashMap<>();
+        for (Difficulty difficulty : options.difficulties()) {
+            List<Future<LevelMetrics.ColossusRun>> list = new ArrayList<>();
+            boolean breaching =
+                    options.has(Part.COLOSSUS) && LevelMetrics.hasBreach(SimSpecs.level(content, key, difficulty));
+            for (long seed = 1; breaching && seed <= options.seeds(); seed++) {
+                long s = seed;
+                list.add(pool.submit(() -> LevelMetrics.colossus(
+                        content, key, difficulty, loadout(content, key, difficulty, floorFit), s, AUTOPILOT_STEPS)));
+            }
+            colossi.put(difficulty, list);
+        }
+
         double fitted = options.has(Part.HAUL) ? LevelMetrics.bountyScaleForBudget(content, key) : Double.NaN;
         List<ByDifficulty> rows = new ArrayList<>();
         for (Difficulty difficulty : options.difficulties()) {
@@ -244,6 +261,10 @@ final class LevelReport {
             for (Future<LevelMetrics.PursuitRun> chase : pursuits.get(difficulty)) {
                 chases.add(chase.get());
             }
+            List<LevelMetrics.ColossusRun> fights = new ArrayList<>();
+            for (Future<LevelMetrics.ColossusRun> fight : colossi.get(difficulty)) {
+                fights.add(fight.get());
+            }
             rows.add(new ByDifficulty(
                     difficulty,
                     LevelMetrics.density(level),
@@ -257,7 +278,8 @@ final class LevelReport {
                     floor == null ? null : floor.get(),
                     options.has(Part.HAUL) ? TypicalHaul.of(content, key, difficulty) : null,
                     done,
-                    chases));
+                    chases,
+                    fights));
         }
         double referenceLife = Double.NaN;
         if (hpRun) {
@@ -485,6 +507,44 @@ final class LevelReport {
                                 .orElse(0),
                         lunges);
             }
+            if (!row.colossi().isEmpty()) {
+                List<LevelMetrics.ColossusRun> fights = row.colossi();
+                int n = fights.size();
+                double[] seconds = new double[3];
+                double[] armour = new double[3];
+                double[] lost = new double[3];
+                int bites = 0;
+                int eruptions = 0;
+                double breaches = 0;
+                for (LevelMetrics.ColossusRun fight : fights) {
+                    for (int p = 0; p < 3; p++) {
+                        seconds[p] += fight.phaseSeconds()[p] / n;
+                        armour[p] += fight.armourLost()[p] / n;
+                        lost[p] += fight.damage()[p] / n;
+                    }
+                    bites += fight.bites();
+                    eruptions += fight.eruptions();
+                    breaches += fight.breaches() / (double) n;
+                }
+                line(
+                        out,
+                        "colossus",
+                        "phases %.1f + %.1f + %.1f s, shield+armour lost %.0f / %.0f / %.0f (armour %.0f / %.0f / %.0f),"
+                                + " %.1f breaches, bites %d, eruptions %d over %d runs [plan fit]",
+                        seconds[0],
+                        seconds[1],
+                        seconds[2],
+                        lost[0],
+                        lost[1],
+                        lost[2],
+                        armour[0],
+                        armour[1],
+                        armour[2],
+                        breaches,
+                        bites,
+                        eruptions,
+                        n);
+            }
             if (medium && level.parts().contains(Part.HP) && row.floor() != null) {
                 double life = row.floor().smallLife();
                 double ratio = life / level.referenceSmallLife();
@@ -669,6 +729,31 @@ final class LevelReport {
                             "lunges_with_motes", chase.lungesWithMotes()));
                 }
                 d.put("pursuit", chases);
+            }
+            if (!row.colossi().isEmpty()) {
+                List<Object> fights = new ArrayList<>();
+                for (LevelMetrics.ColossusRun fight : row.colossi()) {
+                    fights.add(ordered(
+                            "phase_seconds",
+                                    List.of(
+                                            round(fight.phaseSeconds()[0]),
+                                            round(fight.phaseSeconds()[1]),
+                                            round(fight.phaseSeconds()[2])),
+                            "lost",
+                                    List.of(
+                                            round(fight.damage()[0]),
+                                            round(fight.damage()[1]),
+                                            round(fight.damage()[2])),
+                            "armour_lost",
+                                    List.of(
+                                            round(fight.armourLost()[0]),
+                                            round(fight.armourLost()[1]),
+                                            round(fight.armourLost()[2])),
+                            "breaches", fight.breaches(),
+                            "bites", fight.bites(),
+                            "eruptions", fight.eruptions()));
+                }
+                d.put("colossus", fights);
             }
             byDifficulty.put(row.difficulty().name().toLowerCase(Locale.ROOT), d);
         }

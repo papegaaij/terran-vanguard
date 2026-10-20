@@ -63,6 +63,11 @@ class PlaceholderAuditTest {
             "round 43's picks (user 2026-10-20): Level 19's walker, vent and tank sounds and Level 20's, the"
                     + " concept files mixed from CC0/CC-BY Freesound originals (CREDITS.md)";
 
+    private static final String ROUND_44 =
+            "round 44's proposals (option a until the user's pick, the ridge pass b): Level 21's Dust Colossus sounds"
+                    + " and the Revenant Walker's lance and shockwave, the concept files mixed from CC0/CC-BY Freesound"
+                    + " originals (CREDITS.md)";
+
     private static final String ROUND_41_MUSIC =
             "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
                     + " files, rendered by tools/concept/audio/music_r41.py";
@@ -204,6 +209,16 @@ class PlaceholderAuditTest {
             Map.entry("sfx/basin-rumble-r43-a.ogg", ROUND_43),
             Map.entry("sfx/swarm-hum-r43-a.ogg", ROUND_43),
             Map.entry("sfx/swarm-lunge-r43-a.ogg", ROUND_43),
+            // round 44's proposals: the Dust Colossus (Level 21), the walker's lance and shockwave
+            Map.entry("sfx/colossus-bulge-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/colossus-eruption-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/colossus-suction-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/colossus-bite-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/colossus-death-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/colossus-ridge-r44-b.ogg", ROUND_44),
+            Map.entry("sfx/walker-lance-charge-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/walker-lance-shot-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/walker-shockwave-r44-a.ogg", ROUND_44),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

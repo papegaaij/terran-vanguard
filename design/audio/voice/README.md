@@ -498,6 +498,15 @@ level).
       Varga, Rook, Ares Control); four takes pinned; `VoiceFilesTest` covers Level 20 and the top barks (M7 part G,
       step VOX-G, 2026-10-20; pending the user's review). Open: `RadioTimelineTest` gets Level 20's runs once the
       level is mapped
+- [x] Level 21's lines (eight timed with Rook's two side takes, `requires: escort`; the three `boss-phase` lines;
+      the four `boss-destroyed` lines with the Choir's spoken "…many… we are many… we are going…", `distorted`, with
+      the Choir's layering; the survey crawler's secret, the level end's line; the two briefing pages: 21 files; the
+      secondary has no line) and the Act 3 outro's four pages rendered with the cast speakers (Okafor, Varga, Rook,
+      Ares Control, the Choir): 25 files, seven takes pinned; `VoiceFilesTest` covers Level 21 and the Act 3 outro
+      (M7 part H, step VOX-H, 2026-10-20; pending the user's review). Open: the Choir line's fragment joins (0.7 s
+      of drone between separately spoken fragments) and its layering a/b (Design, The Choir) are not built: the
+      line is one take through the round-18 layering (a); `RadioTimelineTest` gets Level 21's runs once the level
+      is mapped
 - [x] A line that is only a stage direction plays its speaker's `stage` sound (speaker table) on
       the voice bus, found by `VoiceLines.radioVoice` for the game and RadioTimelineTest; the
       Choir's is round 29's option b (the sung "ah" F3 to E3), copied by
@@ -1148,3 +1157,19 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   Pitch on the unfiltered takes: Okafor 131-175 Hz median, Varga 185-213, Rook 140-162 on the radio lines and
   216-301 on the shouted barks (inside the earlier shouted barks' 179-508), Ares Control 106-137. No radio retime:
   the timed lines never overlap (the closest, t=20 → 27.5, leaves about 3.4 s).
+- 2026-10-20: M7 part H, step VOX-H (**pending the user's review**): Level 21's 21 voiced lines and the Act 3 outro's
+  four pages rendered by `tools/art/voice.py`, 25 new files. The Choir's first words are one take in Varga's
+  reference voice with the Choir's fixed settings, the round-18 layering (option a) and the `distorted` filter
+  (4.1 s with the reverb tail, inside the 6 s slot); the fragments are not spoken separately (no drone joins yet).
+  Its key's seed and five of six more said "we are going" (or "we are many") twice; the pin speaks each fragment
+  once (2.6 s raw). Whisper cannot read the layered file (expected), the raw take reads "Many, we are many, we are
+  going." Pins (7): the Choir's line; Okafor's t=53 ("Base and floor" in nearly every seed: Whisper's reading
+  of "Basin" at a sentence start; the pin reads "Basin floor" through the filter) and outro page 1 (every take of
+  three seeds held a 1.1-2.6 s pause; the pin's sixth take has none); Varga's t=37 (an octave jump) and briefing
+  page 2 ("lime, brings"); Rook's t=13 left take (barely voiced); Ares Control's t=21 (a jump to about 440 Hz).
+  "Hellas" reads "Hellas Basin" on Okafor's briefing page; "Vrell" mostly "Vrell" with the name prompt ("Vrellon"
+  for "Vrell on" at t=1), "Aegis" right, "Ares" right with the prompt ("Airy's"/"Aries" without), "Europa" right,
+  "Colossus" right; Okafor's outro page 4 reads "Thera, Deep" (a small break inside the name) and "Conamara" right
+  with the prompt. Varga's outro page 3 speaks the quoted "we are going" plainly. Pitch on the unfiltered takes:
+  Okafor 135-161 Hz median, Varga 188-210, Rook 132-182, Ares Control 116-133. No radio retime: the timed lines
+  never overlap (the closest, t=13 → 21, leaves about 5 s).

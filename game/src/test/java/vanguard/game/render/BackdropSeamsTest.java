@@ -46,18 +46,21 @@ class BackdropSeamsTest extends BackdropSeams {
             Path folder = BACKDROP.resolve(Backdrop.folder(entry.getKey(), level));
             for (BackdropLayer layer : TERRAIN) {
                 // M7 part G: a strip backdrop's tile sets change at its zones' starts.
-                for (Border border : borders(level, layer)) {
+                // M7 part H: the section after a crawling arena as the game lays it (Level 21's settling dust).
+                for (Border border : borders(entry.getKey(), level, layer, folder)) {
                     String below = border.below();
                     String above = border.above();
-                    if (below == null || above == null || below.equals(above)) {
+                    if (below == null || above == null || border.same()) {
                         continue;
                     }
                     long seam = border.seam();
                     // Both tile sets over the rows next to the border, the set pieces on top: they
                     // match, or a feature crosses the border without a piece cut from one render
                     // over it.
-                    int[][] lower = composite(level, layer, folder, below, seam - 2, seam + 2, border.phase());
-                    int[][] upper = composite(level, layer, folder, above, seam - 2, seam + 2, border.phase());
+                    int[][] lower = composite(
+                            level, layer, folder, below, seam - 2, seam + 2, border.phase(), border.belowOverlay());
+                    int[][] upper = composite(
+                            level, layer, folder, above, seam - 2, seam + 2, border.phase(), border.aboveOverlay());
                     double share = differing(lower, upper);
                     if (share > 0.002) {
                         seams.add(String.format(

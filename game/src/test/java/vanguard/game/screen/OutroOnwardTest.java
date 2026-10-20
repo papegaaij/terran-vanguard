@@ -3,6 +3,8 @@ package vanguard.game.screen;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import vanguard.content.campaign.OutroScript;
  * capture, round 30: after Act 1 they named the hangar while Act 2's title card came first).
  */
 class OutroOnwardTest {
+    private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
     private final Content content = ContentLoader.fromClasspath();
 
     private static OutroScript outro(int last, int nextLevel) {
@@ -79,8 +82,50 @@ class OutroOnwardTest {
         int unbuilt = 50;
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro(49, unbuilt));
 
-        assertEquals(BriefingScreen.RELEASE_END, onward.next());
+        assertEquals(ReleaseTexts.outroNext(content), onward.next());
         assertEquals("ENTER TO THE END", onward.hint());
+    }
+
+    /**
+     * M7 part H (H.7d): Level 21 ends Act 3 and the release: its outro's NEXT panel names the release's end and Act 4
+     * from Act 3's {@code next_act}; the end card's texts and the hangar's line come from the same data.
+     */
+    @Test
+    void afterAct3sOutroTheReleaseEndsWithAct4ComingSoon() {
+        String directory = "act-3-red-dust";
+        ActData act = content.acts().get(directory);
+        assertEquals(21, act.levels().last(), "Act 3 ends with Level 21");
+        assertTrue(content.levelKey(22).isEmpty(), "Level 22 is not built");
+        OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act, 21), 22)
+                .orElseThrow();
+        // Step HB: Act 3's outro, Level 14's order: four voiced pages with their images, the fanfare under page 1.
+        assertEquals("ACT III - RED DUST", outro.act());
+        assertEquals(15, outro.first());
+        assertEquals(21, outro.last());
+        assertEquals(Optional.of("act-complete"), outro.music(), "track 24 under page 1");
+        assertEquals(
+                List.of("Okafor", "Okafor", "Varga", "Okafor"),
+                outro.pages().stream().map(BriefingPage::speaker).toList());
+        assertEquals(
+                List.of("act-3-outro-hellas", "act-3-outro-domes", "act-3-outro-europa", "act-3-outro-aegis"),
+                outro.pages().stream().map(page -> page.image().orElseThrow()).toList());
+        for (BriefingPage page : outro.pages()) {
+            assertTrue(
+                    Files.isRegularFile(
+                            ASSETS.resolve("ui/briefing/" + page.image().orElseThrow() + ".png")),
+                    page.image().orElseThrow());
+        }
+        BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
+
+        assertEquals("THE END OF THIS RELEASE AND THE CREDITS. ACT IV - DEEP WATER IS COMING SOON.", onward.next());
+        assertEquals("ENTER TO THE END", onward.hint());
+        assertEquals("ACTS I-III COMPLETE", ReleaseTexts.title(content));
+        assertEquals("ACT IV - DEEP WATER. EUROPA. COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals(
+                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT III.",
+                ReleaseTexts.continueLine(content));
+        assertEquals(
+                "ACT IV - DEEP WATER: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 22");
     }
 
     /** M6 part B: the end card, then the name entry only for a top-10 score, then the credits. */
@@ -89,6 +134,5 @@ class OutroOnwardTest {
         assertEquals(ReleaseEndScreen.Phase.ENTRY, ReleaseEndScreen.next(ReleaseEndScreen.Phase.CARD, true));
         assertEquals(ReleaseEndScreen.Phase.CREDITS, ReleaseEndScreen.next(ReleaseEndScreen.Phase.CARD, false));
         assertEquals(ReleaseEndScreen.Phase.CREDITS, ReleaseEndScreen.next(ReleaseEndScreen.Phase.ENTRY, true));
-        assertEquals("ACT III - RED DUST: COMING SOON", ReleaseEndScreen.COMING_SOON, "the hangar before Level 15");
     }
 }

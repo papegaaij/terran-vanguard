@@ -1,9 +1,6 @@
 package vanguard.game.render;
 
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.utils.Array;
 import vanguard.content.LevelData;
 import vanguard.sim.PlayField;
 
@@ -22,7 +19,6 @@ import vanguard.sim.PlayField;
  * and the ground scroll, so a restart or {@code --debug-speed} keeps in step; nothing is allocated per frame.
  */
 public final class RidgeLooks {
-    private static final float X0 = PixelScreen.PLAY_FIELD_X;
     /** The sprite root: lengths, {@code -head}, {@code -tail}, {@code -glow}, {@code -dust}. */
     public static final String ROOT = "colossus-ridge";
     /** The body's length along its track, px. */
@@ -47,10 +43,9 @@ public final class RidgeLooks {
     static final double SURGE_PERIOD = 1.6;
     /** The track's sampling step while walking it back from the head, s of the head's run. */
     static final double SAMPLE_SECONDS = 0.01;
-    /** The dust puffs' frame rate, and the glow's pulse (radians a second) and its range. */
-    static final double DUST_FPS = 10;
-
+    /** The glow's pulse (radians a second) and its range. */
     static final double PULSE_RATE = 5;
+
     static final float PULSE_LOW = 0.1f;
     static final float PULSE_HIGH = 1f;
 
@@ -66,11 +61,8 @@ public final class RidgeLooks {
     /** The ground scroll at {@link #start}: the track's rows count from the bottom edge then. */
     private final double startScroll;
 
-    private final Array<AtlasRegion> lengths;
-    private final Array<AtlasRegion> heads;
-    private final Array<AtlasRegion> tails;
-    private final Array<AtlasRegion> glows;
-    private final Array<AtlasRegion> dust;
+    /** The body's sprites and drawing (M7 part H: shared with the Dust Colossus's ridge, {@link ColossusLooks}). */
+    private final RidgeBody body;
     /** The body's points this frame, head first: x, height above the bottom edge (y up) and heading index. */
     private final double[] xs = new double[MAX_POINTS];
 
@@ -78,55 +70,28 @@ public final class RidgeLooks {
     private final int[] headings = new int[MAX_POINTS];
     private int points;
 
-    private RidgeLooks(Sprites sprites, LevelData.Ridge ridge, double startScroll) {
-        this(
-                ridge,
-                startScroll,
-                sprites.frames(ROOT),
-                optional(sprites, ROOT + "-head", sprites.frames(ROOT)),
-                optional(sprites, ROOT + "-tail", sprites.frames(ROOT)),
-                optional(sprites, ROOT + "-glow", new Array<>(0)),
-                optional(sprites, ROOT + "-dust", new Array<>(0)));
-    }
-
-    private RidgeLooks(
-            LevelData.Ridge ridge,
-            double startScroll,
-            Array<AtlasRegion> lengths,
-            Array<AtlasRegion> heads,
-            Array<AtlasRegion> tails,
-            Array<AtlasRegion> glows,
-            Array<AtlasRegion> dust) {
+    private RidgeLooks(LevelData.Ridge ridge, double startScroll, RidgeBody body) {
         this.start = ridge.t();
         this.crossing = ridge.seconds();
         this.across = (PlayField.WIDTH + 2 * MARGIN) / ridge.seconds();
         this.leftward = ridge.leftward();
         this.surface = PlayField.HEIGHT - ridge.depth();
         this.startScroll = startScroll;
-        this.lengths = lengths;
-        this.heads = heads;
-        this.tails = tails;
-        this.glows = glows;
-        this.dust = dust;
+        this.body = body;
     }
 
     /** The ridge's track alone (no sprites), its pass {@code ridge} with the ground at {@code startScroll}: for the tests. */
     static RidgeLooks track(LevelData.Ridge ridge, double startScroll) {
-        Array<AtlasRegion> none = new Array<>(0);
-        return new RidgeLooks(ridge, startScroll, none, none, none, none, none);
+        return new RidgeLooks(ridge, startScroll, RidgeBody.none());
     }
 
     /** The level's ridge, or null for a level without a {@code ridge} key (or without the sprites). */
     static RidgeLooks of(Sprites sprites, LevelData level) {
-        if (level.ridge().isEmpty() || !sprites.has(ROOT) || sprites.frames(ROOT).size < HEADINGS) {
+        if (level.ridge().isEmpty() || !RidgeBody.drawable(sprites)) {
             return null;
         }
         LevelData.Ridge ridge = level.ridge().get();
-        return new RidgeLooks(sprites, ridge, level.scrollAt(ridge.t()));
-    }
-
-    private static Array<AtlasRegion> optional(Sprites sprites, String name, Array<AtlasRegion> fallback) {
-        return sprites.has(name) ? sprites.frames(name) : fallback;
+        return new RidgeLooks(ridge, level.scrollAt(ridge.t()), RidgeBody.of(sprites));
     }
 
     /**
@@ -239,47 +204,21 @@ public final class RidgeLooks {
         if (!shows(seconds) || layOut(seconds, scroll) == 0) {
             return;
         }
-        if (!onScreen()) {
-            return;
-        }
-        for (int i = points - 1; i >= 0; i--) {
-            Array<AtlasRegion> set = i == 0 ? heads : i == points - 1 ? tails : lengths;
-            drawCentred(batch, set.get(headings[i] % set.size), xs[i], ys[i]);
-        }
-        if (glows.size >= HEADINGS) {
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-            batch.setColor(1, 1, 1, pulse(seconds));
-            for (int i = points - 2; i >= 1; i--) {
-                drawCentred(batch, glows.get(headings[i] % glows.size), xs[i], ys[i]);
-            }
-            batch.setColor(1, 1, 1, 1);
-            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        }
-        if (dust.size > 0 && points > 2) {
-            int middle = points / 2;
-            AtlasRegion puff = dust.get((int) Math.floorMod((long) Math.floor(seconds * DUST_FPS), (long) dust.size));
-            drawCentred(batch, puff, xs[middle] + 30, ys[middle] - 8);
-        }
+        body.draw(batch, xs, ys, headings, points, seconds, true, pulse(seconds), 1);
     }
 
-    /** Whether any point of the body lies within reach of the play field (a sprite's half width outside it). */
-    private boolean onScreen() {
-        double margin = 64;
-        for (int i = 0; i < points; i++) {
-            if (xs[i] > -margin
-                    && xs[i] < PlayField.WIDTH + margin
-                    && ys[i] > -margin
-                    && ys[i] < PlayField.HEIGHT + margin) {
-                return true;
-            }
+    /**
+     * M7 part H: the light shake of the ridge pass (design/campaign Level 21, the ridge pass; round 43 Q.4), 0–1 at level
+     * time {@code seconds}: rising over its first second, full while the head crosses, fading out over the tail's
+     * {@link #TAIL_SECONDS} s; the game scales it by the screen-shake setting ({@code ScreenShake}).
+     */
+    double shake(double seconds) {
+        double u = seconds - start;
+        if (!(u > 0) || seconds >= end()) {
+            return 0;
         }
-        return false;
-    }
-
-    private static void drawCentred(SpriteBatch batch, AtlasRegion region, double x, double y) {
-        batch.draw(
-                region,
-                Math.round(X0 + x - region.getRegionWidth() / 2.0),
-                Math.round(y - region.getRegionHeight() / 2.0));
+        double in = Math.min(1, u);
+        double out = Math.min(1, (end() - seconds) / TAIL_SECONDS);
+        return in * out;
     }
 }

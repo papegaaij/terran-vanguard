@@ -185,6 +185,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r40-a.png](concept/intel-final-r40-a.png) | Intel portraits of Level 17's Choir Herald and Shellback (`tools/art/intel.py`) | chosen (round 40, F.f: approved as final) |
 | [concept/intel-final-r41-a.png](concept/intel-final-r41-a.png) | Intel portraits of Level 18's Dust Devil and Ghost Drone and the `unclassified-ghost-drone` sensor picture (`tools/art/intel.py`) | chosen (round 41) |
 | [concept/intel-final-r42-a.png](concept/intel-final-r42-a.png) | Intel portraits of Level 19's Warden Tank (Act 3 grey) and Revenant Walker and the `boss-revenant-walker` "unclassified, huge" contact silhouette with sensor noise (`tools/art/intel.py`) | chosen (round 42, F.e: approved as final) |
+| [concept/intel-final-r44-a.png](concept/intel-final-r44-a.png) | The `boss-dust-colossus` sensor silhouette (40×40, the open mouth as phase 3 shows it, outline only; `tools/art/intel.py`, M7 part H batch, step ART-H2) | proposed (round 44, F.d) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -599,3 +600,4 @@ release's end, which writes that autosave.
 - 2026-10-19 (user's playtest): hover only gives a row, chip, slot or command the hover look and never selects; a click selects, a click on a choice or command makes it; a chip click returns the focus from the command bar to the shop; a key press takes the hover look off. Replaces round 35's A.1 choice "shop rows, chips and commands by hover". While the pointer rests on one of the selected row's choices the test fire and power bar preview it (pending the user's review).
 - 2026-10-20: round 42 closed: the Level 19 intel pictures (F.e) approved as final by the user; the shop's mouse handling (T.6: the selection stays with the clicked item) accepted.
 - 2026-10-20 (user, round 43, Q.5): the hangar's art moves to `final` for the approved items only (the rear-guard bay's icon, F.d); `art` stays `chosen` for the rest. The user asked "When do we move the remaining hangar and briefing art to final?": an audit step lists the `chosen` items left in `ui/hangar` and `ui/briefing` for the next round.
+- 2026-10-20: the Dust Colossus's intel silhouette (`boss-dust-colossus`) made with the part H batch (`tools/art/intel.py`, step ART-H2) and its review sheet generated for [round 44](../../concept-rounds/round-44/README.md) (F.d); pending the user's review.

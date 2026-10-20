@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import vanguard.sim.Command;
+import vanguard.sim.Debris;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyBullet;
 import vanguard.sim.Layer;
@@ -158,10 +159,13 @@ final class MovePlanner {
         double nearest = Double.POSITIVE_INFINITY;
         SetPiece walker = WalkerPlay.walkingBoss(sortie);
         boolean cone = walker != null && WalkerPlay.coneActive(walker);
+        // M7 part H: the Dust Colossus's suction carries the ship on as it flies (0 without it).
+        double pullX = ColossusPlay.pullX(sortie);
+        double pullY = ColossusPlay.pullY(sortie);
         for (int k = 1; k <= SAMPLES; k++) {
             double t = k * SAMPLE;
-            double x = Math.clamp(x0 + dx * speed * t, margin, PlayField.WIDTH - margin);
-            double y = Math.clamp(y0 + dy * speed * t, margin, PlayField.HEIGHT - margin);
+            double x = Math.clamp(x0 + (dx * speed + pullX) * t, margin, PlayField.WIDTH - margin);
+            double y = Math.clamp(y0 + (dy * speed + pullY) * t, margin, PlayField.HEIGHT - margin);
             double steps = t / SimStep.SECONDS;
             if (cone && WalkerPlay.coneDanger(walker, x, y, WalkerPlay.CONE_INNER)) {
                 // M7 part F: a move into the walker's telling or burning cone is a hit.
@@ -189,6 +193,22 @@ final class MovePlanner {
                 double mx = missile.renderX(1) + (missile.renderX(1) - missile.renderX(0)) * steps;
                 double my = missile.renderY(1) + (missile.renderY(1) - missile.renderY(0)) * steps;
                 nearest = Math.min(nearest, gap(mx - x, my - y, HULL_X, HULL_Y));
+            }
+            for (int i = 0; i < sortie.debrisCount(); i++) {
+                // M7 part H: a rock pulled toward the Colossus's mouth breaks on the hull (its contact damage).
+                Debris chunk = sortie.debris(i);
+                if (!chunk.pulled()) {
+                    continue;
+                }
+                double cx = chunk.renderX(1) + (chunk.renderX(1) - chunk.renderX(0)) * steps;
+                double cy = chunk.renderY(1) + (chunk.renderY(1) - chunk.renderY(0)) * steps;
+                nearest = Math.min(
+                        nearest,
+                        gap(
+                                cx - x,
+                                cy - y,
+                                HULL_X + chunk.spec().size().width() / 2,
+                                HULL_Y + chunk.spec().size().height() / 2));
             }
             for (int i = 0; i < sortie.enemyCount(); i++) {
                 Enemy enemy = sortie.enemy(i);

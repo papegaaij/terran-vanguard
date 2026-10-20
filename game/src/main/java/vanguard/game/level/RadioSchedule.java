@@ -93,7 +93,10 @@ public final class RadioSchedule {
             case LEVEL_END, SECONDARY_OBJECTIVE, BOSS_DESTROYED -> RadioQueue.Priority.CLOSING;
             // M5 part H, step H7b: a phase's lines queue together (Okafor's, then Rook's reply as the
             // Siege Spire tears loose); the second must not go stale behind the first.
-            case BOSS_PHASE -> RadioQueue.Priority.PHASE;
+            // Step FXL11: the arena's teaching line on a ship's lane (Level 11) comes in the same step as the
+            // first telegraph's line when that telegraph falls on a ship's lane, so it waits out that voiced line;
+            // as an event line it went stale before it closed and was never heard.
+            case BOSS_PHASE, FIRST_SHIP_TELEGRAPH -> RadioQueue.Priority.PHASE;
             default -> RadioQueue.Priority.EVENT;
         };
     }

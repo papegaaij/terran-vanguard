@@ -48,7 +48,8 @@ import java.util.function.IntToDoubleFunction;
  *
  * <p>M7 part G (Level 20): ambience layers over the setting's loop ({@link #ambienceLayers}: the basin rumble under
  * the travelling ridge), each looping at its level by the level time (the level's {@code music.ambience_layers}: in
- * and out over their fades), silent outside it.
+ * and out over their fades), silent outside it. M7 part H (Level 21): while an act boss fights they swell and hold, and
+ * the kill cuts them ({@link #layers}); the wind's calm over the settling dust is {@link #calmDb}.
  *
  * <p>An act boss (Level 07) has its own music: at its arrival the theme crossfades out over 0.5 s
  * while the boss warning (track 22) starts, and the boss track (track 18) comes in on the downbeat
@@ -357,21 +358,69 @@ public final class LevelMusic implements Disposable {
         return layerLevels[i];
     }
 
-    /** M7 part G: each ambience layer follows its level by the level time: looping while above 0, stopped at 0. */
-    private void layers(double levelSeconds) {
+    /**
+     * M7 part H (Level 21): while an act boss fights, the ambience layers swell by {@value #BOSS_LAYER_SWELL_DB} dB over
+     * {@value #BOSS_LAYER_SWELL_SECONDS} s (the basin rumble at the arena) and do not fall with the level time (a
+     * crawling arena holds its clock at its end, where the rumble's fade-out lies); at the kill they follow the level
+     * time again at once: the kill's jump to the arena's end cuts the rumble with the death chain.
+     */
+    static final double BOSS_LAYER_SWELL_DB = 4;
+
+    static final double BOSS_LAYER_SWELL_SECONDS = 3;
+    private static final float BOSS_LAYER_SWELL = (float) Math.pow(10, BOSS_LAYER_SWELL_DB / 20);
+    /** M7 part H: the layers' swell now, linear (1 outside an act boss's fight). */
+    private float layerSwell = 1;
+
+    /** M7 part H: the layers' swell now, linear, for the tests. */
+    float layerSwell() {
+        return layerSwell;
+    }
+
+    /**
+     * M7 part H (Level 21): the wind's calm over the settling dust: from level time {@code from} (a crawling arena's
+     * end, where the kill's jump puts the clock) the setting's ambience falls by {@value #CALM_DB} dB over {@value
+     * #CALM_SECONDS} s (smoothstep) and stays down; 0 before it and for a level without one ({@code from} NaN).
+     */
+    public static double calmDb(double levelSeconds, double from) {
+        if (!(levelSeconds >= from)) {
+            return 0;
+        }
+        double s = Math.min(1, (levelSeconds - from) / CALM_SECONDS);
+        return CALM_DB * s * s * (3 - 2 * s);
+    }
+
+    static final double CALM_DB = -9;
+    static final double CALM_SECONDS = 4;
+
+    /**
+     * M7 part G: each ambience layer follows its level by the level time: looping while above 0, stopped at 0; M7 part
+     * H: held and swelled while an act boss fights.
+     */
+    private void layers(double levelSeconds, float seconds) {
+        boolean fight = bossState == BossState.FIGHT;
+        float swellBefore = layerSwell;
+        layerSwell = fight
+                ? (float) Math.min(
+                        BOSS_LAYER_SWELL, layerSwell + seconds * (BOSS_LAYER_SWELL - 1) / BOSS_LAYER_SWELL_SECONDS)
+                : 1;
         for (int i = 0; i < layers.size(); i++) {
             AmbienceLayer layer = layers.get(i);
             float level = (float) Math.clamp(layer.level().applyAsDouble(levelSeconds), 0, 1);
-            if (level == layerLevels[i]) {
+            if (fight) {
+                level = Math.max(level, layerLevels[i]);
+            }
+            if (level == layerLevels[i] && layerSwell == swellBefore) {
                 continue;
             }
             layerLevels[i] = level;
             if (level <= 0) {
-                sfx.stop(layer.sound());
+                if (sfx.looping(layer.sound())) {
+                    sfx.stop(layer.sound());
+                }
             } else if (!sfx.looping(layer.sound())) {
-                sfx.loop(layer.sound(), AMBIENCE_VOLUME * level);
+                sfx.loop(layer.sound(), AMBIENCE_VOLUME * level * layerSwell);
             } else {
-                sfx.loopVolume(layer.sound(), AMBIENCE_VOLUME * level);
+                sfx.loopVolume(layer.sound(), AMBIENCE_VOLUME * level * layerSwell);
             }
         }
     }
@@ -507,7 +556,7 @@ public final class LevelMusic implements Disposable {
         }
         playJingle(levelSeconds);
         ambienceLevel(levelSeconds);
-        layers(levelSeconds);
+        layers(levelSeconds, seconds);
         loop(section);
         if (music.isEmpty()
                 && !cut

@@ -461,6 +461,10 @@ else approved as final and accepted, the Spire's death after a redo.
 | [concept/act-2-outro-capture-r36-a.png](concept/act-2-outro-capture-r36-a.png) | Capture of the act end from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15 ([recipe](concept/prompts.md#act-2-outro-capture-r36-a)) | chosen |
 | [concept/level-14-fixes-r42-a.mp4](concept/level-14-fixes-r42-a.mp4) | Check capture of the playtest fixes (round 42, medium, the plan's L14 fit, the test autopilot): the last waves, the quiet gap, the Siege Spire warning box before it arrives, its sweeps, its death and the scroll resuming (144 s with sound) | chosen (round 42, K.b: accepted) |
 | [concept/level-14-fixes-r42-a.png](concept/level-14-fixes-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.b: accepted) |
+| [concept/level-14-briefing-r44-a.mp4](concept/level-14-briefing-r44-a.mp4) | Varga's new briefing page 2 (the briefing shown before a debug level start by a snapshot hook, paged on by itself once the voice ends): the root-scan image, her text typed and voiced, the hand-over to the level. 17.5 s | proposed (round 44) |
+| [concept/level-14-briefing-r44-a.png](concept/level-14-briefing-r44-a.png) | Briefing page 2 at 1:1 (960×540), fully typed | proposed (round 44) |
+| [concept/level-14-fight-r44-a.mp4](concept/level-14-fight-r44-a.mp4) | The kinder Spire fight in the live game (plan fit: Pulse L4, Micro-Missile Pods L2, Tail Gun L2, Mk II, Composite II, Airstrike ×4, Rook's Autocannon; level t ≈ mp4 time + 90): the last waves, Okafor's root-grid line, "SIEGE SPIRE APPROACHING", the Choir, Varga, then **Rook's halt line "Missiles on the roots, I'll keep the flyers off you."** voiced at 0:28–0:34 (level t ≈ 118: it queues behind Okafor, the Choir and Varga), the roots' fire, the sweeps, the crown opening, the kill (≈ 2:05), the daylight, the debrief (A+, boss time 1:44 against a par of 1:43, ROOTS 8 / 8). 152 s | proposed (round 44) |
+| [concept/level-14-fight-r44-a.png](concept/level-14-fight-r44-a.png) | 20-tile sheet of that clip + the radio panel on Rook's line, the Spire and the open crown at 1:1 | proposed (round 44) |
 
 ## Implementation
 
@@ -533,8 +537,8 @@ else approved as final and accepted, the Spire's death after a redo.
       dropped; the convoy, the side stream, the Wraiths and the Needler line earlier), the Roots phase's 1.5 s
       delay, the leading sweep (the Spire's README) (`Level14Test`, `SiegeSpireTest`, `PacingTest`,
       `TypicalHaulTest`; the game's `BossWarningBoxTest`)
-- [ ] Round 40: Varga's new briefing page and Rook's halt line voiced (a VOX step), a capture of the
-      kinder fight for the user's review
+- [x] Round 40: Varga's new briefing page and Rook's halt line voiced (step VOX2, 2026-10-19; `VoiceFilesTest`), a
+      capture of the kinder fight for the user's review (round 44, X.c and X.d)
 
 ## Open questions
 

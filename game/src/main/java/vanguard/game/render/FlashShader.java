@@ -60,8 +60,30 @@ public final class FlashShader implements Disposable {
             }
             """;
 
+    /**
+     * Step GFX3: only a sprite's cracks lit in a flat colour (the Dust Colossus's bulge and eruption marker, their dark
+     * violet cracks glowing lime): a texel's crack share is how violet (blue over green) and how dark it is, its output
+     * the colour at the texel's alpha times that share times {@code u_flash.a}, for an additive draw over the sprite.
+     */
+    private static final String CRACKS_FRAGMENT = """
+            #ifdef GL_ES
+            precision mediump float;
+            #endif
+            varying vec4 v_color;
+            varying vec2 v_texCoords;
+            uniform sampler2D u_texture;
+            uniform vec4 u_flash;
+            void main() {
+                vec4 texel = v_color * texture2D(u_texture, v_texCoords);
+                float lum = dot(texel.rgb, vec3(0.299, 0.587, 0.114));
+                float crack = clamp((texel.b - texel.g + 0.08) * 5.0, 0.0, 1.0) * clamp((0.38 - lum) * 6.0, 0.0, 1.0);
+                gl_FragColor = vec4(u_flash.rgb, texel.a * crack * u_flash.a);
+            }
+            """;
+
     private final ShaderProgram program;
     private final ShaderProgram recolour;
+    private final ShaderProgram cracks;
 
     public FlashShader() {
         program = new ShaderProgram(VERTEX, FRAGMENT);
@@ -71,6 +93,10 @@ public final class FlashShader implements Disposable {
         recolour = new ShaderProgram(VERTEX, RECOLOUR_FRAGMENT);
         if (!recolour.isCompiled()) {
             throw new IllegalStateException("recolour shader: " + recolour.getLog());
+        }
+        cracks = new ShaderProgram(VERTEX, CRACKS_FRAGMENT);
+        if (!cracks.isCompiled()) {
+            throw new IllegalStateException("cracks shader: " + cracks.getLog());
         }
     }
 
@@ -100,6 +126,15 @@ public final class FlashShader implements Disposable {
         program.setUniformf("u_flash", colour.r, colour.g, colour.b, amount);
     }
 
+    /**
+     * Step GFX3: every draw until {@link #end} shows only its dark violet cracks, in {@code colour} at {@code amount}
+     * (0..1) of their opacity (drawn additively over the sprite: the cracks glowing).
+     */
+    public void beginCracks(SpriteBatch batch, Color colour, float amount) {
+        batch.setShader(cracks);
+        cracks.setUniformf("u_flash", colour.r, colour.g, colour.b, amount);
+    }
+
     /** Back to the batch's own shader after {@link #begin}. */
     public void end(SpriteBatch batch) {
         batch.setShader(null);
@@ -109,5 +144,6 @@ public final class FlashShader implements Disposable {
     public void dispose() {
         program.dispose();
         recolour.dispose();
+        cracks.dispose();
     }
 }

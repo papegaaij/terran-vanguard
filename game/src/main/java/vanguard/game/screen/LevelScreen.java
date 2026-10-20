@@ -2,6 +2,7 @@ package vanguard.game.screen;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -47,6 +48,7 @@ import vanguard.game.render.LevelRenderer;
 import vanguard.game.render.MilitiaFlak;
 import vanguard.game.render.PodPivots;
 import vanguard.game.render.ScreenFlash;
+import vanguard.game.render.ScreenShake;
 import vanguard.game.render.SecretGlints;
 import vanguard.game.render.SetPieceWrecks;
 import vanguard.game.render.StormLooks;
@@ -60,9 +62,11 @@ import vanguard.sim.FixedStepClock;
 import vanguard.sim.HazardSpec;
 import vanguard.sim.Layer;
 import vanguard.sim.LevelResult;
+import vanguard.sim.LevelScript;
 import vanguard.sim.PickupType;
 import vanguard.sim.RadioCue;
 import vanguard.sim.Rules;
+import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SetPieceSpec;
 import vanguard.sim.Shot;
@@ -271,6 +275,10 @@ public final class LevelScreen implements GameScreen {
         sounds.ground(sortie.groundAllies());
         // M5 part H: Level 14's canopy withers at the Siege Spire's death.
         sounds.canopy(Sfx.afterBoss(Sfx.ambience(level.music().ambience())) != null);
+        // M7 part H: Level 21's ridge pass rumbles (the Colossus's back under the dunes); Level 20's ridge has its bed.
+        if (breachingBoss(sortie.script())) {
+            level.ridge().ifPresent(ridge -> sounds.ridgePass(ridge.t()));
+        }
         easy = difficulty == Difficulty.EASY;
         sortie.script().setPieces().stream()
                 .flatMap(piece -> piece.boss().stream())
@@ -380,12 +388,33 @@ public final class LevelScreen implements GameScreen {
         // M5 part G: the jingle inside the level (Level 13's "Grid sync complete"), the wind in the whiteout.
         level.music().jingle().ifPresent(jingle -> music.jingle(jingle.t(), jingle.fadeSeconds()));
         // M7 part E: the dust storm's bed swelling as the view closes in (Level 18), and track 9's motif layer.
-        music.ambienceLevels(t -> AtmosphereRamp.ambienceDb(level, easy, t) + StormLooks.swellDb(level, difficulty, t));
+        // M7 part H: the wind's calm over Level 21's settling dust, from the crawling arena's end (the kill's jump).
+        double calmFrom = crawlEnd(sortie.script());
+        music.ambienceLevels(t -> AtmosphereRamp.ambienceDb(level, easy, t)
+                + StormLooks.swellDb(level, difficulty, t)
+                + LevelMusic.calmDb(t, calmFrom));
         music.motif(services.files.internal(Tracks.motifPath(theme)), level.music()::motifOn);
         // M7 part F: the sections that play the motif layer alone over the ambience (Level 19's crawl).
         music.motifAlone(level.music()::motifAlone);
         // M7 part G: the ambience layers over the setting's loop (Level 20's basin rumble under the ridge).
         music.ambienceLayers(ambienceLayers(level.music()));
+    }
+
+    /** M7 part H: the end of the level's crawling arena (a breaching boss's, Level 21's), s; NaN without one. */
+    public static double crawlEnd(LevelScript script) {
+        for (Section section : script.sections()) {
+            if (section.crawls()) {
+                return section.end();
+            }
+        }
+        return Double.NaN;
+    }
+
+    /** M7 part H: whether the level's boss breaches (the Dust Colossus): its ridge pass has the boss's rumble. */
+    public static boolean breachingBoss(LevelScript script) {
+        return script.setPieces().stream()
+                .flatMap(piece -> piece.boss().stream())
+                .anyMatch(boss -> boss.breach().isPresent());
     }
 
     /** M7 part G: the level's {@code music.ambience_layers}, each its sound at its level by the level time. */
@@ -939,6 +968,17 @@ public final class LevelScreen implements GameScreen {
 
     @Override
     public void draw(SpriteBatch batch) {
+        // M7 part H: the play field's sideways shake (the ridge pass's tremble) within the screen-shake setting; the
+        // HUD
+        // drawn after it stays still and its side panels cover the shaken edges.
+        float shake = ScreenShake.scaled(
+                renderer.shakeX(sortie, sortie.realSeconds()),
+                services.settings().gameplay().screenShake());
+        if (shake != 0) {
+            unshaken.set(batch.getTransformMatrix());
+            shaken.set(unshaken).translate(shake, 0, 0);
+            batch.setTransformMatrix(shaken);
+        }
         renderer.draw(
                 batch,
                 sortie,
@@ -961,8 +1001,16 @@ public final class LevelScreen implements GameScreen {
             latchPrompt.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
         }
         banner.draw(batch, sortie.tick(), clock.alpha());
+        if (shake != 0) {
+            batch.setTransformMatrix(unshaken);
+        }
         hud.draw(batch, sortie, radio, visiblePrompts());
     }
+
+    /** M7 part H: the batch's transform without and with the play field's shake (reused, nothing allocated). */
+    private final Matrix4 unshaken = new Matrix4();
+
+    private final Matrix4 shaken = new Matrix4();
 
     /**
      * The control prompts show in the first section, once the launch is over; a level's

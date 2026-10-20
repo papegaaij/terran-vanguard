@@ -46,7 +46,7 @@ accepted in round 36, confirmed by the Act 3 balance plan in part A).
 | Formations | solo set piece |
 | Weak points | lime gullet (while open) (×2) |
 | Effective traits | `anti-ground`, `side`, `rear`, `homing` |
-| Credits | 320 (score 3200 × chain) in Act 1 terms (mouth 284, spine vents 12 each); × 2.56 × Level 21's `bounty_scale` of 0.75 (paper) it pays **614 = 22.7 % of budget(21) = 2,709** (see *Bounty*) |
+| Credits | 325 (score 3250 × chain) in Act 1 terms (mouth 289, spine vents 12 each); × 2.56 × Level 21's `bounty_scale` of 0.74 it pays **616 = 22.7 % of budget(21) = 2,709** (see *Bounty*) |
 | Death | `huge`: the last mouth rears up and shudders, the sand splits along the whole ridge, chained eruptions of dust and lime ichor over 3 s, the mouth sinks into a collapsing crater; screen flash at the chain's end (an act boss); credit shower; the Choir speaks (see *The Choir's first words*) |
 | First level / used in | L21; L21 only (an echo version in the L49 boss rush) |
 | Difficulty hooks | hard: rings of 16, the bite's tell 0.6 s, the pull 55 px/s, phase 3's marker 1.2 s, the spiral's three arms; easy: the pull 30 px/s, the bite's tell 1.0 s, phase 3's marker 1.8 s |
@@ -121,6 +121,23 @@ the HUD portrait frame: the rule that Choir transmissions precede a Vrell boss),
 Target: the act-boss window **90–180 s** at medium, aimed at ≈ 130 s; the **par** is the measured mean
 (draft **130 s**).
 
+**Measured (step H4, `DustColossusTest`):** the autopilot with the balance plan's Level 21 fit (the Ion Beam L3, two
+Micro-missile Pods L2, the Tail Gun L3, Composite III, Rook's Autocannon) in Level 21's crawling arena, five seeds:
+
+| Difficulty | Fight (bar → kill) | Phases 1 + 2 + 3 | Breaches | Shield + armour lost | Won |
+|---|---|---|---|---|---|
+| Easy | 86.8 s (80.0–89.7) | 17 + 50 + 14 s | 6–7 | ≤ 8 | 5 / 5 |
+| Medium | **101.7 s** (100.9–103.1) | 22 + 61 + 13 s | 8 | ≤ 4 | 5 / 5 |
+| Hard | 142.7 s (135.5–148.1) | 34 + 80 + 22 s | 11–12 | ≤ 12 | 5 / 5 |
+
+Every medium seed lies inside the window at the spec's HP (mouth 5,600, vents 280), so the HP stays and the **par is
+102 s**. The real level gives the same fight (the level report: 101.7 s at medium, 89.3 s easy, 141.7 s hard; no bite
+and no eruption reached the ship). Phase 2 is the long one: its rear breaches leave only the Tail Gun and the missiles
+on the gullet, the vents and the pulled rocks take shots. Phase 1 with the calibration harness's random dodge: **6.3**
+shield and armour lost per 10 s against the Kraken's 11.4 = **0.55×**, below H.4's band of 0.8–1.2× (see *Open
+questions*). The ring, the fan and the spiral name the mouth as their firing part (`parts: [mouth]`): its phases end on
+HP shares, which name no part, and without it the gullet never fired (found in step H4).
+
 Paper estimate (window-aware, as the Kraken's `BalanceTest` check): the effective boss DPS is 0.6 × 100
 = **60**. While a mouth is open, hits fall on the lips (×0.5) and the gullet (×2), a mean of ×1.25 (the
 Kraken's eyes-and-mantle convention); half of the rise and of the dive at ×0.5; nothing while buried.
@@ -150,9 +167,9 @@ Lessons from Act 2 that the build must apply (M7 part H):
 
 An act boss aims at ≈ **30 %** of its level's budget (band 20–40 %). Data is in Act 1 terms: **bounty =
 share × budget(21) ÷ (2.56 × `bounty_scale`)**. [Level 21](../../../campaign/act-3-red-dust/level-21-dust-colossus/README.md)
-sets its `bounty_scale` at **0.75** (step PH2's paper value), and the boss there is **320** (mouth 284,
-vents 12 each), paid 320 × 2.56 × 0.75 = **614 = 22.7 %** of budget(21) = 2,709 (H.5; step H4
-recomputes it from the measured scale).
+sets its `bounty_scale` at **0.74** (step H4's measured fit; the paper value was 0.75), and the boss there is **325**
+(mouth 289, vents 12 each), paid 547 + 3 × 23 = **616 = 22.7 %** of budget(21) = 2,709 (H.5); the perfect run is
+1.43 × the budget.
 
 **Why 22.7 %, not 30 %** (accepted in round 36, Q.21a), as the [Siege Spire](../siege-spire/README.md)'s
 26.8 %: a perfect run must earn at least **1.4 × the budget** (`TypicalHaulTest`), and the boss pays
@@ -208,28 +225,34 @@ Production art: [dust-colossus-final-r44-a.png](../concept/dust-colossus-final-r
 
 ## Implementation
 
-- [ ] The `buried` layer (M7 = a; appended after `sub` so the ordinals and replay hashes stay): nothing
-      hits it, not even the Smart Bomb; no contact
+- [x] The `buried` layer (M7 = a; appended after `sub` so the ordinals and replay hashes stay): nothing
+      hits it, not even the Smart Bomb; no contact (the layer from part B's Burrower; the Colossus's buried mouth is shielded, step PH1: `BreachArenaTest`)
 - [x] Stat block and boss script in a `data.yaml` (breach points, the cycle, phases, par), loaded;
       global difficulty multipliers applied (M7 part H, step PH2: `movement.breach`, `boss.suction`,
       `vents`, `eruption`, `debris` and the hooks, checked by `ColossusChecks`, mapped by `ColossusRules`)
-- [ ] Breaches: the tell, the dynamic edge warning 3 s ahead, rise, open, bite, dive; the points per
-      phase; the layer flips at the middles; the bottom breach as a rear wave for Rook
-- [ ] The suction (a radial pull on the ship, Rook and debris) and the debris rocks as hazards
-- [ ] Phase 2's spine vents; phase 3's marker under the ship and the eruption; the drops
-- [ ] The slow arena (20 px/s), the level clock halting at the section's end while it lives
-- [ ] Rook and the autopilot: out of the bite circle and the marker, against the pull
-- [ ] The fight measured over five seeds (≈ 130 s, every seed 90–180 s), the HP tuned, the par set;
-      phase 1 checked with the calibration harness; the bounty at 22.7 % (or what `TypicalHaulTest` allows with the final scale)
-- [ ] Intro (the Choir sings), death (chain, flash, credit shower), the Choir's first words and the
-      lines after them
-- [ ] Production art (≤ one atlas page): the mouth in its 5 poses with rise, open, bite and dive frames,
-      the spine vents, the bulge and the crater, the ridge, the death, the intel silhouette
+- [x] Breaches: the tell, the dynamic edge warning 3 s ahead, rise, open, bite, dive; the points per
+      phase; the layer flips at the middles; the bottom breach as a rear wave for Rook (step PH1: `BreachArena`, `BreachArenaTest`; the bite lands by the centre within 70 px, a cycle is 12.8 s)
+- [x] The suction (a radial pull on the ship, Rook and debris) and the debris rocks as hazards (steps PH1/PH3: `BreachArenaTest`, `BreachHazardsTest`; debris stops the player's shots only)
+- [x] Phase 2's spine vents; phase 3's marker under the ship and the eruption; the drops (step PH3: `BreachHazardsTest`; the erupted mouth's safe spot is round 44 Q.4)
+- [x] The slow arena (20 px/s), the level clock halting at the section's end while it lives (steps PH1/HA: `CrawlingArenaTest`)
+- [x] Rook and the autopilot: out of the bite circle and the marker, against the pull (sim step PH3: Rook;
+      step H4: `ColossusPlay`, the suction and the pulled rocks in the planner's look-ahead)
+- [x] The fight measured over five seeds (101.7 s at medium, every seed 90–180 s), the HP kept, the par set
+      (102); phase 1 checked with the calibration harness (0.55× the Kraken's; round 44 Q.2); the bounty
+      at 22.7 % with the final scale 0.74 (`DustColossusTest`, step H4)
+- [x] Intro (the Choir sings), death (chain, flash, credit shower), the Choir's first words and the
+      lines after them (step HB: the death's own sound, the local flash and the credit shower; step VOX-H: the Choir's words as one take, round 44 Q.7)
+- [x] Production art (≤ one atlas page): the mouth in its 5 poses with rise, open, bite and dive frames,
+      the spine vents, the bulge and the crater, the ridge, the death, the intel silhouette (steps ART-H2, HA: `tools/art/dust_colossus.py`, drawn by `ColossusLooks`; `art` stays `chosen` until the user approves it in round 44, F.c)
 
 ## Open questions
 
-- None open: round 36 answered them (see *Decisions*); the reference DPS and `bounty_scale` are
-  confirmed by the Act 3 balance plan in part A (M18, M12).
+- Round 44 (step H4; Q.2): phase 1 measures **0.55×** the Kraken's phase 1 for the random dodger (6.3 against 11.4 per
+  10 s), below H.4's band of 0.8–1.2×. Reaching the band means more phase-1 fire (not the HP): for example the
+  rings faster (100 → 130 px/s) or denser (12 → 16), a ring every 2 s instead of 2.5, or phase 2's fan from phase 1 on.
+  `DustColossusTest` holds the measured value (at least 0.45×) until then.
+- Round 44 (step H4; Q.3): the par is the measured **102 s**, not the spec's draft 130. Keep it, or raise the mouth's HP
+  (≈ 7,300 for ≈ 130 s at medium; hard would reach ≈ 185 s)?
 
 ## Decisions
 
@@ -260,3 +283,11 @@ Production art: [dust-colossus-final-r44-a.png](../concept/dust-colossus-final-r
   0.75; the points in screen space, turned into the simulation's frame by `ColossusRules`; defaults: the gullet's box
   70×70, the vents' aimed bursts `small` at 130 px/s, the spiral's arms turning 90°/s, the debris accelerating at
   60 px/s² (sim step H3's suggestion), the hard rings of 16 in both phases.
+- 2026-10-20 (step H4, M7 part H; pending the user's review in round 44): the fight flown and measured
+  (`DustColossusTest`, `Level21Test`, the level report's `colossus` line). The ring, the fan and the spiral name the
+  mouth as their firing part (without it the gullet never fired: its phases end on HP shares). At the spec's HP the
+  medium fight lasts 101.7 s on five seeds (100.9–103.1, inside 90–180 s): the HP stays, the par is the measured
+  102 (was the draft 130). Level 21's measured `bounty_scale` 0.74 makes the bounty 325 (mouth 289) for H.5's 22.7 %.
+  Phase 1's calibration measures 0.55× the Kraken's, under H.4's band: an open question, not tuned (the attacks are
+  the user's).
+- 2026-10-20 (steps HA and HB, M7 part H; pending the user's review in round 44): the game draws the Colossus (`ColossusLooks`: the poses, the funnel, the bulge, the marker, the gullet's glow, the craters, the vents, the rocks and the death frames), plays the nine round-44 sounds as provisional picks (bulge, eruption, bite and suction loop panned to the mouth; the death's own sound; the ridge pass *b*) and flashes locally at the death with the credit shower; no separate sound for a mouth's death (round 44, S.j). Asked in round 44: the safe spot on the erupted mouth (Q.4).

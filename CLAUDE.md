@@ -129,7 +129,7 @@ design tree; this list is only a reminder.
   typical haul vs the budget with the `bounty_scale` that would hit it, the autopilot's wins, retries, secondary and
   boss fights vs par and window, and the beam era's small-unit time on the screen vs Level 10. Options:
   `-Pdifficulty=easy,medium,hard`, `-Pseeds=3`, `-Pfit=test|plan|user` (default: each measure with its test's fit),
-  `-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit` (`pursuit`: motes on the screen and lunges, levels with a pursuit only), `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
+  `-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus` (`pursuit`: motes on the screen and lunges, levels with a pursuit only; `colossus`: the breach fight's phases, damage, shots, breaches, bites, eruptions), `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
   time (no recompile after a data.yaml edit) and runs the flights in parallel: a few seconds a level.
 - `tools/concept/` – reproducible generators for concept mockups (Python 3 + PIL + numpy,
   ffmpeg for audio/GIF encoding). Each script documents its outputs at the top.

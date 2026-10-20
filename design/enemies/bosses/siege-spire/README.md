@@ -104,7 +104,7 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
 - [x] Round 40 (4a–4c), the data: every pod `aim: down` with `aim_turns: {every: 2.0, glow: 0.6}`, the maw's fan 7 every 3.0 s, one Wraith a launch (hard 2) and at most 2 alive, the roots 460 / 530, traits `homing`, `anti-ground`, `rear`; measured at most 5 hits a minute in every phase, the Pulse Cannon alone inside 180 s, the par 103 s (step CB: `SiegeSpireTest`, `PartHUnitsDataTest`, `Level14Test`)
 - [x] Round 41 (the user's playtest 2026-10-19; steps FX-S2 and FX-C, pending the user's review): the leading sweep (`lead: 12`, 600 px, 0.8 s telegraph; `SpirePlaytestTest`), the Roots phase's `delay: 1.5`, the core 4 950 → 3 450; measured with the dodging autopilot: no sweep hits, medium mean 101.9 s (par 103 s kept), easy 75.0 s, hard 149.9 s (5 of 5 won each), the Pulse Cannon alone 158–163 s (`SiegeSpireTest`)
 - [x] Round 42 readability (step GFX, pending the user's review): hit flashes on the crown, pods and maw by the Kraken's rule, the death flash as a local glow (see *Decisions* 2026-10-20)
-- [ ] Round 40 (4c): the voices of Varga's new briefing page and Rook's line at the halt rendered (a VOX step; `VoiceFilesTest`)
+- [x] Round 40 (4c): the voices of Varga's new briefing page and Rook's line at the halt rendered (step VOX2, 2026-10-19; `VoiceFilesTest`); captured in round 44 (X.c and X.d)
 
 ## Decisions
 

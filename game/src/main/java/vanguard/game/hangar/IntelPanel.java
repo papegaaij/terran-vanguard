@@ -65,6 +65,9 @@ final class IntelPanel {
     private static final int PORTRAIT = 30;
 
     private static final int SILHOUETTE = 40;
+    /** M7 part H (H.7e): the boss's silhouette on the wave strip at its arrival, px square. */
+    static final int STRIP_SILHOUETTE = 14;
+
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
     private static final int CONTACT_CHARS = (RIGHT - SILHOUETTE - PICTURE_GAP - VALUE_X) / 8;
@@ -81,6 +84,14 @@ final class IntelPanel {
 
         /** A sensor picture ({@code intel/...}) in an inset, {@code size} px square. */
         void picture(String name, int x, int y, int size);
+
+        /**
+         * M7 part H: a sensor picture ({@code intel/...}) scaled to {@code size} px square with no inset, its top left
+         * at ({@code x}, {@code y}): a mark on the wave strip.
+         */
+        default void mark(String name, float x, int y, int size) {
+            picture(name, Math.round(x), y, size);
+        }
 
         /** The sensor level's chip. */
         void chip(String text, int x, int y, int width, int height);
@@ -320,7 +331,8 @@ final class IntelPanel {
                     level,
                     Field.OBJECTIVE,
                     "OBJECTIVE",
-                    List.of(Names.of(level.profile().objective().get())),
+                    // M7 part H: wrapped to the value column (Level 21's "destroy the Dust Colossus").
+                    Words.wrap(Names.of(level.profile().objective().get()), VALUE_CHARS),
                     y,
                     step);
         }
@@ -343,7 +355,7 @@ final class IntelPanel {
                 List.of(joined(level.profile().traits())),
                 y,
                 step);
-        return waves(canvas, level, y, step) - step + LABEL_INK;
+        return waves(canvas, level, y, step, unclassified) - step + LABEL_INK;
     }
 
     /** Varga's line for the intel's sensor level, in quotes, wrapped to the panel's width. */
@@ -491,7 +503,7 @@ final class IntelPanel {
         return y + step;
     }
 
-    private static int waves(Canvas canvas, Intel intel, int y, int step) {
+    private static int waves(Canvas canvas, Intel intel, int y, int step, Map<String, String> unclassified) {
         if (!intel.shows(Field.WAVES)) {
             return field(canvas, intel, Field.WAVES, "WAVES", List.of(), y, step);
         }
@@ -516,9 +528,16 @@ final class IntelPanel {
         for (double t : intel.waves()) {
             canvas.fill(Glass.AMBER, (float) (VALUE_X + width * t / intel.seconds()), y, 2, 8);
         }
-        // Step K10: the boss's arrival as a red tick the strip's full depth, over the waves.
+        // Step K10: the boss's arrival as a red tick the strip's full depth, over the waves; M7 part H (the user's
+        // round 43 answer H.7e): the boss's sensor silhouette at its time instead, a boss kept unclassified aside.
+        String boss = intel.profile().boss();
+        boolean silhouette = !boss.equals("none") && !unclassified.containsKey(boss);
         for (Intel.Mark mark : intel.marks()) {
-            if (mark.kind() == Intel.Mark.Kind.BOSS) {
+            if (mark.kind() == Intel.Mark.Kind.BOSS && silhouette) {
+                float at = (float) (VALUE_X + width * mark.from() / intel.seconds());
+                canvas.mark(
+                        "intel/boss-" + Portraits.slug(boss), at + 1 - STRIP_SILHOUETTE / 2f, y - 3, STRIP_SILHOUETTE);
+            } else if (mark.kind() == Intel.Mark.Kind.BOSS) {
                 canvas.fill(Glass.ALERT, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 1, 2, 10);
             } else if (mark.kind() == Intel.Mark.Kind.BURROW_FIELD) {
                 // M7 part B: a Burrower field (Level 15's threat profile) as a green tick the strip's full depth.
@@ -579,6 +598,11 @@ final class IntelPanel {
         public void picture(String name, int x, int y, int size) {
             glass.inset(batch, x - 1, y - 1, size + 2, size + 2);
             batch.draw(sprites.region(name), x, PixelScreen.HEIGHT - y - size);
+        }
+
+        @Override
+        public void mark(String name, float x, int y, int size) {
+            batch.draw(sprites.region(name), x, PixelScreen.HEIGHT - y - size, size, size);
         }
 
         @Override

@@ -9,7 +9,11 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Content;
 import vanguard.content.ContentLoader;
+import vanguard.content.Difficulty;
 import vanguard.content.campaign.ActSummary;
+import vanguard.content.campaign.Campaign;
+import vanguard.content.campaign.CampaignRoute;
+import vanguard.content.campaign.CampaignRules;
 import vanguard.content.campaign.SaveGame;
 import vanguard.sim.LevelResult;
 
@@ -86,6 +90,31 @@ class DebriefActEndTest {
                         .size(),
                 "as many rows as Act 1's seven, which fit the page");
         assertEquals("7 000 CR", rows.get(8).right(1));
+    }
+
+    /**
+     * M7 part H (step HB): Level 21 ends Act 3: the summary page {@code ACT III COMPLETE} / {@code RED DUST} lists Levels
+     * 15–21, seven rows as Act 1's and Act 2's, from the campaign as the debrief builds it.
+     */
+    @Test
+    void theAct3SummaryListsLevels15To21() {
+        Content content = ContentLoader.fromClasspath();
+        String directory = "act-3-red-dust";
+        Campaign campaign = Campaign.start(CampaignRules.of(content), Difficulty.MEDIUM);
+        ActSummary summary = ActSummary.of(
+                content,
+                campaign,
+                new CampaignRoute.ActEnd(directory, content.acts().get(directory), 21));
+
+        assertEquals("ACT III", summary.act(), "the page's title: ACT III COMPLETE");
+        assertEquals("RED DUST", summary.name());
+        List<String> labels = DebriefScreen.summaryRows(summary).stream()
+                .map(DebriefScreen.Row::label)
+                .toList();
+        assertEquals("MISSIONS", labels.getFirst());
+        assertEquals("15 OLYMPUS DESCENT", labels.get(1));
+        assertEquals("21 DUST COLOSSUS", labels.get(7));
+        assertEquals("ACT TOTAL", labels.get(8));
     }
 
     @Test

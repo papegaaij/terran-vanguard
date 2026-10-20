@@ -302,6 +302,115 @@ final class LevelMetrics {
         return level.waves().stream().anyMatch(wave -> wave.pursuit().isPresent());
     }
 
+    /**
+     * M7 part H (step H4): a breaching boss's fight on the attempt that completes the level (Level 21's Dust Colossus):
+     * per boss phase (the last counting every later one) the seconds it is engaged and alive and the shield and the
+     * armour the ship lost in them, the bites and the eruptions that caught the ship, the breaches it made.
+     */
+    record ColossusRun(
+            double[] phaseSeconds,
+            double[] damage,
+            double[] armourLost,
+            int[] shots,
+            int bites,
+            int eruptions,
+            int breaches) {
+        /** Its shots a minute in phase {@code phase}, as the level report counts them (one per {@code ENEMY_FIRED}). */
+        double shotsPerMinute(int phase) {
+            return phaseSeconds[phase] > 0 ? shots[phase] * 60 / phaseSeconds[phase] : 0;
+        }
+
+        /** The fight's seconds, its phases' sum. */
+        double seconds() {
+            return phaseSeconds[0] + phaseSeconds[1] + phaseSeconds[2];
+        }
+
+        /** The shield and armour lost per 10 s of phase {@code phase} (the calibration harness's measure in phase 1). */
+        double lostPerTen(int phase) {
+            return phaseSeconds[phase] > 0 ? damage[phase] * 10 / phaseSeconds[phase] : 0;
+        }
+    }
+
+    /** {@link ColossusRun}'s measure; it allocates nothing per step. */
+    static final class ColossusWatch implements Probe {
+        private final double[] phaseSeconds = new double[3];
+        private final double[] damage = new double[3];
+        private final double[] armourLost = new double[3];
+        private final int[] shots = new int[3];
+        private int bites;
+        private int eruptions;
+        private int breaches;
+        private double shield = Double.NaN;
+        private double armour = Double.NaN;
+
+        @Override
+        public void newAttempt() {
+            java.util.Arrays.fill(phaseSeconds, 0);
+            java.util.Arrays.fill(damage, 0);
+            java.util.Arrays.fill(armourLost, 0);
+            java.util.Arrays.fill(shots, 0);
+            bites = 0;
+            eruptions = 0;
+            breaches = 0;
+            shield = Double.NaN;
+            armour = Double.NaN;
+        }
+
+        @Override
+        public void stepped(Sortie sortie, int step) {
+            double nowShield = sortie.ship().defences().shield();
+            double nowArmour = sortie.ship().defences().armour();
+            double lostShield = Double.isNaN(shield) ? 0 : Math.max(0, shield - nowShield);
+            double lostArmour = Double.isNaN(armour) ? 0 : Math.max(0, armour - nowArmour);
+            shield = nowShield;
+            armour = nowArmour;
+            SetPiece boss = ColossusPlay.breachingBoss(sortie);
+            if (boss == null || !boss.engaged()) {
+                return;
+            }
+            int phase = Math.min(2, boss.phase());
+            phaseSeconds[phase] += SimStep.SECONDS;
+            damage[phase] += lostShield + lostArmour;
+            armourLost[phase] += lostArmour;
+            SimEvents events = sortie.events();
+            shots[phase] += events.count(SimEvents.Type.ENEMY_FIRED);
+            for (int e = 0; e < events.size(); e++) {
+                if (events.type(e) == SimEvents.Type.BITE_SNAP && (events.value(e) & 1) != 0) {
+                    bites++;
+                }
+                if (events.type(e) == SimEvents.Type.ERUPTION && (events.value(e) & 1) != 0) {
+                    eruptions++;
+                }
+            }
+            breaches = boss.breach().orElseThrow().breaches();
+        }
+
+        ColossusRun run() {
+            return new ColossusRun(
+                    phaseSeconds.clone(),
+                    damage.clone(),
+                    armourLost.clone(),
+                    shots.clone(),
+                    bites,
+                    eruptions,
+                    breaches);
+        }
+    }
+
+    /** Flies the autopilot as {@link #autopilot} and returns its breaching boss's fight. */
+    static ColossusRun colossus(
+            Content content, String key, Difficulty difficulty, Loadout loadout, long seed, int steps) {
+        ColossusWatch watch = new ColossusWatch();
+        fly(sortie(content, key, difficulty, loadout, seed), steps, watch);
+        return watch.run();
+    }
+
+    /** Whether the level has a breaching boss (a set piece whose boss breaches). */
+    static boolean hasBreach(LevelScript level) {
+        return level.setPieces().stream()
+                .anyMatch(piece -> piece.boss().flatMap(BossSpec::breach).isPresent());
+    }
+
     /** Whether a boss (a set piece) is engaged and alive: its fight, left out of the floor's means. */
     private static boolean bossFight(Sortie sortie) {
         for (int i = 0; i < sortie.setPieceCount(); i++) {

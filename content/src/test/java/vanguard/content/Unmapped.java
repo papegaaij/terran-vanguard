@@ -17,18 +17,19 @@ import java.util.Set;
  * reversed sections, the {@code pursuit} formation, the BOTTOM lessons' {@code warning}) until steps G1 and G3 flew
  * the reverse scroll and the pursuit and step G4 mapped them ({@link RetreatRules}) and gave the autopilot its retreat
  * play ({@link RetreatPlay}). M7 part H (step PH2): Level 21 Dust Colossus is loaded, checked and mapped (the crawling
- * arena, the breach cycle, the suction, the vents, the eruption and the debris: {@link ColossusRules}), but the tests
- * that fly it leave it out until step H4 gives the autopilot its colossus play and measures the fight.
+ * arena, the breach cycle, the suction, the vents, the eruption and the debris: {@link ColossusRules}), and the tests
+ * that fly it left it out until step H4 gave the autopilot its colossus play ({@link ColossusPlay}) and measured the
+ * fight. None is left out now.
  */
 final class Unmapped {
     /** Why a test leaves a level out. */
     static final String REASON = "not mapped (or not flown) yet";
 
     /** The level keys the mapping does not know yet. */
-    static final Set<String> LEVELS = Set.of("act-3-red-dust/level-21-dust-colossus");
+    static final Set<String> LEVELS = Set.of();
 
     /** The stat blocks the mapping does not know yet. */
-    static final Set<String> ENEMIES = Set.of("dust-colossus");
+    static final Set<String> ENEMIES = Set.of();
 
     private Unmapped() {}
 

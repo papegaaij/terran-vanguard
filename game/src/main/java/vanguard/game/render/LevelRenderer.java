@@ -195,6 +195,10 @@ public final class LevelRenderer {
     private final DroneLooks drones;
     /** M7 part G: Level 20's travelling ridge on the ground (null for another level). */
     private final RidgeLooks ridge;
+    /** M7 part H: the breaching boss (the Dust Colossus), its ridge, craters, vents and rocks; null without it. */
+    private final ColossusLooks colossus;
+    /** M7 part H: the script time a crawling arena ends at (Level 21's t=245), NaN without one ({@link #stepped}). */
+    private final double crawlEnd;
     /** M5 part G: the arctic setting's snow on high-air; null in another setting. */
     private SnowLooks snow;
 
@@ -243,6 +247,7 @@ public final class LevelRenderer {
                         ? sprites.backdrop(folder + "daylight-beams", 2)
                         : new Array<>(0));
         walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
+        colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
         foundry = FoundryLooks.of(sprites, level, script);
         rootBursts = RootBurstLooks.of(sprites, script);
         List<EnemySpec> launches =
@@ -255,6 +260,10 @@ public final class LevelRenderer {
                         : null,
                 flash);
         this.backdrop = new Backdrop(sprites, level, levelKey);
+        // M7 part H: a crawling arena (Level 21's) lays the next section's backdrop from the ground at its start.
+        int crawling = crawlingArena(script);
+        backdrop.crawls(crawling);
+        crawlEnd = crawling < 0 ? Double.NaN : script.sections().get(crawling).end();
         canyon = WallProjection.Looks.of(level);
         this.collapse = level.collapse()
                 .map(spec -> new CollapseLooks(sprites, spec, backdrop, Backdrop.folder(levelKey, level)))
@@ -360,6 +369,10 @@ public final class LevelRenderer {
         if (walker != null) {
             walker.reset();
         }
+        if (colossus != null) {
+            colossus.reset();
+        }
+        backdrop.crawlPending();
         if (foundry != null) {
             foundry.restart();
         }
@@ -403,6 +416,19 @@ public final class LevelRenderer {
         kinds.ghostDrones(sortie).stepped(sortie);
         if (walker != null) {
             walker.stepped(sortie);
+        }
+        if (colossus != null) {
+            colossus.stepped(sortie);
+        }
+        if (!Double.isNaN(crawlEnd)) {
+            // M7 part H: the section after the crawling arena starts once the clock passes its end (the kill's jump or
+            // the hold's end): its tiles from the next seam above the top edge, its pieces shifted by the crawl.
+            boolean started = sortie.levelSeconds() >= crawlEnd;
+            if (started && !backdrop.crawlEnded()) {
+                backdrop.crawlEnded(sortie.groundScroll());
+            } else if (!started && backdrop.crawlEnded()) {
+                backdrop.crawlPending();
+            }
         }
         if (foundry != null) {
             foundry.stepped(sortie);
@@ -592,6 +618,11 @@ public final class LevelRenderer {
             // wreck.
             walker.drawGround(batch, sortie, alpha, scroll, play);
         }
+        if (colossus != null) {
+            // M7 part H: the breaching boss's craters, funnel, body, tell, mouth, glow and vents; its furrow and
+            // crater.
+            colossus.drawGround(batch, sortie, alpha, scroll, clock.real());
+        }
         luna.drawSled(batch, sortie, scroll, alpha);
         if (storm == null) {
             luna.drawMarkers(batch, sortie, alpha);
@@ -645,6 +676,10 @@ public final class LevelRenderer {
         if (walker != null) {
             // M7 part F: the walker's flame cone (its tell's outline, its burn) and pilot light over the ground units.
             walker.drawCone(batch, sortie, alpha, clock.real());
+        }
+        if (colossus != null) {
+            // M7 part H: the suction's sand streaks into an open mouth, over the ground units.
+            colossus.drawStreaks(batch, sortie, alpha, clock.real());
         }
         if (foundry != null) {
             // M7 part F: the vents' heat glow over the tell, the flame column over the burn, the smoke after it.
@@ -722,6 +757,10 @@ public final class LevelRenderer {
         setPieces.drawWrecks(batch, sortie, wrecks, alpha, seconds);
         pieces.draw(batch, scroll);
         props.drawDebris(batch, sortie, alpha);
+        if (colossus != null) {
+            // M7 part H: the rocks the breaching boss tears loose toward its mouth.
+            colossus.drawRocks(batch, sortie, alpha);
+        }
         props.drawCranes(batch, sortie, alpha);
         if (secretGlints != null) {
             secretGlints.draw(batch, sortie, alpha);
@@ -1016,6 +1055,24 @@ public final class LevelRenderer {
     }
 
     /** M5 part H: whether a set piece is the Siege Spire, drawn by its own looks (its death too). */
+    /** M7 part H: the 0-based index of the script's crawling arena ({@code Section.crawls}), -1 without one. */
+    static int crawlingArena(LevelScript script) {
+        for (int i = 0; i < script.sections().size(); i++) {
+            if (script.sections().get(i).crawls()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * M7 part H: the play field's sideways shake now, px at the full screen-shake setting (the caller scales it by the
+     * setting): the ridge pass's light tremble ({@link ScreenShake#ridge}), none without a ridge.
+     */
+    public float shakeX(Sortie sortie, double realSeconds) {
+        return ridge == null ? 0 : ScreenShake.ridge(ridge.shake(sortie.levelSeconds()), realSeconds);
+    }
+
     public static boolean spire(SetPiece piece) {
         return SpireLooks.drawn(piece);
     }

@@ -353,7 +353,7 @@ class RevenantWalkerTest {
     }
 
     /** The random dodger's shield and armour lost per 10 s of the Harbour Kraken's phase 1 (its fixture and fit, medium). */
-    private static double krakenPhaseOne(long seed) {
+    static double krakenPhaseOne(long seed) {
         Sortie sortie = KrakenTest.sortie(seed, Difficulty.MEDIUM);
         SetPiece boss = sortie.setPiece(0);
         ToIntFunction<Sortie> pilot = randomDodge(seed);

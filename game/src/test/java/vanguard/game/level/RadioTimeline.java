@@ -79,12 +79,14 @@ abstract class RadioTimeline {
     static final String LEVEL_18 = "act-3-red-dust/level-18-dust-storm";
     static final String LEVEL_19 = "act-3-red-dust/level-19-foundry-of-tharsis";
     static final String LEVEL_20 = "act-3-red-dust/level-20-retreat-from-hellas";
+    static final String LEVEL_21 = "act-3-red-dust/level-21-dust-colossus";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
 
     /**
-     * Levels whose lines are not rendered yet (none now: Level 20's were rendered in M7 part G's step VOX-G,
+     * Levels whose lines are not rendered yet (none: Level 21's were rendered in M7 part H's step VOX-H, Level 20's
+     * in M7 part G's step VOX-G,
      * Level 14's in M5 part H's step H6,
      * Level 13's in M5 part G's step G6,
      * Level 12's in M5 part F's voice step, step 6, Level 11's in part E's, Level 10's in part D's,
@@ -199,7 +201,14 @@ abstract class RadioTimeline {
                                 new Event(162, CueTrigger.FIRST_TELEGRAPH, ""),
                                 new Event(170, CueTrigger.BOSS_PART_DESTROYED, "left arm"),
                                 new Event(175, CueTrigger.ALLY_LOST, ""),
-                                new Event(190, CueTrigger.BOSS_DESTROYED, "harbour-kraken"))));
+                                new Event(190, CueTrigger.BOSS_DESTROYED, "harbour-kraken")),
+                        // Step FXL11: the first telegraph on a ship's lane sets off both telegraph cues in one
+                        // step, the ship hit just after (round 44's capture)
+                        List.of(
+                                new Event(162, CueTrigger.FIRST_TELEGRAPH, ""),
+                                new Event(162, CueTrigger.FIRST_SHIP_TELEGRAPH, ""),
+                                Event.named(164, CueTrigger.ALLY_HIT, "Saint-Laurent"),
+                                new Event(195, CueTrigger.BOSS_DESTROYED, "harbour-kraken"))));
         // M5 part F: Level 12's events as a flight sees them: the first latch at the introduction (just
         // after Varga's warning) or at a later swarm, the canister's cache in the lightning field, the
         // sondes' secondary as the third one reaches the ship in the eye (every cue is timed or an event)
@@ -360,6 +369,24 @@ abstract class RadioTimeline {
                                 new Event(96.5, CueTrigger.SECRET, "emergency cache"),
                                 new Event(172, CueTrigger.SECONDARY_OBJECTIVE, "")),
                         List.of(new Event(172, CueTrigger.SECONDARY_OBJECTIVE, ""))));
+        // M7 part H: Level 21's events: the survey crawler (x 80, t≈44) shot as it enters or late as it passes, then
+        // the crawling arena's phase lines and the kill (the arena's clock runs to t=245, so the timed t=111 line plays
+        // in it): a fast fight, a slow one, and a kill as the clock reaches the arena's end (the test's clock runs on
+        // from a kill; the game's jumps to t=245, which the last run's kill at t=245 stands for)
+        runs.put(
+                LEVEL_21,
+                List.of(
+                        List.of(),
+                        List.of(new Event(45, CueTrigger.SECRET, "survey crawler")),
+                        List.of(
+                                new Event(47.5, CueTrigger.SECRET, "survey crawler"),
+                                new Event(150, CueTrigger.BOSS_PHASE, "Hunting"),
+                                new Event(185, CueTrigger.BOSS_PHASE, "Breaching anywhere"),
+                                new Event(205, CueTrigger.BOSS_DESTROYED, "dust-colossus")),
+                        List.of(
+                                new Event(170, CueTrigger.BOSS_PHASE, "Hunting"),
+                                new Event(215, CueTrigger.BOSS_PHASE, "Breaching anywhere"),
+                                new Event(245, CueTrigger.BOSS_DESTROYED, "dust-colossus"))));
         return runs;
     }
 

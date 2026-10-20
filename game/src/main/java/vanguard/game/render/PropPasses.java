@@ -105,6 +105,10 @@ final class PropPasses {
                 drawRock(batch, chunk, alpha);
                 continue;
             }
+            if (chunk.pulled()) {
+                // M7 part H: a rock pulled toward a breaching boss's mouth: ColossusLooks draws it.
+                continue;
+            }
             AtlasRegion sprite = debrisSprites.get(chunk.sprite());
             if (sprite == null) {
                 sprite = sprites.region(chunk.sprite());

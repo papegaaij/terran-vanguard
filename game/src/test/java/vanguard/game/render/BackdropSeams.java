@@ -307,9 +307,83 @@ abstract class BackdropSeams {
      * backdrop, Level 20) at a zone's start on the strip, layer row (from - origin) x its factor, the tile's pixel rows
      * then counted from the strip's origin ({@code phase}).
      */
-    record Border(String below, String above, long seam, long phase) {}
+    record Border(String below, String above, long seam, long phase, Overlay belowOverlay, Overlay aboveOverlay) {
+        Border(String below, String above, long seam, long phase) {
+            this(below, above, seam, phase, null, null);
+        }
 
-    static List<Border> borders(LevelData level, BackdropLayer layer) {
+        /** Whether both sides show the same ground (the same tile set, the same overlay): nothing to check. */
+        boolean same() {
+            return below != null && below.equals(above) && java.util.Objects.equals(belowOverlay, aboveOverlay);
+        }
+    }
+
+    /** M7 part H: a seam piece the game lays over a border (Level 21's {@code seam-settle}), its bottom layer row. */
+    record Overlay(String piece, long bottom) {}
+
+    /**
+     * M7 part H (design/campaign Level 21; the user's round 43 answer H.6): the section after a crawling arena starts
+     * at the next multiple of the arena tile's height at or above the top edge, wherever the fight left the ground
+     * ({@code Backdrop.crawlSeam}), with {@code seam-settle} centred on it: both tile sets share the tile's pattern at
+     * any multiple, so one stands for all (the first at or above the data's seam); the borders are then the seam
+     * piece's bottom edge over the arena's tiles and its top edge under the next section's.
+     */
+    static List<Border> crawlBorders(LevelData level, Path folder, int section, String below, String above)
+            throws IOException {
+        int height = level.backdrop().tileSets().get(below).height();
+        long seam = Math.floorDiv(Math.round(level.seam(BackdropLayer.GROUND, section)) + height - 1, (long) height)
+                * height;
+        BufferedImage settle =
+                ImageIO.read(folder.resolve(Backdrop.SEAM_SETTLE + ".png").toFile());
+        Overlay overlay = new Overlay(Backdrop.SEAM_SETTLE, seam - settle.getHeight() / 2);
+        return List.of(
+                new Border(below, below, overlay.bottom(), 0, null, overlay),
+                new Border(above, above, overlay.bottom() + settle.getHeight(), 0, overlay, null));
+    }
+
+    /** M7 part H: the 0-based index of the level's crawling arena (its ground scrolls on in the fight), -1 for none. */
+    static int crawlingArena(String key) {
+        List<vanguard.sim.Section> sections = vanguard.content.SimSpecs.level(
+                        CONTENT, key, vanguard.content.Difficulty.MEDIUM)
+                .sections();
+        for (int i = 0; i < sections.size(); i++) {
+            if (sections.get(i).crawls()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /** The layer's rows [from, to) as {@link #composite} draws them, with {@code overlay} (null: none) laid over them. */
+    int[][] composite(
+            LevelData level,
+            BackdropLayer layer,
+            Path folder,
+            String tileSet,
+            long from,
+            long to,
+            long phase,
+            Overlay overlay)
+            throws IOException {
+        int[][] rows = composite(level, layer, folder, tileSet, from, to, phase);
+        if (overlay == null) {
+            return rows;
+        }
+        BufferedImage piece = image(folder.resolve(overlay.piece() + ".png"));
+        int h = piece.getHeight();
+        for (int r = 0; r < rows.length; r++) {
+            long y = h - 1 - (from + r - overlay.bottom());
+            if (y < 0 || y >= h) {
+                continue;
+            }
+            for (int x = 0; x < rows[r].length && x < piece.getWidth(); x++) {
+                rows[r][x] = over(piece.getRGB(x, (int) y), rows[r][x]);
+            }
+        }
+        return rows;
+    }
+
+    static List<Border> borders(String key, LevelData level, BackdropLayer layer, Path folder) {
         List<Border> borders = new ArrayList<>();
         BackdropData backdrop = level.backdrop();
         if (backdrop.stripped()) {
@@ -326,9 +400,20 @@ abstract class BackdropSeams {
             }
             return borders;
         }
+        // M7 part H: the section after a crawling arena as the game lays it.
+        int crawl = crawlingArena(key);
         for (int s = 1; s < level.sections().size(); s++) {
-            borders.add(new Border(
-                    tileOn(level, s - 1, layer), tileOn(level, s, layer), Math.round(level.seam(layer, s)), 0));
+            String below = tileOn(level, s - 1, layer);
+            String above = tileOn(level, s, layer);
+            if (s == crawl + 1 && crawl >= 0 && layer == BackdropLayer.GROUND && below != null && above != null) {
+                try {
+                    borders.addAll(crawlBorders(level, folder, s, below, above));
+                } catch (IOException e) {
+                    throw new java.io.UncheckedIOException(e);
+                }
+                continue;
+            }
+            borders.add(new Border(below, above, Math.round(level.seam(layer, s)), 0));
         }
         return borders;
     }

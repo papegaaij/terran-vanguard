@@ -527,6 +527,10 @@ pair and for the lane telegraph and slam look. The round's captures of this leve
 | [concept/kraken-capture-final-r33-a.png](concept/kraken-capture-final-r33-a.png), [.mp4](concept/kraken-capture-final-r33-a.mp4) | Capture of the Harbour Kraken's arena (round 33, [notes](concept/prompts.md#kraken-capture-final-r33-a)): Tiamat scrolling in, telegraphs, slams, awash arms, the head's surfacing and fans, the left arm severed, the death and the convoy holding clear of Tiamat; with sound. Retaken after round 33's feedback (2026-10-09): Platform Tiamat raised to y 78, the head surfacing and sinking in open water off the deck's south edge, flesh hits instead of water ripples, slamming arms bending and whipping, only the part hit flashing lightly; with the t≈55 foreshadowing (the torpedo crops are in the [torpedo capture](concept/prompts.md#torpedo-capture-r33-a)) | chosen |
 | [concept/torpedo-capture-r33-a.png](concept/torpedo-capture-r33-a.png), [.mp4](concept/torpedo-capture-r33-a.mp4) | Capture with `left=torpedo-pod:3` (round 33, [notes](concept/prompts.md#torpedo-capture-r33-a)): hits under the water, the sunken pod freed and its crate caught (secret 1 / 1), the arm cut early; `NO WATER` cannot show on L11 | chosen |
 | [concept/level-11-readability-r33-a.png](concept/level-11-readability-r33-a.png) | Readability crops at 1:1 and 2× (round 33, [notes](concept/prompts.md#level-11-readability-r33-a)): jellies surfaced and submerged, a raft, ships with wake and collar, telegraph, slam, awash arm, arms under the mantle, the head with eyes open and under fire, the CONVOY tracker, the debrief's HULLS AFLOAT row | chosen |
+| [concept/level-11-arena-r44-a.mp4](concept/level-11-arena-r44-a.mp4) | The reworked arena in the live game (plan fit: Pulse L4, Bomb Rack, Autocannon Pod, Tail Gun, Airstrike ×2, Rook's Mortar; level t ≈ mp4 time + 148): Varga's rising-contact line, Rook's "Here comes the big one." (0:10), the halt with Tiamat and the convoy gliding to its lanes, Okafor's first-telegraph line "Watch the churning water…" (0:19–0:26), lane telegraphs and slams, the Halvorsen and the Saint-Laurent hit but holding, the head surfacing, the kill (≈ 1:06, Varga's sinking line), "All three hulls afloat" (1:17), Okafor's level-end line. **Okafor's teaching line `first-ship-telegraph` is not heard**: the first telegraph falls on a ship's lane, so both cues fire in the same step (`BossPasses.telegraph`), the root hint queues behind the first-telegraph line as an EVENT line and goes stale after 6 s (`RadioQueue.STALE_SECONDS`) before that line (voice + 5 s hold) closes. The game's seed is fixed (2185), so this happened on every medium run with this fit: a bug, **fixed afterwards in step FXL11** (the line is now a `PHASE` line, 20 s stale; shown by the patched clip below). 94 s | proposed (round 44) |
+| [concept/level-11-arena-r44-a.png](concept/level-11-arena-r44-a.png) | 20-tile sheet of that clip (HUD left panel + field) + the radio panel on the first-telegraph line and the arena at 1:1 | proposed (round 44) |
+| [concept/level-11-shipcue-r44-a.mp4](concept/level-11-shipcue-r44-a.mp4) | **Snapshot-patched radio queue, not the live game:** the same run with `first-ship-telegraph` queued as a PHASE line (20 s stale): Okafor's first-telegraph line (0:01–0:08), then his root hint "The arms are rooted at the rim. Cut a root and that lane is safe!" voiced in full (0:09–0:15), then the Saint-Laurent hit. With sound, 32 s | proposed (round 44) |
+| [concept/level-11-shipcue-r44-a.png](concept/level-11-shipcue-r44-a.png) | 10-tile sheet of that clip + the radio panel on both of Okafor's lines | proposed (round 44) |
 
 ## Implementation
 
@@ -589,8 +593,9 @@ pair and for the lane telegraph and slam look. The round's captures of this leve
       above the top edge at the halt; `backdrop_l11.py --check`), `hold_clear` 552 → 676, the teaching
       line on `first-ship-telegraph`, Rook's line on the first root cut; both pilots keep the convoy
       at medium (`Level11Test`, `KrakenTest`)
-- [ ] Round 40: Okafor's teaching line voiced (a VOX step) and a capture of the reworked arena for the
-      user's review
+- [x] Round 40: Okafor's teaching line voiced (step VOX2, 2026-10-19; `VoiceFilesTest`) and a capture of the reworked
+      arena for the user's review (round 44, X.a and X.b; the capture showed the line never played: fixed in step FXL11,
+      `RadioTimelineLevel11Test`)
 
 ## Open questions
 

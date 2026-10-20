@@ -89,6 +89,23 @@ public final class Backdrop {
     private Look to;
     private float weight;
 
+    /**
+     * M7 part H: the section after a crawling arena (Level 21's section 6), -1 without one ({@link #crawls}); its
+     * start's script time, and the ground scroll the data places it at.
+     */
+    private int crawlNext = -1;
+
+    private double crawlStart = Double.NaN;
+    private double crawlPlanned;
+    /** Whether that section has started ({@link #crawlEnded(double)}): its seams and its pieces' shift are set. */
+    private boolean crawlSet;
+    /** How far the ground at its start lies past where the data places it, ground px. */
+    private double crawlShift;
+    /** The seam piece laid over its ground seam ({@code seam-settle}), null without one, and its bottom row. */
+    private TextureRegion settle;
+
+    private long settleBottom;
+
     private record Tiles(TextureRegion image, double drift) {}
 
     private record Look(Tiles banks, Tiles wisps, float haze) {}
@@ -229,6 +246,91 @@ public final class Backdrop {
      */
     public void easy(boolean easy) {
         stretches = level.atmosphereStretches(easy);
+    }
+
+    /**
+     * M7 part H (design/campaign Level 21; the user's round 43 answer H.6): section {@code arena} (0-based) is an arena
+     * whose ground crawls on while the clock is held, so the ground at the next section's start is not where the data
+     * places it. Until that section starts the crawl keeps drawing the arena's tile sets (its seams wait) and the next
+     * section's pieces are not drawn; then {@link #crawlEnded(double)} lays them out from the actual ground.
+     */
+    void crawls(int arena) {
+        if (arena < 0 || arena + 1 >= level.sections().size()) {
+            return;
+        }
+        crawlNext = arena + 1;
+        crawlStart = level.sections().get(arena).end();
+        crawlPlanned = level.scrollAt(crawlStart);
+        settle = sprites.hasBackdrop(folder + SEAM_SETTLE)
+                ? sprites.backdrop(folder + SEAM_SETTLE, 1).first()
+                : null;
+        crawlPending();
+    }
+
+    /** M7 part H: the seam piece a crawl's next section lays over its ground seam (Level 21's settling dust). */
+    static final String SEAM_SETTLE = "seam-settle";
+
+    /** M7 part H: the crawl's next section has not started (a restart, a retry from the boss): its seams wait. */
+    void crawlPending() {
+        if (crawlNext < 0) {
+            return;
+        }
+        for (int l = 0; l < tiles.length; l++) {
+            if (crawlNext < tiles[l].length && tiles[l][crawlNext] != null) {
+                seams[l][crawlNext] = Long.MAX_VALUE;
+            }
+        }
+        crawlSet = false;
+        crawlShift = 0;
+    }
+
+    /** M7 part H: whether the crawl's next section has started ({@link #crawlEnded(double)}); false without a crawl. */
+    boolean crawlEnded() {
+        return crawlSet;
+    }
+
+    /**
+     * M7 part H: the crawl's next section starts with the ground at {@code ground}: on each layer its tile set starts at
+     * the next seam of the arena's tile at or above the top edge ({@link #crawlSeam}; on the ground the next multiple of
+     * 512 for Level 21's floor with the seam piece's lower half off the screen), {@code seam-settle} centred on the
+     * ground's;
+     * its pieces shift by the ground's distance past where the data places the section's start (times their layer's
+     * factor), so Level 21's lift-offs keep their place in the section however long the fight ran.
+     */
+    void crawlEnded(double ground) {
+        if (crawlNext < 0) {
+            return;
+        }
+        for (int l = 0; l < tiles.length; l++) {
+            if (crawlNext < tiles[l].length && tiles[l][crawlNext] != null) {
+                Tiles arena = tiles[l][crawlNext - 1];
+                int height = arena == null ? 1 : arena.image().getRegionHeight();
+                int margin = l == BackdropLayer.GROUND.ordinal() && settle != null ? settle.getRegionHeight() / 2 : 0;
+                seams[l][crawlNext] = crawlSeam(Math.round(ground * factors[l]), height, margin);
+            }
+        }
+        long groundSeam = seams[BackdropLayer.GROUND.ordinal()][crawlNext];
+        if (settle != null && groundSeam != Long.MAX_VALUE) {
+            settleBottom = groundSeam - settle.getRegionHeight() / 2;
+        }
+        crawlShift = ground - crawlPlanned;
+        crawlSet = true;
+    }
+
+    /**
+     * M7 part H: where the section after a crawl begins on a layer whose scroll is {@code scroll} as it starts: the
+     * next multiple of the arena's tile {@code height} at or above the top edge (both tile sets share the pattern
+     * there, H.6), at least {@code margin} px above it (the seam piece's lower half: it never pops in on the screen; on
+     * Level 21's ground 160 px, so the settled floor enters within 512 + 160 px, ≤ 27 s at 25 px/s).
+     */
+    static long crawlSeam(long scroll, int height, int margin) {
+        long top = scroll + HEIGHT + margin;
+        return Math.floorDiv(top + height - 1, (long) height) * height;
+    }
+
+    /** M7 part H: a piece of the crawl's next section ({@link #crawls}): held back until it starts, then shifted. */
+    private boolean afterCrawl(BackdropData.PlacedPiece placed) {
+        return crawlNext >= 0 && placed.t() >= crawlStart;
     }
 
     /**
@@ -402,6 +504,13 @@ public final class Backdrop {
      * rule: ground units, bullets and the flyers' shadows stay over them).
      */
     public void drawGroundPieces(SpriteBatch batch, double groundScroll, BackdropClock clock) {
+        if (crawlSet && settle != null) {
+            // M7 part H: the settling dust's soft edge over the crawl's next ground seam, under the other pieces.
+            long y = settleBottom - scroll(BackdropLayer.GROUND, groundScroll);
+            if (y < HEIGHT && y + settle.getRegionHeight() > 0) {
+                batch.draw(settle, X0, y);
+            }
+        }
         drawPieces(batch, BackdropLayer.GROUND, scroll(BackdropLayer.GROUND, groundScroll), clock, false);
         if (underTowers != null) {
             underTowers.draw(batch);
@@ -707,10 +816,17 @@ public final class Backdrop {
             if (placed.isOverhead() != overhead || overheadPass(layer, placed) != passes) {
                 continue;
             }
+            long shift = 0;
+            if (afterCrawl(placed)) {
+                if (!crawlSet) {
+                    continue;
+                }
+                shift = Math.round(crawlShift * factors[layer.ordinal()]);
+            }
             float width = (float) piece.spec().size().width();
             float height = (float) piece.spec().size().height();
             double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
-            float y = piece.bottom() - scroll + Math.round(placed.offsetY(along));
+            float y = piece.bottom() + shift - scroll + Math.round(placed.offsetY(along));
             if (y >= HEIGHT || y + height <= 0) {
                 continue;
             }

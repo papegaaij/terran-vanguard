@@ -23,7 +23,7 @@ class LevelReportTest {
     private static final Content CONTENT = LevelMetrics.CONTENT;
 
     @ParameterizedTest
-    @ValueSource(ints = {10, 15, 18, 19})
+    @ValueSource(ints = {10, 15, 18, 19, 21})
     void theReportsNumbersAreTheTests(int number) throws Exception {
         String key = CONTENT.levelKey(number).orElseThrow();
         LevelReport.Level report;
@@ -94,6 +94,21 @@ class LevelReportTest {
         assertEquals(
                 fights,
                 run.bosses().stream().map(LevelMetrics.BossFight::seconds).toList());
+
+        // M7 part H: a breaching boss's line (Level 21): its phases from its first tell to the kill, the bar's intro
+        // before them, on the same seed and fit as the run.
+        boolean breaching = LevelMetrics.hasBreach(SimSpecs.level(CONTENT, key, difficulty));
+        assertEquals(breaching ? 1 : 0, medium.colossi().size());
+        if (breaching) {
+            SetPiece boss = null;
+            for (int i = 0; i < sortie.setPieceCount(); i++) {
+                if (sortie.setPiece(i).breach().isPresent()) {
+                    boss = sortie.setPiece(i);
+                }
+            }
+            double intro = boss.boss().orElseThrow().breach().orElseThrow().introSeconds();
+            assertEquals(boss.killSeconds(), medium.colossi().getFirst().seconds() + intro, 0.1);
+        }
     }
 
     private static void assertSameFlight(LevelMetrics.Flight expected, LevelMetrics.Flight actual) {

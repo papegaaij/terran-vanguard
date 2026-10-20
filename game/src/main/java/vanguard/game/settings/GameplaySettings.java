@@ -4,7 +4,7 @@ package vanguard.game.settings;
  * The Gameplay tab (design/ui/options).
  *
  * @param textSpeed characters per second the radio types; the briefings type at twice this speed
- * @param screenShake 0..1 of the full screen shake; stored, the game has no screen shake yet
+ * @param screenShake 0..1 of the full screen shake (M7 part H: the play field's sideways tremble, {@code ScreenShake})
  * @param flashReduction tone down the white hit and invulnerability flashes
  * @param creditNumbers show the small floating numbers for credits picked up (design/ui/hud)
  */

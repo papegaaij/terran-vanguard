@@ -14,21 +14,15 @@ import vanguard.game.ui.Glass;
 
 /**
  * The release's end (M6 part B, Q1 = a, pending the user's review in round 35): after the last
- * built act's outro ({@code CampaignRoute.releaseEnd}) comes an end card ("ACTS I-II COMPLETE",
- * the campaign's totals, "TO BE CONTINUED" with the next act's name), then the name entry when the
+ * built act's outro ({@code CampaignRoute.releaseEnd}) comes an end card ("ACTS I-III COMPLETE",
+ * the campaign's totals, "TO BE CONTINUED" with the next act's name; M7 part H: all from the acts' data, {@link
+ * ReleaseTexts}), then the name entry when the
  * score makes the difficulty's top 10, then the credits roll over it, then the main menu. The title
  * theme plays from the card through the credits. It writes the autosave as the hangar would (never
  * in a debug run), so Continue reaches the hangar before the next level, which says the act is
  * coming soon.
  */
 public final class ReleaseEndScreen implements GameScreen {
-    /** The act that comes next, as the end card and the hangar name it. */
-    public static final String NEXT_ACT = "ACT III - RED DUST";
-    /** The hangar's mission line before the first level that is not built (Q1 = a). */
-    public static final String COMING_SOON = NEXT_ACT + ": COMING SOON";
-
-    static final String TITLE = "ACTS I-II COMPLETE";
-
     private static final float MUSIC_VOLUME = 0.6f;
     static final int PANEL_X = 260;
     static final int PANEL_Y = 136;
@@ -120,7 +114,7 @@ public final class ReleaseEndScreen implements GameScreen {
     private void drawCard(SpriteBatch batch, Glass glass) {
         var heading = glass.fonts.heading;
         heading.getData().setScale(2);
-        glass.centred(batch, heading, TITLE, Glass.WHITE, PixelScreen.WIDTH / 2f, 36);
+        glass.centred(batch, heading, ReleaseTexts.title(services.content), Glass.WHITE, PixelScreen.WIDTH / 2f, 36);
         heading.getData().setScale(1);
         glass.centred(
                 batch,
@@ -153,11 +147,16 @@ public final class ReleaseEndScreen implements GameScreen {
         }
         glass.centred(batch, glass.fonts.heading, "TO BE CONTINUED", Glass.AMBER, PixelScreen.WIDTH / 2f, 356);
         glass.centred(
-                batch, glass.fonts.body, NEXT_ACT + ". MARS. COMING SOON.", Glass.BODY, PixelScreen.WIDTH / 2f, 392);
+                batch,
+                glass.fonts.body,
+                ReleaseTexts.comingSoon(services.content),
+                Glass.BODY,
+                PixelScreen.WIDTH / 2f,
+                392);
         glass.centred(
                 batch,
                 glass.fonts.label,
-                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT II.",
+                ReleaseTexts.continueLine(services.content),
                 Glass.LABEL,
                 PixelScreen.WIDTH / 2f,
                 424);

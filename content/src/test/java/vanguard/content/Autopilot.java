@@ -44,7 +44,7 @@ import vanguard.sim.Sortie;
  * station under the ally, in the way of what comes up at it from below; ground units, which cannot ram,
  * are not dodged there. The plays live beside it: {@link DodgePlay}, {@link TargetPlay}, {@link HazardPlay},
  * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay}, {@link RetreatPlay} (M7 part G: the
- * reversed scroll, Level 20) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -181,6 +181,11 @@ public final class Autopilot {
         SetPiece walking = WalkerPlay.walkingBoss(sortie);
         if (walking != null) {
             return commands | WalkerPlay.walkerMove(sortie, walking);
+        }
+        SetPiece colossus = ColossusPlay.breachingBoss(sortie);
+        if (colossus != null) {
+            // M7 part H: the Dust Colossus (Level 21, ColossusPlay), before the rooted arena bosses' play.
+            return commands | ColossusPlay.move(sortie, colossus);
         }
         SetPiece kraken = KrakenPlay.arenaBoss(sortie);
         if (kraken != null) {

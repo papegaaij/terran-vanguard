@@ -339,6 +339,8 @@ final class EventEffects {
                     spireDeath(events.value(i), x, y);
                 } else if (sortie.setPiece(events.value(i)).stride().isPresent()) {
                     walkerDeath(events.value(i), x, y);
+                } else if (sortie.setPiece(events.value(i)).breach().isPresent()) {
+                    colossusDeath(events.value(i), x, y);
                 } else if (sortie.setPiece(events.value(i)).arena().isPresent()) {
                     arenaDeath(events.value(i), x, y);
                 } else {
@@ -787,6 +789,24 @@ final class EventEffects {
         effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, landX, landY, chain, scroll);
         effects.startOnGround(large, LARGE_EXPLOSION_FRAME_TICKS, landX - 28, landY + 20, chain + 4, scroll);
         chainSounds.play(sounds.deathBlast(k), 1, 1, pan(landX), chain);
+    }
+
+    /**
+     * M7 part H, step HB: the Dust Colossus's death (design/enemies/bosses/dust-colossus, Death: {@code huge}, "the
+     * last mouth rears up and shudders, the sand splits along the whole ridge, chained eruptions of dust and lime ichor
+     * over 3 s, the mouth sinks into a collapsing crater; screen flash at the chain's end; credit shower"): its death
+     * frames, the split ridge glowing, its eruptions along it and the crater and the furrow are {@code ColossusLooks}';
+     * here the white flash at the chain's end (round 42's local flash, as the Siege Spire's: a glow round the mouth,
+     * not the whole field washed white) and the credit shower after it. Its sound is its own death ({@code BossCues}:
+     * the chained eruptions and the blast in the file), so no chained bursts' sounds.
+     */
+    private void colossusDeath(int k, double x, double y) {
+        SetPiece piece = sortie.setPiece(k);
+        int chain = LevelRenderer.chainTicks(piece);
+        showerDelay = chain;
+        if (LevelRenderer.flashesAtDeath(piece)) {
+            screenFlash.startAt(chain, x, y);
+        }
     }
 
     /**

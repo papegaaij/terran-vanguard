@@ -55,6 +55,8 @@ speakers:
       972444750345: 122301067   # Level 19 t=88 "Grey drones again…": the key's seed read "Grade drones" both ways; the pin reads "Grey" at her 152 Hz
       3c758d205aa3: 113596483   # Level 19 end "Tharsis is breathing again…": the key's seed read "Come home, ages" through the filter
       3a33859ee853: 61428441    # Level 20 t=1 "Hellas basin, Aegis…": the key's seed read "Ella's basin, ages" and "Hello space" through the filter; the pin reads "Heller's basin, Aegis" and "Vrel" through it (of five seeds), at about 140 Hz
+      4039b813137a: 77912865    # Level 21 t=53 "Basin floor ahead…": Whisper reads "Base and floor" in nearly every seed (11 tried); the pin reads "Basin floor" through the filter at about 148 Hz (the one plain "Basin" jumped to p90 about 520 Hz)
+      1d76337fde0a: 18075540    # Act 3 outro page 1 "The Colossus is dead…": every take of the key's seed and of two more pins held a 1.1-2.6 s pause in its first chunk; the pin's sixth take has none
   varga:
     names: [Varga]
     ref: ref-varga
@@ -78,6 +80,8 @@ speakers:
       ec548c3af77b: 118220431   # Level 10 secret "That ferry's hold…": the key's seed read "berry's" through the filter; the pin "ferries" every way
       d04034114ff1: 22000222    # Level 14 briefing page 2 "The Vrell fight as one…" (round 40, trimmed): the key's seed jumped high (about 450 Hz) on the closing "you"; the pin is the steadiest of six and reads "Vrel"
       33887c6a4a28: 152804203   # Level 19 first-telegraph "It burns what's behind it…": the key's seed jumped an octave (p90 about 500 Hz); the pin stays near her 190 Hz
+      7ba95ec98d89: 194028836   # Level 21 t=37 "Burrowers on the wall…": the key's seed jumped an octave (p90 about 490 Hz); the pin stays near her 190 Hz
+      38ee1a81a162: 213299318   # Level 21 briefing page 2 "The song comes from under the basin floor…": the key's seed ran "lime. Bring" into "lime, brings"; the pin reads "Bring" every way
   rook:
     names: [Rook]
     ref: ref-rook
@@ -98,11 +102,14 @@ speakers:
       d30d8395ac50: 267581009   # Level 19 t=77 "Coming up behind, Lancer!": the key's seed jumped an octave (about 510 Hz) on a quarter of the line
       edd94197e037: 71916770    # Level 19 t=116 "Behind us!": the key's seed squealed (about 570 Hz throughout); the pin is at his 154 Hz
       3a9819cc3b09: 61840412    # Level 20 t=98 "Cloakers up top again!": the key's seed was unvoiced (a whisper, no pitch found); the pin is voiced at about 160 Hz
+      4dfea2344c1f: 233372167   # Level 21 t=13 "On your left, Lancer. Let's finish this.": the key's seed was barely voiced (8 %); the pin is voiced at about 132 Hz like the right-side take
   choir:
     names: [The Choir]
     ref: ref-varga
     fixed: {exaggeration: 0.3, cfg_weight: 0.3, temperature: 0.7}
     layering: choir
+    pins:
+      a200f821d3c6: 3575012     # Level 21 boss-destroyed "…many… we are many… we are going…": the key's seed and five of six more added a second "we are going" (or "we are many"); the pin speaks the three fragments once, 2.6 s
     stage: voice-choir-sings-r29-b.ogg   # "[the Choir sings]": round 29's option b, the sung "ah" F3 to E3
   yard-control: {names: [Yard Control], ref: ref-yard-control}
   dock: {names: [Dock One, Dock Two, Dock Three, Dock Four], ref: ref-dock}
@@ -177,6 +184,7 @@ speakers:
       4e76806dd7b1: 247068096   # Level 19 t=155.5 "Tower to Aegis…": the key's seed read "We're coming up" both ways
       69d12604b55b: 111357152   # Level 20 t=131 "Militia on the rim, Aegis…": the key's seed swallowed "Aegis" ("egg is" through the filter) at about 140 Hz; the pin reads "Aegis" (as "ages", like his other lines) at about 110 Hz
       625324f0c4ed: 103601007   # Level 20 secret emergency cache "Hellas Outpost's emergency cache…": the key's seed jumped high (p90 about 570 Hz) and read "the rail" through the filter; the pin reads "Vrel" both ways at about 127 Hz
+      1724a21edd38: 56894530    # Level 21 t=21 "Ares Control, Aegis…": the key's seed jumped high (p90 about 440 Hz); the pin stays near his 133 Hz and reads "Aegis" through the filter
   lance-control:   # the Orbital Lance's call (M7 part A, design/player/specials): the CDF orbital officer; cast in round 37 (b, Celine Major, S.16), neutral as auditioned
     names: [Lance Control]
     ref: ref-lance-control

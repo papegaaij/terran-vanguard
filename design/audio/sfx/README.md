@@ -967,7 +967,8 @@ alone (no file); b adds a crack layer over it. The game ships the eruption and t
   (step K1: the thunder and the gust b)
 - [ ] The Proximity Mines' drop and arm heard in Level 12's capture (M5 part F, step 7) — left open:
       both heard in the capture and accepted in round 34, but the drop was raised to −10 dB afterwards and
-      not re-captured
+      not re-captured until round 44 (X.e: recorded with sound; whether the drop is still audible in the rain is for
+      the user's ear, so the box stays open until X.e is answered)
 - [x] Level 13's sounds (M5 part G, step G6): `AMBIENCE_ARCTIC` (key `earth-arctic`) with its whiteout
   peak (the section peak's `ambience_db`, ramping with the atmosphere; `LevelMusic.ambienceLevels`), the
   relay hit, the integrity alarm, relay destroyed, the drone launch and grid online as round 35's **a**
@@ -1420,3 +1421,4 @@ alone (no file); b adds a crack layer over it. The game ships the eruption and t
   synthesized hatch, flamer tell, flame, vent tell, vent burst, tracks, turret and burst, plus its pod missile (round
   08 a is used), moved to `concept/rejected/`; the r42 stomp, tank death, belt loop and `mars-foundry` stay chosen.
   CREDITS.md paths updated.
+- 2026-10-20: M7 part H (step AUD-H, round 44's S rows): eighteen proposals from the Freesound database (`sfx_r44.py`, CREDITS.md +54 lines, never synthesized): the Dust Colossus's bulge, eruption, suction loop, bite, death and ridge pass and the Revenant Walker's lance charge, lance shot and stomp shockwave, a and b each. **Provisional picks until the user listens** (step HB; nothing is approved): the game plays **a** for all of them except the ridge pass, which plays **b** (a pans left to right, the ridge travels right to left); the walker's brace tell stays a placeholder. No separate sound for a mouth's death (the death's own sound covers it; round 44, S.j asks). Review points: the bites are slowed bone crunches (crackle check), the loudness against the bed, the 3 s death chain under the 6.1 s sound.

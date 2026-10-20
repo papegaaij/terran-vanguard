@@ -467,6 +467,8 @@ Production art of M7 part F's round 42 (step ART-F2), pending the user's review.
 | [concept/level-19-walker-r43-a.png](concept/level-19-walker-r43-a.png) | 12-frame sheet of that fight (the play field, times in s of the run) | proposed (round 43) |
 | [concept/level-19-walker-r44-a.mp4](concept/level-19-walker-r44-a.mp4) | Check capture of the walker fight after round 44 (step WR2: medium, the plan's fit with Rook's Mortar, the test autopilot, sound; 94 s, the fight 72 s): the pods' hatches and salvos, the stomp's brace ring, the cone, the red rail lance's charge line and shot once both pods are gone and in phase 3, the topple and the wreck; the lance's and the stomp's sounds are placeholders | proposed (round 44) |
 | [concept/level-19-walker-r44-a.png](concept/level-19-walker-r44-a.png) | 12-frame sheet of that fight (the play field, times in s of the clip) | proposed (round 44) |
+| [concept/payroll-safe-glow-r44-a.mp4](concept/payroll-safe-glow-r44-a.mp4) | The payroll safe's strobe in the live game (plan fit, the autopilot does not shoot it): the shift office scrolling down the left wall at about 130 px/s (0:02–0:06), the safe's door lamp blinking green about twice a second with a small green halo spilling just past the safe's box when lit. It reads as a blinking green lamp; the halo is small (≈ 12 px) and easy to miss at play speed among the belts. With sound, 9 s | proposed (round 44) |
+| [concept/payroll-safe-glow-r44-a.png](concept/payroll-safe-glow-r44-a.png) | Six field frames + seven 1:1 crops of the safe at 2×, lit and dark | proposed (round 44) |
 
 The level will need (part F's production-art round; the mood comes from the Tharsis
 foundry mood still in [mars](../../../world/mars/README.md) and the walker's chosen concept a, the

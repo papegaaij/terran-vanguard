@@ -121,9 +121,16 @@ final class BossCues extends SoundFamily {
         };
     }
 
-    /** Round 43: a set piece's own death instead of its rung's blast, or null: the Revenant Walker's (round 43 a). */
+    /**
+     * Round 43: a set piece's own death instead of its rung's blast, or null: the Revenant Walker's (round 43 a); M7
+     * part H: the Dust Colossus's (round 44 a, its chained eruptions and its blast in the file, over the 3 s chain).
+     */
     private static Sfx death(String slug) {
-        return "revenant-walker".equals(slug) ? Sfx.WALKER_DEATH : null;
+        return switch (slug) {
+            case "revenant-walker" -> Sfx.WALKER_DEATH;
+            case "dust-colossus" -> Sfx.COLOSSUS_DEATH;
+            default -> null;
+        };
     }
 
     /** A boss's own sounds, or null for the generic ones: the Brood Carrier's (round 25 a, provisional). */

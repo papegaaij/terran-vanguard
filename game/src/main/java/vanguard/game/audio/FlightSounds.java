@@ -28,7 +28,7 @@ import vanguard.sim.WarningEdge;
  * <p>Each event type belongs to one family ({@link SoundFamily}): the player's side ({@link PlayerCues}),
  * the bosses ({@link BossCues}; Level 19's walker in {@link WalkerCues}), the enemy units ({@link UnitCues}, Level 18's in
  * {@link StormCues}, Level 19's tanks, vents and belts in {@link FoundryCues}, Level 20's pursuit swarm in {@link
- * PursuitCues}), the allies ({@link AllyCues}), the
+ * PursuitCues}, Level 21's Dust Colossus in {@link ColossusCues}), the allies ({@link AllyCues}), the
  * arsenal ({@link ArsenalCues}) and the levels' own ({@link LevelCues}); they share one {@link SoundMix},
  * and this class routes the events to them in their order and keeps the order of the watched states.
  */
@@ -63,6 +63,8 @@ public final class FlightSounds {
     private final FoundryCues foundry;
     /** M7 part G: Level 20's pursuit swarm: its band hum and lunge. */
     private final PursuitCues pursuit;
+    /** M7 part H: Level 21's Dust Colossus: its bulge, eruption, suction, bite and ridge pass. */
+    private final ColossusCues colossus;
     /** The convoy, the relay, the domes, Rook, the scripted loss's lance and the tows. */
     private final AllyCues allies;
     /** The specials and the Act 3 arsenal, its held loops. */
@@ -123,7 +125,8 @@ public final class FlightSounds {
         Sfx.WALKER_FLAME,
         Sfx.TANK_TRACKS,
         Sfx.BELT_RUMBLE,
-        Sfx.SWARM_HUM
+        Sfx.SWARM_HUM,
+        Sfx.COLOSSUS_SUCTION
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -176,11 +179,14 @@ public final class FlightSounds {
         walker = new WalkerCues(mix);
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
+        colossus = new ColossusCues(mix);
         units = new UnitCues(mix, looks, storm, foundry, walker);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix);
-        all = new SoundFamily[] {player, bosses, units, storm, walker, foundry, pursuit, allies, arsenal, levels};
+        all = new SoundFamily[] {
+            player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels
+        };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
                 if (families[type.ordinal()] != null) {
@@ -189,6 +195,14 @@ public final class FlightSounds {
                 families[type.ordinal()] = family;
             }
         }
+    }
+
+    /**
+     * M7 part H: Level 21's ridge pass (the level's {@code ridge} with its breaching boss) starts at level time {@code
+     * seconds}: its rumble then ({@link ColossusCues}).
+     */
+    public void ridgePass(double seconds) {
+        colossus.ridgePass(seconds);
     }
 
     /** How long the level's flares burn (its darkness at the difficulty): the burn loop's length. */
@@ -529,6 +543,7 @@ public final class FlightSounds {
         walker.watch(sortie);
         foundry.watch(sortie);
         pursuit.watch(sortie);
+        colossus.watch(sortie);
         levels.watchWeather(sortie);
         allies.watchDrones(sortie);
         mix.watched = sortie;
@@ -570,6 +585,7 @@ public final class FlightSounds {
             walker.silence(loop);
             foundry.silence(loop);
             pursuit.silence(loop);
+            colossus.silence(loop);
         }
     }
 

@@ -469,6 +469,49 @@ public enum Sfx {
      * its end, 0.8 s, -20 dB; no pop): through the tell, its whoosh on the dive.
      */
     SWARM_LUNGE("sfx/swarm-lunge-r43-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M7 part H: the Dust Colossus's bulge, a breach's tell and an eruption's marker (round 44 a, proposed: an
+     * earthquake's cracking soil and stone swelling in, sand pouring off the bulge, 2.1 s, -16 LUFS); a warning.
+     */
+    COLOSSUS_BULGE("sfx/colossus-bulge-r44-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M7 part H: the mouth breaching, at the rise and at an eruption (round 44 a, proposed: an earth impact's boom, a
+     * deep roar rising out of it, rock and sand pouring back, 2.6 s).
+     */
+    COLOSSUS_ERUPTION("sfx/colossus-eruption-r44-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M7 part H: the mouth's suction draw (round 44 a, proposed: air rushing into a chimney under a sandstorm, a
+     * seamless 4 s loop, -28 dB band RMS as the walker's flame): while the mouth is open and through its bite's tell,
+     * louder the nearer the ship.
+     */
+    COLOSSUS_SUCTION("sfx/colossus-suction-r44-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M7 part H: the jaws snapping shut (round 44 a, proposed: a massive structure's deep impact with bones crunching
+     * and a large stone scraping, 0.9 s).
+     */
+    COLOSSUS_BITE("sfx/colossus-bite-r44-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M7 part H: the Colossus's death (round 44 a, proposed: a deep roar shuddering, chained eruptions, a massive blast
+     * at ≈ 2.6 s, then a rock avalanche subsiding, 6.1 s), its own instead of the huge rung's blast, over the 3 s chain.
+     */
+    COLOSSUS_DEATH("sfx/colossus-death-r44-a.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * M7 part H: Level 21's ridge pass (round 44 b, proposed: a large low rumble passing with a heavy stone grind and
+     * sand pouring, panned right to left in the file as the ridge runs, 7 s, -20 LUFS); a's pan runs the other way.
+     */
+    COLOSSUS_RIDGE("sfx/colossus-ridge-r44-b.ogg", 1, Bus.EFFECTS, BOSS),
+    /**
+     * Round 44 (step HB): the Revenant Walker's rail lance charging (round 44 a, proposed: a power charge gliding up
+     * over a Tesla coil's sparking, 1.05 s).
+     */
+    WALKER_LANCE_CHARGE("sfx/walker-lance-charge-r44-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** Round 44 (step HB): the rail lance's shot (round 44 a, proposed: a real railgun, 1.6 s). */
+    WALKER_LANCE_SHOT("sfx/walker-lance-shot-r44-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * Round 44 (step HB): the stomp's shockwave (round 44 a, proposed: a giant's footfall and an explosion's shockwave
+     * rolling out of it, 1.6 s).
+     */
+    WALKER_SHOCKWAVE("sfx/walker-shockwave-r44-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M7 part B: a Burrower's 0.4 s dive, the grain slide (round 38 b, the user's pick of 2026-10-14). */
     BURROW_DIVE("sfx/burrow-dive-r38-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** M5 part H: a burst's growths growing in, a stretching creak set with a dull knock at 1.45 s (round 36 a, one proposal). */

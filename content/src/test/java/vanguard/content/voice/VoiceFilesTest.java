@@ -57,7 +57,9 @@ class VoiceFilesTest {
             "act-3-red-dust/level-18-dust-storm",
             "act-3-red-dust/level-19-foundry-of-tharsis",
             "act-3-red-dust/level-20-retreat-from-hellas",
+            "act-3-red-dust/level-21-dust-colossus",
             "act-3-red-dust briefing",
+            "act-3-red-dust outro",
             "specials",
             "armour",
             VoiceLines.BARKS);

@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Concept rounds
@@ -62,6 +62,7 @@ they belong to; a round only collects them.
 | [round-41](round-41/README.md) | M7 part E (Level 18 Dust Storm) final art, track 9, sounds, voices, capture and build choices; the dome-break redo; Level 17's round 40 fixes; the Act 2 finish (Kraken and Spire data, waves, voices, debrief music, intel panel, refit-only replay hangar) | approved | n/a | chosen |
 | [round-42](round-42/README.md) | M7 part F (Level 19 Foundry of Tharsis) final art, sounds, voices, capture and build choices; the overnight playtest fixes (Spire, radio outro, domes, shop mouse); Levels 15-17's rework; the refactors (closed 2026-10-20) | approved | n/a | chosen |
 | [round-43](round-43/README.md) | The walker's rework, the Freesound sounds, M7 part G (Level 20) final art, voices, capture and build choices with five questions, part H's questions (closed 2026-10-20) | approved | n/a | chosen |
+| [round-44](round-44/README.md) | M7 part H (Level 21, the Dust Colossus): final art, voices, captures, build choices and eleven open questions; the walker's second rework, eighteen Freesound sounds, Level 20's levers, the art audit, the new glows, Act 2 to final, part I's questions and Act 4 | review | n/a | proposed |
 
 ## Design
 
@@ -124,4 +125,5 @@ How a round works:
 | 40 | 2026-10-19 | closed | M7 part D (Level 17), the Level 16 canyon redo, the Act 2 playtest rework, debrief music, closed 2026-10-19: the Act 2 rows accepted (Kraken r40 art chosen, P.e: Levels 11-14's waves now, 15-17 later); Level 17's final art, voices, changes and build choices approved, the sounds accepted except the dome break (redo); the Level 16 canyon walls final; debrief music b "Stand Down"; the capture's note and part D's findings (R.a = a, R.b-R.e) queued, R.f keep |
 | 41 | 2026-10-19 | closed | M7 part E: Level 18 Dust Storm (final art, track 9 "Grey Signal", sounds, voices, capture, build choices and findings, built on the user's behalf), the dome-break redo, Level 17's round 40 fixes, the Act 2 finish |
 | 42 | 2026-10-19 | closed | M7 part F: Level 19 (final art, 13 sounds, 25 voices, capture, build choices), the six playtest findings' fixes, Levels 15-17's rework, review points and the refactors, built on the user's behalf; closed 2026-10-20: 116 answers, the rest redone in round 43 |
-| 43 | 2026-10-20 | open | The walker's rework (capture, HP, phase 1, hard's fight, the safe-spot question), the Freesound sounds for Levels 19 and 20 (a/b/redo), M7 part G Level 20 (final art, voices, capture, build choices, five questions), part H's questions for Level 21, records; every undecided point a question with a recommendation |
+| 43 | 2026-10-20 | closed | The walker's rework (capture, HP, phase 1, hard's fight, the safe-spot question), the Freesound sounds for Levels 19 and 20 (a/b/redo), M7 part G Level 20 (final art, voices, capture, build choices, five questions), part H's questions for Level 21, records; every undecided point a question with a recommendation |
+| 44 | 2026-10-20 | open | M7 part H Level 21 (final art, voices, captures, the six steps' build choices) and eleven questions it left open (the floor, phase 1, the par, the safe spot, the hard key, the zones, the Choir's take, small defaults); the walker's second rework (WR2); eighteen Freesound sounds (a/b/redo); Level 20's levers; the art audit and the rear-guard bay's approval; the new glows; Act 2 to final; part I's questions; Act 4 |

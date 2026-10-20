@@ -68,12 +68,12 @@ tasks.test {
 
 /**
  * A level's numbers for tuning (LevelReport, CLAUDE.md Tools): ./gradlew :content:levelReport -Plevel=19
- * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit]
+ * [-Pdifficulty=easy,medium,hard] [-Pseeds=3] [-Pfit=test|plan|user] [-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus]
  * [-Pjson]. It runs on the test classes and reads the design data at run time: a data.yaml edit needs no recompile.
  */
 tasks.register<JavaExec>("levelReport") {
     group = "verification"
-    description = "Prints a level's pacing, floor, haul, boss, beam-era and pursuit numbers (-Plevel=<n>)."
+    description = "Prints a level's pacing, floor, haul, boss, beam-era, pursuit and colossus numbers (-Plevel=<n>)."
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass = "vanguard.content.LevelReport"
     maxHeapSize = "2g"
