@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -40,6 +41,17 @@ class Level19Test {
      * second shield, Composite II, the Airstrike and Rook's Mortar.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
+        return withoutRook(content, difficulty)
+                .withWingman(SimSpecs.wingman(
+                        content,
+                        "mortar",
+                        1,
+                        WingmanSpec.Side.LEFT,
+                        content.wingmen().rook().armour()));
+    }
+
+    /** The plan's fit without Rook ({@code --escort none}; M7 part I, step I1). */
+    static Loadout withoutRook(Content content, Difficulty difficulty) {
         return SimSpecs.loadout(
                         content,
                         content.systems().engines().getFirst().name(),
@@ -52,12 +64,6 @@ class Level19Test {
                         content.armour().plating().get(2).name(),
                         0,
                         difficulty)
-                .withWingman(SimSpecs.wingman(
-                        content,
-                        "mortar",
-                        1,
-                        WingmanSpec.Side.LEFT,
-                        content.wingmen().rook().armour()))
                 .withSpecial(SimSpecs.special(content, "Airstrike", 4));
     }
 
@@ -167,6 +173,28 @@ class Level19Test {
                     fights / SEEDS));
         }
         System.out.println(report);
+    }
+
+    /**
+     * The autopilot completes the level without Rook too ({@code --escort none}), one seed per difficulty (M7 part I,
+     * step I1). On hard it does not (it is still retrying after 30 minutes): printed, a round-45 finding pending the
+     * user's review; the test fails once it does, so that the exception is removed here.
+     */
+    @Test
+    void theAutopilotFliesTheLevelWithoutRook() {
+        for (Difficulty difficulty : Difficulty.values()) {
+            LevelMetrics.Run run =
+                    LevelMetrics.autopilot(content, LEVEL, difficulty, withoutRook(content, difficulty), 1, MAX_STEPS);
+            String outcome = String.format(
+                    "Level 19 without Rook, %s: %s after %d retries",
+                    difficulty, run.complete() ? "won" : "not won", run.retries());
+            System.out.println(outcome);
+            if (difficulty == Difficulty.HARD) {
+                assertFalse(run.complete(), outcome + ": remove the hard exception");
+            } else {
+                assertTrue(run.complete(), outcome);
+            }
+        }
     }
 
     @Test

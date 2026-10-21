@@ -118,7 +118,7 @@ design tree; this list is only a reminder.
   marked data tables. It also fails when a marked table differs from its `data.yaml`.
 - `python3 tools/sync_tables.py` – renders every marked table from the `data.yaml` in the
   README's directory (`--check` only lists the tables that differ). Needs PyYAML.
-- `python3 tools/balance.py` – balancing report for levels 01–14 from the data files and the
+- `python3 tools/balance.py` – balancing report for levels 01–21 from the data files and the
   expected purchases in `design/player/balance-plan.yaml` (`--weapons` prints every weapon's
   per-level numbers); the same checks run as JUnit tests (`BalanceTest`, `ActPlaythroughTest`).
   It exits 0; the L01–L03 DPS gap, the Coilwyrm's bounty and the Level 12 Wraith rear check
@@ -131,6 +131,7 @@ design tree; this list is only a reminder.
   `-Pdifficulty=easy,medium,hard`, `-Pseeds=3`, `-Pfit=test|plan|user` (default: each measure with its test's fit),
   `-Pparts=pacing,floor,haul,boss,secondary,hp,pursuit,colossus` (`pursuit`: motes on the screen and lunges, levels with a pursuit only; `colossus`: the breach fight's phases, damage, shots, breaches, bites, eruptions), `-Pjson`; `-Plevel=10,15` takes several. It reads the data at run
   time (no recompile after a data.yaml edit) and runs the flights in parallel: a few seconds a level.
+- `./gradlew :content:playthroughSave -Plevel=15 [-Pdifficulty=medium] -Pout=<dir>` – a real save for a playthrough (a debug start writes none): flies `ActPlaythroughTest`'s campaign on the balance plan to that level and writes it into `<dir>/saves/` (the autosave and slot 1); play it with `--settings <dir>/settings.properties`, Continue opens the level's briefing (an act's intro first).
 - `tools/concept/` – reproducible generators for concept mockups (Python 3 + PIL + numpy,
   ffmpeg for audio/GIF encoding). Each script documents its outputs at the top.
 - `tools/art/` – production generators for final assets (see

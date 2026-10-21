@@ -93,7 +93,7 @@ class PartELevelKeysTest {
                 "a trigger's easy/hard gives its hits");
         assertProblem(
                 text -> replace(text, "    at: []\n    hard: {at:", "    at: []\n    hard: {hits: 2, at:"),
-                "an easy/hard change gives at (an enemy nest's placements) or hits (a trigger's)");
+                "an easy/hard change gives at (an enemy nest's placements), hits (a trigger's)");
         assertProblem(text -> replace(text, "    hard: {hits: 5}\n", "    hard: {hits: 0}\n"), "hits must be > 0");
         assertProblem(
                 text -> replace(

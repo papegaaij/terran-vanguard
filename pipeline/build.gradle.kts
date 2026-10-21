@@ -230,17 +230,18 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "basin-rumble-r43-a.ogg",
         "swarm-hum-r43-a.ogg",
         "swarm-lunge-r43-a.ogg",
-        // Round 44's proposals (M7 part H, step HB; CC0/CC-BY Freesound originals, CREDITS.md), option a until the
-        // user's pick: the Dust Colossus's bulge, eruption, suction loop, bite and death (Level 21) and the Revenant
-        // Walker's rail lance charge and shot and stomp shockwave. The ridge pass plays b: a's pan runs left to right,
-        // Level 21's ridge runs from the right edge to the left (b's way).
+        // Round 44's picks (the user, 2026-10-20; CC0/CC-BY Freesound originals, CREDITS.md): the Dust Colossus's
+        // bulge a, eruption a, suction loop a, bite a and death a (Level 21) and the Revenant Walker's rail lance
+        // charge b, shot a and stomp shockwave a. The ridge pass is a too, but its game copy is not copied from here:
+        // a's file pans left to right and Level 21's ridge runs from the right edge to the left, so
+        // `tools/concept/audio/sfx_r44.py --mirror colossus-ridge-r44-a` writes assets/sfx/colossus-ridge-r44-a.ogg
+        // with its channels swapped (same name, so its CREDITS.md rows match).
         "colossus-bulge-r44-a.ogg",
         "colossus-eruption-r44-a.ogg",
         "colossus-suction-r44-a.ogg",
         "colossus-bite-r44-a.ogg",
         "colossus-death-r44-a.ogg",
-        "colossus-ridge-r44-b.ogg",
-        "walker-lance-charge-r44-a.ogg",
+        "walker-lance-charge-r44-b.ogg",
         "walker-lance-shot-r44-a.ogg",
         "walker-shockwave-r44-a.ogg",
     )
@@ -327,8 +328,8 @@ tasks.test {
  * Copies the chosen concept art and audio that stand in for production assets into assets/ and
  * cuts the sprite frames. Run it after a concept choice changes; its output is committed (Git
  * LFS), the build only reads assets/. The title scene, the logo and the bitmap fonts are production
- * art (tools/art/ui_scenes.py, tools/art/fonts.py), the act titles' lettering is rendered by
- * tools/concept/ui_assets.py. It rewrites the credits roll last.
+ * art (tools/art/ui_scenes.py, tools/art/fonts.py), and so are the act titles' lettering
+ * (tools/art/act_titles.py). It rewrites the credits roll last.
  */
 tasks.register("importPlaceholders") {
     description = "Copies chosen concept art and audio into assets/ as placeholders."

@@ -2,7 +2,7 @@
 title: Act 3 – Red Dust
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../act-2-homefront, ../../world/mars, ../../story/twist]
 updated: 2026-10-20
 ---
@@ -30,13 +30,13 @@ marked tables; the outro joins it in part H.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-15-olympus-descent](level-15-olympus-descent/README.md) | Act 3's opener: the descent through the cloud deck past Olympus Mons to the colony rail line; introduces the Burrower and the Dust Kite | approved | in-progress | final |
-| [level-16-valles-canyon-run](level-16-valles-canyon-run/README.md) | The canyon run east to Ares Landing: terrain collision, a fork, tendril barriers and the Threadcrawler; the Helix station untouched on the rim | approved | in-progress | final |
-| [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | in-progress | chosen |
-| [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | in-progress | chosen |
+| [level-15-olympus-descent](level-15-olympus-descent/README.md) | Act 3's opener: the descent through the cloud deck past Olympus Mons to the colony rail line; introduces the Burrower and the Dust Kite | approved | done | final |
+| [level-16-valles-canyon-run](level-16-valles-canyon-run/README.md) | The canyon run east to Ares Landing: terrain collision, a fork, tendril barriers and the Threadcrawler; the Helix station untouched on the rim | approved | done | final |
+| [level-17-dome-siege](level-17-dome-siege/README.md) | Hold Ares Landing's five domes against bombers and Shellbacks; Choir Herald and Shellback introduced; the Helix compound untouched | approved | done | final |
+| [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | in-progress | final |
 | [level-19-foundry-of-tharsis](level-19-foundry-of-tharsis/README.md) | Tharsis foundry: grey Warden Tanks on conveyors, furnace vents, turrets that fire after you pass; mid-boss Revenant Walker and the hint-2 wreck crawl | approved | in-progress | final |
-| [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | in-progress | final |
-| [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | in-progress | proposed |
+| [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | done | final |
+| [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | in-progress | chosen |
 
 ## Design
 
@@ -96,7 +96,7 @@ to ship out and nine days at full burn put the arrival at **five weeks** of sieg
 `tools/art/act_stills.py act-3` from Level 15's production backdrop as Act 2's was from Level 08's:
 Mars from the entry corridor, Olympus Mons' caldera and flank far below through thin cirrus, the
 cloud deck, the Tharsis plain beyond, a dust-storm front on the northern horizon; its chrome
-lettering `ui/act-3-red-dust-title.png` from `tools/concept/ui_assets.py`). Text:
+lettering `ui/act-3-red-dust-title.png` from `tools/art/act_titles.py`). Text:
 
 <!-- data: act-title-card -->
 > ACT III
@@ -392,28 +392,31 @@ ART-B, as Act 2's); the intro's four images are on the
 - [x] Act data file: `levels: [15, 21]`, the title card, the four intro pages and the four outro
       pages with their images and expressions, rendered into *Act intro and outro* as marked
       tables (part B for the intro: done in step B2; part H for the outro: done in step PH2, with `next_act` for the release's end).
-- [ ] The title card's still (`tools/art/act_stills.py act-3` from Level 15's backdrop) and lettering;
+- [x] The title card's still (`tools/art/act_stills.py act-3` from Level 15's backdrop) and lettering;
       the eight briefing images (`tools/art/briefing_images.py`). Part B: the still, the lettering and the
-      intro's four images (step ART-B, round 38, pending the user's review); the outro's four in part H.
-- [ ] The act's systems: the `buried` layer (L15), terrain collision and the canyon walls (L16,
+      intro's four images (step ART-B, round 38, accepted in round 43 (2026-10-20)); the outro's four in part H
+      (step ART-H3, `tools/art/outro_l21_images.py`, in `assets/ui/briefing/`, approved in round 44 F.a–F.f); the
+      lettering from `tools/art/act_titles.py` (step ART-K).
+- [x] The act's systems: the `buried` layer (L15), terrain collision and the canyon walls (L16,
       rules in the [art-direction](../../art-direction/README.md) layer model), `link` and `aura`
       (L16–L17), the visibility radius (L18), conveyors, vents and up-facing turrets (L19), reverse
       scroll (L20), the breaching boss (L21).
 - [x] `reference_dps` 15–21 and the Act 3 balance plan (part A) before any Act 3 level data (M7
       part A: `enemies/data.yaml`, the plan's rows 15–21, `ActHpFactorTest`, `BalanceTest`).
-- [ ] Every level within the act's density band (`DensityTest`, `PacingTest`) and its typical haul
-      within ±5 % of its budget (`TypicalHaulTest`).
-- [ ] The act-end order after L21 (L14's) and the release's end moved from L14 to L21; the hangar
+- [x] Every level within the act's density band (`DensityTest`, `PacingTest`) and its typical haul
+      within ±5 % of its budget (`TypicalHaulTest`; through Level 21, M7 part I).
+- [x] The act-end order after L21 (L14's) and the release's end moved from L14 to L21; the hangar
       before L22 reads `ACT IV - DEEP WATER: COMING SOON`.
 - [x] A save at the L15 hangar from the M6 release, written before Act 3 existed, plays the Act 3
       intro **once** on Continue (user decision L.6 of round 36): the title card, the four intro
       pages and the Level 15 briefing, then the hangar; a flag in the save (intro seen) keeps it
       from playing again (part B: steps B2 and B4, the `act-intro:N` flags, `CampaignRouteTest`,
-      `SaveFormatTest`; captured in round 38, `act-3-intro-capture-r38-a`, pending the user's review).
+      `SaveFormatTest`; captured in round 38, `act-3-intro-capture-r38-a`, accepted in round 43 (2026-10-20)).
 - [ ] Ares Control voiced (cast in round 36, S.6 = b; his lines rendered in part B, his mid-line
       pauses checked); the Choir's speech treatment (part H). Part B's half done in steps AUD-B and VOX-B
-      (pending the user's listen in round 38).
-- [ ] `ActPlaythroughTest` and `BalanceTest` through Act 3 with Rook (part I).
+      (the listen-through of every voiced Act 3 line is round 45's, I.5).
+- [x] `ActPlaythroughTest` and `BalanceTest` through Act 3 with Rook (M7 part I, step I1, 2026-10-20: Levels 01–21 on every difficulty).
+- [ ] The user's playthrough of Act 3 (the same one as Act 2's, round 34's P9 and M7's: part I's save at the Level 15 hangar, medium; round 44 X.m, I.3), then the `v0.1` release (Acts 1-3, I.2).
 
 ## Open questions
 
@@ -426,8 +429,7 @@ ART-B, as Act 2's); the intro's four images are on the
 - 2026-10-01: L17 introduces the Shellback, an animal-like Vrell armoured beast that threatens the domes (round 05 follow-up).
 - 2026-10-12 (overnight design phase): the seven roster rows promoted to draft level documents
   (the Contents table replaces the roster); the canyon-wall question moved to Level 16 and answered
-  there (M1 = a, pending). This README rewritten for the rules Acts 1–2 established, all pending
-  the user's review in concept round 36: the act intro (title card ACT III · RED DUST · Mars · June
+  there (M1 = a, pending). This README rewritten for the rules Acts 1–2 established, all accepted in round 36 (2026-10-13): the act intro (title card ACT III · RED DUST · Mars · June
   2185, four pages continuing Act 2's outro) and the act outro (four pages, the Vrell leave Mars
   and Varga tracks their fleet to Europa) as draft texts; the timeline of nine days' crossing and
   five weeks of siege; the units in the act with the act HP factor from the proposed reference DPS
@@ -440,8 +442,7 @@ ART-B, as Act 2's); the intro's four images are on the
 - 2026-10-12 (overnight design phase, harmonised): Levels 15, 16, 17 and 19 brought into the band
   (L15 200 ≈ 65 a minute, scale 0.42; L16 215 ≈ 70, 0.54; L17 196 ≈ 70, 0.60; L19 172 ≈ 62,
   0.52); their threat profiles (L15 front 96 % · sides 4 %, L17 95 · 5, L19 front 90 · rear 10),
-  "five weeks" in Level 15, Ares Warden's lines moved to Ares Control. Pending the user's review in
-  round 36.
+  "five weeks" in Level 15, Ares Warden's lines moved to Ares Control. Accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the act approved (D.1) with its intro and outro texts as drafted.
   M1–M19 kept or accepted. Q.24 all yes: the density band 60–72 a minute (breather 48–55), the
   timeline (nine days' crossing, five weeks of siege, June 2185), Okafor's refrain in L17 and L19
@@ -452,7 +453,7 @@ ART-B, as Act 2's); the intro's four images are on the
   **L.6**: a release save at the L15 hangar plays the Act 3 intro once on Continue (Implementation).
   The levels stay `implementation: not-started` until M7 builds them (parts A–I on the
   [roadmap](../../tech/roadmap/README.md)).
-- 2026-10-14 (M7 part B, step ART-B): the title card's still and the intro's four images made straight to production (round 38), as Act 2's; the still sees Level 15's deep layer in perspective (Olympus far below, the cloud deck, the plain beyond, the storm front on the horizon). Pending the user's review: the flat cloud banks, the faint `mars-high` tiling near the bottom, RED DUST's lettering taller than HOMEFRONT's.
+- 2026-10-14 (M7 part B, step ART-B): the title card's still and the intro's four images made straight to production (round 38), as Act 2's; the still sees Level 15's deep layer in perspective (Olympus far below, the cloud deck, the plain beyond, the storm front on the horizon). Accepted in round 43 (2026-10-20): the flat cloud banks, the faint `mars-high` tiling near the bottom, RED DUST's lettering taller than HOMEFRONT's.
 - 2026-10-14 (user, round 38): closed: the title card `act-3-still-final-r38-a` approved as final (F.7); the
   intro capture accepted (K.2), the intro pages under Level 15's header and objectives kept as built (R.3); the
   four voiced intro pages accepted (V.4); B.2 (e), the `act-intro:N` story flag with the version 3 save's
@@ -465,3 +466,5 @@ ART-B, as Act 2's); the intro's four images are on the
 - 2026-10-20 (step PH2, M7 part H): the outro's four pages in the act's data (rendered above, the approved text
   unchanged) and `next_act: {act: ACT IV, name: DEEP WATER, setting: EUROPA}` for the release's end (H.7d: "ACTS I-III
   COMPLETE", "ACT IV - DEEP WATER. EUROPA. COMING SOON."; the hangar before L22 "ACT IV - DEEP WATER: COMING SOON").
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-20 (user, round 44, closed): Level 21 and the act end built and reviewed (rows F, V, K, B, Q; two captures K.b and K.c asked for changes, see the [Level 21 decisions](level-21-dust-colossus/README.md#decisions)); the art audit (A.a, A.b: `art: final` for this README and the part READMEs whose assets are production); the stale "pending the user's review" notes of the Act 3 tree and units rewritten as "accepted in round N (date)" (I.7); an Act 3 level is `implementation: done` when its round has closed and its checklist is ticked (I.8; Level 15 is `done`); the playthrough stays an act-level item (one for M5 and M7, I.3). The release `v0.1` is Acts 1-3 (I.2); the Act 4 design phase follows part I and the release (J.a).

@@ -161,7 +161,8 @@ final class GroundRules {
                         placement.t(),
                         placement.x(),
                         SimSpecs.hitbox(target.size().orElseThrow()),
-                        target.hp().orElse(0.0),
+                        change.flatMap(LevelData.Placements::hp)
+                                .orElse(target.hp().orElse(0.0)),
                         target.bounty().orElse(0),
                         target.drop().map(SimSpecs::pickup),
                         hits,

@@ -38,6 +38,9 @@ import java.util.List;
  *     hits allowed ({@link #standing(int, String)}): failed at the first one broken
  * @param escapesAllowed M7 part F (design/campaign Level 19, "12 of 14"): how many units of an escapes objective
  *     may get away ({@link #withEscapesAllowed(int)}); 0 for none (every one destroyed)
+ * @param countsBosses step SIM-K (design/campaign Level 21, round 44 K.h: "count as the data says"): whether a kill
+ *     ratio counts the level's bosses among its enemies (their kills and the total; {@link #withBossesCounted}); true
+ *     unless the data says otherwise
  */
 public record Secondary(
         double killRatio,
@@ -56,8 +59,12 @@ public record Secondary(
         boolean links,
         boolean untouched,
         boolean standing,
-        int escapesAllowed) {
+        int escapesAllowed,
+        boolean countsBosses) {
     public Secondary {
+        if (!countsBosses && !(killRatio > 0)) {
+            throw new IllegalArgumentException("only a kill ratio leaves the bosses out of its count");
+        }
         if (escapesAllowed < 0
                 || (escapesAllowed > 0
                         && (escapes.isEmpty() || !killAll.isEmpty() || !parts.isEmpty() || sondes || links))) {
@@ -117,6 +124,72 @@ public record Secondary(
         if (afloat && (!groups.isEmpty() || !escapes.isEmpty() || !killAll.isEmpty() || !parts.isEmpty())) {
             throw new IllegalArgumentException("an afloat objective counts the convoy, nothing else");
         }
+    }
+
+    /** Without step SIM-K's bosses left out (they count). */
+    public Secondary(
+            double killRatio,
+            int credits,
+            List<String> groups,
+            String escapes,
+            List<String> killAll,
+            String label,
+            String partsOf,
+            List<Integer> parts,
+            int beforePhase,
+            String tag,
+            boolean afloat,
+            boolean sondes,
+            double integrity,
+            boolean links,
+            boolean untouched,
+            boolean standing,
+            int escapesAllowed) {
+        this(
+                killRatio,
+                credits,
+                groups,
+                escapes,
+                killAll,
+                label,
+                partsOf,
+                parts,
+                beforePhase,
+                tag,
+                afloat,
+                sondes,
+                integrity,
+                links,
+                untouched,
+                standing,
+                escapesAllowed,
+                true);
+    }
+
+    /**
+     * Step SIM-K (design/campaign Level 21, "the boss and its debris not counted"): this kill ratio counting the level's
+     * bosses among its enemies ({@code counted}) or not.
+     */
+    public Secondary withBossesCounted(boolean counted) {
+        return new Secondary(
+                killRatio,
+                credits,
+                groups,
+                escapes,
+                killAll,
+                label,
+                partsOf,
+                parts,
+                beforePhase,
+                tag,
+                afloat,
+                sondes,
+                integrity,
+                links,
+                untouched,
+                standing,
+                escapesAllowed,
+                counted);
     }
 
     /** Without M7 part F's escapes allowed. */
@@ -180,7 +253,8 @@ public record Secondary(
                 links,
                 untouched,
                 standing,
-                allowed);
+                allowed,
+                countsBosses);
     }
 
     /** Without round 41's standing. */

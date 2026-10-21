@@ -60,7 +60,7 @@ class WalkerSoundsTest {
         assertEquals("sfx/walker-wreck-settle-r43-a.ogg", Sfx.WALKER_WRECK_SETTLE.path());
         assertEquals(Sfx.Priority.EXPLOSION, Sfx.WALKER_DEATH.priority(), "its death on the explosion rung");
         // Round 44's proposals, a each until the user's pick (step HB).
-        assertEquals("sfx/walker-lance-charge-r44-a.ogg", Sfx.WALKER_LANCE_CHARGE.path());
+        assertEquals("sfx/walker-lance-charge-r44-b.ogg", Sfx.WALKER_LANCE_CHARGE.path());
         assertEquals("sfx/walker-lance-shot-r44-a.ogg", Sfx.WALKER_LANCE_SHOT.path());
         assertEquals("sfx/walker-shockwave-r44-a.ogg", Sfx.WALKER_SHOCKWAVE.path());
         assertEquals(1f, WalkerCues.WALKER_LEVEL, "levelled in their files");

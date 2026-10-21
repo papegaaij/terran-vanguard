@@ -2,9 +2,9 @@
 title: Level 18 – Dust Storm
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../enemies/air/ghost-drone, ../../../enemies/ground/dust-devil, ../../../enemies/air/dust-kite, ../../../story/twist, ../../../player/systems, ../../../player/wingmen, ../../../world/mars]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Level 18 – Dust Storm
@@ -24,7 +24,7 @@ boss, light firing groups and the calm eye, at the Act 2+ floor's density (≈ 1
 phase (2026-10-12) from the act roster and the gap analysis's recommended answers, all kept or
 accepted in the round. M7 part E (step E2, 2026-10-19) moved the numbers into the level's
 [data.yaml](data.yaml): the tables below are rendered from it, the waves re-planned to the Act 2+ floor
-(the user's decision of 2026-10-19; see *Waves*), pending the user's review in round 41.
+(the user's decision of 2026-10-19; see *Waves*), accepted in round 41 (2026-10-19).
 
 ## Briefing
 
@@ -172,7 +172,7 @@ Enemy definitions are linked per row; formation names from the
   thinned by the formation lever. Every side and rear wave warned 3 s ahead at its edge (the warnings
   draw above the dust). With the plan's fit at medium: **2.77 enemies on the screen and 46.5 enemy shots a
   minute**, two pauses over 2 s (t=25.8–28.7 before the front, the clearing); hard 2.93 and 77.5, one pause;
-  easy 1.26 and 15.8 (Act 1's rule: one pause over 3 s); pending the user's review in round 41.
+  easy 1.26 and 15.8 (Act 1's rule: one pause over 3 s); accepted in round 41 (2026-10-19).
 - **Quiet windows**: no other wave for 3.5 s after the first Dust Devils (t=41.5) and after the first
   Ghost Drones (t=69.5). The Ghost Drones' first sight keeps Vrell air off the screen (their spec):
   the grey machines read as a different force; a spine-turret nest on the ground (t≈69) keeps the
@@ -365,7 +365,7 @@ act factor **2.56**, bounties × the scale (the beam era raises HP, not bounties
 Act 2+ floor (≈ 101 a minute with the beam era's HP; the user's decisions of 2026-10-19) a **`bounty_scale`
 of 0.37** (from round 36's 0.92 for ≈ 50 a minute, E2's 0.51 for ≈ 89 and E4's 0.24 for ≈ 204) puts the
 typical haul at **2,186 (−1.1 %)**, inside M12's 0.3–0.5 expectation (0.38 steps to +4.3 % as the rounded
-bounties change); `TypicalHaulTest`, pending the user's review in round 41.
+bounties change); `TypicalHaulTest`, accepted in round 41 (2026-10-19).
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
@@ -391,20 +391,20 @@ expects `homing` (the Hornet Launcher or the Micro-Missile Pod) and is flyable w
 
 ## Concept art
 
-Production art of M7 part E's round 41 (step ART-E), pending the user's review. Prompts:
+Production art of M7 part E's round 41 (step ART-E), accepted in round 41 (2026-10-19). Prompts:
 [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r41-a.png](concept/backdrop-final-r41-a.png) | Level 18 backdrop final (`tools/art/backdrop_l18.py`): the play field at twelve times with the storm look b at the README's radius, stand-in units; the main pieces and the storm textures (sheet) | chosen (round 41); fixed by step FXS (2026-10-19), pending the user's look (F.c: a horizontal line where the dust ends at about 5 s; step FXS) |
-| [concept/backdrop-final-r41-a.gif](concept/backdrop-final-r41-a.gif) | Level 18 backdrop final: the whole level flown at 0.5x with the storm look, 10 fps | chosen (round 41); fixed by step FXS (2026-10-19), pending the user's look (F.c: a horizontal line where the dust ends at about 5 s; step FXS) |
+| [concept/backdrop-final-r41-a.png](concept/backdrop-final-r41-a.png) | Level 18 backdrop final (`tools/art/backdrop_l18.py`): the play field at twelve times with the storm look b at the README's radius, stand-in units; the main pieces and the storm textures (sheet) | chosen (round 41); fixed by step FXS (2026-10-19), accepted in round 41 (2026-10-19) (F.c: a horizontal line where the dust ends at about 5 s; step FXS) |
+| [concept/backdrop-final-r41-a.gif](concept/backdrop-final-r41-a.gif) | Level 18 backdrop final: the whole level flown at 0.5x with the storm look, 10 fps | chosen (round 41); fixed by step FXS (2026-10-19), accepted in round 41 (2026-10-19) (F.c: a horizontal line where the dust ends at about 5 s; step FXS) |
 | [concept/l18-props-final-r41-a.png](concept/l18-props-final-r41-a.png) | The rover-wreck secret (`tools/art/storm_units.py`): the half-buried militia rover (intact, hit, destroyed), its red beacon, seen in / at the edge of / outside the radius, the pod popping (sheet) | chosen (round 41: approved as final) |
 | [concept/l18-props-final-r41-a.gif](concept/l18-props-final-r41-a.gif) | The rover scrolling into the radius, shot open, the crate popping free, 20 fps | chosen (round 41: approved as final) |
-| [concept/level-18-capture-r41-a.png](concept/level-18-capture-r41-a.png) | Game capture (step E6): twenty frames of a medium run with the plan's L18 ship and Rook (`--invulnerable`) and a no-fire run showing the Dust Devils' pull, the debrief last | proposed (round 41); K.a fixed by step FXS (2026-10-19), pending the user's look (the Dust Devil vanishes for a second at 24 s; step FXS) |
-| [concept/level-18-capture-r41-a.mp4](concept/level-18-capture-r41-a.mp4) | Game capture (step E6): the whole medium run with sound (t −1 to 214), then the pull run (t 39–49) | proposed (round 41); K.a fixed by step FXS (2026-10-19), pending the user's look (the Dust Devil vanishes for a second at 24 s; step FXS) |
-| [concept/level-18-fixes-r41-b.png](concept/level-18-fixes-r41-b.png) | Game capture (step FXS) after round 41's fixes, eight frames: the front passing with its top faded out (F.c), the Dust Devils opening out of the dust at the radius's edge and open inside it (K.a), Needlers and Ghost Drones outside the radius as dust-coloured silhouettes with their lights (R.b) | proposed (round 41 follow-up) |
-| [concept/level-18-fixes-r41-b.mp4](concept/level-18-fixes-r41-b.mp4) | Game capture (step FXS): the front passing (t 27–34), the Dust Devils and the silhouettes (t 75–91), no sound | proposed (round 41 follow-up) |
-| [concept/level-18-crops-r41-a.png](concept/level-18-crops-r41-a.png) | Readability crops from the capture at 1:1 and 2×: inside the radius, outside it, the back wall at 150 px | proposed (round 41) |
+| [concept/level-18-capture-r41-a.png](concept/level-18-capture-r41-a.png) | Game capture (step E6): twenty frames of a medium run with the plan's L18 ship and Rook (`--invulnerable`) and a no-fire run showing the Dust Devils' pull, the debrief last | chosen (round 41 closed: accepted; round 44, A.b: confirmed) |
+| [concept/level-18-capture-r41-a.mp4](concept/level-18-capture-r41-a.mp4) | Game capture (step E6): the whole medium run with sound (t −1 to 214), then the pull run (t 39–49) | chosen (round 41 closed: accepted; round 44, A.b: confirmed) |
+| [concept/level-18-fixes-r41-b.png](concept/level-18-fixes-r41-b.png) | Game capture (step FXS) after round 41's fixes, eight frames: the front passing with its top faded out (F.c), the Dust Devils opening out of the dust at the radius's edge and open inside it (K.a), Needlers and Ghost Drones outside the radius as dust-coloured silhouettes with their lights (R.b) | chosen (round 41 closed: accepted; round 44, A.b: confirmed) |
+| [concept/level-18-fixes-r41-b.mp4](concept/level-18-fixes-r41-b.mp4) | Game capture (step FXS): the front passing (t 27–34), the Dust Devils and the silhouettes (t 75–91), no sound | chosen (round 41 closed: accepted; round 44, A.b: confirmed) |
+| [concept/level-18-crops-r41-a.png](concept/level-18-crops-r41-a.png) | Readability crops from the capture at 1:1 and 2×: inside the radius, outside it, the back wall at 150 px | chosen (round 41 closed: accepted; round 44, A.b: confirmed) |
 
 The level needs (part E's production-art round; the mood comes from the storm-plains
 mood still and the chosen radius look **b**, the soft ragged falloff, in
@@ -469,7 +469,7 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the Act 3 roster to a draft level document.
-  Taken as the recommended options, pending the user's review in round 36: M6 = a (the storm is a
+  Taken as the recommended options, accepted in round 36 (2026-10-13): M6 = a (the storm is a
   look: ground and `low-air` gone and air units dimmed outside a radius, bullets always visible,
   everything hittable), M10 = b (the Dust Kite as the act's popcorn), M12 = a, M13 = a (Varga's line,
   Okafor's "Not on this channel, Doctor.", the private part on her briefing page), M17 = a, M18 = a
@@ -493,7 +493,7 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
 - 2026-10-19 (M7 part E, step E2): the level's `data.yaml` written and the tables marked. The user's
   decision of 2026-10-19: Level 18 meets the Act 2+ pacing and floor rules and joins `small_act_hp`
   (Needler 12, Stinger 18), staying the breather by threat, not by count. Built as the gap check's
-  defaults, pending the user's review in round 41: the anchor waves kept and filled to a wave about every
+  defaults, accepted in round 41 (2026-10-19): the anchor waves kept and filled to a wave about every
   2.5 s with firing groups, kite swarms and nests (264 enemies, ≈ 89 a minute; `bounty_scale` 0.51 for a
   typical 2,228); a spine-turret nest on the ground in the hint-1 window; the Needler pincers 2 per edge;
   the Skitters' rear entries line abreasts from the rear; the Dust Devils' pairs and trio `pack`s on
@@ -503,16 +503,14 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
   ART-E's.
 - 2026-10-19 (M7 part E, step E4): ART-E's backdrop block merged (tile sets `north-plain`, `storm-plain`,
   `dry-lake`, the seams, pipelines and ridges under the nests, the eye's walls, the front and the back wall
-  passing over); the high-air factor 2.0 as ART-E rendered it (E2's placeholder had 2.2), pending the user's
-  review in round 41.
+  passing over); the high-air factor 2.0 as ART-E rendered it (E2's placeholder had 2.2), accepted in round 41 (2026-10-19).
 - 2026-10-19 (M7 part E, step E4): the Dust Devil and the Ghost Drone mapped (`StormRules`; the grit spiral
   turns clockwise on the screen with the vanes' spin) and the level flown (`Level18Test`). E2's waves flew
   1.05 enemies on the screen with the plan's fit; three tuning passes (the fill groups one or two larger, a
   light firing group or kite V midway between every two waves at least 2 s apart, the quiet windows kept, the
   hint nest 5 turrets) reach 3.27 on the screen and 22.9 shots a minute at medium: 605 enemies (≈ 204 a minute)
   and `bounty_scale` 0.24 (typical 2,136, −3.4 %). The intel's hazard reads "dust storm, half blind" and the
-  setting "Mars, northern plains" ("low visibility" overflowed the panel). All pending the user's review in
-  round 41.
+  setting "Mars, northern plains" ("low visibility" overflowed the panel). All accepted in round 41 (2026-10-19).
 - 2026-10-19 (user): the beam era's density is "tougher, not more": raise the enemies' HP for the beam era so
   units live long enough to shoot back, bring Level 18 back to about 90–110 enemies a minute still meeting the
   floor, and let later levels follow the same rule.
@@ -523,7 +521,7 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
   streams Stinger groups of 3, four light groups in the widest gaps; 301 enemies (≈ 101 a minute), 2.77 on
   the screen and 46.5 shots a minute at medium (hard 2.93 and 77.5), `bounty_scale` 0.37 (typical 2,186,
   −1.1 %). The anchors, quiet windows, the eye, the radio and the hint nest kept; the autopilot flies every
-  difficulty without a retry. Pending the user's review in round 41 (the shots a minute are about twice
+  difficulty without a retry. Accepted in round 41 (2026-10-19) (the shots a minute are about twice
   Level 10's 22: the price of units that shoot back).
 - 2026-10-19 (user, round 41; step FXS): **F.c** the straight line at 5 s in the backdrop loop was the backdrop's own: the
   high-air `storm-front` piece (and the `storm-back-wall`) ended at its top row at up to 20 % opacity, a hard edge passing
@@ -536,5 +534,6 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
   colour at their place (the veil and its drift layer), 0.82 of it with 0.12 of the unit's luminance as a trace of its
   shading, the shade fading into the plain dust over 2 texels round the edge, covering the unit whole; only saturated
   bright pixels (the Vrell's light) poke through, a pale or white part (a Needler's legs) goes into the dust, the
-  Ghost Drone's eye and tips come back with its glow frames (`StormLooksTest`). Pending the user's review
+  Ghost Drone's eye and tips come back with its glow frames (`StormLooksTest`). Accepted in round 44 (2026-10-20)
   (`concept/level-18-fixes-r41-b`).
+- 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

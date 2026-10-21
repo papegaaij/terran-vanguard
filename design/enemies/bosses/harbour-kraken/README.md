@@ -164,7 +164,7 @@ slam cycles to the third impact), phase 2 33.7 s (2.2 surfacing cycles of 15.1 s
 each dive), phase 3 13.0 s.
 
 
-**Round 40 (step CB, pending the user's review).** The rooted fight with the proposal's numbers (the
+**Round 40 (step CB, accepted in round 40 (2026-10-19)).** The rooted fight with the proposal's numbers (the
 head 1,400, total 2,200) lasted only **26 s** for the autopilot (the root-first pilot 36 s): with the
 head in open view, 200 px above the ship band, and five slow orbs a fan, the eyes take the whole open
 window and phase 2 ends in the first surfacing. The head was **re-measured to 3,400** (total 4,200):
@@ -396,7 +396,7 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
   stat block's numbers and the build choices (f)–(k), (o), (q), (r) and (u) accepted. `design:
   approved`, `art: final`; every Implementation item is ticked, so the implementation is `done`.
 - 2026-10-19 (user, round 40, A.a): the r40 Kraken approved and chosen (four rooted arms, everything 124 px up; the layout changes for the data, the platform anchor -46 and the sockets at x 60 / 154 / 326 / 420, accepted); build choices A.aa-A.af (aimed orb turns, raised-arm double damage, cut-root lanes, glow, reused sounds, cut-root chain) all yes. `art` stays `final`; step CB puts r40 in Levels 11 and 14.
-- 2026-10-19 (step CB, round 40 data; pending the user's review where marked): the reworked fight in
+- 2026-10-19 (step CB, round 40 data; accepted in round 40 (2026-10-19) where marked): the reworked fight in
   the data as approved (3a, A.aa–A.af). Measured with the autopilot and the plan's Level 11 fit, the
   proposal's head of **1,400** made a **26 s** fight (the arm-first pilot 36 s): with the head in open
   view and the thin fans the eyes take the whole open window, so phase 2 ended in the first
@@ -407,7 +407,7 @@ The production files (M5 part E, straight to production per E9 = a, built per E7
   otherwise, which would be 4); hard's telegraph **1.1 s** (0.8 before, with medium's 1.0 → 1.4;
   pending review). Rook's root line reuses his calamari line (no new voice); Okafor's teaching line
   needs its voice (VOX step).
-- 2026-10-19 (step WB, pending the user's review): the bounty **216 → 300** in Act 1 terms (head 144 →
+- 2026-10-19 (step WB, accepted in round 41 (2026-10-19)): the bounty **216 → 300** in Act 1 terms (head 144 →
   200, the roots 18 → 25, still 1 : 8), as Level 11's L10-style waves took its `bounty_scale` from 0.6
   to 0.43: every part pays what it did, 207 = **15 %** of budget(11) (`KrakenTest`); the fight is
   unchanged.

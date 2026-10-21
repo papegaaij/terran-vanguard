@@ -2,9 +2,9 @@
 title: Generator
 design: approved
 implementation: done
-art: none
+art: n/a
 depends-on: [../weapons, ../shields]
-updated: 2026-10-05
+updated: 2026-10-20
 ---
 
 # Generator
@@ -79,3 +79,4 @@ shield regeneration or lowers fire rate. It is a reward, not a risk.
   the projected load of the selected choice (red when it would not fit) and the output.
 - 2026-10-02: M4 part A: the spare-power bonus applies in flight (`SimSpecs.regenBonus` on the shield's regen, from `spare_power` in the data) and shows on the HUD's power row.
 - 2026-10-05: M4 part H docs reconciliation: implementation `done`; every item is ticked (the spare-power bonus since M4 part A).
+- 2026-10-20 (user, round 44, X.k): **`art: n/a`**: the part has only the shop's icons, made with the shop (`tools/art/icons.py`), and no assets of its own.

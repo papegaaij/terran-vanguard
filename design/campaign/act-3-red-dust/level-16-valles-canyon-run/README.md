@@ -1,10 +1,10 @@
 ---
 title: Level 16 – Valles Canyon Run
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/ground/tendril-anchor, ../../../enemies/ground/threadcrawler, ../../../enemies/air/dust-kite, ../../../player/weapons/ion-beam, ../../../player/wingmen, ../../../world/mars, ../../../art-direction]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Level 16 – Valles Canyon Run
@@ -212,8 +212,7 @@ islands with their own faces and tops. Ground units, ground targets and bullets 
 walls. Shadows of flyers fall on the floor and the foot bands, and on the wall faces and the plateau
 where they cross them (round 39 C3).
 
-Round 40 (R.1, "more like a real canyon", the Grand Canyon from above; step CW, pending the user's
-review): each wall descends from the plateau's rim to its foot in steps, three cliff bands (the dark
+Round 40 (R.1, "more like a real canyon", the Grand Canyon from above; step CW, accepted in round 39 (2026-10-18)): each wall descends from the plateau's rim to its foot in steps, three cliff bands (the dark
 inner gorge at the foot, the red-orange middle cliffs, the pale cap cliff) each above a talus bench,
 every step's edge set back toward the rock (never past the collision line, which stays the foot), the
 more the more room there is to the field's edge. Side canyons of three sizes bite back into the plateau,
@@ -291,7 +290,7 @@ The returning `medium` units get the act HP factor (reference DPS 80 at L16, M18
 - **Density and pacing** (step PE16, the user's round 40 P.e "all later levels" and "tougher, not more"):
   **367 enemies at medium** (the waves' 325, the 18 anchors among them, and 24 turrets and mortars; a
   Threadcrawler counts as one) over the 185 s after the launch, **≈ 119 a minute** (minimum 55; above the
-  step's 70–100 target, pending the user's review); a wave about every 2.3 s. The Act 2+ rules hold: at
+  step's 70–100 target, accepted in round 40 (2026-10-19)); a wave about every 2.3 s. The Act 2+ rules hold: at
   medium and hard at most 3 pauses over 2 s (`PacingTest`: medium and hard 1, gate 1's lone window
   35.5–37.8) and, with the plan's fit at medium, **2.63 enemies on the screen and 13.9 enemy shots a
   minute** (`ActFloorTest`: 2.5 and 10; before: 0.94 and 2.9, 15 pauses). The floor comes from long-lived,
@@ -596,7 +595,7 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
 - [x] Round 40 redo (R.1): stepped walls (cliffs and talus benches set back toward the rock, side
       canyons in a ragged rim, strata as contour bands), lit from the upper left with cast shadows,
       the pale plateau with gullies, the islands as buttes; the foot stays the collision line
-      (`CanyonProfile`, `WallProjectionTest`), pending the user's review
+      (`CanyonProfile`, `WallProjectionTest`), accepted in round 39 (2026-10-18)
 - [x] The fork island and the rock pillar; the autopilot flies both channels
 - [x] Tendril gates (the anchor spec), the Threadcrawler along the walls' foot, the outflow's Burrower
       field on sand only
@@ -620,7 +619,7 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
 - [x] Music and ambience as in *Music & ambience*; easy/hard as in *Difficulty notes*
 - [x] Production art and captures for part C's round (round 39: ART-C's backdrop and props, step C5's
       capture; built in steps C1–C4, G1, G2; accepted in round 39)
-- [ ] The walls' and islands' look redone to read as a real canyon from above (round 39 R.1: the user,
+- [x] The walls' and islands' look redone to read as a real canyon from above (round 39 R.1: the user,
       "take inspiration from pictures from the Grand Canyon from above"; step CW, for round 40)
 
 ## Open questions
@@ -630,7 +629,7 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the [Act 3](../README.md) roster to a draft
-  level document. Taken as the recommended options, pending the user's review in round 36: M1 = a
+  level document. Taken as the recommended options, accepted in round 36 (2026-10-13): M1 = a
   (damage and push-back, 0.5 s cooldown), M2 = a (wall polylines and island polygons in the level
   data; walls stop shots, beams, missiles and enemy bullets; pickups slide), M3 = a (a visual
   branch on one screen), M10 = b, M13 = a (in-level only Varga's observation), M17 = a, M18 = a
@@ -641,7 +640,7 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   relay hut secret, the `links` secondary (80), Rook's trail position, the radio and intel texts,
   `bounty_scale` ≈ 0.45.
 - 2026-10-12 (overnight, harmonised with the act README): density brought into the act's band of
-  60–72 a minute (pending the user's review in round 36) by smaller popcorn waves at the same
+  60–72 a minute (accepted in round 36 (2026-10-13) by smaller popcorn waves at the same
   cadence: Dust Kite streams 5 → 3, V-wings 7 → 5 and 5 → 4, snakes 6 → 4, the fork's channel
   streams 6 → 4 and 4 → 3; Skitter streams 4 → 3, snakes 6 → 4; only pairs in the narrows (the
   t=142 Kites and the t=147 Skitters); 215 enemies (≈ 70 a minute), the gates, the crawlers and
@@ -658,8 +657,7 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   240 px trail threshold.
 - 2026-10-14 (M7 part C, step C2): the numbers moved into [data.yaml](data.yaml) and the tables
   rendered from it (the briefing, the teaser, the threat profile, the sections, the wall table, the
-  waves, the ground targets, the radio, the credit budget). Built as the gap check's defaults, pending
-  the user's review in round 39: the gates as six linked enemy nests among the ground targets (`link:
+  waves, the ground targets, the radio, the credit budget). Built as the gap check's defaults, accepted in round 39 (2026-10-18): the gates as six linked enemy nests among the ground targets (`link:
   pairs`, moved from the wave table; the anchors 12 px off the collision line), the walls' height
   ramp at the mouth and the outflow, the crawlers up-canyon with the t=160 one crossing the floor,
   the Threadcrawler's whole 48 as its head's first bonus. The backdrop block in the data is a
@@ -673,19 +671,19 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   20.5, 48.5, 81.5, 138); the intel setting shortened to "Mars, Valles Marineris" (the panel's
   width). Typical haul 1,944 (+0.7 %, `bounty_scale` 0.54 kept), 69.7 enemies a minute; the
   autopilot touches a wall about 6 times a run (60 damage, 0–3 of it armour, the README's ≤ ≈ 30
-  armour kept). Pending the user's review in round 39.
+  armour kept). Accepted in round 39 (2026-10-18).
 - 2026-10-14 (M7 part C, step C5): part C built (steps C1–C4, G1, G2, ART-C, AUD-C); the capture
   `level-16-capture-r39-a` flown on medium with the plan's ship (the Orbital Lance as its special for the
   beam burn) and Rook, no invulnerability: 210 / 215, no armour lost, the secret, BARRIERS 9 / 9, A+. A crash
   at every Level 16 start fixed (the cargo rovers have no break-apart frames: the game now only needs them
-  when they exist). `art: proposed`; the art, the capture and every built default pending the user's review in
+  when they exist). `art: proposed`; the art, the capture and every built default accepted in round 39 (2026-10-18) in
   [round 39](../../../concept-rounds/round-39/README.md); the voices (step VOX-C) are not rendered yet.
 - 2026-10-18 (M7 part C, step VOX-C): the 17 voiced lines (Rook's t=11 line once per side) and both briefing
   pages rendered (`tools/art/voice.py`; Okafor, Rook, Varga, Ares Control; the Choir's song reused); "Airees",
   "Vallis Marinairis" and "Coprateez" respelled as approved, Eos and Helix spoken plain; four seeds pinned
   (design/audio/voice). The Choir moved t=162 → 166 and Varga's reply 169.5 → 173: the secondary's closing
   line takes a free radio at once and held the Choir back up to 6 s when gate 6 fell after t≈155
-  (`RadioTimelineTest` now plays Level 16, with and without Rook). Pending the user's review in round 39.
+  (`RadioTimelineTest` now plays Level 16, with and without Rook). Accepted in round 39 (2026-10-18).
 - 2026-10-18 (user, round 39): closed. C1 accepted: the Orbital Lance is **not** stopped by rock (the
   specials spec wins; *What walls stop* now lists it apart from the Ion Beam); C2 accepted: a fork wave flies
   the widest channel at its entry row, `edge` does not choose (the wave notes and *Branching* updated); C3
@@ -698,20 +696,18 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   **hint** (the approved Act 3 economy stays): Varga's t=47 line now "Kill an anchor and the tendril drops.
   Ordinary shots pass straight through it." (re-rendered, `tools/art/voice.py`), her L3 intel line "Kill an
   anchor to drop a tendril. A cache down the left fork.", the recommended traits `forward`, `piercing`; the
-  briefing's "a beam burns through the tendril" stays (true from the Lance and the Ion Beam on). Pending the
-  user's review: the R.4 wording.
+  briefing's "a beam burns through the tendril" stays (true from the Lance and the Ion Beam on). Accepted in round 39 (2026-10-18): the R.4 wording.
 - 2026-10-18 (step CW, round 39 R.1): the canyon redone from Grand Canyon views from above: stepped
   walls (three cliff bands over talus benches, set back toward the rock by the room to the field's edge
   and by side canyons of three sizes, the big ones repeating with the plateau tile so its gullies drain
   into them), per-step lighting from the upper left with cast shadows on the benches and the floor, the
   pale plateau, the islands as buttes, the rim kept clear of the Helix station; mockups in three render
   iterations, then `tools/art/backdrop_l16.py` (the model, the textures) and the game (`CanyonProfile`,
-  `WallProjection`). Pending the user's review (round 40): where a wall stands near the field's edge
+  `WallProjection`). Accepted in round 40 (2026-10-19) (round 40): where a wall stands near the field's edge
   (most of sections 2-4) only its inner gorge and first bench are on screen, so it still reads as a
   band; the buttes show mostly their pale caps.
 - 2026-10-19 (user, round 40, W.a): the canyon walls' redo approved as final (`art: final`); W.b the redo's defaults (a)-(f) all yes, W.c Varga's t=47 line accepted, W.d the fork's right channel kept.
-- 2026-10-19 (step PE16; the user's round 40 P.e "all later levels" and "tougher, not more"; pending the user's
-  review): the waves reworked to the Act 2+ rules. The walls, the fork, the six gates and their anchors, the
+- 2026-10-19 (step PE16; the user's round 40 P.e "all later levels" and "tougher, not more"; accepted in round 40 (2026-10-19)): the waves reworked to the Act 2+ rules. The walls, the fork, the six gates and their anchors, the
   Threadcrawlers, the Mantis pair, the narrows' pairs, the relay hut, the Helix glimpse, the pickups' carriers and
   the radio keep their times; the first Kite stream moved from t=7 to 5.5, the t=31 Skitters to 30. Added: 10
   Needler circles of 6 (hold 8 s), 13 Needler pairs, Stinger streams (channel, narrows pairs, and eight Skitter
@@ -727,4 +723,4 @@ being redone to look like a real canyon (round 39 R.1, step CW, for round 40); u
   ends ≈ t=188, before the level end at 190). Step RX's live run queued the secondary's voiced line (6.8 s) at
   154.65 with the radio busy, and it found no gap before the Choir nor between the three close lines, so it opened
   at 187.28; now it fits before the Choir whenever the radio frees by t≈160.7 (RadioTimeline's Level 16 runs green
-  with the new times). Pending the user's review.
+  with the new times). Accepted in round 39 (2026-10-18).

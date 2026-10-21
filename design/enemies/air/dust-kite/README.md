@@ -104,17 +104,17 @@ in [concept/prompts.md](../concept/prompts.md#dust-kite-r36-a), generator
 
 - 2026-10-12 (overnight design phase): new unit for M10 = b (one new Mars popcorn flyer, the
   "dust-camouflaged flyer" of the [Mars natives](../../../world/mars/README.md)), taken as the
-  recommended option, pending the user's review in round 36. Our proposals: the name, a membrane
+  recommended option, accepted in round 36 (2026-10-13). Our proposals: the name, a membrane
   glider rather than an insect, 1 HP, bounty 4, the sine glide with one swoop, the entry fade as a
   look only.
 - 2026-10-12 (overnight design phase): concept a/b proposed in round 36 (U.7: diamond kite vs
   crescent sail), pending the user's choice.
 - 2026-10-13 (user, round 36): approved (D.17). M10 = b kept: the Dust Kite, with its name (Q.22i). U.7 = b: the crescent sail chosen, the diamond kite (a) rejected and moved to `../concept/rejected/`.
-- 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 look (b, crescent sail), review sheet and GIF `dust-kite-final-r38-a` proposed for round 38 (pending the user's review).
+- 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 look (b, crescent sail), review sheet and GIF `dust-kite-final-r38-a` proposed for round 38 (accepted in round 38 (2026-10-14)).
 - 2026-10-14 (user, round 38): closed: the production art `dust-kite-final-r38-a` approved as final (F.4), so
   `art: final`; B.1 (b), the swoop bending 60 px across the ship's lane, and B.2 (g), the V-wing placing gliding
   units in their wing slots, kept as built.
-- 2026-10-18 (M7 part D, step D2; pending the user's review in round 40): the `flock` moved forward from part E,
+- 2026-10-18 (M7 part D, step D2; accepted in round 40 (2026-10-19): the `flock` moved forward from part E,
   since Level 17's Helix swarm of 8 needs it first: the Mote Swarm's weights (alignment 0.5, cohesion 0.3, leader
   0.6), its separation and reach scaled to the kite's 24 px (26 and 64 px), the glide's 130 px/s cruise, at most 12;
   `swarm` among its formations. Part E's dust storm (Level 18) reuses it.

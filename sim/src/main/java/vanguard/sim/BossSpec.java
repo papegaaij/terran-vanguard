@@ -1859,7 +1859,7 @@ public record BossSpec(
      * M7 part H, step H3 (design/enemies/bosses/dust-colossus, Phases: phase 2's spine vents): with each breach in a
      * boss phase whose attacks include {@code burst} (an index into its attacks; the vents' aimed burst, its parts the
      * vents) the living vents among {@code parts} rise with the mouth, at {@code distances} px from the mouth's centre
-     * toward the field's centre (the ridge's last stretch), {@code buried} → {@code ground} at the rise's middle and
+     * back along the body (the ridge's curve that ends at the mouth: step SIM-K, on its spine), {@code buried} → {@code ground} at the rise's middle and
      * back at the dive's middle; a destroyed vent stays dead. While the mouth is open the burst fires from each
      * risen living vent, its first {@link BreachArena#VENT_FIRST_SECONDS} after the open, then every its interval; the
      * phase's ring and fan timing leaves it out. The vents are out of the boss bar.
@@ -1885,7 +1885,8 @@ public record BossSpec(
      * most) as its marker appears ({@code radius} px; it does not follow), which erupts {@code markerSeconds} later:
      * the mouth is up at once ({@code ground}), the ship or Rook inside the marker takes {@code damage}, once; it
      * stands open {@code openSeconds}, then bites and dives as any breach, then lies {@code buriedSeconds} before the
-     * next marker.
+     * next marker. Step SIM-K (round 44, Q.4: "re-measure, then a short ring if still safe", as the walker's stomp):
+     * {@code ring}, a shockwave that expands from the mouth as it erupts (the marker was its tell); empty for none.
      */
     public record Eruption(
             double markerSeconds,
@@ -1893,7 +1894,8 @@ public record BossSpec(
             double damage,
             double inset,
             double openSeconds,
-            double buriedSeconds) {
+            double buriedSeconds,
+            Optional<Shockwave> ring) {
         public Eruption {
             if (!(markerSeconds > 0)
                     || !(radius >= 0)
@@ -1902,6 +1904,36 @@ public record BossSpec(
                     || !(openSeconds > 0)
                     || !(buriedSeconds >= 0)) {
                 throw new IllegalArgumentException("an eruption has a marker, a radius, a damage and an open time");
+            }
+        }
+
+        /** Without step SIM-K's ring at the eruption. */
+        public Eruption(
+                double markerSeconds,
+                double radius,
+                double damage,
+                double inset,
+                double openSeconds,
+                double buriedSeconds) {
+            this(markerSeconds, radius, damage, inset, openSeconds, buriedSeconds, Optional.empty());
+        }
+
+        /** Step SIM-K: this eruption with {@code shockwave} as it erupts (empty: none). */
+        public Eruption withRing(Optional<Shockwave> shockwave) {
+            return new Eruption(markerSeconds, radius, damage, inset, openSeconds, buriedSeconds, shockwave);
+        }
+    }
+
+    /**
+     * Step SIM-K (round 44, Q.4), an eruption's short ring: it expands from the mouth's centre to {@code radius} px over
+     * {@code expandSeconds} as the mouth erupts, dealing {@code damage} once to the ship and to Rook when it reaches
+     * their centres (not while the ship dashes), as the walker's {@link Stomp}; no bullets, so the no-fire distance
+     * does not spare a ship parked on the mouth.
+     */
+    public record Shockwave(double radius, double expandSeconds, double damage) {
+        public Shockwave {
+            if (!(radius > 0) || !(expandSeconds > 0) || !(damage >= 0)) {
+                throw new IllegalArgumentException("a shockwave has a radius, an expansion time and a damage");
             }
         }
     }

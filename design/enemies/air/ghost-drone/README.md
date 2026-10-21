@@ -106,7 +106,7 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the [air roster](../README.md) to a draft
-  spec. M18 = a taken as the recommended option, pending the user's review in round 36. Our
+  spec. M18 = a taken as the recommended option, accepted in round 36 (2026-10-13). Our
   proposals: 14 HP, one re-aimed 3-shot fast burst per pass with a 0.3 s glint, lanes
   120–220 px, bounty 14, the deliberately weak readability in the storm.
 - 2026-10-12 (merge): the round-36 a/b proposals are listed under Concept art (`art: proposed`).
@@ -115,6 +115,6 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 - 2026-10-19 (M7 part E, step E2): the stat block moved into [data.yaml](data.yaml) (the table is rendered
   from it): the `lane_strafe` movement, the burst's pass `trigger` (`within_x: 60`), its `tell` and
   `reaim`, the hard `second_pass`, `machine: true` and `intel: {unclassified_until_flown: true}`. Default
-  of the gap check, pending the user's review in round 41: the lane strafe a movement of the simulation,
+  of the gap check, accepted in round 41 (2026-10-19): the lane strafe a movement of the simulation,
   not authored paths.
 - 2026-10-19 (user, round 41): the final art approved (F.a/F.b, `art: final`); the build choices of the gap check accepted (B.b/B.c: all yes); the sounds and the intel picture accepted.

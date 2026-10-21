@@ -28,7 +28,7 @@ import vanguard.sim.WalkerHooks;
 
 /**
  * M7 part H (design/campaign Level 21; step HA): the Dust Colossus's pose and frame choice (the rise's three steps, half
- * open then open, the bite's tell, the snap, the dive's two steps, the tells' and the funnel's frames, the death chain),
+ * open then open, the bite's tell, the snap, the dive's two steps, the tells' and the funnel's frames, the death throe),
  * its body laid along a breach's curve a length every 16 px toward its head, the section after the crawling arena
  * starting at the next 512 px seam with the seam piece off the screen (the user's round 43 answer H.6), the rocks'
  * frames and the ridge pass's light shake within the setting.
@@ -70,6 +70,14 @@ class Level21LooksTest {
         assertFrames("dust-colossus-death", 6);
         assertFrames("dust-colossus-burst", 8);
         assertFrames("dust-colossus-vent", 4);
+        // Round 44 K.b (step GK): the back's segments and the death throe's sets.
+        assertFrames("dust-colossus-spine", ColossusSpine.SEGMENTS * ColossusSpine.STATES * RidgeLooks.HEADINGS);
+        assertFrames("dust-colossus-rear", 4);
+        assertFrames("dust-colossus-collapse", 3);
+        assertFrames("dust-colossus-geyser", ColossusThroe.GEYSER_FRAMES);
+        assertFrames("dust-colossus-fissure", ColossusThroe.FISSURE_STARTS.length);
+        assertFrames("dust-colossus-plume", ColossusThroe.PLUME_STARTS.length);
+        assertFrames("dust-colossus-debris", ColossusThroe.ROCK_SHAPES * ColossusThroe.ROCK_TUMBLE);
         assertFrames("dust-colossus-rock", ColossusLooks.ROCK_SHAPES * ColossusLooks.ROCK_TUMBLE);
         Path level = ASSETS.resolve("backdrop/level-21");
         assertTrue(Files.isRegularFile(level.resolve(ColossusLooks.SINKHOLE + ".png")));
@@ -101,8 +109,9 @@ class Level21LooksTest {
         assertEquals(-1, ColossusLooks.funnelFrame(Phase.BURIED, 0), "the crater is the ground's after the dive");
     }
 
+    /** Step GK: the death throe runs past the boss's 3 s chain (the simulation's, unchanged) to the credit shower. */
     @Test
-    void theDeathChainFitsTheBosssDeathAndEndsOnTheSinkingMouth() {
+    void theThroeOutlastsTheBosssChain() {
         LevelScript script = SimSpecs.level(CONTENT, LEVEL_21, Difficulty.MEDIUM);
         double chain = script.setPieces().stream()
                 .filter(piece -> piece.isBoss())
@@ -111,17 +120,8 @@ class Level21LooksTest {
                 .boss()
                 .orElseThrow()
                 .deathSeconds();
-        assertTrue(ColossusLooks.deathLength() <= chain, ColossusLooks.deathLength() + " s within " + chain);
-        assertEquals(0, ColossusLooks.deathFrame(0.2));
-        List<Integer> frames = new ArrayList<>();
-        for (double t = 0; t < ColossusLooks.deathLength(); t += 0.05) {
-            int frame = ColossusLooks.deathFrame(t);
-            if (frames.isEmpty() || frames.getLast() != frame) {
-                frames.add(frame);
-            }
-        }
-        assertEquals(List.of(0, 1, 2, 1, 2, 3, 4, 5), frames);
-        assertEquals(-1, ColossusLooks.deathFrame(ColossusLooks.deathLength() + 0.01), "the sinkhole after it");
+        assertEquals(3, chain, 1e-9, "the simulation's chain stays 3 s");
+        assertTrue(ColossusThroe.THROE_SECONDS > chain, "the throe runs on past it");
     }
 
     @Test
@@ -222,28 +222,6 @@ class Level21LooksTest {
     }
 
     /**
-     * Step HB: the death chain's eruptions run along the split ridge from the mouth to the tail, one every {@link
-     * ColossusLooks#BURST_EVERY} points, the last ending before the chain's end (the flash).
-     */
-    @Test
-    void theDeathsEruptionsRunAlongTheRidgeFromTheMouthToTheTail() {
-        int frames = 8;
-        double chain = 3;
-        int points = 41;
-        assertEquals(0, ColossusLooks.burstFrame(0, points, 0, chain, frames), "the first at the mouth at once");
-        assertEquals(-1, ColossusLooks.burstFrame(1, points, 0, chain, frames), "every fourth point only");
-        assertEquals(-1, ColossusLooks.burstFrame(points - 1, points, 0.2, chain, frames), "the tail's comes later");
-        double length = frames / ColossusLooks.BURST_FPS;
-        double lastStart = chain - ColossusLooks.BURST_END_SECONDS - length;
-        assertEquals(0, ColossusLooks.burstFrame(points - 1, points, lastStart + 1e-6, chain, frames));
-        assertEquals(
-                frames - 1, ColossusLooks.burstFrame(points - 1, points, lastStart + length - 1e-3, chain, frames));
-        assertEquals(
-                -1, ColossusLooks.burstFrame(points - 1, points, chain - 0.05, chain, frames), "done by the flash");
-        assertEquals(-1, ColossusLooks.burstFrame(0, points, 0, chain, 0), "none without the frames");
-    }
-
-    /**
      * Step GFX3 (the H5 capture: the mouth vanished at the kill, no death chain, no sinkhole or furrow): the kill takes
      * the Colossus off the field at once (not present), and its looks keep its death through the chain, laid at the
      * mouth's place and along the body behind it, and keep the furrow and the collapsed crater after it, scrolling with
@@ -283,20 +261,21 @@ class Level21LooksTest {
             assertTrue(Math.hypot(looks.furrowX(i) - mouthX, dy) <= RidgeLooks.LENGTH + 40, "near the mouth " + i);
         }
         List<Integer> frames = new ArrayList<>();
-        boolean settledBeforeEnd = false;
+        boolean settledEarly = false;
+        assertEquals(ColossusThroe.THROE_SECONDS, looks.deathSeconds(), 1e-9, "step GK: the 4.5 s throe");
         while (looks.deathAge(sortie.tick(), 0) < looks.deathSeconds() + 1) {
             double age = looks.deathAge(sortie.tick(), 0);
-            int frame = ColossusLooks.deathFrame(age);
+            int frame = ColossusThroe.bodyFrame(age);
             if (frame >= 0 && (frames.isEmpty() || frames.getLast() != frame)) {
                 frames.add(frame);
             }
-            settledBeforeEnd |= age < looks.deathSeconds() - ColossusLooks.SETTLE_SECONDS && looks.settled(age) > 0;
+            settledEarly |= age < ColossusThroe.SETTLE_START && looks.settled(age) > 0;
             assertTrue(looks.drawsDeath(sortie), "still drawn " + age + " s after the kill");
             sortie.step(Command.NONE);
             looks.stepped(sortie);
         }
-        assertEquals(List.of(0, 1, 2, 1, 2, 3, 4, 5), frames, "the whole chain");
-        assertFalse(settledBeforeEnd, "the crater and the furrow fade in over the chain's last 0.5 s only");
+        assertEquals(ColossusThroe.BODY_FRAMES.length, frames.size(), "the whole throe: " + frames);
+        assertFalse(settledEarly, "the crater and the furrow fade in only as the body has sunk");
         assertEquals(1, looks.settled(looks.deathAge(sortie.tick(), 0)), 1e-6, "settled after the chain");
         double row = looks.deathRow();
         double before = sortie.groundScroll();

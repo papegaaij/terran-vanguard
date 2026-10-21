@@ -516,8 +516,10 @@ final class LevelReport {
                 int bites = 0;
                 int eruptions = 0;
                 double breaches = 0;
+                double[] byPhase = new double[3];
                 for (LevelMetrics.ColossusRun fight : fights) {
                     for (int p = 0; p < 3; p++) {
+                        byPhase[p] += fight.breachesByPhase()[p] / (double) n;
                         seconds[p] += fight.phaseSeconds()[p] / n;
                         armour[p] += fight.armourLost()[p] / n;
                         lost[p] += fight.damage()[p] / n;
@@ -530,7 +532,7 @@ final class LevelReport {
                         out,
                         "colossus",
                         "phases %.1f + %.1f + %.1f s, shield+armour lost %.0f / %.0f / %.0f (armour %.0f / %.0f / %.0f),"
-                                + " %.1f breaches, bites %d, eruptions %d over %d runs [plan fit]",
+                                + " %.1f breaches (%.1f / %.1f / %.1f), bites %d, eruptions %d over %d runs [plan fit]",
                         seconds[0],
                         seconds[1],
                         seconds[2],
@@ -541,6 +543,9 @@ final class LevelReport {
                         armour[1],
                         armour[2],
                         breaches,
+                        byPhase[0],
+                        byPhase[1],
+                        byPhase[2],
                         bites,
                         eruptions,
                         n);
@@ -750,6 +755,11 @@ final class LevelReport {
                                             round(fight.armourLost()[1]),
                                             round(fight.armourLost()[2])),
                             "breaches", fight.breaches(),
+                            "breaches_by_phase",
+                                    List.of(
+                                            fight.breachesByPhase()[0],
+                                            fight.breachesByPhase()[1],
+                                            fight.breachesByPhase()[2]),
                             "bites", fight.bites(),
                             "eruptions", fight.eruptions()));
                 }

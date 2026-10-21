@@ -397,7 +397,7 @@ final class WalkerLooks {
         }
         StrideArena stride = piece.stride().orElseThrow();
         heat(sortie, piece);
-        strikes.stepped(sortie);
+        strikes.stepped(sortie, piece);
         SimEvents events = sortie.events();
         for (int i = 0; i < events.size(); i++) {
             switch (events.type(i)) {
@@ -683,7 +683,12 @@ final class WalkerLooks {
         StrideArena stride = piece.stride().orElseThrow();
         // Round 44: the stomp's ground ring and its shockwave, under the flame.
         strikes.drawStomp(
-                batch, piece, piece.renderX(alpha) - piece.renderX(1), piece.renderY(alpha) - piece.renderY(1));
+                batch,
+                sortie,
+                piece,
+                alpha,
+                piece.renderX(alpha) - piece.renderX(1),
+                piece.renderY(alpha) - piece.renderY(1));
         if (stride.offScreen() || coneLength <= 0) {
             return;
         }

@@ -21,8 +21,10 @@ import vanguard.sim.StrideStrikes;
  * Ion Beam's blue and the flame's orange.
  *
  * <p>Over the ground units ({@link #drawStomp}): over the brace a dusty ring on the ground at the stomp's full radius,
- * its rim brightening as the tell runs out, a faint fill inside; then the shockwave: a ring of dust expanding to that
- * radius, thinning and fading as it goes.
+ * its rim brightening as the tell runs out, a faint fill inside; then the shockwave: a bright band of dust running out
+ * from the feet to that radius with the simulation's ring (the brace's mark fading as it goes, the swept ground dusted
+ * faintly), held there and fading over {@value #WAVE_FADE_SECONDS} s after (step GFX4: H6's capture showed it as a
+ * flash at the feet, gone in about 8 frames).
  */
 final class StrikeLooks {
     /** The charge's line width, px, and its glow's. */
@@ -35,10 +37,19 @@ final class StrikeLooks {
     static final double HIT_RADIUS = 26;
 
     static final int HIT_TICKS = SimStep.ticks(0.25);
-    /** The stomp's ring: its rim's width, px, and its slices. */
-    static final double RIM_WIDTH = 4;
+    /**
+     * The stomp's ring: its rim's width, px, the shockwave's, and its slices (round 44 W.h, step GK: brighter and
+     * thicker, the brace's rim with a dark edge outside it so it reads on the pale floors).
+     */
+    static final double RIM_WIDTH = 7;
 
-    static final double WAVE_WIDTH = 14;
+    static final double WAVE_WIDTH = 20;
+    static final double EDGE_WIDTH = 2;
+    /** Step GFX4: the shockwave's bright band, px wide, and its fade at the full radius after the ring, s. */
+    static final double WAVE_BAND = 12;
+
+    static final double WAVE_FADE_SECONDS = 0.35;
+    static final int WAVE_FADE_TICKS = SimStep.ticks(WAVE_FADE_SECONDS);
     private static final int RING_SLICES = 40;
     /** The hit flashes remembered at once. */
     private static final int FLASHES = 4;
@@ -47,7 +58,8 @@ final class StrikeLooks {
     private static final Color LANCE = new Color(1f, 0.28f, 0.2f, 1f);
 
     private static final Color LANCE_CORE = new Color(1f, 0.93f, 0.86f, 1f);
-    private static final Color DUST = new Color(0.86f, 0.62f, 0.42f, 1f);
+    private static final Color DUST = new Color(1f, 0.84f, 0.62f, 1f);
+    private static final Color DUST_EDGE = new Color(0.28f, 0.18f, 0.11f, 1f);
     private static final long NEVER = Long.MIN_VALUE / 2;
 
     private final VertexFills fills;
@@ -56,6 +68,12 @@ final class StrikeLooks {
     private final double[] flashY = new double[FLASHES];
     private final long[] flashTick = new long[FLASHES];
     private int nextFlash;
+    /** Step GFX4: the last stomp's ring: its centre and full radius, and the last step it was expanding. */
+    private double waveX;
+
+    private double waveY;
+    private double waveRadius;
+    private long waveTick = NEVER;
 
     StrikeLooks(VertexFills fills) {
         this.fills = fills;
@@ -66,10 +84,20 @@ final class StrikeLooks {
     void reset() {
         java.util.Arrays.fill(flashTick, NEVER);
         nextFlash = 0;
+        waveTick = NEVER;
     }
 
-    /** After each simulation step: the lance's hits flash where they land. */
-    void stepped(Sortie sortie) {
+    /** After each simulation step: the lance's hits flash where they land; the stomp's ring is kept for its fade. */
+    void stepped(Sortie sortie, SetPiece piece) {
+        if (!piece.destroyed()) {
+            StrideStrikes strikes = piece.stride().orElseThrow().strikes();
+            if (strikes.stompPhase() == StrideStrikes.StompPhase.RING) {
+                waveX = strikes.ringX();
+                waveY = strikes.ringY();
+                waveRadius = strikes.stompRadius();
+                waveTick = sortie.tick();
+            }
+        }
         SimEvents events = sortie.events();
         for (int i = 0; i < events.size(); i++) {
             if (events.type(i) == SimEvents.Type.LANCE_HIT) {
@@ -120,13 +148,22 @@ final class StrikeLooks {
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    /** Over the ground units: the stomp's ground ring over its brace, then its expanding shockwave. */
-    void drawStomp(SpriteBatch batch, SetPiece piece, double dx, double dy) {
+    /** Over the ground units: the stomp's ground ring over its brace, then its expanding shockwave and its fade. */
+    void drawStomp(SpriteBatch batch, Sortie sortie, SetPiece piece, float alpha, double dx, double dy) {
         if (piece == null || piece.destroyed()) {
             return;
         }
         StrideStrikes strikes = piece.stride().orElseThrow().strikes();
         StrideStrikes.StompPhase phase = strikes.stompPhase();
+        if (phase != StrideStrikes.StompPhase.RING) {
+            float fade = waveFade(sortie.tick() - waveTick, alpha);
+            if (fade > 0) {
+                // Step GFX4: held at its full radius after the ring, thinning and fading.
+                ring(batch, waveX, waveY, waveRadius, waveRadius + EDGE_WIDTH, DUST_EDGE, 0.45f * fade);
+                ring(batch, waveX, waveY, waveRadius - WAVE_BAND * (0.4 + 0.6 * fade), waveRadius, DUST, 0.95f * fade);
+                batch.setColor(Color.WHITE);
+            }
+        }
         if (phase == StrideStrikes.StompPhase.IDLE) {
             return;
         }
@@ -136,16 +173,33 @@ final class StrikeLooks {
             // It braces where it stands: the ring follows it until it stomps.
             double cx = strikes.ringX() + dx;
             double cy = strikes.ringY() + dy;
-            ring(batch, cx, cy, 0, radius, DUST, 0.06f + 0.08f * (float) share);
-            ring(batch, cx, cy, radius - RIM_WIDTH, radius, DUST, 0.45f + 0.45f * (float) share);
+            ring(batch, cx, cy, 0, radius, DUST, 0.08f + 0.10f * (float) share);
+            ring(batch, cx, cy, radius, radius + EDGE_WIDTH, DUST_EDGE, 0.35f + 0.25f * (float) share);
+            ring(batch, cx, cy, radius - RIM_WIDTH, radius, DUST, 0.65f + 0.35f * (float) share);
         } else {
+            // Step GFX4: a bright band running out with the simulation's ring (the look only), the brace's mark
+            // fading over its first half, the swept ground dusted faintly.
             double r = strikes.ringRadius();
-            float fade = (float) (1 - 0.6 * share);
-            double width = WAVE_WIDTH * (1.2 - 0.6 * share);
-            ring(batch, strikes.ringX(), strikes.ringY(), Math.max(0, r - width), r, DUST, 0.8f * fade);
-            ring(batch, strikes.ringX(), strikes.ringY(), radius - RIM_WIDTH / 2, radius, DUST, 0.3f * fade);
+            double x = strikes.ringX();
+            double y = strikes.ringY();
+            ring(batch, x, y, radius - RIM_WIDTH / 2, radius, DUST, 0.45f * (float) Math.max(0, 1 - 2 * share));
+            ring(batch, x, y, 0, Math.max(0, r - WAVE_BAND), DUST, 0.14f);
+            ring(batch, x, y, r, r + EDGE_WIDTH, DUST_EDGE, 0.45f);
+            ring(batch, x, y, Math.max(0, r - WAVE_BAND), r, DUST, 0.95f);
         }
         batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * The stomp wave's fade (1–0) {@code age} steps (plus {@code alpha} of the next) after the ring last expanded: 0
+     * while it expands and once {@link #WAVE_FADE_TICKS} have passed.
+     */
+    static float waveFade(long age, float alpha) {
+        double t = age + alpha;
+        if (age < 0 || t <= 0 || t >= WAVE_FADE_TICKS) {
+            return 0;
+        }
+        return (float) (1 - t / WAVE_FADE_TICKS);
     }
 
     /** The charge's strength {@code share} through it: faint at first, full as it runs out. */

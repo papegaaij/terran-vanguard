@@ -2,9 +2,9 @@
 title: Special abilities
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-18
+updated: 2026-10-20
 ---
 
 # Special abilities
@@ -347,8 +347,7 @@ approved as final (F.3, F.4).
   stat blocks), the Orbital Lance (0.6 s targeting line, a 40 px column for 3 s following the ship
   at 240 px/s, 400 per second, boss parts at most 400 per lance, a `beam` for tendrils, not stopped
   by walls) and the Shield Overcharge (twice the capacity for 8 s); the cooldown rules (ready at
-  every attempt's start, level time, a charge pickup takes 10 s off) and the HUD ring. Pending the
-  user's review in concept round 36; the Acts 1–2 specials are unchanged.
+  every attempt's start, level time, a charge pickup takes 10 s off) and the HUD ring. Accepted in round 36 (2026-10-13); the Acts 1–2 specials are unchanged.
 - 2026-10-12 (overnight design phase): concept round 36 proposes an a/b of the EMP Burst and of the
   Shield Overcharge with its HUD ring (`tools/concept/gear_r36.py`), pending the user's choice.
 - 2026-10-13 (user, round 36): the *Act 3 specials in detail* approved (D.24): the EMP Burst, the
@@ -358,8 +357,7 @@ approved as final (F.3, F.4).
   bar's 0–45 scale kept with white second-layer cores, a white arc on the HUD ring); the gold look
   (a, the Ascendancy's colour) rejected. The rejected files moved to `concept/rejected/`. The special
   row's width for "OVERCHARGE" is checked with the HUD in part A.
-- 2026-10-13: M7 part A, step A6, the game's side (our reading, **pending the user's review** in
-  round 37): the EMP ring is the 60×128 strip as a band round the circle, fading to 65 %; the
+- 2026-10-13: M7 part A, step A6, the game's side (our reading, **accepted in round 37 (2026-10-13)**: the EMP ring is the 60×128 strip as a band round the circle, fading to 65 %; the
   crackle by the unit's size (under 32 px, under 64 px, above), a stunned Vrell unit's glow at 35 %
   and a machine's out; the lance's scorch columns fade over 4 s, their embers over 1.2 s; the
   overcharge's shell fades to half over the excess's bleed. The Orbital Lance's call is Lance
@@ -378,3 +376,4 @@ approved as final (F.3, F.4).
 - 2026-10-18 (user, round 39): C1: this spec wins over Level 16's first table: the Orbital Lance's column is not
   stopped by rock (Level 16's *What walls stop* now lists it apart from the Ion Beam). R.3: the Lance's scorch line
   on the canyon's pale sand kept as it is.
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

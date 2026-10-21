@@ -64,9 +64,9 @@ class PlaceholderAuditTest {
                     + " concept files mixed from CC0/CC-BY Freesound originals (CREDITS.md)";
 
     private static final String ROUND_44 =
-            "round 44's proposals (option a until the user's pick, the ridge pass b): Level 21's Dust Colossus sounds"
-                    + " and the Revenant Walker's lance and shockwave, the concept files mixed from CC0/CC-BY Freesound"
-                    + " originals (CREDITS.md)";
+            "round 44's picks (user 2026-10-20): Level 21's Dust Colossus sounds and the Revenant Walker's lance"
+                    + " and shockwave, the concept files mixed from CC0/CC-BY Freesound originals (CREDITS.md); the"
+                    + " ridge pass a mirrored right to left by tools/concept/audio/sfx_r44.py --mirror";
 
     private static final String ROUND_41_MUSIC =
             "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
@@ -83,11 +83,6 @@ class PlaceholderAuditTest {
      * left {@code assets/} fails it too, so the list never goes stale.
      */
     private static final Map<String, String> KNOWN = new TreeMap<>(Map.ofEntries(
-            // The act titles' lettering: tools/concept/ui_assets.py, as the production plan says
-            // (pipeline/build.gradle.kts, importPlaceholders); the title cards' stills are final.
-            Map.entry("ui/act-1-first-contact-title.png", "act title lettering from tools/concept/ui_assets.py"),
-            Map.entry("ui/act-2-homefront-title.png", "act title lettering from tools/concept/ui_assets.py"),
-            Map.entry("ui/act-3-red-dust-title.png", "act title lettering from tools/concept/ui_assets.py"),
             Map.entry("voice/choir/voice-choir-sings-r29-b.ogg", "the Choir's sung sting, round 29 b (synthesized)"),
             Map.entry("sfx/pickup-r01-a.ogg", SYNTHESIZED),
             Map.entry("sfx/pickup-r01-b.ogg", SYNTHESIZED),
@@ -209,14 +204,14 @@ class PlaceholderAuditTest {
             Map.entry("sfx/basin-rumble-r43-a.ogg", ROUND_43),
             Map.entry("sfx/swarm-hum-r43-a.ogg", ROUND_43),
             Map.entry("sfx/swarm-lunge-r43-a.ogg", ROUND_43),
-            // round 44's proposals: the Dust Colossus (Level 21), the walker's lance and shockwave
+            // round 44's picks: the Dust Colossus (Level 21), the walker's lance and shockwave
             Map.entry("sfx/colossus-bulge-r44-a.ogg", ROUND_44),
             Map.entry("sfx/colossus-eruption-r44-a.ogg", ROUND_44),
             Map.entry("sfx/colossus-suction-r44-a.ogg", ROUND_44),
             Map.entry("sfx/colossus-bite-r44-a.ogg", ROUND_44),
             Map.entry("sfx/colossus-death-r44-a.ogg", ROUND_44),
-            Map.entry("sfx/colossus-ridge-r44-b.ogg", ROUND_44),
-            Map.entry("sfx/walker-lance-charge-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/colossus-ridge-r44-a.ogg", ROUND_44),
+            Map.entry("sfx/walker-lance-charge-r44-b.ogg", ROUND_44),
             Map.entry("sfx/walker-lance-shot-r44-a.ogg", ROUND_44),
             Map.entry("sfx/walker-shockwave-r44-a.ogg", ROUND_44),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),

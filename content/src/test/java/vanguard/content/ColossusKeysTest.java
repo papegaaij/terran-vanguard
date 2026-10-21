@@ -58,9 +58,9 @@ class ColossusKeysTest {
         assertEquals(List.of(120.0, 200.0, 280.0), script.vents().orElseThrow().distances());
         assertEquals(1.2, script.debris().orElseThrow().every().get("Hunting"));
         assertEquals(0.8, script.debris().orElseThrow().every().get("Breaching anywhere"));
-        // H.5: the boss keeps its 22.7 % of budget(21) at the level's measured scale (step H4): 325 × 2.56 × 0.74 =
-        // 616.
-        assertEquals(325, colossus.bounty());
+        // H.5: the boss keeps its 22.7 % of budget(21) at the level's measured scale (step L21R after round 44 Q.1's
+        // rework): 480 × 2.56 × 0.50 = 614.
+        assertEquals(480, colossus.bounty());
         assertEquals(6440, colossus.hp());
     }
 
@@ -69,10 +69,11 @@ class ColossusKeysTest {
         EnemyData colossus = CONTENT.enemy("dust-colossus");
         BossSpec.Breach breach =
                 ColossusRules.breach(CONTENT, colossus, Difficulty.MEDIUM).orElseThrow();
-        // y up from the bottom edge: front (240, 510), left (30, 280), right (450, 280), rear (240, 25).
+        // y up from the bottom edge: front (240, 445; round 44 Q.11: 95 px below the top edge, clear of the boss bar),
+        // left (30, 280), right (450, 280), rear (240, 25).
         assertEquals(
                 List.of(
-                        new BossSpec.Point(240, 510),
+                        new BossSpec.Point(240, 445),
                         new BossSpec.Point(30, 280),
                         new BossSpec.Point(450, 280),
                         new BossSpec.Point(240, 25)),
@@ -135,7 +136,7 @@ class ColossusKeysTest {
     }
 
     @Test
-    void theApproachIsCountNeutralAndClearsBeforeTheBoss() {
+    void theApproachMeetsTheActTwoRulesAndClearsBeforeTheBoss() {
         LevelData level = level();
         int waves = level.waves().stream()
                 .filter(wave -> wave.fliesOn(Difficulty.MEDIUM))
@@ -147,17 +148,42 @@ class ColossusKeysTest {
                 .filter(target -> target.enemy().isPresent())
                 .mapToInt(target -> target.at().size())
                 .sum();
-        assertEquals(96, waves, "H.1: count-neutral, the t=101 V-wing folded in");
+        assertEquals(158, waves, "round 44 Q.1: more firing groups as Level 20 (H.1's 96 failed the floor)");
         assertEquals(10, ground);
         double perMinute = (waves + ground) / (105.0 - 8.0) * 60;
-        assertTrue(perMinute >= 55 && perMinute <= 72, "the act's band: " + perMinute);
+        assertTrue(perMinute >= 55 && perMinute <= 105, "Q.1's 150-170 units: " + perMinute);
         double last =
                 level.waves().stream().mapToDouble(LevelData.Wave::t).max().orElseThrow();
         assertEquals(97.5, last, "H.3: nothing enters after the Mote stream");
-        assertEquals(0.74, level.bountyScale().orElseThrow(), "step H4's measured fit (the paper 0.75)");
+        assertEquals(0.50, level.bountyScale().orElseThrow(), "step L21R's measured fit (step H4's 0.74)");
         WeatherBlock.Ridge ridge = level.ridge().orElseThrow();
         assertTrue(ridge.leftward());
         assertEquals(64, ridge.t());
+    }
+
+    /**
+     * Round 44 Q.5: the survey crawler (the secret's destructible) has the design's 28 HP on hard, 20 on easy and
+     * medium (a destructible's {@code hard: {hp}}); only a destructible's change gives {@code hp}.
+     */
+    @Test
+    void theSurveyCrawlerIsTougherOnHard() {
+        for (Difficulty difficulty : Difficulty.values()) {
+            double hp = SimSpecs.level(CONTENT, Level21Test.LEVEL, difficulty).groundObjects().stream()
+                    .filter(object -> object.secret().equals("survey crawler"))
+                    .findFirst()
+                    .orElseThrow()
+                    .hp();
+            assertEquals(difficulty == Difficulty.HARD ? 28 : 20, hp, difficulty.name());
+        }
+        assertProblem(
+                replace(LEVEL, "    hard: {hp: 28}   #", "    hard: {hp: 28, hits: 2}   #"), "a destructible's its hp");
+        assertProblem(replace(LEVEL, "    hard: {hp: 28}   #", "    hard: {hp: -1}   #"), "hp");
+        assertProblem(
+                replace(
+                        LEVEL,
+                        "    count: 2\n    at: [[92, 120]",
+                        "    count: 2\n    hard: {hp: 9}\n    at: [[92, 120]"),
+                "an enemy nest's easy/hard gives its at");
     }
 
     @Test

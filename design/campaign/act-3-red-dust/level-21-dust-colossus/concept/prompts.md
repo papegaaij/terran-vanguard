@@ -1,7 +1,6 @@
 # Level 21 – concept and production notes
 
-Round 44 (M7 part H, step ART-H1: production straight away, as Levels 15-20's; all of it is pending the user's
-review in round 44). None of it is prompted: every file is rendered by a generator in `tools/art/`.
+Round 44 (M7 part H, step ART-H1: production straight away, as Levels 15-20's; all of it is accepted in round 44 (2026-10-20)). None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r44-a
 

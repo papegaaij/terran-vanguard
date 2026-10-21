@@ -1,7 +1,7 @@
 # Level 16 – concept and production notes
 
 Round 39 (M7 part C, step ART-C: production straight away, as Act 2's and Level 15's; the user is on
-vacation, so all of it is pending the user's review in round 39). None of it is prompted: every file is
+vacation, so all of it is accepted in round 39 (2026-10-18). None of it is prompted: every file is
 rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r39-a

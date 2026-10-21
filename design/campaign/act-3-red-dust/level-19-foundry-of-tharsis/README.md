@@ -26,7 +26,7 @@ tougher rather than more (the beam era's HP).
 phase (2026-10-12) from the act roster and the gap analysis's recommended answers, all kept or
 accepted in the round. M7 part F (step F2, 2026-10-19) moved the numbers into the level's
 [data.yaml](data.yaml): the tables below are rendered from it, the waves re-planned to the Act 2+ floor
-(the gap check's default, see *Waves*), pending the user's review in round 42.
+(the gap check's default, see *Waves*), accepted in round 42 (2026-10-20).
 
 ## Briefing
 
@@ -88,7 +88,7 @@ Rendered from the data; directions are counted by each wave's `from` (the intel'
   the scroll stays halted until it dies (as Level 11's Kraken).
 - **Secondary** `destroy-targets` (counted): destroy at least **12 of the 14** grey Warden Tanks
   before they leave the screen (the data's `escapes: warden-tank` with `allowed: 2`, the HUD counter
-  `GREY TANKS`), met as soon as it can no longer fail (the twelfth tank destroyed; the HUD counter turns `DONE` then; round 42, pending the user's review) or at the level's end, failed at
+  `GREY TANKS`), met as soon as it can no longer fail (the twelfth tank destroyed; the HUD counter turns `DONE` then; round 42, accepted in round 42 (2026-10-20)) or at the level's end, failed at
   once by the third away. Pays
   **100** credits in Act 1 terms (256 in Act 3); the typical haul counts 50 %. The tanks ride the
   conveyors past the ship, so the secondary rewards a `rear` gun or `anti-ground` fire before they
@@ -452,7 +452,7 @@ the EMP Burst against the machines are options, not needs.
 
 ## Concept art
 
-Production art of M7 part F's round 42 (step ART-F2), pending the user's review. Prompts:
+Production art of M7 part F's round 42 (step ART-F2), accepted in round 42 (2026-10-20). Prompts:
 [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
@@ -461,14 +461,16 @@ Production art of M7 part F's round 42 (step ART-F2), pending the user's review.
 | [concept/backdrop-final-r42-a.gif](concept/backdrop-final-r42-a.gif) | Level 19 backdrop final: the whole level flown at 0.5x with the belts running, 10 fps | chosen (round 42: approved as final) |
 | [concept/l19-props-final-r42-a.png](concept/l19-props-final-r42-a.png) | Level 19 props final (`tools/art/l19_props.py`, step ART-F4): the furnace vent grate (shut, the tell's three steps) with its tell glow, flame column and smoke; the gantry and the up-facing nest's cradle (chevrons pointing up the line); the payroll safe (intact, hit, opened) with its lamp and the shift office; the ingot stacks and pallet; the crews' rover in 16 headings with its lights; frames from the GIF (sheet) | chosen (round 42: approved as final) |
 | [concept/l19-props-final-r42-a.gif](concept/l19-props-final-r42-a.gif) | Level 19 props final over the backdrop: the ore gantry's nests passing the ship and firing back up, the safe shot open, a vent row's ripple, the south gate's ingots and the crews' rovers, 10 fps | chosen (round 42: approved as final) |
-| [concept/level-19-capture-r42-a.mp4](concept/level-19-capture-r42-a.mp4) | Capture of the whole level with sound (round 42, medium, the plan's fit with Rook's Mortar, the test autopilot): belts and Warden Tanks, gantry nests, furnace vents, the walker fight, the wreck crawl, the south gate, the debrief (261 s) | proposed (round 42) |
-| [concept/level-19-capture-r42-a.png](concept/level-19-capture-r42-a.png) | 20-frame sheet of that run and a row of 1:1 crops (the walker front and back, a Warden Tank, a vent row) | proposed (round 42) |
-| [concept/level-19-walker-r43-a.mp4](concept/level-19-walker-r43-a.mp4) | Check capture of the reworked walker fight with sound (round 43, step WR: medium, the plan's fit with Rook's Mortar, the test autopilot): the bar at the halt, the chin's fans and the flank guns, the salvos, the 240 px cone's tell and burn, phase 3 and the topple (83 s) | proposed (round 43) |
-| [concept/level-19-walker-r43-a.png](concept/level-19-walker-r43-a.png) | 12-frame sheet of that fight (the play field, times in s of the run) | proposed (round 43) |
-| [concept/level-19-walker-r44-a.mp4](concept/level-19-walker-r44-a.mp4) | Check capture of the walker fight after round 44 (step WR2: medium, the plan's fit with Rook's Mortar, the test autopilot, sound; 94 s, the fight 72 s): the pods' hatches and salvos, the stomp's brace ring, the cone, the red rail lance's charge line and shot once both pods are gone and in phase 3, the topple and the wreck; the lance's and the stomp's sounds are placeholders | proposed (round 44) |
-| [concept/level-19-walker-r44-a.png](concept/level-19-walker-r44-a.png) | 12-frame sheet of that fight (the play field, times in s of the clip) | proposed (round 44) |
-| [concept/payroll-safe-glow-r44-a.mp4](concept/payroll-safe-glow-r44-a.mp4) | The payroll safe's strobe in the live game (plan fit, the autopilot does not shoot it): the shift office scrolling down the left wall at about 130 px/s (0:02–0:06), the safe's door lamp blinking green about twice a second with a small green halo spilling just past the safe's box when lit. It reads as a blinking green lamp; the halo is small (≈ 12 px) and easy to miss at play speed among the belts. With sound, 9 s | proposed (round 44) |
-| [concept/payroll-safe-glow-r44-a.png](concept/payroll-safe-glow-r44-a.png) | Six field frames + seven 1:1 crops of the safe at 2×, lit and dark | proposed (round 44) |
+| [concept/level-19-capture-r42-a.mp4](concept/level-19-capture-r42-a.mp4) | Capture of the whole level with sound (round 42, medium, the plan's fit with Rook's Mortar, the test autopilot): belts and Warden Tanks, gantry nests, furnace vents, the walker fight, the wreck crawl, the south gate, the debrief (261 s) | chosen (round 42 closed: accepted) |
+| [concept/level-19-capture-r42-a.png](concept/level-19-capture-r42-a.png) | 20-frame sheet of that run and a row of 1:1 crops (the walker front and back, a Warden Tank, a vent row) | chosen (round 42 closed: accepted) |
+| [concept/level-19-walker-r43-a.mp4](concept/level-19-walker-r43-a.mp4) | Check capture of the reworked walker fight with sound (round 43, step WR: medium, the plan's fit with Rook's Mortar, the test autopilot): the bar at the halt, the chin's fans and the flank guns, the salvos, the 240 px cone's tell and burn, phase 3 and the topple (83 s) | chosen (round 43, W.a: accepted with a change; reworked, see r44) |
+| [concept/level-19-walker-r43-a.png](concept/level-19-walker-r43-a.png) | 12-frame sheet of that fight (the play field, times in s of the run) | chosen (round 43, W.a: accepted with a change; reworked, see r44) |
+| [concept/level-19-walker-r44-a.mp4](concept/level-19-walker-r44-a.mp4) | Check capture of the walker fight after round 44 (step WR2: medium, the plan's fit with Rook's Mortar, the test autopilot, sound; 94 s, the fight 72 s): the pods' hatches and salvos, the stomp's brace ring, the cone, the red rail lance's charge line and shot once both pods are gone and in phase 3, the topple and the wreck; the lance's and the stomp's sounds are placeholders | chosen (round 44, W.a: accepted) |
+| [concept/level-19-walker-r44-a.png](concept/level-19-walker-r44-a.png) | 12-frame sheet of that fight (the play field, times in s of the clip) | chosen (round 44, W.a: accepted) |
+| [concept/level-19-stomp-r45-a.mp4](concept/level-19-stomp-r45-a.mp4) | Round 45 check capture (step H6): one stomp with the brighter brace ring and the expanding ring, 6.5 s with sound | proposed |
+| [concept/level-19-stomp-r45-a.png](concept/level-19-stomp-r45-a.png) | Six field frames and five 1:1 crops of the stomp | proposed |
+| [concept/payroll-safe-glow-r44-a.mp4](concept/payroll-safe-glow-r44-a.mp4) | The payroll safe's strobe in the live game (plan fit, the autopilot does not shoot it): the shift office scrolling down the left wall at about 130 px/s (0:02–0:06), the safe's door lamp blinking green about twice a second with a small green halo spilling just past the safe's box when lit. It reads as a blinking green lamp; the halo is small (≈ 12 px) and easy to miss at play speed among the belts. With sound, 9 s | chosen (round 44, G.a: accepted; G.c split the pad is planned) |
+| [concept/payroll-safe-glow-r44-a.png](concept/payroll-safe-glow-r44-a.png) | Six field frames + seven 1:1 crops of the safe at 2×, lit and dark | chosen (round 44, G.a: accepted; G.c split the pad is planned) |
 
 The level will need (part F's production-art round; the mood comes from the Tharsis
 foundry mood still in [mars](../../../world/mars/README.md) and the walker's chosen concept a, the
@@ -509,20 +511,20 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
       era's HP (`BeamEraHpTest`), measured in step F4 (the autopilot's walker play and vent dodging;
       `Level19Test`, `RevenantWalkerTest`) (steps F2, F4: `Level19Test`)
 - [x] Secondary `destroy-targets`: 12 of the 14 Warden Tanks, the HUD counter, judged at the end (steps F2, G2: `Level19HudTest`)
-- [ ] Ground targets, the payroll-safe secret (20 HP trigger, crate 100), the supply drone's armour
+- [x] Ground targets, the payroll-safe secret (20 HP trigger, crate 100), the supply drone's armour
       patch at t=122, the overdrive
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`, with Rook and without),
       Rook's lines `requires: escort`; the arena's event lines (steps VOX-F, G1: `RadioTimelineLevel19Test`)
-- [ ] Threat profile with the "unclassified, huge" L2 silhouette, Varga's four intel lines and Rook's
+- [x] Threat profile with the "unclassified, huge" L2 silhouette, Varga's four intel lines and Rook's
       teaser fitting the intel panel (`IntelPanelLayoutTest`)
-- [ ] Briefing: Okafor's page and Varga's, each one screen (`BriefingLayoutTest`), with their images
+- [x] Briefing: Okafor's page and Varga's, each one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(19) = 2,366 with the level's `bounty_scale` (`TypicalHaulTest`;
       step F4: 2,399 at 0.28, +1.4 %; perfect 3,561)
-- [ ] Music: track 9's stems, the mini-boss sting, the motif layer under the fight and alone over the
+- [x] Music: track 9's stems, the mini-boss sting, the motif layer under the fight and alone over the
       crawl; the `mars-foundry` ambience
 - [ ] Easy/hard variations; the autopilot flies the level and the fight with Rook on every difficulty
       (`--escort none` too)
-- [ ] Production art and captures for part F's round
+- [x] Production art and captures for part F's round
 
 ## Open questions
 
@@ -531,7 +533,7 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the Act 3 roster to a draft level document.
-  Taken as the recommended options, pending the user's review in round 36: M10 = b (the Dust Kite as
+  Taken as the recommended options, accepted in round 36 (2026-10-13): M10 = b (the Dust Kite as
   the act's popcorn), M12 = a, M13 = a (in the level only Varga's observation and Okafor's "Not on
   this channel, Doctor."), M15 = a (the scroll crawls past the wreck; Level 20's briefing shows the
   filed plate), M17 = a, M18 = a (reference DPS 92), M19 (hand tables). Our proposals: seven sections
@@ -543,7 +545,7 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   not Levels 15–17's 85–90) and `bounty_scale` 0.53 for a typical 2,356; the walker's bounty
   recomputed to 262 (15.0 %).
 - 2026-10-12 (overnight, harmonised with the act README): density raised into the act's band of
-  60–72 a minute (pending the user's review in round 36) by four cadence-fill waves of small units in
+  60–72 a minute (accepted in round 36 (2026-10-13) by four cadence-fill waves of small units in
   sections 2–4 (a Kite stream at t=56.5, a Skitter stream at t=84.5, a Kite V-wing at t=95, a
   Skitter snake at t=109; 13 enemies), none over the wreck crawl: 172 enemies (≈ 62 a minute), front
   90 % · rear 10 %; `bounty_scale` 0.53 → 0.52 (typical 2,364, −0.1 %), the walker's 262 kept
@@ -556,7 +558,7 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   wreck crawl, `bounty_scale` 0.52 accepted. The walker is the "Strider heavy" biped (B.1 = a); track
   9 is "Grey Signal" with the motif as an intercepted radio whistle (S.1 = b).
 - 2026-10-19 (M7 part F, step F2): the numbers moved into [data.yaml](data.yaml), the tables marked. The gap
-  check's defaults, pending the user's review in round 42: the Act 2+ floor met by density (243 enemies,
+  check's defaults, accepted in round 42 (2026-10-20): the Act 2+ floor met by density (243 enemies,
   ≈ 88 a minute: light firing groups in place of the approved popcorn streams, more up-facing nests under
   the gantries at t≈36, 70, 88, 110 and 152, the crawl's kites as Dust Kite swarms of 4 at the edges; the
   anchors and radio beats at their times), not by an `ActFloorTest` exception; Level 19 joins
@@ -579,7 +581,7 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   minute at medium (the plan's fit kills everything in ≈ 1.5 s); three passes (*Waves*) give 2.83 and 27.8 (hard
   3.31, under the ≈ 3.5 cap), 297 enemies at medium. `bounty_scale` 0.35 → **0.28** (typical 2,399, +1.4 %; perfect
   3,561), the walker's bounty 395 → 495 (paid 355 = 15.0 %); the walker's HP 2,200 → 3,740 and par 60 → 53 (its
-  spec). Pending the user's review in round 42: "tougher, not more" read with the floor as the binding rule (the
+  spec). Accepted in round 42 (2026-10-20): "tougher, not more" read with the floor as the binding rule (the
   level is denser than step F2's plan, as dense as Level 18), and the scale just under M12's 0.3.
 - 2026-10-20 (user, round 42, closed): the backdrop (F.c) and the props (F.d) approved as final (their concept rows
   `chosen`, `art: final`); the level's data and the walker as built (B.a–B.d) and the round's other rows accepted;
@@ -588,10 +590,10 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   `proposed` until it is re-recorded; the sounds (S rows) are round 43's.
 - 2026-10-20 (round 43, step WR): the walker reworked for K.a (its spec: far more fire in every phase, the flank
   guns, the 240 px cone that tracks the ship; HP 3,170, par 57); the level re-measured: the fight ≈ 61 s at medium,
-  no retries, the haul unchanged (+1.4 %). A check capture of the fight is in *Concept art* (pending the user's
-  review in round 43).
+  no retries, the haul unchanged (+1.4 %). A check capture of the fight is in *Concept art* (accepted in round 43 (2026-10-20).
 - 2026-10-20 (round 44, step WR2; the user in round 43, W.a/W.e): the walker's pods armoured until open, its rail lance
   once both pods are gone and in phase 3, its stomp shockwave (its spec; HP 1,350, par 51); the level re-measured:
   the fight 50–59 s at medium on the level test's seeds, no retries at medium, the floor and the haul unchanged
   (+1.4 %); hard is won with 2 retries over 3 runs (round 43: 1; hard keeps medium's lance, stomp and phase-1
-  salvos, or the walker drained the ship before the level's end; pending the user's review). A check capture of the fight is in *Concept art* (pending the user's review in round 44).
+  salvos, or the walker drained the ship before the level's end; accepted in round 44 (2026-10-20)). A check capture of the fight is in *Concept art* (accepted in round 44 (2026-10-20).
+- 2026-10-20 (user, round 44, closed): the reworked walker fight (W.a-W.g, see the [walker](../../../enemies/bosses/revenant-walker/README.md#decisions)) accepted; W.h's brighter stomp ring planned. **G.a** the payroll safe's strobe accepted (a blinking green lamp with a small halo); **G.c** split the burnt pad off the greenhouse frame as a ground decal (Level 17's frame; planned, a small art step).

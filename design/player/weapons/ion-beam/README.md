@@ -153,8 +153,7 @@ engine Mk I at 0):
   income (the user's decision of 2026-10-14, round 37 R.1's act-factor income reverted; Level 15's own
   typical haul), each item as soon as it is affordable, which gives exactly this hand plan's visits
   (medium: 387 credits left at the tightest visit, L19).
-  On hard the beam is refused at L18, so the hard sheet keeps the Pulse Cannon L4 (pending the user's
-  review; hard is tighter on purpose). Without the beam the same credits buy the Pulse L5 and pods L3 for 100 already
+  On hard the beam is refused at L18, so the hard sheet keeps the Pulse Cannon L4 (accepted in round 34 (2026-10-12); hard is tighter on purpose). Without the beam the same credits buy the Pulse L5 and pods L3 for 100 already
   at L18 (4 000 instead of about 7 500 net), the usual price of a trait weapon (the Lance Laser
   at L05 did the same).
 - With draw 5 → 9, beam L3 is **0.5 MW over** the Mk III with the Act 2 kit: the beam plan stalls
@@ -227,8 +226,7 @@ dust and scorch mark, and the glance spark; the heat tint on the target is the g
 - 2026-10-12 (overnight design phase): promoted from the weapons roster with full per-level
   numbers in Act 1 terms; the `beam` delivery rules (first target, walls per M2 = a, tendrils per
   M9 = a, hardened targets passed over, `high-air` reached); the M11 power check by hand
-  (recommendation: keep the generator tiers, draw 4 → 8). All pending the user's review in
-  concept round 36.
+  (recommendation: keep the generator tiers, draw 4 → 8). All accepted in round 36 (2026-10-13).
 - 2026-10-12 (overnight design phase): concept round 36 proposes an a/b of the beam's look;
   `art: proposed`, pending the user's choice.
 - 2026-10-13 (user, round 36): approved (D.20). M11 accepted and Q.23f–g yes: the draw lowered to
@@ -256,6 +254,6 @@ dust and scorch mark, and the glance spark; the heat tint on the target is the g
   factor applied, R.2 accepted (now moot), R.4 (c) fixed as recorded above with Q1's `CAST_ARMOUR` rule.
 - 2026-10-14 (user: budget(n) is the absolute typical haul; round 37 R.1 reverted; M7 part B, step B3): the
   balance plan buys the beam at L2 at the L18 visit and raises it to L3 at L19 again (A2's hand plan),
-  the Tail Gun L3 at L20 and Composite III at L21; hard keeps the Pulse Cannon (pending the user's review).
+  the Tail Gun L3 at L20 and Composite III at L21; hard keeps the Pulse Cannon (accepted in round 38 (2026-10-14)).
 - 2026-10-19 (M7 part E, step E5; the user's "tougher, not more"): the enemies' beam-era HP (×2 on `small` units
   from Level 18, the plan's first beam) answers the beam's instant reach; the beam's own numbers are unchanged.

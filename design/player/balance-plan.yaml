@@ -1,8 +1,8 @@
 # The expected purchases of a typical medium player at each hangar visit, for Acts 1-3 (Act 3, Levels
-# 15-21, from M7 part A: the Ion Beam's hand plan; a level without data yet earns budget(n), the absolute
-# typical haul, user decision 2026-10-14).
+# 15-21, from M7 part A: the Ion Beam's hand plan; every level earns its own typical haul, M7 part I: the
+# budget(n) fallback for a level without data is gone).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
-# ActPlaythroughTest (Acts 1-2 flown with these purchases on every difficulty), and printed by
+# ActPlaythroughTest (Acts 1-3 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
 # comes from the parts' data.yaml files. The free charges a special gives at its unlock (the
 # Airstrike's first, at L04) come on top of the charges bought here.
@@ -17,7 +17,7 @@
 #   fit: [slot, item]   fits an owned item again in place of the fitted one, which is kept (M5 part D);
 #   (slot special: a special by name, M7 part A: the charges of the one it replaces stay owned)
 # An optional `difficulties: {hard: {"NN": {...}}}` adds purchases to a visit on another
-# difficulty (ActPlaythroughTest); none are needed today: Acts 1-2 are flown on every difficulty with
+# difficulty (ActPlaythroughTest); none are needed today: Acts 1-3 are flown on every difficulty with
 # the medium plan (M5 part I; on easy a charge the plan buys while the special carries its most is skipped).
 # Hard (BalanceTest prints the sheet on hard too: income × 0.9, repairs 10 cr a point): where the
 # credits after the plan's purchases do not pay the repairs, the shortfall is accepted, hard is meant

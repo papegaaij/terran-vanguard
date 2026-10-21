@@ -263,7 +263,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
       cores are checked against L08–L14: none of them hides one, the page reads `NONE FOUND`), as the
       Act 1 summary of the [debrief](../debrief/README.md) (M5 part H, step H6; `PartHHudTest`,
       `LevelScreenPartHTest`, `DebriefActEndTest`)
-- [ ] The hangar intel for Levels 13 and 14 (M5 parts G and H): Varga's lines (Level 13's four,
+- [x] The hangar intel for Levels 13 and 14 (M5 parts G and H): Varga's lines (Level 13's four,
       Level 14's five), the Siege Spire's boss silhouette (`intel/boss-siege-spire`), and the L3
       wave strip's marks: Level 13's three defend phases and the whiteout (new marks, done in M5 part
       G, step G6: `Intel.marks`, `PartGHudTest`), Level 14's root field (t=60–95) and the boss at 108

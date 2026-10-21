@@ -117,15 +117,14 @@ produced yet.
 
 - 2026-10-12 (overnight design phase): promoted from the [ground roster](../README.md) to a draft
   spec with the round-05 concept (Ascendancy livery) as its chosen model; the Act 3 grey variant
-  is proposed by step A-units. M18 = a taken as the recommended option, pending the user's review
-  in round 36. Our proposals: hull 64 and turret 20 as parts, the ±50° rear plate at ×1.5, the
+  is proposed by step A-units. M18 = a taken as the recommended option, accepted in round 36 (2026-10-13). Our proposals: hull 64 and turret 20 as parts, the ±50° rear plate at ×1.5, the
   3-shot burst every 2.5 s in any direction, bounty 26 whole / 28 in parts, intel label
   "unidentified".
 - 2026-10-12 (merge): the round-36 unmarked-grey livery proposal is listed under Concept art.
 - 2026-10-13 (user, round 36): approved (D.14). Q.22f yes: the intel lists the Act 3 tanks as "unidentified", not Ascendancy. U.6 accepted: the unmarked grey livery (the r05-a model, no gold, no accent, the red sensors kept) is chosen for Act 3.
 - 2026-10-19 (M7 part F, step F2): the stat block moved into [data.yaml](data.yaml) (the `turret` and
   `rear_plate` keys; the turret a destroyable part that silences the gun, its hit box on the hull's
-  centre; the hull's `first_bonus` 6 for the whole 26). Fixed, pending the user's review in round 42: the
+  centre; the hull's `first_bonus` 6 for the whole 26). Fixed, accepted in round 42 (2026-10-20): the
   rear plate faced the ship "after it passes" in the *Effective traits* row; on Level 19's belts a tank
   drives up the belt, so its rear plate faces the ship while it approaches (as Level 19's briefing image
   and text have it).

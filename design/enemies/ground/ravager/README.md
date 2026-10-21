@@ -144,6 +144,6 @@ The production files, generator notes in [concept/prompts.md](concept/prompts.md
   the nodes. They move too quickly out of the screen. Do not mix the ravagers with the nodes and slow
   them down a little bit."; PT2-B proposal 1b, chosen by the user): gallop 160 → **120 px/s**, a
   pounce every **4 s** (was 3; on hard too, was 2: with the hard step the slower Ravagers wore the
-  plan's fit down in every attempt, pending the user's review), trigger range 200 → **170 px**; in Level 09 no pack runs in a hold (the bridge packs at
+  plan's fit down in every attempt, accepted in round 39 (2026-10-18)), trigger range 200 → **170 px**; in Level 09 no pack runs in a hold (the bridge packs at
   t=100/106, hold C's two packs moved to t=141/147 after hold B) and the two crossing packs
   (t=62, t=141) gallop down at the ship before they turn. Level 14's Ravagers follow the stat block.

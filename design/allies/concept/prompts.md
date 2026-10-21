@@ -155,7 +155,7 @@ Outcome (user, 2026-10-09): **rejected** in round 33 (a picked), moved to `rejec
 ## relay-r35-a
 
 Round 35 proposal A, **"Ice station"**, Nansen Relay at production quality (M5 part G batch, step G2;
-decision G9 = a, pending the user's review: the relay had no concept of its own, only the station of
+decision G9 = a, accepted in round 34 (2026-10-12): the relay had no concept of its own, only the station of
 the chosen arctic scene `scene-arctic-r09-a`, so it is proposed as two finished sets; A goes into the
 game until the pick). Sheet and loop by `python3 tools/art/relay.py` (see `tools/art/README.md`); SDF
 models in the script with the station kit's materials (`tools/concept/render/station.py`), 1 model unit

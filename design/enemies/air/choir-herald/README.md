@@ -104,11 +104,11 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 - 2026-10-12 (overnight design phase): promoted from the [air roster](../README.md) to a draft
   spec. M8 = a (a ring absorbing ≈ 1× each unit's HP within ~90 px, refilled slowly while the
   Herald lives, stripped by the EMP; not full immunity) and M18 = a taken as the recommended
-  options, pending the user's review in round 36. Our proposals: 60 HP, the 40 cap, the 2.0 s /
+  options, accepted in round 36 (2026-10-13). Our proposals: 60 HP, the 40 cap, the 2.0 s /
   25 %/s refill, no aura on bosses or other Heralds, bounty 30, one Herald on screen at most.
 - 2026-10-12 (merge): the round-36 a/b proposals are listed under Concept art (`art: proposed`).
 - 2026-10-13 (user, round 36): approved (D.15). M8 = a accepted; Q.22g yes: a unit's ring thins as its absorb value drains. U.3 = b: the seraph (bone, floating halo crest, segmented violet rings) chosen, the cantor bell (a) rejected and moved to `../concept/rejected/`.
-- 2026-10-18 (M7 part D, step D2; pending the user's review in round 40): the stat block moved into
+- 2026-10-18 (M7 part D, step D2; accepted in round 40 (2026-10-19): the stat block moved into
   [data.yaml](data.yaml) with the new `aura` attack (`radius` 90, `share` 1, `cap` 40, `refill` 0.25 after
   `refill_delay` 2.0 s, `fill` 0.5 s, `keep` 1.0 s, `collapse` 0.3 s) and its easy/hard `aura` hooks; the song a
   `ring` named `song` (hard 12 every 3.2 s through the attack hook). Defaults of the gap check: its escorts orbit

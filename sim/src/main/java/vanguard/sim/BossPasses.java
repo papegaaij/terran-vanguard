@@ -508,6 +508,26 @@ final class BossPasses implements SetPiece.BossActions {
         return hit;
     }
 
+    @Override
+    public int strike(double x, double y, double radius, double damage, int spared) {
+        int hit = 0;
+        if (s.flying() && !s.complete && !s.failed && !rules.invulnerableShip()) {
+            if ((spared & BreachArena.BITE_SHIP) == 0 && !ship.evading() && within(ship.x(), ship.y(), x, y, radius)) {
+                hit |= BreachArena.BITE_SHIP;
+                double lost = ship.defences().armourLost();
+                hitPasses.damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
+            }
+            if ((spared & BreachArena.BITE_WINGMAN) == 0
+                    && wingman != null
+                    && !wingman.ejected()
+                    && within(wingman.x(), wingman.y(), x, y, radius)) {
+                hit |= BreachArena.BITE_WINGMAN;
+                wingman.hit(damage, ship.x(), ship.y(), events);
+            }
+        }
+        return hit;
+    }
+
     /** M7 part H, step H3: a breaching boss tears a rock loose toward its mouth (the simulation's random numbers). */
     @Override
     public void tearLoose(PulledDebris rocks, double mouthX, double mouthY) {

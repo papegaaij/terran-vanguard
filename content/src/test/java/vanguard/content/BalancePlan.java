@@ -26,7 +26,7 @@ import vanguard.content.campaign.LoadoutSlot;
  * the plan with it, and tools/balance.py prints the same plan as the balancing sheet. The slot
  * {@code escort} is Rook's gun (M5 part C: his Mortar, bought before Level 09); M7 part A: the slot
  * {@code special} fits an owned special again (the Airstrike after Level 15's EMP charge, which buying
- * fits). Act 3's items are in the shop it is given ({@link Catalogue#complete}).
+ * fits). Act 3's items are in the shop it is given ({@link Catalogue#of}: M7 part I, every Act 3 icon is in).
  */
 public final class BalancePlan {
     private static final Map<String, LoadoutSlot> SLOTS = Map.of(

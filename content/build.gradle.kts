@@ -85,6 +85,29 @@ tasks.register<JavaExec>("levelReport") {
 }
 
 /**
+ * The user's playthrough save (M7 part I, the user's I.3 of round 44): ./gradlew :content:playthroughSave -Plevel=15
+ * [-Pdifficulty=medium] -Pout=<settings dir> flies the playthrough test's campaign on the balance plan to that level
+ * and writes it into <out>/saves/ (the autosave and slot 1); the game reads it with --settings <out>/settings.properties.
+ */
+tasks.register<JavaExec>("playthroughSave") {
+    group = "application"
+    description = "Writes the balance plan's campaign before a level into a settings dir's saves (-Plevel -Pout)."
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass = "vanguard.content.campaign.PlaythroughSave"
+    maxHeapSize = "2g"
+    systemProperty("vanguard.designDir", rootProject.layout.projectDirectory.dir("design").asFile.absolutePath)
+    val options = listOf("level", "difficulty").mapNotNull { name ->
+        providers.gradleProperty(name).orNull?.let { listOf("--$name", it) }
+    }.flatten()
+    // A relative -Pout is taken from the directory Gradle was started in, not the module's.
+    val start = gradle.startParameter.currentDir
+    val out = providers.gradleProperty("out").map { path ->
+        listOf("--out", File(path).let { if (it.isAbsolute) it else start.resolve(path) }.absolutePath)
+    }
+    args(options + out.getOrElse(listOf()))
+}
+
+/**
  * The zero-allocation tests (Allocations) once more on C1 code only (-XX:TieredStopAtLevel=1): C1 has no escape
  * analysis, so an allocation that only C2 removes (HazardPlay.channelSpan's double[2], CI on the 3-core macOS runner,
  * 2026-10-20) fails here on every machine instead of on a slow one only. Its own forks, next to `test` in `check`.

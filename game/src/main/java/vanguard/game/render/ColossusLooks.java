@@ -36,12 +36,15 @@ import vanguard.sim.Sortie;
  * sinking with the dive), the bulge and crack ring of a tell, an eruption's marker, the mouth in its five poses (the
  * rise's three steps, half open, open with the gullet lit, the bite's tell with the teeth lit, the snap, the dive's two
  * steps; a hit flashing it at most once each 0.25 s, {@link HitFlash}), the gullet's glow before a ring (additive,
- * pulsing), the spine vents (rising, up, venting as they fire, destroyed), and its death in the under pose over the
- * death chain (drawn from the kill on, though the kill takes the boss off the field). The tells' cracks glow lime and
- * the eruption marker's ring is traced (step GFX3). Over the ground units ({@link #drawStreaks}): the suction's sand
- * streaks, each with a dark shadow, running into an open mouth. With
- * the debris ({@link #drawRocks}): the rocks it tears loose, tumbling. Its edge warnings are the simulation's ({@code
- * Sortie.edgeWarnings}, {@link EdgeWarnings}). Presentation only; nothing is allocated per frame.
+ * pulsing), the bite's circle over the mouth through its tell (round 44 Q.10, step GFX4), behind a risen edge mouth
+ * its back with the spine vents as organs on its segments (round 44 K.b, {@link ColossusSpine}: rising, up, venting
+ * as they fire, destroyed), and after the kill the ground half of its death throe ({@link ColossusThroe}: the fissure ring, the
+ * split ridge with its geysers; drawn from the kill on, though the kill takes the boss off the field). The tells'
+ * cracks glow lime and the eruption marker's ring is traced (step GFX3). Over the ground units ({@link #drawStreaks}):
+ * the suction's sand streaks, each with a dark shadow, running into an open mouth; the throe's body and shockwave.
+ * With the debris ({@link #drawRocks}): the rocks it tears loose, tumbling; the throe's plume and rock rain. Its edge
+ * warnings are the simulation's ({@code Sortie.edgeWarnings}, {@link EdgeWarnings}); the throe's shake is {@link
+ * #shakeX}. Presentation only; nothing is allocated per frame.
  */
 final class ColossusLooks {
     /** The breach points, its sprites' poses: front, left, right, rear, under ({@link BreachArena.Pose}). */
@@ -60,22 +63,16 @@ final class ColossusLooks {
     static final int FUNNEL_CRATER = 5;
     /** The bulge's and the marker's frames over their tell. */
     static final int TELL_FRAMES = 4;
-    /** The death chain's frames (the under pose): its first this long, the others each this long, in this order. */
-    static final double DEATH_FIRST_SECONDS = 0.5;
-
-    static final double DEATH_STEP_SECONDS = 0.35;
-    static final int[] DEATH_ORDER = {0, 1, 2, 1, 2, 3, 4, 5};
     /**
-     * Step HB: the death chain's eruptions along the ridge ({@code dust-colossus-burst}): one every this many of the
-     * body's points (a point every {@link RidgeLooks#SPACING} px), from the mouth to the tail, each playing its frames
-     * at {@link #BURST_FPS}; the last one ends {@link #BURST_END_SECONDS} before the chain's end (the flash).
+     * Round 44 Q.10 (step GK): the bite's circle during its tell, its bright ring's opacity and its dark edge's; step
+     * GFX4: drawn over the mouth, a soft additive glow of this many rings each side at most this opacity.
      */
-    static final int BURST_EVERY = 4;
+    static final float BITE_ALPHA = 0.95f;
 
-    static final double BURST_FPS = 16;
-    static final double BURST_END_SECONDS = 0.1;
-    /** The collapsed crater and the furrow fade in over the death chain's last this long, s. */
-    static final double SETTLE_SECONDS = 0.5;
+    static final float BITE_EDGE_ALPHA = 0.4f;
+    static final int BITE_GLOW_RINGS = 3;
+    static final float BITE_GLOW_ALPHA = 0.3f;
+    private static final Color BITE_WHITE = new Color(1f, 0.98f, 0.92f, 1f);
     /** A vent shows its venting frame this long after it fires, s. */
     static final double VENT_SECONDS = 0.25;
     /** A shot from within this of a vent's centre is its burst, px. */
@@ -129,20 +126,22 @@ final class ColossusLooks {
     private final Array<AtlasRegion> shut;
     private final Array<AtlasRegion> mouth;
     private final Array<AtlasRegion> gullet;
-    private final Array<AtlasRegion> death;
-    private final Array<AtlasRegion> bursts;
     private final Array<AtlasRegion> vent;
     private final Array<AtlasRegion> bulge;
     private final Array<AtlasRegion> marker;
     private final Array<AtlasRegion> funnel;
     private final Array<AtlasRegion> rock;
+    /** Round 44 K.b (step GK): the back behind a risen edge mouth, and the death throe. */
+    private final ColossusSpine spine;
+
+    private final ColossusThroe throe;
     /** Level 21's backdrop pieces laid at the kill: the collapsed crater, the furrow's 16 headings (null without). */
     private final AtlasRegion sinkhole;
 
     private final Array<AtlasRegion> furrow;
     /** Per pose: how far behind the mouth's centre the body leaves the sand (the pivots' neck), px. */
     private final double[] neck = new double[POSES];
-    /** The breach's timings, s: the rise, the open (an eruption's), the dive, the death chain. */
+    /** The breach's timings, s: the rise, the open (an eruption's), the dive, the death throe. */
     private final double riseSeconds;
 
     private final double openSeconds;
@@ -192,6 +191,8 @@ final class ColossusLooks {
     private final double[] furrowRow = new double[RidgeLooks.MAX_POINTS];
     private final int[] furrowHeading = new int[RidgeLooks.MAX_POINTS];
     private int furrowPoints;
+    /** Step GFX4: how far the furrow reaches from the mouth's place at the kill, px. */
+    private double furrowReach;
     /** The body's point count drawn last (the furrow copies it at the kill). */
     private int points;
 
@@ -204,13 +205,23 @@ final class ColossusLooks {
         shut = optional(sprites, slug + "-shut");
         mouth = optional(sprites, slug + "-mouth");
         gullet = optional(sprites, slug + "-gullet");
-        death = optional(sprites, slug + "-death");
-        bursts = optional(sprites, slug + "-burst");
         vent = optional(sprites, slug + "-vent");
         bulge = optional(sprites, slug + "-bulge");
         marker = optional(sprites, slug + "-marker");
         funnel = optional(sprites, slug + "-funnel");
         rock = optional(sprites, slug + "-rock");
+        spine = new ColossusSpine(optional(sprites, slug + "-spine"), pivots);
+        throe = new ColossusThroe(
+                optional(sprites, slug + "-rear"),
+                optional(sprites, slug + "-collapse"),
+                optional(sprites, slug + "-death"),
+                optional(sprites, slug + "-geyser"),
+                optional(sprites, slug + "-fissure"),
+                optional(sprites, slug + "-plume"),
+                optional(sprites, slug + "-debris"),
+                optional(sprites, RidgeLooks.ROOT + "-dust"),
+                pixel,
+                flash);
         sinkhole = sprites != null && sprites.hasBackdrop(backdropFolder + SINKHOLE)
                 ? sprites.backdrop(backdropFolder + SINKHOLE, 1).first()
                 : null;
@@ -229,7 +240,7 @@ final class ColossusLooks {
         openSeconds = breach.openSeconds();
         diveSeconds = breach.diveSeconds();
         eruptOpenSeconds = spec.eruption().map(BossSpec.Eruption::openSeconds).orElse(openSeconds);
-        deathSeconds = Math.max(spec.deathSeconds(), deathLength());
+        deathSeconds = Math.max(spec.deathSeconds(), ColossusThroe.THROE_SECONDS);
         streakShare = (float) spec.suction()
                 .map(suction -> Math.clamp(suction.speed() / DESIGN_SUCTION, 0, 1.5))
                 .orElse(0.0)
@@ -326,42 +337,9 @@ final class ColossusLooks {
         };
     }
 
-    /** The death chain's frame {@code age} s after the kill ({@link #DEATH_ORDER}); -1 once it has run out. */
-    static int deathFrame(double age) {
-        if (age < 0) {
-            return -1;
-        }
-        if (age < DEATH_FIRST_SECONDS) {
-            return DEATH_ORDER[0];
-        }
-        int step = 1 + (int) Math.floor((age - DEATH_FIRST_SECONDS) / DEATH_STEP_SECONDS);
-        return step < DEATH_ORDER.length ? DEATH_ORDER[step] : -1;
-    }
-
-    /**
-     * Step HB: the frame of the death chain's eruption at the body's point {@code point} (head first) of {@code points}
-     * {@code age} s after the kill, its frames {@code frames}, over a chain of {@code chainSeconds}; -1 before it starts,
-     * after it has run and at a point without one (every {@link #BURST_EVERY}th from the head).
-     */
-    static int burstFrame(int point, int points, double age, double chainSeconds, int frames) {
-        if (point % BURST_EVERY != 0 || frames <= 0) {
-            return -1;
-        }
-        int count = (points + BURST_EVERY - 1) / BURST_EVERY;
-        double length = frames / BURST_FPS;
-        double span = Math.max(0, chainSeconds - BURST_END_SECONDS - length);
-        double start = count <= 1 ? 0 : span * (point / BURST_EVERY) / (count - 1);
-        double into = age - start;
-        if (into < 0) {
-            return -1;
-        }
-        int frame = (int) (into * BURST_FPS);
-        return frame < frames ? frame : -1;
-    }
-
-    /** The death chain's frames' length, s. */
-    static double deathLength() {
-        return DEATH_FIRST_SECONDS + (DEATH_ORDER.length - 1) * DEATH_STEP_SECONDS;
+    /** Round 44 Q.10: whether the bite's circle shows on the sand in {@code phase}: through the bite's tell only. */
+    static boolean biteCircle(BreachArena.Phase phase) {
+        return phase == BreachArena.Phase.BITE;
     }
 
     /**
@@ -491,7 +469,9 @@ final class ColossusLooks {
             System.arraycopy(ys, 0, furrowRow, 0, points);
             System.arraycopy(headings, 0, furrowHeading, 0, points);
         }
+        furrowReach = 0;
         for (int i = 0; i < furrowPoints; i++) {
+            furrowReach = Math.max(furrowReach, Math.hypot(furrowX[i] - deathX, furrowRow[i] - deathRow + scroll));
             furrowRow[i] += scroll;
         }
     }
@@ -509,10 +489,10 @@ final class ColossusLooks {
 
     /** How far the furrow and the collapsed crater have faded in {@code age} s after the kill (0–1). */
     float settled(double age) {
-        return (float) Math.clamp((age - (deathSeconds - SETTLE_SECONDS)) / SETTLE_SECONDS, 0, 1);
+        return ColossusThroe.settled(age);
     }
 
-    /** The death chain's length, s (the boss's death or the frames', the longer). */
+    /** The death throe's length, s (the boss's death or the throe's, the longer). */
     double deathSeconds() {
         return deathSeconds;
     }
@@ -580,6 +560,11 @@ final class ColossusLooks {
             drawCentred(batch, funnel.get(funnelAt), x, y);
         }
         drawBody(batch, breach, phase, realSeconds);
+        boolean back = held && ColossusSpine.shows(breach.pose()) && spine.drawable();
+        if (back) {
+            spine.lay(heldX, heldY, BreachArena.RIDGE_POINTS, breach);
+            spine.draw(batch, phase, elapsed, riseSeconds, diveSeconds);
+        }
         if (breach.marker()) {
             if (marker.size >= TELL_FRAMES) {
                 double progress = breach.markerProgress();
@@ -593,7 +578,7 @@ final class ColossusLooks {
             drawCentred(batch, swell, x, y);
             drawTellGlow(batch, swell, x, y, breach.progress(), 0, realSeconds);
         }
-        drawVents(batch, piece, breach, phase, tick, true);
+        drawVents(batch, piece, breach, phase, elapsed, tick, back, true);
         int open = openStep(phase, elapsed);
         int closed = shutStep(phase, elapsed, riseSeconds, diveSeconds);
         AtlasRegion frame = open >= 0
@@ -615,7 +600,28 @@ final class ColossusLooks {
             batch.setColor(Color.WHITE);
             batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
-        drawVents(batch, piece, breach, phase, tick, false);
+        if (biteCircle(phase) && pixel != null) {
+            drawBiteCircle(batch, x, y, breach.biteRadius(), realSeconds);
+        }
+        drawVents(batch, piece, breach, phase, elapsed, tick, back, false);
+    }
+
+    /**
+     * Round 44 Q.10, step GFX4: the bite's reach through its tell, over the mouth (the risen body, about 95 px, covered
+     * a ring on the sand): a dark edge outside for the sand, a soft glow either side and a thin bright ring, pulsing.
+     */
+    private void drawBiteCircle(SpriteBatch batch, double x, double y, double radius, double seconds) {
+        float pulse = (float) (0.8 + 0.2 * Math.sin(seconds * 2 * Math.PI * 5));
+        drawRing(batch, x, y, radius + 2 * RING_WIDTH, RING_EDGE, BITE_EDGE_ALPHA);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+        for (int k = 1; k <= BITE_GLOW_RINGS; k++) {
+            float soft = BITE_GLOW_ALPHA * pulse * (BITE_GLOW_RINGS + 1 - k) / BITE_GLOW_RINGS;
+            drawRing(batch, x, y, radius + k * RING_WIDTH, STREAK, soft);
+            drawRing(batch, x, y, radius - k * RING_WIDTH, STREAK, soft * 0.6f);
+        }
+        drawRing(batch, x, y, radius, BITE_WHITE, BITE_ALPHA * pulse);
+        batch.setColor(Color.WHITE);
+        batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     /**
@@ -744,12 +750,21 @@ final class ColossusLooks {
     }
 
     /**
-     * The spine vents risen with this breach: rising and sinking (the rise's first half, the dive's second), up, venting
-     * for {@link #VENT_SECONDS} after a burst, a hit flashing them; a vent destroyed in this breach shows its wreck until
-     * the mouth dives. {@code wrecks} draws the wrecks (under the mouth), else the living vents (over it).
+     * The spine vents. On a risen edge mouth's back ({@code back}, step GK) each sits on its segment: shut while the
+     * segment rises or sinks, up, venting for {@link #VENT_SECONDS} after a burst, a hit flashing it; a vent destroyed
+     * in this or an earlier breach leaves its scar on its segment while the segment is up (otherwise the segment's
+     * sealed pore shows). Without the back (an under breach) the vents rise from the sand as before. {@code wrecks}
+     * draws the wrecks (under the mouth), else the living vents (over it).
      */
     private void drawVents(
-            SpriteBatch batch, SetPiece piece, BreachArena breach, BreachArena.Phase phase, long tick, boolean wrecks) {
+            SpriteBatch batch,
+            SetPiece piece,
+            BreachArena breach,
+            BreachArena.Phase phase,
+            double elapsed,
+            long tick,
+            boolean back,
+            boolean wrecks) {
         if (vent.size < 4) {
             return;
         }
@@ -761,18 +776,27 @@ final class ColossusLooks {
             return;
         }
         for (int v = 0; v < breach.ventCount(); v++) {
-            double x = breach.ventX(v);
-            double y = breach.ventY(v);
+            boolean onBack = back && v < ColossusSpine.SEGMENTS;
+            int state = onBack ? ColossusSpine.state(phase, elapsed, v, riseSeconds, diveSeconds) : ColossusSpine.UP;
             if (wrecks) {
-                if (ventDied[v] == breach.breaches() && ventDied[v] > 0) {
+                boolean scar = onBack
+                        ? ventDied[v] >= 0 && !breach.ventRaised(v) && state == ColossusSpine.UP
+                        : ventDied[v] == breach.breaches() && ventDied[v] > 0;
+                if (scar) {
+                    double x = onBack ? spine.x(v) : breach.ventX(v);
+                    double y = onBack ? spine.y(v) : breach.ventY(v);
                     drawCentred(batch, vent.get(3), x, y);
                 }
                 continue;
             }
-            if (!breach.ventRaised(v)) {
+            if (!breach.ventRaised(v) || state < 0) {
                 continue;
             }
-            int frame = !breach.ventUp(v) ? 0 : tick - ventFired[v] < SimStep.ticks(VENT_SECONDS) ? 2 : 1;
+            double x = breach.ventX(v);
+            double y = breach.ventY(v);
+            int frame = !breach.ventUp(v) || state < ColossusSpine.UP
+                    ? 0
+                    : tick - ventFired[v] < SimStep.ticks(VENT_SECONDS) ? 2 : 1;
             int part = breach.ventPart(v);
             if (frame > 0 && hits.on(part, tick, piece.partTicksSinceHit(part))) {
                 flash.draw(batch, vent.get(frame), Math.round(X0 + x), Math.round(y), HIT_WHITE, HitFlash.PART_FLASH);
@@ -783,16 +807,17 @@ final class ColossusLooks {
     }
 
     /**
-     * Its death: the under pose's death chain at the mouth's place, sinking with the ground's scroll; the furrow along
-     * the body's last track and the collapsed crater fading in over the chain's last {@link #SETTLE_SECONDS} and
-     * staying, scrolling with the ground; the body's last stretch over the chain, its glow at full; step HB: the
-     * eruptions along it from the mouth to the tail ({@link #burstFrame}).
+     * Its death on the ground (step GK, the throe, {@link ColossusThroe}): the fissure ring opening round the mouth's
+     * place; the furrow along the body's last track and the collapsed crater fading in and staying, scrolling with the
+     * ground; the split ridge glowing at full until they have settled. The body itself and the geysers are drawn over
+     * the ground units ({@link #drawStreaks}).
      */
     private void drawDeath(SpriteBatch batch, long tick, float alpha, double scroll, double realSeconds) {
         if (deathTick == NEVER) {
             return;
         }
         double age = deathAge(tick, alpha);
+        throe.drawFissure(batch, age, deathX, deathRow - scroll);
         float settled = settled(age);
         if (settled > 0) {
             batch.setColor(1, 1, 1, settled);
@@ -810,7 +835,7 @@ final class ColossusLooks {
             batch.setColor(Color.WHITE);
         }
         if (age < deathSeconds && furrowPoints > 0) {
-            // The body's last stretch through the chain, its crest cracks glowing at full (the art's death).
+            // The body's last stretch through the throe, its crest cracks glowing at full (the art's death).
             for (int i = 0; i < furrowPoints; i++) {
                 xs[i] = furrowX[i];
                 ys[i] = furrowRow[i] - scroll;
@@ -818,30 +843,48 @@ final class ColossusLooks {
             }
             body.draw(batch, xs, ys, headings, furrowPoints, realSeconds, false, 1, 1 - settled);
         }
-        int frame = deathFrame(age);
-        if (frame >= 0 && death.size > frame) {
-            batch.setColor(1, 1, 1, 1 - settled);
-            drawCentred(batch, death.get(frame), deathX, deathRow - scroll);
-            batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * Over the ground units after the kill: the throe's body rearing, collapsing and sinking, and its shockwave; then
+     * the geysers rolling along the split ridge from its tail to its head, or round the mouth's place where the ridge
+     * is too short to carry them (step GFX4: over the body, which hid them on the ground; H6's capture).
+     */
+    private void drawThroeBody(SpriteBatch batch, Sortie sortie, float alpha, double scroll) {
+        if (deathTick == NEVER || !drawsDeath(sortie)) {
+            return;
         }
-        // Step HB: the chained eruptions of dust and lime ichor along the split ridge, from the mouth to the tail.
-        if (age < deathSeconds) {
+        double age = deathAge(sortie.tick(), alpha);
+        throe.drawBody(batch, age, deathX, deathRow - scroll);
+        if (age >= deathSeconds) {
+            return;
+        }
+        if (ColossusThroe.alongRidge(furrowPoints, furrowReach)) {
             for (int i = 0; i < furrowPoints; i++) {
-                int burst = burstFrame(i, furrowPoints, age, deathSeconds, bursts.size);
-                double y = furrowRow[i] - scroll;
-                if (burst >= 0 && y > -64 && y < PlayField.HEIGHT + 64) {
-                    drawCentred(batch, bursts.get(burst), furrowX[i], y);
-                }
+                xs[i] = furrowX[i];
+                ys[i] = furrowRow[i] - scroll;
             }
+            throe.drawGeysers(batch, age, xs, ys, furrowPoints);
+        } else {
+            throe.drawGeysersRound(batch, age, deathX, deathRow - scroll);
         }
+    }
+
+    /**
+     * Step GK: the play field's sideways shake now from the death throe ({@link ColossusThroe#shakeX}), px at the full
+     * screen-shake setting; 0 while it lives and after the throe.
+     */
+    float shakeX(Sortie sortie, double realSeconds) {
+        return deathTick == NEVER ? 0 : ColossusThroe.shakeX(deathAge(sortie.tick(), 0), realSeconds);
     }
 
     /**
      * Over the ground units: while the mouth draws (open, the bite's tell) sand streaks run into it from the suction's
      * outer radius to its inner one along {@value #STREAKS} lanes, fading in at the outer and out at the inner end,
-     * their opacity by the difficulty's suction.
+     * their opacity by the difficulty's suction. After the kill: the throe's body ({@link #drawThroeBody}).
      */
-    void drawStreaks(SpriteBatch batch, Sortie sortie, float alpha, double realSeconds) {
+    void drawStreaks(SpriteBatch batch, Sortie sortie, float alpha, double scroll, double realSeconds) {
+        drawThroeBody(batch, sortie, alpha, scroll);
         SetPiece piece = colossus(sortie);
         if (piece == null || !piece.present() || piece.destroyed() || streakShare <= 0) {
             return;
@@ -922,9 +965,13 @@ final class ColossusLooks {
 
     /**
      * With the debris: the rocks it tears loose, one of the four shapes (by the rock's serial) tumbling, scaled to the
-     * rock's size; a hit flashes it white.
+     * rock's size; a hit flashes it white. After the kill: the throe's dust plume and rock rain ({@link
+     * ColossusThroe#drawAir}).
      */
-    void drawRocks(SpriteBatch batch, Sortie sortie, float alpha) {
+    void drawRocks(SpriteBatch batch, Sortie sortie, float alpha, double scroll) {
+        if (deathTick != NEVER && drawsDeath(sortie)) {
+            throe.drawAir(batch, deathAge(sortie.tick(), alpha), deathX, deathRow - scroll);
+        }
         if (rock.size < ROCK_SHAPES * ROCK_TUMBLE) {
             return;
         }

@@ -626,7 +626,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `leave_out_large` (every n-th large chunk) and `hard` `drift_factor`); `ground_targets` (`target`, `section`, `layer`, `size`, `at` (one `[t, x]` per object:
   when it enters at the top edge and its x), a destructible's `count`, `hp`, `bounty`, `drop`, an
   optional `bonus_drop` with it (a special charge drops only with a special fitted), `hardened`, an
-  optional `reveals` (its hidden crate drops when it is destroyed), `dark: true` (a trigger that
+  optional `reveals` (its hidden crate drops when it is destroyed), an `easy` / `hard` change giving its `hp`
+  (Level 21's survey crawler, hard 28; round 44 Q.5), `dark: true` (a trigger that
   takes hits only while the headlight or a flare lights it), an optional `sprite` (its sprite
   set: `<sprite>_0..2` intact, damaged, wrecked and `<sprite>-break_<n>`; Level 01's
   `cargo-container`, without a wreck, if left out), or
@@ -673,7 +674,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   given; a secret's `radio` line takes it too), `shout: true` (the voice shouts the line, with the
   speaker table's `shout` row; separate from how the line queues), and `easy` / `hard` changes
   giving another `line`,
-  as when a wave enters elsewhere on that difficulty); `objectives` (`primary`, `secondary` `kill_ratio`, `groups`, `escapes` (the enemy none of
+  as when a wave enters elsewhere on that difficulty); `objectives` (`primary`, `secondary` `kill_ratio` with an
+  optional `boss_counted: false` (the level's boss set pieces left out of the ratio's enemies and kills; default true:
+  Level 21, round 44 K.h), `groups`, `escapes` (the enemy none of
   which may leave the screen alive; a spawner's self-burst counts as an escape) or `kill_all`
   (enemies every unit of which must die, met and failed as `escapes`, with the tracker's `label`)
   and `credits`;
@@ -2143,7 +2146,7 @@ compiles, and the allocation tests then see allocations that escape analysis oth
 - 2026-10-12: M6 part D (Q14 = b, pending the user's review in round 35): Rook's guns and barks
   tables (`rook-guns`, `rook-barks`) and the act outro's page table (`act-outro-pages`) are rendered
   by `tools/sync_tables.py`; their wording sits under `notes` (`notes.scale`, `notes.trigger`,
-  `notes.image`). The specials, allies and economy tables stay hand-written (`later: Act 3` tooling).
+  `notes.image`). The specials, allies and economy tables stay hand-written (`later: Act 3` tooling; round 44 I.4 dropped the tag, see below).
 - 2026-10-12 (user, round 35): Q14 = b accepted: Rook's guns and barks tables and the act outro's
   page table stay rendered by `tools/sync_tables.py`; the specials, allies and economy tables stay
   hand-written until Act 3.
@@ -2176,3 +2179,4 @@ compiles, and the allocation tests then see allocations that escape analysis oth
   it and it runs next to `test`; measured +34 s on `:content:check` wall time (4 m 42 s → 5 m 16 s, machine under
   load), the task itself 62 s, alone 12 s of tests; with b239705 reverted it fails Level 16 (7.66 MB) while `test`
   passes.
+- 2026-10-20 (user, round 44, I.4): the specials, allies and economy tables stay **hand-written**; the `later: Act 3` tag is dropped (they are stable and rarely edited), so no part I step renders them through `tools/sync_tables.py`.

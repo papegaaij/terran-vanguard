@@ -102,8 +102,7 @@ Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 14 
 
 - 2026-10-12 (overnight design phase): promoted from the weapons roster with full per-level
   numbers in Act 1 terms: the Lance Laser's pattern at rate 4 (18 → 60 DPS, the roster's), draw 3 →
-  5, 2 800 cr, unlock L17; walls stop it; reverse scroll keeps "rear" as the screen's bottom. Pending
-  the user's review in concept round 36.
+  5, 2 800 cr, unlock L17; walls stop it; reverse scroll keeps "rear" as the screen's bottom. Accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): approved (D.21) with M2, M4 and M5 accepted.
 - 2026-10-13 (M7 part A, step A2): data.yaml written; the property and per-level tables are
   rendered from it.

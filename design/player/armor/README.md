@@ -2,9 +2,9 @@
 title: Armour
 design: approved
 implementation: done
-art: none
+art: n/a
 depends-on: [../shields, ../../systems/retry, ../../systems/difficulty]
-updated: 2026-10-05
+updated: 2026-10-20
 ---
 
 # Armour
@@ -90,3 +90,4 @@ auto-repair or armour patches). When it reaches zero the ship is destroyed and t
   (`assets/voice/okafor/14b14dfe36a3.ogg`, 4.5 s of speech on the key's seed), for the user's ear
   in round 26.
 - 2026-10-05: Concept round 26 closed (user: the round accepted as proposed): Okafor's low-armour line accepted as rendered (`assets/voice/okafor/14b14dfe36a3.ogg`, "hull" as heard), with its **urgent** queueing as built: it interrupts the line on the radio, the cut line replays after it, and the timed lines behind it start late (typically 2–13 s, at worst 18 s in Level 03 from t=36.5). Rejected: dropping the cut line instead of replaying it (not chosen).
+- 2026-10-20 (user, round 44, X.k): **`art: n/a`**: the part has only the shop's icons, made with the shop (`tools/art/icons.py`), and no assets of its own.

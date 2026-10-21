@@ -1,9 +1,9 @@
 ---
 title: Act 2 – Homefront
 design: approved
-implementation: in-progress
+implementation: done
 art: final
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Act 2 – Homefront
@@ -22,10 +22,10 @@ Siege Spire, a Vrell citadel that has rooted itself in the heart of the UTC capi
 | [level-08-neon-skyline](level-08-neon-skyline/README.md) | Night megacity, Rook's first sortie on Lancer's wing, Creeper intro · front · density 3 | approved | done | final |
 | [level-09-arcology-fall](level-09-arcology-fall/README.md) | The act's first `destroy-targets`: six hardened hive nodes, hold zones, Ravager packs, the arcology collapse · front · density 3 | approved | done | final |
 | [level-10-evacuation-corridor](level-10-evacuation-corridor/README.md) | escort` of five shuttles at first light, first rear-heavy level (Wraith, Mote Swarm), one scripted loss · front and rear (a third from behind by threat) · density 3 | approved | done | final |
-| [level-11-atlantic-convoy](level-11-atlantic-convoy/README.md) | Naval layer (Driftjelly, Reef Spitter), `sub` shadows, mid-boss Harbour Kraken · front · density 3 | approved | in-progress | final |
+| [level-11-atlantic-convoy](level-11-atlantic-convoy/README.md) | Naval layer (Driftjelly, Reef Spitter), `sub` shadows, mid-boss Harbour Kraken · front · density 3 | approved | done | final |
 | [level-12-storm-front](level-12-storm-front/README.md) | Weather (rain, lightning, gusts), Lamprey intro, Varga sees the Vrell herd the storm · all · density 4 | approved | done | final |
 | [level-13-polar-relay](level-13-polar-relay/README.md) | defend` the Arctic relay for 180 s, Skimmer intro, whiteout · all edges · density 4 | approved | done | final |
-| [level-14-siege-spire](level-14-siege-spire/README.md) | Geneva Concord approach through the root field, act boss Siege Spire · front · density 4 | approved | in-progress | final |
+| [level-14-siege-spire](level-14-siege-spire/README.md) | Geneva Concord approach through the root field, act boss Siege Spire · front · density 4 | approved | done | final |
 
 ## Design
 
@@ -69,7 +69,7 @@ Spire falls, the act ends as the *Act-end order* below says (M5 part H).
 
 **Title card** (held 3.5 s over the act's still, `ui/act-2-homefront-still.png`: Nova Lagos at
 night seen from low orbit, fires along the coast, the landing trails of the second fleet cutting
-down through the cloud deck; its chrome lettering from `tools/concept/ui_assets.py`):
+down through the cloud deck; its chrome lettering from `tools/art/act_titles.py`):
 
 <!-- data: act-title-card -->
 > ACT II
@@ -106,7 +106,7 @@ it opens on the landfall twelve days later and does not repeat them.
 > briefing follows. Aegis Actual out."
 <!-- /data -->
 
-**Act-end order** (M5 part H, decision H6 = a, pending the user's review; the flow of
+**Act-end order** (M5 part H, decision H6 = a, accepted in round 34 (2026-10-12); the flow of
 [Act 1](../act-1-first-contact/README.md#act-intro-and-outro) for any act, the same code): the
 Siege Spire's kill → the daylight section (the boss theme fades, no music) → the debrief with the
 act summary `ACT II COMPLETE · HOMEFRONT` (the `mission-complete` jingle, the
@@ -208,7 +208,7 @@ officer of the relay, round 35) and plays as text until it is cast.
 Production art for concept round 30 (M5 part B batch): the still behind the act's title card,
 rendered by `tools/art/act_stills.py act-2` from Level 08's production backdrop
 (`tools/art/backdrop_l08.py`, its pieces in `assets/backdrop/level-08/`), and its chrome lettering
-(`ui/act-2-homefront-title.png`, `tools/concept/ui_assets.py`); the act briefing's four images are
+(`ui/act-2-homefront-title.png`, `tools/art/act_titles.py`); the act briefing's four images are
 the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.md](concept/prompts.md).
 
 | File | What | Status |
@@ -217,14 +217,17 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
 
 ## Implementation
 
-- [ ] All 7 levels promoted to draft level documents and implemented: Levels 08–11 done; Levels
-      12–14 built and accepted in the combined concept round 34 (M5 parts F–H, 2026-10-12); the user's
-      playthrough of the act (round 34's P9) still open. Round 41 (2026-10-19) accepted the build of the rework (Kraken and Spire fights, waves, voices, debrief music, intel panel, refit-only replay hangar); only the playthrough remains.
+- [x] All 7 levels promoted to draft level documents and implemented: Levels 08–14 `done`, `design: approved`,
+      `art: final` (Levels 12–14 built and accepted in the combined concept round 34, M5 parts F–H, 2026-10-12;
+      round 41 (2026-10-19) accepted the rework: Kraken and Spire fights, waves, voices, debrief music, intel panel,
+      refit-only replay hangar; round 44 (2026-10-20) accepted the last captures and moved the production rows to
+      `final`). **The user played Act 2 through on 2026-10-20 and accepted it all**: the act is final (the umbrella
+      documents that wait for later acts' tickets are judged per act ticket, round 44 X.j).
       Acts 1–2 flown as one campaign on every difficulty by `ActPlaythroughTest` (M5 part I).
 - [x] Weather system (rain, lightning, wind gusts and drift) for L12 — M5 part F ([Level 12](level-12-storm-front/README.md#weather); `WindTest`, `Level12Test`, `Level12LooksTest`).
 - [x] Halted-scroll `defend` mode for L13 — M5 part G ([Level 13](level-13-polar-relay/README.md#the-halt); `TimedHaltTest`, `DefendTest`, `Level13Test`).
 - [x] Act title card over its still (`ui/act-2-homefront-still.png`, `tools/art/act_stills.py`) with
-      its lettering (`ui/act-2-homefront-title.png`, `tools/concept/ui_assets.py`), then the four
+      its lettering (`ui/act-2-homefront-title.png`, `tools/art/act_titles.py`), then the four
       voiced act briefing pages with their images, before the L08 briefing at the act's start
       ([data.yaml](data.yaml); M5 part B).
 - [x] Act outro (four voiced pages with their images, `act-complete` under page 1) and the
@@ -285,7 +288,7 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
   top). Level 10 flies at first light (D11 = a), as Level 09's end line says; its texts go to
   `review` for round 32.
 - 2026-10-11: M5 parts G and H (the user is on vacation; the main agent took the gap analyses'
-  recommendations, **pending the user's review** in the combined round at the end of M5): Level 13
+  recommendations, **accepted in round 34 (2026-10-12)**): Level 13
   and Level 14 go to `review`/`in-progress` as their rows say; **H6 = a** the act-end order is
   Act 1's (kill, daylight, debrief with the act summary, outro, hangar), so the old "fanfare over
   the daylight, then the act debrief" is corrected; **H7 = a** the act debrief becomes the four-page
@@ -296,8 +299,7 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
   ticked as built; the levels item stays open until Levels 12–14 pass the combined concept round.
   `ActPlaythroughTest` now flies Acts 1 and 2 as one campaign with Rook on every difficulty.
 - 2026-10-12: `design` back to `review` (from `approved`) for the act-end order (H6 = a corrects the
-  approved "fanfare over the daylight") and the outro split into four pages (H7 = a), both pending the
-  user's review: C13 in the combined [concept round 34](../../concept-rounds/round-34/README.md#changes-to-approved-specs).
+  approved "fanfare over the daylight") and the outro split into four pages (H7 = a), both accepted in round 34 (2026-10-12): C13 in the combined [concept round 34](../../concept-rounds/round-34/README.md#changes-to-approved-specs).
 - 2026-10-12 (user, [round 34](../../concept-rounds/round-34/README.md)): C13 accepted (the act-end order
   as Act 1's and the four voiced outro pages), the outro images and the act-end capture approved, so
   the document goes back to `approved`; with Levels 12–14 final every level's art is final, so `art:
@@ -305,7 +307,9 @@ the [briefing screen](../../ui/briefing/README.md)'s. Prompts: [concept/prompts.
 - 2026-10-18 (the user's Act 2 playtest, PT2-B 1b, 2a, 2b, 2c chosen): Levels 08 and 09 rewritten
   with L10-style waves (a wave about every 2.5 s, Needler and Stinger groups between the Skitters,
   Spore Bomber lines and Mantis pincers returning there, Creeper convoys of 5; the brief's 6–7 units a
-  wave with at most 40 % Skitters cut back once the plan's fit died on hard, pending the user's review), the Ravager slowed and kept out of Level 09's
+  wave with at most 40 % Skitters cut back once the plan's fit died on hard, accepted in round 39 (2026-10-18)), the Ravager slowed and kept out of Level 09's
   holds, the Needler and the Stinger given the act HP factor capped at ×3 in those two levels, and the
   Act 2+ pacing rule and floor (`PacingTest`, `ActFloorTest`; Levels 11–14 left pending below it).
 - 2026-10-19 (user, round 41): the Act 2 finish built after round 40 accepted: the Kraken and Spire fights (P.a), Levels 08, 12 and 13 (P.b), Levels 11 and 14's waves (P.c), the new voices (P.d), the debrief music (P.e), the intel panel (P.f) and the refit-only replay hangar (P.g, as built). The build is accepted; the user's own playthrough of the act is still open.
+- 2026-10-20 (user, round 44, X.f-X.m, all as recommended): Rook's halt line stays at level t≈118 (X.f); the stale "pending the user's review" notes of Levels 08-14 and their units rewritten as "accepted in round N (date)" (X.g); Level 13's G1-G7 and Level 14's H1-H10 are "None open" (X.h); the production `chosen` rows of Levels 08-14 are `final` (X.i; the concept picks stay `chosen`); the umbrella parts (`audio/voice`, `art-direction/production`, `audio/music`, `audio/sfx`, `enemies`, `ui/hud`, `ui/hangar`, the allies' relay sprite) are judged per act ticket: every Act 2 box in them is ticked, so Act 2 is final without them (X.j; `audio/voice` stays `design: draft` until the user approves it); `player/armor` and `player/generator` are `art: n/a` (X.k); the act-title lettering (`assets/ui/act-N-*-title.png`) gets a `tools/art` generator with the pixels unchanged (X.l, step ART-K, planned); the Act 2 playthrough (round 34's P9) and the Act 3 playthrough are one (X.m). With these the act is complete except the playthrough.
+- 2026-10-20 (user): "test played act 2, all accepted": the Act 2 playthrough (round 34's P9) is done and the act is final; the playthrough of Act 3 stays open (part I's save at the Level 15 hangar).

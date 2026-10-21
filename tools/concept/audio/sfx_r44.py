@@ -8,7 +8,8 @@ or a gliding one), layers, fades, filters, pans and levels them: nothing is synt
 every blast starts with a ramped attack (15-40 ms). The same tools as sfx_r43.py and sfx_r43g.py (Levels 19 and 20).
 Pending the user's review in round 44.
 
-Outputs (design/audio/sfx/concept/; OGG Vorbis q6, 44.1 kHz stereo):
+Outputs (design/audio/sfx/concept/, the variants the user rejected in concept/rejected/; OGG Vorbis q6, 44.1 kHz
+stereo):
 
   colossus-bulge-r44-a      a breach's 2.0 s tell (the sand bulges and cracks): an earthquake's cracking soil and
                             stone swelling in, sand pouring off the bulge on top; 2.1 s
@@ -52,6 +53,11 @@ and is nearly all below 200 Hz, so it is levelled by its loudness (-20 LUFS, 8 L
 layer is peak-normalised before its gain.
 
 Usage: python3 tools/concept/audio/sfx_r44.py [subject-or-file ...]   e.g. colossus-bite walker-lance-shot-r44-b
+       python3 tools/concept/audio/sfx_r44.py --mirror colossus-ridge-r44-a
+The mirror option swaps the two channels (the pan runs the other way) and writes the game's copy to assets/sfx/ under
+the concept name instead of the concept file (round 44, the user: the ridge pass a, but Level 21's ridge runs from the
+right edge to the left, so the game's colossus-ridge-r44-a.ogg is a's render mirrored, panned right to left; the
+concept file keeps a's left-to-right pan). importPlaceholders does not copy that file (pipeline/build.gradle.kts).
 Deterministic (no randomness, bit-exact ffmpeg flags).
 """
 import sys
@@ -69,6 +75,12 @@ from synth import db, decode, limiter, lufs, undb, write_ogg  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "design" / "audio" / "sfx" / "concept"
+ASSETS = ROOT / "assets" / "sfx"
+# The user's round-44 picks (2026-10-20): a each except the lance charge (b); the other variants are written to
+# concept/rejected/, where they moved after the pick.
+REJECTED = {"colossus-bulge-r44-b", "colossus-eruption-r44-b", "colossus-suction-r44-b", "colossus-bite-r44-b",
+            "colossus-death-r44-b", "colossus-ridge-r44-b", "walker-lance-charge-r44-a", "walker-lance-shot-r44-b",
+            "walker-shockwave-r44-b"}
 SCRIPT = "tools/concept/audio/sfx_r44.py"
 
 # Freesound sound id -> (title, author, licence); the originals are cached as <id>_<name>.<type>.
@@ -238,7 +250,7 @@ def sources_of(spec):
     return list(dict.fromkeys(layer["sound"] for layer in layers_of(spec)))
 
 
-def build(subject, v):
+def build(subject, v, mirror=False):
     kind, band, ceiling, variants = SOUNDS[subject]
     spec, what = variants[v]
     name = f"{subject}-r44-{v}"
@@ -258,7 +270,12 @@ def build(subject, v):
         if lufs(st)[0] > cap:  # level the unlimited mix by its loudness instead (no extra squashing)
             st = loudness(raw, cap, ceiling)
         print(f"  {name}: limiting {max(0.0, over):.1f} dB at the band level, cap {cap:.0f} LUFS")
-    out = write_ogg(OUT / f"{name}.ogg", st, max_peak_db=ceiling, tags={"COMMENT": f"{SCRIPT} {name}: {what}; {used}"})
+    if mirror:  # the channels swapped: the pan runs the other way; the game's copy, not the concept file
+        st = st[::-1].copy()
+        what = f"{what}; mirrored (channels swapped) for the game"
+    target = (ASSETS if mirror else OUT / "rejected" if name in REJECTED else OUT) / f"{name}.ogg"
+    flag = " --mirror" if mirror else ""
+    out = write_ogg(target, st, max_peak_db=ceiling, tags={"COMMENT": f"{SCRIPT}{flag} {name}: {what}; {used}"})
     report(out, what)
     if kind == "loop":
         x = decode(out)
@@ -267,11 +284,15 @@ def build(subject, v):
 
 
 def main(argv):
+    mirror = "--mirror" in argv
+    argv = [a for a in argv if a != "--mirror"]
+    if mirror and not argv:
+        sys.exit("--mirror needs the subjects or files to mirror, e.g. --mirror colossus-ridge-r44-a")
     for subject, (_, _, _, variants) in SOUNDS.items():
         for v in variants:
             if argv and subject not in argv and f"{subject}-r44-{v}" not in argv:
                 continue
-            build(subject, v)
+            build(subject, v, mirror)
 
 
 if __name__ == "__main__":

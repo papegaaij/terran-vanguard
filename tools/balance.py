@@ -6,7 +6,7 @@ difficulty levers, the enemies and the levels); the expected purchases per hanga
 design/player/balance-plan.yaml. The weapon tables are rendered by tools/sync_tables.py.
 
 The checks themselves are content tests (design/tech/architecture, balance checks as JUnit tests):
-BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-2 flown with the
+BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Acts 1-3 flown with the
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
@@ -14,9 +14,9 @@ Usage:
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
-table where the level has data, else budget(n), the absolute typical haul: user decision 2026-10-14,
-round 37 R.1 reverted, design/systems/economy, Per-level budget; plus the typical player's grade
-bonus, a B: round 34 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
+table, design/systems/economy, Per-level budget: every planned level has its data since M7 part H, so
+the fallback to budget(n) is gone, M7 part I; plus the typical player's grade bonus, a B: round 34
+P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
 inside 0.75-1.33x; Levels 01-03's gentle onboarding (up to 1.75x) is the accepted exception
@@ -100,13 +100,12 @@ def typical_haul(d):
 
 
 def income(data, n):
-    """(credits the level earns, whether it is the level's typical haul). Without level data (Act 3's
-    levels after Level 15 until part C on writes theirs): budget(n), the absolute typical haul with the
-    act factor included (user decision 2026-10-14, round 37 R.1 reverted); the levels' own data replaces it."""
+    """The credits the level earns: its typical haul. M7 part I: every planned level has its data (Level 21
+    since part H), so a level without a data file is an error, no longer budget(n)."""
     d = level_dir(n)
-    if d:
-        return typical_haul(d), True
-    return round(budget(data, n)), False
+    if not d:
+        sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
+    return typical_haul(d)
 
 
 def apply_plan(data):
@@ -218,10 +217,10 @@ def apply_plan(data):
             # round 34, P3 = A: Rook's repairs after a level flown with him, after the ship's
             pay(plan["escort_repair_points_per_level"] * data["repair_cost"], "Rook's repairs (estimate)")
         yield n, state
-        earned, haul = income(data, n)
+        earned = income(data, n)
         # round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul, rounded half to even
         earned += round(earned * plan["typical_grade_bonus"])
-        state["earned"] = (earned, haul)
+        state["earned"] = earned
         state["credits"] += earned
         state["income"] += earned
 
@@ -535,7 +534,7 @@ def report(data):
         if d:
             slugs, boss = level_enemies(d)
             slowest = max(slugs, key=lambda s: enemy(s)["hp"])
-            line = (f"L{n:02d}: typical haul {income(data, n)[0]} of budget {budget(data, n):.0f}; "
+            line = (f"L{n:02d}: typical haul {income(data, n)} of budget {budget(data, n):.0f}; "
                     f"slowest TTK at the plan's DPS {enemy(slowest)['name']} {enemy(slowest)['hp'] / fwd:.1f} s")
             if boss:
                 line += f"; boss {enemy(boss)['name']} {boss_seconds(enemy(boss), EFFECTIVE * fwd):.0f} s (at 0.6×)"
@@ -545,8 +544,8 @@ def report(data):
             ttk_lines += rear_lines
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
-    print("\nBefore visit: the credits after the level before it, which earns its typical haul where the "
-          "level has data (its credit-budget table), else budget(n) × the act factor^(act − 1), plus the typical player's grade bonus "
+    print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
+          "credit-budget table), plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "
           "(from Level 08), not in the forward DPS.")

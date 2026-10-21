@@ -5,7 +5,7 @@ The chosen concept is [skimmer-r06-a](../../concept/prompts.md#skimmer-r06-a) (r
 
 ## skimmer-final-r35-a
 
-Round 35, production art (M5 part G batch, step G2; decision G9 = a, pending the user's review:
+Round 35, production art (M5 part G batch, step G2; decision G9 = a, accepted in round 34 (2026-10-12):
 straight to production from the chosen concept; water drawn as part E's hybrid, E4 = c). Review sheet
 (`.png`) and loop (`.gif`) rendered by `python3 tools/art/skimmer.py` from in-memory frames (see
 `tools/art/README.md`); the frames go to `assets/` only with `--assets`, in the content step's time (no

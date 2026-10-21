@@ -147,6 +147,15 @@ public final class SetPiece implements Hashed {
         }
 
         /**
+         * Step SIM-K: a breaching boss's eruption ring of {@code radius} px about (x, y) reaches the ship and Rook within
+         * it, except those in {@code spared} (bits as {@link #bite}'s, hit before), who take {@code damage}; returns
+         * whom it caught now.
+         */
+        default int strike(double x, double y, double radius, double damage, int spared) {
+            return 0;
+        }
+
+        /**
          * M7 part H, step H3: a breaching boss tears a rock of {@code rocks} loose toward its mouth at (mouthX,
          * mouthY) ({@link PulledDebris#tear}).
          */
@@ -197,15 +206,10 @@ public final class SetPiece implements Hashed {
     /** The parts out of the boss bar: the fire-only ones (M7 part H: and a breaching boss's spine vents). */
     private final boolean[] outOfBar;
 
-    private final int[] partChain;
+    /** Its chains: the necks its parts hang on and the slam arms. */
+    private final BossChains chains;
+
     private final int[] exposedFrom;
-    private final int[] chainStart;
-    private final int[] segmentStart;
-    private final double[] angles;
-    private final double[] segmentX;
-    private final double[] segmentY;
-    private final double[] tipX;
-    private final double[] tipY;
     private final int[] attackTicks;
     private final int[] attackBurstLeft;
     private final int[] attackBurstTicks;
@@ -222,10 +226,8 @@ public final class SetPiece implements Hashed {
 
     private final double[][] poseDy;
     private final Hitbox[] poseBody;
-    /** Per phase and part, whether the phase's windows hold the part (it takes damage only while open). */
-    private final boolean[][] windowed;
-    /** Per part, the steps it stays open in its window; 0 closed. */
-    private final int[] openTicks;
+    /** Its phases' windows (which parts they hold, which are open, the windows' clock). */
+    private final BossWindows windows;
 
     private final double entryY;
     /** Steps since it arrived; -1 before. */
@@ -256,10 +258,6 @@ public final class SetPiece implements Hashed {
     /** Bit f set: phase f ended on its timer. */
     private long timeouts;
 
-    private int windowTicks;
-    private int windowNext;
-    private int windowOpenings;
-
     private int phase;
     private int turn;
     private int turnTicks;
@@ -289,22 +287,12 @@ public final class SetPiece implements Hashed {
     private boolean approaching;
 
     /**
-     * M5 part H: whether an anchored boss has a lift (a phase with a move) and whether any of its
-     * attacks sweeps: their state is hashed only then, so Level 11's Kraken hashes as before.
+     * M5 part H: whether an anchored boss has a lift (a phase with a move): its state is hashed only then, so Level
+     * 11's Kraken hashes as before.
      */
     private final boolean lifts;
-
-    private final boolean sweeps;
-    /**
-     * Round 40 (the Siege Spire's lanes, proposal 4a): whether any attack takes aim turns (their state is
-     * hashed only then); per attack, the steps to its next aimed shot, the next part in its turn order
-     * and the part whose turn it is (glowing; -1 for none).
-     */
-    private final boolean aims;
-
-    private final int[] aimTicks;
-    private final int[] aimNext;
-    private final int[] aimPart;
+    /** Round 40: its attacks' aim turns (the Siege Spire's pods). */
+    private final BossAimTurns aimTurns;
     /**
      * M5 part H, the lift (design/enemies/bosses/siege-spire; decision H4 = a): whether it has left its
      * anchor (from its lift's start), per part whether it stays at the anchor (the stump: the parts
@@ -316,24 +304,8 @@ public final class SetPiece implements Hashed {
     private final boolean[] stays;
     private int liftPose;
     private int liftEndTicks;
-    /**
-     * M5 part H, per attack its sweep (design/enemies, Boss attacks and root bursts; decision H5 = a):
-     * steps into its telegraph and beam (-1 while none runs), the part it sweeps from, its centre
-     * (radians clockwise from straight down), its direction (1 clockwise, -1 the other way), the sweeps it
-     * started (they alternate their direction) and what its current one hit already ({@link #SWEPT_SHIP},
-     * {@link #SWEPT_WINGMAN}).
-     */
-    private final int[] sweepTicks;
-
-    private final int[] sweepPart;
-    private final double[] sweepCentre;
-    private final int[] sweepDirection;
-    private final int[] sweepsStarted;
-    private final int[] sweepHits;
-    /** M5 part H: the ship's position in the current {@link #act}, where a sweep's centre aims as it starts. */
-    private double shipAtX;
-
-    private double shipAtY;
+    /** M5 part H: its attacks' sweeps (design/enemies, Boss attacks and root bursts). */
+    private final BossSweeps sweeps;
     /** M7 part F: a walking boss's passes, plate, vents and cone; null for any other. */
     private final StrideArena stride;
     /** {@link #stride} for the presentation, made once. */
@@ -342,13 +314,8 @@ public final class SetPiece implements Hashed {
     private final BreachArena breach;
     /** {@link #breach} for the presentation, made once. */
     private final java.util.Optional<BreachArena> breachView;
-    /** M7 part F: per part, the steps its hatch stays open (its homing salvo's tell and the salvo); 0 shut. */
-    private final int[] hatchTicks;
-    /**
-     * Round 44 (the user in round 43, W.a): per part, whether it takes damage only while its hatch is open (a walking
-     * boss with {@link BossSpec.Stride#hatchArmour()}: the parts that fire a homing attack, the pods); null for none.
-     */
-    private final boolean[] hatchArmoured;
+    /** M7 part F: a walking boss's hatches (its homing salvos' tell; round 44: its pods' armour). */
+    private final BossHatches hatches;
 
     /** M5 part H: a sweep's beam hit the ship ({@link #sweepHit}). */
     static final int SWEPT_SHIP = 1;
@@ -385,9 +352,7 @@ public final class SetPiece implements Hashed {
             hp += outOfBar[p] ? 0 : spec.parts().get(p).hp();
         }
         maxHp = hp;
-        partChain = new int[parts];
         exposedFrom = new int[parts];
-        java.util.Arrays.fill(partChain, -1);
         int poses = boss == null || boss.poses().isEmpty() ? 1 : boss.poses().size();
         poseDx = new double[poses][parts];
         poseDy = new double[poses][parts];
@@ -408,32 +373,15 @@ public final class SetPiece implements Hashed {
                         : layout.offsets().get(p).dy();
             }
         }
-        int chains = boss == null ? 0 : boss.chains().size();
-        chainStart = new int[chains];
-        segmentStart = new int[chains];
-        int angleCount = 0;
-        int segmentCount = 0;
+        chains = new BossChains(this, boss, spec.parts());
         // A boss arriving on high air is drawn (and its parts placed) at the high-air scale.
         double scale = boss != null && boss.layer() == Layer.HIGH_AIR ? BossSpec.HIGH_AIR_SCALE : 1;
         double reach = spec.size().height() / 2 * scale;
-        for (int c = 0; c < chains; c++) {
-            BossSpec.Chain chain = boss.chains().get(c);
-            partChain[chain.part()] = c;
-            chainStart[c] = angleCount;
-            segmentStart[c] = segmentCount;
-            angleCount += chain.segments() + 1;
-            segmentCount += chain.segments();
-        }
         for (int p = 0; p < parts; p++) {
             PartSpec part = spec.parts().get(p);
             reach = Math.max(reach, (Math.abs(poseDy[0][p]) + part.box().height() / 2) * scale);
         }
         entryY = PlayField.HEIGHT + reach;
-        angles = new double[angleCount];
-        segmentX = new double[segmentCount];
-        segmentY = new double[segmentCount];
-        tipX = new double[chains];
-        tipY = new double[chains];
         int attacks = boss == null ? 0 : boss.attacks().size();
         attackTicks = new int[attacks];
         attackBurstLeft = new int[attacks];
@@ -446,18 +394,12 @@ public final class SetPiece implements Hashed {
         if (phases > Long.SIZE - 1) {
             throw new IllegalArgumentException(spec.slug() + ": at most " + (Long.SIZE - 1) + " phases");
         }
-        windowed = new boolean[phases][parts];
-        openTicks = new int[parts];
         for (int f = 0; f < phases; f++) {
-            BossSpec.Phase current = boss.phases().get(f);
-            for (int p : current.exposes()) {
+            for (int p : boss.phases().get(f).exposes()) {
                 exposedFrom[p] = Math.max(exposedFrom[p], f);
             }
-            for (int p = 0; p < parts; p++) {
-                windowed[f][p] =
-                        current.windows().isPresent() && current.windows().get().holds(p);
-            }
         }
+        windows = new BossWindows(this, boss, parts, phases);
         arena = boss != null && boss.arena().isPresent()
                 ? new SlamArena(this, boss, boss.arena().get(), parts)
                 : null;
@@ -466,33 +408,16 @@ public final class SetPiece implements Hashed {
         strideView = java.util.Optional.ofNullable(stride);
         breach = boss != null && boss.breach().isPresent() ? new BreachArena(this, boss, spec) : null;
         breachView = java.util.Optional.ofNullable(breach);
-        hatchTicks = new int[parts];
-        hatchArmoured = stride != null && boss.stride().get().hatchArmour() ? hatchArmoured(boss, parts) : null;
+        hatches = new BossHatches(
+                this, boss, parts, stride != null && boss.stride().get().hatchArmour());
         boolean moves = false;
-        boolean sweeping = false;
         for (int f = 0; f < phases; f++) {
             moves |= boss.phases().get(f).move().isPresent();
         }
-        for (int a = 0; a < attacks; a++) {
-            sweeping |= boss.attacks().get(a).pattern() == BossSpec.Pattern.SWEEP;
-        }
         lifts = arena != null && moves;
-        sweeps = sweeping;
         stays = new boolean[parts];
-        sweepTicks = new int[attacks];
-        sweepPart = new int[attacks];
-        sweepCentre = new double[attacks];
-        sweepDirection = new int[attacks];
-        sweepsStarted = new int[attacks];
-        sweepHits = new int[attacks];
-        boolean aiming = false;
-        for (int a = 0; a < attacks; a++) {
-            aiming |= boss.attacks().get(a).aimTurns().isPresent();
-        }
-        aims = aiming;
-        aimTicks = new int[attacks];
-        aimNext = new int[attacks];
-        aimPart = new int[attacks];
+        sweeps = new BossSweeps(this, boss);
+        aimTurns = new BossAimTurns(this, boss);
         reset();
     }
 
@@ -531,10 +456,7 @@ public final class SetPiece implements Hashed {
             pose = fromPose = 0;
             phaseTicks = 0;
             timeouts = 0;
-            windowTicks = 0;
-            windowNext = 0;
-            windowOpenings = 0;
-            java.util.Arrays.fill(openTicks, 0);
+            windows.reset();
             java.util.Arrays.fill(spiralAngles, 0);
             java.util.Arrays.fill(spiralTicks, 0);
             turn = -1;
@@ -544,15 +466,13 @@ public final class SetPiece implements Hashed {
             streamUnitTicks = 0;
             streamUnits = 0;
             killTicks = -1;
-            java.util.Arrays.fill(angles, 0);
+            chains.reset();
             java.util.Arrays.fill(attackTicks, 0);
             java.util.Arrays.fill(attackBurstLeft, 0);
             java.util.Arrays.fill(attackBurstTicks, 0);
             java.util.Arrays.fill(attackPart, -1);
             java.util.Arrays.fill(attackNext, 0);
-            java.util.Arrays.fill(aimTicks, 0);
-            java.util.Arrays.fill(aimNext, 0);
-            java.util.Arrays.fill(aimPart, -1);
+            aimTurns.reset();
             x = prevX = boss.x();
             y = prevY = entryY;
             altitude = prevAltitude = layer == Layer.HIGH_AIR ? 1 : 0;
@@ -561,17 +481,12 @@ public final class SetPiece implements Hashed {
             java.util.Arrays.fill(stays, false);
             liftPose = 0;
             liftEndTicks = -1;
-            java.util.Arrays.fill(sweepTicks, -1);
-            java.util.Arrays.fill(sweepPart, -1);
-            java.util.Arrays.fill(sweepCentre, 0);
-            java.util.Arrays.fill(sweepDirection, 1);
-            java.util.Arrays.fill(sweepsStarted, 0);
-            java.util.Arrays.fill(sweepHits, 0);
+            sweeps.reset();
             if (arena != null) {
                 arena.reset();
                 y = prevY = anchorGround - groundScroll;
             }
-            java.util.Arrays.fill(hatchTicks, 0);
+            hatches.reset();
             if (stride != null) {
                 // M7 part F: off the screen above the top edge until it arrives.
                 stride.reset();
@@ -584,7 +499,7 @@ public final class SetPiece implements Hashed {
                 x = prevX = breach.mouthX();
                 y = prevY = breach.mouthY();
             }
-            placeChains();
+            chains.place();
         }
     }
 
@@ -1038,25 +953,19 @@ public final class SetPiece implements Hashed {
         if (boss == null || !present || destroyed) {
             return;
         }
-        bendChains(shipX, shipY);
+        chains.bend(
+                shipX, shipY, !engaged ? Double.NaN : boss.phases().get(phase).bendRadians());
         if (!engaged) {
             return;
         }
-        for (int p = 0; p < openTicks.length; p++) {
-            if (openTicks[p] > 0) {
-                openTicks[p]--;
-            }
-            if (hatchTicks[p] > 0) {
-                hatchTicks[p]--;
-            }
-        }
+        windows.tick();
+        hatches.tick();
         if (moveTicks >= 0) {
             return;
         }
-        shipAtX = shipX;
-        shipAtY = shipY;
-        if (sweeps) {
-            stepSweeps(actions);
+        sweeps.aimAt(shipX, shipY);
+        if (sweeps.any()) {
+            sweeps.step(actions);
         }
         phaseTicks++;
         while (phase < boss.phases().size() - 1 && phaseOver(boss.phases().get(phase))) {
@@ -1078,7 +987,7 @@ public final class SetPiece implements Hashed {
             breach.act(actions, firing);
             breachAttacks(current, actions, firing);
             if (current.windows().isPresent()) {
-                windows(current.windows().get(), shipX, shipY, actions, firing);
+                windows.step(current.windows().get(), shipX, shipY, actions, firing);
             }
             if (current.stream().isPresent()) {
                 stream(current.stream().get(), actions, firing);
@@ -1091,7 +1000,7 @@ public final class SetPiece implements Hashed {
         }
         if (arena != null) {
             boolean fans = arena.step(current, shipX, actions, firing);
-            placeChains();
+            chains.place();
             if (current.arena().surface().isPresent()) {
                 // The phase's attacks fire from its surfacing part while it is up, each after its tell.
                 if (fans) {
@@ -1110,7 +1019,7 @@ public final class SetPiece implements Hashed {
             }
         }
         if (current.windows().isPresent()) {
-            windows(current.windows().get(), shipX, shipY, actions, firing);
+            windows.step(current.windows().get(), shipX, shipY, actions, firing);
         }
         if (current.stream().isPresent()) {
             stream(current.stream().get(), actions, firing);
@@ -1217,13 +1126,13 @@ public final class SetPiece implements Hashed {
 
     /** A phase starts: its windows close; it begins its move, or engages at once. */
     private void startPhase() {
-        java.util.Arrays.fill(openTicks, 0);
+        windows.closeAll();
         BossSpec.Phase current = boss.phases().get(phase);
         if (arena != null) {
             arena.phaseStarted(current);
         }
         // M5 part H: a sweep under way ends with its phase.
-        java.util.Arrays.fill(sweepTicks, -1);
+        sweeps.endAll();
         if (current.move().isPresent() && arena != null && !lifted) {
             // M5 part H: the lift: what is destroyed or armoured now stays at the anchor (the stump).
             lifted = true;
@@ -1251,7 +1160,7 @@ public final class SetPiece implements Hashed {
     private void armPhase() {
         BossSpec.Phase current = boss.phases().get(phase);
         // Round 40: an aim turn's glow ends with its phase.
-        java.util.Arrays.fill(aimPart, -1);
+        aimTurns.endGlows();
         int delay = SimStep.ticks(current.delaySeconds());
         for (int i = 0; i < current.attacks().size(); i++) {
             int a = current.attacks().get(i);
@@ -1265,22 +1174,14 @@ public final class SetPiece implements Hashed {
             }
             if (attack.aimTurns().isPresent()) {
                 // Round 40: the first aimed shot one turn after the delay, from the first part.
-                aimTicks[a] = delay
-                        + Math.max(1, SimStep.ticks(attack.aimTurns().get().everySeconds()));
-                aimNext[a] = 0;
-                aimPart[a] = -1;
+                aimTurns.arm(a, attack.aimTurns().get(), delay);
             }
         }
         turn = -1;
         turnTicks = Math.max(1, delay);
         streamLeft = 0;
         streamTicks = Math.max(1, delay);
-        int offset = current.windows().isPresent()
-                ? SimStep.ticks(current.windows().get().offsetSeconds())
-                : 0;
-        windowTicks = Math.max(1, delay + offset);
-        windowNext = 0;
-        windowOpenings = 0;
+        windows.arm(current, delay);
         phaseTicks = 0;
     }
 
@@ -1333,113 +1234,13 @@ public final class SetPiece implements Hashed {
         }
     }
 
-    /**
-     * The phase's windows: when one is due, the next group in order with a living part on the field
-     * opens (every such group when {@code all}), and each opened group releases the spawn of this
-     * opening from its open parts.
-     */
-    private void windows(BossSpec.Windows windows, double shipX, double shipY, BossActions actions, boolean firing) {
-        if (--windowTicks > 0) {
-            return;
-        }
-        windowTicks = Math.max(1, SimStep.ticks(windows.everySeconds()));
-        int open = Math.max(1, SimStep.ticks(windows.openSeconds()));
-        BossSpec.Spawn spawn = windows.spawns().isEmpty()
-                ? null
-                : windows.spawns().get(windowOpenings % windows.spawns().size());
-        int groups = windows.groups().size();
-        boolean opened = false;
-        for (int i = 0; i < groups; i++) {
-            int g = (windowNext + i) % groups;
-            List<Integer> group = windows.groups().get(g);
-            int alive = 0;
-            int ready = 0;
-            for (int k = 0; k < group.size(); k++) {
-                int p = group.get(k);
-                if (partHp[p] > 0) {
-                    alive++;
-                    ready += partOnField(p) ? 1 : 0;
-                }
-            }
-            if (ready == 0) {
-                continue;
-            }
-            for (int k = 0; k < group.size(); k++) {
-                int p = group.get(k);
-                if (partHp[p] > 0 && partOnField(p)) {
-                    openTicks[p] = open;
-                }
-            }
-            if (spawn != null && firing) {
-                release(spawn, group, alive, ready, shipX, shipY, actions);
-            }
-            opened = true;
-            if (!windows.all()) {
-                windowNext = (g + 1) % groups;
-                break;
-            }
-        }
-        if (opened) {
-            windowOpenings++;
-        }
-    }
-
-    /**
-     * An opened group releases its share of {@code spawn}: the count times its living share,
-     * rounded up, dealt out among its open parts, each part's units spread over the arc centred on
-     * the direction from it to the ship.
-     */
-    private void release(
-            BossSpec.Spawn spawn,
-            List<Integer> group,
-            int alive,
-            int ready,
-            double shipX,
-            double shipY,
-            BossActions actions) {
-        int units = (spawn.count() * alive + group.size() - 1) / group.size();
-        if (spawn.ambush()) {
-            // M5 part H: ambush launches fly their planned rear paths; the arc is not read.
-            int j = 0;
-            for (int k = 0; k < group.size(); k++) {
-                int p = group.get(k);
-                if (partHp[p] <= 0 || !partOnField(p)) {
-                    continue;
-                }
-                int mine = units / ready + (j < units % ready ? 1 : 0);
-                j++;
-                for (int u = 0; u < mine; u++) {
-                    actions.ambush(spawn, p, u, mine, partX(p), partY(p));
-                }
-            }
-            return;
-        }
-        int j = 0;
-        for (int k = 0; k < group.size(); k++) {
-            int p = group.get(k);
-            if (partHp[p] <= 0 || !partOnField(p)) {
-                continue;
-            }
-            int mine = units / ready + (j < units % ready ? 1 : 0);
-            j++;
-            double px = partX(p);
-            double py = partY(p);
-            double toShip = StrictMath.atan2(shipY - py, shipX - px);
-            for (int u = 0; u < mine; u++) {
-                double angle =
-                        mine == 1 ? toShip : toShip - spawn.arcRadians() / 2 + u * spawn.arcRadians() / (mine - 1);
-                actions.launch(spawn, px, py, angle);
-            }
-        }
-    }
-
     /** An attack fired on its own interval: a volley when it is due, then the rest of its burst. */
     private void runAttack(int a, BossSpec.Phase current, BossActions actions, boolean firing) {
         BossSpec.Attack attack = boss.attacks().get(a);
         fireAttack(a, attack, current, actions, firing);
         if (attack.aimTurns().isPresent()) {
             // Round 40: after the regular fire, so a part holds it through its aimed shot's step as well.
-            aimTurn(a, attack, current, actions, firing);
+            aimTurns.turn(a, attack, current, actions, firing);
         }
     }
 
@@ -1458,7 +1259,7 @@ public final class SetPiece implements Hashed {
         }
         if (--attackTicks[a] > 0) {
             if (stride != null && attack.gun().homing().isPresent()) {
-                hatchTell(a, attack, current, actions, firing);
+                hatches.tell(attack, current, attackTicks[a], attackNext[a], actions, firing);
             }
             return;
         }
@@ -1466,77 +1267,9 @@ public final class SetPiece implements Hashed {
         volley(a, current, actions, firing);
     }
 
-    /**
-     * M7 part F: a homing attack's salvo is its gun's hatch time away: the hatch of each part that will fire it
-     * opens (the tell), until its salvo's last missile has left: the next part in turn of a staggered or rotating
-     * attack, else every living one; a part off the field does not.
-     */
-    private void hatchTell(int a, BossSpec.Attack attack, BossSpec.Phase current, BossActions actions, boolean firing) {
-        int hatch = SimStep.ticks(attack.gun().homing().orElseThrow().hatchSeconds());
-        if (hatch <= 0 || attackTicks[a] != hatch || !firing) {
-            return;
-        }
-        int open = hatch + (attack.gun().burst() - 1) * Math.max(1, SimStep.ticks(attack.burstGapSeconds())) + 1;
-        List<Integer> parts = firingParts(attack, current);
-        if (attack.stagger()) {
-            openHatch(parts.get(attackNext[a] % parts.size()), open, actions);
-            return;
-        }
-        for (int i = 0; i < parts.size(); i++) {
-            int p = parts.get((attack.rotate() ? attackNext[a] + i : i) % parts.size());
-            if (partHp[p] > 0) {
-                openHatch(p, open, actions);
-                if (attack.rotate()) {
-                    return;
-                }
-            }
-        }
-    }
-
-    private void openHatch(int p, int open, BossActions actions) {
-        if (partHp[p] > 0 && partOnField(p)) {
-            hatchTicks[p] = open;
-            actions.hatch(p, partX(p), partY(p));
-        }
-    }
-
     /** M7 part F: whether part {@code p}'s hatch is open (its homing salvo's tell and the salvo). */
     public boolean partHatchOpen(int p) {
-        return hatchTicks[p] > 0;
-    }
-
-    /**
-     * Round 40: attack {@code a}'s aim turns: the glow before an aimed shot picks the next living part
-     * in turn (its tell), the shot comes from it at the ship; a part that dies in its glow loses the shot.
-     */
-    private void aimTurn(int a, BossSpec.Attack attack, BossSpec.Phase current, BossActions actions, boolean firing) {
-        BossSpec.AimTurns turns = attack.aimTurns().orElseThrow();
-        int glow = SimStep.ticks(turns.glowSeconds());
-        aimTicks[a]--;
-        if (aimPart[a] < 0 && aimTicks[a] <= glow) {
-            List<Integer> parts = firingParts(attack, current);
-            for (int i = 0; i < parts.size(); i++) {
-                int candidate = (aimNext[a] + i) % parts.size();
-                int p = parts.get(candidate);
-                if (partHp[p] > 0) {
-                    aimPart[a] = p;
-                    aimNext[a] = (candidate + 1) % parts.size();
-                    if (firing) {
-                        actions.aimTell(p, partX(p), partY(p));
-                    }
-                    break;
-                }
-            }
-        }
-        if (aimTicks[a] > 0) {
-            return;
-        }
-        aimTicks[a] = Math.max(1, SimStep.ticks(turns.everySeconds()));
-        int p = aimPart[a];
-        aimPart[a] = -1;
-        if (p >= 0 && partHp[p] > 0 && firing) {
-            actions.aimed(partX(p), partY(p), attack.gun());
-        }
+        return hatches.open(p);
     }
 
     /**
@@ -1592,7 +1325,7 @@ public final class SetPiece implements Hashed {
         }
         if (attackPart[a] >= 0) {
             // Round 40: a part in its aim turn's glow holds its regular fire.
-            if (partHp[attackPart[a]] > 0 && attackPart[a] != aimPart[a]) {
+            if (partHp[attackPart[a]] > 0 && attackPart[a] != aimTurns.part(a)) {
                 fireFrom(a, attackPart[a], attack, actions);
             }
             return;
@@ -1600,7 +1333,7 @@ public final class SetPiece implements Hashed {
         List<Integer> parts = firingParts(attack, current);
         for (int i = 0; i < parts.size(); i++) {
             int p = parts.get(i);
-            if (partHp[p] > 0 && p != aimPart[a]) {
+            if (partHp[p] > 0 && p != aimTurns.part(a)) {
                 fireFrom(a, p, attack, actions);
             }
         }
@@ -1621,7 +1354,7 @@ public final class SetPiece implements Hashed {
             return;
         }
         if (attack.pattern() == BossSpec.Pattern.SWEEP) {
-            startSweep(a, p, attack, actions);
+            sweeps.start(a, p, attack, actions);
             return;
         }
         // M5 part E: an arena boss's surfacing part fires from its hit box's lower edge (the Kraken's beak).
@@ -1646,119 +1379,54 @@ public final class SetPiece implements Hashed {
         }
     }
 
-    /**
-     * M5 part H: attack {@code a}'s sweep starts from part {@code p} (unless one runs): its centre on the
-     * ship's bearing from the beam's origin now, its direction the other way from its last one's; its
-     * telegraph shows first.
-     */
-    private void startSweep(int a, int p, BossSpec.Attack attack, BossActions actions) {
-        if (sweepTicks[a] >= 0) {
-            return;
-        }
-        EnemySpec.Sweep sweep = attack.sweep().orElseThrow();
-        double ox = partX(p);
-        double oy = partY(p) - sweep.originDown();
-        sweepPart[a] = p;
-        sweepCentre[a] = StrictMath.atan2(-(shipAtX - ox), -(shipAtY - oy));
-        sweepDirection[a] = sweepsStarted[a] % 2 == 0 ? 1 : -1;
-        if (sweep.leads()) {
-            // Round 41: the first edge lies its lead from the ship's bearing, on the side the beam comes from.
-            sweepCentre[a] += sweepDirection[a] * (sweep.arcRadians() / 2 - sweep.leadRadians());
-        }
-        sweepsStarted[a]++;
-        sweepTicks[a] = 0;
-        sweepHits[a] = 0;
-        actions.sweep(a, true, ox, oy);
-    }
-
-    /** M5 part H: the running sweeps advance: the beam starts after the telegraph, the sweep ends after its time or with its part. */
-    private void stepSweeps(BossActions actions) {
-        for (int a = 0; a < sweepTicks.length; a++) {
-            if (sweepTicks[a] < 0) {
-                continue;
-            }
-            if (partHp[sweepPart[a]] <= 0) {
-                sweepTicks[a] = -1;
-                continue;
-            }
-            EnemySpec.Sweep sweep = boss.attacks().get(a).sweep().orElseThrow();
-            int telegraph = SimStep.ticks(sweep.telegraphSeconds());
-            if (++sweepTicks[a] >= telegraph + Math.max(1, SimStep.ticks(sweep.sweepSeconds()))) {
-                sweepTicks[a] = -1;
-            } else if (sweepTicks[a] == telegraph) {
-                actions.sweep(a, false, sweepOriginX(a), sweepOriginY(a));
-            }
-        }
-    }
-
     /** M5 part H: whether attack {@code a}'s sweep is in its telegraph now. */
     public boolean sweepTelegraphing(int a) {
-        return sweepTicks[a] >= 0
-                && sweepTicks[a]
-                        < SimStep.ticks(
-                                boss.attacks().get(a).sweep().orElseThrow().telegraphSeconds());
+        return sweeps.telegraphing(a);
     }
 
     /** M5 part H: whether attack {@code a}'s beam sweeps now (it hurts what it touches, once per sweep each). */
     public boolean sweepBeaming(int a) {
-        return sweepTicks[a] >= 0 && !sweepTelegraphing(a);
+        return sweeps.beaming(a);
     }
 
     /** M5 part H: the attacks whose sweeps run, for the presentation (as {@link BossSpec#attacks()}). */
     public int attackCount() {
-        return sweepTicks.length;
+        return sweeps.count();
     }
 
     /** Round 40: the part glowing in attack {@code a}'s aim turn (its aimed shot comes next); -1 for none. */
     public int aimPart(int a) {
-        return aimPart[a];
+        return aimTurns.part(a);
     }
 
     /** Round 40: how far attack {@code a}'s aim glow has run, 0–1 (0 without a glowing part). */
     public double aimGlowShare(int a) {
-        if (aimPart[a] < 0) {
-            return 0;
-        }
-        int glow = Math.max(
-                1, SimStep.ticks(boss.attacks().get(a).aimTurns().orElseThrow().glowSeconds()));
-        return Math.clamp(1 - (double) aimTicks[a] / glow, 0, 1);
+        return aimTurns.glowShare(a);
     }
 
     /** Round 40: whether part {@code p} glows in an aim turn (the tell before its aimed shot). */
     public boolean partAimGlowing(int p) {
-        for (int a = 0; a < aimPart.length; a++) {
-            if (aimPart[a] == p) {
-                return true;
-            }
-        }
-        return false;
+        return aimTurns.glowing(p);
     }
 
     /** M5 part H: attack {@code a}'s beam's origin now, px from the left: its part's centre. */
     public double sweepOriginX(int a) {
-        return partX(Math.max(0, sweepPart[a]));
+        return sweeps.originX(a);
     }
 
     /** M5 part H: attack {@code a}'s beam's origin now, px up: its sweep's origin below its part's centre. */
     public double sweepOriginY(int a) {
-        return partY(Math.max(0, sweepPart[a]))
-                - boss.attacks().get(a).sweep().orElseThrow().originDown();
+        return sweeps.originY(a);
     }
 
     /** M5 part H: attack {@code a}'s sweep's first edge, radians clockwise from straight down (the telegraph's line). */
     public double sweepFrom(int a) {
-        return sweepCentre[a]
-                - sweepDirection[a]
-                        * boss.attacks().get(a).sweep().orElseThrow().arcRadians()
-                        / 2;
+        return sweeps.from(a);
     }
 
     /** M5 part H: attack {@code a}'s sweep's last edge, radians clockwise from straight down. */
     public double sweepTo(int a) {
-        return sweepCentre[a]
-                + sweepDirection[a]
-                        * boss.attacks().get(a).sweep().orElseThrow().arcRadians()
-                        / 2;
+        return sweeps.to(a);
     }
 
     /**
@@ -1766,24 +1434,21 @@ public final class SetPiece implements Hashed {
      * from {@link #sweepFrom} to {@link #sweepTo} over the sweep; {@code alpha} interpolates between steps.
      */
     public double sweepBeam(int a, double alpha) {
-        EnemySpec.Sweep sweep = boss.attacks().get(a).sweep().orElseThrow();
-        int telegraph = SimStep.ticks(sweep.telegraphSeconds());
-        double into = Math.max(0, sweepTicks[a] - telegraph + alpha) / Math.max(1, SimStep.ticks(sweep.sweepSeconds()));
-        return sweepFrom(a) + (sweepTo(a) - sweepFrom(a)) * Math.min(1, into);
+        return sweeps.beam(a, alpha);
     }
 
     /** M5 part H: whether attack {@code a}'s current sweep hit {@code what} ({@link #SWEPT_SHIP}, {@link #SWEPT_WINGMAN}) already. */
     boolean sweepHit(int a, int what) {
-        return (sweepHits[a] & what) != 0;
+        return sweeps.hit(a, what);
     }
 
     /** M5 part H: attack {@code a}'s current sweep hit {@code what}: it does not again in this sweep. */
     void markSweepHit(int a, int what) {
-        sweepHits[a] |= what;
+        sweeps.markHit(a, what);
     }
 
     /** The parts that fire {@code attack}: its own, or else the parts the phase ends on. */
-    private static List<Integer> firingParts(BossSpec.Attack attack, BossSpec.Phase current) {
+    static List<Integer> firingParts(BossSpec.Attack attack, BossSpec.Phase current) {
         return attack.parts().isEmpty() ? current.untilParts() : attack.parts();
     }
 
@@ -1811,88 +1476,6 @@ public final class SetPiece implements Hashed {
     }
 
     /**
-     * The necks turn toward the ship: each chain's anchor piece eases toward the angle to the
-     * ship (at most its bend, the phase's in an enraged phase), every later piece toward the one
-     * before it, {@code lag} s late; a chain whose part is destroyed goes limp toward its rest.
-     */
-    private void bendChains(double shipX, double shipY) {
-        double phaseBend = !engaged ? Double.NaN : boss.phases().get(phase).bendRadians();
-        for (int c = 0; c < chainStart.length; c++) {
-            BossSpec.Chain chain = boss.chains().get(c);
-            if (chain.slam()) {
-                continue;
-            }
-            PartSpec end = spec.parts().get(chain.part());
-            double restX = end.dx() - chain.fromDx();
-            double restY = end.dy() - chain.fromDy();
-            double target = 0;
-            if (partHp[chain.part()] > 0) {
-                double toX = shipX - (x + chain.fromDx());
-                double toY = shipY - (y + chain.fromDy());
-                double bend = Double.isNaN(phaseBend) ? chain.bendRadians() : phaseBend;
-                target =
-                        Math.clamp(StrictMath.atan2(restX * toY - restY * toX, restX * toX + restY * toY), -bend, bend);
-            }
-            double ease = Math.min(1, SimStep.SECONDS / chain.lagSeconds());
-            int first = chainStart[c];
-            angles[first] += (target - angles[first]) * ease;
-            for (int k = 1; k <= chain.segments(); k++) {
-                angles[first + k] += (angles[first + k - 1] - angles[first + k]) * ease;
-            }
-        }
-        placeChains();
-    }
-
-    /** The chains' segment and tip offsets from their angles: each piece is the rest line's share, turned. */
-    private void placeChains() {
-        for (int c = 0; c < chainStart.length; c++) {
-            BossSpec.Chain chain = boss.chains().get(c);
-            PartSpec end = spec.parts().get(chain.part());
-            if (chain.slam() && arena != null && arena.chainArm(c) >= 0 && arena.armLane(arena.chainArm(c)) > 0) {
-                laySlamChain(c, chain, arena.armLane(arena.chainArm(c)));
-                continue;
-            }
-            int pieces = chain.segments() + 1;
-            double stepX = (end.dx() - chain.fromDx()) / pieces;
-            double stepY = (end.dy() - chain.fromDy()) / pieces;
-            double px = chain.fromDx();
-            double py = chain.fromDy();
-            for (int k = 0; k < pieces; k++) {
-                double angle = angles[chainStart[c] + k];
-                double cosA = Trig.cos(angle);
-                double sinA = Trig.sin(angle);
-                px += stepX * cosA - stepY * sinA;
-                py += stepX * sinA + stepY * cosA;
-                if (k < chain.segments()) {
-                    segmentX[segmentStart[c] + k] = px;
-                    segmentY[segmentStart[c] + k] = py;
-                }
-            }
-            tipX[c] = px;
-            tipY[c] = py;
-        }
-    }
-
-    /**
-     * M5 part E: a slam chain laid along lane {@code lane}: its base just below the lanes' top edge,
-     * its tip {@link SlamArena#TIP_MARGIN} above the bottom edge, its segments evenly between them
-     * from the base.
-     */
-    private void laySlamChain(int c, BossSpec.Chain chain, int lane) {
-        double laneX = arena.laneWidth() * (lane - 0.5) - x;
-        // Round 40: a rooted arm lies from its root's lower edge down.
-        double top = (arena.rooted() ? arena.armTop(arena.chainArm(c)) : arena.laneTop()) - y;
-        double bottom = SlamArena.TIP_MARGIN - y;
-        int n = chain.segments();
-        for (int k = 0; k < n; k++) {
-            segmentX[segmentStart[c] + k] = laneX;
-            segmentY[segmentStart[c] + k] = top + (bottom - top) * k / n;
-        }
-        tipX[c] = laneX;
-        tipY[c] = bottom;
-    }
-
-    /**
      * Whether part {@code p} takes no damage now: a boss's parts before it engages (its descent)
      * and during a phase's move, its fire-only parts, the parts a later phase exposes before it,
      * and a window part while its window is shut. A shot on it glances off.
@@ -1908,31 +1491,16 @@ public final class SetPiece implements Hashed {
             // M7 part H: a breaching boss's buried mouth: nothing touches it (the Lance and the Smart Bomb included).
             return true;
         }
-        if (hatchArmoured != null && hatchArmoured[p] && hatchTicks[p] == 0 && !stride.overheating()) {
+        if (hatches.armoured(p) && !hatches.open(p) && !stride.overheating()) {
             // Round 44: a walking boss's pod is armoured while its hatch is shut (until it overheats).
             return true;
         }
-        return windowed[phase][p] && openTicks[p] == 0;
-    }
-
-    /** Round 44: the parts that fire a homing attack (a walking boss's pods). */
-    private static boolean[] hatchArmoured(BossSpec boss, int parts) {
-        boolean[] out = new boolean[parts];
-        for (BossSpec.Attack attack : boss.attacks()) {
-            if (attack.gun().homing().isPresent()) {
-                for (int p : attack.parts()) {
-                    if (p >= 0 && p < parts) {
-                        out[p] = true;
-                    }
-                }
-            }
-        }
-        return out;
+        return windows.windowed(phase, p) && windows.openTicks(p) == 0;
     }
 
     /** Round 44: whether part {@code p} takes damage only while its hatch is open (a walking boss's pod). */
     public boolean partHatchArmoured(int p) {
-        return hatchArmoured != null && hatchArmoured[p];
+        return hatches.armoured(p);
     }
 
     /** Whether part {@code p} is fire-only: it fires, never takes damage, is not in the bar and pays nothing. */
@@ -1942,17 +1510,17 @@ public final class SetPiece implements Hashed {
 
     /** Whether the current phase's windows hold part {@code p} (it opens and shuts). */
     public boolean partWindowed(int p) {
-        return boss != null && windowed[phase][p];
+        return boss != null && windows.windowed(phase, p);
     }
 
     /** Whether part {@code p}'s window is open now and the part lives (it takes damage, unless the boss is moving). */
     public boolean partOpen(int p) {
-        return openTicks[p] > 0 && partHp[p] > 0;
+        return windows.openTicks(p) > 0 && partHp[p] > 0;
     }
 
     /** Seconds part {@code p}'s window stays open; 0 shut. */
     public double partOpenSeconds(int p) {
-        return openTicks[p] * SimStep.SECONDS;
+        return windows.openTicks(p) * SimStep.SECONDS;
     }
 
     /** The current phase's window open time, s (0 without windows): with {@link #partOpenSeconds} the opening's progress. */
@@ -1966,19 +1534,7 @@ public final class SetPiece implements Hashed {
 
     /** Whether a shot of {@code size} at (sx, sy) touches one of its armoured neck segments (not a slam arm's). */
     boolean neckTouches(Hitbox size, double sx, double sy) {
-        for (int c = 0; c < chainStart.length; c++) {
-            if (boss.chains().get(c).slam()) {
-                continue;
-            }
-            Hitbox box = boss.chains().get(c).box();
-            for (int k = 0; k < boss.chains().get(c).segments(); k++) {
-                int i = segmentStart[c] + k;
-                if (size.overlaps(sx, sy, box, x + segmentX[i], y + segmentY[i])) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return chains.neckTouches(size, sx, sy);
     }
 
     /**
@@ -1987,19 +1543,7 @@ public final class SetPiece implements Hashed {
      * Double#POSITIVE_INFINITY} for none.
      */
     double neckColumn(double cx, double halfWidth, double fromY) {
-        double nearest = Double.POSITIVE_INFINITY;
-        for (int c = 0; c < chainStart.length; c++) {
-            if (boss.chains().get(c).slam()) {
-                continue;
-            }
-            Hitbox box = boss.chains().get(c).box();
-            for (int k = 0; k < boss.chains().get(c).segments(); k++) {
-                int i = segmentStart[c] + k;
-                nearest = Math.min(
-                        nearest, PlayerFire.columnContact(cx, halfWidth, fromY, x + segmentX[i], y + segmentY[i], box));
-            }
-        }
-        return nearest;
+        return chains.neckColumn(cx, halfWidth, fromY);
     }
 
     /**
@@ -2012,17 +1556,8 @@ public final class SetPiece implements Hashed {
             return Double.POSITIVE_INFINITY;
         }
         double nearest = PlayerFire.columnContact(cx, halfWidth, fromY, partX(p), partY(p), box(p));
-        int c = slamChain(p);
-        if (c < 0) {
-            return nearest;
-        }
-        Hitbox box = boss.chains().get(c).box();
-        for (int k = 0; k < boss.chains().get(c).segments(); k++) {
-            int i = segmentStart[c] + k;
-            nearest = Math.min(
-                    nearest, PlayerFire.columnContact(cx, halfWidth, fromY, x + segmentX[i], y + segmentY[i], box));
-        }
-        return nearest;
+        int c = chains.slamChain(p);
+        return c < 0 ? nearest : chains.segmentsColumn(c, cx, halfWidth, fromY, nearest);
     }
 
     /**
@@ -2045,18 +1580,8 @@ public final class SetPiece implements Hashed {
         if (size.overlaps(sx, sy, box(p), partX(p), partY(p))) {
             return true;
         }
-        int c = slamChain(p);
-        if (c < 0) {
-            return false;
-        }
-        Hitbox box = boss.chains().get(c).box();
-        for (int k = 0; k < boss.chains().get(c).segments(); k++) {
-            int i = segmentStart[c] + k;
-            if (size.overlaps(sx, sy, box, x + segmentX[i], y + segmentY[i])) {
-                return true;
-            }
-        }
-        return false;
+        int c = chains.slamChain(p);
+        return c >= 0 && chains.segmentsTouch(c, size, sx, sy);
     }
 
     /** Whether a blast of {@code radius} at (bx, by) reaches part {@code p} (its hit box or a slam arm's segment). */
@@ -2067,18 +1592,8 @@ public final class SetPiece implements Hashed {
         if (PlayerFire.inBlast(bx, by, radius, partX(p), partY(p), box(p))) {
             return true;
         }
-        int c = slamChain(p);
-        if (c < 0) {
-            return false;
-        }
-        Hitbox box = boss.chains().get(c).box();
-        for (int k = 0; k < boss.chains().get(c).segments(); k++) {
-            int i = segmentStart[c] + k;
-            if (PlayerFire.inBlast(bx, by, radius, x + segmentX[i], y + segmentY[i], box)) {
-                return true;
-            }
-        }
-        return false;
+        int c = chains.slamChain(p);
+        return c >= 0 && chains.segmentsInBlast(c, bx, by, radius);
     }
 
     /** Whether part {@code p} overlaps the play field (its hit box, or a slam arm's segment). */
@@ -2086,18 +1601,8 @@ public final class SetPiece implements Hashed {
         if (PlayField.overlaps(partX(p), partY(p), box(p))) {
             return true;
         }
-        int c = slamChain(p);
-        if (c < 0) {
-            return false;
-        }
-        Hitbox box = boss.chains().get(c).box();
-        for (int k = 0; k < boss.chains().get(c).segments(); k++) {
-            int i = segmentStart[c] + k;
-            if (PlayField.overlaps(x + segmentX[i], y + segmentY[i], box)) {
-                return true;
-            }
-        }
-        return false;
+        int c = chains.slamChain(p);
+        return c >= 0 && chains.segmentsOnField(c);
     }
 
     /** Part {@code p}'s hit box now: its spec's, M7 part F a walking boss's turned with its heading. */
@@ -2113,29 +1618,6 @@ public final class SetPiece implements Hashed {
     /** M7 part F: where a beam's column first touches a walking boss's front plate; +∞ for none. */
     double plateColumn(double cx, double halfWidth, double fromY) {
         return stride == null ? Double.POSITIVE_INFINITY : stride.plateColumn(cx, halfWidth, fromY);
-    }
-
-    /**
-     * The slam chain whose arm part {@code p} is, for its segments' hit boxes; -1 for any other part
-     * (round 40: and for a rooted arm's root while its arm is not out of the water along its lane).
-     */
-    private int slamChain(int p) {
-        int c = partChain[p];
-        if (c < 0 || !boss.chains().get(c).slam()) {
-            return -1;
-        }
-        if (arena != null && arena.rooted() && (arena.chainArm(c) < 0 || !arena.armOut(arena.chainArm(c)))) {
-            return -1;
-        }
-        return c;
-    }
-
-    /** Round 40: whether part {@code p} is a rooted arm's root: it stays at its offset, not at its chain's tip. */
-    private boolean rootPart(int p) {
-        return arena != null
-                && arena.rooted()
-                && partChain[p] >= 0
-                && boss.chains().get(partChain[p]).slam();
     }
 
     /**
@@ -2276,18 +1758,16 @@ public final class SetPiece implements Hashed {
                     .add(fromPose)
                     .add(phaseTicks)
                     .add(timeouts)
-                    .add(windowTicks)
-                    .add(windowNext)
-                    .add(windowOpenings)
+                    .add(windows.ticks())
+                    .add(windows.next())
+                    .add(windows.openings())
                     .add(prevAltitude)
                     .add(streamTicks)
                     .add(streamLeft)
                     .add(streamUnitTicks)
                     .add(streamUnits)
                     .add(killTicks);
-            for (double angle : angles) {
-                hash.add(angle);
-            }
+            chains.addTo(hash);
             for (int a = 0; a < attackTicks.length; a++) {
                 hash.add(attackTicks[a])
                         .add(attackBurstLeft[a])
@@ -2297,9 +1777,7 @@ public final class SetPiece implements Hashed {
                         .add(spiralAngles[a])
                         .add(spiralTicks[a]);
             }
-            for (int ticks : openTicks) {
-                hash.add(ticks);
-            }
+            windows.addOpenTicks(hash);
             if (arena != null) {
                 // M5 part E: only an arena boss (Level 11) hashes these.
                 hash.add(approaching ? 1 : 0);
@@ -2319,32 +1797,21 @@ public final class SetPiece implements Hashed {
             if (stride != null) {
                 // M7 part F: only a walking boss (Level 19) hashes these.
                 stride.addTo(hash);
-                for (int ticks : hatchTicks) {
-                    hash.add(ticks);
-                }
+                hatches.addTo(hash);
             }
-            if (aims) {
-                // Round 40: only a boss with aim turns hashes these.
-                for (int a = 0; a < aimTicks.length; a++) {
-                    hash.add(aimTicks[a]).add(aimNext[a]).add(aimPart[a]);
-                }
-            }
-            if (sweeps) {
-                // M5 part H: only a boss that sweeps (Level 14) hashes these.
-                for (int a = 0; a < sweepTicks.length; a++) {
-                    hash.add(sweepTicks[a])
-                            .add(sweepPart[a])
-                            .add(sweepCentre[a])
-                            .add(sweepDirection[a])
-                            .add(sweepsStarted[a])
-                            .add(sweepHits[a]);
-                }
-            }
+            // Round 40: only a boss with aim turns hashes these; M5 part H: only a boss that sweeps (Level 14) these.
+            aimTurns.addTo(hash);
+            sweeps.addTo(hash);
         }
     }
 
     double x() {
         return x;
+    }
+
+    /** M5 part E: its arena (lanes, slams and surfacing); null for any other boss. */
+    SlamArena slamArena() {
+        return arena;
     }
 
     double y() {
@@ -2519,31 +1986,27 @@ public final class SetPiece implements Hashed {
 
     /** A boss's neck segments, all chains in order. */
     public int segmentCount() {
-        return segmentX.length;
+        return chains.segmentCount();
     }
 
     /** Neck segment {@code i}'s centre offset from its centre, px to the right. */
     public double segmentOffsetX(int i) {
-        return segmentX[i];
+        return chains.segmentOffsetX(i);
     }
 
     /** Neck segment {@code i}'s centre offset from its centre, px up. */
     public double segmentOffsetY(int i) {
-        return segmentY[i];
+        return chains.segmentOffsetY(i);
     }
 
     /** The chain neck segment {@code i} belongs to. */
     public int segmentChain(int i) {
-        int c = 0;
-        while (c + 1 < segmentStart.length && segmentStart[c + 1] <= i) {
-            c++;
-        }
-        return c;
+        return chains.segmentChain(i);
     }
 
     /** Chain {@code c}'s angle at its piece {@code k} (0 at the anchor; its segments, then its tip), radians counter-clockwise. */
     public double chainAngle(int c, int k) {
-        return angles[chainStart[c] + k];
+        return chains.angle(c, k);
     }
 
     /** Position between the previous and the current step; {@code alpha} in [0, 1]. */
@@ -2601,8 +2064,8 @@ public final class SetPiece implements Hashed {
             // M5 part H: a part of the stump stays at the anchor, in the pose it lifted from.
             return stumpX() + poseDx[liftPose][p] - x;
         }
-        if (partChain[p] >= 0 && !rootPart(p)) {
-            return tipX[partChain[p]];
+        if (chains.atTip(p)) {
+            return chains.tipX(p);
         }
         if (stride != null) {
             // M7 part F: a walking boss's offsets turn with its heading.
@@ -2624,8 +2087,8 @@ public final class SetPiece implements Hashed {
         if (lifted && stays[p]) {
             return stumpY() + poseDy[liftPose][p] - y;
         }
-        if (partChain[p] >= 0 && !rootPart(p)) {
-            return tipY[partChain[p]];
+        if (chains.atTip(p)) {
+            return chains.tipY(p);
         }
         if (stride != null) {
             return stride.turnY(poseDx[pose][p], poseDy[pose][p]);

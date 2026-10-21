@@ -208,24 +208,49 @@ def shellback_review():
 # =========================================================================== the secret
 
 def props_review():
+    """Round 45 (round 44 G.c): the frame split off its pad; the hit flash (the frame's opaque pixels whitened)
+    shows that it follows the structure's shape, not the pad's rectangle."""
     frames, cap, glow = su.load("greenhouse-frame"), su.load("seed-capsule"), su.load("seed-capsule-glow")
-    rows = [("GREENHOUSE-FRAME: WHOLE, HIT, BADLY HIT, LIFTED", frames, 4, False),
+    pad = su.load("greenhouse-pad")[0]
+
+    def over_pad(f):
+        out = pad.copy()
+        out.alpha_composite(f)
+        return out
+
+    def flash(f, k=0.75):
+        a = np.array(f).astype(np.float64)
+        a[..., :3] = a[..., :3] * (1 - k) + 255 * k
+        return Image.fromarray(a.astype(np.uint8), "RGBA")
+    rows = [("GREENHOUSE-FRAME: WHOLE, HIT, BADLY HIT, LIFTED (TRANSPARENT ROUND THE STRUCTURE)", frames, 4, False),
+            ("GREENHOUSE-PAD (GROUND DECAL, UNDER EVERY STATE)", [pad], 4, False),
+            ("THE FRAME OVER ITS PAD, AS THE GAME DRAWS IT", [over_pad(f) for f in frames], 4, False),
+            ("THE HIT FLASH OVER THE PAD (THE FRAME'S PIXELS ONLY)", [over_pad(flash(f)) for f in frames[:3]], 4, False),
             ("SEED-CAPSULE (FREED)", cap, 4, False),
             ("SEED-CAPSULE-GLOW (ADDITIVE, UNDER THE FRAME)", glow, 4, True),
-            ("THE FRAME WITH THE GLOW ADDED", [artkit.add_light(frames[0], g, (20, 16)) for g in glow[:3]], 4, False)]
-    sheet = artkit.review_sheet("LEVEL 17 - THE SEED-VAULT SECRET (FINAL)", rows, width=1240, batch=BATCH)
-    gif = []
-    for k in range(50):
-        t = k / 10
-        f = plate("burnt-fields", 200, 140, 20, 300)
-        state = 0 if t < 1.5 else 1 if t < 2.5 else 2 if t < 3.2 else 3
-        paste_c(f, frames[state], 100, 70)
-        if state < 3:
-            add_c(f, glow[int(t * 6) % 6], 100, 69)
-        else:
-            paste_c(f, cap[0], 100 + min(1.0, (t - 3.2) * 4) * 6, 70 - min(1.0, (t - 3.2) * 4) * 10)
-        gif.append(f.resize((400, 280), Image.NEAREST).convert("RGB"))
-    save(sheet, gif, su.LEVEL / "concept", "l17-props")
+            ("THE FRAME WITH THE GLOW ADDED", [artkit.add_light(over_pad(frames[0]), g, (20, 16)) for g in glow[:3]], 4,
+             False)]
+    before = artkit.REVIEW_ROUND
+    artkit.REVIEW_ROUND = "r45"
+    try:
+        sheet = artkit.review_sheet("LEVEL 17 - THE SEED-VAULT SECRET: THE FRAME AND ITS PAD (FINAL)", rows, width=1240,
+                                    batch=BATCH)
+        gif = []
+        for k in range(50):
+            t = k / 10
+            f = plate("burnt-fields", 200, 140, 20, 300)
+            state = 0 if t < 1.5 else 1 if t < 2.5 else 2 if t < 3.2 else 3
+            paste_c(f, pad, 100, 70)
+            hit = state < 3 and any(h <= t < h + 0.08 for h in (0.6, 1.0, 1.5, 2.0, 2.5, 2.9, 3.15))
+            paste_c(f, flash(frames[state]) if hit else frames[state], 100, 70)
+            if state < 3:
+                add_c(f, glow[int(t * 6) % 6], 100, 69)
+            else:
+                paste_c(f, cap[0], 100 + min(1.0, (t - 3.2) * 4) * 6, 70 - min(1.0, (t - 3.2) * 4) * 10)
+            gif.append(f.resize((400, 280), Image.NEAREST).convert("RGB"))
+        save(sheet, gif, su.LEVEL / "concept", "greenhouse-frame")
+    finally:
+        artkit.REVIEW_ROUND = before
 
 
 def review(only=None):

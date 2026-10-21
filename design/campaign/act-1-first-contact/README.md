@@ -237,7 +237,7 @@ rendered by `tools/art/act_stills.py` from Level 01's final backdrop pieces; pro
 - 2026-10-02: M3 part B1: the title card and the act briefing moved into the act's
   [data.yaml](data.yaml) (with the act's levels, `[1, 7]`), rendered into *Act intro and outro*;
   the game shows them before the L01 briefing at a new game (title card held 3.5 s, its chrome
-  lettering from `tools/concept/ui_assets.py`, over the title scene until a still of the yards
+  lettering from `tools/art/act_titles.py`, over the title scene until a still of the yards
   exists). The outro follows with L07 (M4), so the title card item stays open.
 - 2026-10-02: User decisions: the L01 briefing comes **before** the first hangar visit (the UI
   screen flow wins; *Act intro and outro* corrected); the act briefing's "eleven days later" and

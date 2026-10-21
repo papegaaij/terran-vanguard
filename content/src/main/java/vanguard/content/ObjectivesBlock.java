@@ -93,7 +93,9 @@ public sealed interface ObjectivesBlock permits LevelData {
      * failed at the first hit on any of them, met when the last leaves the bottom edge. Round 41 (the user's playtest
      * 2026-10-19, "both"): {@code standing: true}, none of the level's ground allies broken (Level 17's "No dome lost";
      * hits allowed), failed when the first breaks, met when the last leaves the bottom edge. M7 part F (design/campaign
-     * Level 19, "12 of 14"): an {@code escapes} objective's {@code allowed}, how many of them may get away.
+     * Level 19, "12 of 14"): an {@code escapes} objective's {@code allowed}, how many of them may get away. Step SIM-K
+     * (design/campaign Level 21, round 44 K.h): a {@code kill_ratio}'s {@code boss_counted: false} leaves the level's
+     * bosses out of its count (their kills and the total); counted if not given.
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -112,9 +114,55 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<Boolean> links,
             Optional<Boolean> untouched,
             Optional<Boolean> standing,
-            Optional<Integer> allowed) {
+            Optional<Integer> allowed,
+            Optional<Boolean> bossCounted) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** Without step SIM-K's boss_counted. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links,
+                Optional<Boolean> untouched,
+                Optional<Boolean> standing,
+                Optional<Integer> allowed) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    untouched,
+                    standing,
+                    allowed,
+                    Optional.empty());
+        }
+
+        /** Step SIM-K: whether a kill ratio counts the level's bosses ({@code boss_counted}; true if not given). */
+        public boolean bossesCounted() {
+            return bossCounted.orElse(true);
+        }
 
         /** Without M7 part F's allowed. */
         public Secondary(

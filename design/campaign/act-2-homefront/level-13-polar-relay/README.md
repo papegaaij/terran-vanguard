@@ -21,8 +21,7 @@ the ice. A whiteout rolls in for the final push. About 3 minutes 55 seconds; no 
 
 **Status (M5 part G, step G1a).** This document states the design decided on 2026-10-11 (the
 gap analysis's questions G1–G9, all taken as the recommendation **a** while the user is on
-vacation, and its stated defaults; **all pending the user's review** in the combined concept round
-at the end of M5, see *Decisions*) and is the ticket for the later steps. Its script is
+vacation, and its stated defaults; **all accepted in round 34 (2026-10-12), see *Decisions*) and is the ticket for the later steps. Its script is
 [data.yaml](data.yaml) (step G4): the marked tables below are rendered from it. The level reworks the
 approved draft for the M4/M5 rules: density, the 3 s pacing rule, budget(13) in Act 1 terms,
 voiced radio, edge warnings of 3 s and the exact hook modes.
@@ -127,7 +126,7 @@ loses the relay and keeps ≥ 50 % in about half the seeds**; **easy keeps it ne
 lose the secondary** (hard is supposed to be hard) but **never the relay**. The measured integrity at
 the end per difficulty is recorded here (and in round 35).
 
-**Measured (step G4, pending the user's review).** The guarding autopilot (`Autopilot`: it lines up on
+**Measured (step G4, accepted in round 34 (2026-10-12)).** The guarding autopilot (`Autopilot`: it lines up on
 a mortar lobbing at the relay first, then a diver sent at it, then a walker with the relay in its arc,
 then the nearest hooked boat, and holds station under the relay otherwise) with the plan's fit and Rook,
 eight seeds per difficulty (`BalanceTest.theAutopilotKeepsTheRelay`; damage taken by the relay up to the
@@ -532,12 +531,12 @@ the Skimmer's in its own README, the sounds and Nansen in [sfx](../../../audio/s
 |---|---|---|
 | [concept/rejected/whiteout-r35-a.png](concept/rejected/whiteout-r35-a.png), [.gif](concept/rejected/whiteout-r35-a.gif) | Whiteout peak a "rolling banks" (`tools/art/whiteout_l13.py`): the halted frame at the peak, the layers, the ramp; a 4 s loop | rejected |
 | [concept/whiteout-r35-b.png](concept/whiteout-r35-b.png), [.gif](concept/whiteout-r35-b.gif) | Whiteout peak b "blizzard curtain": as a | chosen |
-| [concept/l13-props-final-r35-a.png](concept/l13-props-final-r35-a.png), [.gif](concept/l13-props-final-r35-a.gif) | Production art, one version each (`tools/art/l13_props.py`): the CDF supply drone (rotor phases, clamps, nav lights, the patch in its bay; its arc from the helipad) and the research hut (four states, the hatch beacon) | chosen |
-| [concept/backdrop-final-r35-a.png](concept/backdrop-final-r35-a.png), [.gif](concept/backdrop-final-r35-a.gif) | Production backdrop straight from scene-arctic-r09-a (`tools/art/backdrop_l13.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r35-a); its block for the level data, merged, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the ground as one unique strip of four pieces (the approach and the halt's frame, the leads cut along every Skimmer lane, the relay's and the hut's floes, brash in the margins and rubble where the walkers cross), the dark arctic water drifting on `deep`, the exit's open floes, the loose ice and the mortars' floe drifting on paths, the fog (light, medium) and the whiteout (look b, the user's pick in round 34; the sheet rebuilt with it) as the atmosphere's banks; composites with stand-ins for the units; the GIF the ease into the halt and the whiteout's ramp | chosen |
-| [concept/level-13-capture-final-r35-a.png](concept/level-13-capture-final-r35-a.png), [.mp4](concept/level-13-capture-final-r35-a.mp4) | Capture of the game (medium, the balance plan's L13 fit with Rook, no `--invulnerable`): 193 / 208 kills, the relay at 54 % (the secondary met), secret 1 / 1, A, 2,776 credits; sixteen frames (three from shorter runs: easy's whiteout, the damage smoke, the destroyed relay) and the whole run with sound ([recipe](concept/prompts.md#level-13-capture-final-r35-a)) | chosen |
-| [concept/level-13-capture-fixes-r35-a.png](concept/level-13-capture-fixes-r35-a.png), [.mp4](concept/level-13-capture-fixes-r35-a.mp4) | Supplement to the capture, the fixes made after it (45 s clip with sound + sheet, [notes](concept/prompts.md#level-13-capture-fixes-r35-a)): the t=20 Skimmers on their leads (a run without firing: two hulls touch a floe edge, t 24.5 and 27.5), the mortars' burst riding their floe (t 77), the pale fog bank against the capture's grey one (t 145), the whiteout (176–186), the end's chord (218.05–220.65) and jingle (from 220.65) without overlap | chosen |
-| [concept/level-13-capture-leads-r35-a.png](concept/level-13-capture-leads-r35-a.png), [.mp4](concept/level-13-capture-leads-r35-a.mp4) | Supplementary clip after G5c's wider leads (step CF; 22 s with sound, the level time burnt in, and a sheet; no firing, `--invulnerable`): the t=20 Skimmers through their whole leads, every hull on open water (a 10 fps scan, 2× insets of the nearest ones), and the halt frame: the relay's floe in brash-strewn water, small floes at the side edges ([recipe](concept/prompts.md#level-13-capture-leads-r35-a)) | chosen |
-| [concept/level-13-capture-relay-lost-r35-a.png](concept/level-13-capture-relay-lost-r35-a.png), [.mp4](concept/level-13-capture-relay-lost-r35-a.mp4) | The relay-lost mission-failed screen (P5 of round 34; nine frames + a 26 s clip with sound, the level time burnt in, [recipe](concept/prompts.md#level-13-capture-relay-lost-r35-a)): medium, the plan's L13 fit with Rook, auto-fire off and the ship parked in a corner, no `--invulnerable`: the secondary failed below half (Nansen's "Integrity at half", t ≈ 90), Scuttler fans on the relay (its white hit flash, the damage smoke), the last hit at t 103.6, the explosion at 103.8, the burning wreck and its smoke column, the mission-failed screen at t ≈ 106.4 with Okafor's "Nansen is gone. Pull back, Lancer." (the ship alive at 37 armour) | chosen |
+| [concept/l13-props-final-r35-a.png](concept/l13-props-final-r35-a.png), [.gif](concept/l13-props-final-r35-a.gif) | Production art, one version each (`tools/art/l13_props.py`): the CDF supply drone (rotor phases, clamps, nav lights, the patch in its bay; its arc from the helipad) and the research hut (four states, the hatch beacon) | final (round 44, X.i) |
+| [concept/backdrop-final-r35-a.png](concept/backdrop-final-r35-a.png), [.gif](concept/backdrop-final-r35-a.gif) | Production backdrop straight from scene-arctic-r09-a (`tools/art/backdrop_l13.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r35-a); its block for the level data, merged, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the ground as one unique strip of four pieces (the approach and the halt's frame, the leads cut along every Skimmer lane, the relay's and the hut's floes, brash in the margins and rubble where the walkers cross), the dark arctic water drifting on `deep`, the exit's open floes, the loose ice and the mortars' floe drifting on paths, the fog (light, medium) and the whiteout (look b, the user's pick in round 34; the sheet rebuilt with it) as the atmosphere's banks; composites with stand-ins for the units; the GIF the ease into the halt and the whiteout's ramp | final (round 44, X.i) |
+| [concept/level-13-capture-final-r35-a.png](concept/level-13-capture-final-r35-a.png), [.mp4](concept/level-13-capture-final-r35-a.mp4) | Capture of the game (medium, the balance plan's L13 fit with Rook, no `--invulnerable`): 193 / 208 kills, the relay at 54 % (the secondary met), secret 1 / 1, A, 2,776 credits; sixteen frames (three from shorter runs: easy's whiteout, the damage smoke, the destroyed relay) and the whole run with sound ([recipe](concept/prompts.md#level-13-capture-final-r35-a)) | final (round 44, X.i) |
+| [concept/level-13-capture-fixes-r35-a.png](concept/level-13-capture-fixes-r35-a.png), [.mp4](concept/level-13-capture-fixes-r35-a.mp4) | Supplement to the capture, the fixes made after it (45 s clip with sound + sheet, [notes](concept/prompts.md#level-13-capture-fixes-r35-a)): the t=20 Skimmers on their leads (a run without firing: two hulls touch a floe edge, t 24.5 and 27.5), the mortars' burst riding their floe (t 77), the pale fog bank against the capture's grey one (t 145), the whiteout (176–186), the end's chord (218.05–220.65) and jingle (from 220.65) without overlap | final (round 44, X.i) |
+| [concept/level-13-capture-leads-r35-a.png](concept/level-13-capture-leads-r35-a.png), [.mp4](concept/level-13-capture-leads-r35-a.mp4) | Supplementary clip after G5c's wider leads (step CF; 22 s with sound, the level time burnt in, and a sheet; no firing, `--invulnerable`): the t=20 Skimmers through their whole leads, every hull on open water (a 10 fps scan, 2× insets of the nearest ones), and the halt frame: the relay's floe in brash-strewn water, small floes at the side edges ([recipe](concept/prompts.md#level-13-capture-leads-r35-a)) | final (round 44, X.i) |
+| [concept/level-13-capture-relay-lost-r35-a.png](concept/level-13-capture-relay-lost-r35-a.png), [.mp4](concept/level-13-capture-relay-lost-r35-a.mp4) | The relay-lost mission-failed screen (P5 of round 34; nine frames + a 26 s clip with sound, the level time burnt in, [recipe](concept/prompts.md#level-13-capture-relay-lost-r35-a)): medium, the plan's L13 fit with Rook, auto-fire off and the ship parked in a corner, no `--invulnerable`: the secondary failed below half (Nansen's "Integrity at half", t ≈ 90), Scuttler fans on the relay (its white hit flash, the damage smoke), the last hit at t 103.6, the explosion at 103.8, the burning wreck and its smoke column, the mission-failed screen at t ≈ 106.4 with Okafor's "Nansen is gone. Pull back, Lancer." (the ship alive at 37 armour) | final (round 44, X.i) |
 
 ## Implementation
 
@@ -621,11 +620,10 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
 
 ## Open questions
 
-- Everything below was decided **as recommended while the user is on vacation** and is **pending the
-  user's review** in the combined concept round at the end of M5: whether a Stinger should die on the
-  relay (a kamikaze) instead of flying on (G1); the measured numbers and the final integrity per
-  difficulty (G2); whether ≈ 190 units in 3:55 from all edges feels right for density 4 (G3); the
-  leads and the drifting ice in the capture (G4); the drone's look (G6); the whiteout's look (G7).
+- None open. G1-G7 were decided as recommended while the user was on vacation and accepted in round 34 (2026-10-12);
+  round 44 (X.h, 2026-10-20) closed the list: whether a Stinger dies on the relay (G1), the measured numbers and the
+  final integrity per difficulty (G2), the density (G3), the leads and the drifting ice (G4), the drone's look (G6)
+  and the whiteout's look (G7).
 
 ## Decisions
 
@@ -635,45 +633,44 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
 - 2026-10-01: The relay's spec moved to [allies](../../../allies/README.md#nansen-relay). Open question resolved: the per-unit relay-targeting overrides are replaced by the general target-the-objective hook in the enemies README, configured here as a small table.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
 - 2026-10-11: M5 part G, step G1a: reworked for the M4/M5 rules, so `design: review`. **The user is on
-  vacation: the main agent took every recommendation of the gap analysis; all are pending the user's
-  review** in the one combined concept round at the end of M5.
-- 2026-10-11: **G1 = a** (recommended; pending the user's review) the hook modes made exact on the
+  vacation: the main agent took every recommendation of the gap analysis; all are accepted in round 34 (2026-10-12) in the one combined concept round at the end of M5.
+- 2026-10-11: **G1 = a** (recommended; accepted in round 34 (2026-10-12)) the hook modes made exact on the
   relay-aimed rule: `alternate` (every second attack, the relay closer than the ship, a burst is one
   attack), `in-arc` (the fan centred on the relay within ±45° of the facing), `always` (the Stinger's
   dive and fan at the relay, a single 10-point hit crossing the footprint, then it flies on; the
   mortar's marker, direct hit and lob on the relay). Rejected: b (everything hooked that crosses the
   relay hurts it: far more damage, no counterplay) and c (only aimed shots follow the hook: the divers'
   idea lost).
-- 2026-10-11: **G2 = a** (recommended; pending the user's review) the waves kept and the integrity tuned
+- 2026-10-11: **G2 = a** (recommended; accepted in round 34 (2026-10-12)) the waves kept and the integrity tuned
   per difficulty with the defend autopilot (medium never loses, ≥ 50 % in about half the seeds; easy
   nearly always; hard may lose the secondary, never the relay); measured numbers recorded here later.
   Rejected: b (change the approved wave table) and c (accept what is measured).
-- 2026-10-11: **G3 = a** (recommended; pending the user's review) halted time counts as scroll time;
+- 2026-10-11: **G3 = a** (recommended; accepted in round 34 (2026-10-12)) halted time counts as scroll time;
   ≈ 196 units, the extra 114 unhooked popcorn from all edges; no rule change. Rejected: b (a lower
   minimum for `defend` levels) and c (more hooked Skimmers).
-- 2026-10-11: **G4 = a** (recommended; pending the user's review) Skimmers are lane walkers on
+- 2026-10-11: **G4 = a** (recommended; accepted in round 34 (2026-10-12)) Skimmers are lane walkers on
   ground-space lanes with the weave; the leads and the relay's floe are fixed in the halt, loose ice
   drifts. Rejected: b (flight paths: boats would cross the ice) and c (drifting leads).
-- 2026-10-11: **G5 = a** (recommended; pending the user's review) `water: true` for the whole field in
+- 2026-10-11: **G5 = a** (recommended; accepted in round 34 (2026-10-12)) `water: true` for the whole field in
   the simulation, the water splash by unit (a level flag). Rejected: b (a lead mask) and c
   (`water: false`).
-- 2026-10-11: **G6 = a** (recommended; pending the user's review) the supply drone is presentation only
+- 2026-10-11: **G6 = a** (recommended; accepted in round 34 (2026-10-12)) the supply drone is presentation only
   and releases an ordinary patch at the arc's top. Rejected: b (a carried patch) and c (no drone).
-- 2026-10-11: **G7 = a** (recommended; pending the user's review) the whiteout banks hide ground units
+- 2026-10-11: **G7 = a** (recommended; accepted in round 34 (2026-10-12)) the whiteout banks hide ground units
   at the edges, air stays visible. Rejected: b (a veil dimming air units) and c (snow only).
-- 2026-10-11: **G8 = a** (recommended; pending the user's review) the jingle plays once at t=218, the
+- 2026-10-11: **G8 = a** (recommended; accepted in round 34 (2026-10-12)) the jingle plays once at t=218, the
   debrief without it. Rejected: b (twice) and c (none).
-- 2026-10-11: **G9 = a** (recommended; pending the user's review) round 35: a/b for the relay, the
+- 2026-10-11: **G9 = a** (recommended; accepted in round 34 (2026-10-12)) round 35: a/b for the relay, the
   whiteout peak, three sounds and Nansen; production straight away for the backdrop and the Skimmer;
   one version for the drone and the hut.
-- 2026-10-11: Stated defaults of the gap analysis (all pending the user's review): the halt's 2 s eases;
+- 2026-10-11: Stated defaults of the gap analysis (all accepted in round 34 (2026-10-12)): the halt's 2 s eases;
   hit box 80×80; Act 1 terms with a `bounty_scale` (estimate 0.67), the hut 110 and the secondary 95;
   no act HP factor for the Skimmer; Scuttler lanes ending 100–140 px short of the relay; the mortar
   floe from the left at t=66; the circle centred above the relay; the drones' patches at (240, 380) at
   t≈162 and t≈202; the radio retimed to the 1 s rule with Rook's t=82 and t=122 lines dropped; Varga's
   four intel lines; the HUD tracker; the fog from t=140; the threat profile's defend exception; Rook
   keeps the Autocannon; L13's units in L13's own atlas.
-- 2026-10-11: M5 part G, step G3 (the simulation; **pending the user's review**, the user is on vacation):
+- 2026-10-11: M5 part G, step G3 (the simulation; **accepted in round 34 (2026-10-12)**, the user is on vacation):
   the timed halt eases by smoothstep on the level clock, the ramp read from the halted section (default
   2 s: down over the last 2 s before it, up over the first 2 s after it); the approach then scrolls
   ≈ 5,460 px to the halt and the exit ≈ 1,960 px. The defend has a start and a duration (t=40 + 178 s:
@@ -691,7 +688,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
 - 2026-10-11: The draft's errors corrected: the relay at play-field x = 240 (not "480 in screen
   coordinates"), entering at t≈37 (not 34), the edge warning 3 s (not 1.5 s), the budget 1,577 (not
   the perfect-run 2,252), the hut's 180 and the secondary's 150 are the act-scaled values of 110 and 95.
-- 2026-10-12: M5 part G, step G4 (the content step; **pending the user's review**, the user is on
+- 2026-10-12: M5 part G, step G4 (the content step; **accepted in round 34 (2026-10-12)**, the user is on
   vacation): the level's [data.yaml](data.yaml) and the marked tables rendered from it. The relay's
   integrity tuned per G2 = a with the guarding autopilot over 8 seeds: **240 medium / 340 easy / 520 hard**
   (the draft's 600 / 900 / 450; see *Nansen Relay* for the measurements and why hard's is higher than
@@ -705,7 +702,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   have no image until step G5 renders them; the backdrop is a placeholder (Level 12's sea, `images:
   level-12`) until G5's arctic one. Rejected: three recommended traits (the panel), the draft's popcorn
   timing (the plan fit clears it with up to 7.5 s empty).
-- 2026-10-12: M5 part G, step G6 (the game step; **pending the user's review**, the user is on
+- 2026-10-12: M5 part G, step G6 (the game step; **accepted in round 34 (2026-10-12)**, the user is on
   vacation): the relay drawn in variant a (relay.py; state by integrity: smoke below 50 %, fire below
   25 %, dark at 0 with a smoke column of puffs every 0.15 s rising 42 px/s and drifting 16 px/s; a hit
   flashes it white). Grid online at the synchronisation's end, **t=218** (the README's "t=220" read as
@@ -724,7 +721,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   data line `peak: {atmosphere: heavy, from: 176, to: 188, easy: 6, ambience_db: 3}` is the main agent's
   merge (the data was being edited by step G5).
 - 2026-10-12: M5 part G, step G5 (the backdrop and the briefing images, straight to production, G9 = a;
-  all pending the user's review in round 35): **the ground is one unique strip** (four `ground` pieces
+  all accepted in round 34 (2026-10-12): **the ground is one unique strip** (four `ground` pieces
   of 480×1,536, the approach and the halt's frame in one render) instead of a repeating ice tile: in a
   timed halt every later section's tile set begins at the halt's top edge (ground 6,000), so the halt
   shows section 1's ground, and a tile would have repeated the halt's leads through the approach (across
@@ -743,14 +740,14 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   begins. Rejected: an opaque halt piece over a repeating tile (its water could not drift and slides
   against the deep layer while it scrolls in).
 - 2026-10-12: M5 part G, step G7, the capture (round 35's [level-13-capture-final-r35-a](concept/level-13-capture-final-r35-a.png);
-  the user is on vacation, so **pending the user's review**). Fixed in the game: the Skimmers were drawn
+  the user is on vacation, so **accepted in round 34 (2026-10-12)**). Fixed in the game: the Skimmers were drawn
   as flyers (no wake, a drop shadow, over the whiteout banks): a lane walker is now on the ground units'
   depth; the relay's damage smoke below 50 % (three static 16 px puffs, unreadable on the ice) now rises
   and drifts off each smoke point at 2× as tools/art/relay.py's review loop; the drone launch +2 dB.
   Seen and left for review: a Skimmer of the t = 20 introduction crossing a floe instead of its lead; the
   mortars' wreck stays at the left edge while their floe drifts on; grid online's chord lands on the
   jingle's first second; the debrief comes ≈ 16 s after the level's end (t 235) behind two radio lines.
-- 2026-10-12: M5 part G, step G5b, the backdrop's fixes after the capture (**pending the user's review**).
+- 2026-10-12: M5 part G, step G5b, the backdrop's fixes after the capture (**accepted in round 34 (2026-10-12)**).
   The t = 20 Skimmer crossing a floe: the sim lays a lane on the ground at each unit's *entry*
   (`Formations.lanes`: a convoy's units 1.5 s apart), the generator at the wave's time, so the second and
   third units' lanes lay 210 and 420 px further up the ice than their leads (32 % and 38 % of their
@@ -762,7 +759,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   edges darker than the ice, two hard alpha steps): now pale, soft-edged fog lighter than the ice it covers
   (`--check`: +16 / +25 luminance over the ice, wisps / banks). The mortars' floe path matches the sim's
   side entry (centre x −22 at t = 66, 10 px/s); their wreck staying at the left edge is game-side.
-- 2026-10-12: M5 part G, step G5c, the Level 13 lead margin (**pending the user's review**). The
+- 2026-10-12: M5 part G, step G5c, the Level 13 lead margin (**accepted in round 34 (2026-10-12)**). The
   supplementary clip ([level-13-capture-fixes-r35-a](concept/level-13-capture-fixes-r35-a.png)) still
   showed the t=20 Skimmers' hulls on floe edges (t 24.5, 27.5): `--check` tested only the weaving hull's
   centre, and a lead 44 px either side (rough edge >= 42 px) leaves the 40 px weave 2 px for a hull
@@ -773,7 +770,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   The ice is thinner: the approach 38 % (was about 41 %), the halt's frame 20 % (was 29 %): the halt's
   lanes leave only 24 % of the field beyond the hulls' reach, so the halt is the relay's floe in brash-
   strewn water with floes at the edges; the relay's and the hut's floes are unchanged (100 % ice).
-- 2026-10-12: M5 part G, step G8, the game's fixes after the capture (**pending the user's review**).
+- 2026-10-12: M5 part G, step G8, the game's fixes after the capture (**accepted in round 34 (2026-10-12)**).
   **Grid online and the jingle**: the chord (2.6 s from t=218) sat on the jingle's first second, both
   near −17 dBFS; the music block's `jingle` is now `{t: 218, fade: 2.6}`, so the theme fades with the
   chord and the jingle starts as it ends (t=220.6). **The mortars' wreck**: a ground unit that drifts on
@@ -808,7 +805,7 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   a look per direction) became eight pieces, `mortar-floe` and `loose-ice-a` .. `-g`, of 2 headings
   each with the same image twice (an east-bound path shows frame 1). As the motion budget counts moving
   pieces by name, the **water no longer drifts** (it drifted 3 px/s west, under the east-bound floes),
-  and the floes are timed so that at most two move on the screen at once. Pending the user's review:
+  and the floes are timed so that at most two move on the screen at once. Accepted in round 41 (2026-10-19):
   the still water, the 40 px.
 - 2026-10-19: The user's Act 2 playtest, P.e "yes, all" (as step CA did Levels 08–09): the waves
   **rewritten L10-style** in the halt (a wave about every 2.5 s, Skitter streams of 6 at 1 s and
@@ -819,10 +816,9 @@ All items below are **M5 part G** (the steps are those of the gap analysis's wor
   hard 2.8 and 50.9 with Needler groups of 2; `bounty_scale` 0.67 → 0.33 (typical haul 1,539,
   −2.4 %). The guarding pilot has more to shoot, so the relay lost 122–158 of 240 on medium (none of
   the 8 seeds kept half) and up to 504 of 520 on hard: the integrity is retuned to **260 medium** (the
-  ally's `hp`) and **560 hard** (medium's median seed 48 %, 3 of 8 keep half; hard 19–25 %). Pending
-  the user's review: the number of units, the integrity; the test edits (the level's totals and
+  ally's `hp`) and **560 hard** (medium's median seed 48 %, 3 of 8 keep half; hard 19–25 %). Accepted in round 41 (2026-10-19): the number of units, the integrity; the test edits (the level's totals and
   integrity, `PacingTest.PENDING_ACT_TWO_RULE`) are the main agent's.
 - 2026-10-19 (round 41, step FX-C; the game's new all-levels radio test, `RadioTimeline.everyRadioLineEndsBeforeTheLevelDoes`,
-  after the user's playtest "the last message is cut short"; pending the user's review): the Grid Online exit ends
+  after the user's playtest "the last message is cut short"; accepted in round 41 (2026-10-19)): the Grid Online exit ends
   at **t=239** (was 235), so Okafor's t=233.5 line (ending at 238.2 s at the latest) finishes before the level
   does. The waves, the halt and the hauls are unchanged.

@@ -117,7 +117,8 @@ final class RookHazards {
 
     /**
      * M7 part H, step H3: out of a breaching boss's bite circle from its tell to its snap (at the point it breaches
-     * at), and out of an eruption's marker (or the bite circle the mouth then opens with, the larger) until it erupts.
+     * at), and out of an eruption's marker (or the bite circle the mouth then opens with, the larger) until it erupts;
+     * step SIM-K: out of the eruption's ring's full reach from the marker until the ring has expanded.
      */
     private boolean clearOfBreach(BreachArena breach) {
         BreachArena.Phase phase = breach.phase();
@@ -125,6 +126,10 @@ final class RookHazards {
             return false;
         }
         double radius = breach.marker() ? Math.max(breach.markerRadius(), breach.biteRadius()) : breach.biteRadius();
+        if (breach.marker() || breach.ringing()) {
+            // Step SIM-K: out of the eruption's full ring too, until it has expanded.
+            radius = Math.max(radius, breach.shockReach());
+        }
         return clearOfCircle(breach.mouthX(), breach.mouthY(), radius);
     }
 

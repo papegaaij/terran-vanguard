@@ -2,7 +2,7 @@
 title: Bosses
 design: approved
 implementation: done
-art: chosen
+art: final
 updated: 2026-10-20
 ---
 
@@ -25,7 +25,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [harbour-kraken](harbour-kraken/README.md) | Act 2 mid-boss: cephalopod around a platform, lane slams, surfacing head (L11) | approved | in-progress | final |
 | [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | approved | in-progress | final |
 | [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
-| [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | chosen |
+| [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
 
 ## Roster
 
@@ -109,7 +109,8 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
 | [concept/rejected/revenant-walker-r36-b.png](concept/rejected/revenant-walker-r36-b.png) | Revenant Walker B "Siege crawler" — low four-legged hull with a dozer prow, two vertical-launch blocks (2×4 cells), twin-nozzle rear flamer barbette, reactor under radiator fins; the wreck with its plate cut off by torch (sheet) | rejected — round 36: a (Strider heavy, biped) picked |
 | [concept/rejected/revenant-walker-r36-b.gif](concept/rejected/revenant-walker-r36-b.gif) | Revenant Walker B — the same fight as A (motion) | rejected — round 36: a (Strider heavy, biped) picked |
 | [concept/revenant-walker-final-r42-a.png](concept/revenant-walker-final-r42-a.png), [.gif](concept/revenant-walker-final-r42-a.gif) | Revenant Walker production art (`tools/art/revenant_walker.py`, step ART-F1; held in `build/art-held/` until the walker's `data.yaml` claims the root `revenant-walker`): 8 headings × 8-frame walk, the hull with the front plate and chin cannon, the two reactor vents (shut / open / overheated), the shoulder pods (16 aim headings, hatch tell) and stubs, the flamer (32 aims) and pilot light, the 6-step topple and the wreck with the serial plate ground blank, the homing missile, its smoke puffs and the flame-cone puffs; the pass, the cone and the topple over the foundry yard in the GIF | chosen (round 42, F.a: approved as final) |
-| [concept/dust-colossus-final-r44-a.png](concept/dust-colossus-final-r44-a.png), [.gif](concept/dust-colossus-final-r44-a.gif) | Dust Colossus production art (`tools/art/dust_colossus.py`, step ART-H2; held in `build/art-held/` until the Colossus's `data.yaml` claims the root `dust-colossus`): the chosen r36 b mouth at 72 px/unit in five poses (four edge breaches leaning 30° into the field on the body's neck, upright under the ship) with rise, risen, half open, open, the bite's tell and snap, and the dive; the gullet glow; the death (rears, shudders with lime ichor, sinks under pouring sand); the funnel loop and the crater it leaves, the bulge, phase 3's marker, the spine vent, the death's bursts, four debris rocks, the intel silhouette; a breach in each phase and the death over the arena floor in the GIF | proposed |
+| [concept/dust-colossus-final-r44-a.png](concept/dust-colossus-final-r44-a.png), [.gif](concept/dust-colossus-final-r44-a.gif) | Dust Colossus production art (`tools/art/dust_colossus.py`, step ART-H2; held in `build/art-held/` until the Colossus's `data.yaml` claims the root `dust-colossus`): the chosen r36 b mouth at 72 px/unit in five poses (four edge breaches leaning 30° into the field on the body's neck, upright under the ship) with rise, risen, half open, open, the bite's tell and snap, and the dive; the gullet glow; the death (rears, shudders with lime ichor, sinks under pouring sand); the funnel loop and the crater it leaves, the bulge, phase 3's marker, the spine vent, the death's bursts, four debris rocks, the intel silhouette; a breach in each phase and the death over the arena floor in the GIF | chosen (round 44, F.c: approved as final) |
+| [concept/dust-colossus-final-r45-a.png](concept/dust-colossus-final-r45-a.png), [.gif](concept/dust-colossus-final-r45-a.gif) | Dust Colossus round 45 production art (`tools/art/dust_colossus.py`, step ART-K, round 44 K.b): the armoured spine breaking the sand behind an edge mouth (4 tapering segments × 3 rise states × 16 headings, toward the field's centre), the three vents as organs on its segments (shut, up, venting, destroyed) instead of turrets; the death throe: the forebody rearing and screaming, the geysers bursting along the ridge tail to head, the fissure ring, falling debris, the collapse into the sinkhole and the dust plume; a rear and a following front breach and the throe in the GIF | proposed |
 | [concept/rejected/dust-colossus-r36-a.png](concept/rejected/dust-colossus-r36-a.png) | Dust Colossus A "Rearing maw" — segmented slate worm arching out of a cracking sand dome; three jaw plates around rings of teeth and a lime throat; furrow and bulge tell, breach, rings, suction (sheet) | rejected — round 36: b (Sinkhole colony) picked |
 | [concept/rejected/dust-colossus-r36-a.gif](concept/rejected/dust-colossus-r36-a.gif) | Dust Colossus A — breaches at the edges of the slow-scrolling Hellas arena in turn (motion) | rejected — round 36: b (Sinkhole colony) picked |
 | [concept/dust-colossus-r36-b.png](concept/dust-colossus-r36-b.png) | Dust Colossus B "Sinkhole colony" — the ground collapses into a funnel; four bone mandibles unfold around a lime throat, violet-lit vein ridges under the sand (sheet) | chosen (round 36, B.2) |
@@ -120,9 +121,9 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
 - [x] Each boss promoted to its own directory with phases, attack scripts and weak-point
       layout before it is implemented: the Acts 1–2 bosses (Gorgon Frigate and Brood Carrier,
       built in M4; Harbour Kraken and Siege Spire for M5).
-- [ ] The same for the roster's bosses of Acts 3–7 — **later: Act 3** (the Revenant Walker, L19,
-      and the Dust Colossus, L21, first) to Act 7. The two Act 3 bosses are promoted to draft
-      specs (overnight design phase, 2026-10-12); they are built with Act 3 (M7), Acts 4–7 follow.
+- [x] The same for the Act 3 bosses (the Revenant Walker, L19, and the Dust Colossus, L21): promoted to specs
+      (overnight design phase, 2026-10-12) and built with Act 3 (M7 parts F and H).
+- [ ] The same for the roster's bosses of Acts 4–7 — **later: Act 4** to Act 7.
 - [x] Shared boss framework: multi-part hitboxes, neck chains, phase transitions, HUD boss bar,
       the intro descent, the chained death and the credit shower (M4 part E, with the Gorgon
       Frigate; drawn in plain shapes until its production sprites).
@@ -152,8 +153,8 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
   comes with Level 05's data, the screen flash and the sprites with the production art.
 - 2026-10-05: M4 close-out bookkeeping (round 26): the promotion item is split into the Acts 1–2 bosses, all promoted (two built in M4), and the roster's Acts 3–7 bosses, tagged with their acts; every other item is ticked, so the document is `done` for M4.
 - 2026-10-12 (overnight design phase): the Revenant Walker (L19) and the Dust Colossus (L21)
-  promoted from the roster to draft specs; concept round 36 proposes an a/b of each, pending the
-  user's review.
+  promoted from the roster to draft specs; concept round 36 proposes an a/b of each, accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the Revenant Walker and the Dust Colossus approved (D.18, D.19). Picks: the walker **a** (the "Strider heavy" biped), the Colossus **b** (the "Sinkhole colony"); the rejected variants moved to `concept/rejected/`.
 - 2026-10-20 (user, round 42): the Revenant Walker's production art approved as final (F.a): its row `chosen`, the walker `art: final`.
-- 2026-10-20: the Dust Colossus's production art made (step ART-H2, round 44); pending the user's review.
+- 2026-10-20: the Dust Colossus's production art made (step ART-H2, round 44); accepted in round 44 (2026-10-20).
+- 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

@@ -24,7 +24,7 @@ import vanguard.sim.StrideArena;
  * hit on its open vents a metal hit of its own ({@link Sfx#WALKER_VENT_HIT}, at most one each {@value
  * #VENT_HIT_GAP_SECONDS} s) instead of the plain hit ({@link #ventHit}, asked by {@code UnitCues}).
  *
- * <p>Round 44 (step WR2; step HB: round 44's proposals, a each until the user's pick, levelled in their files): the
+ * <p>Round 44 (step WR2; round 44's picks: the charge b, the shot and the shockwave a, levelled in their files): the
  * rail lance's charge ({@link Sfx#WALKER_LANCE_CHARGE}) and shot ({@link Sfx#WALKER_LANCE_SHOT}), the stomp's
  * shockwave ({@link Sfx#WALKER_SHOCKWAVE}); the stomp's brace stays a placeholder, the hatch's clank pitched down.
  */

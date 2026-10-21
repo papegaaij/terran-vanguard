@@ -117,7 +117,7 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 
 - 2026-10-12 (overnight design phase): promoted from the [ground roster](../README.md) to a draft
   spec. M7 = a (a new `buried` layer, nothing hits it) and M18 = a (L15 reference DPS 76) taken
-  as the recommended options, pending the user's review in round 36. Our proposals: 44 HP,
+  as the recommended options, accepted in round 36 (2026-10-13). Our proposals: 44 HP,
   bounty 24, the 1.0 s bulge tell, the spot rule (140–240 px ahead, ≥ 110 px from the ship),
   3 surfacings, at most 2 up at once.
 - 2026-10-12 (merge): the round-36 a/b proposals are listed under Concept art (`art: proposed`).
@@ -126,7 +126,7 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
   on its top side while up), so the spot rule's numbers, the 90 px/s swim, the 4.5 s cycle and the three
   surfacings hold on Level 15's 150–160 px/s ground; the crater or filling hole it leaves scrolls with the
   ground. The stat block moved into `data.yaml` (step B2).
-- 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 look (a, sand maw), review sheet and GIF `burrower-final-r38-a` proposed for round 38 (pending the user's review).
+- 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 look (a, sand maw), review sheet and GIF `burrower-final-r38-a` proposed for round 38 (accepted in round 38 (2026-10-14)).
 - 2026-10-14 (user, round 38): closed: the production art `burrower-final-r38-a` approved as final (F.3), so
   `art: final`; the simulation's build choices B.1 (a)–(f) all yes (the 30 s life and the escape off the bottom,
   the spot picked at the swim's start and checked again at the bulge, the mirrored spot, the stagger, the

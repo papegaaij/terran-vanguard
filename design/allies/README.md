@@ -116,13 +116,13 @@ crawler's or shuttle's becomes its number word. The boss checkpoint keeps each s
 ### Nansen Relay
 
 The Arctic grid relay, a friendly `defend` structure (M5 part G, Level 13; reworked 2026-10-11, G1 and
-G2 = a, pending the user's review). Its numbers are in [data.yaml](data.yaml) (M5 part G, step G4: `follows:
+G2 = a, accepted in round 34 (2026-10-12)). Its numbers are in [data.yaml](data.yaml) (M5 part G, step G4: `follows:
 ground`, `damaged_by` `objective_aimed`, `dives: 10` and `lobs: true`); the table is hand-written.
 
 | Property | Value |
 |---|---|
 | Size / layer | footprint 96×96 px on `ground`: dish array, mast, prefab modules, a helipad; **hit box 80×80** inside the footprint |
-| Integrity | **260** at medium since Level 13's L10-style waves of 2026-10-19 (240 before; the draft's 600), **340 easy / 560 hard** (520 before; the draft's 900 / 450): tuned in Level 13's content step with the guarding autopilot over 8 seeds (G2 = a: medium never loses it and keeps half in about half the seeds, easy nearly always, hard never loses it; hard's hook load is 3.4 × medium's), pending the user's review; no regeneration; a bar in the objective tracker |
+| Integrity | **260** at medium since Level 13's L10-style waves of 2026-10-19 (240 before; the draft's 600), **340 easy / 560 hard** (520 before; the draft's 900 / 450): tuned in Level 13's content step with the guarding autopilot over 8 seeds (G2 = a: medium never loses it and keeps half in about half the seeds, easy nearly always, hard never loses it; hard's hook load is 3.4 × medium's), accepted in round 34 (2026-10-12); no regeneration; a bar in the objective tracker |
 | Follows | `follows: ground` (new): it scrolls with the ground, enters at the top edge during the approach and stops where the ground halts |
 | Damaged by | Only attacks **aimed at the relay** through the [target-the-objective hook](../enemies/README.md#target-the-objective-hook) (the attack's normal damage class; a diver's hit is 10, once as it crosses the footprint). Shots aimed at the player that cross it do nothing, and the relay-aimed bullets still hurt the ship, so the player can body-block. Relay-aimed bullets have the normal enemy look. Keys: `damaged_by: objective-aimed, dives, lobs` |
 | Feedback | a white hit flash per hit; **smoke below 50 %**; at grid online (t=220) its lights come on in sequence |
@@ -139,7 +139,7 @@ sequence) and a HUD icon; it has no concept of its own yet, so round 35 shows an
 A small `air` drone of the Nansen Relay's crew (promoted from the roster, M5 part G, G6 = a;
 Level 14 reuses it, part H). **Presentation only**: it lifts off the relay's helipad, flies a slow arc
 (≈ 4 s) over the relay and **releases an armour patch at the arc's top**, a point in the field (Level
-13: ≈ (240, 380 y-up)). In Level 14 (no relay, step H9, pending the user's review) it flies in from
+13: ≈ (240, 380 y-up)). In Level 14 (no relay, step H9, accepted in round 34 (2026-10-12)) it flies in from
 below the bottom edge under its point, releases the patch at (240, 380 y-up) at t=100 and leaves the
 same way, without the launch sound (a helipad's lift-off). The patch is then an ordinary pickup: it drifts down, the magnet pulls it and it
 expires as pickups do. **Nobody can hit the drone** and it hurts nobody; in the simulation there is
@@ -215,7 +215,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
 ## Open questions
 
 - The relay's sprite (states and the lights sequence): an a/b in concept round 35 (M5 part G, G9 =
-  a, taken as recommended while the user is on vacation; pending the user's review).
+  a, taken as recommended while the user is on vacation; accepted in round 34 (2026-10-12)).
 
 ## Decisions
 
@@ -321,7 +321,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
   frigate's flak as presentation) accepted as built, so `design: approved`; the convoy's items are
   ticked, the rest wait for their M5 parts.
 - 2026-10-11: M5 part G, step G1a (the user is on vacation: the main agent took the gap analysis's
-  recommendations, **all pending the user's review** in the combined concept round at the end of M5):
+  recommendations, **all accepted in round 34 (2026-10-12)):
   **G1 = a** the relay is hurt only by relay-aimed attacks, made exact per hook mode (a diver's 10 once
   as it crosses the footprint; the mortar's direct hit; the Skimmer's and Scuttler's aimed shots and
   fans, see [Level 13](../campaign/act-2-homefront/level-13-polar-relay/README.md#what-hurts-the-relay-the-hook-modes-g1--a)).
@@ -329,20 +329,20 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
   the supply drone is presentation only and releases an ordinary pickup, promoted from the roster to a
   spec section. Stated defaults: hit box 80×80, `follows: ground`, smoke below 50 %, the lights at grid
   online, the relay and the drone `first_level: 13`. `design: review` for the reworked specs.
-- 2026-10-11: M5 part G, step G3 (the simulation; pending the user's review, the user is on vacation):
+- 2026-10-11: M5 part G, step G3 (the simulation; accepted in round 34 (2026-10-12), the user is on vacation):
   the Nansen Relay is a `defend` primary's ally (a `Convoy` of one): `follows: ground`, it stands at its
   place when the level clock reaches the defend's start and scrolls with the ground before and after;
   `damaged_by: dives` deals the spec's 10 once as a hooked diver's hit box crosses the relay's hit box,
   `lobs` a relay-aimed lob's direct hit when it lands on the hit box; once its synchronisation is over
   nothing aims at it and nothing hurts it; `--invulnerable` keeps its loss from failing the level, as
   an escort's. The supply drone's patch is a placed pickup with a point (y up) instead of the top edge.
-- 2026-10-12: M5 part G, step G4 (pending the user's review): the Nansen Relay in [data.yaml](data.yaml)
+- 2026-10-12: M5 part G, step G4 (accepted in round 34 (2026-10-12)): the Nansen Relay in [data.yaml](data.yaml)
   (`follows: ground`, `damaged_by` `objective_aimed`, `dives: 10`, `lobs: true`, `first_level: 13`), its
   integrity tuned with the guarding autopilot to 240 at medium (Level 13's 340 easy / 520 hard; the draft's
   600 / 900 / 450 left the medium relay at 81–83 % in every seed); its production sprites (variant a)
   written to `assets/` (`tools/art/relay.py --assets`, b's stay review files until the pick); the supply
   drone stays presentation only (no allies entry: Level 13's `drops` name its sprite).
-- 2026-10-12: M5 part H, step H9 (pending the user's review): Level 14's t=100 armour patch, which simply
+- 2026-10-12: M5 part H, step H9 (accepted in round 34 (2026-10-12)): Level 14's t=100 armour patch, which simply
   entered at the top edge, is carried in by the supply drone: the level's `drops`; without a defended
   ally the drone flies in from 24 px below the bottom edge under its point and leaves the same way
   (`DroneLooks`; Level 13's arcs from the helipad are unchanged).
@@ -352,13 +352,12 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
   The relay's integrity (C11), the drone and hut, H9's armour patch and the escort numbers accepted;
   `design: approved`, `art: final`.
 - 2026-10-12 (overnight design phase): the Ares Landing dome added to the roster, drafted in Level 17
-  (five named domes to hold); it gets its own section here when Act 3 is built, pending the user's
-  review in round 36.
+  (five named domes to hold); it gets its own section here when Act 3 is built, accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the Ares Landing dome approved with Level 17 (M16 accepted, Q.17a:
   the hooked Shellbacks hurt it too); its look is the geodesic glass dome on a concrete ring (MA.3 =
   a, in [Mars](../world/mars/README.md#concept-art)); it becomes its own document here in M7 part D
   (Q.25b).
-- 2026-10-18 (M7 part D, step D2; pending the user's review in round 40): the Ares Landing dome's own
+- 2026-10-18 (M7 part D, step D2; accepted in round 40 (2026-10-19): the Ares Landing dome's own
   document, [ares-landing-dome](ares-landing-dome/README.md) (Q.25b), its numbers in [data.yaml](data.yaml)
   under its slug (`hits: 3` instead of an `hp`, `damaged_by` `bombs: 1`, `lobs: true`, `rolls: 1`, `sprite:
   ares-dome`); the roster row became the Contents row. New keys: an ally's `hits` (it counts hits; its hp is

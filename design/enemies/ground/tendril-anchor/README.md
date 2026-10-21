@@ -117,8 +117,7 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 
 - 2026-10-12 (overnight design phase): promoted from the [ground roster](../README.md) to a draft
   spec. M9 = a (the tendril has its own HP, hit only by `beam`; anchors hit by everything; touch
-  `medium` 6 with a cooldown) and M18 = a taken as the recommended options, pending the user's
-  review in round 36. Our proposals: anchors 12 HP, tendril 40 HP, a 1.0 s dormant tell, a
+  `medium` 6 with a cooldown) and M18 = a taken as the recommended options, accepted in round 36 (2026-10-13). Our proposals: anchors 12 HP, tendril 40 HP, a 1.0 s dormant tell, a
   0.5 s touch cooldown, no regrowth, the anchors silent except on hard.
 - 2026-10-12 (merge): the beam figure follows the Ion Beam document (L1 45 DPS, not 35); the
   round-36 a/b proposals are listed under Concept art (`art: proposed`).
@@ -126,8 +125,8 @@ Concept art table; prompts in [../concept/prompts.md](../concept/prompts.md), ge
 - 2026-10-14 (M7 part C, step C2): the stat block moved into [data.yaml](data.yaml): the `link` attack
   (the tendril's 40 HP, 1.0 s tell, 6 px band, 0.5 s cooldown, burnt 8) and the hard-only aimed orb
   (`only: [hard]`); a level places the pairs as a linked enemy nest (`link: pairs`, a default of the
-  gap check, pending the user's review in round 39).
-- 2026-10-14 (M7 part C, step C5): every item built (steps C3/C4 (simulation, data), G2 (looks, sounds)), flown in Level 16's capture (round 39); the art and the defaults pending the user's review in round 39.
+  gap check, accepted in round 39 (2026-10-18).
+- 2026-10-14 (M7 part C, step C5): every item built (steps C3/C4 (simulation, data), G2 (looks, sounds)), flown in Level 16's capture (round 39); the art and the defaults accepted in round 39 (2026-10-18).
 - 2026-10-18 (user, round 39): closed. The production art `tendril-anchor-final-r39-a` approved as final (F.3),
   so `art: final`; the gates as linked nests (`link: pairs`, the anchors 20 px off the wall line) and B.2's
   choices (a beam burns a dormant tendril too, the shared touch cooldown, Rook's clearance, the burnt

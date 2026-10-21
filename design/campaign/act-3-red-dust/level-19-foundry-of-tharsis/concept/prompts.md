@@ -1,7 +1,6 @@
 # Level 19 – concept and production notes
 
-Round 42 (M7 part F, step ART-F2: production straight away, as Levels 15-18's; all of it is pending the user's
-review in round 42). None of it is prompted: every file is rendered by a generator in `tools/art/`.
+Round 42 (M7 part F, step ART-F2: production straight away, as Levels 15-18's; all of it is accepted in round 42 (2026-10-20). None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r42-a
 

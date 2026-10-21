@@ -496,19 +496,20 @@ public enum Sfx {
      */
     COLOSSUS_DEATH("sfx/colossus-death-r44-a.ogg", 1, Bus.EFFECTS, BOSS),
     /**
-     * M7 part H: Level 21's ridge pass (round 44 b, proposed: a large low rumble passing with a heavy stone grind and
-     * sand pouring, panned right to left in the file as the ridge runs, 7 s, -20 LUFS); a's pan runs the other way.
+     * M7 part H: Level 21's ridge pass (round 44 a, the user's pick: a subway train passing under a bridge with sand
+     * flowing off the ridge, mirrored to pan right to left as Level 21's ridge runs, 7 s, -20 LUFS).
      */
-    COLOSSUS_RIDGE("sfx/colossus-ridge-r44-b.ogg", 1, Bus.EFFECTS, BOSS),
+    COLOSSUS_RIDGE("sfx/colossus-ridge-r44-a.ogg", 1, Bus.EFFECTS, BOSS),
     /**
-     * Round 44 (step HB): the Revenant Walker's rail lance charging (round 44 a, proposed: a power charge gliding up
-     * over a Tesla coil's sparking, 1.05 s).
+     * Round 44 (step HB): the Revenant Walker's rail lance charging (round 44 b, the user's pick: a high-voltage
+     * discharge's buzz swelling and gliding up, Tesla sparks on top, a low rumble rising; 1.05 s, about 5 LU louder
+     * than a).
      */
-    WALKER_LANCE_CHARGE("sfx/walker-lance-charge-r44-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
-    /** Round 44 (step HB): the rail lance's shot (round 44 a, proposed: a real railgun, 1.6 s). */
+    WALKER_LANCE_CHARGE("sfx/walker-lance-charge-r44-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /** Round 44 (step HB): the rail lance's shot (round 44 a, the user's pick: a real railgun, 1.6 s). */
     WALKER_LANCE_SHOT("sfx/walker-lance-shot-r44-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * Round 44 (step HB): the stomp's shockwave (round 44 a, proposed: a giant's footfall and an explosion's shockwave
+     * Round 44 (step HB): the stomp's shockwave (round 44 a, the user's pick: a giant's footfall and an explosion's shockwave
      * rolling out of it, 1.6 s).
      */
     WALKER_SHOCKWAVE("sfx/walker-shockwave-r44-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),

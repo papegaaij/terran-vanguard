@@ -1,7 +1,7 @@
 # Level 14 – concept and production notes
 
 Round 36 (M5 part H step H2; decision H8 = a: a/b for the root burst and the daylight, one version for
-the props and the outro images; the user is on vacation, so all of it is pending the user's review).
+the props and the outro images; the user is on vacation, so all of it is accepted in round 34 (2026-10-12)).
 None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## root-burst-r36-a
@@ -52,7 +52,7 @@ inward over the section; no beams; the city graded clear and cool with lower con
 ## backdrop-final-r36-a
 
 Production art, M5 part H (round 36; H8 = a, straight to production from the chosen
-`scene-geneva-r10-a`, pending the user's review). Not a mockup: the sheet and GIF of Level 14's backdrop
+`scene-geneva-r10-a`, accepted in round 36 (2026-10-13)). Not a mockup: the sheet and GIF of Level 14's backdrop
 in `assets/backdrop/level-14/`, rendered by [tools/art/backdrop_l14.py](../../../../../tools/art/backdrop_l14.py)
 (`python3 tools/art/backdrop_l14.py`: the proposal, every image, the checks and this review; `--review`
 only the review; `--proposal` only [backdrop-proposal.yaml](backdrop-proposal.yaml), the level's block for
@@ -102,7 +102,7 @@ Level 08's traffic; the drone's armour patch enters without a drone sprite).
 
 ## act-2-outro-final-r36-a
 
-Production art, M5 part H step H2 (round 36; the user is on vacation, pending the user's review). It is
+Production art, M5 part H step H2 (round 36; the user is on vacation, accepted in round 36 (2026-10-13)). It is
 not a mockup: it is the sheet of the Act 2 outro's four briefing images, rendered by
 [tools/art/outro_l14_images.py](../../../../../tools/art/outro_l14_images.py)
 (`python3 tools/art/outro_l14_images.py`, which writes only this sheet; `--assets` writes

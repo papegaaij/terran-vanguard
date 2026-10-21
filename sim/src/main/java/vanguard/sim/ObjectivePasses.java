@@ -239,7 +239,10 @@ final class ObjectivePasses {
         }
         SetPieceSpec spec = piece.spec();
         events.add(SimEvents.Type.SET_PIECE_DESTROYED, piece.x(), piece.y(), k);
-        tally.countKill();
+        if (!spec.isBoss() || script.objectives().secondary().countsBosses()) {
+            // Step SIM-K: a boss the secondary does not count is no kill (Level 21's Colossus).
+            tally.countKill();
+        }
         if (spec.drop().isPresent()) {
             double half = EnemyGun.BULLET.width();
             s.pickupPasses.drop(

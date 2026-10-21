@@ -106,13 +106,13 @@ act's art track in its level's round.
 
 - 2026-10-12 (overnight design phase): promoted from the [ground roster](../README.md) to a draft
   spec with the round-06 concept as its chosen art. M18 = a taken as the recommended option,
-  pending the user's review in round 36. Our proposals: 52 HP; the roster's "ground → low-air"
+  accepted in round 36 (2026-10-13). Our proposals: 52 HP; the roster's "ground → low-air"
   read as the cycle's rise (closed on `ground`, open on `low-air`); the 2.6 s cycle with a 0.8 s
   window; the spiral only while open; the pull numbers.
 - 2026-10-13 (user, round 36): approved (D.13). Q.22e yes: a Smart Bomb or Airstrike hits it while closed (blasts ignore the vanes' armour).
 - 2026-10-19 (M7 part E, step E2): the stat block moved into [data.yaml](data.yaml) (the table is rendered
   from it): the `vortex` cycle, the `pull`, the grit `spiral` fired `while: open`, the armour `vanes`.
-  Defaults of the gap check, pending the user's review in round 41: the wander's amplitude 60 px either
+  Defaults of the gap check, accepted in round 41 (2026-10-19): the wander's amplitude 60 px either
   side of the wave's path; a pair or trio flies as a `pack` (each on its own path); easy's 1.0 s window
   lengthens the cycle to 2.8 s (the closed time kept); the closed vanes glance on the core's hit box.
 - 2026-10-19 (user, round 41): the final art approved (F.a/F.b, `art: final`); the build choices of the gap check accepted (B.b/B.c: all yes); the sounds and the intel picture accepted.

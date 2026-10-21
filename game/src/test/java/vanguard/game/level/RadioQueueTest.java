@@ -176,6 +176,60 @@ class RadioQueueTest {
         assertTrue(radio.idle(), "a phase line that never found a gap is dropped at last");
     }
 
+    /**
+     * Step GK (H5R's capture): Varga's phase line, cut by Rook's eject bark, played again over the Colossus's kill. A
+     * phase line playing again after an urgent cut leaves the radio when the boss's death withdraws the phase lines,
+     * and one cut while the death withdraws them does not play again.
+     */
+    @Test
+    void aCutPhaseLineDoesNotPlayAgainOverTheBosssDeath() {
+        radio.add(
+                "Varga",
+                "Varga",
+                "fierce",
+                "It's under you! Move when the ground cracks!",
+                false,
+                RadioQueue.Priority.PHASE);
+        radio.update(0.01f);
+        run(1);
+        radio.add("Rook", "Rook", "neutral", "Punching out!", false, RadioQueue.Priority.URGENT);
+        assertEquals(RadioQueue.Change.OPENED, radio.update(0.01f));
+        assertEquals("Rook", radio.current().orElseThrow().speaker());
+        run(5.6);
+        run(0.6);
+        assertEquals("Varga", radio.current().orElseThrow().speaker(), "it plays again after the bark");
+        assertTrue(radio.withdrawAll(RadioQueue.Priority.PHASE), "the boss is down: cut, its voice stops");
+        assertTrue(radio.current().isEmpty(), "not over the kill");
+        radio.add("The Choir", "The Choir", "neutral", "...we are many...", true, RadioQueue.Priority.CLOSING);
+        assertEquals(RadioQueue.Change.OPENED, radio.update(0.01f));
+        assertEquals("The Choir", radio.current().orElseThrow().speaker());
+
+        radio.clear();
+        radio.add(
+                "Varga",
+                "Varga",
+                "fierce",
+                "It's under you! Move when the ground cracks!",
+                false,
+                RadioQueue.Priority.PHASE);
+        radio.update(0.01f);
+        run(1);
+        radio.add("Rook", "Rook", "neutral", "Punching out!", false, RadioQueue.Priority.URGENT);
+        assertFalse(radio.withdrawAll(RadioQueue.Priority.PHASE), "playing for the first time: it stays on");
+        assertEquals(RadioQueue.Change.OPENED, radio.update(0.01f));
+        assertEquals("Rook", radio.current().orElseThrow().speaker());
+        run(5.6);
+        run(2);
+        assertTrue(radio.idle(), "the cut line does not come back after the death");
+
+        radio.clear();
+        radio.add("Varga", "Varga", "fierce", "It's under you!", false, RadioQueue.Priority.PHASE);
+        radio.update(0.01f);
+        run(1);
+        assertFalse(radio.withdrawAll(RadioQueue.Priority.PHASE), "a phase line on its first play is not cut");
+        assertEquals("Varga", radio.current().orElseThrow().speaker());
+    }
+
     @Test
     void aDroppedLineLeavesTheQueueOrTheRadioIfItHasJustOpened() {
         RadioQueue.Message secondary = radio.add(

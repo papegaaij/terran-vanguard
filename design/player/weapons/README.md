@@ -2,7 +2,7 @@
 title: Weapons
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../generator, ../../systems/economy]
 updated: 2026-10-20
 ---
@@ -41,9 +41,9 @@ the document in review); later weapons are still roster rows below.
 | [micro-missile-pod](micro-missile-pod/README.md) | Micro-missile Pod — Wing (per pod), homing; DPS 8 → 28; 800; L06 | approved | done | final |
 | [swivel-gun](swivel-gun/README.md) | Swivel Gun — Wing (per pod), side, homing; DPS 8 → 26; 1 500; L09 | approved | done | final |
 | [torpedo-pod](torpedo-pod/README.md) | Torpedo Pod — Wing (per pod), anti-sub; DPS 10 → 32; 1 000; L11 | approved | done | final |
-| [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | chosen |
+| [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | final |
 | [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
-| [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | review | in-progress | final |
+| [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
 
 ## Design
 
@@ -246,8 +246,7 @@ phase 2026-10-12) — the Act 3 front beam and the drone bay, a/b each; generato
 - 2026-10-12: M5 part I (close-out): the Torpedo Pod item ticked (built in part E, its own document
   `done`); every other item is ticked or tagged later (`beam`, Act 3), so the document is `done`.
 - 2026-10-12 (overnight design phase): the Act 3 weapons Ion Beam (L1 raised to 45 DPS), Rear Lance,
-  Deflector Pod and Light Drone Bay promoted from the roster to draft documents, pending the user's
-  review in round 36.
+  Deflector Pod and Light Drone Bay promoted from the roster to draft documents, accepted in round 36 (2026-10-13).
 - 2026-10-12 (overnight design phase): concept round 36 proposes an a/b of the Ion Beam and of the
   light drone and its bay (`tools/concept/gear_r36.py`); both documents `art: proposed`, pending the
   user's choice.
@@ -260,3 +259,4 @@ phase 2026-10-12) — the Act 3 front beam and the drone bay, a/b each; generato
   rejected and moved to its `concept/rejected/`); the simulation's build choices B.1 (a)–(f) all yes; R.3
   (the Deflector Pod's data layout) accepted; R.4 (a)–(g) all fixed, (c) by Q1's `CAST_ARMOUR` rule (a
   set piece's armour stops the beam on every layer).
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

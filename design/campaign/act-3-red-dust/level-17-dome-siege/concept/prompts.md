@@ -1,7 +1,7 @@
 # Level 17 – concept and production notes
 
 Round 40 (M7 part D, step ART-D: production straight away, as Act 2's and Levels 15-16's; the user is on
-vacation, so all of it is pending the user's review in round 40). None of it is prompted: every file is
+vacation, so all of it is accepted in round 40 (2026-10-19). None of it is prompted: every file is
 rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r40-a
@@ -24,6 +24,17 @@ Production art, M7 part D (round 40), straight to production (no concept): the s
 frame over the seed-vault capsule (whole, hit, badly hit, lifted aside), the freed capsule (amber bands, a
 rule-7 light rim) and its beacon glow, rendered by [tools/art/siege_units.py](../../../../../tools/art/siege_units.py).
 The GIF plays the frame being shot apart on the burnt fields and the capsule popping free.
+
+## greenhouse-frame-final-r45-a
+
+Production art, round 44 G.c (approved; step ART-K, for round 45's review): the greenhouse frame split off its
+burnt concrete pad, rendered by [tools/art/siege_units.py](../../../../../tools/art/siege_units.py) (`props`). The
+frame's four states keep their look but are transparent round the structure (ribs, ridge beam, glass shards, the
+capsule's amber bands; the lifted wreck at the pad's edge), so the hit flash follows the structure; the pad with
+its soot is its own 64×48 ground decal `greenhouse-pad`, drawn under every state. The sheet shows the frame alone,
+the pad, the frame over its pad and the hit flash over the pad; the GIF plays the frame shot apart over its pad
+(hit flashes on the structure only) and the capsule popping free. Pending the user's review: the frame no longer
+casts its rendered shadow on the pad (the soot under it stands in for it).
 
 ## level-17-capture-r40-a
 

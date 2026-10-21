@@ -62,7 +62,10 @@ greenhouse frame's look its contents `seed-capsule`):
   shellback-husk_0..15      112x112, one per heading: the cracked dead shell, tucked, no glow
   greenhouse-frame_0..3     64x48, the secret's collapsed greenhouse frame over the seed-vault capsule: 0
                             whole (the capsule's amber light under the bent ribs), 1 hit (scorched), 2 badly
-                            hit (ribs broken), 3 lifted aside (the bare scorched pad)
+                            hit (ribs broken), 3 lifted aside (the wreck at the pad's edge); transparent round
+                            the structure (round 44 G.c), drawn over its pad
+  greenhouse-pad            64x48, ground decal: the frame's scorched concrete pad with the soot, centred on the
+                            frame's centre, under every state of the frame (build/art-held/ until data claims it)
   seed-capsule              24x16, the freed seed-vault capsule (amber bands, a rule-7 light rim)
   seed-capsule-glow_0..5    24x16, additive: the capsule's beacon blinking under the frame (6 fps)
   assets/pivots/shellback.json   per heading the vent's centre (px from the 112x112 frame's top left) and
@@ -140,6 +143,8 @@ def _yaml(path):
 
 # A trigger look over contents with sprites of their own (vanguard.pipeline.SpriteUse.TRIGGER_CONTENTS).
 TRIGGER_CONTENTS = {"greenhouse-frame": "seed-capsule"}
+# A trigger look on a ground decal of its own (vanguard.pipeline.SpriteUse.TRIGGER_PADS; step GK claims the pad).
+TRIGGER_PADS = {"greenhouse-frame": "greenhouse-pad"}
 
 
 def level_sprite_roots():
@@ -154,6 +159,8 @@ def level_sprite_roots():
                 roots.add(str(g["sprite"]))
                 if str(g["sprite"]) in TRIGGER_CONTENTS:
                     roots.add(TRIGGER_CONTENTS[str(g["sprite"])])
+                if str(g["sprite"]) in TRIGGER_PADS:
+                    roots.add(TRIGGER_PADS[str(g["sprite"])])
         block = data.get("allies")
         if isinstance(block, dict) and block.get("units"):
             for unit in block["units"]:
@@ -773,9 +780,13 @@ def shellback_intel_model():
 # =========================================================================== the secret
 
 def frame_scene(state):
-    """The collapsed greenhouse frame (state 0-2) over the capsule, or its lifted wreck (3): a scorched
-    concrete pad, the tube greenhouse's white ribs fallen half flat across it, leaning, a ridge beam, glass
-    shards, the capsule's amber bands showing between the ribs."""
+    """The collapsed greenhouse frame (state 0-2) over the capsule, or its lifted wreck (3): the tube
+    greenhouse's white ribs fallen half flat, leaning, a ridge beam, glass shards, the capsule's amber bands
+    showing between the ribs. State ``"pad"``: the scorched concrete pad under it alone (round 44 G.c: the pad
+    is its own ground decal, so the frame's sprite is transparent round the structure and its hit flash follows
+    the structure's shape)."""
+    pad_only = state == "pad"
+    state = 3 if pad_only else state
     rib = Material((0.86, 0.86, 0.82), metal=0.3, shininess=60, spec=0.6)
     burnt = Material((0.32, 0.29, 0.26), metal=0.2, shininess=20, spec=0.2)
     pad = Material((0.5, 0.45, 0.4), metal=0.0, shininess=10, spec=0.1,
@@ -796,7 +807,9 @@ def frame_scene(state):
         return np.minimum.reduce([sd_capsule(p, pts[j], pts[j + 1], 0.85) for j in range(6)])
 
     def scene(p):
-        items = [(sd_box(p, (0, 0, 0.5), (29, 21, 0.5), 1.0), 2)]
+        if pad_only:
+            return union((sd_box(p, (0, 0, 0.5), (29, 21, 0.5), 1.0), 2))
+        items = []
         if state < 3:
             items.append((sd_capsule(p, (-8, -2, 3.4), (8, -2, 3.4), 3.0), 4))
             for k in range(3):
@@ -829,7 +842,7 @@ def frame_frame(state):
         dark = (n > 0.62 - 0.08 * state) & (a[..., 3] > 0)
         a[dark, :3] *= 0.45
         img = Image.fromarray(a.astype(np.uint8), "RGBA")
-    if state == 3:
+    if state == "pad":                                # the soot of the burnt-out greenhouse
         a = np.array(img).astype(np.float64)
         yy, xx = np.mgrid[0:h, 0:w]
         soot = np.hypot((xx - w / 2) / 14, (yy - h / 2) / 10) < 1
@@ -911,7 +924,7 @@ def build(only=None):
                       + [("curl", k, j) for k in range(HEADINGS) for j in range(len(CURL))]
                       + [("roll", k, j) for k in range(HEADINGS) for j in range(ROLL)]
                       + [("belly", k, 0) for k in range(HEADINGS)] + [("husk", k, 0) for k in range(HEADINGS)]),
-        "props": [("frame", s) for s in range(4)],
+        "props": [("frame", s) for s in range(4)] + [("frame", "pad")],
     }
     wanted = [g for g in groups if not only or g in only]
     jobs = [j for g in wanted for j in groups[g]]
@@ -954,10 +967,11 @@ def build(only=None):
         sets["shellback-vent-dead"] = artkit.quantize_set([vent_dead()], 16)
     if "props" in wanted:
         sets["greenhouse-frame"] = artkit.quantize_set(got([("frame", s) for s in range(4)]), 32)
+        sets["greenhouse-pad"] = artkit.quantize_set(got([("frame", "pad")]), 24)
         sets["seed-capsule"] = artkit.quantize_set([capsule()], 24)
         sets["seed-capsule-glow"] = [capsule_glow(k) for k in range(6)]
     held = []
-    singles = {"dome-pip", "choir-herald-aura", "shellback-vent-dead", "seed-capsule"} | {
+    singles = {"dome-pip", "choir-herald-aura", "shellback-vent-dead", "seed-capsule", "greenhouse-pad"} | {
         f"{n}-flash" for n in DOMES} | {f"{n}-crack-{h}" for n in DOMES for h in (1, 2, 3)}
     for name, frames in sets.items():
         where = write(name, frames, single=name in singles)

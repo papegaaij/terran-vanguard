@@ -129,7 +129,9 @@ final class LevelRules {
                         beforePhase,
                         secondary.tag().orElse(""))
                 // M7 part F (Level 19's "12 of 14"): how many of an escapes objective's units may get away.
-                .withEscapesAllowed(secondary.escapesAllowed());
+                .withEscapesAllowed(secondary.escapesAllowed())
+                // Step SIM-K (Level 21's "the boss and its debris not counted"): a kill ratio without its bosses.
+                .withBossesCounted(secondary.bossesCounted());
     }
 
     /** What a radio cue's {@code requires} or {@code requires_not} names, as the simulation's fitted bits (0 for none). */

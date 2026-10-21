@@ -143,17 +143,17 @@ The production files (M5 part D, straight to production per D10 = a; approved as
   **"Homing ignores motes"**: the seekers never target a mote, and direct fire still hits it. Step SW
   added it as the stat block's `seekers_ignore: true` (the [schemas](../../../tech/architecture/README.md#data-file-schemas)),
   honoured by the player's homing shots, torpedoes and turrets and by Rook. The turrets count as seekers
-  in our reading, pending the user's review in round 43. Levels 10, 11, 17 and 18 fly motes too. Their
+  in our reading, accepted in round 43 (2026-10-20). Levels 10, 11, 17 and 18 fly motes too. Their
   measures moved a little and every rule still holds: Level 11 unchanged; Level 10's pacing flight at
   medium 2.04 on the screen (was 1.89); Level 17's floor 2.59 (was 2.60, least 2.5); Level 18's floor
   2.69 (was 2.77). Level 20's numbers are in its
   [README](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm).
-- 2026-10-20 (step R43): the pursuit flies (steps PG3, G4, GB, SW; its Implementation item ticked); whether the swarm's data levers (band lag 30 px/s, a lunge every 4 s) are applied and whether the turrets count as seekers are questions Q.1 and Q.3 of [round 43](../../../concept-rounds/round-43/README.md), pending the user's review.
+- 2026-10-20 (step R43): the pursuit flies (steps PG3, G4, GB, SW; its Implementation item ticked); whether the swarm's data levers (band lag 30 px/s, a lunge every 4 s) are applied and whether the turrets count as seekers are questions Q.1 and Q.3 of [round 43](../../../concept-rounds/round-43/README.md), accepted in round 43 (2026-10-20).
 - 2026-10-20 (user, round 43 Q.1 **both levers**; step LQ): the `pursuit` block's `lag` 90 → **30** px/s and
-  `lunge_every` 6 → **4** s, data only. The hooks keep the medium cadence's ratio (our reading, pending the user's
-  review): easy 8 → **5.5** s (tell 1.2 s), hard 4.5 → **3** s; a lunge, its dive and climb last longer than that,
+  `lunge_every` 6 → **4** s, data only. The hooks keep the medium cadence's ratio (our reading, accepted in round 43 (2026-10-20)): easy 8 → **5.5** s (tell 1.2 s), hard 4.5 → **3** s; a lunge, its dive and climb last longer than that,
   so on hard the next tell follows as soon as the flock is back in the band. Measured together on Level 20
   (`levelReport`, the plan's fit, 3 seeds): motes on the screen at medium 0.77 → **1.03** (easy 0.35 → 0.44, hard
   1.03 → 1.68), lunges with motes 2–4 of 18 → **8–9 of 27–28** a run (easy 1 of 13 → 3–5 of 19–20, hard 6–7 of 23–24
   → 16–21 of 33–35); the autopilot still wins every seed on every difficulty. Numbers in
   [Level 20](../../../campaign/act-3-red-dust/level-20-retreat-from-hellas/README.md#the-pursuit-swarm).
+- 2026-10-20 (user, round 44, closed): **L.a** the two levers (lag 30 px/s, a lunge every 4 s at medium: 1.03 motes on the screen, 8-9 of 27-28 lunges with motes) accepted, **L.b** easy lunges every 5.5 s and hard every 3 s, **L.c** the reversed level's small-unit limit raised to 2.6x Level 10's — as recommended.

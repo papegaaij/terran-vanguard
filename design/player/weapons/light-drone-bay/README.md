@@ -117,8 +117,7 @@ offsets in `pivots/pods.json`).
 
 - 2026-10-12 (overnight design phase): promoted from the weapons roster with full per-level
   numbers in Act 1 terms (10 → 30 DPS, 8 → 12 hits, rebuild 6 → 4 s, draw 2 → 3, 2 000 cr, L15);
-  the drone aims at a convergence point so its orbit does not waste its shots. Pending the user's
-  review in concept round 36.
+  the drone aims at a convergence point so its orbit does not waste its shots. Accepted in round 36 (2026-10-13).
 - 2026-10-12 (overnight design phase): concept round 36 proposes an a/b of the drone and its
   bay; `art: proposed`, pending the user's choice.
 - 2026-10-13 (user, round 36): approved (D.23). G.2 = a: the disc drone with the dock-ring bay

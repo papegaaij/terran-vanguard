@@ -107,16 +107,16 @@ level's round.
 
 - 2026-10-12 (overnight design phase): promoted from the [ground roster](../README.md) to a draft
   spec with the round-06 concept as its chosen art. M18 = a taken as the recommended option,
-  pending the user's review in round 36. Our proposals: head 80, segment 8, tail 20; the rear
+  accepted in round 36 (2026-10-13). Our proposals: head 80, segment 8, tail 20; the rear
   half of a cut dies (no regrow, unlike the Coilwyrm); bounty 48 whole, 60 in parts (the multi-part
   rule); the 0.25 s pore wave with a 2.0 s rest.
-- 2026-10-13 (user, round 36): approved (D.11). Q.22c yes: once per level it crosses the canyon floor from wall to wall, its body across the path. MA.1 = b (the canyon walls rise toward the camera; by the tower rule nothing gameplay touches climbs a face): its path keeps to the canyon floor and the walls' foot, no longer up the wall faces (an adaptation made at the close, pending the user's review).
+- 2026-10-13 (user, round 36): approved (D.11). Q.22c yes: once per level it crosses the canyon floor from wall to wall, its body across the path. MA.1 = b (the canyon walls rise toward the camera; by the tower rule nothing gameplay touches climbs a face): its path keeps to the canyon floor and the walls' foot, no longer up the wall faces (an adaptation made at the close, accepted in round 37 (2026-10-13)).
 - 2026-10-14 (M7 part C, step C2): the stat block moved into [data.yaml](data.yaml): the `crawl`
   movement (the path is the wave's), the chain's `cut` (1.0 s) and `width` (hit box 36×24), the `pores`
-  attack with its easy and hard hooks. The credits as data (pending the user's review in round 39): a
+  attack with its easy and hard hooks. The credits as data (accepted in round 39 (2026-10-18): a
   head-first kill pays the whole 48 as the head's 30 and its first bonus 18; taken apart 60, the
   tail paying 2 and its first bonus 4 when it goes first ("6 against a segment's 2").
-- 2026-10-14 (M7 part C, step C5): every item built (steps C3/C4 (simulation, data), G2 (looks, sounds)), flown in Level 16's capture (round 39); the art and the defaults pending the user's review in round 39.
+- 2026-10-14 (M7 part C, step C5): every item built (steps C3/C4 (simulation, data), G2 (looks, sounds)), flown in Level 16's capture (round 39); the art and the defaults accepted in round 39 (2026-10-18).
 - 2026-10-18 (user, round 39): closed. The production art `threadcrawler-final-r39-a` approved as final (F.4),
   so `art: final`; the credits as data (the whole 48 as the head's first bonus), the up-canyon crawl paths
   starting 30 rows higher and B.2/B.4's choices (the pore glow from the first frame, the cut members unhittable

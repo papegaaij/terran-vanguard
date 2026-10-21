@@ -164,7 +164,7 @@ Deflector Pod's field arc catching two bullets (white flash) at t 51.2–51.6. T
 150–178 (the frigate fight to its death), Level 07 t 107–113, Level 05 hard t 23–36 (drone break and
 rebuild), Level 05 t 48.5–54 (the catches).
 
-Findings (pending the user's review): the beam's tint on the tentacle reads as a flat pure-white
+Findings (accepted in round 34 (2026-10-12)): the beam's tint on the tentacle reads as a flat pure-white
 silhouette over a second rather than a tint; on the frigate's hull the column just ends, with no
 contact flare; the column runs on past the Brood Carrier in phase 1 (on `high-air`, which the Ion
 Beam reaches) and past the Siege Spire at t 114: to check whether these parts are meant to stop it.

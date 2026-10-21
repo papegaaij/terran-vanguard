@@ -60,6 +60,9 @@ final class GroundPasses {
     /** M5 part E: a ground object's foam collar ({@code <look>-collar}, the floating containers), by its look. */
     private final Map<String, Array<AtlasRegion>> groundCollars = new HashMap<>();
 
+    /** Round 44 G.c: a trigger look's ground decal under it ({@link LevelRenderer#TRIGGER_PADS}), by its look. */
+    private final Map<String, AtlasRegion> groundPads = new HashMap<>();
+
     /** M5 part E: a sunken trigger's rise once freed ({@code <look>-rise}), by its look. */
     private final Map<String, Array<AtlasRegion>> groundRises = new HashMap<>();
 
@@ -120,6 +123,10 @@ final class GroundPasses {
             } else if (!look.equals(GroundObjectSpec.CARGO_CONTAINER) && sprites.has(look)) {
                 triggerLooks.add(look);
                 groundLooks.computeIfAbsent(look, sprites::frames);
+                String pad = LevelRenderer.TRIGGER_PADS.get(look);
+                if (pad != null && sprites.has(pad)) {
+                    groundPads.computeIfAbsent(look, name -> sprites.region(pad));
+                }
                 if (sprites.has(look + "-glint")) {
                     groundGlints.computeIfAbsent(look, name -> sprites.frames(name + "-glint"));
                 }
@@ -166,6 +173,11 @@ final class GroundPasses {
             }
             int damaged = object.damaged() ? 1 : 0;
             TextureRegion frame;
+            AtlasRegion pad = ownLook ? groundPads.get(object.spec().look()) : null;
+            if (pad != null) {
+                // Round 44 G.c: its scorched pad under every state (the frame's hit flash then follows its ribs only).
+                drawCentred(batch, pad, object.renderX(alpha), object.renderY(alpha));
+            }
             if (ownLook) {
                 // Its own frames: hit after the first hit (with three frames), the last once spent.
                 Array<AtlasRegion> frames = groundLooks.get(object.spec().look());

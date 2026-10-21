@@ -7,7 +7,7 @@ bosses' `concept/`); its prompt stays valid for the look.
 
 Round 36, production art (M5 part H step H2; H8 = a: straight to production from the chosen concept;
 H1 = a, H4 = a: one anchored boss without lanes, all six roots on the screen from the start, the
-phase-3 lift; the user is on vacation, so all of it is pending the user's review). Rendered by
+phase-3 lift; the user is on vacation, so all of it is accepted in round 34 (2026-10-12)). Rendered by
 [tools/art/siege_spire.py](../../../../../tools/art/siege_spire.py) (`python3 tools/art/siege_spire.py`;
 the frames go to `assets/` only with `--assets`, in the content step's time: no data claims them yet,
 and `packAtlases` fails on sprites no data claims). Not prompted: the round-06 models
@@ -42,7 +42,7 @@ stand-ins (`tools/concept/bosses_r06.py`); the Wraiths are the production `wrait
 
 ## siege-spire-death-final-r36-a
 
-Production art, M5 part H (round 36; H8 = a, no a/b for the death, pending the user's review). Not a
+Production art, M5 part H (round 36; H8 = a, no a/b for the death, accepted in round 36 (2026-10-13)). Not a
 mockup: the sheet and GIF of `assets/sprites/siege-spire-death_0..7`, rendered by
 [tools/art/siege_spire_death.py](../../../../../tools/art/siege_spire_death.py) (`python3
 tools/art/siege_spire_death.py --assets`, after `siege_spire.py --assets`) from the production free
@@ -57,7 +57,7 @@ generator now makes b.
 
 ## siege-spire-death-final-r36-b
 
-Production art, the round 34 follow-up (step K3, two passes; pending the user's review). The user:
+Production art, the round 34 follow-up (step K3, two passes; accepted in round 34 (2026-10-12)). The user:
 "Split the arms and let them fall down"; "break it into natural pieces, detach the arms; it sits on
 land, so it collapses, it does not sink and drift". Not a mockup: the sheet and GIF of
 `assets/sprites/siege-spire-death_0..7`, rendered by

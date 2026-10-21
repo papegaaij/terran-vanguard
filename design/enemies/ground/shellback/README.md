@@ -118,11 +118,11 @@ act's art track in its level's round.
 
 - 2026-10-12 (overnight design phase): promoted from the [ground roster](../README.md) to a draft
   spec with the round-05 concept as its chosen art. M18 = a taken as the recommended option,
-  pending the user's review in round 36. Our proposals: body 120 and vent 24 as parts, the curl
+  accepted in round 36 (2026-10-13). Our proposals: body 120 and vent 24 as parts, the curl
   once at 40 %, armoured while rolling, crushing ally structures and scenery but not enemies,
   the ×1.5 belly window, bounty 48 whole / 52 in parts.
 - 2026-10-13 (user, round 36): approved (D.12). Q.22d yes: the roll follows its authored path, it does not steer toward the domes. Its hooked mortar and roll hurt Level 17's domes (Q.17a).
-- 2026-10-18 (M7 part D, step D2; pending the user's review in round 40): the stat block moved into
+- 2026-10-18 (M7 part D, step D2; accepted in round 40 (2026-10-19): the stat block moved into
   [data.yaml](data.yaml): the body (`vital`, 120 HP, 40 with a `first_bonus` of 8: a body-first kill pays the
   whole 48) and the vent (`destroyable`, 24 HP, 12, `attack: mortar`: its loss silences the mortar) as a
   `part_list` on a unit that is not a boss; the new `roll` block (`below` 0.4, `curl` 0.6 s, 2.5 s at 140 px/s,
@@ -132,10 +132,9 @@ act's art track in its level's round.
 - 2026-10-18 (M7 part D, step D4): the vent's offset moved from 30 to 15 px towards the tail, where the production
   sprite draws it (`assets/pivots/shellback.json`: 14.6 px at every heading). Either way its 28 px box lies inside
   the body's 84 px box at the rear of the back, so a shot from below meets the body first and no forward shot reaches
-  the vent while the Shellback walks down the screen (Level 17's autopilot shot none); pending the user's review in
-  round 40 (the part's hit test, or the vent's place).
+  the vent while the Shellback walks down the screen (Level 17's autopilot shot none); accepted in round 40 (2026-10-19) (the part's hit test, or the vent's place).
 - 2026-10-19 (user, round 40, F.c): the final art approved (`art: final`); R.a = a: a shot inside the vent's box hits the vent first, from any side (queued, Level 17's Implementation); R.e: a Shellback shot near the bottom rolls a shorter way (queued).
-- 2026-10-19 (step D6, round 40 K.a, R.a, R.c, R.e; pending the user's review): weaker so a careful pilot destroys
+- 2026-10-19 (step D6, round 40 K.a, R.a, R.c, R.e; accepted in round 40 (2026-10-19)): weaker so a careful pilot destroys
   it: body 120 → 90, vent 24 → 16, curl and uncurl 0.6 → 0.4 s (Level 17's autopilot kills 37 of 40 at medium over
   8 seeds, was 8); a shot whose line crosses the vent hits the vent first, from any side; the roll's new `belly_row`
   (200 px above the bottom edge) ends a roll drifting down the screen early so its belly shows; the roll crushes a

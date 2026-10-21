@@ -2,8 +2,8 @@
 title: Air enemies
 design: approved
 implementation: in-progress
-art: chosen
-updated: 2026-10-19
+art: final
+updated: 2026-10-20
 ---
 
 # Air enemies
@@ -179,5 +179,6 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Mars; g
   is narrowed to snakes and swarms (D8 = a: the route as data), streams keeping their shapes.
 - 2026-10-12 (overnight design phase): Act 3 units promoted to draft specs (Choir Herald, Ghost
   Drone) and the new Dust Kite (M10 = b, Act 3's popcorn; name pending); concept round 36 proposes
-  the Choir Herald, Ghost Drone and Dust Kite a/b, pending the user's review.
+  the Choir Herald, Ghost Drone and Dust Kite a/b, accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the Act 3 air units approved (D.15–D.17), the Dust Kite's name included. Picks: Choir Herald **b** (seraph), Ghost Drone **a** (facet dart, with the eye and running lights fix U.5 for the art step), Dust Kite **b** (crescent sail). The rejected variants moved to `concept/rejected/`.
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

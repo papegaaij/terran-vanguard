@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
+import vanguard.sim.BreachArena;
 import vanguard.sim.Loadout;
 import vanguard.sim.Rules;
 import vanguard.sim.SetPiece;
@@ -78,27 +79,39 @@ class Level21Test {
 
     /**
      * The slowly scrolling arena (H.7a): from the boss's arrival the level clock holds at the arena's end while the
-     * ground crawls on at 20 px/s; the kill jumps the clock to the end (section 6, the settling dust).
+     * ground crawls on at 20 px/s; the kill jumps the clock to the end (section 6, the settling dust). Step SIM-K (round
+     * 44, K.c): the ground stands still while the mouth is out of the sand. Round 44 K.h: the kill ratio leaves the
+     * boss out (step L21R, round 44 Q.1: 168 enemies at medium, the 65 % target 110).
      */
     @Test
     void theArenaCrawlsWhileTheColossusLives() {
         Sortie sortie = sortie(content, 2185, Difficulty.MEDIUM, true);
         SetPiece boss = null;
         int crawled = 0;
+        int still = 0;
         int steps = 0;
         while (!sortie.complete() && steps++ < MAX_STEPS) {
             sortie.step(Autopilot.commands(sortie));
             boss = ColossusPlay.breachingBoss(sortie);
             if (boss != null && boss.engaged() && sortie.realSeconds() > ARENA_START + 10) {
                 assertTrue(sortie.crawling(), "crawling at " + sortie.realSeconds());
-                assertEquals(20, sortie.groundSpeed(), 1e-9, "the crawl at " + sortie.realSeconds());
+                BreachArena.Phase phase = boss.breach().orElseThrow().phase();
+                boolean out = phase != BreachArena.Phase.BURIED && phase != BreachArena.Phase.TELL;
+                if (out) {
+                    assertEquals(0, sortie.groundSpeed(), 0, "still under the risen mouth at " + sortie.realSeconds());
+                    still++;
+                } else if (Math.abs(sortie.groundSpeed() - 20) < 1e-9) {
+                    crawled++;
+                }
                 assertTrue(sortie.levelSeconds() <= ARENA_END + 1e-9, "the clock held at " + sortie.levelSeconds());
-                crawled++;
             }
         }
         assertTrue(sortie.complete(), "completed");
         assertTrue(crawled > 0, "the fight crawled");
+        assertTrue(still > 0, "and stood still");
         assertTrue(sortie.setPiece(0).destroyed(), "the Colossus killed");
+        assertEquals(168, sortie.enemyTotal(), "the boss not counted");
+        assertEquals(110, sortie.requiredKills());
     }
 
     /**

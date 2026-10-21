@@ -2,9 +2,9 @@
 title: Music
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../campaign]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # Music
@@ -748,3 +748,4 @@ Prompts: [concept/prompts.md](concept/prompts.md#music-r41-a--track-9-grey-signa
   level (0.8, so the handover sounds as the listening aid), carries on under the act summary page (which
   had no music of its own after the jingle), and fades out over 0.5 s when the player leaves, the next
   screen waiting for the fade; the act outro keeps its act-complete fanfare.
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

@@ -795,17 +795,18 @@ final class EventEffects {
      * M7 part H, step HB: the Dust Colossus's death (design/enemies/bosses/dust-colossus, Death: {@code huge}, "the
      * last mouth rears up and shudders, the sand splits along the whole ridge, chained eruptions of dust and lime ichor
      * over 3 s, the mouth sinks into a collapsing crater; screen flash at the chain's end; credit shower"): its death
-     * frames, the split ridge glowing, its eruptions along it and the crater and the furrow are {@code ColossusLooks}';
-     * here the white flash at the chain's end (round 42's local flash, as the Siege Spire's: a glow round the mouth,
-     * not the whole field washed white) and the credit shower after it. Its sound is its own death ({@code BossCues}:
-     * the chained eruptions and the blast in the file), so no chained bursts' sounds.
+     * frames, the split ridge glowing and the crater and the furrow are {@code ColossusLooks}'; step GK: its 4.5 s
+     * death throe ({@code ColossusThroe}, round 44 K.b) runs past the simulation's 3 s chain, so the white flash (round
+     * 42's local flash, as the Siege Spire's: a glow round the mouth, not the whole field washed white) comes at its
+     * 4.2 s and the credit shower at its end ({@link LevelRenderer#colossusFlashTicks()}, {@link
+     * LevelRenderer#colossusShowerTicks()}). Its sound is its own death ({@code BossCues}: the chained eruptions and the
+     * blast in the file, 6.1 s), so no chained bursts' sounds.
      */
     private void colossusDeath(int k, double x, double y) {
         SetPiece piece = sortie.setPiece(k);
-        int chain = LevelRenderer.chainTicks(piece);
-        showerDelay = chain;
+        showerDelay = LevelRenderer.colossusShowerTicks();
         if (LevelRenderer.flashesAtDeath(piece)) {
-            screenFlash.startAt(chain, x, y);
+            screenFlash.startAt(LevelRenderer.colossusFlashTicks(), x, y);
         }
     }
 

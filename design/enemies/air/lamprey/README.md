@@ -145,7 +145,7 @@ Chosen concept: [lamprey-r06-a.png](../concept/lamprey-r06-a.png), [lamprey-r06-
   Lampreys do not collide with the ship; several latched ones each drain at their rate. The
   `data.yaml` waits for step 4 (the strict loader rejects unknown keys, and every enemy's data file
   needs its portrait and sprites in the game's tests).
-- 2026-10-11: M5 part F step 3 (simulation built; pending the user's review in the combined round):
+- 2026-10-11: M5 part F step 3 (simulation built; accepted in round 34 (2026-10-12):
   a Lamprey still flying in before its chase starts (a swarm member's delay) latches on a touch too;
   the reversals count only while something is latched (forgotten at the first latch and at each
   shake-off); the drain takes nothing in the mercy time after an armour hit (the regeneration stays
@@ -154,13 +154,12 @@ Chosen concept: [lamprey-r06-a.png](../concept/lamprey-r06-a.png), [lamprey-r06-
   passes him). The data's `spots` are `[dx, dy]` px from the ship's centre with y **up**, as the
   weapons' muzzles: left `[-22, -13]`, right `[21, -13]`, tail `[0, -35]` (the pivots file is in image
   coordinates, y down).
-- 2026-10-11: M5 part F step 4 (pending the user's review in the combined round): the `data.yaml`
+- 2026-10-11: M5 part F step 4 (accepted in round 34 (2026-10-12): the `data.yaml`
   with `movement.chase` (`speed`, `turn_rate` °/s, `seconds`), the top-level `latch` block (`slots`,
   `spots.left/right/tail` as `[dx, dy]` y up, `damage_factor`, `shake.reversals/within`, `stun`,
   `throw`), the `drain` attack (`rate`, nothing else) and the hooks `drain` and `latch_slots`;
   effective traits `homing`, `side`, `rear`, `area`; the intel portrait nose down in swim frame 1.
-- 2026-10-11: M5 part F step 6, its looks in the game (pending the user's review in the combined
-  round 34; latch look **a**, the "gulp", in the game, b only in the review files): chasing, flying
+- 2026-10-11: M5 part F step 6, its looks in the game (accepted in round 34 (2026-10-12); latch look **a**, the "gulp", in the game, b only in the review files): chasing, flying
   on and fleeing with its 16 angles and its shadow; latched at the ship's position plus its spot,
   over the hull and without a shadow, `lamprey-latched_<spot × 4 + frame>` at 10 fps (each Lamprey
   at its own phase), the ship's shield ring pulsing 0.55 / 0.3 / 0.12 / 0 with the gulp (the
@@ -181,7 +180,7 @@ Chosen concept: [lamprey-r06-a.png](../concept/lamprey-r06-a.png), [lamprey-r06-
 - 2026-10-12 (user, [round 34](../../../concept-rounds/round-34/README.md)): the production sprites (12.2a) and the intel portrait approved as
   **final**, so `art: final`; the latch look **b** as above (a's files moved to `concept/rejected/`); the
   latch and drain sounds stay **a**; the build choices accepted but (b) as above. `design: approved`.
-  Pending the user's review: b's latch spots sit 1 px off the data's (step K3).
+  Accepted in round 34 (2026-10-12): b's latch spots sit 1 px off the data's (step K3).
 - 2026-10-13 (user, round 36 L.5): the data's latch `spots` move 1 px to match look b's pivots
   (`assets/pivots/lamprey.json` left `[-21, 13]`, right `[20, 13]`, tail `[0, 34]`, y down): left
   `[-21, -13]`, right `[20, -13]`, tail `[0, -34]` (y up). The siphon's glow (14 to 17 px from the

@@ -135,6 +135,15 @@ public final class Sortie {
     private final SetPiece breachBoss;
     /** M7 part H: whether the arena crawls ({@link Section#crawls()}): its ground scrolls on while the clock is held. */
     private final boolean crawling;
+    /**
+     * Step SIM-K (round 44, K.c): a crawling arena's ground stands still while the breaching boss is out of the sand:
+     * how far its crawl is eased in, steps (0 still, {@link #crawlEaseTicks} at full speed; smoothstep between).
+     */
+    private int crawlLevel;
+
+    private final int crawlEaseTicks;
+    /** Step SIM-K: the sets pieces the level's enemy total counts (its bosses left out when the secondary says so). */
+    private final int countedPieces;
 
     /** The boss whose arrival records the checkpoint (the first boss); -1 without one. */
     private final int checkpointBoss;
@@ -316,6 +325,15 @@ public final class Sortie {
         arenaStartTicks = arenaStart;
         arenaSpeed = arenaSpeedFound;
         crawling = crawls;
+        crawlEaseTicks = Math.max(1, SimStep.ticks(CRAWL_EASE_SECONDS));
+        crawlLevel = crawlEaseTicks;
+        int counted = setPieces.length;
+        if (!script.objectives().secondary().countsBosses()) {
+            for (SetPiece piece : setPieces) {
+                counted -= piece.spec().isBoss() ? 1 : 0;
+            }
+        }
+        countedPieces = counted;
         double hold = 0;
         double easeOut = 0;
         for (int i = 0; i < script.sections().size(); i++) {
@@ -774,6 +792,11 @@ public final class Sortie {
                 rampTicks = -1;
             }
         }
+        if (crawling) {
+            // Step SIM-K: the crawl eases to a stop while the breaching boss is out of the sand, and back.
+            crawlLevel = Math.clamp(crawlLevel + (groundStill() ? -1 : 1), 0, crawlEaseTicks);
+            scrollStep *= crawlFactor();
+        }
         groundScroll += scrollStep;
         if (surfaceZones.active()) {
             surfaceZones.scroll(groundScroll);
@@ -1133,6 +1156,19 @@ public final class Sortie {
         return crawling;
     }
 
+    /**
+     * Step SIM-K: whether the breaching boss wants a crawling arena's ground still now or within the crawl's ease
+     * ({@link BreachArena#groundStill(int)}).
+     */
+    private boolean groundStill() {
+        return breachBoss != null && breachBoss.breach().orElseThrow().groundStill(crawlEaseTicks);
+    }
+
+    /** Step SIM-K: the share of its speed a crawling arena's ground scrolls at now, 0–1 (1 in any other level). */
+    public double crawlFactor() {
+        return crawling ? smoothstep((double) crawlLevel / crawlEaseTicks) : 1;
+    }
+
     /** Whether the level clock is halted in the arena now (the boss outlived its arena). */
     public boolean arenaHalted() {
         return clockHeld();
@@ -1156,6 +1192,7 @@ public final class Sortie {
     }
 
     void resetArena() {
+        crawlLevel = crawlEaseTicks;
         arenaJump = false;
         postBossHold = 0;
         rampFrom = 0;
@@ -1278,6 +1315,12 @@ public final class Sortie {
 
     /** Out of the arena the scroll ramps up to the next section's speed over this time. */
     public static final double ARENA_RAMP_SECONDS = 1;
+
+    /**
+     * Step SIM-K (round 44, K.c): a crawling arena's ground eases from its speed to a stop (and back) over this time
+     * as the breaching boss comes out of the sand (and goes back under), s.
+     */
+    public static final double CRAWL_EASE_SECONDS = 0.5;
 
     /**
      * The active edges the wingman flies by ({@link EnemyForce#activeEdges()}); M7 part F: a walking boss's rear; M7
@@ -1634,6 +1677,10 @@ public final class Sortie {
                     .add(arenaJump ? 1 : 0)
                     .add(rampFrom)
                     .add(rampTicks);
+        }
+        if (crawling) {
+            // Step SIM-K: only in a crawling arena's level, so the others hash as before.
+            hash.add(crawlLevel);
         }
         if (holdAfterBoss > 0) {
             // M7 part F: only in a level whose arena holds after its boss, so the others hash as before.
@@ -2279,9 +2326,15 @@ public final class Sortie {
         return sections.size();
     }
 
-    /** The ground layer's current scroll speed in px/s. */
+    /**
+     * The ground layer's current scroll speed in px/s; step SIM-K: in a crawling arena the crawl's speed while the clock
+     * is held, eased to 0 while the breaching boss is out of the sand ({@link #crawlFactor()}).
+     */
     public double groundSpeed() {
-        return scrollSpeed();
+        if (!crawling) {
+            return scrollSpeed();
+        }
+        return (clockHeld() ? arenaSpeed : scrollSpeed()) * crawlFactor();
     }
 
     /** Whether the non-playable launch is still running. */
@@ -2330,10 +2383,14 @@ public final class Sortie {
         return tally.kills();
     }
 
-    /** Every enemy the level sends, its set pieces among them and the boss streams' units let in so far. */
+    /**
+     * Every enemy the level sends, its set pieces among them (its bosses only when the secondary counts them, {@link
+     * Secondary#countsBosses()}) and the boss streams' units let in so far.
+     */
     public int enemyTotal() {
         // M7 part G: less the pursuits' refill motes left out (planned, they never entered).
-        return force.units() - force.skipped() + setPieces.length + streamReleased;
+        // Step SIM-K: its bosses left out when the secondary does not count them (Level 21's Colossus).
+        return force.units() - force.skipped() + countedPieces + streamReleased;
     }
 
     /** Kills needed for the secondary objective. */

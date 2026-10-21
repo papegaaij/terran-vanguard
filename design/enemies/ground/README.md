@@ -2,8 +2,8 @@
 title: Ground enemies
 design: approved
 implementation: in-progress
-art: chosen
-updated: 2026-10-19
+art: final
+updated: 2026-10-20
 ---
 
 # Ground enemies
@@ -147,8 +147,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian
 | [concept/warden-tank-r36-a.gif](concept/warden-tank-r36-a.gif) | Warden Tank, unmarked grey — on a dirt road on Mars (motion) | chosen (round 36, U.6: the unmarked grey livery) |
 | [concept/dust-devil-final-r41-a.png](concept/dust-devil-final-r41-a.png) | Dust Devil final sprites (`tools/art/storm_units.py`, the chosen r06 a): closed spin, rise, open with the lime core, core glow, grit swirls, in / out of the radius, collapse, death light, grit cloud (sheet) | chosen (round 41) |
 | [concept/dust-devil-final-r41-a.gif](concept/dust-devil-final-r41-a.gif) | Dust Devil final: two devils cycling on the eye's dry lake, the grit spiral, pickups pulled in, one killed in its window, 15 fps | chosen (round 41) |
-| [concept/warden-tank-final-r42-a.png](concept/warden-tank-final-r42-a.png) | Warden Tank final sprites, Act 3 grey (`tools/art/warden_tank.py`, the chosen r36 a; held in `build/art-held/` until the tank's `data.yaml` claims the root `warden-tank`): hull 16 headings × 2 tread frames, turret 32 aims at rest / recoil, muzzle flash, turret stub, burnt grey wreck 16 headings (sheet); pending the user's review | proposed |
-| [concept/warden-tank-final-r42-a.gif](concept/warden-tank-final-r42-a.gif) | Warden Tank final: a convoy of three riding a foundry belt, turrets tracking and firing 3-shot bursts (flash, recoil), back up the screen after the ship passes; a turret shot off, a wreck riding on, 20 fps; pending the user's review | proposed |
+| [concept/warden-tank-final-r42-a.png](concept/warden-tank-final-r42-a.png) | Warden Tank final sprites, Act 3 grey (`tools/art/warden_tank.py`, the chosen r36 a; held in `build/art-held/` until the tank's `data.yaml` claims the root `warden-tank`): hull 16 headings × 2 tread frames, turret 32 aims at rest / recoil, muzzle flash, turret stub, burnt grey wreck 16 headings (sheet); accepted in round 42 (2026-10-20) | chosen (round 42, closed: approved as final) |
+| [concept/warden-tank-final-r42-a.gif](concept/warden-tank-final-r42-a.gif) | Warden Tank final: a convoy of three riding a foundry belt, turrets tracking and firing 3-shot bursts (flash, recoil), back up the screen after the ship passes; a turret shot off, a wreck riding on, 20 fps; accepted in round 42 (2026-10-20) | chosen (round 42, closed: approved as final) |
 
 ## Implementation
 
@@ -174,7 +174,8 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../reviews/acts-1-2/README.md).
 - 2026-10-12 (overnight design phase): Act 3 units promoted to draft specs (Burrower, Tendril
   Anchor, Threadcrawler, Shellback, Dust Devil, Warden Tank); concept round 36 proposes the Burrower and
-  Tendril Anchor a/b and the unmarked-grey Warden Tank, pending the user's review.
+  Tendril Anchor a/b and the unmarked-grey Warden Tank, accepted in round 34 (2026-10-12).
 - 2026-10-13 (user, round 36): the Act 3 ground units approved (D.9–D.14). Picks: Burrower **a** (sand maw), Tendril Anchor **a** (polyp clamps); the unmarked grey Warden Tank accepted (U.6). The rejected variants (Burrower b, Tendril Anchor b) moved to `concept/rejected/`. With the canyon walls' b (MA.1) the anchors and the Threadcrawler keep to the walls' foot.
 - 2026-10-18 (user, round 39): the Tendril Anchor's and the Threadcrawler's production art
   (`tendril-anchor-final-r39-a`, `threadcrawler-final-r39-a`) approved as final (F.3, F.4); both parts `art: final`.
+- 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

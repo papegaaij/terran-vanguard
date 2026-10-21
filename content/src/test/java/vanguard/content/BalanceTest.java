@@ -28,9 +28,9 @@ import vanguard.sim.EnemySpec;
  * plan as the balancing sheet:
  *
  * <ul>
- *   <li>the balance plan's purchases (M7 part A: to Level 21, Act 3's items in the complete catalogue)
- *       are in the shop and affordable at every hangar visit, with
- *       the levels' typical hauls as income (budget(n) for a level without data yet) plus the typical
+ *   <li>the balance plan's purchases (M7 part A: to Level 21; M7 part I: in the shop the game runs, every Act 3
+ *       icon is in) are in the shop and affordable at every hangar visit, with
+ *       the levels' typical hauls as income (every level has its data since M7 part H) plus the typical
  *       player's grade bonus (a B, round 34 P3 = A), within the generator's output; on medium with
  *       the repairs of the plan's estimated damage, the ship's and from Level 08 Rook's, on hard
  *       (income × 0.9, repairs 10 cr a point) with the repairs the credits left allow, the
@@ -59,8 +59,8 @@ import vanguard.sim.EnemySpec;
  */
 class BalanceTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
-    /** M7 part A: the complete catalogue, Act 3's items included before their hangar icons. */
-    private static final Catalogue CATALOGUE = Catalogue.complete(CONTENT);
+    /** M7 part I: the shop the game runs (Act 3's hangar icons are all in, so it is the complete catalogue). */
+    private static final Catalogue CATALOGUE = Catalogue.of(CONTENT);
 
     private static final CampaignRules RULES = CampaignRules.of(CONTENT);
 
@@ -151,7 +151,6 @@ class BalanceTest {
             int level,
             double budget,
             int income,
-            boolean haul,
             int before,
             BalancePlan.Visit visit,
             int repairs,
@@ -180,7 +179,7 @@ class BalanceTest {
 
     /**
      * The balancing sheet on a difficulty: the income is the typical haul of the level as the
-     * difficulty builds it (its formation sizes; budget(n) without level data) × the difficulty's
+     * difficulty builds it (its formation sizes) × the difficulty's
      * credit income, the repairs cost the difficulty's price; on another difficulty than medium it
      * repairs what the credits left allow and records the rest as unrepaired.
      */
@@ -227,22 +226,20 @@ class BalanceTest {
                 problems.add("load " + hangar.load() + " MW over the output " + hangar.output());
             }
             double[] dps = dps(campaign.gear().loadout());
-            // M7 part C: a level the mapping does not know yet counts as one without data (Unmapped).
-            Optional<String> key = CONTENT.levelKey(level).filter(Unmapped::mapped);
+            // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
+            // level's typical haul; the fallback to budget(n) for a level without data is gone.
+            String key = CONTENT.levelKey(level)
+                    .filter(Unmapped::mapped)
+                    .orElseThrow(() -> new AssertionError("Level " + level + " has no (mapped) level data"));
             double budget = CONTENT.economy().budget().of(level);
-            // Without level data (Act 3's levels after Level 15 until part C on writes theirs) the income is
-            // budget(n): the budget is the absolute typical haul, act factor included (user decision 2026-10-14,
-            // round 37 R.1 reverted; tools/balance.py's income() agrees); the levels' own data replaces it.
-            int haul = (int) Math.rint(incomeFactor
-                    * key.map(k -> TypicalHaul.of(CONTENT, k, difficulty).typical())
-                            .orElse(Math.rint(budget)));
+            int haul = (int) Math.rint(
+                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
                     level,
                     budget,
                     income,
-                    key.isPresent(),
                     before,
                     new BalancePlan.Visit(visit.spent(), visit.log(), problems),
                     repairs,
@@ -469,11 +466,10 @@ class BalanceTest {
         List<String> problems = new ArrayList<>();
         for (Row row : rows) {
             System.out.printf(
-                    "%02d  | %6.0f | %6d%s | %6d | %5d | %7d | %4d | %4.1f/%-3.0f | %7.1f | %3.0f | %7s | %4.1f | %4.1f | %s%n",
+                    "%02d  | %6.0f | %6d | %6d | %5d | %7d | %4d | %4.1f/%-3.0f | %7.1f | %3.0f | %7s | %4.1f | %4.1f | %s%n",
                     row.level(),
                     row.budget(),
                     row.income(),
-                    row.haul() ? "*" : " ",
                     row.before(),
                     row.visit().spent(),
                     row.repairs(),
@@ -488,9 +484,10 @@ class BalanceTest {
                     String.join("; ", row.visit().log()));
             row.visit().problems().forEach(problem -> problems.add("L" + row.level() + ": " + problem));
         }
-        System.out.println("* the level's typical haul (design/systems/economy); otherwise budget(n); income:"
-                + " the level before's haul plus the typical B grade bonus; repairs: the ship's and Rook's estimate;"
-                + " Rook: his gun's single-target DPS (from Level 08), not in the forward DPS");
+        System.out.println(
+                "Income: the level's typical haul (design/systems/economy) plus the typical B grade bonus, banked"
+                        + " at the next visit; repairs: the ship's and Rook's estimate;"
+                        + " Rook: his gun's single-target DPS (from Level 08), not in the forward DPS");
         return problems;
     }
 

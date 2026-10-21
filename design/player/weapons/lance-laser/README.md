@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-02
+updated: 2026-10-21
 ---
 
 # Lance Laser
@@ -57,7 +57,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 - [x] Layer hit rules for its traits (see Layers hit)
 - [x] Muzzle flash, projectile and impact sprites of its VFX family; sound of its family
 - [x] Behaviour as described above, except:
-- [ ] Terrain walls stop a lance — **later: Act 3** (canyon walls, the first terrain walls)
+- [x] Terrain walls stop a lance (canyon walls and rock islands, Act 3; `LanceWallTest`)
 - [ ] Under water (the [Europa rules](../../../world/europa/README.md#under-water-rules)) — **later: Act 4** (the first level under water)
 - [x] Power draw per level counted in the loadout; upgrades priced as listed
 
@@ -68,3 +68,4 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 - 2026-10-02: Numbers moved into [data.yaml](data.yaml) (M2 data files); the property and per-level tables are rendered from it by `tools/sync_tables.py`.
 - 2026-10-02: M4 part A: flies in the simulation (`vanguard.sim.WeaponSpec` built by `SimSpecs.weapon`), with its effects from `tools/art/weapon_fx.py` and its family's sound; the effects are proposed as final in [concept round 14](../../../concept-rounds/round-14/README.md).
 - 2026-10-02: Concept round 14 closed (user decision): its effects (`tools/art/weapon_fx.py`) approved as **final**, `art: final`.
+- 2026-10-21: Terrain walls stop a lance: verified with the real lance data by `LanceWallTest` (content tests): a lance pierces the unit in front of a rock island and ends at the rock with a spark; the unit behind it takes no damage. The sim already did this (M7 part C, shots stop at rock).

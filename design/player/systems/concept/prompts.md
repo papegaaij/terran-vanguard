@@ -62,6 +62,6 @@ behind the ship, fading), the same moment full frame; the HUD dash pip right of 
 afterimages trailing right, the refused Right double-tap, the other run's Right dash and the pip
 during the double-tap dash. The mp4: Level 05 t 12.8–18, 20–25.4, 28–32 and (second run) 32–36.3.
 
-Findings (pending the user's review): the pip's white "ready" state lasts one captured frame (10
+Findings (accepted in round 34 (2026-10-12)): the pip's white "ready" state lasts one captured frame (10
 rendered frames at about 460 fps uncapped under Xvfb, about 20 ms); see the same note on the cooldown
 ring in [specials-capture-r37-a](../../specials/concept/prompts.md#specials-capture-r37-a).

@@ -1,7 +1,7 @@
 ---
 title: Level 20 – Retreat from Hellas
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/air/mote-swarm, ../../../enemies/air/dust-kite, ../../../enemies/ground/burrower, ../../../enemies/ground/dust-devil, ../../../enemies/bosses/dust-colossus, ../../../player/wingmen, ../../../player/weapons/rear-lance, ../../../story/characters/rook, ../../../world/mars]
 updated: 2026-10-20
@@ -25,7 +25,7 @@ the pursuit swarms' motes.
 phase (2026-10-12) from the act roster and the gap analysis's recommended answers, all kept or
 accepted in the round. M7 part G (step G2, 2026-10-20) moved the numbers into the level's
 [data.yaml](data.yaml): the tables below are rendered from it, the waves re-planned to the Act 2+ floor
-("tougher, not more", count-neutral; see *Waves*), pending the user's review in round 43.
+("tougher, not more", count-neutral; see *Waves*), accepted in round 43 (2026-10-20).
 
 ## Briefing
 
@@ -192,7 +192,7 @@ block (with its easy and hard hooks); each pursuit wave's `pursuit` block gives 
   0.4 motes on average at medium (0.2 easy, 0.8 hard) over its 112 s, and a whole run sees 1–4 lunges:
   the beam takes the entry flock within a second of its entry and the homing pods and Rook take each
   refill as it joins. Neither lever moves it (the band's lag at 15 or 30 px/s instead of 90: the same
-  0.35 motes, 2–3 lunges), so the approved numbers stay; pending the user's review in round 43 with the
+  0.35 motes, 2–3 lunges), so the approved numbers stay; accepted in round 43 (2026-10-20) with the
   captures (the levers left are outside Q.3's: the motes' HP, their refills, or homing that skips them).
 - **Homing ignores the motes** (the user's choice of 2026-10-20): no homing shot, turret or Rook picks a
   mote as a target ([Mote Swarm](../../../enemies/air/mote-swarm/README.md), `seekers_ignore`); the swarm
@@ -203,7 +203,7 @@ block (with its easy and hard hooks); each pursuit wave's `pursuit` block gives 
   1.03), and lunges with motes in the flock 1–2 → **2–4** of 18 a run (easy 1 → 1 of 13, hard 4–7 → 6–7
   of 23). The leader point lunges on with an empty flock, so most of the 18 lunges are empty. The beam
   still melts the entry flock and most refills. The approved pursuit numbers stay. The data levers
-  measured, not applied (pending the user's review in round 43): the band's lag at 30 px/s gives 0.87
+  measured, not applied (accepted in round 43 (2026-10-20): the band's lag at 30 px/s gives 0.87
   at medium (3–6 lunges with motes), a lunge every 4 s gives 0.94 (6–7 of 27).
 - **Both levers applied** (the user's round 43 Q.1; step LQ): the lag 30 px/s and a lunge every 4 s (easy 5.5,
   hard 3), measured together (`levelReport`, the plan's fit, 3 seeds): motes on the screen at medium 0.77 →
@@ -211,7 +211,7 @@ block (with its easy and hard hooks); each pursuit wave's `pursuit` block gives 
   13 → 3–5 of 19–20, hard 6–7 of 23–24 → 16–21 of 33–35). The floor at medium 3.38 → 3.67 on the screen and 34.5 →
   35.6 shots a minute; gaps over 2 s 2 → 0 (easy 1, hard 0); the haul unchanged (typical 2,525, `bounty_scale`
   0.83); the autopilot wins every seed on every difficulty with the secondary met. A small unit lives 2.53× Level
-  10's time (was 2.48×; the limit raised to 2.6×, pending the user's review: see *Decisions*).
+  10's time (was 2.48×; the limit raised to 2.6×, accepted in round 43 (2026-10-20): see *Decisions*).
 
 ## Waves
 
@@ -247,7 +247,7 @@ the screen edges with their meaning by travel.
   rim road), so ground rises during each pursuit. Hard: the extra Wraith pair; easy thinned by the
   formation lever.
 - **Step G4's tuning** (`levelReport -Plevel=20`, the plan's fit, the autopilot's retreat play; two
-  passes, pending the user's review in round 43). Step G2's waves measured 8 gaps over 2 s at medium (the
+  passes, accepted in round 43 (2026-10-20). Step G2's waves measured 8 gaps over 2 s at medium (the
   beam killed each strike wave and the swarm on entry; the lull's three flocks fell to the homing pods
   in about a second each) and a small unit lived 2.5× Level 10's time. Added: three strike waves (t=11.5
   kite stream, 15 kite V, 18.5 kite stream), **Needler pincers from the sides at t=22.5 and 25.5**
@@ -471,7 +471,7 @@ into contact threats it must dodge and shoot once they pass).
 ## Concept art
 
 Production art of M7 part G's round 43 (step ART-G1; the mood from the Hellas mood still in
-[mars](../../../world/mars/README.md), round 36 MA.4), pending the user's review. Prompts:
+[mars](../../../world/mars/README.md), round 36 MA.4), accepted in round 43 (2026-10-20). Prompts:
 [concept/prompts.md](concept/prompts.md). Still to come in part G: the pursuit swarm's band and lunge tell, the
 TOP edge warning, the rear-guard drone (ART-G2) and the round's captures.
 
@@ -491,8 +491,7 @@ TOP edge warning, the rear-guard drone (ART-G2) and the round's captures.
 | [concept/level-20-cache-strobe-r43-a.png](concept/level-20-cache-strobe-r43-a.png) | Two field frames of that clip (lamp lit, dark) + five 1:1 crops of the cache, lit and dark | chosen (round 43: accepted) |
 
 Varga's page image `level-20-filed-plate` was produced early with Level 19's batch (round 42, the walker wreck's
-plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-images-final-r42-a.png); pending the
-user's review.
+plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-images-final-r42-a.png); accepted in round 43 (2026-10-20).
 
 ## Implementation
 
@@ -518,24 +517,24 @@ user's review.
       waves ahead by travel (`Level20Test`), the act HP factor for the Burrower, Dust Devil and Wraith,
       `small_act_hp` (Level 20 in its levels since step G2) — the data written in step G2, measured and
       tuned in step G4 (two passes, pending round 43)
-- [ ] Ground targets, the emergency-cache secret (20 HP trigger, crate 100), the supply drone's armour
+- [x] Ground targets, the emergency-cache secret (20 HP trigger, crate 100), the supply drone's armour
       patch at t=117, the overdrive, the Dust Devil's shield cell
 - [x] Kill-ratio secondary at 65 %, judged at the level end (§1.7); reachable without a mote
       (`Level20Test`), met by the autopilot on every seed and difficulty
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`, with Rook and without)
-- [ ] Threat profile by travel, Varga's four intel lines and Rook's teaser fitting the intel panel
+- [x] Threat profile by travel, Varga's four intel lines and Rook's teaser fitting the intel panel
       (`IntelPanelLayoutTest`)
-- [ ] Briefing: Okafor's page (the fallback, the walker report) and Varga's (the filed plate), each
+- [x] Briefing: Okafor's page (the fallback, the walker report) and Varga's (the filed plate), each
       one screen (`BriefingLayoutTest`), with their images
 - [x] Typical haul within ±5 % of budget(20) = 2,532 with the level's `bounty_scale` (`TypicalHaulTest`:
       0.83, −0.3 %)
-- [ ] Music: track 8's stems by section, the lull's drop; the basin rumble
-- [ ] Easy/hard variations; the autopilot flies the turnabout and the reversed sections with Rook on
-      every difficulty (`--escort none` too); a golden replay of the level — the autopilot's retreat play
+- [x] Music: track 8's stems by section, the lull's drop; the basin rumble
+- [x] Easy/hard variations; the autopilot flies the turnabout and the reversed sections with Rook on
+      every difficulty (`--escort none` too); covered by `Level20Test`'s flights, no golden recording beyond Level 01 — the autopilot's retreat play
       (`RetreatPlay`, step G4: the middle band, the unit it kills soonest with either gun, out of a lunge's
       path, a look-ahead over the bullets from both edges) wins every seed on every difficulty with Rook
-      and without him (`Level20Test`); the golden replay open (step G5)
-- [ ] Production art and captures for part G's round
+      and without him (`Level20Test`); the golden replay is not applicable (only Level 01 has one; `Level20Test`'s same-seed test covers determinism)
+- [x] Production art and captures for part G's round
 
 ## Open questions
 
@@ -544,7 +543,7 @@ user's review.
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the Act 3 roster to a draft level document.
-  Taken as the recommended options, pending the user's review in round 36: M4 = a (the terrain moves
+  Taken as the recommended options, accepted in round 36 (2026-10-13): M4 = a (the terrain moves
   up the screen; the swarm presses from the top, the ambushes come up from the bottom), M5 = a (a
   signed scroll speed per section, entry edges by the sign, front/rear by travel, a TOP warning edge),
   M10 = b (the Dust Kite as the act's popcorn), M12 = a, M13 = a (the walker report on Okafor's
@@ -574,7 +573,7 @@ user's review.
   from it; the waves re-planned to the Act 2+ floor as the user's Q.4 (192 enemies, ≈ 69 a minute;
   eight popcorn threes as firing threes, three nests added, the lull's kite flocks); the beam era's HP
   and `small_act_hp` stated (the approved "keep their HP" was stale); the paper `bounty_scale` 0.77.
-  Choices of the step, pending the user's review in round 43: each pursuit's break-off is its wave's
+  Choices of the step, accepted in round 43 (2026-10-20): each pursuit's break-off is its wave's
   `break_at` (t=108 and t=163; the second breaks off inside section 7, so not "its section's end"); the
   BOTTOM lessons use the existing wave key `warning` on a front wave in a reversed section (no new
   `warn` key); the t=20.5 vanguard Skitters stream 0.6 s apart (all in before the turnabout's zero); the
@@ -582,7 +581,7 @@ user's review.
   `emergency-cache`; the basin rumble as a second ambience loop (`ambience_layers`) and the rim flak as
   `flak` with `band: top`; the threat profile's hazards `reverse scroll`, `fallback under pursuit`.
 - 2026-10-20 (M7 part G, step G4): mapped (`RetreatRules`) and flown by the autopilot's retreat play;
-  measured with `levelReport` and tuned in two passes (pending the user's review in round 43): three
+  measured with `levelReport` and tuned in two passes (accepted in round 43 (2026-10-20): three
   strike waves, Needler pincers at t=22.5 and 25.5, the lull as six kite flocks of 3, the firing threes as
   pairs on every difficulty, three Burrower fields as pairs (197 enemies, ≈ 71 a minute; medium 2 gaps
   over 2 s, hard none); `bounty_scale` 0.83 from the measured haul; `BeamEraHpTest` holds a reversed
@@ -598,8 +597,8 @@ user's review.
   1–2); the floor 3.38 on the screen and 34.5 shots a minute (was 3.15 and 33.1); the small units'
   time 2.48× Level 10's (was 2.30×, limit 2.5); the autopilot wins 3/3 on every difficulty, the
   secondary met 3/3; the haul unchanged (typical 2,525, `bounty_scale` 0.83). No data tuned: the lag
-  and cadence levers are in *The pursuit swarm*, pending the user's review in round 43.
-- 2026-10-20 (M7 part G, step R43): the code and tests of part G are in (reverse scroll, TOP warnings, the pursuit, Rook's retreat play, the kill ratio, the voiced radio: those Implementation items ticked); the art, the voices, the captures, the build choices and five questions (the swarm's levers, the beam-era limit, turrets as seekers, the ridge's data key, the hangar's and briefing's art status) are in [round 43](../../../concept-rounds/round-43/README.md), pending the user's review.
+  and cadence levers are in *The pursuit swarm*, accepted in round 43 (2026-10-20).
+- 2026-10-20 (M7 part G, step R43): the code and tests of part G are in (reverse scroll, TOP warnings, the pursuit, Rook's retreat play, the kill ratio, the voiced radio: those Implementation items ticked); the art, the voices, the captures, the build choices and five questions (the swarm's levers, the beam-era limit, turrets as seekers, the ridge's data key, the hangar's and briefing's art status) are in [round 43](../../../concept-rounds/round-43/README.md), accepted in round 43 (2026-10-20).
 - 2026-10-20 (user, round 43, closed): the backdrop (F.a), the props (F.b) and Okafor's briefing image
   `level-20-hellas-fallback` (F.e) approved as final (`art: final`, their concept rows `chosen`); the voices (V.a-V.g),
   the captures (K.a-K.d) and the build choices (B.a-B.g, every sub-choice) accepted as built. Q.1 **both levers** (the
@@ -608,14 +607,14 @@ user's review.
   key (to build), Q.5 final for the approved items only. The sounds: `basin-rumble` **a**, `swarm-hum` **a**,
   `swarm-lunge` **a** chosen (S.l-S.n). See [round 43](../../../concept-rounds/round-43/README.md).
 - 2026-10-20 (round 43 Q.1, step LQ): **both levers applied** in the Mote Swarm's `pursuit` block (the lag 30 px/s, a
-  lunge every 4 s; the easy and hard hooks 5.5 s and 3 s, keeping the medium cadence's ratio: our reading, pending the
-  user's review) and re-measured together: motes on the screen at medium 0.77 → 1.03, lunges with motes 2–4 → 8–9 a
+  lunge every 4 s; the easy and hard hooks 5.5 s and 3 s, keeping the medium cadence's ratio: our reading, accepted in round 43 (2026-10-20)) and re-measured together: motes on the screen at medium 0.77 → 1.03, lunges with motes 2–4 → 8–9 a
   run, the floor 3.67 and 35.6 shots a minute, no gap over 2 s at medium, the haul unchanged, the autopilot wins
   everywhere (see *The pursuit swarm*). The motes now held in the beam's column take some of its time, so a small unit
   lives **2.53×** Level 10's time (was 2.48×, over Q.2's 2.5): `BeamEraHpTest`'s limit for a reversed level raised to
-  **2.6×**, pending the user's review (the other way out: lower the Needler's and Stinger's HP on this level).
+  **2.6×**, accepted in round 43 (2026-10-20) (the other way out: lower the Needler's and Stinger's HP on this level).
 - 2026-10-20 (round 43 Q.4, step LQ): the travelling ridge's pass is the level key **`ridge`** `{t: 12, seconds: 8,
   from: left, to: right, depth: 70}` (the [schemas](../../../tech/architecture/README.md#data-file-schemas)), read by
   the game's `RidgeLooks` instead of the `basin-rumble` layer's start; the approved track moved into it unchanged
   (the head off the left edge 70 px below the top at t=12, off the right edge 8 s later, the tail gone at t=27).
   Level 21's ridge pass uses the same key, from the right edge.
+- 2026-10-20 (user, round 44, closed): **L.a** the swarm's two levers (the band's lag 90 to 30 px/s, a lunge every 4 s at medium) accepted as built, **L.b** easy 5.5 s and hard 3 s, **L.c** the reversed-level limit of `BeamEraHpTest` raised to 2.6x (the swarm lives longer; the alternative, lowering Level 20's small HP, is not taken), **L.d** the `ridge {t, seconds, from, to, depth}` level key (Level 20's track in its data; Level 21 uses the same key) — all as recommended.

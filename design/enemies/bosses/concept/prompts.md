@@ -134,7 +134,7 @@ four bone mandibles unfold from its rim around a lime throat.
 
 ## revenant-walker-final-r42-a
 
-**Production art, pending the user's review** (step ART-F1, 2026-10-19). The chosen round-36 a
+**Production art, accepted in round 42 (2026-10-20) (step ART-F1, 2026-10-19). The chosen round-36 a
 "Strider heavy" straight to production: the concept's legs, torso layout, materials and missile from
 `tools/concept/bosses_r36.py` imported unchanged, re-laid to the [walker's spec](../revenant-walker/README.md):
 drawn at 72 px per model unit (the concept 92), the round reactor grille split into the **two reactor
@@ -158,9 +158,28 @@ white-yellow core → orange → red) are 2D/model frames for the game to place.
 
 # Round 44 — production art (M7 part H)
 
+## dust-colossus-final-r45-a
+
+**Production art for round 45's review (step ART-K, round 44 K.b), [tools/art/dust_colossus.py](../../../../tools/art/dust_colossus.py)
+(`spine vent throe`).** The user found the phase-2 vents read as turrets popping out of the sand and the death's
+few small blasts too little for the creature. **The spine:** behind every risen edge mouth the Colossus's back
+breaks the sand along the line toward the field's centre (where the vents stand): four armoured segments at 120,
+200, 280 and 350 px, tapering, each a hump of the glossy violet hide under three shingled bone plates (each
+overlapping the next toward the tail) with a low bone keel, violet seams and vein ridges, a sand berm along the
+body's line and sand heaped on and sliding off it as it rises (three rise states, front to tail a beat apart),
+pre-rendered at 16 headings under the fixed key light. **The vents** are organs on the first three segments: a
+squat fleshy chimney broken up through a collar of armour scales, its top a sphincter of five fleshy folds round
+the lime gill throat (shut, up, venting with a gout of ichor, torn open). **The throe** (~4.5 s, my design for the
+user's "something extra"): the forebody rears out of the sand toward the camera (perspective makes it larger than
+the open mouth), its neck's armour rings showing, screams with the teeth white-hot and shudders bleeding ichor;
+the ridge bursts open tail to head in a chain of big sand geysers spraying lime ichor; a fissure ring tears open
+round it (the crust heaving up outside, slumping inside, ichor light in the fresh cracks); rocks flung up rain
+over the field; the forebody collapses back (three frames, then the old sinking frames) into the Level 21
+sinkhole while a soft dust plume rolls out; the white flash. Pending the user's review.
+
 ## dust-colossus-final-r44-a
 
-**Production art, pending the user's review** (step ART-H2, 2026-10-20). The chosen round-36 b "Sinkhole
+**Production art, accepted in round 44 (2026-10-20) (step ART-H2, 2026-10-20). The chosen round-36 b "Sinkhole
 colony" straight to production: the collar, the lime throat in its two rings of bone teeth, the four bone
 mandibles and the eight violet-tipped palps of `tools/concept/bosses_r36.py` (its polar fold, teeth and
 bone/violet/lime scheme imported unchanged), re-laid to the [Colossus's spec](../dust-colossus/README.md): drawn

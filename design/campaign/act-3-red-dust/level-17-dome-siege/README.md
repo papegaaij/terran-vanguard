@@ -1,8 +1,8 @@
 ---
 title: Level 17 – Dome Siege
 design: approved
-implementation: in-progress
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../enemies/air/choir-herald, ../../../enemies/ground/shellback, ../../../enemies/air/spore-bomber, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../allies, ../../../player/wingmen, ../../../world/mars]
 updated: 2026-10-20
 ---
@@ -88,7 +88,7 @@ Rendered from the data; directions are counted by each wave's `from` (the intel'
 - **Primary** `reach-end`: reach the spaceport. The domes never fail the mission: a broken dome
   loses its crops, not lives (the colonists are below ground).
 - **Secondary** "No dome lost" (round 41, the user's playtest 2026-10-19, "both": the secondary and the
-  bombers' run-in below; pending the user's review): **failed** when the first dome breaks, **met** when the
+  bombers' run-in below; accepted in round 41 (2026-10-19)): **failed** when the first dome breaks, **met** when the
   last dome (Eden) leaves the bottom edge (t≈135.8) with all five standing; hits are allowed. Pays **100**
   credits in Act 1 terms (256 in Act 3, the act factor 2.56); the typical haul counts the economy's secondary
   share (50 %). Kind: `standing` (round 41), next to `untouched` (the ally group took no hit: M16 = a's "No dome
@@ -128,7 +128,7 @@ is hooked, the hooked rows in *Waves*; easy unhooks the Shellbacks); the popcorn
 Stingers, the Mantises, the Herald, the Burrowers and the ground nests are never hooked. The hooked bombers from the
 front hold the row 220 px below the top edge (`bomb_row`; 160 until round 40 R.b), a wave's bombers on x
 slots 40 px apart round the dome's x (`bomb_slot`); the side pairs keep their entry row, 140 px. Round 41
-(pending the user's review): a hooked bomber flies **2.5 s on the play field before it may drop**
+(accepted in round 40 (2026-10-19)): a hooked bomber flies **2.5 s on the play field before it may drop**
 (`bomb_run_in`); over a dome before then it keeps its load and steers on to the next one (the t=124 bombers
 dropped on Eden as they entered, before the player could reach them).
 
@@ -178,7 +178,7 @@ with a `bounty_scale` (see *Credit budget*).
   and the **Stinger** take the factor capped at ×3 (`small_act_hp`, step PE17): 12 and 18 HP. The
   Shellback and the Choir Herald are new here.
 - **Density and pacing** (§1.7; step PE17, the user's round 40 P.e "all later levels" and "tougher, not
-  more", pending the user's review): **213 enemies** (waves 196 + ground targets 17) over the 167 s from
+  more", accepted in round 40 (2026-10-19)): **213 enemies** (waves 196 + ground targets 17) over the 167 s from
   the launch, **≈ 77 a minute** at medium (≥ 55; above the act's band 60–72,
   [Act 3](../README.md#density-and-threat-profile); Levels 15 and 16 landed at 99 and 119); a wave every
   3–3.5 s from t=6, the popcorn in small waves (Dust Kite streams and V-wings of 3, the long V-wings and
@@ -414,12 +414,16 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 | [concept/backdrop-final-r40-a.gif](concept/backdrop-final-r40-a.gif) | Level 17 backdrop final: the whole level flown at 0.5x, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
 | [concept/l17-props-final-r40-a.png](concept/l17-props-final-r40-a.png) | The seed-vault secret (`tools/art/siege_units.py`): the collapsed greenhouse frame (whole, hit, badly hit, lifted), the capsule and its glow (sheet) | chosen (round 40, F.d / F.e: approved as final) |
 | [concept/l17-props-final-r40-a.gif](concept/l17-props-final-r40-a.gif) | The frame shot apart and the capsule popping free, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
+| [concept/greenhouse-frame-final-r45-a.png](concept/greenhouse-frame-final-r45-a.png) | Round 44 G.c (`tools/art/siege_units.py props`): the greenhouse frame split off its burnt pad, the frame transparent round the structure, the pad its own ground decal `greenhouse-pad` (64×48), the frame over its pad and the hit flash following the structure (sheet) | proposed |
+| [concept/greenhouse-frame-final-r45-a.gif](concept/greenhouse-frame-final-r45-a.gif) | The frame over its pad shot apart, hit flashes on the structure only, the capsule popping free, 10 fps | proposed |
 | [concept/level-17-capture-r40-a.png](concept/level-17-capture-r40-a.png) | Capture of the game (step D5): twenty frames of the medium run with the plan's fit and Rook (and four of a hard run without firing), the last the debrief | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
 | [concept/level-17-capture-r40-a.mp4](concept/level-17-capture-r40-a.mp4) | Capture of the game with its sound: the whole medium run, then the hard run's domes cracking and breaking and the Herald's rings | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
 | [concept/level-17-fixes-r42-a.mp4](concept/level-17-fixes-r42-a.mp4) | Check capture of the dome fixes (round 42, medium, the plan's L17 fit, the test autopilot): the dome sections with the bombers' run-ins, a dome turning yellow and still counting, the debrief `DOMES STANDING 5 / 5` (172 s with sound) | chosen (round 42, K.c: accepted) |
 | [concept/level-17-fixes-r42-a.png](concept/level-17-fixes-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.c: accepted) |
-| [concept/greenhouse-frame-glow-r44-a.mp4](concept/greenhouse-frame-glow-r44-a.mp4) | The seed vault's glow: the collapsed greenhouse frame drawn with the capsule's `seed-capsule-glow` (it has no glow of its own). **Fire held by the snapshot hook from 66 to 78.5 s**, because in a normal run the autopilot shoots the frame about 1.5 s after it enters (checked in a live run). The frame enters at ≈ 0:01, a small warm-yellow glint at its centre swells and fades slowly (brightest ≈ 0:02.4); fire resumes, the frame's hit flash (a flat white rectangle over the whole sprite box), it breaks at ≈ 0:04.2 and the capsule is caught (+256, ≈ 0:04.5). The glow reads weakly at play size: a soft glint, not a strobe you notice. With sound, 8 s | proposed (round 44) |
-| [concept/greenhouse-frame-glow-r44-a.png](concept/greenhouse-frame-glow-r44-a.png) | Six field frames + five 1:1 crops of the frame at 3× across one swell | proposed (round 44) |
+| [concept/greenhouse-frame-glow-r44-a.mp4](concept/greenhouse-frame-glow-r44-a.mp4) | The seed vault's glow: the collapsed greenhouse frame drawn with the capsule's `seed-capsule-glow` (it has no glow of its own). **Fire held by the snapshot hook from 66 to 78.5 s**, because in a normal run the autopilot shoots the frame about 1.5 s after it enters (checked in a live run). The frame enters at ≈ 0:01, a small warm-yellow glint at its centre swells and fades slowly (brightest ≈ 0:02.4); fire resumes, the frame's hit flash (a flat white rectangle over the whole sprite box), it breaks at ≈ 0:04.2 and the capsule is caught (+256, ≈ 0:04.5). The glow reads weakly at play size: a soft glint, not a strobe you notice. With sound, 8 s | chosen (round 44, G.b: accepted) |
+| [concept/greenhouse-frame-glow-r44-a.png](concept/greenhouse-frame-glow-r44-a.png) | Six field frames + five 1:1 crops of the frame at 3× across one swell | chosen (round 44, G.b: accepted) |
+| [concept/greenhouse-frame-r45-a.mp4](concept/greenhouse-frame-r45-a.mp4) | Round 45 check capture (step H6): the greenhouse frame hit in a normal run, the capsule popping out and caught, 6.5 s with sound | proposed |
+| [concept/greenhouse-frame-r45-a.png](concept/greenhouse-frame-r45-a.png) | Six field frames and seven 2x crops following the frame | proposed |
 
 ## Implementation
 
@@ -442,7 +446,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
       hard (every hard loss Eden at t≈129) (`Level17Test`)
 - [x] The debrief row `DOMES STANDING n / 5` (`Sortie.alliesStanding()`) instead of `DOMES UNTOUCHED` (step RX,
       `LevelScreenSiegeTest`), and the secondary's radio line reworded and voiced for hits allowed: "All five domes
-      still standing. Fine. Earth can stay for dinner." (step VOX-F, 2026-10-19; pending the user's review)
+      still standing. Fine. Earth can stay for dinner." (step VOX-F, 2026-10-19; accepted in round 40 (2026-10-19))
 - [x] The dome secondary measured with the autopilot over several seeds, as Level 11's convoy: the
       hits per dome and the hooked waves tuned so a careful pilot keeps every dome about half the
       time at medium (step D4 measured it: 8/8 on easy, 0/8 at medium and hard; step D6 after round
@@ -471,9 +475,8 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
       2,048 at 0.40, −0.9 %; the perfect run 3,145; step PE17)
 - [x] Music: "Red Dust Run"'s stems by section; the `mars-colony` ambience; the dome and Herald sounds
       (`Level17SoundsTest`)
-- [ ] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on
-      every difficulty (`--escort none` too) (step D5: the variations are in; `Level17Test`'s autopilot
-      flies every difficulty without Rook only, the capture flew medium with him)
+- [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on
+      every difficulty (`--escort none` too) (step D5; `Level17Test` flies every difficulty without Rook, `ActPlaythroughTest` with him: each won first time, M7 part I)
 - [x] Production art and captures for part D's round (steps ART-D and D5; round 40: the art approved as final, `art`
       stays `chosen` until the dome-break redo (S.b) and the part D fixes below land)
 - [x] Part D fixes (round 40 K.a, the user's note: "The second shell creature rolls over a dome and again some time
@@ -498,7 +501,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
       roll's `belly_row` 200 px; `ShellbackTest`, `aShellbacksRollCrushesTheDomeAheadOfIt`)
 - [x] R.f (decided: keep): the dome `ally-hit` / `ally-lost` lines stay event lines (wait for a gap, dropped after 6 s)
       (unchanged; `RadioTimelineLevel17Test`)
-- [ ] The dome-break sound redone as a rumble from a cave-in or collapse recording (S.b, step AUD-S)
+- [x] The dome-break sound redone as a rumble from a cave-in or collapse recording (S.b, step AUD-S; round 41 S.h chose `dome-break-r40-c`)
 
 ## Open questions
 
@@ -507,7 +510,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the Act 3 roster to a draft level document.
-  Taken as the recommended options, pending the user's review in round 36: M16 = a (the dome as a new
+  Taken as the recommended options, accepted in round 36 (2026-10-13): M16 = a (the dome as a new
   ally on the Nansen Relay's rules, secondary "no dome hit"), M8 = a (the Herald's absorbing rings),
   M10 = b (the Dust Kite as the act's popcorn), M12 = a, M13 = a (in-level only Varga's observation
   and Okafor's "Not on this channel, Doctor."), M17 = a (Rook flies, one dry joke), M18 = a
@@ -518,7 +521,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   backdrop set piece with a swarm bending round it; Ares Warden as the colony's voice; the seed-vault
   secret; 247 enemies (≈ 89 a minute) and `bounty_scale` 0.55 for a typical 2,072.
 - 2026-10-12 (overnight, harmonised with the act README): density brought into the act's band of
-  60–72 a minute (pending the user's review in round 36) by smaller popcorn waves at the same
+  60–72 a minute (accepted in round 36 (2026-10-13) by smaller popcorn waves at the same
   cadence: Dust Kite streams 4–5 → 3, V-wings 5 → 3 and 7 → 4, snakes 6 → 4, the Helix swarm
   10 → 8; Mote Swarms 8 → 6; Skitter snakes 6 → 4; 196 enemies (≈ 70 a minute, front 95 % · sides 5 %), the hooked waves,
   Shellbacks and Heralds unchanged; `bounty_scale` 0.55 → 0.60 (typical 2,063, −0.2 %), and the
@@ -535,8 +538,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   the briefing, teaser, threat profile, layout, waves, ground targets, radio and credit budget tables are now
   rendered from it (the typical haul 2,044, −1.1 %, with the Shellback whole at the ground rate; step D4's
   `TypicalHaulTest` fits it). The dome's spec moved to its own document,
-  [Ares Landing dome](../../../allies/ares-landing-dome/README.md). Built as the gap check's defaults, pending
-  the user's review in round 40: the new level block `allies` (the five domes at their entry `[t, x]`,
+  [Ares Landing dome](../../../allies/ares-landing-dome/README.md). Built as the gap check's defaults, accepted in round 40 (2026-10-19): the new level block `allies` (the five domes at their entry `[t, x]`,
   Eden's 144 px `size` and sprite overrides), the hook per unit type (every Spore Bomber wave `always`, every
   Shellback `alternate`; easy unhooks the Shellbacks), the bombers' row 160 px below the top edge and their
   x slots 40 px apart, the t=124 bombers a plain hooked wave of the Herald's escorts (step D4: a line abreast beside it, not its escorts, as a bomb run never applies to escorts), the Polyp Mortar floes
@@ -546,7 +548,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   is a placeholder (Level 15's images) until step D4 merges step ART-D's.
 - 2026-10-18 (M7 part D, step D4): the level mapped for the simulation (content's `SiegeRules`: the five domes
   as ground allies with the hook per unit type, the `untouched` secondary, the Herald's aura and song, the
-  Shellback's vent and roll, `dropped_by.enemy`). Built as defaults, pending the user's review in round 40: the
+  Shellback's vent and roll, `dropped_by.enemy`). Built as defaults, accepted in round 40 (2026-10-19): the
   t=124 bombers a plain hooked line abreast beside the Herald on the ±40 px slots, not its escorts (a bomb run
   never applies to escorts); the side bomber pairs (t=43.5, 108.5, hard's 126) streams on a route in at the row
   140 px below the top edge, 1 s apart (a side column needs a hovering or diving unit); six popcorn waves moved by
@@ -559,7 +561,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   shot, its roll crosses Lowell; left alone, its second lob lands on Lowell; its vent, which the radio tells the
   pilot to hit, sits inside the body's hit box at the rear of its back and no shot from below reaches it (0 vents
   shot). Open for round 40 (the vent's hit test or the walk behind the domes), not tuned further.
-- 2026-10-19 (step D5, pending the user's review in round 40): the radio retimed for
+- 2026-10-19 (step D5, accepted in round 40 (2026-10-19): the radio retimed for
   `RadioTimelineLevel17Test` (the text, not the voices, held the radio too long: Varga's two-page t=36.5
   bomber line opened Ares Control's t=45 line 2.0 s late, her t=80.5 Helix line Okafor's t=88.5 cut-off
   2.7 s late, and with Rook his t=95 and Ares Control's t=102 lines 2.5 and 2.3 s): t=45 → 47, 55.5 →
@@ -576,7 +578,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   (a shot inside the vent's box hits the vent first), R.b re-measure the secondary after R.a, R.c route the walks between
   the domes, R.d the first Herald enters higher or slower, R.e roll a shorter way near the bottom, R.f keep the dome lines
   as they are.
-- 2026-10-19 (step D6, round 40's fixes, pending the user's review): **K.a / R.c** the rule chosen: a Shellback
+- 2026-10-19 (step D6, round 40's fixes, accepted in round 40 (2026-10-19)): **K.a / R.c** the rule chosen: a Shellback
   walks between the domes (its body's hit box never over a dome's hit box, the glass; `SiegeChecks` checks every
   walker with a roll), and its roll, once per Shellback, crushes a dome whose **footprint** (the concrete ring) the
   ball touches, one hit (the dome's `rolls: crossing its footprint`; it was the hit box). The t=46.5 and t=111
@@ -594,8 +596,7 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   medium 5/8, hard 5/8, easy 8/8 (the autopilot is chaotic: a 0.5 s move changes its runs). The dome table and the hooked waves' notes
   give the centres' times at the new row.
 - 2026-10-19 (user, round 41): Level 17's round 40 fixes (L.a, step D6, (a)-(g)) accepted, all yes. S.h = c: the dome-break redo is option c (the low-passed building collapse over a crust rumble with glass smash); step FXS wires it, so its checklist item stays open until then.
-- 2026-10-19 (step PE17; the user's round 40 P.e "all later levels" and "tougher, not more"; pending the user's
-  review): the waves reworked to the Act 2+ rules. The five domes, the hooked bomber waves, the Shellbacks, the
+- 2026-10-19 (step PE17; the user's round 40 P.e "all later levels" and "tougher, not more"; accepted in round 40 (2026-10-19)): the waves reworked to the Act 2+ rules. The five domes, the hooked bomber waves, the Shellbacks, the
   Heralds, the Helix beat, the Mantis pincers, the quiet windows, the ground targets, the pickups' carriers and the
   radio keep their times. Added: six **Burrower fields** (t=9, 60, 86, 112, 137.5, 161.5; 4 each, the inner one
   3, hard one fewer each; the t=9.5 V-wing and the t=88 stream made way), the inner one kept off the domes and
@@ -612,12 +613,15 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
   "about half"), hard 0/8, every first hit the t=124 bombers on Eden, before step FX-C's bomber run-in and "No
   dome lost". Burrowers on the colony ground and the spaceport apron (t=161.5 "through the cracked slabs") are a
   setting stretch for the user's review.
-- 2026-10-19 (round 41, the user's playtest: "both"; steps FX-S2 and FX-C, pending the user's review): the
+- 2026-10-19 (round 41, the user's playtest: "both"; steps FX-S2 and FX-C, accepted in round 41 (2026-10-19)): the
   secondary becomes **"No dome lost"** (`standing: true`: failed when a dome breaks, hits allowed; was
   `untouched`, "No dome hit") and the hooked bombers fly **2.5 s on the play field before they may drop**
   (`bomb_run_in`). The autopilot over 8 seeds: easy 8/8, medium 8/8 (4/8 under the old rule), hard 1/8 (0/8);
   every hard failure is Eden breaking at t≈129 under the t=124 bombers. Left alone, easy now loses no dome (the
   secondary is met; 4 hits break a dome there), medium loses 3 and hard 4. The radio's secondary line ("Five
   domes, not a crack.") was reworded by step VOX-F: "All five domes still standing. Fine. Earth can stay for
-  dinner.", with a new take (pending the user's review).
+  dinner.", with a new take (accepted in round 42 (2026-10-20)).
 - 2026-10-20: round 42 closed: the rework to the Act 2+ rules (R.c) and the dome fixes with their check capture (K.c, T.4: both fixes, every sub-choice yes) accepted by the user; the hard dome rate (R.i) kept.
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-20 (user, round 44, closed): **G.b** the greenhouse frame's seed-capsule glint accepted; **G.c** the frame's hit flash lights the whole 64x48 sprite as a white slab because the burnt ground pad is baked into it: **split the pad off as a ground decal** (the frame sprite becomes the frame only and the pad a decal under it; a small art step, planned, not started; the final asset changes and its generator stays reproducible).
+- 2026-10-20 (steps ART-K, GK): round 44 G.c built: the greenhouse frame is transparent round the structure, the burnt pad is the ground decal `greenhouse-pad` (drawn under the frame and claimed so it stays in the atlas), the hit flash follows the structure only (`tools/art/siege_units.py`); the files are listed under Concept art as proposed and are a row in [round 45](../../../concept-rounds/round-45/README.md).

@@ -49,14 +49,13 @@ Values are first-draft balancing numbers at **medium** (see the [balancing basis
   player at 90°/s and it fires along the barrel; once the player is more than 100° off its facing
   (above and behind it, after the ground has carried it past), it stops turning and firing, so a
   turret that has been passed is harmless (Varga's tip in Level 02).
-- **Grown by a root burst (Level 14, M5 part H, decision H2 = a, pending the user's review).** In
+- **Grown by a root burst (Level 14, M5 part H, decision H2 = a, accepted in round 34 (2026-10-12)).** In
   [Level 14](../../../campaign/act-2-homefront/level-14-siege-spire/README.md) the turrets are
   placed by `root_bursts` ([entry rules](../../README.md#boss-attacks-and-root-bursts)): the paving
   cracks for the 1.0 s telegraph, the turret stands there, invulnerable and silent while it grows,
   and fires first 1.5 s (hard 1.0 s) after it appeared. On easy a burst grows a turret only (the
   secondary counts 4 of the 8 growths).
-- **Turned arc: the `arc` placement parameter (Act 3, overnight design phase 2026-10-12, pending the
-  user's review).** A level may place a turret with its facing, and so its 100° silence rule, turned
+- **Turned arc: the `arc` placement parameter (Act 3, overnight design phase 2026-10-12, accepted in round 36 (2026-10-13)).** A level may place a turret with its facing, and so its 100° silence rule, turned
   **180°**: `arc: up` (the default is `down`, the behaviour above). An up-facing turret is **silent
   while it is above the ship** and opens fire up the screen once the ground has carried it past (the
   ship more than 100° off its facing until then): the roster's "turrets that fire after you pass",
@@ -110,7 +109,7 @@ Production art for concept round 15 (M4 part B, the Level 02 batch), review file
   (`darkness-final-r23-a` in Level 06's concept directory).
 - 2026-10-05: M4 part H docs reconciliation: the glow frames were built in part F and approved in
   round 23; ticked, the document is `done`.
-- 2026-10-12 (overnight design phase, pending the user's review): the `arc` placement parameter
+- 2026-10-12 (overnight design phase, accepted in round 36 (2026-10-13)): the `arc` placement parameter
   (`arc: up` turns the facing and the silence arc 180°) for Level 19's up-facing nests and Level 20's
   reverse scroll; its item is tagged for Act 3, so the document stays `done`.
 - 2026-10-19 (M7 part F, step F2): the `arc` placement parameter built as a ground target's `arc: up` (left out:

@@ -1,7 +1,7 @@
 # Level 15 – concept and production notes
 
 Round 38 (M7 part B, step ART-B: production straight away, as Act 2's levels; the user is on vacation, so
-all of it is pending the user's review in round 38). None of it is prompted: every file is rendered by a
+all of it is accepted in round 38 (2026-10-14). None of it is prompted: every file is rendered by a
 generator in `tools/art/`.
 
 ## backdrop-final-r38-a

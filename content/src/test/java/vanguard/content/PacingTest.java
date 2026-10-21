@@ -102,13 +102,13 @@ class PacingTest {
     static final Set<String> PENDING_ACT_TWO_RULE = Set.of();
 
     /**
-     * M7 part H (step H4): the levels whose measured pacing and Act 2+ floor wait for a wave rework the user decides
-     * (round 44): flown, measured and printed here and in {@link ActFloorTest}, not asserted (the level report prints
-     * their verdicts). Level 21: at medium 5 stretches over 2 s (the settling dust, the pre-boss pause, the ridge pass,
-     * and 10.5-13.2 and 61.9-64.3 s) and 1.78 enemies on the screen against the floor's 2.5 with the approach's 106
-     * units (H.1's count-neutral plan; "more only if the measured floor fails"). Remove a level once it passes.
+     * M7 part H (step H4): the levels whose measured pacing and Act 2+ floor wait for a wave rework the user decides:
+     * flown, measured and printed here and in {@link ActFloorTest}, not asserted (the level report prints their
+     * verdicts). Remove a level once it passes. None left: Level 21, the first, passes with its rework (round 44 Q.1,
+     * step L21R, 2026-10-20: 168 units at medium, 2.55 on the screen, the pre-boss pause and the settling dust the only
+     * stretches over 2 s).
      */
-    static final Set<String> PENDING_WAVES = Set.of(Level21Test.LEVEL);
+    static final Set<String> PENDING_WAVES = Set.of();
 
     /**
      * The user's Act 2 fit (playtest 2026-10-18): the Pulse Cannon at L4, a Micro-missile Pod at L2 on the right

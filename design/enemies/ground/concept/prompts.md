@@ -291,7 +291,7 @@ dropping what it held.
 
 ## warden-tank-final-r42-a
 
-Round 42, production art (M7 part F batch, step ART-F3, pending the user's review; straight to production from
+Round 42, production art (M7 part F batch, step ART-F3, accepted in round 42 (2026-10-20); straight to production from
 the chosen round-36 concept warden-tank-r36-a: the round-05 model of `tools/concept/render/archetype_models.py`
 in the unmarked grey livery of `tools/concept/enemies_r36.py`, no gold, no accent, the red sensors, the hex
 panelling and the neutral grey rim kept, at the concept's 76 px scale). Not a mockup: the review sheet (`.png`)

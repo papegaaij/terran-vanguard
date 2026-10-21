@@ -187,6 +187,13 @@ public final class LevelRenderer {
      */
     static final java.util.Map<String, String> TRIGGER_CONTENTS = java.util.Map.of("greenhouse-frame", "seed-capsule");
 
+    /**
+     * Round 44 G.c (step GK): a trigger look standing on a ground decal of its own, drawn under every state of it at the
+     * same centre (Level 17's greenhouse frame on its scorched pad, tools/art/siege_units.py; vanguard.pipeline.SpriteUse
+     * claims the pad with the look).
+     */
+    static final java.util.Map<String, String> TRIGGER_PADS = java.util.Map.of("greenhouse-frame", "greenhouse-pad");
+
     /** M5 part G: a defend primary's ally (Level 13's Nansen Relay); null without one. */
     private final RelayLooks relay;
     /** M7 part D: the level's ground allies (Level 17's domes); null without them ({@link #groundAllies}). */
@@ -559,7 +566,7 @@ public final class LevelRenderer {
         play.heatPart = ArsenalLooks.heatPart(play.heatTarget);
         play.groundHeatX = ArsenalLooks.groundHeatX(sortie);
         double lag = SimStep.SECONDS * (1 - alpha);
-        double scroll = sortie.groundScroll() - sortie.groundSpeed() * lag;
+        double scroll = drawnScroll(sortie, alpha);
         // M5 part C: between two steps script time moves at the level clock's rate (a fifth in a hold).
         double seconds = sortie.levelSeconds() - lag * sortie.scriptRate();
         clock.record(sortie.levelSeconds(), sortie.realSeconds());
@@ -679,7 +686,7 @@ public final class LevelRenderer {
         }
         if (colossus != null) {
             // M7 part H: the suction's sand streaks into an open mouth, over the ground units.
-            colossus.drawStreaks(batch, sortie, alpha, clock.real());
+            colossus.drawStreaks(batch, sortie, alpha, scroll, clock.real());
         }
         if (foundry != null) {
             // M7 part F: the vents' heat glow over the tell, the flame column over the burn, the smoke after it.
@@ -758,8 +765,8 @@ public final class LevelRenderer {
         pieces.draw(batch, scroll);
         props.drawDebris(batch, sortie, alpha);
         if (colossus != null) {
-            // M7 part H: the rocks the breaching boss tears loose toward its mouth.
-            colossus.drawRocks(batch, sortie, alpha);
+            // M7 part H: the rocks the breaching boss tears loose toward its mouth; its throe's plume and rock rain.
+            colossus.drawRocks(batch, sortie, alpha, scroll);
         }
         props.drawCranes(batch, sortie, alpha);
         if (secretGlints != null) {
@@ -1067,10 +1074,35 @@ public final class LevelRenderer {
 
     /**
      * M7 part H: the play field's sideways shake now, px at the full screen-shake setting (the caller scales it by the
-     * setting): the ridge pass's light tremble ({@link ScreenShake#ridge}), none without a ridge.
+     * setting): the ridge pass's light tremble ({@link ScreenShake#ridge}), the Dust Colossus's death throe (step GK,
+     * the stronger of the two), none without either.
      */
     public float shakeX(Sortie sortie, double realSeconds) {
-        return ridge == null ? 0 : ScreenShake.ridge(ridge.shake(sortie.levelSeconds()), realSeconds);
+        float ridgeShake = ridge == null ? 0 : ScreenShake.ridge(ridge.shake(sortie.levelSeconds()), realSeconds);
+        // Step GK: the Dust Colossus's death throe shakes the field hard.
+        float throe = colossus == null ? 0 : colossus.shakeX(sortie, realSeconds);
+        return Math.abs(throe) > Math.abs(ridgeShake) ? throe : ridgeShake;
+    }
+
+    /**
+     * The ground's scroll as drawn {@code alpha} of the way from the last step to the next: the simulation's, less the
+     * ground speed's share still to come (step GK: in Level 21's crawling arena the speed the simulation eases to 0
+     * while the Colossus is out, so the ground and everything on it stands still under a risen mouth).
+     */
+    static double drawnScroll(Sortie sortie, float alpha) {
+        return sortie.groundScroll() - sortie.groundSpeed() * SimStep.SECONDS * (1 - alpha);
+    }
+
+    /**
+     * Step GK: the steps from the Dust Colossus's kill to its throe's white flash, and to its credit shower
+     * (briefs/l21-art-names.md "Round 44: the death throe"; the simulation's 3 s chain is unchanged).
+     */
+    public static int colossusFlashTicks() {
+        return SimStep.ticks(ColossusThroe.FLASH_SECONDS);
+    }
+
+    public static int colossusShowerTicks() {
+        return SimStep.ticks(ColossusThroe.SHOWER_SECONDS);
     }
 
     public static boolean spire(SetPiece piece) {

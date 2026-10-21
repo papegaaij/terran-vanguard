@@ -13,7 +13,7 @@ import vanguard.sim.Sortie;
 
 /**
  * M7 part H: the Dust Colossus's sounds for {@link FlightSounds} (design/campaign Level 21, Music &amp; ambience;
- * design/audio/sfx; round 44's proposals, a each until the user's pick, the ridge pass b; levelled in their files and
+ * design/audio/sfx; round 44's picks, a each (the ridge pass mirrored to run right to left); levelled in their files and
  * played as they are). The bulge at each breach's tell and each eruption's marker; the eruption as the mouth breaches
  * (the rise, an eruption); the suction's draw as one loop while the mouth is open and through its bite's tell, panned to
  * the mouth, louder the nearer the ship (its {@value #FAR_SHARE} share beyond the suction's outer radius, full within

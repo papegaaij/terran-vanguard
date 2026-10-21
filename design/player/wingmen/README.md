@@ -250,7 +250,7 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
 - **Reverse scroll (Level 20, M7 part G):** in a reversed section trigger 2 fires for the waves that
   enter from the **top** (`rear` by travel: the pursuit swarms, the Wraiths) with its "Up top!"
   variants (`top_lines`), and stays silent for the bottom entries, which are ahead by travel there
-  (pending the user's review in round 43).
+  (accepted in round 43 (2026-10-20).
 - After he ejects, trigger 5 can no longer fire; the others still do (he watches the scope from
   his pod).
 - The level documents' scripted "Six o'clock" and "flank" lines (L08 t=92, L13 t=82 and t=122,
@@ -260,11 +260,11 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
   as `escort-first-kill`'s does. Level 12's t=102 is dropped the same way (M5 part F), its t=44
   "Seeds on the wind" kept (it suppresses the side bark of the t=46 cluster), and his line on the
   first latch (`first-latch`) counts as a scripted Rook line.
-- **Level 13 (planned, M5 part G, pending the user's review):** he does not guard the Nansen Relay
+- **Level 13 (planned, M5 part G, accepted in round 34 (2026-10-12)):** he does not guard the Nansen Relay
   (no change to his AI) and keeps his Autocannon (the plan's L13 visit changes nothing for him); the
   level document's t=82 "Six o'clock" and t=122 "Contacts on your flank" are dropped for his rear
   and side barks, and his t=3, t=54 and t=230 lines carry `requires: escort`.
-- **Level 14 (planned, M5 part H, pending the user's review):** in the Siege Spire's fight he flies
+- **Level 14 (planned, M5 part H, accepted in round 34 (2026-10-12)):** in the Siege Spire's fight he flies
   Trail for each of the maw's Wraith re-entries (the bottom edge counts as a rear wave, warned 3 s
   ahead) and his rear bark calls each launch; his boss-warning bark plays at t=108 (not scripted);
   the level document's t=80 "Six o'clock" is dropped, his t=3 line carries `requires: escort`, and
@@ -469,10 +469,11 @@ built were accepted in concept round 28.
       impact hurts, so a slammed lane is safe again); a slam's impact hitting him; the cases in
       `SlamArenaTest` (`rookKeepsOutOfATelegraphedLane`, `aSlamHitsRookInItsLane`)
 - [ ] Warden heavy drone: formation, cannon, draw-fire rule — **later: Act 4** (the Warden unlocks at L22)
-- [ ] Drone behaviours: orbit, trail, block, rebuild — **later: Act 3** (light drone L15, rear-guard drone L20) and **later: Act 5** (hunter drone L29) — the Act 3 pair specified under *Light drone* and *Rear-guard drone* (draft); the light drone's
+- [x] Drone behaviours: orbit, trail, block, rebuild for the Act 3 pair (light drone L15, rear-guard drone L20) — specified under *Light drone* and *Rear-guard drone* (draft); the light drone's
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
+- [ ] The hunter drone's behaviours (L29) — **later: Act 5**
 - [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4**
 
 - [x] Level 12 (M5 part F, step 3): the wind pushing him (positions, edges clamped); his shots
@@ -685,7 +686,7 @@ built were accepted in concept round 28.
   out of his reach (his shots pass, his pick skips it); he does not collect sondes; his t=102 line
   is dropped for the rear bark, his t=44 line kept, and the `first-latch` line counts for the bark
   spacing. The balance plan's L12 visit refits his Autocannon (the Mortar has nothing to hit).
-- 2026-10-11: M5 parts G and H (the user is on vacation; the main agent took the gap analyses' recommendations, **pending the user's review** in the combined round): in Level 13 Rook does not guard the relay and keeps his Autocannon, his draft rear and side lines give way to the barks; in Level 14 he flies Trail for the maw's Wraiths (H3 = a) and has one event line in phase 3.
+- 2026-10-11: M5 parts G and H (the user is on vacation; the main agent took the gap analyses' recommendations, **accepted in round 34 (2026-10-12)**: in Level 13 Rook does not guard the relay and keeps his Autocannon, his draft rear and side lines give way to the barks; in Level 14 he flies Trail for the maw's Wraiths (H3 = a) and has one event line in phase 3.
 - 2026-10-12: M5 part I (close-out): the balance item is built — `BalanceTest`'s sheet and
   `tools/balance.py` print his DPS (12 with the Autocannon L1, 15 with the Mortar L1), and
   `ActPlaythroughTest` flies Acts 1 and 2 as one campaign with him on every difficulty, paying his
@@ -693,7 +694,7 @@ built were accepted in concept round 28.
   hard also in Levels 10 and 11 (80-point repairs at the visits after), with every level still won at
   the first attempt. The guns and barks tables' rendering is retagged **later: M6** (tooling); with
   the drone items tagged Acts 3–5 the document is `done`.
-- 2026-10-12: M6 part D (Q14 = b, pending the user's review in round 35): the guns and barks tables
+- 2026-10-12: M6 part D (Q14 = b, accepted in round 35 (2026-10-12): the guns and barks tables
   are rendered from the data (`rook-guns`, `rook-barks`); the guns' Available cell reads the data's
   `act 2` (he joins at L08) instead of the hand-written L08.
 - 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (C5 and Q14, the rendered tables).
@@ -705,7 +706,7 @@ built were accepted in concept round 28.
   bullets and contacts cost hits, break and rebuild, walls shrink its orbit; its shop numbers in the
   [Light Drone Bay](../weapons/light-drone-bay/README.md)) and the rear-guard drone (40 px behind,
   fires backwards, 9 → 26 rear DPS, the same block and rebuild; behind stays the screen's bottom in
-  the reverse scroll). Pending the user's review in concept round 36; the approved parts of this
+  the reverse scroll). Accepted in round 36 (2026-10-13); the approved parts of this
   document are unchanged.
 - 2026-10-13 (user, round 36): the Act 3 drones approved (D.26): the light drone (orbit 36 px,
   convergence 140 px, block, break and rebuild; the disc drone of G.2 = a) and the rear-guard drone
@@ -715,5 +716,4 @@ built were accepted in concept round 28.
 - 2026-10-20 (M7 part G, step G2): the rear-guard drone's shop numbers moved to the new [Rear-guard Drone
   Bay](../weapons/rear-guard-drone-bay/README.md) document, linked from here. Rook's rear bark in a
   reversed section (Level 20, where "behind" is the top of the screen) gets three "Up top!" variants
-  (`top_lines` of the rear-wave trigger, rendered into the barks table), pending the user's review in
-  round 43; it stays silent for the bottom entries there.
+  (`top_lines` of the rear-wave trigger, rendered into the barks table), accepted in round 43 (2026-10-20); it stays silent for the bottom entries there.

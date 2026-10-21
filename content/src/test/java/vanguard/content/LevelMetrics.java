@@ -314,7 +314,8 @@ final class LevelMetrics {
             int[] shots,
             int bites,
             int eruptions,
-            int breaches) {
+            int breaches,
+            int[] breachesByPhase) {
         /** Its shots a minute in phase {@code phase}, as the level report counts them (one per {@code ENEMY_FIRED}). */
         double shotsPerMinute(int phase) {
             return phaseSeconds[phase] > 0 ? shots[phase] * 60 / phaseSeconds[phase] : 0;
@@ -340,6 +341,7 @@ final class LevelMetrics {
         private int bites;
         private int eruptions;
         private int breaches;
+        private final int[] breachesByPhase = new int[3];
         private double shield = Double.NaN;
         private double armour = Double.NaN;
 
@@ -352,6 +354,7 @@ final class LevelMetrics {
             bites = 0;
             eruptions = 0;
             breaches = 0;
+            java.util.Arrays.fill(breachesByPhase, 0);
             shield = Double.NaN;
             armour = Double.NaN;
         }
@@ -382,7 +385,9 @@ final class LevelMetrics {
                     eruptions++;
                 }
             }
-            breaches = boss.breach().orElseThrow().breaches();
+            int now = boss.breach().orElseThrow().breaches();
+            breachesByPhase[phase] += now - breaches;
+            breaches = now;
         }
 
         ColossusRun run() {
@@ -393,7 +398,8 @@ final class LevelMetrics {
                     shots.clone(),
                     bites,
                     eruptions,
-                    breaches);
+                    breaches,
+                    breachesByPhase.clone());
         }
     }
 

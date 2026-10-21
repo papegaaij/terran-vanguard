@@ -81,15 +81,13 @@ item|“Scraping and Clunking Large Stone 1.wav” by F.M.Audio
 detail|CC-BY 4.0 · freesound.org/people/F.M.Audio/sounds/572754
 item|“rock_avalanche_w_rumbling_sound_01092026” by Artninja
 detail|CC-BY 4.0 · freesound.org/people/Artninja/sounds/841540
+item|“Flowing Sand” by SteveMeli
+detail|CC-BY 3.0 · freesound.org/people/SteveMeli/sounds/215006
 item|“Large, Low Rumble.wav” by duckduckpony
 detail|CC-BY 4.0 · freesound.org/people/duckduckpony/sounds/130972
-item|“Guterton - Heavy Stone Grind” by guterton.wav
-detail|CC-BY 4.0 · freesound.org/people/guterton.wav/sounds/760672
-item|“charging power” by JavierZumer
-detail|CC-BY 4.0 · freesound.org/people/JavierZumer/sounds/257229
 gap|
 role|WITH THANKS TO (CC0)
-text|adviseme333, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, deerlord, derplayer, dinodilopho, Division4884, dwswords, Elektrocell, Elements-Library, facklere, FlatHill, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, jvmyka@gmail.com, kalhan, Kinoton, kyles, loganzsound, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, profoundsounds, qubodup, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, SecureSubset, Sheyvan, sidohzen, SuperPhat, ThefitzyG, TRP, uagadugu, unfa, wilhellboy, xkeril
+text|adviseme333, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, deerlord, derplayer, dinodilopho, Division4884, dwswords, Elektrocell, Elements-Library, facklere, FlatHill, follytowers, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, jvmyka@gmail.com, kalhan, Kinoton, kyles, loganzsound, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, profoundsounds, qubodup, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, SecureSubset, Sheyvan, sidohzen, SuperPhat, ThefitzyG, TRP, uagadugu, unfa, wilhellboy, xkeril
 gap|
 title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings

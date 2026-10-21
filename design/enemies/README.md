@@ -2,8 +2,8 @@
 title: Enemies
 design: approved
 implementation: in-progress
-art: chosen
-updated: 2026-10-19
+art: final
+updated: 2026-10-20
 ---
 
 # Enemies
@@ -22,11 +22,11 @@ directories hold the rosters.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (22) | approved | in-progress | chosen |
-| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (18) | approved | in-progress | chosen |
-| [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (9) | approved | in-progress | chosen |
+| [air](air/README.md) | Flying enemies on the `air`, `low-air` and `high-air` layers, incl. serpents, spinners and drone trains (22) | approved | in-progress | final |
+| [ground](ground/README.md) | Turrets, walkers, tanks, crawlers, bunkers and spawners on the `ground` layer (18) | approved | in-progress | final |
+| [naval](naval/README.md) | Surface vessels and submerged enemies (`ground` on water, `sub`) (9) | approved | in-progress | final |
 | [space](space/README.md) | Vacuum-only enemies for space levels, incl. the Leviathan (8) | approved | in-progress | chosen |
-| [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | done | chosen |
+| [bosses](bosses/README.md) | 7 act bosses and 5 mid-bosses | approved | done | final |
 
 ## Design
 
@@ -146,7 +146,7 @@ most one on screen, announced by radio, with a bounty close to a mid-boss.
 
 ### Boss attacks and root bursts
 
-Planned (M5 part H, decisions H2 and H5 = a, pending the user's review; the schema is in
+Planned (M5 part H, decisions H2 and H5 = a, accepted in round 34 (2026-10-12); the schema is in
 [architecture](../tech/architecture/README.md#data-file-schemas)):
 
 - **Boss `lob`.** The enemy `mortar` attack with a part as its origin (the Polyp Mortar's lob
@@ -287,7 +287,7 @@ Current coverage (✓ = passes):
 |---|---|---|---|---|---|---|---|
 | 1 First Contact | tiny, small, medium, large, huge | Coilwyrm (L06), Leviathan (L03), Gorgon Frigate (L05), Brood Carrier (L07) | Scuttler (L04) | Whirl Seed (L03) | Mantis sides (L06, L07), Coilwyrm rear loops (L06), Brood Pod Skitter bursts | 3 of 14 (Skitter, Stinger, Mantis); the 14 used in L01–L07: Skitter, Needler, Stinger, Spine Turret, Spore Bomber, Whirl Seed, Leviathan, Brood Pod, Scuttler, Polyp Mortar, Gorgon Frigate, Coilwyrm, Mantis, Brood Carrier | ✓ |
 | 2 Homefront | tiny, small, medium, huge (as built: no `large` unit) | Harbour Kraken (L11), Siege Spire (L14) | Creeper (L08), Ravager packs (L09, L14), Scuttler returns (L13) | Whirl Seed returns (L12) | Wraith and Mote Swarm rear (L10), Mantis sides (L12, L13), Skimmers from all edges (L13), maw Wraiths (L14) | 5 of 20 (Skitter, Stinger, Creeper, Wraith, Mantis); the 20 used in L08–L14: Needler, Skitter, Stinger, Spine Turret, Polyp Mortar, Creeper, Hive Node, Ravager, Mote Swarm, Wraith, Driftjelly, Reef Spitter, Harbour Kraken, Lamprey, Mantis, Spore Bomber, Whirl Seed, Scuttler, Skimmer, Siege Spire | ✓ |
-| 3 Red Dust | tiny (the new Dust Kite, plus returning Skitters and Whirl Seeds), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 3 of 12 (Burrower, Choir Herald, Threadcrawler) | ✓ |
+| 3 Red Dust | tiny (the new Dust Kite and Mote Swarm, plus returning Skitters), small, medium, large, huge | Threadcrawler, Revenant Walker, Dust Colossus | Burrower, Threadcrawler, Shellback (L17), Warden Tank | Dust Devil (L18) | L19 rear, L20 reverse scroll, L21 breaches | 8 of 22 (Skitter, Stinger, Mantis, Creeper, Wraith, Burrower, Choir Herald, Threadcrawler); the 22 used in L15–L21: Dust Kite, Skitter, Mote Swarm, Needler, Stinger, Polyp Mortar, Spine Turret, Tendril Anchor, Ghost Drone, Burrower, Creeper, Ravager, Spore Bomber, Mantis, Choir Herald, Dust Devil, Wraith, Warden Tank, Threadcrawler, Shellback, Revenant Walker, Dust Colossus | ✓ |
 | 4 Deep Water | small, medium, large, huge | Eel Swarm, Abyssal Maw | Scuttler on the sea floor (L24) | Spiral Nautilus (L25) | Siren side caves, L27 rear | 0 of 10 | ✓ |
 | 5 The Belt | tiny, small, medium, large, huge | Rail Serpent, Shard Drone links, Iron Sovereign | Strider (L32), Crawler Tank (L34) | Buzzsaw Drone (L31), Sovereign rings | Minelayer and Rail Serpent rear (L30), Void Leech rear | 1 of 15 (Asteroid Mite) | ✓ |
 | 6 Jovian Storm | small, medium, large, huge | Halo Platform, Ascendant | Warden Tank and Strider return (L39, L41) | Halo Platform (L41), Buzzsaw Drone returns (L38) | Honour Guard rear (L40), Harrow all edges | 0 of 12 | ✓ |
@@ -511,7 +511,7 @@ which mode. Units without it ignore the objective.
 - Telegraphs still apply (mortar impact markers on the objective, edge warnings).
 - Difficulty: a level may drop the hook on easy (e.g. divers go back to the player) or add
   units to it on hard.
-- **Exact rules of the three modes (M5 part G, decision G1 = a, pending the user's review; the
+- **Exact rules of the three modes (M5 part G, decision G1 = a, accepted in round 34 (2026-10-12); the
   bullets still hurt the ship, so the player can body-block).** `alternate`: each unit counts its
   attacks; every second one goes at the objective while it is closer than the player; a hard
   2-shot burst is one attack. `in-arc`: while the objective lies within ±45° of the unit's facing
@@ -585,7 +585,7 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       chase and latch, the Skimmer's lanes, the Spire's lift (`CreeperTest`, `RavagerPounceTest`,
       `WraithTest`, `FlockTest`, `DriftjellyTest`, `ReefSpitterTest`, `SlamArenaTest`,
       `LampreyTest`, `SkimmerTest`, `SpireLiftTest`).
-- [ ] The other movement patterns with the first unit that flies each — **later: Act 3** to Act 7
+- [ ] The other movement patterns with the first unit that flies each — **later: Act 4** to Act 7
       (e.g. `burrow`, `teleport`, `mirror`).
 - [x] Attack patterns from the vocabulary implemented as reusable emitters: those the Act 1 units
       and bosses use (`aimed`, `burst`, `fan`, `ring`, `spiral`, `laser-sweep`, `mine`, `mortar`,
@@ -595,7 +595,7 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       Lamprey's `drain`, the Siege Spire's `lob`, `sweep` and maw launches (`HiveNodeTest`,
       `DriftjellyTest`, `SlamArenaTest`, `LampreyTest`, `BossLobTest`, `BossSweepTest`,
       `MawLaunchTest`).
-- [ ] The other attack patterns with the first unit that uses each — **later: Act 3** to Act 7
+- [ ] The other attack patterns with the first unit that uses each — **later: Act 4** to Act 7
       (e.g. `laser-line`, `link`, `aura`, `reflect`).
 - [x] Formation spawner that places enemies by formation name and entry edge (`Formations`): the
       Act 1 formations (single, V-wing, line abreast, column, snake, stream, pincer, circle,
@@ -603,7 +603,7 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 - [x] The Act 2 formations with the first level that uses each (M5 parts C–G): `pack` (L09),
       `swarm` and `rear ambush` (L10), `field` (L11), `cross` (L13) (`PackFormationTest`,
       `PartDFormationsTest`, `DriftjellyTest`, `CrossTest`).
-- [ ] The other formations with the first level that uses each — **later: Act 3** to Act 7
+- [ ] The other formations with the first level that uses each — **later: Act 4** to Act 7
       (`submerged ambush` — **later: Act 4**).
 - [x] M5 part E (Level 11): the `sub` layer and its hit rules (E2 = a: only `anti-sub` and the
       Smart Bomb; no contact; homing shots, turrets, landing blasts, mines, the Airstrike and Rook
@@ -661,7 +661,9 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
 - [x] Act 1 passes the variety checklist (as built: [act 1](../campaign/act-1-first-contact/README.md#enemy-use-per-level)).
 - [x] Act 2 passes the variety checklist as built (M5 part I, 2026-10-12, from Levels 08–14's
       data: the table's row above; tiny, small, medium and huge, no `large` unit).
-- [ ] Acts 3–7 pass it as built — **later: Act 3** to Act 7.
+- [x] Act 3 passes the variety checklist as built (M7 part I, 2026-10-20, from Levels 15–21's data: the table's row above;
+      8 of 22 units insectoid).
+- [ ] Acts 4–7 pass it as built — **later: Act 4** to Act 7.
 
 ## Open questions
 
@@ -820,36 +822,33 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   `ActHpFactorTest`, `BalanceTest`'s time-to-kill bands) in Levels 08–09 only, the levels whose numbers
   change: applied from L08 on, Level 10's escort check (3 of 4 shuttles home at medium, D2 = a) failed
   at 2 of 4 and Level 11's hard runs stopped completing, so Levels 10–17 keep the old HP until the
-  user extends `levels` (pending the user's review). The brief's "Stinger 18 at L08" assumed the full
+  user extends `levels` (accepted in round 39 (2026-10-18)). The brief's "Stinger 18 at L08" assumed the full
   ×3; the reference DPS ratio gives ×2.31 there (14 HP; 15 at L09).
 - 2026-10-19: `small_act_hp.levels` extended to Levels 12–13 with their L10-style waves (step WA, the user's
   P.e "yes, all"): Needler 12, Stinger 17/18 HP there; without it Level 12 measured 1.7 enemies on the
-  screen and 4 shots a minute at medium (the Act 2 floor: 2.5 and 10), with it 2.7 and 18 (pending the
-  user's review).
+  screen and 4 shots a minute at medium (the Act 2 floor: 2.5 and 10), with it 2.7 and 18 (accepted in round 41 (2026-10-19)).
 - 2026-10-19: `small_act_hp.levels` extended to Levels 11 and 14 with their L10-style waves (step WB, the
   user's P.e "yes, all"): Needler 12 HP there; with it Level 14 measures 2.8 enemies on the screen and 23
   shots a minute at medium, Level 11 2.9 and 14 (the floor: 2.5 and 10), and Level 11's hard run keeps
-  all three ships afloat (pending the user's review).
+  all three ships afloat (accepted in round 40 (2026-10-19)).
 - 2026-10-19: `small_act_hp.levels` extended to Level 18 (M7 part E, step E2; the user's decision of 2026-10-19:
   Level 18 meets the Act 2+ pacing and floor rules, round 40 P.e "all later levels"): Needler 12, Stinger 18 HP
-  there, with its waves of firing groups; Levels 15–17 join with their own P.e rework (pending the user's review
-  in round 41).
+  there, with its waves of firing groups; Levels 15–17 join with their own P.e rework (accepted in round 41 (2026-10-19).
 - 2026-10-19: `small_act_hp.levels` extended to Level 15 (step PE15, the user's round 40 P.e "all later levels"):
   Needler 12, Stinger 18 HP there, with its waves of firing groups; Level 15 measures 2.68 enemies on the screen
-  and 17.2 shots a minute at medium (the floor: 2.5 and 10). Levels 16–17 join with their own rework (pending
-  the user's review).
+  and 17.2 shots a minute at medium (the floor: 2.5 and 10). Levels 16–17 join with their own rework (accepted in round 40 (2026-10-19)).
 - 2026-10-19: **Beam-era HP** (the user's decision of 2026-10-19, "tougher, not more": raise the HP for the beam era
   so units live long enough to shoot back, instead of step E4's 605 enemies on Level 18; later levels follow the
   same rule; M7 part E, step E5): `beam_era_hp` ×2 on `small` units from Level 18 (the plan's first Ion Beam), set
   so a killed small unit lives as long on the screen as on Level 10 (0.9 s → 1.5 s at Level 10's density, Level 10
   1.6 s). Built for `small` only: doubled, the Dust Devil (vanes) went unkilled at hard and the Wraith broke its
-  rear check; `tiny` gains nothing against the beam (pending the user's review in round 41).
-- 2026-10-19: `small_act_hp.levels` extended to Level 19 (M7 part F, step F2; the gap check's default, pending
-  the user's review in round 42): Needler 12, Stinger 18 HP there, then ×2 by `beam_era_hp` (24 and 36), with its
+  rear check; `tiny` gains nothing against the beam (accepted in round 41 (2026-10-19).
+- 2026-10-19: `small_act_hp.levels` extended to Level 19 (M7 part F, step F2; the gap check's default, accepted in round 42 (2026-10-20): Needler 12, Stinger 18 HP there, then ×2 by `beam_era_hp` (24 and 36), with its
   waves re-planned to the Act 2+ floor (light firing groups instead of popcorn).
 - 2026-10-19 (user, round 41): the beam-era HP (B.e, `small` units ×2 from Level 18) accepted, all yes.
 - 2026-10-19: `small_act_hp.levels` extended to Levels 16 and 17 (steps PE16 and PE17, the user's round 40 P.e
   "all later levels"): Needler 12, Stinger 18 HP there, with their waves to the Act 2+ floor; Level 17 measures
   2.60 enemies on the screen and 15.1 shots a minute at medium, most of the shots from its Burrower fields' rings
   (the plan's fit still kills a Needler group before its first shot). Every Act 2-3 level from 11 to 18 is listed
-  now; Level 10 (the user's reference) is not (pending the user's review).
+  now; Level 10 (the user's reference) is not (accepted in round 44 (2026-10-20)).
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

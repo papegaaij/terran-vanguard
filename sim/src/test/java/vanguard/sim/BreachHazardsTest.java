@@ -192,7 +192,7 @@ class BreachHazardsTest {
     }
 
     @Test
-    void phaseTwosVentsRiseWithTheMouthTowardTheCentreAndSinkWithIt() {
+    void phaseTwosVentsRiseWithTheMouthOnItsSpineAndSinkWithIt() {
         Sortie sortie = vents();
         SetPiece boss = boss(sortie);
         BreachArena breach = breach(sortie);
@@ -210,16 +210,19 @@ class BreachHazardsTest {
         until(sortie, SimEvents.Type.BOSS_PHASE, 0.1, 0);
         // Phase 2's first breach (the rear point).
         until(sortie, SimEvents.Type.BREACH_RISE, 20, 0);
-        double mx = breach.mouthX();
-        double my = breach.mouthY();
-        double cx = PlayField.WIDTH / 2.0 - mx;
-        double cy = PlayField.HEIGHT / 2.0 - my;
-        double length = Math.hypot(cx, cy);
+        assertEquals(breach.mouthX(), breach.ridgeX(BreachArena.RIDGE_POINTS - 1), 1e-9, "the curve ends at the mouth");
+        assertEquals(breach.mouthY(), breach.ridgeY(BreachArena.RIDGE_POINTS - 1), 1e-9);
         for (int i = 0; i < 3; i++) {
             assertTrue(breach.ventRaised(i));
             assertFalse(breach.ventUp(i), "buried until the rise's middle");
-            assertEquals(mx + cx / length * DISTANCES[i], breach.ventX(i), 1e-9);
-            assertEquals(my + cy / length * DISTANCES[i], breach.ventY(i), 1e-9);
+            // Step SIM-K (round 44, K.b): on the body, its distance along the ridge's curve back from the mouth.
+            double[] spine = alongSpine(breach, DISTANCES[i]);
+            assertEquals(spine[0], breach.ventX(i), 0.5, "on the spine");
+            assertEquals(spine[1], breach.ventY(i), 0.5);
+            assertEquals(1, Math.hypot(breach.ventDirX(i), breach.ventDirY(i)), 1e-9, "a unit heading");
+            double toMouthX = breach.mouthX() - breach.ventX(i);
+            double toMouthY = breach.mouthY() - breach.ventY(i);
+            assertTrue(breach.ventDirX(i) * toMouthX + breach.ventDirY(i) * toMouthY > 0, "heading for the mouth");
             assertEquals(breach.ventX(i), boss.partX(VENTS[i]), 1e-9, "the part stands at the vent");
             assertEquals(breach.ventY(i), boss.partY(VENTS[i]), 1e-9);
             assertEquals(VENTS[i], breach.ventPart(i));
@@ -245,6 +248,101 @@ class BreachHazardsTest {
             assertEquals(Layer.BURIED, boss.partLayer(VENTS[i]));
             assertTrue(boss.partShielded(VENTS[i]));
         }
+    }
+
+    /**
+     * The point {@code d} px back from the mouth along the ridge's curve (rebuilt from its samples: the ends and the
+     * middle give the control point), measured over 4,000 pieces.
+     */
+    private static double[] alongSpine(BreachArena breach, double d) {
+        int last = BreachArena.RIDGE_POINTS - 1;
+        double fx = breach.ridgeX(0);
+        double fy = breach.ridgeY(0);
+        double tx = breach.ridgeX(last);
+        double ty = breach.ridgeY(last);
+        double vx = 2 * breach.ridgeX(last / 2) - (fx + tx) / 2;
+        double vy = 2 * breach.ridgeY(last / 2) - (fy + ty) / 2;
+        double x = tx;
+        double y = ty;
+        double left = d;
+        int n = 4000;
+        for (int k = n - 1; k >= 0; k--) {
+            double u = (double) k / n;
+            double px = (1 - u) * (1 - u) * fx + 2 * u * (1 - u) * vx + u * u * tx;
+            double py = (1 - u) * (1 - u) * fy + 2 * u * (1 - u) * vy + u * u * ty;
+            double step = Math.hypot(x - px, y - py);
+            if (step >= left) {
+                return new double[] {x + (px - x) * left / step, y + (py - y) * left / step};
+            }
+            left -= step;
+            x = px;
+            y = py;
+        }
+        throw new AssertionError("the curve is shorter than " + d);
+    }
+
+    @Test
+    void phaseThreesVentsRiseOnTheSpineOfAnUnderBreachWithinTheField() {
+        Sortie sortie = withAttacks(List.of(), List.of(BURST), List.of(BURST), TestSpecs.RULES.withInvulnerableShip());
+        toPhaseThree(sortie);
+        BreachArena breach = breach(sortie);
+        for (int n = 0; n < 2; n++) {
+            until(sortie, SimEvents.Type.ERUPTION, 20, 0);
+            assertEquals(BreachArena.Pose.UNDER, breach.pose());
+            for (int i = 0; i < 3; i++) {
+                assertTrue(breach.ventUp(i), "up with the erupted mouth");
+                double toMouth = Math.hypot(breach.mouthX() - breach.ventX(i), breach.mouthY() - breach.ventY(i));
+                assertTrue(toMouth <= DISTANCES[i] + 1e-9, "no farther than its way along the body");
+                assertTrue(toMouth > DISTANCES[i] * 0.5, "behind the mouth: " + toMouth);
+            }
+        }
+    }
+
+    @Test
+    void anEruptionsRingExpandsAndCatchesTheShipParkedOnTheMouthOnce() {
+        BossSpec.Eruption ringed = ERUPTION.withRing(Optional.of(new BossSpec.Shockwave(100, 0.3, 7)));
+        SetPieceSpec piece = colossus(List.of(), List.of(), List.of());
+        // No rocks, so only the ring hurts the ship here.
+        BossSpec boss =
+                piece.boss().orElseThrow().withEruption(Optional.of(ringed)).withDebris(Optional.empty());
+        SetPieceSpec spec = new SetPieceSpec(
+                piece.slug(),
+                piece.size(),
+                piece.body(),
+                piece.contactDamage(),
+                piece.parts(),
+                piece.passes(),
+                piece.drop(),
+                Optional.of(boss));
+        Sortie sortie = new Sortie(1, TestSpecs.LOADOUT, level(spec), TestSpecs.RULES, TestSpecs.FULL_ARMOUR);
+        toPhaseThree(sortie);
+        BreachArena breach = breach(sortie);
+        assertEquals(100, breach.shockReach(), 0);
+        steerTo(sortie, 240, 270);
+        until(sortie, SimEvents.Type.ERUPTION_MARKER, 20, 0);
+        // The ship moves 60 px off the marker: out of the eruption's 45 px, inside the ring's 100.
+        double off = breach.markerX() < PlayField.WIDTH / 2.0 ? 60 : -60;
+        steerTo(sortie, breach.markerX() + off, breach.markerY());
+        assertTrue(breach.marker(), "still before the eruption");
+        assertEquals(List.of(0), until(sortie, SimEvents.Type.ERUPTION, 3, 0), "out of the eruption's circle");
+        assertTrue(breach.ringing());
+        List<Integer> caught = new ArrayList<>();
+        double lost = 0;
+        int ticks = 0;
+        while (breach.ringing()) {
+            caught.addAll(values(sortie, SimEvents.Type.ERUPTION_RING));
+            double before = health(sortie);
+            sortie.step(0);
+            if (!values(sortie, SimEvents.Type.ERUPTION_RING).isEmpty()) {
+                lost = before - health(sortie);
+            }
+            ticks++;
+        }
+        caught.addAll(values(sortie, SimEvents.Type.ERUPTION_RING));
+        assertEquals(SimStep.ticks(0.3) + 1, ticks, 1, "it expands over its 0.3 s");
+        assertEquals(List.of(BreachArena.BITE_SHIP), caught, "the ship once");
+        assertEquals(7, lost, 0.1, "its damage");
+        assertEquals(0, breach.shockRadius(), 0);
     }
 
     @Test
@@ -654,6 +752,8 @@ class BreachHazardsTest {
                 "the burst is an attack");
         assertThrows(IllegalArgumentException.class, () -> new BossSpec.Vents(List.of(1, 2), List.of(120.0), BURST));
         assertThrows(IllegalArgumentException.class, () -> new BossSpec.Eruption(0, 45, 10, 80, 5, 1.5));
+        assertThrows(IllegalArgumentException.class, () -> new BossSpec.Shockwave(0, 0.3, 7));
+        assertThrows(IllegalArgumentException.class, () -> new BossSpec.Shockwave(100, 0, 7));
         assertThrows(IllegalArgumentException.class, () -> new BossSpec.DebrisFlow(List.of(), 20, 28, 2, 60, 60, 6));
         assertThrows(IllegalArgumentException.class, () -> new BossSpec.DebrisFlow(List.of(1.2), 28, 20, 2, 60, 60, 6));
         BossSpec plain = BreachArenaTest.colossus(false).boss().orElseThrow();

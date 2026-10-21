@@ -481,8 +481,8 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 | [concept/slam-r33-a.gif](concept/slam-r33-a.gif) | The same in two arena lanes with a cargo ship and a stand-in arm: telegraph, rise, impact, awash, sink (motion) | chosen |
 | [concept/rejected/slam-r33-b.png](concept/rejected/slam-r33-b.png) | Kraken lane telegraph and slam b, "lane boil, chevrons and rollers": the whole lane boiling over the arm's shadow, red chevrons down its centre, a crown and two rollers breaking at the lane edges (sheet; review files only) | rejected |
 | [concept/rejected/slam-r33-b.gif](concept/rejected/slam-r33-b.gif) | The same in the arena (motion) | rejected |
-| [concept/l11-props-final-r33-a.png](concept/l11-props-final-r33-a.png) | Level 11's props, final frames: floating container with collar and its sinking, the sunken supply pod on its reef root (snagged, hit, freed) and its rise, and the backdrop pieces for step E3b: the burning freighter, three reef growths and a reef root (sheet) | chosen |
-| [concept/l11-props-final-r33-a.gif](concept/l11-props-final-r33-a.gif) | The same on the ocean stand-in: the reef line, the pod freed by torpedoes and rising to the crate, containers drifting and one sinking, the freighter passing (motion) | chosen |
+| [concept/l11-props-final-r33-a.png](concept/l11-props-final-r33-a.png) | Level 11's props, final frames: floating container with collar and its sinking, the sunken supply pod on its reef root (snagged, hit, freed) and its rise, and the backdrop pieces for step E3b: the burning freighter, three reef growths and a reef root (sheet) | final (round 44, X.i) |
+| [concept/l11-props-final-r33-a.gif](concept/l11-props-final-r33-a.gif) | The same on the ocean stand-in: the reef line, the pod freed by torpedoes and rising to the crate, containers drifting and one sinking, the freighter passing (motion) | final (round 44, X.i) |
 
 ## Implementation
 
@@ -503,7 +503,7 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
       splashing; flyers' shadows on the sea (steps E1b, E1c and E3c; the reefs' collars are the
       backdrop pieces' own, the shadows fall on the sea's chop, which marks the shadow stencil
       everywhere).
-- [ ] Perspective geometry between layers for canyon walls and cliffs — **later: Act 3** (the
+- [x] Perspective geometry between layers for canyon walls and cliffs (M7 part C; the
       canyon walls of L16 rising toward the camera, collision at their foot: MA.1 = b of round 36;
       M7 part C).
 - [x] Runtime drop shadows from sprite alpha, offset per layer, masked to shadow-catching layers

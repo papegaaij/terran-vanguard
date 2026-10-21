@@ -21,7 +21,8 @@ public sealed interface GroundTargetsBlock permits LevelData {
      * secondary objective. M5 part E: a destructible may belong to a {@code group} of its own (not
      * the objectives'), whose last one destroyed drops a placed pickup ({@code dropped_by: {group,
      * unit: last}}: Level 11's floating containers), and a trigger's {@code easy} / {@code hard}
-     * change may give its {@code hits} (Level 11's sunken pod: hard 6).
+     * change may give its {@code hits} (Level 11's sunken pod: hard 6), a destructible's its {@code hp} (round 44
+     * Q.5: Level 21's survey crawler, hard 28).
      *
      * @param layer and {@code size}: a destructible's or trigger's layer and hit box in px; an
      *     enemy's come from its stat block
@@ -29,8 +30,8 @@ public sealed interface GroundTargetsBlock permits LevelData {
      * @param hardened only {@code anti-ground} weapons damage it (design/enemies, layer rules)
      * @param bonusDrop a second pickup it drops with its {@code drop} (Level 04's supply drop: a
      *     special charge, only with a special fitted)
-     * @param easy another placement list on easy (an enemy nest's size), or a trigger's hits on easy
-     * @param hard another placement list on hard, or a trigger's hits on hard
+     * @param easy another placement list on easy (an enemy nest's size), a trigger's hits or a destructible's hp on easy
+     * @param hard another placement list on hard, a trigger's hits or a destructible's hp on hard
      * @param sprite a destructible's sprite set: {@code <sprite>_0..2} (intact, damaged, wrecked)
      *     and {@code <sprite>-break_<n>}; Level 01's cargo container if left out
      * @param current M5 part E: an enemy nest's current, ° from straight down (positive to the
@@ -94,6 +95,11 @@ public sealed interface GroundTargetsBlock permits LevelData {
                 Check.that(
                         hp.isEmpty() && hits.isEmpty() && bounty.isEmpty() && layer.isEmpty() && size.isEmpty(),
                         "an enemy's hp, bounty, layer and size come from its stat block");
+                for (Optional<Placements> change : List.of(easy, hard)) {
+                    Check.that(
+                            change.isEmpty() || change.get().at().isPresent(),
+                            "an enemy nest's easy/hard gives its at (its placements)");
+                }
             } else {
                 Check.that(layer.isPresent() && size.isPresent(), "a destructible or trigger needs layer and size");
                 Check.that(hp.isPresent() != hits.isPresent(), "give hp (destructible) or hits (trigger)");
@@ -102,16 +108,26 @@ public sealed interface GroundTargetsBlock permits LevelData {
                 Check.that(group.isEmpty() || hits.isEmpty(), "only enemies and destructibles have a group");
                 for (Optional<Placements> change : List.of(easy, hard)) {
                     Check.that(
-                            change.isEmpty()
-                                    || (hits.isPresent() && change.get().at().isEmpty()),
-                            "only enemies have easy/hard placements; a trigger's easy/hard gives its hits");
+                            change.isEmpty() || change.get().at().isEmpty(),
+                            "only enemies have easy/hard placements; a trigger's easy/hard gives its hits, a"
+                                    + " destructible's its hp");
+                    Check.that(
+                            change.flatMap(Placements::hits).isEmpty() || hits.isPresent(),
+                            "only enemies have easy/hard placements; a trigger's easy/hard gives its hits, a"
+                                    + " destructible's its hp");
+                    Check.that(
+                            change.flatMap(Placements::hp).isEmpty() || hp.isPresent(),
+                            "only a destructible's easy/hard gives hp");
                 }
             }
             for (Optional<Placements> change : List.of(easy, hard)) {
                 change.ifPresent(c -> Check.that(
-                        c.at().isPresent() != c.hits().isPresent(),
-                        "an easy/hard change gives at (an enemy nest's placements) or hits (a trigger's)"));
+                        (c.at().isPresent() ? 1 : 0) + (c.hits().isPresent() ? 1 : 0) + (c.hp().isPresent() ? 1 : 0)
+                                == 1,
+                        "an easy/hard change gives at (an enemy nest's placements), hits (a trigger's) or hp (a"
+                                + " destructible's)"));
                 change.flatMap(Placements::hits).ifPresent(n -> Check.positive("hits", n));
+                change.flatMap(Placements::hp).ifPresent(n -> Check.positive("hp", n));
             }
             Check.that(
                     enemy.isPresent()
@@ -128,13 +144,13 @@ public sealed interface GroundTargetsBlock permits LevelData {
     public static final String LINK_PAIRS = "pairs";
 
     /**
-     * A difficulty's change to a ground target: an enemy nest's placements ({@code at}) or (M5 part
-     * E) a trigger's {@code hits}.
+     * A difficulty's change to a ground target: an enemy nest's placements ({@code at}), (M5 part
+     * E) a trigger's {@code hits} or (round 44 Q.5) a destructible's {@code hp}.
      */
-    public record Placements(Optional<List<Placement>> at, Optional<Integer> hits) {
+    public record Placements(Optional<List<Placement>> at, Optional<Integer> hits, Optional<Double> hp) {
         /** An enemy nest's placements. */
         public Placements(List<Placement> at) {
-            this(Optional.of(at), Optional.empty());
+            this(Optional.of(at), Optional.empty(), Optional.empty());
         }
     }
 

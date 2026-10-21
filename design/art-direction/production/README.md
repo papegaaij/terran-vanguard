@@ -173,8 +173,8 @@ Game captures of the production batches that span several parts; prompts:
       12–14's sounds pending concept round 34), a listed file that turns final or leaves fails it,
       and every sprite root of Levels 01–14 (`SpriteUse.roots`) has frames, every unit its own
       sprite (a hull boss or set piece its parts), so none is drawn by the code's placeholder shapes
-- [ ] M5 parts final — **later: M5** (a round per level, as in M4; part A's round 28, part B's
-      round 30, part C's round 31, part D's round 32 and part E's round 33 closed)
+- [x] M5 parts final (a round per level, as in M4: rounds 28, 30, 31, 32, 33 and 34 closed, the Act 2 rework's rounds
+      40-42 and round 44's X rows accepted; the Act 2 rows are `final`)
 
 ## Open questions
 

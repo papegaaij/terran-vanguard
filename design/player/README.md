@@ -2,9 +2,9 @@
 title: Player
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-14
+updated: 2026-10-20
 ---
 
 # Player
@@ -21,12 +21,12 @@ generator limits what can be fitted at the same time.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [ship](ship/README.md) | AF-12 Stormhawk: movement, hitbox, sprite and animation requirements | approved | done | final |
-| [weapons](weapons/README.md) | Front, rear and wing-mount weapons, traits, power draw, costs, upgrades | approved | done | chosen |
-| [generator](generator/README.md) | Power output that limits the loadout; spare power boosts shield regen | approved | done | none |
+| [weapons](weapons/README.md) | Front, rear and wing-mount weapons, traits, power draw, costs, upgrades | approved | done | final |
+| [generator](generator/README.md) | Power output that limits the loadout; spare power boosts shield regen | approved | done | n/a |
 | [shields](shields/README.md) | Regenerating energy shield, capacity, regen and delay | approved | done | final |
-| [armor](armor/README.md) | Non-regenerating hull points, plating upgrades, repairs | approved | done | none |
+| [armor](armor/README.md) | Non-regenerating hull points, plating upgrades, repairs | approved | done | n/a |
 | [wingmen](wingmen/README.md) | AI wingman Rook (escort slot) and drones (wing mounts) | approved | done | final |
-| [specials](specials/README.md) | Special abilities: airstrike, smart bomb, EMP, orbital lance, … | approved | done | chosen |
+| [specials](specials/README.md) | Special abilities: airstrike, smart bomb, EMP, orbital lance, … | approved | done | final |
 | [systems](systems/README.md) | Engines and utility-bay modules: magnet, sensors, auto-repair, … | approved | done | final |
 
 ## Design
@@ -212,3 +212,4 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
 - 2026-10-05: M4 part H docs reconciliation: the special button (part D) and the salvage L,
   special charge and data core pickups (parts C, D and F) were built with their parts; both items
   ticked, the document is `done`.
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

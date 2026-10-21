@@ -150,7 +150,7 @@ the rest its back (×1, the vents ×2 for 2 s per burn): an overall efficiency o
 2,200 HP ÷ 37.5 ≈ 59 s, plus the intro pass's first 4 s (invulnerable until the hull is fully on the
 screen) ≈ **63 s**.
 
-**Measured (step F4, pending the user's review in round 42).** The autopilot with the plan's fit (the Ion Beam
+**Measured (step F4, accepted in round 42 (2026-10-20).** The autopilot with the plan's fit (the Ion Beam
 L3, two Micro-missile Pods, the Tail Gun, Rook's Mortar) plays "get behind it, but not in the cone": the pods
 first in phase 1 (from below on a down-pass, lined up on their outer edge, clear of the plate; the pods sit at the
 art's mounts, ±53 px), then the hull's back from just outside the cone's length (inside its trigger, so a burn
@@ -163,7 +163,7 @@ won, no burn reaches the autopilot. The paper's efficiency 0.68 becomes the meas
 every 0.4 s, eight seeds, shield and armour lost per 10 s of phase 1): **12.3**, the Kraken's phase 1 with the
 same driver 11.4: about as much (the test allows 1.2×), not less; the attacks are not tuned (pending review).
 
-**Re-measured after the rework (round 43, step WR, pending the user's review in round 43).** Far more fire and the
+**Re-measured after the rework (round 43, step WR, accepted in round 43 (2026-10-20).** Far more fire and the
 bigger cone slow the autopilot (more dodging; it stands off behind the 240 px cone): at 3,740 HP the fight ran
 80–110 s at medium, its phase 3 alone up to 54 s. The HP were cut to **3,170** (hull 2,310, pods 430; ×0.85), the
 fight **56.1–60.2 s** on all five seeds (mean 57.1 s; in-level 56.8–68.2 s, mean 61.0), the par **57**; easy 33–39
@@ -174,7 +174,7 @@ flank bursts, but the autopilot's phase 3 lasts ≈ 10 s and much of it hugs the
 which no gun fires (hard: ≈ 185, phase 3 ≈ 240). The random dodger now loses **21.0** per 10 s of phase 1 against
 the Kraken's 11.4 (×1.84; the test asks for 1.3–2×). `WALKER_EFFICIENCY` 1.39 → **1.08** (57.1 s at 3,170 HP).
 
-**Re-measured after round 44 (step WR2, pending the user's review in round 44).** The armoured pods (hit only in
+**Re-measured after round 44 (step WR2, accepted in round 44 (2026-10-20).** The armoured pods (hit only in
 their windows), the rail lance (a dodge every 4 s, every 3 s in phase 3) and the stomp (no more hugging it) cut the
 autopilot's damage hard: at hull 2,310 with pods of 100 the fight ran ≈ 96 s. The autopilot learnt the new rules:
 in phase 1 it shoots a pod whose hatch is open (else it lines up on the nearer one), on a horizontal pass it lines
@@ -219,7 +219,7 @@ terms: **bounty = share × budget(19) ÷ (2.56 × `bounty_scale`)**. With
   a, "Strider heavy", round 36 B.1), a squat armoured hull, the twin missile pods (boxes) on the
   shoulders, the chin cannon, the reactor vents and the flamer nozzle on its back; the vents are
   drawn as a **hot-amber reactor grille** (the Ascendancy rule for exposed cores, Q.23i). Bare-metal scars where the plates and stencils were ground off. No insignia anywhere.
-- **Readability (round 42, step GFX, pending the user's review)**: under the Ion Beam the **heat builds
+- **Readability (round 42, step GFX, accepted in round 42 (2026-10-20))**: under the Ion Beam the **heat builds
   over 0.5 s and cools over 1.0 s as a local hot spot**: the hull stays grey, the pods tint by their heat.
   Hit flashes follow the Kraken's rule (at most one every 0.25 s, a 0.3 blend towards white, none on a
   beam-hot part). The **flame cone** is drawn as a **tell outline over a faint fill**, then a filled **flame
@@ -302,13 +302,13 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
 - [x] The fight measured over five seeds (the balance plan's Level 19 fit), the HP tuned to ≈ 60 s at
       medium (every seed in 45–75 s), the par set to the measured mean; phase 1 checked with the
       calibration harness; the bounty at ≈ 15 % of budget(19) after Level 19's `bounty_scale`
-- [x] Round 42 readability (step GFX, pending the user's review): the beam's local heat, the hit-flash rule,
+- [x] Round 42 readability (step GFX, accepted in round 42 (2026-10-20)): the beam's local heat, the hit-flash rule,
       the flame cone's tell and sector, the larger missiles with glow and trails (see *Presentation*)
-- [x] Round 43 rework (step WR, K.a of round 42; pending the user's review in round 43): the chin's fans in
+- [x] Round 43 rework (step WR, K.a of round 42; accepted in round 43 (2026-10-20): the chin's fans in
       bursts in every phase, the flank guns, bigger salvos, a fiercer phase 3, the cone 240 px ±32° with the
       tracking burn, the drawing scaled to it; the HP re-measured (3,170), the par 57 (`RevenantWalkerSimTest`,
       `FoundryKeysTest`, `RevenantWalkerTest`)
-- [x] Round 44 (step WR2, the user in round 43, W.a/W.e; pending the user's review in round 44): the pods armoured
+- [x] Round 44 (step WR2, the user in round 43, W.a/W.e; accepted in round 44 (2026-10-20): the pods armoured
       while their hatch is shut (`boss.hatch_armour`, until phase 3), the back-mounted rail lance once both pods are
       gone and in phase 3 (`boss.lance`: the charge's line, the shot, its flash), the stomp shockwave (`boss.stomp`:
       the brace's ring, the expanding ring); Rook and the autopilot keep clear of both; the HP re-measured (1,350),
@@ -330,8 +330,7 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
 ## Decisions
 
 - 2026-09-30: Drafted in the bosses roster as the Level 19 mid-boss and hint 2.
-- 2026-10-12 (overnight design phase): promoted from the roster to a draft spec (all pending the
-  user's review in round 36): passes from every edge across a halted casting yard with edge warnings;
+- 2026-10-12 (overnight design phase): promoted from the roster to a draft spec (all accepted in round 36 (2026-10-13): passes from every edge across a halted casting yard with edge warnings;
   three phases (Stride, Hunt, Overheat); a front plate, two pods and the reactor vents as the parts;
   enemy `homing` missiles and a rear flame cone as new attacks; a kinder phase 1 (the lane beside the
   ship, the burst along the heading, one pod at a time); HP 2,200 from the proposed reference DPS 92
@@ -349,7 +348,7 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   four legs) rejected and moved to `../concept/rejected/`. The reference DPS 92 and the bounty 262
   (Level 19's scale) stand until the Act 3 balance plan (part A). The 1 s EMP stun proposed here is
   dropped for the specials document's rule (bosses never stunned), an alignment made at the close,
-  pending the user's review.
+  accepted in round 37 (2026-10-13).
 - 2026-10-19 (M7 part F, step F2): the stat block and script moved into [data.yaml](data.yaml), the table
   marked. The front plate is the boss's `plate` (a box ahead of the hull, not an `armoured` part: it has no
   hit box of its own to be shot); the walker's 8 body headings are a new orientation `8 angles`; the
@@ -358,26 +357,25 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   (`aim: facing`); hard's salvos of 3 from phase 1, missiles 120°/s, the cone 170 px with a 35° swivel,
   easy's 0.8 s tell and phase-1 salvos of 1 are its hooks. The bounty recomputed for Level 19's
   `bounty_scale` of 0.35: 395 (hull 315, pods 40 each), paid 354 = 15.0 %; HP 2,200 and par 60 until
-  step F4 measures the fight (pending the user's review in round 42).
+  step F4 measures the fight (accepted in round 42 (2026-10-20).
 - 2026-10-19 (M7 part F, step F4): the fight measured with the autopilot's walker play and the plan's Level 19 fit
   (see *Duration and HP*): HP 2,200 → **3,740** (hull 2,720, pods 510), par 60 → **53** (the measured mean,
   52.7 s); the pods moved to the art's mounts (±53 px, was ±73: G1's request, so the missiles leave the drawn
   pods), which put them at the plate's ends (the autopilot lines up on their outer edge); `intel:
   {unclassified_until_flown: true}` (unnamed before the fight; the check now counts a level's boss as flying it);
   the bounty 395 → **495** (hull 395, pods 50) for Level 19's measured `bounty_scale` of 0.28, paid 355 = 15.0 %.
-  The random dodger loses 12.3 per 10 s of phase 1 against the Kraken's 11.4 (about as much, not less). Pending the
-  user's review in round 42.
+  The random dodger loses 12.3 per 10 s of phase 1 against the Kraken's 11.4 (about as much, not less). Accepted in round 42 (2026-10-20).
 - 2026-10-20 (round 42, step GFX): readability fixes after the round 42 captures: the Ion Beam's heat as a
   local hot spot (builds 0.5 s, cools 1.0 s; the hull stays grey, the pods tint), the Kraken's hit-flash rule
   (at most one per 0.25 s, a 0.3 blend, none on a beam-hot part), the flame cone's tell outline and filled
   flame sector over a dark underlay with puffs, homing missiles 1.5x with an exhaust glow and 0.9 s smoke
-  trails. Pending the user's review in round 42.
+  trails. Accepted in round 42 (2026-10-20).
 - 2026-10-20 (user, round 42, closed): the production art approved as final (F.a; `art: final`); the walker in
   the simulation and Level 19's data as built (B.a–B.d), the cone and pods (R.d) and the rest of the round's rows
   accepted; the death and the crawl seen and accepted (N.c). K.a **change**: "The walker looks like a real easy
   target. It needs to do a lot more shooting and the flame needs to be bigger." (round 43, below). Its sounds
   (S rows) are round 43's.
-- 2026-10-20 (round 43, step WR, the K.a change; pending the user's review in round 43): **much more shooting**:
+- 2026-10-20 (round 43, step WR, the K.a change; accepted in round 43 (2026-10-20): **much more shooting**:
   the chin fires fans in bursts in every phase (along its heading in phase 1, aimed from phase 2, 5-way in phase
   3), new **flank guns** (a fan of 2 over 180° along its heading, bursts out of both flanks), salvos of 3 in phase
   1 and every 3 s per pod from phase 2, at most 8 missiles; a **bigger flame**: 240 px ±32° (was 150, ±22°), the
@@ -387,7 +385,7 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   pods 430), par 53 → **57**; the random dodger's phase 1 21.0 per 10 s (Kraken 11.4); the shots a minute ≈ 100
   against 41. Rejected: a mortar on its back (the shared lob draws Level 14's lime acid, wrong for a foundry
   machine); a forward flame wash in phase 3 (the 180° turning burn already sweeps a half disc of 240 px).
-- 2026-10-20 (user, round 43, W.a and W.e; built in step WR2, pending the user's review in round 44): "The first
+- 2026-10-20 (user, round 43, W.a and W.e; built in step WR2, accepted in round 44 (2026-10-20): "The first
   missile hatch is destroyed before the walker has a chance of ever using it. That's too easy. When both missile
   hatches are destroyed, the walker is mostly toothless. Can't you add something else that keeps the final part
   interesting?" and "stomp shockwave … And as noted above, something else for the longer range." Decided with the
@@ -400,3 +398,4 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   medium's lance and stomp and drops its phase-1 salvos of 4 (the walker otherwise drained the ship before the level's
   end), easy's lance charge 1.3 s every 5 / 3.8 s and stomp brace 0.7 s.
   The sounds of the lance and the stomp are placeholders (nothing synthesized) until the next sound round.
+- 2026-10-20 (user, round 44, closed): the second rework accepted as built: **W.a** the capture (the pods armoured until their hatch opens, the stomp's ring, the rail lance on the back) accepted, **W.b** HP 1,350 (pods 80 each, hull 1,190) and par 51 s, **W.c** hard keeps medium's lance, stomp and phase 1, **W.d** the hatches jam open in phase 3, **W.e** phase 2's salvos every 4 s per pod, the lance every 4 s / 3 s and the stomp at most every 4 s, **W.f** phase 1's loss at most 2.2x the Kraken's, **W.g** the narrow HP plateau accepted as a known risk (a later change to the attacks or speed needs a re-measure and an HP re-tune) — all as recommended. **W.h** the stomp's ring is too faint against the foundry floor: a **brighter, thicker ring** (a look change only, no number moves), planned, not started. **Sounds**: S.g the lance charge **b**, S.h the lance shot **a**, S.i the shockwave **a** (see the [sfx decisions](../../../audio/sfx/README.md#decisions)).

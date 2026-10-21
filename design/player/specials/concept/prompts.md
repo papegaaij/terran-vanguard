@@ -161,7 +161,7 @@ white double shell (zoom 2×), the shield bar at 40 with white cores, the HUD ri
 across the pickup and at READY. The mp4: Level 05 hard t 50–56, Level 05 t 62–66, Level 07 t 29–35.6
 and 105.4–111.4, Level 09 t 11.4–19.4, 32.4–36.9 and 44.4–51.4, Level 14 t 24.3–28.7.
 
-Findings (pending the user's review): the READY white flash of the cooldown ring (and the dash
+Findings (accepted in round 34 (2026-10-12)): the READY white flash of the cooldown ring (and the dash
 pip's, see [dash-capture-r37-a](../../systems/concept/prompts.md#dash-capture-r37-a)) shows in one
 captured frame only: it counts rendered frames (12), and the game ran uncapped at about 460 fps
 under Xvfb, so on a fast machine without vsync it is gone in about 25 ms.

@@ -78,5 +78,17 @@
  ],
  "neck_note": "where the body leaves the sand behind a risen mouth: the ridge's head joins there",
  "collar_radius": 57.6,
- "funnel_radius": 104.0
+ "funnel_radius": 104.0,
+ "spine": {
+  "distances": [
+   120,
+   200,
+   280,
+   350
+  ],
+  "states": 3,
+  "headings": 16,
+  "note": "dust-colossus-spine frame (segment * states + state) * headings + heading; segment i centred distances[i] px from the mouth's centre toward the field's centre; heading k turns k * 22.5 degrees clockwise from straight down (the ridge's rule)"
+ },
+ "fissure_radius": 118.0
 }

@@ -20,10 +20,17 @@
 # centre turret pair; easy by the formation lever, the t=61 Wraiths a Needler V-wing from the front (Level 14's rule).
 # Step H4 measured the haul and the fight (the level report): the `bounty_scale` 0.74 puts the typical haul on
 # budget(21), the boss's bounty 325 keeps H.5's 22.7 %, the fight's par is its measured 102 s. Rook keeps Level 20's Autocannon (H.2: the balance plan's fit carries it).
+# Round 44 Q.1 (step L21R, 2026-10-20): H.1's 106 failed the Act 2+ floor (1.78 on the screen, 5 stretches over 2 s), so
+# the waves were reworked as Level 20's, the anchors kept at their times: a firing group between every two approved
+# waves (23 entries, Needler line abreasts and Stinger V-wings of 2, one smaller on hard; the two last ones not on
+# hard), Needler rings held over the Kite swarms at t=9.5 and 30 (`circle`, 6 and 5, hold 8), and a slow
+# Stinger stream with the t=64 Kites that holds the ridge pass (4, 1.6 s apart; hard 2). 158 + 10 = 168 at medium,
+# 2.55 on the screen, the pre-boss pause and the settling dust the only stretches over 2 s; the haul re-scaled to 0.50
+# and the boss's bounty to 480 (H.5's share). The survey crawler's hard 28 HP is its `hard: {hp}` (Q.5).
 # The backdrop is step ART-H1's (tools/art/backdrop_l21.py --proposal, merged here): seams at exact rows.
 scroll_speed: 160     # the rim; the inner wall, the dune sea and the hollow set their own
 launch_seconds: 5     # the usual launch from the bottom edge over the rim's CDF line (H.7g)
-bounty_scale: 0.74    # every bounty × 0.74: the typical haul on budget(21) 2,709 (step H4's measured fit; step PH2's paper value 0.75)
+bounty_scale: 0.50    # every bounty × 0.50: the typical haul on budget(21) 2,709 (step L21R's measured fit after round 44 Q.1's wave rework; step H4's 0.74, step PH2's paper value 0.75)
 control_prompts: []
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
   setting: Mars, Hellas basin
@@ -127,6 +134,8 @@ boss:  # the act boss: the arena's start is its arrival (the warning, the bar, t
 # before the boss (nothing enters after the t=97.5 Mote stream: the screen clears while the Choir sings, H.3).
 waves:
   - {t: 6, formation: stream, enemy: dust-kite, count: 4, from: front, edge: alternating, interval: 1.25, notes: Popcorn over the rim line}
+  - {t: 8, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R (round 44 Q.1): a firing pair over the rim line"}
+  - {t: 9.5, formation: circle, enemy: needler, count: 6, from: front, hold: 8, at: [240, 200], hard: {count: 5}, notes: "Round 44 Q.1 (step L21R): a firing ring held over the Kite swarm (the beam takes the Kites at once)"}
   - t: 9.5
     formation: swarm
     enemy: dust-kite
@@ -134,11 +143,18 @@ waves:
     from: front
     paths: [[[300, -60], [290, 180], [160, 300], [120, 160], [230, 110], [300, 330], [200, 620]]]   # a loop over the rim line, down the middle (H.1: the V-wing as a looping swarm)
     notes: "H.1: the approved V-wing as a swarm that loops on the screen"
+  - {t: 11.5, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair: the rim's screen held (Act 2+ rule)"}
   - {t: 13, formation: stream, enemy: skitter, count: 3, from: front, edge: left, interval: 1.25}
+  - {t: 14.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair"}
   - {t: 16.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: Over the wrecks of the retreat}
+  - {t: 18.25, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair between the Needler lines"}
   - {t: 20, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Down the first slope; a firing group in place of the approved Kite snake (H.1)"}
+  - {t: 21.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair down the first slope"}
   - {t: 23, formation: field, enemy: burrower, count: 3, from: front, x: 240, size: [400, 200], notes: "On the dune fans; act HP factor"}
+  - {t: 24.75, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair over the dune fans"}
   - {t: 26.5, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: alternating, interval: 1.25, notes: "A firing group in place of the approved Kite stream (H.1)"}
+  - {t: 28.25, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair"}
+  - {t: 30, formation: circle, enemy: needler, count: 5, from: front, hold: 8, at: [240, 220], hard: {count: 4}, notes: "Round 44 Q.1 (step L21R): a firing ring held over the Kite swarm"}
   - t: 30
     formation: swarm
     enemy: dust-kite
@@ -146,11 +162,16 @@ waves:
     from: front
     paths: [[[160, -60], [170, 200], [320, 300], [360, 150], [250, 100], [180, 330], [280, 620]]]   # a loop down the inner wall's left half
     notes: "H.1: the approved V-wing as a looping swarm"
+  - {t: 31.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair before the pincer"}
   - {t: 33.5, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "1 per side; edge warnings; act HP factor"}
+  - {t: 35.25, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair"}
   - {t: 37, formation: stream, enemy: skitter, count: 3, from: front, edge: right, interval: 1.25, notes: "Over the hauler's nest"}
+  - {t: 38.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair past the hauler's nest"}
   - {t: 40.5, formation: field, enemy: burrower, count: 4, from: front, x: 260, size: [360, 200], notes: "Below the survey crawler's tread"}
+  - {t: 42.25, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair over the survey crawler's tread"}
   - {t: 44, formation: V-wing, enemy: stinger, count: 5, from: front, hard: {count: 4}, notes: The leader drops an overdrive}
   - {t: 47, formation: stream, enemy: dust-kite, count: 4, from: sides, interval: 1.25, notes: "Popcorn from the sides; edge warnings"}
+  - {t: 48.75, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair onto the dune sea"}
   - t: 50.5
     formation: pack
     enemy: dust-devil
@@ -158,10 +179,15 @@ waves:
     from: front
     paths: [[[140, -40], [190, 640]], [[340, -40], [290, 640]]]   # roaming the dune sea, closing in
     notes: "Roaming the dune sea; act HP factor"
+  - {t: 52.25, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair"}
   - {t: 54, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "A firing group in place of the approved Kite snake (H.1)"}
+  - {t: 55.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair before the crest"}
   - {t: 57.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "With the dune-crest mortars; act HP factor"}
+  - {t: 59.25, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair over the crest mortars"}
   - {t: 61, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, skip: [easy], notes: "Cloaked; BOTTOM warning; Rook's rear bark; act HP factor; easy: a Needler V-wing from the front instead"}
   - {t: 61, formation: V-wing, enemy: needler, count: 3, from: front, skip: [medium, hard], notes: "Easy only: instead of the rear Wraiths (Level 14's rule)"}
+  - {t: 62.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}, notes: "Step L21R: a firing group into the ridge pass (the screen held to t=64)"}
+  - {t: 64, formation: stream, enemy: stinger, count: 4, from: front, edge: alternating, interval: 1.6, hard: {count: 2}, notes: "Round 44 Q.1 (step L21R): a slow firing stream that holds the ridge pass with the Kites (the beam takes the Kites at once)"}
   - t: 64
     formation: swarm
     enemy: dust-kite
@@ -177,10 +203,15 @@ waves:
     interval: 3
     paths: [[[170, -60], [180, 200], [150, 400], [170, 640]]]   # lumbering down the dune sea after the ridge, 3 s apart (their rolls never overlap)
     notes: "Lumbering after the ridge; act HP factor"
+  - {t: 72.25, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair after the ridge"}
   - {t: 74, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, notes: "1 per side; edge warnings"}
+  - {t: 75.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair"}
   - {t: 77.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1.25}
+  - {t: 79, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair into the hollow"}
   - {t: 80.5, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, notes: "2 per side, hold {hold} s; edge warnings"}
+  - {t: 82.25, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair"}
   - {t: 84, formation: field, enemy: burrower, count: 4, from: front, x: 240, size: [400, 200], notes: "Between the hollow's nests"}
+  - {t: 85.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair between the hollow's nests"}
   - t: 87.5
     groups:
       - {formation: carrier + escorts, enemy: choir-herald, count: 1}
@@ -189,7 +220,9 @@ waves:
     speed: 50   # in at half its 100 px/s, so its rings are seen before it holds (as Levels 17 and 19)
     notes: "The escorts in `orbit` under its rings; act HP factor"
   - {t: 91, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: right, interval: 1.25, notes: "A firing group in place of the approved Kite snake (H.1)"}
+  - {t: 92.75, formation: line abreast, enemy: needler, count: 2, from: front, skip: [hard], notes: "Step L21R: a firing pair over the lip mortars (not on hard: the third Wraiths and the centre turrets)"}
   - {t: 94, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, notes: "BOTTOM warning; Rook's rear bark"}
+  - {t: 95.75, formation: V-wing, enemy: stinger, count: 2, from: front, skip: [hard], notes: "Step L21R: a firing pair, the last from the front (not on hard)"}
   - t: 97.5
     formation: swarm
     enemy: mote-swarm
@@ -213,6 +246,7 @@ ground_targets:  # at: [t, x], when it enters at the top edge and its x
     size: [64, 56]
     sprite: survey-crawler   # step ART-H1: the colonial deep-survey crawler buried to its cab by a landslide (frames 0 buried, 1 hit, 2 cleared with the crate)
     hp: 20
+    hard: {hp: 28}   # round 44 Q.5: the design's hard 28 HP (a destructible's hard `hp`, step L21R's key)
     reveals: survey crawler
     at: [[44, 80]]   # on an inner-wall tread at the left edge (104 rows from the nearest riser: l21_props.py --check)
     notes:
@@ -284,7 +318,7 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies; the are
 
 objectives:
   primary: reach-end   # the arena makes the kill a condition of the level's end
-  secondary: {kill_ratio: 0.65, credits: 100, name: Clear the basin}   # at least 65 % of the level's enemies (the boss and its debris not counted), judged at the end; no radio line (100 in Act 1 terms: pays 256)
+  secondary: {kill_ratio: 0.65, boss_counted: false, credits: 100, name: Clear the basin}   # at least 65 % of the level's enemies (the boss and its debris not counted), judged at the end; no radio line (100 in Act 1 terms: pays 256)
 
 music:
   track: 9            # Act 3 B "Grey Signal" (audio/music track list); Vorne's motif layer stays muted (no `motif`: the Colossus is pure Vrell)
@@ -299,7 +333,7 @@ music:
 
 ridge: {t: 64, seconds: 8, from: right, to: left, depth: 150}   # presentation (round 43 Q.4 / H.7f): the ridge pass: the Colossus's back surfaces off the right edge at t=64, 150 px below the top edge, its head off the left edge at t=72 across the upper half, hitting nothing (Level 20's ridge sprites)
 
-difficulty: {}  # easy's Needler V-wing at t=61 and hard's centre turret pair and third Wraiths are in their entries; the firing groups' hard counts are in their waves; the formation lever sizes the rest (the Burrower fields one smaller on easy); the stat blocks' hooks apply (the Burrowers', the Dust Devils' pull, the Colossus's easy and hard hooks); the survey crawler's hard 28 HP waits for a trigger's hard key (pending)
+difficulty: {}  # easy's Needler V-wing at t=61 and hard's centre turret pair and third Wraiths are in their entries; the firing groups' hard counts are in their waves; the formation lever sizes the rest (the Burrower fields one smaller on easy); the stat blocks' hooks apply (the Burrowers', the Dust Devils' pull, the Colossus's easy and hard hooks); the survey crawler's hard 28 HP is its entry's `hard: {hp}` (round 44 Q.5)
 
 briefing:
   pages:

@@ -91,6 +91,10 @@ public final class BreachArena implements Hashed {
     public static final double VENT_FIRST_SECONDS = 1;
     /** Where the ridge comes from before the first breach: this far above the top edge, px. */
     static final double START_ABOVE = 200;
+    /** Step SIM-K: samples of the ridge's curve a spine vent's distance is measured over (from the mouth back). */
+    private static final int SPINE_SAMPLES = 64;
+    /** Step SIM-K: a spine vent's centre stays this far inside the play field's edges, px (half a vent). */
+    private static final double VENT_MARGIN = 20;
 
     /** What a bite or an eruption caught ({@link SetPiece.BossActions#bite}): the ship. */
     public static final int BITE_SHIP = 1;
@@ -114,6 +118,10 @@ public final class BreachArena implements Hashed {
 
     private final double[] ventX;
     private final double[] ventY;
+    /** Step SIM-K: per vent, the spine's direction there toward the mouth (a unit vector, screen px, y up). */
+    private final double[] ventDirX;
+
+    private final double[] ventDirY;
     /** Per part, its index among the vents; -1 for none. */
     private final int[] partVent;
 
@@ -202,6 +210,12 @@ public final class BreachArena implements Hashed {
 
     private boolean opened;
     private boolean tear;
+    /** Step SIM-K: the eruption's ring: null without; its steps since the eruption (-1: none expanding), whom it hit. */
+    private final BossSpec.Shockwave shock;
+
+    private final int shockTicks;
+    private int shockAge;
+    private int shockHit;
 
     /** {@link #fires()}: the phase's first attack (the ring). */
     static final int RING = 1;
@@ -235,6 +249,8 @@ public final class BreachArena implements Hashed {
         ventParts = new int[vents == null ? 0 : vents.parts().size()];
         ventX = new double[ventParts.length];
         ventY = new double[ventParts.length];
+        ventDirX = new double[ventParts.length];
+        ventDirY = new double[ventParts.length];
         partVent = new int[parts];
         java.util.Arrays.fill(partVent, -1);
         for (int i = 0; i < ventParts.length; i++) {
@@ -247,6 +263,8 @@ public final class BreachArena implements Hashed {
         markerTicks = eruption == null ? tellTicks : Math.max(1, SimStep.ticks(eruption.markerSeconds()));
         eruptOpenTicks = eruption == null ? openTicks : Math.max(1, SimStep.ticks(eruption.openSeconds()));
         eruptGapTicks = eruption == null ? gapTicks : SimStep.ticks(eruption.buriedSeconds()) + markerTicks;
+        shock = eruption == null ? null : eruption.ring().orElse(null);
+        shockTicks = shock == null ? 0 : Math.max(1, SimStep.ticks(shock.expandSeconds()));
         reset();
     }
 
@@ -281,6 +299,8 @@ public final class BreachArena implements Hashed {
         for (int i = 0; i < ventParts.length; i++) {
             ventX[i] = mouthX;
             ventY[i] = mouthY;
+            ventDirX[i] = 0;
+            ventDirY[i] = 1;
         }
         debrisTicks = 0;
         intervalNow = 0;
@@ -288,6 +308,8 @@ public final class BreachArena implements Hashed {
         erupted = false;
         opened = false;
         tear = false;
+        shockAge = -1;
+        shockHit = 0;
         if (rocks != null) {
             rocks.reset();
         }
@@ -295,6 +317,7 @@ public final class BreachArena implements Hashed {
 
     /** It was destroyed: no suction, no fire, no snap (its pose and place stay for the death). */
     void died() {
+        shockAge = -1;
         fires = 0;
         snap = false;
         erupted = false;
@@ -338,6 +361,9 @@ public final class BreachArena implements Hashed {
         if (!arrived) {
             return;
         }
+        if (shockAge >= 0 && ++shockAge > shockTicks) {
+            shockAge = -1;
+        }
         phaseTicks++;
         if (toRise > 0) {
             toRise--;
@@ -367,6 +393,11 @@ public final class BreachArena implements Hashed {
                     if (erupts(pose)) {
                         // Step H3: the marker erupts: the mouth is up and open at once.
                         erupted = true;
+                        if (shock != null) {
+                            // Step SIM-K: its ring starts expanding from the mouth.
+                            shockAge = 0;
+                            shockHit = 0;
+                        }
                         layer(Layer.GROUND);
                         open(bossPhase);
                     } else {
@@ -451,27 +482,85 @@ public final class BreachArena implements Hashed {
         }
     }
 
-    /** Step H3: the living spine vents rise with this breach when the boss phase fires their burst. */
+    /**
+     * Step H3: the living spine vents rise with this breach when the boss phase fires their burst. Step SIM-K (round 44,
+     * K.b: "on its spine, not in the sand"): each sits on the body behind the mouth, its distance measured along the
+     * ridge's curve that ends at the mouth (the curve the presentation draws behind the risen mouth, {@link
+     * #ridgeX(int)}), straight on along the curve's start past its far end.
+     */
     private void raiseVents(int bossPhase) {
         if (vents == null || !boss.phases().get(bossPhase).attacks().contains(vents.burst())) {
             return;
         }
         ventsRaised = true;
-        double ux = PlayField.WIDTH / 2.0 - mouthX;
-        double uy = PlayField.HEIGHT / 2.0 - mouthY;
-        double length = Math.sqrt(ux * ux + uy * uy);
-        if (length < 1) {
-            ux = 0;
-            uy = 1;
-            length = 1;
-        }
         for (int i = 0; i < ventParts.length; i++) {
             if (!piece.partWrecked(ventParts[i])) {
-                double d = vents.distances().get(i);
-                ventX[i] = mouthX + ux / length * d;
-                ventY[i] = mouthY + uy / length * d;
+                onSpine(i, vents.distances().get(i));
             }
         }
+    }
+
+    /**
+     * Step SIM-K: places vent {@code i} {@code d} px back from the mouth along the ridge's curve; where the curve turns
+     * back on itself (more than a right angle from its last stretch: two under points close together, the curve's
+     * hairpin through the field's centre) or ends, straight on along the stretch before.
+     */
+    private void onSpine(int i, double d) {
+        double left = d;
+        double x = toX;
+        double y = toY;
+        // The way back from the mouth, a unit vector: the curve's last stretch, else away from where it came from.
+        double backX = fromX - toX;
+        double backY = fromY - toY;
+        double backLength = Math.sqrt(backX * backX + backY * backY);
+        if (backLength < 1e-9) {
+            backX = 0;
+            backY = 1;
+        } else {
+            backX /= backLength;
+            backY /= backLength;
+        }
+        boolean first = true;
+        double firstX = backX;
+        double firstY = backY;
+        for (int k = SPINE_SAMPLES - 1; k >= 0; k--) {
+            double u = (double) k / SPINE_SAMPLES;
+            double px = curve(fromX, viaX, toX, u);
+            double py = curve(fromY, viaY, toY, u);
+            double dx = px - x;
+            double dy = py - y;
+            double length = Math.sqrt(dx * dx + dy * dy);
+            if (length < 1e-9) {
+                continue;
+            }
+            dx /= length;
+            dy /= length;
+            if (first) {
+                first = false;
+                firstX = dx;
+                firstY = dy;
+            } else if (dx * firstX + dy * firstY <= 0) {
+                break;
+            }
+            backX = dx;
+            backY = dy;
+            if (length >= left) {
+                break;
+            }
+            left -= length;
+            x = px;
+            y = py;
+        }
+        // On the play field, so it can be shot (a hairpin's or a degenerate curve's straight run may leave it).
+        ventX[i] = Math.clamp(x + backX * left, VENT_MARGIN, PlayField.WIDTH - VENT_MARGIN);
+        ventY[i] = Math.clamp(y + backY * left, VENT_MARGIN, PlayField.HEIGHT - VENT_MARGIN);
+        ventDirX[i] = -backX;
+        ventDirY[i] = -backY;
+    }
+
+    /** The quadratic curve from {@code a} over {@code b} to {@code c} at {@code u} (0–1). */
+    private static double curve(double a, double b, double c, double u) {
+        return (1 - u) * (1 - u) * a + 2 * u * (1 - u) * b + u * u * c;
     }
 
     /** Whether a breach at {@code p} erupts (an under point with an eruption). */
@@ -617,6 +706,14 @@ public final class BreachArena implements Hashed {
             int hit = actions.bite(mouthX, mouthY, eruption.radius(), eruption.damage());
             actions.breach(SimEvents.Type.ERUPTION, mouthX, mouthY, hit);
         }
+        if (shockAge >= 0) {
+            // Step SIM-K: the ring catches the ship and Rook once each as it reaches them.
+            int hit = actions.strike(mouthX, mouthY, shockRadius(), shock.damage(), shockHit);
+            if (hit != 0) {
+                shockHit |= hit;
+                actions.breach(SimEvents.Type.ERUPTION_RING, mouthX, mouthY, hit);
+            }
+        }
         if (tear && firing) {
             actions.tearLoose(rocks, mouthX, mouthY);
         }
@@ -659,6 +756,23 @@ public final class BreachArena implements Hashed {
     /** Step H3: whether the risen vents fire their burst now (the mouth open). */
     boolean ventsFiring() {
         return ventsRaised && phase == Phase.OPEN;
+    }
+
+    /**
+     * Step SIM-K (round 44, K.c: "when the Colossus is out of the ground, the background cannot move"): whether a
+     * crawling arena's ground must stand still now, or come to a stop within {@code easeTicks} steps: from {@code
+     * easeTicks} before a tell (or an eruption's marker) through the tell (the bulge stays put on the sand), the rise,
+     * the open mouth, the bite and the whole dive; never before it arrives nor once it is destroyed (its body then
+     * scrolls with the ground).
+     */
+    boolean groundStill(int easeTicks) {
+        if (!arrived || piece.destroyed()) {
+            return false;
+        }
+        return switch (phase) {
+            case TELL, RISE, OPEN, BITE, DIVE -> true;
+            case BURIED -> toRise >= 0 && toRise <= tellNow + easeTicks;
+        };
     }
 
     /** Step H3: the spine vents' burst attack; -1 without vents. */
@@ -925,6 +1039,24 @@ public final class BreachArena implements Hashed {
         return eruption != null;
     }
 
+    /**
+     * Step SIM-K: whether the eruption's ring is expanding now (from the eruption over its expansion time); false
+     * without one.
+     */
+    public boolean ringing() {
+        return shockAge >= 0;
+    }
+
+    /** Step SIM-K: the eruption's ring's radius now, px (its centre the mouth's); 0 while none expands. */
+    public double shockRadius() {
+        return shockAge < 0 ? 0 : shock.radius() * Math.min(1, (double) shockAge / shockTicks);
+    }
+
+    /** Step SIM-K: the eruption's ring's full radius, px; 0 without one. */
+    public double shockReach() {
+        return shock == null ? 0 : shock.radius();
+    }
+
     /** How many spine vents it has (0 without). */
     public int ventCount() {
         return ventParts.length;
@@ -954,6 +1086,19 @@ public final class BreachArena implements Hashed {
     /** ... px up from the bottom edge. */
     public double ventY(int i) {
         return ventY[i];
+    }
+
+    /**
+     * Step SIM-K: the spine's direction at spine vent {@code i} toward the mouth, a unit vector (screen px to the
+     * right; {@link #ventDirY(int)} up): the organ's heading on the body.
+     */
+    public double ventDirX(int i) {
+        return ventDirX[i];
+    }
+
+    /** ... up. */
+    public double ventDirY(int i) {
+        return ventDirY[i];
     }
 
     /** Rocks torn loose in this attempt (0 without debris). */
@@ -994,6 +1139,10 @@ public final class BreachArena implements Hashed {
                 .add(intervalNow)
                 .add(spiralNow ? 1 : 0)
                 .add(rocksTorn());
+        if (shock != null) {
+            // Step SIM-K: only with an eruption ring, so the other bosses hash as before.
+            hash.add(shockAge).add(shockHit);
+        }
         for (int i = 0; i < ventParts.length; i++) {
             hash.add(ventX[i]).add(ventY[i]);
         }

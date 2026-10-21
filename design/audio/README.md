@@ -2,9 +2,9 @@
 title: Audio
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../campaign, ../world]
-updated: 2026-10-07
+updated: 2026-10-20
 ---
 
 # Audio
@@ -20,8 +20,8 @@ crunchy, and clearly readable. Radio chatter is spoken (text-to-speech rendered 
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [music](music/README.md) | Track list, styles per act, loop and transition rules | approved | in-progress | chosen |
-| [sfx](sfx/README.md) | Full sound-effect list with priorities, mixing rules | approved | in-progress | chosen |
+| [music](music/README.md) | Track list, styles per act, loop and transition rules | approved | in-progress | final |
+| [sfx](sfx/README.md) | Full sound-effect list with priorities, mixing rules | approved | in-progress | final |
 | [voice](voice/README.md) | Spoken radio lines: Chatterbox text-to-speech rendered offline through the radio filter | draft | in-progress | chosen |
 
 ## Design
@@ -192,3 +192,4 @@ spoken lines are designed in [voice](voice/README.md).
   effects' own limits and priorities in [sfx](sfx/README.md#mixing-rules)); it bounds how many
   effects play, not their sum, which stays the master limiter's job. The SFX playback item is ticked.
 - 2026-10-05: Concept round 26 closed: every item is ticked and the music, SFX and voice documents are `done` for M4, so this document is `done`.
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

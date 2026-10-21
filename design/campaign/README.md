@@ -3,7 +3,7 @@ title: Campaign
 design: approved
 implementation: in-progress
 art: none
-updated: 2026-10-18
+updated: 2026-10-20
 ---
 
 # Campaign
@@ -21,8 +21,8 @@ consecutive levels.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [act-1-first-contact](act-1-first-contact/README.md) | Levels 01–07 · Earth orbit & Luna · the Vrell strike · boss Brood Carrier | approved | done | final |
-| [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | in-progress | final |
-| [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | chosen |
+| [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | done | final |
+| [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
 | [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | draft | not-started | none |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal · boss Iron Sovereign | draft | not-started | none |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
@@ -215,14 +215,18 @@ criteria), Open questions, Decisions. The worked example is
       `DebriefActEndTest`, `OutroOnwardTest`, the route in `ActPlaythroughTest`)
 - [x] Campaign sequence 08→14 in order, Act 2's outro after Level 14 (M5 parts B–H;
       `ActPlaythroughTest` flies Levels 01–14 as one campaign on every difficulty, M5 part I)
-- [ ] Campaign sequence 15→50 in order — **later: Act 3** to Act 7 (Levels 15–50), each level with
+- [x] Campaign sequence 15→21 in order, Act 3's outro after Level 21 (M7 parts B–H; `ActPlaythroughTest` flies
+      Levels 01–21 as one campaign on every difficulty, M7 part I)
+- [ ] Campaign sequence 22→50 in order — **later: Act 4** to Act 7 (Levels 22–50), each level with
       its act
 - [x] Act transitions show an act title card and the act's opening briefing.
 - [x] Each level's threat profile is available as data for the hangar intel panel: Levels 01–07
       (`threat_profile` in each level's data.yaml, read by `LevelData` and `Intel`)
 - [x] The threat profiles of Levels 08–14 in their data files, with Dr. Varga's intel lines (M5
       parts B–H; `Intel`, `IntelPanelLayoutTest`, each level's `LevelNNTest`)
-- [ ] The threat profiles of Levels 15–50 — **later: Act 3** to Act 7, in each level's data file as
+- [x] The threat profiles of Levels 15–21 in their data files, with Dr. Varga's intel lines (M7 parts B–H;
+      `Intel`, `IntelPanelLayoutTest` over every level)
+- [ ] The threat profiles of Levels 22–50 — **later: Act 4** to Act 7, in each level's data file as
       it is written
 - [x] Shop unlocks follow the *Loadout pressure* table (data-driven, per level): each item's
       `unlock` or `available` in its data (`Hangar.available`, `Catalogue`); the Act 1 rows
@@ -231,8 +235,8 @@ criteria), Open questions, Decisions. The worked example is
       `unlock: 8`), built in M5 part A
 - [x] The `anti-sub` row (L11) checked with its weapon in play: the Torpedo Pod (M5 part E;
       `TorpedoTest`, `SubLayerTest`)
-- [ ] The later rows checked with their weapons in play: `beam` (L15) and `shield-breaker` (L29) —
-      **later: Act 3** and **later: Act 5**
+- [x] The `beam` row (L15) checked with its weapon in play (M7 part A: the Ion Beam)
+- [ ] The `shield-breaker` row (L29) checked with its weapon in play — **later: Act 5**
 - [x] Campaign progress (current level, unlocks) is stored in the save game
       ([systems](../systems/README.md)).
 

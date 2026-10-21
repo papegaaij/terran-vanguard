@@ -146,17 +146,20 @@ public final class RadioQueue {
         final Priority priority;
         /** A closing line queued while the radio was free: it opens without waiting for a gap. */
         final boolean ahead;
+        /** Step GK: a line an urgent one interrupted, waiting to play again in full. */
+        final boolean replay;
 
         float waited;
 
         Waiting(Message message, Priority priority) {
-            this(message, priority, false);
+            this(message, priority, false, false);
         }
 
-        Waiting(Message message, Priority priority, boolean ahead) {
+        Waiting(Message message, Priority priority, boolean ahead, boolean replay) {
             this.message = message;
             this.priority = priority;
             this.ahead = ahead;
+            this.replay = replay;
         }
     }
 
@@ -166,6 +169,13 @@ public final class RadioQueue {
     private Priority currentPriority = Priority.TIMED;
     /** Whether the current message is a closing line that went ahead, to go ahead again if interrupted. */
     private boolean currentAhead;
+    /** Step GK: whether the current message plays again after an urgent line cut it. */
+    private boolean currentReplay;
+    /**
+     * Step GK: whether the current message's priority was withdrawn while it played ({@link #withdrawAll}): cut by an
+     * urgent line now, it does not play again.
+     */
+    private boolean currentSpent;
 
     private int page;
     private float typed;
@@ -207,7 +217,7 @@ public final class RadioQueue {
             return message;
         }
         boolean free = current.isEmpty() && queue.isEmpty();
-        queue.add(new Waiting(message, priority, priority == Priority.CLOSING && free));
+        queue.add(new Waiting(message, priority, priority == Priority.CLOSING && free, false));
         return message;
     }
 
@@ -250,9 +260,25 @@ public final class RadioQueue {
         return false;
     }
 
-    /** Takes every waiting line of {@code priority} out of the queue (a boss phase's lines once the boss is down). */
-    public void withdrawAll(Priority priority) {
+    /**
+     * Takes every waiting line of {@code priority} out of the queue (a boss phase's lines once the boss is down). Step
+     * GK (H5R's capture: Varga's "It's under you!", cut by Rook's eject bark, showed again over the Colossus's kill): a
+     * line of that priority on the radio that is playing again after an urgent line cut it is taken off the radio too,
+     * and one playing for the first time no longer plays again if an urgent line cuts it now.
+     *
+     * @return whether a line was cut on the radio (its voice must stop)
+     */
+    public boolean withdrawAll(Priority priority) {
         queue.removeIf(waiting -> waiting.priority == priority);
+        if (current.isEmpty() || currentPriority != priority) {
+            return false;
+        }
+        if (currentReplay) {
+            cancel(current.get());
+            return true;
+        }
+        currentSpent = true;
+        return false;
     }
 
     /** How long a line of {@code priority} waits before it is dropped as stale. */
@@ -316,8 +342,11 @@ public final class RadioQueue {
         boolean urgent = queue.stream().anyMatch(waiting -> waiting.priority == Priority.URGENT);
         if (urgent && current.isPresent() && currentPriority != Priority.URGENT) {
             // The interrupted line goes back to the head of the queue, to play again in full once the
-            // urgent lines (which go first wherever they wait) are done.
-            queue.addFirst(new Waiting(current.get(), currentPriority, currentAhead));
+            // urgent lines (which go first wherever they wait) are done; step GK: not once its priority was
+            // withdrawn while it played (a boss phase's line as the boss died).
+            if (!currentSpent) {
+                queue.addFirst(new Waiting(current.get(), currentPriority, currentAhead, true));
+            }
             current = Optional.empty();
         }
         if (current.isEmpty()) {
@@ -333,6 +362,8 @@ public final class RadioQueue {
             current = Optional.of(next.get().message);
             currentPriority = next.get().priority;
             currentAhead = next.get().ahead;
+            currentReplay = next.get().replay;
+            currentSpent = false;
             page = 0;
             typed = 0;
             held = 0;

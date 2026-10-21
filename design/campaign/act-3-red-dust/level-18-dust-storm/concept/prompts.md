@@ -1,7 +1,7 @@
 # Level 18 – concept and production notes
 
 Round 41 (M7 part E, step ART-E: production straight away, as Levels 15-17's; the user is on vacation, so all of
-it is pending the user's review in round 41). None of it is prompted: every file is rendered by a generator in
+it is accepted in round 41 (2026-10-19). None of it is prompted: every file is rendered by a generator in
 `tools/art/`.
 
 ## backdrop-final-r41-a

@@ -2,9 +2,9 @@
 title: Deflector Pod
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [.., ../../generator, ../../shields, ../../ship, ../../../systems/economy]
-updated: 2026-10-13
+updated: 2026-10-20
 ---
 
 # Deflector Pod
@@ -116,13 +116,12 @@ per level and side (`deflector-pod-field-<1..6>-<left|right>`) and the catch fla
 
 - 2026-10-12 (overnight design phase): promoted from the weapons roster: a half-disc field per
   pod (22 → 30 px), charges 3 → 5 returning every 0.67 → 0.4 s, draw 2 → 3, 1 600 cr, unlock L18;
-  bullets only (no lasers, beams, links, contacts or hazards). Pending the user's review in
-  concept round 36.
+  bullets only (no lasers, beams, links, contacts or hazards). Accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): approved (D.22); Q.23h yes: a caught bullet pays nothing back.
 - 2026-10-13 (M7 part A, step A2): data.yaml written; the field numbers are the `levels` and the
   `overdrive` (`radius`, `charges`, `recharge`) under `hits: deflector` instead of a separate block, so
   every weapon keeps five levels and an overdrive for the shop's prices and draws (step agent's
-  choice, pending the user's review). The per-level table is rendered from it.
+  choice, accepted in round 37 (2026-10-13)). The per-level table is rendered from it.
 - 2026-10-13 (user, round 37): look **a** "field band" chosen (P.1; `art: chosen`): an emitter pod with a
   cyan dome, the field a thin cyan band; the "plate lattice" (b) rejected (busier next to the drone pods
   and the shield ring) and moved to `concept/rejected/` (`tools/art/deflector_pod.py` routes it there).
@@ -130,3 +129,4 @@ per level and side (`deflector-pod-field-<1..6>-<left|right>`) and the catch fla
   charged field is caught, a bullet is caught when its centre enters a field, the overdrive's raised
   cap empties when it ends; B.4 d: the test fire's slow dummy bullets); its sounds S.5 tick a and S.6
   return b "charge settle"; the capture accepted (K.1).
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

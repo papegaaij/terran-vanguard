@@ -59,8 +59,7 @@ class Level21SoundsTest {
                 Sfx.COLOSSUS_RIDGE);
         for (Sfx sfx : sounds) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            String variant = sfx == Sfx.COLOSSUS_RIDGE ? "-r44-b.ogg" : "-r44-a.ogg";
-            assertTrue(sfx.path().endsWith(variant), sfx + ": round 44's proposal");
+            assertTrue(sfx.path().endsWith("-r44-a.ogg"), sfx + ": round 44's pick");
         }
         assertEquals(Sfx.Priority.WARNING, Sfx.COLOSSUS_BULGE.priority(), "the tell is a warning");
         assertEquals(Sfx.Priority.BOSS, Sfx.COLOSSUS_DEATH.priority());

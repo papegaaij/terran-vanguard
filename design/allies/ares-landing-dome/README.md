@@ -21,8 +21,7 @@ whose secondary objective is that none of them is hit (M16 = a).
 
 The spec, approved with Level 17 in concept round 36 (M16 = a, Q.17a, MA.3 = a), moved here as its own
 document in M7 part D (Q.25b). Its numbers live in the allies' [data.yaml](../data.yaml) under the slug
-`ares-landing-dome` (one loader for every ally; the defaults of the gap check below pending the user's
-review in round 40); the table is hand-written. Level 17 places the domes (the level's `allies` block,
+`ares-landing-dome` (one loader for every ally; the defaults of the gap check below accepted in round 40 (2026-10-19); the table is hand-written. Level 17 places the domes (the level's `allies` block,
 [schemas](../../tech/architecture/README.md#data-file-schemas)).
 
 | Property | Value |
@@ -73,7 +72,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 
 ## Open questions
 
-- Pending the user's review in round 40 (defaults of the gap check, built in M7 part D): the dome as its
+- Accepted in round 40 (2026-10-19) (defaults of the gap check, built in M7 part D): the dome as its
   own directory with its numbers in the allies' data under its slug; Eden as a `size` override (144 px,
   the hit box keeping the 16 px margin) with its own sprite rather than a second slug; the bombers' row
   and x slots; the hook per unit type.
@@ -89,6 +88,6 @@ Prompts: [concept/prompts.md](concept/prompts.md).
   [data.yaml](../data.yaml) (`ares-landing-dome`: `hits: 3`, `damaged_by` `bombs: 1`, `lobs: true`,
   `rolls: 1`); the roster row replaced by the Contents row; the defaults above pending round 40.
 - 2026-10-19 (user, round 40, F.a): the final art approved (`art: final`); the dome's defaults (round 40 B.b) accepted.
-- 2026-10-19 (step D6, round 40 R.b, R.c; pending the user's review): a roll hits a dome where the ball touches its
+- 2026-10-19 (step D6, round 40 R.b, R.c; accepted in round 40 (2026-10-19)): a roll hits a dome where the ball touches its
   footprint (the ring), as `rolls` says, not only its hit box (the glass), so a Shellback walking beside the glass
   can still graze it once; Level 17's `bomb_row` 160 → 220 for the dome secondary (medium 5/8 over 8 seeds).

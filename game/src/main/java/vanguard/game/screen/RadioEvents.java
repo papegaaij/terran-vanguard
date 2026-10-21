@@ -74,8 +74,13 @@ final class RadioEvents {
                     barks.kill(sortie.realSeconds());
                 }
             }
-            // M5 part H, step H7b: a phase's line still waiting would come after the death.
-            case BOSS_DESTROYED -> radio.withdrawAll(RadioQueue.Priority.PHASE);
+            // M5 part H, step H7b: a phase's line still waiting would come after the death; step GK: so would one
+            // playing again after an urgent line cut it (its voice stops with it).
+            case BOSS_DESTROYED -> {
+                if (radio.withdrawAll(RadioQueue.Priority.PHASE)) {
+                    services.voices.stop();
+                }
+            }
             // Round 41: a boss with a lead time is warned of at its BOSS_INCOMING, and its arrival then
             // warns no more (a retry from the boss checkpoint has no lead warning: its arrival warns).
             case BOSS_INCOMING -> {

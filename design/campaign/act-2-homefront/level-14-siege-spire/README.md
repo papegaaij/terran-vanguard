@@ -1,7 +1,7 @@
 ---
 title: Level 14 – Siege Spire
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/bosses/siege-spire]
 updated: 2026-10-20
@@ -26,8 +26,7 @@ daylight section, a 25 px/s drift.
 below are rendered from it (step H4: the loader, the Spire's data, the measured fight); the backdrop
 in the data is a placeholder until step H5. The design was decided on 2026-10-11 for M5 part H
 (decisions H1–H10 and the stated defaults of the part's gap analysis, see *Decisions*). **The user is
-on vacation: every decision here was taken as the recommendation and is pending the user's review in
-one combined concept round (round 36) at the end of M5.** The most important one changes an approved
+on vacation: every decision here was taken as the recommendation and is accepted in round 34 (2026-10-12).** The most important one changes an approved
 spec: **H1 = a drops the approved 15 px/s creep of boss phase 1** (see *Layout* and *Decisions*); the
 user must confirm that. Step H4 added two more for review: **the root field scrolls at 80 px/s** (not
 140) so the root-burst growths stand on the screen once they fire, and **the Spire's paid bounty is
@@ -109,26 +108,26 @@ edge waves, so they are not in the numbers.
 ## Layout
 
 Approach at **140 px/s** (the chosen Geneva scene), **108 s** of it, with **the root field at
-80 px/s** (step H4, pending the user's review: a root-burst growth appears 1 s after its dust and
+80 px/s** (step H4, accepted in round 34 (2026-10-12): a root-burst growth appears 1 s after its dust and
 fired 1.5 s later (0.75 s since step H7b), and at 140 px/s it would by then have scrolled 350 px from its burst, out of the
 player's reach before the bottom edge; at 80 px/s it stands about 3 s on the screen once it fires).
 The **boss arrives at t=108**: the arena section starts then, with speed 0, and the boss warning, the
 boss's arrival (its bar, the sting, track 22) and the boss checkpoint are one moment. **Round 41** (the
 user's playtest 2026-10-19: "put a small pause in between the last enemies and the fly towards it; show the
-warning box before you reach it"; pending the user's review): the warning (box, klaxon, track 22) opens
+warning box before you reach it"; accepted in round 34 (2026-10-12)): the warning (box, klaxon, track 22) opens
 **7.5 s before the arrival**, at t=100.5 (`boss.incoming`), and closes before the Spire's roots enter the top
 edge (t≈105.5); the last wave enters at t=97.5 (two waves dropped, four moved earlier, see *Waves*), so the
 autopilot's screen is empty from about t=101.5 (medium) or 102.5 (hard) until the roots appear, and the Spire
 holds its fire 1.5 s after the halt (its Roots phase's `delay`); the bar and the checkpoint stay at the
 arrival. A retry from the boss checkpoint warns at the arrival as before. **The 15 px/s
-creep of boss phase 1 in the approved spec is dropped** (H1 = a, pending the user's review): the
+creep of boss phase 1 in the approved spec is dropped** (H1 = a, accepted in round 34 (2026-10-12)): the
 built anchored arena needs speed 0, and all six roots stand on the screen from the start. "In turn"
 comes from the staggered fire (pods 0.4 s apart, each every 1.6 s, the mortar roots every 8 s since
 round 34's P2) and from the player's choice of root: the inner pods' guns turn toward the ship and the
 outer pods fire straight down their columns, so the player's x decides the exposure. The
 arena runs from t=108 to t=250; the level clock halts at the arena's end while the Spire lives, and a
 kill jumps the clock to it (Level 07's `arenaJump`), the scroll ramping up over 1 s into the 12 s
-daylight section, which **drifts at 25 px/s** (steps H7b and H9, pending the user's review: at 140 px/s the
+daylight section, which **drifts at 25 px/s** (steps H7b and H9, accepted in round 34 (2026-10-12): at 140 px/s the
 stump scrolled off about 4 s after the kill, before the light fell on it, at 40 px/s about 9 s after it,
 10 s before the debrief; now it stays on the screen through the daylight's beams until past the section's
 end, the scroll running on to the debrief). Total 262 s on the level clock and 13,320 px of ground (the scroll column
@@ -250,7 +249,7 @@ before; three launches in the measured medium fight) are ambush plans, not edge 
   26 px either side of its burst's point, the Spine Turret on the left): the paving cracks and dust
   rises for 1 s, then a root breaks out and grows a Spine Turret and a Polyp Mortar on the ground
   layer. No collision. A growth takes **no damage and fires nothing while it grows**, then fires
-  its first shot **0.75 s after it has appeared** (hard 0.5 s; step H7b, pending the user's review: at
+  its first shot **0.75 s after it has appeared** (hard 0.5 s; step H7b, accepted in round 34 (2026-10-12): at
 1.5 s the growths fired from about 220 px above the bottom edge, on top of the ship; now about
 280 px). From then on it scrolls with the
   ground. A burst lies **100–400 px below the top edge** and never within **60 px of the ship's
@@ -269,7 +268,7 @@ before; three launches in the measured medium fight) are ambush plans, not edge 
 - **Overdrive** ×2: from the t=72 Ravager leader, and from the maw when it dies (phase 2 → 3).
 - **Armour patches** ×2: a CDF supply drone (Level 13's, [allies](../../../allies/README.md)) flies
   in from the bottom edge at t≈96, releases its patch at t=100 at x 240, 380 px above the bottom
-  edge (the data's `drops`, as Level 13's) and leaves the same way (step H9, pending the user's review;
+  edge (the data's `drops`, as Level 13's) and leaves the same way (step H9, accepted in round 34 (2026-10-12);
   it was a placed pickup that simply entered at the top edge), and the tear-free shockwave throws one
   up from the debris at the start of phase 3.
 
@@ -288,12 +287,12 @@ level clock is halted): `boss-phase` (phases 2 and 3), `boss-destroyed` and
 event lines but go stale only after 20 s, so Rook's phase-3 line, queued after Okafor's, plays (at
 the 6 s of an event line it went stale behind it); a phase line still waiting at the kill is dropped.
 The secondary's line, a closing line, **goes ahead of the Choir** when the roots die before it
-(about t=93.5 in a normal run; step H9, pending the user's review): queued while the radio is free, it
+(about t=93.5 in a normal run; step H9, accepted in round 34 (2026-10-12)): queued while the radio is free, it
 opens at once and the Choir's and Varga's timed lines wait for it (about 8 s later, Varga's then over
 the Spire's arrival). When the roots die late, while a line plays, it waits for a gap as before and
 **once the boss warning starts it is dropped** (or cut if it opened less than 1.5 s before), since the HUD
 shows the objective done, and Rook's boss-warning bark plays instead of going stale behind it (step
-H7b, pending the user's review). The closing line is queued as `CLOSING` so that the daylight section
+H7b, accepted in round 34 (2026-10-12)). The closing line is queued as `CLOSING` so that the daylight section
 and the debrief wait for it.
 The Choir's text line is voiced as in the earlier levels (the portrait frame full of static).
 
@@ -399,15 +398,14 @@ run 2,458, 1.46 ×; round 41, without the two dropped approach waves: 1,707, +1.
 1.42 ×). The maw's Wraiths are budgeted at the measured fight's count (three launches
 of 1 since round 40, of 2 before; the boss's `spawns`), the node-spawned Skitters at one release per node.
 
-**The Spire's share (step H4, pending the user's review): 452 paid = 26.8 % of the budget**, not the
+**The Spire's share (step H4, accepted in round 40 (2026-10-19)): 452 paid = 26.8 % of the budget**, not the
 planned ≈ 506 (30 %). The typical haul sits on the budget and a perfect run must earn at least 1.4 ×
 it (`TypicalHaulTest`): the boss pays the same in both, so every credit it takes off the scaled kills
 narrows the gap between them; at 30 % the perfect run falls short (≈ 1.39 ×), at 26.8 % it reaches
 1.42 ×. The act boss's share stays inside its tolerance (20–40 %, `BalanceTest`). **Round 40:** with
 one Wraith a launch the perfect run fell to 2,289 (1.36 ×) at the scale of 0.76; the scale went to
 **0.81** (the typical haul 1,722, +2.1 %; the perfect run 2,400, 1.42 ×), so the Spire paid **482
-= 28.6 %** of the budget (pending the user's review). **Step WB (2026-10-19, pending the user's
-review):** the L10-style waves carry about twice the bounties, so the scale fell to **0.40**; at the
+= 28.6 %** of the budget (accepted in round 34 (2026-10-12)). **Step WB (2026-10-19, accepted in round 34 (2026-10-12)):** the L10-style waves carry about twice the bounties, so the scale fell to **0.40**; at the
 old 372 the Spire would have paid 238 (14 %, under the act boss's 20 % floor), so its bounty doubled to
 **768** (pods and mortar roots 64, maw 128, core 256): every part pays what it did, **492 = 29.2 %**.
 
@@ -439,7 +437,7 @@ The look comes from the chosen Geneva scene in [art direction](../../../art-dire
 [scene-geneva-r10-a.png](../../../art-direction/concept/scene-geneva-r10-a.png) and its
 [scroll loop](../../../art-direction/concept/scene-geneva-r10-a.gif); the boss follows its chosen
 [Siege Spire](../../../enemies/bosses/siege-spire/README.md) concept. Concept round 36 (part H, H8 = a,
-pending the user's review) auditions what has no concept: the **root burst** and the **daylight** a/b
+accepted in round 36 (2026-10-13)) auditions what has no concept: the **root burst** and the **daylight** a/b
 here, the **tear-free roar** and the **canopy withering** a/b in the [sfx](../../../audio/sfx/README.md)
 round; the armoured car, the outro images, the burst's sounds and the hum get one version; the Geneva
 backdrop and the Spire go straight to production. Generator notes: [concept/prompts.md](concept/prompts.md).
@@ -452,19 +450,19 @@ else approved as final and accepted, the Spire's death after a redo.
 | [concept/rejected/root-burst-r36-b.png](concept/rejected/root-burst-r36-b.png), [.gif](concept/rejected/root-burst-r36-b.gif) | Root burst, look b "creep surge": creep tendrils from the gutters, spore mist, a sac mound swelling and two buds splitting open | rejected |
 | [concept/daylight-r36-a.png](concept/daylight-r36-a.png) | Daylight section, look a "golden hour": warm grade, low-sun beams through the tearing canopy (`tools/art/daylight_l14.py`; still and timeline) | chosen |
 | [concept/rejected/daylight-r36-b.png](concept/rejected/daylight-r36-b.png) | Daylight section, look b "pale dawn": cool grade, haze burning off from the lake, no beams | rejected |
-| [concept/backdrop-final-r36-a.png](concept/backdrop-final-r36-a.png), [.gif](concept/backdrop-final-r36-a.gif) | Production backdrop straight from scene-geneva-r10-a (`tools/art/backdrop_l14.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r36-a); its block for the level data, for the main agent to merge, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the city rebuilt from plans (perimeter blocks, tile and slate roofs, sodium lamps, the canopy's mottled shadow baked in): the lakefront with the lake, the old town, the root field with roots as thick as trams, cracked paving and collapsed houses, the daylight tiles; sections 4–6 one unique strip (the converging avenues, the Concord plaza under the Spire's anchor with six avenues along its roots, the daylight graded by its distance past the arena frame); the Rhone with the Pont du Mont-Blanc, Saint-Pierre's square and the Place du Molard cut from the tiles under them, the cathedral towers in perspective, the Jet d'Eau, the Ravagers' crater, boulevards over the tile seams, Hammer flight and the few moving cars; the spore haze and the canopy's veins; the game's daylight looks (the canopy tearing, the beams, look a); composites with stand-ins for the units and the Spire; the GIF the ease into the halt and the daylight after a kill | chosen |
-| [concept/l14-props-final-r36-a.png](concept/l14-props-final-r36-a.png), [.gif](concept/l14-props-final-r36-a.gif) | Production art (`tools/art/l14_props.py`): the CDF armoured car under creep, cleared hit by hit, hatch open with the supply crate | chosen |
-| [concept/act-2-outro-final-r36-a.png](concept/act-2-outro-final-r36-a.png) | Production art (`tools/art/outro_l14_images.py`): the Act 2 outro's four briefing images, the stump in Geneva at sunrise, the memorial wall of names at dawn, Ares Landing's priority signal from Mars, Aegis Wing and the Mars transport on the apron at dusk | chosen |
-| [concept/level-14-capture-final-r36-a.png](concept/level-14-capture-final-r36-a.png), [.mp4](concept/level-14-capture-final-r36-a.mp4) | Capture of the game (medium, a strong fit with Rook, **`--invulnerable`**: the dead-reckoning driver cannot survive the Spire on the debug start's cores): 115 / 117 kills, ROOTS 8 / 8, secret 1 / 1, the Spire in 1:26 (par 2:10), A+; nineteen frames (the briefing pages and the hangar from a won Level 13, one phase-1 frame from a run without `--invulnerable`) and the whole run with sound through the act end ([recipe](concept/prompts.md#level-14-capture-final-r36-a)) | chosen |
-| [concept/level-14-capture-fixes-r36-a.png](concept/level-14-capture-fixes-r36-a.png), [.mp4](concept/level-14-capture-fixes-r36-a.mp4) | Supplementary capture of the step H7b fixes (step H8; the level time burnt in): Hammer flight at x 130 clear of the car, the growths' first shot about 290 px above the bottom edge, the radio at the roots' end and the boss arrival (Rook's warning bark, his phase-3 line), the free spire over the ash stump, the withering 3 s after the kill, the daylight's 40 px/s drift; the bottom row a run **without `--invulnerable`** on the balance plan's L14 fit (cores included) with Rook, lost five times in the Spire fight ([recipe](concept/prompts.md#level-14-capture-fixes-r36-a)) | chosen |
-| [concept/level-14-capture-daylight-r36-a.png](concept/level-14-capture-daylight-r36-a.png), [.mp4](concept/level-14-capture-daylight-r36-a.mp4) | Supplementary clip of the step H9 changes (step CF; 47 s with sound, the level time burnt in, and a sheet; `--invulnerable`): Okafor's root-grid line at the roots' end (≈ 95) ahead of the Choir (≈ 105) and Varga (≈ 111), the CDF supply drone carrying the armour patch in from the bottom edge (t 96.5–103), the kill (≈ 194.5) and the daylight at 25 px/s: the stump on the screen through the beams, its last root tips leaving at ≈ 215.3 (≈ 21 s after the kill), the debrief at ≈ 217.5 ([recipe](concept/prompts.md#level-14-capture-daylight-r36-a)) | chosen |
-| [concept/act-2-outro-capture-r36-a.png](concept/act-2-outro-capture-r36-a.png) | Capture of the act end from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15 ([recipe](concept/prompts.md#act-2-outro-capture-r36-a)) | chosen |
-| [concept/level-14-fixes-r42-a.mp4](concept/level-14-fixes-r42-a.mp4) | Check capture of the playtest fixes (round 42, medium, the plan's L14 fit, the test autopilot): the last waves, the quiet gap, the Siege Spire warning box before it arrives, its sweeps, its death and the scroll resuming (144 s with sound) | chosen (round 42, K.b: accepted) |
-| [concept/level-14-fixes-r42-a.png](concept/level-14-fixes-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.b: accepted) |
-| [concept/level-14-briefing-r44-a.mp4](concept/level-14-briefing-r44-a.mp4) | Varga's new briefing page 2 (the briefing shown before a debug level start by a snapshot hook, paged on by itself once the voice ends): the root-scan image, her text typed and voiced, the hand-over to the level. 17.5 s | proposed (round 44) |
-| [concept/level-14-briefing-r44-a.png](concept/level-14-briefing-r44-a.png) | Briefing page 2 at 1:1 (960×540), fully typed | proposed (round 44) |
-| [concept/level-14-fight-r44-a.mp4](concept/level-14-fight-r44-a.mp4) | The kinder Spire fight in the live game (plan fit: Pulse L4, Micro-Missile Pods L2, Tail Gun L2, Mk II, Composite II, Airstrike ×4, Rook's Autocannon; level t ≈ mp4 time + 90): the last waves, Okafor's root-grid line, "SIEGE SPIRE APPROACHING", the Choir, Varga, then **Rook's halt line "Missiles on the roots, I'll keep the flyers off you."** voiced at 0:28–0:34 (level t ≈ 118: it queues behind Okafor, the Choir and Varga), the roots' fire, the sweeps, the crown opening, the kill (≈ 2:05), the daylight, the debrief (A+, boss time 1:44 against a par of 1:43, ROOTS 8 / 8). 152 s | proposed (round 44) |
-| [concept/level-14-fight-r44-a.png](concept/level-14-fight-r44-a.png) | 20-tile sheet of that clip + the radio panel on Rook's line, the Spire and the open crown at 1:1 | proposed (round 44) |
+| [concept/backdrop-final-r36-a.png](concept/backdrop-final-r36-a.png), [.gif](concept/backdrop-final-r36-a.gif) | Production backdrop straight from scene-geneva-r10-a (`tools/art/backdrop_l14.py`, notes in [concept/prompts.md](concept/prompts.md#backdrop-final-r36-a); its block for the level data, for the main agent to merge, is [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml)): the city rebuilt from plans (perimeter blocks, tile and slate roofs, sodium lamps, the canopy's mottled shadow baked in): the lakefront with the lake, the old town, the root field with roots as thick as trams, cracked paving and collapsed houses, the daylight tiles; sections 4–6 one unique strip (the converging avenues, the Concord plaza under the Spire's anchor with six avenues along its roots, the daylight graded by its distance past the arena frame); the Rhone with the Pont du Mont-Blanc, Saint-Pierre's square and the Place du Molard cut from the tiles under them, the cathedral towers in perspective, the Jet d'Eau, the Ravagers' crater, boulevards over the tile seams, Hammer flight and the few moving cars; the spore haze and the canopy's veins; the game's daylight looks (the canopy tearing, the beams, look a); composites with stand-ins for the units and the Spire; the GIF the ease into the halt and the daylight after a kill | final (round 44, X.i) |
+| [concept/l14-props-final-r36-a.png](concept/l14-props-final-r36-a.png), [.gif](concept/l14-props-final-r36-a.gif) | Production art (`tools/art/l14_props.py`): the CDF armoured car under creep, cleared hit by hit, hatch open with the supply crate | final (round 44, X.i) |
+| [concept/act-2-outro-final-r36-a.png](concept/act-2-outro-final-r36-a.png) | Production art (`tools/art/outro_l14_images.py`): the Act 2 outro's four briefing images, the stump in Geneva at sunrise, the memorial wall of names at dawn, Ares Landing's priority signal from Mars, Aegis Wing and the Mars transport on the apron at dusk | final (round 44, X.i) |
+| [concept/level-14-capture-final-r36-a.png](concept/level-14-capture-final-r36-a.png), [.mp4](concept/level-14-capture-final-r36-a.mp4) | Capture of the game (medium, a strong fit with Rook, **`--invulnerable`**: the dead-reckoning driver cannot survive the Spire on the debug start's cores): 115 / 117 kills, ROOTS 8 / 8, secret 1 / 1, the Spire in 1:26 (par 2:10), A+; nineteen frames (the briefing pages and the hangar from a won Level 13, one phase-1 frame from a run without `--invulnerable`) and the whole run with sound through the act end ([recipe](concept/prompts.md#level-14-capture-final-r36-a)) | final (round 44, X.i) |
+| [concept/level-14-capture-fixes-r36-a.png](concept/level-14-capture-fixes-r36-a.png), [.mp4](concept/level-14-capture-fixes-r36-a.mp4) | Supplementary capture of the step H7b fixes (step H8; the level time burnt in): Hammer flight at x 130 clear of the car, the growths' first shot about 290 px above the bottom edge, the radio at the roots' end and the boss arrival (Rook's warning bark, his phase-3 line), the free spire over the ash stump, the withering 3 s after the kill, the daylight's 40 px/s drift; the bottom row a run **without `--invulnerable`** on the balance plan's L14 fit (cores included) with Rook, lost five times in the Spire fight ([recipe](concept/prompts.md#level-14-capture-fixes-r36-a)) | final (round 44, X.i) |
+| [concept/level-14-capture-daylight-r36-a.png](concept/level-14-capture-daylight-r36-a.png), [.mp4](concept/level-14-capture-daylight-r36-a.mp4) | Supplementary clip of the step H9 changes (step CF; 47 s with sound, the level time burnt in, and a sheet; `--invulnerable`): Okafor's root-grid line at the roots' end (≈ 95) ahead of the Choir (≈ 105) and Varga (≈ 111), the CDF supply drone carrying the armour patch in from the bottom edge (t 96.5–103), the kill (≈ 194.5) and the daylight at 25 px/s: the stump on the screen through the beams, its last root tips leaving at ≈ 215.3 (≈ 21 s after the kill), the debrief at ≈ 217.5 ([recipe](concept/prompts.md#level-14-capture-daylight-r36-a)) | final (round 44, X.i) |
+| [concept/act-2-outro-capture-r36-a.png](concept/act-2-outro-capture-r36-a.png) | Capture of the act end from the same run (a real kill): the daylight and the closing line, the debrief, the act summary, the four voiced outro pages, the hangar before L15 ([recipe](concept/prompts.md#act-2-outro-capture-r36-a)) | final (round 44, X.i) |
+| [concept/level-14-fixes-r42-a.mp4](concept/level-14-fixes-r42-a.mp4) | Check capture of the playtest fixes (round 42, medium, the plan's L14 fit, the test autopilot): the last waves, the quiet gap, the Siege Spire warning box before it arrives, its sweeps, its death and the scroll resuming (144 s with sound) | final (round 42, K.b: accepted) |
+| [concept/level-14-fixes-r42-a.png](concept/level-14-fixes-r42-a.png) | 20-frame sheet of that excerpt | final (round 42, K.b: accepted) |
+| [concept/level-14-briefing-r44-a.mp4](concept/level-14-briefing-r44-a.mp4) | Varga's new briefing page 2 (the briefing shown before a debug level start by a snapshot hook, paged on by itself once the voice ends): the root-scan image, her text typed and voiced, the hand-over to the level. 17.5 s | final (round 44, X.c: accepted) |
+| [concept/level-14-briefing-r44-a.png](concept/level-14-briefing-r44-a.png) | Briefing page 2 at 1:1 (960×540), fully typed | final (round 44, X.c: accepted) |
+| [concept/level-14-fight-r44-a.mp4](concept/level-14-fight-r44-a.mp4) | The kinder Spire fight in the live game (plan fit: Pulse L4, Micro-Missile Pods L2, Tail Gun L2, Mk II, Composite II, Airstrike ×4, Rook's Autocannon; level t ≈ mp4 time + 90): the last waves, Okafor's root-grid line, "SIEGE SPIRE APPROACHING", the Choir, Varga, then **Rook's halt line "Missiles on the roots, I'll keep the flyers off you."** voiced at 0:28–0:34 (level t ≈ 118: it queues behind Okafor, the Choir and Varga), the roots' fire, the sweeps, the crown opening, the kill (≈ 2:05), the daylight, the debrief (A+, boss time 1:44 against a par of 1:43, ROOTS 8 / 8). 152 s | final (round 44, X.d: accepted) |
+| [concept/level-14-fight-r44-a.png](concept/level-14-fight-r44-a.png) | 20-tile sheet of that clip + the radio panel on Rook's line, the Spire and the open crown at 1:1 | final (round 44, X.d: accepted) |
 
 ## Implementation
 
@@ -532,7 +530,7 @@ else approved as final and accepted, the Spire's death after a redo.
 - [x] Round 40 (4a–4c, step CB): the kinder Spire's data (its README), the traits `homing`,
       `anti-ground`, Varga's briefing page and intel L3 with the homing hint, Rook's line at the halt,
       the maw's Wraiths budgeted at 3 (`Level14Test`, `SiegeSpireTest`, `TypicalHaulTest`)
-- [x] Round 41 (the user's playtest 2026-10-19; steps FX-S2, FX-G and FX-C, pending the user's review): the
+- [x] Round 41 (the user's playtest 2026-10-19; steps FX-S2, FX-G and FX-C, accepted in round 41 (2026-10-19)): the
       warning 7.5 s before the arrival (`boss.incoming`), the quiet approach (the t=102 and t=105.5 waves
       dropped; the convoy, the side stream, the Wraiths and the Needler line earlier), the Roots phase's 1.5 s
       delay, the leading sweep (the Spire's README) (`Level14Test`, `SiegeSpireTest`, `PacingTest`,
@@ -542,9 +540,9 @@ else approved as final and accepted, the Spire's death after a redo.
 
 ## Open questions
 
-- None open. All of H1–H10 are decided as recommended **while the user is on vacation** and wait
-  for the user's review in the combined round 36 at the end of M5 (see *Decisions*): above all
-  that the approved 15 px/s creep is dropped (H1) and that all six roots are in range at once.
+- None open. All of H1-H10 were decided as recommended while the user was on vacation and accepted in round 34
+  (2026-10-12); round 44 (X.h, 2026-10-20) closed the list (see *Decisions*): above all that the approved 15 px/s creep
+  is dropped (H1) and that all six roots are in range at once.
 
 ## Decisions
 
@@ -553,8 +551,7 @@ else approved as final and accepted, the Spire's death after a redo.
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
 - 2026-10-11: M5 part H, step H1a: the approved first draft reworked to the design the gap
   analysis decided. **The user is on vacation: H1–H10 are all the recommendation (a) and all the
-  stated defaults apply, pending the user's review in one combined round (round 36) at the end of
-  M5.** **H1 = a (recommended; pending the user's review): the approved 15 px/s creep of boss
+  stated defaults apply, accepted in round 34 (2026-10-12).** **H1 = a (recommended; accepted in round 34 (2026-10-12)): the approved 15 px/s creep of boss
   phase 1 is dropped, a change to an approved spec that the user must confirm**: the arena is a
   halt (speed 0), all six roots on the screen from the start, "in turn" from the staggered fire
   and the player's choice of root; rejected: b (an arena of speed 15 in phase 1 and 0 afterwards: a
@@ -586,7 +583,7 @@ else approved as final and accepted, the Spire's death after a redo.
   90–180 s, the par the measured mean; the bounty ≈ 30 % of the budget as paid (≈ 506, was 720 =
   43 %); rejected: b (keep 720 and let `bounty_scale` absorb it: breaks the 30 % share) and c (keep
   the HP and accept the measurement).
-- 2026-10-11: M5 part H stated defaults (pending the user's review with the decisions): arena
+- 2026-10-11: M5 part H stated defaults (accepted in round 34 (2026-10-12) with the decisions): arena
   start, boss warning, arrival and checkpoint all at **t=108** (the draft's warning time; its
   boss arrival at t=113 and the checkpoint "at the warning" were two moments) and the Concord
   approach 95–108 (was 95–113); the clash at t=106/107/108 on top of the boss warning goes (the
@@ -616,7 +613,7 @@ else approved as final and accepted, the Spire's death after a redo.
   burst hard timing: the first shot after 1.0 s, not the telegraph (the draft's wording read as
   if the telegraph shortened); L14's units in an atlas of their own with the Spire on its own
   pages. `design` goes to `review` for the reworked texts; `implementation` is `in-progress`.
-- 2026-10-12: M5 part H, step H4 (pending the user's review with H1–H10): the level's `data.yaml` and
+- 2026-10-12: M5 part H, step H4 (accepted in round 34 (2026-10-12) with H1–H10): the level's `data.yaml` and
   the loader (`root_bursts`, the Siege Spire's boss keys, `PartHRules`/`PartHChecks`), the tables above
   rendered from it. Settled while the user is away: **the root field (section 3) scrolls at 80 px/s**
   (a growth appears 1 s after its dust and fires 1.5 s later: at 140 px/s it would by then have scrolled
@@ -639,7 +636,7 @@ else approved as final and accepted, the Spire's death after a redo.
   renders them (as Level 13's); Rook's teaser shortened to "Roots first, flyers from behind, then the
   Spire. I'll take the six o'clock." and Varga's L2 and L3 lines shortened (the intel panel's room,
   `IntelPanelLayoutTest`).
-- 2026-10-12: M5 part H, step H6 (the user is on vacation; **pending the user's review** in round 36):
+- 2026-10-12: M5 part H, step H6 (the user is on vacation; **accepted in round 34 (2026-10-12)**:
   the game's looks and sounds. The root bursts draw look a (the cracks over the telegraph, the dust 6 px
   above the point over the telegraph and the eruption, the root's 0.5 s eruption leaving the crater) and
   grow their units in from 0.35 of their size, tinted from the creep's violet; the armoured car shows a
@@ -657,8 +654,7 @@ else approved as final and accepted, the Spire's death after a redo.
   lengths the radio is retimed to the 1 s rule: Hammer Lead 16 → 13 (before Rook; his flight still
   passes during the line), Rook 7.5 → 21, Varga's canopy line 22 → 31.5, the Choir 98 → 96; three
   seeds are pinned (Hammer Lead's "Hammer flight", Varga's "hive nodes", Okafor's "ships out for Mars").
-- 2026-10-12: M5 part H, step H7b (from the H7 capture; the user is on vacation, **all pending the
-  user's review**): Rook's phase-3 line went stale behind Okafor's (an event line waits 6 s at most):
+- 2026-10-12: M5 part H, step H7b (from the H7 capture; the user is on vacation, **all accepted in round 34 (2026-10-12)): Rook's phase-3 line went stale behind Okafor's (an event line waits 6 s at most):
   a `boss-phase` cue now queues as a `PHASE` line, stale after 20 s, dropped at the kill. Okafor's
   root-grid line waited behind the Choir (96) and Varga (102) and played over the boss's arrival,
   which also made Rook's boss-warning bark (and his t≈104 rear bark, which the higher-priority warning
@@ -676,7 +672,7 @@ else approved as final and accepted, the Spire's death after a redo.
   and the silent act summary page (Act 1's is the same: the debrief plays no music, the outro's
   `act-complete` follows).
 - 2026-10-12: M5 part H, step H9 (from the H8 capture `level-14-capture-fixes-r36-a`; the user is on
-  vacation, **all pending the user's review**): (1) Okafor's root-grid line never played: the roots
+  vacation, **all accepted in round 34 (2026-10-12)): (1) Okafor's root-grid line never played: the roots
   die at about t=93.5 with the radio free, but at the default text speed the line holds the radio
   about 10 s (two pages), so it found no gap before the Choir (96) or Varga (102) and was dropped at
   the Spire's warning. A closing line queued while the radio is free (nothing on it, nothing waiting)
@@ -725,9 +721,9 @@ else approved as final and accepted, the Spire's death after a redo.
   reach every root."; Rook at t=110 "Missiles on the roots, I'll keep the flyers off you."), the
   maw's Wraiths budgeted at 3 launches of 1, the `bounty_scale` 0.76 → **0.81** so a perfect run keeps
   1.4 × the budget (typical 1,722, +2.1 %; perfect 2,400, 1.42 ×; the Spire paid 482, 28.6 %).
-  Pending the user's review: the scale, Rook's line at t=110 (the halt eases over t=108–109), intel
+  Accepted in round 41 (2026-10-19): the scale, Rook's line at t=110 (the halt eases over t=108–109), intel
   L3 drops "When the crown opens, look behind you." (Varga's page keeps it). L14 stays in `PacingTest.PENDING_ACT_TWO_RULE` (its waves next).
-- 2026-10-19 (step WB, round 40 P.e "yes, all", pending the user's review): the waves rewritten
+- 2026-10-19 (step WB, round 40 P.e "yes, all", accepted in round 40 (2026-10-19)): the waves rewritten
   L10-style (43 waves, 181 enemies before the arena at medium, a wave about every 2.5 s: Needler and
   Stinger groups, Skitters, four Creeper convoys of 5, Spore Bomber lines, Mantis pincers round the kept
   Ravager pack, Wraith ambushes, ground targets and root bursts), so the level passes `PacingTest`'s Act
@@ -738,7 +734,7 @@ else approved as final and accepted, the Spire's death after a redo.
   bounty 372 → 768, so its parts pay what they did (29.2 % of the budget; `BalanceTest`'s 20–40 %).
   The floor leaves out the boss fight (the Spire is a set piece, not an enemy on the screen; it has its
   own tests). L14 leaves `PacingTest.PENDING_ACT_TWO_RULE`.
-- 2026-10-19 (round 41, the user's playtest; steps FX-S2, FX-G and FX-C, pending the user's review): **the
+- 2026-10-19 (round 41, the user's playtest; steps FX-S2, FX-G and FX-C, accepted in round 41 (2026-10-19)): **the
   approach to the Spire gets a pause and the warning comes first.** The boss block's `incoming: 7.5` opens the
   warning box, the klaxon and track 22 at t=100.5, closing (5 s) before the Spire's roots enter the top edge;
   the Roots phase holds its fire 1.5 s after the halt. The t=102 Stinger V-wing and the t=105.5 Needler line are
@@ -749,3 +745,4 @@ else approved as final and accepted, the Spire's death after a redo.
   1–2 s. The typical haul 1,707 (+1.2 %), the perfect run 2,396 (1.42 ×), `bounty_scale` 0.40 kept. With the
   Spire's leading sweep (its README) the fight at medium stays at its par (101.9 s mean, par 103 s).
 - 2026-10-20: round 42 closed: the playtest fixes (T.1 approach, T.2 sweep, T.5 death) and their check capture (K.b) accepted by the user, every sub-choice yes; the sweep is not clipped to the play field (T.2 d).
+- 2026-10-20 (user, round 44, X.a-X.d, X.f-X.i): the Level 11 arena and first-ship-cue captures and the Level 14 briefing page and kinder fight accepted; Rook's halt line at level t≈118 kept (X.f); the stale "pending the user's review" notes rewritten as "accepted in round N (date)" (X.g); the final production rows `final` (X.i). The checklist is ticked and its rounds are closed: **`implementation: done`**; the act's playthrough stays an act-level item in the [Act 2 README](../README.md).

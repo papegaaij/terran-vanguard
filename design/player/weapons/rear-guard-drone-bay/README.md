@@ -1,6 +1,6 @@
 ---
 title: Rear-guard Drone Bay
-design: review
+design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../wingmen, ../light-drone-bay, ../../generator, ../../../systems/economy, ../../../campaign/act-3-red-dust/level-20-retreat-from-hellas]
@@ -118,16 +118,17 @@ drone's disc with a forked twin gun and blue fins, 16 gun headings: the trail fi
 - 2026-10-13 (user, round 36): the rear-guard drone approved with the drones (D.26) as wingmen content:
   2 400 cr, draw 2 → 3 MW, unlock L20, the per-level numbers.
 - 2026-10-20 (M7 part G, step G2): the weapons document written from the wingmen table, which now
-  links here; `design: review` (the document is new, pending the user's review in round 43). Not in
+  links here; `design: review` (the document is new; approved in round 44, A.c). Not in
   the balance plan. Its drone flies `station: trail`; until the simulation flies the trail (steps G3,
   G4) the bay is not flown (`SimSpecs.flies` false), though the shop sells it from the L20 visit.
 - 2026-10-20: production art made (step ART-G2): the light drone's disc with a forked twin gun and blue
   fins, the bay turned round (dock ring at the back); shot = pulse bolt, break/rebuild = the light
-  drone's; pending the user's review in round 43.
+  drone's; accepted in round 43 (2026-10-20).
 - 2026-10-20 (M7 part G, step G4): the trail station mapped; the simulation flies the bay
   (`SimSpecs.flies` true). Still not in the balance plan, so no level test fits it.
-- 2026-10-20 (step R43): the art is in the game (the sprites, the pod, the icon, the looks of step GB); the document and the art are rows B.d and F.c-F.d of [round 43](../../../concept-rounds/round-43/README.md), pending the user's review (`design` stays `review`).
+- 2026-10-20 (step R43): the art is in the game (the sprites, the pod, the icon, the looks of step GB); the document and the art are rows B.d and F.c-F.d of [round 43](../../../concept-rounds/round-43/README.md), approved in round 44 (A.c).
 - 2026-10-20 (user, round 43, closed): the document approved with the build choices B.d (a)-(d) (the drone flies at
   every level, not in the balance plan, the numbers as the wingmen table, the shop sells it from the visit before
   Level 20); the drone, the bay pod and the hangar icon approved as final (F.c, F.d: `art: final`, their concept rows
   `chosen`); the test-fire capture (K.c, K.d) accepted.
+- 2026-10-20 (user, round 44, A.c): the design **approved** (main had reverted it to `review` after part G because only the user approves; the user's decision: "approve"). The document is final for Acts 3 and later.

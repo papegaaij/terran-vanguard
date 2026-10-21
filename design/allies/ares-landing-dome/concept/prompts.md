@@ -1,7 +1,7 @@
 # Ares Landing dome – concept and production notes
 
 Round 40 (M7 part D, step ART-D: production straight away; the user is on vacation, so all of it is
-pending the user's review in round 40). None of it is prompted: every file is rendered by a generator in
+accepted in round 40 (2026-10-19). None of it is prompted: every file is rendered by a generator in
 `tools/art/`. The look is the chosen dome a of round 36 (MA.3, [Mars](../../../world/mars/README.md)
 `dome-r36-a`: geodesic glass on a concrete ring).
 

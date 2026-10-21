@@ -1,7 +1,7 @@
 ---
 title: Level 15 – Olympus Descent
 design: approved
-implementation: in-progress
+implementation: done
 art: final
 depends-on: [../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../world/mars, ../../../player/wingmen, ../../../systems/economy]
 updated: 2026-10-20
@@ -460,7 +460,7 @@ level's data. The briefing images are on the
 ## Decisions
 
 - 2026-10-12 (overnight design phase): promoted from the [Act 3](../README.md) roster to a draft
-  level document. Taken as the recommended options, pending the user's review in round 36: M7 = a
+  level document. Taken as the recommended options, accepted in round 36 (2026-10-13): M7 = a
   (the `buried` layer), M10 = b (the Dust Kite as popcorn), M12 = a (a low `bounty_scale`), M17 = a
   (Rook flies the level), M18 = a (reference DPS 76), M19 (hand tables, no data). Our proposals:
   the five sections and speeds, the descent through two cloud decks with the close-over, 262
@@ -468,7 +468,7 @@ level's data. The briefing images are on the
   the 65 % kill-ratio secondary (80), Ares Control as a new speaker, the radio and intel texts,
   `bounty_scale` ≈ 0.36.
 - 2026-10-12 (overnight, harmonised with the act README): density brought into the act's band of
-  60–72 a minute (pending the user's review in round 36) by smaller popcorn waves at the same
+  60–72 a minute (accepted in round 36 (2026-10-13) by smaller popcorn waves at the same
   cadence: Dust Kite streams 5 → 3, V-wings 7 → 4, snakes 6 → 4; Skitter streams 4 → 3, snakes
   6 → 4; 200 enemies (≈ 65 a minute, front 96 % · sides 4 %), the Burrower fields and the set pieces unchanged;
   `bounty_scale` 0.36 → 0.42 (typical 1,817, +0.7 %). The siege's length "three weeks" → "five
@@ -478,7 +478,7 @@ level's data. The briefing images are on the
   controller, teal channel), a submerged Burrower counts as on the screen for `PacingTest`, the
   drop-pod secret stays 100 in Act 1 terms, the Burrower's formation is `field`. Ares Control is cast
   (S.6 = b, Thomas A).
-- 2026-10-14 (M7 part B, step B2; defaults pending the user's review in round 38): the hand tables became
+- 2026-10-14 (M7 part B, step B2; defaults accepted in round 38 (2026-10-14): the hand tables became
   [data.yaml](data.yaml) and marked tables. Choices made there: the backdrop block, the sections' tiles and the
   atmospheres are step ART-B's proposal (`concept/backdrop-proposal.yaml`): the entry glow is a `clear` peak
   at 0–8 s inside section 1's `light` (the plasma streaks as its wisps), the deck's close-over the opaque
@@ -495,8 +495,8 @@ level's data. The briefing images are on the
   and the convoy's hard 4 come from the formation lever; the secret's line is in the *Secrets* text (the radio
   table lists the radio's cues). `bounty_scale` 0.42 kept until `TypicalHaulTest` fits it (step B3; typical
   1,800, −0.3 %).
-- 2026-10-14 (M7 part B, step ART-B): production backdrop and props straight from `mars-olympus-r36-a`, review sheets `backdrop-final-r38-a` and `l15-props-final-r38-a` proposed for round 38. Pending the user's review: the deep scroll factor 0.15, the entry streaks as the `clear` look's wisps (the entry-glow peak fades them), the transport drawn at 75 % with normal blending, the escarpment cliff as towers along the right edge (h 1.2), the road straight at x 300, the colony off-white containers, the drop pod and rubble design with Level 13's amber beacon, the deck fully white from t 62.0 to 64.0.
-- 2026-10-14 (M7 part B, step B3; pending the user's review in round 38): the simulation flies the level
+- 2026-10-14 (M7 part B, step ART-B): production backdrop and props straight from `mars-olympus-r36-a`, review sheets `backdrop-final-r38-a` and `l15-props-final-r38-a` proposed for round 38. Accepted in round 38 (2026-10-14): the deep scroll factor 0.15, the entry streaks as the `clear` look's wisps (the entry-glow peak fades them), the transport drawn at 75 % with normal blending, the escarpment cliff as towers along the right edge (h 1.2), the road straight at x 300, the colony off-white containers, the drop pod and rubble design with Level 13's amber beacon, the deck fully white from t 62.0 to 64.0.
+- 2026-10-14 (M7 part B, step B3; accepted in round 38 (2026-10-14): the simulation flies the level
   (content's `MarsRules`: the burrow and the swoop from the stat blocks, the moving sections' ease, the
   no-surface zones from each zone's `t`, `launch: drop`; a V-wing of Dust Kites flies down the screen).
   `bounty_scale` 0.42 confirmed by `TypicalHaulTest` (typical 1,800, −0.3 %). The autopilot (plan fit
@@ -511,7 +511,7 @@ level's data. The briefing images are on the
   Level 15's runs: no voiced line late). Lycus is spoken as written (pending review in round 38).
 - 2026-10-14 (M7 part B, step B5): captured (`level-15-capture-r38-a`: a whole medium run with the plan's fit and
   Rook, no `--invulnerable`, 198 / 200, A+) and the part's implementation items ticked; everything of part B goes
-  to concept [round 38](../../../concept-rounds/round-38/README.md), pending the user's review.
+  to concept [round 38](../../../concept-rounds/round-38/README.md), accepted in round 38 (2026-10-14).
 - 2026-10-14 (user, round 38): closed. C1 (Varga's kite warning at t=34.5) and C2 (easy's t=49 pincer as two
   ranks of 2 at t=49 and 51) accepted into this spec; the backdrop and props approved as final (F.1, F.2), so
   `art: final`; the capture accepted (K.1); the build choices B.1–B.3 all yes (the drop launch, the
@@ -521,8 +521,7 @@ level's data. The briefing images are on the
   level ending over the dunes rather than the rail line stay as built, the prose above now gives the
   measured values. The Burrower's bulge plays round 38's crack layer b over the eruption, its dive the
   grain slide b; the entry roar a and `mars-dust` a chosen.
-- 2026-10-19 (step PE15; the user's round 40 P.e "all later levels" and "tougher, not more"; pending the user's
-  review): the waves reworked to the Act 2+ rules. The Burrower fields, the set pieces (Spore Bombers, Ravager
+- 2026-10-19 (step PE15; the user's round 40 P.e "all later levels" and "tougher, not more"; accepted in round 40 (2026-10-19)): the waves reworked to the Act 2+ rules. The Burrower fields, the set pieces (Spore Bombers, Ravager
   packs, the convoy), the pincers, the pickups' carriers and the radio keep their times; the first Kite stream
   moved from t=7 to t=5 (the launch ends at 5) and the t=21 Needler line to 22.5; between the anchors 33 firing
   groups were added (16 Needler lines of 3 and one of 4 over the rail line at 183, 16 Stinger streams of 3, the
@@ -532,3 +531,4 @@ level's data. The briefing images are on the
   over 2 s; hard 251 → 388, 2.34 → 4.79 on the screen, 21.1 → 43.5 shots, 9 → 0 pauses; easy 152 → 227, 1 pause
   over 3 s. `bounty_scale` 0.42 → 0.26 (typical 1,796, −0.5 %; perfect 2,833).
 - 2026-10-20: round 42 closed: the rework to the Act 2+ rules (R.a, kept) and the radio outro fix with its check capture (K.d, T.3) accepted by the user.
+- 2026-10-20 (user, round 44, I.8): an Act 3 level is `implementation: done` when its round has closed and its checklist is ticked (Act 2's rule). Round 38 closed and every box is ticked: **`done`**. The act's playthrough stays an act-level item in the [Act 3 README](../README.md).

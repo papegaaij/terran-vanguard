@@ -12,11 +12,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import vanguard.sim.Allocations;
 import vanguard.sim.BossSpec;
+import vanguard.sim.BreachArena;
+import vanguard.sim.Command;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.Section;
 import vanguard.sim.SetPiece;
 import vanguard.sim.SetPieceSpec;
+import vanguard.sim.SimEvents;
 import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
@@ -121,9 +124,11 @@ class DustColossusTest {
 
     /**
      * The par: the autopilot's measured mean at medium (step H4: 101.7 s at the spec's HP, mouth 5,600 and the vents
-     * 280, every seed 100.9-103.1 s, inside the act boss's window; the spec's draft par was 130).
+     * 280, every seed 100.9-103.1 s, inside the act boss's window; the spec's draft par was 130). Step L21R (round 44:
+     * the phases at 70 % and 45 % of the mouth, Q.9; the rings every 2.0 s, Q.2; the front point 95 px down, Q.11; the
+     * HP kept, Q.3): 104.3 s.
      */
-    static final double PAR = 102;
+    static final double PAR = 104;
 
     @Test
     void theStatBlockMapsToABreachingActBossWithItsPar() {
@@ -234,13 +239,77 @@ class DustColossusTest {
 
     /**
      * H.4: phase 1 costs a random dodger at least this times the Kraken's phase 1 ... (the user's band starts at 0.8: step
-     * H4 measured 6.3 against 11.4 = 0.55× with the gullet firing its rings; the lower bound pending the user's review in
-     * round 44, which decides whether phase 1 fires more, not the HP).
+     * H4 measured 6.3 against 11.4 = 0.55× with the gullet's rings every 2.5 s; step L21R 8.0 = 0.70× with them every
+     * 2.0 s, round 44 Q.2; the lower bound pending the user's review: the fan from phase 1 is the next lever).
      */
-    static final double LEAST = 0.45;
+    static final double LEAST = 0.65;
 
     /** ... and at most this times. */
     static final double MOST = 1.2;
+
+    /**
+     * Round 44 Q.4: the erupted mouth is no safe spot. A ship that steps out of the marker (the autopilot's play) and
+     * then parks on the erupted mouth's centre, firing, until the bite's tell (the walker's safe spot of round 43's
+     * W.e) is hit while it stands there: the spiral fires from the mouth (step H4) and the debris rocks are pulled into
+     * it. Measured per 10 s parked over the seeds at medium (the eruption and the bite left out): at least {@link
+     * #PARKED_LOST}, so the eruption needs no ring (SIM-K's hook stays unused).
+     */
+    @Test
+    void theEruptedMouthIsNoSafeSpot() {
+        double parked = 0;
+        double lost = 0;
+        int fired = 0;
+        for (long seed : SEEDS) {
+            Sortie sortie = sortie(seed, Difficulty.MEDIUM, Level21Test.planLoadout(CONTENT, Difficulty.MEDIUM));
+            SetPiece boss = sortie.setPiece(0);
+            for (int i = 0; i < SimStep.ticks(MOST_SECONDS) && !boss.destroyed() && sortie.flying(); i++) {
+                BreachArena breach = boss.breach().orElseThrow();
+                boolean onMouth = boss.engaged()
+                        && boss.phase() == 2
+                        && breach.pose() == BreachArena.Pose.UNDER
+                        && breach.phase() == BreachArena.Phase.OPEN
+                        && !ColossusPlay.biting(boss, breach);
+                double before = sortie.ship().defences().shield()
+                        + sortie.ship().defences().armour();
+                double dx = sortie.ship().x() - breach.mouthX();
+                double dy = sortie.ship().y() - breach.mouthY();
+                boolean near = onMouth && dx * dx + dy * dy < PARKED * PARKED;
+                int command = onMouth
+                        ? Command.FIRE.bit()
+                                | MovePlanner.steer(
+                                        sortie.ship().x(), sortie.ship().y(), breach.mouthX(), breach.mouthY())
+                        : Autopilot.commands(sortie);
+                sortie.step(command);
+                boolean struck = false;
+                SimEvents events = sortie.events();
+                for (int e = 0; e < events.size(); e++) {
+                    SimEvents.Type type = events.type(e);
+                    struck |= type == SimEvents.Type.ERUPTION || type == SimEvents.Type.BITE_SNAP;
+                }
+                if (near && !struck) {
+                    parked += SimStep.SECONDS;
+                    fired += events.count(SimEvents.Type.ENEMY_FIRED);
+                    lost += Math.max(
+                            0,
+                            before
+                                    - sortie.ship().defences().shield()
+                                    - sortie.ship().defences().armour());
+                }
+            }
+        }
+        double perTen = parked > 0 ? lost * 10 / parked : 0;
+        System.out.printf(
+                "Parked on the erupted mouth: %.1f s, %.1f lost per 10 s, %.0f shots a minute%n",
+                parked, perTen, parked > 0 ? fired * 60 / parked : 0);
+        assertTrue(parked > 10, "it parked: " + parked);
+        assertTrue(perTen >= PARKED_LOST, "no safe spot: " + perTen + " per 10 s");
+    }
+
+    /** Q.4: the least a parked ship loses per 10 s on the erupted mouth (step L21R measured 9.9). */
+    static final double PARKED_LOST = 5;
+
+    /** Within this of the mouth's centre the ship counts as parked on it, px. */
+    static final double PARKED = 30;
 
     /**
      * H.5: the boss keeps the act boss's 22.7 % share of budget(21): its bounty is 0.227 × budget ÷ (the act factor ×

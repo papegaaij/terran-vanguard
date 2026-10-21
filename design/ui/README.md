@@ -2,9 +2,9 @@
 title: User interface
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../art-direction, ../systems]
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 
 # User interface
@@ -23,8 +23,8 @@ frames and chunky bitmap fonts.
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
 | [main-menu](main-menu/README.md) | Title screen, continue/new/load, options, credits, quit | approved | done | final |
-| [briefing](briefing/README.md) | Story briefing before each level: portraits, typed text, objectives | approved | done | chosen |
-| [hangar](hangar/README.md) | Ship configurator: intel, shop, loadout, repair, save, launch | approved | in-progress | chosen |
+| [briefing](briefing/README.md) | Story briefing before each level: portraits, typed text, objectives | approved | done | final |
+| [hangar](hangar/README.md) | Ship configurator: intel, shop, loadout, repair, save, launch | approved | in-progress | final |
 | [hud](hud/README.md) | In-level side panels: status, weapons, special, radio chatter, progress | approved | in-progress | final |
 | [pause](pause/README.md) | Pause menu during a level | approved | done | final |
 | [debrief](debrief/README.md) | Level complete: kills, credits, bonuses, grade | approved | done | final |
@@ -272,3 +272,4 @@ Production art, UI batch part U3 (concept round 13): the bitmap fonts rendered b
 - 2026-10-19 (user correction of 2026-10-18): the replay hangar is refit only: fitting what the
   campaign owns stays, buying, selling, upgrading and repairs are gone from it. Details in
   [mission select](mission-select/README.md#decisions).
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

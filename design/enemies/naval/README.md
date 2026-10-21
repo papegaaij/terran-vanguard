@@ -2,8 +2,8 @@
 title: Naval enemies
 design: approved
 implementation: in-progress
-art: chosen
-updated: 2026-10-12
+art: final
+updated: 2026-10-20
 ---
 
 # Naval enemies
@@ -94,3 +94,4 @@ Concept [round 07](../../concept-rounds/round-07/README.md) — real waterline (
   ([art direction](../../art-direction/README.md#animation-rules)); the Driftjelly's and Reef
   Spitter's specs reworked for Level 11.
 - 2026-10-12: M5 part I (close-out): the surfacing and submerging visuals ticked as built in part E (the `sub` pass and the units' surfacing steps, approved in round 33).
+- 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.

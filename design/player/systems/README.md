@@ -330,7 +330,7 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   walls stop it without contact, a HUD pip) and the third bay's rules (on sale once from L15,
   any module, not sold while fitted); the rendered rows keep their data until M7 part A. The
   power check found the thrusters' 2 MW does not fit the typical Act 3 loadout on the Mk III.
-  Pending the user's review in concept round 36.
+  Accepted in round 36 (2026-10-13).
 - 2026-10-13 (user, round 36): the Act 3 sections approved (D.25): the Evasive thrusters (the dash,
   its double-tap and button, 0.25 s invulnerability, 3 s cooldown, 2 MW) and the third utility bay
   on sale once from the L15 visit. The HUD's dash pip and the controls' Dash binding are part A items

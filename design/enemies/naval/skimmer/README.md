@@ -94,13 +94,13 @@ concept round 34), generator notes in [concept/prompts.md](concept/prompts.md):
 - 2026-10-01: Promoted from the naval roster to a full spec for the Acts 1–2 wrap-up.
 - 2026-10-01: HP rescaled to the lowered L13 reference DPS (8 → 5, ×76/120).
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
-- 2026-10-11: M5 part G, step G1a: **G4 = a** (recommended; pending the user's review, the user is on
+- 2026-10-11: M5 part G, step G1a: **G4 = a** (recommended; accepted in round 34 (2026-10-12), the user is on
   vacation) the Skimmer is a lane walker on ground-space lanes with the weave as an offset, 16 headings
   from its velocity; the leads are cut along the lanes and do not drift. **G1 = a** (recommended;
-  pending the user's review): under `alternate` every second attack goes at the relay while it is
+  accepted in round 34 (2026-10-12)): under `alternate` every second attack goes at the relay while it is
   closer than the ship; a burst is one attack. Death flip-and-sink with the water splash by unit
   (G5 = a). `design: review` for the reworked behaviour; the stat block is unchanged.
-- 2026-10-11: M5 part G, step G3 (the simulation; pending the user's review): a lane is a smooth curve
+- 2026-10-11: M5 part G, step G3 (the simulation; accepted in round 34 (2026-10-12)): a lane is a smooth curve
   through its points (a Catmull-Rom curve, as a flight path; the backdrop cuts the leads along the same
   curve); the weave is an offset across the lane, to the right of its direction on a positive swing; the
   Skimmer goes straight on past its lane's end until it leaves the play field, and a unit that never got
@@ -108,7 +108,7 @@ concept round 34), generator notes in [concept/prompts.md](concept/prompts.md):
   (the scroll left out; the 16 headings are the drawing's), and its gun counts down only on the screen
   (first shot 0.5 s after it comes on, the stat block's delay). Its death raises `LANE_WALKER_DOWN` with its
   kind and facing for the flip and sink.
-- 2026-10-12: M5 part G, step G4 (pending the user's review): the stat block in [data.yaml](data.yaml) (a
+- 2026-10-12: M5 part G, step G4 (accepted in round 34 (2026-10-12)): the stat block in [data.yaml](data.yaml) (a
   `ground` unit with the `sine` weave; a lane walker by its waves' `lanes`; hard's 2-shot burst as the
   hook `burst: 2`), the stat block table rendered from it; the production sprites written to `assets/`
   (`tools/art/skimmer.py --assets`) and the intel portrait (`tools/art/intel.py skimmer`).

@@ -638,7 +638,12 @@ public final class SimEvents {
          * M7 part H, step H3: the marker erupts, the mouth up and open at once (at its centre; it replaces the rise's
          * {@link #BREACH_RISE}); value: what it caught, {@code 1} the ship, {@code 2} Rook (0: nothing).
          */
-        ERUPTION;
+        ERUPTION,
+        /**
+         * Step SIM-K (round 44, Q.4): the eruption's ring ({@link BossSpec.Shockwave}) reaches the ship or Rook (at the
+         * mouth's centre); value: whom it caught now, {@code 1} the ship, {@code 2} Rook.
+         */
+        ERUPTION_RING;
 
         private static final Type[] VALUES = values();
     }

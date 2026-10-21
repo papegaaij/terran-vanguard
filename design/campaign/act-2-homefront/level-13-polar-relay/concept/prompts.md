@@ -3,7 +3,7 @@
 ## whiteout-r35-a
 
 The whiteout peak (t=176–188), look a "rolling banks" (round 35, M5 part G step G2; decision G9 = a:
-an a/b for the whiteout, pending the user's review). Rendered by
+an a/b for the whiteout, accepted in round 34 (2026-10-12)). Rendered by
 [tools/art/whiteout_l13.py](../../../../../tools/art/whiteout_l13.py) (`python3 tools/art/whiteout_l13.py a`),
 not prompted. Brief (the README's *The halt* section 4 and *Whiteout (G7 = a)*): two layers on the real
 clock (the scroll is halted): the **banks** on `low-air` roll in from both side edges (reaching ≈ 128 px
@@ -27,8 +27,7 @@ snow as short slanted streaks, more of them toward the edges.
 
 ## l13-props-final-r35-a
 
-Production art, one version each (round 35, M5 part G step G2; decision G9 = a, pending the user's
-review; no concept: designed to the READMEs and the chosen arctic scene's light), rendered by
+Production art, one version each (round 35, M5 part G step G2; decision G9 = a, accepted in round 34 (2026-10-12); no concept: designed to the READMEs and the chosen arctic scene's light), rendered by
 [tools/art/l13_props.py](../../../../../tools/art/l13_props.py) (`python3 tools/art/l13_props.py`; the
 frames go to `assets/` only with `--assets`, in the content step's time). Not prompted.
 
@@ -55,7 +54,7 @@ G5's `tools/art/backdrop_l13.py`.
 ## backdrop-final-r35-a
 
 Production art, straight from the chosen arctic scene (round 35, M5 part G step G5; decision G9 = a,
-pending the user's review), rendered by [tools/art/backdrop_l13.py](../../../../../tools/art/backdrop_l13.py)
+accepted in round 34 (2026-10-12)), rendered by [tools/art/backdrop_l13.py](../../../../../tools/art/backdrop_l13.py)
 (`python3 tools/art/backdrop_l13.py`; `--check` for the lanes on water (each unit's run as the sim
 flies it, per wave: its lane's centre and its hull on the weave, ≥ 95 % each), the relay's and the hut's
 floes, the seam, the wraps, the motion budget and the fog over the ice (it must not darken it); `--proposal` writes

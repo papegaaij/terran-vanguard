@@ -1,16 +1,19 @@
-# Terran Vanguard @tag@ — Acts 1 and 2
+# Terran Vanguard @tag@ — Acts 1 to 3
 
-A late-90s style vertical shoot'em up set in 2185. This release holds the first two of the
-campaign's seven acts: fourteen levels on easy, medium or hard, with their briefings, radio
-chatter, shop and hangar, the Act 1 and Act 2 bosses and the act outros. The later acts follow in
-later releases.
+A late-90s style vertical shoot'em up set in 2185. This release holds the first three of the
+campaign's seven acts: twenty-one levels on easy, medium or hard, from Earth orbit and Luna
+(Act 1, *First Contact*) over Earth's cities, oceans and arctic (Act 2, *Homefront*) to the Mars
+colonies (Act 3, *Red Dust*). Each act has its briefings, radio chatter and outro, the shop and
+the hangar between the levels, and a boss at its end: the Brood Carrier, the Siege Spire and the
+Dust Colossus. From Act 2 on Rook flies with you as your wingman. After Level 21 the campaign
+stops at Act 4, *Deep Water*, which follows in a later release.
 
 ## Download
 
 | System | File |
 |---|---|
 | Windows 10/11, 64-bit | `terran-vanguard-@version@-winX64.zip` |
-| macOS, Apple Silicon (M1 and later) | `terran-vanguard-@version@-macM1.zip` |
+| macOS, Apple Silicon (M1 and later): untested on Apple silicon, see below | `terran-vanguard-@version@-macM1.zip` |
 | macOS, Intel | `terran-vanguard-@version@-macX64.zip` |
 | Linux, 64-bit x86 | `terran-vanguard-@version@-linuxX64.zip` |
 
@@ -27,6 +30,9 @@ and where the settings, saves and screenshots are kept.
   System Settings → Privacy & Security. If macOS says the app is damaged, run once in Terminal:
   `xattr -dr com.apple.quarantine "/path/to/Terran Vanguard.app"`.
 - **Linux:** if the game does not start, make it executable: `chmod +x terran-vanguard`.
+
+The Apple silicon build is made the same way as the others but has not yet been started on a
+real Mac with an M-series chip; if it will not open even after the steps above, please report it.
 
 ## Requirements
 

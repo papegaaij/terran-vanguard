@@ -123,6 +123,12 @@ final class SpriteUse {
     static final Map<String, String> TRIGGER_CONTENTS = Map.of("greenhouse-frame", "seed-capsule");
 
     /**
+     * Round 44 G.c: a trigger look standing on a ground decal of its own (LevelRenderer's {@code TRIGGER_PADS}): Level
+     * 17's greenhouse frame on its scorched pad, {@code greenhouse-pad}.
+     */
+    static final Map<String, String> TRIGGER_PADS = Map.of("greenhouse-frame", "greenhouse-pad");
+
+    /**
      * M7 part F: a ground target look standing inside another sprite of its own (the game's {@code
      * FoundryLooks.TRIGGER_SURROUNDS}): Level 19's payroll safe inside the shift office.
      */
@@ -238,6 +244,7 @@ final class SpriteUse {
             }
             // M7 part D: a look over contents with sprites of their own (Level 17's seed-vault capsule).
             target.sprite().map(TRIGGER_CONTENTS::get).ifPresent(roots::add);
+            target.sprite().map(TRIGGER_PADS::get).ifPresent(roots::add);
             // M7 part F: a look inside a surround of its own (Level 19's payroll safe in the shift office).
             target.sprite().map(TRIGGER_SURROUNDS::get).ifPresent(roots::add);
             if (target.arc().isPresent()) {

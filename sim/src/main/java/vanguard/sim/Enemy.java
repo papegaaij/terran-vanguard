@@ -14,7 +14,7 @@ public final class Enemy implements Hashed {
     /** The most its facing turns in one step: one step of a 16-angle set (art direction, Rotation). */
     private static final double MAX_TURN = StrictMath.PI / 8;
 
-    private enum Phase {
+    enum Phase {
         ENTER,
         HOLD,
         LEAVE,
@@ -174,12 +174,11 @@ public final class Enemy implements Hashed {
         SINKING
     }
 
-    /** A walker is at a waypoint this close to it and heads for the next. */
-    private static final double ARRIVED = 6;
-
-    private EnemySpec spec;
+    // The fields without a modifier are its movement state, shared with its behaviour components ({@link Chasing}
+    // ...), which move it through them; nothing else in the package writes them.
+    EnemySpec spec;
     /** Its hit box: its stat block's, or a chain member's own (the segments taper). */
-    private Hitbox box;
+    Hitbox box;
     /** The chain it is a member of; null for any other unit (the link is hashed only with one). */
     private Chain chain;
     /** Its place in its chain: 0 the head. */
@@ -193,34 +192,34 @@ public final class Enemy implements Hashed {
     /** The ground group it belongs to (a dock of Level 02); -1 for none. */
     private int group;
 
-    private FlightPath path;
-    private int segment;
-    private double distance;
-    private double speed;
-    private Phase phase;
-    private int holdTicks;
+    FlightPath path;
+    int segment;
+    double distance;
+    double speed;
+    Phase phase;
+    int holdTicks;
     private Optional<Spawn.Orbit> orbit;
-    private double angle;
+    double angle;
     private Spawn.Exit exit;
-    private double vx;
-    private double vy;
-    private double x;
-    private double y;
-    private double prevX;
-    private double prevY;
+    double vx;
+    double vy;
+    double x;
+    double y;
+    double prevX;
+    double prevY;
     /**
      * Where it faces: radians clockwise from straight down the screen. For the presentation only,
      * and not part of the state hash, except for a walker, whose facing decides its armour and its
      * fan (design/enemies/ground/scuttler).
      */
-    private double facing;
+    double facing;
     /**
      * M7 part G (design/campaign Level 20, Reverse scroll): the frame it lives in. Its own state (position, velocity,
      * facing, aim, its cycles' state) is in this frame; the accessors and the events give the screen's, and the ship,
      * its aim point and the ground's scroll come in converted ({@link TravelFrame}). {@link TravelFrame#SCREEN} for
      * every unit not spawned in a reversed scroll.
      */
-    private TravelFrame frame = TravelFrame.SCREEN;
+    TravelFrame frame = TravelFrame.SCREEN;
 
     private double hp;
     /**
@@ -229,31 +228,23 @@ public final class Enemy implements Hashed {
      */
     private int ticksSinceHit = Integer.MAX_VALUE;
 
-    private int volleyTicks;
-    private int burstLeft;
-    private int burstTicks;
+    int volleyTicks;
+    int burstLeft;
+    int burstTicks;
     private boolean leadsTarget;
     private Optional<PickupType> carried;
     /** A turret's barrel: radians clockwise from straight down the screen. */
-    private double aim;
+    double aim;
     /** Whether the ship is inside a turret's arc this step. */
     private boolean inArc;
-    /**
-     * M7 part F: a turret's lock (design/enemies/ground/warden-tank): steps left before its burst while it has
-     * stopped turning (the tell); -1 while it turns. Hashed only with a turret.
-     */
-    private int turretLock = -1;
-    /** M7 part F: how far its turret's aim was off its target in this step's turn, radians (set and read within the step). */
-    private double turretOff = Double.POSITIVE_INFINITY;
+    /** M7 part F: its turret and its gun (design/enemies/ground/warden-tank; hashed only with a turret). */
+    private final TurretGun turretGun = new TurretGun(this);
 
     private int diveTicks;
     private boolean diveFired;
     private boolean diveShot;
-    private double releaseX;
-    private double releaseY;
-    private double spiralAngle;
-    private int spiralTicks;
-    private int ricochetsLeft;
+    /** A whirl seed's spiral and ricochets (design/enemies/air/whirl-seed). */
+    private final Spiralling spiralling = new Spiralling(this);
 
     /** A spawner's steps since its centre crossed the top edge; -1 before. */
     private int broodTicks;
@@ -262,38 +253,15 @@ public final class Enemy implements Hashed {
 
     private int glideHoldTicks;
 
-    /** Whether it entered as an escort; the escort's fields are in the state hash only then. */
-    private boolean escort;
-    /** The carrier it circles; null once that ended (or when it entered without one). */
-    private Enemy carrier;
+    /** An escort's circle round its carrier (hashed only for an escort). */
+    private final Escorting escorting = new Escorting(this);
 
-    private double escortRadius;
-    private double escortRate;
-    /** Steps left before an escort whose carrier ended breaks off toward the ship. */
-    private int breakTicks;
-
-    private double centreX;
-    private double centreY;
-
-    /** A walker's path; null for any other unit (the walker's fields are hashed only with one). */
-    private WalkPath walkPath;
-    /** The walk path's point it heads for; past the last it walks straight on. */
-    private int waypoint;
-    /** How far the ground scrolled since it entered (its path's points scroll with it). */
-    private double scrolled;
-    /** How far it walked over the ground, which drives its walk cycle. */
-    private double walked;
+    /** A walker's walk (design/enemies/ground/scuttler; hashed only for a walker or a volley wave's unit). */
+    private final Walking walking = new Walking(this);
+    /** How far the ground scrolled since it entered (a walker's path's points and a lane scroll with it). */
+    double scrolled;
     /** Whether it has been on the play field (a walker enters from outside it). */
-    private boolean entered;
-
-    private int spitTicks;
-    /**
-     * M5 part B: its wave's volley clock (a staggered walker wave, design/enemies/ground/creeper)
-     * and its place in the wave (from 0, in entry order); -1 and 0 without one.
-     */
-    private int volleyGroup = -1;
-
-    private int volleyUnit;
+    boolean entered;
     /** The edge its wave entered from (a wingman's formation follows the sides and rear waves); front for any other unit. */
     private WaveSpec.Entry entry = WaveSpec.Entry.FRONT;
 
@@ -313,18 +281,8 @@ public final class Enemy implements Hashed {
     /** M5 part C: its wave's tag; "" for none (not hashed: it follows from the plan). */
     private String tag = "";
 
-    /** M5 part D: an ambush unit's plan; null for any other unit (its fields are hashed only with one). */
-    private Spawn.Ambush ambush;
-
-    private AmbushPhase ambushPhase = AmbushPhase.NONE;
-    /** Steps since it entered, until its re-entry. */
-    private int ambushTicks;
-    /** Steps from its entry to its re-entry at the bottom edge (the end of its edge warning). */
-    private int reentryTicks;
-    /** Whether it decloaked in this step (not hashed: set and read within the step). */
-    private boolean decloaked;
-    /** The volleys it started in its hold. */
-    private int ambushVolleys;
+    /** M5 part D: a rear ambush unit's way (design/enemies/air/wraith; hashed only for one). */
+    private final Ambushing ambushing = new Ambushing(this);
     /**
      * M5 part D: the volleys of an ambush unit's hold (design/enemies/air/wraith: "twice in its
      * hold"); hard's longer hold does not add a third.
@@ -360,18 +318,8 @@ public final class Enemy implements Hashed {
     private int burrowGroup = -1;
     /** M7 part B, a swoop (design/enemies/air/dust-kite; hashed only with one). */
     private final Swooping swooping = new Swooping();
-    /** M5 part F: a chaser's state (design/enemies/air/lamprey); {@link LatchPhase#NONE} for other units. */
-    private LatchPhase latchPhase = LatchPhase.NONE;
-    /** M5 part F: steps left after its entry before its chase starts. */
-    private int chaseWait;
-    /** M5 part F: steps into its chase. */
-    private int chaseTicks;
-    /** M5 part F: its heading while it chases, radians clockwise from straight down. */
-    private double heading;
-    /** M5 part F: the hull spot it latched onto ({@link EnemySpec.Latch#LEFT} ...); -1 before. */
-    private int spot = -1;
-    /** M5 part F: steps into its stun. */
-    private int stunTicks;
+    /** M5 part F: a chaser's chase, latch and shake-off (design/enemies/air/lamprey; hashed only with a chase). */
+    private final Chasing chasing = new Chasing(this);
 
     /**
      * M5 part G: a lane walker (design/enemies/naval/skimmer, user decision G4 = a): {@link #path} is its
@@ -413,9 +361,9 @@ public final class Enemy implements Hashed {
 
     /**
      * M7 part A, the EMP Burst's stun (design/player/specials, EMP Burst): steps left; 0 when it is not
-     * stunned. Separate from a Lamprey's own {@link #stunTicks} after a shake-off.
+     * stunned. Separate from a Lamprey's own stun after a shake-off ({@link Chasing}).
      */
-    private int empStun;
+    int empStun;
     /** M7 part A: an air unit's drift per step while stunned: its last step's movement when the stun began. */
     private double stunDx;
 
@@ -424,9 +372,9 @@ public final class Enemy implements Hashed {
      * M7 part A: how far its stuns let it drift off the path, circle or carrier it is placed on; it
      * resumes there shifted by this, so it does not jump when a stun ends (0 for most units).
      */
-    private double offX;
+    double offX;
 
-    private double offY;
+    double offY;
 
     /** A pounce's contact with the ship. */
     static final int TOUCHED_SHIP = 1;
@@ -499,14 +447,13 @@ public final class Enemy implements Hashed {
         leadsTarget = plan.leadsTarget();
         carried = plan.carried();
         place();
-        spiralTicks = 0;
-        ricochetsLeft = spec.spiral().isPresent() ? spec.spiral().get().ricochets() : 0;
+        spiralling.reset(spec.spiral().isPresent() ? spec.spiral().get().ricochets() : 0);
         if (plan.release().isPresent() && spec.spiral().isPresent()) {
             Spawn.Release release = plan.release().get();
             phase = Phase.SPIRAL;
-            releaseX = x = release.x();
-            releaseY = y = release.y();
-            spiralAngle = release.angle();
+            x = release.x();
+            y = release.y();
+            spiralling.release(x, y, release.angle());
         }
         if (spec.gun().isPresent() && spec.gun().get().mine().isPresent()) {
             volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
@@ -517,22 +464,19 @@ public final class Enemy implements Hashed {
         if (plan.escort().isPresent()) {
             Spawn.Escort circle = plan.escort().get();
             phase = Phase.ESCORT;
-            escort = true;
-            escortRadius = circle.radius();
-            escortRate = circle.radiansPerSecond();
+            escorting.start(circle);
             angle = circle.angle();
-            breakTicks = SimStep.ticks(circle.breakSeconds());
             volleyTicks =
                     spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
         }
         if (plan.walk().isPresent()) {
-            walkPath = plan.walk().get();
+            WalkPath walkPath = plan.walk().get();
+            walking.start(walkPath, spec.walker().orElseThrow());
             phase = Phase.WALK;
-            waypoint = 1;
             x = prevX = walkPath.x(0);
             y = prevY = walkPath.y(0);
             facing = walkPath.points() > 1 ? heading(walkPath.x(1) - x, walkPath.y(1) - y) : StrictMath.PI;
-            turretLock = -1;
+            turretGun.start();
             if (spec.turret().isPresent()) {
                 // M7 part F: the turret starts along the hull.
                 aim = facing;
@@ -540,10 +484,6 @@ public final class Enemy implements Hashed {
             // The first volleys come half an interval after it walks onto the screen.
             volleyTicks =
                     spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().intervalSeconds() / 2) : 0;
-            EnemySpec.Walker walker = spec.walker().orElseThrow();
-            spitTicks = walker.spit().isPresent()
-                    ? SimStep.ticks(walker.spit().get().intervalSeconds() / 2)
-                    : 0;
             if (spec.pounce().isPresent()) {
                 pouncing.start(spec.pounce().get());
             }
@@ -589,8 +529,7 @@ public final class Enemy implements Hashed {
         }
         if (spec.chase().isPresent() && phase == Phase.ENTER) {
             // M5 part F: a chaser flies in along its path; its chase starts its delay after its entry.
-            latchPhase = LatchPhase.ENTER;
-            chaseWait = SimStep.ticks(plan.chaseDelay());
+            chasing.enter(SimStep.ticks(plan.chaseDelay()));
         }
         if (plan.lane()) {
             // M5 part G: a lane walker starts on its lane, facing along it; its gun counts down on the screen.
@@ -604,11 +543,8 @@ public final class Enemy implements Hashed {
                     spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
         }
         if (plan.ambush().isPresent()) {
-            ambush = plan.ambush().get();
             phase = Phase.AMBUSH;
-            ambushPhase = AmbushPhase.SWOOP;
-            ambushTicks = 0;
-            reentryTicks = Math.max(1, plan.ambushReentryTick() - plan.tick());
+            ambushing.start(plan.ambush().get(), Math.max(1, plan.ambushReentryTick() - plan.tick()));
         }
     }
 
@@ -621,44 +557,23 @@ public final class Enemy implements Hashed {
         link = 0;
         sweepBeam.clear();
         broodTicks = -1;
-        escort = false;
-        carrier = null;
-        escortRadius = 0;
-        escortRate = 0;
-        breakTicks = 0;
-        centreX = 0;
-        centreY = 0;
-        walkPath = null;
-        waypoint = 0;
+        escorting.clear();
+        walking.clear();
         scrolled = 0;
-        walked = 0;
         entered = false;
-        spitTicks = 0;
-        volleyGroup = -1;
-        volleyUnit = 0;
         glideTicks = 0;
         glideHoldTicks = 0;
         spawnerIris.clear();
         pouncing.clear();
         allyContacts = 0;
-        ambush = null;
-        ambushPhase = AmbushPhase.NONE;
-        ambushTicks = 0;
-        reentryTicks = 0;
-        decloaked = false;
-        ambushVolleys = 0;
+        ambushing.clear();
         flock = null;
         member = 0;
         driftX = 0;
         driftY = 0;
         submerging.clear();
         ringWait = 0;
-        latchPhase = LatchPhase.NONE;
-        chaseWait = 0;
-        chaseTicks = 0;
-        heading = 0;
-        spot = -1;
-        stunTicks = 0;
+        chasing.clear();
         lane = false;
         attacks = 0;
         attackTarget = -1;
@@ -691,27 +606,17 @@ public final class Enemy implements Hashed {
      * off at once from where it is).
      */
     void escort(Enemy circled) {
-        carrier = circled;
-        if (circled != null && circled.spec.aura().isPresent()) {
-            // M7 part D: a Herald's escorts circle it inside its aura (the gap check's 0.8, pending round 40).
-            EnemySpec.Aura aura = circled.spec.aura().get();
-            escortRadius = aura.radius() * aura.escortRadiusShare();
-        }
-        centreX = circled != null ? circled.x : x;
-        // M7 part G: the carrier's height in this unit's frame.
-        centreY = circled != null ? frame.y(circled.y()) : y;
-        x = prevX = centreX + escortRadius * Trig.cos(angle);
-        y = prevY = centreY + escortRadius * Trig.sin(angle);
+        escorting.circle(circled);
     }
 
     /** Whether it circles {@code unit} as an escort. */
     boolean escorts(Enemy unit) {
-        return carrier == unit;
+        return escorting.escorts(unit);
     }
 
     /** Its carrier ended: it circles the carrier's last position until it breaks off toward the ship. */
     void carrierEnded() {
-        carrier = null;
+        escorting.carrierEnded();
     }
 
     /**
@@ -745,8 +650,7 @@ public final class Enemy implements Hashed {
         burstTicks = 0;
         leadsTarget = false;
         carried = Optional.empty();
-        spiralTicks = 0;
-        ricochetsLeft = 0;
+        spiralling.reset(0);
         x = prevX = atX;
         y = prevY = atY;
         vx = velX;
@@ -1074,7 +978,7 @@ public final class Enemy implements Hashed {
                 double push = wind * SimStep.SECONDS;
                 x += push;
                 if (phase == Phase.SPIRAL) {
-                    releaseX += push;
+                    spiralling.push(push);
                 }
             } else if (spec.latch().isPresent() && phase != Phase.LATCHED) {
                 x += wind * SimStep.SECONDS;
@@ -1162,25 +1066,23 @@ public final class Enemy implements Hashed {
                 return on || (!entered && y + box.height() / 2 > 0);
             }
             case SPIRAL -> {
-                spiral();
+                spiralling.step();
                 return true;
             }
             case CHASE -> {
-                chase(shipX, shipY);
+                chasing.chase(shipX, shipY);
                 return true;
             }
             case LATCHED -> {
-                EnemySpec.Spot at = spec.latch().orElseThrow().spots().get(spot);
-                x = shipX + at.dx();
-                y = shipY + frame.vy(at.dy());
+                chasing.hold(shipX, shipY);
                 return true;
             }
             case STUNNED -> {
-                stun();
+                chasing.stun();
                 return true;
             }
             case AMBUSH -> {
-                if (!ambushStep()) {
+                if (!ambushing.step()) {
                     return false;
                 }
             }
@@ -1234,28 +1136,17 @@ public final class Enemy implements Hashed {
                     pouncing.waitStep();
                 }
                 if (spec.turret().isPresent()) {
-                    turnTurret(aimX, aimY);
+                    turretGun.turn(aimX, aimY);
                 }
                 boolean on = PlayField.overlaps(x, y, box);
                 entered |= on;
                 return on || (!entered && y + box.height() / 2 > 0 && !carriedOffTop(groundScroll));
             }
             case ESCORT -> {
-                if (carrier != null) {
-                    centreX = carrier.x;
-                    centreY = frame.y(carrier.y());
-                } else if (--breakTicks < 0) {
+                if (!escorting.step()) {
                     leave(shipX, shipY);
                     turn();
                     return true;
-                }
-                angle += escortRate * SimStep.SECONDS;
-                x = centreX + escortRadius * Trig.cos(angle);
-                y = centreY + escortRadius * Trig.sin(angle);
-                if (offX != 0 || offY != 0) {
-                    // M7 part A: shifted by its drift while stunned.
-                    x += offX;
-                    y += offY;
                 }
             }
             case ENTER -> {
@@ -1270,8 +1161,8 @@ public final class Enemy implements Hashed {
                 } else {
                     place();
                 }
-                if (latchPhase == LatchPhase.ENTER) {
-                    awaitChase();
+                if (chasing.phase() == LatchPhase.ENTER) {
+                    chasing.await();
                 }
                 if (spec.brood().isPresent() && (broodTicks >= 0 || y <= PlayField.HEIGHT)) {
                     broodTicks++;
@@ -1302,7 +1193,7 @@ public final class Enemy implements Hashed {
             case LEAVE -> {
                 x += vx * SimStep.SECONDS;
                 y += vy * SimStep.SECONDS;
-                ricochet();
+                spiralling.ricochet();
                 turn();
                 if (glideTicks > 0 && --glideTicks == 0) {
                     // A launched unit's glide is over: it holds, its gun firing, then leaves down.
@@ -1374,9 +1265,7 @@ public final class Enemy implements Hashed {
         prevY = y;
         switch (phase) {
             case LATCHED -> {
-                EnemySpec.Spot at = spec.latch().orElseThrow().spots().get(spot);
-                x = shipX + at.dx();
-                y = shipY + frame.vy(at.dy());
+                chasing.hold(shipX, shipY);
                 return true;
             }
             case GROUND -> {
@@ -1419,8 +1308,7 @@ public final class Enemy implements Hashed {
                         offY += stunDy;
                     }
                     case SPIRAL -> {
-                        releaseX += stunDx;
-                        releaseY += stunDy;
+                        spiralling.drift(stunDx, stunDy);
                     }
                     case SWOOP -> {
                         // M7 part B: its curve drifts with it.
@@ -1452,53 +1340,11 @@ public final class Enemy implements Hashed {
     }
 
     /**
-     * M5 part F: a chaser flying in counts its delay down from its entry (its centre inside the play
-     * field), then starts its chase along its path's heading.
-     */
-    private void awaitChase() {
-        entered |= x >= 0 && x <= PlayField.WIDTH && y >= 0 && y <= PlayField.HEIGHT;
-        if (!entered || chaseWait-- > 0) {
-            return;
-        }
-        phase = Phase.CHASE;
-        latchPhase = LatchPhase.CHASE;
-        chaseTicks = 0;
-        heading = heading(path.dx(segment), path.dy(segment));
-    }
-
-    /**
-     * One step of a chase (design/enemies/air/lamprey): its heading turns toward the ship's centre by at
-     * most its turn rate and it flies along it at its chase speed; after its time it flies straight on.
-     */
-    private void chase(double shipX, double shipY) {
-        EnemySpec.Chase chase = spec.chase().orElseThrow();
-        double delta = Math.IEEEremainder(heading(shipX - x, shipY - y) - heading, 2 * StrictMath.PI);
-        double most = chase.turnRate() * SimStep.SECONDS;
-        heading = Math.IEEEremainder(heading + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
-        vx = -Trig.sin(heading) * chase.speed();
-        vy = -Trig.cos(heading) * chase.speed();
-        x += vx * SimStep.SECONDS;
-        y += vy * SimStep.SECONDS;
-        facing = heading;
-        if (++chaseTicks >= SimStep.ticks(chase.seconds())) {
-            phase = Phase.LEAVE;
-            latchPhase = LatchPhase.ON;
-        }
-    }
-
-    /**
      * M5 part F: it latches onto the ship at {@code ship}'s centre plus its {@code at} spot's offset;
      * it moves with the ship from now on.
      */
     void latch(int at, double shipX, double shipY) {
-        EnemySpec.Spot offset = spec.latch().orElseThrow().spots().get(at);
-        spot = at;
-        phase = Phase.LATCHED;
-        latchPhase = LatchPhase.LATCHED;
-        vx = vy = 0;
-        x = shipX + offset.dx();
-        // M7 part G: the spot on the hull, in its frame.
-        y = frame.y(shipY + offset.dy());
+        chasing.latch(at, shipX, shipY);
     }
 
     /**
@@ -1506,40 +1352,12 @@ public final class Enemy implements Hashed {
      * slowing to a stop over its stun.
      */
     void shakeOff() {
-        EnemySpec.Latch latch = spec.latch().orElseThrow();
-        EnemySpec.Spot offset = latch.spots().get(spot);
-        double length = Math.sqrt(offset.dx() * offset.dx() + offset.dy() * offset.dy());
-        double ux = length > 0 ? offset.dx() / length : 0;
-        double uy = length > 0 ? frame.vy(offset.dy()) / length : -1;
-        vx = ux * latch.throwSpeed();
-        vy = uy * latch.throwSpeed();
-        facing = heading(ux, uy);
-        phase = Phase.STUNNED;
-        latchPhase = LatchPhase.STUNNED;
-        stunTicks = 0;
-        // M7 part A: thrown off, it takes the shake-off's own stun instead of the EMP Burst's.
-        empStun = 0;
-    }
-
-    /** One step of its stun; at its end it flees at its speed to the nearer side edge. */
-    private void stun() {
-        EnemySpec.Latch latch = spec.latch().orElseThrow();
-        int total = Math.max(1, SimStep.ticks(latch.stunSeconds()));
-        double left = 1 - (double) ++stunTicks / total;
-        x += vx * left * SimStep.SECONDS;
-        y += vy * left * SimStep.SECONDS;
-        if (stunTicks >= total) {
-            phase = Phase.LEAVE;
-            latchPhase = LatchPhase.FLEE;
-            vx = (x <= PlayField.WIDTH / 2.0 ? -1 : 1)
-                    * spec.chase().orElseThrow().speed();
-            vy = 0;
-        }
+        chasing.shakeOff();
     }
 
     /** M5 part F: where a chaser is in its life; {@link LatchPhase#NONE} for any other unit. */
     public LatchPhase latchPhase() {
-        return latchPhase;
+        return chasing.phase();
     }
 
     /** M5 part F: whether it is latched onto the ship. */
@@ -1552,114 +1370,27 @@ public final class Enemy implements Hashed {
      * flying on that never latched (stunned or fleeing it does not even collide with the ship).
      */
     boolean latchable() {
-        return latchPhase == LatchPhase.ENTER || latchPhase == LatchPhase.CHASE || latchPhase == LatchPhase.ON;
+        return chasing.latchable();
     }
 
     /** M5 part F: the hull spot it latched onto ({@link EnemySpec.Latch#LEFT} ...); -1 before it latched. */
     public int spot() {
-        return spot;
+        return chasing.spot();
     }
 
     /** M5 part F: how far into its stun it is, 0 to 1 (1 outside a stun). */
     public double stunProgress() {
-        if (phase != Phase.STUNNED) {
-            return 1;
-        }
-        return Math.min(
-                1,
-                (double) stunTicks
-                        / Math.max(1, SimStep.ticks(spec.latch().orElseThrow().stunSeconds())));
-    }
-
-    /**
-     * One step of a rear ambush unit's way (design/enemies/air/wraith, user decision D6 = a of M5
-     * part D): its swoop down its lane and off the bottom edge, the gap below it, its rise back up to
-     * its hold point, the decloak flash and the hold there (its gun counting its first-shot delay
-     * from the stop), then its exit up the side lane; returns false once it has left the top edge.
-     */
-    private boolean ambushStep() {
-        decloaked = false;
-        switch (ambushPhase) {
-            case SWOOP, GAP -> {
-                if (ambushPhase == AmbushPhase.SWOOP) {
-                    distance += speed * SimStep.SECONDS;
-                    if (distance >= path.length()) {
-                        distance = path.length();
-                        ambushPhase = AmbushPhase.GAP;
-                    }
-                    place();
-                }
-                if (++ambushTicks >= reentryTicks) {
-                    // It re-enters its lane where its swoop left it, below the bottom edge.
-                    ambushPhase = AmbushPhase.RISE;
-                    path = ambush.rise();
-                    segment = 0;
-                    distance = 0;
-                    place();
-                }
-            }
-            case RISE -> {
-                distance += speed * SimStep.SECONDS;
-                if (distance >= path.length()) {
-                    distance = path.length();
-                    place();
-                    decloak();
-                } else {
-                    place();
-                }
-            }
-            case DECLOAK -> {
-                if (--holdTicks <= 0) {
-                    ambushPhase = AmbushPhase.HOLD;
-                    holdTicks = Math.max(1, SimStep.ticks(ambush.holdSeconds()));
-                }
-            }
-            case HOLD -> {
-                if (--holdTicks <= 0) {
-                    ambushPhase = AmbushPhase.EXIT;
-                    burstLeft = 0;
-                    path = ambush.exit();
-                    segment = 0;
-                    distance = 0;
-                    speed = ambush.exitSpeed();
-                }
-            }
-            case EXIT -> {
-                distance += speed * SimStep.SECONDS;
-                if (distance >= path.length()) {
-                    return false;
-                }
-                place();
-            }
-            case NONE -> throw new IllegalStateException("an ambush unit without its phase");
-        }
-        return true;
-    }
-
-    /** It stops at its hold point and decloaks: the flash starts, its gun counts from here. */
-    private void decloak() {
-        decloaked = true;
-        burstLeft = 0;
-        // + 1: the gun already counts down in the step the unit stops, as a hover's (see hold()).
-        volleyTicks = spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
-        int flash = SimStep.ticks(ambush.flashSeconds());
-        if (flash > 0) {
-            ambushPhase = AmbushPhase.DECLOAK;
-            holdTicks = flash;
-        } else {
-            ambushPhase = AmbushPhase.HOLD;
-            holdTicks = Math.max(1, SimStep.ticks(ambush.holdSeconds()));
-        }
+        return chasing.stunProgress(phase == Phase.STUNNED);
     }
 
     /** M5 part D: where a rear ambush unit is on its way; {@link AmbushPhase#NONE} for any other unit. */
     public AmbushPhase ambushPhase() {
-        return ambushPhase;
+        return ambushing.phase();
     }
 
     /** M5 part D: whether it decloaked in this step (the {@link SimEvents.Type#DECLOAK} event). */
     boolean decloakedNow() {
-        return decloaked;
+        return ambushing.decloakedNow();
     }
 
     /**
@@ -1667,7 +1398,7 @@ public final class Enemy implements Hashed {
      * decloak, drawn as a shimmer on its stat block's layer; false for any other unit.
      */
     public boolean cloaked() {
-        return spec.cloak().isPresent() && !decloakedPhase();
+        return spec.cloak().isPresent() && !ambushing.decloakedPhase();
     }
 
     /**
@@ -1676,19 +1407,7 @@ public final class Enemy implements Hashed {
      * without a cloak.
      */
     public double decloak(double alpha) {
-        if (spec.cloak().isEmpty() || ambushPhase.compareTo(AmbushPhase.HOLD) >= 0) {
-            return 1;
-        }
-        if (ambushPhase != AmbushPhase.DECLOAK) {
-            return 0;
-        }
-        int flash = Math.max(1, SimStep.ticks(ambush.flashSeconds()));
-        return Math.clamp((flash - holdTicks + alpha) / flash, 0.0, 1.0);
-    }
-
-    /** Whether it is at or past its decloak (an ambush unit's flash, hold and exit). */
-    private boolean decloakedPhase() {
-        return ambushPhase.compareTo(AmbushPhase.DECLOAK) >= 0;
+        return spec.cloak().isEmpty() ? 1 : ambushing.decloak(alpha);
     }
 
     /**
@@ -1707,59 +1426,18 @@ public final class Enemy implements Hashed {
     }
 
     /**
-     * One step of a whirl cluster's spiral (design/enemies/air/whirl-seed): around the release
-     * point, which drifts down, at its turn rate and with a growing radius; at its end it flies on
-     * along its outward angle, turned downward, and at least as steeply down as the release point
-     * drifted (so a seed that ends the spiral pointing sideways still leaves through the bottom).
-     */
-    private void spiral() {
-        EnemySpec.Spiral spiral = spec.spiral().orElseThrow();
-        double t = ++spiralTicks * SimStep.SECONDS;
-        double angle = spiralAngle + 2 * StrictMath.PI * spiral.turnsPerSecond() * t;
-        double radius = spiral.growth() * t;
-        double cos = Trig.cos(angle);
-        double sin = Trig.sin(angle);
-        x = releaseX + radius * cos;
-        y = releaseY - spiral.drift() * t + radius * sin;
-        if (t >= spiral.seconds()) {
-            phase = Phase.LEAVE;
-            double down = Math.max(Math.abs(sin), spiral.drift() / speed);
-            double length = Math.sqrt(cos * cos + down * down);
-            vx = cos / length * speed;
-            vy = -down / length * speed;
-        }
-    }
-
-    /**
      * One step of a walker over the ground (design/enemies/ground/scuttler): its facing turns toward
      * the path's next point by at most its turn rate, and it walks along its facing; a point it
      * reached, or one it can no longer turn into (behind it, inside its turning circle), is passed.
      * Past the last point it walks straight on.
      */
     private void walk() {
-        walk(spec.walker().orElseThrow().speed());
+        walking.step(spec.walker().orElseThrow().speed());
     }
 
     /** One step over the ground at {@code walkSpeed} px/s (M7 part D: a roll goes at the roll's speed). */
     void walk(double walkSpeed) {
-        EnemySpec.Walker walker = spec.walker().orElseThrow();
-        if (waypoint < walkPath.points()) {
-            double dx = walkPath.x(waypoint) - x;
-            double dy = walkPath.y(waypoint) - scrolled - y;
-            double distanceLeft = Math.sqrt(dx * dx + dy * dy);
-            double delta = Math.IEEEremainder(heading(dx, dy) - facing, 2 * StrictMath.PI);
-            double turning = 2 * walkSpeed / walker.turnRate();
-            if (distanceLeft <= ARRIVED || (distanceLeft < turning && Math.abs(delta) > StrictMath.PI / 2)) {
-                waypoint++;
-            } else {
-                double most = walker.turnRate() * SimStep.SECONDS;
-                facing = Math.IEEEremainder(facing + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
-            }
-        }
-        double step = walkSpeed * SimStep.SECONDS;
-        x -= Trig.sin(facing) * step;
-        y -= Trig.cos(facing) * step;
-        walked += step;
+        walking.step(walkSpeed);
     }
 
     /**
@@ -1773,7 +1451,7 @@ public final class Enemy implements Hashed {
      */
     boolean pounce(double shipX, double screenShipY) {
         double shipY = frame.y(screenShipY);
-        if (walkPath == null || spec.pounce().isEmpty() || !pouncing.ready() || !PlayField.overlaps(x, y, box)) {
+        if (!walking.active() || spec.pounce().isEmpty() || !pouncing.ready() || !PlayField.overlaps(x, y, box)) {
             return false;
         }
         double dx = shipX - x;
@@ -1837,7 +1515,7 @@ public final class Enemy implements Hashed {
             return vortexCycle.open() ? Layer.LOW_AIR : spec.layer();
         }
         // M5 part D: a cloaked unit is on its decloaked layer from its flash's start on.
-        if (spec.cloak().isPresent() && decloakedPhase()) {
+        if (spec.cloak().isPresent() && ambushing.decloakedPhase()) {
             return spec.cloak().get().layer();
         }
         // M5 part E: a submerging unit is under the surface from its dive's middle to its rise's.
@@ -1890,16 +1568,7 @@ public final class Enemy implements Hashed {
             // M7 part D: a curled shell sparks off every shot.
             return true;
         }
-        if (walkPath == null || !(spec.walker().orElseThrow().frontArc() > 0)) {
-            return false;
-        }
-        double length = Math.sqrt(shotVx * shotVx + shotVy * shotVy);
-        if (length == 0) {
-            return false;
-        }
-        // The facing as a direction (y up): a shot from the front flies against it.
-        double against = (shotVx * Trig.sin(facing) + shotVy * Trig.cos(facing)) / length;
-        return against >= Trig.cos(spec.walker().orElseThrow().frontArc());
+        return walking.glances(shotVx, shotVy);
     }
 
     /**
@@ -1907,24 +1576,7 @@ public final class Enemy implements Hashed {
      * when it is ready and the ship at (shipX, shipY) is more than its away angle off its facing.
      */
     boolean spit(double shipX, double screenShipY) {
-        double shipY = frame.y(screenShipY);
-        if (walkPath == null || !PlayField.overlaps(x, y, box)) {
-            return false;
-        }
-        EnemySpec.Walker walker = spec.walker().orElseThrow();
-        if (walker.spit().isEmpty()) {
-            return false;
-        }
-        if (spitTicks > 0) {
-            spitTicks--;
-            return false;
-        }
-        double off = Math.abs(Math.IEEEremainder(heading(shipX - x, shipY - y) - facing, 2 * StrictMath.PI));
-        if (off <= walker.awayRadians()) {
-            return false;
-        }
-        spitTicks = SimStep.ticks(walker.spit().get().intervalSeconds());
-        return true;
+        return walking.spit(shipX, frame.y(screenShipY));
     }
 
     /**
@@ -1932,13 +1584,12 @@ public final class Enemy implements Hashed {
      * (from 0, in entry order); -1: it keeps its own clock.
      */
     void volley(int clock, int unit) {
-        volleyGroup = walkPath != null ? clock : -1;
-        volleyUnit = volleyGroup >= 0 ? unit : 0;
+        walking.volley(clock, unit);
     }
 
     /** Its wave's volley clock; -1 for a unit on its own clock. */
     int volleyGroup() {
-        return volleyGroup;
+        return walking.volleyGroup();
     }
 
     /**
@@ -1949,17 +1600,7 @@ public final class Enemy implements Hashed {
      * its turn.
      */
     boolean staggeredVolley(int[] clocks) {
-        if (spec.gun().isEmpty() || gunQuiet() || !PlayField.overlaps(x, y, box)) {
-            return false;
-        }
-        if (clocks[volleyGroup] == 0) {
-            clocks[volleyGroup] = 1;
-        }
-        EnemyGun gun = spec.gun().get();
-        int since = clocks[volleyGroup]
-                - SimStep.ticks(gun.intervalSeconds() / 2)
-                - SimStep.ticks(volleyUnit * spec.walker().orElseThrow().staggerSeconds());
-        return since >= 0 && since % SimStep.ticks(gun.intervalSeconds()) == 0;
+        return walking.staggeredVolley(clocks);
     }
 
     /** Whether a spawner's time ran out: it bursts on its own this step. */
@@ -1981,7 +1622,7 @@ public final class Enemy implements Hashed {
 
     /** A walker's distance walked over the ground in px (its walk cycle); 0 for other units. */
     public double walked() {
-        return walked;
+        return walking.walked();
     }
 
     /** Whether it is a walker. */
@@ -2079,18 +1720,6 @@ public final class Enemy implements Hashed {
         diveHit = true;
     }
 
-    /** A spiralled-out unit bounces off the side edges, up to its ricochets. */
-    private void ricochet() {
-        if (ricochetsLeft == 0) {
-            return;
-        }
-        double half = box.width() / 2;
-        if ((x < half && vx < 0) || (x > PlayField.WIDTH - half && vx > 0)) {
-            vx = -vx;
-            ricochetsLeft--;
-        }
-    }
-
     /**
      * A turret on the screen turns its barrel towards its target (the ship, or the convoy unit the
      * target-the-objective hook chose) by at most its turn rate while the target is inside its arc;
@@ -2118,70 +1747,6 @@ public final class Enemy implements Hashed {
     }
 
     /**
-     * M7 part F (design/enemies/ground/warden-tank): its turret turns toward (targetX, targetY) by at most its
-     * turn rate, all round, while the unit is on the screen and its gun is not quiet; it holds while it is
-     * locked for its burst (the tell) and through the burst.
-     */
-    private void turnTurret(double targetX, double targetY) {
-        turretOff = Double.POSITIVE_INFINITY;
-        if (gunQuiet() || !PlayField.overlaps(x, y, box)) {
-            return;
-        }
-        double wanted = heading(targetX - x, targetY - y);
-        if (turretLock < 0 && burstLeft == 0) {
-            double most = spec.turret().orElseThrow().turnRate() * SimStep.SECONDS;
-            double delta = Math.IEEEremainder(wanted - aim, 2 * StrictMath.PI);
-            aim = Math.IEEEremainder(aim + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
-        }
-        turretOff = Math.abs(Math.IEEEremainder(wanted - aim, 2 * StrictMath.PI));
-    }
-
-    /**
-     * M7 part F: a turret's gun (design/enemies/ground/warden-tank): its interval counts down from its last burst's
-     * start less the lock; once it is ready and the turret's aim is within the turret's angle of the target, the
-     * turret locks for its lock time (the tell) and then fires the burst along its aim, its shots the burst gap
-     * apart; so a turret that stays on its target fires a burst every interval. Silent while the unit is off the
-     * screen or its gun is quiet (its turret part shot off). Returns whether a shot goes now.
-     */
-    private boolean turretTrigger() {
-        if (spec.gun().isEmpty() || gunQuiet() || !PlayField.overlaps(x, y, box)) {
-            turretLock = -1;
-            burstLeft = 0;
-            return false;
-        }
-        EnemyGun gun = spec.gun().get();
-        if (volleyTicks > 0) {
-            // From its last burst's start (the burst's own steps count too).
-            volleyTicks--;
-        }
-        if (burstLeft > 0) {
-            if (--burstTicks > 0) {
-                return false;
-            }
-            burstLeft--;
-            burstTicks = SimStep.ticks(gun.burstGapSeconds());
-            return true;
-        }
-        EnemySpec.Turret turret = spec.turret().orElseThrow();
-        if (turretLock < 0) {
-            if (volleyTicks > 0 || turretOff > turret.withinRadians()) {
-                return false;
-            }
-            turretLock = SimStep.ticks(turret.lockSeconds());
-            if (turretLock > 0) {
-                return false;
-            }
-        } else if (--turretLock > 0) {
-            return false;
-        }
-        turretLock = -1;
-        volleyTicks = Math.max(1, SimStep.ticks(gun.intervalSeconds()) - SimStep.ticks(turret.lockSeconds()));
-        burstLeft = gun.burst() - 1;
-        burstTicks = SimStep.ticks(gun.burstGapSeconds());
-        return true;
-    }
-
-    /**
      * M7 part F: its turret's aim, radians clockwise from straight down (design/enemies/ground/warden-tank: drawn on
      * its own over the hull, which faces its path); the hull's {@link #facing()} for a unit without a turret.
      */
@@ -2191,7 +1756,7 @@ public final class Enemy implements Hashed {
 
     /** M7 part F: whether its turret has stopped turning for its burst (the tell, then the burst); false without one. */
     public boolean turretLocked() {
-        return spec.turret().isPresent() && (turretLock >= 0 || burstLeft > 0);
+        return spec.turret().isPresent() && turretGun.locked();
     }
 
     /**
@@ -2200,18 +1765,7 @@ public final class Enemy implements Hashed {
      * its rear (flies along its facing), 1 otherwise and for a unit without a rear plate.
      */
     double rearFactor(double shotVx, double screenShotVy) {
-        double shotVy = frame.vy(screenShotVy);
-        if (spec.rearPlate().isEmpty() || walkPath == null) {
-            return 1;
-        }
-        double length = Math.sqrt(shotVx * shotVx + shotVy * shotVy);
-        if (length == 0) {
-            return 1;
-        }
-        EnemySpec.RearPlate plate = spec.rearPlate().get();
-        // The facing as a direction (y up): a shot from behind flies along it.
-        double along = -(shotVx * Trig.sin(facing) + shotVy * Trig.cos(facing)) / length;
-        return along >= Trig.cos(plate.halfArcRadians()) ? plate.multiplier() : 1;
+        return walking.rearFactor(shotVx, frame.vy(screenShotVy));
     }
 
     /**
@@ -2231,11 +1785,11 @@ public final class Enemy implements Hashed {
     }
 
     /** The direction of a movement (y up) in radians clockwise from straight down the screen. */
-    private static double heading(double dx, double dy) {
+    static double heading(double dx, double dy) {
         return StrictMath.atan2(-dx, -dy);
     }
 
-    private void place() {
+    void place() {
         segment = path.segmentAt(distance, segment);
         x = path.x(segment, distance);
         y = path.y(segment, distance);
@@ -2331,7 +1885,7 @@ public final class Enemy implements Hashed {
             return true;
         }
         if (phase == Phase.WALK && spec.turret().isPresent()) {
-            return turretTrigger();
+            return turretGun.trigger();
         }
         if (phase == Phase.WALK) {
             // A walker's fan, along its facing, while it is on the screen (M7 part D: not while it is
@@ -2363,6 +1917,7 @@ public final class Enemy implements Hashed {
             diveShot = false;
             return shot;
         }
+        AmbushPhase ambushPhase = ambushing.phase();
         boolean ready = phase == Phase.HOLD
                 || (phase == Phase.GROUND && inArc)
                 || (phase == Phase.ESCORT && y < PlayField.HEIGHT)
@@ -2394,7 +1949,7 @@ public final class Enemy implements Hashed {
             volleyTicks = 1;
             return false;
         }
-        if (ambushPhase != AmbushPhase.NONE && ++ambushVolleys > AMBUSH_VOLLEYS) {
+        if (ambushPhase != AmbushPhase.NONE && ambushing.volleysSpent()) {
             volleyTicks = Integer.MAX_VALUE;
             return false;
         }
@@ -2482,8 +2037,8 @@ public final class Enemy implements Hashed {
                 .add(aim)
                 .add(diveTicks)
                 .add(diveFired ? 1 : 0)
-                .add(spiralTicks)
-                .add(ricochetsLeft)
+                .add(spiralling.ticks())
+                .add(spiralling.ricochetsLeft())
                 .add(distance)
                 .add(segment)
                 .add(phase.ordinal())
@@ -2509,26 +2064,14 @@ public final class Enemy implements Hashed {
         if (glideHoldTicks > 0) {
             hash.add(glideTicks);
         }
-        if (escort) {
-            hash.add(breakTicks).add(centreX).add(centreY).add(carrier == null ? -1 : carrier.serial);
-        }
+        escorting.addTo(hash);
         if (chain != null) {
             hash.add(chain.serial()).add(link);
         }
         if (spec.sweep().isPresent()) {
             sweepBeam.addTo(hash);
         }
-        if (walkPath != null) {
-            hash.add(facing)
-                    .add(walked)
-                    .add(waypoint)
-                    .add(scrolled)
-                    .add(spitTicks)
-                    .add(entered ? 1 : 0);
-        }
-        if (volleyGroup >= 0) {
-            hash.add(volleyGroup).add(volleyUnit);
-        }
+        walking.addTo(hash);
         // M5 part C's spawners and pounces add their state; earlier units hash as before.
         if (spec.spawner().isPresent()) {
             spawnerIris.addTo(hash);
@@ -2537,13 +2080,7 @@ public final class Enemy implements Hashed {
             pouncing.addTo(hash);
         }
         // M5 part D's ambush units and flock members add theirs; earlier units hash as before.
-        if (ambush != null) {
-            hash.add(ambushPhase.ordinal())
-                    .add(ambushTicks)
-                    .add(reentryTicks)
-                    .add(speed)
-                    .add(ambushVolleys);
-        }
+        ambushing.addTo(hash);
         if (flock != null) {
             hash.add(flock.serial()).add(member);
         }
@@ -2582,13 +2119,8 @@ public final class Enemy implements Hashed {
         }
         // M5 part F's chasers add theirs; earlier units hash as before.
         if (spec.chase().isPresent()) {
-            hash.add(latchPhase.ordinal())
-                    .add(chaseWait)
-                    .add(chaseTicks)
-                    .add(heading)
-                    .add(spot)
-                    .add(stunTicks)
-                    .add(entered ? 1 : 0);
+            chasing.addTo(hash);
+            hash.add(entered ? 1 : 0);
         }
         if (empStun != 0 || offX != 0 || offY != 0) {
             // M7 part A: only while the EMP Burst stuns it or after it drifted, so other runs hash as before.
@@ -2623,7 +2155,7 @@ public final class Enemy implements Hashed {
         }
         // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
         if (spec.turret().isPresent()) {
-            hash.add(turretLock);
+            turretGun.addTo(hash);
         }
     }
 
@@ -2900,8 +2432,7 @@ public final class Enemy implements Hashed {
         burstTicks = 0;
         leadsTarget = false;
         carried = Optional.empty();
-        spiralTicks = 0;
-        ricochetsLeft = 0;
+        spiralling.reset(0);
         vx = 0;
         vy = 0;
         x = prevX = atX;
@@ -2931,7 +2462,7 @@ public final class Enemy implements Hashed {
      */
     public WaveSpec.Entry entry() {
         // M5 part D: a rear ambush unit's wave is a rear wave from its re-entry on.
-        if (ambushPhase == AmbushPhase.SWOOP || ambushPhase == AmbushPhase.GAP) {
+        if (ambushing.phase() == AmbushPhase.SWOOP || ambushing.phase() == AmbushPhase.GAP) {
             return WaveSpec.Entry.FRONT;
         }
         return entry;
@@ -3009,8 +2540,7 @@ public final class Enemy implements Hashed {
         burstTicks = 0;
         leadsTarget = false;
         carried = plan.carried();
-        spiralTicks = 0;
-        ricochetsLeft = 0;
+        spiralling.reset(0);
         vx = 0;
         vy = 0;
         x = prevX = atX;
@@ -3182,7 +2712,7 @@ public final class Enemy implements Hashed {
     }
 
     /** M7 part D: whether its gun is quiet now: curled, or silenced for good with its part gone. */
-    private boolean gunQuiet() {
+    boolean gunQuiet() {
         if (curlRoll.phase() != CurlPhase.WALK) {
             return true;
         }
@@ -3239,7 +2769,7 @@ public final class Enemy implements Hashed {
     private boolean curlDue() {
         if (curlRoll.rolled()
                 || spec.roll().isEmpty()
-                || walkPath == null
+                || !walking.active()
                 || curlRoll.phase() != CurlPhase.WALK
                 || pouncing.leaping()) {
             return false;
