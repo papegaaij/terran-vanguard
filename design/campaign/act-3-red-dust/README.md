@@ -36,7 +36,7 @@ marked tables; the outro joins it in part H.
 | [level-18-dust-storm](level-18-dust-storm/README.md) | Sweep a dust storm with visibility cut to a radius; Dust Devils; the Ghost Drone's first sight (hint 1); the act's breather | approved | in-progress | final |
 | [level-19-foundry-of-tharsis](level-19-foundry-of-tharsis/README.md) | Tharsis foundry: grey Warden Tanks on conveyors, furnace vents, turrets that fire after you pass; mid-boss Revenant Walker and the hint-2 wreck crawl | approved | in-progress | final |
 | [level-20-retreat-from-hellas](level-20-retreat-from-hellas/README.md) | The Hellas strike turns into a retreat: reverse scroll, a Mote Swarm pursuing from the top, ambushes from the bottom; Rook's quiet beat | approved | done | final |
-| [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | in-progress | chosen |
+| [level-21-dust-colossus](level-21-dust-colossus/README.md) | Act finale in the Hellas basin: rim, inner wall, dune sea and lime hollow (≈ 66 a minute, all directions, the ridge pass), then the Dust Colossus on a slow-crawling arena; the Choir's first words; Level 14's act-end order | approved | done | final |
 
 ## Design
 

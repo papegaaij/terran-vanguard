@@ -67,6 +67,8 @@ final class IntelPanel {
     private static final int SILHOUETTE = 40;
     /** M7 part H (H.7e): the boss's silhouette on the wave strip at its arrival, px square. */
     static final int STRIP_SILHOUETTE = 14;
+    /** Step GI1: the ridge pass's band on the wave strip, a muted sand (the Red Dust's ground, dimmed to the glass). */
+    static final Color RIDGE_SAND = new Color(132 / 255f, 106 / 255f, 70 / 255f, 1);
 
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
@@ -520,6 +522,9 @@ final class IntelPanel {
                 case PHASE -> canvas.fill(Glass.TRIM, left + 1, y - 1, right - left - 2, 10);
                 // M7 part G: a lull (Level 20's upper terrace) as a dim band under the waves, a phase's look.
                 case LULL -> canvas.fill(Glass.TRIM, left + 1, y - 1, right - left - 2, 10);
+                // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
+                // under the waves, from its surfacing to its head off the far edge.
+                case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
                 case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN -> {
                     // drawn over the waves, below
                 }

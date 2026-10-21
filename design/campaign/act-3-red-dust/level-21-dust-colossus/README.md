@@ -1,8 +1,8 @@
 ---
 title: Level 21 – Dust Colossus
 design: approved
-implementation: in-progress
-art: chosen
+implementation: done
+art: final
 depends-on: [../../../enemies/bosses/dust-colossus, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../world/mars, ../../../systems/economy]
 updated: 2026-10-21
 ---
@@ -491,8 +491,8 @@ starts at the next 512 px seam, its seam piece, the collapsed crater and the fur
 | [concept/level-21-capture-r45-a-p2.mp4](concept/level-21-capture-r45-a-p2.mp4) | Part 2 of 3, phases 1-2: the ground holds still through the fight, the spine and its vent organs, the breaches, the bite tell, 96 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
 | [concept/level-21-capture-r45-a-p3.mp4](concept/level-21-capture-r45-a-p3.mp4) | Part 3 of 3, phase 3 (two eruptions), the death throe, the sinkhole and the debrief, 87 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
 | [concept/level-21-capture-r45-a.png](concept/level-21-capture-r45-a.png) | 24-tile sheet of the three parts plus crops of the spine, a vent organ, the bite tell and six throe frames | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
-| [concept/level-21-spine-r46-b.mp4](concept/level-21-spine-r46-b.mp4) | Round 46 b in-game capture (step GSR, autopilot, medium, the plan's fit): the Colossus's spine **rising out of its ridge** — one front runs along the back from the collar to the tail over the rise, the plates coming up out of the sand bulge with sand still on them at the front and puffs off the flanks; the dive runs it back tail to head, the head last with the mouth, then the ridge fades. A left breach (straight back) and a rear breach (a slanted, curved back with the vent organs), each rise and dive at 1× then at 0.25×, 47 s | proposed |
-| [concept/level-21-spine-r46-b.png](concept/level-21-spine-r46-b.png) | Sheet of that capture: the left and rear rises and dives frame by frame, 1:1 crops of the front (left rise ×3, rear rise, left dive) | proposed |
+| [concept/level-21-spine-r46-b.mp4](concept/level-21-spine-r46-b.mp4) | Round 46 b in-game capture (step GSR, autopilot, medium, the plan's fit): the Colossus's spine **rising out of its ridge** — one front runs along the back from the collar to the tail over the rise, the plates coming up out of the sand bulge with sand still on them at the front and puffs off the flanks; the dive runs it back tail to head, the head last with the mouth, then the ridge fades. A left breach (straight back) and a rear breach (a slanted, curved back with the vent organs), each rise and dive at 1× then at 0.25×, 47 s | chosen |
+| [concept/level-21-spine-r46-b.png](concept/level-21-spine-r46-b.png) | Sheet of that capture: the left and rear rises and dives frame by frame, 1:1 crops of the front (left rise ×3, rear rise, left dive) | chosen |
 
 The other part H art, in the tables of the parts it belongs to (round 44, accepted in round 44 (2026-10-20)): the Colossus's
 sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), its intel silhouette in the
@@ -539,10 +539,11 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
       `requires: escort` (steps VOX-H, HA: `RadioTimelineLevel21Test`, `VoiceFilesTest`; the Choir's speech is one take, round 44 Q.7)
 - [x] The Choir's death line held 4.5 s after the kill, the closing lines after it, the debrief waiting (round 45
       B.a: the data's `delay`, step C45, `Level21Test`; the game's hold, step G45: `RadioQueue`'s delayed add, `RadioTimelineLevel21Test`, `RadioQueueTest`)
-- [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
+- [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
       (`IntelPanelLayoutTest`); the Colossus's intel silhouette; the L3 strip's marks (the ridge
       pass and the boss: Level 14's strip draws no boss mark yet) (step HA: the boss's silhouette is on the strip
-      for every boss level; the ridge pass's mark needs a content `Intel` mark kind, part I, round 44 Q.8 d)
+      for every boss level; the ridge pass's mark: the content `Intel` mark kind `RIDGE`, 64–72 s, step CI1, `IntelTest`; its drawing in the
+      intel panel, step GI1; round 44 Q.8 d)
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their
       images (steps PH2, ART-H3, VOX-H: `BriefingLayoutTest`)
 - [x] Act end: the settling dust, the debrief with `ACT III COMPLETE · RED DUST`, the four outro
@@ -650,3 +651,8 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
 - 2026-10-21: Edge-warning rule change (user, built by step EW): the Wraith ambushes (t=61, 94) lose their BOTTOM warning and Rook's
   rear bark (a unit's own re-entry), and the Colossus's breaches get no LEFT/RIGHT/BOTTOM warning (a boss never warns); the
   waves' first entries (the Mantis pincers, the Kite stream, the Mote stream) keep theirs.
+- 2026-10-21 (step CI1): the content's `Intel` marks the ridge pass on the L3 wave strip as a `RIDGE` span, the
+  `ridge` key's `t` to `t + seconds` (64–72 s; round 44 Q.8 d); the Wraith ambushes carry no `warning` key (none was
+  set here). The game's drawing is the next step's.
+- 2026-10-21 (user, on the r46 b spine: "ok, much better indeed"; "lets finish up all the other items"): the spine rising out of its ridge accepted; Level 21's art is final (production art throughout; the r45/r46 captures and reviews chosen).
+- 2026-10-21: the L3 strip's ridge-pass band drawn (step GI1, `IntelPanelLayoutTest`); every checklist item ticked and round 45 closed, so Level 21 is `implementation: done` (round 44 I.8's rule); the user's Act 3 playthrough stays an act-level item.

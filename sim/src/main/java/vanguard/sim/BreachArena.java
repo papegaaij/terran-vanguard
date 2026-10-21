@@ -440,6 +440,8 @@ public final class BreachArena implements Hashed {
             case BITE -> {
                 if (phaseTicks >= biteTicks) {
                     snap = true;
+                    // Step SV2: the vents stop being hittable as the dive starts (the reverse of the open).
+                    ventsLayer(Layer.BURIED);
                     enter(Phase.DIVE);
                     toRise = diveTicks + gapFor(peek(bossPhase));
                 } else {
@@ -465,6 +467,9 @@ public final class BreachArena implements Hashed {
     private void open(int bossPhase) {
         enter(Phase.OPEN);
         opened = true;
+        // Step SV2: the risen vents become hittable only once the spine is fully up (the presentation's reveal has
+        // passed the farthest vent by the rise's end).
+        ventsLayer(Layer.GROUND);
         int interval = interval(bossPhase);
         intervalNow = interval;
         spiralNow = spirals(bossPhase);
@@ -607,9 +612,16 @@ public final class BreachArena implements Hashed {
         }
         if (layer == Layer.BURIED) {
             ventsRaised = false;
+            ventsLayer(Layer.BURIED);
         }
+    }
+
+    /**
+     * Step H3: the risen living vents go {@code ground} (step SV2: at the open, not with the mouth at the rise's
+     * middle); every vent goes {@code buried} at the dive's start (a dead one stays down).
+     */
+    private void ventsLayer(Layer layer) {
         for (int i = 0; i < ventParts.length; i++) {
-            // Step H3: the risen living vents with the mouth; every vent sinks with it (a dead one stays down).
             int p = ventParts[i];
             Layer to = layer == Layer.GROUND && ventsRaised && !piece.partWrecked(p) ? Layer.GROUND : Layer.BURIED;
             if (piece.partLayer(p) != to) {
@@ -1055,7 +1067,10 @@ public final class BreachArena implements Hashed {
         return ventParts[i];
     }
 
-    /** Whether spine vent {@code i} is up: risen with the current breach, alive, {@code ground} (from the rise's middle). */
+    /**
+     * Whether spine vent {@code i} is up: risen with the current breach, alive, {@code ground} (step SV2: from the open,
+     * once the spine is fully up, to the dive's start).
+     */
     public boolean ventUp(int i) {
         int p = ventParts[i];
         return ventsRaised && !piece.partWrecked(p) && piece.partLayer(p) == Layer.GROUND;

@@ -180,6 +180,12 @@ final class ColossusLooks {
     private final long[] ventFired;
 
     private final int[] ventDied;
+    /**
+     * Step GI1: per vent, whether it rose with the current breach and lives, held through the whole dive (the sim's
+     * {@code ventRaised} ends at the dive's middle, the spine's front reaching the collar later), so an organ on the back
+     * sinks with its segment.
+     */
+    private final boolean[] ventRose;
     /** The death: its step, the mouth's place (x and ground row), NEVER while it lives. */
     private long deathTick = NEVER;
 
@@ -251,6 +257,7 @@ final class ColossusLooks {
         int vents = spec.vents().map(v -> v.parts().size()).orElse(0);
         ventFired = new long[vents];
         ventDied = new int[vents];
+        ventRose = new boolean[vents];
         reset();
     }
 
@@ -297,6 +304,7 @@ final class ColossusLooks {
         points = 0;
         Arrays.fill(ventFired, NEVER);
         Arrays.fill(ventDied, -1);
+        Arrays.fill(ventRose, false);
         hits.reset();
     }
 
@@ -440,6 +448,11 @@ final class ColossusLooks {
         for (int v = 0; v < ventDied.length; v++) {
             if (ventDied[v] < 0 && piece.partWrecked(breach.ventPart(v))) {
                 ventDied[v] = breach.breaches();
+            }
+            if (breach.ventRaised(v)) {
+                ventRose[v] = true;
+            } else if (phase != BreachArena.Phase.DIVE || ventDied[v] >= 0) {
+                ventRose[v] = false;
             }
         }
     }
@@ -807,7 +820,10 @@ final class ColossusLooks {
                 }
                 continue;
             }
-            if (!breach.ventRaised(v) || !out) {
+            // Step GI1: on the back the organ follows the spine's reveal through the rise and the whole dive, in its
+            // shut frame until the vent is up (hittable: from the open to the dive's start, step SV2).
+            boolean raised = onBack ? ventRose[v] : breach.ventRaised(v);
+            if (!raised || !out) {
                 continue;
             }
             double x = breach.ventX(v);

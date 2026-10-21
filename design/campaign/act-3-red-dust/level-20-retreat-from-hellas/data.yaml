@@ -56,7 +56,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Recommended traits: '{traits}'
     Hazards: 'Reverse scroll from t≈22: the ground moves up the screen; a pursuing swarm lunging from the top'
     Boss / mid-boss: none
-    Sensor-suite detail: 'none: Hellas basin, `air` + `ground`, front · L1: + directions (all, "reverse scroll"), density {density}, hazard "fallback under pursuit", the objective `{objective}` and the secondary `KILL RATIO 65 %` · L2: + Mote Swarm, Dust Kite, Skitter, Needler, Stinger, Wraith, Burrower, Dust Devil portraits · L3: + `rear` and `homing` highlighted, the wave strip marking the turn and the lull, 1 secret'
+    Sensor-suite detail: 'none: Hellas basin, `air` + `ground`, front · L1: + directions (all, "reverse scroll"), density {density}, hazard "fallback under pursuit", the objective `{objective}` and the secondary `KILL RATIO 65 %` · L2: + Mote Swarm, Dust Kite, Skitter, Needler, Stinger, Wraith, Burrower, Dust Devil portraits · L3: + `rear` and `homing` highlighted, the wave strip marking the ridge pass (12–20 s), the turn and the lull, 1 secret'
 
 sections:  # back to back from t = 0; signed speeds (M5 = a): negative = the ground moves up the screen; each speed change eased (ramp: the turnabout 4 s through zero at ≈ 22.1, the retreat's 2 s, the rim's 8 s); the ground's tiles come from the backdrop's strip, by row
   - name: The Strike
@@ -164,18 +164,18 @@ waves:
   - {t: 48.5, formation: line abreast, enemy: needler, count: 2, from: front}
   - {t: 52.5, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200]}
   - {t: 56.5, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved kite stream}
-  - {t: 59, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "Cloaked inside the swarm; no TOP warning (Rook's line at t=56); act HP factor"}
+  - {t: 59, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked inside the swarm; no edge warning (a Wraith's re-entry; Rook's line at t=56); act HP factor"}
   - {t: 63, formation: line abreast, enemy: needler, count: 2, from: front, notes: A firing pair in place of the approved kite snake}
   - {t: 67, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Over the floor nest (t≈66)"}
   - {t: 71, formation: V-wing, enemy: stinger, count: 3, from: front, notes: Up the first terrace; the leader drops an overdrive}
   - {t: 75, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved kite stream}
   - {t: 79, formation: line abreast, enemy: needler, count: 2, from: front}
-  - {t: 80, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair, no TOP warning"}
+  - {t: 80, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair, no edge warning (a Wraith's re-entry)"}
   - {t: 83, formation: snake, enemy: dust-kite, count: 3, from: front, edge: right, notes: "Over the terrace nest (t≈85)"}
   - {t: 87, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200], notes: In the terrace sand}
   - {t: 90.5, formation: pincer, enemy: needler, count: 2, from: sides, hold: 4, notes: "1 per edge; warned 3 s ahead"}
   - {t: 94.5, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Past the emergency cache (the secret, t≈92); a firing pair in place of the approved kite V-wing"}
-  - {t: 101, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "no TOP warning (Rook's line at t=98)"}
+  - {t: 101, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "No edge warning (a Wraith's re-entry; Rook's line at t=98)"}
   - {t: 104.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 108, formation: snake, enemy: skitter, count: 3, from: front, edge: left, notes: The swarm drops back off the top}
   - t: 110.5
@@ -236,7 +236,7 @@ waves:
     notes: "On the road's switchback; the last one drops a shield cell"
   - {t: 137.5, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Over the road nest (t≈140); a firing pair in place of the approved kite V-wing"}
   - {t: 141.5, formation: line abreast, enemy: needler, count: 2, from: front}
-  - {t: 146.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "no TOP warning (Rook's line at t=143.5)"}
+  - {t: 146.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "No edge warning (a Wraith's re-entry; Rook's line at t=143.5)"}
   - {t: 150, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200], notes: "In the road's drifts"}
   - {t: 154, formation: V-wing, enemy: stinger, count: 2, from: front, notes: "Over the last road nest (t≈155); a firing pair in place of the approved kite snake"}
   - {t: 157.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}
@@ -370,7 +370,7 @@ music:
 flak: {from: 160, every: 1.5, band: top}   # presentation: the rim guns firing up past the ship, bursts in the top band among the pursuers, hitting nothing (the frigate's flak sound, as Level 17's militia)
 ridge: {t: 12, seconds: 8, from: left, to: right, depth: 70}   # presentation (round 43 Q.4): the Dust Colossus's travelling ridge surfaces off the left edge at t=12, 70 px below the top edge, its head off the right edge 8 s later on a slow S up the strip, the tail gone by t≈27; hitting nothing (Level 21's ridge pass uses the same key)
 
-difficulty: {}  # the pursuit's easy and hard lunges and tells are in the Mote Swarm's hooks; the TOP warnings' easy 4 s are in their waves; hard's extra Wraith pair is its wave (skip); the firing pairs stay pairs on hard (step G4); the formation lever sizes the rest (the swarm 8 / 12 on entry, refills of 2 / 4); the stat blocks' hooks apply (the Burrowers' rings, the Dust Devils' pull and spiral, the Wraiths' hard hold)
+difficulty: {}  # the pursuit's easy and hard lunges and tells are in the Mote Swarm's hooks; the pursuits' TOP warnings' easy 4 s are in their waves (a rear ambush's Wraith re-entry is never warned, 2026-10-21); hard's extra Wraith pair is its wave (skip); the firing pairs stay pairs on hard (step G4); the formation lever sizes the rest (the swarm 8 / 12 on entry, refills of 2 / 4); the stat blocks' hooks apply (the Burrowers' rings, the Dust Devils' pull and spiral, the Wraiths' hard hold)
 
 briefing:
   pages:

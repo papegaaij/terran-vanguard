@@ -18,6 +18,23 @@ class IntelTest {
     private static final String LEVEL_01 = "act-1-first-contact/level-01-break-at-dawn";
     private static final String LEVEL_03 = "act-1-first-contact/level-03-spore-drift";
 
+    /** Round 44 Q.8 d: the wave strip marks a level's ridge pass from its surfacing to its head off the far edge. */
+    @Test
+    void theStripMarksTheRidgePassOfLevels20And21() {
+        assertEquals(List.of(new Intel.Mark(12, 20, Intel.Mark.Kind.RIDGE)), ridges(20), "Level 20's, t=12 for 8 s");
+        assertEquals(
+                List.of(new Intel.Mark(64, 72, Intel.Mark.Kind.RIDGE)),
+                ridges(21),
+                "Level 21's ridge pass, 64–72 s as its threat profile says");
+        assertEquals(List.of(), ridges(19), "a level without a ridge marks none");
+    }
+
+    private static List<Intel.Mark> ridges(int number) {
+        return Intel.of(CONTENT, CONTENT.levelKey(number).orElseThrow(), 3).marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.RIDGE)
+                .toList();
+    }
+
     @Test
     void withoutASensorSuiteLevel01ShowsTheSettingTheLayersAndTheMainDirection() {
         Intel intel = Intel.of(CONTENT, LEVEL_01, 0);

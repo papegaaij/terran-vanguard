@@ -288,6 +288,53 @@ class IntelPanelLayoutTest {
         assertStripSilhouette(21, "dust-colossus", 105);
     }
 
+    /**
+     * Round 44 Q.8 d (step GI1): Levels 20 and 21's strips at sensor L3 mark the Colossus's ridge pass as one sand band
+     * from its surfacing to its head off the far edge (Level 20: 12–20 s, Level 21: 64–72 s), inside the strip; no
+     * other level has one, and below L3 there is no strip.
+     */
+    @Test
+    void levels20And21sStripsMarkTheRidgePass() {
+        Map<Integer, double[]> ridges = Map.of(20, new double[] {12, 20}, 21, new double[] {64, 72});
+        for (String level : CONTENT.levels().keySet()) {
+            Intel intel = Intel.of(CONTENT, level, 3);
+            Measure measure = assertFits(intel, CONTENT.level(level).briefing().teaser(), level, level + ": ");
+            List<Fill> sand = measure.fills.stream()
+                    .filter(fill -> fill.colour().equals(IntelPanel.RIDGE_SAND))
+                    .toList();
+            int number = intel.number();
+            if (!ridges.containsKey(number)) {
+                assertTrue(sand.isEmpty(), level + ": no ridge pass " + sand);
+                continue;
+            }
+            assertEquals(1, sand.size(), level + ": one ridge band " + sand);
+            Fill band = sand.getFirst();
+            Box strip = measure.parts.stream()
+                    .filter(box -> box.what().equals("wave strip"))
+                    .findFirst()
+                    .orElseThrow();
+            float width = strip.right() - strip.left() - 4;
+            double[] span = ridges.get(number);
+            float from = (float) (strip.left() + 2 + width * span[0] / intel.seconds());
+            float to = (float) (strip.left() + 2 + width * span[1] / intel.seconds());
+            assertEquals(from + 1, band.x(), 0.01f, level + ": from the surfacing");
+            assertEquals(to - 1, band.x() + band.width(), 0.01f, level + ": to the head off the edge");
+            assertTrue(band.width() > 0, level + ": a span");
+            assertTrue(
+                    band.y() >= strip.top() && band.y() + band.height() <= strip.bottom(),
+                    level + ": inside the strip " + band + " in " + strip);
+            Measure l2 = new Measure();
+            IntelPanel.layout(
+                    l2,
+                    Intel.of(CONTENT, level, 2),
+                    CONTENT.level(level).briefing().teaser(),
+                    level);
+            assertTrue(
+                    l2.fills.stream().noneMatch(fill -> fill.colour().equals(IntelPanel.RIDGE_SAND)),
+                    level + ": no strip below L3");
+        }
+    }
+
     private static void assertStripSilhouette(int number, String boss, double arrival) {
         String level = CONTENT.levelKey(number).orElseThrow();
         Intel intel = Intel.of(CONTENT, level, 3);

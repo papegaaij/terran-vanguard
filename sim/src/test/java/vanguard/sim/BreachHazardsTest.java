@@ -214,7 +214,7 @@ class BreachHazardsTest {
         assertEquals(breach.mouthY(), breach.ridgeY(BreachArena.RIDGE_POINTS - 1), 1e-9);
         for (int i = 0; i < 3; i++) {
             assertTrue(breach.ventRaised(i));
-            assertFalse(breach.ventUp(i), "buried until the rise's middle");
+            assertFalse(breach.ventUp(i), "buried until the open");
             // Step SIM-K (round 44, K.b): on the body, its distance along the ridge's curve back from the mouth.
             double[] spine = alongSpine(breach, DISTANCES[i]);
             assertEquals(spine[0], breach.ventX(i), 0.5, "on the spine");
@@ -231,15 +231,36 @@ class BreachHazardsTest {
         while (boss.partLayer(MOUTH) == Layer.BURIED) {
             sortie.step(0);
             middle++;
-            assertEquals(boss.partLayer(MOUTH), boss.partLayer(VENTS[0]), "with the mouth");
         }
         assertEquals(SimStep.ticks(0.75), middle, 1);
+        // Step SV2: the mouth is up from the rise's middle, the vents only from the open: the presentation's reveal
+        // runs up the spine over the whole rise.
+        int rise = middle;
+        while (breach.phase() == BreachArena.Phase.RISE) {
+            for (int i = 0; i < 3; i++) {
+                assertFalse(breach.ventUp(i), "not hittable while the spine is still rising");
+                assertEquals(Layer.BURIED, boss.partLayer(VENTS[i]));
+                assertTrue(boss.partShielded(VENTS[i]));
+            }
+            sortie.step(0);
+            rise++;
+        }
+        assertEquals(BreachArena.Phase.OPEN, breach.phase());
+        assertEquals(SimStep.ticks(1.5), rise, 1);
         for (int i = 0; i < 3; i++) {
-            assertTrue(breach.ventUp(i));
+            assertTrue(breach.ventUp(i), "up once the rise is over");
             assertEquals(Layer.GROUND, boss.partLayer(VENTS[i]));
             assertFalse(boss.partShielded(VENTS[i]), "up and hittable");
         }
         untilPhase(sortie, BreachArena.Phase.DIVE, 10);
+        // Step SV2: symmetric: the vents sink as the dive starts, the mouth at its middle.
+        assertEquals(Layer.GROUND, boss.partLayer(MOUTH));
+        for (int i = 0; i < 3; i++) {
+            assertTrue(breach.ventRaised(i), "still drawn, sinking with the mouth");
+            assertFalse(breach.ventUp(i), "not hittable once the dive starts");
+            assertEquals(Layer.BURIED, boss.partLayer(VENTS[i]));
+            assertTrue(boss.partShielded(VENTS[i]));
+        }
         while (boss.partLayer(MOUTH) == Layer.GROUND) {
             sortie.step(0);
         }

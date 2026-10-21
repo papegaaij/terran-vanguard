@@ -28,7 +28,7 @@ import vanguard.content.Tier;
  * @param marks M5 part G: the spans the wave strip marks (Level 13's three defend phases, the halt's
  *     sections, and its whiteout, the heavy peak in them); M5 part H: a root field as a hazard and the
  *     boss's arrival (step K10); M7 part B: the Burrower fields' arrivals; M7 part C: the gates' and the crawlers'
- *     arrivals; empty for a level with none of them
+ *     arrivals; M7 part G: the scroll's turn, a lull and the ridge pass; empty for a level with none of them
  */
 public record Intel(
         int number,
@@ -118,7 +118,13 @@ public record Intel(
              * M7 part G: a lull after the turn (a section with a clear sky, haze only, short of the level's last: Level
              * 20's upper terrace): the wave strip marks the lull.
              */
-            LULL
+            LULL,
+            /**
+             * Round 44 Q.8 d (design/campaign Levels 20 and 21, Threat profile at L3): the Dust Colossus's ridge pass
+             * (the level's {@code ridge}), a span from its surfacing ({@code t}) to its head leaving the far edge
+             * ({@code t + seconds}): the wave strip marks the ridge pass.
+             */
+            RIDGE
         }
     }
 
@@ -201,7 +207,7 @@ public record Intel(
      * step K10: a level with a boss (or mid-boss) marks its arrival; M7 part B: every wave of a burrowing unit (a
      * Burrower field) is marked at its time; M7 part D: a level with ground allies marks the sections they enter in
      * (Level 17's two dome sections) as phases; M7 part G: a reversed level its turn and lull ({@link #turnAndLull});
-     * none for another level.
+     * round 44 Q.8 d: a level with a {@code ridge} its ridge pass; none for another level.
      */
     static List<Mark> marks(Content content, LevelData level) {
         List<Mark> marks = new java.util.ArrayList<>();
@@ -244,6 +250,9 @@ public record Intel(
             }
         }
         turnAndLull(level, marks);
+        // Round 44 Q.8 d: the ridge pass (Level 20's at t=12, Level 21's at t=64) from its surfacing to its head off
+        // the far edge.
+        level.ridge().ifPresent(ridge -> marks.add(new Mark(ridge.t(), ridge.t() + ridge.seconds(), Mark.Kind.RIDGE)));
         // M7 part C: each gate (a linked nest) at its first pair.
         for (LevelData.GroundTarget target : level.groundTargets()) {
             if (target.link().isPresent() && !target.at().isEmpty()) {
