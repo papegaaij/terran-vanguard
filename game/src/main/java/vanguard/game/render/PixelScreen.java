@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer.FrameBufferBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import vanguard.game.settings.Scaling;
@@ -67,8 +68,15 @@ public final class PixelScreen implements Disposable {
             }
             """;
 
-    /** With a stencil buffer (and depth, for the packed depth-stencil fallback): the level's shadow mask. */
-    private final FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, WIDTH, HEIGHT, true, true);
+    /**
+     * With a stencil buffer for the level's shadow mask, as one packed depth-stencil render buffer:
+     * separate depth and stencil render buffers make Apple's OpenGL-over-Metal driver abort the
+     * first draw into the frame buffer (macOS 27, Apple silicon).
+     */
+    private final FrameBuffer frameBuffer = new FrameBufferBuilder(WIDTH, HEIGHT)
+            .addBasicColorTextureAttachment(Pixmap.Format.RGBA8888)
+            .addBasicStencilDepthPackedRenderBuffer()
+            .build();
 
     private final OrthographicCamera internalCamera = new OrthographicCamera();
     private final OrthographicCamera windowCamera = new OrthographicCamera();
