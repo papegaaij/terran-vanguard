@@ -16,7 +16,7 @@ import vanguard.content.Difficulty;
  * @param created when the save was written
  * @param playtime seconds played in the campaign
  * @param nextLevel the level the campaign goes on with, 1–50
- * @param loadout the fitted item per slot (Rook's gun is in {@code escort})
+ * @param loadout the fitted item per slot, with its power setting (format version 5; Rook's gun is in {@code escort})
  * @param inventory owned items that are not fitted, by kind (Rook's guns are in {@code escort})
  * @param unlocks shop items unlocked ahead of their normal unlock (data cores, story)
  * @param specials charges per special

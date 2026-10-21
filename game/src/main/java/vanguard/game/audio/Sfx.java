@@ -762,14 +762,14 @@ public enum Sfx {
 
     /**
      * The hangar's sound for a shop action that was made (design/audio/sfx, UI and radio): buying an
-     * item or a charge, selling, fitting or unfitting, upgrading. A refused choice plays
+     * item or a charge, selling, fitting or unfitting (and the power dial's free refit), upgrading. A refused choice plays
      * {@link #SHOP_DENIED}, a paid repair {@link #SHOP_BUY} and an undo's refund {@link #SHOP_SELL}.
      */
     public static Sfx shop(Hangar.Action action) {
         return switch (action) {
             case BUY, BUY_CHARGE -> SHOP_BUY;
             case SELL -> SHOP_SELL;
-            case FIT, UNFIT -> EQUIP;
+            case FIT, UNFIT, POWER_DOWN, POWER_UP -> EQUIP;
             case UPGRADE -> UPGRADE;
         };
     }

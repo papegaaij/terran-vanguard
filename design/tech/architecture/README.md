@@ -1370,7 +1370,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   adds `stats.levels`, per won level number its banked `credits` and `kills`. Planned (M5 part A):
   format version 3 adds `escort` (`hired`, `side`, `fitted`, `guns` with `item` and `level`,
   `armour`), migrated from version 2; version 4 (M7 part A, Q1 = a) adds `bays` (the utility bays
-  bought, 0 or 1), migrated from version 3 with 0. M7 part B (L.6 of round 36; a default pending the
+  bought, 0 or 1), migrated from version 3 with 0; version 5 (the power dial, 2026-10-21) adds an item's
+  optional `power` (its power setting, 1 … `level`, written only below full power; a missing one is full
+  power), migrated from version 4 unchanged. M7 part B (L.6 of round 36; a default pending the
   user's review in round 38): the story flag **`act-intro:N`** records act N's intro as shown (set
   whenever a briefing opens an act); the version 3 migration adds `act-intro:1`, and `act-intro:2` from
   Level 08 on (the release had Acts 1–2), never `act-intro:3`; Continue on a save whose next level

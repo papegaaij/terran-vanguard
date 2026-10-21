@@ -2319,3 +2319,599 @@ Proposed (round 44).
 Sources: <https://freesound.org/people/DasWaff/sounds/721601/> (Giant step by DasWaff, CC0 1.0), <https://freesound.org/people/777hr1/sounds/663057/> (loudthump.wav by 777hr1, CC-BY 4.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/onteca/sounds/197770/> (building_collapse04_enclosed_space.wav by onteca, CC-BY 3.0). Use: the walker's stomp shockwave (step WR2): the stomp after its 0.5 s tell and the ring expanding out to 110 px.
 Brief: a ground slam and a low boom (WR2). Why: a giant's step, a loud thump and a massive structure's deep impact rolling out, rubble shaken loose.
 Edit: 1.48 s, the loudest 100 ms band −20.9 dB, peak −4.2 dBFS, −14.3 LUFS.
+
+## Concept round 46, step AUD-J (the Ghost Drone and the Act 3 enemy cues, from the database)
+
+The user, Act 3 playthrough: "Ghost drone sounds are really bad. They sound like pling plong on a xylophone." Every file is cut from **Freesound originals** (CC0 or CC-BY, each in [CREDITS.md](../../../../CREDITS.md)) by `tools/concept/audio/sfx_r46j.py` (cut, slowed or gliding, layered, filtered, faded and levelled; nothing synthesized), big and heavy sources, nothing bubbly or popping, no pitched pings, every blast with a ramped attack. An a/b pair each, proposed (round 46), pending the user's review; the game keeps the old synthesized files until the pick. Levels: each at the level of the file it replaces: one-shots on the loudest 100 ms of the 200 Hz–5 kHz band under a −4 dBFS ceiling with at most 4 dB of limiting (a mix of sharper transients, the clicks and shots, lower), at most −14 LUFS (the tells −16, the Shellback's plates −16/−17, the stomp −15); loops by their band RMS, at most about the replaced loop's loudness (+1 LU) where a loop is heavy below 200 Hz.
+
+### ghost-drone-drop-r46-a — "Jet Flyby 02" by mrspivey
+
+Proposed (round 46).
+Source: <https://freesound.org/people/mrspivey/sounds/805169/> (Jet Flyby 02 by mrspivey, CC0 1.0). Use: a Ghost Drone dropping into its lane (Levels 18, 19).
+Brief: a turbine/jet whine descending, built not grown, 0.9 s. Why: a jet's turbine whine passing, its speed gliding down from 1.3 to 0.8.
+Edit: 0.92 s, the loudest 100 ms band −24.1 dB, peak −11.5 dBFS, −23.8 LUFS.
+
+### ghost-drone-drop-r46-b — "Eurofighter Typhoon Flyby 005 – Close Proximity" by TimoSchmied
+
+Proposed (round 46).
+Source: <https://freesound.org/people/TimoSchmied/sounds/640505/> (Eurofighter Typhoon Flyby 005 – Close Proximity by TimoSchmied, CC-BY 4.0). Use: a Ghost Drone dropping into its lane (Levels 18, 19).
+Brief: a turbine/jet whine descending, built not grown, 0.9 s. Why: a Eurofighter's close flyby, its speed gliding down from 1.25 to 0.8.
+Edit: 0.90 s, the loudest 100 ms band −24.0 dB, peak −8.1 dBFS, −25.3 LUFS.
+
+### ghost-drone-glint-r46-a — "Relay 2" by JoontheFloof
+
+Proposed (round 46).
+Source: <https://freesound.org/people/JoontheFloof/sounds/740252/> (Relay 2 by JoontheFloof, CC0 1.0). Use: a Ghost Drone's 0.3 s eye glint before its burst (the tell).
+Brief: a short mechanical/electronic lock click, not a pitched ping. Why: an electric relay latching (two dry clicks).
+Edit: 0.23 s, the loudest 100 ms band −31.7 dB, peak −4.1 dBFS.
+
+### ghost-drone-glint-r46-b — "Canon 550D Shutter" by iainmccurdy + "M&P15 Bolt Release [No Ring]" by smill.and.welson
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/iainmccurdy/sounds/613884/> (Canon 550D Shutter by iainmccurdy, CC-BY 4.0), <https://freesound.org/people/smill.and.welson/sounds/858506/> (M&P15 Bolt Release [No Ring] by smill.and.welson, CC-BY 4.0). Use: a Ghost Drone's 0.3 s eye glint before its burst (the tell).
+Brief: a short mechanical/electronic lock click, not a pitched ping. Why: a camera shutter's two clicks with a rifle's bolt release under them.
+Edit: 0.30 s, the loudest 100 ms band −26.3 dB, peak −4.3 dBFS.
+
+### ghost-drone-burst-r46-a — "M16 gun 3 round burst" by lensflare8642
+
+Proposed (round 46).
+Source: <https://freesound.org/people/lensflare8642/sounds/145206/> (M16 gun 3 round burst by lensflare8642, CC0 1.0). Use: a Ghost Drone's burst (shots 0.15 s apart), once at its first shot.
+Brief: three dry precise human-gun shots. Why: an M16's three-round burst (shots 0.14 s apart).
+Edit: 0.60 s, the loudest 100 ms band −21.0 dB, peak −5.5 dBFS, −18.7 LUFS.
+
+### ghost-drone-burst-r46-b — "Rifle Burst" by qubodup
+
+Proposed (round 46).
+Source: <https://freesound.org/people/qubodup/sounds/482120/> (Rifle Burst by qubodup, CC0 1.0). Use: a Ghost Drone's burst (shots 0.15 s apart), once at its first shot.
+Brief: three dry precise human-gun shots. Why: an automatic rifle's three-shot burst (shots 0.1 s apart).
+Edit: 0.29 s, the loudest 100 ms band −23.6 dB, peak −4.3 dBFS.
+
+### ghost-drone-death-r46-a — "Explosion 1 (Burning Car rec by Ñado)" by qubodup + "Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024" by Artninja + "Electric Sparks" by mikiko850 + "Parts falling" by tlwmdbt
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/qubodup/sounds/843247/> (Explosion 1 (Burning Car rec by Ñado) by qubodup, CC0 1.0), <https://freesound.org/people/Artninja/sounds/752072/> (Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024 by Artninja, CC-BY 4.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0), <https://freesound.org/people/tlwmdbt/sounds/165860/> (Parts falling by tlwmdbt, CC-BY 4.0). Use: a Ghost Drone's death, the `small` rung.
+Brief: a small machine breaking up: crack, metal, sparks, no fireball. Why: a dry bang and a heavy metal crunch, a burst of sparks and parts falling.
+Edit: 0.90 s, the loudest 100 ms band −19.1 dB, peak −5.7 dBFS, −20.8 LUFS.
+
+### ghost-drone-death-r46-b — "Metal Crash Collision" by qubodup + "Quadcopter Drone Collision Hitting Wall and Falling" by qubodup + "QUICK_SMASH_DEBRIS_001.wav" by JoelAudio + "Electric Sparks" by mikiko850
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/qubodup/sounds/67617/> (Metal Crash Collision by qubodup, CC0 1.0), <https://freesound.org/people/qubodup/sounds/854351/> (Quadcopter Drone Collision Hitting Wall and Falling by qubodup, CC0 1.0), <https://freesound.org/people/JoelAudio/sounds/135459/> (QUICK_SMASH_DEBRIS_001.wav by JoelAudio, CC-BY 4.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0). Use: a Ghost Drone's death, the `small` rung.
+Brief: a small machine breaking up: crack, metal, sparks, no fireball. Why: a metal crash, a real quadcopter hitting a wall and falling, smashed debris and sparks.
+Edit: 0.87 s, the loudest 100 ms band −19.2 dB, peak −6.9 dBFS, −18.6 LUFS.
+
+### devil-spin-r46-a — "Inside a Tornado.wav" by RogerBoyX69 + "G56-22-Sandstorm.wav" by craigsmith
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/RogerBoyX69/sounds/338721/> (Inside a Tornado.wav by RogerBoyX69, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/438877/> (G56-22-Sandstorm.wav by craigsmith, CC0 1.0). Use: the Dust Devil's spin, one loop for the nearest (Levels 18, 20, 21).
+Brief: a whirling wind roar with grit. Why: inside a tornado (a steady whirling roar) with a sandstorm's grit.
+Edit: a seamless 3 s loop, band RMS −32.1 dB, peak −16.1 dBFS, −26.7 LUFS.
+
+### devil-spin-r46-b — "JM_NATURAL ELEMENTS_Wind 01 - Tornado - Inside a metalic squeaking structure" by Julien_Matthey + "Flowing Sand" by SteveMeli
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Julien_Matthey/sounds/557188/> (JM_NATURAL ELEMENTS_Wind 01 - Tornado - Inside a metalic squeaking structure by Julien_Matthey, CC0 1.0), <https://freesound.org/people/SteveMeli/sounds/215006/> (Flowing Sand by SteveMeli, CC-BY 3.0). Use: the Dust Devil's spin, one loop for the nearest (Levels 18, 20, 21).
+Brief: a whirling wind roar with grit. Why: a tornado through a squeaking metal structure, sand flowing.
+Edit: a seamless 3 s loop, band RMS −32.0 dB, peak −4.0 dBFS, −23.5 LUFS.
+
+### devil-open-r46-a — "Instant Wind" by Raclure + "Heavy stone door opens" by PostProdDog
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Raclure/sounds/483599/> (Instant Wind by Raclure, CC0 1.0), <https://freesound.org/people/PostProdDog/sounds/578490/> (Heavy stone door opens by PostProdDog, CC0 1.0). Use: a Dust Devil's 0.4 s rise and opening (the tell).
+Brief: the vanes parting with a gust and a low hollow tone. Why: a gust swelling in over a heavy stone door grinding open (its hollow resonance).
+Edit: 0.70 s, the loudest 100 ms band −21.3 dB, peak −4.2 dBFS, −16.0 LUFS.
+
+### devil-open-r46-b — "Powerfull Whooshes 2.wav" by Nic3_one + "stone_on_stone.aif" by thanvannispen
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Nic3_one/sounds/434869/> (Powerfull Whooshes 2.wav by Nic3_one, CC0 1.0), <https://freesound.org/people/thanvannispen/sounds/29986/> (stone_on_stone.aif by thanvannispen, CC-BY 4.0). Use: a Dust Devil's 0.4 s rise and opening (the tell).
+Brief: the vanes parting with a gust and a low hollow tone. Why: a powerful whoosh with stone dragging on stone.
+Edit: 0.70 s, the loudest 100 ms band −20.4 dB, peak −4.0 dBFS, −19.6 LUFS.
+
+### devil-spiral-r46-a — "OsVaDuThDustThrowThud.wav" by The_Sean_ + "Sand slidding out of shovel slowly.wav" by XfiXy8
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/The_Sean_/sounds/340307/> (OsVaDuThDustThrowThud.wav by The_Sean_, CC0 1.0), <https://freesound.org/people/XfiXy8/sounds/467301/> (Sand slidding out of shovel slowly.wav by XfiXy8, CC0 1.0). Use: a Dust Devil's grit spiral volleys.
+Brief: a short turning grit hiss, 0.45 s. Why: a throw of dust with sand sliding off a shovel.
+Edit: 0.47 s, the loudest 100 ms band −22.2 dB, peak −4.0 dBFS, −18.6 LUFS.
+
+### devil-spiral-r46-b — "Big Swoosh" by Electroviolence + "sand pour on sand FF662.aif" by martinimeniscus
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Electroviolence/sounds/234547/> (Big Swoosh by Electroviolence, CC0 1.0), <https://freesound.org/people/martinimeniscus/sounds/199332/> (sand pour on sand FF662.aif by martinimeniscus, CC0 1.0). Use: a Dust Devil's grit spiral volleys.
+Brief: a short turning grit hiss, 0.45 s. Why: a big swoosh with sand pouring.
+Edit: 0.45 s, the loudest 100 ms band −22.2 dB, peak −8.1 dBFS, −20.1 LUFS.
+
+### shellback-walk-r46-a — "Dinosaur Footsteps-01.wav" by jamesrodavidson + "stonehit1.wav" by aerror
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/jamesrodavidson/sounds/192365/> (Dinosaur Footsteps-01.wav by jamesrodavidson, CC-BY 3.0), <https://freesound.org/people/aerror/sounds/350750/> (stonehit1.wav by aerror, CC0 1.0). Use: the Shellback's walk, one loop for the nearest (Levels 17, 19, 21).
+Brief: heavy padded footfalls with shell plates clacking. Why: a big creature's footsteps (two to a loop) with stones clacking.
+Edit: a seamless 3.26 s loop, band RMS −43.5 dB, peak −8.5 dBFS, −22.0 LUFS.
+
+### shellback-walk-r46-b — "Monster Stomp Footsteps Sequence" by Vilkas_Sound + "stone_on_stone.aif" by thanvannispen
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Vilkas_Sound/sounds/753178/> (Monster Stomp Footsteps Sequence by Vilkas_Sound, CC-BY 4.0), <https://freesound.org/people/thanvannispen/sounds/29986/> (stone_on_stone.aif by thanvannispen, CC-BY 4.0). Use: the Shellback's walk, one loop for the nearest (Levels 17, 19, 21).
+Brief: heavy padded footfalls with shell plates clacking. Why: a monster's heavy stomps (two to a loop) with stone knocking on stone.
+Edit: a seamless 4.16 s loop, band RMS −34.2 dB, peak −6.2 dBFS, −22.0 LUFS.
+
+### shellback-lob-r46-a — "M224 Mortar Firing Close 02" by Nanashi + "Pressure Hiss" by magnuswaker
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Nanashi/sounds/426162/> (M224 Mortar Firing Close 02 by Nanashi, CC-BY 4.0), <https://freesound.org/people/magnuswaker/sounds/581083/> (Pressure Hiss by magnuswaker, CC0 1.0). Use: a Shellback's mortar lob.
+Brief: a dull cough thump and a pressure hiss. Why: a real M224 mortar firing, slowed to 0.85, with a pressure hiss.
+Edit: 0.62 s, the loudest 100 ms band −17.2 dB, peak −5.8 dBFS, −17.0 LUFS.
+
+### shellback-lob-r46-b — "120mm Mortar Shell Shot 2" by qubodup + "Pressure Hiss" by magnuswaker
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/qubodup/sounds/854478/> (120mm Mortar Shell Shot 2 by qubodup, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/581083/> (Pressure Hiss by magnuswaker, CC0 1.0). Use: a Shellback's mortar lob.
+Brief: a dull cough thump and a pressure hiss. Why: a 120 mm mortar shot, slowed to 0.8, with a pressure hiss.
+Edit: 0.64 s, the loudest 100 ms band −20.8 dB, peak −6.1 dBFS, −16.2 LUFS.
+
+### shellback-curl-r46-a — "stone_on_stone_dragging3.aif" by thanvannispen + "stonehit1.wav" by aerror
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/thanvannispen/sounds/29989/> (stone_on_stone_dragging3.aif by thanvannispen, CC-BY 4.0), <https://freesound.org/people/aerror/sounds/350750/> (stonehit1.wav by aerror, CC0 1.0). Use: a Shellback curling up.
+Brief: plates grinding shut, a heavy clack. Why: stone dragging on stone, closing on a heavy stone clack.
+Edit: 0.80 s, the loudest 100 ms band −20.0 dB, peak −5.2 dBFS, −19.3 LUFS.
+
+### shellback-curl-r46-b — "Guterton - Heavy Stone Grind" by guterton.wav + "stone_on_stone.aif" by thanvannispen
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/guterton.wav/sounds/760672/> (Guterton - Heavy Stone Grind by guterton.wav, CC-BY 4.0), <https://freesound.org/people/thanvannispen/sounds/29986/> (stone_on_stone.aif by thanvannispen, CC-BY 4.0). Use: a Shellback curling up.
+Brief: plates grinding shut, a heavy clack. Why: a heavy stone grind, closing on a stone-on-stone knock.
+Edit: 0.85 s, the loudest 100 ms band −20.4 dB, peak −4.3 dBFS, −16.4 LUFS.
+
+### shellback-roll-r46-a — "Rolling boulder" by gootie3333333 + "Gravel Impacts and Falls.wav" by lolamadeus
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/gootie3333333/sounds/610739/> (Rolling boulder by gootie3333333, CC-BY 4.0), <https://freesound.org/people/lolamadeus/sounds/179341/> (Gravel Impacts and Falls.wav by lolamadeus, CC0 1.0). Use: a Shellback's roll, one loop for the nearest rolling one.
+Brief: a rumbling grind that crushes. Why: a boulder rolling with gravel falling.
+Edit: a seamless 2.5 s loop, band RMS −30.0 dB, peak −7.0 dBFS, −23.3 LUFS.
+
+### shellback-roll-r46-b — "Large, Low Rumble.wav" by duckduckpony + "stone_on_stone_dragging3.aif" by thanvannispen
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/duckduckpony/sounds/130972/> (Large, Low Rumble.wav by duckduckpony, CC-BY 4.0), <https://freesound.org/people/thanvannispen/sounds/29989/> (stone_on_stone_dragging3.aif by thanvannispen, CC-BY 4.0). Use: a Shellback's roll, one loop for the nearest rolling one.
+Brief: a rumbling grind that crushes. Why: a large low rumble with stone dragging on stone.
+Edit: a seamless 2.5 s loop, band RMS −31.1 dB, peak −5.7 dBFS, −19.0 LUFS.
+
+### shellback-uncurl-r46-a — "stone_on_stone_dragging3.aif" by thanvannispen + "stonehit1.wav" by aerror + "sand pour on sand FF662.aif" by martinimeniscus
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/thanvannispen/sounds/29989/> (stone_on_stone_dragging3.aif by thanvannispen, CC-BY 4.0), <https://freesound.org/people/aerror/sounds/350750/> (stonehit1.wav by aerror, CC0 1.0), <https://freesound.org/people/martinimeniscus/sounds/199332/> (sand pour on sand FF662.aif by martinimeniscus, CC0 1.0). Use: a Shellback uncurling.
+Brief: the plates opening, a looser clack, a short exhale of grit. Why: stone dragging open, a loose stone clack and sand pouring off.
+Edit: 0.70 s, the loudest 100 ms band −22.0 dB, peak −7.2 dBFS, −21.5 LUFS.
+
+### shellback-uncurl-r46-b — "Heavy stone door opens" by PostProdDog + "stonehit1.wav" by aerror + "Sand slidding out of shovel slowly.wav" by XfiXy8
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/PostProdDog/sounds/578490/> (Heavy stone door opens by PostProdDog, CC0 1.0), <https://freesound.org/people/aerror/sounds/350750/> (stonehit1.wav by aerror, CC0 1.0), <https://freesound.org/people/XfiXy8/sounds/467301/> (Sand slidding out of shovel slowly.wav by XfiXy8, CC0 1.0). Use: a Shellback uncurling.
+Brief: the plates opening, a looser clack, a short exhale of grit. Why: a heavy stone door grinding open, a stone clack and sand sliding off.
+Edit: 0.70 s, the loudest 100 ms band −24.4 dB, peak −7.0 dBFS, −16.5 LUFS.
+
+### crawler-walk-r46-a — "bug legs tapping" by c64cosmin + "Gravel Impacts and Falls.wav" by lolamadeus
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/c64cosmin/sounds/828623/> (bug legs tapping by c64cosmin, CC0 1.0), <https://freesound.org/people/lolamadeus/sounds/179341/> (Gravel Impacts and Falls.wav by lolamadeus, CC0 1.0). Use: the Threadcrawler's walk, one loop for the nearest (Level 16).
+Brief: a dry many-legged skitter on rock. Why: fingers tapping like bug legs (a dense skitter) over gravel.
+Edit: a seamless 3 s loop, band RMS −36.0 dB, peak −8.8 dBFS, −32.6 LUFS.
+
+### crawler-walk-r46-b — "crab walking" by stuniverso + "bug legs tapping" by c64cosmin
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/stuniverso/sounds/761559/> (crab walking by stuniverso, CC0 1.0), <https://freesound.org/people/c64cosmin/sounds/828623/> (bug legs tapping by c64cosmin, CC0 1.0). Use: the Threadcrawler's walk, one loop for the nearest (Level 16).
+Brief: a dry many-legged skitter on rock. Why: a crab walking, slowed to 0.85, over the tapping legs.
+Edit: a seamless 3 s loop, band RMS −36.1 dB, peak −9.3 dBFS, −30.5 LUFS.
+
+### tendril-hum-r46-a — "hum electric transformer in large room1.flac" by kyles + "765 kilo-volt transmission lines buzzing and crackling" by johnaudiotech
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/johnaudiotech/sounds/347046/> (765 kilo-volt transmission lines buzzing and crackling by johnaudiotech, CC0 1.0). Use: a standing tendril barrier's hum, one loop for the nearest (L16, L06).
+Brief: a taut electric-organic drone, no wobble. Why: an electric transformer's hum in a large room with high-voltage lines buzzing.
+Edit: a seamless 6 s loop, band RMS −38.0 dB, peak −23.9 dBFS, −33.7 LUFS.
+
+### tendril-hum-r46-b — "Electric_Pylon_Power Line-Buzz 01.wav" by omnisounddesign + "765 kilo-volt transmission lines buzzing and crackling" by johnaudiotech
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/omnisounddesign/sounds/338074/> (Electric_Pylon_Power Line-Buzz 01.wav by omnisounddesign, CC-BY 4.0), <https://freesound.org/people/johnaudiotech/sounds/347046/> (765 kilo-volt transmission lines buzzing and crackling by johnaudiotech, CC0 1.0). Use: a standing tendril barrier's hum, one loop for the nearest (L16, L06).
+Brief: a taut electric-organic drone, no wobble. Why: a power pylon's buzz with high-voltage lines crackling.
+Edit: a seamless 6 s loop, band RMS −38.3 dB, peak −16.4 dBFS, −27.8 LUFS.
+
+### tendril-burn-r46-a — "Welding_2_long_take.wav" by ivolipa
+
+Proposed (round 46).
+Source: <https://freesound.org/people/ivolipa/sounds/385992/> (Welding_2_long_take.wav by ivolipa, CC0 1.0). Use: a beam burning a tendril, a loop while it burns.
+Brief: a searing crackle. Why: an electric welder's crackle.
+Edit: a seamless 2 s loop, band RMS −34.2 dB, peak −3.7 dBFS, −22.6 LUFS.
+
+### tendril-burn-r46-b — "Electric welding with tig - Full cycle" by ldezem + "Electric Sparks" by mikiko850
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/ldezem/sounds/386386/> (Electric welding with tig - Full cycle by ldezem, CC0 1.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0). Use: a beam burning a tendril, a loop while it burns.
+Brief: a searing crackle. Why: a TIG welder's hiss with electric sparks.
+Edit: a seamless 2 s loop, band RMS −34.1 dB, peak −14.0 dBFS, −27.3 LUFS.
+
+### tendril-break-r46-a — "Whip Crack 01.wav" by CGEffex + "Wind-down 1.aif" by timgormly
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/CGEffex/sounds/93100/> (Whip Crack 01.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/timgormly/sounds/151288/> (Wind-down 1.aif by timgormly, CC0 1.0). Use: a tendril breaking.
+Brief: a whip-crack snap and a falling whine. Why: a whip crack and a motor winding down, its speed gliding from 1.4 to 0.6.
+Edit: 0.90 s, the loudest 100 ms band −18.9 dB, peak −4.1 dBFS, −16.4 LUFS.
+
+### tendril-break-r46-b — "24_SeRompeCable.wav" by Lextao + "Whip Crack.m4a" by SciFiSounds + "FAN 3 (Slow Stop).wav" by temawas
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Lextao/sounds/471828/> (24_SeRompeCable.wav by Lextao, CC-BY 4.0), <https://freesound.org/people/SciFiSounds/sounds/529925/> (Whip Crack.m4a by SciFiSounds, CC0 1.0), <https://freesound.org/people/temawas/sounds/179245/> (FAN 3 (Slow Stop).wav by temawas, CC-BY 4.0). Use: a tendril breaking.
+Brief: a whip-crack snap and a falling whine. Why: a cable snapping with a whip crack, a fan slowing to a stop, its speed gliding from 2 to 0.8.
+Edit: 0.92 s, the loudest 100 ms band −18.1 dB, peak −4.1 dBFS, −15.2 LUFS.
+
+### burrow-dive-r46-a — "Sand slidding out of shovel slowly.wav" by XfiXy8
+
+Proposed (round 46).
+Source: <https://freesound.org/people/XfiXy8/sounds/467301/> (Sand slidding out of shovel slowly.wav by XfiXy8, CC0 1.0). Use: a Burrower's 0.4 s dive (Levels 15-17, 20, 21).
+Brief: a falling sand hiss, short. Why: sand sliding off a shovel, its speed gliding down from 1 to 0.75.
+Edit: 0.55 s, the loudest 100 ms band −26.2 dB, peak −13.9 dBFS, −22.0 LUFS.
+
+### burrow-dive-r46-b — "sand slide on metal FF678.aif" by martinimeniscus + "sand pour on sand FF662.aif" by martinimeniscus
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/martinimeniscus/sounds/199397/> (sand slide on metal FF678.aif by martinimeniscus, CC0 1.0), <https://freesound.org/people/martinimeniscus/sounds/199332/> (sand pour on sand FF662.aif by martinimeniscus, CC0 1.0). Use: a Burrower's 0.4 s dive (Levels 15-17, 20, 21).
+Brief: a falling sand hiss, short. Why: sand sliding on metal, gliding down, with sand pouring.
+Edit: 0.55 s, the loudest 100 ms band −26.3 dB, peak −6.7 dBFS, −18.9 LUFS.
+
+### herald-song-r46-a — "Short Choir" by Breviceps
+
+Proposed (round 46).
+Source: <https://freesound.org/people/Breviceps/sounds/444491/> (Short Choir by Breviceps, CC0 1.0). Use: the Choir Herald's song with its ring of bullets (L17, L19, L21).
+Brief: a short sung phrase in the Choir's colour (not words). Why: a short choir's 'aah', slowed to 0.85 (darker).
+Edit: 1.90 s, the loudest 100 ms band −19.9 dB, peak −11.6 dBFS, −20.7 LUFS.
+
+### herald-song-r46-b — "Choir.aif" by DiArchangeli + "Kargyraa Throat Chant/Singing (Lower Register Vocal Folds)" by Hjaarlmarch
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/DiArchangeli/sounds/458144/> (Choir.aif by DiArchangeli, CC0 1.0), <https://freesound.org/people/Hjaarlmarch/sounds/732443/> (Kargyraa Throat Chant/Singing (Lower Register Vocal Folds) by Hjaarlmarch, CC0 1.0). Use: the Choir Herald's song with its ring of bullets (L17, L19, L21).
+Brief: a short sung phrase in the Choir's colour (not words). Why: a choir's chord changing, a low throat chant under it.
+Edit: 1.90 s, the loudest 100 ms band −20.0 dB, peak −6.8 dBFS, −16.4 LUFS.
+
+### herald-aura-r46-a — "26-07-12 - Ethereal Choir Drone - ambient pad" by Valerie-Vivegnis
+
+Proposed (round 46).
+Source: <https://freesound.org/people/Valerie-Vivegnis/sounds/862321/> (26-07-12 - Ethereal Choir Drone - ambient pad by Valerie-Vivegnis, CC-BY 4.0). Use: the Herald's aura, one loop while any ring is up.
+Brief: a soft high shimmer. Why: an ethereal choir drone, high-passed at 1.5 kHz.
+Edit: a seamless 4 s loop, band RMS −40.2 dB, peak −21.8 dBFS, −31.8 LUFS.
+
+### herald-aura-r46-b — "Choir.aif" by DiArchangeli
+
+Proposed (round 46).
+Source: <https://freesound.org/people/DiArchangeli/sounds/458144/> (Choir.aif by DiArchangeli, CC0 1.0). Use: the Herald's aura, one loop while any ring is up.
+Brief: a soft high shimmer. Why: a choir's held chord, high-passed at 1.5 kHz.
+Edit: a seamless 4 s loop, band RMS −40.1 dB, peak −22.1 dBFS, −32.4 LUFS.
+
+### aura-absorb-r46-a — "Electric Sparks" by mikiko850 + "Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024" by Artninja
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0), <https://freesound.org/people/Artninja/sounds/752072/> (Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024 by Artninja, CC-BY 4.0). Use: a ring absorbing a hit, spaced out.
+Brief: the enemy-shield hit, no glassy ping. Why: a burst of electric sparks over a muffled metal punch.
+Edit: 0.35 s, the loudest 100 ms band −22.0 dB, peak −4.1 dBFS.
+
+### aura-absorb-r46-b — "Force Field 01.wav" by LilMati + "Electric Sparks" by mikiko850 + "Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024" by Artninja
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/LilMati/sounds/702771/> (Force Field 01.wav by LilMati, CC0 1.0), <https://freesound.org/people/mikiko850/sounds/849772/> (Electric Sparks by mikiko850, CC-BY 4.0), <https://freesound.org/people/Artninja/sounds/752072/> (Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024 by Artninja, CC-BY 4.0). Use: a ring absorbing a hit, spaced out.
+Brief: the enemy-shield hit, no glassy ping. Why: a force field's hit with a crackle of sparks over a muffled punch.
+Edit: 0.40 s, the loudest 100 ms band −22.1 dB, peak −6.7 dBFS.
+
+### walker-stomp-r46-a — "Big robot footstep 002" by AudioPapkin + "Hydraulic Hiss, TTC bus door" by OttisG
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/AudioPapkin/sounds/813053/> (Big robot footstep 002 by AudioPapkin, CC0 1.0), <https://freesound.org/people/OttisG/sounds/852991/> (Hydraulic Hiss, TTC bus door by OttisG, CC-BY 4.0). Use: a Revenant Walker's footfall (Level 19).
+Brief: a dull heavy stomp, a leg clank and a hydraulic hiss. Why: a big robot's footstep with a bus door's hydraulic hiss.
+Edit: 1.00 s, the loudest 100 ms band −19.6 dB, peak −4.1 dBFS, −14.7 LUFS.
+
+### walker-stomp-r46-b — "mech_step_002.ogg" by pgi + "Pressure Hiss" by magnuswaker
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/pgi/sounds/213041/> (mech_step_002.ogg by pgi, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/581083/> (Pressure Hiss by magnuswaker, CC0 1.0). Use: a Revenant Walker's footfall (Level 19).
+Brief: a dull heavy stomp, a leg clank and a hydraulic hiss. Why: a mech's step and its servo, a pressure hiss.
+Edit: 1.00 s, the loudest 100 ms band −22.5 dB, peak −4.2 dBFS, −15.6 LUFS.
+
+### tank-death-r46-a — "Explosive 1 v2 [DOD 130303].flac" by qubodup + "R29-28-Large Metal Vehicle Crashes.wav" by craigsmith + "Flame Burst" by magnuswaker
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/qubodup/sounds/182431/> (Explosive 1 v2 [DOD 130303].flac by qubodup, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/487143/> (R29-28-Large Metal Vehicle Crashes.wav by craigsmith, CC0 1.0), <https://freesound.org/people/magnuswaker/sounds/592572/> (Flame Burst by magnuswaker, CC0 1.0). Use: a Warden Tank's death, the `medium` rung (Levels 08, 19).
+Brief: a hull explosion with metal debris. Why: a real military explosive, a large metal vehicle crashing and a flame burst.
+Edit: 1.80 s, the loudest 100 ms band −17.2 dB, peak −4.1 dBFS, −19.5 LUFS.
+
+### tank-death-r46-b — "S17-28 Large explosion with debris.wav" by craigsmith + "Metal Crash Collision" by qubodup + "Fire - Effects - Swooshes - Bursts, evolving" by GregorQuendel + "R29-28-Large Metal Vehicle Crashes.wav" by craigsmith
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/craigsmith/sounds/674899/> (S17-28 Large explosion with debris.wav by craigsmith, CC0 1.0), <https://freesound.org/people/qubodup/sounds/67617/> (Metal Crash Collision by qubodup, CC0 1.0), <https://freesound.org/people/GregorQuendel/sounds/421879/> (Fire - Effects - Swooshes - Bursts, evolving by GregorQuendel, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/487143/> (R29-28-Large Metal Vehicle Crashes.wav by craigsmith, CC0 1.0). Use: a Warden Tank's death, the `medium` rung (Levels 08, 19).
+Brief: a hull explosion with metal debris. Why: a large explosion with debris, a metal crash, fire roaring out, metal wreckage.
+Edit: 1.80 s, the loudest 100 ms band −17.1 dB, peak −4.5 dBFS, −15.7 LUFS.
+
+## Concept round 46, step AUD-K (the remaining synthesized beds, rare sounds and player gear, from the database)
+
+The user (round 42): "You should really stop trying to make these sounds yourself. Use the database." Every file is cut from **Freesound originals** (CC0 or CC-BY, each in [CREDITS.md](../../../../CREDITS.md)) by `tools/concept/audio/sfx_r46k.py` (cut, slowed, sped or gliding, layered, filtered, faded and levelled; nothing synthesized), real recordings wherever the database has them, nothing bubbly or popping, no bell chimes. An a/b pair each, proposed (round 46), pending the user's review; the game keeps the old files until the pick. Levels: each sound like the one it replaces (its loudest 100 ms of the 200 Hz–5 kHz band under a −4 dBFS ceiling, at most a little over its loudness), the beds like the accepted beds (`mars-dust`'s −36 dB band RMS, at most `basin-rumble`'s −28 LUFS; the canopy 3 dB under them, as before), the loops (drain, beam impact) by their band RMS. Freesound's download limit (500 a day) ran out during the step, so the foundry, the sonde's b, the drone rebuild and the launch rail use originals already in the cache.
+
+### canopy-hum-r46-a — "Dark Voice Drone 02 - Loop" by kkenny101 + "room tone large room church basement heavy deep ventilation or furnace hum quiet and clicking that picks up in middle.flac" by kyles
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/kkenny101/sounds/872936/> (Dark Voice Drone 02 - Loop by kkenny101, CC0 1.0), <https://freesound.org/people/kyles/sounds/451923/> (room tone large room church basement heavy deep ventilation or furnace hum quiet and clicking that picks up in middle.flac by kyles, CC0 1.0). Use: Level 14 (`Sfx.AMBIENCE_CANOPY`): the canopy's bed over the megacity while the canopy lives.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a deep time-stretched voice drone (the living canopy), slowed to 0.85, over a large basement's deep furnace hum.
+Edit: seamless 16.00 s loop, band RMS −47.6 dB, peak −20.7 dBFS, −31.0 LUFS.
+
+### canopy-hum-r46-b — "Tuuli sähkölangoissa / Wind humming and howling in the electric wires, power line" by YleArkisto + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/YleArkisto/sounds/362914/> (Tuuli sähkölangoissa / Wind humming and howling in the electric wires, power line by YleArkisto, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0). Use: Level 14 (`Sfx.AMBIENCE_CANOPY`): the canopy's bed over the megacity while the canopy lives.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: wind humming and howling in power lines, slowed to 0.7, over a transformer's hum in a large room.
+Edit: seamless 16.00 s loop, band RMS −39.0 dB, peak −18.3 dBFS, −31.2 LUFS.
+
+### mars-canyon-r46-a — "Low wind in a desert canyon 2" by fran_marenco + "G55-12-Moaning Whistle Wind.wav" by craigsmith
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/fran_marenco/sounds/852881/> (Low wind in a desert canyon 2 by fran_marenco, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438866/> (G55-12-Moaning Whistle Wind.wav by craigsmith, CC0 1.0). Use: Level 16 (`mars-canyon`): the canyon wind and its howl.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a low wind in a desert canyon with a moaning whistling wind howling through it.
+Edit: seamless 16.00 s loop, band RMS −36.1 dB, peak −13.7 dBFS, −29.1 LUFS.
+
+### mars-canyon-r46-b — "howling wind.WAV" by inchadney + "G56-22-Sandstorm.wav" by craigsmith
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/inchadney/sounds/157204/> (howling wind.WAV by inchadney, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/438877/> (G56-22-Sandstorm.wav by craigsmith, CC0 1.0). Use: Level 16 (`mars-canyon`): the canyon wind and its howl.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a howling wind over a sandstorm's grit.
+Edit: seamless 16.00 s loop, band RMS −36.2 dB, peak −19.3 dBFS, −30.8 LUFS.
+
+### mars-colony-r46-a — "Pink Lakes Wind Atmos #2" by kangaroovindaloo + "Arena Underground Ventilation Hum and Rumble" by jamesdrake89 + "freight train distant short and clicky.flac" by kyles
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/kangaroovindaloo/sounds/266656/> (Pink Lakes Wind Atmos #2 by kangaroovindaloo, CC0 1.0), <https://freesound.org/people/jamesdrake89/sounds/671456/> (Arena Underground Ventilation Hum and Rumble by jamesdrake89, CC0 1.0), <https://freesound.org/people/kyles/sounds/451145/> (freight train distant short and clicky.flac by kyles, CC0 1.0). Use: Level 17 (`mars-colony`): the plains wind, the domes' air plant, a distant rail.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: an open plain's wind, an underground ventilation plant's hum and a distant freight train clicking by.
+Edit: seamless 16.00 s loop, band RMS −36.0 dB, peak −21.1 dBFS, −32.0 LUFS.
+
+### mars-colony-r46-b — "G56-22-Sandstorm.wav" by craigsmith + "Ambient Industrial Ventilation Soundscape" by amenhotepIV + "Shunting Atmos" by kangaroovindaloo
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/craigsmith/sounds/438877/> (G56-22-Sandstorm.wav by craigsmith, CC0 1.0), <https://freesound.org/people/amenhotepIV/sounds/166014/> (Ambient Industrial Ventilation Soundscape by amenhotepIV, CC0 1.0), <https://freesound.org/people/kangaroovindaloo/sounds/414739/> (Shunting Atmos by kangaroovindaloo, CC-BY 4.0). Use: Level 17 (`mars-colony`): the plains wind, the domes' air plant, a distant rail.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a thin sand wind, an industrial ventilation hum and a distant freight train's steel clanking.
+Edit: seamless 16.00 s loop, band RMS −36.1 dB, peak −19.6 dBFS, −32.2 LUFS.
+
+### mars-foundry-r46-a — "Foundry Furnace.wav" by Walter_Odington + "G16-09-Factory-Overhead Crane.wav" by craigsmith + "Low wind in a desert canyon 2" by fran_marenco + "Big robot footstep 002" by AudioPapkin
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Walter_Odington/sounds/31566/> (Foundry Furnace.wav by Walter_Odington, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438133/> (G16-09-Factory-Overhead Crane.wav by craigsmith, CC0 1.0), <https://freesound.org/people/fran_marenco/sounds/852881/> (Low wind in a desert canyon 2 by fran_marenco, CC0 1.0), <https://freesound.org/people/AudioPapkin/sounds/813053/> (Big robot footstep 002 by AudioPapkin, CC0 1.0). Use: Level 19 (`mars-foundry`): the conveyors, the furnace, a slow hammer, the plateau wind.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a foundry furnace's roar, a factory's overhead crane rumbling (the conveyors), a far heavy hammer every 4 s and a low wind.
+Edit: seamless 16.00 s loop, band RMS −37.6 dB, peak −16.6 dBFS, −28.0 LUFS.
+
+### mars-foundry-r46-b — "Metalurgists At The Foundary.wav" by Walter_Odington + "MACHFan_big_industrial_fan_white_noise_Olympus_LS-P4.wav" by DBS_Sounds + "Steel mill low frequency drone" by sarana + "Low wind in a desert canyon 2" by fran_marenco + "Giant step" by DasWaff
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Walter_Odington/sounds/31567/> (Metalurgists At The Foundary.wav by Walter_Odington, CC0 1.0), <https://freesound.org/people/DBS_Sounds/sounds/613158/> (MACHFan_big_industrial_fan_white_noise_Olympus_LS-P4.wav by DBS_Sounds, CC0 1.0), <https://freesound.org/people/sarana/sounds/567148/> (Steel mill low frequency drone by sarana, CC0 1.0), <https://freesound.org/people/fran_marenco/sounds/852881/> (Low wind in a desert canyon 2 by fran_marenco, CC0 1.0), <https://freesound.org/people/DasWaff/sounds/721601/> (Giant step by DasWaff, CC0 1.0). Use: Level 19 (`mars-foundry`): the conveyors, the furnace, a slow hammer, the plateau wind.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a foundry's furnace, a big industrial fan (the blowers), a steel mill's deep drone, a low wind and a far giant hammer every 8 s.
+Edit: seamless 16.00 s loop, band RMS −40.5 dB, peak −16.2 dBFS, −28.0 LUFS.
+
+### enemy-leviathan-cry-r46-a — "Blue Whale B call @ 5X" by MBARI_MARS + "Underwater Rumble" by EminYILDIRIM
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/MBARI_MARS/sounds/343682/> (Blue Whale B call @ 5X by MBARI_MARS, CC-BY 4.0), <https://freesound.org/people/EminYILDIRIM/sounds/572005/> (Underwater Rumble by EminYILDIRIM, CC-BY 4.0). Use: the Leviathan's death cry (Level 03), under its large burst.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a blue whale's B call (a deep falling moan), slowed to 0.9, over an underwater rumble.
+Edit: 3.40 s, the loudest 100 ms band −23.9 dB, peak −16.0 dBFS, −23.8 LUFS.
+
+### enemy-leviathan-cry-r46-b — "Underwater recording of Humpback whales and their calves" by alanmcki
+
+Proposed (round 46).
+Source: <https://freesound.org/people/alanmcki/sounds/399609/> (Underwater recording of Humpback whales and their calves by alanmcki, CC-BY 4.0). Use: the Leviathan's death cry (Level 03), under its large burst.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: two humpback whale calls, slowed to 0.5 (deep and mournful).
+Edit: 3.40 s, the loudest 100 ms band −24.0 dB, peak −16.1 dBFS, −26.5 LUFS.
+
+### driftjelly-pulse-r46-a — "Underwater Impact" by deleted_user_7709760 + "Underwater Rumble" by EminYILDIRIM
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/deleted_user_7709760/sounds/400793/> (Underwater Impact by deleted_user_7709760, CC-BY 3.0), <https://freesound.org/people/EminYILDIRIM/sounds/572005/> (Underwater Rumble by EminYILDIRIM, CC-BY 4.0). Use: the Driftjelly's ring pulse (Level 11).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a muffled underwater impact over an underwater rumble.
+Edit: 0.90 s, the loudest 100 ms band −27.0 dB, peak −12.7 dBFS, −27.0 LUFS.
+
+### driftjelly-pulse-r46-b — "Massive Structure Bend" by Kostas17 + "Underwater Impact" by deleted_user_7709760
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Kostas17/sounds/529620/> (Massive Structure Bend by Kostas17, CC-BY 3.0), <https://freesound.org/people/deleted_user_7709760/sounds/400793/> (Underwater Impact by deleted_user_7709760, CC-BY 3.0). Use: the Driftjelly's ring pulse (Level 11).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a massive structure bending (a deep groan), slowed to 0.8, with the underwater impact's tail.
+Edit: 0.90 s, the loudest 100 ms band −30.2 dB, peak −15.3 dBFS, −26.9 LUFS.
+
+### lamprey-drain-r46-a — "JacobsLadderLong1.flac" by Halleck + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Halleck/sounds/19482/> (JacobsLadderLong1.flac by Halleck, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0). Use: the Lamprey's shield drain (Level 12) while it is latched on.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a Jacob's ladder's buzzing arc slowed to 0.6, over a transformer's hum.
+Edit: seamless 2.40 s loop, band RMS −24.0 dB, peak −6.9 dBFS, −20.2 LUFS.
+
+### lamprey-drain-r46-b — "S16-18 Tesla coil sparking and humming.wav" by craigsmith + "ELECMisc-INT_NOISES-Electrical Hums And Crackles Of A Light Fixture With A Loose Light Bulb_YMLT_NONE_08982261" by YouMightLikeThis
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0), <https://freesound.org/people/YouMightLikeThis/sounds/814061/> (ELECMisc-INT_NOISES-Electrical Hums And Crackles Of A Light Fixture With A Loose Light Bulb_YMLT_NONE_08982261 by YouMightLikeThis, CC0 1.0). Use: the Lamprey's shield drain (Level 12) while it is latched on.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a Tesla coil sparking and humming, slowed to 0.7, over a loose light fixture's hum and crackle.
+Edit: seamless 2.40 s loop, band RMS −24.3 dB, peak −11.3 dBFS, −18.2 LUFS.
+
+### sonde-chime-r46-a — "MechanicalClamp.wav" by Skullsmasha + "Radio Sign Off / Squelch" by JovianSounds
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Skullsmasha/sounds/123253/> (MechanicalClamp.wav by Skullsmasha, CC0 1.0), <https://freesound.org/people/JovianSounds/sounds/524205/> (Radio Sign Off / Squelch by JovianSounds, CC0 1.0). Use: a weather sonde collected (Level 12).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a heavy mechanical clamp slamming shut with a radio squelch (the telemetry handed over); no bell.
+Edit: 1.00 s, the loudest 100 ms band −16.8 dB, peak −4.1 dBFS, −12.8 LUFS.
+
+### sonde-chime-r46-b — "metal heavy dungeon prison door unlatch open close thud rattle and hatch open close slide squeak various int perspective on offmic.wav" by kyles + "Squelch.mp3" by LucasDuff
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/kyles/sounds/407322/> (metal heavy dungeon prison door unlatch open close thud rattle and hatch open close slide squeak various int perspective on offmic.wav by kyles, CC0 1.0), <https://freesound.org/people/LucasDuff/sounds/516643/> (Squelch.mp3 by LucasDuff, CC0 1.0). Use: a weather sonde collected (Level 12).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a heavy dungeon door's latch clanking shut with a radio squelch; no bell.
+Edit: 0.90 s, the loudest 100 ms band −16.5 dB, peak −4.3 dBFS, −17.3 LUFS.
+
+### integrity-alarm-r46-a — "S29-08 Navy ship classic danger whistle siren.wav" by craigsmith
+
+Proposed (round 46).
+Source: <https://freesound.org/people/craigsmith/sounds/675782/> (S29-08 Navy ship classic danger whistle siren.wav by craigsmith, CC0 1.0). Use: the integrity alarm at 50 % and 25 % (Level 13's relay, Level 17's domes).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a navy ship's danger whistle siren (a real one).
+Edit: 1.70 s, the loudest 100 ms band −17.0 dB, peak −8.9 dBFS, −14.5 LUFS.
+
+### integrity-alarm-r46-b — "Submarie dive horn_better.wav" by CGEffex
+
+Proposed (round 46).
+Source: <https://freesound.org/people/CGEffex/sounds/104882/> (Submarie dive horn_better.wav by CGEffex, CC-BY 4.0). Use: the integrity alarm at 50 % and 25 % (Level 13's relay, Level 17's domes).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a submarine's dive horn, two blasts (a real one).
+Edit: 1.85 s, the loudest 100 ms band −17.0 dB, peak −9.0 dBFS, −18.2 LUFS.
+
+### drone-launch-r46-a — "Drone take off" by GeorgeHopkins
+
+Proposed (round 46).
+Source: <https://freesound.org/people/GeorgeHopkins/sounds/537241/> (Drone take off by GeorgeHopkins, CC-BY 4.0). Use: a drone launching (Level 13's relay, Level 17's colony).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a drone taking off, slowed to 0.75 (bigger rotors).
+Edit: 2.20 s, the loudest 100 ms band −20.5 dB, peak −7.8 dBFS, −19.1 LUFS.
+
+### drone-launch-r46-b — "Dji Mavic Mini 2 take-off UP-DOWN XY mic placement Zoom H5.wav" by Sadiquecat
+
+Proposed (round 46).
+Source: <https://freesound.org/people/Sadiquecat/sounds/683300/> (Dji Mavic Mini 2 take-off UP-DOWN XY mic placement Zoom H5.wav by Sadiquecat, CC0 1.0). Use: a drone launching (Level 13's relay, Level 17's colony).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a quadcopter's rotors starting and taking off, slowed to 0.75.
+Edit: 2.20 s, the loudest 100 ms band −20.6 dB, peak −5.5 dBFS, −20.5 LUFS.
+
+### dome-hit-r46-a — "BANGING ON THICK GLASS.wav" by trexlasso + "Thuds on Window" by zerolagtime + "Door Close Heavy Metal Glass Slow Creak Seal Theatre" by LampEight + "Ice Crack 3" by j_p_higgins
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/trexlasso/sounds/629994/> (BANGING ON THICK GLASS.wav by trexlasso, CC0 1.0), <https://freesound.org/people/zerolagtime/sounds/245033/> (Thuds on Window by zerolagtime, CC-BY 4.0), <https://freesound.org/people/LampEight/sounds/402459/> (Door Close Heavy Metal Glass Slow Creak Seal Theatre by LampEight, CC0 1.0), <https://freesound.org/people/j_p_higgins/sounds/262633/> (Ice Crack 3 by j_p_higgins, CC0 1.0). Use: a Level 17 dome struck (`ALLY_HIT`).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a bang on thick glass with a heavy thud behind it, a glass door's creak and ice cracking (the stress lines); no shatter.
+Edit: 1.20 s, the loudest 100 ms band −26.1 dB, peak −4.1 dBFS, −22.2 LUFS.
+
+### dome-hit-r46-b — "Thuds on Window" by zerolagtime + "Door Close Heavy Metal Glass Medium Creak Seal Theatre" by LampEight + "Ice Crack 4" by j_p_higgins + "BANGING ON THICK GLASS.wav" by trexlasso
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/zerolagtime/sounds/245033/> (Thuds on Window by zerolagtime, CC-BY 4.0), <https://freesound.org/people/LampEight/sounds/402460/> (Door Close Heavy Metal Glass Medium Creak Seal Theatre by LampEight, CC0 1.0), <https://freesound.org/people/j_p_higgins/sounds/262632/> (Ice Crack 4 by j_p_higgins, CC0 1.0), <https://freesound.org/people/trexlasso/sounds/629994/> (BANGING ON THICK GLASS.wav by trexlasso, CC0 1.0). Use: a Level 17 dome struck (`ALLY_HIT`).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a heavy thud on a window, a heavy glass door's creak and a frozen lake's fine cracking; no shatter.
+Edit: 1.20 s, the loudest 100 ms band −27.2 dB, peak −4.1 dBFS, −23.0 LUFS.
+
+### dash-r46-a — "Tire Bead Seater Air Blast" by j_soundeffects + "jet thruster bassy potential.aiff" by kyles
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/j_soundeffects/sounds/863981/> (Tire Bead Seater Air Blast by j_soundeffects, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/51808/> (jet thruster bassy potential.aiff by kyles, CC0 1.0). Use: the ship's dash.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a compressed-air blast with a jet thruster's bassy roar.
+Edit: 0.40 s, the loudest 100 ms band −20.6 dB, peak −5.7 dBFS, −inf LUFS.
+
+### dash-r46-b — "Afterburner (Close, Screamer, Quick Onset)" by JSK_Productions + "Gas Release" by adgawrhbshbffsfgvsrf
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/JSK_Productions/sounds/829068/> (Afterburner (Close, Screamer, Quick Onset) by JSK_Productions, CC0 1.0), <https://freesound.org/people/adgawrhbshbffsfgvsrf/sounds/494044/> (Gas Release by adgawrhbshbffsfgvsrf, CC0 1.0). Use: the ship's dash.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: an afterburner's roar, sped to 1.2, with a gas release's hiss.
+Edit: 0.40 s, the loudest 100 ms band −21.0 dB, peak −6.9 dBFS, −inf LUFS.
+
+### overcharge-whoosh-r46-a — "Power Charge" by crashoverride6 + "Powerfull Whooshes 2.wav" by Nic3_one
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/crashoverride6/sounds/193610/> (Power Charge by crashoverride6, CC0 1.0), <https://freesound.org/people/Nic3_one/sounds/434869/> (Powerfull Whooshes 2.wav by Nic3_one, CC0 1.0). Use: Shield Overcharge's activation.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a camera flash charging, its whine gliding up, a powerful whoosh at its end.
+Edit: 1.00 s, the loudest 100 ms band −20.2 dB, peak −7.3 dBFS, −18.6 LUFS.
+
+### overcharge-whoosh-r46-b — "Electronic_Powerup.wav" by StephenSaldanha + "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/StephenSaldanha/sounds/132560/> (Electronic_Powerup.wav by StephenSaldanha, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0). Use: Shield Overcharge's activation.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a phasing power-up gliding up with a Tesla coil's sparks swelling under it.
+Edit: 1.00 s, the loudest 100 ms band −20.4 dB, peak −7.6 dBFS, −18.5 LUFS.
+
+### overcharge-end-r46-a — "Power Charge" by crashoverride6
+
+Proposed (round 46).
+Source: <https://freesound.org/people/crashoverride6/sounds/193610/> (Power Charge by crashoverride6, CC0 1.0). Use: the end of Shield Overcharge's 8 s.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: the camera flash's charge whine gliding down and fading.
+Edit: 0.90 s, the loudest 100 ms band −24.0 dB, peak −16.4 dBFS, −22.4 LUFS.
+
+### overcharge-end-r46-b — "Electronic_Powerup.wav" by StephenSaldanha + "S16-18 Tesla coil sparking and humming.wav" by craigsmith
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/StephenSaldanha/sounds/132560/> (Electronic_Powerup.wav by StephenSaldanha, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0). Use: the end of Shield Overcharge's 8 s.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: the phasing power-up gliding down with the Tesla coil's sparks dying.
+Edit: 0.90 s, the loudest 100 ms band −25.3 dB, peak −12.2 dBFS, −21.5 LUFS.
+
+### emp-ring-r46-a — "JacobsLadderLong1.flac" by Halleck + "S16-18 Tesla coil sparking and humming.wav" by craigsmith + "Big Structure Collision Heard from Inside" by Osvoldon
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Halleck/sounds/19482/> (JacobsLadderLong1.flac by Halleck, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0). Use: the EMP Burst's ring.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a Jacob's ladder's arc buzzing out, a Tesla coil's sparks and a massive structure's deep impact.
+Edit: 1.35 s, the loudest 100 ms band −19.9 dB, peak −5.8 dBFS, −17.2 LUFS.
+
+### emp-ring-r46-b — "high-voltage-discharge-2.wav" by follytowers + "Taser/High Voltage discharge" by The_Chemical_Workshop + "Deep Boom" by Za-Games
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/follytowers/sounds/415962/> (high-voltage-discharge-2.wav by follytowers, CC0 1.0), <https://freesound.org/people/The_Chemical_Workshop/sounds/403252/> (Taser/High Voltage discharge by The_Chemical_Workshop, CC0 1.0), <https://freesound.org/people/Za-Games/sounds/539968/> (Deep Boom by Za-Games, CC0 1.0). Use: the EMP Burst's ring.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a high-voltage discharge with a taser's crack on its attack over a deep boom.
+Edit: 1.35 s, the loudest 100 ms band −24.7 dB, peak −4.1 dBFS, −17.2 LUFS.
+
+### emp-powerdown-r46-a — "Large machine running and powering down" by ryks88
+
+Proposed (round 46).
+Source: <https://freesound.org/people/ryks88/sounds/709258/> (Large machine running and powering down by ryks88, CC-BY 4.0). Use: a machine stunned by the EMP.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a large machine powering down, played fast and gliding down from 3x to 1x.
+Edit: 0.90 s, the loudest 100 ms band −24.0 dB, peak −14.7 dBFS, −24.7 LUFS.
+
+### emp-powerdown-r46-b — "hum electric transformer in large room1.flac" by kyles + "ELECMisc-INT_NOISES-Electrical Hums And Crackles Of A Light Fixture With A Loose Light Bulb_YMLT_NONE_08982261" by YouMightLikeThis
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/YouMightLikeThis/sounds/814061/> (ELECMisc-INT_NOISES-Electrical Hums And Crackles Of A Light Fixture With A Loose Light Bulb_YMLT_NONE_08982261 by YouMightLikeThis, CC0 1.0). Use: a machine stunned by the EMP.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a transformer's hum sagging (gliding 1.0 to 0.6) with a loose light fixture's flickering crackle.
+Edit: 0.90 s, the loudest 100 ms band −24.0 dB, peak −10.8 dBFS, −20.5 LUFS.
+
+### ion-beam-stop-r46-a — "S16-18 Tesla coil sparking and humming.wav" by craigsmith + "Large machine running and powering down" by ryks88
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/craigsmith/sounds/675760/> (S16-18 Tesla coil sparking and humming.wav by craigsmith, CC0 1.0), <https://freesound.org/people/ryks88/sounds/709258/> (Large machine running and powering down by ryks88, CC-BY 4.0). Use: the Ion Beam's collapse when it stops.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a Tesla coil's hum and a large machine gliding down together (1.0 to 0.35).
+Edit: 0.64 s, the loudest 100 ms band −25.5 dB, peak −15.6 dBFS, −21.3 LUFS.
+
+### ion-beam-stop-r46-b — "JacobsLadderLong1.flac" by Halleck + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/Halleck/sounds/19482/> (JacobsLadderLong1.flac by Halleck, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0). Use: the Ion Beam's collapse when it stops.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a Jacob's ladder's arc buzz and a transformer's hum gliding down to nothing.
+Edit: 0.62 s, the loudest 100 ms band −25.9 dB, peak −10.4 dBFS, −21.2 LUFS.
+
+### beam-impact-r46-a — "Arc Welding.wav" by kev_durr
+
+Proposed (round 46).
+Source: <https://freesound.org/people/kev_durr/sounds/396511/> (Arc Welding.wav by kev_durr, CC-BY 4.0). Use: where any beam hits (a loop while it burns).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: arc welding: a dry crackling sizzle over its 120 Hz buzz.
+Edit: seamless 1.50 s loop, band RMS −40.1 dB, peak −5.1 dBFS, −26.2 LUFS.
+
+### beam-impact-r46-b — "MIG Welding" by unfa + "JacobsLadderLong1.flac" by Halleck
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/unfa/sounds/264827/> (MIG Welding by unfa, CC0 1.0), <https://freesound.org/people/Halleck/sounds/19482/> (JacobsLadderLong1.flac by Halleck, CC-BY 4.0). Use: where any beam hits (a loop while it burns).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: MIG welding over a Jacob's ladder's arc buzz slowed to 0.6.
+Edit: seamless 1.50 s loop, band RMS −38.0 dB, peak −10.5 dBFS, −32.5 LUFS.
+
+### drone-rebuild-r46-a — "Rotating tank turret planetary electric motor" by lorefold + "M&P15 Bolt Release [No Ring]" by smill.and.welson
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/lorefold/sounds/607310/> (Rotating tank turret planetary electric motor by lorefold, CC0 1.0), <https://freesound.org/people/smill.and.welson/sounds/858506/> (M&P15 Bolt Release [No Ring] by smill.and.welson, CC-BY 4.0). Use: the Combat Drone rebuilt.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: an electric turret motor whirring up (gliding 0.8 to 1.2) into a rifle bolt's metal clack.
+Edit: 0.60 s, the loudest 100 ms band −25.2 dB, peak −13.1 dBFS, −22.5 LUFS.
+
+### drone-rebuild-r46-b — "Sci-Fi Mechanical Door" by CheatinSloth
+
+Proposed (round 46).
+Source: <https://freesound.org/people/CheatinSloth/sounds/739197/> (Sci-Fi Mechanical Door by CheatinSloth, CC0 1.0). Use: the Combat Drone rebuilt.
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a sci-fi mechanical door's servo and clunk.
+Edit: 0.60 s, the loudest 100 ms band −25.0 dB, peak −10.2 dBFS, −24.0 LUFS.
+
+### launch-rail-r46-a — "Air (or steam) pressure release" by brunoboselli + "Eurofighter Typhoon Flyby 005 – Close Proximity" by TimoSchmied + "Closing large metal door-001" by AudioPapkin + "steam_safety_valve.wav" by Engineer_815
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0), <https://freesound.org/people/TimoSchmied/sounds/640505/> (Eurofighter Typhoon Flyby 005 – Close Proximity by TimoSchmied, CC-BY 4.0), <https://freesound.org/people/AudioPapkin/sounds/814976/> (Closing large metal door-001 by AudioPapkin, CC0 1.0), <https://freesound.org/people/Engineer_815/sounds/493558/> (steam_safety_valve.wav by Engineer_815, CC0 1.0). Use: the catapult run at every level start (the buffer clunk at 3.6 s).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a pressure hiss building and a fighter jet's close pass (the shuttle's run) into a large metal door slamming (the buffer) and a steam safety valve venting.
+Edit: 4.90 s, the loudest 100 ms band −20.9 dB, peak −6.2 dBFS, −20.9 LUFS.
+
+### launch-rail-r46-b — "Hydraulic Hiss, TTC bus door" by OttisG + "Train, Subway, Pass By, Under Bridge Perspective" by Kinoton + "Heavy Gate Metal 01 (underground bunker of civil defense, Vsetin City, Club Vesmir)" by ALEFF-ATMOS + "MrM_Gas_Steam_Escape.wav" by mrmccormack
+
+Proposed (round 46).
+Sources: <https://freesound.org/people/OttisG/sounds/852991/> (Hydraulic Hiss, TTC bus door by OttisG, CC-BY 4.0), <https://freesound.org/people/Kinoton/sounds/368650/> (Train, Subway, Pass By, Under Bridge Perspective by Kinoton, CC0 1.0), <https://freesound.org/people/ALEFF-ATMOS/sounds/452780/> (Heavy Gate Metal 01 (underground bunker of civil defense, Vsetin City, Club Vesmir) by ALEFF-ATMOS, CC0 1.0), <https://freesound.org/people/mrmccormack/sounds/182359/> (MrM_Gas_Steam_Escape.wav by mrmccormack, CC0 1.0). Use: the catapult run at every level start (the buffer clunk at 3.6 s).
+Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a hydraulic hiss, a subway train rushing past under a bridge (the shuttle's run), a bunker's heavy metal gate slamming (the buffer) and gas and steam escaping.
+Edit: 4.90 s, the loudest 100 ms band −20.9 dB, peak −5.6 dBFS, −19.9 LUFS.

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Hangar
@@ -31,14 +31,14 @@ the next level's threat profile are marked.
 │   L2      ███      L2  │   Hornet Launcher 2 000      │ └──────┘  slopes..." │
 │      [Tail Gun L1]     │   Hammer Mortar   1 500 ◆    │ Setting  Mars descent│
 │                        │   Ion Beam   NEW  5 000      │ Layers   ground, air │
-│  GEN  Mk III  14 MW    │ ───────────────────────────  │ From     front 100 % │
+│  GEN  Mk III  16 MW    │ ───────────────────────────  │ From     front 100 % │
 │  SHD  Mk II            │ Hammer Mortar L1             │ Density  ███░░ 3     │
 │  ARM  Comp I  64/80    │ anti-ground, area            │ Hazards  burrowers   │
 │  ENG  Mk I             │ DPS  25 (ground)   Draw 3    │ Boss     none        │
 │  SPC  Airstrike ×2     │ vs fitted: DPS −10 air,      │ Recommend            │
 │  UTL  Sensor L3, Magnet│      +25 ground              │ ◆ forward            │
 │                        │ [BUY 1 500]  [TEST FIRE]     │ ◆ anti-ground        │
-│ POWER ███████████░░ 12.5/14 MW   (+15 % shield regen)                        │
+│ POWER ██████████░░░ 12.5/16 MW   (+35 % shield regen)                        │
 └────────────────────────┴──────────────────────────────┴──────────────────────┘
 ```
 
@@ -133,6 +133,14 @@ sell-back, see [economy](../../systems/economy/README.md#sell-back-and-undo).
 
 Swapping the plating keeps the damage: the missing armour points stay missing (Standard 41/60 →
 Composite I 61/80), with at least 1 point left. Repair is a separate choice.
+
+**Power dial** (the user, 2026-10-21; rules in [player](../../player/README.md#power-budget)): a
+fitted weapon's row offers **POWER −** and **POWER +** next to its other choices. They are free and part
+of the visit's undo; POWER − is refused at L1, POWER + at the bought level and, like an upgrade, when the
+load would exceed the output (`NEEDS x MORE POWER`), and the power bar previews both. A turned-down
+weapon's row shows its DPS and draw at the setting, and its loadout callout shows the setting over the
+bought level (`L3/5`). The replay hangar's refit-only mode offers the dial too (a free refit; stated
+default, pending the user's review).
 
 **Mouse** (M6 part A, see [ui](../README.md#mouse)): hovering a shop row, a choice chip or a
 command of the top bar only gives it the hover look (a cyan outline) and never selects or
@@ -233,6 +241,14 @@ release's end, which writes that autosave.
 - [x] Mouse navigation — M6 part A (`HangarPointer`, `HangarPointerTest`; see *Design*), accepted by the user in concept round 35
 - [x] Slot selection filters the shop; owned/buyable/locked sorting
 - [x] Power bar with projected load and refusal
+- [x] Power dial (the user, 2026-10-21): POWER − / POWER + on a fitted weapon's row (keys and mouse like
+      the other choices, the refusal lines), the row's DPS and draw at the setting, `L3/5` on the
+      loadout callout — content built (`Hangar` `POWER_DOWN` / `POWER_UP`, `Offer.power`; see
+      [player](../../player/README.md#implementation)); the shop in step PD-G: chips `PWR -` / `PWR +` (the
+      full words don't fit beside UPGRADE at the top prices), a second chip row when a row's choices don't fit
+      in one (upgrade and dial above, UNFIT/SELL below), messages "… POWER L2 OF 3", "AT ITS LOWEST POWER",
+      "AT FULL POWER", the detail and test fire at the setting ("TEST FIRE L3>L2"), the replay hangar's refit
+      mode too (`PowerDialShopTest`)
 - [x] Comparison deltas vs the fitted item
 - [x] Test-fire preview box: the selected weapon (at the detail's level, or the next one while
       UPGRADE is highlighted) loops in the real simulation against three dummies in the shop's
@@ -602,3 +618,7 @@ release's end, which writes that autosave.
 - 2026-10-20 (user, round 43, Q.5): the hangar's art moves to `final` for the approved items only (the rear-guard bay's icon, F.d); `art` stays `chosen` for the rest. The user asked "When do we move the remaining hangar and briefing art to final?": an audit step lists the `chosen` items left in `ui/hangar` and `ui/briefing` for the next round.
 - 2026-10-20: the Dust Colossus's intel silhouette (`boss-dust-colossus`) made with the part H batch (`tools/art/intel.py`, step ART-H2) and its review sheet generated for [round 44](../../concept-rounds/round-44/README.md) (F.d); pending the user's review.
 - 2026-10-20 (user, round 44, A.a): the audit approved: `hangar-r07-b` (a layout mockup) moved to `concept/rejected/`; the 22 review sheets and captures of production assets (the Act 1 map and icons sheet, the intel sheets r13-r42, the test-fire and Act 3 hangar captures, the Act 3 icons) marked `final`; the Dust Colossus's intel silhouette (F.d) approved as final; **`art: final`** for the hangar. A later addition needs its own row.
+- 2026-10-21 (the user's Act 3 playthrough: "My big weapons take too much power and I can't lower them. We should
+  add an option to reduce power on fitted weapons to allow rebalancing the weapons on the ship (like more power
+  to the rear)."; decided: A, a free power dial): the shop's POWER − / POWER + choices on a fitted weapon (see
+  *Transactions*); the layout mockup shows the Mk III's new 16 MW.

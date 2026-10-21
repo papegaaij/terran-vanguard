@@ -156,7 +156,7 @@ typical haul (1 800). `tools/balance.py` (`income`) and `BalanceTest` agree. The
 ([balance-plan.yaml](../../player/balance-plan.yaml)) keep the Ion Beam's hand order with each item as
 soon as it is affordable: an EMP charge (L15), the Mk III generator (L16), saving (L17), the beam at L2
 with the Pulse Cannon sold (L18), the beam at L3 (L19), the Tail Gun L3 (L20), Composite III (L21);
-forward DPS 77 · 77 · 77 · 80 · 100 · 100 · 100 against the reference 76 → 100, at most 14 of 14 MW. The
+forward DPS 77 · 77 · 77 · 80 · 100 · 100 · 100 against the reference 76 → 100, at most 14 of 14 MW until L19; since 2026-10-21 the Mk III gives 16 MW and the plan adds a Pickup magnet L1 at the L20 visit (15 of 16 MW). The
 medium sheet's tightest visit is L19 (387 left); it leaves about 1 900 after the L21 visit. On hard the
 beam is refused at L18 (short by about 330 after the repairs), so hard keeps the Pulse Cannon L4 (77
 forward, 0.77× the reference at L21) and banks about 7 100 by the L21 visit (pending the user's review;

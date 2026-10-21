@@ -24,8 +24,13 @@ class ReverseScrollTest {
      * rear wave and a side stream, a Spine Turret and a mortar nest on the ground.
      */
     private static LevelScript mixed(double sign) {
+        return mixed(sign, true);
+    }
+
+    /** As {@link #mixed(double)}, the diving Stinger left out unless {@code diver} (a diver is never flipped). */
+    private static LevelScript mixed(double sign, boolean diver) {
         EnemySpec skitter = TestSpecs.SKITTER;
-        List<WaveSpec> waves = List.of(
+        List<WaveSpec> all = List.of(
                 TestSpecs.wave(3, WaveSpec.Formation.V_WING, skitter, 5, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE),
                 TestSpecs.wave(
                         4,
@@ -55,6 +60,9 @@ class ReverseScrollTest {
                 TestSpecs.wave(
                         11, WaveSpec.Formation.LINE_ABREAST, skitter, 3, WaveSpec.Entry.REAR, WaveSpec.Edge.NONE),
                 stream(12, skitter, WaveSpec.Edge.LEFT));
+        List<WaveSpec> waves = all.stream()
+                .filter(wave -> diver || wave.enemy().dive().isEmpty())
+                .toList();
         return LevelScript.builder(4, 1)
                 .sections(List.of(new Section(14, sign * 130), new Section(40, sign * 160, false, 2, 1.5)))
                 .waves(waves)
@@ -72,9 +80,10 @@ class ReverseScrollTest {
     @Test
     void aReversedLevelFliesEveryUnitMirrored() {
         // Every speed negated and the ship's input mirrored (it holds the bottom edge going forward, the top one going
-        // back), guns cold: every unit flies the same course top to bottom mirrored.
-        Sortie forward = untouchable(mixed(1));
-        Sortie back = untouchable(mixed(-1));
+        // back), guns cold: every unit flies the same course top to bottom mirrored. The Stinger is left out: a diver
+        // is never flipped (aDiverEntersFromTheTopInAReversedScroll).
+        Sortie forward = untouchable(mixed(1, false));
+        Sortie back = untouchable(mixed(-1, false));
         int seen = 0;
         int flippedSeen = 0;
         java.util.Set<String> kinds = new java.util.HashSet<>();
@@ -119,7 +128,6 @@ class ReverseScrollTest {
                 java.util.Set.of(
                         "skitter",
                         "needler",
-                        "stinger",
                         "dust-kite",
                         BurrowTest.burrower().slug(),
                         "dust-devil",
@@ -232,6 +240,39 @@ class ReverseScrollTest {
         assertTrue(secondY < 0, "after it: in at the bottom: " + secondY);
         assertEquals(-GroundAndDiveTest.TURRET.hitbox().height() / 2 + 120 * SimStep.SECONDS, turretY, 1e-6);
         assertTrue(turretLast > turretY + 100, "the turret rides the ground up the screen: " + turretLast);
+    }
+
+    @Test
+    void aDiverEntersFromTheTopInAReversedScroll() {
+        // 2026-10-21 (user): "when flying backwards, the stingers should still enter from the top." A diver is never
+        // flipped: after the turn it comes in at the top edge and dives down the screen at the ship, as going forward.
+        WaveSpec stinger = TestSpecs.wave(
+                25, WaveSpec.Formation.SINGLE, GroundAndDiveTest.STINGER, 1, WaveSpec.Entry.FRONT, WaveSpec.Edge.NONE);
+        Sortie sortie = untouchable(turnabout(List.of(stinger), List.of()));
+        double firstY = Double.NaN;
+        double lowest = Double.POSITIVE_INFINITY;
+        boolean fired = false;
+        for (int tick = 0; tick < SimStep.ticks(32); tick++) {
+            // The ship sidesteps once the Stinger has paused (as in GroundAndDiveTest), so its fan has room.
+            sortie.step(sortie.levelSeconds() > 27.2 ? Command.RIGHT.bit() : Command.NONE);
+            assertTrue(sortie.reversed() || sortie.levelSeconds() < 23, "the scroll runs reversed from ≈ 22.2 s");
+            fired |= sortie.events().count(SimEvents.Type.ENEMY_FIRED) > 0;
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy unit = sortie.enemy(i);
+                assertEquals("stinger", unit.spec().slug());
+                assertFalse(unit.flipped(), "a diver is never flipped");
+                if (Double.isNaN(firstY)) {
+                    firstY = unit.y();
+                }
+                lowest = Math.min(lowest, unit.y());
+            }
+        }
+        assertTrue(firstY > PlayField.HEIGHT, "in at the top: " + firstY);
+        assertTrue(lowest < PlayField.HEIGHT / 2.0, "it dived down the screen: " + lowest);
+        assertTrue(fired, "its fan in the dive");
+        // Its warning is a forward level's: a front diver warns no edge, its warning time or not (no BOTTOM lesson).
+        assertEquals(0, warningsAt(turnabout(List.of(stinger), List.of()), 24.5));
+        assertEquals(0, warningsAt(turnabout(List.of(withWarning(stinger, 4)), List.of()), 23));
     }
 
     @Test

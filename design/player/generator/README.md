@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Generator
@@ -22,7 +22,7 @@ in [player](../README.md#power-budget).
 |---|---|---|---|
 | Mk I "Spark" | 8 MW | starter | start |
 | Mk II "Arc" | 11 MW | 1 500 | act 1 |
-| Mk III "Fusion" | 14 MW | 4 000 | act 2 |
+| Mk III "Fusion" | 16 MW | 4 000 | act 2 |
 | Mk IV "Tokamak" | 18 MW | 9 000 | act 4 |
 | Mk V "Helix" | 22 MW | 18 000 | act 5 (Helix Dynamics tech, captured) |
 | Mk VI "Choir Core" | 27 MW | 32 000 | act 7 (Vrell tech) |
@@ -80,3 +80,12 @@ shield regeneration or lowers fire rate. It is a reward, not a risk.
 - 2026-10-02: M4 part A: the spare-power bonus applies in flight (`SimSpecs.regenBonus` on the shield's regen, from `spare_power` in the data) and shows on the HUD's power row.
 - 2026-10-05: M4 part H docs reconciliation: implementation `done`; every item is ticked (the spare-power bonus since M4 part A).
 - 2026-10-20 (user, round 44, X.k): **`art: n/a`**: the part has only the shop's icons, made with the shop (`tools/art/icons.py`), and no assets of its own.
+- 2026-10-21 (the user's Act 3 playthrough: "I can't retrofit some of the other weapons, nor can I buy
+  new things because my ship does not have enough power. I've fitted the gen 3 generator."; decided: more
+  generator room in Act 3, measured): the **Mk III "Fusion" gives 16 MW** (was 14). 15 and 16 MW were
+  measured on the balance plan (`ActPlaythroughTest`, `BalanceTest`, `tools/balance.py`,
+  `:content:levelReport` for Levels 15–21): both leave the Act 3 credits and fights the same (easy +2.8 %,
+  medium −2.4 % against the expert's bound; hard's accepted exception about −54 %), so 16 is taken: it fits
+  Act 3's own items (Shield Mk III, a module, the Evasive thrusters' 2 MW) next to the Ion Beam L3, where
+  15 fits one 1-MW item only. The Mk IV's 18 MW (Act 4) is a smaller step now; to revisit when Act 4 is
+  designed (pending the user's review). The weapons' [power dial](../README.md#power-budget) came with it.

@@ -19,8 +19,9 @@ import vanguard.sim.SimStep;
 /**
  * The shop drawer's test-fire box (design/ui/hangar, Test fire), below the selected item: while a
  * weapon is selected it loops a {@link TestFire} of it in the slot being shopped, at the level the
- * detail shows, or at the next one while its UPGRADE choice is highlighted (what the purchase would
- * give), and starts over whenever that changes. The box is the play field turned a quarter
+ * detail shows (a turned-down weapon's power setting), or at the next one while its UPGRADE choice is highlighted
+ * (what the purchase would give) and one step down or up while the power dial's choice is, and starts over whenever
+ * that changes. The box is the play field turned a quarter
  * ({@link TestFireView}): the ship faces right; one of Rook's guns fires from his craft. Other items
  * show what the box is for.
  */
@@ -60,6 +61,9 @@ final class TestFirePanel {
 
     private String selectedItem = "";
     private String label = "TEST FIRE";
+    /** The level the label's row flies at now (its power setting), 0 for no row. */
+    private int labelFrom;
+
     private Color labelColour = Glass.DIM;
 
     /** The label's dark backing over the loop. */
@@ -80,9 +84,13 @@ final class TestFirePanel {
         Optional<TestFire.Shown> wanted = offer.flatMap(
                 selected -> TestFire.of(content, state.slot(), selected.item().id(), level(state, selected)));
         String item = offer.map(selected -> selected.item().id()).orElse("");
+        int from = offer.map(Offer::power).orElse(0);
         if (!wanted.equals(shown) || !item.equals(selectedItem)) {
-            select(wanted, upgrading(state));
+            select(wanted, from);
             selectedItem = item;
+        } else if (from != labelFrom && wanted.isPresent()) {
+            label = label(from, wanted.get().level());
+            labelFrom = from;
         }
         if (fire == null) {
             return;
@@ -96,13 +104,14 @@ final class TestFirePanel {
         }
     }
 
-    private void select(Optional<TestFire.Shown> wanted, boolean upgrade) {
+    private void select(Optional<TestFire.Shown> wanted, int from) {
         shown = wanted;
+        labelFrom = from;
         if (wanted.isPresent()) {
             TestFire.Shown weapon = wanted.get();
             fire = new TestFire(content, weapon);
             view.show(fire.sortie(), weapon.level(), weapon.escortGun().isPresent());
-            label = label(weapon.level(), upgrade);
+            label = label(from, weapon.level());
             labelColour = Glass.AMBER;
             return;
         }
@@ -112,19 +121,28 @@ final class TestFirePanel {
     }
 
     /**
-     * The label over a weapon's loop, short (it hides the rear of the ship's left): "TEST FIRE L2",
-     * or "TEST FIRE L1>L2" while the upgrade is highlighted.
+     * The label over a weapon's loop, short (it hides the rear of the ship's left): "TEST FIRE L2", or "TEST FIRE
+     * L1>L2" while a choice that changes the level it flies at is highlighted: the upgrade, or the power dial's
+     * {@code POWER -} / {@code POWER +} ("TEST FIRE L3>L2").
+     *
+     * @param from the level the row flies at now (its power setting)
+     * @param level the level the box shows
      */
-    static String label(int level, boolean upgrade) {
-        return "TEST FIRE " + (upgrade ? "L" + (level - 1) + ">" : "") + "L" + level;
+    static String label(int from, int level) {
+        return "TEST FIRE " + (from != level && from > 0 ? "L" + from + ">" : "") + "L" + level;
     }
 
     /**
-     * The level the box shows for a row: the level the detail shows, or the next one while the row's
-     * UPGRADE choice is highlighted (and not refused for the top level).
+     * The level the box shows for a row: the level it flies at (its power setting, the detail's level at full
+     * power), the one the upgrade gives while the row's UPGRADE choice is highlighted (and not refused for the top
+     * level; a turned-down weapon keeps its setting), or the setting one step down or up while the power dial's
+     * choice is (and not refused at its end).
      */
     static int level(HangarState state, Offer offer) {
-        return offer.level() + (upgrading(state) ? 1 : 0);
+        if (upgrading(state)) {
+            return offer.owned().map(owned -> owned.upgraded().power()).orElse(offer.level() + 1);
+        }
+        return offer.power() + dialling(state);
     }
 
     /** Whether the highlighted choice (or the one the pointer rests on) is an upgrade that has a next level. */
@@ -136,6 +154,27 @@ final class TestFirePanel {
         return choice.isPresent()
                 && choice.get().action() == Action.UPGRADE
                 && !choice.get().refusal().filter(Refusal.MAX_LEVEL::equals).isPresent();
+    }
+
+    /**
+     * The power dial's step the highlighted choice (or the one under the pointer) previews: -1 for {@code POWER
+     * -}, +1 for {@code POWER +} (also when the power budget refuses it, as an upgrade's preview), 0 otherwise or at
+     * the dial's end.
+     */
+    static int dialling(HangarState state) {
+        if (state.focus() != HangarState.Focus.SHOP) {
+            return 0;
+        }
+        Optional<Choice> choice = state.previewChoice();
+        if (choice.isEmpty()) {
+            return 0;
+        }
+        Optional<Refusal> refusal = choice.get().refusal();
+        return switch (choice.get().action()) {
+            case POWER_DOWN -> refusal.filter(Refusal.MIN_POWER::equals).isPresent() ? 0 : -1;
+            case POWER_UP -> refusal.filter(Refusal.FULL_POWER::equals).isPresent() ? 0 : 1;
+            default -> 0;
+        };
     }
 
     void draw(SpriteBatch batch) {

@@ -9,6 +9,8 @@ dependencies {
     api(platform(libs.jackson.bom))
     // The data records carry Jackson's annotations, so their users compile against them too.
     api(libs.jackson.annotations)
+    // Fitted reads a save through a databind builder (@JsonDeserialize), so its users compile against that too.
+    compileOnlyApi("tools.jackson.core:jackson-databind")
     implementation(libs.jackson.yaml)
     testImplementation(testFixtures(project(":sim")))
 }

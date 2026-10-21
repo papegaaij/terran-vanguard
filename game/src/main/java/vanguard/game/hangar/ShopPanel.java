@@ -307,8 +307,30 @@ final class ShopPanel {
         return item.maxLevel() > 1 ? "L" + level : "";
     }
 
+    /**
+     * The power dial (2026-10-21): an owned item's level with its power setting, {@code L3/5} while it is turned
+     * down below its bought level 5, else {@code L5}.
+     */
+    static String setting(Offer offer) {
+        return setting(offer.power(), offer.level());
+    }
+
+    /** A power setting over a bought level: {@code L3/5}, or {@code L5} at full power. */
+    static String setting(int power, int level) {
+        return power < level ? "L" + power + "/" + level : "L" + level;
+    }
+
+    /** The detail heading's level: {@link #setting(Offer)}; empty for an item without levels. */
+    static String level(Offer offer) {
+        return offer.item().maxLevel() > 1 ? setting(offer) : "";
+    }
+
+    /**
+     * A row's status on its right: {@code L3 FITTED}, {@code L2 OWNED}, the price or {@code LOCKED L20}; a weapon
+     * turned down by the power dial shows its setting over its level, {@code L3/5 FITTED}.
+     */
     static String status(Offer offer) {
-        String level = offer.item().maxLevel() > 1 ? "L" + offer.level() + " " : "";
+        String level = offer.item().maxLevel() > 1 ? setting(offer) + " " : "";
         return switch (offer.state()) {
             case FITTED -> offer.item().kind() == ItemKind.SPECIAL ? "FITTED" : level + "FITTED";
             case OWNED -> level + "OWNED";
@@ -322,8 +344,7 @@ final class ShopPanel {
         Item item = offer.item();
         TextureRegion icon = icons.of(item).large();
         drawIcon(batch, icon, RIGHT - icon.getRegionWidth(), y - 6, offer.state() == State.LOCKED);
-        String heading = Names.heading(
-                item.name(), level(item, offer.level()), headingChars(Fonts.width(glass.fonts.body, "M")));
+        String heading = Names.heading(item.name(), level(offer), headingChars(Fonts.width(glass.fonts.body, "M")));
         glass.shadowed(batch, glass.fonts.body, heading, Glass.AMBER, INNER, y);
         int traitX = INNER;
         for (String trait : item.traits()) {
@@ -332,7 +353,8 @@ final class ShopPanel {
             traitX += Fonts.width(glass.fonts.label, text) + 8;
         }
         int line = statsY(item);
-        Map<Stat, Double> stats = item.stats(offer.level());
+        // The power dial: a turned-down weapon's numbers are its setting's.
+        Map<Stat, Double> stats = item.stats(offer.power());
         Optional<Item> fitted = state.hangar().fitted(state.slot());
         StringBuilder numbers = new StringBuilder();
         stats.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(stat -> numbers.append(
@@ -344,16 +366,20 @@ final class ShopPanel {
         catalogue.cooldown(item).ifPresent(seconds -> numbers.append("COOLDOWN ")
                 .append(Names.number(seconds))
                 .append(" S   "));
-        numbers.append("DRAW ").append(Names.megawatts(item.draw(offer.level())));
+        numbers.append("DRAW ").append(Names.megawatts(item.draw(offer.power())));
         glass.shadowed(batch, glass.fonts.label, numbers.toString(), Glass.WHITE, INNER, line);
         List<Delta> deltas = offer.state() != State.FITTED && fitted.isPresent()
-                ? deltas(item, offer.level(), fitted.get(), fittedLevel(state))
+                ? deltas(item, offer.power(), fitted.get(), fittedLevel(state))
                 : List.of();
         if (!deltas.isEmpty()) {
             drawDeltas(batch, deltas, line + 14);
-        } else if (fullRefund(offer)) {
+        } else if (fullRefund(offer) && chipRows(offer) == 1) {
             // M7 part A (round 37, R.4 e): a sale of what this visit bought returns all it cost.
             glass.shadowed(batch, glass.fonts.label, FULL_REFUND, Glass.LABEL, INNER, line + 14);
+        } else if (fullRefund(offer)) {
+            // The power dial's two rows of chips take that line: the note's short form follows the last chip.
+            Box note = refundNote(offer);
+            glass.shadowed(batch, glass.fonts.label, SHORT_REFUND, Glass.LABEL, note.x(), note.y());
         }
         if (!flies(state.slot(), item)) {
             glass.shadowed(batch, glass.fonts.label, "NOT YET IN FLIGHT", Glass.DIM, INNER, line + 28);
@@ -366,9 +392,10 @@ final class ShopPanel {
         drawChoices(batch, state, offer);
     }
 
+    /** The level the fitted item flies at, its power setting: what the {@code VS FITTED:} line compares with. */
     private static int fittedLevel(HangarState state) {
         Fitted fitted = state.hangar().campaign().loadout().get(state.slot());
-        return fitted == null ? 1 : fitted.level();
+        return fitted == null ? 1 : fitted.power();
     }
 
     private boolean flies(LoadoutSlot slot, Item item) {
@@ -377,6 +404,9 @@ final class ShopPanel {
 
     /** M7 part A: what the detail says of a sale of an item this visit bought (its full price comes back). */
     static final String FULL_REFUND = "BOUGHT THIS VISIT: FULL REFUND";
+
+    /** {@link #FULL_REFUND} beside the chips, when the power dial's two rows of chips take its line. */
+    static final String SHORT_REFUND = "FULL REFUND";
 
     /** One stat's change against the fitted item, as the {@code VS FITTED:} line shows it. */
     record Delta(String text, boolean better) {}
@@ -472,17 +502,75 @@ final class ShopPanel {
         return DETAIL_Y + (item.traits().isEmpty() ? 24 : 40);
     }
 
-    /** A choice's chip under the detail of a row that is not locked, as wide as its label. */
+    /**
+     * A choice's chip under the detail of a row that is not locked, as wide as its label. The chips sit in one row;
+     * when they do not fit it (a fitted weapon's power dial makes five), in two: the upgrade and the dial ({@code
+     * PWR -}, {@code PWR +}) above, the rest below in the one row's place, so left / right still run through them in
+     * reading order.
+     */
     static Box choiceChip(Offer offer, int index) {
+        int[] rows = chipRows(offer.choices());
+        int count = rows.length == 0 ? 1 : rows[rows.length - 1] + 1;
         float x = INNER;
         for (int i = 0; i < index; i++) {
-            x += chipWidth(choiceLabel(offer.choices().get(i))) + 6;
+            x = rows[i + 1] == rows[i]
+                    ? x + chipWidth(choiceLabel(offer.choices().get(i))) + 6
+                    : INNER;
         }
         return new Box(
                 x,
-                statsY(offer.item()) + 44,
+                statsY(offer.item()) + 44 - (count - 1 - rows[index]) * CHIP_ROW,
                 chipWidth(choiceLabel(offer.choices().get(index))),
                 20);
+    }
+
+    /** The second row of chips sits this far above the first. */
+    static final int CHIP_ROW = 24;
+
+    /** How many rows the row's chips take: 1, or 2 when they do not fit one. */
+    static int chipRows(Offer offer) {
+        int[] rows = chipRows(offer.choices());
+        return rows.length == 0 ? 1 : rows[rows.length - 1] + 1;
+    }
+
+    /**
+     * Each choice's row of chips, from 0: all 0 when they fit the drawer's width; otherwise the row breaks after the
+     * power dial's {@code PWR +} (or, without a dial, before the first chip past the drawer's edge).
+     */
+    static int[] chipRows(List<Choice> choices) {
+        int[] rows = new int[choices.size()];
+        int width = -6;
+        for (Choice choice : choices) {
+            width += chipWidth(choiceLabel(choice)) + 6;
+        }
+        if (width <= RIGHT - INNER) {
+            return rows;
+        }
+        int dial = -1;
+        for (int i = 0; i < choices.size(); i++) {
+            if (choices.get(i).action() == Hangar.Action.POWER_UP) {
+                dial = i;
+            }
+        }
+        int row = 0;
+        float x = INNER;
+        for (int i = 0; i < choices.size(); i++) {
+            int chip = chipWidth(choiceLabel(choices.get(i)));
+            boolean wrap = dial >= 0 ? i == dial + 1 : i > 0 && x + chip > RIGHT;
+            if (wrap) {
+                row++;
+                x = INNER;
+            }
+            rows[i] = row;
+            x += chip + 6;
+        }
+        return rows;
+    }
+
+    /** Where {@link #SHORT_REFUND} is written: after the last chip, on its row. */
+    static Box refundNote(Offer offer) {
+        Box last = choiceChip(offer, offer.choices().size() - 1);
+        return new Box(last.x() + last.width() + 8, last.y() + 4, SHORT_REFUND.length() * Fonts.LABEL_CELL, 12);
     }
 
     /** The side row's {@code LEFT} or {@code RIGHT} chip. */
@@ -501,6 +589,11 @@ final class ShopPanel {
         return label.length() * Fonts.LABEL_CELL + 14;
     }
 
+    /** The power dial's chips (2026-10-21), short so that they fit beside the upgrade's. */
+    static final String POWER_DOWN = "PWR -";
+
+    static final String POWER_UP = "PWR +";
+
     /** A choice's chip: the action and its credits, without "CR" so three chips fit the drawer. */
     static String choiceLabel(Choice choice) {
         String credits = Names.grouped(Math.abs(choice.credits()));
@@ -512,6 +605,8 @@ final class ShopPanel {
             case UNFIT -> "UNFIT";
             case SELL -> "SELL " + credits;
             case BUY_CHARGE -> "CHARGE " + credits;
+            case POWER_DOWN -> POWER_DOWN;
+            case POWER_UP -> POWER_UP;
         };
     }
 

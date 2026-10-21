@@ -68,7 +68,7 @@ the top.
 | Field | Value |
 |---|---|
 | Dominant layers | `air` (popcorn, Needler and Stinger groups, the pursuit swarm, Wraiths), `ground` (Burrowers, Dust Devils, turret and mortar nests) |
-| Attack directions | front 63% · sides 3% · rear 34% (by travel: front = ahead, the bottom edge once reversed; rear = behind, the top) |
+| Attack directions | front 57% · sides 3% · rear 40% (by travel: front = ahead, the bottom edge once reversed; rear = behind, the top) |
 | Density | 4 |
 | Recommended traits | `rear`, `homing` |
 | Hazards | Reverse scroll from t≈22: the ground moves up the screen; a pursuing swarm lunging from the top |
@@ -139,7 +139,10 @@ The rules for a section with a negative speed (new in part G), for review:
   and its route is mirrored vertically: a Dust Kite glides up the screen and swoops across the ship's
   lane from below, a Burrower surfaces a short way below the ship, ground targets and scenery rise
   from the bottom with the terrain. "Rear" by travel is the **top** edge. The sprites are not mirrored
-  (the light stays top-left); units with 16 or 32 angles face their travel.
+  (the light stays top-left); units with 16 or 32 angles face their travel. **Not flipped** (they fly by
+  the screen): armoured walkers, segment chains, the pursuits and **divers** (the Stinger, 2026-10-21): a
+  Stinger enters from the top and dives down at the ship as in a forward level, into the front guns; a
+  front one is unwarned, as going forward ("behind" by travel in the shares).
 - **Fixed-facing ground units** turn their arcs with the travel (a Spine Turret's silence arc points
   down by travel, so it fires up at the ship while it rises toward it and falls silent once past:
   the same `arc` placement parameter as Level 19's up-facing nests).
@@ -243,7 +246,7 @@ the screen edges with their meaning by travel.
   48.5/79/141.5, the nests at 42/85/140, the mortars at 60/100, the cache, the patch and every radio
   beat). **Eight bottom popcorn threes became firing threes** (Needler line abreasts at t=40, 63, 94.5,
   137.5; Stinger V-wings at 56.5, 75, 129.5, 154): at 24/36 HP against the rear guns they stay 2–4 s and
-  fire. **Three spine nests ×3 were added** (t≈66 on the basin floor, ≈96 on a terrace step, ≈155 on the
+  fire (the Stingers since 2026-10-21 from the top, into the front guns: divers are not flipped). **Three spine nests ×3 were added** (t≈66 on the basin floor, ≈96 on a terrace step, ≈155 on the
   rim road), so ground rises during each pursuit. Hard: the extra Wraith pair; easy thinned by the
   formation lever.
 - **Step G4's tuning** (`levelReport -Plevel=20`, the plan's fit, the autopilot's retreat play; two
@@ -263,8 +266,9 @@ the screen edges with their meaning by travel.
   (step G4: six flocks of 3 at t=110.5–123, in place of the approved pairs and three) never fire (Level
   19's crawl trick), so the Act 2 rule holds without an exception and Rook's line still plays over a
   nearly empty middle.
-- Ahead (by travel) ≈ 84 % of the waves (81 % of those after the turn) and ≈ 63 % of the enemies (the
-  threat profile's split counts the enemies).
+- Ahead (by travel) ≈ 74 % of the waves (69 % of those after the turn) and ≈ 57 % of the enemies (the
+  threat profile's split counts the enemies); the Stingers after the turn come in at the top since
+  2026-10-21 and count as behind (before: 84 %, 81 % and 63 %).
 - The t=20.5 vanguard Skitters stream in 0.6 s apart, so all three enter before the turnabout's zero
   (≈ 22.1): a unit that spawns once the travel is reversed enters from the bottom.
 
@@ -289,12 +293,12 @@ the screen edges with their meaning by travel.
 | 44 | 3 | pack | [Dust Devil](../../../enemies/ground/dust-devil/README.md) | 2 | bottom (ahead) | Their pull with the swarm above; act HP factor |
 | 48.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | |
 | 52.5 | 3 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 2 | bottom (ahead) | |
-| 56.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved kite stream |
+| 56.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | top (a diver, not flipped) | A firing pair in place of the approved kite stream |
 | 59 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | Cloaked inside the swarm; no edge warning (a Wraith's re-entry; Rook's line at t=56); act HP factor |
 | 63 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved kite snake |
 | 67 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | bottom (ahead, alternating edges) | Over the floor nest (t≈66) |
-| 71 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | bottom (ahead) | Up the first terrace; the leader drops an overdrive |
-| 75 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved kite stream |
+| 71 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | top (a diver, not flipped) | Up the first terrace; the leader drops an overdrive |
+| 75 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | top (a diver, not flipped) | A firing pair in place of the approved kite stream |
 | 79 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | |
 | 80 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | Hard only: an extra Wraith pair, no edge warning (a Wraith's re-entry) |
 | 83 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead, right) | Over the terrace nest (t≈85) |
@@ -312,13 +316,13 @@ the screen edges with their meaning by travel.
 | 123 | 5 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead) | |
 | 124 | 6 | pursuit | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 10 + 3 × 3 | top (behind) | **Pursuit 2**: TOP warning from t=121; refills at t=134, 144, 154; breaks off at t=163 |
 | 125.5 | 6 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead, alternating edges) | |
-| 129.5 | 6 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved Skitter snake |
+| 129.5 | 6 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | top (a diver, not flipped) | A firing pair in place of the approved Skitter snake |
 | 133.5 | 6 | pack | [Dust Devil](../../../enemies/ground/dust-devil/README.md) | 2 | bottom (ahead) | On the road's switchback; the last one drops a shield cell |
 | 137.5 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | Over the road nest (t≈140); a firing pair in place of the approved kite V-wing |
 | 141.5 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | |
 | 146.5 | 6 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | No edge warning (a Wraith's re-entry; Rook's line at t=143.5) |
 | 150 | 6 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 2 | bottom (ahead) | In the road's drifts |
-| 154 | 6 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | Over the last road nest (t≈155); a firing pair in place of the approved kite snake |
+| 154 | 6 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | top (a diver, not flipped) | Over the last road nest (t≈155); a firing pair in place of the approved kite snake |
 | 157.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | bottom (ahead, alternating edges) | |
 | 161 | 7 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead, alternating edges) | The rim guns open fire at t=160 |
 | 164.5 | 7 | V-wing | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead) | The last wave |
@@ -624,3 +628,12 @@ plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-
   removed and their notes say "no edge warning" (a rear ambush's pop-up never warns: `WaveSchedule`); the pursuits'
   `easy: {warning: 4}` stays (it drives their TOP warning). The L3 wave strip marks the ridge pass (12–20 s), the
   `ridge` key's `t` to `t + seconds` (round 44 Q.8 d, `Intel`'s `RIDGE` mark; drawn by the game's intel panel).
+- 2026-10-21 (step SF, the user's Act 3 playthrough): "stingers flying backwards look strange. I think when flying
+  backwards, the stingers should still enter from the top." A diver (an enemy with a `movement.dive`: only the
+  Stinger) is no longer flipped in a reversed scroll (`WaveSchedule.flips`): the V-wings at t=56.5, 71, 75, 129.5
+  and 154 enter from the top and dive down at the ship as in a forward level, their warning a forward level's (a
+  front wave: none). The wave table reads "top (a diver, not flipped)" and the shares count them behind by travel
+  (enemies ahead 63 → 57 %, waves after the turn 81 → 69 %, still over the 60 % rule). Measured after
+  (`levelReport -Plevel=20`, the test fit): medium 197 enemies, 3.43 on the screen, 33.8 shots a minute, no gap
+  over 2 s, typical haul 2,525 vs 2,532 (−0.3 %), a small unit 3.57 s on the screen = 2.23× Level 10's (≤ 2.6);
+  easy one gap of 2.2 s (rule: none over 3 s), hard none; the autopilot wins 3/3 on every difficulty, no retry.

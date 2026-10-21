@@ -38,7 +38,11 @@ import vanguard.sim.WingmanSpec;
  *
  * <p>The power load is the sum of the fitted items' draws and may not exceed the generator's
  * output (a loadout already over it may make changes that do not widen the gap); the front gun and
- * the core parts are always fitted. A plating swap keeps the damage: the
+ * the core parts are always fitted. The power dial (the user, 2026-10-21): a fitted weapon's
+ * {@link Action#POWER_DOWN} and {@link Action#POWER_UP} turn its power setting ({@link Fitted#power}) down to 1
+ * and up to its bought level, for free and as part of the visit's undo; the weapon draws and flies at its setting,
+ * raising it checks the load like an upgrade, and an upgrade of a weapon at full power raises the setting with
+ * it (a turned-down one keeps its setting). A plating swap keeps the damage: the
  * missing armour points stay missing (at least 1 point is left).
  */
 public final class Hangar {
@@ -59,7 +63,17 @@ public final class Hangar {
         FIT,
         UNFIT,
         SELL,
-        BUY_CHARGE
+        BUY_CHARGE,
+        /**
+         * The power dial (the user, 2026-10-21): a fitted weapon flies and draws one level lower, for free; refused
+         * at setting 1 ({@link Refusal#MIN_POWER}).
+         */
+        POWER_DOWN,
+        /**
+         * The power dial: a turned-down weapon one level higher again, for free, up to its bought level ({@link
+         * Refusal#FULL_POWER}); the load is checked like an upgrade's ({@link Refusal#POWER}).
+         */
+        POWER_UP
     }
 
     /** Why a choice cannot be made. */
@@ -69,7 +83,11 @@ public final class Hangar {
         POWER,
         MAX_LEVEL,
         /** The special carries its most charges. */
-        FULL
+        FULL,
+        /** The power dial: the weapon is at setting 1. */
+        MIN_POWER,
+        /** The power dial: the weapon is at its bought level. */
+        FULL_POWER
     }
 
     /** M7 part A: why a utility bay cannot be bought or sold. */
@@ -116,7 +134,7 @@ public final class Hangar {
      * A shop row for a slot.
      *
      * @param level the owned level (1 for a buyable or locked item)
-     * @param owned the owned item this row stands for; empty for a buyable or locked item
+     * @param owned the owned item this row stands for (with its power setting); empty for a buyable or locked item
      * @param bought the owned item was bought during this visit, so it sells for all spent on it
      * @param isNew in the shop since the visit before
      */
@@ -134,6 +152,14 @@ public final class Hangar {
 
         public Optional<Choice> choice(Action action) {
             return choices.stream().filter(choice -> choice.action() == action).findFirst();
+        }
+
+        /**
+         * The power setting the owned item flies at (the power dial), its level when at full power; the level for a
+         * buyable or locked item. The shop's numbers for the row are {@code item().stats(power())}.
+         */
+        public int power() {
+            return owned.map(Fitted::power).orElse(level);
         }
     }
 
@@ -168,7 +194,7 @@ public final class Hangar {
         return catalogue.item(kind, fitted.item());
     }
 
-    /** The fitted items' draw, MW. */
+    /** The fitted items' draw at their power settings, MW. */
     public double load() {
         return load(campaign.gear().loadout());
     }
@@ -176,7 +202,7 @@ public final class Hangar {
     private double load(Map<LoadoutSlot, Fitted> loadout) {
         return loadout.entrySet().stream()
                 .mapToDouble(entry -> item(entry.getKey().kind(), entry.getValue())
-                        .draw(entry.getValue().level()))
+                        .draw(entry.getValue().power()))
                 .sum();
     }
 
@@ -379,7 +405,7 @@ public final class Hangar {
                             isBought,
                             false,
                             List.of(
-                                    fitChoice(slot, special, 1),
+                                    fitChoice(slot, new Fitted(special.id(), 1)),
                                     special.cooldownSpecial()
                                             ? sellChoice(special, 1, 0, isBought)
                                             : chargeChoice(special))));
@@ -399,7 +425,7 @@ public final class Hangar {
                     Optional.of(owned),
                     isBought,
                     false,
-                    List.of(fitChoice(slot, item, owned.level()), sellChoice(item, owned.level(), 0, isBought))));
+                    List.of(fitChoice(slot, owned), sellChoice(item, owned.level(), 0, isBought))));
             listed.add(owned.item());
         }
         catalogue.items(kind).stream()
@@ -438,23 +464,47 @@ public final class Hangar {
         } else if (kind == ItemKind.SPECIAL) {
             choices.add(chargeChoice(item));
         } else if (item.maxLevel() > 1) {
-            choices.add(upgradeChoice(item, fitted.level()));
+            choices.add(upgradeChoice(item, fitted));
+        }
+        if (kind.weapon()) {
+            choices.add(powerDownChoice(item, fitted));
+            choices.add(powerUpChoice(item, fitted));
         }
         if (kind.optional() && kind != ItemKind.SPECIAL) {
-            double draw = item.draw(fitted.level());
+            double draw = item.draw(fitted.power());
             choices.add(new Choice(Action.UNFIT, 0, load() - draw, output(), false, Optional.empty()));
             choices.add(sellChoice(item, fitted.level(), draw, isBought));
         }
         return new Offer(item, State.FITTED, fitted.level(), Optional.of(fitted), isBought, false, choices);
     }
 
-    private Choice upgradeChoice(Item item, int level) {
+    private Choice upgradeChoice(Item item, Fitted fitted) {
+        int level = fitted.level();
         if (level >= item.maxLevel()) {
             return new Choice(Action.UPGRADE, 0, load(), output(), true, Optional.of(Refusal.MAX_LEVEL));
         }
         int cost = item.upgradeCost(level);
-        double load = load() - item.draw(level) + item.draw(level + 1);
+        double load =
+                load() - item.draw(fitted.power()) + item.draw(fitted.upgraded().power());
         return new Choice(Action.UPGRADE, cost, load, output(), true, refusal(cost, load, output()));
+    }
+
+    /** The power dial one step down: free, never over the budget (it draws less). */
+    private Choice powerDownChoice(Item item, Fitted fitted) {
+        if (fitted.power() <= 1) {
+            return new Choice(Action.POWER_DOWN, 0, load(), output(), true, Optional.of(Refusal.MIN_POWER));
+        }
+        double load = load() - item.draw(fitted.power()) + item.draw(fitted.power() - 1);
+        return new Choice(Action.POWER_DOWN, 0, load, output(), true, Optional.empty());
+    }
+
+    /** The power dial one step up: free, up to the bought level, and only when the load stays within the output. */
+    private Choice powerUpChoice(Item item, Fitted fitted) {
+        if (fitted.fullPower()) {
+            return new Choice(Action.POWER_UP, 0, load(), output(), true, Optional.of(Refusal.FULL_POWER));
+        }
+        double load = load() - item.draw(fitted.power()) + item.draw(fitted.power() + 1);
+        return new Choice(Action.POWER_UP, 0, load, output(), true, refusal(0, load, output()));
     }
 
     private Choice buyChoice(LoadoutSlot slot, Item item) {
@@ -473,8 +523,9 @@ public final class Hangar {
         return new Choice(Action.BUY, special.price(), load(), output(), true, refusal);
     }
 
-    private Choice fitChoice(LoadoutSlot slot, Item item, int level) {
-        Map<LoadoutSlot, Fitted> fitted = withFitted(slot, new Fitted(item.id(), level));
+    /** Fitting an owned item at its level and power setting. */
+    private Choice fitChoice(LoadoutSlot slot, Fitted owned) {
+        Map<LoadoutSlot, Fitted> fitted = withFitted(slot, owned);
         double load = load(fitted);
         double output = output(fitted);
         return new Choice(Action.FIT, 0, load, output, true, refusal(0, load, output));
@@ -550,7 +601,11 @@ public final class Hangar {
             }
             case UPGRADE -> {
                 Fitted fitted = before.gear().loadout().get(slot);
-                change.loadout.put(slot, new Fitted(fitted.item(), fitted.level() + 1));
+                change.loadout.put(slot, fitted.upgraded());
+            }
+            case POWER_DOWN, POWER_UP -> {
+                Fitted fitted = before.gear().loadout().get(slot);
+                change.loadout.put(slot, fitted.withPower(fitted.power() + (action == Action.POWER_UP ? 1 : -1)));
             }
             case FIT -> {
                 Fitted owned = row.owned().orElseThrow();

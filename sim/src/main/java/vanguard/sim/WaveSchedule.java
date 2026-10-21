@@ -188,13 +188,19 @@ final class WaveSchedule {
 
     /**
      * M7 part G: whether a wave's units may be flipped: not a walker with frontal armour (its glance arc reads the
-     * screen's shot directions), a segment chain (its members are placed by its own frame's history) or a pursuit.
+     * screen's shot directions), a segment chain (its members are placed by its own frame's history), a pursuit or a
+     * diver.
      */
     private static boolean flips(WaveSpec wave) {
         EnemySpec enemy = wave.enemy();
         boolean armoured = enemy.walker().isPresent() && enemy.walker().get().frontArc() > 0;
         // M7 part G: nor a pursuit: its flock flies in screen space (its band below the top edge).
-        return !armoured && enemy.chain().isEmpty() && wave.formation() != WaveSpec.Formation.PURSUIT;
+        // 2026-10-21 (user): "when flying backwards, the stingers should still enter from the top": a diver (the
+        // Stinger) flies as in a forward level, in from the top and diving at the ship; its warning a top/front one.
+        return !armoured
+                && enemy.chain().isEmpty()
+                && enemy.dive().isEmpty()
+                && wave.formation() != WaveSpec.Formation.PURSUIT;
     }
 
     /** M7 part G: a flipped unit's frame edges as the screen's: its frame's bottom is the screen's top. */

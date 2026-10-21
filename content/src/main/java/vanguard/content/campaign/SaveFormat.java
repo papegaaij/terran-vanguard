@@ -22,11 +22,13 @@ import tools.jackson.databind.node.ObjectNode;
  * {@code bays}, the utility bays bought (the third bay, from Act 3); a version 3 save gets 0, and (M7 part B, user
  * decision L.6 of round 36; a default pending the user's review in round 38) the story flags {@code act-intro:1}
  * and, from Level 08 on, {@code act-intro:2}: the release that wrote it had Acts 1–2 only, so their intros have
- * been shown and Act 3's has not ({@link CampaignRoute#onContinue}).
+ * been shown and Act 3's has not ({@link CampaignRoute#onContinue}). 5 (M7, the user's power dial of 2026-10-21)
+ * adds an item's optional {@code power}, its power setting ({@link Fitted#power}), written only below full power; a
+ * version 4 save has none, so every item is at full power and the migration only raises the version.
  */
 public final class SaveFormat {
     /** The version this game writes. */
-    public static final int VERSION = 4;
+    public static final int VERSION = 5;
 
     /**
      * What a migrated version 2 save that is past Level 07 gets: Rook's state as he joins, frozen as
@@ -84,6 +86,9 @@ public final class SaveFormat {
         }
         if (tree.get("version").intValue() == 3) {
             migrateFrom3(tree);
+        }
+        if (tree.get("version").intValue() == 4) {
+            migrateFrom4(tree);
         }
         try {
             return MAPPER.treeToValue(tree, SaveGame.class);
@@ -146,6 +151,16 @@ public final class SaveFormat {
             }
         }
         save.put("version", 4);
+    }
+
+    /**
+     * Version 4 to 5: the power dial's setting is optional, a missing one full power, so no item changes.
+     */
+    private static void migrateFrom4(JsonNode tree) throws SaveException {
+        if (!(tree instanceof ObjectNode save)) {
+            throw new SaveException("invalid save: not an object");
+        }
+        save.put("version", 5);
     }
 
     private static boolean contains(ArrayNode flags, String flag) {

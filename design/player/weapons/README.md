@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Weapons
@@ -53,7 +53,9 @@ the document in review); later weapons are still roster rows below.
   draw. Overdrive pickups temporarily add a 6th level pattern.
 - **Upgrade cost** (first draft): L2 = 0.5 × base price, L3 = 1 ×, L4 = 2 ×, L5 = 4 ×. Taking a
   weapon from L1 to L5 costs 7.5 × its base price on top of the purchase.
-- **Draw**: listed as L1 → L5 in MW. In between it rises linearly and is rounded to 0.5.
+- **Draw**: listed as L1 → L5 in MW. In between it rises linearly and is rounded to 0.5. A fitted
+  weapon draws at its **power setting** (the [power dial](../README.md#power-budget), 2026-10-21):
+  turned down in the hangar for free, it flies and draws as the lower level.
 - **Unlock**: `Lnn` = the item is in the shop from the hangar visit before level *nn*. The
   trait pacing (which trait must be buyable by which level) is owned by the
   [campaign](../../campaign/README.md#loadout-pressure-and-shop-unlock-pacing); the unlock
@@ -260,3 +262,6 @@ phase 2026-10-12) — the Act 3 front beam and the drone bay, a/b each; generato
   (the Deflector Pod's data layout) accepted; R.4 (a)–(g) all fixed, (c) by Q1's `CAST_ARMOUR` rule (a
   set piece's armour stops the beam on every layer).
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21 (the user, Act 3 playthrough: "My big weapons take too much power and I can't lower them"):
+  the [power dial](../README.md#power-budget): every fitted weapon flies and draws at a power setting
+  from L1 to its bought level, turned down and up in the hangar for free.

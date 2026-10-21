@@ -61,7 +61,7 @@ class TestFirePanelLayoutTest {
 
     @Test
     void theLongestLabelFitsTheBox() {
-        for (String label : List.of(TestFirePanel.WEAPONS_ONLY, TestFirePanel.label(5, true))) {
+        for (String label : List.of(TestFirePanel.WEAPONS_ONLY, TestFirePanel.label(4, 5))) {
             assertTrue(
                     TestFirePanel.LABEL_X + label.length() * LABEL_CELL <= TestFirePanel.X + TestFirePanel.WIDTH - 4,
                     label);

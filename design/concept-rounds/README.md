@@ -3,7 +3,7 @@ title: Concept rounds
 design: review
 implementation: n/a
 art: chosen
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Concept rounds
@@ -64,6 +64,7 @@ they belong to; a round only collects them.
 | [round-43](round-43/README.md) | The walker's rework, the Freesound sounds, M7 part G (Level 20) final art, voices, capture and build choices with five questions, part H's questions (closed 2026-10-20) | approved | n/a | chosen |
 | [round-44](round-44/README.md) | M7 part H (Level 21, the Dust Colossus): final art, voices, captures, build choices and eleven open questions; the walker's second rework, eighteen Freesound sounds, Level 20's levers, the art audit, the new glows, Act 2 to final, part I's questions and Act 4 | approved | n/a | chosen |
 | [round-45](round-45/README.md) | The Colossus's spine and death throe, the greenhouse frame, Level 21 in play and phase 1's pressure, hard's Act 3 economy, the Act 3 listen-through (closed 2026-10-21: the spine to be redone as one ridged back, the choir text delayed 4.5 s, phase 1 gets the fan, the stomp ring dimmed, hard accepted for v0.1, the voices accepted) | approved | n/a | chosen |
+| [round-46](round-46/README.md) | Freesound replacements for 42 synthesized sounds (Act 3 enemies, beds, rare sounds, player gear; a/b/redo next to the old file), the GitHub README draft with screenshots and a GIF | review | n/a | proposed |
 
 ## Design
 

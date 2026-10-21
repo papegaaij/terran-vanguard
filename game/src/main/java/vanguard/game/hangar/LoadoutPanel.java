@@ -33,6 +33,9 @@ import vanguard.game.ui.Glass;
  * once the bay is bought, in the schematic's lower right corner opposite Rook's callout (default,
  * pending the user's review: the module row has no room for an eighth 48 px tile); a cooldown
  * special's tile shows its cooldown ({@code 45S}) where a charge special shows its charges.
+ *
+ * <p>The power dial (2026-10-21, design/ui/hangar): a weapon turned down below its bought level shows its setting
+ * over that level ({@code L3/5}, amber) in place of its pips.
  */
 final class LoadoutPanel {
     private static final int X = 306;
@@ -198,6 +201,17 @@ final class LoadoutPanel {
                 callout.x() + (item.isPresent() ? NAME_INDENT : 6),
                 callout.y() + 26,
                 callout.width() - NAME_INDENT - 2);
+        if (fitted.isPresent() && !fitted.get().fullPower()) {
+            // The power dial (2026-10-21): a turned-down weapon shows its setting over its level where its pips are.
+            glass.right(
+                    batch,
+                    glass.fonts.label,
+                    setting(fitted.get()),
+                    Glass.AMBER,
+                    callout.x() + callout.width() - 6,
+                    callout.y() + 6);
+            return;
+        }
         int level = fitted.map(Fitted::level).orElse(0);
         for (int i = 0; i < PIPS; i++) {
             glass.bar(
@@ -208,6 +222,14 @@ final class LoadoutPanel {
                     7,
                     7);
         }
+    }
+
+    /**
+     * A weapon callout's level while the power dial turns it down: its setting over its bought level, {@code L3/5},
+     * in place of its level pips (right-aligned 6 px in from the callout's edge, after its slot name).
+     */
+    static String setting(Fitted fitted) {
+        return ShopPanel.setting(fitted.power(), fitted.level());
     }
 
     /**

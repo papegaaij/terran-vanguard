@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Player
@@ -78,6 +78,23 @@ generator's **output**. Armour, specials and the escort slot draw no power.
 
 Spare power is not wasted: each spare MW gives **+10 % shield regeneration** (max +50 %), so
 keeping some headroom is a real choice.
+
+**Power dial** (the user, 2026-10-21): every fitted weapon (front, rear, wings) has a **power
+setting** from L1 up to its bought level, full power by default. In the hangar the shop's
+**POWER −** and **POWER +** turn it down and up again for free (part of the visit's undo): the
+weapon then draws and flies at its setting, so power can be moved between weapons (more to the rear,
+less to the front) and a turned-down weapon makes room for another item. Raising a setting is checked
+against the output like an upgrade; it never goes below 1 or above the bought level. An upgrade of a
+weapon at full power raises the setting with it; a turned-down weapon keeps its setting (the upgrade
+waits in reserve). An overdrive pickup gives the setting +1, as it gives the level. The shop's numbers
+for a turned-down weapon (DPS, draw) are its setting's, the loadout shows it as `L3/5`, and an unfitted
+weapon keeps its setting in the inventory. Shields, engines, utility modules, the generator and Rook's
+guns have no dial.
+
+**Act 3's power room** (the user's decision of 2026-10-21, measured): the Mk III "Fusion" generator
+gives **16 MW** (was 14), so Act 3's own items (Shield Mk III, Engine Mk III, the utility modules and
+the Evasive thrusters in the third bay) fit next to the Ion Beam. The balance plan uses 15 of 16 MW from
+Level 20 (a Pickup magnet; see [generator](generator/README.md)).
 
 Worked example (first-draft numbers), start of act 2:
 
@@ -157,6 +174,10 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
 - [x] Loadout data model: slots, fitted items, inventory, upgrade levels
 - [x] Power load calculation and over-budget refusal
 - [x] Spare-power shield regen bonus
+- [x] Power dial: a weapon's power setting (`Fitted.power`, save format version 5), the free
+  `POWER_DOWN` / `POWER_UP` choices on a fitted weapon (`Hangar`), the load and the flight at the
+  setting (`Hangar.load`, `Flight`; the overdrive one level over it); tests in `PowerDialTest` and
+  `SaveFormatTest`. The shop's controls are the [hangar](../ui/hangar/README.md)'s ticket.
 - [x] Single fire button fires all weapons
 - [x] Special on a separate button (`Action.SPECIAL`, bound in `Bindings`, sent as `Command.SPECIAL`; M4 part D)
 - [x] Pickup types, drop tables and 6 s despawn: salvage S and M, overdrive, shield cell, armour patch, the hidden crate
@@ -213,3 +234,10 @@ Production art for concept round 16 (M4 part C, the Level 03 batch), by `tools/a
   special charge and data core pickups (parts C, D and F) were built with their parts; both items
   ticked, the document is `done`.
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21: The power dial and Act 3's power room, from the user (Act 3 playthrough, 2026-10-21): "I can't retrofit some of the other weapons, nor can I buy new things because my ship does not have enough power. I've fitted the gen 3 generator. My big weapons take too much power and I can't lower them. We should add an option to reduce power on fitted weapons to allow rebalancing the weapons on the ship (like more power to the rear)." Decided: **A, a free power dial**
+  (a fitted weapon turns down to L1 and back up to its bought level, at no cost, see *Power budget*) and
+  **more generator room in Act 3, measured**: the Mk III raised to 16 MW (15 and 16 measured with
+  `ActPlaythroughTest`, `BalanceTest`, `tools/balance.py` and `:content:levelReport` for Levels 15–21: the
+  balance is the same within 0.3 %, so 16 is taken, the room that fits Act 3's own items, e.g. the
+  Evasive thrusters (2 MW), next to the Ion Beam L3; pending the user's review). The plan buys a Pickup
+  magnet L1 at the L20 visit (15 of 16 MW).

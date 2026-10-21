@@ -38,7 +38,8 @@ import vanguard.sim.WingmanSpec;
  * shop list.
  *
  * <p>The replay hangar is refit only (the user's correction of 2026-10-19, design/ui/mission-select): its
- * rows are the owned items alone with their {@code FIT} and {@code UNFIT} choices, the bay row and the
+ * rows are the owned items alone with their {@code FIT} and {@code UNFIT} choices (and a fitted weapon's power
+ * dial, a free refit), the bay row and the
  * repair are gone, and nothing that spends or returns credits can be made ({@link #REFIT_ONLY}); Rook's
  * side stays.
  */
@@ -164,9 +165,15 @@ public final class HangarState {
         return refitOnly;
     }
 
-    /** Whether an action is a refit, which the replay hangar allows: fitting or unfitting an owned item. */
+    /**
+     * Whether an action is a refit, which the replay hangar allows: fitting or unfitting an owned item, and (the power
+     * dial, 2026-10-21; stated default, design/ui/hangar) turning a fitted weapon's power down or up, which is free.
+     */
     public static boolean refit(Action action) {
-        return action == Action.FIT || action == Action.UNFIT;
+        return switch (action) {
+            case FIT, UNFIT, POWER_DOWN, POWER_UP -> true;
+            case BUY, UPGRADE, SELL, BUY_CHARGE -> false;
+        };
     }
 
     public Hangar hangar() {
@@ -842,17 +849,41 @@ public final class HangarState {
                 made.fits()
                         ? "BOUGHT AND FITTED " + name
                         : "BOUGHT " + name + " - IN THE INVENTORY: " + shortfall(made);
-            case UPGRADE -> name + " UPGRADED TO L" + (offer.level() + 1);
+            case UPGRADE -> upgraded(name, offer);
             case FIT -> name + " FITTED";
             case UNFIT -> name + " MOVED TO THE INVENTORY";
             case SELL -> "SOLD " + name + " FOR CR " + -made.credits();
             case BUY_CHARGE -> "BOUGHT A CHARGE OF " + name;
+            case POWER_DOWN -> powered(name, offer.power() - 1, offer.level());
+            case POWER_UP -> powered(name, offer.power() + 1, offer.level());
         };
+        int dial = choice;
         afterChange(
                 made.action() == Action.SELL
                         ? Optional.empty()
                         : Optional.of(offer.item().name()));
+        if (made.action() == Action.POWER_DOWN || made.action() == Action.POWER_UP) {
+            // The power dial stays on its chip, so that confirm turns it another step.
+            choice = dial;
+        }
         return Outcome.DONE;
+    }
+
+    /**
+     * An upgrade's message: {@code PULSE CANNON UPGRADED TO L3}; a turned-down weapon keeps its power setting, so
+     * its message says so: {@code PULSE CANNON UPGRADED TO L4 - POWER L2}.
+     */
+    static String upgraded(String name, Offer offer) {
+        String text = name + " UPGRADED TO L" + (offer.level() + 1);
+        return offer.owned()
+                .filter(owned -> !owned.fullPower())
+                .map(owned -> text + " - POWER L" + owned.power())
+                .orElse(text);
+    }
+
+    /** The power dial's message: {@code PULSE CANNON POWER L2 OF 3}. */
+    static String powered(String name, int setting, int level) {
+        return name + " POWER L" + setting + " OF " + level;
     }
 
     /** Keeps the cursor on the item that changed, or on a row that still exists. */
@@ -892,6 +923,8 @@ public final class HangarState {
             case POWER -> "NEEDS " + shortfall(choice) + " MORE POWER";
             case MAX_LEVEL -> "AT ITS HIGHEST LEVEL";
             case FULL -> "CARRIES ITS MOST CHARGES";
+            case MIN_POWER -> "AT ITS LOWEST POWER";
+            case FULL_POWER -> "AT FULL POWER";
         };
     }
 

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: none
 depends-on: [.., ../lance-laser, ../../generator, ../../../systems/economy]
-updated: 2026-10-13
+updated: 2026-10-21
 ---
 
 # Rear Lance
@@ -68,9 +68,11 @@ DPS, as Level 10's Wraith check). The Rear Lance is a trait buy: per credit the 
 give more single-target DPS, the Lance gives **pierce** (a line of pursuers behind the ship, a
 Threadcrawler's segments, the Level 20 retreat's obstacles coming up from the bottom) and a lance
 that kills a `medium` rear unit in fewer hits. Its draw (3 MW at L1, 1.5 more than the typical
-Tail Gun L2) does not fit the typical Act 3 loadout on the Mk III generator with an Ion Beam (see
+Tail Gun L2) fits the typical Act 3 loadout on the Mk III generator's 16 MW (14 until 2026-10-21) next
+to an Ion Beam L3 (beam 6 + pods L2 3 + shield Mk II 3 + Rear Lance L1 3 = 15 of 16 MW; see
 [Ion Beam](../ion-beam/README.md#price-and-power-m11)); with the Pulse Cannon it fits from the
-Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 14 MW).
+Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 16 MW). The
+[power dial](../../README.md#power-budget) can also move power to it from the front gun.
 
 ### Behaviour
 
@@ -106,3 +108,4 @@ Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 14 
 - 2026-10-13 (user, round 36): approved (D.21) with M2, M4 and M5 accepted.
 - 2026-10-13 (M7 part A, step A2): data.yaml written; the property and per-level tables are
   rendered from it.
+- 2026-10-21 (the user's power room): with the Mk III at 16 MW the Rear Lance fits next to an Ion Beam L3.

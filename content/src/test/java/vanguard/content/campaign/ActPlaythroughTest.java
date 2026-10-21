@@ -47,7 +47,8 @@ class ActPlaythroughTest {
      * off alive), while the end credits the ratio is taken of are small after Act 3's purchases. The user's tuning
      * order (I.1 of round 44) does not reach it: the plan's later items cannot move earlier (the medium sheet
      * cannot afford Composite III before Level 21, the beam leaves no power for a shield or a module), and a level's
-     * {@code bounty_scale} scales the bound and the earnings together.
+     * {@code bounty_scale} scales the bound and the earnings together. Step PD-C (the user's power room of 2026-10-21,
+     * the Mk III at 16 MW): the plan's Pickup magnet from Level 20 leaves it about 54 % under.
      */
     private static final Map<Difficulty, Integer> PENDING_BOUND = Map.of(Difficulty.HARD, 3);
 

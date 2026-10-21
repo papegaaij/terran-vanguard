@@ -503,6 +503,19 @@ def travel_at(level, t):
     return -1 if scroll_at(level, t + 0.001) < scroll_at(level, t) else 1
 
 
+def dives(wave):
+    """Whether a wave's enemy is a diver (a `movement.dive`, the Stinger): 2026-10-21 (user), never flipped in a
+    reversed scroll, it enters from the top and dives at the ship as going forward (`WaveSchedule.flips`)."""
+    movement = load(f"{enemy_dir(wave['enemy'])}/data.yaml").get("movement") if wave.get("enemy") else None
+    return isinstance(movement, dict) and "dive" in movement
+
+
+def unflipped(wave, level):
+    """M7 part G: whether a front/rear wave of a reversed level enters by the screen, not by travel: a diver
+    spawned while the travel is reversed (so its `from` reads the other way by travel)."""
+    return reverses(level) and travel_at(level, wave["t"]) < 0 and dives(wave)
+
+
 def entry(wave, level=None):
     """Where a wave enters: `sides` alone means both side edges, one side reads "left side"; M5 part G: a
     cross's `all` reads "all edges". M7 part G: in a level that scrolls backwards, front and rear read as the screen
@@ -513,8 +526,10 @@ def entry(wave, level=None):
     if wave["from"] == "sides" and edge in ("left", "right"):
         return f"{edge} side"
     if level is not None and reverses(level) and wave["from"] in ("front", "rear"):
-        top = (wave["from"] == "front") == (travel_at(level, wave["t"]) > 0)
         side = f", {EDGES[edge]}" if edge else ""
+        if unflipped(wave, level):
+            return f"{'top' if wave['from'] == 'front' else 'bottom'} (a diver, not flipped{side})"
+        top = (wave["from"] == "front") == (travel_at(level, wave["t"]) > 0)
         return f"{'top' if top else 'bottom'} ({'ahead' if wave['from'] == 'front' else 'behind'}{side})"
     return wave["from"] + (f" ({EDGES[edge]})" if edge else "")
 
@@ -528,6 +543,9 @@ def directions(level):
             counts["front"] += n / 4
             counts["sides"] += n / 2
             counts["rear"] += n / 4
+        elif wave["from"] in ("front", "rear") and unflipped(wave, level):
+            # 2026-10-21: a diver of a reversed section comes in at the top: behind by travel
+            counts["rear" if wave["from"] == "front" else "front"] += n
         else:
             counts[wave["from"]] += n
     total = sum(counts.values())

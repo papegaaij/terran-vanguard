@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar]
-updated: 2026-10-14
+updated: 2026-10-21
 ---
 
 # Saves
@@ -46,7 +46,7 @@ A versioned document (engine-agnostic; for example JSON):
 | `difficulty` | easy / medium / hard |
 | `nextLevel` | Level number 1–50 (and act) |
 | `credits`, `score` | |
-| `loadout` | Fitted item per slot, with upgrade level |
+| `loadout` | Fitted item per slot, with upgrade level and (format version 5) the weapon's optional `power` setting of the [power dial](../../player/README.md#power-budget), written only below full power |
 | `inventory` | Owned unfitted items with upgrade levels, by kind (front, rear, wing, generator, shield, plating, engine, utility) |
 | `unlocks` | Shop items unlocked (by act, data cores or story) |
 | `specials` | Charges per special type; a cooldown special (M7 part A: the Shield Overcharge) is owned with 1, never used up |
@@ -94,6 +94,11 @@ intro and the level's briefing once (`CampaignRoute.onContinue`), sets the flag,
 hangar (its autosave keeps it): a save at the Level 15 hangar from the M6 release sees the Act 3
 intro once.
 
+**Version 5** (the user's power dial, 2026-10-21) adds an item's optional `power`, its power setting
+from 1 up to its `level` (`{"item": "ion-beam", "level": 3, "power": 2}`), in `loadout` and `inventory`.
+It is written only below full power, and a missing one is full power, so a version 4 save is migrated by
+its version number alone; a setting outside 1 … `level` makes the save unreadable.
+
 ### Slot display
 
 Each slot shows: act and level name, difficulty, credits, playtime, date, and a small icon for
@@ -115,6 +120,9 @@ the act.
   (`SaveFormat.VERSION` 4, `migrateFrom3` adds 0; `Gear.bays`, `Hangar.buyBay`/`sellBay`; tests in
   `SaveFormatTest`: the round trip, the migration from version 3, a version 4 save without it, an
   unbought bay with a module)
+- [x] `power`, the power dial's setting (format version 5, migrated from version 4) — step PD-C
+  (`SaveFormat.VERSION` 5, `migrateFrom4`; `Fitted.power`; tests in `SaveFormatTest`: the round trip,
+  a version 4 save at full power, a setting out of range)
 - [x] Act intro once on Continue (L.6): the `act-intro:N` story flags, the version 3 migration's flags and
   `CampaignRoute.onContinue` — content built in M7 part B step B2 (tests in `CampaignRouteTest`,
   `SaveFormatTest`); the game's Continue (`HangarScreen.onContinue`, from the slots and the main menu) in
@@ -179,3 +187,6 @@ the act.
   `specials` with 1 (stated default, accepted in round 37, V.1), so it needs no format change.
 - 2026-10-13 (user, round 37, V.1): save format 4 accepted as built: the `bays` field (0 or 1), version
   3 saves migrated with 0, an owned cooldown special held in `specials` with 1 (no format change).
+- 2026-10-21: save format version 5 for the user's power dial (decided 2026-10-21: A, a free power dial): an
+  item's optional `power` setting, written only below full power, so a version 4 save loads unchanged at full
+  power.

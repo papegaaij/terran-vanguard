@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy, ../../../enemies]
-updated: 2026-10-19
+updated: 2026-10-21
 ---
 
 # Ion Beam
@@ -131,13 +131,16 @@ The beam is the costliest and hungriest gun the shop has sold so far. Checked by
 typical Act 2 kit the player keeps (two Micro-missile Pods L2 at 1.5 MW each, Tail Gun L2 at 1.5,
 engine Mk I at 0):
 
-| Beam | Shield Mk II (3) | Shield Mk III (4) | Fits Mk II "Arc" 11 MW? | Fits Mk III "Fusion" 14 MW? | Fits Mk IV "Tokamak" 18 MW (act 4)? |
+| Beam | Shield Mk II (3) | Shield Mk III (4) | Fits Mk II "Arc" 11 MW? | Fits Mk III "Fusion" 16 MW? | Fits Mk IV "Tokamak" 18 MW (act 4)? |
 |---|---|---|---|---|---|
-| L1 (5) | 12.5 | 13.5 | no | yes | yes |
-| L2 (6) | 13.5 | 14.5 | no | with shield Mk II | yes |
-| L3 (7) | 14.5 | 15.5 | no | **no** (0.5 over) | yes |
-| L4 (8) | 15.5 | 16.5 | no | no | yes |
-| L5 (9) | 16.5 | 17.5 | no | no | yes |
+| L1 (4) | 11.5 | 12.5 | no | yes | yes |
+| L2 (5) | 12.5 | 13.5 | no | yes | yes |
+| L3 (6) | 13.5 | 14.5 | no | yes | yes |
+| L4 (7) | 14.5 | 15.5 | no | yes | yes |
+| L5 (8) | 15.5 | 16.5 | no | with shield Mk II | yes |
+
+The table has the approved 4 → 8 draw and the Mk III's 16 MW of the power room (2026-10-21, below); the
+M11 check below was made with the roster's 5 → 9 and the Mk III's 14 MW.
 
 - The player arrives at 11 of 11 MW on the Mk II, so **any** beam needs the Mk III generator
   first (4 000, on sale since Act 2). Generator plus beam at L2, less the Pulse Cannon's 1 260,
@@ -149,7 +152,8 @@ engine Mk I at 0):
   visit): L15 one EMP charge; L16 the Mk III; L17 save; L18 sell the Pulse Cannon (1 260) and buy
   the beam at L2 (6 250); L19 beam L3 (2 500, only with the draw recommended below); L20 Tail Gun
   L3 (600); L21 Composite III (3 000). Forward DPS 77 · 77 · 77 · 80 · 100 · 100 · 100 for
-  L15–L21, at most 14 of 14 MW. The [balance plan](../../balance-plan.yaml) follows it on budget(n)
+  L15–L21, at most 14 of 14 MW (15 of 16 since the power room: the plan adds a Pickup magnet at the L20
+  visit). The [balance plan](../../balance-plan.yaml) follows it on budget(n)
   income (the user's decision of 2026-10-14, round 37 R.1's act-factor income reverted; Level 15's own
   typical haul), each item as soon as it is affordable, which gives exactly this hand plan's visits
   (medium: 387 credits left at the tightest visit, L19).
@@ -163,8 +167,14 @@ engine Mk I at 0):
   help the typical player before L21) and lower the beam's draw to **4 → 8 MW** (4 / 5 / 6 / 7 /
   8): beam L3 then fits the Mk III with the Act 2 kit and shield Mk II at 13.5 of 14, the beam
   plan reaches 100 at L19 like the gun plan, and L4–L5 still wait for the Tokamak in Act 4. The
-  table above has the 4 → 8 draw; the power table in this section shows the roster's 5 → 9 it
-  was checked against.
+  weapon's Per level table has the 4 → 8 draw; the power table in this section had the roster's 5 → 9
+  it was checked against until step PD-C (2026-10-21) brought it up to date.
+- **The power room (the user, 2026-10-21):** the [Mk III](../../generator/README.md) gives **16 MW**
+  (was 14), and every fitted weapon has a free [power dial](../../README.md#power-budget). With the
+  typical kit the beam L3 now leaves 2.5 MW with shield Mk II (1.5 with shield Mk III): room for a
+  utility module or the Evasive thrusters. Power no longer keeps beam L4 out of Act 3 (L5 only with
+  shield Mk II); its 5 000 (L4) and 10 000 (L5) keep it out of the typical plan (pending the user's
+  review).
 - The upgrade base of 2 500 (the Lance Laser's prices) instead of the price is taken so L3 is
   reachable in Act 3 at all: on the price, L2 + L3 would cost 7 500 more instead of 3 750.
 
@@ -257,3 +267,6 @@ dust and scorch mark, and the glance spark; the heat tint on the target is the g
   the Tail Gun L3 at L20 and Composite III at L21; hard keeps the Pulse Cannon (accepted in round 38 (2026-10-14)).
 - 2026-10-19 (M7 part E, step E5; the user's "tougher, not more"): the enemies' beam-era HP (×2 on `small` units
   from Level 18, the plan's first beam) answers the beam's instant reach; the beam's own numbers are unchanged.
+- 2026-10-21 (step PD-C, the user's power room): the stale *Price and power* table (the roster's 5 → 9 MW draws)
+  brought up to the approved 4 → 8 and the Mk III's new 16 MW; beam L4 now fits the Mk III power-wise (L5 with
+  shield Mk II), the price keeps it out of the typical plan (pending the user's review).

@@ -59,13 +59,14 @@ plan:
   # levels after it budget(n), about 2 000 → 3 000 a visit with the B bonus). The Ion Beam's hand plan in
   # its order (design/player/weapons/ion-beam, Price and power), each item as soon as it is affordable:
   # one EMP charge, the Mk III generator, the beam at L2 (the Pulse Cannon sold), the beam at L3, the
-  # Tail Gun L3, Composite III; at most 14 of 14 MW. Forward DPS 77 · 77 · 77 · 80 · 100 · 100 · 100
+  # Tail Gun L3, Composite III; at most 14 of 14 MW then. PD-C (the user's power room of 2026-10-21: the Mk III raised
+  # to 16 MW): the Pickup magnet L1 joins the Tail Gun L3 at the L20 visit, 15 of 16 MW. Forward DPS 77 · 77 · 77 · 80 · 100 · 100 · 100
   # against the reference 76 → 100. The Airstrike stays fitted, the EMP charges wait in the inventory
   # until a level with machines.
   "15": {charges: [[EMP Burst, 1]], fit: [[special, Airstrike]]}   # one EMP charge on top of the free one; the Airstrike fitted again; the Mk III (4 000) is not yet affordable
-  "16": {core: [[generator, 2]]}   # Mk III "Fusion" (14 MW): any beam needs it
+  "16": {core: [[generator, 2]]}   # Mk III "Fusion" (16 MW since PD-C, 14 before): any beam needs it
   "17": {}                         # saving: the beam at L1 (5 000 less the Pulse Cannon's 1 260) is short, and an L1 beam (65) would be a downgrade from the Pulse L4's 77
-  "18": {buy: [[front, ion-beam]], sell_owned: [[front, pulse-cannon]], upgrade: [[front, 2]]}   # the beam bought at L2 (6 250); the Pulse Cannon L4 it replaced sold: 12.5 of 14 MW
-  "19": {upgrade: [[front, 3]], fit: [[escort, mortar]]}    # beam L3 (2 500): 13.5 of 14 MW (M11); M7 part F (step F2, the gap check's default, pending the user's review in round 42): Rook's owned Mortar again for the Warden Tanks, the nests and the walker (Level 19 asks `anti-ground`)
-  "20": {upgrade: [[rear, 3]], fit: [[escort, autocannon]]}     # Tail Gun L3 (600): 14 of 14 MW; M7 part G (step G2, the user's Q.2 of 2026-10-20): Rook's owned Autocannon again, Level 20 is air-heavy (the swarm, the ambushes)
+  "18": {buy: [[front, ion-beam]], sell_owned: [[front, pulse-cannon]], upgrade: [[front, 2]]}   # the beam bought at L2 (6 250); the Pulse Cannon L4 it replaced sold: 12.5 of 16 MW
+  "19": {upgrade: [[front, 3]], fit: [[escort, mortar]]}    # beam L3 (2 500): 13.5 of 16 MW (M11: 13.5 of 14); M7 part F (step F2, the gap check's default, pending the user's review in round 42): Rook's owned Mortar again for the Warden Tanks, the nests and the walker (Level 19 asks `anti-ground`)
+  "20": {upgrade: [[rear, 3]], utility: [[Pickup magnet, 1]], fit: [[escort, autocannon]]}     # Tail Gun L3 (600) and (PD-C) the Pickup magnet L1 (600), the module the Mk III's 16 MW makes room for: 15 of 16 MW; M7 part G (step G2, the user's Q.2 of 2026-10-20): Rook's owned Autocannon again, Level 20 is air-heavy (the swarm, the ambushes)
   "21": {core: [[armor, 3]]}       # Composite III (3 000)

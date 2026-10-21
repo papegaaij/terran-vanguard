@@ -227,11 +227,14 @@ class HangarPointerTest {
         assertEquals(keyed.credits(), clicked.credits());
     }
 
-    /** The first shown row with two choices or more, after buying the second row's item (the first goes to the inventory). */
+    /**
+     * The first shown row with two choices or more, after buying the second row's item (the first goes to the
+     * inventory); past the fitted front gun's row, which has three since the power dial (PD-G).
+     */
     private static int rowWithChoices(HangarState state) {
         state.down();
         state.confirm();
-        for (int row = 0; row < Math.min(state.rowCount(), HangarState.VISIBLE_ROWS); row++) {
+        for (int row = 1; row < Math.min(state.rowCount(), HangarState.VISIBLE_ROWS); row++) {
             if (state.rows().get(row).choices().size() > 1) {
                 return row;
             }

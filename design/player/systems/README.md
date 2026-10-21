@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-13
+updated: 2026-10-21
 ---
 
 # Ship systems
@@ -114,9 +114,10 @@ numbers below (M7 part A).
 | Rook and drones | Unaffected; Rook reacts to the ship's new place with his usual delay, the drones keep their orbit and station round it |
 | Reverse scroll (L20) | Directions are the screen's |
 
-Power: at 2 MW the thrusters do not fit the typical Act 3 loadout, which is at 13.5–14 of the Mk III
-generator's 14 MW by L19 (see the [Ion Beam's power check](../weapons/ion-beam/README.md#price-and-power-m11)):
-a player takes them in place of a pod level or a shield tier until the Mk IV generator (Act 4).
+Power: the thrusters' 2 MW fit the typical Act 3 loadout, which is at 13.5–14 of the Mk III
+generator's 16 MW by L19 (14 MW until the user's power room of 2026-10-21; see the
+[Ion Beam's power check](../weapons/ion-beam/README.md#price-and-power-m11)); next to a Shield Mk III or
+another module a player turns a weapon down with the [power dial](../README.md#power-budget).
 
 ### Third utility bay (Act 3)
 
@@ -343,3 +344,5 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   `Command.DASH` the last command bit; B.5 b: the dash pip right of the shield's label plate, its white
   state 0.2 s of game time since R.4 d); its sound S.13 a "thruster puff"; save format 4 accepted
   (V.1); a second set of thrusters adds nothing (B.3 c).
+- 2026-10-21 (the user's power room: the Mk III at 16 MW, the weapons' power dial): the Evasive thrusters fit
+  the typical Act 3 loadout; the balance plan fits a Pickup magnet L1 from Level 20.

@@ -303,7 +303,7 @@ need about four times the Mantis and Spore Bombers L20's draft offers to reach 0
 | L17 | front 95 % · sides 5 % | `spread`, `anti-ground` | attacks on the domes, Shellback mortars | none |
 | L18 | front 88 % · sides 6 % · rear 6 % | `homing`, `spread` | the dust storm's radius, Dust Devils' pull | none |
 | L19 | front 90 % · rear 10 % | `anti-ground`, `rear` | furnace vents, conveyors, turrets firing after the ship passes | mid-boss Revenant Walker |
-| L20 | ahead 61 % · behind 38 % · sides 1 % (by travel) | `rear`, `homing` | reverse scroll, the pursuing swarm | none |
+| L20 | ahead 57 % · behind 42 % · sides 1 % (by travel; the Stingers enter at the top since 2026-10-21) | `rear`, `homing` | reverse scroll, the pursuing swarm | none |
 | L21 | front 75 % · sides 12 % · rear 12 % | `anti-ground`, `rear` | suction and debris in the arena | act boss Dust Colossus |
 
 Every level keeps at least 60 % of its waves from the front (L20 counts by travel), and every side

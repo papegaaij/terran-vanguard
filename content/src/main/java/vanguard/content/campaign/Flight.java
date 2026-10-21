@@ -23,7 +23,7 @@ import vanguard.sim.Loadout;
  * that does not fly yet are listed for the HUD.
  *
  * @param weapons the flown weapons, in the order of the loadout's {@link Armament} mounts
- * @param sparePower the generator's output minus the fitted items' draw, MW (negative when a debug
+ * @param sparePower the generator's output minus the fitted items' draw at their power settings, MW (negative when a debug
  *     fit exceeds it)
  * @param notFlown the names of the fitted items the sortie leaves out, in slot order
  * @param sensor the best fitted sensor suite's level, 0 without one (the difficulty's intel bonus not
@@ -47,7 +47,7 @@ public record Flight(
         notFlown = List.copyOf(notFlown);
     }
 
-    /** A flown weapon for the HUD: its slot, name and upgrade level. */
+    /** A flown weapon for the HUD: its slot, name and the level it flies at (its power setting, the power dial). */
     public record Weapon(Armament.Slot slot, String name, int level) {}
 
     public static Flight of(Content content, Catalogue catalogue, Campaign campaign) {
@@ -65,7 +65,7 @@ public record Flight(
             LoadoutSlot slot = entry.getKey();
             Fitted item = entry.getValue();
             Catalogue.Item info = catalogue.item(slot.kind(), item.item());
-            load += info.draw(item.level());
+            load += info.draw(item.power());
             if (!flies(content, slot, item)) {
                 notFlown.add(info.name());
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(Hangar.SENSOR_SUITE)) {
@@ -79,8 +79,9 @@ public record Flight(
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.PICKUP_MAGNET)) {
                 magnet = Math.max(magnet, item.level());
             } else if (weaponSlot(slot) != null) {
-                fitted.add(new SimSpecs.FittedWeapon(weaponSlot(slot), item.item(), item.level()));
-                weapons.add(new Weapon(weaponSlot(slot), info.name(), item.level()));
+                // The power dial: a weapon flies at its setting (an overdrive gives it one level more).
+                fitted.add(new SimSpecs.FittedWeapon(weaponSlot(slot), item.item(), item.power()));
+                weapons.add(new Weapon(weaponSlot(slot), info.name(), item.power()));
             }
         }
         double output = catalogue

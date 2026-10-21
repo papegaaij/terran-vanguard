@@ -28,7 +28,7 @@ class SaveFormatTest {
 
         String json = SaveFormat.write(save);
 
-        assertTrue(json.contains("\"version\" : 4"), json);
+        assertTrue(json.contains("\"version\" : 5"), json);
         assertTrue(json.contains("\"bays\" : 0"), json);
         assertEquals(save, SaveFormat.read(json));
         assertEquals(
@@ -123,7 +123,7 @@ class SaveFormatTest {
     void aVersion3SaveWithBaysOrAVersion4SaveWithoutThemIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4", "\"version\" : 3")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5", "\"version\" : 3")));
         assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 0,", "")));
         assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 0", "\"bays\" : -1")));
     }
@@ -150,6 +150,63 @@ class SaveFormatTest {
                         gear.credits(), loadout, gear.inventory(), gear.specials(), gear.armour(), gear.escort()));
     }
 
+    /**
+     * The power dial (the user, 2026-10-21): format version 5 writes a weapon's power setting only below full power, and
+     * reads it back; a setting outside 1 up to the level is rejected.
+     */
+    @Test
+    void aPowerSettingSurvivesTheRoundTrip() throws SaveException {
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save());
+        Gear gear = campaign.gear();
+        java.util.Map<LoadoutSlot, Fitted> loadout = new java.util.EnumMap<>(gear.loadout());
+        loadout.put(LoadoutSlot.FRONT, new Fitted("pulse-cannon", 4, 2));
+        loadout.put(LoadoutSlot.REAR, new Fitted("tail-gun", 3));
+        campaign.gear(new Gear(
+                gear.credits(),
+                loadout,
+                Map.of(ItemKind.WING, List.of(new Fitted("autocannon-pod", 2, 1))),
+                gear.specials(),
+                gear.armour(),
+                gear.escort()));
+        String json = SaveFormat.write(campaign.save(Instant.EPOCH));
+        assertEquals(2, json.split("\"power\"", -1).length - 1, "only the turned-down items carry a setting: " + json);
+
+        SaveGame loaded = SaveFormat.read(json);
+
+        assertEquals(new Fitted("pulse-cannon", 4, 2), loaded.loadout().get(LoadoutSlot.FRONT));
+        assertEquals(new Fitted("tail-gun", 3, 3), loaded.loadout().get(LoadoutSlot.REAR));
+        assertEquals(
+                List.of(new Fitted("autocannon-pod", 2, 1)), loaded.inventory().get(ItemKind.WING));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"power\" : 2", "\"power\" : 5")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"power\" : 2", "\"power\" : 0")));
+    }
+
+    /** The power dial: a version 4 save (no power settings) loads with every item at full power. */
+    @Test
+    void aVersion4SaveLoadsAtFullPower() throws SaveException {
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save());
+        Gear gear = campaign.gear();
+        java.util.Map<LoadoutSlot, Fitted> loadout = new java.util.EnumMap<>(gear.loadout());
+        loadout.put(LoadoutSlot.FRONT, new Fitted("pulse-cannon", 3));
+        campaign.gear(
+                new Gear(gear.credits(), loadout, gear.inventory(), gear.specials(), gear.armour(), gear.escort()));
+        SaveGame save = campaign.save(Instant.EPOCH);
+        String old = SaveFormat.write(save).replace("\"version\" : 5", "\"version\" : 4");
+        assertTrue(!old.contains("\"power\""), old);
+
+        SaveGame loaded = SaveFormat.read(old);
+
+        assertEquals(SaveFormat.VERSION, loaded.version());
+        assertEquals(save, loaded);
+        assertTrue(loaded.loadout().values().stream().allMatch(Fitted::fullPower));
+        assertEquals(3, loaded.loadout().get(LoadoutSlot.FRONT).power());
+        Hangar hangar = new Hangar(HangarTest.CATALOGUE, Campaign.load(CampaignTest.RULES, loaded));
+        assertEquals(
+                3,
+                HangarTest.row(hangar, LoadoutSlot.FRONT, "Pulse Cannon", Hangar.State.FITTED)
+                        .power());
+    }
+
     @Test
     void anOldTopGradeSLoadsAsAPlus() throws SaveException {
         String json = SaveFormat.write(save());
@@ -161,7 +218,7 @@ class SaveFormatTest {
 
     @Test
     void aNewerFormatVersionIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 4", "\"version\" : 5");
+        String json = SaveFormat.write(save()).replace("\"version\" : 5", "\"version\" : 6");
 
         SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(json));
         assertTrue(e.getMessage().contains("newer version"), e.getMessage());
@@ -171,10 +228,10 @@ class SaveFormatTest {
     void anUnknownOrMissingVersionIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4", "\"version\" : 0")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5", "\"version\" : 0")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5,", "")));
         assertThrows(
-                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 4", "\"version\" : \"4\"")));
+                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5", "\"version\" : \"5\"")));
     }
 
     @Test
