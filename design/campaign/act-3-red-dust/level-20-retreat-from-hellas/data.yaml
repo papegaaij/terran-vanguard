@@ -164,18 +164,18 @@ waves:
   - {t: 48.5, formation: line abreast, enemy: needler, count: 2, from: front}
   - {t: 52.5, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200]}
   - {t: 56.5, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved kite stream}
-  - {t: 59, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "Cloaked inside the swarm; TOP-warned (Rook's line at t=56); act HP factor"}
+  - {t: 59, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "Cloaked inside the swarm; no TOP warning (Rook's line at t=56); act HP factor"}
   - {t: 63, formation: line abreast, enemy: needler, count: 2, from: front, notes: A firing pair in place of the approved kite snake}
   - {t: 67, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1, notes: "Over the floor nest (t≈66)"}
   - {t: 71, formation: V-wing, enemy: stinger, count: 3, from: front, notes: Up the first terrace; the leader drops an overdrive}
   - {t: 75, formation: V-wing, enemy: stinger, count: 2, from: front, notes: A firing pair in place of the approved kite stream}
   - {t: 79, formation: line abreast, enemy: needler, count: 2, from: front}
-  - {t: 80, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair, TOP-warned"}
+  - {t: 80, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair, no TOP warning"}
   - {t: 83, formation: snake, enemy: dust-kite, count: 3, from: front, edge: right, notes: "Over the terrace nest (t≈85)"}
   - {t: 87, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200], notes: In the terrace sand}
   - {t: 90.5, formation: pincer, enemy: needler, count: 2, from: sides, hold: 4, notes: "1 per edge; warned 3 s ahead"}
   - {t: 94.5, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Past the emergency cache (the secret, t≈92); a firing pair in place of the approved kite V-wing"}
-  - {t: 101, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "TOP-warned (Rook's line at t=98)"}
+  - {t: 101, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "no TOP warning (Rook's line at t=98)"}
   - {t: 104.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25}
   - {t: 108, formation: snake, enemy: skitter, count: 3, from: front, edge: left, notes: The swarm drops back off the top}
   - t: 110.5
@@ -236,7 +236,7 @@ waves:
     notes: "On the road's switchback; the last one drops a shield cell"
   - {t: 137.5, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Over the road nest (t≈140); a firing pair in place of the approved kite V-wing"}
   - {t: 141.5, formation: line abreast, enemy: needler, count: 2, from: front}
-  - {t: 146.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "TOP-warned (Rook's line at t=143.5)"}
+  - {t: 146.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, easy: {warning: 4}, notes: "no TOP warning (Rook's line at t=143.5)"}
   - {t: 150, formation: field, enemy: burrower, count: 2, from: front, x: 240, size: [400, 200], notes: "In the road's drifts"}
   - {t: 154, formation: V-wing, enemy: stinger, count: 2, from: front, notes: "Over the last road nest (t≈155); a firing pair in place of the approved kite snake"}
   - {t: 157.5, formation: stream, enemy: skitter, count: 3, from: front, edge: alternating, interval: 1}

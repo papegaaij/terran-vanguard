@@ -226,3 +226,16 @@ plate shingled over the next. One far key light (as a sun) lights every segment 
 and cut afterwards, so the joints carry no lit face and no sharpening halo. The back tapers from 60 px wide behind
 the neck to the tip at 400 px. Pending the user's review.
 
+## dust-colossus-final-r46-b
+
+**Review of the spine's rise for round 46 b (step GSR), [tools/art/dust_colossus.py](../../../../tools/art/dust_colossus.py)
+(`--review`; no frame changed).** The user on r46: the spine "just appears one segment at a time, like it's warped in.
+The spine must rise out of the sand from the silhouette that precedes it. It rises from the head to the back. When it
+goes under again ... from the back to the head." The review now draws the game's rule (`ColossusSpine`): the ridge's
+sand bulge lies along the back's track before and through the breach; an emergence front runs along the back from the
+collar (60 px) to the tail's tip (408 px) over the 1.5 s rise; each segment shows only up to it with a 24 px soft edge,
+the plates taking the bulge's sand colour over the last 40 px before it (sand still on them), each segment's three
+states (a third out, two thirds, up) blended continuously over a 60 px band behind it, a sand puff off alternate flanks
+where it passes. The dive runs it back from the tip to the collar over the first 70 % of the dive (the head last, with
+the mouth), then the bulge fades. The GIF's ground stands still from the first tell on (eased over 0.5 s), as the
+game's crawl halt (round 44 K.c). Pending the user's review.

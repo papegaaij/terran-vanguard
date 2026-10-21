@@ -74,9 +74,10 @@ root `dust-colossus`, vanguard.pipeline.SpriteUse: rerun once the boss's data.ya
   assets/pivots/dust-colossus.json   per pose: the lean, the gullet's ellipse, the neck (where the body leaves
                              the sand: the ridge joins there), the collar's radius
   assets/sprites/intel/boss-dust-colossus.png   via tools/art/intel.py (the open UNDER mouth's outline)
-  design/enemies/bosses/concept/dust-colossus-final-r46-a.png/.gif   the review (round 46: the spine as one
-                             ridged back; r45's sheet showed the first spine, the vent organs and the throe, r44's
-                             the first sets)
+  design/enemies/bosses/concept/dust-colossus-final-r46-b.png/.gif   the review (step GSR: the spine rising out of
+                             its ridge head to tail and sinking tail to head, the game's rule, the ground still while
+                             the Colossus is out; r46 a: the spine as one ridged back; r45's sheet showed the first
+                             spine, the vent organs and the throe, r44's the first sets)
 
 How the game draws it, back to front: the funnel at the breach point (the crater after the dive, scrolling with
 the ground), the shut / mouth frames centred on the point, the gullet glow added over an open mouth; the vents on
@@ -114,6 +115,7 @@ SCRIPT = "dust_colossus.py"
 BATCH = "M7 part H batch"
 SOURCE = artkit.source_note(SCRIPT, BATCH)
 REVIEW_ROUND = "r46"
+REVIEW_VARIANT = "b"   # step GSR: the spine rising out of its ridge, the ground still while it is out
 ROOT_NAME = "dust-colossus"
 CONCEPT = DESIGN / "enemies" / "bosses" / "concept"
 DATA = DESIGN / "enemies" / "bosses" / "dust-colossus" / "data.yaml"
@@ -1153,7 +1155,7 @@ def glow_c(img, g, x, y, k=1.0):
 
 class Field:
     """The review's play field: Level 21's arena tile (tools/art/backdrop_l21.py's basin floor; Level 20's dunes
-    if it is missing) scrolling at the arena's 20 px/s, in 0.5 s steps (the GIF's size)."""
+    if it is missing) crawling at the arena's 20 px/s, standing still while the Colossus is out (ground_scroll)."""
 
     def __init__(self):
         tile = ROOT / "assets" / "backdrop" / "level-21" / "basin-floor.png"
@@ -1164,12 +1166,19 @@ class Field:
 
     def frame(self, t):
         h = self.strip.shape[0]
-        y0 = int(h - FH - ground_step(t)) % (h - FH)
+        y0 = int(h - FH - round(ground_scroll(t))) % (h - FH)
         return Image.fromarray(self.strip[y0:y0 + FH]).convert("RGBA")
 
 
-def ridge_draw(img, s, a, b, u, glow=0.5):
-    """The colossus ridge (tools/art/l20_props.py's sprites) from a toward b, its head at fraction u."""
+def ridge_draw(img, s, a, b, u, glow=0.5, head=True, alpha=1.0):
+    """The colossus ridge (tools/art/l20_props.py's sprites) from a toward b, its head at fraction u (behind a risen
+    mouth no head: the mouth is its head; ``alpha`` fades the whole body, as the game's dive does)."""
+    if alpha < 1.0:
+        if alpha <= 0.0:
+            return img
+        layer = ridge_draw(Image.new("RGBA", img.size, (0, 0, 0, 0)), s, a, b, u, glow, head)
+        img.alpha_composite(faded(layer, alpha))
+        return img
     (ax, ay), (bx, by) = a, b
     hx, hy = ax + (bx - ax) * u, ay + (by - ay) * u
     L = math.hypot(hx - ax, hy - ay)
@@ -1186,7 +1195,7 @@ def ridge_draw(img, s, a, b, u, glow=0.5):
     for i in range(1, n):
         x, y = ax + dx * 16 * i, ay + dy * 16 * i
         img = glow_c(img, s["colossus-ridge-glow"][k], x, y, glow)
-    paste_c(img, s["colossus-ridge-head"][k], hx, hy)
+    paste_c(img, s["colossus-ridge-head" if head else "colossus-ridge"][k], hx, hy)
     return img
 
 
@@ -1195,34 +1204,101 @@ def heading_of(dx, dy):
     return int(round(math.atan2(-dx, dy) / (TAU / 16))) % 16
 
 
-def spine_rise_state(seg, tr):
-    """A segment's frame tr s into the mouth's 1.5 s rise (each 0.12 s behind the one before it), None while
-    still under the sand."""
-    u = tr - 0.12 * seg
-    return None if u < 0 else min(2, int(u / 0.5))
+# Step GSR (the user on round 46: the spine "just appears one segment at a time, like it's warped in"): the game's
+# rule (ColossusSpine): one front runs along the back out of the ridge's silhouette from the collar to the tail's tip
+# over the rise (the dive back, tail to head, over its first DIVE_SHARE); each segment shown only up to the front
+# with a soft edge, its three states blended over a band behind it; sand puffs off the flanks where it passes.
+SPAN_START = (60, 154, 234, 314)          # px from the mouth: each segment's plates (SPINE_FRONT, the cuts - overlap)
+SPAN_END = (166, 246, 326, 408)           # ... to the cuts and the tail's tip
+BAND, SOFT, DIVE_SHARE = 60, 24, 0.7
+SAND, SAND_RGB = 40, np.array((171, 145, 107), np.float64)   # sand on the plates toward the front (the ridge's colour)
+FRONT_FROM, FRONT_TO = SPAN_START[0] - SOFT / 2, SPAN_END[-1] + BAND + SOFT / 2
+PUFF_STEP, PUFF_SECONDS, PUFF_SIDE = 24, 0.5, 20
+RIDGE_BACK = 460                          # px: how far the review's ridge reaches behind a risen mouth
 
 
-def spine_dive_state(seg, td):
-    """A segment's frame td s into the mouth's 1.5 s dive: 1, then 0, then gone (None), each 0.12 s behind."""
-    u = td - 0.12 * seg
-    return 2 if u < 0 else (1 if u < 0.5 else (0 if u < 1.0 else None))
+def spine_front(phase, t, rise=1.5, dive=1.5):
+    """The emergence front t s into the rise ("rise"), open ("up") or dive ("dive"), px from the mouth's centre."""
+    if phase == "rise":
+        return FRONT_FROM + (FRONT_TO - FRONT_FROM) * min(1.0, max(0.0, t / rise))
+    if phase == "dive":
+        return FRONT_TO - (FRONT_TO - FRONT_FROM) * min(1.0, max(0.0, t / (dive * DIVE_SHARE)))
+    return FRONT_TO if phase == "up" else FRONT_FROM
 
 
-def spine_draw(img, s, mouth, states, vents=None):
-    """The spine behind a risen mouth toward the field's centre: segment i at SPINE_DIST[i] px in its frame
-    states[i] (None: under the sand), tail first; the vent organs over segments 0-2 (vents[j] its frame)."""
+def emergence(seg, front):
+    """Segment seg's rise with the front at front (0 a third out .. 1 up), blended over the band behind it."""
+    return min(1.0, max(0.0, (front - SPAN_START[seg]) / (SPAN_END[seg] - SPAN_START[seg] + BAND)))
+
+
+def dive_body(t, dive=1.5):
+    """The ridge's opacity t s into the dive: full while the back sinks into it, then fading by the dive's end."""
+    sunk = dive * DIVE_SHARE
+    return min(1.0, max(0.0, 1 - (t - sunk) / (dive - sunk)))
+
+
+def revealed(sp, cx, cy, ux, uy, cut, alpha=1.0):
+    """sp (centred on cx, cy) shown only where it lies less than cut px along the unit axis (ux, uy) from its
+    centre, the edge SOFT px wide, taking the sand's colour toward it over SAND px (the game's reveal shader), at
+    alpha."""
+    a = np.array(sp).astype(np.float64)
+    h, w = a.shape[:2]
+    gy, gx = np.mgrid[0:h, 0:w]
+    along = (gx + 0.5 - w / 2) * ux + (gy + 0.5 - h / 2) * uy
+    clean = np.clip((cut - along) / SAND, 0, 1)[..., None]
+    a[..., :3] = SAND_RGB * (1 - clean) + a[..., :3] * clean
+    a[..., 3] *= np.clip((cut - along) / SOFT + 0.5, 0, 1) * alpha
+    return Image.fromarray(a.astype(np.uint8), "RGBA")
+
+
+def spine_draw(img, s, mouth, front, vents=None, clock=None, diving=False):
+    """The spine behind a risen mouth toward the field's centre, out of its ridge up to the front (px from the
+    mouth): segment i centred at SPINE_DIST[i] px, tail first, its states blended; the vent organs over segments
+    0-2 (vents[j] its frame, shut until its segment is up), cut as their segments; then the sand puffs (clock: s
+    into the rise, on through the open, or into the dive)."""
     mx, my = mouth
     dx, dy = FW / 2 - mx, 270 - my
     L = math.hypot(dx, dy)
+    ux, uy = dx / L, dy / L
     k = heading_of(dx, dy)
+    sp = s["dust-colossus-spine"]
     for seg in reversed(range(len(SPINE_DIST))):
-        if states[seg] is not None:
-            d = SPINE_DIST[seg]
-            paste_c(img, s["dust-colossus-spine"][spine_index(seg, states[seg], k)], mx + dx / L * d, my + dy / L * d)
+        if front + SOFT / 2 <= SPAN_START[seg]:
+            continue
+        d = SPINE_DIST[seg]
+        cx, cy = mx + ux * d, my + uy * d
+        state = 2 * emergence(seg, front)
+        low = min(2, int(state))
+        mix = state - low
+        paste_c(img, revealed(sp[spine_index(seg, low, k)], cx, cy, ux, uy, front - d), cx, cy)
+        if mix > 0 and low < 2:
+            paste_c(img, revealed(sp[spine_index(seg, low + 1, k)], cx, cy, ux, uy, front - d, mix), cx, cy)
     for j, st in enumerate(vents or []):
-        if st is not None and states[j] is not None:
+        if st is not None and front + SOFT / 2 > SPAN_START[j]:
             d = SPINE_DIST[j]
-            paste_c(img, s["dust-colossus-vent"][st], mx + dx / L * d, my + dy / L * d)
+            st = st if emergence(j, front) >= 1 or st == 3 else 0
+            paste_c(img, revealed(s["dust-colossus-vent"][st], mx + ux * d, my + uy * d, ux, uy, front - d),
+                    mx + ux * d, my + uy * d)
+    if clock is not None:
+        dust = s["colossus-ridge-dust"]
+        for n in range(int((SPAN_END[-1] - SPAN_START[0]) / PUFF_STEP) + 1):
+            d = SPAN_START[0] + PUFF_STEP * (n + 0.5)
+            share = (d - FRONT_FROM) / (FRONT_TO - FRONT_FROM)
+            age = clock - (1.5 * DIVE_SHARE * (1 - share) if diving else 1.5 * share)
+            if 0 <= age < PUFF_SECONDS:
+                side = PUFF_SIDE if n % 2 == 0 else -PUFF_SIDE
+                f = dust[min(len(dust) - 1, int(age / PUFF_SECONDS * len(dust)))]
+                paste_c(img, faded(f, 0.9), mx + ux * d - uy * side, my + uy * d + ux * side)
+
+
+def ridge_behind(img, s, mouth, alpha=1.0):
+    """The ridge's silhouette behind a risen mouth, from RIDGE_BACK px back to the neck, toward the centre."""
+    mx, my = mouth
+    dx, dy = FW / 2 - mx, 270 - my
+    L = math.hypot(dx, dy)
+    a = (mx + dx / L * RIDGE_BACK, my + dy / L * RIDGE_BACK)
+    b = (mx + dx / L * 18, my + dy / L * 18)
+    return ridge_draw(img, s, a, b, 1.0, head=False, alpha=alpha)
 
 
 THROE_SEQ = [(0.3, "rear", 0), (0.65, "rear", 1), (1.1, "rear", 2), (1.35, "rear", 3), (1.6, "rear", 2),
@@ -1274,7 +1350,7 @@ def review_gif(s, until=None):
         label = ""
         # ------------------------------------------------ the rear breach (phase 2)
         if t < 3.0:
-            img = ridge_draw(img, s, (FW / 2, 250), (P1[0], P1[1] - 60), min(1.0, t / 2.6))
+            img = ridge_draw(img, s, (P1[0], P1[1] - RIDGE_BACK), (P1[0], P1[1] - 18), min(1.0, t / 2.6))
             label = "PHASE 2: THE RIDGE COMES IN, THE BULGE"
         if 1.0 <= t < 3.0:
             paste_c(img, s["dust-colossus-bulge"][min(3, int((t - 1.0) / 0.5))], *P1)
@@ -1282,23 +1358,24 @@ def review_gif(s, until=None):
             fu = 0 if t < 3.75 else (4 if t >= 8.0 else 1 + int(t * 6) % 3)
             paste_c(img, s["dust-colossus-funnel"][fu], *P1)
         if t >= 9.5:
-            paste_c(img, s["dust-colossus-funnel"][5], P1[0], P1[1] + ground_step(t) - ground_step(9.5))
+            paste_c(img, s["dust-colossus-funnel"][5], P1[0], P1[1] + ground_scroll(t) - ground_scroll(9.5))
         if 3.0 <= t < 9.5:
-            if t < 8.0:
-                states = [spine_rise_state(i, t - 3.0) for i in range(4)]
+            img = ridge_behind(img, s, P1, dive_body(t - 8.0) if t >= 8.0 else 1.0)
+            if t < 4.5:
+                front, clock, diving = spine_front("rise", t - 3.0), t - 3.0, False
+            elif t < 8.0:
+                front, clock, diving = spine_front("up", 0), t - 3.0, False
             else:
-                states = [spine_dive_state(i, t - 8.0) for i in range(4)]
+                front, clock, diving = spine_front("dive", t - 8.0), t - 8.0, True
             vents = []
             for j in range(3):
-                if states[j] is None:
-                    vents.append(None)
-                elif j == 1 and t >= 6.0:
+                if j == 1 and t >= 6.0:
                     vents.append(3)
-                elif states[j] < 2 or t < 4.5 or t >= 8.0:
+                elif t < 4.5 or t >= 8.0:
                     vents.append(0)
                 else:
                     vents.append(2 if (t - 4.8 - 0.3 * j) % 1.2 < 0.25 else 1)
-            spine_draw(img, s, P1, states, vents)
+            spine_draw(img, s, P1, front, vents, clock, diving)
             if 6.0 <= t < 6.5:
                 dx, dy = FW / 2 - P1[0], 270 - P1[1]
                 L = math.hypot(dx, dy)
@@ -1307,7 +1384,7 @@ def review_gif(s, until=None):
         p = 3
         if 3.0 <= t < 4.5:
             paste_c(img, s["dust-colossus-shut"][p * 6 + min(2, int((t - 3.0) / 0.5))], *P1)
-            label = "THE RISE: THE SPINE BREAKS THE SAND BEHIND THE MOUTH"
+            label = "THE RISE: THE SPINE RISES OUT OF ITS RIDGE, HEAD TO TAIL"
         elif 4.5 <= t < 7.0:
             paste_c(img, s["dust-colossus-mouth"][p * 3 + (0 if t < 4.8 else 1)], *P1)
             label = "OPEN: THE VENT ORGANS ON THE SPINE VENT" if t < 6.0 else "VENT 2 DESTROYED (SCARRED, STAYS DEAD)"
@@ -1318,18 +1395,21 @@ def review_gif(s, until=None):
             paste_c(img, s["dust-colossus-shut"][p * 6 + 3], *P1)
         elif 8.0 <= t < 9.5:
             paste_c(img, s["dust-colossus-shut"][p * 6 + (4 if t < 8.75 else 5)], *P1)
-            label = "THE DIVE: THE SPINE SINKS, HEAD FIRST"
+            label = "THE DIVE: THE SPINE SINKS INTO ITS RIDGE, TAIL FIRST"
         # ------------------------------------------------ the front breach, following (a slanted spine)
         if 9.5 <= t < 15.5:
             fu = 0 if t < 10.25 else (4 if t >= 14.0 else 1 + int(t * 6) % 3)
             paste_c(img, s["dust-colossus-funnel"][fu], *P2)
-            if t < 14.0:
-                states = [spine_rise_state(i, t - 9.5) for i in range(4)]
+            img = ridge_behind(img, s, P2, dive_body(t - 14.0) if t >= 14.0 else 1.0)
+            if t < 11.0:
+                front, clock, diving = spine_front("rise", t - 9.5), t - 9.5, False
+            elif t < 14.0:
+                front, clock, diving = spine_front("up", 0), t - 9.5, False
             else:
-                states = [spine_dive_state(i, t - 14.0) for i in range(4)]
-            vents = [None if states[j] is None else (3 if j == 1 else (0 if states[j] < 2 or t < 11.0 or t >= 14.0
-                     else (2 if (t - 11.3 - 0.3 * j) % 1.2 < 0.25 else 1))) for j in range(3)]
-            spine_draw(img, s, P2, states, vents)
+                front, clock, diving = spine_front("dive", t - 14.0), t - 14.0, True
+            vents = [3 if j == 1 else (0 if t < 11.0 or t >= 14.0
+                     else (2 if (t - 11.3 - 0.3 * j) % 1.2 < 0.25 else 1)) for j in range(3)]
+            spine_draw(img, s, P2, front, vents, clock, diving)
             p = 0
             if t < 11.0:
                 paste_c(img, s["dust-colossus-shut"][p * 6 + min(2, int((t - 9.5) / 0.5))], *P2)
@@ -1396,9 +1476,28 @@ def review_gif(s, until=None):
     return frames
 
 
-def ground_step(t):
-    """The review field's scroll (px) at t: 20 px/s in 0.5 s steps."""
-    return 10 * int(t * 2)
+CRAWL, CRAWL_EASE = 20.0, 0.5               # the arena's crawl (px/s) and its ease (s, a smoothstep)
+STILL = (1.0, 17.0)                         # the review's first tell to the kill: the Colossus out, the ground still
+
+
+def crawl_factor(t):
+    """Step GSR: the share of the crawl at t, as the game's (SIM-K): easing to a stop that is reached as the first
+    tell starts, still while the Colossus is out (here to the kill), easing back in from it."""
+    if t <= STILL[0] - CRAWL_EASE:
+        u = 1.0
+    elif t < STILL[0]:
+        u = (STILL[0] - t) / CRAWL_EASE
+    elif t <= STILL[1]:
+        u = 0.0
+    else:
+        u = min(1.0, (t - STILL[1]) / CRAWL_EASE)
+    return u * u * (3 - 2 * u)
+
+
+def ground_scroll(t, step=1 / 240):
+    """The review field's scroll (px) at t: the crawl integrated over its eases."""
+    n = int(t / step)
+    return sum(CRAWL * crawl_factor((i + 0.5) * step) * step for i in range(n)) + CRAWL * crawl_factor(t) * (t - n * step)
 
 
 def ship_path(t):
@@ -1416,31 +1515,36 @@ def load_game(name):
     return artkit.load_frames(name)
 
 
-def spine_scene_review(s, mouth, pose, states, vents):
-    """The back as the game lays it behind an edge mouth (risen shut, or still rising), on the arena floor."""
+def spine_scene_review(s, mouth, pose, front, vents):
+    """The back as the game lays it behind an edge mouth (risen shut, or still rising: the front px from the
+    mouth), out of its ridge, on the arena floor."""
     img = Field().frame(0.0)
-    spine_draw(img, s, mouth, states, vents)
-    rise = 2 if states[0] == 2 else 1
+    img = ridge_behind(img, s, mouth)
+    spine_draw(img, s, mouth, front, vents)
+    rise = 2 if front >= FRONT_TO else 1
     paste_c(img, s["dust-colossus-shut"][pose * 6 + rise], *mouth)
     return img.resize((288, 324), Image.LANCZOS)
 
 
 def review():
-    """Round 46 (round 45 A.a): the spine re-rendered as one continuous ridged back."""
+    """Round 46 (round 45 A.a): the spine re-rendered as one continuous ridged back; b (step GSR): rising out of its
+    ridge as the game draws it."""
     artkit.REVIEW_ROUND = REVIEW_ROUND
     s = {name: load(name) for name in SET_NAMES}
-    for name in ("colossus-ridge", "colossus-ridge-head", "colossus-ridge-tail", "colossus-ridge-glow"):
+    for name in ("colossus-ridge", "colossus-ridge-head", "colossus-ridge-tail", "colossus-ridge-glow",
+                 "colossus-ridge-dust"):
         s[name] = l20.load(name)
     gif = review_gif(s, until=15.5)
     sp = s["dust-colossus-spine"]
-    laid = [spine_scene_review(s, (240, 515), 3, [2, 2, 2, 2], [1, 1, 1]),
-            spine_scene_review(s, (130, 30), 0, [2, 2, 2, 2], [2, 3, 1]),
-            spine_scene_review(s, (25, 330), 1, [2, 2, 2, 2], None),
-            spine_scene_review(s, (240, 515), 3, [2, 1, 0, None], [0, None, None]),
-            spine_scene_review(s, (455, 120), 2, [1, 0, 0, None], None)]
+    laid = [spine_scene_review(s, (240, 515), 3, FRONT_TO, [1, 1, 1]),
+            spine_scene_review(s, (130, 30), 0, FRONT_TO, [2, 3, 1]),
+            spine_scene_review(s, (25, 330), 1, FRONT_TO, None),
+            spine_scene_review(s, (240, 515), 3, 250, [0, 0, 0]),
+            spine_scene_review(s, (455, 120), 2, 170, None)]
     rows = [
-        ("THE BACK AS THE GAME LAYS IT (SEGMENTS 0-3 AT 120/200/280/350 PX): REAR, FRONT AT A SLANT (VENTING, ONE "
-         "DESTROYED), LEFT; RISING (REAR, RIGHT)", laid, 1, False),
+        ("THE BACK AS THE GAME LAYS IT ON ITS RIDGE (SEGMENTS 0-3 AT 120/200/280/350 PX): REAR, FRONT AT A SLANT "
+         "(VENTING, ONE DESTROYED), LEFT; RISING OUT OF THE RIDGE HEAD TO TAIL (REAR: FRONT AT 250 PX, RIGHT: 170)",
+         laid, 1, False),
         ("SPINE SEGMENT 0 UP (STATE 2), HEADINGS 0-7 (0 = THE SPINE RUNS DOWN THE SCREEN, CLOCKWISE)",
          [sp[spine_index(0, 2, k)] for k in range(8)], 1, False),
         ("SPINE SEGMENT 0 UP, HEADINGS 8-15", [sp[spine_index(0, 2, k)] for k in range(8, 16)], 1, False),
@@ -1449,12 +1553,14 @@ def review():
         ("SPINE AT HEADING 3 (A SLANT): SEGMENTS 0-3 UP", [sp[spine_index(g, 2, 3)] for g in range(4)], 1, False),
         ("VENT ORGAN ON A SPINE SEGMENT: SHUT (RISING/SINKING), UP, VENTING, DESTROYED", s["dust-colossus-vent"], 2,
          False),
-        ("FRAMES FROM THE GIF: THE RISE, VENTING, VENT 2 DESTROYED, THE DIVE, THE SLANTED FRONT BREACH",
-         [gif[int(t * FPS)].resize((216, 243), Image.LANCZOS) for t in (3.9, 5.2, 6.5, 8.6, 12.5)], 1, False),
+        ("FRAMES FROM THE GIF: THE RISE (HEAD TO TAIL OUT OF THE RIDGE), VENTING, VENT 2 DESTROYED, THE DIVE "
+         "(TAIL FIRST), THE SLANTED FRONT BREACH RISING",
+         [gif[int(t * FPS)].resize((216, 243), Image.LANCZOS) for t in (3.5, 3.9, 5.2, 6.5, 8.5, 8.8, 10.1)], 1,
+         False),
     ]
-    sheet = artkit.review_sheet("DUST COLOSSUS - THE SPINE AS ONE CONTINUOUS RIDGED BACK (ROUND 46)", rows,
+    sheet = artkit.review_sheet("DUST COLOSSUS - THE SPINE RISING OUT OF ITS RIDGE (ROUND 46, B)", rows,
                                 width=1500, batch=BATCH)
-    artkit.save_review(sheet, gif, CONCEPT, "dust-colossus", fps=FPS)
+    artkit.save_review(sheet, gif, CONCEPT, "dust-colossus", fps=FPS, variant=REVIEW_VARIANT)
 
 
 PIV = pivots()

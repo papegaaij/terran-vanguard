@@ -50,7 +50,7 @@ movement:
     lanes_x: [120, 240, 360]   # px from the left edge: the vertical passes' lanes
     lanes_y: [200, 330]        # px below the top edge: the horizontal passes' lanes
     edges: [top, bottom, left, top, bottom, right]   # the entry edges in turn (then again); the first, top, is its intro
-    off_screen: 3       # s off the screen between two passes, under the next entry edge's warning
+    off_screen: 3       # s off the screen between two passes, with no edge warning (a boss never warns)
     turn: 1.5           # s a turn round on the spot takes (phase 3)
     speeds: [45, 55, 60]   # px/s by phase
     beside_lane: true   # phase 1: the lane beside the ship's
@@ -216,7 +216,7 @@ notes:
   hp: hull 1,190; pods 80 each; total
   armour: 'the front plate turns every shot that meets it from ahead (it stops the Ion Beam too); a pod turns every shot while its hatch is shut (round 44: only its 0.4 s hatch tell and its salvo open it; from phase 3 the hatches jam open); the back takes full damage; the vents ×2 while open ({boss.cone.vents} s after each burn, always in phase 3)'
   speed: (phase 1), 55 px/s (phase 2), 60 px/s (phase 3); turns 90° in 1.5 s
-  movement: '`walk` in **passes** across the halted casting yard (see *Passes*); off the screen {movement.stride.off_screen} s between passes, under an edge warning'
+  movement: '`walk` in **passes** across the halted casting yard (see *Passes*); off the screen {movement.stride.off_screen} s between passes, with no edge warning (a boss never warns)'
   attack_prefix: 'the rear **flame cone** ({boss.cone.length} px, ±{boss.cone.half_angle}°, a {boss.cone.tell} s tell, a {boss.cone.burn} s burn, `heavy` = 10 once per burn, at most every {boss.cone.cooldown} s; from phase 2 its burn follows the ship at {boss.cone.track}°/s; see *Attacks*); the back-mounted **rail lance** once both pods are gone and in phase 3 (round 44: a {boss.lance.charge} s charge, a glowing line from its back through where the ship was, then a {boss.lance.fire} s shot along it, `heavy` = 10 once a shot, every {boss.lance.interval} s, {boss.lance.last_interval} s in phase 3); the **stomp** (round 44: the ship or Rook within {boss.stomp.reach} px of its centre: a {boss.stomp.tell} s brace, then a ring out to {boss.stomp.radius} px over {boss.stomp.expand} s, `medium` = 6 once a stomp, at most every {boss.stomp.cooldown} s); '
   weak_points: '(exposed machinery: they glow heat orange when open)'
   bounty: ' in Act 1 terms (hull 395, pods 50 each); × 2.56 (Act 3 factor 1.6²) × Level 19''s `bounty_scale` of 0.28 it pays **355 = 15.0 % of budget(19) = 2,366** (see *Bounty*)'

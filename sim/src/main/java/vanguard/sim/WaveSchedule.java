@@ -9,16 +9,17 @@ import java.util.Map;
 /**
  * The level's waves planned unit by unit ({@link Formations}), in the order they enter, and the
  * edge warnings for the waves that enter from the sides or the rear (design/enemies, bullet
- * readability rules: an arrow at that edge at least 3 s ahead), and at the bottom edge ahead of a
- * chain's or a swarm's loop-back and a rear ambush unit's re-entry. Built once per level; an
- * attempt walks through it with a cursor.
+ * readability rules: an arrow at that edge at least 3 s ahead). Only a wave's first entry warns: a
+ * unit's own re-entry (a chain's or a swarm's loop-back, a rear ambush's pop-up behind the ship) is
+ * its flight pattern and gets none (2026-10-21, user). Built once per level; an attempt walks
+ * through it with a cursor.
  *
  * <p>M7 part G (design/campaign Level 20, Reverse scroll; defaults pending the user's review): the units of a wave
  * whose time falls in a reversed scroll ({@link Sortie#travelAt}{@code < 0}) are <em>flipped</em> ({@link
  * TravelFrame}): planned as ever, they live in the mirrored frame, so a front entry comes in at the bottom edge and a
- * rear one at the top. The edges warn by the screen: a flipped wave from the rear, a flipped re-entry (a rear ambush's,
- * a swarm's loop-back) and a flipped cross unit from beyond the frame's bottom warn {@link WarningEdge#TOP}; a flipped
- * front wave warns {@link WarningEdge#BOTTOM} only when it carries a {@code warningSeconds} (Level 20's lessons). A
+ * rear one at the top. The edges warn by the screen: a flipped wave from the rear and a flipped cross unit from beyond
+ * the frame's bottom warn {@link WarningEdge#TOP}; a flipped front wave warns {@link WarningEdge#BOTTOM} only when it
+ * carries a {@code warningSeconds} (Level 20's lessons). A
  * walker with frontal armour ({@code frontArc}) and a segment chain are never flipped, nor a pursuit, which enters at the
  * top edge under a TOP warning whatever the scroll's direction.
  */
@@ -125,7 +126,7 @@ final class WaveSchedule {
                 }
                 clocks++;
             }
-            // M5 part D: a rear ambush enters at the top; it is warned ahead of its re-entry instead.
+            // M5 part D: a rear ambush enters at the top; its re-entry behind the ship is its flight: no warning.
             if (wave.formation() == WaveSpec.Formation.PURSUIT) {
                 // M7 part G: a pursuit comes in at the top edge whatever the scroll's direction (screen space).
                 warned.add(wave);
@@ -170,28 +171,9 @@ final class WaveSchedule {
         }
         volleyClocks = clocks;
         burrowClocks = burrows;
-        // A chain's loop-back re-enters from the bottom edge: warned like a rear entry.
-        List<Spawn> loops =
-                planned.stream().filter(spawn -> spawn.loop().isPresent()).toList();
-        // M5 part D: so do a rear ambush unit's re-entry and every loop-back of a swarm's route.
-        List<int[]> reentries = new ArrayList<>();
-        for (Spawn spawn : planned) {
-            // M7 part G: a flipped unit re-enters from the frame's bottom: the screen's top.
-            int edge = flipOf.containsKey(spawn) ? WarningEdge.TOP.bit() : WarningEdge.BOTTOM.bit();
-            if (spawn.ambush().isPresent()) {
-                int end = spawn.ambushReentryTick();
-                reentries.add(
-                        new int[] {end - SimStep.ticks(spawn.ambush().get().warningSeconds()), end, edge});
-            }
-            if (spawn.swarm().isPresent() && spawn.swarm().get().member() == 0) {
-                Spawn.Route route = spawn.swarm().get().route();
-                for (int k = 0; k < route.loops().size(); k++) {
-                    int end = spawn.tick() + route.reentryAfter(k);
-                    reentries.add(new int[] {end - SimStep.ticks(route.warningSeconds()), end, edge});
-                }
-            }
-        }
-        int warnings = warned.size() + loops.size() + reentries.size();
+        // 2026-10-21 (user): a unit's own re-entry (a chain's or a swarm's loop-back, a rear ambush's pop-up behind the
+        // ship) is its flight pattern, not a wave's entry: it gets no edge warning (nor one after the unit's kill).
+        int warnings = warned.size();
         warningStarts = new int[warnings];
         warningEnds = new int[warnings];
         warningEdges = new int[warnings];
@@ -201,20 +183,6 @@ final class WaveSchedule {
             warningStarts[i] = SimStep.ticks(wave.t() - lead);
             warningEnds[i] = SimStep.ticks(wave.t());
             warningEdges[i] = warnedEdges.get(i);
-        }
-        for (int i = 0; i < loops.size(); i++) {
-            Spawn spawn = loops.get(i);
-            int end = spawn.reentryTick();
-            warningStarts[warned.size() + i] =
-                    end - SimStep.ticks(spawn.loop().orElseThrow().warningSeconds());
-            warningEnds[warned.size() + i] = end;
-            warningEdges[warned.size() + i] = WarningEdge.BOTTOM.bit();
-        }
-        for (int i = 0; i < reentries.size(); i++) {
-            int at = warned.size() + loops.size() + i;
-            warningStarts[at] = reentries.get(i)[0];
-            warningEnds[at] = reentries.get(i)[1];
-            warningEdges[at] = reentries.get(i)[2];
         }
     }
 

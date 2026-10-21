@@ -14,8 +14,8 @@ import vanguard.sim.Enemy.AmbushPhase;
 
 /**
  * The Wraith (design/enemies/air/wraith, user decision D6 = a of M5 part D): cloaked on {@code
- * high-air} it swoops down its lane past the ship and off the bottom edge; after the bottom edge's
- * warning it comes back up to its hold point, decloaks with a 0.4 s flash (on {@code air} from its
+ * high-air} it swoops down its lane past the ship and off the bottom edge; with no edge warning (its
+ * flight, 2026-10-21) it comes back up to its hold point, decloaks with a 0.4 s flash (on {@code air} from its
  * start, the {@code DECLOAK} event), holds 2.5 s (hard 3.0 s) with two bursts up the screen and leaves
  * decloaked up the nearer side lane.
  */
@@ -133,24 +133,35 @@ class WraithTest {
     }
 
     @Test
-    void theBottomEdgeIsWarnedThreeSecondsAheadOfItsReEntryNotOfItsEntry() {
+    void itsPopUpBehindTheShipIsItsFlightNoEdgeWarning() {
+        // 2026-10-21 (user): the re-entry from the rear is part of its flight pattern: no warning, from its entry at
+        // the
+        // top through its pop-up behind the ship to its exit.
         List<Seen> seen = follow(lone(PartDSpecs.wraith()), Command.NONE);
         int rise = first(seen, AmbushPhase.RISE);
-        int bottom = WarningEdge.BOTTOM.bit();
-
         for (Seen s : seen) {
-            boolean warned = (s.warnings() & bottom) != 0;
-            if (s.step() < rise - SimStep.ticks(3) - 1 || s.step() > rise) {
-                assertFalse(warned, "no warning at " + s.step() + " (re-entry at " + rise + ")");
-            } else if (s.step() >= rise - SimStep.ticks(3) + 1 && s.step() < rise) {
-                assertTrue(warned, "warned at " + s.step() + " (re-entry at " + rise + ")");
-            }
+            assertEquals(0, s.warnings(), "no edge warning at " + s.step() + " (re-entry at " + rise + ")");
             // A rear wave for Rook's Trail from its re-entry on.
             assertEquals(s.step() >= rise ? WaveSpec.Entry.REAR : WaveSpec.Entry.FRONT, s.entry(), "at " + s.step());
         }
-        assertTrue(
-                seen.stream().filter(s -> s.phase() == AmbushPhase.SWOOP).anyMatch(s -> (s.warnings() & bottom) != 0),
-                "the warning starts while it still swoops");
+    }
+
+    @Test
+    void shotDownOnItsWayDownItGivesNoWarningForNothing() {
+        Sortie sortie = lone(PartDSpecs.wraith());
+        Enemy wraith = null;
+        int step = 0;
+        while (wraith == null || wraith.ambushPhase() != AmbushPhase.SWOOP) {
+            sortie.step(Command.NONE);
+            wraith = find(sortie, "wraith");
+            assertTrue(step++ < SimStep.ticks(10), "it swoops");
+        }
+        assertTrue(wraith.damage(1e6), "shot down while it swoops");
+        for (int i = 0; i < SimStep.ticks(15); i++) {
+            sortie.step(Command.NONE);
+            assertEquals(0, sortie.edgeWarnings(), "no warning after its kill, step " + i);
+        }
+        assertEquals(null, find(sortie, "wraith"), "it is gone");
     }
 
     @Test

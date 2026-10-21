@@ -52,7 +52,7 @@ notes:
   orientation: per part type (head, segment, tail)
   hp: head 40, each segment 4, tail 10; whole
   speed: (regrown chain 220 px/s)
-  movement: 'the head flies an authored `swirl`, `loop` or `figure-8` path from the wave; segments `chain` on the head''s path history at {segment_chain.spacing} × segment length spacing; frequent `loop` + `rear-entry` (edge-warned like every rear entry)'
+  movement: 'the head flies an authored `swirl`, `loop` or `figure-8` path from the wave; segments `chain` on the head''s path history at {segment_chain.spacing} × segment length spacing; frequent `loop` + `rear-entry` (its own re-entry: no edge warning, 2026-10-21)'
   formations: (solo; on hard two chains cross, *pairs crossing*)
   bounty: '; segment {segment_chain.bounty} each, tail +{part_list.1.first_bonus} if destroyed first: a perfect dismantle pays 96; a head-first kill pays the head only; a regrown head pays {segment_chain.regrow.bounty}'
   death: 'head: `medium` burst (its teal flash and a deep wet burst), then the segments and the tail burst one after another down the body ({segment_chain.pop_interval} s apart) as it drifts to rest, each with its glint, pieces and wet burst; the waiting members cannot be hit and pay nothing; a segment shot on its own bursts the same way'

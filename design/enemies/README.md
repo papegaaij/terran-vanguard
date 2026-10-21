@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Enemies
@@ -204,7 +204,7 @@ that move in any direction must read from any angle:
 | `loop` | A full loop-the-loop mid-path, often to turn around and come back from the rear. |
 | `figure-8` | Traces a figure-eight around two points, typically across the whole play field. |
 | `cross` | Crosses the screen diagonally or side to side, entering and leaving through different edges. |
-| `rear-entry` | Enters from the bottom edge (or loops around to it) and attacks up the screen; always edge-warned, 3 s ahead of the entry or the re-entry. |
+| `rear-entry` | Enters from the bottom edge (or loops around to it) and attacks up the screen; a wave entering from the bottom edge is always edge-warned 3 s ahead; a loop-around re-entry is the unit's own flight and is not (2026-10-21). |
 | `flock` | Boids-like group movement (separation, alignment, cohesion) steered by a leader or target; produces swirling clouds. Planned (M5 part D) for the [Mote Swarm](air/mote-swarm/README.md): a leader point flies the wave's authored route, the members steer round it; deterministic (fixed order, `StrictMath`) and allocation-free, at most 24 members. |
 | `walk` | A walker moving along the terrain on its own heading (not just scrolling), turning to face where it goes; the gait follows the walk cycle. |
 | `surface` | Emerges from the ground or water at a telegraphed spot (ripple, dust), acts, and dives again; like `burrow` but it travels while submerged. |
@@ -247,7 +247,7 @@ that move in any direction must read from any angle:
 | `snake` | A column following a curving `path`, each unit delayed by a fixed interval. Readability: the head is on screen at least 1.5 s before it can reach the player, however long the snake. |
 | `stream` | A continuous trickle of single units from alternating edges. |
 | `pincer` | Two groups entering from the left and right edges at the same time. |
-| `rear ambush` | A group of 2–4 attacking from the bottom edge, each in its own lane across it (always warned; see readability). A cloaked Wraith enters at the top first and is warned 3 s ahead of its re-entry (M5 part D). |
+| `rear ambush` | A group of 2–4 attacking from the bottom edge, each in its own lane across it. A cloaked Wraith enters at the top first; its re-entry behind the ship is its flight pattern and gets no edge warning (M5 part D; 2026-10-21, see readability). |
 | `circle` | Units orbiting a point, then breaking off. |
 | `grid` | A block of units that holds and shifts sideways (a nod to classic arcades). |
 | `wall` | A full-width line with one or two gaps to fly through. |
@@ -345,7 +345,10 @@ open ocean does not have.
   `mortar` impact point marked ≥ 1 s ahead.
 - No enemy bullet spawns within 72 px of the player's ship.
 - Waves entering from the sides or rear get an **edge warning**: an arrow at the edge of the
-  play field ≥ 3 s ahead, often with a radio call.
+  play field ≥ 3 s ahead, often with a radio call. Only a wave's **first entry** warns: a unit's
+  re-entry from a side or the rear as part of its own flight pattern (a Wraith's pop-up behind
+  the ship, a chain's or a swarm's loop-back) never does, nor after its kill, and **bosses never
+  trigger edge warnings** (their own tells announce them; 2026-10-21, user).
 - A **bullet budget** caps the number of enemy bullets on screen (values per difficulty in
   [difficulty](../systems/difficulty/README.md)). Patterns degrade gracefully (fewer bullets per
   burst) when the budget is hit.
@@ -617,9 +620,9 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
       (`DriftjellyTest`, `ReefSpitterTest`); in step E2c the arena boss: anchored, its parts' own
       layers, its slam lanes, surfacing and weak spots (`SlamArenaTest`, `KrakenTest`).
 - [x] M5 part D (Level 10): the `swarm` formation with the `flock` movement (a leader point on an
-      authored route, boids round it, loop-backs warned 3 s ahead of the re-entry; the Mote Swarm),
+      authored route, boids round it, loop-backs (not edge-warned since 2026-10-21); the Mote Swarm),
       the `rear ambush` formation (2–4 across the bottom edge; a cloaked unit enters at the top and
-      is warned ahead of its re-entry; the Wraith), a cloak (`high-air` until a decloak, then `air`,
+      re-enters behind the ship, not edge-warned since 2026-10-21; the Wraith), a cloak (`high-air` until a decloak, then `air`,
       the per-unit current layer of part C) and authored `paths` on a snake (`FlockTest`,
       `PartDFormationsTest`, `WraithTest`).
 - [x] M5 part C (Level 09): the `pack` formation (one path per walker, 0.25 s apart), hardened
@@ -852,3 +855,11 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   (the plan's fit still kills a Needler group before its first shot). Every Act 2-3 level from 11 to 18 is listed
   now; Level 10 (the user's reference) is not (accepted in round 44 (2026-10-20)).
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21 (user, after playthroughs): "It looks like for the wraiths this warning is shown. The
+  wraith popping up from behind is part of its normal flight pattern, and as such, the warning is
+  confusing. Also, when the wraith is shot down while going down, you get a warning for nothing.
+  When a re-entry from left, rear or right is part of the normal flight pattern, do not show the
+  warning. The walker also seem to show warnings. This takes away the surprise effect that should
+  go with a boss fight. Bosses must never trigger these warnings." The readability rule now warns
+  only a wave's first entry from a side or the rear; re-entries (the Wraith, the Coilwyrm's and
+  the Mote Swarm's loop-backs) and bosses feed no edge warning (see [HUD](../ui/hud/README.md)).

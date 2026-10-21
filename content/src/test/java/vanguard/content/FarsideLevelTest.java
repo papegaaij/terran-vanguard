@@ -222,7 +222,7 @@ class FarsideLevelTest {
 
     @ParameterizedTest
     @EnumSource(Difficulty.class)
-    void theAutopilotFliesTheLevelWithTheLoopBackWarnedAhead(Difficulty difficulty) {
+    void theAutopilotFliesTheLevelWithTheLoopBackNotWarned(Difficulty difficulty) {
         Sortie sortie = new Sortie(
                 2186,
                 SimSpecs.starterLoadout(content, difficulty),
@@ -231,16 +231,18 @@ class FarsideLevelTest {
                 SimSpecs.starterLoadout(content, difficulty).plating().maxArmour());
         int steps = 0;
         double bottomFrom = -1;
+        double sideFrom = -1;
         boolean telegraphed = false;
         while (!sortie.complete() && steps++ < MAX_STEPS) {
             if (!sortie.flying()) {
                 sortie.retry(sortie.ship().defences().maxArmour());
             }
             sortie.step(Autopilot.commands(sortie));
-            if (bottomFrom < 0
-                    && sortie.levelSeconds() > 45
-                    && (sortie.edgeWarnings() & WarningEdge.BOTTOM.bit()) != 0) {
+            if (bottomFrom < 0 && (sortie.edgeWarnings() & WarningEdge.BOTTOM.bit()) != 0) {
                 bottomFrom = sortie.levelSeconds();
+            }
+            if (sideFrom < 0 && (sortie.edgeWarnings() & WarningEdge.LEFT.bit()) != 0) {
+                sideFrom = sortie.levelSeconds();
             }
             SimEvents events = sortie.events();
             for (int i = 0; i < events.size(); i++) {
@@ -249,8 +251,10 @@ class FarsideLevelTest {
         }
         assertTrue(sortie.complete());
         assertTrue(telegraphed, "a Mantis swept");
-        // The loop-back's warning: the bottom edge, 3 s (easy 4 s) before it re-enters.
-        assertTrue(bottomFrom > 45, "the loop-back was warned");
+        // 2026-10-21 (user): the Coilwyrm's loop-back is its own flight pattern: the bottom edge is never warned; the
+        // Mantis from the left at t=20 is, 3 s ahead.
+        assertEquals(-1, bottomFrom, "the loop-back is not warned");
+        assertEquals(17, sideFrom, 0.05, "the side entry is warned 3 s ahead");
         assertEquals(4 + sortie.setPieceCount(), sortie.enemyTotal(), "a chain counts once");
     }
 }

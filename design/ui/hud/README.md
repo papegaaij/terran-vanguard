@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/scoring, ../../art-direction]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # HUD
@@ -108,7 +108,12 @@ control prompts 384–430 (a two-line well, 42 px), objective tracker 436–482 
 - **Warning** banners ("WARNING — HOSTILES FROM THE REAR") and **edge warnings**: every wave
   that enters from the sides or the rear gets a flashing arrow at that edge of the play field
   at least 3 s ahead, always, often with a radio call (readability rule in
-  [enemies](../../enemies/README.md#bullet-readability-rules)). The banner's band sits across the
+  [enemies](../../enemies/README.md#bullet-readability-rules)). Only a wave's **first entry**
+  warns: a unit's own re-entry from a side or the rear as part of its flight pattern (a Wraith's
+  pop-up behind the ship, a chain's or a swarm's loop-back) gets no warning, banner or rear bark,
+  and a **boss never triggers** them (the walker's entries, the Dust Colossus's breaches, the
+  Siege Spire's launched Wraiths): its own tells and the boss warning banner announce it
+  (2026-10-21, user). The banner's band sits across the
   upper play field (its middle 164 px below the top edge); in a level with an air escort
   (Level 10) it sits higher, 97–127 px below the top edge, so it never covers the shuttle band
   (stations from 140 px down). The boss warning banner opens at the boss's lead warning when it has
@@ -607,3 +612,10 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
   the READY flash and the dash pip's white state last 0.2 s of game time (step A8).
 - 2026-10-19: The boss warning banner opens at the boss's lead warning when it has one, and closes early rather than hide a boss that fights under it.
 - 2026-10-20: round 42 closed: the barks after the win (`Barks.levelComplete()`, R.h) accepted by the user.
+- 2026-10-21 (user, after playthroughs): "When a re-entry from left, rear or right is part of the
+  normal flight pattern, do not show the warning. [...] Bosses must never trigger these warnings."
+  The edge warnings and wave banners now come only from a wave's first entry from the left, right
+  or rear (in Level 20's reversed scroll, the top) and a side ground unit's entry: no warning for
+  a Wraith's re-entry (nor one after its kill), a chain's or a swarm's loop-back, the Revenant
+  Walker's or the Dust Colossus's entries or the Siege Spire's launches (`Sortie.edgeWarnings`).
+  Rook's rear bark went with the re-entry warnings; Rook's Trail on those units stays.

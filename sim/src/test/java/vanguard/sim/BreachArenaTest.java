@@ -355,33 +355,29 @@ class BreachArenaTest {
     }
 
     @Test
-    void sideAndRearBreachesAreWarnedThreeSecondsBeforeTheirRiseTheFrontNot() {
+    void noBreachIsEdgeWarnedSideAndRearPointsAreFixedThreeSecondsBeforeTheirRise() {
+        // 2026-10-21 (user): a boss never triggers the edge warnings (the surprise of the fight); its bulge and ridge
+        // are its tells. A side or rear point is still fixed 3 s before its rise (the ridge runs to it), the front one
+        // at its tell.
         Sortie sortie = sortie(false, TestSpecs.RULES.withInvulnerableShip());
         BreachArena breach = breach(sortie);
-        int[] warned = new int[BreachArena.Pose.values().length];
-        int[] beforeTell = new int[warned.length];
+        int[] fixed = new int[BreachArena.Pose.values().length];
+        int[] beforeTell = new int[fixed.length];
         int rises = 0;
         while (rises < 5) {
             sortie.step(0);
-            int bit = sortie.edgeWarnings();
-            if (bit != 0) {
+            assertEquals(0, sortie.edgeWarnings(), "no edge warning");
+            if (breach.nextFixed()) {
                 BreachArena.Pose next = breach.nextPose();
-                assertTrue(breach.nextFixed(), "the point is fixed while it is warned");
-                int expected = next == BreachArena.Pose.LEFT
-                        ? WarningEdge.LEFT.bit()
-                        : next == BreachArena.Pose.RIGHT
-                                ? WarningEdge.RIGHT.bit()
-                                : next == BreachArena.Pose.REAR ? WarningEdge.BOTTOM.bit() : 0;
-                assertEquals(expected, bit, "the warning for " + next);
-                warned[next.ordinal()]++;
+                fixed[next.ordinal()]++;
                 beforeTell[next.ordinal()] += breach.phase() == BreachArena.Phase.TELL ? 0 : 1;
             }
             rises += values(sortie, SimEvents.Type.BREACH_RISE).size();
         }
-        assertEquals(0, warned[BreachArena.Pose.FRONT.ordinal()], "a front breach needs no edge warning");
-        assertEquals(SimStep.ticks(3), warned[BreachArena.Pose.LEFT.ordinal()], "3 s before the rise");
-        assertEquals(SimStep.ticks(3), warned[BreachArena.Pose.RIGHT.ordinal()]);
-        assertEquals(SimStep.ticks(3), warned[BreachArena.Pose.REAR.ordinal()]);
+        assertEquals(0, beforeTell[BreachArena.Pose.FRONT.ordinal()], "a front point is fixed at its tell");
+        assertEquals(SimStep.ticks(3), fixed[BreachArena.Pose.LEFT.ordinal()], "3 s before the rise");
+        assertEquals(SimStep.ticks(3), fixed[BreachArena.Pose.RIGHT.ordinal()]);
+        assertEquals(SimStep.ticks(3), fixed[BreachArena.Pose.REAR.ordinal()]);
         assertEquals(SimStep.ticks(1), beforeTell[BreachArena.Pose.LEFT.ordinal()], "1 s before the bulge");
     }
 
@@ -413,8 +409,8 @@ class BreachArenaTest {
         List<double[]> places = new ArrayList<>();
         boolean moved = false;
         while (poses.size() < 6) {
-            if (breach.warning() != 0 && breach.nextPose() == BreachArena.Pose.REAR && !moved) {
-                // The rear point is fixed when its warning starts: the ship flying off does not move it.
+            if (breach.nextFixed() && breach.nextPose() == BreachArena.Pose.REAR && !moved) {
+                // The rear point is fixed 3 s before its rise: the ship flying off does not move it.
                 double fixed = breach.nextX();
                 for (int i = 0; i < SimStep.ticks(0.5); i++) {
                     sortie.step(Command.RIGHT.bit());

@@ -31,7 +31,7 @@ The numbers are in [data.yaml](data.yaml); the table is rendered from it. Values
 | HP | head 40, each segment 4, tail 10; whole 98 (easy 74 / hard 127, from the global multipliers) |
 | Armour / shield | none |
 | Speed | 180 px/s (regrown chain 220 px/s) |
-| Movement | the head flies an authored `swirl`, `loop` or `figure-8` path from the wave; segments `chain` on the head's path history at 0.5 × segment length spacing; frequent `loop` + `rear-entry` (edge-warned like every rear entry) |
+| Movement | the head flies an authored `swirl`, `loop` or `figure-8` path from the wave; segments `chain` on the head's path history at 0.5 × segment length spacing; frequent `loop` + `rear-entry` (its own re-entry: no edge warning, 2026-10-21) |
 | Attack | head: 3-way `fan` every 2 s (spread 24°, 160 px/s, `small` = 4); contact damage `large` = 20 (head) / `small` = 10 (segments, tail) |
 | Formations | snake (solo; on hard two chains cross, *pairs crossing*) |
 | Weak points | head teal crest (×2) |
@@ -63,8 +63,7 @@ The numbers are in [data.yaml](data.yaml); the table is rendered from it. Values
 - The regrown head has 20 HP and pays 20 (half the head). A head-first kill pays the head only
   (the chained death pays nothing more). Parts killed in one step (a Smart Bomb) do not regrow.
 - Each wave authors its own path; a loop-back leaves through the bottom or top edge and re-enters
-  from the bottom edge at the head's x after 6 s, warned 3 s ahead like every rear entry (4 s on
-  easy). `REAR` entry is allowed for a chain.
+  from the bottom edge at the head's x after 6 s, not edge-warned (its own flight, 2026-10-21). `REAR` entry is allowed for a chain.
 
 ## Concept art
 
@@ -80,8 +79,8 @@ Chosen concept: [coilwyrm-r08-a.png](../concept/coilwyrm-r08-a.png), [coilwyrm-r
 ## Implementation
 
 - [x] Path-history chain with per-segment angles and tapering hit boxes; the head flies the
-      wave's authored path; loop-back re-entering from the bottom edge at the head's x, warned
-      3 s ahead (a wave's `warning`, 4 s on easy)
+      wave's authored path; loop-back re-entering from the bottom edge at the head's x, not edge-warned
+      (2026-10-21)
 - [x] The authored `swirl`, `loop` and `figure-8` paths in Level 06's data
 - [x] Counts as one enemy (density, kill ratio); segments pay bounty only
 - [x] Split once with regrowth, second cut kills the severed part

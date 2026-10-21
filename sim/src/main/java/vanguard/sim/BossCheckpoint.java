@@ -164,7 +164,7 @@ final class BossCheckpoint {
         s.streamReleased = streamReleased;
         s.resetArena();
         s.vents.restore(s.levelTick, s.groundScroll);
-        s.bossPasses.clearLaunchWarnings();
+        s.bossPasses.clearLaunches();
         s.complete = false;
         s.wrecked = false;
         s.failed = false;

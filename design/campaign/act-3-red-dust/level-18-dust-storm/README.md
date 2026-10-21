@@ -169,7 +169,7 @@ Enemy definitions are linked per row; formation names from the
   line of 3) in the gaps over 2.5 s, and the spine-turret and mortar nests along the pipelines (the hint
   nest 5 turrets). The level stays the act's breather by threat (no boss, popcorn-weight groups, the
   eye in clear air), not by count. Hard: the firing groups one unit smaller (as Act 2's reworks); easy
-  thinned by the formation lever. Every side and rear wave warned 3 s ahead at its edge (the warnings
+  thinned by the formation lever. Every side and rear wave's first entry warned 3 s ahead at its edge (a Wraith's re-entry is not, 2026-10-21) (the warnings
   draw above the dust). With the plan's fit at medium: **2.77 enemies on the screen and 46.5 enemy shots a
   minute**, two pauses over 2 s (t=25.8–28.7 before the front, the clearing); hard 2.93 and 77.5, one pause;
   easy 1.26 and 15.8 (Act 1's rule: one pause over 3 s); accepted in round 41 (2026-10-19).
@@ -221,7 +221,7 @@ Enemy definitions are linked per row; formation names from the
 | 87.5 | 3 | line abreast | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 4 | front | Rook's line at t=86 |
 | 90 | 3 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Over the buried rover (the secret) |
 | 92.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
-| 94.5 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked: `homing` hits them before the decloak; warned 3 s ahead |
+| 94.5 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked: `homing` hits them before the decloak; no edge warning (a Wraith's re-entry) |
 | 96.5 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front (right) | |
 | 99 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 5 | front | |
 | 101.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 5 | front | The leader drops an overdrive |
@@ -245,7 +245,7 @@ Enemy definitions are linked per row; formation names from the
 | 143 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
 | 145.5 | 5 | line abreast | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 4 | front | Splits half left, half right; Rook's line at t=146 |
 | 148 | 5 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 6 | front | |
-| 150 | 5 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Hard only: an extra Wraith pair from the rear, warned |
+| 150 | 5 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Hard only: an extra Wraith pair from the rear, unwarned |
 | 150.5 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 152.5 | 5 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 3 | rear | Warned 3 s ahead |
 | 155 | 5 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
@@ -387,7 +387,7 @@ expects `homing` (the Hornet Launcher or the Micro-Missile Pod) and is flyable w
   and the Dust Devils' longer window and weaker pull (their specs); the formation lever.
 - **Hard**: radius 150 / 130; the Ghost Drones' 4-shot burst and the second pass of surviving
   line-abreast drones; the Dust Devils' 3-arm spiral and 45 px/s pull; an extra Wraith rear pair at
-  t≈150 (warned); the Wraiths' hard hooks from their spec.
+  t≈150 (unwarned); the Wraiths' hard hooks from their spec.
 
 ## Concept art
 
@@ -439,7 +439,7 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
       the screen through the window: round 41)
 - [x] Wave script to the Act 2+ rules (the user, 2026-10-19): `ActFloorTest` (2.5 on the screen, 10
       shots a minute with the plan's fit at medium) and `PacingTest`'s Act 2 rule (no level left in
-      `PENDING_ACT_TWO_RULE`), the quiet windows, edge warnings for every side and rear wave
+      `PENDING_ACT_TWO_RULE`), the quiet windows, edge warnings for every side and rear wave's first entry
 - [x] Ground targets, the rover secret (20 HP trigger, the beacon only inside the radius, crate 100),
       the supply drone's armour patch at t=118, the overdrive, the Dust Devil's held pickups and the
       shield cell (steps E1, E2, E4: `Level18Test`, `PullTest`; the held patch released in the capture)
@@ -537,3 +537,5 @@ mood still and the chosen radius look **b**, the soft ragged falloff, in
   Ghost Drone's eye and tips come back with its glow frames (`StormLooksTest`). Accepted in round 44 (2026-10-20)
   (`concept/level-18-fixes-r41-b`).
 - 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21: Edge-warning rule change (user, built by step EW): the Wraith rear pairs (t=94.5, hard's t=150) re-enter without
+  an edge warning; the side and rear waves' first entries keep their 3 s warning.

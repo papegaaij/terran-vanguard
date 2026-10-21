@@ -1,7 +1,6 @@
 package vanguard.sim;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static vanguard.sim.PartCSpecs.count;
@@ -95,7 +94,7 @@ class FlockTest {
     }
 
     @Test
-    void eachLoopBackIsWarnedAtTheBottomEdgeAndDivesAtItsDiveSpeed() {
+    void eachLoopBackIsItsFlightNoEdgeWarningAndDivesAtItsDiveSpeed() {
         Sortie sortie = swarm(20, 2);
         List<Integer> loopBacks = new ArrayList<>();
         List<Integer> values = new ArrayList<>();
@@ -111,7 +110,7 @@ class FlockTest {
             }
             int loopsBefore = sortie.flockCount() > 0 ? sortie.flock(0).loopsFlown() : 0;
             sortie.step(Command.NONE);
-            if ((sortie.edgeWarnings() & WarningEdge.BOTTOM.bit()) != 0) {
+            if (sortie.edgeWarnings() != 0) {
                 warned.add(step);
             }
             for (int k = 0; k < sortie.events().size(); k++) {
@@ -147,12 +146,8 @@ class FlockTest {
         }
 
         assertEquals(List.of(1, 2), values, "two loop-backs, numbered");
-        for (int at : loopBacks) {
-            for (int step = at - SimStep.ticks(3) + 1; step < at; step++) {
-                assertTrue(warned.contains(step), "the bottom edge warned at " + step + ", 3 s ahead of " + at);
-            }
-        }
-        assertFalse(warned.contains(loopBacks.getFirst() + 1), "the warning ends at the re-entry");
+        // 2026-10-21 (user): a loop-back is the swarm's own flight pattern: no edge warning.
+        assertEquals(List.of(), warned, "no edge warning for a loop-back");
         assertEquals(200, cruise / cruiseSteps, 30, "its cruise");
         assertEquals(260, dive / diveSteps, 40, "diving after a loop-back");
         assertTrue(dive / diveSteps > cruise / cruiseSteps + 30, "faster after its loop-back");

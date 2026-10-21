@@ -50,7 +50,7 @@ notes:
   layer: ' while cloaked (only `homing` hits it, no contact, specials skip it) → `air` from its decloak flash on'
   orientation: (16 headings × 4 ripple frames; a cloaked shimmer set)
   speed: '(cloaked, the swoop and the re-entry; {movement.straight.speed} px/s decloaked, its exit)'
-  movement: 'cloaked `swoop` straight down its lane past the ship and off the bottom edge, 1.5 s below it, `rear-entry` up to y = {movement.hover.y} px (20–70 px above the bottom edge; the edge warning 3 s ahead of the re-entry, while it still swoops), decloak (a 0.4 s violet flash, on `air` from its start), `hover` {movement.hover.seconds} s, then out up the nearer side lane (its centre 40 px from that edge) decloaked at {movement.straight.speed} px/s, clear of the shuttle band'
+  movement: 'cloaked `swoop` straight down its lane past the ship and off the bottom edge, 1.5 s below it, `rear-entry` up to y = {movement.hover.y} px (20–70 px above the bottom edge; no edge warning: its own flight, 2026-10-21), decloak (a 0.4 s violet flash, on `air` from its start), `hover` {movement.hover.seconds} s, then out up the nearer side lane (its centre 40 px from that edge) decloaked at {movement.straight.speed} px/s, clear of the shuttle band'
   formations: (2–4 across the bottom edge, each in its own lane; a lone one as its introduction)
   weak_points: (drawn only)
   death: '`medium` burst: membrane tatters, violet flash'

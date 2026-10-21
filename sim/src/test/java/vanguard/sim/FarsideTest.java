@@ -391,18 +391,16 @@ class FarsideTest {
     }
 
     @Test
-    void aLoopBackReentersFromTheBottomAtTheHeadsXWarnedThreeSecondsAhead() {
+    void aLoopBackReentersFromTheBottomAtTheHeadsXWithNoEdgeWarning() {
         WaveSpec wave = chainWave(120, Optional.of(new WaveSpec.LoopBack(6, List.of())));
         Sortie sortie = sortie(level(List.of(wave), List.of(), 0, Optional.empty()));
         // The path: 760 px at 180 px/s from t=1, then 6 s off the screen.
         double reentry = 1 + 760.0 / 180 + 6;
-        double warnedFrom = -1;
         double back = -1;
         while (sortie.levelSeconds() < reentry + 3) {
             sortie.step(Command.NONE);
-            if (warnedFrom < 0 && (sortie.edgeWarnings() & WarningEdge.BOTTOM.bit()) != 0) {
-                warnedFrom = sortie.levelSeconds();
-            }
+            // 2026-10-21 (user): the loop-back is the chain's own flight pattern: no edge warning.
+            assertEquals(0, sortie.edgeWarnings(), "no edge warning at " + sortie.levelSeconds());
             if (back < 0 && sortie.chainCount() == 1) {
                 Enemy head = member(sortie, sortie.chain(0), 0);
                 if (sortie.levelSeconds() > reentry - 1 && head != null && head.y() > 0 && head.y() < 100) {
@@ -412,7 +410,6 @@ class FarsideTest {
             }
         }
 
-        assertEquals(reentry - 3, warnedFrom, 0.1, "the bottom edge warned 3 s ahead");
         assertTrue(back > reentry && back < reentry + 1, "it is back from the bottom edge at " + back);
     }
 

@@ -65,7 +65,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 - The first rear specialists come with Level 10 (M5 part D): the [Wraith](wraith/README.md)
   passes overhead cloaked on `high-air` and decloaks behind the player (`rear ambush`), the
   [Mote Swarm](mote-swarm/README.md) is a boids flock (`swarm`) that loops back from below; both
-  are warned 3 s ahead of their re-entry at the bottom edge.
+  re-enter at the bottom edge without an edge warning (a unit's own flight, 2026-10-21).
 
 ## Concept art
 

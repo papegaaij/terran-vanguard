@@ -134,7 +134,7 @@ visibility:
   hard: {deep: 150, wall: 130}
 
 # A wave about every 2.5 s from t=6 (the eye included; step E5: four more in the widest gaps), keeping the approved
-# table's anchor waves at their times; the side and rear waves warned 3 s ahead at their edge (the warnings draw above
+# table's anchor waves at their times; the side and rear waves' first entries warned 3 s ahead at their edge (the Wraiths' re-entries are not, 2026-10-21) (the warnings draw above
 # the dust). Quiet windows: no other wave
 # for 3.5 s after the first Dust Devils (t=41.5, the armoured devils hold the screen) and after the first Ghost Drones
 # (t=69.5, no Vrell air: a spine-turret nest on the ground holds the screen). The Dust Devils' paths are the centre
@@ -217,7 +217,7 @@ waves:
     paths: [[[110, -60], [100, 300], [160, 460], [120, 620]]]   # down the left lane, over the buried rover
     notes: Over the buried rover (the secret)
   - {t: 92.5, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}}
-  - {t: 94.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked: `homing` hits them before the decloak; warned 3 s ahead"}
+  - {t: 94.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked: `homing` hits them before the decloak; no edge warning (a Wraith's re-entry)"}
   - {t: 96.5, formation: stream, enemy: stinger, count: 3, from: front, hard: {count: 2}, edge: right, interval: 1.25}
   - {t: 99, formation: line abreast, enemy: needler, count: 5, from: front, hard: {count: 4}}
   - {t: 101.5, formation: V-wing, enemy: stinger, count: 5, from: front, hard: {count: 4}, notes: "The leader drops an overdrive"}
@@ -269,7 +269,7 @@ waves:
     count: 6
     from: front
     paths: [[[140, -60], [150, 220], [210, 380], [170, 620]]]   # down the left half
-  - {t: 150, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair from the rear, warned"}
+  - {t: 150, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair from the rear, unwarned"}
   - {t: 150.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - {t: 152.5, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "Warned 3 s ahead"}
   - {t: 155, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}}

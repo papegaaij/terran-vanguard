@@ -93,7 +93,7 @@ sections:  # back to back from t = 0; tiles: the backdrop's tile sets (tools/art
 # the side lane of its edge (x 50 or 430) to y 250, curls across below the band (y 340-400) and leaves
 # at the bottom of the other side; a stream unit from the left comes down x = 70 to y 300 and then
 # runs diagonally to the bottom right (330, 580), one from the right the mirror image. Rear ambushes: lanes
-# x = (i + 1) × 480 ÷ (n + 1), the warning 3 s ahead of the re-entry (about 4.6 s after t).
+# x = (i + 1) × 480 ÷ (n + 1), the re-entry about 4.6 s after t, without an edge warning (2026-10-21).
 waves:
   - {t: 7.5, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25, paths: [[[70, -40], [70, 300], [330, 580]]], notes: Over the pads as the shuttles climb; the first targets}
   - {t: 10.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, paths: [[[50, -40], [50, 250], [90, 340], [200, 380], [330, 400], [400, 470], [390, 580]]], notes: Curls over the blast fences}
@@ -112,7 +112,7 @@ waves:
   - {t: 30, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25, paths: [[[70, -40], [70, 300], [330, 580]]]}
   - {t: 33, formation: snake, enemy: skitter, count: 6, from: front, edge: left, paths: [[[50, -40], [50, 250], [90, 340], [200, 380], [330, 400], [400, 470], [390, 580]]]}
   - {t: 36, formation: V-wing, enemy: needler, count: 4, from: front}
-  - {t: 39, formation: line abreast, enemy: skitter, count: 5, from: rear, notes: "The first rear wave: the 3 s bottom-edge warning, Rook's rear bark and his Trail; nothing fires"}
+  - {t: 39, formation: line abreast, enemy: skitter, count: 5, from: rear, notes: "The first rear wave: the 3 s bottom-edge warning and Rook's Trail; nothing fires"}
   - {t: 42, formation: snake, enemy: skitter, count: 6, from: front, edge: right, paths: [[[430, -40], [430, 250], [390, 340], [280, 380], [150, 400], [80, 470], [90, 580]]]}
   - t: 45
     formation: swarm
@@ -122,7 +122,7 @@ waves:
     paths: [[[430, -60], [430, 330], [350, 460], [380, 620]]]   # down the right lane, out at the bottom-right
     notes: Down the right lane, no loop-back
   - {t: 48, formation: stream, enemy: skitter, count: 4, from: front, edge: left, interval: 1.25, paths: [[[70, -40], [70, 300], [330, 580]]]}
-  - {t: 50, formation: rear ambush, enemy: wraith, count: 1, from: rear, notes: "**New.** One Wraith down the centre lane, cloaked; the warning from ≈ 51.6, re-entry ≈ 54.6, decloak ≈ 55 (Varga's `first-decloak` line); its bursts cross the shuttle band"}
+  - {t: 50, formation: rear ambush, enemy: wraith, count: 1, from: rear, notes: "**New.** One Wraith down the centre lane, cloaked; no edge warning, re-entry ≈ 54.6, decloak ≈ 55 (Varga's `first-decloak` line); its bursts cross the shuttle band"}
   - {t: 52.5, formation: stream, enemy: skitter, count: 4, from: front, edge: right, interval: 1.25, paths: [[[70, -40], [70, 300], [330, 580]]]}
   - {t: 55.5, formation: line abreast, enemy: needler, count: 3, from: front}
   - {t: 58.5, formation: snake, enemy: skitter, count: 6, from: front, edge: left, paths: [[[50, -40], [50, 250], [90, 340], [200, 380], [330, 400], [400, 470], [390, 580]]]}

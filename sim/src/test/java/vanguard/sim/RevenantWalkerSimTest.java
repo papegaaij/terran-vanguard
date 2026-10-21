@@ -350,7 +350,7 @@ class RevenantWalkerSimTest {
     }
 
     @Test
-    void passesCycleTheEdgesOffTheScreenUnderTheNextEdgesWarning() {
+    void passesCycleTheEdgesOffTheScreenWithNoEdgeWarning() {
         Sortie sortie = sortie(false, TestSpecs.RULES.withInvulnerableShip());
         until(sortie, SimEvents.Type.BOSS_ARRIVED, 4, 0);
         StrideArena stride = stride(sortie);
@@ -359,22 +359,14 @@ class RevenantWalkerSimTest {
         List<Double> lanes = new ArrayList<>(List.of(boss.x()));
         List<Integer> headings = new ArrayList<>(List.of(stride.heading()));
         int offSteps = 0;
-        int warned = 0;
         boolean rear = false;
         int passes = stride.passes();
         while (stride.passes() < 7) {
             sortie.step(0);
             if (stride.offScreen()) {
                 offSteps++;
-                int bit = sortie.edgeWarnings();
-                WaveSpec.Edge next = stride.nextEdge();
-                int expected = next == WaveSpec.Edge.BOTTOM
-                        ? WarningEdge.BOTTOM.bit()
-                        : next == WaveSpec.Edge.LEFT
-                                ? WarningEdge.LEFT.bit()
-                                : next == WaveSpec.Edge.RIGHT ? WarningEdge.RIGHT.bit() : 0;
-                assertEquals(expected, bit, "the warning for its next entry " + next);
-                warned += bit != 0 ? 1 : 0;
+                // 2026-10-21 (user): a boss never warns; its entry from any edge is the surprise.
+                assertEquals(0, sortie.edgeWarnings(), "no edge warning for its next entry " + stride.nextEdge());
             }
             if (stride.passes() != passes) {
                 passes = stride.passes();
@@ -402,7 +394,6 @@ class RevenantWalkerSimTest {
         assertEquals(List.of(120.0, 360.0, 330.0, 120.0, 360.0, 330.0, 120.0), lanes);
         assertEquals(List.of(0, 4, 6, 0, 4, 2, 0), headings);
         assertEquals(6 * SimStep.ticks(3), offSteps, "3 s off the screen between two passes");
-        assertEquals(4 * SimStep.ticks(3), warned, "the bottom, left and right entries are warned, the top ones not");
         assertTrue(rear, "a bottom entry is a rear wave for Rook");
     }
 

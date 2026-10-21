@@ -204,15 +204,15 @@ or crawls; the helicopters and the sea mist are the moving scenery.
 Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary) (`swarm` and `rear ambush`
 are built in M5 part D). The Wraith and the Mote Swarm are new; the returning units are all `tiny`
-or `small` and keep their HP. Every rear entry is warned at the bottom edge **3 s** ahead, and Rook
+or `small` and keep their HP. Every wave's first entry from the rear is warned at the bottom edge **3 s** ahead, and Rook
 switches to his Trail formation (see
 [Rook's AI](../../../player/wingmen/README.md#rooks-ai-first-draft-parameters)):
 
 - A **`rear ambush`** of Wraiths (`from: rear`) enters at the top at its time, cloaked, and is
-  warned 3 s ahead of its **re-entry** at the bottom edge (about 4.6 s after its time), not ahead of
-  its time; its lanes are spread evenly across the bottom edge.
-- A **looping swarm** (`from: front` with a `loop_back`) is warned 3 s ahead of its re-entry; the
-  off-screen gap is 1.5 s, so the warning starts while it still exits (the chains' rule).
+  re-enters at the bottom edge about 4.6 s after its time **without an edge warning** (a unit's own
+  re-entry, 2026-10-21); its lanes are spread evenly across the bottom edge.
+- A **looping swarm** (`from: front` with a `loop_back`) re-enters unwarned (2026-10-21: a unit's own
+  re-entry); the off-screen gap is 1.5 s.
 - A **swarm from the rear** and a **line abreast from the rear** are warned 3 s ahead of their
   time, as every rear wave.
 
@@ -247,11 +247,11 @@ diagonally to the bottom right, those from the right the mirror image (the route
 | 30 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
 | 33 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
 | 36 | 2 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 39 | 2 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 5 | rear | The first rear wave: the 3 s bottom-edge warning, Rook's rear bark and his Trail; nothing fires |
+| 39 | 2 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 5 | rear | The first rear wave: the 3 s bottom-edge warning and Rook's Trail; nothing fires |
 | 42 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
 | 45 | 2 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 6 | front | Down the right lane, no loop-back |
 | 48 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
-| 50 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 1 | rear | **New.** One Wraith down the centre lane, cloaked; the warning from ≈ 51.6, re-entry ≈ 54.6, decloak ≈ 55 (Varga's `first-decloak` line); its bursts cross the shuttle band |
+| 50 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 1 | rear | **New.** One Wraith down the centre lane, cloaked; no edge warning, re-entry ≈ 54.6, decloak ≈ 55 (Varga's `first-decloak` line); its bursts cross the shuttle band |
 | 52.5 | 2 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (right) | |
 | 55.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 58.5 | 2 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | |
@@ -360,8 +360,8 @@ and Five and of the hit line (one voice, several names, as the docks); **Lifelin
 cut off. Both use the generic civilian radio portrait. **Rook's lines** carry `requires: escort`.
 New events (M5 part D): `first-decloak` (the attempt's first Wraith decloak), `first-loop-back`
 (the first swarm's leader re-entering at the bottom edge; as `escort-first-kill`'s line it counts
-as a scripted Rook line for the barks' spacing, so the rear bark of the same loop-back is
-withdrawn), `scripted-loss` (the lance) and `ally-lost` (every player-caused loss).
+as a scripted Rook line for the barks' spacing, so the rear bark of the same loop-back was
+withdrawn; the bark went altogether on 2026-10-21), `scripted-loss` (the lance) and `ally-lost` (every player-caused loss).
 
 <!-- data: radio -->
 | Trigger | Speaker | Line |
@@ -502,8 +502,8 @@ with the production art approved as final. Prompts and generator notes:
 - [x] Wave script matches the *Waves* table (final times and counts by the data step); at least
       50 enemies per minute at medium (`DensityTest`); no empty screen over 3 s of real time but
       the quiet end (`PacingTest`, every difficulty)
-- [x] Wraith `rear ambush` waves and Mote Swarm flocks with their loop-backs, each re-entry warned
-      3 s ahead; Rook's Trail on them; a `WingmanTest` case for Trail near the Wraiths' hold band
+- [x] Wraith `rear ambush` waves and Mote Swarm flocks with their loop-backs, the re-entries unwarned
+      (2026-10-21); Rook's Trail on the rear waves; a `WingmanTest` case for Trail near the Wraiths' hold band
 - [x] Ground target, the ferry secret and the pickups
 - [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineTest`, with Rook and without
       him); the events `first-decloak`, `first-loop-back`, `scripted-loss` and `ally-lost`; Rook's
@@ -660,3 +660,6 @@ with the production art approved as final. Prompts and generator notes:
   after the user's playtest "the last message is cut short"; accepted in round 41 (2026-10-19)): the Orbital Corridor ends
   at **t=201** (was 200), so Lifeline One's t=196 line (ending at 200.1 s at the latest) finishes before the level
   does. The waves, the shuttles' climb and the hauls are unchanged.
+- 2026-10-21: Edge-warning rule change (user, built by step EW): only a wave's first entry from the left, right or rear is
+  edge-warned; the Wraith pop-ups and the Mote Swarm loop-backs re-enter unwarned and Rook's rear bark for them is gone
+  (his scripted lines stay); the rear waves (t=39 and the like) keep their 3 s warning and the Trail.

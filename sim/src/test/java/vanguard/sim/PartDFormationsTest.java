@@ -102,37 +102,31 @@ class PartDFormationsTest {
     }
 
     @Test
-    void aRearAmbushIsWarnedAheadOfItsReEntryNotOfItsTime() {
+    void aRearAmbushIsWarnedNeitherAtItsTimeNorAheadOfItsReEntry() {
         WaveSpec wave = PartDSpecs.ambush(10, PartDSpecs.wraith(), 2);
         WaveSchedule schedule = new WaveSchedule(List.of(wave), List.of(wave.enemy()), new SplitMix64(1));
         Spawn spawn = plan(wave).getFirst();
         int reentry = spawn.ambushReentryTick();
-        int bottom = WarningEdge.BOTTOM.bit();
 
         assertEquals(
                 SimStep.ticks(10) + SimStep.ticks((PlayField.HEIGHT + 80) / 200.0 + 1.5),
                 reentry,
                 "its swoop down the screen and its gap");
-        assertEquals(0, schedule.warnings(SimStep.ticks(10) - SimStep.ticks(3)) & bottom, "not warned at its time");
-        assertEquals(0, schedule.warnings(reentry - SimStep.ticks(3) - 1) & bottom);
-        assertEquals(bottom, schedule.warnings(reentry - SimStep.ticks(3)) & bottom, "3 s ahead of its re-entry");
-        assertEquals(bottom, schedule.warnings(reentry - 1) & bottom);
-        assertEquals(0, schedule.warnings(reentry) & bottom, "until it re-enters");
+        // 2026-10-21 (user): its pop-up behind the ship is its flight pattern, not a wave's entry: no warning at all.
+        for (int tick = 0; tick <= reentry + SimStep.ticks(5); tick++) {
+            assertEquals(0, schedule.warnings(tick), "no edge warning at " + tick);
+        }
     }
 
     @Test
-    void aSwarmsLoopBacksAreWarnedAtTheBottomEdge() {
+    void aSwarmsLoopBacksAreItsFlightNoEdgeWarning() {
         WaveSpec wave = PartDSpecs.swarm(10, 12, 2);
         WaveSchedule schedule = new WaveSchedule(List.of(wave), List.of(wave.enemy()), new SplitMix64(1));
         Spawn.Route route = plan(wave).getFirst().swarm().orElseThrow().route();
-        int bottom = WarningEdge.BOTTOM.bit();
-
-        for (int k = 0; k < 2; k++) {
-            int reentry = SimStep.ticks(10) + route.reentryAfter(k);
-            assertEquals(bottom, schedule.warnings(reentry - SimStep.ticks(3)) & bottom, "loop-back " + k);
-            assertEquals(0, schedule.warnings(reentry) & bottom);
+        int last = SimStep.ticks(10) + route.reentryAfter(1);
+        for (int tick = 0; tick <= last + SimStep.ticks(1); tick++) {
+            assertEquals(0, schedule.warnings(tick), "a front swarm and its loop-backs warn nowhere: " + tick);
         }
-        assertEquals(0, schedule.warnings(SimStep.ticks(10) - 1) & bottom, "a front swarm is not warned at its time");
         assertEquals(12, schedule.units(), "every mote a unit");
     }
 

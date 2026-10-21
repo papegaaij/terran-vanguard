@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../allies]
-updated: 2026-10-08
+updated: 2026-10-21
 ---
 
 # Wraith
@@ -31,7 +31,7 @@ The numbers live in [data.yaml](data.yaml). Values are first-draft balancing num
 | HP | 16 (easy 12 / hard 21, from the global multipliers) |
 | Armour / shield | none |
 | Speed | 200 px/s (cloaked, the swoop and the re-entry; 120 px/s decloaked, its exit) |
-| Movement | cloaked `swoop` straight down its lane past the ship and off the bottom edge, 1.5 s below it, `rear-entry` up to y = 470–520 px (20–70 px above the bottom edge; the edge warning 3 s ahead of the re-entry, while it still swoops), decloak (a 0.4 s violet flash, on `air` from its start), `hover` 2.5 s, then out up the nearer side lane (its centre 40 px from that edge) decloaked at 120 px/s, clear of the shuttle band |
+| Movement | cloaked `swoop` straight down its lane past the ship and off the bottom edge, 1.5 s below it, `rear-entry` up to y = 470–520 px (20–70 px above the bottom edge; no edge warning: its own flight, 2026-10-21), decloak (a 0.4 s violet flash, on `air` from its start), `hover` 2.5 s, then out up the nearer side lane (its centre 40 px from that edge) decloaked at 120 px/s, clear of the shuttle band |
 | Attack | 5-shot `burst` (0.12 s apart, 220 px/s, `medium` = 6) straight up the screen as a fixed 40° fan, its shots in turn from left to right, aimed at nobody and fired however close the player is (no no-fire distance), twice in its hold (0.9 s after it stops, then 1.2 s later); only while decloaked |
 | Formations | rear ambush (1–4) (2–4 across the bottom edge, each in its own lane; a lone one as its introduction) |
 | Weak points | blue-violet veins (drawn only) |
@@ -49,13 +49,13 @@ User decision D6 = a of M5 part D: it flies as its stat block says.
 - **Cloaked** (`high-air`, the stat block's layer): it enters at the top edge at the wave's time and
   flies straight down its lane at 200 px/s, past the ship and off the bottom edge. While cloaked it
   is drawn as a refraction **shimmer** at the high-air scale (attentive players see it coming
-  before the warning); only `homing` shots hit it (there is no player `beam` weapon in Act 2), it
+  before it decloaks); only `homing` shots hit it (there is no player `beam` weapon in Act 2), it
   never touches the ship, Rook or a shuttle, and the specials skip it, as every `high-air` unit.
 - **Rear entry.** 1.5 s below the bottom edge, it comes back up to its hold point, y = 470–520 px
-  (20–70 px above the bottom edge), still cloaked. The bottom edge is **warned 3 s ahead of the
-  re-entry** (so the warning starts while it still swoops, as a chain's loop-back), with Rook's
-  rear bark ([wingmen](../../../player/wingmen/README.md#radio-barks)); its wave counts as a `rear`
-  wave for Rook's Trail from the re-entry.
+  (20–70 px above the bottom edge), still cloaked. The re-entry is part of its flight pattern, so
+  it gets **no edge warning**, no banner and no rear bark (2026-10-21, user; a Wraith shot down on
+  its way down warns of nothing); the shimmer is its tell. Its wave counts as a `rear` wave for
+  Rook's Trail ([wingmen](../../../player/wingmen/README.md)) from the re-entry.
 - **Decloak.** At its hold point it decloaks: a **0.4 s violet flash**, on `air` from the flash's
   start (the unit's current layer, as the Ravager's pounce; every weapon hits it, it has contact),
   its gun silent until the flash ends. The simulation raises a decloak event for the flash, its
@@ -79,8 +79,8 @@ User decision D6 = a of M5 part D: it flies as its stat block says.
 - **Launched by the Siege Spire's maw (Level 14, M5 part H, decision H3 = a, accepted in round 34 (2026-10-12)).** The maw launches 2 Wraiths every 8 s (hard 3), at most 4 alive from it at once. A
   launched Wraith starts cloaked at the maw, swoops down a lane past the ship, re-enters from the
   bottom edge after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10.
-  Every re-entry is warned 3 s ahead on the bottom edge, which counts as a rear wave for Rook
-  ([Trail formation and bark](../../../player/wingmen/README.md)). It has the L14 act HP factor
+  The re-entry is not edge-warned (its flight, and a boss never warns: 2026-10-21); it counts as
+  a rear wave for Rook ([Trail formation](../../../player/wingmen/README.md)). It has the L14 act HP factor
   (19 HP at medium).
 - **Weak point drawn only** (single-part rule, as part C did for the Hive Node and the Ravager):
   the blue-violet veins glow but take no extra damage; the draft's ×1.5 is struck.
@@ -105,8 +105,8 @@ The production files (M5 part D, straight to production per D10 = a; approved as
       layer at every hit, contact and targeting site), the gun only after the flash; the decloak
       event (D6 = a)
 - [x] The `rear ambush` path: cloaked straight down its lane at 200 px/s, 1.5 s below the bottom
-      edge, up to y 470–520 px; the bottom-edge warning 3 s ahead of the re-entry; Rook's Trail and
-      rear bark from it; the 2.5 s hold (hard 3.0 s); out up the nearer side lane at 120 px/s
+      edge, up to y 470–520 px; no edge warning for the re-entry (2026-10-21); Rook's Trail from it;
+      the 2.5 s hold (hard 3.0 s); out up the nearer side lane at 120 px/s
 - [x] Two bursts in its hold, 5 shots (hard 7) 0.12 s apart, 220 px/s, `medium`, straight up as
       a fixed 40° fan (`aim: up`), not aimed and without the no-fire distance
 - [x] HP 16 (D7 = a) and `BalanceTest`'s rear check; its time to kill at L10's reference an
@@ -152,3 +152,9 @@ The production files (M5 part D, straight to production per D10 = a; approved as
   round 32 (the two bursts, the exit lane, the hold depth, the `rear ambush`, the `Trig` table)
   accepted. `design: approved`, `art: final`; every Implementation item is ticked, so the
   implementation is `done`.
+- 2026-10-21 (user, after playthroughs): "It looks like for the wraiths this warning is shown. The
+  wraith popping up from behind is part of its normal flight pattern, and as such, the warning is
+  confusing. Also, when the wraith is shot down while going down, you get a warning for nothing.
+  When a re-entry from left, rear or right is part of the normal flight pattern, do not show the
+  warning." Its re-entry (in a wave and from the Siege Spire's maw) gets no edge warning, banner
+  or rear bark any more; Rook's Trail from the re-entry stays (`WraithTest`, `MawLaunchTest`).

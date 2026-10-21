@@ -177,8 +177,8 @@ and the Needler and the Stinger also `small_act_hp` (Level 21 joined its levels 
   screen busy without it. One longer pause, the ridge pass (no wave enters from t=64 to t=70.5;
   the Kites of t=64 are still on the screen), as Level 14's root-burst window.
 - **Directions** ("all", the roster): two side pincers and one side stream with the LEFT/RIGHT edge
-  warnings 3 s ahead, two Wraith rear ambushes and a rear Mote stream with the BOTTOM warning 3 s
-  ahead; Rook's flank and rear barks (his AI, not scripted). Front 75 % (≥ 60 %).
+  warnings 3 s ahead, two unwarned Wraith rear ambushes (re-entries) and a rear Mote stream with the BOTTOM warning 3 s
+  ahead; Rook's flank and rear barks (his AI, not scripted; none for the Wraiths). Front 75 % (≥ 60 %).
 - **Burrowers** return in three fields (their spec's "may return in L20–L21"), only over sand: the
   dune fans of the inner wall, the dune sea's edge and the hollow's crust between the nests. The
   hollow's crust is the spec's "dust or regolith"; the nests' rocks are no-surface zones (Level
@@ -220,7 +220,7 @@ and the Needler and the Stinger also `small_act_hp` (Level 21 joined its levels 
 | 55.75 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front | Step L21R: a firing pair before the crest |
 | 57.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 2 | front | With the dune-crest mortars; act HP factor |
 | 59.25 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Step L21R: a firing pair over the crest mortars |
-| 61 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; BOTTOM warning; Rook's rear bark; act HP factor; easy: a Needler V-wing from the front instead |
+| 61 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; no edge warning or rear bark (a Wraith's re-entry); act HP factor; easy: a Needler V-wing from the front instead |
 | 61 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Easy only: instead of the rear Wraiths (Level 14's rule) |
 | 62.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | Step L21R: a firing group into the ridge pass (the screen held to t=64) |
 | 64 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (alternating edges) | Round 44 Q.1 (step L21R): a slow firing stream that holds the ridge pass with the Kites (the beam takes the Kites at once) |
@@ -238,7 +238,7 @@ and the Needler and the Stinger also `small_act_hp` (Level 21 joined its levels 
 | 87.5 | 4 | carrier + escorts | [Choir Herald](../../../enemies/air/choir-herald/README.md) + [Needler](../../../enemies/air/needler/README.md) | 1 + 4 | front | The escorts in `orbit` under its rings; act HP factor |
 | 91 | 4 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (right) | A firing group in place of the approved Kite snake (H.1) |
 | 92.75 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | front | Step L21R: a firing pair over the lip mortars (not on hard: the third Wraiths and the centre turrets) |
-| 94 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | BOTTOM warning; Rook's rear bark |
+| 94 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | No edge warning or rear bark (a Wraith's re-entry) |
 | 95.75 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | front | Step L21R: a firing pair, the last from the front (not on hard) |
 | 97.5 | 4 | swarm | [Mote Swarm](../../../enemies/air/mote-swarm/README.md) | 8 | rear | The last of Level 20's pursuers catching up; BOTTOM warning; the last wave before the Colossus (H.3: the t=101 V-wing dropped) |
 | 105 | 5 | boss | [Dust Colossus](../../../enemies/bosses/dust-colossus/README.md) | 1 | the edges (breach points) | At the arena's start: the warning, the bar and the checkpoint; the breaches as in its spec; no other waves in the arena |
@@ -335,13 +335,12 @@ the last.
 
 Timeline check (text): t=1 closes ≈ 12.4, t=13 ≈ 20.4, t=21 ≈ 28.1, t=37 ≈ 44.4; the secret's line
 has the gap from ≈ 44.4 to Okafor at t=53 (the crawler is in reach at t≈44–49; an event line waits
-at most 6 s); t=53 closes ≈ 60.9 (the t=61 Wraiths' rear bark, warned at t=58, waits ≈ 3 s), t=65.5
+at most 6 s); t=53 closes ≈ 60.9 (the t=61 Wraiths get no bark or warning since 2026-10-21), t=65.5
 ≈ 73.0, t=74 ≈ 81.5 (the t=80.5 pincer's flank bark, warned at t=77.5, waits ≈ 4 s), t=84 ≈ 91.0
-(the t=94 Wraiths' rear bark at ≈ 91.4), the Choir's stage sound (≈ 3.9 s, subtitle 5.6 s) closes
+(the t=94 Wraiths: no bark), the Choir's stage sound (≈ 3.9 s, subtitle 5.6 s) closes
 ≈ 103.5 before the warning at t=105; t=111 closes ≈ 118.5 before the first breach opens (the first
 tell starts about t=111). The t=33.5 pincer's flank bark (warned at t=30.5) falls in the free gap
-after Ares Control. The Mote stream's warning (t=94.5) follows Rook's rear bark; his bark cooldown
-may drop it (no loss: the arrow shows).
+after Ares Control. The Mote stream's first entry (t=97.5) keeps its BOTTOM warning.
 
 **Story notes.** The Helix beat is not in this level (Levels 16–19 carry it, M13 = a); Okafor's
 "Log everything" is the boss spec's line. The colony's resentment of Earth (Level 15's beat) is
@@ -359,8 +358,8 @@ HP and attacks live in the spec. Arena notes for this level:
   (the front breach, phase 1) starts about t=111, the spec's ≈ 6 s arrival.
 - The arena crawls at 20 px/s on a seamless tile (see *Layout*); the breach points are screen
   points, and the bulges, craters and the ridge scroll with the tile.
-- The side and rear breaches get the dynamic edge warnings (LEFT, RIGHT, BOTTOM) 3 s ahead of the
-  rise; the bottom breach counts as a rear wave for Rook (his Trail formation and rear bark).
+- The breaches get **no** edge warnings (the boss never warns, 2026-10-21: the bulge and the tell are the cue);
+  the bottom breach counts as a rear wave for Rook (his Trail formation).
 - **Rook and the autopilot** must leave the bite circle before the snap, step out of phase 3's
   marker and work against the pull (the spec's last lesson), or the tests cannot finish the fight.
   Rook takes the spec's damage like the ship (`heavy` 10 at the snap or the eruption).
@@ -492,6 +491,8 @@ starts at the next 512 px seam, its seam piece, the collapsed crater and the fur
 | [concept/level-21-capture-r45-a-p2.mp4](concept/level-21-capture-r45-a-p2.mp4) | Part 2 of 3, phases 1-2: the ground holds still through the fight, the spine and its vent organs, the breaches, the bite tell, 96 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
 | [concept/level-21-capture-r45-a-p3.mp4](concept/level-21-capture-r45-a-p3.mp4) | Part 3 of 3, phase 3 (two eruptions), the death throe, the sinkhole and the debrief, 87 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
 | [concept/level-21-capture-r45-a.png](concept/level-21-capture-r45-a.png) | 24-tile sheet of the three parts plus crops of the spine, a vent organ, the bite tell and six throe frames | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
+| [concept/level-21-spine-r46-b.mp4](concept/level-21-spine-r46-b.mp4) | Round 46 b in-game capture (step GSR, autopilot, medium, the plan's fit): the Colossus's spine **rising out of its ridge** — one front runs along the back from the collar to the tail over the rise, the plates coming up out of the sand bulge with sand still on them at the front and puffs off the flanks; the dive runs it back tail to head, the head last with the mouth, then the ridge fades. A left breach (straight back) and a rear breach (a slanted, curved back with the vent organs), each rise and dive at 1× then at 0.25×, 47 s | proposed |
+| [concept/level-21-spine-r46-b.png](concept/level-21-spine-r46-b.png) | Sheet of that capture: the left and rear rises and dives frame by frame, 1:1 crops of the front (left rise ×3, rear rise, left dive) | proposed |
 
 The other part H art, in the tables of the parts it belongs to (round 44, accepted in round 44 (2026-10-20)): the Colossus's
 sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), its intel silhouette in the
@@ -516,12 +517,11 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
       contact (steps PH2/HA/HB: the `ridge` key, `RidgeBody`, the 2 px `ScreenShake`, the ridge rumble; `Level21LooksTest`, `Level21SoundsTest`; round 44 Q.8 b)
 - [x] Wave script: ≥ 55 enemies a minute at medium from t=8 to the arena (`DensityTest`; drafted
       ≈ 66), no empty screen over 3 s on every difficulty (`PacingTest`), the edge warnings for the
-      side and rear waves, Burrower fields only over sand with the nests as no-surface zones (step H4:
+      side and rear waves' first entries, Burrower fields only over sand with the nests as no-surface zones (step H4:
       the density holds, 63.6 a minute; step L21R, round 44 Q.1: the rework to the Act 2+ rules, 168 at medium,
       2.55 on the screen, 2 stretches over 2 s, `PacingTest` and `ActFloorTest` assert it; no no-surface zones, round 44
       Q.6)
-- [x] Boss arena per the arena notes: the checkpoint at t=105 (none on hard), the breaches' edge
-      warnings, the bottom breach as a rear wave for Rook; Rook and the autopilot out of the bite
+- [x] Boss arena per the arena notes: the checkpoint at t=105 (none on hard), the breaches' bulges and tells (no edge warnings), the bottom breach as a rear wave for Rook; Rook and the autopilot out of the bite
       circle and the marker, against the pull (steps PH1/PH3/H4: `BreachArenaTest`, `BreachHazardsTest`, `Level21Test`; step L21R: the erupted mouth is no safe spot, Q.4, `DustColossusTest`; `ColossusPlay` re-checked with SIM-K's crawl halt)
 - [x] The fight measured on the plan's fit over five seeds (every seed 90–180 s), the HP tuned, the
       par set; the boss's bounty at the share `TypicalHaulTest`'s perfect-run bound allows
@@ -647,3 +647,6 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
   `boss-destroyed` line waits 4.5 s (the closing lines queue behind it; the game's hold is step G45); B.b phase 1 fires
   the fan (the [boss's](../../../enemies/bosses/dust-colossus/README.md#decisions) numbers): the fight 106.4 s at medium,
   par 106, the level report 104.7 s at medium (100.0–107.1), the haul +1.1 % at the `bounty_scale` 0.50 (kept).
+- 2026-10-21: Edge-warning rule change (user, built by step EW): the Wraith ambushes (t=61, 94) lose their BOTTOM warning and Rook's
+  rear bark (a unit's own re-entry), and the Colossus's breaches get no LEFT/RIGHT/BOTTOM warning (a boss never warns); the
+  waves' first entries (the Mantis pincers, the Kite stream, the Mote stream) keep theirs.

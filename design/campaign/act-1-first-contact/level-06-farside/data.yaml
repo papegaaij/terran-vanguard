@@ -115,7 +115,7 @@ waves:
     paths: [[[100, -60], [160, 200], [300, 300], [390, 190], [310, 100], [230, 230], [260, 640]]]
     loop_back: {after: 6, path: [[260, 600], [220, 380], [300, 200], [240, -80]]}
     easy: {warning: 4}
-    notes: '`loop` out of the bottom edge, back from the rear 6 s later (`rear-entry`; edge warning 3 s, 4 s on easy); radio "six"'
+    notes: '`loop` out of the bottom edge, back from the rear 6 s later (`rear-entry`, its own re-entry: no edge warning); radio "six"'
   - {t: 104.5, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.5}
   - {t: 110, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: Into the Vrell fields}
   - {t: 113, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25, notes: Under the second flare}
@@ -156,7 +156,7 @@ waves:
     paths: [[[200, -60], [240, 290], [330, 390], [240, 470], [150, 390], [240, 290], [330, 190], [240, 110], [160, 200], [200, 380], [230, 640]]]
     loop_back: {after: 6, path: [[230, 600], [310, 360], [230, 160], [190, -80]]}
     easy: {warning: 4}
-    notes: '`figure-8`, then out of the bottom edge and back from the rear (edge warning)'
+    notes: '`figure-8`, then out of the bottom edge and back from the rear (no edge warning)'
   - {t: 172, formation: pincer, enemy: mantis, count: 2, from: sides, notes: Finale with the last Coilwyrm}
   - {t: 176, formation: stream, enemy: skitter, count: 4, from: front, edge: alternating, interval: 1.25}
   - {t: 179, formation: snake, enemy: skitter, count: 6, from: front, edge: left, notes: Past the open airlock}
@@ -308,7 +308,7 @@ darkness:
     - {t: 185.58, x: 120, radius: 110}   # dome-b
   ambient: 0.12
 
-radio:  # trigger: t or event; the "six" lines start with the bottom-edge warning of the rear strike they call
+radio:  # trigger: t or event; the "six" lines are scripted ahead of the rear strike they call (the loop-backs are not edge-warned)
   - {t: 2, speaker: Okafor, line: "Aegis, Daedalus Rim stopped answering thirty hours ago. Find out why."}
   - {t: 12.5, speaker: Rook, line: "Aegis Two on the north lane. I've got cousins on Daedalus, Lancer."}
   - {t: 20, speaker: Varga, line: "You're over the terminator. Headlight on. The Vrell glow; the ground doesn't. Trust the glow."}
@@ -317,12 +317,12 @@ radio:  # trigger: t or event; the "six" lines start with the bottom-edge warnin
   - {t: 52.5, speaker: Perimeter beacon, portrait: generic-cdf, line: "...Daedalus perimeter. All residents report to shelter... all residents report..."}
   - {t: 64, speaker: Okafor, expression: grim, line: "Domes intact. Airlocks open. Nobody's home."}
   - {t: 76, speaker: Varga, line: "Long contact, moving like a snake. Cut it and the back half grows a new head. Go for the head."}
-  - {t: 112, speaker: Rook, shout: true, line: "It's turning, it's coming round behind you! Six, Lancer, six!", notes: {trigger: the t=102 loop-back's warning}}
+  - {t: 112, speaker: Rook, shout: true, line: "It's turning, it's coming round behind you! Six, Lancer, six!", notes: {trigger: the t=102 loop-back, scripted}}
   - {t: 119.5, speaker: Varga, line: "You can't shoot behind you yet. Dodge it."}
   - {t: 131, speaker: Rook, shout: true, line: "Contacts on six! Why is it always six?", notes: {trigger: the t=134 rear entry's warning}}
   - {t: 160, speaker: Varga, expression: grim, line: "No bodies. No damage. Commander, the Vrell didn't kill them. They took them."}
   - {t: 171, speaker: Okafor, expression: grim, line: "...Understood. Log it, Varga. Aegis, finish this and come home."}
-  - {t: 180.5, speaker: Rook, line: "Another one's coming round. Watch your tail.", notes: {trigger: the t=168 loop-back's warning}}
+  - {t: 180.5, speaker: Rook, line: "Another one's coming round. Watch your tail.", notes: {trigger: the t=168 loop-back, scripted}}
   - {event: level-end, speaker: Okafor, expression: grim, line: "Daedalus is empty. So are the others. We'll find them.", notes: {trigger: Level end}}
   - {event: level-end, speaker: Rook, line: "...Copy. Aegis Two, heading home.", notes: {trigger: "Level end, after Okafor's line"}}
   - {event: secondary-objective, speaker: Okafor, line: "Not one sniper left standing. Good eyes in the dark, Lancer.", notes: {trigger: Secondary met}}
@@ -340,7 +340,7 @@ music:
   voice_loop: {speaker: Perimeter beacon, section: 2, db: -18}   # the beacon's radio line, looping faintly under section 2
   end_jingle: mission-complete
 
-difficulty: {}   # the Coilwyrm warnings and the hard pair are in their waves, the t=112 flare in the darkness; the stat blocks' hooks apply
+difficulty: {}   # the rear entry's warning and the hard pair are in their waves, the t=112 flare in the darkness; the stat blocks' hooks apply
 
 briefing:
   pages:

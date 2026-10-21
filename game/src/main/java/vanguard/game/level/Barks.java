@@ -276,7 +276,8 @@ public final class Barks {
         for (int i = 0; i < escortOnly.length; i++) {
             escortOnly[i] = RadioSchedule.needsEscort(rook.get(i));
         }
-        // M5 part D: a rear ambush enters at the top; its bark keys to its re-entry (reentry()).
+        // M5 part D: a rear ambush enters at the top; its re-entry behind the ship is its own flight: no warning and
+        // no bark (2026-10-21, user).
         List<WaveSpec> rear = script.waves().stream()
                 .filter(wave -> wave.entry() == WaveSpec.Entry.REAR)
                 .filter(wave -> wave.formation() != WaveSpec.Formation.REAR_AMBUSH)
@@ -474,10 +475,10 @@ public final class Barks {
     }
 
     /**
-     * M5 part D: the bottom edge's warning started at step {@code levelTick} (design/player/wingmen:
-     * a Wraith's rear ambush and a swarm's or chain's loop-back are rear waves from their re-entry at
-     * the bottom edge): unless it is a rear wave's own warning (its bark due within the warning), its
-     * rear bark is due {@link #REAR_AHEAD_SECONDS} before the re-entry, at the warning's end.
+     * M5 part D: the bottom edge's warning started at step {@code levelTick}: unless it is a rear wave's own warning
+     * (its bark due within the warning), its rear bark is due {@link #REAR_AHEAD_SECONDS} before the entry, at the
+     * warning's end. Since 2026-10-21 (user) a unit's own re-entry (a Wraith's, a loop-back) and a boss warn no more,
+     * so this is a first entry no rear wave's bark covers (a cross unit's from the bottom edge).
      *
      * @return whether a bark was planned
      */

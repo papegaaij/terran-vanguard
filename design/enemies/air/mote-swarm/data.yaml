@@ -52,7 +52,7 @@ bounty: 2
 first_level: 10
 notes:
   speed: (flock cruise), 260 px/s diving after a loop-back
-  movement: '`flock` (separation 18 px, alignment, cohesion) round a leader point that flies the wave''s authored route at {movement.path.speed} px/s (`path`): it swirls in front, exits at the bottom-left or bottom-right, re-enters from the bottom 1.5 s later (the edge warning 3 s ahead, starting while it exits) and dives up through the player''s lane'
+  movement: '`flock` (separation 18 px, alignment, cohesion) round a leader point that flies the wave''s authored route at {movement.path.speed} px/s (`path`): it swirls in front, exits at the bottom-left or bottom-right, re-enters from the bottom 1.5 s later (no edge warning: its own flight, 2026-10-21) and dives up through the player''s lane'
   attack: '`none` — contact (damage `{tier}` = {contact_damage} per mote; destroyed by the impact)'
   formations: '(a wave of motes; base 20, easy 16, hard 24 by the formation lever; Level 10 flies smaller ones too)'
   weak_points: (dies in one hit)

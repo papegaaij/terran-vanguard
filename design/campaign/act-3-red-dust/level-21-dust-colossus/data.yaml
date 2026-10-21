@@ -129,7 +129,7 @@ boss:  # the act boss: the arena's start is its arrival (the warning, the bar, t
     from: the edges (breach points)
     waves: 'At the arena''s start: the warning, the bar and the checkpoint; the breaches as in its spec; no other waves in the arena'
 
-# A wave about every 3.5 s from t=6 (H.1), the side and rear waves warned 3 s ahead at their edge. Quiet windows: the
+# A wave about every 3.5 s from t=6 (H.1), the side and rear waves' first entries warned 3 s ahead at their edge (not the Wraiths' re-entries). Quiet windows: the
 # ridge pass (no wave enters from t=64 to t=70.5; the t=64 Kite swarm loops on the screen through it) and the pause
 # before the boss (nothing enters after the t=97.5 Mote stream: the screen clears while the Choir sings, H.3).
 waves:
@@ -184,7 +184,7 @@ waves:
   - {t: 55.75, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair before the crest"}
   - {t: 57.5, formation: line abreast, enemy: spore-bomber, count: 2, from: front, notes: "With the dune-crest mortars; act HP factor"}
   - {t: 59.25, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step L21R: a firing pair over the crest mortars"}
-  - {t: 61, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, skip: [easy], notes: "Cloaked; BOTTOM warning; Rook's rear bark; act HP factor; easy: a Needler V-wing from the front instead"}
+  - {t: 61, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, skip: [easy], notes: "Cloaked; no edge warning or rear bark (a Wraith's re-entry); act HP factor; easy: a Needler V-wing from the front instead"}
   - {t: 61, formation: V-wing, enemy: needler, count: 3, from: front, skip: [medium, hard], notes: "Easy only: instead of the rear Wraiths (Level 14's rule)"}
   - {t: 62.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}, notes: "Step L21R: a firing group into the ridge pass (the screen held to t=64)"}
   - {t: 64, formation: stream, enemy: stinger, count: 4, from: front, edge: alternating, interval: 1.6, hard: {count: 2}, notes: "Round 44 Q.1 (step L21R): a slow firing stream that holds the ridge pass with the Kites (the beam takes the Kites at once)"}
@@ -221,7 +221,7 @@ waves:
     notes: "The escorts in `orbit` under its rings; act HP factor"
   - {t: 91, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: right, interval: 1.25, notes: "A firing group in place of the approved Kite snake (H.1)"}
   - {t: 92.75, formation: line abreast, enemy: needler, count: 2, from: front, skip: [hard], notes: "Step L21R: a firing pair over the lip mortars (not on hard: the third Wraiths and the centre turrets)"}
-  - {t: 94, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, notes: "BOTTOM warning; Rook's rear bark"}
+  - {t: 94, formation: rear ambush, enemy: wraith, count: 2, from: rear, hard: {count: 3}, notes: "No edge warning or rear bark (a Wraith's re-entry)"}
   - {t: 95.75, formation: V-wing, enemy: stinger, count: 2, from: front, skip: [hard], notes: "Step L21R: a firing pair, the last from the front (not on hard)"}
   - t: 97.5
     formation: swarm

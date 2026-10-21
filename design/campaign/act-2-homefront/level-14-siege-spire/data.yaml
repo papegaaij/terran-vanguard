@@ -181,7 +181,7 @@ waves:
     notes: Up a street broken by the roots
   - {t: 77, formation: V-wing, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - {t: 79.5, formation: line abreast, enemy: spore-bomber, count: 3, from: front, hard: {count: 2}}
-  - {t: 82, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy], notes: "Cloaked on `high-air` under the canopy; Rook's rear bark (not scripted); easy: a Needler V-wing from the front instead"}
+  - {t: 82, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy], notes: "Cloaked on `high-air` under the canopy; no edge warning or rear bark; easy: a Needler V-wing from the front instead"}
   - {t: 82, formation: V-wing, enemy: needler, count: 3, from: front, skip: [medium, hard], notes: "Easy only: instead of the rear Wraiths"}
   - {t: 84.5, formation: snake, enemy: skitter, count: 6, from: front, edge: right}
   - {t: 87, formation: pincer, enemy: needler, count: 4, from: sides, hold: 4, hard: {count: 2}}

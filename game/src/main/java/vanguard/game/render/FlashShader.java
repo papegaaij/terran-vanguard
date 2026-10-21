@@ -81,9 +81,55 @@ public final class FlashShader implements Disposable {
             }
             """;
 
+    /**
+     * Step GSR: the Dust Colossus's spine rising out of its ridge: a sprite shown only on the near side of a line across
+     * an axis, with a soft edge. {@code u_axis} is a point on the screen (x, y) and the unit axis (z, w) pointing away
+     * from the shown side; {@code u_cut} how far along the axis from the point the edge lies (x) and its softness (y,
+     * px): a texel at {@code s} px along the axis shows {@code clamp((cut - s) / soft + 0.5, 0, 1)} of its alpha;
+     * {@code u_sand} a colour (rgb) the texels take toward the edge over its last {@code a} px (sand still on the
+     * plates; none when {@code a} is 0).
+     */
+    private static final String REVEAL_VERTEX = """
+            attribute vec4 a_position;
+            attribute vec4 a_color;
+            attribute vec2 a_texCoord0;
+            uniform mat4 u_projTrans;
+            varying vec4 v_color;
+            varying vec2 v_texCoords;
+            varying vec2 v_place;
+            void main() {
+                v_color = a_color;
+                v_color.a = v_color.a * (255.0 / 254.0);
+                v_texCoords = a_texCoord0;
+                v_place = a_position.xy;
+                gl_Position = u_projTrans * a_position;
+            }
+            """;
+
+    private static final String REVEAL_FRAGMENT = """
+            #ifdef GL_ES
+            precision mediump float;
+            #endif
+            varying vec4 v_color;
+            varying vec2 v_texCoords;
+            varying vec2 v_place;
+            uniform sampler2D u_texture;
+            uniform vec4 u_axis;
+            uniform vec2 u_cut;
+            uniform vec4 u_sand;
+            void main() {
+                vec4 texel = v_color * texture2D(u_texture, v_texCoords);
+                float along = dot(v_place - u_axis.xy, u_axis.zw);
+                float shown = clamp((u_cut.x - along) / u_cut.y + 0.5, 0.0, 1.0);
+                float clean = u_sand.a > 0.5 ? clamp((u_cut.x - along) / u_sand.a, 0.0, 1.0) : 1.0;
+                gl_FragColor = vec4(mix(u_sand.rgb, texel.rgb, clean), texel.a * shown);
+            }
+            """;
+
     private final ShaderProgram program;
     private final ShaderProgram recolour;
     private final ShaderProgram cracks;
+    private final ShaderProgram reveal;
 
     public FlashShader() {
         program = new ShaderProgram(VERTEX, FRAGMENT);
@@ -98,6 +144,43 @@ public final class FlashShader implements Disposable {
         if (!cracks.isCompiled()) {
             throw new IllegalStateException("cracks shader: " + cracks.getLog());
         }
+        reveal = new ShaderProgram(REVEAL_VERTEX, REVEAL_FRAGMENT);
+        if (!reveal.isCompiled()) {
+            throw new IllegalStateException("reveal shader: " + reveal.getLog());
+        }
+    }
+
+    /**
+     * Step GSR: every draw until {@link #end} shown only up to an edge across an axis ({@link #revealUpTo} sets it;
+     * nothing is cut until then).
+     */
+    public void beginReveal(SpriteBatch batch) {
+        batch.setShader(reveal);
+        reveal.setUniformf("u_axis", 0, 0, 1, 0);
+        reveal.setUniformf("u_cut", Float.MAX_VALUE / 4, 1);
+        reveal.setUniformf("u_sand", 0, 0, 0, 0);
+    }
+
+    /**
+     * Step GSR: from here on (after {@link #beginReveal}) the draws show only the texels less than {@code cut} px along
+     * the unit axis ({@code axisX}, {@code axisY}) from the screen point ({@code x}, {@code y}), the edge {@code soft} px
+     * wide, the texels taking {@code sand}'s colour toward the edge over its last {@code sandWidth} px (0: none).
+     * Flushes what was drawn before under the last edge.
+     */
+    public void revealUpTo(
+            SpriteBatch batch,
+            float x,
+            float y,
+            float axisX,
+            float axisY,
+            float cut,
+            float soft,
+            Color sand,
+            float sandWidth) {
+        batch.flush();
+        reveal.setUniformf("u_axis", x, y, axisX, axisY);
+        reveal.setUniformf("u_cut", cut, Math.max(soft, 1e-3f));
+        reveal.setUniformf("u_sand", sand.r, sand.g, sand.b, sandWidth);
     }
 
     /**
@@ -145,5 +228,6 @@ public final class FlashShader implements Disposable {
         program.dispose();
         recolour.dispose();
         cracks.dispose();
+        reveal.dispose();
     }
 }

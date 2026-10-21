@@ -31,7 +31,7 @@ The numbers live in [data.yaml](data.yaml); the stat block is one mote's, a swar
 | HP | 1 (easy 1 / hard 1, from the global multipliers) |
 | Armour / shield | none |
 | Speed | 200 px/s (flock cruise), 260 px/s diving after a loop-back |
-| Movement | `flock` (separation 18 px, alignment, cohesion) round a leader point that flies the wave's authored route at 200 px/s (`path`): it swirls in front, exits at the bottom-left or bottom-right, re-enters from the bottom 1.5 s later (the edge warning 3 s ahead, starting while it exits) and dives up through the player's lane |
+| Movement | `flock` (separation 18 px, alignment, cohesion) round a leader point that flies the wave's authored route at 200 px/s (`path`): it swirls in front, exits at the bottom-left or bottom-right, re-enters from the bottom 1.5 s later (no edge warning: its own flight, 2026-10-21) and dives up through the player's lane |
 | Attack | `none` — contact (damage `tiny` = 6 per mote; destroyed by the impact) |
 | Formations | swarm (6–24), pursuit (8–12) (a wave of motes; base 20, easy 16, hard 24 by the formation lever; Level 10 flies smaller ones too) |
 | Weak points | none (dies in one hit) |
@@ -56,8 +56,7 @@ User decision D8 = a of M5 part D: **real flocking** (boids).
   mote drops out and the rest close up. The same seed flies the same flock.
 - **Loop-back**: after its route leaves the bottom-left or bottom-right edge, the leader point
   re-enters from the bottom **1.5 s** later and the flock dives up through the player's lane at
-  260 px/s. The bottom edge is warned **3 s** ahead of the re-entry, so the warning starts while
-  the swarm still exits (the chains' rule); the flock counts as a `rear` wave for Rook's Trail from
+  260 px/s. The re-entry gets **no edge warning** (the unit's own flight, 2026-10-21); the flock counts as a `rear` wave for Rook's Trail from
   the re-entry, and the attempt's first loop-back raises the radio event `first-loop-back`. On hard
   a swarm loops back **twice** (the level data's wave change); on easy as on medium.
 - A swarm may also enter **from the bottom edge** (`from: rear`, warned 3 s ahead as any rear
@@ -100,8 +99,8 @@ The production files (M5 part D, straight to production per D10 = a; approved as
 - [x] Stat block values loaded from [data.yaml](data.yaml); global difficulty multipliers applied
 - [x] Boids flock round a leader point flying the wave's authored route (D8 = a): separation 18 px,
       alignment, cohesion; deterministic and allocation-free (at most 24 members)
-- [x] The `swarm` formation: from the top or `from: rear`; the loop-back (one, hard two) with the
-      bottom-edge warning 3 s ahead, Rook's Trail and the radio event `first-loop-back`
+- [x] The `swarm` formation: from the top or `from: rear`; the loop-back (one, hard two) without an
+      edge warning (2026-10-21), Rook's Trail and the radio event `first-loop-back`
 - [x] Per-mote kills count toward chains; contact `tiny`, destroyed by the impact
 - [x] Death effect, bounty and score per this spec
 - [x] Production sprites (headings, flicker, ember puff) and intel portrait; the swarm sound

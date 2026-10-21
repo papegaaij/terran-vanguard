@@ -210,7 +210,7 @@ Enemy definitions are linked per row; formation names from the
 | 42.5 | 2 | single | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 1 | front | |
 | 44 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step F4: the floor (fills 42.5-46) |
 | 46 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Over the slag pit's mortars |
-| 48 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; warned 3 s ahead (Rook's bark at t=45.5); act HP factor |
+| 48 | 2 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked; no edge warning (Rook's line at t=45.5); act HP factor |
 | 51.5 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Past the shift office (the secret) |
 | 53 | 2 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 55 | 2 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | On the hall floor road between the belts; act HP factor |
@@ -223,7 +223,7 @@ Enemy definitions are linked per row; formation names from the
 | 73.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | |
 | 76 | 3 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 3 | front | Between the vent rows |
 | 78 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | Step F4: the floor |
-| 79.5 | 3 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 3 | rear | Warned 3 s ahead (Rook's bark at t=77) |
+| 79.5 | 3 | line abreast | [Skitter](../../../enemies/air/skitter/README.md) | 3 | rear | Warned 3 s ahead (Rook's line at t=77) |
 | 81.5 | 3 | stream | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front (alternating edges) | |
 | 83 | 3 | convoy | [Shellback](../../../enemies/ground/shellback/README.md) | 2 | front | On the furnace road; act HP factor |
 | 84.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | front (alternating edges) | Over the Shellbacks |
@@ -231,9 +231,9 @@ Enemy definitions are linked per row; formation names from the
 | 90 | 3 | line abreast | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 4 | front | |
 | 92 | 3 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
 | 93.5 | 3 | pack | [Ravager](../../../enemies/ground/ravager/README.md) | 4 | front | Round the slag pool's mortars; act HP factor |
-| 97 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive; Rook's bark at t=97.5 |
+| 97 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 4 | front | The leader drops an overdrive; Rook's line at t=97.5 |
 | 99 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step F4: the floor |
-| 100.5 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Warned 3 s ahead |
+| 100.5 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | No edge warning (a Wraith's re-entry) |
 | 104 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front (right) | Ares Control's line at t=105 |
 | 105.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 107.5 | 4 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | 2 + 2 on the feed belts |
@@ -248,8 +248,8 @@ Enemy definitions are linked per row; formation names from the
 | 125 | 4 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 3 | front | Act HP factor |
 | 126.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 128.5 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | front (alternating edges) | Gone before the halt |
-| 130 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Hard only: an extra Wraith pair before the yard, warned |
-| 132 | 5 | mid-boss | [Revenant Walker](../../../enemies/bosses/revenant-walker/README.md) | 1 | top (its intro pass) | At the halt (the bar, the mini-boss sting, the boss checkpoint); its passes from every edge per its spec, with their edge warnings; no other waves in the arena |
+| 130 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Hard only: an extra Wraith pair before the yard, unwarned |
+| 132 | 5 | mid-boss | [Revenant Walker](../../../enemies/bosses/revenant-walker/README.md) | 1 | top (its intro pass) | At the halt (the bar, the mini-boss sting, the boss checkpoint); its passes from every edge per its spec, without edge warnings; no other waves in the arena |
 | 133.5 | 6 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | The crawl: kite swarms along the edges only |
 | 136 | 6 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
 | 138.5 | 6 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | Varga's hint line at t=137 |
@@ -260,7 +260,7 @@ Enemy definitions are linked per row; formation names from the
 | 149 | 7 | convoy | [Warden Tank](../../../enemies/ground/warden-tank/README.md) | 2 | front | The last two tanks |
 | 151 | 7 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
 | 153.5 | 7 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
-| 156 | 7 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Warned 3 s ahead |
+| 156 | 7 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | No edge warning (a Wraith's re-entry) |
 | 158 | 7 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | Step F4: the floor |
 | 159.5 | 7 | line abreast | [Ghost Drone](../../../enemies/air/ghost-drone/README.md) | 3 | front | |
 | 161.5 | 7 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 4 | front | |
@@ -365,9 +365,9 @@ death, closes before t=137 (the death chain's 2 s plus 1 s, then 3.7 s of the li
 <!-- /data -->
 
 Timeline check (text): the longest timed lines close at ≈ 13.5 (t=1), ≈ 116.0 (t=105) and ≈ 148.3
-(Varga's hint line, t=137); every timed line starts on time. Rook's four rear barks fall on the
-rear waves' warnings (t=45.5, 77, 97.5, 116); the t=23.5 and t=156 rear waves are warned without a
-bark (the radio is busy). **Hint 2** follows M13 = a and M15 = a: in the level only Varga's
+(Varga's hint line, t=137); every timed line starts on time. Rook's four scripted rear lines (t=45.5, 77, 97.5, 116) stay; those at 77 and 116 fall on the
+rear Skitter waves' warnings, those at 45.5 and 97.5 come before Wraith pairs that carry no edge warning (2026-10-21); the t=23.5 rear wave is warned without a
+line (the radio is busy), the t=156 Wraith pair is unwarned. **Hint 2** follows M13 = a and M15 = a: in the level only Varga's
 observation and Okafor's cut, which lands as the scroll picks up again (t≈145–147). Varga's line is
 the spec's text shortened to two pages (the spec's "slow over the wreck" is the crawl itself).
 Rook's death line is not his dry joke; he does not take up the question.
@@ -383,15 +383,14 @@ HP, attacks and wreck beat live in the spec. Arena notes for this level:
 - The walker's first pass is its intro from the top; the short mid-boss bar `REVENANT WALKER`, the
   **mini-boss sting** and the boss checkpoint (none on hard) at the halt, as the Kraken's. **No Choir
   static** (it is not Vrell).
-- No other waves in the arena: the passes and their edge warnings are the fight (measured by step F4:
+- No other waves in the arena: the passes are the fight (measured by step F4:
   52.7 s in the fixture, 55–57 s in the level at medium, the par 53; the walker's HP 3,740; round 43's rework,
   far more fire and a bigger flame: 57.1 s in the fixture, ≈ 61 s in the level, the par 57, HP 3,170; round 44's
   armoured pods, rail lance and stomp: 50.8 s in the fixture, 50–59 s in the level, the par 51, HP 1,350).
 - **Bounty**: recomputed with Level 19's `bounty_scale` of 0.35 (below): **395** in Act 1 terms
   (hull 315, pods 40 each), paid 395 × 2.56 × 0.35 = **354 = 15.0 %** of budget(19); step F4 sets the
   final value from the measured scale (pending round 42).
-- The boss warning opens 3 s before the halt (`incoming: 3`, round 41's key); the walker's first pass
-  from the top needs no edge warning.
+- The boss warning opens 3 s before the halt (`incoming: 3`, round 41's key); the walker's passes carry no edge warning (2026-10-21).
 - **Hint 2** (M15 = a): the wreck stays on the `ground` layer where it falls, the filed plate turned
   up; section 6 crawls past it at 20 px/s for 10 s (the walker never stands lower than y ≈ 470, so
   the wreck stays on the screen for at least 8 s of it). The wreck's flank plate is the same render
@@ -447,7 +446,7 @@ the EMP Burst against the machines are options, not needs.
   hooks (their specs); the secondary stays 12 of 14 (the tanks have less HP); the formation lever.
 - **Hard**: vents every 3 s with a 0.9 s tell and a 0.3 s ripple (0.4 s would not fit a row of four
   into the 3 s period; step F2's default, pending round 42); the Warden Tanks' 4-shot bursts and faster turrets;
-  an extra up-facing nest of 3 at t≈100; an extra Wraith rear pair at t≈130 before the yard (warned);
+  an extra up-facing nest of 3 at t≈100; an extra Wraith rear pair at t≈130 before the yard (unwarned);
   the walker's hard hooks and no boss checkpoint.
 
 ## Concept art
@@ -507,7 +506,7 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
       motif layer alone over the crawl (seen and accepted in the round-42 capture, N.c)
 - [x] Wave script: the Act 2+ rules (`PacingTest`'s Act 2 rule, `ActFloorTest`'s floor; ≈ 88 a
       minute at medium, `DensityTest`), ≥ 60 % of waves from the front, edge warnings for every rear
-      wave, the act HP factor for the Creeper, Ravager, Wraith, Choir Herald and Shellback, the beam
+      wave's first entry (not the Wraiths' re-entries or the walker), the act HP factor for the Creeper, Ravager, Wraith, Choir Herald and Shellback, the beam
       era's HP (`BeamEraHpTest`), measured in step F4 (the autopilot's walker play and vent dodging;
       `Level19Test`, `RevenantWalkerTest`) (steps F2, F4: `Level19Test`)
 - [x] Secondary `destroy-targets`: 12 of the 14 Warden Tanks, the HUD counter, judged at the end (steps F2, G2: `Level19HudTest`)
@@ -598,3 +597,5 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   salvos, or the walker drained the ship before the level's end; accepted in round 44 (2026-10-20)). A check capture of the fight is in *Concept art* (accepted in round 44 (2026-10-20).
 - 2026-10-20 (user, round 44, closed): the reworked walker fight (W.a-W.g, see the [walker](../../../enemies/bosses/revenant-walker/README.md#decisions)) accepted; W.h's brighter stomp ring planned. **G.a** the payroll safe's strobe accepted (a blinking green lamp with a small halo); **G.c** split the burnt pad off the greenhouse frame as a ground decal (Level 17's frame; planned, a small art step).
 - 2026-10-21 (user, round 45, B.c): the stomp ring is "too bright, somewhere in between is better" (step G45, planned).
+- 2026-10-21: Edge-warning rule change (user, built by step EW): the Wraith pairs (t=48, 100.5, 130, 156) and the Revenant Walker's
+  passes carry no edge warning; Rook's scripted rear lines stay; the rear Skitter waves keep their 3 s warning.

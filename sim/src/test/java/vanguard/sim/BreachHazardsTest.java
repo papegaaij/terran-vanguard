@@ -251,34 +251,72 @@ class BreachHazardsTest {
     }
 
     /**
-     * The point {@code d} px back from the mouth along the ridge's curve (rebuilt from its samples: the ends and the
-     * middle give the control point), measured over 4,000 pieces.
+     * Step SVF: the point {@code d} px back from the mouth along the ridge's curve as the presentation lays the spine
+     * (game's {@code ColossusSpine.onTrack}): along the {@link BreachArena#RIDGE_POINTS} samples from the mouth back,
+     * straight on along the first stretch past the curve's start.
      */
-    private static double[] alongSpine(BreachArena breach, double d) {
-        int last = BreachArena.RIDGE_POINTS - 1;
-        double fx = breach.ridgeX(0);
-        double fy = breach.ridgeY(0);
-        double tx = breach.ridgeX(last);
-        double ty = breach.ridgeY(last);
-        double vx = 2 * breach.ridgeX(last / 2) - (fx + tx) / 2;
-        double vy = 2 * breach.ridgeY(last / 2) - (fy + ty) / 2;
-        double x = tx;
-        double y = ty;
+    static double[] alongSpine(BreachArena breach, double d) {
         double left = d;
-        int n = 4000;
-        for (int k = n - 1; k >= 0; k--) {
-            double u = (double) k / n;
-            double px = (1 - u) * (1 - u) * fx + 2 * u * (1 - u) * vx + u * u * tx;
-            double py = (1 - u) * (1 - u) * fy + 2 * u * (1 - u) * vy + u * u * ty;
-            double step = Math.hypot(x - px, y - py);
-            if (step >= left) {
-                return new double[] {x + (px - x) * left / step, y + (py - y) * left / step};
+        for (int k = BreachArena.RIDGE_POINTS - 1; k > 0; k--) {
+            double x = breach.ridgeX(k);
+            double y = breach.ridgeY(k);
+            double dx = breach.ridgeX(k - 1) - x;
+            double dy = breach.ridgeY(k - 1) - y;
+            double length = Math.hypot(dx, dy);
+            if (length >= left || k == 1) {
+                return new double[] {x + dx * left / length, y + dy * left / length};
             }
-            left -= step;
-            x = px;
-            y = py;
+            left -= length;
         }
-        throw new AssertionError("the curve is shorter than " + d);
+        throw new AssertionError("no curve");
+    }
+
+    /**
+     * Step SVF: with the ship in a bottom corner, phase 2's rear, left and right points bend the ridge into a hairpin
+     * through the field's centre (and rear to rear at the phase change): each vent still sits on the curve the spine
+     * is drawn along, its segment's place, within 2 px (the old straight run left vent 3 up to 137 px off it).
+     */
+    @Test
+    void theVentsFollowTheRidgesCurveRoundAHairpin() {
+        for (int corner : new int[] {Command.LEFT.bit(), Command.RIGHT.bit()}) {
+            for (boolean late : new boolean[] {false, true}) {
+                Sortie sortie = vents();
+                BreachArena breach = breach(sortie);
+                if (late) {
+                    // The phase change during phase 1's rear breach: phase 2 starts rear again.
+                    for (int n = 0; n < 4; n++) {
+                        until(sortie, SimEvents.Type.BREACH_RISE, 20, 0);
+                    }
+                }
+                toPhaseTwo(sortie);
+                double offStraight = 0;
+                int rises = 0;
+                while (rises < 5) {
+                    sortie.step(corner | Command.DOWN.bit());
+                    if (values(sortie, SimEvents.Type.BREACH_RISE).isEmpty()) {
+                        continue;
+                    }
+                    rises++;
+                    int last = BreachArena.RIDGE_POINTS - 1;
+                    double backX = breach.ridgeX(last - 1) - breach.mouthX();
+                    double backY = breach.ridgeY(last - 1) - breach.mouthY();
+                    double back = Math.hypot(backX, backY);
+                    for (int i = 0; i < 3; i++) {
+                        double[] spot = alongSpine(breach, DISTANCES[i]);
+                        String where = breach.pose() + " vent " + i;
+                        assertTrue(spot[0] >= 20 && spot[0] <= PlayField.WIDTH - 20, where + " on the field");
+                        assertTrue(spot[1] >= 20 && spot[1] <= PlayField.HEIGHT - 20, where + " on the field");
+                        assertEquals(0, Math.hypot(spot[0] - breach.ventX(i), spot[1] - breach.ventY(i)), 2, where);
+                        offStraight = Math.max(
+                                offStraight,
+                                Math.hypot(
+                                        breach.mouthX() + backX / back * DISTANCES[i] - spot[0],
+                                        breach.mouthY() + backY / back * DISTANCES[i] - spot[1]));
+                    }
+                }
+                assertTrue(offStraight > 40, "a hairpin among them: " + offStraight);
+            }
+        }
     }
 
     @Test
@@ -293,7 +331,14 @@ class BreachHazardsTest {
                 assertTrue(breach.ventUp(i), "up with the erupted mouth");
                 double toMouth = Math.hypot(breach.mouthX() - breach.ventX(i), breach.mouthY() - breach.ventY(i));
                 assertTrue(toMouth <= DISTANCES[i] + 1e-9, "no farther than its way along the body");
-                assertTrue(toMouth > DISTANCES[i] * 0.5, "behind the mouth: " + toMouth);
+                // Step SVF: on the ridge's curve as the spine is laid (an under point's curve may turn back on itself),
+                // held 20 px inside the field.
+                double[] spot = alongSpine(breach, DISTANCES[i]);
+                double x = Math.clamp(spot[0], 20, PlayField.WIDTH - 20);
+                double y = Math.clamp(spot[1], 20, PlayField.HEIGHT - 20);
+                assertEquals(0, Math.hypot(x - breach.ventX(i), y - breach.ventY(i)), 2, "on the curve");
+                assertTrue(breach.ventX(i) >= 20 && breach.ventX(i) <= PlayField.WIDTH - 20, "on the field");
+                assertTrue(breach.ventY(i) >= 20 && breach.ventY(i) <= PlayField.HEIGHT - 20, "on the field");
             }
         }
     }

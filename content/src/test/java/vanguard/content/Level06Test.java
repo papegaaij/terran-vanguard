@@ -178,11 +178,12 @@ class Level06Test {
     }
 
     /**
-     * Rook calls each rear strike at the start of its bottom-edge warning (README, Radio chatter):
-     * the "six" lines lie within half a second of the warnings' starts at medium.
+     * Rook calls each rear strike (README, Radio chatter); only the rear entry is edge-warned, the Coilwyrm's two
+     * loop-backs are its own flight pattern (2026-10-21, user): the rear entry's warning starts within half a second of
+     * one of Rook's "six" lines at medium.
      */
     @Test
-    void rooksSixLinesStartWithTheRearWarnings() {
+    void rooksSixLineStartsWithTheRearEntrysWarning() {
         Sortie sortie = new Sortie(
                 5,
                 planLoadout(content, Difficulty.MEDIUM),
@@ -205,10 +206,11 @@ class Level06Test {
                 .map(RadioCue::t)
                 .toList();
         System.out.printf("Level 06 rear warnings from %s s; Rook's calls at %s s%n", starts, six);
-        assertEquals(3, starts.size(), "two loop-backs and the rear entry");
-        for (int i = 0; i < starts.size(); i++) {
-            assertEquals(starts.get(i), six.get(i), 0.5, "Rook's call of rear strike " + (i + 1));
-        }
+        assertEquals(1, starts.size(), "the rear entry only; the loop-backs are not warned");
+        assertEquals(3, six.size(), "Rook calls the two loop-backs and the rear entry");
+        assertTrue(
+                six.stream().anyMatch(t -> Math.abs(t - starts.getFirst()) <= 0.5),
+                "Rook's call of the rear entry: " + six);
     }
 
     @Test

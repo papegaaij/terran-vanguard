@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Siege Spire
@@ -65,7 +65,7 @@ The boss is one anchored arena boss with one HP bar and no slam lanes (the model
 
 #### The maw's Wraiths (H3 = a)
 
-A launched [Wraith](../../air/wraith/README.md) starts **cloaked** at the maw's centre, swoops down one of the launch lanes past the ship (spread evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three; C7 in round 34), re-enters from the **bottom edge** after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10. For each re-entry the sim adds the **3 s bottom-edge warning** (computed from the launch tick, deterministic) and counts the bottom edge as a rear wave for Rook (Trail formation, his rear bark). **At most 2 Wraiths from the maw are alive at once** (4 until round 40). They are counted as the level's enemies and pay the normal Wraith bounty (see below).
+A launched [Wraith](../../air/wraith/README.md) starts **cloaked** at the maw's centre, swoops down one of the launch lanes past the ship (spread evenly across the field as a rear ambush wave's: x 160 / 320 for two, 120 / 240 / 360 for three; C7 in round 34), re-enters from the **bottom edge** after the 1.5 s gap, decloaks, holds 2.5 s and exits up a side lane, as in Level 10. A re-entry gets **no edge warning** (2026-10-21, user: a boss never triggers them, and the pop-up is the Wraith's own flight); it counts as a rear wave for Rook (his Trail formation). **At most 2 Wraiths from the maw are alive at once** (4 until round 40). They are counted as the level's enemies and pay the normal Wraith bounty (see below).
 
 ### Arena
 
@@ -93,7 +93,7 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
 - [x] Spec reworked to the decided design: no creep, one anchored boss without lanes, the lift, `lob` and `sweep`, the maw's ambush launches, the bounty as a share of the budget (M5 part H, step H1a)
 - [x] Rooted phase with six independent root parts on `ground`, all on the screen from the arena start, no creep (M5 part H, step H3)
 - [x] `lob` from the mortar roots: marker, flight, ring, staggered, hard's ring of 12 (M5 part H, step H3)
-- [x] The maw (exposed in phase 2), its 9-bullet fan, and the Wraith launches as ambush plans with the dynamic bottom-edge warning, Rook's Trail and at most 4 alive (M5 part H, step H3)
+- [x] The maw (exposed in phase 2), its 9-bullet fan, and the Wraith launches as ambush plans (no edge warning since 2026-10-21), Rook's Trail and at most 4 alive (M5 part H, step H3)
 - [x] Tear-free lift: invulnerable ≈ 3 s, core to `air`, shockwave event, armour patch, the stump; the airborne drift, `ring`s of 14 and the `sweep` (hard 180°) (M5 part H, step H3)
 - [x] `data.yaml` with the stat block loaded and the global difficulty multipliers applied (M5 part H, step H4)
 - [x] The fight measured over five seeds (mean 129.5 s, every seed 90–180 s), the HP tuned, the par (130 s) and the bounty (452 as paid, 26.8 %) set; `SiegeSpireTest` (M5 part H, step H4; step WB: 768 in Act 1 terms, 492 as paid, 29.2 %)
@@ -200,3 +200,6 @@ Chosen concept: [siege-spire-r06-a.png](../concept/siege-spire-r06-a.png), [sieg
   **local glow** (radius 190 px round the core; the flash-reduction setting applies) instead of a full-field
   flash; the Brood Carrier keeps its full-field flash (this replaces the "every act boss's full flash" note
   above for the Spire). Accepted in round 42 (2026-10-20).
+- 2026-10-21 (user, after playthroughs): "Bosses must never trigger these warnings." The maw's
+  launched Wraiths no longer get the bottom-edge warning, banner or rear bark ahead of their
+  re-entry (`MawLaunchTest`); Rook's Trail on them and the boss warning banner stay.

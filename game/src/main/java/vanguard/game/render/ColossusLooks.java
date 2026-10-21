@@ -42,8 +42,8 @@ import vanguard.sim.Sortie;
  * split ridge with its geysers; drawn from the kill on, though the kill takes the boss off the field). The tells'
  * cracks glow lime and the eruption marker's ring is traced (step GFX3). Over the ground units ({@link #drawStreaks}):
  * the suction's sand streaks, each with a dark shadow, running into an open mouth; the throe's body and shockwave.
- * With the debris ({@link #drawRocks}): the rocks it tears loose, tumbling; the throe's plume and rock rain. Its edge
- * warnings are the simulation's ({@code Sortie.edgeWarnings}, {@link EdgeWarnings}); the throe's shake is {@link
+ * With the debris ({@link #drawRocks}): the rocks it tears loose, tumbling; the throe's plume and rock rain. It shows
+ * no edge warning (a boss never warns, 2026-10-21: its bulge and ridge are its tells); the throe's shake is {@link
  * #shakeX}. Presentation only; nothing is allocated per frame.
  */
 final class ColossusLooks {
@@ -210,7 +210,8 @@ final class ColossusLooks {
         marker = optional(sprites, slug + "-marker");
         funnel = optional(sprites, slug + "-funnel");
         rock = optional(sprites, slug + "-rock");
-        spine = new ColossusSpine(optional(sprites, slug + "-spine"), pivots);
+        spine = new ColossusSpine(
+                optional(sprites, slug + "-spine"), optional(sprites, RidgeLooks.ROOT + "-dust"), flash, pivots);
         throe = new ColossusThroe(
                 optional(sprites, slug + "-rear"),
                 optional(sprites, slug + "-collapse"),
@@ -554,16 +555,18 @@ final class ColossusLooks {
         int pose = breach.pose().ordinal();
         double x = breach.mouthX();
         double y = breach.mouthY();
-        double elapsed = elapsed(breach, phase, pose);
+        double elapsed = elapsed(breach, phase, pose, alpha);
         int funnelAt = funnelFrame(phase, realSeconds);
         if (funnelAt >= 0 && funnel.size > funnelAt) {
             drawCentred(batch, funnel.get(funnelAt), x, y);
         }
-        drawBody(batch, breach, phase, realSeconds);
+        drawBody(batch, breach, phase, elapsed, realSeconds);
         boolean back = held && ColossusSpine.shows(breach.pose()) && spine.drawable();
         if (back) {
-            spine.lay(heldX, heldY, BreachArena.RIDGE_POINTS, breach);
-            spine.draw(batch, phase, elapsed, riseSeconds, diveSeconds);
+            // Step GSR: the back rises out of the ridge drawn under it, on the ridge's own track.
+            spine.lay(heldX, heldY, BreachArena.RIDGE_POINTS);
+            spine.at(phase, elapsed, riseSeconds, diveSeconds);
+            spine.draw(batch, realSeconds);
         }
         if (breach.marker()) {
             if (marker.size >= TELL_FRAMES) {
@@ -578,7 +581,7 @@ final class ColossusLooks {
             drawCentred(batch, swell, x, y);
             drawTellGlow(batch, swell, x, y, breach.progress(), 0, realSeconds);
         }
-        drawVents(batch, piece, breach, phase, elapsed, tick, back, true);
+        drawVents(batch, piece, breach, phase, tick, back, true);
         int open = openStep(phase, elapsed);
         int closed = shutStep(phase, elapsed, riseSeconds, diveSeconds);
         AtlasRegion frame = open >= 0
@@ -603,7 +606,7 @@ final class ColossusLooks {
         if (biteCircle(phase) && pixel != null) {
             drawBiteCircle(batch, x, y, breach.biteRadius(), realSeconds);
         }
-        drawVents(batch, piece, breach, phase, elapsed, tick, back, false);
+        drawVents(batch, piece, breach, phase, tick, back, false);
     }
 
     /**
@@ -691,7 +694,7 @@ final class ColossusLooks {
     }
 
     /** How long the breach has been in its phase, s (the open's length an eruption's at an erupting point). */
-    private double elapsed(BreachArena breach, BreachArena.Phase phase, int pose) {
+    private double elapsed(BreachArena breach, BreachArena.Phase phase, int pose, float alpha) {
         double length =
                 switch (phase) {
                     case RISE -> riseSeconds;
@@ -700,7 +703,8 @@ final class ColossusLooks {
                     case DIVE -> diveSeconds;
                     default -> 0;
                 };
-        return breach.progress() * length;
+        // Step GSR: between two steps too ({@code alpha}), so the spine's front glides.
+        return Math.min(length, breach.progress() * length + (length > 0 ? alpha * SimStep.SECONDS : 0));
     }
 
     private void drawCraters(SpriteBatch batch, double scroll) {
@@ -718,10 +722,22 @@ final class ColossusLooks {
     }
 
     /**
-     * The body under the sand: before a rise (buried, the tell) along the next point's curve up to its head; behind a
-     * risen mouth its last stretch up to the neck (the mouth is its head); in the dive that stretch sinking (fading).
+     * Step GSR: the body's opacity {@code elapsed} s into a dive {@code dive} s long: full while the back sinks into it
+     * (the spine's front running back to the collar, {@link ColossusSpine#DIVE_SHARE} of the dive), then fading out by
+     * the dive's end, as the buried ridge goes on from the next point.
      */
-    private void drawBody(SpriteBatch batch, BreachArena breach, BreachArena.Phase phase, double realSeconds) {
+    static float diveBody(double elapsed, double dive) {
+        double sunk = dive * ColossusSpine.DIVE_SHARE;
+        return (float) Math.clamp(1 - (elapsed - sunk) / (dive - sunk), 0, 1);
+    }
+
+    /**
+     * The body under the sand: before a rise (buried, the tell) along the next point's curve up to its head; behind a
+     * risen mouth its last stretch up to the neck (the mouth is its head), the back rising out of it; in the dive that
+     * stretch staying while the back sinks into it, then fading ({@link #diveBody}).
+     */
+    private void drawBody(
+            SpriteBatch batch, BreachArena breach, BreachArena.Phase phase, double elapsed, double realSeconds) {
         points = 0;
         float alpha = 1;
         boolean head = true;
@@ -741,7 +757,7 @@ final class ColossusLooks {
                     points = layOut(heldX, heldY, BreachArena.RIDGE_POINTS, 1, trim, xs, ys, headings);
                     head = false;
                     if (phase == BreachArena.Phase.DIVE) {
-                        alpha = (float) (1 - breach.progress());
+                        alpha = diveBody(elapsed, diveSeconds);
                     }
                 }
             }
@@ -750,10 +766,11 @@ final class ColossusLooks {
     }
 
     /**
-     * The spine vents. On a risen edge mouth's back ({@code back}, step GK) each sits on its segment: shut while the
-     * segment rises or sinks, up, venting for {@link #VENT_SECONDS} after a burst, a hit flashing it; a vent destroyed
-     * in this or an earlier breach leaves its scar on its segment while the segment is up (otherwise the segment's
-     * sealed pore shows). Without the back (an under breach) the vents rise from the sand as before. {@code wrecks}
+     * The spine vents. On a risen edge mouth's back ({@code back}, step GK) each sits on its segment (at the
+     * simulation's place, where it is hit): shut while the segment rises or sinks, up, venting for {@link
+     * #VENT_SECONDS} after a burst, a hit flashing it; a vent destroyed in this or an earlier breach leaves its scar on
+     * its segment (otherwise the segment's sealed pore shows); step GSR: each shown up to the spine's front as its
+     * segment is. Without the back (an under breach) the vents rise from the sand as before. {@code wrecks}
      * draws the wrecks (under the mouth), else the living vents (over it).
      */
     private void drawVents(
@@ -761,7 +778,6 @@ final class ColossusLooks {
             SetPiece piece,
             BreachArena breach,
             BreachArena.Phase phase,
-            double elapsed,
             long tick,
             boolean back,
             boolean wrecks) {
@@ -777,29 +793,31 @@ final class ColossusLooks {
         }
         for (int v = 0; v < breach.ventCount(); v++) {
             boolean onBack = back && v < ColossusSpine.SEGMENTS;
-            int state = onBack ? ColossusSpine.state(phase, elapsed, v, riseSeconds, diveSeconds) : ColossusSpine.UP;
+            // Step GSR: an organ shows as its segment does, up to the spine's front; shut until the segment is up.
+            boolean out = !onBack || spine.out(v);
+            boolean up = !onBack || spine.emergence(v) >= 1;
             if (wrecks) {
                 boolean scar = onBack
-                        ? ventDied[v] >= 0 && !breach.ventRaised(v) && state == ColossusSpine.UP
+                        ? ventDied[v] >= 0 && !breach.ventRaised(v) && out
                         : ventDied[v] == breach.breaches() && ventDied[v] > 0;
-                if (scar) {
-                    double x = onBack ? spine.x(v) : breach.ventX(v);
-                    double y = onBack ? spine.y(v) : breach.ventY(v);
-                    drawCentred(batch, vent.get(3), x, y);
+                if (scar && onBack) {
+                    spine.drawOn(batch, vent.get(3), spine.x(v), spine.y(v), v);
+                } else if (scar) {
+                    drawCentred(batch, vent.get(3), breach.ventX(v), breach.ventY(v));
                 }
                 continue;
             }
-            if (!breach.ventRaised(v) || state < 0) {
+            if (!breach.ventRaised(v) || !out) {
                 continue;
             }
             double x = breach.ventX(v);
             double y = breach.ventY(v);
-            int frame = !breach.ventUp(v) || state < ColossusSpine.UP
-                    ? 0
-                    : tick - ventFired[v] < SimStep.ticks(VENT_SECONDS) ? 2 : 1;
+            int frame = !breach.ventUp(v) || !up ? 0 : tick - ventFired[v] < SimStep.ticks(VENT_SECONDS) ? 2 : 1;
             int part = breach.ventPart(v);
             if (frame > 0 && hits.on(part, tick, piece.partTicksSinceHit(part))) {
                 flash.draw(batch, vent.get(frame), Math.round(X0 + x), Math.round(y), HIT_WHITE, HitFlash.PART_FLASH);
+            } else if (onBack) {
+                spine.drawOn(batch, vent.get(frame), x, y, v);
             } else {
                 drawCentred(batch, vent.get(frame), x, y);
             }
@@ -896,7 +914,7 @@ final class ColossusLooks {
         }
         int pose = breach.pose().ordinal();
         float in = phase == BreachArena.Phase.OPEN
-                ? (float) Math.clamp(elapsed(breach, phase, pose) / STREAK_IN_SECONDS, 0, 1)
+                ? (float) Math.clamp(elapsed(breach, phase, pose, alpha) / STREAK_IN_SECONDS, 0, 1)
                 : 1;
         double cx = breach.mouthX();
         double cy = breach.mouthY();

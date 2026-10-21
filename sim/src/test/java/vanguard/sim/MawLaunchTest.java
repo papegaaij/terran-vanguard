@@ -42,10 +42,6 @@ class MawLaunchTest {
         return units;
     }
 
-    private static boolean bottomWarned(Sortie sortie) {
-        return WarningEdge.BOTTOM.in(sortie.edgeWarnings());
-    }
-
     @Test
     void theCrownOpensAndTheMawLaunchesTwoCloakedWraithsAtOnce() {
         Sortie sortie = atMaw(2, TestSpecs.LOADOUT);
@@ -67,27 +63,18 @@ class MawLaunchTest {
     }
 
     @Test
-    void theBottomEdgeIsWarnedThreeSecondsAheadOfTheReentry() {
+    void theBossesLaunchesReEnterWithNoEdgeWarning() {
+        // 2026-10-21 (user): a boss never warns, and a Wraith's pop-up behind the ship is its own flight.
         Sortie sortie = atMaw(2, TestSpecs.LOADOUT);
         Enemy unit = launched(sortie).getFirst();
-        assertFalse(bottomWarned(sortie));
-        int warned = -1;
-        int step = 0;
         while (unit.ambushPhase() != Enemy.AmbushPhase.RISE) {
             sortie.step(0);
-            step++;
-            if (warned < 0 && bottomWarned(sortie)) {
-                warned = step;
-            }
-            if (unit.ambushPhase() != Enemy.AmbushPhase.RISE) {
-                assertEquals(warned >= 0, bottomWarned(sortie), "warned from its start until the re-entry");
-            }
+            assertEquals(0, sortie.edgeWarnings(), "no edge warning ahead of its re-entry");
         }
-        assertEquals(SimStep.ticks(WaveSchedule.EDGE_WARNING_SECONDS), step - warned, "3 s ahead");
         assertTrue(sortie.arenaHalted() || sortie.groundSpeed() == 0, "on the real steps in the halt");
-        assertEquals(WaveSpec.Entry.REAR, unit.entry(), "a rear unit from its re-entry");
+        assertEquals(WaveSpec.Entry.REAR, unit.entry(), "a rear unit from its re-entry (Rook's Trail)");
         PartHSpecs.steps(sortie, 0.1);
-        assertFalse(bottomWarned(sortie), "the warning ends with the re-entry");
+        assertEquals(0, sortie.edgeWarnings());
     }
 
     @Test

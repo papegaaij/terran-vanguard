@@ -11,8 +11,8 @@ import java.util.List;
  * vital part (the hull) is wholly on the screen, then it engages. Each pass runs from one edge to the opposite
  * one, along a lane of its {@link BossSpec.Stride} chosen when the pass starts from the ship's position (its
  * first phase: the lane beside the ship's), until it has walked off the screen; then it is off the screen for
- * the stride's off time, the next entry edge (the edge cycle in turn) warned for the last {@link
- * WaveSchedule#EDGE_WARNING_SECONDS} of it (not a top entry). Its heading is one of 8 (45° steps, 0 straight down,
+ * the stride's off time, then enters from the next edge (the edge cycle in turn) with no edge warning (2026-10-21,
+ * user: a boss never warns; its entry is the surprise). Its heading is one of 8 (45° steps, 0 straight down,
  * clockwise: 2 left, 4 up, 6 right); its parts, plate, vents and cone turn with it (offsets given as when it faces
  * straight down). In an overheating last phase ({@link BossSpec.Stride#turnInPlaceLastPhase()}) it no longer leaves:
  * where its centre comes to lie its body's reach inside the far edge it stops (its cone's tell, {@link
@@ -83,7 +83,6 @@ public final class StrideArena implements Hashed {
     private final double margin;
 
     private final int offTicks;
-    private final int warnTicks;
     private final int turnTicks;
     private final int tellTicks;
     private final int burnTicks;
@@ -164,7 +163,6 @@ public final class StrideArena implements Hashed {
         }
         margin = Math.max(setPiece.size().width(), setPiece.size().height()) / 2;
         offTicks = SimStep.ticks(spec.offSeconds());
-        warnTicks = SimStep.ticks(WaveSchedule.EDGE_WARNING_SECONDS);
         turnTicks = Math.max(1, SimStep.ticks(spec.turnSeconds()));
         tellTicks = cone == null ? 0 : SimStep.ticks(cone.tellSeconds());
         burnTicks = cone == null ? 0 : Math.max(1, SimStep.ticks(cone.burnSeconds()));
@@ -679,22 +677,6 @@ public final class StrideArena implements Hashed {
     /** How many passes it has started in this attempt (the intro is the first). */
     public int passes() {
         return passes;
-    }
-
-    /**
-     * The {@link WarningEdge} bit of its next entry edge while it is off the screen, the last {@link
-     * WaveSchedule#EDGE_WARNING_SECONDS} before it (none for a top entry), else 0.
-     */
-    public int warning() {
-        if (gait != Gait.OFF || offTicks - gaitTicks > warnTicks) {
-            return 0;
-        }
-        return switch (edge) {
-            case BOTTOM -> WarningEdge.BOTTOM.bit();
-            case LEFT -> WarningEdge.LEFT.bit();
-            case RIGHT -> WarningEdge.RIGHT.bit();
-            default -> 0;
-        };
     }
 
     /** The bottom edge's {@link WarningEdge} bit while it walks up the screen (a rear wave for Rook), else 0. */

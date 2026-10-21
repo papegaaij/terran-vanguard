@@ -122,10 +122,10 @@ boss:  # the mid-boss: it walks in from the top edge as the scroll halts (its in
   t: 132
   x: 240
   section: 5
-  incoming: 3   # the boss warning 3 s before the halt (round 41's key; the walker's first pass needs no edge warning)
+  incoming: 3   # the boss warning 3 s before the halt (round 41's key; the walker's passes carry no edge warning)
   notes:
     from: top (its intro pass)
-    waves: 'At the halt (the bar, the mini-boss sting, the boss checkpoint); its passes from every edge per its spec, with their edge warnings; no other waves in the arena'
+    waves: 'At the halt (the bar, the mini-boss sting, the boss checkpoint); its passes from every edge per its spec, without edge warnings; no other waves in the arena'
 
 # The conveyor belts (design/campaign Level 19, Conveyors): 48 px wide, running up the screen at 40 px/s relative to the
 # ground; each run from where its bottom end enters at the top edge to where its top end leaves at the bottom edge
@@ -165,8 +165,8 @@ vents:
     - {t: 112.5, xs: [180, 240, 300]}       # section 4: between the feed belts
     - {t: 122.5, xs: [300, 240, 180]}
 
-# A wave about every 2.5 s from t=6 (§1.5), keeping the approved table's anchor waves at their times; the rear waves
-# warned 3 s ahead at the bottom edge. Quiet windows: no other wave for 3.5 s after the first Warden Tanks (t=30.5, the
+# A wave about every 2.5 s from t=6 (§1.5), keeping the approved table's anchor waves at their times; the rear waves'
+# first entries warned 3 s ahead at the bottom edge (the Wraith pairs' re-entries are not). Quiet windows: no other wave for 3.5 s after the first Warden Tanks (t=30.5, the
 # tanks hold the screen) and after the first vent row (t≈64.5: the mortar pair by the stacks holds it). The walkers'
 # paths are ground positions at the wave's t ([x, y] px, y below the top edge): a Warden Tank drives up its belt (its
 # path runs up the screen; the belt's 40 px/s and its own 40 against the scroll: 50 px/s down the screen in the halls),
@@ -214,7 +214,7 @@ waves:
     paths: [[[340, -40], [340, -5000]]]
   - {t: 44, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor (fills 42.5-46)"}
   - {t: 46, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Over the slag pit's mortars"}
-  - {t: 48, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked; warned 3 s ahead (Rook's bark at t=45.5); act HP factor"}
+  - {t: 48, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Cloaked; no edge warning (Rook's line at t=45.5); act HP factor"}
   - {t: 51.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Past the shift office (the secret)"}
   - {t: 53, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - t: 55
@@ -256,7 +256,7 @@ waves:
     paths: [[[240, -40], [240, -5000]]]   # up the belt at x 240 between the vent rows
     notes: Between the vent rows
   - {t: 78, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
-  - {t: 79.5, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "Warned 3 s ahead (Rook's bark at t=77)"}
+  - {t: 79.5, formation: line abreast, enemy: skitter, count: 3, from: rear, notes: "Warned 3 s ahead (Rook's line at t=77)"}
   - {t: 81.5, formation: stream, enemy: stinger, count: 4, from: front, hard: {count: 3}, edge: alternating, interval: 1.25}
   - t: 83
     formation: convoy
@@ -287,9 +287,9 @@ waves:
       - [[180, -30], [170, 90], [-80, 0]]
       - [[140, -30], [130, 110], [-100, 20]]
     notes: "Round the slag pool's mortars; act HP factor"
-  - {t: 97, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "The leader drops an overdrive; Rook's bark at t=97.5"}
+  - {t: 97, formation: V-wing, enemy: stinger, count: 4, from: front, hard: {count: 3}, notes: "The leader drops an overdrive; Rook's line at t=97.5"}
   - {t: 99, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
-  - {t: 100.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Warned 3 s ahead"}
+  - {t: 100.5, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "No edge warning (a Wraith's re-entry)"}
   - {t: 104, formation: snake, enemy: dust-kite, count: 4, from: front, edge: right, notes: "Ares Control's line at t=105"}
   - {t: 105.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - t: 107.5
@@ -329,7 +329,7 @@ waves:
     notes: Act HP factor
   - {t: 126.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
   - {t: 128.5, formation: stream, enemy: dust-kite, count: 3, from: front, edge: alternating, interval: 1.25, notes: "Gone before the halt"}
-  - {t: 130, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair before the yard, warned"}
+  - {t: 130, formation: rear ambush, enemy: wraith, count: 2, from: rear, skip: [easy, medium], notes: "Hard only: an extra Wraith pair before the yard, unwarned"}
   - t: 133.5
     formation: swarm
     enemy: dust-kite
@@ -375,7 +375,7 @@ waves:
     notes: The last two tanks
   - {t: 151, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
   - {t: 153.5, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}}
-  - {t: 156, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "Warned 3 s ahead"}
+  - {t: 156, formation: rear ambush, enemy: wraith, count: 2, from: rear, notes: "No edge warning (a Wraith's re-entry)"}
   - {t: 158, formation: line abreast, enemy: needler, count: 4, from: front, hard: {count: 3}, notes: "Step F4: the floor"}
   - {t: 159.5, formation: line abreast, enemy: ghost-drone, count: 3, from: front}
   - t: 161.5

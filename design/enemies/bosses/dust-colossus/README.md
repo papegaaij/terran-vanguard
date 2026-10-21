@@ -57,9 +57,9 @@ accepted in round 36, confirmed by the Act 3 balance plan in part A).
 A breach is one cycle of a mouth at a **breach point**:
 
 1. **Tell** (2.0 s): the sand **bulges** and cracks at the breach point, a dust ring spreads, a low
-   rumble (no popping). Side and rear breaches are also announced by the **edge warning** (`WarningEdge`
-   LEFT, RIGHT or BOTTOM), starting **3 s ahead** of the rise (1 s before the bulge); a front breach needs
-   no edge warning. Meanwhile the ridge of its back runs under the sand toward the point.
+   rumble (no popping). No breach gets an **edge warning** (2026-10-21, user: a boss never triggers
+   them); a side or rear point is still fixed **3 s ahead** of the rise (1 s before the bulge), when the
+   ridge of its back starts to run under the sand toward it: the bulge and the ridge are its tells.
 2. **Rise** (1.5 s): the mouth breaches, leaning into the field; `buried` → `ground` at the middle.
 3. **Open** (7 s): the jaws open, the gullet glows lime (the weak spot). The gullet fires (see
    *Phases*) and the **suction** runs.
@@ -70,12 +70,12 @@ A breach is one cycle of a mouth at a **breach point**:
 
 **Breach points** (screen space; the ground scrolls under them and the crater scrolls on with it):
 
-| Point | Mouth centre | Leans | Warning |
+| Point | Mouth centre | Leans | Tell |
 |---|---|---|---|
-| Front | x 240 (phase 2: the ship's x, clamped 100–380), y 95 (round 44 Q.11: the mouth's 120 px circle clears the boss bar, whose plate ends 35 px below the top edge; was 30) | down | none (front) |
-| Left | x 30, y 260 (phase 2: the ship's y, clamped 160–420) | right | LEFT |
-| Right | x 450, y as left | left | RIGHT |
-| Rear | x 240 (phase 2: the ship's x, clamped 100–380), y 515 | up | BOTTOM |
+| Front | x 240 (phase 2: the ship's x, clamped 100–380), y 95 (round 44 Q.11: the mouth's 120 px circle clears the boss bar, whose plate ends 35 px below the top edge; was 30) | down | bulge, ridge |
+| Left | x 30, y 260 (phase 2: the ship's y, clamped 160–420) | right | bulge, ridge |
+| Right | x 450, y as left | left | bulge, ridge |
+| Rear | x 240 (phase 2: the ship's x, clamped 100–380), y 515 | up | bulge, ridge |
 | Under the ship (phase 3) | the ship's position when the marker is placed, clamped 80 px inside the edges | up (faces the camera) | the marker |
 
 A side or rear mouth faces the ship's sides and tail, where the front guns cannot easily reach it:
@@ -254,6 +254,8 @@ Round 45 (round 44 K.b, step ART-K): [dust-colossus-final-r45-a.png](../concept/
 
 Round 46 (round 45 A.a, step ART-S): [dust-colossus-final-r46-a.png](../concept/dust-colossus-final-r46-a.png) ([GIF](../concept/dust-colossus-final-r46-a.gif)): the spine as one continuous ridged back (dark shingled plates over the violet hide, sand berms on the flanks; same frames and names, no game change); prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r46-a); proposed, pending the user's review.
 
+Round 46 b (the user on r46: the spine "just appears one segment at a time, like it's warped in"; step GSR): [dust-colossus-final-r46-b.png](../concept/dust-colossus-final-r46-b.png) ([GIF](../concept/dust-colossus-final-r46-b.gif)) and the in-game capture [level-21-spine-r46-b](../../../campaign/act-3-red-dust/level-21-dust-colossus/concept/level-21-spine-r46-b.mp4): the back rises out of the ridge's silhouette head to tail and sinks back tail to head (a game change, no new frames); prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r46-b); proposed, pending the user's review.
+
 ## Implementation
 
 - [x] The `buried` layer (M7 = a; appended after `sub` so the ordinals and replay hashes stay): nothing
@@ -261,7 +263,7 @@ Round 46 (round 45 A.a, step ART-S): [dust-colossus-final-r46-a.png](../concept/
 - [x] Stat block and boss script in a `data.yaml` (breach points, the cycle, phases, par), loaded;
       global difficulty multipliers applied (M7 part H, step PH2: `movement.breach`, `boss.suction`,
       `vents`, `eruption`, `debris` and the hooks, checked by `ColossusChecks`, mapped by `ColossusRules`)
-- [x] Breaches: the tell, the dynamic edge warning 3 s ahead, rise, open, bite, dive; the points per
+- [x] Breaches: the tell, the point fixed 3 s ahead (no edge warning since 2026-10-21), rise, open, bite, dive; the points per
       phase; the layer flips at the middles; the bottom breach as a rear wave for Rook (step PH1: `BreachArena`, `BreachArenaTest`; the bite lands by the centre within 70 px, a cycle is 12.8 s)
 - [x] The suction (a radial pull on the ship, Rook and debris) and the debris rocks as hazards (steps PH1/PH3: `BreachArenaTest`, `BreachHazardsTest`; debris stops the player's shots only)
 - [x] Phase 2's spine vents; phase 3's marker under the ship and the eruption; the drops (step PH3: `BreachHazardsTest`; step L21R: the erupted mouth is no safe spot, round 44 Q.4, `DustColossusTest`)
@@ -341,3 +343,9 @@ Round 46 (round 45 A.a, step ART-S): [dust-colossus-final-r46-a.png](../concept/
   2.5 s (our choice, pending the user's review): 1.17×, the test's lower bound 0.8 again. The fight 106.4 s at medium,
   par 106 (from 104); the haul +1.1 % at the scale 0.50, the bounty 480 (22.7 %) kept. B.a's Choir delay is Level 21's
   (its radio line's `delay: 4.5`).
+- 2026-10-21 (user, after playthroughs): "The walker also seem to show warnings. This takes away the
+  surprise effect that should go with a boss fight. Bosses must never trigger these warnings." Its
+  side and rear breaches no longer show an edge warning or a wave banner (nor Rook's rear bark); the
+  bulge, the ridge and the boss warning banner at its arrival stay, as does Rook's Trail on a rear
+  breach (`BreachArenaTest`). The Wraith pairs of Level 21 lose their re-entry warning too (their
+  own flight pattern).

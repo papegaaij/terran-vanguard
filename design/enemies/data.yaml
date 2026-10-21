@@ -44,7 +44,7 @@ formations:  # the formation vocabulary: name and description
   snake: 'A column following a curving `path`, each unit delayed by a fixed interval. Readability: the head is on screen at least 1.5 s before it can reach the player, however long the snake.'
   stream: A continuous trickle of single units from alternating edges.
   pincer: Two groups entering from the left and right edges at the same time.
-  rear ambush: 'A group of 2–4 attacking from the bottom edge, each in its own lane across it (always warned; see readability). A cloaked Wraith enters at the top first and is warned 3 s ahead of its re-entry (M5 part D).'
+  rear ambush: 'A group of 2–4 attacking from the bottom edge, each in its own lane across it. A cloaked Wraith enters at the top first; its re-entry behind the ship is its flight pattern and gets no edge warning (M5 part D; 2026-10-21, see readability).'
   circle: Units orbiting a point, then breaking off.
   grid: A block of units that holds and shifts sideways (a nod to classic arcades).
   wall: A full-width line with one or two gaps to fly through.

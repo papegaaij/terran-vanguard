@@ -626,14 +626,14 @@ public final class LevelScreen implements GameScreen {
             boolean reversed = sortie.reversed();
             int started = warnings.step(sortie.edgeWarnings(), sortie.tick(), reversed);
             sounds.edgeWarnings(started);
+            // 2026-10-21 (user): a unit's own re-entry (a Wraith's pop-up, a loop-back) and a boss warn no more, so a
+            // warning here is a wave's first entry; one no rear wave's bark covers (a cross unit's) gets Rook's bark.
             if (barks != null && WarningEdge.TOP.in(started)) {
-                // M7 part G: a re-entry from the top in reversed travel (a Wraith, a swarm's loop-back) is a rear
-                // wave: "Up top!".
+                // M7 part G: a wave from the top in reversed travel is a rear wave: "Up top!".
                 barks.reentry(SimStep.ticks(sortie.levelSeconds()), SimStep.ticks(sortie.realSeconds()), true);
             } else if (barks != null && WarningEdge.BOTTOM.in(started) && !reversed) {
-                // M5 part D: a re-entry at the bottom edge (a Wraith, a swarm's loop-back) is a rear wave;
-                // M5 part H: timed on the real clock (the maw's launches in Level 14's halted arena). M7 part G: in
-                // reversed travel a bottom warning is a lesson for a wave from ahead: no bark.
+                // M5 part H: timed on the real clock. M7 part G: in reversed travel a bottom warning is a lesson for a
+                // wave from ahead: no bark.
                 barks.reentry(SimStep.ticks(sortie.levelSeconds()), SimStep.ticks(sortie.realSeconds()));
             }
             waveBanners.step(sortie.edgeWarnings(), started, sortie.tick(), reversed);

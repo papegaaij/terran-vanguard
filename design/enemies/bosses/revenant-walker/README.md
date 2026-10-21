@@ -41,7 +41,7 @@ at Level 21; accepted in round 36, confirmed by the Act 3 balance plan in part A
 | HP | hull 1,190; pods 80 each; total 1350 (easy 1012 / hard 1755, from the global multipliers) |
 | Armour / shield | the front plate turns every shot that meets it from ahead (it stops the Ion Beam too); a pod turns every shot while its hatch is shut (round 44: only its 0.4 s hatch tell and its salvo open it; from phase 3 the hatches jam open); the back takes full damage; the vents ×2 while open (2 s after each burn, always in phase 3) |
 | Speed | 45 px/s (phase 1), 55 px/s (phase 2), 60 px/s (phase 3); turns 90° in 1.5 s |
-| Movement | `walk` in **passes** across the halted casting yard (see *Passes*); off the screen 3 s between passes, under an edge warning |
+| Movement | `walk` in **passes** across the halted casting yard (see *Passes*); off the screen 3 s between passes, with no edge warning (a boss never warns) |
 | Attack | the rear **flame cone** (240 px, ±32°, a 0.6 s tell, a 1.5 s burn, `heavy` = 10 once per burn, at most every 3 s; from phase 2 its burn follows the ship at 40°/s; see *Attacks*); the back-mounted **rail lance** once both pods are gone and in phase 3 (round 44: a 1 s charge, a glowing line from its back through where the ship was, then a 0.3 s shot along it, `heavy` = 10 once a shot, every 4 s, 3 s in phase 3); the **stomp** (round 44: the ship or Rook within 90 px of its centre: a 0.5 s brace, then a ring out to 110 px over 0.3 s, `medium` = 6 once a stomp, at most every 4 s); phase 1: the pods take turns firing `homing` missile salvos of 3, one 0.2 s after the other, every 3.5 s (110 px/s, turning 90°/s, 4 s life, 2 HP each, at most 8 alive, `medium` = 6; the hatch opens 0.4 s before: the tell); from phase 2 each living pod fires salvos of 3 every 4 s, staggered; the chin cannon's `fan` of 3 over 30° in a `burst` of 2 (0.2 s apart, 150 px/s, `small` = 4) every 2 s, along its heading in phase 1; phase 2: `aimed` at the ship (3 over 24°, 160 px/s); phase 3: 5 over 40° every 2.4 s (170 px/s); the hull's **flank guns** (round 43): a `burst` of 3 out of both flanks, square to its heading (0.25 s apart, 120 px/s, `small` = 4) every 2.2 s in phases 1 and 2: a dashed line across the lanes beside its own; 4 every 2.2 s in phase 3 (130 px/s) |
 | Formations | solo set piece |
 | Weak points | hot-amber reactor vents (while open) (×2) (exposed machinery: they glow heat orange when open) |
@@ -116,10 +116,10 @@ one, then steps off the screen.
   ship instead of over it; from **phase 2** on the ship's own lane (nearest the ship at the pass's
   start).
 - **Entry edges** cycle **top → bottom → left → top → bottom → right** (then repeat). The first pass is
-  its intro from the top. Between passes it is off the screen for **3 s**, under the **edge warning**
-  for its next entry (`WarningEdge` BOTTOM, LEFT or RIGHT, 3 s ahead, computed from the pass schedule
-  so it is deterministic; a top entry needs none). A bottom entry counts as a rear wave for Rook (his
-  Trail formation and rear bark), as the Siege Spire's Wraiths do.
+  its intro from the top. Between passes it is off the screen for **3 s**; its next entry gets **no
+  edge warning** (2026-10-21, user: a boss never triggers them; where it comes from next is part of
+  the fight's surprise). A bottom entry counts as a rear
+  wave for Rook (his Trail formation), as the Siege Spire's Wraiths do.
 - **Why passes**: the ship's front guns fire up and its rear guns down. A walker striding down the
   screen shows its plated front to the ship's front guns (only the pods are open to them) until it has
   passed; then its back, vents and flamer face the ship from below, in the **rear** guns' field. On an
@@ -292,8 +292,8 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
       its window, the passes, phases, par), loaded; global difficulty multipliers applied (M7 part F,
       step F2: `movement.stride`, `boss.plate`, `boss.cone`, the pods' `homing`, an attack's `parts` and
       `aim: facing`, `until.share`, mapped by `FoundryRules`)
-- [x] Walking passes: lanes, the lane choice per phase, the entry-edge cycle, 3 s off the screen with
-      the dynamic edge warning, a bottom entry as a rear wave for Rook; the phase-3 turn on the spot (step F1: `StrideArena`, `RevenantWalkerSimTest`)
+- [x] Walking passes: lanes, the lane choice per phase, the entry-edge cycle, 3 s off the screen (no
+      edge warning since 2026-10-21), a bottom entry as a rear wave for Rook; the phase-3 turn on the spot (step F1: `StrideArena`, `RevenantWalkerSimTest`)
 - [x] Enemy `homing` missiles: salvos, turn rate, life, shootable, at most 6 alive; the pods' hatch tell (step F1: `Missiles`, `RevenantWalkerSimTest`; the hatch tell's art in step ART-F3)
 - [x] The rear flame cone: trigger by the ship behind it, tell, burn, once per burn, cooldown; the
       phase-2 swivel and the phase-3 turning burn; the vents opening after each burn (steps F1, F3: `RevenantWalkerSimTest`, `RookHazards`)
@@ -400,3 +400,8 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   The sounds of the lance and the stomp are placeholders (nothing synthesized) until the next sound round.
 - 2026-10-20 (user, round 44, closed): the second rework accepted as built: **W.a** the capture (the pods armoured until their hatch opens, the stomp's ring, the rail lance on the back) accepted, **W.b** HP 1,350 (pods 80 each, hull 1,190) and par 51 s, **W.c** hard keeps medium's lance, stomp and phase 1, **W.d** the hatches jam open in phase 3, **W.e** phase 2's salvos every 4 s per pod, the lance every 4 s / 3 s and the stomp at most every 4 s, **W.f** phase 1's loss at most 2.2x the Kraken's, **W.g** the narrow HP plateau accepted as a known risk (a later change to the attacks or speed needs a re-measure and an HP re-tune) — all as recommended. **W.h** the stomp's ring is too faint against the foundry floor: a **brighter, thicker ring** (a look change only, no number moves), planned, not started. **Sounds**: S.g the lance charge **b**, S.h the lance shot **a**, S.i the shockwave **a** (see the [sfx decisions](../../../audio/sfx/README.md#decisions)).
 - 2026-10-21 (user, round 45, B.c): the brighter stomp ring is too bright; something between the old and the new ring (step G45, planned).
+- 2026-10-21 (user, after playthroughs): "The walker also seem to show warnings. This takes away the
+  surprise effect that should go with a boss fight. Bosses must never trigger these warnings." Its
+  entries between passes no longer show an edge warning or a wave banner (nor Rook's rear bark);
+  Rook's Trail on a bottom entry and the boss warning banner at its arrival stay
+  (`RevenantWalkerSimTest`).

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.BreachArena;
@@ -17,7 +18,7 @@ import vanguard.sim.WalkerHooks;
 
 /**
  * Round 44 (step GK; briefs/l21-art-names.md "Round 44: spine" and "the death throe"): the Dust Colossus's back rising
- * and sinking segment by segment on the vents' places, its 4.5 s death throe's timeline (the body, the geysers from the
+ * out of its ridge head to tail and sinking tail to head (step GSR) on the ridge's track and the vents' places, its 4.5 s death throe's timeline (the body, the geysers from the
  * tail to the head, the fissure ring, the plume, the settling, the shake, the flash and the credit shower), the ground
  * standing still under a risen mouth in the crawling arena (K.c), and the bite's circle through the bite's tell only
  * (Q.10).
@@ -26,31 +27,148 @@ class ColossusThroeTest {
     private static final double RISE = 1.5;
     private static final double DIVE = 1.5;
 
+    /**
+     * Step GSR: one front runs along the back from the collar to the tail's tip over the rise, the plates rising
+     * continuously behind it and each segment shown only up to it; the dive runs it back from the tail to the head.
+     */
     @Test
-    void theBackBreaksTheSandABeatAfterTheHeadAndSinksTheSameWay() {
-        assertEquals(0, ColossusSpine.state(Phase.RISE, 0.01, 0, RISE, DIVE), "the first segment a third out at once");
-        assertEquals(-1, ColossusSpine.state(Phase.RISE, 0.01, 1, RISE, DIVE), "the next a beat later");
-        assertEquals(0, ColossusSpine.state(Phase.RISE, 0.13, 1, RISE, DIVE));
-        assertEquals(1, ColossusSpine.state(Phase.RISE, 0.6, 0, RISE, DIVE), "two thirds");
-        assertEquals(2, ColossusSpine.state(Phase.RISE, 1.0, 0, RISE, DIVE), "up");
-        assertEquals(1, ColossusSpine.state(Phase.RISE, 1.0, 3, RISE, DIVE), "the tail still rising");
-        assertEquals(2, ColossusSpine.state(Phase.RISE, RISE, 2, RISE, DIVE));
+    void theBackRisesOutOfTheRidgeHeadToTailAndSinksTailToHead() {
+        double far = 1000;
+        assertEquals(ColossusSpine.FRONT_FROM, ColossusSpine.front(Phase.RISE, 0, RISE, DIVE), 1e-9);
+        assertEquals(ColossusSpine.FRONT_TO, ColossusSpine.front(Phase.RISE, RISE, RISE, DIVE), 1e-9);
         for (int i = 0; i < ColossusSpine.SEGMENTS; i++) {
-            assertEquals(2, ColossusSpine.state(Phase.OPEN, 0.5, i, RISE, DIVE));
-            assertEquals(2, ColossusSpine.state(Phase.BITE, 0.5, i, RISE, DIVE));
-            assertEquals(-1, ColossusSpine.state(Phase.TELL, 0.5, i, RISE, DIVE), "buried in the tell");
-            assertEquals(-1, ColossusSpine.state(Phase.BURIED, 0.5, i, RISE, DIVE));
-            assertEquals(-1, ColossusSpine.state(Phase.DIVE, DIVE, i, RISE, DIVE), "under by the dive's end");
+            assertFalse(ColossusSpine.out(i, ColossusSpine.front(Phase.RISE, 0, RISE, DIVE), far), "nothing out yet");
+            for (Phase buried : new Phase[] {Phase.BURIED, Phase.TELL}) {
+                assertFalse(ColossusSpine.out(i, ColossusSpine.front(buried, 0.5, RISE, DIVE), far), "buried");
+            }
+            for (Phase up : new Phase[] {Phase.OPEN, Phase.BITE}) {
+                assertEquals(1, ColossusSpine.emergence(i, ColossusSpine.front(up, 0.5, RISE, DIVE)), 1e-9, "up");
+            }
+            assertEquals(1, ColossusSpine.emergence(i, ColossusSpine.FRONT_TO), 1e-9, "all up at the rise's end");
+            assertFalse(ColossusSpine.out(i, ColossusSpine.front(Phase.DIVE, DIVE, RISE, DIVE), far), "under");
         }
-        assertEquals(1, ColossusSpine.state(Phase.DIVE, 0.1, 0, RISE, DIVE), "the head's segment sinks first");
-        assertEquals(2, ColossusSpine.state(Phase.DIVE, 0.1, 3, RISE, DIVE), "the tail still up");
-        assertEquals(0, ColossusSpine.state(Phase.DIVE, 0.7, 0, RISE, DIVE));
-        assertEquals(-1, ColossusSpine.state(Phase.DIVE, 1.05, 0, RISE, DIVE));
+        assertEquals(0, ColossusSpine.shown(ColossusSpine.FRONT_FROM, ColossusSpine.HEAD), 1e-9, "the collar hidden");
+        assertEquals(1, ColossusSpine.shown(ColossusSpine.FRONT_TO, ColossusSpine.TIP), 1e-9, "the tip shown");
+
+        // The rise: head to tail, continuous (no step over a frame), each segment's head end before its tail end.
+        double[] firstOut = new double[ColossusSpine.SEGMENTS];
+        double[] firstUp = new double[ColossusSpine.SEGMENTS];
+        Arrays.fill(firstOut, -1);
+        Arrays.fill(firstUp, -1);
+        double frame = 1 / 60.0;
+        double last = ColossusSpine.FRONT_FROM;
+        double[] lastEmergence = new double[ColossusSpine.SEGMENTS];
+        for (double t = 0; t <= RISE + 1e-9; t += frame) {
+            double front = ColossusSpine.front(Phase.RISE, t, RISE, DIVE);
+            assertTrue(front >= last, "the front only runs on");
+            last = front;
+            for (int i = 0; i < ColossusSpine.SEGMENTS; i++) {
+                double e = ColossusSpine.emergence(i, front);
+                assertTrue(e - lastEmergence[i] < 0.06, "segment " + i + " rises smoothly at " + t);
+                lastEmergence[i] = e;
+                if (firstOut[i] < 0 && ColossusSpine.out(i, front, far)) {
+                    firstOut[i] = t;
+                }
+                if (firstUp[i] < 0 && e >= 1) {
+                    firstUp[i] = t;
+                }
+                if (i > 0) {
+                    assertTrue(e <= ColossusSpine.emergence(i - 1, front), "the head ahead of the tail at " + t);
+                }
+                double start = ColossusSpine.SPAN_START[i];
+                double end = ColossusSpine.SPAN_END[i];
+                assertTrue(
+                        ColossusSpine.shown(front, start) >= ColossusSpine.shown(front, end),
+                        "a segment's head end shows before its tail end");
+            }
+        }
+        for (int i = 1; i < ColossusSpine.SEGMENTS; i++) {
+            assertTrue(firstOut[i] > firstOut[i - 1], "segment " + i + " breaks the sand after " + (i - 1));
+            assertTrue(firstUp[i] > firstUp[i - 1], "segment " + i + " up after " + (i - 1));
+        }
+        assertTrue(firstOut[0] < 0.1, "the collar's plates at once");
+        assertTrue(firstUp[ColossusSpine.SEGMENTS - 1] <= RISE + 1e-6, "all up by the rise's end");
+        double half = ColossusSpine.front(Phase.RISE, RISE / 2, RISE, DIVE);
+        double mid = (ColossusSpine.SPAN_START[1] + ColossusSpine.SPAN_END[1]) / 2;
+        assertTrue(half > ColossusSpine.SPAN_START[1] && half < ColossusSpine.TIP, "half way: in the back");
+        assertTrue(ColossusSpine.emergence(1, half) > 0 && ColossusSpine.emergence(3, half) < 1, "breaking through");
+        assertTrue(ColossusSpine.shown(half, mid) > ColossusSpine.shown(half, ColossusSpine.TIP), "masked ahead");
+
+        // The dive: the exact reverse over its first share, tail to head, the head last.
+        double[] under = new double[ColossusSpine.SEGMENTS];
+        double[] sinking = new double[ColossusSpine.SEGMENTS];
+        Arrays.fill(under, -1);
+        Arrays.fill(sinking, -1);
+        double share = DIVE * ColossusSpine.DIVE_SHARE;
+        for (double t = 0; t <= DIVE + 1e-9; t += frame) {
+            double front = ColossusSpine.front(Phase.DIVE, t, RISE, DIVE);
+            assertEquals(ColossusSpine.front(Phase.RISE, RISE * Math.max(0, 1 - t / share), RISE, DIVE), front, 1e-9);
+            for (int i = 0; i < ColossusSpine.SEGMENTS; i++) {
+                if (sinking[i] < 0 && ColossusSpine.emergence(i, front) < 1) {
+                    sinking[i] = t;
+                }
+                if (under[i] < 0 && !ColossusSpine.out(i, front, far)) {
+                    under[i] = t;
+                }
+            }
+        }
+        for (int i = 0; i < ColossusSpine.SEGMENTS - 1; i++) {
+            assertTrue(sinking[i] > sinking[i + 1], "segment " + i + " sinks after " + (i + 1));
+            assertTrue(under[i] > under[i + 1], "segment " + i + " under after " + (i + 1));
+        }
+        assertTrue(under[0] <= share + 1e-6 && under[0] > share - 0.1, "the head last, with the mouth");
+        assertEquals(1, ColossusLooks.diveBody(0, DIVE), 1e-6, "the ridge stays while the back sinks into it");
+        assertEquals(1, ColossusLooks.diveBody(share, DIVE), 1e-6);
+        assertEquals(0, ColossusLooks.diveBody(DIVE, DIVE), 1e-6, "then fades as the buried ridge goes on");
+
+        // The sand spills where the front passes, in the rise and the dive.
+        for (double d = ColossusSpine.HEAD; d <= ColossusSpine.TIP; d += 20) {
+            double rose = RISE * (d - ColossusSpine.FRONT_FROM) / (ColossusSpine.FRONT_TO - ColossusSpine.FRONT_FROM);
+            assertEquals(d, ColossusSpine.front(Phase.RISE, rose, RISE, DIVE), 1e-6);
+            assertEquals(0, ColossusSpine.puffAge(d, rose, false, RISE, DIVE), 1e-9);
+            double sank = share * (1 - rose / RISE);
+            assertEquals(d, ColossusSpine.front(Phase.DIVE, sank, RISE, DIVE), 1e-6);
+            assertEquals(0, ColossusSpine.puffAge(d, sank, true, RISE, DIVE), 1e-9);
+        }
+        assertFalse(ColossusSpine.out(3, ColossusSpine.FRONT_TO, 300), "nothing past the ridge's reach");
+        assertTrue(ColossusSpine.out(2, ColossusSpine.FRONT_TO, 300), "up to it");
+
         assertTrue(ColossusSpine.shows(BreachArena.Pose.FRONT) && ColossusSpine.shows(BreachArena.Pose.REAR));
         assertFalse(ColossusSpine.shows(BreachArena.Pose.UNDER), "the under pose's body goes straight down");
         assertEquals(0, ColossusSpine.frame(0, 0, 0));
         assertEquals(16 * 3 + 5, ColossusSpine.frame(1, 0, 5));
         assertEquals(191, ColossusSpine.frame(3, 2, 15), "the last of 192");
+    }
+
+    /** Step GSR: the back lies on the ridge's own track: the body's points, then straight on past its start. */
+    @Test
+    void theBackLiesOnTheRidgesTrack() {
+        int n = BreachArena.RIDGE_POINTS;
+        double[] cx = new double[n];
+        double[] cy = new double[n];
+        for (int i = 0; i < n; i++) {
+            double u = (double) i / (n - 1);
+            // A short hairpin: from the rear point up toward the centre and down to the left point.
+            cx[i] = (1 - u) * (1 - u) * 240 + 2 * u * (1 - u) * 240 + u * u * 30;
+            cy[i] = (1 - u) * (1 - u) * 25 + 2 * u * (1 - u) * 270 + u * u * 120;
+        }
+        double[] xs = new double[RidgeLooks.MAX_POINTS];
+        double[] ys = new double[RidgeLooks.MAX_POINTS];
+        int[] headings = new int[RidgeLooks.MAX_POINTS];
+        int points = ColossusLooks.layOut(cx, cy, n, 1, 0, xs, ys, headings);
+        double[] at = new double[2];
+        for (int k = 0; k < points; k++) {
+            ColossusSpine.onTrack(cx, cy, n, k * RidgeLooks.SPACING, at);
+            assertEquals(xs[k], at[0], 1e-6, "point " + k + " x");
+            assertEquals(ys[k], at[1], 1e-6, "point " + k + " y");
+        }
+        double length = ColossusSpine.length(cx, cy, n);
+        ColossusSpine.onTrack(cx, cy, n, length + 50, at);
+        double dx = cx[0] - cx[1];
+        double dy = cy[0] - cy[1];
+        double step = Math.hypot(dx, dy);
+        assertEquals(cx[0] + dx / step * 50, at[0], 1e-6, "straight on past the start");
+        assertEquals(cy[0] + dy / step * 50, at[1], 1e-6);
     }
 
     /**
@@ -78,7 +196,10 @@ class ColossusThroeTest {
                 "a little past down toward the left: clockwise");
     }
 
-    /** The segments lie on the simulation's vents (the same distances along the same curve). */
+    /**
+     * The segments lie on the simulation's vents (the same distances along the same curve) where the curve does not
+     * turn back on itself (the simulation then goes straight on; step GSR keeps the back on the ridge's track).
+     */
     @Test
     void theVentSegmentsSitOnTheSimulationsVents() {
         Sortie sortie = ColossusFixture.sortie();
@@ -86,10 +207,11 @@ class ColossusThroeTest {
         BreachArena breach = piece.breach().orElseThrow();
         double[] cx = new double[BreachArena.RIDGE_POINTS];
         double[] cy = new double[BreachArena.RIDGE_POINTS];
-        double[] at = new double[4];
+        double[] at = new double[2];
         int checked = 0;
         boolean wasRaised = false;
         boolean hunting = false;
+        int compared = 0;
         for (int t = 0; t < SimStep.ticks(130) && checked < 3; t++) {
             sortie.step(Command.NONE);
             if (piece.phase() == 0 && breach.phase() == Phase.OPEN) {
@@ -107,18 +229,38 @@ class ColossusThroeTest {
                     if (!breach.ventRaised(v)) {
                         continue;
                     }
-                    ColossusSpine.place(cx, cy, cx.length, ColossusSpine.DISTANCES[v], at);
+                    double d = ColossusSpine.DISTANCES[v];
+                    if (turnsBack(cx, cy, d) || d > ColossusSpine.length(cx, cy, cx.length)) {
+                        continue;
+                    }
+                    ColossusSpine.onTrack(cx, cy, cx.length, d, at);
+                    compared++;
                     assertEquals(breach.ventX(v), at[0], 1, "vent " + v + " x");
                     assertEquals(breach.ventY(v), at[1], 1, "vent " + v + " y");
-                    assertEquals(-breach.ventDirX(v), at[2], 0.02, "vent " + v + " heading");
-                    assertEquals(-breach.ventDirY(v), at[3], 0.02, "vent " + v + " heading");
                 }
                 checked++;
             }
             wasRaised = raised;
         }
         assertTrue(hunting && piece.phase() > 0, "into phase 2");
-        assertTrue(checked > 0, "a breach raised its vents");
+        assertTrue(checked > 0 && compared > 0, "a breach raised its vents");
+    }
+
+    /** Whether the track turns more than a right angle from its last stretch within {@code d} px of the mouth. */
+    private static boolean turnsBack(double[] cx, double[] cy, double d) {
+        int last = cx.length - 1;
+        double fx = cx[last - 1] - cx[last];
+        double fy = cy[last - 1] - cy[last];
+        double walked = 0;
+        for (int i = last; i > 0 && walked < d; i--) {
+            double dx = cx[i - 1] - cx[i];
+            double dy = cy[i - 1] - cy[i];
+            if (dx * fx + dy * fy <= 0) {
+                return true;
+            }
+            walked += Math.hypot(dx, dy);
+        }
+        return false;
     }
 
     @Test

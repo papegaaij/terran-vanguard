@@ -147,7 +147,7 @@ Enemy specs: [Mantis](../../../enemies/air/mantis/README.md),
 | 92.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | |
 | 96 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 99 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
-| 102 | 3 | snake | [Coilwyrm](../../../enemies/air/coilwyrm/README.md) | 1 | front | `loop` out of the bottom edge, back from the rear 6 s later (`rear-entry`; edge warning 3 s, 4 s on easy); radio "six" |
+| 102 | 3 | snake | [Coilwyrm](../../../enemies/air/coilwyrm/README.md) | 1 | front | `loop` out of the bottom edge, back from the rear 6 s later (`rear-entry`, its own re-entry: no edge warning); radio "six" |
 | 104.5 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
 | 110 | 4 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Into the Vrell fields |
 | 113 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | Under the second flare |
@@ -166,7 +166,7 @@ Enemy specs: [Mantis](../../../enemies/air/mantis/README.md),
 | 158 | 4 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (left) | |
 | 162 | 5 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 3 | front | |
 | 166 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
-| 168 | 5 | snake | [Coilwyrm](../../../enemies/air/coilwyrm/README.md) | 1 | front | `figure-8`, then out of the bottom edge and back from the rear (edge warning) |
+| 168 | 5 | snake | [Coilwyrm](../../../enemies/air/coilwyrm/README.md) | 1 | front | `figure-8`, then out of the bottom edge and back from the rear (no edge warning) |
 | 172 | 5 | pincer | [Mantis](../../../enemies/air/mantis/README.md) | 2 | sides | Finale with the last Coilwyrm |
 | 176 | 5 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 4 | front (alternating edges) | |
 | 179 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (left) | Past the open airlock |
@@ -175,9 +175,9 @@ Totals: Skitter 122 · Needler 20 · Mantis 8 · Stinger 12 · Coilwyrm 4.
 <!-- /data -->
 
 Rear attacks are dodged, not shot: the first rear-firing weapon (Tail Gun) is in the shop from
-L08 (the Side Splitter on the rear mount fires sideways). Every side and rear entry is edge-warned
-**3 s** ahead, the code's minimum (the 1.5 s of the first draft follows it; easy warns
-Coilwyrm loop-backs 4 s ahead), and every rear strike is called by Rook (see *Radio chatter*).
+L08 (the Side Splitter on the rear mount fires sideways). Every wave's first entry from a side or the rear is edge-warned
+**3 s** ahead, the code's minimum (the 1.5 s of the first draft follows it); a Coilwyrm's own
+loop-back re-entry is not warned (2026-10-21), and Rook's scripted "six" lines call it (see *Radio chatter*).
 A loop-back re-enters from the bottom edge at the head's x 6 s after the head left the screen.
 The Mantis hovers at y = 120–360 px with two sweeps per 6 s hover, its sprite mirrored per side.
 The finale's figure-8 comes at t=168 (2 s before the first draft's 170) so its loop-back strikes
@@ -199,8 +199,7 @@ the t=102 `loop` round the right half and out of the bottom edge, its loop-back 
 middle; the t=134 rear entry swirling up from the bottom left and out of the top; the t=168
 `figure-8` through the screen's middle (its lobes crossing at y 290) and out of the bottom edge,
 its loop-back up and out to the left; hard's t=146 pair on one diagonal, the second chain
-mirrored, so they cross in the middle. The loop-backs' bottom-edge warnings start at t=112.2 and
-t=180.6, the rear entry's at t=131.
+mirrored, so they cross in the middle. The loop-backs re-enter unwarned (about t=115.2 and t=183.6); the rear entry's edge warning starts at t=131.
 
 ## Ground targets
 
@@ -271,20 +270,20 @@ Spoken radio ([voice](../../../audio/voice/README.md)). Rook flies Aegis Two on 
 | t=52.5 | Generic CDF (Perimeter beacon) | "...Daedalus perimeter. All residents report to shelter... all residents report..." |
 | t=64 | Okafor | "Domes intact. Airlocks open. Nobody's home." |
 | t=76 | Varga | "Long contact, moving like a snake. Cut it and the back half grows a new head. Go for the head." |
-| t=112 (the t=102 loop-back's warning) | Rook | "It's turning, it's coming round behind you! Six, Lancer, six!" |
+| t=112 (the t=102 loop-back) | Rook | "It's turning, it's coming round behind you! Six, Lancer, six!" |
 | t=119.5 | Varga | "You can't shoot behind you yet. Dodge it." |
 | t=131 (the t=134 rear entry's warning) | Rook | "Contacts on six! Why is it always six?" |
 | t=160 | Varga | "No bodies. No damage. Commander, the Vrell didn't kill them. They took them." |
 | t=171 | Okafor | "...Understood. Log it, Varga. Aegis, finish this and come home." |
-| t=180.5 (the t=168 loop-back's warning) | Rook | "Another one's coming round. Watch your tail." |
+| t=180.5 (the t=168 loop-back) | Rook | "Another one's coming round. Watch your tail." |
 | Level end | Okafor | "Daedalus is empty. So are the others. We'll find them." |
 | Level end, after Okafor's line | Rook | "...Copy. Aegis Two, heading home." |
 | Secondary met | Okafor | "Not one sniper left standing. Good eyes in the dark, Lancer." |
 <!-- /data -->
 
 Retimed in the build step to the HUD's 1 s rule (`RadioTimelineTest`; a text line holds the
-radio 6–12 s): Rook's "six" lines start with the bottom-edge warning of the rear strike they
-call (t=112 for the t=102 loop-back, which re-enters at 115.2; t=131 for the t=134 rear entry;
+radio 6–12 s): Rook's "six" lines are scripted ahead of the rear strike they
+call (the loop-backs have no edge warning since 2026-10-21; t=112 for the t=102 loop-back, which re-enters at 115.2; t=131 for the t=134 rear entry;
 t=180.5 for the t=168 figure-8's loop-back; `Level06Test` checks them within 0.5 s), Varga's
 "Dodge it" follows Rook's first call at 119.5, and the opening lines are spread (Rook 12.5,
 Varga's headlight line and the headlight 20, Rook's Mantis sighting 32.5 with its warning, Varga
@@ -334,7 +333,7 @@ grade.
 
 ## Difficulty notes
 
-- **Easy**: Coilwyrm loop-backs are edge-warned 4 s ahead (instead of 3 s); flares last
+- **Easy**: the rear entry's edge warning is 4 s (instead of 3 s); flares last
   12 s; the headlight cone is 260 px long.
 - **Hard**: Coilwyrms have 14 segments and the Mantis sweeps 90° (stat-block hooks); no flare
   at t=112; the t=146 Skitter snake is replaced by a new two-chain Coilwyrm wave, the chains
@@ -375,8 +374,8 @@ D8), with their briefs: [concept/prompts.md](concept/prompts.md); reviewed in
       block, M4 part F step 2).
 - [x] Scripted flares at t=70, 112 and 150 with moving light pools.
 - [x] Wave script matches the *Waves* table; the first Coilwyrm does not loop.
-- [x] Every side and rear entry is edge-warned 3 s ahead (loop-backs 4 s on easy); Rook calls
-      each rear strike at the start of its warning.
+- [x] Every wave's first side or rear entry is edge-warned 3 s ahead (4 s on easy); the Coilwyrm loop-backs are not
+      (2026-10-21); Rook's scripted lines call the rear strikes.
 - [x] At least 40 enemies per minute of scroll at medium (`DensityTest`), from Level 06's own
       light enemies; a Coilwyrm counts once.
 - [x] Survey cache revealed by light and hittable only while lit; data core at the airlock
@@ -466,3 +465,6 @@ D8), with their briefs: [concept/prompts.md](concept/prompts.md); reviewed in
   `level-06-props-capture-final-r23-a`. The perimeter beacon is cast (Mark F. Smith, PA filter), so
   its line is spoken and loops under section 2. The level's art is `final`: its backdrop,
   darkness and props are production art (the Mantis and Coilwyrm are their own parts).
+- 2026-10-21: Edge-warning rule change (user, built by step EW): only a wave's first entry from the left, right or rear is
+  edge-warned; the Coilwyrm loop-backs (t=102, t=168) re-enter unwarned, and Rook's rear bark for them is gone; his scripted
+  "six" lines stay.

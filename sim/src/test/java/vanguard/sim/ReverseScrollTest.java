@@ -254,9 +254,9 @@ class ReverseScrollTest {
     }
 
     @Test
-    void aFlippedReentryWarnsTheTopEdge() {
+    void aFlippedReentryWarnsNoEdge() {
         // A Wraith ambush swoops off the frame's bottom (the screen's top) and comes back from there; a swarm's
-        // loop-back too.
+        // loop-back too. 2026-10-21 (user): a re-entry is the unit's own flight pattern: no edge warning.
         LevelScript ambush = turnabout(List.of(PartDSpecs.ambush(25, PartDSpecs.wraith(), 2)), List.of());
         LevelScript swarm = turnabout(List.of(PartDSpecs.swarm(25, 6, 1)), List.of());
         for (LevelScript level : List.of(ambush, swarm)) {
@@ -270,10 +270,7 @@ class ReverseScrollTest {
                     flippedRearSeen |= sortie.enemy(i).flipped();
                 }
             }
-            assertEquals(
-                    WarningEdge.TOP.bit(),
-                    warned,
-                    level.waves().getFirst().enemy().slug());
+            assertEquals(0, warned, level.waves().getFirst().enemy().slug());
             assertTrue(flippedRearSeen);
         }
     }

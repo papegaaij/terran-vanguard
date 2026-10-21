@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Wingmen and drones
@@ -85,7 +85,9 @@ segment chain counts by the edge it entered from last: a Coilwyrm wave from the 
 wave, and a chain that loops back is one from its re-entry at the bottom edge. Planned (M5 part D,
 Level 10): a Wraith `rear ambush` counts as a rear wave from its re-entry at the bottom edge (its
 cloaked pass from the top before it does not), and a Mote Swarm that loops back from its leader's
-re-entry, as a chain's loop-back; the rear bark (trigger 2) fires 1.5 s ahead of those re-entries.
+re-entry, as a chain's loop-back. Those re-entries are the units' own flight pattern: since
+2026-10-21 (user) they get no edge warning and so no rear bark (trigger 2), which keys to the edge
+warnings of rear waves ([HUD](../../ui/hud/README.md)).
 When both Trail and Wide apply, **Trail** wins. When the slot lies outside the play field (the
 player flies close to the edge on Rook's side, or near the bottom edge in Trail), he takes the
 **mirrored slot** on the other side, and returns to his own side once it has been inside the
@@ -265,8 +267,7 @@ eject bark, an urgent line: see below), and are voiced like every Act 1 line
   level document's t=82 "Six o'clock" and t=122 "Contacts on your flank" are dropped for his rear
   and side barks, and his t=3, t=54 and t=230 lines carry `requires: escort`.
 - **Level 14 (planned, M5 part H, accepted in round 34 (2026-10-12)):** in the Siege Spire's fight he flies
-  Trail for each of the maw's Wraith re-entries (the bottom edge counts as a rear wave, warned 3 s
-  ahead) and his rear bark calls each launch; his boss-warning bark plays at t=108 (not scripted);
+  Trail for each of the maw's Wraith re-entries (the bottom edge counts as a rear wave; no edge warning or rear bark since 2026-10-21); his boss-warning bark plays at t=108 (not scripted);
   the level document's t=80 "Six o'clock" is dropped, his t=3 line carries `requires: escort`, and
   his phase-3 line "Roots and all. Somebody call a gardener." is an event line 5 s after the phase
   starts. No change to his AI.

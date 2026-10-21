@@ -145,8 +145,8 @@ The rules for a section with a negative speed (new in part G), for review:
   the same `arc` placement parameter as Level 19's up-facing nests).
 - **Front/rear rules read travel**: the 60 %-front rule, the intel's directions and the threat profile
   above.
-- **Edge warnings**: a new **TOP** edge (`WarningEdge` TOP, 3 s ahead) for every entry from the top in
-  a reversed section (the pursuit swarms, the Wraiths); LEFT/RIGHT as usual. Bottom entries are the
+- **Edge warnings**: a new **TOP** edge (`WarningEdge` TOP, 3 s ahead) for a wave's first entry from the top in
+  a reversed section (the pursuit swarms; the Wraiths' pop-ups are re-entries and never warn, 2026-10-21); LEFT/RIGHT as usual. Bottom entries are the
   default edge and unwarned, except the **first three after the turn** (t=27.5, 31.5, 35.5), which
   show the BOTTOM warning as a lesson.
 - **Pickups** drift with the scroll's sign (up the screen in a reversed section). Bullets and shots are
@@ -290,18 +290,18 @@ the screen edges with their meaning by travel.
 | 48.5 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | |
 | 52.5 | 3 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 2 | bottom (ahead) | |
 | 56.5 | 3 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved kite stream |
-| 59 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | Cloaked inside the swarm; TOP-warned (Rook's line at t=56); act HP factor |
+| 59 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | Cloaked inside the swarm; no TOP warning (Rook's line at t=56); act HP factor |
 | 63 | 3 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved kite snake |
 | 67 | 3 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | bottom (ahead, alternating edges) | Over the floor nest (t≈66) |
 | 71 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | bottom (ahead) | Up the first terrace; the leader drops an overdrive |
 | 75 | 4 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | A firing pair in place of the approved kite stream |
 | 79 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | |
-| 80 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | Hard only: an extra Wraith pair, TOP-warned |
+| 80 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | Hard only: an extra Wraith pair, no TOP warning |
 | 83 | 4 | snake | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead, right) | Over the terrace nest (t≈85) |
 | 87 | 4 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 2 | bottom (ahead) | In the terrace sand |
 | 90.5 | 4 | pincer | [Needler](../../../enemies/air/needler/README.md) | 2 | sides | 1 per edge; warned 3 s ahead |
 | 94.5 | 4 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | Past the emergency cache (the secret, t≈92); a firing pair in place of the approved kite V-wing |
-| 101 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | TOP-warned (Rook's line at t=98) |
+| 101 | 4 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | no TOP warning (Rook's line at t=98) |
 | 104.5 | 4 | stream | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead, alternating edges) | |
 | 108 | 5 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 3 | bottom (ahead, left) | The swarm drops back off the top |
 | 110.5 | 5 | swarm | [Dust Kite](../../../enemies/air/dust-kite/README.md) | 3 | bottom (ahead) | **The lull**: kite flocks at the edges only (they never fire); step G4: six flocks 2.5 s apart (Act 2+ rule) |
@@ -316,7 +316,7 @@ the screen edges with their meaning by travel.
 | 133.5 | 6 | pack | [Dust Devil](../../../enemies/ground/dust-devil/README.md) | 2 | bottom (ahead) | On the road's switchback; the last one drops a shield cell |
 | 137.5 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | Over the road nest (t≈140); a firing pair in place of the approved kite V-wing |
 | 141.5 | 6 | line abreast | [Needler](../../../enemies/air/needler/README.md) | 2 | bottom (ahead) | |
-| 146.5 | 6 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | TOP-warned (Rook's line at t=143.5) |
+| 146.5 | 6 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | top (behind) | no TOP warning (Rook's line at t=143.5) |
 | 150 | 6 | field | [Burrower](../../../enemies/ground/burrower/README.md) | 2 | bottom (ahead) | In the road's drifts |
 | 154 | 6 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 2 | bottom (ahead) | Over the last road nest (t≈155); a firing pair in place of the approved kite snake |
 | 157.5 | 6 | stream | [Skitter](../../../enemies/air/skitter/README.md) | 3 | bottom (ahead, alternating edges) | |
@@ -406,8 +406,8 @@ level (the retreat) and instead the act's one **quiet beat** (M17 = a), at t=113
 
 Timeline check (text): the two-page lines close at ≈ 12.2 (t=1) and ≈ 124.3 (Rook's quiet line,
 t=113); Ares Control's t=131 line starts 0.2 s late (Varga's closes at ≈ 131.2), within the rule;
-every other timed line starts on time. Rook's top lines fall on the Wraiths' TOP warnings (t=56, 98,
-143.5): as scripted Rook lines they suppress his rear bark there by the spacing rule; the pursuits'
+every other timed line starts on time. Rook's top lines come before the Wraith pairs (t=56, 98,
+143.5), which carry no TOP warning since 2026-10-21; his scripted lines stay; the pursuits'
 TOP entries (t=24, 124) get his "Up top!" bark (the rear-wave bark's `top_lines`). **The quiet beat**: Rook's line plays with the screen nearly empty and the music down to its
 base stem; it is not a joke and nobody answers it. It plays **without** `requires: escort`
 (he speaks from the formation off-screen when the slot is empty, as his character document allows),
@@ -465,7 +465,7 @@ into contact threats it must dodge and shoot once they pass).
 - **Easy**: the swarm 8 on entry, refills of 2, a lunge every 5.5 s with a 1.2 s tell; the TOP warning
   4 s ahead; the Burrowers' ring of 8 and the Dust Devils' weaker pull (their specs).
 - **Hard**: the swarm 12 on entry, refills of 4, a lunge every 3 s; the Burrowers' second ring and
-  the Dust Devils' 3-arm spiral (their specs); an extra Wraith pair from the top at t≈80 (TOP-warned);
+  the Dust Devils' 3-arm spiral (their specs); an extra Wraith pair from the top at t≈80 (unwarned);
   the Wraiths' hard hooks; the firing groups (Needler lines, Stinger V-wings) one unit smaller.
 
 ## Concept art
@@ -577,7 +577,7 @@ plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-
   `break_at` (t=108 and t=163; the second breaks off inside section 7, so not "its section's end"); the
   BOTTOM lessons use the existing wave key `warning` on a front wave in a reversed section (no new
   `warn` key); the t=20.5 vanguard Skitters stream 0.6 s apart (all in before the turnabout's zero); the
-  pursuits' and the Wraiths' TOP warnings 4 s on easy (`easy: {warning: 4}`); the cache's sprite named
+  pursuits' TOP warnings 4 s on easy (the Wraith waves' `easy: {warning: 4}` is moot since 2026-10-21) (`easy: {warning: 4}`); the cache's sprite named
   `emergency-cache`; the basin rumble as a second ambience loop (`ambience_layers`) and the rim flak as
   `flak` with `band: top`; the threat profile's hazards `reverse scroll`, `fallback under pursuit`.
 - 2026-10-20 (M7 part G, step G4): mapped (`RetreatRules`) and flown by the autopilot's retreat play;
@@ -618,3 +618,5 @@ plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-
   (the head off the left edge 70 px below the top at t=12, off the right edge 8 s later, the tail gone at t=27).
   Level 21's ridge pass uses the same key, from the right edge.
 - 2026-10-20 (user, round 44, closed): **L.a** the swarm's two levers (the band's lag 90 to 30 px/s, a lunge every 4 s at medium) accepted as built, **L.b** easy 5.5 s and hard 3 s, **L.c** the reversed-level limit of `BeamEraHpTest` raised to 2.6x (the swarm lives longer; the alternative, lowering Level 20's small HP, is not taken), **L.d** the `ridge {t, seconds, from, to, depth}` level key (Level 20's track in its data; Level 21 uses the same key) — all as recommended.
+- 2026-10-21: Edge-warning rule change (user, built by step EW): the Wraith pop-ups (t=59, 80, 101, 146.5) are no longer TOP-warned
+  (a unit's own re-entry); the pursuits' first entry from the top keeps its TOP warning; Rook's scripted lines stay.

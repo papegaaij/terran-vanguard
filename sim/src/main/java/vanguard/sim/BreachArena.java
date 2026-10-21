@@ -17,7 +17,8 @@ import java.util.List;
  * {@code buriedSeconds} (at least its tell) after the dive's end.
  *
  * <p><b>Points.</b> The next point is fixed {@link BossSpec.Breach#warnSeconds()} before its rise for a side or rear
- * point (its edge's warning starts then: {@link #warning()}), else at its tell (H.7h). A following order's front and
+ * point (no edge warning since 2026-10-21: a boss never warns; its bulge and ridge are its tells), else at its tell
+ * (H.7h). A following order's front and
  * rear points take the ship's x, its side points the ship's y, each within its clamp; an {@link Pose#UNDER} point lies
  * on the ship, {@link #UNDER_INSET} px inside the edges at most. A new boss phase starts its order from the first point
  * at its next pick (a breach under way runs its cycle out). The mouths do not move once risen.
@@ -59,18 +60,21 @@ public final class BreachArena implements Hashed {
 
     /** Where the mouth breaches (its sprite's pose). */
     public enum Pose {
-        /** At the top edge, leaning down (no edge warning). */
+        /** At the top edge, leaning down. */
         FRONT,
-        /** At the left edge, leaning right (the LEFT warning). */
+        /** At the left edge, leaning right. */
         LEFT,
-        /** At the right edge, leaning left (the RIGHT warning). */
+        /** At the right edge, leaning left. */
         RIGHT,
-        /** At the bottom edge, leaning up (the BOTTOM warning; a rear wave for Rook). */
+        /** At the bottom edge, leaning up (a rear wave for Rook). */
         REAR,
-        /** Under the ship, straight up (phase 3; its marker instead of a warning). */
+        /** Under the ship, straight up (phase 3; its marker). */
         UNDER;
 
-        /** Its {@link WarningEdge} bit; 0 for the front and under points. */
+        /**
+         * Its edge's {@link WarningEdge} bit; 0 for the front and under points. Only the point's fixing reads it (a
+         * side or rear point is fixed {@link BossSpec.Breach#warnSeconds()} ahead): a boss shows no edge warning.
+         */
         int edgeBit() {
             return switch (this) {
                 case LEFT -> WarningEdge.LEFT.bit();
@@ -91,8 +95,8 @@ public final class BreachArena implements Hashed {
     public static final double VENT_FIRST_SECONDS = 1;
     /** Where the ridge comes from before the first breach: this far above the top edge, px. */
     static final double START_ABOVE = 200;
-    /** Step SIM-K: samples of the ridge's curve a spine vent's distance is measured over (from the mouth back). */
-    private static final int SPINE_SAMPLES = 64;
+    /** Step SVF: a spine vent's heading is the way along the ridge this far either side of it, px (the back's). */
+    private static final double SPINE_CHORD = 16;
     /** Step SIM-K: a spine vent's centre stays this far inside the play field's edges, px (half a vent). */
     private static final double VENT_MARGIN = 20;
 
@@ -122,6 +126,10 @@ public final class BreachArena implements Hashed {
     private final double[] ventDirX;
 
     private final double[] ventDirY;
+    /** Step SVF: the place {@link #alongRidge} found last (screen px, y up). */
+    private double spotX;
+
+    private double spotY;
     /** Per part, its index among the vents; -1 for none. */
     private final int[] partVent;
 
@@ -348,7 +356,7 @@ public final class BreachArena implements Hashed {
     }
 
     /**
-     * One step of the cycle in boss phase {@code bossPhase}: the next point fixed at its warning or its tell, the
+     * One step of the cycle in boss phase {@code bossPhase}: the next point fixed at its lead or its tell, the
      * phases' times, the layer flips at the rise's and the dive's middles, the attacks' times while open.
      */
     void step(int bossPhase) {
@@ -501,66 +509,57 @@ public final class BreachArena implements Hashed {
     }
 
     /**
-     * Step SIM-K: places vent {@code i} {@code d} px back from the mouth along the ridge's curve; where the curve turns
-     * back on itself (more than a right angle from its last stretch: two under points close together, the curve's
-     * hairpin through the field's centre) or ends, straight on along the stretch before.
+     * Step SIM-K: places vent {@code i} {@code d} px back from the mouth along the ridge's curve. Step SVF: along the
+     * curve as the presentation lays the body and its back (the {@value #RIDGE_POINTS} samples of {@link #ridgeX(int)}
+     * from the mouth back, straight on along the first stretch past the curve's start: a short ridge), so vent i sits
+     * on spine segment i at a hairpin too; its heading the way along the samples {@value #SPINE_CHORD} px either side.
      */
     private void onSpine(int i, double d) {
-        double left = d;
-        double x = toX;
-        double y = toY;
-        // The way back from the mouth, a unit vector: the curve's last stretch, else away from where it came from.
-        double backX = fromX - toX;
-        double backY = fromY - toY;
-        double backLength = Math.sqrt(backX * backX + backY * backY);
-        if (backLength < 1e-9) {
-            backX = 0;
-            backY = 1;
+        alongRidge(d - SPINE_CHORD);
+        double aheadX = spotX;
+        double aheadY = spotY;
+        alongRidge(d + SPINE_CHORD);
+        double dx = aheadX - spotX;
+        double dy = aheadY - spotY;
+        double length = Math.sqrt(dx * dx + dy * dy);
+        if (length < 1e-9) {
+            dx = 0;
+            dy = -1;
         } else {
-            backX /= backLength;
-            backY /= backLength;
-        }
-        boolean first = true;
-        double firstX = backX;
-        double firstY = backY;
-        for (int k = SPINE_SAMPLES - 1; k >= 0; k--) {
-            double u = (double) k / SPINE_SAMPLES;
-            double px = curve(fromX, viaX, toX, u);
-            double py = curve(fromY, viaY, toY, u);
-            double dx = px - x;
-            double dy = py - y;
-            double length = Math.sqrt(dx * dx + dy * dy);
-            if (length < 1e-9) {
-                continue;
-            }
             dx /= length;
             dy /= length;
-            if (first) {
-                first = false;
-                firstX = dx;
-                firstY = dy;
-            } else if (dx * firstX + dy * firstY <= 0) {
-                break;
-            }
-            backX = dx;
-            backY = dy;
-            if (length >= left) {
-                break;
-            }
-            left -= length;
-            x = px;
-            y = py;
         }
-        // On the play field, so it can be shot (a hairpin's or a degenerate curve's straight run may leave it).
-        ventX[i] = Math.clamp(x + backX * left, VENT_MARGIN, PlayField.WIDTH - VENT_MARGIN);
-        ventY[i] = Math.clamp(y + backY * left, VENT_MARGIN, PlayField.HEIGHT - VENT_MARGIN);
-        ventDirX[i] = -backX;
-        ventDirY[i] = -backY;
+        alongRidge(d);
+        // On the play field, so it can be shot (a short ridge's straight run may leave it).
+        ventX[i] = Math.clamp(spotX, VENT_MARGIN, PlayField.WIDTH - VENT_MARGIN);
+        ventY[i] = Math.clamp(spotY, VENT_MARGIN, PlayField.HEIGHT - VENT_MARGIN);
+        ventDirX[i] = dx;
+        ventDirY[i] = dy;
     }
 
-    /** The quadratic curve from {@code a} over {@code b} to {@code c} at {@code u} (0–1). */
-    private static double curve(double a, double b, double c, double u) {
-        return (1 - u) * (1 - u) * a + 2 * u * (1 - u) * b + u * u * c;
+    /**
+     * Step SVF: the place {@code d} px back from the mouth along the ridge's samples ({@link #ridgeX(int)}, the last
+     * the mouth), straight on along the first stretch past the curve's start, into {@link #spotX}, {@link #spotY}
+     * (the presentation's {@code ColossusSpine.onTrack}).
+     */
+    private void alongRidge(double d) {
+        double left = Math.max(0, d);
+        for (int k = RIDGE_POINTS - 1; k > 0; k--) {
+            double x = ridgeX(k);
+            double y = ridgeY(k);
+            double dx = ridgeX(k - 1) - x;
+            double dy = ridgeY(k - 1) - y;
+            double length = Math.sqrt(dx * dx + dy * dy);
+            if (length >= left || k == 1) {
+                double u = length > 1e-9 ? left / length : 0;
+                spotX = x + dx * u;
+                spotY = y + dy * u;
+                return;
+            }
+            left -= length;
+        }
+        spotX = ridgeX(0);
+        spotY = ridgeY(0);
     }
 
     /** Whether a breach at {@code p} erupts (an under point with an eruption). */
@@ -944,17 +943,6 @@ public final class BreachArena implements Hashed {
         }
         double s = Math.clamp(1 - (double) toRise / transitTicks, 0, 1);
         return s * s * (3 - 2 * s);
-    }
-
-    /**
-     * The {@link WarningEdge} bit of the next point's edge from {@link BossSpec.Breach#warnSeconds()} before its rise
-     * until the rise (none for a front or under point), else 0.
-     */
-    public int warning() {
-        if (!picked || toRise <= 0 || toRise > warnTicks || piece.destroyed()) {
-            return 0;
-        }
-        return nextPose.edgeBit();
     }
 
     /** The bottom edge's {@link WarningEdge} bit while a rear breach tells, rises, opens, bites or dives (a rear wave for Rook). */

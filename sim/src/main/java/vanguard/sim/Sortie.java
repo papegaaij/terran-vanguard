@@ -76,8 +76,8 @@ import java.util.List;
  * <p>M5 part H (design/campaign Level 14 and design/enemies/bosses/siege-spire; decisions H1–H5 = a):
  * root bursts place their growths at a point of the screen after their telegraph ({@link
  * RootBurst}); an anchored boss without lanes lobs and sweeps from its parts, its windows'
- * ambush launches fly planned rear paths ({@link Launches}) with the bottom edge warned ahead of each
- * re-entry on the real steps (a fixed ring of warnings, {@link BossPasses#WARNINGS}), and a phase's move lifts it
+ * ambush launches fly planned rear paths ({@link Launches}) (no edge warning since 2026-10-21: a boss never warns),
+ * and a phase's move lifts it
  * off its anchor, the stump staying behind. New state is hashed only in a level that uses it.
  *
  * <p>The step's passes live in package-private classes, each with the state only it uses: {@link HitPasses}
@@ -880,11 +880,9 @@ public final class Sortie {
             vents.update(levelTick, groundScroll, clockTicked, events);
         }
         bossPasses.flySetPieces();
-        edgeWarnings = complete ? 0 : force.warnings(levelTick) | bossPasses.launchWarnings();
-        if ((walks || breachBoss != null) && !complete) {
-            // M7 part F: the walker's next entry edge; M7 part H: the breaching boss's next side or rear point.
-            edgeWarnings |= bossPasses.strideWarnings();
-        }
+        // 2026-10-21 (user): only the waves' first entries warn; a boss (the walker's entries, the breaching boss's
+        // points, the Spire's launched Wraiths) never does: the boss fight keeps its surprise.
+        edgeWarnings = complete ? 0 : force.warnings(levelTick);
         fire.move(scrollStep, force.enemies(), ground);
         boolean firing = flying() && !complete;
         force.move(ship, firing, scrollStep);
@@ -1213,7 +1211,7 @@ public final class Sortie {
         bossRetry = false;
         streamReleased = 0;
         resetArena();
-        bossPasses.clearLaunchWarnings();
+        bossPasses.clearLaunches();
         fire.reset();
         special.reset();
         force.reset();

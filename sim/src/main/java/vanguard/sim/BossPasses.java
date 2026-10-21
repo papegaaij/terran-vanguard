@@ -1,18 +1,14 @@
 package vanguard.sim;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * The set pieces' passes in a {@link Sortie}'s step and what the bosses do to the level (it is their
  * {@link SetPiece.BossActions}): their flight, arrival and escape, their guns, phases, streams, windows'
- * launches and ambushes (with the bottom edge's warnings ahead of the re-entries), the arena boss's
- * telegraphs, slams, roots and release.
+ * launches and ambushes, the arena boss's telegraphs, slams, roots and release. A boss feeds no edge warning
+ * (2026-10-21, user: the surprise of a boss fight): its own tells and the boss warning banner stay.
  */
 final class BossPasses implements SetPiece.BossActions {
-    /** M5 part H: the bottom edge's warnings ahead of the launched units' re-entries, a ring of real steps [start, end). */
-    static final int WARNINGS = 8;
-
     private final Sortie s;
     private final LevelScript script;
     private final Ship ship;
@@ -46,10 +42,6 @@ final class BossPasses implements SetPiece.BossActions {
     private final Launches launches;
     /** M5 part H: the ambush launches' openings in this attempt (they take the planned sets in turn). */
     private int ambushOpenings;
-
-    private final int[] warningStarts;
-    private final int[] warningEnds;
-    private int warningNext;
     /** The phase a boss entered in this step, for its event; -1 for none. */
     int bossPhase = -1;
 
@@ -98,17 +90,12 @@ final class BossPasses implements SetPiece.BossActions {
             streamFromRight[i] = Formations.streamUnit(streams[i].enemy(), kind, false);
         }
         launches = arenaBoss == null ? null : Launches.plan(arenaBoss, force.kinds(), seed);
-        warningStarts = new int[launches == null ? 0 : WARNINGS];
-        warningEnds = new int[warningStarts.length];
     }
 
     /** M5 part H: only in a level with ambush launches, so the other levels hash as before. */
     void addTo(StateHash hash) {
         if (launches != null) {
-            hash.add(ambushOpenings).add(warningNext);
-            for (int w = 0; w < warningStarts.length; w++) {
-                hash.add(warningStarts[w]).add(warningEnds[w]);
-            }
+            hash.add(ambushOpenings);
         }
     }
 
@@ -116,7 +103,7 @@ final class BossPasses implements SetPiece.BossActions {
      * M5 part H (design/enemies/bosses/siege-spire, the maw's Wraiths; decision H3 = a): unit {@code
      * unit} of {@code units} of an ambush launch from window part {@code part} at (x, y): it flies its
      * planned rear path unless the boss's launched units alive reach the spawn's most already (then it is
-     * left out); it counts among the level's enemies, and the bottom edge is warned ahead of its re-entry.
+     * left out); it counts among the level's enemies; its re-entry behind the ship gets no edge warning (2026-10-21).
      */
     private void launchAmbush(BossSpec.Spawn spawn, int part, int unit, int units, double x, double y) {
         if (unit == 0) {
@@ -131,35 +118,6 @@ final class BossPasses implements SetPiece.BossActions {
         }
         s.streamReleased++;
         events.add(SimEvents.Type.BOSS_LAUNCHED, x, y, plan.kind());
-        int reentry = s.realTick + launches.reentry(spawn, part, ambushOpenings - 1, unit, units);
-        warningStarts[warningNext] = Math.max(s.realTick, reentry - SimStep.ticks(WaveSchedule.EDGE_WARNING_SECONDS));
-        warningEnds[warningNext] = reentry;
-        warningNext = (warningNext + 1) % warningStarts.length;
-    }
-
-    /** M5 part H: the bottom edge's bit while a launched unit's re-entry warning runs, else 0. */
-    int launchWarnings() {
-        for (int w = 0; w < warningStarts.length; w++) {
-            if (s.realTick >= warningStarts[w] && s.realTick < warningEnds[w]) {
-                return WarningEdge.BOTTOM.bit();
-            }
-        }
-        return 0;
-    }
-
-    /** M7 part F: the walking boss's next entry edge's warning bit while it is off the screen, else 0. */
-    int strideWarnings() {
-        int edges = 0;
-        for (SetPiece piece : setPieces) {
-            if (piece.stride().isPresent() && piece.present() && !piece.destroyed()) {
-                edges |= piece.stride().get().warning();
-            }
-            if (piece.breach().isPresent() && piece.present() && !piece.destroyed()) {
-                // M7 part H: a breaching boss's next side or rear point.
-                edges |= piece.breach().get().warning();
-            }
-        }
-        return edges;
     }
 
     /** M7 part F: the bottom edge's bit while a walking boss walks up the screen (a rear wave for Rook), else 0. */
@@ -177,11 +135,8 @@ final class BossPasses implements SetPiece.BossActions {
         return edges;
     }
 
-    /** M5 part H: no launched unit's warning runs (a new attempt, a retry from the boss on an empty field). */
-    void clearLaunchWarnings() {
-        Arrays.fill(warningStarts, 0);
-        Arrays.fill(warningEnds, 0);
-        warningNext = 0;
+    /** M5 part H: the launches start over (a new attempt, a retry from the boss on an empty field). */
+    void clearLaunches() {
         ambushOpenings = 0;
     }
 

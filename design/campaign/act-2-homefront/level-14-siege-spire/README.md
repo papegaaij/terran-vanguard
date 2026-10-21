@@ -209,7 +209,7 @@ flies only the rear ambush).
 | 77 | 3 | convoy | [Creeper](../../../enemies/ground/creeper/README.md) | 5 | front | Up a street broken by the roots |
 | 77 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 4 | front | |
 | 79.5 | 3 | line abreast | [Spore Bomber](../../../enemies/air/spore-bomber/README.md) | 3 | front | |
-| 82 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked on `high-air` under the canopy; Rook's rear bark (not scripted); easy: a Needler V-wing from the front instead |
+| 82 | 3 | rear ambush | [Wraith](../../../enemies/air/wraith/README.md) | 2 | rear | Cloaked on `high-air` under the canopy; no edge warning or rear bark; easy: a Needler V-wing from the front instead |
 | 82 | 3 | V-wing | [Needler](../../../enemies/air/needler/README.md) | 3 | front | Easy only: instead of the rear Wraiths |
 | 84.5 | 3 | snake | [Skitter](../../../enemies/air/skitter/README.md) | 6 | front (right) | |
 | 87 | 3 | pincer | [Needler](../../../enemies/air/needler/README.md) | 4 | sides | |
@@ -226,8 +226,8 @@ Totals: Skitter 57 · Needler 58 · Stinger 18 · Mantis 4 · Creeper 20 · Spor
 <!-- /data -->
 
 The maw's launches in the fight (a Wraith every 8 s, hard 2, at most 2 alive, round 40; 2 and 3
-before; three launches in the measured medium fight) are ambush plans, not edge waves: the bottom-edge warning and Rook's Trail formation apply
-(the boss row's notes).
+before; three launches in the measured medium fight) are ambush plans, not edge waves: no bottom-edge warning and no rear bark since 2026-10-21 (a unit's own
+re-entry; Rook's Trail formation still applies).
 
 ## Ground targets
 
@@ -332,8 +332,8 @@ attacks live in the spec. Arena notes for this level:
   two mortar roots break out along the avenues radiating from it, **all six on the screen from
   the start** (no creep, H1 = a).
 - Phase 2: the maw's Wraiths come at the player from the bottom edge as ambushes (H3 = a): the
-  sim adds the 3 s bottom-edge warning before each re-entry, Rook switches to his Trail formation
-  and calls each launch (bark priority 2), at most 2 alive at once (round 40: one a launch, 4 alive
+  sim adds no edge warning before a re-entry (rule of 2026-10-21; the 3 s warning of H3 = a is gone), Rook switches to
+  his Trail formation, at most 2 alive at once (round 40: one a launch, 4 alive
   before).
 - **Round 40** (proposals 4a–4c, step CB): the pods fire down their columns with safe lanes between
   and take turns to aim (a 0.6 s glow, one pod every 2.0 s); the maw's fan 7 orbs every 3.0 s; the
@@ -746,3 +746,6 @@ else approved as final and accepted, the Spire's death after a redo.
   Spire's leading sweep (its README) the fight at medium stays at its par (101.9 s mean, par 103 s).
 - 2026-10-20: round 42 closed: the playtest fixes (T.1 approach, T.2 sweep, T.5 death) and their check capture (K.b) accepted by the user, every sub-choice yes; the sweep is not clipped to the play field (T.2 d).
 - 2026-10-20 (user, round 44, X.a-X.d, X.f-X.i): the Level 11 arena and first-ship-cue captures and the Level 14 briefing page and kinder fight accepted; Rook's halt line at level t≈118 kept (X.f); the stale "pending the user's review" notes rewritten as "accepted in round N (date)" (X.g); the final production rows `final` (X.i). The checklist is ticked and its rounds are closed: **`implementation: done`**; the act's playthrough stays an act-level item in the [Act 2 README](../README.md).
+- 2026-10-21: Edge-warning rule change (user, built by step EW): the maw's Wraith launches and the rear ambushes are a unit's
+  own re-entries and are no longer edge-warned (H3 = a's 3 s warning and Rook's launch bark are gone); the Spire's own
+  arrival keeps its boss-warning box (round 41), which is not an edge warning.
