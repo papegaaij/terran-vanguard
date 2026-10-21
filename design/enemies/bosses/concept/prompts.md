@@ -208,3 +208,21 @@ four tumble steps; the intel's sensor silhouette (`tools/art/intel.py`, the open
   bite and the dive), a rear breach with its three spine vents and the debris (phase 2), the marker and the
   eruption under the ship with the two-arm spiral (phase 3), and the death, the ridge splitting in chained
   eruptions and the flash, over Level 21's arena floor at 20 px/s (the open phases shortened).
+
+# Round 45 — production art (M7 part I)
+
+## dust-colossus-final-r46-a
+
+**Production art for round 46's review (step ART-S, round 45 A.a), [tools/art/dust_colossus.py](../../../../tools/art/dust_colossus.py)
+(`spine`).** The user: the round 45 spine read as a chain of pale bubbles; re-render it as one continuous ridged back.
+The four segment frames (`dust-colossus-spine`, the same frame scheme) are now cut from **one** model of the back in
+the spine's own coordinates, so laid at 120/200/280/350 px they join: the dark violet-grey chitin plates shingled
+along it (each plate's tail edge proud over the next, a worn tan rim on it, bowing headward on the flanks; a low bone
+keel spike on each plate's crest), the violet hide showing along the flanks under the plates, a low sand berm
+hugging both flanks (closing round the tail's tip and where the back dives into the sand by the mouth's collar),
+the sealed pores under the vents, sand heaped on the plates while it rises. The cuts sit on plate edges (166, 246,
+326 px) and each segment reaches 12 px under the one before it (the game draws tail first), so a bend reads as one
+plate shingled over the next. One far key light (as a sun) lights every segment alike; the model is rendered whole
+and cut afterwards, so the joints carry no lit face and no sharpening halo. The back tapers from 60 px wide behind
+the neck to the tip at 400 px. Pending the user's review.
+

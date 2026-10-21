@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Architecture
@@ -672,7 +672,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   and the subtitle shows the side's text),
   `distorted`, the portrait's optional `expression` (`neutral`, `grim`, `fierce`; neutral if not
   given; a secret's `radio` line takes it too), `shout: true` (the voice shouts the line, with the
-  speaker table's `shout` row; separate from how the line queues), and `easy` / `hard` changes
+  speaker table's `shout` row; separate from how the line queues), an event cue's optional `delay` (round 45 B.a,
+  step C45: seconds, at least 0; the radio holds the line that long after its event, the lines queued after it
+  waiting behind it, the debrief too; Level 21's Choir at the Colossus's death, 4.5 s; `RadioCue.delaySeconds()`, or
+  `LevelData.radioDelay(i)` by the script radio's index), and `easy` / `hard` changes
   giving another `line`,
   as when a wave enters elsewhere on that difficulty); `objectives` (`primary`, `secondary` `kill_ratio` with an
   optional `boss_counted: false` (the level's boss set pieces left out of the ratio's enemies and kills; default true:

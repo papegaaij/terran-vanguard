@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: chosen
 depends-on: [../../../enemies/bosses/dust-colossus, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../world/mars, ../../../systems/economy]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Level 21 – Dust Colossus
@@ -304,9 +304,11 @@ The arena's clock runs (the arena crawls), so the t=111 line is timed; the phase
 `boss-phase` events queued as `PHASE` lines (Level 14's step H7b: they wait for a gap, stale after
 20 s, dropped at the kill). **The five death lines are queued as `CLOSING` lines in order**
 (round 36): they never go stale, and the debrief waits for the last one (Level 14's
-closing rule). Text model from the kill (K): the Choir from K to ≈ K+6.0 (its subtitle 5.6 s), Varga to ≈ K+12.7,
-Okafor to ≈ K+19.3, Ares Control to ≈ K+26.7, Okafor's closing line to ≈ K+34; the settling-dust
-section (32 s) is sized to them.
+closing rule). The Choir's words wait **4.5 s** after the kill (`delay: 4.5`, round 45 B.a: the death roar drowned
+them), the lines after them queue behind them. Text model from the kill (K): the Choir from K+4.5 to ≈ K+10.5 (its
+subtitle 5.6 s), Varga to ≈ K+17.2, Okafor to ≈ K+23.8, Ares Control to ≈ K+31.2, Okafor's closing line to ≈ K+38.5;
+the settling-dust section (32 s, sized to the lines before the delay) runs on under them and the debrief waits for
+the last.
 
 <!-- data: radio -->
 | Trigger | Speaker | Line |
@@ -324,7 +326,7 @@ section (32 s) is sized to them.
 | Phase 2 (`boss-phase` Hunting) | Okafor | "It's hunting you now, Lancer. Keep moving and mind the pull." |
 | Phase 2, queued after Okafor's line | Rook | "Remember the moles, Lancer? I take it back." |
 | Phase 3 (`boss-phase` Breaching anywhere) | Varga | "It's under you! Move when the ground cracks!" |
-| Colossus destroyed (`boss-destroyed`, the chain's start): the Choir speaks, with its layering on speech | The Choir (distorted) | "…many… we are many… we are going…" |
+| Colossus destroyed (`boss-destroyed`, the chain's start), held 4.5 s (`delay`, round 45 B.a: past the death roar): the Choir speaks, with its layering on speech | The Choir (distorted) | "…many… we are many… we are going…" |
 | After the chain and the flash (`CLOSING`) | Varga | "Commander… that was not singing. Those were words." |
 | Then (`CLOSING`) | Okafor | "I heard it, Doctor. Log everything." |
 | Then (`CLOSING`) | Generic colonial (Ares Control) | "Clear sky over every dome, Aegis. Dinner's on Ares Landing." |
@@ -486,10 +488,10 @@ starts at the next 512 px seam, its seam piece, the collapsed crater and the fur
 | [concept/level-21-capture-r44-a.png](concept/level-21-capture-r44-a.png) | 24-tile sheet of the three parts (HUD left panel + field, captioned part + time; the p3 tiles from the re-recorded part 3) + 1:1 crops: the gullet open, the bite tell, the spine vents firing, the front mouth under the boss bar (from part 2), and from the new part 3 the eruption marker, the suction streaks (and 2×), four death frames, the sinkhole with the furrow, debris rocks | proposed (round 44, K.b/K.c: the sheet of the clips above; re-made with them) |
 | [concept/level-21-act-end-r44-a.mp4](concept/level-21-act-end-r44-a.mp4) | After the win (same run): the last of the settling dust and Okafor's closing line, the debrief tally and stamp, ACT III COMPLETE (Level 21 alone recorded: a debug run), Act 3's outro, 4 pages typed and voiced (0:38–1:41), the release end card "ACTS I-III COMPLETE … TO BE CONTINUED / ACT IV - DEEP WATER. EUROPA. COMING SOON." (1:45), then the hangar (snapshot hook, see above) with "ACT IV - DEEP WATER: COMING SOON" in its header and Mission 22's intel "NO INTEL YET: THE MISSION FOLLOWS IN A LATER RELEASE." 139 s | chosen (round 44, K.d: accepted) |
 | [concept/level-21-act-end-r44-a.png](concept/level-21-act-end-r44-a.png) | 12-tile sheet of that clip (full frames) | chosen (round 44, K.d: accepted) |
-| [concept/level-21-capture-r45-a-p1.mp4](concept/level-21-capture-r45-a-p1.mp4) | Round 45 check capture (step H6, autopilot with the plan's fit and Rook): part 1 of 3, the approach with the reworked waves, 103.5 s | proposed |
-| [concept/level-21-capture-r45-a-p2.mp4](concept/level-21-capture-r45-a-p2.mp4) | Part 2 of 3, phases 1-2: the ground holds still through the fight, the spine and its vent organs, the breaches, the bite tell, 96 s | proposed |
-| [concept/level-21-capture-r45-a-p3.mp4](concept/level-21-capture-r45-a-p3.mp4) | Part 3 of 3, phase 3 (two eruptions), the death throe, the sinkhole and the debrief, 87 s | proposed |
-| [concept/level-21-capture-r45-a.png](concept/level-21-capture-r45-a.png) | 24-tile sheet of the three parts plus crops of the spine, a vent organ, the bite tell and six throe frames | proposed |
+| [concept/level-21-capture-r45-a-p1.mp4](concept/level-21-capture-r45-a-p1.mp4) | Round 45 check capture (step H6, autopilot with the plan's fit and Rook): part 1 of 3, the approach with the reworked waves, 103.5 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
+| [concept/level-21-capture-r45-a-p2.mp4](concept/level-21-capture-r45-a-p2.mp4) | Part 2 of 3, phases 1-2: the ground holds still through the fight, the spine and its vent organs, the breaches, the bite tell, 96 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
+| [concept/level-21-capture-r45-a-p3.mp4](concept/level-21-capture-r45-a-p3.mp4) | Part 3 of 3, phase 3 (two eruptions), the death throe, the sinkhole and the debrief, 87 s | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
+| [concept/level-21-capture-r45-a.png](concept/level-21-capture-r45-a.png) | 24-tile sheet of the three parts plus crops of the spine, a vent organ, the bite tell and six throe frames | chosen (round 45: accepted; the Choir delay and phase 1 fan follow) |
 
 The other part H art, in the tables of the parts it belongs to (round 44, accepted in round 44 (2026-10-20)): the Colossus's
 sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), its intel silhouette in the
@@ -524,7 +526,7 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
 - [x] The fight measured on the plan's fit over five seeds (every seed 90–180 s), the HP tuned, the
       par set; the boss's bounty at the share `TypicalHaulTest`'s perfect-run bound allows
       (drafted 22.7 %) (step H4: 101.7 s, the spec's HP kept, par 102, 325 at the scale 0.74 = 22.7 %; step L21R after
-      round 44's Q.2/Q.9/Q.11: 104.3 s, par 104, 480 at the scale 0.50)
+      round 44's Q.2/Q.9/Q.11: 104.3 s, par 104, 480 at the scale 0.50; step C45 after round 45 B.b: 106.4 s, par 106)
 - [x] Ground targets, the survey-crawler secret (20 HP trigger, hard 28, crate 100, the scanner's
       glint, its line), the overdrive, the supply drone's armour patch at t=89, the boss's phase-3
       patch (steps PH2/H4/ART-H1; step L21R: the hard 28 HP as the destructible's `hard: {hp}`, round 44 Q.5,
@@ -535,6 +537,8 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
       without); the phase lines as `PHASE`, the death's lines as `CLOSING` in order with the debrief
       waiting for the last; the Choir's speech voiced with its layering; Rook's lines
       `requires: escort` (steps VOX-H, HA: `RadioTimelineLevel21Test`, `VoiceFilesTest`; the Choir's speech is one take, round 44 Q.7)
+- [x] The Choir's death line held 4.5 s after the kill, the closing lines after it, the debrief waiting (round 45
+      B.a: the data's `delay`, step C45, `Level21Test`; the game's hold, step G45: `RadioQueue`'s delayed add, `RadioTimelineLevel21Test`, `RadioQueueTest`)
 - [ ] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel
       (`IntelPanelLayoutTest`); the Colossus's intel silhouette; the L3 strip's marks (the ridge
       pass and the boss: Level 14's strip draws no boss mark yet) (step HA: the boss's silhouette is on the strip
@@ -638,3 +642,8 @@ sprites in the [bosses' table](../../../enemies/bosses/README.md#concept-art), i
 - 2026-10-20 (step GK): the ground holds still under a breach (`LevelRenderer.drawnScroll`), the radio's cut phase line is withdrawn at the kill; the greenhouse pad of Level 17 is drawn and claimed.
 - 2026-10-20 (step L21R): 168 enemies at medium (easy 143, hard 152), floor 2.55, 2 gaps over 2 s, fight 104 s (par 104), phase 3 from 45 % (about 3 eruptions), `bounty_scale` 0.50, boss bounty 480.
 - 2026-10-20 (step R45): the Colossus's fight in play (round 45 B rows), the spine and the death throe (A rows) and hard's Act 3 economy (C.1) are questions in [round 45](../../../concept-rounds/round-45/README.md).
+- 2026-10-21 (user, round 45): the Level 21 check capture accepted (B.a) with one change: the Choir's words at the Colossus's death start 4.5 s after the kill; B.b phase 1 gets the 5-way fan; C.1 hard's Act 3 economy accepted for v0.1 and revisited after the playthrough (steps C45, G45, planned).
+- 2026-10-21 (step C45, round 45): B.a radio event lines take an optional `delay` (s, at least 0) and the Choir's
+  `boss-destroyed` line waits 4.5 s (the closing lines queue behind it; the game's hold is step G45); B.b phase 1 fires
+  the fan (the [boss's](../../../enemies/bosses/dust-colossus/README.md#decisions) numbers): the fight 106.4 s at medium,
+  par 106, the level report 104.7 s at medium (100.0–107.1), the haul +1.1 % at the `bounty_scale` 0.50 (kept).

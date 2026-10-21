@@ -310,7 +310,7 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies; the are
   - {event: boss-phase, phase: Hunting, speaker: Okafor, line: "It's hunting you now, Lancer. Keep moving and mind the pull.", notes: {trigger: "Phase 2 (`boss-phase` Hunting)"}}
   - {event: boss-phase, phase: Hunting, speaker: Rook, requires: escort, line: "Remember the moles, Lancer? I take it back.", notes: {trigger: "Phase 2, queued after Okafor's line"}}
   - {event: boss-phase, phase: Breaching anywhere, speaker: Varga, expression: fierce, line: "It's under you! Move when the ground cracks!", notes: {trigger: "Phase 3 (`boss-phase` Breaching anywhere)"}}
-  - {event: boss-destroyed, speaker: The Choir, distorted: true, line: "…many… we are many… we are going…", notes: {trigger: "Colossus destroyed (`boss-destroyed`, the chain's start): the Choir speaks, with its layering on speech"}}
+  - {event: boss-destroyed, delay: 4.5, speaker: The Choir, distorted: true, line: "…many… we are many… we are going…", notes: {trigger: "Colossus destroyed (`boss-destroyed`, the chain's start), held 4.5 s (`delay`, round 45 B.a: past the death roar): the Choir speaks, with its layering on speech"}}
   - {event: boss-destroyed, speaker: Varga, line: "Commander… that was not singing. Those were words.", notes: {trigger: "After the chain and the flash (`CLOSING`)"}}
   - {event: boss-destroyed, speaker: Okafor, line: "I heard it, Doctor. Log everything.", notes: {trigger: "Then (`CLOSING`)"}}
   - {event: boss-destroyed, speaker: Ares Control, portrait: generic-colonial, line: "Clear sky over every dome, Aegis. Dinner's on Ares Landing.", notes: {trigger: "Then (`CLOSING`)"}}

@@ -48,6 +48,8 @@ public sealed interface RadioBlock permits LevelData {
      *     its timeout with parts it waited for still alive (Level 07's "Forget the sacs")
      * @param below M5 part G, an {@code ally-below} cue: the share of the defended ally's integrity it
      *     dropped below (Level 13's 0.5 and 0.25)
+     * @param delay round 45 B.a, an event cue: the seconds (at least 0) the radio holds the line after its event before
+     *     it plays, the lines queued after it waiting behind it (Level 21's Choir under the Colossus's death roar)
      */
     public record RadioCue(
             Optional<Double> t,
@@ -68,8 +70,12 @@ public sealed interface RadioBlock permits LevelData {
             Optional<String> requiresNot,
             Optional<Boolean> timeout,
             Optional<List<String>> parts,
-            Optional<Double> below) {
+            Optional<Double> below,
+            Optional<Double> delay) {
         public RadioCue {
+            Check.that(delay.isEmpty() || event.isPresent(), "only an event cue waits a delay");
+            delay.ifPresent(seconds ->
+                    Check.that(Double.isFinite(seconds) && seconds >= 0, "delay: seconds, at least 0, was " + seconds));
             Check.that(
                     below.isPresent() == (event.orElse(null) == CueEvent.ALLY_BELOW),
                     "an ally-below event names its share (below), other triggers do not");
@@ -101,6 +107,11 @@ public sealed interface RadioBlock permits LevelData {
             Check.that(
                     group.isPresent() == byGroup,
                     "a group-cleared or group-lost event names its group, other triggers do not");
+        }
+
+        /** Round 45 B.a: the seconds the radio holds the line after its event, its {@code delay}; 0 if not given. */
+        public double delaySeconds() {
+            return delay.orElse(0.0);
         }
     }
 

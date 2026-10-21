@@ -1255,6 +1255,13 @@ abstract class RadioTimeline {
         boolean escort = (fitted & ESCORT) != 0;
         RadioQueue radio = new RadioQueue();
         List<RadioCue> cues = script.radio();
+        // Round 45 B.a: the cues' delays after their events, as the game reads them from the level's data
+        Optional<LevelData> level = CONTENT.levelKey(script.number()).map(CONTENT::level);
+        float[] delays = new float[cues.size()];
+        for (int i = 0; i < delays.length; i++) {
+            int cue = i;
+            delays[i] = level.map(data -> (float) data.radioDelay(cue)).orElse(0f);
+        }
         boolean[] fired = new boolean[cues.size()];
         // M7 part D: the events of repeating triggers, each setting off its cues once
         boolean[] eventFired = new boolean[events.size()];
@@ -1341,7 +1348,7 @@ abstract class RadioTimeline {
                 if (due) {
                     fired[i] = true;
                     double dueAt = cue.trigger() == CueTrigger.TIME && holds.isEmpty() ? cue.t() : seconds;
-                    queued.add(queue(radio, schedule, cue, i, text(cue, side), dueAt, voiced));
+                    queued.add(queue(radio, schedule, cue, i, text(cue, side), dueAt, voiced, delays[i]));
                 }
             }
             for (int e = 0; e < events.size(); e++) {
@@ -1355,7 +1362,8 @@ abstract class RadioTimeline {
                     if (cue.trigger() == event.trigger()
                             && cue.subject().equals(event.subject())
                             && cue.allowedWith(fitted)) {
-                        queued.add(queue(radio, schedule, cue, i, text(cue, side, event.ally()), seconds, voiced));
+                        queued.add(queue(
+                                radio, schedule, cue, i, text(cue, side, event.ally()), seconds, voiced, delays[i]));
                     }
                 }
             }
@@ -1405,9 +1413,19 @@ abstract class RadioTimeline {
         return played;
     }
 
-    /** Queues cue {@code i} with {@code text} on {@code radio} as the game does, due at {@code due}. */
+    /**
+     * Queues cue {@code i} with {@code text} on {@code radio} as the game does, due at {@code due}, held {@code
+     * delay} seconds (round 45 B.a).
+     */
     private static Queued queue(
-            RadioQueue radio, RadioSchedule schedule, RadioCue cue, int i, String text, double due, boolean voiced) {
+            RadioQueue radio,
+            RadioSchedule schedule,
+            RadioCue cue,
+            int i,
+            String text,
+            double due,
+            boolean voiced,
+            float delay) {
         radio.add(
                 cue.speaker(),
                 cue.portrait(),
@@ -1416,7 +1434,8 @@ abstract class RadioTimeline {
                 cue.distorted(),
                 schedule.priority(i),
                 Optional.empty(),
-                voiced ? voiceSeconds(cue.speaker(), text, cue.expression()) : 0);
+                voiced ? voiceSeconds(cue.speaker(), text, cue.expression()) : 0,
+                delay);
         return new Queued(i, text, due);
     }
 }

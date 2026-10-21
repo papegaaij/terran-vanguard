@@ -41,12 +41,16 @@ root `dust-colossus`, vanguard.pipeline.SpriteUse: rerun once the boss's data.ya
                              not a turret): a fleshy chimney through a collar of armour scales, its top a
                              sphincter round the lime gill throat: 0 shut (rising/sinking), 1 up (lime dim), 2
                              venting (dilated, blazing, a gout of ichor), 3 destroyed (torn open; stays dead)
-  dust-colossus-spine_0..191 round 45: the armoured spine breaking the sand behind a risen edge mouth, toward the
-                             field's centre: frame (segment * 3 + state) * 16 + heading; segments 0-3 at 120, 200,
-                             280, 350 px from the mouth (tapering; the vents on 0-2, a sealed pore under each),
-                             states 0 rise 1/3, 1 rise 2/3 (sand sliding off), 2 up; heading k = the spine's
-                             direction from the mouth, k * 22.5 degrees clockwise from straight down; each frame
-                             centred on the segment's centre
+  dust-colossus-spine_0..191 the armoured back breaking the sand behind a risen edge mouth, toward the field's
+                             centre: frame (segment * 3 + state) * 16 + heading; segments 0-3 at 120, 200, 280, 350
+                             px from the mouth (the vents on 0-2, a sealed pore under each), states 0 rise 1/3, 1
+                             rise 2/3 (sand heaped on the plates), 2 up; heading k = the spine's direction from the
+                             mouth, k * 22.5 degrees clockwise from straight down; each frame centred on the
+                             segment's centre. Round 46 (round 45 A.a): the four frames are stretches of ONE back
+                             (dark shingled plates over the violet hide, a bone keel spike per plate, a low sand berm
+                             on both flanks; one far key light), cut at 166/246/326 px on plate edges; segment 0
+                             dives into the sand toward the mouth (from 60 px), segments 1-3 reach 12 px under the
+                             one before (the game draws tail first), segment 3 tapers to the tip at 400
   dust-colossus-rear_0..3    round 45, the death throe (UNDER pose, bigger than the open mouth): the forebody
                              rearing out of the sand: 0 rising, 1 towering (the armour rings of the neck showing),
                              2 the scream (teeth white-hot), 3 a shudder (ichor bursting)
@@ -70,8 +74,9 @@ root `dust-colossus`, vanguard.pipeline.SpriteUse: rerun once the boss's data.ya
   assets/pivots/dust-colossus.json   per pose: the lean, the gullet's ellipse, the neck (where the body leaves
                              the sand: the ridge joins there), the collar's radius
   assets/sprites/intel/boss-dust-colossus.png   via tools/art/intel.py (the open UNDER mouth's outline)
-  design/enemies/bosses/concept/dust-colossus-final-r45-a.png/.gif   the review (round 45: the spine, the vent
-                             organs and the throe; r44's sheet showed the first sets)
+  design/enemies/bosses/concept/dust-colossus-final-r46-a.png/.gif   the review (round 46: the spine as one
+                             ridged back; r45's sheet showed the first spine, the vent organs and the throe, r44's
+                             the first sets)
 
 How the game draws it, back to front: the funnel at the breach point (the crater after the dive, scrolling with
 the ground), the shut / mouth frames centred on the point, the gullet glow added over an open mouth; the vents on
@@ -108,7 +113,7 @@ from render.sdf import Material, sd_capsule, sd_cylinder_z, sd_ellipsoid, sd_sph
 SCRIPT = "dust_colossus.py"
 BATCH = "M7 part H batch"
 SOURCE = artkit.source_note(SCRIPT, BATCH)
-REVIEW_ROUND = "r45"
+REVIEW_ROUND = "r46"
 ROOT_NAME = "dust-colossus"
 CONCEPT = DESIGN / "enemies" / "bosses" / "concept"
 DATA = DESIGN / "enemies" / "bosses" / "dust-colossus" / "data.yaml"
@@ -141,6 +146,7 @@ ROCKS = [(70, 44, 30), (104, 68, 44), (138, 94, 62), (170, 122, 84), (196, 150, 
 
 # extra material slots after boss_models.mats' nine (7 Vrell + crimson + dead tissue)
 W_SAND, W_HOT, W_ICHOR, W_ROCK = 9, 10, 11, 12
+W_PLATE, W_HIDE, W_RIM = 13, 14, 15                 # round 45 A.a: the spine's dark plates, violet hide, worn rims
 W_DEAD = 8
 
 
@@ -157,6 +163,10 @@ def mats(glow=1.0, weak=0.75, hot=0.0):
                       emission=tuple(LIME / 255 * 1.1)))
     m.append(Material(tuple(np.array(ROCKS[2], float) / 255), metal=0.05, shininess=18, spec=0.25,   # W_ROCK
                       pattern=lambda p, n: 0.78 + 0.22 * np.sin(p[:, 0] * 33) * np.sin(p[:, 1] * 29 + p[:, 2] * 17)))
+    m.append(Material((0.29, 0.22, 0.31), metal=0.3, shininess=70, spec=0.75,               # W_PLATE: dark chitin
+                      pattern=lambda p, n: 0.9 + 0.1 * np.sin(p[:, 0] * 41) * np.sin(p[:, 1] * 37)))
+    m.append(Material((0.36, 0.2, 0.46), metal=0.1, shininess=40, spec=0.5))                 # W_HIDE: violet hide
+    m.append(Material((0.55, 0.47, 0.44), metal=0.2, shininess=60, spec=0.6))                # W_RIM: worn plate edge
     return m
 
 
@@ -326,84 +336,145 @@ def vent_scene(state):
     return scene
 
 
-# --------------------------------------------------------------------------- the spine (round 44 K.b)
+# --------------------------------------------------------------------------- the spine (round 45 A.a)
+#
+# Round 45 A.a (the user: the round 44 spine read as a chain of pale bubbles): one continuous ridged back. The four
+# segment frames are cut from ONE model of the back (the same plates, hide, berms and light in global spine
+# coordinates), so laid at their distances on a straight line they join seamlessly; each frame reaches SPINE_OVERLAP
+# px further toward the mouth than the cut in front of it, under the segment before it (the game draws tail first), and
+# ends toward the tail at a plate's proud edge (the cuts sit on plate edges): where the curve or the 22.5 degree heading
+# steps bend the back, the joint reads as one armour plate shingled over the next.
 
 SPINE_DIST = (120, 200, 280, 350)        # px from the mouth's centre along the spine (the vents at the first three)
-SPINE_HALF_W = (0.52, 0.45, 0.38, 0.28)  # model units: the segments taper toward the tail
-SPINE_HALF_L = (0.57, 0.53, 0.48, 0.38)
-SPINE_BERM = (0.7, 0.68, 0.62, 0.5)       # the sand berm's half length: the neighbours' berms meet between them
-SPINE_STATES = (0.74, 0.5, 0.26)         # how deep the segment's centre sits, x its half height: 0, 1 rise, 2 up
+SPINE_CUT = (166, 246, 326)              # px: where segment i ends toward the tail (= where i + 1 shows from under it)
+SPINE_FRONT = 60                         # px: segment 0's front (the back dives into the sand there, by the collar)
+SPINE_TIP = 400                          # px: the tail's tip, sinking into the sand
+SPINE_OVERLAP = 12                       # px: each segment 1-3 reaches this far under the one before it
+SPINE_PITCH = 80 / 3                     # px: the plates' pitch (the cuts at 166, 246, 326 are plate edges)
+SPINE_STATES = (0.78, 0.55, 0.3)         # how deep the back's axis sits, x its half height: 0, 1 rise, 2 up
 SPINE_HEADINGS = 16
+SPINE_KEY = np.array((-2.2, 2.6, 3.2)) * 12          # the render package's key light direction, 12 x as far
+
+
+def spine_span(seg):
+    """Segment ``seg``'s stretch of the back, px from the mouth: (front, tail end)."""
+    front = SPINE_FRONT if seg == 0 else SPINE_CUT[seg - 1] - SPINE_OVERLAP
+    return front, (SPINE_CUT[seg] if seg < 3 else SPINE_TIP + 8)
+
+
+def spine_width(s):
+    """The back's half width (model units) at s units from the mouth: full behind the neck, tapering to the tail,
+    rounding off to the tip."""
+    s = np.asarray(s, float)
+    w = np.interp(s, [0.0, 2.2, 4.45], [0.42, 0.4, 0.31])
+    tail = 4.45
+    u = np.clip((s - tail) / (SPINE_TIP / S - tail), 0.0, 1.0)
+    return w * np.sqrt(np.clip(1.0 - u * u, 0.0, 1.0)) + 0.012
 
 
 def spine_canvas(seg):
-    reach = (SPINE_BERM[seg] + SPINE_HALF_W[seg] + 0.16) / math.sqrt(2) * S
-    return 2 * int(math.ceil(reach)) + 8
+    front, back = spine_span(seg)
+    along = max(SPINE_DIST[seg] - front, back - SPINE_DIST[seg]) / S
+    reach = math.hypot(along, float(spine_width(SPINE_DIST[seg] / S - along)) + 0.3)
+    return 2 * int(math.ceil(reach * S)) + 8
+
+
+def _ellipse(x, z, a, b):
+    """Approximate distance to the ellipse with semi-axes a (across), b (up) (iq's ellipsoid bound, 2D)."""
+    k0 = np.sqrt((x / a) ** 2 + (z / b) ** 2)
+    k1 = np.sqrt((x / (a * a)) ** 2 + (z / (b * b)) ** 2)
+    return k0 * (k0 - 1.0) / np.maximum(k1, 1e-6)
 
 
 def spine_scene(seg, state, heading):
-    """One armoured spine segment breaking the sand behind a risen mouth: a hump of the violet hide under three
-    shingled bone plates (each overlapping the next toward the tail), a low bone keel on each plate, violet seams
-    between them and vein ridges down the flanks, a sealed fleshy pore on the vent segments (0-2, the vent organ
-    drawn over it), sand piled along its flanks and a berm of sand along the body's line; sand clumps sliding off
-    while it rises. ``heading``: the spine's direction from the mouth toward the tail, k * 22.5 degrees clockwise
-    from straight down the screen (the ridge's heading rule)."""
-    a, b = SPINE_HALF_W[seg], SPINE_HALF_L[seg]
-    c = 0.75 * a
-    zc = SPINE_STATES[state] * c
+    """Segment ``seg``'s stretch of the Colossus's back breaking the sand behind a risen mouth (round 45 A.a: one
+    continuous ridged back): the dark violet hide as one body, shingled armour plates over it (each plate's tail edge
+    stands proud over the next, a worn rim on it, a low bone keel spike along the crest), the hide showing along the
+    flanks under the plates, a sand berm along both flanks, a sealed pore under each vent (segments 0-2); the sand heaped
+    on the plates while it rises (state 0, 1). ``heading``: the spine's direction from the mouth toward the tail, k *
+    22.5 degrees clockwise from straight down the screen (the ridge's heading rule)."""
+    c0 = SPINE_DIST[seg] / S
+    front, back = (v / S for v in spine_span(seg))
+    sink = SPINE_STATES[state]
     th = TAU * heading / SPINE_HEADINGS
     dir_ = np.array([-math.sin(th), -math.cos(th)])          # world (y up): down the screen at heading 0
     perp = np.array([math.cos(th), -math.sin(th)])
-    rng = np.random.default_rng(5100 + seg * 10 + state)
-    n_clump = (11, 6, 2)[state]
+    pitch = SPINE_PITCH / S
+    edge0 = SPINE_CUT[0] / S
+    rng = np.random.default_rng(5200 + seg * 10 + state)
     clumps = []
-    for _ in range(n_clump):
-        u, v = rng.uniform(-0.8, 0.8), rng.uniform(-0.85, 0.85)
-        top = c * math.sqrt(max(0.0, 1 - u * u - v * v)) - zc
-        if top > 0.02:
-            r = rng.uniform(0.07, 0.12) * a / 0.5
-            clumps.append((u * a, v * b, top + r * 0.2, r))
-    berm_h = 0.07 + 0.02 * (2 - state)
+    for _ in range((26, 12, 0)[state]):
+        s, v = rng.uniform(front + 0.1, back - 0.05), rng.uniform(-0.75, 0.75)
+        w = float(spine_width(s))
+        h = 0.72 * w
+        top = h * math.sqrt(max(0.0, 1 - v * v)) - sink * h
+        if top > 0.03:
+            r = rng.uniform(0.06, 0.11) * (w / 0.47) ** 0.5
+            clumps.append((v * w, s - c0, top + r * 0.15, r))
+    berm_h = (0.07, 0.055, 0.045)[state]
 
     def scene(p):
         x = p[:, 0] * perp[0] + p[:, 1] * perp[1]
         y = p[:, 0] * dir_[0] + p[:, 1] * dir_[1]
         z = p[:, 2]
-        q = np.stack([x, y, z + zc], axis=1)
-        body = sd_ellipsoid(q, (0, 0, 0), (a, b, c))
-        items = [(body, V_DARK)]                                      # the glossy violet hide, as the neck's
-        for j, yj in enumerate((-0.62, 0.0, 0.62)):                  # the plates, shingled toward the tail
-            qs = q.copy()
-            qs[:, 2] -= 0.16 * (q[:, 1] - yj * b)                     # each plate's tail edge stands proud
-            plate = sd_ellipsoid(qs, (0, yj * b, 0.012), (a * 0.8, b * 0.44, c * 1.04)) / 1.05
-            plate = np.maximum(plate, -(q[:, 2] - 0.55 * c))         # only the back: the flanks stay hide
-            items.append((plate, V_BONE))
-            keel = sd_capsule(qs, (0, yj * b - 0.22 * b, c * 1.0), (0, yj * b + 0.2 * b, c * 1.06), 0.035 * a / 0.5,
-                              0.02 * a / 0.5)
-            items.append((keel, V_BONE))
-        qv = q.copy()
-        qv[:, 0] = np.abs(qv[:, 0])
-        for yv in (-0.5, 0.05, 0.55):                                 # vein ridges down the flanks
-            items.append((sd_capsule(qv, (0.72 * a, yv * b, 0.45 * c), (0.98 * a, (yv + 0.12) * b, 0.0), 0.022, 0.018),
-                          V_GLOW))
-        for yg in (-0.31, 0.31):                                      # the seams between the plates
-            items.append((sd_ellipsoid(q, (0, yg * b, 0.0), (a * 0.78, 0.06, c * 1.0)), V_SEAM))
-        if seg < 3:                                                   # the sealed pore the vent breaks out of
-            rq = np.sqrt(q[:, 0] ** 2 + q[:, 1] ** 2)
-            items.append((np.sqrt((rq - 0.07) ** 2 + (q[:, 2] - c * 1.04) ** 2) - 0.035, V_SEAM))
+        s = c0 + y                                             # units from the mouth along the back
+        w = spine_width(s)
+        h = 0.72 * w
+        dive = np.clip((s - 4.9) / 0.7, 0, 1) * 0.9 * h        # the tail dives into the sand, the front by the collar
+        dive = dive + np.clip((82 - s * S) / 20, 0, 1) * 0.95 * h
+        zz = z + sink * h + dive
+        hide = np.maximum(_ellipse(x, zz, w, h), s - SPINE_TIP / S)   # capped at the tail's tip
+        items = [(hide, W_HIDE)]
+        # the plates: plate j spans [edge0 + (j - 1) pitch, edge0 + j pitch]; t runs 0 (tucked under the plate in
+        # front) -> 1 (its proud tail edge); the edge bows toward the head on the flanks (scale-like shingles)
+        bow = 0.09 * (x / w) ** 2
+        sj = s + bow - edge0
+        j = np.ceil(sj / pitch)
+        t = 1.0 - (j * pitch - sj) / pitch
+        wf = np.clip(w / 0.33, 0.15, 1.0)                    # the plates thin out toward the tail's tip
+        e = (0.022 + 0.07 * t ** 1.5) * wf
+        plate = _ellipse(x, zz, w + e, h + e)
+        plate = np.maximum(plate, -(zz - 0.58 * h))                       # the top only: the flanks stay hide
+        items.append((plate, W_PLATE))
+        rim = np.maximum(plate - 0.006, (1.0 - t) * pitch - 0.035)             # the worn tail edge of each plate
+        items.append((rim, W_RIM))
+        # a low bone keel spike on each plate's crest, leaning back to its proud edge
+        ky = j * pitch                                         # the plate's tail edge (in sj)
+        kt = np.clip((sj - (ky - 0.75 * pitch)) / (0.75 * pitch), 0, 1)
+        keel = np.sqrt(x ** 2 + (zz - (h + e) - kt * 0.07 * w / 0.47) ** 2) - (0.012 + 0.03 * kt) * (w / 0.47) * wf
+        keel = np.maximum(keel, np.abs(sj - (ky - 0.38 * pitch)) - 0.38 * pitch)
+        rq = np.sqrt(x ** 2 + y ** 2)
+        if seg < 3:                                            # no keel spike through the vent's pore
+            keel = np.maximum(keel, 0.2 - rq)
+        items.append((keel, V_BONE))
+        if seg < 3:                                            # the sealed pore the vent organ breaks out of
+            items.append((np.sqrt((rq - 0.085) ** 2 + (zz - (h + 0.06)) ** 2) - 0.035, V_SEAM))
         for cx, cy, cz, r in clumps:
-            items.append((sd_ellipsoid(np.stack([x, y, z], axis=1), (cx, cy, cz), (r, r, r * 0.55)), W_SAND))
-        d, m = union(*items, k=0.02)
-        n = 0.018 * np.sin(p[:, 0] * 23 + 1.1) * np.sin(p[:, 1] * 19)
+            items.append((sd_ellipsoid(np.stack([x, y, z], axis=1), (cx, cy, cz), (r, r * 1.2, r * 0.55)), W_SAND))
+        d, m = union(*items, k=0.012)
+        n = 0.016 * np.sin(p[:, 0] * 23 + 1.1) * np.sin(p[:, 1] * 19)
         ground = z - n
-        berm = sd_ellipsoid(np.stack([x, y, z], axis=1), (0, 0, -0.02), (a * 1.05, SPINE_BERM[seg], berm_h + 0.02))
-        # the fillet from the body alone: the thin seams' approximate distance would smear it out in streaks
-        sand_d = np.minimum(berm, np.maximum(ground - 0.07, body - 0.13))
-        h = np.clip(0.5 + 0.5 * (sand_d - d) / 0.05, 0, 1)
+        bx = np.abs(x) - (w + 0.01)                            # a low sand berm hugging both flanks
+        fade = np.clip(np.minimum((SPINE_TIP / S + 0.1 - s) / 0.5, (s * S - 62) / 20), 0, 1)   # closing at the ends
+        berm = _ellipse(bx, z + 0.02, 0.06 + 0.015 * (2 - state), berm_h * fade + 0.02)
+        sand_d = np.minimum(berm, np.maximum(ground - 0.035, hide - 0.04))
+        hh = np.clip(0.5 + 0.5 * (sand_d - d) / 0.05, 0, 1)
         m = np.where(sand_d < d, W_SAND, m)
-        d = sand_d * (1 - h) + d * h - 0.05 * h * (1 - h)
-        return np.maximum(d, -ground), m
+        d = sand_d * (1 - hh) + d * hh - 0.05 * hh * (1 - hh)
+        return np.maximum(d / 1.15, -ground), m
     return scene
+
+
+def spine_mask(seg, heading, size):
+    """The native frame's pixels on segment ``seg``'s stretch of the back (the model is rendered whole and cut
+    afterwards, so the cut has no lit face nor a sharpening halo): toward the mouth where the back has dived into the
+    sand (segment 0) or under the segment before it, toward the tail on a plate's proud edge."""
+    front, back = (v / S for v in spine_span(seg))
+    th = TAU * heading / SPINE_HEADINGS
+    c = (np.arange(size) + 0.5 - size / 2) / S
+    gx, gy = np.meshgrid(c, -c)
+    s = SPINE_DIST[seg] / S - gx * math.sin(th) - gy * math.cos(th)
+    return (s >= front) & (s <= back)
 
 
 # --------------------------------------------------------------------------- the throe (round 44 K.b)
@@ -462,7 +533,7 @@ def rock_scene(shape, spin):
 
 # =========================================================================== render jobs
 
-REV = {"vent": 2}                         # round 45: the vent is an organ now (the cache keys change with it)
+REV = {"vent": 2, "spine": 5}                         # round 45: the vent is an organ now (the cache keys change with it)
 
 
 def _job_key(job):
@@ -510,8 +581,14 @@ def render_job(job):
     if path.exists():
         return Image.open(path).convert("RGBA")
     scene, m, size = model_for(job)
-    hi, factor = artkit.render_hi(scene, m, (size, size), size / S)
+    # the spine: a far key light (as a sun), so every segment of the one back is lit alike and the joints match
+    kw = dict(key_pos=tuple(SPINE_KEY)) if job[0] == "spine" else {}
+    hi, factor = artkit.render_hi(scene, m, (size, size), size / S, **kw)
     img = artkit.native(hi, factor)
+    if job[0] == "spine":
+        a = np.array(img)
+        a[~spine_mask(job[1], job[3], size)] = 0
+        img = Image.fromarray(a, "RGBA")
     CACHE.mkdir(parents=True, exist_ok=True)
     img.save(path)
     return img
@@ -1172,7 +1249,7 @@ def faded(sp, k):
     return Image.fromarray(a, "RGBA")
 
 
-def review_gif(s):
+def review_gif(s, until=None):
     """Round 45: a rear breach in phase 2 (the spine and its vent organs rising with the mouth, venting, one
     destroyed, sinking with the dive), a following front breach (a slanted spine), then a breach under the ship
     and the 4.5 s death throe (rearing, the geysers along the ridge, the fissure ring, the debris, the collapse,
@@ -1184,7 +1261,7 @@ def review_gif(s):
     sink = ROOT / "assets" / "backdrop" / "level-21" / "colossus-sinkhole.png"
     sinkhole = Image.open(sink).convert("RGBA") if sink.exists() else None
     P1, P2, P3 = (240, 515), (130, 30), (300, 300)
-    T = 23.0
+    T = until or 23.0
     rng = np.random.default_rng(45)
     rocks = [(rng.uniform(0.7, 3.0), rng.uniform(30, 450), rng.uniform(40, 500), int(rng.integers(16)))
              for _ in range(18)]
@@ -1314,7 +1391,7 @@ def review_gif(s):
         if 4.2 <= a < 4.65:
             k = 1.0 - (a - 4.2) / 0.45
             img.alpha_composite(Image.new("RGBA", img.size, (255, 250, 235, int(210 * k))))
-        raster.draw_text(img, 8, FH - 14, f"DUST COLOSSUS FINAL R45 - {t:4.1f} S  {label}", raster.LABEL)
+        raster.draw_text(img, 8, FH - 14, f"DUST COLOSSUS FINAL {REVIEW_ROUND.upper()} - {t:4.1f} S  {label}", raster.LABEL)
         frames.append(img)
     return frames
 
@@ -1339,34 +1416,43 @@ def load_game(name):
     return artkit.load_frames(name)
 
 
+def spine_scene_review(s, mouth, pose, states, vents):
+    """The back as the game lays it behind an edge mouth (risen shut, or still rising), on the arena floor."""
+    img = Field().frame(0.0)
+    spine_draw(img, s, mouth, states, vents)
+    rise = 2 if states[0] == 2 else 1
+    paste_c(img, s["dust-colossus-shut"][pose * 6 + rise], *mouth)
+    return img.resize((288, 324), Image.LANCZOS)
+
+
 def review():
+    """Round 46 (round 45 A.a): the spine re-rendered as one continuous ridged back."""
     artkit.REVIEW_ROUND = REVIEW_ROUND
     s = {name: load(name) for name in SET_NAMES}
     for name in ("colossus-ridge", "colossus-ridge-head", "colossus-ridge-tail", "colossus-ridge-glow"):
         s[name] = l20.load(name)
-    gif = review_gif(s)
+    gif = review_gif(s, until=15.5)
     sp = s["dust-colossus-spine"]
+    laid = [spine_scene_review(s, (240, 515), 3, [2, 2, 2, 2], [1, 1, 1]),
+            spine_scene_review(s, (130, 30), 0, [2, 2, 2, 2], [2, 3, 1]),
+            spine_scene_review(s, (25, 330), 1, [2, 2, 2, 2], None),
+            spine_scene_review(s, (240, 515), 3, [2, 1, 0, None], [0, None, None]),
+            spine_scene_review(s, (455, 120), 2, [1, 0, 0, None], None)]
     rows = [
+        ("THE BACK AS THE GAME LAYS IT (SEGMENTS 0-3 AT 120/200/280/350 PX): REAR, FRONT AT A SLANT (VENTING, ONE "
+         "DESTROYED), LEFT; RISING (REAR, RIGHT)", laid, 1, False),
         ("SPINE SEGMENT 0 UP (STATE 2), HEADINGS 0-7 (0 = THE SPINE RUNS DOWN THE SCREEN, CLOCKWISE)",
          [sp[spine_index(0, 2, k)] for k in range(8)], 1, False),
         ("SPINE SEGMENT 0 UP, HEADINGS 8-15", [sp[spine_index(0, 2, k)] for k in range(8, 16)], 1, False),
-        ("SPINE AT HEADING 0: SEGMENTS 0-3 (TAPERING), EACH RISE 1/3, RISE 2/3, UP",
+        ("SPINE AT HEADING 0: SEGMENTS 0-3 (EACH ONE STRETCH OF THE ONE BACK), EACH RISE 1/3, RISE 2/3, UP",
          [sp[spine_index(g, st, 0)] for g in range(4) for st in range(3)], 1, False),
+        ("SPINE AT HEADING 3 (A SLANT): SEGMENTS 0-3 UP", [sp[spine_index(g, 2, 3)] for g in range(4)], 1, False),
         ("VENT ORGAN ON A SPINE SEGMENT: SHUT (RISING/SINKING), UP, VENTING, DESTROYED", s["dust-colossus-vent"], 2,
          False),
-        ("THE THROE: THE FOREBODY REARS (UNDER POSE), SCREAMS (TEETH LIT), SHUDDERS", s["dust-colossus-rear"], 1, False),
-        ("THE COLLAPSE x3, THEN THE EXISTING DEATH 4, 5 (SINKING)",
-         s["dust-colossus-collapse"] + s["dust-colossus-death"][4:6], 1, False),
-        ("GEYSERS ALONG THE RIDGE (SAND, LIME ICHOR) BY AGE", s["dust-colossus-geyser"], 1, False),
-        ("FISSURE RING (GROUND DECAL): CRACKING, OPEN (ICHOR LIGHT), WIDENING, SETTLED", s["dust-colossus-fissure"], 1,
-         False),
-        ("DUST PLUME (SOFT ALPHA SHEET, THE GAME SCALES AND FADES IT): YOUNG, SPREADING, THIN", s["dust-colossus-plume"],
-         1, False),
-        ("FALLING DEBRIS (4 SHAPES x 4 TUMBLE STEPS)", s["dust-colossus-debris"], 2, False),
-        ("FRAMES FROM THE GIF: THE SPINE RISING, VENTING, A SLANTED SPINE, REARING, THE GEYSERS, THE COLLAPSE",
-         [gif[int(t * FPS)].resize((216, 243), Image.LANCZOS) for t in (3.9, 5.2, 12.5, 17.8, 18.6, 19.6)], 1, False),
+        ("FRAMES FROM THE GIF: THE RISE, VENTING, VENT 2 DESTROYED, THE DIVE, THE SLANTED FRONT BREACH",
+         [gif[int(t * FPS)].resize((216, 243), Image.LANCZOS) for t in (3.9, 5.2, 6.5, 8.6, 12.5)], 1, False),
     ]
-    sheet = artkit.review_sheet("DUST COLOSSUS - THE SPINE, THE VENT ORGANS AND THE DEATH THROE (ROUND 45)", rows,
+    sheet = artkit.review_sheet("DUST COLOSSUS - THE SPINE AS ONE CONTINUOUS RIDGED BACK (ROUND 46)", rows,
                                 width=1500, batch=BATCH)
     artkit.save_review(sheet, gif, CONCEPT, "dust-colossus", fps=FPS)
 

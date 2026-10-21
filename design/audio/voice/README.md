@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Voice
@@ -511,13 +511,12 @@ level).
       the voice bus, found by `VoiceLines.radioVoice` for the game and RadioTimelineTest; the
       Choir's is round 29's option b (the sung "ah" F3 to E3), copied by
       `:pipeline:copyPlaceholderStageSounds`; VoiceFilesTest checks the file and every Choir cue
-- [ ] Act 3 (approved in round 36, M7): Ares Control cast (round 36, S.6 = b, Thomas A): his clip
+- [x] Act 3 (approved in round 36, M7): Ares Control cast (round 36, S.6 = b, Thomas A): his clip
       renamed `refs/ref-ares-control.wav`, the speaker table without `uncast`, his takes checked for
       mid-line pauses, the colonial portrait b (part B); Lance Control cast a/b in part A's round (round 37, S.16 = b, Celine Major: her clip renamed `refs/ref-lance-control.wav`, the speaker in the table, the call rendered and spoken in flight, step Q2); the respelling list in the text as spoken (built in part B step B2: `respell` in
       the speaker table, `VoiceData.respelled`; Ares Control in the table) and the
-      Act 3 names in the read-back prompt (part B); the Choir's spoken line in fragments with its
-      layering a/b (part H); each Act 3 level's lines and the act intro and outro pages rendered and
-      reviewed in its part's round, `RadioTimelineTest` voiced per level with and without Rook
+      Act 3 names in the read-back prompt (part B); the Choir's spoken line (part H: accepted as one take in round 44, Q.7; held 4.5 s past the death roar, round 45 B.a); each Act 3 level's lines and the act intro and outro pages rendered and
+      reviewed in its part's round (the whole Act 3 listen-through, 202 lines, accepted in round 45, V.1), `RadioTimelineTest` voiced per level with and without Rook
 
 ## Concept art
 
@@ -1173,3 +1172,4 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   with the prompt. Varga's outro page 3 speaks the quoted "we are going" plainly. Pitch on the unfiltered takes:
   Okafor 135-161 Hz median, Varga 188-210, Rook 132-182, Ares Control 116-133. No radio retime: the timed lines
   never overlap (the closest, t=13 → 21, leaves about 5 s).
+- 2026-10-21 (user, [round 45](../../concept-rounds/round-45/README.md), V.1): the listen-through of all 202 voiced Act 3 lines: all fine, the Act 3 voices accepted.

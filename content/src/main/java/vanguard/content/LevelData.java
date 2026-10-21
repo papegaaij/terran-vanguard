@@ -237,6 +237,15 @@ public record LevelData(
         return bountyScale.orElse(1.0);
     }
 
+    /**
+     * Round 45 B.a: the seconds the radio holds cue {@code cue} after its event ({@link RadioCue#delaySeconds()}),
+     * indexed as the simulation's script radio ({@code script().radio()}: the level's cues first, in order, then the
+     * secrets' lines, which wait none); 0 without a delay.
+     */
+    public double radioDelay(int cue) {
+        return cue < radio.size() ? radio.get(cue).delaySeconds() : 0;
+    }
+
     /** The level's length in seconds: the end of the last section. */
     public double seconds() {
         return sections.getLast().end();

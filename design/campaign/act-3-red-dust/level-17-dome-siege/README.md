@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../../enemies/air/choir-herald, ../../../enemies/ground/shellback, ../../../enemies/air/spore-bomber, ../../../enemies/ground/burrower, ../../../enemies/air/dust-kite, ../../../allies, ../../../player/wingmen, ../../../world/mars]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Level 17 – Dome Siege
@@ -414,16 +414,16 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 | [concept/backdrop-final-r40-a.gif](concept/backdrop-final-r40-a.gif) | Level 17 backdrop final: the whole level flown at 0.5x, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
 | [concept/l17-props-final-r40-a.png](concept/l17-props-final-r40-a.png) | The seed-vault secret (`tools/art/siege_units.py`): the collapsed greenhouse frame (whole, hit, badly hit, lifted), the capsule and its glow (sheet) | chosen (round 40, F.d / F.e: approved as final) |
 | [concept/l17-props-final-r40-a.gif](concept/l17-props-final-r40-a.gif) | The frame shot apart and the capsule popping free, 10 fps | chosen (round 40, F.d / F.e: approved as final) |
-| [concept/greenhouse-frame-final-r45-a.png](concept/greenhouse-frame-final-r45-a.png) | Round 44 G.c (`tools/art/siege_units.py props`): the greenhouse frame split off its burnt pad, the frame transparent round the structure, the pad its own ground decal `greenhouse-pad` (64×48), the frame over its pad and the hit flash following the structure (sheet) | proposed |
-| [concept/greenhouse-frame-final-r45-a.gif](concept/greenhouse-frame-final-r45-a.gif) | The frame over its pad shot apart, hit flashes on the structure only, the capsule popping free, 10 fps | proposed |
+| [concept/greenhouse-frame-final-r45-a.png](concept/greenhouse-frame-final-r45-a.png) | Round 44 G.c (`tools/art/siege_units.py props`): the greenhouse frame split off its burnt pad, the frame transparent round the structure, the pad its own ground decal `greenhouse-pad` (64×48), the frame over its pad and the hit flash following the structure (sheet) | chosen (round 45) |
+| [concept/greenhouse-frame-final-r45-a.gif](concept/greenhouse-frame-final-r45-a.gif) | The frame over its pad shot apart, hit flashes on the structure only, the capsule popping free, 10 fps | chosen (round 45) |
 | [concept/level-17-capture-r40-a.png](concept/level-17-capture-r40-a.png) | Capture of the game (step D5): twenty frames of the medium run with the plan's fit and Rook (and four of a hard run without firing), the last the debrief | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
 | [concept/level-17-capture-r40-a.mp4](concept/level-17-capture-r40-a.mp4) | Capture of the game with its sound: the whole medium run, then the hard run's domes cracking and breaking and the Herald's rings | chosen (round 40, K.a: accepted with notes, the fixes queued in Implementation) |
 | [concept/level-17-fixes-r42-a.mp4](concept/level-17-fixes-r42-a.mp4) | Check capture of the dome fixes (round 42, medium, the plan's L17 fit, the test autopilot): the dome sections with the bombers' run-ins, a dome turning yellow and still counting, the debrief `DOMES STANDING 5 / 5` (172 s with sound) | chosen (round 42, K.c: accepted) |
 | [concept/level-17-fixes-r42-a.png](concept/level-17-fixes-r42-a.png) | 20-frame sheet of that excerpt | chosen (round 42, K.c: accepted) |
 | [concept/greenhouse-frame-glow-r44-a.mp4](concept/greenhouse-frame-glow-r44-a.mp4) | The seed vault's glow: the collapsed greenhouse frame drawn with the capsule's `seed-capsule-glow` (it has no glow of its own). **Fire held by the snapshot hook from 66 to 78.5 s**, because in a normal run the autopilot shoots the frame about 1.5 s after it enters (checked in a live run). The frame enters at ≈ 0:01, a small warm-yellow glint at its centre swells and fades slowly (brightest ≈ 0:02.4); fire resumes, the frame's hit flash (a flat white rectangle over the whole sprite box), it breaks at ≈ 0:04.2 and the capsule is caught (+256, ≈ 0:04.5). The glow reads weakly at play size: a soft glint, not a strobe you notice. With sound, 8 s | chosen (round 44, G.b: accepted) |
 | [concept/greenhouse-frame-glow-r44-a.png](concept/greenhouse-frame-glow-r44-a.png) | Six field frames + five 1:1 crops of the frame at 3× across one swell | chosen (round 44, G.b: accepted) |
-| [concept/greenhouse-frame-r45-a.mp4](concept/greenhouse-frame-r45-a.mp4) | Round 45 check capture (step H6): the greenhouse frame hit in a normal run, the capsule popping out and caught, 6.5 s with sound | proposed |
-| [concept/greenhouse-frame-r45-a.png](concept/greenhouse-frame-r45-a.png) | Six field frames and seven 2x crops following the frame | proposed |
+| [concept/greenhouse-frame-r45-a.mp4](concept/greenhouse-frame-r45-a.mp4) | Round 45 check capture (step H6): the greenhouse frame hit in a normal run, the capsule popping out and caught, 6.5 s with sound | chosen (round 45) |
+| [concept/greenhouse-frame-r45-a.png](concept/greenhouse-frame-r45-a.png) | Six field frames and seven 2x crops following the frame | chosen (round 45) |
 
 ## Implementation
 
@@ -625,3 +625,4 @@ Production art of M7 part D's round 40 (step ART-D; the mood from the Ares Landi
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
 - 2026-10-20 (user, round 44, closed): **G.b** the greenhouse frame's seed-capsule glint accepted; **G.c** the frame's hit flash lights the whole 64x48 sprite as a white slab because the burnt ground pad is baked into it: **split the pad off as a ground decal** (the frame sprite becomes the frame only and the pad a decal under it; a small art step, planned, not started; the final asset changes and its generator stays reproducible).
 - 2026-10-20 (steps ART-K, GK): round 44 G.c built: the greenhouse frame is transparent round the structure, the burnt pad is the ground decal `greenhouse-pad` (drawn under the frame and claimed so it stays in the atlas), the hit flash follows the structure only (`tools/art/siege_units.py`); the files are listed under Concept art as proposed and are a row in [round 45](../../../concept-rounds/round-45/README.md).
+- 2026-10-21 (user, round 45, A.c): the greenhouse frame and its burnt pad approved.

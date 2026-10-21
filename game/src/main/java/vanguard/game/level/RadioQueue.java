@@ -35,6 +35,10 @@ import vanguard.game.ui.Words;
  * or waits any more, and a line that is no closing line closes as soon as its voice has ended, without
  * holding its text, so the closing lines open sooner; {@link #closingLeft} tells the outro whether a
  * closing line still has to be heard.
+ *
+ * <p>A line may be held for a delay after it is queued (round 45 B.a: the Choir's words at the Dust Colossus's
+ * death wait out its death roar): it does not open before it has waited its delay, and the lines queued after it
+ * (the closing lines that follow it) wait behind it; only an urgent or timed line goes ahead of it meanwhile.
  */
 public final class RadioQueue {
     public static final int LINE_CHARS = 22;
@@ -148,18 +152,22 @@ public final class RadioQueue {
         final boolean ahead;
         /** Step GK: a line an urgent one interrupted, waiting to play again in full. */
         final boolean replay;
+        /** Round 45 B.a: seconds it is held after it was queued before it may open; 0 for none. */
+        final float delay;
 
         float waited;
 
-        Waiting(Message message, Priority priority) {
-            this(message, priority, false, false);
-        }
-
-        Waiting(Message message, Priority priority, boolean ahead, boolean replay) {
+        Waiting(Message message, Priority priority, boolean ahead, boolean replay, float delay) {
             this.message = message;
             this.priority = priority;
             this.ahead = ahead;
             this.replay = replay;
+            this.delay = delay;
+        }
+
+        /** Whether it has waited out its delay. */
+        boolean ready() {
+            return waited >= delay;
         }
     }
 
@@ -212,12 +220,29 @@ public final class RadioQueue {
             Priority priority,
             Optional<String> voice,
             float voiceSeconds) {
+        return add(speaker, portrait, expression, line, distorted, priority, voice, voiceSeconds, 0);
+    }
+
+    /**
+     * As above, the line held {@code delay} seconds after it is queued (round 45 B.a): it opens no sooner, and the
+     * lines queued after it wait behind it.
+     */
+    public Message add(
+            String speaker,
+            String portrait,
+            String expression,
+            String line,
+            boolean distorted,
+            Priority priority,
+            Optional<String> voice,
+            float voiceSeconds,
+            float delay) {
         Message message = new Message(speaker, portrait, expression, wrap(line), distorted, voice, voiceSeconds);
         if (outro && (priority == Priority.EVENT || priority == Priority.PHASE)) {
             return message;
         }
         boolean free = current.isEmpty() && queue.isEmpty();
-        queue.add(new Waiting(message, priority, priority == Priority.CLOSING && free, false));
+        queue.add(new Waiting(message, priority, priority == Priority.CLOSING && free, false, Math.max(0, delay)));
         return message;
     }
 
@@ -335,7 +360,7 @@ public final class RadioQueue {
         for (Iterator<Waiting> waiting = queue.iterator(); waiting.hasNext(); ) {
             Waiting next = waiting.next();
             next.waited += seconds;
-            if (next.waited > staleAfter(next.priority)) {
+            if (next.waited - next.delay > staleAfter(next.priority)) {
                 waiting.remove();
             }
         }
@@ -345,7 +370,7 @@ public final class RadioQueue {
             // urgent lines (which go first wherever they wait) are done; step GK: not once its priority was
             // withdrawn while it played (a boss phase's line as the boss died).
             if (!currentSpent) {
-                queue.addFirst(new Waiting(current.get(), currentPriority, currentAhead, true));
+                queue.addFirst(new Waiting(current.get(), currentPriority, currentAhead, true, 0));
             }
             current = Optional.empty();
         }
@@ -405,7 +430,8 @@ public final class RadioQueue {
     /**
      * The message to open now: the oldest urgent line, else a closing line that went ahead (queued
      * while the radio was free), else the oldest timed line, else the oldest other line if it ends,
-     * with the gap after it, before the next timed line is due.
+     * with the gap after it, before the next timed line is due. Round 45 B.a: a held line (its delay not yet
+     * waited out) does not open, and neither does a non-urgent line queued after it.
      */
     private Optional<Waiting> next(float untilTimed) {
         Optional<Waiting> urgent = queue.stream()
@@ -416,7 +442,7 @@ public final class RadioQueue {
         }
         Optional<Waiting> ahead =
                 queue.stream().filter(waiting -> waiting.ahead).findFirst();
-        if (ahead.isPresent()) {
+        if (ahead.isPresent() && ahead.get().ready()) {
             return ahead;
         }
         Optional<Waiting> timed = queue.stream()
@@ -426,7 +452,7 @@ public final class RadioQueue {
             return timed;
         }
         Waiting oldest = queue.getFirst();
-        return oldest.message.seconds(charsPerSecond) + GAP_SECONDS <= untilTimed
+        return oldest.ready() && oldest.message.seconds(charsPerSecond) + GAP_SECONDS <= untilTimed
                 ? Optional.of(oldest)
                 : Optional.empty();
     }

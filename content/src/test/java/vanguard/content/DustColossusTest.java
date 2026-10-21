@@ -126,9 +126,10 @@ class DustColossusTest {
      * The par: the autopilot's measured mean at medium (step H4: 101.7 s at the spec's HP, mouth 5,600 and the vents
      * 280, every seed 100.9-103.1 s, inside the act boss's window; the spec's draft par was 130). Step L21R (round 44:
      * the phases at 70 % and 45 % of the mouth, Q.9; the rings every 2.0 s, Q.2; the front point 95 px down, Q.11; the
-     * HP kept, Q.3): 104.3 s.
+     * HP kept, Q.3): 104.3 s. Step C45 (round 45 B.b: phase 2's fan in phase 1 too, its rings back to every 2.5 s):
+     * 106.4 s.
      */
-    static final double PAR = 104;
+    static final double PAR = 106;
 
     @Test
     void theStatBlockMapsToABreachingActBossWithItsPar() {
@@ -240,9 +241,10 @@ class DustColossusTest {
     /**
      * H.4: phase 1 costs a random dodger at least this times the Kraken's phase 1 ... (the user's band starts at 0.8: step
      * H4 measured 6.3 against 11.4 = 0.55× with the gullet's rings every 2.5 s; step L21R 8.0 = 0.70× with them every
-     * 2.0 s, round 44 Q.2; the lower bound pending the user's review: the fan from phase 1 is the next lever).
+     * 2.0 s, round 44 Q.2; step C45, round 45 B.b: the fan in phase 1 too, 14.9 = 1.30× with the rings every 2.0 s,
+     * 13.4 = 1.17× with them every 2.5 s, kept).
      */
-    static final double LEAST = 0.65;
+    static final double LEAST = 0.8;
 
     /** ... and at most this times. */
     static final double MOST = 1.2;

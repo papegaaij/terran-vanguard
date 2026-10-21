@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/bosses/revenant-walker, ../../../enemies/ground/warden-tank, ../../../enemies/ground/spine-turret, ../../../enemies/air/dust-kite, ../../../enemies/air/ghost-drone, ../../../story/twist, ../../../player/specials, ../../../world/mars]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Level 19 – Foundry of Tharsis
@@ -467,8 +467,8 @@ Production art of M7 part F's round 42 (step ART-F2), accepted in round 42 (2026
 | [concept/level-19-walker-r43-a.png](concept/level-19-walker-r43-a.png) | 12-frame sheet of that fight (the play field, times in s of the run) | chosen (round 43, W.a: accepted with a change; reworked, see r44) |
 | [concept/level-19-walker-r44-a.mp4](concept/level-19-walker-r44-a.mp4) | Check capture of the walker fight after round 44 (step WR2: medium, the plan's fit with Rook's Mortar, the test autopilot, sound; 94 s, the fight 72 s): the pods' hatches and salvos, the stomp's brace ring, the cone, the red rail lance's charge line and shot once both pods are gone and in phase 3, the topple and the wreck; the lance's and the stomp's sounds are placeholders | chosen (round 44, W.a: accepted) |
 | [concept/level-19-walker-r44-a.png](concept/level-19-walker-r44-a.png) | 12-frame sheet of that fight (the play field, times in s of the clip) | chosen (round 44, W.a: accepted) |
-| [concept/level-19-stomp-r45-a.mp4](concept/level-19-stomp-r45-a.mp4) | Round 45 check capture (step H6): one stomp with the brighter brace ring and the expanding ring, 6.5 s with sound | proposed |
-| [concept/level-19-stomp-r45-a.png](concept/level-19-stomp-r45-a.png) | Six field frames and five 1:1 crops of the stomp | proposed |
+| [concept/level-19-stomp-r45-a.mp4](concept/level-19-stomp-r45-a.mp4) | Round 45 check capture (step H6): one stomp with the brighter brace ring and the expanding ring, 6.5 s with sound | chosen (round 45: the ring to be dimmed, step G45) |
+| [concept/level-19-stomp-r45-a.png](concept/level-19-stomp-r45-a.png) | Six field frames and five 1:1 crops of the stomp | chosen (round 45: the ring to be dimmed, step G45) |
 | [concept/payroll-safe-glow-r44-a.mp4](concept/payroll-safe-glow-r44-a.mp4) | The payroll safe's strobe in the live game (plan fit, the autopilot does not shoot it): the shift office scrolling down the left wall at about 130 px/s (0:02–0:06), the safe's door lamp blinking green about twice a second with a small green halo spilling just past the safe's box when lit. It reads as a blinking green lamp; the halo is small (≈ 12 px) and easy to miss at play speed among the belts. With sound, 9 s | chosen (round 44, G.a: accepted; G.c split the pad is planned) |
 | [concept/payroll-safe-glow-r44-a.png](concept/payroll-safe-glow-r44-a.png) | Six field frames + seven 1:1 crops of the safe at 2×, lit and dark | chosen (round 44, G.a: accepted; G.c split the pad is planned) |
 
@@ -597,3 +597,4 @@ foundry mood still in [mars](../../../world/mars/README.md) and the walker's cho
   (+1.4 %); hard is won with 2 retries over 3 runs (round 43: 1; hard keeps medium's lance, stomp and phase-1
   salvos, or the walker drained the ship before the level's end; accepted in round 44 (2026-10-20)). A check capture of the fight is in *Concept art* (accepted in round 44 (2026-10-20).
 - 2026-10-20 (user, round 44, closed): the reworked walker fight (W.a-W.g, see the [walker](../../../enemies/bosses/revenant-walker/README.md#decisions)) accepted; W.h's brighter stomp ring planned. **G.a** the payroll safe's strobe accepted (a blinking green lamp with a small halo); **G.c** split the burnt pad off the greenhouse frame as a ground decal (Level 17's frame; planned, a small art step).
+- 2026-10-21 (user, round 45, B.c): the stomp ring is "too bright, somewhere in between is better" (step G45, planned).

@@ -245,7 +245,7 @@ public final class LevelScreen implements GameScreen {
                         radio,
                         this::bark)
                 : null;
-        radioEvents = new RadioEvents(services, sortie, radio, radioSchedule, barks);
+        radioEvents = new RadioEvents(services, level, sortie, radio, radioSchedule, barks);
         wrecks = new SetPieceWrecks(sortie.setPieceCount());
         looks = EnemyLooks.of(sortie.enemyKinds(), services.sprites, services.content);
         weaponLooks = new WeaponLooks(

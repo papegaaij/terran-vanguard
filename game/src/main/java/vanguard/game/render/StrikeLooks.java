@@ -39,11 +39,12 @@ final class StrikeLooks {
     static final int HIT_TICKS = SimStep.ticks(0.25);
     /**
      * The stomp's ring: its rim's width, px, the shockwave's, and its slices (round 44 W.h, step GK: brighter and
-     * thicker, the brace's rim with a dark edge outside it so it reads on the pale floors).
+     * thicker, the brace's rim with a dark edge outside it so it reads on the pale floors; round 45 B.c, the user: "too
+     * bright, somewhere in between is better": the widths, colours and opacities halfway between round 43's look and
+     * step GFX4's).
      */
-    static final double RIM_WIDTH = 7;
+    static final double RIM_WIDTH = 5.5;
 
-    static final double WAVE_WIDTH = 20;
     static final double EDGE_WIDTH = 2;
     /** Step GFX4: the shockwave's bright band, px wide, and its fade at the full radius after the ring, s. */
     static final double WAVE_BAND = 12;
@@ -58,7 +59,7 @@ final class StrikeLooks {
     private static final Color LANCE = new Color(1f, 0.28f, 0.2f, 1f);
 
     private static final Color LANCE_CORE = new Color(1f, 0.93f, 0.86f, 1f);
-    private static final Color DUST = new Color(1f, 0.84f, 0.62f, 1f);
+    private static final Color DUST = new Color(0.93f, 0.73f, 0.52f, 1f);
     private static final Color DUST_EDGE = new Color(0.28f, 0.18f, 0.11f, 1f);
     private static final long NEVER = Long.MIN_VALUE / 2;
 
@@ -159,8 +160,8 @@ final class StrikeLooks {
             float fade = waveFade(sortie.tick() - waveTick, alpha);
             if (fade > 0) {
                 // Step GFX4: held at its full radius after the ring, thinning and fading.
-                ring(batch, waveX, waveY, waveRadius, waveRadius + EDGE_WIDTH, DUST_EDGE, 0.45f * fade);
-                ring(batch, waveX, waveY, waveRadius - WAVE_BAND * (0.4 + 0.6 * fade), waveRadius, DUST, 0.95f * fade);
+                ring(batch, waveX, waveY, waveRadius, waveRadius + EDGE_WIDTH, DUST_EDGE, 0.22f * fade);
+                ring(batch, waveX, waveY, waveRadius - WAVE_BAND * (0.4 + 0.6 * fade), waveRadius, DUST, 0.75f * fade);
                 batch.setColor(Color.WHITE);
             }
         }
@@ -173,19 +174,19 @@ final class StrikeLooks {
             // It braces where it stands: the ring follows it until it stomps.
             double cx = strikes.ringX() + dx;
             double cy = strikes.ringY() + dy;
-            ring(batch, cx, cy, 0, radius, DUST, 0.08f + 0.10f * (float) share);
-            ring(batch, cx, cy, radius, radius + EDGE_WIDTH, DUST_EDGE, 0.35f + 0.25f * (float) share);
-            ring(batch, cx, cy, radius - RIM_WIDTH, radius, DUST, 0.65f + 0.35f * (float) share);
+            ring(batch, cx, cy, 0, radius, DUST, 0.07f + 0.09f * (float) share);
+            ring(batch, cx, cy, radius, radius + EDGE_WIDTH, DUST_EDGE, 0.18f + 0.12f * (float) share);
+            ring(batch, cx, cy, radius - RIM_WIDTH, radius, DUST, 0.55f + 0.40f * (float) share);
         } else {
             // Step GFX4: a bright band running out with the simulation's ring (the look only), the brace's mark
             // fading over its first half, the swept ground dusted faintly.
             double r = strikes.ringRadius();
             double x = strikes.ringX();
             double y = strikes.ringY();
-            ring(batch, x, y, radius - RIM_WIDTH / 2, radius, DUST, 0.45f * (float) Math.max(0, 1 - 2 * share));
-            ring(batch, x, y, 0, Math.max(0, r - WAVE_BAND), DUST, 0.14f);
-            ring(batch, x, y, r, r + EDGE_WIDTH, DUST_EDGE, 0.45f);
-            ring(batch, x, y, Math.max(0, r - WAVE_BAND), r, DUST, 0.95f);
+            ring(batch, x, y, radius - RIM_WIDTH / 2, radius, DUST, 0.38f * (float) Math.max(0, 1 - 2 * share));
+            ring(batch, x, y, 0, Math.max(0, r - WAVE_BAND), DUST, 0.07f);
+            ring(batch, x, y, r, r + EDGE_WIDTH, DUST_EDGE, 0.22f);
+            ring(batch, x, y, Math.max(0, r - WAVE_BAND), r, DUST, 0.75f);
         }
         batch.setColor(Color.WHITE);
     }

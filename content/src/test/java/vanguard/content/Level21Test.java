@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
 import vanguard.sim.BreachArena;
+import vanguard.sim.CueTrigger;
 import vanguard.sim.Loadout;
 import vanguard.sim.Rules;
 import vanguard.sim.SetPiece;
@@ -64,6 +65,27 @@ class Level21Test {
                         0,
                         difficulty)
                 .withSpecial(SimSpecs.special(content, "Airstrike", 4));
+    }
+
+    /**
+     * Round 45 B.a: the Choir's words at the Colossus's death wait 4.5 s past the death roar ({@code delay}); the
+     * closing lines after it wait none of their own, and {@link LevelData#radioDelay(int)} reads the delay by the
+     * script radio's index (the game's).
+     */
+    @Test
+    void theChoirsDeathLineWaitsPastTheRoar() {
+        LevelData level = content.level(LEVEL);
+        List<vanguard.sim.RadioCue> script =
+                SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).radio();
+        int delayed = 0;
+        for (int i = 0; i < script.size(); i++) {
+            vanguard.sim.RadioCue cue = script.get(i);
+            boolean choir =
+                    cue.trigger() == CueTrigger.BOSS_DESTROYED && cue.speaker().equals("The Choir");
+            assertEquals(choir ? 4.5 : 0, level.radioDelay(i), cue.line());
+            delayed += choir ? 1 : 0;
+        }
+        assertEquals(1, delayed, "the Choir's death line");
     }
 
     static Sortie sortie(Content content, long seed, Difficulty difficulty, boolean invulnerable) {

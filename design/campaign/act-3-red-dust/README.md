@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../act-2-homefront, ../../world/mars, ../../story/twist]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Act 3 – Red Dust
@@ -412,9 +412,9 @@ ART-B, as Act 2's); the intro's four images are on the
       pages and the Level 15 briefing, then the hangar; a flag in the save (intro seen) keeps it
       from playing again (part B: steps B2 and B4, the `act-intro:N` flags, `CampaignRouteTest`,
       `SaveFormatTest`; captured in round 38, `act-3-intro-capture-r38-a`, accepted in round 43 (2026-10-20)).
-- [ ] Ares Control voiced (cast in round 36, S.6 = b; his lines rendered in part B, his mid-line
+- [x] Ares Control voiced (cast in round 36, S.6 = b; his lines rendered in part B, his mid-line
       pauses checked); the Choir's speech treatment (part H). Part B's half done in steps AUD-B and VOX-B
-      (the listen-through of every voiced Act 3 line is round 45's, I.5).
+      (the listen-through of every voiced Act 3 line: all fine, round 45 V.1, 2026-10-21).
 - [x] `ActPlaythroughTest` and `BalanceTest` through Act 3 with Rook (M7 part I, step I1, 2026-10-20: Levels 01–21 on every difficulty).
 - [ ] The user's playthrough of Act 3 (the same one as Act 2's, round 34's P9 and M7's: part I's save at the Level 15 hangar, medium; round 44 X.m, I.3), then the `v0.1` release (Acts 1-3, I.2).
 
@@ -468,3 +468,4 @@ ART-B, as Act 2's); the intro's four images are on the
   COMPLETE", "ACT IV - DEEP WATER. EUROPA. COMING SOON."; the hangar before L22 "ACT IV - DEEP WATER: COMING SOON").
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
 - 2026-10-20 (user, round 44, closed): Level 21 and the act end built and reviewed (rows F, V, K, B, Q; two captures K.b and K.c asked for changes, see the [Level 21 decisions](level-21-dust-colossus/README.md#decisions)); the art audit (A.a, A.b: `art: final` for this README and the part READMEs whose assets are production); the stale "pending the user's review" notes of the Act 3 tree and units rewritten as "accepted in round N (date)" (I.7); an Act 3 level is `implementation: done` when its round has closed and its checklist is ticked (I.8; Level 15 is `done`); the playthrough stays an act-level item (one for M5 and M7, I.3). The release `v0.1` is Acts 1-3 (I.2); the Act 4 design phase follows part I and the release (J.a).
+- 2026-10-21 (user, round 45): the Act 3 voices accepted after the listen-through (V.1); hard's Act 3 economy accepted for v0.1, revisited after the user's playthrough (C.1).

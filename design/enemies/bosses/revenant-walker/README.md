@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust, ../../../story/twist]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Revenant Walker
@@ -399,3 +399,4 @@ frame layout in its docstring and `briefs/m7f-names.md`): **approved as final** 
   end), easy's lance charge 1.3 s every 5 / 3.8 s and stomp brace 0.7 s.
   The sounds of the lance and the stomp are placeholders (nothing synthesized) until the next sound round.
 - 2026-10-20 (user, round 44, closed): the second rework accepted as built: **W.a** the capture (the pods armoured until their hatch opens, the stomp's ring, the rail lance on the back) accepted, **W.b** HP 1,350 (pods 80 each, hull 1,190) and par 51 s, **W.c** hard keeps medium's lance, stomp and phase 1, **W.d** the hatches jam open in phase 3, **W.e** phase 2's salvos every 4 s per pod, the lance every 4 s / 3 s and the stomp at most every 4 s, **W.f** phase 1's loss at most 2.2x the Kraken's, **W.g** the narrow HP plateau accepted as a known risk (a later change to the attacks or speed needs a re-measure and an HP re-tune) — all as recommended. **W.h** the stomp's ring is too faint against the foundry floor: a **brighter, thicker ring** (a look change only, no number moves), planned, not started. **Sounds**: S.g the lance charge **b**, S.h the lance shot **a**, S.i the shockwave **a** (see the [sfx decisions](../../../audio/sfx/README.md#decisions)).
+- 2026-10-21 (user, round 45, B.c): the brighter stomp ring is too bright; something between the old and the new ring (step G45, planned).

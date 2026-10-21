@@ -53,6 +53,31 @@ class ColossusThroeTest {
         assertEquals(191, ColossusSpine.frame(3, 2, 15), "the last of 192");
     }
 
+    /**
+     * Step SPR: a segment's frame turns by the leftover of its 22.5° heading, so the frame then points exactly along the
+     * body and the joints of a slanted back line up.
+     */
+    @Test
+    void eachSegmentTurnsByTheLeftoverOfItsHeading() {
+        assertEquals(0, ColossusSpine.tilt(0, -1), 1e-4, "straight down: frame 0 as it is");
+        assertEquals(0, ColossusSpine.tilt(-1, -1), 1e-4, "down and left: frame 2 as it is");
+        for (int a = 0; a < 3600; a++) {
+            double turn = Math.toRadians(a / 10.0); // clockwise from down
+            double dx = -Math.sin(turn);
+            double dy = -Math.cos(turn);
+            float tilt = ColossusSpine.tilt(dx, dy);
+            assertTrue(Math.abs(tilt) <= 11.25f + 1e-3f, "at most half a step: " + a / 10.0 + "° → " + tilt);
+            // The frame's own heading, turned counter-clockwise by the tilt, points along the body.
+            double frameTurn = RidgeLooks.heading(dx, dy) * 2 * Math.PI / RidgeLooks.HEADINGS;
+            double turned = frameTurn - Math.toRadians(tilt);
+            assertEquals(dx, -Math.sin(turned), 1e-5, "x at " + a / 10.0 + "°");
+            assertEquals(dy, -Math.cos(turned), 1e-5, "y at " + a / 10.0 + "°");
+        }
+        assertTrue(
+                ColossusSpine.tilt(-Math.sin(0.1), -Math.cos(0.1)) < 0,
+                "a little past down toward the left: clockwise");
+    }
+
     /** The segments lie on the simulation's vents (the same distances along the same curve). */
     @Test
     void theVentSegmentsSitOnTheSimulationsVents() {

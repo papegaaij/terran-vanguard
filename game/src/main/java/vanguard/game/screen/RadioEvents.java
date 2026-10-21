@@ -42,14 +42,24 @@ final class RadioEvents {
     private final java.util.Set<Integer> announced = new java.util.HashSet<>();
 
     private final GameServices services;
+    /** The level: its cues' delays (round 45 B.a). */
+    private final LevelData level;
+
     private final Sortie sortie;
     private final RadioQueue radio;
     private final RadioSchedule radioSchedule;
     /** Rook's radio barks while he flies in the level (M5 part A); null without him. */
     private final Barks barks;
 
-    RadioEvents(GameServices services, Sortie sortie, RadioQueue radio, RadioSchedule radioSchedule, Barks barks) {
+    RadioEvents(
+            GameServices services,
+            LevelData level,
+            Sortie sortie,
+            RadioQueue radio,
+            RadioSchedule radioSchedule,
+            Barks barks) {
         this.services = services;
+        this.level = level;
         this.sortie = sortie;
         this.radio = radio;
         this.radioSchedule = radioSchedule;
@@ -134,7 +144,9 @@ final class RadioEvents {
                         cue.expression(),
                         RadioSchedule.line(cue.line(), unit, allyName(unit), escortSide()),
                         cue.distorted(),
-                        radioSchedule.priority(events.value(i)));
+                        radioSchedule.priority(events.value(i)),
+                        // Round 45 B.a: a line held after its event (the Choir's words past the Colossus's death roar)
+                        (float) level.radioDelay(events.value(i)));
                 if (cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE) {
                     secondaryLine = message;
                 }
@@ -218,6 +230,18 @@ final class RadioEvents {
             String line,
             boolean distorted,
             RadioQueue.Priority priority) {
+        return queue(speaker, portrait, expression, line, distorted, priority, 0);
+    }
+
+    /** As above, the line held {@code delay} seconds before it may open (round 45 B.a). */
+    private RadioQueue.Message queue(
+            String speaker,
+            String portrait,
+            String expression,
+            String line,
+            boolean distorted,
+            RadioQueue.Priority priority,
+            float delay) {
         Optional<Voices.Voice> voice = services.voices.radio(speaker, line, expression);
         return radio.add(
                 speaker,
@@ -227,6 +251,7 @@ final class RadioEvents {
                 distorted,
                 priority,
                 voice.map(Voices.Voice::path),
-                voice.map(Voices.Voice::seconds).orElse(0f));
+                voice.map(Voices.Voice::seconds).orElse(0f),
+                delay);
     }
 }

@@ -75,7 +75,7 @@ attacks:
     parts: [mouth]      # step H4: the gullet fires it (a phase that ends on a share names no firing part)
     bullet: small
     count: 12
-    interval: 2.0       # round 44 Q.2: every 2.0 s (from 2.5): phase 1 as fierce as the Kraken's
+    interval: 2.5       # round 45 B.b: back to 2.5 s with the fan between the rings (with the fan at 2.0 s 1.30x the Kraken's, over H.4's 1.2); round 44 Q.2's 2.0 s was 0.70x without it
     speed: 100
     notes:
       text: 'phase 1: the gullet fires a ring of {count} (`{bullet}` = {damage}, {speed} px/s) every {interval} s while open, each after a 0.5 s lime glow'
@@ -97,7 +97,7 @@ attacks:
     interval: 2.5
     speed: 130
     notes:
-      text: 'with a {count}-way `{pattern}` (spread {spread}°, {speed} px/s, `{bullet}`) at the ship between the rings'
+      text: 'with a {count}-way `{pattern}` (spread {spread}°, {speed} px/s, `{bullet}`) at the ship between the rings, in phase 1 too (round 45)'
   - pattern: spiral
     name: spiral
     parts: [mouth]
@@ -132,7 +132,7 @@ difficulty:
 boss:
   kind: boss        # the act boss: the long bar
   bar_name: DUST COLOSSUS
-  par: 104          # s from the bar to the kill: the Boss rush bonus (step L21R, round 44 Q.3/Q.9: the autopilot's measured mean at medium, 104.3 s, after the phase shares 70/45 %; step H4: 101.7 s; the spec's draft 130)
+  par: 106          # s from the bar to the kill: the Boss rush bonus (step C45, round 45 B.b: 106.4 s with the fan in phase 1 and its rings every 2.5 s; step L21R, round 44 Q.3/Q.9: the autopilot's measured mean at medium, 104.3 s, after the phase shares 70/45 %; step H4: 101.7 s; the spec's draft 130)
   death_seconds: 3  # the chain: the last mouth rears up and shudders, the sand splits along the ridge, chained eruptions
   suction: {speed: 45, inner: 120, outer: 360}   # px/s toward the open mouth within 120 px, falling off linearly to 0 at 360 px; the ship and Rook (not bullets, not pickups: H.7b); the debris (boss.debris)
   vents:            # phase 2: the three spine vents rise with each mouth along the ridge toward the field's centre, sink with it; a destroyed vent stays dead
@@ -159,7 +159,7 @@ boss:
   phases:
     - name: Circling
       until: {parts: [mouth], below: 0.7}
-      attacks: [ring-12]
+      attacks: [ring-12, fan]   # round 45 B.b: phase 2's 5-way fan half an interval after each ring (H.4's 0.8x)
     - name: Hunting
       until: {parts: [mouth], below: 0.45}
       attacks: [ring-14, fan, vent-burst]   # the vents rise with the mouth only in a phase that lists their burst

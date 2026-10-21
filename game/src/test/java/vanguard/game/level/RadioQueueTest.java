@@ -26,6 +26,41 @@ class RadioQueueTest {
         assertTrue(lines.stream().allMatch(line -> line.length() <= RadioQueue.LINE_CHARS));
     }
 
+    /**
+     * Round 45 B.a: a held line opens no sooner than its delay after it was queued, the closing lines queued after it
+     * wait behind it, and the outro waits for them all.
+     */
+    @Test
+    void aHeldLineOpensAfterItsDelayAndTheLinesAfterItFollow() {
+        radio.add(
+                "The Choir",
+                "The Choir",
+                "neutral",
+                "...we are many...",
+                true,
+                RadioQueue.Priority.CLOSING,
+                java.util.Optional.empty(),
+                0,
+                4.5f);
+        radio.add("Varga", "Varga", "neutral", "It's down.", false, RadioQueue.Priority.CLOSING);
+        radio.outro();
+        float t = 0;
+        while (radio.current().isEmpty()) {
+            assertTrue(radio.closingLeft(), "the outro waits for the held line");
+            radio.update(0.1f);
+            t += 0.1f;
+        }
+        assertEquals("The Choir", radio.current().orElseThrow().speaker());
+        assertTrue(t >= 4.5f - 1e-3f && t < 4.7f, "opened at " + t);
+        while (radio.current().isPresent() && radio.current().get().speaker().equals("The Choir")) {
+            radio.update(0.1f);
+        }
+        while (radio.current().isEmpty()) {
+            radio.update(0.1f);
+        }
+        assertEquals("Varga", radio.current().orElseThrow().speaker());
+    }
+
     @Test
     void anUrgentLineInterruptsAndTheInterruptedLinePlaysAgainAfterIt() {
         radio.add("Okafor", "neutral", "Five crawlers, four hundred civilians. Get them to the terminal.", false);

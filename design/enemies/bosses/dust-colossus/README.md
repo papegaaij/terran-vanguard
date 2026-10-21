@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-3-red-dust, ../../../story/characters/the-choir]
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 
 # Dust Colossus
@@ -42,7 +42,7 @@ accepted in round 36, confirmed by the Act 3 balance plan in part A).
 | Armour / shield | `buried` between breaches and during the first half of a rise and the second half of a dive; the lips ×0.5; the gullet ×2 while the mouth is open |
 | Speed | 0 px/s (the mouths do not move once risen; the arena crawls at 20 px/s) |
 | Movement | `burrow` with fixed **breach points** around the field (see *Breaches*); between breaches its ridge runs under the sand from the last breach point toward the next |
-| Attack | the **suction** (45 px/s within 120 px, falling off to 0 at 360 px); the **bite** (a 0.8 s tell, then `heavy` = 10 within 70 px, once); debris in phases 2-3; phase 3's **eruption** (a 45 px marker on the ship, `heavy` = 10 after 1.5 s; see *Phases*); phase 1: the gullet fires a ring of 12 (`small` = 4, 100 px/s) every 2 s while open, each after a 0.5 s lime glow; phase 2: rings of 14 (110 px/s) every 2.5 s; with a 5-way `fan` (spread 50°, 130 px/s, `small`) at the ship between the rings; phase 3: the mouth standing in the field fires a 2-arm `spiral` (4 bullets a second per arm, 120 px/s, `small`) while it stands open; phase 2: each living spine vent vents an aimed 3-round `burst` (130 px/s, `small`) every 3 s while the mouth is open |
+| Attack | the **suction** (45 px/s within 120 px, falling off to 0 at 360 px); the **bite** (a 0.8 s tell, then `heavy` = 10 within 70 px, once); debris in phases 2-3; phase 3's **eruption** (a 45 px marker on the ship, `heavy` = 10 after 1.5 s; see *Phases*); phase 1: the gullet fires a ring of 12 (`small` = 4, 100 px/s) every 2.5 s while open, each after a 0.5 s lime glow; phase 2: rings of 14 (110 px/s) every 2.5 s; with a 5-way `fan` (spread 50°, 130 px/s, `small`) at the ship between the rings, in phase 1 too (round 45); phase 3: the mouth standing in the field fires a 2-arm `spiral` (4 bullets a second per arm, 120 px/s, `small`) while it stands open; phase 2: each living spine vent vents an aimed 3-round `burst` (130 px/s, `small`) every 3 s while the mouth is open |
 | Formations | solo set piece |
 | Weak points | lime gullet (while open) (×2) |
 | Effective traits | `anti-ground`, `side`, `rear`, `homing` |
@@ -107,7 +107,7 @@ key).
 
 | Phase | Ends at | Behaviour |
 |---|---|---|
-| 1 — Circling | the mouth below 70 % (round 44 Q.9; was 60 %) | Breaches in a fixed order **front → left → right → rear**, repeating, at the fixed points (the front first, to teach the cycle where the front guns reach it). The gullet fires one **ring of 12** (`small` = 4, 100 px/s) every 2.0 s (round 44 Q.2; was 2.5 s), each after a 0.5 s lime glow. No debris. The kinder first phase: slow rings, fixed points, one mouth at a time. |
+| 1 — Circling | the mouth below 70 % (round 44 Q.9; was 60 %) | Breaches in a fixed order **front → left → right → rear**, repeating, at the fixed points (the front first, to teach the cycle where the front guns reach it). The gullet fires one **ring of 12** (`small` = 4, 100 px/s) every 2.5 s, each after a 0.5 s lime glow, with phase 2's 5-way `fan` at the ship half an interval after each ring (round 45 B.b; round 44 Q.2's rings every 2.0 s went back to 2.5 s with it). No debris. The first phase: slow rings, fixed points, one mouth at a time. |
 | 2 — Hunting | the mouth below 45 % (round 44 Q.9; was 25 %) | The order **rear → left → rear → right → front**, the points following the ship (see *Breaches*). Rings of 14 (110 px/s) every 2.5 s with a 5-way `fan` (spread 50°, 130 px/s, `small`) at the ship in between. Each breach also raises **three spine vents** along the ridge from the mouth toward the field's centre (120, 200 and 280 px from the mouth), `ground`, each venting an aimed 3-round `burst` every 3 s while the mouth is open; they sink with the mouth, and a destroyed vent stays dead. Debris every 1.2 s. |
 | 3 — Breaching anywhere | the mouth at 0 | It breaches **under the ship**: a marker (the bulge and a crack ring, 90 px across) is placed on the ship's position and erupts **1.5 s** later (the Polyp Mortar marker's rule: placed at the start, it does not follow); a ship or Rook inside takes `heavy` = 10. The mouth stands open in the field for **5 s** firing a two-arm `spiral` (4 bullets a second per arm, 120 px/s, `small`), the suction at full strength, then bites and dives; 1.5 s buried, then the next marker (a cycle ≈ 10 s). Debris every 0.8 s. An **armour patch** drops as the phase begins. |
 
@@ -157,6 +157,13 @@ one, keeps its 35 % share); phase 1's rings every 2.0 s (Q.2); the front point 9
 Phase 3 now gets **about 3 eruptions** at medium (2.6 over five seeds; 3.0 in the level's three), and the **par is
 104 s**. Phase 1 with the random dodge: **8.0** per 10 s against the Kraken's 11.4 = **0.70×**, still under H.4's 0.8
 (the test's lower bound 0.65, pending the user's review; the fan from phase 1 is the next lever).
+
+**Re-measured (step C45, round 45 B.b):** phase 2's 5-way fan in phase 1 too, half an interval after each ring. With
+the rings every 2.0 s the random dodge lost **14.9** per 10 s = **1.30×** the Kraken's, over H.4's 1.2; with the rings
+back to every 2.5 s (the phase's interval, the fan's too) **13.4 = 1.17×**, inside the band, and the test's lower bound
+is H.4's 0.8 again. The fight (`DustColossusTest`, five seeds): medium **106.4 s** (104.6–107.2; phases 17 + 55 + 28 s,
+8–9 breaches), easy 73.0 s, hard 137.7 s (132.0–151.8), all won; the level report 104.7 s at medium (100.0–107.1), 3/3
+in the window. The **par is 106 s**; the haul +1.1 % at the `bounty_scale` 0.50, so the bounty 480 keeps its 22.7 %.
 
 Paper estimate (window-aware, as the Kraken's `BalanceTest` check): the effective boss DPS is 0.6 × 100
 = **60**. While a mouth is open, hits fall on the lips (×0.5) and the gullet (×2), a mean of ×1.25 (the
@@ -243,7 +250,9 @@ unfolding around a lime throat, violet-lit vein ridges under the sand.
 
 Production art: [dust-colossus-final-r44-a.png](../concept/dust-colossus-final-r44-a.png) ([GIF](../concept/dust-colossus-final-r44-a.gif)), `tools/art/dust_colossus.py` (sprite names and frame layout in its docstring; held in `build/art-held/` until this part's `data.yaml` claims the root), prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r44-a); accepted in round 44 (2026-10-20).
 
-Round 45 (round 44 K.b, step ART-K): [dust-colossus-final-r45-a.png](../concept/dust-colossus-final-r45-a.png) ([GIF](../concept/dust-colossus-final-r45-a.gif)): the spine behind an edge mouth with the vents as organs on its segments, and the death throe (rearing, the geysers along the ridge, the fissure ring, debris, the collapse, the dust plume); prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r45-a); frame rules for the game in the step's art-names note; proposed, pending the user's review.
+Round 45 (round 44 K.b, step ART-K): [dust-colossus-final-r45-a.png](../concept/dust-colossus-final-r45-a.png) ([GIF](../concept/dust-colossus-final-r45-a.gif)): the spine behind an edge mouth with the vents as organs on its segments, and the death throe (rearing, the geysers along the ridge, the fissure ring, debris, the collapse, the dust plume); prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r45-a); frame rules for the game in the step's art-names note; round 45 (2026-10-21): the death throe and the debris rocks accepted; the spine is to be re-rendered as one continuous ridged back (step ART-S, planned, a new r46 row), until then the r45 spine stands.
+
+Round 46 (round 45 A.a, step ART-S): [dust-colossus-final-r46-a.png](../concept/dust-colossus-final-r46-a.png) ([GIF](../concept/dust-colossus-final-r46-a.gif)): the spine as one continuous ridged back (dark shingled plates over the violet hide, sand berms on the flanks; same frames and names, no game change); prompt in [../concept/prompts.md](../concept/prompts.md#dust-colossus-final-r46-a); proposed, pending the user's review.
 
 ## Implementation
 
@@ -262,7 +271,9 @@ Round 45 (round 44 K.b, step ART-K): [dust-colossus-final-r45-a.png](../concept/
 - [x] The fight measured over five seeds (101.7 s at medium, every seed 90–180 s), the HP kept, the par set
       (102); phase 1 checked with the calibration harness (0.55× the Kraken's; round 44 Q.2); the bounty
       at 22.7 % with the final scale 0.74 (`DustColossusTest`, step H4; step L21R after round 44's Q.2, Q.9 and Q.11:
-      104.3 s, par 104, phase 3 ≈ 3 eruptions, phase 1 0.70×, the bounty 480 at the scale 0.50)
+      104.3 s, par 104, phase 3 ≈ 3 eruptions, phase 1 0.70×, the bounty 480 at the scale 0.50; step C45 after
+      round 45 B.b, the fan in phase 1 and its rings every 2.5 s: 106.4 s, par 106, phase 1 1.17×, the test's band
+      0.8–1.2× again)
 - [x] Intro (the Choir sings), death (chain, flash, credit shower), the Choir's first words and the
       lines after them (step HB: the death's own sound, the local flash and the credit shower; step VOX-H: the Choir's words as one take, round 44 Q.7)
 - [x] Production art (≤ one atlas page): the mouth in its 5 poses with rise, open, bite and dive frames,
@@ -270,11 +281,11 @@ Round 45 (round 44 K.b, step ART-K): [dust-colossus-final-r45-a.png](../concept/
 
 ## Open questions
 
-- Pending the user's review (step L21R, 2026-10-20): **phase 1's calibration** is 0.70× the Kraken's with the rings
-  every 2.0 s, still under H.4's 0.8 (the test holds 0.65× for now); the next lever is phase 2's fan in phase 1 too
-  (Q.2's last resort), or accept 0.70×. **Phase 1 ends at 70 %** (from 60 %) so that phase 3's 45 % share (Q.9) keeps
+- Pending the user's review (step C45, 2026-10-21): with phase 2's fan in phase 1 (round 45 B.b) and the rings every
+  2.0 s phase 1 measured 1.30× the Kraken's, over H.4's 1.2, so its rings (and the fan between them) went back to
+  every 2.5 s: **1.17×**, inside the band (round 44 Q.2's 2.0 s undone by this step's choice). **Phase 1 ends at 70 %** (from 60 %) so that phase 3's 45 % share (Q.9) keeps
   the fight in the window with the HP kept; with phase 1 at 60 % the fight fell to ≈ 92 s with 83–97 s seeds.
-- Built (steps ART-K, GK, SIM-K, round 44 K.b/K.c): the spine with the vents as organs on its segments, the 4.5 s death throe, the ground holding still while the Colossus is out and the brighter bite circle (Q.10). **Pending the user's review (round 45):** at 1x the spine's humps read as a chain of pale bubbles (one continuous ridged back is proposed), the debris rocks read dark, and phase 1's 0.70x pressure (a 5-way fan in phase 1 is proposed).
+- Built (steps ART-K, GK, SIM-K, round 44 K.b/K.c): the spine with the vents as organs on its segments, the 4.5 s death throe, the ground holding still while the Colossus is out and the brighter bite circle (Q.10). **Pending the user's review (round 45):** at 1x the spine's humps read as a chain of pale bubbles (one continuous ridged back is proposed), the debris rocks read dark, and phase 1's 0.70x pressure (a 5-way fan in phase 1 is proposed; built in step C45: 1.17x).
 
 ## Decisions
 
@@ -324,3 +335,9 @@ Round 45 (round 44 K.b, step ART-K): [dust-colossus-final-r45-a.png](../concept/
   pulled rocks, so no safe spot and no ring (SIM-K's hook unused). The bounty 480 (mouth 444) for H.5's 22.7 % at
   Level 21's new scale 0.50.
 - 2026-10-20 (steps SIM-K, ART-K, GK): the crawl halts while the Colossus is out (K.c); the spine is 4 segments x 3 states x 16 headings with the vents on it (K.b), with a soft spine shadow; the death throe lasts 4.5 s (rear, collapse, geysers tail to head, or a geyser ring round the mouth when the ridge is short, fissure ring, 18 rocks, plume, shockwave 2.9 s, shake up to 7 px, flash 4.2, credits 4.5); the bite circle, the stomp and the brace rings are brighter. Proposed in round 45: the spine as one continuous ridged back, lighter debris.
+- 2026-10-21 (user, round 45): A.b the death throe approved, A.d the debris rocks accepted as they are; A.a the spine reads as bubbles: re-render as one continuous ridged back (step ART-S, planned); B.a the Choir's words at the death get a 4.5 s delay (the roar drowns them; C45 + G45, planned); B.b the 5-way fan of phase 2 is added to phase 1 (C45, planned).
+- 2026-10-21 (step C45, round 45 B.b): phase 1 fires phase 2's 5-way fan half an interval after each ring. With the
+  rings every 2.0 s the random dodge lost 1.30× the Kraken's (over H.4's 1.2), so phase 1's rings went back to every
+  2.5 s (our choice, pending the user's review): 1.17×, the test's lower bound 0.8 again. The fight 106.4 s at medium,
+  par 106 (from 104); the haul +1.1 % at the scale 0.50, the bounty 480 (22.7 %) kept. B.a's Choir delay is Level 21's
+  (its radio line's `delay: 4.5`).

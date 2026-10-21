@@ -1,6 +1,6 @@
 package vanguard.game.render;
 
-import static vanguard.game.render.PlayFrame.drawCentred;
+import static vanguard.game.render.PlayFrame.X0;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +18,9 @@ import vanguard.sim.PlayField;
  * BreachArena.ventX}: the same distances, measured the same way), the fourth a tapering tail. Each segment rises a beat
  * after the one before it ({@value #STAGGER_SECONDS} s, head to tail) in three steps over the mouth's rise (a third out
  * with the sand heaped on it, two thirds with the sand sliding off, up) and sinks back the same way in the dive.
- * Presentation only; nothing is allocated per frame.
+ * Presentation only; nothing is allocated per frame. Step SPR: the frames come in {@value RidgeLooks#HEADINGS} headings
+ * of 22.5°, so each segment (and its shadow) turns by what is left over ({@link #tilt}, at most ±11.25°) about its
+ * centre, and the joints of a slanted back line up instead of showing a sawtooth.
  */
 final class ColossusSpine {
     /** The segments: three vent segments and the tail. */
@@ -47,11 +49,12 @@ final class ColossusSpine {
 
     private final Array<AtlasRegion> frames;
     private final double[] distances = DISTANCES.clone();
-    /** The segments laid this frame: centre (x, y up) and heading index. */
+    /** The segments laid this frame: centre (x, y up), heading index and the leftover turn ({@link #tilt}). */
     private final double[] segX = new double[SEGMENTS];
 
     private final double[] segY = new double[SEGMENTS];
     private final int[] segHeading = new int[SEGMENTS];
+    private final float[] segTilt = new float[SEGMENTS];
     private final double[] place = new double[4];
 
     ColossusSpine(Array<AtlasRegion> frames, JsonValue pivots) {
@@ -73,6 +76,17 @@ final class ColossusSpine {
     /** The spine sprite's frame: segment {@code seg}, its state, its heading ((seg * 3 + state) * 16 + heading). */
     static int frame(int seg, int state, int heading) {
         return (seg * STATES + state) * RidgeLooks.HEADINGS + heading;
+    }
+
+    /**
+     * The turn a heading frame needs to point exactly along a direction ({@code dx} right, {@code dy} up), degrees
+     * counter-clockwise (the batch's rotation): the frames step 22.5° clockwise from down ({@link RidgeLooks#heading}),
+     * so this is minus what the direction turns past its frame's heading, at most ±11.25°.
+     */
+    static float tilt(double dx, double dy) {
+        double turn = Math.atan2(-dx, -dy);
+        double step = 2 * Math.PI / RidgeLooks.HEADINGS;
+        return (float) -Math.toDegrees(turn - Math.round(turn / step) * step);
     }
 
     /** Whether a mouth at {@code pose} shows its back (an edge breach; the under pose's body goes straight down). */
@@ -181,11 +195,13 @@ final class ColossusSpine {
                 segX[i] = breach.ventX(i);
                 segY[i] = breach.ventY(i);
                 segHeading[i] = RidgeLooks.heading(-breach.ventDirX(i), -breach.ventDirY(i));
+                segTilt[i] = tilt(-breach.ventDirX(i), -breach.ventDirY(i));
             } else {
                 place(cx, cy, samples, distances[i], place);
                 segX[i] = place[0];
                 segY[i] = place[1];
                 segHeading[i] = RidgeLooks.heading(place[2], place[3]);
+                segTilt[i] = tilt(place[2], place[3]);
             }
         }
     }
@@ -212,19 +228,37 @@ final class ColossusSpine {
             int state = state(phase, elapsed, i, rise, dive);
             if (state >= 0) {
                 double lift = (state + 1.0) / STATES;
-                drawCentred(
+                drawTilted(
                         batch,
                         frames.get(frame(i, state, segHeading[i])),
                         segX[i] + SHADOW_DX * lift,
-                        segY[i] + SHADOW_DY * lift);
+                        segY[i] + SHADOW_DY * lift,
+                        segTilt[i]);
             }
         }
         batch.setColor(Color.WHITE);
         for (int i = SEGMENTS - 1; i >= 0; i--) {
             int state = state(phase, elapsed, i, rise, dive);
             if (state >= 0) {
-                drawCentred(batch, frames.get(frame(i, state, segHeading[i])), segX[i], segY[i]);
+                drawTilted(batch, frames.get(frame(i, state, segHeading[i])), segX[i], segY[i], segTilt[i]);
             }
         }
+    }
+
+    /** Draws {@code region} centred on ({@code x}, {@code y} up), turned {@code degrees} counter-clockwise about it. */
+    private static void drawTilted(SpriteBatch batch, AtlasRegion region, double x, double y, float degrees) {
+        int width = region.getRegionWidth();
+        int height = region.getRegionHeight();
+        batch.draw(
+                region,
+                Math.round(X0 + x - width / 2.0),
+                Math.round(y - height / 2.0),
+                width / 2f,
+                height / 2f,
+                width,
+                height,
+                1,
+                1,
+                degrees);
     }
 }
