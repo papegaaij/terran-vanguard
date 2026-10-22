@@ -22,8 +22,8 @@ import vanguard.content.Difficulty;
  * most, because the autopilot found or kept one, is printed as accepted), repairs what the credits left allow and
  * flies the level until it is won, in at most {@link Playthrough#MAX_ATTEMPTS} attempts; the campaign goes through a
  * save and a load before and after every visit. Level 07's win ends Act 1 with its outro and Act 2's intro briefing
- * follows; Level 14's win ends Act 2 and Act 3's intro follows; Level 21's win ends Act 3 with its outro, and the
- * release ends there (no Level 22 is built: {@link CampaignRoute#releaseEnd}). The credits and the fit per visit are
+ * follows; Level 14's win ends Act 2 and Act 3's intro follows; Level 21's win ends Act 3 with its outro, and Act 4's
+ * intro follows (M8 part B: Level 22 is built, {@link CampaignRoute#releaseEnd} is false). The credits and the fit per visit are
  * printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
@@ -93,17 +93,14 @@ class ActPlaythroughTest {
                     assertTrue(inside, message);
                 }
                 visits.clear();
-                if (level < LAST) {
-                    // After the outro: the next act's intro briefing before its first level.
-                    assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act " + act + "'s outro ends nothing");
-                    assertInstanceOf(
-                            CampaignRoute.Step.Briefing.class,
-                            CampaignRoute.beforeNextLevel(CONTENT, campaign),
-                            "the next act opens with its briefing");
-                } else {
-                    // M7 part I: Act 3's outro ends the release (the end card, the name entry, the credits).
-                    assertTrue(CampaignRoute.releaseEnd(CONTENT, campaign), "Act 3's outro ends the release");
-                }
+                // After the outro: the next act's intro briefing before its first level (M8 part B: Act 3's too, Act
+                // 4's
+                // intro before Level 22; the release's end moves to Level 28 in part H).
+                assertFalse(CampaignRoute.releaseEnd(CONTENT, campaign), "Act " + act + "'s outro ends nothing");
+                assertInstanceOf(
+                        CampaignRoute.Step.Briefing.class,
+                        CampaignRoute.beforeNextLevel(CONTENT, campaign),
+                        "the next act opens with its briefing");
             }
             // The autosave after the debrief.
             playthrough.autosave();

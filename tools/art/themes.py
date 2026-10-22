@@ -27,6 +27,11 @@ Outputs:
   assets/music/red-dust-run.ogg    #8 "Red Dust Run", full length (music_r38.py: the chosen mars-theme-r02-a
                                    composed out to full length; no earlier concept file, review in round 38)
   assets/music/red-dust-run-base.ogg  its base stem (music_r38.py, the same pass; provisional)
+  assets/music/thera-deep{,-base}.ogg  #10 "Thera Deep" and its base stem (M8 part B: tools/concept/audio/music_r51b.py's
+                                   thera-deep{,-base}-r51-a, COPIED: remuxed with the SOURCE comment, not re-rendered;
+                                   proposed in round 51, the concept sheet thera-deep-sheet-r51-a.png reviews them)
+  assets/music/pressure-line{,-base,-motif}.ogg  #11 "Pressure Line", its base and motif stems (the same way from
+                                   pressure-line{,-base,-motif}-r51-a; heard in game from Level 25)
   design/audio/music/concept/themes-final-r13-a.png      review sheet of round 13
   design/audio/music/concept/boss-music-final-r25-a.png  review sheet of round 25
   design/audio/music/concept/{choir-descends,boss-warning,act-complete}-final-r25-a.ogg
@@ -95,7 +100,8 @@ Usage: python3 tools/art/themes.py [title] [hangar] [briefing] [boss] [warning] 
                                    [afterburner] [afterburner-base] [coalition] [coalition-base]
                                    [miniboss] [complete] [failed] [gameover] [homefront]
                                    [homefront-base] [firestorm] [firestorm-base] [red-dust]
-                                   [red-dust-base]
+                                   [red-dust-base] [thera] [thera-base] [pressure]
+                                   [pressure-base] [pressure-motif]
                                                        render (default all), then check and review
        python3 tools/art/themes.py --check [keys]      check only (default all)
        python3 tools/art/themes.py --review [keys]     review sheets (and r25/r26 aids) of the keys' rounds
@@ -151,6 +157,8 @@ ROUNDS = {
          artkit.source_note(SCRIPT, "M5 part C")),
     38: ("music-final-r38-a.png", "RED DUST RUN AND ITS BASE STEM (FULL LENGTH, PROVISIONAL STEM)",
          "PRODUCTION ART, M7 PART B - R38", artkit.source_note(SCRIPT, "M7 part B")),
+    # no sheet of its own: COPIED pieces, reviewed on music_r51b.py's concept sheets
+    51: (None, None, None, artkit.source_note(SCRIPT, "M8 part B")),
 }
 # key: (asset name, music_r08 key, title shown on the sheet, round); loops first, then one-shots
 THEMES = {
@@ -164,6 +172,8 @@ THEMES = {
     "firestorm": ("firestorm", "act2b", "FIRESTORM - TRACK 7, ACT 2 B", 31),
     # no music_r08 key: composed out to full length by music_r38 (PAIR_RENDERED)
     "red-dust": ("red-dust-run", None, "RED DUST RUN - TRACK 8, ACT 3 A", 38),
+    "thera": ("thera-deep", None, "THERA DEEP - TRACK 10, ACT 4 A", 51),
+    "pressure": ("pressure-line", None, "PRESSURE LINE - TRACK 11, ACT 4 B", 51),
 }
 # key: (asset name, key of its full mix in THEMES, title, round, stem generator, chosen file)
 STEMS = {
@@ -180,6 +190,22 @@ STEMS = {
     # rendered with its full mix by music_r38 (provisional until round 38 reviews the full mix)
     "red-dust-base": ("red-dust-run-base", "red-dust", "RED DUST RUN - TRACK 8, BASE STEM (PROVISIONAL)", 38,
                       "music_r38", "red-dust-run-base-r38-a"),
+    "thera-base": ("thera-deep-base", "thera", "THERA DEEP - TRACK 10, BASE STEM", 51,
+                   "music_r51b", "thera-deep-base-r51-a"),
+    "pressure-base": ("pressure-line-base", "pressure", "PRESSURE LINE - TRACK 11, BASE STEM", 51,
+                      "music_r51b", "pressure-line-base-r51-a"),
+    "pressure-motif": ("pressure-line-motif", "pressure", "PRESSURE LINE - TRACK 11, MOTIF STEM", 51,
+                       "music_r51b", "pressure-line-motif-r51-a"),
+}
+# M8 part B: pieces copied from their concept file (key: its name in design/audio/music/concept): remuxed with the
+# SOURCE comment, packets unchanged, not re-rendered (music_r51b.py renders the full mixes and stems in one linked
+# pass of ~5 min each); their review is the concept round's own sheet and aids, so no review copy or sheet here.
+COPIED = {
+    "thera": "thera-deep-r51-a",
+    "thera-base": "thera-deep-base-r51-a",
+    "pressure": "pressure-line-r51-a",
+    "pressure-base": "pressure-line-base-r51-a",
+    "pressure-motif": "pressure-line-motif-r51-a",
 }
 CUES = {
     "warning": ("boss-warning", "warning", "RED ALERT - TRACK 22, BOSS WARNING", 25),
@@ -209,6 +235,8 @@ SEAM_SECONDS = 8.0
 
 
 def concept_file(key):
+    if key in COPIED:
+        return CONCEPT / f"{COPIED[key]}.ogg"
     if key in STEMS:
         return CONCEPT / f"{STEMS[key][5]}.ogg"
     if PIECES[key][1] is None:  # composed by its stem generator: its own full-mix name (not written by default)
@@ -314,7 +342,9 @@ def render(key, rendered):
     ``rendered`` maps a TRUE_PEAK_FIX pair to the directory of its two files (rendered once)."""
     with tempfile.TemporaryDirectory() as tmp:
         pair = fix_pair(key)
-        if pair:
+        if key in COPIED:
+            src = concept_file(key)
+        elif pair:
             if pair not in rendered:
                 rendered[pair] = tempfile.mkdtemp()
                 render_true_peak_fixed(pair, rendered[pair])
@@ -332,7 +362,7 @@ def render(key, rendered):
             ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(src), "-c:a", "copy",
              "-metadata:s:a:0", f"SOURCE={source(key)}", "-fflags", "+bitexact", str(asset_file(key))],
             check=True)
-    if PIECES[key][3] >= 25:
+    if PIECES[key][3] >= 25 and key not in COPIED:
         shutil.copyfile(asset_file(key), review_copy(key))
 
 
@@ -460,7 +490,7 @@ def check(keys):
                 (m["end"] > SILENT_END, f"end at {m['end']:.0f} dBFS, not silent"),
             ]
             shape = f"one-shot, end {m['end']:.0f} dBFS"
-        if PIECES[key][3] >= 25:
+        if PIECES[key][3] >= 25 and key not in COPIED:
             problems.append((not review_copy(key).exists()
                              or review_copy(key).read_bytes() != asset_file(key).read_bytes(),
                              f"{review_copy(key).name} missing or not the asset"))
@@ -610,6 +640,9 @@ def rows(round_no):
 
 def review(round_no):
     file, title, subtitle, _ = ROUNDS[round_no]
+    if file is None:
+        print(f"review: round {round_no}'s pieces are COPIED, reviewed on their concept sheets")
+        return
     block = 40 + WAVE_H + 26
     sheet_rows = rows(round_no)
     img = raster.sheet(WAVE_W + 40, 40 + block * len(sheet_rows), title, subtitle)

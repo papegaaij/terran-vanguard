@@ -179,3 +179,23 @@ Stormhawk and Ember sprites foreshortened on their pads, ground crews with work 
 lowering a pod over Lancer's mount, the domes on the horizon, Jupiter a bright point in the dusk sky; "4 DAYS").
 Artist brief: release after the fight (dawn, lights, a plot that points onward), the Helix thread kept quiet in one
 corner window.
+
+## briefing-images-final-r51-a
+
+Production art, M8 part B (round 51; straight to production as in Acts 2 and 3, pending the user's review). Not a
+mockup: the sheet of the Act 4 intro's four briefing images and Level 22's two in `assets/ui/briefing/`
+(`act-4-arrival`, `act-4-europa-cutaway`, `act-4-hydro-kit`, `act-4-drop`, `level-22-conamara-map`,
+`level-22-drill-rig`), rendered by [tools/art/briefing_images.py](../../../../tools/art/briefing_images.py)
+(`python3 tools/art/briefing_images.py <names> r51`). Okafor's page 1: Europa in the transport's forward view
+(an orthographic globe, cream ice with rust lineae and dark chaos patches, lit from the top left) against banded
+Jupiter, the Vrell fleet's ring of contacts in orbit, the four rigs on the ice at Conamara and the station's beacon;
+the nav screen: 7 days ahead of us, 4 drill rigs, "tremors for 7 days", 40 in the dome. Varga's page 2: a cut
+through Europa's shell, the ice kilometres thick over the ocean, Thera Deep's habitat (40,000 people) with its kelp
+farms, the rigs boring down from Conamara toward the ocean. Okafor's page 3: the hydro-kit Stormhawk (ship-hydro_2
+at 4×) with callouts (sealed intakes, torpedo rack, pressure hull, headlights) and the water's rules (bullets ×0.7,
+a third of the bite off all but torpedoes and depth charges). Okafor's page 4: the drop over Level 22's rig field,
+the Level 15 transport piece with Aegis Wing leaving it, the route over the four rigs to the hole, "we follow it
+down". Okafor's Level 22 page: the CDF map of the Conamara Chaos from Level 22's tiles as a hologram, north up, the
+route south over the four rigs to Conamara Station, the three sections, Jupiter in an inset. Varga's Level 22 page:
+the production Drill Rig scanned with the bore core marked, the hardened collar, the pumps, what gets through; an
+inset of a geyser's crack glowing, then its steam.

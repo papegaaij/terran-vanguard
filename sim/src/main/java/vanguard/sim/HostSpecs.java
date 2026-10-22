@@ -123,10 +123,14 @@ public interface HostSpecs {
      * M7 part D, a destroyable part on a unit that is not a boss (design/enemies/ground/shellback, the mortar
      * vent; part F's Warden Tank turret may reuse it): {@code hp} of its own, its {@code hitbox} centred
      * {@code dx} px to the unit's right and {@code dy} px towards its tail in its own frame (facing down the
-     * screen), turning with the unit's facing in its 16 headings. Shots test it before the body; a blast
-     * covering both hurts both. Destroyed, it pays {@code bounty} (as a chain's part does) and, with {@code
-     * silencesGun}, the unit's gun stops for good. Killing the body while it stands pays the unit's bounty
-     * plus {@code firstBonus} (the whole: the Shellback's 40 + 8).
+     * screen), turning with a walker's facing in its 16 headings (M8 part B: a unit that does not walk keeps its
+     * parts where they are, the Drill Rig's fixed collar). Shots test it before the body; a blast
+     * covering both hurts both. Destroyed, it pays {@code bounty} (as a chain's part does). With {@code
+     * silencesGun} the unit's gun is bound to it: M8 part B (design/enemies/ground/drill-rig, the pumps), the gun
+     * fires while any of the unit's parts that carry it stands and stops for good once all of them are gone, its
+     * interval {@code slowsGunSeconds} longer for each of them lost (the Shellback's one vent: silenced with it).
+     * Killing the body pays the unit's bounty plus the {@code firstBonus} of every part still standing (the
+     * whole: the Shellback's 40 + 8; the Drill Rig's 40 + 4 a pump).
      */
     public record UnitPart(
             String name,
@@ -136,11 +140,29 @@ public interface HostSpecs {
             double dy,
             int bounty,
             boolean silencesGun,
-            int firstBonus) {
+            int firstBonus,
+            double slowsGunSeconds) {
         public UnitPart {
             if (!(hp > 0)) {
                 throw new IllegalArgumentException(name + ": a unit part has HP: " + hp);
             }
+            if (!(slowsGunSeconds >= 0) || (slowsGunSeconds > 0 && !silencesGun)) {
+                throw new IllegalArgumentException(
+                        name + ": only a part that carries the gun slows it, by 0 s or more: " + slowsGunSeconds);
+            }
+        }
+
+        /** A part whose loss does not slow the gun (M7 part D). */
+        public UnitPart(
+                String name,
+                double hp,
+                Hitbox hitbox,
+                double dx,
+                double dy,
+                int bounty,
+                boolean silencesGun,
+                int firstBonus) {
+            this(name, hp, hitbox, dx, dy, bounty, silencesGun, firstBonus, 0);
         }
 
         /** A part without a whole-kill bonus. */

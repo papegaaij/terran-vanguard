@@ -41,6 +41,9 @@ final class KindLooks {
     /** M7 part F: the turret units' turrets, flashes and wrecks (built with the first sortie). */
     private TankLooks tanks;
 
+    /** M8 part B: the Drill Rigs' pumps, decals, muzzle, remains and steam (built with the first sortie). */
+    private DrillRigLooks rigs;
+
     private final Sprites sprites;
     private final Files files;
 
@@ -112,6 +115,14 @@ final class KindLooks {
         return tanks;
     }
 
+    /** M8 part B: the Drill Rigs' looks for the sortie's enemy kinds, built once. */
+    DrillRigLooks rigs(Sortie sortie) {
+        if (rigs == null) {
+            rigs = new DrillRigLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return rigs;
+    }
+
     /** M5 part F: the latch poses of the sortie's enemy kinds (the Lamprey's), null where a kind has none. */
     private LampreyLooks[] lampreyLooks(Sortie sortie) {
         List<EnemySpec> kinds = sortie.enemyKinds();
@@ -159,6 +170,9 @@ final class KindLooks {
         }
         if (tanks != null) {
             tanks.restart();
+        }
+        if (rigs != null) {
+            rigs.restart();
         }
     }
 }

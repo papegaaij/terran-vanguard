@@ -256,7 +256,10 @@ public sealed interface HazardsBlock permits LevelData {
      * each row, from the time it enters at the top edge, fires every {@code period} s as a ripple, grate i glowing
      * {@code tell} s from {@code i × ripple} s into the cycle, then its flame column standing {@code burn} s, hitting
      * the ship and Rook whatever their layer once per burst for the {@code bullet} class's damage; {@code easy} and
-     * {@code hard} change the tell, period and ripple. Cold from the arena on.
+     * {@code hard} change the tell, period and ripple. Cold from the arena on. M8 part B (design/campaign Level 22,
+     * Hazards: the ice geysers): a row may set its own period and ripple ({@link VentRowData}), and {@code look} names
+     * how the game draws and sounds the rows ({@link #FURNACE_VENT} if not given, {@link #ICE_GEYSER}); the simulation
+     * never reads it.
      */
     public record Vents(
             double width,
@@ -267,8 +270,32 @@ public sealed interface HazardsBlock permits LevelData {
             String bullet,
             Optional<VentChange> easy,
             Optional<VentChange> hard,
-            List<VentRowData> rows) {
+            List<VentRowData> rows,
+            Optional<String> look) {
+        /** M7 part F: Level 19's furnace vents, the look if not given. */
+        public static final String FURNACE_VENT = "furnace-vent";
+
+        /** M8 part B: Level 22's ice geysers (a crack that glows, then a steam column). */
+        public static final String ICE_GEYSER = "ice-geyser";
+
+        /** Without M8 part B's look. */
+        public Vents(
+                double width,
+                double tell,
+                double burn,
+                double period,
+                double ripple,
+                String bullet,
+                Optional<VentChange> easy,
+                Optional<VentChange> hard,
+                List<VentRowData> rows) {
+            this(width, tell, burn, period, ripple, bullet, easy, hard, rows, Optional.empty());
+        }
+
         public Vents {
+            look.ifPresent(name -> Check.that(
+                    name.equals(FURNACE_VENT) || name.equals(ICE_GEYSER),
+                    "look: " + FURNACE_VENT + " or " + ICE_GEYSER + ", was '" + name + "'"));
             rows = List.copyOf(rows);
             Check.positive("width", width);
             Check.notNegative("tell", tell);
@@ -279,6 +306,38 @@ public sealed interface HazardsBlock permits LevelData {
             for (int i = 1; i < rows.size(); i++) {
                 Check.that(rows.get(i).t() >= rows.get(i - 1).t(), "rows[" + i + "]: listed in time order");
             }
+        }
+
+        /** M8 part B: how the game draws and sounds the rows ({@link #FURNACE_VENT} if not given). */
+        public String lookOrDefault() {
+            return look.orElse(FURNACE_VENT);
+        }
+
+        /**
+         * M8 part B: {@code row}'s tell on {@code difficulty}, s: its own difficulty's change, else its own value, else
+         * the rows' ({@link #tellOn(Difficulty)}).
+         */
+        public double tellOn(VentRowData row, Difficulty difficulty) {
+            return row.change(difficulty)
+                    .flatMap(VentChange::tell)
+                    .or(row::tell)
+                    .orElseGet(() -> tellOn(difficulty));
+        }
+
+        /** M8 part B: {@code row}'s period on {@code difficulty}, s (as {@link #tellOn(VentRowData, Difficulty)}). */
+        public double periodOn(VentRowData row, Difficulty difficulty) {
+            return row.change(difficulty)
+                    .flatMap(VentChange::period)
+                    .or(row::period)
+                    .orElseGet(() -> periodOn(difficulty));
+        }
+
+        /** M8 part B: {@code row}'s ripple on {@code difficulty}, s (as {@link #tellOn(VentRowData, Difficulty)}). */
+        public double rippleOn(VentRowData row, Difficulty difficulty) {
+            return row.change(difficulty)
+                    .flatMap(VentChange::ripple)
+                    .or(row::ripple)
+                    .orElseGet(() -> rippleOn(difficulty));
         }
 
         /** The tell on {@code difficulty}, s. */
@@ -316,14 +375,40 @@ public sealed interface HazardsBlock permits LevelData {
 
     /**
      * M7 part F: a vent row entering at the top edge at level time {@code t}, its grates at {@code xs} px from the
-     * left in ripple order (the first fires first).
+     * left in ripple order (the first fires first). M8 part B (design/campaign Level 22, the geysers that tremble faster
+     * near Conamara): the row's own {@code tell}, {@code period} and {@code ripple} and its own {@code easy} and {@code
+     * hard} changes of them, over the rows' ({@link Vents#periodOn(VentRowData, Difficulty)}).
      */
-    public record VentRowData(double t, List<Double> xs) {
+    public record VentRowData(
+            double t,
+            List<Double> xs,
+            Optional<Double> tell,
+            Optional<Double> period,
+            Optional<Double> ripple,
+            Optional<VentChange> easy,
+            Optional<VentChange> hard) {
+        /** Without M8 part B's own timing. */
+        public VentRowData(double t, List<Double> xs) {
+            this(t, xs, Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        }
+
         public VentRowData {
             xs = List.copyOf(xs);
             Check.notNegative("t", t);
             Check.notEmpty("xs", xs);
             xs.forEach(x -> Check.that(x > 0 && x < PlayField.WIDTH, "xs: on the play field, was " + x));
+            tell.ifPresent(v -> Check.notNegative("tell", v));
+            period.ifPresent(v -> Check.positive("period", v));
+            ripple.ifPresent(v -> Check.notNegative("ripple", v));
+        }
+
+        /** M8 part B: the row's own change on {@code difficulty}; none on medium. */
+        public Optional<VentChange> change(Difficulty difficulty) {
+            return switch (difficulty) {
+                case EASY -> easy;
+                case MEDIUM -> Optional.empty();
+                case HARD -> hard;
+            };
         }
     }
 }

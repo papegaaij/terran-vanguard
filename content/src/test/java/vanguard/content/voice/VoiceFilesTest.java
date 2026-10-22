@@ -60,6 +60,8 @@ class VoiceFilesTest {
             "act-3-red-dust/level-21-dust-colossus",
             "act-3-red-dust briefing",
             "act-3-red-dust outro",
+            "act-4-deep-water/level-22-ice-shelf",
+            "act-4-deep-water briefing",
             "specials",
             "armour",
             VoiceLines.BARKS);

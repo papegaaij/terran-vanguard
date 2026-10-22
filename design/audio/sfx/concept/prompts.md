@@ -3078,6 +3078,8 @@ Brief: the `torpedo` family made heavier and without bubbles: a pneumatic tube's
 This one: a tyre-bead seater's compressed-air blast (a pneumatic tube's hard 'thoomp'), muffled at 2.5 kHz, on a cannon's deep thump played at quarter speed, and from 0.12 s a submarine motor's whirr rising in pitch as it runs off and fades: a punchy pneumatic launch with a motor leaving, 0.82 s.
 Edit: 0.82 s, the loudest 100 ms band −22.4 dB, peak −7.7 dBFS, −22.2 LUFS.
 
+**Rejected** (round 50, S.1, 2026-10-22: the user picked b); the file is in `rejected/`.
+
 ### shot-harpoon-r50-b — "G45-13-Submarine Torpedo Fire.wav" by craigsmith + "Torpedo launch.wav" by jobro
 
 Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
@@ -3086,6 +3088,8 @@ Use: every Harpoon Torpedoes shot (the front `anti-sub` weapon, Act 4 from L23's
 Brief: the `torpedo` family made heavier and without bubbles: a pneumatic tube's thump as the torpedo is pushed out and its motor's whirr running off ahead; muffled and pressured, short, never tiring at one a second; a real recording, heavy, nothing bubbly.
 This one: a vintage film recording of a submarine torpedo firing (a pressurised hiss with thumps and thunks in it), muffled at 3 kHz, over the Torpedo Pod's launch in its dry version slowed to 0.75 and muffled at 900 Hz: the pod's launch made bigger and lower, more hiss and mechanism than a, 0.9 s.
 Edit: 0.90 s, the loudest 100 ms band −24.6 dB, peak −5.6 dBFS, −18.0 LUFS.
+
+**Chosen** (round 50, S.1: b picked; to be rebuilt from the originals, Freesound 438715 and 35531, when the download limit allows).
 
 ### harpoon-run-r50-a — "G45-20-Submarine Motor Underwater.wav" by craigsmith + "Submarine Passing 1.wav" by Schmaddio
 
@@ -3096,6 +3100,8 @@ Brief: a torpedo's motor and propeller running away through the water: a steady,
 This one: a submarine's motor under water (a steady, high, muffled whirr, a vintage film recording) over a deep submarine rumble: a machine's whine running on, the most 'motor' of the two.
 Edit: 4.00 s, band RMS −34.0 dB, peak −18.7 dBFS, −30.4 LUFS.
 
+**Chosen** (round 50, S.2: a picked; to be rebuilt from the originals, Freesound 438722 and 432514, when the download limit allows).
+
 ### harpoon-run-r50-b — "underwater ship propeller 3.45 PM 220920_0532.wav" by klankbeeld + "G45-20-Submarine Motor Underwater.wav" by craigsmith
 
 Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
@@ -3104,6 +3110,8 @@ Use: while a Harpoon Torpedo runs ahead of the ship (one loop for all of them, a
 Brief: a torpedo's motor and propeller running away through the water: a steady, muffled, heavy whirr or thrum, low in the mix under the launches and hits, no bubbles, no clicks, a seamless loop; a real recording, heavy, nothing bubbly.
 This one: a real ship's propeller recorded through a hydrophone (a low churning thrum, the blades' beat in it), muffled at 1.5 kHz, with the submarine motor slowed to 0.8 quietly under it: lower and rougher than a, the most 'propeller in water'.
 Edit: 4.00 s, band RMS −34.0 dB, peak −11.9 dBFS, −30.4 LUFS.
+
+**Rejected** (round 50, S.2, 2026-10-22: the user picked a); the file is in `rejected/`.
 
 ### harpoon-hit-r50-a — "Underwater Deep Impact" by Sheyvan + "DepthBomb_01.aif" by ZeSoundResearchInc.
 
@@ -3114,6 +3122,8 @@ Brief: a heavy thud on impact: a deep, pressured under-water blast with a muffle
 This one: an under-water deep impact (a massive dull hit with a churning body) on a depth bomb's sub-bass boom: a heavy 'thoom' with a low rolling tail, 1.2 s.
 Edit: 1.20 s, the loudest 100 ms band −27.4 dB, peak −4.1 dBFS, −18.0 LUFS.
 
+**Chosen** (round 50, S.3: a picked; to be rebuilt from the originals, Freesound 470084 and 147876, when the download limit allows).
+
 ### harpoon-hit-r50-b — "G45-14-Torpedo Explosion.wav" by craigsmith + "DepthBomb_04.aif" by ZeSoundResearchInc.
 
 Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
@@ -3122,6 +3132,8 @@ Use: a Harpoon Torpedo striking its target (with the 20 px splash), under water 
 Brief: a heavy thud on impact: a deep, pressured under-water blast with a muffled body and a short low tail, no splash and no bubble rattle; short enough to repeat; a real recording, heavy, nothing bubbly.
 This one: a vintage film recording of a torpedo exploding (a big blast with rumble in it), muffled at 2 kHz, on a depth bomb's sub-bass boom: rougher and more 'explosion' than a, with more grit in it, 1.2 s.
 Edit: 1.20 s, the loudest 100 ms band −23.4 dB, peak −8.4 dBFS, −18.8 LUFS.
+
+**Rejected** (round 50, S.3, 2026-10-22: the user picked a); the file is in `rejected/`.
 
 ### shot-depth-charge-r50-a — "barrelhits.wav" by j1987 + "Oil Drum Soft Impact.wav" by DeVern
 
@@ -3132,6 +3144,8 @@ Brief: a heavy barrel clank as the charge rolls off its rail: steel on steel, we
 This one: a piece of a steel barrel slammed down (a hard metal clank and a smaller rebound 0.1 s later) slowed to 0.85, over an oil drum's soft hit slowed to 0.75 (its hollow boom ringing under the clank): a heavy barrel thrown off, 0.5 s.
 Edit: 0.50 s, the loudest 100 ms band −27.3 dB, peak −11.6 dBFS, −24.6 LUFS.
 
+**Rejected** (round 50, S.4, 2026-10-22: the user picked b); the file is in `rejected/`.
+
 ### shot-depth-charge-r50-b — "hatchclose.wav" by Mihacappy + "Big robot footstep 005" by AudioPapkin
 
 Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
@@ -3140,6 +3154,8 @@ Use: every Depth Charges volley (the rear `anti-sub` weapon, Act 4 from L23's wa
 Brief: a heavy barrel clank as the charge rolls off its rail: steel on steel, weighty and short, slightly muffled; the burst comes later (its own sound); a real recording, heavy, nothing bubbly.
 This one: a heavy metal hatch slamming shut slowed to 0.9, on a big robot's metal footstep (a deep steel stomp): a darker, more 'latch and weight' clunk than a, less ring, 0.55 s.
 Edit: 0.50 s, the loudest 100 ms band −27.0 dB, peak −15.1 dBFS, −26.2 LUFS.
+
+**Chosen** (round 50, S.4: b picked; to be rebuilt from the originals, Freesound 828127 and 815039, when the download limit allows).
 
 ### depth-charge-burst-r50-a — "DepthBomb_03.aif" by ZeSoundResearchInc. + "NổLớnDướiNước1" by SieuAmThanh
 
@@ -3150,6 +3166,8 @@ Brief: a heavy, low under-water thud: a pressure wave rather than a fireball, de
 This one: a depth bomb's sub-bass boom with a real explosion low-passed at 500 Hz (its body only) over it: a deep, round pressure 'whumpf', the softest and lowest, 1.5 s.
 Edit: 1.50 s, the loudest 100 ms band −23.4 dB, peak −5.0 dBFS, −18.1 LUFS.
 
+**Chosen** (round 50, S.5: a picked; to be rebuilt from the originals, Freesound 147874 and 546957, when the download limit allows).
+
 ### depth-charge-burst-r50-b — "G45-14-Torpedo Explosion.wav" by craigsmith + "DepthBomb_02.aif" by ZeSoundResearchInc.
 
 Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
@@ -3158,6 +3176,8 @@ Use: a depth charge bursting on its fuse (0.7-0.9 s after the roll-out, behind t
 Brief: a heavy, low under-water thud: a pressure wave rather than a fireball, deep and muffled with a short low tail; no splash, no bubbles; a real recording, heavy, nothing bubbly.
 This one: a vintage torpedo explosion slowed to 0.75 and muffled at 1.2 kHz, on a depth bomb's sub-bass boom: a deeper, rumbling 'thoom' with a rough edge, more weight than a, 1.5 s.
 Edit: 1.50 s, the loudest 100 ms band −26.0 dB, peak −7.7 dBFS, −18.0 LUFS.
+
+**Rejected** (round 50, S.5, 2026-10-22: the user picked a); the file is in `rejected/`.
 
 ### shot-torpedo-r50-a — "Torpedo launch.wav" by jobro
 
@@ -3168,6 +3188,8 @@ Brief: the chosen launch as it is, with its bubbly character cut (Q12): the sour
 This one: the same launch without the phaser: its author's dry version ('Torpedo launch', from which the chosen one was made by filtering and a phaser) low-passed at 550 Hz like the chosen one: the same muffled rush and thump, smooth, no warble, 1.0 s.
 Edit: 1.00 s, the loudest 100 ms band −22.5 dB, peak −8.5 dBFS, −19.8 LUFS.
 
+**Rejected** (round 50, S.6, 2026-10-22: the user kept the chosen shot-torpedo-r03-a); the file is in `rejected/`.
+
 ### shot-torpedo-r50-b — "Torpedo launch underwater.wav" by jobro
 
 Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
@@ -3176,6 +3198,8 @@ Use: every Torpedo Pod shot (wing mount, Levels 11 on and Act 4; Rook's torpedo 
 Brief: the chosen launch as it is, with its bubbly character cut (Q12): the source's 'water' is a phaser sweep over a low-passed launch, so the cut keeps the muffled launch and drops the phaser's gurgle; a real recording, heavy, nothing bubbly.
 This one: the chosen launch itself with the phaser's fast sweep and gurgle smoothed out of its spectrum (each frequency's level held steady over 90 ms): closest to the chosen file, a little duller, 1.0 s.
 Edit: 1.00 s, the loudest 100 ms band −22.5 dB, peak −8.2 dBFS, −19.0 LUFS.
+
+**Rejected** (round 50, S.6, 2026-10-22: the user kept the chosen shot-torpedo-r03-a); the file is in `rejected/`.
 
 ### special-sonar-r50-b — "Sonar_pings.ogg" by Peter_Gross + "submarine sonar.mp3" by Link-Boy
 
@@ -3186,6 +3210,8 @@ Brief: a soft, heavy, low ping that fills the water, no bubbles, no pops; a = th
 This one: a real 625 Hz active sonar ping (a long-range anti-submarine type) slowed to 0.85 (about 530 Hz, a lower and longer 'pinnng' than a's) over a heavy low sonar hit's thump and rumble: the same role as the chosen a, a deeper and weightier ping, 3.0 s.
 Edit: 3.00 s, the loudest 100 ms band −13.4 dB, peak −4.1 dBFS, −15.3 LUFS.
 
+**Rejected** (round 50, S.7, 2026-10-22: the user picked a, the chosen special-sonar-r04-a); the file is in `rejected/`.
+
 ### special-limit-r50-a — synthesized
 
 Proposed (round 50), synthesized by `tools/concept/audio/sfx_r50a.py` (sfx_r37.py's bell and glass voices).
@@ -3194,6 +3220,8 @@ Brief: a short soft UI chime (synthesized, never bubbly), the cooldown-ready chi
 This one: two soft bells falling, E6 then A5 80 ms later (the ready chime's two bells turned round): 'switched off', light, 0.53 s.
 Edit: 0.55 s, the loudest 100 ms band −22.0 dB, peak −14.0 dBFS, −22.4 LUFS.
 
+**Rejected** (round 50, S.8, 2026-10-22: the user picked b); the file is in `rejected/`.
+
 ### special-limit-r50-b — synthesized
 
 Proposed (round 50), synthesized by `tools/concept/audio/sfx_r50a.py` (sfx_r37.py's bell and glass voices).
@@ -3201,3 +3229,135 @@ Use: the special row changing state at once as the ship crosses a waterline (gre
 Brief: a short soft UI chime (synthesized, never bubbly), the cooldown-ready chime's family but clearly 'changed', not 'ready'.
 This one: one soft glass fifth an octave lower, C5-G5, muted at 2.5 kHz: a darker, rounder 'tonk' than a, 0.6 s.
 Edit: 0.60 s, the loudest 100 ms band −21.9 dB, peak −14.0 dBFS, −25.0 LUFS.
+
+**Chosen** (round 50, S.8: b picked; synthesized, final as it is).
+
+## Concept round 51, step AUD-B (Level 22: the ice geysers, the Drill Rig, the Europa surface beds)
+
+The generator is `tools/concept/audio/sfx_r51b.py` (Freesound HQ previews; the rig's collar and the two beds are seamless loops; nothing synthesized). The station hum is not a sound of its own but the bed `conamara-station` (the ice bed with the hum), section 3's.
+
+### geyser-tell-r51-a — "Ice - Lake fractures" by Vrymaa + "Air (or steam) pressure release" by brunoboselli
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0), <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0).
+Use: every Level 22 ice geyser's 1.2 s tell, as its crack darkens and glows lime-white before the steam column (8 rows of 3 cracks, a row rippling 0.4 s a crack, every 4 s; every 3.2 s in section 3), one per crack, so often.
+Brief: a deep ice crack running and splitting under the ship as the pressure builds, with a hiss rising under it: heavy, 1.2 s, rising into the burst, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: a frozen lake's ice cracking (a field recording on a real lake) slowed to 0.85, quiet at first, the cracks gathering and growing heavier towards the end, over an air-pressure release's hiss rising with it: a deep, running, glassy crack building to the burst, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −20.4 dB, peak −6.3 dBFS, −25.7 LUFS.
+
+### geyser-tell-r51-b — "BreakingIce.wav" by iainmccurdy + "Safety relief valve.wav" by tosha73 + "Ice - Lake fractures" by Vrymaa
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/iainmccurdy/sounds/440858/> (BreakingIce.wav by iainmccurdy, CC-BY 4.0), <https://freesound.org/people/tosha73/sounds/544239/> (Safety relief valve.wav by tosha73, CC-BY 4.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0).
+Use: every Level 22 ice geyser's 1.2 s tell, as its crack darkens and glows lime-white before the steam column (8 rows of 3 cracks, a row rippling 0.4 s a crack, every 4 s; every 3.2 s in section 3), one per crack, so often.
+Brief: a deep ice crack running and splitting under the ship as the pressure builds, with a hiss rising under it: heavy, 1.2 s, rising into the burst, no pop; a real recording, heavy, nothing bubbly or popping.
+This one: ice breaking (a slab cracking piece by piece) slowed to 0.7 and swelling, a steam safety valve's hiss rising under it, and at 0.85 s one deep lake-ice crack slowed to 0.8 as the crack gives: drier and more splintering than a, with a hard last crack, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −20.4 dB, peak −5.8 dBFS, −24.3 LUFS.
+
+### geyser-burst-r51-a — "steam_safety_valve.wav" by Engineer_815 + "Spouting Horn2 Kauai.wav" by tec_studio + "Ice - Lake fractures" by Vrymaa
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/Engineer_815/sounds/493558/> (steam_safety_valve.wav by Engineer_815, CC0 1.0), <https://freesound.org/people/tec_studio/sounds/222641/> (Spouting Horn2 Kauai.wav by tec_studio, CC0 1.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0).
+Use: every Level 22 ice geyser's burst, as its 40 px steam column stands for 0.8 s (one per crack, right after its tell).
+Brief: a roaring column of steam and water slush tearing upward out of the ice: heavy, a soft onset (no hiss-pop at the start), 1.5 s with the roar dying away; a real recording, heavy, nothing bubbly or popping.
+This one: a boiler's steam safety valve blowing (a loud roaring hiss) over a sea blowhole's spout of water (Spouting Horn, Kauai: air and spray roaring up through rock) and under both a lake-ice boom slowed to 0.8, muffled: a big wet steam roar with a deep thump in it, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −19.4 dB, peak −4.1 dBFS, −14.1 LUFS.
+
+### geyser-burst-r51-b — "S34-24 Steam or fire extinguisher blasts.wav" by craigsmith + "Sea blowhole, breathe. Bufador de mar, respira." by SonoRec + "Digging.wav" by prozaciswack
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/676005/> (S34-24 Steam or fire extinguisher blasts.wav by craigsmith, CC0 1.0), <https://freesound.org/people/SonoRec/sounds/824087/> (Sea blowhole, breathe. Bufador de mar, respira. by SonoRec, CC0 1.0), <https://freesound.org/people/prozaciswack/sounds/82722/> (Digging.wav by prozaciswack, CC0 1.0).
+Use: every Level 22 ice geyser's burst, as its 40 px steam column stands for 0.8 s (one per crack, right after its tell).
+Brief: a roaring column of steam and water slush tearing upward out of the ice: heavy, a soft onset (no hiss-pop at the start), 1.5 s with the roar dying away; a real recording, heavy, nothing bubbly or popping.
+This one: a steam (or fire extinguisher) blast, a long steady roar, over a sea blowhole breathing out (a surging rush of air and water) and a deep earth rumble under it: more air and surge than a, less steam hiss, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −19.6 dB, peak −7.1 dBFS, −14.7 LUFS.
+
+### rig-collar-r51-a — "Fracking.ND.DrillRig.Whine.mp3" by fkunze + "Digging.wav" by prozaciswack
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/fkunze/sounds/407454/> (Fracking.ND.DrillRig.Whine.mp3 by fkunze, CC0 1.0), <https://freesound.org/people/prozaciswack/sounds/82722/> (Digging.wav by prozaciswack, CC0 1.0).
+Use: while a Drill Rig's collar bores on the screen (Level 22, four rigs; one quiet loop for all of them, as Level 19's belt loop, stopping with the last rig's core).
+Brief: a low heavy drill whine with a grinding bite: a big machine boring into ice, steady, low in the mix under the fire, no clicks, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a real oil drill rig's whine (a fracking rig in North Dakota: a steady droning whine with a grind in it) over a deep digging rumble of earth: an industrial drill hard at work, 4.0 s loop.
+Edit: 4.00 s, band RMS −34.0 dB, peak −19.7 dBFS, −30.2 LUFS.
+
+### rig-collar-r51-b — "Drilling to the earth's core.wav" by reacthor + "motor industrial turbine large fan blades spin sorta.flac" by kyles
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/reacthor/sounds/130438/> (Drilling to the earth's core.wav by reacthor, CC0 1.0), <https://freesound.org/people/kyles/sounds/453476/> (motor industrial turbine large fan blades spin sorta.flac by kyles, CC0 1.0).
+Use: while a Drill Rig's collar bores on the screen (Level 22, four rigs; one quiet loop for all of them, as Level 19's belt loop, stopping with the last rig's core).
+Brief: a low heavy drill whine with a grinding bite: a big machine boring into ice, steady, low in the mix under the fire, no clicks, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a deep boring drone (a sound designer's drill sinking towards the earth's core: low, heavy, grinding) with a big industrial turbine's fan blades turning in it: lower and darker than a, more machine-hall than oil field, 4.0 s loop.
+Edit: 4.00 s, band RMS −35.0 dB, peak −14.7 dBFS, −27.1 LUFS.
+
+### rig-ring-r51-a — "Wham n Shatter" by eben-frostey + "20061111AirHoseDisconnect1.wav" by daveincamas
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/eben-frostey/sounds/608685/> (Wham n Shatter by eben-frostey, CC0 1.0), <https://freesound.org/people/daveincamas/sounds/25578/> (20061111AirHoseDisconnect1.wav by daveincamas, CC-BY 4.0).
+Use: each ring of 10 ice shards a Drill Rig's collar fires (every 3.5 s while its pumps live, slower as they die; Level 22, up to two rigs at once).
+Brief: the collar spitting a ring of ice shards: a hard icy crack-and-shatter with a burst of pressure behind it, short and dry, not a gunshot, never bubbly; a real recording, heavy, nothing bubbly or popping.
+This one: a hammer smashing a block of ice (the whack and the shards flying) on a compressed-air hose's burst: sharp, bright and icy, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −22.2 dB, peak −12.0 dBFS, −22.0 LUFS.
+
+### rig-ring-r51-b — "Chipping large Ice Block 1.wav" by kev_durr + "steam_burst.wav" by pengo_au
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/kev_durr/sounds/426205/> (Chipping large Ice Block 1.wav by kev_durr, CC-BY 4.0), <https://freesound.org/people/pengo_au/sounds/90143/> (steam_burst.wav by pengo_au, CC0 1.0).
+Use: each ring of 10 ice shards a Drill Rig's collar fires (every 3.5 s while its pumps live, slower as they die; Level 22, up to two rigs at once).
+Brief: the collar spitting a ring of ice shards: a hard icy crack-and-shatter with a burst of pressure behind it, short and dry, not a gunshot, never bubbly; a real recording, heavy, nothing bubbly or popping.
+This one: a large block of ice chipped (one hard crack and the chips scattering) slowed to 0.8, on a steam piston's blast muffled at 3 kHz: heavier and lower than a, more crack than shatter, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −22.3 dB, peak −7.3 dBFS, −20.4 LUFS.
+
+### rig-death-r51-a — "R29-28-Large Metal Vehicle Crashes.wav" by craigsmith + "Ice - Lake fractures" by Vrymaa + "Metal Groan_Steam release.wav" by Cell31_Sound_Productions
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/487143/> (R29-28-Large Metal Vehicle Crashes.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0), <https://freesound.org/people/Cell31_Sound_Productions/sounds/390188/> (Metal Groan_Steam release.wav by Cell31_Sound_Productions, CC-BY 4.0).
+Use: a Drill Rig's core destroyed (Level 22, four rigs; with the `large` ground explosion): the collar stops, the ice cracks and a steam plume rises.
+Brief: a big structure failing: metal crashing and tearing, ice cracking under it and a steam plume rising, heavy, about 3 s, a few dB under the large explosion it plays with; a real recording, heavy, nothing bubbly or popping.
+This one: a large metal vehicle crashing (a long tearing crash with debris, a vintage film recording) on a lake-ice boom slowed to 0.75 and muffled, then from 0.7 s a metal structure's groan ending in a steam release: the collar tearing apart and the plume escaping, 3.1 s.
+Edit: 3.10 s, the loudest 100 ms band −17.1 dB, peak −5.8 dBFS, −15.1 LUFS.
+
+### rig-death-r51-b — "Big Structure Collision Heard from Inside" by Osvoldon + "BreakingIce.wav" by iainmccurdy + "Air (or steam) pressure release" by brunoboselli
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/Osvoldon/sounds/653294/> (Big Structure Collision Heard from Inside by Osvoldon, CC0 1.0), <https://freesound.org/people/iainmccurdy/sounds/440858/> (BreakingIce.wav by iainmccurdy, CC-BY 4.0), <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0).
+Use: a Drill Rig's core destroyed (Level 22, four rigs; with the `large` ground explosion): the collar stops, the ice cracks and a steam plume rises.
+Brief: a big structure failing: metal crashing and tearing, ice cracking under it and a steam plume rising, heavy, about 3 s, a few dB under the large explosion it plays with; a real recording, heavy, nothing bubbly or popping.
+This one: a big structure's collision heard from inside (a vast deep boom and rumble), ice breaking up around it slowed to 0.8, and from 0.5 s a pressure release's hiss as the plume rises: deeper and less metallic than a, the ice in front, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −20.7 dB, peak −2.1 dBFS, −15.3 LUFS.
+
+### europa-ice-r51-a — "Glacial Wind.wav" by Uzbazur + "Ice - Lake fractures" by Vrymaa
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/Uzbazur/sounds/432086/> (Glacial Wind.wav by Uzbazur, CC-BY 4.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0).
+Use: Level 22 throughout (crossfading to `conamara-station` in section 3), Level 23's shaft mouth and Level 28 after the breakout: the ambience bed of Europa's surface.
+Brief: a cold wind over open ice with deep ice groans and booms rolling under it far off; quiet, under the music, no hiss-pops, no bubbles, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a glacial wind (a steady, cold, hollow blow) over a frozen lake's fractures played an octave down and muffled, so the cracks become deep booms and groans rolling under it now and then: 16.0 s loop.
+Edit: 16.00 s, band RMS −37.5 dB, peak −13.2 dBFS, −28.1 LUFS.
+
+### europa-ice-r51-b — "Wind__Artic__Cold.wav" by cobratronik + "Ice 3.wav" by Benboncan
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/cobratronik/sounds/117136/> (Wind__Artic__Cold.wav by cobratronik, CC0 1.0), <https://freesound.org/people/Benboncan/sounds/112628/> (Ice 3.wav by Benboncan, CC-BY 4.0).
+Use: Level 22 throughout (crossfading to `conamara-station` in section 3), Level 23's shaft mouth and Level 28 after the breakout: the ambience bed of Europa's surface.
+Brief: a cold wind over open ice with deep ice groans and booms rolling under it far off; quiet, under the music, no hiss-pops, no bubbles, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a cold arctic wind (a low moan with gusts; the same recording's moan is under `mars-dust`) over ice creaking and groaning (a hydrophone recording in lake ice) slowed to 0.6 and muffled: more creak and groan than boom, closer than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −36.1 dB, peak −15.6 dBFS, −28.7 LUFS.
+
+### conamara-station-r51-a — "Glacial Wind.wav" by Uzbazur + "Ice - Lake fractures" by Vrymaa + "Arena Underground Ventilation Hum and Rumble" by jamesdrake89 + "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/Uzbazur/sounds/432086/> (Glacial Wind.wav by Uzbazur, CC-BY 4.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0), <https://freesound.org/people/jamesdrake89/sounds/671456/> (Arena Underground Ventilation Hum and Rumble by jamesdrake89, CC0 1.0), <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: Level 22's section 3 (t=104 on), the run-in to Conamara Station: the ice bed with the station's hum, crossfading in from `europa-ice` (one bed, no positional hum).
+Brief: the ice bed with a big building's ventilation hum and a low transformer drone under the wind: inhabited, mechanical, steady; quiet, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: europa-ice a (the glacial wind and the deep booms, 2 dB quieter) with an underground arena's ventilation hum and rumble and an electric transformer's hum in a large room under it: the wind over a building that breathes, 16.0 s loop.
+Edit: 16.00 s, band RMS −36.1 dB, peak −16.5 dBFS, −28.4 LUFS.
+
+### conamara-station-r51-b — "Wind__Artic__Cold.wav" by cobratronik + "Ice 3.wav" by Benboncan + "motor industrial turbine large fan blades spin sorta.flac" by kyles + "Large machine running and powering down" by ryks88
+
+Proposed (round 51), cut from the HQ previews by `tools/concept/audio/sfx_r51b.py`.
+Sources: <https://freesound.org/people/cobratronik/sounds/117136/> (Wind__Artic__Cold.wav by cobratronik, CC0 1.0), <https://freesound.org/people/Benboncan/sounds/112628/> (Ice 3.wav by Benboncan, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/453476/> (motor industrial turbine large fan blades spin sorta.flac by kyles, CC0 1.0), <https://freesound.org/people/ryks88/sounds/709258/> (Large machine running and powering down by ryks88, CC-BY 4.0).
+Use: Level 22's section 3 (t=104 on), the run-in to Conamara Station: the ice bed with the station's hum, crossfading in from `europa-ice` (one bed, no positional hum).
+Brief: the ice bed with a big building's ventilation hum and a low transformer drone under the wind: inhabited, mechanical, steady; quiet, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: europa-ice b (the arctic wind and the ice groans, 2 dB quieter) with a large industrial turbine fan turning and a big machine running under it, muffled: busier and more industrial than a, 16.0 s loop.
+Edit: 16.00 s, band RMS −36.1 dB, peak −18.0 dBFS, −29.7 LUFS.

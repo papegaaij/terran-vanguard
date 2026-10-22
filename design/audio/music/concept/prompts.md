@@ -1171,3 +1171,93 @@ the voice heard on Mars was the fleet. **Measured**: 9.0 s, −14.5 LUFS, peak �
 **AI prompt**: *"A nine-second sci-fi reveal sting: a thin whistled four-note melody heard through radio static over
 a rising sub-bass and low brass cluster, then a deep impact and the melody's last two notes blasting out in full low
 brass and organ over a dark B minor drone, unresolved, the moment the enemy fleet is revealed to be human."*
+
+# Round 51 — the Act 4 themes at full length (tracks 10 and 11)
+
+Brief (M8 part B, step AUD-B; pending the user's review in round 51): the two Act 4 themes at about 3:00 with their
+stems, as the music README's [*Act 4 music*](../README.md#act-4-music-draft-round-48) asks: −14 LUFS, true peak
+≤ −1 dBTP, intro + seamless loop with `LOOPSTART` / `LOOPLENGTH`, every stem from the same render (linked mastering:
+the full mix's gain for all of a track's files) so they play sample-aligned; **no bubbles, no bloopy plucks, nothing
+that pops** (round 48, Q12 a). Generator `tools/concept/audio/music_r51b.py` (deterministic, ~6 min a track); it
+follows `music_r38.py` (track 8 from a round-02 sketch) and `music_r41.py` (track 9's three stems).
+
+## thera-deep-r51-a — track 10 "Thera Deep" and its three stems
+
+From the chosen round-02 sketch [europa-theme-r02-a](europa-theme-r02-a.ogg) (125 BPM, F minor). Composition: the
+sketch's 4-bar intro (pad, sonar, a far whale, the bass stirring) and an 88-bar loop of eleven 8-bar sections on its
+two progressions, A = `Fm9 Fm9 D♭ D♭ B♭m9 B♭m9 Csus C` and B = `D♭ E♭ Fm9 Fm9 D♭ E♭ Csus C`: A (four-on-the-floor
+kick, off-beat hats, the rolling 16th bass, the arpeggio), B (+ claps, the melody on lead and low flute, the water
+opening 1.8 → 4.8 kHz), A2 (the groove at 2.4 kHz, the flute's echo phrase twice), C (the sketch's deep breakdown:
+no kit, held sub, two whale calls, the flute echo; the kit back under a 4-bar riser), D (surfacing: the melody
+again), E (new, "drift": `B♭m9 B♭m9 Fm9 Fm9 D♭ D♭ Csus C`, the kick alone, a quiet held sub, a new low flute melody,
+one whale call, the water at 1.3 kHz), F (the build: kick, then hats and bass, then claps, the water opening), B2
+(the climax), A3 (the echo phrase an octave up), C2 (deep again, six bars without the kit, two whale calls) and T (the
+turn: the hats out, the water closing into A). Changes to the sketch's sound: the `bubble` hits are left out, the
+sonar ping has round 48's softer 6 ms attack, and the arpeggio's pluck has its filter resonance lowered (q 1.4, the
+sketch's 3.0) with an 80 ms filter envelope (50 ms) so it cannot read as a bloop.
+
+Stems: **base** kick, bass, pad, the sonar pings and the whale calls (Level 22 from section 2, Levels 23–24);
+**full** everything (Level 22 from section 3); **dark** (Level 26's darkness, the third lockstep stream played `alone`
+from t=8–18): the sonar pings, the same pad through the same water but without the kick's ducking (alone it must not
+pump), and an F1 + C2 pedal drone (a dark pad at 300 Hz, only in this stem).
+
+**Measured** (not listened to): 180.72 s, `LOOPSTART` 349272 (7.920 s, step 2 of the loop's first bar, an off-beat),
+`LOOPLENGTH` 7451136 (168.960 s = 88 bars); full −14.0 LUFS, −1.7 dBTP, seam 0.29; base −14.9 LUFS (−0.9 LU: the
+kick, bass and pad carry most of the loudness), −2.6 dBTP, seam 0.47; dark −18.1 LUFS (−4.2 LU), −6.3 dBTP, seam
+0.30. Each stem's source is periodic to the bit across the loop (checked before encoding). Loudness per section in
+the sheet.
+
+**AI prompt**: *"Muffled ambient trance level theme for a 1990s sci-fi shooter under the ice of Europa, 125 BPM,
+F minor, four-on-the-floor kick and off-beat hats under a slowly moving low-pass like deep water, rolling sixteenth
+bass, warm wide pads, an echoing soft arpeggio, a slow lead and flute melody, sonar pings with long echoes, distant
+whale calls in the breakdowns, no bubbles, about three minutes, instrumental, seamless loop."*
+
+- `thera-deep-r51-a.ogg`, `thera-deep-base-r51-a.ogg`, `thera-deep-dark-r51-a.ogg`: the full mix and its two stems.
+- `thera-deep-seam-r51-a.ogg`, `thera-deep-base-seam-r51-a.ogg`, `thera-deep-dark-seam-r51-a.ogg`: listening aids,
+  the last 8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades).
+- `thera-deep-dark-join-r51-a.ogg`: listening aid, loop bars 1–16, the full mix crossfading over 2 s into the dark
+  stem alone at bar 9 (30.7 s).
+- `thera-deep-sheet-r51-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
+  points (amber), the measured numbers and a per-section loudness table.
+
+## pressure-line-r51-a — track 11 "Pressure Line" and its three stems
+
+From the round-48 sketch [act4-b-theme-r48-a](act4-b-theme-r48-a.ogg) (picked in round 48; 175 BPM, F minor), the
+sketch's voices, chains and seeds unchanged (no bubble layer, the soft lamp arpeggio). Composition: its 4-bar intro
+and a 128-bar loop of sixteen 8-bar sections on A = `Fm9 Fm9 D♭maj7 D♭maj7 B♭m9 B♭m9 Csus C` and B = `Fm9 Fm9
+D♭maj7 A♭ B♭m9 B♭m9 Csus C`: A (the two-step break, reese and sub, the arpeggio), B (+ open hats, the slow flute
+line), A2 (the flute an octave down), C (the breakdown: drums out until bar 7, two whale calls, the deep current
+swelling), D (full, the flute an octave up), E (new, "pressure": half time, kick on 1 and snare on 3, the reese
+held, the arpeggio in quarters, a new low flute melody), B2, D2 (the flute at pitch and an octave up), F (a drumless
+deep section, the new melody high and far, two whale calls, a ghost-snare fill out), G (the build: kick, snares,
+ghosts and hats, open hats, a riser), D3 (the climax, the water at its most open, 3.2 kHz, never fully), A3, E2
+(pressure again, the new melody an octave down), B3, D4 and T (the turn: the hats out, a ghost-snare roll, the
+water closing into A).
+
+Stems: **base** the kick and backbeat snares, sub, pad, whale calls, sonar pings and the deep current; **full** the
+base plus the ghost snares, hats, crashes, reese, arpeggio, flute and risers; **motif** Vorne's motif alone (F4 A♭4 C5
+E5 on track 9's whistle through the 700 Hz – 2.6 kHz radio band-pass, a 1.8 kHz low-pass and a 4.5 s reverb over a
+2-bar static swell: the same intercepted signal, now under water), on each section's first bar (≈ 11 s apart) and
+on bar 5 of the breakdowns C and F and the climax D3, none in the intro; not part of the full mix (the game adds it
+as the third stream in Levels 27–28, muted in Level 25). Its level is set by measurement: 19 dB under the full mix in
+the same 2-bar windows, 16 dB in the breakdowns.
+
+**Measured** (not listened to): 183.94 s, `LOOPSTART` 249480 (5.657 s, step 2 of the loop's first bar),
+`LOOPLENGTH` 7741440 (175.543 s = 128 bars); full −14.0 LUFS, −1.8 dBTP, seam 1.21 (the loop point falls on a
+16th hat's onset, so the step there is the music's own; the source is periodic); base −15.6 LUFS (−1.6 LU), −2.0
+dBTP, seam 1.00; motif −33.8 LUFS, −23.9 dBTP, seam 0.35, its statements 18.0–19.9 dB under the full mix (15.5–16.1
+in the breakdowns); full + motif summed −14.0 LUFS, −1.6 dBTP. Loudness per section in the sheet.
+
+**AI prompt**: *"Liquid ambient drum and bass level theme for a 1990s sci-fi shooter deep under Europa's ice, 175 BPM,
+F minor, a rolling two-step break under a water-like low-pass that breathes but never opens fully, deep reese and
+sub bass, warm wide pads, a soft lamp-like arpeggio through a delay, sonar pings, a slow breathy flute, distant whale
+calls and a deep current in the breakdowns, a faint whistled four-note motif like an intercepted transmission heard
+through water, no bubbles, about three minutes, instrumental, seamless loop."*
+
+- `pressure-line-r51-a.ogg`, `pressure-line-base-r51-a.ogg`, `pressure-line-motif-r51-a.ogg`: the full mix and its
+  two stems.
+- `pressure-line-seam-r51-a.ogg`, `pressure-line-base-seam-r51-a.ogg`, `pressure-line-motif-seam-r51-a.ogg`:
+  listening aids, the last 8 s of each loop followed by the first 8 s after `LOOPSTART` (0.5 s fades).
+- `pressure-line-motif-mix-r51-a.ogg`: listening aid, the full mix with the motif stem on top, loop bars 25–48 (C, D,
+  E; 32.9 s).
+- `pressure-line-sheet-r51-a.png`: review sheet, as track 10's (the third column the motif against the full mix).

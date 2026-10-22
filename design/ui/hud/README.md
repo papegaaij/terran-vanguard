@@ -205,7 +205,7 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
 | File | What | Status |
 |---|---|---|
 | [concept/boss-bar-plate-final-r26-a.png](concept/boss-bar-plate-final-r26-a.png) | `hud/boss-bar-plate.9.png`: a 64×20 nine-patch steel strip with riveted end caps and a recessed trough (splits L14 R14 T7 B7, content box L11 R11 T7 B7 = the 6 px fill), at 8× with its splits, and round the 400 px and 240 px bars as drawn | chosen |
-| [concept/special-limits-capture-r50-a.png](concept/special-limits-capture-r50-a.png) | Game captures of the special row's limits (M8 part A, 2× crops of the right panel): `NO WATER` on the Sonar Pulse (and the Harpoons and Depth Charges) on Level 18 before the water, `UNDER ICE` on the Airstrike on Level 20 under water | proposed (round 50) |
+| [concept/special-limits-capture-r50-a.png](concept/special-limits-capture-r50-a.png) | Game captures of the special row's limits (M8 part A, 2× crops of the right panel): `NO WATER` on the Sonar Pulse (and the Harpoons and Depth Charges) on Level 18 before the water, `UNDER ICE` on the Airstrike on Level 20 under water | chosen (round 50, K.1: accepted) |
 
 ## Implementation
 
@@ -620,4 +620,5 @@ Production art for concept round 26 (M4 part H batch): the boss bar's plate, ren
   a Wraith's re-entry (nor one after its kill), a chain's or a swarm's loop-back, the Revenant
   Walker's or the Dust Colossus's entries or the Siege Spire's launches (`Sortie.edgeWarnings`).
   Rook's rear bark went with the re-entry warnings; Rook's Trail on those units stays.
-- 2026-10-22 (M8 part A, step A6; pending the user's review in round 50): a forbidden special greys and switches to the compact row with its reason word (`UNDER ICE` / `NO WATER`) in amber, `ORBITAL LANCE` cut to `ORBITAL` to fit; the row flashes once on the state change at a waterline and plays the limit chime (a press on a greyed special keeps the denied buzz r08-a); the Harpoon Torpedoes read `HARPOONS` so `NO WATER` fits beside the name; the escort box reads `BULWARK` (`LOST` when destroyed); the nanites' `+` pip.
+- 2026-10-22 (M8 part A, step A6; accepted in round 50 (2026-10-22)): a forbidden special greys and switches to the compact row with its reason word (`UNDER ICE` / `NO WATER`) in amber, `ORBITAL LANCE` cut to `ORBITAL` to fit; the row flashes once on the state change at a waterline and plays the limit chime (a press on a greyed special keeps the denied buzz r08-a); the Harpoon Torpedoes read `HARPOONS` so `NO WATER` fits beside the name; the escort box reads `BULWARK` (`LOST` when destroyed); the nanites' `+` pip.
+- 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): K.1: the special row's limits (`UNDER ICE` / `NO WATER`, the compact greyed row, `ORBITAL LANCE` cut to `ORBITAL`) accepted, the capture `chosen`; the limit chime is S.8 **b** (the soft glass fifth).

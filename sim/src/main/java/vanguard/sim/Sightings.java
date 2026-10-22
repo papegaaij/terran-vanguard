@@ -2,8 +2,8 @@ package vanguard.sim;
 
 /**
  * The radio's first-sighting cues of a {@link Sortie}: once per attempt, the first pounce (M5 part C),
- * decloak and loop-back (M5 part D), Burrower surfacing (M7 part B) and Herald ring (M7 part D) seen in a step's events start
- * their cues. The boss checkpoint keeps a copy ({@link #copyFrom}).
+ * decloak and loop-back (M5 part D), Burrower surfacing (M7 part B), Herald ring (M7 part D) and geyser tell (M8 part
+ * B) seen in a step's events start their cues. The boss checkpoint keeps a copy ({@link #copyFrom}).
  */
 final class Sightings {
     private final SimEvents events;
@@ -18,11 +18,19 @@ final class Sightings {
     private boolean surfacingSeen;
     /** M7 part D, round 40 K.a: whether a Herald sang a ring in this attempt (the radio's {@code first-ring}). */
     private boolean ringSeen;
+    /**
+     * M8 part B: whether the level has a {@code first-geyser} cue: only then is a vent tell watched (Level 19's
+     * furnace vents tell too and hash as before).
+     */
+    private final boolean geysers;
+    /** M8 part B: whether a geyser (a vent) told in this attempt (the radio's {@code first-geyser}). */
+    private boolean geyserSeen;
 
     /** With {@code events} and {@code radio} null: a copy for the boss checkpoint, never stepped. */
     Sightings(SimEvents events, Radio radio) {
         this.events = events;
         this.radio = radio;
+        geysers = radio != null && radio.listens(CueTrigger.FIRST_GEYSER);
     }
 
     /** The step's first sightings: their cues. */
@@ -47,6 +55,10 @@ final class Sightings {
             ringSeen = true;
             radio.cue(CueTrigger.FIRST_RING, "");
         }
+        if (geysers && !geyserSeen && events.count(SimEvents.Type.VENT_TELL) > 0) {
+            geyserSeen = true;
+            radio.cue(CueTrigger.FIRST_GEYSER, "");
+        }
     }
 
     /** A new attempt: nothing seen. */
@@ -56,6 +68,7 @@ final class Sightings {
         loopBackSeen = false;
         surfacingSeen = false;
         ringSeen = false;
+        geyserSeen = false;
     }
 
     /** Takes over what {@code other} has seen. */
@@ -65,6 +78,7 @@ final class Sightings {
         loopBackSeen = other.loopBackSeen;
         surfacingSeen = other.surfacingSeen;
         ringSeen = other.ringSeen;
+        geyserSeen = other.geyserSeen;
     }
 
     /** Each sighting only once seen, so the levels without it hash as before. */
@@ -82,6 +96,11 @@ final class Sightings {
         }
         if (ringSeen) {
             // M7 part D: only once a Herald sang a ring, so the other levels hash as before.
+            hash.add(1);
+        }
+        if (geyserSeen) {
+            // M8 part B: only once a geyser told in a level with a first-geyser cue, so the other levels hash as
+            // before.
             hash.add(1);
         }
     }

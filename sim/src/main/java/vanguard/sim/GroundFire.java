@@ -95,11 +95,13 @@ final class GroundFire {
 
     /**
      * M7 part D: a blast of {@code radius} around (x, y) that reaches enemy {@code j} hurts its standing unit
-     * part too when it covers it (the gap check's default: both), before the body.
+     * part too when it covers it (the gap check's default: both), before the body; M8 part B: each part it covers.
      */
     private void blastPart(int j, Enemy enemy, double x, double y, double radius, double damage, int mount) {
-        if (enemy.partInBlast(x, y, radius) && enemy.damagePart(damage, true)) {
-            hits.unitPartDestroyed(j, mount);
+        for (int p = 0; p < enemy.partCount(); p++) {
+            if (enemy.partInBlast(p, x, y, radius) && enemy.damagePart(p, damage, true)) {
+                hits.unitPartDestroyed(j, p, mount);
+            }
         }
     }
 

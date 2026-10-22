@@ -111,8 +111,8 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 
 | Part | Scope | Depends on | Round |
 |---|---|---|---|
-| **A** Act 4 systems — **built** (steps A1–A7, ART-A, AUD-A; concept round 50 open: the finals, the sounds, seven calls and the Level 23 question) | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Auto-repair nanites, Mk IV (20 MW, round 48 J1), the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on built levels with the `--medium underwater` debug option and on simulation fixtures | — | 50 |
-| **B** Level 22 + Act 4 intro | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 51 |
+| **A** Act 4 systems — **done**; round 50 closed 2026-10-22: the finals accepted, the sounds picked (the recorded picks from the Freesound previews until their originals), the seven calls accepted, the Level 23 dry shaft kept as approved (Q.1 a) | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Auto-repair nanites, Mk IV (20 MW, round 48 J1), the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on built levels with the `--medium underwater` debug option and on simulation fixtures | — | 50 |
+| **B** Level 22 + Act 4 intro — **built** (2026-10-22, steps B1–B5, ART-B, AUD-B, VOX-B); [round 51](../../concept-rounds/round-51/README.md) open: the art finals, Dr. Brandt's casting, the sounds, tracks 10 and 11 and the part's calls | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 51 |
 | **C** Level 23 | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 52 |
 | **D** Level 24 | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
 | **E** Level 25 | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
@@ -589,3 +589,10 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
   `tools/check_docs.py` clean); the parts' checklists ticked with their tests, the steps' small rules logged in the
   parts' *Decisions* as pending the user's review in round 50; concept [round 50](../../concept-rounds/round-50/README.md)
   opened (the finals with game captures, eight sound pairs, seven calls the build made, part C's dry-shaft question).
+- 2026-10-22 (user, round 50, closed): part A **done**. All art accepted (F.1–F.7, K.1); the sounds picked (harpoon launch b, run a, hit a; depth-charge roll-out b, burst a; the Torpedo Pod keeps r03-a; the Sonar Pulse keeps r04-a; limit chime b), in the game from step R50C; the seven calls B.1–B.7 and the steps' logged small rules accepted; Q.1 a: Level 23's dry shaft stays as approved, part C measures it with `levelReport` and the autopilot.
+- 2026-10-22 (M8 part B, step B5): part B **built** (steps B1–B4, B3b, ART-B, AUD-B, VOX-B; the full `check`,
+  `tools/balance.py` and `tools/check_docs.py` clean); Dr. Brandt's secondary line made true on every difficulty and the
+  ice-crawler's drop moved onto the road; the parts' checklists ticked with their tests, the steps' small rules logged in
+  the parts' *Decisions* as pending the user's review in round 51; concept [round 51](../../concept-rounds/round-51/README.md)
+  opened (the finals with game captures and the deep-layer question, Dr. Brandt's casting, seven sound pairs, tracks 10
+  and 11, seven calls the build made).

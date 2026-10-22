@@ -1,5 +1,6 @@
 package vanguard.sim;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -64,8 +65,9 @@ import java.util.Optional;
  *     (design/enemies/ground/threadcrawler); a chain's head only
  * @param aura M7 part D: the shield rings it sings onto the other units near it (design/enemies/air/
  *     choir-herald); a unit with one is also a carrier its escorts circle
- * @param part M7 part D: its destroyable part, on a unit that is not a boss (design/enemies/ground/shellback,
- *     the mortar vent); {@link #hp()} and {@link #bounty()} are then the body's
+ * @param parts M7 part D: its destroyable parts, on a unit that is not a boss (design/enemies/ground/shellback,
+ *     the mortar vent; M8 part B: design/enemies/ground/drill-rig, its four pumps); {@link #hp()} and {@link
+ *     #bounty()} are then the body's; at most {@link #MOST_PARTS}, empty for none
  * @param roll M7 part D: a walker's curl-roll (design/enemies/ground/shellback)
  * @param vortex M7 part E: its vortex cycle (design/enemies/ground/dust-devil): closed on {@code ground}, it
  *     rises and opens on {@link Layer#LOW_AIR}; it wanders round its centre line and its vanes are armoured
@@ -124,7 +126,7 @@ public record EnemySpec(
         Optional<Link> link,
         Optional<Crawl> crawl,
         Optional<Aura> aura,
-        Optional<UnitPart> part,
+        List<UnitPart> parts,
         Optional<Roll> roll,
         Optional<Vortex> vortex,
         Optional<Pull> pull,
@@ -133,6 +135,9 @@ public record EnemySpec(
         Optional<RearPlate> rearPlate,
         boolean seekersIgnore)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
+    /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
+    public static final int MOST_PARTS = 4;
+
     public EnemySpec {
         if (turret.isPresent() && (walker.isEmpty() || gun.isEmpty() || chain.isPresent())) {
             throw new IllegalArgumentException(slug + ": a turret is a walker's with a gun (the Warden Tank)");
@@ -166,7 +171,11 @@ public record EnemySpec(
         if (aura.isPresent() && (chain.isPresent() || brood.isPresent())) {
             throw new IllegalArgumentException(slug + ": an aura is a plain unit's (not a chain's or a spawner's)");
         }
-        if (part.isPresent() && chain.isPresent()) {
+        parts = List.copyOf(parts);
+        if (parts.size() > MOST_PARTS) {
+            throw new IllegalArgumentException(slug + ": a unit has at most " + MOST_PARTS + " parts: " + parts.size());
+        }
+        if (!parts.isEmpty() && chain.isPresent()) {
             throw new IllegalArgumentException(slug + ": a chain's parts are its members, not a unit part");
         }
         if (roll.isPresent() && walker.isEmpty()) {
@@ -294,7 +303,7 @@ public record EnemySpec(
                 link,
                 crawl,
                 aura,
-                part,
+                part.stream().toList(),
                 roll,
                 vortex,
                 pull,
@@ -809,9 +818,22 @@ public record EnemySpec(
      * (design/enemies/ground/shellback, the mortar vent); empty for none.
      */
     public EnemySpec withPart(Optional<UnitPart> withUnitPart) {
+        return withParts(withUnitPart.stream().toList());
+    }
+
+    /**
+     * M8 part B: this unit with its destroyable {@code parts} (design/enemies/ground/drill-rig, the four pumps round
+     * its vital core), tested in their order; empty for none.
+     */
+    public EnemySpec withParts(List<UnitPart> withUnitParts) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
-        copy.part = withUnitPart;
+        copy.parts = withUnitParts;
         return copy.build();
+    }
+
+    /** M7 part D: its first destroyable part (the Shellback's vent); empty for a unit without one. */
+    public Optional<UnitPart> part() {
+        return parts.isEmpty() ? Optional.empty() : Optional.of(parts.getFirst());
     }
 
     /** M7 part E: this ground unit with its vortex cycle (design/enemies/ground/dust-devil); empty for none. */

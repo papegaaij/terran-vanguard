@@ -64,6 +64,27 @@ final class SiegeChecks {
                                 + enemy.size().height() + " sprite");
             }
         });
+        // M8 part B (design/enemies/ground/drill-rig): a part that slows its attack is a unit's (not a boss's), and
+        // a hook's aimed shards go with a ring.
+        List<EnemyData.PartData> parts = enemy.partList().orElse(List.of());
+        for (int i = 0; i < parts.size(); i++) {
+            if (parts.get(i).slows().isPresent() && enemy.boss().isPresent()) {
+                problem.accept("part_list[" + i + "].slows", "only a unit's part slows its attack, not a boss's");
+            }
+        }
+        for (var hook : List.of(
+                enemy.difficulty().flatMap(EnemyData.Hooks::easy),
+                enemy.difficulty().flatMap(EnemyData.Hooks::hard))) {
+            hook.flatMap(EnemyData.Hook::attacks)
+                    .ifPresent(changes -> changes.forEach((name, change) -> {
+                        boolean ring = enemy.attack(name)
+                                .filter(attack -> attack.pattern().equals("ring"))
+                                .isPresent();
+                        if (change.aimed().isPresent() && !ring) {
+                            problem.accept("difficulty.attacks." + name + ".aimed", "aimed shards go with a ring");
+                        }
+                    }));
+        }
     }
 
     /** A level's M7 part D keys. */

@@ -313,3 +313,4 @@ backdrop (the shaft, the farms), the shaft's wall art and the briefing images co
   waterline is a medium switch inside the level (the shaft is a `Terrain`); the pumps (not an ally) are the secondary; Thera Deep Control is the
   new voice; numbers from the proposed reference DPS 100.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
+- 2026-10-22 (user, [round 50](../../../concept-rounds/round-50/README.md) closed): Q.1 **a**: the dry shaft stays as approved: `NO WATER` on the Harpoon Torpedoes, the Depth Charges and the Sonar Pulse until the waterline (t = 25.5 s), the dry popcorn left to the wing weapons and Rook, the crossing flashing the rows back on. Part C measures it with `levelReport` and the autopilot; the waterline moves (b) only if those measures fail.

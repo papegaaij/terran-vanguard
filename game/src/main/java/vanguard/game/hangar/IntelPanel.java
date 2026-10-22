@@ -67,6 +67,8 @@ final class IntelPanel {
     private static final int SILHOUETTE = 40;
     /** M7 part H (H.7e): the boss's silhouette on the wave strip at its arrival, px square. */
     static final int STRIP_SILHOUETTE = 14;
+    /** M8 part B: the crossbar of a target site's "T" on the wave strip, px. */
+    static final int TARGET_BAR = 6;
     /** Step GI1: the ridge pass's band on the wave strip, a muted sand (the Red Dust's ground, dimmed to the glass). */
     static final Color RIDGE_SAND = new Color(132 / 255f, 106 / 255f, 70 / 255f, 1);
 
@@ -596,7 +598,7 @@ final class IntelPanel {
                 // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
                 // under the waves, from its surfacing to its head off the far edge.
                 case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN -> {
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET -> {
                     // drawn over the waves, below
                 }
             }
@@ -629,6 +631,12 @@ final class IntelPanel {
                 // M7 part G: the reverse scroll's turn (Level 20) as a white tick the strip's full depth and a pixel
                 // above and below it.
                 canvas.fill(Glass.WHITE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 12);
+            } else if (mark.kind() == Intel.Mark.Kind.TARGET) {
+                // M8 part B: a site of the secondary's targets (Level 22's four rigs) as a red "T" over the strip's
+                // lower half: its tick and a crossbar on it (the boss's tick is plain and full depth).
+                float at = (float) (VALUE_X + width * mark.from() / intel.seconds());
+                canvas.fill(Glass.ALERT, at, y + 3, 2, 6);
+                canvas.fill(Glass.ALERT, at - TARGET_BAR / 2f + 1, y + 2, TARGET_BAR, 2);
             }
         }
         return y + step;

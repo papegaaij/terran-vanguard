@@ -151,7 +151,7 @@ its wake). Rendered from the chosen hull (`render/models.ship_a_model`, the pale
 
 ## hydro-kit-final-r50-a
 
-Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/act4_gear.py
+Production art (M8 part A batch, step ART-A, for concept round 50; accepted as final in round 50 (2026-10-22)), not a mockup: `python3 tools/art/act4_gear.py
 hydro` writes `ship-hydro_0..4` and `rook-hydro_0..4` into `assets/sprites/` and this review sheet and GIF. The look is
 the one round 48 chose (E10 = a, "sealed refit", [hydro-kit-r48-a](hydro-kit-r48-a.png), the kit parts of
 `tools/concept/europa_r48.py kit_model("a")`): pump-jet shrouds, orange ballast saddles on the wing roots, dark seal
@@ -168,4 +168,4 @@ Vrell and Siren teal 00ff9a).
 
 ## underwater-capture-r50-a
 
-Concept round 50 (M8 part A, step A7), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). `--level 20 --medium underwater@10 --loadout front=ion-beam:3,rear=rear-lance:2,left=torpedo-pod:2,right=torpedo-pod:2 --special airstrike:2`; the video is level seconds 3–25, the frames 6.3 s (dry) and 12 s (under water).
+Concept round 50 (M8 part A, step A7; accepted in round 50, 2026-10-22), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). `--level 20 --medium underwater@10 --loadout front=ion-beam:3,rear=rear-lance:2,left=torpedo-pod:2,right=torpedo-pod:2 --special airstrike:2`; the video is level seconds 3–25, the frames 6.3 s (dry) and 12 s (under water).

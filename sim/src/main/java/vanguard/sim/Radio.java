@@ -118,6 +118,16 @@ final class Radio {
         return false;
     }
 
+    /** M8 part B: whether the level has a cue started by {@code trigger}. */
+    boolean listens(CueTrigger trigger) {
+        for (int i = 0; i < cues.size(); i++) {
+            if (cues.get(i).trigger() == trigger) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** Starts the level-end cues for {@code home} convoy units at the end (0 without a convoy). */
     void end(int home) {
         for (int i = 0; i < cues.size(); i++) {

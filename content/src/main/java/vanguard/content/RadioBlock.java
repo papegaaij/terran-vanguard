@@ -232,7 +232,19 @@ public sealed interface RadioBlock permits LevelData {
          * level with an aura enemy.
          */
         @JsonProperty("first-ring")
-        FIRST_RING
+        FIRST_RING,
+        /**
+         * M8 part B (design/campaign Level 22, Radio chatter): the attempt's first vent tell (a geyser's crack starting
+         * to glow; once); only in a level with {@code vents}.
+         */
+        @JsonProperty("first-geyser")
+        FIRST_GEYSER,
+        /**
+         * M8 part B (design/campaign Level 22, Radio chatter): the attempt's first unit of the secondary's {@code
+         * escapes} enemy destroyed (Level 22's first rig core; once); only with an escapes secondary.
+         */
+        @JsonProperty("target-destroyed")
+        TARGET_DESTROYED
     }
 
     /**

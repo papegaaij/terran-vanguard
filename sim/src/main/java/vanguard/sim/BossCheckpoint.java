@@ -45,6 +45,9 @@ final class BossCheckpoint {
     private boolean bulwarkDestroyed;
     private long bulwarkDraws;
     private boolean escortKilled;
+    /** M8 part B: whether the attempt's first target-destroyed cue fired. */
+    private boolean targetKilled;
+
     private int tickFraction;
     private int realTick;
     private final int[] holdState;
@@ -125,6 +128,7 @@ final class BossCheckpoint {
             bulwarkDraws = bulwark.drawState();
         }
         escortKilled = s.objectivePasses.escortKilled;
+        targetKilled = s.objectivePasses.targetKilled;
         tickFraction = s.tickFraction;
         realTick = s.realTick;
         HoldZones holds = s.holdZones;
@@ -191,6 +195,7 @@ final class BossCheckpoint {
             s.bulwark.restore(bulwarkArmour, bulwarkDestroyed, bulwarkDraws, ship.x(), ship.y());
         }
         s.objectivePasses.escortKilled = escortKilled;
+        s.objectivePasses.targetKilled = targetKilled;
         s.tickFraction = tickFraction;
         s.realTick = realTick;
         HoldZones holds = s.holdZones;

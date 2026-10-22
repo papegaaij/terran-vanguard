@@ -199,6 +199,6 @@ the act.
 - 2026-10-21: save format version 5 for the user's power dial (decided 2026-10-21: A, a free power dial): an
   item's optional `power` setting, written only below full power, so a version 4 save loads unchanged at full
   power.
-- 2026-10-22 (M8 part A, step A2; pending the user's review in round 50): save format version 6 for the Bulwark
+- 2026-10-22 (M8 part A, step A2; accepted in round 50 (2026-10-22)): save format version 6 for the Bulwark
   heavy drone: the escort slot's `flies` and `bulwark`, migrated from the v0.1 release's version 5; Rook's absence is
   the story flag `rook-missing` (the wingmen README's `rook_missing`), the hydro-kit's notice the flag `hydro-kit`.

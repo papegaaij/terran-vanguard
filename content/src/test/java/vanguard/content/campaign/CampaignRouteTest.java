@@ -278,6 +278,41 @@ class CampaignRouteTest {
     }
 
     /**
+     * M8 part B (design/campaign Act 4, Implementation): a save at the Level 22 hangar from the v0.1 release (format
+     * version 5, Acts 1–3, their intros seen) plays Act 4's title card, its four intro pages and Level 22's briefing
+     * once on Continue; reloaded, the next Continue opens Level 22's own briefing.
+     */
+    @Test
+    void aV01SaveAtTheLevel22HangarPlaysTheActFourIntroOnceOnContinue() throws SaveException {
+        Campaign campaign = Campaign.load(CampaignTest.RULES, SaveFormat.read(version5At(22)));
+        assertTrue(campaign.actIntroShown(3) && !campaign.actIntroShown(4));
+
+        var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.onContinue(content, campaign));
+
+        assertEquals("act-4-deep-water", briefing.script().actDirectory());
+        assertEquals("DEEP WATER", briefing.script().titleCard().orElseThrow().name());
+        assertEquals(22, briefing.script().mission());
+        assertEquals(4 + 2, briefing.script().pages().size(), "the act's four intro pages, then Level 22's two");
+        assertTrue(campaign.actIntroShown(4));
+        Campaign reloaded =
+                Campaign.load(CampaignTest.RULES, SaveFormat.read(SaveFormat.write(campaign.save(Instant.EPOCH))));
+        assertEquals(
+                2,
+                assertMissionBriefing(22, CampaignRoute.onContinue(content, reloaded))
+                        .pages()
+                        .size());
+    }
+
+    /** M8 part B: a save at the Level 22 hangar that has seen Act 4's intro opens Level 22's own briefing. */
+    @Test
+    void aSaveAtTheLevel22HangarWithTheActFourIntroSeenOpensTheMissionBriefing() throws SaveException {
+        Campaign campaign = Campaign.load(CampaignTest.RULES, SaveFormat.read(version5At(22)));
+        campaign.markActIntroShown(4);
+
+        assertMissionBriefing(22, CampaignRoute.onContinue(content, campaign));
+    }
+
+    /**
      * M7 part B (L.6): a release save at the Level 08 hangar has seen Act 2's intro: Continue opens Level 08's own
      * briefing, without the act intro (2026-10-18).
      */
@@ -327,6 +362,25 @@ class CampaignRouteTest {
         tree.remove("bays");
         ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
         tree.putArray("storyFlags");
+        return tree.toString();
+    }
+
+    /**
+     * A format version 5 save (the v0.1 release, Acts 1–3) whose next level is {@code level}, with the intros of the
+     * acts that release had and that the save has reached (Act 1 from Level 01, Act 2 from 08, Act 3 from 15).
+     */
+    static String version5At(int level) {
+        Campaign campaign = DebugFit.startAt(CampaignTest.RULES, Difficulty.MEDIUM, level);
+        ObjectNode tree =
+                (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(campaign.save(Instant.EPOCH)));
+        tree.put("version", 5);
+        ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
+        var flags = tree.putArray("storyFlags");
+        for (int act = 1; act <= 3; act++) {
+            if (level >= new int[] {1, 8, 15}[act - 1]) {
+                flags.add("act-intro:" + act);
+            }
+        }
         return tree.toString();
     }
 

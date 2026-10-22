@@ -38,6 +38,14 @@ final class ObjectivePasses {
      * {@code escort-first-kill} fired then); hashed with a wingman and kept by the boss checkpoint.
      */
     boolean escortKilled;
+    /** M8 part B: whether the level has a {@code target-destroyed} radio cue (only then is it watched). */
+    private final boolean listensTarget;
+    /**
+     * M8 part B: whether a unit the secondary objective counts was destroyed in this attempt (the radio's {@code
+     * target-destroyed} fired then); set only in a level with such a cue, hashed only once set and kept by the boss
+     * checkpoint.
+     */
+    boolean targetKilled;
 
     ObjectivePasses(
             Sortie s,
@@ -73,23 +81,25 @@ final class ObjectivePasses {
         this.partDropPiece = partDropPiece;
         this.partsPiece = partsPiece;
         groupCalled = new boolean[script.groups().size()];
+        listensTarget = radio.listens(CueTrigger.TARGET_DESTROYED);
     }
 
     /** A new attempt: no group called, no kill of the wingman's. */
     void reset() {
         escortKilled = false;
+        targetKilled = false;
         java.util.Arrays.fill(groupCalled, false);
     }
 
     /**
-     * M7 part D: the unit part of enemy {@code index} was destroyed (design/enemies/ground/shellback, the vent):
-     * its event and its part bounty, paid as a chain's part is; the unit stays (its gun silenced for good when
-     * the part carries it).
+     * M7 part D: unit part {@code part} of enemy {@code index} was destroyed (design/enemies/ground/shellback, the
+     * vent; M8 part B: a Drill Rig's pump): its event at the part and its part bounty, paid as a chain's part is; the
+     * unit stays (its gun silenced for good when the part carries it alone, slowed when it carries it with others).
      */
-    void partOff(int index) {
+    void partOff(int index, int part) {
         Enemy enemy = force.enemies().get(index);
-        events.add(SimEvents.Type.UNIT_PART_DESTROYED, enemy.partX(), enemy.partY(), enemy.kind());
-        tally.partKill(enemy.spec().part().orElseThrow().bounty());
+        events.add(SimEvents.Type.UNIT_PART_DESTROYED, enemy.partX(part), enemy.partY(part), enemy.kind());
+        tally.partKill(enemy.spec().parts().get(part).bounty());
     }
 
     /**
@@ -137,9 +147,10 @@ final class ObjectivePasses {
             headBonus = force.headFirstBonusDue(enemy) ? enemy.chain().spec().headFirstBonus() : 0;
             force.memberDestroyed(enemy);
         }
-        if (spec.part().isPresent() && enemy.partAlive()) {
-            // M7 part D: the body destroyed while its part stands pays the whole (the Shellback's 40 + 8).
-            headBonus += spec.part().get().firstBonus();
+        for (int p = 0; p < enemy.partCount(); p++) {
+            // M7 part D: the body destroyed while its part stands pays the whole (the Shellback's 40 + 8); M8 part B:
+            // each standing part's bonus (the Drill Rig's 40 + 4 a pump).
+            headBonus += enemy.partAlive(p) ? spec.parts().get(p).firstBonus() : 0;
         }
         tally.kill(spec.bounty() + headBonus, enemy.grounded() ? CreditSource.GROUND_TARGETS : CreditSource.KILLS);
         int kills = objectives.kill(enemy.kind());
@@ -198,6 +209,11 @@ final class ObjectivePasses {
         }
         if (objectives.escapeDestroyed(spec.slug(), tag)) {
             paySecondary();
+        }
+        if (listensTarget && !targetKilled && script.objectives().secondary().counts(spec.slug(), tag)) {
+            // M8 part B (design/campaign Level 22, radio): the first unit the objective counts destroyed, once.
+            targetKilled = true;
+            radio.cue(CueTrigger.TARGET_DESTROYED, "");
         }
     }
 

@@ -1,0 +1,22 @@
+{
+ "source": "tools/art/l22_props.py (production art, M8 part B batch)",
+ "size": [
+  48,
+  48
+ ],
+ "bed": [
+  [
+   24,
+   31
+  ],
+  [
+   24,
+   17
+  ]
+ ],
+ "headings": [
+  "up the screen",
+  "down the screen"
+ ],
+ "note": "per heading the cargo bed's centre (px from the frame's top left), where the armour patch rides"
+}

@@ -187,14 +187,14 @@ class ColossusKeysTest {
     }
 
     @Test
-    void actThreeEndsWithItsOutroAndNamesTheNextAct() {
+    void actThreeEndsWithItsOutroAndActFourFollows() {
         ActData act = CONTENT.actOf(21).orElseThrow().getValue();
         assertEquals(21, act.levels().last());
         assertEquals(4, act.outro().orElseThrow().pages().size());
         assertEquals(Optional.of("act-complete"), act.outro().orElseThrow().music());
-        assertEquals(
-                "ACT IV - DEEP WATER. EUROPA. COMING SOON.",
-                act.nextAct().orElseThrow().comingSoon());
+        // M8 part B: Act 4 is built from Level 22 on, so Act 3 names no next act (part H gives Act 4 its own).
+        assertEquals(Optional.empty(), act.nextAct());
+        assertEquals(22, CONTENT.actOf(22).orElseThrow().getValue().levels().first());
     }
 
     @Test

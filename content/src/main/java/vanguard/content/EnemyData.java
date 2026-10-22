@@ -990,6 +990,9 @@ public record EnemyData(
      * @param spots M5 part E: weak spots on it (the Kraken's eyes)
      * @param aim round 34 (P2, the kinder Siege Spire): {@code down}, the part fires its aimed attack
      *     straight down the screen instead of at the ship; empty: as its attack aims
+     * @param slows M8 part B (design/enemies/ground/drill-rig: each pump lost slows the collar's ring 0.5 s): on a
+     *     unit's part that carries its {@code attack}, the seconds its loss adds to that attack's interval; the attack
+     *     stops when every part that carries it is lost; none if not given
      */
     public record PartData(
             String name,
@@ -1003,9 +1006,12 @@ public record EnemyData(
             Optional<Integer> firstBonus,
             Optional<String> layer,
             Optional<List<SpotData>> spots,
-            Optional<String> aim) {
+            Optional<String> aim,
+            Optional<Double> slows) {
         public PartData {
             aim.ifPresent(a -> Check.that(a.equals("down"), "a part's aim is down, was '" + a + "'"));
+            slows.ifPresent(v -> Check.positive("slows", v));
+            Check.that(slows.isEmpty() || attack.isPresent(), "only a part that carries an attack slows it (slows)");
             Check.that(aim.isEmpty() || attack.isPresent(), "a part aimed down fires an attack");
             firstBonus.ifPresent(b -> Check.notNegative("first_bonus", b));
             // M7 part H: or buried (a breaching boss's mouth until its rise, its vents until they rise with it).
@@ -1037,7 +1043,8 @@ public record EnemyData(
                 @com.fasterxml.jackson.annotation.JsonProperty("first_bonus") Optional<Integer> firstBonus,
                 @com.fasterxml.jackson.annotation.JsonProperty("layer") Optional<String> layer,
                 @com.fasterxml.jackson.annotation.JsonProperty("spots") Optional<List<SpotData>> spots,
-                @com.fasterxml.jackson.annotation.JsonProperty("aim") Optional<String> aim) {
+                @com.fasterxml.jackson.annotation.JsonProperty("aim") Optional<String> aim,
+                @com.fasterxml.jackson.annotation.JsonProperty("slows") Optional<Double> slows) {
             Check.that(
                     name != null && offset != null && hitbox != null && kind != null,
                     "a part has a name, an offset, a hit box and a kind");
@@ -1060,7 +1067,8 @@ public record EnemyData(
                     firstBonus == null ? Optional.empty() : firstBonus,
                     layer == null ? Optional.empty() : layer,
                     spots == null ? Optional.empty() : spots,
-                    aim == null ? Optional.empty() : aim);
+                    aim == null ? Optional.empty() : aim,
+                    slows == null ? Optional.empty() : slows);
         }
 
         /** Whether it is a fire-only part. */
@@ -2129,16 +2137,31 @@ public record EnemyData(
         }
     }
 
-    /** A difficulty's change to one named attack. */
+    /**
+     * A difficulty's change to one named attack. M8 part B (design/enemies/ground/drill-rig, hard): {@code aimed}, the
+     * bullets fired straight at the ship besides a {@code ring}'s with each volley (the hard rig's aimed shard).
+     */
     public record AttackChange(
             Optional<Integer> burst,
             Optional<Integer> count,
             Optional<Double> interval,
             Optional<Integer> arms,
-            Optional<Double> within) {
+            Optional<Double> within,
+            Optional<Integer> aimed) {
+        /** Without M8 part B's aimed shards. */
+        public AttackChange(
+                Optional<Integer> burst,
+                Optional<Integer> count,
+                Optional<Double> interval,
+                Optional<Integer> arms,
+                Optional<Double> within) {
+            this(burst, count, interval, arms, within, Optional.empty());
+        }
+
         public AttackChange {
             arms.ifPresent(a -> Check.positive("arms", a));
             within.ifPresent(w -> Check.positive("within", w));
+            aimed.ifPresent(a -> Check.positive("aimed", a));
         }
     }
 

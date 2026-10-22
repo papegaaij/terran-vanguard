@@ -2,7 +2,7 @@
 title: Harpoon Torpedoes
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [.., ../torpedo-pod, ../../generator, ../../../world/europa, ../../../systems/economy]
 updated: 2026-10-22
 ---
@@ -84,10 +84,10 @@ round-48 under-water grade (Level 24) with stand-in targets.
 
 | File | What | Status |
 |---|---|---|
-| [concept/harpoon-torpedoes-final-r50-a.png](concept/harpoon-torpedoes-final-r50-a.png) | Harpoon Torpedoes final frames (`tools/art/act4_gear.py harpoon`, round 48 G1 = a): the barbed harpoon at 32 headings, the impact (dark cavity, teal ring, barb sparks), motor glow, launch light, cable tile; an L5 pair in the water (sheet) | proposed (round 50) |
-| [concept/harpoon-torpedoes-final-r50-a.gif](concept/harpoon-torpedoes-final-r50-a.gif) | Two L5 volleys running up from the nose with their lines of light, curving onto a stand-in Needler and hitting it, 20 fps at 2x | proposed (round 50) |
-| [concept/harpoon-torpedoes-capture-r50-a.png](concept/harpoon-torpedoes-capture-r50-a.png) | Game capture, Level 18 with `--medium underwater@10`: harpoons at L3 with their lines of light running from the nose under water, the Depth Charges behind (a frame) | proposed (round 50) |
-| [concept/harpoon-torpedoes-capture-r50-a.mp4](concept/harpoon-torpedoes-capture-r50-a.mp4) | Game capture with the game's sound: the `HARPOONS … NO WATER` row while dry, then the harpoons' launches, run loop and hits under water, the ship swept left and right (the drag) | proposed (round 50) |
+| [concept/harpoon-torpedoes-final-r50-a.png](concept/harpoon-torpedoes-final-r50-a.png) | Harpoon Torpedoes final frames (`tools/art/act4_gear.py harpoon`, round 48 G1 = a): the barbed harpoon at 32 headings, the impact (dark cavity, teal ring, barb sparks), motor glow, launch light, cable tile; an L5 pair in the water (sheet) | chosen (round 50, F.1: accepted as final) |
+| [concept/harpoon-torpedoes-final-r50-a.gif](concept/harpoon-torpedoes-final-r50-a.gif) | Two L5 volleys running up from the nose with their lines of light, curving onto a stand-in Needler and hitting it, 20 fps at 2x | chosen (round 50, F.1: accepted as final) |
+| [concept/harpoon-torpedoes-capture-r50-a.png](concept/harpoon-torpedoes-capture-r50-a.png) | Game capture, Level 18 with `--medium underwater@10`: harpoons at L3 with their lines of light running from the nose under water, the Depth Charges behind (a frame) | chosen (round 50, F.1: accepted) |
+| [concept/harpoon-torpedoes-capture-r50-a.mp4](concept/harpoon-torpedoes-capture-r50-a.mp4) | Game capture with the game's sound: the `HARPOONS … NO WATER` row while dry, then the harpoons' launches, run loop and hits under water, the ship swept left and right (the drag) | chosen (round 50, F.1: accepted) |
 
 Prompts: [concept/prompts.md](concept/prompts.md).
 
@@ -97,7 +97,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - [x] A front torpedo delivery that runs on the play plane under water and on the `sub` layer above it; reaches `sub`, `air`, `low-air` and `ground` in the water; idle with `NO WATER` in a dry level — M8 part A (steps A1/A3/A4: `HarpoonTorpedoTest`, `Act4ArsenalFlightTest.theHarpoonHitsUnderWaterAtFullDamageAndIsIdleInADryLevel`; the HUD's `HARPOONS … NO WATER` row in step A6)
 - [x] Weak homing, impact blast, power draw per level, upgrade prices — M8 part A (the 20 px splash at half damage to others (D13); `ActFourDataTest.theHarpoonIsAFrontTorpedoWithASplash`, `HarpoonTorpedoTest.underWaterItStrikesAFlyerAndSplashesHalfItsDamageWithinTwentyPixels`)
 - [x] Shop entry from the L22 visit; the balance plan's purchases (see the generator's hand plan) — M8 part A (step A2: the plan's L2 at L23, L4 at L26, `BalanceTest`; step A5: `ActFourHangarTest.theActFourItemsAreInTheLiveShopWithTheirNames`)
-- [x] Sprites, the cable trail and sounds of the weapon (round 48) — M8 part A (ART-A's finals and AUD-A's a variants in the game, step A6: `DeepWaterLooksTest.theCableFadesAfterAHitAndItsSlackGrowsAlongIt`, `ActFourSoundsTest.harpoonsLaunchAndRunOnOneLoopWhileAnyIsInFlight`; the finals and the a/b sounds pending the user's review in [round 50](../../../concept-rounds/round-50/README.md))
+- [x] Sprites, the cable trail and sounds of the weapon (round 48) — M8 part A (ART-A's finals and AUD-A's a variants in the game, step A6: `DeepWaterLooksTest.theCableFadesAfterAHitAndItsSlackGrowsAlongIt`, `ActFourSoundsTest.harpoonsLaunchAndRunOnOneLoopWhileAnyIsInFlight`; the finals accepted and the sounds picked in [round 50](../../../concept-rounds/round-50/README.md))
 
 ## Open questions
 
@@ -114,4 +114,5 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - 2026-10-22 (M8 part A, step A2): the numbers in [data.yaml](data.yaml) (`hits: anti-sub`, the Torpedo Pod's
   delivery from the nose; the splash as `blast: 20` per level with `splash: 0.5`; sound and VFX family `harpoon`);
   the tables are rendered from it.
-- 2026-10-22 (M8 part A, steps A1–A6; pending the user's review in round 50): the splash is half the damage to the **other** units within 20 px, not to the struck target (D13), and hits units only (not projectiles); all harpoons in flight share one run loop.
+- 2026-10-22 (M8 part A, steps A1–A6; accepted in round 50 (2026-10-22)): the splash is half the damage to the **other** units within 20 px, not to the struck target (D13), and hits units only (not projectiles); all harpoons in flight share one run loop.
+- 2026-10-22 (user, [round 50](../../../concept-rounds/round-50/README.md) closed): F.1: the final art (`tools/art/act4_gear.py harpoon`) and its game capture accepted; `art: final`, the concept rows `chosen`. Its sounds (in [sfx](../../../audio/sfx/README.md)): launch b, run a, hit a.

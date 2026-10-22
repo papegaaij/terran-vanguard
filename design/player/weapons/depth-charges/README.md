@@ -2,7 +2,7 @@
 title: Depth Charges
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [.., ../torpedo-pod, ../../generator, ../../../world/europa, ../../../systems/economy]
 updated: 2026-10-22
 ---
@@ -81,10 +81,10 @@ round-48 under-water grade (Level 24) with stand-in targets.
 
 | File | What | Status |
 |---|---|---|
-| [concept/depth-charges-final-r50-a.png](concept/depth-charges-final-r50-a.png) | Depth Charges final frames (`tools/art/act4_gear.py charges`, round 48 G2 = a): the drum's 16 spins in three sinking stages, the fuse lamp, the pressure-dome bursts at 40 / 52 / 64 px and the dark cavity; roll-out, hover, sink and burst behind the ship (sheet) | proposed (round 50) |
-| [concept/depth-charges-final-r50-a.gif](concept/depth-charges-final-r50-a.gif) | Two L3 charges rolling out of the stern, blinking faster and bursting at 52 px, 15 fps at 2x | proposed (round 50) |
-| [concept/depth-charges-capture-r50-a.png](concept/depth-charges-capture-r50-a.png) | Game capture, Level 11 above water: the charges rolling off the stern and a burst on the `sub` layer by the Driftjelly field (a frame) | proposed (round 50) |
-| [concept/depth-charges-capture-r50-a.mp4](concept/depth-charges-capture-r50-a.mp4) | Game capture with the game's sound: the roll-outs, the blinking lamps and the bursts on Level 11's submerged jellies | proposed (round 50) |
+| [concept/depth-charges-final-r50-a.png](concept/depth-charges-final-r50-a.png) | Depth Charges final frames (`tools/art/act4_gear.py charges`, round 48 G2 = a): the drum's 16 spins in three sinking stages, the fuse lamp, the pressure-dome bursts at 40 / 52 / 64 px and the dark cavity; roll-out, hover, sink and burst behind the ship (sheet) | chosen (round 50, F.2: accepted as final) |
+| [concept/depth-charges-final-r50-a.gif](concept/depth-charges-final-r50-a.gif) | Two L3 charges rolling out of the stern, blinking faster and bursting at 52 px, 15 fps at 2x | chosen (round 50, F.2: accepted as final) |
+| [concept/depth-charges-capture-r50-a.png](concept/depth-charges-capture-r50-a.png) | Game capture, Level 11 above water: the charges rolling off the stern and a burst on the `sub` layer by the Driftjelly field (a frame) | chosen (round 50, F.2: accepted) |
+| [concept/depth-charges-capture-r50-a.mp4](concept/depth-charges-capture-r50-a.mp4) | Game capture with the game's sound: the roll-outs, the blinking lamps and the bursts on Level 11's submerged jellies | chosen (round 50, F.2: accepted) |
 
 Prompts: [concept/prompts.md](concept/prompts.md).
 
@@ -94,7 +94,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - [x] A rear delivery: barrel roll-out, fuse, a circular burst that hits the water's layers; safe for the ship and Rook — M8 part A (steps A1/A3/A4: `DepthChargeTest`, `Act4ArsenalFlightTest.theDepthChargesBurstOnWhatPassesBehindTheShip`)
 - [x] Idle with `NO WATER` in a dry level; the above-water drop on the `sub` layer — M8 part A (`DepthChargeTest.dryItReadsNoWaterAndDropsNothing`, `DepthChargeTest.aboveWaterItBurstsOnTheSubLayerAndTheNavalGroundOnly`)
 - [x] Power draw per level, upgrade prices, shop entry from the L22 visit; the balance plan's purchases — M8 part A (`ActFourDataTest.theDepthChargesBurstOnAFusePerLevel`, `BalanceTest`, `ActFourHangarTest.theActFourItemsAreInTheLiveShopWithTheirNames`; the hangar's test range: `ActFourHangarTest.theDepthChargesTestRangeIsWaterWithSubmergedDummiesThatOneBurstDestroys`)
-- [x] Sprites, burst VFX and sounds (round 48) — M8 part A (step A6: `DeepWaterLooksTest.theDrumSinksInThreeStagesAndSpins`, `theFuseLampBlinksFasterTowardsTheBurst`, `theBurstMatchesTheLevelsRadius`, `ActFourSoundsTest.aDepthChargeRollsOutAndBurstsOnItsFuse`; the finals and the a/b sounds pending the user's review in [round 50](../../../concept-rounds/round-50/README.md))
+- [x] Sprites, burst VFX and sounds (round 48) — M8 part A (step A6: `DeepWaterLooksTest.theDrumSinksInThreeStagesAndSpins`, `theFuseLampBlinksFasterTowardsTheBurst`, `theBurstMatchesTheLevelsRadius`, `ActFourSoundsTest.aDepthChargeRollsOutAndBurstsOnItsFuse`; the finals accepted and the sounds picked in [round 50](../../../concept-rounds/round-50/README.md))
 
 ## Open questions
 
@@ -110,6 +110,7 @@ Prompts: [concept/prompts.md](concept/prompts.md).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
 - 2026-10-22 (M8 part A, step A2): the numbers in [data.yaml](data.yaml) (`hits: depth-charge`, a delivery of its
   own: `speed` 140, `drift` 0.6, per level a `fuse` and the burst `blast`; L5's two charges 8 px either side; the
-  barrel's 12×12 px box ours, pending the user's review in round 50); the tables are rendered from it (L4's 65.8 DPS
+  barrel's 12×12 px box ours, accepted in round 50 (2026-10-22)); the tables are rendered from it (L4's 65.8 DPS
   where the hand-written table said 66).
-- 2026-10-22 (M8 part A, steps A1–A6; pending the user's review in round 50): the roll-out under water is 140 × 1.5 (range) × 0.7 (speed) = 147 px/s, the fuse counts from the launch, L5's two charges ±8 px apart, hardened ground glances off as from the mines (D12); at most 8 charges live (`max_live`'s default); a charge sinking off the field is lost, so charges dropped with the ship at the bottom edge roll off the screen before they burst.
+- 2026-10-22 (M8 part A, steps A1–A6; accepted in round 50 (2026-10-22)): the roll-out under water is 140 × 1.5 (range) × 0.7 (speed) = 147 px/s, the fuse counts from the launch, L5's two charges ±8 px apart, hardened ground glances off as from the mines (D12); at most 8 charges live (`max_live`'s default); a charge sinking off the field is lost, so charges dropped with the ship at the bottom edge roll off the screen before they burst.
+- 2026-10-22 (user, [round 50](../../../concept-rounds/round-50/README.md) closed): F.2: the final art (`tools/art/act4_gear.py charges`) and its game capture accepted; `art: final`, the concept rows `chosen`. B.7 accepted: a charge that leaves the field before its fuse is lost (no burst at the bottom edge). Its sounds (in [sfx](../../../audio/sfx/README.md)): roll-out b, burst a.

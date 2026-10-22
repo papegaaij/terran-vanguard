@@ -60,7 +60,9 @@ public final class DroneLooks {
 
     /** The level's drones, or null for a level without drops carried by a drone (or without its sprites). */
     static DroneLooks of(Sprites sprites, LevelData level) {
+        // M8 part B: a drop carried by a ground vehicle (Level 22's ice-crawler) is IceCrawlerLooks'.
         List<LevelData.Drop> drops = level.released().stream()
+                .filter(drop -> !IceCrawlerLooks.carried(drop))
                 .filter(drop -> drop.sprite().filter(sprites::has).isPresent())
                 .toList();
         if (drops.isEmpty()) {

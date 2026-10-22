@@ -69,10 +69,14 @@ class PlaceholderAuditTest {
                     + " from CC0/CC-BY Freesound originals (CREDITS.md) by tools/concept/audio/sfx_r46j.py and"
                     + " sfx_r46k.py";
 
+    private static final String ROUND_51 =
+            "M8 part B: round 51's proposals for Level 22 (the Freesound HQ previews of CC0/CC-BY sounds, by"
+                    + " tools/concept/audio/sfx_r51b.py), the a variants until the user's pick, to be rebuilt from the"
+                    + " originals";
     private static final String ROUND_50 =
-            "M8 part A: round 50's proposals for the Act 4 arsenal, their a variants until the user's pick (the"
-                    + " Freesound HQ previews of CC0/CC-BY sounds, CREDITS.md, by tools/concept/audio/sfx_r50a.py; the"
-                    + " limit chime synthesized), to be rebuilt from the originals once picked";
+            "M8 part A: round 50's picks for the Act 4 arsenal (user 2026-10-22; the Freesound HQ previews of"
+                    + " CC0/CC-BY sounds, CREDITS.md, by tools/concept/audio/sfx_r50a.py; the limit chime synthesized),"
+                    + " to be rebuilt from the originals";
 
     private static final String ROUND_47 =
             "round 47's and 49's picks (user 2026-10-22): the Herald's song, the Leviathan's cry, the launch rail"
@@ -227,13 +231,21 @@ class PlaceholderAuditTest {
             Map.entry("sfx/enemy-leviathan-cry-r47-b.ogg", ROUND_47),
             Map.entry("sfx/launch-rail-r47-b.ogg", ROUND_47),
             Map.entry("sfx/dome-hit-r49-b.ogg", ROUND_47),
-            // M8 part A: round 50's proposals, their a variants until the user's pick
-            Map.entry("sfx/shot-harpoon-r50-a.ogg", ROUND_50),
+            // M8 part A: round 50's picks, from the Freesound previews until the originals
+            Map.entry("sfx/shot-harpoon-r50-b.ogg", ROUND_50),
             Map.entry("sfx/harpoon-run-r50-a.ogg", ROUND_50),
             Map.entry("sfx/harpoon-hit-r50-a.ogg", ROUND_50),
-            Map.entry("sfx/shot-depth-charge-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/shot-depth-charge-r50-b.ogg", ROUND_50),
             Map.entry("sfx/depth-charge-burst-r50-a.ogg", ROUND_50),
-            Map.entry("sfx/special-limit-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/special-limit-r50-b.ogg", ROUND_50),
+            // M8 part B: round 51's a variants, from the Freesound previews until the pick and the originals
+            Map.entry("sfx/geyser-tell-r51-a.ogg", ROUND_51),
+            Map.entry("sfx/geyser-burst-r51-a.ogg", ROUND_51),
+            Map.entry("sfx/rig-collar-r51-a.ogg", ROUND_51),
+            Map.entry("sfx/rig-ring-r51-a.ogg", ROUND_51),
+            Map.entry("sfx/rig-death-r51-a.ogg", ROUND_51),
+            Map.entry("sfx/europa-ice-r51-a.ogg", ROUND_51),
+            Map.entry("sfx/conamara-station-r51-a.ogg", ROUND_51),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

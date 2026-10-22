@@ -212,8 +212,8 @@ final class Beams {
                     fire.hitBy(enemy.serial());
                     if (castPart >= 0) {
                         // M7 part D: its unit part lay nearer in the column (the Shellback's vent).
-                        if (enemy.damagePart(damage, false)) {
-                            hits.unitPartDestroyed(castIndex, m);
+                        if (enemy.damagePart(castPart, damage, false)) {
+                            hits.unitPartDestroyed(castIndex, castPart, m);
                         }
                     } else if (enemy.damage(damage * enemy.rearFactor(0, 1))) {
                         // M7 part F: the beam goes up the screen: from behind a rear plate facing up it does more.
@@ -298,14 +298,22 @@ final class Beams {
             double y = columnContact(x, half, fromY, enemy.x(), enemy.y(), enemy.hitbox());
             boolean damageable =
                     (weapon.antiGround() || !enemy.spec().hardened()) && !enemy.glances(0, 1) && !enemy.growing();
-            if (enemy.partAlive()) {
-                // M7 part D: a unit part first, so a tie goes to it (the Shellback's vent); round 40 R.a: a column
-                // through the part burns over the body to it (the vent on the back of the shell is seen from above).
-                double partY = columnContact(x, half, fromY, enemy.partX(), enemy.partY(), enemy.partBox());
-                if (partY < limit) {
-                    consider(damageable ? CAST_ENEMY : CAST_BLOCKED, partY, layer, j, 0);
+            // M7 part D: a unit part first, so a tie goes to it (the Shellback's vent); round 40 R.a: a column
+            // through the part burns over the body to it (the vent on the back of the shell is seen from above). M8
+            // part B: of several parts in the column (a Drill Rig's pumps), the nearest.
+            boolean onPart = false;
+            for (int p = 0; p < enemy.partCount(); p++) {
+                if (!enemy.partAlive(p)) {
                     continue;
                 }
+                double partY = columnContact(x, half, fromY, enemy.partX(p), enemy.partY(p), enemy.partBox(p));
+                if (partY < limit) {
+                    consider(damageable ? CAST_ENEMY : CAST_BLOCKED, partY, layer, j, p);
+                    onPart = true;
+                }
+            }
+            if (onPart) {
+                continue;
             }
             consider(damageable ? CAST_ENEMY : CAST_BLOCKED, y, layer, j, -1);
         }

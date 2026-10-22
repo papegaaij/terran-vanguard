@@ -37,6 +37,8 @@ public final class Tracks {
             Map.entry(7, "firestorm"),
             Map.entry(8, "red-dust-run"),
             Map.entry(9, "grey-signal"),
+            Map.entry(10, "thera-deep"),
+            Map.entry(11, "pressure-line"),
             Map.entry(BOSS_VRELL, "choir-descends"),
             Map.entry(21, "miniboss-sting"),
             Map.entry(BOSS_WARNING, "boss-warning"),

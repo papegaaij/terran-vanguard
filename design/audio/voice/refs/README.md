@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [..]
-updated: 2026-10-14
+updated: 2026-10-22
 ---
 
 # Reference voices
@@ -43,6 +43,8 @@ How the clips are chosen and used: [voice](../README.md#reference-voices).
 | `ref-nansen.wav` | Nansen (Level 13) | Patrick Eaton | [In the Arctic Seas, ch. 1 (McClintock)](https://archive.org/details/arctic_seas_pje_1311_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 35, picked in round 34's review) |
 | `ref-ares-control.wav` | Ares Control (Levels 15–17, 19–21) | Thomas A | [The Warlord of Mars, ch. 2 (Burroughs)](https://archive.org/details/warlord_mars_tac_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 36, S.6 = b; renamed at the cast, part B, its pauses trimmed: 10.3 s) |
 | `ref-lance-control.wav` | Lance Control (the Orbital Lance's call) | Celine Major | [Campaigns of the Civil War, ch. 1 (Geer)](https://archive.org/details/campaignsofthecivilwar_2603_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 37, S.16 = b) |
+| `ref-conamara-r51-a.wav` | Dr. Brandt (`conamara`), candidate a | Margaret Espaillat | [Eminent Victorians, ch. 1 (Strachey)](https://archive.org/details/eminent_victorians_1204_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 51) |
+| `ref-conamara-r51-b.wav` | Dr. Brandt (`conamara`), candidate b | Sue Anderson | [Gallipoli Diary, ch. 1 (Gillam)](https://archive.org/details/gallipoli_diary_sa_librivox) | public domain | proposed (round 51) |
 
 Round 19's chosen candidates were renamed to `ref-<speaker>.wav`; the rejected candidates and
 round 18's Tranquility Control clip (David Leeson), which no speaker uses any more, were deleted

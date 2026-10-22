@@ -16,8 +16,8 @@ import vanguard.sim.Sortie;
 import vanguard.sim.WeaponSpec;
 
 /**
- * M8 part A, the Act 4 systems' sounds for {@link FlightSounds} (design/audio/sfx, round 50; the a variants until the
- * user's pick): the special row's limit chime at a waterline, the Sonar Pulse's ping, the Decoy Flares' launch, the
+ * M8 part A, the Act 4 systems' sounds for {@link FlightSounds} (design/audio/sfx, round 50's picks; the Torpedo Pod
+ * keeps its r03 a): the special row's limit chime at a waterline, the Sonar Pulse's ping, the Decoy Flares' launch, the
  * Bulwark's hits and its loss; the Harpoon Torpedoes' hit for the hits the player's and the units' families hand over
  * ({@link #harpoonHit}), and its run: one loop for every harpoon in flight, held while any runs (decided in step A6:
  * one shared loop, not a voice per torpedo, so two weapons' worth of harpoons do not stack into a drone).

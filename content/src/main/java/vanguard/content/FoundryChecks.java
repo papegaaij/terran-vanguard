@@ -212,13 +212,13 @@ final class FoundryChecks {
                     }
                 }
                 for (Difficulty difficulty : Difficulty.values()) {
-                    double whole = vents.tellOn(difficulty)
+                    double whole = vents.tellOn(row, difficulty)
                             + vents.burn()
-                            + vents.rippleOn(difficulty) * (row.xs().size() - 1);
-                    if (vents.periodOn(difficulty) < whole - 1e-9) {
+                            + vents.rippleOn(row, difficulty) * (row.xs().size() - 1);
+                    if (vents.periodOn(row, difficulty) < whole - 1e-9) {
                         problem.accept(
                                 field + ".xs",
-                                difficulty + ": the period " + vents.periodOn(difficulty)
+                                difficulty + ": the period " + vents.periodOn(row, difficulty)
                                         + " s holds the whole ripple (" + whole + " s)");
                     }
                 }
@@ -248,19 +248,31 @@ final class FoundryChecks {
         }
         level.objectives()
                 .secondary()
-                .filter(secondary -> secondary.allowed().isPresent())
+                .filter(secondary -> secondary.allowed().isPresent()
+                        || secondary.easy().isPresent()
+                        || secondary.hard().isPresent())
                 .ifPresent(secondary -> {
                     String slug = secondary.escapes().orElse("");
-                    int units = level.waves().stream()
-                            .filter(wave -> wave.fliesOn(Difficulty.MEDIUM))
-                            .flatMap(wave -> wave.groupList().stream())
-                            .filter(group -> group.enemy().equals(slug))
-                            .mapToInt(LevelData.Group::count)
+                    // M8 part B: the ground targets of it count too (Level 22's four Drill Rigs).
+                    int placed = level.groundTargets().stream()
+                            .filter(target ->
+                                    target.enemy().filter(slug::equals).isPresent())
+                            .mapToInt(target -> target.at().size())
                             .sum();
-                    if (secondary.escapesAllowed() >= units) {
-                        problem.accept(
-                                "objectives.secondary.allowed",
-                                "fewer may get away than the " + units + " '" + slug + "' the level flies");
+                    int units = placed
+                            + level.waves().stream()
+                                    .filter(wave -> wave.fliesOn(Difficulty.MEDIUM))
+                                    .flatMap(wave -> wave.groupList().stream())
+                                    .filter(group -> group.enemy().equals(slug))
+                                    .mapToInt(LevelData.Group::count)
+                                    .sum();
+                    for (Difficulty difficulty : Difficulty.values()) {
+                        if (secondary.escapesAllowed(difficulty) >= units) {
+                            problem.accept(
+                                    "objectives.secondary.allowed",
+                                    difficulty + ": fewer may get away than the " + units + " '" + slug
+                                            + "' the level flies");
+                        }
                     }
                 });
     }

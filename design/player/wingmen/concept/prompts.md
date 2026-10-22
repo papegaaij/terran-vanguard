@@ -193,7 +193,7 @@ shots going to it and striking it).
 
 ## bulwark-final-r50-a
 
-Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/act4_gear.py
+Production art (M8 part A batch, step ART-A, for concept round 50; accepted as final in round 50 (2026-10-22)), not a mockup: `python3 tools/art/act4_gear.py
 bulwark` writes the frames (into `build/art-held/sprites/` until the game data claims `bulwark`, then `assets/sprites/`)
 and this review sheet and GIF. The look is the one round 48 chose (G4 = a, "turtle", [bulwark-r48-a](bulwark-r48-a.png),
 `tools/concept/gear_r48.py bulwark_model("a")`, `damaged`, `bw_lure`, `bw_jets`, `bw_shell`, `bw_spark`, and
@@ -212,4 +212,4 @@ Vrell and Siren teal 00ff9a).
 
 ## bulwark-capture-r50-a
 
-Concept round 50 (M8 part A, step A7), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). The Level 19 run of [decoy-flares-capture-r50-a](../../specials/concept/prompts.md#decoy-flares-capture-r50-a) (`--escort bulwark`); the video is level seconds 14–40, the frame 148.5 s.
+Concept round 50 (M8 part A, step A7; accepted in round 50, 2026-10-22), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). The Level 19 run of [decoy-flares-capture-r50-a](../../specials/concept/prompts.md#decoy-flares-capture-r50-a) (`--escort bulwark`); the video is level seconds 14–40, the frame 148.5 s.

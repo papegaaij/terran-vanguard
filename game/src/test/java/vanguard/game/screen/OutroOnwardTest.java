@@ -87,15 +87,19 @@ class OutroOnwardTest {
     }
 
     /**
-     * M7 part H (H.7d): Level 21 ends Act 3 and the release: its outro's NEXT panel names the release's end and Act 4
-     * from Act 3's {@code next_act}; the end card's texts and the hangar's line come from the same data.
+     * M7 part H (H.7d): Level 21 ends Act 3; M8 part B: Level 22 is built, so Act 3's outro leads on to Act 4's title
+     * card and the Level 22 briefing (Act 3's {@code next_act} is gone). The interim release ends with Act 4 still
+     * open: no act names the act after it yet (part H adds Act 5's with Act 4's outro), so the end texts follow the act
+     * with the highest levels, Act 4, with no act named ("MORE"), and the hangar before Level 23 shows the release's
+     * line.
      */
     @Test
-    void afterAct3sOutroTheReleaseEndsWithAct4ComingSoon() {
+    void afterAct3sOutroComeAct4sTitleCardAndTheBriefingOfLevel22() {
         String directory = "act-3-red-dust";
         ActData act = content.acts().get(directory);
         assertEquals(21, act.levels().last(), "Act 3 ends with Level 21");
-        assertTrue(content.levelKey(22).isEmpty(), "Level 22 is not built");
+        assertTrue(content.levelKey(22).isPresent(), "Level 22 is built (M8 part B)");
+        assertTrue(act.nextAct().isEmpty(), "Act 3 names no next act any more");
         OutroScript outro = Briefings.outro(new CampaignRoute.ActEnd(directory, act, 21), 22)
                 .orElseThrow();
         // Step HB: Act 3's outro, Level 14's order: four voiced pages with their images, the fanfare under page 1.
@@ -117,15 +121,16 @@ class OutroOnwardTest {
         }
         BriefingScreen.Onward onward = BriefingScreen.onward(content, outro);
 
-        assertEquals("THE END OF THIS RELEASE AND THE CREDITS. ACT IV - DEEP WATER IS COMING SOON.", onward.next());
-        assertEquals("ENTER TO THE END", onward.hint());
-        assertEquals("ACTS I-III COMPLETE", ReleaseTexts.title(content));
-        assertEquals("ACT IV - DEEP WATER. EUROPA. COMING SOON.", ReleaseTexts.comingSoon(content));
+        assertEquals("ACT IV: DEEP WATER, THEN THE BRIEFING FOR MISSION 22: ICE SHELF", onward.next());
+        assertEquals("ENTER TO ACT IV", onward.hint());
+        // The interim release's end (after Level 22 until part H): Act 4 is the last act, no act after it named.
+        assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
+        assertEquals("MORE COMING SOON.", ReleaseTexts.comingSoon(content));
         assertEquals(
-                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT III.",
+                "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT IV.",
                 ReleaseTexts.continueLine(content));
-        assertEquals(
-                "ACT IV - DEEP WATER: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 22");
+        assertEquals("MORE: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 23");
+        assertEquals("THE END OF THIS RELEASE AND THE CREDITS. MORE IS COMING SOON.", ReleaseTexts.outroNext(content));
     }
 
     /** M6 part B: the end card, then the name entry only for a top-10 score, then the credits. */

@@ -495,8 +495,14 @@ final class ContentValidator {
             }
         });
         level.objectives().secondary().flatMap(LevelData.Secondary::escapes).ifPresent(slug -> {
-            if (!levelEnemies.contains(slug)) {
-                problem(level, "objectives.secondary.escapes", "no wave of '" + slug + "' in this level");
+            // M8 part B: or a ground target of it (Level 22's Drill Rigs).
+            boolean placed = level.groundTargets().stream()
+                    .anyMatch(target -> target.enemy().filter(slug::equals).isPresent());
+            if (!levelEnemies.contains(slug) && !placed) {
+                problem(
+                        level,
+                        "objectives.secondary.escapes",
+                        "no wave or ground target of '" + slug + "' in this level");
             }
         });
         level.crateSeconds().ifPresent(seconds -> {
@@ -1594,6 +1600,14 @@ final class ContentValidator {
                 problem(level, field, "first-surfacing in a level without a burrowing enemy");
             } else if (event == LevelData.CueEvent.FIRST_RING && !sings) {
                 problem(level, field, "first-ring in a level without an aura enemy");
+            } else if (event == LevelData.CueEvent.FIRST_GEYSER && level.vents().isEmpty()) {
+                problem(level, field, "first-geyser in a level without vents");
+            } else if (event == LevelData.CueEvent.TARGET_DESTROYED
+                    && level.objectives()
+                            .secondary()
+                            .flatMap(LevelData.Secondary::escapes)
+                            .isEmpty()) {
+                problem(level, field, "target-destroyed in a level without an escapes secondary");
             }
         }
         if (!level.noSurfaceZones().isEmpty() && !burrows) {

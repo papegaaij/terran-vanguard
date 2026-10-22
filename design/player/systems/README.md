@@ -398,4 +398,4 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   `repair`; the nanites' unlock L24 as this README has it, the hull's Effect cell rewritten: "Removes the under-water
   drag"); their table rows set from `idea` to `draft` (written and decided in round 48; raising a row to `approved` is
   the user's).
-- 2026-10-22 (M8 part A, steps A3/A6; pending the user's review in round 50): the Auto-repair nanites are built in part A (D6, the Mk IV's reason); a hit pauses them for 1 s; the pip `+` beside the armour gauge while they repair.
+- 2026-10-22 (M8 part A, steps A3/A6; accepted in round 50 (2026-10-22)): the Auto-repair nanites are built in part A (D6, the Mk IV's reason); a hit pauses them for 1 s; the pip `+` beside the armour gauge while they repair.

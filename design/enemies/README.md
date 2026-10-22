@@ -398,7 +398,7 @@ popcorn stays easy (the campaign's "many small, easy units"), and Act 1's levels
 **Exception, the Needler and the Stinger** (the user's Act 2 playtest, 2026-10-18: "the missiles take
 out most enemies with a single shot"): the `small` units listed in the basis's `small_act_hp`
 ([data.yaml](data.yaml)) get the factor too, **capped at ×3**, in its listed levels, **Levels 08–09
-and 11–18**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
+and 11–22**: the Needler 4 → 12 HP (two Pulse Cannon bolts), the Stinger 6 → 14 at L08, 15 at L09, 17 at
 L12 and 18 at L13 and L15–L18; the Skitters stay one-shot fodder, and the turrets, mortars and Act 2's own small
 units keep their HP. Level 18 (M7 part E) joins with its waves built to the Act 2+ floor (the user's decision
 of 2026-10-19), Levels 15, 16 and 17 with their reworks (steps PE15, PE16 and PE17). Level 10 and the rest of Act 3 keep 4 and 6: applied there, the autopilot's Level 10
@@ -865,3 +865,5 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   the Mote Swarm's loop-backs) and bosses feed no edge warning (see [HUD](../ui/hud/README.md)).
 - 2026-10-22 (M8 part A, step A2): `reference_dps` for Levels 22–28 (96 → 120, the generator's hand plan of round 48)
   in [data.yaml](data.yaml), so the act HP factor reaches Act 4; parts B–H re-measure each level with `levelReport`.
+- 2026-10-22 (M8 part B, step B3): `small_act_hp.levels` extended to Level 22, as its approved README has it (the
+  Needler and the Stinger take the factor capped at ×3, 12 and 18 HP, doubled by the beam era to 24 and 36).

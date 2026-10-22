@@ -1,0 +1,16 @@
+# Act 4 – Deep Water: its levels and the act intro (title card and the four intro pages), rendered into README.md (Act
+# intro and outro). M8 part B, step B2, from the approved texts (round 48). The act-end outro after Level 28 and the
+# `next_act` for the release's end (ACT V · THE BELT) come with part H, with their images and voices.
+# Schema: ../../tech/architecture/README.md#data-file-schemas
+levels: [22, 28]
+
+title_card:  # over the act's still (ui/act-4-deep-water-still.png, tools/art/act_stills.py act-4 from Level 22's backdrop): Europa's ice shelf from the entry corridor, the Conamara Chaos ice field, Jupiter filling the sky, a thin steam plume from the first rig
+  act: ACT IV
+  name: DEEP WATER
+  line: Europa · July 2185
+
+briefing:  # three pages by Commander Okafor, one by Dr. Varga (approved in round 48), each voiced and with its image (tools/art/briefing_images.py)
+  - {speaker: Okafor, expression: grim, image: act-4-arrival, line: "Twelve days at full burn, and the Vrell beat us to Europa by a week. Their fleet is in orbit and their drill rigs are on the ice. Conamara Station has been feeling the tremors since before we left Mars."}
+  - {speaker: Varga, image: act-4-europa-cutaway, line: "Europa is a shell of ice kilometres thick over an ocean. Forty thousand people live under it, in Thera Deep, and eat from its kelp farms. The Vrell are drilling for that ocean. They are not here for the ice."}
+  - {speaker: Okafor, image: act-4-hydro-kit, line: "The Stormhawks are refitted for the water: sealed intakes, a torpedo rack, a hull that does not mind the pressure. Everything slows down there, theirs and yours. Anything that is not a torpedo or a depth charge loses a third of its bite. Fly accordingly."}
+  - {speaker: Okafor, expression: fierce, image: act-4-drop, line: "We hit the rigs on the surface first, then we follow the hole down. Drop in ninety minutes. Mission briefing follows. Aegis Actual out."}

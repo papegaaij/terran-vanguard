@@ -12,12 +12,21 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      scanlines), for the briefing speakers okafor, rook (from
                                      Act 2: Level 08's hangar teaser, round 30) and varga
   radio-the-choir-neutral_0..31.png  the Choir's interference glyph, a 32-frame loop (12 fps)
+  radio-conamara-neutral.png         72x72, Dr. Ilse Brandt, Conamara Station's director (Levels 22-23, the
+                                     speaker `conamara`; M8 part B batch, round 51, straight to production):
+                                     a woman in her late fifties, dark ash bob with a side fringe, tired
+                                     eyes, a quilted red polar parka with a high collar and an amber station
+                                     patch, a headset with a boom mic; lit by the dome control room's
+                                     sodium lamps (a warm amber rim from the right) with the dome's ribs,
+                                     two sodium lamps and the consoles' screens behind her
   design/story/characters/concept/portraits-final-r13-a.png/.gif   review sheet and loop
   design/story/characters/rook/concept/rook-briefing-portrait-final-r30-a.png   Rook's briefing
                                      portraits (round 30), next to his radio portraits and the
                                      other briefing speakers'
   design/story/characters/concept/portraits-final-r38-a.png   the colonial generic's review
                                      (round 38): 1x, 2x, 4x and a line-up with the other generics
+  design/story/characters/concept/portraits-final-r51-a.png   Dr. Brandt's review (round 51): 1x, 2x,
+                                     4x and a line-up with the other minor speakers
 
 The busts are the concept SDF busts (tools/concept/portraits_r03.py, the generic speakers of
 portraits_r08.py), imported unchanged; the expressions replace their face with this script's
@@ -67,11 +76,13 @@ SPEAKERS = {
     "generic-cdf": (("neutral",), ("radio",)),
     "generic-civilian": (("neutral",), ("radio",)),
     "generic-colonial": (("neutral",), ("radio",)),
+    "conamara": (("neutral",), ("radio",)),
 }
 # M7 part B: the colonial generic is round 36's chosen variant under the game's slug
 r03.CAST["generic-colonial"] = dict(r03.CAST[f"generic-colonial-{r36.CHOSEN}"])
 # the batch each speaker was made in (the Source note); the UI batch's are left out
-BATCHES = {"generic-colonial": "M7 part B batch"}
+BATCHES = {"generic-colonial": "M7 part B batch", "conamara": "M8 part B batch"}
+CONAMARA_ROUND = "r51"
 COLONIAL_ROUND = "r38"
 CONCEPT_COLONIAL = CONCEPT
 CHOIR = "the-choir"
@@ -92,6 +103,92 @@ FACES = {
     "fierce": dict(brow_inner=-0.06, brow_outer=0.03, brow_in=0.02, brow_r=0.026, lid=0.01, lower=-0.002,
                    eyes=1.25, mouth="shout", pitch=0.03),
 }
+
+
+# --------------------------------------------------------------------------- Dr. Ilse Brandt (Conamara)
+
+SKIN, EYE, IRIS, LIPS, HAIR, CLOTH, ACCENT, METAL, GLOW, EXTRA, BROW = range(11)
+SODIUM = (255, 168, 56)
+
+
+def brandt():
+    """Dr. Ilse Brandt, Conamara Station's director (L22-23): a tired, precise woman in her late fifties; an
+    dark ash bob going grey with a side fringe, a headset with a boom mic, a quilted red polar station parka with a high
+    collar and an amber station patch, the inner fleece showing at the throat."""
+    mats = [
+        sdf.Material((0.84, 0.68, 0.6), shininess=16, spec=0.2),           # fair skin
+        sdf.Material((0.86, 0.84, 0.8), shininess=60, spec=0.5),
+        sdf.Material((0.16, 0.22, 0.28), shininess=90, spec=0.9),          # grey-blue iris
+        sdf.Material((0.62, 0.38, 0.36), shininess=24, spec=0.25),
+        sdf.Material((0.46, 0.42, 0.38), shininess=14, spec=0.18, pattern=r03.noise_pattern(220, 0.22, 4)),  # dark ash
+        sdf.Material((0.66, 0.16, 0.1), shininess=12, spec=0.15, pattern=r03.noise_pattern(60, 0.1, 5)),  # red parka
+        sdf.Material((0.95, 0.6, 0.16), shininess=18, spec=0.25),          # amber station patch
+        sdf.Material((0.22, 0.22, 0.24), metal=0.5, shininess=60, spec=0.6),  # headset
+        sdf.Material((0.1, 0.1, 0.1), emission=(1.0, 0.55, 0.15)),         # on-air LED (sodium)
+        sdf.Material((0.74, 0.72, 0.66), shininess=6, spec=0.05, pattern=r03.noise_pattern(150, 0.18, 2)),
+        sdf.Material((0.56, 0.54, 0.5), shininess=8, spec=0.08),           # grey brows
+    ]
+
+    def scene(p):
+        q = r03.turn(p, -0.2, 0.04)                    # three-quarter, as the other speakers
+        items, skin = r03.face(q, jaw=0.9, mouth="smile")
+        hair = sdf.sd_ellipsoid(q, (0, 0.5, -0.05), (0.33, 0.38, 0.34))
+        hair = np.maximum(hair, -(q[:, 1] - 0.56 + 0.42 * np.maximum(q[:, 2] - 0.02, 0)))
+        bob = sdf.sd_ellipsoid(q, (0, 0.38, -0.07), (0.315, 0.17, 0.27))  # the bob down to the jaw
+        bob = np.maximum(bob, q[:, 2] - 0.12)
+        hair = sdf.smin(hair, bob, 0.08)
+        fringe = sdf.sd_ellipsoid(q, (0.1, 0.63, 0.2), (0.22, 0.08, 0.12))    # swept to her left
+        fringe = np.maximum(fringe, q[:, 1] - 0.72 - 0.25 * (q[:, 0] - 0.1))
+        hair = sdf.smin(hair, fringe, 0.06)
+        band = np.maximum(r03.sd_torus_z(q, (0, 0.44, -0.04), 0.355, 0.02), -q[:, 1] + 0.44)
+        cup = sdf.sd_cylinder_x(q, (-0.34, 0.42, -0.02), 0.07, 0.03)
+        boom = sdf.sd_capsule(q, (-0.35, 0.38, 0.03), (-0.24, 0.27, 0.2), 0.011)
+        mic = sdf.sd_sphere(q, (-0.235, 0.265, 0.2), 0.02)
+        led = sdf.sd_sphere(q, (-0.36, 0.39, 0.05), 0.013)
+        pb = r03.turn(p, -0.08)
+        neck, torso = r03.body(pb, neck_r=0.115, shoulders=0.84)
+        collar = sdf.sd_cylinder_y(pb, (0, -0.07, -0.04), 0.25, 0.08)
+        collar = np.maximum(collar, -sdf.sd_cylinder_y(pb, (0, -0.07, -0.04), 0.17, 0.3))
+        collar = np.maximum(collar, -(pb[:, 2] - 0.06 - 0.9 * np.abs(pb[:, 0])))   # open at the front
+        fleece = sdf.sd_cylinder_y(pb, (0, -0.06, -0.03), 0.17, 0.07)
+        quilt = [sdf.sd_ellipsoid(pb, (s * 0.5, -0.3, -0.02), (0.24, 0.1, 0.23)) for s in (-1, 1)]
+        patch = sdf.sd_box(pb, (0.42, -0.4, 0.22), (0.07, 0.05, 0.02), 0.012)
+        zip_ = sdf.sd_box(pb, (0.0, -0.5, 0.24), (0.012, 0.32, 0.01), 0.004)
+        return sdf.union(*items, (hair, HAIR), (sdf.smin(neck, skin, 0.05), SKIN), (torso, CLOTH),
+                         (np.minimum(*quilt), CLOTH), (fleece, EXTRA), (collar, CLOTH), (patch, ACCENT),
+                         (zip_, METAL), (band, METAL), (cup, METAL), (boom, METAL), (mic, METAL), (led, GLOW))
+    return scene, mats
+
+
+r03.CAST["conamara"] = dict(build=brandt, name="DR. I. BRANDT", role="CONAMARA STATION",
+                            key=(-1.4, 2.2, 3.2), rim=(2.6, 0.9, -1.0), rim_col=(1.0, 0.6, 0.2),
+                            bg=((18, 10, 4), (90, 52, 14)), fill_col=(1.0, 0.66, 0.3), channel="cdf",
+                            exposure=1.15)
+
+
+def conamara_room(ramp):
+    """The radio portrait's background for Brandt: the sodium-lit dome control room, drawn in the channel's
+    dark tones: the dome's curved ribs, two sodium lamps (warm amber with a small halo) and a row of console
+    screens low behind her shoulders."""
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float64)
+    bg = np.zeros((N, N, 3)) + ramp[0] * 255
+    for cx in (-30.0, 36.0, 102.0):                    # the dome's ribs: arcs converging overhead
+        r = np.hypot(xx - cx, (yy + 40) * 0.9)
+        bg[np.abs(r - 78) < 1.0] = ramp[1] * 255 * 0.9
+    bg[(yy > 7) & (yy < 9)] = ramp[1] * 255 * 0.6      # a ring beam
+    for lx, ly in ((10, 14), (60, 10)):                # the sodium lamps
+        d = np.hypot(xx - lx, yy - ly)
+        halo = np.clip(1 - d / 9, 0, 1) ** 1.5
+        bg = bg * (1 - halo[..., None] * 0.55) + np.array(SODIUM) * halo[..., None] * 0.55
+        bg[d < 1.6] = (255, 226, 160)
+    for k, x0 in enumerate(range(2, N, 13)):           # consoles: screens low on the wall
+        lit = ramp[3] if k % 2 else ramp[2]
+        bg[52:57, x0:x0 + 8] = lit * 255 * 0.7
+        bg[57:58, x0:x0 + 8] = np.array(SODIUM) * 0.35
+    return bg
+
+
+ROOMS = {"conamara": conamara_room}
 
 
 # --------------------------------------------------------------------------- the expressive face
@@ -217,7 +314,7 @@ def screen(slug, fig):
     a = arr[..., 3] > 0
     yy, xx = np.mgrid[0:N, 0:N]
     grid = (xx % 6 == 0) & (yy % 6 == 0)
-    bg = np.where(grid[..., None], ramp[1] * 255 * 0.8, ramp[0] * 255)
+    bg = ROOMS[slug](ramp) if slug in ROOMS else np.where(grid[..., None], ramp[1] * 255 * 0.8, ramp[0] * 255)
     img = np.where(a[..., None], arr[..., :3], bg)
     pad = np.pad(a, 1)
     touch = (pad[:-2, 1:-1] | pad[2:, 1:-1] | pad[1:-1, :-2] | pad[1:-1, 2:]) & ~a
@@ -397,6 +494,29 @@ def review_colonial():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+def review_conamara():
+    """Round 51: Dr. Brandt (Conamara) at 1x, 2x and 4x, and at 1x next to the other minor speakers."""
+    img = load("radio-conamara-neutral")
+    others = ("generic-cdf", "generic-civilian", "generic-colonial", "conamara")
+    width = 16 + 72 + 12 + 144 + 12 + 288 + 16 + len(others) * (72 + 12) + 16
+    sheet = raster.sheet(width, 56 + 288 + 40, f"CONAMARA RADIO PORTRAIT (FINAL {CONAMARA_ROUND.upper()})",
+                         f"PRODUCTION ART, M8 PART B BATCH - {CONAMARA_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"DR. ILSE BRANDT, NEUTRAL: 72X72 AT 1X, 2X, 4X ({artkit.colour_count([img])} "
+                                    "COLOURS) | THE MINOR SPEAKERS AT 1X", raster.LABEL)
+    x, y = 16, 56
+    for zoom in (1, 2, 4):
+        sheet.alpha_composite(sprite.enlarge(img, zoom), (x, y))
+        x += 72 * zoom + 12
+    x += 4
+    for slug in others:
+        sheet.alpha_composite(load(f"radio-{slug}-neutral"), (x, y))
+        raster.draw_text(sheet, x, y + 76, slug.replace("generic-", "").upper(), raster.LABEL_DIM)
+        x += 72 + 12
+    png = CONCEPT / f"portraits-final-{CONAMARA_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
     unknown = set(only) - set(SPEAKERS) - {CHOIR}
@@ -404,7 +524,9 @@ if __name__ == "__main__":
         sys.exit(f"unknown speakers: {', '.join(sorted(unknown))}")
     if "--review" not in sys.argv[1:]:
         build(only)
-    if not only or set(only) - {"generic-colonial"}:
+    if not only or set(only) - {"generic-colonial", "conamara"}:
         review()
     if not only or "generic-colonial" in only:
         review_colonial()
+    if not only or "conamara" in only:
+        review_conamara()

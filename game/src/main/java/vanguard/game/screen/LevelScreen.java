@@ -13,6 +13,7 @@ import vanguard.content.Content;
 import vanguard.content.Difficulty;
 import vanguard.content.DifficultyData;
 import vanguard.content.Expression;
+import vanguard.content.HazardsBlock;
 import vanguard.content.LevelData;
 import vanguard.content.SimSpecs;
 import vanguard.content.SpecialsData;
@@ -44,6 +45,7 @@ import vanguard.game.render.Effects;
 import vanguard.game.render.EnemyLooks;
 import vanguard.game.render.EventPrompt;
 import vanguard.game.render.Hud;
+import vanguard.game.render.IceCrawlerLooks;
 import vanguard.game.render.LevelRenderer;
 import vanguard.game.render.MilitiaFlak;
 import vanguard.game.render.PodPivots;
@@ -275,9 +277,15 @@ public final class LevelScreen implements GameScreen {
                 sortie.defending(),
                 level.released().stream()
                         .filter(drop -> drop.sprite().isPresent())
+                        // M8 part B: a ground vehicle's drop (Level 22's ice-crawler) has no rotor launch.
+                        .filter(drop -> !IceCrawlerLooks.carried(drop))
                         .mapToDouble(LevelData.Drop::t)
                         .toArray(),
                 DroneLooks.ARC_SECONDS);
+        // M8 part B: Level 22's ice geysers sound as geysers, not furnace vents.
+        sounds.geysers(level.vents()
+                .map(vents -> vents.lookOrDefault().equals(HazardsBlock.Vents.ICE_GEYSER))
+                .orElse(false));
         // M7 part D: Level 17's domes: glass hits and breaks, the bombers' drops.
         sounds.ground(sortie.groundAllies());
         // M5 part H: Level 14's canopy withers at the Siege Spire's death.

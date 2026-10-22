@@ -32,7 +32,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      Ghost Drone nose down with its red eye); warden-tank, revenant-walker (Level 19, M7
                      part F batch: the production models of tools/art/warden_tank.py, the grey hull driving
                      down with the turret aimed along it, and tools/art/revenant_walker.py, walking down in
-                     walk phase 0 with its pods aimed ahead and the flamer at rest, scaled to fit)
+                     walk phase 0 with its pods aimed ahead and the flamer at rest, scaled to fit);
+                     drill-rig (Level 22, M8 part B batch: the production models of tools/art/drill_rig.py,
+                     the core with its augers and the four pumps on their hoses, scaled to fit)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -103,6 +105,7 @@ import burrower  # noqa: E402  (the Burrower's production model)
 import canyon_units  # noqa: E402  (the Tendril Anchor's and the Threadcrawler's production models)
 import coilwyrm  # noqa: E402  (the Coilwyrm's production models)
 import dust_kite  # noqa: E402  (the Dust Kite's production model)
+import drill_rig  # noqa: E402  (the Drill Rig's production models)
 import creeper  # noqa: E402  (the Creeper's production model)
 import dust_colossus  # noqa: E402  (the Dust Colossus's production sprites)
 import reef_spitter  # noqa: E402  (the Reef Spitter's production gun and raft models)
@@ -150,13 +153,14 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "dust-devil": "M7 part E batch", "ghost-drone": "M7 part E batch",
            "unclassified-ghost-drone": "M7 part E batch",
            "warden-tank": "M7 part F batch", "revenant-walker": "M7 part F batch",
-           "boss-revenant-walker": "M7 part F batch", "boss-dust-colossus": "M7 part H batch"}
+           "boss-revenant-walker": "M7 part F batch", "boss-dust-colossus": "M7 part H batch",
+           "drill-rig": "M8 part B batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
           "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
-          "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44"}
+          "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44", "M8 part B batch": "r51"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -192,6 +196,7 @@ ENEMIES = {
     "ghost-drone": storm_units.ghost_intel_model,
     "warden-tank": warden_tank.intel_model,
     "revenant-walker": lambda: walker_model(),
+    "drill-rig": drill_rig.intel_model,
 }
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}

@@ -92,7 +92,7 @@ final class PlayerCues extends SoundFamily {
         charges = new boolean[mounts];
         wingman.ifPresent(gun -> {
             shots[armament.size()] = shot(gun.sfx());
-            // M8 part A: the Bulwark's cannon: the ballistic family lowered, a heavier slug (pending round 50).
+            // M8 part A: the Bulwark's cannon: the ballistic family lowered, a heavier slug (accepted in round 50).
             shotPitch[armament.size()] = gun.sfx().equals(BULWARK_CANNON) ? BULWARK_PITCH : 1;
         });
         for (int m = 0; m < armament.size(); m++) {
@@ -131,7 +131,7 @@ final class PlayerCues extends SoundFamily {
             case "missile" -> Sfx.MISSILE_SHOT;
             case "mine" -> Sfx.MINE_DROP;
             case "torpedo" -> Sfx.SHOT_TORPEDO;
-            // M8 part A: the Act 4 arsenal (round 50's a until the pick) and the Bulwark's cannon.
+            // M8 part A: the Act 4 arsenal (round 50's picks) and the Bulwark's cannon.
             case "harpoon" -> Sfx.SHOT_HARPOON;
             case DEPTH_CHARGE -> Sfx.SHOT_DEPTH_CHARGE;
             case BULWARK_CANNON -> Sfx.BALLISTIC_SHOT;

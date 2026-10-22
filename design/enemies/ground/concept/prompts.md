@@ -346,3 +346,14 @@ off, bombs taking the pumps and then the core, a bore hole and a steam plume).
 - **Negative prompt:** as A.
 - **Animation brief:** as A (the three auger blades turn).
 - **Mockup generator:** `python3 tools/concept/enemies_r48.py drill-rig b`
+
+## drill-rig-final-r51-a
+
+Round 51, production art (M8 part B batch, step ART-B; from the chosen concept drill-rig-r48-b, the rust auger
+flower of `tools/concept/enemies_r48.py`, with the round-48 note "b's augers are faint": the three auger blades are
+rebuilt thicker and taller in their own dark iron-rust chitin with bone cutting edges). Not a mockup: the review
+sheet and a loop of the files written by [tools/art/drill_rig.py](../../../../tools/art/drill_rig.py) (held in
+`build/art-held/sprites/` until the drill rig's `data.yaml` exists): the 128 px core with the collar's 8 spin frames
+and its additive glow, the stump (remains), the 36 px pump's heave and its dead frame, the base and crack decals, the
+steam plume, the shard ring's tell and release; the GIF on Level 22's `ice-shelf` tile: the spin, a tell and a ring of
+ten lime shards, bombs taking the pumps one by one (the ring slowing), the core's death, the stump, crack and steam.

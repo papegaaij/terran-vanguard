@@ -74,8 +74,11 @@ final class LevelRules {
         return drops;
     }
 
-    /** The secondary objective for the simulation; a parts objective's parts and phase as indexes into the boss's. */
-    static Secondary secondary(Content content, LevelData level, LevelData.Secondary secondary) {
+    /**
+     * The secondary objective for the simulation on {@code difficulty}; a parts objective's parts and phase as indexes
+     * into the boss's; M8 part B: an escapes objective's allowed on that difficulty.
+     */
+    static Secondary secondary(Content content, LevelData level, LevelData.Secondary secondary, Difficulty difficulty) {
         // M7 part D (Q.25c): every ground ally untouched, or (round 41) standing (Level 17's "No dome lost",
         // SiegeRules).
         Optional<Secondary> allies = SiegeRules.secondary(secondary);
@@ -128,8 +131,9 @@ final class LevelRules {
                         parts,
                         beforePhase,
                         secondary.tag().orElse(""))
-                // M7 part F (Level 19's "12 of 14"): how many of an escapes objective's units may get away.
-                .withEscapesAllowed(secondary.escapesAllowed())
+                // M7 part F (Level 19's "12 of 14"): how many of an escapes objective's units may get away (M8 part B:
+                // by difficulty, Level 22's rigs).
+                .withEscapesAllowed(secondary.escapesAllowed(difficulty))
                 // Step SIM-K (Level 21's "the boss and its debris not counted"): a kill ratio without its bosses.
                 .withBossesCounted(secondary.bossesCounted());
     }

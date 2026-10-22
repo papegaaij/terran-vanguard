@@ -126,20 +126,21 @@ final class SiegeRules {
     /**
      * {@code gun} as a ring (the Choir Herald's song): the hook's {@code attacks.<name>.count} (hard's 12) instead of
      * the stat block's, spread round the circle ({@code 2π × (n − 1) / n}, so the n bullets lie evenly apart); another
-     * attack's gun as it is.
+     * attack's gun as it is. M8 part B: with the hook's {@code aimed} shards (the hard rig's).
      */
     static EnemyGun ring(EnemyData enemy, EnemyData.Attack attack, Difficulty difficulty, EnemyGun gun) {
         if (!attack.pattern().equals(RING)) {
             return gun;
         }
-        int count = attack.name()
-                .flatMap(name -> UnitRules.hook(enemy, difficulty)
-                        .flatMap(EnemyData.Hook::attacks)
-                        .map(changes -> changes.get(name)))
-                .flatMap(EnemyData.AttackChange::count)
+        Optional<EnemyData.AttackChange> change = attack.name().flatMap(name -> UnitRules.hook(enemy, difficulty)
+                .flatMap(EnemyData.Hook::attacks)
+                .map(changes -> changes.get(name)));
+        int count = change.flatMap(EnemyData.AttackChange::count)
                 .orElse(attack.count()
                         .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": a ring has a count")));
-        return new EnemyGun(
+        // M8 part B (design/enemies/ground/drill-rig, hard): the hook's aimed shards beside the ring.
+        int aimed = change.flatMap(EnemyData.AttackChange::aimed).orElse(0);
+        EnemyGun ring = new EnemyGun(
                 gun.intervalSeconds(),
                 gun.firstShotDelay(),
                 gun.burst(),
@@ -154,10 +155,11 @@ final class SiegeRules {
                 gun.mortar(),
                 gun.burstGapSeconds(),
                 gun.up());
+        return aimed > 0 ? ring.withAimedShards(aimed) : ring;
     }
 
     /**
-     * A unit's body (its {@code vital} part) when it carries a unit part ({@link #part}): its HP and bounty are the
+     * A unit's body (its {@code vital} part) when it carries unit parts ({@link #parts}): its HP and bounty are the
      * unit's in the simulation (the Shellback's 120 and 40); empty for another unit.
      */
     static Optional<EnemyData.PartData> body(EnemyData enemy) {
@@ -191,7 +193,7 @@ final class SiegeRules {
             out = out.withAura(Optional.of(aura(aura.get(), hook.flatMap(EnemyData.Hook::aura), enemy)));
         }
         if (carriesPart(enemy)) {
-            out = out.withPart(Optional.of(part(content, enemy, difficulty, actHp)));
+            out = out.withParts(parts(content, enemy, difficulty, actHp));
         }
         Optional<EnemyData.Roll> roll = enemy.roll();
         if (roll.isPresent()) {
@@ -215,26 +217,45 @@ final class SiegeRules {
                 aura.escortRadius());
     }
 
-    private static EnemySpec.UnitPart part(Content content, EnemyData enemy, Difficulty difficulty, double actHp) {
+    /**
+     * The unit's destroyable parts (the Shellback's vent; M8 part B: the Drill Rig's four pumps), in their stat
+     * block's order: each its HP by the HP lever and the act factor, its bounty, offset and hit box, bound to the gun
+     * when it carries the unit's attack, slowing it by its {@code slows} once lost; the body's {@code first_bonus}
+     * shared evenly among them (the sim pays the standing parts' bonus with a body kill: the Shellback's 8, the
+     * rig's 16 as 4 a pump).
+     */
+    private static List<EnemySpec.UnitPart> parts(
+            Content content, EnemyData enemy, Difficulty difficulty, double actHp) {
         List<EnemyData.PartData> parts = enemy.partList().orElseThrow();
         List<EnemyData.PartData> vital =
                 parts.stream().filter(p -> p.kind().equals("vital")).toList();
         List<EnemyData.PartData> destroyable =
                 parts.stream().filter(p -> p.kind().equals("destroyable")).toList();
-        if (vital.size() != 1 || destroyable.size() != 1 || parts.size() != 2) {
-            throw new IllegalArgumentException(enemy.name() + ": a unit's parts are its body (vital) and one part");
+        if (vital.size() != 1
+                || destroyable.isEmpty()
+                || destroyable.size() > EnemySpec.MOST_PARTS
+                || parts.size() != destroyable.size() + 1) {
+            throw new IllegalArgumentException(enemy.name() + ": a unit's parts are its body (vital) and 1 to "
+                    + EnemySpec.MOST_PARTS + " destroyable parts");
         }
-        EnemyData.PartData body = vital.getFirst();
-        EnemyData.PartData part = destroyable.getFirst();
-        return new EnemySpec.UnitPart(
-                part.name(),
-                content.difficulty().enemyHp(part.hp() * actHp, difficulty),
-                SimSpecs.hitbox(part.hitbox()),
-                part.offset().x(),
-                part.offset().y(),
-                part.bounty(),
-                part.attack().isPresent(),
-                body.firstBonus().orElse(0));
+        int firstBonus = vital.getFirst().firstBonus().orElse(0);
+        if (firstBonus % destroyable.size() != 0) {
+            throw new IllegalArgumentException(enemy.name() + ": the body's first_bonus " + firstBonus
+                    + " is shared evenly among its " + destroyable.size() + " parts");
+        }
+        int bonusEach = firstBonus / destroyable.size();
+        return destroyable.stream()
+                .map(part -> new EnemySpec.UnitPart(
+                        part.name(),
+                        content.difficulty().enemyHp(part.hp() * actHp, difficulty),
+                        SimSpecs.hitbox(part.hitbox()),
+                        part.offset().x(),
+                        part.offset().y(),
+                        part.bounty(),
+                        part.attack().isPresent(),
+                        bonusEach,
+                        part.slows().orElse(0.0)))
+                .toList();
     }
 
     private static EnemySpec.Roll roll(EnemyData.Roll roll, Optional<EnemyData.RollChange> change) {

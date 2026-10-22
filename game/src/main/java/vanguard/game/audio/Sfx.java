@@ -465,6 +465,31 @@ public enum Sfx {
      */
     BELT_RUMBLE("sfx/belt-rumble-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
+     * M8 part B: an ice geyser's tell (round 51 a, proposed: a frozen lake's ice cracking over a pressure release's
+     * rising hiss, 1.2 s), as each crack of a row darkens and glows (the vents' {@code look: ice-geyser}, Level 22).
+     */
+    GEYSER_TELL("sfx/geyser-tell-r51-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part B: an ice geyser's burst (round 51 a, proposed: a steam safety valve's roar over a sea blowhole's spout
+     * and a muffled lake-ice boom, 1.5 s), as its steam column stands up.
+     */
+    GEYSER_BURST("sfx/geyser-burst-r51-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part B: a Drill Rig's collar boring (round 51 a, proposed: an oil rig's drill whine over a digging rumble, a
+     * seamless 4 s loop): one quiet loop while a rig's collar turns on the screen, panned to the one nearest the ship.
+     */
+    RIG_COLLAR("sfx/rig-collar-r51-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part B: a Drill Rig's ring of ice shards (round 51 a, proposed: a hammer smashing ice on an air hose's burst,
+     * 0.7 s), instead of the shots' report.
+     */
+    RIG_RING("sfx/rig-ring-r51-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part B: a Drill Rig's core destroyed (round 51 a, proposed: a metal crash on a lake-ice boom, a groan and a
+     * steam release, 3.1 s), with its {@code large} explosion.
+     */
+    RIG_DEATH("sfx/rig-death-r51-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
      * point.
@@ -586,22 +611,22 @@ public enum Sfx {
     /** M7 part A: the Evasive thrusters' burst as a dash starts. */
     DASH("sfx/dash-r46-b.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
     /**
-     * M8 part A, the Act 4 arsenal (design/audio/sfx, round 50's proposals; the a variants play until the user's pick,
-     * which may swap the file): the Harpoon Torpedoes' launch, its run (one loop while any harpoon is in flight) and
-     * its hit; the Depth Charges' roll-out and burst.
+     * M8 part A, the Act 4 arsenal (design/audio/sfx, round 50's picks, 2026-10-22: launch b, run a, hit a, roll-out b,
+     * burst a; cut from the Freesound previews until their originals): the Harpoon Torpedoes' launch, its run (one loop
+     * while any harpoon is in flight) and its hit; the Depth Charges' roll-out and burst.
      */
-    SHOT_HARPOON("sfx/shot-harpoon-r50-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    SHOT_HARPOON("sfx/shot-harpoon-r50-b.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
 
     HARPOON_RUN("sfx/harpoon-run-r50-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
     HARPOON_HIT("sfx/harpoon-hit-r50-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
-    SHOT_DEPTH_CHARGE("sfx/shot-depth-charge-r50-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    SHOT_DEPTH_CHARGE("sfx/shot-depth-charge-r50-b.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
     DEPTH_CHARGE_BURST("sfx/depth-charge-burst-r50-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
     /** M8 part A: the Sonar Pulse's ping (round 04 a, chosen) and the Decoy Flares' launch (round 08 a, chosen). */
     SPECIAL_SONAR("sfx/special-sonar-r04-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
 
     SPECIAL_FLARES("sfx/special-flares-r08-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
-    /** M8 part A: the special's row changing state at a waterline (round 50 a, proposed; synthesized). */
-    SPECIAL_LIMIT("sfx/special-limit-r50-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /** M8 part A: the special's row changing state at a waterline (round 50 b, chosen; synthesized). */
+    SPECIAL_LIMIT("sfx/special-limit-r50-b.ogg", 1, Bus.EFFECTS, WARNING),
     /** The Earth-orbit ambience, looped (design/audio/sfx, Ambience per setting). */
     AMBIENCE_ORBIT("sfx/ambience-orbit-r08-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The Luna ambience, looped (design/audio/sfx, Ambience per setting): Level 04. */
@@ -662,6 +687,16 @@ public enum Sfx {
      * seamless 16 s loop, -28 LUFS): Level 20's ambience layer under the travelling ridge ({@code ambience_layers}).
      */
     AMBIENCE_BASIN_RUMBLE("sfx/basin-rumble-r43-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part B: Europa's ice (round 51 a, proposed: a glacial wind over lake-ice fractures an octave down, the deep
+     * booms and groans rolling under it, a seamless 16 s loop): Level 22 to its run-in.
+     */
+    AMBIENCE_EUROPA_ICE("sfx/europa-ice-r51-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part B: the run-in to Conamara Station (round 51 a, proposed: the Europa ice bed with an underground hall's
+     * ventilation hum and a transformer's drone, a seamless 16 s loop): Level 22's section 3.
+     */
+    AMBIENCE_CONAMARA("sfx/conamara-station-r51-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -756,6 +791,9 @@ public enum Sfx {
             case "mars-foundry" -> AMBIENCE_MARS_FOUNDRY;
             // M7 part G: an ambience layer over the setting's (Level 20's ridge), not a setting of its own.
             case "basin-rumble" -> AMBIENCE_BASIN_RUMBLE;
+            // M8 part B: Europa's ice shelf and the station's bed (Level 22).
+            case "europa-ice" -> AMBIENCE_EUROPA_ICE;
+            case "conamara-station" -> AMBIENCE_CONAMARA;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

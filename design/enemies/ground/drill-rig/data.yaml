@@ -1,0 +1,62 @@
+# Drill Rig stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part B, step B2 (Level 22), from the approved hand table (round 48): a hardened ground structure with a vital core
+# and four destroyable pumps (the Shellback's unit parts, four of them) that carry the collar's ring: each pump lost
+# slows it 0.5 s (`slows`), the ring stops with the last pump (sim: step B1; mapped in step B3). Credits: a core-first
+# kill pays the whole 56 (the core's 40 and its first_bonus 16, as Level 22's credit table counts it); the pumps first
+# pay 4 each on top. Pump offsets from step ART-B's pivots (assets/pivots/drill-rig.json). Defaults of the gap check,
+# pending the user's review in round 51: the shards use the existing lime `medium` bullet look, the pumps fire nothing
+# of their own.
+name: Drill Rig
+faction: Vrell
+layer: ground
+tier: large
+size: [120, 120]  # the core's sprite px (the collar and its augers); the pumps stand at its corners
+hitbox: [96, 96]  # the core's
+parts: multi
+part_list:  # offsets in its own frame (facing down the screen: dx right, dy up towards its tail)
+  - {name: core, offset: [0, 0], hitbox: [96, 96], hp: 150, kind: vital, bounty: 40, first_bonus: 16}   # first_bonus: a core-first kill pays the whole 56
+  - {name: pump-nw, offset: [-62, 58], hitbox: [24, 24], hp: 24, kind: destroyable, bounty: 4, attack: ring, slows: 0.5}
+  - {name: pump-ne, offset: [62, 58], hitbox: [24, 24], hp: 24, kind: destroyable, bounty: 4, attack: ring, slows: 0.5}
+  - {name: pump-se, offset: [62, -58], hitbox: [24, 24], hp: 24, kind: destroyable, bounty: 4, attack: ring, slows: 0.5}
+  - {name: pump-sw, offset: [-62, -58], hitbox: [24, 24], hp: 24, kind: destroyable, bounty: 4, attack: ring, slows: 0.5}
+orientation: fixed
+hp: 246           # the parts' sum: core 150, pumps 4 × 24 (2.6 s at the L22 reference DPS of 96; step B3b: the core falls to two of an Airstrike's blasts, hard's 195 too)
+armour: hardened  # only anti-ground deliveries, the Airstrike and the Smart Bomb damage it, every part (the Hive Node's rule)
+speed: 0          # scrolls with the ice
+movement:
+  terrain: {}
+attacks:
+  - pattern: ring
+    name: ring
+    bullet: medium
+    count: 10
+    interval: 3.5            # s, while any pump lives; +0.5 s a pump lost (the pumps' slows)
+    speed: 110               # px/s
+    first_shot_delay: 1.5    # s after it enters the screen
+    notes:
+      text: 'the collar fires a `{pattern}` of {count} lime ice shards ({speed} px/s, `{bullet}` = {damage}) every {interval} s while the pumps live; each pump lost slows it by 0.5 s (3.5 / 4.0 / 4.5 / 5.0 s), none with all four down'
+formations:
+  - {name: single}
+weak_points:
+  - {name: the lime bore core (the vital part; drawn only)}
+drops: []
+traits: [anti-ground, area]
+bounty: 56        # the parts' sum: core 40, pumps 4 × 4 (whole 56 by the core's first_bonus, core first)
+first_level: 22
+difficulty:
+  easy: {attacks: {ring: {interval: 4.5}}}
+  hard: {attacks: {ring: {aimed: 1}}}   # a second, aimed shard with every ring
+notes:
+  layer: ' (hardened: only `anti-ground` weapons, the Airstrike and the Smart Bomb damage it)'
+  size: '(the core); pump 32×32 (hitbox 24×24) at the collar''s corners'
+  parts: '`vital` core, 4 `destroyable` pumps (they carry the ring)'
+  orientation: (the drill collar spins decoratively)
+  hp: 'core 150 · pump 24 each (2.6 s at the L22 reference of 96; one Airstrike breaks the core on every difficulty); whole'
+  armour: 'hardened: other shots glance off with a spark; homing shots and Rook do not pick it unless their weapon is `anti-ground`'
+  speed: (scrolls with the ice)
+  movement: '`terrain`'
+  formations: '(a set of 2-4 rigs along the shelf, with 3-6 Spine Turrets round them)'
+  bounty: '; core 40, pumps 4 each; whole (core first) 56; the level''s objective counts the cores'
+  death: '`large` ground explosion; the collar stops, the ice cracks and a steam plume rises (a geyser scenery, not a hazard)'
+  used_in: the objective; not under water (it sits on the surface)
+  difficulty: 'easy: shards every 4.5 s; hard: a second `aimed` shard each time'

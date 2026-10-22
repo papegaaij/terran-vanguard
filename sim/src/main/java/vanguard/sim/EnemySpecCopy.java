@@ -1,5 +1,6 @@
 package vanguard.sim;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -50,7 +51,7 @@ final class EnemySpecCopy {
     Optional<EnemySpec.Link> link;
     Optional<EnemySpec.Crawl> crawl;
     Optional<EnemySpec.Aura> aura;
-    Optional<EnemySpec.UnitPart> part;
+    List<EnemySpec.UnitPart> parts;
     Optional<EnemySpec.Roll> roll;
     Optional<EnemySpec.Vortex> vortex;
     Optional<EnemySpec.Pull> pull;
@@ -102,7 +103,7 @@ final class EnemySpecCopy {
         link = spec.link();
         crawl = spec.crawl();
         aura = spec.aura();
-        part = spec.part();
+        parts = spec.parts();
         roll = spec.roll();
         vortex = spec.vortex();
         pull = spec.pull();
@@ -156,7 +157,7 @@ final class EnemySpecCopy {
                 link,
                 crawl,
                 aura,
-                part,
+                parts,
                 roll,
                 vortex,
                 pull,

@@ -65,7 +65,8 @@ class ActHpFactorTest {
         assertEquals(
                 List.of("needler", "stinger"), CONTENT.enemyBasis().smallActHp().units());
         assertEquals(
-                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21), // M7 part H: Level 21 (step PH2)
+                // M7 part H: Level 21 (step PH2); M8 part B: Level 22 (step B3, its approved README)
+                List.of(8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22),
                 CONTENT.enemyBasis().smallActHp().levels());
         // The Needler (4 HP, L01, reference 20): ×60/20 = 3 at L08, ×63/20 capped at 3 at L09.
         assertEquals(3, SimSpecs.actHpFactor(CONTENT, "needler", 2, 8), 1e-12);
@@ -158,7 +159,7 @@ class ActHpFactorTest {
     /**
      * M8 part A (step A4): in Act 4 (Levels 22–28, the hand plan's reference 96 to 120, the ice surface at L22 below
      * L21's 100) the factor follows the curve again: a returning {@code medium} unit by the ratio, the {@code small}
-     * units outside {@code small_act_hp}'s levels at ×1 but doubled by the beam era, {@code tiny} ones unchanged.
+     * units outside {@code small_act_hp}'s levels (L22 in them, step B3) at ×1 but doubled by the beam era, {@code tiny} ones unchanged.
      */
     @Test
     void anActFourLevelUsesTheActFourCurve() {
@@ -176,8 +177,9 @@ class ActHpFactorTest {
                     Math.rint(40 * ratio),
                     at("coilwyrm", Difficulty.MEDIUM, 4, level).hp(),
                     "L" + level);
-            // Small units: no act factor past Level 21 (small_act_hp ends there), the beam era's ×2 still on.
-            assertEquals(2, SimSpecs.actHpFactor(CONTENT, "needler", 4, level), 1e-12, "L" + level);
+            // Small units: no act factor past Level 22 (small_act_hp ends there: M8 part B, Level 22's README gives
+            // the Needler and the Stinger the factor capped at ×3), the beam era's ×2 still on.
+            assertEquals(level == 22 ? 6 : 2, SimSpecs.actHpFactor(CONTENT, "needler", 4, level), 1e-12, "L" + level);
             assertEquals(16, at("spine-turret", Difficulty.MEDIUM, 4, level).hp(), "L" + level);
             // Tiny units keep theirs.
             assertEquals(1, SimSpecs.actHpFactor(CONTENT, "skitter", 4, level), "L" + level);
@@ -188,6 +190,10 @@ class ActHpFactorTest {
         assertEquals(60, at("mantis", Difficulty.MEDIUM, 4, 28).hp());
         assertEquals(81, at("spore-bomber", Difficulty.MEDIUM, 4, 25).hp());
         assertEquals(78, at("mantis", Difficulty.HARD, 4, 28).hp());
+        // M8 part B: Level 22's Needler 4 × 3 = 12 and Stinger 6 × 3 = 18 (capped), doubled by the beam era.
+        assertEquals(24, at("needler", Difficulty.MEDIUM, 4, 22).hp());
+        assertEquals(36, at("stinger", Difficulty.MEDIUM, 4, 22).hp());
+        assertEquals(8, at("needler", Difficulty.MEDIUM, 4, 23).hp());
     }
 
     /**

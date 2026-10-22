@@ -80,6 +80,7 @@ abstract class RadioTimeline {
     static final String LEVEL_19 = "act-3-red-dust/level-19-foundry-of-tharsis";
     static final String LEVEL_20 = "act-3-red-dust/level-20-retreat-from-hellas";
     static final String LEVEL_21 = "act-3-red-dust/level-21-dust-colossus";
+    static final String LEVEL_22 = "act-4-deep-water/level-22-ice-shelf";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -387,6 +388,35 @@ abstract class RadioTimeline {
                                 new Event(170, CueTrigger.BOSS_PHASE, "Hunting"),
                                 new Event(215, CueTrigger.BOSS_PHASE, "Breaching anywhere"),
                                 new Event(245, CueTrigger.BOSS_DESTROYED, "dust-colossus"))));
+        // M8 part B: Level 22's events at the autopilot's times with the plan's fit (step B3b, levelReport's runs: the
+        // Airstrike on each rig in the lower half of the screen): the first geyser row's flare (t=12, the first row's
+        // tell); no rig broken (a fit without the strike or an anti-ground gun); medium: the first core at t≈47, the
+        // core-sample cache at t≈73, the secondary met with the third core at t≈79; hard: the first core at t≈47.5, the
+        // secondary with the fourth at t≈95.5, the cache left; easy: the secondary with the second core at t≈63, the
+        // cache at t≈71; a player who lets the first rig go: the first core with the second rig at t≈63.5, the cache
+        // shot as it enters (t≈70.9)
+        runs.put(
+                LEVEL_22,
+                List.of(
+                        List.of(new Event(12, CueTrigger.FIRST_GEYSER, "")),
+                        List.of(
+                                new Event(12, CueTrigger.FIRST_GEYSER, ""),
+                                new Event(47.1, CueTrigger.TARGET_DESTROYED, ""),
+                                new Event(73, CueTrigger.SECRET, "core-sample cache"),
+                                new Event(79.2, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(
+                                new Event(12, CueTrigger.FIRST_GEYSER, ""),
+                                new Event(47.5, CueTrigger.TARGET_DESTROYED, ""),
+                                new Event(95.5, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(
+                                new Event(12, CueTrigger.FIRST_GEYSER, ""),
+                                new Event(47.2, CueTrigger.TARGET_DESTROYED, ""),
+                                new Event(63.2, CueTrigger.SECONDARY_OBJECTIVE, ""),
+                                new Event(71, CueTrigger.SECRET, "core-sample cache")),
+                        List.of(
+                                new Event(12, CueTrigger.FIRST_GEYSER, ""),
+                                new Event(63.5, CueTrigger.TARGET_DESTROYED, ""),
+                                new Event(70.9, CueTrigger.SECRET, "core-sample cache"))));
         return runs;
     }
 

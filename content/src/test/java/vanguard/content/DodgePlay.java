@@ -145,7 +145,10 @@ final class DodgePlay {
     /** The side to dodge bullets and rammers to: negative = left, positive = right, 0 = nothing close. */
     static double threat(Sortie sortie, double shipX, double shipY) {
         // Level 05: with a battery unit on the screen it holds its line and dodges only the closest bullets.
-        boolean holding = TargetPlay.battery(sortie, shipY) != null || TargetPlay.hardenedTarget(sortie) != null;
+        // M8 part B: so it does over a Drill Rig it bombs (an anti-ground gun fitted).
+        boolean overRig = TargetPlay.overRig(sortie);
+        boolean holding =
+                TargetPlay.battery(sortie, shipY) != null || TargetPlay.hardenedTarget(sortie) != null || overRig;
         double bulletDx = holding ? 18 : 24;
         double bulletDy = holding ? 40 : DANGER;
         boolean fromBelow = sortie.airEscort();
@@ -167,7 +170,7 @@ final class DodgePlay {
         }
         // Level 05: the batteries' units lie on the ground and cannot ram, so it flies over them; M5 part G:
         // so do Level 13's boats and walkers round the relay.
-        boolean overGround = !sortie.script().objectives().targets().isEmpty() || sortie.defending();
+        boolean overGround = !sortie.script().objectives().targets().isEmpty() || sortie.defending() || overRig;
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             // M7 part B: a buried Burrower touches nothing; it is not dodged.

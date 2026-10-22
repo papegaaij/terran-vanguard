@@ -25,6 +25,20 @@ final class TargetPlay {
 
     private static final double STRIKE_HP = 15;
 
+    /**
+     * M8 part B (Level 22's Drill Rigs, step B3b): without an {@code anti-ground} gun the Airstrike is the only way
+     * through a rig's shell, so it goes in once the rig is wholly on the screen (below this height, px), not only as it
+     * is about to get away (the lower half of the screen): the bombers bomb their whole column, and the waves' dodging
+     * may take the last seconds.
+     */
+    private static final double RIG_STRIKE_LINE = 240;
+
+    /**
+     * M8 part B (step B3b): over a rig the strike goes in this close to its place, px (one of the two bombers 64 px
+     * either side still passes over the 96 px core with its 32 px blasts), also while the ship dodges.
+     */
+    private static final double RIG_STRIKE_SLACK = 24;
+
     /** The Airstrike's bombers fly this far either side of the ship's x (design/player/specials). */
     private static final double STRIKE_OFFSET = 64;
 
@@ -207,17 +221,102 @@ final class TargetPlay {
     }
 
     /**
+     * M8 part B (Level 22's Drill Rigs): the lowest hardened unit of the level's escapes objective on the screen (a rig:
+     * only {@code anti-ground} deliveries and the specials crack it); null without one, or on a level with a
+     * destroy-targets primary ({@link #hardenedTarget} serves those).
+     */
+    static Enemy hardenedEscapee(Sortie sortie) {
+        String escapes = sortie.script().objectives().secondary().escapes();
+        if (escapes.isEmpty() || !sortie.script().objectives().targets().isEmpty()) {
+            return null;
+        }
+        Enemy lowest = null;
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy enemy = sortie.enemy(i);
+            double y = enemy.renderY(1);
+            if (enemy.spec().hardened()
+                    && enemy.spec().slug().equals(escapes)
+                    && y < PlayField.HEIGHT - 20
+                    && y > 20
+                    && (lowest == null || y < lowest.renderY(1))) {
+                lowest = enemy;
+            }
+        }
+        return lowest;
+    }
+
+    /** M8 part B: whether it flies over a rig to bomb it: a hardened unit of the escapes objective on the screen and an
+     * {@code anti-ground} gun fitted. */
+    static boolean overRig(Sortie sortie) {
+        return hardenedEscapee(sortie) != null && antiGround(sortie);
+    }
+
+    /** M8 part B: whether the ship carries an {@code anti-ground} gun (the Bomb Rack, the Hammer Mortar). */
+    static boolean antiGround(Sortie sortie) {
+        var mounts = sortie.armament().mounts();
+        for (int m = 0; m < mounts.size(); m++) { // indexed: no iterator on C1 (the allocation tests)
+            if (mounts.get(m).weapon() != null && mounts.get(m).weapon().antiGround()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M8 part B: where to aim at a unit with parts (a rig): its lowest standing part (a pump), else its body. */
+    static double partsFirstX(Enemy unit) {
+        int part = lowestPart(unit);
+        return part < 0 ? unit.renderX(1) : unit.partX(part);
+    }
+
+    /** M8 part B: the height of {@link #partsFirstX}'s part, else of the body. */
+    static double partsFirstY(Enemy unit) {
+        int part = lowestPart(unit);
+        return part < 0 ? unit.renderY(1) : unit.partY(part);
+    }
+
+    private static int lowestPart(Enemy unit) {
+        int lowest = -1;
+        for (int p = 0; p < unit.partCount(); p++) {
+            if (unit.partAlive(p) && (lowest < 0 || unit.partY(p) < unit.partY(lowest))) {
+                lowest = p;
+            }
+        }
+        return lowest;
+    }
+
+    /**
      * Level 09: whether to call the Airstrike on a hardened target about to get away (low on the
-     * screen with HP left): only with an Airstrike fitted, charged and not already flying.
+     * screen with HP left): only with an Airstrike fitted, charged and not already flying. M8 part B: a rig of the
+     * escapes objective without an {@code anti-ground} gun fitted gets it as soon as it is on the screen
+     * ({@link #RIG_STRIKE_LINE}).
      */
     static boolean strikeDue(Sortie sortie, Enemy node) {
         var special = sortie.special();
+        double line = node.spec()
+                                .slug()
+                                .equals(sortie.script().objectives().secondary().escapes())
+                        && !antiGround(sortie)
+                ? RIG_STRIKE_LINE
+                : STRIKE_LOW;
         return special.fitted()
                 && special.name().equals("Airstrike")
                 && special.ready()
                 && special.charges() > 0
-                && node.renderY(1) < STRIKE_LOW
+                && node.renderY(1) < line
                 && node.hp() > STRIKE_HP;
+    }
+
+    /**
+     * M8 part B (step B3b): whether to call the Airstrike on a rig of the escapes objective now, without an {@code
+     * anti-ground} gun: due ({@link #strikeDue}) and either bomber's line within {@link #RIG_STRIKE_SLACK} of the rig
+     * (the ship {@link #STRIKE_OFFSET} to either side of it), so a dodge does not cost the strike.
+     */
+    static boolean rigStrikeNow(Sortie sortie, double shipX) {
+        Enemy rig = hardenedEscapee(sortie);
+        return rig != null
+                && !antiGround(sortie)
+                && strikeDue(sortie, rig)
+                && Math.abs(Math.abs(rig.renderX(1) - shipX) - STRIKE_OFFSET) <= RIG_STRIKE_SLACK;
     }
 
     /**

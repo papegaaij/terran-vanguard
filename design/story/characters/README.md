@@ -3,7 +3,7 @@ title: Characters
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-14
+updated: 2026-10-22
 ---
 
 # Characters
@@ -88,6 +88,7 @@ generator `tools/concept/portraits_r36.py`, prompts in [concept/prompts.md](conc
 | [concept/rejected/generic-colonial-r36-a.png](concept/rejected/generic-colonial-r36-a.png) | Generic colonial A, the old controller — older colonist in a dust-orange militia cap with a boom mic, rust clothes (72×72 at 1× and 2×) | rejected — round 36: b (dust-suit controller) picked |
 | [concept/generic-colonial-r36-b.png](concept/generic-colonial-r36-b.png) | Generic colonial B, the dust-suit controller — the same speaker as a surface worker, goggles on the brow and a respirator | chosen (round 36, C.1) |
 | [concept/portraits-final-r38-a.png](concept/portraits-final-r38-a.png) | Review sheet (`tools/art/portraits.py`, M7 part B): the colonial generic radio portrait `radio-generic-colonial-neutral` (Ares Control, from the chosen dust-suit look b), final art | chosen (round 38, F.6: approved as final) |
+| [concept/portraits-final-r51-a.png](concept/portraits-final-r51-a.png) | Review sheet (`tools/art/portraits.py`, M8 part B): Dr. Ilse Brandt's radio portrait `radio-conamara-neutral` (Conamara Station's director: dark ash bob, red polar parka, headset, the sodium-lit dome control room behind her) | proposed (round 51) |
 
 ## Decisions
 
@@ -103,3 +104,5 @@ generator `tools/concept/portraits_r36.py`, prompts in [concept/prompts.md](conc
 - 2026-10-14 (M7 part B, step ART-B): production art from the chosen round-36 look (generic colonial b), review sheet `portraits-final-r38-a` proposed for round 38 (pending the user's review).
 - 2026-10-14 (user, round 38): Ares Control's production portrait `portraits-final-r38-a` approved as final
   (F.6). `art` stays `chosen`.
+- 2026-10-22 (M8 part B, step ART-B; pending the user's review in round 51): Dr. Ilse Brandt's radio portrait `radio-conamara-neutral`
+  (`portraits-final-r51-a`): it reads plain next to the main cast's — accept or redo in [round 51](../../concept-rounds/round-51/README.md).

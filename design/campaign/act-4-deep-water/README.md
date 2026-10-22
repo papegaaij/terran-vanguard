@@ -2,7 +2,7 @@
 title: Act 4 – Deep Water
 design: approved
 implementation: in-progress
-art: none
+art: proposed
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
 updated: 2026-10-22
 ---
@@ -33,7 +33,7 @@ yet: the loader would fly it, so every number here is a hand table marked draft,
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [level-22-ice-shelf](level-22-ice-shelf/README.md) | Act 4's opener and breather: four Vrell drill rigs on Conamara's ice shelf, ice geysers, the run-in to the station | approved | not-started | none |
+| [level-22-ice-shelf](level-22-ice-shelf/README.md) | Act 4's opener and breather: four Vrell drill rigs on Conamara's ice shelf, ice geysers, the run-in to the station | approved | in-progress | proposed |
 | [level-23-through-the-ice](level-23-through-the-ice/README.md) | The descent: a drill shaft, the waterline where the hydro-kit switches the ship to the water rules, Thera Deep's kelp farms; Glassfin schools and the Eel Swarm | approved | not-started | none |
 | [level-24-abyssal-plain](level-24-abyssal-plain/README.md) | The ocean floor: Vrell spawning reefs, the Barbfin, three Abyss Rays rising from below, the first red-gold relay beacons | approved | not-started | none |
 | [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | not-started | none |
@@ -85,8 +85,9 @@ black and gold rise through it beside the Vrell fleet and open fire on the Coali
 
 Format: the [briefing screen](../../ui/briefing/README.md), as Acts 1–3. Order: the L21 debrief with the
 act summary → Act 3's outro (which ends on "*Aegis Wing leaves Mars in four days*") → this act's title card →
-the act intro below → the L22 mission briefing → the hangar visit before L22 (autosave) → L22. (Until M8 ships,
-the release ends after Act 3 with `ACT IV - DEEP WATER: COMING SOON`.) The intro continues from Act 3's outro,
+the act intro below → the L22 mission briefing → the hangar visit before L22 (autosave) → L22. (Since M8 part B
+Act 3 names no next act and its outro leads here; until part H moves the release's end to Level 28, the hangar
+before L23 cannot launch and reads `MORE: COMING SOON`.) The intro continues from Act 3's outro,
 which already told the Colossus's death, the Vrell leaving Mars and Varga's plot to Europa, so it opens on the
 arrival at Jupiter and does not repeat them. After the Maw falls the act ends in Level 21's order: the
 finale (the climb, the breakout, the reveal, the run, the orbit), the debrief with the act summary
@@ -102,15 +103,18 @@ the Vrell fleet got there first by a few days.
 `tools/art/act_stills.py act-4` from Level 22's production backdrop as Acts 2–3's were: Europa's ice shelf
 from the entry corridor, the Conamara Chaos ice field's broken plates and fissures, Jupiter filling the
 sky, a thin plume of steam from the first rig on the horizon; its chrome lettering
-`ui/act-4-deep-water-title.png` from `tools/art/act_titles.py`). Text (draft):
+`ui/act-4-deep-water-title.png` from `tools/art/act_titles.py`). Text (approved in round 48):
 
+<!-- data: act-title-card -->
 > ACT IV
 > DEEP WATER
 > Europa · July 2185
+<!-- /data -->
 
 **Act intro** (four pages, each voiced and with its own image in `assets/ui/briefing/`, as Act 3's). Texts
-(draft; decided in round 48 (2026-10-22)); three by Commander Okafor, one by Dr. Varga. Images are production art
-straight away (briefs only here: the build's art step makes them with `tools/art/briefing_images.py`):
+(approved in round 48 (2026-10-22)); three by Commander Okafor, one by Dr. Varga. The title card and the pages live
+in the act's [data.yaml](data.yaml) (`levels`, `title_card`, `briefing`; M8 part B, step B2) and are rendered here.
+Images are production art straight away (the build's art step makes them with `tools/art/briefing_images.py`):
 
 | Page | Speaker | Image |
 |---|---|---|
@@ -119,20 +123,22 @@ straight away (briefs only here: the build's art step makes them with `tools/art
 | 3 | Commander Okafor | `act-4-hydro-kit`: a Stormhawk in the transport's refit bay in a hydro-kit (sealed gun ports, intake fairings, a torpedo rack), ground crews on gantries, Rook's Ember craft beside it |
 | 4 | Commander Okafor (fierce) | `act-4-drop`: the transport's drop bay open over Europa, Aegis Wing's Stormhawks on their launch rails, the cracked white shelf far below under Jupiter |
 
-> **Commander Okafor:** "Twelve days at full burn, and the Vrell beat us to Europa by a week. Their
-> fleet is in orbit and their drill rigs are on the ice. Conamara Station has been feeling the tremors
-> since before we left Mars."
+<!-- data: act-briefing -->
+> **Commander Okafor:** "Twelve days at full burn, and the Vrell beat us to Europa by a week.
+> Their fleet is in orbit and their drill rigs are on the ice. Conamara Station has been feeling
+> the tremors since before we left Mars."
 >
-> **Dr. Varga:** "Europa is a shell of ice kilometres thick over an ocean. Forty thousand people live
-> under it, in Thera Deep, and eat from its kelp farms. The Vrell are drilling for that ocean. They are
-> not here for the ice."
+> **Dr. Varga:** "Europa is a shell of ice kilometres thick over an ocean. Forty thousand people
+> live under it, in Thera Deep, and eat from its kelp farms. The Vrell are drilling for that
+> ocean. They are not here for the ice."
 >
-> **Commander Okafor:** "The Stormhawks are refitted for the water: sealed intakes, a torpedo rack,
-> a hull that does not mind the pressure. Everything slows down there, theirs and yours. Anything
-> that is not a torpedo or a depth charge loses a third of its bite. Fly accordingly."
+> **Commander Okafor:** "The Stormhawks are refitted for the water: sealed intakes, a torpedo
+> rack, a hull that does not mind the pressure. Everything slows down there, theirs and yours.
+> Anything that is not a torpedo or a depth charge loses a third of its bite. Fly accordingly."
 >
-> **Commander Okafor:** "We hit the rigs on the surface first, then we follow the hole down. Drop in
-> ninety minutes. Mission briefing follows. Aegis Actual out."
+> **Commander Okafor:** "We hit the rigs on the surface first, then we follow the hole down.
+> Drop in ninety minutes. Mission briefing follows. Aegis Actual out."
+<!-- /data -->
 
 **Act outro** (four pages after the L28 debrief, each voiced and with its own image; track 24 under
 page 1). It carries the beat the finale hands over: the wing escapes into orbit, and the Ascendancy has
@@ -345,11 +351,17 @@ the act's data (parts B and H).
 
 ## Concept art
 
-The title card's still and the act's briefing images are production art straight away (M8 parts B and H, as Act 3's;
-briefs only here). The act's own concept files are the Europa mood stills and the under-water grade in
-[europa](../../world/europa/README.md#concept-art), the units' proposals in [naval](../../enemies/naval/README.md#concept-art)
-and the boss's in [bosses](../../enemies/bosses/README.md#concept-art), all in round 48. This README has no
-`concept/` directory yet.
+The title card's still and the act intro's images are production art straight away (M8 part B, step ART-B, as Act 3's);
+the intro's four images are on the [briefing review sheet](../../ui/briefing/README.md#concept-art). The act's concept
+files are the Europa mood stills and the under-water grade in [europa](../../world/europa/README.md#concept-art), the units'
+proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's in
+[bosses](../../enemies/bosses/README.md#concept-art), all in round 48. Prompts in [concept/prompts.md](concept/prompts.md).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act-4-still-final-r51-a.png](concept/act-4-still-final-r51-a.png) | Review sheet, M8 part B (round 51): the title card's 960×540 still (Europa's ice shelf from the entry corridor, the Conamara Chaos to a sharp horizon, Jupiter huge over it, a steam thread from the first rig; from Level 22's production backdrop) and the title card over it | proposed (round 51) |
+| [concept/act-4-intro-capture-r51-a.png](concept/act-4-intro-capture-r51-a.png) | Game capture, M8 part B (step B5): a save before Level 22 (`:content:playthroughSave -Plevel=22`) continued from the main menu: the ACT IV DEEP WATER title card, the four voiced intro pages, then the Level 22 hangar | proposed (round 51) |
+| [concept/act-4-intro-capture-r51-a.mp4](concept/act-4-intro-capture-r51-a.mp4) | The same run as a short video with the game's sound: Continue, the title card and page 1 (28 s) | proposed (round 51) |
 
 ## Implementation
 
@@ -357,9 +369,11 @@ and the boss's in [bosses](../../enemies/bosses/README.md#concept-art), all in r
       (M8 parts B–H).
 - [ ] Act data file: `levels: [22, 28]`, the title card, the four intro pages and the four outro pages with their
       images and expressions, rendered into *Act intro and outro* as marked tables (part B for the intro, part H for
-      the outro with `next_act` for the release's end, ACT V · THE BELT).
+      the outro with `next_act` for the release's end, ACT V · THE BELT). The intro is built (part B: `ActFourDataTest`,
+      `BriefingsTest`, `OutroOnwardTest.afterAct3sOutroComeAct4sTitleCardAndTheBriefingOfLevel22`); the outro waits for part H.
 - [ ] The title card's still (`tools/art/act_stills.py act-4` from Level 22's backdrop) and lettering; the eight
-      intro and outro briefing images plus the fourteen level briefing images (`tools/art/briefing_images.py`).
+      intro and outro briefing images plus the fourteen level briefing images (`tools/art/briefing_images.py`). Built in
+      part B: the still and lettering, the four intro images and Level 22's two (`BriefingLayoutTest`; round 51).
 - [ ] The act's systems (M8 part A and the levels' parts): the under-water mode (medium field, trait factor,
       bullet speed, drag, beam reach, special setting restrictions), the descent shaft and trench on `Terrain`,
       the Siren's slow, darkness, heat plumes, homing torpedoes and Decoy Flares, the breakout and the reveal run,
@@ -372,8 +386,8 @@ and the boss's in [bosses](../../enemies/bosses/README.md#concept-art), all in r
       re-measured under water (`BeamEraHpTest`) and its typical haul within ±5 % of its budget (`TypicalHaulTest`).
 - [ ] The act-end order after L28 (Level 21's) and the release's end moved from L21 to L28; the hangar before L29
       reads `ACT V - THE BELT: COMING SOON`.
-- [ ] A save at the L22 hangar from the `v0.1` release plays the Act 4 intro **once** on Continue (the `act-intro:N`
-      flag, as Act 3's), not repeating the title card of an act already seen.
+- [x] A save at the L22 hangar from the `v0.1` release plays the Act 4 intro **once** on Continue (the `act-intro:N`
+      flag, as Act 3's), not repeating the title card of an act already seen (step B2: `CampaignRouteTest`).
 - [ ] The act's voices (Dr. Brandt, Thera Deep Control, the Choir's speech) cast and rendered; the act's sounds
       (Freesound only) and the Act 4 B theme and the reveal sting made.
 - [ ] `ActPlaythroughTest` and `BalanceTest` through Act 4 with Rook (L22–L26) and the Bulwark (L27–L28; `--escort none` works).
@@ -414,3 +428,9 @@ and the boss's in [bosses](../../enemies/bosses/README.md#concept-art), all in r
   until the user decides). The weapons README's two roster rows (Harpoon Torpedoes, Depth Charges) became Contents rows.
   The M8 row and parts A–I are proposed in the [roadmap](../../tech/roadmap/README.md#m8-parts).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
+- 2026-10-22 (M8 part B, steps B2, ART-B and B4; pending the user's review in round 51): the act's `data.yaml` with the title card and the four intro pages
+  (marked tables); Act 3's `next_act` removed, so between parts B and C the hangar before Level 23 reads "MORE: COMING
+  SOON" and cannot launch; the outro stays out of the data until part H (its images and voices are H's), which adds
+  `next_act` (ACT V / THE BELT). The title card's still and lettering from Level 22's production backdrop
+  (`act-4-still-final-r51-a`); after Act 3's outro come Act 4's title card and Level 22's briefing
+  (`OutroOnwardTest`); the intro captured from a save before Level 22 (`act-4-intro-capture-r51-a`).

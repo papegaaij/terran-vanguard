@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-20
+updated: 2026-10-22
 ---
 
 # Briefing screen
@@ -100,6 +100,7 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/briefing-images-final-r41-a.png](concept/briefing-images-final-r41-a.png) | Level 18's briefing images (`level-18-storm-front`, `level-18-visibility`; `tools/art/briefing_images.py`) | final (round 44, A.a: a record of production assets) |
 | [concept/briefing-images-final-r42-a.png](concept/briefing-images-final-r42-a.png) | Level 19's briefing images and Level 20's filed plate (`level-19-tharsis-works`, `level-19-rear-arcs`, `level-20-filed-plate`; `tools/art/briefing_images.py`, step ART-F4) | final (round 44, A.a: a record of production assets) |
 | [concept/briefing-images-final-r44-a.png](concept/briefing-images-final-r44-a.png) | Review sheet, M7 part H (round 44): Level 21's two 672×240 images (`level-21-hellas-basin`: the basin on a CDF plot, the CDF line held on the rim, the inner wall's terraces, the dune sea with a moving seismic contact, the lime hollow with seismic rings, the descent route and five sections; `level-21-colossus-scan`: Varga's seismic cut with the body under the sand, the ridge and a breaching mouth, beside a breach from above at the left edge with the gullet, the bite circle and the suction; `tools/art/briefing_images.py`, step ART-H3) | final (round 44, F.e: approved as final) |
+| [concept/briefing-images-final-r51-a.png](concept/briefing-images-final-r51-a.png) | Review sheet, M8 part B (round 51): the Act 4 intro's four 672×240 images (`act-4-arrival`, `act-4-europa-cutaway`, `act-4-hydro-kit`, `act-4-drop`) and Level 22's two (`level-22-conamara-map`, `level-22-drill-rig`; `tools/art/briefing_images.py`) | proposed (round 51) |
 | [concept/act3-outro-final-r44-a.png](concept/act3-outro-final-r44-a.png) | Review sheet, M7 part H (round 44): the Act 3 outro's four 672×240 images (`act-3-outro-hellas`: the basin at dawn, the collapsed crater, the last spore trails; `act-3-outro-domes`: Ares Landing's domes at night, every pane lit, colonists on the ring road looking up; `act-3-outro-europa`: Varga's plot of the courses off Mars converging on Europa, the filed plate in a minimised window; `act-3-outro-aegis`: Aegis Wing refitting on the spaceport apron at dusk, Jupiter a bright point; `tools/art/outro_l21_images.py`, step ART-H3) | final (round 44, F.f: approved as final) |
 
 ## Implementation
@@ -300,3 +301,5 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 - 2026-10-20: Level 21's briefing images and the Act 3 outro's four images made as production art (step ART-H3); pending the user's review in round 44.
 - 2026-10-20 (user, round 44, A.a): the audit approved: `briefing-r08-a` and `act-title-r08-a` (superseded mockups) moved to `concept/rejected/`; the 19 review sheets and captures of production assets (`briefing-final-r13-a`, its capture and the 17 briefing-image sheets r13-r42) marked `final`; Level 21's two briefing images (F.e) and the Act 3 outro's four images (F.f) approved as final; **`art: final`** for the briefing. A later addition needs its own row.
 - 2026-10-20 (user, round 44, X.l): the act-title lettering gets a `tools/art` generator, the pixels unchanged where the user approved them (planned, step ART-K; ticked in the Implementation list when built).
+- 2026-10-22 (M8 part B, step ART-B; pending the user's review in round 51): the Act 4 intro's four images and Level 22's two
+  (`briefing-images-final-r51-a`, `tools/art/briefing_images.py`).

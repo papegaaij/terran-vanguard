@@ -58,8 +58,10 @@ record TypicalHaul(int perfect, double typical, double budget) {
             // M7 part G: a pursuit's refills too (LevelMetrics.planned, as tools/sync_tables.py).
             sum.bounty(LevelMetrics.planned(wave), wave.enemy().bounty(), rate(rate, wave.enemy()));
             // M7 part D: a unit part pays its own bounty (the Shellback's vent: 40 + 12 by parts, as the README's
-            // table)
-            wave.enemy().part().ifPresent(part -> sum.bounty(wave.count(), part.bounty(), rate(rate, wave.enemy())));
+            // table; M8 part B: each of its parts)
+            for (EnemySpec.UnitPart part : wave.enemy().parts()) {
+                sum.bounty(wave.count(), part.bounty(), rate(rate, wave.enemy()));
+            }
             // a segment chain's unit is its head; its segments and tail pay their own bounty
             wave.enemy().chain().ifPresent(chain -> {
                 sum.bounty(
@@ -75,6 +77,10 @@ record TypicalHaul(int perfect, double typical, double budget) {
         }
         for (var unit : level.groundUnits()) {
             sum.bounty(1, unit.enemy().bounty(), rate.groundTargets());
+            // M8 part B: a ground unit's parts pay their own bounty (the Drill Rig's pumps: 40 + 4 × 4)
+            for (EnemySpec.UnitPart part : unit.enemy().parts()) {
+                sum.bounty(1, part.bounty(), rate.groundTargets());
+            }
             // M5 part C: a periodic spawner (Level 09's Hive Nodes) counts one release, as DensityTest
             unit.enemy()
                     .spawner()

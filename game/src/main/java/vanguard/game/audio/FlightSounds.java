@@ -127,6 +127,7 @@ public final class FlightSounds {
         Sfx.WALKER_FLAME,
         Sfx.TANK_TRACKS,
         Sfx.BELT_RUMBLE,
+        Sfx.RIG_COLLAR,
         Sfx.SWARM_HUM,
         Sfx.COLOSSUS_SUCTION
     };
@@ -319,6 +320,14 @@ public final class FlightSounds {
      */
     public void canopy(boolean canopy) {
         bosses.canopy(canopy);
+    }
+
+    /**
+     * M8 part B: the level's vents are ice geysers (Level 22's {@code look: ice-geyser}): their tell and burst play the
+     * geyser's ice crack and steam roar instead of the furnace vent's.
+     */
+    public void geysers(boolean geysers) {
+        foundry.geysers(geysers);
     }
 
     /** M5 part E: the level's convoy sails on the water: its hits and losses play the ships' sounds. */

@@ -1,0 +1,459 @@
+# Level 22 – Ice Shelf: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M8 part B, step B2, from the README's approved
+# hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M8 part B (loaded and checked by content in step B2; flown from steps B1/B3, drawn by step B4): the vents'
+# `look` (ice-geyser) and a row's own `period` and `ripple` (with its own easy and hard), the secondary's per-difficulty
+# `allowed` (its easy and hard), the radio events `first-geyser` and `target-destroyed`, the Drill Rig's pumps that carry
+# its ring and slow it (its stat block). Defaults of the gap check (m8b-gaps.md §5, pending the user's review in round
+# 51): 8 geyser rows (the README lists 8 times), hard's section-3 ripple 0.3 (period 2.6 holds tell + burn + 2 ripples),
+# the secondary's allowed easy 2 / medium 1 / hard 0. Step B2's own placements (pending review): the Skimmer lanes, the
+# rig nests and the geyser rows' x (the leads are cut along the lanes and kept clear of the rigs, the nests and the
+# cracks; briefs/m8b-lanes.md), the t=30 row at 31, the t=52 row at 50.5, the t=118 row at 118.5 and the t=132 row at
+# 136.5 (clear of the Skimmer leads).
+scroll_speed: 120     # the shelf approach; the rig field and the run-in set their own
+launch_seconds: 5
+bounty_scale: 0.30    # every bounty × 0.30: re-fitted in step B3b after the waves' rework (levelReport, medium); B3's 0.38 fitted the approved draft waves
+control_prompts: []
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Europa, ice shelf
+  layers: [ground, air]
+  density: 3
+  traits: [anti-ground, forward]
+  hazards: [ice geysers]
+  boss: none
+  objective: REACH CONAMARA   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Europa's ice shelf, Lancer. Four rigs are boring for the ocean.
+    l1: Mostly ahead. Cracks glow before the steam bursts.
+    l2: "New: a hardened drill rig. Aim for the glowing core."
+    l3: Bombs and mortars for the rigs, forward guns for the rest.
+  notes:
+    Dominant layers: '`air` (Stinger, Needler, Skitter and Mote streams, Mantis pincers), `ground` (Drill Rigs, Spine Turret nests, a Polyp Mortar floe, Skimmers in the open leads)'
+    Attack directions: '{directions}'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Ice geysers (cracks that glow, then burst); the rigs' ice-shard rings
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: Europa, ice shelf, `ground` + `air`, front · L1: + directions (sides), density {density}, hazard "ice geysers", the objective `{objective}` and the secondary `RIGS 3/4` · L2: + Drill Rig (new, hardened), Skimmer, Stinger, Needler, Mantis, Skitter and Mote portraits · L3: + `anti-ground` and `forward` highlighted, the wave strip marking the four rig sites'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); tiles: step ART-B's backdrop (no deep layer: the opaque shelf, pending round 51)
+  - name: The Shelf
+    end: 36
+    atmosphere: clear
+    tiles: [ice-shelf, ice-crystals]
+    notes:
+      layers:
+        ground: fissured ice, ridges, open leads (black water mirroring Jupiter, scenery) along the Skimmers' lanes; a Spine Turret nest on a ridge (t≈20); the first geyser row (t≈12) flares alone.
+        high-air: ice crystals.
+      purpose: Popcorn from t=5; the first geysers; no rig yet.
+  - name: The Rig Field
+    end: 104
+    speed: 60
+    ramp: 2   # eased from 120 over its first 2 s
+    atmosphere: clear
+    tiles: [rig-field]
+    notes:
+      layers:
+        ground: four **Drill Rigs** (t=40, 56, 72, 88; x 130, 340, 150, 330), each with its nest of Spine Turrets and, after the last, a Polyp Mortar floe (t≈100); steaming cracks where the collars bore; the secret's crevasse at t≈70.
+      purpose: The rigs' quiet window, the hardened target, the geysers between rigs.
+  - name: Conamara Run-in
+    end: 150
+    speed: 110
+    ramp: 2   # eased from 60
+    atmosphere: clear
+    tiles: [conamara-run]
+    notes:
+      layers:
+        ground: the ice-breaker road to **Conamara Station** (the research dome, a landing pad, sodium lamps; scenery), a cordon of Spine Turrets (t≈125); the geysers tremble faster as the dome nears.
+      purpose: The run-in, the faster geysers; level end as the dome reaches the bottom edge.
+
+# The README's 48 waves at their times (draft, measured with levelReport in step B3). A Skimmer stream is a lane walker
+# (design/enemies/naval/skimmer): unit i on lane i (wrapping), 1.5 s apart, each lane in ground space at its own unit's
+# entry ([x, y], y below the top edge); the streams alternate between the left and the right top corner and the leads
+# are cut along their runs (step ART-B, briefs/m8b-lanes.md). On the shelf and the run-in a lane curls across the screen
+# and back (about 4 s on the screen); in the rig field the lanes pass under the rig that has just entered, one per unit.
+# Stinger streams keep 3 on hard (the README's hand trim, at most ~3.5 enemies on the screen); the Mantis pincers fly 1
+# on easy. No other wave enters t=39.5-43.5 (the first rig's quiet window): the t=35 Skimmers keep 3 on hard.
+waves:
+  - {t: 5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}}
+  - {t: 8, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 10.5, formation: circle, enemy: needler, count: 5, from: front, hold: 8, at: [240, 200], hard: {count: 4}, notes: "Step B3b: a firing ring held over the Skitter snake and the Motes (the beam takes them at once)"}
+  - {t: 11, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - t: 14
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[240, -60], [230, 200], [300, 360], [260, 620]]]   # down the middle, swinging right
+  - {t: 14.5, formation: V-wing, enemy: stinger, count: 3, from: front, hard: {count: 2}, notes: "Step B3b: a firing group behind the ring"}
+  - t: 17
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:   # left top corner, then the right one: each curls across the screen and back out of its own side
+      - [[60, -40], [250, -90], [400, -160], [380, -250], [200, -300], [-40, -330]]
+      - [[420, -40], [230, -90], [80, -160], [100, -250], [280, -300], [520, -330]]
+    notes: Alternating corners, along the open leads
+  - {t: 20, formation: V-wing, enemy: stinger, count: 4, from: front, notes: The leader drops an overdrive}
+  - t: 23
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:
+      - [[60, -40], [250, -90], [400, -160], [380, -250], [200, -300], [-40, -330]]
+      - [[420, -40], [230, -90], [80, -160], [100, -250], [280, -300], [520, -330]]
+    notes: Out of the first open lead on the shelf
+  - {t: 26, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 28.5, formation: circle, enemy: needler, count: 5, from: front, hold: 7, at: [240, 220], hard: {count: 4}, notes: "Step B3b: a firing ring held over the Skitters and the Motes, gone before the first rig's quiet window"}
+  - {t: 29, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - t: 32
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half
+  - {t: 32.5, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair over the Motes"}
+  - t: 35
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    hard: {count: 3}   # the first rig's quiet window from t=39.5
+    lanes:   # the first curls on the shelf; the next two zigzag down under the slowing scroll
+      - [[60, -40], [250, -90], [400, -160], [380, -250], [200, -300], [-40, -330]]
+      - [[420, -40], [240, -10], [60, 40], [240, 100], [420, 140], [520, 160]]
+      - [[60, -40], [240, -10], [420, 40], [240, 100], [60, 140], [-40, 160]]
+  - {t: 38, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 43.5, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}, notes: "Over the first rig; the rig's quiet window (t=39.5-43.5) is over"}
+  - {t: 44, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}}
+  - {t: 45.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair past the first rig"}
+  - {t: 47, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 50, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 51.5, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair over the second rig's approach"}
+  - t: 53
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[360, -60], [350, 200], [290, 380], [330, 620]]]   # down the right half
+  - {t: 54, formation: line abreast, enemy: needler, count: 2, from: front, notes: "Step B3b: a firing pair before the second rig"}
+  - t: 56
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:   # the second rig enters at x 340: the left ones dive under it, the right ones come down the right edge and cross under it; hard's fourth crosses above it
+      - [[60, -40], [180, 60], [330, 110], [520, 120]]
+      - [[500, -40], [490, 80], [440, 180], [240, 200], [-40, 210]]
+      - [[60, -40], [150, 150], [260, 270], [520, 290]]
+      - [[520, -40], [360, -30], [240, -60], [120, -40], [-40, -60]]
+  - {t: 59, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 61, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, easy: {count: 1}, notes: "1 per side, hover {hold} s; edge warnings; act HP factor"}
+  - {t: 62.5, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair over the second rig"}
+  - {t: 65, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 68, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 69, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair past the third rig"}
+  - t: 71
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[240, -60], [230, 200], [300, 360], [260, 620]]]   # down the middle, swinging right
+  - t: 74
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:   # the third rig is at x 150: right corner first, every lane passes under it, clear of the crevasse
+      - [[420, -40], [300, 150], [150, 250], [-40, 270]]
+      - [[20, -40], [200, -20], [330, 60], [330, 200], [200, 320], [-40, 340]]
+      - [[420, -40], [330, 100], [300, 370], [150, 390], [-40, 400]]
+      - [[20, -40], [300, 50], [330, 200], [260, 460], [-40, 490]]
+  - {t: 75.5, formation: circle, enemy: needler, count: 4, from: front, hold: 6, at: [240, 260], hard: {count: 3}, notes: "Step B3b: a firing ring held over the third rig's Skimmers"}
+  - {t: 77, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 80, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}}
+  - {t: 82, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, easy: {count: 1}, notes: "1 per side, hover {hold} s; edge warnings; Rook's flank bark; the last drops a shield cell"}
+  - {t: 86, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - t: 89
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half
+  - t: 92
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:   # the last rig is low on the screen: flat leads across the top, above its nest
+      - [[-40, -40], [120, -30], [240, -60], [360, -40], [520, -60]]
+      - [[520, -40], [360, -30], [240, -60], [120, -40], [-40, -60]]
+  - {t: 95, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 96.5, formation: line abreast, enemy: needler, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair over the last rig"}
+  - {t: 98, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}}
+  - {t: 99.5, formation: circle, enemy: needler, count: 4, from: front, hold: 6, at: [240, 260], hard: {count: 3}, notes: "Step B3b: a firing ring held over the mortar floe"}
+  - {t: 101, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 104, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 105.5, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair onto the run-in"}
+  - t: 107
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[360, -60], [350, 200], [290, 380], [330, 620]]]   # down the right half
+  - t: 109
+    formation: swarm
+    enemy: mote-swarm
+    count: 8
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half
+    notes: The run-in to Conamara; the geysers at their fastest
+  - t: 110
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:
+      - [[60, -40], [250, -90], [400, -160], [380, -250], [200, -300], [-40, -330]]
+      - [[420, -40], [230, -90], [80, -160], [100, -250], [280, -300], [520, -330]]
+  - {t: 111.5, formation: circle, enemy: needler, count: 4, from: front, hold: 6, at: [240, 220], hard: {count: 3}, notes: "Step B3b: a firing ring held over the run-in's Motes"}
+  - {t: 113, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 116, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}}
+  - {t: 119, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 121, formation: pincer, enemy: mantis, count: 2, from: sides, hold: 6, easy: {count: 1}, notes: "1 per side, hover {hold} s; edge warnings"}
+  - {t: 123, formation: circle, enemy: needler, count: 4, from: front, hold: 6, at: [240, 240], hard: {count: 3}, notes: "Step B3b: a firing ring held over the Conamara cordon"}
+  - t: 125
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[240, -60], [230, 200], [300, 360], [260, 620]]]   # down the middle, swinging right
+  - t: 128
+    formation: stream
+    enemy: skimmer
+    count: 3
+    from: front
+    edge: alternating   # the lanes' corners (the rendered table's "alternating edges")
+    lanes:
+      - [[60, -40], [250, -90], [400, -160], [380, -250], [200, -300], [-40, -330]]
+      - [[420, -40], [230, -90], [80, -160], [100, -250], [280, -300], [520, -330]]
+  - {t: 129.5, formation: V-wing, enemy: stinger, count: 2, from: front, hard: {count: 1}, notes: "Step B3b: a firing pair past the cordon"}
+  - {t: 131, formation: V-wing, enemy: stinger, count: 4, from: front}
+  - {t: 134, formation: stream, enemy: stinger, count: 3, from: front, edge: right, interval: 1.25, hard: {count: 3}}
+  - {t: 137, formation: line abreast, enemy: needler, count: 3, from: front}
+  - {t: 140, formation: snake, enemy: skitter, count: 4, from: front, edge: left}
+  - {t: 140.5, formation: circle, enemy: needler, count: 5, from: front, hold: 8, at: [240, 200], hard: {count: 4}, notes: "Step B3b: a firing ring held over the last Motes, up to the dome"}
+  - t: 143
+    formation: swarm
+    enemy: mote-swarm
+    count: 6
+    from: front
+    paths: [[[120, -60], [130, 220], [200, 380], [160, 620]]]   # down the left half
+  - {t: 143.5, formation: line abreast, enemy: needler, count: 3, from: front, hard: {count: 2}, notes: "Step B3b: a firing line over the last Motes"}
+  - {t: 146, formation: stream, enemy: stinger, count: 4, from: front, edge: alternating, interval: 1.25, hard: {count: 3}, notes: "Step B3b: the last firing stream as the dome nears"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x; the rig nests stand round each rig, off its Skimmer leads
+  - target: ridge nest
+    section: 1
+    enemy: spine-turret
+    count: 3
+    at: [[19.9, 330], [19.9, 370], [19.9, 410]]   # along a pressure ridge, between the t=17 Skimmer leads
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on a ridge (t≈20)'
+      effect: Bounty {bounty} each
+  - target: drill rigs
+    section: 2
+    enemy: drill-rig
+    count: 4
+    at: [[40, 130], [56, 340], [72, 150], [88, 330]]
+    notes:
+      target: '**[Drill Rig](../../../enemies/ground/drill-rig/README.md)** ×{count} (t=40, 56, 72, 88; x 130, 340, 150, 330): core 150 HP, 4 pumps of 24, hardened'
+      effect: The secondary counts the cores; core 40, pumps 4 each
+  - target: first rig nest
+    section: 2
+    enemy: spine-turret
+    count: 4
+    at: [[39.27, 240], [40.93, 70], [40.93, 190], [41.43, 130]]   # beside, then above the rig (clear of its pumps)
+    notes:
+      target: Spine Turret nest ×{count} round the first rig
+      effect: Bounty
+  - target: second rig nest
+    section: 2
+    enemy: spine-turret
+    count: 4
+    at: [[56.93, 280], [56.93, 400], [57.77, 290], [57.77, 390]]   # above the rig: its Skimmer leads pass under it
+    notes:
+      target: Spine Turret nest ×{count} round the second rig
+      effect: Bounty
+  - target: third rig nest
+    section: 2
+    enemy: spine-turret
+    count: 4
+    at: [[72.27, 40], [72.93, 90], [72.93, 210], [73.77, 150]]
+    notes:
+      target: Spine Turret nest ×{count} round the third rig
+      effect: Bounty
+  - target: last rig nest
+    section: 2
+    enemy: spine-turret
+    count: 5
+    at: [[85.6, 270], [85.6, 390], [86.77, 130], [87.27, 220], [87.27, 440]]   # below and beside the rig, one more on the ridge to its left; the t=92 leads pass above
+    notes:
+      target: Spine Turret nest ×{count} round the last rig (one on the ridge beside it)
+      effect: Bounty
+  - target: crevasse lip
+    section: 2
+    layer: ground
+    size: [64, 48]
+    sprite: crevasse-lip   # tools/art (step ART-B): an overhanging lip of ice over a crevasse, its break frames; core-sample-cache the crate it frees
+    hp: 20
+    reveals: core-sample cache
+    at: [[70, 440]]   # beside the third rig, across the field
+    notes:
+      target: Core-sample cache under a crevasse lip (`ground` trigger, {hp} HP, t≈70, x 440)
+      effect: '{hp} HP break the lip and free the hidden crate'
+  - target: mortar floe
+    section: 2
+    enemy: polyp-mortar
+    count: 3
+    at: [[100, 110], [100.4, 170], [100.8, 230]]
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) floe ×{count} after the last rig (t≈100)'
+      effect: Bounty {bounty} each
+  - target: Conamara cordon
+    section: 3
+    enemy: spine-turret
+    count: 3
+    at: [[125, 140], [125.4, 240], [125, 340]]
+    notes:
+      target: Spine Turret cordon ×{count} outside Conamara (t≈125)
+      effect: Bounty
+
+vents:  # the ice geysers (Level 19's vent rows on the ice): a crack glows lime-white for the tell, then a steam column stands; 3 cracks a row, alternate ends
+  look: ice-geyser   # the game draws and sounds the rows as ice geysers (the furnace vent if not given)
+  width: 40
+  tell: 1.2
+  burn: 0.8
+  period: 4.0
+  ripple: 0.4
+  bullet: heavy
+  easy: {period: 5}
+  hard: {period: 3.2}
+  rows:
+    - {t: 12, xs: [150, 240, 330]}   # the first row, alone: the radio's first-geyser line
+    - {t: 31, xs: [360, 240, 120]}
+    - {t: 50.5, xs: [90, 170, 250]}   # under the second rig's Skimmer leads, left of its nest
+    - {t: 66, xs: [360, 240, 120]}
+    - {t: 84, xs: [120, 240, 360]}
+    - {t: 107, xs: [360, 300, 120], period: 3.2, easy: {period: 4}, hard: {period: 2.6, ripple: 0.3}}   # section 3: Conamara's tremors (hard: 0.3 s ripple so tell, burn and the ripples fit 2.6 s)
+    - {t: 118.5, xs: [120, 180, 360], period: 3.2, easy: {period: 4}, hard: {period: 2.6, ripple: 0.3}}   # the road's lane in the middle stays clear
+    - {t: 136.5, xs: [360, 300, 120], period: 3.2, easy: {period: 4}, hard: {period: 2.6, ripple: 0.3}}
+
+secrets:
+  - name: core-sample cache
+    crate: 100   # Act 1 terms: pays 410 with the act factor
+    radio: {speaker: Dr. Brandt, portrait: conamara, line: "That's our deep core. Three years of ice. Keep it, you earned it."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 20, unit: first}}      # the leader of the t=20 Stinger V-wing
+  - {pickup: shield cell, dropped_by: {wave: 82, unit: last}}     # the second Mantis of the t=82 pincer
+
+drops:  # a Conamara ice-crawler (a tracked survey vehicle, the CDF supply drone's role; its look, step B4) releases an armour patch
+  - {t: 110.5, x: 240, y: 380, pickup: armour patch, sprite: ice-crawler}   # step B5: on the ice-breaker road between the seam and lead 6 (its drive up and back stays off leads 5 and 6; t=100 put it on open lead 5)
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
+  - {t: 1, speaker: Dr. Brandt, portrait: conamara, line: "Aegis flight, Conamara Station. Four rigs on the shelf, forty of us in the dome, and the ice will not hold still."}
+  - {t: 18, speaker: Rook, requires: escort, line: "Copy, Conamara. Last open sky for a while, Lancer. Enjoy it."}
+  - {event: first-geyser, speaker: Varga, line: "Cracks glow, then steam. Do not sit on them.", notes: {trigger: "First geyser row flares (`first-geyser`, t≈12)"}}
+  - {t: 29, speaker: Varga, line: "Drill rig ahead. Hardened shell: bombs, mortars and the Airstrike get through. Break the bore core."}
+  - {event: target-destroyed, speaker: Dr. Brandt, portrait: conamara, line: "That's one collar stopped and the shaking eased. Three to go.", notes: {trigger: "First rig core destroyed (`target-destroyed`)"}}
+  - {t: 58, speaker: Varga, line: "Ilse? It's Elena. Hold on, we are coming."}
+  - {t: 87, speaker: Rook, requires: escort, line: "Mantis, both flanks!"}
+  - {t: 104, speaker: Dr. Brandt, portrait: conamara, line: "Something went through under the north dome. There is water in the shaft at Kilo-Seven. It leads down."}
+  - {event: secondary-objective, speaker: Dr. Brandt, portrait: conamara, line: "Enough rigs are down. The shelf is quiet. Thank you, Aegis.", notes: {trigger: Secondary met (`secondary-objective`)}}
+  - {t: 135, speaker: Okafor, line: "Conamara is in sight. We refit for the water tonight and we take that shaft in the morning."}
+  - {event: level-end, speaker: Okafor, line: "Conamara is safe, for now. Refit, Aegis. Tomorrow we go under the ice."}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: drill-rig, allowed: 1, easy: {allowed: 2}, hard: {allowed: 0}, label: RIGS, credits: 100, name: Break 3 of the 4 drill rigs}   # at least 3 of the 4 rig cores destroyed before the rig leaves the screen (easy 2, hard all 4), failed by the second rig away (100 in Act 1 terms: pays 410)
+
+music:
+  track: 10           # Act 4 A "Thera Deep" (audio/music track list)
+  start_section: 2    # the ice-surface ambience alone on the shelf, the base stem from the rig field (the first rig)
+  full_section: 3     # the full mix from the run-in to Conamara
+  ambience: europa-ice   # wind and distant ice groans (step AUD-B proposes it)
+  ambience_changes:
+    - {section: 3, ambience: conamara-station, crossfade: 2}   # the ice bed with the station's ventilation hum
+  end_jingle: mission-complete
+
+difficulty: {}  # the geysers' easy and hard periods are in `vents`, the secondary's easy and hard allowed in `objectives`; the Stinger streams' hard counts, the pincers' easy counts and the t=35 Skimmers' hard count are in their waves; the formation lever sizes the rest; the stat blocks' hooks apply (the Drill Rig's easy 4.5 s ring and hard aimed shard)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-22-conamara-map, line: "Conamara Station has felt the ice shaking for a week. Now we know why: the Vrell have set four drill rigs on the shelf and they are boring for the ocean. Forty scientists are in that dome. Break the rigs before they go through, then we follow the hole down."}
+    - {speaker: Varga, image: level-22-drill-rig, line: "A rig is a collar and four pumps in a hardened shell. Shots glance off; bombs, mortars and an Airstrike get through. Aim for the bore core. And mind the cracks: when the ice glows, the steam is next."}
+  teaser: {speaker: Rook, line: "Last open sky for a while, Lancer. Bombs for the rigs, I'd say."}
+
+backdrop:
+  # Presentation only: Europa's ice shelf (tools/art/backdrop_l22.py, from europa-ice-shelf-r48-a). No deep
+  # layer: the shelf is opaque everywhere (the leads are dark water mirroring Jupiter, not holes); the leads
+  # are cut along the Skimmer runs, the seams, the crevasse and the station sit at exact rows (re-run the
+  # generator after the data moves a lane, a section or the lip).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused (no deep layer: the shelf is opaque), given as the loader asks
+  ramp: 4
+  haze_colour: c8d8e8  # Europa's pale blue-white
+  atmosphere:
+    clear: {haze: 0.0}   # every section: hard sunlight from the top left, no haze
+  tile_sets:
+    ice-shelf: {layer: ground, height: 960}   # section 1: the white-blue plain of Europa's ice, double ridges (lineae) crossing it, fissures, pressure ridges; Jupiter's warm shine from the right
+    rig-field: {layer: ground, height: 960}   # section 2: the chaos's broken plates over the refrozen matrix, Vrell teal stains, fissures
+    conamara-run: {layer: ground, height: 960}   # section 3: the plates under packed snow, the ice-breaker road at x 240 (berms, marker poles, a sodium lamp every 240 px)
+    ice-crystals: {layer: high-air, height: 960}   # section 1: glittering ice crystals and thin vapour wisps (additive at 40 %)
+  pieces:
+    seam-rig-field: {layer: ground, size: [480, 320]}
+    seam-conamara-run: {layer: ground, size: [480, 320]}
+    pressure-ridge: {layer: ground, size: [260, 120]}
+    crevasse: {layer: ground, size: [180, 64]}
+    lead-1: {layer: ground, size: [480, 1682]}
+    lead-2: {layer: ground, size: [480, 454]}
+    lead-3: {layer: ground, size: [480, 583]}
+    lead-4: {layer: ground, size: [480, 713]}
+    lead-5: {layer: ground, size: [480, 434]}
+    lead-6: {layer: ground, size: [480, 918]}
+    lead-7: {layer: ground, size: [480, 917]}
+    conamara-station: {layer: ground, size: [480, 300], mid_size: true}
+  placed:
+    # 2. section 2's seam (ground 4860): ice-shelf into rig-field along a pressure ridge; exact rows
+    - {piece: seam-rig-field, t: 39.5, x: 240}
+    # 3. section 3's seam (ground 9000): rig-field into conamara-run along a pressure ridge; exact rows
+    - {piece: seam-conamara-run, t: 106.909, x: 240}
+    # 1. the pressure ridge under the t~20 nest
+    - {piece: pressure-ridge, t: 22.283, x: 350}
+    # 2. the secret's crevasse, its gash through the lip (x 440)
+    - {piece: crevasse, t: 74.9, x: 390}
+    # open lead 1 (rows 2554-4236), cut along the Skimmer runs; exact rows
+    - {piece: lead-1, t: 26.042, x: 240}
+    # open lead 2 (rows 4692-5146), cut along the Skimmer runs; exact rows
+    - {piece: lead-2, t: 40.483, x: 240}
+    # open lead 3 (rows 5934-6517), cut along the Skimmer runs; exact rows
+    - {piece: lead-3, t: 62.258, x: 240}
+    # open lead 4 (rows 6864-7577), cut along the Skimmer runs; exact rows
+    - {piece: lead-4, t: 78.842, x: 240}
+    # open lead 5 (rows 8243-8677), cut along the Skimmer runs; exact rows
+    - {piece: lead-5, t: 99.5, x: 240}
+    # open lead 6 (rows 9584-10502), cut along the Skimmer runs; exact rows
+    - {piece: lead-6, t: 116.391, x: 240}
+    # open lead 7 (rows 11564-12481), cut along the Skimmer runs; exact rows
+    - {piece: lead-7, t: 134.386, x: 240}
+    # 3. Conamara Station: the dome's foot on the bottom edge at t=150; exact rows
+    - {piece: conamara-station, t: 148.209, x: 240}

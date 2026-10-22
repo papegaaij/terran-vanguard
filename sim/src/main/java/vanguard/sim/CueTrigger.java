@@ -102,7 +102,18 @@ public enum CueTrigger {
      * Choir Herald sings onto a unit ({@link SimEvents.Type#RING_SUNG}: as soon as it is on the play field with
      * its escorts round it); once. No subject.
      */
-    FIRST_RING;
+    FIRST_RING,
+    /**
+     * M8 part B (design/campaign Level 22, the geysers): the attempt's first vent tell ({@link
+     * SimEvents.Type#VENT_TELL}: a geyser's crack); once. No subject (the radio event {@code first-geyser}).
+     */
+    FIRST_GEYSER,
+    /**
+     * M8 part B (design/campaign Level 22, the drill rigs): the attempt's first destroyed unit that the secondary
+     * objective counts (an escapes or kill-all objective's); once, at that first one only. No subject (the radio event
+     * {@code target-destroyed}).
+     */
+    TARGET_DESTROYED;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

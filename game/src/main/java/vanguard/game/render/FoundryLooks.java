@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import vanguard.content.BackdropData;
+import vanguard.content.HazardsBlock;
 import vanguard.content.LevelData;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemyGun;
@@ -37,6 +38,11 @@ import vanguard.sim.Sortie;
  * <p>Places on the ground are kept as {@code Y}: the screen's y (up) plus the ground's scroll, so a point is drawn at
  * {@code Y - scroll}. A unit that enters at the top edge at level time t lies at {@code scrollAt(t) + 540 + h/2}; a
  * backdrop piece at {@code pieceCentre}.
+ *
+ * <p>M8 part B: the vents' {@code look} names their sprites ({@link #ventSprites}): Level 22's ice geysers
+ * ({@code ice-geyser*}, tools/art/l22_props.py) draw a crack in the ice for the grate, its lime-white glow over the
+ * tell, a steam column for the flame and the residue mist for the smoke; the steam is drawn with normal blending over
+ * the ground units (stepped translucency, not additive light).
  */
 final class FoundryLooks {
     /** The art's grate states: 0 shut, 1-3 the tell's steps (red, orange, white-hot). */
@@ -105,6 +111,9 @@ final class FoundryLooks {
     private final Array<AtlasRegion> glow;
     private final Array<AtlasRegion> flame;
     private final Array<AtlasRegion> smoke;
+    /** M8 part B: the burn's column is steam, drawn with normal blending (the ice geyser's), not additive flame. */
+    private final boolean steam;
+
     private final AtlasRegion gantry;
     private final AtlasRegion cradle;
     private final AtlasRegion pallet;
@@ -135,10 +144,12 @@ final class FoundryLooks {
     private static final long NEVER = Long.MIN_VALUE / 2;
 
     private FoundryLooks(Sprites sprites, LevelData level, LevelScript script) {
-        grate = optional(sprites, "furnace-vent");
-        glow = optional(sprites, "furnace-vent-glow");
-        flame = optional(sprites, "furnace-vent-flame");
-        smoke = optional(sprites, "furnace-vent-smoke");
+        String[] names = ventSprites(ventLook(level));
+        grate = optional(sprites, names[0]);
+        glow = optional(sprites, names[1]);
+        flame = optional(sprites, names[2]);
+        smoke = optional(sprites, names[3]);
+        steam = isGeyser(ventLook(level));
         gantry = sprites.has("gantry") ? sprites.region("gantry") : null;
         cradle = sprites.has("gantry-cradle") ? sprites.region("gantry-cradle") : null;
         pallet = sprites.has("ingot-pallet") ? sprites.region("ingot-pallet") : null;
@@ -195,6 +206,28 @@ final class FoundryLooks {
                         .anyMatch(unit -> upFacing(unit.enemy().gun().orElse(null)))
                 || script.groundObjects().stream().anyMatch(object -> TRIGGER_SURROUNDS.containsKey(object.look()));
         return any ? new FoundryLooks(sprites, level, script) : null;
+    }
+
+    /** M8 part B: the level's vents' look ({@code furnace-vent} without vents or a look of their own). */
+    static String ventLook(LevelData level) {
+        return level.vents().map(HazardsBlock.Vents::lookOrDefault).orElse(HazardsBlock.Vents.FURNACE_VENT);
+    }
+
+    /** Whether a vents look is the ice geyser's: a steam column drawn with normal blending, not a flame. */
+    static boolean isGeyser(String look) {
+        return look.equals(HazardsBlock.Vents.ICE_GEYSER);
+    }
+
+    /**
+     * M8 part B: a vents look's sprites: the grate (crack), its tell's glow, the burn's column (flame or steam) and what
+     * stays after the burn (smoke or residue); the furnace vent's {@code furnace-vent}, {@code -glow}, {@code -flame},
+     * {@code -smoke}, the ice geyser's {@code ice-geyser}, {@code -glow}, {@code -steam}, {@code -residue}.
+     */
+    static String[] ventSprites(String look) {
+        boolean geyser = isGeyser(look);
+        return new String[] {
+            look, look + "-glow", look + (geyser ? "-steam" : "-flame"), look + (geyser ? "-residue" : "-smoke")
+        };
     }
 
     private static Array<AtlasRegion> optional(Sprites sprites, String name) {
@@ -518,7 +551,7 @@ final class FoundryLooks {
                     }
                 }
                 case BURN -> {
-                    if (!flame.isEmpty()) {
+                    if (!flame.isEmpty() && !steam) {
                         drawCentred(batch, flame.get(flameFrame(vents.progress(g)) % flame.size), x, y);
                     }
                 }
@@ -526,5 +559,14 @@ final class FoundryLooks {
             }
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        if (steam && !flame.isEmpty()) {
+            // M8 part B: the ice geyser's steam column, normal blending over the ground units.
+            for (int g = 0; g < vents.grates(); g++) {
+                if (vents.present(g) && vents.phase(g) == FurnaceVents.Phase.BURN) {
+                    drawCentred(
+                            batch, flame.get(flameFrame(vents.progress(g)) % flame.size), vents.x(g), vents.y(g) - lag);
+                }
+            }
+        }
     }
 }

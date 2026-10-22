@@ -202,6 +202,8 @@ public final class LevelRenderer {
     private DomeLooks domes;
     /** M5 part G: the supply drones carrying the drops; null without them. */
     private final DroneLooks drones;
+    /** M8 part B: the ground vehicles carrying drops (Level 22's ice-crawler); null without them. */
+    private final IceCrawlerLooks crawlerDrops;
     /** M7 part G: Level 20's travelling ridge on the ground (null for another level). */
     private final RidgeLooks ridge;
     /** M7 part H: the breaching boss (the Dust Colossus), its ridge, craters, vents and rocks; null without it. */
@@ -300,6 +302,7 @@ public final class LevelRenderer {
         this.level = level;
         this.relay = RelayLooks.of(sprites, flash, script, name -> pivots(files, name));
         this.drones = DroneLooks.of(sprites, level);
+        this.crawlerDrops = IceCrawlerLooks.of(sprites, level, pivots(files, "ice-crawler"));
         this.ridge = RidgeLooks.of(sprites, level);
         this.snow = SnowLooks.of(level, false, sprites.pixel);
         this.arsenal = new ArsenalLooks(sprites, flash);
@@ -446,6 +449,7 @@ public final class LevelRenderer {
             foundry.stepped(sortie);
         }
         kinds.tanks(sortie).stepped(sortie);
+        kinds.rigs(sortie).stepped(sortie);
     }
 
     /** M5 part E: the renderer's own effects advance one simulation step (with the screen's). */
@@ -642,6 +646,10 @@ public final class LevelRenderer {
         if (storm == null) {
             luna.drawMarkers(batch, sortie, alpha);
         }
+        if (crawlerDrops != null) {
+            // M8 part B: Conamara's ice-crawler driving up the road with the armour patch, and back.
+            crawlerDrops.draw(batch, seconds);
+        }
         ground.drawGround(batch, sortie, alpha);
         convoy.drawConvoy(batch, sortie, alpha, play.whiteFlash);
         if (relay != null) {
@@ -664,6 +672,8 @@ public final class LevelRenderer {
         debris.draw(batch, scroll);
         // M7 part F: the Warden Tanks' wrecks, scrolling with the ground and riding their belts.
         kinds.tanks(sortie).drawWrecks(batch, scroll);
+        // M8 part B: the Drill Rigs' cracked ice and stumps, their hoses' decals and pumps under the cores.
+        kinds.rigs(sortie).drawGround(batch, sortie, alpha, scroll);
         // M7 part B: the Burrowers' craters and filling holes on the ground, under the ground units.
         kinds.burrowers(sortie).drawGround(batch, sortie.tick(), alpha, scroll);
         surfaceWater.draw(batch, scroll);
@@ -679,6 +689,8 @@ public final class LevelRenderer {
         kinds.shellbacks(sortie).drawOver(batch, sortie, alpha);
         // M7 part F: the Warden Tanks' turrets (or torn rings) on their hulls, their muzzle flashes.
         kinds.tanks(sortie).drawOver(batch, sortie, alpha);
+        // M8 part B: the dead rigs' steam plumes, the live ones' bore glow and muzzle tell.
+        kinds.rigs(sortie).drawOver(batch, sortie, looks, alpha, scroll);
         AuraLooks auras = kinds.aura(sortie);
         if (auras != null) {
             auras.drawRings(batch, sortie, alpha, true);

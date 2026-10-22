@@ -95,7 +95,9 @@ public sealed interface ObjectivesBlock permits LevelData {
      * hits allowed), failed when the first breaks, met when the last leaves the bottom edge. M7 part F (design/campaign
      * Level 19, "12 of 14"): an {@code escapes} objective's {@code allowed}, how many of them may get away. Step SIM-K
      * (design/campaign Level 21, round 44 K.h): a {@code kill_ratio}'s {@code boss_counted: false} leaves the level's
-     * bosses out of its count (their kills and the total); counted if not given.
+     * bosses out of its count (their kills and the total); counted if not given. M8 part B (design/campaign Level 22,
+     * Difficulty notes): an {@code escapes} objective's {@code easy} and {@code hard} change its {@code allowed} on
+     * that difficulty (0: every one destroyed).
      */
     public record Secondary(
             Optional<Double> killRatio,
@@ -115,9 +117,54 @@ public sealed interface ObjectivesBlock permits LevelData {
             Optional<Boolean> untouched,
             Optional<Boolean> standing,
             Optional<Integer> allowed,
-            Optional<Boolean> bossCounted) {
+            Optional<Boolean> bossCounted,
+            Optional<SecondaryChange> easy,
+            Optional<SecondaryChange> hard) {
         /** M5 part F: what a {@code collect} objective counts, the level's weather sondes. */
         public static final String SONDES = "sondes";
+
+        /** Without M8 part B's easy and hard. */
+        public Secondary(
+                Optional<Double> killRatio,
+                Optional<List<String>> groups,
+                Optional<String> escapes,
+                Optional<List<String>> killAll,
+                Optional<List<String>> parts,
+                Optional<String> before,
+                Optional<String> label,
+                int credits,
+                Optional<String> tag,
+                Optional<String> name,
+                Optional<Boolean> afloat,
+                Optional<String> collect,
+                Optional<Double> integrity,
+                Optional<Boolean> links,
+                Optional<Boolean> untouched,
+                Optional<Boolean> standing,
+                Optional<Integer> allowed,
+                Optional<Boolean> bossCounted) {
+            this(
+                    killRatio,
+                    groups,
+                    escapes,
+                    killAll,
+                    parts,
+                    before,
+                    label,
+                    credits,
+                    tag,
+                    name,
+                    afloat,
+                    collect,
+                    integrity,
+                    links,
+                    untouched,
+                    standing,
+                    allowed,
+                    bossCounted,
+                    Optional.empty(),
+                    Optional.empty());
+        }
 
         /** Without step SIM-K's boss_counted. */
         public Secondary(
@@ -208,6 +255,21 @@ public sealed interface ObjectivesBlock permits LevelData {
          */
         public int escapesAllowed() {
             return allowed.orElse(0);
+        }
+
+        /**
+         * M8 part B (design/campaign Level 22: easy 2, medium 1, hard 0 of the four rigs): how many units of an {@code
+         * escapes} objective may get away on {@code difficulty}: that difficulty's change, else {@link
+         * #escapesAllowed()}.
+         */
+        public int escapesAllowed(Difficulty difficulty) {
+            Optional<SecondaryChange> change =
+                    switch (difficulty) {
+                        case EASY -> easy;
+                        case MEDIUM -> Optional.empty();
+                        case HARD -> hard;
+                    };
+            return change.flatMap(SecondaryChange::allowed).orElseGet(this::escapesAllowed);
         }
 
         /** Without round 41's standing. */
@@ -460,6 +522,9 @@ public sealed interface ObjectivesBlock permits LevelData {
             Check.that(standing.orElse(true), "standing: true, or leave it out");
             allowed.ifPresent(n -> Check.positive("allowed", n));
             Check.that(allowed.isEmpty() || escapes.isPresent(), "only an escapes objective allows some to get away");
+            Check.that(
+                    (easy.isEmpty() && hard.isEmpty()) || escapes.isPresent(),
+                    "only an escapes objective changes by difficulty (its allowed)");
             integrity.ifPresent(share -> Check.that(share > 0 && share < 1, "integrity: a share between 0 and 1"));
             collect.ifPresent(what -> Check.that(SONDES.equals(what), "collect: sondes, was '" + what + "'"));
             Check.that(afloat.orElse(true), "afloat: true, or leave it out");
@@ -486,6 +551,16 @@ public sealed interface ObjectivesBlock permits LevelData {
                             + " tracker label,"
                             + " a groups one or an escapes one with allowed may have one, the others none");
             Check.notNegative("credits", credits);
+        }
+    }
+
+    /**
+     * M8 part B: a difficulty's change to an {@code escapes} secondary: how many may get away instead ({@code allowed},
+     * 0 or more).
+     */
+    public record SecondaryChange(Optional<Integer> allowed) {
+        public SecondaryChange {
+            allowed.ifPresent(n -> Check.notNegative("allowed", n));
         }
     }
 }

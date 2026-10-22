@@ -1,0 +1,75 @@
+{
+ "source": "tools/art/drill_rig.py (production art, M8 part B batch)",
+ "core": {
+  "size": [
+   128,
+   128
+  ],
+  "centre": [
+   64,
+   64
+  ]
+ },
+ "pumps": {
+  "offsets": [
+   [
+    -62,
+    58
+   ],
+   [
+    62,
+    58
+   ],
+   [
+    62,
+    -58
+   ],
+   [
+    -62,
+    -58
+   ]
+  ],
+  "convention": "px from the core's centre, dx right, dy up",
+  "size": [
+   36,
+   36
+  ]
+ },
+ "decals": {
+  "size": [
+   192,
+   192
+  ],
+  "centre": [
+   96,
+   96
+  ]
+ },
+ "steam": {
+  "size": [
+   128,
+   160
+  ],
+  "bore": [
+   64,
+   112
+  ]
+ },
+ "muzzle": {
+  "size": [
+   160,
+   160
+  ],
+  "centre": [
+   80,
+   80
+  ],
+  "ring": 10,
+  "first_direction": "straight down, then every 36 degrees"
+ },
+ "spin": {
+  "frames": 8,
+  "fps": 12,
+  "degrees_per_frame": 15
+ }
+}

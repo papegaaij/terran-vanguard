@@ -362,6 +362,19 @@ final class EnemyFire {
                     gun.damage(),
                     target);
         }
+        for (int k = 0; k < gun.aimedShards() && bullets.size() < rules.bulletBudget(); k++) {
+            // M8 part B (design/enemies/ground/drill-rig, hard): an aimed shard straight along the volley's aim.
+            double cos = Trig.cos(turn);
+            double sin = frame.vy(Trig.sin(turn));
+            bullets.obtain()
+                    .fire(
+                            x,
+                            y,
+                            (dx * cos - dy * sin) * gun.bulletSpeed(),
+                            (dx * sin + dy * cos) * gun.bulletSpeed(),
+                            gun.damage(),
+                            target);
+        }
         events.add(SimEvents.Type.ENEMY_FIRED, x, y, (int) gun.damage());
     }
 

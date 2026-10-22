@@ -23,7 +23,9 @@ import vanguard.sim.Sortie;
  * chain's head rather than its body (a cut grows a new head). Over a hardened destroy-targets unit
  * (Level 09's Hive Nodes, which only bombs and mortars crack) it flies over the unit, where its bombs
  * fall, leading it by the scroll during the bombs' fall, holding its line as over a battery; when
- * one is about to get away it calls the Airstrike (if fitted and charged) with a bomber over it. It reads each unit's current layer (a
+ * one is about to get away it calls the Airstrike (if fitted and charged) with a bomber over it; M8 part B: the same over
+ * a hardened unit of the escapes objective (Level 22's Drill Rigs, pumps first), over it only with an {@code anti-ground}
+ * gun, the strike in any case. It reads each unit's current layer (a
  * pouncing Ravager is in the air for part of its leap). With an air escort (Level 10's shuttles) it
  * cruises low, below the shuttle band; it never lines up under a cloaked unit (a Wraith on
  * {@code high-air}, which only homing reaches and which cannot ram), and a decloaked Wraith holding
@@ -211,7 +213,10 @@ public final class Autopilot {
             int vertical = sortie.airEscort() && (shipY < CRUISE_Y || DodgePlay.fromBelow(sortie, shipX, shipY))
                     ? 0
                     : Command.DOWN.bit();
-            return commands | (threat < 0 ? Command.LEFT.bit() : Command.RIGHT.bit()) | vertical;
+            // M8 part B (step B3b): a rig's strike goes in during the dodge too (the plan's fit has no anti-ground
+            // gun).
+            int strike = TargetPlay.rigStrikeNow(sortie, shipX) ? Command.SPECIAL.bit() : 0;
+            return commands | (threat < 0 ? Command.LEFT.bit() : Command.RIGHT.bit()) | vertical | strike;
         }
         double targetX = shipX;
         double targetY = cruise(sortie);
@@ -279,6 +284,15 @@ public final class Autopilot {
             lowest = node;
             targetY = Math.max(40, node.renderY(1) - sortie.groundSpeed() * BOMB_FALL);
         }
+        // M8 part B: an escapes objective's hardened unit (Level 22's Drill Rigs): with an anti-ground gun over it as
+        // over a Hive Node, its pumps first, then its core; without one only the Airstrike below.
+        Enemy rig = node == null ? TargetPlay.hardenedEscapee(sortie) : null;
+        boolean overRig = rig != null && TargetPlay.overRig(sortie);
+        if (overRig) {
+            lowest = rig;
+            // the bombs land where the pod is as they land (measured): over the part, no lead
+            targetY = Math.max(40, TargetPlay.partsFirstY(rig));
+        }
         Enemy head = TargetPlay.chainHead(sortie, shipY);
         if (head != null) {
             lowest = head;
@@ -302,7 +316,7 @@ public final class Autopilot {
         if (walker != null) {
             targetX = walker.renderX(1);
         } else if (lowest != null) {
-            targetX = lowest.renderX(1);
+            targetX = overRig && lowest == rig ? TargetPlay.partsFirstX(rig) : lowest.renderX(1);
         } else {
             GroundObject ground = TargetPlay.lowestGround(sortie, shipY);
             Pickup pickup = sortie.pickupCount() > 0 ? sortie.pickup(0) : null;
@@ -316,9 +330,10 @@ public final class Autopilot {
                 targetX = sortie.ally(0).renderX(1);
             }
         }
-        if (node != null && TargetPlay.strikeDue(sortie, node)) {
-            double strikeX = TargetPlay.strikeX(sortie, node);
-            if (Math.abs(strikeX - shipX) <= MovePlanner.DEAD_ZONE) {
+        Enemy struck = node != null ? node : rig;
+        if (struck != null && TargetPlay.strikeDue(sortie, struck)) {
+            double strikeX = TargetPlay.strikeX(sortie, struck);
+            if (Math.abs(strikeX - shipX) <= MovePlanner.DEAD_ZONE || TargetPlay.rigStrikeNow(sortie, shipX)) {
                 return commands | Command.SPECIAL.bit();
             }
             return commands | MovePlanner.steer(shipX, shipY, strikeX, targetY);

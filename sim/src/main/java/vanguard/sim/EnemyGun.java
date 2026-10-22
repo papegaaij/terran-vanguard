@@ -44,6 +44,8 @@ import java.util.Optional;
  * @param arcFacingRadians M7 part F (design/enemies/ground/spine-turret, Turned arc): the direction its {@code
  *     arcRadians} is measured from, radians clockwise from straight down; 0 (straight down) for every turret before
  *     Level 19, {@code PI} for a turret that faces up the screen ({@code arc: up}); its barrel starts along it
+ * @param aimedShards M8 part B (design/enemies/ground/drill-rig, hard): bullets fired straight along the volley's aim
+ *     (at the ship, within the difficulty's aim spread) besides its fan, with each volley; 0 for every other gun
  */
 public record EnemyGun(
         double intervalSeconds,
@@ -65,8 +67,18 @@ public record EnemyGun(
         double tellSeconds,
         boolean reaim,
         Optional<HomingSpec> homing,
-        double arcFacingRadians) {
+        double arcFacingRadians,
+        int aimedShards) {
     public EnemyGun {
+        if (aimedShards < 0
+                || (aimedShards > 0
+                        && (up
+                                || mine.isPresent()
+                                || mortar.isPresent()
+                                || spiral.isPresent()
+                                || homing.isPresent()))) {
+            throw new IllegalArgumentException("aimed shards go with a volley of bullets, 0 or more: " + aimedShards);
+        }
         if (!Double.isFinite(arcFacingRadians)) {
             throw new IllegalArgumentException("an arc faces a direction: " + arcFacingRadians);
         }
@@ -95,6 +107,81 @@ public record EnemyGun(
         if (homing.isPresent() && (up || mine.isPresent() || mortar.isPresent() || spiral.isPresent() || fan != 1)) {
             throw new IllegalArgumentException("a homing gun fires single missiles, not up, a fan, a mine or a lob");
         }
+    }
+
+    /** An attack without M8 part B's aimed shards (every gun before the Drill Rig's ring). */
+    public EnemyGun(
+            double intervalSeconds,
+            double firstShotDelay,
+            int burst,
+            double bulletSpeed,
+            double damage,
+            boolean leadsTargetInCircle,
+            int fan,
+            double spreadRadians,
+            double turnRate,
+            double arcRadians,
+            Optional<MineSpec> mine,
+            Optional<MortarSpec> mortar,
+            double burstGapSeconds,
+            boolean up,
+            Optional<SpiralSpec> spiral,
+            double passWithinX,
+            double tellSeconds,
+            boolean reaim,
+            Optional<HomingSpec> homing,
+            double arcFacingRadians) {
+        this(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tellSeconds,
+                reaim,
+                homing,
+                arcFacingRadians,
+                0);
+    }
+
+    /**
+     * M8 part B (design/enemies/ground/drill-rig, hard): this volley with {@code shards} more bullets aimed straight
+     * at the ship besides its fan (the hard rig's aimed shard beside its ring); 0 for none.
+     */
+    public EnemyGun withAimedShards(int shards) {
+        return new EnemyGun(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tellSeconds,
+                reaim,
+                homing,
+                arcFacingRadians,
+                shards);
     }
 
     /** An attack without M7 part F's homing missiles (every gun before the Revenant Walker's pods). */
@@ -208,7 +295,8 @@ public record EnemyGun(
                 tellSeconds,
                 reaim,
                 homing,
-                facingRadians);
+                facingRadians,
+                aimedShards);
     }
 
     /**
@@ -253,7 +341,8 @@ public record EnemyGun(
                 tellSeconds,
                 reaim,
                 withHoming,
-                arcFacingRadians);
+                arcFacingRadians,
+                aimedShards);
     }
 
     /** An attack without M7 part E's pass trigger (every unit before the Ghost Drone). */
@@ -320,7 +409,8 @@ public record EnemyGun(
                 tell,
                 reaimed,
                 homing,
-                arcFacingRadians);
+                arcFacingRadians,
+                aimedShards);
     }
 
     /** M7 part E: whether it fires by a pass trigger ({@link #passWithinX()} is a number). */
@@ -398,7 +488,8 @@ public record EnemyGun(
                 tellSeconds,
                 reaim,
                 homing,
-                arcFacingRadians);
+                arcFacingRadians,
+                aimedShards);
     }
 
     /** An attack that is not fired straight up (every unit but the Wraith). */

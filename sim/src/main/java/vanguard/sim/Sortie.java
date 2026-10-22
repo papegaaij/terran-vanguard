@@ -438,8 +438,8 @@ public final class Sortie {
             }
 
             @Override
-            public void unitPartDestroyed(int index, int mount) {
-                objectivePasses.partOff(index);
+            public void unitPartDestroyed(int index, int part, int mount) {
+                objectivePasses.partOff(index, part);
             }
         };
         this.hits = hits;
@@ -1806,6 +1806,10 @@ public final class Sortie {
             // M8 part A: only with a Bulwark, so the hashes of sorties without one stay as they were.
             bulwark.addTo(hash);
             hash.add(bulwarkStart);
+        }
+        if (objectivePasses.targetKilled) {
+            // M8 part B: only once a target-destroyed cue's unit fell, so the other levels hash as before.
+            hash.add(1);
         }
         return hash.value();
     }

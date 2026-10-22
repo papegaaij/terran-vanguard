@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.sim.Allocations;
 import vanguard.sim.Armament;
+import vanguard.sim.EnemySpec;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.PartSpec;
@@ -89,7 +90,9 @@ class Level19Test {
         for (WaveSpec wave : level.waves()) {
             kills += wave.count() * wave.enemy().bounty();
             kills += wave.count()
-                    * wave.enemy().part().map(part -> part.bounty()).orElse(0);
+                    * wave.enemy().parts().stream()
+                            .mapToInt(EnemySpec.UnitPart::bounty)
+                            .sum();
         }
         int ground = level.groundUnits().stream()
                 .mapToInt(unit -> unit.enemy().bounty())

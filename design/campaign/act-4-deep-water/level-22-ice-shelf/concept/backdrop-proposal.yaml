@@ -1,0 +1,54 @@
+backdrop:
+  # Presentation only: Europa's ice shelf (tools/art/backdrop_l22.py, from europa-ice-shelf-r48-a). No deep
+  # layer: the shelf is opaque everywhere (the leads are dark water mirroring Jupiter, not holes); the leads
+  # are cut along the Skimmer runs, the seams, the crevasse and the station sit at exact rows (re-run the
+  # generator after the data moves a lane, a section or the lip).
+  scroll_factors: {ground: 1, low-air: 1.35, high-air: 2.2}
+  ramp: 4
+  haze_colour: c8d8e8  # Europa's pale blue-white
+  atmosphere:
+    clear: {haze: 0.0}   # every section: hard sunlight from the top left, no haze
+  tile_sets:
+    ice-shelf: {layer: ground, height: 960}   # section 1: the white-blue plain of Europa's ice, double ridges (lineae) crossing it, fissures, pressure ridges; Jupiter's warm shine from the right
+    rig-field: {layer: ground, height: 960}   # section 2: the chaos's broken plates over the refrozen matrix, Vrell teal stains, fissures
+    conamara-run: {layer: ground, height: 960}   # section 3: the plates under packed snow, the ice-breaker road at x 240 (berms, marker poles, a sodium lamp every 240 px)
+    ice-crystals: {layer: high-air, height: 960}   # section 1: glittering ice crystals and thin vapour wisps (additive at 40 %)
+  pieces:
+    seam-rig-field: {layer: ground, size: [480, 320]}
+    seam-conamara-run: {layer: ground, size: [480, 320]}
+    pressure-ridge: {layer: ground, size: [260, 120]}
+    crevasse: {layer: ground, size: [180, 64]}
+    lead-1: {layer: ground, size: [480, 1682]}
+    lead-2: {layer: ground, size: [480, 454]}
+    lead-3: {layer: ground, size: [480, 583]}
+    lead-4: {layer: ground, size: [480, 713]}
+    lead-5: {layer: ground, size: [480, 434]}
+    lead-6: {layer: ground, size: [480, 918]}
+    lead-7: {layer: ground, size: [480, 917]}
+    conamara-station: {layer: ground, size: [480, 300], mid_size: true}
+  placed:
+    # 2. section 2's seam (ground 4860): ice-shelf into rig-field along a pressure ridge; exact rows
+    - {piece: seam-rig-field, t: 39.5, x: 240}
+    # 3. section 3's seam (ground 9000): rig-field into conamara-run along a pressure ridge; exact rows
+    - {piece: seam-conamara-run, t: 106.909, x: 240}
+    # 1. the pressure ridge under the t~20 nest
+    - {piece: pressure-ridge, t: 22.283, x: 350}
+    # 2. the secret's crevasse, its gash through the lip (x 440)
+    - {piece: crevasse, t: 74.9, x: 390}
+    # open lead 1 (rows 2554-4236), cut along the Skimmer runs; exact rows
+    - {piece: lead-1, t: 26.042, x: 240}
+    # open lead 2 (rows 4692-5146), cut along the Skimmer runs; exact rows
+    - {piece: lead-2, t: 40.483, x: 240}
+    # open lead 3 (rows 5934-6517), cut along the Skimmer runs; exact rows
+    - {piece: lead-3, t: 62.258, x: 240}
+    # open lead 4 (rows 6864-7577), cut along the Skimmer runs; exact rows
+    - {piece: lead-4, t: 78.842, x: 240}
+    # open lead 5 (rows 8243-8677), cut along the Skimmer runs; exact rows
+    - {piece: lead-5, t: 99.5, x: 240}
+    # open lead 6 (rows 9584-10502), cut along the Skimmer runs; exact rows
+    - {piece: lead-6, t: 116.391, x: 240}
+    # open lead 7 (rows 11564-12481), cut along the Skimmer runs; exact rows
+    - {piece: lead-7, t: 134.386, x: 240}
+    # 3. Conamara Station: the dome's foot on the bottom edge at t=150; exact rows
+    - {piece: conamara-station, t: 148.209, x: 240}
+# sections' tiles: 1: [ice-shelf, ice-crystals]; 2: [rig-field]; 3: [conamara-run]

@@ -148,6 +148,8 @@ final class UnitCues extends SoundFamily {
             case ENEMY_DESTROYED -> {
                 EnemyLooks kind = looks[events.value(i)];
                 bank.play(alternate(kind.explosionA(), kind.explosionB()), EXPLOSIONS, pitch(0.04), pan);
+                // M8 part B: a Drill Rig's core also plays the rig's collapse (FoundryCues).
+                foundry.destroyed(events.value(i), pan);
             }
             // A heavy shot for a medium bullet: the event's value is the bullet's damage, the same
             // class boundary as its large orb.

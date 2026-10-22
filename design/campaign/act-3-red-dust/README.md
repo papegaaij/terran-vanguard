@@ -84,8 +84,10 @@ Spire's death, the losses and Ares Landing's signal, so it opens on the arrival 
 not repeat them. After the Colossus falls, the act ends in Level 14's order (H6 = a): the
 settling-dust section, the debrief with the act summary `ACT III COMPLETE · RED DUST`, the four
 outro pages with track 24 *act complete* under page 1, then the release's end (moved from Level 14
-to Level 21 in M7 part H), which autosaves the hangar before L22: `ACT IV - DEEP WATER: COMING
-SOON` (see [Level 21](level-21-dust-colossus/README.md#act-end)).
+to Level 21 in M7 part H), which autosaved the hangar before L22: `ACT IV - DEEP WATER: COMING
+SOON` (see [Level 21](level-21-dust-colossus/README.md#act-end)); the `v0.1` release ended there. Since M8 part B
+(Level 22 built) the outro leads to [Act 4](../act-4-deep-water/README.md)'s title card and intro instead, and Act 3's
+data names no next act.
 
 **Timeline** (round 36, Q.24b): Act 2 plays in May 2185; Ares Landing's signal said three weeks; three days
 to ship out and nine days at full burn put the arrival at **five weeks** of siege, in June. Level
@@ -470,3 +472,6 @@ ART-B, as Act 2's); the intro's four images are on the
 - 2026-10-20 (user, round 44, closed): Level 21 and the act end built and reviewed (rows F, V, K, B, Q; two captures K.b and K.c asked for changes, see the [Level 21 decisions](level-21-dust-colossus/README.md#decisions)); the art audit (A.a, A.b: `art: final` for this README and the part READMEs whose assets are production); the stale "pending the user's review" notes of the Act 3 tree and units rewritten as "accepted in round N (date)" (I.7); an Act 3 level is `implementation: done` when its round has closed and its checklist is ticked (I.8; Level 15 is `done`); the playthrough stays an act-level item (one for M5 and M7, I.3). The release `v0.1` is Acts 1-3 (I.2); the Act 4 design phase follows part I and the release (J.a).
 - 2026-10-21 (user, round 45): the Act 3 voices accepted after the listen-through (V.1); hard's Act 3 economy accepted for v0.1, revisited after the user's playthrough (C.1).
 - 2026-10-22 (user): the playthrough of Act 3 done (2026-10-21; its fixes in commits 6381ef2b–c72cdd24) and `v0.1` (Acts 1-3) released. Still open: the "All 7 levels" item and Levels 18 and 19's "Easy/hard variations" items (Level 18's autopilot does not fly without Rook; Level 19's text records no autopilot check on every difficulty).
+- 2026-10-22 (M8 part B, step B2): `next_act` removed from the act's data: Level 22 is built, so the outro leads to Act
+  4's intro (the release's end moves to Level 28 in M8 part H; until then the hangar before L23 reads `MORE: COMING
+  SOON` and cannot launch).

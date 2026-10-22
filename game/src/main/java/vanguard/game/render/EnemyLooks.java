@@ -123,7 +123,17 @@ public record EnemyLooks(
      * the Ravager (a {@code medium} contact) bursts {@code small}.
      */
     private static final java.util.Map<String, Tier> DEATH_TIERS =
-            java.util.Map.of("hive-node", Tier.LARGE, "ravager", Tier.SMALL);
+            java.util.Map.of("hive-node", Tier.LARGE, "ravager", Tier.SMALL, DrillRigLooks.SLUG, Tier.LARGE);
+    /**
+     * M8 part B: the Drill Rig's collar spins at this rate (assets/pivots/drill-rig.json's {@code spin}: 8 frames of 15
+     * degrees, 180 degrees/s), not the Vrell's organic 10 fps.
+     */
+    static final double RIG_FPS = 12;
+    /**
+     * M8 part B: units whose remains are their own looks' ({@link DrillRigLooks}: the rig's stump stays on the ground with
+     * its cracked ice and steam until it leaves the screen), not the 10 s remains.
+     */
+    private static final java.util.Set<String> OWN_REMAINS = java.util.Set.of(DrillRigLooks.SLUG);
     /**
      * M7 part E: a unit whose death sounds other than its rung's two files (design/audio/sfx): the Ghost Drone's
      * mechanical break-up is the {@code small} rung's Ghost Drone entry (round 41 a, proposed): it must sound built,
@@ -237,7 +247,7 @@ public record EnemyLooks(
                         ? NavalLooks.JELLY_FPS
                         : orientation == Orientation.RADIAL
                                 ? SPIN_TURNS_PER_SECOND * SPIN_SYMMETRY * frames.size
-                                : ORGANIC_FPS,
+                                : slug.equals(DrillRigLooks.SLUG) ? RIG_FPS : ORGANIC_FPS,
                 switch (tier) {
                     case TINY -> sprites.explosionTiny;
                     case SMALL -> sprites.explosionSmall;
@@ -387,6 +397,9 @@ public record EnemyLooks(
      * 1 s timeline: fresh 1 s, then 7 s, fading over the last 2 s (the Polyp Mortar's acid splash).
      */
     private static Array<AtlasRegion> remains(Sprites sprites, String slug, Array<AtlasRegion> none) {
+        if (OWN_REMAINS.contains(slug)) {
+            return none;
+        }
         if (sprites.has(slug + "-stump")) {
             return sprites.frames(slug + "-stump");
         }

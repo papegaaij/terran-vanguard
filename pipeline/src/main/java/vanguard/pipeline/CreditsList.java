@@ -25,8 +25,9 @@ import java.util.stream.Stream;
  * with its title, author, licence and source; the authors of shipped CC0 and public-domain assets
  * are thanked by name. A row counts as shipped by its path: a file under {@code assets/} that
  * exists, a concept file whose copy (same name) is in {@code assets/}, or a voice reference clip
- * whose speaker has rendered lines in {@code assets/voice/}; a path in a {@code rejected/}
- * directory never counts.
+ * whose speaker has rendered lines in {@code assets/voice/} (the speaker is the clip's name after {@code ref-}
+ * without an audition's {@code -rNN-x} suffix: {@code ref-conamara-r51-a} is Conamara's, M8 part B); a path in a
+ * {@code rejected/} directory never counts.
  *
  * <p>The roll is a line file, one {@code kind|text} entry per line ({@code #} starts a comment),
  * read by {@code vanguard.game.ui.CreditsRoll}; the screen wraps the texts to its column.
@@ -39,7 +40,9 @@ public final class CreditsList {
 
     private static final Pattern PATH = Pattern.compile("(?:assets|design)/[^\\s,()`]+");
     private static final Pattern LINK = Pattern.compile("\\[([^\\]]*)\\]\\(([^)]*)\\)");
-    private static final Pattern VOICE_REF = Pattern.compile("design/audio/voice/refs/ref-([a-z0-9-]+)\\.wav");
+    /** A voice reference clip: group 1 the speaker, without an audition's round and variant ({@code -r51-a}). */
+    private static final Pattern VOICE_REF =
+            Pattern.compile("design/audio/voice/refs/ref-([a-z0-9-]+?)(?:-r\\d{2,}-[a-z])?\\.wav");
 
     /** The groups of the roll, in their order. */
     enum Group {

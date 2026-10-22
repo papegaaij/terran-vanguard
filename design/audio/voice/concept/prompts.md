@@ -412,3 +412,36 @@ Scott Danneker, a wide pitch range and long pauses; Susan Morin, a storybook rea
 |---|---|---|---|---|
 | a | Ted Lienhart | [Our Air Force: The Keystone of National Defense, ch. 1 (Mitchell)](https://archive.org/details/ourairforce_2502_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 132 Hz, a narrow range (IQR 16 Hz), 2.7 words/s (take 126 Hz); the clipped staff officer, near the Kilo Lead (129 Hz) |
 | b | Celine Major | [Campaigns of the Civil War, ch. 1 (Geer)](https://archive.org/details/campaignsofthecivilwar_2603_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 159 Hz, 3.0 words/s (take 162 Hz); quicker and lighter, the precise operator, near Dock (167 Hz) |
+
+## voice-conamara
+
+Round 51 (the Dr. Ilse Brandt audition, M8 part B, step AUD-B; pending the user's review), generated with
+`tools/concept/audio/tts_r51b.py` as round 37, each line through radio filter b on its own, 1 s apart (−15.8 /
+−15.9 LUFS, OGG Vorbis q4, 44.1 kHz mono). Dr. Brandt (Conamara Station's director, Level 22; speaker `conamara`,
+`uncast: true` until the pick, the radio portrait `radio-conamara`), neutral (0.5 / 0.5 / 0.7), two of her lines:
+Level 22's t=1 call ("Aegis flight, Conamara Station. Four rigs on the shelf, forty of us in the dome, and the ice will
+not hold still.") and her next call after Varga's "Ilse? It's Elena. Hold on, we are coming.", t=100 ("Something went
+through under the north dome. There is water in the shaft at Kilo-Seven. It leads down."): Level 22 gives her no line
+that answers Varga directly, so the second audition line is the one that follows Varga's. Seeds 100–102 per candidate
+and line; every take read back right (Whisper base.en with the names prompt); the pin is the take whose median pitch is
+nearest the clip's without a jump: a 100 / 100, b 100 / 102. Through the filter both read back word for word.
+Measured: a 17.1 s, b 17.3 s. Measured only, not listened to.
+
+The voice README asks for a woman, dry, tired, precise, older than Varga, a lower and flatter register than Varga's
+190–210 Hz (her clip 193 Hz, a wide range) and apart from Okafor (152 Hz). Both candidates read plain non-fiction in a
+level, unhurried delivery, neither in the cast nor auditioned before (also measured and passed over: Mil Nicholson,
+147 Hz, too near Okafor; Elizabeth Klett, 219 Hz with a wide range, above Varga; Kristin LeMoine, a storybook read).
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Margaret Espaillat | [Eminent Victorians, ch. 1 (Strachey)](https://archive.org/details/eminent_victorians_1204_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 168 Hz, a very narrow range (IQR 22 Hz), 2.4 words/s (takes 165 / 162 Hz); dry and even |
+| b | Sue Anderson | [Gallipoli Diary, ch. 1 (Gillam)](https://archive.org/details/gallipoli_diary_sa_librivox), cut at 60 s | public domain | 172 Hz, a narrow range (IQR 29 Hz), 2.4 words/s (takes 173 / 173 Hz); steady and plain, a diary read |
+
+**Her Level 22 lines with candidate b** (step VOX-B, M8 part B; pending the pick in round 51): all five of Dr. Brandt's
+lines (t=1, `target-destroyed`, t=100, `secondary-objective`, the core-sample cache's secret) rendered by the production
+renderer `tools/art/voice.py` exactly as the game's own takes, but with `ref: ref-conamara-r51-b`, into
+`concept/voice-conamara-r51-b/<key>.ogg` under the keys that ref gives (candidate a's takes are in
+`assets/voice/conamara/`, the speaker table's provisional `ref`). The pick is a file move: for b, set the speaker's
+`ref` to `ref-conamara-r51-b` (drop a's pin) and move these five files into `assets/voice/conamara/`; for a, nothing
+changes. No take needed a retry or a pin; median pitch 170–185 Hz, no jump; every take read back word for word from
+the raw take with the name prompt ("collar" heard as "color" through the filter in one).

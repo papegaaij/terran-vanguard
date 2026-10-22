@@ -24,8 +24,8 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M8 part A, step A6: the Act 4 systems' sounds in flight (design/audio/sfx, round 50's a variants until the pick; the
- * Sonar Pulse's chosen r04 a): the Harpoon Torpedoes' launch with one run loop held while any harpoon is in flight, the
+ * M8 part A, step A6: the Act 4 systems' sounds in flight (design/audio/sfx, round 50's picks; the Sonar Pulse's
+ * chosen r04 a): the Harpoon Torpedoes' launch with one run loop held while any harpoon is in flight, the
  * Depth Charges' roll-out and their burst on the fuse, the Sonar Pulse's ping. Flown on Level 01 under water from its
  * start (the debug option {@code --medium underwater}).
  */
@@ -51,12 +51,18 @@ class ActFourSoundsTest {
                 Sfx.DEPTH_CHARGE_BURST,
                 Sfx.SPECIAL_LIMIT)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r50-a.ogg"), sfx + " plays round 50's a until the pick: " + sfx.path());
         }
+        // round 50's picks (2026-10-22): launch b, run a, hit a, roll-out b, burst a, limit chime b
+        assertTrue(Sfx.SHOT_HARPOON.path().endsWith("shot-harpoon-r50-b.ogg"), "the picked launch");
+        assertTrue(Sfx.HARPOON_RUN.path().endsWith("harpoon-run-r50-a.ogg"), "the picked run");
+        assertTrue(Sfx.HARPOON_HIT.path().endsWith("harpoon-hit-r50-a.ogg"), "the picked hit");
+        assertTrue(Sfx.SHOT_DEPTH_CHARGE.path().endsWith("shot-depth-charge-r50-b.ogg"), "the picked roll-out");
+        assertTrue(Sfx.DEPTH_CHARGE_BURST.path().endsWith("depth-charge-burst-r50-a.ogg"), "the picked burst");
+        assertTrue(Sfx.SPECIAL_LIMIT.path().endsWith("special-limit-r50-b.ogg"), "the picked limit chime");
         assertTrue(Sfx.SPECIAL_SONAR.path().endsWith("special-sonar-r04-a.ogg"), "the chosen ping");
         assertTrue(Sfx.SPECIAL_FLARES.path().endsWith("special-flares-r08-a.ogg"), "the chosen flares");
         assertTrue(Sfx.SPECIAL_DENIED.path().endsWith("special-denied-r08-a.ogg"), "the chosen denied buzz");
-        assertTrue(Sfx.SHOT_TORPEDO.path().endsWith("shot-torpedo-r03-a.ogg"), "the pod's launch until round 50");
+        assertTrue(Sfx.SHOT_TORPEDO.path().endsWith("shot-torpedo-r03-a.ogg"), "the pod's launch (round 50, S.6)");
     }
 
     @Test

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import vanguard.content.BriefingPage;
 import vanguard.content.Content;
@@ -75,6 +76,29 @@ class PortraitsTest {
                 assertTrue(Files.isRegularFile(INTEL.resolve(name + ".png")), name);
             }
         }
+    }
+
+    /**
+     * M8 part B: Dr. Brandt speaks from Conamara Station with the station's portrait (tools/art/portraits.py
+     * radio-conamara: the director in the sodium-lit dome control room), her lines and the secret's alike, and the
+     * Drill Rig has its sensor portrait.
+     */
+    @Test
+    void drBrandtSpeaksWithConamarasPortrait() {
+        LevelData level = content.level(content.levelKey(22).orElseThrow());
+        List<LevelData.RadioCue> brandt = level.radio().stream()
+                .filter(cue -> cue.speaker().equals("Dr. Brandt"))
+                .toList();
+        assertEquals(4, brandt.size(), "her call, the first core, t=100 and the secondary's thanks");
+        for (LevelData.RadioCue cue : brandt) {
+            assertEquals(java.util.Optional.of("conamara"), cue.portrait(), cue.line());
+        }
+        for (LevelData.Secret secret : level.secrets()) {
+            assertEquals(java.util.Optional.of("conamara"), secret.radio().portrait());
+        }
+        assertEquals("conamara", Portraits.slug("conamara"));
+        assertTrue(Files.isRegularFile(PORTRAITS.resolve("radio-conamara-neutral.png")));
+        assertTrue(Files.isRegularFile(INTEL.resolve("drill-rig.png")), "the Drill Rig's sensor portrait");
     }
 
     /** tools/art/intel.py renders the sensor silhouette of every set piece a level's intel shows as an unknown contact. */

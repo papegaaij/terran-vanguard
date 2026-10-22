@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 import vanguard.sim.Enemy;
+import vanguard.sim.EnemySpec;
 import vanguard.sim.GroundSpec;
 import vanguard.sim.PlayField;
 import vanguard.sim.SimEvents;
@@ -21,6 +22,12 @@ import vanguard.sim.Sortie;
  * its explosion ({@code EnemyLooks}). A furnace vent's rising roar as each grate starts to glow (the tell) and its fire
  * blast as the flame column stands up (40 ms attack: no pop). The belts' rumble, one quiet loop while a belt runs on
  * the screen, panned to the one nearest the ship, under the {@code mars-foundry} bed.
+ *
+ * <p>M8 part B: Level 22's ice geysers (the vents' {@code look: ice-geyser}, {@link #geysers}) play the geyser's ice
+ * crack for the tell and its steam roar for the burst (round 51 a, proposed); the Drill Rig's collar whine is one quiet
+ * loop while a rig's collar turns on the screen (its core standing), panned to the rig nearest the ship; its ring of
+ * shards plays the rig's ring once instead of the shots' report; its core's death plays the rig's collapse with its
+ * {@code large} explosion.
  */
 final class FoundryCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(SimEvents.Type.VENT_TELL, SimEvents.Type.VENT_BURST);
@@ -49,6 +56,12 @@ final class FoundryCues extends SoundFamily {
     private float beltLevel;
     /** This step's step. */
     private long now;
+    /** M8 part B: the level's vents are ice geysers (their own tell and burst). */
+    private boolean geysers;
+    /** M8 part B: the rig collar's loop level now (its fade). */
+    private float rigLevel;
+    /** M8 part B: per enemy kind whether it is a Drill Rig, from the first watch; null before it. */
+    private boolean[] rigKinds;
 
     FoundryCues(SoundMix mix) {
         super(mix);
@@ -66,13 +79,48 @@ final class FoundryCues extends SoundFamily {
         this.now = now;
     }
 
+    /** M8 part B: the level's vents are ice geysers ({@code look: ice-geyser}): their tell and burst are the geyser's. */
+    void geysers(boolean geysers) {
+        this.geysers = geysers;
+    }
+
+    /** The tell's sound of the level's vents. */
+    Sfx tell() {
+        return geysers ? Sfx.GEYSER_TELL : Sfx.VENT_TELL;
+    }
+
+    /** The burst's sound of the level's vents. */
+    Sfx burst() {
+        return geysers ? Sfx.GEYSER_BURST : Sfx.VENT_BURST;
+    }
+
     @Override
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
-            case VENT_TELL -> bank.play(Sfx.VENT_TELL, FOUNDRY_LEVEL, pitch(0.03), pan);
-            case VENT_BURST -> bank.play(Sfx.VENT_BURST, FOUNDRY_LEVEL, pitch(0.03), pan);
+            case VENT_TELL -> bank.play(tell(), FOUNDRY_LEVEL, pitch(0.03), pan);
+            case VENT_BURST -> bank.play(burst(), FOUNDRY_LEVEL, pitch(0.03), pan);
             default -> {}
         }
+    }
+
+    /** Whether {@code spec} is a Drill Rig (design/enemies/ground/drill-rig). */
+    static boolean rig(EnemySpec spec) {
+        return spec.slug().equals(DRILL_RIG);
+    }
+
+    /** The Drill Rig's slug. */
+    static final String DRILL_RIG = "drill-rig";
+
+    /**
+     * M8 part B: an enemy of kind {@code kind} was destroyed: a Drill Rig's core plays the rig's collapse with its
+     * explosion (which plays as ever). False for another kind, or before the first watch knows the kinds.
+     */
+    boolean destroyed(int kind, float pan) {
+        if (rigKinds == null || kind < 0 || kind >= rigKinds.length || !rigKinds[kind]) {
+            return false;
+        }
+        bank.play(Sfx.RIG_DEATH, FOUNDRY_LEVEL, pitch(0.03), pan);
+        return true;
     }
 
     /**
@@ -80,6 +128,11 @@ final class FoundryCues extends SoundFamily {
      * burst, nothing for its later shots; false for another unit, whose shot plays as ever.
      */
     boolean fired(Enemy unit, float pan) {
+        if (unit != null && rig(unit.spec())) {
+            // M8 part B: a Drill Rig's ring of shards (with hard's aimed shard: one volley, one sound).
+            bank.play(Sfx.RIG_RING, FOUNDRY_LEVEL, pitch(0.03), pan);
+            return true;
+        }
         if (unit == null || unit.spec().turret().isEmpty()) {
             return false;
         }
@@ -124,8 +177,26 @@ final class FoundryCues extends SoundFamily {
         int[] locked = new int[SLOTS];
         Arrays.fill(locked, -1);
         int lockedCount = 0;
+        if (rigKinds == null) {
+            rigKinds = new boolean[sortie.enemyKinds().size()];
+            for (int k = 0; k < rigKinds.length; k++) {
+                rigKinds[k] = rig(sortie.enemyKinds().get(k));
+            }
+        }
+        double nearestRig = Double.POSITIVE_INFINITY;
+        float rigPan = 0;
         for (int e = 0; e < sortie.enemyCount(); e++) {
             Enemy enemy = sortie.enemy(e);
+            if (rigKinds.length > 0 && enemy.kind() >= 0 && enemy.kind() < rigKinds.length && rigKinds[enemy.kind()]) {
+                double x = enemy.renderX(1);
+                double y = enemy.renderY(1);
+                double distance = Math.hypot(x - shipX, y - shipY);
+                if (y >= 0 && y <= PlayField.HEIGHT && distance < nearestRig) {
+                    nearestRig = distance;
+                    rigPan = pan(x);
+                }
+                continue;
+            }
             if (enemy.spec().turret().isEmpty()) {
                 continue;
             }
@@ -158,6 +229,8 @@ final class FoundryCues extends SoundFamily {
         double belt = nearestBelt(sortie, shipX);
         float beltTarget = flying && !Double.isNaN(belt) ? UNIT_LOOP_LEVEL : 0;
         beltLevel = fadeLoop(Sfx.BELT_RUMBLE, beltLevel, beltTarget, Double.isNaN(belt) ? 0 : pan(belt));
+        float rigTarget = flying && nearestRig < Double.POSITIVE_INFINITY ? UNIT_LOOP_LEVEL : 0;
+        rigLevel = fadeLoop(Sfx.RIG_COLLAR, rigLevel, rigTarget, rigPan);
     }
 
     /** The x of the belt on the screen nearest {@code shipX}, or NaN while no belt runs on the screen. */
@@ -185,6 +258,8 @@ final class FoundryCues extends SoundFamily {
             tracksLevel = 0;
         } else if (loop == Sfx.BELT_RUMBLE) {
             beltLevel = 0;
+        } else if (loop == Sfx.RIG_COLLAR) {
+            rigLevel = 0;
         }
     }
 }

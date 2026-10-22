@@ -414,7 +414,8 @@ There is no Level 22 yet: the release's end (M6 part B, Q1 = a) moves from Level
 M7 part H: the outro is followed by the end card, the name entry and the credits, then the main
 menu; Continue opens the hangar before L22, which reads `ACT IV - DEEP WATER: COMING SOON` and
 cannot launch (Level 14's `ACT III - RED DUST: COMING SOON` goes). `--act-end` works unchanged for
-this level.
+this level. Since M8 part B (Level 22 built, Act 3's `next_act` removed) the outro leads to Act 4's title card and
+intro, then Level 22's briefing and hangar; the release's end moves to Level 28 in part H.
 
 ## Credit budget
 

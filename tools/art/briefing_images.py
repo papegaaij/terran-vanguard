@@ -163,6 +163,26 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           the CDF line held at the end of the retreat, the inner wall's terraces as contours, the
                           dune sea's crests with a moving seismic contact, the lime hollow at the lowest point with
                           seismic rings centred on it; the descent route and the five sections
+  act-4-arrival           Act 4 p1 (M8 part B batch): Europa in the transport's forward view against Jupiter (its
+                          lineae and chaos patches, lit from the upper left), the Vrell fleet's ring of contacts in
+                          orbit, the four rigs on the ice at Conamara and the station's beacon; the nav screen's days
+                          and tremors
+  act-4-europa-cutaway    Act 4 p2: Varga's cut through Europa's shell: the ice kilometres thick, the ocean under
+                          it, Thera Deep's habitat (40,000 people) and its kelp farms, the rigs boring down from
+                          Conamara on the surface toward the ocean
+  act-4-hydro-kit         Act 4 p3: the hydro-kit Stormhawk (tools/art/act4_gear.py's ship-hydro_2 at 4x) with the
+                          callouts (sealed intakes, torpedo rack, pressure hull, headlights); the water's rules (x0.7
+                          bullets, a third of the bite off all but torpedoes and depth charges) beside it
+  act-4-drop              Act 4 p4: the drop over Europa: Level 22's production rig-field tile from above, the
+                          Level 15 transport piece turned nose right with Aegis Wing leaving it, the route over the
+                          four rigs to the hole they bored, "we follow it down"
+  level-22-conamara-map   L22 p1: Okafor's CDF map of the Conamara Chaos, north up, from Level 22's production
+                          tiles as a hologram: the route south over the shelf, the four rigs, the station's dome at
+                          the south end, the three sections; Jupiter in an inset
+  level-22-drill-rig      L22 p2: Varga's scan of the production Drill Rig (tools/art/drill_rig.py: collar, four
+                          pumps on their hoses) with the bore core marked, the hardened collar (shots glance off),
+                          what gets through; an inset of a geyser's crack glowing, then its steam
+                          (tools/art/l22_props.py)
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -185,6 +205,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r41-a.png   review sheet, L18 (M7 part E)
   design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
+  design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -235,7 +256,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r44"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r51"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -4628,6 +4649,407 @@ def colossus_scan():
     return b
 
 
+
+# --------------------------------------------------------------------------- Act 4 intro and Level 22 (M8 part B)
+
+SOURCE_M8B = artkit.source_note(SCRIPT, "M8 part B batch")
+L22 = ROOT / "assets" / "backdrop" / "level-22"
+EUROPA_HOLO = [(0.0, (40, 34, 36)), (0.35, (120, 104, 96)), (0.7, (206, 196, 184)), (1.0, (246, 240, 230))]
+LINEA = np.array((150, 80, 52.0))                      # Europa's lineae: rust-brown
+CONAMARA = (-88.0, 10.0)                              # Conamara Chaos on the globe (lon, lat)
+JUP_BANDS = [(0.0, (70, 40, 26)), (0.25, (150, 96, 60)), (0.45, (214, 176, 132)), (0.6, (236, 214, 180)),
+             (0.75, (178, 118, 74)), (1.0, (120, 70, 44))]   # tools/concept/europa_r48.py's JUP
+
+
+def jupiter_disc(b, cx, cy, r, seed=4501, light_dir=(-0.62, -0.5, 0.6), strength=1.0):
+    """Jupiter on the display: latitude belts and zones with turbulence, the Great Red Spot, lit from the upper
+    left, its night side dark."""
+    nx, ny = (b.xx - cx) / r, (b.yy - cy) / r
+    r2 = nx ** 2 + ny ** 2
+    inside = r2 < 1
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    lat = np.arcsin(np.clip(ny, -1, 1))
+    turb = raster.fbm(W, H, 24, seed, octaves=4, period=False)
+    belts = np.sin(lat * 9.0 + 0.6 * turb) * 0.6 + np.sin(lat * 23.0 + 1.6 * turb + 0.4 * np.sin(nx * 7)) * 0.4
+    col = raster.ramp(JUP_BANDS, 0.5 + 0.3 * belts)
+    spot = np.exp(-(((nx + 0.2) / 0.14) ** 2 + ((ny - 0.34) / 0.07) ** 2))
+    col = col * (1 - 0.55 * spot[..., None]) + np.array((196, 84, 52.0)) * 0.55 * spot[..., None]
+    L = np.array(light_dir) / np.linalg.norm(light_dir)
+    light = np.clip(nx * L[0] + ny * L[1] + nz * L[2], 0, 1)
+    body = col * (0.05 + 0.95 * np.clip(light * 1.25, 0, 1) ** 0.8)[..., None] * strength
+    edge = np.clip((1 - np.sqrt(r2)) * r, 0, 1)[..., None]
+    b.base = b.base * (1 - edge) + body * edge
+    return inside
+
+
+def europa_globe(b, g, seed=4502):
+    """Europa through Globe ``g``: the cream-white ice with its rust lineae (great-circle bands), dark chaos
+    patches, lit from the upper left."""
+    inside, lon, lat, nx, ny, nz = g.inverse(b.xx, b.yy)
+    rng = np.random.default_rng(seed)
+    lo, la = np.radians(lon), np.radians(lat)
+    p = np.stack([np.cos(la) * np.cos(lo), np.cos(la) * np.sin(lo), np.sin(la)], -1)
+    lines = np.zeros(lon.shape)
+    for _ in range(16):                                  # great circles: distance to a random plane through the centre
+        v = rng.normal(size=3)
+        v /= np.linalg.norm(v)
+        d = np.abs(p @ v)
+        w = rng.uniform(0.006, 0.016)
+        lines = np.maximum(lines, np.exp(-(d / w) ** 2) * rng.uniform(0.5, 1.0))
+    n = raster.fbm(W, H, 18, seed + 1, octaves=4, period=False)
+    chaos = np.zeros(lon.shape)
+    for clo, cla, cr in ((CONAMARA[0], CONAMARA[1], 9.0), (-40, -30, 12.0), (-130, 40, 8.0), (-60, 52, 10.0)):
+        cc = np.radians([clo, cla])
+        q = np.array([np.cos(cc[1]) * np.cos(cc[0]), np.cos(cc[1]) * np.sin(cc[0]), np.sin(cc[1])])
+        ang = np.degrees(np.arccos(np.clip(p @ q, -1, 1)))
+        chaos = np.maximum(chaos, np.clip(1 - ang / cr, 0, 1) * (0.5 + 0.5 * n))
+    alb = 0.78 + 0.12 * (n - 0.5) - 0.3 * chaos
+    lam = -0.62 * nx + 0.5 * ny + 0.6 * nz
+    light = np.clip(lam * 1.15 + 0.05, 0, 1) ** 0.75
+    body = raster.ramp(EUROPA_HOLO, np.clip(alb * light, 0, 1))
+    body = body * (1 - lines[..., None] * 0.7) + LINEA * light[..., None] * lines[..., None] * 0.7
+    b.base = np.where(inside[..., None], body, b.base)
+    return inside
+
+
+def canopy(b):
+    """The transport's canopy as act-3-arrival's: the top bar, the left pillar, the strut before the nav screen."""
+    frame = (9, 11, 20)
+    fill(b, [(0, 0), (W, 0), (W, 20), (0, 20)], frame)
+    fill(b, [(0, 20), (24, 20), (8, H), (0, H)], frame)
+    fill(b, [(512, 20), (530, 20), (548, H), (530, H)], frame)
+    fill(b, [(530, 20), (W, 20), (W, H), (548, H)], (6, 10, 24))
+    fill(b, [(0, 230), (548, 230), (548, H), (0, H)], frame)
+    for x in range(40, 512, 48):
+        b.glow(x, 235, 3, (60, 120, 160) if x % 96 else (160, 110, 40), 0.9)
+    b.line([(0, 20), (512, 20)], CYAN_DIM, 1, 150)
+    b.line([(24, 20), (8, H)], CYAN_DIM, 1, 110)
+    b.line([(512, 20), (530, H - 10)], CYAN_DIM, 1, 110)
+    b.line([(8, 230), (531, 230)], CYAN_DIM, 1, 150)
+
+
+def arrival4():
+    """Act 4 p1: Europa in the transport's forward view against Jupiter, the Vrell fleet in orbit round it, the
+    drill rigs on the ice at Conamara, the station's beacon; the nav screen's count of days and tremors."""
+    b = Board()
+    b.base *= 0.5
+    rng = np.random.default_rng(4511)
+    for _ in range(90):
+        x, y = int(rng.integers(0, W)), int(rng.integers(0, H))
+        b.base[y, x] += rng.uniform(40, 140)
+    jupiter_disc(b, 420, 96, 150)
+    g = Globe(230, 136, 96, -70, 8)
+    europa_globe(b, g)
+    canopy(b)
+    b.title("CDF TRANSPORT - FORWARD VIEW")
+    b.label(W - 10, 9, "EUROPA - DAY 12 AT FULL BURN", AMBER, right=True)
+    # the Vrell fleet in orbit: a tilted ring of contacts round the moon
+    pts = []
+    for k in range(64):
+        a = k / 64 * 2 * np.pi
+        pts.append((230 + np.cos(a) * 140, 136 + np.sin(a) * 36 - np.cos(a) * 18))
+    b.dashed(pts[:34], RED, 1, 3, 4)
+    for k in range(0, 34, 4):
+        x, y = pts[k]
+        b.marker(x, y, "chevron", RED, 3)
+    # the rigs on the ice at Conamara, the station's beacon
+    cx, cy, _ = g.project(*CONAMARA)
+    for dx, dy in ((-14, -10), (-6, -16), (4, -12), (12, -18)):
+        b.marker(cx + dx, cy + dy, "dot", RED, 2)
+    b.glow(cx, cy, 8, (220, 140, 40), 1.0)
+    for k, r in enumerate((4, 8, 13)):
+        b.ring(cx, cy, r, colour=AMBER, alpha=235 - 50 * k)
+    b.marker(cx, cy, "diamond", AMBER, 3)
+    b.line([(cx - 6, cy + 6), (cx - 30, cy + 40), (cx - 46, cy + 40)], AMBER, 1, 220)
+    tag(b, cx - 50, cy + 36, "CONAMARA STATION", AMBER, right=True)
+    tag(b, cx - 50, cy + 46, "TREMORS", WHITE, right=True)
+    b.line([(cx + 14, cy - 20), (cx + 40, cy - 48), (cx + 52, cy - 48)], RED, 1, 220)
+    tag(b, cx + 56, cy - 52, "DRILL RIGS ON THE ICE", RED)
+    tag(b, 420, 196, "JUPITER", CYAN)
+    tag(b, 60, 40, "VRELL FLEET - IN ORBIT", RED)
+    b.bracket(30, 26, 506, 226, CYAN_DIM, 10)
+    px = 560
+    b.label(px, 30, "EUROPA", WHITE)
+    b.label(px, 44, "AHEAD OF US", CYAN_DIM)
+    b.label(W - 12, 44, "7 D", RED, right=True)
+    b.label(px, 54, "FLEET", CYAN_DIM)
+    b.label(W - 12, 54, "ORBIT", RED, right=True)
+    b.label(px, 64, "DRILL RIGS", CYAN_DIM)
+    b.label(W - 12, 64, "4", RED, right=True)
+    b.line([(px, 80), (W - 12, 80)], CYAN_DIM, 1, 120)
+    b.label(px, 88, "CONAMARA STATION", AMBER)
+    b.label(px, 98, "TREMORS FOR", WHITE)
+    big(b, px, 112, "7 DAYS", AMBER)
+    b.label(px, 136, "40 IN THE DOME", CYAN_DIM)
+    b.label(px, 146, "ON THE ICE SHELF", CYAN_DIM)
+    b.line([(px, 162), (W - 12, 162)], CYAN_DIM, 1, 120)
+    b.label(px, 172, "12 DAYS AT", CYAN_DIM)
+    b.label(px, 182, "FULL BURN", CYAN_DIM)
+    b.marker(px + 4, 202, "chevron", RED, 3)
+    b.label(px + 14, 198, "THEY BEAT US", RED)
+    b.label(px + 14, 208, "BY A WEEK", RED)
+    return b
+
+
+def europa_cutaway():
+    """Act 4 p2: Varga's cut through Europa's shell: the ice kilometres thick, the ocean under it, Thera Deep's
+    habitat and kelp farms in it, the Vrell rigs boring a shaft down through the ice toward them."""
+    b = Board()
+    x0, x1 = 20, 520
+    surf = 46.0
+    ice_bot = 112.0
+    floor_y = 226.0
+    xx, yy = b.xx, b.yy
+    curve = 0.00006 * (xx - 270) ** 2                       # the moon's curve
+    s_y, i_y = surf + curve, ice_bot + curve + 6 * np.sin(xx / 47) + 3 * np.sin(xx / 13)
+    inside = (xx > x0) & (xx < x1)
+    ice = inside & (yy > s_y) & (yy < i_y)
+    n = raster.fbm(W, H, 16, 4521, octaves=4, period=False)
+    icecol = raster.ramp([(0.0, (60, 90, 120)), (0.6, (140, 176, 206)), (1.0, (210, 228, 242))],
+                         np.clip(0.4 + 0.5 * (1 - (yy - s_y) / (i_y - s_y)) + 0.2 * (n - 0.5), 0, 1))
+    b.base = np.where(ice[..., None], icecol * 0.85, b.base)
+    sea = inside & (yy >= i_y) & (yy < floor_y)
+    depth = np.clip((yy - i_y) / (floor_y - i_y), 0, 1)
+    seacol = np.array((10, 60, 84.0)) * (1 - depth[..., None]) + np.array((2, 10, 22.0)) * depth[..., None]
+    b.base = np.where(sea[..., None], seacol, b.base)
+    b.line([(x, float(surf + 0.00006 * (x - 270) ** 2)) for x in range(x0, x1, 4)], WHITE, 1, 220)
+    b.title("CDF SCIENCE - EUROPA, A CUT THROUGH THE SHELL")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    # Thera Deep: the habitat under the ice, the lamp-lit kelp farms round it
+    hx, hy = 330, 150
+    for k in range(9):                                       # kelp farm rows
+        fx = 250 + k * 20
+        top = hy + 30 + 6 * np.sin(k)
+        b.line([(fx, top), (fx, floor_y - 2)], (70, 200, 120), 1, 150)
+        b.line([(fx + 2, top + 8), (fx + 5, floor_y - 2)], (70, 200, 120), 1, 110)
+    b.glow(hx, hy + 52, 60, (40, 110, 70), 0.6)
+    b.draw.ellipse([hx - 26, hy - 12, hx + 26, hy + 12], outline=AMBER + (240,), width=2)
+    b.draw.rectangle([hx - 4, hy - 34, hx + 4, hy - 12], outline=AMBER + (220,))
+    for k in range(5):
+        b.glow(hx - 18 + 9 * k, hy, 2, (255, 190, 80), 0.9)
+    b.line([(hx, hy - 34), (hx, float(ice_bot) + 4)], AMBER, 1, 200)          # the lift up to the ice
+    tag(b, hx + 34, hy - 6, "THERA DEEP", AMBER)
+    tag(b, hx + 34, hy + 4, "40,000 PEOPLE", WHITE)
+    tag(b, 300, 212, "KELP FARMS", GREEN)
+    # Conamara on the surface, the rigs boring down
+    cx = 150
+    b.marker(cx, surf - 6, "square", AMBER, 3)
+    tag(b, cx - 30, surf - 22, "CONAMARA", AMBER)
+    for k, rx in enumerate((90, 118, 182, 206)):
+        ry = surf + 0.00006 * (rx - 270) ** 2
+        b.marker(rx, ry - 4, "chevron", RED, 3)
+        depth_k = (0.75, 0.45, 0.55, 0.3)[k]
+        y_end = ry + (ice_bot - surf) * depth_k
+        b.line([(rx, ry), (rx, y_end)], RED, 2, 230)
+        b.glow(rx, y_end, 4, (255, 60, 40), 0.9)
+    b.dashed([(90, surf + 52), (90, ice_bot + 30), (240, 160)], RED, 1, 4, 3)
+    tag(b, 44, 168, "THEY DRILL FOR", RED)
+    tag(b, 44, 178, "THE OCEAN", RED)
+    # the scale bar
+    b.line([(x1 + 10, surf + 2), (x1 + 10, ice_bot)], CYAN, 1, 220)
+    for y in (surf + 2, ice_bot):
+        b.line([(x1 + 6, y), (x1 + 14, y)], CYAN, 1, 220)
+    b.line([(x1 + 10, ice_bot + 4), (x1 + 10, floor_y)], CYAN_DIM, 1, 220)
+    tag(b, x1 + 18, 74, "ICE", CYAN)
+    tag(b, x1 + 18, 84, "KILOMETRES", CYAN)
+    tag(b, x1 + 18, 160, "OCEAN", CYAN)
+    tag(b, x1 + 18, 170, "UNDER IT", CYAN)
+    b.label(x1 + 18, 206, "NOT HERE", RED)
+    b.label(x1 + 18, 216, "FOR THE ICE", RED)
+    return b
+
+
+def hydro_kit():
+    """Act 4 p3: the Stormhawk refitted for the water (the hydro-kit's production frame, ship-hydro_2, at 4x) with
+    callouts to the sealed intakes, the torpedo rack and the pressure hull; the water's rules beside it."""
+    b = Board()
+    b.title("CDF REFIT - AF-12 STORMHAWK, HYDRO-KIT")
+    b.label(W - 10, 9, "EVERYTHING SLOWS DOWN", AMBER, right=True)
+    ship = asset("ship-hydro_2", 4)
+    cx, cy = 180, 126
+    b.glow(cx, cy, 90, (10, 60, 84), 0.9)
+    for k in range(6):                                       # the water's pressure rings
+        b.ring(cx, cy, 70 + 10 * k, colour=CYAN_DIM, alpha=90 - 12 * k)
+    b.sprite(ship, cx, cy)
+    calls = [((cx - 34, cy - 8), (40, 40), "SEALED INTAKES"),
+             ((cx + 28, cy + 22), (300, 52), "TORPEDO RACK"),
+             ((cx, cy + 52), (300, 196), "PRESSURE HULL"),
+             ((cx - 10, cy - 70), (40, 210), "HEADLIGHTS")]
+    for (px_, py_), (tx, ty), text in calls:
+        b.line([(px_, py_), (tx + (0 if tx > cx else raster.text_width(text) + 4), ty + 4)], CYAN, 1, 200)
+        b.marker(px_, py_, "dot", CYAN, 2)
+        tag(b, tx + (6 if tx > cx else 0), ty, text, WHITE)
+    px = 420
+    b.label(px, 30, "UNDER WATER", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 50, "BULLETS, BOTH SIDES", CYAN_DIM)
+    big(b, px, 62, "X 0.7", AMBER)
+    b.label(px, 88, "NOT A TORPEDO", CYAN_DIM)
+    b.label(px, 98, "OR A DEPTH CHARGE", CYAN_DIM)
+    big(b, px, 110, "-1/3 BITE", RED)
+    b.line([(px, 134), (W - 12, 134)], CYAN_DIM, 1, 120)
+    b.label(px, 142, "HARPOON TORPEDOES", GREEN)
+    b.label(px, 152, "DEPTH CHARGES", GREEN)
+    b.label(px, 162, "FULL BITE", GREEN)
+    tor = asset("harpoon-torpedoes-shot_16", 2)
+    b.sprite(tor, W - 40, 150)
+    b.line([(px, 178), (W - 12, 178)], CYAN_DIM, 1, 120)
+    b.label(px, 188, "FLY ACCORDINGLY", AMBER)
+    b.label(px, 206, "FREE: THE KIT", CYAN_DIM)
+    b.label(px, 216, "FITS EVERY SHIP", CYAN_DIM)
+    return b
+
+
+def drop4():
+    """Act 4 p4: the drop: the transport over Europa's ice shelf (Level 22's production tiles from above, hazeless),
+    the route down to the four rigs on the shelf, then into the shaft they bored; Jupiter low on the horizon."""
+    b = Board()
+    shelf = np.array(Image.open(L22 / "rig-field.png").convert("RGB").resize((240, 480), Image.LANCZOS)).astype(float)
+    shelf = np.rot90(shelf, -1)                               # the flight direction to the right
+    rgb = tiled(shelf, W, H, 30, 0)
+    b.base = rgb * 0.62
+    b.title("CDF TRANSPORT - DROP IN 90 MINUTES")
+    b.label(W - 10, 9, "AEGIS ACTUAL", AMBER, right=True)
+    tsp = Image.open(L15 / "transport.png").convert("RGBA").rotate(-90, expand=True)
+    tsp = scaled(tsp, 0.3, 48)
+    tx, ty = 104, 70
+    shadow(b, tsp, tx, ty, 18, 26, 0.4)
+    b.sprite(tsp, tx, ty)
+    rigs = [(250, 150), (330, 96), (400, 168), (470, 110)]
+    route = [(tx + 60, ty + 6), (220, 150)] + rigs + [(560, 150)]
+    b.dashed(route, CYAN, 2)
+    for k, (x, y) in enumerate(rigs):
+        b.ring(x, y, 10, colour=RED, alpha=230)
+        b.marker(x, y, "dot", RED, 2)
+        tag(b, x - 12, y + 16, f"RIG {k + 1}", RED)
+    hx, hy = 560, 150
+    for k, r in enumerate((6, 11, 17)):
+        b.ring(hx, hy, r, colour=AMBER, alpha=230 - 50 * k)
+    b.arrow(hx, hy + 20, hx, hy + 70, AMBER, 6)
+    tag(b, hx - 24, hy + 26, "THE HOLE", AMBER, right=True)
+    tag(b, hx - 24, hy + 36, "WE FOLLOW IT DOWN", WHITE, right=True)
+    tag(b, 196, 214, "1  THE RIGS ON THE SURFACE", WHITE)
+    tag(b, 430, 214, "2  THEN THE SHAFT", AMBER)
+    for k, x in enumerate((14, 30, 46)):
+        ship = scaled(turned(asset("ship_2"), 90), 0.6)
+        b.sprite(ship, tx + 40 + 16 * k, ty + 30 + 8 * k)
+    return b
+
+
+def conamara_map():
+    """L22 p1: Okafor's top-down CDF map of the Conamara Chaos ice field, north up: the shelf's fissures and leads,
+    the four rigs on the way south, Conamara Station's dome at the south end, the route and the three sections;
+    Jupiter in an inset."""
+    b = Board()
+    field = np.array(Image.open(L22 / "ice-shelf.png").convert("RGB")).astype(float)
+    chaos = np.array(Image.open(L22 / "rig-field.png").convert("RGB")).astype(float)
+    mx0, mx1 = 20, 420
+    strip = np.concatenate([field[:320], chaos[:400], field[320:640]], axis=0)       # north to south
+    small = np.array(Image.fromarray(strip.astype(np.uint8)).resize((240, 640), Image.LANCZOS)).astype(float)
+    small = np.rot90(small, 1)[:, ::-1] if False else small
+    img = np.array(Image.fromarray(small.astype(np.uint8)).resize((mx1 - mx0, H - 40), Image.LANCZOS)).astype(float)
+    lum = img @ np.array([0.3, 0.55, 0.15]) / 255
+    holo_rgb = raster.ramp([(0.0, (6, 20, 34)), (0.5, (30, 90, 120)), (1.0, (130, 200, 230))], np.clip(lum, 0, 1))
+    b.base[24:H - 16, mx0:mx1] = holo_rgb
+    b.title("CDF MAP - CONAMARA CHAOS, NORTH UP")
+    b.label(W - 10, 9, "FOUR RIGS ON THE SHELF", RED, right=True)
+    route_x = [220, 230, 140, 330, 150, 330, 240, 240]
+    route_y = [30, 70, 92, 120, 148, 170, 196, 210]
+    b.dashed(list(zip(route_x, route_y)), CYAN, 2)
+    for (x, y), name in zip(((140, 92), (330, 120), (150, 148), (330, 170)), ("RIG 1", "RIG 2", "RIG 3", "RIG 4")):
+        b.draw.rectangle([x - 6, y - 6, x + 6, y + 6], outline=RED + (240,), width=2)
+        b.marker(x, y, "dot", RED, 2)
+        tag(b, x + 10, y - 4, name, RED)
+    sx, sy = 240, 214
+    for k, r in enumerate((5, 9, 14)):
+        b.ring(sx, sy, r, colour=AMBER, alpha=235 - 50 * k)
+    b.marker(sx, sy, "diamond", AMBER, 3)
+    tag(b, sx + 18, sy - 4, "CONAMARA STATION", AMBER)
+    for y, label in ((50, "1 THE SHELF"), (130, "2 THE RIG FIELD"), (196, "3 THE RUN-IN")):
+        b.line([(mx0, y + 12), (mx1, y + 12)], CYAN_DIM, 1, 90)
+        tag(b, mx0 + 6, y, label, CYAN)
+    b.label(mx1 - 16, 30, "N", WHITE)
+    b.arrow(mx1 - 13, 58, mx1 - 13, 42, WHITE, 4, dashed=False)
+    # the inset: Jupiter over the shelf
+    ix0, iy0, ix1, iy1 = 436, 28, 560, 120
+    fill(b, [(ix0, iy0), (ix1, iy0), (ix1, iy1), (ix0, iy1)], (4, 6, 14), 1.0)
+    jb = Board()
+    jupiter_disc(jb, 60, 52, 44)
+    b.base[iy0:iy1, ix0:ix1] = np.where(jb.base[:iy1 - iy0, :ix1 - ix0].max(axis=-1, keepdims=True) > 40,
+                                        jb.base[:iy1 - iy0, :ix1 - ix0], b.base[iy0:iy1, ix0:ix1])
+    b.draw.rectangle([ix0, iy0, ix1, iy1], outline=CYAN_DIM + (220,))
+    tag(b, ix0 + 4, iy1 - 12, "JUPITER, OVERHEAD", CYAN)
+    px = 576
+    b.label(px - 8, 130, "THE SHELF", WHITE)
+    b.label(px - 8, 140, "CRACKS", CYAN_DIM)
+    b.label(px - 8, 150, "LEADS", CYAN_DIM)
+    b.label(px - 8, 166, "THE RIGS", RED)
+    b.label(px - 8, 176, "BORING", RED)
+    b.label(px - 8, 192, "40 PEOPLE", AMBER)
+    b.label(px - 8, 202, "IN THE DOME", AMBER)
+    return b
+
+
+def rig_scan():
+    """L22 p2: Varga's scan of a Drill Rig: the production rig (collar, four pumps on their hoses) with the bore
+    core marked, the hardened shell (shots glance off) and the weapons that get through; an inset of a crack
+    glowing before a geyser's steam."""
+    b = Board()
+    b.title("CDF SCAN - VRELL DRILL RIG")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    base = held_asset("drill-rig-base")
+    core = held_asset("drill-rig_0")
+    pump = held_asset("drill-rig-pump_1")
+    glow = held_asset("drill-rig-glow_0")
+    rig = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    rig.alpha_composite(base)
+    for dx, dy in ((-62, 58), (62, 58), (62, -58), (-62, -58)):
+        rig.alpha_composite(pump, (96 + dx - 18, 96 - dy - 18))
+    rig.alpha_composite(core, (32, 32))
+    cx, cy = 170, 126
+    rig = scaled(rig, 1.0, 64)
+    shadow(b, rig, cx, cy, 6, 8, 0.4)
+    b.sprite(rig, cx, cy)
+    g = np.array(glow).astype(float)
+    b.add_light(g[..., :3] * g[..., 3:4] / 255, cx - 64, cy - 64, "over")
+    b.ring(cx, cy, 20, colour=LIME, alpha=240)
+    b.line([(cx + 16, cy - 14), (cx + 120, cy - 70), (cx + 140, cy - 70)], LIME, 1, 230)
+    tag(b, cx + 144, cy - 74, "BORE CORE - THE TARGET", LIME)
+    b.ring(cx, cy, 58, colour=CYAN_DIM, alpha=160)
+    b.line([(cx + 50, cy + 30), (cx + 130, cy + 60), (cx + 140, cy + 60)], CYAN, 1, 220)
+    tag(b, cx + 144, cy + 56, "COLLAR - HARDENED", CYAN)
+    for dx, dy in ((62, 58), (-62, -58)):
+        b.ring(cx + dx, cy - dy, 15, colour=AMBER, alpha=200)
+    b.line([(cx + 74, cy - 66), (cx + 120, cy - 96), (cx + 140, cy - 96)], AMBER, 1, 220)
+    tag(b, cx + 144, cy - 100, "4 PUMPS - EACH SLOWS IT", AMBER)
+    # glancing shots, the weapons that get through
+    for k in range(3):
+        x = cx - 90 + 8 * k
+        b.line([(x, cy + 100), (x + 30, cy + 60)], WHITE, 1, 160)
+        b.marker(x + 30, cy + 60, "cross", WHITE, 2)
+    tag(b, 20, 216, "SHOTS GLANCE OFF", WHITE)
+    px = 470
+    b.label(px, 116, "GETS THROUGH", WHITE)
+    b.line([(px, 128), (W - 12, 128)], CYAN_DIM, 1, 120)
+    for k, name in enumerate(("BOMBS", "MORTARS", "MISSILES", "AIRSTRIKE")):
+        b.label(px, 136 + 10 * k, name, GREEN)
+    b.label(px, 186, "RING OF 10 SHARDS", RED)
+    b.label(px, 196, "EVERY 3.5 S", RED)
+    # the inset: a crack glowing before a geyser
+    ix0, iy0, ix1, iy1 = 548, 24, 662, 104
+    fill(b, [(ix0, iy0), (ix1, iy0), (ix1, iy1), (ix0, iy1)], (8, 14, 26), 1.0)
+    crack = held_asset("ice-geyser_3")
+    steam = held_asset("ice-geyser-steam_3")
+    b.sprite(crack, ix0 + 30, iy0 + 42)
+    b.sprite(steam, ix0 + 84, iy0 + 40)
+    gl = np.array(held_asset("ice-geyser-glow_2")).astype(float)
+    b.add_light(gl[..., :3] * gl[..., 3:4] / 255, ix0 + 30 - 32, iy0 + 42 - 32, "over")
+    b.arrow(ix0 + 50, iy0 + 42, ix0 + 60, iy0 + 42, AMBER, 3, dashed=False)
+    b.draw.rectangle([ix0, iy0, ix1, iy1], outline=CYAN_DIM + (220,))
+    tag(b, ix0 + 4, iy1 - 12, "GLOW, THEN STEAM", LIME)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -4688,6 +5110,12 @@ IMAGES = {
     "level-20-hellas-fallback": hellas_fallback,
     "level-21-hellas-basin": hellas_basin,
     "level-21-colossus-scan": colossus_scan,
+    "act-4-arrival": arrival4,
+    "act-4-europa-cutaway": europa_cutaway,
+    "act-4-hydro-kit": hydro_kit,
+    "act-4-drop": drop4,
+    "level-22-conamara-map": conamara_map,
+    "level-22-drill-rig": rig_scan,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -4710,7 +5138,8 @@ BATCHES = {
     "r41": (list(IMAGES)[51:53], "M7 PART E"),
     "r42": (list(IMAGES)[53:56], "M7 PART F"),
     "r43": (list(IMAGES)[56:57], "M7 PART G"),
-    "r44": (list(IMAGES)[57:], "M7 PART H"),
+    "r44": (list(IMAGES)[57:59], "M7 PART H"),
+    "r51": (list(IMAGES)[59:], "M8 PART B"),
 }
 
 
@@ -4730,6 +5159,7 @@ def build(names):
                   else SOURCE_M7F if name in BATCHES["r42"][0]
                   else SOURCE_M7G if name in BATCHES["r43"][0]
                   else SOURCE_M7H if name in BATCHES["r44"][0]
+                  else SOURCE_M8B if name in BATCHES["r51"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

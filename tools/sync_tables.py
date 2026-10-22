@@ -390,7 +390,8 @@ def formations(d):
 EDGES = {"left": "left", "right": "right", "alternating": "alternating edges"}
 EVENTS = {"level-end": "Level end", "secondary-objective": "Secondary objective met"}
 PORTRAITS = {"generic-cdf": "Generic CDF", "generic-civilian": "Generic civilian",
-             "generic-colonial": "Generic colonial"}  # the generic portraits of unnamed speakers
+             "generic-colonial": "Generic colonial",
+             "conamara": "Conamara Station"}  # the generic portraits of unnamed speakers; M8 part B: Dr. Brandt's own
 
 
 def timed_halt(section):
@@ -1074,7 +1075,17 @@ def credit_budget(d):
               if "enemy" not in g and ("bounty" in g or g.get("drop", "").endswith("salvage"))]
     parts = [f"{enemy_name(slug)} {n} × {stat_bounty(slug)}" for slug, n in enemies.items()]
     parts += [fill(g["notes"]["budget"], g) for g in paying]
-    items = [(n, bounty(stat_bounty(slug)), rate["ground_targets"]) for slug, n in enemies.items()]
+    def ground_items(slug, n):
+        """M8 part B: a ground target with unit parts (the Drill Rig) pays its body and each part, each rounded (the
+        whole: the body's bounty and first bonus, as the parts' bounties); another by its stat block's bounty."""
+        e = load(f"{enemy_dir(slug)}/data.yaml")
+        vital = whole_part(e)
+        if not vital:
+            return [(n, bounty(stat_bounty(slug)), rate["ground_targets"])]
+        return ([(n, bounty(vital["bounty"]), rate["ground_targets"])]
+                + [(n, bounty(p["bounty"]), rate["ground_targets"]) for p in e["part_list"] if p is not vital])
+
+    items = [item for slug, n in enemies.items() for item in ground_items(slug, n)]
     for g in paying:
         items.append((g["count"], bounty(g.get("bounty", 0)), rate["ground_targets"]))
         items.append((g["count"], pay(g.get("drop_credits", 0)), rate["ground_targets"] * rate["pickups"]))

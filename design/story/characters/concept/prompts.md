@@ -120,3 +120,14 @@ three-quarter view, tired and dry expression, head and shoulders.
 ## portraits-final-r38-a
 
 Production art, M7 part B batch (round 38). Not a mockup: the sheet of `assets/sprites/portraits/radio-generic-colonial-neutral.png` (Ares Control, the colonial generic speaker of Act 3), rendered by [tools/art/portraits.py](../../../../tools/art/portraits.py) (`python3 tools/art/portraits.py generic-colonial`) from round 36's chosen bust b, the dust-suit controller of `tools/concept/portraits_r36.py` (imported unchanged), in style B on the friendly teal channel like the CDF generic, at 1×, 2× and 4×, and at 1× next to the CDF and civilian generics. Prompt as generic-colonial-r36-b.
+
+## portraits-final-r51-a
+
+Production art, M8 part B batch (round 51, straight to production, pending the user's review). Not a mockup: the
+sheet of `assets/sprites/portraits/radio-conamara-neutral.png` (Dr. Ilse Brandt, Conamara Station's director, the
+speaker `conamara` of Levels 22–23), rendered by [tools/art/portraits.py](../../../../tools/art/portraits.py)
+(`python3 tools/art/portraits.py conamara`): an SDF bust in the radio speakers' style B on the friendly teal channel:
+a woman in her late fifties, a dark ash bob going grey with a side fringe, tired eyes, a headset with a boom mic, a
+quilted red polar parka with a high collar and an amber station patch; a warm sodium rim light from the right and,
+behind her, the dome control room: the dome's ribs, two sodium lamps, a row of console screens. At 1×, 2× and 4×,
+and at 1× next to the other minor speakers.

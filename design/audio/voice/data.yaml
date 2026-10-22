@@ -57,6 +57,7 @@ speakers:
       3a33859ee853: 61428441    # Level 20 t=1 "Hellas basin, Aegis…": the key's seed read "Ella's basin, ages" and "Hello space" through the filter; the pin reads "Heller's basin, Aegis" and "Vrel" through it (of five seeds), at about 140 Hz
       4039b813137a: 77912865    # Level 21 t=53 "Basin floor ahead…": Whisper reads "Base and floor" in nearly every seed (11 tried); the pin reads "Basin floor" through the filter at about 148 Hz (the one plain "Basin" jumped to p90 about 520 Hz)
       1d76337fde0a: 18075540    # Act 3 outro page 1 "The Colossus is dead…": every take of the key's seed and of two more pins held a 1.1-2.6 s pause in its first chunk; the pin's sixth take has none
+      33d9c9134784: 113585984   # Level 22 t=135 "Conamara is in sight…": the key's seed read "reficked" for "refit" through the filter; the pin reads "refit" and "Conamara" both ways at about 154 Hz
   varga:
     names: [Varga]
     ref: ref-varga
@@ -82,6 +83,7 @@ speakers:
       33887c6a4a28: 152804203   # Level 19 first-telegraph "It burns what's behind it…": the key's seed jumped an octave (p90 about 500 Hz); the pin stays near her 190 Hz
       7ba95ec98d89: 194028836   # Level 21 t=37 "Burrowers on the wall…": the key's seed jumped an octave (p90 about 490 Hz); the pin stays near her 190 Hz
       38ee1a81a162: 213299318   # Level 21 briefing page 2 "The song comes from under the basin floor…": the key's seed ran "lime. Bring" into "lime, brings"; the pin reads "Bring" every way
+      38a0dbf42f62: 148653954   # Level 22 t=58 (t=66 until step B3b) "Ilse? It's Elena…": the key's seed jumped high on 16 % of the line (p90 about 380 Hz); the pin stays at her 200 Hz (p90 246) and reads "Ilse" with the name prompt
   rook:
     names: [Rook]
     ref: ref-rook
@@ -103,6 +105,7 @@ speakers:
       edd94197e037: 71916770    # Level 19 t=116 "Behind us!": the key's seed squealed (about 570 Hz throughout); the pin is at his 154 Hz
       3a9819cc3b09: 61840412    # Level 20 t=98 "Cloakers up top again!": the key's seed was unvoiced (a whisper, no pitch found); the pin is voiced at about 160 Hz
       4dfea2344c1f: 233372167   # Level 21 t=13 "On your left, Lancer. Let's finish this.": the key's seed was barely voiced (8 %); the pin is voiced at about 132 Hz like the right-side take
+      26f36c7b9641: 18900666    # Level 22 t=87 (t=82 until step B3b) "Mantis, both flanks!": the key's seed was unvoiced (a whisper, no pitch found; so were four of six more seeds); the pin is voiced at about 141 Hz
   choir:
     names: [The Choir]
     ref: ref-varga
@@ -188,3 +191,8 @@ speakers:
   lance-control:   # the Orbital Lance's call (M7 part A, design/player/specials): the CDF orbital officer; cast in round 37 (b, Celine Major, S.16), neutral as auditioned
     names: [Lance Control]
     ref: ref-lance-control
+  conamara:   # Level 22 (M8 part B): Dr. Ilse Brandt, Conamara Station's director (Act 4's voice for L22-L23); a woman, dry, tired, precise; radio portrait radio-conamara (the station's sodium-lit dome control room); auditioned in round 51 (step AUD-B: a Margaret Espaillat, b Sue Anderson); her lines are rendered with both (step VOX-B): a here into assets/voice/conamara/, b from ref-conamara-r51-b into concept/voice-conamara-r51-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the clip's name is part of the key: no rename) and, for b, moves those files into assets/
+    names: [Dr. Brandt]
+    ref: ref-conamara-r51-a   # provisional until round 51 (a, Margaret Espaillat)
+    pins:   # by candidate a's keys; candidate b's five takes needed none
+      6ed33d226abf: 4460161     # Level 22 target-destroyed "That's one collar stopped…": the key's seed jumped an octave on 19 % of the line; the pin stays at her 163 Hz (p90 183) and reads "collar" (Whisper hears "color" in about half the takes of both readers)

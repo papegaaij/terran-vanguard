@@ -1901,7 +1901,7 @@ public final class Enemy implements Hashed {
                 }
                 return false;
             }
-            volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
+            volleyTicks = volleyInterval(spec.gun().get());
             return true;
         }
         if (spec.gun().isPresent() && spec.gun().get().mine().isPresent()) {
@@ -1924,7 +1924,8 @@ public final class Enemy implements Hashed {
                 || (phase == Phase.LANE && PlayField.overlaps(x, y, box))
                 || ambushPhase == AmbushPhase.DECLOAK
                 || ambushPhase == AmbushPhase.HOLD;
-        if (!ready || spec.gun().isEmpty()) {
+        if (!ready || spec.gun().isEmpty() || (phase == Phase.GROUND && partHp.silenced(spec.parts()))) {
+            // M8 part B: a ground unit whose gun is bound to its parts falls silent with the last of them.
             return false;
         }
         EnemyGun gun = spec.gun().get();
@@ -1953,7 +1954,7 @@ public final class Enemy implements Hashed {
             volleyTicks = Integer.MAX_VALUE;
             return false;
         }
-        volleyTicks = SimStep.ticks(gun.intervalSeconds());
+        volleyTicks = volleyInterval(gun);
         burstLeft = gun.burst() - 1;
         burstTicks = SimStep.ticks(gun.burstGapSeconds());
         return true;
@@ -2136,9 +2137,7 @@ public final class Enemy implements Hashed {
         }
         // M7 part D's rings, unit parts, curl-rolls and Herald hovers add theirs; earlier units hash as before.
         auraRing.addTo(hash);
-        if (spec.part().isPresent()) {
-            partHp.addTo(hash);
-        }
+        partHp.addTo(hash);
         if (spec.roll().isPresent()) {
             curlRoll.addTo(hash);
         }
@@ -2653,50 +2652,103 @@ public final class Enemy implements Hashed {
         }
     }
 
-    // ---- M7 part D: a unit part (design/enemies/ground/shellback, the mortar vent) ----
+    // ---- M7 part D: a unit part (design/enemies/ground/shellback, the mortar vent); M8 part B: several ----
 
-    /** M7 part D: whether its unit part stands; false for a unit without one. */
+    /** M8 part B: the number of its unit parts (design/enemies/ground/drill-rig: 4 pumps); 0 without. */
+    public int partCount() {
+        return partHp.count();
+    }
+
+    /** M8 part B: the number of its unit parts still standing. */
+    public int partsStanding() {
+        return partHp.standing();
+    }
+
+    /** M7 part D: whether its (first) unit part stands; false for a unit without one. */
     public boolean partAlive() {
-        return partHp.alive();
+        return partHp.alive(0);
     }
 
-    /** M7 part D: its unit part's HP share left, 0 to 1; 0 without one or once it is destroyed. */
+    /** M8 part B: whether its unit part {@code p} stands; false for a part it does not have. */
+    public boolean partAlive(int p) {
+        return partHp.alive(p);
+    }
+
+    /** M7 part D: its (first) unit part's HP share left, 0 to 1; 0 without one or once it is destroyed. */
     public double partShare() {
-        return spec.part().isPresent() ? partHp.share(spec.part().get()) : 0;
+        return partShare(0);
     }
 
-    /** M7 part D: its unit part's centre, px (its offset turned with its facing); its own centre without one. */
+    /** M8 part B: its unit part {@code p}'s HP share left, 0 to 1; 0 for a part it does not have. */
+    public double partShare(int p) {
+        return p < partHp.count() ? partHp.share(p, spec.parts().get(p)) : 0;
+    }
+
+    /** M7 part D: its (first) unit part's centre, px (its offset turned with its facing); its own centre without one. */
     public double partX() {
-        if (spec.part().isEmpty()) {
-            return x;
-        }
-        return PartHp.x(spec.part().get(), x, facing);
-    }
-
-    /** M7 part D: its unit part's centre's height, px. */
-    public double partY() {
-        if (spec.part().isEmpty()) {
-            return y();
-        }
-        return frame.y(PartHp.y(spec.part().get(), y, facing));
-    }
-
-    /** M7 part D: its unit part's hit box; its own without one. */
-    Hitbox partBox() {
-        return spec.part().isPresent() ? spec.part().get().hitbox() : box;
-    }
-
-    /** M7 part D: whether its standing part lies in a blast of {@code radius} around (bx, by). */
-    boolean partInBlast(double bx, double by, double radius) {
-        return partAlive() && PlayerFire.inBlast(bx, by, radius, partX(), partY(), partBox());
+        return partX(0);
     }
 
     /**
-     * M7 part D: its standing part takes damage (an aura ring spends itself first; a curled shell glances off);
-     * returns whether this destroyed it.
+     * M8 part B: its unit part {@code p}'s centre, px: its offset turned with a walker's facing; a unit that does not
+     * walk keeps its parts in place (the Drill Rig's fixed collar). Its own centre for a part it does not have.
      */
+    public double partX(int p) {
+        if (p >= partHp.count()) {
+            return x;
+        }
+        return PartHp.x(spec.parts().get(p), x, partFacing());
+    }
+
+    /** M7 part D: its (first) unit part's centre's height, px. */
+    public double partY() {
+        return partY(0);
+    }
+
+    /** M8 part B: its unit part {@code p}'s centre's height, px. */
+    public double partY(int p) {
+        if (p >= partHp.count()) {
+            return y();
+        }
+        return frame.y(PartHp.y(spec.parts().get(p), y, partFacing()));
+    }
+
+    /** M8 part B: the facing its parts turn with: a walker's own; straight down (no turn) for any other unit. */
+    private double partFacing() {
+        return spec.walker().isPresent() ? facing : 0;
+    }
+
+    /** M7 part D: its (first) unit part's hit box; its own without one. */
+    Hitbox partBox() {
+        return partBox(0);
+    }
+
+    /** M8 part B: its unit part {@code p}'s hit box; its own for a part it does not have. */
+    Hitbox partBox(int p) {
+        return p < partHp.count() ? spec.parts().get(p).hitbox() : box;
+    }
+
+    /** M7 part D: whether its standing (first) part lies in a blast of {@code radius} around (bx, by). */
+    boolean partInBlast(double bx, double by, double radius) {
+        return partInBlast(0, bx, by, radius);
+    }
+
+    /** M8 part B: whether its standing part {@code p} lies in a blast of {@code radius} around (bx, by). */
+    boolean partInBlast(int p, double bx, double by, double radius) {
+        return partAlive(p) && PlayerFire.inBlast(bx, by, radius, partX(p), partY(p), partBox(p));
+    }
+
+    /** M7 part D: its standing (first) part takes damage; returns whether this destroyed it. */
     boolean damagePart(double amount, boolean fromAbove) {
-        if (!partAlive() || growTicks > 0) {
+        return damagePart(0, amount, fromAbove);
+    }
+
+    /**
+     * M7 part D: its standing part {@code p} takes damage (an aura ring spends itself first; a curled shell glances
+     * off); returns whether this destroyed it.
+     */
+    boolean damagePart(int p, double amount, boolean fromAbove) {
+        if (!partAlive(p) || growTicks > 0) {
             return false;
         }
         if (armoured()) {
@@ -2708,15 +2760,26 @@ public final class Enemy implements Hashed {
         if (left <= 0) {
             return false;
         }
-        return partHp.take(left);
+        return partHp.take(p, left);
     }
 
-    /** M7 part D: whether its gun is quiet now: curled, or silenced for good with its part gone. */
+    /**
+     * M7 part D: whether its gun is quiet now: curled, or silenced for good with its part gone (M8 part B: every part
+     * that carries it).
+     */
     boolean gunQuiet() {
         if (curlRoll.phase() != CurlPhase.WALK) {
             return true;
         }
-        return spec.part().isPresent() && spec.part().get().silencesGun() && partHp.gone();
+        return partHp.silenced(spec.parts());
+    }
+
+    /**
+     * M8 part B (design/enemies/ground/drill-rig): its gun's interval now: the stat block's, longer by each lost part's
+     * slowdown (exactly the stat block's without parts).
+     */
+    private int volleyInterval(EnemyGun gun) {
+        return SimStep.ticks(gun.intervalSeconds() + partHp.slowSeconds(spec.parts()));
     }
 
     // ---- M7 part D: the curl-roll (design/enemies/ground/shellback) ----

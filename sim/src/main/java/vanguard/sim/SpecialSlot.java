@@ -473,9 +473,11 @@ public final class SpecialSlot {
                 continue;
             }
             if (strike(2 * enemy.serial(), smartBomb.damage())) {
-                // M7 part D: a unit part takes the bomb too (the Shellback's vent).
-                if (enemy.partAlive() && enemy.damagePart(smartBomb.damage(), true)) {
-                    hits.unitPartDestroyed(j);
+                // M7 part D: a unit part takes the bomb too (the Shellback's vent; M8 part B: every one).
+                for (int p = 0; p < enemy.partCount(); p++) {
+                    if (enemy.partAlive(p) && enemy.damagePart(p, smartBomb.damage(), true)) {
+                        hits.unitPartDestroyed(j, p);
+                    }
                 }
                 // M7 part E (Q.22e): a blast, which a closed vortex's vanes let through.
                 if (enemy.damage(smartBomb.damage(), true, true)) {
@@ -702,12 +704,14 @@ public final class SpecialSlot {
                             == Double.POSITIVE_INFINITY) {
                 continue;
             }
-            if (enemy.partAlive()
-                    && PlayerFire.columnContact(lanceX, half, 0, enemy.partX(), enemy.partY(), enemy.partBox())
-                            < Double.POSITIVE_INFINITY
-                    && enemy.damagePart(damage, true)) {
-                // M7 part D: a unit part in the column burns too (the Shellback's vent).
-                hits.unitPartDestroyed(j);
+            for (int p = 0; p < enemy.partCount(); p++) {
+                if (enemy.partAlive(p)
+                        && PlayerFire.columnContact(lanceX, half, 0, enemy.partX(p), enemy.partY(p), enemy.partBox(p))
+                                < Double.POSITIVE_INFINITY
+                        && enemy.damagePart(p, damage, true)) {
+                    // M7 part D: a unit part in the column burns too (the Shellback's vent; M8 part B: each one).
+                    hits.unitPartDestroyed(j, p);
+                }
             }
             if (enemy.damage(damage, true)) {
                 hits.enemyDestroyed(j);
@@ -938,9 +942,11 @@ public final class SpecialSlot {
                 continue;
             }
             double amount = deal(2 * enemy.serial(), layer);
-            if (amount > 0 && enemy.partInBlast(x, y, radius) && enemy.damagePart(amount, true)) {
-                // M7 part D: a blast covering a unit part hurts it too (the Shellback's vent).
-                hits.unitPartDestroyed(j);
+            for (int p = 0; p < enemy.partCount() && amount > 0; p++) {
+                if (enemy.partInBlast(p, x, y, radius) && enemy.damagePart(p, amount, true)) {
+                    // M7 part D: a blast covering a unit part hurts it too (the Shellback's vent; M8 part B: each).
+                    hits.unitPartDestroyed(j, p);
+                }
             }
             // M7 part E (Q.22e): a blast, which a closed vortex's vanes let through.
             if (amount > 0 && enemy.damage(amount, true, true)) {

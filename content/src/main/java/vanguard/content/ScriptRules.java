@@ -75,7 +75,7 @@ final class ScriptRules {
                         .toList())
                 .objectives(new ObjectiveSpec(
                         secondary
-                                .map(objective -> LevelRules.secondary(content, level, objective))
+                                .map(objective -> LevelRules.secondary(content, level, objective, difficulty))
                                 .orElse(Secondary.NONE),
                         level.objectives().targets().orElse(List.of()),
                         level.objectives().escort().map(escort -> escort(content, escort, difficulty)),
@@ -335,6 +335,9 @@ final class ScriptRules {
                         case FIRST_WALL_CONTACT -> CueTrigger.FIRST_WALL_CONTACT;
                         // M7 part D, round 40 K.a: the first Herald's first ring (Level 17).
                         case FIRST_RING -> CueTrigger.FIRST_RING;
+                        // M8 part B: the first geyser's tell and the first rig destroyed (Level 22).
+                        case FIRST_GEYSER -> CueTrigger.FIRST_GEYSER;
+                        case TARGET_DESTROYED -> CueTrigger.TARGET_DESTROYED;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own

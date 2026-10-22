@@ -35,6 +35,14 @@ Outputs (assets/ui/, a texture of its own like the title scene, not packed):
                                   line, the sky dark above; a dust-storm front rolling along the northern horizon
                                   on the right (drawn here, no piece)
   design/campaign/act-3-red-dust/concept/act-3-still-final-r38-a.png   its review sheet, as Act 1's
+  act-4-deep-water-still.png      960x540 (M8 part B batch, concept round 51): Europa's ice shelf from the entry
+                                  corridor, Level 22's ground tile sets in perspective from high up (the Act 3
+                                  still's planes): the shelf's double ridges (`ice-shelf`) near, the Conamara Chaos's
+                                  broken plates (`rig-field`) beyond, running to the sharp curved horizon (no air: no haze, a black sky with a few
+                                  stars); Jupiter huge over the horizon on the right, banded, lit from the upper
+                                  left with its night side to the right, the Great Red Spot; a thin steam thread
+                                  rising from the first rig far out on the plates, lit on its sunward side
+  design/campaign/act-4-deep-water/concept/act-4-still-final-r51-a.png   its review sheet, as Act 1's
 
 The look is Level 01's final backdrop (tools/art/backdrop_l01.py, approved in round 12): Earth and
 the terminator are its placeholder generator's functions (tools/concept/backdrop_l01.py, frozen,
@@ -60,8 +68,12 @@ assets/backdrop/level-15/): each layer is a plane under the camera sampled per p
 (the ground, the deck at 0.55 of its distance, the cirrus at 0.2), hazed by distance; one 96-colour
 dithered palette.
 
-Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [--review]   (~30 s for all; after
-backdrop_l01.py, stormhawk.py, backdrop_l08.py and backdrop_l15.py)
+Act 4's still is built from Level 22's production backdrop (tools/art/backdrop_l22.py's images in
+assets/backdrop/level-22/) the same way, without haze (Europa has no air); Jupiter, the stars and the steam
+thread are drawn here (Jupiter's bands with tools/concept/europa_r48.py's ramp JUP).
+
+Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [--review]   (~30 s for all; after
+backdrop_l01.py, stormhawk.py, backdrop_l08.py, backdrop_l15.py and backdrop_l22.py)
 """
 import importlib.util
 import sys
@@ -799,8 +811,126 @@ def review3():
     print(f"review: {path.relative_to(ROOT)}")
 
 
+# =========================================================================== Act 4: Europa from the entry corridor
+
+A4_SOURCE = artkit.source_note(SCRIPT, "M8 part B batch")
+A4_ROUND = "r51"
+A4_CONCEPT = DESIGN / "campaign" / "act-4-deep-water" / "concept"
+A4_NAME = "act-4-deep-water"
+L22_DIR = ROOT / "assets" / "backdrop" / "level-22"
+HORIZON4, CURVE4 = 286.0, 1.0e-4       # the sharp horizon's middle and its curve down to the sides
+GROUND4 = 150_000.0                    # the ground plane: distance ahead = GROUND4 / rows below the horizon
+CHAOS_Z = (2600.0, 5200.0)             # the shelf gives way to the chaos's plates over this distance
+JUP_C, JUP_R = (676.0, 196.0), 286.0   # Jupiter's disc on the screen
+SUN = np.array([-0.62, -0.5, 0.6])     # the sun from the upper left (screen x right, y down, z toward the camera)
+STEAM_AT = (318.0, 22.0)               # the first rig far out: x on the screen, rows below the horizon
+
+
+def l22(name):
+    a = np.array(Image.open(L22_DIR / f"{name}.png").convert("RGBA")).astype(np.float64)
+    a[..., :3] *= a[..., 3:4] / 255
+    return a
+
+
+def jupiter():
+    """Jupiter's disc: latitude bands with turbulence (europa_r48's JUP ramp), the Great Red Spot, lit from the upper
+    left with a soft terminator; RGB and coverage."""
+    from europa_r48 import JUP  # noqa: E402  (concept script, unchanged)
+    cx, cy = JUP_C
+    nx, ny = (_xx - cx) / JUP_R, (_yy - cy) / JUP_R
+    r2 = nx ** 2 + ny ** 2
+    inside = r2 < 1
+    nz = np.sqrt(np.clip(1 - r2, 0, 1))
+    lat = np.arcsin(np.clip(ny, -1, 1))
+    turb = raster.fbm(W, H, 40, 4401, octaves=5, period=False)
+    belts = np.sin(lat * 9.0 + 0.6 * turb) * 0.6 + np.sin(lat * 23.0 + 1.6 * turb + 0.4 * np.sin(nx * 7 + lat * 5)) * 0.4
+    v = 0.5 + 0.3 * belts
+    col = raster.ramp(JUP, v)
+    spot = np.exp(-(((nx + 0.18) / 0.13) ** 2 + ((ny - 0.36) / 0.065) ** 2))
+    col = col * (1 - 0.55 * spot[..., None]) + np.array((196, 84, 52.0)) * 0.55 * spot[..., None]
+    light = np.clip(nx * SUN[0] + ny * SUN[1] + nz * SUN[2], 0, 1) / np.linalg.norm(SUN)
+    light = np.clip(light * 1.25, 0, 1) ** 0.8
+    limb = 0.75 + 0.25 * nz
+    rgb = col * (0.06 + 0.94 * light)[..., None] * limb[..., None]
+    edge = np.clip((1 - np.sqrt(r2)) * JUP_R, 0, 1)
+    return rgb, (inside * edge)
+
+
+def europa_still():
+    hor = HORIZON4 + CURVE4 * (_xx - W / 2) ** 2
+    dy = np.maximum(_yy - hor, 0.5)
+    ground = _yy > hor
+    z = GROUND4 / dy
+    u = (_xx - W / 2) * z / FOCAL
+    foot = z / FOCAL
+    shelf = plane_sample(mip_chain(l22("ice-shelf")), u + 240, -z, foot, True)[..., :3]
+    chaos = plane_sample(mip_chain(l22("rig-field")), u * 0.8 + 100, -z * 0.8, foot * 0.8, True)[..., :3]
+    k = np.clip((z - CHAOS_Z[0]) / (CHAOS_Z[1] - CHAOS_Z[0]), 0, 1)[..., None]
+    rgb = shelf * (1 - k) + chaos * k
+    far = (1 - np.exp(-z / 30000.0))[..., None]                 # no air: only the texture's own falloff, a hint of
+    rgb = rgb * (1 - 0.35 * far) + np.array((150, 162, 182.0)) * 0.35 * far * 0.6     # the far ice's grey
+    shine = np.clip((_xx - 300) / 660, 0, 1)[..., None] * 0.12   # Jupiter's warm light on the ice to the right
+    rgb = rgb * (1 - shine) + np.array((255, 190, 140.0)) * shine
+    # the sky: black, a few stars, Jupiter
+    sky = np.zeros((H, W, 3)) + np.array((2, 3, 8.0))
+    rng = np.random.default_rng(4402)
+    for _ in range(120):
+        x, y = rng.integers(0, W), rng.integers(0, int(HORIZON4))
+        b = rng.uniform(60, 200)
+        sky[y, x] = (b, b, b * 1.05)
+    jrgb, ja = jupiter()
+    sky = sky * (1 - ja[..., None]) + jrgb * ja[..., None]
+    rgb = np.where(ground[..., None], rgb, sky)
+    rgb += np.exp(-((_yy - hor) / 1.2) ** 2)[..., None] * np.array((30, 34, 40.0)) * ground[..., None]   # the sunlit rim
+    # the steam thread from the first rig, far out on the plates
+    sx = STEAM_AT[0]
+    base_y = HORIZON4 + CURVE4 * (sx - W / 2) ** 2 + STEAM_AT[1]
+    t = np.clip((base_y - _yy) / 150, 0, 1)
+    cxs = sx + 26 * t ** 1.6 + 3 * np.sin(t * 9)
+    width = 1.6 + 9 * t ** 1.2
+    n = raster.fbm(W, H, 8, 4403, octaves=3, period=False)
+    plume = np.exp(-((_xx - cxs) / width) ** 2) * (_yy <= base_y) * (1 - t) ** 0.7 * (0.65 + 0.5 * n)
+    sunward = np.clip(0.75 - (_xx - cxs) / np.maximum(width, 1) * 0.35, 0.45, 1.05)
+    pcol = np.array((236, 242, 250.0)) * sunward[..., None]
+    a = np.clip(plume, 0, 0.9)[..., None]
+    rgb = rgb * (1 - a) + pcol * a
+    d = np.hypot(_xx - sx, (_yy - base_y) * 2)
+    rgb = np.where((d < 2.2)[..., None], np.array((40, 26, 22.0)), rgb)          # the rig, a dark speck
+    rgb += (np.exp(-(d / 1.4) ** 2) * 0.9)[..., None] * np.array((168, 255, 42.0)) * 0.5   # its lime bore
+    return np.clip(rgb, 0, 255)
+
+
+def still4():
+    img = ui_dither(europa_still(), np.ones((H, W)), STILL_COLOURS)
+    return img.convert("RGB").convert("RGBA")
+
+
+def build4():
+    OUT.mkdir(parents=True, exist_ok=True)
+    img = still4()
+    artkit.save_png(img, OUT / f"{A4_NAME}-still.png", A4_SOURCE)
+    print(f"{A4_NAME}-still.png: {img.width}x{img.height}, {artkit.colour_count([img])} colours")
+
+
+def review4():
+    img = Image.open(OUT / f"{A4_NAME}-still.png").convert("RGBA")
+    sheet = raster.sheet(1000, 40 + 2 * (H + 30) + 10,
+                         "ACT 4 TITLE-CARD STILL (FINAL R51): EUROPA UNDER JUPITER",
+                         f"PRODUCTION ART, M8 PART B BATCH - {A4_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"THE STILL, 960X540 AT 1X ({artkit.colour_count([img])} COLOURS)", raster.LABEL)
+    sheet.alpha_composite(img, (16, 52))
+    raster.draw_text(sheet, 16, 52 + H + 14, f"THE TITLE CARD OVER IT: DARKENED TO {int(BRIGHTNESS * 100)} %, LETTERBOX, "
+                                             "CHROME LETTERING (THE GAME ADDS THE SETTINGS LINE AND THE MISSIONS)",
+                     raster.LABEL)
+    sheet.alpha_composite(title_card(img, A4_NAME), (16, 52 + H + 28))
+    A4_CONCEPT.mkdir(parents=True, exist_ok=True)
+    path = A4_CONCEPT / f"act-4-still-final-{A4_ROUND}-a.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"review: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
-    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3")] or ["act-1", "act-2", "act-3"]
+    acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4")] or ["act-1", "act-2", "act-3", "act-4"]
     if "act-1" in acts:
         if "--review" not in sys.argv[1:]:
             build()
@@ -813,3 +943,7 @@ if __name__ == "__main__":
         if "--review" not in sys.argv[1:]:
             build3()
         review3()
+    if "act-4" in acts:
+        if "--review" not in sys.argv[1:]:
+            build4()
+        review4()

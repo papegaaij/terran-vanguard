@@ -124,7 +124,12 @@ public record Intel(
              * (the level's {@code ridge}), a span from its surfacing ({@code t}) to its head leaving the far edge
              * ({@code t + seconds}): the wave strip marks the ridge pass.
              */
-            RIDGE
+            RIDGE,
+            /**
+             * M8 part B (design/campaign Level 22, Threat profile at L3: "the wave strip marking the four rig sites"): a
+             * ground target of the secondary's {@code escapes} enemy entering (a moment at each placement's time).
+             */
+            TARGET
         }
     }
 
@@ -207,7 +212,8 @@ public record Intel(
      * step K10: a level with a boss (or mid-boss) marks its arrival; M7 part B: every wave of a burrowing unit (a
      * Burrower field) is marked at its time; M7 part D: a level with ground allies marks the sections they enter in
      * (Level 17's two dome sections) as phases; M7 part G: a reversed level its turn and lull ({@link #turnAndLull});
-     * round 44 Q.8 d: a level with a {@code ridge} its ridge pass; none for another level.
+     * round 44 Q.8 d: a level with a {@code ridge} its ridge pass; M8 part B: the ground targets an escapes secondary
+     * counts (Level 22's rig sites); none for another level.
      */
     static List<Mark> marks(Content content, LevelData level) {
         List<Mark> marks = new java.util.ArrayList<>();
@@ -258,6 +264,15 @@ public record Intel(
             if (target.link().isPresent() && !target.at().isEmpty()) {
                 double t = target.at().getFirst().t();
                 marks.add(new Mark(t, t, Mark.Kind.GATE));
+            }
+        }
+        // M8 part B: each ground target of the escapes secondary's enemy at its time (Level 22's four rig sites).
+        java.util.Optional<String> escapes = level.objectives().secondary().flatMap(LevelData.Secondary::escapes);
+        for (LevelData.GroundTarget target : level.groundTargets()) {
+            if (escapes.isPresent() && target.enemy().equals(escapes)) {
+                for (LevelData.Placement placement : target.at()) {
+                    marks.add(new Mark(placement.t(), placement.t(), Mark.Kind.TARGET));
+                }
             }
         }
         return marks;

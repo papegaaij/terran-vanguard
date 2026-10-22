@@ -70,16 +70,17 @@ final class PlayerFire {
         /** Part {@code part} of set piece {@code piece} was destroyed by a shot or blast of {@code mount}; -1 for none. */
         void partDestroyed(int piece, int part, int mount);
 
-        /** M7 part D: the unit part of the enemy at {@code index} was destroyed (by a special: no mount). */
-        default void unitPartDestroyed(int index) {
-            unitPartDestroyed(index, -1);
+        /** M7 part D: unit part {@code part} of the enemy at {@code index} was destroyed (by a special: no mount). */
+        default void unitPartDestroyed(int index, int part) {
+            unitPartDestroyed(index, part, -1);
         }
 
         /**
-         * M7 part D: the unit part of the enemy at {@code index} (design/enemies/ground/shellback, the vent) was
-         * destroyed by a shot or blast of {@code mount}; -1 for none. The enemy stays.
+         * M7 part D: unit part {@code part} of the enemy at {@code index} (design/enemies/ground/shellback, the vent;
+         * M8 part B: a Drill Rig's pump) was destroyed by a shot or blast of {@code mount}; -1 for none. The enemy
+         * stays.
          */
-        void unitPartDestroyed(int index, int mount);
+        void unitPartDestroyed(int index, int part, int mount);
     }
 
     /** Homing locks on a set piece's part use serials from here: unit serials stay far below it. */
@@ -555,9 +556,8 @@ final class PlayerFire {
                 // M7 part D: a unit part is tested before the body (the Shellback's vent); round 40 R.a: a shot over
                 // the body whose line of flight crosses the part's box hits the part, from any side.
                 boolean onBody = weapon.size().overlaps(shot.x(), shot.y(), enemy.hitbox(), enemy.x(), enemy.y());
-                boolean onPart = enemy.partAlive()
-                        && (weapon.size().overlaps(shot.x(), shot.y(), enemy.partBox(), enemy.partX(), enemy.partY())
-                                || (onBody && towardPart(shot, weapon.size(), enemy)));
+                int part = struckPart(shot, weapon.size(), enemy, onBody);
+                boolean onPart = part >= 0;
                 if ((!onPart && !onBody) || (weapon.pierce() > 1 && shot.struck(2 * enemy.serial()))) {
                     continue;
                 }
@@ -578,8 +578,8 @@ final class PlayerFire {
                 boolean spent = shot.pierced();
                 int struck = enemy.serial();
                 if (onPart) {
-                    if (enemy.damagePart(shot.damage() * groundFactor(weapon, layer), false)) {
-                        hits.unitPartDestroyed(j, shot.mount());
+                    if (enemy.damagePart(part, shot.damage() * groundFactor(weapon, layer), false)) {
+                        hits.unitPartDestroyed(j, part, shot.mount());
                     }
                 } else if (enemy.damage(
                         shot.damage() * groundFactor(weapon, layer) * enemy.rearFactor(shot.vx(), shot.vy()))) {
@@ -602,7 +602,7 @@ final class PlayerFire {
      * the shot's half size. Such a shot hits the part first, from any side (the vent on the back of the shell is seen
      * from above). Allocates nothing.
      */
-    static boolean towardPart(Shot shot, Hitbox size, Enemy enemy) {
+    static boolean towardPart(Shot shot, Hitbox size, Enemy enemy, int p) {
         double vx = shot.vx();
         double vy = shot.vy();
         double speed = Math.hypot(vx, vy);
@@ -611,16 +611,47 @@ final class PlayerFire {
         }
         Hitbox body = enemy.hitbox();
         double reach = body.width() + body.height();
-        Hitbox part = enemy.partBox();
+        Hitbox part = enemy.partBox(p);
         return segmentCrossesBox(
                 shot.x(),
                 shot.y(),
                 vx / speed * reach,
                 vy / speed * reach,
-                enemy.partX(),
-                enemy.partY(),
+                enemy.partX(p),
+                enemy.partY(p),
                 (part.width() + size.width()) / 2,
                 (part.height() + size.height()) / 2);
+    }
+
+    /**
+     * M7 part D: the standing unit part of {@code enemy} that {@code shot}, of {@code size}, hits first; -1 for none
+     * (it hits the body, or nothing). A part it overlaps comes first; else, with the shot over the body ({@code
+     * onBody}), the part its line of flight runs into ({@link #towardPart}); M8 part B: of several (a Drill Rig's
+     * pumps), the one whose centre is nearest the shot, the first in the stat block's order on a tie. Allocates
+     * nothing.
+     */
+    static int struckPart(Shot shot, Hitbox size, Enemy enemy, boolean onBody) {
+        int best = -1;
+        double bestDistance = Double.POSITIVE_INFINITY;
+        boolean bestOverlaps = false;
+        for (int p = 0; p < enemy.partCount(); p++) {
+            if (!enemy.partAlive(p)) {
+                continue;
+            }
+            double px = enemy.partX(p);
+            double py = enemy.partY(p);
+            boolean overlaps = size.overlaps(shot.x(), shot.y(), enemy.partBox(p), px, py);
+            if (!overlaps && (bestOverlaps || !onBody || !towardPart(shot, size, enemy, p))) {
+                continue;
+            }
+            double distance = (px - shot.x()) * (px - shot.x()) + (py - shot.y()) * (py - shot.y());
+            if ((overlaps && !bestOverlaps) || distance < bestDistance) {
+                best = p;
+                bestDistance = distance;
+                bestOverlaps = overlaps;
+            }
+        }
+        return best;
     }
 
     /**

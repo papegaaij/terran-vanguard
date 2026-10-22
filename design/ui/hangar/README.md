@@ -125,7 +125,7 @@ icon, as built.
   front gun.
 
 **The Bulwark and Rook's absence** (M8 part A, [wingmen](../../player/wingmen/README.md#heavy-drone-bulwark-escort-alternative-l22);
-the layout below is the step's default, pending the user's review in round 50):
+the layout below is the step's default, accepted in round 50 (2026-10-22)):
 
 - The escort's shop lists a **Bulwark row** between Rook's guns and the side row: `BULWARK HEAVY
   DRONE` with its icon and its price, `OWNED`, `FITTED` (it flies the next level) or `LOCKED L22`.
@@ -213,6 +213,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r41-a.png](concept/intel-final-r41-a.png) | Intel portraits of Level 18's Dust Devil and Ghost Drone and the `unclassified-ghost-drone` sensor picture (`tools/art/intel.py`) | final (round 44, A.a: a record of production assets) |
 | [concept/intel-final-r42-a.png](concept/intel-final-r42-a.png) | Intel portraits of Level 19's Warden Tank (Act 3 grey) and Revenant Walker and the `boss-revenant-walker` "unclassified, huge" contact silhouette with sensor noise (`tools/art/intel.py`) | final (round 44, A.a: a record of production assets) |
 | [concept/intel-final-r44-a.png](concept/intel-final-r44-a.png) | The `boss-dust-colossus` sensor silhouette (40×40, the open mouth as phase 3 shows it, outline only; `tools/art/intel.py`, M7 part H batch, step ART-H2) | final (round 44, F.d: approved as final) |
+| [concept/intel-final-r51-a.png](concept/intel-final-r51-a.png) | The `drill-rig` sensor L2 portrait (30×30, the core and its four pumps; `tools/art/intel.py`, M8 part B batch) | proposed (round 51) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -232,8 +233,8 @@ Light Drone Bay, EMP Burst, Orbital Lance and Shield Overcharge. Round 37 chose 
 | [concept/rejected/act3-icons-r37-b.png](concept/rejected/act3-icons-r37-b.png) | B: an emitter ring with the beam, one lance through two marks, the field arc catching a bolt, a small drone in an orbit arc (utility green), concentric arcs, a satellite above a column, a shield with an up arrow | rejected — round 37: a (each item as its effect) picked |
 | [concept/act3-hangar-capture-r37-a.png](concept/act3-hangar-capture-r37-a.png) | Game capture (round 37, M7 part A), the hangar before Level 19 from a hand-written save: the Act 3 shop rows (Ion Beam, Deflector Pod, Light Drone Bay, Rear Lance, EMP Burst, Orbital Lance, Shield Overcharge bought, Evasive thrusters) and the `UTILITY BAY 3` row bought, the `UTL` tile appearing (sheet) | final (round 44, A.a: a record of production assets) |
 | [concept/act3-hangar-capture-r37-a.mp4](concept/act3-hangar-capture-r37-a.mp4) | The same, 97 s | final (round 44, A.a: a record of production assets) |
-| [concept/act4-icons-final-r50-a.png](concept/act4-icons-final-r50-a.png) | The four Act 4 equipment icons (`tools/art/icons.py --act4`): Harpoon Torpedoes, Depth Charges, Sonar Pulse, Bulwark (escort) at 16 and 24 px, beside the Torpedo Pod, Proximity Mines, EMP Burst and Rook icons for the style (sheet) | proposed (round 50) |
-| [concept/act4-hangar-capture-r50-a.png](concept/act4-hangar-capture-r50-a.png) | Game capture (round 50, M8 part A, step A5), the hangar before Level 27 (Rook MIA) from a scratch save: the Harpoon Torpedoes row and its test fire, the escort callout with the loaner Bulwark and `ROOK MIA`, the escort shop's Bulwark row before and after `BUY`, the Depth Charges' test fire over water (sheet of 4 frames) | proposed (round 50) |
+| [concept/act4-icons-final-r50-a.png](concept/act4-icons-final-r50-a.png) | The four Act 4 equipment icons (`tools/art/icons.py --act4`): Harpoon Torpedoes, Depth Charges, Sonar Pulse, Bulwark (escort) at 16 and 24 px, beside the Torpedo Pod, Proximity Mines, EMP Burst and Rook icons for the style (sheet) | chosen (round 50, F.7: accepted as final) |
+| [concept/act4-hangar-capture-r50-a.png](concept/act4-hangar-capture-r50-a.png) | Game capture (round 50, M8 part A, step A5), the hangar before Level 27 (Rook MIA) from a scratch save: the Harpoon Torpedoes row and its test fire, the escort callout with the loaner Bulwark and `ROOK MIA`, the escort shop's Bulwark row before and after `BUY`, the Depth Charges' test fire over water (sheet of 4 frames) | chosen (round 50, F.7: accepted) |
 
 **After a load and in a replay** (user decision 2026-10-18): Continue and Load game reach the
 hangar through the next level's briefing; that hangar does not autosave as it opens (a save was
@@ -653,7 +654,7 @@ release's end, which writes that autosave.
   add an option to reduce power on fitted weapons to allow rebalancing the weapons on the ship (like more power
   to the rear)."; decided: A, a free power dial): the shop's POWER − / POWER + choices on a fitted weapon (see
   *Transactions*); the layout mockup shows the Mk III's new 16 MW.
-- 2026-10-22 (M8 part A, step A5; defaults pending the user's review in round 50): the escort's Bulwark
+- 2026-10-22 (M8 part A, step A5; defaults accepted in round 50 (2026-10-22)): the escort's Bulwark
   row sits between Rook's guns and the side row and is listed while locked like the other items
   (`LOCKED L22`); `FIT` / `UNFIT` choose the slot between the Bulwark and Rook; the callout shows
   whoever flies; the intel's `SPECIAL LIMITED` names only the **fitted** special (an owned Sonar Pulse
@@ -661,4 +662,7 @@ release's end, which writes that autosave.
   FITTED: THE STORMHAWK AND ROOK ARE SEALED FOR THE OCEAN`; the test fire of the torpedo-type weapons
   and the Depth Charges is over the water's surface, not under it (D9: the water's factors stay out
   of the hangar).
-- 2026-10-22 (ART-A; pending the user's review in round 50): the Harpoon Torpedoes' icon drawn with a 1.7× stroke so the barb reads at 16 px.
+- 2026-10-22 (ART-A; accepted in round 50 (2026-10-22)): the Harpoon Torpedoes' icon drawn with a 1.7× stroke so the barb reads at 16 px.
+- 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): F.7: the Act 4 hangar icons (`tools/art/icons.py --act4`) and the hangar capture accepted, the concept rows `chosen`.
+- 2026-10-22 (M8 part B, steps ART-B and B4; pending the user's review in round 51): the `drill-rig` sensor L2 portrait (`intel-final-r51-a`); Level 22's
+  threat strip marks the four rig sites with a red "T" (`IntelPanelLayoutTest.level22sStripMarksTheFourRigSites`).

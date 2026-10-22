@@ -106,7 +106,9 @@ class PacingTest {
      * flown, measured and printed here and in {@link ActFloorTest}, not asserted (the level report prints their
      * verdicts). Remove a level once it passes. None left: Level 21, the first, passes with its rework (round 44 Q.1,
      * step L21R, 2026-10-20: 168 units at medium, 2.55 on the screen, the pre-boss pause and the settling dust the only
-     * stretches over 2 s).
+     * stretches over 2 s). M8 part B: Level 22's approved draft waves (48 small waves, 214 units at medium, mostly tiny
+     * fodder: 2.17 on the screen, 8 stretches over 2 s, step B3) pass with their rework (step B3b, 2026-10-22: 67 waves,
+     * 273 units at medium, 2.54 on the screen, no stretch over 2 s).
      */
     static final Set<String> PENDING_WAVES = Set.of();
 
@@ -158,7 +160,7 @@ class PacingTest {
      * 15's) and Rook; M7 part D: Level 17 with its plan's fit (Level 16's); M7 part E: Level 18 with its plan's fit,
      * the Ion Beam at L2 in front; M7 part F: Level 19 with its plan's fit, the beam at L3 and Rook's Mortar; M7 part
      * G: Level 20 with its plan's fit, the Tail Gun at L3 and Rook's Autocannon; M7 part H: Level 21 with its plan's fit,
-     * Composite III).
+     * Composite III; M8 part B: Level 22 with Level 21's).
      */
     static Loadout planLoadout(String key, Difficulty difficulty) {
         BiFunction<Content, Difficulty, Loadout> plan = PLAN_FITS.get(key);
@@ -182,7 +184,8 @@ class PacingTest {
             Map.entry(Level18Test.LEVEL, Level18Test::planLoadout),
             Map.entry(Level19Test.LEVEL, Level19Test::planLoadout),
             Map.entry(Level20Test.LEVEL, Level20Test::planLoadout),
-            Map.entry(Level21Test.LEVEL, Level21Test::planLoadout));
+            Map.entry(Level21Test.LEVEL, Level21Test::planLoadout),
+            Map.entry(Level22Test.LEVEL, Level22Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

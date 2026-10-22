@@ -1225,6 +1225,23 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   **`special_limits`** (the specials forbidden, by their slugs, `orbital-lance`) on the level and on a section,
   replacing its setting's list from the specials' `limits` (a section's own, else the level's:
   `LevelData.forbiddenSpecials`); every special named there must be in a setting's list (its reason word).
+- **Level and unit, M8 part B** ([Level 22](../../campaign/act-4-deep-water/level-22-ice-shelf/README.md), the
+  [Drill Rig](../../enemies/ground/drill-rig/README.md); loaded and checked in step B2, mapped in step B3; the
+  defaults pending the user's review in round 51): the **`vents`**' **`look`** (`furnace-vent`, the default, or
+  `ice-geyser`: how the game draws and sounds the rows; `Vents.lookOrDefault()`, the simulation never reads it) and a
+  row's own **`tell`**, **`period`**, **`ripple`** and **`easy`** / **`hard`** changes of them (a row's value on a
+  difficulty: its own change, else its own value, else the rows' on that difficulty, `Vents.periodOn(row,
+  difficulty)`; each row's period holds its whole ripple on every difficulty). An `escapes` secondary's **`easy`** /
+  **`hard`** `{allowed}` (0 or more: how many may get away on that difficulty, `Secondary.escapesAllowed(difficulty)`;
+  fewer than the units it counts on every difficulty); an `escapes` objective counts the **ground targets** of its
+  enemy too (a wave or a ground target of it must be in the level). The radio events **`first-geyser`** (the
+  attempt's first vent tell, once; only with `vents`) and **`target-destroyed`** (the attempt's first unit of the
+  escapes secondary's enemy destroyed, once; only with an `escapes` secondary). The intel wave strip's **`TARGET`**
+  marks (each ground target of the escapes secondary's enemy at its time). A unit's `part_list` may hold **several
+  `destroyable` parts** carrying its `attack` (the Drill Rig's four pumps with `attack: ring`): the attack stops when
+  the last of them is lost, and a part's **`slows`** (s, only on a unit's part that carries an attack) adds that much
+  to the attack's interval when it is lost; the hook **`attacks.<name>.aimed`** (only on a `ring`: that many bullets
+  aimed at the ship besides the ring with each volley, the hard rig's shard).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

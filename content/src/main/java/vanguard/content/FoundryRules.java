@@ -89,7 +89,10 @@ final class FoundryRules {
         return out;
     }
 
-    /** The vent rows at {@code difficulty}: the tell, period and ripple of its change, the damage of the bullet class. */
+    /**
+     * The vent rows at {@code difficulty}: the tell, period and ripple of its change (M8 part B: a row's own over the
+     * rows'), the damage of the bullet class.
+     */
     static List<HazardSpec.VentRow> vents(Content content, LevelData.Vents vents, Difficulty difficulty) {
         double damage = UnitRules.bulletDamage(content, vents.bullet());
         List<HazardSpec.VentRow> out = new ArrayList<>();
@@ -98,10 +101,10 @@ final class FoundryRules {
                     row.t(),
                     row.xs().stream().mapToDouble(Double::doubleValue).toArray(),
                     vents.width(),
-                    vents.tellOn(difficulty),
+                    vents.tellOn(row, difficulty),
                     vents.burn(),
-                    vents.periodOn(difficulty),
-                    vents.rippleOn(difficulty),
+                    vents.periodOn(row, difficulty),
+                    vents.rippleOn(row, difficulty),
                     damage));
         }
         return out;

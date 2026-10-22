@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -105,6 +106,25 @@ class CreditsListTest {
         assertTrue(roll.contains("title|VOICES\n"), roll);
         assertTrue(roll.contains("text|Ruth Reader\n"), roll);
         assertFalse(roll.contains("Una Used"), roll);
+    }
+
+    @Test
+    void anAuditionedVoiceReferenceCountsForItsSpeakerWithoutTheRoundSuffix() throws IOException {
+        // M8 part B: Dr. Brandt's provisional clip ref-conamara-r51-a keys the speaker conamara's lines.
+        touch("assets/voice/conamara/line.ogg");
+        String roll = roll(HEADER
+                + row(
+                        "design/audio/voice/refs/ref-conamara-r51-a.wav",
+                        "Book",
+                        "Mary Reader (LibriVox reader)",
+                        "CC0 1.0")
+                + row("design/audio/voice/refs/ref-crawler-one.wav", "Book", "Una Used (LibriVox reader)", "CC0 1.0"));
+        assertTrue(roll.contains("text|Mary Reader\n"), roll);
+        assertFalse(roll.contains("Una Used"), roll);
+        assertTrue(CreditsList.shipped("design/audio/voice/refs/ref-conamara-r51-a.wav", dir, Set.of()));
+        assertFalse(CreditsList.shipped("design/audio/voice/refs/ref-crawler-one.wav", dir, Set.of()));
+        touch("assets/voice/crawler-one/line.ogg");
+        assertTrue(CreditsList.shipped("design/audio/voice/refs/ref-crawler-one.wav", dir, Set.of()));
     }
 
     @Test

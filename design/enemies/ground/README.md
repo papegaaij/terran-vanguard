@@ -3,7 +3,7 @@ title: Ground enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-20
+updated: 2026-10-22
 ---
 
 # Ground enemies
@@ -31,7 +31,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [threadcrawler](threadcrawler/README.md) | Ground centipede chain on canyon floors and walls, travelling spore wave (L16) | approved | done | final |
 | [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | final |
 | [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
-| [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | not-started | chosen |
+| [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | done | chosen |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | in-progress | final |
 
 ## Roster
@@ -161,6 +161,10 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
 | [concept/rejected/drill-rig-r48-a.gif](concept/rejected/drill-rig-r48-a.gif) | Drill Rig A — on the ice shelf: shard rings, bolts glancing off, bombs take the pumps then the core; a bore hole and a steam plume (motion) | rejected — round 48: b picked |
 | [concept/drill-rig-r48-b.png](concept/drill-rig-r48-b.png) | Drill Rig B, rust auger flower — a rust mound with three turning auger blades round the lime bore, ribbed bellows pumps (sheet) | chosen — round 48 |
 | [concept/drill-rig-r48-b.gif](concept/drill-rig-r48-b.gif) | Drill Rig B — the same scene as A (motion) | chosen — round 48 |
+| [concept/drill-rig-final-r51-a.png](concept/drill-rig-final-r51-a.png) | Drill Rig final frames (`tools/art/drill_rig.py`, round 48 b with stronger augers): the core's 8 spin frames and glow, the stump, pumps (heave, dead), base and crack decals, the steam plume, the shard ring's tell and release, three screens on the shelf (sheet) | proposed (round 51) |
+| [concept/drill-rig-final-r51-a.gif](concept/drill-rig-final-r51-a.gif) | The collar spinning, a tell and a ring of ten shards, bombs taking the pumps (the ring slowing), the core's death, stump, crack and steam | proposed (round 51) |
+| [concept/drill-rig-capture-r51-a.png](concept/drill-rig-capture-r51-a.png) | Game capture, Level 22 (M8 part B, step B5, medium, `--invulnerable`, Hammer Mortar + two Bomb Racks): the first rig's tell (t=41.5), its ring of shards (t=42), the next tell with the bombs on it (t=45), the core's death (t=46.5), the stump and dead pumps (t=48); the second rig's remains (t=63.5) | proposed (round 51) |
+| [concept/drill-rig-capture-r51-a.mp4](concept/drill-rig-capture-r51-a.mp4) | The same run, t 37–51 with the game's sound: the ship moving under the first rig, the collar's hum, the tells and rings, the pumps and the core breaking, the death | proposed (round 51) |
 
 ## Implementation
 

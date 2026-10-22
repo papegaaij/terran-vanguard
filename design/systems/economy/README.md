@@ -414,5 +414,5 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
 - 2026-10-19 (user, after the Act 2 wave rework): the hard playthrough may end an act up to 25 % under the
   expert's bound (`expert.hard_under`); over-earning stays capped at +15 %, easy and medium keep ±15 %. Hard is
   tighter on purpose: its smaller firing groups and the Spire's half-paying hard Wraiths put Act 2 at −21.6 %.
-- 2026-10-22 (M8 part A, step A2; pending the user's review in round 50): a temporary budget(n) income for the Act 4
+- 2026-10-22 (M8 part A, step A2; accepted in round 50 (2026-10-22)): a temporary budget(n) income for the Act 4
   levels without data (D8 of the part's gap check; removed in M8 part I) and the plan's Act 4 visits.

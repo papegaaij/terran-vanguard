@@ -138,9 +138,13 @@ final class SpriteUse {
 
     /**
      * M7 part F: a level with furnace {@code vents} draws their grates, heat glow, flame and smoke, {@code
-     * furnace-vent*} (tools/art/l19_props.py; the game's FoundryLooks).
+     * furnace-vent*} (tools/art/l19_props.py; the game's FoundryLooks); M8 part B: the vents' {@code look} names the
+     * root (Level 22's {@code ice-geyser*}, tools/art/l22_props.py), the furnace vent if not given.
      */
     static final String VENT_ROOT = "furnace-vent";
+
+    /** M8 part B: the ice geysers' crack, glow, steam and residue (the vents' {@code look: ice-geyser}). */
+    static final String GEYSER_ROOT = "ice-geyser";
 
     /**
      * M7 part F: a level with up-facing nests ({@code arc: up}) draws the steel truss gantry under them and each
@@ -302,7 +306,8 @@ final class SpriteUse {
         });
         level.flak().ifPresent(flak -> roots.add(FLAK_ROOT));
         // M7 part F: the furnace vents' looks, a foundry's ingots and rovers.
-        level.vents().ifPresent(vents -> roots.add(VENT_ROOT));
+        level.vents()
+                .ifPresent(vents -> roots.add(GEYSER_ROOT.equals(vents.lookOrDefault()) ? GEYSER_ROOT : VENT_ROOT));
         level.belts().ifPresent(belts -> roots.addAll(FOUNDRY_ROOTS));
         // M7 part G: the travelling ridge (its ridge key).
         level.ridge().ifPresent(ridge -> roots.add(RIDGE_ROOT));

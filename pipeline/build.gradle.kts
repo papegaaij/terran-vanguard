@@ -248,17 +248,27 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "enemy-leviathan-cry-r47-b.ogg",
         "launch-rail-r47-b.ogg",
         "dome-hit-r49-b.ogg",
-        // M8 part A: round 50's proposals for the Act 4 arsenal (CC0/CC-BY Freesound HQ previews, CREDITS.md; the
-        // limit chime synthesized), their a variants until the user's pick, which may swap the file: the Harpoon
-        // Torpedoes' launch, run loop and hit, the Depth Charges' roll-out and burst, the special row's limit chime.
-        // The Sonar Pulse and the Decoy Flares play their chosen files (r04 a, r08 a, already final in assets/sfx); the
-        // Torpedo Pod keeps its chosen r03 a until round 50 picks its de-bubbled launch.
-        "shot-harpoon-r50-a.ogg",
+        // M8 part A: round 50's picks for the Act 4 arsenal (the user, 2026-10-22; CC0/CC-BY Freesound HQ previews,
+        // CREDITS.md; the limit chime synthesized), to be rebuilt from the originals by tools/concept/audio/sfx_r50a.py:
+        // the Harpoon Torpedoes' launch b, run loop a and hit a, the Depth Charges' roll-out b and burst a, the special
+        // row's limit chime b. The Sonar Pulse and the Decoy Flares play their chosen files (r04 a, r08 a, already final
+        // in assets/sfx); the Torpedo Pod keeps its chosen r03 a (round 50, S.6: both de-bubbled launches rejected).
+        "shot-harpoon-r50-b.ogg",
         "harpoon-run-r50-a.ogg",
         "harpoon-hit-r50-a.ogg",
-        "shot-depth-charge-r50-a.ogg",
+        "shot-depth-charge-r50-b.ogg",
         "depth-charge-burst-r50-a.ogg",
-        "special-limit-r50-a.ogg",
+        "special-limit-r50-b.ogg",
+        // M8 part B: round 51's proposals for Level 22 (CC0/CC-BY Freesound HQ previews, briefs of the round; CREDITS
+        // rows from step AUD-B), their a variants until the user's pick, which may swap the file: the ice geyser's tell
+        // and burst, the Drill Rig's collar loop, shard ring and core death, the Europa ice bed and Conamara's bed.
+        "geyser-tell-r51-a.ogg",
+        "geyser-burst-r51-a.ogg",
+        "rig-collar-r51-a.ogg",
+        "rig-ring-r51-a.ogg",
+        "rig-death-r51-a.ogg",
+        "europa-ice-r51-a.ogg",
+        "conamara-station-r51-a.ogg",
     )
 }
 

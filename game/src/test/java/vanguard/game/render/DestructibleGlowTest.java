@@ -79,8 +79,9 @@ class DestructibleGlowTest {
                 }
             }
         }
-        // Level 17's seed-vault capsule (its contents' glow), Level 19's payroll safe, Level 20's emergency cache.
-        assertEquals(Set.of("emergency-cache", "greenhouse-frame", "payroll-safe"), glowing);
+        // Level 17's seed-vault capsule (its contents' glow), Level 19's payroll safe, Level 20's emergency cache, M8
+        // part B: Level 22's crevasse lip (the core-sample cache's marker light).
+        assertEquals(Set.of("crevasse-lip", "emergency-cache", "greenhouse-frame", "payroll-safe"), glowing);
         assertEquals(null, GroundPasses.glowName(cargo(), DestructibleGlowTest::onDisk), "a cargo container has none");
     }
 
