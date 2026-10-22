@@ -127,9 +127,19 @@ item|“Large machine running and powering down” by ryks88
 detail|CC-BY 4.0 · freesound.org/people/ryks88/sounds/709258
 item|“Arc Welding.wav” by kev_durr
 detail|CC-BY 4.0 · freesound.org/people/kev_durr/sounds/396511
+item|“humpback_whales_and_orcas_ambient_underwater_recording” by raiden04
+detail|CC-BY 4.0 · freesound.org/people/raiden04/sounds/797762
+item|“Train car coupling sounds” by toam
+detail|CC-BY 3.0 · freesound.org/people/toam/sounds/198605
+item|“Rail Cars Slam Hard and Couple Together Air Released” by WeenyBeany
+detail|CC-BY 4.0 · freesound.org/people/WeenyBeany/sounds/750751
+item|“AIRHiss-Blue Snowball Microphone, CU_Steam Release, Acme Windmaster_Nicholas Judy_TDC” by designerschoice
+detail|CC-BY 4.0 · freesound.org/people/designerschoice/sounds/803061
+item|“R4_00328-8_GlassTable.wav” by kevp888
+detail|CC-BY 4.0 · freesound.org/people/kevp888/sounds/636555
 gap|
 role|WITH THANKS TO (CC0)
-text|adgawrhbshbffsfgvsrf, adviseme333, aerror, amenhotepIV, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, c64cosmin, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, Elektrocell, Elements-Library, facklere, FlatHill, follytowers, fran_marenco, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, ivolipa, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, kyles, lensflare8642, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, PostProdDog, profoundsounds, qubodup, Raclure, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, sarana, SciFiSounds, SecureSubset, Sheyvan, sidohzen, Skullsmasha, SuperPhat, The_Chemical_Workshop, The_Sean_, ThefitzyG, TRP, uagadugu, unfa, Walter_Odington, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games
+text|adgawrhbshbffsfgvsrf, adviseme333, aerror, amenhotepIV, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, c64cosmin, cellokratzer, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, Elektrocell, Elements-Library, facklere, FlatHill, follytowers, fran_marenco, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, ItsThatRoboGuy, ivolipa, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, kyles, lensflare8642, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Nox_Sound, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, PostProdDog, profoundsounds, qubodup, Raclure, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, samueljustice00, sarana, SciFiSounds, SecureSubset, Sheyvan, sidohzen, Skullsmasha, StoneyJ, SuperPhat, The_Chemical_Workshop, The_Sean_, ThefitzyG, TRP, uagadugu, unfa, Walter_Odington, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games
 gap|
 title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings

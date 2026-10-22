@@ -211,7 +211,7 @@ public final class FlightSounds {
     }
 
     /**
-     * The launch rail at the start of an attempt's launch: its buffer clunk, the release, lands 3.6 s
+     * The launch rail at the start of an attempt's launch: its stop, the release, lands 3.55 s
      * into the 5 s launch. The file is levelled like the interface sounds, so it plays as it is.
      */
     public void launch() {

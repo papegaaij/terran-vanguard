@@ -40,12 +40,12 @@ class Level17SoundsTest {
     void everySoundHasItsFile() {
         for (Sfx sfx : List.of(Sfx.DOME_HIT, Sfx.DOME_BREAK, Sfx.AMBIENCE_MARS_COLONY)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            // The dome break is round 40's redo c, chosen in round 41 (S.h); the others round 40's a.
-            // The colony's bed is round 46's pick b (the user, 2026-10-21).
+            // The dome break is round 40's redo c, chosen in round 41 (S.h); the colony's bed is round 46's pick b
+            // (the user, 2026-10-21); the hit round 49's pick b (2026-10-22).
             String option = sfx == Sfx.DOME_BREAK
                     ? "-r40-c.ogg"
-                    : sfx == Sfx.AMBIENCE_MARS_COLONY ? "-r46-b.ogg" : "-r40-a.ogg";
-            assertTrue(sfx.path().endsWith(option), sfx + ": round 40's " + option);
+                    : sfx == Sfx.AMBIENCE_MARS_COLONY ? "-r46-b.ogg" : "-r49-b.ogg";
+            assertTrue(sfx.path().endsWith(option), sfx + ": " + option);
         }
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_MARS_COLONY.priority());
         assertTrue(Files.isRegularFile(ASSETS.resolve(Sfx.BOMB_SHOT.path())), "the reused whistle");
@@ -76,10 +76,11 @@ class Level17SoundsTest {
                 Sfx.SHELLBACK_ROLL,
                 Sfx.SHELLBACK_UNCURL)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            // Round 46's picks (the user, 2026-10-21): b for the aura, the absorb and the Shellback; the song and the
-            // collapse stay round 40's a.
-            boolean old = sfx == Sfx.HERALD_SONG || sfx == Sfx.AURA_COLLAPSE;
-            assertTrue(sfx.path().endsWith(old ? "-r40-a.ogg" : "-r46-b.ogg"), sfx + ": " + sfx.path());
+            // Round 46's picks (the user, 2026-10-21): b for the aura, the absorb and the Shellback; the collapse
+            // stays round 40's a; the song is round 47's pick a (2026-10-22).
+            String option =
+                    sfx == Sfx.HERALD_SONG ? "-r47-a.ogg" : sfx == Sfx.AURA_COLLAPSE ? "-r40-a.ogg" : "-r46-b.ogg";
+            assertTrue(sfx.path().endsWith(option), sfx + ": " + sfx.path());
         }
         assertEquals(Sfx.AURA_COLLAPSE, FlightSounds.siegeSound(SimEvents.Type.RINGS_COLLAPSED));
         assertEquals(Sfx.AURA_COLLAPSE, FlightSounds.siegeSound(SimEvents.Type.RINGS_STRIPPED), "the EMP's strip too");

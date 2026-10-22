@@ -75,9 +75,7 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "ui-menu-confirm-r08-a.ogg",
         "ui-menu-back-r08-a.ogg",
         "ambience-orbit-r08-a.ogg",
-        "launch-rail-r11-b.ogg",
         "ui-edge-warning-r11-b.ogg",
-        "enemy-leviathan-cry-r16-a.ogg",
         "enemy-mortar-lob-r21-a.ogg",
         "enemy-mortar-impact-r21-a.ogg",
         "hazard-sled-whine-r21-a.ogg",
@@ -157,12 +155,10 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // (round 39 a, synthesized, kept by the user in round 46; the rest of Level 16: round 46's picks).
         "canyon-scrape-r36-b.ogg",
         "tendril-hum-r39-a.ogg",
-        // M7 part D, Level 17: round 40's proposals still standing, option a (the domes' hit, the Choir Herald's
-        // song and collapse; synthesized; the hit and the song until their redo; the rest: round 46's picks).
-        "dome-hit-r40-a.ogg",
+        // M7 part D, Level 17: round 40's proposal still standing, option a (the Choir Herald's rings' collapse;
+        // synthesized; the domes' hit and the song: rounds 49 and 47's picks, the rest: round 46's picks, below).
         // The dome break: round 40's redo c, chosen in round 41 (S.h, 2026-10-19).
         "dome-break-r40-c.ogg",
-        "herald-song-r40-a.ogg",
         "aura-collapse-r40-a.ogg",
         // M7 part E, Level 18: the `mars-storm` bed chosen in round 36 (S.5 = a, "recorded front": a sandstorm over
         // a furious low howl, CC0 + CC-BY, seamless 16 s loop).
@@ -206,8 +202,8 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // and earlier files: the Ghost Drone, Dust Devil, Shellback, Threadcrawler, tendril burn and break, Burrower dive,
         // Herald aura and absorb, walker stomp, tank death, the canopy, canyon, colony and foundry beds and the Act 2/3
         // sounds (Driftjelly pulse, Lamprey drain, sonde, drone launch, dash, overcharge, EMP, beam stop and impact,
-        // drone rebuild). The tendril hum stays round 39's a; the herald song, Leviathan cry, integrity alarm, dome hit
-        // and launch rail keep their old files until their redo.
+        // drone rebuild). The tendril hum stays round 39's a; the integrity alarm keeps its old file (round 47); the
+        // herald song, Leviathan cry, dome hit and launch rail: rounds 47 and 49's picks, below.
         "ghost-drone-drop-r46-b.ogg",
         "ghost-drone-glint-r46-b.ogg",
         "ghost-drone-burst-r46-a.ogg",
@@ -244,6 +240,14 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "ion-beam-stop-r46-a.ogg",
         "beam-impact-r46-a.ogg",
         "drone-rebuild-r46-a.ogg",
+        // Round 47's and 49's picks (the user, 2026-10-22; CC0/CC-BY Freesound sounds, CREDITS.md), cut from the
+        // Freesound previews (the download limit blocked the originals) and to be rebuilt from the originals by
+        // tools/concept/audio/sfx_r47l.py and sfx_r49m.py: the Herald's song a, the Leviathan's cry b, the launch
+        // rail b and the domes' hit b (round 49).
+        "herald-song-r47-a.ogg",
+        "enemy-leviathan-cry-r47-b.ogg",
+        "launch-rail-r47-b.ogg",
+        "dome-hit-r49-b.ogg",
     )
 }
 

@@ -10,12 +10,19 @@ Freesound user, so this script runs in three steps:
                                                               approving for an access token
   python3 tools/concept/audio/freesound_fetch.py --download   downloads every sound in CREDITS.md
                                                               that is not cached yet
+  python3 tools/concept/audio/freesound_fetch.py --download --ids 162449,797762
+                                                              only these sounds (a round's picks)
 
 Credentials and tokens live in ~/.config/terran-vanguard/freesound.json (client_id and
 client_secret written by the user; the tokens are added by --code), never in the repository.
 Originals are cached in ~/.cache/terran-vanguard/freesound/ as <id>_<name>.<type>; only the
-processed files made from them are committed. Throttling (HTTP 429) is waited out; any other
-failed request stops the script.
+processed files made from them are committed.
+
+Freesound allows 500 OAuth2 requests a day, and only the download needs OAuth2: the sound's name
+and type are looked up with the API key (the client secret, 2000 requests a day), so each original
+costs one OAuth2 request. Download only the originals of sounds the user picked; concept-round
+candidates are cut from the public HQ previews (cdn.freesound.org, no quota). A per-minute
+throttle (HTTP 429) is waited out; the daily limit and any other failed request stop the script.
 """
 
 import argparse
@@ -34,7 +41,7 @@ CREDENTIALS = Path.home() / ".config" / "terran-vanguard" / "freesound.json"
 CACHE = Path.home() / ".cache" / "terran-vanguard" / "freesound"
 CREDITS = Path(__file__).resolve().parents[3] / "CREDITS.md"
 SOUND_URL = re.compile(r"freesound\.org/people/[^/\s]+/sounds/(\d+)")
-# Freesound throttles OAuth2 requests at 30 a minute; two requests per sound (info and download).
+# Freesound throttles OAuth2 requests at 30 a minute (one per sound, the download).
 REQUEST_GAP = 2.1
 THROTTLE_RETRIES = 5
 
@@ -73,15 +80,20 @@ def access_token(credentials):
     return credentials["access_token"]
 
 
-def get(url, token):
-    """GET with the token; waits out Freesound's throttling (HTTP 429) instead of failing."""
-    request = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+def get(url, token=None):
+    """GET with the OAuth2 token (or none: the url carries the API key); waits out Freesound's
+    per-minute throttling (HTTP 429) but fails at once on the daily limit."""
+    headers = {"Authorization": f"Bearer {token}"} if token else {}
+    request = urllib.request.Request(url, headers=headers)
     for attempt in range(THROTTLE_RETRIES):
         try:
             return urllib.request.urlopen(request)
         except urllib.error.HTTPError as error:
             if error.code != 429 or attempt == THROTTLE_RETRIES - 1:
                 raise
+            body = error.read().decode(errors="replace")
+            if "/day" in body:
+                sys.exit(f"{error.url}: HTTP 429, Freesound's daily limit: {body[:200]}")
             wait = int(error.headers.get("Retry-After") or 60)
             print(f"throttled, waiting {wait} s")
             time.sleep(wait)
@@ -91,17 +103,17 @@ def sound_ids():
     return sorted({int(match) for match in SOUND_URL.findall(CREDITS.read_text())})
 
 
-def download(credentials):
+def download(credentials, only=None):
     CACHE.mkdir(parents=True, exist_ok=True)
-    ids = sound_ids()
+    ids = only or sound_ids()
     cached = {int(path.name.split("_", 1)[0]) for path in CACHE.iterdir() if path.name[0].isdigit()}
     missing = [sound for sound in ids if sound not in cached]
-    print(f"{len(ids)} sounds in CREDITS.md, {len(ids) - len(missing)} cached, {len(missing)} to fetch")
+    print(f"{len(ids)} sounds, {len(ids) - len(missing)} cached, {len(missing)} to fetch")
     for count, sound in enumerate(missing, 1):
-        token = access_token(credentials)
-        with get(f"{API}/sounds/{sound}/?fields=id,name,type", token) as response:
+        key = urllib.parse.urlencode({"fields": "id,name,type", "token": credentials["client_secret"]})
+        with get(f"{API}/sounds/{sound}/?{key}") as response:
             info = json.load(response)
-        time.sleep(REQUEST_GAP)
+        token = access_token(credentials)
         stem = re.sub(r"[^A-Za-z0-9._-]+", "-", Path(info["name"]).stem).strip("-")[:60]
         target = CACHE / f"{sound}_{stem}.{info['type']}"
         partial = target.with_suffix(target.suffix + ".part")
@@ -117,6 +129,7 @@ def main():
     action = parser.add_mutually_exclusive_group()
     action.add_argument("--code", help="the authorisation code shown after approving the link")
     action.add_argument("--download", action="store_true", help="download the originals")
+    parser.add_argument("--ids", help="with --download: only these comma-separated sound ids")
     args = parser.parse_args()
     credentials = load_credentials()
     try:
@@ -124,7 +137,7 @@ def main():
             post_token(credentials, {"grant_type": "authorization_code", "code": args.code})
             print(f"access token stored in {CREDENTIALS}")
         elif args.download:
-            download(credentials)
+            download(credentials, sorted({int(i) for i in args.ids.split(",")}) if args.ids else None)
         else:
             query = urllib.parse.urlencode({"client_id": credentials["client_id"], "response_type": "code"})
             print(f"open and approve: {API}/oauth2/authorize/?{query}")

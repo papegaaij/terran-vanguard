@@ -44,8 +44,8 @@ class PlaceholderAuditTest {
                     + " and sfx_r37.py";
 
     private static final String ROUND_40 =
-            "M7 part D's Level 17 sounds: round 40's proposals still standing (option a; the hit and the song"
-                    + " until their redo), synthesized by tools/concept/audio/sfx_r40.py";
+            "M7 part D's Level 17 rings' collapse: round 40's proposal still standing (option a),"
+                    + " synthesized by tools/concept/audio/sfx_r40.py";
 
     private static final String ROUND_40_DOME =
             "M7 part D's dome break: round 40's redo c, chosen in round 41 (S.h, user 2026-10-19): the concept"
@@ -68,6 +68,11 @@ class PlaceholderAuditTest {
             "round 46's picks (user 2026-10-21): Acts 2-3 sounds redone from the database, the concept files mixed"
                     + " from CC0/CC-BY Freesound originals (CREDITS.md) by tools/concept/audio/sfx_r46j.py and"
                     + " sfx_r46k.py";
+
+    private static final String ROUND_47 =
+            "round 47's and 49's picks (user 2026-10-22): the Herald's song, the Leviathan's cry, the launch rail"
+                    + " and the domes' hit, the concept files cut from the Freesound previews of CC0/CC-BY sounds"
+                    + " (CREDITS.md) by tools/concept/audio/sfx_r47l.py and sfx_r49m.py until their originals";
 
     private static final String ROUND_41_MUSIC =
             "track 9 \"Grey Signal\" and its base and motif stems (M7 part E, round 41 a, proposed): the concept"
@@ -105,9 +110,7 @@ class PlaceholderAuditTest {
             Map.entry("sfx/ui-tally-total-r08-a.ogg", SYNTHESIZED),
             Map.entry("sfx/ui-typewriter-r08-a.ogg", SYNTHESIZED),
             Map.entry("sfx/ui-upgrade-r08-a.ogg", SYNTHESIZED),
-            Map.entry("sfx/launch-rail-r11-b.ogg", SYNTHESIZED),
             Map.entry("sfx/ui-edge-warning-r11-b.ogg", SYNTHESIZED),
-            Map.entry("sfx/enemy-leviathan-cry-r16-a.ogg", SYNTHESIZED),
             Map.entry("sfx/ui-save-r27-b.ogg", SYNTHESIZED),
             Map.entry("sfx/weapon-mine-arm-r28-a.ogg", SYNTHESIZED),
             Map.entry("sfx/ambience-storm-rain-r34-a.ogg", ROUND_34),
@@ -142,10 +145,8 @@ class PlaceholderAuditTest {
             // M7 part C, Level 16: the scrape chosen in round 36 (S.3 = b), round 39's tendril hum (kept in round 46)
             Map.entry("sfx/canyon-scrape-r36-b.ogg", ROUND_38),
             Map.entry("sfx/tendril-hum-r39-a.ogg", ROUND_38),
-            // M7 part D, Level 17: round 40's proposals still standing, synthesized by sfx_r40.py
-            Map.entry("sfx/dome-hit-r40-a.ogg", ROUND_40),
+            // M7 part D, Level 17: round 40's proposal still standing, synthesized by sfx_r40.py
             Map.entry("sfx/dome-break-r40-c.ogg", ROUND_40_DOME),
-            Map.entry("sfx/herald-song-r40-a.ogg", ROUND_40),
             Map.entry("sfx/aura-collapse-r40-a.ogg", ROUND_40),
             // M7 part E, Level 18: the `mars-storm` bed and track 9 with its two stems
             Map.entry(
@@ -216,6 +217,11 @@ class PlaceholderAuditTest {
             Map.entry("sfx/ion-beam-stop-r46-a.ogg", ROUND_46),
             Map.entry("sfx/beam-impact-r46-a.ogg", ROUND_46),
             Map.entry("sfx/drone-rebuild-r46-a.ogg", ROUND_46),
+            // round 47's and 49's picks, from the Freesound previews until the originals
+            Map.entry("sfx/herald-song-r47-a.ogg", ROUND_47),
+            Map.entry("sfx/enemy-leviathan-cry-r47-b.ogg", ROUND_47),
+            Map.entry("sfx/launch-rail-r47-b.ogg", ROUND_47),
+            Map.entry("sfx/dome-hit-r49-b.ogg", ROUND_47),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

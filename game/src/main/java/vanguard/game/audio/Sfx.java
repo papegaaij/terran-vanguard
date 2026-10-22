@@ -103,8 +103,12 @@ public enum Sfx {
     TALLY_TICK("sfx/ui-tally-tick-r08-a.ogg", 2, Bus.EFFECTS, WARNING),
     TALLY_TOTAL("sfx/ui-tally-total-r08-a.ogg", 1, Bus.EFFECTS, WARNING),
     GRADE_STAMP("sfx/ui-grade-stamp-r08-a.ogg", 1, Bus.EFFECTS, WARNING),
-    /** The catapult run of a level's launch (round 11 b): its buffer clunk, the release, is 3.6 s in. */
-    LAUNCH_RAIL("sfx/launch-rail-r11-b.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * The catapult run of a level's launch (round 47 b, the user's pick, from the Freesound previews until the
+     * originals: a real carrier launch under an afterburner, a coupler's steel clank at the stop, steam; 4.95 s):
+     * its stop, the release, is 3.55 s in.
+     */
+    LAUNCH_RAIL("sfx/launch-rail-r47-b.ogg", 1, Bus.EFFECTS, WARNING),
     /** The contact ping with an edge warning (round 11 b); one at a time, so overlapping warnings do not stack. */
     EDGE_WARNING("sfx/ui-edge-warning-r11-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
@@ -113,10 +117,10 @@ public enum Sfx {
      */
     KLAXON("sfx/ui-klaxon-r08-a.ogg", 1, Bus.EFFECTS, WARNING),
     /**
-     * The Leviathan's whale-song cry under its death's explosion (round 16 a, synthesized): a
-     * placeholder until the recorded enemy sounds replace it.
+     * The Leviathan's whale-song cry under its death's explosion (round 47 b, the user's pick, from the Freesound
+     * previews until the originals: a real humpback's moan, high then a long deep groan, slowed to 0.8; 4 s).
      */
-    LEVIATHAN_CRY("sfx/enemy-leviathan-cry-r16-a.ogg", 1, Bus.EFFECTS, BOSS),
+    LEVIATHAN_CRY("sfx/enemy-leviathan-cry-r47-b.ogg", 1, Bus.EFFECTS, BOSS),
     /** The Polyp Mortar's lob (round 21 a, a real mortar thump). */
     MORTAR_LOB("sfx/enemy-mortar-lob-r21-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /** The Polyp Mortar's blob landing on its marker (round 21 a, a wet splat). */
@@ -317,10 +321,11 @@ public enum Sfx {
      */
     CRAWLER_WALK("sfx/crawler-walk-r46-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M7 part D: a dome of Level 17 taking a hit ({@code ALLY_HIT} on a ground ally; round 40 a, proposed: a glass
-     * knock, a creak round the dome and a fine stress-line crackle, no shatter, 1.2 s), panned to the dome.
+     * M7 part D: a dome of Level 17 taking a hit ({@code ALLY_HIT} on a ground ally; round 49 b, the user's pick, from
+     * the Freesound previews until the originals: a hammer striking a glass pane over a struck glass table's ring an
+     * octave down, in a cathedral, 1.2 s), panned to the dome.
      */
-    DOME_HIT("sfx/dome-hit-r40-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    DOME_HIT("sfx/dome-hit-r49-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
      * M7 part D: a dome breaking ({@code ALLY_LOST} on a ground ally; round 40's redo c, chosen in round 41 (S.h):
      * a low-passed building collapse over a deep crust rumble with smashing glass, 2.4 s, from CC0 Freesound
@@ -328,10 +333,11 @@ public enum Sfx {
      */
     DOME_BREAK("sfx/dome-break-r40-c.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M7 part D: the Choir Herald's song with its ring of bullets (round 40 a, proposed: three voices a fifth apart
-     * singing an "ah", F3 A3 E3, 1.9 s), instead of a gun's report.
+     * M7 part D: the Choir Herald's song with its ring of bullets (round 47 a, the user's pick, from the Freesound
+     * previews until the originals: a concert-hall choir's swelling chord slowed to 0.7 over throat singing, 2.4 s),
+     * instead of a gun's report.
      */
-    HERALD_SONG("sfx/herald-song-r40-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    HERALD_SONG("sfx/herald-song-r47-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M7 part D: the Herald's aura (round 46 b, the user's pick: a choir's held chord, high-passed, a 4 s loop,
      * levelled in its file): one loop while any unit carries a ring, panned to the nearest ringed unit.

@@ -1879,6 +1879,8 @@ Levels: one-shots on the loudest 100 ms of the 200 Hz–5 kHz band, loops by the
 ### dome-hit-r40-a — synthesized
 Use: a dome of Level 17 takes a hit (`ALLY_HIT`). Brief: thick glass under stress: a heavy knock, a creak running round the dome and a fine crackle of stress lines; no shatter. Why: a 70–190 Hz noise thud plus a 1.2–3 kHz tick, a band-noise creak (resonance wandering 700 → 1400 Hz, panned across the field) and 60 grains of 2–9 kHz. Edit: 1.2 s, −18 dB loudest 100 ms band, ceiling −4 dBFS.
 
+**Rejected** (round 49, M.1, 2026-10-22): replaced by dome-hit-r49-b.
+
 ### dome-break-r40-a — synthesized
 Use: a dome breaks (`ALLY_LOST`). Brief: a long glass cave-in: a crack, panes going in a cascade, air rushing out in a falling hiss, a steel frame groan. Why: a snap, ~400 glass grains (3–10 ms, thinning out), a hiss falling 6 → 1.2 kHz and a rough sawtooth set sinking 150 → 85 Hz. Edit: 3.6 s, −16 dB, ceiling −4 dBFS.
 
@@ -2915,3 +2917,150 @@ Proposed (round 46).
 Sources: <https://freesound.org/people/OttisG/sounds/852991/> (Hydraulic Hiss, TTC bus door by OttisG, CC-BY 4.0), <https://freesound.org/people/Kinoton/sounds/368650/> (Train, Subway, Pass By, Under Bridge Perspective by Kinoton, CC0 1.0), <https://freesound.org/people/ALEFF-ATMOS/sounds/452780/> (Heavy Gate Metal 01 (underground bunker of civil defense, Vsetin City, Club Vesmir) by ALEFF-ATMOS, CC0 1.0), <https://freesound.org/people/mrmccormack/sounds/182359/> (MrM_Gas_Steam_Escape.wav by mrmccormack, CC0 1.0). Use: the catapult run at every level start (the buffer clunk at 3.6 s).
 Brief: replace the synthesized sound with a real recording, big and heavy, nothing bubbly. Why: a hydraulic hiss, a subway train rushing past under a bridge (the shuttle's run), a bunker's heavy metal gate slamming (the buffer) and gas and steam escaping.
 Edit: 4.90 s, the loudest 100 ms band −20.9 dB, peak −5.6 dBFS, −19.9 LUFS.
+
+### herald-song-r47-a — "Vocal_crescendo.wav" by cellokratzer + "Throat Singing in a Cave" by ItsThatRoboGuy
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Sources: <https://freesound.org/people/cellokratzer/sounds/502946/> (Vocal_crescendo.wav by cellokratzer, CC0 1.0), <https://freesound.org/people/ItsThatRoboGuy/sounds/816640/> (Throat Singing in a Cave by ItsThatRoboGuy, CC0 1.0).
+Use: the Choir Herald's song (`Sfx.HERALD_SONG`), a one-shot with each 10-bullet ring the Herald fires (every 4 s, 3.2 s on hard) while it lives, Levels 17, 19 and 21.
+Brief: the Vrell Choir's voice: eerie and inhuman, several voices in a slow drifting chord; a real recording, big, nothing bubbly.
+This one: a concert-hall choir's chord swelling in a crescendo while its voices slide upward, slowed to 0.7 (deeper and slower, the slide drags), with throat singing in a cave under it slowed to 0.85: its whistling overtones drift above the drone, which no human choir does.
+Edit: 2.40 s, the loudest 100 ms band −20.0 dB, peak −10.8 dBFS, −20.6 LUFS.
+
+**Chosen** (round 47, L.1: a picked; to be rebuilt from the originals, Freesound 502946 and 816640, when the download limit allows).
+
+### herald-song-r47-b — "chamber_choir_chord_o.wav" by uair01
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Source: <https://freesound.org/people/uair01/sounds/65195/> (chamber_choir_chord_o.wav by uair01, CC-BY 3.0).
+Use: the Choir Herald's song (`Sfx.HERALD_SONG`), a one-shot with each 10-bullet ring the Herald fires (every 4 s, 3.2 s on hard) while it lives, Levels 17, 19 and 21.
+Brief: the Vrell Choir's voice: eerie and inhuman, several voices in a slow drifting chord; a real recording, big, nothing bubbly.
+This one: a chamber choir's held 'oh' chord played twice at once, slowed to about 0.65 and a semitone apart, both sagging slowly in pitch: two choirs out of tune with each other, beating and smeared, a chord that slides downward and never settles.
+Edit: 2.40 s, the loudest 100 ms band −20.0 dB, peak −9.3 dBFS, −19.4 LUFS.
+
+**Rejected** (round 47, L.1, 2026-10-22: a picked); the file is in `rejected/`.
+
+### enemy-leviathan-cry-r47-a — "humpback_whales_and_orcas_ambient_underwater_recording" by raiden04
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Source: <https://freesound.org/people/raiden04/sounds/797762/> (humpback_whales_and_orcas_ambient_underwater_recording by raiden04, CC-BY 4.0).
+Use: the Leviathan's death cry (Level 03), under its large burst when it dies.
+Brief: a whale's cry: deep, long and mournful; a real recording, big, nothing bubbly.
+This one: a humpback whale's moan from a clean 3D hydrophone recording: a cry that falls and settles on a long low tone with its overtones, slowed to 0.85 (a bigger animal).
+Edit: 4.00 s, the loudest 100 ms band −23.9 dB, peak −16.2 dBFS, −23.2 LUFS.
+
+**Rejected** (round 47, L.2, 2026-10-22: b picked); the file is in `rejected/`.
+
+### enemy-leviathan-cry-r47-b — "humpback_whales_and_orcas_ambient_underwater_recording" by raiden04
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Source: <https://freesound.org/people/raiden04/sounds/797762/> (humpback_whales_and_orcas_ambient_underwater_recording by raiden04, CC-BY 4.0).
+Use: the Leviathan's death cry (Level 03), under its large burst when it dies.
+Brief: a whale's cry: deep, long and mournful; a real recording, big, nothing bubbly.
+This one: another humpback moan from the same recording: it starts high, sinks into a long deep groan and lifts a little at its end, slowed to 0.8 (deeper).
+Edit: 4.00 s, the loudest 100 ms band −26.9 dB, peak −12.2 dBFS, −20.4 LUFS.
+
+**Chosen** (round 47, L.2: b picked; to be rebuilt from the original, Freesound 797762, when the download limit allows).
+
+### integrity-alarm-r47-a — "Submarine submersion alarm_mono_wave.wav" by Guialgarve
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Source: <https://freesound.org/people/Guialgarve/sounds/480898/> (Submarine submersion alarm_mono_wave.wav by Guialgarve, CC0 1.0).
+Use: an ally or an object the player protects (Level 13's relay, Level 17's domes) dropping below 50 % and again below 25 % of its health: the cockpit's warning that it is in danger.
+Brief: a short urgent alarm, two tones, about 1 s, repeating; a real recording, big, nothing bubbly.
+This one: a real submarine's submersion alarm, a harsh buzzing horn, cut into a high-low call (the low a third under, by slowing it to 0.84), twice: 'BAAP-baap, BAAP-baap', 2 s.
+Edit: 1.95 s, the loudest 100 ms band −17.1 dB, peak −6.6 dBFS, −14.1 LUFS.
+
+**Rejected** (round 47, L.3, 2026-10-22: neither; "The old one is fine for that."); the file is in `rejected/`.
+
+### integrity-alarm-r47-b — "Klaxon on axis Long.wav" by jameswrowles
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Source: <https://freesound.org/people/jameswrowles/sounds/514981/> (Klaxon on axis Long.wav by jameswrowles, CC0 1.0).
+Use: an ally or an object the player protects (Level 13's relay, Level 17's domes) dropping below 50 % and again below 25 % of its health: the cockpit's warning that it is in danger.
+Brief: a short urgent alarm, two tones, about 1 s, repeating; a real recording, big, nothing bubbly.
+This one: a real mains-driven klaxon hooter (the old 'ah-oo-gah' horn's steady blare), cut into a high-low call (the low slowed to 0.8), twice: rougher and more nasal than a, 2 s.
+Edit: 1.95 s, the loudest 100 ms band −17.3 dB, peak −6.6 dBFS, −13.1 LUFS.
+
+**Rejected** (round 47, L.3, 2026-10-22: neither; "The old one is fine for that."); the file is in `rejected/`.
+
+### dome-hit-r47-a — "Hard Glass Impact" by deleted_user_3656686 + "hit - glass - window 01.wav" by Anthousai + "Crack_glass.wav" by 13FPanska_Cerny_Jan
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Sources: <https://freesound.org/people/deleted_user_3656686/sounds/418194/> (Hard Glass Impact by deleted_user_3656686, CC0 1.0), <https://freesound.org/people/Anthousai/sounds/406261/> (hit - glass - window 01.wav by Anthousai, CC0 1.0), <https://freesound.org/people/13FPanska_Cerny_Jan/sounds/379008/> (Crack_glass.wav by 13FPanska_Cerny_Jan, CC0 1.0).
+Use: an enemy shot hitting a Level 17 colony dome (`ALLY_HIT`), a greenhouse of thick glass.
+Brief: glass being hit: sharp, a hard knock with a bright crack, maybe a faint stress creak; not a thud; a real recording, big, nothing bubbly.
+This one: a hard glass impact (a metal object on glass, with cracks forming), the ring of a window pane under it and a sharp glass crack 0.1 s later: bright and hard, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −21.8 dB, peak −4.6 dBFS, −22.3 LUFS.
+
+**Rejected** (round 47, L.4, 2026-10-22: redo; "These are too small. a is a bottle cracking, b is nothing like glass breaking. A dome is a very large structure."); the file is in `rejected/`.
+
+### dome-hit-r47-b — "hit - glass - window 01.wav" by Anthousai + "Tapping on window - 3 types.WAV" by bpwebster + "glass_kappa_03.wav" by mugwood
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Sources: <https://freesound.org/people/Anthousai/sounds/406261/> (hit - glass - window 01.wav by Anthousai, CC0 1.0), <https://freesound.org/people/bpwebster/sounds/658607/> (Tapping on window - 3 types.WAV by bpwebster, CC0 1.0), <https://freesound.org/people/mugwood/sounds/121366/> (glass_kappa_03.wav by mugwood, CC-BY 4.0).
+Use: an enemy shot hitting a Level 17 colony dome (`ALLY_HIT`), a greenhouse of thick glass.
+Brief: glass being hit: sharp, a hard knock with a bright crack, maybe a faint stress creak; not a thud; a real recording, big, nothing bubbly.
+This one: a window struck hard: the knock and the pane ringing, a second hard tap's ring on it, and a stress crack in the glass right after (a cooling glass cracking): a glassy 'tock' with a ring, 1 s.
+Edit: 1.00 s, the loudest 100 ms band −20.6 dB, peak −4.2 dBFS, −23.6 LUFS.
+
+**Rejected** (round 47, L.4, 2026-10-22: redo; "These are too small. a is a bottle cracking, b is nothing like glass breaking. A dome is a very large structure."); the file is in `rejected/`.
+
+### launch-rail-r47-a — "Jet Fighters and Helicopter Launches and Recoveries (Landings) on Aircraft Carrier.flac" by qubodup + "Afterburner sound.wav" by StoneyJ + "Rail Cars Slam Hard and Couple Together Air Released" by WeenyBeany + "Air (or steam) pressure release" by brunoboselli
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/162449/> (Jet Fighters and Helicopter Launches and Recoveries (Landings) on Aircraft Carrier.flac by qubodup, CC0 1.0), <https://freesound.org/people/StoneyJ/sounds/104883/> (Afterburner sound.wav by StoneyJ, CC0 1.0), <https://freesound.org/people/WeenyBeany/sounds/750751/> (Rail Cars Slam Hard and Couple Together Air Released by WeenyBeany, CC-BY 4.0), <https://freesound.org/people/brunoboselli/sounds/457294/> (Air (or steam) pressure release by brunoboselli, CC0 1.0).
+Use: every level start (4.9 s): the ship is catapulted off the carrier; the shuttle stops at 3.6 s.
+Brief: an aircraft-carrier catapult launch: the jet at full power, the run, the hard stop, steam; a real recording, big, nothing bubbly.
+This one: a real carrier launch (USS George H. W. Bush) with a real F-4's afterburner at full power under its start, then the catapult fires at 1.2 s and the jet's roar tears past; at 3.55 s a rail car's hard steel slam (the shuttle hitting its stop) and a steam release hissing as the roar fades.
+Edit: 4.90 s, the loudest 100 ms band −21.0 dB, peak −7.6 dBFS, −19.4 LUFS.
+
+**Rejected** (round 47, L.5, 2026-10-22: b picked); the file is in `rejected/`.
+
+### launch-rail-r47-b — "Jet Fighters and Helicopter Launches and Recoveries (Landings) on Aircraft Carrier.flac" by qubodup + "Afterburner sound.wav" by StoneyJ + "Train car coupling sounds" by toam + "Rail Cars Slam Hard and Couple Together Air Released" by WeenyBeany + "AIRHiss-Blue Snowball Microphone, CU_Steam Release, Acme Windmaster_Nicholas Judy_TDC" by designerschoice
+
+Proposed (round 47), cut from the HQ previews by `tools/concept/audio/sfx_r47l.py`.
+Sources: <https://freesound.org/people/qubodup/sounds/162449/> (Jet Fighters and Helicopter Launches and Recoveries (Landings) on Aircraft Carrier.flac by qubodup, CC0 1.0), <https://freesound.org/people/StoneyJ/sounds/104883/> (Afterburner sound.wav by StoneyJ, CC0 1.0), <https://freesound.org/people/toam/sounds/198605/> (Train car coupling sounds by toam, CC-BY 3.0), <https://freesound.org/people/WeenyBeany/sounds/750751/> (Rail Cars Slam Hard and Couple Together Air Released by WeenyBeany, CC-BY 4.0), <https://freesound.org/people/designerschoice/sounds/803061/> (AIRHiss-Blue Snowball Microphone, CU_Steam Release, Acme Windmaster_Nicholas Judy_TDC by designerschoice, CC-BY 4.0).
+Use: every level start (4.9 s): the ship is catapulted off the carrier; the shuttle stops at 3.6 s.
+Brief: an aircraft-carrier catapult launch: the jet at full power, the run, the hard stop, steam; a real recording, big, nothing bubbly.
+This one: another real launch from the same carrier: an afterburner at full power, the catapult firing at 1.2 s and the jet's roar rising more slowly; at 3.55 s a train coupler's sharp steel clank over a rail car slam's low body (a brighter, more metallic stop than a), then a close steam release.
+Edit: 4.95 s, the loudest 100 ms band −21.1 dB, peak −8.6 dBFS, −20.6 LUFS.
+
+**Chosen** (round 47, L.5: b picked; to be rebuilt from the originals, Freesound 162449, 104883, 198605, 750751 and 803061, when the download limit allows).
+
+## Concept round 49, step AUD-M (the dome hit, third try, from the database)
+
+The generator is `tools/concept/audio/sfx_r49m.py` (Freesound HQ previews; variant b adds a real cathedral impulse response by convolution).
+
+### dome-hit-r49-a — "IMPACT_GLASS_PANE_HIT_NO_SMASH_METAL_RING_LOUD_NTG3_H4N_20120513.wav" by samueljustice00 + "Ice - Lake fractures" by Vrymaa
+
+Proposed (round 49), cut from the HQ previews by `tools/concept/audio/sfx_r49m.py`.
+Sources: <https://freesound.org/people/samueljustice00/sounds/155619/> (IMPACT_GLASS_PANE_HIT_NO_SMASH_METAL_RING_LOUD_NTG3_H4N_20120513.wav by samueljustice00, CC0 1.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0).
+Use: every enemy shot that hits one of Level 17's colony greenhouse domes (`Sfx.DOME_HIT`, `AllyCues`): often, several in a row.
+Brief: a glass dome tens of metres across, the size of a stadium roof, being hit: both sharp and huge, a hard bright strike and then the big structure answering (a long low glassy resonance or boom, cracks running away across a large surface, like a frozen lake's ice), heard from a distance; at most 1.2 s, no shatter, not a thud, not a bottle; a real recording, big, nothing bubbly.
+This one: a steel hammer striking a big glass pane on a wall (loud, bright, not breaking) and, right under it, a frozen lake's ice cracking: one deep crack and then a run of smaller cracks racing away across the sheet, each with the ice's falling 'zing', slowed to 0.8 so the sheet sounds bigger: sharp, glassy and wide, 1.2 s.
+Edit: 1.22 s, the loudest 100 ms band −19.6 dB, peak −9.0 dBFS, −23.2 LUFS.
+
+**Rejected** (round 49, M.1, 2026-10-22: the user picked b); the file is in `rejected/`.
+
+### dome-hit-r49-b — "IMPACT_GLASS_PANE_HIT_NO_SMASH_METAL_RING_LOUD_NTG3_H4N_20120513.wav" by samueljustice00 + "R4_00328-8_GlassTable.wav" by kevp888 + "IR_Cathedral_5m_Stereo.wav" by Nox_Sound
+
+Proposed (round 49), cut from the HQ previews by `tools/concept/audio/sfx_r49m.py`.
+Sources: <https://freesound.org/people/samueljustice00/sounds/155619/> (IMPACT_GLASS_PANE_HIT_NO_SMASH_METAL_RING_LOUD_NTG3_H4N_20120513.wav by samueljustice00, CC0 1.0), <https://freesound.org/people/kevp888/sounds/636555/> (R4_00328-8_GlassTable.wav by kevp888, CC-BY 4.0), <https://freesound.org/people/Nox_Sound/sounds/648945/> (IR_Cathedral_5m_Stereo.wav by Nox_Sound, CC0 1.0).
+Use: every enemy shot that hits one of Level 17's colony greenhouse domes (`Sfx.DOME_HIT`, `AllyCues`): often, several in a row.
+Brief: a glass dome tens of metres across, the size of a stadium roof, being hit: both sharp and huge, a hard bright strike and then the big structure answering (a long low glassy resonance or boom, cracks running away across a large surface, like a frozen lake's ice), heard from a distance; at most 1.2 s, no shatter, not a thud, not a bottle; a real recording, big, nothing bubbly.
+This one: the hammer on the glass pane slowed to 0.85 (heavier), over a glass table struck and ringing (a contact-mic recording) slowed to 0.5, an octave down, so a large glass body hums on after the hit; both played into a real cathedral (convolved with its recorded impulse response), so it rings out in a huge space as if heard from far below: a bright 'clank' with a long low glassy 'hmmm', 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −19.9 dB, peak −9.0 dBFS, −22.1 LUFS.
+
+**Chosen** (round 49, M.1: b picked; to be rebuilt from the originals, Freesound 155619, 636555 and the impulse response 648945, when the download limit allows).
+
+### dome-hit-r49-c — "rock hitting icy lake" by ultraaxvii + "Ice - Lake fractures" by Vrymaa + "Door_Metal_Groans_Ext.wav" by Cell31_Sound_Productions
+
+Proposed (round 49), cut from the HQ previews by `tools/concept/audio/sfx_r49m.py`.
+Sources: <https://freesound.org/people/ultraaxvii/sounds/591152/> (rock hitting icy lake by ultraaxvii, CC0 1.0), <https://freesound.org/people/Vrymaa/sounds/737896/> (Ice - Lake fractures by Vrymaa, CC0 1.0), <https://freesound.org/people/Cell31_Sound_Productions/sounds/264014/> (Door_Metal_Groans_Ext.wav by Cell31_Sound_Productions, CC-BY 4.0).
+Use: every enemy shot that hits one of Level 17's colony greenhouse domes (`Sfx.DOME_HIT`, `AllyCues`): often, several in a row.
+Brief: a glass dome tens of metres across, the size of a stadium roof, being hit: both sharp and huge, a hard bright strike and then the big structure answering (a long low glassy resonance or boom, cracks running away across a large surface, like a frozen lake's ice), heard from a distance; at most 1.2 s, no shatter, not a thud, not a bottle; a real recording, big, nothing bubbly.
+This one: a rock slammed onto a frozen lake (a hard icy crack with the ice's 'zing'), on a deep crack and boom of the lake's thick ice slowed to 0.85, and from 0.25 s a tall steel door's low groan under it, quiet, like the dome's frame taking the blow: harder and darker than a, no glass pane, 1.2 s.
+Edit: 1.23 s, the loudest 100 ms band −24.7 dB, peak −4.3 dBFS, −22.0 LUFS.
+
+**Rejected** (round 49, M.1, 2026-10-22: the user picked b); the file is in `rejected/`.
