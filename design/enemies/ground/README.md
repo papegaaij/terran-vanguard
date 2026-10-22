@@ -31,6 +31,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [threadcrawler](threadcrawler/README.md) | Ground centipede chain on canyon floors and walls, travelling spore wave (L16) | approved | done | final |
 | [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | final |
 | [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
+| [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | not-started | chosen |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | in-progress | final |
 
 ## Roster
@@ -150,6 +151,17 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian
 | [concept/warden-tank-final-r42-a.png](concept/warden-tank-final-r42-a.png) | Warden Tank final sprites, Act 3 grey (`tools/art/warden_tank.py`, the chosen r36 a; held in `build/art-held/` until the tank's `data.yaml` claims the root `warden-tank`): hull 16 headings × 2 tread frames, turret 32 aims at rest / recoil, muzzle flash, turret stub, burnt grey wreck 16 headings (sheet); accepted in round 42 (2026-10-20) | chosen (round 42, closed: approved as final) |
 | [concept/warden-tank-final-r42-a.gif](concept/warden-tank-final-r42-a.gif) | Warden Tank final: a convoy of three riding a foundry belt, turrets tracking and firing 3-shot bursts (flash, recoil), back up the screen after the ship passes; a turret shot off, a wreck riding on, 20 fps; accepted in round 42 (2026-10-20) | chosen (round 42, closed: approved as final) |
 
+Concept round 48 (Act 4 "Deep Water" design phase, 2026-10-21) — the Level 22 Drill Rig on Europa's
+ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
+[concept/prompts.md](concept/prompts.md#round-48--act-4-opener-the-drill-rig-level-22).
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/drill-rig-r48-a.png](concept/rejected/drill-rig-r48-a.png) | Drill Rig A, bone bore tower — slate base ring, a spinning crown of bone teeth round the lime bore, four lime-veined pump sacs on hoses (sheet) | rejected — round 48: b picked |
+| [concept/rejected/drill-rig-r48-a.gif](concept/rejected/drill-rig-r48-a.gif) | Drill Rig A — on the ice shelf: shard rings, bolts glancing off, bombs take the pumps then the core; a bore hole and a steam plume (motion) | rejected — round 48: b picked |
+| [concept/drill-rig-r48-b.png](concept/drill-rig-r48-b.png) | Drill Rig B, rust auger flower — a rust mound with three turning auger blades round the lime bore, ribbed bellows pumps (sheet) | chosen — round 48 |
+| [concept/drill-rig-r48-b.gif](concept/drill-rig-r48-b.gif) | Drill Rig B — the same scene as A (motion) | chosen — round 48 |
+
 ## Implementation
 
 - [x] Each enemy promoted to its own directory with a stat block before it is implemented (every unit of Acts 1–2; the rule stands for the units of Acts 3–7, M6 part D)
@@ -179,3 +191,4 @@ follows) — each a PNG sheet plus a GIF in the 480×540 play field over Martian
 - 2026-10-18 (user, round 39): the Tendril Anchor's and the Threadcrawler's production art
   (`tendril-anchor-final-r39-a`, `threadcrawler-final-r39-a`) approved as final (F.3, F.4); both parts `art: final`.
 - 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21 (Act 4 design phase, step m8-denemies): the Drill Rig (L22, a hardened ground target) added as a draft spec.

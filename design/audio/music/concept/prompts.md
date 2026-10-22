@@ -1079,3 +1079,95 @@ three minutes, instrumental, seamless loop."*
   17–40 (46.1 s).
 - `music-r41-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
   points (amber), the measured numbers and a per-section loudness table.
+
+# Round 48 — the Act 4 B theme (track 11) and the reveal sting (track 30)
+
+Brief (M8 "Act 4 – Deep Water" design phase, step AUD48; decided in round 48 (2026-10-22)): track 11, the Act 4
+B theme, "muffled ambient drum & bass, Vorne's motif as a faint layer" for Level 25 and Levels 27–28, and a new
+one-shot, the reveal sting, for Level 28's Ascendancy cruisers. Synthesized (own score) by
+`tools/concept/audio/music_r48.py` (deterministic). Round 48's Q12 a: **no bubble layer** (the round-02 A theme's
+`bubble` hits are not used), no resonant short plucks (the arpeggio is a soft sine-and-triangle voice, the stabs at
+q 1.0), soft attacks on every voice but the drums. The themes in the round-02 loop format (intro + loop + 2-bar fade
+tail, `LOOPSTART` / `LOOPLENGTH`, −14 LUFS target, −2 dBFS sample-peak ceiling), mastered before the assembly with
+the next loop pass appended so the limiter's gain matches across the loop point; Vorne's motif (1 – ♭3 – 5 – 7) in
+its own group, from the loop's C section on, measured in its 2-bar statements against the whole mix (Act 3's
+target: 17 dB under in the breakdown, 19 in the full sections). The stings in the round-08 sting format (−14 LUFS
+target, −2 dBFS ceiling, a 1.2 s fade at the end), the hit at 4.0 s (the cruisers rise for 4 s, then their gun
+ports open). Not listened to by Claude: checked by loudness, peaks, the seam and spectrograms.
+
+## act4-b-theme-r48-a — "Pressure Line" (#11 Act 4 B, 52.5 s)
+
+**Proposed** (round 48).
+
+**Brief**: the A theme's world, deeper: liquid ambient drum & bass. A two-step break (kick on 1 and the "and" of 3,
+snares on 2 and 4, ghost snares) under a water low-pass that breathes with the sections and never opens fully
+(1.1–3.2 kHz), a deep reese on the roots and a sub, the A theme's wide pads, a soft lamp-like arpeggio of eighths
+(sine and triangle, a 4 ms attack) through a dotted-8th delay, the A theme's sonar ping (softened) every two bars, a
+slow flute line in B and an octave up in D, far synthesized whale calls in the drumless breakdown C, and a deep
+current of low noise made periodic in the loop. Vorne's motif: track 9's intercepted whistle (F4 A♭4 C5 E5) through
+the radio band-pass and then a 1.8 kHz low-pass with a 4.5 s reverb: the Act 3 signal, now heard through water; at
+bars 16 and 20 (C) and 24 and 28 (D), 16.3 and 16.2 dB under the mix in C, 19.8 and 20.0 in D.
+
+**Tempo / key**: 175 BPM, F minor. **Loop**: `LOOPSTART` 257040 (5.829 s), `LOOPLENGTH` 1935360 (43.886 s = 32
+bars). **Chords**: A and C `Fm9 Fm9 D♭maj7 D♭maj7 B♭m9 B♭m9 Csus C`; B and D `Fm9 Fm9 D♭maj7 A♭ B♭m9 B♭m9 Csus C`.
+**Measured**: −14.3 LUFS, peak −1.9 dBFS, true peak −1.9 dBTP, seam 0.28.
+
+**AI prompt**: *"Muffled liquid drum and bass level theme for a 1990s sci-fi shooter under the ice of Europa,
+175 BPM, F minor, a rolling two-step breakbeat under a low-pass filter as if heard underwater, deep reese bass and
+sub, wide warm pads, a soft echoing arpeggio, distant sonar pings and whale calls, a slow breathy flute melody, a
+faint whistled four-note motif through radio static, no bubbles, instrumental, seamless loop."*
+
+## act4-b-theme-r48-b — "Black Current" (#11 Act 4 B, 58.7 s)
+
+**Proposed** (round 48).
+
+**Brief**: half-time deep drum & bass, darker and roomier, closer to Level 26's dark: a heavy kick with a sub tail on
+1 with two broken pick-ups, one snare a bar on 3 through a long dark reverb, rolling 16th shakers (closed hats on the
+off-steps in D), a growling reese swelling over each pair of bars, dub chord stabs (low resonance) on steps 4, 7 and
+12 through a long ping-pong echo, their filter opening through the loop, a dark pad and a low pressure drone looped
+with the loop; a drumless breakdown C with a kick fill back in. Vorne's motif: not a signal but the machines
+themselves: cold organ (an octave down) and low brass, C3 E♭3 G3 B3, under a 900 Hz low-pass and a 5 s reverb, far
+behind the hull; at bars 16 (C), 20 and 24 (D), 17.5 dB under the mix in C, 18.4 and 17.7 in D.
+
+**Tempo / key**: 140 BPM (half-time feel), C minor. **Loop**: `LOOPSTART` 321300 (7.286 s), `LOOPLENGTH` 2116800
+(48.000 s = 28 bars). **Chords**: A, B and D `Cm9 Cm9 A♭maj7 A♭maj7 Fm9 Fm9 G7(♭9) G7(♭9)`; C `Cm9 Cm9 A♭maj7
+G7(♭9)`. **Measured**: −14.3 LUFS, peak −1.8 dBFS, true peak −1.8 dBTP, seam 1.72 (the render itself is
+sample-periodic across the loop point, checked before the encoding; the step is the Vorbis encoder's error at the
+loop start, where the shakers and the kick's tail run; to be rechecked in the production render).
+
+**AI prompt**: *"Dark half-time drum and bass level theme for a 1990s sci-fi shooter in the black depths of an
+alien ocean, 140 BPM, C minor, heavy kick and one cavernous snare per bar, rolling shakers, a growling reese bass
+swelling and falling, dub chord stabs with long ping-pong echo, a pressure drone, a cold organ and low brass motif
+far in the background as if heard through a submarine hull, no bubbles, instrumental, seamless loop."*
+
+## reveal-sting-r48-a — "Black and Gold" (#30 Reveal sting, 9.0 s)
+
+**Proposed** (round 48).
+
+**Brief**: orchestral, B minor (the motif's home key, Act 5's "Hollow Rock"). 0–4 s, the cruisers rising: low
+tremolo strings (B1 F♯2 B2), an organ pedal and a timpani roll swelling with the square of time, a noise riser; the
+whole starts muffled (0.7 kHz) and opens over the last second as the water lifts (the under-water grade lifts over
+1 s at the breakout). 4.0 s, the gun ports: a brass-and-organ tutti whose notes enter one by one in the motif's
+rhythm (B on the beat, D a dotted quarter later, F♯ an eighth after, A♯ on the next bar), each with its timpani and a
+taiko and crash on the first, so the motif arrives stacked into its minor-major-seventh chord instead of as a tune;
+the A♯ is left on top, unresolved, as the low strings fall away. **Measured**: 9.0 s, −15.0 LUFS, peak −3.1 dBFS.
+
+**AI prompt**: *"A nine-second orchestral reveal sting for a 1990s sci-fi game: low tremolo strings, an organ pedal
+and a rolling timpani crescendo rising from muffled to open for four seconds, then a cold brass and organ chord
+built note by note, B minor with a dissonant major seventh left hanging, ominous, black and gold warships rising
+through ice."*
+
+## reveal-sting-r48-b — "Ours" (#30 Reveal sting, 9.0 s)
+
+**Proposed** (round 48).
+
+**Brief**: the signal comes true. 0–4 s: track 9's thin intercepted whistle plays the motif (B4 D5 F♯5 A♯5) through
+the radio band-pass (700 Hz – 2.6 kHz) out of a static swell, while a sub on B1 swells under it with a low brass
+cluster (B1 C2 F♯2 A♯2, muffled at 900 Hz) and a riser. 4.0 s: a deep impact (a falling 70 → 32 Hz boom, a 3 ms
+attack) and a taiko; the radio band-pass opens over 0.6 s into full range, and low brass (two octaves) and organ play
+the motif's last two notes, F♯ then A♯, the A♯ held over a B-minor drone (organ B0 B1 F♯2, slow strings B1 D2 F♯2):
+the voice heard on Mars was the fleet. **Measured**: 9.0 s, −14.5 LUFS, peak −2.4 dBFS.
+
+**AI prompt**: *"A nine-second sci-fi reveal sting: a thin whistled four-note melody heard through radio static over
+a rising sub-bass and low brass cluster, then a deep impact and the melody's last two notes blasting out in full low
+brass and organ over a dark B minor drone, unresolved, the moment the enemy fleet is revealed to be human."*

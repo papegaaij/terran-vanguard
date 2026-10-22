@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../generator, ../../systems/economy]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Weapons
@@ -41,6 +41,8 @@ the document in review); later weapons are still roster rows below.
 | [micro-missile-pod](micro-missile-pod/README.md) | Micro-missile Pod — Wing (per pod), homing; DPS 8 → 28; 800; L06 | approved | done | final |
 | [swivel-gun](swivel-gun/README.md) | Swivel Gun — Wing (per pod), side, homing; DPS 8 → 26; 1 500; L09 | approved | done | final |
 | [torpedo-pod](torpedo-pod/README.md) | Torpedo Pod — Wing (per pod), anti-sub; DPS 10 → 32; 1 000; L11 | approved | done | final |
+| [harpoon-torpedoes](harpoon-torpedoes/README.md) | Harpoon Torpedoes — Front, anti-sub, forward; DPS 30 → 100; 2 000; L22 | approved | not-started | chosen |
+| [depth-charges](depth-charges/README.md) | Depth Charges — Rear, anti-sub, rear; DPS 25 → 80; 1 300; L22 | approved | not-started | chosen |
 | [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | final |
 | [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
 | [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |
@@ -93,10 +95,8 @@ Still at `idea`; they get a directory when they are designed (Act 3 onwards).
 
 | Name | Slot | Traits | DPS L1/L5 | Draw L1→L5 | Base price | Unlock | Design |
 |---|---|---|---|---|---|---|---|
-| Harpoon Torpedoes | front | anti-sub, forward | 30 / 100 (sub + surface) | 3 → 5 | 2 000 | L22 | idea |
 | Plasma Arc | front | area, spread | 30 / 120 (short range, chains to 3–6 targets) | 5 → 8 | 6 000 | L31 | idea |
 | Choir Resonator | front | spread, piercing | 45 / 160 | 7 → 11 | 12 000 | L44 (captured Vrell tech) | idea |
-| Depth Charges | rear | anti-sub, rear | 25 / 80 (sink into the `sub` layer) | 2 → 3 | 1 300 | L22 | idea |
 | Swarm Tail | rear | rear, homing | 15 / 55 (micro-missiles that curve back up) | 3 → 5 | 3 500 | L30 | idea |
 | Tesla Coil Pod | wing | area, shield-breaker | 12 / 40 (short-range zap) | 2 → 4 | 3 000 | L29 | idea |
 
@@ -166,6 +166,21 @@ phase 2026-10-12) — the Act 3 front beam and the drone bay, a/b each; generato
 | [concept/rejected/light-drone-r36-b.gif](concept/rejected/light-drone-r36-b.gif) | Light drone B — the same scene as A (motion) | rejected — round 36: a (disc drone) picked |
 | [concept/arsenal-capture-r37-a.png](concept/arsenal-capture-r37-a.png) | Game capture (round 37, M7 part A) with `--loadout front=ion-beam:2,left=light-drone-bay,right=deflector-pod,utility=evasive-thrusters` on Act 1 levels: the beam's contact flare and heat tint on the Gorgon Frigate's tentacle, hull and core (L05) and under the Brood Carrier (L07); a drone rammed, broken and rebuilt with the HUD hits strip (L05 hard, scratch data: 2 hits); the Deflector Pod catching bullets and its charges returning (sheet) | chosen (round 37, K.1: accepted) |
 | [concept/arsenal-capture-r37-a.mp4](concept/arsenal-capture-r37-a.mp4) | The same, 53 s with the game's sound | chosen (round 37, K.1: accepted) |
+
+Concept [round 48](../../concept-rounds/README.md) (Act 4 "Deep Water", design phase 2026-10-21) —
+the two `anti-sub` weapons of Act 4, a/b each, under the round-48 under-water grade with stand-in
+targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](concept/prompts.md#harpoon-torpedoes-r48-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/harpoon-torpedoes-r48-a.png](concept/harpoon-torpedoes-r48-a.png) | [Harpoon Torpedoes](harpoon-torpedoes/README.md) A "barbed harpoon" — a gunmetal shaft with a steel spear head and swept barbs, a teal motor ring and the cable-thin line of light behind it; 32 headings, the volley per level, the weak homing (70° cone, 90°/s), the impact (a dark cavity flash, a teal ring to the 20 px blast) (sheet) | chosen — round 48 |
+| [concept/harpoon-torpedoes-r48-a.gif](concept/harpoon-torpedoes-r48-a.gif) | Harpoon A — L3 then L5 (two parallel) homing onto stand-in Needlers and Driftjellies on the Level 24 sea floor (motion) | chosen — round 48 |
+| [concept/rejected/harpoon-torpedoes-r48-b.png](concept/rejected/harpoon-torpedoes-r48-b.png) | Harpoon Torpedoes B "heavy torpedo" — a white UTC torpedo with a cobalt nose band and a pump-jet shroud, a straight white-teal wake streak; the impact a white flash with a double ring (sheet) | rejected — round 48: a picked |
+| [concept/rejected/harpoon-torpedoes-r48-b.gif](concept/rejected/harpoon-torpedoes-r48-b.gif) | Harpoon B — the same scene as A (motion) | rejected — round 48: a picked |
+| [concept/depth-charges-r48-a.png](concept/depth-charges-r48-a.png) | [Depth Charges](depth-charges/README.md) A "drum" — a navy drum with yellow bands and a white fuse lamp blinking faster; roll-out, hover, sink (smaller, darker), the burst radius 40 / 52 / 64 px; the burst a pressure dome (flash disc, dark cavity, rim ring) (sheet) | chosen — round 48 |
+| [concept/depth-charges-r48-a.gif](concept/depth-charges-r48-a.gif) | Depth Charges A — L3 then L5 (two charges splayed) bursting on stand-in Driftjellies rising from behind (motion) | chosen — round 48 |
+| [concept/rejected/depth-charges-r48-b.png](concept/rejected/depth-charges-r48-b.png) | Depth Charges B "finned canister" — a grey canister with a dome and cross fins, a cyan fuse ring that closes; the burst a sharp double shock ring that refracts the floor (sheet) | rejected — round 48: a picked |
+| [concept/rejected/depth-charges-r48-b.gif](concept/rejected/depth-charges-r48-b.gif) | Depth Charges B — the same scene as A (motion) | rejected — round 48: a picked |
 
 ## Implementation
 

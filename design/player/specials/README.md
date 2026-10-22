@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-20
+updated: 2026-10-22
 ---
 
 # Special abilities
@@ -24,7 +24,7 @@ no airstrikes under the Europa ice. This gives the hangar intel another thing to
 | Smart Bomb | max 3 charges (1 free at unlock) | Flash: clears all enemy bullets, 120 damage to everything on screen | 400 / charge | L06 | none | draft |
 | Decoy Flares | max 6 charges | Homing missiles and seekers retarget to flares for 4 s | 150 / charge | L27 (with the first homing projectiles) | none | draft |
 | EMP Burst | max 3 charges (1 free at unlock) | Stuns machines 3 s and strips enemy shields and aura rings; Vrell (biomechanical) stunned 1.5 s; bosses never stunned (see *Act 3 specials in detail*) | 350 / charge | L15 | none | draft |
-| Sonar Pulse | max 4 charges | Reveals the `sub` layer and makes it hittable by all weapons for 6 s | 250 / charge | L22 | Water levels only | idea |
+| Sonar Pulse | max 4 charges | Pings the water: reveals the `sub` layer and makes it hittable by all weapons for 6 s; under water it also lights every unit and gives every weapon full damage for 6 s (see *Act 4 specials in detail*) | 250 / charge | L22 | Water only (under the Europa ice, from L23); idle with `NO WATER` elsewhere | draft |
 | Orbital Lance | max 2 charges | 3 s vertical beam, 40 px wide, that follows the ship's X, 400 DPS on all layers except `sub` (boss parts at most 400 per lance); a `beam` for tendrils | 600 / charge | L17 | Needs satellite cover: not under ice, not beyond the gate | draft |
 | Shield Overcharge | cooldown 45 s | Fills the shield to twice its capacity and keeps the capacity doubled for 8 s | 5 000 once | L19 | none | draft |
 | Time Dilation | cooldown 60 s | Everything except the player runs at 50 % speed for 5 s | 8 000 once | L31 | none | idea |
@@ -182,6 +182,58 @@ Swarm Call later):
   bubbly) and the row reads `READY`. While the effect lasts (the Overcharge's 8 s) a white arc
   drains anticlockwise over the ring to show the time left.
 
+### Act 4 specials in detail
+
+*Draft, decided in round 48 (2026-10-22) (Q4 = a, Q1 = b). Step `m8-dsystems`; the numbers move
+into [data.yaml](data.yaml) in M8 part A.*
+
+#### Setting restrictions and the greyed state
+
+A level (or a section of one: L23's descent, L28's breakout) lists the specials it forbids, and the
+rule table above is read from that list instead of from the special's name:
+
+| Setting | Forbidden | HUD reason word |
+|---|---|---|
+| Under the ice, in water (L23 from the waterline to L28's breakout) | Airstrike, Orbital Lance | `UNDER ICE` |
+| Above water or dry | Sonar Pulse | `NO WATER` |
+| The ice surface (L22), the descent shaft above the waterline | none forbidden (the Airstrike works on the surface; the Sonar Pulse still reads `NO WATER` until the water starts) | — |
+
+- The HUD's special row greys the icon and writes the reason word where the charge count stands; a
+  press plays the "special denied" sound and flashes the row (the common input rules). The
+  restriction is shown **in advance** in the hangar intel (a `SPECIAL LIMITED` warning on the next
+  level's panel, from the Sensor suite's first level; without one, Varga's line says so) and in the
+  briefing's threat line, as the table above already promises.
+- A charge is never spent on a refused press. When the ship crosses a waterline the row
+  changes state at once (a short chime, the row flashes once).
+- Level data (proposal): `special_limits: [airstrike, orbital-lance]` per level or section.
+
+#### Sonar Pulse (L22)
+
+| Property | Value |
+|---|---|
+| Charges | 250 cr each, at most 4; **1 free charge** when it unlocks (the hangar visit before L22), fitted only into an empty special slot like the Smart Bomb's |
+| Setting | Water only; in a dry level the row reads `NO WATER`. L22's ice shelf is dry unless its level draft adds open leads |
+| Call | Instant. A teal ring expands from the ship to cover the field in 0.5 s (a soft, heavy, low ping: no bubbles, no pops), then every unit stays outlined for the duration |
+| Duration | **6 s** from the call; a second call while it lasts restarts the 6 s (no stacking) |
+| Above water | Reveals the `sub` layer (the outline) and makes it hittable by **all weapons** for the 6 s, as first drafted |
+| Under water | Everything on the screen is lit and drawn whole (outlined in teal), including the lures and the glow-only units of L26 (the Glow Angler's lure is then plain to see), and **every weapon does full damage** (the × 0.7 water rule is off) for the 6 s; the `sub` layer (a unit rising from below) is hittable by all weapons too. A unit that is only lit by it is not slowed, revealed to the radar or marked for homing: it is a lamp, not a lock |
+| Not affected | Enemy bullets and speeds, the Siren's slow, the ceiling (`high-air`) rules |
+| Repeat | 1.5 s between pulses |
+| Rewards | Kills pay their normal bounty |
+| Audio / VFX | A new `sonar` sound family (heavy, no bubbles); the ring and the outlines on the round-48 specials sheet |
+
+Why it exists: above water it was "reveal the sub layer"; under the ice the play plane is already
+the water, so the pulse becomes the answer to the dark and to the **×0.7**: a charge buys six
+seconds of the surface's firepower for a loadout that still carries non-`anti-sub` guns (the
+Act 3 loadout's beam gains 43 %: 56 → 80 DPS), the lamp for the black level, and the only way
+for such a gun to reach a rising `sub` unit.
+
+#### Decoy Flares (L27) under water
+
+Unchanged (see above): under water the flares drift and burn for 4 s as they do in air, the
+launch fan stays 120° backwards, the flare's speed × 0.7 like every projectile. Unlocked at the
+visit before L27 with the Depth Hunter's torpedoes ([naval](../../enemies/naval/README.md)).
+
 ### One special at a time
 
 The special slot holds **one** special; there is no swap button. Specials are changed in the
@@ -235,6 +287,17 @@ approved as final (F.3, F.4).
 | [concept/specials-capture-r37-a.png](concept/specials-capture-r37-a.png) | Game capture (round 37, M7 part A): the EMP Burst stunning Needlers made machines in scratch data (3 s) and Skitters (1.5 s), L05; the Orbital Lance's lock line, column, scorch and Lance Control's line, L07; the Shield Overcharge's double shell and white cores, its cooldown ring (a charge pickup taking 10 s off) through to READY, L09; the Smart Bomb, L14 (sheet) | chosen (round 37, K.2: accepted) |
 | [concept/specials-capture-r37-a.mp4](concept/specials-capture-r37-a.mp4) | The same, 46 s with the game's sound | chosen (round 37, K.2: accepted) |
 
+Concept [round 48](../../concept-rounds/README.md) (Act 4 "Deep Water", design phase 2026-10-21) — the
+Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_r48.py`; prompts in
+[concept/prompts.md](concept/prompts.md#sonar-pulse-r48-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/sonar-pulse-r48-a.png](concept/rejected/sonar-pulse-r48-a.png) | Sonar Pulse A "flood" — a soft teal band with two echoes that lights the water it passes; every unit drawn whole with a teal outline for 6 s, blinking in the last second; the above-water `sub` reveal; the HUD special row (ready, active, last second, `NO WATER`) (sheet) | rejected — round 48: b picked |
+| [concept/rejected/sonar-pulse-r48-a.gif](concept/rejected/sonar-pulse-r48-a.gif) | Sonar Pulse A — the headlight only, the call, the ring covering the field in 0.5 s, 6 s lit, the dark returning (motion) | rejected — round 48: b picked |
+| [concept/sonar-pulse-r48-b.png](concept/sonar-pulse-r48-b.png) | Sonar Pulse B "echo marks" — a crisp dashed pale-cyan double ring; the water stays black, units drawn whole inside sonar contact brackets that ping as the ring reaches them (sheet) | chosen — round 48 |
+| [concept/sonar-pulse-r48-b.gif](concept/sonar-pulse-r48-b.gif) | Sonar Pulse B — the same scene as A (motion) | chosen — round 48 |
+
 ## Implementation
 
 - [x] Special slot and charge counting: the special button (`Command.SPECIAL`) with its 0.1 s
@@ -260,13 +323,14 @@ approved as final (F.3, F.4).
   special slot, with the hangar notice (`free_charges: 1` in data.yaml)
 - [ ] Decoy Flares — **later: Act 4** (unlock at L27 with the first homing projectiles; user decision D4 of M4 part G)
 - [x] One free Airstrike charge granted once, at the unlock before L04
-- [ ] Setting restrictions read from the level data — **later: Act 4** (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special)
+- [ ] Setting restrictions read from the level data — **later: Act 4** (draft: *Act 4 specials in detail*) (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special)
 - [x] HUD special row: icon, name, charges; greyed while the strike flies or with no charge; flashes
   when denied
 - [x] HUD: cooldown ring (M7 part A step A6: `ShipPanel`; the row goes compact, the icon in its
   ring where the word `SPECIAL` stands, and reads `OVERCHARGE 27s` / `READY`; the white flash and the
   chime as it is ready; the overcharge's white arc draining anticlockwise)
-- [ ] HUD: the unavailable-in-this-setting state — **later: Act 4** (with the setting restrictions)
+- [ ] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions)
+- [ ] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A)
 
 ## Decisions
 
@@ -377,3 +441,4 @@ approved as final (F.3, F.4).
   stopped by rock (Level 16's *What walls stop* now lists it apart from the Ion Beam). R.3: the Lance's scorch line
   on the canyon's pale sand kept as it is.
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): setting restrictions specified (a per-level/section list, the HUD reason words `UNDER ICE` / `NO WATER`, shown in advance in the intel), the Sonar Pulse specified for water (it lights the field and gives full damage for 6 s: Q4 = a; above water as drafted; 1 free charge at L22); the Airstrike stays allowed on L22's ice surface. Alternatives from Q4: (b) shots hit only lit units, (c) sonar blips only.

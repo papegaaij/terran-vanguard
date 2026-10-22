@@ -30,6 +30,7 @@ milestone lists which documents it covers, it does not copy their items.
 | M5 | **Act 2** | Levels 08–14 and their new units and equipment | [act 2](../../campaign/act-2-homefront/README.md) levels and their enemies and equipment, the [wingmen](../../player/wingmen/README.md) escort slot (Rook from L08), the [saves](../../systems/saves/README.md) `escort` field, the Targeting computer in the shop with its effects and the Salvage scanner's ([ship systems](../../player/systems/README.md), part A), the perspective towers and roofs of L08 (art direction); built in parts A–I (below) |
 | M6 | **Acts 1–2 release** (its `v0.1` tag moved to the end of M7: the first release is Acts 1–3, round 44 I.2) | Credits screen with the CC-BY attributions, polish pass, release bundles for all OSes on a `v0.1` tag | [credits](../../ui/credits/README.md), mouse support in the out-of-game screens ([ui](../../ui/README.md)), the [scoring](../../systems/scoring/README.md) high-score table per difficulty with its name entry at game over and at the campaign's end, remaining checklist items of Acts 1–2 |
 | M7 | **Act 3** | Levels 15–21 and their new units and equipment | [act 3](../../campaign/act-3-red-dust/README.md) levels and their enemies, bosses and equipment (Ion Beam and `beam`, drones, EMP Burst, Orbital Lance, Shield Overcharge and cooldowns, Evasive thrusters, the third utility bay), terrain collision and canyon walls, reverse scroll, the dust-storm visibility, the Mars backdrops; built in parts A–I (below; the design approved in concept round 36) |
+| M8 | **Act 4** (design decided in round 48, 2026-10-22; not started) | Levels 22–28 and their new units and equipment | [act 4](../../campaign/act-4-deep-water/README.md) levels and their enemies, boss and equipment: under-water mode, darkness for every unit, the trench and shaft on `Terrain`, the Siren's slow, heat plumes, anti-sub gear (Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, pressure hull, Mk IV), the Bulwark heavy drone and Rook's absence, the Abyssal Maw and the reveal; built in parts A–I (below) |
 
 ### Rules
 
@@ -104,6 +105,22 @@ what building it brings up. The architecture's new kinds come with the parts tha
 C is the riskiest part (terrain touches every system); it can start right after A if B's Burrower
 slips. G's reverse scroll is independent of C–F and could run in parallel on its own files.
 
+### M8 parts
+
+*Proposed* by the Act 4 design phase (2026-10-21), **pending the user's review in round 48**; nothing is built before the user approves the act's design. Built like M7: each part is a commit series with its own gap check and a production-art concept round; E (the trench) can run beside D on its own files once C's under-water mode is in.
+
+| Part | Scope | Depends on | Round |
+|---|---|---|---|
+| **A** Act 4 systems | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Mk IV, the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on a test level | — | 49 |
+| **B** Level 22 + Act 4 intro | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 50 |
+| **C** Level 23 | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 51 |
+| **D** Level 24 | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 52 |
+| **E** Level 25 | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 53 |
+| **F** Level 26 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 54 |
+| **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F | 55 |
+| **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 56 |
+| **I** Close-out | Playthrough and balance tests through Act 4, variety as built, `later` tags → Act 5, the voice listen-through | all | 57 |
+
 ## Implementation
 
 - [x] M0 Skeleton
@@ -140,6 +157,7 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
       2026-10-18 (step R39C), done except R.1's redo of the canyon walls' look (step CW, in progress, to round
       40), pending the user's playthrough; part D, Level 17, built on 2026-10-18/19 (steps D1–D5, G1, G2, ART-D,
       AUD-D, VOX-D), concept round 40 closed 2026-10-19; parts E (Level 18), F (Level 19), G (Level 20) and H (Level 21 and the act end) built and their rounds 41-44 closed by 2026-10-20 (round 44's K.b and K.c changes and the Q rows' reworks are planned: steps SIM-K, ART-K, GK, L21R); part I, the close-out, done: the user's playthrough of Act 3 on 2026-10-21 and the `v0.1` release = Acts 1-3 on 2026-10-22; open: Levels 18 and 19's "Easy/hard variations" items and the act's "All 7 levels" item)
+- [ ] M8 Act 4 (design decided in round 48; parts A–I under *M8 parts*; the design phase of 2026-10-21 wrote the act, its seven levels, the units, the boss and the systems as drafts)
 
 ## Open questions
 
@@ -562,3 +580,4 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
 - 2026-10-20: M7 part H (Level 21, the Dust Colossus and the act end) **built** (steps PH1-PH3, ART-H1-H3, AUD-H, H4, VOX-H, HA, HB), together with the walker's second rework (WR2), Level 20's levers and the ridge key (LQ); concept [round 44](../../concept-rounds/round-44/README.md) opened. Part H is done except what the round decides: the wave rework for the floor and the gaps (Q.1), phase 1's rings (Q.2), the par (Q.3), the erupted mouth's safe spot (Q.4), the crawler's hard key (Q.5), the nests' zones (Q.6), the Choir's take (Q.7) and the small defaults (Q.8). The round also asks Act 2's last items and part I's eleven questions (the playthrough rules, the first release as Acts 1-3, the playthrough save, the listen-through, the art audit).
 - 2026-10-20 (user, round 44, I.1-I.11 and J.a, all as recommended): see the part I gap check's log (a local working note, `m7i-gaps.md`) and the *M7 parts* table: v0.1 is Acts 1-3 (I.2); an Act 3 level is `done` when its round has closed and its checklist is ticked, the playthrough staying an act-level item (I.8); the Act 4 design phase follows part I and the release (J.a, part J).
 - 2026-10-22 (user): M7 part I done: the playthrough of Act 3 (2026-10-21) and the release `v0.1` = Acts 1-3 (no Mac check, so the release notes keep the "untested on Apple silicon" mark). M6's tag is made; M6 and M7 stay unticked for the open items named in their rows (M6: R.5 and round 34's leftovers; M7: Levels 18/19 variations).
+- 2026-10-21 (Act 4 design phase, step m8-dact; **pending the user's review in round 48**): the M8 row and its *M8 parts* A–I proposed (the gap analysis's plan); nothing is built before the design is approved.

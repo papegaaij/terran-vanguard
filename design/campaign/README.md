@@ -23,7 +23,7 @@ consecutive levels.
 | [act-1-first-contact](act-1-first-contact/README.md) | Levels 01–07 · Earth orbit & Luna · the Vrell strike · boss Brood Carrier | approved | done | final |
 | [act-2-homefront](act-2-homefront/README.md) | Levels 08–14 · Earth surface: megacities, oceans, arctic · boss Siege Spire | approved | done | final |
 | [act-3-red-dust](act-3-red-dust/README.md) | Levels 15–21 · Mars · first hints of human involvement · boss Dust Colossus | approved | in-progress | final |
-| [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | draft | not-started | none |
+| [act-4-deep-water](act-4-deep-water/README.md) | Levels 22–28 · Europa ice & under-ice ocean · underwater play · boss Abyssal Maw | approved | not-started | none |
 | [act-5-the-belt](act-5-the-belt/README.md) | Levels 29–35 · asteroid belt & stations · the betrayal · boss Iron Sovereign | draft | not-started | none |
 | [act-6-jovian-storm](act-6-jovian-storm/README.md) | Levels 36–42 · Jupiter cloud cities & Callisto · hunting Vorne · boss Ascendant | draft | not-started | none |
 | [act-7-beyond-the-gate](act-7-beyond-the-gate/README.md) | Levels 43–50 · Tether Gate & Vrell space · final boss Choir Heart | draft | not-started | none |
@@ -156,7 +156,7 @@ level in the *Available from* column (their unlock levels are set to match). The
 drives the hangar's "new in shop" markers and the intel panel's "recommended traits".
 
 Other unlock anchors (items and prices in [player](../player/README.md)): first special,
-the Airstrike, from L04; escort slot and Rook as wingman from L08; the Warden heavy drone from
+the Airstrike, from L04; escort slot and Rook as wingman from L08; the Bulwark heavy drone from
 L22 (it covers Rook's absence in L27–L29); the Hunter drone from L29.
 
 ### Credit budget

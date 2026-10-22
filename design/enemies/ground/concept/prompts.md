@@ -309,3 +309,40 @@ rides on.
 - **Brief:** as [warden-tank-r36-a](#warden-tank-r36-a); no markings, no insignia, no faction rim.
 - **Generator:** `python3 tools/art/warden_tank.py` (`--review` rebuilds this sheet and GIF from the written
   frames); the sprite names and frame layout are in the generator's docstring.
+
+# Round 48 — Act 4 opener: the Drill Rig (Level 22)
+
+## drill-rig-r48-a
+
+**Drill Rig A, bone bore tower (Vrell, Level 22)**: a hardened ground target on Europa's ice shelf: a
+120 px core and four 32 px pumps on hoses. Files: `drill-rig-r48-a.png` (sheet: source, the set at 1x, the
+collar spin frames, the pump pulse) and `drill-rig-r48-a.gif` (shard rings, the player's bolts glancing
+off, bombs taking the pumps and then the core, a bore hole and a steam plume).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, straight top-down orthographic, key light from
+  the top-left, glossy highlights, crisp silhouette, isolated on a flat dark background. An alien
+  drilling structure seen from directly above, sitting on white-blue ice: a thick ring-shaped base in
+  matte mauve-grey slate chitin (#7c6878) with six bone buttresses, a crown of eight curved bone teeth
+  around a deep glowing lime (#a8ff2a) bore hole in the centre; four bulbous slate pump sacs with
+  glowing lime veins around it, joined to the base by fleshy hoses.
+- **Negative prompt:** photograph, painterly brush strokes, soft focus, perspective camera, side view,
+  text, watermark, motion blur, rivets, metal plating, oil rig, magenta or hot-pink glow, yellow glow,
+  blue or cyan body colour, insect legs.
+- **Animation brief:** fixed; the tooth collar turns (4 frames over one tooth step), the pumps heave
+  (2 pulse frames). Every 3.5 s (0.5 s slower per dead pump) the bore flashes lime for 0.5 s and the
+  collar fires a ring of 10 lime ice shards. Hardened: non-`anti-ground` shots glance off with sparks.
+  Pumps die in a ground explosion and leave a dark socket; the core's death is a large ground
+  explosion, a dark bore hole with radial cracks and a rising steam plume (scenery).
+- **Mockup generator:** `python3 tools/concept/enemies_r48.py drill-rig a`
+
+## drill-rig-r48-b
+
+**Drill Rig B, rust auger flower (Vrell, Level 22)**. Files: `drill-rig-r48-b.png` and `drill-rig-r48-b.gif`
+(same scene as A).
+
+- **Prompt:** as A, but a domed mound of rust chitin plates (#b04a2c to #3a1008) with three curved auger
+  blades spiralling round the glowing lime (#a8ff2a) bore like a flower screwing itself into the ice,
+  bone studs round its rim, and four ribbed rust bellows pumps.
+- **Negative prompt:** as A.
+- **Animation brief:** as A (the three auger blades turn).
+- **Mockup generator:** `python3 tools/concept/enemies_r48.py drill-rig b`

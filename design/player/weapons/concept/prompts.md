@@ -168,3 +168,84 @@ Findings (accepted in round 34 (2026-10-12)): the beam's tint on the tentacle re
 silhouette over a second rather than a tint; on the frigate's hull the column just ends, with no
 contact flare; the column runs on past the Brood Carrier in phase 1 (on `high-air`, which the Ion
 Beam reaches) and past the Siege Spire at t 114: to check whether these parts are meant to stop it.
+
+## harpoon-torpedoes-r48-a
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Harpoon Torpedoes A, "barbed harpoon" (front, anti-sub, Act 4 from Level 22)**: the 6×22 px torpedo in a
+24×24 cell at 32 headings. Files: `harpoon-torpedoes-r48-a.png` (sheet: the source render, 8 of the 32
+headings at 4×, the volley per level L1–L5 and overdrive at 1×, the weak-homing diagram (70° cone, 90°/s),
+the impact in 0.08 s steps at 3×, a torpedo in flight at 2×) and `harpoon-torpedoes-r48-a.gif` (12.5 fps
+over the Level 24 sea floor under the round-48 under-water grade: L3, one torpedo a second, homing onto
+stand-in Needlers and Driftjellies, then L5, two parallel torpedoes 6 px apart).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic,
+  key light from the top-left, crisp silhouette, isolated on a flat dark background: a slender harpoon
+  torpedo, a dark gunmetal shaft with two thin cobalt-blue bands, a polished steel spear head with two
+  swept-back barbs, four small tail fins and a glowing pale-teal motor ring at the tail; behind it a
+  hair-thin line of pale teal-white light, the harpoon's cable, trailing along its path and slackening
+  into a slow wave toward its end; dim blue-green deep water.
+- **Negative prompt:** bubbles, smoke trail, fire, orange or magenta light (enemy colours), the Vrell
+  green-teal 00ff9a, photographic realism, side view, text, watermark.
+- **Animation brief:** speeds up from 250 to 365 px/s in 0.6 s; the motor ring flickers; the cable is
+  150 px, fading from the torpedo, its wave moving back along it. Impact (0.45 s): a dark cavity flash
+  (the thud), a teal pressure ring to the 20 px blast radius, five barb sparks; a heavy thud, no bubbles.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py harpoon-torpedoes a` (reuses
+  `enemies_r48.py`'s under-water grade and `gear_r36.py`'s production Stormhawk; stand-in targets from
+  `assets/`)
+
+## harpoon-torpedoes-r48-b
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Harpoon Torpedoes B, "heavy torpedo"**: the same scene with a different torpedo. Files:
+`harpoon-torpedoes-r48-b.png` and `harpoon-torpedoes-r48-b.gif`.
+
+- **Prompt:** as A, but a heavy torpedo instead of a harpoon: a white UTC torpedo body with a cobalt-blue
+  nose band, a dark sensor nose, a dark pump-jet shroud with a cyan glow at the tail and two small fins;
+  behind it a straight soft white-teal wake streak, no cable.
+- **Negative prompt:** as A, plus: barbs, spear head.
+- **Animation brief:** as A; the wake is 80 px, fading. Impact (0.45 s): a white flash and a double ring,
+  white at the 20 px blast radius, cyan inside it.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py harpoon-torpedoes b`
+
+## depth-charges-r48-a
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Depth Charges A, "drum" (rear, anti-sub, area, Act 4 from Level 22)**: the 16×16 charge at 16 spin
+headings. Files: `depth-charges-r48-a.png` (sheet: the source render, the spin at 4×, the sinking states
+(smaller and darker toward the fuse), the roll-out / hover / sink / burst diagram with the burst radius
+40 / 52 / 64 px for L1 / L3 / L5, the L3 and L5 bursts in 0.08 s steps) and `depth-charges-r48-a.gif`
+(12.5 fps under the Level 24 grade: L3, one charge every 0.77 s with a 0.8 s fuse and a 52 px burst,
+then L5, two charges splayed 18° with a 64 px burst; stand-in Driftjellies rising from behind with the
+REAR! warning and dying in the bursts).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, top-down orthographic, key light from the top-left:
+  a small navy-blue depth-charge drum lying on its side, light grey end caps, two yellow hazard bands,
+  a small white fuse lamp on top; tumbling slowly in deep blue-green water behind a small fighter. The
+  burst: a white-teal flash disc, a dark cavity collapsing in its middle, a bright pale-teal rim ring
+  racing out to the burst radius and a faint ring of stirred silt.
+- **Negative prompt:** fire ball, orange flame, smoke, bubbles, red lights, photographic realism, side
+  view, text, watermark.
+- **Animation brief:** leaves the stern at 147 px/s, slows to a hover in 0.6 s, then sinks with the scroll
+  (scaled to 78 %, darker); the fuse lamp blinks faster (0.32 → 0.08 s) as the fuse runs down. Burst
+  0.55 s: the rim ring reaches the radius in 0.19 s; a heavy, low underwater thud, no bubbles.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py depth-charges a`
+
+## depth-charges-r48-b
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Depth Charges B, "finned canister"**: the same scene with a different charge and burst. Files:
+`depth-charges-r48-b.png` and `depth-charges-r48-b.gif`.
+
+- **Prompt:** as A, but a round grey canister seen from directly above: a pale dome, a cobalt band and
+  four dark cross fins that show its spin, a thin cyan fuse ring closing round it. The burst: a sharp
+  double shock ring (white at the radius, cyan just inside it) that bends the sea floor beneath it like
+  a lens as it passes, a short white core; no fire ball.
+- **Negative prompt:** as A.
+- **Animation brief:** as A; the cyan fuse arc closes clockwise from 12 o'clock over the fuse. Burst
+  0.45 s: the rings reach the radius in 0.13 s, the refraction fades by 0.27 s.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py depth-charges b`

@@ -165,3 +165,43 @@ Findings (accepted in round 34 (2026-10-12)): the READY white flash of the coold
 pip's, see [dash-capture-r37-a](../../systems/concept/prompts.md#dash-capture-r37-a)) shows in one
 captured frame only: it counts rendered frames (12), and the game ran uncapped at about 460 fps
 under Xvfb, so on a fast machine without vsync it is gone in about 25 ms.
+
+## sonar-pulse-r48-a
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Sonar Pulse A, "flood" (special, Act 4 from Level 22)**: the pulse under water in the black of Level 26.
+Files: `sonar-pulse-r48-a.png` (sheet: the pulse and the 6 s window in six frames, a unit in the black
+and then lit at 3×, the above-water case (a Driftjelly on the `sub` layer revealed), the HUD special row
+mock-up: ready, active with the 6 s arc draining, the last second, `NO WATER` in a dry level) and
+`sonar-pulse-r48-a.gif` (12.5 fps: the headlight only for 1.6 s, the call, the ring covering the field in
+0.5 s, 6 s lit with the outlines blinking in the last second, the dark returning; stand-in Needlers and
+Driftjellies).
+
+- **Prompt:** top-down effect frames for a late-1990s pre-rendered CGI vertical shoot'em up in pitch-black
+  deep water under an ice sheet: a soft teal ring with a bright leading edge and two faint echo rings
+  sweeping out from a small blue-and-white fighter; the water behind the ring takes on a dim teal glow
+  that shows the silt floor, and every creature and drone it has passed is lit and traced with a thin
+  1-pixel teal outline.
+- **Negative prompt:** bubbles, ripples like a pond, electric arcs (the EMP Burst's), the Vrell green-teal
+  00ff9a, white flash, text, watermark.
+- **Animation brief:** the ring at about 1 000 px/s (0.5 s to the far corner); the floor's light fades over
+  the last 1.5 s and the outlines blink at 4 Hz in the last second. A soft, heavy, low ping: no bubbles,
+  no pops.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py sonar-pulse a` (reuses `enemies_r48.py`'s
+  under-water grade, Level 26 "black")
+
+## sonar-pulse-r48-b
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Sonar Pulse B, "echo marks"**: the same scene with a different ring and lit look. Files:
+`sonar-pulse-r48-b.png` and `sonar-pulse-r48-b.gif`.
+
+- **Prompt:** as A, but the ring is a crisp dashed pale-cyan double ring like a sonar display's sweep, and
+  the water stays black; each unit the ring reaches is drawn whole inside four small pale-cyan corner
+  brackets, sonar contact marks.
+- **Negative prompt:** as A, plus: a lit floor, outlines.
+- **Animation brief:** the brackets snap in from 8 px wider over 0.3 s when the ring reaches a unit, then
+  stay; they blink in the last second.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py sonar-pulse b`

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-20
+updated: 2026-10-22
 ---
 
 # Music
@@ -32,7 +32,7 @@ everywhere.
 | 8 | Act 3 A: Mars | Levels 15–17 and 20 (see *Act 3 music*) | Dusty breakbeat, desert-scale (phrygian dominant) lead | 3:00 | P2 | [mars-theme-r02-a](concept/mars-theme-r02-a.ogg) "Red Dust Run" (chosen) |
 | 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | sketch [act3-b-theme-r36-b](concept/act3-b-theme-r36-b.ogg) "Grey Signal" (chosen); full length with base, full and motif stems: [grey-signal-r41-a](concept/grey-signal-r41-a.ogg) (proposed, round 41) |
 | 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen) |
-| 11 | Act 4 B: Europa | Levels 22–28 | Muffled ambient-dnb, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | — |
+| 11 | Act 4 B: Europa | Level 25, Levels 27–28 (see *Act 4 music*) | Muffled ambient drum & bass, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | sketches [act4-b-theme-r48-a](concept/act4-b-theme-r48-a.ogg) "Pressure Line" and [act4-b-theme-r48-b](concept/rejected/act4-b-theme-r48-b.ogg) "Black Current" (chosen, round 48: a) |
 | 12 | Act 5 A: Asteroid belt | Levels 29–35 | Driving industrial, metallic percussion, Vorne's motif in the open | 3:00 | P3 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
 | 13 | Act 5 B: Asteroid belt | Levels 29–35 | Driving industrial, Vorne's motif in the open | 3:00 | P3 | — |
 | 14 | Act 6 A: Jupiter | Levels 36–42 | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif | 3:00 | P3 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
@@ -50,6 +50,7 @@ everywhere.
 | 27 | Ending | Campaign ending | Main motif, orchestral | 3:00 | P3 | — |
 | 28 | Credits | Credits roll | Upbeat remix of the title theme | 3:30 | P3 | — |
 | 29 | Debrief | Under the debrief, after the mission complete jingle (23) | Quiet, calm, a little proud; D major (the jingle's last chord), −18…−20 LUFS under the debrief's sounds and voice; not the hangar theme | 1:00–1:30 loop | P2 | [debrief-theme-r40-b](concept/debrief-theme-r40-b.ogg) "Stand Down" (chosen, round 40) |
+| 30 | Reveal sting | Level 28, the Ascendancy cruisers rising (see *Act 4 music*) | Dread rising for 4 s, a hit as the gun ports open, Vorne's motif hidden in it; B minor; ends unresolved | 0:09 | P2 | [reveal-sting-r48-a](concept/reveal-sting-r48-a.ogg) "Black and Gold" and [reveal-sting-r48-b](concept/rejected/reveal-sting-r48-b.ogg) "Ours" (chosen, round 48: a) |
 
 The concept pieces are 40–65 s sketches of each track's style and material. Production
 versions are extended to the listed length.
@@ -279,6 +280,55 @@ theme, and Level 18 is the first to need track 9, so track 9 moves from the road
 E. No new music hook beyond the `motif` list: the rest uses the built `stems`, `boss_sting`, the boss
 warning and the music-free section of Level 14's daylight.
 
+### Act 4 music (draft, round 48)
+
+**Status: draft, decided in round 48 (2026-10-22)** (M8 design phase, step AUD48), for the
+[Act 4 README](../../campaign/act-4-deep-water/README.md)'s plan; the level documents carry the cues in their
+*Music & ambience*. Round 48's Q12 (the under-water sound) is proposed as **a**: no low-pass on the sfx bus, heavy
+recordings, and **no bubble layer anywhere** in the music. Two themes serve the act, plus a darkness stem, the boss
+theme and a new sting:
+
+- **Track 10 "Thera Deep"** (the A theme, chosen in round 02): Levels 22–24 and 26. Its full length and stems come
+  with M8 part A by the method of tracks 6–9 (the round-02 generator extended, one render, linked mastering). Q12 a:
+  the sketch's `bubble` hits are left out of the full-length version (the sonar pings and whale calls stay).
+  **Darkness stem** (proposal, Level 26): a third stem of the same render, the sonar pings, the deep pad and a drone
+  alone, played through track 9's third, lockstep stream with `alone` (the base and full stems fade out over 2 s,
+  the dark stem stays), so Level 26 strips back from the full mix to pings in the dark at t=8–18 with the machinery
+  built for Level 19's wreck crawl; no new hook.
+- **Track 11, the Act 4 B theme**: Level 25 and Levels 27–28. Brief: the A theme's water world turned colder and
+  deeper, muffled ambient drum & bass, a faint Vorne's motif; no bubbles, no resonant plucks. Round 48 offers two
+  sketches (below, *Concept art*): a "Pressure Line" (175 BPM, F minor, the A theme's key and pads, a liquid two-step
+  break; the motif as track 9's intercepted whistle, now muffled by the water) and b "Black Current" (140 BPM
+  half-time, C minor, darker and roomier; the motif as cold organ and low brass far behind the hull). The production
+  delivers three stems as track 9's: **base**, **full** and **motif**.
+- **Vorne's motif in Act 4**: muted in Level 25; on in Levels 27–28 only (**hint 3**, the Depth Hunters and the
+  Helix hull code, and the reveal), 18–20 dB under the full mix as in Act 3; the level documents place it.
+- **The Abyssal Maw** (Level 28): the Vrell boss theme (track 18) after the boss warning, as the boss document asks
+  "in its Act 4 setting (muffled, reverberant)". Proposal: no runtime filter (none exists for music); either the
+  built theme as it is, or a pre-rendered deep copy of track 18 from its generator through the A theme's water
+  low-pass and a longer reverb (a new file, no new hook). Open below.
+- **The reveal sting** (new track 30): Level 28, at the cruisers' rise (≈ 18 s after the kill): dread rising for
+  4 s as they come up through the ice, a hit as their gun ports open, Vorne's motif **hidden** in it (Act 5 states
+  it in the open), in **B minor**, the motif's home key and Act 5's ("Hollow Rock"), ending unresolved on the motif's
+  major seventh, about 9 s; the radio lines speak over its tail. A one-shot played by the level's music block (as
+  Level 13's mid-level jingle). The run after it (≈ 35 s) plays under Vorne's motif: the level document's cue (track
+  11's motif stem `alone`, or the full mix with the motif on).
+
+#### Cues per level (Act 4)
+
+| Level | Theme | Music by section | Sting / boss | Vorne's motif | Ambience |
+|---|---|---|---|---|---|
+| [22](../../campaign/act-4-deep-water/level-22-ice-shelf/README.md#music--ambience) | 10 | s1 the ambience alone; base from s2 (the first rig); full from s3 (the run-in to Conamara) | — | — | `europa-ice`; the Conamara station hum at the end |
+| [23](../../campaign/act-4-deep-water/level-23-through-the-ice/README.md#music--ambience) | 10 | the shaft mouth on the ambience; base from the waterline; full from s3 (the farms) | — | — | `europa-ice` in the shaft mouth, `europa-under` from the waterline |
+| [24](../../campaign/act-4-deep-water/level-24-abyssal-plain/README.md#music--ambience) | 10 | s1 the bed alone; base from s2 (the reef field); full in s3 (the beacon line); base in s4 | — | — | `europa-under` |
+| [25](../../campaign/act-4-deep-water/level-25-siren-trench/README.md#music--ambience) | 11 | s1 the A theme's sonar-and-pad intro; B base from s2; full in s5 (the Song); out into silence as the lights go out | — | muted | `europa-trench` |
+| [26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#music--ambience) | 10 (dark) | s1 the full mix with the lamps; the dark stem `alone` from t=8–18; the Choir's line ducks it (−6 dB); thinning from t=150; out at t=160 (Rook's loss); a warm pad from t=168 | — | — | `europa-black`; `europa-trench` at the scarp |
+| 27 | 11 | the level document (in progress) | — | on (hint 3) | `europa-vents` |
+| 28 | 11, then 18 | the level document (in progress): the B theme to the caldera, the boss warning and the boss theme, silence under the dive's darkness | boss warning, boss theme, the reveal sting (30) at the cruisers' rise | on, and under the run | the caldera bed, `europa-ice` after the breakout |
+
+Every level plays the `mission-complete` jingle (23); Level 28's debrief is followed by the act outro with the
+act-complete fanfare (24), as Level 21's.
+
 ## Concept art
 
 Concept rounds 01–03 and 08 — see [round 01](../../concept-rounds/round-01/README.md). Briefs,
@@ -469,7 +519,7 @@ picked b "Stand Down" (M.a = b), wired into the game on 2026-10-19 (see Implemen
 | [concept/rejected/debrief-join-r40-a.ogg](concept/rejected/debrief-join-r40-a.ogg) | Listening aid: the mission complete jingle → "Homeward", 15 s | rejected — round 40: b picked |
 | [concept/debrief-join-r40-b.ogg](concept/debrief-join-r40-b.ogg) | Listening aid: the mission complete jingle → "Stand Down", 15 s | chosen (round 40, M.a = b) |
 
-Concept round 41 (M7 part E, step MUS-E, 2026-10-19; pending the user's review) — track 9 "Grey Signal" at
+Concept round 41 (M7 part E, step MUS-E, 2026-10-19; decided in round 48 (2026-10-22)) — track 9 "Grey Signal" at
 full length with its three stems, from the chosen round-36 sketch b, by the new generator
 `tools/concept/audio/music_r41.py`: the sketch's 4-bar intro and an 88-bar loop of eleven 8-bar sections
 on its material (A groove, B and B2 with track 8's hand drums, the breakdown C, D and D2 full, the new
@@ -490,6 +540,19 @@ Prompts: [concept/prompts.md](concept/prompts.md#music-r41-a--track-9-grey-signa
 | [concept/grey-signal-motif-seam-r41-a.ogg](concept/grey-signal-motif-seam-r41-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 41) |
 | [concept/grey-signal-motif-mix-r41-a.ogg](concept/grey-signal-motif-mix-r41-a.ogg) | Listening aid: the full mix with the motif stem on top as Level 18 plays them, loop bars 17–40 (B2, the breakdown, D; 46.1 s) | chosen (round 41) |
 | [concept/music-r41-a.png](concept/music-r41-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, the motif against the full mix) | chosen (round 41) |
+
+Concept round 48 (M8 "Act 4 – Deep Water" design phase, step AUD48, 2026-10-22; decided in round 48 (2026-10-22)) — two
+sketches for track 11, the Act 4 B theme, and two proposals for the reveal sting (track 30), synthesized by
+`tools/concept/audio/music_r48.py` (deterministic; the round-02 loop format for the themes, the round-08 sting format;
+Vorne's motif in its own group in the themes, entering in the loop's C section). Measured only, not listened to.
+Prompts: [concept/prompts.md](concept/prompts.md#round-48--the-act-4-b-theme-track-11-and-the-reveal-sting-track-30).
+
+| File | What | Status |
+|---|---|---|
+| [concept/act4-b-theme-r48-a.ogg](concept/act4-b-theme-r48-a.ogg) | #11 "Pressure Line" — liquid ambient drum & bass, 175 BPM, F minor, 52.5 s (loop 5.8 s + 43.9 s): a two-step break under a water filter that never opens fully, reese and sub, wide pads, a soft lamp-like arpeggio through a delay, the A theme's sonar ping, a slow flute line; far whale calls in the drumless breakdown; Vorne's motif as track 9's intercepted whistle, muffled by the water | chosen — round 48 |
+| [concept/rejected/act4-b-theme-r48-b.ogg](concept/rejected/act4-b-theme-r48-b.ogg) | #11 "Black Current" — half-time deep drum & bass, 140 BPM, C minor, 58.7 s (loop 7.3 s + 48.0 s): a heavy kick and one dark snare a bar, rolling shakers, a reese swelling over each pair of bars, dub chord stabs with a long echo, a pressure drone; Vorne's motif as cold organ and low brass far behind the hull | rejected — round 48: a picked |
+| [concept/reveal-sting-r48-a.ogg](concept/reveal-sting-r48-a.ogg) | #30 "Black and Gold" — B minor, 9.0 s: tremolo strings, an organ pedal and a timpani roll swelling from muffled to open for 4 s; at 4.0 s a brass and organ tutti whose notes enter in the motif's rhythm (B D F♯ A♯), the motif as a chord, the A♯ left hanging | chosen — round 48 |
+| [concept/rejected/reveal-sting-r48-b.ogg](concept/rejected/reveal-sting-r48-b.ogg) | #30 "Ours" — B minor, 9.0 s: Act 3's intercepted whistle plays the motif out of radio static over a rising sub and low brass cluster; at 4.0 s a deep impact and the radio filter bursts open into full low brass and organ on the motif's last two notes, the A♯ held over a B-minor drone | rejected — round 48: a picked |
 
 ## Implementation
 
@@ -540,11 +603,18 @@ Prompts: [concept/prompts.md](concept/prompts.md#music-r41-a--track-9-grey-signa
       and motif stems (part E, Level 18); the `motif` list and the third, lockstep motif stream
       (`on`, `off`, `alone`; part E, used again in part F); each Act 3 level's music block as in
       *Act 3 music* (parts B–H)
+- [ ] Act 4 (draft, round 48, M8): track 10 "Thera Deep" at full length without the bubble layer, with its
+      base stem and the darkness stem (Level 26, the third stream with `alone`); track 11, the B theme, with its
+      base, full and motif stems; the reveal sting (track 30) as a one-shot from Level 28's music block; each Act
+      4 level's music block as in *Act 4 music*
 
 ## Open questions
 
 - 28 tracks is a lot of production. If needed, drop the B variants of acts (−7 tracks) or reuse
   the Vrell boss theme for all bosses.
+- Round 48 (Act 4, pending): the B theme sketch (a "Pressure Line" or b "Black Current"); the reveal sting (a
+  "Black and Gold" or b "Ours"); the Maw's music: the Vrell boss theme as it is, or a pre-rendered deep copy
+  (muffled, longer reverb), as the boss document asks; Level 26's darkness as a third stem of track 10 (proposed).
 
 ## Decisions
 
@@ -749,3 +819,6 @@ Prompts: [concept/prompts.md](concept/prompts.md#music-r41-a--track-9-grey-signa
   had no music of its own after the jingle), and fades out over 0.5 s when the player leaves, the next
   screen waiting for the fade; the act outro keeps its act-complete fanfare.
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-22 (step AUD48, M8 design phase, decided in round 48 (2026-10-22)): *Act 4 music* drafted from the
+  level and boss documents; track 11 sketched a/b and a new track 30, the reveal sting, a/b
+  (`tools/concept/audio/music_r48.py`); Q12 a assumed for the music (no bubble layer anywhere).

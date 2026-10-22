@@ -151,3 +151,42 @@ and its trail; the 16×16 pod itself is small at 1× but identifiable, so it was
 larger (`tools/art/rook.py` unchanged). The pod took the nearer edge with the ship on the other side, so the in-the-way branch of the path
 rule did not occur in this run (it is covered by `WingmanPodTest`). The bark
 played at once, not held back by the spacing.
+
+## bulwark-r48-a
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Bulwark A, "turtle" (heavy drone, escort slot, Act 4 from Level 22)**: the 36×36 sprite (hit box 14×14).
+Files: `bulwark-r48-a.png` (sheet: the source render, the sprite intact / hit / under half armour at 4×,
+beside the Stormhawk and Rook at 2×, the wing slot (56, +20) and the 150 px draw-fire radius, the loss
+in five steps) and `bulwark-r48-a.gif` (12.5 fps under the Level 24 grade: the drone lagging in its wing
+slot with the water's drag, its cannon firing once a second at stand-in Needlers, 30 % of their aimed
+shots going to it and striking it).
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, top-down orthographic, key light from the top-left,
+  crisp silhouette on a flat dark background: a heavy armoured combat drone like a flying turtle, a domed
+  blue-grey armour shell with a pale raised centre plate and a cobalt-blue rim band, dark armour skirts on
+  both sides, a short heavy cannon with a muzzle brake on a ball mantlet at the front, a small cyan sensor
+  eye, twin pump-jet nozzles glowing cyan at the back; Coalition Defence Force colours.
+- **Negative prompt:** red or orange lights, insignia, rotors, organic shapes, the player's swept wings,
+  photographic realism, side view, text, watermark.
+- **Animation brief:** the jets flicker; a cyan muzzle flash and a short cyan slug with a straight wake
+  once a second; a slow cyan halo breathes out from it once a second (the draws-fire tell); a white flash
+  and sparks when hit; under half armour scorched plates and sparks; destroyed: an under-water burst.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py bulwark a` (reuses `enemies_r48.py`'s
+  under-water grade and `gear_r36.py`'s production Stormhawk; Rook and the stand-in Needlers from
+  `assets/`)
+
+## bulwark-r48-b
+
+**Proposed** (round 48, Act 4 design phase, pending the user's review).
+
+**Bulwark B, "riot barge"**: the same scenes with a different drone. Files: `bulwark-r48-b.png` and
+`bulwark-r48-b.gif`.
+
+- **Prompt:** as A, but a blunt blue-grey slab hull behind a wide curved pale shield blade with small
+  yellow hazard marks, the cannon through a slit in the blade's middle, four round corner thrusters glowing
+  cyan, a cobalt deck plate with a white strobe beacon on it.
+- **Negative prompt:** as A.
+- **Animation brief:** as A, but the draws-fire tell is the white strobe flashing for 0.1 s every 0.8 s.
+- **Mockup generator:** `python3 tools/concept/gear_r48.py bulwark b`

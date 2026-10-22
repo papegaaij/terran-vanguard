@@ -134,9 +134,50 @@ another module a player turns a weapon down with the [power dial](../README.md#p
 
 ### Hydro-kit (automatic)
 
-Not a module and not for sale: before L23 every Stormhawk gets a free field refit for
-underwater play. It takes no slot and draws no power. What changes under water is defined in
-[europa](../../world/europa/README.md#under-water-rules).
+*Act 4 draft, decided in round 48 (2026-10-22) (the act's open question: keep it automatic; recommended yes).*
+
+Not a module and not for sale: before L23 every Stormhawk gets a free field refit for underwater
+play (a story beat: Thera Deep's yard fits it in the hangar visit before the descent). It takes no
+slot and draws no power, and it needs no purchase, so a thrifty player is never locked out of
+Act 4. **What it is in the game:** the ship's *look* under water (a sealed hull, ducted thrusters
+and two floodlights, concept in round 48) and the story's reason for the drag; the factors
+themselves come from the level's medium and are defined in
+[europa](../../world/europa/README.md#under-water-rules). In a level without water (Act 5 on) the
+kit is stowed and the ordinary Stormhawk sprite is drawn. Rook's variant-C Stormhawk gets the same
+kit. The alternative (a purchasable module that must be fitted) was rejected: with the pressure hull
+already optional it would put a mandatory purchase at the act's start.
+
+### Pressure hull (L22)
+
+*Act 4 draft, decided in round 48 (2026-10-22) (Q1 = b).* A utility module (1 MW, 2 000 cr, in
+the shop from the visit before L22; the numbers it reads are in the *Utility modules* table above,
+whose Effect text is regenerated from [data.yaml](data.yaml) when part A changes it).
+
+- **Effect:** removes the **drag** of the under-water rules: acceleration is back to normal (the
+  ship flies as on the surface). Under the recommended (b) rules there is no top-speed or
+  shield-regeneration penalty left to remove; under the as-drafted rules (a) it removes those two
+  and the drag stays.
+- It does nothing above water, against the Siren's sonar slow, or for the bullet speed (× 0.7 for
+  both sides), and it is not needed to beat any level: the recommended typical plan buys it at the L24
+  visit (see the [hand plan](../generator/README.md#act-4-hand-plan-draft)).
+- Two hulls do nothing more than one (the thrusters' rule).
+
+### Auto-repair nanites (L24)
+
+*Act 4 draft, decided in round 48 (2026-10-22); the unlock level 24 is ours (the roster said "act 4").*
+
+- **Effect:** a fitted module repairs **1 armour point per 4 s** (L2: per 2 s) while the ship is in
+  flight, but only up to **50 % of the armour's maximum**: it never lifts the armour above half, so
+  it softens a long level without replacing the repair bill or the armour tiers. Nothing repairs
+  while the ship is wrecked, and a retry starts at the level's start armour as always.
+- **Price and power:** 6 000 cr (L2 12 000), **3 MW**, the heaviest module in the game: it is the
+  reason the Mk IV generator matters (see the
+  [hand plan](../generator/README.md#act-4-hand-plan-draft)). Not in the typical plan.
+- **Economy:** the armour it restores in flight is not repaired at the hangar, so it saves the
+  repair cost of those points (about 5 cr a point on medium, 10 on hard); at most
+  about 5–10 points a level, worth 25–100 cr: it never pays for itself in credits, it is bought for
+  the safety. Rook's and the Bulwark's armour is not repaired by it.
+- HUD: a small `+` pip on the armour bar while it repairs; a hit pauses it for 1 s.
 
 ### Sensor levels and hangar intel
 
@@ -222,12 +263,16 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   spoofer)
 - [x] Sensor level controls the intel panel detail
 - [ ] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
-  module; the penalties are Europa's under-water rules)
+  module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above)
+- [ ] Hydro-kit: the refit before L23 (a hangar notice, the ship's look under water, stowed in dry levels) — **later: Act 4** (M8 part A, look in round 48)
+- [ ] Auto-repair nanites as under *Auto-repair nanites (L24)*: the repair tick, the 50 % cap, the HUD pip — **later: Act 4** (M8 part A)
 
 ## Open questions
 
-- Is the underwater speed/shield penalty desirable? It makes Europa feel different and gives
-  the pressure hull a reason to exist, but it also punishes players who skip it.
+- The underwater penalties: recommended (b) keeps the drag and the × 0.7 damage and drops the
+  top-speed and shield-regen penalties, so the pressure hull "removes the drag"; (a) is the
+  first draft ([europa](../../world/europa/README.md#under-water-rules); round 48, Q1).
+- Keep the hydro-kit automatic and free (recommended) or make it a module?
 
 ## Decisions
 
@@ -346,3 +391,4 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   (V.1); a second set of thrusters adds nothing (B.3 c).
 - 2026-10-21 (the user's power room: the Mk III at 16 MW, the weapons' power dial): the Evasive thrusters fit
   the typical Act 3 loadout; the balance plan fits a Pickup magnet L1 from Level 20.
+- 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): the hydro-kit stays automatic and free (its look, no slot, no power; the factors come from the level's medium), the pressure hull is specified as removing the drag (Q1 = b), the Auto-repair nanites (unlock L24, 3 MW, repairs up to 50 % of the armour) specified as a draft; the table rows stay `idea` until the user reviews them.

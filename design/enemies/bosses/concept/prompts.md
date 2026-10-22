@@ -239,3 +239,69 @@ states (a third out, two thirds, up) blended continuously over a 60 px band behi
 where it passes. The dive runs it back from the tip to the collar over the first 70 % of the dive (the head last, with
 the mouth), then the bulge fades. The GIF's ground stands still from the first tell on (eased over 0.5 s), as the
 game's crawl halt (round 44 K.c). Pending the user's review.
+
+# Round 48 — Abyssal Maw and the Ascendancy cruiser (Act 4)
+
+Act 4 design phase (2026-10-21, step A-boss), two variants each, decided in round 48 (2026-10-22). The
+[Abyssal Maw](../abyssal-maw/README.md) keeps the Vrell boss convention (**weak points glow lime, #a8ff2a**) over
+dark chitin plates and a deep-violet hide with a teal (#00ff9a) flank line; its **Helix implants** are grey,
+unmarked human machinery whose exposed core glows hot amber (#ff7a20, the Ascendancy rule for exposed cores), and
+nothing on it is gold (Q11 a). The cruisers are the Ascendancy's first open appearance: black hex-panelled hulls,
+gold trim, one secondary accent per hull and the 1 px gold / red rim light (the round 04 rule). Each item has a
+sheet (PNG) and a motion study (GIF, 15 fps) in the 480×540 play field at 1×; the Maw's arena is Level 28's
+hatchery vent (lit by the vent and the eggs' bioluminescence, round 48 Q2 a), enemy bullets drawn bright at the
+water's ×0.7 speed. Generator: `python3 tools/concept/bosses_r48.py [maw-a] [maw-b] [cruiser-a] [cruiser-b]`
+(models in the script, the frozen `render/` package only imported).
+
+## abyssal-maw-r48-a
+
+**Proposed** (round 48, Q9 a: the roster's draft).
+
+**Abyssal Maw A "Rising maw" (Act 4 boss, L28)** — hidden in the black water: a shadow grows under the ship, a
+broad two-jawed head bursts up through the play plane and snaps, sinks shedding Eel Swarms, and fires
+bioluminescent fan walls from the deep between snaps; two Helix implants sit on its lower jaw.
+
+- **Prompt:** late-1990s pre-rendered CGI game art, straight top-down orthographic view into dark abyssal water over a silt sea floor lit orange from a hydrothermal vent, key light from the top-left. A colossal alien eel-leviathan's head bursting straight up toward the viewer: two broad jaw shells of glossy near-black chitin (#1c2128, shadows #06080c) hinged at the top and bottom of the head, folded open around a ring of curved bone teeth (#dccfb4) and a glowing lime (#a8ff2a) throat; deep-violet hide (#42184f) at the hinges, violet gill frills with thin teal (#00ff9a) edges at the sides, small teal eyes and teal glow lines on the upper jaw. Two grey industrial housings (#787d82) bolted into the lower jaw with cables sunk into the flesh, their cores glowing hot amber (#ff7a20). Silt and water streaming off the shells, a pale pressure ring round it.
+- **Negative prompt:** photograph, painterly brush strokes, perspective camera, side view, horizon, text, watermark, logos, insignia, gold, black-and-gold, bubbles, cute, cartoon, shark, magenta or hot-pink glow, yellow body, blue body colour.
+- **Animation brief:** the tell: a dark shadow (darker than the darkest backdrop) grows under the ship's position over 2 s while pale silt lifts off the floor; the head rises through three sink states (smaller, darker, blurred toward the water colour) with the jaws opening, snaps shut in 0.25 s (a heavy pressure ring), holds, then sinks; two Eel Swarms peel off its sides toward the edges. Between snaps it lies deep under the top of the field, a blurred lime glow brightening for 0.8 s before each 17-orb teal fan wall (one gap). In the second snap the implants spark and glow amber.
+- **Mockup generator:** `python3 tools/concept/bosses_r48.py maw-a`
+
+## abyssal-maw-r48-b
+
+**Proposed** (round 48, Q9 b: recommended).
+
+**Abyssal Maw B "Coiled guardian" (Act 4 boss, L28)** — a 1,750 px serpent leviathan coiled round the hatchery
+vent: 31 shingled segments along the arena's edges (half beyond the edge), the head at the top centre with four gill
+sacs; the coil reads in the dark as a glowing teal frame. Three Helix implants (the neck, the left and the right
+coil) tear open in phase 3.
+
+- **Prompt:** late-1990s pre-rendered CGI game art, straight top-down orthographic view of a dark abyssal arena: a silt floor round a glowing orange hydrothermal caldera, clusters of faintly glowing lime and teal alien eggs. A colossal serpent leviathan lies coiled round the arena's four edges like a living frame: a chain of shingled armour plates of glossy near-black chitin (#1c2128) over a deep-violet hide (#42184f), a pale bone keel ridge on each plate, a thin bioluminescent teal (#00ff9a) line down each flank, the tail tapering at the top right. At the top centre its long eel head faces down: dark plated skull, short bone brow ridges, small teal eyes, an underslung jaw opening on a glowing lime (#a8ff2a) throat ringed with bone teeth, two pairs of translucent lime-teal gill sacs with glowing veins behind the jaw. Grey unmarked industrial housings (#787d82) bolted through its plates at the neck and on both flanks, cables sunk into the flesh, casings cracked and scorched, one open on a hot amber (#ff7a20) core. Key light from the top-left.
+- **Negative prompt:** photograph, painterly brush strokes, perspective camera, side view, horizon, text, watermark, logos, insignia, gold, black-and-gold, bubbles, dragon wings, legs, cute, cartoon, magenta or hot-pink glow, yellow body, blue body colour.
+- **Animation brief:** segments are 64 px wide, 56 px apart, 32 angles, the tail tapering in four steps; drawn tail first so each plate overlaps the next toward the head. Intro: the coil rises along the edges tail first (sunk states: smaller, darker, silt pouring off), the head last. Phase 1: a gill sac swells 0.6 s and exhales a ring of 10; the throat glows 0.6 s, the skull lifts on its hinge and an aimed fan of 5 follows; a destroyed sac leaves a torn crater. Phase 2: 17-orb teal fan walls with one gap; a coil sweep: the bight's flank line turns lime and silt streams off it for 1.2 s, then it swings 110 px into the arena as one curved body (headings follow the chain), holds and swings back. The dive: the coil slides outward off the edges into the dark and the vent gutters to near-black (the ship's headlight cone and the glows only); a dark column with lifting silt runs up from the bottom at the ship's x for 2 s; the head bursts up the column with its jaws open (a rush of pale streaks), the body streams up behind it and stays as a wall, then sinks while the coil rises back round the edges. Phase 3: the jaw clamps shut; the implants surface and spark open in turn (1 s of sparks and amber flicker, then the cover blown aside and the hot-amber core open 4 s, an amber arc 0.4 s before each burst of 3 bolts). A glow-only twin of every part (black surfaces, emission kept) carries the dark.
+- **Mockup generator:** `python3 tools/concept/bosses_r48.py maw-b`
+
+## ascendancy-cruiser-r48-a
+
+**Proposed** (round 48, the reveal's look; Q10 a, Q11 a).
+
+**Ascendancy cruiser A "Regent wedge" (the L28 reveal set piece)** — a long faceted wedge with a stepped spine and
+a bridge tower aft, one row of gun ports down each flank, point-defence turrets either side of the spine, a crimson
+accent, the gold sunburst emblem on the bow deck and the Helix hull code stencilled in gold down both sides of the bow.
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, metallic specular highlights, crisp silhouette, isolated on a flat dark background, like Raptor: Call of the Shadows or Tyrian 2000. A huge human-built warship seen from directly above, about three times longer than wide, bow up: an angular faceted wedge hull of black armour with a fine hexagonal panel pattern (#1a1622, facets #26202e), thin bright gold (#ffa800) trim along every hull and deck edge and gold cross bands, a raised stepped spine of armoured blocks, a bridge tower near the stern with an amber vision slit, a row of small rectangular gun ports down each flank glowing faint amber, small point-defence turrets with crimson (#b01828) barrels either side of the spine, thin crimson stripes on the deck, a gold sunburst emblem (a ring with eight rays) on the bow deck, a short gold stencilled hull code running down both sides of the bow, red running lights, four orange-red engine nozzles at the stern. Thin gold rim light on the top-left edges, red on the bottom-right.
+- **Negative prompt:** photograph, painterly brush strokes, perspective camera, side view, text other than the hull code, watermark, organic shapes, glowing veins, camouflage, grey unmarked hull, star wars star destroyer, cute, cartoon, purple hull.
+- **Animation brief:** low-air, below the play plane; one on each flank, the hull's centre on the field's edge so only the inner half shows (inner edge x 110 / 370). The rise: the ice cracks along its outline, the hull comes up through it (from a cold blue-dark tint at 86 % size to full in 4 s), white ice slabs sheet off its sides and slide toward the field, mist drifts; it then keeps pace with the wing in an open-water channel with jagged floe edges that it carves through the scrolling ice. Broadside: the flank's gun ports in the band glow hot amber and amber tracer dashes cross a 70 px band for 1.2 s, then 7 gold shells cross it; flak: two dashed red markers (45 px) for 1 s, then a ring of 8; point defence: bursts of 3 small gold rounds.
+- **Mockup generator:** `python3 tools/concept/bosses_r48.py cruiser-a`
+
+## ascendancy-cruiser-r48-b
+
+**Proposed** (round 48, the reveal's look; Q10 a, Q11 a).
+
+**Ascendancy cruiser B "Forked monitor" (the L28 reveal set piece)** — a forked ram bow, broad sponsons with three
+twin casemate guns a side and gun ports between them, a row of gold crown fins across the spine, a tiered bridge aft,
+an ivory accent, the gold emblem and the hull code on the bow.
+
+- **Prompt:** late-1990s pre-rendered CGI game sprite, 3D model rendered straight top-down orthographic, key light from the top-left, metallic specular highlights, crisp silhouette, isolated on a flat dark background. A huge human-built monitor warship seen from directly above, bow up: black armoured hull with a fine hexagonal panel pattern (#1a1622, deck #26202e), a forked ram bow of two long prongs, broad sponsons along both flanks each carrying three round casemate turrets with twin barrels turned outboard and a row of small amber-glowing gun ports between them, a row of short gold (#ffa800) transverse crown fins down the centre spine, thin gold trim on every edge, long ivory (#ece4d0) deck stripes, small point-defence turrets with ivory barrels, a gold sunburst emblem on the foredeck, a gold stencilled hull code down both sides of the bow, a tiered bridge near the stern with an amber vision slit, four orange-red engine nozzles. Thin gold rim light top-left, red bottom-right.
+- **Negative prompt:** photograph, painterly brush strokes, perspective camera, side view, text other than the hull code, watermark, organic shapes, glowing veins, camouflage, grey unmarked hull, cute, cartoon, purple hull.
+- **Animation brief:** as A; the broadside's ports are the sponsons' rows between the casemates.
+- **Mockup generator:** `python3 tools/concept/bosses_r48.py cruiser-b`

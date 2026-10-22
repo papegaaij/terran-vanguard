@@ -16,7 +16,7 @@ shortened re-creations of earlier bosses.
 
 ## Contents
 
-Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12); the remaining units stay in the roster below.
+Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 drafts of the overnight design phase (2026-10-12) and the Act 4 boss of its design phase (2026-10-21, draft); the remaining units stay in the roster below.
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
@@ -26,6 +26,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [siege-spire](siege-spire/README.md) | Act 2 boss: rooted citadel that tears free and rises (L14) | approved | in-progress | final |
 | [revenant-walker](revenant-walker/README.md) | Act 3 mid-boss: unmarked grey war walker striding through the casting yard, homing pods, rear flamer; its wreck is hint 2 (L19) | approved | in-progress | final |
 | [dust-colossus](dust-colossus/README.md) | Act 3 boss: buried colony organism breaching at the edges and under the ship, mouths with rings, suction and bite (L21) | approved | in-progress | final |
+| [abyssal-maw](abyssal-maw/README.md) | Act 4 boss: serpent leviathan coiled round the hatchery vent, gill rings, fan walls, coil sweeps, one dive and lunge, Helix implants; then the breakout and the run under Ascendancy cruisers (L28) | approved | not-started | chosen |
 
 ## Roster
 
@@ -33,7 +34,6 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 
 | Name | Faction | Layer | Role/ability | Formations | First level | Design |
 |---|---|---|---|---|---|---|
-| Abyssal Maw | Vrell | sub | Underwater leviathan guarding the hatchery. Rises from below in a jaw-snap (a telegraphed shadow), trails Eel Swarms, and fires bioluminescent `fan` walls. Wrecked Helix implants on its body are the last clue before the reveal. | carrier + escorts | 28 | idea |
 | Iron Sovereign | Ascendancy | space + ground | A battle station with three concentric rotating rings. Each ring carries batteries (rail, SAM, laser) that rotate into view; destroy the batteries to stop a ring, and stop all rings to expose the core. Tests piercing and positioning. | turret nest | 35 | idea |
 | Ascendant | Hybrid | air + space | Vorne's flagship, half warship and half Vrell organism. **Phase 1**: gold hull with shield generators and mirror panels (`reflect`). **Phase 2**: the Vrell half erupts and regenerates tissue while spawning Chimeras. **Phase 3**: Vorne's Vrell lifeboat breaks free and flees (can't be killed; it escapes). Taunts from Vorne over the radio. | carrier + escorts | 42 | idea |
 | Choir Heart | Vrell | all | The hive mind's core: a vast luminous organ in the hive's centre. It switches between the attack styles of every Vrell enemy in the game, reshapes the arena (walls of tissue, darkness, distorted scroll) and speaks through the Choir. The final phase is a single weak point in a storm of bullets. | – | 50 | idea |
@@ -118,6 +118,22 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
 | [concept/dust-colossus-r36-b.png](concept/dust-colossus-r36-b.png) | Dust Colossus B "Sinkhole colony" — the ground collapses into a funnel; four bone mandibles unfold around a lime throat, violet-lit vein ridges under the sand (sheet) | chosen (round 36, B.2) |
 | [concept/dust-colossus-r36-b.gif](concept/dust-colossus-r36-b.gif) | Dust Colossus B — the same arena as A (motion) | chosen (round 36, B.2) |
 
+Concept round 48 (Act 4 "Deep Water", design phase 2026-10-21, step A-boss; the round's review board follows) —
+the [Abyssal Maw](abyssal-maw/README.md) a/b (Q9) and the reveal's Ascendancy cruiser a/b (Q10, the faction's first
+black-and-gold look); generator `tools/concept/bosses_r48.py`. The Maw keeps the lime Vrell weak points; its Helix
+implants are grey with a hot-amber core and nothing on it is gold (Q11 a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/rejected/abyssal-maw-r48-a.png](concept/rejected/abyssal-maw-r48-a.png) | Abyssal Maw A "Rising maw" (Q9 a, the roster's draft) — a broad two-jawed head of dark chitin rising out of the black water: jaw shells round a ring of bone teeth and a lime throat, violet gill frills, two Helix implants on the lower jaw; rise and jaw states (sheet) | rejected — round 48: b picked |
+| [concept/rejected/abyssal-maw-r48-a.gif](concept/rejected/abyssal-maw-r48-a.gif) | Abyssal Maw A — the shadow growing under the ship, the jaw-snap up through the play plane, Eel Swarms peeling off as it sinks, fan walls from the deep, a second snap with the implants sparking, over the L28 vent arena (motion) | rejected — round 48: b picked |
+| [concept/abyssal-maw-r48-b.png](concept/abyssal-maw-r48-b.png) | Abyssal Maw B "Coiled guardian" (Q9 b, recommended) — a 1,750 px serpent coiled round the hatchery vent: 31 shingled segments (dark plates over violet hide, teal flank line; 32 angles, a four-step taper, the sweep's lime and the shed's flare), the head (shut, throat glow, open, lunge), four gill sacs (idle, swelling, torn), the Helix implant (shut, sparking, open, blown), the glow-only twins for the dark (sheet) | chosen — round 48 |
+| [concept/abyssal-maw-r48-b.gif](concept/abyssal-maw-r48-b.gif) | Abyssal Maw B — the coil rising round the edges, phase 1 gill rings, the throat fan and a sac shot off, phase 2 fan walls with a gap and a coil sweep, the dive into the dark, the shadow column and the lunge, phase 3's implants sparking open with Varga's line; the 130 s fight in 20 s (motion) | chosen — round 48 |
+| [concept/rejected/ascendancy-cruiser-r48-a.png](concept/rejected/ascendancy-cruiser-r48-a.png) | Ascendancy cruiser A "Regent wedge" — a 220×640 black-and-gold faceted wedge: stepped spine, bridge tower, a row of gun ports down each flank (cold and in a broadside's tell), point-defence turrets, crimson accent, the gold sunburst emblem and the Helix hull code on the bow (placeholder text), the gold / red rim light (sheet) | rejected — round 48: b picked |
+| [concept/rejected/ascendancy-cruiser-r48-a.gif](concept/rejected/ascendancy-cruiser-r48-a.gif) | Ascendancy cruiser A — two cruisers break up through the Europa ice beside the wing (cracks, slabs sheeting off, mist, an open-water channel), Okafor's "Those are ours", then the run: broadside bands, flak markers, point-defence bursts, two bands at once (motion) | rejected — round 48: b picked |
+| [concept/ascendancy-cruiser-r48-b.png](concept/ascendancy-cruiser-r48-b.png) | Ascendancy cruiser B "Forked monitor" — a forked ram bow, sponsons with three twin casemate guns a side and gun ports between them, gold crown fins across the spine, tiered bridge, ivory accent, the emblem and the hull code (sheet) | chosen — round 48 |
+| [concept/ascendancy-cruiser-r48-b.gif](concept/ascendancy-cruiser-r48-b.gif) | Ascendancy cruiser B — the same breakout and run as A (motion) | chosen — round 48 |
+
 ## Implementation
 
 - [x] Each boss promoted to its own directory with phases, attack scripts and weak-point
@@ -160,3 +176,4 @@ The walker's weak point is a hot-amber reactor on its back (the Ascendancy rule 
 - 2026-10-20 (user, round 42): the Revenant Walker's production art approved as final (F.a): its row `chosen`, the walker `art: final`.
 - 2026-10-20: the Dust Colossus's production art made (step ART-H2, round 44); accepted in round 44 (2026-10-20).
 - 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
+- 2026-10-21 (Act 4 design phase, step D-boss; decided in round 48 (2026-10-22)): the [Abyssal Maw](abyssal-maw/README.md) promoted from the roster to a draft spec (Q9 b, the coiled guardian; Q10 a, the breakout and the run, the Ascendancy cruisers specced in its document); its roster row removed.

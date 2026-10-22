@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Voice
@@ -334,6 +334,45 @@ Ares Control, three seeds each, the plain spelling against the respelling) and k
 | Bradbury, Lowell (domes) | as usually said | as written (Level 17, step VOX-D: read back as written with the name prompt; one "bribery" and one "Below" take replaced by pins) |
 | Olympus Mons, Tharsis, Hellas, Noctis, Candor, Europa, Conamara, Thera | as usually said | as written; respelled only if the read-back fails |
 
+### Act 4 voices (draft, round 48)
+
+**Status: draft, decided in round 48 (2026-10-22)** (M8 design phase, step AUD48). Act 4 is voiced as
+Acts 1–3: every radio line and briefing page, the act intro's four pages and the outro's four. The speakers per level,
+Rook's scripted Level 26 and his silence in Levels 27–28 are in the
+[Act 4 README](../../campaign/act-4-deep-water/README.md#voice); this section holds how they are cast and rendered.
+
+- **Two new colony voices**, cast as Ares Control and Lance Control were (real lines, two new candidate readers each
+  from the CC0 and public-domain sources, never a main-cast reader nor a voice already cast, radio filter b, the
+  neutral settings, `uncast: true` until the round picks), in an audition step of round 48 if the GPU is free,
+  otherwise in M8 part B's round:
+  - **Dr. Ilse Brandt** (Conamara Station, Level 22): a woman, dry, tired, precise, older than Varga. Her reader must
+    sit clearly apart from Varga's 190–210 Hz and from Okafor's voice, since Level 22 has the two scientists talk
+    to each other (Varga's "*Ilse? It's Elena.*"): a lower, flatter register. Audition lines: her first call and her
+    answer to Varga.
+  - **Thera Deep Control** (Levels 23, 27): the city's harbour controller, a calm man, older than Rook; below or
+    between the cast men (Ares Control 112 Hz, Nansen 124 Hz, the Kilo Lead 129 Hz) by timbre rather than pitch alone,
+    warmer and slower than Ares Control's dryness. Audition lines: Level 23's t=34 call and the t=70 "*Forty thousand
+    people eat from those racks.*"
+- **The Choir speaks** twice (Level 26 at t=99, Level 28 as the Maw dies): Level 21's treatment as decided for its
+  first words (fragments split at the ellipses and joined by 0.7 s of the Choir's drone, the round-18 layering with
+  the part-H pick of a or b, the `distorted` filter with the dropouts between the fragments). Level 26's line is
+  quieter and closer, "a reversed-whisper line" as its level document asks: proposal, the same layering with the
+  reversed copy raised from 0.22 to 0.4 and the take at exaggeration 0.25, so it reads as a whisper through the
+  radio, not a chant; one take each, pinned. It still **sings** (its round-29 stage sound) before Level 28's boss.
+- **Rook's cut-off** (Level 26, t=160.3, "*Lancer, something's below u—*"): rendered whole and cut by Whisper's word
+  timing inside "us", then a burst of static and silence, as Lifeline Three's cut in round 32 (`tts_r32.py`); his
+  t=150 line is read at the neutral row, slower, with no joke (Level 20's quiet beat), pinned.
+- **Pronunciation** (to try at the render step, as Act 3's: Whisper's read-back with the name prompt, three seeds,
+  the plain spelling against a respelling; kept only where it reads better):
+
+| Name | Say | Respelling |
+|---|---|---|
+| Thera Deep | THEER-uh deep | as written; "Theera" if the read-back hears "terror" |
+| Conamara (Station, Chaos) | kon-uh-MAR-uh, KAY-oss | as written |
+| Brandt (Dr. Ilse) | BRAHNT, ILL-zuh | "Ilsa Brant" if the read-back fails |
+| Marlin (L27's hauler) | MAR-lin | as written |
+| Pelagic-3 (L28's recon sub) | puh-LAJ-ik three | "Pelajic Three" if the read-back fails |
+
 ### Briefings
 
 The briefing pages (a level's and an act's) are **voiced** (user decision) by the same pipeline
@@ -496,14 +535,14 @@ level).
       end's lines; the two briefing pages: 22 files) and Rook's three "Up top!" barks of a reversed section (the
       rear-wave bark's `top_lines`, source `wingmen barks rear-wave top`) rendered with the cast speakers (Okafor,
       Varga, Rook, Ares Control); four takes pinned; `VoiceFilesTest` covers Level 20 and the top barks (M7 part G,
-      step VOX-G, 2026-10-20; pending the user's review). Open: `RadioTimelineTest` gets Level 20's runs once the
+      step VOX-G, 2026-10-20; decided in round 48 (2026-10-22)). Open: `RadioTimelineTest` gets Level 20's runs once the
       level is mapped
 - [x] Level 21's lines (eight timed with Rook's two side takes, `requires: escort`; the three `boss-phase` lines;
       the four `boss-destroyed` lines with the Choir's spoken "…many… we are many… we are going…", `distorted`, with
       the Choir's layering; the survey crawler's secret, the level end's line; the two briefing pages: 21 files; the
       secondary has no line) and the Act 3 outro's four pages rendered with the cast speakers (Okafor, Varga, Rook,
       Ares Control, the Choir): 25 files, seven takes pinned; `VoiceFilesTest` covers Level 21 and the Act 3 outro
-      (M7 part H, step VOX-H, 2026-10-20; pending the user's review). Open: the Choir line's fragment joins (0.7 s
+      (M7 part H, step VOX-H, 2026-10-20; decided in round 48 (2026-10-22)). Open: the Choir line's fragment joins (0.7 s
       of drone between separately spoken fragments) and its layering a/b (Design, The Choir) are not built: the
       line is one take through the round-18 layering (a); `RadioTimelineTest` gets Level 21's runs once the level
       is mapped
@@ -517,6 +556,10 @@ level).
       the speaker table, `VoiceData.respelled`; Ares Control in the table) and the
       Act 3 names in the read-back prompt (part B); the Choir's spoken line (part H: accepted as one take in round 44, Q.7; held 4.5 s past the death roar, round 45 B.a); each Act 3 level's lines and the act intro and outro pages rendered and
       reviewed in its part's round (the whole Act 3 listen-through, 202 lines, accepted in round 45, V.1), `RadioTimelineTest` voiced per level with and without Rook
+- [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
+      speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
+      line); Rook's cut-off at t=160.3; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
+      intro and outro pages rendered and reviewed in its part's round
 
 ## Concept art
 
@@ -1173,3 +1216,5 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   Okafor 135-161 Hz median, Varga 188-210, Rook 132-182, Ares Control 116-133. No radio retime: the timed lines
   never overlap (the closest, t=13 → 21, leaves about 5 s).
 - 2026-10-21 (user, [round 45](../../concept-rounds/round-45/README.md), V.1): the listen-through of all 202 voiced Act 3 lines: all fine, the Act 3 voices accepted.
+- 2026-10-22 (step AUD48, M8 design phase, decided in round 48 (2026-10-22)): *Act 4 voices* drafted: the two
+  colony voices' casting briefs, the Choir's Level 26 whisper treatment, Rook's cut-off, the Act 4 names to try.

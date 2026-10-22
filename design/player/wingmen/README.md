@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Wingmen and drones
@@ -33,7 +33,7 @@ can only hold a heavy drone; Rook is freed at Ceres Hub in L29 and is back from 
 upgrades are kept.
 
 In Act 2 the slot always holds Rook: there is no empty escort slot and no choice of escort until
-the Warden (L22).
+the Bulwark (L22).
 
 ### Rook (AI wingman)
 
@@ -341,16 +341,43 @@ Rook's repair cost per point is the difficulty's `repair_cost`, so it is not in 
 - The HUD's escort box and the hangar's escort UI are in [HUD](../../ui/hud/README.md) and
   [hangar](../../ui/hangar/README.md#escort-from-level-08).
 
-### Heavy drone "Warden" (escort alternative, L22)
+### Heavy drone "Bulwark" (escort alternative, L22)
+
+*Act 4 draft, decided in round 48 (2026-10-22). Renamed from "Warden", which clashes with
+Act 3's Warden Tank (the table's numbers are the 2026-10-01 first draft, kept; the under-water
+changes and the loaner are new).*
 
 | Property | Value |
 |---|---|
-| Ship | Armour 120, no shield, top speed 200 px/s, hitbox 14×14 px |
+| Ship | Armour 120, no shield, top speed 200 px/s, hitbox 14×14 px; the hydro-kit's drag applies under water like Rook's |
 | Formation | Wing slot (56, +20), no automatic formation changes |
-| Weapon | Slow cannon straight ahead: 1 shell/s, 14 damage (14 DPS), not upgradable |
-| Draws fire | While within 150 px of the player, 30 % of enemy aimed shots that would target the player target the Warden instead |
+| Weapon | Slow cannon straight ahead: 1 shell/s, 14 damage (14 DPS), not upgradable. Under water the shell is `anti-sub` (a deep gun), so it keeps its 14 DPS instead of losing 30 % |
+| Draws fire | While within 150 px of the player, 30 % of enemy aimed shots that would target the player target the Bulwark instead |
 | Destroyed | Out for the rest of the level; rebuilt for the next level, repairs 8 cr per point |
 | Radio | None (a drone) |
+| Price and unlock | 6 000 cr, in the shop from the visit before L22, **and one Bulwark is loaned free** while Rook is missing (below) |
+
+### Rook's loss and absence (L26–L29)
+
+*Act 4 draft, decided in round 48 (2026-10-22) (Q7 = a: the shoot-down on the screen). The story
+beat is in [Rook](../../story/characters/rook/README.md) and the L26 level draft.*
+
+- **L26's end:** a scripted loss. In the black, torpedo trails from unseen Depth Hunters, Rook's
+  light spins down into the dark, his last radio line is cut mid-word. It is not a normal
+  "Downed" (the eject, the repair at the next visit): the save records `rook_missing: true` from the
+  win of L26.
+- **L27, L28 and L29 (Act 5's first level):** the escort slot shows Rook as **MIA** (a greyed card,
+  no hire and no repair row), his guns and upgrades kept in the inventory; the slot can hold only a
+  heavy drone. A visit before L27 puts a **Bulwark (loaner)** in the slot at no cost, so the slot is
+  never empty, and the shop sells the Bulwark for 6 000 as a second one for the later levels. Rook
+  has no radio lines in L27 and L28: his `requires: escort` barks are dropped, not just silenced by
+  the missing escort (the debrief and briefing lines name him). He is freed at Ceres Hub in L29 and
+  flies again from L30, with all his guns and upgrades.
+- **`--escort none`** and a run without Rook: nothing changes for the shoot-down (there is no ship
+  to lose), only his radio is heard in L26; the MIA state is a no-op. A `--level 27` debug start
+  treats him as MIA unless `--escort rook:` is given.
+- The new rules need `Campaign.escortFlight()` to take the level number (an availability per
+  level) and the hangar's escort UI a "missing" card ([hangar](../../ui/hangar/README.md)).
 
 ### Drones
 
@@ -358,10 +385,10 @@ Rook's repair cost per point is the difficulty's `repair_cost`, so it is not in 
 |---|---|---|---|---|---|---|
 | Light drone | wing mount | Orbits the ship at 36 px, fires a small gun at the point ahead of the nose, blocks bullets (breaks after 8 hits, rebuilds in 6 s at L1). Sold as the [Light Drone Bay](../weapons/light-drone-bay/README.md); see *Light drone* below | 2 → 3 | 2 000 | L15 | draft |
 | Rear-guard drone | wing mount | Trails 40 px behind the ship, fires backwards (`rear`), blocks bullets from behind. Sold as the [Rear-guard Drone Bay](../weapons/rear-guard-drone-bay/README.md); see *Rear-guard drone* below | 2 → 3 | 2 400 | L20 | draft |
-| Heavy drone "Warden" | escort | Tough (armour 120), slow-firing cannon, draws enemy fire | 0 | 6 000 | L22 | idea |
+| Heavy drone "Bulwark" | escort | Tough (armour 120), slow-firing cannon (`anti-sub` under water), draws enemy fire; a free loaner while Rook is missing | 0 | 6 000 | L22 | draft |
 | Hunter drone | escort | Leaves formation to chase homing targets, fragile | 0 | 7 500 | L29 | idea |
 
-Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Warden arrives before
+Unlock `Lnn` = in the shop from the hangar visit before level *nn*. The Bulwark arrives before
 Rook's absence (L27–L29) so the escort slot never has to stay empty.
 
 #### Light drone
@@ -433,6 +460,17 @@ Concept round 28 (M5 part A) — game capture, see [prompts](concept/prompts.md#
 | [concept/part-a-capture-final-r28-a.mp4](concept/part-a-capture-final-r28-a.mp4) | The same capture as video with the game's sound (101 s): formations, the barks' voices, the eject, the Act 2 weapons, the utility modules, the hangar | chosen |
 | [concept/rook-eject-capture-r28-b.png](concept/rook-eject-capture-r28-b.png) | Game capture sheet of the eject after the pod fixes (Level 07 medium, scratch data: armour 2, hitbox 40, no dodging): the pod over the explosion, its red beacon glow and smoke trail at 3× zoom, 0.1 s apart, and the full frame with the pod heading for the edge away from the ship, `EJECTED` in the HUD and the eject bark on the radio | chosen |
 
+Concept [round 48](../../concept-rounds/README.md) (Act 4 "Deep Water", design phase 2026-10-21) — the
+heavy drone [Bulwark](#heavy-drone-bulwark-escort-alternative-l22), a/b, under the round-48 under-water
+grade; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](concept/prompts.md#bulwark-r48-a).
+
+| File | What | Status |
+|---|---|---|
+| [concept/bulwark-r48-a.png](concept/bulwark-r48-a.png) | Bulwark A "turtle" — a domed blue-grey armour shell with a cobalt rim band, skirts, a heavy barrel and twin pump-jets, 36×36 (hit box 14×14); intact, hit, under half; beside the Stormhawk and Rook; the wing slot (56, +20) and the 150 px draw-fire radius; the loss; draws fire with a slow cyan lure halo (sheet) | chosen — round 48 |
+| [concept/bulwark-r48-a.gif](concept/bulwark-r48-a.gif) | Bulwark A — lagging in its wing slot with the water's drag, its cannon firing once a second, 30 % of the stand-in Needlers' aimed shots going to it (motion) | chosen — round 48 |
+| [concept/rejected/bulwark-r48-b.png](concept/rejected/bulwark-r48-b.png) | Bulwark B "riot barge" — a slab hull behind a wide curved shield blade, the cannon through its slit, four corner thrusters; draws fire with a white strobe beacon (sheet) | rejected — round 48: a picked |
+| [concept/rejected/bulwark-r48-b.gif](concept/rejected/bulwark-r48-b.gif) | Bulwark B — the same scene as A (motion) | rejected — round 48: a picked |
+
 ## Implementation
 
 M5 part A builds Rook and the escort slot; its production art, the barks' voices and the AI as
@@ -469,13 +507,14 @@ built were accepted in concept round 28.
       its impact (his goal moved beside the run of telegraphed lanes, on the side nearer him; only the
       impact hurts, so a slammed lane is safe again); a slam's impact hitting him; the cases in
       `SlamArenaTest` (`rookKeepsOutOfATelegraphedLane`, `aSlamHitsRookInItsLane`)
-- [ ] Warden heavy drone: formation, cannon, draw-fire rule — **later: Act 4** (the Warden unlocks at L22)
+- [ ] Bulwark heavy drone (was "Warden"): formation, cannon (`anti-sub` under water), draw-fire rule, the free loaner — **later: Act 4** (unlocks at L22)
 - [x] Drone behaviours: orbit, trail, block, rebuild for the Act 3 pair (light drone L15, rear-guard drone L20) — specified under *Light drone* and *Rear-guard drone* (draft); the light drone's
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
 - [ ] The hunter drone's behaviours (L29) — **later: Act 5**
-- [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4**
+- [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4** (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`)
+- [ ] Rook under water: the hydro-kit's drag, his guns × 0.7, his formation in the trench walls and the dark (his lamp) — **later: Act 4**
 
 - [x] Level 12 (M5 part F, step 3): the wind pushing him (positions, edges clamped); his shots
       passing a latched Lamprey and his pick skipping it; no sonde collection; a test case in a gust
@@ -718,3 +757,4 @@ built were accepted in concept round 28.
   Bay](../weapons/rear-guard-drone-bay/README.md) document, linked from here. Rook's rear bark in a
   reversed section (Level 20, where "behind" is the top of the screen) gets three "Up top!" variants
   (`top_lines` of the rear-wave trigger, rendered into the barks table), accepted in round 43 (2026-10-20); it stays silent for the bottom entries there.
+- 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): the heavy drone "Warden" is renamed **"Bulwark"** (it clashed with Act 3's Warden Tank); its cannon is `anti-sub` under water; one Bulwark is loaned free while Rook is missing (L27–L29) so the slot is never empty; Rook's loss is a scripted on-screen shoot-down at L26's end (Q7 = a; alternatives: radio only, or told in L27's briefing); Rook under water flies with the same drag and the × 0.7 damage rule.

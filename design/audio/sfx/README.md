@@ -210,6 +210,11 @@ gate. P2–P3, one loop per setting in the [world](../../world/README.md).
 | Mars colony | `mars-colony` (Act 3: Level 17, the plains wind, the domes' air-plant hum, a distant rail clank) | round 40, accepted: [a](concept/mars-colony-r40-a.ogg) — synthesized plains wind, air-plant hum (60 Hz partials) and a distant rail clank, seamless 16 s loop (accepted in round 40, S.l) |
 | Mars dust storm | `mars-storm` (Act 3: Level 18 from t=25, swelling in the storm walls, +3 dB as Level 13's whiteout; in the eye a crossfade to `mars-dust` and back over 4 s, as Level 12's eye) | [a](concept/dust-storm-bed-r36-a.ogg) — "recorded front", a sandstorm over a furious low howl, seamless 16 s loop (round 36, S.5 = a) |
 | Mars foundry | `mars-foundry` (Act 3: Level 19, conveyor rumble, a far furnace roar, a slow hammer, the plateau wind) | round 42 (M7 part F): [a](concept/mars-foundry-r42-a.ogg) — synthesized conveyor rumble, far furnace roar, a slow distant hammer every 4 s with a hall echo and the plateau wind, seamless 16 s loop, pending the user's review |
+| Europa ice | `europa-ice` (Act 4, draft: Level 22, Level 23's shaft mouth, Level 28 after the breakout) | round 48: not made yet (Freesound quota): a cold wind over open ice with deep ice groans rolling under it |
+| Europa under the ice | `europa-under` (Act 4, draft: Level 23 from the waterline, Level 24) | round 48: not made yet: muffled deep water, a heavy pressure rumble, hull creaks, far whale-like calls; no bubbles |
+| Europa trench | `europa-trench` (Act 4, draft: Level 25, Level 26's scarp) | round 48: not made yet: the under-water bed lower and closer, far rock grinding |
+| Europa black water | `europa-black` (Act 4, draft: Level 26) | round 48: not made yet: a heavy pressure drone in total dark, very sparse far calls |
+| Europa vents | `europa-vents` (Act 4, draft: Level 27; a caldera variant for Level 28's arena) | round 48: not made yet: a deep roaring vent rumble with slow surges and a far venting hiss |
 
 ### Act 3 sounds (approved, round 36)
 
@@ -284,6 +289,81 @@ at the enemy-fire level; it starts and stops with a 0.2 s fade, is never stolen 
 lives (as an ambience) and counts as one voice. The dust storm changes nothing in the mix: the
 bullets and their sounds stay as they are (M6 = a).
 
+### Act 4 sounds (draft, round 48)
+
+**Status: draft, decided in round 48 (2026-10-22)** (M8 design phase, step AUD48). The new sounds Levels
+22–28 and the Act 4 arsenal need, from the [level](../../campaign/act-4-deep-water/README.md), unit, boss and
+equipment documents (the level documents list them in their *Music & ambience*; Levels 27–28 are still being
+drafted). The rules are Act 3's and the user's: real recordings from Freesound only (CC0 or CC-BY, in CREDITS.md),
+**heavy and big**, levelled on the 200 Hz–5 kHz band like the accepted Act 3 sounds, and **no bubbly, popping or
+squelching sounds**, a hard constraint in an under-water act. Round 48's **Q12** (proposed **a**): **no low-pass on
+the sfx bus** (it would make every Act 3-style heavy sound small for six levels); instead heavy real under-water
+recordings for the explosions and the creatures, the muffled ambience beds above (*Ambience (per setting)*), and no
+bubble pop anywhere (the chosen torpedo launch's bubbles cut, the A theme's bubble layer dropped). Alternative b: the
+bus low-pass as first drafted.
+
+**Not made yet**: Freesound refused the first original download of round 48 on 2026-10-21 (HTTP 429, its daily
+request limit of 500), so every sound here is a brief for the round; the a/b proposals follow after the quota resets
+(the round page's sound rows name the candidate originals). A sound that reuses a chosen file says so.
+
+**Explosions under water** (Q12 a): the explosion ladder's rungs (`tiny` to `huge`) get under-water variants for every
+kill below the waterline (Levels 23–28): deep, heavy pressure booms with a muffled body and a long low tail, no splash
+and no bubble rattle; the chosen [explosion-underwater-r04-a](concept/explosion-underwater-r04-a.ogg) is one candidate
+for a rung. P1.
+
+**Terrain, hazards and set pieces**
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| Ice crack | Level 22, a geyser's tell | A deep ice crack running and splitting, 0.8–1.0 s | round 48 (not made yet) | P1 |
+| Geyser burst | Level 22, a geyser erupting | A roaring column of steam and slush tearing upward, 1.5 s; no hiss-pop at the start | round 48 (not made yet) | P1 |
+| Conamara station hum | Level 22's end, the station | A big building's ventilation hum and a low transformer drone under the wind | round 48 (not made yet) | P3 |
+| Waterline crossing | Level 23, the ship crossing the waterline | A heavy submersion swell: the air's roar cut into a deep muffled whoomph; no splash-plop | round 48 (not made yet) | P1 |
+| Hydro-kit refit | Level 23, the kit locking for water | Heavy clamps and a hydraulic seal, 0.6 s | round 48 (not made yet) | P2 |
+| Wall scrape under water | Levels 23 and 25, the ship on the shaft or trench wall (the canyon scrape's rule) | Metal grinding on ice or rock, muffled, a hard onset | round 48 (not made yet); else the chosen canyon scrape, muffled | P2 |
+| Siphon pump | Level 23, the farm racks' pumps: a hum while one lives, its break | A deep pump throb; a heavy mechanical failure with a pressure release | round 48 (not made yet) | P2 |
+| Reef iris and collapse | Level 24, a reef opening and dying | A slow grinding of chitin plates; a heavy crumbling of coral-like rock | round 48 (not made yet) | P2 |
+| Beacon pulse | Level 24, the beacon line | A deep, far, clean sonar ping under the music | round 48 (not made yet); else the chosen Sonar Pulse ping, lower | P3 |
+| Headlight click | Level 26, the lamps on at the start and out at t=8–18 | A heavy relay clunk | round 48 (not made yet) | P2 |
+| Rook's lamp flicker and spin-down | Level 26, t≈160, Rook's loss | An electrical flicker crackle, then his engine winding down into silence | round 48 (not made yet) | P1 |
+| Heat plume / vent eruption | Level 27 (its document in progress): the tell and the eruption | A deep rumble rising from below; a roaring column of superheated water, heavy | round 48 (not made yet) | P1 |
+| Breakout | Level 28, the ice ceiling shattering after the kill | Ice cracking and tearing (calving), a huge crash, a roar of water and air into the open | round 48 (not made yet) | P1 |
+
+**Enemies** (each unit's death plays its size rung, under water the variants above; the Vrell screech rule covers a new
+large Vrell unit as it enters: the Abyss Ray; the human-built Depth Hunter never screeches)
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| [Drill Rig](../../enemies/ground/drill-rig/README.md) | Level 22: the collar boring (a loop), its core's death | A low heavy drill whine with a grinding bite; a structure failing, metal and ice | round 48 (not made yet) | P1 |
+| [Eel Swarm](../../enemies/naval/eel-swarm/README.md) | The head's pulse shot; a segment dying | A dull pressure thump, short; a wet tearing slide, short; no squelch | round 48 (not made yet) | P2 |
+| [Glassfin](../../enemies/naval/glassfin/README.md) | Its death (`tiny`) | A thin glass shatter, small and dry | round 48 (not made yet) | P2 |
+| [Abyss Ray](../../enemies/naval/abyss-ray/README.md) | Its rising horn (the shadow's tell); its fan | A low, heavy, swelling horn-like call; the fan as the enemy medium shot | round 48 (not made yet) | P1 |
+| [Barbfin](../../enemies/naval/barbfin/README.md) | Its needles | A short sharp spit (the Needler's role) | round 48 (not made yet); else the Needler's shot | P3 |
+| [Siren](../../enemies/naval/siren/README.md) | The sac's 0.8 s tell and the ring; the slow on the ship | A soft, heavy, low sweep spreading out, sung rather than pinged; a falling tone with a hull shimmer | round 48 (not made yet) | P1 |
+| [Spiral Nautilus](../../enemies/naval/spiral-nautilus/README.md) | The shell spin (a loop, the nearest), the uncoil, the spiral | A heavy rolling grind; a shell scraping open; the spiral as the enemy small shot | round 48 (not made yet) | P2 |
+| [Glow Angler](../../enemies/naval/glow-angler/README.md) | The lure (a loop, the nearest), the lunge, its ring | A faint electric hum; a rushing surge and a heavy jaw snap (no click); the ring as the enemy small shot | round 48 (not made yet) | P1 |
+| Driftjelly | Level 26 | Reuse its pulse of round 46 (the user's pick) | — | P3 |
+| [Depth Hunter](../../enemies/naval/depth-hunter/README.md) | Its rise, the torpedo launch, the torpedo's run (Level 26's far trails too), its death | A ballast blow and a hull groan; a heavy pneumatic launch thump; a long distant rising hiss; a mechanical break-up, metal and sparks. It must sound built, not grown | round 48 (not made yet) | P1 |
+| Scuttler on silt | Level 24 (returning unit) | Its walk, muffled; reuse with a low-pass unless the round asks for more | — | P3 |
+
+**Bosses**: the [Abyssal Maw](../../enemies/bosses/abyssal-maw/README.md#sounds-brief) (arrival roar, gill breath,
+throat charge, coil sweep, eel shed, dive, lunge, implant spark and burst, death) and the reveal's set piece (the
+breakout above, the cruisers' rise, their broadside, flak and point defence: big naval gun volleys, airbursts, rapid
+autocannon) follow the boss document's *Sounds brief*, one row each in round 48, not made yet. P1.
+
+**Player equipment**
+
+| Sound | Trigger and use | Brief | Proposed in | Priority |
+|---|---|---|---|---|
+| [Harpoon Torpedoes](../../player/weapons/harpoon-torpedoes/README.md) | Launch; the hit | The `torpedo` family made heavier and without the chosen launch's bubbles: a pneumatic tube thump and a motor running off; the hit on the under-water explosion set | round 48 (not made yet) | P1 |
+| [Depth Charges](../../player/weapons/depth-charges/README.md) | Roll-out; the burst | A heavy barrel clank; a heavy, low under-water thud | round 48 (not made yet) | P1 |
+| Sonar Pulse | The special (L22) | Reuse the chosen [special-sonar-r04-a](concept/special-sonar-r04-a.ogg) | — | P2 |
+| Decoy Flares | The special (L27) | Reuse the chosen [special-flares-r08-a](concept/special-flares-r08-a.ogg) | — | P2 |
+| Bulwark | The heavy drone (L22 on): a hit as it draws fire, its break and rebuild | Reuse the light drone's break and rebuild (round 46); a heavier hit only if the round asks | — | P3 |
+
+**Voice-adjacent**: the Choir's whisper (Level 26) and Rook's cut-off are the voice pipeline's
+([voice](../voice/README.md#act-4-voices-draft-round-48)); no sound file.
+
 ### Chosen sounds the game does not play
 
 Every other chosen sound in the Concept art tables below is played by the game (an entry of
@@ -326,7 +406,9 @@ game may play only `proposed` sounds of an open concept round, provisionally unt
   player damage and warnings +2 dB, pickups −6 dB, enemy hits −6 dB (8 dB below player damage).
 - **Variation**: every frequent sound gets ±5 % random pitch and 2–3 variants.
 - **Stereo**: pan by horizontal play-field position, subtle (max ±40 %).
-- **Underwater**: a low-pass filter on the sfx bus in `sub` settings, and muffled variants for
+- **Underwater** (round 48 Q12, proposed **a**, pending the user's review: see *Act 4 sounds*): **no** low-pass on
+  the sfx bus; heavy real under-water recordings for the explosions and the creatures instead. The first draft was:
+  a low-pass filter on the sfx bus in `sub` settings, and muffled variants for
   explosions.
 
 ## Concept art
@@ -985,7 +1067,8 @@ alone (no file); b adds a crack layer over it. The game ships the eruption and t
 - [x] SFX playback with instance limits, stealing by priority, pitch variation: the 32-voice
   limit with priority stealing (`VoiceLimit`, `Sfx.Priority`), the per-sound instance limits, ±pitch
 - [x] Stereo panning by play-field X
-- [ ] Underwater low-pass on the sfx bus — **later: Act 4** (the Europa levels)
+- [ ] Underwater low-pass on the sfx bus — **later: Act 4** (the Europa levels); round 48 Q12 a proposes dropping it
+  for the under-water recordings of *Act 4 sounds* (decided in round 48 (2026-10-22))
 - [x] The Act 1 sounds: every chosen sound an Act 1 event uses is played (the list of the ones
   that are not, with the reason, is above); the explosion ladder by size, the Smart Bomb, the
   shield's restore chime, the low-armour beeps, the pickups by type, the ground targets' crumble
@@ -1542,3 +1625,7 @@ Rounds 47 and 49 closed (2026-10-22): the dome hit **b** (round 49); herald song
   its LUFS cap, so they play at the same game levels. The launch rail's stop at 3.55 s (r11-b: 3.6 s) and its
   4.95 s fit the 5 s launch. They still wait for their originals (the Freesound download limit); the rebuilt files
   will replace the preview cuts.
+- 2026-10-22 (step AUD48, M8 design phase, decided in round 48 (2026-10-22)): *Act 4 sounds* drafted from the
+  level, unit, boss and equipment documents, with five Europa ambience keys; Q12 a proposed (no sfx-bus low-pass,
+  heavy under-water recordings, no bubbles). No file made: Freesound answered HTTP 429 (its 500-a-day request limit)
+  at the first original download on 2026-10-21, so the a/b proposals follow when the quota resets.
