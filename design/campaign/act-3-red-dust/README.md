@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../act-2-homefront, ../../world/mars, ../../story/twist]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Act 3 – Red Dust
@@ -416,7 +416,7 @@ ART-B, as Act 2's); the intro's four images are on the
       pauses checked); the Choir's speech treatment (part H). Part B's half done in steps AUD-B and VOX-B
       (the listen-through of every voiced Act 3 line: all fine, round 45 V.1, 2026-10-21).
 - [x] `ActPlaythroughTest` and `BalanceTest` through Act 3 with Rook (M7 part I, step I1, 2026-10-20: Levels 01–21 on every difficulty).
-- [ ] The user's playthrough of Act 3 (the same one as Act 2's, round 34's P9 and M7's: part I's save at the Level 15 hangar, medium; round 44 X.m, I.3), then the `v0.1` release (Acts 1-3, I.2).
+- [x] The user's playthrough of Act 3 (done 2026-10-21, its fixes in commits 6381ef2b–c72cdd24; the same one as Act 2's, round 34's P9 and M7's: part I's save at the Level 15 hangar, medium; round 44 X.m, I.3), then the `v0.1` release (Acts 1-3, I.2: released as `v0.1` on 2026-10-22).
 
 ## Open questions
 
@@ -469,3 +469,4 @@ ART-B, as Act 2's); the intro's four images are on the
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
 - 2026-10-20 (user, round 44, closed): Level 21 and the act end built and reviewed (rows F, V, K, B, Q; two captures K.b and K.c asked for changes, see the [Level 21 decisions](level-21-dust-colossus/README.md#decisions)); the art audit (A.a, A.b: `art: final` for this README and the part READMEs whose assets are production); the stale "pending the user's review" notes of the Act 3 tree and units rewritten as "accepted in round N (date)" (I.7); an Act 3 level is `implementation: done` when its round has closed and its checklist is ticked (I.8; Level 15 is `done`); the playthrough stays an act-level item (one for M5 and M7, I.3). The release `v0.1` is Acts 1-3 (I.2); the Act 4 design phase follows part I and the release (J.a).
 - 2026-10-21 (user, round 45): the Act 3 voices accepted after the listen-through (V.1); hard's Act 3 economy accepted for v0.1, revisited after the user's playthrough (C.1).
+- 2026-10-22 (user): the playthrough of Act 3 done (2026-10-21; its fixes in commits 6381ef2b–c72cdd24) and `v0.1` (Acts 1-3) released. Still open: the "All 7 levels" item and Levels 18 and 19's "Easy/hard variations" items (Level 18's autopilot does not fly without Rook; Level 19's text records no autopilot check on every difficulty).
