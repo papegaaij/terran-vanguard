@@ -181,7 +181,7 @@ from the floor to the rim (L20); the Hellas basin from the rim to the lime hollo
 ### New mechanics
 
 Each is designed in the level that introduces it; the systems are M7's parts
-(the [gap analysis](../../../m7-gaps.md)'s roadmap row).
+(the gap analysis (a local working note, `m7-gaps.md`)'s roadmap row).
 
 | Level | Mechanic | Where it is designed |
 |---|---|---|

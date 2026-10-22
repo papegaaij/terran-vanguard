@@ -112,106 +112,64 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "enemy-coilwyrm-cut-r27-a.ogg",
         // Concept round 28 (open): the proximity mine's arming beep, option a until the choice.
         "weapon-mine-arm-r28-a.ogg",
-        // Concept round 33's choice: the Driftjelly's pulse (synthesized; the other seven Level 11
-        // sounds are made from their originals by tools/art/sfx_originals.py).
-        "driftjelly-pulse-r33-a.ogg",
         // Concept round 34's choices (user, 2026-10-12; M5 parts F-H, rounds 34-36's sounds): Level 12's
-        // thunder and gust b, the latch, drain, shake-off, chime and the rain-only storm bed (F6 = a) a,
-        // beside round 08's chosen storm ambience, which stays.
+        // thunder and gust b, the latch, shake-off and the rain-only storm bed (F6 = a) a, beside round 08's
+        // chosen storm ambience, which stays (the drain and chime: round 46's picks, below).
         "ambience-storm-rain-r34-a.ogg",
         "thunder-1-r34-b.ogg",
         "thunder-2-r34-b.ogg",
         "thunder-3-r34-b.ogg",
         "gust-r34-b.ogg",
         "lamprey-latch-r34-a.ogg",
-        "lamprey-drain-r34-a.ogg",
         "lamprey-shake-r34-a.ogg",
-        "sonde-chime-r34-a.ogg",
-        // Level 13's: grid online b, the relay hit and the integrity alarm a, the drone launch and the
-        // relay destroyed (one proposal each).
+        // Level 13's: grid online b, the relay hit and the integrity alarm a and the relay destroyed (the
+        // drone launch: round 46's pick, below).
         "relay-hit-r35-a.ogg",
         "integrity-alarm-r35-a.ogg",
         "relay-destroyed-r35-a.ogg",
-        "drone-launch-r35-a.ogg",
         "grid-online-r35-b.ogg",
-        // Level 14's: the tear-free roar and the canopy withering b, the root burst a, the root growth and
-        // the canopy hum (one proposal each).
+        // Level 14's: the tear-free roar and the canopy withering b, the root burst a and the root growth
+        // (the canopy hum: round 46's pick, below).
         "root-burst-r36-a.ogg",
         "root-growth-r36-a.ogg",
         "tear-free-roar-r36-b.ogg",
         "canopy-withering-r36-b.ogg",
-        "canopy-hum-r36-a.ogg",
         // M7 part A, the Act 3 arsenal: the Ion Beam's chosen loop (round 36 a) and round 37's picks
-        // (user, 2026-10-13: the beam's stop and rock impact, the deflector's return, the EMP ring and
-        // power-down, the lance's rumble and the overcharge's whoosh b, the rest a; the lance's loop c
-        // and the lock beep are already there).
+        // (user, 2026-10-13: the rock impact, the deflector's return and the lance's rumble b, the rest a;
+        // the lance's loop c and the lock beep are already there; the beam's stop and impact, the drone
+        // rebuild, the EMP, the overcharge and the dash: round 46's picks, below).
         "ion-beam-loop-r36-a.ogg",
         "ion-beam-start-r37-a.ogg",
-        "ion-beam-stop-r37-b.ogg",
-        "beam-impact-r37-a.ogg",
         "beam-impact-rock-r37-b.ogg",
         "deflector-tick-r37-a.ogg",
         "deflector-return-r37-b.ogg",
         "drone-break-r37-a.ogg",
-        "drone-rebuild-r37-a.ogg",
-        "emp-ring-r37-b.ogg",
-        "emp-powerdown-r37-b.ogg",
         "lance-rumble-r37-b.ogg",
-        "overcharge-whoosh-r37-b.ogg",
-        "overcharge-end-r37-a.ogg",
         "cooldown-ready-r37-a.ogg",
-        "dash-r37-a.ogg",
         // M7 part B, Level 15: the Burrower's eruption chosen in round 36 (S.2 = a; it opens with the 1.0 s
         // bulge tell, so it starts at the bulge) and round 38's picks (2026-10-14): the bulge's crack layer b
-        // over the eruption, the dive b, the entry roar a and the Mars dust wind a.
+        // over the eruption, the entry roar a and the Mars dust wind a (the dive: round 46's pick, below).
         "burrow-eruption-r36-a.ogg",
         "burrow-bulge-r38-b.ogg",
-        "burrow-dive-r38-b.ogg",
         "entry-roar-r38-a.ogg",
         "mars-dust-r38-a.ogg",
-        // M7 part C, Level 16: the canyon wall scrape chosen in round 36 (S.3 = b) and round 39's proposals,
-        // option a until the user's choice (the tendril's hum, burn and break, the Threadcrawler's walk, the
-        // `mars-canyon` ambience; all synthesized).
+        // M7 part C, Level 16: the canyon wall scrape chosen in round 36 (S.3 = b) and the tendril's hum
+        // (round 39 a, synthesized, kept by the user in round 46; the rest of Level 16: round 46's picks).
         "canyon-scrape-r36-b.ogg",
         "tendril-hum-r39-a.ogg",
-        "tendril-burn-r39-a.ogg",
-        "tendril-break-r39-a.ogg",
-        "crawler-walk-r39-a.ogg",
-        "mars-canyon-r39-a.ogg",
-        // M7 part D, Level 17: round 40's proposals, option a until the user's choice (the domes' hit and break,
-        // the Choir Herald's song, aura, absorb and collapse, the Shellback's walk, lob, curl, roll and uncurl,
-        // the `mars-colony` ambience; all synthesized).
+        // M7 part D, Level 17: round 40's proposals still standing, option a (the domes' hit, the Choir Herald's
+        // song and collapse; synthesized; the hit and the song until their redo; the rest: round 46's picks).
         "dome-hit-r40-a.ogg",
         // The dome break: round 40's redo c, chosen in round 41 (S.h, 2026-10-19).
         "dome-break-r40-c.ogg",
         "herald-song-r40-a.ogg",
-        "herald-aura-r40-a.ogg",
-        "aura-absorb-r40-a.ogg",
         "aura-collapse-r40-a.ogg",
-        "shellback-walk-r40-a.ogg",
-        "shellback-lob-r40-a.ogg",
-        "shellback-curl-r40-a.ogg",
-        "shellback-roll-r40-a.ogg",
-        "shellback-uncurl-r40-a.ogg",
-        "mars-colony-r40-a.ogg",
         // M7 part E, Level 18: the `mars-storm` bed chosen in round 36 (S.5 = a, "recorded front": a sandstorm over
         // a furious low howl, CC0 + CC-BY, seamless 16 s loop).
         "dust-storm-bed-r36-a.ogg",
-        // M7 part E, Level 18: round 41's unit proposals, option a until the user's choice (the Dust Devil's spin
-        // loop, opening and grit spiral, the Ghost Drone's drop, glint, burst and death; all synthesized).
-        "devil-spin-r41-a.ogg",
-        "devil-open-r41-a.ogg",
-        "devil-spiral-r41-a.ogg",
-        "ghost-drone-drop-r41-a.ogg",
-        "ghost-drone-glint-r41-a.ogg",
-        "ghost-drone-burst-r41-a.ogg",
-        "ghost-drone-death-r41-a.ogg",
-        // M7 part F, Level 19: round 42's proposals still standing, option a (the Revenant Walker's stomp, the Warden
-        // Tank's death, the belt loop, the `mars-foundry` ambience; all synthesized).
-        "walker-stomp-r42-a.ogg",
-        "tank-death-r42-a.ogg",
+        // M7 part F, Level 19: round 42's belt loop, option a (synthesized; the stomp, the tank's death and the
+        // `mars-foundry` ambience: round 46's picks, below).
         "belt-rumble-r42-a.ogg",
-        "mars-foundry-r42-a.ogg",
         // Round 43's picks (the user, 2026-10-20; built from CC0/CC-BY Freesound originals, CREDITS.md): the walker's
         // hatch b, flamer tell a, flame loop b, vent hit a, death a and wreck settle a; the furnace vents' tell a and
         // burst a; the Warden Tank's tracks a, turret a and burst a. The walker's pod missile plays the chosen enemy
@@ -244,6 +202,48 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "walker-lance-charge-r44-b.ogg",
         "walker-lance-shot-r44-a.ogg",
         "walker-shockwave-r44-a.ogg",
+        // Round 46's picks (the user, 2026-10-21; CC0/CC-BY Freesound originals, CREDITS.md), replacing the synthesized
+        // and earlier files: the Ghost Drone, Dust Devil, Shellback, Threadcrawler, tendril burn and break, Burrower dive,
+        // Herald aura and absorb, walker stomp, tank death, the canopy, canyon, colony and foundry beds and the Act 2/3
+        // sounds (Driftjelly pulse, Lamprey drain, sonde, drone launch, dash, overcharge, EMP, beam stop and impact,
+        // drone rebuild). The tendril hum stays round 39's a; the herald song, Leviathan cry, integrity alarm, dome hit
+        // and launch rail keep their old files until their redo.
+        "ghost-drone-drop-r46-b.ogg",
+        "ghost-drone-glint-r46-b.ogg",
+        "ghost-drone-burst-r46-a.ogg",
+        "ghost-drone-death-r46-b.ogg",
+        "devil-spin-r46-a.ogg",
+        "devil-open-r46-a.ogg",
+        "devil-spiral-r46-a.ogg",
+        "shellback-curl-r46-b.ogg",
+        "shellback-uncurl-r46-b.ogg",
+        "shellback-roll-r46-b.ogg",
+        "shellback-lob-r46-b.ogg",
+        "shellback-walk-r46-b.ogg",
+        "crawler-walk-r46-a.ogg",
+        "tendril-burn-r46-a.ogg",
+        "tendril-break-r46-b.ogg",
+        "burrow-dive-r46-a.ogg",
+        "herald-aura-r46-b.ogg",
+        "aura-absorb-r46-b.ogg",
+        "walker-stomp-r46-a.ogg",
+        "tank-death-r46-a.ogg",
+        "canopy-hum-r46-a.ogg",
+        "mars-canyon-r46-a.ogg",
+        "mars-colony-r46-b.ogg",
+        "mars-foundry-r46-b.ogg",
+        "driftjelly-pulse-r46-b.ogg",
+        "lamprey-drain-r46-b.ogg",
+        "sonde-chime-r46-a.ogg",
+        "drone-launch-r46-a.ogg",
+        "dash-r46-b.ogg",
+        "overcharge-whoosh-r46-b.ogg",
+        "overcharge-end-r46-b.ogg",
+        "emp-ring-r46-b.ogg",
+        "emp-powerdown-r46-a.ogg",
+        "ion-beam-stop-r46-a.ogg",
+        "beam-impact-r46-a.ogg",
+        "drone-rebuild-r46-a.ogg",
     )
 }
 

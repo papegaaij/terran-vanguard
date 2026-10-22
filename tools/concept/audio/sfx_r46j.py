@@ -265,7 +265,9 @@ SOUNDS = {
     "herald-aura": ("loop", -40.0, -1.0, "the Herald's aura, one loop while any ring is up",
                     "a soft high shimmer", {
         "a": (([Loop(862321, 10.0, hp=1500.0)], 4.0, 0.5), "an ethereal choir drone, high-passed at 1.5 kHz"),
-        "b": (([Loop(458144, 6.21, hp=1500.0)], 4.0, 0.5), "a choir's held chord, high-passed at 1.5 kHz"),
+        # b: the chord holds steady from 6.0 to about 9.25 s and then dies away; the loop stays inside it (the first
+        # cut, 6.21 s for 4 s, ran into the decay and dipped to about -59 dB at the seam every 4 s, SNDL).
+        "b": (([Loop(458144, 6.15, hp=1500.0)], 2.6, 0.5), "a choir's held chord, high-passed at 1.5 kHz"),
     }),
     "aura-absorb": ("shot", -22.0, -4.0, "a ring absorbing a hit, spaced out",
                     "the enemy-shield hit, no glassy ping", {

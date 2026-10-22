@@ -43,7 +43,9 @@ class Level14SoundsTest {
                 Sfx.ROOT_BURST, Sfx.ROOT_GROWTH, Sfx.TEAR_FREE_ROAR, Sfx.CANOPY_WITHERING, Sfx.AMBIENCE_CANOPY)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
             boolean b = sfx == Sfx.TEAR_FREE_ROAR || sfx == Sfx.CANOPY_WITHERING;
-            assertTrue(sfx.path().endsWith(b ? "-r36-b.ogg" : "-r36-a.ogg"), sfx + ": the user's round 34 pick");
+            // The canopy hum is round 46's pick a (the user, 2026-10-21).
+            String pick = sfx == Sfx.AMBIENCE_CANOPY ? "-r46-a.ogg" : b ? "-r36-b.ogg" : "-r36-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), sfx + ": the user's pick");
         }
         assertFalse(Files.exists(ASSETS.resolve("sfx/tear-free-roar-r36-a.ogg")), "the roar's a left");
         assertFalse(Files.exists(ASSETS.resolve("sfx/canopy-withering-r36-a.ogg")), "the withering's a left");

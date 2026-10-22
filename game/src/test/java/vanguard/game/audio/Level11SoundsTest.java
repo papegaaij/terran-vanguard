@@ -53,7 +53,7 @@ class Level11SoundsTest {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
         }
         // Round 33's sounds, all accepted (2026-10-09): seven made from their originals by
-        // tools/art/sfx_originals.py, the synthesized pulse copied, all under their concept names.
+        // tools/art/sfx_originals.py, all under their concept names; the pulse is round 46's pick b.
         assertEquals("sfx/kraken-slam-r33-a.ogg", Sfx.KRAKEN_SLAM.path(), "round 33's picks");
         assertEquals("sfx/kraken-churn-r33-a.ogg", Sfx.KRAKEN_CHURN.path());
         assertEquals("sfx/kraken-surface-r33-a.ogg", Sfx.KRAKEN_SURFACE.path());
@@ -61,7 +61,7 @@ class Level11SoundsTest {
         assertEquals("sfx/ship-hit-r33-a.ogg", Sfx.SHIP_HIT.path());
         assertEquals("sfx/ship-sink-r33-a.ogg", Sfx.SHIP_SINK.path());
         assertEquals("sfx/frigate-flak-r33-a.ogg", Sfx.FRIGATE_FLAK.path());
-        assertEquals("sfx/driftjelly-pulse-r33-a.ogg", Sfx.DRIFTJELLY_PULSE.path());
+        assertEquals("sfx/driftjelly-pulse-r46-b.ogg", Sfx.DRIFTJELLY_PULSE.path());
         assertEquals("sfx/shot-torpedo-r03-a.ogg", Sfx.SHOT_TORPEDO.path());
     }
 

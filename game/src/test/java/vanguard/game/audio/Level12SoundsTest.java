@@ -52,8 +52,14 @@ class Level12SoundsTest {
                 Sfx.LAMPREY_SHAKE,
                 Sfx.SONDE_CHIME);
         Set<Sfx> b = Set.of(Sfx.THUNDER_1, Sfx.THUNDER_2, Sfx.THUNDER_3, Sfx.GUST);
+        // Round 46's picks (the user, 2026-10-21) replaced the drain (b) and the chime (a).
+        assertEquals("sfx/lamprey-drain-r46-b.ogg", Sfx.LAMPREY_DRAIN.path(), "round 46's pick");
+        assertEquals("sfx/sonde-chime-r46-a.ogg", Sfx.SONDE_CHIME.path(), "round 46's pick");
         for (Sfx sfx : all) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
+            if (sfx == Sfx.LAMPREY_DRAIN || sfx == Sfx.SONDE_CHIME) {
+                continue;
+            }
             String pick = b.contains(sfx) ? "-r34-b.ogg" : "-r34-a.ogg";
             assertTrue(sfx.path().endsWith(pick), sfx + ": the user's round 34 pick");
             String other = b.contains(sfx) ? "-r34-a.ogg" : "-r34-b.ogg";

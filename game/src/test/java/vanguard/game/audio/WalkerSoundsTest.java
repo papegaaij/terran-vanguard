@@ -49,8 +49,8 @@ class WalkerSoundsTest {
                 Sfx.WALKER_SHOCKWAVE)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
         }
-        // Round 43's picks (the user, 2026-10-20); the stomp stays round 42's a, the missile is the chosen r08 launch.
-        assertEquals("sfx/walker-stomp-r42-a.ogg", Sfx.WALKER_STOMP.path());
+        // Round 43's picks (the user, 2026-10-20); the stomp is round 46's a, the missile is the chosen r08 launch.
+        assertEquals("sfx/walker-stomp-r46-a.ogg", Sfx.WALKER_STOMP.path());
         assertEquals("sfx/walker-hatch-r43-b.ogg", Sfx.WALKER_HATCH.path());
         assertEquals("sfx/enemy-missile-r08-a.ogg", Sfx.WALKER_MISSILE.path());
         assertEquals("sfx/walker-flame-tell-r43-a.ogg", Sfx.WALKER_FLAME_TELL.path());

@@ -73,27 +73,19 @@ class ArsenalSoundsTest {
         }
         assertTrue(Sfx.ION_BEAM_LOOP.path().endsWith("ion-beam-loop-r36-a.ogg"), "round 36's chosen loop (S.4 = a)");
         assertTrue(Sfx.LANCE_LOOP.path().endsWith("shot-beam-r04-c.ogg"), "the beam family's loop c");
-        // Round 37's picks (user, 2026-10-13): S.2, S.4, S.6-S.10 b, the other sounds a.
-        for (Sfx sfx : List.of(
-                Sfx.ION_BEAM_STOP,
-                Sfx.BEAM_IMPACT_ROCK,
-                Sfx.DEFLECTOR_RETURN,
-                Sfx.EMP_RING,
-                Sfx.EMP_POWERDOWN,
-                Sfx.LANCE_RUMBLE,
-                Sfx.OVERCHARGE_WHOOSH)) {
+        // Round 37's picks (user, 2026-10-13): S.2, S.4, S.6-S.10 b, the other sounds a; round 46's (2026-10-21)
+        // replaced the beam's stop and impact, the drone rebuild, the EMP, the overcharge and the dash.
+        for (Sfx sfx : List.of(Sfx.BEAM_IMPACT_ROCK, Sfx.DEFLECTOR_RETURN, Sfx.LANCE_RUMBLE)) {
             assertTrue(sfx.path().endsWith("-r37-b.ogg"), sfx + " is round 37's b: " + sfx.path());
         }
-        for (Sfx sfx : List.of(
-                Sfx.ION_BEAM_START,
-                Sfx.BEAM_IMPACT,
-                Sfx.DEFLECTOR_TICK,
-                Sfx.DRONE_BREAK,
-                Sfx.DRONE_REBUILD,
-                Sfx.OVERCHARGE_END,
-                Sfx.COOLDOWN_READY,
-                Sfx.DASH)) {
+        for (Sfx sfx : List.of(Sfx.ION_BEAM_START, Sfx.DEFLECTOR_TICK, Sfx.DRONE_BREAK, Sfx.COOLDOWN_READY)) {
             assertTrue(sfx.path().endsWith("-r37-a.ogg"), sfx + " is round 37's a: " + sfx.path());
+        }
+        for (Sfx sfx : List.of(Sfx.ION_BEAM_STOP, Sfx.BEAM_IMPACT, Sfx.DRONE_REBUILD, Sfx.EMP_POWERDOWN)) {
+            assertTrue(sfx.path().endsWith("-r46-a.ogg"), sfx + " is round 46's a: " + sfx.path());
+        }
+        for (Sfx sfx : List.of(Sfx.EMP_RING, Sfx.OVERCHARGE_WHOOSH, Sfx.OVERCHARGE_END, Sfx.DASH)) {
+            assertTrue(sfx.path().endsWith("-r46-b.ogg"), sfx + " is round 46's b: " + sfx.path());
         }
     }
 

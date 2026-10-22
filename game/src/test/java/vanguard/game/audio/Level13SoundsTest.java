@@ -46,7 +46,8 @@ class Level13SoundsTest {
         for (Sfx sfx :
                 List.of(Sfx.RELAY_HIT, Sfx.INTEGRITY_ALARM, Sfx.RELAY_DESTROYED, Sfx.DRONE_LAUNCH, Sfx.GRID_ONLINE)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            String pick = sfx == Sfx.GRID_ONLINE ? "-r35-b.ogg" : "-r35-a.ogg";
+            // The drone launch is round 46's pick a (the user, 2026-10-21).
+            String pick = sfx == Sfx.GRID_ONLINE ? "-r35-b.ogg" : sfx == Sfx.DRONE_LAUNCH ? "-r46-a.ogg" : "-r35-a.ogg";
             assertTrue(sfx.path().endsWith(pick), sfx + ": the user's round 34 pick");
         }
         assertFalse(Files.exists(ASSETS.resolve("sfx/grid-online-r35-a.ogg")), "grid online's a left");

@@ -44,7 +44,9 @@ class Level18SoundsTest {
                 Sfx.GHOST_DRONE_BURST,
                 Sfx.GHOST_DRONE_DEATH)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r41-a.ogg"), sfx + ": round 41's proposal a");
+            // Round 46's picks (the user, 2026-10-21): the Ghost Drone's drop, glint and death b, the rest a.
+            boolean b = sfx == Sfx.GHOST_DRONE_DROP || sfx == Sfx.GHOST_DRONE_GLINT || sfx == Sfx.GHOST_DRONE_DEATH;
+            assertTrue(sfx.path().endsWith(b ? "-r46-b.ogg" : "-r46-a.ogg"), sfx + ": " + sfx.path());
         }
         assertEquals(Sfx.Priority.EXPLOSION, Sfx.GHOST_DRONE_DEATH.priority(), "on the explosion rung");
         assertEquals(1f, StormCues.STORM_LEVEL, "levelled in their files");

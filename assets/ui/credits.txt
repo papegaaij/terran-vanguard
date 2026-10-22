@@ -85,9 +85,51 @@ item|“Flowing Sand” by SteveMeli
 detail|CC-BY 3.0 · freesound.org/people/SteveMeli/sounds/215006
 item|“Large, Low Rumble.wav” by duckduckpony
 detail|CC-BY 4.0 · freesound.org/people/duckduckpony/sounds/130972
+item|“Eurofighter Typhoon Flyby 005 – Close Proximity” by TimoSchmied
+detail|CC-BY 4.0 · freesound.org/people/TimoSchmied/sounds/640505
+item|“Canon 550D Shutter” by iainmccurdy
+detail|CC-BY 4.0 · freesound.org/people/iainmccurdy/sounds/613884
+item|“M&P15 Bolt Release [No Ring]” by smill.and.welson
+detail|CC-BY 4.0 · freesound.org/people/smill.and.welson/sounds/858506
+item|“QUICK_SMASH_DEBRIS_001.wav” by JoelAudio
+detail|CC-BY 4.0 · freesound.org/people/JoelAudio/sounds/135459
+item|“Electric Sparks” by mikiko850
+detail|CC-BY 4.0 · freesound.org/people/mikiko850/sounds/849772
+item|“Inside a Tornado.wav” by RogerBoyX69
+detail|CC-BY 4.0 · freesound.org/people/RogerBoyX69/sounds/338721
+item|“Monster Stomp Footsteps Sequence” by Vilkas_Sound
+detail|CC-BY 4.0 · freesound.org/people/Vilkas_Sound/sounds/753178
+item|“stone_on_stone.aif” by thanvannispen
+detail|CC-BY 4.0 · freesound.org/people/thanvannispen/sounds/29986
+item|“Guterton - Heavy Stone Grind” by guterton.wav
+detail|CC-BY 4.0 · freesound.org/people/guterton.wav/sounds/760672
+item|“stone_on_stone_dragging3.aif” by thanvannispen
+detail|CC-BY 4.0 · freesound.org/people/thanvannispen/sounds/29989
+item|“24_SeRompeCable.wav” by Lextao
+detail|CC-BY 4.0 · freesound.org/people/Lextao/sounds/471828
+item|“FAN 3 (Slow Stop).wav” by temawas
+detail|CC-BY 4.0 · freesound.org/people/temawas/sounds/179245
+item|“Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024” by Artninja
+detail|CC-BY 4.0 · freesound.org/people/Artninja/sounds/752072
+item|“Hydraulic Hiss, TTC bus door” by OttisG
+detail|CC-BY 4.0 · freesound.org/people/OttisG/sounds/852991
+item|“Shunting Atmos” by kangaroovindaloo
+detail|CC-BY 4.0 · freesound.org/people/kangaroovindaloo/sounds/414739
+item|“Massive Structure Bend” by Kostas17
+detail|CC-BY 3.0 · freesound.org/people/Kostas17/sounds/529620
+item|“Underwater Impact” by deleted_user_7709760
+detail|CC-BY 3.0 · freesound.org/people/deleted_user_7709760/sounds/400793
+item|“Drone take off” by GeorgeHopkins
+detail|CC-BY 4.0 · freesound.org/people/GeorgeHopkins/sounds/537241
+item|“Electronic_Powerup.wav” by StephenSaldanha
+detail|CC-BY 4.0 · freesound.org/people/StephenSaldanha/sounds/132560
+item|“Large machine running and powering down” by ryks88
+detail|CC-BY 4.0 · freesound.org/people/ryks88/sounds/709258
+item|“Arc Welding.wav” by kev_durr
+detail|CC-BY 4.0 · freesound.org/people/kev_durr/sounds/396511
 gap|
 role|WITH THANKS TO (CC0)
-text|adviseme333, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, deerlord, derplayer, dinodilopho, Division4884, dwswords, Elektrocell, Elements-Library, facklere, FlatHill, follytowers, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, jvmyka@gmail.com, kalhan, Kinoton, kyles, loganzsound, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, profoundsounds, qubodup, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, SecureSubset, Sheyvan, sidohzen, SuperPhat, ThefitzyG, TRP, uagadugu, unfa, wilhellboy, xkeril
+text|adgawrhbshbffsfgvsrf, adviseme333, aerror, amenhotepIV, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, c64cosmin, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, Elektrocell, Elements-Library, facklere, FlatHill, follytowers, fran_marenco, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, ivolipa, iwanPlays, Jacco18, jamesabels, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, kyles, lensflare8642, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, PostProdDog, profoundsounds, qubodup, Raclure, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, sarana, SciFiSounds, SecureSubset, Sheyvan, sidohzen, Skullsmasha, SuperPhat, The_Chemical_Workshop, The_Sean_, ThefitzyG, TRP, uagadugu, unfa, Walter_Odington, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games
 gap|
 title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings

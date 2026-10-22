@@ -32,7 +32,10 @@ class Level16SoundsTest {
         for (Sfx sfx : List.of(
                 Sfx.TENDRIL_HUM, Sfx.TENDRIL_BURN, Sfx.TENDRIL_BREAK, Sfx.CRAWLER_WALK, Sfx.AMBIENCE_MARS_CANYON)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r39-a.ogg"), sfx + ": round 39's proposal a");
+            // Round 46's picks (the user, 2026-10-21): the tendril's break b, the rest a; the hum stays round 39's a.
+            String pick =
+                    sfx == Sfx.TENDRIL_HUM ? "-r39-a.ogg" : sfx == Sfx.TENDRIL_BREAK ? "-r46-b.ogg" : "-r46-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), sfx + ": " + sfx.path());
         }
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_MARS_CANYON.priority());
     }

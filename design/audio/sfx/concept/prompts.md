@@ -2588,7 +2588,7 @@ Edit: a seamless 4 s loop, band RMS −40.2 dB, peak −21.8 dBFS, −31.8 LUFS.
 Proposed (round 46).
 Source: <https://freesound.org/people/DiArchangeli/sounds/458144/> (Choir.aif by DiArchangeli, CC0 1.0). Use: the Herald's aura, one loop while any ring is up.
 Brief: a soft high shimmer. Why: a choir's held chord, high-passed at 1.5 kHz.
-Edit: a seamless 4 s loop, band RMS −40.1 dB, peak −22.1 dBFS, −32.4 LUFS.
+Edit: a seamless 2.6 s loop, band RMS −40.1 dB, peak −24.1 dBFS, −33.0 LUFS. Re-cut after the pick (step HAF): the first cut (6.21 s for 4 s) ran into the chord's decay and dipped to about −59 dB at the seam every 4 s; the chord holds steady from 6.0 to about 9.25 s, so the loop now stays inside it (seam 100 ms RMS within 1 dB of the body, no click).
 
 ### aura-absorb-r46-a — "Electric Sparks" by mikiko850 + "Metal_heavy_punch_with_crunch_and_glass_debris_sounds_08242024" by Artninja
 

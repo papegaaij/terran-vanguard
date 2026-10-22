@@ -42,7 +42,7 @@ class Level15SoundsTest {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
         }
         assertTrue(Sfx.BURROW_BULGE.path().endsWith("burrow-bulge-r38-b.ogg"), "S.1 = b");
-        assertTrue(Sfx.BURROW_DIVE.path().endsWith("burrow-dive-r38-b.ogg"), "S.2 = b");
+        assertTrue(Sfx.BURROW_DIVE.path().endsWith("burrow-dive-r46-a.ogg"), "round 46 a");
         assertTrue(Sfx.AMBIENCE_MARS_ENTRY.path().endsWith("entry-roar-r38-a.ogg"), "S.3 = a");
         assertTrue(Sfx.AMBIENCE_MARS_DUST.path().endsWith("mars-dust-r38-a.ogg"), "S.4 = a");
         assertFalse(Files.exists(ASSETS.resolve("sfx/burrow-dive-r38-a.ogg")), "the dive's a left");
