@@ -153,4 +153,38 @@ public interface LayerSpecs {
             return closedSeconds + riseSeconds + openSeconds;
         }
     }
+
+    /**
+     * M8 part D, the {@code rise} (design/enemies/naval/abyss-ray): a unit that enters as a shadow on {@link Layer#SUB}
+     * at a spot in the ship's lane: the ship's x as it enters (clamped so its hit box stays on the play field) and
+     * {@code ahead} px above the ship's centre (its hit box kept below the top edge). The shadow grows there for {@code
+     * shadowSeconds} (the tell: on {@code sub}, only {@code anti-sub} fire and the Smart Bomb reach it, no contact),
+     * then it rises over {@code riseSeconds}, its layer flipping to {@link Layer#AIR} at the rise's middle; it touches
+     * nothing from the flip to the rise's end. It then glides {@code glideSeconds} at {@code glideSpeed} px/s toward the
+     * far side (from the play field's centre line; the right from the line itself), its gun's clock starting at the
+     * glide's start (its first-shot delay, then its bursts, only while it glides with its centre on the play field), and sinks over
+     * {@code sinkSeconds} gliding on, back to {@code sub} at the sink's middle; at the sink's end, or once its hit box
+     * left the play field while it glides or sinks, it is gone (an escape). Its facing is the glide's direction
+     * throughout.
+     */
+    public record Rise(
+            double shadowSeconds,
+            double riseSeconds,
+            double glideSeconds,
+            double glideSpeed,
+            double sinkSeconds,
+            double ahead) {
+        public Rise {
+            if (!(shadowSeconds >= 0)
+                    || !(riseSeconds > 0)
+                    || !(glideSeconds >= 0)
+                    || !(glideSpeed >= 0)
+                    || !(sinkSeconds > 0)
+                    || !(ahead >= 0)) {
+                throw new IllegalArgumentException("a rise has a shadow, a rise, a glide, a sink and a spot ahead: "
+                        + shadowSeconds + ", " + riseSeconds + ", " + glideSeconds + ", " + glideSpeed + ", "
+                        + sinkSeconds + ", " + ahead);
+            }
+        }
+    }
 }

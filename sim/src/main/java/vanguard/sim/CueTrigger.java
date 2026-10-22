@@ -113,7 +113,12 @@ public enum CueTrigger {
      * objective counts (an escapes or kill-all objective's); once, at that first one only. No subject (the radio event
      * {@code target-destroyed}).
      */
-    TARGET_DESTROYED;
+    TARGET_DESTROYED,
+    /**
+     * M8 part D (design/campaign Level 24, the Abyss Ray): the attempt's first rising unit's shadow ({@link
+     * SimEvents.Type#RISE_SHADOW}, its wave's entry); once. No subject (the radio event {@code first-ray}).
+     */
+    FIRST_RAY;
 
     /** Between the part names of a {@link #BOSS_PART_DESTROYED} cue's subject. */
     public static final String PART_SEPARATOR = "|";

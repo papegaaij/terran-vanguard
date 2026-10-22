@@ -133,6 +133,13 @@ final class EnemyHash {
         if (u.spec.flock().isPresent() && u.spec.flock().get().ram().isPresent()) {
             u.ramming.addTo(hash);
         }
+        // M8 part D's rises and hovers above the ship add theirs; earlier units hash as before.
+        if (u.spec.rise().isPresent()) {
+            u.rising.addTo(hash);
+        }
+        if (u.hoverHold.active()) {
+            u.hoverHold.addTo(hash);
+        }
         // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
         if (u.spec.turret().isPresent()) {
             u.turretGun.addTo(hash);

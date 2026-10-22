@@ -257,6 +257,16 @@ final class PropPasses {
         }
     }
 
+    /** M8 part D: after each step, the bullets' own looks (the Barbfin's violet needle; {@link BulletLooks#stepped}). */
+    void steppedBullets(Sortie sortie) {
+        bullets.stepped(sortie);
+    }
+
+    /** M8 part D: a new attempt: no bullet followed. */
+    void restartBullets() {
+        bullets.restart();
+    }
+
     void drawBullets(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int i = 0; i < sortie.bulletCount(); i++) {
             EnemyBullet bullet = sortie.bullet(i);

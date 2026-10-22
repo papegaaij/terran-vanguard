@@ -1,0 +1,482 @@
+# Level 24 – Abyssal Plain: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
+# targets, radio, credit budget). Times are seconds from the level start. M8 part D, step D2, from the README's approved
+# hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M8 part D (loaded and checked by content in step D2; flown from step D1, mapped in step D3, drawn by step
+# D4): the Abyss Ray's `rise` and the Barbfin's hover `above_ship` (their stat blocks), the spawning reef
+# (enemies/ground/spawning-reef: a periodic spawn of Glassfin fry), the radio event `first-ray` (until step D3 maps the
+# simulation's sighting it is resolved by content to the first Ray's wave time, a timed line), a backdrop piece's
+# `keep_clear` (the relay beacons: no ground target and no walk start within 100 px), the per-section `underwater_look`
+# (the plain darkening section by section), the stems' base again in section 4 (`stems`, an existing key).
+# Defaults of the gap check (m8d-gaps.md §5, pending the user's review in round 53): the Ray's shadow ahead of the ship
+# (D2), the escorts held until its rise (D3), the reef's fry released as single rammers that outlive it (D4), the
+# Barbfin's beam-era HP only (D5), the beacons animated scenery pieces (D6) with 100 px clear (D7), four Barbfins with
+# every Ray (D9), the per-section ambient 0.50 / 0.32 / 0.18 / 0.14
+# (D10, ART-D's proposal). Step D2's own placements (pending review): the schools' and eels' routes over the open plain
+# (x 140–340), the ribbons (`column`) straight down the left or right side (x 144 / 336), the eel pairs as two rows 4 s
+# apart (t=82, 132), the walkers' paths, the README's `pair` of walkers as a `single` of two on their own paths (the
+# vocabulary has no pair), the nests' x, the wreck's size and the beacons' rows (each centre at the top edge at the
+# README's time); the radio retimed to the HUD's real hold (a two-page line holds it ~11 s: Varga's t=5 line at t=13, not
+# D8's t=7; Rook t=24, Varga t=35, Okafor t=109.5), the secondary's line per difficulty, Varga's briefing page trimmed to
+# fit one screen.
+scroll_speed: 100     # the plain's edge and the beacon line; the reef field and the Ray crossing set their own
+launch_seconds: 5
+bounty_scale: 0.42    # every bounty × 0.42: fitted in step D3 (TypicalHaulTest, levelReport; the README's first estimate 0.40 was 3.9 % under the budget)
+control_prompts: []
+medium: underwater    # the whole level (no waterline): the water's factors, the grade, the special limits (UNDER ICE)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Europa, ocean floor
+  layers: [air, sub, ground]
+  density: 4
+  traits: [anti-sub, spread]
+  hazards: [Ray fans, water]
+  boss: none
+  objective: REACH THE BEACONS   # the OBJECTIVE field from sensor L1
+  varga:
+    none: The abyssal plain, Lancer. Beyond Thera Deep's lamps.
+    l1: All from ahead. A shadow on the floor means a Ray is rising.
+    l2: "New: a needle swimmer and a manta that rises from below."
+    l3: Spread for the fry, torpedoes for the Ray's shadow.
+  notes:
+    Dominant layers: '`air` (Glassfin schools, Barbfins, Eel Swarms, Driftjellies, Lampreys), `sub` (the Abyss Ray''s shadow), `ground` (Scuttlers, Reef Spitters, spawning reefs)'
+    Attack directions: '{directions} (the Ray rises from below the ship''s lane)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: The Ray's fans; the reefs' fry; water (bullets × 0.7, drag)
+    Boss / mid-boss: none (the Abyss Ray is a large set-piece unit, not a mid-boss)
+    Sensor-suite detail: 'none: Europa, ocean floor, `air` + `ground` + `sub`, front · L1: + directions, density {density}, hazard "Ray fans", the objective `{objective}` and the secondary `REEFS RAZED` · L2: + Abyss Ray (new), Barbfin (new), Scuttler, Glassfin, Eel Swarm, Driftjelly, Lamprey portraits · L3: + `anti-sub` and `spread` highlighted, the wave strip marking the three Rays'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); the whole level under water (the level's medium)
+  - name: The Plain's Edge
+    end: 30
+    atmosphere: clear
+    tiles: [lamp-edge, ice-ceiling]
+    notes:
+      layers:
+        ground: 'silt floor at Thera Deep''s edge, the last grow-lamp pylons (t≈4, 12, 22), kelp stands, a Reef Spitter nest on a ridge (t≈18).'
+        high-air: the ice ceiling far above (a faint glow of light cracks).
+      purpose: The first Barbfins (t=6) alone; popcorn; the first Eel; two Scuttlers walking in (t=30).
+  - name: The Reef Field
+    end: 95
+    speed: 80
+    ramp: 2   # eased from 100 over its first 2 s
+    atmosphere: clear
+    tiles: [plain-reefs, ice-ceiling]
+    underwater_look: {ambient: 0.32, tint: b4dcf5, caustics: 0.05, snow: 90, headlights: 0.75}   # the lamps fall behind: dimming
+    notes:
+      layers:
+        ground: 'four **spawning reefs** (t=36, 48, 64, 80; x 120, 350, 130, 340), coral towers with a teal iris, Reef Spitter nests round the middle two; ridges; the survey sub''s wreck lies ahead (the secret).'
+        high-air: the ice ceiling.
+      purpose: The reefs' fry, the first Abyss Ray (t=58, over the second and third reef), Scuttlers on the floor.
+  - name: The Beacon Line
+    end: 135
+    speed: 100
+    ramp: 2   # eased from 80
+    atmosphere: clear
+    tiles: [beacon-line, ice-ceiling]
+    underwater_look: {ambient: 0.18, tint: a8d0ee, caustics: 0.0, snow: 100, headlights: 0.85}   # dark: the headlights, the reefs' teal and the beacons' red-gold
+    notes:
+      layers:
+        ground: 'three **relay beacons** (t=100 x 60, t=112 x 420, t=126 x 100): tall grey masts with an amber-red lamp pulsing every 2 s, human cable-laid, no Vrell growth within 100 px (scenery, not hit by shots); the survey sub''s wreck at t≈105.'
+        high-air: the ice ceiling.
+      purpose: The beacon beat (radio), the second Ray (t=112), a Scuttler convoy along the beacon line.
+  - name: The Ray Crossing
+    end: 172
+    speed: 90
+    ramp: 2   # eased from 100
+    atmosphere: clear
+    tiles: [deep-silt, ice-ceiling]
+    underwater_look: {ambient: 0.14, tint: a0c8e8, caustics: 0.0, snow: 100, headlights: 0.9}   # the last lamp-free stretch
+    notes:
+      layers:
+        ground: a wide, empty silt floor with the trench's mouth at the bottom edge; the last lamp-free stretch.
+        high-air: the ice ceiling.
+      purpose: The third Ray (t=150), the last eel and walkers; level end as the trench's mouth reaches the bottom edge.
+
+# The game's under-water grade (presentation only; step C4's UnderwaterGrade), the round-48 grade a ("warm behind, dark
+# ahead", Q2 a): the plain's edge still lamp-lit as Level 23's last section, darkening section by section (gap check D10:
+# ambient 0.50 / 0.32 / 0.18 / 0.14 and the tints, caustics, snow and headlights of ART-D's proposal for round 53), the
+# caustics gone by the beacon line, the headlights up; glows (the reefs' iris, the beacons' pulse, the Rays' gill slits), bullets and the HUD ungraded.
+underwater_look: {ambient: 0.5, tint: bfe6ff, caustics: 0.1, snow: 80, headlights: 0.6}
+
+# The README's waves at their times (draft, measured with levelReport in step D3). Every wave enters from the front.
+# Schools (`swarm`) fly an S-shaped route over the open plain (x 140–340), ribbons (`column`) a straight column down
+# its left (x 144) or right side (x 336); an eel swims its route with its 36 px sway; a pair of eels is two rows 4 s
+# apart. The Barbfins' columns stop and hold above the ship's lane, their circles orbit their hold (9 s) and break off;
+# a Ray's four Barbfins are held until its rise and fan out from it (step D1). Quiet windows: no other wave enters
+# t=6–9.5 (the first Barbfins), t=55–62, 109–116, 147–154 (3 s before each Ray's rise to 4 s after it starts).
+waves:
+  - t: 3
+    formation: swarm
+    enemy: glassfin
+    count: 14
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - {t: 6, formation: column, enemy: barbfin, count: 3, from: front, notes: "**New.** Three Barbfins hold and spit needles; Varga's line at t=13, after Okafor's opening; alone until t=9.5"}
+  - {t: 12, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 15, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 18, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 20
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+    notes: Solo; the Barbfins' first holders are gone
+  - {t: 24, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - t: 27
+    formation: swarm
+    enemy: glassfin
+    count: 14
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - t: 30
+    formation: single
+    enemy: scuttler
+    count: 2
+    from: front
+    paths:
+      - [[150, -40], [170, 220], [140, 600]]   # down the left of the floor
+      - [[330, -40], [310, 220], [340, 600]]   # down the right
+    notes: Two walkers on the sea floor (`ground`)
+  - {t: 33, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 36, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 39
+    formation: column
+    enemy: glassfin
+    count: 10
+    from: front
+    edge: left   # a straight column at x 144 (a column flies no path)
+  - {t: 42, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - t: 44
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
+    notes: Over the first spawning reef
+  - {t: 48, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 51, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 54, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 58
+    groups:
+      - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
+      - {formation: carrier + escorts, enemy: barbfin, count: 4}
+    from: front
+    notes: "**New.** The first Ray: a shadow grows in the ship's lane ahead of it for 1.5 s, the Ray rises, fans three times and glides off; the four Barbfins peel off its shadow; Varga's line at its first shadow (`first-ray`); no wave enters until t=62; it drops an overdrive when it dies"
+  - t: 63
+    formation: column
+    enemy: glassfin
+    count: 10
+    from: front
+    edge: right   # a straight column at x 336
+  - t: 66
+    formation: convoy
+    enemy: scuttler
+    count: 3
+    from: front
+    interval: 3
+    paths: [[[300, -40], [290, 260], [310, 600]]]   # down the floor between the second and third reef
+    notes: Three walkers 3 s apart down the reefs' lane
+  - t: 69
+    formation: swarm
+    enemy: glassfin
+    count: 14
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - {t: 72, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 75, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - t: 78
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+    notes: The first of two eels staggered 4 s apart
+  - t: 81
+    formation: column
+    enemy: glassfin
+    count: 10
+    from: front
+    edge: left   # a straight column at x 144
+  - t: 82
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
+    notes: The second of the pair, on the mirrored route
+  - {t: 84, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - t: 87
+    formation: swarm
+    enemy: glassfin
+    count: 14
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - t: 90
+    formation: single
+    enemy: scuttler
+    count: 2
+    from: front
+    paths:
+      - [[120, -40], [150, 260], [110, 600]]
+      - [[360, -40], [330, 260], [370, 600]]
+    notes: Past the last reef
+  - {t: 93, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 96, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 100
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
+    notes: Under the first beacon
+  - {t: 102, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - t: 105
+    formation: swarm
+    enemy: glassfin
+    count: 14
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - {t: 108, formation: column, enemy: barbfin, count: 4, from: front}
+  - t: 112
+    groups:
+      - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
+      - {formation: carrier + escorts, enemy: barbfin, count: 4}
+    from: front
+    notes: "The second Ray, over the beacon line: its fans cross the beacons' pulse; no wave enters until t=116; it drops a shield cell when it dies"
+  - {t: 117, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 120, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 124
+    formation: convoy
+    enemy: scuttler
+    count: 3
+    from: front
+    interval: 3
+    paths: [[[260, -40], [240, 260], [270, 600]]]   # down the middle of the beacon line, clear of the beacons (x 60, 420, 100) by more than 100 px
+    notes: Along the beacon line's floor
+  - {t: 126, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - t: 128
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+    notes: The first of two eels staggered 4 s apart
+  - {t: 132, formation: column, enemy: barbfin, count: 4, from: front}
+  - t: 132
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
+    notes: The second of the pair, on the mirrored route
+  - {t: 135, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 138, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 141
+    formation: column
+    enemy: glassfin
+    count: 10
+    from: front
+    edge: right   # a straight column at x 336
+  - {t: 144, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - t: 150
+    groups:
+      - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
+      - {formation: carrier + escorts, enemy: barbfin, count: 4}
+    from: front
+    notes: The last Ray; the Barbfins stay when it sinks; no wave enters until t=154
+  - t: 156
+    formation: single
+    enemy: scuttler
+    count: 2
+    from: front
+    paths:
+      - [[180, -40], [200, 260], [170, 600]]
+      - [[300, -40], [280, 260], [310, 600]]
+    notes: The last walkers
+  - t: 160
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+    notes: The last eel
+  - {t: 162, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
+  - {t: 165, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
+  - t: 168
+    formation: column
+    enemy: glassfin
+    count: 10
+    from: front
+    edge: left   # a straight column at x 144
+    notes: The last wave
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x; none within 100 px of a relay beacon (keep_clear)
+  - target: ridge nest
+    section: 1
+    enemy: reef-spitter
+    count: 2
+    at: [[18, 150], [18.4, 200]]   # on a ridge, left of the middle
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) nest ×{count} on a ridge (t≈18)'
+      effect: Bounty {bounty} each
+  - target: spawning reefs
+    section: 2
+    enemy: spawning-reef
+    count: 4
+    at: [[36, 120], [48, 350], [64, 130], [80, 340]]
+    notes:
+      target: '**[Spawning reefs](../../../enemies/ground/spawning-reef/README.md)** ×{count} (t=36, 48, 64, 80; x 120, 350, 130, 340): a coral tower with an iris that releases 4 Glassfin every 3.5 s while it is on the screen, 200 HP, **not hardened**'
+      effect: 'The secondary counts them; bounty {bounty} each; razed: the iris closes, a coral burst'
+  - target: reef nests
+    section: 2
+    enemy: reef-spitter
+    count: 2
+    at: [[50, 250], [66, 200]]   # beside the second reef (x 350) and the third (x 130)
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) nests ×{count} round the second and third reef (t≈50, 66)'
+      effect: Bounty {bounty} each
+  - target: Meridian
+    section: 3
+    layer: ground
+    size: [80, 48]
+    sprite: meridian-wreck   # step ART-D: the Thera Deep survey sub lying on the floor, its hatch break frames; the crate it frees
+    hp: 20
+    reveals: Meridian
+    at: [[105, 70]]   # at the left edge of the beacon line, 500 px below the first beacon
+    notes:
+      target: 'Wrecked survey sub *Meridian* (`ground` trigger, {hp} HP, t≈105, x 70)'
+      effect: 'The secret: a crate worth 100 (410)'
+  - target: beacon nests
+    section: 3
+    enemy: reef-spitter
+    count: 2
+    at: [[114, 380], [114.3, 440]]   # about 200 px below the second beacon (t=112, x 420), clear of it (gap check D7)
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) nest ×{count} at the foot of the second beacon (t≈114), 200 px below it'
+      effect: Bounty {bounty} each
+
+secrets:
+  - name: Meridian
+    crate: 100   # Act 1 terms: pays 410 with the act factor
+    radio: {speaker: Varga, line: "That's the Meridian. Thera Deep lost her to the dark, not to the Vrell. Take what she kept."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 58, enemy: abyss-ray, unit: first}}     # the first Ray, when it dies
+  - {pickup: shield cell, dropped_by: {wave: 112, enemy: abyss-ray, unit: first}}  # the second Ray, when it dies
+
+drops:  # a Thera Deep tender (as Level 23's) releases an armour patch
+  - {t: 95, x: 240, y: 380, pickup: armour patch, sprite: thera-tender}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
+  - {t: 1, speaker: Okafor, line: "Past the farms is the abyssal plain, Aegis. Thera Deep's lamps end ahead; from here you fly on your own lights."}
+  - {t: 13, speaker: Varga, line: "Small swimmers, needles aimed at you. They hold and shoot: take them one by one."}   # the README's t=5: after Okafor's opening, which holds the radio until t≈12.7 (gap check D8 moved it to t=7; the HUD's 1 s rule needs 13)
+  - {t: 24, speaker: Rook, requires: escort, line: "Dark's coming, Lancer. Rule one in a submarine: the ceiling is lower than it looks."}   # the README's t=14, after Varga's t=13 line
+  - {t: 35, speaker: Varga, line: "Spawning reefs. They breed fry from the iris, and they are soft: torpedoes will do."}   # the README's t=34, after Rook's t=24 line; the first reef enters at t=36
+  - {event: first-ray, speaker: Varga, line: "Something huge under you. A shadow first, then a manta. Torpedoes reach it now; the rest must wait.", notes: {trigger: "A Ray's first shadow (`first-ray`, t=58)"}}
+  - {t: 98, speaker: Varga, line: "A beacon. Human-made, relay hardware, an amber pulse. And the carrier on it is Helix's."}
+  - {t: 109.5, speaker: Okafor, line: "Log it, Doctor. Full record, for my eyes only."}   # the README's t=106, after Varga's t=98 line (until t≈108.9)
+  - {t: 120, speaker: Rook, requires: escort, line: "Ray at six, Lancer: it is rising!"}   # the Ray's flank bark; may drop by the 1 s rule (the README allows it)
+  - {event: secondary-objective, speaker: Okafor, line: "Third reef down. The Vrell will have to breed somewhere else.", easy: {line: "Second reef down. The Vrell will have to breed somewhere else."}, hard: {line: "Last reef down. The Vrell will have to breed somewhere else."}, notes: {trigger: Secondary met (`secondary-objective`)}}   # met at the third reef razed (easy the second, hard the fourth): the line counts true on every difficulty
+  - {t: 131, speaker: Varga, line: "A third beacon. The same pulse every two kilometres. Somebody laid a road down here."}
+  - {event: level-end, speaker: Okafor, line: "The plain is behind us. The beacons lead into the trench, and so do we. Refit, Aegis."}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: spawning-reef, allowed: 1, easy: {allowed: 2}, hard: {allowed: 0}, label: REEFS, credits: 100, name: Raze 3 of the 4 spawning reefs}   # at least 3 of the 4 reefs destroyed before they leave the screen (easy 2, hard all 4), failed by the second reef away (100 in Act 1 terms: pays 410)
+
+music:
+  track: 10           # Act 4 A "Thera Deep" (audio/music track list)
+  start_section: 2    # the under-water bed alone at the plain's edge, the base stem from the reef field
+  full_section: 3     # the full mix along the beacon line
+  stems: {4: base}    # the base stem again in the Ray crossing, to the end
+  ambience: europa-under   # the under-water bed (round 52's pick)
+  end_jingle: mission-complete
+
+difficulty: {}  # the secondary's easy and hard allowed are in `objectives`; the formation lever sizes the waves; the stat blocks' hooks apply (the Ray's easy 7-way fan and two fans, hard 11-way and four; the Barbfin's easy 3 s needle, hard 2-needle burst every 2.1 s; the Eel Swarm's easy 10 segments and no fan, hard 16; the spawning reef's easy 3 fry)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-24-abyssal-plain, line: "Past the farms is the abyssal plain, and the Vrell are growing reefs on it: living nurseries that breed fry. Burn them down. Thera Deep's lamps end ahead, so you fly on your own lights."}
+    - {speaker: Varga, image: level-24-abyss-ray, line: "Two new forms: a small swimmer with a barbed snout that holds and spits needles, and a manta the size of a cruiser that rises from the dark below you. Torpedoes reach it while it is a shadow. And there are human relay beacons out there. I want a closer look."}
+  teaser: {speaker: Rook, line: "Open water, Lancer. Spread for the fry, torpedoes for the big one."}
+
+backdrop:
+  # Presentation only: Level 24's abyssal plain (tools/art/backdrop_l24.py, step ART-D, from the level's data.yaml; its
+  # `--proposal`, concept/backdrop-proposal.yaml, merged in step D2 with the beacons' `keep_clear`). Re-run the
+  # generator after the data moves a section, a reef, a nest, the wreck or a beacon.
+  # No deep layer (the ground is opaque). The plain darkens by the grade alone (underwater_look per section,
+  # ART-D's proposal below); the pylons' pools are baked assuming section 1's ambient 0.5. relay-beacon-glow is
+  # not placed: the game adds it over the grade at relay-beacon's placements on the same frame clock (D4).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 04222e  # the plain's blue-black water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    lamp-edge: {layer: ground, height: 960}   # section 1: the silt plain at Thera Deep's edge, kelp stands, pale stones
+    plain-reefs: {layer: ground, height: 960}   # section 2: darker silt, ridges, Vrell coral crust and root veins (the reefs are units)
+    beacon-line: {layer: ground, height: 960}   # section 3: smooth dark silt, stones, almost no kelp
+    deep-silt: {layer: ground, height: 960}   # section 4: long low dunes of fine silt, empty
+    ice-ceiling: {layer: high-air, height: 960}   # all sections: the ice ceiling's cracks of light (Level 23's; additive at 40 %)
+  pieces:
+    thera-lamps: {layer: ground, size: [480, 540]}
+    lamp-pylon-1: {layer: ground, size: [208, 208]}
+    lamp-pylon-2: {layer: ground, size: [208, 208]}
+    lamp-pylon-3: {layer: ground, size: [208, 208]}
+    floor-ridge: {layer: ground, size: [480, 176]}
+    seam-plain-reefs: {layer: ground, size: [480, 320]}
+    seam-beacon-line: {layer: ground, size: [480, 320]}
+    seam-deep-silt: {layer: ground, size: [480, 320]}
+    coral-stack-1: {layer: ground, size: [112, 112]}
+    coral-stack-2: {layer: ground, size: [112, 112]}
+    coral-stack-3: {layer: ground, size: [112, 112]}
+    coral-stack-4: {layer: ground, size: [112, 112]}
+    wreck-scar: {layer: ground, size: [176, 176]}
+    beacon-footing-1: {layer: ground, size: [176, 176]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 8, keep_clear: 100}   # scenery: no ground target and no walk start within 100 px of it (gap check D7)
+    beacon-footing-2: {layer: ground, size: [176, 176]}
+    beacon-footing-3: {layer: ground, size: [176, 176]}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 8}
+    trench-mouth: {layer: ground, size: [480, 1995]}
+  placed:
+    # 1. Thera Deep's last pylons behind the ship, their pools baked; exact rows
+    - {piece: thera-lamps, t: 0.0, x: 240}
+    # the last grow-lamp pylon 1 (t~4), its pool baked; exact rows
+    - {piece: lamp-pylon-1, t: 6.7, x: 376}
+    # the last grow-lamp pylon 2 (t~12), its pool baked; exact rows
+    - {piece: lamp-pylon-2, t: 14.7, x: 104}
+    # the last grow-lamp pylon 3 (t~22), its pool baked; exact rows
+    - {piece: lamp-pylon-3, t: 24.7, x: 376}
+    # a low rock ridge across the plain (t~18: the Reef Spitter nest on it); exact rows
+    - {piece: floor-ridge, t: 20.7, x: 240}
+    # section 2's seam (ground 3540): lamp-edge into plain-reefs; exact rows
+    - {piece: seam-plain-reefs, t: 33.125, x: 240}
+    # section 3's seam (ground 8760): plain-reefs into beacon-line; exact rows
+    - {piece: seam-beacon-line, t: 97.9, x: 240}
+    # section 4's seam (ground 12740): beacon-line into deep-silt; exact rows
+    - {piece: seam-deep-silt, t: 137.889, x: 240}
+    # a dead coral stack of the reef field (t~42; scenery); exact rows
+    - {piece: coral-stack-1, t: 45.375, x: 410}
+    # a dead coral stack of the reef field (t~56; scenery); exact rows
+    - {piece: coral-stack-2, t: 59.375, x: 64}
+    # a dead coral stack of the reef field (t~72; scenery); exact rows
+    - {piece: coral-stack-3, t: 75.375, x: 410}
+    # a dead coral stack of the reef field (t~89; scenery); exact rows
+    - {piece: coral-stack-4, t: 92.375, x: 230}
+    # the Meridian's scour under the wreck (t~105 x 70); exact rows
+    - {piece: wreck-scar, t: 107.94, x: 88}
+    # relay beacon 1's footing and cable trenches (its foot enters at the top edge at t=100, x 60); exact rows
+    - {piece: beacon-footing-1, t: 102.7, x: 60}
+    # relay beacon 1 on its footing (the 2 s pulse; its light is relay-beacon-glow, added over the grade at this placement)
+    - {piece: relay-beacon, t: 102.87, x: 60}
+    # relay beacon 2's footing and cable trenches (its foot enters at the top edge at t=112, x 420); exact rows
+    - {piece: beacon-footing-2, t: 114.7, x: 420}
+    # relay beacon 2 on its footing (the 2 s pulse; its light is relay-beacon-glow, added over the grade at this placement)
+    - {piece: relay-beacon, t: 114.87, x: 420}
+    # relay beacon 3's footing and cable trenches (its foot enters at the top edge at t=126, x 100); exact rows
+    - {piece: beacon-footing-3, t: 128.7, x: 100}
+    # relay beacon 3 on its footing (the 2 s pulse; its light is relay-beacon-glow, added over the grade at this placement)
+    - {piece: relay-beacon, t: 128.87, x: 100}
+    # the trench's mouth: its lip at the bottom edge at the level's end (t=172); covers the screen through the outro; exact rows
+    - {piece: trench-mouth, t: 179.006, x: 240}

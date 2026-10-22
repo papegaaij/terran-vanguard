@@ -32,7 +32,8 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [shellback](shellback/README.md) | Armoured beast with a spore mortar; curls and rolls once, crushing (L17) | approved | done | final |
 | [dust-devil](dust-devil/README.md) | Spinning vortex with a core window, pulls ship and pickups (L18) | approved | in-progress | final |
 | [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | done | final |
-| [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | proposed |
+| [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
+| [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | proposed |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | in-progress | final |
 
 ## Roster
@@ -164,8 +165,14 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
 | [concept/drill-rig-r48-b.gif](concept/drill-rig-r48-b.gif) | Drill Rig B — the same scene as A (motion) | chosen — round 48 |
 | [concept/drill-rig-final-r51-a.png](concept/drill-rig-final-r51-a.png) | Drill Rig final frames (`tools/art/drill_rig.py`, round 48 b with stronger augers): the core's 8 spin frames and glow, the stump, pumps (heave, dead), base and crack decals, the steam plume, the shard ring's tell and release, three screens on the shelf (sheet) | chosen (round 51, F.1: accepted as final) |
 | [concept/drill-rig-final-r51-a.gif](concept/drill-rig-final-r51-a.gif) | The collar spinning, a tell and a ring of ten shards, bombs taking the pumps (the ring slowing), the core's death, stump, crack and steam | chosen (round 51, F.1: accepted as final) |
-| [concept/siphon-pump-final-r52-a.png](concept/siphon-pump-final-r52-a.png) | Siphon pump final frames (`tools/art/siphon_pump.py`, from the Thera Deep mood still): the heave loop, the sump's glow, the dead pump, the break, the root decal live and withered (sheet) | proposed (round 52) |
-| [concept/siphon-pump-final-r52-a.gif](concept/siphon-pump-final-r52-a.gif) | Two pumps heaving on the farm floor, one shot and breaking | proposed (round 52) |
+| [concept/siphon-pump-final-r52-a.png](concept/siphon-pump-final-r52-a.png) | Siphon pump final frames (`tools/art/siphon_pump.py`, from the Thera Deep mood still): the heave loop, the sump's glow, the dead pump, the break, the root decal live and withered (sheet) | chosen (round 52, F.4: accepted as final) |
+| [concept/siphon-pump-final-r52-a.gif](concept/siphon-pump-final-r52-a.gif) | Two pumps heaving on the farm floor, one shot and breaking | chosen (round 52, F.4: accepted as final) |
+| [concept/spawning-reef-final-r53-a.png](concept/spawning-reef-final-r53-a.png) | Spawning reef, proposal **a** "coral knot" (`tools/art/spawning_reef.py --look a`, from the abyssal plain mood still; in `assets/` until the pick): plum coral bulbs, bone finger coral, teal polyps, the six-petal iris (6 states × 4 breathing frames, the Hive Node's layout), its glow, the reef-bed decal and wither, the coral burst, tatters, the razed stump (sheet) | proposed (round 53) |
+| [concept/spawning-reef-final-r53-a.gif](concept/spawning-reef-final-r53-a.gif) | Two reefs on the plain at 80 px/s: the iris opening, four Glassfin fanning out every 3.5 s, one reef shot and razed | proposed (round 53) |
+| [concept/spawning-reef-final-r53-b.png](concept/spawning-reef-final-r53-b.png) | Proposal **b** "bone chimneys" (`--look b`): a plum dome ringed by seven leaning bone tube chimneys with violet lips and teal-lit mouths, the iris at the crown; the same states, decal, burst, tatters and stump (sheet) | proposed (round 53) |
+| [concept/spawning-reef-final-r53-b.gif](concept/spawning-reef-final-r53-b.gif) | b's reefs on the plain: releases, one razed | proposed (round 53) |
+| [concept/spawning-reef-capture-r53-a.png](concept/spawning-reef-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along): the first spawning reef, look a (2× detail; two runs) at t=39.8 and 40.2, its iris open and the fry darting out, then razed in a second run where the ship sat under it, t=39.9 and 40.6, the coral burst and the dead husk | proposed (round 53) |
+| [concept/spawning-reef-capture-r53-a.mp4](concept/spawning-reef-capture-r53-a.mp4) | The same as a video with the game's sound (t=36.5–43): the reef arriving, its iris opening, fry, razed | proposed (round 53) |
 | [concept/drill-rig-capture-r51-a.png](concept/drill-rig-capture-r51-a.png) | Game capture, Level 22 (M8 part B, step B5, medium, `--invulnerable`, Hammer Mortar + two Bomb Racks): the first rig's tell (t=41.5), its ring of shards (t=42), the next tell with the bombs on it (t=45), the core's death (t=46.5), the stump and dead pumps (t=48); the second rig's remains (t=63.5) | chosen (round 51, F.1: accepted as final) |
 | [concept/drill-rig-capture-r51-a.mp4](concept/drill-rig-capture-r51-a.mp4) | The same run, t 37–51 with the game's sound: the ship moving under the first rig, the collar's hum, the tells and rings, the pumps and the core breaking, the death | chosen (round 51, F.1: accepted as final) |
 
@@ -199,3 +206,4 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
   (`tendril-anchor-final-r39-a`, `threadcrawler-final-r39-a`) approved as final (F.3, F.4); both parts `art: final`.
 - 2026-10-20 (user, round 44, A.b (b): its last `proposed` rows are decided (round 44 and the closed rounds 41-43)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
 - 2026-10-21 (Act 4 design phase, step m8-denemies): the Drill Rig (L22, a hardened ground target) added as a draft spec.
+- 2026-10-22 (user, round 52, closed): the siphon pump's final frames accepted (F.4; the part is `art: final`).

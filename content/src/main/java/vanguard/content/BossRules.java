@@ -334,7 +334,7 @@ final class BossRules {
         // M7 part F: a walking boss (the Revenant Walker) walks its passes: its station is not read.
         double hoverY = movement.anchored()
                 .map(EnemyData.Anchored::y)
-                .or(() -> movement.hover().map(hover -> hover.y().min()))
+                .or(() -> movement.hover().map(hover -> hover.heightFromTop().min()))
                 .or(() -> movement.stride().map(stride -> 0.0))
                 // M7 part H: a breaching boss's mouth takes its breach points' places (ColossusRules).
                 .or(() -> movement.breach().map(breach -> 0.0))

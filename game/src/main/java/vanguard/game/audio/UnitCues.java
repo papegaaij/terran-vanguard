@@ -110,6 +110,8 @@ final class UnitCues extends SoundFamily {
     private final DeepWaterCues deepWater;
     /** M8 part C: the kills' under-water rung and Level 23's units' own sounds. */
     private final UnderIceCues underIce;
+    /** M8 part D: Level 24's units' own sounds (the Ray, the Barbfin, the reef). */
+    private final AbyssCues abyss;
 
     UnitCues(
             SoundMix mix,
@@ -118,10 +120,12 @@ final class UnitCues extends SoundFamily {
             FoundryCues foundry,
             WalkerCues walker,
             DeepWaterCues deepWater,
-            UnderIceCues underIce) {
+            UnderIceCues underIce,
+            AbyssCues abyss) {
         super(mix);
         this.deepWater = deepWater;
         this.underIce = underIce;
+        this.abyss = abyss;
         this.looks = looks;
         this.storm = storm;
         this.foundry = foundry;
@@ -154,6 +158,8 @@ final class UnitCues extends SoundFamily {
                 bank.play(explosion(kind), EXPLOSIONS, pitch(0.04), pan);
                 // M8 part C: a Glassfin's shatter, an eel part's tear, a pump's break over it.
                 underIce.destroyed(events.value(i), pan);
+                // M8 part D: a Ray's dying groan, a reef's collapse over it.
+                abyss.destroyed(events.value(i), pan);
                 // M8 part B: a Drill Rig's core also plays the rig's collapse (FoundryCues).
                 foundry.destroyed(events.value(i), pan);
             }
@@ -172,6 +178,8 @@ final class UnitCues extends SoundFamily {
                     // M7 part F: a Warden Tank's burst, once at its first shot (FoundryCues).
                 } else if (underIce.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M8 part C: an Eel Swarm head's pulse shot (UnderIceCues).
+                } else if (abyss.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M8 part D: an Abyss Ray's fan, a Barbfin's needle (AbyssCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))
@@ -262,8 +270,17 @@ final class UnitCues extends SoundFamily {
             // little above the enemy fire, one long sound.
             case SWEEP_TELEGRAPH -> bank.play(Sfx.MANTIS_TELEGRAPH, PLAYER_DAMAGE, pitch(0.03), pan);
             // M5 part C: the Hive Node's iris and release, the Ravager's take-off.
-            case SPAWN_TELEGRAPH -> bank.play(Sfx.HIVE_IRIS, HITS, pitch(0.04), pan);
-            case SPAWN_RELEASED -> bank.play(Sfx.HIVE_SPAWN, EXPLOSIONS, pitch(0.04), pan);
+            case SPAWN_TELEGRAPH -> {
+                // M8 part D: a spawning reef's iris grinds open instead (AbyssCues).
+                if (!abyss.telegraph(events.value(i), pan)) {
+                    bank.play(Sfx.HIVE_IRIS, HITS, pitch(0.04), pan);
+                }
+            }
+            case SPAWN_RELEASED -> {
+                if (!abyss.released(events.value(i))) {
+                    bank.play(Sfx.HIVE_SPAWN, EXPLOSIONS, pitch(0.04), pan);
+                }
+            }
             case POUNCE -> bank.play(FlightSounds.pounce(mix.random), HITS, pitch(0.06), pan);
             case SWEEP_FIRED -> bank.play(Sfx.MANTIS_SWEEP, HITS, pitch(0.03), pan);
             // M5 part D: a Wraith's decloak and a Mote Swarm's loop-back, levelled like the Vrell

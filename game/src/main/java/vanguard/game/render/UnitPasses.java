@@ -152,6 +152,14 @@ final class UnitPasses {
                     continue;
                 }
             }
+            if (kinds.rays(sortie).draws(enemy)) {
+                // M8 part D: an Abyss Ray on the play plane (the rise's second half, the glide, the sink's first);
+                // on sub it is drawn under the flyers (drawRisers).
+                if (!AbyssRayLooks.deep(enemy)) {
+                    kinds.rays(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
+                }
+                continue;
+            }
             EnemyLooks look = looks[enemy.kind()];
             AtlasRegion frame = enemyFrame(sortie, enemy, i, alpha);
             // M7 part B: a Dust Kite fades in from the dust as it enters (a look only).
@@ -327,6 +335,15 @@ final class UnitPasses {
         if (fin != null) {
             return fin;
         }
+        // M8 part D: a Barbfin swims or tells its needle; an Abyss Ray glides with its wing beat.
+        AtlasRegion barb = kinds.barbfins(sortie).frame(enemy, sortie.tick());
+        if (barb != null) {
+            return barb;
+        }
+        AtlasRegion glide = kinds.rays(sortie).frame(enemy, sortie.tick());
+        if (glide != null) {
+            return glide;
+        }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
@@ -440,6 +457,14 @@ final class UnitPasses {
         kinds.eels(sortie).drawGlows(batch, sortie, alpha);
         kinds.glassfins(sortie).drawGlows(batch, sortie, alpha);
         kinds.pumps(sortie).drawGlows(batch, sortie, looks, alpha);
+        // M8 part D: the Rays' gill slits and mouth flash, the Barbfins' snout sparkle.
+        kinds.rays(sortie).drawGlows(batch, sortie, alpha);
+        kinds.barbfins(sortie).drawGlows(batch, sortie, alpha);
+    }
+
+    /** M8 part D: the Abyss Rays on {@code sub} (their shadow, the rise's first half, the sink's second). */
+    void drawRisers(SpriteBatch batch, Sortie sortie, float alpha) {
+        kinds.rays(sortie).drawDeep(batch, sortie, alpha, unitFlash);
     }
 
     /** A unit's frame at (x, y), flashing white just after a hit. */
@@ -741,6 +766,11 @@ final class UnitPasses {
             if (depth == Depth.GROUND || depth == Depth.HIGH_AIR || enemy.chain() != null || enemy.latched()) {
                 continue;
             }
+            if (kinds.rays(sortie).draws(enemy) && enemy.risePhase() != vanguard.sim.RisePhase.GLIDE) {
+                // M8 part D: an Abyss Ray casts its shadow only in its glide (its own shadow is the tell, the rise
+                // and the sink are translucent).
+                continue;
+            }
             float shade = EnemyLooks.bodyOpacity(enemy.decloak(alpha)) * kiteFade.opacity(enemy, sortie.tick(), alpha);
             if (PursuitLooks.pursuing(enemy.flock())) {
                 // Step GFX2: the pursuit swarm's shadows only faint (at 50 % they read as a second flock).
@@ -845,7 +875,9 @@ final class UnitPasses {
                     || enemy.walking()
                     || enemy.chain() != null
                     || enemy.latched()
-                    || enemy.decloak(alpha) < 1) {
+                    || enemy.decloak(alpha) < 1
+                    || kinds.rays(sortie).draws(enemy)) {
+                // M8 part D: an Abyss Ray's glow follows its rise (drawDeepGlows).
                 continue;
             }
             float glow = ArsenalLooks.glowShare(enemy) * kiteFade.opacity(enemy, sortie.tick(), alpha);

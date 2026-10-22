@@ -201,6 +201,24 @@ class ActHpFactorTest {
     }
 
     /**
+     * M8 part D (step D3): Level 24's units (reference 104): the Scuttler (28 HP, L04, reference 36) by the ratio, the
+     * returning small units (the Driftjelly and the Reef Spitter, L11) and the new Barbfin by the beam era's ×2 only
+     * (gap check D5), the Abyss Ray and the spawning reef at their own first level, the Glassfin (tiny) unchanged.
+     */
+    @Test
+    void levelTwentyFoursUnits() {
+        assertEquals(
+                Math.rint(28 * 104.0 / 38),
+                at("scuttler", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(24, at("barbfin", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(8, at("driftjelly", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(14, at("reef-spitter", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(210, at("abyss-ray", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(200, at("spawning-reef", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(1, at("glassfin", Difficulty.MEDIUM, 4, 24).hp());
+    }
+
+    /**
      * M7 part E, step E5 (the user's "tougher, not more" of 2026-10-19): from Level 18 on, where the balance plan fits
      * the Ion Beam, a {@code small} unit takes the basis's {@code beam_era_hp} factor (×2) on top of its act HP factor,
      * its own first level included; {@code tiny} and {@code medium} units (the Dust Devil, whose vanes already gate its

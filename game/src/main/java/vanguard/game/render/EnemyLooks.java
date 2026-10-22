@@ -117,13 +117,25 @@ public record EnemyLooks(
     static final int LEAP_SHADOW_DX = Shadows.AIR_DX;
 
     static final int LEAP_SHADOW_DY = Shadows.AIR_DY;
+    /** M8 part D: the spawning reef (design/enemies/ground/spawning-reef), the Hive Node's look on the sea floor. */
+    static final String SPAWNING_REEF = "spawning-reef";
     /**
      * A unit whose death burst differs from its size tier (its stat block's {@code death} note; the
      * stat blocks' notes are not read by the game): the Hive Node collapses in a {@code large} burst,
      * the Ravager (a {@code medium} contact) bursts {@code small}.
      */
-    private static final java.util.Map<String, Tier> DEATH_TIERS =
-            java.util.Map.of("hive-node", Tier.LARGE, "ravager", Tier.SMALL, DrillRigLooks.SLUG, Tier.LARGE);
+    private static final java.util.Map<String, Tier> DEATH_TIERS = java.util.Map.of(
+            "hive-node",
+            Tier.LARGE,
+            "ravager",
+            Tier.SMALL,
+            DrillRigLooks.SLUG,
+            Tier.LARGE,
+            // M8 part D: the Abyss Ray's break-up and the spawning reef's coral burst are `large` (their stat blocks).
+            AbyssRayLooks.SLUG,
+            Tier.LARGE,
+            SPAWNING_REEF,
+            Tier.LARGE);
     /**
      * M8 part B: the Drill Rig's collar spins at this rate (assets/pivots/drill-rig.json's {@code spin}: 8 frames of 15
      * degrees, 180 degrees/s), not the Vrell's organic 10 fps.
@@ -265,7 +277,10 @@ public record EnemyLooks(
                 chain ? chainBurst : explosionSound(slug, tier, true),
                 sprites.has(slug + "-flare") ? sprites.frames(slug + "-flare") : none,
                 remains(sprites, slug, none),
-                death(sprites, slug, DEATH_GLOW, tier, true, walker),
+                // M8 part D: the Abyss Ray's -death set is its solid break-up per heading (AbyssRayLooks), not a glow.
+                slug.equals(AbyssRayLooks.SLUG)
+                        ? new DeathEffect(none, DEATH_FRAME_TICKS, 0)
+                        : death(sprites, slug, DEATH_GLOW, tier, true, walker),
                 // M8 part C: the eel's -husk set is its parts' sinking husks per heading (EelLooks), not a death.
                 death(sprites, slug, DEATH_PIECES, tier, false, walker || eel),
                 sprites.has(slug + "-glow") ? sprites.frames(slug + "-glow") : none,

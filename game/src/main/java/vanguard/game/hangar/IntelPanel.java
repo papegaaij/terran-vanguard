@@ -78,6 +78,11 @@ final class IntelPanel {
     static final Color WATER_BAND = new Color(18 / 255f, 70 / 255f, 92 / 255f, 1);
 
     static final Color WATERLINE = new Color(70 / 255f, 210 / 255f, 230 / 255f, 1);
+    /**
+     * M8 part D: a rising unit's wave (Level 24's three Abyss Rays): a violet tick the strip's full depth with a pixel
+     * above (the Ray's violet eye spots; it rises from below, so its mark reaches up).
+     */
+    static final Color RAY_VIOLET = new Color(176 / 255f, 110 / 255f, 236 / 255f, 1);
 
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
@@ -605,7 +610,7 @@ final class IntelPanel {
                 // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
                 // under the waves, from its surfacing to its head off the far edge.
                 case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE -> {
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY -> {
                     // drawn over the waves, below
                 }
             }
@@ -652,6 +657,10 @@ final class IntelPanel {
                 // M8 part C: the waterline (Level 23's descent) as a bright teal tick a pixel above and below the
                 // strip.
                 canvas.fill(WATERLINE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 12);
+            } else if (mark.kind() == Intel.Mark.Kind.RAY) {
+                // M8 part D: a rising unit's wave (Level 24's Abyss Rays) as a violet tick the strip's full depth and a
+                // pixel above it.
+                canvas.fill(RAY_VIOLET, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 11);
             } else if (mark.kind() == Intel.Mark.Kind.TARGET) {
                 // M8 part B: a site of the secondary's targets (Level 22's four rigs) as a red "T" over the strip's
                 // lower half: its tick and a crossbar on it (the boss's tick is plain and full depth).

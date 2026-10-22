@@ -368,3 +368,26 @@ exists): the 40 px pump heaving (a ribbed purple chitin bellows, mauve bone ribs
 three feeder hoses with teal-lit tips), its sump's additive glow, the dead pump, the break (teal sap clouding up, chitin
 chips) and the root decal live and withered; the GIF on Thera Deep's farm floor: two pumps heaving, one shot and
 breaking.
+
+**Accepted as final** in round 52 (F.4, 2026-10-22).
+
+## spawning-reef-final-r53-a
+
+Round 53, production art (M8 part D batch, step ART-D; straight to production from the round-48 abyssal plain mood
+still, `europa-abyssal-plain-r48-a`: "lumpy plum and bone coral, a teal iris at the crown", and the Level 24 README's
+"a coral tower with a teal iris that releases 4 Glassfin every 3.5 s"). Not a mockup: the review sheet and a loop of
+the files written by [tools/art/spawning_reef.py](../../../../tools/art/spawning_reef.py) `--look a` (the default),
+look **a "coral knot"**: an 80 px mound of plum coral bulbs, bone-white finger coral breaking out of its flanks, teal
+polyp buds, a raised collar at the crown round a six-petal iris over the teal throat. The Hive Node's frame layout
+(6 iris states × 4 breathing frames, the iris opening over the spawn's 0.5 s telegraph), the additive throat and halo,
+the reef-bed decal and its wither, the coral burst's teal light, the tatters (bulbs and fingers tumbling slowly out over
+a silt-and-coral dust cloud; no fire, no bubbles) and the razed stump; the GIF on the plain under the section 2
+review grade: two reefs scrolling at 80 px/s, the iris opening and four Glassfin fanning out every 3.5 s, one reef shot
+and razed.
+
+## spawning-reef-final-r53-b
+
+Look **b "bone chimneys"** of the same script (`--look b`; written to the same sprite names, so the pick decides which
+stays): a plum dome ringed by seven leaning bone tube chimneys of different heights with violet lips and a teal glow
+deep in their mouths, the six-petal iris at the dome's crown; the same states, decal, burst, tatters (the chimneys
+breaking off whole) and stump; the same GIF.

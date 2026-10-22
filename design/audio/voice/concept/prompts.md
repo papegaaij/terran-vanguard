@@ -474,12 +474,16 @@ Lead), so the pair differs from the cast men by timbre and pace more than by pit
 | a | Bruce Pirie | [The Mayor of Casterbridge, ch. 1 (Hardy)](https://archive.org/details/mayor_casterbridge_1207_librivox), cut at 120 s | public domain (Public Domain Mark 1.0) | 100 Hz, a narrow range (IQR 19 Hz), 2.6 words/s (takes 116 / 127 Hz); a low, even country narration |
 | b | John Van Stan | [Early Greek Philosophy & Other Essays, ch. 1 (Nietzsche)](https://archive.org/details/earlygreekphilosophy_2103_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 119 Hz, a narrow range (IQR 26 Hz), 1.7 words/s (takes 133 / 126 Hz); slow and soft, a measured essay read |
 
-**His Level 23 lines with candidate b** (step VOX-C, M8 part C; pending the user's review in round 52): all four of
+**His Level 23 lines with candidate b** (step VOX-C, M8 part C; accepted in round 52 (2026-10-22)): all four of
 Thera Deep Control's lines (t=34, t=70, `secondary-objective`, the survey probe's secret) rendered by the production
 renderer `tools/art/voice.py` exactly as the game's own takes, but with `ref: ref-thera-control-r52-b`, into
-`concept/voice-thera-control-r52-b/<key>.ogg` under the keys that ref gives (candidate a's takes are in
+`concept/voice-thera-control-r52-b/<key>.ogg` (in `assets/voice/thera-control/` since the pick) under the keys that ref gives (candidate a's takes are in
 `assets/voice/thera-control/`, the speaker table's provisional `ref`). Two takes pinned by b's keys in the speaker
 table (t=34: the key's seed read "on the shot" for "shaft"; the secret: an octave jump); median pitch 121–133 Hz; every
 file read back word for word through the filter with the Act 4 name prompt ("racks" heard right in both rack lines).
-If round 52 picks b, `ref` becomes `ref-thera-control-r52-b` and these four files move into `assets/voice/thera-control/`
-(a's four go to `concept/rejected/`); no re-render.
+Round 52 picked b: `ref` became `ref-thera-control-r52-b` and these four files moved into `assets/voice/thera-control/`
+(a's four to `concept/rejected/voice-thera-control-r52-a/`; step D4); no re-render.
+
+Closed in round 52 (user, 2026-10-22, V.1 = b): **Chosen: b** (John Van Stan, `refs/ref-thera-control-r52-b.wav`).
+**Rejected: a** (Bruce Pirie: `concept/rejected/voice-thera-control-r52-a.ogg`, its four line files in
+`concept/rejected/voice-thera-control-r52-a/` and the clip `concept/rejected/ref-thera-control-r52-a.wav/.txt`).

@@ -56,7 +56,12 @@ public final class Enemy implements Hashed {
          * M7 part E: a lane strafer (design/enemies/air/ghost-drone), placed by its {@link LaneStrafing}: down to its
          * lane, across, and (hard) back once.
          */
-        STRAFE
+        STRAFE,
+        /**
+         * M8 part D: a unit with a rise (design/enemies/naval/abyss-ray), placed by its {@link Rising}: its shadow, the
+         * rise, the glide and the sink.
+         */
+        RISE
     }
 
     /**
@@ -317,6 +322,10 @@ public final class Enemy implements Hashed {
     final Swooping swooping = new Swooping();
     /** M8 part C, a ram (design/enemies/naval/glassfin; hashed only with one). */
     final Ramming ramming = new Ramming();
+    /** M8 part D, a rise (design/enemies/naval/abyss-ray; hashed only with one). */
+    final Rising rising = new Rising();
+    /** M8 part D, a hover held above the ship (design/enemies/naval/barbfin; hashed only with one). */
+    final HoverHold hoverHold = new HoverHold();
     /** M5 part F: a chaser's chase, latch and shake-off (design/enemies/air/lamprey; hashed only with a chase). */
     final Chasing chasing = new Chasing(this);
 
@@ -430,6 +439,11 @@ public final class Enemy implements Hashed {
     /** A unit released by a spawner (design/enemies/air/brood-pod; {@link EnemyStarts#hatch}). */
     void hatch(EnemySpec enemySpec, int enemyKind, double atX, double atY, double velX, double velY, int unitSerial) {
         starts.hatch(enemySpec, enemyKind, atX, atY, velX, velY, unitSerial);
+    }
+
+    /** M8 part D: an escort peeling off its rising carrier ({@link EnemyStarts#peel}). */
+    void peel(Spawn plan, double atX, double atY, double offsetX, double shipY, int unitSerial) {
+        starts.peel(plan, atX, atY, offsetX, shipY, unitSerial);
     }
 
     /** A unit a boss's window launches (design/enemies/bosses, part G; {@link EnemyStarts#launch}). */
@@ -929,7 +943,47 @@ public final class Enemy implements Hashed {
         if (submerging.submerged()) {
             return Layer.SUB;
         }
+        if (phase == Phase.RISE) {
+            // M8 part D: a shadow on sub, on air from the rise's middle to the sink's.
+            return rising.layer();
+        }
         return spec.layer();
+    }
+
+    /**
+     * Whether its body touches the craft on the play plane now (the ship, the wingman, the escort slot, the drones,
+     * an air escort's units): its layer collides with them, except (M8 part D) in a rise before its glide.
+     */
+    boolean bodyTouches() {
+        return layer().collidesWithPlayer() && !(phase == Phase.RISE && rising.harmless());
+    }
+
+    /** M8 part D: where a unit with a rise is in it (design/enemies/naval/abyss-ray); {@link RisePhase#NONE} else. */
+    public RisePhase risePhase() {
+        return phase == Phase.RISE ? rising.phase() : RisePhase.NONE;
+    }
+
+    /**
+     * M8 part D: how far a unit with a rise is through its current phase of it, between the previous and the current
+     * step, 0 to 1 (the rise and the sink flip its layer at 0.5); 0 for any other unit (for the looks).
+     */
+    public double riseProgress(double alpha) {
+        return phase == Phase.RISE ? rising.progress(spec.rise().orElseThrow(), alpha) : 0;
+    }
+
+    /** M8 part D: its rise's glide direction, 1 to the right and -1 to the left; 0 for a unit without a rise. */
+    public int riseDirection() {
+        return phase == Phase.RISE ? rising.direction() : 0;
+    }
+
+    /** M8 part D: whether its rise flipped it to {@code air} in this step (its held escorts peel off then). */
+    boolean risenNow() {
+        return phase == Phase.RISE && rising.flippedNow();
+    }
+
+    /** M8 part D: whether its rise holds its escorts still (before the rise's middle). */
+    boolean riseHolding() {
+        return phase == Phase.RISE && rising.holding();
     }
 
     /**

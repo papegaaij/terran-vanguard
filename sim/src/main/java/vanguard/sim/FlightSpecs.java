@@ -9,8 +9,33 @@ public interface FlightSpecs {
     /** A snake's units follow one another {@code spacingSeconds} apart. */
     public record Snake(double spacingSeconds) {}
 
-    /** Hovers for {@code seconds}, {@code depth} px below the top edge of the play field. */
-    public record Hover(Range seconds, Range depth) {}
+    /**
+     * Hovers for {@code seconds}, {@code depth} px below the top edge of the play field.
+     *
+     * <p>M8 part D (design/enemies/naval/barbfin): with {@code aboveShip} each unit draws once, by its own seed, a
+     * height in that range; coming down its path on the play field it stops as soon as its centre is that far above
+     * the ship's centre (but never higher than the depth's min below the top edge); a path from the top edge then ends
+     * at the depth's max (its formation's stop, which stops it at the latest; a side entry keeps its height). While it holds it drifts sideways at {@code drift} px/s (to a side drawn by
+     * its seed, turning back at the side edges) and turns its facing toward the ship. Empty and 0 for the plain hover.
+     */
+    public record Hover(Range seconds, Range depth, java.util.Optional<Range> aboveShip, double drift) {
+        public Hover {
+            java.util.Objects.requireNonNull(aboveShip);
+            if (!(drift >= 0) || (aboveShip.isPresent() && !(aboveShip.get().min() >= 0))) {
+                throw new IllegalArgumentException("a hover drifts 0 px/s or more, above the ship by 0 px or more");
+            }
+        }
+
+        /** The plain hover, without M8 part D's height above the ship and drift. */
+        public Hover(Range seconds, Range depth) {
+            this(seconds, depth, java.util.Optional.empty(), 0);
+        }
+
+        /** M8 part D: this hover held {@code above} px above the ship, drifting {@code driftSpeed} px/s. */
+        public Hover aboveShip(Range above, double driftSpeed) {
+            return new Hover(seconds, depth, java.util.Optional.of(above), driftSpeed);
+        }
+    }
 
     /** Circles a point at {@code radius} px and {@code degreesPerSecond}. */
     public record Orbit(double radius, double degreesPerSecond) {}

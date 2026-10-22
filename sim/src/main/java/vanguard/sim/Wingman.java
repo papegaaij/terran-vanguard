@@ -846,7 +846,7 @@ public final class Wingman {
             boolean moved = false;
             for (int j = 0; j < enemies.size(); j++) {
                 Enemy enemy = enemies.get(j);
-                if (!enemy.layer().collidesWithPlayer() || !PlayerFire.onField(enemy)) {
+                if (!enemy.bodyTouches() || !PlayerFire.onField(enemy)) {
                     continue;
                 }
                 double ex = enemy.x();

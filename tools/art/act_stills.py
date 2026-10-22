@@ -48,8 +48,8 @@ Outputs (assets/ui/, a texture of its own like the title scene, not packed):
                                   ballistic arcs from a vent, sunlit from the upper left, glittering, falling back as
                                   a veil); a: one huge plume on the horizon left of Jupiter, b: a nearer plume on a
                                   fissure below the lettering with a curtain of smaller ones receding along it;
-                                  act-4-still-r52-sheet.png: both stills and the title card over each. assets/ui keeps
-                                  the r51 still until the user picks (then set A4_GEYSER and run `act-4`)
+                                  act-4-still-r52-sheet.png: both stills and the title card over each. The user
+                                  picked a (round 52, T.1): A4_GEYSER = "a", assets/ui's still carries its plume
 
 The look is Level 01's final backdrop (tools/art/backdrop_l01.py, approved in round 12): Earth and
 the terminator are its placeholder generator's functions (tools/concept/backdrop_l01.py, frozen,
@@ -864,9 +864,9 @@ def jupiter():
 
 
 # round 52 (F.6 redo, the user: "Europa is known for its giant geysers shooting up to 200 km"): a giant water-vapour
-# plume over the accepted composition, two proposals; None draws the round-51 still unchanged (assets/ui keeps it until
-# the user picks, then set this to the chosen variant and rebuild)
-A4_GEYSER = None
+# plume over the accepted composition, two proposals; None draws the round-51 still unchanged. The user's pick (round
+# 52, T.1 = a, 2026-10-22): the one huge plume on the horizon, left of Jupiter
+A4_GEYSER = "a"
 A4_R52 = "r52"
 # a vent: (screen x, screen y of the vent, apex height px, jet spread, lean, particles, seed, hidden below the horizon)
 GEYSERS = {

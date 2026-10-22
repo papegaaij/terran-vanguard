@@ -82,6 +82,8 @@ import java.util.Optional;
  *     its rear do its multiplier to the body; a walker's
  * @param seekersIgnore M7 part G (user decision 2026-10-20, the Mote Swarm): the seekers never pick it as a target:
  *     the player's homing shots and turrets, Rook's target; a shot that flies into it still hits
+ * @param rise M8 part D: its rise (design/enemies/naval/abyss-ray): a shadow on {@code sub}, the rise to {@code air},
+ *     the glide and the sink ({@link Rise}); its stat block's layer is {@code sub}
  */
 public record EnemySpec(
         String slug,
@@ -133,7 +135,8 @@ public record EnemySpec(
         Optional<LaneStrafe> laneStrafe,
         Optional<Turret> turret,
         Optional<RearPlate> rearPlate,
-        boolean seekersIgnore)
+        boolean seekersIgnore,
+        Optional<Rise> rise)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -213,6 +216,138 @@ public record EnemySpec(
         if (laneStrafe.isPresent() && gun.isPresent() && Double.isNaN(gun.get().passWithinX())) {
             throw new IllegalArgumentException(slug + ": a lane strafer's gun fires by a pass trigger");
         }
+        java.util.Objects.requireNonNull(rise);
+        if (rise.isPresent()
+                && (layer != Layer.SUB
+                        || walker.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || burrow.isPresent()
+                        || submerge.isPresent()
+                        || vortex.isPresent()
+                        || laneStrafe.isPresent()
+                        || swoop.isPresent()
+                        || chase.isPresent()
+                        || terrain)) {
+            throw new IllegalArgumentException(
+                    slug + ": a rise is a plain unit's entering on the sub layer (M8 part D, the Abyss Ray)");
+        }
+    }
+
+    /** The constructor without M8 part D's {@code rise}. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            List<UnitPart> parts,
+            Optional<Roll> roll,
+            Optional<Vortex> vortex,
+            Optional<Pull> pull,
+            Optional<LaneStrafe> laneStrafe,
+            Optional<Turret> turret,
+            Optional<RearPlate> rearPlate,
+            boolean seekersIgnore) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                parts,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                turret,
+                rearPlate,
+                seekersIgnore,
+                Optional.empty());
+    }
+
+    /**
+     * M8 part D: this unit with its rise (design/enemies/naval/abyss-ray): a shadow on {@code sub}, the rise, the glide
+     * and the sink; empty for none.
+     */
+    public EnemySpec withRise(Optional<Rise> withRise) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.rise = withRise;
+        return copy.build();
     }
 
     /** The constructor without M7 part G's {@code seekersIgnore}: every seeker may pick it. */

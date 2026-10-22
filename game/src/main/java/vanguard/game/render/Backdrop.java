@@ -68,6 +68,12 @@ public final class Backdrop {
     private final long[] phase = new long[BackdropLayer.values().length];
 
     private final Piece[][] pieces;
+    /**
+     * M8 part D: per ground piece its light, or null: a piece {@code <id>-glow} declared next to it but not placed
+     * (Level 24's {@code relay-beacon-glow}), drawn additively over the grade at the piece's place on its frame clock.
+     */
+    private final List<Array<AtlasRegion>> glows;
+
     private final TowerProjection towers;
     private final Look[] looks;
     /** M5 part C: the collapse's dust peak's look (Level 09's {@code heavy}); null without a collapse. */
@@ -159,6 +165,17 @@ public final class Backdrop {
             }
             pieces[l] = onLayer.toArray(Piece[]::new);
         }
+        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
+        List<Array<AtlasRegion>> lights = new ArrayList<>();
+        for (Piece piece : onGround) {
+            String light = piece.placed().piece() + GLOW;
+            BackdropData.Piece spec = data.pieces().get(light);
+            lights.add(
+                    spec != null && spec.imageCount() == piece.images().size
+                            ? sprites.backdrop(folder + light, spec.imageCount())
+                            : null);
+        }
+        glows = lights;
         towers = new TowerProjection(towers(sprites, folder, level), pixel);
         for (int s = 0; s < sectionCount; s++) {
             for (String id : level.sections().get(s).tiles()) {
@@ -875,6 +892,57 @@ public final class Backdrop {
             } else {
                 batch.draw(image, x, y);
             }
+        }
+    }
+
+    /** M8 part D: the suffix of a ground piece's light ({@link #drawPieceGlows}). */
+    static final String GLOW = "-glow";
+
+    /** M8 part D: whether a ground piece has its light ({@link #drawPieceGlows}): Level 24's relay beacons. */
+    public boolean hasPieceGlows() {
+        for (Array<AtlasRegion> light : glows) {
+            if (light != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M8 part D: the ground pieces' lights (Level 24's relay beacons' pulse), additive, at their pieces' places and on
+     * their frame clock, after the under-water grade so it does not dim them.
+     */
+    public void drawPieceGlows(SpriteBatch batch, double groundScroll, BackdropClock clock) {
+        Piece[] onGround = pieces[BackdropLayer.GROUND.ordinal()];
+        long scroll = scroll(BackdropLayer.GROUND, groundScroll);
+        boolean additive = false;
+        for (int p = 0; p < onGround.length; p++) {
+            Piece piece = onGround[p];
+            Array<AtlasRegion> light = glows.get(p);
+            if (light == null || afterCrawl(piece.placed())) {
+                continue;
+            }
+            float height = (float) piece.spec().size().height();
+            double along = Double.isNaN(piece.pathStart()) ? 0 : clock.pathTime(piece.pathStart());
+            float y = piece.bottom() - scroll + Math.round(piece.placed().offsetY(along));
+            if (y >= HEIGHT || y + height <= 0) {
+                continue;
+            }
+            if (!additive) {
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                additive = true;
+            }
+            float width = (float) piece.spec().size().width();
+            float x = X0 + Math.round(piece.placed().x() + piece.placed().offsetX(along) - width / 2);
+            TextureRegion image = light.get(imageAt(piece, clock.real(), along));
+            if (piece.placed().mirrored()) {
+                batch.draw(image, x + width, y, -width, height);
+            } else {
+                batch.draw(image, x, y);
+            }
+        }
+        if (additive) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         }
     }
 

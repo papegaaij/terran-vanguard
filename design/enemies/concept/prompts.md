@@ -68,3 +68,12 @@ Round 12, production art (Level 01 batch). Review sheet (`.png`) and loop (`.gif
 ## enemy-bullet-medium-final-r26-a
 
 Round 26, production art (M4 part H batch). Review sheet (`.png`) and loop (`.gif`) made from the final files in `assets/` by `tools/art/bullet_medium.py --review`; the frames themselves are rendered by `tools/art/bullet_medium.py`. Shows the `medium` class's large pulsing orb (round 09's `b_large` at a 6.5 px radius, the largest bullet body the art direction allows, in the final small orb's magenta ring, white core and `300030` rim; the body 1-bit, the glow in four translucency steps) over its 6 frames, next to the small orb, and a drifting field of both; check that it reads as the same family but clearly heavier, and that its pulse is calm. The game draws it for every bullet of the `medium` class's damage (the Leviathan's and the Scuttler's aimed shots). Not an image-generator prompt: the look is the chosen round-09 concept's, whose prompt stays valid.
+
+## enemy-bullets-final-r53-a
+
+Round 53, production art (M8 part D batch, step ART-D). Review sheet (`.png`) and loop (`.gif`) of the Barbfin's
+**violet needle** `needle-violet_0..15` written by `tools/art/enemy_bullets.py violet` (round 09's `b_needle` in a
+lavender DEBEFF ring over a violet A85CFF band and a white core, the yellow needle's halo rule; 16 headings), next to
+the yellow needle and the orb, and drifting over Level 24's graded plain with orbs (the Abyss Ray's fan). Check that it
+reads on the dark water as clearly as the orb. Not an image-generator prompt: the look is the chosen round-09 concept's
+in the Barbfin's colour (its README: "a violet-hued shot").

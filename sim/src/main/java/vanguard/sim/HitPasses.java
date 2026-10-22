@@ -107,7 +107,7 @@ final class HitPasses {
             EnemySpec spec = enemy.spec();
             // A pounce (M5 part C) touches him once per leap, in its air window.
             // M5 part F: a Lamprey latched onto the player's hull does not touch him.
-            if (!enemy.layer().collidesWithPlayer()
+            if (!enemy.bodyTouches()
                     || Chain.doomed(enemy)
                     || enemy.latched()
                     || !hull.overlaps(x, y, enemy.hitbox(), enemy.x(), enemy.y())
@@ -177,7 +177,7 @@ final class HitPasses {
         for (int j = enemies.size() - 1; j >= 0; j--) {
             Enemy enemy = enemies.get(j);
             EnemySpec spec = enemy.spec();
-            if (!enemy.layer().collidesWithPlayer()
+            if (!enemy.bodyTouches()
                     || Chain.doomed(enemy)
                     || enemy.latched()
                     || !hull.overlaps(x, y, enemy.hitbox(), enemy.x(), enemy.y())
@@ -235,7 +235,7 @@ final class HitPasses {
             for (int j = enemies.size() - 1; j >= 0 && !broke; j--) {
                 Enemy enemy = enemies.get(j);
                 EnemySpec enemySpec = enemy.spec();
-                if (!enemy.layer().collidesWithPlayer()
+                if (!enemy.bodyTouches()
                         || Chain.doomed(enemy)
                         || enemy.latched()
                         || !spec.box().overlaps(x, y, enemy.hitbox(), enemy.x(), enemy.y())
@@ -704,7 +704,7 @@ final class HitPasses {
                 latches.latchOn(enemy);
                 continue;
             }
-            if (enemy.layer().collidesWithPlayer()
+            if (enemy.bodyTouches()
                     && !Chain.doomed(enemy)
                     && hull.overlaps(ship.x(), ship.y(), enemy.hitbox(), enemy.x(), enemy.y())
                     && (!enemy.leaping() || enemy.pounceTouch(Enemy.TOUCHED_SHIP))) {

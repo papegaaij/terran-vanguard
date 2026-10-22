@@ -2,7 +2,7 @@
 title: Glassfin
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-22
 ---
@@ -77,11 +77,12 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a tiny schoo
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (our reading, Q3 a): a new Vrell swimmer, not a re-tinted Skitter; named Glassfin.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-22 (M8 part C, step C2): the stat block is now its [data.yaml](data.yaml) and the table rendered from it (the Mote Swarm's flock as the template: separation 14, radius 40, cruise 170, at most 24). Data readings, pending the user's review in round 52: the medium ram share 0.25 (gap check §5 D6; the stat block gives easy 0.15 and hard 0.40), "the dive 0.5 s after a 0.3 s glint" read as the dive 0.5 s after the glint starts (step C3 reads it as after the glint's end, see below), "streams up the screen" as entering from the top (the Level 23 table's `front`); `seekers_ignore` stands (D7).
+- 2026-10-22 (M8 part C, step C2): the stat block is now its [data.yaml](data.yaml) and the table rendered from it (the Mote Swarm's flock as the template: separation 14, radius 40, cruise 170, at most 24). Data readings, accepted in round 52 (2026-10-22): the medium ram share 0.25 (gap check §5 D6; the stat block gives easy 0.15 and hard 0.40), "the dive 0.5 s after a 0.3 s glint" read as the dive 0.5 s after the glint starts (step C3 reads it as after the glint's end, see below), "streams up the screen" as entering from the top (the Level 23 table's `front`); `seekers_ignore` stands (D7).
 - 2026-10-22 (M8 part C, step C3): the ram's timing follows the approved text "0.5 s after a 0.3 s glint tell": the dive 0.5 s after the glint ends (0.8 s from its start), as the simulation flies it (step C1); the data's `delay` now counts from the glint's end. A `column` flies no authored path in the simulation, so Level 23's ribbons are straight columns down the shaft's left or right side (x 144 / 336), each fry with the same ram. Pending the user's review in round 52.
-- 2026-10-22 (M8 part C, steps C1, ART-C and C4; pending the user's review in round 52): the final frames from round 48's a
+- 2026-10-22 (M8 part C, steps C1, ART-C and C4; accepted in round 52 (2026-10-22)): the final frames from round 48's a
   (`tools/art/glassfin.py`: 16 headings swimming and glinting, the glint's sparkle, the shatter's flash and shards) and the
   intel portrait; a fry's swim frame is offset by a hash of its serial, a ribbon's sway lags π/4 a fish along the column
   (step C1); the shatter's shards draw under the `tiny` death flash (step C4); no glow-only frames yet (Level 26's
   darkness, part F). The sounds: step AUD-C's `glassfin-shatter` a/b over the under-water `tiny` rung, the a files in the
   game until round 52's picks. Captured in Level 23 (`glassfin-capture-r52-a`).
+- 2026-10-22 (user, round 52, closed): the final frames accepted (F.3, `art: final`); the shatter **b** picked (in the game since step D4); C.3 (straight columns) and C.5 (the dive 0.5 s after the glint ends, the ram shares) accepted.

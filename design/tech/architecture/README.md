@@ -337,7 +337,8 @@ first entry of a part's model list is the starter (price 0, `start`).
   its own), its `telegraph` (s the iris opens ahead of a release), `enemy`, `count`, `arc`,
   `speed` and `shut_within` (px: an opening due while the ship's centre is this close is skipped,
   and so is a release the ship came that close to during the telegraph; the next one waits a whole
-  `every`); a unit has at most one `spawn`; the released units count into the level's enemies as they
+  `every`; M8 part D: `ram_after`, s on the field before each released unit of a kind with a flock's
+  `ram` draws it, instead of the kind's own: the spawning reef's fry, 0); a unit has at most one `spawn`; the released units count into the level's enemies as they
   are released (as a boss's streams), the density and haul checks count one release per spawner,
   and the hook `spawn_count` sets the count; the attack pattern **`pounce`** (no `bullet` or
   `speed`; its `interval` is the s from landing until it may leap again, by the fire-rate lever
@@ -1245,8 +1246,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
 - **Level and unit, M8 part C** ([Level 23](../../campaign/act-4-deep-water/level-23-through-the-ice/README.md), the
   [Eel Swarm](../../enemies/naval/eel-swarm/README.md), the [Glassfin](../../enemies/naval/glassfin/README.md), the
   [siphon pump](../../enemies/ground/siphon-pump/README.md) and the naval *Returning units under water*; loaded and checked
-  in step C2 by content's `DeepWaterChecks`, flown from step C1, mapped in step C3; the gap check's defaults pending the
-  user's review in round 52): a part's **`attacks`** (two or more of the unit's attacks by name instead of one `attack`:
+  in step C2 by content's `DeepWaterChecks`, flown from step C1, mapped in step C3; the gap check's defaults accepted in round 52 (2026-10-22)): a part's **`attacks`** (two or more of the unit's attacks by name instead of one `attack`:
   the eel head's aimed shot and fan; only on a segment chain's vital part; `PartData.attackNames()`); a segment chain's
   **`cut: {scatter, seconds}`** (instead of `delay`: the rear part keeps its heading at `scatter` px/s for `seconds`,
   firing nothing, then dies from the cut backwards; only on an air chain; `Cut.scatters()`); a `path` movement's
@@ -1268,6 +1268,28 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   **`dropped_by.head_first: true`** (only the wave's first unit of a segment chain's wave: it drops only when the
   chain's head is destroyed before any other part; `Carrier.dropsHeadFirst()`). The intel wave strip's **`WATERLINE`**
   marks (each waterline at its time, `LevelData.waterlines()`).
+- **Level and unit, M8 part D** ([Level 24](../../campaign/act-4-deep-water/level-24-abyssal-plain/README.md), the
+  [Abyss Ray](../../enemies/naval/abyss-ray/README.md), the [Barbfin](../../enemies/naval/barbfin/README.md) and the
+  [spawning reef](../../enemies/ground/spawning-reef/README.md); loaded and checked in step D2 by content's `AbyssChecks`,
+  flown from step D1, mapped in step D3; the gap check's defaults pending the user's review in round 53): a unit's
+  **`rise`** movement (`shadow` s on `sub`, growing in the ship's lane `ahead` px above the ship, reached only by
+  `anti-sub` fire and the Smart Bomb, no contact; the `rise` s, the layer flipping to `air` at its middle, no contact
+  until it ends; the `glide` s at `speed` px/s toward the far side, its attack firing from the rise's end; the `sink` s,
+  back to `sub` at its middle, then gone as escaped; `Rise.visit()` the whole of it): its stat block's `layer` is `sub`
+  (the only unit that may give it) and the rise is its whole movement; a `carrier + escorts` wave's escorts are held until
+  its rise's middle and fan out from it; a rising unit's `fan` may come in a `burst` (as a boss's). A level flies one
+  rising unit to a wave and never two on the screen at once (its waves at least a visit apart, every difficulty). A
+  `hover`'s **`above_ship`** (`[min, max]` px instead of `y`: it stops that far above the ship's y at the moment it stops,
+  a seeded draw, drifting its **`drift`** px/s sideways while it holds (0 if not given; only with `above_ship`) and
+  turning toward the ship; only on an `air` unit with the hover's `seconds`; `Hover.heightFromTop()` throws for it; the
+  simulation's hover depth is then 60–460 px below the top edge: never higher than 60, a path from the top ends at 460). A periodic `spawn` may release a **flock** unit (the spawning reef's Glassfin
+  fry: each flies out and rams on its own, without a flock). The radio event **`first-ray`** (the attempt's first rising
+  unit's shadow, the simulation's `RISE_SHADOW` sighting; only in a level with a rising unit; the cue's time is the first
+  rising wave's, `AbyssChecks.firstRise`, for the radio timeline). A backdrop piece's
+  **`keep_clear`** (px, only on a ground piece: no ground target's placement and no walker's walk start, its path's first
+  point, lies within that far of the piece's centre wherever it is placed; Level 24's relay beacons, 100). The intel wave
+  strip's **`RAY`** marks (each wave with a rising unit at its time, flown at medium). The stems' existing `stems`
+  override plays the base stem again in a later section (Level 24's `{4: base}`).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

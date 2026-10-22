@@ -34,3 +34,5 @@ receding to the horizon on the left. AI prompt: *late-90s pre-rendered CGI, Euro
 to a sharp curved horizon, black sky, Jupiter huge on the right; a giant water-vapour plume ~200 km high erupting from
 a fissure, thin at the base, a faint tall column fanning out high up, sunlit on its left side, ice crystals
 glittering, falling back as a faint veil.*
+
+Closed in round 52 (user, 2026-10-22, T.1 = a): **Chosen: a** (`A4_GEYSER = "a"`, built into `assets/ui/act-4-deep-water-still.png` and the review sheet `act-4-still-final-r51-a.png` in step D4). **Rejected: b** (`rejected/act-4-still-r52-b.png`).

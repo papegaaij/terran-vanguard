@@ -507,32 +507,33 @@ public enum Sfx {
      */
     SCRAPE_UNDER("sfx/scrape-under-r52-a.ogg", 2, Bus.EFFECTS, WARNING),
     /**
-     * M8 part C: an Eel Swarm head's pulse shot (round 52 a, proposed: a deep door thump on an under-water impact,
-     * 0.4 s), instead of a gun's report.
+     * M8 part C: an Eel Swarm head's pulse shot (round 52 b, chosen (S.4): an under-water impact over an air cannon's
+     * blast at quarter speed, muffled, 0.45 s), instead of a gun's report.
      */
-    EEL_PULSE("sfx/eel-pulse-r52-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    EEL_PULSE("sfx/eel-pulse-r52-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part C: an Eel Swarm's segment or tail destroyed, shot or in the chained death (round 52 a, proposed: a heavy
-     * fabric rip slowed on an under-water impact's tail, 0.6 s), over its under-water burst.
+     * M8 part C: an Eel Swarm's segment or tail destroyed, shot or in the chained death (round 52 b, chosen (S.5):
+     * stretched rubber ripping, slowed and softened, 0.6 s), over its under-water burst.
      */
-    EEL_SEGMENT("sfx/eel-segment-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
+    EEL_SEGMENT("sfx/eel-segment-r52-b.ogg", 4, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part C: a Glassfin killed (round 52 a, proposed: a small glass sheet shattered by a rock, 0.5 s), over its
-     * under-water {@code tiny} burst.
+     * M8 part C: a Glassfin killed (round 52 b, chosen (S.3): a glass shattering inside a bucket, slowed a little,
+     * 0.45 s), over its under-water {@code tiny} burst.
      */
-    GLASSFIN_SHATTER("sfx/glassfin-shatter-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
+    GLASSFIN_SHATTER("sfx/glassfin-shatter-r52-b.ogg", 4, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part C: the siphon pumps working (round 52 a, proposed: a basement water pump's throb slowed over a centrifugal
-     * pump's hum, a seamless 4 s loop): one quiet loop while a pump lives on the screen, panned to the nearest.
+     * M8 part C: the siphon pumps working (round 52 b, chosen (S.6): a large industrial hydraulic piston pump slowed into
+     * a groan over a lowered drone, a seamless 4 s loop): one quiet loop while a pump lives on the screen, panned to
+     * the nearest.
      */
-    PUMP_HUM("sfx/pump-hum-r52-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    PUMP_HUM("sfx/pump-hum-r52-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part C: a siphon pump destroyed (round 52 a, proposed: a clunk, a submarine motor running down, a pressure
-     * release, 1.85 s), with its under-water {@code medium} burst.
+     * M8 part C: a siphon pump destroyed (round 52 b, chosen (S.7): a hydraulic metal cutter's crunch, a pipe straining
+     * and giving, a hydraulic brake's hiss, 1.4 s), with its under-water {@code medium} burst.
      */
-    PUMP_BREAK("sfx/pump-break-r52-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    PUMP_BREAK("sfx/pump-break-r52-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part C: the under-water explosion ladder (round 52 a "the depth bomb", proposed: a depth bomb's sub boom with
+     * M8 part C: the under-water explosion ladder (round 52 a "the depth bomb", still open (S.10): a depth bomb's sub boom with
      * a real under-water impact as its body; medium and large a quarry blast's roar under it), a kill below the
      * waterline on its size rung in place of the air rung's two files ({@link #underwater}); {@code huge} waits for the
      * Maw.
@@ -542,6 +543,51 @@ public enum Sfx {
     EXPLOSION_DEEP_SMALL("sfx/explosion-underwater-small-r52-a.ogg", 6, Bus.EFFECTS, EXPLOSION),
     EXPLOSION_DEEP_MEDIUM("sfx/explosion-underwater-medium-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
     EXPLOSION_DEEP_LARGE("sfx/explosion-underwater-large-r52-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part D: the Abyss Ray's rising horn, its tell (round 53 a, proposed: a cruise ship's fog horn slowed and
+     * muffled, swelling out of a deep-sea rumble, 2.9 s), from its shadow's start through the rise.
+     */
+    RAY_RISE("sfx/ray-rise-r53-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part D: the Abyss Ray's wing strokes (round 53 a, proposed: two slowed, muffled tarp whooshes over a faint
+     * rumble, 3.5 s), once as it levels out into its glide.
+     */
+    RAY_GLIDE("sfx/ray-glide-r53-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part D: each fan the Abyss Ray fires (round 53 a, proposed: a tyre bead seater's air blast slowed and muffled
+     * over a depth bomb's sub boom, 0.65 s), instead of the shots' report.
+     */
+    RAY_FAN("sfx/ray-fan-r53-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part D: an Abyss Ray killed (round 53 a, proposed: a camel's groan slowed further and further over a depth
+     * bomb's sub boom, 2.8 s), with its under-water {@code large} burst.
+     */
+    RAY_DEATH("sfx/ray-death-r53-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part D: a Barbfin's needle (round 53 a, proposed: a blowgun dart's shot slowed a little, its plosive cut,
+     * 0.3 s), instead of the small shot's report.
+     */
+    BARBFIN_NEEDLE("sfx/barbfin-needle-r53-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part D: a spawning reef's iris opening (round 53 a, proposed: a heavy stone grind slowed and muffled over
+     * jammed seashells, 0.6 s), with its 0.5 s telegraph before a release.
+     */
+    REEF_IRIS("sfx/reef-iris-r53-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part D: a spawning reef razed (round 53 a, proposed: a granite rockslide slowed and muffled over a depth
+     * bomb's boom, 2.2 s), with its under-water {@code large} burst.
+     */
+    REEF_DEATH("sfx/reef-death-r53-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part D: a relay beacon's pulse (round 53 a, proposed: a real 625 Hz sonar ping slowed to about 400 Hz and
+     * muffled, 1.9 s), on each 2 s pulse while a beacon is on the screen, low under the music.
+     */
+    BEACON_PULSE("sfx/beacon-pulse-r53-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part D: the Meridian's hatch letting go (round 53 a, proposed: a submarine hatch's clanks and creak slowed
+     * and muffled on an under-water impact, 1.6 s), once as the wreck is shot open.
+     */
+    WRECK_HATCH("sfx/wreck-hatch-r53-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader

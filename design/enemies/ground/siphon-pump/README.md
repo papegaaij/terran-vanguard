@@ -2,7 +2,7 @@
 title: Siphon Pump
 design: review
 implementation: done
-art: proposed
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../../../campaign/act-4-deep-water/level-23-through-the-ice]
 updated: 2026-10-22
 ---
@@ -74,7 +74,7 @@ C (step C2), because the secondary's `escapes` counts a unit by its slug and the
 
 ## Decisions
 
-- 2026-10-22 (M8 part C, step C2; gap check `m8c-gaps.md` §5 D3, pending the user's review in round 52): promoted
+- 2026-10-22 (M8 part C, step C2; gap check `m8c-gaps.md` §5 D3, accepted in round 52 (2026-10-22)): promoted
   from Level 23's ground targets to its own part (the loader and the secondary need a unit), its text Level 23's
   approved one; the 40 × 40 sprite with a 32 × 32 hit box, the fixed orientation and the formation `turret nest` (one
   on each rack) decided here. Its tier is `medium` (the gap check said `small`): the approved 40 HP (0.4 s at the
@@ -82,8 +82,9 @@ C (step C2), because the secondary's `escapes` counts a unit by its slug and the
   bounty 10–15), so `BalanceTest` holds without a new accepted deviation; its effective traits `anti-sub` (the torpedo
   weapons at full damage under water) and `anti-ground` (× 2).
 - 2026-10-22 (M8 part C, step C3): mapped and flown: the five pumps on Level 23's racks counted by the `escapes` secondary (`PUMPS`, 1 away allowed at medium, 2 on easy, none on hard); the autopilot breaks a pump low on the screen first (`WaterPlay`).
-- 2026-10-22 (M8 part C, steps ART-C, AUD-C and C4; pending the user's review in round 52): the final frames
+- 2026-10-22 (M8 part C, steps ART-C, AUD-C and C4; accepted in round 52 (2026-10-22)): the final frames
   (`tools/art/siphon_pump.py`, from the Thera Deep mood still: the heave loop, the sump's glow, the dead pump, the break,
   the root decal live and withered); one quiet `pump-hum` loop for all the pumps on the screen (as the Drill Rig's
   collar), `pump-break` a few dB under its under-water `medium` burst; the a files in the game until round 52's picks.
   Captured in Level 23 (`farms-capture-r52-a`).
+- 2026-10-22 (user, round 52, closed): the final frames accepted (F.4, `art: final`); the hum **b** and the break **b** picked (in the game since step D4); C.7 (the secondary 3 / 4 / 5, the part's stats) accepted.

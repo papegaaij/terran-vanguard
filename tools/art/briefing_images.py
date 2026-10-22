@@ -190,6 +190,14 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-23-eel-and-fry    L23 p2: Varga's scan of the Eel Swarm (tools/art/eel_swarm.py's frames: the gills
                           circled, the stripe lit, a cut) and a Glassfin school as a ribbon (tools/art/glassfin.py:
                           a glint, the ram); the rules strip BULLETS X0.7, DRAG, TORPEDO RANGE +50 %
+  level-24-abyssal-plain  L24 p1 (M8 part D batch): Okafor's sonar map of the abyssal plain, north up: Thera Deep's
+                          last lamps at the north edge, the silt as sonar contours, the four spawning reefs as red
+                          clusters, the three relay beacons as dashed amber marks in a line, the trench's mouth at the
+                          south end; the route in teal and the four sections
+  level-24-abyss-ray      L24 p2: Varga's scan of the Abyss Ray: a depth cut (the play plane, the Ray's shadow far
+                          below, its rise, the lime gill slits), the production Ray (tools/art/abyss_ray.py) from
+                          above with its gill slits circled and a fan of nine; a Barbfin inset at 2x
+                          (tools/art/barbfin.py: the barbed snout, the violet needles)
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -214,6 +222,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
+  design/ui/briefing/concept/briefing-images-final-r53-a.png   review sheet, L24 (M8 part D)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -224,7 +233,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -264,7 +273,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r52"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r53"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -5214,6 +5223,164 @@ def eel_and_fry():
     return b
 
 
+# --------------------------------------------------------------------------- Level 24 (M8 part D)
+
+SOURCE_M8D = artkit.source_note(SCRIPT, "M8 part D batch")
+BEACON_RG = (255, 110, 50)
+
+
+def l24_map_xy(t, x):
+    """Level 24's (t s, play-field x px) on Okafor's map: north (the level's start) up."""
+    return 24 + x * 400 / 480, 34 + t / 172 * 192
+
+
+def abyssal_plain():
+    """L24 p1: Okafor's sonar map of the abyssal plain, north up: Thera Deep's last lamps at the north edge, the
+    silt floor as sonar contours, the four spawning reefs as red clusters, the three relay beacons as dashed amber
+    marks in a line, the trench's mouth at the south end; the route in teal and the level's four sections."""
+    b = Board()
+    mx0, mx1, my0, my1 = 20, 428, 24, H - 10
+    inside = (b.xx > mx0) & (b.xx < mx1) & (b.yy > my0) & (b.yy < my1)
+    depth = np.clip((b.yy - my0) / (my1 - my0), 0, 1)
+    n = raster.fbm(W, H, 40, 2461, octaves=4, period=False)
+    floor = np.array((6, 22, 34.0)) * (1 - depth[..., None]) + np.array((2, 8, 18.0)) * depth[..., None]
+    b.base = np.where(inside[..., None], floor + 10 * (n[..., None] - 0.5), b.base)
+    level = (n * 9 + depth * 2) % 1.0                         # sonar contours of the silt
+    contour = inside & (np.abs(level - 0.5) < 0.05)
+    b.base = np.where(contour[..., None], b.base + np.array((10, 50, 60.0)) * (1 - 0.6 * depth[..., None]), b.base)
+    # the trench's mouth at the south end
+    tx, ty = l24_map_xy(172, 240)
+    mouth = inside & (np.abs(b.xx - tx) < 70 + 30 * (b.yy - ty + 18) / 18) & (b.yy > ty - 18)
+    b.base = np.where(mouth[..., None], np.array((1, 3, 8.0)), b.base)
+    edge = inside & (np.abs(np.abs(b.xx - tx) - (70 + 30 * (b.yy - ty + 18) / 18)) < 1.0) & (b.yy > ty - 18)
+    b.base = np.where(edge[..., None], np.array((40, 130, 180.0)), b.base)
+    b.title("CDF SONAR - THE ABYSSAL PLAIN, NORTH UP")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    # Thera Deep's last lamps at the north edge, thinning out
+    for k, (t, x) in enumerate(((0, 170), (0, 300), (2, 400), (4, 200), (12, 360), (22, 150))):
+        mx, my = l24_map_xy(t, x)
+        b.glow(mx, my, 12 - k, (200, 130, 40), 1.6 - 0.2 * k)
+        b.marker(mx, my, "dot", AMBER, 1)
+    for k, x in enumerate((60, 110)):                          # Thera Deep's domes at the north edge
+        b.draw.arc([x - 14, my0 + 2, x + 14, my0 + 26], 180, 360, fill=AMBER + (220,), width=2)
+    tag(b, mx0 + 6, my0 + 16, "THERA DEEP", AMBER)
+    # the route
+    pts = [l24_map_xy(t, x) for t, x in ((0, 240), (30, 250), (55, 220), (95, 240), (135, 230), (172, 240))]
+    b.dashed(pts, TEAL_V, 2)
+    b.arrow(*pts[-2], *pts[-1], TEAL_V, 4, dashed=False)
+    # the four spawning reefs as red clusters
+    rng = np.random.default_rng(2462)
+    for k, (t, x) in enumerate(((36, 120), (48, 350), (64, 130), (80, 340))):
+        mx, my = l24_map_xy(t, x)
+        for _ in range(7):
+            b.marker(mx + rng.normal(0, 3.2), my + rng.normal(0, 2.2), "dot", RED, 1)
+        b.ring(mx, my, 8, colour=RED, alpha=230)
+        tag(b, mx + (12 if x < 240 else -12), my - 4, f"REEF {k + 1}", RED, right=x >= 240)
+    # the three relay beacons, dashed amber marks in a line
+    marks = [l24_map_xy(t, x) for t, x in ((100, 60), (112, 420), (126, 100))]
+    b.dashed(marks, BEACON_RG, 1, 3, 3)
+    for mx, my in marks:
+        b.line([(mx - 5, my), (mx + 5, my)], BEACON_RG, 2, 240)
+        b.line([(mx, my - 5), (mx, my + 5)], BEACON_RG, 2, 240)
+        b.glow(mx, my, 5, (120, 40, 10), 0.8)
+    tag(b, marks[1][0] - 8, marks[1][1] + 8, "RELAY BEACONS", BEACON_RG, right=True)
+    tag(b, tx + 76, ty - 14, "THE TRENCH", CYAN)
+    for t, label in ((0, "1 THE PLAIN'S EDGE"), (30, "2 THE REEF FIELD"), (95, "3 THE BEACON LINE"),
+                     (135, "4 THE RAY CROSSING")):
+        _, y = l24_map_xy(t, 0)
+        if t:
+            b.line([(mx0, y), (mx1, y)], CYAN_DIM, 1, 90)
+        tag(b, mx1 - 4, y + 3, label, CYAN, right=True)
+    b.label(mx1 + 8, 30, "N", WHITE)
+    b.arrow(mx1 + 11, 58, mx1 + 11, 42, WHITE, 4, dashed=False)
+    px = 470
+    b.label(px, 30, "THE PLAIN", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "THE LAMPS END:", AMBER)
+    b.label(px, 62, "YOUR OWN LIGHTS", AMBER)
+    b.label(px, 80, "4 SPAWNING REEFS", RED)
+    big(b, px, 92, "BURN 3", RED)
+    b.label(px, 114, "SOFT: TORPEDOES", GREEN)
+    b.label(px, 124, "DO FULL DAMAGE", GREEN)
+    b.label(px, 144, "RELAY BEACONS", BEACON_RG)
+    b.label(px, 154, "HUMAN-BUILT", BEACON_RG)
+    b.label(px, 172, "A SHADOW BELOW:", VIOLET)
+    b.label(px, 182, "A RAY RISING", VIOLET)
+    return b
+
+
+def abyss_ray_scan():
+    """L24 p2: Varga's scan of the Abyss Ray: a depth cut (the play plane with the ship, the Ray's shadow far below
+    in the dark, its rise, the lime gill slits), the production Ray from above with its gill slits circled and a fan
+    of nine needles drawn from its mouth; a Barbfin inset at 2x (the barbed snout, the violet needle)."""
+    b = Board()
+    b.base = b.base * 0.8 + np.array((1, 12, 20.0)) * 0.6
+    b.title("CDF SCAN - ABYSS RAY, BARBFIN")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    # the depth cut, left: the play plane, the dark water under it, the shadow and its rise
+    cx0, cx1 = 16, 196
+    plane_y, sub_y = 62, 176
+    b.line([(cx0, plane_y), (cx1, plane_y)], CYAN, 1, 220)
+    tag(b, cx0, plane_y - 14, "YOUR PLANE", CYAN)
+    dz = (b.xx > cx0) & (b.xx < cx1) & (b.yy > plane_y + 1) & (b.yy < 224)
+    k = np.clip((b.yy - plane_y) / (224 - plane_y), 0, 1)
+    b.base = np.where(dz[..., None], b.base * (1 - 0.6 * k[..., None]), b.base)
+    ship = scaled(turned(asset("ship_2"), 90), 0.55)
+    b.sprite(ship, 70, plane_y - 2)
+    # the Ray in profile: a flat wing section with the tail, drawn as the shadow far below and again on the rise
+    for (x, y, s, a) in ((120, sub_y, 1.0, 120), (150, 112, 0.8, 200)):
+        pts = [(x - 46 * s, y), (x - 20 * s, y - 6 * s), (x + 16 * s, y - 7 * s), (x + 40 * s, y - 2 * s),
+               (x + 44 * s, y), (x + 20 * s, y + 4 * s), (x - 30 * s, y + 3 * s)]
+        b.draw.polygon(pts, fill=(14, 22, 30, a), outline=VIOLET + (a,))
+        b.line([(x + 44 * s, y), (x + 70 * s, y + 2 * s)], VIOLET, 1, a)
+        for g in range(3):
+            b.glow(x - 6 * s + g * 6 * s, y + 2 * s, 2.2, (60, 110, 10), 0.9)
+    b.arrow(120, sub_y - 12, 146, 124, VIOLET, 4, dashed=True)
+    tag(b, cx0, sub_y + 16, "SHADOW: TORPEDOES REACH IT", GREEN)
+    tag(b, cx0, sub_y + 28, "1.5 S, THEN IT RISES", VIOLET)
+    # the Ray from above, centre
+    rx, ry = 318, 124
+    ray = held_frame("abyss-ray_0", 0.85, 48)
+    shadow(b, ray, rx, ry, 8, 10, 0.4)
+    b.sprite(ray, rx, ry)
+    try:
+        gl = np.array(scaled(held_asset("abyss-ray-glow_0"), 0.85, 32)).astype(float)
+        b.add_light(gl[..., :3] * gl[..., 3:4] / 255, rx - gl.shape[1] / 2, ry - gl.shape[0] / 2, "over")
+    except FileNotFoundError:
+        pass
+    for sx in (-1, 1):                                       # the lime slits on the leading edges
+        b.line([(rx + sx * 58, ry + 46), (rx + sx * 70, ry + 58)], LIME, 1, 230)
+    b.line([(rx - 70, ry + 58), (rx - 74, 214), (rx - 80, 214)], LIME, 1, 230)
+    tag(b, rx - 80, 210, "GILL SLITS GLOW", LIME, right=True)
+    for j in range(9):                                        # a fan of nine, 110 degrees, toward the ship
+        a = np.radians(90 - 55 + 110 * j / 8)
+        x0, y0 = rx + np.cos(a) * 14, ry + 64 + np.sin(a) * 14
+        b.line([(x0, y0), (x0 + np.cos(a) * 22, y0 + np.sin(a) * 22)], VIOLET, 1, 220)
+    tag(b, rx - 90, 30, "THREE FANS OF NINE", VIOLET)
+    # the Barbfin inset
+    ix0, iy0, ix1, iy1 = 470, 28, 660, 150
+    fill(b, [(ix0, iy0), (ix1, iy0), (ix1, iy1), (ix0, iy1)], (4, 14, 22), 1.0)
+    fin = held_frame("barbfin_0", 2.0, 48)
+    b.sprite(fin, ix0 + 52, iy0 + 56)
+    b.ring(ix0 + 52, iy0 + 56 + 24, 8, colour=VIOLET, alpha=230)
+    for j in range(3):
+        b.line([(ix0 + 52, iy0 + 92 + 12 * j), (ix0 + 52, iy0 + 98 + 12 * j)], VIOLET, 2, 240)
+    b.draw.rectangle([ix0, iy0, ix1, iy1], outline=CYAN_DIM + (220,))
+    tag(b, ix0 + 96, iy0 + 30, "BARBFIN (2X)", TEAL_V)
+    b.label(ix0 + 96, iy0 + 46, "HOLDS AND", WHITE)
+    b.label(ix0 + 96, iy0 + 56, "SPITS NEEDLES", WHITE)
+    b.label(ix0 + 96, iy0 + 72, "PEELS OFF THE", VIOLET)
+    b.label(ix0 + 96, iy0 + 82, "RAY'S SHADOW", VIOLET)
+    px = 470
+    b.label(px, 166, "THE RAY", WHITE)
+    b.line([(px, 178), (W - 12, 178)], CYAN_DIM, 1, 120)
+    b.label(px, 186, "A SHADOW FIRST:", GREEN)
+    b.label(px, 196, "TORPEDOES, DEPTH", GREEN)
+    b.label(px, 206, "CHARGES REACH IT", GREEN)
+    b.label(px, 220, "THEN IT GLIDES OFF", GREY)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -5282,6 +5449,8 @@ IMAGES = {
     "level-22-drill-rig": rig_scan,
     "level-23-drill-shaft": drill_shaft,
     "level-23-eel-and-fry": eel_and_fry,
+    "level-24-abyssal-plain": abyssal_plain,
+    "level-24-abyss-ray": abyss_ray_scan,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -5307,6 +5476,7 @@ BATCHES = {
     "r44": (list(IMAGES)[57:59], "M7 PART H"),
     "r51": (list(IMAGES)[59:65], "M8 PART B"),
     "r52": (list(IMAGES)[65:67], "M8 PART C"),
+    "r53": (list(IMAGES)[67:69], "M8 PART D"),
 }
 
 
@@ -5328,6 +5498,7 @@ def build(names):
                   else SOURCE_M7H if name in BATCHES["r44"][0]
                   else SOURCE_M8B if name in BATCHES["r51"][0]
                   else SOURCE_M8C if name in BATCHES["r52"][0]
+                  else SOURCE_M8D if name in BATCHES["r53"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

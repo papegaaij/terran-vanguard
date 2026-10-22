@@ -22,7 +22,7 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M8 part C's Level 23 sounds (design/audio/sfx, Level 23's rows; round 52's a variants until the user's pick): the
+ * M8 part C's Level 23 sounds (design/audio/sfx, Level 23's rows; round 52's picks, the explosions' a until theirs): the
  * waterline's crossing and the hydro-kit's refit once at the crossing; below the waterline every kill on the
  * under-water rung, a Glassfin's glass shatter over it, an eel head's pulse instead of a gun's report; the siphon pumps'
  * hum while one is on the screen; the Europa ice bed in the dry shaft crossfading to the bed under the ice at the
@@ -50,11 +50,20 @@ class Level23SoundsTest {
             Sfx.EXPLOSION_DEEP_MEDIUM,
             Sfx.EXPLOSION_DEEP_LARGE);
 
+    /** Round 52's picks (the user, 2026-10-22): S.3 to S.7 chose b; the rest a (S.10, the explosions, still open). */
+    private static final List<Sfx> PICKED_B =
+            List.of(Sfx.GLASSFIN_SHATTER, Sfx.EEL_PULSE, Sfx.EEL_SEGMENT, Sfx.PUMP_HUM, Sfx.PUMP_BREAK);
+
     @Test
-    void everySoundHasItsFileRoundFiftyTwosAAndTheLoopsLoop() throws IOException {
+    void everySoundHasItsFileRoundFiftyTwosPickAndTheLoopsLoop() throws IOException {
         for (Sfx sfx : SOUNDS) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r52-a.ogg"), "round 52's a until the pick: " + sfx.path());
+            String pick = PICKED_B.contains(sfx) ? "-r52-b.ogg" : "-r52-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), "round 52's pick: " + sfx.path());
+            assertFalse(
+                    Files.exists(ASSETS.resolve(
+                            sfx.path().replace(pick, pick.equals("-r52-b.ogg") ? "-r52-a.ogg" : "-r52-b.ogg"))),
+                    "the other variant is not in assets: " + sfx.path());
         }
         assertEquals(Sfx.AMBIENCE_EUROPA_UNDER, Sfx.ambience("europa-under"));
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_UNDER.priority());

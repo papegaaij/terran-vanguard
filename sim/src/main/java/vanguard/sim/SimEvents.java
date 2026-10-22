@@ -666,7 +666,14 @@ public final class SimEvents {
         /** M8 part A: the Bulwark was hit (at it): its hit flash; value: the damage, rounded up. */
         BULWARK_HIT,
         /** M8 part A: the Bulwark was destroyed (at it): a {@code medium} explosion; it is out for the attempt. */
-        BULWARK_DESTROYED;
+        BULWARK_DESTROYED,
+        /**
+         * M8 part D: a unit with a rise took its spot as a shadow (at it; design/enemies/naval/abyss-ray): the dark
+         * patch starts to grow, the low horn (the tell); value: its kind. The radio's {@code first-ray} watches it.
+         */
+        RISE_SHADOW,
+        /** M8 part D: its shadow's time is over and it rises at its spot (at it); value: its kind. */
+        RISE;
 
         private static final Type[] VALUES = values();
     }

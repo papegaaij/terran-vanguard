@@ -47,7 +47,8 @@ import vanguard.sim.Sortie;
  * are not dodged there. The plays live beside it: {@link DodgePlay}, {@link TargetPlay}, {@link HazardPlay},
  * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay}, {@link RetreatPlay} (M7 part G: the
  * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21), {@link WaterPlay} (M8 part C:
- * the drag, the siphon pumps and the Glassfin's rams, Level 23) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * the drag, the siphon pumps and the Glassfin's rams, Level 23), {@link AbyssPlay} (M8 part D: the Abyss Ray's shadow,
+ * the Barbfins, Level 24) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -303,10 +304,20 @@ public final class Autopilot {
         if (head != null) {
             lowest = head;
         }
+        // M8 part D: a Barbfin holding above the ship before the mute fry (Level 24, AbyssPlay).
+        Enemy holder = AbyssPlay.holder(sortie, shipY);
+        if (holder != null) {
+            lowest = holder;
+        }
         // M8 part C: the escapes objective's unit low on the screen before it gets away (Level 23's siphon pumps).
         Enemy escapee = WaterPlay.escapee(sortie, shipY);
         if (escapee != null) {
             lowest = escapee;
+        }
+        // M8 part D: an Abyss Ray's shadow and rise, the torpedoes reaching it under the play plane (Level 24).
+        Enemy shadow = AbyssPlay.shadow(sortie);
+        if (shadow != null) {
+            lowest = shadow;
         }
         Enemy anchor = TargetPlay.gateAnchor(sortie, shipX, shipY);
         if (anchor != null) {

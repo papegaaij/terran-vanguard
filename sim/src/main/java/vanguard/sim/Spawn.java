@@ -453,10 +453,15 @@ record Spawn(
         /** M7 part D: straight up and out (a Choir Herald's hover ends so, design/enemies/air/choir-herald). */
         static final Exit UP = new Exit(false, 0, 1);
 
+        /** M8 part D: down and out to the left (one exit, so choosing it allocates nothing). */
+        static final Exit DOWN_LEFT = new Exit(false, -0.6, -0.8);
+        /** M8 part D: down and out to the right. */
+        static final Exit DOWN_RIGHT = new Exit(false, 0.6, -0.8);
+
         /** Down and out to the side of the play field the unit is on. */
         static Exit awayFromCentre(double x) {
             double side = Math.signum(x - PlayField.WIDTH / 2.0);
-            return side == 0 ? DOWN : new Exit(false, side * 0.6, -0.8);
+            return side == 0 ? DOWN : side < 0 ? DOWN_LEFT : DOWN_RIGHT;
         }
     }
 }

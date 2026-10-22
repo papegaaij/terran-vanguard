@@ -212,6 +212,10 @@ final class ObjectivePasses {
             // M7 part D: a Herald's rings collapse, its escorts break off.
             force.heraldGone(enemy, true);
         }
+        if (spec.rise().isPresent()) {
+            // M8 part D: a Ray killed before its rise's middle lets the escorts it held peel off where it was.
+            force.riseEnded(enemy, ship);
+        }
         if (enemy.walking()) {
             events.add(
                     SimEvents.Type.WALKER_DOWN,

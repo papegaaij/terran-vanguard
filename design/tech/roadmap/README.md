@@ -113,8 +113,8 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 |---|---|---|---|
 | **A** Act 4 systems — **done**; round 50 closed 2026-10-22: the finals accepted, the sounds picked (the recorded picks from the Freesound previews until their originals), the seven calls accepted, the Level 23 dry shaft kept as approved (Q.1 a) | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Auto-repair nanites, Mk IV (20 MW, round 48 J1), the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on built levels with the `--medium underwater` debug option and on simulation fixtures | — | 50 |
 | **B** Level 22 + Act 4 intro — **built** (2026-10-22, steps B1–B5, ART-B, AUD-B, VOX-B); [round 51](../../concept-rounds/round-51/README.md) closed (2026-10-22): the art accepted but the Act 4 title card (F.6 redo, a geyser added, round 52), Dr. Brandt cast a, the sounds picked, tracks 10 and 11 and the calls accepted; F.3: no deep layer | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 51 |
-| **C** Level 23 — **built** (2026-10-22, steps C1–C5b, ART-C, ART-T, AUD-C, VOX-C); [round 52](../../concept-rounds/round-52/README.md) open | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 52 |
-| **D** Level 24 | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
+| **C** Level 23 — **built** (2026-10-22, steps C1–C5b, ART-C, ART-T, AUD-C, VOX-C); [round 52](../../concept-rounds/round-52/README.md) closed (2026-10-22): the art accepted, the bursts a, the title card's geyser a, Thera Deep Control cast b, the sounds picked (the under-water explosion family S.10 asked again in round 53), the AI-made r04-a replaced, the calls accepted | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 52 |
+| **D** Level 24 — **built** (2026-10-22, steps D1–D5, ART-D, AUD-D, VOX-D); [round 53](../../concept-rounds/round-53/README.md) open | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
 | **E** Level 25 | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
 | **F** Level 26 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
 | **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F | 56 |
@@ -600,8 +600,21 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 - 2026-10-22 (M8 part C, step C5b): part C **built** (steps C1–C4, C5a, C5b, ART-C, ART-T, AUD-C, VOX-C; the full `check`,
   `tools/balance.py` and `tools/check_docs.py` clean): Level 23 *Through the Ice* with the dry shaft, the waterline switch,
   the under-water grade, the Eel Swarm, the Glassfin, the siphon pumps and Thera Deep; the parts' checklists ticked with
-  their tests, the steps' small rules logged in the parts' *Decisions* as pending the user's review in round 52; the
+  their tests, the steps' small rules logged in the parts' *Decisions* as accepted in round 52 (2026-10-22); the
   frame rate of a full medium run 291 fps (longest frame 56.9 ms) on the software renderer; concept
   [round 52](../../concept-rounds/round-52/README.md) opened (the finals with game captures, the under-water bursts a/b,
   the Act 4 title card's redo, Thera Deep Control's casting, nine sounds and the under-water explosion family, seven
   calls the build made).
+- 2026-10-22 (user, round 52, closed): part C's art accepted (Level 23, the Eel Swarm, the Glassfin and the siphon pump
+  `art: final`); the under-water kill bursts a; the Act 4 title card's geyser a; Thera Deep Control cast b; the sounds
+  picked (waterline a, refit a, shatter b, eel pulse b, segment b, pump hum b, break b, scrape a, bed a; in the game from
+  step D4); the under-water explosion family (S.10) asked again in round 53; the AI-made `explosion-underwater-r04-a`
+  replaced (Q.1); the seven calls and the steps' logged small rules accepted.
+- 2026-10-22 (M8 part D, step D5): part D **built** (steps D1–D4, D5, ART-D, AUD-D, VOX-D; the full `check`,
+  `tools/balance.py` and `tools/check_docs.py` clean): Level 24 *Abyssal Plain* with the Abyss Ray (the shadow, the rise,
+  the fans, the escorts), the Barbfin, the spawning reefs and their secondary, the beacons, the *Meridian* wreck and the
+  plain's grade by section; the parts' checklists ticked with their tests, the steps' small rules logged in the parts'
+  *Decisions* as pending the user's review in round 53; the frame rate of a full medium run 419 fps (longest frame
+  46.6 ms) on the software renderer; concept [round 53](../../concept-rounds/round-53/README.md)
+  opened (the finals with game captures, the spawning reef's look a/b, nine sound pairs and round 52's under-water
+  explosion family, the calls the build made, and Level 25's one rule ahead).

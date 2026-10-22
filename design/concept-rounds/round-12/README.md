@@ -86,7 +86,7 @@ within 1 dB except the noted peak.
 | shot-beam-stop-r04-a | [chosen](../../audio/sfx/concept/shot-beam-stop-r04-a.ogg) | [final](../../../assets/sfx/shot-beam-stop-r04-a.ogg) | 1.30 | -10.0 → -10.0 | -29.9 → -29.9 |  |
 | special-sonar-r04-a | [chosen](../../audio/sfx/concept/special-sonar-r04-a.ogg) | [final](../../../assets/sfx/special-sonar-r04-a.ogg) | 3.00 | -4.2 → -4.1 | -21.6 → -21.5 |  |
 | explosion-huge-r04-a | [chosen](../../audio/sfx/concept/explosion-huge-r04-a.ogg) | [final](../../../assets/sfx/explosion-huge-r04-a.ogg) | 6.00 | -1.1 → -1.2 | -23.9 → -23.6 | original clipped at full scale |
-| explosion-underwater-r04-a | [chosen](../../audio/sfx/concept/explosion-underwater-r04-a.ogg) | [final](../../../assets/sfx/explosion-underwater-r04-a.ogg) | 3.50 | -1.7 → -1.5 | -19.0 → -18.8 |  |
+| explosion-underwater-r04-a | [chosen](../../audio/sfx/concept/rejected/explosion-underwater-r04-a.ogg) (rejected in round 52, Q.1: AI-made) | removed from `assets/` (round 52, Q.1) | 3.50 | -1.7 → -1.5 | -19.0 → -18.8 |  |
 | hit-metal-r08-a | [chosen](../../audio/sfx/concept/hit-metal-r08-a.ogg) | [final](../../../assets/sfx/hit-metal-r08-a.ogg) | 0.30 | -13.9 → -14.8 | -30.0 → -30.0 | in the game |
 | hit-metal-r08-b | [chosen](../../audio/sfx/concept/hit-metal-r08-b.ogg) | [final](../../../assets/sfx/hit-metal-r08-b.ogg) | 0.45 | -16.0 → -15.6 | -30.1 → -30.1 | in the game; original clipped at full scale |
 | hit-organic-r08-a | [chosen](../../audio/sfx/concept/hit-organic-r08-a.ogg) | [final](../../../assets/sfx/hit-organic-r08-a.ogg) | 0.30 | -8.1 → -8.8 | -31.3 → -32.0 | in the game; original clipped at full scale |

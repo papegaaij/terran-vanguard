@@ -68,7 +68,9 @@ final class EnemyGunnery {
                 || (u.phase == Enemy.Phase.ESCORT && u.y < PlayField.HEIGHT)
                 || (u.phase == Enemy.Phase.LANE && PlayField.overlaps(u.x, u.y, u.box))
                 || ambushPhase == Enemy.AmbushPhase.DECLOAK
-                || ambushPhase == Enemy.AmbushPhase.HOLD;
+                || ambushPhase == Enemy.AmbushPhase.HOLD
+                // M8 part D: a rising unit fires while it glides on the play field.
+                || (u.phase == Enemy.Phase.RISE && u.rising.firing(u));
         if (!ready || u.spec.gun().isEmpty() || (u.phase == Enemy.Phase.GROUND && u.partHp.silenced(u.spec.parts()))) {
             // M8 part B: a ground unit whose gun is bound to its parts falls silent with the last of them.
             return false;

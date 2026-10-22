@@ -57,6 +57,10 @@ final class EnemyFlight {
         u.prevX = u.x;
         u.prevY = u.y;
         switch (u.phase) {
+            case RISE -> {
+                // M8 part D: its shadow, rise, glide and sink; gone at the sink's end or off the play field.
+                return u.rising.step(u.spec.rise().orElseThrow(), u, shipX, shipY);
+            }
             case BURROW -> {
                 // M7 part B: fixed on the screen but in its entry and escape (Q1 = a).
                 boolean on = u.burrowing.step(shipX, shipY, groundScroll, u.box.height() / 2);
@@ -195,6 +199,10 @@ final class EnemyFlight {
                     hold();
                 } else {
                     place();
+                    if (u.orbit.isEmpty() && u.holdTicks > 0 && u.hoverHold.stopsNow(u, shipY)) {
+                        // M8 part D: down to its height above the ship, it stops there (before its path's end).
+                        hold();
+                    }
                 }
                 if (u.chasing.phase() == Enemy.LatchPhase.ENTER) {
                     u.chasing.await();
@@ -214,11 +222,18 @@ final class EnemyFlight {
                     circle(u.orbit.get());
                 } else if (u.spec.aura().isPresent() && u.spec.sine().isPresent()) {
                     hoverDrift(u.spec.sine().get());
+                } else if (u.hoverHold.active()) {
+                    // M8 part D: its drift sideways, its facing toward the ship.
+                    u.hoverHold.hold(u, shipX, shipY);
                 }
                 if (u.spec.sweep().isPresent()) {
                     sweep(shipX, shipY);
                 }
                 if (--u.holdTicks <= 0) {
+                    if (u.hoverHold.active() && u.orbit.isEmpty()) {
+                        // M8 part D: it leaves down and out to the side it holds on now (after its drift).
+                        u.exit = Spawn.Exit.awayFromCentre(u.x);
+                    }
                     if (u.spec.dive().isPresent()) {
                         // M5 part G: a diver dives at the point it is given (the objective under the always hook).
                         u.divedAtObjective = objective;
@@ -226,6 +241,10 @@ final class EnemyFlight {
                     } else {
                         leave(shipX, shipY);
                     }
+                }
+                if (u.phase == Enemy.Phase.HOLD && u.orbit.isEmpty() && u.hoverHold.active()) {
+                    // M8 part D: its facing is on the ship, not along its drift.
+                    return true;
                 }
             }
             case LEAVE -> {
@@ -250,6 +269,11 @@ final class EnemyFlight {
                 }
                 if (u.spec.swoop().isPresent()) {
                     swoopDue(shipX, shipY);
+                }
+                if (u.spec.flock().isPresent() && u.spec.flock().get().ram().isPresent() && !u.ramming.diving()) {
+                    // M8 part D: a flock's kind released on its own (a spawning reef's fry) flies straight out and
+                    // rams as a column's member does.
+                    ram(u.spec.flock().get().ram().get(), shipX, shipY);
                 }
                 return PlayField.overlaps(u.x, u.y, u.box);
             }

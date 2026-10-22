@@ -108,5 +108,5 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
   (the raft's cut edge, the dark intel picture); the stat block's numbers and the build choices of round 33 (the rafts on the flanks (d), the first volley 1.0 s after
   entering (e), the weak point drawn only (t)) accepted. `design: approved`, `art: final`;
   every Implementation item is ticked, so the implementation is `done`.
-- 2026-10-22: M8 part C, step C2 (gap check m8c-gaps.md §5 D2, pending the user's review in round 52): the
+- 2026-10-22: M8 part C, step C2 (gap check m8c-gaps.md §5 D2, accepted in round 52 (2026-10-22)): the
   `underwater` block in its data (`drift: 0`, `look: floor`): under water it sits on the floor, no raft and no drift.

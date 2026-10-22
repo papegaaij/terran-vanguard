@@ -89,7 +89,7 @@ generator `tools/concept/portraits_r36.py`, prompts in [concept/prompts.md](conc
 | [concept/generic-colonial-r36-b.png](concept/generic-colonial-r36-b.png) | Generic colonial B, the dust-suit controller — the same speaker as a surface worker, goggles on the brow and a respirator | chosen (round 36, C.1) |
 | [concept/portraits-final-r38-a.png](concept/portraits-final-r38-a.png) | Review sheet (`tools/art/portraits.py`, M7 part B): the colonial generic radio portrait `radio-generic-colonial-neutral` (Ares Control, from the chosen dust-suit look b), final art | chosen (round 38, F.6: approved as final) |
 | [concept/portraits-final-r51-a.png](concept/portraits-final-r51-a.png) | Review sheet (`tools/art/portraits.py`, M8 part B): Dr. Ilse Brandt's radio portrait `radio-conamara-neutral` (Conamara Station's director: dark ash bob, red polar parka, headset, the sodium-lit dome control room behind her) | chosen (round 51, F.5: accepted as final) |
-| [concept/portraits-final-r52-a.png](concept/portraits-final-r52-a.png) | Review sheet (`tools/art/portraits.py`, M8 part C): Thera Deep Control's radio portrait `radio-thera-deep-neutral` (the harbour controller: olive skin, short dark hair, a close beard, the grey-blue harbour coverall with a pressure suit's neck ring, the control room's viewport on the lit farms behind him) | proposed (round 52) |
+| [concept/portraits-final-r52-a.png](concept/portraits-final-r52-a.png) | Review sheet (`tools/art/portraits.py`, M8 part C): Thera Deep Control's radio portrait `radio-thera-deep-neutral` (the harbour controller: olive skin, short dark hair, a close beard, the grey-blue harbour coverall with a pressure suit's neck ring, the control room's viewport on the lit farms behind him) | chosen (round 52, F.8: accepted as final) |
 
 ## Decisions
 
@@ -108,7 +108,8 @@ generator `tools/concept/portraits_r36.py`, prompts in [concept/prompts.md](conc
 - 2026-10-22 (M8 part B, step ART-B; accepted in round 51 (2026-10-22)): Dr. Ilse Brandt's radio portrait `radio-conamara-neutral`
   (`portraits-final-r51-a`): it reads plain next to the main cast's (accepted in [round 51](../../concept-rounds/round-51/README.md), F.5).
 - 2026-10-22 (user, round 51, closed; F.5): Dr. Brandt's radio portrait accepted as final (the plain face is kept); her voice is Margaret Espaillat (V.1 a).
-- 2026-10-22 (M8 part C, step ART-C; pending the user's review in round 52): Thera Deep Control's radio portrait
+- 2026-10-22 (M8 part C, step ART-C; accepted in round 52 (2026-10-22)): Thera Deep Control's radio portrait
   `radio-thera-deep-neutral` (`portraits-final-r52-a`, four tries): the harbour controller in the grey-blue harbour
   coverall with a pressure suit's neck ring, the control room's viewport on the lit farms behind him; on Level 23's radio
   (`radio-capture-r52-a`, `PortraitsTest.theraDeepControlSpeaksWithTheHarboursPortrait`).
+- 2026-10-22 (user, round 52, closed): Thera Deep Control's radio portrait `radio-thera-deep-neutral` accepted as final (F.8); his voice is candidate b, John Van Stan (V.1).

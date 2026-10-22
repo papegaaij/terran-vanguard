@@ -96,6 +96,8 @@ final class EnemyForce {
     private final int[] broodKinds;
     /** The spawner that entered last, which the escorts entering after it circle. */
     private Enemy lastCarrier;
+    /** M8 part D: the escorts held by a rising carrier until its rise's middle. */
+    private final RiseEscorts riseEscorts = new RiseEscorts();
     /**
      * M5 part B: per staggered walker wave its volley clock, in steps since the first of its units
      * came onto the screen (counting that step as 1); 0 before (see {@link Enemy#staggeredVolley}).
@@ -309,6 +311,7 @@ final class EnemyForce {
         spawned = 0;
         nextGround = 0;
         lastCarrier = null;
+        riseEscorts.reset();
         java.util.Arrays.fill(volleyClocks, 0);
         burrowers.reset();
         objectiveHook.clearAllyHits();
@@ -334,6 +337,14 @@ final class EnemyForce {
             }
             if (spawn.swarm().isPresent()) {
                 spawnMember(spawn);
+                continue;
+            }
+            if (spawn.escort().isPresent()
+                    && lastCarrier != null
+                    && lastCarrier.riseHolding()
+                    && riseEscorts.hold(spawn, lastCarrier, spawned, waves.lastTag())) {
+                // M8 part D: held unspawned until its rising carrier's layer flips (it peels off then).
+                spawned++;
                 continue;
             }
             Enemy enemy = enemies.obtain();
@@ -363,8 +374,11 @@ final class EnemyForce {
                     enemy.bombRun(row, slot, SimStep.ticks(allies.bombRunIn()));
                 }
             }
-            if (spawn.enemy().brood().isPresent() || spawn.enemy().aura().isPresent()) {
-                // M7 part D: a Herald is a carrier too; its escorts circle it inside its aura.
+            if (spawn.enemy().brood().isPresent()
+                    || spawn.enemy().aura().isPresent()
+                    || spawn.enemy().rise().isPresent()) {
+                // M7 part D: a Herald is a carrier too; its escorts circle it inside its aura. M8 part D: so is a
+                // rising unit (the Abyss Ray), which holds its escorts until its rise's middle.
                 lastCarrier = enemy;
             }
             spawned++;
@@ -710,6 +724,10 @@ final class EnemyForce {
                 events.add(SimEvents.Type.BOMB_DROPPED, enemy.x(), enemy.y(), dome);
                 objectiveHook.hitAlly(dome, convoy.spec(dome).bombs());
             }
+            if (flying && enemy.risenNow()) {
+                // M8 part D: its layer flipped: its escorts peel off its shadow.
+                peel(enemy, ship);
+            }
             if (flying && !stunned && enemy.decloakedNow()) {
                 events.add(SimEvents.Type.DECLOAK, enemy.x(), enemy.y(), enemy.kind());
             }
@@ -733,6 +751,9 @@ final class EnemyForce {
                 }
                 if (enemy.spec().aura().isPresent()) {
                     heraldGone(enemy, false);
+                }
+                if (enemy.spec().rise().isPresent()) {
+                    riseEnded(enemy, ship);
                 }
                 escapes.escaped(enemy);
                 enemies.free(i);
@@ -1105,6 +1126,46 @@ final class EnemyForce {
     /** M5 part H: slot {@code b}'s burst's point's height in ground space. */
     double burstBase(int b) {
         return rootBursts.burstBase(b);
+    }
+
+    /**
+     * M8 part D: rising carrier {@code carrier} is gone (destroyed or away, before it is freed): the escorts it still
+     * held peel off where it was.
+     */
+    void riseEnded(Enemy carrier, Ship ship) {
+        peel(carrier, ship);
+        carrierEnded(carrier);
+    }
+
+    /**
+     * M8 part D (design/enemies/naval/abyss-ray, design/enemies/naval/barbfin): the escorts {@code carrier} held peel
+     * off from its centre, in their entry order, to hold points spread evenly across their circle's diameter around
+     * its x at their hover's height above the ship ({@link EnemyStarts#peel}); they keep their own cadence after it
+     * leaves or dies.
+     */
+    private void peel(Enemy carrier, Ship ship) {
+        int count = riseEscorts.count(carrier);
+        for (int i = 0; i < count; i++) {
+            int k = riseEscorts.first(carrier);
+            Spawn plan = riseEscorts.plan(k);
+            int serial = riseEscorts.serial(k);
+            String tag = riseEscorts.tag(k);
+            riseEscorts.remove(k);
+            double radius = plan.escort().isPresent() ? plan.escort().get().radius() : 0;
+            double offset = count == 1 ? 0 : radius * (2.0 * i / (count - 1) - 1);
+            Enemy unit = enemies.obtain();
+            if (unit != null) {
+                unit.peel(plan, carrier.x(), carrier.y(), offset, ship.y(), serial);
+                unit.tag(tag);
+            }
+        }
+    }
+
+    /** M8 part D: the escorts held by rising carriers (hashed only while there are any). */
+    void addRiseEscortsTo(StateHash hash) {
+        if (riseEscorts.size() > 0) {
+            riseEscorts.addTo(hash);
+        }
     }
 
     /** The escorts circling {@code carrier} break off: it is gone. */

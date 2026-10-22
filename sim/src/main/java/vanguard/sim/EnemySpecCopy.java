@@ -59,6 +59,7 @@ final class EnemySpecCopy {
     Optional<EnemySpec.Turret> turret;
     Optional<EnemySpec.RearPlate> rearPlate;
     boolean seekersIgnore;
+    Optional<EnemySpec.Rise> rise;
 
     EnemySpecCopy(EnemySpec spec) {
         slug = spec.slug();
@@ -111,6 +112,7 @@ final class EnemySpecCopy {
         turret = spec.turret();
         rearPlate = spec.rearPlate();
         seekersIgnore = spec.seekersIgnore();
+        rise = spec.rise();
     }
 
     EnemySpec build() {
@@ -164,6 +166,7 @@ final class EnemySpecCopy {
                 laneStrafe,
                 turret,
                 rearPlate,
-                seekersIgnore);
+                seekersIgnore,
+                rise);
     }
 }

@@ -128,6 +128,8 @@ public final class LevelRenderer {
     private final WingmanLooks wingmanLooks;
     /** M8 part A: the Act 4 systems: harpoons, depth charges, the sonar, the flares, the Bulwark. */
     private final DeepWaterLooks deepWater;
+    /** M8 part D: the silt the walkers kick up on the sea floor (Level 24). */
+    private final PlainLooks plain;
     /** The flyers' drop shadows on the ground layer. */
     private final Shadows shadows;
 
@@ -329,6 +331,7 @@ public final class LevelRenderer {
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
         deepWater = new DeepWaterLooks(sprites, looks, weapons, water != null);
+        plain = new PlainLooks(sprites);
         // M8 part C: the under-water grade, the hydro-kit's effects, the tender, the ice shaft's walls.
         grade = UnderwaterGrade.of(level, sprites.pixel);
         deepDeaths = new DeepDeaths(sprites, kinds);
@@ -446,6 +449,8 @@ public final class LevelRenderer {
         canyonLooks.restart();
         kinds.restart();
         deepWater.restart();
+        plain.clear();
+        props.restartBullets();
     }
 
     /** M7 part C: the canyon's presentation beyond its collision lines (the level data's by default). */
@@ -496,6 +501,11 @@ public final class LevelRenderer {
         // M8 part C: the eels' tells and volleys, the Glassfins' glints.
         kinds.eels(sortie).stepped(sortie);
         kinds.glassfins(sortie).stepped(sortie);
+        // M8 part D: the Rays' fans, the Barbfins' needles (their tells), the bullets' shooters, the walkers' silt.
+        kinds.rays(sortie).stepped(sortie);
+        kinds.barbfins(sortie).stepped(sortie);
+        props.steppedBullets(sortie);
+        plain.stepped(sortie, looks);
     }
 
     /** M5 part E: the renderer's own effects advance one simulation step (with the screen's). */
@@ -505,6 +515,7 @@ public final class LevelRenderer {
         bubbles.step();
         lowAir.step();
         deepWater.stepEffects();
+        plain.step();
     }
 
     /** M5 part E: whether the level is over water: its kills and blasts burst on the water ({@link #surfaceWater()}). */
@@ -737,6 +748,8 @@ public final class LevelRenderer {
         kinds.vortices(sortie).drawSwirls(batch, sortie, alpha);
         // M8 part C: the live siphon pumps' roots in their racks, under the ground units.
         kinds.pumps(sortie).drawGround(batch, sortie, alpha);
+        // M8 part D: the silt puffs at the walkers' feet on the sea floor, under them.
+        plain.draw(batch, scroll);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
         kinds.crawlers(sortie).drawChains(batch, sortie, alpha, looks, units.unitFlash);
         kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
@@ -776,6 +789,8 @@ public final class LevelRenderer {
             // M8 part C: under the grade the glows wait for it (after the ship).
             ground.drawGroundGlows(batch, sortie, alpha);
         }
+        // M8 part D: the Abyss Rays deep under the play plane (the shadow, the rise's first half, the sink's second).
+        units.drawRisers(batch, sortie, alpha);
         player.drawBomberShadows(batch, sortie, alpha);
         drawShadows(batch, sortie, alpha);
         if (relay != null) {
@@ -973,6 +988,8 @@ public final class LevelRenderer {
         if (grade != null) {
             grade.draw(batch, sortie, alpha, scroll, clock.real());
         }
+        // M8 part D: the ground pieces' lights over the grade (Level 24's relay beacons' pulse).
+        backdrop.drawPieceGlows(batch, scroll, clock);
         if (graded) {
             ground.drawGroundGlows(batch, sortie, alpha);
             units.drawUnitGlows(batch, sortie, alpha);

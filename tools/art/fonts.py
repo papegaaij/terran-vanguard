@@ -46,7 +46,8 @@ PAGE_WIDTH = 256
 PAD = 8  # rows and columns around a cell where a glyph may overflow while it is rasterised
 CHARSET = ("".join(chr(c) for c in range(32, 127))
            + "×·◆▲▼◄►•°–—…‘’“”→≈©"
-           + "éèëüöäßÉÈËÜÖÄ")
+           + "éèëüöäßÉÈËÜÖÄ"
+           + "óÓ")   # M8 part D: a thanked author on the credits roll (Pól, round 53)
 SAMPLES = [
     "MISSION 01: BREAK AT DAWN",
     "LANCER, ROOK. AEGIS TWO'S GOT THE NORTH ARM, YOU'VE GOT THE SOUTH.",

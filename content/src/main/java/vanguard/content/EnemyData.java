@@ -471,7 +471,8 @@ public record EnemyData(
                         movement.crawl(),
                         movement.laneStrafe(),
                         movement.stride(),
-                        movement.breach()))
+                        movement.breach(),
+                        movement.rise()))
                 .orElse(movement);
         return new EnemyData(
                 name,
@@ -560,6 +561,8 @@ public record EnemyData(
      * @param laneStrafe M7 part E: it drops to a lane and strafes across the screen (the Ghost Drone)
      * @param stride M7 part F: a walking boss's passes across its halted arena (the Revenant Walker)
      * @param breach M7 part H: a breaching boss's cycle under its crawling arena (the Dust Colossus)
+     * @param rise M8 part D: it rises out of the deep water below the play plane, glides across and sinks away (the
+     *     Abyss Ray)
      */
     public record Movement(
             Optional<Snake> snake,
@@ -583,7 +586,33 @@ public record EnemyData(
             Optional<Crawl> crawl,
             Optional<LaneStrafe> laneStrafe,
             Optional<Stride> stride,
-            Optional<Breach> breach) {}
+            Optional<Breach> breach,
+            Optional<Rise> rise) {}
+
+    /**
+     * M8 part D, a rise (design/enemies/naval/abyss-ray, Behaviour; gap check m8d-gaps.md §5 D2): from its entry it is a
+     * shadow on {@code sub} for {@code shadow} s, growing in the ship's lane (the ship's x at its entry, clamped) {@code
+     * ahead} px above the ship (the tell: only {@code anti-sub} fire and the Smart Bomb reach it, no contact); it rises
+     * over {@code rise} s, its layer flipping to {@code air} at the rise's middle (no contact damage until the rise
+     * ends); it glides {@code glide} s at {@code speed} px/s toward the far side, its attack firing from the rise's end;
+     * then it sinks over {@code sink} s (back to {@code sub} at the sink's middle) and is gone (escaped). A {@code carrier
+     * + escorts} wave's escorts stay unspawned until the rise's middle and fan out from it (gap check D3).
+     */
+    public record Rise(double shadow, double rise, double glide, double speed, double sink, double ahead) {
+        public Rise {
+            Check.positive("shadow", shadow);
+            Check.positive("rise", rise);
+            Check.positive("glide", glide);
+            Check.positive("speed", speed);
+            Check.positive("sink", sink);
+            Check.notNegative("ahead", ahead);
+        }
+
+        /** The whole visit from the shadow's start to the sink's end, s. */
+        public double visit() {
+            return shadow + rise + glide + sink;
+        }
+    }
 
     /**
      * M7 part F, a walking boss's passes (design/enemies/bosses/revenant-walker, Passes): it crosses its halted arena
@@ -1404,32 +1433,64 @@ public record EnemyData(
     /**
      * Hovers for {@code seconds} at a height of {@code y} px from the top of the play field; without
      * {@code seconds} it holds until it is killed (a boss). Part F: a unit entering from a side
-     * edge hovers {@code edgeX} px from that edge, and {@code exit} {@code back} leaves through it.
+     * edge hovers {@code edgeX} px from that edge, and {@code exit} {@code back} leaves through it. M8 part D
+     * (design/enemies/naval/barbfin): with {@code above_ship} instead of {@code y} it stops a seeded {@code [min, max]}
+     * px above the ship's y at the moment it stops (the Barbfin's 90–200), drifting {@code drift} px/s sideways while it
+     * holds (the Barbfin's 6; 0 if not given) and turning toward the ship.
      */
-    public record Hover(Optional<Span> seconds, Span y, Optional<Double> edgeX, Optional<String> exit) {
+    public record Hover(
+            Optional<Span> seconds,
+            Optional<Span> y,
+            Optional<Double> edgeX,
+            Optional<String> exit,
+            Optional<Span> aboveShip,
+            Optional<Double> drift) {
         public Hover {
+            drift.ifPresent(speed -> Check.notNegative("drift", speed));
+            Check.that(drift.isEmpty() || aboveShip.isPresent(), "only a hover above the ship drifts");
+            Check.that(y.isPresent() != aboveShip.isPresent(), "a hover holds at a y or above_ship, one of the two");
+            aboveShip.ifPresent(above -> {
+                Check.notNegative("above_ship", above.min());
+                Check.that(above.max() >= above.min(), "above_ship: [min, max]");
+            });
+            Check.that(aboveShip.isEmpty() || edgeX.isEmpty(), "a hover above the ship enters from the top, no edge_x");
             edgeX.ifPresent(x -> Check.notNegative("edge_x", x));
             exit.ifPresent(e -> Check.that(e.equals("back"), "exit must be back, was '" + e + "'"));
         }
 
-        /** {@code y} and {@code seconds} written as {@code [min, max]} or as one value. */
+        /** {@code y}, {@code seconds} and {@code above_ship} written as {@code [min, max]} or as one value. */
         @JsonCreator
         static Hover of(
                 @com.fasterxml.jackson.annotation.JsonProperty("seconds")
                         Optional<tools.jackson.databind.JsonNode> seconds,
-                @com.fasterxml.jackson.annotation.JsonProperty("y") tools.jackson.databind.JsonNode y,
+                @com.fasterxml.jackson.annotation.JsonProperty("y") Optional<tools.jackson.databind.JsonNode> y,
                 @com.fasterxml.jackson.annotation.JsonProperty("edge_x") Optional<Double> edgeX,
-                @com.fasterxml.jackson.annotation.JsonProperty("exit") Optional<String> exit) {
-            Check.that(y != null && span(y) != null, "y is a height or [min, max]");
-            Optional<tools.jackson.databind.JsonNode> time = seconds == null
-                    ? Optional.empty()
-                    : seconds.filter(node -> !node.isNull() && !node.isMissingNode());
+                @com.fasterxml.jackson.annotation.JsonProperty("exit") Optional<String> exit,
+                @com.fasterxml.jackson.annotation.JsonProperty("above_ship")
+                        Optional<tools.jackson.databind.JsonNode> aboveShip,
+                @com.fasterxml.jackson.annotation.JsonProperty("drift") Optional<Double> drift) {
+            Optional<tools.jackson.databind.JsonNode> height = given(y == null ? Optional.empty() : y);
+            Optional<tools.jackson.databind.JsonNode> above = given(aboveShip == null ? Optional.empty() : aboveShip);
+            Check.that(height.isEmpty() || span(height.get()) != null, "y is a height or [min, max]");
+            Check.that(above.isEmpty() || span(above.get()) != null, "above_ship is a height or [min, max]");
+            Optional<tools.jackson.databind.JsonNode> time = given(seconds == null ? Optional.empty() : seconds);
             Check.that(time.isEmpty() || span(time.get()) != null, "seconds is a time or [min, max]");
             return new Hover(
                     time.map(Hover::span),
-                    span(y),
+                    height.map(Hover::span),
                     edgeX == null ? Optional.empty() : edgeX,
-                    exit == null ? Optional.empty() : exit);
+                    exit == null ? Optional.empty() : exit,
+                    above.map(Hover::span),
+                    drift == null ? Optional.empty() : drift);
+        }
+
+        /** The hold's height from the top of the play field; a hover above the ship has none (M8 part D). */
+        public Span heightFromTop() {
+            return y.orElseThrow(() -> new IllegalStateException("a hover above the ship holds at no fixed y"));
+        }
+
+        private static Optional<tools.jackson.databind.JsonNode> given(Optional<tools.jackson.databind.JsonNode> node) {
+            return node.filter(n -> !n.isNull() && !n.isMissingNode());
         }
 
         private static Span span(tools.jackson.databind.JsonNode node) {
@@ -1773,7 +1834,9 @@ public record EnemyData(
      * with a {@code telegraph} of s before it. M5 part C, a periodic spawner (the Hive Node): instead
      * of {@code after} and {@code burst_bounty}, {@code every} s from its centre crossing the top
      * edge, its iris opening over the {@code telegraph}, and an opening due while the ship's centre
-     * is within {@code shut_within} px skipped; it never bursts on its own.
+     * is within {@code shut_within} px skipped; it never bursts on its own. M8 part D (the spawning reef): a periodic
+     * spawn of a kind with a flock's ram (the Glassfin) may give its released units' {@code ram_after}, s on the field
+     * before each draws its ram, instead of the kind's own (released mid-screen, the school's 3 s would see them gone).
      */
     public record Spawn(
             String enemy,
@@ -1784,8 +1847,11 @@ public record EnemyData(
             double arc,
             double speed,
             Optional<Integer> burstBounty,
-            Optional<Double> shutWithin) {
+            Optional<Double> shutWithin,
+            Optional<Double> ramAfter) {
         public Spawn {
+            ramAfter.ifPresent(a -> Check.notNegative("ram_after", a));
+            Check.that(every.isPresent() || ramAfter.isEmpty(), "only a periodic spawn has a ram_after");
             Check.positive("count", count);
             Check.that(after.isPresent() != every.isPresent(), "a spawn has an after (a brood) or an every, not both");
             after.ifPresent(a -> Check.positive("after", a));

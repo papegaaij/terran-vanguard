@@ -19,7 +19,10 @@ import java.util.Set;
  * play ({@link RetreatPlay}). M7 part H (step PH2): Level 21 Dust Colossus is loaded, checked and mapped (the crawling
  * arena, the breach cycle, the suction, the vents, the eruption and the debris: {@link ColossusRules}), and the tests
  * that fly it left it out until step H4 gave the autopilot its colossus play ({@link ColossusPlay}) and measured the
- * fight. None is left out now.
+ * fight. M8 part D (step D2): Level 24 Abyssal Plain (the Abyss Ray's {@code rise} with its escorts held until the rise,
+ * the Barbfin's hover {@code above_ship}, the spawning reef's release of Glassfin fry, the {@code first-ray} cue as an
+ * event) and its three units were left out until step D3 mapped step D1's simulation pieces ({@link AbyssRules}) and
+ * gave the autopilot its shadow targeting. None is left out now.
  */
 final class Unmapped {
     /** Why a test leaves a level out. */

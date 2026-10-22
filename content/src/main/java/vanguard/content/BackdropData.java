@@ -175,6 +175,9 @@ public record BackdropData(
      * @param midSize whether it counts towards the art direction's mid-size set pieces per screen
      * @param tower a ground piece drawn in true perspective as a tower (design/art-direction,
      *     Perspective towers are scenery): walls up from its footprint and its image as the roof
+     * @param keepClear M8 part D (design/campaign Level 24, the relay beacons; gap check m8d-gaps.md §5 D7): scenery
+     *     nothing may touch: no ground target and no walker's walk start lies within this many px of its centre
+     *     (Level 17's Helix compound rule as a check, {@code AbyssChecks})
      */
     public record Piece(
             BackdropLayer layer,
@@ -183,8 +186,25 @@ public record BackdropData(
             Optional<Double> fps,
             Optional<Integer> headings,
             Optional<Boolean> midSize,
-            Optional<Tower> tower) {
+            Optional<Tower> tower,
+            Optional<Double> keepClear) {
+        /** Without M8 part D's clearance. */
+        public Piece(
+                BackdropLayer layer,
+                Size size,
+                Optional<Integer> frames,
+                Optional<Double> fps,
+                Optional<Integer> headings,
+                Optional<Boolean> midSize,
+                Optional<Tower> tower) {
+            this(layer, size, frames, fps, headings, midSize, tower, Optional.empty());
+        }
+
         public Piece {
+            keepClear.ifPresent(r -> Check.positive("keep_clear", r));
+            Check.that(
+                    keepClear.isEmpty() || layer == BackdropLayer.GROUND,
+                    "keep_clear: only a ground piece is kept clear");
             Check.that(frames.isPresent() == fps.isPresent(), "an animation gives frames and fps");
             Check.that(frames.isEmpty() || headings.isEmpty(), "give frames (an animation) or headings, not both");
             frames.ifPresent(n -> Check.that(n >= 2, "frames must be >= 2, was " + n));

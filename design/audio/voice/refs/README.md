@@ -44,8 +44,7 @@ How the clips are chosen and used: [voice](../README.md#reference-voices).
 | `ref-ares-control.wav` | Ares Control (Levels 15–17, 19–21) | Thomas A | [The Warlord of Mars, ch. 2 (Burroughs)](https://archive.org/details/warlord_mars_tac_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 36, S.6 = b; renamed at the cast, part B, its pauses trimmed: 10.3 s) |
 | `ref-lance-control.wav` | Lance Control (the Orbital Lance's call) | Celine Major | [Campaigns of the Civil War, ch. 1 (Geer)](https://archive.org/details/campaignsofthecivilwar_2603_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 37, S.16 = b) |
 | `ref-conamara-r51-a.wav` | Dr. Brandt (`conamara`), candidate a | Margaret Espaillat | [Eminent Victorians, ch. 1 (Strachey)](https://archive.org/details/eminent_victorians_1204_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 51, V.1 = a) |
-| `ref-thera-control-r52-a.wav` | Thera Deep Control (`thera-control`), candidate a | Bruce Pirie | [The Mayor of Casterbridge, ch. 1 (Hardy)](https://archive.org/details/mayor_casterbridge_1207_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 52) |
-| `ref-thera-control-r52-b.wav` | Thera Deep Control (`thera-control`), candidate b | John Van Stan | [Early Greek Philosophy & Other Essays, ch. 1 (Nietzsche)](https://archive.org/details/earlygreekphilosophy_2103_librivox) | public domain (Public Domain Mark 1.0) | proposed (round 52) |
+| `ref-thera-control-r52-b.wav` | Thera Deep Control (`thera-control`), candidate b | John Van Stan | [Early Greek Philosophy & Other Essays, ch. 1 (Nietzsche)](https://archive.org/details/earlygreekphilosophy_2103_librivox) | public domain (Public Domain Mark 1.0) | chosen (round 52, V.1 = b) |
 
 Round 19's chosen candidates were renamed to `ref-<speaker>.wav`; the rejected candidates and
 round 18's Tranquility Control clip (David Leeson), which no speaker uses any more, were deleted
@@ -133,3 +132,4 @@ with their CREDITS.md rows (their sources and cuts stay in `tools/concept/audio/
   every take for a pause as well (`tools/art/voice.py`, `MAX_PAUSE`). Pending the user's review with
   his Level 15 lines (round 38).
 - 2026-10-22 (user, round 51, V.1 = a): Dr. Brandt (`conamara`) is Margaret Espaillat; her clip `ref-conamara-r51-a.wav` keeps its `-r51-` name (it is part of her lines' key). Sue Anderson's clip b (`ref-conamara-r51-b.wav/.txt`) moved to `../concept/rejected/` with its CREDITS.md row.
+- 2026-10-22 (user, round 52, V.1 = b): Thera Deep Control (`thera-control`) is John Van Stan; his clip `ref-thera-control-r52-b.wav` keeps its `-r52-` name (it is part of his lines' key). Bruce Pirie's clip a (`ref-thera-control-r52-a.wav/.txt`) moved to `../concept/rejected/` with its CREDITS.md row.

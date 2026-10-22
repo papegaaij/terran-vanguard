@@ -148,8 +148,12 @@ class Act4ArsenalFlightTest {
         for (String key : CONTENT.levels().keySet()) {
             LevelData level = CONTENT.level(key);
             if (level.underwater()) {
-                // M8 part C: Level 23 dives at its waterline (25.5 s); step C3's Level23Test flies the rest.
-                assertEquals(List.of(25.5), level.waterlines(), key);
+                // M8 part C: Level 23 dives at its waterline (25.5 s); step C3's Level23Test flies the rest. M8 part D:
+                // Level 24 is under water from its start (the level's medium), no waterline.
+                assertEquals(
+                        key.equals("act-4-deep-water/level-24-abyssal-plain") ? List.of() : List.of(25.5),
+                        level.waterlines(),
+                        key);
                 continue;
             }
             LevelScript script = SimSpecs.level(CONTENT, key, Difficulty.MEDIUM);

@@ -2,7 +2,7 @@
 title: Eel Swarm
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-22
 ---
@@ -75,11 +75,12 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a head and s
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (our reading): no regrowth, the cut tail scatters for 3 s.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-22 (M8 part C, step C2; gap check m8c-gaps.md §5 D11): the open question (regrow or scatter) closed: round 48's approval settled the scatter, no regrowth. The stat block is now its [data.yaml](data.yaml) and the table rendered from it. Data readings, pending the user's review in round 52: `size` and the parts' hit boxes as [across, along] the path (a segment 36 px along, 24 across, hit box share 0.77; the tail's hit box written [16, 24]); the chain's spacing 0.8 × a segment's length (Threadcrawler's, ≈ 380 px with 12 segments); the stripe's tell as each attack's `tell` 0.3 s; easy's missing fan as the fan's `only: [medium, hard]`.
-- 2026-10-22 (M8 part C, step C3): mapped for the simulation: the head's attack list as its head attacks (each on its own clock, the head's own gun empty), the sway as a sine of 36 px over 1.25 s about the path, the cut's scatter (70 px/s, 3 s, no regrown head). Data reading, pending the user's review in round 52: the first shots' delays after the head is on the screen, the aimed 0.6 s and the fan 2.5 s (half its interval), so the aimed shot comes first (Level 23's note) and each first volley has its stripe tell. The level's credit table and the code count an eel the same way: whole (48) for the typical player, by its parts with the tail first (60) in a perfect run.
-- 2026-10-22 (M8 part C, steps C1, ART-C and C4; pending the user's review in round 52): the final frames from round 48's a
+- 2026-10-22 (M8 part C, step C2; gap check m8c-gaps.md §5 D11): the open question (regrow or scatter) closed: round 48's approval settled the scatter, no regrowth. The stat block is now its [data.yaml](data.yaml) and the table rendered from it. Data readings, accepted in round 52 (2026-10-22): `size` and the parts' hit boxes as [across, along] the path (a segment 36 px along, 24 across, hit box share 0.77; the tail's hit box written [16, 24]); the chain's spacing 0.8 × a segment's length (Threadcrawler's, ≈ 380 px with 12 segments); the stripe's tell as each attack's `tell` 0.3 s; easy's missing fan as the fan's `only: [medium, hard]`.
+- 2026-10-22 (M8 part C, step C3): mapped for the simulation: the head's attack list as its head attacks (each on its own clock, the head's own gun empty), the sway as a sine of 36 px over 1.25 s about the path, the cut's scatter (70 px/s, 3 s, no regrown head). Data reading, accepted in round 52 (2026-10-22): the first shots' delays after the head is on the screen, the aimed 0.6 s and the fan 2.5 s (half its interval), so the aimed shot comes first (Level 23's note) and each first volley has its stripe tell. The level's credit table and the code count an eel the same way: whole (48) for the typical player, by its parts with the tail first (60) in a perfect run.
+- 2026-10-22 (M8 part C, steps C1, ART-C and C4; accepted in round 52 (2026-10-22)): the final frames from round 48's a
   (`tools/art/eel_swarm.py`: the head at 16 headings at rest, in its tell and firing, the body eel and the tail with the
   stripe lit, the stripe's additive bloom, the muzzle, the husks sinking); the stripe tell drawn brighter than the concept
   with a bloom so it reads at play size (step ART-C); a cut's scattered parts live their 3 s even off the screen (step C1);
   no glow-only frames yet (Level 26's darkness, part F). The sounds: step AUD-C's `eel-pulse` and `eel-segment` a/b, the
   a files in the game until round 52's picks. Captured in Level 23 (`eel-swarm-capture-r52-a`).
+- 2026-10-22 (user, round 52, closed): the final frames accepted (F.2, `art: final`); the pulse shot **b** and the segment's death **b** picked (in the game since step D4); C.4 (the first shots 0.6 s and 2.5 s after entry) accepted.

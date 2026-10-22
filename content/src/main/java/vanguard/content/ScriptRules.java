@@ -68,7 +68,7 @@ final class ScriptRules {
                 .groundObjects(GroundRules.groundObjects(level, difficulty, carried))
                 .groundUnits(GroundRules.groundUnits(content, level, difficulty, inLevel))
                 .secrets(level.secrets().size())
-                .radio(radio(level, difficulty))
+                .radio(radio(content, level, difficulty))
                 .setPieces(java.util.stream.Stream.concat(
                                 level.setPieces().orElse(List.of()).stream()
                                         .map(piece -> BossRules.setPiece(content, piece, difficulty, inLevel)),
@@ -294,7 +294,7 @@ final class ScriptRules {
         return Integer.parseInt(matcher.group(group));
     }
 
-    private static List<RadioCue> radio(LevelData level, Difficulty difficulty) {
+    private static List<RadioCue> radio(Content content, LevelData level, Difficulty difficulty) {
         List<RadioCue> cues = new ArrayList<>();
         for (LevelData.RadioCue cue : level.radio()) {
             Optional<LevelData.RadioChange> change =
@@ -342,6 +342,9 @@ final class ScriptRules {
                         // M8 part C (gap check D5): the waterline plays as a timed line at its time (Level 23's 25.5
                         // s).
                         case WATERLINE -> CueTrigger.TIME;
+                        // M8 part D (gap check §5 D2): the first Ray's shadow (the simulation's sighting); its time
+                        // below is its wave's, for the radio timeline (Level 24's 58 s).
+                        case FIRST_RAY -> CueTrigger.FIRST_RAY;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own
@@ -352,6 +355,9 @@ final class ScriptRules {
                             .or(() -> cue.event()
                                     .filter(LevelData.CueEvent.WATERLINE::equals)
                                     .flatMap(event -> level.firstWaterline()))
+                            .or(() -> cue.event()
+                                    .filter(LevelData.CueEvent.FIRST_RAY::equals)
+                                    .flatMap(event -> AbyssChecks.firstRise(content, level)))
                             .orElse(0.0),
                     // M5 part E: a boss-part-destroyed cue waits for any of its parts.
                     cue.parts()

@@ -140,6 +140,21 @@ final class UnitRules {
             Optional<LevelData.EnemyChange> change,
             InLevel inLevel,
             double arcFacing) {
+        return enemy(content, slug, difficulty, change, inLevel, arcFacing, Optional.empty());
+    }
+
+    /**
+     * As {@link #enemy(Content, String, Difficulty, Optional, InLevel, double)} with its flock's ram drawn {@code
+     * ramAfter} s after it came onto the field instead of the stat block's (M8 part D: a spawning reef's fry).
+     */
+    static EnemySpec enemy(
+            Content content,
+            String slug,
+            Difficulty difficulty,
+            Optional<LevelData.EnemyChange> change,
+            InLevel inLevel,
+            double arcFacing,
+            Optional<Double> ramAfter) {
         EnemyData stat = content.enemy(slug);
         double actHp = actHpFactor(content, stat, inLevel);
         // M8 part C (gap check D2): a unit entering under water flies its stat block's underwater changes.
@@ -165,7 +180,8 @@ final class UnitRules {
                 .filter(EnemyData.Spawn::periodic)
                 .findFirst()
                 .map(spawn -> new EnemySpec.Spawner(
-                        enemy(content, spawn.enemy(), difficulty, Optional.empty(), inLevel),
+                        // M8 part D: a reef's fry draw their ram sooner than a school's (the spawn's ram_after).
+                        enemy(content, spawn.enemy(), difficulty, Optional.empty(), inLevel, 0, spawn.ramAfter()),
                         hook.flatMap(EnemyData.Hook::spawnCount).orElse(spawn.count()),
                         spawn.every().orElseThrow(),
                         spawn.telegraph(),
@@ -228,13 +244,13 @@ final class UnitRules {
                 movement.snake().map(snake -> new EnemySpec.Snake(snake.spacing())),
                 movement.straight().map(EnemyData.Straight::speed),
                 movement.hover()
-                        .map(hover -> new EnemySpec.Hover(
+                        .map(hover -> AbyssRules.hover(
+                                hover,
                                 // M5 part D: the hook's hover time (the Wraith's hard hold) instead.
                                 hook.flatMap(EnemyData.Hook::hoverSeconds)
                                         .map(seconds -> new Range(seconds, seconds))
                                         .or(() -> hover.seconds().map(UnitRules::range))
-                                        .orElse(new Range(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)),
-                                range(hover.y()))),
+                                        .orElse(new Range(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)))),
                 movement.orbit().map(orbit -> new EnemySpec.Orbit(orbit.radius(), orbit.turnRate())),
                 gun(content, enemy, difficulty, change).map(gun -> arcFacing != 0 ? gun.withArcFacing(arcFacing) : gun),
                 drop(enemy),
@@ -303,7 +319,7 @@ final class UnitRules {
                                 flock.sway().map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency())),
                                 flock.ram()
                                         .map(ram -> new EnemySpec.Ram(
-                                                ram.after(),
+                                                ramAfter.orElse(ram.after()),
                                                 hook.flatMap(EnemyData.Hook::ram)
                                                         .flatMap(EnemyData.RamChange::share)
                                                         .orElse(ram.share()),
@@ -332,25 +348,29 @@ final class UnitRules {
         // M7 part D: an aura (the Choir Herald), a unit part and a curl-roll (the Shellback).
         // M7 part E: a spin cycle and a pull (the Dust Devil), a lane strafe (the Ghost Drone) (StormRules).
         // M7 part F: a turret and a rear plate (the Warden Tank) (FoundryRules).
-        return FoundryRules.unit(
+        // M8 part D: a rise (the Abyss Ray) (AbyssRules).
+        return AbyssRules.unit(
                 enemy,
-                difficulty,
-                StormRules.unit(
+                FoundryRules.unit(
                         enemy,
                         difficulty,
-                        SiegeRules.unit(
-                                content,
+                        StormRules.unit(
                                 enemy,
                                 difficulty,
-                                actHp,
-                                TerrainRules.anchor(
+                                SiegeRules.unit(
                                         content,
                                         enemy,
                                         difficulty,
-                                        MarsRules.kite(
+                                        actHp,
+                                        TerrainRules.anchor(
+                                                content,
                                                 enemy,
-                                                hook,
-                                                MarsRules.burrower(content, enemy, hook, difficulty, machine))))));
+                                                difficulty,
+                                                MarsRules.kite(
+                                                        enemy,
+                                                        hook,
+                                                        MarsRules.burrower(
+                                                                content, enemy, hook, difficulty, machine)))))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */
@@ -510,8 +530,9 @@ final class UnitRules {
         DifficultyData levers = content.difficulty();
         double damage = bulletDamage(content, attack.bullet().orElseThrow());
         Optional<EnemyData.Hook> hook = hook(enemy, difficulty);
-        // A burst is of aimed shots: a fan or a mine keeps one volley.
-        int burst = attack.pattern().equals("aimed")
+        // A burst is of aimed shots: a fan or a mine keeps one volley; M8 part D: a rising unit's fan comes in its
+        // burst (the Abyss Ray's three fans).
+        int burst = attack.pattern().equals("aimed") || AbyssRules.fanBursts(enemy, attack)
                 ? change.flatMap(LevelData.EnemyChange::burst)
                         .or(() -> hook.flatMap(EnemyData.Hook::burst))
                         // M5 part D: the stat block's own burst (the Wraith's 5).
@@ -570,7 +591,7 @@ final class UnitRules {
                                 attack.aim().filter("up"::equals).isPresent())));
     }
 
-    private static Range range(Span span) {
+    static Range range(Span span) {
         return new Range(span.min(), span.max());
     }
 }

@@ -1,0 +1,54 @@
+# Barbfin stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part D, step D2 (Level 24): the approved stat block (round 48) as data, the Needler's as its template. New in it: the
+# hover's `above_ship` (flown from step D1, mapped in step D3): it stops a seeded 90–200 px above the ship's y at the
+# moment it stops, drifts 6 px/s while it holds and turns toward the ship (32 angles). As an Abyss Ray's escort it is held
+# until the Ray's rise and fans out from it (gap check m8d-gaps.md §5 D3). HP: the beam era's ×2 only (24 at L24), not
+# `small_act_hp` (gap check D5).
+name: Barbfin
+faction: Vrell
+layer: air        # the play plane under water
+tier: small
+size: [36, 28]    # sprite px
+hitbox: [26, 20]
+parts: single
+orientation: 32 angles
+hp: 12
+armour: none
+speed: 120        # px/s while entering
+movement:
+  swoop: {}
+  hover: {seconds: 9, above_ship: [90, 200], drift: 6}   # s; px above the ship's y at the moment it stops (a seeded draw); px/s sideways while it holds
+  orbit: {radius: 90, turn_rate: 60}           # in `circle` formations (px, °/s; the Needler's), until it holds
+attacks:
+  - pattern: aimed
+    name: needle
+    bullet: small
+    interval: 2.4          # s
+    speed: 150             # px/s base (× 0.7 under water)
+    first_shot_delay: 0.9  # s after it stops
+    burst_gap: 0.12        # s between the needles of hard's burst
+    notes:
+      text: '`{pattern}` needle (a violet-hued shot) every {interval} s, {speed} px/s, `{bullet}` = {damage}; first shot {first_shot_delay} s after it stops'
+formations:
+  - {name: column, size: [3, 5]}
+  - {name: circle, size: [4]}
+  - {name: carrier + escorts, size: [4]}   # the Abyss Ray's escort, in `circle`
+weak_points:
+  - {name: violet snout barb}
+drops: []
+traits: [spread, homing]
+bounty: 12
+first_level: 24
+difficulty:
+  easy: {attacks: {needle: {interval: 3}}}
+  hard: {burst: 2, attacks: {needle: {interval: 2.6}}}
+notes:
+  layer: ' (the play plane under water)'
+  orientation: (it turns toward the ship while it holds)
+  speed: in, 0 while it holds
+  movement: '`swoop` in from a side or top edge along a short curve, stops {movement.hover.above_ship.0}–{movement.hover.above_ship.1} px above the ship''s lane and holds {movement.hover.seconds} s with a {movement.hover.drift} px/s drift, turning toward the ship, then leaves toward the nearest side; as an Abyss Ray''s escort it peels off the Ray''s shadow as it rises'
+  formations: '(the [Abyss Ray](../abyss-ray/README.md)''s escort); scattered pairs'
+  weak_points: (drawn only)
+  death: '`small` flash with a sinking shell and a short ink-grey cloud'
+  used_in: L25, L27 and the Maw's L28 escorts
+  difficulty: 'easy: a needle every 3 s; hard: a 2-needle `burst` 0.12 s apart every 2.6 s'

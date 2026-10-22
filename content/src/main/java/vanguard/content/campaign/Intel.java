@@ -134,7 +134,12 @@ public record Intel(
              * M8 part C (design/campaign Level 23, Threat profile at L3: "the wave strip marking the waterline"): a
              * waterline, the medium switching at a section's start (a moment): the wave strip marks the waterline.
              */
-            WATERLINE
+            WATERLINE,
+            /**
+             * M8 part D (design/campaign Level 24, Threat profile at L3: "the wave strip marking the three Rays"): a wave
+             * with a rising unit (the Abyss Ray's {@code rise}) entering, a moment at its time: the strip marks the Rays.
+             */
+            RAY
         }
     }
 
@@ -218,7 +223,8 @@ public record Intel(
      * Burrower field) is marked at its time; M7 part D: a level with ground allies marks the sections they enter in
      * (Level 17's two dome sections) as phases; M7 part G: a reversed level its turn and lull ({@link #turnAndLull});
      * round 44 Q.8 d: a level with a {@code ridge} its ridge pass; M8 part B: the ground targets an escapes secondary
-     * counts (Level 22's rig sites); M8 part C: each waterline (Level 23's); none for another level.
+     * counts (Level 22's rig sites); M8 part C: each waterline (Level 23's); M8 part D: each wave with a rising unit
+     * (Level 24's Abyss Rays); none for another level.
      */
     static List<Mark> marks(Content content, LevelData level) {
         List<Mark> marks = new java.util.ArrayList<>();
@@ -274,6 +280,16 @@ public record Intel(
         // M8 part C: each waterline at its time (Level 23's descent at 25.5 s).
         for (double t : level.waterlines()) {
             marks.add(new Mark(t, t, Mark.Kind.WATERLINE));
+        }
+        // M8 part D: each wave with a rising unit at its time (Level 24's three Abyss Rays).
+        for (LevelData.Wave wave : level.waves()) {
+            if (wave.fliesOn(vanguard.content.Difficulty.MEDIUM)
+                    && wave.groupList().stream().anyMatch(group -> content.enemy(group.enemy())
+                            .movement()
+                            .rise()
+                            .isPresent())) {
+                marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.RAY));
+            }
         }
         // M8 part B: each ground target of the escapes secondary's enemy at its time (Level 22's four rig sites).
         java.util.Optional<String> escapes = level.objectives().secondary().flatMap(LevelData.Secondary::escapes);

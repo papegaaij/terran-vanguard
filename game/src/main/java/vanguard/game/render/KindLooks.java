@@ -56,6 +56,12 @@ final class KindLooks {
     /** M8 part C: the returning naval units' bodies under water (built with the first sortie). */
     private DeepBodyLooks deepBodies;
 
+    /** M8 part D: the Abyss Rays' shadow, rise, glide, sink, glow and mouth flash (built with the first sortie). */
+    private AbyssRayLooks rays;
+
+    /** M8 part D: the Barbfins' swim, tell and snout sparkle (built with the first sortie). */
+    private BarbfinLooks barbfins;
+
     private final Sprites sprites;
     private final Files files;
 
@@ -159,6 +165,22 @@ final class KindLooks {
         return deepBodies;
     }
 
+    /** M8 part D: the Abyss Rays' looks for the sortie's enemy kinds, built once. */
+    AbyssRayLooks rays(Sortie sortie) {
+        if (rays == null) {
+            rays = new AbyssRayLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return rays;
+    }
+
+    /** M8 part D: the Barbfins' looks for the sortie's enemy kinds, built once. */
+    BarbfinLooks barbfins(Sortie sortie) {
+        if (barbfins == null) {
+            barbfins = new BarbfinLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return barbfins;
+    }
+
     /** M8 part C: the siphon pumps' looks for the sortie's enemy kinds, built once. */
     SiphonPumpLooks pumps(Sortie sortie) {
         if (pumps == null) {
@@ -223,6 +245,12 @@ final class KindLooks {
         }
         if (glassfins != null) {
             glassfins.restart();
+        }
+        if (rays != null) {
+            rays.restart();
+        }
+        if (barbfins != null) {
+            barbfins.restart();
         }
     }
 }

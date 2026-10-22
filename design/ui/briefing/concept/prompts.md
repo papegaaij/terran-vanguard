@@ -209,3 +209,16 @@ the Vrell collars in red, the waterline where the hydro-kits switch on, Thera De
 siphon pumps on the floor, the route and the four sections) and Varga's scan (the Eel Swarm from the production frames
 with its gills circled, the stripe lit and a cut; a Glassfin ribbon at 2x with a glint and the ram; the rules strip
 BULLETS X0.7, DRAG, TORPEDO RANGE +50 %).
+
+**Accepted as final** in round 52 (F.9, 2026-10-22).
+
+## briefing-images-final-r53-a
+
+Round 53, production art (M8 part D batch, step ART-D): Level 24's two briefing images (672x240), written by
+[tools/art/briefing_images.py](../../../../tools/art/briefing_images.py) `level-24-abyssal-plain level-24-abyss-ray`:
+Okafor's sonar map of the abyssal plain, north up (Thera Deep's domes and last lamps at the north edge, the silt as
+sonar contours, the four spawning reefs as red clusters, the three relay beacons as amber marks on a dashed line, the
+trench's mouth at the south end, the route in teal and the four sections; the strip: the lamps end, burn 3 of 4 reefs,
+soft to torpedoes, human-built beacons, a shadow below means a Ray) and Varga's scan (a depth cut with the play plane,
+the Ray's shadow far below and its rise; the production Abyss Ray from above with its lime gill slits circled and a fan
+of nine; a Barbfin inset at 2x with its violet needles).

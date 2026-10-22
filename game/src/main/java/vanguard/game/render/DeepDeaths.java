@@ -107,4 +107,55 @@ public final class DeepDeaths {
     public static int breakTicks() {
         return SiphonPumpLooks.BREAK_FRAME_TICKS;
     }
+
+    /** M8 part D: an Abyss Ray's break-up (solid) at its last heading; empty for another kind. */
+    public Array<AtlasRegion> rayBreakUp(Sortie sortie, int kind) {
+        return kinds.rays(sortie).breakUp(kind);
+    }
+
+    /** M8 part D: an Abyss Ray's bioluminescent bloom (additive); empty for another kind. */
+    public Array<AtlasRegion> rayBloom(Sortie sortie, int kind) {
+        return kinds.rays(sortie).bloom(kind);
+    }
+
+    /** M8 part D: how opaque a Ray's death is drawn (faint for a shadow killed in the deep water). */
+    public float rayOpacity(Sortie sortie) {
+        return kinds.rays(sortie).deathOpacity();
+    }
+
+    /** M8 part D: the break-up's and the bloom's frames' steps. */
+    public static int rayBreakUpTicks() {
+        return AbyssRayLooks.DEATH_FRAME_TICKS;
+    }
+
+    public static int rayBloomTicks() {
+        return AbyssRayLooks.BLOOM_FRAME_TICKS;
+    }
+
+    /** M8 part D: a Barbfin's shell sinking at its heading (solid); empty for another kind. */
+    public Array<AtlasRegion> barbfinShell(Sortie sortie, int kind, double x, double y) {
+        return kinds.barbfins(sortie).shell(kind, x, y);
+    }
+
+    /** M8 part D: a Barbfin's ink cloud (solid); empty for another kind. */
+    public Array<AtlasRegion> barbfinInk(Sortie sortie, int kind) {
+        return kinds.barbfins(sortie).ink(kind);
+    }
+
+    /** M8 part D: the shell's and the ink's frames' steps, the shell's sinking (px/s, down) and the ink's drop, px. */
+    public static int shellTicks() {
+        return BarbfinLooks.SHELL_FRAME_TICKS;
+    }
+
+    public static int inkTicks() {
+        return BarbfinLooks.INK_FRAME_TICKS;
+    }
+
+    public static double shellSink() {
+        return BarbfinLooks.SHELL_SINK;
+    }
+
+    public static double inkBelow() {
+        return BarbfinLooks.INK_BELOW;
+    }
 }

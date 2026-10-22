@@ -37,7 +37,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      the core with its augers and the four pumps on their hoses, scaled to fit); glassfin,
                      eel-swarm (Level 23, M8 part C batch: the production models of tools/art/glassfin.py,
                      three fry of a school nose down, and tools/art/eel_swarm.py, the head nose down with the
-                     stripe lit and two body eels trailing)
+                     stripe lit and two body eels trailing); abyss-ray, barbfin (Level 24, M8 part D batch: the
+                     production models of tools/art/abyss_ray.py, the bone skate nose down with its wings level,
+                     and tools/art/barbfin.py, the bone lionfish nose down with its barb lit)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -109,6 +111,8 @@ import canyon_units  # noqa: E402  (the Tendril Anchor's and the Threadcrawler's
 import coilwyrm  # noqa: E402  (the Coilwyrm's production models)
 import dust_kite  # noqa: E402  (the Dust Kite's production model)
 import drill_rig  # noqa: E402  (the Drill Rig's production models)
+import abyss_ray  # noqa: E402  (the Abyss Ray's production model)
+import barbfin  # noqa: E402  (the Barbfin's production model)
 import eel_swarm  # noqa: E402  (the Eel Swarm's production models)
 import glassfin  # noqa: E402  (the Glassfin's production model)
 import creeper  # noqa: E402  (the Creeper's production model)
@@ -159,14 +163,15 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "unclassified-ghost-drone": "M7 part E batch",
            "warden-tank": "M7 part F batch", "revenant-walker": "M7 part F batch",
            "boss-revenant-walker": "M7 part F batch", "boss-dust-colossus": "M7 part H batch",
-           "drill-rig": "M8 part B batch", "glassfin": "M8 part C batch", "eel-swarm": "M8 part C batch"}
+           "drill-rig": "M8 part B batch", "glassfin": "M8 part C batch", "eel-swarm": "M8 part C batch",
+           "abyss-ray": "M8 part D batch", "barbfin": "M8 part D batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
           "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
           "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44", "M8 part B batch": "r51",
-          "M8 part C batch": "r52"}
+          "M8 part C batch": "r52", "M8 part D batch": "r53"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -205,6 +210,8 @@ ENEMIES = {
     "drill-rig": drill_rig.intel_model,
     "glassfin": glassfin.intel_model,
     "eel-swarm": eel_swarm.intel_model,
+    "abyss-ray": abyss_ray.intel_model,
+    "barbfin": barbfin.intel_model,
 }
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}

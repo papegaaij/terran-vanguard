@@ -579,3 +579,5 @@ variant a is in `assets/` until the pick. No bubbles (user feedback).
 - **b "quenched fire"**: a short orange-white fireball choked within a tenth of a second into a teal-green glow, slow
   embers fanning out and dimming, a soft turbid ring; under it a grey-teal silt puff spreading and settling.
 The GIF plays the four rungs side by side over Thera Deep's farm floor (review grade), 3x.
+
+Closed in round 52 (user, 2026-10-22, F.7 = a): **Chosen: a** ("pressure flash", `underwater-burst-final-r52-a`, the frames in the game). **Rejected: b** ("quenched fire": `rejected/underwater-burst-final-r52-b.png`/`.gif`).

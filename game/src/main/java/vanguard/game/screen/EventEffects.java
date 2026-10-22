@@ -900,9 +900,25 @@ final class EventEffects {
         start(pieces, deathPieces.frames(), deathPieces.ticksPerFrame(), x, y, deathPieces.delayTicks(), onGround);
         start(pieces, deep.pieces(sortie, kind, x, y), DeepDeaths.piecesTicks(sortie, kind), x, y, 0, onGround);
         start(pieces, deep.pumpBreak(sortie, kind), DeepDeaths.breakTicks(), x, y, 0, onGround);
+        // M8 part D: an Abyss Ray's break-up (faint for a shadow killed in the deep), a Barbfin's sinking shell and
+        // ink cloud, under the burst.
+        Array<AtlasRegion> breakUp = deep.rayBreakUp(sortie, kind);
+        float rayOpacity = deep.rayOpacity(sortie);
+        if (!breakUp.isEmpty()) {
+            pieces.start(breakUp, DeepDeaths.rayBreakUpTicks(), x, y, 0, 1, rayOpacity);
+        }
+        Array<AtlasRegion> shell = deep.barbfinShell(sortie, kind, x, y);
+        if (!shell.isEmpty()) {
+            pieces.startDrifting(shell, DeepDeaths.shellTicks(), x, y, 0, 0, -DeepDeaths.shellSink());
+        }
+        start(pieces, deep.barbfinInk(sortie, kind), DeepDeaths.inkTicks(), x, y - DeepDeaths.inkBelow(), 0, false);
         start(effects, deep.flash(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
         EnemyLooks.DeathEffect glow = look.deathGlow();
         start(effects, glow.frames(), glow.ticksPerFrame(), x, y, glow.delayTicks(), onGround);
+        Array<AtlasRegion> bloom = deep.rayBloom(sortie, kind);
+        if (!bloom.isEmpty()) {
+            effects.start(bloom, DeepDeaths.rayBloomTicks(), x, y, 0, 1, rayOpacity);
+        }
         for (Array<AtlasRegion> remains : deep.pumpRemains(sortie, kind)) {
             debris.startOnGround(remains, REMAINS_TICKS, x, y, 0, sortie.groundScroll());
         }

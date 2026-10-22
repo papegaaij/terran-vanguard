@@ -125,6 +125,21 @@ class PortraitsTest {
         }
     }
 
+    /**
+     * M8 part D: Level 24's speakers (Okafor, Varga, Rook) have their portraits; the Abyss Ray and the Barbfin, new on
+     * the sensor suite's L2 contacts, have their sensor portraits.
+     */
+    @Test
+    void level24sNewUnitsHaveTheirSensorPortraits() {
+        LevelData level = content.level(content.levelKey(24).orElseThrow());
+        for (LevelData.RadioCue cue : level.radio()) {
+            assertTrue(List.of("Okafor", "Varga", "Rook").contains(cue.speaker()), cue.speaker());
+        }
+        for (String unit : List.of("abyss-ray", "barbfin", "glassfin", "eel-swarm", "scuttler")) {
+            assertTrue(Files.isRegularFile(INTEL.resolve(unit + ".png")), unit + "'s sensor portrait");
+        }
+    }
+
     /** tools/art/intel.py renders the sensor silhouette of every set piece a level's intel shows as an unknown contact. */
     @Test
     void everyContactOfALevelHasItsIntelSilhouette() {

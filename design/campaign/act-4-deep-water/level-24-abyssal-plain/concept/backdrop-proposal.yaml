@@ -1,0 +1,83 @@
+backdrop:
+  # Presentation only: Level 24's abyssal plain (tools/art/backdrop_l24.py, step ART-D, from the level's data.yaml).
+  # No deep layer (the ground is opaque). The plain darkens by the grade alone (underwater_look per section,
+  # ART-D's proposal below); the pylons' pools are baked assuming section 1's ambient 0.5. relay-beacon-glow is
+  # not placed: the game adds it over the grade at relay-beacon's placements on the same frame clock (D4).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 04222e  # the plain's blue-black water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    lamp-edge: {layer: ground, height: 960}   # section 1: the silt plain at Thera Deep's edge, kelp stands, pale stones
+    plain-reefs: {layer: ground, height: 960}   # section 2: darker silt, ridges, Vrell coral crust and root veins (the reefs are units)
+    beacon-line: {layer: ground, height: 960}   # section 3: smooth dark silt, stones, almost no kelp
+    deep-silt: {layer: ground, height: 960}   # section 4: long low dunes of fine silt, empty
+    ice-ceiling: {layer: high-air, height: 960}   # all sections: the ice ceiling's cracks of light (Level 23's; additive at 40 %)
+  pieces:
+    thera-lamps: {layer: ground, size: [480, 540]}
+    lamp-pylon-1: {layer: ground, size: [208, 208]}
+    lamp-pylon-2: {layer: ground, size: [208, 208]}
+    lamp-pylon-3: {layer: ground, size: [208, 208]}
+    floor-ridge: {layer: ground, size: [480, 176]}
+    seam-plain-reefs: {layer: ground, size: [480, 320]}
+    seam-beacon-line: {layer: ground, size: [480, 320]}
+    seam-deep-silt: {layer: ground, size: [480, 320]}
+    coral-stack-1: {layer: ground, size: [112, 112]}
+    coral-stack-2: {layer: ground, size: [112, 112]}
+    coral-stack-3: {layer: ground, size: [112, 112]}
+    coral-stack-4: {layer: ground, size: [112, 112]}
+    wreck-scar: {layer: ground, size: [176, 176]}
+    beacon-footing-1: {layer: ground, size: [176, 176]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 8}
+    beacon-footing-2: {layer: ground, size: [176, 176]}
+    beacon-footing-3: {layer: ground, size: [176, 176]}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 8}
+    trench-mouth: {layer: ground, size: [480, 1995]}
+  placed:
+    # 1. Thera Deep's last pylons behind the ship, their pools baked; exact rows
+    - {piece: thera-lamps, t: 0.0, x: 240}
+    # the last grow-lamp pylon 1 (t~4), its pool baked; exact rows
+    - {piece: lamp-pylon-1, t: 6.7, x: 376}
+    # the last grow-lamp pylon 2 (t~12), its pool baked; exact rows
+    - {piece: lamp-pylon-2, t: 14.7, x: 104}
+    # the last grow-lamp pylon 3 (t~22), its pool baked; exact rows
+    - {piece: lamp-pylon-3, t: 24.7, x: 376}
+    # a low rock ridge across the plain (t~18: the Reef Spitter nest on it); exact rows
+    - {piece: floor-ridge, t: 20.7, x: 240}
+    # section 2's seam (ground 3540): lamp-edge into plain-reefs; exact rows
+    - {piece: seam-plain-reefs, t: 33.125, x: 240}
+    # section 3's seam (ground 8760): plain-reefs into beacon-line; exact rows
+    - {piece: seam-beacon-line, t: 97.9, x: 240}
+    # section 4's seam (ground 12740): beacon-line into deep-silt; exact rows
+    - {piece: seam-deep-silt, t: 137.889, x: 240}
+    # a dead coral stack of the reef field (t~42; scenery); exact rows
+    - {piece: coral-stack-1, t: 45.375, x: 410}
+    # a dead coral stack of the reef field (t~56; scenery); exact rows
+    - {piece: coral-stack-2, t: 59.375, x: 64}
+    # a dead coral stack of the reef field (t~72; scenery); exact rows
+    - {piece: coral-stack-3, t: 75.375, x: 410}
+    # a dead coral stack of the reef field (t~89; scenery); exact rows
+    - {piece: coral-stack-4, t: 92.375, x: 230}
+    # the Meridian's scour under the wreck (t~105 x 70); exact rows
+    - {piece: wreck-scar, t: 107.94, x: 88}
+    # relay beacon 1's footing and cable trenches (its foot enters at the top edge at t=100, x 60); exact rows
+    - {piece: beacon-footing-1, t: 102.7, x: 60}
+    # relay beacon 1 on its footing (the 2 s pulse; its light is relay-beacon-glow, added over the grade at this placement)
+    - {piece: relay-beacon, t: 102.87, x: 60}
+    # relay beacon 2's footing and cable trenches (its foot enters at the top edge at t=112, x 420); exact rows
+    - {piece: beacon-footing-2, t: 114.7, x: 420}
+    # relay beacon 2 on its footing (the 2 s pulse; its light is relay-beacon-glow, added over the grade at this placement)
+    - {piece: relay-beacon, t: 114.87, x: 420}
+    # relay beacon 3's footing and cable trenches (its foot enters at the top edge at t=126, x 100); exact rows
+    - {piece: beacon-footing-3, t: 128.7, x: 100}
+    # relay beacon 3 on its footing (the 2 s pulse; its light is relay-beacon-glow, added over the grade at this placement)
+    - {piece: relay-beacon, t: 128.87, x: 100}
+    # the trench's mouth: its lip at the bottom edge at the level's end (t=172); covers the screen through the outro; exact rows
+    - {piece: trench-mouth, t: 179.006, x: 240}
+# sections' tiles: 1: [lamp-edge, ice-ceiling]; 2: [plain-reefs, ice-ceiling]; 3: [beacon-line, ice-ceiling]; 4: [deep-silt, ice-ceiling]
+# sections' underwater_look (ART-D's grade ladder proposal, round 53; the level-wide block = section 1's):
+#   1: underwater_look: {ambient: 0.5, tint: bfe6ff, caustics: 0.1, snow: 80, headlights: 0.6}
+#   2: underwater_look: {ambient: 0.32, tint: b4dcf5, caustics: 0.05, snow: 90, headlights: 0.75}
+#   3: underwater_look: {ambient: 0.18, tint: a8d0ee, caustics: 0.0, snow: 100, headlights: 0.85}
+#   4: underwater_look: {ambient: 0.14, tint: a0c8e8, caustics: 0.0, snow: 100, headlights: 0.9}

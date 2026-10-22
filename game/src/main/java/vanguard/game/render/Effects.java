@@ -130,6 +130,28 @@ public final class Effects {
         }
     }
 
+    /**
+     * M8 part D: as {@link #start(Array, int, double, double, int)}, drifting on the play field (a Barbfin's shell
+     * sinking).
+     *
+     * @param driftX the drift across, px/s (positive to the right)
+     * @param driftY the drift up, px/s
+     */
+    public void startDrifting(
+            Array<AtlasRegion> frames,
+            int ticksPerFrame,
+            double x,
+            double y,
+            int delayTicks,
+            double driftX,
+            double driftY) {
+        Effect effect = start(frames, ticksPerFrame, x, y, delayTicks, 1, 1, false);
+        if (effect != null) {
+            effect.driftX = (float) (driftX * SimStep.SECONDS);
+            effect.driftY = (float) (driftY * SimStep.SECONDS);
+        }
+    }
+
     /** The started animation, or null when all are in use. */
     private Effect start(
             Array<AtlasRegion> frames,

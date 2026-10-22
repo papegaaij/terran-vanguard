@@ -1,6 +1,6 @@
 # Level 23 – concept and production notes
 
-Round 52 (M8 part C, step ART-C: production straight away, as the Act 2–4 levels; pending the user's review in round 52).
+Round 52 (M8 part C, step ART-C: production straight away, as the Act 2–4 levels; accepted in round 52 (2026-10-22)).
 None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r52-a
@@ -38,3 +38,5 @@ gripped by its violet-brown root plate, no raft) and the Driftjelly's under-wate
 translucent, a cool rim light); the GIF on the farm floor: the probe shot free and its crate, the tender swimming up
 with the patch and back, a spitter turning on its base, two jellies pulsing. The probe and the tender are held until
 the level's data names them; the floor base and the jelly frames are claimed by their units.
+
+**Accepted as final** in round 52 (F.1 the backdrop, F.5 the props, 2026-10-22).

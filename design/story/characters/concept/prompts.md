@@ -141,3 +141,5 @@ calm, heavy-set man in his fifties, olive skin, short dark hair and a close dark
 coverall with a pressure suit's steel neck ring and an amber shoulder tab, a headset; lit by warm grow-lamp light with a
 cool teal rim; behind him the control room's round viewport (dark water, a lamp-lit farm rack, kelp) and the consoles.
 Shown at 1x, 2x and 4x and next to the other minor speakers.
+
+**Accepted as final** in round 52 (F.8, 2026-10-22).

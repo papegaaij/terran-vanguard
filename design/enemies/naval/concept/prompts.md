@@ -299,6 +299,8 @@ its rear part scattering for 3 s, the head kill unzipping the rest head to tail 
 of `explosions.py`, variant a), the husks sinking. The stripe is lit brighter than the concept (1.6 instead of 1.0)
 and gets an additive bloom so the tell reads under the grade.
 
+**Accepted as final** in round 52 (F.2, 2026-10-22).
+
 ## glassfin-final-r52-a
 
 Round 52, production art (M8 part C batch, step ART-C; from the chosen concept glassfin-r48-a, the needle fry). Not a
@@ -306,3 +308,30 @@ mockup: the review sheet and a loop of the files written by [tools/art/glassfin.
 (held until the Glassfin's `data.yaml` exists): the 16 px fry at 16 headings swimming and glinting (the ram's tell),
 the glint sparkle, the shatter's flash and four glass shards (no bubbles); the GIF: two ribbons of 14 swaying over the
 farms, three fry glinting and ramming down the ship's lane at 230 px/s (x 0.7 under water), five shattering.
+
+**Accepted as final** in round 52 (F.3, 2026-10-22).
+
+## abyss-ray-final-r53-a
+
+Round 53, production art (M8 part D batch, step ART-D; from the chosen concept abyss-ray-r48-b, the bone skate of
+`tools/concept/enemies_r48.py`, model imported unchanged). Not a mockup: the review sheet and a loop of the files
+written by [tools/art/abyss_ray.py](../../../../tools/art/abyss_ray.py) (held in `build/art-held/sprites/` until the
+Abyss Ray's `data.yaml` exists): the 208 px ray at 16 glide headings x 3 wing-beat frames (level, up, down; the beat
+seen through a mild perspective camera so the raised wings read larger), the additive glow of the lime gill slits and
+the violet spots and mouth (drawn ungraded, alone in the dark levels), the shadow growing 1.5 s on `sub`, the rise and
+the sink (the body tinted to the deep water, blurred, smaller and faint, to crisp), the fan's violet mouth flash, the
+`large` break-up (the wings folding up over the back, the glow dying, the body sinking) at the rise's and the two
+glides' headings, the lime-violet bloom. The GIF: a whole visit on Level 24's plain under the review grade (section
+2): the shadow growing ahead of the ship, the rise, four Barbfins peeling off to their holds, three 9-way fans 1.2 s
+apart (x 0.7 under water), the glide to the far side and the sink; then a second visit killed after its second fan
+(section 3 grade).
+
+## barbfin-final-r53-a
+
+Round 53, production art (M8 part D batch, step ART-D; from the chosen concept barbfin-r48-a, the bone lionfish). Not
+a mockup: the review sheet and a loop of the files written by [tools/art/barbfin.py](../../../../tools/art/barbfin.py)
+(held until the Barbfin's `data.yaml` exists): the 40 px fish at 32 headings x (two swim frames, the shot's tell with
+the snout barb and eyes lit), the violet snout sparkle (additive), the dead shell sinking (8 headings x 4 steps) and the
+ink-grey cloud (no bubbles); the needles are **violet** (the README), not the mockup's yellow
+(`enemy_bullets.py violet`). The GIF: a column of four from the left and three from the right darting in, holding
+90-200 px above the ship turned toward it, a violet needle every 2.4 s, two kills over the under-water burst.

@@ -146,6 +146,14 @@ final class EnemyStarts {
             u.phase = Enemy.Phase.AMBUSH;
             u.ambushing.start(plan.ambush().get(), Math.max(1, plan.ambushReentryTick() - plan.tick()));
         }
+        if (u.spec.rise().isPresent()) {
+            // M8 part D: its rise takes its spot ahead of the ship on its first step.
+            u.phase = Enemy.Phase.RISE;
+        }
+        if (u.phase == Enemy.Phase.ENTER) {
+            // M8 part D: a hover held above the ship draws its height (only with one).
+            u.hoverHold.start(u.spec, unitSerial);
+        }
     }
 
     /** The fields of Level 04's spawners, escorts and walkers back to a plain unit's. */
@@ -200,6 +208,8 @@ final class EnemyStarts {
         u.hoverTicks = 0;
         u.vortexCycle.clear();
         u.laneStrafing.clear();
+        u.rising.clear();
+        u.hoverHold.clear();
     }
 
     /**
@@ -239,6 +249,41 @@ final class EnemyStarts {
         u.vx = velX;
         u.vy = velY;
         u.facing = Enemy.heading(velX, velY);
+    }
+
+    /**
+     * M8 part D (design/enemies/naval/barbfin, the Abyss Ray's escorts): an escort its rising carrier held, peeling
+     * off at (atX, atY) as the carrier's layer flips. Its hold point lies {@code offsetX} px across from there (its hit
+     * box kept on the play field) at its hover's height above the ship, the ship's centre at {@code shipY} (at the
+     * carrier's height without one); it flies straight there at its speed, holds its hover time (the middle of its
+     * range; its drift and facing, its gun counting its first-shot delay from the stop), then leaves down and out to
+     * its side. Without a hover it flies on until it leaves the play field. It carries what its plan carries.
+     */
+    void peel(Spawn plan, double atX, double atY, double offsetX, double shipY, int unitSerial) {
+        EnemySpec spec = plan.enemy();
+        double half = spec.hitbox().width() / 2;
+        double toX = Math.clamp(
+                atX + offsetX,
+                Math.min(half, PlayField.WIDTH / 2.0),
+                Math.max(PlayField.WIDTH - half, PlayField.WIDTH / 2.0));
+        u.hoverHold.start(spec, unitSerial);
+        double toY = u.hoverHold.active() ? u.hoverHold.holdY(spec.hover().get(), shipY) : atY;
+        double dx = toX - atX;
+        double dy = toY - atY;
+        double length = Math.sqrt(dx * dx + dy * dy);
+        double speed = plan.speed() > 0 ? plan.speed() : spec.speed();
+        double ux = length > 0 ? dx / length : 0;
+        double uy = length > 0 ? dy / length : -1;
+        // The hatch clears the unit (its hover hold too): drawn again after it.
+        hatch(spec, plan.kind(), atX, atY, ux * speed, uy * speed, unitSerial);
+        u.hoverHold.start(spec, unitSerial);
+        u.carried = plan.carried();
+        if (spec.hover().isPresent() && speed > 0) {
+            Range hover = spec.hover().get().seconds();
+            u.exit = Spawn.Exit.awayFromCentre(toX);
+            u.glideTicks = Math.max(1, SimStep.ticks(length / speed));
+            u.glideHoldTicks = Math.max(1, SimStep.ticks((hover.min() + hover.max()) / 2));
+        }
     }
 
     /**

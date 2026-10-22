@@ -97,10 +97,14 @@ final class FoundryChecks {
             if (attack.homing().isPresent() && !boss) {
                 problem.accept(field + ".homing", "only a boss's parts fire homing missiles (the walker's pods)");
             }
+            // M8 part D: a rising unit's fan comes in a burst too (the Abyss Ray's three fans 1.2 s apart).
             if (!boss
+                    && enemy.movement().rise().isEmpty()
                     && attack.pattern().equals("fan")
                     && (attack.burst().isPresent() || attack.burstGap().isPresent())) {
-                problem.accept(field + ".burst", "only a boss's fan comes in a burst (round 43: the walker's)");
+                problem.accept(
+                        field + ".burst",
+                        "only a boss's (or a rising unit's) fan comes in a burst (round 43: the walker's)");
             }
             if (boss && attack.aim().filter("facing"::equals).isPresent() && !enemy.walks()) {
                 problem.accept(field + ".aim", "a boss fires along its facing only when it walks (movement stride)");

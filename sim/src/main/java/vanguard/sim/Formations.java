@@ -363,12 +363,7 @@ final class Formations {
                         Spawn.Exit.DOWN);
                 return;
             }
-            stopAt(
-                    0,
-                    wave.t(),
-                    FlightPath.through(
-                            x, HEIGHT + OUTSIDE, x, HEIGHT - stopDepth().at(0.5)),
-                    x);
+            stopAt(0, wave.t(), FlightPath.through(x, HEIGHT + OUTSIDE, x, HEIGHT - pathEndDepth()), x);
         }
 
         /**
@@ -457,8 +452,7 @@ final class Formations {
                     stopAt(
                             i,
                             wave.t() + i * gap,
-                            FlightPath.through(
-                                    x, HEIGHT + OUTSIDE, x, HEIGHT - stopDepth().at(0.5)),
+                            FlightPath.through(x, HEIGHT + OUTSIDE, x, HEIGHT - pathEndDepth()),
                             x);
                 } else {
                     add(
@@ -486,12 +480,7 @@ final class Formations {
                 double x = alone ? centre : centre + (i % 2 == 0 ? -PAIR_SPACING / 2 : PAIR_SPACING / 2);
                 double t = wave.t() + (i / 2) * gap;
                 if (stops()) {
-                    stopAt(
-                            i,
-                            t,
-                            FlightPath.through(
-                                    x, HEIGHT + OUTSIDE, x, HEIGHT - stopDepth().at(0.5)),
-                            x);
+                    stopAt(i, t, FlightPath.through(x, HEIGHT + OUTSIDE, x, HEIGHT - pathEndDepth()), x);
                 } else {
                     add(
                             i,
@@ -631,6 +620,20 @@ final class Formations {
             return enemy().hover().isPresent() || enemy().dive().isPresent();
         }
 
+        /**
+         * How far below the top edge the path of a unit coming down from the top edge ends: its stop depth's middle;
+         * M8 part D: for a hover held above the ship the depth's max (it stops at its height above the ship on the way,
+         * {@link EnemySpec.Hover#aboveShip()}, its path's end only at the latest).
+         */
+        private double pathEndDepth() {
+            if (enemy().dive().isEmpty()
+                    && enemy().hover().isPresent()
+                    && enemy().hover().get().aboveShip().isPresent()) {
+                return enemy().hover().get().depth().max();
+            }
+            return stopDepth().at(0.5);
+        }
+
         /** How far below the top edge its units stop: where they hover, or pause before a dive. */
         private Range stopDepth() {
             if (enemy().dive().isPresent()) {
@@ -673,7 +676,7 @@ final class Formations {
             int count = wave.count();
             if (enemy().hover().isPresent() && wave.entry() == Entry.FRONT) {
                 EnemySpec.Hover hover = enemy().hover().orElseThrow();
-                double y = HEIGHT - hover.depth().at(0.5);
+                double y = HEIGHT - pathEndDepth();
                 for (int i = 0; i < count; i++) {
                     double x = (i + 1) * WIDTH / (count + 1);
                     stopAt(i, wave.t(), FlightPath.through(x, HEIGHT + OUTSIDE, x, y), x);
@@ -790,12 +793,22 @@ final class Formations {
                 // across like a line abreast (one: at the wave's front column); the escorts' wave circles it.
                 for (int i = 0; i < wave.count(); i++) {
                     double x = wave.count() == 1 ? frontColumn() : (i + 1) * WIDTH / (wave.count() + 1);
-                    stopAt(
+                    stopAt(i, wave.t(), FlightPath.through(x, HEIGHT + OUTSIDE, x, HEIGHT - pathEndDepth()), x);
+                }
+                return;
+            }
+            if (enemy().rise().isPresent()) {
+                // M8 part D (design/enemies/naval/abyss-ray): a rising carrier takes its spot ahead of the ship on its
+                // first step (its path is never flown); the escorts' wave is held until its rise's middle.
+                for (int i = 0; i < wave.count(); i++) {
+                    add(
                             i,
                             wave.t(),
-                            FlightPath.through(
-                                    x, HEIGHT + OUTSIDE, x, HEIGHT - stopDepth().at(0.5)),
-                            x);
+                            FlightPath.through(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT / 2 - 1),
+                            speed(enemy().speed()),
+                            0,
+                            Optional.empty(),
+                            Spawn.Exit.DOWN);
                 }
                 return;
             }

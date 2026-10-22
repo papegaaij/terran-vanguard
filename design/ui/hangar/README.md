@@ -214,7 +214,8 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r42-a.png](concept/intel-final-r42-a.png) | Intel portraits of Level 19's Warden Tank (Act 3 grey) and Revenant Walker and the `boss-revenant-walker` "unclassified, huge" contact silhouette with sensor noise (`tools/art/intel.py`) | final (round 44, A.a: a record of production assets) |
 | [concept/intel-final-r44-a.png](concept/intel-final-r44-a.png) | The `boss-dust-colossus` sensor silhouette (40×40, the open mouth as phase 3 shows it, outline only; `tools/art/intel.py`, M7 part H batch, step ART-H2) | final (round 44, F.d: approved as final) |
 | [concept/intel-final-r51-a.png](concept/intel-final-r51-a.png) | The `drill-rig` sensor L2 portrait (30×30, the core and its four pumps; `tools/art/intel.py`, M8 part B batch) | chosen (round 51, F.8: accepted as final) |
-| [concept/intel-final-r52-a.png](concept/intel-final-r52-a.png) | The `glassfin` and `eel-swarm` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part C batch) | proposed (round 52) |
+| [concept/intel-final-r52-a.png](concept/intel-final-r52-a.png) | The `glassfin` and `eel-swarm` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part C batch) | chosen (round 52, F.10: accepted as final) |
+| [concept/intel-final-r53-a.png](concept/intel-final-r53-a.png) | The `abyss-ray` and `barbfin` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part D batch) | proposed (round 53) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).
@@ -668,3 +669,4 @@ release's end, which writes that autosave.
 - 2026-10-22 (M8 part B, steps ART-B and B4; accepted in round 51 (2026-10-22)): the `drill-rig` sensor L2 portrait (`intel-final-r51-a`); Level 22's
   threat strip marks the four rig sites with a red "T" (`IntelPanelLayoutTest.level22sStripMarksTheFourRigSites`).
 - 2026-10-22 (user, round 51, closed; F.8): the `drill-rig` intel portrait accepted as final.
+- 2026-10-22 (user, round 52, closed): the `glassfin` and `eel-swarm` intel portraits and Level 23's threat strip accepted as final (F.10).

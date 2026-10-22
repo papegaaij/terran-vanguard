@@ -251,7 +251,15 @@ public sealed interface RadioBlock permits LevelData {
          * level clock, so it plays as a timed line (no simulation event); only in a level with a waterline.
          */
         @JsonProperty("waterline")
-        WATERLINE
+        WATERLINE,
+        /**
+         * M8 part D (design/campaign Level 24, Radio chatter; gap check m8d-gaps.md §1.5, §5 D2): the attempt's first
+         * Abyss Ray's shadow (the first unit with a {@code rise} entering, its wave's time: the README's t≈57.6 is the
+         * same beat); once; only in a level with a rising unit. The simulation's sighting ({@code CueTrigger.FIRST_RAY});
+         * its time for the radio timeline is the first rising wave's ({@code AbyssChecks.firstRise}).
+         */
+        @JsonProperty("first-ray")
+        FIRST_RAY
     }
 
     /**

@@ -1,0 +1,61 @@
+# Abyss Ray stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part D, step D2 (Level 24): the approved stat block (round 48) as data. New in it: the `rise` movement (flown from
+# step D1, mapped in step D3): a shadow on `sub` growing in the ship's lane about `ahead` px above the ship (gap check
+# m8d-gaps.md §5 D2: ahead of the ship, not on it; only `anti-sub` fire and the Smart Bomb reach it, no contact), the rise
+# flipping it to `air` at its middle (no contact damage until the rise ends), the glide toward the far side, the sink
+# back to `sub` and gone (escaped). Its fan comes in a burst of three 1.2 s apart from the rise's end, once a visit (the
+# interval is longer than the visit). The escorts of its `carrier + escorts` wave are held until the rise's middle and
+# fan out from it (gap check D3).
+name: Abyss Ray
+faction: Vrell
+layer: sub        # its entry layer: the shadow in the deep water below the play plane
+tier: large
+size: [200, 150]  # sprite px, the wingspan
+hitbox: [130, 90] # the body
+parts: single
+orientation: 16 angles
+hp: 210           # 2.0 s at the L24 reference DPS of 104
+armour: none      # while a shadow only `anti-sub` deliveries and the Smart Bomb reach it (Delivery.reaches: the `sub` layer)
+speed: 70         # px/s, the glide
+movement:
+  rise:
+    shadow: 1.5   # s: the shadow grows below the ship's lane (the tell: a darker patch and a low horn)
+    rise: 0.9     # s: it rises under the shadow; the layer flips to `air` at the middle
+    glide: 5      # s: it glides toward the far side, its fans firing
+    speed: 70     # px/s, the glide
+    sink: 0.9     # s: it dives away, back to `sub` at the middle, and is gone (escaped)
+    ahead: 200    # px above the ship: where the shadow grows, in the ship's lane (its x at the entry, clamped)
+attacks:
+  - pattern: fan
+    name: fan
+    bullet: small
+    count: 9
+    spread: 110       # °
+    speed: 110        # px/s base (× 0.7 under water)
+    burst: 3          # fans a salvo
+    burst_gap: 1.2    # s between two fans: the safe time
+    first_shot_delay: 0   # s after the rise's end
+    interval: 20      # s: longer than the visit, so one salvo a visit
+    notes:
+      text: 'a {count}-way `{pattern}` (spread {spread}°, {speed} px/s, `{bullet}` = {damage}) from its mouth, centred on the ship at the moment of firing: {burst} fans {burst_gap} s apart from the rise''s end, then a rest (one salvo a visit)'
+formations:
+  - {name: carrier + escorts, size: [1]}   # the Ray plus four Barbfins in `circle`, held until its rise
+weak_points:
+  - {name: lime gill slits along its leading edge}
+drops: []
+traits: [anti-sub, spread, beam]
+bounty: 60
+first_level: 24
+difficulty:
+  easy: {fan_count: 7, burst: 2}
+  hard: {fan_count: 11, burst: 4}
+notes:
+  layer: ' (the deep water below the play plane) while it is a shadow, flipping to `air` at the middle of the rise, back to `sub` at the middle of the sink'
+  speed: (the glide); the rise {movement.rise.rise} s
+  armour: 'none; while a shadow only `anti-sub` (the harpoon torpedoes and depth charges) and the Smart Bomb reach it'
+  movement: '`rise`: a dark shape grows {movement.rise.shadow} s in the ship''s lane about {movement.rise.ahead} px ahead of the ship (the tell, no hazard, no contact), the manta rises under it over {movement.rise.rise} s (`sub` to `air` at the middle, no contact until the rise ends), glides {movement.rise.glide} s at {movement.rise.speed} px/s toward the far side and sinks away over {movement.rise.sink} s (escaped); the escorts peel off at the rise'
+  formations: '(the Ray plus four [Barbfins](../barbfin/README.md) in `circle`, held until its rise)'
+  weak_points: (drawn only; the body is the vital part)
+  death: '`large` break-up: the wings fold, a bioluminescent bloom, the body sinks into the dark'
+  used_in: L26 (a single Ray in the dark, its gill slits the only glow), L27
+  difficulty: 'easy: 7-way fan, two fans; hard: 11-way fan, four fans'

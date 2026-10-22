@@ -180,3 +180,5 @@ engine flame under water, and the refit flash at the waterline (the seals lighti
 white-teal flash and a pressure ring; the hull swaps to `ship-hydro` mid-flash), each for the Stormhawk and Rook; the
 GIF: the waterline row scrolling down past the two ships, the review grade ahead of it, the flashes and the wakes
 starting behind.
+
+**Accepted as final** in round 52 (F.6, 2026-10-22).

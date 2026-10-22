@@ -282,7 +282,7 @@ final class AllyPasses {
         for (int j = enemies.size() - 1; j >= 0 && !s.failed; j--) {
             Enemy enemy = enemies.get(j);
             int touching = 0;
-            if (enemy.layer().collidesWithPlayer() && !Chain.doomed(enemy) && !enemy.leaping()) {
+            if (enemy.bodyTouches() && !Chain.doomed(enemy) && !enemy.leaping()) {
                 for (int k = 0; k < convoy.size(); k++) {
                     if (convoy.touchesInAir(k, enemy.x(), enemy.y(), enemy.hitbox())) {
                         touching |= 1 << k;

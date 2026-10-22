@@ -2,7 +2,7 @@
 title: Level 23 – Through the Ice
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/naval/eel-swarm, ../../../enemies/naval/glassfin, ../../../enemies/naval/driftjelly, ../../../enemies/naval/reef-spitter, ../../../enemies/air/lamprey, ../../../player/weapons/harpoon-torpedoes, ../../../player/weapons/depth-charges, ../../../player/systems, ../../../world/europa]
 updated: 2026-10-22
 ---
@@ -357,18 +357,18 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r52-a.png](concept/backdrop-final-r52-a.png) | Production backdrop (`tools/art/backdrop_l23.py`, from europa-descent-r48-a, europa-thera-deep-r48-a and round 07's farm floor): the tile sets (the dry and the wet shaft, Thera Deep's farms, the plain's edge, the ice ceiling), the pieces at exact rows (the shelf lip, the waterline band at the row the ship passes at 25.5 s, ledges with Vrell collars, the probe's ledge, two seams, five farm racks with grow-lamp pools, pressure domes, the plain's last lamps), the ice-shaft wall textures for WallProjection; ten screens with stand-ins (sheet) | proposed (round 52) |
-| [concept/backdrop-final-r52-a.gif](concept/backdrop-final-r52-a.gif) | t 20–30 at half size: the waterline crossing, dry behind, water ahead | proposed (round 52) |
-| [concept/l23-props-final-r52-a.png](concept/l23-props-final-r52-a.png) | The level's props (`tools/art/l23_props.py`): Conamara's survey probe (snagged, hit, freed; its strobe), the Thera Deep tender (up/down, 3 jet frames, lights), the Reef Spitter's floor base, the Driftjelly's under-water body (sheet) | proposed (round 52) |
-| [concept/l23-props-final-r52-a.gif](concept/l23-props-final-r52-a.gif) | The probe shot free with its crate, the tender bringing the armour patch, a spitter on its base, jellies pulsing | proposed (round 52) |
-| [concept/dry-shaft-capture-r52-a.png](concept/dry-shaft-capture-r52-a.png) | Game capture, M8 part C (step C5b; Level 23 on medium, `--invulnerable`, the balance plan's Level 23 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods, the Sonar Pulse, Rook with his gun): the dry shaft at t=8 and t=20, the ice walls and ledges, the weapon rows reading `NO WATER` | proposed (round 52) |
-| [concept/waterline-capture-r52-a.png](concept/waterline-capture-r52-a.png) | The waterline crossing at t=24.6, 25.6 and 26.6: the band reaching the ship's row, the wipe and the refit flash, the rules strip | proposed (round 52) |
-| [concept/waterline-capture-r52-a.mp4](concept/waterline-capture-r52-a.mp4) | The same as a video with the game's sound (t=21.5–31): the last dry wave, the crossing, the wipe, the refit, the rules strip, the first school arriving | proposed (round 52) |
-| [concept/probe-capture-r52-a.png](concept/probe-capture-r52-a.png) | The secret at t=52.5, 54, 55 and 56: Conamara's survey probe snagged at the left wall's foot with its strobe, hit, shot free, its crate | proposed (round 52) |
-| [concept/farms-capture-r52-a.png](concept/farms-capture-r52-a.png) | Thera Deep's farms at t=96, 99.5, 101 and 104: the racks with their siphon pumps, the pressure domes, the tender bringing the armour patch, a pump breaking | proposed (round 52) |
-| [concept/plains-edge-capture-r52-a.png](concept/plains-edge-capture-r52-a.png) | The plain's edge at t=141, 148 and 156: the farms thinning into the dark plain, the last lamps | proposed (round 52) |
-| [concept/ice-ceiling-capture-r52-a.png](concept/ice-ceiling-capture-r52-a.png) | The ice ceiling (`high-air`, step C5a's thin cracks of light) over the wet shaft (t=39), the farms' entry (t=74) and the farms (t=135) | proposed (round 52) |
-| [concept/radio-capture-r52-a.png](concept/radio-capture-r52-a.png) | Thera Deep Control on the radio at t=66 and t=89.5 (his portrait, candidate a's voice) | proposed (round 52) |
+| [concept/backdrop-final-r52-a.png](concept/backdrop-final-r52-a.png) | Production backdrop (`tools/art/backdrop_l23.py`, from europa-descent-r48-a, europa-thera-deep-r48-a and round 07's farm floor): the tile sets (the dry and the wet shaft, Thera Deep's farms, the plain's edge, the ice ceiling), the pieces at exact rows (the shelf lip, the waterline band at the row the ship passes at 25.5 s, ledges with Vrell collars, the probe's ledge, two seams, five farm racks with grow-lamp pools, pressure domes, the plain's last lamps), the ice-shaft wall textures for WallProjection; ten screens with stand-ins (sheet) | chosen (round 52, F.1: accepted as final) |
+| [concept/backdrop-final-r52-a.gif](concept/backdrop-final-r52-a.gif) | t 20–30 at half size: the waterline crossing, dry behind, water ahead | chosen (round 52, F.1: accepted as final) |
+| [concept/l23-props-final-r52-a.png](concept/l23-props-final-r52-a.png) | The level's props (`tools/art/l23_props.py`): Conamara's survey probe (snagged, hit, freed; its strobe), the Thera Deep tender (up/down, 3 jet frames, lights), the Reef Spitter's floor base, the Driftjelly's under-water body (sheet) | chosen (round 52, F.5: accepted as final) |
+| [concept/l23-props-final-r52-a.gif](concept/l23-props-final-r52-a.gif) | The probe shot free with its crate, the tender bringing the armour patch, a spitter on its base, jellies pulsing | chosen (round 52, F.5: accepted as final) |
+| [concept/dry-shaft-capture-r52-a.png](concept/dry-shaft-capture-r52-a.png) | Game capture, M8 part C (step C5b; Level 23 on medium, `--invulnerable`, the balance plan's Level 23 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods, the Sonar Pulse, Rook with his gun): the dry shaft at t=8 and t=20, the ice walls and ledges, the weapon rows reading `NO WATER` | chosen (round 52, F.1: accepted as final) |
+| [concept/waterline-capture-r52-a.png](concept/waterline-capture-r52-a.png) | The waterline crossing at t=24.6, 25.6 and 26.6: the band reaching the ship's row, the wipe and the refit flash, the rules strip | chosen (round 52, F.1: accepted as final) |
+| [concept/waterline-capture-r52-a.mp4](concept/waterline-capture-r52-a.mp4) | The same as a video with the game's sound (t=21.5–31): the last dry wave, the crossing, the wipe, the refit, the rules strip, the first school arriving | chosen (round 52, F.1 and F.6: accepted as final) |
+| [concept/probe-capture-r52-a.png](concept/probe-capture-r52-a.png) | The secret at t=52.5, 54, 55 and 56: Conamara's survey probe snagged at the left wall's foot with its strobe, hit, shot free, its crate | chosen (round 52, F.5: accepted as final) |
+| [concept/farms-capture-r52-a.png](concept/farms-capture-r52-a.png) | Thera Deep's farms at t=96, 99.5, 101 and 104: the racks with their siphon pumps, the pressure domes, the tender bringing the armour patch, a pump breaking | chosen (round 52, F.1, F.4 and F.5: accepted as final) |
+| [concept/plains-edge-capture-r52-a.png](concept/plains-edge-capture-r52-a.png) | The plain's edge at t=141, 148 and 156: the farms thinning into the dark plain, the last lamps | chosen (round 52, F.1: accepted as final) |
+| [concept/ice-ceiling-capture-r52-a.png](concept/ice-ceiling-capture-r52-a.png) | The ice ceiling (`high-air`, step C5a's thin cracks of light) over the wet shaft (t=39), the farms' entry (t=74) and the farms (t=135) | chosen (round 52, F.1: accepted as final) |
+| [concept/radio-capture-r52-a.png](concept/radio-capture-r52-a.png) | Thera Deep Control on the radio at t=66 and t=89.5 (his portrait, candidate a's voice) | chosen (round 52, F.8: accepted as final) |
 
 ## Implementation
 
@@ -380,15 +380,15 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
       (`Level23Test.theSpecialLimitsSwitchAtTheWaterline`, `ActFourHangarTest.theIntelMarksAFittedSpecialTheLevelForbids`)
 - [x] The secret (survey probe), the Thera Deep tender's armour patch, the overdrive and the shield-cell drops (the head-first drop: steps C1 and C3; the probe's and the tender's looks: step C4)
 - [x] Wave script: ≥ 60 enemies a minute at medium, no empty screen over 2 s, the Act 2+ floor, the quiet windows (`DensityTest`, `PacingTest`, `ActFloorTest`, `Level23Test`; step C3)
-- [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel23Test`, with Rook and without), Thera Deep Control cast
+- [x] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel23Test`, with Rook and without), Thera Deep Control cast
       (built and tested: `RadioTimelineLevel23Test`, `VoiceFilesTest`, `Level23Test.theWaterlineLinePlaysAtTheCrossing`, steps VOX-C
-      and C5a; Thera Deep Control speaks with candidate a until [round 52](../../../concept-rounds/round-52/README.md) casts him, V.1)
+      and C5a; [round 52](../../../concept-rounds/round-52/README.md) cast him b, John Van Stan, V.1; his b takes in the game since step D4)
 - [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`, its
       `level23sStripMarksTheWaterlineAndThePumps`); the Glassfin's and Eel Swarm's portraits (`PortraitsTest`)
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images (`BriefingLayoutTest.everyPageImageIsInTheAssetsAtItsSize`, `BriefingsTest`)
 - [x] Typical haul within ±5 % of budget(23) = 3 101 with the level's `bounty_scale` (`TypicalHaulTest`: 3,080 at 0.49, step C3)
 - [x] Music and ambience: the stems by section, the under-water bed, the waterline and the school/eel sounds (`Level23SoundsTest`;
-      round 52's a files play until the picks)
+      round 52's picks in the game since step D4)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty (`--escort none` too) (step C3)
 - [x] Production art and captures for part C's round ([round 52](../../../concept-rounds/round-52/README.md), step C5b; the
       looks: `Level23LooksTest`)
@@ -401,7 +401,7 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   new voice; numbers from the proposed reference DPS 100.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
 - 2026-10-22 (user, [round 50](../../../concept-rounds/round-50/README.md) closed): Q.1 **a**: the dry shaft stays as approved: `NO WATER` on the Harpoon Torpedoes, the Depth Charges and the Sonar Pulse until the waterline (t = 25.5 s), the dry popcorn left to the wing weapons and Rook, the crossing flashing the rows back on. Part C measures it with `levelReport` and the autopilot; the waterline moves (b) only if those measures fail.
-- 2026-10-22 (M8 part C, step C2; the gap check's defaults, `m8c-gaps.md` §5, pending the user's review in round 52):
+- 2026-10-22 (M8 part C, step C2; the gap check's defaults, `m8c-gaps.md` §5, accepted in round 52 (2026-10-22)):
   the data file from the approved tables, the hand tables replaced by tables rendered from it. The two open questions
   closed, settled by round 48's approval (D11): the waterline is a switch with a short quiet window and a tell (no set
   piece), the pumps (not an ally) are the secondary. **Five data sections** for the README's four, the waterline its own
@@ -412,7 +412,7 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   easy and 22 on hard (the Glassfin's stat block; the lever alone gives 13 and 19); the Lamprey `line abreast` rows kept
   as written; the under-water look per section from the round-48 stills (the wet shaft's descent, Thera Deep's farms, a
   darker plain's edge); the stray "(Eel Swarm whole, 48)" and "halved reach" (× 0.75) fixed.
-- 2026-10-22 (M8 part C, step C3; pending the user's review in round 52): mapped and flown. The ribbons (`column`) are
+- 2026-10-22 (M8 part C, step C3; accepted in round 52 (2026-10-22)): mapped and flown. The ribbons (`column`) are
   straight columns down the shaft's left or right side (x 144 / 336): the simulation's column flies no authored path.
   The README's Needler and Stinger at the cap ×3 need Level 23 in `small_act_hp`'s levels (added; 24 and 36 HP with the
   beam era). Measured with the balance plan's fit (`levelReport`, seeds 1-3): medium 352 enemies (132 a minute), 7.4 on
@@ -422,7 +422,7 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   hard. **The dry shaft** (round 50 Q.1 a, kept as approved): at medium on seed 1 with Rook the wing pods and Rook kill 23
   of the section's 28 units (4.4 on the screen, 38 shots a minute; 17 shield and 5 armour lost; 418 credits by the
   waterline), without Rook 15 (12 shield, no armour lost; 320 credits): every test passes, so no fallback goes to round 52.
-- 2026-10-22 (M8 part C, step C5a; pending the user's review in round 52): VOX-C's radio retime applied (Varga t=17→13.5,
+- 2026-10-22 (M8 part C, step C5a; accepted in round 52 (2026-10-22)): VOX-C's radio retime applied (Varga t=17→13.5,
   Thera Deep Control t=34→65 and t=70→88.5, Rook's joke t=9→99.5 over the racks, Okafor t=134→140; every timed line at
   most 1 s late with and without Rook). Varga's t=13.5 line now says "Water in twelve seconds" (the waterline is at
   t=25.5); Thera Deep Control's secondary line is "Enough pumps are off the racks…", true on every difficulty (the third
@@ -432,10 +432,18 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   rendered over 1,008 rows, where r07's noise lattices wrap, and taken to 960 by nearest rows (`BackdropSeamsTest`: 4.84
   → 0); the ice ceiling's isolines (white scribbles over the field in C4's capture) replaced by seven dim fracture cracks
   with a fork or two each, about a pixel wide.
-- 2026-10-22 (M8 part C, steps ART-C, C4 and C5b; pending the user's review in round 52): the production backdrop
+- 2026-10-22 (M8 part C, steps ART-C, C4 and C5b; accepted in round 52 (2026-10-22)): the production backdrop
   (`tools/art/backdrop_l23.py`), its ledge, nest and dome positions estimated by step ART-C from the data; the HUD's rules
   strip is a one-line prompt for 4 s at the crossing and the weapon rows' `NO WATER` clears with one flash (gap check
   D10, no sound beyond the crossing and refit pair). Captured on medium with `--invulnerable` (step C5b: the dry shaft, the
   waterline, a Glassfin school, an eel, the farms with the pumps and the tender, the plain's edge, the ice ceiling, Thera
   Deep Control on the radio). The frame rate of a full medium run on the software renderer (Xvfb, llvmpipe, no capture):
   **291 fps** on average, the longest frame **56.9 ms**, with the 7.4 units on the screen step C3 measured.
+- 2026-10-22 (user, round 52, closed): the art accepted (F.1 the backdrop with the ice ceiling, F.5 the props, F.4 the
+  siphon pump, F.6 the hydro-kit's wake and refit flash, F.8 Thera Deep Control's portrait, F.9 the briefing images, F.10
+  the intel; `art: final`); the under-water kill bursts **a** (F.7, "pressure flash", already in the game). Thera Deep
+  Control is cast **b** (V.1, John Van Stan; his takes in `assets/` since step D4). The sounds picked (waterline a, refit
+  a, Glassfin shatter b, eel pulse b and segment b, pump hum b and break b, scrape a, the bed a; the b files in the game
+  since step D4); the under-water explosion family (S.10) asked again in round 53. C.1–C.7 accepted (the density, the
+  radio retime, the straight Glassfin columns, the eel's first shots, the Glassfin's dive, `small_act_hp`, the pumps'
+  secondary), and with them the small rules the steps logged as pending this round (now "accepted in round 52").

@@ -269,23 +269,35 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "rig-death-r51-b.ogg",
         "europa-ice-r51-a.ogg",
         "conamara-station-r51-a.ogg",
-        // M8 part C: round 52's proposals for Level 23 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-C),
-        // their a variants until the user's pick, which may swap the file: the waterline crossing, the hydro-kit's refit,
-        // the wall scrape under water, the eel's pulse and segment, the Glassfin's shatter, the siphon pump's hum and
-        // break, the bed under the ice and the under-water explosion ladder (tiny to large).
+        // M8 part C: round 52's picks for Level 23 (the user, 2026-10-22; CC0/CC-BY Freesound HQ previews, CREDITS rows
+        // from step AUD-C): the waterline crossing a, the hydro-kit's refit a, the wall scrape under water a, the eel's
+        // pulse b and segment b, the Glassfin's shatter b, the siphon pump's hum b and break b, the bed under the ice a;
+        // the under-water explosion ladder (tiny to large) is still open (S.10): family a until the pick.
         "waterline-cross-r52-a.ogg",
         "hydro-refit-r52-a.ogg",
         "scrape-under-r52-a.ogg",
-        "eel-pulse-r52-a.ogg",
-        "eel-segment-r52-a.ogg",
-        "glassfin-shatter-r52-a.ogg",
-        "pump-hum-r52-a.ogg",
-        "pump-break-r52-a.ogg",
+        "eel-pulse-r52-b.ogg",
+        "eel-segment-r52-b.ogg",
+        "glassfin-shatter-r52-b.ogg",
+        "pump-hum-r52-b.ogg",
+        "pump-break-r52-b.ogg",
         "europa-under-r52-a.ogg",
         "explosion-underwater-tiny-r52-a.ogg",
         "explosion-underwater-small-r52-a.ogg",
         "explosion-underwater-medium-r52-a.ogg",
         "explosion-underwater-large-r52-a.ogg",
+        // M8 part D: round 53's proposals for Level 24 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-D),
+        // their a variants until the user's pick, which may swap the file: the Abyss Ray's rise, glide, fan and death,
+        // the Barbfin's needle, the spawning reef's iris and death, the relay beacons' pulse, the Meridian's hatch.
+        "ray-rise-r53-a.ogg",
+        "ray-glide-r53-a.ogg",
+        "ray-fan-r53-a.ogg",
+        "ray-death-r53-a.ogg",
+        "barbfin-needle-r53-a.ogg",
+        "reef-iris-r53-a.ogg",
+        "reef-death-r53-a.ogg",
+        "beacon-pulse-r53-a.ogg",
+        "wreck-hatch-r53-a.ogg",
     )
 }
 

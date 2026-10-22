@@ -52,6 +52,15 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         DeepWaterChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M8 part D: the rising unit and the hover above the ship (the Abyss Ray's, the Barbfin's) and a level's.
+        content.enemies()
+                .values()
+                .forEach(
+                        enemy -> AbyssChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(
+                        level -> AbyssChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M8 part A: the under-water rules, Rook's absence and a level's medium and special limits.
         ActFourChecks.europa(content, (field, message) -> problem(content.europa(), field, message));
         ActFourChecks.wingmen(content, (field, message) -> problem(content.wingmen(), field, message));
@@ -198,8 +207,12 @@ final class ContentValidator {
 
     private void checkEnemy(EnemyData enemy) {
         // M5 part E: a unit is under the water only in its dives (E2b's submerge), never by its stat block.
-        if (enemy.layer().equals(SUB)) {
-            problem(enemy, "layer", "a unit's stat block is not on sub: it dives from ground");
+        // M8 part D: a rising unit (the Abyss Ray) enters as a shadow on sub (AbyssChecks).
+        if (enemy.layer().equals(SUB) && enemy.movement().rise().isEmpty()) {
+            problem(
+                    enemy,
+                    "layer",
+                    "a unit's stat block is not on sub: it dives from ground (or rises: movement.rise)");
         }
         // M7 part B: nor under the sand: a Burrower is buried only by its burrow movement. M7 part H: a breaching
         // boss's body is (the Dust Colossus: ColossusChecks).
@@ -1622,6 +1635,9 @@ final class ContentValidator {
             } else if (event == LevelData.CueEvent.WATERLINE
                     && level.waterlines().isEmpty()) {
                 problem(level, field, "waterline in a level without a waterline (a section changing the medium)");
+            } else if (event == LevelData.CueEvent.FIRST_RAY
+                    && AbyssChecks.firstRise(content, level).isEmpty()) {
+                problem(level, field, "first-ray in a level without a rising unit (movement.rise)");
             }
         }
         if (!level.noSurfaceZones().isEmpty() && !burrows) {

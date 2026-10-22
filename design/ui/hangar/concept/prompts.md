@@ -287,3 +287,13 @@ down) and `eel-swarm` (the head nose down with the stripe lit and two body eels 
 the production models of [tools/art/glassfin.py](../../../../tools/art/glassfin.py) and
 [tools/art/eel_swarm.py](../../../../tools/art/eel_swarm.py), written by
 [tools/art/intel.py](../../../../tools/art/intel.py) `glassfin eel-swarm`.
+
+**Accepted as final** in round 52 (F.10, 2026-10-22).
+
+## intel-final-r53-a
+
+Round 53, production art (M8 part D batch, step ART-D): the sensor L2 portraits `abyss-ray` (the bone skate nose down,
+wings level, scaled to the card) and `barbfin` (the bone lionfish nose down, its barb lit), 30x30, from the production
+models of [tools/art/abyss_ray.py](../../../../tools/art/abyss_ray.py) and
+[tools/art/barbfin.py](../../../../tools/art/barbfin.py), written by [tools/art/intel.py](../../../../tools/art/intel.py)
+`abyss-ray barbfin`.

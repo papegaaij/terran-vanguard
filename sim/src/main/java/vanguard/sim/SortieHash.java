@@ -69,6 +69,8 @@ final class SortieHash {
         if (s.force.flocks().size() > 0) {
             Pools.addAll(hash, s.force.flocks());
         }
+        // M8 part D: only while a rising carrier holds escorts, so the other levels hash as before.
+        s.force.addRiseEscortsTo(hash);
         if (s.force.skipped() > 0) {
             // M7 part G: only once a pursuit's refill was left out, so the other levels hash as before.
             hash.add(s.force.skipped());

@@ -1,0 +1,57 @@
+# Spawning Reef stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part D, step D2 (Level 24; gap check m8d-gaps.md §5 D1): Level 24's spawning reefs promoted to a part of their own,
+# because the secondary's `escapes` counts a unit by its slug and the loader finds units only here. The approved text of
+# Level 24 (round 48: a coral tower with an iris that releases 4 Glassfin every 3.5 s while it is on the screen, 200 HP,
+# not hardened, bounty 40) with the Hive Node's periodic spawn (its telegraph, arc, speed and `shut_within`); the
+# released fry fly out and then each rams as a single Glassfin, no flock (gap check D4, flown from step D1); a razed reef
+# releases no more (the Hive Node's rule), the fry already out live on. The 96 × 96 sprite and its 72 × 72 hit box are
+# step D2's, pending the user's review in round 53. Damage under water as every ground target's: the torpedo weapons at
+# full damage, the others × 0.7 (Europa's rules, design/world/europa).
+name: Spawning Reef
+faction: Vrell
+layer: ground     # the sea floor of the abyssal plain
+tier: large       # 200 HP is 1.9 s at the L24 reference DPS of 104
+size: [96, 96]    # sprite px
+hitbox: [72, 72]
+parts: single
+orientation: radial
+hp: 200
+armour: none      # soft (not hardened like the Hive Node): the harpoon loadout can raze it
+speed: 0          # scrolls with the ground
+movement:
+  terrain: {}
+attacks:
+  - pattern: spawn
+    spawn:
+      enemy: glassfin
+      count: 4            # fry a release (easy 3: the hook spawn_count below)
+      every: 3.5          # s between releases; the first one every s after its centre crosses the top edge
+      telegraph: 0.5      # s the iris opens ahead of a release
+      arc: 120            # ° the fry fan out in, centred on the ship (as the Hive Node's)
+      speed: 160          # px/s, the released fry fly straight out, then each rams as a single Glassfin
+      shut_within: 96     # px: a release due while the ship's centre is this close is skipped
+      ram_after: 0        # s: each fry draws its ram as it leaves the iris (step D3: with the school's 3 s on the field none rammed, measured gone in 0.6-1.2 s)
+    notes:
+      text: '`{pattern}`: its teal iris opens over {spawn.telegraph} s every {spawn.every} s and releases {spawn.count} Glassfin fry, flying out at {spawn.speed} px/s in a {spawn.arc}° arc toward the ship, each drawing its ram (the Glassfin''s share) as it leaves the iris; it stays shut while the ship is within {spawn.shut_within} px; no direct fire'
+formations:
+  - {name: single}
+weak_points:
+  - {name: open iris}
+drops: []
+traits: [anti-sub, anti-ground]   # the torpedo weapons at full damage under water; anti-ground × 2 (as the siphon pump)
+bounty: 40
+first_level: 24
+difficulty:
+  easy: {spawn_count: 3}
+notes:
+  layer: ' (the sea floor of the abyssal plain)'
+  orientation: (no headings; the coral pulses, the iris opens and shuts)
+  armour: 'none (soft, not hardened like the [Hive Node](../hive-node/README.md): the torpedo weapons at full damage, the others × 0.7 under water)'
+  speed: (scrolls with the ground)
+  movement: '`terrain` (grown out of the plain''s floor)'
+  formations: (placed one by one, each its own named target)
+  weak_points: (drawn only; it glows teal while the iris opens, the spawn's telegraph)
+  bounty: '; the fry it releases pay their own 2 and count into the level''s enemies as released'
+  death: '`large` coral burst: the iris closes, the tower crumbles to a razed stump; the fry already out live on'
+  used_in: Level 24 (the secondary `REEFS`); a later Europa level may reuse it
+  difficulty: 'easy: 3 fry a release; the secondary''s allowed escapes change too (easy 2, medium 1, hard 0)'

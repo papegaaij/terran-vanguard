@@ -302,6 +302,8 @@ public final class LevelScreen implements GameScreen {
         if (breachingBoss(sortie.script())) {
             level.ridge().ifPresent(ridge -> sounds.ridgePass(ridge.t()));
         }
+        // M8 part D: Level 24's relay beacons ping with their pulse while one is on the screen.
+        sounds.beacons(level);
         easy = difficulty == Difficulty.EASY;
         sortie.script().setPieces().stream()
                 .flatMap(piece -> piece.boss().stream())
