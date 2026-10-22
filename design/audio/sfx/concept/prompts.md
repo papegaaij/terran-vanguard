@@ -3064,3 +3064,140 @@ This one: a rock slammed onto a frozen lake (a hard icy crack with the ice's 'zi
 Edit: 1.23 s, the loudest 100 ms band −24.7 dB, peak −4.3 dBFS, −22.0 LUFS.
 
 **Rejected** (round 49, M.1, 2026-10-22: the user picked b); the file is in `rejected/`.
+
+## Concept round 50, step AUD-A (the Act 4 arsenal: Harpoon Torpedoes, Depth Charges, the Torpedo Pod without bubbles, the Sonar Pulse and the limit chime)
+
+The generator is `tools/concept/audio/sfx_r50a.py` (Freesound HQ previews; the harpoon's run is a seamless loop; the limit chime is synthesized). The Sonar Pulse's a is the chosen `special-sonar-r04-a` and the Decoy Flares keep the chosen special-flares-r08-a (no new file).
+
+### shot-harpoon-r50-a — "Tire Bead Seater Air Blast" by j_soundeffects + "Cannon Fires, Take 1, Quarter Speed" by CHallSmith + "G45-20-Submarine Motor Underwater.wav" by craigsmith
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/j_soundeffects/sounds/863981/> (Tire Bead Seater Air Blast by j_soundeffects, CC-BY 4.0), <https://freesound.org/people/CHallSmith/sounds/870742/> (Cannon Fires, Take 1, Quarter Speed by CHallSmith, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438722/> (G45-20-Submarine Motor Underwater.wav by craigsmith, CC0 1.0).
+Use: every Harpoon Torpedoes shot (the front `anti-sub` weapon, Act 4 from L23's waterline; 0.8-1 a second, two torpedoes at L5), mostly under water: the ship's own fire, so often.
+Brief: the `torpedo` family made heavier and without bubbles: a pneumatic tube's thump as the torpedo is pushed out and its motor's whirr running off ahead; muffled and pressured, short, never tiring at one a second; a real recording, heavy, nothing bubbly.
+This one: a tyre-bead seater's compressed-air blast (a pneumatic tube's hard 'thoomp'), muffled at 2.5 kHz, on a cannon's deep thump played at quarter speed, and from 0.12 s a submarine motor's whirr rising in pitch as it runs off and fades: a punchy pneumatic launch with a motor leaving, 0.82 s.
+Edit: 0.82 s, the loudest 100 ms band −22.4 dB, peak −7.7 dBFS, −22.2 LUFS.
+
+### shot-harpoon-r50-b — "G45-13-Submarine Torpedo Fire.wav" by craigsmith + "Torpedo launch.wav" by jobro
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/438715/> (G45-13-Submarine Torpedo Fire.wav by craigsmith, CC0 1.0), <https://freesound.org/people/jobro/sounds/35531/> (Torpedo launch.wav by jobro, CC-BY 3.0).
+Use: every Harpoon Torpedoes shot (the front `anti-sub` weapon, Act 4 from L23's waterline; 0.8-1 a second, two torpedoes at L5), mostly under water: the ship's own fire, so often.
+Brief: the `torpedo` family made heavier and without bubbles: a pneumatic tube's thump as the torpedo is pushed out and its motor's whirr running off ahead; muffled and pressured, short, never tiring at one a second; a real recording, heavy, nothing bubbly.
+This one: a vintage film recording of a submarine torpedo firing (a pressurised hiss with thumps and thunks in it), muffled at 3 kHz, over the Torpedo Pod's launch in its dry version slowed to 0.75 and muffled at 900 Hz: the pod's launch made bigger and lower, more hiss and mechanism than a, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −24.6 dB, peak −5.6 dBFS, −18.0 LUFS.
+
+### harpoon-run-r50-a — "G45-20-Submarine Motor Underwater.wav" by craigsmith + "Submarine Passing 1.wav" by Schmaddio
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/438722/> (G45-20-Submarine Motor Underwater.wav by craigsmith, CC0 1.0), <https://freesound.org/people/Schmaddio/sounds/432514/> (Submarine Passing 1.wav by Schmaddio, CC0 1.0).
+Use: while a Harpoon Torpedo runs ahead of the ship (one loop for all of them, as long as any is on the screen: about 2.5 s a torpedo under water, so nearly all the time while the weapon fires).
+Brief: a torpedo's motor and propeller running away through the water: a steady, muffled, heavy whirr or thrum, low in the mix under the launches and hits, no bubbles, no clicks, a seamless loop; a real recording, heavy, nothing bubbly.
+This one: a submarine's motor under water (a steady, high, muffled whirr, a vintage film recording) over a deep submarine rumble: a machine's whine running on, the most 'motor' of the two.
+Edit: 4.00 s, band RMS −34.0 dB, peak −18.7 dBFS, −30.4 LUFS.
+
+### harpoon-run-r50-b — "underwater ship propeller 3.45 PM 220920_0532.wav" by klankbeeld + "G45-20-Submarine Motor Underwater.wav" by craigsmith
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/klankbeeld/sounds/680037/> (underwater ship propeller 3.45 PM 220920_0532.wav by klankbeeld, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/438722/> (G45-20-Submarine Motor Underwater.wav by craigsmith, CC0 1.0).
+Use: while a Harpoon Torpedo runs ahead of the ship (one loop for all of them, as long as any is on the screen: about 2.5 s a torpedo under water, so nearly all the time while the weapon fires).
+Brief: a torpedo's motor and propeller running away through the water: a steady, muffled, heavy whirr or thrum, low in the mix under the launches and hits, no bubbles, no clicks, a seamless loop; a real recording, heavy, nothing bubbly.
+This one: a real ship's propeller recorded through a hydrophone (a low churning thrum, the blades' beat in it), muffled at 1.5 kHz, with the submarine motor slowed to 0.8 quietly under it: lower and rougher than a, the most 'propeller in water'.
+Edit: 4.00 s, band RMS −34.0 dB, peak −11.9 dBFS, −30.4 LUFS.
+
+### harpoon-hit-r50-a — "Underwater Deep Impact" by Sheyvan + "DepthBomb_01.aif" by ZeSoundResearchInc.
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/Sheyvan/sounds/470084/> (Underwater Deep Impact by Sheyvan, CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147876/> (DepthBomb_01.aif by ZeSoundResearchInc., CC0 1.0).
+Use: a Harpoon Torpedo striking its target (with the 20 px splash), under water and at the surface of a `water: true` level: up to about one a second, more with two weapons' worth of targets dying around it; the target's own death plays its explosion rung over it.
+Brief: a heavy thud on impact: a deep, pressured under-water blast with a muffled body and a short low tail, no splash and no bubble rattle; short enough to repeat; a real recording, heavy, nothing bubbly.
+This one: an under-water deep impact (a massive dull hit with a churning body) on a depth bomb's sub-bass boom: a heavy 'thoom' with a low rolling tail, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −27.4 dB, peak −4.1 dBFS, −18.0 LUFS.
+
+### harpoon-hit-r50-b — "G45-14-Torpedo Explosion.wav" by craigsmith + "DepthBomb_04.aif" by ZeSoundResearchInc.
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/438716/> (G45-14-Torpedo Explosion.wav by craigsmith, CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147873/> (DepthBomb_04.aif by ZeSoundResearchInc., CC0 1.0).
+Use: a Harpoon Torpedo striking its target (with the 20 px splash), under water and at the surface of a `water: true` level: up to about one a second, more with two weapons' worth of targets dying around it; the target's own death plays its explosion rung over it.
+Brief: a heavy thud on impact: a deep, pressured under-water blast with a muffled body and a short low tail, no splash and no bubble rattle; short enough to repeat; a real recording, heavy, nothing bubbly.
+This one: a vintage film recording of a torpedo exploding (a big blast with rumble in it), muffled at 2 kHz, on a depth bomb's sub-bass boom: rougher and more 'explosion' than a, with more grit in it, 1.2 s.
+Edit: 1.20 s, the loudest 100 ms band −23.4 dB, peak −8.4 dBFS, −18.8 LUFS.
+
+### shot-depth-charge-r50-a — "barrelhits.wav" by j1987 + "Oil Drum Soft Impact.wav" by DeVern
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/j1987/sounds/178838/> (barrelhits.wav by j1987, CC0 1.0), <https://freesound.org/people/DeVern/sounds/524817/> (Oil Drum Soft Impact.wav by DeVern, CC0 1.0).
+Use: every Depth Charges volley (the rear `anti-sub` weapon, Act 4 from L23's waterline): a barrel rolling off the stern, 1 to 1.4 times a second (two barrels at L5); the ship's own fire, so often.
+Brief: a heavy barrel clank as the charge rolls off its rail: steel on steel, weighty and short, slightly muffled; the burst comes later (its own sound); a real recording, heavy, nothing bubbly.
+This one: a piece of a steel barrel slammed down (a hard metal clank and a smaller rebound 0.1 s later) slowed to 0.85, over an oil drum's soft hit slowed to 0.75 (its hollow boom ringing under the clank): a heavy barrel thrown off, 0.5 s.
+Edit: 0.50 s, the loudest 100 ms band −27.3 dB, peak −11.6 dBFS, −24.6 LUFS.
+
+### shot-depth-charge-r50-b — "hatchclose.wav" by Mihacappy + "Big robot footstep 005" by AudioPapkin
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/Mihacappy/sounds/828127/> (hatchclose.wav by Mihacappy, CC0 1.0), <https://freesound.org/people/AudioPapkin/sounds/815039/> (Big robot footstep 005 by AudioPapkin, CC0 1.0).
+Use: every Depth Charges volley (the rear `anti-sub` weapon, Act 4 from L23's waterline): a barrel rolling off the stern, 1 to 1.4 times a second (two barrels at L5); the ship's own fire, so often.
+Brief: a heavy barrel clank as the charge rolls off its rail: steel on steel, weighty and short, slightly muffled; the burst comes later (its own sound); a real recording, heavy, nothing bubbly.
+This one: a heavy metal hatch slamming shut slowed to 0.9, on a big robot's metal footstep (a deep steel stomp): a darker, more 'latch and weight' clunk than a, less ring, 0.55 s.
+Edit: 0.50 s, the loudest 100 ms band −27.0 dB, peak −15.1 dBFS, −26.2 LUFS.
+
+### depth-charge-burst-r50-a — "DepthBomb_03.aif" by ZeSoundResearchInc. + "NổLớnDướiNước1" by SieuAmThanh
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/ZeSoundResearchInc./sounds/147874/> (DepthBomb_03.aif by ZeSoundResearchInc., CC0 1.0), <https://freesound.org/people/SieuAmThanh/sounds/546957/> (NổLớnDướiNước1 by SieuAmThanh, CC0 1.0).
+Use: a depth charge bursting on its fuse (0.7-0.9 s after the roll-out, behind the ship), about once a second, two at L5; also on the `sub` layer above water.
+Brief: a heavy, low under-water thud: a pressure wave rather than a fireball, deep and muffled with a short low tail; no splash, no bubbles; a real recording, heavy, nothing bubbly.
+This one: a depth bomb's sub-bass boom with a real explosion low-passed at 500 Hz (its body only) over it: a deep, round pressure 'whumpf', the softest and lowest, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −23.4 dB, peak −5.0 dBFS, −18.1 LUFS.
+
+### depth-charge-burst-r50-b — "G45-14-Torpedo Explosion.wav" by craigsmith + "DepthBomb_02.aif" by ZeSoundResearchInc.
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/craigsmith/sounds/438716/> (G45-14-Torpedo Explosion.wav by craigsmith, CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147875/> (DepthBomb_02.aif by ZeSoundResearchInc., CC0 1.0).
+Use: a depth charge bursting on its fuse (0.7-0.9 s after the roll-out, behind the ship), about once a second, two at L5; also on the `sub` layer above water.
+Brief: a heavy, low under-water thud: a pressure wave rather than a fireball, deep and muffled with a short low tail; no splash, no bubbles; a real recording, heavy, nothing bubbly.
+This one: a vintage torpedo explosion slowed to 0.75 and muffled at 1.2 kHz, on a depth bomb's sub-bass boom: a deeper, rumbling 'thoom' with a rough edge, more weight than a, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −26.0 dB, peak −7.7 dBFS, −18.0 LUFS.
+
+### shot-torpedo-r50-a — "Torpedo launch.wav" by jobro
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Source: <https://freesound.org/people/jobro/sounds/35531/> (Torpedo launch.wav by jobro, CC-BY 3.0).
+Use: every Torpedo Pod shot (wing mount, Levels 11 on and Act 4; Rook's torpedo gun too): its chosen launch (shot-torpedo-r03-a) today.
+Brief: the chosen launch as it is, with its bubbly character cut (Q12): the source's 'water' is a phaser sweep over a low-passed launch, so the cut keeps the muffled launch and drops the phaser's gurgle; a real recording, heavy, nothing bubbly.
+This one: the same launch without the phaser: its author's dry version ('Torpedo launch', from which the chosen one was made by filtering and a phaser) low-passed at 550 Hz like the chosen one: the same muffled rush and thump, smooth, no warble, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −22.5 dB, peak −8.5 dBFS, −19.8 LUFS.
+
+### shot-torpedo-r50-b — "Torpedo launch underwater.wav" by jobro
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Source: <https://freesound.org/people/jobro/sounds/35530/> (Torpedo launch underwater.wav by jobro, CC-BY 3.0).
+Use: every Torpedo Pod shot (wing mount, Levels 11 on and Act 4; Rook's torpedo gun too): its chosen launch (shot-torpedo-r03-a) today.
+Brief: the chosen launch as it is, with its bubbly character cut (Q12): the source's 'water' is a phaser sweep over a low-passed launch, so the cut keeps the muffled launch and drops the phaser's gurgle; a real recording, heavy, nothing bubbly.
+This one: the chosen launch itself with the phaser's fast sweep and gurgle smoothed out of its spectrum (each frequency's level held steady over 90 ms): closest to the chosen file, a little duller, 1.0 s.
+Edit: 1.00 s, the loudest 100 ms band −22.5 dB, peak −8.2 dBFS, −19.0 LUFS.
+
+### special-sonar-r50-b — "Sonar_pings.ogg" by Peter_Gross + "submarine sonar.mp3" by Link-Boy
+
+Proposed (round 50), cut from the HQ previews by `tools/concept/audio/sfx_r50a.py`.
+Sources: <https://freesound.org/people/Peter_Gross/sounds/12677/> (Sonar_pings.ogg by Peter_Gross, CC0 1.0), <https://freesound.org/people/Link-Boy/sounds/414831/> (submarine sonar.mp3 by Link-Boy, CC0 1.0).
+Use: the Sonar Pulse call (the special, from L22's unlock; in water only, at most 4 charges, 1.5 s between pulses): with the teal ring sweeping the field in 0.5 s.
+Brief: a soft, heavy, low ping that fills the water, no bubbles, no pops; a = the chosen special-sonar-r04-a (a clean single ping, kept), b only if clearly heavier; a real recording, heavy, nothing bubbly.
+This one: a real 625 Hz active sonar ping (a long-range anti-submarine type) slowed to 0.85 (about 530 Hz, a lower and longer 'pinnng' than a's) over a heavy low sonar hit's thump and rumble: the same role as the chosen a, a deeper and weightier ping, 3.0 s.
+Edit: 3.00 s, the loudest 100 ms band −13.4 dB, peak −4.1 dBFS, −15.3 LUFS.
+
+### special-limit-r50-a — synthesized
+
+Proposed (round 50), synthesized by `tools/concept/audio/sfx_r50a.py` (sfx_r37.py's bell and glass voices).
+Use: the special row changing state at once as the ship crosses a waterline (greyed with `UNDER ICE` or `NO WATER`, or usable again; the row flashes once): a few times in Levels 23 and 28. A press on a greyed or empty special keeps the chosen denied buzz (special-denied-r08-a).
+Brief: a short soft UI chime (synthesized, never bubbly), the cooldown-ready chime's family but clearly 'changed', not 'ready'.
+This one: two soft bells falling, E6 then A5 80 ms later (the ready chime's two bells turned round): 'switched off', light, 0.53 s.
+Edit: 0.55 s, the loudest 100 ms band −22.0 dB, peak −14.0 dBFS, −22.4 LUFS.
+
+### special-limit-r50-b — synthesized
+
+Proposed (round 50), synthesized by `tools/concept/audio/sfx_r50a.py` (sfx_r37.py's bell and glass voices).
+Use: the special row changing state at once as the ship crosses a waterline (greyed with `UNDER ICE` or `NO WATER`, or usable again; the row flashes once): a few times in Levels 23 and 28. A press on a greyed or empty special keeps the chosen denied buzz (special-denied-r08-a).
+Brief: a short soft UI chime (synthesized, never bubbly), the cooldown-ready chime's family but clearly 'changed', not 'ready'.
+This one: one soft glass fifth an octave lower, C5-G5, muted at 2.5 kHz: a darker, rounder 'tonk' than a, 0.6 s.
+Edit: 0.60 s, the loudest 100 ms band −21.9 dB, peak −14.0 dBFS, −25.0 LUFS.

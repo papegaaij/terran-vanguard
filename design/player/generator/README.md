@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Generator
@@ -23,7 +23,7 @@ in [player](../README.md#power-budget).
 | Mk I "Spark" | 8 MW | starter | start |
 | Mk II "Arc" | 11 MW | 1 500 | act 1 |
 | Mk III "Fusion" | 16 MW | 4 000 | act 2 |
-| Mk IV "Tokamak" | 18 MW | 9 000 | act 4 |
+| Mk IV "Tokamak" | 20 MW | 9 000 | act 4 |
 | Mk V "Helix" | 22 MW | 18 000 | act 5 (Helix Dynamics tech, captured) |
 | Mk VI "Choir Core" | 27 MW | 32 000 | act 7 (Vrell tech) |
 <!-- /data -->
@@ -123,7 +123,7 @@ So the Mk III just carries the typical plan (16 of 16 at L27), the 18 MW Mk IV c
 asks for a choice (a power dial, or one fewer gun), which is the intended wall.
 
 **The Mk IV "Tokamak" note** (the open item of 2026-10-21: "to revisit when Act 4 is designed"). The
-user decided **20 MW** in round 48 (2026-10-22, J1); `data.yaml` still says 18 and changes in M8 part A. *Recommendation, accepted:
+user decided **20 MW** in round 48 (2026-10-22, J1); [data.yaml](data.yaml) says 20 since M8 part A (step A2). *Recommendation, accepted:
 raise it to **20 MW**.* Why: at 18 MW it is +2 over the Mk III for 9 000 cr and does not carry the nanites
 (3 MW), the act's heavy module; at 20 MW it is a real step (+4: the nanites, or the second Torpedo Pod
 pair, next to the full plan) and the Mk V "Helix" at 22 stays a step of +2 as the Mk III to IV was in
@@ -165,3 +165,6 @@ leave the nanites a luxury; rejected because a 3 MW module that no generator car
   15 fits one 1-MW item only. The Mk IV's 18 MW (Act 4) is a smaller step now; to revisit when Act 4 is
   designed (decided in round 48 (2026-10-22)). The weapons' [power dial](../README.md#power-budget) came with it.
 - 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): the Act 4 hand plan written (the anti-sub loadout's power on the Mk III, Mk IV 18 and Mk IV 20, the reference DPS 22–28, the visits' cash); recommendation: the Mk IV "Tokamak" gives **20 MW** (data unchanged at 18 until decided).
+- 2026-10-22 (M8 part A, step A2): the Mk IV "Tokamak" gives 20 MW in [data.yaml](data.yaml) (round 48, J1); the
+  balance plan buys it at the L27 visit (16 of 20 MW, see [balance-plan.yaml](../balance-plan.yaml)).
+- 2026-10-22 (M8 part A, step A2; pending the user's review in round 50): the Act 4 balance plan fits the free Sonar charge at L23 (the Airstrike is forbidden under water), keeps the beam fitted at L22 (the harpoon idle on the dry ice) and flies the loaner Bulwark at L27–28 (D7); it buys the Harpoon at L22 into the inventory, fits it at L23 and raises it to L3 there and L4 at L26 (the shop upgrades only a fitted item), the pressure hull at L24 and the Shield Mk III at L28 (the nanites stay out of the plan); planned levels from 22 without data earn a temporary budget(n) income (D8), removed in part I.

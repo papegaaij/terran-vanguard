@@ -1,14 +1,18 @@
 package vanguard.content;
 
 import static vanguard.content.SimSpecs.AIRSTRIKE;
+import static vanguard.content.SimSpecs.AUTO_REPAIR_NANITES;
+import static vanguard.content.SimSpecs.DECOY_FLARES;
 import static vanguard.content.SimSpecs.EMP_BURST;
 import static vanguard.content.SimSpecs.EVASIVE_THRUSTERS;
 import static vanguard.content.SimSpecs.ORBITAL_LANCE;
 import static vanguard.content.SimSpecs.PICKUP_MAGNET;
+import static vanguard.content.SimSpecs.PRESSURE_HULL;
 import static vanguard.content.SimSpecs.PULSE_CANNON;
 import static vanguard.content.SimSpecs.SALVAGE_SCANNER;
 import static vanguard.content.SimSpecs.SHIELD_OVERCHARGE;
 import static vanguard.content.SimSpecs.SMART_BOMB;
+import static vanguard.content.SimSpecs.SONAR_PULSE;
 import static vanguard.content.SimSpecs.TARGETING_COMPUTER;
 
 import java.util.List;
@@ -16,17 +20,21 @@ import java.util.function.Function;
 import vanguard.content.SimSpecs.FittedWeapon;
 import vanguard.sim.AirstrikeSpec;
 import vanguard.sim.Armament;
+import vanguard.sim.BulwarkSpec;
 import vanguard.sim.EmpSpec;
+import vanguard.sim.FlaresSpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.Hull;
 import vanguard.sim.LanceSpec;
 import vanguard.sim.Loadout;
 import vanguard.sim.Magnet;
+import vanguard.sim.NaniteSpec;
 import vanguard.sim.OverchargeSpec;
 import vanguard.sim.Plating;
 import vanguard.sim.ShieldModel;
 import vanguard.sim.ShipSpec;
 import vanguard.sim.SmartBombSpec;
+import vanguard.sim.SonarSpec;
 import vanguard.sim.SpecialSpec;
 import vanguard.sim.ThrusterSpec;
 import vanguard.sim.WeaponSpec;
@@ -141,7 +149,29 @@ final class LoadoutRules {
         return name.equals(PICKUP_MAGNET)
                 || name.equals(TARGETING_COMPUTER)
                 || name.equals(SALVAGE_SCANNER)
-                || name.equals(EVASIVE_THRUSTERS);
+                || name.equals(EVASIVE_THRUSTERS)
+                // M8 part A: the Pressure hull (no water drag) and the Auto-repair nanites.
+                || name.equals(PRESSURE_HULL)
+                || name.equals(AUTO_REPAIR_NANITES);
+    }
+
+    /**
+     * M8 part A: the Auto-repair nanites at {@code level} (1–2) from design/player/systems/data.yaml: a point every
+     * interval up to the cap's share of the plating, paused by a hit.
+     */
+    static NaniteSpec nanites(Content content, int level) {
+        SystemsData.Repair repair = named(content.systems().utility(), SystemsData.Utility::name, AUTO_REPAIR_NANITES)
+                .repair()
+                .orElseThrow(() -> new IllegalArgumentException(AUTO_REPAIR_NANITES + " has no repair numbers"));
+        return new NaniteSpec(repair.interval(level), repair.cap(), repair.pause());
+    }
+
+    /** M8 part A: whether the fitted Pressure hull removes the water's drag on the ship (its data's {@code drag}). */
+    static boolean pressureHull(Content content) {
+        return !named(content.systems().utility(), SystemsData.Utility::name, PRESSURE_HULL)
+                .hull()
+                .orElseThrow(() -> new IllegalArgumentException(PRESSURE_HULL + " has no hull numbers"))
+                .drag();
     }
 
     /**
@@ -246,6 +276,66 @@ final class LoadoutRules {
                 pattern.scaled(gun.scale(), muzzles));
     }
 
+    /**
+     * M8 part A: the Bulwark heavy drone in the escort slot (design/player/wingmen, Heavy drone "Bulwark") on {@code
+     * side}, starting the level with {@code armour}: its data's armour, size, hit box, speed, wing slot and draw-fire
+     * radius and share, and its cannon: one shell straight ahead from its nose at the gun's rate and damage, {@code
+     * anti-sub} as the data says (its shell's speed, box and muzzle are the art's, {@link #BULWARK_SHELL_SPEED}).
+     */
+    static BulwarkSpec bulwark(Content content, WingmanSpec.Side side, double armour) {
+        WingmenData.Bulwark bulwark = content.wingmen().bulwark();
+        WingmenData.BulwarkGun gun = bulwark.gun();
+        WeaponSpec cannon = new WeaponSpec(
+                        BULWARK_CANNON,
+                        BULWARK_CANNON,
+                        BULWARK_CANNON,
+                        WeaponSpec.Delivery.BOLT,
+                        false,
+                        gun.rate(),
+                        gun.damage(),
+                        BULWARK_SHELL_SPEED,
+                        BULWARK_SHELL,
+                        Double.POSITIVE_INFINITY,
+                        Double.POSITIVE_INFINITY,
+                        1,
+                        0,
+                        0,
+                        Math.PI,
+                        0,
+                        0,
+                        List.of(new WeaponSpec.Muzzle(0, BULWARK_MUZZLE, 0)),
+                        BULWARK_SHELL_SPEED,
+                        0,
+                        WeaponSpec.Mines.NONE)
+                .antiSub(gun.antiSub());
+        return new BulwarkSpec(
+                side,
+                Math.min(armour, bulwark.armour()),
+                bulwark.armour(),
+                bulwark.size().width(),
+                SimSpecs.hitbox(bulwark.hitbox()),
+                bulwark.speed(),
+                offset(bulwark.slot()),
+                cannon,
+                bulwark.draw().radius(),
+                bulwark.draw().share());
+    }
+
+    /** M8 part A: the Bulwark's cannon (its slug, vfx and sfx). */
+    static final String BULWARK_CANNON = "bulwark-cannon";
+
+    /**
+     * M8 part A: the Bulwark's shell, px/s: the data gives only the gun's rate and damage, so the speed is step A3's
+     * test cannon's (pending the user's review in round 50).
+     */
+    static final double BULWARK_SHELL_SPEED = 500;
+
+    /** M8 part A: the shell's hit box, the head of the art's 6×22 slug (tools/art/act4_gear.py, bulwark-shot). */
+    static final Hitbox BULWARK_SHELL = new Hitbox(6, 10);
+
+    /** M8 part A: the muzzle, px ahead of the Bulwark's centre (the art's muzzle light). */
+    static final double BULWARK_MUZZLE = 18;
+
     private static WingmanSpec.Offset offset(Point slot) {
         return new WingmanSpec.Offset(slot.x(), slot.y());
     }
@@ -256,7 +346,10 @@ final class LoadoutRules {
                 || name.equals(SMART_BOMB)
                 || name.equals(EMP_BURST)
                 || name.equals(ORBITAL_LANCE)
-                || name.equals(SHIELD_OVERCHARGE);
+                || name.equals(SHIELD_OVERCHARGE)
+                // M8 part A: the Sonar Pulse, and the Decoy Flares with the enemies' homing missiles.
+                || name.equals(SONAR_PULSE)
+                || name.equals(DECOY_FLARES);
     }
 
     /**
@@ -275,12 +368,49 @@ final class LoadoutRules {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("no special '" + name + "'"));
         SpecialSpec.Effect effect = effect(specials, name);
+        SpecialSpec.Setting setting = setting(specials, name);
         if (special.cooldownSpecial()) {
             return SpecialSpec.cooldown(
-                    name, specials.inputBuffer(), special.cooldown().orElseThrow(), specials.cooldownPickup(), effect);
+                            name,
+                            specials.inputBuffer(),
+                            special.cooldown().orElseThrow(),
+                            specials.cooldownPickup(),
+                            effect)
+                    .withSetting(setting);
         }
         int most = special.maxCharges().orElseThrow();
-        return new SpecialSpec(name, Math.min(charges, most), most, specials.inputBuffer(), effect);
+        return new SpecialSpec(name, Math.min(charges, most), most, specials.inputBuffer(), effect)
+                .withSetting(setting);
+    }
+
+    /**
+     * M8 part A (design/player/specials, Setting restrictions): where the special of this name works, from the specials
+     * data's {@code limits}: one the {@code underwater} setting forbids (the Airstrike, the Orbital Lance) not under
+     * water, one the {@code dry} setting forbids (the Sonar Pulse) only where there is water, the others anywhere.
+     */
+    static SpecialSpec.Setting setting(SpecialsData specials, String name) {
+        if (specials.forbids(java.util.Optional.of(SpecialsData.Setting.UNDERWATER))
+                .contains(name)) {
+            return SpecialSpec.Setting.NOT_UNDER_WATER;
+        }
+        if (specials.forbids(java.util.Optional.of(SpecialsData.Setting.DRY)).contains(name)) {
+            return SpecialSpec.Setting.WATER_ONLY;
+        }
+        return SpecialSpec.Setting.ANYWHERE;
+    }
+
+    /** M8 part A: the simulation's kind of the special of this name (a level's or section's list of forbidden ones). */
+    static SpecialSpec.Kind kind(String name) {
+        return switch (name) {
+            case AIRSTRIKE -> SpecialSpec.Kind.AIRSTRIKE;
+            case SMART_BOMB -> SpecialSpec.Kind.SMART_BOMB;
+            case EMP_BURST -> SpecialSpec.Kind.EMP;
+            case ORBITAL_LANCE -> SpecialSpec.Kind.LANCE;
+            case SHIELD_OVERCHARGE -> SpecialSpec.Kind.OVERCHARGE;
+            case SONAR_PULSE -> SpecialSpec.Kind.SONAR;
+            case DECOY_FLARES -> SpecialSpec.Kind.FLARES;
+            default -> throw new IllegalArgumentException("the special " + name + " does not fly yet");
+        };
     }
 
     /** What the special of this name does, from its block in design/player/specials/data.yaml. */
@@ -320,6 +450,17 @@ final class LoadoutRules {
             case SHIELD_OVERCHARGE -> {
                 SpecialsData.Overcharge overcharge = specials.overcharge();
                 yield new OverchargeSpec(overcharge.factor(), overcharge.seconds(), overcharge.bleed());
+            }
+            case SONAR_PULSE -> {
+                // M8 part A: the ring, the window and the repeat.
+                SpecialsData.Sonar sonar = specials.sonar();
+                yield new SonarSpec(sonar.ring(), sonar.seconds(), sonar.repeat());
+            }
+            case DECOY_FLARES -> {
+                // M8 part A: the fan of flares from the rear muzzle, their drift and burn, the repeat.
+                SpecialsData.Flares flares = specials.flares();
+                yield new FlaresSpec(
+                        flares.count(), flares.fan(), flares.speed(), flares.drift(), flares.burn(), flares.repeat());
             }
             default -> {
                 SpecialsData.Airstrike data = specials.airstrike();

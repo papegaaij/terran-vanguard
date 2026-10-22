@@ -248,6 +248,17 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "enemy-leviathan-cry-r47-b.ogg",
         "launch-rail-r47-b.ogg",
         "dome-hit-r49-b.ogg",
+        // M8 part A: round 50's proposals for the Act 4 arsenal (CC0/CC-BY Freesound HQ previews, CREDITS.md; the
+        // limit chime synthesized), their a variants until the user's pick, which may swap the file: the Harpoon
+        // Torpedoes' launch, run loop and hit, the Depth Charges' roll-out and burst, the special row's limit chime.
+        // The Sonar Pulse and the Decoy Flares play their chosen files (r04 a, r08 a, already final in assets/sfx); the
+        // Torpedo Pod keeps its chosen r03 a until round 50 picks its de-bubbled launch.
+        "shot-harpoon-r50-a.ogg",
+        "harpoon-run-r50-a.ogg",
+        "harpoon-hit-r50-a.ogg",
+        "shot-depth-charge-r50-a.ogg",
+        "depth-charge-burst-r50-a.ogg",
+        "special-limit-r50-a.ogg",
     )
 }
 

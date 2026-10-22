@@ -126,6 +126,8 @@ public final class LevelRenderer {
     private final ShipLooks shipLooks;
     /** Rook's craft, its flames, smoke, muzzle flash and eject pod (M5 part A). */
     private final WingmanLooks wingmanLooks;
+    /** M8 part A: the Act 4 systems: harpoons, depth charges, the sonar, the flares, the Bulwark. */
+    private final DeepWaterLooks deepWater;
     /** The flyers' drop shadows on the ground layer. */
     private final Shadows shadows;
 
@@ -309,6 +311,7 @@ public final class LevelRenderer {
         setPieces = new SetPiecePasses(flash, play, font, setPieceLooks, bossLooks, kraken, spire);
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
+        deepWater = new DeepWaterLooks(sprites, looks, weapons, water != null);
     }
 
     /**
@@ -396,6 +399,7 @@ public final class LevelRenderer {
         arsenal.restart();
         canyonLooks.restart();
         kinds.restart();
+        deepWater.restart();
     }
 
     /** M7 part C: the canyon's presentation beyond its collision lines (the level data's by default). */
@@ -410,6 +414,7 @@ public final class LevelRenderer {
      */
     public void stepped(Sortie sortie) {
         arsenal.stepped(sortie);
+        deepWater.stepped(sortie);
         kinds.burrowers(sortie).stepped(sortie);
         units.stepped(sortie);
         canyonLooks.stepped(sortie);
@@ -449,6 +454,7 @@ public final class LevelRenderer {
         underWater.step();
         bubbles.step();
         lowAir.step();
+        deepWater.stepEffects();
     }
 
     /** M5 part E: whether the level is over water: its kills and blasts burst on the water ({@link #surfaceWater()}). */
@@ -560,6 +566,8 @@ public final class LevelRenderer {
             boolean flashReduction,
             ScreenFlash screenFlash) {
         play.whiteFlash = flashReduction ? REDUCED_FLASH : 1;
+        // M8 part A: Rook's craft wears the hydro-kit under water (the ship's: PlayerPasses.hull).
+        wingmanLooks.underwater(sortie.underwater());
         play.heatTarget = ArsenalLooks.heatTarget(sortie);
         int piece = ArsenalLooks.heatPiece(play.heatTarget);
         play.heatPiece = piece >= 0 && piece < sortie.setPieceCount() ? sortie.setPiece(piece) : null;
@@ -778,8 +786,12 @@ public final class LevelRenderer {
             // M7 part E: a faint glint on the pickups the dust would hide.
             storm.drawPickupGlints(batch, sortie, alpha);
         }
+        // M8 part A: the harpoons' cables and motor lights under them.
+        deepWater.drawUnderShots(batch, sortie, alpha);
         player.drawShots(batch, sortie, alpha, false);
         Wingman rook = sortie.wingman().orElse(null);
+        // M8 part A: the Bulwark flies in his slot.
+        deepWater.drawBulwark(batch, sortie, alpha);
         if (rook != null) {
             wingmanLooks.draw(batch, rook, sortie.tick(), alpha, play.whiteFlash);
             if (storm != null) {
@@ -793,6 +805,8 @@ public final class LevelRenderer {
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         player.drawShots(batch, sortie, alpha, true);
+        // M8 part A: the depth charges' fuse lamps and the Decoy Flares.
+        deepWater.drawOverShots(batch, sortie, alpha);
         if (sortie.flying()) {
             player.drawMuzzles(batch, sortie, alpha, true);
             // M7 part A: the fields, the drones' lights, the beams, the overcharge's shell.
@@ -811,6 +825,8 @@ public final class LevelRenderer {
             wingmanLooks.drawMuzzle(batch, rook, weapons, sortie.wingmanMount(), alpha, false);
         }
         effects.draw(batch, scroll);
+        // M8 part A: the harpoons' impacts, the depth charges' bursts, the Bulwark's sparks and loss.
+        deepWater.drawEffects(batch, scroll);
         canyonLooks.draw(batch, scroll);
         // M5 part D: the lance above the air layer.
         loss.drawLance(batch, sortie, alpha);
@@ -822,6 +838,8 @@ public final class LevelRenderer {
         // M7 part A: the EMP Burst's ring, the Orbital Lance's targeting line and column.
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         arsenal.drawSpecials(batch, sortie, alpha);
+        // M8 part A: the Sonar Pulse's ring and contact brackets.
+        deepWater.drawSonar(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         setPieces.drawSetPieces(batch, sortie, alpha, seconds, true);
         if (overHull) {
@@ -1022,6 +1040,8 @@ public final class LevelRenderer {
         units.drawNavalSub(batch, sortie, alpha);
         player.drawUnderWater(batch, sortie, alpha);
         underWater.draw(batch, scroll);
+        // M8 part A: over water, the harpoons' cables, the depth charges' lamps and bursts under the surface.
+        deepWater.drawSub(batch, sortie, alpha, scroll);
     }
 
     /**
@@ -1037,7 +1057,7 @@ public final class LevelRenderer {
             Ship craft = sortie.ship();
             Shadows.draw(
                     batch,
-                    sprites.ship.get(craft.bank() + ShipSpec.HARD_BANK),
+                    player.hull(sortie).get(craft.bank() + ShipSpec.HARD_BANK),
                     Math.round(X0 + craft.renderX(alpha)),
                     Math.round(craft.renderY(alpha)),
                     Shadows.AIR_DX,
@@ -1048,6 +1068,7 @@ public final class LevelRenderer {
         if (rook != null) {
             wingmanLooks.drawShadow(batch, rook, alpha);
         }
+        deepWater.drawBulwarkShadow(batch, sortie, alpha);
         shuttles.drawShadows(batch, sortie, alpha);
         setPieces.drawSpireShadows(batch, sortie, alpha);
         shadows.end(batch);

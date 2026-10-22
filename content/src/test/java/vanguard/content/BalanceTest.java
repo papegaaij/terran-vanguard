@@ -59,8 +59,17 @@ import vanguard.sim.EnemySpec;
  */
 class BalanceTest {
     private static final Content CONTENT = ContentLoader.fromClasspath();
-    /** M7 part I: the shop the game runs (Act 3's hangar icons are all in, so it is the complete catalogue). */
-    private static final Catalogue CATALOGUE = Catalogue.of(CONTENT);
+    /**
+     * M7 part I: the shop the game runs (Act 3's hangar icons are all in, so it is the complete catalogue); M8 part A:
+     * the complete catalogue, the Act 4 items awaiting their icons ({@link Catalogue#AWAITING_ICONS}) included.
+     */
+    private static final Catalogue CATALOGUE = Catalogue.complete(CONTENT);
+
+    /**
+     * M8 part A (temporary, removed in M8 part I): from this level a planned level without its data yet earns
+     * budget(n) (design/systems/economy, the absolute typical haul) instead of its typical haul.
+     */
+    static final int FALLBACK_FROM = 22;
 
     private static final CampaignRules RULES = CampaignRules.of(CONTENT);
 
@@ -225,15 +234,22 @@ class BalanceTest {
             if (hangar.load() > hangar.output() + 1e-9) {
                 problems.add("load " + hangar.load() + " MW over the output " + hangar.output());
             }
-            double[] dps = dps(campaign.gear().loadout());
+            double water = plan.underwater().contains(level)
+                    ? CONTENT.europa().underwater().damage()
+                    : 1;
+            double[] dps = dps(campaign.gear().loadout(), water);
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
-            // level's typical haul; the fallback to budget(n) for a level without data is gone.
-            String key = CONTENT.levelKey(level)
-                    .filter(Unmapped::mapped)
-                    .orElseThrow(() -> new AssertionError("Level " + level + " has no (mapped) level data"));
+            // level's typical haul; M8 part A (temporary, until part I): an Act 4 level without its data earns
+            // budget(n).
+            Optional<String> key = CONTENT.levelKey(level).filter(Unmapped::mapped);
+            if (key.isEmpty() && level < FALLBACK_FROM) {
+                throw new AssertionError("Level " + level + " has no (mapped) level data");
+            }
             double budget = CONTENT.economy().budget().of(level);
-            int haul = (int) Math.rint(
-                    incomeFactor * TypicalHaul.of(CONTENT, key, difficulty).typical());
+            int haul = (int) Math.rint(incomeFactor
+                    * key.map(found ->
+                                    TypicalHaul.of(CONTENT, found, difficulty).typical())
+                            .orElse(budget));
             // Round 34, P3 = A: the typical player's grade bonus (a B) on top of the haul.
             int income = haul + (int) Math.rint(plan.gradeBonus() * haul);
             rows.add(new Row(
@@ -252,7 +268,7 @@ class BalanceTest {
                     dps[0] + dps[1],
                     Optional.ofNullable(CONTENT.enemyBasis().referenceDps().get(level)),
                     antiGround(campaign.gear().loadout()),
-                    escort(campaign.gear().loadout())));
+                    escort(campaign, water)));
             SaveGame after = campaign.save(Instant.EPOCH);
             save = next(
                     after,
@@ -287,7 +303,9 @@ class BalanceTest {
                                 save.escort().side(),
                                 save.escort().fitted(),
                                 save.escort().guns(),
-                                escortArmour)
+                                escortArmour,
+                                save.escort().flies(),
+                                save.escort().bulwark())
                         : save.escort(),
                 save.retriesLeft(),
                 save.grades(),
@@ -298,6 +316,14 @@ class BalanceTest {
 
     /** {forward single-target DPS, rear single-target DPS} of a loadout's weapons. */
     static double[] dps(Map<LoadoutSlot, Fitted> loadout) {
+        return dps(loadout, 1);
+    }
+
+    /**
+     * {forward single-target DPS, rear single-target DPS} of a loadout's weapons, M8 part A: a weapon without the
+     * {@code anti-sub} trait at {@code water} (the water's damage factor under water, else 1).
+     */
+    static double[] dps(Map<LoadoutSlot, Fitted> loadout, double water) {
         double front = 0;
         double rear = 0;
         for (LoadoutSlot slot :
@@ -307,7 +333,8 @@ class BalanceTest {
                 continue;
             }
             WeaponData weapon = CONTENT.weapon(fitted.item());
-            double single = singleTarget(weapon, weapon.levels().get(fitted.level() - 1));
+            double single =
+                    singleTarget(weapon, weapon.levels().get(fitted.level() - 1)) * (weapon.antiSub() ? 1 : water);
             if (slot == LoadoutSlot.REAR) {
                 rear += single;
             } else {
@@ -330,6 +357,18 @@ class BalanceTest {
         WingmenData.Gun gun = escortGun(fitted.item());
         WeaponData base = CONTENT.weapon(gun.base());
         return gun.scale() * singleTarget(base, base.levels().get(fitted.level() - 1));
+    }
+
+    /**
+     * M8 part A: the escort's single-target DPS in the next flight: Rook's ({@link #escort(Map)}) at {@code water}, or
+     * the Bulwark's cannon (anti-sub: full damage) when it flies (while Rook is missing, the loaner).
+     */
+    static double escort(Campaign campaign, double water) {
+        return campaign.escortFlight()
+                .map(flight -> flight.rook()
+                        ? escort(campaign.gear().loadout()) * water
+                        : CONTENT.wingmen().bulwark().gun().dps())
+                .orElse(escort(campaign.gear().loadout()) * water);
     }
 
     private static WingmenData.Gun escortGun(String id) {

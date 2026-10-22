@@ -72,6 +72,11 @@ final class PlayerPasses {
     private final CanyonLooks canyonLooks;
     /** M5 part E: whether the level is over water: its torpedoes run under it ({@link #runsUnder}). */
     private final boolean overWater;
+    /**
+     * M8 part A: the Stormhawk's hydro-kit banking frames ({@code ship-hydro_0..4}, tools/art/act4_gear.py; the same
+     * camera and mounts as {@code ship_0..4}), drawn whenever the medium is under water; the plain hull without them.
+     */
+    private final Array<AtlasRegion> hydroHull;
 
     PlayerPasses(
             Sprites sprites,
@@ -93,6 +98,12 @@ final class PlayerPasses {
         this.arsenal = arsenal;
         this.canyonLooks = canyonLooks;
         this.overWater = overWater;
+        hydroHull = sprites.has("ship-hydro") ? sprites.frames("ship-hydro") : sprites.ship;
+    }
+
+    /** M8 part A: the ship's hull frames now: the hydro-kit's under water, else the plain hull. */
+    Array<AtlasRegion> hull(Sortie sortie) {
+        return sortie.underwater() ? hydroHull : sprites.ship;
     }
 
     /**
@@ -102,7 +113,7 @@ final class PlayerPasses {
      */
     void drawShip(SpriteBatch batch, Sortie sortie, float alpha, float shieldShimmer) {
         Ship craft = sortie.ship();
-        TextureRegion hull = sprites.ship.get(craft.bank() + ShipSpec.HARD_BANK);
+        TextureRegion hull = hull(sortie).get(craft.bank() + ShipSpec.HARD_BANK);
         float x = Math.round(X0 + craft.renderX(alpha));
         float y = Math.round(craft.renderY(alpha));
         // M7 part A: a dash's afterimages and the drones under the hull.
@@ -158,7 +169,8 @@ final class PlayerPasses {
                 flash.beginRecolour(batch, look.recolour, WeaponLooks.RECOLOUR);
             }
             double x = shot.renderX(alpha);
-            double y = shot.renderY(alpha);
+            // M8 part A: a sprite whose round is off its centre (the Bulwark's slug with its wake).
+            double y = shot.renderY(alpha) + look.shotDy;
             switch (shot.weapon().delivery()) {
                 case DROPPED ->
                     drawScaled(batch, sprite, x, y, 1 - (1 - BOMB_LANDING_SCALE) * (float) shot.airProgress(alpha));
@@ -169,7 +181,8 @@ final class PlayerPasses {
                             x,
                             y,
                             1 + SHELL_ARC_SCALE * (float) (shot.arc() * Math.sin(Math.PI * shot.airProgress(alpha))));
-                case MINE -> drawCentred(batch, sprite, x, y);
+                // M8 part A: a depth charge's drum (its fuse lamp is DeepWaterLooks').
+                case MINE, DEPTH_CHARGE -> drawCentred(batch, sprite, x, y);
                 case BOLT, HOMING, TURRET, TORPEDO -> {
                     double left = shot.rangeLeft();
                     if (left < FADE_SHARE) {
@@ -257,7 +270,8 @@ final class PlayerPasses {
         boolean any = false;
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
-            if (!runsUnder(shot)) {
+            // M8 part A: a depth charge sinks: no lit back over the chop.
+            if (!runsUnder(shot) || shot.weapon().delivery() == WeaponSpec.Delivery.DEPTH_CHARGE) {
                 continue;
             }
             if (!any) {
@@ -274,9 +288,14 @@ final class PlayerPasses {
         }
     }
 
-    /** Whether a shot runs under the water and is drawn in the {@code sub} pass (a torpedo over water). */
-    private boolean runsUnder(Shot shot) {
-        return overWater && shot.weapon().delivery() == WeaponSpec.Delivery.TORPEDO;
+    /**
+     * Whether a shot runs under the water and is drawn in the {@code sub} pass (a torpedo over water; M8 part A: a
+     * depth charge, which drops through the surface).
+     */
+    boolean runsUnder(Shot shot) {
+        return overWater
+                && (shot.weapon().delivery() == WeaponSpec.Delivery.TORPEDO
+                        || shot.weapon().delivery() == WeaponSpec.Delivery.DEPTH_CHARGE);
     }
 
     /** M5 part E: the torpedoes' bodies in the {@code sub} pass, under the water, fading with their range. */

@@ -71,6 +71,7 @@ public final class DesktopLauncher {
                 options.debugFit(),
                 options.level(),
                 options.actEnd(),
+                options.underwaterFrom(),
                 options.benchSeconds(),
                 saves,
                 scoreFile(options, settingsFile.path()),

@@ -104,6 +104,7 @@ class DebugRunTest {
                 "--escort rook:missiles:3,side=right",
                 "--escort none --level 9",
                 "--act-end",
+                "--medium underwater@10",
                 "--start level",
                 "--bench 3",
                 "--bench 3 --start title",

@@ -3,15 +3,19 @@ package vanguard.content;
 import java.util.List;
 import java.util.Optional;
 import vanguard.sim.Armament;
+import vanguard.sim.BulwarkSpec;
 import vanguard.sim.EnemySpec;
 import vanguard.sim.Hitbox;
 import vanguard.sim.LevelScript;
 import vanguard.sim.Loadout;
 import vanguard.sim.Magnet;
+import vanguard.sim.MediumSpec;
+import vanguard.sim.NaniteSpec;
 import vanguard.sim.PickupType;
 import vanguard.sim.Road;
 import vanguard.sim.Rules;
 import vanguard.sim.SetPieceSpec;
+import vanguard.sim.SpecialLimits;
 import vanguard.sim.SpecialSpec;
 import vanguard.sim.ThrusterSpec;
 import vanguard.sim.WeaponSpec;
@@ -29,13 +33,13 @@ import vanguard.sim.WingmanSpec;
  * level's script), {@link WaveRules} (air waves), {@link GroundRules} (ground units, destructibles,
  * cranes), {@link BossRules} (set pieces and bosses), {@link UnitRules} (an enemy unit) and {@link
  * ChainRules} (a segment chain) — next to the parts' rules ({@code MarsRules}, {@code TerrainRules},
- * {@code SiegeRules}, {@code StormRules}, {@code FoundryRules}, …).
+ * {@code SiegeRules}, {@code StormRules}, {@code FoundryRules}, …) and (M8 part A) {@link WaterRules} (the medium and the special limits).
  */
 public final class SimSpecs {
     /** The starter front gun's slug. */
     public static final String PULSE_CANNON = "pulse-cannon";
 
-    /** The utility modules the simulation flies (design/player/systems). */
+    /** The utility modules the simulation flies (design/player/systems); M8 part A: the hull and the nanites too. */
     public static final String PICKUP_MAGNET = "Pickup magnet";
 
     public static final String TARGETING_COMPUTER = "Targeting computer";
@@ -58,6 +62,16 @@ public final class SimSpecs {
     public static final String ORBITAL_LANCE = "Orbital Lance";
 
     public static final String SHIELD_OVERCHARGE = "Shield Overcharge";
+
+    /** M8 part A: the Sonar Pulse and the Decoy Flares (design/player/specials). */
+    public static final String SONAR_PULSE = "Sonar Pulse";
+
+    public static final String DECOY_FLARES = "Decoy Flares";
+
+    /** M8 part A: the Pressure hull and the Auto-repair nanites (design/player/systems). */
+    public static final String PRESSURE_HULL = "Pressure hull";
+
+    public static final String AUTO_REPAIR_NANITES = "Auto-repair nanites";
 
     private SimSpecs() {}
 
@@ -169,7 +183,51 @@ public final class SimSpecs {
         return LoadoutRules.wingman(content, gunId, level, side, armour);
     }
 
-    /** Whether the simulation flies the special of this name; the Decoy Flares follow with the homing projectiles. */
+    /**
+     * M8 part A: the Bulwark heavy drone in the escort slot (design/player/wingmen) on {@code side}, starting the level
+     * with {@code armour} (see {@link LoadoutRules#bulwark}).
+     */
+    public static BulwarkSpec bulwark(Content content, WingmanSpec.Side side, double armour) {
+        return LoadoutRules.bulwark(content, side, armour);
+    }
+
+    /** M8 part A: the Auto-repair nanites at {@code level} (1–2) from design/player/systems/data.yaml. */
+    public static NaniteSpec nanites(Content content, int level) {
+        return LoadoutRules.nanites(content, level);
+    }
+
+    /** M8 part A: whether the Pressure hull removes the water's drag on the ship (design/player/systems/data.yaml). */
+    public static boolean pressureHull(Content content) {
+        return LoadoutRules.pressureHull(content);
+    }
+
+    /** M8 part A: the under-water rules (design/world/europa/data.yaml, see {@link WaterRules#rules}). */
+    public static MediumSpec.Rules waterRules(Content content) {
+        return WaterRules.rules(content);
+    }
+
+    /** M8 part A: the level's medium with its waterlines at its sections' starts (see {@link WaterRules#medium}). */
+    public static MediumSpec medium(Content content, LevelData level) {
+        return WaterRules.medium(content, level);
+    }
+
+    /**
+     * M8 part A, the debug option {@code --medium underwater[@<s>]}: under water from {@code atSeconds} on the level
+     * clock (see {@link WaterRules#underwaterFrom}); give it to a level's script with {@code toBuilder().medium(..)}.
+     */
+    public static MediumSpec underwaterFrom(Content content, double atSeconds) {
+        return WaterRules.underwaterFrom(content, atSeconds);
+    }
+
+    /** M8 part A: the level's and its sections' forbidden specials (see {@link WaterRules#specialLimits}). */
+    public static SpecialLimits specialLimits(Content content, LevelData level) {
+        return WaterRules.specialLimits(content, level);
+    }
+
+    /**
+     * Whether the simulation flies the special of this name; M8 part A: the Sonar Pulse and the Decoy Flares too (the
+     * flares decoy the enemies' homing missiles).
+     */
     public static boolean fliesSpecial(String name) {
         return LoadoutRules.fliesSpecial(name);
     }

@@ -37,6 +37,13 @@ public final class Shot implements Hashed {
     private int airTicks;
     /** The share of the full lob it flies, 0..1: its arc's height; 1 for a full lob or a bomb. */
     private double arc = 1;
+    /**
+     * M8 part A: its speed factor, fixed at its spawn (the water's bullet speed, a depth charge's roll-out); 1 in the
+     * air.
+     */
+    private double speedFactor = 1;
+    /** M8 part A: how far it flies, px: its weapon's range, under water a torpedo's longer run or a lance's reach. */
+    private double range;
 
     /** A bolt, a homing missile, a mine or a torpedo leaving (x, y) at {@code angle}. */
     void fire(WeaponSpec spec, int mountIndex, double startX, double startY, double angle) {
@@ -87,6 +94,22 @@ public final class Shot implements Hashed {
         struckCount = 0;
         target = -1;
         arc = 1;
+        speedFactor = 1;
+        range = spec.range();
+    }
+
+    /**
+     * M8 part A (design/world/europa, Under water rules): the water's factors on this shot, just fired: its damage
+     * times {@code damageFactor}, its speed times {@code speedFactor} (its velocity now and its acceleration's), its
+     * range times {@code rangeFactor} and at most {@code rangeLimit} px. Called once per shot, only under water (or
+     * easing out of it).
+     */
+    void soak(double damageFactor, double speedFactor, double rangeFactor, double rangeLimit) {
+        damage *= damageFactor;
+        this.speedFactor = speedFactor;
+        vx *= speedFactor;
+        vy *= speedFactor;
+        range = Math.min(range * rangeFactor, rangeLimit);
     }
 
     /** One step of straight flight; an accelerating missile speeds up along its heading. */
@@ -107,10 +130,10 @@ public final class Shot implements Hashed {
     /** Its speed now, px/s: an accelerating missile's grows from the weapon's speed to its end speed. */
     double speed() {
         if (weapon.accelSeconds() <= 0) {
-            return weapon.speed();
+            return weapon.speed() * speedFactor;
         }
         double share = Math.min(1, ticks * SimStep.SECONDS / weapon.accelSeconds());
-        return weapon.speed() + (weapon.endSpeed() - weapon.speed()) * share;
+        return (weapon.speed() + (weapon.endSpeed() - weapon.speed()) * share) * speedFactor;
     }
 
     /**
@@ -126,6 +149,23 @@ public final class Shot implements Hashed {
             y += vy * left * SimStep.SECONDS;
         }
         ticks++;
+    }
+
+    /**
+     * M8 part A: one step of a depth charge: it drifts as a mine does ({@link #drift}), then sinks with the ground,
+     * which scrolls down by {@code scroll}.
+     */
+    void sink(double scroll) {
+        boolean drifting = ticks * SimStep.SECONDS < weapon.mines().driftSeconds();
+        drift();
+        if (!drifting) {
+            y -= scroll;
+        }
+    }
+
+    /** M8 part A: whether a depth charge's fuse has run: it bursts now. */
+    boolean fused() {
+        return ticks >= SimStep.ticks(weapon.mines().fuseSeconds());
     }
 
     /** Whether a mine has armed: it bursts when an enemy comes close. */
@@ -227,7 +267,17 @@ public final class Shot implements Hashed {
         if (weapon.delivery() == WeaponSpec.Delivery.HOMING || weapon.delivery() == WeaponSpec.Delivery.MINE) {
             return ticks * SimStep.SECONDS >= weapon.lifetimeSeconds();
         }
-        return travelled >= weapon.range();
+        return travelled >= range;
+    }
+
+    /** M8 part A: how far it flies (or a torpedo runs, or a homing shot seeks), px; under water as soaked. */
+    double range() {
+        return range;
+    }
+
+    /** M8 part A: its speed factor, fixed at its spawn; 1 in the air. */
+    public double speedFactor() {
+        return speedFactor;
     }
 
     void lock(int serial) {
@@ -256,6 +306,10 @@ public final class Shot implements Hashed {
         }
         for (int i = 0; i < struckCount; i++) {
             hash.add(struck[i]);
+        }
+        if (speedFactor != 1 || range != weapon.range()) {
+            // M8 part A: only a shot fired in the water, so the other levels hash as before.
+            hash.add(speedFactor).add(range);
         }
     }
 
@@ -313,10 +367,10 @@ public final class Shot implements Hashed {
     /** The share of a bolt's range that is left, 1 for one that flies to the screen edge. */
     public double rangeLeft() {
         if ((weapon.delivery() != WeaponSpec.Delivery.BOLT && weapon.delivery() != WeaponSpec.Delivery.TURRET)
-                || Double.isInfinite(weapon.range())) {
+                || Double.isInfinite(range)) {
             return 1;
         }
-        return Math.max(0, 1 - travelled / weapon.range());
+        return Math.max(0, 1 - travelled / range);
     }
 
     /** Position between the previous and the current step; {@code alpha} in [0, 1]. */

@@ -21,7 +21,8 @@ import vanguard.content.Difficulty;
  * @param unlocks shop items unlocked ahead of their normal unlock (data cores, story)
  * @param specials charges per special
  * @param armour the current armour points (repair is not automatic)
- * @param escort the escort slot: Rook, his guns and his armour (format version 3)
+ * @param escort the escort slot: Rook, his guns and his armour (format version 3); the Bulwark and the slot's choice
+ *     (format version 6, M8 part A)
  * @param bays the utility bays bought in the hangar, 0 or 1 (format version 4, M7 part A): the third
  *     bay, whose slot {@code UTILITY_3} holds a module only once it is bought
  * @param retriesLeft retries left in the next level on hard; empty where retries are unlimited
@@ -166,17 +167,35 @@ public record SaveGame(
      * @param fitted the id of his fitted gun, one of {@code guns}; none before he joins
      * @param guns every gun he owns with its level, the fitted one included
      * @param armour his current armour (repair is not automatic); 0 after an ejection
+     * @param flies format version 6 (M8 part A): who the player chose for the slot, {@code rook} or {@code bulwark}
+     * @param bulwark format version 6 (M8 part A): the Bulwark heavy drone, {@code owned} and its {@code armour}
      */
-    public record EscortSlot(boolean hired, String side, Optional<String> fitted, List<Fitted> guns, double armour) {
+    public record EscortSlot(
+            boolean hired,
+            String side,
+            Optional<String> fitted,
+            List<Fitted> guns,
+            double armour,
+            String flies,
+            BulwarkSlot bulwark) {
         /** Before Rook joins, as a version 2 save is migrated (his armour as he will join). */
         public static final EscortSlot NOT_HIRED =
                 new EscortSlot(false, SaveFormat.ESCORT_SIDE, Optional.empty(), List.of(), SaveFormat.ESCORT_ARMOUR);
 
+        /** The slot before format version 6: Rook chosen, no Bulwark owned. */
+        public EscortSlot(boolean hired, String side, Optional<String> fitted, List<Fitted> guns, double armour) {
+            this(hired, side, fitted, guns, armour, SaveFormat.ESCORT_FLIES, BulwarkSlot.NOT_OWNED);
+        }
+
         public EscortSlot {
             Objects.requireNonNull(fitted, "fitted");
+            Objects.requireNonNull(bulwark, "bulwark");
             guns = List.copyOf(guns);
             if (!side.equals("left") && !side.equals("right")) {
                 throw new IllegalArgumentException("invalid escort: side " + side);
+            }
+            if (!flies.equals("rook") && !flies.equals("bulwark")) {
+                throw new IllegalArgumentException("invalid escort: flies " + flies);
             }
             if (!(armour >= 0)) {
                 throw new IllegalArgumentException("invalid escort: armour " + armour);
@@ -191,6 +210,23 @@ public record SaveGame(
             }
             if (guns.stream().map(Fitted::item).distinct().count() != guns.size()) {
                 throw new IllegalArgumentException("invalid escort: a gun owned twice in " + guns);
+            }
+        }
+    }
+
+    /**
+     * Format version 6 (M8 part A): the Bulwark heavy drone in the escort slot's inventory.
+     *
+     * @param owned it was bought
+     * @param armour its current armour; its full armour while not owned
+     */
+    public record BulwarkSlot(boolean owned, double armour) {
+        /** No Bulwark bought, as a version 5 save is migrated (its full armour frozen as M8 part A defined it). */
+        public static final BulwarkSlot NOT_OWNED = new BulwarkSlot(false, SaveFormat.BULWARK_ARMOUR);
+
+        public BulwarkSlot {
+            if (!(armour >= 0)) {
+                throw new IllegalArgumentException("invalid Bulwark: armour " + armour);
             }
         }
     }

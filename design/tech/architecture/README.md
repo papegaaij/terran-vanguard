@@ -195,6 +195,25 @@ first entry of a part's model list is the starter (price 0, `start`).
   `side` (px to its bay's side), `lag` (s it follows the ship with) and `fire: back` (straight back) instead of
   `orbit`, `period` and `converge`; its bay is a wing `pod` with the `rear` trait. Step G4 maps the trail station
   (`RetreatRules.trail` → `DroneSpec.trail`), so `SimSpecs.flies` is true for it.
+  M8 part A (Act 4's anti-sub pair, round 48; loaded and checked in step A2 by content's `WeaponData`, the
+  simulation's specs in step A1, mapped in step A4): the trait **`anti-sub`** (`WeaponData.antiSub`) keeps a weapon's
+  full damage under water (see *Europa*). The [Harpoon Torpedoes](../../player/weapons/harpoon-torpedoes/README.md)
+  are a front `hits: anti-sub` torpedo (fired from the nose) with **`splash`** (a share: a hit blasts its level's
+  `blast` radius for that share of its damage on the others there, not on the struck target; only a torpedo's, every
+  level and the overdrive with a `blast`). **`hits: depth-charge`** (the [Depth
+  Charges](../../player/weapons/depth-charges/README.md), `WeaponData.DEPTH_CHARGE`) has one `speed` (px/s backwards
+  at the roll-out), a `size` and a `drift` (s the roll-out decays to a hover over) and no `range` or `lifetime`; every
+  level and the overdrive add a **`fuse`** (s from the launch to the burst; only a depth charge's) and a `blast` (the
+  burst radius); its tables are rendered by `tools/sync_tables.py`'s depth-charge rows. `notes.vfx` overrides the
+  README's *Projectile family* cell (the round-48 sheets).
+- **Europa** (`world/europa/data.yaml`, M8 part A, `EuropaData`): the **`underwater`** rules a level or section with
+  `medium: underwater` flies by: `bullet_speed` (every bullet's speed at its spawn), `acceleration` (the drag: the
+  ship's, Rook's and the Bulwark's acceleration and braking), `damage` (a weapon without `anti-sub`, after
+  `anti-ground`'s ×2; not specials, not the enemy's damage), `reach` (the share of the play field's height the
+  `reach_weapons` reach) with `reach_weapons` (beams or lasers that fly to the screen's edge), `torpedo_range` with
+  `torpedo_weapons` (each `anti-sub`), `ease` (s the factors ease over at a waterline, for new projectiles) and
+  `hydro_kit` (the level whose hangar visit fits the hydro-kit, its one-off notice; Act 4). The README's *Under water
+  rules* numbers table is rendered from it (`underwater`).
 - **Enemy** (`enemies/<category>/<slug>/data.yaml`): the stat block of the
   [enemies](../../enemies/README.md#stat-block-template) template: `name`, `faction`, `layer`,
   `tier`, `size`, `hitbox`, `parts` (`single` or `multi`: a multi-part unit lists its
@@ -1199,6 +1218,13 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   only in a phase listing that attack), `Eruption` and `DebrisFlow` (the time by phase index, 0 for none). An act's
   **`next_act`** (`act`, `name`, `setting`: the act after the release's last, not built yet, as the release's end and
   the hangar name it; `ActData.NextAct.comingSoon()`, `hangarLine()`).
+- **Level, M8 part A** (Act 4's medium and special limits; loaded and checked in step A2, mapped in step A4): an
+  optional **`medium`** (`air`, the default, or `underwater`: the play plane is under water and Europa's rules apply)
+  on the level and on a section (a section's own, else the level's: `LevelData.mediumOf`; a section whose medium
+  differs from the one before it is a waterline at its start), only from Act 4's first level on; an optional
+  **`special_limits`** (the specials forbidden, by their slugs, `orbital-lance`) on the level and on a section,
+  replacing its setting's list from the specials' `limits` (a section's own, else the level's:
+  `LevelData.forbiddenSpecials`); every special named there must be in a setting's list (its reason word).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the
@@ -1289,7 +1315,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   after the last hit; `bar_fade`, 0.3 s) and the Salvage scanner's `salvage` (`bonus`, one share
   per level: `[0.1, 0.2]`) and (M7 part A) the Evasive thrusters' `dash` (`distance` px, `seconds`,
   `invulnerable` s and `cooldown` s from its start, `double_tap` s between the first press's release
-  and the second press)); specials (`input_buffer` (s a press waits
+  and the second press); M8 part A: the Auto-repair nanites' `repair` (`interval`, s per armour point, one per level;
+  `cap`, the share of the plating's maximum it repairs up to; `pause`, s a hit pauses it) and the Pressure hull's
+  `hull` (`drag: false`: no under-water drag)); specials (`input_buffer` (s a press waits
   while the special is busy), `cooldown_pickup` (M7 part A: s a special charge pickup takes off a
   cooldown special's running cooldown), `specials` with `name`, `unlock` and either `charge_price`,
   `max_charges` and optional `free_charges` (given once at the unlock) or (M7 part A, a cooldown
@@ -1301,7 +1329,11 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `repeat` (s); M7 part A: the `emp` block (`ring` s, `stun` s for a `machine` and a `vrell` unit,
   `repeat` s), the `orbital_lance` block (`lock` s, `width` px, `seconds`, `fade` s, `follow` px/s,
   `dps`, `boss_part` `dps` and `cap`, `repeat` s, the call's `radio`) and the `overcharge` block
-  (`factor` on the shield's capacity, `seconds`, `bleed` s)). Each model also has `name`, `price` and
+  (`factor` on the shield's capacity, `seconds`, `bleed` s); M8 part A: the `sonar` block (`ring` s, `seconds` a
+  pulse lasts, `repeat` s), the `flares` block (`count`, `fan` °, `speed` px/s, `drift` s, `burn` s, `repeat` s) and
+  the **`limits`** (the setting restrictions: per `setting`, `underwater` or `dry` (neither under water nor a `water:
+  true` level), the specials it `forbids` by name and the HUD's `reason` word; a special is in at most one setting,
+  `SpecialsData.forbidden`/`reason`)). Each model also has `name`, `price` and
   `available`.
 - **Player** (`player/data.yaml`): `availability`, `pickup_seconds`, `pickup_drift_speed`, `pickups` (salvage
   credits, overdrive `levels` and `seconds`, shield cell `shield_percent`, armour patch
@@ -1372,7 +1404,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `armour`), migrated from version 2; version 4 (M7 part A, Q1 = a) adds `bays` (the utility bays
   bought, 0 or 1), migrated from version 3 with 0; version 5 (the power dial, 2026-10-21) adds an item's
   optional `power` (its power setting, 1 … `level`, written only below full power; a missing one is full
-  power), migrated from version 4 unchanged. M7 part B (L.6 of round 36; a default pending the
+  power), migrated from version 4 unchanged; version 6 (M8 part A) adds the escort's `flies` (`rook` or `bulwark`,
+  the slot's choice) and `bulwark` (`owned`, `armour`), migrated from version 5 with `rook` and no Bulwark at its full
+  120. M7 part B (L.6 of round 36; a default pending the
   user's review in round 38): the story flag **`act-intro:N`** records act N's intro as shown (set
   whenever a briefing opens an act); the version 3 migration adds `act-intro:1`, and `act-intro:2` from
   Level 08 on (the release had Acts 1–2), never `act-intro:3`; Continue on a save whose next level
@@ -1382,7 +1416,8 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   level), `side` (a new campaign's), `armour`, `size`, `hitbox`, `muzzle` (his one gun's muzzle,
   px from the sprite's top left), `speed`, `acceleration_seconds`,
   `min_distance`, `edge_gap`, `ram_damage`, `launch_warning` (share of his armour), `glide_seconds`,
-  `swap_seconds`, `formations` (`wing`, `wide`, `trail`: `[x, y]` offsets from the player's centre,
+  `swap_seconds`, M8 part A: `missing` (`after`, the level he is shot down at the end of, the story flag
+  `rook-missing` from its win; `back`, the level he flies again from), `formations` (`wing`, `wide`, `trail`: `[x, y]` offsets from the player's centre,
   y down, x mirrored on the left side), `flank_distance`, `reaction_seconds`, `dodge` (`interval`,
   `look_ahead`, `clearance` (also his gap to the air enemies' bodies), `step`, `reacts` (the share
   of the predicted bullets he reacts to, each decided once by his own seeded generator)), `cone` (° full width), `range`, `recent_hit_seconds`, `eject`
@@ -1393,7 +1428,10 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `rook-armour` with `below` (share), `rook-ejects`, `kill-streak` with `kills` and `seconds`,
   `overdrive`), the portrait's `expression`, optional `shout`, and the variant `lines`; M7 part G: the rear wave's
   optional `top_lines`, its variants in a reversed section, where behind is the top of the screen). His repair
-  cost is the difficulty's `repair_cost`.
+  cost is the difficulty's `repair_cost`. M8 part A: **`bulwark`**, the Bulwark heavy drone (`armour`, `size`,
+  `hitbox`, `speed`, `slot` (`[x, y]`, its fixed wing slot on the escort's side), `gun` (`rate`, `damage`,
+  `anti_sub`), `draw` (`radius` px, `share` of the enemy's aimed bullets it draws), `price`, `available`, `repair` cr
+  per point on every difficulty).
 
 ### Presentation (`game`)
 

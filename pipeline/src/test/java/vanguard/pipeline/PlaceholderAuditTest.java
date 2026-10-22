@@ -69,6 +69,11 @@ class PlaceholderAuditTest {
                     + " from CC0/CC-BY Freesound originals (CREDITS.md) by tools/concept/audio/sfx_r46j.py and"
                     + " sfx_r46k.py";
 
+    private static final String ROUND_50 =
+            "M8 part A: round 50's proposals for the Act 4 arsenal, their a variants until the user's pick (the"
+                    + " Freesound HQ previews of CC0/CC-BY sounds, CREDITS.md, by tools/concept/audio/sfx_r50a.py; the"
+                    + " limit chime synthesized), to be rebuilt from the originals once picked";
+
     private static final String ROUND_47 =
             "round 47's and 49's picks (user 2026-10-22): the Herald's song, the Leviathan's cry, the launch rail"
                     + " and the domes' hit, the concept files cut from the Freesound previews of CC0/CC-BY sounds"
@@ -222,6 +227,13 @@ class PlaceholderAuditTest {
             Map.entry("sfx/enemy-leviathan-cry-r47-b.ogg", ROUND_47),
             Map.entry("sfx/launch-rail-r47-b.ogg", ROUND_47),
             Map.entry("sfx/dome-hit-r49-b.ogg", ROUND_47),
+            // M8 part A: round 50's proposals, their a variants until the user's pick
+            Map.entry("sfx/shot-harpoon-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/harpoon-run-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/harpoon-hit-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/shot-depth-charge-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/depth-charge-burst-r50-a.ogg", ROUND_50),
+            Map.entry("sfx/special-limit-r50-a.ogg", ROUND_50),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

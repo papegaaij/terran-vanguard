@@ -127,6 +127,76 @@ final class HitPasses {
     }
 
     /**
+     * M8 part A (design/player/wingmen, Heavy drone "Bulwark"): the enemy bullets, armed mines and homing missiles
+     * that touch the Bulwark burst on it, and an {@code air} enemy touching it hurts it once per contact by its contact
+     * damage (a rammer destroyed by ramming is destroyed, paying as the player's kills). Default pending the user's
+     * review: the bosses' beams, cones, vents and strikes pass it.
+     */
+    void hitBulwark(Bulwark bulwark) {
+        if (bulwark.destroyed()) {
+            return;
+        }
+        Hull hull = bulwark.hull();
+        double x = bulwark.x();
+        double y = bulwark.y();
+        Pool<EnemyBullet> bullets = force.bullets();
+        for (int i = bullets.size() - 1; i >= 0; i--) {
+            EnemyBullet bullet = bullets.get(i);
+            if (hull.overlaps(x, y, EnemyGun.BULLET, bullet.x(), bullet.y())) {
+                bullets.free(i);
+                if (bulwark.hit(bullet.damage(), events)) {
+                    return;
+                }
+            }
+        }
+        Pool<Mine> mines = force.mines();
+        for (int i = mines.size() - 1; i >= 0; i--) {
+            Mine mine = mines.get(i);
+            if (mine.armed() && hull.overlaps(x, y, EnemyGun.MineSpec.BOX, mine.x(), mine.y())) {
+                double damage = mine.gun().damage();
+                events.add(SimEvents.Type.MINE_BURST, mine.x(), mine.y());
+                mines.free(i);
+                if (bulwark.hit(damage, events)) {
+                    return;
+                }
+            }
+        }
+        Missiles missiles = force.missiles();
+        for (int i = missiles.size() - 1; i >= 0; i--) {
+            Missile missile = missiles.get(i);
+            if (hull.overlaps(x, y, Missile.BOX, missile.x(), missile.y())) {
+                double damage = missile.damage();
+                missiles.destroy(i, Missiles.STRUCK);
+                if (bulwark.hit(damage, events)) {
+                    return;
+                }
+            }
+        }
+        Pool<Enemy> enemies = force.enemies();
+        bulwark.beginContacts();
+        for (int j = enemies.size() - 1; j >= 0; j--) {
+            Enemy enemy = enemies.get(j);
+            EnemySpec spec = enemy.spec();
+            if (!enemy.layer().collidesWithPlayer()
+                    || Chain.doomed(enemy)
+                    || enemy.latched()
+                    || !hull.overlaps(x, y, enemy.hitbox(), enemy.x(), enemy.y())
+                    || !bulwark.touch(enemy.serial())
+                    || (enemy.leaping() && !enemy.pounceTouch(Enemy.TOUCHED_WINGMAN))) {
+                continue;
+            }
+            boolean out = bulwark.hit(spec.contactDamage(), events);
+            if (spec.destroyedByRamming()) {
+                s.objectivePasses.destroy(j);
+            }
+            if (out) {
+                return;
+            }
+        }
+        bulwark.endContacts();
+    }
+
+    /**
      * M7 part A (design/player/wingmen, Light drone): every whole drone absorbs the enemy bullets that
      * touch it (one hit each), a laser touching it (a sweeping beam, its laser cost once per touch; the
      * laser goes on) and the {@code air} enemies that touch it (its contact cost, a {@code tiny} or

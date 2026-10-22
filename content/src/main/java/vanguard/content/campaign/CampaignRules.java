@@ -23,6 +23,9 @@ import vanguard.sim.WingmanSpec;
  * @param escort Rook's rules in the escort slot (design/player/wingmen)
  * @param cooldownSpecials M7 part A: the specials bought once with a cooldown instead of charges
  *     (design/player/specials, Cooldown specials): the gear holds 1 for an owned one, never used up
+ * @param bulwark M8 part A: the Bulwark heavy drone in the escort slot (design/player/wingmen)
+ * @param hydroKit M8 part A: the level whose hangar visit fits the hydro-kit, with its one-off notice
+ *     (design/world/europa)
  */
 public record CampaignRules(
         int startingCredits,
@@ -33,7 +36,9 @@ public record CampaignRules(
         Map<String, Double> plating,
         List<String> grades,
         EscortRules escort,
-        java.util.Set<String> cooldownSpecials) {
+        java.util.Set<String> cooldownSpecials,
+        BulwarkRules bulwark,
+        int hydroKit) {
     public CampaignRules {
         cooldownSpecials = java.util.Set.copyOf(cooldownSpecials);
         retries = Map.copyOf(retries);
@@ -50,9 +55,33 @@ public record CampaignRules(
      * @param side a new campaign's side
      * @param maxArmour his full armour
      * @param launchWarning the launch warns while his armour is below this share
+     * @param lostAfter M8 part A: he is shot down at the end of this level (the story flag {@code rook-missing} from
+     *     its win)
+     * @param back M8 part A: he is back from this level; missing in the levels between
      */
     public record EscortRules(
-            int joins, String starterGun, WingmanSpec.Side side, double maxArmour, double launchWarning) {}
+            int joins,
+            String starterGun,
+            WingmanSpec.Side side,
+            double maxArmour,
+            double launchWarning,
+            int lostAfter,
+            int back) {
+        /** M8 part A: whether he is missing in Level {@code level} (design/player/wingmen, Rook's loss and absence). */
+        public boolean missing(int level) {
+            return level > lostAfter && level < back;
+        }
+    }
+
+    /**
+     * M8 part A: the Bulwark heavy drone (design/player/wingmen, Heavy drone "Bulwark").
+     *
+     * @param maxArmour its full armour
+     * @param price its price, credits
+     * @param unlock the level from whose hangar visit it is for sale
+     * @param repair credits per armour point, on every difficulty
+     */
+    public record BulwarkRules(double maxArmour, int price, int unlock, int repair) {}
 
     public static CampaignRules of(Content content) {
         Map<Difficulty, Optional<Integer>> retries = new EnumMap<>(Difficulty.class);
@@ -88,7 +117,15 @@ public record CampaignRules(
                 content.specials().specials().stream()
                         .filter(vanguard.content.SpecialsData.Special::cooldownSpecial)
                         .map(vanguard.content.SpecialsData.Special::name)
-                        .collect(Collectors.toSet()));
+                        .collect(Collectors.toSet()),
+                bulwarkRules(content),
+                content.europa().underwater().hydroKit());
+    }
+
+    private static BulwarkRules bulwarkRules(Content content) {
+        WingmenData.Bulwark bulwark = content.wingmen().bulwark();
+        return new BulwarkRules(
+                bulwark.armour(), bulwark.price(), content.player().firstLevel(bulwark.available()), bulwark.repair());
     }
 
     private static EscortRules escortRules(WingmenData wingmen) {
@@ -98,7 +135,9 @@ public record CampaignRules(
                 wingmen.guns().starter().id(),
                 WingmanSpec.Side.valueOf(rook.side().toUpperCase(java.util.Locale.ROOT)),
                 rook.armour(),
-                rook.launchWarning());
+                rook.launchWarning(),
+                rook.missing().after(),
+                rook.missing().back());
     }
 
     /** The maximum armour of the plating with this name. */

@@ -23,9 +23,17 @@ public final class Missile implements Hashed {
     private int age;
     private int lifeTicks;
     private int serial;
+    /** M8 part A: its speed factor, fixed at its launch (the water's bullet speed); 1 in the air. */
+    private double speedFactor = 1;
 
     /** Launched at (x, y) by {@code launcher} along {@code angle} (radians clockwise from straight down). */
     void launch(EnemyGun launcher, double startX, double startY, double angle, int id) {
+        launch(launcher, startX, startY, angle, id, 1);
+    }
+
+    /** As {@link #launch(EnemyGun, double, double, double, int)}; M8 part A: flying at {@code speed} × its gun's. */
+    void launch(EnemyGun launcher, double startX, double startY, double angle, int id, double speed) {
+        speedFactor = speed;
         gun = launcher;
         spec = launcher.homing().orElseThrow();
         x = prevX = startX;
@@ -48,7 +56,7 @@ public final class Missile implements Hashed {
         double off = Math.IEEEremainder(bearing - heading, 2 * StrictMath.PI);
         double most = spec.turnRadiansPerSecond() * SimStep.SECONDS;
         heading = Math.IEEEremainder(heading + Math.clamp(off, -most, most), 2 * StrictMath.PI);
-        double step = gun.bulletSpeed() * SimStep.SECONDS;
+        double step = gun.bulletSpeed() * speedFactor * SimStep.SECONDS;
         x -= Trig.sin(heading) * step;
         y -= Trig.cos(heading) * step;
         age++;
@@ -64,6 +72,10 @@ public final class Missile implements Hashed {
     @Override
     public void addTo(StateHash hash) {
         hash.add(x).add(y).add(heading).add(hp).add(age).add(serial);
+        if (speedFactor != 1) {
+            // M8 part A: only one launched in the water, so the other levels hash as before.
+            hash.add(speedFactor);
+        }
     }
 
     public double x() {

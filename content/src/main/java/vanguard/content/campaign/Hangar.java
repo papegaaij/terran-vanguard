@@ -36,6 +36,12 @@ import vanguard.sim.WingmanSpec;
  * {@link #sellBay}, part of the visit's undo; its slot {@link LoadoutSlot#UTILITY_3} has no shop
  * rows until it is bought, and it cannot be sold while a module is fitted in it.
  *
+ * <p>M8 part A (design/player/wingmen, Heavy drone "Bulwark"; design/ui/hangar): the Bulwark is bought once ({@link
+ * #buyBulwark}, chosen for the escort slot at once) and sold back ({@link #sellBulwark}) like other gear; the slot's
+ * choice between Rook and an owned Bulwark ({@link #chooseEscort}) is free; the Bulwark's armour has its own repair
+ * line at its own cost per point ({@link #repairBulwark}); all of it part of the visit's undo. While Rook is missing
+ * (Levels 27–29) his card is MIA ({@link #rookMissing}): no gun rows and no repair line, his guns kept.
+ *
  * <p>The power load is the sum of the fitted items' draws and may not exceed the generator's
  * output (a loadout already over it may make changes that do not widen the gap); the front gun and
  * the core parts are always fitted. The power dial (the user, 2026-10-21): a fitted weapon's
@@ -88,6 +94,23 @@ public final class Hangar {
         MIN_POWER,
         /** The power dial: the weapon is at its bought level. */
         FULL_POWER
+    }
+
+    /**
+     * M8 part A: the Bulwark's shop line (design/player/wingmen, Heavy drone "Bulwark").
+     *
+     * @param state {@link State#OWNED} when bought, {@link State#BUYABLE} when for sale at this visit, {@link
+     *     State#LOCKED} before its unlock
+     * @param bought it was bought during this visit, so it sells for all it cost
+     * @param credits what buying it costs, or (negative) what selling it returns
+     * @param refusal why buying it cannot be done now ({@link Refusal#CREDITS}); empty when it can, and for the
+     *     owned and the locked line
+     * @param unlock the level from whose hangar visit it is for sale
+     */
+    public record BulwarkOffer(State state, boolean bought, int credits, Optional<Refusal> refusal, int unlock) {
+        public boolean allowed() {
+            return state != State.LOCKED && refusal.isEmpty();
+        }
     }
 
     /** M7 part A: why a utility bay cannot be bought or sold. */
@@ -270,9 +293,11 @@ public final class Hangar {
                         .forEach(traits::add);
             }
         });
-        campaign.escortFlight().ifPresent(flight -> item(ItemKind.ESCORT, flight.gun()).traits().stream()
-                .filter(trait -> !trait.equals(REAR))
-                .forEach(traits::add));
+        campaign.escortFlight()
+                .flatMap(Campaign.EscortFlight::gun)
+                .ifPresent(gun -> item(ItemKind.ESCORT, gun).traits().stream()
+                        .filter(trait -> !trait.equals(REAR))
+                        .forEach(traits::add));
         Fitted special = campaign.gear().loadout().get(LoadoutSlot.SPECIAL);
         if (special != null
                 && HARDENED_SPECIALS.contains(special.item())
@@ -379,8 +404,9 @@ public final class Hangar {
     public List<Offer> shop(LoadoutSlot slot) {
         ItemKind kind = slot.kind();
         Gear gear = campaign.gear();
-        if (kind == ItemKind.ESCORT && !gear.escort().hired()) {
-            // The escort slot opens when Rook joins (Level 08).
+        if (kind == ItemKind.ESCORT && (!gear.escort().hired() || campaign.rookMissing())) {
+            // The escort slot opens when Rook joins (Level 08); M8 part A: while he is missing his card is MIA, his
+            // guns kept in the inventory but not offered.
             return List.of();
         }
         if (!gear.open(slot)) {
@@ -698,10 +724,137 @@ public final class Hangar {
         return campaign.gear().escort().hired();
     }
 
-    /** Rook's whole armour points missing; 0 before he is hired. */
+    /** Rook's whole armour points missing; 0 before he is hired and (M8 part A) while he is missing. */
     public int escortMissingArmour() {
         Escort escort = campaign.gear().escort();
-        return escort.hired() ? (int) Math.ceil(campaign.escortMaxArmour() - escort.armour() - EPSILON) : 0;
+        return escort.hired() && !campaign.rookMissing()
+                ? (int) Math.ceil(campaign.escortMaxArmour() - escort.armour() - EPSILON)
+                : 0;
+    }
+
+    /** M8 part A: whether Rook is missing in the next level: his card is MIA (no gun rows, no repair line). */
+    public boolean rookMissing() {
+        return campaign.rookMissing();
+    }
+
+    /** M8 part A: the Bulwark's shop line. */
+    public BulwarkOffer bulwark() {
+        CampaignRules.BulwarkRules rules = campaign.bulwarkRules();
+        Escort escort = campaign.gear().escort();
+        if (escort.bulwark().owned()) {
+            int refund = bought.bulwark() ? rules.price() : (int) Math.rint(rules.price() * catalogue.sellBack());
+            return new BulwarkOffer(State.OWNED, bought.bulwark(), -refund, Optional.empty(), rules.unlock());
+        }
+        if (!escort.hired() || rules.unlock() > campaign.nextLevel()) {
+            return new BulwarkOffer(State.LOCKED, false, rules.price(), Optional.empty(), rules.unlock());
+        }
+        return new BulwarkOffer(
+                State.BUYABLE,
+                false,
+                rules.price(),
+                campaign.credits() < rules.price() ? Optional.of(Refusal.CREDITS) : Optional.empty(),
+                rules.unlock());
+    }
+
+    /**
+     * M8 part A: buys the Bulwark when it is for sale and affordable; it comes whole and is chosen for the escort slot.
+     *
+     * @return whether it was bought
+     */
+    public boolean buyBulwark() {
+        BulwarkOffer offer = bulwark();
+        if (offer.state() != State.BUYABLE || !offer.allowed()) {
+            return false;
+        }
+        Step before = step();
+        Gear gear = before.gear();
+        undo.push(before);
+        restore(new Step(
+                gear.withCredits(gear.credits() - offer.credits())
+                        .withEscort(gear.escort()
+                                .withBulwark(new Escort.Bulwark(true, campaign.bulwarkMaxArmour()))
+                                .withFlies(Escort.Escorter.BULWARK)),
+                bought.withBulwark(true)));
+        return true;
+    }
+
+    /**
+     * M8 part A: sells the owned Bulwark, for all it cost when it was bought during the visit, the sell-back share of
+     * its price otherwise; the slot's choice goes back to Rook.
+     *
+     * @return whether it was sold
+     */
+    public boolean sellBulwark() {
+        BulwarkOffer offer = bulwark();
+        if (offer.state() != State.OWNED) {
+            return false;
+        }
+        Step before = step();
+        Gear gear = before.gear();
+        undo.push(before);
+        restore(new Step(
+                gear.withCredits(gear.credits() - offer.credits())
+                        .withEscort(gear.escort()
+                                .withBulwark(new Escort.Bulwark(false, campaign.bulwarkMaxArmour()))
+                                .withFlies(Escort.Escorter.ROOK)),
+                bought.withBulwark(false)));
+        return true;
+    }
+
+    /**
+     * M8 part A: chooses who flies in the escort slot, for free and as part of the visit's undo: Rook while he is
+     * hired, or the owned Bulwark. While Rook is missing the slot holds the Bulwark whatever the choice.
+     *
+     * @return whether the choice changed
+     */
+    public boolean chooseEscort(Escort.Escorter escorter) {
+        Gear gear = campaign.gear();
+        Escort escort = gear.escort();
+        boolean allowed = escorter == Escort.Escorter.ROOK
+                ? escort.hired()
+                : escort.bulwark().owned();
+        if (!allowed || escort.flies() == escorter) {
+            return false;
+        }
+        undo.push(step());
+        restore(new Step(gear.withEscort(escort.withFlies(escorter)), bought));
+        return true;
+    }
+
+    /** M8 part A: the owned Bulwark's whole armour points missing; 0 without one. */
+    public int bulwarkMissingArmour() {
+        Escort.Bulwark bulwark = campaign.gear().escort().bulwark();
+        return bulwark.owned() ? (int) Math.ceil(campaign.bulwarkMaxArmour() - bulwark.armour() - EPSILON) : 0;
+    }
+
+    /** M8 part A: credits per Bulwark armour point (on every difficulty). */
+    public int bulwarkRepairCost() {
+        return campaign.bulwarkRules().repair();
+    }
+
+    /** M8 part A: the most of the Bulwark's points the credits repair now. */
+    public int affordableBulwarkRepair() {
+        int cost = bulwarkRepairCost();
+        return cost == 0 ? bulwarkMissingArmour() : Math.min(bulwarkMissingArmour(), campaign.credits() / cost);
+    }
+
+    /**
+     * M8 part A: repairs the owned Bulwark's armour points at its cost per point.
+     *
+     * @return whether it was done: at least one point, no more than are missing or affordable
+     */
+    public boolean repairBulwark(int points) {
+        if (points < 1 || points > affordableBulwarkRepair()) {
+            return false;
+        }
+        Gear before = campaign.gear();
+        undo.push(step());
+        Escort escort = before.escort();
+        campaign.gear(before.withCredits(before.credits() - points * bulwarkRepairCost())
+                .withEscort(escort.withBulwark(escort.bulwark()
+                        .withArmour(Math.min(
+                                campaign.bulwarkMaxArmour(), escort.bulwark().armour() + points)))));
+        return true;
     }
 
     /** The most of Rook's points the credits repair now, at the same cost per point as the ship's. */
@@ -765,9 +918,15 @@ public final class Hangar {
      * @param stored the ones in the inventory, by kind
      * @param specials M7 part A: the cooldown specials bought, wherever they are
      * @param bays M7 part A: the utility bays bought (the last ones the gear has)
+     * @param bulwark M8 part A: the Bulwark was bought
      */
-    private record Bought(Set<LoadoutSlot> fitted, Map<ItemKind, List<Fitted>> stored, Set<String> specials, int bays) {
-        static final Bought NONE = new Bought(Set.of(), Map.of(), Set.of(), 0);
+    private record Bought(
+            Set<LoadoutSlot> fitted,
+            Map<ItemKind, List<Fitted>> stored,
+            Set<String> specials,
+            int bays,
+            boolean bulwark) {
+        static final Bought NONE = new Bought(Set.of(), Map.of(), Set.of(), 0, false);
 
         Bought {
             fitted = Set.copyOf(fitted);
@@ -777,7 +936,12 @@ public final class Hangar {
 
         /** M7 part A: with {@code change} more (or fewer) utility bays bought during the visit. */
         Bought withBay(int change) {
-            return new Bought(fitted, stored, specials, bays + change);
+            return new Bought(fitted, stored, specials, bays + change, bulwark);
+        }
+
+        /** M8 part A: with the Bulwark bought during the visit, or not. */
+        Bought withBulwark(boolean changed) {
+            return new Bought(fitted, stored, specials, bays, changed);
         }
 
         List<Fitted> stored(ItemKind kind) {
@@ -798,6 +962,7 @@ public final class Hangar {
         final Set<String> specialsBought = new java.util.TreeSet<>();
         final int bays;
         final int baysBought;
+        final boolean bulwarkBought;
 
         Change(Step step) {
             Gear gear = step.gear();
@@ -813,6 +978,7 @@ public final class Hangar {
             specialsBought.addAll(step.bought().specials());
             bays = gear.bays();
             baysBought = step.bought().bays();
+            bulwarkBought = step.bought().bulwark();
         }
 
         /**
@@ -857,7 +1023,7 @@ public final class Hangar {
         Step step() {
             return new Step(
                     new Gear(credits, loadout, inventory, specials, armour, escort, bays),
-                    new Bought(fitted, stored, specialsBought, baysBought));
+                    new Bought(fitted, stored, specialsBought, baysBought, bulwarkBought));
         }
     }
 }

@@ -1,7 +1,7 @@
 ---
 title: Special abilities
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
 updated: 2026-10-22
@@ -184,8 +184,9 @@ Swarm Call later):
 
 ### Act 4 specials in detail
 
-*Draft, decided in round 48 (2026-10-22) (Q4 = a, Q1 = b). Step `m8-dsystems`; the numbers move
-into [data.yaml](data.yaml) in M8 part A.*
+*Draft, decided in round 48 (2026-10-22) (Q4 = a, Q1 = b). Step `m8-dsystems`; the numbers are in
+[data.yaml](data.yaml) since M8 part A (step A2: the Sonar Pulse's row and `sonar` block, the `flares` block and the
+`limits`).*
 
 #### Setting restrictions and the greyed state
 
@@ -205,7 +206,10 @@ rule table above is read from that list instead of from the special's name:
   briefing's threat line, as the table above already promises.
 - A charge is never spent on a refused press. When the ship crosses a waterline the row
   changes state at once (a short chime, the row flashes once).
-- Level data (proposal): `special_limits: [airstrike, orbital-lance]` per level or section.
+- Level data: the settings' lists are the `limits` of [data.yaml](data.yaml) (`underwater`: Airstrike and Orbital
+  Lance, `UNDER ICE`; `dry`, a level or section without water: the Sonar Pulse, `NO WATER`), read from a level's or
+  section's `medium` and the level's `water`; a level or section may replace its list with `special_limits:
+  [airstrike, orbital-lance]` (the specials' slugs; each must be in a setting's list, which gives its reason word).
 
 #### Sonar Pulse (L22)
 
@@ -297,6 +301,14 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
 | [concept/rejected/sonar-pulse-r48-a.gif](concept/rejected/sonar-pulse-r48-a.gif) | Sonar Pulse A — the headlight only, the call, the ring covering the field in 0.5 s, 6 s lit, the dark returning (motion) | rejected — round 48: b picked |
 | [concept/sonar-pulse-r48-b.png](concept/sonar-pulse-r48-b.png) | Sonar Pulse B "echo marks" — a crisp dashed pale-cyan double ring; the water stays black, units drawn whole inside sonar contact brackets that ping as the ring reaches them (sheet) | chosen — round 48 |
 | [concept/sonar-pulse-r48-b.gif](concept/sonar-pulse-r48-b.gif) | Sonar Pulse B — the same scene as A (motion) | chosen — round 48 |
+| [concept/sonar-pulse-final-r50-a.png](concept/sonar-pulse-final-r50-a.png) | Sonar Pulse final frames (`tools/art/act4_gear.py sonar`, round 48 G3 = b): the sweep's dash and the contact bracket's corner (ping, steady); the dashed double ring sweeping the black and the brackets snapping in (sheet) | proposed (round 50) |
+| [concept/sonar-pulse-final-r50-a.gif](concept/sonar-pulse-final-r50-a.gif) | The pulse from the ship in the black, stand-in units drawn whole inside their brackets as the ring reaches them, 20 fps at 2x | proposed (round 50) |
+| [concept/sonar-pulse-capture-r50-a.png](concept/sonar-pulse-capture-r50-a.png) | Game capture, Level 11 (`water: true`): the Sonar Pulse's ring sweeping the field and the contact brackets on the units it reached (a frame) | proposed (round 50) |
+| [concept/sonar-pulse-capture-r50-a.mp4](concept/sonar-pulse-capture-r50-a.mp4) | Game capture with the game's sound: two pulses on Level 11 with their pings, the ring and the brackets | proposed (round 50) |
+| [concept/decoy-flares-final-r50-a.png](concept/decoy-flares-final-r50-a.png) | Decoy Flares final frames (`tools/art/act4_gear.py flares`, round 09's a): the white-hot flare's 4-frame flicker and its warm halo; four flares fanned out behind the ship under water (sheet) | proposed (round 50) |
+| [concept/decoy-flares-final-r50-a.gif](concept/decoy-flares-final-r50-a.gif) | Four flares launched in the 120° fan behind the ship, slowing to a stop and burning, 20 fps at 2x | proposed (round 50) |
+| [concept/decoy-flares-capture-r50-a.png](concept/decoy-flares-capture-r50-a.png) | Game capture, Level 19 under water: four flares burning behind the ship and a Revenant Walker missile turning for them, the Bulwark beside the ship (a frame) | proposed (round 50) |
+| [concept/decoy-flares-capture-r50-a.mp4](concept/decoy-flares-capture-r50-a.mp4) | Game capture with the game's sound: the flares launched as the Revenant Walker's pods fire, its missiles bursting on them | proposed (round 50) |
 
 ## Implementation
 
@@ -321,16 +333,16 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   as final in round 26; its chosen sound by the SFX pass)
 - [x] One free Smart Bomb charge granted once, at the unlock before L06: fitted only into an empty
   special slot, with the hangar notice (`free_charges: 1` in data.yaml)
-- [ ] Decoy Flares — **later: Act 4** (unlock at L27 with the first homing projectiles; user decision D4 of M4 part G)
+- [x] Decoy Flares — **later: Act 4** (unlock at L27 with the first homing projectiles; user decision D4 of M4 part G) (M8 part A, step A2: the `flares` block in [data.yaml](data.yaml), `SpecialsData.Flares`; the simulation in step A3: `Act4SpecialsTest.theFlaresFanOutBackwardsSlowToAStopAndBurnFourSeconds`, `aHomingMissileGoesForTheNearestBurningFlareAndBurstsOnIt`; flown in step A4, `Act4ArsenalFlightTest.theSonarPulseAndTheDecoyFlaresFlyWithTheirSettings`; the look and the chosen r08-a sound in step A6)
 - [x] One free Airstrike charge granted once, at the unlock before L04
-- [ ] Setting restrictions read from the level data — **later: Act 4** (draft: *Act 4 specials in detail*) (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special)
+- [x] Setting restrictions read from the level data — **later: Act 4** (draft: *Act 4 specials in detail*) (the first restricted setting is under the Europa ice from L22; no Acts 1–3 level restricts a special) (M8 part A, step A2: the `limits` and the level's and section's `medium` and `special_limits`, `SpecialsData.forbidden`/`reason`, `LevelData.forbiddenSpecials`, checked by `ActFourChecks`; `ActFourDataTest`; the simulation's forbidden state in step A3, `Act4SpecialsTest.theAirstrikeReadsUnderIceUnderWaterAndWorksAboveIt`, `aWaterlineChangesTheStateOnceWithItsEvent`; mapped in step A4, `Act4ArsenalFlightTest.aForbiddenSpecialIsRefusedWithItsReasonAndNoChargeSpent`; the greyed row with its word and the limit chime in step A6, `DeepWaterLooksTest.theReasonWordFitsTheSpecialRowWithTheNameCut`)
 - [x] HUD special row: icon, name, charges; greyed while the strike flies or with no charge; flashes
   when denied
 - [x] HUD: cooldown ring (M7 part A step A6: `ShipPanel`; the row goes compact, the icon in its
   ring where the word `SPECIAL` stands, and reads `OVERCHARGE 27s` / `READY`; the white flash and the
   chime as it is ready; the overcharge's white arc draining anticlockwise)
 - [ ] HUD: the unavailable-in-this-setting state (greyed icon, the reason word) — **later: Act 4** (with the setting restrictions)
-- [ ] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A)
+- [x] Sonar Pulse as under *Sonar Pulse (L22)*: the pulse, the lighting, the full-damage window, the 1 free charge — **later: Act 4** (M8 part A; step A2: its row (250 a charge, at most 4, L22, the free charge given at the L22 visit into an empty slot only) and the `sonar` block; the shop row waits for its icon in `Catalogue.AWAITING_ICONS`; the icon from ART-A, the row live in step A5; the simulation in step A3, `Act4SpecialsTest.thePulseOpensSixSecondsOfFullDamageUnderWaterAndACallRestartsThem`, `abovetheWaterThePulseOpensTheSubLayerToEveryWeaponAndItsRingFindsTheContacts`; `ActFourEscortTest.theSonarPulsesFreeChargeComesAtLevel22AndIsFittedOnlyIntoAnEmptySlot`; the ring, the brackets and the ping in step A6, `DeepWaterLooksTest.aContactBracketSnapsInOverAThirdOfASecond`, `ActFourSoundsTest.theSonarPulsePings`)
 
 ## Decisions
 
@@ -442,3 +454,8 @@ Sonar Pulse under water in Level 26's black, a/b; generator `tools/concept/gear_
   on the canyon's pale sand kept as it is.
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
 - 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): setting restrictions specified (a per-level/section list, the HUD reason words `UNDER ICE` / `NO WATER`, shown in advance in the intel), the Sonar Pulse specified for water (it lights the field and gives full damage for 6 s: Q4 = a; above water as drafted; 1 free charge at L22); the Airstrike stays allowed on L22's ice surface. Alternatives from Q4: (b) shots hit only lit units, (c) sonar blips only.
+- 2026-10-22 (M8 part A, step A2; pending the user's review in round 50): the Sonar Pulse, the Decoy Flares' numbers and
+  the setting restrictions in [data.yaml](data.yaml); a level's `special_limits` name the specials by slug (the
+  proposal's form) and replace the setting's list; the reason word is the one of the setting that lists the special;
+  the Sonar Pulse works wherever there is water (`medium: underwater` or a `water: true` level, D4 of the gap check).
+- 2026-10-22 (M8 part A, steps A3–A6; pending the user's review in round 50): the Decoy Flares decoy enemy `Missile`s only (D5; a seeker flag comes with the first unit that needs one, part G); the flares start 20 px behind the ship and a missile bursts on a flare inside a 10 px box; a level's or section's list may allow the Airstrike under water (it replaces the medium's rule; the Sonar needs water always); the Sonar Pulse and the Flares get no radio call; ART-A's flare glow is dithered and leaves no smoke under water.

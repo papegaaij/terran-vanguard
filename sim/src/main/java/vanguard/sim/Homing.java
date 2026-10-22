@@ -72,7 +72,7 @@ final class Homing {
             // a turret's shots pass unless its mount may hit it. M7 part G: nor one the seekers ignore (a mote).
             if (!onField(enemy)
                     || enemy.spec().seekersIgnore()
-                    || !weapon.delivery().reaches(enemy.layer())
+                    || !fire.medium().reaches(weapon, enemy.layer())
                     || (enemy.latched() && !fire.hitsLatched(m))) {
                 continue;
             }
@@ -94,7 +94,7 @@ final class Homing {
             SetPiece piece = setPieces[k];
             for (int p = 0; p < piece.partCount(); p++) {
                 // M5 part E: on the part's own layer (an arena boss's part under the water is none).
-                if (!weapon.delivery().reaches(piece.partLayer(p)) || !partTarget(piece, p)) {
+                if (!fire.medium().reaches(weapon, piece.partLayer(p)) || !partTarget(piece, p)) {
                     continue;
                 }
                 double d = distanceSquared(x, y, targetX, targetY);
@@ -180,7 +180,7 @@ final class Homing {
         if (shot.target() >= TRIGGER_SERIAL) {
             return trigger(shot.target() - TRIGGER_SERIAL, ground);
         }
-        return located(shot.target(), enemies) && shot.weapon().delivery().reaches(targetLayer);
+        return located(shot.target(), enemies) && fire.medium().reaches(shot.weapon(), targetLayer);
     }
 
     /**
@@ -267,7 +267,9 @@ final class Homing {
      */
     int nearestInCone(Shot shot, Pool<Enemy> enemies, Pool<GroundObject> ground) {
         WeaponSpec weapon = shot.weapon();
-        double best = weapon.range() * weapon.range();
+        Medium medium = fire.medium();
+        // M8 part A: its range as fired (a torpedo's under water × the torpedo range).
+        double best = shot.range() * shot.range();
         int nearest = -1;
         double nearestX = 0;
         double nearestY = 0;
@@ -279,7 +281,7 @@ final class Homing {
             if (onField(enemy)
                     && !enemy.latched()
                     && !enemy.spec().seekersIgnore()
-                    && weapon.delivery().reaches(enemy.layer())
+                    && medium.reaches(weapon, enemy.layer())
                     && (weapon.antiGround() || !enemy.spec().hardened())
                     && inCone(shot, enemy.x(), enemy.y(), best)) {
                 best = distanceSquared(shot.x(), shot.y(), enemy.x(), enemy.y());
@@ -293,7 +295,7 @@ final class Homing {
             for (int p = 0; p < piece.partCount(); p++) {
                 // A high-air boss's open parts are sought all round: the missile climbs to them; M5
                 // part E: on the part's own layer (a torpedo's sub and ground, a missile's the rest).
-                if (weapon.delivery().reaches(piece.partLayer(p))
+                if (medium.reaches(weapon, piece.partLayer(p))
                         && partTarget(piece, p)
                         && (overhead(piece)
                                 ? distanceSquared(shot.x(), shot.y(), targetX, targetY) <= best

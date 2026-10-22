@@ -1,0 +1,29 @@
+# Depth Charges: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon). M8 part A.
+# hits: depth-charge, a delivery of its own: a barrel rolled out of the stern at `speed` px/s backwards, its drift
+# decaying over `drift` s, then sinking with the scroll; it bursts on its level's `fuse` (s from the launch) for its
+# damage on every target within its `blast` radius in the water (a boss part once a charge); never the ship or Rook.
+# Under water: the roll-out x 1.5 (torpedo range) x 0.7 (bullet speed) (../../../world/europa/data.yaml).
+name: Depth Charges
+slot: rear
+traits: [anti-sub, rear, area]
+price: 1300
+upgrade_base: 800    # L2-L5 400 / 800 / 1 600 / 3 200
+unlock: 22
+draw: [2, 3]
+sfx: depth-charge    # round 48 (G2): a heavy, low thud under water, no bubbles (M8 part A sounds)
+vfx: depth-charge    # round 48 (G2 a "drum"): the barrel with its fuse lamp, the pressure-dome burst
+hits: depth-charge
+speed: 140           # px/s backwards at the roll-out
+size: [12, 12]       # the barrel's drawn box, px (it is hit by nothing and blocks nothing)
+drift: 0.6           # s over which the roll-out decays to a hover (the water's drag)
+seek: true
+levels:              # blast: the burst radius px; fuse: s from the launch; L5 two charges 8 px either side
+  - {pattern: [[0, 180]], rate: 1, damage: 25, blast: 40, fuse: 0.9}
+  - {pattern: [[0, 180]], rate: 1.2, damage: 31.7, blast: 46, fuse: 0.9}
+  - {pattern: [[0, 180]], rate: 1.3, damage: 40, blast: 52, fuse: 0.8}
+  - {pattern: [[0, 180]], rate: 1.4, damage: 47, blast: 58, fuse: 0.8}
+  - {pattern: [[-8, 180], [8, 180]], rate: 0.8, damage: 50, blast: 64, fuse: 0.7}
+overdrive: {pattern: [[-8, 180], [8, 180]], rate: 0.9, damage: 54, blast: 64, fuse: 0.7}
+notes:
+  vfx: the drum and its pressure-dome burst of concept round 48, G2 a
+  layers_hit: 'Under water: the burst hits everything inside its radius in the water, at full damage (the play plane `air`, `low-air`, the sea floor `ground`, and the `sub` layer below); never `high-air`. Above water: the barrel drops through the surface and bursts on the `sub` layer, hitting `sub` and naval `ground` in a level with `water: true`; idle with `NO WATER` in a dry level'

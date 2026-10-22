@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import vanguard.content.Content;
+import vanguard.content.WingmenData;
 import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Catalogue.Item;
 import vanguard.content.campaign.Catalogue.Stat;
@@ -37,7 +38,9 @@ import vanguard.sim.WingmanSpec;
  * A) lists Rook's guns and, last, the row of his side with its {@code LEFT} / {@code RIGHT} choice.
  * M7 part A: a utility slot's shop ends with its bay row ({@link HangarState#bayRow()}: the third
  * bay for sale with its {@code BUY} chip, or in the bought bay's own shop its {@code SELL} chip), and a
- * cooldown special's detail shows its cooldown. The rows and chips double as the mouse's hit regions
+ * cooldown special's detail shows its cooldown. M8 part A: the escort's shop lists the Bulwark's row between Rook's
+ * guns and the side row ({@link HangarState#bulwarkRow()}): its icon, its price, {@code OWNED}, {@code FITTED} or
+ * {@code LOCKED L22}, and in its detail its numbers, what it does and its chips. The rows and chips double as the mouse's hit regions
  * ({@link HangarPointer}). The replay hangar's drawer (refit only, the user's correction of 2026-10-19) is
  * headed {@code REFIT} and lists only the owned items, or says the slot has none.
  */
@@ -86,6 +89,8 @@ final class ShopPanel {
             int y = ROWS_Y + (i - state.top()) * ROW;
             if (i < rows.size()) {
                 drawRow(batch, rows.get(i), y, shop && i == state.row(), markedTraits);
+            } else if (i == rows.size() && state.bulwarkRow().isPresent()) {
+                drawBulwarkRow(batch, state, state.bulwarkRow().get(), y, shop && i == state.row());
             } else if (state.bayRow().isPresent()) {
                 drawBayRow(batch, state.bayRow().get(), y, shop && i == state.row());
             } else {
@@ -113,11 +118,17 @@ final class ShopPanel {
         if (state.baySelected()) {
             drawBay(batch, state.bayRow().orElseThrow(), shopFocus, state.hovers(HangarState.Target.BAY, 0), DETAIL_Y);
         }
+        if (state.bulwarkSelected()) {
+            drawBulwark(batch, state, state.bulwarkRow().orElseThrow(), DETAIL_Y);
+        }
         Optional<String> refused = shopFocus
                 ? state.previewChoice().filter(choice -> !choice.allowed()).map(HangarState::refusal)
                 : Optional.empty();
         if (shopFocus && state.baySelected()) {
             refused = state.bayRow().flatMap(Hangar.BayOffer::refusal).map(HangarState::bayRefusal);
+        }
+        if (shopFocus && state.bulwarkSelected()) {
+            refused = state.bulwarkChoice().flatMap(HangarState.BulwarkChoice::refusal);
         }
         String message = refused.orElse(state.message());
         List<String> lines = Words.wrap(message, (WIDTH - 20) / Fonts.advance(glass.fonts.label));
@@ -180,15 +191,23 @@ final class ShopPanel {
             glass.selection(batch, X + 2, y - 5, WIDTH - 4, ROW - 2);
             glass.cursor(batch, glass.fonts.label, X + 4, y + 4);
         }
-        drawIcon(batch, icons.escort().small(), INNER - 2, y - 3, false);
+        boolean bulwark = state.bulwarkFliesNext();
+        drawIcon(batch, (bulwark ? icons.bulwark() : icons.escort()).small(), INNER - 2, y - 3, false);
         glass.right(batch, glass.fonts.label, state.escortSide().name(), Glass.CYAN, RIGHT, y);
-        glass.shadowed(batch, glass.fonts.label, SIDE, selected ? Glass.AMBER : Glass.WHITE, NAME_X, y);
+        glass.shadowed(batch, glass.fonts.label, side(bulwark), selected ? Glass.AMBER : Glass.WHITE, NAME_X, y);
     }
 
     /** The side row's detail: where Rook flies, and the {@code LEFT} / {@code RIGHT} choice. */
     private void drawSide(SpriteBatch batch, HangarState state, int y) {
-        glass.shadowed(batch, glass.fonts.body, SIDE, Glass.AMBER, INNER, y);
-        glass.shadowed(batch, glass.fonts.label, "WHERE ROOK FLIES BESIDE YOU.", Glass.WHITE, INNER, y + 24);
+        boolean bulwark = state.bulwarkFliesNext();
+        glass.shadowed(batch, glass.fonts.body, side(bulwark), Glass.AMBER, INNER, y);
+        glass.shadowed(
+                batch,
+                glass.fonts.label,
+                bulwark ? "WHERE THE BULWARK FLIES BESIDE YOU." : "WHERE ROOK FLIES BESIDE YOU.",
+                Glass.WHITE,
+                INNER,
+                y + 24);
         glass.shadowed(batch, glass.fonts.label, "FREE: LEFT / RIGHT SET IT.", Glass.LABEL, INNER, y + 38);
         boolean shop = state.focus() == HangarState.Focus.SHOP;
         for (WingmanSpec.Side side : WingmanSpec.Side.values()) {
@@ -214,6 +233,142 @@ final class ShopPanel {
 
     /** The side row's name. */
     static final String SIDE = "ROOK'S SIDE";
+
+    /** M8 part A: the side row's name while the Bulwark flies the next level. */
+    static final String BULWARK_SIDE = "BULWARK'S SIDE";
+
+    static String side(boolean bulwark) {
+        return bulwark ? BULWARK_SIDE : SIDE;
+    }
+
+    /**
+     * M8 part A: the escort's Bulwark row: its icon, its name, and its price, {@code OWNED}, {@code FITTED} (it flies
+     * the next level) or {@code LOCKED L22}.
+     */
+    private void drawBulwarkRow(
+            SpriteBatch batch, HangarState state, Hangar.BulwarkOffer line, int y, boolean selected) {
+        boolean locked = line.state() == State.LOCKED;
+        glass.row(batch, X + 4, y - 5, WIDTH - 8, ROW - 2);
+        if (selected) {
+            glass.selection(batch, X + 2, y - 5, WIDTH - 4, ROW - 2);
+            glass.cursor(batch, glass.fonts.label, X + 4, y + 4);
+        }
+        drawIcon(batch, icons.bulwark().small(), INNER - 2, y - 3, locked);
+        glass.right(
+                batch,
+                glass.fonts.label,
+                bulwarkStatus(line, state.bulwarkFlies()),
+                locked ? Glass.DIM : Glass.CYAN,
+                RIGHT,
+                y);
+        glass.shadowed(
+                batch,
+                glass.fonts.label,
+                BULWARK_NAME,
+                selected ? Glass.AMBER : locked ? Glass.DIM : Glass.WHITE,
+                NAME_X,
+                y);
+    }
+
+    /**
+     * M8 part A: the Bulwark's row name and detail heading (the design's Heavy drone "Bulwark", turned so that it fits
+     * beside {@code LOCKED L22}).
+     */
+    static final String BULWARK_NAME = "BULWARK HEAVY DRONE";
+
+    /** M8 part A: the Bulwark row's status: its price, {@code OWNED}, {@code FITTED} or {@code LOCKED L22}. */
+    static String bulwarkStatus(Hangar.BulwarkOffer line, boolean flies) {
+        return switch (line.state()) {
+            case OWNED -> flies ? "FITTED" : "OWNED";
+            case BUYABLE -> Names.credits(line.credits());
+            case LOCKED -> String.format(Locale.ROOT, "LOCKED L%02d", line.unlock());
+            case FITTED -> "FITTED";
+        };
+    }
+
+    /**
+     * M8 part A: the Bulwark row's detail: its numbers, what it does, a note (its unlock, the loaner while Rook is
+     * missing, its repair cost) and its chips.
+     */
+    private void drawBulwark(SpriteBatch batch, HangarState state, Hangar.BulwarkOffer line, int y) {
+        boolean locked = line.state() == State.LOCKED;
+        TextureRegion icon = icons.bulwark().large();
+        drawIcon(batch, icon, RIGHT - icon.getRegionWidth(), y - 6, locked);
+        glass.shadowed(batch, glass.fonts.body, BULWARK_NAME, Glass.AMBER, INNER, y);
+        WingmenData.Bulwark bulwark = content.wingmen().bulwark();
+        glass.shadowed(batch, glass.fonts.label, bulwarkNumbers(bulwark), Glass.WHITE, INNER, y + 24);
+        glass.shadowed(batch, glass.fonts.label, bulwarkDraws(bulwark), Glass.LABEL, INNER, y + 38);
+        glass.shadowed(batch, glass.fonts.label, bulwarkNote(state, line, bulwark), Glass.LABEL, INNER, y + 50);
+        boolean shop = state.focus() == HangarState.Focus.SHOP;
+        Optional<HangarState.BulwarkChoice> selected = shop ? state.bulwarkChoice() : Optional.empty();
+        List<HangarState.BulwarkChoice> choices = state.bulwarkChoices();
+        for (int i = 0; i < choices.size(); i++) {
+            HangarState.BulwarkChoice choice = choices.get(i);
+            Box chip = bulwarkChip(choices, i);
+            boolean on = selected.filter(c -> c.action() == choice.action()).isPresent();
+            glass.chip(
+                    batch,
+                    glass.fonts.label,
+                    bulwarkLabel(choice),
+                    chip.x(),
+                    chip.y(),
+                    chip.width(),
+                    chip.height(),
+                    on && choice.allowed(),
+                    choice.allowed());
+            if (on && !choice.allowed()) {
+                glass.outline(batch, Glass.AMBER, chip.x(), chip.y(), chip.width(), chip.height());
+            } else if (!on && state.hovers(HangarState.Target.CHOICE, i)) {
+                hover(batch, chip.x(), chip.y(), chip.width(), chip.height());
+            }
+        }
+    }
+
+    /** M8 part A: the Bulwark's numbers: {@code ARMOUR 120   DPS 14   DRAW 0 MW} (its own power, as Rook's). */
+    static String bulwarkNumbers(WingmenData.Bulwark bulwark) {
+        return "ARMOUR " + Names.number(bulwark.armour()) + "   DPS "
+                + Names.number(bulwark.gun().dps()) + "   DRAW " + Names.megawatts(0);
+    }
+
+    /** M8 part A: what the Bulwark does: {@code DRAWS 30 % OF AIMED FIRE NEAR YOU}. */
+    static String bulwarkDraws(WingmenData.Bulwark bulwark) {
+        return "DRAWS " + Math.round(bulwark.draw().share() * 100) + " % OF AIMED FIRE NEAR YOU";
+    }
+
+    /**
+     * M8 part A: the Bulwark's note: its unlock while locked; while Rook is missing who flies in his place (the owned
+     * one, or the loaner while none is owned); once owned its repair cost; else that buying it fits it.
+     */
+    static String bulwarkNote(HangarState state, Hangar.BulwarkOffer line, WingmenData.Bulwark bulwark) {
+        boolean owned = line.state() == State.OWNED;
+        if (line.state() == State.LOCKED) {
+            return String.format(Locale.ROOT, "IN THE SHOP BEFORE MISSION %02d", line.unlock());
+        }
+        if (state.hangar().rookMissing()) {
+            return owned ? "ROOK IS MIA: IT FLIES FOR HIM" : "ROOK IS MIA: A LOANER FLIES FREE";
+        }
+        return owned ? "REPAIRS " + Names.credits(bulwark.repair()) + " A POINT" : "BOUGHT, IT FLIES IN ROOK'S PLACE";
+    }
+
+    /** M8 part A: a Bulwark choice's chip: {@code BUY 6 000}, {@code FIT}, {@code UNFIT}, {@code SELL 3 600}. */
+    static String bulwarkLabel(HangarState.BulwarkChoice choice) {
+        String credits = Names.grouped(Math.abs(choice.credits()));
+        return switch (choice.action()) {
+            case BUY -> "BUY " + credits;
+            case SELL -> "SELL " + credits;
+            case FIT -> "FIT";
+            default -> "UNFIT";
+        };
+    }
+
+    /** M8 part A: the Bulwark row's chips in one row, where the side row's chips are. */
+    static Box bulwarkChip(List<HangarState.BulwarkChoice> choices, int index) {
+        float x = INNER;
+        for (int i = 0; i < index; i++) {
+            x += chipWidth(bulwarkLabel(choices.get(i))) + 6;
+        }
+        return new Box(x, DETAIL_Y + 64, chipWidth(bulwarkLabel(choices.get(index))), 20);
+    }
 
     /**
      * M7 part A: a utility slot's bay row: the bay's name with a bay glyph, its price while for sale or

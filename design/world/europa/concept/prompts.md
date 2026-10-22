@@ -148,3 +148,24 @@ its wake). Rendered from the chosen hull (`render/models.ship_a_model`, the pale
 - **Prompt (both):** late-1990s pre-rendered CGI sprite, top-down, the AF-12 Stormhawk
   (forward-swept wings, light grey hull, blue accents) fitted for under-water flight with the parts
   above; key light from the top-left; transparent background.
+
+## hydro-kit-final-r50-a
+
+Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/act4_gear.py
+hydro` writes `ship-hydro_0..4` and `rook-hydro_0..4` into `assets/sprites/` and this review sheet and GIF. The look is
+the one round 48 chose (E10 = a, "sealed refit", [hydro-kit-r48-a](hydro-kit-r48-a.png), the kit parts of
+`tools/concept/europa_r48.py kit_model("a")`): pump-jet shrouds, orange ballast saddles on the wing roots, dark seal
+plates, twin headlights under the canards and red / green nav lights at the wingtips, on the Stormhawk's five banking
+frames through its production camera (the stock pivots and pods apply unchanged), and the same parts moved onto Rook's
+ship-C airframe in his Ember scheme. The pump wake and the under-water grade are part C.
+
+Artist brief: keep the round-48 pick's look exactly (pre-rendered models lit from the top left, every
+heading or state its own render, never rotated at runtime; one palette per frame set; additive effects
+stored premultiplied on black; the player's under-water colours toward cyan / teal-white, away from the
+Vrell and Siren teal 00ff9a).
+- **Prompt:** see [hydro-kit-r48-a](#hydro-kit-r48-a---b).
+- **Negative prompt:** pontoons, changed silhouette, photographic realism, side view, watermark.
+
+## underwater-capture-r50-a
+
+Concept round 50 (M8 part A, step A7), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). `--level 20 --medium underwater@10 --loadout front=ion-beam:3,rear=rear-lance:2,left=torpedo-pod:2,right=torpedo-pod:2 --special airstrike:2`; the video is level seconds 3–25, the frames 6.3 s (dry) and 12 s (under water).

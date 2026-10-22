@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../../player, ../difficulty]
-updated: 2026-10-14
+updated: 2026-10-22
 ---
 
 # Economy
@@ -161,6 +161,18 @@ medium sheet's tightest visit is L19 (387 left); it leaves about 1 900 after the
 beam is refused at L18 (short by about 330 after the repairs), so hard keeps the Pulse Cannon L4 (77
 forward, 0.77× the reference at L21) and banks about 7 100 by the L21 visit (pending the user's review;
 hard is tighter on purpose, below). Each Act 3 level's own data replaces the fallback as it is written.
+
+**Act 4 before its level data** (M8 part A, step A2; temporary, M8 part I removes it). The plan's Act 4 visits
+(Levels 22–28, the [generator's hand plan](../../player/generator/README.md#act-4-hand-plan-draft)) come before
+any Act 4 level has its data, so a planned level from L22 without a `data.yaml` earns **budget(n)** again
+(`tools/balance.py`'s `FALLBACK_FROM`, `BalanceTest.FALLBACK_FROM`): 2 898 → 4 350 a level (3 188 → 4 785 with the B
+bonus); Level 21 earns its own haul. At the plan's `underwater` levels (23–28, until the levels carry their
+`medium`) a weapon without the `anti-sub` trait and Rook's gun count at the water's ×0.7. The medium sheet: the
+harpoon bought at L22 (the beam flies the dry ice), the Depth Charges, the harpoon at L3 and the Sonar Pulse at
+L23, the pressure hull at L24, the second pod at L25, the harpoon at L4 at L26, the Mk IV at L27, the Shield Mk III at
+L28; forward DPS 100 · 76 · 79.5 · 83 · 101 · 101 · 101 against the reference 96 → 120 (0.76–1.04), at most 16 of 16
+MW until the Mk IV; the tightest visit L23 (about 1 940 left), about 3 500 left after the L28 visit. Rook's repairs
+stop while he is missing (L27–L28: the loaner Bulwark is repaired free).
 
 **Hard is tighter on purpose.** The plan is a medium player's; on hard (income ×0.9 of the hard
 levels' larger hauls, repairs 10 cr/point) the static sheet may not pay both the plan and the repairs;
@@ -402,3 +414,5 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
 - 2026-10-19 (user, after the Act 2 wave rework): the hard playthrough may end an act up to 25 % under the
   expert's bound (`expert.hard_under`); over-earning stays capped at +15 %, easy and medium keep ±15 %. Hard is
   tighter on purpose: its smaller firing groups and the Spire's half-paying hard Wraiths put Act 2 at −21.6 %.
+- 2026-10-22 (M8 part A, step A2; pending the user's review in round 50): a temporary budget(n) income for the Act 4
+  levels without data (D8 of the part's gap check; removed in M8 part I) and the plan's Act 4 visits.

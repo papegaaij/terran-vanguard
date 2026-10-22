@@ -119,6 +119,23 @@ render grade, sound and special limits switch with it.
 | Pressure hull | Optional utility module that **removes the drag** (acceleration back to normal; the speed and shield penalties of the draft are gone); see [ship systems](../../player/systems/README.md#pressure-hull-l22). |
 | Rook | Flies with the same hydro-kit: the same drag (his formation slot lags a little more), his guns × 0.7 (none of his guns is `anti-sub`); the [Bulwark](../../player/wingmen/README.md#heavy-drone-bulwark-escort-alternative-l22)'s cannon is `anti-sub`. |
 
+The numbers the game reads (M8 part A) are in [data.yaml](data.yaml), with the weapons each reach and
+range rule names:
+
+<!-- data: underwater -->
+| Rule | Number |
+|---|---|
+| Projectile speed | × 0.7: every bullet, the player's and the enemies', at its spawn |
+| Handling (drag) | acceleration and braking × 0.6, top speed unchanged (the pressure hull removes it) |
+| Damage | × 0.7 for a weapon without the `anti-sub` trait (the ship's and Rook's guns), after `anti-ground`'s ×2 |
+| Beam and laser reach | × 0.75 of the play field's height: [Ion Beam](../../player/weapons/ion-beam/README.md), [Lance Laser](../../player/weapons/lance-laser/README.md), [Rear Lance](../../player/weapons/rear-lance/README.md) |
+| Torpedo-type range | × 1.5: [Torpedo Pod](../../player/weapons/torpedo-pod/README.md), [Harpoon Torpedoes](../../player/weapons/harpoon-torpedoes/README.md), [Depth Charges](../../player/weapons/depth-charges/README.md) |
+| Waterline ease | 1 s, for new projectiles |
+| Hydro-kit refit | at the hangar visit before L23 (a one-off notice) |
+
+Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`.
+<!-- /data -->
+
 Which layers can be hit above water (the `sub` layer seen from the surface in Act 2) is part of
 the layer rules in [enemies](../../enemies/README.md#layer-rules).
 
@@ -224,6 +241,10 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
 | [concept/rejected/darkness-r48-b.gif](concept/rejected/darkness-r48-b.gif) | Darkness B in motion | rejected — round 48: a picked |
 | [concept/hydro-kit-r48-a.png](concept/hydro-kit-r48-a.png) | Hydro-kit A, sealed refit: pump-jet shrouds, ballast saddles, twin headlights, nav lights; banking frames vs stock, in L24 and L26, the pump wake | chosen — round 48 |
 | [concept/rejected/hydro-kit-r48-b.png](concept/rejected/hydro-kit-r48-b.png) | Hydro-kit B, pontoon kit: wing pontoons with lamps, a sonar blister, ducted engines; the same views (the pontoons sit where the weapon pods mount) | rejected — round 48: a picked |
+| [concept/hydro-kit-final-r50-a.png](concept/hydro-kit-final-r50-a.png) | Hydro-kit final frames (`tools/art/act4_gear.py hydro`, round 48 E10 = a): the Stormhawk's five banking frames stock and with the sealed refit, the kit with the micro-missile and torpedo pods at their pivots, Rook's craft stock and with the same kit parts (sheet) | proposed (round 50) |
+| [concept/hydro-kit-final-r50-a.gif](concept/hydro-kit-final-r50-a.gif) | The kitted Stormhawk and Rook banking under water (no grade, no wake: part C), the torpedo pods fitted halfway, 10 fps at 2x | proposed (round 50) |
+| [concept/underwater-capture-r50-a.png](concept/underwater-capture-r50-a.png) | Game capture, Level 20 with `--medium underwater@10`: dry (left: the Ion Beam's full reach, the Torpedo Pods `NO WATER`) and under water (right: the beam at three quarters of the field, the pods firing, the Airstrike greyed `UNDER ICE`, the ship and Rook with the hydro-kit) | proposed (round 50) |
+| [concept/underwater-capture-r50-a.mp4](concept/underwater-capture-r50-a.mp4) | Game capture with the game's sound: the same run across the waterline at 10 s (the special row's flash and limit chime, the factors easing in) | proposed (round 50) |
 
 ## Decisions
 
@@ -234,3 +255,8 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
 - 2026-10-01: Linked the chosen scene from art direction; `art: chosen`.
 - 2026-10-21 (Act 4 design phase, step m8-dsystems; **all decided in round 48 (2026-10-22)**): the *Under water rules* are rewritten to Q1 = b (the softened rules: damage × 0.7, no top-speed or shield-regen penalty, beam reach × 0.75, the pressure hull removes the drag), the as-drafted values kept as alternative a; the play plane under water is `air` in water (`sub` = the deep below, `ground` = the sea floor, `high-air` = the ice ceiling), the parallax-layer table re-worded; Darkness (Q4 = a: a look only, the Sonar Pulse lights the field) and the Siren's sonar slow (Q5 = a: a visible ring, 60 % for 2 s, 3 s immunity) written as system text.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
+- 2026-10-22 (M8 part A, step A2): the under-water rules' numbers in [data.yaml](data.yaml) (`underwater`, with the
+  weapons the reach and range rules name and the hydro-kit's level 23), rendered into the *Under water rules* table
+  (D2 of the part's gap check, pending the user's review in round 50).
+- 2026-10-22 (M8 part A, steps A1–A6; small rules decided by the part's gap check and its steps, pending the user's review in round 50): part A is flown on built levels with the debug option `--medium underwater[@<s>]` and on simulation fixtures, no test level in the design tree (D1); the water's factors apply when a shot or a bullet spawns, so a shot keeps the factor it was fired with, and the drag works on braking too (D3); the 1 s ease at a waterline is a smoothstep and touches new projectiles only, while a beam's reach and the layers switch at once; lobbed shells (mortars) and spore mines are not slowed (not bullets); a mine's roll-out is ×0.7.
+- 2026-10-22 (M8 part A, ART-A and step A6; pending the user's review in round 50): the hydro-kit's parts on Rook's craft placed by hand; the engine flames still show under water (the under-water look is part C's); over water (Levels 11–13) the harpoons' and the charges' cables, lamps and bursts are drawn in the `sub` pass, so they read dim under the sea's surface.

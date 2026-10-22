@@ -44,6 +44,7 @@ public final class TerranVanguard extends ApplicationAdapter {
     private final Optional<DebugFit> debugFit;
     private final int level;
     private final boolean actEnd;
+    private final java.util.OptionalDouble underwaterFrom;
     private final Optional<BenchRun> bench;
     private final SaveSlots saves;
     private final ScoreFile scores;
@@ -66,6 +67,7 @@ public final class TerranVanguard extends ApplicationAdapter {
      * @param debugFit a debug option: the weapons the level start flies
      * @param level a debug option: the level the level start flies
      * @param actEnd a debug option: winning the level start's level ends its act (act summary, outro)
+     * @param underwaterFrom M8 part A, a debug option: the level start flies under water from this level second on
      * @param benchSeconds exit after this many seconds and log the frame count; 0 runs until quit
      * @param saves the save slots: read-only in a debug run, which writes no save
      * @param scores the high-score file: read-only in a debug run
@@ -83,6 +85,7 @@ public final class TerranVanguard extends ApplicationAdapter {
             Optional<DebugFit> debugFit,
             int level,
             boolean actEnd,
+            java.util.OptionalDouble underwaterFrom,
             double benchSeconds,
             SaveSlots saves,
             ScoreFile scores,
@@ -98,6 +101,7 @@ public final class TerranVanguard extends ApplicationAdapter {
         this.debugFit = debugFit;
         this.level = level;
         this.actEnd = actEnd;
+        this.underwaterFrom = underwaterFrom;
         this.bench = benchSeconds > 0 ? Optional.of(new BenchRun(benchSeconds)) : Optional.empty();
         this.saves = saves;
         this.scores = scores;
@@ -111,7 +115,17 @@ public final class TerranVanguard extends ApplicationAdapter {
         batch = new SpriteBatch();
         pixelScreen = new PixelScreen();
         services = new GameServices(
-                Gdx.files, Gdx.audio, displayModes, settings, store, difficulty, invulnerable, saves, scores, version);
+                Gdx.files,
+                Gdx.audio,
+                displayModes,
+                settings,
+                store,
+                difficulty,
+                invulnerable,
+                underwaterFrom,
+                saves,
+                scores,
+                version);
         screens = new ScreenFlow(startLevel ? testLevel() : MainMenuScreen.title(services), Gdx.app::exit);
         Gdx.input.setInputProcessor(services.mouse);
         cursor = new PointerCursor(Gdx.files);

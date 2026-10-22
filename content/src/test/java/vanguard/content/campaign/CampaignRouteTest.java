@@ -325,6 +325,7 @@ class CampaignRouteTest {
                 (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(campaign.save(Instant.EPOCH)));
         tree.put("version", 3);
         tree.remove("bays");
+        ((ObjectNode) tree.get("escort")).remove(java.util.List.of("flies", "bulwark")); // M8 part A: version 6's
         tree.putArray("storyFlags");
         return tree.toString();
     }

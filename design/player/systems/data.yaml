@@ -62,15 +62,22 @@ utility:
   - name: Auto-repair nanites
     draw: 3
     prices: [6000, 12000]
-    available: act 4
-    design: idea
-    notes: {effect: 'Repairs 1 armour per 4 s, up to 50 % of max armour', levels: (2 s at L2)}
+    available: L24    # M8 part A: the README's unlock (round 48; the roster said act 4)
+    design: draft     # decided in round 48; the row's status is the user's to raise
+    repair:  # M8 part A: 1 armour point every `interval` s (one per level) in flight, up to `cap` of the plating's maximum; a hit pauses it `pause` s; nothing while wrecked
+      interval: [4, 2]
+      cap: 0.5
+      pause: 1
+    notes:
+      effect: 'Repairs 1 armour per {repair.interval.0} s, up to {repair.cap:.0%} of max armour; a hit pauses it {repair.pause} s (see below)'
+      levels: '({repair.interval.1} s at L2)'
   - name: Pressure hull
     draw: 1
     prices: [2000]
     available: L22
-    design: idea
-    notes: {effect: 'Removes the underwater top-speed and shield-regen penalties (see [europa](../../world/europa/README.md#under-water-rules))'}
+    design: draft     # decided in round 48; the row's status is the user's to raise
+    hull: {drag: false}  # M8 part A: under water the ship keeps its normal acceleration (no drag); a second hull adds nothing
+    notes: {effect: 'Removes the under-water drag (see [europa](../../world/europa/README.md#under-water-rules) and below)'}
   - name: Ascendancy IFF spoofer
     draw: 2
     prices: [5000]

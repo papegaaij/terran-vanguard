@@ -230,10 +230,17 @@ public final class LevelScreen implements GameScreen {
         Rules rules = SimSpecs.rules(services.content, levelKey, difficulty);
         campaign.launch();
         flight = Flight.of(services.content, services.catalogue, campaign);
+        LevelScript script = SimSpecs.level(services.content, levelKey, difficulty);
+        if (services.underwaterFrom.isPresent()) {
+            // M8 part A, the debug option --medium underwater[@<s>]: under water from that level second on.
+            script = script.toBuilder()
+                    .medium(SimSpecs.underwaterFrom(services.content, services.underwaterFrom.getAsDouble()))
+                    .build();
+        }
         sortie = new Sortie(
                 SEED,
                 flight.loadout(),
-                SimSpecs.level(services.content, levelKey, difficulty),
+                script,
                 services.invulnerable ? rules.withInvulnerableShip() : rules,
                 campaign.armour());
         radioSchedule = new RadioSchedule(sortie.script(), RadioSchedule.fitted(sortie));
@@ -253,14 +260,14 @@ public final class LevelScreen implements GameScreen {
                 flight.weapons().stream().mapToInt(Flight.Weapon::level).toArray(),
                 services.sprites,
                 new PodPivots(services.files),
-                sortie.wingman().map(Wingman::gun));
+                escortGun(sortie));
         flak = optionalFrames(services, "escort-frigate-flak");
         sounds = new FlightSounds(
                 services.sfx,
                 looks,
                 sortie.armament(),
                 sortie.script().setPieces().stream().map(SetPieceSpec::slug).toList(),
-                sortie.wingman().map(Wingman::gun));
+                escortGun(sortie));
         // M5 part E: Level 11's sounds: ships on the convoy, the Kraken's slam cycle for its sound's timing.
         sounds.naval(sortie.navalConvoy());
         // M5 part G: Level 13's relay sounds and its supply drones' launches.
@@ -527,12 +534,21 @@ public final class LevelScreen implements GameScreen {
         radioEvents.clearFailureLine();
     }
 
+    /**
+     * M8 part A: the gun flying in the escort slot, whose shots carry the escort's mount: Rook's, or the Bulwark's
+     * cannon; empty without an escort.
+     */
+    static java.util.Optional<vanguard.sim.WeaponSpec> escortGun(Sortie sortie) {
+        return sortie.wingman().map(Wingman::gun).or(() -> sortie.bulwark().map(vanguard.sim.Bulwark::gun));
+    }
+
     /** Starts the level over from its start state with {@code armour} (a retry, or the pause menu's restart). */
     void retry(double armour) {
         // The flight's Rook: the gear's, or the --escort debug option's (never the gear's).
         double rook = campaign.escortFlight().map(Campaign.EscortFlight::armour).orElse(0.0);
-        if (sortie.wingman().isPresent() && rook > 0) {
-            // Rook starts over with his level-start armour, raised to the floor like the player's.
+        if ((sortie.wingman().isPresent() || sortie.bulwark().isPresent()) && rook > 0) {
+            // Rook starts over with his level-start armour, raised to the floor like the player's; M8 part A: the
+            // Bulwark the same.
             sortie.retry(armour, rook);
         } else {
             sortie.retry(armour);
@@ -799,6 +815,8 @@ public final class LevelScreen implements GameScreen {
                 case BOSS_RETRY -> music.bossRetry();
                 case SPECIAL_READY -> hud.specialReady();
                 case SPECIAL_DENIED -> hud.specialDenied();
+                // M8 part A: the special's row changed state at a waterline: it flashes once (its chime: FlightSounds).
+                case SPECIAL_LIMIT -> hud.specialLimit();
                 case SHIELD_HIT -> shimmer = SHIMMER_TICKS;
                 // M5 part D: the scripted loss's lance ducks the theme (the music block's duck, no sting).
                 case SCRIPTED_LOSS ->
@@ -928,7 +946,9 @@ public final class LevelScreen implements GameScreen {
             case AIRSTRIKE -> specials.airstrike().radio();
             case LANCE ->
                 specials.orbitalLance() == null ? null : specials.orbitalLance().radio();
-            case SMART_BOMB, EMP, OVERCHARGE -> null;
+            // M8 part A (step A6, decided): the Sonar Pulse and the Decoy Flares are the ship's own, no call: the
+            // ping and the flares' launch answer the press.
+            case SMART_BOMB, EMP, OVERCHARGE, SONAR, FLARES -> null;
         };
     }
 
@@ -1051,6 +1071,8 @@ public final class LevelScreen implements GameScreen {
                 sortie.special().found(),
                 sortie.wingman()
                         .map(rook -> java.util.OptionalDouble.of(rook.armour()))
+                        // M8 part A: the Bulwark's armour left, for its repair.
+                        .or(() -> sortie.bulwark().map(bulwark -> java.util.OptionalDouble.of(bulwark.armour())))
                         .orElse(java.util.OptionalDouble.empty()));
         if (newBest) {
             // A replay's better grade goes into the save it was started from (design/ui/mission-select).

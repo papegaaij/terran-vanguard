@@ -39,6 +39,11 @@ final class BossCheckpoint {
     private boolean wingmanEjected;
     private boolean wingmanCritical;
     private long wingmanLuck;
+    /** M8 part A: the Bulwark's armour, whether it was destroyed and its generator then. */
+    private double bulwarkArmour;
+
+    private boolean bulwarkDestroyed;
+    private long bulwarkDraws;
     private boolean escortKilled;
     private int tickFraction;
     private int realTick;
@@ -113,6 +118,12 @@ final class BossCheckpoint {
             wingmanCritical = wingman.wasCritical();
             wingmanLuck = wingman.luck();
         }
+        Bulwark bulwark = s.bulwark;
+        if (bulwark != null) {
+            bulwarkArmour = bulwark.armour();
+            bulwarkDestroyed = bulwark.destroyed();
+            bulwarkDraws = bulwark.drawState();
+        }
         escortKilled = s.objectivePasses.escortKilled;
         tickFraction = s.tickFraction;
         realTick = s.realTick;
@@ -175,6 +186,9 @@ final class BossCheckpoint {
         ship.defences().restore(shield, armour, armourLost);
         if (s.wingman != null) {
             s.wingman.restore(wingmanArmour, wingmanEjected, wingmanCritical, wingmanLuck, ship.x(), ship.y());
+        }
+        if (s.bulwark != null) {
+            s.bulwark.restore(bulwarkArmour, bulwarkDestroyed, bulwarkDraws, ship.x(), ship.y());
         }
         s.objectivePasses.escortKilled = escortKilled;
         s.tickFraction = tickFraction;

@@ -76,7 +76,13 @@ class HangarTest {
 
         assertEquals(State.FITTED, front.getFirst().state());
         assertEquals(
-                List.of("Scatter Vulcan", "Lance Laser", "Hammer Mortar", "Hornet Launcher", "Ion Beam"),
+                List.of(
+                        "Scatter Vulcan",
+                        "Lance Laser",
+                        "Hammer Mortar",
+                        "Hornet Launcher",
+                        "Ion Beam",
+                        "Harpoon Torpedoes"),
                 front.subList(1, front.size()).stream()
                         .map(offer -> offer.item().name())
                         .toList());

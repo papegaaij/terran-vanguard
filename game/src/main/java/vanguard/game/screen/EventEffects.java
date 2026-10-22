@@ -216,18 +216,23 @@ final class EventEffects {
         double y = events.y(i);
         switch (events.type(i)) {
             case ENEMY_HIT -> {
-                if (!waterImpact(events.value(i), x, y)) {
+                // M8 part A: a harpoon's impact is DeepWaterLooks' (its cavity under it).
+                if (!weaponLooks.ownImpact(events.value(i)) && !waterImpact(events.value(i), x, y)) {
                     effects.start(weaponLooks.impact(events.value(i)), IMPACT_FRAME_TICKS, x, y);
                 }
             }
             case GROUND_HIT -> {
-                if (!waterImpact(events.value(i), x, y)) {
+                if (!weaponLooks.ownImpact(events.value(i)) && !waterImpact(events.value(i), x, y)) {
                     effects.startOnGround(
                             weaponLooks.impact(events.value(i)), IMPACT_FRAME_TICKS, x, y, 0, sortie.groundScroll());
                 }
             }
             case SHOT_GLANCED -> effects.start(glance, IMPACT_FRAME_TICKS, x, y);
             case BLAST -> {
+                if (weaponLooks.depthCharge(events.value(i))) {
+                    // M8 part A: a depth charge's pressure dome is DeepWaterLooks'.
+                    return;
+                }
                 // A bomb's or shell's burst is the small explosion; a mine bursts in its own blast.
                 Array<AtlasRegion> blast = weaponLooks.blast(events.value(i), services.sprites.explosionSmall);
                 if (blast == services.sprites.explosionSmall

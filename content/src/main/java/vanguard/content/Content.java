@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * Everything in the design tree's data files, loaded and validated by {@link ContentLoader}.
  * Weapons and enemies are keyed by their slug, levels by their path under design/campaign
  * ({@code act-1-first-contact/level-01-break-at-dawn}), acts by their directory
- * ({@code act-1-first-contact}).
+ * ({@code act-1-first-contact}). M8 part A: {@code europa} holds the under-water rules (design/world/europa).
  */
 public record Content(
         PlayerData player,
@@ -31,7 +31,8 @@ public record Content(
         RetryData retry,
         AlliesData allies,
         VoiceData voices,
-        WingmenData wingmen) {
+        WingmenData wingmen,
+        EuropaData europa) {
     public Content {
         weapons = Map.copyOf(weapons);
         enemies = Map.copyOf(enemies);

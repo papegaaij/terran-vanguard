@@ -30,6 +30,12 @@ import java.util.List;
  * Beam} runs from the muzzle straight up and {@link #burn} damages the first target in its column every
  * step (see there). A drone bay's gun fires from its {@link Drones drone} at the convergence point, and
  * only while the drone is whole; a Deflector Pod ({@link Deflectors}) fires nothing.
+ *
+ * <p>M8 part A (design/world/europa, Under water rules): the {@link Medium}'s water factors land on a shot once, as it
+ * is fired ({@link #soak}: its damage, speed and range; the ship's, the drones' and Rook's), and per step on the beam
+ * ({@link Beams}); every layer rule reads {@link Medium#reaches}. A torpedo runs where there is water (over water or
+ * under it) and, with a splash (the Harpoon Torpedoes), its hit deals a share of its damage to the units round it; a
+ * {@link WeaponSpec.Delivery#DEPTH_CHARGE} rolls out, hovers, sinks with the scroll and bursts on its fuse.
  */
 final class PlayerFire {
     private static final int SHOT_CAPACITY = 256;
@@ -139,6 +145,8 @@ final class PlayerFire {
     private Missiles missiles;
     /** M7 part C: the level's tendril gates, which a beam burns on its way past; null without. */
     private Links links;
+    /** M8 part A: the medium the ship flies in (the air unless the sortie sets the level's). */
+    private Medium medium = Medium.air();
     /** The enemy (a serial) the player's shots damaged last, for the wingman's first target; -1 for none. */
     private int lastHit;
     /** Steps since {@link #lastHit} was damaged. */
@@ -190,6 +198,16 @@ final class PlayerFire {
     /** M7 part F: the enemies' homing missiles; null before the sortie sets them. */
     Missiles missiles() {
         return missiles;
+    }
+
+    /** M8 part A: the level's medium (design/world/europa, Under water rules). */
+    void medium(Medium water) {
+        medium = water;
+    }
+
+    /** M8 part A: the medium the ship flies in. */
+    Medium medium() {
+        return medium;
     }
 
     /** The level's rock; null without terrain. */
@@ -270,7 +288,7 @@ final class PlayerFire {
                     // M7 part A: a broken (or fading-in) drone does not fire.
                     || (mount.bay() && !drones.whole(m))
                     || (weapon.delivery() == WeaponSpec.Delivery.TURRET && turretTargets[m] < 0)
-                    || (weapon.delivery() == WeaponSpec.Delivery.MINE
+                    || (weapon.delivery().laid()
                             && liveMines(m) >= weapon.mines().maxLive())) {
                 // A turret without a target holds fire; at its mine cap a mount waits for one to go;
                 // a torpedo pod over land fires nothing (M5 part E).
@@ -300,6 +318,7 @@ final class PlayerFire {
                     ? StrictMath.PI
                     : StrictMath.atan2(ship.x() - x, ship.y() + drones.spec(m).converge() - y);
             shot.fire(weapon, m, x, y, heading);
+            soak(shot);
         }
         events.add(SimEvents.Type.SHOT_FIRED, x, y, m);
     }
@@ -315,10 +334,31 @@ final class PlayerFire {
 
     /**
      * M5 part E (user decision E1 = a): whether {@code weapon} fires nothing in this level: a
-     * torpedo over land (its pod still draws its power; the HUD reads NO WATER).
+     * torpedo over land (its pod still draws its power; the HUD reads NO WATER). M8 part A: a torpedo (the Harpoon's
+     * too) or a depth charge where there is no water: not over water and not under it now.
      */
     boolean idle(WeaponSpec weapon) {
-        return weapon != null && weapon.delivery() == WeaponSpec.Delivery.TORPEDO && !water;
+        return weapon != null && weapon.delivery().needsWater() && !water && !medium.underwater();
+    }
+
+    /**
+     * M8 part A (design/world/europa, Under water rules; decided D3): the water's factors on a shot just fired, once:
+     * its damage × the medium's (an {@code anti-sub} weapon's full), its speed × the bullet speed (a depth charge's
+     * roll-out × the torpedo range too, D12), a torpedo-type weapon's range × the torpedo range, a reach-limited
+     * weapon's (the lances') at most its reach of the field's height. Nothing in the air.
+     */
+    private void soak(Shot shot) {
+        if (!medium.wet()) {
+            return;
+        }
+        WeaponSpec weapon = shot.weapon();
+        double torpedo = medium.torpedoRange(weapon);
+        double reach = medium.reach(weapon);
+        shot.soak(
+                medium.damage(weapon),
+                medium.bulletSpeed() * (weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE ? torpedo : 1),
+                torpedo,
+                reach < 1 ? reach * PlayField.HEIGHT : Double.POSITIVE_INFINITY);
     }
 
     private void volley(int mount, WeaponSpec weapon, Pool<Enemy> enemies, Pool<GroundObject> ground) {
@@ -337,12 +377,7 @@ final class PlayerFire {
                 continue;
             }
             switch (weapon.delivery()) {
-                case BOLT, HOMING, MINE -> shot.fire(weapon, mount, x, y, muzzle.angle());
-                case TORPEDO -> {
-                    // It picks its target as it is fired; without one it runs straight.
-                    shot.fire(weapon, mount, x, y, muzzle.angle());
-                    shot.lock(homing.nearestInCone(shot, enemies, ground));
-                }
+                case BOLT, HOMING, MINE, TORPEDO, DEPTH_CHARGE -> shot.fire(weapon, mount, x, y, muzzle.angle());
                 case TURRET -> {
                     shot.fire(weapon, mount, x, y, turretHeadings[mount]);
                     // Its lock: a high-air boss's part is hit only by a shot aimed at it.
@@ -350,6 +385,12 @@ final class PlayerFire {
                 }
                 case DROPPED -> shot.lob(weapon, mount, x, y, x, y);
                 case LOBBED -> lob(shot, weapon, mount, x, y, enemies, ground);
+                case BEAM -> throw new IllegalStateException("a beam fires no shots");
+            }
+            soak(shot);
+            if (weapon.delivery() == WeaponSpec.Delivery.TORPEDO) {
+                // It picks its target as it is fired (in its soaked range); without one it runs straight.
+                shot.lock(homing.nearestInCone(shot, enemies, ground));
             }
         }
         events.add(SimEvents.Type.SHOT_FIRED, sumX / muzzles.size(), sumY / muzzles.size(), mount);
@@ -425,6 +466,18 @@ final class PlayerFire {
                 }
                 continue;
             }
+            if (weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE) {
+                // M8 part A: it rolls out, hovers, then sinks with the ground; it bursts on its fuse (hitGround).
+                shot.sink(groundScroll);
+                if (canyon != null) {
+                    shot.placeX(
+                            canyon.flyableX(shot.y(), shot.x(), weapon.size().width() / 2));
+                }
+                if (!PlayField.overlaps(shot.x(), shot.y(), weapon.size())) {
+                    shots.free(i);
+                }
+                continue;
+            }
             if (weapon.delivery() == WeaponSpec.Delivery.MINE) {
                 // A mine holds its place on the screen (it does not scroll) until it bursts or fizzles.
                 shot.drift();
@@ -488,13 +541,13 @@ final class PlayerFire {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             WeaponSpec weapon = shot.weapon();
-            if (weapon.delivery().landing() || weapon.delivery() == WeaponSpec.Delivery.MINE) {
+            if (weapon.delivery().landing() || weapon.delivery().laid()) {
                 continue;
             }
             for (int j = enemies.size() - 1; j >= 0; j--) {
                 Enemy enemy = enemies.get(j);
                 Layer layer = enemy.layer();
-                if (!weapon.delivery().reaches(layer)
+                if (!medium.reaches(weapon, layer)
                         || !onField(enemy)
                         || (enemy.latched() && !hitsLatched(shot.mount()))) {
                     continue;
@@ -523,6 +576,7 @@ final class PlayerFire {
                     sinceHit = 0;
                 }
                 boolean spent = shot.pierced();
+                int struck = enemy.serial();
                 if (onPart) {
                     if (enemy.damagePart(shot.damage() * groundFactor(weapon, layer), false)) {
                         hits.unitPartDestroyed(j, shot.mount());
@@ -533,6 +587,7 @@ final class PlayerFire {
                     hits.enemyDestroyed(j, shot.mount());
                 }
                 if (spent) {
+                    splash(shot, struck, enemies);
                     shots.free(i);
                     break;
                 }
@@ -619,7 +674,7 @@ final class PlayerFire {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             WeaponSpec weapon = shot.weapon();
-            if (weapon.delivery().landing() || !weapon.delivery().reaches(Layer.AIR)) {
+            if (weapon.delivery().landing() || !medium.reaches(weapon, Layer.AIR)) {
                 continue;
             }
             for (int j = mines.size() - 1; j >= 0; j--) {
@@ -652,7 +707,7 @@ final class PlayerFire {
         for (int i = shots.size() - 1; i >= 0; i--) {
             Shot shot = shots.get(i);
             WeaponSpec weapon = shot.weapon();
-            if (weapon.delivery().landing() || !weapon.delivery().reaches(Layer.AIR)) {
+            if (weapon.delivery().landing() || !medium.reaches(weapon, Layer.AIR)) {
                 continue;
             }
             for (int j = missiles.size() - 1; j >= 0; j--) {
@@ -695,13 +750,13 @@ final class PlayerFire {
                 Shot shot = shots.get(i);
                 WeaponSpec weapon = shot.weapon();
                 if (weapon.delivery().landing()
-                        || (!anchored && !weapon.delivery().reaches(piece.layer()))
+                        || (!anchored && !medium.reaches(weapon, piece.layer()))
                         || (overhead && homing.overhead(shot.target()) != k)) {
                     continue;
                 }
                 int lockedPart = overhead ? (shot.target() - PART_SERIAL) % SetPieceSpec.MAX_PARTS : -1;
                 if (piece.plateTouches(weapon.size(), shot.x(), shot.y())
-                        && (!anchored || weapon.delivery().reaches(piece.layer()))) {
+                        && (!anchored || medium.reaches(weapon, piece.layer()))) {
                     // M7 part F: a walking boss's front plate turns every shot that meets it.
                     events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
                     shots.free(i);
@@ -714,7 +769,7 @@ final class PlayerFire {
                     }
                     Layer partLayer = piece.partLayer(p);
                     if (piece.partWrecked(p)
-                            || (anchored && !weapon.delivery().reaches(partLayer))
+                            || (anchored && !medium.reaches(weapon, partLayer))
                             || !piece.partTouches(p, weapon.size(), shot.x(), shot.y())
                             || !piece.partOnField(p)
                             || (weapon.pierce() > 1 && shot.struck(-1 - k * SetPieceSpec.MAX_PARTS - p))) {
@@ -783,6 +838,39 @@ final class PlayerFire {
             }
         }
         return false;
+    }
+
+    /**
+     * M8 part A (design/player/weapons/harpoon-torpedoes; decided D13): a torpedo with a splash that struck at its
+     * place deals its {@link WeaponSpec#splash()} share of its damage to every other unit within its blast on a layer
+     * it reaches (the unit with the serial {@code struck} excepted; -1 for none); hardened units without {@code
+     * anti-ground} and growths are not hurt. Units only (not ground objects or set pieces' parts, default pending the
+     * user's review).
+     */
+    void splash(Shot shot, int struck, Pool<Enemy> enemies) {
+        WeaponSpec weapon = shot.weapon();
+        if (!(weapon.splash() > 0) || !(weapon.blast() > 0)) {
+            return;
+        }
+        double damage = shot.damage() * weapon.splash();
+        double x = shot.x();
+        double y = shot.y();
+        for (int j = enemies.size() - 1; j >= 0; j--) {
+            Enemy enemy = enemies.get(j);
+            Layer layer = enemy.layer();
+            if (enemy.serial() == struck
+                    || !medium.reaches(weapon, layer)
+                    || !onField(enemy)
+                    || enemy.latched()
+                    || (enemy.spec().hardened() && !weapon.antiGround())
+                    || enemy.growing()
+                    || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
+                continue;
+            }
+            if (enemy.damage(damage * groundFactor(weapon, layer))) {
+                hits.enemyDestroyed(j, shot.mount());
+            }
+        }
     }
 
     /** A hit on a ground object: a trigger counts it, a destructible takes the damage. */
@@ -911,6 +999,8 @@ final class PlayerFire {
                     shot.lock(target);
                 }
             }
+            // M8 part A: Rook's guns take the water's factors as the ship's do (none of them is anti-sub).
+            soak(shot);
         }
         events.add(SimEvents.Type.SHOT_FIRED, sumX / muzzles.size(), sumY / muzzles.size(), mount);
     }

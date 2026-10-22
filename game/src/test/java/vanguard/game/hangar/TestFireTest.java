@@ -125,6 +125,8 @@ class TestFireTest {
             case TORPEDO -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
             // M7 part A: the column burns the dummy on its line ahead.
             case BEAM -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
+            // M8 part A: over the test range's water, the drums burst among the submerged dummies behind the ship.
+            case DEPTH_CHARGE -> assertTrue(hits.stream().anyMatch(hit -> hit.y() < shipY - HULL), "behind: " + where);
         }
     }
 
@@ -163,7 +165,8 @@ class TestFireTest {
                     }
                 }
                 case ENEMY_DESTROYED -> {
-                    if (weapon.delivery().landing()) {
+                    // M8 part A: a depth charge's burst destroys a dummy outright, so it is gone before it is seen.
+                    if (weapon.delivery().landing() || weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE) {
                         hits.add(new Hit(x, y));
                     }
                 }

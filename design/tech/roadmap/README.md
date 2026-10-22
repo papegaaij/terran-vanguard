@@ -30,7 +30,7 @@ milestone lists which documents it covers, it does not copy their items.
 | M5 | **Act 2** | Levels 08–14 and their new units and equipment | [act 2](../../campaign/act-2-homefront/README.md) levels and their enemies and equipment, the [wingmen](../../player/wingmen/README.md) escort slot (Rook from L08), the [saves](../../systems/saves/README.md) `escort` field, the Targeting computer in the shop with its effects and the Salvage scanner's ([ship systems](../../player/systems/README.md), part A), the perspective towers and roofs of L08 (art direction); built in parts A–I (below) |
 | M6 | **Acts 1–2 release** (its `v0.1` tag moved to the end of M7: the first release is Acts 1–3, round 44 I.2) | Credits screen with the CC-BY attributions, polish pass, release bundles for all OSes on a `v0.1` tag | [credits](../../ui/credits/README.md), mouse support in the out-of-game screens ([ui](../../ui/README.md)), the [scoring](../../systems/scoring/README.md) high-score table per difficulty with its name entry at game over and at the campaign's end, remaining checklist items of Acts 1–2 |
 | M7 | **Act 3** | Levels 15–21 and their new units and equipment | [act 3](../../campaign/act-3-red-dust/README.md) levels and their enemies, bosses and equipment (Ion Beam and `beam`, drones, EMP Burst, Orbital Lance, Shield Overcharge and cooldowns, Evasive thrusters, the third utility bay), terrain collision and canyon walls, reverse scroll, the dust-storm visibility, the Mars backdrops; built in parts A–I (below; the design approved in concept round 36) |
-| M8 | **Act 4** (design decided in round 48, 2026-10-22; not started) | Levels 22–28 and their new units and equipment | [act 4](../../campaign/act-4-deep-water/README.md) levels and their enemies, boss and equipment: under-water mode, darkness for every unit, the trench and shaft on `Terrain`, the Siren's slow, heat plumes, anti-sub gear (Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, pressure hull, Mk IV), the Bulwark heavy drone and Rook's absence, the Abyssal Maw and the reveal; built in parts A–I (below) |
+| M8 | **Act 4** (design decided in round 48, 2026-10-22; part A in progress) | Levels 22–28 and their new units and equipment | [act 4](../../campaign/act-4-deep-water/README.md) levels and their enemies, boss and equipment: under-water mode, darkness for every unit, the trench and shaft on `Terrain`, the Siren's slow, heat plumes, anti-sub gear (Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, pressure hull, Mk IV), the Bulwark heavy drone and Rook's absence, the Abyssal Maw and the reveal; built in parts A–I (below) |
 
 ### Rules
 
@@ -107,19 +107,19 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
 
 ### M8 parts
 
-*Proposed* by the Act 4 design phase (2026-10-21), **pending the user's review in round 48**; nothing is built before the user approves the act's design. Built like M7: each part is a commit series with its own gap check and a production-art concept round; E (the trench) can run beside D on its own files once C's under-water mode is in.
+Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (2026-10-22, the act's design approved). Built like M7: each part is a commit series with its own gap check and a production-art concept round; E (the trench) can run beside D on its own files once C's under-water mode is in.
 
 | Part | Scope | Depends on | Round |
 |---|---|---|---|
-| **A** Act 4 systems | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Mk IV, the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on a test level | — | 49 |
-| **B** Level 22 + Act 4 intro | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 50 |
-| **C** Level 23 | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 51 |
-| **D** Level 24 | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 52 |
-| **E** Level 25 | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 53 |
-| **F** Level 26 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 54 |
-| **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F | 55 |
-| **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 56 |
-| **I** Close-out | Playthrough and balance tests through Act 4, variety as built, `later` tags → Act 5, the voice listen-through | all | 57 |
+| **A** Act 4 systems — **built** (steps A1–A7, ART-A, AUD-A; concept round 50 open: the finals, the sounds, seven calls and the Level 23 question) | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Auto-repair nanites, Mk IV (20 MW, round 48 J1), the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on built levels with the `--medium underwater` debug option and on simulation fixtures | — | 50 |
+| **B** Level 22 + Act 4 intro | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 51 |
+| **C** Level 23 | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 52 |
+| **D** Level 24 | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
+| **E** Level 25 | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
+| **F** Level 26 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
+| **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F | 56 |
+| **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 57 |
+| **I** Close-out | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 58 |
 
 ## Implementation
 
@@ -581,3 +581,11 @@ slips. G's reverse scroll is independent of C–F and could run in parallel on i
 - 2026-10-20 (user, round 44, I.1-I.11 and J.a, all as recommended): see the part I gap check's log (a local working note, `m7i-gaps.md`) and the *M7 parts* table: v0.1 is Acts 1-3 (I.2); an Act 3 level is `done` when its round has closed and its checklist is ticked, the playthrough staying an act-level item (I.8); the Act 4 design phase follows part I and the release (J.a, part J).
 - 2026-10-22 (user): M7 part I done: the playthrough of Act 3 (2026-10-21) and the release `v0.1` = Acts 1-3 (no Mac check, so the release notes keep the "untested on Apple silicon" mark). M6's tag is made; M6 and M7 stay unticked for the open items named in their rows (M6: R.5 and round 34's leftovers; M7: Levels 18/19 variations).
 - 2026-10-21 (Act 4 design phase, step m8-dact; **pending the user's review in round 48**): the M8 row and its *M8 parts* A–I proposed (the gap analysis's plan); nothing is built before the design is approved.
+- 2026-10-22 (M8 part A, step A2): the *M8 parts* table follows round 48: the parts' rounds renumbered (round 49 was an
+  Act 3 sound redo: part A → 50 … part I → 58), the "pending round 48" wording dropped, the Auto-repair nanites and
+  the Mk IV's 20 MW named in part A, part A flown on built levels with a debug option (D1 of its gap check) and part I
+  removing part A's temporary budget(n) income.
+- 2026-10-22 (M8 part A, step A7): part A **built** (steps A1–A6, ART-A, AUD-A; the full `check`, `tools/balance.py` and
+  `tools/check_docs.py` clean); the parts' checklists ticked with their tests, the steps' small rules logged in the
+  parts' *Decisions* as pending the user's review in round 50; concept [round 50](../../concept-rounds/round-50/README.md)
+  opened (the finals with game captures, eight sound pairs, seven calls the build made, part C's dry-shaft question).

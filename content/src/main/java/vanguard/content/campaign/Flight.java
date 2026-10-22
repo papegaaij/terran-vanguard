@@ -18,7 +18,9 @@ import vanguard.sim.Loadout;
  * Targeting computer (its turn bonus on the Stormhawk's homing weapons, its HP bars and weak-point
  * brackets for the renderer) and the Salvage scanner's bonus at its best fitted level, the Evasive thrusters' dash (M7 part A), and the
  * sensor suite's best level for the HUD's threat arrows (L2+; it always gave the hangar intel), and
- * Rook in the escort slot with his fitted gun when he flies ({@link Campaign#escortFlight()}). The
+ * Rook in the escort slot with his fitted gun when he flies ({@link Campaign#escortFlight()}) or (M8 part A) the
+ * Bulwark there, owned or on loan, with its armour, and the Pressure hull and the Auto-repair nanites (the best fitted
+ * level); the Sonar Pulse and the Decoy Flares fly as specials. The
  * other specials and utility modules are bought, fitted and saved but fly later; they and any weapon
  * that does not fly yet are listed for the HUD.
  *
@@ -61,6 +63,8 @@ public record Flight(
         boolean targeting = false;
         int salvage = 0;
         boolean thrusters = false;
+        boolean hull = false;
+        int nanites = 0;
         for (var entry : loadout.entrySet()) {
             LoadoutSlot slot = entry.getKey();
             Fitted item = entry.getValue();
@@ -76,6 +80,10 @@ public record Flight(
                 salvage = Math.max(salvage, item.level());
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.EVASIVE_THRUSTERS)) {
                 thrusters = true;
+            } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.PRESSURE_HULL)) {
+                hull = true;
+            } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.AUTO_REPAIR_NANITES)) {
+                nanites = Math.max(nanites, item.level());
             } else if (slot.kind() == ItemKind.UTILITY && item.item().equals(SimSpecs.PICKUP_MAGNET)) {
                 magnet = Math.max(magnet, item.level());
             } else if (weaponSlot(slot) != null) {
@@ -113,11 +121,25 @@ public record Flight(
             // M7 part A: the dash (one module; a second one in another bay adds nothing).
             flown = flown.withThrusters(SimSpecs.thrusters(content));
         }
-        Optional<Campaign.EscortFlight> rook = campaign.escortFlight();
-        if (rook.isPresent()) {
-            Campaign.EscortFlight escort = rook.get();
-            flown = flown.withWingman(SimSpecs.wingman(
-                    content, escort.gun().item(), escort.gun().level(), escort.side(), escort.armour()));
+        if (hull && SimSpecs.pressureHull(content)) {
+            // M8 part A: no water drag on the ship (a second hull adds nothing).
+            flown = flown.withPressureHull();
+        }
+        if (nanites > 0) {
+            // M8 part A: the Auto-repair nanites at the best fitted level.
+            flown = flown.withNanites(SimSpecs.nanites(content, nanites));
+        }
+        Optional<Campaign.EscortFlight> flying = campaign.escortFlight();
+        if (flying.isPresent()) {
+            Campaign.EscortFlight escort = flying.get();
+            if (escort.rook()) {
+                Fitted gun = escort.gun().orElseThrow();
+                flown = flown.withWingman(
+                        SimSpecs.wingman(content, gun.item(), gun.level(), escort.side(), escort.armour()));
+            } else {
+                // M8 part A: the Bulwark, owned or on loan (Rook missing in Levels 27–29), with its armour.
+                flown = flown.withBulwark(SimSpecs.bulwark(content, escort.side(), escort.armour()));
+            }
         }
         return new Flight(flown, weapons, spare, notFlown, sensor, targeting, salvage);
     }

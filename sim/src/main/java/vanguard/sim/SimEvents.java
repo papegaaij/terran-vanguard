@@ -94,7 +94,10 @@ public final class SimEvents {
         SORTIE_RESTARTED,
         /** The special was called and used a charge (at the ship): the Airstrike's radio call. */
         SPECIAL_CALLED,
-        /** The special button found no charge, no special, or a strike still flying (at the ship). */
+        /**
+         * The special button found no charge, no special, or a strike still flying (at the ship); M8 part A: or the
+         * setting forbids the special; value: the {@link SpecialLimits.Reason} ordinal then, 0 otherwise.
+         */
         SPECIAL_DENIED,
         /** The Airstrike's bombers entered at the bottom edge (between them). */
         AIRSTRIKE_INBOUND,
@@ -643,7 +646,27 @@ public final class SimEvents {
          * Step SIM-K (round 44, Q.4): the eruption's ring ({@link BossSpec.Shockwave}) reaches the ship or Rook (at the
          * mouth's centre); value: whom it caught now, {@code 1} the ship, {@code 2} Rook.
          */
-        ERUPTION_RING;
+        ERUPTION_RING,
+        /**
+         * M8 part A: the fitted special's setting limit changed at a waterline or a section (at the ship): the HUD
+         * row's chime and its flash; value: the new {@link SpecialLimits.Reason} ordinal (0: usable again).
+         */
+        SPECIAL_LIMIT,
+        /**
+         * M8 part A: a Sonar Pulse went off (at the ship; after its {@link #SPECIAL_CALLED}): the ring ({@link
+         * SpecialSlot#sonarRadius(double)}) and the ping.
+         */
+        SONAR_PULSE,
+        /** M8 part A: the Sonar Pulse's ring reached a unit (at it): its contact bracket pings; value: its serial. */
+        SONAR_CONTACT,
+        /** M8 part A: the Sonar Pulse's window closed (at the ship): the outlines go, the water's rules are back. */
+        SONAR_ENDED,
+        /** M8 part A: Decoy Flares were launched (at the rear muzzle): the pitched-up launch; value: how many. */
+        FLARES_LAUNCHED,
+        /** M8 part A: the Bulwark was hit (at it): its hit flash; value: the damage, rounded up. */
+        BULWARK_HIT,
+        /** M8 part A: the Bulwark was destroyed (at it): a {@code medium} explosion; it is out for the attempt. */
+        BULWARK_DESTROYED;
 
         private static final Type[] VALUES = values();
     }

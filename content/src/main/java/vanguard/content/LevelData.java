@@ -76,6 +76,11 @@ import vanguard.sim.PlayField;
  * @param vents M7 part F (design/campaign Level 19, Hazards): the furnace vent rows; none if not given
  * @param ridge M7 part G, presentation (Level 20's travelling ridge, Level 21's ridge pass; round 43 Q.4): the Dust
  *     Colossus's ridge crossing the ground; none if not given
+ * @param medium M8 part A (design/world/europa, Under water rules): the level's medium, {@code air} if not given; a
+ *     section may set its own ({@link #mediumOf})
+ * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the specials the level forbids, by
+ *     their slugs, replacing its setting's list (a section's own replaces it again; {@link #specialLimitsOf}); the
+ *     setting's if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -123,7 +128,9 @@ public record LevelData(
         Optional<Visibility> visibility,
         Optional<Belts> belts,
         Optional<Vents> vents,
-        Optional<Ridge> ridge)
+        Optional<Ridge> ridge,
+        Optional<Medium> medium,
+        Optional<List<String>> specialLimits)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -139,6 +146,7 @@ public record LevelData(
     public LevelData {
         launch.ifPresent(kind -> Check.that(LAUNCH_DROP.equals(kind), "launch: only 'drop', was '" + kind + "'"));
         noSurface = noSurface.map(List::copyOf);
+        specialLimits = specialLimits.map(List::copyOf);
         dropFactor.ifPresent(factor -> Check.positive("drop_factor", factor));
         waterSplash.ifPresent(splash -> Check.that(
                 WATER_SPLASH_ALL.equals(splash) || WATER_SPLASH_NAVAL.equals(splash),
@@ -186,6 +194,38 @@ public record LevelData(
      */
     public double placementRow(double t, double height) {
         return TerrainBlock.row(scrollAt(t), PlayField.HEIGHT + height / 2);
+    }
+
+    /** M8 part A: the level's medium, {@code air} if not given. */
+    public Medium levelMedium() {
+        return medium.orElse(Medium.AIR);
+    }
+
+    /** M8 part A: the medium of section {@code index}: its own, else the level's. */
+    public Medium mediumOf(int index) {
+        return sections.get(index).medium().orElse(levelMedium());
+    }
+
+    /** M8 part A: whether any of the level is under water (the level's medium or a section's). */
+    public boolean underwater() {
+        return levelMedium() == Medium.UNDERWATER
+                || sections.stream().anyMatch(section -> section.medium().orElse(null) == Medium.UNDERWATER);
+    }
+
+    /**
+     * M8 part A: the special limits of section {@code index} (specials by slug), its own, else the level's; empty when
+     * neither gives them (the setting's list applies: {@link SpecialsData#forbidden}).
+     */
+    public Optional<List<String>> specialLimitsOf(int index) {
+        return sections.get(index).specialLimits().or(() -> specialLimits);
+    }
+
+    /**
+     * M8 part A: the specials (by name) forbidden in section {@code index}: its special limits, else its setting's
+     * (its medium and the level's {@code water}).
+     */
+    public List<String> forbiddenSpecials(int index, SpecialsData specials) {
+        return specials.forbidden(mediumOf(index), water.orElse(false), specialLimitsOf(index));
     }
 
     /** M7 part B: the no-surface zones; none if not given. */

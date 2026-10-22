@@ -28,8 +28,9 @@ class SaveFormatTest {
 
         String json = SaveFormat.write(save);
 
-        assertTrue(json.contains("\"version\" : 5"), json);
+        assertTrue(json.contains("\"version\" : 6"), json);
         assertTrue(json.contains("\"bays\" : 0"), json);
+        assertTrue(json.contains("\"flies\" : \"rook\""), json);
         assertEquals(save, SaveFormat.read(json));
         assertEquals(
                 Map.of(1, new SaveGame.LevelStats(480, 80)),
@@ -75,7 +76,7 @@ class SaveFormatTest {
     @Test
     void aVersion3SaveLoadsWithNoBayBought() throws SaveException {
         SaveGame save = save();
-        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save));
+        ObjectNode tree = before6(SaveFormat.write(save));
         tree.put("version", 3);
         tree.remove("bays");
 
@@ -108,7 +109,7 @@ class SaveFormatTest {
     }
 
     private static String version3(int nextLevel, List<String> flags) {
-        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(SaveFormat.write(save()));
+        ObjectNode tree = before6(SaveFormat.write(save()));
         tree.put("version", 3);
         tree.remove("bays");
         tree.put("nextLevel", nextLevel);
@@ -119,13 +120,77 @@ class SaveFormatTest {
         return tree.toString();
     }
 
+    /**
+     * The JSON tree of a save as format version 5 wrote it (M8 part A): the escort slot without the version 6 {@code
+     * flies} and {@code bulwark}.
+     */
+    static ObjectNode before6(String json) {
+        ObjectNode tree = (ObjectNode) JsonMapper.builder().build().readTree(json);
+        ((ObjectNode) tree.get("escort")).remove(List.of("flies", "bulwark"));
+        tree.put("version", 5);
+        return tree;
+    }
+
+    /**
+     * M8 part A: a version 5 save (the v0.1 release, Acts 1–3) has Rook chosen for the escort slot and no Bulwark; it
+     * loads with both, the Bulwark's full armour frozen at 120.
+     */
     @Test
-    void aVersion3SaveWithBaysOrAVersion4SaveWithoutThemIsRejected() {
+    void aVersion5SaveLoadsWithRookChosenAndNoBulwark() throws SaveException {
+        SaveGame save = save();
+        String old = before6(SaveFormat.write(save)).toString();
+        assertTrue(!old.contains("flies") && !old.contains("bulwark"), old);
+
+        SaveGame loaded = SaveFormat.read(old);
+
+        assertEquals(SaveFormat.VERSION, loaded.version());
+        assertEquals(save, loaded);
+        assertEquals("rook", loaded.escort().flies());
+        assertEquals(new SaveGame.BulwarkSlot(false, 120), loaded.escort().bulwark());
+        Escort escort = Campaign.load(CampaignTest.RULES, loaded).gear().escort();
+        assertEquals(Escort.Escorter.ROOK, escort.flies());
+        assertTrue(!escort.bulwark().owned());
+    }
+
+    /** M8 part A: a version 5 save that already has the escort's version 6 fields, or a version 6 save without them. */
+    @Test
+    void aVersion5SaveWithABulwarkOrAVersion6SaveWithoutOneIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5", "\"version\" : 3")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 0,", "")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\" : 0", "\"bays\" : -1")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6", "\"version\" : 5")));
+        ObjectNode tree = before6(json);
+        tree.put("version", 6);
+        assertThrows(SaveException.class, () -> SaveFormat.read(tree.toString()));
+        assertThrows(
+                SaveException.class,
+                () -> SaveFormat.read(json.replace("\"flies\" : \"rook\"", "\"flies\" : \"warden\"")));
+    }
+
+    /** M8 part A: an owned Bulwark, its armour and the slot's choice survive the round trip. */
+    @Test
+    void anOwnedBulwarkSurvivesTheRoundTrip() throws SaveException {
+        Campaign campaign = Campaign.load(CampaignTest.RULES, save());
+        campaign.gear(campaign.gear()
+                .withEscort(campaign.gear()
+                        .escort()
+                        .withBulwark(new Escort.Bulwark(true, 77))
+                        .withFlies(Escort.Escorter.BULWARK)));
+        SaveGame save = campaign.save(Instant.EPOCH);
+
+        SaveGame loaded = SaveFormat.read(SaveFormat.write(save));
+
+        assertEquals(save, loaded);
+        assertEquals(new SaveGame.BulwarkSlot(true, 77), loaded.escort().bulwark());
+        assertEquals("bulwark", loaded.escort().flies());
+    }
+
+    @Test
+    void aVersion3SaveWithBaysOrAVersion4SaveWithoutThemIsRejected() {
+        String json = before6(SaveFormat.write(save())).toString();
+
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\":5", "\"version\":3")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\":0,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"bays\":0", "\"bays\":-1")));
     }
 
     /** M7 part A: the third bay's slot holds a module only once the bay is bought; the bought bay survives. */
@@ -191,7 +256,9 @@ class SaveFormatTest {
         campaign.gear(
                 new Gear(gear.credits(), loadout, gear.inventory(), gear.specials(), gear.armour(), gear.escort()));
         SaveGame save = campaign.save(Instant.EPOCH);
-        String old = SaveFormat.write(save).replace("\"version\" : 5", "\"version\" : 4");
+        ObjectNode tree = before6(SaveFormat.write(save));
+        tree.put("version", 4);
+        String old = tree.toString();
         assertTrue(!old.contains("\"power\""), old);
 
         SaveGame loaded = SaveFormat.read(old);
@@ -218,7 +285,7 @@ class SaveFormatTest {
 
     @Test
     void aNewerFormatVersionIsRejected() {
-        String json = SaveFormat.write(save()).replace("\"version\" : 5", "\"version\" : 6");
+        String json = SaveFormat.write(save()).replace("\"version\" : 6", "\"version\" : 7");
 
         SaveException e = assertThrows(SaveException.class, () -> SaveFormat.read(json));
         assertTrue(e.getMessage().contains("newer version"), e.getMessage());
@@ -228,10 +295,10 @@ class SaveFormatTest {
     void anUnknownOrMissingVersionIsRejected() {
         String json = SaveFormat.write(save());
 
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5", "\"version\" : 0")));
-        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5,", "")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6", "\"version\" : 0")));
+        assertThrows(SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6,", "")));
         assertThrows(
-                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 5", "\"version\" : \"5\"")));
+                SaveException.class, () -> SaveFormat.read(json.replace("\"version\" : 6", "\"version\" : \"6\"")));
     }
 
     @Test

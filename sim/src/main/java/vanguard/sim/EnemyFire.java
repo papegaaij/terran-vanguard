@@ -26,6 +26,8 @@ final class EnemyFire {
     private final Pool<Lob> lobs = new Pool<>(LOB_CAPACITY, Lob::new, Lob[]::new);
     /** M7 part F: the bosses' homing missiles (the Revenant Walker's pods). */
     private final Missiles missiles;
+    /** M8 part A: the Bulwark that draws aimed volleys at the ship to itself; null without one. */
+    private Bulwark lure;
     /** M5 part G: the direct hits of the lobs aimed at the objective that landed on it in the last {@link #moveLobs}. */
     private double objectiveDamage;
 
@@ -35,6 +37,25 @@ final class EnemyFire {
         this.events = events;
         this.hook = hook;
         missiles = new Missiles(events);
+    }
+
+    /**
+     * M8 part A (design/world/europa, Under water rules): the level's medium: every bullet and homing missile is fired
+     * at its bullet speed × the water's.
+     */
+    void medium(Medium water) {
+        for (int i = 0; i < bullets.capacity(); i++) {
+            bullets.get(i).medium(water);
+        }
+        missiles.medium(water);
+    }
+
+    /**
+     * M8 part A (design/player/wingmen, Heavy drone "Bulwark"; D11): the Bulwark in the escort slot, which draws a
+     * share of the aimed volleys at the ship to itself while it is near the ship (its own generator decides).
+     */
+    void lure(Bulwark bulwark) {
+        lure = bulwark;
     }
 
     /** Back to the level start: no bullets, spores or lobs. */
@@ -292,6 +313,7 @@ final class EnemyFire {
         if (distance < NO_FIRE_DISTANCE || bullets.size() >= rules.bulletBudget()) {
             return;
         }
+        boolean drawn = false;
         if (target >= 0) {
             dx = hook.convoy().get(target).x() - x;
             dy = hook.convoy().get(target).y() - y;
@@ -299,13 +321,22 @@ final class EnemyFire {
             if (distance == 0) {
                 return;
             }
+        } else if (lure != null && !alongAim && !Double.isFinite(gun.turnRate()) && lure.draws(ship.x(), ship.y())) {
+            // M8 part A: the Bulwark draws this aimed volley to itself (its own generator decided; no lead).
+            dx = lure.x() - x;
+            dy = lure.y() - y;
+            distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance == 0) {
+                return;
+            }
+            drawn = true;
         }
         if (alongAim || Double.isFinite(gun.turnRate())) {
             // Along the barrel: radians clockwise from straight down.
             dx = -Trig.sin(aim);
             dy = -Trig.cos(aim);
             distance = 1;
-        } else if (leads && target < 0) {
+        } else if (leads && target < 0 && !drawn) {
             double flight = distance / gun.bulletSpeed();
             dx += ship.vx() * flight;
             dy += ship.vy() * flight;

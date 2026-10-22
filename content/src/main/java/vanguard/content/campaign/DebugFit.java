@@ -28,7 +28,8 @@ import vanguard.sim.WingmanSpec;
  * charge if left out, at most its most charges). The {@code --escort} debug option flies Rook
  * (design/player/wingmen) with a gun at a level and full armour on any level, written
  * {@code rook:missiles:3,side=right} (the gun's id, its level, 1 if left out, and his side, the
- * campaign's if left out), or {@code none}: he does not fly a level from 08 on. The escort applies
+ * campaign's if left out), or {@code none}: he does not fly a level from 08 on; M8 part A: {@code
+ * bulwark[,side=left|right]} flies the Bulwark heavy drone at full armour instead. The escort applies
  * to the flights only, never to the campaign's gear, so no save holds it.
  *
  * @param weapons the weapon fitted per slot
@@ -57,10 +58,22 @@ public record DebugFit(Map<LoadoutSlot, Fitted> weapons, Optional<Fitted> specia
     /**
      * The {@code --escort} option.
      *
-     * @param gun Rook's gun (its id) and level; empty for {@code none}
+     * @param gun Rook's gun (its id) and level; empty for {@code none} and the Bulwark
      * @param side his side; empty for the campaign's
+     * @param bulwark M8 part A: {@code --escort bulwark}, the Bulwark flies (at full armour)
      */
-    public record EscortFit(Optional<Fitted> gun, Optional<WingmanSpec.Side> side) {}
+    public record EscortFit(Optional<Fitted> gun, Optional<WingmanSpec.Side> side, boolean bulwark) {
+        public EscortFit {
+            if (bulwark && gun.isPresent()) {
+                throw new IllegalArgumentException("--escort: Rook's gun or the Bulwark, not both");
+            }
+        }
+
+        /** Rook with a gun, or none. */
+        public EscortFit(Optional<Fitted> gun, Optional<WingmanSpec.Side> side) {
+            this(gun, side, false);
+        }
+    }
 
     /** No weapons, no special and no escort: for a {@code --special} or {@code --escort} without {@code --loadout}. */
     public static final DebugFit NONE = new DebugFit(Map.of(), Optional.empty(), Optional.empty());
@@ -75,21 +88,22 @@ public record DebugFit(Map<LoadoutSlot, Fitted> weapons, Optional<Fitted> specia
         return new DebugFit(weapons, Optional.of(new Fitted(nameAndCharges[0].trim(), charges)), escort);
     }
 
-    /** This fit with the escort of {@code spec}, written {@code rook:<gun>[:<level>][,side=left|right]} or {@code none}. */
+    /**
+     * This fit with the escort of {@code spec}, written {@code rook:<gun>[:<level>][,side=left|right]}, (M8 part A)
+     * {@code bulwark[,side=left|right]} or {@code none}.
+     */
     public DebugFit withEscort(String spec) {
         String text = spec.trim().toLowerCase(Locale.ROOT);
         if (text.equals("none")) {
             return new DebugFit(weapons, special, Optional.of(new EscortFit(Optional.empty(), Optional.empty())));
         }
-        String usage = "--escort: '" + spec + "' is not rook:<gun>[:<level>][,side=left|right] or none";
+        String usage = "--escort: '" + spec
+                + "' is not rook:<gun>[:<level>][,side=left|right], bulwark[,side=left|right]" + " or none";
         String[] parts = text.split(",", -1);
         String[] pilot = parts[0].trim().split(":", -1);
-        if (!pilot[0].trim().equals("rook") || pilot.length < 2 || pilot.length > 3 || parts.length > 2) {
+        boolean bulwark = pilot.length == 1 && pilot[0].trim().equals("bulwark");
+        if (!bulwark && (!pilot[0].trim().equals("rook") || pilot.length < 2 || pilot.length > 3) || parts.length > 2) {
             throw new IllegalArgumentException(usage);
-        }
-        int level = pilot.length > 2 ? Integer.parseInt(pilot[2].trim()) : 1;
-        if (level < 1 || level > MAX_LEVEL) {
-            throw new IllegalArgumentException("--escort: level " + level + " outside 1.." + MAX_LEVEL);
         }
         Optional<WingmanSpec.Side> side = Optional.empty();
         if (parts.length == 2) {
@@ -100,6 +114,13 @@ public record DebugFit(Map<LoadoutSlot, Fitted> weapons, Optional<Fitted> specia
                 throw new IllegalArgumentException(usage);
             }
             side = Optional.of(WingmanSpec.Side.valueOf(setting[1].trim().toUpperCase(Locale.ROOT)));
+        }
+        if (bulwark) {
+            return new DebugFit(weapons, special, Optional.of(new EscortFit(Optional.empty(), side, true)));
+        }
+        int level = pilot.length > 2 ? Integer.parseInt(pilot[2].trim()) : 1;
+        if (level < 1 || level > MAX_LEVEL) {
+            throw new IllegalArgumentException("--escort: level " + level + " outside 1.." + MAX_LEVEL);
         }
         return new DebugFit(
                 weapons, special, Optional.of(new EscortFit(Optional.of(new Fitted(pilot[1].trim(), level)), side)));
@@ -204,6 +225,10 @@ public record DebugFit(Map<LoadoutSlot, Fitted> weapons, Optional<Fitted> specia
             campaign.gear(campaign.gear().withArmour(campaign.maxArmour()));
         }
         escort.ifPresent(fit -> {
+            if (fit.bulwark()) {
+                campaign.debugBulwark(fit.side());
+                return;
+            }
             fit.gun().ifPresent(gun -> catalogue.item(ItemKind.ESCORT, gun.item()));
             campaign.debugEscort(fit.gun(), fit.side());
         });

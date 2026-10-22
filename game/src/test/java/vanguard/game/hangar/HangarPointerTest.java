@@ -297,7 +297,7 @@ class HangarPointerTest {
         assertEquals(Focus.REPAIR, state.focus());
         int most = state.affordable(HangarState.RepairLine.SHIP);
 
-        Box slider = HangarPointer.repairSlider(false);
+        Box slider = HangarPointer.repairSlider(1);
         mouse.move(slider.x() + slider.width() / 2, slider.y() + 5);
         hangarPointer.update(state, mouse.pointer);
         mouse.click();
@@ -306,7 +306,7 @@ class HangarPointerTest {
         assertFalse(click(state, ShopPanel.row(2)).confirm(), "the shop waits behind the panel");
         assertEquals(Focus.REPAIR, state.focus());
 
-        assertTrue(click(state, HangarPointer.repairButton(false)).confirm());
+        assertTrue(click(state, HangarPointer.repairButton(1)).confirm());
         assertEquals(Outcome.DONE, state.confirm());
     }
 
@@ -361,8 +361,8 @@ class HangarPointerTest {
             Box chip = HangarPointer.command(command);
             assertTrue(chip.x() >= 0 && chip.x() + chip.width() <= 960 && chip.y() >= 0, command.name());
         }
-        Box panel = HangarPointer.repairPanel(true);
-        Box button = HangarPointer.repairButton(true);
+        Box panel = HangarPointer.repairPanel(2);
+        Box button = HangarPointer.repairButton(2);
         assertTrue(button.y() + button.height() <= panel.y() + panel.height());
     }
 }

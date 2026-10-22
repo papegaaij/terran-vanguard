@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../systems, ../ui/hangar]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Player
@@ -25,9 +25,9 @@ generator limits what can be fitted at the same time.
 | [generator](generator/README.md) | Power output that limits the loadout; spare power boosts shield regen | approved | done | n/a |
 | [shields](shields/README.md) | Regenerating energy shield, capacity, regen and delay | approved | done | final |
 | [armor](armor/README.md) | Non-regenerating hull points, plating upgrades, repairs | approved | done | n/a |
-| [wingmen](wingmen/README.md) | AI wingman Rook (escort slot) and drones (wing mounts) | approved | done | final |
-| [specials](specials/README.md) | Special abilities: airstrike, smart bomb, EMP, orbital lance, … | approved | done | final |
-| [systems](systems/README.md) | Engines and utility-bay modules: magnet, sensors, auto-repair, … | approved | done | final |
+| [wingmen](wingmen/README.md) | AI wingman Rook (escort slot) and drones (wing mounts) | approved | in-progress | final |
+| [specials](specials/README.md) | Special abilities: airstrike, smart bomb, EMP, orbital lance, … | approved | in-progress | final |
+| [systems](systems/README.md) | Engines and utility-bay modules: magnet, sensors, auto-repair, … | approved | in-progress | final |
 
 ## Design
 
@@ -67,8 +67,9 @@ generator limits what can be fitted at the same time.
 - All balancing numbers for Acts 1–3 live in the parts' `data.yaml` files (this directory's
   [data.yaml](data.yaml) holds availability and the pickups; Act 3's arsenal since M7 part A); check
   them with `python3 tools/balance.py` (see [weapons](weapons/README.md#data-and-balancing)). The
-  [balance plan](balance-plan.yaml) runs to Level 21 (the Ion Beam's hand plan; a level's income is its
-  typical haul, budget(n) until its data exists: the user's decision of 2026-10-14, round 37 R.1 reverted).
+  [balance plan](balance-plan.yaml) runs to Level 28 (the Ion Beam's hand plan to Level 21, M8 part A: the
+  generator's Act 4 hand plan; a level's income is its typical haul, budget(n) until its data exists: the user's
+  decision of 2026-10-14, round 37 R.1 reverted; for Act 4 again until M8 part I).
 
 ### Power budget
 

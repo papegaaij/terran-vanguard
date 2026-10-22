@@ -34,8 +34,16 @@ design/player/weapons/rear-guard-drone-bay/concept/rear-guard-icon-final-r43-a.p
 Drone Bay's icon); the other icons are left as they are. A full run renders it too, with the same
 Source note.
 
+``--act4`` (M8 part A batch, step ART-A, concept round 50): only the four Act 4 items' icons, the round-48
+picks as emblems: ``harpoon-torpedoes`` (gear_r48's barbed harpoon, drawn 1.7x as stout, with its teal
+line), ``depth-charges`` (the navy drum over the arcs of its pressure dome), ``special-sonar-pulse`` (the
+sweep's dashed double ring round a contact dot, the specials' orange) and ``escort-bulwark`` (the turtle
+drone); review sheet design/ui/hangar/concept/act4-icons-final-r50-a.png. A full run includes them too
+once their data lists them (``escort-bulwark`` always, beside ``escort-rook``).
+
 Run: python3 tools/art/icons.py [--review] [--variant a|b]   (~20 s; --review only rebuilds the sheets,
---variant only that proposal sheet); python3 tools/art/icons.py --rear-guard [--review]   (~3 s)
+--variant only that proposal sheet); python3 tools/art/icons.py --rear-guard [--review]   (~3 s);
+python3 tools/art/icons.py --act4 [--review]   (~5 s)
 """
 import re
 import sys
@@ -47,7 +55,7 @@ from PIL import Image
 
 import artkit
 import stormhawk
-from artkit import DESIGN, ROOT, sprite
+from artkit import DESIGN, ROOT, TAU, sprite
 
 import ships_r02  # noqa: E402  (concept scripts, imported unchanged)
 import vfx_r08 as v8  # noqa: E402
@@ -99,6 +107,7 @@ def catalogue():
             symbol = f"{kind}-{slug(name)}" if kind in ("utility", "special") else kind
             items.append((f"{kind}-{slug(name)}", name, symbol, ROMAN[grade.group(1)] if grade else 0))
     items.append(("escort-rook", "Rook (escort)", "escort-rook", 0))
+    items.append(("escort-bulwark", "Bulwark (escort)", "escort-bulwark", 0))
     return items
 
 
@@ -406,6 +415,76 @@ def act3_symbol(symbol, v):
     return None
 
 
+# --------------------------------------------------------------------------- the Act 4 items (M8 part A)
+# The round-48 picks as emblems (concept round 50): the harpoon and the drum of tools/concept/gear_r48.py
+# (variant a), the Bulwark's turtle (a), and the Sonar Pulse's dashed double ring (G3 b) in the specials'
+# orange; ``--act4`` builds only these.
+
+M8_TEAL = v8.m_glow((150, 255, 235), 1.4)      # gear_r48.TEAL_W: the harpoon's line, the charge's ring
+
+
+def _harpoon():
+    """Harpoon Torpedoes: the barbed harpoon (drawn 1.7x as stout, so it reads at 16 px) diagonally
+    across the badge, its line of light trailing in a slack wave."""
+    import gear_r48
+    scene, mats = gear_r48.harpoon_model("a")
+
+    def stout(p):
+        q = p.copy()
+        q[:, 0] /= 1.7
+        q[:, 2] /= 1.7
+        d, m = scene(q)
+        return d * 1.0, m
+    inner, extra = model_symbol(stout, mats, 2.0, -45.0, (0.0, -0.12, 0.0))
+    teal = len(MATS) + len(extra)
+    lead = np.array([np.sin(np.radians(45)), np.cos(np.radians(45))])   # the nose's direction on the badge
+    side = np.array([lead[1], -lead[0]])
+
+    def symbol(p):
+        start = -lead * 0.7
+        pts = [start - lead * 0.11 * k + side * 0.1 * np.sin(k * 1.6) * (k / 4) for k in range(5)]
+        line = np.min([bolt(p, tuple(a), tuple(b), 0.075) for a, b in zip(pts[:-1], pts[1:])], axis=0)
+        return union(inner(p), (line, teal))
+    return symbol, extra + [M8_TEAL]
+
+
+def _depth_charge():
+    """Depth Charges: the navy drum with its yellow bands and lamp over the arc of its pressure dome."""
+    import gear_r48
+    scene, mats = gear_r48.charge_model("a")
+    inner, extra = model_symbol(scene, mats, 1.3, -25.0, (0.0, -0.1, 0.0))
+    teal = len(MATS) + len(extra)
+
+    def symbol(p):
+        dome = np.minimum(arc(rotate_z(p, np.pi), (0, 0.12), 0.78, 0.075, np.radians(62)),
+                          arc(rotate_z(p, np.pi), (0, 0.12), 0.52, 0.06, np.radians(48)))
+        return union(inner(p), (dome, teal))
+    return symbol, extra + [M8_TEAL]
+
+
+def _sonar(p):
+    """Sonar Pulse: the sweep's dashed double ring round a contact dot (the chosen echo marks)."""
+    q = p - vec(0, 0, 0.1)
+    angle = np.arctan2(q[:, 1], q[:, 0]) + np.pi / 4
+    rr = sdf.length(q[:, :2])
+    rings = np.full(len(p), np.inf)
+    for radius, dashes, tube in ((0.46, 4, 0.08), (0.84, 8, 0.085)):
+        gap = np.abs((angle * dashes / TAU) % 1.0 - 0.5) > 0.3
+        rings = np.minimum(rings, np.where(gap, np.inf, np.sqrt((rr - radius) ** 2 + q[:, 2] ** 2) - tube))
+    return union((rings, M["special"]), (sd_sphere(p, (0, 0, 0.12), 0.19), M["special"]))
+
+
+def _bulwark():
+    """The Bulwark: the turtle drone itself, nose up."""
+    import gear_r48
+    return model_symbol(*gear_r48.bulwark_model("a"), 1.8, 0.0, (0.0, 0.06, 0.0))
+
+
+M8_BATCH = {"harpoon-torpedoes": _harpoon, "depth-charges": _depth_charge,
+            "special-sonar-pulse": lambda: (_sonar, []), "escort-bulwark": _bulwark}
+M8_SOURCE = artkit.source_note(SCRIPT, "M8 part A batch")
+M8_REVIEW = CONCEPT / "act4-icons-final-r50-a.png"
+
 G_BATCH = {"rear-guard-drone-bay": _rear_guard_pair}   # M7 part G (step ICON-G, round 43)
 G_SOURCE = artkit.source_note(SCRIPT, "M7 part G batch")
 G_CONCEPT = PLAYER / "weapons" / "rear-guard-drone-bay" / "concept"
@@ -422,6 +501,9 @@ def emblem(symbol, grade):
     act3 = act3_symbol(symbol, VARIANT) if symbol in ACT3 else None
     if act3 is not None:
         inner, extra = act3
+        mats += extra
+    elif symbol in M8_BATCH:
+        inner, extra = M8_BATCH[symbol]()
         mats += extra
     elif symbol in G_BATCH:
         inner, extra = G_BATCH[symbol]()
@@ -476,7 +558,8 @@ def build():
             for suffix, size in SIZES.items()]
     with ProcessPoolExecutor() as pool:
         for job, img in zip(jobs, pool.map(render, jobs)):
-            artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE if job[1] in G_BATCH else SOURCE)
+            artkit.save_png(img, OUT / f"{job[0]}.png", G_SOURCE if job[1] in G_BATCH
+                            else M8_SOURCE if job[1] in M8_BATCH else SOURCE)
     print(f"{len(jobs)} icons ({len(jobs) // len(SIZES)} items x {len(SIZES)} sizes)")
 
 
@@ -573,8 +656,51 @@ def review_g():
     print(f"review: {path.relative_to(ROOT)}")
 
 
+def build_m8():
+    """The M8 part A batch only: writes its four icons, leaves every other icon as it is."""
+    OUT.mkdir(parents=True, exist_ok=True)
+    jobs = [(name + suffix, name, 0, size) for name in M8_BATCH for suffix, size in SIZES.items()]
+    with ProcessPoolExecutor() as pool:
+        for job, img in zip(jobs, pool.map(render, jobs)):
+            artkit.save_png(img, OUT / f"{job[0]}.png", M8_SOURCE)
+    print(f"{len(jobs)} icons (M8 part A batch)")
+
+
+def review_m8():
+    """Review sheet: the four Act 4 icons at 1x and enlarged, beside the icons they sit next to."""
+    labels = {"harpoon-torpedoes": "HARPOON TORPEDOES", "depth-charges": "DEPTH CHARGES",
+              "special-sonar-pulse": "SONAR PULSE", "escort-bulwark": "BULWARK (ESCORT)",
+              "torpedo-pod": "TORPEDO POD (FOR STYLE)", "proximity-mines": "PROXIMITY MINES (FOR STYLE)",
+              "special-emp-burst": "EMP BURST (FOR STYLE)", "escort-rook": "ROOK (FOR STYLE)"}
+    names = list(M8_BATCH) + ["torpedo-pod", "proximity-mines", "special-emp-burst", "escort-rook"]
+    cell = 260
+    sheet = raster.sheet(16 + 4 * cell + 16, 60 + 2 * 120 + 12, "ACT 4 EQUIPMENT ICONS (FINAL R50)",
+                         "PRODUCTION ART, M8 PART A BATCH - R50")
+    raster.draw_text(sheet, 16, 38, "16X16 (SHOP ROWS, HUD SPECIAL ROW) AT 1X AND 4X, 24X24 (SELECTED, CALLOUTS) AT 1X AND 3X;"
+                                    " BOTTOM ROW: EXISTING ICONS FOR THE STYLE", raster.LABEL)
+    for i, name in enumerate(names):
+        x, y = 16 + (i % 4) * cell, 56 + (i // 4) * 120
+        small = Image.open(OUT / f"{name}.png").convert("RGBA")
+        large = Image.open(OUT / f"{name}-large.png").convert("RGBA")
+        plate_ = Image.new("RGBA", (cell - 8, 104), (6, 8, 26, 255))
+        plate_.alpha_composite(small, (2, 2))
+        plate_.alpha_composite(sprite.enlarge(small, 4), (22, 2))
+        plate_.alpha_composite(large, (92, 2))
+        plate_.alpha_composite(sprite.enlarge(large, 3), (120, 2))
+        sheet.alpha_composite(plate_, (x, y))
+        raster.draw_text(sheet, x + 2, y + 108, labels[name], raster.LABEL_DIM)
+    M8_REVIEW.parent.mkdir(parents=True, exist_ok=True)
+    sheet.convert("RGB").save(M8_REVIEW, optimize=True)
+    print(f"review: {M8_REVIEW.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if "--act4" in args:
+        if "--review" not in args:
+            build_m8()
+        review_m8()
+        sys.exit()
     if "--rear-guard" in args:
         if "--review" not in args:
             build_g()

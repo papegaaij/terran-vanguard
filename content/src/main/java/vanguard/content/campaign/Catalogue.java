@@ -174,7 +174,9 @@ public final class Catalogue {
      * assets (the game's item icons fail on a missing one as the hangar loads, m7a-gaps §2 risk 5):
      * the four Act 3 weapons by slug and the three Act 3 specials by name. Step A5 (the hangar) empties
      * it once tools/art/icons.py has drawn them; {@link #complete} has them already. Step A5: empty, every
-     * icon is in the assets.
+     * icon is in the assets. M8 part A (step A2): the two Act 4 weapons and the Sonar Pulse until step ART-A drew their
+     * icons and the hangar step (A5) empties it again; the Decoy Flares', the pressure hull's and the nanites' icons are
+     * in. Step A5: empty again, every Act 4 icon is in the assets (tools/art/icons.py {@code --act4}).
      */
     public static final Set<String> AWAITING_ICONS = Set.of();
 
@@ -448,6 +450,11 @@ public final class Catalogue {
     /** M7 part A: what selling a bought utility bay returns: the sell-back share of its price, rounded half to even. */
     public int sellPrice(Bay bay) {
         return (int) Math.rint(bay.price() * sellBack);
+    }
+
+    /** M8 part A: the share of what was spent on an item that selling it returns (the Bulwark's line uses it too). */
+    public double sellBack() {
+        return sellBack;
     }
 
     /** Credits per armour point repaired in the hangar. */

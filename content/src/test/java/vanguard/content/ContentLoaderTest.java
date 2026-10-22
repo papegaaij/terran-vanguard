@@ -20,7 +20,7 @@ class ContentLoaderTest {
     void everyDataFileInTheDesignTreeLoadsAndValidates() {
         Content content = ContentLoader.load(DesignTree.dataFiles());
 
-        assertEquals(19, content.weapons().size()); // M7 part G: the Rear-guard Drone Bay
+        assertEquals(21, content.weapons().size()); // M7 part G: the Rear-guard Drone Bay; M8 part A: the two anti-sub
         assertEquals(
                 List.of(
                         "brood-carrier",

@@ -18,7 +18,9 @@ import java.util.stream.Stream;
  * @param hits which targets it can hit: {@code standard}, {@code homing}, {@code ground-only},
  *     {@code area} (proximity mines), {@code anti-sub} (torpedoes, M5 part E); M7 part A: {@code beam}
  *     (the Ion Beam: a continuous column, every level a {@code width} and a damage per second) and
- *     {@code deflector} (the Deflector Pod: no shots, every level a field)
+ *     {@code deflector} (the Deflector Pod: no shots, every level a field); M8 part A: {@code depth-charge} (the
+ *     Depth Charges: a barrel rolled out of the stern that bursts on its level's {@code fuse} for its damage in its
+ *     {@code blast} radius)
  * @param speed the projectile speed in px/s; none for lobbed and dropped projectiles, a beam and a
  *     deflector
  * @param size the projectile's hit box; none for a beam and a deflector
@@ -40,6 +42,8 @@ import java.util.stream.Stream;
  * @param mirrored fires the pattern to the left too (numbers per side)
  * @param pod a wing pod (numbers per pod)
  * @param seek homing, lobbed or dropped: every projectile counts as a single-target hit
+ * @param splash M8 part A, a torpedo's (the Harpoon Torpedoes'): a hit blasts its level's {@code blast} radius for
+ *     this share of its damage on the others there (not the struck target); none if not given
  * @param drone M7 part A: the Light Drone Bay's drone, which fires the levels' shots from its orbit;
  *     every level then has its {@code drone_hits} and {@code rebuild}
  */
@@ -72,6 +76,7 @@ public record WeaponData(
         Optional<Boolean> mirrored,
         Optional<Boolean> pod,
         Optional<Boolean> seek,
+        Optional<Double> splash,
         List<Level> levels,
         Level overdrive,
         Optional<Drone> drone) {
@@ -98,7 +103,10 @@ public record WeaponData(
                     "a deflector (hits: deflector) is a wing pod (pod: true)");
         } else {
             Check.that(size.isPresent(), "size is required");
-            Check.that(range.isPresent() || lifetime.isPresent(), "range or lifetime is required");
+            // M8 part A: depth charges burst on a fuse per level instead.
+            Check.that(
+                    range.isPresent() || lifetime.isPresent() || hits.equals(DEPTH_CHARGE),
+                    "range or lifetime is required");
             Check.that(
                     Stream.concat(levels.stream(), Stream.of(overdrive))
                             .allMatch(level -> level.kind() == Level.Kind.SHOTS),
@@ -146,6 +154,34 @@ public record WeaponData(
                                     level.blast().isPresent() && level.maxLive().isPresent()),
                     "mines (hits: area): every level and the overdrive need a blast and max_live");
         }
+        if (hits.equals(DEPTH_CHARGE)) {
+            // M8 part A: rolled out at its speed, drifting to a hover, a fuse per level instead of a range.
+            Check.that(
+                    speed.filter(s -> s.start() == s.end()).isPresent()
+                            && drift.isPresent()
+                            && range.isEmpty()
+                            && lifetime.isEmpty(),
+                    "depth charges (hits: depth-charge) need one speed and a drift, and no range or lifetime");
+            Check.positive("drift", drift.orElseThrow());
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .allMatch(level ->
+                                    level.fuse().isPresent() && level.blast().isPresent()),
+                    "depth charges (hits: depth-charge): every level and the overdrive need a fuse and a blast");
+        } else {
+            Check.that(
+                    Stream.concat(levels.stream(), Stream.of(overdrive))
+                            .noneMatch(level -> level.fuse().isPresent()),
+                    "a fuse belongs to depth charges (hits: depth-charge)");
+        }
+        splash.ifPresent(share -> {
+            Check.share("splash", share);
+            Check.that(
+                    hits.equals(TORPEDO)
+                            && Stream.concat(levels.stream(), Stream.of(overdrive))
+                                    .allMatch(level -> level.blast().isPresent()),
+                    "a splash is a torpedo's (hits: anti-sub) whose every level and overdrive has a blast radius");
+        });
         if (hits.equals(TORPEDO)) {
             Check.that(
                     speed.isPresent()
@@ -166,6 +202,21 @@ public record WeaponData(
                                     level.turn().filter(turn -> turn > 0).isPresent()),
                     "a torpedo (hits: anti-sub): every level and the overdrive need a turn");
         }
+    }
+
+    /**
+     * M8 part A: the {@code hits} of the Depth Charges (design/player/weapons/depth-charges): a barrel rolled out of the
+     * stern that bursts on its level's {@code fuse} for its damage on every target in its {@code blast} radius in the
+     * water; idle with {@code NO WATER} in a dry level.
+     */
+    public static final String DEPTH_CHARGE = "depth-charge";
+
+    /** M8 part A: the trait of the weapons that keep their full damage under water (design/world/europa). */
+    public static final String ANTI_SUB = "anti-sub";
+
+    /** M8 part A: whether it keeps its full damage under water: it has the {@value #ANTI_SUB} trait. */
+    public boolean antiSub() {
+        return traits.contains(ANTI_SUB);
     }
 
     /** The {@code hits} of proximity mines: they burst in a blast that reaches air, low-air and ground. */
@@ -351,6 +402,7 @@ public record WeaponData(
      * @param recharge M7 part A: seconds until a deflector gets one charge back
      * @param droneHits M7 part A: the hits a drone takes before it breaks
      * @param rebuild M7 part A: seconds the bay takes to build a new drone
+     * @param fuse M8 part A: seconds from a depth charge's launch to its burst
      */
     public record Level(
             List<Shot> pattern,
@@ -365,7 +417,40 @@ public record WeaponData(
             Optional<Integer> charges,
             Optional<Double> recharge,
             Optional<Integer> droneHits,
-            Optional<Double> rebuild) {
+            Optional<Double> rebuild,
+            Optional<Double> fuse) {
+        /** A level without a depth charge's fuse (the levels before M8 part A). */
+        public Level(
+                List<Shot> pattern,
+                double rate,
+                double damage,
+                Optional<Integer> pierce,
+                Optional<Double> blast,
+                Optional<Double> turn,
+                Optional<Integer> maxLive,
+                Optional<Double> width,
+                Optional<Double> radius,
+                Optional<Integer> charges,
+                Optional<Double> recharge,
+                Optional<Integer> droneHits,
+                Optional<Double> rebuild) {
+            this(
+                    pattern,
+                    rate,
+                    damage,
+                    pierce,
+                    blast,
+                    turn,
+                    maxLive,
+                    width,
+                    radius,
+                    charges,
+                    recharge,
+                    droneHits,
+                    rebuild,
+                    Optional.empty());
+        }
+
         /** What a level is: a volley of shots, a beam or a deflector's field. */
         public enum Kind {
             SHOTS,
@@ -381,6 +466,7 @@ public record WeaponData(
             recharge.ifPresent(seconds -> Check.positive("recharge", seconds));
             droneHits.ifPresent(count -> Check.positive("drone_hits", count));
             rebuild.ifPresent(seconds -> Check.positive("rebuild", seconds));
+            fuse.ifPresent(seconds -> Check.positive("fuse", seconds));
             boolean field = radius.isPresent() || charges.isPresent() || recharge.isPresent();
             if (width.isPresent()) {
                 Check.that(
@@ -420,7 +506,8 @@ public record WeaponData(
                 @JsonProperty("charges") Optional<Integer> charges,
                 @JsonProperty("recharge") Optional<Double> recharge,
                 @JsonProperty("drone_hits") Optional<Integer> droneHits,
-                @JsonProperty("rebuild") Optional<Double> rebuild) {
+                @JsonProperty("rebuild") Optional<Double> rebuild,
+                @JsonProperty("fuse") Optional<Double> fuse) {
             return new Level(
                     pattern.orElse(List.of()),
                     rate.orElse(0.0),
@@ -434,7 +521,8 @@ public record WeaponData(
                     charges,
                     recharge,
                     droneHits,
-                    rebuild);
+                    rebuild,
+                    fuse);
         }
 
         /** Whether it fires shots, burns a beam or holds a deflector's field. */

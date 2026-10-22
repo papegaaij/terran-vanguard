@@ -44,6 +44,8 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
      * @param targeting the Targeting computer's numbers; empty for the other modules
      * @param salvage the Salvage scanner's bonus per level; empty for the other modules
      * @param dash M7 part A: the Evasive thrusters' dash; empty for the other modules
+     * @param repair M8 part A: the Auto-repair nanites' repair; empty for the other modules
+     * @param hull M8 part A: the Pressure hull's effect under water; empty for the other modules
      */
     public record Utility(
             String name,
@@ -55,7 +57,9 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
             Optional<Boolean> forSale,
             Optional<Targeting> targeting,
             Optional<Salvage> salvage,
-            Optional<Dash> dash) {
+            Optional<Dash> dash,
+            Optional<Repair> repair,
+            Optional<Hull> hull) {
         public Utility {
             Check.notNegative("draw", draw);
             Check.notEmpty("prices", prices);
@@ -64,6 +68,8 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
                     "magnet: one radius and one pull per level"));
             salvage.ifPresent(
                     numbers -> Check.that(numbers.bonus().size() == prices.size(), "salvage: one bonus per level"));
+            repair.ifPresent(numbers ->
+                    Check.that(numbers.interval().size() == prices.size(), "repair: one interval per level"));
         }
 
         /** Whether the shop sells it once it is unlocked. */
@@ -101,6 +107,32 @@ public record SystemsData(List<Engine> engines, Bays bays, List<Utility> utility
             Check.positive("double_tap", doubleTap);
         }
     }
+
+    /**
+     * M8 part A, the Auto-repair nanites (design/player/systems, Auto-repair nanites (L24)): in flight 1 armour point
+     * every {@code interval} s (one per level) up to {@code cap} of the plating's maximum; a hit pauses it {@code
+     * pause} s; nothing while the ship is wrecked. Rook's and the Bulwark's armour is not repaired.
+     */
+    public record Repair(List<Double> interval, double cap, double pause) {
+        public Repair {
+            interval = List.copyOf(interval);
+            interval.forEach(seconds -> Check.positive("interval", seconds));
+            Check.share("cap", cap);
+            Check.positive("cap", cap);
+            Check.notNegative("pause", pause);
+        }
+
+        /** Seconds per armour point at {@code level} (1 …). */
+        public double interval(int level) {
+            return interval.get(level - 1);
+        }
+    }
+
+    /**
+     * M8 part A, the Pressure hull (design/player/systems, Pressure hull (L22)): {@code drag} false, the ship keeps its
+     * normal acceleration under water (the water's drag is removed); a second hull adds nothing.
+     */
+    public record Hull(boolean drag) {}
 
     /** The Salvage scanner: per level, the share added to salvage pickups' and hidden crates' credits. */
     public record Salvage(List<Double> bonus) {

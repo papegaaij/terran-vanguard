@@ -25,6 +25,11 @@ public final class Ship {
     private int bankTimer;
     /** M7 part A: the Evasive thrusters' dash; null without them (then nothing of it is hashed). */
     private final Thrusters thrusters;
+    /**
+     * M8 part A (design/world/europa, Under water rules): the water's drag on its acceleration and braking, set by the
+     * sortie every step from its medium; exactly 1 in the air. Not hashed: the medium it comes from is.
+     */
+    private double drag = 1;
 
     Ship(ShipSpec spec, Defences defences) {
         this(spec, defences, null);
@@ -176,9 +181,17 @@ public final class Ship {
         y = Math.clamp(y, margin, PlayField.HEIGHT - margin);
     }
 
+    /**
+     * M8 part A: the water's drag for the next {@link #fly}: its acceleration and braking times {@code factor} (the
+     * dash and the precision mode as ever); 1 in the air.
+     */
+    void drag(double factor) {
+        drag = factor;
+    }
+
     /** Moves one velocity component towards its target: accelerating, or braking to a stop. */
     private double approach(double velocity, double target) {
-        double rate = target == 0 ? stopPerStep : accelerationPerStep;
+        double rate = (target == 0 ? stopPerStep : accelerationPerStep) * drag;
         if (velocity < target) {
             return Math.min(target, velocity + rate);
         }

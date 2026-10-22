@@ -35,6 +35,10 @@ import vanguard.sim.ObjectiveSpec.Naval;
  * @param ground the road, water, terrain, gates, no-surface zones and conveyor belts
  * @param hazards the cranes, debris, sleds, rocks, vents, darkness, weather and sondes
  * @param drops the group and part drops, the placed pickups and the drop factor
+ * @param medium M8 part A (design/world/europa, Under water rules): the level's medium and its switches at the
+ *     sections' starts; {@link MediumSpec#AIR} (the default) for every level before Act 4
+ * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the level's and its sections' lists
+ *     of forbidden specials; {@link SpecialLimits#NONE} (the default): the specials' own settings decide
  */
 public record LevelScript(
         int number,
@@ -51,7 +55,9 @@ public record LevelScript(
         ObjectiveSpec objectives,
         GroundSpec ground,
         HazardSpec hazards,
-        DropSpec drops) {
+        DropSpec drops,
+        MediumSpec medium,
+        SpecialLimits specialLimits) {
     public LevelScript {
         checkGroundAllies(
                 sections,
@@ -86,11 +92,97 @@ public record LevelScript(
         if (sections.isEmpty()) {
             throw new IllegalArgumentException("a level needs at least one section");
         }
+        if (!medium.switches().isEmpty()
+                && !(medium.switches().getLast().atSeconds()
+                        < sections.getLast().end())) {
+            throw new IllegalArgumentException("the medium switches before the level's end: " + medium.switches());
+        }
+        if (!specialLimits.switches().isEmpty()
+                && !(specialLimits.switches().getLast().atSeconds()
+                        < sections.getLast().end())) {
+            throw new IllegalArgumentException(
+                    "the special limits switch before the level's end: " + specialLimits.switches());
+        }
         if (objectives.escort().isPresent()
                 && objectives.escort().get().air().isEmpty()
                 && ground.road().isEmpty()) {
             throw new IllegalArgumentException("a convoy follows the level's road");
         }
+    }
+
+    /** A level in the air (every level before Act 4): {@link MediumSpec#AIR}. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            boolean launchDrop,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            int secrets,
+            List<RadioCue> radio,
+            ObjectiveSpec objectives,
+            GroundSpec ground,
+            HazardSpec hazards,
+            DropSpec drops) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                launchDrop,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                setPieces,
+                secrets,
+                radio,
+                objectives,
+                ground,
+                hazards,
+                drops,
+                MediumSpec.AIR,
+                SpecialLimits.NONE);
+    }
+
+    /** M8 part A: a level whose specials follow their own settings ({@link SpecialLimits#NONE}). */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            boolean launchDrop,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            int secrets,
+            List<RadioCue> radio,
+            ObjectiveSpec objectives,
+            GroundSpec ground,
+            HazardSpec hazards,
+            DropSpec drops,
+            MediumSpec medium) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                launchDrop,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                setPieces,
+                secrets,
+                radio,
+                objectives,
+                ground,
+                hazards,
+                drops,
+                medium,
+                SpecialLimits.NONE);
     }
 
     /**
@@ -117,7 +209,9 @@ public record LevelScript(
                 .objectives(objectives)
                 .ground(ground)
                 .hazards(hazards)
-                .drops(drops);
+                .drops(drops)
+                .medium(medium)
+                .specialLimits(specialLimits);
     }
 
     /**
@@ -141,6 +235,8 @@ public record LevelScript(
         private GroundSpec ground = GroundSpec.NONE;
         private HazardSpec hazards = HazardSpec.NONE;
         private DropSpec drops = DropSpec.NONE;
+        private MediumSpec medium = MediumSpec.AIR;
+        private SpecialLimits specialLimits = SpecialLimits.NONE;
 
         private Builder(int number, int act) {
             this.number = number;
@@ -222,6 +318,21 @@ public record LevelScript(
             return this;
         }
 
+        /** M8 part A: the level's medium (design/world/europa, Under water rules); {@link MediumSpec#AIR} by default. */
+        public Builder medium(MediumSpec medium) {
+            this.medium = medium;
+            return this;
+        }
+
+        /**
+         * M8 part A: the level's and its sections' lists of forbidden specials (design/player/specials, Setting
+         * restrictions); {@link SpecialLimits#NONE} by default.
+         */
+        public Builder specialLimits(SpecialLimits specialLimits) {
+            this.specialLimits = specialLimits;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -239,7 +350,9 @@ public record LevelScript(
                     objectives,
                     ground,
                     hazards,
-                    drops);
+                    drops,
+                    medium,
+                    specialLimits);
         }
     }
 

@@ -94,7 +94,7 @@ class HangarEscortTest {
         HangarState state = atEscort(campaign(8, 1000, FULL, 80));
 
         assertEquals(4, state.rows().size());
-        assertEquals(5, state.rowCount());
+        assertEquals(6, state.rowCount(), "M8 part A: the Bulwark's row between his guns and the side row");
         assertEquals(State.FITTED, state.rows().getFirst().state());
         assertEquals("autocannon", state.rows().getFirst().item().id());
         assertTrue(state.rows().stream().skip(1).allMatch(offer -> offer.state() == State.BUYABLE));
@@ -102,6 +102,10 @@ class HangarEscortTest {
         for (int i = 0; i < 4; i++) {
             state.down();
         }
+        assertTrue(state.bulwarkSelected());
+        assertEquals(State.LOCKED, state.bulwarkRow().orElseThrow().state(), "in the shop from Level 22");
+        assertEquals(List.of(), state.bulwarkChoices());
+        state.down();
         assertTrue(state.sideSelected());
         assertTrue(state.selected().isEmpty());
         assertEquals(Outcome.NONE, state.down(), "the side row is the last");
@@ -111,10 +115,11 @@ class HangarEscortTest {
     void leftAndRightSetHisSideOnTheSideRow() {
         Campaign campaign = campaign(8, 1000, FULL, 80);
         HangarState state = atEscort(campaign);
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             state.down();
         }
 
+        assertTrue(state.sideSelected());
         assertEquals(WingmanSpec.Side.LEFT, state.escortSide());
         assertEquals(Outcome.NONE, state.left(), "already left");
         assertEquals(Outcome.MOVED, state.right());

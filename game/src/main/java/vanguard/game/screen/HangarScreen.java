@@ -100,6 +100,11 @@ public final class HangarScreen implements GameScreen {
         for (Campaign.FreeCharges free : given) {
             state.notice(HangarState.freeChargesNotice(free));
         }
+        // M8 part A: the hydro-kit's refit, once, at the first visit before an under-water level (its story flag is
+        // set here, before the autosave).
+        if (replay.isEmpty() && campaign.hydroKitNotice()) {
+            state.notice(HangarState.HYDRO_KIT_NOTICE);
+        }
         view = new HangarView(services.files, services.glass, services.sprites, services.catalogue, services.content);
         if (autosave && services.debugRun()) {
             // A debug run writes no save (design/systems/saves).
@@ -481,20 +486,27 @@ public final class HangarScreen implements GameScreen {
                         : "Q/E SLOT    UP/DOWN ITEM    LEFT/RIGHT CHOICE    ENTER CONFIRM    ESC MAIN MENU";
             case COMMANDS -> "LEFT/RIGHT COMMAND    ENTER CONFIRM    DOWN SHOP    ESC MAIN MENU";
             case REPAIR ->
-                state.hangar().escortHired()
-                        ? "Q/E SHIP/ROOK    LEFT/RIGHT 1 POINT    UP/DOWN 10 POINTS    ENTER REPAIR    ESC CLOSE"
+                state.repairLines().size() > 1
+                        ? "Q/E "
+                                + String.join(
+                                        "/",
+                                        state.repairLines().stream()
+                                                .map(Enum::name)
+                                                .toList())
+                                + "    LEFT/RIGHT 1 POINT    UP/DOWN 10 POINTS    ENTER REPAIR    ESC CLOSE"
                         : "LEFT/RIGHT 1 POINT    UP/DOWN 10 POINTS    ENTER REPAIR    ESC CLOSE";
         };
     }
 
     /**
      * The repair panel: the ship's armour line and, once Rook is hired, his ({@code SHIP} and
-     * {@code ROOK}, design/ui/hangar, Escort), the selected line's points on the slider and its cost.
+     * {@code ROOK}, design/ui/hangar, Escort; M8 part A: not while he is missing, and an owned Bulwark's {@code
+     * BULWARK}), the selected line's points on the slider and its cost.
      */
     private void drawRepair(SpriteBatch batch, Glass glass) {
-        Hangar hangar = state.hangar();
-        boolean rook = hangar.escortHired();
-        Box panel = HangarPointer.repairPanel(rook);
+        List<HangarState.RepairLine> lines = state.repairLines();
+        boolean rook = lines.size() > 1;
+        Box panel = HangarPointer.repairPanel(lines.size());
         float x = panel.x();
         float y = panel.y();
         float width = panel.width();
@@ -503,19 +515,17 @@ public final class HangarScreen implements GameScreen {
         glass.panel(batch, x, y, width, height, 0.94f);
         glass.header(batch, "REPAIR ARMOUR", x + 12, x + width - 12, y + 12);
         float lineY = y + 32;
-        for (HangarState.RepairLine line : HangarState.RepairLine.values()) {
-            if (line == HangarState.RepairLine.ROOK && !rook) {
-                continue;
-            }
+        for (HangarState.RepairLine line : lines) {
             boolean on = state.repairLine() == line;
             String text = repairLine(line, rook);
             glass.shadowed(batch, glass.fonts.label, text, on ? Glass.AMBER : Glass.WHITE, x + 12, lineY);
             lineY += 16;
         }
-        String rate = hangar.repairCost() == 0 ? "FREE ON EASY" : Names.credits(hangar.repairCost()) + " A POINT";
+        int perPoint = state.repairCost(state.repairLine());
+        String rate = perPoint == 0 ? "FREE ON EASY" : Names.credits(perPoint) + " A POINT";
         glass.shadowed(batch, glass.fonts.label, rate, Glass.LABEL, x + 12, lineY);
         int points = state.repairPoints();
-        Box slider = HangarPointer.repairSlider(rook);
+        Box slider = HangarPointer.repairSlider(lines.size());
         glass.slider(
                 batch,
                 slider.x(),
@@ -526,10 +536,10 @@ public final class HangarScreen implements GameScreen {
         String cost = String.format(
                 Locale.ROOT,
                 "REPAIR %s%d POINTS FOR %s",
-                state.repairLine() == HangarState.RepairLine.ROOK ? "ROOK: " : "",
+                HangarState.repairPrefix(state.repairLine()),
                 points,
-                Names.credits((long) points * hangar.repairCost()));
-        Box button = HangarPointer.repairButton(rook);
+                Names.credits((long) points * perPoint));
+        Box button = HangarPointer.repairButton(lines.size());
         glass.chip(batch, glass.fonts.label, cost, button.x(), button.y(), button.width(), button.height(), true, true);
     }
 
@@ -538,9 +548,18 @@ public final class HangarScreen implements GameScreen {
      * line as before ({@code ARMOUR 64 / 80 - 16 POINTS MISSING}).
      */
     private String repairLine(HangarState.RepairLine line, boolean named) {
-        boolean ship = line == HangarState.RepairLine.SHIP;
-        double armour = ship ? campaign.armour() : campaign.gear().escort().armour();
-        double max = ship ? campaign.maxArmour() : campaign.escortMaxArmour();
+        double armour =
+                switch (line) {
+                    case SHIP -> campaign.armour();
+                    case ROOK -> campaign.gear().escort().armour();
+                    case BULWARK -> campaign.gear().escort().bulwark().armour();
+                };
+        double max =
+                switch (line) {
+                    case SHIP -> campaign.maxArmour();
+                    case ROOK -> campaign.escortMaxArmour();
+                    case BULWARK -> campaign.bulwarkMaxArmour();
+                };
         String text = String.format(
                 Locale.ROOT,
                 "ARMOUR %d / %d - %d POINTS MISSING",

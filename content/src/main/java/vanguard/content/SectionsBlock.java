@@ -29,6 +29,11 @@ public sealed interface SectionsBlock permits LevelData {
      * @param speed px/s; M7 part G (design/campaign Level 20, Reverse scroll; M5 = a): a moving section's speed may be
      *     negative, the ground then moving up the screen (a reversed section, {@link #reversed()}); an arena or a timed
      *     halt stays at 0
+     * @param medium M8 part A (design/world/europa, Under water rules): the section's medium, {@code air} or {@code
+     *     underwater}; the level's if not given. A section whose medium differs from the one before it is a
+     *     waterline at its start (Level 23's descent, Level 28's breakout)
+     * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the specials it forbids, by their
+     *     slugs ({@code orbital-lance}), replacing its setting's list; the level's if not given
      */
     public record Section(
             String name,
@@ -39,7 +44,34 @@ public sealed interface SectionsBlock permits LevelData {
             List<String> tiles,
             Optional<Boolean> arena,
             Optional<Double> ramp,
-            Optional<Double> holdAfterBoss) {
+            Optional<Double> holdAfterBoss,
+            Optional<Medium> medium,
+            Optional<List<String>> specialLimits) {
+        /** Without M8 part A's medium and special limits. */
+        public Section(
+                String name,
+                double end,
+                Optional<Double> speed,
+                Atmosphere atmosphere,
+                Optional<Peak> peak,
+                List<String> tiles,
+                Optional<Boolean> arena,
+                Optional<Double> ramp,
+                Optional<Double> holdAfterBoss) {
+            this(
+                    name,
+                    end,
+                    speed,
+                    atmosphere,
+                    peak,
+                    tiles,
+                    arena,
+                    ramp,
+                    holdAfterBoss,
+                    Optional.empty(),
+                    Optional.empty());
+        }
+
         /** Without M7 part F's hold after the boss. */
         public Section(
                 String name,
@@ -67,6 +99,7 @@ public sealed interface SectionsBlock permits LevelData {
                     "ramp: on a timed halt (speed 0 without an arena) or a moving section, not on an arena");
             holdAfterBoss.ifPresent(h -> Check.positive("hold_after_boss", h));
             Check.that(holdAfterBoss.isEmpty() || arena.orElse(false), "hold_after_boss: only on an arena");
+            specialLimits = specialLimits.map(List::copyOf);
         }
 
         /**
@@ -153,6 +186,15 @@ public sealed interface SectionsBlock permits LevelData {
         public double ambienceRise() {
             return ambienceDb.orElse(0.0);
         }
+    }
+
+    /**
+     * M8 part A (design/world/europa, Under water rules): what the play plane is in: {@code air} (every level before
+     * Act 4) or {@code underwater} (the water's factors, the hydro-kit, the special limits under the ice).
+     */
+    public enum Medium {
+        AIR,
+        UNDERWATER
     }
 
     /** Low-air cloud and haze intensity (design/art-direction/README.md). */

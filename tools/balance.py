@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""The balancing sheet for the player's equipment (Acts 1-3; Act 3 from M7 part A, Level 15's data from M7 part B).
+"""The balancing sheet for the player's equipment (Acts 1-4; Act 3 from M7 part A, Level 15's data from M7 part B;
+Act 4's visits from M8 part A).
 
 The numbers come from the parts' data files (design/player/**/data.yaml, the economy, the
 difficulty levers, the enemies and the levels); the expected purchases per hangar visit are in
@@ -10,16 +11,19 @@ BalanceTest (this sheet's plan, DPS and enemy checks) and ActPlaythroughTest (Ac
 plan on every difficulty). This script prints the same sheet for reading:
 
 Usage:
-  python3 tools/balance.py              the sheet per visit, levels 01-21 (the plan's visits), and the enemy checks
+  python3 tools/balance.py              the sheet per visit, levels 01-28 (the plan's visits), and the enemy checks
   python3 tools/balance.py --weapons    print every weapon's per-level numbers
 
 Per visit: the income of the level before it (the level's typical haul from its credit-budget
 table, design/systems/economy, Per-level budget: every planned level has its data since M7 part H, so
-the fallback to budget(n) is gone, M7 part I; plus the typical player's grade bonus, a B: round 34
+the fallback to budget(n) is gone, M7 part I; M8 part A: TEMPORARILY budget(n) again for an Act 4 level that has
+no data yet, until M8 part I; plus the typical player's grade bonus, a B: round 34
 P3 = A), the plan's purchases (with the free charges a special gives at its unlock), the repair
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
-inside 0.75-1.33x; Levels 01-03's gentle onboarding (up to 1.75x) is the accepted exception
+inside 0.75-1.33x (M8 part A: at the plan's `underwater` levels a weapon without the anti-sub trait, and Rook's
+gun, counts at the water's damage factor of design/world/europa/data.yaml; the Bulwark's anti-sub cannon is the
+escort's DPS while Rook is missing); Levels 01-03's gentle onboarding (up to 1.75x) is the accepted exception
 (user decision 2026-10-01). Per level with data: the slowest time to kill among its enemies and its
 boss's at the plan's DPS. Per enemy: the time to kill at its first level and the bounty against
 the balancing basis (design/enemies/README.md); a deviation is listed, marked when it is an
@@ -60,6 +64,10 @@ REAR_PENDING = {(12, "wraith"): "the act HP factor on the Wraith, the rear still
 LATCHED_SHARE = 0.25             # a latched Lamprey dies in at most this share of its shake-off time (BalanceTest)
 
 
+# M8 part A: the first level whose missing data falls back to budget(n) (temporary: M8 part I removes it).
+FALLBACK_FROM = 22
+
+
 def load_all():
     """Everything the report needs, gathered from the data files."""
     plan = load("player/balance-plan.yaml")
@@ -79,6 +87,7 @@ def load_all():
         "utility": {u["name"]: u for u in load("player/systems/data.yaml")["utility"]},
         "specials": {s["name"]: s for s in load("player/specials/data.yaml")["specials"]},
         "wingmen": load("player/wingmen/data.yaml"),
+        "water": load("world/europa/data.yaml")["underwater"],
     }
 
 
@@ -101,11 +110,26 @@ def typical_haul(d):
 
 def income(data, n):
     """The credits the level earns: its typical haul. M7 part I: every planned level has its data (Level 21
-    since part H), so a level without a data file is an error, no longer budget(n)."""
+    since part H), so a level without a data file is an error, no longer budget(n). M8 part A (temporary, until M8
+    part I): an Act 4 level without its data yet earns budget(n), rounded half to even."""
     d = level_dir(n)
     if not d:
+        if n >= FALLBACK_FROM:
+            return round(budget(data, n))
         sys.exit(f"Level {n:02d} is in the balance plan but has no data.yaml")
     return typical_haul(d)
+
+
+def water(data, n):
+    """M8 part A: the damage factor on a weapon without the anti-sub trait in Level n: the water's at the plan's
+    underwater levels, else 1."""
+    return data["water"]["damage"] if n in data["plan"].get("underwater", []) else 1
+
+
+def rook_missing(data, n):
+    """M8 part A: whether Rook is missing in Level n (design/player/wingmen, Rook's loss and absence)."""
+    missing = data["wingmen"]["rook"]["missing"]
+    return missing["after"] < n < missing["back"]
 
 
 def apply_plan(data):
@@ -213,8 +237,9 @@ def apply_plan(data):
             pay(sp["charge_price"] * count, f"{count}× {name} charge")
         if n > 1:
             pay(plan["repair_points_per_level"] * data["repair_cost"], "repairs (estimate)")
-        if n > data["wingmen"]["rook"]["joins"]:
-            # round 34, P3 = A: Rook's repairs after a level flown with him, after the ship's
+        if n > data["wingmen"]["rook"]["joins"] and not rook_missing(data, n):
+            # round 34, P3 = A: Rook's repairs after a level flown with him, after the ship's; M8 part A: none while
+            # he is missing (his card is MIA, the loaner Bulwark is repaired free)
             pay(plan["escort_repair_points_per_level"] * data["repair_cost"], "Rook's repairs (estimate)")
         yield n, state
         earned = income(data, n)
@@ -229,18 +254,24 @@ def escort_gun(data, gun_id):
     return next(g for g in data["wingmen"]["guns"]["list"] if g["id"] == gun_id)
 
 
-def escort_dps(data, state):
+def escort_dps(data, state, n):
     """Rook's single-target DPS (M5 part I, BalanceTest.escort): his gun's scale x its base weapon's
-    single-target DPS at the gun's level; 0 before he has a gun. Not part of the forward DPS."""
+    single-target DPS at the gun's level (M8 part A: x the water's factor under water); 0 before he has a gun. M8
+    part A: the Bulwark's cannon while Rook is missing (anti-sub, full damage). Not part of the forward DPS."""
     if "escort" not in state["slots"]:
         return 0.0
+    if rook_missing(data, n):
+        gun = data["wingmen"]["bulwark"]["gun"]
+        return gun["rate"] * gun["damage"]
     slug, lvl = state["slots"]["escort"]
     gun = escort_gun(data, slug)
     w = data["weapons"][gun["base"]]
-    return gun["scale"] * stats(w, w["levels"][lvl - 1])[1]
+    return gun["scale"] * stats(w, w["levels"][lvl - 1])[1] * water(data, n)
 
 
-def loadout_numbers(data, state):
+def loadout_numbers(data, state, n):
+    """The fit's load, output and single-target forward, rear and volley DPS in Level n (M8 part A: a weapon without
+    the anti-sub trait at the water's factor under water)."""
     W, core = data["weapons"], data["core"]
     load_mw, fwd, rear, volley = 0.0, 0.0, 0.0, 0.0
     for slot, (slug, lvl) in state["slots"].items():
@@ -248,6 +279,8 @@ def loadout_numbers(data, state):
             continue
         w = W[slug]
         v, s = stats(w, w["levels"][lvl - 1])
+        factor = 1 if "anti-sub" in w["traits"] else water(data, n)
+        v, s = v * factor, s * factor
         load_mw += draw(w, lvl)
         volley += v
         if w["slot"] == "rear":
@@ -509,7 +542,7 @@ def report(data):
     for n, st in apply_plan(data):
         spent_here = st["spent"] - prev_spent
         prev_spent = st["spent"]
-        load_mw, out, fwd, rear, volley = loadout_numbers(data, st)
+        load_mw, out, fwd, rear, volley = loadout_numbers(data, st, n)
         flags = []
         if st["credits"] < 0:
             flags.append("OVERSPENT")
@@ -525,7 +558,7 @@ def report(data):
                 flags.append(f"DPS {fwd:.0f} vs enemy reference {r:.0f}")
         print(f"{n:02d}  | {budget(data, n):6.0f} | {st['credits'] + spent_here:12.0f} | {spent_here:10.0f} | "
               f"{st['credits']:4.0f} | {load_mw:4.1f}/{out:<3g} | {fwd:7.1f} | {(r or 0):7.0f} | {ratio} | "
-              f"{rear:8.1f} | {volley:10.1f} | {escort_dps(data, st):8.1f} | "
+              f"{rear:8.1f} | {volley:10.1f} | {escort_dps(data, st, n):8.1f} | "
               + "; ".join(st["log"]) + (("  <-- " + ", ".join(flags)) if flags else ""))
         for f in flags:
             problems.append(f"L{n:02d}: {f}")
@@ -545,7 +578,8 @@ def report(data):
             problems += [f"L{n:02d}: {m}" for m in slow]
             accepted += [f"L{n:02d}: {m}" for m in pending]
     print("\nBefore visit: the credits after the level before it, which earns its typical haul (its "
-          "credit-budget table), plus the typical player's grade bonus "
+          f"credit-budget table; M8 part A, temporary: budget(n) for a level from L{FALLBACK_FROM} without data), "
+          "plus the typical player's grade bonus "
           f"(+{data['plan']['typical_grade_bonus']:.0%}, a B). Spent here includes the repair estimate "
           "(the ship's, and Rook's from the L09 visit). Rook DPS: his gun's single-target DPS "
           "(from Level 08), not in the forward DPS.")

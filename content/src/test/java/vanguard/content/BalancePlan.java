@@ -49,6 +49,7 @@ public final class BalancePlan {
     private final double gradeBonus;
     private final int escortRepairPoints;
     private final JsonNode expert;
+    private final java.util.Set<Integer> underwater;
 
     private BalancePlan(Catalogue catalogue, JsonNode tree) {
         this.catalogue = catalogue;
@@ -58,6 +59,17 @@ public final class BalancePlan {
         this.gradeBonus = tree.path("typical_grade_bonus").asDouble();
         this.escortRepairPoints = tree.path("escort_repair_points_per_level").asInt();
         this.expert = tree.path("expert");
+        java.util.Set<Integer> levels = new java.util.TreeSet<>();
+        tree.path("underwater").forEach(level -> levels.add(level.asInt()));
+        this.underwater = java.util.Collections.unmodifiableSet(levels);
+    }
+
+    /**
+     * M8 part A (temporary, until the Act 4 levels carry their {@code medium}): the levels the plan flies under water,
+     * where a weapon without the {@code anti-sub} trait (and Rook's gun) counts at the water's damage factor.
+     */
+    public java.util.Set<Integer> underwater() {
+        return underwater;
     }
 
     /** The plan in the design tree, with the shop's items. */

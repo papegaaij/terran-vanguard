@@ -178,12 +178,18 @@ final class Beams {
                     ? armament.mount(m).overdrive()
                     : armament.mount(m).weapon();
             double half = weapon.size().width() / 2;
-            double reach = beam.fromY + BEAM_REACH * Math.min(1, (double) beam.ticksOn / Beam.GROW_TICKS);
+            Medium medium = fire.medium();
+            // M8 part A: under water a reach-limited beam reaches its share of the field's height from the nose.
+            double length = medium.wet() ? BEAM_REACH * medium.reach(weapon) : BEAM_REACH;
+            double reach = beam.fromY + length * Math.min(1, (double) beam.ticksOn / Beam.GROW_TICKS);
             double limit = Math.min(reach, wallAhead(beam.x, half, beam.fromY));
             cast(m, weapon, beam.x, half, beam.fromY, limit, enemies, ground, spores);
+            // M8 part A: under water a weapon without anti-sub does the water's share of its damage, every step.
+            double water = medium.wet() ? medium.damage(weapon) : 1;
             if (fire.links() != null) {
                 // M7 part C (M9 = a): the tendrils it crosses short of its end burn, and it goes on past them.
-                fire.links().burn(beam.x, half, beam.fromY, castKind == CAST_NONE ? limit : castY, weapon.damage());
+                fire.links()
+                        .burn(beam.x, half, beam.fromY, castKind == CAST_NONE ? limit : castY, weapon.damage() * water);
             }
             beam.glanceY = castGlance < castY ? castGlance : Double.NaN;
             beam.target = -1;
@@ -198,7 +204,7 @@ final class Beams {
             beam.endY = castY + Beam.BORE;
             beam.contact = castKind == CAST_BLOCKED ? Beam.Contact.BLOCKED : Beam.Contact.BURN;
             int trigger = -1;
-            double damage = weapon.damage() * groundFactor(weapon, castLayer);
+            double damage = weapon.damage() * groundFactor(weapon, castLayer) * water;
             switch (castKind) {
                 case CAST_ENEMY -> {
                     Enemy enemy = enemies.get(castIndex);
@@ -282,11 +288,11 @@ final class Beams {
         castIndex = -1;
         castPart = -1;
         castGlance = Double.POSITIVE_INFINITY;
-        WeaponSpec.Delivery delivery = weapon.delivery();
+        Medium medium = fire.medium();
         for (int j = 0; j < enemies.size(); j++) {
             Enemy enemy = enemies.get(j);
             Layer layer = enemy.layer();
-            if (!delivery.reaches(layer) || !onField(enemy) || (enemy.latched() && !fire.hitsLatched(m))) {
+            if (!medium.reaches(weapon, layer) || !onField(enemy) || (enemy.latched() && !fire.hitsLatched(m))) {
                 continue;
             }
             double y = columnContact(x, half, fromY, enemy.x(), enemy.y(), enemy.hitbox());
@@ -306,17 +312,17 @@ final class Beams {
         for (int k = 0; k < setPieces.length; k++) {
             SetPiece piece = setPieces[k];
             boolean anchored = piece.arena().isPresent();
-            if (!piece.present() || (!anchored && !delivery.reaches(piece.layer()))) {
+            if (!piece.present() || (!anchored && !medium.reaches(weapon, piece.layer()))) {
                 continue;
             }
-            if (!anchored || delivery.reaches(piece.layer())) {
+            if (!anchored || medium.reaches(weapon, piece.layer())) {
                 // M7 part F: a walking boss's front plate stops it, first so that a tie with its hull goes to it.
                 consider(CAST_ARMOUR, piece.plateColumn(x, half, fromY), piece.layer(), k, -1);
             }
             boolean partInColumn = false;
             for (int p = 0; p < piece.partCount(); p++) {
                 Layer partLayer = piece.partLayer(p);
-                if (piece.partWrecked(p) || !piece.partOnField(p) || (anchored && !delivery.reaches(partLayer))) {
+                if (piece.partWrecked(p) || !piece.partOnField(p) || (anchored && !medium.reaches(weapon, partLayer))) {
                     continue;
                 }
                 double y = piece.partColumn(p, x, half, fromY);
@@ -340,7 +346,7 @@ final class Beams {
             }
             consider(CAST_ARMOUR, piece.neckColumn(x, half, fromY), piece.layer(), k, -1);
         }
-        if (delivery.reaches(Layer.AIR)) {
+        if (medium.reaches(weapon, Layer.AIR)) {
             for (int j = 0; j < spores.size(); j++) {
                 Mine spore = spores.get(j);
                 if (spore.armed()) {
@@ -354,7 +360,7 @@ final class Beams {
             }
         }
         Missiles missiles = fire.missiles();
-        if (missiles != null && delivery.reaches(Layer.AIR)) {
+        if (missiles != null && medium.reaches(weapon, Layer.AIR)) {
             // M7 part F: the enemies' homing missiles.
             for (int j = 0; j < missiles.size(); j++) {
                 Missile missile = missiles.get(j);
@@ -369,7 +375,7 @@ final class Beams {
         for (int j = 0; j < ground.size(); j++) {
             GroundObject object = ground.get(j);
             GroundObjectSpec spec = object.spec();
-            if (!object.hittable() || spec.submerged()) {
+            if (!object.hittable() || (spec.submerged() && !medium.reaches(weapon, Layer.SUB))) {
                 continue;
             }
             double y = columnContact(x, half, fromY, object.x(), object.y(), spec.size());

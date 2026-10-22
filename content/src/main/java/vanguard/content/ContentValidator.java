@@ -43,6 +43,12 @@ final class ContentValidator {
         content.enemies().values().forEach(this::checkEnemy);
         content.levels().values().forEach(this::checkLevel);
         content.levels().forEach(this::checkAct);
+        // M8 part A: the under-water rules, Rook's absence and a level's medium and special limits.
+        ActFourChecks.europa(content, (field, message) -> problem(content.europa(), field, message));
+        ActFourChecks.wingmen(content, (field, message) -> problem(content.wingmen(), field, message));
+        content.levels()
+                .forEach((key, level) -> ActFourChecks.level(
+                        content, Content.levelNumber(key), level, (field, message) -> problem(level, field, message)));
         return problems;
     }
 
@@ -145,6 +151,7 @@ final class ContentValidator {
                 problem(wingmen, field + ".base", "its weapon's hits '" + weapon.hits() + "' do not fly");
             }
         }
+        checkAvailable(wingmen, "bulwark.available", wingmen.bulwark().available());
         if (wingmen.barks()
                 .bark(WingmenData.ROOK_ARMOUR)
                 .flatMap(WingmenData.Bark::below)

@@ -14,6 +14,12 @@ import vanguard.sim.WeaponSpec;
  * and a Light Drone Bay's drone (design/player/weapons).
  */
 final class WeaponRules {
+    /**
+     * M8 part A: the most depth charges of one mount out at once when the data gives no {@code max_live}: more than its
+     * rate and fuse ever put out (at most about two), so it never holds a charge back.
+     */
+    static final int DEPTH_CHARGES_LIVE = 8;
+
     private WeaponRules() {}
 
     /**
@@ -22,7 +28,8 @@ final class WeaponRules {
      * level over water. M7 part A: the Rear Lance flies (standard bolts), and the Ion Beam ({@code hits:
      * beam}), the Light Drone Bay (a {@code drone}) and the Deflector Pod ({@code hits: deflector}), each
      * as its {@link #mount}. M7 part G: the Rear-guard Drone Bay too (its drone on the trail station, {@link
-     * RetreatRules#trail}).
+     * RetreatRules#trail}). M8 part A: the Harpoon Torpedoes (a torpedo from the nose, with its splash) and the
+     * Depth Charges ({@code hits: depth-charge}), which run only where there is water, as the torpedoes.
      */
     static boolean flies(Content content, String weapon) {
         WeaponData data = content.weapon(weapon);
@@ -100,6 +107,8 @@ final class WeaponRules {
                 Optional.of(weapon.slew().isPresent() ? WeaponSpec.Delivery.TURRET : WeaponSpec.Delivery.HOMING);
             case WeaponData.MINES -> Optional.of(WeaponSpec.Delivery.MINE);
             case WeaponData.TORPEDO -> Optional.of(WeaponSpec.Delivery.TORPEDO);
+            // M8 part A: the Depth Charges' barrel, bursting on its fuse.
+            case WeaponData.DEPTH_CHARGE -> Optional.of(WeaponSpec.Delivery.DEPTH_CHARGE);
             case "ground-only" ->
                 Optional.of(
                         weapon.range().orElseThrow().kind() == WeaponData.Range.Kind.DROP
@@ -168,14 +177,24 @@ final class WeaponRules {
             }
         }
         double speed = weapon.speed().map(WeaponData.Speed::start).orElse(0.0);
-        WeaponSpec.Mines mines = delivery == WeaponSpec.Delivery.MINE
-                ? new WeaponSpec.Mines(
-                        weapon.drift().orElseThrow(),
-                        weapon.arm().orElseThrow(),
-                        weapon.trigger().orElseThrow(),
-                        level.maxLive().orElseThrow())
-                : WeaponSpec.Mines.NONE;
-        return new WeaponSpec(
+        WeaponSpec.Mines mines =
+                switch (delivery) {
+                    case MINE ->
+                        new WeaponSpec.Mines(
+                                weapon.drift().orElseThrow(),
+                                weapon.arm().orElseThrow(),
+                                weapon.trigger().orElseThrow(),
+                                level.maxLive().orElseThrow());
+                    // M8 part A: a depth charge rolls out, drifts to a hover and bursts on its level's fuse; the data
+                    // caps nothing (its fuse keeps two or three out), so the cap only bounds the pool.
+                    case DEPTH_CHARGE ->
+                        WeaponSpec.Mines.charge(
+                                weapon.drift().orElseThrow(),
+                                level.fuse().orElseThrow(),
+                                level.maxLive().orElse(DEPTH_CHARGES_LIVE));
+                    default -> WeaponSpec.Mines.NONE;
+                };
+        WeaponSpec spec = new WeaponSpec(
                         slug,
                         weapon.vfx(),
                         weapon.sfx(),
@@ -207,7 +226,13 @@ final class WeaponRules {
                         weapon.accelerate().orElse(0.0),
                         mines)
                 // M5 part F (F3 = a): a side or rear weapon's shots hit a latched Lamprey.
-                .flanking(PartFRules.flanking(weapon));
+                .flanking(PartFRules.flanking(weapon))
+                // M8 part A: the anti-sub trait (full damage under water, the sub layer reached).
+                .antiSub(weapon.antiSub());
+        // M8 part A: a torpedo's splash (the Harpoon Torpedoes'): its share of the damage in the level's blast radius.
+        return weapon.splash().isPresent()
+                ? spec.splash(level.blast().orElseThrow(), weapon.splash().get())
+                : spec;
     }
 
     /** A projectile leaving a mount point (sprite pixels from the top left) with an offset and an angle in degrees. */

@@ -1,7 +1,7 @@
 ---
 title: Depth Charges
 design: approved
-implementation: not-started
+implementation: in-progress
 art: chosen
 depends-on: [.., ../torpedo-pod, ../../generator, ../../../world/europa, ../../../systems/economy]
 updated: 2026-10-22
@@ -14,35 +14,47 @@ updated: 2026-10-22
 The rear-slot `anti-sub` weapon of Act 4: barrels that the Stormhawk rolls out behind it, that sink
 back through the water and burst after a short fuse, hitting everything near the burst. It guards
 the tail against swimmers that come up behind, and it keeps its full damage under the ice where the
-Tail Gun loses 30 %. Draft, decided in round 48 (2026-10-22); numbers are hand-written.
+Tail Gun loses 30 %. Decided in round 48 (2026-10-22); its numbers are in [data.yaml](data.yaml) since M8
+part A (`hits: depth-charge`, a delivery of its own).
 
 ## Design
 
-| Property | Value (draft) |
+<!-- data: weapon-properties -->
+| Property | Value |
 |---|---|
-| Slot | Rear |
+| Slot | Rear gun |
 | Traits | `anti-sub`, `rear`, `area` |
 | Layers hit | Under water: the burst hits everything inside its radius in the water, at full damage (the play plane `air`, `low-air`, the sea floor `ground`, and the `sub` layer below); never `high-air`. Above water: the barrel drops through the surface and bursts on the `sub` layer, hitting `sub` and naval `ground` in a level with `water: true`; idle with `NO WATER` in a dry level |
 | Price | 1 300 cr |
-| Upgrade cost L2 / L3 / L4 / L5 | 400 / 800 / 1 600 / 3 200 cr (an upgrade base of 800 on the common factors) |
-| Unlock | L22 (in the shop from the hangar visit before L22; usable from the waterline of L23) |
-| Projectile | A barrel leaves the stern at 140 px/s backwards and slows to a hover over 0.6 s (the water's drag), then sinks along the scroll; fuse 0.9 s; burst radius 40 px (L1) → 64 px (L5) |
-| Sound family | a heavy, low underwater thud, no bubbles (round 48 proposals) |
+| Upgrade cost L2 / L3 / L4 / L5 | 400 / 800 / 1 600 / 3 200 cr (sell-back per [economy](../../../systems/economy/README.md)) |
+| Unlock | L22 (in the shop from the hangar visit before it) |
+| Projectile | 140 px/s backwards from the stern, slowing to a hover over 0.6 s, then sinking with the scroll, 12×12 px, a burst on its fuse (0.9 → 0.7 s) of 40 → 64 px radius |
+| Sound family | `depth-charge` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families)) |
+| Projectile family (VFX) | `depth-charge` (the drum and its pressure-dome burst of concept round 48, G2 a) |
+<!-- /data -->
 
-### Per level (draft, hand-written)
+It is usable from the waterline of L23. Its sound family `depth-charge` is a heavy, low thud under
+water, no bubbles (round 48 proposals).
 
+### Per level
+
+<!-- data: weapon-levels -->
 | Level | Charges | Fuse | Volleys /s | Damage | Volley DPS | Single-target DPS | Burst radius | Draw MW | Upgrade cost |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | 1 | 0.9 s | 1 | 25 | 25.0 | 25.0 | 40 px | 2 | — |
 | 2 | 1 | 0.9 s | 1.2 | 31.7 | 38.0 | 38.0 | 46 px | 2.5 | 400 |
 | 3 | 1 | 0.8 s | 1.3 | 40 | 52.0 | 52.0 | 52 px | 2.5 | 800 |
-| 4 | 1 | 0.8 s | 1.4 | 47 | 66.0 | 66.0 | 58 px | 3 | 1 600 |
+| 4 | 1 | 0.8 s | 1.4 | 47 | 65.8 | 65.8 | 58 px | 3 | 1 600 |
 | 5 | 2 | 0.7 s | 0.8 | 50 | 80.0 | 80.0 | 64 px | 3 | 3 200 |
-| OD | 2 | 0.7 s | 0.9 | 54 | 97.0 | 97.0 | 64 px | — (ignores cap) | — |
+| OD | 2 | 0.7 s | 0.9 | 54 | 97.2 | 97.2 | 64 px | — (ignores cap) | — |
 
-DPS L1 and L5 are the roster's (25 / 80); L2–L4 are ours. A charge's damage is dealt once to every
-target inside the radius (so against a school the volley counts more than the single-target
-DPS above); a boss part takes at most one burst per charge.
+Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by hand. A charge's damage is dealt once to every target inside its burst radius (a boss part at most one burst a charge), so against a group the volley counts more than the single-target DPS. OD = the overdrive (20 s pickup).
+<!-- /data -->
+
+DPS L1 and L5 are the roster's (25 / 80); L2–L4 are ours (L4's 47 damage gives 65.8 DPS where the
+hand-written table said 66; L5's two charges leave 8 px either side of the stern). A charge's
+damage is dealt once to every target inside the radius (so against a school the volley counts more
+than the single-target DPS above); a boss part takes at most one burst per charge.
 
 ### Behaviour
 
@@ -67,13 +79,22 @@ table](../README.md#concept-art); prompts in [../concept/prompts.md](../concept/
 generator `tools/concept/gear_r48.py`), pending the user's review: [a "drum"](../concept/depth-charges-r48-a.png) ([GIF](../concept/depth-charges-r48-a.gif)), a navy drum with yellow bands and a white fuse lamp blinking faster, a pressure-dome burst (flash disc, dark cavity, rim ring); and [b "finned canister"](../concept/rejected/depth-charges-r48-b.png) ([GIF](../concept/rejected/depth-charges-r48-b.gif)), a grey canister with cross fins and a closing cyan fuse ring, a double shock ring that refracts the floor. Both are shown under the
 round-48 under-water grade (Level 24) with stand-in targets.
 
+| File | What | Status |
+|---|---|---|
+| [concept/depth-charges-final-r50-a.png](concept/depth-charges-final-r50-a.png) | Depth Charges final frames (`tools/art/act4_gear.py charges`, round 48 G2 = a): the drum's 16 spins in three sinking stages, the fuse lamp, the pressure-dome bursts at 40 / 52 / 64 px and the dark cavity; roll-out, hover, sink and burst behind the ship (sheet) | proposed (round 50) |
+| [concept/depth-charges-final-r50-a.gif](concept/depth-charges-final-r50-a.gif) | Two L3 charges rolling out of the stern, blinking faster and bursting at 52 px, 15 fps at 2x | proposed (round 50) |
+| [concept/depth-charges-capture-r50-a.png](concept/depth-charges-capture-r50-a.png) | Game capture, Level 11 above water: the charges rolling off the stern and a burst on the `sub` layer by the Driftjelly field (a frame) | proposed (round 50) |
+| [concept/depth-charges-capture-r50-a.mp4](concept/depth-charges-capture-r50-a.mp4) | Game capture with the game's sound: the roll-outs, the blinking lamps and the bursts on Level 11's submerged jellies | proposed (round 50) |
+
+Prompts: [concept/prompts.md](concept/prompts.md).
+
 ## Implementation
 
-- [ ] Weapon data in `data.yaml` (not yet written) (numbers as above) — M8 part A
-- [ ] A rear delivery: barrel roll-out, fuse, a circular burst that hits the water's layers; safe for the ship and Rook — M8 part A
-- [ ] Idle with `NO WATER` in a dry level; the above-water drop on the `sub` layer — M8 part A
-- [ ] Power draw per level, upgrade prices, shop entry from the L22 visit; the balance plan's purchases — M8 part A
-- [ ] Sprites, burst VFX and sounds (round 48) — M8 part A
+- [x] Weapon data in [data.yaml](data.yaml) (numbers as above; M8 part A, step A2: `hits: depth-charge` with a `fuse` and a burst `blast` per level, loaded by `WeaponData`, the tables rendered by `tools/sync_tables.py`; the barrel's 12×12 px box is ours)
+- [x] A rear delivery: barrel roll-out, fuse, a circular burst that hits the water's layers; safe for the ship and Rook — M8 part A (steps A1/A3/A4: `DepthChargeTest`, `Act4ArsenalFlightTest.theDepthChargesBurstOnWhatPassesBehindTheShip`)
+- [x] Idle with `NO WATER` in a dry level; the above-water drop on the `sub` layer — M8 part A (`DepthChargeTest.dryItReadsNoWaterAndDropsNothing`, `DepthChargeTest.aboveWaterItBurstsOnTheSubLayerAndTheNavalGroundOnly`)
+- [x] Power draw per level, upgrade prices, shop entry from the L22 visit; the balance plan's purchases — M8 part A (`ActFourDataTest.theDepthChargesBurstOnAFusePerLevel`, `BalanceTest`, `ActFourHangarTest.theActFourItemsAreInTheLiveShopWithTheirNames`; the hangar's test range: `ActFourHangarTest.theDepthChargesTestRangeIsWaterWithSubmergedDummiesThatOneBurstDestroys`)
+- [x] Sprites, burst VFX and sounds (round 48) — M8 part A (step A6: `DeepWaterLooksTest.theDrumSinksInThreeStagesAndSpins`, `theFuseLampBlinksFasterTowardsTheBurst`, `theBurstMatchesTheLevelsRadius`, `ActFourSoundsTest.aDepthChargeRollsOutAndBurstsOnItsFuse`; the finals and the a/b sounds pending the user's review in [round 50](../../../concept-rounds/round-50/README.md))
 
 ## Open questions
 
@@ -87,3 +108,8 @@ round-48 under-water grade (Level 24) with stand-in targets.
   on the play plane (Q1 = b; the roster's "sink into the `sub` layer" is meaningless when the play
   plane is the water); numbers hand-written (25 / 80 DPS kept, L2–L4 ours).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
+- 2026-10-22 (M8 part A, step A2): the numbers in [data.yaml](data.yaml) (`hits: depth-charge`, a delivery of its
+  own: `speed` 140, `drift` 0.6, per level a `fuse` and the burst `blast`; L5's two charges 8 px either side; the
+  barrel's 12×12 px box ours, pending the user's review in round 50); the tables are rendered from it (L4's 65.8 DPS
+  where the hand-written table said 66).
+- 2026-10-22 (M8 part A, steps A1–A6; pending the user's review in round 50): the roll-out under water is 140 × 1.5 (range) × 0.7 (speed) = 147 px/s, the fuse counts from the launch, L5's two charges ±8 px apart, hardened ground glances off as from the mines (D12); at most 8 charges live (`max_live`'s default); a charge sinking off the field is lost, so charges dropped with the ship at the bottom edge roll off the screen before they burst.

@@ -3,7 +3,7 @@ title: Enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Enemies
@@ -363,9 +363,9 @@ damage units per second, Pulse Cannon L1 = 20, interpolated from the
 [weapon roster](../player/weapons/README.md) and the [level budget](../systems/economy/README.md#per-level-budget)):
 
 <!-- data: reference-dps -->
-| Level | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| DPS | 20 | 26 | 32 | 38 | 45 | 52 | 60 | 60 | 63 | 66 | 70 | 73 | 76 | 80 | 76 | 80 | 84 | 88 | 92 | 96 | 100 |
+| Level | 01 | 02 | 03 | 04 | 05 | 06 | 07 | 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| DPS | 20 | 26 | 32 | 38 | 45 | 52 | 60 | 60 | 63 | 66 | 70 | 73 | 76 | 80 | 76 | 80 | 84 | 88 | 92 | 96 | 100 | 96 | 100 | 104 | 108 | 112 | 116 | 120 |
 <!-- /data -->
 
 Levels 08–14 were lowered on 2026-10-01 (user decision) to what a typical loadout reaches according to
@@ -863,3 +863,5 @@ Production art for concept round 26 (the M4 part H batch), review files built fr
   go with a boss fight. Bosses must never trigger these warnings." The readability rule now warns
   only a wave's first entry from a side or the rear; re-entries (the Wraith, the Coilwyrm's and
   the Mote Swarm's loop-backs) and bosses feed no edge warning (see [HUD](../ui/hud/README.md)).
+- 2026-10-22 (M8 part A, step A2): `reference_dps` for Levels 22–28 (96 → 120, the generator's hand plan of round 48)
+  in [data.yaml](data.yaml), so the act HP factor reaches Act 4; parts B–H re-measure each level with `levelReport`.

@@ -1,7 +1,7 @@
 ---
 title: Wingmen and drones
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
 updated: 2026-10-22
@@ -302,7 +302,9 @@ above) at that level and full armour on any level, Act 1's included, for testing
 save's (left for a new campaign) if left out. `--escort none` flies a level from 08 on without
 him. For testing only, like `--loadout`. The option applies to the flights only, never to the
 campaign's gear: it does not hire him, his fitted gun, side and armour stay as they were, and no
-save (the autosave of a failure, a retry or a won level included) holds it.
+save (the autosave of a failure, a retry or a won level included) holds it. M8 part A: `--escort
+bulwark[,side=left|right]` flies the Bulwark at full armour instead (`DebugFit.EscortFit.bulwark`,
+`Campaign.debugBulwark`), on any level, never the gear's.
 
 ### Data
 
@@ -311,7 +313,9 @@ schema in [architecture](../../tech/architecture/README.md#data-file-schemas)), 
 content's `WingmenData` (M5 part A). The guns and barks tables above are rendered from it by
 `tools/sync_tables.py` (`rook-guns`, `rook-barks`; M6 part D): the DPS, prices and upgrades from
 each gun's base weapon and the price factor, the Scale and Trigger cells' wording from `notes`.
-Rook's repair cost per point is the difficulty's `repair_cost`, so it is not in the file.
+Rook's repair cost per point is the difficulty's `repair_cost`, so it is not in the file. M8 part A: his
+absence (`rook.missing`: lost after Level 26, back from Level 30) and the Bulwark's numbers (`bulwark`) are there
+too (`WingmenData.Missing`, `WingmenData.Bulwark`).
 
 ### In the game (M5 part A)
 
@@ -470,6 +474,10 @@ grade; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](co
 | [concept/bulwark-r48-a.gif](concept/bulwark-r48-a.gif) | Bulwark A — lagging in its wing slot with the water's drag, its cannon firing once a second, 30 % of the stand-in Needlers' aimed shots going to it (motion) | chosen — round 48 |
 | [concept/rejected/bulwark-r48-b.png](concept/rejected/bulwark-r48-b.png) | Bulwark B "riot barge" — a slab hull behind a wide curved shield blade, the cannon through its slit, four corner thrusters; draws fire with a white strobe beacon (sheet) | rejected — round 48: a picked |
 | [concept/rejected/bulwark-r48-b.gif](concept/rejected/bulwark-r48-b.gif) | Bulwark B — the same scene as A (motion) | rejected — round 48: a picked |
+| [concept/bulwark-final-r50-a.png](concept/bulwark-final-r50-a.png) | Bulwark final frames (`tools/art/act4_gear.py bulwark`, round 48 G4 = a): 36×36 intact / hit / under half, pump-jets, the lure halo loop, the shot, muzzle light and hit sparks, the loss (light, ring, debris); in the wing slot, firing, hit, lost (sheet) | proposed (round 50) |
+| [concept/bulwark-final-r50-a.gif](concept/bulwark-final-r50-a.gif) | The Bulwark in the wing slot with its lure halo, firing twice, hit, scorched and lost, 20 fps at 2x | proposed (round 50) |
+| [concept/bulwark-capture-r50-a.png](concept/bulwark-capture-r50-a.png) | Game capture, Level 19 under water with `--escort bulwark`: the Bulwark in the wing slot with its lure halo (a frame) | proposed (round 50) |
+| [concept/bulwark-capture-r50-a.mp4](concept/bulwark-capture-r50-a.mp4) | Game capture with the game's sound: the Bulwark crossing the waterline at 10 s, holding its slot, firing and drawing the aimed volleys | proposed (round 50) |
 
 ## Implementation
 
@@ -507,13 +515,13 @@ built were accepted in concept round 28.
       its impact (his goal moved beside the run of telegraphed lanes, on the side nearer him; only the
       impact hurts, so a slammed lane is safe again); a slam's impact hitting him; the cases in
       `SlamArenaTest` (`rookKeepsOutOfATelegraphedLane`, `aSlamHitsRookInItsLane`)
-- [ ] Bulwark heavy drone (was "Warden"): formation, cannon (`anti-sub` under water), draw-fire rule, the free loaner — **later: Act 4** (unlocks at L22)
+- [x] Bulwark heavy drone (was "Warden"): formation, cannon (`anti-sub` under water), draw-fire rule, the free loaner — **later: Act 4** (unlocks at L22) (M8 part A, step A2: its data (`bulwark`), the campaign's side of it: bought once for 6 000 and sold back, chosen for the slot (`Hangar.buyBulwark`/`sellBulwark`/`chooseEscort`), its repair at 8 cr a point (`repairBulwark`), its armour kept between levels and a destroyed one rebuilt, the loaner, save format 6; `ActFourEscortTest`; the simulation in step A3, `BulwarkTest`; the flight in step A4, `Act4ArsenalFlightTest.theBulwarkFliesWithItsCannonAndALoanerWhileRookIsMissing`; the hangar and the look in steps A5–A6, `ActFourHangarTest.theBulwarkIsBoughtFittedUnfittedSoldAndUndoneOnItsRow`, `DeepWaterLooksTest.theBulwarkShowsItsHitThenScorchesUnderHalf`; the finals pending the user's review in [round 50](../../concept-rounds/round-50/README.md))
 - [x] Drone behaviours: orbit, trail, block, rebuild for the Act 3 pair (light drone L15, rear-guard drone L20) — specified under *Light drone* and *Rear-guard drone* (draft); the light drone's
   orbit, block, break and rebuild built in M7 part A (`vanguard.sim.Drones`, `DronesTest`), the
   rear-guard drone's trail waits for part G (its bay's data and the `station: trail` keys written in
   step G2; flown from step G3, mapped in step G4)
 - [ ] The hunter drone's behaviours (L29) — **later: Act 5**
-- [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4** (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`)
+- [ ] Rook missing for L27–L29 (only a heavy drone in the slot), back from L30 — **later: Act 4** (draft: *Rook's loss and absence*; the scripted loss at L26's end, the MIA card, the loaner, per-level availability in `Campaign.escortFlight()`) (M8 part A, step A2: `Campaign.escortFlight(level)` and `rookMissing(level)` from `rook.missing`, the story flag `rook-missing` from Level 26's win to Level 29's, the hangar's MIA rules (`Hangar.rookMissing`: no gun rows, no repair line), `Campaign.rookFlies` for his `requires: escort` lines; a `--level 27` start treats him as missing; the scripted loss is part F, the MIA card part A5)
 - [ ] Rook under water: the hydro-kit's drag, his guns × 0.7, his formation in the trench walls and the dark (his lamp) — **later: Act 4**
 
 - [x] Level 12 (M5 part F, step 3): the wind pushing him (positions, edges clamped); his shots
@@ -758,3 +766,10 @@ built were accepted in concept round 28.
   reversed section (Level 20, where "behind" is the top of the screen) gets three "Up top!" variants
   (`top_lines` of the rear-wave trigger, rendered into the barks table), accepted in round 43 (2026-10-20); it stays silent for the bottom entries there.
 - 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): the heavy drone "Warden" is renamed **"Bulwark"** (it clashed with Act 3's Warden Tank); its cannon is `anti-sub` under water; one Bulwark is loaned free while Rook is missing (L27–L29) so the slot is never empty; Rook's loss is a scripted on-screen shoot-down at L26's end (Q7 = a; alternatives: radio only, or told in L27's briefing); Rook under water flies with the same drag and the × 0.7 damage rule.
+- 2026-10-22 (M8 part A, step A2; small rules decided by the gap check, pending the user's review in round 50): the
+  Bulwark's economy (D10): an owned Bulwark's armour is kept between levels and repaired at 8 cr a point on every
+  difficulty, a destroyed one is rebuilt whole and free for the next level, the loaner flies whole and keeps nothing;
+  buying it chooses it for the slot, selling it gives the slot back to Rook; with an owned Bulwark chosen and Rook
+  grounded nobody flies (the choice is the player's); an owned Bulwark takes the slot while Rook is missing, the
+  loaner only when none is owned. Draw-fire (D11) is the simulation's (step A3).
+- 2026-10-22 (M8 part A, steps A3–A6; pending the user's review in round 50): the Bulwark reaches its slot in 0.4 s and settles in 0.25 s; it fires only while the player fires, its shell at 500 px/s (not in the data); boss beams, cones and vents pass through it; rammers die on it without ram damage; the draw-fire rolls 30 % per aimed **volley** (not per bullet as D11 had it), and turret barrels, aim-along fans and the convoy's shots are never drawn; its cannon plays the ballistic shot at pitch 0.8, its hit the metal hit at 0.85, its loss the drone break at 0.75 with the medium explosion.

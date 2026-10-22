@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import vanguard.content.campaign.Campaign;
+import vanguard.content.campaign.Escort;
 import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.Hangar.Action;
 import vanguard.content.campaign.Hangar.Choice;
@@ -32,6 +33,13 @@ import vanguard.sim.WingmanSpec;
  * ({@code SELL}, refused while a module is fitted in it; selling asks first like an item). A bought
  * bay's slot joins the slots the tabs cycle, after the second bay. A cooldown special's rows are the
  * shop's ({@code BUY} once, {@code SELL}).
+ *
+ * <p>M8 part A (design/player/wingmen, Heavy drone "Bulwark" and Rook's loss and absence): the escort's shop lists,
+ * after Rook's guns and before the side row, the Bulwark's row ({@link #bulwarkRow()}): {@code BUY} while it is for
+ * sale, once owned {@code FIT} (it flies instead of Rook) or {@code UNFIT} (Rook flies again) and {@code SELL} (asking
+ * first like an item); all of it the visit's undo. While Rook is missing (Levels 27–29) his guns are not listed and
+ * the owned Bulwark, or a free loaner, flies whatever the choice. The repair panel gains a {@code BULWARK} line for an
+ * owned Bulwark, and Rook's line is gone while he is missing ({@link #repairLines()}).
  *
  * <p>The mouse ({@link HangarPointer}) reaches the same places directly: {@code point...} select a
  * slot, a row, a choice, a command, a repair line or the repair points, and the wheel scrolls the
@@ -70,10 +78,11 @@ public final class HangarState {
         return List.copyOf(slots);
     }
 
-    /** The repair panel's lines: the Stormhawk's armour and Rook's. */
+    /** The repair panel's lines: the Stormhawk's armour, Rook's and (M8 part A) an owned Bulwark's. */
     public enum RepairLine {
         SHIP,
-        ROOK
+        ROOK,
+        BULWARK
     }
 
     /** The shop list shows this many rows; the rest scrolls. */
@@ -204,9 +213,100 @@ public final class HangarState {
         return slot() == LoadoutSlot.ESCORT && hangar.escortHired();
     }
 
-    /** The rows the list shows: the shop's, and the escort's side row or a utility slot's bay row. */
+    /**
+     * The rows the list shows: the shop's, and the escort's Bulwark row (M8 part A) and side row or a utility slot's
+     * bay row.
+     */
     public int rowCount() {
-        return rows().size() + (hasSideRow() || bayRow().isPresent() ? 1 : 0);
+        return rows().size() + (bulwarkRow().isPresent() ? 1 : 0) + (hasSideRow() || bayRow().isPresent() ? 1 : 0);
+    }
+
+    /**
+     * M8 part A: the escort's Bulwark row, after Rook's guns: the Bulwark's shop line (locked with its unlock level,
+     * for sale, or owned); empty in another slot and before Rook is hired, and in the replay hangar unless one is
+     * owned (it is then only fitted and unfitted).
+     */
+    public Optional<Hangar.BulwarkOffer> bulwarkRow() {
+        if (slot() != LoadoutSlot.ESCORT || !hangar.escortHired()) {
+            return Optional.empty();
+        }
+        Hangar.BulwarkOffer line = hangar.bulwark();
+        return refitOnly && line.state() != Hangar.State.OWNED ? Optional.empty() : Optional.of(line);
+    }
+
+    /** M8 part A: whether the Bulwark row (after Rook's guns) is selected. */
+    public boolean bulwarkSelected() {
+        return row == rows().size() && bulwarkRow().isPresent();
+    }
+
+    /**
+     * M8 part A: one of the Bulwark row's choices.
+     *
+     * @param action {@link Action#BUY}, {@link Action#FIT} (it flies instead of Rook), {@link Action#UNFIT} (Rook
+     *     flies again) or {@link Action#SELL}
+     * @param credits what it costs, or (negative) returns
+     * @param refusal why it cannot be made now, for the message line; empty when it can
+     */
+    public record BulwarkChoice(Action action, int credits, Optional<String> refusal) {
+        public boolean allowed() {
+            return refusal.isEmpty();
+        }
+    }
+
+    /** M8 part A: the Bulwark row's refusal while its price is more than the credits. */
+    static final String BULWARK_CREDITS = "NOT ENOUGH CREDITS";
+
+    /**
+     * M8 part A: the Bulwark row's choices: none while it is locked; {@code BUY} while it is for sale; once owned
+     * {@code FIT} or (while it is the slot's choice) {@code UNFIT}, then {@code SELL}. While Rook is missing the owned
+     * Bulwark flies whatever the choice, so neither {@code FIT} nor {@code UNFIT} is offered. The replay hangar offers
+     * only the refits.
+     */
+    public List<BulwarkChoice> bulwarkChoices() {
+        Optional<Hangar.BulwarkOffer> shown = bulwarkRow();
+        if (shown.isEmpty()) {
+            return List.of();
+        }
+        Hangar.BulwarkOffer line = shown.get();
+        List<BulwarkChoice> choices = new ArrayList<>();
+        switch (line.state()) {
+            case BUYABLE ->
+                choices.add(new BulwarkChoice(
+                        Action.BUY, line.credits(), line.refusal().map(refusal -> BULWARK_CREDITS)));
+            case OWNED -> {
+                if (!hangar.rookMissing()) {
+                    choices.add(new BulwarkChoice(bulwarkFlies() ? Action.UNFIT : Action.FIT, 0, Optional.empty()));
+                }
+                if (!refitOnly) {
+                    choices.add(new BulwarkChoice(Action.SELL, line.credits(), Optional.empty()));
+                }
+            }
+            default -> {}
+        }
+        return choices;
+    }
+
+    /** M8 part A: the Bulwark row's highlighted choice. */
+    public Optional<BulwarkChoice> bulwarkChoice() {
+        List<BulwarkChoice> choices = bulwarkSelected() ? bulwarkChoices() : List.of();
+        return choices.isEmpty() ? Optional.empty() : Optional.of(choices.get(Math.min(choice, choices.size() - 1)));
+    }
+
+    /**
+     * M8 part A: whether an owned Bulwark is the escort slot's choice, or flies anyway while Rook is missing (the
+     * Bulwark row's {@code FITTED}).
+     */
+    public boolean bulwarkFlies() {
+        Escort escort = hangar.campaign().gear().escort();
+        return escort.bulwark().owned() && (escort.flies() == Escort.Escorter.BULWARK || hangar.rookMissing());
+    }
+
+    /** The choices of the selected row: the shop row's, or the Bulwark row's. */
+    private int choiceCount() {
+        if (bulwarkSelected()) {
+            return bulwarkChoices().size();
+        }
+        return selected().map(offer -> offer.choices().size()).orElse(0);
     }
 
     /**
@@ -252,6 +352,9 @@ public final class HangarState {
         if (baySelected()) {
             return bayRow().map(HangarState::bayAction);
         }
+        if (bulwarkSelected()) {
+            return bulwarkChoice().map(BulwarkChoice::action);
+        }
         return choice().map(Choice::action);
     }
 
@@ -270,16 +373,25 @@ public final class HangarState {
             return bayRow().filter(line -> bayAction(line) == Action.SELL)
                     .map(line -> new Sale(Names.slot(line.bay().slot()), -line.credits(), line.bought()));
         }
+        if (bulwarkSelected()) {
+            return bulwarkChoice()
+                    .filter(chosen -> chosen.action() == Action.SELL)
+                    .map(chosen -> new Sale(
+                            BULWARK, -chosen.credits(), hangar.bulwark().bought()));
+        }
         Optional<Offer> offer = selected();
         return choice().filter(chosen -> chosen.action() == Action.SELL)
                 .flatMap(chosen ->
                         offer.map(sold -> new Sale(Names.of(sold.item().name()), -chosen.credits(), sold.bought())));
     }
 
-    /** Whether the escort's side row (after his guns) is selected. */
+    /** Whether the escort's side row (after his guns and the Bulwark's row) is selected. */
     public boolean sideSelected() {
-        return hasSideRow() && row == rows().size();
+        return hasSideRow() && row == rows().size() + (bulwarkRow().isPresent() ? 1 : 0);
     }
+
+    /** M8 part A: the Bulwark's name in the shop, its callout and the messages. */
+    public static final String BULWARK = "BULWARK";
 
     /** Rook's side (left or right of the player), the escort's setting. */
     public WingmanSpec.Side escortSide() {
@@ -377,7 +489,7 @@ public final class HangarState {
     public boolean enabled(Command candidate) {
         return switch (candidate) {
             case UNDO -> hangar.canUndo();
-            case REPAIR -> !refitOnly && (hangar.missingArmour() > 0 || hangar.escortMissingArmour() > 0);
+            case REPAIR -> !refitOnly && repairLines().stream().anyMatch(line -> missing(line) > 0);
             case SAVE -> true;
             case LAUNCH -> launchable;
         };
@@ -392,14 +504,42 @@ public final class HangarState {
         return repairLine;
     }
 
+    /**
+     * The repair panel's lines: the ship's, Rook's once he is hired (M8 part A: not while he is missing) and an owned
+     * Bulwark's (M8 part A).
+     */
+    public List<RepairLine> repairLines() {
+        List<RepairLine> lines = new ArrayList<>(List.of(RepairLine.SHIP));
+        if (hangar.escortHired() && !hangar.rookMissing()) {
+            lines.add(RepairLine.ROOK);
+        }
+        if (hangar.campaign().gear().escort().bulwark().owned()) {
+            lines.add(RepairLine.BULWARK);
+        }
+        return lines;
+    }
+
     /** The points missing on a repair line. */
     public int missing(RepairLine line) {
-        return line == RepairLine.SHIP ? hangar.missingArmour() : hangar.escortMissingArmour();
+        return switch (line) {
+            case SHIP -> hangar.missingArmour();
+            case ROOK -> hangar.escortMissingArmour();
+            case BULWARK -> hangar.bulwarkMissingArmour();
+        };
     }
 
     /** The most points of a repair line the credits pay for. */
     public int affordable(RepairLine line) {
-        return line == RepairLine.SHIP ? hangar.affordableRepair() : hangar.affordableEscortRepair();
+        return switch (line) {
+            case SHIP -> hangar.affordableRepair();
+            case ROOK -> hangar.affordableEscortRepair();
+            case BULWARK -> hangar.affordableBulwarkRepair();
+        };
+    }
+
+    /** Credits per point on a repair line: the difficulty's, and (M8 part A) the Bulwark's own on every difficulty. */
+    public int repairCost(RepairLine line) {
+        return line == RepairLine.BULWARK ? hangar.bulwarkRepairCost() : hangar.repairCost();
     }
 
     /**
@@ -421,6 +561,12 @@ public final class HangarState {
         }
         return outcome;
     }
+
+    /**
+     * M8 part A: the hydro-kit's one-off notice (design/player/systems, Hydro-kit), at the first visit before an
+     * under-water level (pending the user's review: the wording).
+     */
+    public static final String HYDRO_KIT_NOTICE = "HYDRO-KIT FITTED: THE STORMHAWK AND ROOK ARE SEALED FOR THE OCEAN";
 
     /** The notice for a special's free charges: "1 FREE AIRSTRIKE CHARGE, FITTED". */
     public static String freeChargesNotice(Campaign.FreeCharges free) {
@@ -510,7 +656,7 @@ public final class HangarState {
                 if (sideSelected()) {
                     yield side(direction < 0 ? WingmanSpec.Side.LEFT : WingmanSpec.Side.RIGHT);
                 }
-                int choices = selected().map(offer -> offer.choices().size()).orElse(0);
+                int choices = choiceCount();
                 if (choices < 2) {
                     yield Outcome.NONE;
                 }
@@ -540,14 +686,36 @@ public final class HangarState {
         if (!hangar.escortSide(side)) {
             return Outcome.NONE;
         }
-        message = "ROOK FLIES ON YOUR " + side.name();
+        message = (bulwarkFliesNext() ? "THE BULWARK" : "ROOK") + " FLIES ON YOUR " + side.name();
         return Outcome.MOVED;
     }
 
-    /** The tabs in the repair panel: the other line, when it has points missing. */
+    /**
+     * M8 part A: whether the Bulwark (owned or the loaner) flies the next level, so the side row and its message name
+     * it instead of Rook.
+     */
+    public boolean bulwarkFliesNext() {
+        return hangar.campaign()
+                .escortFlight()
+                .filter(flight -> flight.escorter() == Escort.Escorter.BULWARK)
+                .isPresent();
+    }
+
+    /** The tabs in the repair panel: the next line that has points missing (M8 part A: of up to three). */
     private Outcome switchRepairLine() {
-        RepairLine other = repairLine == RepairLine.SHIP ? RepairLine.ROOK : RepairLine.SHIP;
-        if (missing(other) == 0) {
+        List<RepairLine> lines = repairLines();
+        int at = lines.indexOf(repairLine);
+        for (int step = 1; step < lines.size(); step++) {
+            RepairLine other = lines.get(Math.floorMod(at + step, lines.size()));
+            if (missing(other) > 0) {
+                return switchRepairLine(other);
+            }
+        }
+        return Outcome.NONE;
+    }
+
+    private Outcome switchRepairLine(RepairLine other) {
+        if (missing(other) == 0 || other == repairLine) {
             return Outcome.NONE;
         }
         repairLine = other;
@@ -597,7 +765,7 @@ public final class HangarState {
 
     /** The mouse: a click on one of the selected row's choices selects it, as left / right do (the click then confirms). */
     public Outcome pointChoice(int index) {
-        int choices = selected().map(offer -> offer.choices().size()).orElse(0);
+        int choices = choiceCount();
         if (focus != Focus.SHOP || index < 0 || index >= choices || index == Math.min(choice, choices - 1)) {
             return Outcome.NONE;
         }
@@ -625,10 +793,10 @@ public final class HangarState {
 
     /** The mouse: a click on a line of the repair panel picks it, as the tabs do there. */
     public Outcome pointRepairLine(RepairLine line) {
-        if (focus != Focus.REPAIR || line == repairLine) {
+        if (focus != Focus.REPAIR || line == repairLine || !repairLines().contains(line)) {
             return Outcome.NONE;
         }
-        return switchRepairLine();
+        return switchRepairLine(line);
     }
 
     /** The mouse: the repair slider set to a share (0..1) of the points the credits pay for. */
@@ -676,7 +844,10 @@ public final class HangarState {
     public Outcome confirm() {
         return switch (focus) {
             case COMMANDS -> runCommand();
-            case SHOP -> sideSelected() ? side(escortSide().other()) : baySelected() ? chooseBay() : choose();
+            case SHOP ->
+                sideSelected()
+                        ? side(escortSide().other())
+                        : baySelected() ? chooseBay() : bulwarkSelected() ? chooseBulwark() : choose();
             case REPAIR -> repair();
         };
     }
@@ -707,8 +878,9 @@ public final class HangarState {
                 yield Outcome.DONE;
             }
             case REPAIR -> {
-                // The ship's line first while it has points missing that the credits pay for, else Rook's.
-                Optional<RepairLine> line = java.util.Arrays.stream(RepairLine.values())
+                // The ship's line first while it has points missing that the credits pay for, else Rook's (M8 part A:
+                // else the Bulwark's).
+                Optional<RepairLine> line = repairLines().stream()
                         .filter(candidate -> missing(candidate) > 0 && affordable(candidate) > 0)
                         .findFirst();
                 if (line.isEmpty()) {
@@ -726,14 +898,19 @@ public final class HangarState {
     }
 
     private Outcome repair() {
-        int cost = repairPoints * hangar.repairCost();
-        boolean rook = repairLine == RepairLine.ROOK;
-        if (!(rook ? hangar.repairEscort(repairPoints) : hangar.repair(repairPoints))) {
+        int cost = repairPoints * repairCost(repairLine);
+        boolean done =
+                switch (repairLine) {
+                    case SHIP -> hangar.repair(repairPoints);
+                    case ROOK -> hangar.repairEscort(repairPoints);
+                    case BULWARK -> hangar.repairBulwark(repairPoints);
+                };
+        if (!done) {
             message = "NOT ENOUGH CREDITS FOR A REPAIR";
             return Outcome.REFUSED;
         }
-        message =
-                String.format(Locale.ROOT, "REPAIRED %s%d POINTS FOR CR %d", rook ? "ROOK: " : "", repairPoints, cost);
+        message = String.format(
+                Locale.ROOT, "REPAIRED %s%d POINTS FOR CR %d", repairPrefix(repairLine), repairPoints, cost);
         focus = Focus.COMMANDS;
         if (!enabled(Command.REPAIR)) {
             moveCommand(1);
@@ -756,6 +933,63 @@ public final class HangarState {
             return Outcome.SELL;
         }
         return apply(offer.get(), made);
+    }
+
+    /** A repair's message and button name the escort's line: {@code ROOK: }, {@code BULWARK: }; nothing for the ship. */
+    public static String repairPrefix(RepairLine line) {
+        return line == RepairLine.SHIP ? "" : line.name() + ": ";
+    }
+
+    /**
+     * M8 part A: the Bulwark row's choice: buy it (it flies at once), fit it (it flies instead of Rook), unfit it
+     * (Rook flies again), or ask before selling it.
+     */
+    private Outcome chooseBulwark() {
+        Optional<BulwarkChoice> chosen = bulwarkChoice();
+        if (chosen.isEmpty()) {
+            return Outcome.NONE;
+        }
+        BulwarkChoice made = chosen.get();
+        if (!made.allowed()) {
+            message = made.refusal().orElseThrow();
+            return Outcome.REFUSED;
+        }
+        if (refitOnly && !refit(made.action())) {
+            message = REFIT_ONLY;
+            return Outcome.REFUSED;
+        }
+        if (made.action() == Action.SELL) {
+            return Outcome.SELL;
+        }
+        boolean done =
+                switch (made.action()) {
+                    case BUY -> hangar.buyBulwark();
+                    case FIT -> hangar.chooseEscort(Escort.Escorter.BULWARK);
+                    case UNFIT -> hangar.chooseEscort(Escort.Escorter.ROOK);
+                    default -> false;
+                };
+        if (!done) {
+            message = made.action() == Action.BUY ? BULWARK_CREDITS : "";
+            return Outcome.REFUSED;
+        }
+        message = switch (made.action()) {
+            case BUY -> "BOUGHT THE BULWARK - IT FLIES IN THE ESCORT SLOT";
+            case FIT -> "THE BULWARK FLIES IN THE ESCORT SLOT";
+            default -> "ROOK FLIES IN THE ESCORT SLOT";
+        };
+        choice = 0;
+        return Outcome.DONE;
+    }
+
+    /** M8 part A: sells the owned Bulwark of the selected row; the slot goes back to Rook. */
+    private Outcome sellBulwark() {
+        int refund = -hangar.bulwark().credits();
+        if (!hangar.sellBulwark()) {
+            return Outcome.REFUSED;
+        }
+        message = "SOLD THE BULWARK FOR " + Names.credits(refund);
+        choice = 0;
+        return Outcome.DONE;
     }
 
     /** M7 part A: the bay row's choice: buy the bay for sale, or ask before selling the bought one. */
@@ -825,6 +1059,13 @@ public final class HangarState {
         }
         if (baySelected()) {
             return sellBay();
+        }
+        if (bulwarkSelected()) {
+            return bulwarkChoice()
+                            .filter(chosen -> chosen.action() == Action.SELL)
+                            .isPresent()
+                    ? sellBulwark()
+                    : Outcome.NONE;
         }
         Optional<Offer> offer = selected();
         Optional<Choice> chosen = choice();

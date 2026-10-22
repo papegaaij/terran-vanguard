@@ -198,6 +198,12 @@ public final class Sortie {
     private final int wingmanMount;
     /** The wingman's armour at the start of the next attempt. */
     private double wingmanStart;
+    /** M8 part A: the Bulwark heavy drone in the escort slot; null without one (then nothing of it is hashed). */
+    final Bulwark bulwark;
+    /** {@link #bulwark} for the presentation, made once. */
+    private final java.util.Optional<Bulwark> bulwarkView;
+    /** M8 part A: the Bulwark's armour at the start of the next attempt. */
+    private double bulwarkStart;
 
     private long tick;
     int levelTick;
@@ -270,6 +276,11 @@ public final class Sortie {
     int postBossHold;
     /** M5 part F: the level's wind and lightning (exactly no push without weather). */
     private final Wind wind;
+    /**
+     * M8 part A (design/world/europa, Under water rules): the medium the ship flies in, from the level clock; the air
+     * (no factor) in every level before Act 4. Hashed only in a level with water.
+     */
+    private final Medium medium;
     /** M5 part F: the weather sondes (none in most levels). */
     private final Sondes sondes;
     /** M5 part G: whether the level has a timed halt: its scroll then follows {@link #timedHaltSpeed}. */
@@ -294,6 +305,8 @@ public final class Sortie {
                 loadout.ship(),
                 new Defences(loadout.shield(), loadout.plating(), loadout.ship().mercySeconds()),
                 loadout.thrusters().orElse(null));
+        // M8 part A: the Auto-repair nanites work in the defences (nothing of them without).
+        loadout.nanites().ifPresent(ship.defences()::nanites);
         this.script = script;
         this.rules = rules;
         setPieces = script.setPieces().stream().map(SetPiece::new).toArray(SetPiece[]::new);
@@ -437,10 +450,20 @@ public final class Sortie {
                 hits,
                 setPieces,
                 script.ground().water());
+        medium = new Medium(script.medium());
+        // M8 part A: the Pressure hull takes the water's drag off the ship.
+        medium.hull(loadout.pressureHull());
+        fire.medium(medium);
         terrainSpec = script.ground().terrain().orElse(null);
         canyon = terrainSpec == null ? null : new Canyon(terrainSpec.terrain());
         fire.canyon(canyon);
-        special = new SpecialSlot(loadout.special(), events, ship.defences());
+        special = new SpecialSlot(
+                loadout.special(),
+                events,
+                ship.defences(),
+                medium,
+                script.ground().water(),
+                script.specialLimits());
         // The boss streams' units and (part G) the units its windows launch are enemy kinds of the level.
         List<EnemySpec> streamKinds = java.util.stream.Stream.concat(
                         bossStreams.stream().map(BossSpec.Stream::enemy),
@@ -477,7 +500,15 @@ public final class Sortie {
                 // M7 part G: the waves and the ground units of a reversed scroll are flipped.
                 script.reverses() ? t -> travelAt(script, t) < 0 : t -> false);
         force.canyon(canyon);
+        if (medium.water()) {
+            // M8 part A: the enemies' bullets and missiles fire at the water's speed.
+            force.medium(medium);
+        }
         fire.missiles(force.missiles());
+        if (special.flares() != null) {
+            // M8 part A: the homing missiles go for the burning decoy flares.
+            force.missiles().decoys(special.flares());
+        }
         boolean walking = false;
         for (SetPiece piece : setPieces) {
             walking |= piece.stride().isPresent();
@@ -568,6 +599,10 @@ public final class Sortie {
         crateTicks = SimStep.ticks(rules.pickups().crateSeconds());
         wingman = loadout.wingman().map(flying -> new Wingman(flying, seed)).orElse(null);
         if (wingman != null) {
+            if (medium.water()) {
+                // M8 part A: his drag and his gun's layers under water.
+                wingman.medium(medium);
+            }
             wingman.canyon(canyon);
             wingman.links(links);
             if (vents.grates() > 0) {
@@ -578,6 +613,16 @@ public final class Sortie {
         wingmanMount = loadout.armament().size();
         wingmanStart = loadout.wingman().map(WingmanSpec::armour).orElse(0.0);
         radio.escort(wingman);
+        bulwark = loadout.bulwark().map(flying -> new Bulwark(flying, seed)).orElse(null);
+        if (bulwark != null) {
+            if (medium.water()) {
+                // M8 part A: its drag under water.
+                bulwark.medium(medium);
+            }
+            force.lure(bulwark);
+        }
+        bulwarkView = java.util.Optional.ofNullable(bulwark);
+        bulwarkStart = loadout.bulwark().map(BulwarkSpec::armour).orElse(0.0);
         wind = new Wind(script.hazards().weather());
         sondes = new Sondes(script.hazards().sondes());
         if (links != null && checkpointBoss >= 0) {
@@ -798,6 +843,8 @@ public final class Sortie {
             scrollStep *= crawlFactor();
         }
         groundScroll += scrollStep;
+        // M8 part A: the medium at the level clock now (the waterline's crossing eases the factors).
+        medium.at(levelTick);
         if (surfaceZones.active()) {
             surfaceZones.scroll(groundScroll);
         }
@@ -817,6 +864,8 @@ public final class Sortie {
             double fromY = ship.y();
             // M7 part E: the Dust Devils' pull adds to the wind's push (exactly 0 without a unit with a pull).
             force.pull(fromX, fromY);
+            // M8 part A: the water's drag (exactly 1 in the air).
+            ship.drag(medium.wet() ? medium.shipAcceleration() : 1);
             if (breachBoss != null) {
                 // M7 part H: the breaching boss's suction adds to the wind and the devils' pull.
                 BreachArena breach = breachBoss.breach().orElseThrow();
@@ -843,7 +892,12 @@ public final class Sortie {
             wingman.wind(push);
             flyWingman(commands);
         }
+        if (bulwark != null) {
+            flyBulwark(commands);
+        }
         force.wind(push);
+        // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
+        special.setting(levelTick, ship.x(), ship.y());
         special.command(commands, !launching() && flying() && !complete, ship.x(), ship.y());
         tally.step(chainTargets());
         if (!complete) {
@@ -981,6 +1035,9 @@ public final class Sortie {
                 }
             }
         }
+        if (bulwark != null && flying() && !complete && !failed && !rules.invulnerableShip()) {
+            hitPasses.hitBulwark(bulwark);
+        }
         if (convoy != null && !convoy.naval() && !complete && !wrecked && !failed) {
             allies.hitAllies();
         }
@@ -1057,6 +1114,13 @@ public final class Sortie {
             }
             wingmanStart = Math.min(wingmanArmour, wingman.maxArmour());
         }
+        if (bulwark != null) {
+            // M8 part A: the Bulwark starts the next attempt with its level-start armour as Rook does.
+            if (!(wingmanArmour > 0)) {
+                throw new IllegalArgumentException("a retry needs the Bulwark's armour");
+            }
+            bulwarkStart = Math.min(wingmanArmour, bulwark.maxArmour());
+        }
     }
 
     private void startAttempt(double armour) {
@@ -1069,6 +1133,25 @@ public final class Sortie {
         }
         if (wingman != null) {
             wingman.reset(wingmanStart, ship.x(), ship.y());
+        }
+        if (bulwark != null) {
+            bulwark.reset(bulwarkStart, ship.x(), ship.y());
+        }
+    }
+
+    /**
+     * M8 part A: the Bulwark's step: in its slot during the launch; then it flies to its slot and, while the player
+     * fires, its cannon fires (its shots carry the escort's mount, {@link #wingmanMount()}).
+     */
+    private void flyBulwark(int commands) {
+        bulwark.rememberPosition();
+        if (launching()) {
+            bulwark.formUp(ship.x(), ship.y());
+            return;
+        }
+        bulwark.fly(ship.x(), ship.y());
+        if (bulwark.fires(flying() && !complete && Command.FIRE.in(commands))) {
+            fire.wingmanVolley(wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, force.enemies(), ground);
         }
     }
 
@@ -1611,6 +1694,8 @@ public final class Sortie {
                 .add(rng.state());
         ship.addTo(hash);
         fire.addTo(hash);
+        // M8 part A: only in a level with water, so the other levels hash as before.
+        medium.addTo(hash);
         special.addTo(hash);
         tally.addTo(hash);
         objectives.addKillsTo(hash);
@@ -1717,6 +1802,11 @@ public final class Sortie {
             fire.addRecentHitTo(hash);
             hash.add(wingmanStart).add(objectivePasses.escortKilled ? 1 : 0);
         }
+        if (bulwark != null) {
+            // M8 part A: only with a Bulwark, so the hashes of sorties without one stay as they were.
+            bulwark.addTo(hash);
+            hash.add(bulwarkStart);
+        }
         return hash.value();
     }
 
@@ -1815,6 +1905,11 @@ public final class Sortie {
     /** M5 part A: the wingman flying in the escort slot (Rook), if one flies in this sortie. */
     public java.util.Optional<Wingman> wingman() {
         return wingmanView;
+    }
+
+    /** M8 part A: the Bulwark heavy drone flying in the escort slot, if one flies in this sortie. */
+    public java.util.Optional<Bulwark> bulwark() {
+        return bulwarkView;
     }
 
     /**
@@ -2338,6 +2433,22 @@ public final class Sortie {
     /** Whether the non-playable launch is still running. */
     public boolean launching() {
         return levelTick <= launchTicks;
+    }
+
+    /**
+     * M8 part A (design/world/europa, Under water rules): whether the ship flies under water now (the level's or its
+     * section's medium; the layers the torpedoes reach, the hydro-kit's look, the HUD).
+     */
+    public boolean underwater() {
+        return medium.underwater();
+    }
+
+    /**
+     * M8 part A: the water's share of the factors now, 0 in the air to 1 under water (eased over the rules' ease at a
+     * crossing: the render grade and the sound can follow it).
+     */
+    public double waterBlend() {
+        return medium.blend();
     }
 
     /** Whether the ship is flying, rather than wrecked and waiting for a retry. */

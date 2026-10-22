@@ -36,6 +36,12 @@ final class PlayerCues extends SoundFamily {
     private static final double LARGE_GROUND_AREA = 1000;
 
     private static final float LOW_ARMOUR_LEVEL = FlightSounds.decibels(-6);
+    /** M8 part A: the Depth Charges' and the Bulwark's cannon's sound families. */
+    static final String DEPTH_CHARGE = "depth-charge";
+
+    static final String BULWARK_CANNON = "bulwark-cannon";
+    /** M8 part A: the Bulwark's cannon plays the ballistic family this much lower. */
+    private static final float BULWARK_PITCH = 0.8f;
 
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(
             SimEvents.Type.SHOT_FIRED,
@@ -60,6 +66,10 @@ final class PlayerCues extends SoundFamily {
 
     private final Sfx[] shots;
     private final float[] shotPitch;
+    /** M8 part A: per mount, whether its bursts are depth charges (their own under-water thud, not the small blast). */
+    private final boolean[] charges;
+    /** M8 part A: the harpoons' hit on a ground object. */
+    private final DeepWaterCues deepWater;
     /** The bosses' sounds, told of a restart. */
     private final BossCues bosses;
     /** Which ground objects of the script are large, from the first watch; null before. */
@@ -71,15 +81,19 @@ final class PlayerCues extends SoundFamily {
     /** Whether the shield broke and has not been full since: its restore chime is due. */
     private boolean shieldDown;
 
-    PlayerCues(SoundMix mix, Armament armament, Optional<WeaponSpec> wingman, BossCues bosses) {
+    PlayerCues(
+            SoundMix mix, Armament armament, Optional<WeaponSpec> wingman, BossCues bosses, DeepWaterCues deepWater) {
         super(mix);
         this.bosses = bosses;
+        this.deepWater = deepWater;
         int mounts = armament.size() + (wingman.isPresent() ? 1 : 0);
         shots = new Sfx[mounts];
         shotPitch = new float[mounts];
+        charges = new boolean[mounts];
         wingman.ifPresent(gun -> {
             shots[armament.size()] = shot(gun.sfx());
-            shotPitch[armament.size()] = 1;
+            // M8 part A: the Bulwark's cannon: the ballistic family lowered, a heavier slug (pending round 50).
+            shotPitch[armament.size()] = gun.sfx().equals(BULWARK_CANNON) ? BULWARK_PITCH : 1;
         });
         for (int m = 0; m < armament.size(); m++) {
             if (!armament.mount(m).fires()) {
@@ -88,10 +102,13 @@ final class PlayerCues extends SoundFamily {
                 shotPitch[m] = 1;
                 continue;
             }
-            shots[m] = shot(armament.mount(m).weapon().sfx());
-            // Rear guns play their family lower; a mine's drop is not a gun's report.
+            String family = armament.mount(m).weapon().sfx();
+            shots[m] = shot(family);
+            charges[m] = family.equals(DEPTH_CHARGE);
+            // Rear guns play their family lower; a mine's drop is not a gun's report, nor a depth charge's roll-out.
             shotPitch[m] = armament.mount(m).slot() == Armament.Slot.REAR
-                            && !armament.mount(m).weapon().sfx().equals("mine")
+                            && !family.equals("mine")
+                            && !family.equals(DEPTH_CHARGE)
                     ? REAR_PITCH
                     : 1;
         }
@@ -114,6 +131,10 @@ final class PlayerCues extends SoundFamily {
             case "missile" -> Sfx.MISSILE_SHOT;
             case "mine" -> Sfx.MINE_DROP;
             case "torpedo" -> Sfx.SHOT_TORPEDO;
+            // M8 part A: the Act 4 arsenal (round 50's a until the pick) and the Bulwark's cannon.
+            case "harpoon" -> Sfx.SHOT_HARPOON;
+            case DEPTH_CHARGE -> Sfx.SHOT_DEPTH_CHARGE;
+            case BULWARK_CANNON -> Sfx.BALLISTIC_SHOT;
             default -> Sfx.PULSE_SHOT;
         };
     }
@@ -141,16 +162,30 @@ final class PlayerCues extends SoundFamily {
         switch (events.type(i)) {
             case SHOT_FIRED -> {
                 int mount = events.value(i);
-                float level = shots[mount] == Sfx.MINE_DROP ? MINE_DROPPING : PLAYER_FIRE;
+                // M8 part A: a depth charge's roll-out is levelled with the mine's drop (round 50).
+                float level = shots[mount] == Sfx.MINE_DROP || shots[mount] == Sfx.SHOT_DEPTH_CHARGE
+                        ? MINE_DROPPING
+                        : PLAYER_FIRE;
                 bank.play(shots[mount], level, shotPitch[mount] * pitch(0.05), pan);
             }
             case PROXIMITY_MINE_ARMED -> bank.play(Sfx.MINE_ARM, MINE_ARMING, pitch(0.03), pan);
             case SHOT_GLANCED -> bank.play(alternate(Sfx.HIT_METAL_A, Sfx.HIT_METAL_B), HITS, 1.3f * pitch(0.05), pan);
-            case BLAST ->
-                bank.play(alternate(Sfx.EXPLOSION_SMALL_A, Sfx.EXPLOSION_SMALL_B), EXPLOSIONS, pitch(0.06), pan);
+            case BLAST -> {
+                int mount = events.value(i);
+                if (mount >= 0 && mount < charges.length && charges[mount]) {
+                    // M8 part A: a depth charge bursts in its low under-water thud.
+                    bank.play(Sfx.DEPTH_CHARGE_BURST, EXPLOSIONS, pitch(0.05), pan);
+                } else {
+                    bank.play(alternate(Sfx.EXPLOSION_SMALL_A, Sfx.EXPLOSION_SMALL_B), EXPLOSIONS, pitch(0.06), pan);
+                }
+            }
             case OVERDRIVE_ENDED -> bank.play(Sfx.OVERDRIVE_END, PICKUPS, 1, 0);
             case CLAMP_HIT -> bank.play(alternate(Sfx.HIT_METAL_A, Sfx.HIT_METAL_B), HITS, 0.8f * pitch(0.05), pan);
-            case GROUND_HIT -> bank.play(alternate(Sfx.HIT_METAL_A, Sfx.HIT_METAL_B), HITS, pitch(0.05), pan);
+            case GROUND_HIT -> {
+                if (!deepWater.harpoonHit(events.value(i), pan)) {
+                    bank.play(alternate(Sfx.HIT_METAL_A, Sfx.HIT_METAL_B), HITS, pitch(0.05), pan);
+                }
+            }
             // A destroyed ground target: its blast with its crumble.
             case GROUND_DESTROYED -> groundBreak(events.value(i), pan);
             // A trigger whose spent frame is a wreck (Level 08's billboard topples) breaks the

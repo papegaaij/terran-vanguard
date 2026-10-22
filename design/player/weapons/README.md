@@ -41,8 +41,8 @@ the document in review); later weapons are still roster rows below.
 | [micro-missile-pod](micro-missile-pod/README.md) | Micro-missile Pod — Wing (per pod), homing; DPS 8 → 28; 800; L06 | approved | done | final |
 | [swivel-gun](swivel-gun/README.md) | Swivel Gun — Wing (per pod), side, homing; DPS 8 → 26; 1 500; L09 | approved | done | final |
 | [torpedo-pod](torpedo-pod/README.md) | Torpedo Pod — Wing (per pod), anti-sub; DPS 10 → 32; 1 000; L11 | approved | done | final |
-| [harpoon-torpedoes](harpoon-torpedoes/README.md) | Harpoon Torpedoes — Front, anti-sub, forward; DPS 30 → 100; 2 000; L22 | approved | not-started | chosen |
-| [depth-charges](depth-charges/README.md) | Depth Charges — Rear, anti-sub, rear; DPS 25 → 80; 1 300; L22 | approved | not-started | chosen |
+| [harpoon-torpedoes](harpoon-torpedoes/README.md) | Harpoon Torpedoes — Front, anti-sub, forward; DPS 30 → 100; 2 000; L22 | approved | in-progress | chosen |
+| [depth-charges](depth-charges/README.md) | Depth Charges — Rear, anti-sub, rear; DPS 25 → 80; 1 300; L22 | approved | in-progress | chosen |
 | [deflector-pod](deflector-pod/README.md) | Deflector Pod — Wing (per pod), defensive; absorbs 3 → 5 bullets per 2 s; 1 600; L18 | approved | in-progress | final |
 | [light-drone-bay](light-drone-bay/README.md) | Light Drone Bay — Wing (per bay), forward (drone); DPS 10 → 30; 2 000; L15 | approved | in-progress | final |
 | [rear-guard-drone-bay](rear-guard-drone-bay/README.md) | Rear-guard Drone Bay — Wing (per bay), rear (drone); DPS 9 → 26; 2 400; L20 | approved | in-progress | final |

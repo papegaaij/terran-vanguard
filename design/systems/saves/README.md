@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../../ui/main-menu, ../../ui/hangar]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Saves
@@ -28,7 +28,7 @@ slot. "Load game" in the main menu lists them. There is no mid-level saving: a l
   confirmation).
 - **Continue** in the main menu loads the most recent save of any kind.
 - **Debug runs never write a save**: a run started with a testing option (a level start, `--level`,
-  `--loadout`, `--special`, `--escort`, `--act-end`, `--bench`, `--invulnerable`, `--debug-speed`)
+  `--loadout`, `--special`, `--escort`, `--act-end`, `--medium`, `--bench`, `--invulnerable`, `--debug-speed`)
   plays normally but writes neither the autosave nor a manual
   save, and never creates the `saves` directory; it still reads the saves (Continue, Load game).
   The hangar shows *AUTOSAVE OFF - DEBUG RUN* instead of *AUTOSAVED*, its quit dialog and the
@@ -51,12 +51,12 @@ A versioned document (engine-agnostic; for example JSON):
 | `unlocks` | Shop items unlocked (by act, data cores or story) |
 | `specials` | Charges per special type; a cooldown special (M7 part A: the Shield Overcharge) is owned with 1, never used up |
 | `armour` | Current armour (repair is not automatic) |
-| `escort` | The escort slot (format version 3, M5 part A): `hired` (Rook has joined), `side` (`left`/`right`), `fitted` (the id of his fitted gun, none before he joins), `guns` (every gun he owns with its level, `{"item": "autocannon", "level": 1}`, the fitted one included) and `armour` (his current armour; repair is not automatic). See [wingmen](../../player/wingmen/README.md) |
+| `escort` | The escort slot (format version 3, M5 part A): `hired` (Rook has joined), `side` (`left`/`right`), `fitted` (the id of his fitted gun, none before he joins), `guns` (every gun he owns with its level, `{"item": "autocannon", "level": 1}`, the fitted one included) and `armour` (his current armour; repair is not automatic); format version 6 (M8 part A): `flies` (`rook` or `bulwark`, the slot's choice) and `bulwark` (`owned`, `armour`: the Bulwark heavy drone). See [wingmen](../../player/wingmen/README.md) |
 | `bays` | The utility bays bought in the hangar, 0 or 1 (format version 4, M7 part A): the third bay, on sale from the L15 visit; the slot `UTILITY_3` in `loadout` holds a module only once it is bought. See [systems](../../player/systems/README.md#third-utility-bay-act-3) |
 | `retriesLeft` | Hard mode only |
 | `grades` | Best grade per completed level |
 | `dataCores` | Collected data cores (lore) |
-| `storyFlags` | Branch-free story state (e.g. Rook's status, twist revealed) |
+| `storyFlags` | Branch-free story state (e.g. Rook's status, twist revealed): M8 part A's `rook-missing` (from Level 26's win to Level 29's) and `hydro-kit` (its hangar notice shown) |
 | `stats` | Kills, deaths, accuracy (for the debrief and an eventual stats screen); `levels`: per won level (by number) the credits it banked (earnings plus the grade bonus) and its kills, for the act summary of an act's last [debrief](../../ui/debrief/README.md) (format version 2, M4 part G) |
 
 Settings (audio, controls, display) are stored separately and are not part of a save.
@@ -99,6 +99,12 @@ from 1 up to its `level` (`{"item": "ion-beam", "level": 3, "power": 2}`), in `l
 It is written only below full power, and a missing one is full power, so a version 4 save is migrated by
 its version number alone; a setting outside 1 … `level` makes the save unreadable.
 
+**Version 6** (M8 part A, the [Bulwark](../../player/wingmen/README.md#heavy-drone-bulwark-escort-alternative-l22))
+adds the escort's `flies` (`rook` or `bulwark`) and `bulwark` (`{"owned": false, "armour": 120}`). A version 5 save
+(the v0.1 release, Acts 1–3) is migrated with `rook` and no Bulwark at its full 120 armour (frozen in
+`SaveFormat`); a version 5 save that already has them, a version 6 save without them or an unknown `flies` is
+unreadable.
+
 ### Slot display
 
 Each slot shows: act and level name, difficulty, credits, playtime, date, and a small icon for
@@ -123,6 +129,9 @@ the act.
 - [x] `power`, the power dial's setting (format version 5, migrated from version 4) — step PD-C
   (`SaveFormat.VERSION` 5, `migrateFrom4`; `Fitted.power`; tests in `SaveFormatTest`: the round trip,
   a version 4 save at full power, a setting out of range)
+- [x] `escort.flies` and `escort.bulwark` (format version 6, migrated from version 5) — M8 part A step A2
+  (`SaveFormat.VERSION` 6, `migrateFrom5`; `Escort.flies`/`bulwark`; tests in `SaveFormatTest`: the round trip with
+  an owned Bulwark, the migration from version 5, a version 6 save without them)
 - [x] Act intro once on Continue (L.6): the `act-intro:N` story flags, the version 3 migration's flags and
   `CampaignRoute.onContinue` — content built in M7 part B step B2 (tests in `CampaignRouteTest`,
   `SaveFormatTest`); the game's Continue (`HangarScreen.onContinue`, from the slots and the main menu) in
@@ -190,3 +199,6 @@ the act.
 - 2026-10-21: save format version 5 for the user's power dial (decided 2026-10-21: A, a free power dial): an
   item's optional `power` setting, written only below full power, so a version 4 save loads unchanged at full
   power.
+- 2026-10-22 (M8 part A, step A2; pending the user's review in round 50): save format version 6 for the Bulwark
+  heavy drone: the escort slot's `flies` and `bulwark`, migrated from the v0.1 release's version 5; Rook's absence is
+  the story flag `rook-missing` (the wingmen README's `rook_missing`), the hydro-kit's notice the flag `hydro-kit`.

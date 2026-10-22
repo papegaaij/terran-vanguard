@@ -205,3 +205,44 @@ Driftjellies).
 - **Animation brief:** the brackets snap in from 8 px wider over 0.3 s when the ring reaches a unit, then
   stay; they blink in the last second.
 - **Mockup generator:** `python3 tools/concept/gear_r48.py sonar-pulse b`
+
+## sonar-pulse-final-r50-a
+
+Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/act4_gear.py
+sonar` writes the frames into `assets/sprites/` and this review sheet and GIF (`--review` rebuilds only the review
+files). The look is the one round 48 chose (G3 = b, "echo marks", [the round-48 mockup](sonar-pulse-r48-b.png),
+`tools/concept/gear_r48.py sp_ring`, `sp_brackets`): the sweep's dash (the game lays the dashed pale-cyan double ring
+from it) and the contact bracket's corner, bright for the ping and steady after; the water stays black.
+
+Artist brief: keep the round-48 pick's look exactly (pre-rendered models lit from the top left, every
+heading or state its own render, never rotated at runtime; one palette per frame set; additive effects
+stored premultiplied on black; the player's under-water colours toward cyan / teal-white, away from the
+Vrell and Siren teal 00ff9a).
+- **Prompt:** top-down effect for a late-1990s pre-rendered CGI vertical shoot'em up in black water: a crisp dashed
+  pale-cyan double ring sweeping out from a small fighter like a sonar display's sweep, every creature it reaches drawn
+  whole inside four thin contact brackets that snap in; Raptor / Tyrian 2000 era look.
+- **Negative prompt:** a lit teal flood of the water, glow halos, orange or magenta, photographic realism, watermark.
+
+## decoy-flares-final-r50-a
+
+Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/act4_gear.py
+flares` writes the frames into `assets/sprites/` and this review sheet and GIF. The look is round 09's chosen one
+([specials-r09-a](specials-r09-a.png), `tools/concept/vfx_r09.py flare_sprite`, imported unchanged): the white-hot
+magnesium flare with sparkle spikes in a 4-frame flicker loop and its warm halo (9 steps, ordered dither); no smoke
+trail (the flares burn under water from Level 27).
+
+Artist brief: keep the round-48 pick's look exactly (pre-rendered models lit from the top left, every
+heading or state its own render, never rotated at runtime; one palette per frame set; additive effects
+stored premultiplied on black; the player's under-water colours toward cyan / teal-white, away from the
+Vrell and Siren teal 00ff9a).
+- **Prompt:** see [specials-r09-a](#specials-r09-a): four white-hot magnesium flares with sparkle spikes and a warm halo
+  fanning out behind the ship.
+- **Negative prompt:** magenta or yellow flares (reserved for enemy bullets), smoke, photographic footage, watermark.
+
+## sonar-pulse-capture-r50-a
+
+Concept round 50 (M8 part A, step A7), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). The Level 11 run of [depth-charges-capture-r50-a](../../weapons/depth-charges/concept/prompts.md#depth-charges-capture-r50-a), the Sonar Pulse tapped at 25, 33, 54 and 62 s; the video is level seconds 52–64.5, the frames 25.0 s (the ring) and 54.4 s (the brackets).
+
+## decoy-flares-capture-r50-a
+
+Concept round 50 (M8 part A, step A7), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). `--level 19 --medium underwater@10 --escort bulwark --loadout front=harpoon-torpedoes:4,rear=depth-charges:3,left=micro-missile-pod:3,right=micro-missile-pod:3 --special decoy-flares:6`, the flares tapped from 136 s every 5–7 s through the Revenant Walker's fight; the video is level seconds 133–152, the frame 142.5 s.

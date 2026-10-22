@@ -38,6 +38,10 @@ import java.util.List;
  * @param mines a {@link Delivery#MINE} weapon's mine numbers; {@link Mines#NONE} for other weapons
  * @param flanking M5 part F: it has the {@code side} or the {@code rear} trait: its shots hit a latched
  *     Lamprey (design/enemies/air/lamprey, user decision F3 = a), as a rear mount's do
+ * @param antiSub M8 part A: it has the {@code anti-sub} trait (design/world/europa, Under water rules): it reaches the
+ *     {@code sub} layer and does full damage under water ({@link Medium})
+ * @param splash M8 part A (design/player/weapons/harpoon-torpedoes): the share of a torpedo's damage its hit deals to
+ *     the other units within its {@code blast} radius; 0 for none
  */
 public record WeaponSpec(
         String slug,
@@ -61,7 +65,9 @@ public record WeaponSpec(
         double endSpeed,
         double accelSeconds,
         Mines mines,
-        boolean flanking) {
+        boolean flanking,
+        boolean antiSub,
+        double splash) {
     public WeaponSpec {
         muzzles = List.copyOf(muzzles);
         if (muzzles.isEmpty()) {
@@ -70,8 +76,14 @@ public record WeaponSpec(
         if (!(rate > 0) || pierce < 1) {
             throw new IllegalArgumentException(slug + ": the rate must be > 0 and the pierce at least 1");
         }
-        if (accelSeconds < 0 || (delivery == Delivery.MINE) == mines.equals(Mines.NONE)) {
-            throw new IllegalArgumentException(slug + ": a mine weapon has mine numbers, others none");
+        if (accelSeconds < 0 || delivery.laid() == mines.equals(Mines.NONE)) {
+            throw new IllegalArgumentException(slug + ": a mine or depth-charge weapon has mine numbers, others none");
+        }
+        if (delivery == Delivery.DEPTH_CHARGE && !(mines.fuseSeconds() > 0 && mines.driftSeconds() > 0)) {
+            throw new IllegalArgumentException(slug + ": a depth charge has a drift and a fuse");
+        }
+        if (!(splash >= 0 && splash <= 1)) {
+            throw new IllegalArgumentException(slug + ": a splash is a share of the damage, 0..1: " + splash);
         }
         if (delivery == Delivery.BEAM
                 && (muzzles.size() != 1 || rate != SimStep.PER_SECOND || pierce != 1 || !(size.width() > 0))) {
@@ -107,6 +119,57 @@ public record WeaponSpec(
                 0,
                 0,
                 List.of(nose));
+    }
+
+    /** A weapon without M8 part A's {@code anti-sub} trait and splash. */
+    public WeaponSpec(
+            String slug,
+            String vfx,
+            String sfx,
+            Delivery delivery,
+            boolean antiGround,
+            double rate,
+            double damage,
+            double speed,
+            Hitbox size,
+            double range,
+            double lifetimeSeconds,
+            int pierce,
+            double blast,
+            double turnRate,
+            double coneHalfAngle,
+            double airSeconds,
+            double snap,
+            List<Muzzle> muzzles,
+            double endSpeed,
+            double accelSeconds,
+            Mines mines,
+            boolean flanking) {
+        this(
+                slug,
+                vfx,
+                sfx,
+                delivery,
+                antiGround,
+                rate,
+                damage,
+                speed,
+                size,
+                range,
+                lifetimeSeconds,
+                pierce,
+                blast,
+                turnRate,
+                coneHalfAngle,
+                airSeconds,
+                snap,
+                muzzles,
+                endSpeed,
+                accelSeconds,
+                mines,
+                flanking,
+                false,
+                0);
     }
 
     /** A weapon without M5 part F's {@code side} or {@code rear} trait. */
@@ -181,7 +244,70 @@ public record WeaponSpec(
                 endSpeed,
                 accelSeconds,
                 mines,
-                sideOrRear);
+                sideOrRear,
+                antiSub,
+                splash);
+    }
+
+    /** M8 part A: this weapon with the {@code anti-sub} trait ({@code antiSubTrait}) or without it. */
+    public WeaponSpec antiSub(boolean antiSubTrait) {
+        return new WeaponSpec(
+                slug,
+                vfx,
+                sfx,
+                delivery,
+                antiGround,
+                rate,
+                damage,
+                speed,
+                size,
+                range,
+                lifetimeSeconds,
+                pierce,
+                blast,
+                turnRate,
+                coneHalfAngle,
+                airSeconds,
+                snap,
+                muzzles,
+                endSpeed,
+                accelSeconds,
+                mines,
+                flanking,
+                antiSubTrait,
+                splash);
+    }
+
+    /**
+     * M8 part A (design/player/weapons/harpoon-torpedoes): this torpedo with a splash: its hit deals {@code share} of
+     * its damage to the other units within {@code radius} px (its {@code blast}).
+     */
+    public WeaponSpec splash(double radius, double share) {
+        return new WeaponSpec(
+                slug,
+                vfx,
+                sfx,
+                delivery,
+                antiGround,
+                rate,
+                damage,
+                speed,
+                size,
+                range,
+                lifetimeSeconds,
+                pierce,
+                radius,
+                turnRate,
+                coneHalfAngle,
+                airSeconds,
+                snap,
+                muzzles,
+                endSpeed,
+                accelSeconds,
+                mines,
+                flanking,
+                antiSub,
+                share);
     }
 
     /** A weapon of the Act 1 kind: no acceleration, no mines. */
@@ -235,9 +361,23 @@ public record WeaponSpec(
      * when an enemy on {@code air} or {@code low-air} comes within {@code trigger} px; it fizzles after
      * the weapon's lifetime. While {@code maxLive} of a mount's mines are out it drops no more.
      */
-    public record Mines(double driftSeconds, double armSeconds, double trigger, int maxLive) {
+    public record Mines(double driftSeconds, double armSeconds, double trigger, int maxLive, double fuseSeconds) {
         /** Not a mine weapon. */
         public static final Mines NONE = new Mines(0, 0, 0, 0);
+
+        /** A proximity mine: no fuse. */
+        public Mines(double driftSeconds, double armSeconds, double trigger, int maxLive) {
+            this(driftSeconds, armSeconds, trigger, maxLive, 0);
+        }
+
+        /**
+         * M8 part A (design/player/weapons/depth-charges): a {@link Delivery#DEPTH_CHARGE}'s numbers: it rolls out and
+         * slows to a hover over {@code driftSeconds}, then sinks with the scroll, and bursts {@code fuseSeconds} after
+         * its launch; at most {@code maxLive} of a mount's charges are out at once.
+         */
+        public static Mines charge(double driftSeconds, double fuseSeconds, int maxLive) {
+            return new Mines(driftSeconds, 0, 0, maxLive, fuseSeconds);
+        }
     }
 
     /**
@@ -290,7 +430,17 @@ public record WeaponSpec(
          * simulation step. Hardened ground targets do not stop it; it never pierces. Appended last so
          * the earlier deliveries keep their ordinals.
          */
-        BEAM;
+        BEAM,
+        /**
+         * M8 part A (design/player/weapons/depth-charges, the {@code anti-sub} and {@code area} rear weapon): a barrel
+         * rolls out of the muzzle at the weapon's speed, slows to a hover over its {@link Mines#driftSeconds()}, then
+         * sinks with the scroll, and bursts on its {@link Mines#fuseSeconds()} (never on contact) in its blast: once on
+         * every target in the water ({@link Medium#chargeReaches}; above water the {@code sub} layer and the naval
+         * ground), never the ship or Rook. It hits nothing on its way and is hit by nothing. Only where there is water
+         * (a level over water or under water): elsewhere its mount fires nothing. Appended last so the earlier
+         * deliveries keep their ordinals.
+         */
+        DEPTH_CHARGE;
 
         /** Whether its projectiles hit enemies on {@code layer} on their way (blasts aside). */
         public boolean reaches(Layer layer) {
@@ -299,16 +449,30 @@ public record WeaponSpec(
                 // M7 part B: nothing reaches the buried layer.
                 case HOMING, TURRET, BEAM -> layer != Layer.SUB && layer.touchable();
                 case TORPEDO -> layer == Layer.SUB || layer == Layer.GROUND;
-                case DROPPED, LOBBED, MINE -> false;
+                case DROPPED, LOBBED, MINE, DEPTH_CHARGE -> false;
             };
         }
 
         /**
+         * M8 part A: whether its projectiles are laid in place and burst there, hitting nothing on their way: proximity
+         * mines and depth charges.
+         */
+        public boolean laid() {
+            return this == MINE || this == DEPTH_CHARGE;
+        }
+
+        /** M8 part A: whether it runs only where there is water (its mount reads NO WATER elsewhere). */
+        public boolean needsWater() {
+            return this == TORPEDO || this == DEPTH_CHARGE;
+        }
+
+        /**
          * Whether its projectiles pass under what stops shots in flight (crane arms, a running sled,
-         * tow cables, debris): bombs and shells on their way down, torpedoes under the water.
+         * tow cables, debris): bombs and shells on their way down, torpedoes (M8 part A: and
+         * depth charges) under the water.
          */
         public boolean passesUnder() {
-            return landing() || this == TORPEDO;
+            return landing() || this == TORPEDO || this == DEPTH_CHARGE;
         }
 
         /** Whether its projectiles seek a target: homing missiles and torpedoes. */
@@ -349,7 +513,9 @@ public record WeaponSpec(
                 endSpeed,
                 accelSeconds,
                 mines,
-                flanking);
+                flanking,
+                antiSub,
+                splash);
     }
 
     int intervalTicks() {

@@ -123,6 +123,7 @@ final class IntelPanel {
      * @param teaser the level's hangar teaser, with its intel
      * @param unclassified M7 part E: the enemy types still unclassified, by name, with what the intel calls them
      *     ({@link #unclassified})
+     * @param limited M8 part A: the fitted special the level forbids, with its reason ({@link #limited})
      */
     void draw(
             SpriteBatch batch,
@@ -130,7 +131,8 @@ final class IntelPanel {
             Optional<Intel> intel,
             Optional<BriefingPage> teaser,
             String levelKey,
-            Map<String, String> unclassified) {
+            Map<String, String> unclassified,
+            Optional<String> limited) {
         glass.panel(batch, X, Y, WIDTH, HEIGHT, 0.86f);
         glass.header(batch, String.format(Locale.ROOT, "INTEL - L%02d", number), INNER, RIGHT, Y + 10);
         Canvas canvas = new Screen(batch);
@@ -140,7 +142,7 @@ final class IntelPanel {
             canvas.text("FOLLOWS IN A LATER RELEASE.", Glass.LABEL, INNER, Y + 64, false);
             return;
         }
-        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified);
+        layout(canvas, intel.get(), teaser.get(), levelKey, unclassified, limited);
     }
 
     /** M7 part E: an unclassified unit's sensor picture: its silhouette of its size and layer (tools/art/intel.py). */
@@ -200,9 +202,30 @@ final class IntelPanel {
     /** As above, with the enemy types still unclassified ({@link #unclassified}) as their silhouettes. */
     static void layout(
             Canvas canvas, Intel level, BriefingPage teaser, String levelKey, Map<String, String> unclassified) {
+        layout(canvas, level, teaser, levelKey, unclassified, Optional.empty());
+    }
+
+    /**
+     * As above; M8 part A: {@code limited}, the fitted special the level forbids with its reason ({@link #limited}),
+     * makes the specials row a {@value #SPECIAL_LIMITED} warning from sensor L1.
+     */
+    static void layout(
+            Canvas canvas,
+            Intel level,
+            BriefingPage teaser,
+            String levelKey,
+            Map<String, String> unclassified,
+            Optional<String> limited) {
         List<String> lines = quote(level);
         int quote = Y + HEIGHT - QUOTE_FOOT - LINE * (lines.size() - 1);
-        fields(canvas, level, teaser, levelKey, rows(level, teaser, levelKey, quote, unclassified), unclassified);
+        fields(
+                canvas,
+                level,
+                teaser,
+                levelKey,
+                rows(level, teaser, levelKey, quote, unclassified, limited),
+                unclassified,
+                limited);
         for (String part : lines) {
             canvas.quote(part, INNER, quote);
             quote += LINE;
@@ -238,10 +261,15 @@ final class IntelPanel {
 
     /** The roomiest rows whose last one ends above the quote's top line at {@code quote}. */
     private static Rows rows(
-            Intel level, BriefingPage teaser, String levelKey, int quote, Map<String, String> unclassified) {
+            Intel level,
+            BriefingPage teaser,
+            String levelKey,
+            int quote,
+            Map<String, String> unclassified,
+            Optional<String> limited) {
         for (int step = STEP; step >= LINE; step--) {
             Rows rows = new Rows(step, Integer.MAX_VALUE);
-            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified) <= quote) {
+            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited) <= quote) {
                 return rows;
             }
         }
@@ -251,7 +279,7 @@ final class IntelPanel {
                 names > 1;
                 names--) {
             Rows rows = new Rows(LINE, names);
-            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified) <= quote) {
+            if (fields(MEASURE, level, teaser, levelKey, rows, unclassified, limited) <= quote) {
                 return rows;
             }
         }
@@ -265,7 +293,8 @@ final class IntelPanel {
             BriefingPage teaser,
             String levelKey,
             Rows rows,
-            Map<String, String> unclassified) {
+            Map<String, String> unclassified,
+            Optional<String> limited) {
         int step = rows.step();
         int portraitY = Y + 26;
         canvas.portrait(teaser, INNER, portraitY, SPEAKER_PORTRAIT);
@@ -338,14 +367,26 @@ final class IntelPanel {
                     y,
                     step);
         }
-        y = field(
-                canvas,
-                level,
-                Field.SPECIALS,
-                "SPECIALS",
-                List.of(level.profile().specials().map(Names::of).orElse("NO LIMIT")),
-                y,
-                step);
+        if (limited.isPresent() && level.sensor() >= LIMITED_SENSOR) {
+            // M8 part A (design/player/specials, Setting restrictions): the fitted special the level forbids, in
+            // advance, from the Sensor suite's first level.
+            canvas.text("SPECIALS", Glass.LABEL, INNER, y, false);
+            canvas.text(SPECIAL_LIMITED, Glass.ALERT, VALUE_X, y, false);
+            y += step;
+            for (String part : Words.wrap(limited.get(), VALUE_CHARS)) {
+                canvas.text(part, Glass.ALERT, VALUE_X, y, false);
+                y += step;
+            }
+        } else {
+            y = field(
+                    canvas,
+                    level,
+                    Field.SPECIALS,
+                    "SPECIALS",
+                    List.of(level.profile().specials().map(Names::of).orElse("NO LIMIT")),
+                    y,
+                    step);
+        }
         y = boss(canvas, level, y, step, unclassified);
         y = enemies(canvas, level, y, step, rows.names(), unclassified);
         y = field(canvas, level, Field.SECRETS, "SECRETS", List.of(Integer.toString(level.secrets())), y, step);
@@ -358,6 +399,36 @@ final class IntelPanel {
                 y,
                 step);
         return waves(canvas, level, y, step, unclassified) - step + LABEL_INK;
+    }
+
+    /** M8 part A: the specials row's warning for a fitted special the next level forbids. */
+    static final String SPECIAL_LIMITED = "SPECIAL LIMITED";
+
+    /** M8 part A: the sensor level that shows {@link #SPECIAL_LIMITED} (below it Varga's line says so). */
+    static final int LIMITED_SENSOR = 1;
+
+    /**
+     * M8 part A (design/player/specials, Setting restrictions): the fitted special {@code special} where level {@code
+     * levelKey} (any of its sections) forbids it, with its HUD reason word: {@code AIRSTRIKE: UNDER ICE}; empty when it
+     * is allowed throughout, or none is fitted. Only the fitted special is named (pending the user's review): an
+     * owned Sonar Pulse in the inventory would otherwise mark every dry level.
+     */
+    static Optional<String> limited(Content content, String levelKey, Optional<String> special) {
+        if (special.isEmpty() || levelKey.isEmpty()) {
+            return Optional.empty();
+        }
+        vanguard.content.LevelData level = content.level(levelKey);
+        String name = special.get();
+        for (int i = 0; i < level.sections().size(); i++) {
+            if (level.forbiddenSpecials(i, content.specials()).contains(name)) {
+                return Optional.of(Names.of(name)
+                        + content.specials()
+                                .reason(name)
+                                .map(reason -> ": " + reason)
+                                .orElse(""));
+            }
+        }
+        return Optional.empty();
     }
 
     /** Varga's line for the intel's sensor level, in quotes, wrapped to the panel's width. */

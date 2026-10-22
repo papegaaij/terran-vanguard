@@ -55,7 +55,8 @@ public final class ContentLoader {
             Map.entry("systems/retry/data.yaml", RetryData.class),
             Map.entry("allies/data.yaml", AlliesData.class),
             Map.entry("audio/voice/data.yaml", VoiceData.class),
-            Map.entry("player/wingmen/data.yaml", WingmenData.class));
+            Map.entry("player/wingmen/data.yaml", WingmenData.class),
+            Map.entry("world/europa/data.yaml", EuropaData.class));
 
     private ContentLoader() {}
 
@@ -147,7 +148,8 @@ public final class ContentLoader {
                 part(parts, RetryData.class),
                 part(parts, AlliesData.class),
                 part(parts, VoiceData.class),
-                part(parts, WingmenData.class));
+                part(parts, WingmenData.class),
+                part(parts, EuropaData.class));
         problems.addAll(new ContentValidator(content, paths).problems());
         if (!problems.isEmpty()) {
             throw new ContentException(problems);

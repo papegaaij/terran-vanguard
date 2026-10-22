@@ -50,7 +50,8 @@ public final class Hud {
                         .map(special -> sprites.region("icons/" + iconName(special.name())))
                         .map(TextureRegion.class::cast)
                         .orElse(null),
-                sprites.region("icons/escort-rook"));
+                sprites.region("icons/escort-rook"),
+                sprites.has("icons/escort-bulwark") ? sprites.region("icons/escort-bulwark") : null);
         this.flight = flight;
         this.regenBonus = regenBonus;
         for (Flight.Weapon weapon : flight.weapons()) {
@@ -77,6 +78,11 @@ public final class Hud {
     /** The special button was denied: the special's row flashes. */
     public void specialDenied() {
         ship.specialDenied();
+    }
+
+    /** M8 part A: the special's setting limit changed at a waterline: its row flashes once. */
+    public void specialLimit() {
+        ship.specialLimit();
     }
 
     /** M7 part A: a cooldown special is ready again: its HUD ring flashes white once. */

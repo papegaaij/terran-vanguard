@@ -11,6 +11,13 @@ public final class EnemyBullet implements Hashed {
     private double damage;
     /** The convoy unit it was aimed at by the target-the-objective hook; -1 for the ship. */
     private int target;
+    /** M8 part A: the level's medium (its bullet speed at the spawn); null in the air. */
+    private Medium medium;
+
+    /** M8 part A: the level's medium, whose bullet speed scales every bullet as it is fired. */
+    void medium(Medium water) {
+        medium = water;
+    }
 
     void fire(double startX, double startY, double velocityX, double velocityY, double bulletDamage) {
         fire(startX, startY, velocityX, velocityY, bulletDamage, -1);
@@ -24,6 +31,12 @@ public final class EnemyBullet implements Hashed {
         vx = velocityX;
         vy = velocityY;
         damage = bulletDamage;
+        if (medium != null && medium.wet()) {
+            // M8 part A (design/world/europa, Under water rules; D3): its speed × the water's, fixed at its spawn.
+            double factor = medium.bulletSpeed();
+            vx *= factor;
+            vy *= factor;
+        }
     }
 
     void move() {

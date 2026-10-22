@@ -1,10 +1,10 @@
 ---
 title: Ship systems
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../generator, ../../ui/hangar]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Ship systems
@@ -38,8 +38,8 @@ are the "nice extra options": they make the ship better at a job without adding 
 | Salvage scanner | +10 / +20 % credits from salvage pickups and hidden crates; a glint marks the objects that hide a secret (see below) | L1–L2 | 1 | 2 500 / 6 000 | act 2 | approved |
 | Targeting computer | Homing turn rate +20 % (Stormhawk weapons), fading HP bars under damaged enemies, brackets on open weak points (see below) | L1 | 1 | 3 000 | act 2 (from L07 with the L06 [data core](../../systems/economy/README.md#data-cores), otherwise L08) | approved |
 | Evasive thrusters | Double-tap a direction (or the Dash button): 72 px dash in 0.12 s, 0.25 s invulnerable, 3 s cooldown (see below) | L1 | 2 | 4 000 | act 3 | approved |
-| Auto-repair nanites | Repairs 1 armour per 4 s, up to 50 % of max armour | L1–L2 (2 s at L2) | 3 | 6 000 / 12 000 | act 4 | idea |
-| Pressure hull | Removes the underwater top-speed and shield-regen penalties (see [europa](../../world/europa/README.md#under-water-rules)) | L1 | 1 | 2 000 | L22 | idea |
+| Auto-repair nanites | Repairs 1 armour per 4 s, up to 50% of max armour; a hit pauses it 1 s (see below) | L1–L2 (2 s at L2) | 3 | 6 000 / 12 000 | L24 | draft |
+| Pressure hull | Removes the under-water drag (see [europa](../../world/europa/README.md#under-water-rules) and below) | L1 | 1 | 2 000 | L22 | draft |
 | Ascendancy IFF spoofer | Ascendancy turrets hesitate 0.5 s before firing | L1 | 2 | 5 000 | act 6 (story) | idea |
 <!-- /data -->
 
@@ -262,10 +262,12 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
   **later: Act 4** (Auto-repair nanites, Pressure hull) and **later: Act 6** (Ascendancy IFF
   spoofer)
 - [x] Sensor level controls the intel panel detail
-- [ ] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
-  module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above)
-- [ ] Hydro-kit: the refit before L23 (a hangar notice, the ship's look under water, stowed in dry levels) — **later: Act 4** (M8 part A, look in round 48)
-- [ ] Auto-repair nanites as under *Auto-repair nanites (L24)*: the repair tick, the 50 % cap, the HUD pip — **later: Act 4** (M8 part A)
+- [x] Underwater penalties and the pressure hull — **later: Act 4** (the pressure hull is an L22
+  module; the penalties are Europa's under-water rules; the draft is *Pressure hull (L22)* above) (M8 part A, step
+  A2: the hull's `hull: {drag: false}` and its Effect cell in [data.yaml](data.yaml), the water's numbers in
+  [europa's data.yaml](../../world/europa/data.yaml); the drag in the simulation, steps A1 and A3: `UnderwaterTest`, `Act4SpecialsTest.thePressureHullTakesTheDragOffTheShipOnly`; fitted from the hangar, `Act4ArsenalFlightTest.theHullTheNanitesAndTheArsenalFlyFromTheHangar`)
+- [x] Hydro-kit: the refit before L23 (a hangar notice, the ship's look under water, stowed in dry levels) — **later: Act 4** (M8 part A, look in round 48; step A2: the refit's level (`hydro_kit: 23` in [europa's data.yaml](../../world/europa/data.yaml)) and `Campaign.hydroKitNotice`, once per campaign by the story flag `hydro-kit`; the notice and the look in steps A5–A6: `ActFourHangarTest.theHydroKitsNoticeShowsOnceAndFitsTheMessageLines`, `ActFourEscortTest.theHydroKitNoticeShowsOnceAtTheVisitBeforeLevel23`; the `ship-hydro`/`rook-hydro` frames drawn while under water, `DeepWaterLooksTest.everyActFourSpriteIsInTheAssets`)
+- [x] Auto-repair nanites as under *Auto-repair nanites (L24)*: the repair tick, the 50 % cap, the HUD pip — **later: Act 4** (M8 part A; step A2: the `repair` block (`interval` 4 / 2 s, `cap` 0.5, `pause` 1 s) and the unlock L24 in [data.yaml](data.yaml), `SystemsData.Repair`; the tick in step A3, `Act4SpecialsTest.theNanitesRepairAPointPerIntervalUpToHalfTheArmour`, `aHitPausesTheNanitesForASecondAndAWreckIsNotRepaired`, `theNanitesWorkInFlightAndHashOnlyWhenFitted`; the pip in step A6)
 
 ## Open questions
 
@@ -392,3 +394,8 @@ Prompts and capture notes: [concept/prompts.md](concept/prompts.md).
 - 2026-10-21 (the user's power room: the Mk III at 16 MW, the weapons' power dial): the Evasive thrusters fit
   the typical Act 3 loadout; the balance plan fits a Pickup magnet L1 from Level 20.
 - 2026-10-21 (Act 4 design phase, step m8-dsystems; **decided in round 48 (2026-10-22)**): the hydro-kit stays automatic and free (its look, no slot, no power; the factors come from the level's medium), the pressure hull is specified as removing the drag (Q1 = b), the Auto-repair nanites (unlock L24, 3 MW, repairs up to 50 % of the armour) specified as a draft; the table rows stay `idea` until the user reviews them.
+- 2026-10-22 (M8 part A, step A2): the pressure hull's and the nanites' numbers in [data.yaml](data.yaml) (`hull`,
+  `repair`; the nanites' unlock L24 as this README has it, the hull's Effect cell rewritten: "Removes the under-water
+  drag"); their table rows set from `idea` to `draft` (written and decided in round 48; raising a row to `approved` is
+  the user's).
+- 2026-10-22 (M8 part A, steps A3/A6; pending the user's review in round 50): the Auto-repair nanites are built in part A (D6, the Mk IV's reason); a hit pauses them for 1 s; the pip `+` beside the armour gauge while they repair.

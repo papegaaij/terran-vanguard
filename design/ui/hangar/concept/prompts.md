@@ -249,3 +249,26 @@ down, pods aimed ahead, the flamer at rest; scaled to fit), from the production 
 walker's outline at heading 0 in the boss silhouettes' style, broken by the unclassified pictures' sensor noise
 (torn rows, dropped rim pixels, speckle). Rendered by [tools/art/intel.py](../../../../tools/art/intel.py)
 (`python3 tools/art/intel.py warden-tank revenant-walker boss-revenant-walker`).
+
+## act4-icons-final-r50-a
+
+Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/icons.py --act4`
+writes the four Act 4 items' icons (16×16 and 24×24) into `assets/sprites/icons/` and this review sheet, in the
+hangar's emblem style (a bevelled dark steel badge, the item on it, ray-marched at 8×): Harpoon Torpedoes (round 48's
+barbed harpoon, drawn stouter so it reads at 16 px, with its teal line), Depth Charges (the navy drum over its pressure
+dome's arcs), Sonar Pulse (the sweep's dashed double ring round a contact dot, the specials' orange) and the Bulwark
+(the turtle drone). Shown beside the Torpedo Pod, Proximity Mines, EMP Burst and Rook icons for the style.
+
+- **Prompt:** see [act3-icons-r37-a](#act3-icons-r37-a): the same badge, the Act 4 items on it.
+- **Negative prompt:** text, flat vector icons, photographic realism, watermark.
+
+## act4-hangar-capture-r50-a
+
+Concept round 50 (M8 part A, step A5), a capture of the game, not generated art: a `.png` sheet of four 960×540
+frames with captions (window screenshots at 1920×1080 scaled down) on a private Xvfb display, the game built by
+`:desktop:installDist`, started with `--bench 120 --start title --settings <scratch>/settings.properties` and driven
+by XTest key presses (Continue, then the hangar's tabs and rows). **Scratch save:** `./gradlew
+:content:playthroughSave -Plevel=21` (the balance plan's campaign before Level 21), its `nextLevel` set to 27 and its
+credits to 14 250, so Rook is missing in action and the loaner Bulwark flies. Frames: the front shop with the Harpoon
+Torpedoes row and its test fire; the escort's shop with the Bulwark row; the same after buying it; the rear shop
+with the Depth Charges' test fire over the water.

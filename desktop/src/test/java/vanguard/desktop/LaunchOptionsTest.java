@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import org.junit.jupiter.api.Test;
 import vanguard.content.Difficulty;
 import vanguard.content.campaign.DebugFit;
@@ -17,7 +18,17 @@ class LaunchOptionsTest {
     @Test
     void runsUntilQuitWithTheDefaultSettingsFileWithoutOptions() {
         assertEquals(
-                new LaunchOptions(0, Optional.empty(), Difficulty.MEDIUM, 1, false, false, Optional.empty(), 1, false),
+                new LaunchOptions(
+                        0,
+                        Optional.empty(),
+                        Difficulty.MEDIUM,
+                        1,
+                        false,
+                        false,
+                        Optional.empty(),
+                        1,
+                        false,
+                        OptionalDouble.empty()),
                 LaunchOptions.parse());
     }
 
@@ -33,14 +44,25 @@ class LaunchOptionsTest {
                         true,
                         Optional.empty(),
                         1,
-                        false),
+                        false,
+                        OptionalDouble.empty()),
                 LaunchOptions.parse("--bench", "3", "--settings", "smoke.properties"));
     }
 
     @Test
     void parsesTheTestingOptions() {
         assertEquals(
-                new LaunchOptions(0, Optional.empty(), Difficulty.HARD, 4, true, false, Optional.empty(), 1, false),
+                new LaunchOptions(
+                        0,
+                        Optional.empty(),
+                        Difficulty.HARD,
+                        4,
+                        true,
+                        false,
+                        Optional.empty(),
+                        1,
+                        false,
+                        OptionalDouble.empty()),
                 LaunchOptions.parse("--difficulty", "hard", "--debug-speed", "4", "--invulnerable"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--difficulty", "nightmare"));
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--debug-speed", "0"));
@@ -110,6 +132,24 @@ class LaunchOptionsTest {
         assertEquals(true, options.startLevel());
         assertEquals(false, LaunchOptions.parse("--level", "6").actEnd());
         assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--act-end", "--start", "title"));
+    }
+
+    @Test
+    void theMediumOptionFliesUnderWaterFromItsSecond() {
+        assertEquals(
+                OptionalDouble.of(0),
+                LaunchOptions.parse("--medium", "underwater").underwaterFrom());
+        assertEquals(
+                OptionalDouble.of(10),
+                LaunchOptions.parse("--medium", "underwater@10").underwaterFrom());
+        assertEquals(true, LaunchOptions.parse("--medium", "underwater@10").startLevel());
+        assertEquals(
+                OptionalDouble.empty(), LaunchOptions.parse("--level", "19").underwaterFrom());
+        assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--medium", "air"));
+        assertThrows(IllegalArgumentException.class, () -> LaunchOptions.parse("--medium", "underwater@-1"));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> LaunchOptions.parse("--medium", "underwater", "--start", "title"));
     }
 
     @Test

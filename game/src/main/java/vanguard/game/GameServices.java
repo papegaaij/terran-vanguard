@@ -62,6 +62,11 @@ public final class GameServices implements Disposable {
     public final Difficulty difficulty;
     /** A debug option for testing ({@code --invulnerable}): nothing hits the ship. */
     public final boolean invulnerable;
+    /**
+     * M8 part A, a debug option for testing ({@code --medium underwater[@<s>]}): the level start flies under water from
+     * this level second on; empty for the level's own medium.
+     */
+    public final java.util.OptionalDouble underwaterFrom;
 
     public final Content content;
     public final CampaignRules campaignRules;
@@ -98,6 +103,7 @@ public final class GameServices implements Disposable {
             SettingsStore store,
             Difficulty difficulty,
             boolean invulnerable,
+            java.util.OptionalDouble underwaterFrom,
             SaveSlots saves,
             ScoreFile scores,
             String version) {
@@ -108,6 +114,7 @@ public final class GameServices implements Disposable {
         this.store = store;
         this.difficulty = difficulty;
         this.invulnerable = invulnerable;
+        this.underwaterFrom = underwaterFrom;
         devices = new GdxDevices();
         devices.deadZone(settings.controls().deadZone());
         mouse = new GdxPointer();

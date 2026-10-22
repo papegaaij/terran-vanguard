@@ -7,9 +7,10 @@ import java.util.Set;
 
 /**
  * design/player/wingmen/data.yaml (M5 part A): Rook in the escort slot, his craft and AI, his four
- * guns (each derived from a player weapon's per-level table) and his radio barks.
+ * guns (each derived from a player weapon's per-level table) and his radio barks; M8 part A: his absence ({@code
+ * rook.missing}) and the Bulwark heavy drone, the escort slot's alternative.
  */
-public record WingmenData(Rook rook, Guns guns, Barks barks) {
+public record WingmenData(Rook rook, Bulwark bulwark, Guns guns, Barks barks) {
     /**
      * Rook's craft and AI (design/player/wingmen, Rook's AI).
      *
@@ -27,6 +28,7 @@ public record WingmenData(Rook rook, Guns guns, Barks barks) {
      * @param cone degrees, the full width of his firing cone ahead
      * @param range how far ahead he fires, px
      * @param recentHitSeconds target priority 1: an enemy the player damaged this recently
+     * @param missing M8 part A: the levels he is missing (shot down at the end of one, back from another)
      */
     public record Rook(
             int joins,
@@ -50,7 +52,8 @@ public record WingmenData(Rook rook, Guns guns, Barks barks) {
             double cone,
             double range,
             double recentHitSeconds,
-            Eject eject) {
+            Eject eject,
+            Missing missing) {
         public Rook {
             Check.positive("joins", joins);
             Check.that(side.equals("left") || side.equals("right"), "side must be left or right, was " + side);
@@ -68,6 +71,83 @@ public record WingmenData(Rook rook, Guns guns, Barks barks) {
             Check.that(cone > 0 && cone < 180, "cone must be between 0 and 180 degrees, was " + cone);
             Check.positive("range", range);
             Check.notNegative("recent_hit_seconds", recentHitSeconds);
+        }
+    }
+
+    /**
+     * M8 part A (design/player/wingmen, Rook's loss and absence): shot down at the end of Level {@code after} (the
+     * campaign's story flag {@code rook-missing} from its win), missing in the levels between, back from Level {@code
+     * back}.
+     */
+    public record Missing(int after, int back) {
+        public Missing {
+            Check.positive("after", after);
+            Check.that(back > after + 1, "missing: back must come at least two levels after 'after', was " + back);
+        }
+
+        /** Whether he is missing in Level {@code level}: after the one he is lost in, before the one he is back in. */
+        public boolean in(int level) {
+            return level > after && level < back;
+        }
+    }
+
+    /**
+     * M8 part A, the Bulwark heavy drone (design/player/wingmen, Heavy drone "Bulwark"): the escort slot's alternative
+     * to Rook from Level 22, and the slot's free loaner while Rook is missing and none is owned.
+     *
+     * @param armour its full armour (no shield)
+     * @param size its sprite, px
+     * @param speed top speed, px/s (the water's drag applies under water)
+     * @param slot its wing slot, {@code [x beside the player on the escort's side, y behind]}, px; it keeps it
+     * @param gun its cannon, not upgradable
+     * @param draw how it draws the enemy's aimed fire
+     * @param price its price, credits
+     * @param available in the shop from the hangar visit before this (as the items' availability)
+     * @param repair credits per armour point, on every difficulty (a loaner's repair is free)
+     */
+    public record Bulwark(
+            double armour,
+            Size size,
+            Size hitbox,
+            double speed,
+            Point slot,
+            BulwarkGun gun,
+            Draw draw,
+            int price,
+            String available,
+            int repair) {
+        public Bulwark {
+            Check.positive("armour", armour);
+            Check.positive("speed", speed);
+            Check.positive("price", price);
+            Check.notNegative("repair", repair);
+        }
+    }
+
+    /**
+     * M8 part A: the Bulwark's cannon, straight ahead: {@code rate} shells a second of {@code damage} each; {@code
+     * antiSub} keeps its full damage under water.
+     */
+    public record BulwarkGun(double rate, double damage, boolean antiSub) {
+        public BulwarkGun {
+            Check.positive("rate", rate);
+            Check.positive("damage", damage);
+        }
+
+        /** Its damage per second. */
+        public double dps() {
+            return rate * damage;
+        }
+    }
+
+    /**
+     * M8 part A: while the Bulwark is within {@code radius} px of the player, the share {@code share} of the enemy's
+     * aimed bullets aimed at the player aim at it instead.
+     */
+    public record Draw(double radius, double share) {
+        public Draw {
+            Check.positive("radius", radius);
+            Check.share("share", share);
         }
     }
 

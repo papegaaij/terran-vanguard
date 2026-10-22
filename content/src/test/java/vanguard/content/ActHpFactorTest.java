@@ -125,8 +125,9 @@ class ActHpFactorTest {
 
     @Test
     void aLevelBeyondTheReferenceCurveIsAnError() {
-        // M7 part A: the curve runs to Level 21 (Act 3's reference DPS); Level 22 is beyond it.
-        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 4, 22));
+        // M7 part A: the curve ran to Level 21 (Act 3's reference DPS); M8 part A (step A2): to Level 28 (Act 4's), so
+        // Level 29 is beyond it (Act 4's cases: anActFourLevelUsesTheActFourCurve).
+        assertThrows(IllegalArgumentException.class, () -> SimSpecs.actHpFactor(CONTENT, "mantis", 5, 29));
     }
 
     /**
@@ -152,6 +153,41 @@ class ActHpFactorTest {
                 SimSpecs.enemy(CONTENT, "skitter", Difficulty.MEDIUM, Optional.empty())
                         .hp(),
                 at("skitter", Difficulty.MEDIUM, 3, 21).hp());
+    }
+
+    /**
+     * M8 part A (step A4): in Act 4 (Levels 22–28, the hand plan's reference 96 to 120, the ice surface at L22 below
+     * L21's 100) the factor follows the curve again: a returning {@code medium} unit by the ratio, the {@code small}
+     * units outside {@code small_act_hp}'s levels at ×1 but doubled by the beam era, {@code tiny} ones unchanged.
+     */
+    @Test
+    void anActFourLevelUsesTheActFourCurve() {
+        int[] reference = {96, 100, 104, 108, 112, 116, 120};
+        for (int level = 22; level <= 28; level++) {
+            double ratio = reference[level - 22] / 52.0;
+            assertEquals(ratio, SimSpecs.actHpFactor(CONTENT, "mantis", 4, level), 1e-9, "L" + level);
+            // The Mantis (26 HP, L06, reference 52).
+            assertEquals(
+                    Math.rint(26 * ratio),
+                    at("mantis", Difficulty.MEDIUM, 4, level).hp(),
+                    "L" + level);
+            // The Coilwyrm's head (40 HP, L06).
+            assertEquals(
+                    Math.rint(40 * ratio),
+                    at("coilwyrm", Difficulty.MEDIUM, 4, level).hp(),
+                    "L" + level);
+            // Small units: no act factor past Level 21 (small_act_hp ends there), the beam era's ×2 still on.
+            assertEquals(2, SimSpecs.actHpFactor(CONTENT, "needler", 4, level), 1e-12, "L" + level);
+            assertEquals(16, at("spine-turret", Difficulty.MEDIUM, 4, level).hp(), "L" + level);
+            // Tiny units keep theirs.
+            assertEquals(1, SimSpecs.actHpFactor(CONTENT, "skitter", 4, level), "L" + level);
+        }
+        // The Mantis: 26 × 96/52 = 48 at L22, 26 × 120/52 = 60 at L28; the Spore Bomber (24 HP, reference 32 at L03):
+        // 24 × 108/32 = 81 at L25; on hard 60 × 1.3 = 78 at L28.
+        assertEquals(48, at("mantis", Difficulty.MEDIUM, 4, 22).hp());
+        assertEquals(60, at("mantis", Difficulty.MEDIUM, 4, 28).hp());
+        assertEquals(81, at("spore-bomber", Difficulty.MEDIUM, 4, 25).hp());
+        assertEquals(78, at("mantis", Difficulty.HARD, 4, 28).hp());
     }
 
     /**

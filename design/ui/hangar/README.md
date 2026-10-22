@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Hangar
@@ -124,6 +124,25 @@ icon, as built.
 - **Test fire**: the box loops his selected gun from a single nose muzzle at his scale, like a
   front gun.
 
+**The Bulwark and Rook's absence** (M8 part A, [wingmen](../../player/wingmen/README.md#heavy-drone-bulwark-escort-alternative-l22);
+the layout below is the step's default, pending the user's review in round 50):
+
+- The escort's shop lists a **Bulwark row** between Rook's guns and the side row: `BULWARK HEAVY
+  DRONE` with its icon and its price, `OWNED`, `FITTED` (it flies the next level) or `LOCKED L22`.
+  Its detail shows `ARMOUR 120   DPS 14   DRAW 0 MW`, `DRAWS 30 % OF AIMED FIRE NEAR YOU` and a
+  note (its unlock, its repair cost, or who flies while Rook is missing), and its chips: `BUY 6 000`
+  (bought, it flies at once), then `FIT` (it flies instead of Rook) or `UNFIT` (Rook flies again)
+  and `SELL` (asking first). All of it joins the visit's undo; the replay hangar offers only `FIT` /
+  `UNFIT` for an owned one.
+- The **escort callout** shows whoever flies the next level: Rook as before, or the Bulwark's icon,
+  `BULWARK`, `LOANER` for the free loaner, `CANNON` and its armour `nn/120` (amber below half).
+- **Rook MIA** (Levels 27–29): his guns leave the shop (they stay in the inventory), the callout
+  reads `ROOK MIA` in red under the Bulwark, his repair line is gone, and the owned Bulwark or the
+  loaner flies whatever the choice (the row offers no `FIT` / `UNFIT` then, only `SELL`).
+- The side row and its message name the Bulwark while it flies (`BULWARK'S SIDE`).
+- **Repair**: an owned Bulwark has its own `BULWARK` line at 8 cr a point on every difficulty; Q/E
+  cycle the lines that have points missing.
+
 ### Transactions
 
 Buying fits the item immediately when the power budget allows, otherwise it goes to the
@@ -213,6 +232,8 @@ Light Drone Bay, EMP Burst, Orbital Lance and Shield Overcharge. Round 37 chose 
 | [concept/rejected/act3-icons-r37-b.png](concept/rejected/act3-icons-r37-b.png) | B: an emitter ring with the beam, one lance through two marks, the field arc catching a bolt, a small drone in an orbit arc (utility green), concentric arcs, a satellite above a column, a shield with an up arrow | rejected — round 37: a (each item as its effect) picked |
 | [concept/act3-hangar-capture-r37-a.png](concept/act3-hangar-capture-r37-a.png) | Game capture (round 37, M7 part A), the hangar before Level 19 from a hand-written save: the Act 3 shop rows (Ion Beam, Deflector Pod, Light Drone Bay, Rear Lance, EMP Burst, Orbital Lance, Shield Overcharge bought, Evasive thrusters) and the `UTILITY BAY 3` row bought, the `UTL` tile appearing (sheet) | final (round 44, A.a: a record of production assets) |
 | [concept/act3-hangar-capture-r37-a.mp4](concept/act3-hangar-capture-r37-a.mp4) | The same, 97 s | final (round 44, A.a: a record of production assets) |
+| [concept/act4-icons-final-r50-a.png](concept/act4-icons-final-r50-a.png) | The four Act 4 equipment icons (`tools/art/icons.py --act4`): Harpoon Torpedoes, Depth Charges, Sonar Pulse, Bulwark (escort) at 16 and 24 px, beside the Torpedo Pod, Proximity Mines, EMP Burst and Rook icons for the style (sheet) | proposed (round 50) |
+| [concept/act4-hangar-capture-r50-a.png](concept/act4-hangar-capture-r50-a.png) | Game capture (round 50, M8 part A, step A5), the hangar before Level 27 (Rook MIA) from a scratch save: the Harpoon Torpedoes row and its test fire, the escort callout with the loaner Bulwark and `ROOK MIA`, the escort shop's Bulwark row before and after `BUY`, the Depth Charges' test fire over water (sheet of 4 frames) | proposed (round 50) |
 
 **After a load and in a replay** (user decision 2026-10-18): Continue and Load game reach the
 hangar through the next level's briefing; that hangar does not autosave as it opens (a save was
@@ -297,6 +318,16 @@ release's end, which writes that autosave.
       bought its slot joins the Q/E tabs after the second bay and its `UTL` tile shows in the
       schematic's lower right corner (clickable like the others) (`HangarState.bayRow`,
       `ShopPanel`, `LoadoutPanel`, `HangarPointer`; `ActThreeHangarTest`, `LoadoutTilesLayoutTest`)
+- [x] Act 4 hangar (M8 part A, step A5): the Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy
+      Flares, Pressure hull and Auto-repair nanites in the live shop with their icons
+      (`Catalogue.AWAITING_ICONS` empty; tiles `SONAR`, `FLARES`, `HULL`, `NANITE`, callout
+      `HARPOON`); the escort's Bulwark row (buy, fit, unfit, sell, undo), the escort callout for the
+      Bulwark and the loaner, Rook MIA (no gun rows, no repair line, `ROOK MIA`), the `BULWARK` repair
+      line; the hydro-kit's one-off notice at the visit before Level 23; the intel's `SPECIAL LIMITED`
+      on the specials row from sensor L1 when the next level forbids the fitted special (`AIRSTRIKE:
+      UNDER ICE`); the Depth Charges test-fired over water among submerged dummies, like the
+      torpedoes (`HangarState`, `ShopPanel`, `LoadoutPanel`, `HangarPointer`, `IntelPanel`,
+      `TestFire`; `ActFourHangarTest`, `TestFireTest`)
 - [x] Test fire of the Ion Beam (its column burns the dummy on its line), the Light Drone Bay (the
       drone orbits and fires at its convergence point) and the Deflector Pod (the dummies fire slow
       bullets at the ship and its field catches them on its side) (`TestFire`, `TestFireView`;
@@ -622,3 +653,12 @@ release's end, which writes that autosave.
   add an option to reduce power on fitted weapons to allow rebalancing the weapons on the ship (like more power
   to the rear)."; decided: A, a free power dial): the shop's POWER − / POWER + choices on a fitted weapon (see
   *Transactions*); the layout mockup shows the Mk III's new 16 MW.
+- 2026-10-22 (M8 part A, step A5; defaults pending the user's review in round 50): the escort's Bulwark
+  row sits between Rook's guns and the side row and is listed while locked like the other items
+  (`LOCKED L22`); `FIT` / `UNFIT` choose the slot between the Bulwark and Rook; the callout shows
+  whoever flies; the intel's `SPECIAL LIMITED` names only the **fitted** special (an owned Sonar Pulse
+  in the inventory would otherwise mark every dry level); the hydro-kit notice reads `HYDRO-KIT
+  FITTED: THE STORMHAWK AND ROOK ARE SEALED FOR THE OCEAN`; the test fire of the torpedo-type weapons
+  and the Depth Charges is over the water's surface, not under it (D9: the water's factors stay out
+  of the hangar).
+- 2026-10-22 (ART-A; pending the user's review in round 50): the Harpoon Torpedoes' icon drawn with a 1.7× stroke so the barb reads at 16 px.

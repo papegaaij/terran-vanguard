@@ -109,6 +109,9 @@ final class ScriptRules {
                                 PartFRules.placedPickups(placed, SimSpecs::pickup),
                                 level.released(),
                                 SimSpecs::pickup)))
+                // M8 part A: the level's medium and its special limits (air and none before Act 4).
+                .medium(WaterRules.medium(content, level))
+                .specialLimits(WaterRules.specialLimits(content, level))
                 .build();
         // M7 part B: the no-surface zones and the drop launch (Level 15); M7 part C: the canyon and its gates (Level
         // 16); M7 part D: the ground allies (Level 17's domes).

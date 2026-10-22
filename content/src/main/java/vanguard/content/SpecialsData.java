@@ -5,7 +5,8 @@ import java.util.Optional;
 
 /**
  * design/player/specials/data.yaml: the specials, the Airstrike's and the Smart Bomb's numbers and
- * (M7 part A) the EMP Burst's, the Orbital Lance's and the Shield Overcharge's.
+ * (M7 part A) the EMP Burst's, the Orbital Lance's and the Shield Overcharge's; M8 part A: the Sonar Pulse's, the
+ * Decoy Flares' and the setting restrictions ({@code limits}).
  *
  * @param inputBuffer seconds a press of the special button waits while the special is busy
  * @param cooldownPickup M7 part A: seconds a special charge pickup takes off a cooldown special's
@@ -19,11 +20,136 @@ public record SpecialsData(
         SmartBomb smartBomb,
         Emp emp,
         OrbitalLance orbitalLance,
-        Overcharge overcharge) {
+        Overcharge overcharge,
+        Sonar sonar,
+        Flares flares,
+        List<Limit> limits) {
     public SpecialsData {
         Check.notNegative("input_buffer", inputBuffer);
         Check.notNegative("cooldown_pickup", cooldownPickup);
         specials = List.copyOf(specials);
+        limits = List.copyOf(limits);
+        java.util.Set<Setting> settings = java.util.EnumSet.noneOf(Setting.class);
+        java.util.Set<String> limited = new java.util.HashSet<>();
+        for (Limit limit : limits) {
+            Check.that(settings.add(limit.setting()), "limits: the setting " + limit.setting() + " is listed twice");
+            for (String special : limit.forbids()) {
+                Check.that(
+                        specials.stream().anyMatch(known -> known.name().equals(special)),
+                        "limits: no special '" + special + "'");
+                Check.that(limited.add(special), "limits: '" + special + "' is forbidden by two settings");
+            }
+        }
+    }
+
+    /**
+     * M8 part A (design/player/specials, Setting restrictions): where a special can be forbidden. {@code underwater}:
+     * a level or section with {@code medium: underwater}; {@code dry}: one without water, neither under water nor a
+     * {@code water: true} level. A level above water ({@code water: true}, Levels 11–13) is neither.
+     */
+    public enum Setting {
+        UNDERWATER,
+        DRY;
+
+        /** The setting of a level or section: its medium and whether the level is water ({@code water: true}). */
+        public static java.util.Optional<Setting> of(LevelData.Medium medium, boolean water) {
+            if (medium == LevelData.Medium.UNDERWATER) {
+                return java.util.Optional.of(UNDERWATER);
+            }
+            return water ? java.util.Optional.empty() : java.util.Optional.of(DRY);
+        }
+    }
+
+    /**
+     * M8 part A: the specials a setting forbids, and the HUD's reason word for each ({@code UNDER ICE}, {@code NO
+     * WATER}), the specials by name.
+     */
+    public record Limit(Setting setting, List<String> forbids, String reason) {
+        public Limit {
+            forbids = List.copyOf(forbids);
+            Check.notEmpty("forbids", forbids);
+            Check.that(!reason.isBlank(), "reason: a word for the HUD");
+        }
+    }
+
+    /** M8 part A: the specials (by name) {@code setting} forbids; none for an empty setting (above water). */
+    public List<String> forbids(java.util.Optional<Setting> setting) {
+        return setting.flatMap(at ->
+                        limits.stream().filter(limit -> limit.setting() == at).findFirst())
+                .map(Limit::forbids)
+                .orElse(List.of());
+    }
+
+    /**
+     * M8 part A: the specials (by name) forbidden where a level or section is: its {@code special_limits} (specials
+     * by their slugs, {@code orbital-lance}) when it gives them, which replace its setting's list; else its setting's.
+     */
+    public List<String> forbidden(
+            LevelData.Medium medium, boolean water, java.util.Optional<List<String>> specialLimits) {
+        return specialLimits
+                .map(slugs -> slugs.stream().map(this::named).toList())
+                .orElseGet(() -> forbids(Setting.of(medium, water)));
+    }
+
+    /** M8 part A: the HUD's reason word for a forbidden special: the reason of the limit that lists it. */
+    public java.util.Optional<String> reason(String special) {
+        return limits.stream()
+                .filter(limit -> limit.forbids().contains(special))
+                .map(Limit::reason)
+                .findFirst();
+    }
+
+    /** M8 part A: the special whose slug (its name in lower case, hyphenated: {@code orbital-lance}) this is. */
+    public String named(String slug) {
+        return specials.stream()
+                .map(Special::name)
+                .filter(name -> slug(name).equals(slug))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("no special '" + slug + "'"));
+    }
+
+    /** A special's name in lower case, hyphenated: "Orbital Lance" is {@code orbital-lance}. */
+    public static String slug(String name) {
+        return name.trim()
+                .toLowerCase(java.util.Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("^-|-$", "");
+    }
+
+    /**
+     * M8 part A, the Sonar Pulse (design/player/specials, Sonar Pulse (L22)).
+     *
+     * @param ring seconds for the ring to cover the whole play field from the ship
+     * @param seconds how long a pulse lasts from its call (every unit lit, the {@code sub} layer open to every weapon,
+     *     under water every weapon at full damage); a call while it lasts restarts it
+     * @param repeat seconds between two pulses
+     */
+    public record Sonar(double ring, double seconds, double repeat) {
+        public Sonar {
+            Check.positive("ring", ring);
+            Check.positive("seconds", seconds);
+            Check.positive("repeat", repeat);
+        }
+    }
+
+    /**
+     * M8 part A, the Decoy Flares (design/player/specials, Decoy Flares (L27)).
+     *
+     * @param count flares a launch drops from the rear muzzle
+     * @param fan degrees, the fan backwards they leave in
+     * @param speed px/s at the launch, slowing to a stop over {@code drift} seconds
+     * @param burn seconds each burns; while one burns every enemy homing projectile steers at the nearest one
+     * @param repeat seconds between launches
+     */
+    public record Flares(int count, double fan, double speed, double drift, double burn, double repeat) {
+        public Flares {
+            Check.positive("count", count);
+            Check.that(fan >= 0 && fan <= 360, "fan must be 0-360 degrees, was " + fan);
+            Check.positive("speed", speed);
+            Check.positive("drift", drift);
+            Check.positive("burn", burn);
+            Check.positive("repeat", repeat);
+        }
     }
 
     /**

@@ -71,6 +71,8 @@ public final class FlightSounds {
     private final ArsenalCues arsenal;
     /** The levels' own sounds: the sled, the flares, the collapse, the storm, the wall scrape. */
     private final LevelCues levels;
+    /** M8 part A: the Act 4 systems: the limit chime, the sonar, the flares, the Bulwark, the harpoons' hit and run. */
+    private final DeepWaterCues deepWater;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -163,7 +165,7 @@ public final class FlightSounds {
 
     /**
      * With a wingman's gun too (M5 part A): its shots carry the mount index past the armament's and
-     * play its family.
+     * play its family; M8 part A: or the Bulwark's cannon, which flies in the same escort slot.
      */
     public FlightSounds(
             SfxBank bank,
@@ -174,18 +176,19 @@ public final class FlightSounds {
         this.bank = bank;
         mix = new SoundMix(bank);
         bosses = new BossCues(mix, setPieces);
-        player = new PlayerCues(mix, armament, wingman, bosses);
+        deepWater = new DeepWaterCues(mix, armament, wingman);
+        player = new PlayerCues(mix, armament, wingman, bosses, deepWater);
         storm = new StormCues(mix);
         walker = new WalkerCues(mix);
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
         colossus = new ColossusCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry, walker);
+        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix);
         all = new SoundFamily[] {
-            player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels
+            player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels, deepWater
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -537,6 +540,7 @@ public final class FlightSounds {
         units.watchEntries(sortie);
         allies.watchLance(sortie);
         arsenal.watch(sortie);
+        deepWater.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -587,6 +591,7 @@ public final class FlightSounds {
             pursuit.silence(loop);
             colossus.silence(loop);
         }
+        deepWater.silence();
     }
 
     /** M7 part C: the kinds that are a crawling chain's parts: a head with a {@code crawl}, its segment and tail. */

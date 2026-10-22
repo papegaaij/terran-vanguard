@@ -68,6 +68,7 @@ they belong to; a round only collects them.
 | [round-47](round-47/README.md) | Five sounds redone from real recordings after round 46's redo answers (the Choir Herald's song, the Leviathan's cry, the integrity alarm, the dome hit, the launch rail; a/b/redo next to the old file; closed 2026-10-22: herald song a, Leviathan cry b, launch rail b, the alarm keeps its old file, the dome hit is redone in round 49) | review | n/a | proposed |
 | [round-48](round-48/README.md) | The Act 4 "Deep Water" design phase drafted overnight on the user's behalf (branch `m8-act-4`): the twelve gap questions with recommendations, the judgement calls, art for the units, boss cruiser, Europa and the gear, the Act 4 B theme and reveal sting a/b, the sounds not made yet (Freesound quota), and the documents to approve | review | n/a | proposed |
 | [round-49](round-49/README.md) | The Level 17 dome hit, third try: three variants from real recordings (a/b/c/redo next to the old file and the rejected tries of rounds 46 and 47; closed 2026-10-22: b picked); round 48 is the Act 4 round on another branch | review | n/a | chosen |
+| [round-50](round-50/README.md) | M8 part A, the Act 4 systems and arsenal (open): the final art of the Harpoon Torpedoes, Depth Charges, Sonar Pulse, Decoy Flares, Bulwark, hydro-kit and the Act 4 icons with game captures, eight sound pairs, seven calls the build made and the Level 23 dry-shaft question | review | n/a | proposed |
 
 ## Design
 

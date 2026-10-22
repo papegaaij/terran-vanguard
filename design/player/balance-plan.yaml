@@ -1,6 +1,8 @@
-# The expected purchases of a typical medium player at each hangar visit, for Acts 1-3 (Act 3, Levels
+# The expected purchases of a typical medium player at each hangar visit, for Acts 1-4 (Act 3, Levels
 # 15-21, from M7 part A: the Ion Beam's hand plan; every level earns its own typical haul, M7 part I: the
-# budget(n) fallback for a level without data is gone).
+# budget(n) fallback for a level without data is gone; M8 part A: Act 4, Levels 22-28, from the generator's
+# hand plan of round 48, with a TEMPORARY budget(n) fallback for the Act 4 levels that have no data yet,
+# removed again in M8 part I).
 # Read by the content tests BalanceTest (affordability, power load and DPS per visit) and
 # ActPlaythroughTest (Acts 1-3 flown with these purchases on every difficulty), and printed by
 # tools/balance.py as the balancing sheet; not a rule, and not read by the game. Every other number
@@ -37,6 +39,10 @@ escort_repair_points_per_level: 10
 # Σ round(perfect × income × collection) × (1 + grade_bonus) − its purchases − its repairs. On hard the act's end
 # may lie up to hard_under below it (the user, 2026-10-19: hard is tighter on purpose; over-earning stays capped).
 expert: {collection: 0.9, grade_bonus: 0.25, tolerance: 0.15, hard_under: 0.25}
+# M8 part A (temporary, until the Act 4 levels carry their `medium`, parts B-H): the levels flown under water. The
+# sheet counts a weapon without the anti-sub trait (and Rook's guns) at the water's damage factor there
+# (../world/europa/data.yaml); Level 22 is the dry ice surface, Level 28 breaks out at its end.
+underwater: [23, 24, 25, 26, 27, 28]
 plan:
   "01":
     start: {front: [pulse-cannon, 1], generator: 0, shield: 0, armor: 0, engine: 0}
@@ -70,3 +76,16 @@ plan:
   "19": {upgrade: [[front, 3]], fit: [[escort, mortar]]}    # beam L3 (2 500): 13.5 of 16 MW (M11: 13.5 of 14); M7 part F (step F2, the gap check's default, pending the user's review in round 42): Rook's owned Mortar again for the Warden Tanks, the nests and the walker (Level 19 asks `anti-ground`)
   "20": {upgrade: [[rear, 3]], utility: [[Pickup magnet, 1]], fit: [[escort, autocannon]]}     # Tail Gun L3 (600) and (PD-C) the Pickup magnet L1 (600), the module the Mk III's 16 MW makes room for: 15 of 16 MW; M7 part G (step G2, the user's Q.2 of 2026-10-20): Rook's owned Autocannon again, Level 20 is air-heavy (the swarm, the ambushes)
   "21": {core: [[armor, 3]]}       # Composite III (3 000)
+  # Act 4 (M8 part A, step A2; the generator's hand plan of round 48, design/player/generator, Act 4 hand plan, and
+  # D7 of the part's gap check, pending the user's review in round 50). Income: Level 21's data, then budget(n) for
+  # the levels without data (temporary, M8 part I removes it). The harpoon is bought at L22 but the beam flies the
+  # dry ice; the shop upgrades only a fitted item, so the harpoon's L2 moves to the L23 visit with its L3. The free
+  # Sonar Pulse charge (given at the L22 visit, the Airstrike fitted) is fitted at L23, where the Airstrike is
+  # forbidden under the ice. Rook is missing in L27-28: the loaner Bulwark flies (free, no repairs).
+  "22": {buy: [[front, harpoon-torpedoes]], fit: [[front, ion-beam]]}   # Harpoon Torpedoes (2 000) into the inventory; the Ion Beam L3 flies the dry ice: 15 of 16 MW
+  "23": {sell: [rear], buy: [[rear, depth-charges]], fit: [[front, harpoon-torpedoes], [special, Sonar Pulse]], upgrade: [[front, 3], [rear, 3]]}   # the Tail Gun L3 sold; Depth Charges to L3, the harpoon fitted and to L3; the Sonar Pulse fitted: 13.5 of 16 MW
+  "24": {utility: [[Pressure hull, 1]], upgrade: [[wing_l, 3]]}   # the pressure hull (2 000) and one wing pod's Micro-missiles L3: 15 of 16 MW
+  "25": {upgrade: [[wing_r, 3]]}   # the other pod's Micro-missiles L3: 15.5 of 16 MW
+  "26": {upgrade: [[front, 4]]}    # Harpoon L4 (2 000), one visit before the hand plan's L27: L26's forward DPS would be 83 of 112 (0.74) without it; 16 of 16 MW
+  "27": {core: [[generator, 3]]}   # Mk IV "Tokamak" (9 000, 20 MW since round 48 J1): 16 of 20 MW
+  "28": {core: [[shield, 2]]}      # Shield Mk III (3 000; the Mk IV's 7 000 is not affordable) for the Abyssal Maw: 17 of 20 MW; the nanites (6 000) stay out of the typical plan

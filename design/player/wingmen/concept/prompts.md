@@ -190,3 +190,26 @@ shots going to it and striking it).
 - **Negative prompt:** as A.
 - **Animation brief:** as A, but the draws-fire tell is the white strobe flashing for 0.1 s every 0.8 s.
 - **Mockup generator:** `python3 tools/concept/gear_r48.py bulwark b`
+
+## bulwark-final-r50-a
+
+Production art (M8 part A batch, step ART-A, for concept round 50), not a mockup: `python3 tools/art/act4_gear.py
+bulwark` writes the frames (into `build/art-held/sprites/` until the game data claims `bulwark`, then `assets/sprites/`)
+and this review sheet and GIF. The look is the one round 48 chose (G4 = a, "turtle", [bulwark-r48-a](bulwark-r48-a.png),
+`tools/concept/gear_r48.py bulwark_model("a")`, `damaged`, `bw_lure`, `bw_jets`, `bw_shell`, `bw_spark`, and
+`enemies_r48.uw_burst` for the loss): the 36×36 drone intact, hit and under half, its pump-jets, the slow cyan lure halo,
+the cannon's cyan slug with its wake, the muzzle light, the hit sparks and its loss (light, pressure ring, dark debris).
+
+Artist brief: keep the round-48 pick's look exactly (pre-rendered models lit from the top left, every
+heading or state its own render, never rotated at runtime; one palette per frame set; additive effects
+stored premultiplied on black; the player's under-water colours toward cyan / teal-white, away from the
+Vrell and Siren teal 00ff9a).
+- **Prompt:** top-down sprite frames for a late-1990s pre-rendered CGI vertical shoot'em up: a heavy escort drone like
+  a turtle, a domed blue-grey armour shell with a pale raised plate, a cobalt rim band, dark skirts, a heavy barrel with
+  a muzzle brake, a cyan sensor eye and twin pump-jets, a slow cyan halo breathing out round it; scorched plates when
+  damaged; an under-water burst with a pale pressure ring when lost; Raptor / Tyrian 2000 era look.
+- **Negative prompt:** fire balls, smoke, orange or magenta light, photographic realism, side view, watermark.
+
+## bulwark-capture-r50-a
+
+Concept round 50 (M8 part A, step A7), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). The Level 19 run of [decoy-flares-capture-r50-a](../../specials/concept/prompts.md#decoy-flares-capture-r50-a) (`--escort bulwark`); the video is level seconds 14–40, the frame 148.5 s.

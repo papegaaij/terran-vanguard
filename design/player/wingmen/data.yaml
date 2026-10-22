@@ -22,6 +22,20 @@ rook:
   range: 360                  # px
   recent_hit_seconds: 1.0     # target priority 1: an enemy the player damaged this recently
   eject: {explosion: medium, pod_speed: 120}
+  missing: {after: 26, back: 30}   # M8 part A (round 48): shot down at L26's end (the save's story flag rook-missing from its win), MIA in the levels between, back from this level
+# M8 part A (round 48): the Bulwark heavy drone, the escort slot's alternative to Rook from L22 (README, Heavy drone
+# "Bulwark"); the slot holds one Bulwark on loan, free, while Rook is missing and none is owned.
+bulwark:
+  armour: 120
+  size: [36, 36]              # sprite px (round 48, G4 a)
+  hitbox: [14, 14]
+  speed: 200                  # px/s top speed; the water's drag applies like Rook's
+  slot: [56, 20]              # its wing slot, [x beside the player on the escort's side, y behind], px; no formation changes
+  gun: {rate: 1, damage: 14, anti_sub: true}   # one shell a second straight ahead, not upgradable; anti-sub: full damage under water
+  draw: {radius: 150, share: 0.3}   # while within radius px of the player, this share of the enemy's aimed bullets aimed at the player aim at it
+  price: 6000
+  available: L22
+  repair: 8                   # cr per armour point, every difficulty; a destroyed Bulwark is rebuilt for the next level, a loaner repaired free
 guns:
   price_factor: 0.6           # of the base weapon's price and upgrade base
   list:                       # the first is the starter: free, fitted when he joins; notes.scale follows the README's Scale cell

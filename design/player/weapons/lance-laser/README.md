@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Lance Laser
@@ -58,7 +58,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 - [x] Muzzle flash, projectile and impact sprites of its VFX family; sound of its family
 - [x] Behaviour as described above, except:
 - [x] Terrain walls stop a lance (canyon walls and rock islands, Act 3; `LanceWallTest`)
-- [ ] Under water (the [Europa rules](../../../world/europa/README.md#under-water-rules)) — **later: Act 4** (the first level under water)
+- [x] Under water (the [Europa rules](../../../world/europa/README.md#under-water-rules)) — **later: Act 4** (the first level under water) (M8 part A, step A1: its bolts go no farther than the beam's reach, ×0.7 speed and damage; `UnderwaterTest.aLancesBoltsGoNoFartherThanTheBeamsReach`)
 - [x] Power draw per level counted in the loadout; upgrades priced as listed
 
 ## Decisions

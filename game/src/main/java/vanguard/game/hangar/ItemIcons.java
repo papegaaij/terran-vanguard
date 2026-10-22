@@ -12,7 +12,8 @@ import vanguard.game.render.Sprites;
 /**
  * The hangar's equipment icons (tools/art/icons.py, {@code icons/} on the sprite pages): every shop
  * item's 16 px icon for the shop rows and 24 px icon for the selected item and the schematic's
- * callouts, and Rook's for the escort slot. Looked up once; a missing icon fails here, not while
+ * callouts, and Rook's for the escort slot (M8 part A: and the Bulwark heavy drone's, {@code escort-bulwark}).
+ * Looked up once; a missing icon fails here, not while
  * drawing. Items are the catalogue's own instances, so they are keyed by identity (a record's hash
  * would walk its lists on every lookup).
  */
@@ -22,6 +23,7 @@ final class ItemIcons {
 
     private final Map<Item, Icon> icons = new IdentityHashMap<>();
     private final Icon escort;
+    private final Icon bulwark;
 
     ItemIcons(Sprites sprites, Catalogue catalogue) {
         for (ItemKind kind : ItemKind.values()) {
@@ -30,6 +32,7 @@ final class ItemIcons {
             }
         }
         escort = icon(sprites, "escort-rook");
+        bulwark = icon(sprites, BULWARK);
     }
 
     private static Icon icon(Sprites sprites, String name) {
@@ -59,5 +62,13 @@ final class ItemIcons {
     /** Rook's craft, the escort slot's. */
     Icon escort() {
         return escort;
+    }
+
+    /** M8 part A: the Bulwark heavy drone's icon (tools/art/icons.py {@code --act4}). */
+    static final String BULWARK = "escort-bulwark";
+
+    /** M8 part A: the Bulwark heavy drone, the escort slot's alternative to Rook. */
+    Icon bulwark() {
+        return bulwark;
     }
 }

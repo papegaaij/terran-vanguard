@@ -44,7 +44,7 @@ final class GroundFire {
             Shot shot = shots.get(i);
             WeaponSpec weapon = shot.weapon();
             WeaponSpec.Delivery delivery = weapon.delivery();
-            if (delivery.landing() || delivery == WeaponSpec.Delivery.MINE) {
+            if (delivery.landing() || delivery.laid()) {
                 continue;
             }
             Hitbox size = weapon.size();
@@ -126,13 +126,25 @@ final class GroundFire {
                 }
                 continue;
             }
+            if (weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE) {
+                if (shot.fused()) {
+                    chargeBurst(shot, ground, enemies, spores);
+                    shots.free(i);
+                }
+                continue;
+            }
+            Medium medium = fire.medium();
             for (int j = ground.size() - 1; j >= 0; j--) {
                 GroundObject object = ground.get(j);
                 GroundObjectSpec spec = object.spec();
                 if (!object.hittable()
-                        || (spec.submerged() && weapon.delivery() != WeaponSpec.Delivery.TORPEDO)
-                        // M5 part F: a drifting trigger on low-air is above the water a torpedo runs in.
-                        || (spec.lowAir() && weapon.delivery() == WeaponSpec.Delivery.TORPEDO)
+                        // M8 part A: a sunken object is hit by what reaches the sub layer (torpedoes, anti-sub
+                        // weapons).
+                        || (spec.submerged() && !medium.reaches(weapon, Layer.SUB))
+                        // M5 part F: a drifting trigger on low-air is above the water a torpedo runs in (M8 part A:
+                        // under
+                        // water the torpedo reaches it).
+                        || (spec.lowAir() && !medium.reaches(weapon, Layer.LOW_AIR))
                         || !weapon.size().overlaps(shot.x(), shot.y(), spec.size(), object.x(), object.y())
                         || (weapon.pierce() > 1 && shot.struck(2 * object.serial() + 1))) {
                     continue;
@@ -146,6 +158,8 @@ final class GroundFire {
                 boolean spent = shot.pierced();
                 fire.strike(j, object, shot.damage() * groundFactor(weapon, Layer.GROUND));
                 if (spent) {
+                    // M8 part A: a harpoon's splash round the object it struck.
+                    fire.splash(shot, -1, enemies);
                     shots.free(i);
                     break;
                 }
@@ -312,6 +326,74 @@ final class GroundFire {
                     && inBlast(x, y, radius, spore.x(), spore.y(), EnemyGun.MineSpec.BOX)
                     && spore.damage(mine.damage())) {
                 hits.mineDestroyed(j);
+            }
+        }
+    }
+
+    /**
+     * M8 part A (design/player/weapons/depth-charges): a depth charge bursts on its fuse: its pressure wave deals its
+     * damage once to every target within its blast on a layer {@link Medium#chargeReaches} (under water every layer in
+     * the water, never {@code high-air}; above water {@code sub} and the naval {@code ground}): units (their standing
+     * unit part too), ground objects (sunken ones included; above water not the drifting low-air ones), set pieces'
+     * living parts (once per charge) and, under water, armed spore mines. Hardened units and objects glance off it
+     * without {@code anti-ground} (the mines' rule); it never hurts the ship or Rook.
+     */
+    private void chargeBurst(Shot charge, Pool<GroundObject> ground, Pool<Enemy> enemies, Pool<Mine> spores) {
+        Medium medium = fire.medium();
+        WeaponSpec weapon = charge.weapon();
+        double x = charge.x();
+        double y = charge.y();
+        double radius = weapon.blast();
+        double damage = charge.damage();
+        events.add(SimEvents.Type.BLAST, x, y, charge.mount());
+        for (int j = ground.size() - 1; j >= 0; j--) {
+            GroundObject object = ground.get(j);
+            GroundObjectSpec spec = object.spec();
+            Layer layer = spec.submerged() ? Layer.SUB : spec.lowAir() ? Layer.LOW_AIR : Layer.GROUND;
+            if (object.hittable()
+                    && medium.chargeReaches(layer)
+                    && (weapon.antiGround() || !spec.hardened())
+                    && inBlast(x, y, radius, object.x(), object.y(), spec.size())) {
+                fire.strike(j, object, damage);
+            }
+        }
+        for (int j = enemies.size() - 1; j >= 0; j--) {
+            Enemy enemy = enemies.get(j);
+            if (!medium.chargeReaches(enemy.layer())
+                    || !onField(enemy)
+                    || !inBlast(x, y, radius, enemy.x(), enemy.y(), enemy.hitbox())) {
+                continue;
+            }
+            if ((enemy.spec().hardened() && !weapon.antiGround()) || enemy.growing()) {
+                events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), charge.mount());
+            } else {
+                blastPart(j, enemy, x, y, radius, damage, charge.mount());
+                if (enemy.damage(damage, true)) {
+                    hits.enemyDestroyed(j, charge.mount());
+                }
+            }
+        }
+        for (int k = 0; k < setPieces.length; k++) {
+            SetPiece piece = setPieces[k];
+            for (int p = 0; p < piece.partCount() && piece.present(); p++) {
+                if (medium.chargeReaches(piece.partLayer(p))
+                        && !piece.partWrecked(p)
+                        && !piece.partShielded(p)
+                        && piece.partOnField(p)
+                        && piece.partInBlast(p, x, y, radius)
+                        && piece.damagePartAt(p, damage, x, y)) {
+                    hits.partDestroyed(k, p, charge.mount());
+                }
+            }
+        }
+        if (medium.chargeReaches(Layer.AIR)) {
+            for (int j = spores.size() - 1; j >= 0; j--) {
+                Mine spore = spores.get(j);
+                if (spore.armed()
+                        && inBlast(x, y, radius, spore.x(), spore.y(), EnemyGun.MineSpec.BOX)
+                        && spore.damage(damage)) {
+                    hits.mineDestroyed(j);
+                }
             }
         }
     }

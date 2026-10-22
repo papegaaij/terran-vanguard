@@ -115,12 +115,17 @@ final class WingmanLooks {
     private int nextPuff;
     private long lastTick = -1;
     private long hitTick = Long.MIN_VALUE / 2;
+    /** M8 part A: his hydro-kit frames (tools/art/act4_gear.py; {@code pivots/rook.json} applies unchanged). */
+    private final Array<AtlasRegion> hydroHull;
+
+    private boolean underwater;
 
     WingmanLooks(Sprites sprites, Files files, FlashShader flash) {
         this.sprites = sprites;
         this.flash = flash;
         fallbackHull = !sprites.has("rook");
         hull = fallbackHull ? sprites.ship : sprites.frames("rook");
+        hydroHull = sprites.has("rook-hydro") ? sprites.frames("rook-hydro") : hull;
         flame = sprites.has("rook-flame") ? sprites.frames("rook-flame") : null;
         FileHandle pivots = files.internal("pivots/rook.json");
         JsonValue points = pivots.exists() ? new JsonReader().parse(pivots).get("points") : null;
@@ -165,9 +170,15 @@ final class WingmanLooks {
         hitTick = tick;
     }
 
+    /** M8 part A: whether the medium is under water now: his craft wears the hydro-kit ({@code rook-hydro_0..4}). */
+    void underwater(boolean underwater) {
+        this.underwater = underwater;
+    }
+
     AtlasRegion frame(Wingman rook) {
-        int bank = Math.clamp(rook.bank() + BANKS / 2, 0, hull.size - 1);
-        return hull.get(bank);
+        Array<AtlasRegion> frames = underwater ? hydroHull : hull;
+        int bank = Math.clamp(rook.bank() + BANKS / 2, 0, frames.size - 1);
+        return frames.get(bank);
     }
 
     /** His craft's shadow (and his pod's) on the ground; between {@link Shadows#begin} and {@link Shadows#end}. */

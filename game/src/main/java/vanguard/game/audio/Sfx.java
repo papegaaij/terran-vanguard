@@ -585,6 +585,23 @@ public enum Sfx {
     COOLDOWN_READY("sfx/cooldown-ready-r37-a.ogg", 1, Bus.EFFECTS, WARNING),
     /** M7 part A: the Evasive thrusters' burst as a dash starts. */
     DASH("sfx/dash-r46-b.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    /**
+     * M8 part A, the Act 4 arsenal (design/audio/sfx, round 50's proposals; the a variants play until the user's pick,
+     * which may swap the file): the Harpoon Torpedoes' launch, its run (one loop while any harpoon is in flight) and
+     * its hit; the Depth Charges' roll-out and burst.
+     */
+    SHOT_HARPOON("sfx/shot-harpoon-r50-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+
+    HARPOON_RUN("sfx/harpoon-run-r50-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    HARPOON_HIT("sfx/harpoon-hit-r50-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    SHOT_DEPTH_CHARGE("sfx/shot-depth-charge-r50-a.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
+    DEPTH_CHARGE_BURST("sfx/depth-charge-burst-r50-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /** M8 part A: the Sonar Pulse's ping (round 04 a, chosen) and the Decoy Flares' launch (round 08 a, chosen). */
+    SPECIAL_SONAR("sfx/special-sonar-r04-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+
+    SPECIAL_FLARES("sfx/special-flares-r08-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
+    /** M8 part A: the special's row changing state at a waterline (round 50 a, proposed; synthesized). */
+    SPECIAL_LIMIT("sfx/special-limit-r50-a.ogg", 1, Bus.EFFECTS, WARNING),
     /** The Earth-orbit ambience, looped (design/audio/sfx, Ambience per setting). */
     AMBIENCE_ORBIT("sfx/ambience-orbit-r08-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The Luna ambience, looped (design/audio/sfx, Ambience per setting): Level 04. */

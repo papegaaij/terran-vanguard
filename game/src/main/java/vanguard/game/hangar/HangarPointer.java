@@ -1,5 +1,6 @@
 package vanguard.game.hangar;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import vanguard.content.campaign.Hangar;
@@ -47,34 +48,37 @@ public final class HangarPointer {
                 : new Box(448 + command.ordinal() * 70, 15, 64, 22);
     }
 
-    /** The repair panel, centred: one line per ship, with Rook's once he is hired. */
-    public static Box repairPanel(boolean rook) {
-        int height = 124 + 16 * (rook ? 2 : 1);
+    /**
+     * The repair panel, centred: one line per ship, {@code lines} of them ({@link HangarState#repairLines()}: the
+     * ship's, Rook's once he is hired, M8 part A: an owned Bulwark's).
+     */
+    public static Box repairPanel(int lines) {
+        int height = 124 + 16 * lines;
         return new Box(
                 (PixelScreen.WIDTH - REPAIR_WIDTH) / 2f, (PixelScreen.HEIGHT - height) / 2f, REPAIR_WIDTH, height);
     }
 
-    /** A line of the repair panel: the ship's first, then Rook's. */
-    public static Box repairLine(boolean rook, int index) {
-        Box panel = repairPanel(rook);
+    /** A line of the repair panel: the ship's first, then Rook's, then the Bulwark's. */
+    public static Box repairLine(int lines, int index) {
+        Box panel = repairPanel(lines);
         return new Box(panel.x() + 12, panel.y() + 28 + 16 * index, panel.width() - 24, 16);
     }
 
     /** The y of the repair panel's rate line, under its lines. */
-    public static float repairRateY(boolean rook) {
-        return repairPanel(rook).y() + 32 + 16 * (rook ? 2 : 1);
+    public static float repairRateY(int lines) {
+        return repairPanel(lines).y() + 32 + 16 * lines;
     }
 
     /** The repair panel's slider track (10 px high). */
-    public static Box repairSlider(boolean rook) {
-        Box panel = repairPanel(rook);
-        return new Box(panel.x() + 12, repairRateY(rook) + 24, SLIDER_WIDTH, 10);
+    public static Box repairSlider(int lines) {
+        Box panel = repairPanel(lines);
+        return new Box(panel.x() + 12, repairRateY(lines) + 24, SLIDER_WIDTH, 10);
     }
 
     /** The repair panel's button, which repairs. */
-    public static Box repairButton(boolean rook) {
-        Box panel = repairPanel(rook);
-        return new Box(panel.x() + 12, repairRateY(rook) + 52, panel.width() - 24, 24);
+    public static Box repairButton(int lines) {
+        Box panel = repairPanel(lines);
+        return new Box(panel.x() + 12, repairRateY(lines) + 52, panel.width() - 24, 24);
     }
 
     /**
@@ -156,6 +160,16 @@ public final class HangarPointer {
             }
             return Optional.empty();
         }
+        if (state.bulwarkSelected()) {
+            // M8 part A: the Bulwark row's chips, as a shop row's choices.
+            var choices = state.bulwarkChoices();
+            for (int i = 0; i < choices.size(); i++) {
+                if (pointer.over(ShopPanel.bulwarkChip(choices, i))) {
+                    return Optional.of(new Hover(Target.CHOICE, i));
+                }
+            }
+            return Optional.empty();
+        }
         Optional<Offer> offer = state.selected().filter(o -> o.state() != Hangar.State.LOCKED);
         for (int i = 0; offer.isPresent() && i < offer.get().choices().size(); i++) {
             if (pointer.over(ShopPanel.choiceChip(offer.get(), i))) {
@@ -184,6 +198,17 @@ public final class HangarPointer {
             }
             return Result.NONE;
         }
+        if (state.bulwarkSelected()) {
+            // M8 part A: a click on one of the Bulwark row's chips selects it and makes it, as on a shop row.
+            var choices = state.bulwarkChoices();
+            for (int i = 0; i < choices.size(); i++) {
+                if (pointer.clicks(ShopPanel.bulwarkChip(choices, i)) && state.pointShop()) {
+                    state.pointChoice(i);
+                    return new Result(Outcome.NONE, true);
+                }
+            }
+            return Result.NONE;
+        }
         Optional<Offer> offer = state.selected().filter(o -> o.state() != Hangar.State.LOCKED);
         if (offer.isEmpty()) {
             return Result.NONE;
@@ -198,8 +223,8 @@ public final class HangarPointer {
     }
 
     private Result repair(HangarState state, Pointer pointer) {
-        boolean rook = state.hangar().escortHired();
-        Box slider = repairSlider(rook);
+        List<RepairLine> lines = state.repairLines();
+        Box slider = repairSlider(lines.size());
         Box track = new Box(slider.x() - 6, slider.y() - 6, slider.width() + 12, slider.height() + 12);
         if (dragging && pointer.held()) {
             return new Result(state.pointRepair(share(slider, pointer.x())), false);
@@ -212,13 +237,12 @@ public final class HangarPointer {
             dragging = true;
             return new Result(state.pointRepair(share(slider, pointer.x())), false);
         }
-        if (pointer.clicks(repairButton(rook))) {
+        if (pointer.clicks(repairButton(lines.size()))) {
             return new Result(Outcome.NONE, true);
         }
-        RepairLine[] lines = RepairLine.values();
-        for (int i = 0; i < (rook ? lines.length : 1); i++) {
-            if (pointer.clicks(repairLine(rook, i))) {
-                return new Result(state.pointRepairLine(lines[i]), false);
+        for (int i = 0; i < lines.size(); i++) {
+            if (pointer.clicks(repairLine(lines.size(), i))) {
+                return new Result(state.pointRepairLine(lines.get(i)), false);
             }
         }
         return Result.NONE;

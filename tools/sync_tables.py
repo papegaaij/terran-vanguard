@@ -120,12 +120,29 @@ def drone_rows(w):
     return rows
 
 
+def depth_charge_rows(w):
+    """M8 part A: the Depth Charges' per-level rows: the charges of a volley, their fuse, the volleys, the damage of
+    a charge, its DPS and its burst radius."""
+    rows = []
+    for i, lv in enumerate(w["levels"] + [w["overdrive"]], start=1):
+        volley, single = stats(w, lv)
+        od = i == 6
+        rows.append(["OD" if od else str(i), str(len(lv["pattern"])), f"{num(lv['fuse'])} s", num(lv["rate"]),
+                     num(lv["damage"]), f"{volley:.1f}", f"{single:.1f}", f"{num(lv['blast'])} px",
+                     "— (ignores cap)" if od else num(draw(w, i)),
+                     "—" if od or i == 1 else grouped(upgrade_costs(w)[i - 2])])
+    return rows
+
+
 def per_level_rows(w):
-    """A weapon's per-level rows as its table shows them (M7 part A: a beam's, a deflector's, a drone bay's)."""
+    """A weapon's per-level rows as its table shows them (M7 part A: a beam's, a deflector's, a drone bay's; M8 part
+    A: the depth charges')."""
     if w["hits"] == "beam":
         return beam_rows(w)
     if w["hits"] == "deflector":
         return deflector_rows(w)
+    if w["hits"] == "depth-charge":
+        return depth_charge_rows(w)
     return drone_rows(w) if "drone" in w else level_rows(w)
 
 
@@ -156,6 +173,13 @@ def weapon_levels(d):
             f"{generated} Values are per bay (one drone each). Its shots aim at the convergence point "
             f"{num(w['drone']['converge'])} px ahead of the ship's centre, so every shot counts as a single-target "
             f"hit. {od_note}")
+    if w["hits"] == "depth-charge":
+        head = ["Level", "Charges", "Fuse", "Volleys /s", "Damage", "Volley DPS", "Single-target DPS", "Burst radius",
+                "Draw MW", "Upgrade cost"]
+        return table(head, depth_charge_rows(w)) + "\n\n" + (
+            f"{generated} A charge's damage is dealt once to every target inside its burst radius (a boss part at "
+            f"most one burst a charge), so against a group the volley counts more than the single-target DPS. "
+            f"{od_note}")
     rows = level_rows(w)
     per = " Values are per pod." if w.get("pod") else (" Values are per side." if w.get("mirrored") else "")
     target = weapon_rules()["single_target"]
@@ -201,7 +225,14 @@ def weapon_properties(d):
     else:
         speed_text = f"{num(speed)} px/s"
     rng = w.get("range")
-    if rng == "screen":
+    if w["hits"] == "depth-charge":  # M8 part A: rolled out, a fuse per level instead of a range
+        fuses = [lv["fuse"] for lv in w["levels"]]
+        blasts = [lv["blast"] for lv in w["levels"]]
+        speed_text = (f"{num(speed)} px/s backwards from the stern, slowing to a hover over {num(w['drift'])} s, then "
+                      "sinking with the scroll")
+        range_text = (f"a burst on its fuse ({num(fuses[0])} → {num(fuses[-1])} s) of {num(blasts[0])} → "
+                      f"{num(blasts[-1])} px radius")
+    elif rng == "screen":
         range_text = "until off-screen"
     elif rng == "drop":
         range_text = "drops straight down"
@@ -219,9 +250,11 @@ def weapon_properties(d):
         ["Price", "starter (always owned)" if w["price"] == 0 else f"{grouped(w['price'])} cr"],
         ["Upgrade cost L2 / L3 / L4 / L5", f"{costs} cr (sell-back per [economy](../../../systems/economy/README.md))"],
         ["Unlock", "start" if w["unlock"] == 1 else f"L{w['unlock']:02d} (in the shop from the hangar visit before it)"],
-        ["Projectile", f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, range {range_text}"],
+        ["Projectile", f"{speed_text}, {w['size'][0]}×{w['size'][1]} px, "
+                       + (range_text if w["hits"] == "depth-charge" else f"range {range_text}")],
         ["Sound family", f"`{w['sfx']}` ([weapon sound families](../../../audio/sfx/README.md#weapon-sound-families))"],
-        ["Projectile family (VFX)", f"`{w['vfx']}` (projectile sheet of concept round 08)"],
+        ["Projectile family (VFX)",
+         f"`{w['vfx']}` ({w.get('notes', {}).get('vfx', 'projectile sheet of concept round 08')})"],
     ]
     return table(["Property", "Value"], rows)
 
@@ -260,6 +293,7 @@ def utility(d):
     for m in data(d)["utility"]:
         levels = "L1" if len(m["prices"]) == 1 else f"L1–L{len(m['prices'])}"
         note = m["notes"].get("levels")
+        note = fill(note, m) if note else None
         rows.append([m["name"], fill(m["notes"]["effect"], m), levels + (f" {note}" if note else ""), num(m["draw"]),
                      " / ".join(grouped(p) for p in m["prices"]), available(m), m["design"]])
     return table(["Module", "Effect", "Levels", "Draw", "Price", "Unlock", "Design"], rows)
@@ -1204,7 +1238,30 @@ def difficulty(d):
     return table(["Lever", "Easy", "Medium", "Hard"], rows)
 
 
+def underwater(d):
+    """M8 part A: Europa's under-water rules as the game reads them (design/world/europa/data.yaml)."""
+    u = data(d)["underwater"]
+
+    def names(slugs):
+        return ", ".join(f"[{load(f'player/weapons/{slug}/data.yaml')['name']}]"
+                         f"(../../player/weapons/{slug}/README.md)" for slug in slugs)
+
+    rows = [
+        ["Projectile speed", f"× {num(u['bullet_speed'])}: every bullet, the player's and the enemies', at its spawn"],
+        ["Handling (drag)", f"acceleration and braking × {num(u['acceleration'])}, top speed unchanged (the pressure "
+                            "hull removes it)"],
+        ["Damage", f"× {num(u['damage'])} for a weapon without the `anti-sub` trait (the ship's and Rook's guns), "
+                   "after `anti-ground`'s ×2"],
+        ["Beam and laser reach", f"× {num(u['reach'])} of the play field's height: {names(u['reach_weapons'])}"],
+        ["Torpedo-type range", f"× {num(u['torpedo_range'])}: {names(u['torpedo_weapons'])}"],
+        ["Waterline ease", f"{num(u['ease'])} s, for new projectiles"],
+        ["Hydro-kit refit", f"at the hangar visit before L{u['hydro_kit']:02d} (a one-off notice)"],
+    ]
+    return table(["Rule", "Number"], rows) + "\n\nGenerated from [data.yaml](data.yaml) by `tools/sync_tables.py`."
+
+
 RENDERERS = {
+    "underwater": underwater,
     "weapon-levels": weapon_levels, "weapon-properties": weapon_properties, "shields": shields,
     "plating": plating, "generators": generators, "engines": engines, "bays": bays, "utility": utility,
     "pickups": player_pickups, "ship-movement": ship_movement, "stat-block": stat_block,

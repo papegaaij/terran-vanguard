@@ -24,11 +24,13 @@ import tools.jackson.databind.node.ObjectNode;
  * and, from Level 08 on, {@code act-intro:2}: the release that wrote it had Acts 1–2 only, so their intros have
  * been shown and Act 3's has not ({@link CampaignRoute#onContinue}). 5 (M7, the user's power dial of 2026-10-21)
  * adds an item's optional {@code power}, its power setting ({@link Fitted#power}), written only below full power; a
- * version 4 save has none, so every item is at full power and the migration only raises the version.
+ * version 4 save has none, so every item is at full power and the migration only raises the version. 6 (M8 part A,
+ * design/player/wingmen) adds the escort slot's {@code flies} ({@code rook} or {@code bulwark}) and its {@code bulwark}
+ * ({@code owned}, {@code armour}): a version 5 save (the v0.1 release, Acts 1–3) has Rook chosen and no Bulwark.
  */
 public final class SaveFormat {
     /** The version this game writes. */
-    public static final int VERSION = 5;
+    public static final int VERSION = 6;
 
     /**
      * What a migrated version 2 save that is past Level 07 gets: Rook's state as he joins, frozen as
@@ -39,6 +41,11 @@ public final class SaveFormat {
     static final String ESCORT_GUN = "autocannon";
     static final double ESCORT_ARMOUR = 80;
     static final String ESCORT_SIDE = "left";
+
+    /** M8 part A: what a migrated version 5 save's escort slot gets: Rook chosen, no Bulwark at its full armour. */
+    static final String ESCORT_FLIES = "rook";
+
+    static final double BULWARK_ARMOUR = 120;
 
     /**
      * M7 part B: the first level of each act a version 3 save could have reached, frozen as the release that wrote
@@ -89,6 +96,9 @@ public final class SaveFormat {
         }
         if (tree.get("version").intValue() == 4) {
             migrateFrom4(tree);
+        }
+        if (tree.get("version").intValue() == 5) {
+            migrateFrom5(tree);
         }
         try {
             return MAPPER.treeToValue(tree, SaveGame.class);
@@ -161,6 +171,24 @@ public final class SaveFormat {
             throw new SaveException("invalid save: not an object");
         }
         save.put("version", 5);
+    }
+
+    /**
+     * Version 5 to 6 (M8 part A): the escort slot chooses Rook and owns no Bulwark, which no save before Act 4 can
+     * have ({@link #ESCORT_FLIES}, {@link #BULWARK_ARMOUR}).
+     */
+    private static void migrateFrom5(JsonNode tree) throws SaveException {
+        if (!(tree instanceof ObjectNode save)
+                || !(save.get("escort") instanceof ObjectNode escort)
+                || escort.has("flies")
+                || escort.has("bulwark")) {
+            throw new SaveException("invalid save: a version 5 save has an escort without flies or a Bulwark");
+        }
+        escort.put("flies", ESCORT_FLIES);
+        ObjectNode bulwark = escort.putObject("bulwark");
+        bulwark.put("owned", false);
+        bulwark.put("armour", BULWARK_ARMOUR);
+        save.put("version", 6);
     }
 
     private static boolean contains(ArrayNode flags, String flag) {

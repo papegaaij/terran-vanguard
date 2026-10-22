@@ -99,6 +99,9 @@ public final class Wingman {
 
     private final WingmanSpec spec;
     private final Hull hull;
+    /** M8 part A: the level's medium; null in the air (a wingman flown without a sortie's). */
+    private Medium medium;
+
     private final double accelerationStep;
     private final double limit;
     private final double tanHalfCone;
@@ -348,6 +351,15 @@ public final class Wingman {
         wind = pxPerSecond;
     }
 
+    /**
+     * M8 part A (design/world/europa, Under water rules): the level's medium: under water his acceleration takes the
+     * drag (his slot lags a little more) and his gun the layers the water opens (the factors on his shots are the
+     * {@link PlayerFire}'s).
+     */
+    void medium(Medium water) {
+        medium = water;
+    }
+
     /** M7 part H: a breaching boss's suction on him for his next {@link #fly}, px/s to the right and up. */
     void pull(double rightPerSecond, double upPerSecond) {
         pullX = rightPerSecond;
@@ -584,7 +596,11 @@ public final class Wingman {
      */
     private boolean reaches(Layer layer) {
         WeaponSpec.Delivery delivery = spec.gun().delivery();
-        return delivery.landing() ? layer == Layer.GROUND : delivery.reaches(layer);
+        if (delivery.landing()) {
+            return layer == Layer.GROUND;
+        }
+        // M8 part A: the water's layer rules (an anti-sub gun reaches sub).
+        return medium == null ? delivery.reaches(layer) : medium.reaches(spec.gun(), layer);
     }
 
     /**
@@ -1043,6 +1059,10 @@ public final class Wingman {
         double dvy = wantedY - vy;
         double change = Math.sqrt(dvx * dvx + dvy * dvy);
         double most = dodgeLeft > 0 || evading ? JINK * accelerationStep : accelerationStep;
+        if (medium != null && medium.wet()) {
+            // M8 part A: the water's drag on his acceleration.
+            most *= medium.acceleration();
+        }
         if (change > most) {
             dvx *= most / change;
             dvy *= most / change;

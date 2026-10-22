@@ -24,12 +24,14 @@ public final class Names {
     /**
      * A weapon's or Rook's gun's short name for the schematic's callouts: the model without its
      * nickname, {@code MICRO-MSL} for the Micro-missile Pod; M7 part A: {@code DRONE BAY} for the Light
-     * Drone Bay (its full name is wider than a wing callout).
+     * Drone Bay (its full name is wider than a wing callout); M8 part A: {@code HARPOON} for the Harpoon Torpedoes
+     * (wider than the front callout).
      */
     public static String callout(String name) {
         return of(model(name))
                 .replace("MICRO-MISSILE", "MICRO-MSL")
                 .replace("LIGHT DRONE BAY", "DRONE BAY")
+                .replace("HARPOON TORPEDOES", "HARPOON")
                 .replace(" POD", "");
     }
 
@@ -37,7 +39,8 @@ public final class Names {
      * A core part's, special's or utility module's name on its module tile, at most {@link
      * #TILE_CHARS} characters: the model without its nickname ({@code MK II} for Mk II "Arc"),
      * with the tiles' abbreviations ({@code CMP I}, {@code STRIKE}, {@code S-BOMB}, {@code
-     * FLARES}, {@code TARGET}, {@code SALVGE}; M7 part A: {@code EMP}, {@code LANCE}, {@code OVRCHG});
+     * FLARES}, {@code TARGET}, {@code SALVGE}; M7 part A: {@code EMP}, {@code LANCE}, {@code OVRCHG}; M8 part A:
+     * {@code SONAR}, {@code HULL}, {@code NANITE});
      * a longer name loses its spaces and is cut.
      */
     public static String tile(String name) {
@@ -61,6 +64,10 @@ public final class Names {
     private static Map<String, String> tileWords() {
         Map<String, String> words = new LinkedHashMap<>();
         // M7 part A (pending the user's review): the Act 3 specials' tile names.
+        // M8 part A (pending the user's review): the Act 4 items' tile names.
+        words.put("AUTO-REPAIR NANITES", "NANITE");
+        words.put("PRESSURE HULL", "HULL");
+        words.put("SONAR PULSE", "SONAR");
         words.put("SHIELD OVERCHARGE", "OVRCHG");
         words.put("ORBITAL LANCE", "LANCE");
         words.put("EMP BURST", "EMP");

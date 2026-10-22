@@ -42,7 +42,8 @@ final class SpriteUse {
      * explosions and weapon effects, the wing-mount pods, the enemies' bullets and the loot targets'
      * beacon and glint; M5 part E: the generic water effects ({@code water-splash}, {@code
      * water-ripple}, {@code water-collar-*}, {@code water-foam-strip}, {@code water-wake}), drawn in every
-     * level over water.
+     * level over water; M8 part A: the Bulwark heavy drone ({@code bulwark}, {@code bulwark-*}), flown in the escort
+     * slot wherever Rook could fly.
      */
     static final List<String> GAME_WIDE = List.of(
             "ship",
@@ -59,7 +60,8 @@ final class SpriteUse {
             "needle",
             "beacon",
             "glint",
-            "water");
+            "water",
+            "bulwark");
 
     /**
      * The sprites an enemy's attack pattern draws besides the enemy (the game's names). M7 part C: a

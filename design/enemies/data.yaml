@@ -22,6 +22,13 @@ reference_dps:  # assumed single-target player DPS per level (medium)
   19: 92
   20: 96
   21: 100
+  22: 96   # Act 4 (M8 part A, the generator's hand plan of round 48): the ice surface flown dry, then +4 a level under
+  23: 100  # water, in the water rules' effective terms (non-anti-sub x 0.7); parts B-H measure each level with levelReport
+  24: 104
+  25: 108
+  26: 112
+  27: 116
+  28: 120
 bullet_damage:  # damage to the player per hit (shield first, overflow to armour)
   - {bullet: small, damage: 4, notes: {label: '`small` bullet', used_for: 'thorns, standard orbs, fan and ring bullets'}}
   - {bullet: medium, damage: 6, notes: {label: '`medium` bullet', used_for: 'large orbs, bursts from heavies, acid spit'}}

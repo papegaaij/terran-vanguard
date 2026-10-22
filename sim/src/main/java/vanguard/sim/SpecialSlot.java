@@ -28,6 +28,17 @@ import java.util.Optional;
  * activation, counted in simulation steps; a press while it cools is denied unless it is ready
  * within the input buffer, and a special charge pickup takes its pickup time off a running
  * cooldown. The Airstrike's and the Smart Bomb's state hashes as before.
+ *
+ * <p>M8 part A (design/player/specials, Act 4 specials in detail): the setting limits, the Sonar Pulse and the Decoy
+ * Flares. The fitted special is <em>limited</em> where the level's (or its section's) {@link SpecialLimits} list
+ * forbids it or, without a list, where its own {@link SpecialSpec.Setting} does by the {@link Medium} now (under water,
+ * or no water at all: neither under it nor a level over water): the HUD greys it with the {@link #limit() reason}, a
+ * press is refused ({@link SimEvents.Type#SPECIAL_DENIED} with the reason, no charge spent) and a change of the limit
+ * in flight is a {@link SimEvents.Type#SPECIAL_LIMIT}. The Sonar Pulse is instant: its ring expands from the ship over
+ * the field (each unit it reaches a {@link SimEvents.Type#SONAR_CONTACT}) and its window opens the medium's sonar
+ * ({@link Medium#sonar(boolean)}: full damage, {@code sub} open to every weapon) for its seconds, restarted by a call
+ * while it lasts. The Decoy Flares launch their fan from the rear muzzle ({@link Flares}), which the enemies' homing
+ * missiles go for. Their state is hashed only with them fitted, the limit only while one applies.
  */
 public final class SpecialSlot {
     /** The two bombers. */
@@ -106,13 +117,71 @@ public final class SpecialSlot {
     /** M7 part A: whether the Shield Overcharge raised the capacity in the last step (for its end's event). */
     private boolean overcharged;
 
+    /** M8 part A: the Sonar Pulse's numbers; null for another special. */
+    private final SonarSpec sonar;
+    /** M8 part A: the Sonar Pulse's window, in steps. */
+    private final int sonarTicks;
+    /** M8 part A: the Decoy Flares in flight; null for another special. */
+    private final Flares flares;
+    /** M8 part A: the level's medium, whose sonar the Sonar Pulse opens and whose water the limits read. */
+    private final Medium medium;
+    /** M8 part A: whether the level is over water (Levels 11–13): the Sonar Pulse works there above it. */
+    private final boolean surfaceWater;
+    /** M8 part A: the level's limit switches: their steps on the level clock and their modes ({@link #RULE}, …). */
+    private final int[] limitTicks;
+
+    private final int[] limitModes;
+    /** M8 part A: the Sonar Pulse's window still open, steps; 0 when it is closed. */
+    private int sonarLeft;
+    /** M8 part A: why the fitted special is greyed now; {@link SpecialLimits.Reason#NONE} when it works. */
+    private SpecialLimits.Reason limit = SpecialLimits.Reason.NONE;
+    /** Whether {@link #limit} was read in this attempt (its first reading sets no event off). */
+    private boolean limitKnown;
+
+    /** A limit switch's mode: the special's own setting decides. */
+    private static final int RULE = 0;
+    /** A limit switch's mode: the list allows the fitted special. */
+    private static final int ALLOWED = 1;
+    /** A limit switch's mode: the list forbids the fitted special. */
+    private static final int FORBIDDEN = 2;
+
     SpecialSlot(Optional<SpecialSpec> fitted, SimEvents events) {
         this(fitted, events, null);
     }
 
     /** @param defences the ship's, which a Smart Bomb guards */
     SpecialSlot(Optional<SpecialSpec> fitted, SimEvents events, Defences defences) {
+        this(fitted, events, defences, Medium.air(), false, SpecialLimits.NONE);
+    }
+
+    /**
+     * @param defences the ship's, which a Smart Bomb guards
+     * @param medium M8 part A: the level's medium (the Sonar Pulse's window, the limits' water)
+     * @param surfaceWater M8 part A: whether the level is over water (the Sonar Pulse works above it)
+     * @param limits M8 part A: the level's and its sections' lists of forbidden specials
+     */
+    SpecialSlot(
+            Optional<SpecialSpec> fitted,
+            SimEvents events,
+            Defences defences,
+            Medium medium,
+            boolean surfaceWater,
+            SpecialLimits limits) {
         spec = fitted.orElse(null);
+        this.medium = medium;
+        this.surfaceWater = surfaceWater;
+        sonar = spec == null ? null : spec.sonar();
+        sonarTicks = sonar == null ? 0 : Math.max(1, SimStep.ticks(sonar.seconds()));
+        flares = spec == null || spec.flares() == null ? null : new Flares(spec.flares());
+        limitTicks = new int[limits.switches().size()];
+        limitModes = new int[limitTicks.length];
+        for (int i = 0; i < limitTicks.length; i++) {
+            SpecialLimits.Switch at = limits.switches().get(i);
+            limitTicks[i] = SimStep.ticks(at.atSeconds());
+            limitModes[i] = at.forbidden().isEmpty()
+                    ? RULE
+                    : spec != null && at.forbidden().get().contains(spec.kind()) ? FORBIDDEN : ALLOWED;
+        }
         airstrike = spec == null ? null : spec.airstrike();
         smartBomb = spec == null ? null : spec.smartBomb();
         this.defences = defences;
@@ -128,6 +197,12 @@ public final class SpecialSlot {
         } else if (emp != null) {
             ringTicks = Math.max(1, SimStep.ticks(emp.ringSeconds()));
             repeatTicks = Math.max(ringTicks, SimStep.ticks(emp.repeatSeconds()));
+        } else if (sonar != null) {
+            ringTicks = Math.max(1, SimStep.ticks(sonar.ringSeconds()));
+            repeatTicks = Math.max(ringTicks, SimStep.ticks(sonar.repeatSeconds()));
+        } else if (flares != null) {
+            ringTicks = 0;
+            repeatTicks = Math.max(1, SimStep.ticks(spec.flares().repeatSeconds()));
         } else {
             ringTicks = 0;
             repeatTicks = 0;
@@ -172,6 +247,54 @@ public final class SpecialSlot {
         lanceX = 0;
         prevLanceX = 0;
         overcharged = false;
+        sonarLeft = 0;
+        medium.sonar(false);
+        if (flares != null) {
+            flares.reset();
+        }
+        limit = SpecialLimits.Reason.NONE;
+        limitKnown = false;
+    }
+
+    /**
+     * M8 part A: the fitted special's setting limit at level clock step {@code levelTick} (before {@link #command}):
+     * a change in flight is a {@link SimEvents.Type#SPECIAL_LIMIT} at the ship at (shipX, shipY); the attempt's first
+     * reading sets nothing off.
+     */
+    void setting(int levelTick, double shipX, double shipY) {
+        if (spec == null) {
+            return;
+        }
+        SpecialLimits.Reason now = limitAt(levelTick);
+        if (limitKnown && now != limit) {
+            events.add(SimEvents.Type.SPECIAL_LIMIT, shipX, shipY, now.ordinal());
+        }
+        limit = now;
+        limitKnown = true;
+    }
+
+    /**
+     * Why the fitted special is forbidden at level clock step {@code levelTick}; {@code NONE} where it works. A water
+     * special reads {@code NO WATER} wherever there is none, whatever the lists say (the docs' L22 row: nothing
+     * forbidden on the ice, the Sonar Pulse still reads {@code NO WATER}); otherwise a list that applies decides, and
+     * without one the special's own setting by the medium.
+     */
+    private SpecialLimits.Reason limitAt(int levelTick) {
+        SpecialSpec.Setting setting = spec.setting();
+        if (setting == SpecialSpec.Setting.WATER_ONLY && !medium.underwater() && !surfaceWater) {
+            return SpecialLimits.Reason.NO_WATER;
+        }
+        int mode = RULE;
+        for (int i = 0; i < limitTicks.length && limitTicks[i] <= levelTick; i++) {
+            mode = limitModes[i];
+        }
+        if (mode == FORBIDDEN) {
+            return setting.reason();
+        }
+        if (mode == RULE && setting == SpecialSpec.Setting.NOT_UNDER_WATER && medium.underwater()) {
+            return SpecialLimits.Reason.UNDER_ICE;
+        }
+        return SpecialLimits.Reason.NONE;
     }
 
     /**
@@ -187,6 +310,11 @@ public final class SpecialSlot {
         if (cooling > 0 && --cooling == 0) {
             events.add(SimEvents.Type.SPECIAL_READY, shipX, shipY);
         }
+        if (sonarLeft > 0 && --sonarLeft == 0) {
+            // M8 part A: the Sonar Pulse's window closes: the water's rules are back.
+            medium.sonar(false);
+            events.add(SimEvents.Type.SONAR_ENDED, shipX, shipY);
+        }
         if (overcharge != null) {
             boolean now = defences.overcharged();
             if (overcharged && !now) {
@@ -199,6 +327,12 @@ public final class SpecialSlot {
             return;
         }
         if (pressed) {
+            if (limit != SpecialLimits.Reason.NONE) {
+                // M8 part A: the setting forbids it: refused, no charge spent.
+                buffer = 0;
+                events.add(SimEvents.Type.SPECIAL_DENIED, shipX, shipY, limit.ordinal());
+                return;
+            }
             if (spec == null || (!cooldown && charges == 0) || cooling > bufferTicks) {
                 events.add(SimEvents.Type.SPECIAL_DENIED, shipX, shipY);
                 return;
@@ -208,7 +342,11 @@ public final class SpecialSlot {
         if (buffer == 0) {
             return;
         }
-        if (sinceCall < 0 && cooling == 0) {
+        if (limit != SpecialLimits.Reason.NONE) {
+            // M8 part A: a press waiting in the buffer when the limit came (a waterline): refused.
+            buffer = 0;
+            events.add(SimEvents.Type.SPECIAL_DENIED, shipX, shipY, limit.ordinal());
+        } else if (sinceCall < 0 && cooling == 0) {
             buffer = 0;
             call(shipX, shipY);
         } else if (--buffer == 0) {
@@ -257,6 +395,24 @@ public final class SpecialSlot {
                     overcharge.factor(), SimStep.ticks(overcharge.seconds()), SimStep.ticks(overcharge.bleedSeconds()));
             overcharged = true;
             events.add(SimEvents.Type.OVERCHARGE, shipX, shipY);
+        } else if (sonar != null) {
+            // M8 part A: instant; the window opens at once (a call while it lasts restarts it), the ring expands.
+            bombX = shipX;
+            bombY = shipY;
+            double dx = Math.max(shipX, PlayField.WIDTH - shipX);
+            double dy = Math.max(shipY, PlayField.HEIGHT - shipY);
+            ringReach = Math.sqrt(dx * dx + dy * dy);
+            sonarLeft = sonarTicks;
+            medium.sonar(true);
+            events.add(SimEvents.Type.SONAR_PULSE, shipX, shipY);
+        } else if (flares != null) {
+            // M8 part A: the fan from the rear muzzle, at the water's speed under water.
+            flares.launch(shipX, shipY, medium.wet() ? medium.bulletSpeed() : 1);
+            events.add(
+                    SimEvents.Type.FLARES_LAUNCHED,
+                    shipX,
+                    shipY - Flares.REAR_OFFSET,
+                    spec.flares().count());
         }
     }
 
@@ -277,6 +433,10 @@ public final class SpecialSlot {
             Pool<Mine> mines) {
         if (emp != null) {
             burst(enemies, setPieces);
+            return;
+        }
+        if (sonar != null) {
+            ping(enemies);
             return;
         }
         if (smartBomb == null || sinceCall < 0) {
@@ -349,6 +509,36 @@ public final class SpecialSlot {
                         && piece.damagePart(p, smartBomb.bossPartDamage())) {
                     hits.partDestroyed(k, p);
                 }
+            }
+        }
+    }
+
+    /**
+     * M8 part A, one step of a Sonar Pulse's ring (design/player/specials, Sonar Pulse (L22)): it grows as the Smart
+     * Bomb's; each unit on the screen (but a buried one) whose centre it reaches in this step is a contact ({@link
+     * SimEvents.Type#SONAR_CONTACT}, its bracket's ping). It deals no damage; the pulse is busy until its repeat time.
+     */
+    private void ping(Pool<Enemy> enemies) {
+        if (sinceCall < 0) {
+            return;
+        }
+        sinceCall++;
+        if (sinceCall > repeatTicks) {
+            sinceCall = -1;
+            return;
+        }
+        if (sinceCall > ringTicks) {
+            return;
+        }
+        double inner = ringReach * (sinceCall - 1) / ringTicks;
+        double radius = ringReach * sinceCall / ringTicks;
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            if (!enemy.layer().touchable() || !PlayerFire.onField(enemy)) {
+                continue;
+            }
+            if (within(enemy.x(), enemy.y(), radius) && (sinceCall == 1 || !within(enemy.x(), enemy.y(), inner))) {
+                events.add(SimEvents.Type.SONAR_CONTACT, enemy.x(), enemy.y(), enemy.serial());
             }
         }
     }
@@ -663,6 +853,14 @@ public final class SpecialSlot {
             Pool<GroundObject> ground,
             SetPiece[] setPieces,
             PlayerFire.Hits hits) {
+        if (flares != null) {
+            // M8 part A: the flares drift and burn out; the launcher is busy until its repeat time.
+            flares.step();
+            if (sinceCall >= 0 && ++sinceCall > repeatTicks) {
+                sinceCall = -1;
+            }
+            return;
+        }
         if (airstrike == null) {
             return;
         }
@@ -843,6 +1041,15 @@ public final class SpecialSlot {
         if (spec == null) {
             return;
         }
+        if (limit != SpecialLimits.Reason.NONE) {
+            // M8 part A: only while a limit applies, so the other runs hash as before.
+            hash.add(limit.ordinal());
+        }
+        if (sonar != null) {
+            hash.add(sonarLeft);
+        } else if (flares != null) {
+            flares.addTo(hash);
+        }
         if (airstrike == null && smartBomb == null) {
             // M7 part A's specials: their own state; the Airstrike and the Smart Bomb hash as before.
             hash.add(spec.kind().ordinal())
@@ -926,9 +1133,49 @@ public final class SpecialSlot {
         return sinceCall >= 0 || cooling > 0;
     }
 
-    /** Whether a press now calls a strike. */
+    /** Whether a press now calls a strike (M8 part A: not while the setting forbids the special). */
     public boolean ready() {
-        return spec != null && (cooldown || charges > 0) && sinceCall < 0 && cooling == 0;
+        return spec != null
+                && (cooldown || charges > 0)
+                && sinceCall < 0
+                && cooling == 0
+                && limit == SpecialLimits.Reason.NONE;
+    }
+
+    /**
+     * M8 part A: why the fitted special is greyed now (the HUD's reason word where the charge count stands); {@link
+     * SpecialLimits.Reason#NONE} where it works.
+     */
+    public SpecialLimits.Reason limit() {
+        return limit;
+    }
+
+    /** M8 part A: the Sonar Pulse's numbers; null when the fitted special is another. */
+    public SonarSpec sonar() {
+        return sonar;
+    }
+
+    /** M8 part A: whether the Sonar Pulse's window is open (every unit outlined; full damage, {@code sub} open). */
+    public boolean sonarActive() {
+        return sonarLeft > 0;
+    }
+
+    /** M8 part A: the Sonar Pulse's window's seconds left; 0 when it is closed (the outlines blink in its last). */
+    public double sonarSeconds() {
+        return sonarLeft * SimStep.SECONDS;
+    }
+
+    /** M8 part A: the Sonar Pulse ring's radius between the last step and this one; 0 when none expands. */
+    public double sonarRadius(double alpha) {
+        if (sonar == null || sonarLeft == 0 || sinceCall < 0 || sinceCall > ringTicks) {
+            return 0;
+        }
+        return ringReach * Math.max(0, sinceCall - 1 + alpha) / ringTicks;
+    }
+
+    /** M8 part A: the Decoy Flares in flight; null when the fitted special is another. */
+    public Flares flares() {
+        return flares;
     }
 
     /** M7 part A: the fitted special's kind; null without one. */

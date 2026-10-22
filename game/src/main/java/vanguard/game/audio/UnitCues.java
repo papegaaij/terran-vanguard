@@ -106,9 +106,18 @@ final class UnitCues extends SoundFamily {
     private long now;
     /** Round 43: the walker's sounds, asked whether a hit lands on its open vents; null in tests without it. */
     private final WalkerCues walker;
+    /** M8 part A: the harpoons' hit (and the Act 4 systems' other sounds). */
+    private final DeepWaterCues deepWater;
 
-    UnitCues(SoundMix mix, EnemyLooks[] looks, StormCues storm, FoundryCues foundry, WalkerCues walker) {
+    UnitCues(
+            SoundMix mix,
+            EnemyLooks[] looks,
+            StormCues storm,
+            FoundryCues foundry,
+            WalkerCues walker,
+            DeepWaterCues deepWater) {
         super(mix);
+        this.deepWater = deepWater;
         this.looks = looks;
         this.storm = storm;
         this.foundry = foundry;
@@ -129,8 +138,10 @@ final class UnitCues extends SoundFamily {
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
             case ENEMY_HIT -> {
-                // Round 43: a hit on the walker's open vents is its own metal hit (WalkerCues).
-                if (walker == null || !walker.ventHit(events.x(i), events.y(i), pan)) {
+                // Round 43: a hit on the walker's open vents is its own metal hit (WalkerCues); M8 part A: a harpoon's
+                // hit is its heavy thud (DeepWaterCues).
+                if (!deepWater.harpoonHit(events.value(i), pan)
+                        && (walker == null || !walker.ventHit(events.x(i), events.y(i), pan))) {
                     bank.play(alternate(Sfx.HIT_ORGANIC_A, Sfx.HIT_ORGANIC_B), HITS, pitch(0.05), pan);
                 }
             }

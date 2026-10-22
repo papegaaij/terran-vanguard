@@ -31,6 +31,13 @@ import vanguard.sim.WingmanSpec;
  * He flies from Level 08 on while his armour is above 0 (grounded after an ejection until a repair);
  * his armour is kept as a won level ended it, a retry raises it to the armour floor like the
  * player's, and a failed attempt leaves it as he launched.
+ *
+ * <p>M8 part A (design/player/wingmen, Heavy drone "Bulwark" and Rook's loss and absence): from Level 22 the slot holds
+ * Rook or a bought Bulwark, the player's choice; Rook is missing in the levels after the one he is shot down in (Level
+ * 26) until the one he is back in (Level 30): then the slot holds the owned Bulwark, or a free loaner at full armour,
+ * and the story flag {@value #ROOK_MISSING} is set from Level 26's win to Level 29's. An owned Bulwark's armour is kept
+ * between levels like Rook's; a destroyed one is rebuilt (full armour) for the next level, a loaner always flies
+ * whole and keeps nothing.
  */
 public final class Campaign {
     /** What a failed attempt leads to. */
@@ -73,17 +80,50 @@ public final class Campaign {
      *
      * @param gun his gun at its level; empty for {@code none}: he does not fly
      * @param side his side; empty for the gear's
+     * @param bulwark M8 part A: {@code --escort bulwark}: the Bulwark flies instead, at full armour
      */
-    private record DebugEscort(Optional<Fitted> gun, Optional<WingmanSpec.Side> side) {}
+    private record DebugEscort(Optional<Fitted> gun, Optional<WingmanSpec.Side> side, boolean bulwark) {}
+
+    /** M8 part A: the story flag that records Rook as missing, from Level 26's win to Level 29's. */
+    public static final String ROOK_MISSING = "rook-missing";
+
+    /** M8 part A: the story flag that records the hydro-kit's one-off hangar notice as shown. */
+    public static final String HYDRO_KIT = "hydro-kit";
 
     /**
-     * Rook as a flight takes him (design/player/wingmen).
+     * The escort as a flight takes it (design/player/wingmen): Rook with his gun, or (M8 part A) the Bulwark.
      *
-     * @param gun his gun at its level
-     * @param side his side
-     * @param armour his armour at the start of the attempt
+     * @param escorter who flies
+     * @param gun Rook's gun at its level; empty for the Bulwark
+     * @param side the side of the slot
+     * @param armour the escort's armour at the start of the attempt
+     * @param loaner M8 part A: a Bulwark on loan while Rook is missing and none is owned (free, whole every level)
      */
-    public record EscortFlight(Fitted gun, WingmanSpec.Side side, double armour) {}
+    public record EscortFlight(
+            Escort.Escorter escorter, Optional<Fitted> gun, WingmanSpec.Side side, double armour, boolean loaner) {
+        public EscortFlight {
+            if (gun.isPresent() != (escorter == Escort.Escorter.ROOK)
+                    || loaner && escorter != Escort.Escorter.BULWARK) {
+                throw new IllegalArgumentException(
+                        "Rook flies with a gun, the Bulwark without; only a Bulwark is lent");
+            }
+        }
+
+        /** Rook with his gun. */
+        public static EscortFlight rook(Fitted gun, WingmanSpec.Side side, double armour) {
+            return new EscortFlight(Escort.Escorter.ROOK, Optional.of(gun), side, armour, false);
+        }
+
+        /** The Bulwark heavy drone, owned or on loan. */
+        public static EscortFlight bulwark(WingmanSpec.Side side, double armour, boolean loaner) {
+            return new EscortFlight(Escort.Escorter.BULWARK, Optional.empty(), side, armour, loaner);
+        }
+
+        /** Whether Rook flies (the {@code requires: escort} radio lines are his). */
+        public boolean rook() {
+            return escorter == Escort.Escorter.ROOK;
+        }
+    }
     /** The replay this campaign flies, if it is one: a throwaway copy of a save. */
     private Optional<Replay> replay = Optional.empty();
 
@@ -131,7 +171,12 @@ public final class Campaign {
             }
         }
         inventory.put(ItemKind.ESCORT, guns);
-        Escort escort = new Escort(slot.hired(), side(slot.side()), slot.armour());
+        Escort escort = new Escort(
+                slot.hired(),
+                side(slot.side()),
+                slot.armour(),
+                Escort.Escorter.valueOf(slot.flies().toUpperCase(java.util.Locale.ROOT)),
+                new Escort.Bulwark(slot.bulwark().owned(), slot.bulwark().armour()));
         return new Gear(save.credits(), loadout, inventory, save.specials(), save.armour(), escort, save.bays());
     }
 
@@ -151,7 +196,14 @@ public final class Campaign {
         guns.addAll(gear.inventory(ItemKind.ESCORT));
         Escort escort = gear.escort();
         return new SaveGame.EscortSlot(
-                escort.hired(), side(escort.side()), fitted.map(Fitted::item), guns, escort.armour());
+                escort.hired(),
+                side(escort.side()),
+                fitted.map(Fitted::item),
+                guns,
+                escort.armour(),
+                escort.flies().name().toLowerCase(java.util.Locale.ROOT),
+                new SaveGame.BulwarkSlot(
+                        escort.bulwark().owned(), escort.bulwark().armour()));
     }
 
     /** The gear without Rook's guns, for the save's loadout and inventory. */
@@ -187,7 +239,12 @@ public final class Campaign {
                 gear.inventory(),
                 gear.specials(),
                 gear.armour(),
-                new Escort(true, gear.escort().side(), escort.maxArmour()),
+                new Escort(
+                        true,
+                        gear.escort().side(),
+                        escort.maxArmour(),
+                        gear.escort().flies(),
+                        gear.escort().bulwark()),
                 gear.bays());
     }
 
@@ -213,7 +270,9 @@ public final class Campaign {
                                 side(rules.escort().side()),
                                 Optional.empty(),
                                 List.of(),
-                                rules.escort().maxArmour()),
+                                rules.escort().maxArmour(),
+                                SaveFormat.ESCORT_FLIES,
+                                new SaveGame.BulwarkSlot(false, rules.bulwark().maxArmour())),
                         rules.retries(difficulty),
                         Map.of(),
                         List.of(),
@@ -382,6 +441,13 @@ public final class Campaign {
             gear = gear.withEscort(
                     escort.withArmour(Math.max(escort.armour(), rules.armourFloor() * escortMaxArmour())));
         }
+        Escort.Bulwark bulwark = gear.escort().bulwark();
+        if (bulwark.owned()) {
+            // M8 part A: an owned Bulwark too (a loaner flies whole anyway).
+            gear = gear.withEscort(gear.escort()
+                    .withBulwark(
+                            bulwark.withArmour(Math.max(bulwark.armour(), rules.armourFloor() * bulwarkMaxArmour()))));
+        }
     }
 
     /**
@@ -445,10 +511,18 @@ public final class Campaign {
                     gear.escort(),
                     gear.bays());
         }
-        if (escortArmourLeft.isPresent() && gear.escort().hired() && debugEscort.isEmpty()) {
-            // The --escort debug option's Rook is not the gear's: his armour is not kept.
-            gear = gear.withEscort(
-                    gear.escort().withArmour(Math.clamp(escortArmourLeft.getAsDouble(), 0, escortMaxArmour())));
+        Optional<EscortFlight> flown = escortFlight();
+        if (escortArmourLeft.isPresent() && gear.escort().hired() && debugEscort.isEmpty() && flown.isPresent()) {
+            // The --escort debug option's escort is not the gear's: its armour is not kept.
+            if (flown.get().rook()) {
+                gear = gear.withEscort(
+                        gear.escort().withArmour(Math.clamp(escortArmourLeft.getAsDouble(), 0, escortMaxArmour())));
+            } else if (!flown.get().loaner()) {
+                // M8 part A: an owned Bulwark keeps its armour; a destroyed one is rebuilt for the next level.
+                double left = Math.clamp(escortArmourLeft.getAsDouble(), 0, bulwarkMaxArmour());
+                gear = gear.withEscort(gear.escort()
+                        .withBulwark(gear.escort().bulwark().withArmour(left > 0 ? left : bulwarkMaxArmour())));
+            }
         }
         // A data core collected in a won level: the core and its unlock are kept at once
         // (design/systems/economy, Data cores), even before the item exists.
@@ -466,6 +540,12 @@ public final class Campaign {
                 nextLevel, new SaveGame.LevelStats(result.credits().total() + result.gradeBonus(), result.kills()));
         boolean newBest = recordGrade(result.grade().letter());
         nextLevel++;
+        // M8 part A: Rook is shot down at the end of his last level and back for the level he returns in.
+        if (nextLevel == rules.escort().lostAfter() + 1 && !storyFlags.contains(ROOK_MISSING)) {
+            storyFlags.add(ROOK_MISSING);
+        } else if (nextLevel == rules.escort().back()) {
+            storyFlags.remove(ROOK_MISSING);
+        }
         retriesLeft = rules.retries(difficulty);
         hireWhenDue();
         launched = gear;
@@ -530,45 +610,128 @@ public final class Campaign {
         return rules.escort().maxArmour();
     }
 
-    /** Whether Rook is hired and grounded: his armour is 0 after an ejection, he stays home until a repair. */
+    /**
+     * Whether Rook is hired and grounded: his armour is 0 after an ejection, he stays home until a repair; M8 part A:
+     * only while he is the slot's choice and not missing.
+     */
     public boolean escortGrounded() {
-        return gear.escort().hired() && gear.escort().armour() <= 0;
-    }
-
-    /** Whether the launch warns about Rook's armour: he is hired and below the warning share (grounded too). */
-    public boolean escortArmourLow() {
-        return gear.escort().hired() && gear.escort().armour() < rules.escort().launchWarning() * escortMaxArmour();
+        return rookChosen() && gear.escort().armour() <= 0;
     }
 
     /**
-     * Whether Rook flies the next level: hired, not grounded, and the level is his joining level or
-     * later (not an Act 1 replay); the {@code --escort} debug option decides instead when given.
+     * Whether the launch warns about Rook's armour: he is hired and below the warning share (grounded too); M8 part A:
+     * only while he is the slot's choice and not missing.
+     */
+    public boolean escortArmourLow() {
+        return rookChosen() && gear.escort().armour() < rules.escort().launchWarning() * escortMaxArmour();
+    }
+
+    /**
+     * M8 part A: whether the slot is Rook's at the next level: he is hired, not missing, and the player has not chosen
+     * an owned Bulwark instead.
+     */
+    private boolean rookChosen() {
+        return gear.escort().hired() && !rookMissing() && !bulwarkChosen(nextLevel);
+    }
+
+    /** M8 part A: whether an owned Bulwark is the slot's choice at {@code level} (it is for sale by then). */
+    private boolean bulwarkChosen(int level) {
+        Escort escort = gear.escort();
+        return escort.flies() == Escort.Escorter.BULWARK
+                && escort.bulwark().owned()
+                && level >= rules.bulwark().unlock();
+    }
+
+    /** M8 part A: whether Rook is missing in the next level (design/player/wingmen, Rook's loss and absence). */
+    public boolean rookMissing() {
+        return rookMissing(nextLevel);
+    }
+
+    /** M8 part A: whether Rook is missing in Level {@code level} (Levels 27–29: lost at Level 26's end). */
+    public boolean rookMissing(int level) {
+        return rules.escort().missing(level);
+    }
+
+    /** M8 part A: the Bulwark's rules: its full armour, price, unlock and repair cost. */
+    public CampaignRules.BulwarkRules bulwarkRules() {
+        return rules.bulwark();
+    }
+
+    /** M8 part A: the Bulwark's full armour. */
+    public double bulwarkMaxArmour() {
+        return rules.bulwark().maxArmour();
+    }
+
+    /**
+     * M8 part A: the hydro-kit's one-off hangar notice (design/player/systems, Hydro-kit): true once, at the first visit
+     * whose next level is the kit's or a later one (its story flag {@value #HYDRO_KIT} records it as shown). Called as
+     * the hangar opens, beside {@link #giveFreeCharges}.
+     */
+    public boolean hydroKitNotice() {
+        if (replay.isPresent() || nextLevel < rules.hydroKit() || storyFlags.contains(HYDRO_KIT)) {
+            return false;
+        }
+        storyFlags.add(HYDRO_KIT);
+        return true;
+    }
+
+    /**
+     * Whether an escort flies the next level ({@link #escortFlight()}): Rook hired, not grounded, and the level is his
+     * joining level or later (not an Act 1 replay), or (M8 part A) the Bulwark; the {@code --escort} debug option
+     * decides instead when given.
      */
     public boolean escortFlies() {
         return escortFlight().isPresent();
     }
 
-    /**
-     * Rook as the next flight takes him: the gear's, with his fitted gun, side and armour, when he
-     * flies by the rules; the {@code --escort} debug option's instead when given (his gun, the given
-     * side or the gear's, full armour, whatever the level; none for {@code --escort none}).
-     */
+    /** M8 part A: whether Rook himself flies the next level (the {@code requires: escort} radio lines are his). */
+    public boolean rookFlies() {
+        return escortFlight().filter(EscortFlight::rook).isPresent();
+    }
+
+    /** The escort as the next flight takes it, see {@link #escortFlight(int)}. */
     public Optional<EscortFlight> escortFlight() {
+        return escortFlight(nextLevel);
+    }
+
+    /**
+     * The escort as a flight of Level {@code level} takes it: Rook, the gear's, with his fitted gun, side and armour,
+     * when he flies by the rules; the {@code --escort} debug option's instead when given (his gun, the given side or
+     * the gear's, full armour, whatever the level; none for {@code --escort none}; M8 part A: the Bulwark at full
+     * armour for {@code --escort bulwark}).
+     *
+     * <p>M8 part A: from the Bulwark's unlock an owned Bulwark flies when the player chose it; while Rook is missing
+     * (Levels 27–29) the slot holds the owned Bulwark, or a free loaner at full armour when none is owned.
+     */
+    public Optional<EscortFlight> escortFlight(int level) {
+        Escort escort = gear.escort();
         if (debugEscort.isPresent()) {
             DebugEscort debug = debugEscort.get();
-            return debug.gun()
-                    .map(gun -> new EscortFlight(
-                            gun, debug.side().orElse(gear.escort().side()), escortMaxArmour()));
+            WingmanSpec.Side side = debug.side().orElse(escort.side());
+            if (debug.bulwark()) {
+                return Optional.of(EscortFlight.bulwark(side, bulwarkMaxArmour(), false));
+            }
+            return debug.gun().map(gun -> EscortFlight.rook(gun, side, escortMaxArmour()));
         }
-        Escort escort = gear.escort();
-        Fitted gun = gear.loadout().get(LoadoutSlot.ESCORT);
-        if (!escort.hired()
-                || !(escort.armour() > 0)
-                || gun == null
-                || nextLevel < rules.escort().joins()) {
+        if (!escort.hired() || level < rules.escort().joins()) {
             return Optional.empty();
         }
-        return Optional.of(new EscortFlight(gun, escort.side(), Math.min(escort.armour(), escortMaxArmour())));
+        Escort.Bulwark bulwark = escort.bulwark();
+        double bulwarkArmour = Math.min(bulwark.armour(), bulwarkMaxArmour());
+        if (rookMissing(level)) {
+            return Optional.of(
+                    bulwark.owned()
+                            ? EscortFlight.bulwark(escort.side(), bulwarkArmour, false)
+                            : EscortFlight.bulwark(escort.side(), bulwarkMaxArmour(), true));
+        }
+        if (bulwarkChosen(level)) {
+            return Optional.of(EscortFlight.bulwark(escort.side(), bulwarkArmour, false));
+        }
+        Fitted gun = gear.loadout().get(LoadoutSlot.ESCORT);
+        if (!(escort.armour() > 0) || gun == null) {
+            return Optional.empty();
+        }
+        return Optional.of(EscortFlight.rook(gun, escort.side(), Math.min(escort.armour(), escortMaxArmour())));
     }
 
     /**
@@ -579,7 +742,15 @@ public final class Campaign {
      * save holds it.
      */
     public void debugEscort(Optional<Fitted> gun, Optional<WingmanSpec.Side> side) {
-        debugEscort = Optional.of(new DebugEscort(gun, side));
+        debugEscort = Optional.of(new DebugEscort(gun, side, false));
+    }
+
+    /**
+     * M8 part A: the {@code --escort bulwark} debug option: the Bulwark at full armour, on the given side or the gear's,
+     * flies every level whatever its number; for the flights only, as {@link #debugEscort(Optional, Optional)}.
+     */
+    public void debugBulwark(Optional<WingmanSpec.Side> side) {
+        debugEscort = Optional.of(new DebugEscort(Optional.empty(), side, true));
     }
 
     /** The story state, saved as the save's story flags (among them the free charges given). */

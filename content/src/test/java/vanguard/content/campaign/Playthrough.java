@@ -182,7 +182,8 @@ final class Playthrough {
                     double rook = campaign.escortFlight()
                             .map(Campaign.EscortFlight::armour)
                             .orElse(0.0);
-                    if (sortie.wingman().isPresent() && rook > 0) {
+                    // M8 part A: the Bulwark the same.
+                    if ((sortie.wingman().isPresent() || sortie.bulwark().isPresent()) && rook > 0) {
                         sortie.retry(campaign.armour(), rook);
                     } else {
                         sortie.retry(campaign.armour());
@@ -195,12 +196,16 @@ final class Playthrough {
                 sortie.complete(),
                 difficulty + ": Level " + level + " is not completed in " + attempts + " attempts: " + failures);
         LevelResult result = sortie.result();
+        Sortie won = sortie;
         campaign.complete(
                 result,
                 sortie.ship().defences().armour(),
                 sortie.special().used(),
                 sortie.special().found(),
-                sortie.wingman().map(rook -> OptionalDouble.of(rook.armour())).orElse(OptionalDouble.empty()));
+                won.wingman()
+                        .map(rook -> OptionalDouble.of(rook.armour()))
+                        .or(() -> won.bulwark().map(bulwark -> OptionalDouble.of(bulwark.armour())))
+                        .orElse(OptionalDouble.empty()));
         return new Visit(
                 level,
                 before,

@@ -1,0 +1,30 @@
+# Harpoon Torpedoes: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon). M8 part A.
+# The front-slot torpedo (hits: anti-sub, the Torpedo Pod's delivery fired from the nose); under water the
+# water rules apply (../../../world/europa/data.yaml: range x 1.5, the bullet speed x 0.7, full damage).
+name: Harpoon Torpedoes
+slot: front
+traits: [anti-sub, forward]
+price: 2000
+upgrade_base: 1000   # the Ion Beam's way: L2-L5 500 / 1 000 / 2 000 / 4 000
+unlock: 22
+draw: [3, 5]
+sfx: harpoon         # round 48 (G1 a): the torpedo family's heavier launch, run and thud (M8 part A sounds)
+vfx: harpoon         # round 48 (G1 a "barbed harpoon"): its own shot, cable trail and impact
+hits: anti-sub
+speed: [360, 520]
+accelerate: 0.6
+cone: 70
+size: [6, 22]
+range: 600
+seek: true
+splash: 0.5          # a hit blasts its level's `blast` radius (px) for this share of its damage on the others there (not the struck target)
+levels:
+  - {pattern: [[0, 0]], rate: 0.8, damage: 37.5, turn: 90, blast: 20}
+  - {pattern: [[0, 0]], rate: 0.9, damage: 50, turn: 90, blast: 20}
+  - {pattern: [[0, 0]], rate: 1, damage: 62, turn: 90, blast: 20}
+  - {pattern: [[0, 0]], rate: 1, damage: 80, turn: 90, blast: 20}
+  - {pattern: [[-6, 0], [6, 0]], rate: 0.625, damage: 80, turn: 90, blast: 20}
+overdrive: {pattern: [[-6, 0], [6, 0]], rate: 0.75, damage: 85, turn: 90, blast: 20}
+notes:
+  vfx: the barbed harpoon of concept round 48, G1 a
+  layers_hit: 'Under water: every target in the water (the play plane `air`, `low-air`, the sea floor `ground`, and the `sub` layer below), at full damage, no ×2 and no ×0.7 ([water rules](../../../world/europa/README.md#under-water-rules)); never `high-air`. Above water: like the [Torpedo Pod](../torpedo-pod/README.md) (`sub` and naval `ground`) in a level with `water: true`. In a dry level it is idle with `NO WATER` and still draws power'

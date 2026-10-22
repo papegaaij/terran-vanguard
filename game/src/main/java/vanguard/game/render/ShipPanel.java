@@ -66,6 +66,10 @@ final class ShipPanel {
     static final int COMPACT_NAME_X = 32;
     static final int COUNT_RIGHT = HudKit.INNER_WIDTH - 6;
     static final int NAME_CHARS = 10;
+    /** The HUD font's glyph width, px; M8 part A: the gap between a cut name and the reason word. */
+    static final int GLYPH_WIDTH = 8;
+
+    static final int REASON_GAP = 6;
     /** M7 part A: a cooldown special's ring: its dots and radius round the 16 px icon, its colours. */
     private static final int RING_DOTS = 28;
 
@@ -110,6 +114,16 @@ final class ShipPanel {
     static final int ESCORT_BAR_HEIGHT = 8;
     static final String ESCORT_NAME = "ROOK";
     static final String EJECTED = "EJECTED";
+    /** M8 part A: the Bulwark's name in the escort box, and what it reads once it is lost. */
+    static final String BULWARK_NAME = "BULWARK";
+
+    static final String LOST = "LOST";
+    /** M8 part A: the Auto-repair nanites' pip, its drop below the armour's label top. */
+    static final String REPAIR_PIP = "+";
+
+    private static final int REPAIR_PIP_DROP = 2;
+    /** M8 part A: the special row's flash at a change of its setting limit: 0.5 s at 60 frames a second. */
+    private static final int LIMIT_FLASH_FRAMES = 30;
 
     private static final Color ARMOUR = Color.valueOf("FF4400");
     private static final Color ARMOUR_EMPTY = Color.valueOf("2A0B00");
@@ -126,6 +140,8 @@ final class ShipPanel {
      * Torpedo Pod without water (design/ui/hud; it still draws its power).
      */
     static final String NO_WATER = "NO WATER";
+    /** M8 part A: the room for a weapon's name before {@code NO WATER} in its row, px (14 of the font's 8 px glyphs). */
+    static final int NO_WATER_NAME_WIDTH = HudKit.INNER_WIDTH - 6 - 20 - (NO_WATER.length() + 1) * GLYPH_WIDTH;
     /**
      * M5 part F: the shield gauge's label while a Lamprey drains the shield (design/ui/hud, Level 12), in
      * the warning colour; it fits the label plate ({@code PartFHudTest}).
@@ -144,6 +160,10 @@ final class ShipPanel {
     private final TextureRegion specialIcon;
     /** Rook's 16 px hangar icon. */
     private final TextureRegion escortIcon;
+    /** M8 part A: the Bulwark's 16 px hangar icon (Rook's without it). */
+    private final TextureRegion bulwarkIcon;
+    /** M8 part A: the special row's one flash at a change of its setting limit, frames left. */
+    private int limitFlash;
     /** "×" when the font has it, else "x". */
     private final String times;
 
@@ -163,17 +183,28 @@ final class ShipPanel {
     /** M7 part A: the special's name as its row shows it, from the first draw (it fits its room). */
     private String specialLabel;
 
-    ShipPanel(HudKit kit, double overdriveLength, TextureRegion specialIcon, TextureRegion escortIcon) {
+    ShipPanel(
+            HudKit kit,
+            double overdriveLength,
+            TextureRegion specialIcon,
+            TextureRegion escortIcon,
+            TextureRegion bulwarkIcon) {
         this.kit = kit;
         this.overdriveLength = overdriveLength;
         this.specialIcon = specialIcon;
         this.escortIcon = escortIcon;
+        this.bulwarkIcon = bulwarkIcon == null ? escortIcon : bulwarkIcon;
         times = kit.small.getData().hasGlyph('\u00d7') ? "\u00d7" : "x";
     }
 
     /** The special button was denied: the special's row flashes. */
     void specialDenied() {
         denied = DENIED_FRAMES;
+    }
+
+    /** M8 part A: the special's setting limit changed: its row flashes once (white). */
+    void specialLimit() {
+        limitFlash = LIMIT_FLASH_FRAMES;
     }
 
     /** M7 part A: a cooldown special is ready: its ring flashes white once. */
@@ -257,10 +288,30 @@ final class ShipPanel {
         if (denied > 0) {
             denied--;
         }
+        if (limitFlash > 0) {
+            limitFlash--;
+        }
+        if (defences.repairing()) {
+            // M8 part A: the Auto-repair nanites' + pip right of the armour's label plate while they repair.
+            kit.text(batch, kit.small, REPAIR_PIP, POWER, x + DASH_PIP_X + 4, y - REPAIR_PIP_DROP);
+        }
         Wingman rook = sortie.wingman().orElse(null);
         if (rook != null) {
             escort(batch, rook, sortie.tick(), x, y);
         }
+        // M8 part A: the Bulwark in the escort slot, the same box.
+        sortie.bulwark()
+                .ifPresent(bulwark -> escortBox(
+                        batch,
+                        bulwarkIcon,
+                        BULWARK_NAME,
+                        bulwark.destroyed(),
+                        LOST,
+                        bulwark.armour(),
+                        bulwark.maxArmour(),
+                        sortie.tick(),
+                        x,
+                        y));
         if (!notFlown.isEmpty()) {
             kit.label(batch, "NOT YET AVAILABLE", x, y - NOT_FLOWN_PLATE);
             for (int i = 0; i < Math.min(notFlown.size(), MAX_NOT_FLOWN); i++) {
@@ -275,16 +326,33 @@ final class ShipPanel {
      * number over his armour bar; the bar empty and {@code EJECTED} in red once he is out.
      */
     private void escort(SpriteBatch batch, Wingman rook, long tick, int x, int y) {
+        escortBox(batch, escortIcon, ESCORT_NAME, rook.ejected(), EJECTED, rook.armour(), rook.maxArmour(), tick, x, y);
+    }
+
+    /**
+     * The escort box: {@code ESCORT}, then the escort's icon and name with its armour number over its armour bar; the
+     * bar empty and {@code outWord} in red once it is out (Rook ejected, the Bulwark lost).
+     */
+    private void escortBox(
+            SpriteBatch batch,
+            TextureRegion icon,
+            String name,
+            boolean out,
+            String outWord,
+            double armour,
+            double maxArmour,
+            long tick,
+            int x,
+            int y) {
         kit.label(batch, "ESCORT", x, y - ESCORT_PLATE);
         int top = y - ESCORT_TOP;
         kit.lcd(batch, x, top - ESCORT_HEIGHT, HudKit.INNER_WIDTH, ESCORT_HEIGHT);
-        boolean out = rook.ejected();
-        boolean alarm = !out && armourFlash(LowArmour.of(rook.armour(), rook.maxArmour()), tick);
+        boolean alarm = !out && armourFlash(LowArmour.of(armour, maxArmour), tick);
         kit.glow(batch, out ? HudKit.ALERT : HudKit.READOUT, x, top - ESCORT_HEIGHT, HudKit.INNER_WIDTH, ESCORT_HEIGHT);
         int rowTop = top - 5;
-        batch.draw(escortIcon, x + ESCORT_ICON_X, top - 4 - escortIcon.getRegionHeight());
-        kit.text(batch, kit.small, ESCORT_NAME, out ? HudKit.LABEL : HudKit.READOUT, x + ESCORT_NAME_X, rowTop);
-        String number = out ? EJECTED : Integer.toString((int) Math.ceil(rook.armour()));
+        batch.draw(icon, x + ESCORT_ICON_X, top - 4 - icon.getRegionHeight());
+        kit.text(batch, kit.small, name, out ? HudKit.LABEL : HudKit.READOUT, x + ESCORT_NAME_X, rowTop);
+        String number = out ? outWord : Integer.toString((int) Math.ceil(armour));
         kit.textRight(
                 batch,
                 kit.small,
@@ -297,7 +365,7 @@ final class ShipPanel {
         int barWidth = HudKit.INNER_WIDTH - 2 * ESCORT_BAR_INSET;
         int barY = top - ESCORT_HEIGHT + ESCORT_BAR_INSET;
         kit.fill(batch, ARMOUR_EMPTY, barX, barY, barWidth, ESCORT_BAR_HEIGHT);
-        double share = out ? 0 : Math.clamp(rook.armour() / rook.maxArmour(), 0, 1);
+        double share = out ? 0 : Math.clamp(armour / maxArmour, 0, 1);
         kit.fill(batch, ARMOUR, barX, barY, (float) Math.floor(barWidth * share), ESCORT_BAR_HEIGHT);
         if (alarm) {
             kit.fill(batch, ALARM, barX, barY, barWidth, ESCORT_BAR_HEIGHT);
@@ -318,7 +386,15 @@ final class ShipPanel {
         int height = SPECIAL_HEIGHT;
         kit.lcd(batch, x, top - height, HudKit.INNER_WIDTH, height);
         boolean flash = denied > 0 && denied / DENIED_PHASE_FRAMES % 2 == 0;
-        kit.glow(batch, flash ? HudKit.ALERT : HudKit.READOUT, x, top - height, HudKit.INNER_WIDTH, height);
+        // M8 part A: one white flash as the setting limit changes at a waterline (the denied flash wins).
+        boolean limitFlashing = !flash && limitFlash > 0;
+        kit.glow(
+                batch,
+                flash ? HudKit.ALERT : limitFlashing ? Color.WHITE : HudKit.READOUT,
+                x,
+                top - height,
+                HudKit.INNER_WIDTH,
+                height);
         int rowTop = top - 5;
         if (!special.fitted() || specialIcon == null) {
             kit.text(batch, kit.small, "SPECIAL", flash ? HudKit.ALERT : HudKit.LABEL, x + 6, rowTop);
@@ -330,12 +406,16 @@ final class ShipPanel {
         }
         // M7 part A: a cooldown special (its ring) or a name too wide beside the word: the icon takes
         // the word's place at the row's left.
-        boolean compact = compact(specialLabel, special.cooldown());
+        // M8 part A: a special the setting forbids is greyed with its reason word where the count stands, in the
+        // compact
+        // row (its name needs the room).
+        String reason = special.limit().word();
+        boolean compact = compact(specialLabel, special.cooldown()) || !reason.isEmpty();
         if (!compact) {
             kit.text(batch, kit.small, "SPECIAL", flash ? HudKit.ALERT : HudKit.LABEL, x + 6, rowTop);
         }
         int iconX = x + (compact ? COMPACT_ICON_X : ICON_X);
-        boolean ready = special.ready();
+        boolean ready = special.ready() && reason.isEmpty();
         float shade = ready ? 1 : GREYED;
         batch.setColor(1, 1, 1, shade);
         batch.draw(specialIcon, iconX, top - 4 - specialIcon.getRegionHeight());
@@ -355,8 +435,36 @@ final class ShipPanel {
             count = times + special.charges();
         }
         int nameX = compact ? COMPACT_NAME_X : NAME_X;
+        if (!reason.isEmpty()) {
+            // The reason word takes the count's place, the name the room up to it (its first word if it is too long).
+            int room = COUNT_RIGHT - nameX - reasonWidth(reason) - REASON_GAP;
+            kit.text(batch, kit.small, cutLabel(specialLabel, room), colour, x + nameX, rowTop, room);
+            kit.textRight(batch, kit.small, reason, flash ? HudKit.ALERT : HudKit.AMBER, x, rowTop, COUNT_RIGHT);
+            return;
+        }
         kit.text(batch, kit.small, specialLabel, colour, x + nameX, rowTop, COUNT_RIGHT - nameX);
         kit.textRight(batch, kit.small, count, colour, x, rowTop, COUNT_RIGHT);
+    }
+
+    /**
+     * M8 part A: a special's label cut to {@code room} px beside the reason word: whole, else its first word ({@code
+     * ORBITAL}), else as much as fits.
+     */
+    static String cutLabel(String label, int room) {
+        int chars = Math.max(0, room / GLYPH_WIDTH);
+        if (label.length() <= chars) {
+            return label;
+        }
+        int space = label.indexOf(' ');
+        if (space > 0 && space <= chars) {
+            return label.substring(0, space);
+        }
+        return label.substring(0, chars);
+    }
+
+    /** M8 part A: the reason word's width in the HUD font (8 px glyphs). */
+    static int reasonWidth(String reason) {
+        return reason.length() * GLYPH_WIDTH;
     }
 
     /**
@@ -476,12 +584,13 @@ final class ShipPanel {
             Color colour = weapon == null ? HudKit.LABEL : HudKit.READOUT;
             kit.text(batch, kit.small, SLOT_LETTERS[slot], HudKit.LABEL, x + 6, rowTop);
             String name = weapon == null ? "-" : hudName(weapon.name());
-            kit.text(batch, kit.small, name, colour, x + 20, rowTop, pipsX - x - 24);
             if (weapon != null && idle[slot]) {
-                // M5 part E: it cannot fire here: the reason instead of its pips.
+                // M5 part E: it cannot fire here: the reason instead of its pips (M8 part A: the name cut before it).
+                kit.text(batch, kit.small, name, colour, x + 20, rowTop, NO_WATER_NAME_WIDTH);
                 kit.textRight(batch, kit.small, NO_WATER, HudKit.LABEL, x, rowTop, HudKit.INNER_WIDTH - 6);
                 continue;
             }
+            kit.text(batch, kit.small, name, colour, x + 20, rowTop, pipsX - x - 24);
             int level = weapon == null ? 0 : weapon.level();
             for (int i = 0; i < LEVEL_PIPS; i++) {
                 kit.fill(batch, i < level ? HudKit.AMBER : PIP_EMPTY, pipsX + i * 10, rowTop - 9, 8, 7);
@@ -559,9 +668,15 @@ final class ShipPanel {
         };
     }
 
-    /** The HUD's short weapon names: a pod is named by what it fires ("Micro-missile"). */
+    /**
+     * The HUD's short weapon names: a pod is named by what it fires ("Micro-missile"); M8 part A: the Harpoon
+     * Torpedoes by their harpoons ("HARPOONS"), which leaves room for {@code NO WATER} beside the name.
+     */
     static String hudName(String name) {
         String shortName = name.endsWith(" Pod") ? name.substring(0, name.length() - 4) : name;
+        if (shortName.endsWith(" Torpedoes")) {
+            shortName = shortName.substring(0, shortName.indexOf(' ')) + "s";
+        }
         return shortName.toUpperCase(Locale.ROOT);
     }
 

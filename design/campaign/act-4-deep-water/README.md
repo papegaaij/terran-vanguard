@@ -1,7 +1,7 @@
 ---
 title: Act 4 – Deep Water
 design: approved
-implementation: not-started
+implementation: in-progress
 art: none
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
 updated: 2026-10-22
@@ -364,8 +364,10 @@ and the boss's in [bosses](../../enemies/bosses/README.md#concept-art), all in r
       bullet speed, drag, beam reach, special setting restrictions), the descent shaft and trench on `Terrain`,
       the Siren's slow, darkness, heat plumes, homing torpedoes and Decoy Flares, the breakout and the reveal run,
       the `boss-dive` radio event.
-- [ ] `reference_dps` 22–28 and the Act 4 balance plan (`balance-plan.yaml` visits 22–28) before any Act 4 level
-      data (M8 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest`.
+- [x] `reference_dps` 22–28 and the Act 4 balance plan (`balance-plan.yaml` visits 22–28) before any Act 4 level
+      data (M8 part A): `enemies/data.yaml`, `ActHpFactorTest`, `BalanceTest` (step A2: the reference DPS 96 → 120,
+      the plan's visits with a temporary budget(n) income and the water's ×0.7 in `BalanceTest` and
+      `tools/balance.py`; `ActHpFactorTest`'s Act 4 cases in step A4; `ActFourDataTest.theReferenceDpsRunsToLevel28`, `BalanceTest`, `tools/balance.py` exit 0).
 - [ ] Every level within the act's density band (`DensityTest`, `PacingTest`, `ActFloorTest`), the beam era's HP
       re-measured under water (`BeamEraHpTest`) and its typical haul within ±5 % of its budget (`TypicalHaulTest`).
 - [ ] The act-end order after L28 (Level 21's) and the release's end moved from L21 to L28; the hangar before L29

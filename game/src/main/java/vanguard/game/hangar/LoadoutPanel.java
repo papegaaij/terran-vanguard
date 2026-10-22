@@ -11,6 +11,7 @@ import vanguard.content.campaign.Campaign;
 import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Catalogue.Item;
 import vanguard.content.campaign.Catalogue.Stat;
+import vanguard.content.campaign.Escort;
 import vanguard.content.campaign.Fitted;
 import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.Hangar.Choice;
@@ -33,6 +34,10 @@ import vanguard.game.ui.Glass;
  * once the bay is bought, in the schematic's lower right corner opposite Rook's callout (default,
  * pending the user's review: the module row has no room for an eighth 48 px tile); a cooldown
  * special's tile shows its cooldown ({@code 45S}) where a charge special shows its charges.
+ *
+ * <p>M8 part A (design/player/wingmen, Heavy drone "Bulwark"): while the Bulwark flies the next level the escort's
+ * callout is its: its icon, {@code BULWARK}, {@code LOANER} for the free loaner, {@code CANNON}, its armour {@code
+ * nn/120}; while Rook is missing (Levels 27–29) it reads {@code ROOK MIA} in red under the cannon.
  *
  * <p>The power dial (2026-10-21, design/ui/hangar): a weapon turned down below its bought level shows its setting
  * over that level ({@code L3/5}, amber) in place of its pips.
@@ -245,6 +250,12 @@ final class LoadoutPanel {
         glass.shadowed(batch, glass.fonts.label, Names.slot(LoadoutSlot.ESCORT), edge, x + ESCORT_INSET, y + 6);
         glass.right(
                 batch, glass.fonts.label, side(campaign), Glass.CYAN, x + ESCORT_CALLOUT_WIDTH - ESCORT_INSET, y + 6);
+        Optional<Campaign.EscortFlight> bulwark =
+                campaign.escortFlight().filter(flight -> flight.escorter() == Escort.Escorter.BULWARK);
+        if (bulwark.isPresent()) {
+            drawBulwark(batch, campaign, bulwark.get(), x, y);
+            return;
+        }
         TextureRegion rook = icons.escort().large();
         batch.draw(rook, x + ESCORT_INSET, PixelScreen.HEIGHT - y - 18 - rook.getRegionHeight());
         glass.shadowed(batch, glass.fonts.label, ROOK, Glass.WHITE, x + NAME_INDENT, y + ESCORT_NAME_ROW);
@@ -272,6 +283,38 @@ final class LoadoutPanel {
                 x + ESCORT_INSET,
                 y + ESCORT_ARMOUR_ROW);
     }
+
+    /**
+     * M8 part A: the Bulwark's callout under the plate: its icon and name, {@code LOANER} for the loaner, its cannon,
+     * {@code ROOK MIA} while he is missing, and its armour (amber below half).
+     */
+    private void drawBulwark(SpriteBatch batch, Campaign campaign, Campaign.EscortFlight flight, int x, int y) {
+        TextureRegion icon = icons.bulwark().large();
+        batch.draw(icon, x + ESCORT_INSET, PixelScreen.HEIGHT - y - 18 - icon.getRegionHeight());
+        glass.shadowed(
+                batch, glass.fonts.label, HangarState.BULWARK, Glass.WHITE, x + NAME_INDENT, y + ESCORT_NAME_ROW);
+        if (flight.loaner()) {
+            glass.shadowed(batch, glass.fonts.label, LOANER, Glass.CYAN, x + NAME_INDENT, y + ESCORT_NAME_ROW + 12);
+        }
+        glass.shadowed(batch, glass.fonts.label, CANNON, Glass.WHITE, x + ESCORT_INSET, y + ESCORT_GUN_ROW);
+        if (campaign.rookMissing()) {
+            glass.shadowed(batch, glass.fonts.label, ROOK_MIA, Glass.ALERT, x + ESCORT_INSET, y + ESCORT_PIPS_ROW);
+        }
+        double max = campaign.bulwarkMaxArmour();
+        glass.shadowed(
+                batch,
+                glass.fonts.label,
+                (int) Math.ceil(flight.armour()) + "/" + (int) max,
+                flight.armour() < max / 2 ? Glass.AMBER : Glass.CYAN,
+                x + ESCORT_INSET,
+                y + ESCORT_ARMOUR_ROW);
+    }
+
+    /** M8 part A: the Bulwark callout's words. */
+    static final String LOANER = "LOANER";
+
+    static final String CANNON = "CANNON";
+    static final String ROOK_MIA = "ROOK MIA";
 
     /** Rook's side on the callout: {@code L} or {@code R}. */
     static String side(Campaign campaign) {

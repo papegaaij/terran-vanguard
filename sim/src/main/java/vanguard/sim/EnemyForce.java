@@ -859,6 +859,16 @@ final class EnemyForce {
         }
     }
 
+    /** M8 part A (design/world/europa, Under water rules): the level's medium, for the bullets' speed. */
+    void medium(Medium water) {
+        guns.medium(water);
+    }
+
+    /** M8 part A: the Bulwark in the escort slot, which draws a share of the aimed volleys at the ship. */
+    void lure(Bulwark bulwark) {
+        guns.lure(bulwark);
+    }
+
     /**
      * M7 part C (design/campaign Level 16, What walls stop): the level's rock; enemy bullets stop at it (the
      * sortie's pass), and a swoop and a swarm are clamped to the flyable side.

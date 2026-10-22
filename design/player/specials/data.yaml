@@ -10,6 +10,7 @@ specials:
   - {name: EMP Burst, charge_price: 350, max_charges: 3, unlock: 15, free_charges: 1}
   - {name: Orbital Lance, charge_price: 600, max_charges: 2, unlock: 17}
   - {name: Shield Overcharge, price: 5000, cooldown: 45, unlock: 19}
+  - {name: Sonar Pulse, charge_price: 250, max_charges: 4, unlock: 22, free_charges: 1}  # M8 part A (round 48)
   - {name: Decoy Flares, charge_price: 150, max_charges: 6, unlock: 27}  # with the first homing projectiles (D4 of M4 part G; was 7)
 
 # The Airstrike (README, Airstrike (L04)). The damage already includes the x2 anti-ground bonus.
@@ -56,3 +57,25 @@ overcharge:
   factor: 2                     # the shield's capacity × this while overcharged; it fills to it at once
   seconds: 8                    # s the capacity stays raised
   bleed: 0.5                    # s the excess bleeds away over afterwards
+
+# The Sonar Pulse (README, Sonar Pulse (L22); M8 part A, round 48).
+sonar:
+  ring: 0.5                     # s for the ring to cover the whole play field from the ship (instant call)
+  seconds: 6                    # s from the call: every unit lit, the `sub` layer open to every weapon and, under water, every weapon at full damage; a call while it lasts restarts it
+  repeat: 1.5                   # s between two pulses
+
+# The Decoy Flares (README, Decoy Flares (L27); M8 part A).
+flares:
+  count: 4                      # flares a launch drops from the rear muzzle
+  fan: 120                      # degrees: the fan backwards they leave in
+  speed: 300                    # px/s at the launch (the level's bullet speed factor applies), slowing to a stop over `drift`
+  drift: 0.6                    # s
+  burn: 4                       # s each burns; while one burns every enemy homing projectile steers at the nearest one and bursts on it
+  repeat: 1.0                   # s between launches
+
+# The setting restrictions (README, Act 4 specials in detail; M8 part A): the specials each setting forbids and the
+# HUD's reason word. `underwater`: a level or section with `medium: underwater`; `dry`: one with no water (neither
+# under water nor a `water: true` level). A level's or section's `special_limits` replaces its setting's list.
+limits:
+  - {setting: underwater, forbids: [Airstrike, Orbital Lance], reason: UNDER ICE}
+  - {setting: dry, forbids: [Sonar Pulse], reason: NO WATER}

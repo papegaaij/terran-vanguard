@@ -32,6 +32,14 @@ public final class WeaponLooks {
     private static final int[] MINE_PULSE = {1, 2, 3, 2};
 
     private static final int MINE_PULSE_TICKS = 4;
+    /** M8 part A: the depth charge's drum frames: 3 sinking stages of 16 spins (tools/art/act4_gear.py). */
+    static final int CHARGE_STAGES = 3;
+
+    static final int CHARGE_SPINS = 16;
+    /** M8 part A: the drum turns one frame (11.25 degrees) every this many steps: about a turn a second. */
+    static final int CHARGE_SPIN_TICKS = 3;
+    /** M8 part A: the Bulwark's slug is drawn this far above its sprite's centre (its centre at (3, 5) of 6x22). */
+    private static final int BULWARK_SLUG_DY = -6;
 
     /**
      * Step GFX2 (the round 43 capture: the rear-guard drone's bolts read as more of the Tail Gun's cyan ones): the
@@ -70,6 +78,15 @@ public final class WeaponLooks {
         Array<AtlasRegion> underImpact;
 
         Array<AtlasRegion> waterImpact;
+        /**
+         * M8 part A: whether its hits are its own impact with the cavity under it, drawn by {@link DeepWaterLooks} (the
+         * Harpoon Torpedoes'), not the shared impact.
+         */
+        boolean ownImpact;
+        /** M8 part A: whether its rounds are depth charges: their drum's frames, their burst by {@link DeepWaterLooks}. */
+        boolean charge;
+        /** M8 part A: how far its sprite's centre lies above the shot's position, px (the Bulwark's slug: -6). */
+        int shotDy;
         /**
          * Step GFX2: the colour its shots are recoloured towards ({@link #RECOLOUR} of the way, by the flash shader),
          * null for their art's own: the rear-guard drone's gold ({@link #shotRecolour}).
@@ -191,6 +208,28 @@ public final class WeaponLooks {
                 shots = overdrive = single(sprites.region(slug + "-shot"));
                 glowing = false;
             }
+            case "harpoon-torpedoes" -> {
+                // M8 part A: the barbed harpoon (tools/art/act4_gear.py, 32 headings); the Torpedo Pod's until it
+                // exists.
+                shots = overdrive = sprites.has("harpoon-torpedoes-shot")
+                        ? byHeading(sprites.frames("harpoon-torpedoes-shot"))
+                        : byHeading(sprites.frames("torpedo-pod-shot"));
+                glowing = false;
+            }
+            case "depth-charges" -> {
+                // M8 part A: the drum, indexed stage x 16 + spin ({@link #chargeFrame}).
+                Array<AtlasRegion> drums = sprites.frames("depth-charges-shot");
+                shots = overdrive = new AtlasRegion[drums.size];
+                for (int i = 0; i < drums.size; i++) {
+                    shots[i] = drums.get(i);
+                }
+                glowing = false;
+            }
+            case "bulwark-cannon" -> {
+                // M8 part A: the Bulwark's cyan slug with its wake (additive).
+                shots = overdrive = single(sprites.region("bulwark-shot"));
+                glowing = true;
+            }
             case "torpedo-pod" -> {
                 // M5 part E: its own torpedo once it exists, else the bomb's stand-in.
                 shots = overdrive = sprites.has("torpedo-pod-shot")
@@ -236,6 +275,12 @@ public final class WeaponLooks {
                 impact(weapon.vfx(), sprites),
                 pod,
                 offsets);
+        switch (slug) {
+            case "harpoon-torpedoes" -> look.ownImpact = sprites.has("harpoon-torpedoes-hit");
+            case "depth-charges" -> look.charge = true;
+            case "bulwark-cannon" -> look.shotDy = BULWARK_SLUG_DY;
+            default -> {}
+        }
         look.recolour = shotRecolour(slug);
         if (slug.equals("proximity-mines")) {
             look.blast = sprites.frames("proximity-mines-blast");
@@ -286,12 +331,25 @@ public final class WeaponLooks {
     private static Array<AtlasRegion> muzzle(String vfx, Sprites sprites) {
         return switch (vfx) {
             case "vulcan", "ballistic" -> sprites.frames("ballistic-muzzle");
+            // M8 part A: the harpoon's launch light at the nose for 6 steps (one frame shown three times); a depth
+            // charge rolls off the stern without one.
+            case "harpoon" ->
+                sprites.has("harpoon-torpedoes-muzzle")
+                        ? Array.with(
+                                sprites.region("harpoon-torpedoes-muzzle"),
+                                sprites.region("harpoon-torpedoes-muzzle"),
+                                sprites.region("harpoon-torpedoes-muzzle"))
+                        : sprites.pulseMuzzle;
+            case "depth-charge" -> new Array<>();
             default -> launcher(vfx) ? sprites.frames("launcher-muzzle") : sprites.pulseMuzzle;
         };
     }
 
     private static Array<AtlasRegion> impact(String vfx, Sprites sprites) {
         return switch (vfx) {
+            // M8 part A: the harpoon's own impact (DeepWaterLooks draws it with its cavity).
+            case "harpoon" ->
+                sprites.has("harpoon-torpedoes-hit") ? sprites.frames("harpoon-torpedoes-hit") : sprites.pulseImpact;
             case "vulcan", "ballistic" -> sprites.frames("ballistic-impact");
             default -> launcher(vfx) ? sprites.frames("explosive-impact") : sprites.pulseImpact;
         };
@@ -350,6 +408,11 @@ public final class WeaponLooks {
         return looks[mount];
     }
 
+    /** M8 part A: a depth charge's fuse, in steps (it counts from the launch). */
+    static int fuseTicks(WeaponSpec weapon) {
+        return Math.max(1, vanguard.sim.SimStep.ticks(weapon.mines().fuseSeconds()));
+    }
+
     /** The impact animation of mount {@code m}'s shots. */
     public Array<AtlasRegion> impact(int m) {
         return looks[m].impact;
@@ -383,6 +446,27 @@ public final class WeaponLooks {
         return under ? looks[m].underImpact : looks[m].waterImpact;
     }
 
+    /** M8 part A: whether mount {@code m}'s hits are its own impact ({@link DeepWaterLooks}: the harpoon's). */
+    public boolean ownImpact(int m) {
+        return m >= 0 && m < looks.length && looks[m].ownImpact;
+    }
+
+    /** M8 part A: whether mount {@code m}'s rounds are depth charges, which burst in {@link DeepWaterLooks}. */
+    public boolean depthCharge(int m) {
+        return m >= 0 && m < looks.length && looks[m].charge;
+    }
+
+    /**
+     * M8 part A: the drum's frame of a depth charge {@code age} steps after its launch with a fuse of {@code fuseTicks}
+     * steps: stage x 16 + spin, the stage (sinking: smaller, darker) 1 from a third of the fuse and 2 from two thirds
+     * (tools/art/act4_gear.py), the spin turning one 11.25 degree frame every {@value #CHARGE_SPIN_TICKS} steps.
+     */
+    static int chargeFrame(int age, int fuseTicks) {
+        int stage = Math.clamp(3L * Math.max(0, age) / Math.max(1, fuseTicks), 0, CHARGE_STAGES - 1);
+        int spin = Math.max(0, age) / CHARGE_SPIN_TICKS % CHARGE_SPINS;
+        return stage * CHARGE_SPINS + spin;
+    }
+
     /** The mounts on the hull (a wingman's gun is not among them). */
     int size() {
         return armament.size();
@@ -397,6 +481,9 @@ public final class WeaponLooks {
                 : look.shots;
         if (shot.weapon().delivery() == WeaponSpec.Delivery.MINE) {
             return set[shot.armed() ? MINE_PULSE[shot.age() / MINE_PULSE_TICKS % MINE_PULSE.length] : 0];
+        }
+        if (look.charge && set.length == CHARGE_STAGES * CHARGE_SPINS) {
+            return set[chargeFrame(shot.age(), fuseTicks(shot.weapon()))];
         }
         if (set.length == 1) {
             return set[0];

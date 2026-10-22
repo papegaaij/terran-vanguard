@@ -8,7 +8,9 @@ import java.util.Optional;
 import vanguard.content.BriefingPage;
 import vanguard.content.Content;
 import vanguard.content.campaign.Catalogue;
+import vanguard.content.campaign.Fitted;
 import vanguard.content.campaign.Intel;
+import vanguard.content.campaign.LoadoutSlot;
 import vanguard.game.render.PodPivots;
 import vanguard.game.render.Sprites;
 import vanguard.game.render.TestFireView;
@@ -67,7 +69,12 @@ public final class HangarView implements Disposable {
                 teaser,
                 levelKey.orElse(""),
                 next.map(level -> IntelPanel.unclassified(content, IntelPanel.withBoss(level), nextLevel))
-                        .orElse(java.util.Map.of()));
+                        .orElse(java.util.Map.of()),
+                levelKey.flatMap(key -> IntelPanel.limited(
+                        content,
+                        key,
+                        Optional.ofNullable(state.hangar().campaign().loadout().get(LoadoutSlot.SPECIAL))
+                                .map(Fitted::item))));
     }
 
     @Override

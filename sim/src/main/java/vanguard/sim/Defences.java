@@ -39,6 +39,18 @@ public final class Defences {
     private double bleedPerStep;
     /** Steps the excess bleeds over at the overcharge's end (from the last activation). */
     private int bleedSteps = 1;
+    /** M8 part A, the Auto-repair nanites: steps between repaired points; 0 without them (nothing of them is hashed). */
+    private int repairTicks;
+    /** The nanites' cap: they never lift the armour above it. */
+    private double repairCap;
+    /** Steps a hit pauses the nanites for. */
+    private int pauseTicks;
+    /** Steps the nanites have worked towards the next point. */
+    private int repairProgress;
+    /** Steps the nanites still pause after a hit. */
+    private int repairPause;
+    /** The points the nanites repaired since the last restore. */
+    private int repaired;
 
     Defences(ShieldModel model, Plating plating, double mercySeconds) {
         this.model = model;
@@ -48,6 +60,18 @@ public final class Defences {
         this.breakTicks = SimStep.ticks(model.breakSeconds());
         this.regenPerStep = model.regenPerSecond() * SimStep.SECONDS;
         restore(plating.maxArmour());
+    }
+
+    /**
+     * M8 part A: the fitted Auto-repair nanites (design/player/systems, Auto-repair nanites (L24)): from now on {@link
+     * #step()} repairs a point every interval up to the cap, paused by a hit.
+     */
+    void nanites(NaniteSpec spec) {
+        repairTicks = Math.max(1, SimStep.ticks(spec.intervalSeconds()));
+        repairCap = spec.capShare() * plating.maxArmour();
+        pauseTicks = SimStep.ticks(spec.pauseSeconds());
+        repairProgress = 0;
+        repairPause = 0;
     }
 
     /** A full shield over {@code armour} points, as at the start of an attempt. */
@@ -66,6 +90,9 @@ public final class Defences {
         overTicks = 0;
         bleedTicks = 0;
         bleedPerStep = 0;
+        repairProgress = 0;
+        repairPause = 0;
+        repaired = 0;
     }
 
     /** Back to a boss checkpoint's shield and armour, with the armour lost in the level until then. */
@@ -85,6 +112,9 @@ public final class Defences {
         }
         if (overTicks > 0 || bleedTicks > 0) {
             overchargeStep();
+        }
+        if (repairTicks > 0) {
+            repairStep();
         }
         double capacity = capacity();
         if (regenWait > 0) {
@@ -111,6 +141,26 @@ public final class Defences {
         shield = capacity();
         broken = false;
         regenWait = 0;
+    }
+
+    /**
+     * M8 part A: one step of the nanites: while the armour is above zero and below the cap and no hit pauses them,
+     * a point every interval (never above the cap); a pause holds the progress towards the next point.
+     */
+    private void repairStep() {
+        if (repairPause > 0) {
+            repairPause--;
+            return;
+        }
+        if (armour <= 0 || armour >= repairCap) {
+            repairProgress = 0;
+            return;
+        }
+        if (++repairProgress >= repairTicks) {
+            repairProgress = 0;
+            armour = Math.min(repairCap, armour + 1);
+            repaired++;
+        }
     }
 
     private void overchargeStep() {
@@ -153,6 +203,10 @@ public final class Defences {
             return false;
         }
         regenWait = Math.max(regenWait, delayTicks);
+        if (repairTicks > 0) {
+            // M8 part A: a hit pauses the nanites.
+            repairPause = pauseTicks;
+        }
         double absorbed = Math.min(shield, shieldDamage);
         if (absorbed > 0) {
             shield -= absorbed;
@@ -217,6 +271,10 @@ public final class Defences {
         if (critical) {
             // Only once set, so the hash of a run whose armour never gets this low stays as it was.
             hash.add(1);
+        }
+        if (repairTicks > 0) {
+            // M8 part A: only with the nanites fitted, so other runs hash as before.
+            hash.add(repairProgress).add(repairPause).add(repaired);
         }
         if (overTicks > 0 || bleedTicks > 0) {
             // M7 part A: only while an overcharge or its bleed runs, so other runs hash as before.
@@ -288,6 +346,19 @@ public final class Defences {
     /** The ship takes no damage for the next {@code ticks} steps (the Smart Bomb's), as in its mercy time. */
     void guard(int ticks) {
         mercy = Math.max(mercy, ticks);
+    }
+
+    /**
+     * M8 part A: whether the Auto-repair nanites repair now (the HUD's {@code +} pip on the armour bar): fitted, the
+     * armour above zero and below their cap, and no hit pausing them.
+     */
+    public boolean repairing() {
+        return repairTicks > 0 && repairPause == 0 && armour > 0 && armour < repairCap;
+    }
+
+    /** M8 part A: the armour points the nanites repaired since the defences were last restored. */
+    public int repaired() {
+        return repaired;
     }
 
     /** Steps of mercy invulnerability left; the hull flashes white meanwhile. */

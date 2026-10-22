@@ -172,10 +172,11 @@ versions in `gradle/libs.versions.toml`.
   lower case, hyphenated; 1 charge if left out, at most its most) and starts in the level;
   `--escort rook:<gun>:<level>[,side=left|right]` flies Rook in the escort slot with that gun
   (`autocannon`, `scatter`, `missiles`, `mortar`; level 1 if left out) at full armour on any level,
-  Act 1's included, and starts in the level (`--escort none`: a level from 08 on without him);
+  Act 1's included, and starts in the level (`--escort none`: a level from 08 on without him; `--escort bulwark[,side=left|right]` flies the Bulwark heavy drone instead);
+  `--medium underwater[@<s>]` flies the level under water from that level second on (the specials' limits follow);
   `--level <n>` starts at level n instead of Level 01; `--act-end` makes winning that level end
   its act (the act summary in the debrief, then the act outro, then the hangar), to see the act end
-  before an act's last level exists; all seven are for testing only.
+  before an act's last level exists; all eight are for testing only.
 - `./gradlew :desktop:installDist` – the start script in `desktop/build/install/terran-vanguard/`.
 - `./gradlew :desktop:packageLinuxX64` (also `packageWinX64`, `packageMacX64`, `packageMacM1`) –
   Construo bundles with a trimmed JRE in `desktop/build/construo/dist/`. Run Gradle on JDK 21 for

@@ -13,6 +13,8 @@ package vanguard.sim;
  * @param bufferSeconds how long a press of the special button waits while the special is busy
  * @param cooldownSeconds M7 part A: a cooldown special's cooldown from each activation; 0 for a charge special
  * @param cooldownPickupSeconds M7 part A: what a special charge pickup takes off a running cooldown
+ * @param setting M8 part A: where the special works (design/player/specials, Setting restrictions): a level's or
+ *     section's {@link SpecialLimits} list replaces it there
  */
 public record SpecialSpec(
         String name,
@@ -21,12 +23,14 @@ public record SpecialSpec(
         double bufferSeconds,
         double cooldownSeconds,
         double cooldownPickupSeconds,
-        Effect effect) {
+        Effect effect,
+        Setting setting) {
     /**
-     * What a special does: the Airstrike, the Smart Bomb, and (M7 part A) the EMP Burst, the Orbital
-     * Lance and the Shield Overcharge.
+     * What a special does: the Airstrike, the Smart Bomb, (M7 part A) the EMP Burst, the Orbital Lance and the Shield
+     * Overcharge, and (M8 part A) the Sonar Pulse and the Decoy Flares.
      */
-    public sealed interface Effect permits AirstrikeSpec, SmartBombSpec, EmpSpec, LanceSpec, OverchargeSpec {}
+    public sealed interface Effect
+            permits AirstrikeSpec, SmartBombSpec, EmpSpec, LanceSpec, OverchargeSpec, SonarSpec, FlaresSpec {}
 
     /** M7 part A: the kind of a special, from its {@link #effect()}. */
     public enum Kind {
@@ -34,12 +38,34 @@ public record SpecialSpec(
         SMART_BOMB,
         EMP,
         LANCE,
-        OVERCHARGE
+        OVERCHARGE,
+        /** M8 part A: the Sonar Pulse. */
+        SONAR,
+        /** M8 part A: the Decoy Flares. */
+        FLARES
+    }
+
+    /**
+     * M8 part A (design/player/specials, Setting restrictions and the greyed state): where a special works by the
+     * medium; the HUD's reason word where it does not ({@link SpecialLimits.Reason}).
+     */
+    public enum Setting {
+        /** Everywhere (every special of Acts 1–3 but the two below). */
+        ANYWHERE,
+        /** Not under the ice, in water: {@code UNDER ICE} there (the Airstrike, the Orbital Lance). */
+        NOT_UNDER_WATER,
+        /** Only where there is water (under it, or a level over water): {@code NO WATER} elsewhere (the Sonar Pulse). */
+        WATER_ONLY;
+
+        /** The reason word the HUD writes where this setting forbids the special. */
+        public SpecialLimits.Reason reason() {
+            return this == WATER_ONLY ? SpecialLimits.Reason.NO_WATER : SpecialLimits.Reason.UNDER_ICE;
+        }
     }
 
     public SpecialSpec {
-        if (effect == null) {
-            throw new IllegalArgumentException("a special needs its effect");
+        if (effect == null || setting == null) {
+            throw new IllegalArgumentException("a special needs its effect and its setting");
         }
         if (cooldownSeconds > 0) {
             if (charges != 0 || maxCharges != 0) {
@@ -55,9 +81,35 @@ public record SpecialSpec(
         }
     }
 
+    /** A special that works anywhere ({@link Setting#ANYWHERE}). */
+    public SpecialSpec(
+            String name,
+            int charges,
+            int maxCharges,
+            double bufferSeconds,
+            double cooldownSeconds,
+            double cooldownPickupSeconds,
+            Effect effect) {
+        this(
+                name,
+                charges,
+                maxCharges,
+                bufferSeconds,
+                cooldownSeconds,
+                cooldownPickupSeconds,
+                effect,
+                Setting.ANYWHERE);
+    }
+
     /** A charge special: {@code charges} at the level start, at most {@code maxCharges}. */
     public SpecialSpec(String name, int charges, int maxCharges, double bufferSeconds, Effect effect) {
         this(name, charges, maxCharges, bufferSeconds, 0, 0, effect);
+    }
+
+    /** M8 part A: the same special working only in {@code where} (the specials data's {@code limits}). */
+    public SpecialSpec withSetting(Setting where) {
+        return new SpecialSpec(
+                name, charges, maxCharges, bufferSeconds, cooldownSeconds, cooldownPickupSeconds, effect, where);
     }
 
     /**
@@ -85,6 +137,8 @@ public record SpecialSpec(
             case EmpSpec e -> Kind.EMP;
             case LanceSpec l -> Kind.LANCE;
             case OverchargeSpec o -> Kind.OVERCHARGE;
+            case SonarSpec s -> Kind.SONAR;
+            case FlaresSpec f -> Kind.FLARES;
         };
     }
 
@@ -113,11 +167,22 @@ public record SpecialSpec(
         return effect instanceof OverchargeSpec overcharge ? overcharge : null;
     }
 
+    /** M8 part A: the Sonar Pulse's numbers; null for another special. */
+    public SonarSpec sonar() {
+        return effect instanceof SonarSpec sonar ? sonar : null;
+    }
+
+    /** M8 part A: the Decoy Flares' numbers; null for another special. */
+    public FlaresSpec flares() {
+        return effect instanceof FlaresSpec flares ? flares : null;
+    }
+
     /** The same special with {@code count} charges at the level start; a cooldown special is returned as it is. */
     public SpecialSpec withCharges(int count) {
         if (cooldown()) {
             return this;
         }
-        return new SpecialSpec(name, count, maxCharges, bufferSeconds, cooldownSeconds, cooldownPickupSeconds, effect);
+        return new SpecialSpec(
+                name, count, maxCharges, bufferSeconds, cooldownSeconds, cooldownPickupSeconds, effect, setting);
     }
 }
