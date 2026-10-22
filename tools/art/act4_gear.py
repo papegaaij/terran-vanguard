@@ -75,7 +75,23 @@ Outputs (assets/sprites/; ``additive`` = premultiplied on black, blended GL_SRC_
   rook-hydro_0..4                   42x42 normal: Rook's craft with the same kit parts on its airframe
                                     (pivots/rook.json applies unchanged)
 
-  Review sheets and GIFs of round 50: <part's concept/>/<subject>-final-r50-a.png/.gif
+  Hydro-kit effects (M8 part C, step ART-C, round 52; the gap note's "no grade, no wake: part C")
+  ship-hydro-wake_0..7              16x44 normal, stepped translucency: one pump-jet's wake stream, the
+                                    jet at (8, 2) of the frame (drawn at pivots/ship.json engine-left
+                                    and engine-right, trailing down the screen): a churned white-teal
+                                    core widening and breaking up into drifting turbulence; an 8-frame
+                                    loop at 12 fps (the stream scrolls down 5 px a frame)
+  ship-hydro-jet_0..2               12x12 additive: the pump-jet's light at each shroud under water
+                                    (in place of engine-flame below the waterline), a teal-white swirl,
+                                    3 frames at 12 fps
+  ship-refit_0..9                   72x72 additive, centred on the ship: the hydro-kit's refit flash at
+                                    the waterline: the seals lighting in a bright band sweeping down the
+                                    hull, a white-teal flash and a pressure ring; 3 steps a frame; the
+                                    hull swaps ship_* -> ship-hydro_* at frame 4
+  rook-hydro-wake_0..7, rook-hydro-jet_0..2, rook-refit_0..9   Rook's, at his scale (12x36, 10x10,
+                                    64x64; pivots/rook.json's engine points)
+
+  Review sheets and GIFs of round 50 (52 for the hydro-kit effects): <part's concept/>/<subject>-final-rRR-a.png/.gif
 
 Held sprites (tools/art/act3kit.py): a frame set whose root the game data does not claim yet is written
 to build/art-held/sprites/ instead (the harpoon and the charges until their data.yaml exists, the Sonar
@@ -83,7 +99,7 @@ Pulse until design/player/specials/data.yaml lists it, the Bulwark until
 pipeline/.../SpriteUse.java names ``bulwark``); rerun the part once it is claimed. ``ship-*`` and
 ``rook-*`` are always claimed, as are the Decoy Flares.
 
-Run: python3 tools/art/act4_gear.py [harpoon] [charges] [sonar] [flares] [bulwark] [hydro] [--review]
+Run: python3 tools/art/act4_gear.py [harpoon] [charges] [sonar] [flares] [bulwark] [hydro] [hydrofx] [--review]
      (no part = all, ~1 min; --review only rebuilds the sheets from the written frames)
 """
 import sys
@@ -782,6 +798,143 @@ def hydro_review():
     save_review("hydro", "hydro-kit", "HYDRO-KIT - FINAL (ROUND 48 E10 = A), STORMHAWK AND ROOK", rows, gif, fps=10)
 
 
+# =========================================================================== hydro-kit effects (M8 part C)
+
+SOURCE_C = artkit.source_note(SCRIPT, "M8 part C batch")
+WAKE_COL = np.array((200, 240, 236), float)
+JET_COL = np.array((150, 255, 225), float)
+
+
+def wake_frame(i, w=16, h=44, scale=1.0):
+    """One jet's wake: a churned stream trailing down from (w/2, 2), widening, breaking up, drifting; the
+    noise scrolls 5 px a frame so the 8 frames loop."""
+    ss = 4
+    yy, xx = np.mgrid[0:h * ss, 0:w * ss].astype(np.float64) / ss
+    y = yy - 2
+    spread = 1.2 + y * 0.16 * scale
+    cx = w / 2 + 0.8 * np.sin(y * 0.35 - i * TAU / 8)
+    core = np.exp(-((xx - cx) / spread) ** 2) * np.clip(y / 3 + 0.3, 0, 1) * np.clip(1 - y / (h - 2), 0, 1) ** 1.2
+    n = np.zeros_like(core)
+    for k, (fy, fx, a) in enumerate(((0.9, 1.3, 0.5), (0.45, 0.7, 0.35), (1.9, 2.4, 0.25))):
+        n += a * np.sin((yy + i * 5 * (h / 8) / 5.5) * fy + np.sin(xx * fx + k) * 1.7 + k * 2.1)
+    v = np.clip(core * (0.75 + 0.45 * n), 0, 1)
+    v = v.reshape(h, ss, w, ss).mean(axis=(1, 3))
+    a = np.floor(np.clip(v * 1.25, 0, 1) * 3 + 0.35) / 3
+    rgb = WAKE_COL[None, None] * (0.8 + 0.2 * v[..., None])
+    out = np.dstack([np.clip(rgb, 0, 255), a * 255]).astype(np.uint8)
+    out[a == 0] = 0
+    return Image.fromarray(out, "RGBA")
+
+
+def jet_frame(i, w=12):
+    yy, xx = np.mgrid[0:w, 0:w].astype(np.float64) + 0.5
+    c = w / 2
+    r = np.hypot(xx - c, yy - c)
+    ang = np.arctan2(yy - c, xx - c)
+    swirl = 0.6 + 0.4 * np.cos(ang * 3 + i * TAU / 3 + r * 0.8)
+    f = (np.exp(-(r / (w * 0.13)) ** 2) + np.exp(-(r / (w * 0.3)) ** 2) * 0.55 * swirl)
+    q = artkit.ordered_dither(np.clip(f, 0, 1), 7)
+    rgb = JET_COL[None, None] * q[..., None] + 90 * np.clip(f - 0.85, 0, 1)[..., None]
+    return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
+
+
+def refit_frame(i, hull, w=72):
+    """The refit flash: the hull's silhouette lit in a band sweeping down it (the seals closing), a white-teal
+    flash at frames 3-5 and a pressure ring out to w/2."""
+    u = i / 9
+    yy, xx = np.mgrid[0:w, 0:w].astype(np.float64) + 0.5
+    c = w / 2
+    r = np.hypot(xx - c, yy - c)
+    hull_a = np.zeros((w, w))
+    ha = np.array(hull)[..., 3] / 255.0
+    ox, oy = (w - hull.width) // 2, (w - hull.height) // 2
+    hull_a[oy:oy + hull.height, ox:ox + hull.width] = ha
+    band_y = oy + hull.height * min(1.0, u / 0.55)
+    band = np.exp(-((yy - band_y) / 2.2) ** 2) * hull_a * (u < 0.62)
+    edge = hull_a - np.minimum.reduce([np.roll(hull_a, 1, 0), np.roll(hull_a, -1, 0), np.roll(hull_a, 1, 1),
+                                       np.roll(hull_a, -1, 1)])
+    seal = np.clip(edge, 0, 1) * 0.7 * np.exp(-((u - 0.4) / 0.25) ** 2)
+    flash = np.exp(-(r / (w * 0.22)) ** 2) * np.exp(-((u - 0.4) / 0.12) ** 2) * 0.9
+    rr = w * 0.48 * min(1.0, max(0.0, u - 0.3) / 0.7) ** 0.7
+    ring = np.exp(-((r - rr) / 1.8) ** 2) * (1 - u) * 0.8 * (u > 0.3)
+    f = np.clip(band * 1.2 + seal + flash + ring, 0, 1)
+    q = artkit.ordered_dither(f, 8)
+    col = np.where((band + flash)[..., None] > 0.5, np.array((236, 255, 250.0)), JET_COL[None, None])
+    rgb = col * q[..., None]
+    return artkit.additive(Image.fromarray(np.dstack([np.clip(rgb, 0, 255), np.full((w, w), 255.0)]).astype(np.uint8)))
+
+
+def hydrofx_frames():
+    ship_k, rook_k = load("ship-hydro")[2], load("rook-hydro")[2]
+    return {"ship-hydro-wake": artkit.quantize_set([wake_frame(i) for i in range(8)], 8),
+            "ship-hydro-jet": [jet_frame(i) for i in range(3)],
+            "ship-refit": artkit.quantize_set([refit_frame(i, ship_k) for i in range(10)], 24),
+            "rook-hydro-wake": artkit.quantize_set([wake_frame(i, 12, 36, 0.8) for i in range(8)], 8),
+            "rook-hydro-jet": [jet_frame(i, 10) for i in range(3)],
+            "rook-refit": artkit.quantize_set([refit_frame(i, rook_k, 64) for i in range(10)], 24)}
+
+
+def hydrofx_review():
+    import json
+    import l23kit
+    artkit.REVIEW_ROUND = "r52"
+    ship, kit_, rk = artkit.load_frames("ship"), load("ship-hydro"), load("rook-hydro")
+    rook_ = artkit.load_frames("rook")
+    flame = artkit.load_frames("engine-flame")
+    wake, jet, refit = load("ship-hydro-wake"), load("ship-hydro-jet"), load("ship-refit")
+    rwake, rjet, rrefit = load("rook-hydro-wake"), load("rook-hydro-jet"), load("rook-refit")
+    piv = json.loads((artkit.PIVOTS / "ship.json").read_text(encoding="utf-8"))["points"]
+    rpiv_path = artkit.PIVOTS / "rook.json"
+    rpiv = json.loads(rpiv_path.read_text(encoding="utf-8")).get("points", {}) if rpiv_path.exists() else {}
+    W, H = 240, 300
+    dry = l23kit.plate(W, H + 200, 100, 500, graded=False)
+    wet = l23kit.plate(W, H + 200, 100, 500)
+    gif = []
+    line0 = -40
+    for i in range(72):
+        t = i / 12
+        wl = line0 + t * 60                                   # the waterline row scrolling down past the ship
+        bg = dry.crop((0, 100, W, 100 + H)).copy()
+        cut = int(np.clip(wl, 0, H))
+        if cut > 0:
+            bg.paste(wet.crop((0, 100, W, 100 + cut)), (0, 0))
+        img = bg
+        sx, sy, rx, ry = 120, 210, 176, 248
+        under = sy < wl
+        k = refit and int((t - (sy - line0) / 60) * 20) if under else -1
+        hull = kit_[2] if under and k >= 4 or (under and k < 0) else ship[2]
+        rhull = rk[2] if ry < wl and int((t - (ry - line0) / 60) * 20) >= 4 else rook_[2]
+        for name, hp, (px, py), wk, jt in (("ship", hull, (sx, sy), wake, jet), ("rook", rhull, (rx, ry), rwake, rjet)):
+            pts = piv if name == "ship" else rpiv
+            pv = [pts.get("engine-left", [[hp.width // 2 - 5, hp.height - 3]] * 5)[2],
+                  pts.get("engine-right", [[hp.width // 2 + 5, hp.height - 3]] * 5)[2]]
+            wet_here = py < wl
+            for ex, ey in pv:
+                gx, gy = px - hp.width / 2 + ex, py - hp.height / 2 + ey
+                if wet_here:
+                    img.alpha_composite(wk[i % 8], (int(gx - wk[0].width / 2), int(gy - 2)))
+            put(img, hp, px, py)
+            for ex, ey in pv:
+                gx, gy = px - hp.width / 2 + ex, py - hp.height / 2 + ey
+                img = add(img, jt[i % 3] if wet_here else flame[3 + i % 3], gx, gy + (0 if wet_here else 6))
+        for name, (px, py), rf in (("ship", (sx, sy), refit), ("rook", (rx, ry), rrefit)):
+            k = int((t - (py - line0) / 60) * 20)
+            if 0 <= k < len(rf):
+                img = add(img, rf[k], px, py)
+        if 0 <= wl < H:
+            d = ImageDraw.Draw(img)
+            d.line([0, wl, W, wl], fill=(220, 245, 250, 255), width=1)
+        gif.append(img)
+    rows = [("PUMP-JET WAKE (ONE JET; STEPPED)", wake, 3, False), ("PUMP-JET LIGHT (ADDITIVE)", jet, 4, True),
+            ("REFIT FLASH (ADDITIVE)", refit, 1, True), ("ROOK: WAKE, JET, REFIT", rwake + rjet, 3, False),
+            ("ROOK REFIT (ADDITIVE)", rrefit, 1, True),
+            ("THE CROSSING (1X; AHEAD OF THE LINE THE REVIEW GRADE, BEHIND IT UNGRADED)", [gif[k] for k in (49, 53, 60)], 1,
+             False)]
+    sheet = artkit.review_sheet("HYDRO-KIT EFFECTS - FINAL (PUMP-JET WAKE, REFIT FLASH)", rows, width=1000,
+                                batch="M8 part C batch")
+    artkit.save_review(sheet, [sprite.enlarge(f, 2) for f in gif], CONCEPT["hydro"], "hydro-fx", fps=12)
+
+
 # =========================================================================== main
 
 PARTS = {"harpoon": ("harpoon-torpedoes", harpoon_frames, harpoon_review),
@@ -789,7 +942,8 @@ PARTS = {"harpoon": ("harpoon-torpedoes", harpoon_frames, harpoon_review),
          "sonar": ("sonar-pulse", sonar_frames, sonar_review),
          "flares": ("decoy-flares", flare_frames, flares_review),
          "bulwark": ("bulwark", bulwark_frames, bulwark_review),
-         "hydro": (None, hydro_frames, hydro_review)}
+         "hydro": (None, hydro_frames, hydro_review),
+         "hydrofx": (None, hydrofx_frames, hydrofx_review)}
 
 
 def main(args):
@@ -800,8 +954,8 @@ def main(args):
             sets = frames()
             if root is None:          # ship-* and rook-* are always claimed (SpriteUse.GAME_WIDE)
                 for k, v in sets.items():
-                    artkit.write_frames(k, v, SOURCE)
-                print(f"hydro-kit: {sum(len(v) for v in sets.values())} frames -> assets/sprites")
+                    artkit.write_frames(k, v, SOURCE_C if name == "hydrofx" else SOURCE)
+                print(f"{name}: {sum(len(v) for v in sets.values())} frames -> assets/sprites")
             else:
                 write(root, sets)
         review()

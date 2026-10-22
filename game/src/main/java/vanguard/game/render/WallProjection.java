@@ -237,9 +237,24 @@ final class WallProjection {
     /** A face patch with its image. */
     record Patch(int side, double from, double to, TextureRegion image) {}
 
+    /**
+     * M8 part C: an ice shaft's walls (Level 23, tools/art/backdrop_l23.py; the {@code canyon-wall} convention): the
+     * wet wall and foot below the waterline (from terrain row {@code wetRow} up), the collar strips' glow added
+     * unshaded over the walls ({@link #drawGlow}, after the grade), smooth steps (no side canyons).
+     *
+     * @param wetWall {@code ice-wall-wet} (null: the dry wall throughout)
+     * @param wetFoot {@code ice-wall-foot-wet} (null: the dry foot)
+     * @param glow {@code ice-wall-glow} (null: none)
+     * @param wetRow the terrain row from which the walls are wet ({@code +∞}: never)
+     */
+    record Ice(TextureRegion wetWall, TextureRegion wetFoot, TextureRegion glow, double wetRow) {}
+
     private final Terrain terrain;
     private final TextureRegion wall;
     private final TextureRegion foot;
+    /** M8 part C: an ice shaft's wet walls and glow; null for a canyon. */
+    private final Ice ice;
+
     private final TextureRegion pixel;
     private final Island[] islands;
     private final CanyonProfile.Butte[] buttes;
@@ -287,6 +302,20 @@ final class WallProjection {
             TextureRegion pixel,
             List<Island> islands,
             List<Patch> patches) {
+        this(terrain, looks, wall, foot, pixel, islands, patches, null);
+    }
+
+    /** As above; M8 part C: {@code ice} an ice shaft's wet walls and glow (null: a canyon). */
+    WallProjection(
+            Terrain terrain,
+            Looks looks,
+            TextureRegion wall,
+            TextureRegion foot,
+            TextureRegion pixel,
+            List<Island> islands,
+            List<Patch> patches,
+            Ice ice) {
+        this.ice = ice;
         this.terrain = terrain;
         this.wall = wall;
         this.foot = foot;
@@ -309,8 +338,8 @@ final class WallProjection {
                         .filter(p -> p.side() == s)
                         .mapToDouble(FacePatch::row)
                         .toArray();
-                steps[side] =
-                        new CanyonProfile.Steps(terrain, side, heights[side], range[0], range[1], rows, looks.caps());
+                steps[side] = new CanyonProfile.Steps(
+                        terrain, side, heights[side], range[0], range[1], rows, looks.caps(), ice != null);
             }
         }
     }
@@ -588,6 +617,7 @@ final class WallProjection {
             double row = Terrain.row(scroll, y + 0.5);
             int texRow = tileRows - 1 - (int) Math.floorMod((long) Math.floor(row), (long) tileRows);
             double left = terrain.leftAt(row);
+            TextureRegion foot = footAt(row);
             if (!Double.isNaN(left)) {
                 strip.setRegion(foot, 0, texRow, FOOT_WIDTH, 1);
                 batch.draw(strip, X0 + Math.round(left), y);
@@ -681,7 +711,7 @@ final class WallProjection {
             double r0 = edgeRow[side][e - 1];
             double r1 = edgeRow[side][e];
             double mid = (r0 + r1) / 2;
-            TextureRegion image = wall;
+            TextureRegion image = wallAt(mid);
             float iu0 = image.getU() + (image.getU2() - image.getU()) * u0;
             float iu1 = image.getU() + (image.getU2() - image.getU()) * u1;
             float v0;
@@ -717,6 +747,52 @@ final class WallProjection {
                 quad(batch, image, side, e, g, 1 - f0, 1 - f1, 1, 1, dark, dark, dark, dark, iu0, iu1, v0, v1);
             }
         }
+    }
+
+    /** M8 part C: the wall texture at terrain row {@code row}: an ice shaft's wet one below the waterline. */
+    private TextureRegion wallAt(double row) {
+        return ice != null && ice.wetWall() != null && row >= ice.wetRow() ? ice.wetWall() : wall;
+    }
+
+    /** M8 part C: the foot band at terrain row {@code row}: an ice shaft's wet one below the waterline. */
+    private TextureRegion footAt(double row) {
+        return ice != null && ice.wetFoot() != null && row >= ice.wetRow() ? ice.wetFoot() : foot;
+    }
+
+    /**
+     * M8 part C: an ice shaft's collar strips glowing over its walls (the {@code ice-wall-glow} texture on the same
+     * quads, unshaded, additive), drawn after the under-water grade so they glow through it; nothing for a canyon. The
+     * frame's layout is {@link #prepare}'s.
+     */
+    void drawGlow(SpriteBatch batch) {
+        if (ice == null || ice.glow() == null) {
+            return;
+        }
+        float lit = batch.getPackedColor();
+        float white = Color.WHITE_FLOAT_BITS;
+        TextureRegion image = ice.glow();
+        batch.setBlendFunction(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE);
+        for (int g = 0; g < SEGMENTS; g++) {
+            float iu0 = image.getU() + (image.getU2() - image.getU()) * (float) CanyonProfile.NODE_U[g];
+            float iu1 = image.getU() + (image.getU2() - image.getU()) * (float) CanyonProfile.NODE_U[g + 1];
+            for (int side = LEFT; side <= RIGHT; side++) {
+                for (int e = 1; e < edges[side]; e++) {
+                    if (!cell(side, e)) {
+                        continue;
+                    }
+                    double va = segV[side][(e - 1) * SEGMENTS + g];
+                    double vb = segV[side][e * SEGMENTS + g];
+                    double origin = Math.floor(Math.min(va, vb) / CanyonProfile.TEX_PERIOD) * CanyonProfile.TEX_PERIOD;
+                    double h = image.getRegionHeight();
+                    float v0 = texV(image, 1 - (va - origin) / h);
+                    float v1 = texV(image, 1 - (vb - origin) / h);
+                    quad(batch, image, side, e, g, 0, 0, 1, 1, white, white, white, white, iu0, iu1, v0, v1);
+                }
+            }
+        }
+        batch.setBlendFunction(
+                com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setPackedColor(lit);
     }
 
     private Patch patchAt(int side, double row) {

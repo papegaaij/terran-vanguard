@@ -33,6 +33,9 @@ import vanguard.sim.PlayField;
  *     the ship, its lunges, its refills and its break-off
  * @param seekersIgnore M7 part G (user decision 2026-10-20, the Mote Swarm): {@code seekers_ignore: true}: the seekers
  *     (the player's homing shots and turrets, Rook) never pick it as a target; false when not given
+ * @param underwater M8 part C (design/enemies/naval, Returning units under water): how the unit differs in a wave or a
+ *     nest that enters under water (a section with {@code medium: underwater}); none if it is the same ({@link
+ *     #inWater})
  */
 public record EnemyData(
         String name,
@@ -70,7 +73,8 @@ public record EnemyData(
         Optional<Turret> turret,
         Optional<RearPlate> rearPlate,
         Optional<Pursuit> pursuit,
-        Optional<Boolean> seekersIgnore)
+        Optional<Boolean> seekersIgnore,
+        Optional<Underwater> underwater)
         implements ColossusBlock {
     public EnemyData {
         Layers.of(layer);
@@ -431,6 +435,82 @@ public record EnemyData(
     /** M7 part G: whether the seekers ignore it ({@code seekers_ignore: true}); every seeker may pick it when not given. */
     public boolean ignoredBySeekers() {
         return seekersIgnore.orElse(false);
+    }
+
+    /**
+     * M8 part C (design/enemies/naval, Returning units under water): the unit as it flies in a wave or a nest that
+     * enters under water: its {@code underwater} block's layer, no surface/submerge swap with {@code submerge: false},
+     * its terrain drift instead; itself without the block. The look is the game's ({@code underwater.look}).
+     */
+    public EnemyData inWater() {
+        if (underwater.isEmpty()) {
+            return this;
+        }
+        Underwater water = underwater.get();
+        Movement moved = water.drift()
+                .map(drift -> new Movement(
+                        movement.snake(),
+                        movement.swoop(),
+                        movement.straight(),
+                        movement.hover(),
+                        movement.orbit(),
+                        movement.dive(),
+                        // a drift of 0: none (it scrolls with the ground)
+                        Optional.of(new Terrain(drift > 0 ? Optional.of(drift) : Optional.empty())),
+                        movement.strafe(),
+                        movement.spiralOut(),
+                        movement.drift(),
+                        movement.sine(),
+                        movement.walk(),
+                        movement.path(),
+                        movement.ambush(),
+                        movement.flock(),
+                        movement.anchored(),
+                        movement.chase(),
+                        movement.burrow(),
+                        movement.crawl(),
+                        movement.laneStrafe(),
+                        movement.stride(),
+                        movement.breach()))
+                .orElse(movement);
+        return new EnemyData(
+                name,
+                faction,
+                water.layer().orElse(layer),
+                tier,
+                size,
+                hitbox,
+                parts,
+                partList,
+                orientation,
+                hp,
+                armour,
+                speed,
+                moved,
+                attacks,
+                formations,
+                weakPoints,
+                drops,
+                traits,
+                bounty,
+                firstLevel,
+                difficulty,
+                chains,
+                boss,
+                segmentChain,
+                cloak,
+                water.submerge().filter(keep -> !keep).isPresent() ? Optional.empty() : submerge,
+                latch,
+                machine,
+                roll,
+                vortex,
+                pull,
+                intel,
+                turret,
+                rearPlate,
+                pursuit,
+                seekersIgnore,
+                Optional.empty());
     }
 
     /** The movement patterns it uses, with their parameters (design/enemies/README.md, Movement pattern vocabulary). */
@@ -818,7 +898,8 @@ public record EnemyData(
      * wave's members keep {@code separation} px apart, steer by {@code alignment} and {@code
      * cohesion} among the members within {@code radius} px and toward the wave's leader point by
      * {@code leader} (the weights), at {@code speed} px/s ({@code dive_speed} after a loop-back),
-     * turning at most {@code turn_rate} °/s; at most {@code max} members (24).
+     * turning at most {@code turn_rate} °/s; at most {@code max} members (24). M8 part C (the Glassfin): a {@code
+     * sway} across the leader's route (the ribbon) and a {@code ram} (members breaking off to dive at the ship's lane).
      */
     public record Flock(
             double separation,
@@ -829,7 +910,9 @@ public record EnemyData(
             double speed,
             double diveSpeed,
             double turnRate,
-            int max) {
+            int max,
+            Optional<Sway> sway,
+            Optional<Ram> ram) {
         public Flock {
             Check.positive("separation", separation);
             Check.that(radius >= separation, "radius: the neighbourhood reaches at least the separation");
@@ -843,10 +926,73 @@ public record EnemyData(
         }
     }
 
-    /** Part F: the head of a segment chain flies the wave's authored path at {@code speed} px/s. */
-    public record PathMove(double speed) {
+    /**
+     * Part F: the head of a segment chain flies the wave's authored path at {@code speed} px/s. M8 part C (the Eel
+     * Swarm's {@code snake}): with a {@code sway}, its point swings across the path (a sine about it).
+     */
+    public record PathMove(double speed, Optional<Sway> sway) {
+        /** Without M8 part C's sway. */
+        public PathMove(double speed) {
+            this(speed, Optional.empty());
+        }
+
         public PathMove {
             Check.positive("speed", speed);
+        }
+    }
+
+    /**
+     * M8 part C (design/enemies/naval/eel-swarm, glassfin): a sine of {@code amplitude} px across the route at {@code
+     * frequency} Hz, about the authored path (the Eel Swarm's head) or a flock's leader route (the Glassfin's ribbon).
+     */
+    public record Sway(double amplitude, double frequency) {
+        public Sway {
+            Check.positive("amplitude", amplitude);
+            Check.positive("frequency", frequency);
+        }
+    }
+
+    /**
+     * M8 part C (design/enemies/naval/glassfin, the ram): after {@code after} s on the screen each member of a flock
+     * draws, from its own seed, whether it breaks off; {@code share} of a school does. A member that does glints
+     * {@code tell} s (the tell), dives {@code delay} s after the glint (step C3: the README's "0.5 s after a 0.3 s
+     * glint tell", the simulation's wait after the tell's end), straight down the ship's lane at {@code speed} px/s with
+     * no homing, and leaves at the bottom edge (none loops back).
+     */
+    public record Ram(double after, double share, double tell, double delay, double speed) {
+        public Ram {
+            Check.notNegative("after", after);
+            Check.that(share >= 0 && share <= 1, "share: 0 to 1, was " + share);
+            Check.positive("tell", tell);
+            Check.notNegative("delay", delay);
+            Check.positive("speed", speed);
+        }
+    }
+
+    /** M8 part C: a difficulty's change to a flock's ram: the share of a school that breaks off. */
+    public record RamChange(Optional<Double> share) {
+        public RamChange {
+            share.ifPresent(v -> Check.that(v >= 0 && v <= 1, "share: 0 to 1, was " + v));
+        }
+    }
+
+    /**
+     * M8 part C (design/enemies/naval, Returning units under water; gap check D2): a unit's changes in a wave or a nest
+     * that enters under water, applied when the level's script is built (by the entry time's section). {@code layer}
+     * the layer it flies on instead (the Driftjelly's {@code air}, the play plane); {@code submerge: false} drops its
+     * surface/submerge swap; {@code drift} its terrain drift instead, px/s (the Reef Spitter's 0: no raft); {@code look}
+     * how the game draws it ({@code floor}: on a rock-and-kelp base instead of its raft; presentation only).
+     */
+    public record Underwater(
+            Optional<String> layer, Optional<Boolean> submerge, Optional<Double> drift, Optional<String> look) {
+        /** The Reef Spitter's base on the sea floor, instead of its raft. */
+        public static final String LOOK_FLOOR = "floor";
+
+        public Underwater {
+            layer.ifPresent(Layers::of);
+            submerge.ifPresent(s -> Check.that(!s, "submerge: only false (the swap dropped under water)"));
+            drift.ifPresent(d -> Check.notNegative("drift", d));
+            look.ifPresent(l -> Check.that(LOOK_FLOOR.equals(l), "look: only 'floor', was '" + l + "'"));
         }
     }
 
@@ -888,11 +1034,29 @@ public record EnemyData(
 
     /**
      * M7 part C (the Threadcrawler): a cut chain's rear part stops, writhes and dies {@code delay} s after the cut, from
-     * the cut backwards at the chain's pop interval (no new head; the front part crawls on).
+     * the cut backwards at the chain's pop interval (no new head; the front part crawls on). M8 part C (the Eel Swarm):
+     * or it scatters: it keeps its heading at {@code scatter} px/s for {@code seconds} s, firing nothing, then dies from
+     * the cut backwards (no regrowth); a cut gives {@code delay} or {@code scatter} with {@code seconds}.
      */
-    public record Cut(double delay) {
+    public record Cut(Optional<Double> delay, Optional<Double> scatter, Optional<Double> seconds) {
+        /** M7 part C's cut: the rear part dies {@code delay} s after it. */
+        public Cut(double delay) {
+            this(Optional.of(delay), Optional.empty(), Optional.empty());
+        }
+
         public Cut {
-            Check.positive("delay", delay);
+            Check.that(
+                    delay.isPresent() != (scatter.isPresent() || seconds.isPresent()),
+                    "a cut's rear part dies after a delay, or scatters (scatter and seconds)");
+            Check.that(scatter.isPresent() == seconds.isPresent(), "a scattering cut has its scatter and its seconds");
+            delay.ifPresent(d -> Check.positive("delay", d));
+            scatter.ifPresent(v -> Check.positive("scatter", v));
+            seconds.ifPresent(v -> Check.positive("seconds", v));
+        }
+
+        /** M8 part C: whether the cut's rear part scatters (the Eel Swarm's) instead of dying after a delay. */
+        public boolean scatters() {
+            return scatter.isPresent();
         }
     }
 
@@ -993,6 +1157,8 @@ public record EnemyData(
      * @param slows M8 part B (design/enemies/ground/drill-rig: each pump lost slows the collar's ring 0.5 s): on a
      *     unit's part that carries its {@code attack}, the seconds its loss adds to that attack's interval; the attack
      *     stops when every part that carries it is lost; none if not given
+     * @param attacks M8 part C (design/enemies/naval/eel-swarm: the head's aimed shot and its fan): the unit's attacks
+     *     the part fires, by name, instead of one {@code attack} ({@link #attackNames})
      */
     public record PartData(
             String name,
@@ -1007,8 +1173,12 @@ public record EnemyData(
             Optional<String> layer,
             Optional<List<SpotData>> spots,
             Optional<String> aim,
-            Optional<Double> slows) {
+            Optional<Double> slows,
+            Optional<List<String>> attacks) {
         public PartData {
+            Check.that(attack.isEmpty() || attacks.isEmpty(), "a part fires one attack or a list of attacks, not both");
+            attacks.ifPresent(names -> Check.that(names.size() >= 2, "attacks: two or more (else write attack)"));
+            attacks = attacks.map(List::copyOf);
             aim.ifPresent(a -> Check.that(a.equals("down"), "a part's aim is down, was '" + a + "'"));
             slows.ifPresent(v -> Check.positive("slows", v));
             Check.that(slows.isEmpty() || attack.isPresent(), "only a part that carries an attack slows it (slows)");
@@ -1044,7 +1214,8 @@ public record EnemyData(
                 @com.fasterxml.jackson.annotation.JsonProperty("layer") Optional<String> layer,
                 @com.fasterxml.jackson.annotation.JsonProperty("spots") Optional<List<SpotData>> spots,
                 @com.fasterxml.jackson.annotation.JsonProperty("aim") Optional<String> aim,
-                @com.fasterxml.jackson.annotation.JsonProperty("slows") Optional<Double> slows) {
+                @com.fasterxml.jackson.annotation.JsonProperty("slows") Optional<Double> slows,
+                @com.fasterxml.jackson.annotation.JsonProperty("attacks") Optional<List<String>> attacks) {
             Check.that(
                     name != null && offset != null && hitbox != null && kind != null,
                     "a part has a name, an offset, a hit box and a kind");
@@ -1068,7 +1239,13 @@ public record EnemyData(
                     layer == null ? Optional.empty() : layer,
                     spots == null ? Optional.empty() : spots,
                     aim == null ? Optional.empty() : aim,
-                    slows == null ? Optional.empty() : slows);
+                    slows == null ? Optional.empty() : slows,
+                    attacks == null ? Optional.empty() : attacks);
+        }
+
+        /** M8 part C: the names of the attacks it fires, its {@code attack} or its {@code attacks}; none if neither. */
+        public List<String> attackNames() {
+            return attack.map(List::of).or(() -> attacks).orElse(List.of());
         }
 
         /** Whether it is a fire-only part. */
@@ -2204,6 +2381,7 @@ public record EnemyData(
      * @param breach M7 part H: a breach cycle's bite tell instead (the Dust Colossus's easy 1.0 s, hard 0.6 s)
      * @param suction M7 part H: a suction's speed instead (the Dust Colossus's easy 30, hard 55 px/s)
      * @param eruption M7 part H: an eruption's marker time instead (the Dust Colossus's easy 1.8 s, hard 1.2 s)
+     * @param ram M8 part C: a flock's ram share instead (the Glassfin's easy 0.15, hard 0.40)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -2241,7 +2419,8 @@ public record EnemyData(
             Optional<StompChange> stomp,
             Optional<BreachChange> breach,
             Optional<SuctionChange> suction,
-            Optional<EruptionChange> eruption) {
+            Optional<EruptionChange> eruption,
+            Optional<RamChange> ram) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

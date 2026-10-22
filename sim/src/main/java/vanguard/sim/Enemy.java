@@ -11,9 +11,6 @@ import java.util.Optional;
  * {@link #spawn} and {@link #root} reuse the instance.
  */
 public final class Enemy implements Hashed {
-    /** The most its facing turns in one step: one step of a 16-angle set (art direction, Rotation). */
-    private static final double MAX_TURN = StrictMath.PI / 8;
-
     enum Phase {
         ENTER,
         HOLD,
@@ -174,23 +171,23 @@ public final class Enemy implements Hashed {
         SINKING
     }
 
-    // The fields without a modifier are its movement state, shared with its behaviour components ({@link Chasing}
-    // ...), which move it through them; nothing else in the package writes them.
+    // The fields are package-private: its state, shared with its behaviour components ({@link Chasing}, {@link
+    // EnemyFlight} ...), which move it through them; nothing else in the package writes them.
     EnemySpec spec;
     /** Its hit box: its stat block's, or a chain member's own (the segments taper). */
     Hitbox box;
     /** The chain it is a member of; null for any other unit (the link is hashed only with one). */
-    private Chain chain;
+    Chain chain;
     /** Its place in its chain: 0 the head. */
-    private int link;
+    int link;
 
     /** A laser sweep (design/enemies/air/mantis; hashed only with one). */
-    private final SweepBeam sweepBeam = new SweepBeam();
+    final SweepBeam sweepBeam = new SweepBeam();
 
-    private int kind;
-    private int serial;
+    int kind;
+    int serial;
     /** The ground group it belongs to (a dock of Level 02); -1 for none. */
-    private int group;
+    int group;
 
     FlightPath path;
     int segment;
@@ -198,9 +195,9 @@ public final class Enemy implements Hashed {
     double speed;
     Phase phase;
     int holdTicks;
-    private Optional<Spawn.Orbit> orbit;
+    Optional<Spawn.Orbit> orbit;
     double angle;
-    private Spawn.Exit exit;
+    Spawn.Exit exit;
     double vx;
     double vy;
     double x;
@@ -221,49 +218,49 @@ public final class Enemy implements Hashed {
      */
     TravelFrame frame = TravelFrame.SCREEN;
 
-    private double hp;
+    double hp;
     /**
      * Simulation steps since it last took damage, for the Targeting computer's HP bar; {@link
      * Integer#MAX_VALUE} before its first hit. For the presentation only, not part of the state hash.
      */
-    private int ticksSinceHit = Integer.MAX_VALUE;
+    int ticksSinceHit = Integer.MAX_VALUE;
 
     int volleyTicks;
     int burstLeft;
     int burstTicks;
-    private boolean leadsTarget;
-    private Optional<PickupType> carried;
+    boolean leadsTarget;
+    Optional<PickupType> carried;
     /** A turret's barrel: radians clockwise from straight down the screen. */
     double aim;
     /** Whether the ship is inside a turret's arc this step. */
-    private boolean inArc;
+    boolean inArc;
     /** M7 part F: its turret and its gun (design/enemies/ground/warden-tank; hashed only with a turret). */
-    private final TurretGun turretGun = new TurretGun(this);
+    final TurretGun turretGun = new TurretGun(this);
 
-    private int diveTicks;
-    private boolean diveFired;
-    private boolean diveShot;
+    int diveTicks;
+    boolean diveFired;
+    boolean diveShot;
     /** A whirl seed's spiral and ricochets (design/enemies/air/whirl-seed). */
-    private final Spiralling spiralling = new Spiralling(this);
+    final Spiralling spiralling = new Spiralling(this);
 
     /** A spawner's steps since its centre crossed the top edge; -1 before. */
-    private int broodTicks;
+    int broodTicks;
     /** A boss's launched unit (part G): steps it glides out before it holds, and how long it then holds; 0 for none. */
-    private int glideTicks;
+    int glideTicks;
 
-    private int glideHoldTicks;
+    int glideHoldTicks;
 
     /** An escort's circle round its carrier (hashed only for an escort). */
-    private final Escorting escorting = new Escorting(this);
+    final Escorting escorting = new Escorting(this);
 
     /** A walker's walk (design/enemies/ground/scuttler; hashed only for a walker or a volley wave's unit). */
-    private final Walking walking = new Walking(this);
+    final Walking walking = new Walking(this);
     /** How far the ground scrolled since it entered (a walker's path's points and a lane scroll with it). */
     double scrolled;
     /** Whether it has been on the play field (a walker enters from outside it). */
     boolean entered;
     /** The edge its wave entered from (a wingman's formation follows the sides and rear waves); front for any other unit. */
-    private WaveSpec.Entry entry = WaveSpec.Entry.FRONT;
+    WaveSpec.Entry entry = WaveSpec.Entry.FRONT;
 
     /** {@link #spawnStep}: nothing happens. */
     static final int SPAWN_NONE = 0;
@@ -273,16 +270,16 @@ public final class Enemy implements Hashed {
     static final int SPAWN_RELEASE = 2;
 
     /** M5 part C, a periodic spawner's cycle (design/enemies/ground/hive-node; hashed only with one). */
-    private final SpawnerIris spawnerIris = new SpawnerIris();
+    final SpawnerIris spawnerIris = new SpawnerIris();
 
     /** M5 part C, a pounce (design/enemies/ground/ravager; hashed only with one). */
-    private final Pouncing pouncing = new Pouncing();
+    final Pouncing pouncing = new Pouncing();
 
     /** M5 part C: its wave's tag; "" for none (not hashed: it follows from the plan). */
-    private String tag = "";
+    String tag = "";
 
     /** M5 part D: a rear ambush unit's way (design/enemies/air/wraith; hashed only for one). */
-    private final Ambushing ambushing = new Ambushing(this);
+    final Ambushing ambushing = new Ambushing(this);
     /**
      * M5 part D: the volleys of an ambush unit's hold (design/enemies/air/wraith: "twice in its
      * hold"); hard's longer hold does not add a third.
@@ -290,58 +287,60 @@ public final class Enemy implements Hashed {
     static final int AMBUSH_VOLLEYS = 2;
 
     /** M5 part D: the flock it is a member of; null for any other unit (hashed only with one). */
-    private Flock flock;
+    Flock flock;
     /** Its place in its flock, from 0 in entry order. */
-    private int member;
+    int member;
 
     /**
      * M5 part D: the air escort's units its body overlapped in the last step, one bit per unit (bit k
      * for unit k): a contact hurts a unit once, when it starts (design/allies, evacuation shuttle).
      */
-    private int allyContacts;
+    int allyContacts;
 
     /**
      * M5 part E: its drift on top of the scroll, px/s (y up): a field unit's along its wave's current
      * (design/enemies/naval/driftjelly), a raft's along its nest's (design/enemies/naval/reef-spitter);
      * hashed only while it drifts.
      */
-    private double driftX;
+    double driftX;
 
-    private double driftY;
+    double driftY;
     /** M5 part E, a submerging unit's swap timer (the Driftjelly; hashed only with a submerge). */
-    private final Submerging submerging = new Submerging();
+    final Submerging submerging = new Submerging();
     /** M5 part E, a proximity ring (hashed only with one): steps until it may fire its ring again; 0 ready. */
-    private int ringWait;
+    int ringWait;
     /** M7 part B: a Burrower's cycle (hashed only with a burrow); idle for any other unit. */
-    private final Burrowing burrowing = new Burrowing();
+    final Burrowing burrowing = new Burrowing();
     /** M7 part B: a Burrower's wave's stagger clock in the {@link EnemyForce}; -1 for none. */
-    private int burrowGroup = -1;
+    int burrowGroup = -1;
     /** M7 part B, a swoop (design/enemies/air/dust-kite; hashed only with one). */
-    private final Swooping swooping = new Swooping();
+    final Swooping swooping = new Swooping();
+    /** M8 part C, a ram (design/enemies/naval/glassfin; hashed only with one). */
+    final Ramming ramming = new Ramming();
     /** M5 part F: a chaser's chase, latch and shake-off (design/enemies/air/lamprey; hashed only with a chase). */
-    private final Chasing chasing = new Chasing(this);
+    final Chasing chasing = new Chasing(this);
 
     /**
      * M5 part G: a lane walker (design/enemies/naval/skimmer, user decision G4 = a): {@link #path} is its
      * lane at its entry, scrolled by {@link #scrolled}; hashed only for one.
      */
-    private boolean lane;
+    boolean lane;
     /**
      * M5 part G, the {@code alternate} hook (user decision G1 = a): the attacks it started (a burst is
      * one) and whom the running one goes at (a convoy unit, -1 the ship); hashed once it attacked.
      */
-    private int attacks;
+    int attacks;
 
-    private int attackTarget = -1;
+    int attackTarget = -1;
     /**
      * M5 part G, the {@code always} hook: whether its dive went at the objective, and whether its body
      * crossing the objective dealt the dive's hit (once); hashed only once it dove at it.
      */
-    private boolean divedAtObjective;
+    boolean divedAtObjective;
 
-    private boolean diveHit;
+    boolean diveHit;
     /** M7 part D, a bomb run (design/campaign Level 17, What goes for the domes; hashed only once it flies one). */
-    private final BombRun bombRun = new BombRun();
+    final BombRun bombRun = new BombRun();
 
     /**
      * M5 part H, a root burst's growth (design/campaign Level 14, Hazards; decision H2 = a): steps left
@@ -349,15 +348,15 @@ public final class Enemy implements Hashed {
      * unit). Its growth's length and its burst's index (-1 for a unit no burst grew); hashed only for a
      * growth.
      */
-    private int growTicks;
+    int growTicks;
 
-    private int growTotal;
-    private int rootBurst = -1;
+    int growTotal;
+    int rootBurst = -1;
     /**
      * M5 part H: whether a boss's window launched it as an ambush (the Siege Spire's maw: at most a
      * number of them alive at once); hashed only when set.
      */
-    private boolean launched;
+    boolean launched;
 
     /**
      * M7 part A, the EMP Burst's stun (design/player/specials, EMP Burst): steps left; 0 when it is not
@@ -365,9 +364,9 @@ public final class Enemy implements Hashed {
      */
     int empStun;
     /** M7 part A: an air unit's drift per step while stunned: its last step's movement when the stun began. */
-    private double stunDx;
+    double stunDx;
 
-    private double stunDy;
+    double stunDy;
     /**
      * M7 part A: how far its stuns let it drift off the path, circle or carrier it is placed on; it
      * resumes there shifted by this, so it does not jump when a stun ends (0 for most units).
@@ -381,33 +380,35 @@ public final class Enemy implements Hashed {
     /** A pounce's contact with the wingman. */
     static final int TOUCHED_WINGMAN = 2;
 
-    /**
-     * M7 part D: the fewest steps between two of a unit's {@link SimEvents.Type#RING_ABSORBED} (or armour
-     * {@link SimEvents.Type#SHOT_GLANCED}) events from {@link #damage}, so a beam's or a lance's step-by-step
-     * damage does not flood the events.
-     */
-    private static final int ABSORB_EVENT_GAP = 6;
-
     /** M7 part D: a mortar vent swells this long before its lob (design/enemies/ground/shellback). */
     static final double MORTAR_TELL_SECONDS = 0.5;
 
     /** Where {@link #damage} reports what an aura ring absorbs and what a curled shell glances off. */
-    private final SimEvents events;
+    final SimEvents events;
 
     /** M7 part D, an aura ring (design/enemies/air/choir-herald; {@link Auras}); none for most units. */
-    private final AuraRing auraRing = new AuraRing();
+    final AuraRing auraRing = new AuraRing();
     /** Steps until {@link #damage} reports again (not hashed: it only spaces the events). */
-    private int absorbQuiet;
+    int absorbQuiet;
     /** M7 part D: a unit part (design/enemies/ground/shellback, the vent); none for most units. */
-    private final PartHp partHp = new PartHp();
+    final PartHp partHp = new PartHp();
     /** M7 part D: its curl-roll (design/enemies/ground/shellback; hashed only with a roll). */
-    private final CurlRoll curlRoll = new CurlRoll();
+    final CurlRoll curlRoll = new CurlRoll();
     /** M7 part D: a Herald's steps into its hover, for its side-to-side drift. */
-    private int hoverTicks;
+    int hoverTicks;
     /** M7 part E: a vortex's cycle (design/enemies/ground/dust-devil; hashed only with a vortex). */
-    private final VortexCycle vortexCycle = new VortexCycle();
+    final VortexCycle vortexCycle = new VortexCycle();
     /** M7 part E: a lane strafer's flight and pass trigger (design/enemies/air/ghost-drone; hashed only with one). */
-    private final LaneStrafing laneStrafing = new LaneStrafing();
+    final LaneStrafing laneStrafing = new LaneStrafing();
+
+    /** Its movement step (its flight, its stunned step). */
+    final EnemyFlight flight = new EnemyFlight(this);
+    /** Its (re)starts as a pooled unit. */
+    final EnemyStarts starts = new EnemyStarts(this);
+    /** Its trigger (its gun's clocks). */
+    final EnemyGunnery gunnery = new EnemyGunnery(this);
+    /** How it takes damage. */
+    final EnemyDamage hurt = new EnemyDamage(this);
 
     /** A unit whose events go nowhere (for tests that fly one on its own). */
     Enemy() {
@@ -419,186 +420,29 @@ public final class Enemy implements Hashed {
         this.events = events;
     }
 
+    // ---- its (re)starts as a pooled unit: see EnemyStarts ----
+
     /** @param unitSerial unique among the units of an attempt, for the shots that lock onto it */
     void spawn(Spawn plan, int unitSerial) {
-        clearLevel04();
-        serial = unitSerial;
-        group = -1;
-        aim = 0;
-        inArc = false;
-        diveTicks = 0;
-        diveFired = false;
-        diveShot = false;
-        spec = plan.enemy();
-        box = spec.hitbox();
-        kind = plan.kind();
-        path = plan.path();
-        segment = 0;
-        distance = 0;
-        speed = plan.speed();
-        phase = Phase.ENTER;
-        holdTicks = SimStep.ticks(plan.holdSeconds());
-        orbit = plan.orbit();
-        exit = plan.exit();
-        hp = spec.hp();
-        partHp.start(spec);
-        ticksSinceHit = Integer.MAX_VALUE;
-        burstLeft = 0;
-        leadsTarget = plan.leadsTarget();
-        carried = plan.carried();
-        place();
-        spiralling.reset(spec.spiral().isPresent() ? spec.spiral().get().ricochets() : 0);
-        if (plan.release().isPresent() && spec.spiral().isPresent()) {
-            Spawn.Release release = plan.release().get();
-            phase = Phase.SPIRAL;
-            x = release.x();
-            y = release.y();
-            spiralling.release(x, y, release.angle());
-        }
-        if (spec.gun().isPresent() && spec.gun().get().mine().isPresent()) {
-            volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
-        }
-        prevX = x;
-        prevY = y;
-        facing = heading(path.dx(segment), path.dy(segment));
-        if (plan.escort().isPresent()) {
-            Spawn.Escort circle = plan.escort().get();
-            phase = Phase.ESCORT;
-            escorting.start(circle);
-            angle = circle.angle();
-            volleyTicks =
-                    spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
-        }
-        if (plan.walk().isPresent()) {
-            WalkPath walkPath = plan.walk().get();
-            walking.start(walkPath, spec.walker().orElseThrow());
-            phase = Phase.WALK;
-            x = prevX = walkPath.x(0);
-            y = prevY = walkPath.y(0);
-            facing = walkPath.points() > 1 ? heading(walkPath.x(1) - x, walkPath.y(1) - y) : StrictMath.PI;
-            turretGun.start();
-            if (spec.turret().isPresent()) {
-                // M7 part F: the turret starts along the hull.
-                aim = facing;
-            }
-            // The first volleys come half an interval after it walks onto the screen.
-            volleyTicks =
-                    spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().intervalSeconds() / 2) : 0;
-            if (spec.pounce().isPresent()) {
-                pouncing.start(spec.pounce().get());
-            }
-        }
-        if (plan.field().isPresent()) {
-            // M5 part E: a field unit lies on the sea from its appearance, scrolling and drifting.
-            Spawn.Field field = plan.field().get();
-            phase = Phase.GROUND;
-            x = prevX = field.x();
-            y = prevY = field.y();
-            driftX = field.vx();
-            driftY = field.vy();
-            facing = 0;
-            submerge(field.submerged(), field.seed(), true);
-        }
-        if (spec.burrow().isPresent()) {
-            // M7 part B: a Burrower starts buried where it appears and scrolls in with the ground.
-            phase = Phase.BURROW;
-            driftX = 0;
-            driftY = 0;
-            facing = 0;
-            long seed = plan.field().isPresent() ? plan.field().get().seed() : 0x9E3779B97F4A7C15L * (unitSerial + 1L);
-            burrowing.start(spec.burrow().get(), x, y, seed, SurfaceZones.NONE);
-        }
-        if (spec.vortex().isPresent()) {
-            // M7 part E: a vortex starts closed where it appears; its centre line is its entry's x.
-            phase = Phase.VORTEX;
-            facing = 0;
-            EnemyGun.SpiralSpec spiralGun =
-                    spec.gun().isPresent() && spec.gun().get().spiral().isPresent()
-                            ? spec.gun().get().spiral().get()
-                            : null;
-            vortexCycle.start(
-                    spec.vortex().get(), spiralGun, x, y, 0x5DEECE66DL ^ (0x9E3779B97F4A7C15L * (unitSerial + 1L)));
-        }
-        if (spec.laneStrafe().isPresent() && phase == Phase.ENTER) {
-            // M7 part E: a lane strafer flies by its strafe from its planned path's start toward its end.
-            phase = Phase.STRAFE;
-            laneStrafing.start(spec.laneStrafe().get(), path.startX(), path.startY(), path.endX(), path.endY());
-            x = prevX = laneStrafing.x();
-            y = prevY = laneStrafing.y();
-            facing = laneStrafing.phase() == StrafePhase.DESCENT ? 0 : heading(laneStrafing.side(), 0);
-        }
-        if (spec.chase().isPresent() && phase == Phase.ENTER) {
-            // M5 part F: a chaser flies in along its path; its chase starts its delay after its entry.
-            chasing.enter(SimStep.ticks(plan.chaseDelay()));
-        }
-        if (plan.lane()) {
-            // M5 part G: a lane walker starts on its lane, facing along it; its gun counts down on the screen.
-            lane = true;
-            phase = Phase.LANE;
-            placeLane();
-            prevX = x;
-            prevY = y;
-            facing = heading(path.dx(0), path.dy(0));
-            volleyTicks =
-                    spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
-        }
-        if (plan.ambush().isPresent()) {
-            phase = Phase.AMBUSH;
-            ambushing.start(plan.ambush().get(), Math.max(1, plan.ambushReentryTick() - plan.tick()));
-        }
+        starts.spawn(plan, unitSerial);
     }
 
-    /** The fields of Level 04's spawners, escorts and walkers back to a plain unit's. */
-    private void clearLevel04() {
-        frame = TravelFrame.SCREEN;
-        entry = WaveSpec.Entry.FRONT;
-        tag = "";
-        chain = null;
-        link = 0;
-        sweepBeam.clear();
-        broodTicks = -1;
-        escorting.clear();
-        walking.clear();
-        scrolled = 0;
-        entered = false;
-        glideTicks = 0;
-        glideHoldTicks = 0;
-        spawnerIris.clear();
-        pouncing.clear();
-        allyContacts = 0;
-        ambushing.clear();
-        flock = null;
-        member = 0;
-        driftX = 0;
-        driftY = 0;
-        submerging.clear();
-        ringWait = 0;
-        chasing.clear();
-        lane = false;
-        attacks = 0;
-        attackTarget = -1;
-        divedAtObjective = false;
-        diveHit = false;
-        bombRun.clear();
-        growTicks = 0;
-        growTotal = 0;
-        rootBurst = -1;
-        launched = false;
-        empStun = 0;
-        stunDx = 0;
-        stunDy = 0;
-        offX = 0;
-        offY = 0;
-        burrowing.clear();
-        burrowGroup = -1;
-        swooping.clear();
-        auraRing.reset();
-        absorbQuiet = 0;
-        partHp.clear();
-        curlRoll.clear();
-        hoverTicks = 0;
-        vortexCycle.clear();
-        laneStrafing.clear();
+    /** A unit released by a spawner (design/enemies/air/brood-pod; {@link EnemyStarts#hatch}). */
+    void hatch(EnemySpec enemySpec, int enemyKind, double atX, double atY, double velX, double velY, int unitSerial) {
+        starts.hatch(enemySpec, enemyKind, atX, atY, velX, velY, unitSerial);
+    }
+
+    /** A unit a boss's window launches (design/enemies/bosses, part G; {@link EnemyStarts#launch}). */
+    void launch(
+            EnemySpec enemySpec,
+            int enemyKind,
+            double atX,
+            double atY,
+            double velX,
+            double velY,
+            double glideSeconds,
+            int unitSerial) {
+        starts.launch(enemySpec, enemyKind, atX, atY, velX, velY, glideSeconds, unitSerial);
     }
 
     /**
@@ -620,68 +464,6 @@ public final class Enemy implements Hashed {
     }
 
     /**
-     * A unit released by a spawner at (atX, atY), flying straight out at (velX, velY) px/s until
-     * it leaves the play field (design/enemies/air/brood-pod).
-     */
-    void hatch(EnemySpec enemySpec, int enemyKind, double atX, double atY, double velX, double velY, int unitSerial) {
-        clearLevel04();
-        spec = enemySpec;
-        box = spec.hitbox();
-        kind = enemyKind;
-        serial = unitSerial;
-        group = -1;
-        aim = 0;
-        inArc = false;
-        diveTicks = 0;
-        diveFired = false;
-        diveShot = false;
-        segment = 0;
-        distance = 0;
-        speed = Math.sqrt(velX * velX + velY * velY);
-        phase = Phase.LEAVE;
-        holdTicks = 0;
-        orbit = Optional.empty();
-        exit = Spawn.Exit.DOWN;
-        hp = spec.hp();
-        partHp.start(spec);
-        ticksSinceHit = Integer.MAX_VALUE;
-        volleyTicks = 0;
-        burstLeft = 0;
-        burstTicks = 0;
-        leadsTarget = false;
-        carried = Optional.empty();
-        spiralling.reset(0);
-        x = prevX = atX;
-        y = prevY = atY;
-        vx = velX;
-        vy = velY;
-        facing = heading(velX, velY);
-    }
-
-    /**
-     * A unit a boss's window launches at (atX, atY) (design/enemies/bosses, part G): it flies
-     * straight out at (velX, velY) px/s; with a glide it holds after {@code glideSeconds} for its
-     * hover time (the middle of its range), its gun firing, and then leaves down the screen at that
-     * speed; without one it flies on until it leaves the play field.
-     */
-    void launch(
-            EnemySpec enemySpec,
-            int enemyKind,
-            double atX,
-            double atY,
-            double velX,
-            double velY,
-            double glideSeconds,
-            int unitSerial) {
-        hatch(enemySpec, enemyKind, atX, atY, velX, velY, unitSerial);
-        if (glideSeconds > 0 && enemySpec.hover().isPresent()) {
-            Range hover = enemySpec.hover().get().seconds();
-            glideTicks = Math.max(1, SimStep.ticks(glideSeconds));
-            glideHoldTicks = Math.max(1, SimStep.ticks((hover.min() + hover.max()) / 2));
-        }
-    }
-
-    /**
      * A ground unit entering at the top edge at {@code atX}, in {@code inGroup} (-1 for none). Its
      * gun waits its first-shot delay from here.
      */
@@ -689,13 +471,7 @@ public final class Enemy implements Hashed {
         root(enemySpec, enemyKind, atX, unitSerial, inGroup, 0, -1);
     }
 
-    /**
-     * As {@link #root(EnemySpec, int, double, int, int)}; M5 part E: a unit whose stat block drifts
-     * (a raft, design/enemies/naval/reef-spitter) drifts at that speed along its nest's current,
-     * given as the current's direction ({@code currentX}, {@code currentY}: its sine and minus its
-     * cosine from straight down, worked out once when the level is set up, since {@link StrictMath}'s
-     * sine allocates).
-     */
+    /** As {@link #root(EnemySpec, int, double, int, int)}, drifting along its nest's current ({@link EnemyStarts#root}). */
     void root(
             EnemySpec enemySpec,
             int enemyKind,
@@ -704,47 +480,31 @@ public final class Enemy implements Hashed {
             int inGroup,
             double currentX,
             double currentY) {
-        clearLevel04();
-        spec = enemySpec;
-        box = spec.hitbox();
-        kind = enemyKind;
-        serial = unitSerial;
-        group = inGroup;
-        phase = Phase.GROUND;
-        x = prevX = atX;
-        y = prevY = PlayField.HEIGHT + box.height() / 2;
-        hp = spec.hp();
-        partHp.start(spec);
-        ticksSinceHit = Integer.MAX_VALUE;
-        // M7 part F: a turret whose arc faces up the screen ({@code arc: up}) starts along it; 0 for any other.
-        aim = spec.gun().isPresent() ? spec.gun().get().arcFacingRadians() : 0;
-        facing = aim;
-        inArc = false;
-        burstLeft = 0;
-        leadsTarget = false;
-        carried = Optional.empty();
-        volleyTicks = spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
-        diveFired = diveShot = false;
-        diveTicks = 0;
-        if (spec.drift() > 0) {
-            driftX = spec.drift() * currentX;
-            driftY = spec.drift() * currentY;
-        }
+        starts.root(enemySpec, enemyKind, atX, unitSerial, inGroup, currentX, currentY);
     }
 
-    /**
-     * M5 part G (design/campaign Level 13, the mortar floe): a ground unit entering just outside a side
-     * edge at its {@code side}'s height and drifting across at its drift on top of the scroll; its wave
-     * counts as a side entry (the wingman's formation).
-     */
+    /** A ground unit entering at a side edge (design/campaign Level 13; {@link EnemyStarts#rootAtSide}). */
     void rootAtSide(EnemySpec enemySpec, int enemyKind, SideEntry side, int unitSerial, int inGroup) {
-        root(enemySpec, enemyKind, 0, unitSerial, inGroup);
-        double half = box.width() / 2;
-        x = prevX = side.fromLeft() ? -half : PlayField.WIDTH + half;
-        y = prevY = side.y();
-        driftX = side.fromLeft() ? side.drift() : -side.drift();
-        driftY = 0;
-        entry = WaveSpec.Entry.SIDES;
+        starts.rootAtSide(enemySpec, enemyKind, side, unitSerial, inGroup);
+    }
+
+    /** Links it into a chain as member {@code index} ({@link EnemyStarts#link}). */
+    void link(
+            Chain into,
+            int index,
+            EnemySpec memberSpec,
+            int memberKind,
+            Hitbox memberBox,
+            int unitSerial,
+            double atX,
+            double atY,
+            double heading) {
+        starts.link(into, index, memberSpec, memberKind, memberBox, unitSerial, atX, atY, heading);
+    }
+
+    /** M5 part D: joins a flock as member {@code index} ({@link EnemyStarts#join}). */
+    void join(Flock into, int index, Spawn plan, int unitSerial, double atX, double atY, double heading) {
+        starts.join(into, index, plan, unitSerial, atX, atY, heading);
     }
 
     /**
@@ -794,18 +554,6 @@ public final class Enemy implements Hashed {
         return launched;
     }
 
-    /**
-     * M5 part E: a submerging unit starts {@code under} the surface or on it, its swap timer seeded
-     * with {@code seed}; a field's units start at a seeded point of their first wait ({@code
-     * anyPoint}: a wait drawn from 0 to the longest), so a field swaps on the screen and not in step.
-     */
-    private void submerge(boolean under, long seed, boolean anyPoint) {
-        if (spec.submerge().isEmpty()) {
-            return;
-        }
-        submerging.start(spec.submerge().get(), under, seed, anyPoint);
-    }
-
     /** M5 part E: whether a submerging unit's current layer is {@link Layer#SUB}, under the surface. */
     public boolean submerged() {
         return submerging.submerged();
@@ -827,16 +575,6 @@ public final class Enemy implements Hashed {
         return submerging.diving();
     }
 
-    /**
-     * M7 part B, a swoop (design/enemies/air/dust-kite): once it flies above the ship's centre by its
-     * trigger distance or less (on the play field, once per unit) it banks into its swoop.
-     */
-    private void swoopDue(double shipX, double shipY) {
-        if (swooping.due(spec.swoop().orElseThrow(), x, y, box, shipX, shipY)) {
-            phase = Phase.SWOOP;
-        }
-    }
-
     /** M7 part B: its place in its wave (from 0): a swoop bends left for an even place, right for an odd one. */
     void wavePlace(int place) {
         swooping.wavePlace(place);
@@ -847,6 +585,18 @@ public final class Enemy implements Hashed {
     /** M7 part B: whether it is in its swoop (design/enemies/air/dust-kite). */
     public boolean swooping() {
         return phase == Phase.SWOOP;
+    }
+
+    /** M8 part C: whether it broke off to ram the ship and glints now (design/enemies/naval/glassfin, the tell). */
+    public boolean ramGlinting() {
+        return spec.flock().isPresent()
+                && spec.flock().get().ram().isPresent()
+                && ramming.glinting(spec.flock().get().ram().get());
+    }
+
+    /** M8 part C: whether it dives at the ship's lane in its ram (design/enemies/naval/glassfin). */
+    public boolean ramDiving() {
+        return ramming.diving();
     }
 
     /** M7 part B: whether its swoop started in this step (the {@link SimEvents.Type#SWOOP} event). */
@@ -964,7 +714,7 @@ public final class Enemy implements Hashed {
             double diveY,
             boolean objective) {
         // M7 part G: the screen's points and scroll in its frame (unchanged for an unflipped unit).
-        boolean flying = fly(
+        boolean flying = flight.fly(
                 shipX,
                 frame.y(shipY),
                 frame.scroll(groundScroll),
@@ -985,239 +735,6 @@ public final class Enemy implements Hashed {
             }
         }
         return flying;
-    }
-
-    private boolean fly(
-            double shipX,
-            double shipY,
-            double groundScroll,
-            double aimX,
-            double aimY,
-            double diveX,
-            double diveY,
-            boolean objective) {
-        if (ticksSinceHit < Integer.MAX_VALUE) {
-            ticksSinceHit++;
-        }
-        if (absorbQuiet > 0) {
-            absorbQuiet--;
-        }
-        if (empStun > 0) {
-            // M7 part A: its own clock stops (its timers included) while the EMP Burst's stun lasts.
-            empStun--;
-            return phase == Phase.CHAIN || phase == Phase.FLOCK || stunnedStep(shipX, shipY, groundScroll);
-        }
-        // M5 part E: the swap timer and the ring's cooldown run on the real steps (a halted arena too).
-        if (spec.submerge().isPresent()) {
-            submerging.step(spec.submerge().get());
-        }
-        if (ringWait > 0) {
-            ringWait--;
-        }
-        swooping.scratch();
-        if (phase == Phase.CHAIN || phase == Phase.FLOCK) {
-            // Its chain or its flock placed it this step already.
-            return true;
-        }
-        prevX = x;
-        prevY = y;
-        switch (phase) {
-            case BURROW -> {
-                // M7 part B: fixed on the screen but in its entry and escape (Q1 = a).
-                boolean on = burrowing.step(shipX, shipY, groundScroll, box.height() / 2);
-                x = burrowing.x();
-                y = burrowing.y();
-                turn();
-                return on && !carriedOffTop(groundScroll);
-            }
-            case VORTEX -> {
-                // M7 part E: its swirl round its centre line, scrolling with the ground, kept off the ship.
-                boolean on = vortexCycle.step(shipX, shipY, groundScroll, box.height() / 2);
-                x = vortexCycle.x();
-                y = vortexCycle.y();
-                return on && !carriedOffTop(groundScroll);
-            }
-            case STRAFE -> {
-                // M7 part E: down to its lane, across it and (hard) back once; gone once off the play field.
-                laneStrafing.step();
-                x = laneStrafing.x();
-                y = laneStrafing.y();
-                turn();
-                boolean on = PlayField.overlaps(x, y, box);
-                entered |= on;
-                return on || !entered;
-            }
-            case SWOOP -> {
-                swooping.step(spec.swoop().orElseThrow());
-                x = swooping.x();
-                y = swooping.y();
-                turn();
-                return PlayField.overlaps(x, y, box);
-            }
-            case BOMB -> {
-                // M7 part D: toward its row and its dome's slot at its speed, or straight down.
-                bombRun.step(x, y, speed * SimStep.SECONDS);
-                x = bombRun.x();
-                y = bombRun.y();
-                turn();
-                boolean on = PlayField.overlaps(x, y, box);
-                entered |= on;
-                bombRun.flown(on);
-                return on || (!entered && y + box.height() / 2 > 0);
-            }
-            case SPIRAL -> {
-                spiralling.step();
-                return true;
-            }
-            case CHASE -> {
-                chasing.chase(shipX, shipY);
-                return true;
-            }
-            case LATCHED -> {
-                chasing.hold(shipX, shipY);
-                return true;
-            }
-            case STUNNED -> {
-                chasing.stun();
-                return true;
-            }
-            case AMBUSH -> {
-                if (!ambushing.step()) {
-                    return false;
-                }
-            }
-            case LANE -> {
-                // M5 part G: along its lane, which scrolls with the ground; its facing is its velocity over it.
-                scrolled += groundScroll;
-                distance += speed * SimStep.SECONDS;
-                placeLane();
-                double dx = x - prevX;
-                double dy = y - prevY + groundScroll;
-                if (dx != 0 || dy != 0) {
-                    facing = heading(dx, dy);
-                }
-                boolean on = PlayField.overlaps(x, y, box);
-                entered |= on;
-                return on || (!entered && distance < path.length());
-            }
-            case GROUND -> {
-                y -= groundScroll;
-                if (growTicks > 0 && --growTicks == 0) {
-                    // M5 part H: grown: its gun fires as soon as it can (in its arc).
-                    volleyTicks = 1;
-                    burstLeft = 0;
-                }
-                if (driftX != 0 || driftY != 0) {
-                    // M5 part E: a field unit or a raft drifts on the current, on top of the scroll.
-                    x += driftX * SimStep.SECONDS;
-                    y += driftY * SimStep.SECONDS;
-                    if (x + box.width() / 2 < 0 || x - box.width() / 2 > PlayField.WIDTH) {
-                        return false;
-                    }
-                }
-                track(aimX, aimY);
-                return y + box.height() / 2 > 0 && !carriedOffTop(groundScroll);
-            }
-            case WALK -> {
-                scrolled += groundScroll;
-                pouncing.scratch();
-                if (pouncing.leaping()) {
-                    // In a pounce it flies over the ship's position at take-off and lands beyond it.
-                    pouncing.step(spec.pounce().orElseThrow());
-                    x = pouncing.x();
-                    y = pouncing.y();
-                } else {
-                    y -= groundScroll;
-                    if (curlRoll.phase() == CurlPhase.WALK) {
-                        walk();
-                    } else {
-                        curlRoll.step(this, spec.roll().orElseThrow(), events, groundScroll);
-                    }
-                    pouncing.waitStep();
-                }
-                if (spec.turret().isPresent()) {
-                    turretGun.turn(aimX, aimY);
-                }
-                boolean on = PlayField.overlaps(x, y, box);
-                entered |= on;
-                return on || (!entered && y + box.height() / 2 > 0 && !carriedOffTop(groundScroll));
-            }
-            case ESCORT -> {
-                if (!escorting.step()) {
-                    leave(shipX, shipY);
-                    turn();
-                    return true;
-                }
-            }
-            case ENTER -> {
-                distance += speed * SimStep.SECONDS;
-                if (distance >= path.length()) {
-                    distance = path.length();
-                    place();
-                    if (holdTicks == 0) {
-                        return false;
-                    }
-                    hold();
-                } else {
-                    place();
-                }
-                if (chasing.phase() == LatchPhase.ENTER) {
-                    chasing.await();
-                }
-                if (spec.brood().isPresent() && (broodTicks >= 0 || y <= PlayField.HEIGHT)) {
-                    broodTicks++;
-                }
-                if (spec.swoop().isPresent()) {
-                    swoopDue(shipX, shipY);
-                }
-            }
-            case HOLD -> {
-                if (orbit.isPresent()) {
-                    circle(orbit.get());
-                } else if (spec.aura().isPresent() && spec.sine().isPresent()) {
-                    hoverDrift(spec.sine().get());
-                }
-                if (spec.sweep().isPresent()) {
-                    sweep(shipX, shipY);
-                }
-                if (--holdTicks <= 0) {
-                    if (spec.dive().isPresent()) {
-                        // M5 part G: a diver dives at the point it is given (the objective under the always hook).
-                        divedAtObjective = objective;
-                        leave(diveX, diveY);
-                    } else {
-                        leave(shipX, shipY);
-                    }
-                }
-            }
-            case LEAVE -> {
-                x += vx * SimStep.SECONDS;
-                y += vy * SimStep.SECONDS;
-                spiralling.ricochet();
-                turn();
-                if (glideTicks > 0 && --glideTicks == 0) {
-                    // A launched unit's glide is over: it holds, its gun firing, then leaves down.
-                    holdTicks = glideHoldTicks;
-                    hold();
-                    return true;
-                }
-                if (spec.dive().isPresent() && !diveFired) {
-                    EnemySpec.Dive dive = spec.dive().get();
-                    // Its stat block's timing, also under the always hook (its fan then turns back at the objective).
-                    boolean passed = prevY > shipY && y <= shipY;
-                    if (passed || ++diveTicks >= SimStep.ticks(dive.fireAfterSeconds())) {
-                        diveFired = true;
-                        diveShot = true;
-                    }
-                }
-                if (spec.swoop().isPresent()) {
-                    swoopDue(shipX, shipY);
-                }
-                return PlayField.overlaps(x, y, box);
-            }
-        }
-        turn();
-        return true;
     }
 
     /**
@@ -1252,91 +769,6 @@ public final class Enemy implements Hashed {
     /** M7 part A: whether it is latched and draining the shield now (not while stunned). */
     boolean draining() {
         return phase == Phase.LATCHED && empStun == 0;
-    }
-
-    /**
-     * M7 part A: one stunned step: an air unit drifts on (its anchor shifted along, see {@link #offX}),
-     * a ground unit or a walker scrolls with the ground (a leaping one hangs where it is), a lane walker
-     * stays on its lane's spot, a latched one stays on its spot on the hull. Returns whether it is still
-     * in play, as its own movement would.
-     */
-    private boolean stunnedStep(double shipX, double shipY, double groundScroll) {
-        prevX = x;
-        prevY = y;
-        switch (phase) {
-            case LATCHED -> {
-                chasing.hold(shipX, shipY);
-                return true;
-            }
-            case GROUND -> {
-                y -= groundScroll;
-                return y + box.height() / 2 > 0 && !carriedOffTop(groundScroll);
-            }
-            case WALK -> {
-                scrolled += groundScroll;
-                if (!pouncing.leaping()) {
-                    y -= groundScroll;
-                }
-                boolean on = PlayField.overlaps(x, y, box);
-                entered |= on;
-                return on || (!entered && y + box.height() / 2 > 0 && !carriedOffTop(groundScroll));
-            }
-            case LANE -> {
-                scrolled += groundScroll;
-                placeLane();
-                boolean on = PlayField.overlaps(x, y, box);
-                entered |= on;
-                return on || (!entered && distance < path.length());
-            }
-            case BURROW -> {
-                // M7 part B: up (only then can the EMP reach it) it is fixed on the screen; its timers wait.
-                return true;
-            }
-            case VORTEX -> {
-                // M7 part E: its cycle and swirl wait (it stays as it is, open or closed); it scrolls with the ground.
-                boolean on = vortexCycle.stunned(groundScroll, box.height() / 2);
-                x = vortexCycle.x();
-                y = vortexCycle.y();
-                return on && !carriedOffTop(groundScroll);
-            }
-            default -> {
-                x += stunDx;
-                y += stunDy;
-                switch (phase) {
-                    case ENTER, HOLD, ESCORT, AMBUSH -> {
-                        offX += stunDx;
-                        offY += stunDy;
-                    }
-                    case SPIRAL -> {
-                        spiralling.drift(stunDx, stunDy);
-                    }
-                    case SWOOP -> {
-                        // M7 part B: its curve drifts with it.
-                        swooping.drift(stunDx, stunDy);
-                    }
-                    case STRAFE -> {
-                        // M7 part E: it drifts on its line; its flight resumes from there.
-                        laneStrafing.drift(stunDx, stunDy);
-                        boolean on = PlayField.overlaps(x, y, box);
-                        entered |= on;
-                        return on || !entered;
-                    }
-                    default -> {
-                        // It flies on its velocity, which carries on from where it drifted to.
-                    }
-                }
-                return phase != Phase.LEAVE || PlayField.overlaps(x, y, box);
-            }
-        }
-    }
-
-    /**
-     * M7 part G (design/campaign Level 20, the turnabout): whether the ground, scrolling up the screen in its frame
-     * this step ({@code groundScroll} below 0), has carried it off the top edge: a unit on the ground leaves by
-     * either edge. Never while the ground scrolls down, so an unreversed level steps as before.
-     */
-    private boolean carriedOffTop(double groundScroll) {
-        return groundScroll < 0 && y - box.height() / 2 >= PlayField.HEIGHT;
     }
 
     /**
@@ -1408,31 +840,6 @@ public final class Enemy implements Hashed {
      */
     public double decloak(double alpha) {
         return spec.cloak().isEmpty() ? 1 : ambushing.decloak(alpha);
-    }
-
-    /**
-     * Turns its facing toward the direction it flew this step, by at most {@link #MAX_TURN}, so a
-     * sharp turn (breaking out of an orbit) plays through the in-between headings; standing still
-     * keeps the facing.
-     */
-    private void turn() {
-        double dx = x - prevX;
-        double dy = y - prevY;
-        if (dx == 0 && dy == 0) {
-            return;
-        }
-        double delta = Math.IEEEremainder(heading(dx, dy) - facing, 2 * StrictMath.PI);
-        facing = Math.IEEEremainder(facing + Math.clamp(delta, -MAX_TURN, MAX_TURN), 2 * StrictMath.PI);
-    }
-
-    /**
-     * One step of a walker over the ground (design/enemies/ground/scuttler): its facing turns toward
-     * the path's next point by at most its turn rate, and it walks along its facing; a point it
-     * reached, or one it can no longer turn into (behind it, inside its turning circle), is passed.
-     * Past the last point it walks straight on.
-     */
-    private void walk() {
-        walking.step(spec.walker().orElseThrow().speed());
     }
 
     /** One step over the ground at {@code walkSpeed} px/s (M7 part D: a roll goes at the roll's speed). */
@@ -1721,32 +1128,6 @@ public final class Enemy implements Hashed {
     }
 
     /**
-     * A turret on the screen turns its barrel towards its target (the ship, or the convoy unit the
-     * target-the-objective hook chose) by at most its turn rate while the target is inside its arc;
-     * outside it, the barrel holds.
-     */
-    private void track(double shipX, double shipY) {
-        inArc = false;
-        if (spec.gun().isEmpty() || !PlayField.overlaps(x, y, box)) {
-            return;
-        }
-        EnemyGun gun = spec.gun().get();
-        double wanted = heading(shipX - x, shipY - y);
-        // M7 part F: the arc is measured from its facing (straight down, or up the screen for {@code arc: up}).
-        double off = gun.arcFacingRadians() == 0
-                ? wanted
-                : Math.IEEEremainder(wanted - gun.arcFacingRadians(), 2 * StrictMath.PI);
-        if (Math.abs(off) > gun.arcRadians()) {
-            return;
-        }
-        inArc = true;
-        double delta = Math.IEEEremainder(wanted - aim, 2 * StrictMath.PI);
-        double most = gun.turnRate() * SimStep.SECONDS;
-        aim = Math.IEEEremainder(aim + Math.clamp(delta, -most, most), 2 * StrictMath.PI);
-        facing = aim;
-    }
-
-    /**
      * M7 part F: its turret's aim, radians clockwise from straight down (design/enemies/ground/warden-tank: drawn on
      * its own over the hull, which faces its path); the hull's {@link #facing()} for a unit without a turret.
      */
@@ -1784,180 +1165,22 @@ public final class Enemy implements Hashed {
         return (phase == Phase.GROUND || phase == Phase.WALK) && layer() == Layer.GROUND && !pouncing.leaping();
     }
 
+    /** Places it on its path at its distance (see {@link EnemyFlight#place}). */
+    void place() {
+        flight.place();
+    }
+
     /** The direction of a movement (y up) in radians clockwise from straight down the screen. */
     static double heading(double dx, double dy) {
         return StrictMath.atan2(-dx, -dy);
     }
 
-    void place() {
-        segment = path.segmentAt(distance, segment);
-        x = path.x(segment, distance);
-        y = path.y(segment, distance);
-        if (spec.sine().isPresent()) {
-            EnemySpec.Sine sine = spec.sine().get();
-            x += sine.amplitude() * Trig.sin(2 * StrictMath.PI * distance / (speed * sine.periodSeconds()));
-        }
-        if (offX != 0 || offY != 0) {
-            // M7 part A: shifted by its drift while stunned.
-            x += offX;
-            y += offY;
-        }
-    }
-
     /**
-     * M5 part G: a lane walker's place: {@link #distance} along its lane (straight on past its end along
-     * the last direction), the lane scrolled by {@link #scrolled}, and its {@code sine} weave as an offset
-     * across the lane (to the right of its direction for a positive swing).
-     */
-    private void placeLane() {
-        double along = Math.min(distance, path.length());
-        segment = path.segmentAt(along, segment);
-        double dx = path.dx(segment);
-        double dy = path.dy(segment);
-        double norm = Math.sqrt(dx * dx + dy * dy);
-        double ux = norm > 0 ? dx / norm : 0;
-        double uy = norm > 0 ? dy / norm : -1;
-        double past = distance - along;
-        x = path.x(segment, along) + ux * past;
-        y = path.y(segment, along) + uy * past - scrolled;
-        if (spec.sine().isPresent()) {
-            EnemySpec.Sine sine = spec.sine().get();
-            double offset = sine.amplitude() * Trig.sin(2 * StrictMath.PI * distance / (speed * sine.periodSeconds()));
-            x += uy * offset;
-            y -= ux * offset;
-        }
-    }
-
-    private void hold() {
-        phase = Phase.HOLD;
-        // No Optional.map here: it would allocate in the step loop.
-        angle = orbit.isPresent() ? orbit.get().angle() : 0;
-        // + 1: the gun already counts down in the step the unit stops, which is step 0 of the delay.
-        volleyTicks = spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
-        if (spec.sweep().isPresent()) {
-            sweepBeam.arm(spec.sweep().get());
-        }
-    }
-
-    private void circle(Spawn.Orbit circle) {
-        angle += circle.radiansPerSecond() * SimStep.SECONDS;
-        x = circle.centreX() + circle.radius() * Trig.cos(angle);
-        y = circle.centreY() + circle.radius() * Trig.sin(angle);
-        if (offX != 0 || offY != 0) {
-            // M7 part A: shifted by its drift while stunned.
-            x += offX;
-            y += offY;
-        }
-    }
-
-    private void leave(double shipX, double shipY) {
-        phase = Phase.LEAVE;
-        burstLeft = 0;
-        if (spec.dive().isPresent()) {
-            speed = spec.dive().get().speed();
-        }
-        double dx = exit.dx();
-        double dy = exit.dy();
-        if (exit.towardShip()) {
-            double length = Math.sqrt((shipX - x) * (shipX - x) + (shipY - y) * (shipY - y));
-            dx = length > 0 ? (shipX - x) / length : 0;
-            dy = length > 0 ? (shipY - y) / length : -1;
-        }
-        vx = dx * speed;
-        vy = dy * speed;
-    }
-
-    /**
-     * Counts down its gun while it holds (a turret: while the ship is in its arc); returns whether
-     * it fires a shot this step. A diver fires once, in its dive.
+     * Counts down its gun while it holds (a turret: while the ship is in its arc); returns whether it fires a shot this
+     * step ({@link EnemyGunnery#trigger}). A diver fires once, in its dive.
      */
     boolean trigger() {
-        if (growTicks > 0) {
-            // M5 part H: a root burst's growth fires nothing while it grows.
-            return false;
-        }
-        if (phase == Phase.CHAIN) {
-            // A chain's head fires its fan while it is on the screen.
-            if (spec.gun().isEmpty() || !PlayField.overlaps(x, y, box) || --volleyTicks > 0) {
-                return false;
-            }
-            volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
-            return true;
-        }
-        if (phase == Phase.WALK && spec.turret().isPresent()) {
-            return turretGun.trigger();
-        }
-        if (phase == Phase.WALK) {
-            // A walker's fan, along its facing, while it is on the screen (M7 part D: not while it is
-            // curled, its timer waiting, nor once its vent is gone).
-            if (spec.gun().isEmpty() || gunQuiet() || !PlayField.overlaps(x, y, box) || --volleyTicks > 0) {
-                if (volleyTicks == SimStep.ticks(MORTAR_TELL_SECONDS)
-                        && spec.gun().isPresent()
-                        && spec.gun().get().mortar().isPresent()
-                        && !gunQuiet()
-                        && PlayField.overlaps(x, y, box)) {
-                    // M7 part D: the mortar vent swells before its lob (design/enemies/ground/shellback).
-                    events.add(SimEvents.Type.MORTAR_TELL, x, y(), kind);
-                }
-                return false;
-            }
-            volleyTicks = volleyInterval(spec.gun().get());
-            return true;
-        }
-        if (spec.gun().isPresent() && spec.gun().get().mine().isPresent()) {
-            // A mine layer drops a spore at its interval wherever it flies on the screen.
-            if (phase == Phase.GROUND || !PlayField.overlaps(x, y, box) || --volleyTicks > 0) {
-                return false;
-            }
-            volleyTicks = SimStep.ticks(spec.gun().get().intervalSeconds());
-            return true;
-        }
-        if (spec.dive().isPresent()) {
-            boolean shot = diveShot;
-            diveShot = false;
-            return shot;
-        }
-        AmbushPhase ambushPhase = ambushing.phase();
-        boolean ready = phase == Phase.HOLD
-                || (phase == Phase.GROUND && inArc)
-                || (phase == Phase.ESCORT && y < PlayField.HEIGHT)
-                || (phase == Phase.LANE && PlayField.overlaps(x, y, box))
-                || ambushPhase == AmbushPhase.DECLOAK
-                || ambushPhase == AmbushPhase.HOLD;
-        if (!ready || spec.gun().isEmpty() || (phase == Phase.GROUND && partHp.silenced(spec.parts()))) {
-            // M8 part B: a ground unit whose gun is bound to its parts falls silent with the last of them.
-            return false;
-        }
-        EnemyGun gun = spec.gun().get();
-        if (burstLeft > 0) {
-            if (ambushPhase != AmbushPhase.NONE) {
-                // M5 part D: an ambush unit's interval runs from its burst's start (its two bursts
-                // 1.2 s apart in its hold, design/enemies/air/wraith); other units' from its end.
-                volleyTicks--;
-            }
-            if (--burstTicks > 0) {
-                return false;
-            }
-            burstLeft--;
-            burstTicks = SimStep.ticks(gun.burstGapSeconds());
-            return true;
-        }
-        if (--volleyTicks > 0) {
-            return false;
-        }
-        if (ambushPhase == AmbushPhase.DECLOAK) {
-            // M5 part D: the gun is silent until the decloak flash ends.
-            volleyTicks = 1;
-            return false;
-        }
-        if (ambushPhase != AmbushPhase.NONE && ambushing.volleysSpent()) {
-            volleyTicks = Integer.MAX_VALUE;
-            return false;
-        }
-        volleyTicks = volleyInterval(gun);
-        burstLeft = gun.burst() - 1;
-        burstTicks = SimStep.ticks(gun.burstGapSeconds());
-        return true;
+        return gunnery.trigger();
     }
 
     /**
@@ -1979,45 +1202,12 @@ public final class Enemy implements Hashed {
     }
 
     /**
-     * Takes damage; returns whether it was destroyed. {@code fromAbove} marks damage that comes
-     * down from above (bomb and shell blasts, the Airstrike): it ignores the frontal armour of a
-     * walker such as the Scuttler (design/player/specials, decisions), which reads it once that
-     * armour exists. M7 part E: {@code blast} marks the specials' blasts (the Smart Bomb's ring and the
-     * Airstrike's bombs; Q.22e), which a vortex's closed vanes let through; a curled shell still glances them off.
+     * Takes damage; returns whether it was destroyed ({@link EnemyDamage#damage}). {@code fromAbove} marks damage that
+     * comes down from above (bomb and shell blasts, the Airstrike); {@code blast} the specials' blasts, which a
+     * vortex's closed vanes let through.
      */
     boolean damage(double amount, boolean fromAbove, boolean blast) {
-        if (growTicks > 0) {
-            // M5 part H: a root burst's growth takes no damage while it grows.
-            return false;
-        }
-        if (curlRoll.armoured() || (vanesClosed() && !blast)) {
-            // M7 part D: a curled shell glances off everything, blasts and the Lance included; M7 part E: a
-            // closed vortex's vanes glance off all but the specials' blasts.
-            glancedOff();
-            return false;
-        }
-        // M7 part D: an aura ring spends itself first; only the overflow reaches the HP.
-        double left = absorb(amount);
-        if (left <= 0) {
-            ticksSinceHit = 0;
-            return false;
-        }
-        // A segment chain's original head is a weak point (its spec carries the chain); a set
-        // piece's parts multiply theirs in SetPiece.damagePart.
-        hp -= spec.chain().isPresent() ? left * spec.chain().get().headMultiplier() : left;
-        if (phase == Phase.LATCHED) {
-            // M5 part F: a latched Lamprey takes its latch's damage factor on top (x2).
-            hp -= left * (spec.latch().orElseThrow().damageFactor() - 1);
-        }
-        if (curlRoll.phase() == CurlPhase.BELLY) {
-            // M7 part D: its belly shows after the uncurl: the body takes the belly factor.
-            hp -= left * (spec.roll().orElseThrow().bellyFactor() - 1);
-        }
-        ticksSinceHit = 0;
-        if (hp > 0 && curlDue()) {
-            curl();
-        }
-        return hp <= 0;
+        return hurt.damage(amount, fromAbove, blast);
     }
 
     /** The hit points left. */
@@ -2032,130 +1222,7 @@ public final class Enemy implements Hashed {
 
     @Override
     public void addTo(StateHash hash) {
-        hash.add(kind)
-                .add(serial)
-                .add(group)
-                .add(aim)
-                .add(diveTicks)
-                .add(diveFired ? 1 : 0)
-                .add(spiralling.ticks())
-                .add(spiralling.ricochetsLeft())
-                .add(distance)
-                .add(segment)
-                .add(phase.ordinal())
-                .add(holdTicks)
-                .add(angle)
-                .add(vx)
-                .add(vy)
-                .add(x)
-                .add(y)
-                .add(hp)
-                .add(volleyTicks)
-                .add(burstLeft)
-                .add(burstTicks);
-        if (frame.flipped()) {
-            // M7 part G: its state is its frame's; only a flipped unit adds the mark, so the other levels hash as
-            // before.
-            hash.add(1);
-        }
-        // Level 04's units add their state; the units of Levels 01-03 hash as before.
-        if (spec.brood().isPresent()) {
-            hash.add(broodTicks);
-        }
-        if (glideHoldTicks > 0) {
-            hash.add(glideTicks);
-        }
-        escorting.addTo(hash);
-        if (chain != null) {
-            hash.add(chain.serial()).add(link);
-        }
-        if (spec.sweep().isPresent()) {
-            sweepBeam.addTo(hash);
-        }
-        walking.addTo(hash);
-        // M5 part C's spawners and pounces add their state; earlier units hash as before.
-        if (spec.spawner().isPresent()) {
-            spawnerIris.addTo(hash);
-        }
-        if (spec.pounce().isPresent()) {
-            pouncing.addTo(hash);
-        }
-        // M5 part D's ambush units and flock members add theirs; earlier units hash as before.
-        ambushing.addTo(hash);
-        if (flock != null) {
-            hash.add(flock.serial()).add(member);
-        }
-        if (allyContacts != 0) {
-            // M5 part D: only while it overlaps an air escort's unit, so the other levels hash as before.
-            hash.add(allyContacts);
-        }
-        // M5 part E's drifting, submerging and pulsing units add theirs; earlier units hash as before.
-        if (driftX != 0 || driftY != 0) {
-            hash.add(driftX).add(driftY);
-        }
-        if (spec.submerge().isPresent()) {
-            submerging.addTo(hash);
-        }
-        if (spec.ring().isPresent()) {
-            hash.add(ringWait);
-        }
-        // M5 part G's lane walkers and hooked attacks add theirs; earlier units hash as before.
-        if (lane) {
-            hash.add(scrolled).add(facing).add(entered ? 1 : 0);
-        }
-        if (attacks > 0) {
-            hash.add(attacks).add(attackTarget);
-        }
-        if (divedAtObjective) {
-            hash.add(diveHit ? 1 : 0);
-        }
-        // M7 part D's bomb runs add theirs; earlier units hash as before.
-        bombRun.addTo(hash, entered);
-        // M5 part H's root-burst growths and boss-launched ambushes add theirs; earlier units hash as before.
-        if (rootBurst >= 0) {
-            hash.add(rootBurst).add(growTicks).add(growTotal);
-        }
-        if (launched) {
-            hash.add(1);
-        }
-        // M5 part F's chasers add theirs; earlier units hash as before.
-        if (spec.chase().isPresent()) {
-            chasing.addTo(hash);
-            hash.add(entered ? 1 : 0);
-        }
-        if (empStun != 0 || offX != 0 || offY != 0) {
-            // M7 part A: only while the EMP Burst stuns it or after it drifted, so other runs hash as before.
-            hash.add(empStun).add(stunDx).add(stunDy).add(offX).add(offY);
-        }
-        // M7 part B's burrowers and swoopers add theirs; earlier units hash as before.
-        if (spec.burrow().isPresent()) {
-            burrowing.addTo(hash);
-            hash.add(burrowGroup).add(facing);
-        }
-        if (spec.swoop().isPresent()) {
-            swooping.addTo(hash);
-        }
-        // M7 part D's rings, unit parts, curl-rolls and Herald hovers add theirs; earlier units hash as before.
-        auraRing.addTo(hash);
-        partHp.addTo(hash);
-        if (spec.roll().isPresent()) {
-            curlRoll.addTo(hash);
-        }
-        if (spec.aura().isPresent()) {
-            hash.add(hoverTicks);
-        }
-        // M7 part E's vortices add theirs; earlier units hash as before.
-        if (phase == Phase.VORTEX) {
-            vortexCycle.addTo(hash);
-        }
-        // M7 part E's lane strafers add theirs; earlier units hash as before.
-        if (phase == Phase.STRAFE) {
-            laneStrafing.addTo(hash);
-        }
-        // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
-        if (spec.turret().isPresent()) {
-            turretGun.addTo(hash);
-        }
+        EnemyHash.add(this, hash);
     }
 
     /** M5 part D: the air escort's units it overlapped in the last step, one bit per unit. */
@@ -2286,25 +1353,6 @@ public final class Enemy implements Hashed {
         return frame.y(prevY + (y - prevY) * alpha);
     }
 
-    /**
-     * One step of a laser sweep while it hovers (design/enemies/air/mantis): the wait for the next
-     * telegraph runs; a telegraph starts only if its sweep ends before the hover does, and fixes the
-     * sweep's centre on the ship's bearing from its eye, clamped between straight inward and straight
-     * down.
-     */
-    private void sweep(double shipX, double shipY) {
-        EnemySpec.Sweep sweep = spec.sweep().orElseThrow();
-        if (!sweepBeam.due(sweep, holdTicks)) {
-            return;
-        }
-        boolean left = x < PlayField.WIDTH / 2.0;
-        double inward = left ? -StrictMath.PI / 2 : StrictMath.PI / 2;
-        double bearing = heading(
-                shipX - x - beamOffsetX(),
-                shipY - y + spec.sweep().orElseThrow().originDown());
-        sweepBeam.start(sweep, left ? Math.clamp(bearing, inward, 0) : Math.clamp(bearing, 0, inward));
-    }
-
     /** Whether its sweep is in its telegraph now. */
     public boolean telegraphing() {
         return sweepBeam.running()
@@ -2389,56 +1437,6 @@ public final class Enemy implements Hashed {
         return curlRoll.armoured() ? spec.roll().get().ball() : box;
     }
 
-    /**
-     * Links it into {@code into} as member {@code index} at (atX, atY), facing {@code heading}: a
-     * chain's head, segment or tail with its own hit box. A head's gun waits its first-shot delay.
-     */
-    void link(
-            Chain into,
-            int index,
-            EnemySpec memberSpec,
-            int memberKind,
-            Hitbox memberBox,
-            int unitSerial,
-            double atX,
-            double atY,
-            double heading) {
-        clearLevel04();
-        chain = into;
-        link = index;
-        spec = memberSpec;
-        box = memberBox;
-        kind = memberKind;
-        serial = unitSerial;
-        group = -1;
-        aim = 0;
-        inArc = false;
-        diveTicks = 0;
-        diveFired = false;
-        diveShot = false;
-        segment = 0;
-        distance = 0;
-        speed = 0;
-        phase = Phase.CHAIN;
-        holdTicks = 0;
-        orbit = Optional.empty();
-        exit = Spawn.Exit.DOWN;
-        hp = spec.hp();
-        partHp.start(spec);
-        ticksSinceHit = Integer.MAX_VALUE;
-        volleyTicks = spec.gun().isPresent() ? SimStep.ticks(spec.gun().get().firstShotDelay()) + 1 : 0;
-        burstLeft = 0;
-        burstTicks = 0;
-        leadsTarget = false;
-        carried = Optional.empty();
-        spiralling.reset(0);
-        vx = 0;
-        vy = 0;
-        x = prevX = atX;
-        y = prevY = atY;
-        facing = heading;
-    }
-
     /** M5 part C: marks it as a unit of a wave tagged {@code waveTag} ("" for none). */
     void tag(String waveTag) {
         tag = waveTag;
@@ -2505,62 +1503,7 @@ public final class Enemy implements Hashed {
         return link;
     }
 
-    /**
-     * M5 part D: joins {@code into} as member {@code index} at (atX, atY), facing {@code heading}: a
-     * swarm's member, placed by its flock from now on (design/enemies/air/mote-swarm).
-     */
-    void join(Flock into, int index, Spawn plan, int unitSerial, double atX, double atY, double heading) {
-        clearLevel04();
-        flock = into;
-        member = index;
-        spec = plan.enemy();
-        box = spec.hitbox();
-        kind = plan.kind();
-        serial = unitSerial;
-        group = -1;
-        aim = 0;
-        inArc = false;
-        diveTicks = 0;
-        diveFired = false;
-        diveShot = false;
-        path = plan.path();
-        segment = 0;
-        distance = 0;
-        speed = plan.speed();
-        phase = Phase.FLOCK;
-        holdTicks = 0;
-        orbit = Optional.empty();
-        exit = Spawn.Exit.DOWN;
-        hp = spec.hp();
-        partHp.start(spec);
-        ticksSinceHit = Integer.MAX_VALUE;
-        volleyTicks = 0;
-        burstLeft = 0;
-        burstTicks = 0;
-        leadsTarget = false;
-        carried = plan.carried();
-        spiralling.reset(0);
-        vx = 0;
-        vy = 0;
-        x = prevX = atX;
-        y = prevY = atY;
-        facing = heading;
-    }
-
     // ---- M7 part D: aura rings (design/enemies/air/choir-herald), stepped by Auras ----
-
-    /** Spends its ring on {@code amount} of damage; returns what is left for the HP. */
-    private double absorb(double amount) {
-        if (!(auraRing.ring() > 0)) {
-            return amount;
-        }
-        double left = auraRing.spend(amount);
-        if (absorbQuiet == 0) {
-            events.add(SimEvents.Type.RING_ABSORBED, x, y(), kind);
-            absorbQuiet = ABSORB_EVENT_GAP;
-        }
-        return left;
-    }
 
     /** M7 part D: its aura ring, stepped by {@link Auras}. */
     AuraRing auraRing() {
@@ -2634,22 +1577,6 @@ public final class Enemy implements Hashed {
     /** M7 part D: how far its ring's collapse at its Herald's death is, 0 to 1; 0 while none runs. */
     public double ringCollapse() {
         return auraRing.ringCollapse();
-    }
-
-    /**
-     * M7 part D: a Herald's hover: its side-to-side drift ({@code sine}, the stat block's 32 px over 10 s) goes
-     * on in time where its entry's weave along its path left off.
-     */
-    private void hoverDrift(EnemySpec.Sine sine) {
-        hoverTicks++;
-        x = path.x(segment, distance);
-        y = path.y(segment, distance);
-        double along = distance / speed + hoverTicks * SimStep.SECONDS;
-        x += sine.amplitude() * Trig.sin(2 * StrictMath.PI * along / sine.periodSeconds());
-        if (offX != 0 || offY != 0) {
-            x += offX;
-            y += offY;
-        }
     }
 
     // ---- M7 part D: a unit part (design/enemies/ground/shellback, the mortar vent); M8 part B: several ----
@@ -2743,24 +1670,9 @@ public final class Enemy implements Hashed {
         return damagePart(0, amount, fromAbove);
     }
 
-    /**
-     * M7 part D: its standing part {@code p} takes damage (an aura ring spends itself first; a curled shell glances
-     * off); returns whether this destroyed it.
-     */
+    /** M7 part D: its standing part {@code p} takes damage; returns whether this destroyed it ({@link EnemyDamage}). */
     boolean damagePart(int p, double amount, boolean fromAbove) {
-        if (!partAlive(p) || growTicks > 0) {
-            return false;
-        }
-        if (armoured()) {
-            glancedOff();
-            return false;
-        }
-        double left = absorb(amount);
-        ticksSinceHit = 0;
-        if (left <= 0) {
-            return false;
-        }
-        return partHp.take(p, left);
+        return hurt.damagePart(p, amount, fromAbove);
     }
 
     /**
@@ -2772,14 +1684,6 @@ public final class Enemy implements Hashed {
             return true;
         }
         return partHp.silenced(spec.parts());
-    }
-
-    /**
-     * M8 part B (design/enemies/ground/drill-rig): its gun's interval now: the stat block's, longer by each lost part's
-     * slowdown (exactly the stat block's without parts).
-     */
-    private int volleyInterval(EnemyGun gun) {
-        return SimStep.ticks(gun.intervalSeconds() + partHp.slowSeconds(spec.parts()));
     }
 
     // ---- M7 part D: the curl-roll (design/enemies/ground/shellback) ----
@@ -2794,7 +1698,7 @@ public final class Enemy implements Hashed {
     }
 
     /** M7 part E: whether it is a vortex whose vanes are closed (it is not open). */
-    private boolean vanesClosed() {
+    boolean vanesClosed() {
         return phase == Phase.VORTEX && !vortexCycle.open();
     }
 
@@ -2818,32 +1722,6 @@ public final class Enemy implements Hashed {
     /** M7 part E: its vortex's cycle, for the {@link EnemyForce}'s events and spiral. */
     VortexCycle vortexCycle() {
         return vortexCycle;
-    }
-
-    /** A damage glanced off its curled shell: the grey flash's event (spaced like the absorb's). */
-    private void glancedOff() {
-        if (absorbQuiet == 0) {
-            events.add(SimEvents.Type.SHOT_GLANCED, x, y(), -1);
-            absorbQuiet = ABSORB_EVENT_GAP;
-        }
-    }
-
-    /** Whether its HP fell to its roll's share and its roll is still to come. */
-    private boolean curlDue() {
-        if (curlRoll.rolled()
-                || spec.roll().isEmpty()
-                || !walking.active()
-                || curlRoll.phase() != CurlPhase.WALK
-                || pouncing.leaping()) {
-            return false;
-        }
-        return hp <= spec.roll().get().belowShare() * spec.hp();
-    }
-
-    /** It starts its curl where it stands. */
-    private void curl() {
-        curlRoll.curl();
-        events.add(SimEvents.Type.CURLED, x, y(), kind);
     }
 
     /** M7 part D: where it is in its curl-roll; {@link CurlPhase#WALK} for a unit without one. */

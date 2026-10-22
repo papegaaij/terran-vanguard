@@ -18,6 +18,7 @@ import vanguard.game.audio.FlightSounds;
 import vanguard.game.audio.Sfx;
 import vanguard.game.render.AirborneWalkers;
 import vanguard.game.render.CreditNumbers;
+import vanguard.game.render.DeepDeaths;
 import vanguard.game.render.Effects;
 import vanguard.game.render.EnemyLooks;
 import vanguard.game.render.LevelRenderer;
@@ -271,7 +272,11 @@ final class EventEffects {
                 boolean drifting = i + 1 < events.size() && events.type(i + 1) == SimEvents.Type.WRECK_DRIFT;
                 wreckDriftX = drifting ? SimEvents.driftX(events.value(i + 1)) : 0;
                 wreckDriftY = drifting ? SimEvents.driftY(events.value(i + 1)) : 0;
-                death(kind, x, y, layer == Layer.GROUND);
+                if (deepDeath(kind, x, y, layer == Layer.GROUND)) {
+                    // M8 part C: a kill below the waterline bursts under water (DeepDeaths): no fireball, no smoke.
+                } else {
+                    death(kind, x, y, layer == Layer.GROUND);
+                }
                 if (layer == Layer.GROUND && !withers.get(kind).isEmpty()) {
                     // The Hive Node's creep withers over 2 s under its stump, then lies dry.
                     debris.startOnGround(
@@ -384,8 +389,11 @@ final class EventEffects {
                     debris.startOnGround(groundBreaks.get(object), DEBRIS_FRAME_TICKS, x, y, 0, sortie.groundScroll());
                 }
                 if (!splashes(x, y) || !waterBurst("small", x, y)) {
+                    // M8 part C: under the water (Level 23's probe) the under-water small burst.
                     effects.startOnGround(
-                            services.sprites.explosionSmall,
+                            renderer.deepDeaths().present() && renderer.underwaterAt(y)
+                                    ? renderer.deepDeaths().smallFlash()
+                                    : services.sprites.explosionSmall,
                             TINY_EXPLOSION_FRAME_TICKS,
                             x,
                             y,
@@ -415,7 +423,14 @@ final class EventEffects {
                 death(SimEvents.chainPopKind(events.value(i)), x, y);
             }
             case CHAIN_CUT, CHAIN_REGROWN ->
-                effects.start(services.sprites.explosionSmall, TINY_EXPLOSION_FRAME_TICKS, x, y);
+                // M8 part C: an eel's cut under water bursts in the under-water small burst.
+                effects.start(
+                        renderer.deepDeaths().present() && renderer.underwaterAt(y)
+                                ? renderer.deepDeaths().smallFlash()
+                                : services.sprites.explosionSmall,
+                        TINY_EXPLOSION_FRAME_TICKS,
+                        x,
+                        y);
             case AIRSTRIKE_BLAST -> {
                 if (!splashes(x, y) || !waterBurst("medium", x, y)) {
                     blasts.startOnGround(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y, 0, sortie.groundScroll());
@@ -862,7 +877,36 @@ final class EventEffects {
      * with it and with its husk; a flyer's stay where it died on the play field.
      */
     private void death(int kind, double x, double y) {
-        death(kind, x, y, sortie.enemyKinds().get(kind).layer() == Layer.GROUND);
+        boolean onGround = sortie.enemyKinds().get(kind).layer() == Layer.GROUND;
+        if (!deepDeath(kind, x, y, onGround)) {
+            death(kind, x, y, onGround);
+        }
+    }
+
+    /**
+     * M8 part C: a kill below the waterline (the renderer's grade at its height; design/art-direction, the explosion
+     * ladder under water): the under-water burst of its rung over its cavity, its own death pieces and glow, a
+     * Glassfin's shards or an eel part's husk sinking, a siphon pump's break and its remains on the ground. False
+     * (nothing started) above the water or without the art.
+     */
+    private boolean deepDeath(int kind, double x, double y, boolean onGround) {
+        DeepDeaths deep = renderer.deepDeaths();
+        if (!deep.present() || !renderer.underwaterAt(y)) {
+            return false;
+        }
+        EnemyLooks look = looks[kind];
+        start(pieces, deep.cavity(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        EnemyLooks.DeathEffect deathPieces = look.deathPieces();
+        start(pieces, deathPieces.frames(), deathPieces.ticksPerFrame(), x, y, deathPieces.delayTicks(), onGround);
+        start(pieces, deep.pieces(sortie, kind, x, y), DeepDeaths.piecesTicks(sortie, kind), x, y, 0, onGround);
+        start(pieces, deep.pumpBreak(sortie, kind), DeepDeaths.breakTicks(), x, y, 0, onGround);
+        start(effects, deep.flash(look), TINY_EXPLOSION_FRAME_TICKS, x, y, 0, onGround);
+        EnemyLooks.DeathEffect glow = look.deathGlow();
+        start(effects, glow.frames(), glow.ticksPerFrame(), x, y, glow.delayTicks(), onGround);
+        for (Array<AtlasRegion> remains : deep.pumpRemains(sortie, kind)) {
+            debris.startOnGround(remains, REMAINS_TICKS, x, y, 0, sortie.groundScroll());
+        }
+        return true;
     }
 
     /** As above, on the ground or (a pouncer shot in the air) on the play field. */

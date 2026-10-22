@@ -56,6 +56,7 @@ import vanguard.game.render.SetPieceWrecks;
 import vanguard.game.render.StormLooks;
 import vanguard.game.render.TargetingOverlay;
 import vanguard.game.render.ThreatArrows;
+import vanguard.game.render.WaterlineTell;
 import vanguard.game.render.WaveBanners;
 import vanguard.game.render.WeaponLooks;
 import vanguard.game.settings.Settings;
@@ -209,6 +210,13 @@ public final class LevelScreen implements GameScreen {
      * attempt's first shake-off; null in a level without one.
      */
     private final EventPrompt latchPrompt;
+    /**
+     * M8 part C: the rules strip at a waterline into the water (Level 23: {@code UNDER WATER · BULLETS ×0.7 · DRAG ·
+     * TORPEDOES +50 %}, 4 s below the ship); null in a level that never goes under water.
+     */
+    private final EventPrompt rulesStrip;
+    /** M8 part C: the medium's edge for the waterline's tell (the strip, the weapon rows' flash). */
+    private final WaterlineTell waterlineTell = new WaterlineTell();
     /** The collect pop's sprite and its frames' steps (20 fps). */
     static final String SONDE_COLLECT = "weather-sonde-collect";
 
@@ -331,6 +339,16 @@ public final class LevelScreen implements GameScreen {
                 .map(prompt -> new EventPrompt(
                         services.sprites.pixel, services.fonts.body, prompt.action(), prompt.keys(), prompt.seconds()))
                 .orElse(null);
+        rulesStrip = level.underwater()
+                ? new EventPrompt(
+                        services.sprites.pixel,
+                        services.fonts.label,
+                        WaterlineTell.ACTION,
+                        WaterlineTell.rules(
+                                services.content.europa().underwater(),
+                                services.fonts.label.getData().hasGlyph('\u00d7') ? "\u00d7" : "x"),
+                        WaterlineTell.SECONDS)
+                : null;
         threatArrows = flight.sensor() >= THREAT_ARROW_SENSOR ? new ThreatArrows() : null;
         renderer.modules(
                 flight.targeting()
@@ -640,6 +658,11 @@ public final class LevelScreen implements GameScreen {
             if (latchPrompt != null) {
                 latchPrompt.step(sortie.latched());
             }
+            if (waterlineTell.step(sortie.underwater()) && rulesStrip != null && sortie.flying()) {
+                // M8 part C: the waterline's tell: the rules strip and the weapon rows' flash.
+                rulesStrip.flash(sortie.realSeconds());
+                hud.waterline();
+            }
             if (barks != null) {
                 barks.step(
                         SimStep.ticks(sortie.levelSeconds()), sortie.realSeconds(), armourShare(), overdrivePickups());
@@ -798,6 +821,10 @@ public final class LevelScreen implements GameScreen {
                     if (latchPrompt != null) {
                         latchPrompt.reset();
                     }
+                    if (rulesStrip != null) {
+                        rulesStrip.reset();
+                    }
+                    waterlineTell.reset();
                     layersHit.clear();
                     effects.clear();
                     debris.clear();
@@ -1027,6 +1054,9 @@ public final class LevelScreen implements GameScreen {
         waveBanners.draw(batch, sortie.tick(), clock.alpha());
         if (latchPrompt != null && sortie.flying()) {
             latchPrompt.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
+        }
+        if (rulesStrip != null && sortie.flying()) {
+            rulesStrip.draw(batch, sortie.ship().renderY(clock.alpha()), sortie.realSeconds());
         }
         banner.draw(batch, sortie.tick(), clock.alpha());
         if (shake != 0) {

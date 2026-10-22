@@ -1,10 +1,10 @@
 ---
 title: Reef Spitter
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-09
+updated: 2026-10-22
 ---
 
 # Reef Spitter
@@ -55,6 +55,11 @@ Values are first-draft balancing numbers at **medium** (see the [balancing basis
   in a level with `water: true`.
 - **Weak point drawn only** ([single-part rule](../../README.md#stat-block-template)): the violet
   barrel root glows but takes no extra damage; the draft's ×1.5 is struck.
+- **Under water** (Act 4, from Level 23; the [naval](../README.md#returning-units-under-water) *Returning units* table): a
+  nest that enters in a section with `medium: underwater` sits on the sea floor (a shaft ledge, a farm rack) instead of a
+  raft: the data's `underwater` block (`drift: 0`, `look: floor`) stops its drift, and the game draws it on a
+  rock-and-kelp base instead of the raft; its fans × 0.7 by Europa's water rules. Applied when the level's script is
+  built, by the nest's entry time (M8 part C).
 
 ### Concept art
 
@@ -79,6 +84,8 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
       the small water burst and ripple train, the raft's ten sinking steps over its plain body)
 - [x] Death effect, bounty and score per this spec; production sprites and intel portrait (M5
       part E, steps E1b and E3e; approved as final in round 33)
+- [ ] Under water (M8 part C): the `underwater` block loaded and checked (step C2), applied to a nest entering under
+      water (step C3), its `floor` base drawn (step C4)
 
 ## Decisions
 
@@ -101,3 +108,5 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
   (the raft's cut edge, the dark intel picture); the stat block's numbers and the build choices of round 33 (the rafts on the flanks (d), the first volley 1.0 s after
   entering (e), the weak point drawn only (t)) accepted. `design: approved`, `art: final`;
   every Implementation item is ticked, so the implementation is `done`.
+- 2026-10-22: M8 part C, step C2 (gap check m8c-gaps.md §5 D2, pending the user's review in round 52): the
+  `underwater` block in its data (`drift: 0`, `look: floor`): under water it sits on the floor, no raft and no drift.

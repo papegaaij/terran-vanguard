@@ -84,6 +84,33 @@ final class ObjectivePasses {
         listensTarget = radio.listens(CueTrigger.TARGET_DESTROYED);
     }
 
+    /**
+     * The units a secondary objective counts of all (the escapes' enemy, every unit of its kill-all enemies, its set
+     * pieces, a parts objective's parts, M5 part F's sondes, M7 part C's tendrils): its {@code n / total}.
+     */
+    static int escapers(LevelScript script, EnemyForce force, SetPiece[] setPieces, int partsPiece) {
+        String tag = script.objectives().secondary().tag();
+        int escapers = tag.isEmpty()
+                ? force.unitsOf(script.objectives().secondary().escapes())
+                : force.unitsOf(script.objectives().secondary().escapes(), tag);
+        for (String slug : script.objectives().secondary().killAll()) {
+            escapers += force.unitsOf(slug);
+        }
+        for (SetPiece piece : setPieces) {
+            escapers += script.objectives().secondary().counts(piece.slug()) ? 1 : 0;
+        }
+        escapers += partsPiece >= 0 ? script.objectives().secondary().parts().size() : 0;
+        // M5 part F: a collect: sondes objective counts the level's sondes.
+        escapers += script.objectives().secondary().sondes()
+                ? script.hazards().sondes().orElseThrow().at().size()
+                : 0;
+        // M7 part C: a links objective counts the difficulty's tendrils (one per gate pair).
+        escapers += script.objectives().secondary().links()
+                ? script.ground().gates().size()
+                : 0;
+        return escapers;
+    }
+
     /** A new attempt: no group called, no kill of the wingman's. */
     void reset() {
         escortKilled = false;
@@ -125,6 +152,8 @@ final class ObjectivePasses {
             links.anchorGone(enemy, true);
         }
         int headBonus = 0;
+        // M8 part C: a chain head's head-first pickup drops only with a head-first kill.
+        boolean dropsCarried = true;
         if (enemy.grounded() && (enemy.driftX() != 0 || enemy.driftY() != 0)) {
             // M5 part G: its remains drift on with its floe (Level 13's mortars).
             events.add(
@@ -144,7 +173,9 @@ final class ObjectivePasses {
                 return;
             }
             // M7 part C: a head destroyed before any other part pays its first bonus (the whole chain's).
-            headBonus = force.headFirstBonusDue(enemy) ? enemy.chain().spec().headFirstBonus() : 0;
+            boolean headFirst = force.headFirstBonusDue(enemy);
+            headBonus = headFirst ? enemy.chain().spec().headFirstBonus() : 0;
+            dropsCarried = headFirst || !enemy.chain().headFirstDrop();
             force.memberDestroyed(enemy);
         }
         for (int p = 0; p < enemy.partCount(); p++) {
@@ -165,7 +196,7 @@ final class ObjectivePasses {
             // M7 part E: a Dust Devil's grit cloud drops every pickup it held.
             s.pickupPasses.release(enemy);
         }
-        if (enemy.carried().isPresent()) {
+        if (enemy.carried().isPresent() && dropsCarried) {
             s.pickupPasses.drop(enemy.carried().get(), enemy.x(), enemy.y());
         }
         if (spec.drop().isPresent() && kills % dropEvery(spec.drop().get().every()) == 0) {
@@ -357,6 +388,35 @@ final class ObjectivePasses {
     private void payPart(SetPiece piece, int part) {
         tally.partKill(piece.spec().parts().get(part).bounty());
         events.add(SimEvents.Type.PART_DESTROYED, piece.partX(part), piece.partY(part), part);
+    }
+
+    /**
+     * The level is won (the scroll reached its end): the escort's units home pay, the secondaries judged at the end
+     * (an escapes objective with escapes allowed, a kill ratio) pay their lines, and the radio's level-end cues.
+     */
+    void completeLevel() {
+        s.complete = true;
+        events.add(SimEvents.Type.LEVEL_COMPLETE, ship.x(), ship.y());
+        Convoy convoy = s.convoy;
+        // M5 part E: a naval convoy's level-end cues count its damageable units afloat; it pays nothing.
+        int home = convoy == null ? 0 : convoy.naval() ? convoy.afloat() : convoy.saveableAlive();
+        if (convoy != null && !convoy.naval() && !convoy.defend() && !convoy.groundAllies()) {
+            // Each unit home is a payout of its own (design/campaign, Level 04: the escort objective).
+            int credits = convoy.escort().credits();
+            for (int k = 0; k < home; k++) {
+                s.escortCredits += tally.earn(CreditSource.OBJECTIVES, credits);
+                tally.scoreValue(credits);
+            }
+        }
+        // M7 part F: an escapes objective with escapes allowed is met at the end with no more than those away.
+        if (objectives.escapesAtEnd()) {
+            paySecondary();
+        }
+        // A kill-ratio secondary is judged at the end (design/systems/scoring): its line before the level-end line.
+        if (objectives.meetsKillRatio(tally.kills())) {
+            paySecondary();
+        }
+        radio.end(home);
     }
 
     /** The secondary objective is met: its credits, its event and its line. */

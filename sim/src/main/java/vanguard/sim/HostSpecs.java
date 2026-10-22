@@ -60,6 +60,12 @@ public interface HostSpecs {
      * ({@code leader}); it turns at most {@code turnRate} radians per second and flies about
      * {@code speed} px/s, {@code diveSpeed} after a loop-back. At most {@code max} members ({@link
      * Flock#MAX_MEMBERS} at the most).
+     *
+     * <p>M8 part C (design/enemies/naval/glassfin): with a {@code sway} each member swings {@code amplitude} px across
+     * the leader point's heading, one full swing per {@code periodSeconds}, each member a fixed phase behind the one
+     * before it ({@link Flock#RIBBON_LAG}), so the school ripples as a ribbon; the steering works on the members'
+     * unswayed places. With a {@code ram} its members break off and dive at the ship ({@link Ram}); a unit of the same
+     * stat block flying a path (a {@code column}) rams by it too. Empty for none.
      */
     public record FlockSpec(
             double separation,
@@ -70,8 +76,56 @@ public interface HostSpecs {
             double speed,
             double diveSpeed,
             double turnRate,
-            int max) {
+            int max,
+            java.util.Optional<FlightSpecs.Sine> sway,
+            java.util.Optional<Ram> ram) {
+        /** Without M8 part C's sway and ram (the Mote Swarm's). */
+        public FlockSpec(
+                double separation,
+                double radius,
+                double alignment,
+                double cohesion,
+                double leader,
+                double speed,
+                double diveSpeed,
+                double turnRate,
+                int max) {
+            this(
+                    separation,
+                    radius,
+                    alignment,
+                    cohesion,
+                    leader,
+                    speed,
+                    diveSpeed,
+                    turnRate,
+                    max,
+                    java.util.Optional.empty(),
+                    java.util.Optional.empty());
+        }
+
+        /** M8 part C: this flock with its members' sway and ram; empty for none. */
+        public FlockSpec withRibbon(java.util.Optional<FlightSpecs.Sine> withSway, java.util.Optional<Ram> withRam) {
+            return new FlockSpec(
+                    separation,
+                    radius,
+                    alignment,
+                    cohesion,
+                    leader,
+                    speed,
+                    diveSpeed,
+                    turnRate,
+                    max,
+                    withSway,
+                    withRam);
+        }
+
         public FlockSpec {
+            java.util.Objects.requireNonNull(sway);
+            java.util.Objects.requireNonNull(ram);
+            if (sway.isPresent() && !(sway.get().periodSeconds() > 0)) {
+                throw new IllegalArgumentException("a sway takes time: " + sway.get());
+            }
             if (!(separation > 0)
                     || !(radius >= separation)
                     || !(alignment >= 0)
@@ -84,6 +138,27 @@ public interface HostSpecs {
                     || max > Flock.MAX_MEMBERS) {
                 throw new IllegalArgumentException("a flock has a separation inside its radius, a pull toward"
                         + " its leader, speeds, a turn rate and 1 to " + Flock.MAX_MEMBERS + " members");
+            }
+        }
+    }
+
+    /**
+     * M8 part C, a member's ram (design/enemies/naval/glassfin): {@code afterSeconds} after it first came onto the play
+     * field each member draws once, by its own seed, whether it breaks off ({@code share} of them do: the difficulty's
+     * dive share). One that does glints for {@code tellSeconds} (the tell, {@link SimEvents.Type#EYE_GLINT}, value its
+     * kind), {@code waitSeconds} after the tell's end dives straight at where the ship is then at {@code speed} px/s
+     * (straight down when the ship is not below it), without homing, and is gone once it leaves the play field (an
+     * escape); none loops back.
+     */
+    public record Ram(double afterSeconds, double share, double tellSeconds, double waitSeconds, double speed) {
+        public Ram {
+            if (!(afterSeconds >= 0)
+                    || !(share >= 0 && share <= 1)
+                    || !(tellSeconds >= 0)
+                    || !(waitSeconds >= 0)
+                    || !(speed > 0)) {
+                throw new IllegalArgumentException("a ram has a delay, a share of 0 to 1, a tell, a wait and a speed: "
+                        + afterSeconds + ", " + share + ", " + tellSeconds + ", " + waitSeconds + ", " + speed);
             }
         }
     }

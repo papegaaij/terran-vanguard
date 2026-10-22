@@ -43,6 +43,13 @@ Outputs (assets/ui/, a texture of its own like the title scene, not packed):
                                   left with its night side to the right, the Great Red Spot; a thin steam thread
                                   rising from the first rig far out on the plates, lit on its sunward side
   design/campaign/act-4-deep-water/concept/act-4-still-final-r51-a.png   its review sheet, as Act 1's
+  design/campaign/act-4-deep-water/concept/act-4-still-r52-{a,b}.png   round 52 (F.6 redo) proposals, `act-4-r52`
+                                  only: the Act 4 still with a giant water-vapour plume (ice grains thrown on
+                                  ballistic arcs from a vent, sunlit from the upper left, glittering, falling back as
+                                  a veil); a: one huge plume on the horizon left of Jupiter, b: a nearer plume on a
+                                  fissure below the lettering with a curtain of smaller ones receding along it;
+                                  act-4-still-r52-sheet.png: both stills and the title card over each. assets/ui keeps
+                                  the r51 still until the user picks (then set A4_GEYSER and run `act-4`)
 
 The look is Level 01's final backdrop (tools/art/backdrop_l01.py, approved in round 12): Earth and
 the terminator are its placeholder generator's functions (tools/concept/backdrop_l01.py, frozen,
@@ -72,7 +79,7 @@ Act 4's still is built from Level 22's production backdrop (tools/art/backdrop_l
 assets/backdrop/level-22/) the same way, without haze (Europa has no air); Jupiter, the stars and the steam
 thread are drawn here (Jupiter's bands with tools/concept/europa_r48.py's ramp JUP).
 
-Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [--review]   (~30 s for all; after
+Run: python3 tools/art/act_stills.py [act-1] [act-2] [act-3] [act-4] [--review] | act-4-r52   (~30 s for all; after
 backdrop_l01.py, stormhawk.py, backdrop_l08.py, backdrop_l15.py and backdrop_l22.py)
 """
 import importlib.util
@@ -856,7 +863,94 @@ def jupiter():
     return rgb, (inside * edge)
 
 
-def europa_still():
+# round 52 (F.6 redo, the user: "Europa is known for its giant geysers shooting up to 200 km"): a giant water-vapour
+# plume over the accepted composition, two proposals; None draws the round-51 still unchanged (assets/ui keeps it until
+# the user picks, then set this to the chosen variant and rebuild)
+A4_GEYSER = None
+A4_R52 = "r52"
+# a vent: (screen x, screen y of the vent, apex height px, jet spread, lean, particles, seed, hidden below the horizon)
+GEYSERS = {
+    "a": [(196.0, 296.0, 240.0, 0.085, 0.0, 26000, 5201, True)],         # one huge plume on the horizon, left of Jupiter
+    "b": [(156.0, 444.0, 384.0, 0.06, -0.01, 26000, 5211, False),      # a nearer one on a fissure, below the lettering
+          (104.0, 392.0, 150.0, 0.09, -0.01, 9000, 5212, False),         # and a curtain of smaller ones along it,
+          (58.0, 356.0, 92.0, 0.1, 0.0, 6000, 5213, False),              # receding to the horizon on the left
+          (22.0, 330.0, 56.0, 0.1, 0.0, 4000, 5214, False)],
+}
+FISSURE = [(186.0, 468.0), (156.0, 444.0), (104.0, 392.0), (58.0, 356.0), (22.0, 330.0), (-10.0, 312.0)]
+
+
+def blur(a, s):
+    """A separable Gaussian blur (sigma ``s`` px), zero outside."""
+    r = int(3 * s) + 1
+    k = np.exp(-0.5 * (np.arange(-r, r + 1) / s) ** 2)
+    k /= k.sum()
+    for axis in (0, 1):
+        pad = [(0, 0), (0, 0)]
+        pad[axis] = (r, r)
+        p = np.pad(a, pad)
+        n = a.shape[axis]
+        a = sum(k[i] * (p[i:i + n] if axis == 0 else p[:, i:i + n]) for i in range(2 * r + 1))
+    return a
+
+
+def geyser_density(x0, y0, apex, spread, lean, n, seed, behind_horizon):
+    """A plume of ice grains thrown ballistically from a vent: each grain flies a parabola (a few jets fanning out at
+    their own angles), its time in flight sampled evenly, so the field is thin and dense at the vent, a tall column
+    widening upward, a crown where the grains turn, and a faint veil where they fall back, wider still."""
+    rng = np.random.default_rng(seed)
+    jets, tops = rng.normal(0, spread, 9), rng.uniform(0.55, 1.0, 9)       # each jet its own angle and height
+    which = rng.integers(0, 9, n)
+    ratio = jets[which] + rng.normal(0, spread * 0.3, n) + lean
+    vy = np.sqrt(2 * apex * tops[which] * rng.uniform(0.15, 1, n) ** 0.6)  # most grains high, fewer lower: a round crown
+    depth = rng.normal(0, spread, n) * vy * 0.3                             # their drift toward or away from the camera
+    tmax = 2 * vy * 1.05                                                    # up and back down to the vent
+    steps = 90
+    t = rng.uniform(0, 1, (n, steps)) * tmax[:, None]
+    x = x0 + (ratio * vy)[:, None] * t
+    y = y0 - (vy[:, None] * t - 0.5 * t ** 2)
+    w = np.exp(-t / (tmax[:, None] * 0.7))                                  # grains thin out as they fly: a faint veil
+    xi, yi = np.round(x).astype(int), np.round(y).astype(int)
+    ok = (xi >= 0) & (xi < W) & (yi >= 0) & (yi < H) & (y <= y0 + depth[:, None] * t)   # landed on the ice
+    d = np.bincount(yi[ok] * W + xi[ok], weights=w[ok], minlength=W * H).reshape(H, W)
+    d = blur(d, 1.2) * 0.6 + blur(d, 3.5) * 0.4
+    d = np.maximum(d * 500.0 / n * (apex / 240.0) ** 1.6 - 0.02, 0)   # the same look for any grain count and size;
+    if behind_horizon:                                                 # no faint haze at the fringe
+        d = np.where(_yy > HORIZON4 + CURVE4 * (_xx - W / 2) ** 2, 0.0, d)
+    return d
+
+
+def draw_geysers(rgb, variant):
+    """The giant plumes of a round-52 variant over the still: lit by the sun on their upper left (their own grains
+    shadow the far side), a little of Jupiter's warm light on the right, ice crystals glittering in the sun."""
+    dens = np.zeros((H, W))
+    for g in GEYSERS[variant]:
+        dens += geyser_density(*g)
+    if variant == "b":                                                      # the fissure on the ice, dark with a lit lip
+        for (ax, ay), (bx, by) in zip(FISSURE, FISSURE[1:]):
+            seg = np.array([bx - ax, by - ay])
+            t = np.clip(((_xx - ax) * seg[0] + (_yy - ay) * seg[1]) / (seg @ seg), 0, 1)
+            dist = np.hypot(_xx - ax - t * seg[0], _yy - ay - t * seg[1])
+            wdt = 0.6 + 2.2 * np.clip((_yy - 300) / 160, 0, 1)
+            rgb = rgb * (1 - 0.75 * np.exp(-(dist / wdt) ** 2))[..., None]
+            lip = np.exp(-((dist - wdt * 1.2) / (wdt * 0.6)) ** 2) * (_yy < ay + (_xx - ax) * seg[1] / seg[0])
+            rgb = rgb + (lip * 40)[..., None]
+    n = raster.fbm(W, H, 16, 5220, octaves=4, period=False)
+    dens = dens * (0.65 + 0.7 * n)
+    alpha = 1 - np.exp(-dens * 1.6)
+    tau = np.zeros((H, W))                                                  # the grains between a point and the sun
+    for step in range(3, 40, 3):                                            # (upper left), over a short way
+        dx, dy = round(step * 0.78), round(step * 0.63)
+        tau[dy:, dx:] += dens[:H - dy, :W - dx] * 3
+    lit = np.exp(-tau * 0.035)
+    col = (np.array((242, 248, 255.0)) * lit[..., None] + np.array((76, 88, 114.0)) * (1 - lit[..., None])
+           + np.array((18, 12, 6.0)) * np.clip((_xx - 140) / 400, 0, 1)[..., None] * (1 - lit[..., None]))
+    rgb = rgb * (1 - alpha[..., None]) + col * alpha[..., None]
+    rng = np.random.default_rng(5230)
+    glint = rng.uniform(0, 1, (H, W)) < np.clip(alpha - 0.1, 0, 0.7) * lit * 0.03
+    return np.where(glint[..., None], np.array((255, 255, 255.0)), rgb)
+
+
+def europa_still(geyser=None):
     hor = HORIZON4 + CURVE4 * (_xx - W / 2) ** 2
     dy = np.maximum(_yy - hor, 0.5)
     ground = _yy > hor
@@ -882,6 +976,8 @@ def europa_still():
     sky = sky * (1 - ja[..., None]) + jrgb * ja[..., None]
     rgb = np.where(ground[..., None], rgb, sky)
     rgb += np.exp(-((_yy - hor) / 1.2) ** 2)[..., None] * np.array((30, 34, 40.0)) * ground[..., None]   # the sunlit rim
+    if geyser:
+        rgb = draw_geysers(rgb, geyser)
     # the steam thread from the first rig, far out on the plates
     sx = STEAM_AT[0]
     base_y = HORIZON4 + CURVE4 * (sx - W / 2) ** 2 + STEAM_AT[1]
@@ -900,8 +996,8 @@ def europa_still():
     return np.clip(rgb, 0, 255)
 
 
-def still4():
-    img = ui_dither(europa_still(), np.ones((H, W)), STILL_COLOURS)
+def still4(geyser=A4_GEYSER):
+    img = ui_dither(europa_still(geyser), np.ones((H, W)), STILL_COLOURS)
     return img.convert("RGB").convert("RGBA")
 
 
@@ -929,7 +1025,38 @@ def review4():
     print(f"review: {path.relative_to(ROOT)}")
 
 
+def round52():
+    """Round 52's proposals: the still with a giant geyser, variants a and b, and their sheet (each still and the title
+    card over it)."""
+    A4_CONCEPT.mkdir(parents=True, exist_ok=True)
+    stills = {}
+    for v in GEYSERS:
+        stills[v] = still4(v)
+        path = A4_CONCEPT / f"act-4-still-{A4_R52}-{v}.png"
+        stills[v].convert("RGB").save(path, optimize=True)
+        print(f"{path.relative_to(ROOT)}: {artkit.colour_count([stills[v]])} colours")
+    what = {"a": "A: ONE HUGE PLUME ON THE HORIZON, LEFT OF JUPITER",
+            "b": "B: A NEARER PLUME ON A FISSURE, A CURTAIN OF SMALLER ONES RECEDING ALONG IT"}
+    sheet = raster.sheet(1000, 40 + len(stills) * 2 * (H + 28) + 20,
+                         "ACT 4 TITLE-CARD STILL (R52): A GIANT EUROPA GEYSER", "ROUND 52 F.6 REDO - PROPOSALS A/B")
+    y = 38
+    for v, img in stills.items():
+        raster.draw_text(sheet, 16, y, f"{what[v]} - THE STILL, 960X540 AT 1X", raster.LABEL)
+        sheet.alpha_composite(img, (16, y + 14))
+        y += H + 28
+        raster.draw_text(sheet, 16, y, f"{v.upper()}: THE TITLE CARD OVER IT (DARKENED TO {int(BRIGHTNESS * 100)} %, "
+                                       "LETTERBOX, CHROME LETTERING)", raster.LABEL)
+        sheet.alpha_composite(title_card(img, A4_NAME), (16, y + 14))
+        y += H + 28
+    path = A4_CONCEPT / f"act-4-still-{A4_R52}-sheet.png"
+    sheet.convert("RGB").save(path, optimize=True)
+    print(f"sheet: {path.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
+    if "act-4-r52" in sys.argv[1:]:
+        round52()
+        sys.exit(0)
     acts = [a for a in sys.argv[1:] if a in ("act-1", "act-2", "act-3", "act-4")] or ["act-1", "act-2", "act-3", "act-4"]
     if "act-1" in acts:
         if "--review" not in sys.argv[1:]:

@@ -497,8 +497,20 @@ final class EnemyForce {
                         Double.isNaN(shipX) ? flock.leaderX() : shipX,
                         Double.isNaN(shipY) ? flock.leaderY() : shipY);
                 pursuitEvents(flock);
+            } else if (flock.spec().ram().isPresent() && !Double.isNaN(shipX)) {
+                // M8 part C: its rams dive at the ship (design/enemies/naval/glassfin).
+                flock.advance(canyon, shipX, shipY);
             } else {
                 flock.advance(canyon);
+            }
+            for (int i = 0; i < flock.size(); i++) {
+                if (flock.rammedOff(i)) {
+                    // M8 part C: a ram that dove off the play field is gone (it escaped); none loops back.
+                    Enemy member = flock.member(i);
+                    flock.drop(i);
+                    escapes.escaped(member);
+                    free(member);
+                }
             }
             if (flock.loopedBackNow() > 0) {
                 events.add(SimEvents.Type.LOOP_BACK, flock.leaderX(), flock.leaderY(), flock.loopedBackNow());

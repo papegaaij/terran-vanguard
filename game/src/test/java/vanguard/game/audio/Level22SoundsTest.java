@@ -21,7 +21,7 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M8 part B's Level 22 sounds (design/audio/sfx, Level 22's rows; round 51's a variants until the user picks): the ice
+ * M8 part B's Level 22 sounds (design/audio/sfx, Level 22's rows; round 51's picks: the geyser tell and the rig's collar, ring and death b, the rest a): the ice
  * geysers' crack and steam roar instead of the furnace vent's, the Drill Rig's collar whine (one quiet loop while a rig
  * is on the screen), its ring of shards once a volley instead of the shots' report and its collapse with its
  * explosion; the Europa ice bed, crossfading to Conamara's at the run-in; track 10 "Thera Deep": the ambience alone on
@@ -35,7 +35,7 @@ class Level22SoundsTest {
             new SfxBank(new MockAudio(), new Lwjgl3Files(), new Mixer(AudioSettings.defaults()), () -> now[0]);
 
     @Test
-    void everySoundHasItsFileTheProposalAAndTheBedsLoop() throws IOException {
+    void everySoundHasItsFileTheUsersPickAndTheBedsLoop() throws IOException {
         for (Sfx sfx : List.of(
                 Sfx.GEYSER_TELL,
                 Sfx.GEYSER_BURST,
@@ -45,7 +45,12 @@ class Level22SoundsTest {
                 Sfx.AMBIENCE_EUROPA_ICE,
                 Sfx.AMBIENCE_CONAMARA)) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r51-a.ogg"), "round 51's a until the pick: " + sfx.path());
+        }
+        for (Sfx sfx : List.of(Sfx.GEYSER_TELL, Sfx.RIG_COLLAR, Sfx.RIG_RING, Sfx.RIG_DEATH)) {
+            assertTrue(sfx.path().endsWith("-r51-b.ogg"), "round 51's pick b: " + sfx.path());
+        }
+        for (Sfx sfx : List.of(Sfx.GEYSER_BURST, Sfx.AMBIENCE_EUROPA_ICE, Sfx.AMBIENCE_CONAMARA)) {
+            assertTrue(sfx.path().endsWith("-r51-a.ogg"), "round 51's pick a: " + sfx.path());
         }
         assertEquals(Sfx.AMBIENCE_EUROPA_ICE, Sfx.ambience("europa-ice"));
         assertEquals(Sfx.AMBIENCE_CONAMARA, Sfx.ambience("conamara-station"));

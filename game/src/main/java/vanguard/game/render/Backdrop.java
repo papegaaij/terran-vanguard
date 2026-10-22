@@ -387,14 +387,52 @@ public final class Backdrop {
             double half = image.getRegionHeight() / 2.0;
             patches.add(new WallProjection.Patch(patch.side(), patch.row() - half, patch.row() + half, image));
         }
+        // M8 part C: an ice shaft (Level 23) has its own walls, wet below the waterline, with the collars' glow.
+        boolean ice = !sprites.hasBackdrop(folder + CANYON_WALL) && sprites.hasBackdrop(folder + ICE_WALL);
+        String wall = ice ? ICE_WALL : CANYON_WALL;
+        String foot = ice ? ICE_WALL + "-foot" : "wall-foot";
         canyon = new WallProjection(
                 terrain,
                 looks,
-                sprites.backdrop(folder + "canyon-wall", 1).first(),
-                sprites.backdrop(folder + "wall-foot", 1).first(),
+                sprites.backdrop(folder + wall, 1).first(),
+                sprites.backdrop(folder + foot, 1).first(),
                 pixel,
                 islands,
-                patches);
+                patches,
+                ice
+                        ? new WallProjection.Ice(
+                                optionalImage(folder + wall + "-wet"),
+                                optionalImage(folder + foot + "-wet"),
+                                optionalImage(folder + wall + "-glow"),
+                                wetRow)
+                        : null);
+    }
+
+    /** M7 part C: a canyon's wall texture; M8 part C: an ice shaft's ({@code ice-wall}, {@code -wet}, {@code -glow}). */
+    static final String CANYON_WALL = "canyon-wall";
+
+    static final String ICE_WALL = "ice-wall";
+
+    /**
+     * M8 part C: the terrain row from which an ice shaft's walls are wet (the first waterline's ground row less the play
+     * field's height: Level 23's 2,106); +∞ without a waterline.
+     */
+    private double wetRow = Double.POSITIVE_INFINITY;
+
+    /** M8 part C: an ice shaft's walls are wet from terrain row {@code row} up (the waterline). */
+    void wetFrom(double row) {
+        wetRow = row;
+    }
+
+    private AtlasRegion optionalImage(String name) {
+        return sprites.hasBackdrop(name) ? sprites.backdrop(name, 1).first() : null;
+    }
+
+    /** M8 part C: an ice shaft's collar strips glowing over its walls, after the grade (nothing for a canyon). */
+    public void drawCanyonGlow(SpriteBatch batch) {
+        if (canyon != null) {
+            canyon.drawGlow(batch);
+        }
     }
 
     /** What is drawn over the ground layer's set pieces and under its towers (Level 09's collapse). */

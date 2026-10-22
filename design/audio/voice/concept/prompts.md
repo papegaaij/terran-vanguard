@@ -418,7 +418,7 @@ Scott Danneker, a wide pitch range and long pauses; Susan Morin, a storybook rea
 Round 51 (the Dr. Ilse Brandt audition, M8 part B, step AUD-B; pending the user's review), generated with
 `tools/concept/audio/tts_r51b.py` as round 37, each line through radio filter b on its own, 1 s apart (−15.8 /
 −15.9 LUFS, OGG Vorbis q4, 44.1 kHz mono). Dr. Brandt (Conamara Station's director, Level 22; speaker `conamara`,
-`uncast: true` until the pick, the radio portrait `radio-conamara`), neutral (0.5 / 0.5 / 0.7), two of her lines:
+`uncast: true` until the pick (gone: round 51 cast her), the radio portrait `radio-conamara`), neutral (0.5 / 0.5 / 0.7), two of her lines:
 Level 22's t=1 call ("Aegis flight, Conamara Station. Four rigs on the shelf, forty of us in the dome, and the ice will
 not hold still.") and her next call after Varga's "Ilse? It's Elena. Hold on, we are coming.", t=100 ("Something went
 through under the north dome. There is water in the shaft at Kilo-Seven. It leads down."): Level 22 gives her no line
@@ -437,11 +437,49 @@ level, unhurried delivery, neither in the cast nor auditioned before (also measu
 | a | Margaret Espaillat | [Eminent Victorians, ch. 1 (Strachey)](https://archive.org/details/eminent_victorians_1204_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 168 Hz, a very narrow range (IQR 22 Hz), 2.4 words/s (takes 165 / 162 Hz); dry and even |
 | b | Sue Anderson | [Gallipoli Diary, ch. 1 (Gillam)](https://archive.org/details/gallipoli_diary_sa_librivox), cut at 60 s | public domain | 172 Hz, a narrow range (IQR 29 Hz), 2.4 words/s (takes 173 / 173 Hz); steady and plain, a diary read |
 
-**Her Level 22 lines with candidate b** (step VOX-B, M8 part B; pending the pick in round 51): all five of Dr. Brandt's
+**Her Level 22 lines with candidate b** (step VOX-B, M8 part B; rejected in round 51: Dr. Brandt is a): all five of Dr. Brandt's
 lines (t=1, `target-destroyed`, t=100, `secondary-objective`, the core-sample cache's secret) rendered by the production
 renderer `tools/art/voice.py` exactly as the game's own takes, but with `ref: ref-conamara-r51-b`, into
-`concept/voice-conamara-r51-b/<key>.ogg` under the keys that ref gives (candidate a's takes are in
-`assets/voice/conamara/`, the speaker table's provisional `ref`). The pick is a file move: for b, set the speaker's
-`ref` to `ref-conamara-r51-b` (drop a's pin) and move these five files into `assets/voice/conamara/`; for a, nothing
-changes. No take needed a retry or a pin; median pitch 170–185 Hz, no jump; every take read back word for word from
+`concept/rejected/voice-conamara-r51-b/<key>.ogg` under the keys that ref gives (candidate a's takes are in
+`assets/voice/conamara/`, the speaker table's provisional `ref`). Round 51 picked a: nothing changed in `assets/`, and b's five files moved to `concept/rejected/` with the audition. No take needed a retry or a pin; median pitch 170–185 Hz, no jump; every take read back word for word from
 the raw take with the name prompt ("collar" heard as "color" through the filter in one).
+
+Closed in round 51 (user, 2026-10-22, V.1 = a): **Chosen: a** (Margaret Espaillat, `refs/ref-conamara-r51-a.wav`). **Rejected: b** (Sue Anderson: `concept/rejected/voice-conamara-r51-b.ogg`, its five line files in `concept/rejected/voice-conamara-r51-b/` and the clip `concept/rejected/ref-conamara-r51-b.wav/.txt`).
+
+## voice-thera-control
+
+Round 52 (the Thera Deep Control audition, M8 part C, step AUD-C; pending the user's review), generated with
+`tools/concept/audio/tts_r52c.py` as round 51, each line through radio filter b on its own, 1 s apart (−16.0 /
+−16.2 LUFS, OGG Vorbis q4, 44.1 kHz mono). Thera Deep Control (the city's harbour controller, Levels 23 and 27; speaker
+`thera-control`, `uncast: true` until the pick), neutral (0.5 / 0.5 / 0.7), his two audition lines: Level 23's t=34
+call ("Aegis, Thera Deep Control. We see you on the shaft. The farms are below you, and so is whatever is draining
+them.") and the t=70 line ("Those are our farms, Aegis. Forty thousand people eat from those racks."). Seeds 100–102
+per candidate and line (b's t=70 also 103–105); the pin is the take Whisper (base.en, the names prompt) read back right
+with its median pitch nearest the clip's without a jump: a 100 / 100, b 101 / 105. b's "racks" read back as "wrecks"
+in five of his six t=70 takes (his open vowel); 105 is the one heard right. "Thera Deep" read back as written in every
+take (no respelling). Through the filter both files read back word for word. Measured: a 14.6 s, b 14.3 s. Measured
+only, not listened to.
+
+The voice README asks for a calm man, older than Rook, below or between the cast men (Ares Control 118 Hz on his
+trimmed clip, Nansen 123 Hz, the Kilo Lead 129 Hz) by timbre rather than pitch alone, warmer and slower than Ares
+Control (3.0 words a second). Both candidates read in a low, unhurried way, neither in the cast nor auditioned before
+(also measured and passed over: John Greenman, 103 Hz but quick; Andy Minter, 113 Hz, 2.9 words/s; Tom Weiss, 114 Hz
+with octave jumps in the clip; Bob Neufeld and Don W. Jenkins, about 150 Hz; Barry Eads, 142 Hz, a wide range; Phil
+Chenevert, 130 Hz and quick; Clive Catterall, too low and creaky for the pitch tracker). Chatterbox lifts both voices:
+a's takes sit at 116 / 127 Hz (between Ares Control and the Kilo Lead), b's at 133 / 126 Hz (around Nansen and the Kilo
+Lead), so the pair differs from the cast men by timbre and pace more than by pitch.
+
+| Variant | Reader | Source | Licence | Clip pitch |
+|---|---|---|---|---|
+| a | Bruce Pirie | [The Mayor of Casterbridge, ch. 1 (Hardy)](https://archive.org/details/mayor_casterbridge_1207_librivox), cut at 120 s | public domain (Public Domain Mark 1.0) | 100 Hz, a narrow range (IQR 19 Hz), 2.6 words/s (takes 116 / 127 Hz); a low, even country narration |
+| b | John Van Stan | [Early Greek Philosophy & Other Essays, ch. 1 (Nietzsche)](https://archive.org/details/earlygreekphilosophy_2103_librivox), cut at 60 s | public domain (Public Domain Mark 1.0) | 119 Hz, a narrow range (IQR 26 Hz), 1.7 words/s (takes 133 / 126 Hz); slow and soft, a measured essay read |
+
+**His Level 23 lines with candidate b** (step VOX-C, M8 part C; pending the user's review in round 52): all four of
+Thera Deep Control's lines (t=34, t=70, `secondary-objective`, the survey probe's secret) rendered by the production
+renderer `tools/art/voice.py` exactly as the game's own takes, but with `ref: ref-thera-control-r52-b`, into
+`concept/voice-thera-control-r52-b/<key>.ogg` under the keys that ref gives (candidate a's takes are in
+`assets/voice/thera-control/`, the speaker table's provisional `ref`). Two takes pinned by b's keys in the speaker
+table (t=34: the key's seed read "on the shot" for "shaft"; the secret: an octave jump); median pitch 121–133 Hz; every
+file read back word for word through the filter with the Act 4 name prompt ("racks" heard right in both rack lines).
+If round 52 picks b, `ref` becomes `ref-thera-control-r52-b` and these four files move into `assets/voice/thera-control/`
+(a's four go to `concept/rejected/`); no re-render.

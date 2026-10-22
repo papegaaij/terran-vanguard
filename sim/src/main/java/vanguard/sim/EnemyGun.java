@@ -35,7 +35,9 @@ import java.util.Optional;
  *     per pass, started when the unit, strafing on the play field, is within this many px of the ship's x
  *     ({@code intervalSeconds} and {@code firstShotDelay} are not read); NaN for a gun without one
  * @param tellSeconds M7 part E: a pass trigger's tell, the time from the trigger (the {@link
- *     SimEvents.Type#EYE_GLINT} event) to the burst's first shot; 0 for none
+ *     SimEvents.Type#EYE_GLINT} event) to the burst's first shot; 0 for none. M8 part C: a chain head's attack's
+ *     tell, its {@link SimEvents.Type#EYE_GLINT} that long before each volley ({@link HeadAttacks}); other guns do
+ *     not read it
  * @param reaim M7 part E: a pass trigger's burst aims each shot at the ship anew; otherwise its shots follow the
  *     first one's line (every other aimed burst already aims each of its shots anew)
  * @param homing M7 part F (design/enemies/bosses/revenant-walker, homing missiles): a boss's aimed shots of this
@@ -408,6 +410,35 @@ public record EnemyGun(
                 withinX,
                 tell,
                 reaimed,
+                homing,
+                arcFacingRadians,
+                aimedShards);
+    }
+
+    /**
+     * M8 part C: this attack with a tell of {@code tell} s before each volley (design/enemies/naval/eel-swarm, the
+     * stripe: a chain head's attack, {@link EnemySpec.ChainSpec#headAttacks()}); see {@link #tellSeconds()}.
+     */
+    public EnemyGun withTell(double tell) {
+        return new EnemyGun(
+                intervalSeconds,
+                firstShotDelay,
+                burst,
+                bulletSpeed,
+                damage,
+                leadsTargetInCircle,
+                fan,
+                spreadRadians,
+                turnRate,
+                arcRadians,
+                mine,
+                mortar,
+                burstGapSeconds,
+                up,
+                spiral,
+                passWithinX,
+                tell,
+                reaim,
                 homing,
                 arcFacingRadians,
                 aimedShards);

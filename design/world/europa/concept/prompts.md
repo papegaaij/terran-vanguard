@@ -169,3 +169,14 @@ Vrell and Siren teal 00ff9a).
 ## underwater-capture-r50-a
 
 Concept round 50 (M8 part A, step A7; accepted in round 50, 2026-10-22), a capture of the game, not generated art: the game built by `:desktop:installDist` (branch `m8-act-4`), run on a private Xvfb display (960×540 window) with `--bench <s> --settings <scratch>/settings.properties --invulnerable` (auto-fire on), `ALSOFT_DRIVERS=wave` writing the game's own mix to a file, the screen recorded with ffmpeg `x11grab`; a small XTest driver sweeps the ship left and right and taps the special at set seconds. The `.mp4` is a cut of the recording with the game's sound (H.264 main, AAC 96 kbps); the `.png` is a frame of it (or two side by side). `--level 20 --medium underwater@10 --loadout front=ion-beam:3,rear=rear-lance:2,left=torpedo-pod:2,right=torpedo-pod:2 --special airstrike:2`; the video is level seconds 3–25, the frames 6.3 s (dry) and 12 s (under water).
+
+## hydro-fx-final-r52-a
+
+Round 52, production art (M8 part C batch, step ART-C; the round-50 hydro-kit review's note "no grade, no wake: part
+C"). Not a mockup: the review sheet and a loop of the files written by
+[tools/art/act4_gear.py](../../../../tools/art/act4_gear.py) `hydrofx`: the pump-jet wake (one jet's churned white-teal
+stream, stepped translucency, an 8-frame loop drawn at each engine point), the pump-jets' teal light in place of the
+engine flame under water, and the refit flash at the waterline (the seals lighting in a band sweeping down the hull, a
+white-teal flash and a pressure ring; the hull swaps to `ship-hydro` mid-flash), each for the Stormhawk and Rook; the
+GIF: the waterline row scrolling down past the two ships, the review grade ahead of it, the flashes and the wakes
+starting behind.

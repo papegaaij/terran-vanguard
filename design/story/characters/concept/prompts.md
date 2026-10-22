@@ -123,7 +123,7 @@ Production art, M7 part B batch (round 38). Not a mockup: the sheet of `assets/s
 
 ## portraits-final-r51-a
 
-Production art, M8 part B batch (round 51, straight to production, pending the user's review). Not a mockup: the
+Production art, M8 part B batch (round 51, straight to production, accepted as final in round 51, F.5, 2026-10-22). Not a mockup: the
 sheet of `assets/sprites/portraits/radio-conamara-neutral.png` (Dr. Ilse Brandt, Conamara Station's director, the
 speaker `conamara` of Levels 22–23), rendered by [tools/art/portraits.py](../../../../tools/art/portraits.py)
 (`python3 tools/art/portraits.py conamara`): an SDF bust in the radio speakers' style B on the friendly teal channel:
@@ -131,3 +131,13 @@ a woman in her late fifties, a dark ash bob going grey with a side fringe, tired
 quilted red polar parka with a high collar and an amber station patch; a warm sodium rim light from the right and,
 behind her, the dome control room: the dome's ribs, two sodium lamps, a row of console screens. At 1×, 2× and 4×,
 and at 1× next to the other minor speakers.
+
+## portraits-final-r52-a
+
+Round 52, production art (M8 part C batch, step ART-C; straight to production): Thera Deep Control's radio portrait
+`radio-thera-deep-neutral` (the speaker `thera-control`), written by
+[tools/art/portraits.py](../../../../tools/art/portraits.py) `thera-deep`: the under-ice city's harbour controller, a
+calm, heavy-set man in his fifties, olive skin, short dark hair and a close dark beard, the city's grey-blue harbour
+coverall with a pressure suit's steel neck ring and an amber shoulder tab, a headset; lit by warm grow-lamp light with a
+cool teal rim; behind him the control room's round viewport (dark water, a lamp-lit farm rack, kelp) and the consoles.
+Shown at 1x, 2x and 4x and next to the other minor speakers.

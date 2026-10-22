@@ -165,6 +165,12 @@ public record EnemySpec(
         if (crawl.isPresent() && chain.isEmpty()) {
             throw new IllegalArgumentException(slug + ": a crawl is a segment chain's head's");
         }
+        if (chain.isPresent() && chain.get().scatter().isPresent() && crawl.isPresent()) {
+            throw new IllegalArgumentException(slug + ": a cut part scatters only in an air chain (M8 part C)");
+        }
+        if (chain.isPresent() && !chain.get().headAttacks().isEmpty() && gun.isPresent()) {
+            throw new IllegalArgumentException(slug + ": a chain's head fires its head attacks or its gun, not both");
+        }
         if (link.isPresent() && (chain.isPresent() || burrow.isPresent())) {
             throw new IllegalArgumentException(slug + ": a gate's anchor is a plain ground unit");
         }

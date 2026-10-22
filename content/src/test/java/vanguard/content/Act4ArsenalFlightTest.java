@@ -146,6 +146,12 @@ class Act4ArsenalFlightTest {
     @Test
     void everyBuiltLevelFliesInTheAirWithoutLimits() {
         for (String key : CONTENT.levels().keySet()) {
+            LevelData level = CONTENT.level(key);
+            if (level.underwater()) {
+                // M8 part C: Level 23 dives at its waterline (25.5 s); step C3's Level23Test flies the rest.
+                assertEquals(List.of(25.5), level.waterlines(), key);
+                continue;
+            }
             LevelScript script = SimSpecs.level(CONTENT, key, Difficulty.MEDIUM);
             assertEquals(MediumSpec.AIR, script.medium(), key);
             assertEquals(SpecialLimits.NONE, script.specialLimits(), key);
@@ -180,7 +186,7 @@ class Act4ArsenalFlightTest {
                 .text();
         files.add(new DataFile(
                 "campaign/act-4-deep-water/data.yaml",
-                act3.replace("levels: [15, 21]", "levels: [22, 22]").replaceAll("(?m)^next_act:.*$", "")));
+                act3.replace("levels: [15, 21]", "levels: [22, 28]").replaceAll("(?m)^next_act:.*$", "")));
         Content content = ContentLoader.load(files);
         String key = "act-4-deep-water/level-22-ice-shelf";
         LevelData level = content.level(key);

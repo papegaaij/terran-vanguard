@@ -3,7 +3,7 @@ title: Art direction
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-20
+updated: 2026-10-22
 ---
 
 # Art direction
@@ -477,6 +477,10 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
 |---|---|---|
 | [concept/water-fx-final-r33-a.png](concept/water-fx-final-r33-a.png) | Water and torpedo effects, final frames: the water-surface and under-water explosion ladders (24–96 px), splash, ripple train, foam collars, foam strip, small craft wake, the torpedo at 32 headings with its bubble puff and drop splash (sheet) | chosen |
 | [concept/water-fx-final-r33-a.gif](concept/water-fx-final-r33-a.gif) | The same on the ocean stand-in: kills on and under the water, a collar, a wake, torpedoes hitting a submerged dummy (motion) | chosen |
+| [concept/underwater-burst-final-r52-a.png](concept/underwater-burst-final-r52-a.png) | Under-water kill bursts, proposal **a** "pressure flash" (`tools/art/explosions.py --deep a`): the four rungs' light (a white-teal flash, the pressure ring) and the dark cavity under it; written to `assets/` until the pick (sheet) | proposed (round 52) |
+| [concept/underwater-burst-final-r52-a.gif](concept/underwater-burst-final-r52-a.gif) | a's four rungs side by side over the farm floor, 3x | proposed (round 52) |
+| [concept/underwater-burst-final-r52-b.png](concept/underwater-burst-final-r52-b.png) | Proposal **b** "quenched fire" (`--deep b`): a short orange fireball choked into a teal glow, slow embers, a silt puff under it (sheet) | proposed (round 52) |
+| [concept/underwater-burst-final-r52-b.gif](concept/underwater-burst-final-r52-b.gif) | b's four rungs side by side, 3x | proposed (round 52) |
 | [concept/slam-r33-a.png](concept/slam-r33-a.png) | Kraken lane telegraph and slam a, "edge dashes and spray sheets": a boiling band on the lane's centre line, red dashes down both edges, spray sheets thrown to both sides (sheet; in the game until the pick) | chosen |
 | [concept/slam-r33-a.gif](concept/slam-r33-a.gif) | The same in two arena lanes with a cargo ship and a stand-in arm: telegraph, rise, impact, awash, sink (motion) | chosen |
 | [concept/rejected/slam-r33-b.png](concept/rejected/slam-r33-b.png) | Kraken lane telegraph and slam b, "lane boil, chevrons and rollers": the whole lane boiling over the arm's shadow, red chevrons down its centre, a crown and two rollers breaking at the lane edges (sheet; review files only) | rejected |
@@ -695,3 +699,7 @@ the Level 11 props approved as final; the lane telegraph and slam **a** "edge da
   Revenant Walker and the Siege Spire's crown, pods and maw too (at most one flash every 0.25 s, a 0.3 blend
   towards white, none on a part that is beam-hot). The Siege Spire's death flash is a local glow (190 px round
   the core, the flash-reduction setting applies); the Brood Carrier keeps its full-field flash.
+- 2026-10-22 (M8 part C, gap check D8, steps ART-C and C4; pending the user's review in round 52): kills below the waterline
+  take their own bursts, no smoke: **a** "pressure flash" (a white-teal flash, the pressure ring, a dark cavity under it)
+  or **b** "quenched fire" (a short orange fireball choked into a teal glow, slow embers, a silt puff); a plays in the
+  game (`tools/art/explosions.py --deep a` in `assets/`) until round 52's pick.

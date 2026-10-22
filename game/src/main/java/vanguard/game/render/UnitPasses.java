@@ -179,6 +179,17 @@ final class UnitPasses {
                 RootBurstLooks.drawGrowing(batch, enemy, frame, enemy.renderX(alpha), enemy.renderY(alpha), alpha);
                 continue;
             }
+            if (sortie.underwater() && kinds.deepBodies(sortie).deep(enemy.kind()) != null) {
+                // M8 part C: a Driftjelly on the play plane under water: its whole body at its pulse frame.
+                Array<AtlasRegion> body = kinds.deepBodies(sortie).deep(enemy.kind());
+                drawUnit(
+                        batch,
+                        enemy,
+                        body.get(jellyPulse(sortie, enemy, alpha) % body.size),
+                        enemy.renderX(alpha),
+                        enemy.renderY(alpha));
+                continue;
+            }
             if (depth == Depth.GROUND && look.naval().twoLayers()) {
                 // M5 part E: its surface layer over the body the sub pass drew.
                 drawNaval(batch, sortie, enemy, look, alpha);
@@ -311,6 +322,11 @@ final class UnitPasses {
         if (stunned != null) {
             return stunned;
         }
+        // M8 part C: a Glassfin swims or glints before its ram.
+        AtlasRegion fin = kinds.glassfins(sortie).frame(enemy);
+        if (fin != null) {
+            return fin;
+        }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
@@ -338,6 +354,17 @@ final class UnitPasses {
             int heading = EnemyLooks.heading(enemy.facing(), look.headings());
             drawCentred(batch, naval.wakeFrame(heading, tick, enemy.serial()), x, y);
             drawUnit(batch, enemy, look.frame(enemy.facing(), look.step(tick, enemy.serial())), x, y);
+            return;
+        }
+        AtlasRegion floor = kinds.deepBodies(sortie).floor(enemy.kind());
+        if (naval.rafts() && floor != null && sortie.underwater()) {
+            // M8 part C: a Reef Spitter on its floor base under water (no raft, no bob), its gun on the base's centre.
+            drawCentred(batch, floor, x, y);
+            boolean recoil = !naval.recoil().isEmpty() && firedNear(x, y, tick, NavalLooks.RECOIL_TICKS);
+            Array<AtlasRegion> set = recoil ? naval.recoil() : look.frames();
+            AtlasRegion frame =
+                    set.get(EnemyLooks.heading(enemy.facing(), look.headings()) * (set.size / look.headings()));
+            drawUnit(batch, enemy, frame, x, y + DeepBodyLooks.FLOOR_GUN_DY);
             return;
         }
         if (naval.rafts()) {
@@ -375,6 +402,44 @@ final class UnitPasses {
             return;
         }
         drawUnit(batch, enemy, look.frames().get(pulse % look.frames().size), x, y);
+    }
+
+    /** M8 part C: a jelly's pulse frame now, quickening as the ship closes in (as {@link #drawNaval}'s). */
+    private int jellyPulse(Sortie sortie, Enemy enemy, float alpha) {
+        double x = enemy.renderX(alpha);
+        double y = enemy.renderY(alpha);
+        return pulses.frame(
+                enemy.serial(),
+                sortie.tick(),
+                NavalLooks.jellyFps(Math.hypot(
+                        sortie.ship().renderX(alpha) - x, sortie.ship().renderY(alpha) - y)),
+                NavalLooks.PULSE_FRAMES);
+    }
+
+    /**
+     * M8 part C: after the under-water grade, the deep units' lights: a jelly's pulse bloom over its body (additive),
+     * the eels' stripe and jaws, the Glassfins' glint, the siphon pumps' sump light.
+     */
+    void drawDeepGlows(SpriteBatch batch, Sortie sortie, float alpha) {
+        if (sortie.underwater()) {
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+            for (int i = 0; i < sortie.enemyCount(); i++) {
+                Enemy enemy = sortie.enemy(i);
+                Array<AtlasRegion> pulse = looks[enemy.kind()].naval().pulse();
+                if (pulse.isEmpty() || kinds.deepBodies(sortie).deep(enemy.kind()) == null) {
+                    continue;
+                }
+                drawCentred(
+                        batch,
+                        pulse.get(jellyPulse(sortie, enemy, alpha) % pulse.size),
+                        enemy.renderX(alpha),
+                        enemy.renderY(alpha));
+            }
+            batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        }
+        kinds.eels(sortie).drawGlows(batch, sortie, alpha);
+        kinds.glassfins(sortie).drawGlows(batch, sortie, alpha);
+        kinds.pumps(sortie).drawGlows(batch, sortie, looks, alpha);
     }
 
     /** A unit's frame at (x, y), flashing white just after a hit. */
@@ -456,6 +521,11 @@ final class UnitPasses {
             Chain chain = sortie.chain(c);
             if (chain.ground()) {
                 // M7 part C: a Threadcrawler is drawn with the ground units (CrawlerLooks).
+                continue;
+            }
+            if (kinds.eels(sortie).draws(chain)) {
+                // M8 part C: an Eel Swarm's head, body eels and tail with the stripe tell (EelLooks).
+                kinds.eels(sortie).drawChain(batch, sortie, chain, alpha, unitFlash);
                 continue;
             }
             for (int k = chain.size() - 1; k >= 0; k--) {

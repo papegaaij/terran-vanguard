@@ -90,20 +90,36 @@ public sealed interface PickupsBlock permits LevelData {
      * group is cleared), or (part G) the {@code unit}-th of the level boss's {@code parts} to be
      * shot off (Level 07's first destroyed bay sac); parts lost in the boss's death drop nothing. M7 part D: a wave's
      * carrier may name its {@code enemy}, the {@code unit} then counted among that enemy's units of the wave only (a
-     * mixed wave's: Level 17's t=124 Choir Herald among its bombers drops the shield cell).
+     * mixed wave's: Level 17's t=124 Choir Herald among its bombers drops the shield cell). M8 part C (design/campaign
+     * Level 23, the shield cell): {@code head_first: true}, a segment chain's carrier drops it only when its head is
+     * destroyed before any other part (the first Eel Swarm's head-first kill); always if not given.
      */
     public record Carrier(
             Optional<Double> wave,
             Optional<String> group,
             Optional<List<String>> parts,
             CarrierUnit unit,
-            Optional<String> enemy) {
+            Optional<String> enemy,
+            Optional<Boolean> headFirst) {
         /** Without M7 part D's enemy. */
         public Carrier(Optional<Double> wave, Optional<String> group, Optional<List<String>> parts, CarrierUnit unit) {
-            this(wave, group, parts, unit, Optional.empty());
+            this(wave, group, parts, unit, Optional.empty(), Optional.empty());
+        }
+
+        /** Without M8 part C's head-first drop. */
+        public Carrier(
+                Optional<Double> wave,
+                Optional<String> group,
+                Optional<List<String>> parts,
+                CarrierUnit unit,
+                Optional<String> enemy) {
+            this(wave, group, parts, unit, enemy, Optional.empty());
         }
 
         public Carrier {
+            Check.that(
+                    headFirst.isEmpty() || (headFirst.get() && wave.isPresent()),
+                    "dropped_by.head_first: only true, on a wave's carrier");
             Check.that(enemy.isEmpty() || wave.isPresent(), "dropped_by.enemy: only a wave's carrier names its enemy");
             Check.that(
                     (wave.isPresent() ? 1 : 0) + (group.isPresent() ? 1 : 0) + (parts.isPresent() ? 1 : 0) == 1,
@@ -117,6 +133,11 @@ public sealed interface PickupsBlock permits LevelData {
                         unit != CarrierUnit.SECOND || names.size() >= 2,
                         "dropped_by: the second of the parts needs two of them");
             });
+        }
+
+        /** M8 part C: whether only a head-first kill of the carrier drops it ({@code head_first: true}). */
+        public boolean dropsHeadFirst() {
+            return headFirst.orElse(false);
         }
 
         /** The carrier wave's time; NaN for a group's pickup. */

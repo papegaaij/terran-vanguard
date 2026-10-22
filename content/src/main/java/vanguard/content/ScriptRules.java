@@ -57,7 +57,8 @@ final class ScriptRules {
             if (!wave.fliesOn(difficulty)) {
                 continue;
             }
-            WaveRules.addWave(content, wave, difficulty, enemyChanges, carried, waves, inLevel);
+            // M8 part C (gap check D2): a wave entering under water flies its units' underwater changes.
+            WaveRules.addWave(content, wave, difficulty, enemyChanges, carried, waves, inLevel.at(level, wave.t()));
         }
         LevelScript script = LevelScript.builder(levelKey(levelKey, 2), levelKey(levelKey, 1))
                 .launchSeconds(level.launchSeconds())
@@ -338,13 +339,20 @@ final class ScriptRules {
                         // M8 part B: the first geyser's tell and the first rig destroyed (Level 22).
                         case FIRST_GEYSER -> CueTrigger.FIRST_GEYSER;
                         case TARGET_DESTROYED -> CueTrigger.TARGET_DESTROYED;
+                        // M8 part C (gap check D5): the waterline plays as a timed line at its time (Level 23's 25.5
+                        // s).
+                        case WATERLINE -> CueTrigger.TIME;
                     })
                     .orElse(CueTrigger.TIME);
             // Part G (LevelRules): a boss-destroyed cue's subject is the boss, a timeout cue its own
             // trigger, and the requirements bits (a special, a homing weapon; or none of them).
             cues.add(new RadioCue(
                     LevelRules.trigger(cue, trigger),
-                    cue.t().orElse(0.0),
+                    cue.t()
+                            .or(() -> cue.event()
+                                    .filter(LevelData.CueEvent.WATERLINE::equals)
+                                    .flatMap(event -> level.firstWaterline()))
+                            .orElse(0.0),
                     // M5 part E: a boss-part-destroyed cue waits for any of its parts.
                     cue.parts()
                             .map(parts -> String.join(CueTrigger.PART_SEPARATOR, parts))

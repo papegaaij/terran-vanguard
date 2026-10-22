@@ -81,6 +81,7 @@ abstract class RadioTimeline {
     static final String LEVEL_20 = "act-3-red-dust/level-20-retreat-from-hellas";
     static final String LEVEL_21 = "act-3-red-dust/level-21-dust-colossus";
     static final String LEVEL_22 = "act-4-deep-water/level-22-ice-shelf";
+    static final String LEVEL_23 = "act-4-deep-water/level-23-through-the-ice";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -417,6 +418,22 @@ abstract class RadioTimeline {
                                 new Event(12, CueTrigger.FIRST_GEYSER, ""),
                                 new Event(63.5, CueTrigger.TARGET_DESTROYED, ""),
                                 new Event(70.9, CueTrigger.SECRET, "core-sample cache"))));
+        // M8 part C: Level 23's events (step VOX-C's runs from the data's rows): the waterline line is timed (the
+        // waterline section's start, t=25.5); the survey probe (t≈52, the left wall's foot) shot as it enters or late
+        // (it breaks by t≈58); the pumps' secondary (pumps at t=78, 90, 102, 114, 126) met with the third pump on
+        // easy, the fourth on medium, the fifth on hard (up to t≈130), or not at all.
+        runs.put(
+                LEVEL_23,
+                List.of(
+                        List.of(),
+                        List.of(
+                                new Event(53.5, CueTrigger.SECRET, "survey probe"),
+                                new Event(116.5, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(
+                                new Event(57.5, CueTrigger.SECRET, "survey probe"),
+                                new Event(104.5, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(128.5, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(130, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         return runs;
     }
 

@@ -1,0 +1,63 @@
+# Glassfin stat block at medium (one fry; a school is a wave of them): rendered into README.md.
+# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part C, step C2 (Level 23): the approved stat block (round 48) as data, the Mote Swarm's flock as its template.
+# New in the flock: a `sway` across the route (the ribbon) and the `ram` (after `after` s on the screen each member
+# draws from its own seed whether it breaks off, `share` of a school does; it glints `tell` s, dives `delay` s after the
+# glint (after its end: step C3, the README's "0.5 s after a 0.3 s glint tell"), straight down the ship's lane at `speed`
+# px/s, no homing, and leaves at the bottom). Loaded and checked
+# in step C2, flown from step C1 (sim), mapped in step C3. The medium share 0.25 is the gap check's (m8c-gaps.md §5
+# D6; the stat block gives easy 0.15 and hard 0.40), pending the user's review in round 52.
+name: Glassfin
+faction: Vrell
+layer: air        # the play plane under water
+tier: tiny
+size: [16, 16]    # sprite px, each fry
+hitbox: [10, 10]
+parts: single
+orientation: 16 angles
+hp: 1
+armour: none
+speed: 170        # px/s, the school's cruise
+movement:
+  path: {speed: 170}   # the leader point flies the wave's authored route (`paths`): long and S-shaped, the fry string out along it
+  flock:
+    separation: 14    # px kept between members
+    radius: 40        # px: the neighbourhood the rules look at
+    alignment: 0.5
+    cohesion: 0.3
+    leader: 0.6
+    speed: 170        # px/s cruise
+    dive_speed: 230   # px/s (a ram's dive: `ram.speed`)
+    turn_rate: 360    # °/s
+    max: 24           # members at most (≤ 576 pair checks a step)
+    sway: {amplitude: 14, frequency: 1.4}   # px and Hz across the route: the ribbon
+    ram:
+      after: 3        # s on the screen before a member may break off
+      share: 0.25     # of a school's members break off (each draws from its own seed)
+      tell: 0.3       # s: the glint (its glass flashes teal, the contact hue)
+      delay: 0.5      # s from the glint's end to the dive (0.8 s from its start)
+      speed: 230      # px/s straight down the ship's lane, no homing; it leaves at the bottom
+attacks: []       # contact only
+formations:
+  - {name: swarm, size: [8, 24]}
+  - {name: column, size: [6, 10]}   # a straight column down the shaft's left or right side (step C3: a column flies no path); the same ram per member
+weak_points: []
+drops: []
+seekers_ignore: true   # as the Mote Swarm: no homing shot, turret or Rook picks a fry; direct fire and torpedoes hit it by contact
+traits: [spread, area, rear]
+bounty: 2
+first_level: 23
+difficulty:
+  easy: {ram: {share: 0.15}}
+  hard: {ram: {share: 0.40}}
+notes:
+  layer: ' (the play plane under water)'
+  speed: (cruise), {movement.flock.ram.speed} px/s in a ram dive
+  movement: '`flock` round a leader point flying the wave''s authored route, as the [Mote Swarm](../../air/mote-swarm/README.md) (separation {movement.flock.separation} px, alignment, cohesion), with a sway of {movement.flock.sway.amplitude} px at {movement.flock.sway.frequency} Hz across the route; after {movement.flock.ram.after} s on the screen each fry may break off and `dive` at the ship''s lane: a {movement.flock.ram.tell} s glint, the dive {movement.flock.ram.delay} s after it, no homing; fry that reach the bottom leave'
+  attack: '`none`: contact (`{tier}` = {contact_damage}, the fry is destroyed by the impact)'
+  formations: '(school size via the global formation lever: base 16, easy 12, hard 22)'
+  weak_points: (dies in one hit)
+  bounty: ' per fry; a school of 16 pays 32'
+  death: '`tiny` glass shatter: a grey-teal flash and four slow shards, no bubbles'
+  used_in: L24, L25, L27 as popcorn (not L26)
+  difficulty: 'school size via the global formation lever (base 16, easy 12, hard 22); the share of a school that rams: easy 15 %, medium 25 %, hard 40 %'

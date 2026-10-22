@@ -285,3 +285,24 @@ scene as A).
 - **Negative prompt:** as A.
 - **Animation brief:** as A.
 - **Mockup generator:** `python3 tools/concept/enemies_r48.py barbfin b`
+
+## eel-swarm-final-r52-a
+
+Round 52, production art (M8 part C batch, step ART-C; from the chosen concept eel-swarm-r48-a, the rust ribbon eel of
+`tools/concept/enemies_r48.py`, models imported unchanged). Not a mockup: the review sheet and a loop of the files
+written by [tools/art/eel_swarm.py](../../../../tools/art/eel_swarm.py) (held in `build/art-held/sprites/` until the
+Eel Swarm's `data.yaml` exists): the 48 px head at 16 headings (rest, the tell with the stripe lit, the shot with the
+jaws wide), the 40 px body eel and the 36 px tail (rest, stripe lit), the violet stripe bloom of the tell (additive),
+the muzzle pulse, the husks sinking; the GIF over Thera Deep's farm floor under a stand-in of the under-water grade: a
+12-segment snake with the stripe running to the head before each aimed shot and a 3-way fan, a cut at segment 8 and
+its rear part scattering for 3 s, the head kill unzipping the rest head to tail 0.07 s apart (the under-water bursts
+of `explosions.py`, variant a), the husks sinking. The stripe is lit brighter than the concept (1.6 instead of 1.0)
+and gets an additive bloom so the tell reads under the grade.
+
+## glassfin-final-r52-a
+
+Round 52, production art (M8 part C batch, step ART-C; from the chosen concept glassfin-r48-a, the needle fry). Not a
+mockup: the review sheet and a loop of the files written by [tools/art/glassfin.py](../../../../tools/art/glassfin.py)
+(held until the Glassfin's `data.yaml` exists): the 16 px fry at 16 headings swimming and glinting (the ram's tell),
+the glint sparkle, the shatter's flash and four glass shards (no bubbles); the GIF: two ribbons of 14 swaying over the
+farms, three fry glinting and ramming down the ship's lane at 230 px/s (x 0.7 under water), five shattering.

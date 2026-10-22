@@ -64,6 +64,19 @@ record TypicalHaul(int perfect, double typical, double budget) {
             }
             // a segment chain's unit is its head; its segments and tail pay their own bounty
             wave.enemy().chain().ifPresent(chain -> {
+                if (chain.headFirstBonus() > 0) {
+                    // M8 part C (step C3, as tools/sync_tables.py): a chain whose head pays a first bonus (the
+                    // Threadcrawler's, the Eel Swarm's whole 48) is killed head first by the typical player, the
+                    // segments dying with it, and taken apart in a perfect run, the tail first with its bonus.
+                    sum.typical(wave.count(), chain.headFirstBonus(), rate(rate, wave.enemy()));
+                    sum.bounty(
+                            wave.count() * chain.segmentBoxes().size(),
+                            chain.segment().bounty(),
+                            0);
+                    sum.bounty(wave.count(), chain.tail().bounty(), 0);
+                    sum.bounty(wave.count(), chain.tailFirstBonus(), 0);
+                    return;
+                }
                 sum.bounty(
                         wave.count() * chain.segmentBoxes().size(),
                         chain.segment().bounty(),
@@ -166,6 +179,11 @@ record TypicalHaul(int perfect, double typical, double budget) {
 
         void bounty(int count, int credits, double share) {
             add(count, (int) Math.rint(credits * bountyFactor), share);
+        }
+
+        /** A bounty only the typical player collects (a perfect run takes the unit apart instead). */
+        void typical(int count, int credits, double share) {
+            typical += count * (int) Math.rint(credits * bountyFactor) * share;
         }
 
         void pay(int count, int credits, double share) {

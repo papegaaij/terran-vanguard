@@ -1,0 +1,85 @@
+# Eel Swarm stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part C, step C2 (Level 23): the approved stat block (round 48) as data. A segment chain in the water: the head swims
+# the wave's authored path with a sine sway about it, the body and the tail follow its path history (the Coilwyrm's
+# rig), the head fires two attacks (its part's `attacks` list), and a cut's rear part scatters instead of regrowing
+# (`cut: {scatter, seconds}`). Counts as one enemy (density, kill ratio). Payouts as the Threadcrawler's: a head-first
+# kill pays the whole 48 (the head's 30 and its first_bonus 18), taken apart it pays 56. Loaded and checked in step C2,
+# flown from step C1 (sim), mapped in step C3.
+# Sizes: `size` and the parts' `hitbox` are [across, along] the path (the head faces down the screen); a segment's
+# sprite is 36 px along the path (`size`) by 24 across (`width`), its hit box 28 × 18 (share 0.77); the tail 32 × 24,
+# hit box 24 × 16 (written [16, 24]: across, along).
+name: Eel Swarm
+faction: Vrell
+layer: air        # the play plane under water
+tier: large       # ≈ 380 px along its path with 12 segments
+size: [48, 40]    # the head's sprite px
+hitbox: [36, 28]  # the head's
+parts: multi
+part_list:  # offset 0: head and tail are placed on the path history, not at a fixed offset
+  - {name: head, offset: [0, 0], hitbox: [36, 28], hp: 100, kind: vital, bounty: 30, first_bonus: 18, attacks: [head-aimed, head-fan]}   # first_bonus: a head-first kill pays the whole 48
+  - {name: tail, offset: [0, 0], hitbox: [16, 24], hp: 25, kind: destroyable, bounty: 2, first_bonus: 4}   # 6 when destroyed first
+segment_chain:              # the body between head and tail
+  segments: 12
+  size: [36, 36]            # px, a segment's sprite along the path (no taper: the tail is its own part)
+  width: 24                 # px, its sprite across the path
+  hitbox_share: 0.77        # hit box 18 × 28
+  spacing: 0.8              # × the segment length, along the head's path history (≈ 380 px)
+  hp: 10
+  bounty: 2
+  contact: small            # contact damage class of segments and tail (the head: its tier)
+  cut: {scatter: 70, seconds: 3}   # a cut's rear part keeps its heading at 70 px/s for 3 s, firing nothing, then dies from the cut backwards (no regrowth)
+  pop_interval: 0.07        # s between two bursts of the chained death, head to tail
+orientation: 16 angles
+hp: 245             # the parts' sum: head 100, 12 segments × 10, tail 25
+armour: none
+speed: 110          # px/s, the head along its path (plus scroll)
+movement:
+  path:
+    speed: 110              # the head swims the wave's authored path (the `snake` waves' paths, inside the shaft)
+    sway: {amplitude: 36, frequency: 0.8}   # px and Hz: a sine across the path, the head's point (the segments follow its history)
+attacks:
+  - pattern: aimed
+    name: head-aimed
+    bullet: small
+    interval: 1.8
+    speed: 130
+    first_shot_delay: 0.6   # s after the head is on the screen (step C3: the aimed shot first, its stripe tell before it)
+    tell: 0.3               # s: the stripe runs to the head before each shot
+    notes:
+      text: 'the head fires an `{pattern}` violet pulse every {interval} s ({speed} px/s, `{bullet}` = {damage})'
+  - pattern: fan
+    name: head-fan
+    bullet: small
+    count: 3
+    spread: 40
+    speed: 120
+    interval: 5.0
+    first_shot_delay: 2.5   # s after the head is on the screen (step C3: after the first aimed shots, half its interval)
+    tell: 0.3
+    only: [medium, hard]    # easy: no fan
+    notes:
+      text: 'a {count}-way `{pattern}` every {interval} s (spread {spread}°, {speed} px/s); the stripe glows from head to tail {tell} s before each shot (the tell); the segments fire nothing; contact damage `{tier}` = {contact_damage} (head) / `small` = 10 (segments, tail)'
+formations:
+  - {name: snake}
+weak_points:
+  - {name: the head's lime gill clusters (the vital head)}
+drops: []
+traits: [spread, piercing, beam]
+bounty: 56          # the parts' sum: head 30, 12 segments × 2, tail 2 (whole 48 by the head's first_bonus; 60 taken apart with the tail first)
+first_level: 23
+difficulty:
+  easy: {segments: 10}                                       # and no fan (its `only`)
+  hard: {segments: 16, attacks: {head-aimed: {interval: 1.4}}}
+notes:
+  layer: ' (the play plane under water)'
+  size: '(the head); segment 36×24 (hitbox 28×18); tail 32×24 (hitbox 24×16)'
+  parts: '`vital` head, 10–16 `destroyable` segments (12 by default), `destroyable` tail'
+  orientation: per part, following the head's path history (`chain`)
+  hp: 'head 100 · segment {segment_chain.hp} each · tail 25; whole'
+  speed: along its path (plus scroll)
+  movement: '`snake` along an authored water path, a sine of {movement.path.sway.amplitude} px at {movement.path.sway.frequency} Hz about the route, the segments following by `chain` (path history at a fixed spacing); the stripe glows in a wave from head to tail'
+  formations: (solo or two staggered 4 s apart); never more than two on screen
+  bounty: '; whole (head-first kill) 48: the head''s 30 + its first bonus {part_list.0.first_bonus}; parts: head 30, segment {segment_chain.bounty} each, tail 2 + {part_list.1.first_bonus} if destroyed first'
+  death: 'head killed: the body dies segment by segment from head to tail, {segment_chain.pop_interval} s apart (`small` flashes, a `medium` at the head), the husks sink; a cut''s rear part scatters as drifting eels at {segment_chain.cut.scatter} px/s for {segment_chain.cut.seconds} s, firing nothing, and dies from the cut backwards'
+  used_in: L24 and L26 (a dark snake lit by its stripe), L27; the Maw sheds Eel Swarm trails in L28; returns later with the act HP factor
+  difficulty: 'easy: 10 segments, no `fan`; hard: 16 segments, `aimed` every 1.4 s'

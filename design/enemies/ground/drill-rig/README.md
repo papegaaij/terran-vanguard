@@ -2,7 +2,7 @@
 title: Drill Rig
 design: approved
 implementation: done
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-22
 ---
@@ -70,10 +70,10 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a bone bore 
 - [x] Behaviour, attack and tells per this spec, deterministic and allocation-free (`DrillRigTest`, `Level22Test`'s
       `theRigsCarryTheirPumpsAndTheirRing`, `steppingAWholeLevelDoesNotAllocate` and `theSameSeedAndCommandsGiveTheSameState`)
 - [x] Production sprites straight to production as a/b in the part's round (`tools/art/`), the in-water grade and the intel portrait
-      (`tools/art/drill_rig.py`, one look from round 48's pick b, accept/redo in [round 51](../../../concept-rounds/round-51/README.md);
+      (`tools/art/drill_rig.py`, one look from round 48's pick b, accepted as final in [round 51](../../../concept-rounds/round-51/README.md);
       no in-water grade: the rig stands on the surface; `Level22LooksTest.theRigsArtIsWhatItsLooksDraw`, `PortraitsTest`)
 - [x] Death effect, bounty and sounds (Freesound, no bubble pops) per this spec (`DrillRigTest`, `Level22SoundsTest.theGeysersAndTheRigsSound`;
-      the sounds' a/b in round 51)
+      the sounds picked in round 51: collar b, ring b, death b, still to replace the a files in the game)
 - [x] A hardened large ground structure with a vital core and four pumps (the Hive Node's rules; steps B1 and B3)
 
 ## Open questions
@@ -85,15 +85,15 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a bone bore 
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (decided by me, gap analysis section 2.6): drill rigs are hardened ground targets with a vital core, as the Hive Node.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-22 (M8 part B, step B2; defaults of the gap check, pending the user's review in round 51): the stat block in
+- 2026-10-22 (M8 part B, step B2; defaults of the gap check, accepted in round 51 (2026-10-22)): the stat block in
   a `data.yaml`; the pumps (at step ART-B's pivot offsets ±62, ±58) carry the ring and slow it 0.5 s each; the core's
   `first_bonus` 16 (a core-first kill pays the whole 56, as Level 22's credit table counts); the shards use the existing
   lime `medium` bullet look; the pumps fire nothing of their own.
 - 2026-10-22 (M8 part B, step B3): mapped for the simulation: the four pumps as unit parts that carry the ring and slow
   it 0.5 s each once lost, the core's `first_bonus` 16 shared as 4 a pump (a core-first kill pays the whole 56), hard's
   aimed shard (`Level22Test`). At hard the core's 312 HP is past one Airstrike's cap of 300, so without an
-  `anti-ground` gun a hard run cannot break all four rigs (pending the user's review in round 51).
-- 2026-10-22 (M8 part B, step B3b; pending the user's review in round 51): the core **240 → 150 HP** (pumps 24 kept;
+  `anti-ground` gun a hard run cannot break all four rigs (accepted in round 51 (2026-10-22)).
+- 2026-10-22 (M8 part B, step B3b; accepted in round 51 (2026-10-22)): the core **240 → 150 HP** (pumps 24 kept;
   whole 336 → 246, **3.5 → 2.6 s** at the L22 reference of 96, inside the large class's 1–3 s, so `BalanceTest`'s
   accepted deviation is gone). The balance plan's fit has no `anti-ground` gun: its four Airstrike charges must break
   the rigs, and a strike deals at most 300 to one target (blasts of 100). At 240 the hard core's 312 was past the cap
@@ -103,10 +103,11 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): a bone bore 
   enters (cores at t≈47, 63, 79, 95). The pass time and the rig field's scroll (60 px/s, about 11 s on the screen) are
   unchanged (the backdrop's leads are cut along it). A Bomb Rack L3 alone (about 27 DPS, no Airstrike) still breaks
   four pumps and no core in the autopilot's run (`Level22Test`). The hardened text corrected: missiles do not get through.
-- 2026-10-22 (M8 part B, steps B1, ART-B and B4; pending the user's review in round 51): the pumps are unit parts carrying the collar's ring, each lost
+- 2026-10-22 (M8 part B, steps B1, ART-B and B4; accepted in round 51 (2026-10-22)): the pumps are unit parts carrying the collar's ring, each lost
   pump slowing the gun (`UnitPart.slowsGunSeconds`), hard's aimed shard added to the ring (`EnemyGun.withAimedShards`); the
   core's first bonus is split per pump (`first_bonus` 16 = 4 a standing pump, so a core-first kill pays the whole 56);
   a blast reaches a pump only through the core's hitbox; the shards use the lime `medium` bullet look (no new bullet
   art), the pumps fire nothing of their own. The production frames (`tools/art/drill_rig.py`, round 48's pick b with
   stronger augers) drawn by `DrillRigLooks`: the muzzle gathers over the tell, each ring foreseen for it
   (`Level22LooksTest`); the game capture `drill-rig-capture-r51-a` in the [ground](../README.md#concept-art) table.
+- 2026-10-22 (user, round 51, closed): the production art accepted (F.1; `art: final`), and the calls on the rig, C.2 (the core 240 → 150 HP), C.3 (breaking the rigs with the Airstrike) and C.5 (the bounty split per pump), accepted. Sounds: the collar loop **b**, the ring **b**, the death **b** (S.3–S.5; the a files play in the game until the next code step swaps in the b files).

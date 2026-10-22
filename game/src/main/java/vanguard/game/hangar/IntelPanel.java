@@ -71,6 +71,13 @@ final class IntelPanel {
     static final int TARGET_BAR = 6;
     /** Step GI1: the ridge pass's band on the wave strip, a muted sand (the Red Dust's ground, dimmed to the glass). */
     static final Color RIDGE_SAND = new Color(132 / 255f, 106 / 255f, 70 / 255f, 1);
+    /**
+     * M8 part C: the waterline's marks (Level 23's descent): the water from a waterline on as a dim teal band under the
+     * waves (to the next waterline or the strip's end: dry behind, water ahead), the line itself a bright teal tick.
+     */
+    static final Color WATER_BAND = new Color(18 / 255f, 70 / 255f, 92 / 255f, 1);
+
+    static final Color WATERLINE = new Color(70 / 255f, 210 / 255f, 230 / 255f, 1);
 
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
@@ -598,10 +605,20 @@ final class IntelPanel {
                 // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
                 // under the waves, from its surfacing to its head off the far edge.
                 case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET -> {
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE -> {
                     // drawn over the waves, below
                 }
             }
+        }
+        // M8 part C: the water from each entering waterline (every other one, from the first) to the next or the end.
+        List<Intel.Mark> waterlines = intel.marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE)
+                .toList();
+        for (int w = 0; w < waterlines.size(); w += 2) {
+            double to = w + 1 < waterlines.size() ? waterlines.get(w + 1).from() : intel.seconds();
+            float left = (float) (VALUE_X + width * waterlines.get(w).from() / intel.seconds());
+            float right = (float) (VALUE_X + width * to / intel.seconds());
+            canvas.fill(WATER_BAND, left + 1, y - 1, right - left - 2, 10);
         }
         for (double t : intel.waves()) {
             canvas.fill(Glass.AMBER, (float) (VALUE_X + width * t / intel.seconds()), y, 2, 8);
@@ -631,6 +648,10 @@ final class IntelPanel {
                 // M7 part G: the reverse scroll's turn (Level 20) as a white tick the strip's full depth and a pixel
                 // above and below it.
                 canvas.fill(Glass.WHITE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 12);
+            } else if (mark.kind() == Intel.Mark.Kind.WATERLINE) {
+                // M8 part C: the waterline (Level 23's descent) as a bright teal tick a pixel above and below the
+                // strip.
+                canvas.fill(WATERLINE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 12);
             } else if (mark.kind() == Intel.Mark.Kind.TARGET) {
                 // M8 part B: a site of the secondary's targets (Level 22's four rigs) as a red "T" over the strip's
                 // lower half: its tick and a crossbar on it (the boss's tick is plain and full depth).

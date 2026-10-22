@@ -231,6 +231,22 @@ final class CanyonProfile {
                 double end,
                 double[] patchRows,
                 List<Cap> caps) {
+            this(terrain, side, heights, start, end, patchRows, caps, false);
+        }
+
+        /**
+         * @param smooth M8 part C: a drilled shaft's walls (Level 23's ice shaft): no side canyons, only the steps'
+         *     own wobble, so the ledges stay narrow and the rim even
+         */
+        Steps(
+                Terrain terrain,
+                int side,
+                WallProjection.Heights heights,
+                double start,
+                double end,
+                double[] patchRows,
+                List<Cap> caps,
+                boolean smooth) {
             this.side = side;
             this.terrain = terrain;
             this.heights = heights;
@@ -249,7 +265,7 @@ final class CanyonProfile {
                 double at = Math.clamp(row, start, end);
                 double foot = line(at);
                 double h = Math.clamp(heights.at(at), 0, 1);
-                double calm = 0;
+                double calm = smooth ? 1 : 0;
                 for (double p : patchRows) {
                     calm = Math.max(calm, Math.clamp((190 - Math.abs(row - p)) / 70, 0, 1));
                 }

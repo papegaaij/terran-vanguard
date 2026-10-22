@@ -41,8 +41,12 @@ final class LevelCues extends SoundFamily {
     /** M5 part F: the gust telegraph seen at the last watch: 1 from the left, -1 from the right, 0 none. */
     private int lastGust;
 
-    LevelCues(SoundMix mix) {
+    /** M8 part C: the wall scrape under water ({@link UnderIceCues#scrape}). */
+    private final UnderIceCues underIce;
+
+    LevelCues(SoundMix mix, UnderIceCues underIce) {
         super(mix);
+        this.underIce = underIce;
     }
 
     @Override
@@ -70,8 +74,13 @@ final class LevelCues extends SoundFamily {
             }
             case SONDE_COLLECTED -> bank.play(Sfx.SONDE_CHIME, SONDE_LEVEL, 1, pan);
             // M7 part C: a wall touch's scrape on the rock's side (-1 left, 1 right; Rook's by his x).
-            case WALL_CONTACT ->
-                bank.play(Sfx.CANYON_SCRAPE, SCRAPE_LEVEL, pitch(0.04), FlightSounds.scrapePan(events.value(i), pan));
+            case WALL_CONTACT -> {
+                // M8 part C: under water the scrape is muffled (round 52's scrape-under).
+                float scrapePan = FlightSounds.scrapePan(events.value(i), pan);
+                if (!underIce.scrape(SCRAPE_LEVEL, scrapePan)) {
+                    bank.play(Sfx.CANYON_SCRAPE, SCRAPE_LEVEL, pitch(0.04), scrapePan);
+                }
+            }
             // Level 05's sounds (round 21): the rail's charge hum, its loop played twice over the lights'
             // 1.5 s chase, and the sled's pass.
             case SLED_LIGHTS -> {

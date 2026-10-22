@@ -46,7 +46,8 @@ import vanguard.sim.Sortie;
  * station under the ally, in the way of what comes up at it from below; ground units, which cannot ram,
  * are not dodged there. The plays live beside it: {@link DodgePlay}, {@link TargetPlay}, {@link HazardPlay},
  * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay}, {@link RetreatPlay} (M7 part G: the
- * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21), {@link WaterPlay} (M8 part C:
+ * the drag, the siphon pumps and the Glassfin's rams, Level 23) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -168,6 +169,11 @@ public final class Autopilot {
         double coil = DodgePlay.chainThreat(sortie, shipX, shipY);
         if (coil != 0) {
             return commands | (coil < 0 ? Command.LEFT.bit() : Command.RIGHT.bit());
+        }
+        // M8 part C: out of a Glassfin's ram dive (Level 23, WaterPlay).
+        double ram = WaterPlay.ramThreat(sortie, shipX, shipY);
+        if (ram != 0) {
+            return commands | (ram < 0 ? Command.LEFT.bit() : Command.RIGHT.bit());
         }
         double hazard = DodgePlay.hazard(sortie, shipX, shipY);
         if (hazard != 0) {
@@ -297,6 +303,11 @@ public final class Autopilot {
         if (head != null) {
             lowest = head;
         }
+        // M8 part C: the escapes objective's unit low on the screen before it gets away (Level 23's siphon pumps).
+        Enemy escapee = WaterPlay.escapee(sortie, shipY);
+        if (escapee != null) {
+            lowest = escapee;
+        }
         Enemy anchor = TargetPlay.gateAnchor(sortie, shipX, shipY);
         if (anchor != null) {
             // M7 part C: a gate's anchor before its tendril reaches the ship, holding low meanwhile (Level 16).
@@ -363,9 +374,14 @@ public final class Autopilot {
             targetX = sondes.x(sonde);
             targetY = Math.clamp(sondes.y(sonde), 40, Math.max(40, targetY));
         }
+        // M8 part C: under water with its slide in mind (the drag; in the air the plain steer, WaterPlay).
         return commands
-                | MovePlanner.steer(
-                        shipX, shipY, DodgePlay.clearOfRail(sortie, HazardPlay.leanX(sortie, targetX)), targetY);
+                | WaterPlay.steer(
+                        sortie,
+                        shipX,
+                        shipY,
+                        DodgePlay.clearOfRail(sortie, HazardPlay.leanX(sortie, targetX)),
+                        targetY);
     }
 
     /**

@@ -20,6 +20,13 @@ public interface ChainSpecs {
      * a regrown head's is 1. M7 part C: the head pays {@code headFirstBonus} more when it is destroyed
      * before any other part (design/enemies/ground/threadcrawler: a head-first kill pays the whole); a
      * ground chain ({@link Crawl}) never regrows, and its {@code regrown} may be null.
+     *
+     * <p>M8 part C (design/enemies/naval/eel-swarm): with a {@code scatter} an air chain never regrows: every cut
+     * splits off its rear part, which swims on along the cut's heading as a headless trail ({@link Scatter}), and its
+     * {@code regrown} is null. Its {@code headAttacks} are its head's attacks, each on its own clock while the head is
+     * on the play field (the head's own gun is then empty): each fires its volley at its interval, the first its
+     * {@link EnemyGun#firstShotDelay()} after the head entered the screen, and raises its tell ({@link
+     * SimEvents.Type#EYE_GLINT}) its {@link EnemyGun#tellSeconds()} before (none for 0). An empty list for none.
      */
     public record ChainSpec(
             EnemySpec segment,
@@ -32,16 +39,113 @@ public interface ChainSpecs {
             java.util.List<Double> offsets,
             double popSeconds,
             double headMultiplier,
-            int headFirstBonus) {
+            int headFirstBonus,
+            java.util.Optional<Scatter> scatter,
+            java.util.List<EnemyGun> headAttacks) {
+        /** M8 part C: the most attacks a chain's head has. */
+        public static final int MOST_HEAD_ATTACKS = 4;
+
         public ChainSpec {
             segmentBoxes = java.util.List.copyOf(segmentBoxes);
             offsets = java.util.List.copyOf(offsets);
+            headAttacks = java.util.List.copyOf(headAttacks);
+            java.util.Objects.requireNonNull(scatter);
             if (offsets.size() != segmentBoxes.size() + 2) {
                 throw new IllegalArgumentException("a chain has an offset per member: head, segments, tail");
+            }
+            if (offsets.size() > Chain.MAX_MEMBERS) {
+                throw new IllegalArgumentException(
+                        "a chain has at most " + Chain.MAX_MEMBERS + " members: " + offsets.size());
             }
             if (!(headMultiplier > 0)) {
                 throw new IllegalArgumentException("a chain's head multiplier is positive: " + headMultiplier);
             }
+            if (scatter.isPresent() && regrown != null) {
+                throw new IllegalArgumentException("a chain whose cut part scatters regrows no head");
+            }
+            if (headAttacks.size() > MOST_HEAD_ATTACKS) {
+                throw new IllegalArgumentException(
+                        "a chain's head has at most " + MOST_HEAD_ATTACKS + " attacks: " + headAttacks.size());
+            }
+            for (EnemyGun gun : headAttacks) {
+                if (gun.up()
+                        || gun.burst() != 1
+                        || gun.mine().isPresent()
+                        || gun.mortar().isPresent()
+                        || gun.spiral().isPresent()
+                        || gun.homing().isPresent()
+                        || !Double.isNaN(gun.passWithinX())
+                        || Double.isFinite(gun.turnRate())
+                        || !Double.isFinite(gun.intervalSeconds())) {
+                    throw new IllegalArgumentException(
+                            "a chain head's attack is an aimed shot or a fan at an interval: " + gun);
+                }
+            }
+        }
+
+        /** Without M8 part C's scatter and head attacks. */
+        public ChainSpec(
+                EnemySpec segment,
+                java.util.List<Hitbox> segmentBoxes,
+                EnemySpec tail,
+                int tailFirstBonus,
+                EnemySpec regrown,
+                double regrowSeconds,
+                double regrowSpeed,
+                java.util.List<Double> offsets,
+                double popSeconds,
+                double headMultiplier,
+                int headFirstBonus) {
+            this(
+                    segment,
+                    segmentBoxes,
+                    tail,
+                    tailFirstBonus,
+                    regrown,
+                    regrowSeconds,
+                    regrowSpeed,
+                    offsets,
+                    popSeconds,
+                    headMultiplier,
+                    headFirstBonus,
+                    java.util.Optional.empty(),
+                    java.util.List.of());
+        }
+
+        /** M8 part C: this chain whose cut parts scatter ({@code regrown} must be null); empty for none. */
+        public ChainSpec withScatter(java.util.Optional<Scatter> withScatter) {
+            return new ChainSpec(
+                    segment,
+                    segmentBoxes,
+                    tail,
+                    tailFirstBonus,
+                    regrown,
+                    regrowSeconds,
+                    regrowSpeed,
+                    offsets,
+                    popSeconds,
+                    headMultiplier,
+                    headFirstBonus,
+                    withScatter,
+                    headAttacks);
+        }
+
+        /** M8 part C: this chain with its head's attacks; an empty list for none. */
+        public ChainSpec withHeadAttacks(java.util.List<EnemyGun> withAttacks) {
+            return new ChainSpec(
+                    segment,
+                    segmentBoxes,
+                    tail,
+                    tailFirstBonus,
+                    regrown,
+                    regrowSeconds,
+                    regrowSpeed,
+                    offsets,
+                    popSeconds,
+                    headMultiplier,
+                    headFirstBonus,
+                    scatter,
+                    withAttacks);
         }
 
         /** Without M7 part C's head-first bonus. */
@@ -97,6 +201,21 @@ public interface ChainSpecs {
         /** The members: head, segments and tail. */
         public int members() {
             return offsets.size();
+        }
+    }
+
+    /**
+     * M8 part C, a water chain's cut (design/enemies/naval/eel-swarm, Cut and scatter; the stat block's {@code cut:
+     * {scatter, seconds}}): the rear part a cut splits off keeps the heading the chain had at the cut and swims on
+     * straight at {@code speed} px/s for {@code seconds}, its members hittable and firing nothing, then dies from the
+     * cut backwards (one member every {@link ChainSpec#popSeconds()}), drifting to a halt as a dead chain does. A cut
+     * of a scattering part only takes that member out of it.
+     */
+    public record Scatter(double speed, double seconds) {
+        public Scatter {
+            if (!(speed >= 0) || !(seconds >= 0)) {
+                throw new IllegalArgumentException("a scatter has a speed and a time: " + speed + ", " + seconds);
+            }
         }
     }
 

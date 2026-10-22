@@ -259,16 +259,33 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "shot-depth-charge-r50-b.ogg",
         "depth-charge-burst-r50-a.ogg",
         "special-limit-r50-b.ogg",
-        // M8 part B: round 51's proposals for Level 22 (CC0/CC-BY Freesound HQ previews, briefs of the round; CREDITS
-        // rows from step AUD-B), their a variants until the user's pick, which may swap the file: the ice geyser's tell
-        // and burst, the Drill Rig's collar loop, shard ring and core death, the Europa ice bed and Conamara's bed.
-        "geyser-tell-r51-a.ogg",
+        // M8 part B: round 51's picks for Level 22 (user 2026-10-22; CC0/CC-BY Freesound HQ previews, CREDITS rows from
+        // step AUD-B): the ice geyser's tell b and burst a, the Drill Rig's collar loop, shard ring and core death b, the
+        // Europa ice bed a and Conamara's bed a.
+        "geyser-tell-r51-b.ogg",
         "geyser-burst-r51-a.ogg",
-        "rig-collar-r51-a.ogg",
-        "rig-ring-r51-a.ogg",
-        "rig-death-r51-a.ogg",
+        "rig-collar-r51-b.ogg",
+        "rig-ring-r51-b.ogg",
+        "rig-death-r51-b.ogg",
         "europa-ice-r51-a.ogg",
         "conamara-station-r51-a.ogg",
+        // M8 part C: round 52's proposals for Level 23 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-C),
+        // their a variants until the user's pick, which may swap the file: the waterline crossing, the hydro-kit's refit,
+        // the wall scrape under water, the eel's pulse and segment, the Glassfin's shatter, the siphon pump's hum and
+        // break, the bed under the ice and the under-water explosion ladder (tiny to large).
+        "waterline-cross-r52-a.ogg",
+        "hydro-refit-r52-a.ogg",
+        "scrape-under-r52-a.ogg",
+        "eel-pulse-r52-a.ogg",
+        "eel-segment-r52-a.ogg",
+        "glassfin-shatter-r52-a.ogg",
+        "pump-hum-r52-a.ogg",
+        "pump-break-r52-a.ogg",
+        "europa-under-r52-a.ogg",
+        "explosion-underwater-tiny-r52-a.ogg",
+        "explosion-underwater-small-r52-a.ogg",
+        "explosion-underwater-medium-r52-a.ogg",
+        "explosion-underwater-large-r52-a.ogg",
     )
 }
 

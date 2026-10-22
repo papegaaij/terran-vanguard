@@ -34,11 +34,25 @@ final class CanyonLooks {
     private Array<AtlasRegion> dustFrames;
     private Array<AtlasRegion> dustMirrored;
 
+    /**
+     * M8 part C: an ice shaft's walls (Level 23): a touch throws ice chips (the dust frames in pale ice, {@link
+     * #ICE_CHIP}); under water no sparks fly, only the chips.
+     */
+    private boolean ice;
+
+    /** M8 part C: the ice chips' colour, the dust frames tinted pale blue-white. */
+    static final com.badlogic.gdx.graphics.Color ICE_CHIP = new com.badlogic.gdx.graphics.Color(0.86f, 0.95f, 1f, 1);
+
     private boolean cooling;
     private long flashFrom = Long.MIN_VALUE / 2;
 
     CanyonLooks(Sprites sprites) {
         this.sprites = sprites;
+    }
+
+    /** M8 part C: the walls are an ice shaft's: chips instead of rock dust, no sparks under water. */
+    void ice(boolean ice) {
+        this.ice = ice;
     }
 
     /** A new attempt: the sparks and the flash are gone. */
@@ -86,7 +100,9 @@ final class CanyonLooks {
                     : rockRight(terrain, scroll, x, y, sortie.tick());
             float scale = type == SimEvents.Type.WALL_CONTACT ? 1 : SMALL;
             dust.startOnGroundScaled(rockRight ? dustMirrored : dustFrames, FRAME_TICKS, x, y, 0, scroll, scale, 1);
-            sparks.startOnGroundScaled(rockRight ? sparkMirrored : spark, FRAME_TICKS, x, y, 0, scroll, scale, 1);
+            if (!ice || !sortie.underwater()) {
+                sparks.startOnGroundScaled(rockRight ? sparkMirrored : spark, FRAME_TICKS, x, y, 0, scroll, scale, 1);
+            }
         }
     }
 
@@ -110,7 +126,11 @@ final class CanyonLooks {
 
     /** The dust, then the sparks over it (over the units, with the other impacts). */
     void draw(SpriteBatch batch, double groundScroll) {
+        if (ice) {
+            batch.setColor(ICE_CHIP);
+        }
         dust.draw(batch, groundScroll);
+        batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
         sparks.draw(batch, groundScroll);
     }
 

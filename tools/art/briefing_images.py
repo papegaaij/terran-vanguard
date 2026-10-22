@@ -183,6 +183,13 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           pumps on their hoses) with the bore core marked, the hardened collar (shots glance off),
                           what gets through; an inset of a geyser's crack glowing, then its steam
                           (tools/art/l22_props.py)
+  level-23-drill-shaft    L23 p1 (M8 part C batch): Okafor's CDF section through the ice under Conamara: the dome on
+                          the shelf, the Vrell drill shaft down twenty kilometres of ice with their collars in red,
+                          the waterline where the hydro-kits switch on, Thera Deep's lit domes and farm racks with
+                          the siphon pumps on the floor below; the route and the four sections
+  level-23-eel-and-fry    L23 p2: Varga's scan of the Eel Swarm (tools/art/eel_swarm.py's frames: the gills
+                          circled, the stripe lit, a cut) and a Glassfin school as a ribbon (tools/art/glassfin.py:
+                          a glint, the ram); the rules strip BULLETS X0.7, DRAG, TORPEDO RANGE +50 %
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -206,6 +213,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r42-a.png   review sheet, L19 + the L20 plate (M7 part F)
   design/ui/briefing/concept/briefing-images-final-r44-a.png   review sheet, L21 (M7 part H)
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
+  design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -256,7 +264,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r51"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r52"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -5050,6 +5058,162 @@ def rig_scan():
     return b
 
 
+# --------------------------------------------------------------------------- Level 23 (M8 part C)
+
+SOURCE_M8C = artkit.source_note(SCRIPT, "M8 part C batch")
+TEAL_V = (0, 255, 154)
+
+
+def drill_shaft():
+    """L23 p1: Okafor's CDF section through the ice under Conamara: the shelf and the station's dome on the
+    surface, the Vrell drill shaft straight down through twenty kilometres of ice with their collars as red marks,
+    the waterline where the hydro-kits switch on, the ocean below, Thera Deep's lit pressure domes and farm racks
+    on the floor at the shaft's foot; the route down the shaft and the level's four sections."""
+    b = Board()
+    xx, yy = b.xx, b.yy
+    x0, x1 = 16, 456
+    surf, ice_bot, floor_y = 34.0, 150.0, 226.0
+    sx = 168.0                                                # the shaft
+    inside = (xx > x0) & (xx < x1)
+    s_y = surf + 2 * np.sin(xx / 31)
+    i_y = ice_bot + 5 * np.sin(xx / 41 + 1) + 2 * np.sin(xx / 11)
+    n = raster.fbm(W, H, 14, 4631, octaves=4, period=False)
+    ice = inside & (yy > s_y) & (yy < i_y)
+    icecol = raster.ramp([(0.0, (50, 78, 108)), (0.6, (120, 156, 190)), (1.0, (200, 220, 238))],
+                         np.clip(0.35 + 0.55 * (1 - (yy - s_y) / (i_y - s_y)) + 0.2 * (n - 0.5), 0, 1))
+    b.base = np.where(ice[..., None], icecol * 0.8, b.base)
+    for k in range(5):                                        # strata in the ice
+        y = surf + 18 + k * 22
+        b.base = np.where((inside & (np.abs(yy - y - 3 * np.sin(xx / 23 + k)) < 0.6))[..., None],
+                          b.base * 0.75, b.base)
+    sea = inside & (yy >= i_y) & (yy < floor_y)
+    depth = np.clip((yy - i_y) / (floor_y - i_y), 0, 1)
+    seacol = np.array((10, 56, 70.0)) * (1 - depth[..., None]) + np.array((3, 14, 22.0)) * depth[..., None]
+    b.base = np.where(sea[..., None], seacol, b.base)
+    shaft = (np.abs(xx - sx) < 5 + 9 * np.clip((surf + 12 - yy) / 12, 0, 1)) & (yy > s_y - 1) & (yy < i_y + 1)
+    b.base = np.where(shaft[..., None], np.array((8, 14, 26.0)) + 30 * np.clip(1 - (yy - surf) / 120, 0, 1)[..., None],
+                      b.base)
+    floor = inside & (yy >= floor_y)
+    b.base = np.where(floor[..., None], np.array((18, 30, 30.0)), b.base)
+    b.title("CDF OPS - THE DRILL SHAFT, CONAMARA TO THERA DEEP")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.line([(x0, surf), (x1, surf)], WHITE, 1, 200)
+    # Conamara's dome on the shelf, beside the shaft's mouth
+    cx = 118
+    b.draw.arc([cx - 18, surf - 16, cx + 18, surf + 16], 180, 360, fill=AMBER + (240,), width=2)
+    b.glow(cx, surf - 4, 10, (90, 60, 20), 0.6)
+    tag(b, cx - 96, surf + 8, "CONAMARA", AMBER)
+    # the Vrell collars down the shaft walls
+    for y in np.arange(surf + 14, ice_bot - 4, 17):
+        for side in (-1, 1):
+            b.line([(sx + side * 4, y), (sx + side * 13, y + 3)], RED, 2, 240)
+    b.line([(sx + 10, 74), (sx + 40, 64), (sx + 52, 64)], RED, 1, 220)
+    tag(b, sx + 56, 60, "VRELL COLLARS", RED)
+    # the waterline in the shaft
+    wl = float(ice_bot) - 16
+    b.line([(sx - 7, wl), (sx + 7, wl)], CYAN, 2, 250)
+    b.glow(sx, wl, 9, (20, 90, 110), 0.7)
+    b.line([(sx + 9, wl), (sx + 52, wl + 8), (sx + 62, wl + 8)], CYAN, 1, 230)
+    tag(b, sx + 66, wl + 4, "WATERLINE - HYDRO-KITS ON", CYAN)
+    # the route down
+    b.arrow(sx, surf - 14, sx, wl - 10, AMBER, 5)
+    tag(b, sx - 84, surf + 36, "AEGIS FLIGHT", AMBER)
+    b.dashed([(sx, i_y[0, int(sx)] if np.ndim(i_y) else ice_bot), (sx + 30, 190), (sx + 150, 200), (x1 - 10, 196)],
+             AMBER, 1, 4, 3)
+    # Thera Deep on the floor: pressure domes, lit farm racks
+    for k, (dx, r) in enumerate(((210, 16), (262, 22), (318, 14), (352, 10))):
+        b.draw.arc([dx - r, floor_y - r, dx + r, floor_y + r], 180, 360, fill=AMBER + (230,), width=2)
+        for j in range(3):
+            b.glow(dx - r * 0.5 + j * r * 0.5, floor_y - r * 0.45, 2, (255, 190, 90), 0.9)
+    for k in range(10):                                       # farm racks with grow lamps
+        fx = 196 + k * 22
+        b.line([(fx, floor_y - 2), (fx + 14, floor_y - 2)], GREEN, 1, 160)
+        b.line([(fx + 3, floor_y - 2), (fx + 2, floor_y - 12 - 4 * np.sin(k))], (70, 200, 120), 1, 140)
+        b.glow(fx + 7, floor_y - 6, 6, (70, 60, 20), 0.5)
+    for k, (px_, py_) in enumerate(((240, floor_y - 4), (300, floor_y - 4), (380, floor_y - 4))):
+        b.marker(px_, py_ - 6, "chevron", VIOLET, 3)
+    tag(b, 236, floor_y - 44, "THERA DEEP - 40,000", AMBER)
+    tag(b, 392, floor_y - 22, "SIPHON PUMPS", VIOLET)
+    tag(b, 392, floor_y - 12, "ON THE RACKS", VIOLET)
+    # the depth scale
+    b.line([(x1 + 10, surf), (x1 + 10, ice_bot)], CYAN, 1, 220)
+    for y in (surf, ice_bot):
+        b.line([(x1 + 6, y), (x1 + 14, y)], CYAN, 1, 220)
+    tag(b, x1 + 18, 82, "20 KM", CYAN)
+    tag(b, x1 + 18, 92, "OF ICE", CYAN)
+    # the level's sections
+    px = 520
+    b.label(px, 30, "THE ROUTE", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    for k, (text, col) in enumerate((("1 SHAFT MOUTH, DRY", WHITE), ("  WATERLINE", CYAN), ("2 WET SHAFT", CYAN),
+                                     ("3 THERA DEEP FARMS", AMBER), ("4 THE PLAIN'S EDGE", GREY))):
+        b.label(px, 52 + 12 * k, text, col)
+    b.label(px, 128, "WALLS HURT", RED)
+    b.label(px, 140, "SHOOT THE PUMPS,", VIOLET)
+    b.label(px, 150, "NOT THE RACKS", VIOLET)
+    return b
+
+
+def eel_and_fry():
+    """L23 p2: Varga's scan of the two new swimmers: an Eel Swarm chain (the production sprites: the head with its
+    lime gills circled, the stripe that lights before it fires, the cut that scatters the tail) and a Glassfin school
+    as a ribbon (a glint, then a ram down the lane); the under-water rules strip beside them."""
+    b = Board()
+    b.base = b.base * 0.85 + np.array((2, 18, 22.0)) * 0.6
+    b.title("CDF SCAN - EEL SWARM, GLASSFIN SCHOOL")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    # the eel: head at the lower left, the chain curving up to the right
+    pts = [(70 + 26 * k, 150 - 34 * math.sin(k * 0.55)) for k in range(9)]
+    frames = []
+    for k, (x, y) in enumerate(pts):
+        ahead = pts[k - 1] if k else (x - 26, y + 18)
+        hk = int(round(math.atan2(-(ahead[0] - x), ahead[1] - y) / (2 * math.pi) * 16)) % 16
+        lit = 3 <= k <= 5
+        name = (f"eel-swarm_{hk * 3 + 1}" if k == 0 else f"eel-swarm-tail_{hk * 2}" if k == len(pts) - 1
+                else f"eel-swarm-segment_{hk * 2 + int(lit)}")
+        frames.append((held_frame(name), x, y))
+    for img, x, y in reversed(frames):
+        shadow(b, img, x, y, 4, 6, 0.35)
+        b.sprite(img, x, y)
+    hx, hy = pts[0]
+    b.ring(hx, hy, 15, colour=LIME, alpha=240)
+    b.line([(hx - 10, hy + 12), (hx - 20, hy + 42), (hx - 12, hy + 42)], LIME, 1, 230)
+    tag(b, 18, hy + 46, "GILLS - THE HEAD IS VITAL", LIME)
+    b.line([(pts[4][0], pts[4][1] - 12), (pts[4][0] + 6, 70), (pts[4][0] + 16, 70)], VIOLET, 1, 230)
+    tag(b, pts[4][0] + 20, 66, "STRIPE LIGHTS: IT FIRES", VIOLET)
+    cx_, cy_ = (pts[6][0] + pts[7][0]) / 2, (pts[6][1] + pts[7][1]) / 2
+    b.line([(cx_ - 6, cy_ - 10), (cx_ + 6, cy_ + 10)], RED, 2, 240)
+    b.line([(cx_ + 4, cy_ + 12), (cx_ + 30, 206), (cx_ + 40, 206)], RED, 1, 220)
+    tag(b, cx_ + 44, 202, "CUT: THE TAIL SCATTERS", RED)
+    # the Glassfin school: a ribbon swaying across, one glinting and diving
+    rib = [(346 + 13 * k, 62 + 80 * (k / 11) + 16 * math.sin(k * 0.8)) for k in range(12)]
+    for k, (x, y) in enumerate(rib):
+        nx, ny = rib[min(k + 1, 11)] if k < 11 else (x + 15, y + 8)
+        hk = int(round(math.atan2(-(nx - x), ny - y) / (2 * math.pi) * 16)) % 16
+        if k == 7:
+            continue
+        b.sprite(sprite.enlarge(held_frame(f"glassfin_{hk * 2}"), 2), x, y)
+    gx, gy = rib[7]
+    b.sprite(sprite.enlarge(held_frame("glassfin_1"), 2), gx, gy)
+    gl = np.array(sprite.enlarge(held_asset("glassfin-glint_2"), 2)).astype(float)
+    b.add_light(gl[..., :3] * gl[..., 3:4] / 255, int(gx - 24), int(gy - 24), "over")
+    b.arrow(gx, gy + 10, gx, 214, CYAN, 4, dashed=True)
+    tag(b, gx + 8, 178, "GLINT, THEN A RAM", CYAN)
+    tag(b, gx + 8, 188, "DOWN YOUR LANE", CYAN)
+    tag(b, 340, 34, "GLASSFIN - RIBBONS (2X)", TEAL_V)
+    # the rules strip
+    px = 520
+    b.label(px, 30, "UNDER WATER", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    big(b, px, 52, "BULLETS X0.7", AMBER)
+    big(b, px, 78, "DRAG", AMBER)
+    b.label(px, 104, "TORPEDO RANGE", GREEN)
+    big(b, px, 116, "+50 %", GREEN)
+    b.label(px, 146, "THE REST OF YOUR", RED)
+    b.label(px, 156, "GUNS LOSE A THIRD", RED)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -5116,6 +5280,8 @@ IMAGES = {
     "act-4-drop": drop4,
     "level-22-conamara-map": conamara_map,
     "level-22-drill-rig": rig_scan,
+    "level-23-drill-shaft": drill_shaft,
+    "level-23-eel-and-fry": eel_and_fry,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -5139,7 +5305,8 @@ BATCHES = {
     "r42": (list(IMAGES)[53:56], "M7 PART F"),
     "r43": (list(IMAGES)[56:57], "M7 PART G"),
     "r44": (list(IMAGES)[57:59], "M7 PART H"),
-    "r51": (list(IMAGES)[59:], "M8 PART B"),
+    "r51": (list(IMAGES)[59:65], "M8 PART B"),
+    "r52": (list(IMAGES)[65:67], "M8 PART C"),
 }
 
 
@@ -5160,6 +5327,7 @@ def build(names):
                   else SOURCE_M7G if name in BATCHES["r43"][0]
                   else SOURCE_M7H if name in BATCHES["r44"][0]
                   else SOURCE_M8B if name in BATCHES["r51"][0]
+                  else SOURCE_M8C if name in BATCHES["r52"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

@@ -275,7 +275,15 @@ with the Depth Charges' test fire over the water.
 
 ## intel-final-r51-a
 
-Production art, M8 part B batch (round 51). Not a mockup: the sheet of `assets/sprites/intel/drill-rig.png` (30×30,
+Production art, M8 part B batch (round 51; accepted as final in round 51, F.8, 2026-10-22). Not a mockup: the sheet of `assets/sprites/intel/drill-rig.png` (30×30,
 the sensor L2 portrait of the Drill Rig: the core with its augers and the four pumps on their hoses, scaled to fit),
 rendered by [tools/art/intel.py](../../../../tools/art/intel.py) (`python3 tools/art/intel.py drill-rig`) from the
 production model of `tools/art/drill_rig.py`, at 1× and 3×.
+
+## intel-final-r52-a
+
+Round 52, production art (M8 part C batch, step ART-C): the sensor L2 portraits `glassfin` (three fry of a school nose
+down) and `eel-swarm` (the head nose down with the stripe lit and two body eels trailing up to the right), 30x30, from
+the production models of [tools/art/glassfin.py](../../../../tools/art/glassfin.py) and
+[tools/art/eel_swarm.py](../../../../tools/art/eel_swarm.py), written by
+[tools/art/intel.py](../../../../tools/art/intel.py) `glassfin eel-swarm`.

@@ -1,10 +1,10 @@
 ---
 title: Driftjelly
 design: approved
-implementation: done
+implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-09
+updated: 2026-10-22
 ---
 
 # Driftjelly
@@ -68,6 +68,12 @@ Values are first-draft balancing numbers at **medium** (see the [balancing basis
 - `area` is struck from its effective traits: the mines' blasts are on the player's plane and miss
   `ground`; the Hammer Mortar's blast hits a surfaced jelly as any `ground` unit, never a submerged
   one (E2 = a).
+- **Under water** (Act 4, from Level 23; the [naval](../README.md#returning-units-under-water) *Returning units* table): a
+  field that enters in a section with `medium: underwater` drifts on the play plane, always in the water: the data's
+  `underwater` block (`layer: air`, `submerge: false`) drops the surface/submerge swap; the drift and the ring are
+  unchanged (its bullets × 0.7 by Europa's water rules). Applied when the level's script is built, by the field's entry
+  time (M8 part C). The look: its submerged frames at full opacity under the water's grade, no foam collar (part C's
+  game step).
 
 ### Concept art
 
@@ -95,6 +101,8 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
       water (M5 part E, steps E1b and E3c: `NavalLooks`, `PulseClock`, `Level11LooksTest`)
 - [x] Death effect, bounty and score per this spec; production sprites and intel portrait (M5
       part E, steps E1b and E3e; approved as final in round 33)
+- [ ] Under water (M8 part C): the `underwater` block loaded and checked (step C2), applied to a field entering under
+      water (step C3), drawn under the grade without its foam collar (step C4)
 
 ## Decisions
 
@@ -133,3 +141,5 @@ The production files (M5 part E, straight to production per E9 = a; approved as 
   (the faint jelly ripples, the submerged jelly reading only through a quiet `sub` pass: build choice a); the stat block's numbers and the build choices of round 33 (the ring fired 72–96 px from the ship (b), each jelly's own seeded swap
   timer (c), the kill rate without torpedoes about half (w)) accepted. `design: approved`, `art: final`;
   every Implementation item is ticked, so the implementation is `done`.
+- 2026-10-22: M8 part C, step C2 (gap check m8c-gaps.md §5 D2, pending the user's review in round 52): the
+  `underwater` block in its data (`layer: air`, `submerge: false`): under water it drifts on the play plane, no swap.

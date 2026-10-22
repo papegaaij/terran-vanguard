@@ -32,6 +32,9 @@ drops: []
 traits: [anti-ground, spread]
 bounty: 14
 first_level: 11
+underwater:   # M8 part C (naval README, Returning units under water; gap check D2): a nest entering under water (Level 23 on)
+  drift: 0         # sits on the sea floor (a shaft ledge, a farm rack): no raft, no drift
+  look: floor      # drawn on a rock-and-kelp base instead of its raft (the game's)
 difficulty:
   hard: {fan_count: 5}
 notes:

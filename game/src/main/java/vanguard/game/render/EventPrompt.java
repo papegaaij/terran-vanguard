@@ -67,6 +67,15 @@ public final class EventPrompt {
         }
     }
 
+    /**
+     * M8 part C: a timed prompt (Level 23's rules strip at the waterline) shows from real time {@code real} for its
+     * seconds, whatever latches; such a prompt is never {@link #step}ped.
+     */
+    public void flash(double real) {
+        latchAt = real - MIN_LATCH;
+        shaken = false;
+    }
+
     /** The shake-off threw the latched Lampreys off: the prompt is done for the attempt. */
     public void shaken() {
         shaken = true;

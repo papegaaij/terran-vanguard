@@ -24,7 +24,7 @@ import vanguard.sim.Sortie;
  * the screen, panned to the one nearest the ship, under the {@code mars-foundry} bed.
  *
  * <p>M8 part B: Level 22's ice geysers (the vents' {@code look: ice-geyser}, {@link #geysers}) play the geyser's ice
- * crack for the tell and its steam roar for the burst (round 51 a, proposed); the Drill Rig's collar whine is one quiet
+ * crack for the tell and its steam roar for the burst (round 51: the tell b, the burst a, chosen); the Drill Rig's collar drill (b) is one quiet
  * loop while a rig's collar turns on the screen (its core standing), panned to the rig nearest the ship; its ring of
  * shards plays the rig's ring once instead of the shots' report; its core's death plays the rig's collapse with its
  * {@code large} explosion.

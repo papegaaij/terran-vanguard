@@ -1,0 +1,22 @@
+{
+ "source": "tools/art/l23_props.py (production art, M8 part C batch)",
+ "size": [
+  48,
+  48
+ ],
+ "cradle": [
+  [
+   24,
+   26
+  ],
+  [
+   24,
+   22
+  ]
+ ],
+ "headings": [
+  "up the screen",
+  "down the screen"
+ ],
+ "note": "per heading the cradle's centre (px from the frame's top left), where the armour patch rides"
+}

@@ -19,6 +19,14 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      patch, a headset with a boom mic; lit by the dome control room's
                                      sodium lamps (a warm amber rim from the right) with the dome's ribs,
                                      two sodium lamps and the consoles' screens behind her
+  radio-thera-deep-neutral.png       72x72, Thera Deep Control, the under-ice city's harbour controller (Level 23 on,
+                                     the speaker `thera-control`, portrait `radio-thera-deep`; M8 part C batch,
+                                     round 52, straight to production): a calm, heavy-set man in his fifties, olive
+                                     skin, short dark hair and a close dark beard, the city's grey-blue
+                                     harbour coverall with a pressure suit's steel neck ring and a headset; lit by
+                                     the control room's warm grow-lamp light from the left with a cool teal rim from
+                                     the round viewport behind him (dark water, a lamp-lit farm rack in it, the
+                                     consoles' screens below)
   design/story/characters/concept/portraits-final-r13-a.png/.gif   review sheet and loop
   design/story/characters/rook/concept/rook-briefing-portrait-final-r30-a.png   Rook's briefing
                                      portraits (round 30), next to his radio portraits and the
@@ -27,6 +35,8 @@ Outputs (assets/sprites/portraits/, packed onto the shared sprite pages as ``por
                                      (round 38): 1x, 2x, 4x and a line-up with the other generics
   design/story/characters/concept/portraits-final-r51-a.png   Dr. Brandt's review (round 51): 1x, 2x,
                                      4x and a line-up with the other minor speakers
+  design/story/characters/concept/portraits-final-r52-a.png   Thera Deep Control's review (round 52), the same
+                                     layout
 
 The busts are the concept SDF busts (tools/concept/portraits_r03.py, the generic speakers of
 portraits_r08.py), imported unchanged; the expressions replace their face with this script's
@@ -77,12 +87,14 @@ SPEAKERS = {
     "generic-civilian": (("neutral",), ("radio",)),
     "generic-colonial": (("neutral",), ("radio",)),
     "conamara": (("neutral",), ("radio",)),
+    "thera-deep": (("neutral",), ("radio",)),
 }
 # M7 part B: the colonial generic is round 36's chosen variant under the game's slug
 r03.CAST["generic-colonial"] = dict(r03.CAST[f"generic-colonial-{r36.CHOSEN}"])
 # the batch each speaker was made in (the Source note); the UI batch's are left out
-BATCHES = {"generic-colonial": "M7 part B batch", "conamara": "M8 part B batch"}
+BATCHES = {"generic-colonial": "M7 part B batch", "conamara": "M8 part B batch", "thera-deep": "M8 part C batch"}
 CONAMARA_ROUND = "r51"
+THERA_ROUND = "r52"
 COLONIAL_ROUND = "r38"
 CONCEPT_COLONIAL = CONCEPT
 CHOIR = "the-choir"
@@ -189,6 +201,104 @@ def conamara_room(ramp):
 
 
 ROOMS = {"conamara": conamara_room}
+
+
+# --------------------------------------------------------------------------- Thera Deep Control (M8 part C)
+
+GROW = (255, 206, 132)
+TEAL_W = (90, 230, 210)
+
+
+def thera_controller():
+    """Thera Deep Control, the city's harbour controller (L23 on): a calm, heavy-set man in his fifties, olive skin,
+    dark hair cropped short, a close dark beard along the jaw with a moustache; the grey-blue
+    harbour coverall with a pressure suit's steel neck ring and the city's amber shoulder tab, a headset with a boom
+    mic and a teal on-air lamp."""
+    mats = [
+        sdf.Material((0.66, 0.47, 0.34), shininess=14, spec=0.18),           # olive skin
+        sdf.Material((0.86, 0.84, 0.8), shininess=60, spec=0.5),
+        sdf.Material((0.16, 0.1, 0.06), shininess=90, spec=0.9),             # brown iris
+        sdf.Material((0.5, 0.3, 0.26), shininess=24, spec=0.25),
+        sdf.Material((0.17, 0.16, 0.16), shininess=6, spec=0.05, pattern=r03.noise_pattern(260, 0.45, 4)),  # dark, greying
+        sdf.Material((0.3, 0.34, 0.42), shininess=14, spec=0.2, pattern=r03.noise_pattern(70, 0.08, 5)),    # coverall
+        sdf.Material((0.95, 0.62, 0.18), shininess=18, spec=0.25),           # the city's amber shoulder tab
+        sdf.Material((0.5, 0.52, 0.54), metal=0.7, shininess=80, spec=0.8),  # the neck ring, headset
+        sdf.Material((0.1, 0.1, 0.1), emission=(0.3, 1.0, 0.8)),             # on-air lamp (teal)
+        sdf.Material((0.18, 0.2, 0.22), shininess=8, spec=0.08),             # the ring's dark seal
+        sdf.Material((0.16, 0.15, 0.14), shininess=8, spec=0.08),            # dark brows
+    ]
+
+    def scene(p):
+        q = r03.turn(p, 0.2, 0.02)                     # three-quarter, turned the other way from Brandt
+        items, skin = r03.face(q, jaw=1.1, mouth="neutral")
+        hair = sdf.sd_ellipsoid(q, (0, 0.51, -0.06), (0.3, 0.36, 0.33))
+        hair = np.maximum(hair, -(q[:, 1] - 0.57 + 0.38 * np.maximum(q[:, 2], 0)))   # a slightly receding hairline
+        hair = np.maximum(hair, -sdf.sd_ellipsoid(q, (0, 0.40, 0.25), (0.26, 0.2, 0.2)))
+        beard = sdf.sd_ellipsoid(q, (0, 0.25, 0.06), (0.245, 0.16, 0.27))
+        beard = np.maximum(beard, q[:, 1] - 0.36 + 0.25 * np.maximum(q[:, 2] - 0.15, 0))  # up the cheeks, not the face
+        beard = np.maximum(beard, -sdf.sd_ellipsoid(q, (0, 0.272, 0.3), (0.08, 0.03, 0.08)))  # the lips show
+        moust = sdf.sd_capsule(q, (-0.075, 0.296, 0.295), (0.075, 0.296, 0.295), 0.017)
+        band = np.maximum(r03.sd_torus_z(q, (0, 0.46, -0.03), 0.33, 0.02), -q[:, 1] + 0.46)
+        cup = sdf.sd_cylinder_x(q, (0.32, 0.44, -0.02), 0.075, 0.03)
+        boom = sdf.sd_capsule(q, (0.33, 0.4, 0.03), (0.12, 0.29, 0.27), 0.012)
+        mic = sdf.sd_sphere(q, (0.11, 0.285, 0.275), 0.022)
+        led = sdf.sd_sphere(q, (0.34, 0.41, 0.05), 0.013)
+        pb = r03.turn(p, 0.08)
+        neck, torso = r03.body(pb, neck_r=0.14, shoulders=0.9)
+        ring_p = np.stack([pb[:, 0], pb[:, 2] + 0.03, pb[:, 1] + 0.06], axis=-1)
+        ring = r03.sd_torus_z(ring_p, (0, 0, 0), 0.21, 0.045)
+        seal = sdf.sd_cylinder_y(pb, (0, -0.07, -0.03), 0.2, 0.025)
+        tab = sdf.sd_box(pb, (-0.52, -0.2, 0.1), (0.1, 0.05, 0.04), 0.012)
+        pocket = sdf.sd_box(pb, (0.3, -0.5, 0.25), (0.09, 0.07, 0.015), 0.01)
+        return sdf.union(*items, (hair, HAIR), (beard, HAIR), (moust, HAIR), (sdf.smin(neck, skin, 0.05), SKIN),
+                         (torso, CLOTH), (seal, EXTRA), (ring, METAL), (tab, ACCENT), (pocket, CLOTH),
+                         (band, METAL), (cup, METAL), (boom, METAL), (mic, METAL), (led, GLOW))
+    return scene, mats
+
+
+r03.CAST["thera-deep"] = dict(build=thera_controller, name="THERA DEEP CONTROL", role="THERA DEEP HARBOUR",
+                              key=(-1.6, 2.0, 3.0), rim=(2.4, 1.2, -1.2), rim_col=(0.2, 0.5, 0.46),
+                              bg=((2, 14, 18), (16, 60, 66)), fill_col=(1.0, 0.8, 0.52), channel="cdf",
+                              exposure=1.1)
+
+
+def thera_room(ramp):
+    """The radio portrait's background for Thera Deep Control: the harbour control room under the ice: a round
+    viewport behind him (its steel rim, the dark water, a lamp-lit farm rack and kelp in it), warm grow-lamp light
+    on the wall from the left, the consoles' screens low behind his shoulders."""
+    yy, xx = np.mgrid[0:N, 0:N].astype(np.float64)
+    bg = np.zeros((N, N, 3)) + ramp[0] * 255
+    vx, vy, vr = 50.0, 20.0, 19.0                      # the viewport, up to the right
+    d = np.hypot(xx - vx, yy - vy)
+    inside = d < vr
+    water = np.array((6, 40, 46), float) + np.array((10, 30, 30), float) * np.clip(1 - (yy - vy + vr) / (2 * vr), 0, 1)[..., None]
+    bg = np.where(inside[..., None], water, bg)
+    rack = inside & (np.abs(yy - (vy + 7)) < 1.2) & (np.abs(xx - vx) < 15)
+    bg[rack] = np.array(GROW) * 0.55
+    for lx in range(int(vx) - 12, int(vx) + 13, 6):    # the rack's grow lamps
+        dl = np.hypot(xx - lx, yy - (vy + 5))
+        halo = np.clip(1 - dl / 4.5, 0, 1) ** 1.6 * inside
+        bg = bg * (1 - halo[..., None] * 0.6) + np.array(GROW) * halo[..., None] * 0.6
+    for kx in (vx - 9, vx + 3, vx + 11):               # kelp fronds rising
+        kelp = inside & (np.abs(xx - kx - 2 * np.sin(yy / 4.0)) < 0.8) & (yy > vy - 4)
+        bg[kelp] = (20, 70, 52)
+    rim = (np.abs(d - vr) < 1.6)
+    bg[rim] = np.array((120, 140, 146), float) * np.where((xx - vx + yy - vy) < 0, 1.0, 0.55)[rim][..., None]
+    for k in range(8):                                  # rim bolts
+        a = k * np.pi / 4
+        bx, by = int(round(vx + np.cos(a) * vr)), int(round(vy + np.sin(a) * vr))
+        if 0 <= bx < N and 0 <= by < N:
+            bg[by, bx] = (190, 200, 200)
+    warm = np.clip(1 - xx / 40, 0, 1) ** 1.4 * np.clip(1 - np.abs(yy - 24) / 40, 0, 1)
+    bg = np.where(inside[..., None], bg, bg * (1 - warm[..., None] * 0.45) + np.array(GROW) * 0.32 * warm[..., None])
+    for k, x0 in enumerate(range(2, N, 13)):           # consoles: screens low on the wall
+        lit = ramp[3] if k % 2 else ramp[2]
+        bg[54:58, x0:x0 + 8] = lit * 255 * 0.7
+        bg[58:59, x0:x0 + 8] = np.array(TEAL_W) * 0.3
+    return np.clip(bg, 0, 255)
+
+
+ROOMS["thera-deep"] = thera_room
 
 
 # --------------------------------------------------------------------------- the expressive face
@@ -517,6 +627,29 @@ def review_conamara():
     print(f"review: {png.relative_to(ROOT)}")
 
 
+def review_thera():
+    """Round 52: Thera Deep Control at 1x, 2x and 4x, and at 1x next to the other minor speakers."""
+    img = load("radio-thera-deep-neutral")
+    others = ("generic-cdf", "generic-civilian", "generic-colonial", "conamara", "thera-deep")
+    width = 16 + 72 + 12 + 144 + 12 + 288 + 16 + len(others) * (72 + 12) + 16
+    sheet = raster.sheet(width, 56 + 288 + 40, f"THERA DEEP RADIO PORTRAIT (FINAL {THERA_ROUND.upper()})",
+                         f"PRODUCTION ART, M8 PART C BATCH - {THERA_ROUND.upper()}")
+    raster.draw_text(sheet, 16, 38, f"THERA DEEP CONTROL, NEUTRAL: 72X72 AT 1X, 2X, 4X ({artkit.colour_count([img])} "
+                                    "COLOURS) | THE MINOR SPEAKERS AT 1X", raster.LABEL)
+    x, y = 16, 56
+    for zoom in (1, 2, 4):
+        sheet.alpha_composite(sprite.enlarge(img, zoom), (x, y))
+        x += 72 * zoom + 12
+    x += 4
+    for slug in others:
+        sheet.alpha_composite(load(f"radio-{slug}-neutral"), (x, y))
+        raster.draw_text(sheet, x, y + 76, slug.replace("generic-", "").upper(), raster.LABEL_DIM)
+        x += 72 + 12
+    png = CONCEPT / f"portraits-final-{THERA_ROUND}-a.png"
+    sheet.convert("RGB").save(png, optimize=True)
+    print(f"review: {png.relative_to(ROOT)}")
+
+
 if __name__ == "__main__":
     only = tuple(a for a in sys.argv[1:] if not a.startswith("--"))
     unknown = set(only) - set(SPEAKERS) - {CHOIR}
@@ -524,9 +657,11 @@ if __name__ == "__main__":
         sys.exit(f"unknown speakers: {', '.join(sorted(unknown))}")
     if "--review" not in sys.argv[1:]:
         build(only)
-    if not only or set(only) - {"generic-colonial", "conamara"}:
+    if not only or set(only) - {"generic-colonial", "conamara", "thera-deep"}:
         review()
     if not only or "generic-colonial" in only:
         review_colonial()
     if not only or "conamara" in only:
         review_conamara()
+    if not only or "thera-deep" in only:
+        review_thera()

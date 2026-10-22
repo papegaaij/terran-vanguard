@@ -315,7 +315,13 @@ class IntelPanelLayoutTest {
                     "inside the strip: " + fill);
         }
         for (String other : CONTENT.levels().keySet()) {
-            if (!other.equals(level)) {
+            // M8 part C: Level 23's siphon pumps are an escapes secondary's sites too (its own test).
+            boolean escapes = CONTENT.level(other)
+                    .objectives()
+                    .secondary()
+                    .flatMap(LevelData.Secondary::escapes)
+                    .isPresent();
+            if (!other.equals(level) && !escapes) {
                 assertTrue(
                         Intel.of(CONTENT, other, 3).marks().stream()
                                 .noneMatch(mark -> mark.kind() == Intel.Mark.Kind.TARGET),
@@ -326,6 +332,58 @@ class IntelPanelLayoutTest {
         IntelPanel.layout(
                 l2, Intel.of(CONTENT, level, 2), CONTENT.level(level).briefing().teaser(), level);
         assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(Glass.ALERT)), "no strip below L3");
+    }
+
+    /**
+     * M8 part C (design/campaign Level 23, Threat profile at L3: "the wave strip marking the waterline"): the strip marks
+     * the waterline at 25.5 s with a teal tick and the water after it as a dim band to the strip's end, and the five
+     * siphon pumps' sites as the secondary's red marks; no other level has a waterline yet, and below L3 no strip.
+     */
+    @Test
+    void level23sStripMarksTheWaterlineAndThePumps() {
+        String level = CONTENT.levelKey(23).orElseThrow();
+        Intel intel = Intel.of(CONTENT, level, 3);
+        List<Double> waterlines = intel.marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE)
+                .map(Intel.Mark::from)
+                .toList();
+        assertEquals(List.of(25.5), waterlines);
+        assertEquals(
+                5,
+                intel.marks().stream()
+                        .filter(mark -> mark.kind() == Intel.Mark.Kind.TARGET)
+                        .count(),
+                "the pumps");
+        Measure measure = new Measure();
+        IntelPanel.layout(measure, intel, CONTENT.level(level).briefing().teaser(), level);
+        Box strip = measure.parts.stream()
+                .filter(part -> part.what().equals("wave strip"))
+                .findFirst()
+                .orElseThrow();
+        List<Fill> tick = measure.fills.stream()
+                .filter(fill -> fill.colour().equals(IntelPanel.WATERLINE))
+                .toList();
+        List<Fill> band = measure.fills.stream()
+                .filter(fill -> fill.colour().equals(IntelPanel.WATER_BAND))
+                .toList();
+        assertEquals(1, tick.size(), "one waterline");
+        assertEquals(1, band.size(), "the water after it");
+        float at = strip.left() + 2 + (strip.right() - strip.left() - 4) * 25.5f / (float) intel.seconds();
+        assertTrue(Math.abs(tick.getFirst().x() - at) <= 2, "at 25.5 s: " + tick.getFirst() + " vs " + at);
+        assertTrue(band.getFirst().x() > tick.getFirst().x() - 2, "the band starts at the line");
+        assertTrue(band.getFirst().x() + band.getFirst().width() <= strip.right(), "inside the strip");
+        for (String other : CONTENT.levels().keySet()) {
+            if (!other.equals(level)) {
+                assertTrue(
+                        Intel.of(CONTENT, other, 3).marks().stream()
+                                .noneMatch(mark -> mark.kind() == Intel.Mark.Kind.WATERLINE),
+                        other);
+            }
+        }
+        Measure l2 = new Measure();
+        IntelPanel.layout(
+                l2, Intel.of(CONTENT, level, 2), CONTENT.level(level).briefing().teaser(), level);
+        assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(IntelPanel.WATERLINE)), "no strip at L2");
     }
 
     /** M7 part H (H.7e): Level 21's strip at sensor L3 marks the Dust Colossus's silhouette at 105 s. */

@@ -90,8 +90,8 @@ class OutroOnwardTest {
      * M7 part H (H.7d): Level 21 ends Act 3; M8 part B: Level 22 is built, so Act 3's outro leads on to Act 4's title
      * card and the Level 22 briefing (Act 3's {@code next_act} is gone). The interim release ends with Act 4 still
      * open: no act names the act after it yet (part H adds Act 5's with Act 4's outro), so the end texts follow the act
-     * with the highest levels, Act 4, with no act named ("MORE"), and the hangar before Level 23 shows the release's
-     * line.
+     * with the highest levels, Act 4, with no act named ("MORE"), and the hangar before the first level not built yet
+     * shows the release's line (M8 part C: Level 23 is built, so the hangar before Level 24).
      */
     @Test
     void afterAct3sOutroComeAct4sTitleCardAndTheBriefingOfLevel22() {
@@ -123,13 +123,14 @@ class OutroOnwardTest {
 
         assertEquals("ACT IV: DEEP WATER, THEN THE BRIEFING FOR MISSION 22: ICE SHELF", onward.next());
         assertEquals("ENTER TO ACT IV", onward.hint());
-        // The interim release's end (after Level 22 until part H): Act 4 is the last act, no act after it named.
+        // The interim release's end (after Level 23 until part H): Act 4 is the last act, no act after it named.
+        assertTrue(content.levelKey(23).isPresent(), "Level 23 is built (M8 part C)");
         assertEquals("ACTS I-IV COMPLETE", ReleaseTexts.title(content));
         assertEquals("MORE COMING SOON.", ReleaseTexts.comingSoon(content));
         assertEquals(
                 "CONTINUE IN THE MAIN MENU RETURNS TO THE HANGAR AT THE END OF ACT IV.",
                 ReleaseTexts.continueLine(content));
-        assertEquals("MORE: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 23");
+        assertEquals("MORE: COMING SOON", ReleaseTexts.hangarLine(content), "the hangar before Level 24");
         assertEquals("THE END OF THIS RELEASE AND THE CREDITS. MORE IS COMING SOON.", ReleaseTexts.outroNext(content));
     }
 

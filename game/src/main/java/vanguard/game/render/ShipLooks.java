@@ -185,6 +185,12 @@ public final class ShipLooks {
                     Math.round(puffY[i] - SMOKE_DRIFT * age - puff.getRegionHeight() / 2f));
         }
         int bank = ship.bank() + ShipSpec.HARD_BANK;
+        if (underwater && hydro != null && hydro.hasWake()) {
+            // M8 part C: under water the pump-jets' wakes and lights instead of the flames (HydroLooks).
+            hydro.drawEngine(batch, tick, 0, x - 24 + engineLeft[bank][0], y + 24 - engineLeft[bank][1]);
+            hydro.drawEngine(batch, tick, 1, x - 24 + engineRight[bank][0], y + 24 - engineRight[bank][1]);
+            return;
+        }
         int length = ship.vy() > FLAME_SPEED ? 1 : ship.vy() < -FLAME_SPEED ? 2 : 0;
         int[] frames = flameFrames[length];
         AtlasRegion left = flame.get(frames[(int) (tick / FLAME_FRAME_TICKS % frames.length)]);
@@ -193,6 +199,21 @@ public final class ShipLooks {
         drawFlame(batch, left, engineLeft[bank], x, y);
         drawFlame(batch, right, engineRight[bank], x, y);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /** M8 part C: the hydro-kit's wakes and refit flash; null without (a level in the air). */
+    private HydroLooks hydro;
+    /** M8 part C: whether the ship flies under water now (its engines' wakes instead of the flames). */
+    private boolean underwater;
+
+    /** M8 part C: the hydro-kit's effects of the level ({@link HydroLooks}). */
+    void hydro(HydroLooks hydro) {
+        this.hydro = hydro;
+    }
+
+    /** M8 part C: whether the ship flies under water now. */
+    void underwater(boolean underwater) {
+        this.underwater = underwater;
     }
 
     /** A flame frame with its attach point on an engine mount of the hull centred on (x, y). */

@@ -31,8 +31,8 @@ everywhere.
 | 7 | Act 2 B: Earth surface | Levels 08–14, incl. the L12 storm (no separate storm variant) | Urgent breakbeat, orchestral hits | 3:00 | P2 | [act2-b-theme-r08-a](concept/act2-b-theme-r08-a.ogg) "Firestorm" (chosen) |
 | 8 | Act 3 A: Mars | Levels 15–17 and 20 (see *Act 3 music*) | Dusty breakbeat, desert-scale (phrygian dominant) lead | 3:00 | P2 | [mars-theme-r02-a](concept/mars-theme-r02-a.ogg) "Red Dust Run" (chosen) |
 | 9 | Act 3 B: Mars | Levels 18, 19 and the Level 21 approach (see *Act 3 music*) | "Grey Signal": dusty dub techno, 125 BPM, D minor, Vorne's motif as an intercepted radio whistle (a third stem) | 3:00 | P2 | sketch [act3-b-theme-r36-b](concept/act3-b-theme-r36-b.ogg) "Grey Signal" (chosen); full length with base, full and motif stems: [grey-signal-r41-a](concept/grey-signal-r41-a.ogg) (proposed, round 41) |
-| 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen); full length with base, full and dark stems: [thera-deep-r51-a](concept/thera-deep-r51-a.ogg) (proposed, round 51) |
-| 11 | Act 4 B: Europa | Level 25, Levels 27–28 (see *Act 4 music*) | Muffled ambient drum & bass, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | sketches [act4-b-theme-r48-a](concept/act4-b-theme-r48-a.ogg) "Pressure Line" and [act4-b-theme-r48-b](concept/rejected/act4-b-theme-r48-b.ogg) "Black Current" (chosen, round 48: a); full length with base, full and motif stems: [pressure-line-r51-a](concept/pressure-line-r51-a.ogg) (proposed, round 51) |
+| 10 | Act 4 A: Europa | Levels 22–28 | Muffled ambient trance, sonar pings, deep echoes | 3:00 | P2 | [europa-theme-r02-a](concept/europa-theme-r02-a.ogg) "Thera Deep" (chosen); full length with base, full and dark stems: [thera-deep-r51-a](concept/thera-deep-r51-a.ogg) (chosen, round 51) |
+| 11 | Act 4 B: Europa | Level 25, Levels 27–28 (see *Act 4 music*) | Muffled ambient drum & bass, Vorne's motif as a faint layer (L27–28) | 3:00 | P2 | sketches [act4-b-theme-r48-a](concept/act4-b-theme-r48-a.ogg) "Pressure Line" and [act4-b-theme-r48-b](concept/rejected/act4-b-theme-r48-b.ogg) "Black Current" (chosen, round 48: a); full length with base, full and motif stems: [pressure-line-r51-a](concept/pressure-line-r51-a.ogg) (chosen, round 51) |
 | 12 | Act 5 A: Asteroid belt | Levels 29–35 | Driving industrial, metallic percussion, Vorne's motif in the open | 3:00 | P3 | [belt-theme-r03-a](concept/belt-theme-r03-a.ogg) "Hollow Rock" (chosen) |
 | 13 | Act 5 B: Asteroid belt | Levels 29–35 | Driving industrial, Vorne's motif in the open | 3:00 | P3 | — |
 | 14 | Act 6 A: Jupiter | Levels 36–42 | Vast and stormy: storm strings, thunder, choir; Vorne's motif against the main motif | 3:00 | P3 | [jovian-theme-r03-a](concept/jovian-theme-r03-a.ogg) "Eye of the Storm" (chosen) |
@@ -554,7 +554,7 @@ Prompts: [concept/prompts.md](concept/prompts.md#round-48--the-act-4-b-theme-tra
 | [concept/reveal-sting-r48-a.ogg](concept/reveal-sting-r48-a.ogg) | #30 "Black and Gold" — B minor, 9.0 s: tremolo strings, an organ pedal and a timpani roll swelling from muffled to open for 4 s; at 4.0 s a brass and organ tutti whose notes enter in the motif's rhythm (B D F♯ A♯), the motif as a chord, the A♯ left hanging | chosen — round 48 |
 | [concept/rejected/reveal-sting-r48-b.ogg](concept/rejected/reveal-sting-r48-b.ogg) | #30 "Ours" — B minor, 9.0 s: Act 3's intercepted whistle plays the motif out of radio static over a rising sub and low brass cluster; at 4.0 s a deep impact and the radio filter bursts open into full low brass and organ on the motif's last two notes, the A♯ held over a B-minor drone | rejected — round 48: a picked |
 
-Concept round 51 (M8 part B, step AUD-B, 2026-10-22; **pending the user's review in round 51**) — the two Act 4
+Concept round 51 (M8 part B, step AUD-B, 2026-10-22; accepted in round 51 (2026-10-22)) — the two Act 4
 themes at full length with their stems, by the new generator `tools/concept/audio/music_r51b.py` (the method of
 `music_r38.py` / `music_r41.py`: the sketch's voices, chains and seeds composed out, one render per track, every group
 through the full mix's own chain, linked mastering, so each track's files share length, gain and `LOOPSTART` /
@@ -574,22 +574,22 @@ only, not listened to. Concept files, no `SOURCE` comment and not in `assets/` y
 
 | File | What | Status |
 |---|---|---|
-| [concept/thera-deep-r51-a.ogg](concept/thera-deep-r51-a.ogg) | #10 "Thera Deep" full mix at full length: 180.7 s, loop 349272 + 7451136 samples (7.92 s + 168.96 s, 88 bars at 125 BPM), −14.0 LUFS, −1.7 dBTP, seam 0.29; no bubbles | proposed (round 51) |
-| [concept/thera-deep-base-r51-a.ogg](concept/thera-deep-base-r51-a.ogg) | #10 base stem (kick, bass, pad, sonar pings, whale calls): same length, loop and gain, −14.9 LUFS (−0.9 LU), −2.6 dBTP, seam 0.47; Level 22 from section 2, Levels 23–24 | proposed (round 51) |
-| [concept/thera-deep-dark-r51-a.ogg](concept/thera-deep-dark-r51-a.ogg) | #10 dark stem (the sonar pings, the deep pad unducked, an F1 + C2 pedal drone): same length, loop and gain, −18.1 LUFS (−4.2 LU), −6.3 dBTP, seam 0.30; Level 26 `alone` from t=8–18 | proposed (round 51) |
-| [concept/thera-deep-seam-r51-a.ogg](concept/thera-deep-seam-r51-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 51) |
-| [concept/thera-deep-base-seam-r51-a.ogg](concept/thera-deep-base-seam-r51-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 51) |
-| [concept/thera-deep-dark-seam-r51-a.ogg](concept/thera-deep-dark-seam-r51-a.ogg) | Listening aid: the dark stem across its loop seam, 8 s each side | proposed (round 51) |
-| [concept/thera-deep-dark-join-r51-a.ogg](concept/thera-deep-dark-join-r51-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the dark stem alone at bar 9 (as Level 26 strips back), 30.7 s | proposed (round 51) |
-| [concept/thera-deep-sheet-r51-a.png](concept/thera-deep-sheet-r51-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, dark) | proposed (round 51) |
-| [concept/pressure-line-r51-a.ogg](concept/pressure-line-r51-a.ogg) | #11 "Pressure Line" full mix at full length: 183.9 s, loop 249480 + 7741440 samples (5.66 s + 175.54 s, 128 bars at 175 BPM), −14.0 LUFS, −1.8 dBTP, seam 1.21 (the loop point falls on a 16th hat's onset: the step is the music's own, the source is periodic) | proposed (round 51) |
-| [concept/pressure-line-base-r51-a.ogg](concept/pressure-line-base-r51-a.ogg) | #11 base stem (kick and backbeat snares, sub, pad, whale calls, sonar pings, the deep current): same length, loop and gain, −15.6 LUFS (−1.6 LU), −2.0 dBTP, seam 1.00 | proposed (round 51) |
-| [concept/pressure-line-motif-r51-a.ogg](concept/pressure-line-motif-r51-a.ogg) | #11 motif stem, Vorne's motif as the intercepted whistle under water alone (19 statements): same length, loop and gain, −33.8 LUFS; its statements 18.0–19.9 dB under the full mix (15.5–16.1 in the breakdowns C and F) | proposed (round 51) |
-| [concept/pressure-line-seam-r51-a.ogg](concept/pressure-line-seam-r51-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | proposed (round 51) |
-| [concept/pressure-line-base-seam-r51-a.ogg](concept/pressure-line-base-seam-r51-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | proposed (round 51) |
-| [concept/pressure-line-motif-seam-r51-a.ogg](concept/pressure-line-motif-seam-r51-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | proposed (round 51) |
-| [concept/pressure-line-motif-mix-r51-a.ogg](concept/pressure-line-motif-mix-r51-a.ogg) | Listening aid: the full mix with the motif stem on top as Levels 27–28 play them, loop bars 25–48 (the breakdown C, D, the half-time E; 32.9 s) | proposed (round 51) |
-| [concept/pressure-line-sheet-r51-a.png](concept/pressure-line-sheet-r51-a.png) | Review sheet: the three files' waveforms, loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, the motif against the full mix) | proposed (round 51) |
+| [concept/thera-deep-r51-a.ogg](concept/thera-deep-r51-a.ogg) | #10 "Thera Deep" full mix at full length: 180.7 s, loop 349272 + 7451136 samples (7.92 s + 168.96 s, 88 bars at 125 BPM), −14.0 LUFS, −1.7 dBTP, seam 0.29; no bubbles | chosen (round 51) |
+| [concept/thera-deep-base-r51-a.ogg](concept/thera-deep-base-r51-a.ogg) | #10 base stem (kick, bass, pad, sonar pings, whale calls): same length, loop and gain, −14.9 LUFS (−0.9 LU), −2.6 dBTP, seam 0.47; Level 22 from section 2, Levels 23–24 | chosen (round 51) |
+| [concept/thera-deep-dark-r51-a.ogg](concept/thera-deep-dark-r51-a.ogg) | #10 dark stem (the sonar pings, the deep pad unducked, an F1 + C2 pedal drone): same length, loop and gain, −18.1 LUFS (−4.2 LU), −6.3 dBTP, seam 0.30; Level 26 `alone` from t=8–18 | chosen (round 51) |
+| [concept/thera-deep-seam-r51-a.ogg](concept/thera-deep-seam-r51-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 51) |
+| [concept/thera-deep-base-seam-r51-a.ogg](concept/thera-deep-base-seam-r51-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 51) |
+| [concept/thera-deep-dark-seam-r51-a.ogg](concept/thera-deep-dark-seam-r51-a.ogg) | Listening aid: the dark stem across its loop seam, 8 s each side | chosen (round 51) |
+| [concept/thera-deep-dark-join-r51-a.ogg](concept/thera-deep-dark-join-r51-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the dark stem alone at bar 9 (as Level 26 strips back), 30.7 s | chosen (round 51) |
+| [concept/thera-deep-sheet-r51-a.png](concept/thera-deep-sheet-r51-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, dark) | chosen (round 51) |
+| [concept/pressure-line-r51-a.ogg](concept/pressure-line-r51-a.ogg) | #11 "Pressure Line" full mix at full length: 183.9 s, loop 249480 + 7741440 samples (5.66 s + 175.54 s, 128 bars at 175 BPM), −14.0 LUFS, −1.8 dBTP, seam 1.21 (the loop point falls on a 16th hat's onset: the step is the music's own, the source is periodic) | chosen (round 51) |
+| [concept/pressure-line-base-r51-a.ogg](concept/pressure-line-base-r51-a.ogg) | #11 base stem (kick and backbeat snares, sub, pad, whale calls, sonar pings, the deep current): same length, loop and gain, −15.6 LUFS (−1.6 LU), −2.0 dBTP, seam 1.00 | chosen (round 51) |
+| [concept/pressure-line-motif-r51-a.ogg](concept/pressure-line-motif-r51-a.ogg) | #11 motif stem, Vorne's motif as the intercepted whistle under water alone (19 statements): same length, loop and gain, −33.8 LUFS; its statements 18.0–19.9 dB under the full mix (15.5–16.1 in the breakdowns C and F) | chosen (round 51) |
+| [concept/pressure-line-seam-r51-a.ogg](concept/pressure-line-seam-r51-a.ogg) | Listening aid: the full mix across its loop seam, 8 s each side | chosen (round 51) |
+| [concept/pressure-line-base-seam-r51-a.ogg](concept/pressure-line-base-seam-r51-a.ogg) | Listening aid: the base stem across its loop seam, 8 s each side | chosen (round 51) |
+| [concept/pressure-line-motif-seam-r51-a.ogg](concept/pressure-line-motif-seam-r51-a.ogg) | Listening aid: the motif stem across its loop seam, 8 s each side | chosen (round 51) |
+| [concept/pressure-line-motif-mix-r51-a.ogg](concept/pressure-line-motif-mix-r51-a.ogg) | Listening aid: the full mix with the motif stem on top as Levels 27–28 play them, loop bars 25–48 (the breakdown C, D, the half-time E; 32.9 s) | chosen (round 51) |
+| [concept/pressure-line-sheet-r51-a.png](concept/pressure-line-sheet-r51-a.png) | Review sheet: the three files' waveforms, loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, the motif against the full mix) | chosen (round 51) |
 
 ## Implementation
 
@@ -861,13 +861,14 @@ only, not listened to. Concept files, no `SOURCE` comment and not in `assets/` y
 - 2026-10-22 (step AUD48, M8 design phase, decided in round 48 (2026-10-22)): *Act 4 music* drafted from the
   level and boss documents; track 11 sketched a/b and a new track 30, the reveal sting, a/b
   (`tools/concept/audio/music_r48.py`); Q12 a assumed for the music (no bubble layer anywhere).
-- 2026-10-22 (step AUD-B, M8 part B; **pending the user's review in round 51**): track 10 "Thera Deep" at full length
+- 2026-10-22 (step AUD-B, M8 part B; accepted in round 51 (2026-10-22)): track 10 "Thera Deep" at full length
   with base, full and dark stems and track 11 "Pressure Line" at full length with base, full and motif stems, from one
   render each by `tools/concept/audio/music_r51b.py` (concept files only; the game step copies them to `assets/` with
   `tools/art/themes.py`). Decided here: the dark stem's drone and its pad without the kick's ducking (the stem plays
   alone, so it must not pump), the base stems' groups (track 10: kick, bass, pad, pings, whales; track 11: kick and
   backbeat, sub, pad, whales, pings, the current), track 10's softer sonar ping and lower pluck resonance (the
   user's no-bloop rule, as track 9's stab), and the motif at 19 dB under the full mix (16 in the breakdowns).
-- 2026-10-22 (M8 part B, step B4; pending the user's review in round 51): tracks 10 and 11 copied into `assets/music/` by `themes.py`; Level 22 plays
+- 2026-10-22 (M8 part B, step B4; accepted in round 51 (2026-10-22)): tracks 10 and 11 copied into `assets/music/` by `themes.py`; Level 22 plays
   track 10's base stem from the rig field and the full mix from the run-in (`Level22SoundsTest`); track 11 is made in
   part B but first heard from Level 25 (part E).
+- 2026-10-22 (user, round 51, closed; M.1, M.2): tracks 10 "Thera Deep" and 11 "Pressure Line" accepted as proposed (full mixes, stems and loop points); both already play from `assets/music/` (track 11 first heard in Level 25).

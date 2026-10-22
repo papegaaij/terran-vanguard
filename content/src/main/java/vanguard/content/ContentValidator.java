@@ -43,6 +43,15 @@ final class ContentValidator {
         content.enemies().values().forEach(this::checkEnemy);
         content.levels().values().forEach(this::checkLevel);
         content.levels().forEach(this::checkAct);
+        // M8 part C: the units' under-water keys (the Eel Swarm's, the Glassfin's, the returning units') and a level's.
+        content.enemies()
+                .values()
+                .forEach(enemy ->
+                        DeepWaterChecks.enemy(content, enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level ->
+                        DeepWaterChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M8 part A: the under-water rules, Rook's absence and a level's medium and special limits.
         ActFourChecks.europa(content, (field, message) -> problem(content.europa(), field, message));
         ActFourChecks.wingmen(content, (field, message) -> problem(content.wingmen(), field, message));
@@ -415,9 +424,11 @@ final class ContentValidator {
         for (int i = 0; i < parts.size(); i++) {
             EnemyData.PartData part = parts.get(i);
             int index = i;
-            part.attack().ifPresent(name -> {
+            // M8 part C: or each of its attacks (the Eel Swarm's head).
+            String key = part.attacks().isPresent() ? ".attacks" : ".attack";
+            part.attackNames().forEach(name -> {
                 if (enemy.attack(name).isEmpty()) {
-                    problem(enemy, "part_list[" + index + "].attack", "no attack named '" + name + "'");
+                    problem(enemy, "part_list[" + index + "]" + key, "no attack named '" + name + "'");
                 }
             });
         }
@@ -1608,6 +1619,9 @@ final class ContentValidator {
                             .flatMap(LevelData.Secondary::escapes)
                             .isEmpty()) {
                 problem(level, field, "target-destroyed in a level without an escapes secondary");
+            } else if (event == LevelData.CueEvent.WATERLINE
+                    && level.waterlines().isEmpty()) {
+                problem(level, field, "waterline in a level without a waterline (a section changing the medium)");
             }
         }
         if (!level.noSurfaceZones().isEmpty() && !burrows) {

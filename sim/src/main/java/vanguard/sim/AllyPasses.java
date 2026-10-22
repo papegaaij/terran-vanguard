@@ -23,6 +23,34 @@ final class AllyPasses {
     private final String[] belowSubjects;
     private final boolean[] belowFired;
 
+    /**
+     * The level's convoy: an escort primary's, (M5 part E) a naval convoy's, (M5 part G) a defend primary's ally or
+     * (M7 part D) the ground allies; null without one. The force's hook aims at it (not a naval convoy's).
+     */
+    static Convoy convoy(LevelScript script, EnemyForce force) {
+        Convoy convoy = script.objectives()
+                .escort()
+                .map(escort -> new Convoy(escort, script.ground().road().orElse(null), script.sections()))
+                .or(() -> script.objectives().convoy().map(Convoy::new))
+                .or(() -> script.objectives()
+                        .defend()
+                        .map(defend -> new Convoy(defend, Sortie.scrollAt(script, defend.start()))))
+                .or(() -> script.objectives().groundAllies().map(allies -> ScrollPlan.groundAllies(script, allies)))
+                .orElse(null);
+        if (script.objectives().secondary().byGroundAllies()
+                && script.objectives().groundAllies().isEmpty()) {
+            throw new IllegalArgumentException("an untouched or standing secondary needs the level's ground allies");
+        }
+        if (convoy != null && convoy.defend()) {
+            force.hook(convoy, convoy.defendSpec());
+        } else if (convoy != null && convoy.groundAllies()) {
+            force.hook(convoy, convoy.groundSpec().targetedBy());
+        } else if (convoy != null && !convoy.naval()) {
+            force.hook(convoy, convoy.escort().targetedBy());
+        }
+        return convoy;
+    }
+
     AllyPasses(
             Sortie s,
             LevelScript script,

@@ -216,6 +216,20 @@ public final class LevelRenderer {
     private final LevelData level;
 
     /**
+     * M8 part C: the under-water grade with its wipe, caustics, headlights and marine snow (Level 23 on); null in a
+     * level without an under-water look ({@link UnderwaterGrade}).
+     */
+    private final UnderwaterGrade grade;
+    /** M8 part C: whether the grade covers some of the field this frame: the glows are drawn after it. */
+    private boolean graded;
+    /** M8 part C: the Stormhawk's hydro-kit wakes and refit flash (Rook's: {@link WingmanLooks#hydro}). */
+    private final HydroLooks shipHydro;
+    /** M8 part C: the kills below the waterline (the under-water bursts, shards, husks, the pumps' breaks). */
+    private final DeepDeaths deepDeaths;
+    /** M8 part C: the swimming vehicles carrying drops (Level 23's Thera Deep tender); null without them. */
+    private final IceCrawlerLooks tenderDrops;
+
+    /**
      * @param files the assets, for the pivot files of the cranes and set pieces
      * @param script the level's script, whose set pieces it draws
      * @param levelKey the level's key, {@code <act>/level-NN-<slug>}
@@ -315,6 +329,32 @@ public final class LevelRenderer {
         player = new PlayerPasses(sprites, weapons, flash, play, shipLooks, arsenal, canyonLooks, water != null);
         props = new PropPasses(sprites, flash, play, clock, craneLooks, script);
         deepWater = new DeepWaterLooks(sprites, looks, weapons, water != null);
+        // M8 part C: the under-water grade, the hydro-kit's effects, the tender, the ice shaft's walls.
+        grade = UnderwaterGrade.of(level, sprites.pixel);
+        deepDeaths = new DeepDeaths(sprites, kinds);
+        List<Double> waterlines = level.waterlines();
+        shipHydro = new HydroLooks(sprites, "ship", waterlines);
+        shipLooks.hydro(shipHydro);
+        wingmanLooks.hydro(new HydroLooks(sprites, "rook", waterlines));
+        tenderDrops = IceCrawlerLooks.of(sprites, level, pivots(files, "thera-tender"), true);
+        canyonLooks.ice(sprites.hasBackdrop(folder + Backdrop.ICE_WALL));
+        if (!waterlines.isEmpty()) {
+            backdrop.wetFrom(
+                    UnderwaterGrade.waterlineRow(level, waterlines.getFirst()) - vanguard.sim.PlayField.HEIGHT);
+        }
+    }
+
+    /**
+     * M8 part C: whether a point at play-field height {@code y} lies in the water at the last frame (its kill the
+     * under-water burst): under the grade (above the waterline's row while it is on the screen); false without one.
+     */
+    public boolean underwaterAt(double y) {
+        return grade != null && grade.underwaterAt(y);
+    }
+
+    /** M8 part C: the kills below the waterline ({@link DeepDeaths}). */
+    public DeepDeaths deepDeaths() {
+        return deepDeaths;
     }
 
     /**
@@ -352,6 +392,9 @@ public final class LevelRenderer {
     public void dispose() {
         softGlow.dispose();
         farside.dispose();
+        if (grade != null) {
+            grade.dispose();
+        }
         if (storm != null) {
             storm.dispose();
         }
@@ -450,6 +493,9 @@ public final class LevelRenderer {
         }
         kinds.tanks(sortie).stepped(sortie);
         kinds.rigs(sortie).stepped(sortie);
+        // M8 part C: the eels' tells and volleys, the Glassfins' glints.
+        kinds.eels(sortie).stepped(sortie);
+        kinds.glassfins(sortie).stepped(sortie);
     }
 
     /** M5 part E: the renderer's own effects advance one simulation step (with the screen's). */
@@ -572,6 +618,7 @@ public final class LevelRenderer {
         play.whiteFlash = flashReduction ? REDUCED_FLASH : 1;
         // M8 part A: Rook's craft wears the hydro-kit under water (the ship's: PlayerPasses.hull).
         wingmanLooks.underwater(sortie.underwater());
+        shipLooks.underwater(sortie.underwater());
         play.heatTarget = ArsenalLooks.heatTarget(sortie);
         int piece = ArsenalLooks.heatPiece(play.heatTarget);
         play.heatPiece = piece >= 0 && piece < sortie.setPieceCount() ? sortie.setPiece(piece) : null;
@@ -587,6 +634,12 @@ public final class LevelRenderer {
             collapse.update(sortie, scroll, lag);
         }
         kinds.buildLampreys(sortie);
+        graded = false;
+        if (grade != null) {
+            // M8 part C: this frame's look and waterline wipe.
+            grade.prepare(sortie, scroll, seconds);
+            graded = grade.active();
+        }
         weather.at(seconds);
         if (sortie.terrain() != canyonTerrain) {
             // M7 part C: the canyon's walls are the simulation's terrain, never a placed art piece.
@@ -682,6 +735,8 @@ public final class LevelRenderer {
         kinds.crawlers(sortie).drawHusks(batch, scroll);
         // M7 part E: the Dust Devils' grit swirls on the ground under the ground units (and under an open one).
         kinds.vortices(sortie).drawSwirls(batch, sortie, alpha);
+        // M8 part C: the live siphon pumps' roots in their racks, under the ground units.
+        kinds.pumps(sortie).drawGround(batch, sortie, alpha);
         units.drawEnemies(batch, sortie, alpha, Depth.GROUND, Launched.ANY);
         kinds.crawlers(sortie).drawChains(batch, sortie, alpha, looks, units.unitFlash);
         kinds.crawlers(sortie).drawPores(batch, sortie, alpha, scroll);
@@ -717,7 +772,10 @@ public final class LevelRenderer {
         setPieces.drawKraken(batch, sortie, wrecks, alpha, scroll, false);
         farside.darken(batch, sortie, alpha, scroll, seconds);
         farside.drawGlows(batch, sortie, looks, alpha, seconds);
-        ground.drawGroundGlows(batch, sortie, alpha);
+        if (!graded) {
+            // M8 part C: under the grade the glows wait for it (after the ship).
+            ground.drawGroundGlows(batch, sortie, alpha);
+        }
         player.drawBomberShadows(batch, sortie, alpha);
         drawShadows(batch, sortie, alpha);
         if (relay != null) {
@@ -750,7 +808,9 @@ public final class LevelRenderer {
             luna.drawMarkers(batch, sortie, alpha);
         }
         setPieces.drawBossShadows(batch, sortie, alpha);
-        units.drawUnitGlows(batch, sortie, alpha);
+        if (!graded) {
+            units.drawUnitGlows(batch, sortie, alpha);
+        }
         // M5 part D: the scripted loss's glow under the air layer, then the shuttles under the flyers.
         loss.drawGlow(batch, sortie, alpha, seconds);
         tows.draw(batch, sortie, alpha, seconds);
@@ -768,10 +828,14 @@ public final class LevelRenderer {
             auras.drawRings(batch, sortie, alpha, false);
         }
         units.drawChains(batch, sortie, alpha);
+        if (tenderDrops != null) {
+            // M8 part C: the Thera Deep tender swimming up with the armour patch, and back.
+            tenderDrops.drawBodies(batch, seconds);
+        }
         if (storm != null) {
             // M7 part E: the air units outside the radius as silhouettes in the dust keeping their lights, then glows.
             storm.drawSilhouettes(batch, sortie, alpha, units);
-        } else {
+        } else if (!graded) {
             // M7 part E: the air units' lights (the Ghost Drone's eye and running lights, its glint) in every level.
             units.drawAirGlows(batch, sortie, alpha);
         }
@@ -815,6 +879,7 @@ public final class LevelRenderer {
             player.drawShip(batch, sortie, alpha, shieldShimmer);
             units.drawLatched(batch, sortie, alpha);
         }
+        drawUnderGrade(batch, sortie, alpha, scroll, seconds, rook);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         player.drawShots(batch, sortie, alpha, true);
         // M8 part A: the depth charges' fuse lamps and the Decoy Flares.
@@ -865,6 +930,10 @@ public final class LevelRenderer {
             backdrop.frontFade(SpireLooks.veins(canopyDeath));
         }
         backdrop.drawFront(batch, scroll, clock);
+        if (grade != null) {
+            // M8 part C: the marine snow on the real clock, where the field is graded.
+            grade.drawSnow(batch, scroll, clock.real());
+        }
         if (spire != null) {
             // M5 part H: the canopy tearing and the low sun's beams after the Spire's death.
             spire.drawDaylight(batch, canopyDeath, backdrop.highAirScroll(scroll));
@@ -891,6 +960,41 @@ public final class LevelRenderer {
         warnings.draw(batch, sortie.tick(), alpha);
         credits.draw(batch, font);
         setPieces.drawBossBar(batch, sortie);
+    }
+
+    /**
+     * M8 part C: after the ship, Rook and the flyers: the under-water grade over the field ({@link UnderwaterGrade}),
+     * then the light it must not dim: the ground's and the units' glows (held back while graded), the ice shaft's collar
+     * glow, the deep units' lights (the eels' stripe and jaws, the Glassfins' glint, the pumps' sumps, the jellies'
+     * pulse), the tender's lights and the hydro-kit's refit flashes at a waterline.
+     */
+    private void drawUnderGrade(
+            SpriteBatch batch, Sortie sortie, float alpha, double scroll, double seconds, Wingman rook) {
+        if (grade != null) {
+            grade.draw(batch, sortie, alpha, scroll, clock.real());
+        }
+        if (graded) {
+            ground.drawGroundGlows(batch, sortie, alpha);
+            units.drawUnitGlows(batch, sortie, alpha);
+            if (storm == null) {
+                units.drawAirGlows(batch, sortie, alpha);
+            }
+        }
+        backdrop.drawCanyonGlow(batch);
+        units.drawDeepGlows(batch, sortie, alpha);
+        if (tenderDrops != null) {
+            tenderDrops.drawLights(batch, seconds);
+        }
+        if (sortie.flying()) {
+            shipHydro.drawRefit(
+                    batch,
+                    seconds,
+                    Math.round(X0 + sortie.ship().renderX(alpha)),
+                    Math.round(sortie.ship().renderY(alpha)));
+        }
+        if (rook != null) {
+            wingmanLooks.drawRefit(batch, rook, seconds, alpha);
+        }
     }
 
     /**

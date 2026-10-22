@@ -1174,7 +1174,7 @@ brass and organ over a dark B minor drone, unresolved, the moment the enemy flee
 
 # Round 51 — the Act 4 themes at full length (tracks 10 and 11)
 
-Brief (M8 part B, step AUD-B; pending the user's review in round 51): the two Act 4 themes at about 3:00 with their
+Brief (M8 part B, step AUD-B; accepted in round 51 (2026-10-22)): the two Act 4 themes at about 3:00 with their
 stems, as the music README's [*Act 4 music*](../README.md#act-4-music-draft-round-48) asks: −14 LUFS, true peak
 ≤ −1 dBTP, intro + seamless loop with `LOOPSTART` / `LOOPLENGTH`, every stem from the same render (linked mastering:
 the full mix's gain for all of a track's files) so they play sample-aligned; **no bubbles, no bloopy plucks, nothing
@@ -1220,6 +1220,8 @@ whale calls in the breakdowns, no bubbles, about three minutes, instrumental, se
 - `thera-deep-sheet-r51-a.png`: review sheet: waveforms with intro (grey), loop (blue), fade tail (dark) and loop
   points (amber), the measured numbers and a per-section loudness table.
 
+**Chosen** (round 51, M.1, 2026-10-22: accepted as proposed).
+
 ## pressure-line-r51-a — track 11 "Pressure Line" and its three stems
 
 From the round-48 sketch [act4-b-theme-r48-a](act4-b-theme-r48-a.ogg) (picked in round 48; 175 BPM, F minor), the
@@ -1261,3 +1263,5 @@ through water, no bubbles, about three minutes, instrumental, seamless loop."*
 - `pressure-line-motif-mix-r51-a.ogg`: listening aid, the full mix with the motif stem on top, loop bars 25–48 (C, D,
   E; 32.9 s).
 - `pressure-line-sheet-r51-a.png`: review sheet, as track 10's (the third column the motif against the full mix).
+
+**Chosen** (round 51, M.2, 2026-10-22: accepted as proposed).

@@ -223,7 +223,9 @@ public record EnemyLooks(
         String art = crawler && !sprites.has(slug) && sprites.has(slug + "-head") ? slug + "-head" : slug;
         Array<AtlasRegion> frames =
                 sprites.has(art) ? sprites.frames(art) : Placeholders.frames(slug, orientation.headings());
-        int headings = data.segmentChain().isPresent() && sprites.has(art) && !crawler
+        // M8 part C: the Eel Swarm's parts have their orientation's 16 headings (EelLooks), not the Coilwyrm's 48.
+        boolean eel = slug.equals(EelLooks.SLUG) || slug.startsWith(EelLooks.SLUG + "-");
+        int headings = data.segmentChain().isPresent() && sprites.has(art) && !crawler && !eel
                 ? CHAIN_HEADINGS
                 : orientation.headings();
         Tier tier = tinyPart ? Tier.TINY : DEATH_TIERS.getOrDefault(slug, data.tier());
@@ -247,7 +249,10 @@ public record EnemyLooks(
                         ? NavalLooks.JELLY_FPS
                         : orientation == Orientation.RADIAL
                                 ? SPIN_TURNS_PER_SECOND * SPIN_SYMMETRY * frames.size
-                                : slug.equals(DrillRigLooks.SLUG) ? RIG_FPS : ORGANIC_FPS,
+                                : slug.equals(DrillRigLooks.SLUG)
+                                        ? RIG_FPS
+                                        // M8 part C: the siphon pump's heave loop.
+                                        : slug.equals(SiphonPumpLooks.SLUG) ? SiphonPumpLooks.FPS : ORGANIC_FPS,
                 switch (tier) {
                     case TINY -> sprites.explosionTiny;
                     case SMALL -> sprites.explosionSmall;
@@ -261,7 +266,8 @@ public record EnemyLooks(
                 sprites.has(slug + "-flare") ? sprites.frames(slug + "-flare") : none,
                 remains(sprites, slug, none),
                 death(sprites, slug, DEATH_GLOW, tier, true, walker),
-                death(sprites, slug, DEATH_PIECES, tier, false, walker),
+                // M8 part C: the eel's -husk set is its parts' sinking husks per heading (EelLooks), not a death.
+                death(sprites, slug, DEATH_PIECES, tier, false, walker || eel),
                 sprites.has(slug + "-glow") ? sprites.frames(slug + "-glow") : none,
                 walker && sprites.has(slug + "-husk") ? sprites.frames(slug + "-husk") : none,
                 walkFrames,

@@ -85,6 +85,14 @@ public final class Hud {
         ship.specialLimit();
     }
 
+    /**
+     * M8 part C: the ship crossed a waterline into the water: the weapon rows' {@code NO WATER} clears with one flash
+     * of the weapons panel.
+     */
+    public void waterline() {
+        ship.waterline();
+    }
+
     /** M7 part A: a cooldown special is ready again: its HUD ring flashes white once. */
     public void specialReady() {
         ship.specialReady();

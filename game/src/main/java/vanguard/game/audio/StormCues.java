@@ -68,9 +68,26 @@ final class StormCues extends SoundFamily {
     void play(SimEvents events, int i, float pan) {
         switch (events.type(i)) {
             case VORTEX_RISING -> bank.play(Sfx.DEVIL_OPEN, STORM_LEVEL, pitch(0.03), pan);
-            case EYE_GLINT -> bank.play(Sfx.GHOST_DRONE_GLINT, STORM_LEVEL, pitch(0.02), pan);
+            case EYE_GLINT -> {
+                // M8 part C: the eel head's stripe tell and the Glassfin's ram glint raise it too (value: the kind):
+                // only a lane strafer's eye ticks.
+                if (laneStrafer(events.value(i))) {
+                    bank.play(Sfx.GHOST_DRONE_GLINT, STORM_LEVEL, pitch(0.02), pan);
+                }
+            }
             default -> {}
         }
+    }
+
+    /** Whether enemy kind {@code kind} of the watched sortie is a lane strafer (the Ghost Drone; true before a watch). */
+    private boolean laneStrafer(int kind) {
+        Sortie watched = mix.watched;
+        if (watched == null) {
+            return true;
+        }
+        return kind >= 0
+                && kind < watched.enemyKinds().size()
+                && watched.enemyKinds().get(kind).laneStrafe().isPresent();
     }
 
     /** Whether a spiral's hiss is due at step {@code now} after the last one at {@code last}. */

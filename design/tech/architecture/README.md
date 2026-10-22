@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 
 # Architecture
@@ -1227,7 +1227,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   `LevelData.forbiddenSpecials`); every special named there must be in a setting's list (its reason word).
 - **Level and unit, M8 part B** ([Level 22](../../campaign/act-4-deep-water/level-22-ice-shelf/README.md), the
   [Drill Rig](../../enemies/ground/drill-rig/README.md); loaded and checked in step B2, mapped in step B3; the
-  defaults pending the user's review in round 51): the **`vents`**' **`look`** (`furnace-vent`, the default, or
+  defaults accepted in round 51 (2026-10-22)): the **`vents`**' **`look`** (`furnace-vent`, the default, or
   `ice-geyser`: how the game draws and sounds the rows; `Vents.lookOrDefault()`, the simulation never reads it) and a
   row's own **`tell`**, **`period`**, **`ripple`** and **`easy`** / **`hard`** changes of them (a row's value on a
   difficulty: its own change, else its own value, else the rows' on that difficulty, `Vents.periodOn(row,
@@ -1242,6 +1242,32 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   the last of them is lost, and a part's **`slows`** (s, only on a unit's part that carries an attack) adds that much
   to the attack's interval when it is lost; the hook **`attacks.<name>.aimed`** (only on a `ring`: that many bullets
   aimed at the ship besides the ring with each volley, the hard rig's shard).
+- **Level and unit, M8 part C** ([Level 23](../../campaign/act-4-deep-water/level-23-through-the-ice/README.md), the
+  [Eel Swarm](../../enemies/naval/eel-swarm/README.md), the [Glassfin](../../enemies/naval/glassfin/README.md), the
+  [siphon pump](../../enemies/ground/siphon-pump/README.md) and the naval *Returning units under water*; loaded and checked
+  in step C2 by content's `DeepWaterChecks`, flown from step C1, mapped in step C3; the gap check's defaults pending the
+  user's review in round 52): a part's **`attacks`** (two or more of the unit's attacks by name instead of one `attack`:
+  the eel head's aimed shot and fan; only on a segment chain's vital part; `PartData.attackNames()`); a segment chain's
+  **`cut: {scatter, seconds}`** (instead of `delay`: the rear part keeps its heading at `scatter` px/s for `seconds`,
+  firing nothing, then dies from the cut backwards; only on an air chain; `Cut.scatters()`); a `path` movement's
+  **`sway`** (`amplitude` px, `frequency` Hz: a sine across the authored path, only on a segment chain's head); a
+  flock's **`sway`** (the same, across the leader's route: the Glassfin's ribbon) and **`ram`** (`after` s on the screen,
+  the `share` of a school that breaks off by each member's own seeded draw, a `tell` s glint, the dive `delay` s after
+  the glint ends (step C3), straight down the ship's lane at `speed` px/s, no homing, leaving at the bottom) with the hook
+  **`ram.share`** on easy and hard; an attack's existing **`tell`** for the eel's stripe. A unit's **`underwater`** block
+  (its changes in a wave or a nest whose entry time lies in a section with `medium: underwater`, applied when the script
+  is built: `layer` instead, `submerge: false` drops the surface/submerge swap, `drift` its terrain drift instead (0:
+  none), `look: floor` the game's base for a ground unit; `EnemyData.inWater()`): the Driftjelly's `{layer: air,
+  submerge: false}`, the Reef Spitter's `{drift: 0, look: floor}`. A level's **`underwater_look`** (presentation only, the
+  game's under-water grade: `ambient` 0–1, `tint` `rrggbb`, `caustics` 0–1, `snow` particles on the screen, `headlights`
+  0–1; only on a level that is under water somewhere; the game's defaults where it is left out) and a section's own **`underwater_look`** (any of
+  those values instead of the level's, only on an under-water section of a level that gives the block: part D's Level 24 darkens section by section;
+  `LevelData.underwaterLookOf(section)`). The radio event **`waterline`** (the level's first waterline, the start of the
+  first section whose medium differs from the one before it, `LevelData.firstWaterline()`; content resolves it to that
+  time, so it plays as a timed line with no simulation event; only in a level with a waterline). A pickup's
+  **`dropped_by.head_first: true`** (only the wave's first unit of a segment chain's wave: it drops only when the
+  chain's head is destroyed before any other part; `Carrier.dropsHeadFirst()`). The intel wave strip's **`WATERLINE`**
+  marks (each waterline at its time, `LevelData.waterlines()`).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

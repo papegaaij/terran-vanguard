@@ -20,6 +20,12 @@ package vanguard.sim;
  * and never loops back. A cut stops the members behind it where they are; they die after the crawl's cut
  * delay, from the cut backwards. Its segments fire the pore wave ({@link #poreFiring()}, {@link #poreGlow}).
  * Opt-in: an air chain (the Coilwyrm) flies and hashes exactly as before.
+ *
+ * <p>M8 part C, a water chain (design/enemies/naval/eel-swarm; opt-in by its {@link EnemySpec.ChainSpec#scatter()},
+ * its head's {@link EnemySpec#sine()} and its {@link EnemySpec.ChainSpec#headAttacks()}): its head point sways about
+ * its route ({@link ChainSwim}); it never regrows: every cut splits off its rear part, which scatters ({@link
+ * Mode#SCATTER}): it swims on straight along the cut's heading, then dies; its head fires its own attacks ({@link
+ * HeadAttacks}). A head-first drop ({@link #headFirstDrop()}) is its wave's pickup that only a head-first kill drops.
  */
 public final class Chain implements Hashed {
     /** History points kept: enough for the longest chain at the slowest sampling. */
@@ -48,7 +54,12 @@ public final class Chain implements Hashed {
         /** Holding still while its new head grows. */
         REGROW,
         /** Straight at where the ship was when its new head had grown. */
-        LUNGE
+        LUNGE,
+        /**
+         * M8 part C: a water chain's cut-off rear part, swimming on straight along the cut's heading at its scatter's
+         * speed until its time runs out, then dying ({@link EnemySpec.Scatter}).
+         */
+        SCATTER
     }
 
     private final double[] hx = new double[HISTORY];
@@ -132,6 +143,13 @@ public final class Chain implements Hashed {
     /** M7 part C: whether the last {@link #destroyed} cut a ground chain (stopping its rear part). */
     private boolean cutNow;
 
+    /** M8 part C: its head point's sway and a rear part's scatter clock. */
+    private final ChainSwim swim = new ChainSwim();
+    /** M8 part C: its head's attacks' clocks. */
+    private final HeadAttacks headAttacks = new HeadAttacks();
+    /** M8 part C: whether its wave's pickup drops only when its head is destroyed first (not hashed: from the plan). */
+    private boolean headFirstDrop;
+
     /**
      * A wave's chain entering from {@code from}: the head point starts at its path's start, the
      * members strung out behind it.
@@ -141,11 +159,16 @@ public final class Chain implements Hashed {
         entry = from;
         regrownKind = regrownHeadKind;
         original = true;
-        canRegrow = true;
+        // M8 part C: a chain whose cut parts scatter never regrows.
+        canRegrow = chainSpec.scatter().isEmpty();
         mode = Mode.PATH;
         path = plan.path();
         speed = plan.speed();
         loop = plan.loop().orElse(null);
+        if (plan.enemy().sine().isPresent()) {
+            swim.sway(plan.enemy().sine().get(), speed);
+        }
+        headAttacks.start(chainSpec.headAttacks());
         headX = path.x(0, 0);
         headY = path.y(0, 0);
         size = spec.members();
@@ -186,6 +209,9 @@ public final class Chain implements Hashed {
         poreClock = -1;
         poreFiring = -1;
         cutNow = false;
+        swim.clear();
+        headAttacks.clear();
+        headFirstDrop = false;
     }
 
     /**
@@ -298,6 +324,12 @@ public final class Chain implements Hashed {
             place();
             return true;
         }
+        if (mode == Mode.SCATTER && swim.scatterDue()) {
+            // M8 part C: its swim is over: it dies from the cut backwards, drifting to a halt.
+            dyingFrom = Math.min(dyingFrom, 1);
+            popTicks = SimStep.ticks(spec.popSeconds());
+            drift();
+        }
         if (drifting) {
             speed *= DRIFT;
             vx *= DRIFT;
@@ -333,7 +365,7 @@ public final class Chain implements Hashed {
                     headY = path.y(segment, distance);
                 }
             }
-            case STRAIGHT, LUNGE -> {
+            case STRAIGHT, LUNGE, SCATTER -> {
                 headX += vx * SimStep.SECONDS;
                 headY += vy * SimStep.SECONDS;
                 straightTicks++;
@@ -345,7 +377,13 @@ public final class Chain implements Hashed {
             case REGROW -> moved = false;
         }
         if (moved) {
-            push(headX, headY);
+            if (swim.swaying() && (mode == Mode.PATH || mode == Mode.STRAIGHT)) {
+                // M8 part C: the history takes the swaying head point; headX/headY stay on the route.
+                swim.step(mode == Mode.PATH ? path.dx(segment) : vx, mode == Mode.PATH ? path.dy(segment) : vy, speed);
+                push(headX + swim.offsetX(), headY + swim.offsetY());
+            } else {
+                push(headX, headY);
+            }
         }
         boolean onField = place();
         entered |= onField;
@@ -355,6 +393,10 @@ public final class Chain implements Hashed {
             return onField || (!entered && Terrain.y(scroll, headY) > 0);
         }
         if (onField || mode == Mode.PATH || mode == Mode.REGROW || loop != null) {
+            return true;
+        }
+        if (mode == Mode.SCATTER && swim.scatterLeft() > 0) {
+            // M8 part C: a scattering part lives out its swim, its members above an edge still coming on.
             return true;
         }
         return !entered && straightTicks < SimStep.ticks(1);
@@ -506,6 +548,14 @@ public final class Chain implements Hashed {
             dyingFrom = Math.min(dyingFrom, size);
             return false;
         }
+        if (mode == Mode.SCATTER) {
+            // M8 part C: a scattering part's cut only takes that member out of it.
+            return false;
+        }
+        if (spec.scatter().isPresent() && dyingFrom >= size && rear != null) {
+            scatter(i, rear, rearSerial);
+            return true;
+        }
         if (canRegrow && dyingFrom >= size && rear != null) {
             split(i, rear, rearSerial);
             return true;
@@ -610,6 +660,25 @@ public final class Chain implements Hashed {
         cut = true;
         canRegrow = false;
         dyingFrom = Math.min(dyingFrom, size);
+    }
+
+    /**
+     * M8 part C: the members behind the cut at {@code i} become {@code rear}, which swims on from the cut along the
+     * heading the history has there at its scatter's speed ({@link Mode#SCATTER}).
+     */
+    private void scatter(int i, Chain rear, int rearSerial) {
+        EnemySpec.Scatter cutSpec = spec.scatter().orElseThrow();
+        double cutS = hs[newest] - offsets[i];
+        double dx = pointAt(cutS + 1, true) - pointAt(cutS - 1, true);
+        double dy = pointAt(cutS + 1, false) - pointAt(cutS - 1, false);
+        double length = Math.sqrt(dx * dx + dy * dy);
+        split(i, rear, rearSerial);
+        rear.mode = Mode.SCATTER;
+        rear.regrowTicks = 0;
+        rear.speed = cutSpec.speed();
+        rear.vx = length > 0 ? dx / length * cutSpec.speed() : 0;
+        rear.vy = length > 0 ? dy / length * cutSpec.speed() : -cutSpec.speed();
+        rear.swim.scatter(cutSpec.seconds());
     }
 
     /** Where member {@code i} sits on the history: the cut point when it is destroyed. */
@@ -761,8 +830,9 @@ public final class Chain implements Hashed {
 
     /** Whether destroying member {@code i} now pays the first bonus: the tail of an uncut wave's chain. */
     boolean firstBonusDue(int i) {
-        if (ground) {
-            // M7 part C: a ground chain never regrows: the tail destroyed before any other part.
+        if (ground || spec.scatter().isPresent()) {
+            // M7 part C: a ground chain never regrows (M8 part C: nor a water chain): the tail destroyed before any
+            // other part.
             return original && intact && i > 0 && i == size - 1 && i == spec.members() - 1;
         }
         return original && !cut && canRegrow && i == size - 1 && i == spec.members() - 1;
@@ -817,6 +887,31 @@ public final class Chain implements Hashed {
             return 0;
         }
         return glow == 0 ? 1 : (double) t / glow;
+    }
+
+    /** M8 part C: whether it is a water chain's cut-off rear part, swimming on before it dies. */
+    public boolean scattering() {
+        return mode == Mode.SCATTER;
+    }
+
+    /** M8 part C: the steps a scattering part still swims before it dies; 0 once it dies (and for any other). */
+    public int scatterLeft() {
+        return swim.scatterLeft();
+    }
+
+    /** M8 part C: its head's attacks' clocks. */
+    HeadAttacks headAttacks() {
+        return headAttacks;
+    }
+
+    /** M8 part C: its wave's pickup drops only when its head is destroyed before any other part. */
+    void headFirstDrop(boolean only) {
+        headFirstDrop = only;
+    }
+
+    /** M8 part C: whether its wave's pickup drops only when its head is destroyed before any other part. */
+    boolean headFirstDrop() {
+        return headFirstDrop;
     }
 
     /** The edge it entered from last: its wave's, or the rear after its loop-back. */
@@ -891,5 +986,8 @@ public final class Chain implements Hashed {
         } else if (spec.headFirstBonus() > 0) {
             hash.add(intact ? 1 : 0);
         }
+        // M8 part C: only a water chain's, so the Coilwyrm and the Threadcrawler hash as before.
+        swim.addTo(hash);
+        headAttacks.addTo(hash);
     }
 }

@@ -21,7 +21,13 @@ final class ChainRules {
      * as its sprite, the tail as its hit box over the share); the tail and the regrown head from the
      * part list and the regrow block, the regrown head firing the head's fan (the hook's count).
      */
-    static EnemySpec withChain(Content content, EnemyData enemy, EnemySpec head, Difficulty difficulty, double actHp) {
+    static EnemySpec withChain(
+            Content content,
+            EnemyData enemy,
+            EnemySpec head,
+            Difficulty difficulty,
+            double actHp,
+            Optional<LevelData.EnemyChange> change) {
         EnemyData.SegmentChain chain = enemy.segmentChain().orElseThrow();
         // M7 part C: a chain whose cut rear part dies (the Threadcrawler's cut) has no regrow.
         Optional<EnemyData.Regrow> regrow = chain.regrow();
@@ -104,26 +110,32 @@ final class ChainRules {
                         difficulty))
                 .orElse(null);
         EnemySpec.ChainSpec spec = new EnemySpec.ChainSpec(
-                segment,
-                boxes,
-                tailSpec,
-                tail.firstBonus().orElse(0),
-                regrown,
-                regrow.map(EnemyData.Regrow::seconds).orElse(0.0),
-                regrow.map(EnemyData.Regrow::speed).orElse(0.0),
-                offsets,
-                chain.popInterval(),
-                enemy.partList().orElseThrow().stream()
-                        .filter(part -> part.kind().equals("vital"))
-                        .findFirst()
-                        .flatMap(EnemyData.PartData::multiplier)
-                        .orElse(1.0),
-                // M7 part C: a head-first kill pays the whole (the Threadcrawler's head first_bonus).
-                enemy.partList().orElseThrow().stream()
-                        .filter(part -> part.kind().equals("vital"))
-                        .findFirst()
-                        .flatMap(EnemyData.PartData::firstBonus)
-                        .orElse(0));
+                        segment,
+                        boxes,
+                        tailSpec,
+                        tail.firstBonus().orElse(0),
+                        regrown,
+                        regrow.map(EnemyData.Regrow::seconds).orElse(0.0),
+                        regrow.map(EnemyData.Regrow::speed).orElse(0.0),
+                        offsets,
+                        chain.popInterval(),
+                        enemy.partList().orElseThrow().stream()
+                                .filter(part -> part.kind().equals("vital"))
+                                .findFirst()
+                                .flatMap(EnemyData.PartData::multiplier)
+                                .orElse(1.0),
+                        // M7 part C: a head-first kill pays the whole (the Threadcrawler's head first_bonus).
+                        enemy.partList().orElseThrow().stream()
+                                .filter(part -> part.kind().equals("vital"))
+                                .findFirst()
+                                .flatMap(EnemyData.PartData::firstBonus)
+                                .orElse(0))
+                // M8 part C (design/enemies/naval/eel-swarm): a cut part that scatters, the head's attacks.
+                .withScatter(chain.cut()
+                        .filter(EnemyData.Cut::scatters)
+                        .map(cut -> new EnemySpec.Scatter(
+                                cut.scatter().orElseThrow(), cut.seconds().orElseThrow())))
+                .withHeadAttacks(headAttacks(content, enemy, difficulty, change));
         return new EnemySpec(
                 head.slug(),
                 head.hp(),
@@ -153,6 +165,42 @@ final class ChainRules {
                 head.hardened(),
                 head.spawner(),
                 head.pounce());
+    }
+
+    /**
+     * M8 part C (design/enemies/naval/eel-swarm): the chain's vital part that fires a list of attacks (its {@code
+     * attacks}), if it has one: then they are its head attacks and the head has no gun of its own.
+     */
+    static Optional<EnemyData.PartData> headAttackPart(EnemyData enemy) {
+        if (enemy.segmentChain().isEmpty()) {
+            return Optional.empty();
+        }
+        return enemy.partList().orElse(List.of()).stream()
+                .filter(part -> part.kind().equals("vital") && part.attacks().isPresent())
+                .findFirst();
+    }
+
+    /**
+     * M8 part C (design/enemies/naval/eel-swarm, Attack): the head's attacks at {@code difficulty}, in the order its
+     * part names them, each an attack as a gun ({@link UnitRules#gun}: the fire-rate and bullet-speed levers, the
+     * hooks' intervals) with its {@code tell} before each volley; an attack that does not fire on the difficulty (its
+     * {@code only}: easy's missing fan) left out. None for a chain head without a list of attacks.
+     */
+    static List<EnemyGun> headAttacks(
+            Content content, EnemyData enemy, Difficulty difficulty, Optional<LevelData.EnemyChange> change) {
+        List<EnemyGun> guns = new ArrayList<>();
+        for (String name :
+                headAttackPart(enemy).map(EnemyData.PartData::attackNames).orElse(List.of())) {
+            EnemyData.Attack attack = enemy.attacks().stream()
+                    .filter(a -> a.name().filter(name::equals).isPresent())
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": no attack '" + name + "'"));
+            if (attack.firesOn(difficulty)) {
+                guns.add(UnitRules.gun(content, enemy, attack, difficulty, change)
+                        .withTell(attack.tell().orElse(0.0)));
+            }
+        }
+        return guns;
     }
 
     /** A chain's part as a unit of its own: its HP by the HP lever, on the head's layer. */

@@ -20,11 +20,11 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 4 draft
 
 | Part | Summary | Design | Impl | Art |
 |---|---|---|---|---|
-| [driftjelly](driftjelly/README.md) | Jellyfish mine on or below the surface, proximity ring (L11) | approved | done | final |
-| [reef-spitter](reef-spitter/README.md) | Barnacle gun on a kelp raft, 3-way fans (L11) | approved | done | final |
+| [driftjelly](driftjelly/README.md) | Jellyfish mine on or below the surface, proximity ring (L11) | approved | in-progress | final |
+| [reef-spitter](reef-spitter/README.md) | Barnacle gun on a kelp raft, 3-way fans (L11) | approved | in-progress | final |
 | [skimmer](skimmer/README.md) | Flying-fish skiff weaving between floes from every edge (L13) | approved | done | final |
-| [glassfin](glassfin/README.md) | Transparent fry school, the act's `tiny` popcorn that streams and rams (L23) | approved | not-started | chosen |
-| [eel-swarm](eel-swarm/README.md) | Segmented eel chain, vital head fires aimed shots (L23) | approved | not-started | chosen |
+| [glassfin](glassfin/README.md) | Transparent fry school, the act's `tiny` popcorn that streams and rams (L23) | approved | done | chosen |
+| [eel-swarm](eel-swarm/README.md) | Segmented eel chain, vital head fires aimed shots (L23) | approved | done | chosen |
 | [barbfin](barbfin/README.md) | Small swimmer that holds and spits aimed needles, the Ray's escort (L24) | approved | not-started | chosen |
 | [abyss-ray](abyss-ray/README.md) | Manta that rises from a shadow and sweeps a wide fan (L24) | approved | not-started | chosen |
 | [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | not-started | chosen |
@@ -91,6 +91,10 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 | [concept/eel-swarm-r48-a.gif](concept/eel-swarm-r48-a.gif) | Eel Swarm A — the chain over the lamp-lit L23 farms: aimed shots and a fan, a cut tail drifting off, the head kill unzipping it (motion) | chosen — round 48 |
 | [concept/rejected/eel-swarm-r48-b.png](concept/rejected/eel-swarm-r48-b.png) | Eel Swarm B, lantern eel — teal-black plated eels with violet photophores, a bone skull and violet maw (sheet) | rejected — round 48: a picked |
 | [concept/rejected/eel-swarm-r48-b.gif](concept/rejected/eel-swarm-r48-b.gif) | Eel Swarm B — the same scene as A (motion) | rejected — round 48: a picked |
+| [concept/eel-swarm-final-r52-a.png](concept/eel-swarm-final-r52-a.png) | Eel Swarm final frames (`tools/art/eel_swarm.py`, round 48 a, the ribbon eel): the head at 16 headings (rest, tell, shot), body eel and tail (rest, stripe lit), the stripe's bloom and the muzzle (additive), the husks sinking; three screens over the farms (sheet) | proposed (round 52) |
+| [concept/eel-swarm-final-r52-a.gif](concept/eel-swarm-final-r52-a.gif) | A 12-segment snake: the stripe tell, aimed shots and a fan, a cut and the tail scattering, the head kill unzipping it, the husks sinking | proposed (round 52) |
+| [concept/eel-swarm-capture-r52-a.png](concept/eel-swarm-capture-r52-a.png) | Game capture, M8 part C (step C5b; Level 23 on medium, `--invulnerable`, the balance plan's Level 23 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods, the Sonar Pulse, Rook with his gun): Level 23's second eel at t=60.2 (the stripe tell), 60.8 (the fan), 62.4 (cut, the tail scattering) and 64.5 (the head killed) | proposed (round 52) |
+| [concept/eel-swarm-capture-r52-a.mp4](concept/eel-swarm-capture-r52-a.mp4) | The same eel as a video with the game's sound (t=57.5–66) | proposed (round 52) |
 | [concept/rejected/abyss-ray-r48-a.png](concept/rejected/abyss-ray-r48-a.png) | Abyss Ray A, manta — teal-black wings with teal veins, lime gill slits, violet mouth; flap frames, the shadow-and-rise sequence (sheet) | rejected — round 48: b picked |
 | [concept/rejected/abyss-ray-r48-a.gif](concept/rejected/abyss-ray-r48-a.gif) | Abyss Ray A — a shadow grows, the ray rises, four Barbfins peel off, three 9-way fans, it glides off and sinks; L24's lamps' edge (motion) | rejected — round 48: b picked |
 | [concept/abyss-ray-r48-b.png](concept/abyss-ray-r48-b.png) | Abyss Ray B, bone skate — a bone disc with a tubercle ridge, violet spots, lime gill slits, whip tail (sheet) | chosen — round 48 |
@@ -111,6 +115,10 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 | [concept/glassfin-r48-a.gif](concept/glassfin-r48-a.gif) | Glassfin A — two ribbons of 14 over the L23 farms, glint and ram, one hits the shield (motion) | chosen — round 48 |
 | [concept/rejected/glassfin-r48-b.png](concept/rejected/glassfin-r48-b.png) | Glassfin B, leaf larva — a flat clear glass leaf with a teal spine (sheet) | rejected — round 48: a picked |
 | [concept/rejected/glassfin-r48-b.gif](concept/rejected/glassfin-r48-b.gif) | Glassfin B — the same scene as A (motion) | rejected — round 48: a picked |
+| [concept/glassfin-final-r52-a.png](concept/glassfin-final-r52-a.png) | Glassfin final frames (`tools/art/glassfin.py`, round 48 a, the needle fry): 16 headings swimming and glinting, the glint sparkle, the shatter's flash and shards (sheet) | proposed (round 52) |
+| [concept/glassfin-final-r52-a.gif](concept/glassfin-final-r52-a.gif) | Two ribbons swaying over the farms, fry glinting and ramming down the ship's lane, shatters | proposed (round 52) |
+| [concept/glassfin-capture-r52-a.png](concept/glassfin-capture-r52-a.png) | Game capture, M8 part C (step C5b; Level 23 on medium, `--invulnerable`, the balance plan's Level 23 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods, the Sonar Pulse, Rook with his gun): Level 23's first school (t=29.2–32.2): the S-route down the shaft, the glints and the rams down the ship's lane, shatters | proposed (round 52) |
+| [concept/glassfin-capture-r52-a.mp4](concept/glassfin-capture-r52-a.mp4) | The same school as a video with the game's sound (t=28–37) | proposed (round 52) |
 | [concept/barbfin-r48-a.png](concept/barbfin-r48-a.png) | Barbfin A, bone lionfish — bone fin rays and webbing, a barbed violet-tipped snout; 32 headings, swim frames (sheet) | chosen — round 48 |
 | [concept/barbfin-r48-a.gif](concept/barbfin-r48-a.gif) | Barbfin A — a column of four and a group of three dart in, hold, spit needles, two shot (ink cloud, sinking shell) on the L24 plain (motion) | chosen — round 48 |
 | [concept/rejected/barbfin-r48-b.png](concept/rejected/barbfin-r48-b.png) | Barbfin B, plated box — bone armour plates with violet seams, barbed snout (sheet) | rejected — round 48: a picked |

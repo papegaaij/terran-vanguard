@@ -139,21 +139,29 @@ item|“R4_00328-8_GlassTable.wav” by kevp888
 detail|CC-BY 4.0 · freesound.org/people/kevp888/sounds/636555
 item|“Torpedo launch.wav” by jobro
 detail|CC-BY 3.0 · freesound.org/people/jobro/sounds/35531
-item|“20061111AirHoseDisconnect1.wav” by daveincamas
-detail|CC-BY 4.0 · freesound.org/people/daveincamas/sounds/25578
-item|“Metal Groan_Steam release.wav” by Cell31_Sound_Productions
-detail|CC-BY 4.0 · freesound.org/people/Cell31_Sound_Productions/sounds/390188
+item|“BreakingIce.wav” by iainmccurdy
+detail|CC-BY 4.0 · freesound.org/people/iainmccurdy/sounds/440858
+item|“Safety relief valve.wav” by tosha73
+detail|CC-BY 4.0 · freesound.org/people/tosha73/sounds/544239
+item|“Chipping large Ice Block 1.wav” by kev_durr
+detail|CC-BY 4.0 · freesound.org/people/kev_durr/sounds/426205
 item|“Glacial Wind.wav” by Uzbazur
 detail|CC-BY 4.0 · freesound.org/people/Uzbazur/sounds/432086
+item|“Heavy_mechanical_impact_sounds_various_pitch_sound” by Artninja
+detail|CC-BY 4.0 · freesound.org/people/Artninja/sounds/728170
+item|“Industrial Centrifugal Water Pump contactmic 130203_00.wav” by klankbeeld
+detail|CC-BY 4.0 · freesound.org/people/klankbeeld/sounds/177195
+item|“Explosive works.wav” by tosha73
+detail|CC-BY 4.0 · freesound.org/people/tosha73/sounds/584594
 gap|
 role|WITH THANKS TO (CC0)
-text|adgawrhbshbffsfgvsrf, adviseme333, aerror, amenhotepIV, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, c64cosmin, cellokratzer, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, eben-frostey, Elektrocell, Elements-Library, Engineer_815, facklere, fkunze, FlatHill, follytowers, fran_marenco, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, ItsThatRoboGuy, ivolipa, iwanPlays, Jacco18, jamesabels, jamesdrake89, Jarusca, Jerimee, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, kyles, lensflare8642, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, Mihacappy, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Nox_Sound, Noxdl, Osvoldon, peepholecircus, pgi, plasterbrain, PostProdDog, profoundsounds, prozaciswack, qubodup, Raclure, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, samueljustice00, sarana, Schmaddio, SciFiSounds, SecureSubset, Sheyvan, sidohzen, SieuAmThanh, Skullsmasha, StoneyJ, SuperPhat, tec_studio, The_Chemical_Workshop, The_Sean_, ThefitzyG, TRP, uagadugu, unfa, Vrymaa, Walter_Odington, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games, ZeSoundResearchInc.
+text|adgawrhbshbffsfgvsrf, adviseme333, aerror, amenhotepIV, AudioPapkin, aust_paul, BaggoNotes, bevibeldesign, Bikkit99, Bird_man, blaukreuz, Breviceps, brunoboselli, c64cosmin, cellokratzer, CmdRobot, cobratronik, coolguy244e, craigsmith, cubix, Cyberios, Daleonfire, darcyadam, DasWaff, DBS_Sounds, deerlord, derplayer, DiArchangeli, dinodilopho, Division4884, dwswords, eardeer, Elektrocell, Elements-Library, Engineer_815, facklere, Filmscore, FlatHill, follytowers, fran_marenco, frankelmedico, GameAudio, Glitchedtones, gprosser, greatmganga, HenKonen, hinchinbrook, Hugofski, humanoide9000, ItsThatRoboGuy, ivolipa, iwanPlays, Jacco18, jamesabels, jamesdrake89, Jarusca, Jerimee, jhumbucker, JoelAudio, jokallset, JoMungus, JovianSounds, JSK_Productions, jvmyka@gmail.com, kalhan, Kinoton, kkenny101, kyles, lensflare8642, LilMati, loganzsound, lolamadeus, lorefold, lorenzgillner, LPA134, LucasDuff, magnuswaker, martinimeniscus, mattpavone, michael_grinnell, Mihacappy, mitchelk, Mozfoo, NHMWretched, Nic3_one, NickPeeters, nicktermer, nicoproson, noahpardo, noirenex, Nordliecht, Nox_Sound, Noxdl, Osvoldon, peepholecircus, pengo_au, pgi, plasterbrain, PostProdDog, profoundsounds, qubodup, Raclure, reacthor, Reitanna, RutgerMuller, Sadiquecat, SamsterBirdies, samueljustice00, sarana, Schmaddio, SciFiSounds, SecureSubset, Sheyvan, sidohzen, SieuAmThanh, Skullsmasha, StoneyJ, SuperPhat, tec_studio, The_Chemical_Workshop, The_Sean_, ThefitzyG, TRP, uagadugu, Ubehag, unfa, Vrymaa, Walter_Odington, wilhellboy, XfiXy8, xkeril, YouMightLikeThis, Za-Games, ZeSoundResearchInc.
 gap|
 title|VOICES
 text|Spoken by the Chatterbox text-to-speech engine (Resemble AI, MIT licence) in voices cloned from LibriVox recordings
 gap|
 role|READ BY (PUBLIC DOMAIN AND CC0)
-text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Celine Major, Cori Samuel, Faith Abiola-Ellison, Gord Mackenzie, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Margaret Espaillat, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Rick Rodstrom, Ruth Golding, Sue Anderson, Tadhg Hynes, Thomas A
+text|Aaron Bennett, Adrian Praetzellis, Alex Foster, Betsie Bush, Bruce Pirie, Celine Major, Cori Samuel, Faith Abiola-Ellison, Gord Mackenzie, John Van Stan, Kara Shallenberg, Karen Savage, KevinS, Kristin Hughes, Margaret Espaillat, Maria Kasper, Mark F. Smith, Mark Nelson, MaryAnn, Patrick Eaton, Rick Rodstrom, Ruth Golding, Tadhg Hynes, Thomas A
 gap|
 title|FONTS
 item|“DejaVu Sans Mono Bold” by DejaVu fonts team, after Bitstream Vera (Bitstream)

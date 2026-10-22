@@ -1,0 +1,38 @@
+# Siphon Pump stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part C, step C2 (Level 23; gap check m8c-gaps.md §5 D3): Level 23's siphon pumps promoted to a part of their own,
+# because the secondary's `escapes` counts a unit by its slug and the loader finds units only here. The approved text of
+# Level 23 (round 48); the 40 × 40 sprite and its 32 × 32 hit box are the gap check's, pending the user's review in
+# round 52. Damage under water as every ground target's: the torpedo weapons at full damage, the others × 0.7 after
+# `anti-ground`'s × 2 (Europa's rules, design/world/europa; no own rule).
+name: Siphon Pump
+faction: Vrell
+layer: ground     # the sea floor: Thera Deep's farm racks
+tier: medium     # the balancing basis by its numbers: 40 HP is 0.4 s at the L23 reference and bounty 20 sits in the medium class (a 40 px sprite, "a small structure" in the text)
+size: [40, 40]    # sprite px
+hitbox: [32, 32]
+parts: single
+orientation: fixed
+hp: 40
+armour: none
+speed: 0          # scrolls with the ground
+movement:
+  terrain: {}
+attacks: []       # no attack
+formations:
+  - {name: turret nest}   # one on each farm rack
+weak_points: []
+drops: []
+traits: [anti-sub, anti-ground]   # the torpedo weapons at full damage under water; anti-ground × 2 (gap check D3 gave none: pending review)
+bounty: 20
+first_level: 23
+notes:
+  layer: ' (the sea floor: a farm rack)'
+  orientation: (seen from above; the sump glows, the tube pulses)
+  speed: (scrolls with the ground)
+  movement: '`terrain` (fixed on its farm rack)'
+  attack: '`none`: it drains the farm into the Vrell; a hum while it lives'
+  formations: (one on each farm rack)
+  weak_points: (dies in 0.4 s at the Level 23 reference)
+  death: '`small` burst: the tube breaks, the sump''s glow gutters out, the kelp round it slackens'
+  used_in: Level 23 (the secondary `PUMPS`); a later Europa level may reuse it
+  difficulty: 'none (the secondary''s allowed escapes change: easy 2, medium 1, hard 0)'

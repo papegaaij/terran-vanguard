@@ -465,30 +465,83 @@ public enum Sfx {
      */
     BELT_RUMBLE("sfx/belt-rumble-r42-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part B: an ice geyser's tell (round 51 a, proposed: a frozen lake's ice cracking over a pressure release's
-     * rising hiss, 1.2 s), as each crack of a row darkens and glows (the vents' {@code look: ice-geyser}, Level 22).
+     * M8 part B: an ice geyser's tell (round 51 b, chosen (S.1): ice breaking over a safety relief valve's rising hiss
+     * and a lake's fractures, 1.2 s), as each crack of a row darkens and glows (the vents' {@code look: ice-geyser},
+     * Level 22).
      */
-    GEYSER_TELL("sfx/geyser-tell-r51-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    GEYSER_TELL("sfx/geyser-tell-r51-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part B: an ice geyser's burst (round 51 a, proposed: a steam safety valve's roar over a sea blowhole's spout
-     * and a muffled lake-ice boom, 1.5 s), as its steam column stands up.
+     * M8 part B: an ice geyser's burst (round 51 a, chosen (S.2): a steam safety valve's roar over a sea blowhole's
+     * spout and a muffled lake-ice boom, 1.5 s), as its steam column stands up.
      */
     GEYSER_BURST("sfx/geyser-burst-r51-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part B: a Drill Rig's collar boring (round 51 a, proposed: an oil rig's drill whine over a digging rumble, a
-     * seamless 4 s loop): one quiet loop while a rig's collar turns on the screen, panned to the one nearest the ship.
+     * M8 part B: a Drill Rig's collar boring (round 51 b, chosen (S.3): a deep earth drill over an industrial
+     * turbine's spinning blades, a seamless 4 s loop): one quiet loop while a rig's collar turns on the screen, panned
+     * to the one nearest the ship.
      */
-    RIG_COLLAR("sfx/rig-collar-r51-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    RIG_COLLAR("sfx/rig-collar-r51-b.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part B: a Drill Rig's ring of ice shards (round 51 a, proposed: a hammer smashing ice on an air hose's burst,
-     * 0.7 s), instead of the shots' report.
+     * M8 part B: a Drill Rig's ring of ice shards (round 51 b, chosen (S.4): a large ice block chipped on a steam
+     * burst, 0.8 s), instead of the shots' report.
      */
-    RIG_RING("sfx/rig-ring-r51-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    RIG_RING("sfx/rig-ring-r51-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part B: a Drill Rig's core destroyed (round 51 a, proposed: a metal crash on a lake-ice boom, a groan and a
-     * steam release, 3.1 s), with its {@code large} explosion.
+     * M8 part B: a Drill Rig's core destroyed (round 51 b, chosen (S.5): a big structure's collision heard from
+     * inside, ice breaking and an air pressure release, 3.0 s), with its {@code large} explosion.
      */
-    RIG_DEATH("sfx/rig-death-r51-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    RIG_DEATH("sfx/rig-death-r51-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part C: the waterline crossing (round 52 a, proposed: a jet's roar cut off into a slowed under-water impact on
+     * a depth bomb's boom, 2.0 s), once a run as the ship drops through Level 23's waterline into the water.
+     */
+    WATERLINE_CROSS("sfx/waterline-cross-r52-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part C: the hydro-kit locking for water at the waterline (round 52 a, proposed: a deadbolt slammed home, a
+     * heavy clunk, a hydraulic brake's hiss, 0.6 s), with the crossing.
+     */
+    HYDRO_REFIT("sfx/hydro-refit-r52-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part C: the ship touching an ice shaft's wall under water (round 52 a, proposed: the canyon scrape's recording
+     * slowed and muffled on an under-water impact, 0.6 s), instead of the canyon scrape (its rule: once a contact).
+     */
+    SCRAPE_UNDER("sfx/scrape-under-r52-a.ogg", 2, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part C: an Eel Swarm head's pulse shot (round 52 a, proposed: a deep door thump on an under-water impact,
+     * 0.4 s), instead of a gun's report.
+     */
+    EEL_PULSE("sfx/eel-pulse-r52-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part C: an Eel Swarm's segment or tail destroyed, shot or in the chained death (round 52 a, proposed: a heavy
+     * fabric rip slowed on an under-water impact's tail, 0.6 s), over its under-water burst.
+     */
+    EEL_SEGMENT("sfx/eel-segment-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part C: a Glassfin killed (round 52 a, proposed: a small glass sheet shattered by a rock, 0.5 s), over its
+     * under-water {@code tiny} burst.
+     */
+    GLASSFIN_SHATTER("sfx/glassfin-shatter-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part C: the siphon pumps working (round 52 a, proposed: a basement water pump's throb slowed over a centrifugal
+     * pump's hum, a seamless 4 s loop): one quiet loop while a pump lives on the screen, panned to the nearest.
+     */
+    PUMP_HUM("sfx/pump-hum-r52-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part C: a siphon pump destroyed (round 52 a, proposed: a clunk, a submarine motor running down, a pressure
+     * release, 1.85 s), with its under-water {@code medium} burst.
+     */
+    PUMP_BREAK("sfx/pump-break-r52-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part C: the under-water explosion ladder (round 52 a "the depth bomb", proposed: a depth bomb's sub boom with
+     * a real under-water impact as its body; medium and large a quarry blast's roar under it), a kill below the
+     * waterline on its size rung in place of the air rung's two files ({@link #underwater}); {@code huge} waits for the
+     * Maw.
+     */
+    EXPLOSION_DEEP_TINY("sfx/explosion-underwater-tiny-r52-a.ogg", 6, Bus.EFFECTS, EXPLOSION),
+
+    EXPLOSION_DEEP_SMALL("sfx/explosion-underwater-small-r52-a.ogg", 6, Bus.EFFECTS, EXPLOSION),
+    EXPLOSION_DEEP_MEDIUM("sfx/explosion-underwater-medium-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
+    EXPLOSION_DEEP_LARGE("sfx/explosion-underwater-large-r52-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
     /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
@@ -688,15 +741,20 @@ public enum Sfx {
      */
     AMBIENCE_BASIN_RUMBLE("sfx/basin-rumble-r43-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M8 part B: Europa's ice (round 51 a, proposed: a glacial wind over lake-ice fractures an octave down, the deep
+     * M8 part B: Europa's ice (round 51 a, chosen (S.6): a glacial wind over lake-ice fractures an octave down, the deep
      * booms and groans rolling under it, a seamless 16 s loop): Level 22 to its run-in.
      */
     AMBIENCE_EUROPA_ICE("sfx/europa-ice-r51-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M8 part B: the run-in to Conamara Station (round 51 a, proposed: the Europa ice bed with an underground hall's
+     * M8 part B: the run-in to Conamara Station (round 51 a, chosen (S.7): the Europa ice bed with an underground hall's
      * ventilation hum and a transformer's drone, a seamless 16 s loop): Level 22's section 3.
      */
     AMBIENCE_CONAMARA("sfx/conamara-station-r51-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part C: the bed under Europa's ice (round 52 a, proposed: a deep-sea rumble, a sinking submarine's steel creaks
+     * slowed, humpback whales calling far off, a seamless 16 s loop): Level 23 from the waterline on, and Level 24.
+     */
+    AMBIENCE_EUROPA_UNDER("sfx/europa-under-r52-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -794,6 +852,8 @@ public enum Sfx {
             // M8 part B: Europa's ice shelf and the station's bed (Level 22).
             case "europa-ice" -> AMBIENCE_EUROPA_ICE;
             case "conamara-station" -> AMBIENCE_CONAMARA;
+            // M8 part C: the bed under the ice (Level 23 from the waterline).
+            case "europa-under" -> AMBIENCE_EUROPA_UNDER;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }
@@ -818,6 +878,23 @@ public enum Sfx {
             case MEDIUM -> variantB ? EXPLOSION_MEDIUM_B : EXPLOSION_MEDIUM_A;
             case LARGE -> variantB ? EXPLOSION_LARGE_B : EXPLOSION_LARGE_A;
             case HUGE -> variantB ? EXPLOSION_HUGE_B : EXPLOSION_HUGE_A;
+        };
+    }
+
+    /**
+     * M8 part C (design/audio/sfx, Explosion ladder, under water): a kill's sound below the waterline for its air sound
+     * {@code air}: the under-water file of the same rung for a rung's file (both of the air rung's two, so the
+     * alternation keeps its rhythm), the segment tear for a water chain's part ({@link #COILWYRM_BURST}'s place) and the
+     * {@code medium} one for a chain's head; any other sound (a unit's own death, the {@code huge} rung) as it is.
+     */
+    public static Sfx underwater(Sfx air) {
+        return switch (air) {
+            case EXPLOSION_TINY_A, EXPLOSION_TINY_B -> EXPLOSION_DEEP_TINY;
+            case EXPLOSION_SMALL_A, EXPLOSION_SMALL_B -> EXPLOSION_DEEP_SMALL;
+            case EXPLOSION_MEDIUM_A, EXPLOSION_MEDIUM_B, COILWYRM_HEAD_BURST -> EXPLOSION_DEEP_MEDIUM;
+            case EXPLOSION_LARGE_A, EXPLOSION_LARGE_B -> EXPLOSION_DEEP_LARGE;
+            case COILWYRM_BURST -> EXPLOSION_DEEP_TINY;
+            default -> air;
         };
     }
 

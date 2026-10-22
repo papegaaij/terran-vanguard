@@ -19,6 +19,12 @@ package vanguard.sim;
  * from its {@link Pursuit} (band, tell, dive, climb, break-off; in screen space, never flipped) instead of a route; its
  * tell contracts it into a ball, its dive carries the ball along, its refills join it in free slots ({@link #freeSlot()}, {@link #join(Enemy)}), and it
  * lives on without members until its last refill has come.
+ *
+ * <p>M8 part C (design/enemies/naval/glassfin): a flock with a {@link EnemySpec.FlockSpec#sway()} shows each member
+ * swung across the leader point's heading ({@link #RIBBON_LAG} behind the one before it), the steering working on the
+ * unswayed places; with a {@link EnemySpec.FlockSpec#ram()} each member runs its {@link Ramming} and, diving, leaves
+ * the flock's rules: it flies straight on (no sway, no steering, no neighbour to the others) until it leaves the play
+ * field ({@link #rammedOff(int)}).
  */
 public final class Flock implements Hashed {
     /** The most members a flock has (at most 576 pair checks a step). */
@@ -52,6 +58,11 @@ public final class Flock implements Hashed {
     static final double TELL_PULL = 3;
     /** M7 part G: during a tell a member outside the ball moves in toward the leader point at up to this, px/s. */
     static final double BALL_PULL = 120;
+    /**
+     * M8 part C: each member's sway runs this far (radians) behind the one before it in entry order, so the school
+     * ripples along its length as a ribbon (step m8c1's choice, pending the user's review).
+     */
+    static final double RIBBON_LAG = StrictMath.PI / 4;
 
     private final Enemy[] members = new Enemy[MAX_MEMBERS];
     private final double[] px = new double[MAX_MEMBERS];
@@ -246,6 +257,10 @@ public final class Flock implements Hashed {
         } else {
             flyLeader();
         }
+        if (spec.ram().isPresent()) {
+            // M8 part C: the rams' clocks, draws and tells; a dive starts from where the member is shown.
+            ram(spec.ram().get(), shipX, frame.y(shipY));
+        }
         steer();
         double cruise = cruise();
         // M7 part G: a pursuit's dive carries its ball along: every member moves with the leader point's step too.
@@ -254,6 +269,12 @@ public final class Flock implements Hashed {
         double carryY = carried ? leaderVy * SimStep.SECONDS : 0;
         for (int i = 0; i < size; i++) {
             if (members[i] == null) {
+                continue;
+            }
+            if (diving(i)) {
+                // M8 part C: straight on along its dive, outside the flock's rules.
+                px[i] += members[i].ramming.vx() * SimStep.SECONDS;
+                py[i] += members[i].ramming.vy() * SimStep.SECONDS;
                 continue;
             }
             if (carried) {
@@ -280,15 +301,74 @@ public final class Flock implements Hashed {
                 }
             }
         }
-        for (int i = 0; i < size; i++) {
-            if (members[i] != null) {
-                // Facing: radians clockwise from straight down the screen.
-                members[i].chainTo(px[i], py[i], StrictMath.atan2(-Trig.cos(heading[i]), -Trig.sin(heading[i])));
-            }
-        }
+        place(canyon);
         if (doneTicks >= 0) {
             doneTicks++;
         }
+    }
+
+    /**
+     * The members move to their places: a swaying flock's swung across the leader point's heading (M8 part C, its
+     * divers excepted, clamped to a canyon's flyable side), facing their heading.
+     */
+    private void place(Canyon canyon) {
+        double nx = 0;
+        double ny = 0;
+        if (spec.sway().isPresent()) {
+            double norm = Math.sqrt(leaderVx * leaderVx + leaderVy * leaderVy);
+            // To the right of the heading for a positive swing (as a lane walker's weave).
+            nx = norm > 0 ? leaderVy / norm : -1;
+            ny = norm > 0 ? -leaderVx / norm : 0;
+        }
+        for (int i = 0; i < size; i++) {
+            if (members[i] == null) {
+                continue;
+            }
+            double x = px[i];
+            double y = py[i];
+            if (spec.sway().isPresent() && !diving(i)) {
+                EnemySpec.Sine sway = spec.sway().get();
+                double swing = sway.amplitude()
+                        * Trig.sin(2 * StrictMath.PI * ticks * SimStep.SECONDS / sway.periodSeconds() - RIBBON_LAG * i);
+                x += nx * swing;
+                y += ny * swing;
+                if (canyon != null) {
+                    x = canyon.flyableX(y, x, members[i].hitbox().width() / 2);
+                }
+            }
+            // Facing: radians clockwise from straight down the screen.
+            members[i].chainTo(x, y, StrictMath.atan2(-Trig.cos(heading[i]), -Trig.sin(heading[i])));
+        }
+    }
+
+    /**
+     * M8 part C: every member's ram step (but a stunned one's: its clock waits); one whose dive starts now dives from
+     * where it is shown, heading along its dive.
+     */
+    private void ram(EnemySpec.Ram ram, double shipX, double shipY) {
+        for (int i = 0; i < size; i++) {
+            Enemy member = members[i];
+            if (member == null || member.empStunned()) {
+                continue;
+            }
+            if (member.ramming.step(ram, member, member.x(), member.frameY(), shipX, shipY)) {
+                px[i] = member.x();
+                py[i] = member.frameY();
+                heading[i] = StrictMath.atan2(member.ramming.vy(), member.ramming.vx());
+                pace[i] = 1;
+            }
+        }
+    }
+
+    /** M8 part C: whether member {@code i} dives in its ram (outside the flock's rules). */
+    private boolean diving(int i) {
+        return members[i].ramming.diving();
+    }
+
+    /** M8 part C: whether member {@code i} dove off the play field (gone: it escaped). */
+    boolean rammedOff(int i) {
+        Enemy member = members[i];
+        return member != null && diving(i) && !PlayField.overlaps(member.x(), member.y(), member.hitbox());
     }
 
     /** M7 part G: during a tell the members outside the ball move in toward the leader point. */
@@ -296,7 +376,7 @@ public final class Flock implements Hashed {
         double ball = pursuit.spec().ballSize() / 2;
         double most = BALL_PULL * SimStep.SECONDS;
         for (int i = 0; i < size; i++) {
-            if (members[i] == null) {
+            if (members[i] == null || diving(i)) {
                 continue;
             }
             double dx = leaderX - px[i];
@@ -405,11 +485,11 @@ public final class Flock implements Hashed {
     private void relax() {
         double separation = telling() ? spec.separation() * TELL_SEPARATION : spec.separation();
         for (int i = 0; i < size; i++) {
-            if (members[i] == null) {
+            if (members[i] == null || diving(i)) {
                 continue;
             }
             for (int j = i + 1; j < size; j++) {
-                if (members[j] == null) {
+                if (members[j] == null || diving(j)) {
                     continue;
                 }
                 double dx = px[j] - px[i];
@@ -460,7 +540,7 @@ public final class Flock implements Hashed {
         double cohesionWeight = telling ? spec.cohesion() * TELL_PULL : spec.cohesion();
         double most = spec.turnRate() * SimStep.SECONDS;
         for (int i = 0; i < size; i++) {
-            if (members[i] == null) {
+            if (members[i] == null || diving(i)) {
                 continue;
             }
             double sepX = 0;
@@ -471,7 +551,7 @@ public final class Flock implements Hashed {
             double sumY = 0;
             int neighbours = 0;
             for (int j = 0; j < size; j++) {
-                if (j == i || members[j] == null) {
+                if (j == i || members[j] == null || diving(j)) {
                     continue;
                 }
                 double dx = px[j] - px[i];

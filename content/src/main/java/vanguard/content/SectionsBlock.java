@@ -34,6 +34,9 @@ public sealed interface SectionsBlock permits LevelData {
      *     waterline at its start (Level 23's descent, Level 28's breakout)
      * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the specials it forbids, by their
      *     slugs ({@code orbital-lance}), replacing its setting's list; the level's if not given
+     * @param underwaterLook M8 part C (the under-water render grade; part D's request: Level 24 darkens section by
+     *     section): an under-water section's changes to the level's {@code underwater_look} ({@link
+     *     LevelData#underwaterLookOf}); the level's look if not given
      */
     public record Section(
             String name,
@@ -46,7 +49,36 @@ public sealed interface SectionsBlock permits LevelData {
             Optional<Double> ramp,
             Optional<Double> holdAfterBoss,
             Optional<Medium> medium,
-            Optional<List<String>> specialLimits) {
+            Optional<List<String>> specialLimits,
+            Optional<UnderwaterLookChange> underwaterLook) {
+        /** Without M8 part C's under-water look. */
+        public Section(
+                String name,
+                double end,
+                Optional<Double> speed,
+                Atmosphere atmosphere,
+                Optional<Peak> peak,
+                List<String> tiles,
+                Optional<Boolean> arena,
+                Optional<Double> ramp,
+                Optional<Double> holdAfterBoss,
+                Optional<Medium> medium,
+                Optional<List<String>> specialLimits) {
+            this(
+                    name,
+                    end,
+                    speed,
+                    atmosphere,
+                    peak,
+                    tiles,
+                    arena,
+                    ramp,
+                    holdAfterBoss,
+                    medium,
+                    specialLimits,
+                    Optional.empty());
+        }
+
         /** Without M8 part A's medium and special limits. */
         public Section(
                 String name,
@@ -195,6 +227,60 @@ public sealed interface SectionsBlock permits LevelData {
     public enum Medium {
         AIR,
         UNDERWATER
+    }
+
+    /**
+     * M8 part C (design/world/europa, Palette and lighting; the round-48 grade a, lamp-lit to black): how the game grades
+     * the play field under water (presentation only; the simulation never reads it). Bullets, glows and the HUD stay
+     * ungraded.
+     *
+     * @param ambient the ambient light, 0 (black) to 1 (unlit scene), multiplied over the ground and the units
+     * @param tint the ambient light's colour, {@code rrggbb}
+     * @param caustics the animated caustics' strength on the floor and the walls, 0 (none) to 1
+     * @param snow the marine snow, particles on the screen at once (0: none)
+     * @param headlights the hydro-kit's twin headlight cones' strength, 0 (off) to 1
+     */
+    public record UnderwaterLook(double ambient, String tint, double caustics, int snow, double headlights) {
+        public UnderwaterLook {
+            Check.that(ambient > 0 && ambient <= 1, "ambient: above 0, at most 1, was " + ambient);
+            Check.that(tint.matches("[0-9a-f]{6}"), "tint: rrggbb in lower case, was '" + tint + "'");
+            Check.that(caustics >= 0 && caustics <= 1, "caustics: 0 to 1, was " + caustics);
+            Check.notNegative("snow", snow);
+            Check.that(headlights >= 0 && headlights <= 1, "headlights: 0 to 1, was " + headlights);
+        }
+
+        /** This look with a section's {@code change} applied (each value it gives instead of this one's). */
+        public UnderwaterLook with(UnderwaterLookChange change) {
+            return new UnderwaterLook(
+                    change.ambient().orElse(ambient),
+                    change.tint().orElse(tint),
+                    change.caustics().orElse(caustics),
+                    change.snow().orElse(snow),
+                    change.headlights().orElse(headlights));
+        }
+    }
+
+    /** M8 part C: a section's changes to the level's {@link UnderwaterLook}, each value instead of the level's. */
+    public record UnderwaterLookChange(
+            Optional<Double> ambient,
+            Optional<String> tint,
+            Optional<Double> caustics,
+            Optional<Integer> snow,
+            Optional<Double> headlights) {
+        public UnderwaterLookChange {
+            ambient.ifPresent(a -> Check.that(a > 0 && a <= 1, "ambient: above 0, at most 1, was " + a));
+            tint.ifPresent(t -> Check.that(t.matches("[0-9a-f]{6}"), "tint: rrggbb in lower case, was '" + t + "'"));
+            caustics.ifPresent(c -> Check.that(c >= 0 && c <= 1, "caustics: 0 to 1, was " + c));
+            snow.ifPresent(n -> Check.notNegative("snow", n));
+            headlights.ifPresent(h -> Check.that(h >= 0 && h <= 1, "headlights: 0 to 1, was " + h));
+            Check.that(
+                    ambient.isPresent()
+                            || tint.isPresent()
+                            || caustics.isPresent()
+                            || snow.isPresent()
+                            || headlights.isPresent(),
+                    "underwater_look: a section's change gives at least one value");
+        }
     }
 
     /** Low-air cloud and haze intensity (design/art-direction/README.md). */

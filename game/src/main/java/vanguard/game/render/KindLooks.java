@@ -44,6 +44,18 @@ final class KindLooks {
     /** M8 part B: the Drill Rigs' pumps, decals, muzzle, remains and steam (built with the first sortie). */
     private DrillRigLooks rigs;
 
+    /** M8 part C: the Eel Swarms' chains, tells, glows and husks (built with the first sortie). */
+    private EelLooks eels;
+
+    /** M8 part C: the Glassfins' glint frames and sparkle (built with the first sortie). */
+    private GlassfinLooks glassfins;
+
+    /** M8 part C: the siphon pumps' roots, glow, break and remains (built with the first sortie). */
+    private SiphonPumpLooks pumps;
+
+    /** M8 part C: the returning naval units' bodies under water (built with the first sortie). */
+    private DeepBodyLooks deepBodies;
+
     private final Sprites sprites;
     private final Files files;
 
@@ -123,6 +135,38 @@ final class KindLooks {
         return rigs;
     }
 
+    /** M8 part C: the Eel Swarms' looks for the sortie's enemy kinds, built once. */
+    EelLooks eels(Sortie sortie) {
+        if (eels == null) {
+            eels = new EelLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return eels;
+    }
+
+    /** M8 part C: the Glassfins' looks for the sortie's enemy kinds, built once. */
+    GlassfinLooks glassfins(Sortie sortie) {
+        if (glassfins == null) {
+            glassfins = new GlassfinLooks(sprites, sortie.enemyKinds());
+        }
+        return glassfins;
+    }
+
+    /** M8 part C: the returning naval units' under-water bodies for the sortie's enemy kinds, built once. */
+    DeepBodyLooks deepBodies(Sortie sortie) {
+        if (deepBodies == null) {
+            deepBodies = new DeepBodyLooks(sprites, sortie.enemyKinds());
+        }
+        return deepBodies;
+    }
+
+    /** M8 part C: the siphon pumps' looks for the sortie's enemy kinds, built once. */
+    SiphonPumpLooks pumps(Sortie sortie) {
+        if (pumps == null) {
+            pumps = new SiphonPumpLooks(sprites, sortie.enemyKinds());
+        }
+        return pumps;
+    }
+
     /** M5 part F: the latch poses of the sortie's enemy kinds (the Lamprey's), null where a kind has none. */
     private LampreyLooks[] lampreyLooks(Sortie sortie) {
         List<EnemySpec> kinds = sortie.enemyKinds();
@@ -173,6 +217,12 @@ final class KindLooks {
         }
         if (rigs != null) {
             rigs.restart();
+        }
+        if (eels != null) {
+            eels.restart();
+        }
+        if (glassfins != null) {
+            glassfins.restart();
         }
     }
 }

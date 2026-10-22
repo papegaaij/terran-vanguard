@@ -89,9 +89,35 @@ final class UnitRules {
         return smallUnit ? Math.min(small.cap(), now / first) : now / first;
     }
 
-    /** Where a unit flies, for the act HP factor: a level's act and number; {@link #NOWHERE} outside a level. */
-    record InLevel(int act, int level) {
+    /**
+     * Where a unit flies, for the act HP factor: a level's act and number; {@link #NOWHERE} outside a level. M8 part C
+     * (design/enemies/naval, Returning units under water; gap check D2): {@code water} when the unit enters under water
+     * (its wave's or its nest's time lies in a section with {@code medium: underwater}): its stat block's {@code
+     * underwater} block applies ({@link EnemyData#inWater}).
+     */
+    record InLevel(int act, int level, boolean water) {
         static final InLevel NOWHERE = new InLevel(1, 0);
+
+        /** In the air. */
+        InLevel(int act, int level) {
+            this(act, level, false);
+        }
+
+        /** The same level, the unit entering under water ({@code true}) or not. */
+        InLevel inWater(boolean under) {
+            return under == water ? this : new InLevel(act, level, under);
+        }
+
+        /** The same level, the unit entering at {@code t} s of {@code level}: under water if its section is. */
+        InLevel at(LevelData data, double t) {
+            if (!data.underwater()) {
+                return inWater(false);
+            }
+            // sectionAt is 1-based, 0 after the level's end (the last section's medium then)
+            int section = data.sectionAt(t);
+            int index = section == 0 ? data.sections().size() - 1 : section - 1;
+            return inWater(data.mediumOf(index) == SectionsBlock.Medium.UNDERWATER);
+        }
     }
 
     static EnemySpec enemy(
@@ -114,8 +140,10 @@ final class UnitRules {
             Optional<LevelData.EnemyChange> change,
             InLevel inLevel,
             double arcFacing) {
-        EnemyData enemy = content.enemy(slug);
-        double actHp = actHpFactor(content, enemy, inLevel);
+        EnemyData stat = content.enemy(slug);
+        double actHp = actHpFactor(content, stat, inLevel);
+        // M8 part C (gap check D2): a unit entering under water flies its stat block's underwater changes.
+        EnemyData enemy = inLevel.water() ? stat.inWater() : stat;
         EnemyData.Movement movement = enemy.movement();
         Optional<EnemyData.Hook> hook = hook(enemy, difficulty);
         Optional<EnemySpec.Brood> brood = enemy.attacks().stream()
@@ -232,7 +260,12 @@ final class UnitRules {
                                                 .enemyBulletSpeed()
                                                 .of(difficulty),
                                 bulletDamage(content, puff.bullet()))),
-                movement.sine().map(sine -> new EnemySpec.Sine(sine.amplitude(), sine.period())),
+                movement.sine()
+                        .map(sine -> new EnemySpec.Sine(sine.amplitude(), sine.period()))
+                        // M8 part C (design/enemies/naval/eel-swarm, snake): a chain head's sway about its path.
+                        .or(() -> movement.path()
+                                .flatMap(EnemyData.PathMove::sway)
+                                .map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency()))),
                 brood,
                 walker,
                 movement.hover()
@@ -254,8 +287,7 @@ final class UnitRules {
                                         .map(EnemyData.Straight::speed)
                                         .orElseThrow(() -> new IllegalArgumentException(
                                                 enemy.name() + ": an ambush leaves at its straight speed")))),
-                movement.flock()
-                        .map(flock -> new EnemySpec.FlockSpec(
+                movement.flock().map(flock -> new EnemySpec.FlockSpec(
                                 flock.separation(),
                                 flock.radius(),
                                 flock.alignment(),
@@ -264,7 +296,20 @@ final class UnitRules {
                                 flock.speed(),
                                 flock.diveSpeed(),
                                 Math.toRadians(flock.turnRate()),
-                                flock.max())),
+                                flock.max())
+                        // M8 part C (design/enemies/naval/glassfin): the ribbon's sway and the ram, the
+                        // difficulty's share.
+                        .withRibbon(
+                                flock.sway().map(sway -> new EnemySpec.Sine(sway.amplitude(), 1 / sway.frequency())),
+                                flock.ram()
+                                        .map(ram -> new EnemySpec.Ram(
+                                                ram.after(),
+                                                hook.flatMap(EnemyData.Hook::ram)
+                                                        .flatMap(EnemyData.RamChange::share)
+                                                        .orElse(ram.share()),
+                                                ram.tell(),
+                                                ram.delay(),
+                                                ram.speed())))),
                 // M5 part E: surfacing and submerging, a proximity ring and a raft's drift.
                 enemy.submerge()
                         .map(submerge -> new EnemySpec.Submerge(
@@ -277,7 +322,7 @@ final class UnitRules {
                         enemy,
                         hook,
                         enemy.segmentChain().isPresent()
-                                ? ChainRules.withChain(content, enemy, spec, difficulty, actHp)
+                                ? ChainRules.withChain(content, enemy, spec, difficulty, actHp, change)
                                 : spec)
                 .withMachine(enemy.isMachine())
                 // M7 part G (user decision 2026-10-20): a unit the seekers ignore (the Mote Swarm's motes).
@@ -443,6 +488,11 @@ final class UnitRules {
                         attack.away().isEmpty() || enemy.movement().walk().isEmpty())
                 .toList();
         if (attacks.isEmpty()) {
+            return Optional.empty();
+        }
+        // M8 part C (design/enemies/naval/eel-swarm): a chain head's list of attacks are its head attacks
+        // (ChainRules.headAttacks), each on its own clock; the head's own gun is empty.
+        if (ChainRules.headAttackPart(enemy).isPresent()) {
             return Optional.empty();
         }
         if (attacks.size() > 1) {

@@ -161,7 +161,7 @@ final class TerrainRules {
         }
         double cut = enemy.segmentChain()
                 .flatMap(EnemyData.SegmentChain::cut)
-                .map(EnemyData.Cut::delay)
+                .flatMap(EnemyData.Cut::delay)
                 .orElse(1.0);
         return head.withCrawl(Optional.of(new EnemySpec.Crawl(
                 crawl.speed(),

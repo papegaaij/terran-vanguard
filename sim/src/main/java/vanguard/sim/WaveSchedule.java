@@ -53,6 +53,8 @@ final class WaveSchedule {
 
     /** M7 part G: per planned unit, whether it is flipped (its wave's time falls in a reversed scroll). */
     private final boolean[] flips;
+    /** M8 part C: per planned unit, whether its carried pickup drops only with a head-first kill (a chain's head). */
+    private final boolean[] headFirsts;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -95,6 +97,7 @@ final class WaveSchedule {
         Map<Spawn, String> tagOf = new IdentityHashMap<>();
         Map<Spawn, int[]> placeOf = new IdentityHashMap<>();
         Map<Spawn, Boolean> flipOf = new IdentityHashMap<>();
+        Map<Spawn, Boolean> headFirstOf = new IdentityHashMap<>();
         int clocks = 0;
         int burrows = 0;
         for (WaveSpec wave : waves) {
@@ -112,6 +115,11 @@ final class WaveSchedule {
                     flipOf.put(planned.get(i), Boolean.TRUE);
                 }
                 entryOf.put(planned.get(i), cross ? entryAt(edge) : wave.entry());
+                for (WaveSpec.Carried carried : wave.carried()) {
+                    if (carried.headFirst() && carried.carrier(wave.count()) == i - before) {
+                        headFirstOf.put(planned.get(i), Boolean.TRUE);
+                    }
+                }
                 tagOf.put(planned.get(i), wave.tag());
                 placeOf.put(planned.get(i), new int[] {
                     i - before, wave.enemy().burrow().isPresent() ? burrows : -1, planned.size() - before
@@ -157,8 +165,10 @@ final class WaveSchedule {
         waveSizes = new int[spawns.length];
         burrowGroups = new int[spawns.length];
         flips = new boolean[spawns.length];
+        headFirsts = new boolean[spawns.length];
         for (int i = 0; i < spawns.length; i++) {
             flips[i] = flipOf.containsKey(spawns[i]);
+            headFirsts[i] = headFirstOf.containsKey(spawns[i]);
             int[] place = placeOf.getOrDefault(spawns[i], new int[] {0, -1, 1});
             places[i] = place[0];
             waveSizes[i] = place[2];
@@ -291,6 +301,14 @@ final class WaveSchedule {
     /** M7 part G: whether the unit {@link #due} returned last is flipped (its wave's time is in a reversed scroll). */
     boolean lastFlipped() {
         return flips[next - 1];
+    }
+
+    /**
+     * M8 part C: whether the pickup the unit {@link #due} returned last carries drops only when it (a chain's head) is
+     * destroyed before any other part of its chain.
+     */
+    boolean lastHeadFirst() {
+        return headFirsts[next - 1];
     }
 
     /** The volley clock of the unit {@link #due} returned last; -1 without one. */

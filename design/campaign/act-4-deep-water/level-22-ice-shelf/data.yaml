@@ -36,14 +36,14 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     Boss / mid-boss: none
     Sensor-suite detail: 'none: Europa, ice shelf, `ground` + `air`, front · L1: + directions (sides), density {density}, hazard "ice geysers", the objective `{objective}` and the secondary `RIGS 3/4` · L2: + Drill Rig (new, hardened), Skimmer, Stinger, Needler, Mantis, Skitter and Mote portraits · L3: + `anti-ground` and `forward` highlighted, the wave strip marking the four rig sites'
 
-sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); tiles: step ART-B's backdrop (no deep layer: the opaque shelf, pending round 51)
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); tiles: step ART-B's backdrop (no deep layer: the opaque shelf, kept in round 51)
   - name: The Shelf
     end: 36
     atmosphere: clear
     tiles: [ice-shelf, ice-crystals]
     notes:
       layers:
-        ground: fissured ice, ridges, open leads (black water mirroring Jupiter, scenery) along the Skimmers' lanes; a Spine Turret nest on a ridge (t≈20); the first geyser row (t≈12) flares alone.
+        ground: fissured ice, ridges, open leads (plain dark water, scenery) along the Skimmers' lanes; a Spine Turret nest on a ridge (t≈20); the first geyser row (t≈12) flares alone.
         high-air: ice crystals.
       purpose: Popcorn from t=5; the first geysers; no rig yet.
   - name: The Rig Field
@@ -406,7 +406,7 @@ briefing:
 
 backdrop:
   # Presentation only: Europa's ice shelf (tools/art/backdrop_l22.py, from europa-ice-shelf-r48-a). No deep
-  # layer: the shelf is opaque everywhere (the leads are dark water mirroring Jupiter, not holes); the leads
+  # layer: the shelf is opaque everywhere (the leads are plain dark water, not holes; round 51 F.3 kept it so); the leads
   # are cut along the Skimmer runs, the seams, the crevasse and the station sit at exact rows (re-run the
   # generator after the data moves a lane, a section or the lip).
   scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused (no deep layer: the shelf is opaque), given as the loader asks

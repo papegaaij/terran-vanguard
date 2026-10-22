@@ -63,7 +63,9 @@ final class WaveRules {
                                 case FIRST -> 0;
                                 case SECOND -> 1;
                                 case LAST -> WaveSpec.Carried.LAST;
-                            }))
+                            },
+                            // M8 part C (Level 23's shield cell): only a head-first kill of the chain drops it.
+                            p.carrier().dropsHeadFirst()))
                     .toList();
             EnemySpec mapped = UnitRules.enemy(
                     content, group.enemy(), difficulty, Optional.ofNullable(enemyChanges.get(group.enemy())), inLevel);

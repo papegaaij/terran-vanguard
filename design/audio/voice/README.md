@@ -351,18 +351,30 @@ Rook's scripted Level 26 and his silence in Levels 27–28 are in the
     answer to Varga. Auditioned in round 51 (step AUD-B, `tools/concept/audio/tts_r51b.py`): a, Margaret Espaillat (Eminent
     Victorians, clip 168 Hz, a very narrow range), b, Sue Anderson (Gallipoli Diary, 172 Hz, narrow), both between
     Okafor (152 Hz) and Varga (193 Hz) and much flatter than Varga (IQR 22 / 29 Hz against her 68), at the neutral
-    settings through radio filter b, `uncast: true` until the round picks. Her lines: the t=1 call and, since Level 22
-    gives her no direct answer to Varga's t=66 line, her next call (t=100). Her five Level 22 lines are rendered with **both** candidates (step VOX-B), so
-    the pick needs no render: the speaker table's `ref` is a provisional `ref-conamara-r51-a` (her takes in
-    `assets/voice/conamara/`), and b's takes, keyed by `ref-conamara-r51-b`, wait in `concept/voice-conamara-r51-b/`.
-    The clip's name is part of a line's key, so the chosen clip keeps its `-r51-` name in `refs/` (renaming it to
-    `ref-conamara.wav` would re-key and re-render her five lines, about a minute of work). Either way the
-    credits roll must name the reader: `CreditsList` credits a clip only as `refs/ref-<speaker>.wav`, so a kept
-    `-r51-` name needs its pattern widened (a pipeline edit) or the rename and the re-render.
+    settings through radio filter b. **Cast in round 51 (2026-10-22): Dr. Brandt is Margaret Espaillat (a)**, `uncast`
+    gone, her `ref` stays `ref-conamara-r51-a` (her takes in `assets/voice/conamara/`); b's audition, its five line
+    files and its clip `ref-conamara-r51-b` moved to `concept/rejected/` (the clip's CREDITS.md row with them). Her
+    lines: the t=1 call and, since Level 22 gives her no direct answer to Varga's t=66 line, her next call (t=104). The
+    clip's name is part of a line's key, so the chosen clip keeps its `-r51-` name in `refs/` (renaming it to
+    `ref-conamara.wav` would re-key and re-render her five lines, about a minute of work). The credits roll must name
+    the reader: `CreditsList` credits a clip only as `refs/ref-<speaker>.wav`, so a kept `-r51-` name needs its
+    pattern widened (a pipeline edit) or the rename and the re-render (a later code step).
   - **Thera Deep Control** (Levels 23, 27): the city's harbour controller, a calm man, older than Rook; below or
     between the cast men (Ares Control 112 Hz, Nansen 124 Hz, the Kilo Lead 129 Hz) by timbre rather than pitch alone,
     warmer and slower than Ares Control's dryness. Audition lines: Level 23's t=34 call and the t=70 "*Forty thousand
     people eat from those racks.*"
+    Auditioned in round 52 (step AUD-C, `tools/concept/audio/tts_r52c.py`): a, Bruce Pirie (The Mayor of Casterbridge,
+    clip 100 Hz, a narrow range, 2.6 words a second: a low, even, unhurried narration), b, John Van Stan (Early Greek
+    Philosophy & Other Essays, clip 119 Hz, narrow, 1.7 words a second: Ares Control's pitch but much slower and softer),
+    at the neutral settings through radio filter b, `uncast: true` until the round picks. Chatterbox lifts both: a's takes
+    sit at 116–127 Hz, between Ares Control (118) and the Kilo Lead (129), b's at 126–133 Hz, around Nansen and the Kilo
+    Lead, so both stand apart from the cast men by timbre and pace more than by pitch (a is the lower of the two). His
+    lines: the t=34 call and the t=70 "*Forty thousand people eat from those racks.*"
+    The speaker `thera-control` (names `Thera Deep Control`, Level 23's radio portrait `thera-deep`) is in the speaker
+    table (M8 part C, step C2); step VOX-C gave it the provisional `ref: ref-thera-control-r52-a` (no `uncast`) and
+    rendered his four Level 23 lines with both clips: a in `assets/voice/thera-control/`, b in
+    `concept/voice-thera-control-r52-b/` under the keys `ref-thera-control-r52-b` gives (two pins by b's keys), so the
+    pick sets `ref` to the chosen clip as it is named and, for b, moves those files into `assets/`.
 - **The Choir speaks** twice (Level 26 at t=99, Level 28 as the Maw dies): Level 21's treatment as decided for its
   first words (fragments split at the ellipses and joined by 0.7 s of the Choir's drone, the round-18 layering with
   the part-H pick of a or b, the `distorted` filter with the dropouts between the fragments). Level 26's line is
@@ -569,8 +581,12 @@ level).
 - [x] Level 22's lines (11 radio with Rook's two `requires: escort`, the `first-geyser` and `target-destroyed` lines,
       the core-sample cache's secret, the secondary's line; the two briefing pages) and the Act 4 intro's four pages
       rendered with the cast speakers (Okafor, Varga, Rook) and Dr. Brandt's candidate a: 18 files, four takes pinned;
-      her five lines also with candidate b in `concept/voice-conamara-r51-b/`; the Act 4 names read back as written
-      (M8 part B, step VOX-B, 2026-10-22; pending the user's review in round 51)
+      her five lines also with candidate b in `concept/rejected/voice-conamara-r51-b/`; the Act 4 names read back as written
+      (M8 part B, step VOX-B, 2026-10-22; accepted in round 51 (2026-10-22), Dr. Brandt a)
+- [x] Level 23's lines (11 radio with Rook's `requires: escort` and the `waterline` line, the survey probe's secret,
+      the secondary's line; the two briefing pages) rendered with the cast speakers and Thera Deep Control's candidate
+      a: 14 files, five takes pinned; his four lines also with candidate b in `concept/voice-thera-control-r52-b/` (two
+      pins); the Act 4 names read back as written (M8 part C, step VOX-C, 2026-10-22; pending the user's review in round 52)
 - [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
       speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
       line); Rook's cut-off at t=160.3; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
@@ -672,13 +688,20 @@ row; b's clip is renamed `refs/ref-ares-control.wav` at the render step (part B)
 | [concept/voice-ares-control-r36-b.ogg](concept/voice-ares-control-r36-b.ogg) | Ares Control (round 36 audition), reader Thomas A (clip 112 Hz, 25.2 s, a 2 s pause inside the second and third lines; `tools/concept/audio/tts_r36.py`) | chosen (round 36, S.6: Thomas A; mind his mid-line pauses when rendering) |
 | [concept/rejected/voice-lance-control-r37-a.ogg](concept/rejected/voice-lance-control-r37-a.ogg) | Lance Control (round 37 audition), reader Ted Lienhart (clip 132 Hz, take 126 Hz; "Lance uplink locked. Firing!", seed 104, 2.06 s; `tools/concept/audio/tts_r37.py`) | rejected — round 37: b (Celine Major) picked |
 | [concept/voice-lance-control-r37-b.ogg](concept/voice-lance-control-r37-b.ogg) | Lance Control (round 37 audition), reader Celine Major (clip 159 Hz, take 162 Hz; seed 101, 2.62 s; `tools/concept/audio/tts_r37.py`) | chosen (round 37, S.16: Celine Major; her clip is `refs/ref-lance-control.wav`, the call rendered from it in step Q2) |
-| [concept/voice-conamara-r51-a.ogg](concept/voice-conamara-r51-a.ogg) | Dr. Brandt, `conamara` (round 51 audition), reader Margaret Espaillat (clip 168 Hz, a very narrow range, takes 165 / 162 Hz; Level 22's t=1 and t=100 lines, seeds 100 / 100, 17.1 s; `tools/concept/audio/tts_r51b.py`) | proposed (round 51) |
-| [concept/voice-conamara-r51-b.ogg](concept/voice-conamara-r51-b.ogg) | Dr. Brandt, `conamara` (round 51 audition), reader Sue Anderson (clip 172 Hz, a narrow range, takes 173 / 173 Hz; the same two lines, seeds 100 / 102, 17.3 s; `tools/concept/audio/tts_r51b.py`) | proposed (round 51) |
-| [concept/voice-conamara-r51-b/09bb6186212d.ogg](concept/voice-conamara-r51-b/09bb6186212d.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): t=1 "Aegis flight, Conamara Station…", 8.1 s | proposed (round 51; on b, moves into `assets/voice/conamara/`) |
-| [concept/voice-conamara-r51-b/04065fffd6d7.ogg](concept/voice-conamara-r51-b/04065fffd6d7.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): `target-destroyed` "That's one collar stopped…", 5.1 s | proposed (round 51; on b, moves into `assets/voice/conamara/`) |
-| [concept/voice-conamara-r51-b/7accb3bd8a0e.ogg](concept/voice-conamara-r51-b/7accb3bd8a0e.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): t=100 "Something went through under the north dome…", 6.5 s | proposed (round 51; on b, moves into `assets/voice/conamara/`) |
-| [concept/voice-conamara-r51-b/a95fd2bbf6c1.ogg](concept/voice-conamara-r51-b/a95fd2bbf6c1.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`; re-rendered in step B5 for the new text): `secondary-objective` "Enough rigs are down…", 4.6 s | proposed (round 51; on b, moves into `assets/voice/conamara/`) |
-| [concept/voice-conamara-r51-b/83df603cad3c.ogg](concept/voice-conamara-r51-b/83df603cad3c.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): the core-sample cache's secret "That's our deep core…", 5.7 s | proposed (round 51; on b, moves into `assets/voice/conamara/`) |
+| [concept/voice-conamara-r51-a.ogg](concept/voice-conamara-r51-a.ogg) | Dr. Brandt, `conamara` (round 51 audition), reader Margaret Espaillat (clip 168 Hz, a very narrow range, takes 165 / 162 Hz; Level 22's t=1 and t=100 lines, seeds 100 / 100, 17.1 s; `tools/concept/audio/tts_r51b.py`) | chosen (round 51: Dr. Brandt is Margaret Espaillat) |
+| [concept/rejected/voice-conamara-r51-b.ogg](concept/rejected/voice-conamara-r51-b.ogg) | Dr. Brandt, `conamara` (round 51 audition), reader Sue Anderson (clip 172 Hz, a narrow range, takes 173 / 173 Hz; the same two lines, seeds 100 / 102, 17.3 s; `tools/concept/audio/tts_r51b.py`) | rejected (round 51) |
+| [concept/rejected/voice-conamara-r51-b/09bb6186212d.ogg](concept/rejected/voice-conamara-r51-b/09bb6186212d.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): t=1 "Aegis flight, Conamara Station…", 8.1 s | rejected (round 51; b not picked) |
+| [concept/rejected/voice-conamara-r51-b/04065fffd6d7.ogg](concept/rejected/voice-conamara-r51-b/04065fffd6d7.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): `target-destroyed` "That's one collar stopped…", 5.1 s | rejected (round 51; b not picked) |
+| [concept/rejected/voice-conamara-r51-b/7accb3bd8a0e.ogg](concept/rejected/voice-conamara-r51-b/7accb3bd8a0e.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): t=100 "Something went through under the north dome…", 6.5 s | rejected (round 51; b not picked) |
+| [concept/rejected/voice-conamara-r51-b/a95fd2bbf6c1.ogg](concept/rejected/voice-conamara-r51-b/a95fd2bbf6c1.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`; re-rendered in step B5 for the new text): `secondary-objective` "Enough rigs are down…", 4.6 s | rejected (round 51; b not picked) |
+| [concept/rejected/voice-conamara-r51-b/83df603cad3c.ogg](concept/rejected/voice-conamara-r51-b/83df603cad3c.ogg) | Dr. Brandt's Level 22 line with candidate b (Sue Anderson), keyed by `ref-conamara-r51-b` (step VOX-B, `tools/art/voice.py`): the core-sample cache's secret "That's our deep core…", 5.7 s | rejected (round 51; b not picked) |
+| [concept/rejected/ref-conamara-r51-b.wav](concept/rejected/ref-conamara-r51-b.wav), [.txt](concept/rejected/ref-conamara-r51-b.txt) | Dr. Brandt's candidate b reference clip (Sue Anderson, LibriVox, 172 Hz; the key of the five line files above; CREDITS.md row with it) | rejected (round 51) |
+| [concept/voice-thera-control-r52-a.ogg](concept/voice-thera-control-r52-a.ogg) | Thera Deep Control, `thera-control` (round 52 audition), reader Bruce Pirie (clip 100 Hz, a narrow range, takes 116 / 127 Hz; Level 23's t=34 and t=70 lines, seeds 100 / 100, 14.6 s; `tools/concept/audio/tts_r52c.py`) | proposed (round 52) |
+| [concept/voice-thera-control-r52-b.ogg](concept/voice-thera-control-r52-b.ogg) | Thera Deep Control, `thera-control` (round 52 audition), reader John Van Stan (clip 119 Hz, a narrow range, 1.7 words a second, takes 133 / 126 Hz; the same two lines, seeds 101 / 105, 14.3 s; `tools/concept/audio/tts_r52c.py`) | proposed (round 52) |
+| [concept/voice-thera-control-r52-b/d6eaf31e59c8.ogg](concept/voice-thera-control-r52-b/d6eaf31e59c8.ogg) | Thera Deep Control's Level 23 line with candidate b (John Van Stan), keyed by `ref-thera-control-r52-b` (step VOX-C, `tools/art/voice.py`): t=65 (rendered at t=34) "Aegis, Thera Deep Control. We see you on the shaft…", 8.0 s (pinned: the key's seed read "on the shot") | proposed (round 52) |
+| [concept/voice-thera-control-r52-b/c1f7c58397ac.ogg](concept/voice-thera-control-r52-b/c1f7c58397ac.ogg) | Thera Deep Control's Level 23 line with candidate b (John Van Stan), keyed by `ref-thera-control-r52-b` (step VOX-C, `tools/art/voice.py`): t=88.5 (rendered at t=70) "Those are our farms, Aegis…", 5.1 s ("racks" read back right) | proposed (round 52) |
+| [concept/voice-thera-control-r52-b/c612a56ba759.ogg](concept/voice-thera-control-r52-b/c612a56ba759.ogg) | Thera Deep Control's Level 23 line with candidate b (John Van Stan), keyed by `ref-thera-control-r52-b` (step VOX-C, `tools/art/voice.py`; re-rendered in step C5a for the new text): `secondary-objective` "Enough pumps are off the racks…", 4.3 s | proposed (round 52) |
+| [concept/voice-thera-control-r52-b/fc3128b738ec.ogg](concept/voice-thera-control-r52-b/fc3128b738ec.ogg) | Thera Deep Control's Level 23 line with candidate b (John Van Stan), keyed by `ref-thera-control-r52-b` (step VOX-C, `tools/art/voice.py`): the survey probe's secret "That's Conamara's probe…", 3.9 s (pinned: the key's seed jumped an octave) | proposed (round 52) |
 | [concept/rejected/ref-ares-control-r36-a.wav](concept/rejected/ref-ares-control-r36-a.wav), [.txt](concept/rejected/ref-ares-control-r36-a.txt) | Ares Control's candidate a reference clip (David Wales, LibriVox, 102 Hz) and its Whisper transcript, moved here from `refs/` at the pick | rejected — round 36: b (Thomas A) picked |
 | [concept/rejected/ref-lance-control-r37-a.wav](concept/rejected/ref-lance-control-r37-a.wav), [.txt](concept/rejected/ref-lance-control-r37-a.txt) | Lance Control's candidate a reference clip (Ted Lienhart, LibriVox, 132 Hz) and its Whisper transcript, moved here from `refs/` when round 37 closed | rejected — round 37: b (Celine Major) picked |
 
@@ -1240,29 +1263,65 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
 - 2026-10-21 (user, [round 45](../../concept-rounds/round-45/README.md), V.1): the listen-through of all 202 voiced Act 3 lines: all fine, the Act 3 voices accepted.
 - 2026-10-22 (step AUD48, M8 design phase, decided in round 48 (2026-10-22)): *Act 4 voices* drafted: the two
   colony voices' casting briefs, the Choir's Level 26 whisper treatment, Rook's cut-off, the Act 4 names to try.
-- 2026-10-22 (step AUD-B, M8 part B; pending the user's review in round 51): Dr. Brandt's audition with two new
+- 2026-10-22 (step AUD-B, M8 part B; accepted in round 51 (2026-10-22)): Dr. Brandt's audition with two new
   readers from the public-domain LibriVox recordings (a Margaret Espaillat, b Sue Anderson; passed over: Mil Nicholson,
   147 Hz, too near Okafor; Elizabeth Klett, 219 Hz and a wide range; Kristin LeMoine, a storybook read), the t=1 and
   t=100 lines (the README's "her answer to Varga" has no line of its own in Level 22: t=100 is the call after Varga's).
   Every take read back right; pins by the pitch nearest the clip's. Measured only, not listened to.
-- 2026-10-22 (step VOX-B, M8 part B; pending the user's review in round 51): Level 22's 11 radio lines, the secret's
+- 2026-10-22 (step VOX-B, M8 part B; accepted in round 51 (2026-10-22)): Level 22's 11 radio lines, the secret's
   line, its two briefing pages and the Act 4 intro's four pages rendered (18 files; four retries for mid-line pauses).
   Dr. Brandt has five lines in Level 22, not six; all five rendered with both candidates (a in `assets/`, b in
-  `concept/voice-conamara-r51-b/`), the speaker table's `ref` pointing at a until the pick, the clip names kept since
+  `concept/rejected/voice-conamara-r51-b/`), the speaker table's `ref` pointing at a until the pick, the clip names kept since
   they are part of the key. Four takes pinned (Okafor's t=135 "reficked", Varga's t=66 octave jump, Rook's t=82 whisper,
   Brandt a's `target-destroyed` octave jump). No respelling: Conamara, Ilse, Thera Deep, Europa, Kilo-Seven and Vrell
   read back as written with the Act 4 name prompt. Measured only, not listened to.
-- 2026-10-22 (step B3b, M8 part B; pending the user's review in round 51): Level 22's hardened-shell text corrected
+- 2026-10-22 (step B3b, M8 part B; accepted in round 51 (2026-10-22)): Level 22's hardened-shell text corrected
   (Micro-missiles are not `anti-ground`): Varga's t=29 line ("…bombs, mortars and the Airstrike get through…", 6.1 s
   raw) and her briefing page 2 ("…bombs, mortars and an Airstrike get through…", 13.5 s) re-rendered by
   `tools/art/voice.py` on their keys' seeds, no retry; the two old files deleted. Whisper (base.en, the Act 4 name
   prompt) reads both back word for word but "harden shell" for "Hardened shell" at t=29, as it read the old take;
   pitch 201 and 193 Hz median, in her range. Three lines retimed only (no re-render): Varga's t=66 → 58, Rook's t=82
   → 87, Dr. Brandt's t=100 → 104 (`RadioTimelineLevel22Test` at the autopilot's event times).
-- 2026-10-22 (step B5, M8 part B; pending the user's review in round 51): Dr. Brandt's `secondary-objective` line said
+- 2026-10-22 (step B5, M8 part B; accepted in round 51 (2026-10-22)): Dr. Brandt's `secondary-objective` line said
   "Three rigs are down" on every difficulty, but the secondary asks for 2 rigs on easy and all 4 on hard: now "Enough rigs
   are down. The shelf is quiet. Thank you, Aegis." ("That's enough rigs down…" wrapped onto a second radio page and pushed
   her t=104 line 2 s late in `RadioTimelineLevel22Test`; this one keeps one page), re-rendered by `tools/art/voice.py` for
   both candidates on the keys' seeds, no retry (a 4.4 s in `assets/voice/conamara/`, b 4.6 s in
-  `concept/voice-conamara-r51-b/`; the old files deleted). Whisper (base.en, the Act 4 name prompt) reads both back word
+  `concept/rejected/voice-conamara-r51-b/`; the old files deleted). Whisper (base.en, the Act 4 name prompt) reads both back word
   for word. Measured only, not listened to.
+- 2026-10-22 (user, round 51, closed; V.1 = a): Dr. Brandt (`conamara`) is cast with candidate a, Margaret Espaillat;
+  `uncast` is gone (the speaker table in `data.yaml` already carries `ref: ref-conamara-r51-a`, her five takes are in
+  `assets/voice/conamara/`). b (Sue Anderson): the audition `voice-conamara-r51-b.ogg`, the five line files and the
+  clip `ref-conamara-r51-b.wav/.txt` moved to `concept/rejected/`, the clip's CREDITS.md row with them. The chosen clip
+  keeps its `-r51-` name (the name is part of the lines' key); naming the reader on the credits roll needs
+  `CreditsList`'s pattern widened or the rename and re-render (a later code step).
+- 2026-10-22 (step AUD-C, M8 part C; pending the user's review in round 52): Thera Deep Control's audition with two new
+  readers from the public-domain LibriVox recordings (a Bruce Pirie, b John Van Stan; passed over: John Greenman, 103 Hz
+  but quick, 3.2 words a second; Andy Minter, 113 Hz, 2.9; Tom Weiss, 114 Hz with octave jumps in the clip; Bob Neufeld
+  and Don W. Jenkins, about 150 Hz; Barry Eads, 142 Hz, a wide range; Phil Chenevert, 130 Hz and quick; Clive
+  Catterall, too low and creaky to track), the README's t=34 and t=70 lines. a's clip is cut at 120 s (60 s held a
+  1.4 s pause). Pins by the pitch nearest the clip's; b's t=70 needed three more seeds (103–105) because Whisper heard
+  "racks" as "wrecks" in five takes (105 read back right). "Thera Deep" read back as written: no respelling. Measured
+  only, not listened to.
+- 2026-10-22 (M8 part C, step C2): the speaker `thera-control` (Thera Deep Control, Levels 23 and 27) added to the
+  speaker table with `uncast: true` until round 52 picks a or b; Level 23's data names him `Thera Deep Control` with the
+  portrait `thera-deep` (step ART-C's `radio-thera-deep`). AUD-C's audition rows merged here.
+- 2026-10-22 (step VOX-C, M8 part C; pending the user's review in round 52): Level 23's 11 radio lines, the survey
+  probe's secret and its two briefing pages rendered (14 files). Thera Deep Control has four lines (t=34, t=70, the
+  secondary's, the secret's): all rendered with both candidates (a in `assets/voice/thera-control/`, b in
+  `concept/voice-thera-control-r52-b/`), the speaker table's `ref` pointing at a until the pick (`uncast` gone). Seven
+  takes pinned after three candidate seeds each: Okafor's briefing page 1 (every seed held a 0.9–2.8 s pause, "drill
+  the shaft") and t=1 (pauses and an octave jump, "Age is flight"), Okafor's t=134 ("Hold your light, sieges"), Varga's
+  waterline line ("air-striking lands") and t=77 ("into the rail"), b's t=34 ("on the shot") and b's secret (an octave
+  jump). No respelling: Thera Deep, Conamara, Europa and Vrell read back as written with the Act 4 name prompt (a's
+  t=34 as "Thera, Deep Control", a small break inside the name, as Okafor's Act 3 outro page 4); b's "racks" read back
+  right in both of his rack lines (AUD-C's "wrecks" did not recur). Pitch: Thera a 111–125 Hz, b 121–133 Hz. The level's
+  timed lines as written start up to 19 s late on the text alone (a two-page line holds the radio 11–12 s); a retime
+  is proposed for step C3 in `briefs/m8voxc-tests.patch`. Measured only, not listened to.
+- 2026-10-22 (step C5a, M8 part C; pending the user's review in round 52): VOX-C's retime applied to Level 23 (Varga
+  t=17→13.5, Thera Deep Control t=34→65 and t=70→88.5, Rook t=9→99.5, Okafor t=134→140) and three lines re-rendered for
+  their new words: Varga's t=13.5 "Water in twelve seconds…" (the waterline is 12 s after it), Thera Deep Control's
+  secondary line "Enough pumps are off the racks…" (true on every difficulty: the third pump on easy, the fifth on hard;
+  as Level 22's "Enough rigs are down…"; both candidates, a in `assets/`, b in `concept/voice-thera-control-r52-b/`) and
+  Varga's shortened briefing page 2 (it ran to five lines). Whisper read every one back as written (spelling aside:
+  "12", "Underwater", "air strike"); no pins, no retries. Measured only, not listened to.

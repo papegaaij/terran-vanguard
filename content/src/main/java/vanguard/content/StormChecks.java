@@ -52,8 +52,17 @@ final class StormChecks {
             if (attack.trigger().isPresent() && !laneStrafe) {
                 problem.accept(field + ".trigger", "a pass trigger needs a lane strafe (once per pass)");
             }
-            if (attack.tell().isPresent() && attack.trigger().isEmpty()) {
-                problem.accept(field + ".tell", "a tell comes before a triggered burst (a tell without a trigger)");
+            // M8 part C: or before each shot of a segment chain's head (the Eel Swarm's stripe running to the head).
+            boolean chainHead = enemy.segmentChain().isPresent()
+                    && enemy.partList().orElse(List.of()).stream()
+                            .anyMatch(part -> part.kind().equals("vital")
+                                    && attack.name()
+                                            .filter(part.attackNames()::contains)
+                                            .isPresent());
+            if (attack.tell().isPresent() && attack.trigger().isEmpty() && !chainHead) {
+                problem.accept(
+                        field + ".tell",
+                        "a tell comes before a triggered burst or a chain head's shot (a tell without a trigger)");
             }
         }
         for (var hook : List.of(

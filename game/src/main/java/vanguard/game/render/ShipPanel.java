@@ -164,6 +164,8 @@ final class ShipPanel {
     private final TextureRegion bulwarkIcon;
     /** M8 part A: the special row's one flash at a change of its setting limit, frames left. */
     private int limitFlash;
+    /** M8 part C: the weapons panel's one flash as its {@code NO WATER} rows clear at a waterline, frames left. */
+    private int waterFlash;
     /** "×" when the font has it, else "x". */
     private final String times;
 
@@ -205,6 +207,16 @@ final class ShipPanel {
     /** M8 part A: the special's setting limit changed: its row flashes once (white). */
     void specialLimit() {
         limitFlash = LIMIT_FLASH_FRAMES;
+    }
+
+    /** M8 part C: the ship crossed into the water: the weapons panel flashes once (white) as NO WATER clears. */
+    void waterline() {
+        waterFlash = LIMIT_FLASH_FRAMES;
+    }
+
+    /** M8 part C: whether the weapons panel shows its waterline flash now. */
+    boolean waterFlashing() {
+        return waterFlash > 0;
     }
 
     /** M7 part A: a cooldown special is ready: its ring flashes white once. */
@@ -290,6 +302,9 @@ final class ShipPanel {
         }
         if (limitFlash > 0) {
             limitFlash--;
+        }
+        if (waterFlash > 0) {
+            waterFlash--;
         }
         if (defences.repairing()) {
             // M8 part A: the Auto-repair nanites' + pip right of the armour's label plate while they repair.
@@ -576,7 +591,8 @@ final class ShipPanel {
         int top = y - 22;
         int height = weapons.length * ROW + ROW + 10;
         kit.lcd(batch, x, top - height, HudKit.INNER_WIDTH, height);
-        kit.glow(batch, HudKit.READOUT, x, top - height, HudKit.INNER_WIDTH, height);
+        // M8 part C: one white flash as the NO WATER rows clear at a waterline.
+        kit.glow(batch, waterFlash > 0 ? Color.WHITE : HudKit.READOUT, x, top - height, HudKit.INNER_WIDTH, height);
         int pipsX = x + HudKit.INNER_WIDTH - 6 - LEVEL_PIPS * 10;
         for (int slot = 0; slot < weapons.length; slot++) {
             int rowTop = top - 5 - slot * ROW;

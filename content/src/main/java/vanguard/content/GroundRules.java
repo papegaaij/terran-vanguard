@@ -32,7 +32,7 @@ final class GroundRules {
                 continue;
             }
             // M7 part F: a nest placed turned (arc: up, Level 19's gantry nests) has its guns' facing.
-            EnemySpec enemy = UnitRules.enemy(
+            EnemySpec dry = UnitRules.enemy(
                     content,
                     target.enemy().get(),
                     difficulty,
@@ -51,6 +51,17 @@ final class GroundRules {
             // M5 part E: a nest's current, along which its drifting units (rafts) drift.
             double current = Math.toRadians(target.current().orElse(0.0));
             for (LevelData.Placement placement : at) {
+                // M8 part C (gap check D2): a nest entering under water has its unit's underwater changes.
+                InLevel where = inLevel.at(level, placement.t());
+                EnemySpec enemy = where.water()
+                        ? UnitRules.enemy(
+                                content,
+                                target.enemy().get(),
+                                difficulty,
+                                Optional.empty(),
+                                where,
+                                FoundryRules.arcFacing(target))
+                        : dry;
                 // M5 part G: a nest entering from a side edge, drifting across (Level 13's mortar floe).
                 units.add(
                         target.side().isPresent()

@@ -244,7 +244,14 @@ public sealed interface RadioBlock permits LevelData {
          * escapes} enemy destroyed (Level 22's first rig core; once); only with an escapes secondary.
          */
         @JsonProperty("target-destroyed")
-        TARGET_DESTROYED
+        TARGET_DESTROYED,
+        /**
+         * M8 part C (design/campaign Level 23, Radio chatter; gap check D5): the waterline crossed, the start of the
+         * level's first section whose medium differs from the one before it; content resolves it to that time on the
+         * level clock, so it plays as a timed line (no simulation event); only in a level with a waterline.
+         */
+        @JsonProperty("waterline")
+        WATERLINE
     }
 
     /**

@@ -932,6 +932,37 @@ final class PlayerFire {
     }
 
     /**
+     * Whether anything that keeps the chain going is on screen (design/systems/scoring, Chain
+     * multiplier): a live enemy on a layer the standard shots reach (not high air) whose hit box
+     * overlaps the play field, or a set piece or boss with a part on such a layer that is on the
+     * field, not wrecked and not shielded (a boss's descent). Otherwise the chain window pauses.
+     */
+    static boolean chainTargets(Pool<Enemy> enemies, SetPiece[] setPieces) {
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.layer().hitByStandardShots() && onField(enemy)) {
+                return true;
+            }
+        }
+        for (SetPiece piece : setPieces) {
+            if (!piece.present()) {
+                continue;
+            }
+            List<PartSpec> parts = piece.spec().parts();
+            for (int p = 0; p < parts.size(); p++) {
+                // M5 part E: on the part's own layer (an arena boss's part under the water is none).
+                if (piece.partLayer(p).hitByStandardShots()
+                        && !piece.partWrecked(p)
+                        && !piece.partShielded(p)
+                        && piece.partOnField(p)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * Whether shots, blasts and specials can reach {@code enemy}: on the play field, and not a chain
      * member waiting for its burst ({@link Chain#doomed}).
      */

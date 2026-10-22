@@ -81,6 +81,9 @@ import vanguard.sim.PlayField;
  * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the specials the level forbids, by
  *     their slugs, replacing its setting's list (a section's own replaces it again; {@link #specialLimitsOf}); the
  *     setting's if not given
+ * @param underwaterLook M8 part C (design/world/europa, Palette and lighting): how the game grades the play field under
+ *     water (presentation only), a section's {@code underwater_look} changing it ({@link #underwaterLookOf}); only on a
+ *     level that is under water somewhere; none if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -130,7 +133,8 @@ public record LevelData(
         Optional<Vents> vents,
         Optional<Ridge> ridge,
         Optional<Medium> medium,
-        Optional<List<String>> specialLimits)
+        Optional<List<String>> specialLimits,
+        Optional<UnderwaterLook> underwaterLook)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -226,6 +230,43 @@ public record LevelData(
      */
     public List<String> forbiddenSpecials(int index, SpecialsData specials) {
         return specials.forbidden(mediumOf(index), water.orElse(false), specialLimitsOf(index));
+    }
+
+    /**
+     * M8 part C: the waterlines, the level times at which the medium changes: the start of each section whose medium
+     * differs from the one before it (none at the start: a level may begin under water). Level 23's descent at 25.5 s.
+     */
+    public List<Double> waterlines() {
+        List<Double> times = new java.util.ArrayList<>();
+        Medium before = mediumOf(0);
+        for (int i = 1; i < sections.size(); i++) {
+            Medium now = mediumOf(i);
+            if (now != before) {
+                times.add(sectionStart(i));
+            }
+            before = now;
+        }
+        return List.copyOf(times);
+    }
+
+    /**
+     * M8 part C (the {@code waterline} radio event, gap check D5): the level time of the first waterline, where the
+     * event's cue plays as a timed line.
+     */
+    public Optional<Double> firstWaterline() {
+        return waterlines().stream().findFirst();
+    }
+
+    /**
+     * M8 part C: the under-water look of section {@code index}: the level's {@code underwater_look} with the section's
+     * changes; none on a section in the air or without the level's block.
+     */
+    public Optional<UnderwaterLook> underwaterLookOf(int index) {
+        if (mediumOf(index) != Medium.UNDERWATER) {
+            return Optional.empty();
+        }
+        return underwaterLook.map(
+                look -> sections.get(index).underwaterLook().map(look::with).orElse(look));
     }
 
     /** M7 part B: the no-surface zones; none if not given. */

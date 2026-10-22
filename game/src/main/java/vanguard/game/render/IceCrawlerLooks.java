@@ -18,11 +18,16 @@ import vanguard.content.LevelData;
  * pickup, then turns and drives back down off the bottom edge. Its treads run at {@value #TRACK_FPS} fps while it
  * drives, its amber roof beacon flashes ({@value #BEACON_SECONDS} s every {@value #BEACON_EVERY} s) over its
  * headlights, which point the way it drives (additive). On the ground, under the ground units; all on the level clock.
+ * M8 part C: Level 23's Thera Deep tender (tools/art/l23_props.py, assets/pivots/thera-tender.json's {@code cradle})
+ * swims the same way on the play plane: its body with the flyers (graded under water), its lights after the grade
+ * ({@link #drawLights}), its pump-jets' three frames turning as the treads do.
  */
 public final class IceCrawlerLooks {
     private static final float X0 = PixelScreen.PLAY_FIELD_X;
     /** The drops carried by a ground vehicle: the vehicles' sprite roots (others fly, {@link DroneLooks}). */
-    static final Set<String> VEHICLES = Set.of("ice-crawler");
+    static final Set<String> VEHICLES = Set.of("ice-crawler", "thera-tender");
+    /** M8 part C: the vehicles that swim on the play plane (the rest drive on the ground). */
+    static final Set<String> SWIMMERS = Set.of("thera-tender");
     /** Each way, s: up to the drop's point before the drop, back down after it. */
     static final double DRIVE_SECONDS = 4;
     /** Where the drive starts and ends below the bottom edge, px (its 48 px sprite off the screen). */
@@ -69,8 +74,17 @@ public final class IceCrawlerLooks {
 
     /** The level's ground-carried drops' looks, or null without such drops (or without the vehicle's sprites). */
     static IceCrawlerLooks of(Sprites sprites, LevelData level, JsonValue pivots) {
+        return of(sprites, level, pivots, false);
+    }
+
+    /**
+     * M8 part C: the looks of the level's drops carried by a vehicle that swims ({@code swims}: {@link #SWIMMERS}) or
+     * drives; null without such drops.
+     */
+    static IceCrawlerLooks of(Sprites sprites, LevelData level, JsonValue pivots, boolean swims) {
         List<LevelData.Drop> drops = level.released().stream()
                 .filter(IceCrawlerLooks::carried)
+                .filter(drop -> drop.sprite().filter(SWIMMERS::contains).isPresent() == swims)
                 .filter(drop -> drop.sprite().filter(sprites::has).isPresent())
                 .toList();
         if (drops.isEmpty()) {
@@ -89,7 +103,8 @@ public final class IceCrawlerLooks {
     /** The bed's centre per heading from the frame's centre, px, y up, from the pivot file ({@code bed}). */
     static double[][] bedOffsets(JsonValue pivots, double frame) {
         double[][] offsets = new double[2][2];
-        JsonValue bed = pivots == null ? null : pivots.get("bed");
+        // M8 part C: the tender's cradle is its bed.
+        JsonValue bed = pivots == null ? null : pivots.has("bed") ? pivots.get("bed") : pivots.get("cradle");
         if (bed == null) {
             return offsets;
         }
@@ -135,8 +150,14 @@ public final class IceCrawlerLooks {
         return Math.min(frames - 1, heading * perHeading + (into < BEACON_SECONDS ? 0 : perHeading - 1));
     }
 
-    /** The vehicles driving at level time {@code seconds}, on the ground. */
+    /** The vehicles driving at level time {@code seconds}, on the ground, with their lights. */
     void draw(SpriteBatch batch, double seconds) {
+        drawBodies(batch, seconds);
+        drawLights(batch, seconds);
+    }
+
+    /** M8 part C: the vehicles' bodies with the patch they carry (the tender's, before the grade). */
+    void drawBodies(SpriteBatch batch, double seconds) {
         for (LevelData.Drop drop : drops) {
             double since = seconds - drop.t();
             double y = y(since, drop.y());
@@ -158,6 +179,18 @@ public final class IceCrawlerLooks {
                         w,
                         h);
             }
+        }
+    }
+
+    /** M8 part C: the vehicles' beacons and headlights, additive (the tender's after the grade). */
+    void drawLights(SpriteBatch batch, double seconds) {
+        for (LevelData.Drop drop : drops) {
+            double since = seconds - drop.t();
+            double y = y(since, drop.y());
+            if (Double.isNaN(y)) {
+                continue;
+            }
+            int heading = heading(since);
             int light = lightsFrame(heading, seconds, lights.size);
             if (light >= 0) {
                 AtlasRegion glow = lights.get(light);

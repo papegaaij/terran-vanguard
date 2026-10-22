@@ -1,7 +1,7 @@
 # Level 22 – concept and production notes
 
-Round 51 (M8 part B, step ART-B: production straight away, as the Act 2 and Act 3 levels; pending the user's review
-in round 51). None of it is prompted: every file is rendered by a generator in `tools/art/`.
+Round 51 (M8 part B, step ART-B: production straight away, as the Act 2 and Act 3 levels; accepted as final in round 51 (2026-10-22);
+F.3: no deep layer, kept). None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r51-a
 

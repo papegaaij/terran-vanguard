@@ -108,6 +108,8 @@ final class UnitCues extends SoundFamily {
     private final WalkerCues walker;
     /** M8 part A: the harpoons' hit (and the Act 4 systems' other sounds). */
     private final DeepWaterCues deepWater;
+    /** M8 part C: the kills' under-water rung and Level 23's units' own sounds. */
+    private final UnderIceCues underIce;
 
     UnitCues(
             SoundMix mix,
@@ -115,9 +117,11 @@ final class UnitCues extends SoundFamily {
             StormCues storm,
             FoundryCues foundry,
             WalkerCues walker,
-            DeepWaterCues deepWater) {
+            DeepWaterCues deepWater,
+            UnderIceCues underIce) {
         super(mix);
         this.deepWater = deepWater;
+        this.underIce = underIce;
         this.looks = looks;
         this.storm = storm;
         this.foundry = foundry;
@@ -147,7 +151,9 @@ final class UnitCues extends SoundFamily {
             }
             case ENEMY_DESTROYED -> {
                 EnemyLooks kind = looks[events.value(i)];
-                bank.play(alternate(kind.explosionA(), kind.explosionB()), EXPLOSIONS, pitch(0.04), pan);
+                bank.play(explosion(kind), EXPLOSIONS, pitch(0.04), pan);
+                // M8 part C: a Glassfin's shatter, an eel part's tear, a pump's break over it.
+                underIce.destroyed(events.value(i), pan);
                 // M8 part B: a Drill Rig's core also plays the rig's collapse (FoundryCues).
                 foundry.destroyed(events.value(i), pan);
             }
@@ -164,6 +170,8 @@ final class UnitCues extends SoundFamily {
                     // M7 part E: a Dust Devil's grit spiral or a Ghost Drone's burst (StormCues).
                 } else if (foundry.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M7 part F: a Warden Tank's burst, once at its first shot (FoundryCues).
+                } else if (underIce.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M8 part C: an Eel Swarm head's pulse shot (UnderIceCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))
@@ -225,7 +233,10 @@ final class UnitCues extends SoundFamily {
             // chained pops, the Mantis's telegraph and beam.
             case CHAIN_CUT -> {
                 // M7 part C: a Threadcrawler's cut (value: the segment's kind) tears lower than the Coilwyrm's.
-                if (crawlerPart(events.value(i))) {
+                if (underIce.eelPart(events.value(i))) {
+                    // M8 part C: an eel's cut tears as its segments do (no regrowth: the rear part scatters).
+                    bank.play(Sfx.EEL_SEGMENT, EXPLOSIONS, pitch(0.04), pan);
+                } else if (crawlerPart(events.value(i))) {
                     bank.play(Sfx.COILWYRM_CUT, CRAWLER_CUT_LEVEL, CRAWLER_CUT_PITCH * pitch(0.04), pan);
                 } else {
                     bank.play(Sfx.COILWYRM_CUT, EXPLOSIONS, pitch(0.04), pan);
@@ -240,10 +251,12 @@ final class UnitCues extends SoundFamily {
                 int value = events.value(i);
                 EnemyLooks kind = looks[SimEvents.chainPopKind(value)];
                 bank.play(
-                        alternate(kind.explosionA(), kind.explosionB()),
+                        explosion(kind),
                         EXPLOSIONS,
                         FlightSounds.ripplePitch(SimEvents.chainPopWidth(value)) * pitch(0.02),
                         pan);
+                // M8 part C: an eel's segments tear as they pop.
+                underIce.destroyed(SimEvents.chainPopKind(value), pan);
             }
             // The Mantis (round 23): its telegraph a warning (the player-damage level), its beam a
             // little above the enemy fire, one long sound.
@@ -272,6 +285,15 @@ final class UnitCues extends SoundFamily {
         if (swarms.watch(sortie, mix.resync)) {
             bank.play(Sfx.MOTE_SWARM, EXPLOSIONS, pitch(0.03), pan(swarms.x()));
         }
+    }
+
+    /**
+     * A kill's explosion: its rung's two files alternated (or its own); M8 part C: below the waterline the under-water
+     * rung's file ({@link Sfx#underwater}).
+     */
+    private Sfx explosion(EnemyLooks kind) {
+        Sfx air = alternate(kind.explosionA(), kind.explosionB());
+        return underIce.underwater() ? Sfx.underwater(air) : air;
     }
 
     /** Whether a unit with a proximity ring stands at (x, y), where its ring just fired. */

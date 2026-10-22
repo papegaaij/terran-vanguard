@@ -81,6 +81,8 @@ final class HazardPlay {
         }
         double left = lo + margin;
         double right = hi - margin;
+        // M8 part C: under water it brakes before its slide carries it onto the rock (WaterPlay; none in the air).
+        commands = WaterPlay.keepInSpan(sortie, commands, left, right);
         int horizontal = Command.LEFT.bit() | Command.RIGHT.bit();
         if (shipX < left - MovePlanner.DEAD_ZONE) {
             return (commands & ~horizontal) | Command.RIGHT.bit();

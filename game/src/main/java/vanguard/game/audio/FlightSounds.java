@@ -73,6 +73,8 @@ public final class FlightSounds {
     private final LevelCues levels;
     /** M8 part A: the Act 4 systems: the limit chime, the sonar, the flares, the Bulwark, the harpoons' hit and run. */
     private final DeepWaterCues deepWater;
+    /** M8 part C: Level 23's sounds (the waterline, the pumps' hum, the eels', Glassfins' and pumps' extras). */
+    private final UnderIceCues underIce;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -128,6 +130,7 @@ public final class FlightSounds {
         Sfx.TANK_TRACKS,
         Sfx.BELT_RUMBLE,
         Sfx.RIG_COLLAR,
+        Sfx.PUMP_HUM,
         Sfx.SWARM_HUM,
         Sfx.COLOSSUS_SUCTION
     };
@@ -184,12 +187,14 @@ public final class FlightSounds {
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
         colossus = new ColossusCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater);
+        underIce = new UnderIceCues(mix);
+        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
-        levels = new LevelCues(mix);
+        levels = new LevelCues(mix, underIce);
         all = new SoundFamily[] {
-            player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels, deepWater
+            player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels, deepWater,
+            underIce
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -550,6 +555,7 @@ public final class FlightSounds {
         allies.watchLance(sortie);
         arsenal.watch(sortie);
         deepWater.watch(sortie);
+        underIce.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -599,6 +605,7 @@ public final class FlightSounds {
             foundry.silence(loop);
             pursuit.silence(loop);
             colossus.silence(loop);
+            underIce.silence(loop);
         }
         deepWater.silence();
     }

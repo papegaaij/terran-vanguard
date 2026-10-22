@@ -5,7 +5,8 @@ import java.util.List;
 /**
  * The segment chains of an {@link EnemyForce} (design/enemies/air/coilwyrm; M7 part C: the ground's, the
  * Threadcrawler): a wave's chain entering strung out behind its path's start, the chains flying, regrowing a
- * cut-off rear part's head and popping their dying members, and a member's death cutting its chain.
+ * cut-off rear part's head and popping their dying members, and a member's death cutting its chain; M8 part C (design/
+ * enemies/naval/eel-swarm): a water chain's cut part scattering and its head firing its own attacks.
  */
 final class ChainRules {
     /** Segment chains in flight: the waves' and their regrown rear parts. */
@@ -82,6 +83,8 @@ final class ChainRules {
         } else {
             chain.start(spec, chainsSpawned++, spawn, regrownKinds[spawn.kind()], waves.lastEntry());
         }
+        // M8 part C: its wave's pickup may drop only with a head-first kill.
+        chain.headFirstDrop(waves.lastHeadFirst());
         int members = spec.members();
         for (int i = 0; i < members; i++) {
             Enemy member = enemies.obtain();
@@ -153,8 +156,12 @@ final class ChainRules {
                 chains.free(c);
             } else if (!chain.alive() && !chain.regrowing()) {
                 chains.free(c);
-            } else if (chain.poreFiring() >= 0 && firing) {
-                guns.firePore(chain, ship);
+            } else {
+                if (chain.poreFiring() >= 0 && firing) {
+                    guns.firePore(chain, ship);
+                }
+                // M8 part C: a water chain's head fires its own attacks (design/enemies/naval/eel-swarm).
+                chain.headAttacks().step(chain, ship, firing, guns, events);
             }
         }
     }

@@ -36,6 +36,9 @@ drops: []
 traits: [spread, anti-sub]
 bounty: 10
 first_level: 11
+underwater:   # M8 part C (naval README, Returning units under water; gap check D2): a field entering under water (Level 23 on)
+  layer: air       # drifts on the play plane (the water), always in it
+  submerge: false  # the surface/submerge swap is dropped; the drift and the ring unchanged (the ring's bullets × 0.7 by the water)
 difficulty:
   hard: {attacks: {pulse: {count: 12, within: 110}}}   # a 12-bullet ring within 110 px
 notes:

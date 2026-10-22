@@ -101,6 +101,30 @@ class PortraitsTest {
         assertTrue(Files.isRegularFile(INTEL.resolve("drill-rig.png")), "the Drill Rig's sensor portrait");
     }
 
+    /**
+     * M8 part C: Thera Deep Control speaks with Thera Deep's portrait (tools/art/portraits.py radio-thera-deep: the
+     * harbour controller before the lit farms), his timed lines, the secondary's thanks and the secret's alike; the
+     * Glassfin and the Eel Swarm have their sensor portraits.
+     */
+    @Test
+    void theraDeepControlSpeaksWithTheHarboursPortrait() {
+        LevelData level = content.level(content.levelKey(23).orElseThrow());
+        List<LevelData.RadioCue> thera = level.radio().stream()
+                .filter(cue -> cue.speaker().equals("Thera Deep Control"))
+                .toList();
+        assertEquals(3, thera.size(), "his call, the farms and the secondary's thanks");
+        for (LevelData.RadioCue cue : thera) {
+            assertEquals(java.util.Optional.of("thera-deep"), cue.portrait(), cue.line());
+        }
+        for (LevelData.Secret secret : level.secrets()) {
+            assertEquals(java.util.Optional.of("thera-deep"), secret.radio().portrait());
+        }
+        assertTrue(Files.isRegularFile(PORTRAITS.resolve("radio-thera-deep-neutral.png")));
+        for (String unit : List.of("glassfin", "eel-swarm")) {
+            assertTrue(Files.isRegularFile(INTEL.resolve(unit + ".png")), unit + "'s sensor portrait");
+        }
+    }
+
     /** tools/art/intel.py renders the sensor silhouette of every set piece a level's intel shows as an unknown contact. */
     @Test
     void everyContactOfALevelHasItsIntelSilhouette() {

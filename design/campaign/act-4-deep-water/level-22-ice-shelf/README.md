@@ -2,7 +2,7 @@
 title: Level 22 – Ice Shelf
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/ground/drill-rig, ../../../enemies/naval/skimmer, ../../../enemies/air/mantis, ../../../player/specials, ../../../player/wingmen, ../../../world/europa]
 updated: 2026-10-22
 ---
@@ -16,7 +16,7 @@ Chaos ice field, has reported tremors for a week; the cause is four Vrell
 [Drill Rigs](../../../enemies/ground/drill-rig/README.md) boring through the shelf toward the ocean
 below. Aegis Wing flies the surface one last time before the dive: hardened rigs to bomb, a ring of
 Spine Turrets round each, the Vrell flyers over the ice, and the new **ice geysers**, cracks that glow
-and burst as the rigs shake the shelf. Jupiter fills the deep layer. It is the act's opener and its
+and burst as the rigs shake the shelf. Jupiter shows only as a warm sheen on the ice. It is the act's opener and its
 breather: no new fighter, one new ground structure, the same surface rules as Act 3 (the hydro-kit
 and the water come in Level 23). 150 s: a shelf approach, a slow rig field (60 px/s) and the run-in to
 Conamara.
@@ -113,14 +113,14 @@ Rendered from the data. Directions by each wave's `from`, counted by enemy (the 
 Scroll **120 px/s** on the shelf approach and the Conamara run-in (110 px/s there), **60 px/s** in the rig field (a rig is on the screen about 11 s, a
 hardened core needs time under an `anti-ground` gun). The setting is [Europa](../../../world/europa/README.md)'s
 ice surface: a white-blue plain of ridges, fissures and open leads (cracks of black water, scenery;
-the Sonar Pulse stays `NO WATER`), Jupiter huge in the deep layer, hard sunlight from the top left,
+the Sonar Pulse stays `NO WATER`; the ice is an opaque solid floor with **no deep layer** under it, decided in round 51 (F.3 keep): Jupiter shows as a warm sheen on the ice and huge only in the act's title still), hard sunlight from the top left,
 Vrell teal growth round the rigs. Motion budget: the rigs' spinning collars and the geysers' steam are the strong elements; the ice stays still. The
 data eases each speed change over 2 s (the sections' `ramp`).
 
 <!-- data: level-sections -->
 | Section | t (s) | Scroll (px) | Speed (px/s) | Atmosphere | Layers and content | Purpose |
 |---|---|---|---|---|---|---|
-| 1. The Shelf | 0–36 | 0–4,320 | 120 | clear | `ground`: fissured ice, ridges, open leads (black water mirroring Jupiter, scenery) along the Skimmers' lanes; a Spine Turret nest on a ridge (t≈20); the first geyser row (t≈12) flares alone. `high-air`: ice crystals. | Popcorn from t=5; the first geysers; no rig yet. |
+| 1. The Shelf | 0–36 | 0–4,320 | 120 | clear | `ground`: fissured ice, ridges, open leads (plain dark water, scenery) along the Skimmers' lanes; a Spine Turret nest on a ridge (t≈20); the first geyser row (t≈12) flares alone. `high-air`: ice crystals. | Popcorn from t=5; the first geysers; no rig yet. |
 | 2. The Rig Field | 36–104 | 4,320–8,460 | 60 | clear | `ground`: four **Drill Rigs** (t=40, 56, 72, 88; x 130, 340, 150, 330), each with its nest of Spine Turrets and, after the last, a Polyp Mortar floe (t≈100); steaming cracks where the collars bore; the secret's crevasse at t≈70. | The rigs' quiet window, the hardened target, the geysers between rigs. |
 | 3. Conamara Run-in | 104–150 | 8,460–13,470 | 110 | clear | `ground`: the ice-breaker road to **Conamara Station** (the research dome, a landing pad, sodium lamps; scenery), a cordon of Spine Turrets (t≈125); the geysers tremble faster as the dome nears. | The run-in, the faster geysers; level end as the dome reaches the bottom edge. |
 <!-- /data -->
@@ -147,7 +147,7 @@ a `bounty_scale` (see *Credit budget*). Measured in step B3 (`levelReport`, the 
   the screen and ≥ 10 shots a minute (`ActFloorTest`), **to be confirmed with `levelReport`** in part B.
   **Measured in step B3** (the plan's fit, medium): the approved draft's 214 units gave only **2.17 enemies on the
   screen** and **8 stretches over 2 s** (the Skitter and Mote waves of the shelf die at once in the beam; the run's
-  last 6.4 s were empty). **Reworked in step B3b** (as Level 21's, pending the user's review in round 51): 19 firing
+  last 6.4 s were empty). **Reworked in step B3b** (as Level 21's, accepted in round 51 (2026-10-22)): 19 firing
   groups added (Needler rings held over the tiny waves, Needler and Stinger pairs where the beam had emptied the
   screen, a last Stinger stream to the dome), the approved anchors kept (the sections, rigs, nests, geysers, the
   quiet window, the Skimmer lanes): **273 enemies** at medium (waves 243 + ground 30, 113 a minute), **2.54 on the
@@ -371,15 +371,15 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r51-a.png](concept/backdrop-final-r51-a.png) | Production backdrop (`tools/art/backdrop_l22.py`, from europa-ice-shelf-r48-a): the tile sets (the shelf with Europa's double ridges, the Conamara Chaos rig field, the run-in with the ice-breaker road, the high-air crystals), the pieces at exact rows (two seams, the nest's pressure ridge, the secret's crevasse, seven open leads cut along every Skimmer run, Conamara Station) and eight screens with stand-ins (sheet) | proposed (round 51) |
-| [concept/backdrop-final-r51-a.gif](concept/backdrop-final-r51-a.gif) | t 16–26 at half size: the ridge nest, the first leads with the Skimmer runs' water | proposed (round 51) |
-| [concept/l22-props-final-r51-a.png](concept/l22-props-final-r51-a.png) | The level's props (`tools/art/l22_props.py`): the ice geyser (crack, tell glow, 0.8 s steam column, residue), the crevasse lip over the core-sample cache (intact, hit, fallen; its marker light), the Conamara ice-crawler (up/down, 3 track frames, lights), the station piece (sheet) | proposed (round 51) |
-| [concept/l22-props-final-r51-a.gif](concept/l22-props-final-r51-a.gif) | A geyser row's ripple, the lip shot open, the ice-crawler driving up and back | proposed (round 51) |
-| [concept/ice-shelf-capture-r51-a.png](concept/ice-shelf-capture-r51-a.png) | Game capture, M8 part B (step B5, medium, `--invulnerable`): the shelf at t=13.2 (the first geyser row's cracks glowing for the tell), t=14 (the steam), t=24 and t=33 (the first open leads under the Skimmer runs) | proposed (round 51) |
-| [concept/geyser-capture-r51-a.mp4](concept/geyser-capture-r51-a.mp4) | The same run, t 9–19 with the game's sound: the first geyser row's tell, steam and ripple, Varga's warning | proposed (round 51) |
-| [concept/crawler-capture-r51-a.png](concept/crawler-capture-r51-a.png) | The same run, t 107.5–112.5: Conamara's ice-crawler driving up the ice-breaker road, the armour patch dropped at t=110.5, the crawler driving back (the drop moved off lead 5 in step B5) | proposed (round 51) |
-| [concept/station-capture-r51-a.png](concept/station-capture-r51-a.png) | The same run, t 128–150: the run-in on the road past the Spine Turret cordon, Okafor's t=135 line, Conamara Station coming in and its dome at the bottom edge | proposed (round 51) |
-| [concept/radio-capture-r51-a.png](concept/radio-capture-r51-a.png) | The same run: Dr. Brandt on the radio (her portrait and text) at t=3 (t=1 line), t=48 (`target-destroyed`), t=94.5 (`secondary-objective`, the new "Enough rigs are down") and t=106 (t=104 line) | proposed (round 51) |
+| [concept/backdrop-final-r51-a.png](concept/backdrop-final-r51-a.png) | Production backdrop (`tools/art/backdrop_l22.py`, from europa-ice-shelf-r48-a): the tile sets (the shelf with Europa's double ridges, the Conamara Chaos rig field, the run-in with the ice-breaker road, the high-air crystals), the pieces at exact rows (two seams, the nest's pressure ridge, the secret's crevasse, seven open leads cut along every Skimmer run, Conamara Station) and eight screens with stand-ins (sheet) | chosen (round 51, F.2: accepted as final) |
+| [concept/backdrop-final-r51-a.gif](concept/backdrop-final-r51-a.gif) | t 16–26 at half size: the ridge nest, the first leads with the Skimmer runs' water | chosen (round 51, F.2: accepted as final) |
+| [concept/l22-props-final-r51-a.png](concept/l22-props-final-r51-a.png) | The level's props (`tools/art/l22_props.py`): the ice geyser (crack, tell glow, 0.8 s steam column, residue), the crevasse lip over the core-sample cache (intact, hit, fallen; its marker light), the Conamara ice-crawler (up/down, 3 track frames, lights), the station piece (sheet) | chosen (round 51, F.4: accepted as final) |
+| [concept/l22-props-final-r51-a.gif](concept/l22-props-final-r51-a.gif) | A geyser row's ripple, the lip shot open, the ice-crawler driving up and back | chosen (round 51, F.4: accepted as final) |
+| [concept/ice-shelf-capture-r51-a.png](concept/ice-shelf-capture-r51-a.png) | Game capture, M8 part B (step B5, medium, `--invulnerable`): the shelf at t=13.2 (the first geyser row's cracks glowing for the tell), t=14 (the steam), t=24 and t=33 (the first open leads under the Skimmer runs) | chosen (round 51, F.2: accepted as final) |
+| [concept/geyser-capture-r51-a.mp4](concept/geyser-capture-r51-a.mp4) | The same run, t 9–19 with the game's sound: the first geyser row's tell, steam and ripple, Varga's warning | chosen (round 51, F.4: accepted as final) |
+| [concept/crawler-capture-r51-a.png](concept/crawler-capture-r51-a.png) | The same run, t 107.5–112.5: Conamara's ice-crawler driving up the ice-breaker road, the armour patch dropped at t=110.5, the crawler driving back (the drop moved off lead 5 in step B5) | chosen (round 51, F.4: accepted as final) |
+| [concept/station-capture-r51-a.png](concept/station-capture-r51-a.png) | The same run, t 128–150: the run-in on the road past the Spine Turret cordon, Okafor's t=135 line, Conamara Station coming in and its dome at the bottom edge | chosen (round 51, F.2: accepted as final) |
+| [concept/radio-capture-r51-a.png](concept/radio-capture-r51-a.png) | The same run: Dr. Brandt on the radio (her portrait and text) at t=3 (t=1 line), t=48 (`target-destroyed`), t=94.5 (`secondary-objective`, the new "Enough rigs are down") and t=106 (t=104 line) | chosen (round 51, F.5: accepted as final) |
 
 ## Implementation
 
@@ -394,14 +394,13 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
       moved to t=110.5 on the road in step B5)
 - [x] Wave script: ≥ 48 enemies a minute at medium (`DensityTest`), no empty screen over 2 s (`PacingTest`), the Act 2+ floor (`ActFloorTest`), the rig's quiet window, edge warnings for the Mantis pincers
 - [ ] Radio voiced, every timed line at most 1 s late (`RadioTimelineLevel22Test`, with Rook and without), Dr. Brandt cast; Rook's lines `requires: escort`
-      (built and tested: `RadioTimelineLevel22Test`, `VoiceFilesTest`, `Level22Test.theRadioEventsFireInTheRun`; open: Dr. Brandt's
-      casting, both candidates rendered, the pick in round 51)
+      (built and tested: `RadioTimelineLevel22Test`, `VoiceFilesTest`, `Level22Test.theRadioEventsFireInTheRun`; Dr. Brandt cast with
+      candidate a in round 51, V.1)
 - [x] Threat profile, Varga's four intel lines and Rook's teaser fitting the intel panel (`IntelPanelLayoutTest`, its
       `level22sStripMarksTheFourRigSites`); the Drill Rig's portrait (`PortraitsTest`)
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images (`BriefingLayoutTest.everyPageImageIsInTheAssetsAtItsSize`, `BriefingsTest`)
 - [x] Typical haul within ±5 % of budget(22) = 2 898 with the level's `bounty_scale` (`TypicalHaulTest`)
-- [x] Music and ambience: the Act 4 A theme's stems by section; the ice-surface bed; the geyser and rig sounds (`Level22SoundsTest`;
-      the a proposals in the game until round 51 picks)
+- [x] Music and ambience: the Act 4 A theme's stems by section; the ice-surface bed; the geyser and rig sounds (`Level22SoundsTest`; round 51's picks: the burst, the beds a, the geyser tell, collar, ring and death b still to replace the a files in the game)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty (`--escort none` too)
 - [x] The hangar before L22 sells the Harpoon Torpedoes, the Sonar Pulse (1 free charge) and the Bulwark, each reading `NO WATER` / idle here
       (`ActFourHangarTest.theActFourItemsAreInTheLiveShopWithTheirNames`, `ArsenalHudTest`)
@@ -417,7 +416,7 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
   open questions settled by the approval: the rigs are the **secondary** (3 of 4 cores), so an `anti-ground`-less
   loadout can still finish the opener; the open leads are scenery, never water (the Sonar Pulse reads `NO WATER`
   until L23's waterline).
-- 2026-10-22 (M8 part B, step B2; the gap check's defaults, pending the user's review in round 51): the data file
+- 2026-10-22 (M8 part B, step B2; the gap check's defaults, accepted in round 51 (2026-10-22)): the data file
   from the approved tables. **8** geyser rows (the hazard text listed eight times under "seven rows"); hard's
   section-3 period 2.6 s with a 0.3 s ripple (tell 1.2 + burn 0.8 + 2 ripples must fit the period); easy's
   section-3 rows every 4 s (the "faster near Conamara" beat kept on easy); the secondary's `allowed` easy 2, medium 1,
@@ -431,8 +430,8 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
   core's 312 HP is past one strike's cap of 300). The `bounty_scale` 0.38 confirmed (−2.3 %). The waves measure below
   the Act 2+ floor (2.17 on the screen, 8 stretches over 2 s at medium): measured, not asserted, pending the user's
   rework in round 51. The Needler and the Stinger take `small_act_hp` here as the waves' notes say (24 and 36 HP with
-  the beam era's ×2). The backdrop block is step ART-B's (no deep layer, pending round 51).
-- 2026-10-22 (M8 part B, step B3b; pending the user's review in round 51): the waves reworked to the Act 2+ rules as
+  the beam era's ×2). The backdrop block is step ART-B's (no deep layer, kept in round 51).
+- 2026-10-22 (M8 part B, step B3b; accepted in round 51 (2026-10-22)): the waves reworked to the Act 2+ rules as
   Level 21's (19 firing groups added, the anchors kept; 2.17 → 2.54 on the screen and 8 → 0 stretches over 2 s at
   medium); L22 leaves `PacingTest.PENDING_WAVES`; the `bounty_scale` re-fitted 0.38 → 0.30 (typical 2,857, −1.4 %).
   The rig's core 240 → 150 HP (see the [Drill Rig](../../../enemies/ground/drill-rig/README.md)'s Decisions): the plan's
@@ -442,15 +441,16 @@ and the under-water look are in [europa](../../../world/europa/README.md#concept
   both voice lines re-rendered (`tools/art/voice.py`, Whisper read back right with the name prompt). VOX-B's radio
   patch applied (Rook's dry joke t=8 → 18) and Varga's t=66 → 58, Rook's t=82 → 87, Brandt's t=100 → 104 retimed to
   the measured event times (`RadioTimelineLevel22Test`).
-- 2026-10-22 (M8 part B, the gap check's §5, steps ART-B, AUD-B and B4; pending the user's review in round 51): the geysers reuse `vents` with a `look`
+- 2026-10-22 (M8 part B, the gap check's §5, steps ART-B, AUD-B and B4; accepted in round 51 (2026-10-22)): the geysers reuse `vents` with a `look`
   (`ice-geyser`: the crack, the tell's glow, the steam column and residue, `tools/art/l22_props.py`), sounded by look; the
   station's hum is section 3's bed (`conamara-station`), no positional hum; the ice-crawler is presentation on the
   existing `drops:` (`IceCrawlerLooks`, up the road from the bottom edge and back); the Polyp floe stays at t≈100 as the
   tables count it; the leads are scenery (Sonar Pulse `NO WATER` all level). The backdrop (`tools/art/backdrop_l22.py`):
   the leads read as heavy black strips, the dome is simple, and there is **no deep layer** (the design had Jupiter's
-  deep layer under the shelf) — asked in [round 51](../../../concept-rounds/round-51/README.md). The sounds' a proposals play in the game until the round's picks.
-- 2026-10-22 (M8 part B, step B5; pending the user's review in round 51): the ice-crawler's armour patch moved from t=100 (on open lead 5) to **t=110.5**
+  deep layer under the shelf): kept in [round 51](../../../concept-rounds/round-51/README.md) (F.3, 2026-10-22).
+- 2026-10-22 (M8 part B, step B5; accepted in round 51 (2026-10-22)): the ice-crawler's armour patch moved from t=100 (on open lead 5) to **t=110.5**
   on the ice-breaker road (its drive up from the bottom edge and back stays off leads 5 and 6; haul unchanged, the
   autopilot's credits −0.4 %); Dr. Brandt's secondary line "Three rigs are down" (wrong on easy, 2, and hard, 4) is now
   "Enough rigs are down. The shelf is quiet. Thank you, Aegis." (one radio page, so her t=104 line keeps its time;
   both candidates re-rendered). Captures for round 51 in this table.
+- 2026-10-22 (user, round 51, closed): the art accepted (F.2 the backdrop, F.4 the props, F.5 Dr. Brandt's portrait; `art: final`). **F.3 keep**: no deep layer under the shelf, the ice stays an opaque floor and the leads plain dark water; the design text no longer puts Jupiter in a deep layer (it shows as the warm sheen on the ice and in the act's title still). C.1–C.7 accepted (the waves, the rig's core HP, breaking the rigs with the Airstrike, the geyser rows off the leads, the bounty split, the secondary per difficulty, the crawler's drop). Dr. Brandt is cast with candidate a (V.1). The sounds: the geyser tell b, the burst a, the rig's collar, ring and death b, the beds a (S.1–S.7; the b files of S.1, S.3–S.5 replace the a files in the next code step).

@@ -69,6 +69,9 @@ public record WaveSpec(
             throw new IllegalArgumentException("a wave enters from no top or bottom edge: " + edge);
         }
         carried = List.copyOf(carried);
+        if (carried.stream().anyMatch(Carried::headFirst) && enemy.chain().isEmpty()) {
+            throw new IllegalArgumentException("only a segment chain's head drops a pickup for a head-first kill");
+        }
         paths = paths.stream().map(List::copyOf).toList();
         lanes = lanes.stream().map(List::copyOf).toList();
         if (lanes.stream().anyMatch(List::isEmpty)) {
@@ -713,14 +716,27 @@ public record WaveSpec(
      * A pickup carried by one unit of the group.
      *
      * @param unit the unit's index in the group, or {@link #LAST}
+     * @param headFirst M8 part C (design/campaign Level 23, the shield cell's {@code dropped_by: {head_first: true}}): a
+     *     segment chain's head drops it only when it is destroyed before any other part of its chain; false for every
+     *     other pickup
      */
-    public record Carried(PickupType pickup, int unit) {
+    public record Carried(PickupType pickup, int unit, boolean headFirst) {
         /** The group's last unit, whatever its size on the difficulty. */
         public static final int LAST = -1;
+
+        /** Dropped by its unit however it dies. */
+        public Carried(PickupType pickup, int unit) {
+            this(pickup, unit, false);
+        }
 
         /** Carried by the group's first or last unit. */
         public Carried(PickupType pickup, boolean lastUnit) {
             this(pickup, lastUnit ? LAST : 0);
+        }
+
+        /** The index in a group of {@code count} units of the unit that carries it. */
+        int carrier(int count) {
+            return unit == LAST ? count - 1 : Math.min(unit, count - 1);
         }
 
         /** Whether the last unit carries it. */

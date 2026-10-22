@@ -47,20 +47,11 @@ import java.util.List;
  * him with his level-start armour, the boss checkpoint keeps his armour and whether he ejected.
  * His state is hashed only when he flies, so a sortie without him keeps its hash.
  *
- * <p>M5 part C (design/campaign Level 09, user decisions D2, D3 and D5 = a): the level clock is
- * <em>script time</em>. Over a {@link ObjectiveSpec.Hold hold zone} the scroll eases down and the
- * level clock advances at the current scroll speed ÷ the section's speed, a fraction of a step per
- * step in fixed point ({@link #CLOCK_ONE}), so everything keyed to it (waves, ground targets, radio
- * times, edge warnings, the level end) waits with the scroll, while units, bullets, spawn cycles,
- * pounces and the wingman run on the real steps ({@link #realSeconds()}). Outside a hold the clock
- * advances exactly one step per step, so a level without holds steps and hashes as before. The
- * {@link ObjectiveSpec.Collapse collapse} runs on the real steps once its groups are cleared; a hold
- * over its groups stays active until its dust has settled, so what falls and the heap it leaves
- * stay on the screen.
+ * <p>M5 part C (design/campaign Level 09): the level clock is <em>script time</em>, slowed over a hold zone
+ * ({@link LevelClock}), while units, bullets and the wingman run on the real steps ({@link #realSeconds()}); the
+ * {@link ObjectiveSpec.Collapse collapse} runs on the real steps once its groups are cleared.
  *
- * <p>M5 part G (design/campaign Level 13, user decisions G1–G6 = a): a <em>timed halt</em> is a
- * section of speed 0 without an arena: the level clock runs on one step per step while the scroll
- * eases into it and out of it ({@link #timedHaltSpeed}). A {@code defend} primary ({@link
+ * <p>M5 part G (design/campaign Level 13, user decisions G1–G6 = a): a {@code defend} primary ({@link
  * ObjectiveSpec.Defend}) has a {@link Convoy} of one ally standing on the ground, placed so it stands at
  * its place at the defend's start ({@link #scrollAt}); the hook's modes aim at it, only what they aim
  * at it hurts it, its loss fails the mission (as an escort's), its {@code ally-below} cues and an
@@ -82,11 +73,14 @@ import java.util.List;
  *
  * <p>The step's passes live in package-private classes, each with the state only it uses: {@link HitPasses}
  * (what hits the ship, Rook and the drones), {@link ContactPasses} (what stops shots and bullets, the touches
- * of rock), {@link ObjectivePasses} (kills, losses and the objectives they decide), {@link AllyPasses} (the
- * convoy), {@link GroundPasses} (ground objects and debris), {@link PickupPasses}, {@link BossPasses} (set
- * pieces and what the bosses do), {@link HoldZones} (holds and the collapse), {@link Latches}, {@link
- * Sightings} (first-sighting cues) and the {@link BossCheckpoint}. The sortie keeps the order of the passes in
- * {@link #step(int)}, the level clock and scroll, the attempt and the accessors.
+ * of rock), {@link ObjectivePasses} (kills, losses, the objectives they decide and the level's end), {@link
+ * AllyPasses} (the convoy), {@link GroundPasses} (ground objects and debris), {@link PickupPasses}, {@link
+ * BossPasses} (set pieces and what the bosses do), {@link HoldZones} (holds and the collapse), {@link Latches},
+ * {@link Sightings} (first-sighting cues), {@link EscortSlot} (Rook or the Bulwark) and the {@link BossCheckpoint};
+ * the level clock and the scroll are {@link LevelClock}'s (planned before play: {@link ScrollPlan}), the attempts
+ * {@link Attempts}', the outcomes of hits and escapes {@link SortieOutcomes}' and the hash {@link SortieHash}'s.
+ * The sortie keeps the order of the passes in {@link #step(int)}, the clock's and the attempt's state the passes
+ * share, and the accessors.
  */
 public final class Sortie {
     private static final int GROUND_CAPACITY = 32;
@@ -108,13 +102,13 @@ public final class Sortie {
 
     // The step's passes and their state (see the class comment).
     /** What hits the ship, Rook and the drones. */
-    private final HitPasses hitPasses;
+    final HitPasses hitPasses;
     /** What stops shots and bullets, and the ship's and Rook's touches of rock. */
     final ContactPasses contacts;
     /** The outcomes of kills and losses: pay, drops, lines, objectives. */
     final ObjectivePasses objectivePasses;
     /** The convoy's passes: what hurts its units, and what follows. */
-    private final AllyPasses allies;
+    final AllyPasses allies;
     /** The ground objects and debris chunks: let in, scrolled, destroyed. */
     final GroundPasses groundPasses;
     /** The pickups: dropped, placed, drifting and collected. */
@@ -124,41 +118,29 @@ public final class Sortie {
     /** M5 part C: the hold zones and the collapse. */
     final HoldZones holdZones;
     /** M5 part F: the units latched onto the ship (the Lamprey's), their shake-off and drain. */
-    private final Latches latches;
+    final Latches latches;
     /** The radio's first-sighting cues (a pounce, a decloak, a loop-back, a surfacing). */
     final Sightings sightings;
     /** The boss checkpoint; null in a level without a boss. */
-    private final BossCheckpoint checkpoint;
+    final BossCheckpoint checkpoint;
     /** M7 part F: whether a boss walks passes (Level 19's walker): only then are the homing missiles hashed. */
-    private final boolean walks;
+    final boolean walks;
     /** M7 part H: the breaching boss (Level 21's Dust Colossus); null without one. */
-    private final SetPiece breachBoss;
-    /** M7 part H: whether the arena crawls ({@link Section#crawls()}): its ground scrolls on while the clock is held. */
-    private final boolean crawling;
-    /**
-     * Step SIM-K (round 44, K.c): a crawling arena's ground stands still while the breaching boss is out of the sand:
-     * how far its crawl is eased in, steps (0 still, {@link #crawlEaseTicks} at full speed; smoothstep between).
-     */
-    private int crawlLevel;
-
-    private final int crawlEaseTicks;
+    final SetPiece breachBoss;
+    /** The level clock and the scroll in play: the arena's halt, the ramps and eases, the crawl, the travel. */
+    final LevelClock clock;
     /** Step SIM-K: the sets pieces the level's enemy total counts (its bosses left out when the secondary says so). */
     private final int countedPieces;
 
     /** The boss whose arrival records the checkpoint (the first boss); -1 without one. */
-    private final int checkpointBoss;
-    /** M5 part E: the arena boss (anchored, with lanes); null without one. */
-    private final SetPiece arenaBoss;
+    final int checkpointBoss;
     /** Round 40: whether the arena boss's slam arms are rooted (their roots' hits are events). */
     private final boolean rootedArena;
-    /** M5 part E: the speed the scroll eases into an arena of speed 0 from (the section before's); 0 without one. */
-    private final double arenaFromSpeed;
     /** The arena section's end and start, steps; -1 without an arena. */
     final int arenaEndTicks;
 
     final int arenaStartTicks;
-    private final double arenaSpeed;
-    /** What the guns and the Airstrike destroy is handed here. */
+    /** What the guns and the Airstrike destroy is handed here (and what escapes, and a tendril's end: {@link SortieOutcomes}). */
     private final PlayerFire.Hits hits;
 
     final SimEvents events = new SimEvents(EVENT_CAPACITY);
@@ -167,7 +149,7 @@ public final class Sortie {
     final Radio radio;
     final Crane[] cranes;
     /** The mass-driver sleds; null without them. */
-    private final Sled sled;
+    final Sled sled;
     /** {@link #sled} for the presentation, made once (stepping allocates nothing). */
     private final java.util.Optional<Sled> sledView;
     /** M7 part F: the conveyor belts (none in most levels). */
@@ -186,31 +168,23 @@ public final class Sortie {
     /** The escort objective's convoy, or (M5 part E) the naval convoy; null without one. */
     final Convoy convoy;
 
-    private final int launchTicks;
+    final int launchTicks;
     private final int endTicks;
     /** A secret's crate or data core: the level's own life for it. */
     private final int crateTicks;
+    /** Its attempts: their start, the restart, the boss checkpoint's record. */
+    private final Attempts attempts;
+    /** The escort slot: the wingman (Rook) or the Bulwark, their step, hits and start armour. */
+    final EscortSlot escorts;
     /** M5 part A: the wingman in the escort slot (Rook); null without one. */
     final Wingman wingman;
-    /** {@link #wingman} for the presentation, made once (stepping allocates nothing). */
-    private final java.util.Optional<Wingman> wingmanView;
-    /** The mount index the wingman's shots carry: one past the armament's. */
-    private final int wingmanMount;
-    /** The wingman's armour at the start of the next attempt. */
-    private double wingmanStart;
     /** M8 part A: the Bulwark heavy drone in the escort slot; null without one (then nothing of it is hashed). */
     final Bulwark bulwark;
-    /** {@link #bulwark} for the presentation, made once. */
-    private final java.util.Optional<Bulwark> bulwarkView;
-    /** M8 part A: the Bulwark's armour at the start of the next attempt. */
-    private double bulwarkStart;
 
-    private long tick;
+    long tick;
     int levelTick;
     /** M5 part C: the level clock's part of a step past {@link #levelTick}, in 1/{@link #CLOCK_ONE} steps. */
     int tickFraction;
-    /** How far the level clock advanced in the last step, in 1/{@link #CLOCK_ONE} steps. */
-    private int clockStep = CLOCK_ONE;
     /** Whether {@link #levelTick} moved on in this step (a step in a hold may leave it). */
     boolean clockTicked;
     /** Steps since this attempt started: the real clock. */
@@ -225,9 +199,7 @@ public final class Sortie {
     /** M7 part C: the rock with the scroll now, shared by the fire, the enemies and the wingman. */
     private final Canyon canyon;
     /** M7 part C: the level's tendril gates (design/enemies/ground/tendril-anchor); null without. */
-    private final Links links;
-    /** M7 part B: whether a section eases in from the one before (Level 15's speed changes). */
-    private final boolean eased;
+    final Links links;
 
     int attempt = 1;
     boolean wrecked;
@@ -236,9 +208,9 @@ public final class Sortie {
     /** The destroy-targets group whose loss failed the primary; -1 for none. */
     int failedGroup = -1;
     /** What the convoy earned at the level end, for the debrief. */
-    private int escortCredits;
+    int escortCredits;
     /** The armour of the next attempt, once {@link #retry(double)} asked for one; 0 while none is asked for. */
-    private double retryArmour;
+    double retryArmour;
 
     double groundScroll;
     private int edgeWarnings;
@@ -251,49 +223,24 @@ public final class Sortie {
      */
     private int skippedSeen;
     /** Whether this attempt recorded the boss checkpoint. */
-    private boolean checkpointTaken;
+    boolean checkpointTaken;
     /** Whether the next step restarts at the boss checkpoint. */
     boolean bossRetry;
     /** Whether the next step jumps the clock to the arena's end (the boss died early). */
     boolean arenaJump;
-    /** The scroll ramps from this speed ... */
-    private double rampFrom;
-    /** ... for this many steps so far; -1 without a ramp. */
-    private int rampTicks = -1;
-    /**
-     * M7 part F: the ramp's length out of the arena, steps: {@link #ARENA_RAMP_SECONDS}, or the next section's ease
-     * (smoothstep) when it has one ({@link #easeOutOfArena}).
-     */
-    private final int rampLength;
-    /** M7 part F: whether the section after the arena eases up from the halt (smoothstep over its ease). */
-    private final boolean easeOutOfArena;
-    /** M7 part F: the arena section's hold after its boss, s; 0 without one (or without an arena). */
-    private final double holdAfterBoss;
-    /**
-     * M7 part F: steps the level clock stays halted after an arena boss's death (its death chain, then the arena's
-     * hold after the boss); 0 for none. Hashed only in a level whose arena holds.
-     */
-    int postBossHold;
     /** M5 part F: the level's wind and lightning (exactly no push without weather). */
-    private final Wind wind;
+    final Wind wind;
     /**
      * M8 part A (design/world/europa, Under water rules): the medium the ship flies in, from the level clock; the air
      * (no factor) in every level before Act 4. Hashed only in a level with water.
      */
-    private final Medium medium;
+    final Medium medium;
     /** M5 part F: the weather sondes (none in most levels). */
-    private final Sondes sondes;
-    /** M5 part G: whether the level has a timed halt: its scroll then follows {@link #timedHaltSpeed}. */
-    private final boolean timedHalts;
+    final Sondes sondes;
     /** M5 part G: the step the defend primary's synchronisation completes at; -1 without one. */
     final int defendEndTicks;
     /** M5 part H: per root burst (in the level's order), its first growth's slot in the force's burst arrays. */
-    private final int[] burstSlots;
-    /**
-     * M7 part G (design/campaign Level 20, Reverse scroll): the direction of travel, +1 or -1: the scroll's sign, the
-     * last non-zero one through the turnabout's zero. Follows the scroll (not hashed: the scroll decides it).
-     */
-    private int travel = 1;
+    final int[] burstSlots;
 
     /** @param armour the ship's armour at the level start (design/systems/retry: not full, unless it was full) */
     public Sortie(long seed, Loadout loadout, LevelScript script, Rules rules, double armour) {
@@ -321,25 +268,9 @@ public final class Sortie {
             firstBoss = setPieces[k].boss().isPresent() ? k : firstBoss;
         }
         checkpointBoss = firstBoss;
-        int arenaEnd = -1;
-        int arenaStart = -1;
-        double arenaSpeedFound = 0;
-        boolean crawls = false;
-        for (int i = 0; i < script.sections().size(); i++) {
-            if (script.sections().get(i).arena()) {
-                crawls = script.sections().get(i).crawls();
-                arenaStart =
-                        i == 0 ? 0 : SimStep.ticks(script.sections().get(i - 1).end());
-                arenaEnd = SimStep.ticks(script.sections().get(i).end());
-                arenaSpeedFound = script.sections().get(i).speed();
-            }
-        }
-        arenaEndTicks = arenaEnd;
-        arenaStartTicks = arenaStart;
-        arenaSpeed = arenaSpeedFound;
-        crawling = crawls;
-        crawlEaseTicks = Math.max(1, SimStep.ticks(CRAWL_EASE_SECONDS));
-        crawlLevel = crawlEaseTicks;
+        clock = new LevelClock(this, script, setPieces);
+        arenaEndTicks = clock.arenaEndTicks;
+        arenaStartTicks = clock.arenaStartTicks;
         int counted = setPieces.length;
         if (!script.objectives().secondary().countsBosses()) {
             for (SetPiece piece : setPieces) {
@@ -347,49 +278,8 @@ public final class Sortie {
             }
         }
         countedPieces = counted;
-        double hold = 0;
-        double easeOut = 0;
-        for (int i = 0; i < script.sections().size(); i++) {
-            if (script.sections().get(i).arena()) {
-                hold = script.sections().get(i).holdAfterBossSeconds();
-                easeOut = i + 1 < script.sections().size()
-                        ? script.sections().get(i + 1).easeSeconds()
-                        : 0;
-            }
-        }
-        holdAfterBoss = hold;
-        easeOutOfArena = easeOut > 0;
-        rampLength = easeOutOfArena ? Math.max(1, SimStep.ticks(easeOut)) : SimStep.ticks(ARENA_RAMP_SECONDS);
-        SetPiece anchored = null;
-        for (SetPiece piece : setPieces) {
-            if (anchored == null && piece.arena().isPresent()) {
-                anchored = piece;
-            }
-        }
-        arenaBoss = anchored;
-        arenaFromSpeed = anchored == null ? 0 : arenaFromSpeed(script);
-        SetPiece breaching = null;
-        for (SetPiece piece : setPieces) {
-            if (breaching == null && piece.breach().isPresent()) {
-                breaching = piece;
-            }
-        }
-        breachBoss = breaching;
-        if (anchored != null && anchored.breach().isPresent()) {
-            // M7 part H: a breaching boss needs an arena (it may crawl); it is not anchored to the ground.
-            if (arenaStart < 0) {
-                throw new IllegalArgumentException("a breaching boss needs an arena");
-            }
-        } else if (anchored != null) {
-            if (arenaStart < 0 || arenaSpeed != 0) {
-                throw new IllegalArgumentException("an anchored boss needs an arena of speed 0");
-            }
-            anchored.anchorAt(haltScroll(script, arenaFromSpeed)
-                    + anchored.boss().orElseThrow().hoverY());
-        }
-        if (crawling && (anchored == null || anchored.breach().isEmpty())) {
-            throw new IllegalArgumentException("only a breaching boss's arena crawls");
-        }
+        SetPiece anchored = clock.arenaBoss;
+        breachBoss = clock.breachBoss;
         Hitbox laneBox = anchored == null || anchored.arena().orElseThrow().laneCount() == 0
                 ? null
                 : new Hitbox(
@@ -405,43 +295,7 @@ public final class Sortie {
         partsPiece = script.objectives().secondary().byParts()
                 ? pieceOf(script.objectives().secondary().partsOf())
                 : -1;
-        PlayerFire.Hits hits = new PlayerFire.Hits() {
-            @Override
-            public void enemyDestroyed(int index, int mount) {
-                objectivePasses.escortKill(mount);
-                objectivePasses.destroy(index);
-            }
-
-            @Override
-            public void groundDestroyed(int index) {
-                groundPasses.demolish(index);
-            }
-
-            @Override
-            public void triggerReleased(int index) {
-                GroundObject trigger = ground.get(index);
-                events.add(SimEvents.Type.TRIGGER_SPENT, trigger.x(), trigger.y(), trigger.serial());
-                groundPasses.released(trigger);
-            }
-
-            @Override
-            public void mineDestroyed(int index) {
-                objectivePasses.shootMine(index);
-            }
-
-            @Override
-            public void partDestroyed(int piece, int part, int mount) {
-                if (setPieces[piece].spec().parts().get(part).vital()) {
-                    objectivePasses.escortKill(mount);
-                }
-                objectivePasses.wreck(piece, part);
-            }
-
-            @Override
-            public void unitPartDestroyed(int index, int part, int mount) {
-                objectivePasses.partOff(index, part);
-            }
-        };
+        SortieOutcomes hits = new SortieOutcomes(this);
         this.hits = hits;
         fire = new PlayerFire(
                 ship,
@@ -479,24 +333,8 @@ public final class Sortie {
                 rng,
                 rules,
                 events,
-                new EnemyForce.Escapes() {
-                    @Override
-                    public void escaped(Enemy enemy) {
-                        objectivePasses.escaped(enemy);
-                    }
-
-                    @Override
-                    public void burst(Enemy enemy) {
-                        objectivePasses.selfBurst(enemy);
-                    }
-
-                    @Override
-                    public void released(Enemy spawner, int units) {
-                        // M5 part C: a periodic spawner's units count among the enemies as released.
-                        streamReleased += units;
-                    }
-                },
-                spans(script),
+                hits,
+                ScrollPlan.spans(script),
                 // M7 part G: the waves and the ground units of a reversed scroll are flipped.
                 script.reverses() ? t -> travelAt(script, t) < 0 : t -> false);
         force.canyon(canyon);
@@ -516,77 +354,26 @@ public final class Sortie {
         walks = walking;
         links = script.ground().gates().isEmpty()
                 ? null
-                : new Links(script.ground().gates(), events, new Links.Outcome() {
-                    @Override
-                    public void broken(Tendril tendril) {
-                        objectivePasses.tendrilBurnt(tendril);
-                        objectivePasses.tendrilBroken();
-                    }
-
-                    @Override
-                    public void lost(Tendril tendril) {
-                        objectivePasses.tendrilLost();
-                    }
-                });
+                : new Links(script.ground().gates(), events, hits);
         if (links != null) {
             force.links(links, script.ground().gates());
             fire.links(links);
         }
         tally = new Tally(rules.scoring());
-        String tag = script.objectives().secondary().tag();
-        int escapers = tag.isEmpty()
-                ? force.unitsOf(script.objectives().secondary().escapes())
-                : force.unitsOf(script.objectives().secondary().escapes(), tag);
-        for (String slug : script.objectives().secondary().killAll()) {
-            escapers += force.unitsOf(slug);
-        }
-        for (SetPiece piece : setPieces) {
-            escapers += script.objectives().secondary().counts(piece.slug()) ? 1 : 0;
-        }
-        escapers += partsPiece >= 0 ? script.objectives().secondary().parts().size() : 0;
-        // M5 part F: a collect: sondes objective counts the level's sondes.
-        escapers += script.objectives().secondary().sondes()
-                ? script.hazards().sondes().orElseThrow().at().size()
-                : 0;
-        // M7 part C: a links objective counts the difficulty's tendrils (one per gate pair).
-        escapers += script.objectives().secondary().links()
-                ? script.ground().gates().size()
-                : 0;
         objectives = new Objectives(
                 script.objectives().secondary(),
                 script.groups().size(),
                 force.kinds().size(),
                 enemyTotal(),
                 script.groundUnits(),
-                escapers);
+                ObjectivePasses.escapers(script, force, setPieces, partsPiece));
         cranes = script.hazards().cranes().stream().map(Crane::new).toArray(Crane[]::new);
         sled = script.hazards().sled().map(Sled::new).orElse(null);
         sledView = java.util.Optional.ofNullable(sled);
         belts = new Belts(script.ground().belts());
         vents = new FurnaceVents(script.hazards().vents(), arenaStartTicks >= 0 ? arenaStartTicks : Integer.MAX_VALUE);
         radio = new Radio(script.radio(), events, ship, Radio.fitted(loadout.armament(), special));
-        convoy = script.objectives()
-                .escort()
-                .map(escort -> new Convoy(escort, script.ground().road().orElse(null), script.sections()))
-                .or(() -> script.objectives().convoy().map(Convoy::new))
-                .or(() -> script.objectives()
-                        .defend()
-                        .map(defend -> new Convoy(defend, scrollAt(script, defend.start()))))
-                .or(() -> script.objectives().groundAllies().map(allies -> groundAllies(script, allies)))
-                .orElse(null);
-        if (script.objectives().secondary().byGroundAllies()
-                && script.objectives().groundAllies().isEmpty()) {
-            throw new IllegalArgumentException("an untouched or standing secondary needs the level's ground allies");
-        }
-        if (convoy != null && convoy.defend()) {
-            force.hook(convoy, convoy.defendSpec());
-        } else if (convoy != null && convoy.groundAllies()) {
-            force.hook(convoy, convoy.groundSpec().targetedBy());
-        } else if (convoy != null && !convoy.naval()) {
-            force.hook(convoy, convoy.escort().targetedBy());
-        }
-        timedHalts = script.timedHalts();
-        eased = script.sections().stream().anyMatch(section -> section.easeSeconds() > 0);
+        convoy = AllyPasses.convoy(script, force);
         surfaceZones = SurfaceZones.of(script);
         force.surfaceZones(surfaceZones);
         defendEndTicks = script.objectives()
@@ -597,32 +384,10 @@ public final class Sortie {
         launchTicks = SimStep.ticks(script.launchSeconds());
         endTicks = SimStep.ticks(script.seconds());
         crateTicks = SimStep.ticks(rules.pickups().crateSeconds());
-        wingman = loadout.wingman().map(flying -> new Wingman(flying, seed)).orElse(null);
-        if (wingman != null) {
-            if (medium.water()) {
-                // M8 part A: his drag and his gun's layers under water.
-                wingman.medium(medium);
-            }
-            wingman.canyon(canyon);
-            wingman.links(links);
-            if (vents.grates() > 0) {
-                wingman.vents(vents);
-            }
-        }
-        wingmanView = java.util.Optional.ofNullable(wingman);
-        wingmanMount = loadout.armament().size();
-        wingmanStart = loadout.wingman().map(WingmanSpec::armour).orElse(0.0);
+        escorts = new EscortSlot(this, loadout, seed, medium, canyon, links, vents, force);
+        wingman = escorts.wingman;
+        bulwark = escorts.bulwark;
         radio.escort(wingman);
-        bulwark = loadout.bulwark().map(flying -> new Bulwark(flying, seed)).orElse(null);
-        if (bulwark != null) {
-            if (medium.water()) {
-                // M8 part A: its drag under water.
-                bulwark.medium(medium);
-            }
-            force.lure(bulwark);
-        }
-        bulwarkView = java.util.Optional.ofNullable(bulwark);
-        bulwarkStart = loadout.bulwark().map(BulwarkSpec::armour).orElse(0.0);
         wind = new Wind(script.hazards().weather());
         sondes = new Sondes(script.hazards().sondes());
         if (links != null && checkpointBoss >= 0) {
@@ -670,7 +435,7 @@ public final class Sortie {
                 objectives,
                 setPieces,
                 wingman,
-                wingmanMount,
+                escorts.wingmanMount,
                 links,
                 sondes,
                 partDropPiece,
@@ -722,7 +487,8 @@ public final class Sortie {
                 burstSlots[k++] = b;
             }
         }
-        startAttempt(armour);
+        attempts = new Attempts(this);
+        attempts.start(armour);
     }
 
     /** The index of the set piece {@code slug} among the level's; -1 for none. */
@@ -735,114 +501,14 @@ public final class Sortie {
         return -1;
     }
 
-    /** The speed of the section before the arena: the scroll eases into an arena of speed 0 from it. */
-    private static double arenaFromSpeed(LevelScript script) {
-        List<Section> sections = script.sections();
-        for (int i = 1; i < sections.size(); i++) {
-            if (sections.get(i).arena()) {
-                return sections.get(i - 1).speed();
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * M5 part E: the ground's scroll when it has halted in the arena: the scroll at the arena's start
-     * plus the ease into the halt over {@link #ARENA_RAMP_SECONDS} ({@link #easeDistance(double)}).
-     */
-    static double haltScroll(LevelScript script, double fromSpeed) {
-        double scroll = 0;
-        List<Section> sections = script.sections();
-        for (int i = 0; i < sections.size() && !sections.get(i).arena(); i++) {
-            int start = i == 0 ? 0 : SimStep.ticks(sections.get(i - 1).end());
-            scroll += (SimStep.ticks(sections.get(i).end()) - start)
-                    * sections.get(i).speed()
-                    * SimStep.SECONDS;
-        }
-        return scroll + easeDistance(fromSpeed);
-    }
-
-    /**
-     * M5 part E: how far the ground scrolls while it eases from {@code speed} to a halt at an arena of
-     * speed 0, px: one step at {@code speed} × (n − 1 − j) / n for the arena's step j, n the ease's
-     * steps (about half a second at {@code speed}: 68.8 px at 140 px/s). A level's backdrop pieces that
-     * must lie under the halted boss (Level 11's Platform Tiamat) are placed with it.
-     */
-    public static double easeDistance(double speed) {
-        int n = SimStep.ticks(ARENA_RAMP_SECONDS);
-        double distance = 0;
-        for (int j = 0; j < n - 1; j++) {
-            distance += speed * (n - 1 - j) / n * SimStep.SECONDS;
-        }
-        return distance;
-    }
-
     /** Advances the sortie by one step with the given {@link Command} set. */
     public void step(int commands) {
         tick++;
         events.clear();
-        if (retryArmour > 0) {
-            restart();
-        } else if (bossRetry) {
-            checkpoint.restore();
-        }
-        if (checkpoint != null && !checkpointTaken && levelTick + 1 == arrivalTicks()) {
-            checkpoint.record();
-            checkpointTaken = true;
-        }
+        attempts.step();
         realTick++;
         clockTicked = false;
-        double scrollStep;
-        if (arenaJump) {
-            // The boss died before the arena's end: the next section starts now.
-            arenaJump = false;
-            if (!crawling) {
-                groundScroll += (arenaEndTicks - 1 - levelTick) * arenaSpeed * SimStep.SECONDS;
-            }
-            // M7 part H: a crawling arena's jump moves the clock only (the ground crawls on unbroken).
-            levelTick = arenaEndTicks - 1;
-            tickFraction = 0;
-            rampFrom = arenaSpeed;
-            rampTicks = 0;
-        }
-        if (holdZones.holds()) {
-            holdZones.ease();
-        }
-        boolean held = clockHeld();
-        if (postBossHold > 0) {
-            postBossHold--;
-        }
-        if (held && crawling) {
-            // M7 part H: the clock is held, the ground crawls on at the arena's speed (and ramps on from it).
-            scrollStep = arenaSpeed * SimStep.SECONDS;
-            rampFrom = arenaSpeed;
-            rampTicks = 0;
-            clockStep = 0;
-        } else if (held) {
-            scrollStep = 0;
-            rampFrom = 0;
-            rampTicks = 0;
-            clockStep = 0;
-        } else {
-            double speed = scrollSpeed();
-            scrollStep = speed * SimStep.SECONDS;
-            if (speed > 0) {
-                travel = 1;
-            } else if (speed < 0) {
-                // M7 part G: the scroll runs reversed (it keeps its sign through a halt).
-                travel = -1;
-            }
-            advanceClock(speed);
-            if (rampTicks >= 0 && ++rampTicks >= rampLength) {
-                rampTicks = -1;
-            }
-        }
-        if (crawling) {
-            // Step SIM-K: the crawl eases to a stop while the breaching boss is out of the sand, and back.
-            crawlLevel = Math.clamp(crawlLevel + (groundStill() ? -1 : 1), 0, crawlEaseTicks);
-            scrollStep *= crawlFactor();
-        }
-        groundScroll += scrollStep;
+        double scrollStep = clock.step();
         // M8 part A: the medium at the level clock now (the waterline's crossing eases the factors).
         medium.at(levelTick);
         if (surfaceZones.active()) {
@@ -888,18 +554,12 @@ public final class Sortie {
             fire.ceaseBeams();
             force.noPull();
         }
-        if (wingman != null) {
-            wingman.wind(push);
-            flyWingman(commands);
-        }
-        if (bulwark != null) {
-            flyBulwark(commands);
-        }
+        escorts.fly(commands, push);
         force.wind(push);
         // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
         special.setting(levelTick, ship.x(), ship.y());
         special.command(commands, !launching() && flying() && !complete, ship.x(), ship.y());
-        tally.step(chainTargets());
+        tally.step(PlayerFire.chainTargets(force.enemies(), setPieces));
         if (!complete) {
             if (burstSlots.length > 0) {
                 // M5 part H: the root bursts' telegraphs, before their growths are let in.
@@ -989,7 +649,7 @@ public final class Sortie {
         }
         if (convoy != null && convoy.naval()) {
             // M5 part E: the naval convoy glides on the real steps at the arena's halt and after it.
-            convoy.sail(clockHeld(), scrollStep, events);
+            convoy.sail(clock.clockHeld(), scrollStep, events);
         } else if (convoy != null) {
             convoy.update(levelTick, groundScroll, scrollStep);
             if (convoy.air() && !complete && !wrecked && !failed) {
@@ -1026,17 +686,8 @@ public final class Sortie {
         if (canyon != null) {
             contacts.scrape();
         }
-        if (wingman != null && flying() && !complete && !failed && !rules.invulnerableShip()) {
-            hitPasses.hitWingman();
-            if (links != null && !wingman.ejected()) {
-                double damage = links.touch(wingman.hull(), wingman.x(), wingman.y(), true);
-                if (damage > 0) {
-                    wingman.hit(damage, ship.x(), ship.y(), events);
-                }
-            }
-        }
-        if (bulwark != null && flying() && !complete && !failed && !rules.invulnerableShip()) {
-            hitPasses.hitBulwark(bulwark);
+        if (flying() && !complete && !failed && !rules.invulnerableShip()) {
+            escorts.hit();
         }
         if (convoy != null && !convoy.naval() && !complete && !wrecked && !failed) {
             allies.hitAllies();
@@ -1065,30 +716,12 @@ public final class Sortie {
             holdZones.updateHolds();
         }
         if (!complete && !wrecked && !failed && levelTick >= endTicks) {
-            completeLevel();
+            objectivePasses.completeLevel();
         }
     }
 
     /** The level clock's step: {@link #CLOCK_ONE} is one step of script time. */
     public static final int CLOCK_ONE = 1 << 16;
-
-    /**
-     * Advances the level clock for a step at {@code speed} px/s: one whole step at the section's
-     * speed, the share of one at a hold's eased speed (the clock never runs faster than real time).
-     */
-    private void advanceClock(double speed) {
-        if (holdZones.easeTicks == 0) {
-            clockStep = CLOCK_ONE;
-        } else {
-            double share = speed / sectionSpeed();
-            clockStep = Math.clamp(Math.round(share * CLOCK_ONE), 1, CLOCK_ONE);
-        }
-        tickFraction += clockStep;
-        int whole = tickFraction >> 16;
-        tickFraction &= CLOCK_ONE - 1;
-        levelTick += whole;
-        clockTicked = whole > 0;
-    }
 
     /**
      * Restarts the level at the next step from its start state, after the ship's destruction or from
@@ -1108,125 +741,20 @@ public final class Sortie {
      */
     public void retry(double armour, double wingmanArmour) {
         retry(armour);
-        if (wingman != null) {
-            if (!(wingmanArmour > 0)) {
-                throw new IllegalArgumentException("a retry needs the wingman's armour");
-            }
-            wingmanStart = Math.min(wingmanArmour, wingman.maxArmour());
-        }
-        if (bulwark != null) {
-            // M8 part A: the Bulwark starts the next attempt with its level-start armour as Rook does.
-            if (!(wingmanArmour > 0)) {
-                throw new IllegalArgumentException("a retry needs the Bulwark's armour");
-            }
-            bulwarkStart = Math.min(wingmanArmour, bulwark.maxArmour());
-        }
+        escorts.retry(wingmanArmour);
     }
 
-    private void startAttempt(double armour) {
-        // M7 part G: the travel at the level start.
-        travel = travelAt(script.sections(), 0);
-        ship.reset(armour);
-        if (launchTicks > 0) {
-            ship.launch(0, script.launchDrop());
-            ship.rememberPosition();
-        }
-        if (wingman != null) {
-            wingman.reset(wingmanStart, ship.x(), ship.y());
-        }
-        if (bulwark != null) {
-            bulwark.reset(bulwarkStart, ship.x(), ship.y());
-        }
-    }
-
-    /**
-     * M8 part A: the Bulwark's step: in its slot during the launch; then it flies to its slot and, while the player
-     * fires, its cannon fires (its shots carry the escort's mount, {@link #wingmanMount()}).
-     */
-    private void flyBulwark(int commands) {
-        bulwark.rememberPosition();
-        if (launching()) {
-            bulwark.formUp(ship.x(), ship.y());
-            return;
-        }
-        bulwark.fly(ship.x(), ship.y());
-        if (bulwark.fires(flying() && !complete && Command.FIRE.in(commands))) {
-            fire.wingmanVolley(wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, force.enemies(), ground);
-        }
-    }
-
-    /**
-     * The wingman's step: in his slot during the launch; then his AI and, while the player fires,
-     * his gun.
-     */
-    private void flyWingman(int commands) {
-        wingman.rememberPosition();
-        if (launching()) {
-            wingman.formUp(ship.x(), ship.y());
-            return;
-        }
-        // M7 part G: he keeps out of a pursuit's lunge lane during its tell and its dive.
-        java.util.Optional<Pursuit> chase = force.flocks().size() > 0 ? force.pursuit() : java.util.Optional.empty();
-        if (chase.isPresent() && chase.get().lunging()) {
-            wingman.lunge(chase.get().laneLeft(), chase.get().laneRight());
-        } else {
-            wingman.lunge(Double.NaN, Double.NaN);
-        }
-        if (breachBoss != null) {
-            // M7 part H: the breaching boss's suction pulls him as it pulls the ship.
-            BreachArena breach = breachBoss.breach().orElseThrow();
-            wingman.pull(breach.pullXAt(wingman.x(), wingman.y()), breach.pullYAt(wingman.x(), wingman.y()));
-        }
-        wingman.fly(
-                ship.x(),
-                ship.y(),
-                // M7 part F: the walker walking up the screen is a rear wave for him. M7 part G (default pending the
-                // user's review): in a reversed scroll no bottom wave puts him in Trail (the bottom is ahead).
-                wingmanEdges(),
-                force.enemies(),
-                force.bullets(),
-                setPieces,
-                fire.recentHit(wingman.recentHitTicks()));
-        if (wingman.fires(flying() && Command.FIRE.in(commands))) {
-            fire.wingmanVolley(
-                    wingmanMount, wingman.gun(), wingman.x(), wingman.y(), wingman.target(), force.enemies(), ground);
-        }
-    }
-
-    /** When the checkpoint boss arrives, steps on the level clock; -1 without one. */
-    private int arrivalTicks() {
-        return SimStep.ticks(setPieces[checkpointBoss].boss().orElseThrow().arriveSeconds());
-    }
-
-    /**
-     * Whether the level clock halts: at the end of the arena section while the boss that fights
-     * there lives (the scroll stops until it dies).
-     */
-    private boolean clockHeld() {
-        if (postBossHold > 0) {
-            // M7 part F: the arena's hold after its boss's death chain.
-            return true;
-        }
-        if (arenaEndTicks < 0 || levelTick + 1 < arenaEndTicks || levelTick >= arenaEndTicks) {
-            return false;
-        }
-        for (SetPiece piece : setPieces) {
-            if (piece.boss().isPresent() && piece.present() && !piece.destroyed()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * M5 part E: whether the scroll has come to a halt in an arena of speed 0: its ease is over (or the
-     * level clock is halted at the arena's end).
-     */
+    /** M5 part E: whether the scroll has come to a halt in an arena of speed 0 ({@link LevelClock#scrollHalted}). */
     boolean scrollHalted() {
-        return clockHeld()
-                || (arenaStartTicks >= 0
-                        && levelTick < arenaEndTicks
-                        && levelTick - arenaStartTicks >= SimStep.ticks(ARENA_RAMP_SECONDS) - 1);
+        return clock.scrollHalted();
+    }
+
+    /**
+     * M7 part F: arena boss {@code boss} died at the level clock's tick now ({@link LevelClock#bossDownInArena}): an
+     * arena with a hold after its boss keeps the clock halted for its death chain and then the hold.
+     */
+    void bossDownInArena(BossSpec boss) {
+        clock.bossDownInArena(boss);
     }
 
     /**
@@ -1234,25 +762,17 @@ public final class Sortie {
      * speed while the level clock is held, and the kill's jump moves the clock only.
      */
     public boolean crawling() {
-        return crawling;
-    }
-
-    /**
-     * Step SIM-K: whether the breaching boss wants a crawling arena's ground still now or within the crawl's ease
-     * ({@link BreachArena#groundStill(int)}).
-     */
-    private boolean groundStill() {
-        return breachBoss != null && breachBoss.breach().orElseThrow().groundStill(crawlEaseTicks);
+        return clock.crawling;
     }
 
     /** Step SIM-K: the share of its speed a crawling arena's ground scrolls at now, 0–1 (1 in any other level). */
     public double crawlFactor() {
-        return crawling ? smoothstep((double) crawlLevel / crawlEaseTicks) : 1;
+        return clock.crawlFactor();
     }
 
     /** Whether the level clock is halted in the arena now (the boss outlived its arena). */
     public boolean arenaHalted() {
-        return clockHeld();
+        return clock.clockHeld();
     }
 
     /**
@@ -1273,11 +793,8 @@ public final class Sortie {
     }
 
     void resetArena() {
-        crawlLevel = crawlEaseTicks;
+        clock.reset();
         arenaJump = false;
-        postBossHold = 0;
-        rampFrom = 0;
-        rampTicks = -1;
         bossPasses.bossPhase = -1;
     }
 
@@ -1287,111 +804,9 @@ public final class Sortie {
                 || darkness.lit(object.x(), object.y(), object.spec().size(), ship.x(), ship.y(), levelSeconds());
     }
 
-    private void restart() {
-        checkpointTaken = false;
-        objectivePasses.reset();
-        pickupPasses.reset();
-        bossRetry = false;
-        streamReleased = 0;
-        resetArena();
-        bossPasses.clearLaunches();
-        fire.reset();
-        special.reset();
-        force.reset();
-        Pools.clear(ground);
-        Pools.clear(pickups);
-        Pools.clear(debris);
-        for (SetPiece piece : setPieces) {
-            piece.reset();
-        }
-        groundPasses.reset();
-        tally.reset();
-        objectives.reset();
-        radio.reset();
-        for (Crane crane : cranes) {
-            crane.reset();
-        }
-        if (sled != null) {
-            sled.reset();
-        }
-        vents.reset();
-        for (Tow tow : tows) {
-            tow.reset();
-        }
-        wind.reset();
-        sondes.reset();
-        latches.reset();
-        allies.reset();
-        levelTick = 0;
-        tickFraction = 0;
-        clockStep = CLOCK_ONE;
-        realTick = 0;
-        holdZones.reset();
-        sightings.reset();
-        contacts.reset();
-        if (links != null) {
-            links.reset();
-        }
-        groundScroll = 0;
-        complete = false;
-        wrecked = false;
-        failed = false;
-        failedGroup = -1;
-        escortCredits = 0;
-        if (convoy != null) {
-            convoy.reset();
-        }
-        attempt++;
-        startAttempt(retryArmour);
-        retryArmour = 0;
-        events.add(SimEvents.Type.SORTIE_RESTARTED, ship.x(), ship.y());
-    }
-
-    private double scrollSpeed() {
-        if (timedHalts) {
-            // M5 part G: a level with a timed halt has no holds or arena (LevelScript checks it).
-            return timedHaltSpeed(script.sections(), levelTick);
-        }
-        // M7 part B: a section that eases in from the one before (Level 15's speed changes).
-        double speed = eased ? timedHaltSpeed(script.sections(), levelTick) : sectionSpeed();
-        if (arenaBoss != null
-                && !crawling
-                && rampTicks < 0
-                && levelTick >= arenaStartTicks
-                && levelTick < arenaEndTicks) {
-            // M5 part E: into an arena of speed 0 the scroll eases to a halt over the ramp.
-            int n = SimStep.ticks(ARENA_RAMP_SECONDS);
-            speed = arenaFromSpeed * Math.max(0, n - 1 - (levelTick - arenaStartTicks)) / n;
-        }
-        if (rampTicks >= 0 && easeOutOfArena) {
-            // M7 part F: out of the arena the next section eases up over its ease (smoothstep), as a moving one does.
-            speed = rampFrom + (speed - rampFrom) * smoothstep((rampTicks + 1.0) / rampLength);
-        } else if (rampTicks >= 0) {
-            // Out of the arena the scroll ramps up to the section's speed.
-            speed = rampFrom + (speed - rampFrom) * rampTicks / SimStep.ticks(ARENA_RAMP_SECONDS);
-        }
-        // M5 part C: over a hold zone it eases (smoothstep) to the hold's speed and back.
-        return holdZones.easedSpeed(speed);
-    }
-
-    /** The speed of the section the level clock is in, px/s. */
-    private double sectionSpeed() {
-        return script.sections().get(section() - 1).speed();
-    }
-
-    /**
-     * M7 part F: arena boss {@code boss} died at the level clock's tick now: in the arena (or at its halted end), an
-     * arena with a hold after its boss keeps the clock halted for the boss's death chain and then the hold.
-     */
-    void bossDownInArena(BossSpec boss) {
-        if (holdAfterBoss > 0 && arenaEndTicks >= 0 && levelTick >= arenaStartTicks && levelTick < arenaEndTicks) {
-            postBossHold = SimStep.ticks(boss.deathSeconds() + holdAfterBoss);
-        }
-    }
-
     /** M7 part F: whether the clock is halted after an arena boss's death (its death chain and the hold after it). */
     public boolean holdingAfterBoss() {
-        return postBossHold > 0;
+        return clock.postBossHold > 0;
     }
 
     /** Out of the arena the scroll ramps up to the next section's speed over this time. */
@@ -1404,26 +819,16 @@ public final class Sortie {
     public static final double CRAWL_EASE_SECONDS = 0.5;
 
     /**
-     * The active edges the wingman flies by ({@link EnemyForce#activeEdges()}); M7 part F: a walking boss's rear; M7
-     * part G: in a reversed scroll the bottom edge left out (the bottom is ahead: no Trail into the ahead waves), the
-     * top one (behind) leaving him in Wing.
-     */
-    private int wingmanEdges() {
-        int edges = walks || breachBoss != null ? force.activeEdges() | bossPasses.strideRear() : force.activeEdges();
-        return travel < 0 ? edges & ~WarningEdge.BOTTOM.bit() : edges;
-    }
-
-    /**
      * M7 part G (design/campaign Level 20, Reverse scroll): the direction of travel now, +1 or -1: the scroll's sign,
      * or the last non-zero sign through a zero of the scroll (the turnabout's); +1 before the scroll first moves.
      */
     public int travel() {
-        return travel;
+        return clock.travel;
     }
 
     /** M7 part G: whether the scroll runs reversed now ({@link #travel()} is -1): the ground moves up the screen. */
     public boolean reversed() {
-        return travel < 0;
+        return clock.travel < 0;
     }
 
     /**
@@ -1435,110 +840,42 @@ public final class Sortie {
         return travelAt(script.sections(), SimStep.ticks(t));
     }
 
-    /** M7 part G: {@link #travelAt(LevelScript, double)} at level step {@code tick}. */
+    /** M7 part G: {@link #travelAt(LevelScript, double)} at level step {@code tick} ({@link ScrollPlan#travelAt}). */
     static int travelAt(List<Section> sections, int tick) {
-        boolean reverses = false;
-        for (int i = 0; i < sections.size(); i++) {
-            reverses |= sections.get(i).speed() < 0;
-        }
-        if (!reverses) {
-            return 1;
-        }
-        for (int k = tick; k >= 0; k--) {
-            double speed = timedHaltSpeed(sections, k);
-            if (speed > 0) {
-                return 1;
-            }
-            if (speed < 0) {
-                return -1;
-            }
-        }
-        return 1;
+        return ScrollPlan.travelAt(sections, tick);
     }
 
     /**
-     * M5 part G (design/campaign Level 13, The halt): the scroll's speed in px/s at level step {@code
-     * tick} of a level without hold zones or an arena: its section's speed, 0 in a timed halt, eased
-     * (smoothstep) down to 0 over the last {@link Section#rampSeconds()} of a timed halt
-     * before the halt and back up to its section's speed over as long after it (the halt's ramp): step k
-     * of an ease of n steps runs at the speed × (1 − s) going in and × s coming out, s = smoothstep((k +
-     * 1) ÷ n), so the last step before the halt is at 0. Without a timed halt it is the section's speed.
-     * A section's steps are [its start's ticks, its end's ticks). M7 part B: a moving section with an
-     * {@link Section#easeSeconds()} after a moving section eases in from that section's speed
-     * over its first ease (step k of n: the old speed + (new − old) × smoothstep((k + 1) ÷ n)).
+     * M5 part G (design/campaign Level 13, The halt): the scroll's speed in px/s at level step {@code tick} of a level
+     * without hold zones or an arena: its section's speed, eased into and out of a timed halt and (M7 part B) into a
+     * section with an ease ({@link ScrollPlan#timedHaltSpeed}).
      */
     public static double timedHaltSpeed(List<Section> sections, int tick) {
-        int start = 0;
-        int last = sections.size() - 1;
-        for (int i = 0; i <= last; i++) {
-            Section section = sections.get(i);
-            int end = SimStep.ticks(section.end());
-            if (tick >= end && i < last) {
-                start = end;
-                continue;
-            }
-            if (section.timedHalt()) {
-                return 0;
-            }
-            double speed = section.speed();
-            if (i < last && sections.get(i + 1).timedHalt()) {
-                int n = Math.max(1, SimStep.ticks(sections.get(i + 1).rampSeconds()));
-                int k = tick - (end - n);
-                if (k >= 0) {
-                    speed *= 1 - smoothstep(Math.min(1, (k + 1.0) / n));
-                }
-            }
-            if (i > 0 && sections.get(i - 1).timedHalt()) {
-                int n = Math.max(1, SimStep.ticks(sections.get(i - 1).rampSeconds()));
-                int k = tick - start;
-                if (k < n) {
-                    speed *= smoothstep((k + 1.0) / n);
-                }
-            } else if (i > 0
-                    && section.easeSeconds() > 0
-                    && !sections.get(i - 1).arena()) {
-                double from = sections.get(i - 1).speed();
-                int n = Math.max(1, SimStep.ticks(section.easeSeconds()));
-                int k = tick - start;
-                if (k < n) {
-                    speed = from + (speed - from) * smoothstep((k + 1.0) / n);
-                }
-            }
-            return speed;
-        }
-        return 0;
-    }
-
-    private static double smoothstep(double s) {
-        return s * s * (3 - 2 * s);
+        return ScrollPlan.timedHaltSpeed(sections, tick);
     }
 
     /**
-     * M5 part G: how far the ground has scrolled when the level clock reaches {@code t} s in a level
-     * without hold zones or an arena, px: the sum of {@link #timedHaltSpeed} × a step over the steps
-     * before it, added up as the sortie scrolls. A defend primary's ally stands at its place at its
-     * start; Level 13's backdrop places the relay's floe with it.
+     * M5 part G: how far the ground has scrolled when the level clock reaches {@code t} s in a level without hold
+     * zones or an arena, px ({@link ScrollPlan#scrollAt}).
      */
     public static double scrollAt(LevelScript script, double t) {
-        if (!script.objectives().holds().isEmpty() || script.sections().stream().anyMatch(Section::arena)) {
-            throw new IllegalArgumentException("the scroll of a level with holds or an arena depends on play");
-        }
-        double scroll = 0;
-        int ticks = SimStep.ticks(t);
-        for (int tick = 0; tick < ticks; tick++) {
-            scroll += timedHaltSpeed(script.sections(), tick) * SimStep.SECONDS;
-        }
-        return scroll;
+        return ScrollPlan.scrollAt(script, t);
     }
 
-    /** M7 part D: the ground allies' convoy, each unit standing so its footprint enters the top edge at its time. */
-    private static Convoy groundAllies(LevelScript script, ObjectiveSpec.GroundAllies allies) {
-        double[] standY = new double[allies.units().size()];
-        for (int k = 0; k < standY.length; k++) {
-            ObjectiveSpec.GroundAlly unit = allies.units().get(k);
-            standY[k] = Convoy.standY(unit, scrollAt(script, unit.enterSeconds()));
-        }
-        return new Convoy(allies, standY);
+    /**
+     * M5 part E: the ground's scroll when it has halted in the arena: the scroll at the arena's start plus the ease
+     * into the halt ({@link ScrollPlan#haltScroll}).
+     */
+    static double haltScroll(LevelScript script, double fromSpeed) {
+        return ScrollPlan.haltScroll(script, fromSpeed);
+    }
+
+    /**
+     * M5 part E: how far the ground scrolls while it eases from {@code speed} to a halt at an arena of speed 0, px
+     * ({@link ScrollPlan#easeDistance}); a level's backdrop pieces that must lie under the halted boss are placed with it.
+     */
+    public static double easeDistance(double speed) {
+        return ScrollPlan.easeDistance(speed);
     }
 
     /** M7 part C: how far from rock a pickup slides, px (about half its size). */
@@ -1566,45 +903,6 @@ public final class Sortie {
     }
 
     /**
-     * M7 part C (design/campaign Level 16, Formations in a canyon; risk 1, default pending the user's
-     * review): per wave, the flyable span at the top edge when the wave enters, by its time (the scroll at
-     * it, {@link #scrollAt}); the channel holding the field's centre, or the widest channel there when the
-     * centre is rock. Empty for every wave of a level without terrain (or with holds or an arena, whose
-     * scroll depends on play), so those plan as before.
-     */
-    private static java.util.function.Function<WaveSpec, java.util.Optional<Formations.Span>> spans(
-            LevelScript script) {
-        if (script.ground().terrain().isEmpty()
-                || !script.objectives().holds().isEmpty()
-                || script.sections().stream().anyMatch(Section::arena)) {
-            return wave -> java.util.Optional.empty();
-        }
-        Terrain terrain = script.ground().terrain().get().terrain();
-        return wave -> {
-            double scroll = scrollAt(script, wave.t());
-            double y = PlayField.HEIGHT;
-            double centre = PlayField.WIDTH / 2.0;
-            double left = terrain.spanLeft(scroll, y, centre);
-            double right = terrain.spanRight(scroll, y, centre);
-            if (Double.isNaN(left)) {
-                double best = 0;
-                for (double x = 5; x < PlayField.WIDTH; x += 10) {
-                    double from = terrain.spanLeft(scroll, y, x);
-                    double to = terrain.spanRight(scroll, y, x);
-                    if (!Double.isNaN(from) && to - from > best) {
-                        best = to - from;
-                        left = from;
-                        right = to;
-                    }
-                }
-            }
-            return Double.isNaN(left)
-                    ? java.util.Optional.empty()
-                    : java.util.Optional.of(new Formations.Span(left, right));
-        };
-    }
-
-    /**
      * M7 part C: the level's tendril gates and their tendrils (design/enemies/ground/tendril-anchor); null in a
      * level without gates.
      */
@@ -1622,196 +920,9 @@ public final class Sortie {
         return contacts.wallCooling();
     }
 
-    private void completeLevel() {
-        complete = true;
-        events.add(SimEvents.Type.LEVEL_COMPLETE, ship.x(), ship.y());
-        // M5 part E: a naval convoy's level-end cues count its damageable units afloat; it pays nothing.
-        int home = convoy == null ? 0 : convoy.naval() ? convoy.afloat() : convoy.saveableAlive();
-        if (convoy != null && !convoy.naval() && !convoy.defend() && !convoy.groundAllies()) {
-            // Each unit home is a payout of its own (design/campaign, Level 04: the escort objective).
-            int credits = convoy.escort().credits();
-            for (int k = 0; k < home; k++) {
-                escortCredits += tally.earn(CreditSource.OBJECTIVES, credits);
-                tally.scoreValue(credits);
-            }
-        }
-        // M7 part F: an escapes objective with escapes allowed is met at the end with no more than those away.
-        if (objectives.escapesAtEnd()) {
-            objectivePasses.paySecondary();
-        }
-        // A kill-ratio secondary is judged at the end (design/systems/scoring): its line before the level-end line.
-        if (objectives.meetsKillRatio(tally.kills())) {
-            objectivePasses.paySecondary();
-        }
-        radio.end(home);
-    }
-
-    /**
-     * Whether anything that keeps the chain going is on screen (design/systems/scoring, Chain
-     * multiplier): a live enemy on a layer the standard shots reach (not high air) whose hit box
-     * overlaps the play field, or a set piece or boss with a part on such a layer that is on the
-     * field, not wrecked and not shielded (a boss's descent). Otherwise the chain window pauses.
-     */
-    private boolean chainTargets() {
-        Pool<Enemy> enemies = force.enemies();
-        for (int i = 0; i < enemies.size(); i++) {
-            Enemy enemy = enemies.get(i);
-            if (enemy.layer().hitByStandardShots() && PlayerFire.onField(enemy)) {
-                return true;
-            }
-        }
-        for (SetPiece piece : setPieces) {
-            if (!piece.present()) {
-                continue;
-            }
-            List<PartSpec> parts = piece.spec().parts();
-            for (int p = 0; p < parts.size(); p++) {
-                // M5 part E: on the part's own layer (an arena boss's part under the water is none).
-                if (piece.partLayer(p).hitByStandardShots()
-                        && !piece.partWrecked(p)
-                        && !piece.partShielded(p)
-                        && piece.partOnField(p)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /** A hash over the complete state; equal hashes mean equal replays. */
     public long stateHash() {
-        StateHash hash = new StateHash()
-                .add(tick)
-                .add(levelTick)
-                .add(attempt)
-                .add(wrecked ? 1 : 0)
-                .add(groundScroll)
-                .add(groundPasses.nextGroundObject)
-                .add(groundPasses.nextDebris)
-                .add(objectives.secretsFound())
-                .add(objectives.secondaryMet() ? 1 : 0)
-                .add(complete ? 1 : 0)
-                .add(rng.state());
-        ship.addTo(hash);
-        fire.addTo(hash);
-        // M8 part A: only in a level with water, so the other levels hash as before.
-        medium.addTo(hash);
-        special.addTo(hash);
-        tally.addTo(hash);
-        objectives.addKillsTo(hash);
-        for (Crane crane : cranes) {
-            crane.addTo(hash);
-        }
-        for (Tow tow : tows) {
-            tow.addTo(hash);
-        }
-        for (SetPiece piece : setPieces) {
-            piece.addTo(hash);
-        }
-        for (int spent : groundPasses.secretTriggersSpent) {
-            hash.add(spent);
-        }
-        for (int demolished : groundPasses.groupDemolished) {
-            hash.add(demolished);
-        }
-        Pools.addAll(hash, fire.shots());
-        Pools.addAll(hash, force.enemies());
-        Pools.addAll(hash, force.bullets());
-        Pools.addAll(hash, ground);
-        Pools.addAll(hash, pickups);
-        Pools.addAll(hash, force.mines());
-        if (walks || force.missiles().size() > 0) {
-            // M7 part F: only in a level with a walking boss (or homing missiles), so the other levels hash as before.
-            force.missiles().addTo(hash);
-        }
-        Pools.addAll(hash, debris);
-        if (force.lobs().size() > 0) {
-            Pools.addAll(hash, force.lobs());
-        }
-        if (sled != null) {
-            sled.addTo(hash);
-        }
-        // M7 part F: nothing without furnace vents, so the other levels hash as before.
-        vents.addTo(hash);
-        if (force.chains().size() > 0) {
-            Pools.addAll(hash, force.chains());
-        }
-        // M5 part D: the swarms (none before Level 10).
-        if (force.flocks().size() > 0) {
-            Pools.addAll(hash, force.flocks());
-        }
-        if (force.skipped() > 0) {
-            // M7 part G: only once a pursuit's refill was left out, so the other levels hash as before.
-            hash.add(force.skipped());
-        }
-        // M5 part B: the staggered walker waves' volley clocks (none before Level 08).
-        force.addVolleyClocksTo(hash);
-        pickupPasses.addCoresTo(hash);
-        if (!script.objectives().targets().isEmpty()) {
-            hash.add(failed ? 1 : 0).add(failedGroup).add(groundPasses.rocksThrown);
-        }
-        if (convoy != null) {
-            hash.add(failed ? 1 : 0).add(escortCredits);
-            convoy.addTo(hash);
-        }
-        if (checkpoint != null || arenaEndTicks >= 0) {
-            hash.add(checkpointTaken ? 1 : 0)
-                    .add(streamReleased)
-                    .add(arenaJump ? 1 : 0)
-                    .add(rampFrom)
-                    .add(rampTicks);
-        }
-        if (crawling) {
-            // Step SIM-K: only in a crawling arena's level, so the others hash as before.
-            hash.add(crawlLevel);
-        }
-        if (holdAfterBoss > 0) {
-            // M7 part F: only in a level whose arena holds after its boss, so the others hash as before.
-            hash.add(postBossHold);
-        }
-        if (holdZones.present()) {
-            // M5 part C: only in a level with hold zones or a collapse, so the others hash as before.
-            hash.add(tickFraction).add(clockStep).add(realTick);
-            holdZones.addTo(hash);
-        }
-        sightings.addTo(hash);
-        contacts.addTo(hash);
-        if (links != null) {
-            // M7 part C: only in a level with tendril gates.
-            links.addTo(hash);
-        }
-        // M5 part F: only in a level that uses them, so the other levels hash as before.
-        if (wind.present()) {
-            wind.addTo(hash);
-        }
-        latches.addTo(hash);
-        if (sondes.count() > 0) {
-            sondes.addTo(hash);
-        }
-        pickupPasses.addPlacedTo(hash);
-        // M5 part H: only in a level with root bursts or ambush launches, so the other levels hash as before.
-        if (burstSlots.length > 0) {
-            force.addBurstsTo(hash);
-        }
-        bossPasses.addTo(hash);
-        // M5 part G: only with ally-below cues (a defend primary), so the other levels hash as before.
-        allies.addTo(hash);
-        if (wingman != null) {
-            // Only with a wingman, so the hashes of sorties without one stay as they were.
-            wingman.addTo(hash);
-            fire.addRecentHitTo(hash);
-            hash.add(wingmanStart).add(objectivePasses.escortKilled ? 1 : 0);
-        }
-        if (bulwark != null) {
-            // M8 part A: only with a Bulwark, so the hashes of sorties without one stay as they were.
-            bulwark.addTo(hash);
-            hash.add(bulwarkStart);
-        }
-        if (objectivePasses.targetKilled) {
-            // M8 part B: only once a target-destroyed cue's unit fell, so the other levels hash as before.
-            hash.add(1);
-        }
-        return hash.value();
+        return SortieHash.of(this);
     }
 
     /** The totals for the debrief; meaningful once the level is {@link #complete()}. */
@@ -1908,12 +1019,12 @@ public final class Sortie {
 
     /** M5 part A: the wingman flying in the escort slot (Rook), if one flies in this sortie. */
     public java.util.Optional<Wingman> wingman() {
-        return wingmanView;
+        return escorts.wingmanView;
     }
 
     /** M8 part A: the Bulwark heavy drone flying in the escort slot, if one flies in this sortie. */
     public java.util.Optional<Bulwark> bulwark() {
-        return bulwarkView;
+        return escorts.bulwarkView;
     }
 
     /**
@@ -1921,7 +1032,7 @@ public final class Sortie {
      * ({@link SimEvents.Type#SHOT_FIRED}, hits, blasts) carry: one past the {@link #armament()}'s.
      */
     public int wingmanMount() {
-        return wingmanMount;
+        return escorts.wingmanMount;
     }
 
     /** The special slot: its charges, and the Airstrike in flight for the presentation. */
@@ -2324,7 +1435,7 @@ public final class Sortie {
      * #levelSeconds()} − (1 − alpha) × {@link SimStep#SECONDS} × this.
      */
     public double scriptRate() {
-        return (double) clockStep / CLOCK_ONE;
+        return (double) clock.clockStep / CLOCK_ONE;
     }
 
     /**
@@ -2428,10 +1539,7 @@ public final class Sortie {
      * is held, eased to 0 while the breaching boss is out of the sand ({@link #crawlFactor()}).
      */
     public double groundSpeed() {
-        if (!crawling) {
-            return scrollSpeed();
-        }
-        return (clockHeld() ? arenaSpeed : scrollSpeed()) * crawlFactor();
+        return clock.groundSpeed();
     }
 
     /** Whether the non-playable launch is still running. */
@@ -2623,7 +1731,7 @@ public final class Sortie {
 
     /** M5 part G: whether the scroll is in a timed halt now (Level 13's defend phase), its eases not counted. */
     public boolean timedHalted() {
-        return timedHalts && scrollSpeed() == 0;
+        return clock.timedHalts && clock.scrollSpeed() == 0;
     }
 
     /**

@@ -67,13 +67,16 @@ class TypicalHaulTest {
                         Map.entry(13, 2_494),
                         Map.entry(14, 2_396),
                         Map.entry(15, 2_833),
-                        Map.entry(16, 3_074),
+                        // M8 part C (step C3): the Threadcrawlers taken apart with the tail first (its first bonus)
+                        Map.entry(16, 3_080),
                         Map.entry(17, 3_145),
                         Map.entry(18, 3_567),
                         Map.entry(19, 3_561),
                         Map.entry(20, 3_875),
                         Map.entry(21, 4_007),
-                        Map.entry(22, 4_538)),
+                        Map.entry(22, 4_538),
+                        // M8 part C (step C3): the scale fitted to 0.49; an eel taken apart with the tail first
+                        Map.entry(23, 5_330)),
                 perfect);
     }
 

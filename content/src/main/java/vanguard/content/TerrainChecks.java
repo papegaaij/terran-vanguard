@@ -54,7 +54,8 @@ final class TerrainChecks {
             problem.accept("movement.crawl", "a crawling unit is a segment chain on the ground");
         }
         enemy.segmentChain().flatMap(EnemyData.SegmentChain::cut).ifPresent(cut -> {
-            if (!crawls) {
+            // M8 part C: or an air chain's rear part scatters (the Eel Swarm's; DeepWaterChecks).
+            if (!crawls && !cut.scatters()) {
                 problem.accept("segment_chain.cut", "only a crawling chain's rear part dies at a cut");
             }
         });

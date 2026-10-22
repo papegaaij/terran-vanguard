@@ -175,6 +175,25 @@ final class WingmanLooks {
         this.underwater = underwater;
     }
 
+    /** M8 part C: his hydro-kit's wakes and refit flash; null without (a level in the air). */
+    private HydroLooks hydro;
+
+    /** M8 part C: the hydro-kit's effects of the level ({@link HydroLooks}). */
+    void hydro(HydroLooks hydro) {
+        this.hydro = hydro;
+    }
+
+    /** M8 part C: his refit flash at a waterline at level time {@code seconds}, additive over his hull. */
+    void drawRefit(SpriteBatch batch, Wingman rook, double seconds, float alpha) {
+        if (hydro != null && !rook.ejected()) {
+            hydro.drawRefit(
+                    batch,
+                    seconds,
+                    Math.round(PixelScreen.PLAY_FIELD_X + rook.renderX(alpha)),
+                    Math.round(rook.renderY(alpha)));
+        }
+    }
+
     AtlasRegion frame(Wingman rook) {
         Array<AtlasRegion> frames = underwater ? hydroHull : hull;
         int bank = Math.clamp(rook.bank() + BANKS / 2, 0, frames.size - 1);
@@ -223,10 +242,18 @@ final class WingmanLooks {
         float x = Math.round(PixelScreen.PLAY_FIELD_X + rook.renderX(alpha));
         float y = Math.round(rook.renderY(alpha));
         int bank = Math.clamp(rook.bank() + BANKS / 2, 0, BANKS - 1);
+        boolean wakes = underwater && hydro != null && hydro.hasWake();
+        if (wakes) {
+            // M8 part C: under water his pump-jets' wakes and lights instead of the flames (HydroLooks).
+            hydro.drawEngine(batch, tick, 0, x + engineLeft[bank][0], y - engineLeft[bank][1]);
+            hydro.drawEngine(batch, tick, 1, x + engineRight[bank][0], y - engineRight[bank][1]);
+        }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         int step = (int) (tick / FLAME_FRAME_TICKS);
-        drawFlame(batch, step, engineLeft[bank], x, y);
-        drawFlame(batch, step + 1, engineRight[bank], x, y);
+        if (!wakes) {
+            drawFlame(batch, step, engineLeft[bank], x, y);
+            drawFlame(batch, step + 1, engineRight[bank], x, y);
+        }
         batch.setColor(Color.WHITE);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         AtlasRegion frame = frame(rook);

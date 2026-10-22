@@ -391,7 +391,8 @@ EDGES = {"left": "left", "right": "right", "alternating": "alternating edges"}
 EVENTS = {"level-end": "Level end", "secondary-objective": "Secondary objective met"}
 PORTRAITS = {"generic-cdf": "Generic CDF", "generic-civilian": "Generic civilian",
              "generic-colonial": "Generic colonial",
-             "conamara": "Conamara Station"}  # the generic portraits of unnamed speakers; M8 part B: Dr. Brandt's own
+             "conamara": "Conamara Station",
+             "thera-deep": "Thera Deep"}  # the generic portraits of unnamed speakers; M8 part B: Dr. Brandt's own; M8 part C: Thera Deep Control's
 
 
 def timed_halt(section):

@@ -349,7 +349,7 @@ off, bombs taking the pumps and then the core, a bore hole and a steam plume).
 
 ## drill-rig-final-r51-a
 
-Round 51, production art (M8 part B batch, step ART-B; from the chosen concept drill-rig-r48-b, the rust auger
+Round 51, production art (M8 part B batch, step ART-B; accepted as final in round 51, F.1, 2026-10-22; from the chosen concept drill-rig-r48-b, the rust auger
 flower of `tools/concept/enemies_r48.py`, with the round-48 note "b's augers are faint": the three auger blades are
 rebuilt thicker and taller in their own dark iron-rust chitin with bone cutting edges). Not a mockup: the review
 sheet and a loop of the files written by [tools/art/drill_rig.py](../../../../tools/art/drill_rig.py) (held in
@@ -357,3 +357,14 @@ sheet and a loop of the files written by [tools/art/drill_rig.py](../../../../to
 and its additive glow, the stump (remains), the 36 px pump's heave and its dead frame, the base and crack decals, the
 steam plume, the shard ring's tell and release; the GIF on Level 22's `ice-shelf` tile: the spin, a tell and a ring of
 ten lime shards, bombs taking the pumps one by one (the ring slowing), the core's death, the stump, crack and steam.
+
+## siphon-pump-final-r52-a
+
+Round 52, production art (M8 part C batch, step ART-C; straight to production from the round-48 Thera Deep mood still,
+`europa-thera-deep-r48-a`: "purple chitin, a teal mouth, teal roots spreading into the kelp", and the Level 23 README's
+"a teal pump tube with a glowing sump"). Not a mockup: the review sheet and a loop of the files written by
+[tools/art/siphon_pump.py](../../../../tools/art/siphon_pump.py) (held until `enemies/ground/siphon-pump/data.yaml`
+exists): the 40 px pump heaving (a ribbed purple chitin bellows, mauve bone ribs, a bone collar round the teal mouth,
+three feeder hoses with teal-lit tips), its sump's additive glow, the dead pump, the break (teal sap clouding up, chitin
+chips) and the root decal live and withered; the GIF on Thera Deep's farm floor: two pumps heaving, one shot and
+breaking.

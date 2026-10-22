@@ -58,6 +58,9 @@ speakers:
       4039b813137a: 77912865    # Level 21 t=53 "Basin floor ahead…": Whisper reads "Base and floor" in nearly every seed (11 tried); the pin reads "Basin floor" through the filter at about 148 Hz (the one plain "Basin" jumped to p90 about 520 Hz)
       1d76337fde0a: 18075540    # Act 3 outro page 1 "The Colossus is dead…": every take of the key's seed and of two more pins held a 1.1-2.6 s pause in its first chunk; the pin's sixth take has none
       33d9c9134784: 113585984   # Level 22 t=135 "Conamara is in sight…": the key's seed read "reficked" for "refit" through the filter; the pin reads "refit" and "Conamara" both ways at about 154 Hz
+      8dd79a07602d: 149732323   # Level 23 briefing page 1 "The Vrell drilled a shaft…": every take of the key's seed held a 0.9-2.8 s pause in its first chunk and read "drill the shaft"; the pin has none, reads "drilled a shaft" at 149 Hz
+      954041a6a0b5: 159501027   # Level 23 t=1 "Aegis flight, down the shaft…": every take of the key's seed held a 1.4-2.9 s pause and jumped an octave (p90 about 400 Hz), read "Age is flight"; the pin reads "Aegis" at 143 Hz, no jump
+      2a7ad409bba3: 47543305    # Level 23 t=134 "The farms are clear…": the key's seed read "Hold your light, sieges" through the filter; the pin reads "lights, Aegis" at 151 Hz
   varga:
     names: [Varga]
     ref: ref-varga
@@ -84,6 +87,8 @@ speakers:
       7ba95ec98d89: 194028836   # Level 21 t=37 "Burrowers on the wall…": the key's seed jumped an octave (p90 about 490 Hz); the pin stays near her 190 Hz
       38ee1a81a162: 213299318   # Level 21 briefing page 2 "The song comes from under the basin floor…": the key's seed ran "lime. Bring" into "lime, brings"; the pin reads "Bring" every way
       38a0dbf42f62: 148653954   # Level 22 t=58 (t=66 until step B3b) "Ilse? It's Elena…": the key's seed jumped high on 16 % of the line (p90 about 380 Hz); the pin stays at her 200 Hz (p90 246) and reads "Ilse" with the name prompt
+      b1f0c1054141: 187584083   # Level 23 waterline "Under the ice. Airstrike and Lance…": the key's seed slurred it to "air-striking lands"; the pin reads "airstrike and lance" at 196 Hz
+      0e301c25bf15: 17877131    # Level 23 t=77 "Siphon pumps on the racks…": the key's seed read "into the rail" for "into the Vrell" through the filter; the pin reads "Vrell" at 197 Hz
   rook:
     names: [Rook]
     ref: ref-rook
@@ -193,6 +198,12 @@ speakers:
     ref: ref-lance-control
   conamara:   # Level 22 (M8 part B): Dr. Ilse Brandt, Conamara Station's director (Act 4's voice for L22-L23); a woman, dry, tired, precise; radio portrait radio-conamara (the station's sodium-lit dome control room); auditioned in round 51 (step AUD-B: a Margaret Espaillat, b Sue Anderson); her lines are rendered with both (step VOX-B): a here into assets/voice/conamara/, b from ref-conamara-r51-b into concept/voice-conamara-r51-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the clip's name is part of the key: no rename) and, for b, moves those files into assets/
     names: [Dr. Brandt]
-    ref: ref-conamara-r51-a   # provisional until round 51 (a, Margaret Espaillat)
+    ref: ref-conamara-r51-a   # cast in round 51: a, Margaret Espaillat (the clip keeps its -r51- name: it is part of the lines' key)
     pins:   # by candidate a's keys; candidate b's five takes needed none
       6ed33d226abf: 4460161     # Level 22 target-destroyed "That's one collar stopped…": the key's seed jumped an octave on 19 % of the line; the pin stays at her 163 Hz (p90 183) and reads "collar" (Whisper hears "color" in about half the takes of both readers)
+  thera-control:   # Levels 23 and 27 (M8 part C, step C2): Thera Deep Control, the city's harbour controller; a calm man, older than Rook, warmer and slower than Ares Control; radio portrait radio-thera-deep (step ART-C); auditioned in round 52 (step AUD-C: a Bruce Pirie, b John Van Stan, refs/ref-thera-control-r52-a/-b), his lines are rendered with both (step VOX-C): a here into assets/voice/thera-control/, b from ref-thera-control-r52-b into concept/voice-thera-control-r52-b/ under the keys that ref gives, so the pick sets `ref` to the chosen clip as it is named (the clip's name is part of the key: no rename) and, for b, moves those files into assets/ (as Dr. Brandt's in round 51)
+    names: [Thera Deep Control]
+    ref: ref-thera-control-r52-a   # provisional until round 52 (a, Bruce Pirie); b's takes (John Van Stan) in concept/voice-thera-control-r52-b/
+    pins:   # by candidate b's keys (they apply only while `ref` is b; a's four takes needed none)
+      d6eaf31e59c8: 227357623   # Level 23 t=34 "Aegis, Thera Deep Control…" (b): the key's seed read "on the shot" for "shaft" and broke the name; the pin reads it word for word at 133 Hz
+      fc3128b738ec: 267442516   # Level 23 survey probe "That's Conamara's probe…" (b): the key's seed jumped an octave (p90 about 440 Hz); the pin stays at 112 Hz, near the clip's 119

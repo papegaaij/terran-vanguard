@@ -566,3 +566,16 @@ dome, snagged under a thick rust-brown alien root with faint glowing violet vein
 crisp palette-limited pixel edges`.
 Outcome (user, 2026-10-09): approved as final in round 33, the weak spots as they are (small reefs
 and fires, the pod on its root hard to see, the rectangular container collar).
+
+## underwater-burst-final-r52-a / -b
+
+Round 52, two production proposals for the under-water kill bursts (M8 part C batch, step ART-C; part C's gap check
+D8: kills below the waterline use a pressure-flash + cavity variant of the explosion ladder, no smoke). Both are written
+by [tools/art/explosions.py](../../../tools/art/explosions.py) `--deep a|b` as `explosion-deep-{tiny,small,medium,large}`
+(the dry ladder's sizes and frame counts, additive) with `explosion-deep-cavity-*` (normal, stepped, drawn under);
+variant a is in `assets/` until the pick. No bubbles (user feedback).
+- **a "pressure flash"**: a white-teal flash disc, the bright pressure ring racing out to the rung's radius with a faint
+  second ring behind it, a few teal flecks; under it a dark cavity opening and collapsing (the depth charge's family).
+- **b "quenched fire"**: a short orange-white fireball choked within a tenth of a second into a teal-green glow, slow
+  embers fanning out and dimming, a soft turbid ring; under it a grey-teal silt puff spreading and settling.
+The GIF plays the four rungs side by side over Thera Deep's farm floor (review grade), 3x.
