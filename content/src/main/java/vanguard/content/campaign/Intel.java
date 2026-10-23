@@ -139,7 +139,13 @@ public record Intel(
              * M8 part D (design/campaign Level 24, Threat profile at L3: "the wave strip marking the three Rays"): a wave
              * with a rising unit (the Abyss Ray's {@code rise}) entering, a moment at its time: the strip marks the Rays.
              */
-            RAY
+            RAY,
+            /**
+             * M8 part E (design/campaign Level 25, Threat profile at L3: "the side caves' entry points on the threat
+             * arrows"): a wave out of a cave ({@code cave}) entering, a moment at its time: the panel marks the cave
+             * entries on the side arrows.
+             */
+            CAVE
         }
     }
 
@@ -224,7 +230,7 @@ public record Intel(
      * (Level 17's two dome sections) as phases; M7 part G: a reversed level its turn and lull ({@link #turnAndLull});
      * round 44 Q.8 d: a level with a {@code ridge} its ridge pass; M8 part B: the ground targets an escapes secondary
      * counts (Level 22's rig sites); M8 part C: each waterline (Level 23's); M8 part D: each wave with a rising unit
-     * (Level 24's Abyss Rays); none for another level.
+     * (Level 24's Abyss Rays); M8 part E: each cave wave (Level 25's side caves); none for another level.
      */
     static List<Mark> marks(Content content, LevelData level) {
         List<Mark> marks = new java.util.ArrayList<>();
@@ -289,6 +295,12 @@ public record Intel(
                             .rise()
                             .isPresent())) {
                 marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.RAY));
+            }
+        }
+        // M8 part E: each wave out of a cave at its time (Level 25's side caves).
+        for (LevelData.Wave wave : level.waves()) {
+            if (wave.fliesOn(vanguard.content.Difficulty.MEDIUM) && wave.cave().isPresent()) {
+                marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.CAVE));
             }
         }
         // M8 part B: each ground target of the escapes secondary's enemy at its time (Level 22's four rig sites).

@@ -562,10 +562,11 @@ final class PlayerFire {
                     continue;
                 }
                 if ((enemy.spec().hardened() && !weapon.antiGround())
-                        || enemy.glances(shot.vx(), shot.vy())
+                        || (enemy.glances(shot.vx(), shot.vy()) && !(weapon.antiSub() && enemy.shellClosed()))
                         || enemy.growing()) {
                     // A hardened unit (M5 part C) without anti-ground, or a walker's frontal armour
                     // for a direct shot from ahead, or (M5 part H) a root burst's growth still growing: it sparks off.
+                    // M8 part E: anti-sub fire cracks a coil's closed shell (§5 E8).
                     events.add(SimEvents.Type.SHOT_GLANCED, shot.x(), shot.y(), shot.mount());
                     shots.free(i);
                     break;
@@ -582,7 +583,10 @@ final class PlayerFire {
                         hits.unitPartDestroyed(j, part, shot.mount());
                     }
                 } else if (enemy.damage(
-                        shot.damage() * groundFactor(weapon, layer) * enemy.rearFactor(shot.vx(), shot.vy()))) {
+                        shot.damage() * groundFactor(weapon, layer) * enemy.rearFactor(shot.vx(), shot.vy()),
+                        false,
+                        false,
+                        weapon.antiSub())) {
                     // M7 part F: a direct shot into a rear plate does its multiplier (the Warden Tank's).
                     hits.enemyDestroyed(j, shot.mount());
                 }
@@ -898,7 +902,7 @@ final class PlayerFire {
                     || !inBlast(x, y, weapon.blast(), enemy.x(), enemy.y(), enemy.hitbox())) {
                 continue;
             }
-            if (enemy.damage(damage * groundFactor(weapon, layer))) {
+            if (enemy.damage(damage * groundFactor(weapon, layer), false, false, weapon.antiSub())) {
                 hits.enemyDestroyed(j, shot.mount());
             }
         }

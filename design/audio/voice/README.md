@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Voice
@@ -594,7 +594,12 @@ level).
       line with its easy and hard variants, the *Meridian* wreck's secret; the two briefing pages) rendered with the cast
       speakers (Okafor, Varga, Rook; no new speaker, no Thera Deep Control line): 16 files, five takes pinned; the Act 4
       names read back as written; `VoiceFilesTest` and `RadioTimelineLevel24Test` (applied in step D4)
-      (M8 part D, step VOX-D, 2026-10-22; pending the user's review in round 53)
+      (M8 part D, step VOX-D, 2026-10-22; accepted in round 53 (2026-10-23))
+- [x] Level 25's lines (10 radio with Rook's `requires: escort` line, the secondary's line, the survey sub's secret;
+      the two briefing pages) rendered with the cast speakers (Okafor, Varga, Rook; no new speaker, no Thera Deep Control
+      line): 14 files, seven takes pinned; the Act 4 names read back as written; `VoiceFilesTest` (with Level 25 in
+      `briefs/m8voxe-tests.patch`) and `RadioTimelineLevel25Test` (step E3's patch) green in a snapshot
+      (M8 part E, step VOX-E, 2026-10-23; pending the user's review in round 54)
 - [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
       speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
       line); Rook's cut-off at t=160.3; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
@@ -1334,7 +1339,7 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   as Level 22's "Enough rigs are down…"; both candidates, a in `assets/`, b in `concept/voice-thera-control-r52-b/`) and
   Varga's shortened briefing page 2 (it ran to five lines). Whisper read every one back as written (spelling aside:
   "12", "Underwater", "air strike"); no pins, no retries. Measured only, not listened to.
-- 2026-10-22 (step VOX-D, M8 part D; pending the user's review in round 53): Level 24's 10 radio lines (the secondary's
+- 2026-10-22 (step VOX-D, M8 part D; accepted in round 53 (2026-10-23)): Level 24's 10 radio lines (the secondary's
   line with its easy and hard variants), the *Meridian* wreck's secret and its two briefing pages rendered with Okafor,
   Varga and Rook (16 files; Level 24 has no Thera Deep Control line, so round 52's pick of b did not apply). Five takes
   pinned after three candidate seeds each: Okafor's briefing page 1 ("tear a deep's" for "Thera Deep's") and t=1
@@ -1352,3 +1357,14 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   out of `assets/` in step D4) and the clip `ref-thera-control-r52-a.wav/.txt` in `concept/rejected/`, the clip's
   CREDITS.md row with them. The chosen clip keeps its `-r52-` name (the name is part of the lines' key). The calls of
   round 52 (C.2, the radio retime and Thera's new secondary line) accepted.
+- 2026-10-23 (step VOX-E, M8 part E; pending the user's review in round 54): Level 25's 10 radio lines (Rook's t=13
+  `requires: escort` line among them), the kill-ratio secondary's line, the survey sub's secret and its two briefing
+  pages rendered with Okafor, Varga and Rook (14 files; Level 25 has no Thera Deep Control line, so round 52's pick of b
+  did not apply). Seven takes pinned after three candidate seeds each: Okafor's t=1 ("Relness sing" for "Vrell nests")
+  and t=158 (an octave jump), Varga's t=20, t=33 and the secret (octave jumps, p90 about 460-500 Hz), t=131.5 ("threat a
+  spiral" and a jump) and her briefing page 2 (high, median 216 Hz). Whisper (base.en) reads every take back word for
+  word with the Act 4 name prompt (Siren Trench, Nautilus, Vrell, Helix, Conamara; homophones aside: "plane", "sack",
+  "armor"); without it "Vrell" reads "Well" or "row" and "Conamara" "Connemara", Whisper not knowing the names. No
+  respelling. Pitch (pyin, raw): Okafor 141-186 Hz, Varga 184-219 Hz, Rook 143 Hz. The level's timed lines start on
+  time with and without Rook (`RadioTimelineLevel25Test` in a snapshot with step E3's `briefs/m8e3-radio.patch`: the
+  survey sub at t≈79-82, the secondary at t=173): no retime. Measured only, not listened to.

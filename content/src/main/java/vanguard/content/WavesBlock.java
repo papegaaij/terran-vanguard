@@ -49,6 +49,12 @@ public sealed interface WavesBlock permits LevelData {
      *     path at its {@code crawl} speed on top of the scroll
      * @param pursuit M7 part G (design/campaign Level 20, The pursuit swarm): a {@code pursuit} wave's level numbers
      *     (its refills, its break-off and any change to its unit's {@code pursuit} defaults); only on a pursuit
+     * @param cave M8 part E (design/campaign Level 25, The caves): its units swim out of this notch of the level's
+     *     {@code terrain.notches} (an index); it enters {@code from: sides} at the notch's wall ({@code edge})
+     * @param wall M8 part E (design/campaign Level 25, Siren nests): its units are nests on the walls' feet, entering
+     *     with the ground ({@code from: sides}, counted as side entries): {@code staggered} (a nest every 1.5 s, on the
+     *     {@code edge}'s wall or both taking turns from the right) or {@code opposite} (pairs facing each other at one
+     *     row, the left one's song 1.5 s later)
      */
     public record Wave(
             double t,
@@ -77,8 +83,40 @@ public sealed interface WavesBlock permits LevelData {
             Optional<Boolean> clockwise,
             Optional<List<List<Point>>> lanes,
             Optional<List<TerrainBlock.GroundPoint>> crawl,
-            Optional<Pursuit> pursuit) {
+            Optional<Pursuit> pursuit,
+            Optional<Integer> cave,
+            Optional<String> wall) {
+        /** M8 part E: a wall's nests one after the other ({@link #wall}). */
+        public static final String STAGGERED = "staggered";
+
+        /** M8 part E: a wall's nests in pairs facing each other ({@link #wall}). */
+        public static final String OPPOSITE = "opposite";
+
         public Wave {
+            cave.ifPresent(n -> Check.notNegative("cave", n));
+            wall.ifPresent(w -> Check.that(
+                    STAGGERED.equals(w) || OPPOSITE.equals(w), "wall: staggered or opposite, was '" + w + "'"));
+            Check.that(cave.isEmpty() || wall.isEmpty(), "a wave comes out of a cave or off the walls, not both");
+            Check.that(
+                    (cave.isEmpty() && wall.isEmpty()) || from == LevelData.Entry.SIDES,
+                    "a cave's or the walls' wave enters from: sides");
+            Check.that(
+                    cave.isEmpty() || edge.filter(e -> e != Edge.ALTERNATING).isPresent(),
+                    "a cave wave names its notch's wall (edge: left or right)");
+            Check.that(
+                    wall.isEmpty() || edge.filter(e -> e == Edge.ALTERNATING).isEmpty(),
+                    "a wall's nests stand on the left, the right or both walls (no edge), not alternating");
+            Check.that(
+                    !OPPOSITE.equals(wall.orElse("")) || edge.isEmpty(),
+                    "opposite nests stand on both walls (no edge)");
+            Check.that(
+                    (cave.isEmpty() && wall.isEmpty())
+                            || (easy.isEmpty() && hard.isEmpty())
+                            || java.util.stream.Stream.of(easy, hard)
+                                    .flatMap(Optional::stream)
+                                    .allMatch(change -> change.from().isEmpty()
+                                            && change.edge().isEmpty()),
+                    "a cave's or the walls' wave keeps its entry on every difficulty");
             crawl = crawl.map(List::copyOf);
             crawl.ifPresent(path -> Check.that(path.size() >= 2, "crawl: a ground path of two points or more"));
             Check.that(crawl.isEmpty() || (paths.isEmpty() && lanes.isEmpty()), "a wave crawls, walks paths or lanes");
@@ -138,6 +176,16 @@ public sealed interface WavesBlock permits LevelData {
 
         /** M7 part G: the formation of a flock that holds a band behind the ship and lunges (Level 20's swarm). */
         public static final String PURSUIT = "pursuit";
+
+        /** M8 part E: whether its units are nests on the walls ({@code wall}). */
+        public boolean onWalls() {
+            return wall.isPresent();
+        }
+
+        /** M8 part E: whether its nests stand in pairs facing each other ({@code wall: opposite}). */
+        public boolean opposite() {
+            return wall.filter(OPPOSITE::equals).isPresent();
+        }
 
         /** M7 part G: whether it is a pursuit (a {@code pursuit} wave). */
         public boolean pursues() {

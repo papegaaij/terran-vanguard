@@ -60,6 +60,8 @@ final class EnemySpecCopy {
     Optional<EnemySpec.RearPlate> rearPlate;
     boolean seekersIgnore;
     Optional<EnemySpec.Rise> rise;
+    Optional<EnemySpec.SlowRing> slowRing;
+    Optional<EnemySpec.Coil> coil;
 
     EnemySpecCopy(EnemySpec spec) {
         slug = spec.slug();
@@ -113,6 +115,8 @@ final class EnemySpecCopy {
         rearPlate = spec.rearPlate();
         seekersIgnore = spec.seekersIgnore();
         rise = spec.rise();
+        slowRing = spec.slowRing();
+        coil = spec.coil();
     }
 
     EnemySpec build() {
@@ -167,6 +171,8 @@ final class EnemySpecCopy {
                 turret,
                 rearPlate,
                 seekersIgnore,
-                rise);
+                rise,
+                slowRing,
+                coil);
     }
 }

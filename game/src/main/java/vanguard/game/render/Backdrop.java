@@ -90,6 +90,15 @@ public final class Backdrop {
     private final String folder;
     /** M7 part C: the canyon's rock drawn with the ground's pieces; null without terrain ({@link #canyon}). */
     private WallProjection canyon;
+    /**
+     * M8 part E: the terrain whose notches (the side caves) have their mouths drawn over the walls ({@link
+     * #drawCaveMouths}); null without notches or without the art. Per side (left, right) the mouth's image.
+     */
+    private Terrain caves;
+
+    private final AtlasRegion[] caveMouths = new AtlasRegion[2];
+    /** M8 part E: drawn under the walls (over the floor); null for nothing ({@link #underWalls}). */
+    private UnderTowers underWalls;
 
     private Look from;
     private Look to;
@@ -384,9 +393,19 @@ public final class Backdrop {
      * images, the face patches' images, all from the level's backdrop folder.
      */
     void canyon(Terrain terrain, WallProjection.Looks looks) {
+        caves = null;
         if (terrain == null) {
             canyon = null;
             return;
+        }
+        // M8 part E: the side caves' mouths (Level 25's cave-mouth-left and -right, declared, not placed).
+        for (int side = 0; side < 2; side++) {
+            String mouth = folder + CAVE_MOUTH + (side == 0 ? "left" : "right");
+            caveMouths[side] =
+                    sprites.hasBackdrop(mouth) ? sprites.backdrop(mouth, 1).first() : null;
+        }
+        if (!terrain.notches().isEmpty() && (caveMouths[0] != null || caveMouths[1] != null)) {
+            caves = terrain;
         }
         List<WallProjection.Island> islands = new ArrayList<>();
         for (WallProjection.IslandLook look : looks.islands()) {
@@ -427,6 +446,14 @@ public final class Backdrop {
 
     /** M7 part C: a canyon's wall texture; M8 part C: an ice shaft's ({@code ice-wall}, {@code -wet}, {@code -glow}). */
     static final String CANYON_WALL = "canyon-wall";
+    /**
+     * M8 part E: a side cave's mouth seen from above ({@code cave-mouth-left}, {@code -right}; tools/art/backdrop_l25.py):
+     * per side the image's column on the wall's foot line, and its row (from the top) on the notch's middle row.
+     */
+    static final String CAVE_MOUTH = "cave-mouth-";
+
+    static final int[] CAVE_FOOT = {84, 27};
+    static final int CAVE_MID = 62;
 
     static final String ICE_WALL = "ice-wall";
 
@@ -455,6 +482,11 @@ public final class Backdrop {
     /** What is drawn over the ground layer's set pieces and under its towers (Level 09's collapse). */
     interface UnderTowers {
         void draw(SpriteBatch batch);
+    }
+
+    /** M8 part E: {@code layer} is drawn under the canyon's walls, over its floor; null for nothing. */
+    void underWalls(UnderTowers layer) {
+        underWalls = layer;
     }
 
     /** M5 part C: {@code layer} is drawn between the ground pieces and the towers; null for nothing. */
@@ -573,11 +605,45 @@ public final class Backdrop {
         if (canyon != null) {
             canyon.prepare(Math.round(groundScroll));
             canyon.drawFloor(batch);
+            if (underWalls != null) {
+                // M8 part E: what swims into the rock goes behind the walls' face.
+                underWalls.draw(batch);
+            }
             canyon.drawWalls(batch);
             drawPlateau(batch, groundScroll, clock);
             canyon.drawIslands(batch);
+            drawCaveMouths(batch, Math.round(groundScroll));
         }
         towers.draw(batch, groundScroll);
+    }
+
+    /**
+     * M8 part E: each notch's mouth on the screen ({@link #CAVE_MOUTH}), over the walls and under the ground objects
+     * (Level 25's survey sub lies in one): its image's {@link #CAVE_FOOT} column on its wall's line at the notch's
+     * middle row, its {@link #CAVE_MID} row on that row, at full size (no projection).
+     */
+    private void drawCaveMouths(SpriteBatch batch, long groundScroll) {
+        if (caves == null) {
+            return;
+        }
+        List<Terrain.Notch> notches = caves.notches();
+        for (int n = 0; n < notches.size(); n++) {
+            Terrain.Notch notch = notches.get(n);
+            int side = notch.side() == Terrain.Side.LEFT ? 0 : 1;
+            AtlasRegion mouth = caveMouths[side];
+            double y = notch.scroll() - groundScroll + HEIGHT;
+            if (mouth == null || y + mouth.getRegionHeight() < 0 || y - mouth.getRegionHeight() > HEIGHT) {
+                continue;
+            }
+            double foot = side == 0 ? caves.leftAt(notch.scroll()) : caves.rightAt(notch.scroll());
+            if (Double.isNaN(foot)) {
+                continue;
+            }
+            batch.draw(
+                    mouth,
+                    Math.round(X0 + foot - CAVE_FOOT[side]),
+                    Math.round(y - (mouth.getRegionHeight() - CAVE_MID)));
+        }
     }
 
     /**

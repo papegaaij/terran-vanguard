@@ -2,9 +2,9 @@
 title: Level 24 – Abyssal Plain
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/naval/abyss-ray, ../../../enemies/naval/barbfin, ../../../enemies/ground/spawning-reef, ../../../enemies/naval/glassfin, ../../../enemies/naval/eel-swarm, ../../../enemies/ground/scuttler, ../../../player/weapons/harpoon-torpedoes, ../../../world/europa]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Level 24 – Abyssal Plain
@@ -27,7 +27,7 @@ below are rendered from it; the counts are measured in part D (`levelReport`, st
 ## Briefing
 
 Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts (approved in round 48; Varga's page
-trimmed by a few words in step D2 to fit one screen, pending the user's review in round 53):
+trimmed by a few words in step D2 to fit one screen, accepted in round 53 (2026-10-23)):
 
 <!-- data: briefing -->
 > **Commander Okafor:** "Past the farms is the abyssal plain, and the Vrell are growing reefs on
@@ -82,8 +82,8 @@ strip marks the three Rays (`Intel` `RAY`, each Ray's wave) and the four reefs (
 
 - **Primary** `reach-end`: reach the end of the plain, where the trench's mouth begins (the beacons point to it).
 - **Secondary** `destroy-targets` (counted): destroy at least **3 of the 4 spawning reefs** before they leave the screen (the data's
-  `escapes: spawning-reef` with `allowed: 1`, the HUD counter `REEFS`), met when the third falls (easy: 2 of 4, `allowed: 2`; hard: all 4,
-  `allowed: 0`). Pays **100** credits in Act 1 terms
+  `escapes: spawning-reef` with `allowed: 1`, the HUD counter `REEFS`), met when the third falls (easy: 2 of 4, `allowed: 2`; hard: 3 of 4 as
+  medium, round 53 C.1). Pays **100** credits in Act 1 terms
   (410 in Act 4); the typical haul counts 50 %. A reef is a soft (non-hardened) `ground` target: the torpedo weapons hit it at full
   damage, other weapons at × 0.7; razing it also stops its fry (no new releases; the fry already out live on, gap check D4). The
   reefs are not hardened, so the harpoon loadout of the plan can raze them (approved in round 48); the reef is its own part,
@@ -249,7 +249,7 @@ first sign that she listens to Varga after Act 3 (L16–17: "Not on this channel
 | t=98 | Varga | "A beacon. Human-made, relay hardware, an amber pulse. And the carrier on it is Helix's." |
 | t=109.5 | Okafor | "Log it, Doctor. Full record, for my eyes only." |
 | t=120 | Rook | "Ray at six, Lancer: it is rising!" |
-| Secondary met (`secondary-objective`) | Okafor | "Third reef down. The Vrell will have to breed somewhere else."; easy: "Second reef down. The Vrell will have to breed somewhere else."; hard: "Last reef down. The Vrell will have to breed somewhere else." |
+| Secondary met (`secondary-objective`) | Okafor | "Third reef down. The Vrell will have to breed somewhere else."; easy: "Second reef down. The Vrell will have to breed somewhere else." |
 | t=131 | Varga | "A third beacon. The same pulse every two kilometres. Somebody laid a road down here." |
 | Level end | Okafor | "The plain is behind us. The beacons lead into the trench, and so do we. Refit, Aegis." |
 <!-- /data -->
@@ -257,10 +257,10 @@ first sign that she listens to Varga after Act 3 (L16–17: "Not on this channel
 The secret's line (the wreck's hatch opened): Varga, "That's the Meridian. Thera Deep lost her to the dark, not to the Vrell. Take what she kept." Retimed in step D2 to the HUD's real hold (a two-page line holds the radio about 11 s, not 6): Okafor's opening holds it
 until t≈12.7, so Varga's Barbfin line moves from t=5 to t=13 (gap check D8 had t=7), Rook's t=14 to t=24, Varga's reef
 line from t=34 to t=35 (before the first reef at t=36) and Okafor's t=106 to t=109.5 (after Varga's t=98 line); each
-starts at most 1 s late with and without Rook (`RadioTimelineLevel24Test`, pending the user's review in round 53). The
+starts at most 1 s late with and without Rook (`RadioTimelineLevel24Test`, accepted in round 53 (2026-10-23)). The
 `first-ray` line plays at the first Ray's shadow, its wave's time (t=58; the approved "t≈57.6" is the same beat, gap
 check D2). The secondary's line counts true on every difficulty: "Third reef down" at medium, "Second reef down" on easy,
-"Last reef down" on hard (its `easy` and `hard` lines). Varga's t=98 and t=131 lines are the act's beacon beats
+"Third reef down" on hard too (round 53 C.1: hard allows one reef away, as medium; its `easy` line). Varga's t=98 and t=131 lines are the act's beacon beats
 (L24–L26: Varga decodes Helix frequencies), at no more than one a level so the reveal keeps its weight; Rook's t=120 bark may be dropped by the 1 s rule (pending the build).
 
 ## Music & ambience
@@ -295,7 +295,7 @@ fitted in step D3 with `TypicalHaulTest` and `levelReport`, the first estimate 0
 ## Difficulty notes
 
 - **Easy**: the Ray has a 7-way fan and two fans; the Barbfin shoots every 3 s; the eel has 10 segments and no fan; the secondary needs 2 of 4 reefs; the reefs release 3 fry.
-- **Hard**: the Ray has an 11-way fan and four fans; the Barbfin fires a 2-needle burst every 2.6 s; the eel has 16 segments; the secondary needs all 4 reefs; the other waves by the formation lever, trimmed by hand for at most ~3.5 enemies on the screen.
+- **Hard**: the Ray has an 11-way fan and four fans; the Barbfin fires a 2-needle burst every 2.6 s; the eel has 16 segments; the secondary needs 3 of 4 reefs, as medium (round 53 C.1); the other waves by the formation lever, trimmed by hand for at most ~3.5 enemies on the screen.
 
 ## Concept art
 
@@ -312,14 +312,14 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r53-a.png](concept/backdrop-final-r53-a.png) | Production backdrop (`tools/art/backdrop_l24.py`, from europa-abyssal-plain-r48-a): four plain tile sets darkening by section, the ice ceiling, Thera Deep's last pylons with baked pools, the ridge, dead coral stacks, the Meridian's scour, three relay beacons (16-frame pulse plus an additive glow) on cable-trenched footings, the trench's mouth; ten screens under the proposed grade ladder 0.50/0.32/0.18/0.14 (sheet) | proposed (round 53) |
-| [concept/backdrop-final-r53-a.gif](concept/backdrop-final-r53-a.gif) | t 97–107 at half size: the first beacon's pulse in the dark | proposed (round 53) |
-| [concept/l24-props-final-r53-a.png](concept/l24-props-final-r53-a.png) | The level's props (`tools/art/l24_props.py`): the relay beacon and its glow, a grow-lamp pylon, the Meridian wreck (lying, hit, opened) with its lamp and spark glow, the Scuttler's silt puff (sheet) | proposed (round 53) |
-| [concept/l24-props-final-r53-a.gif](concept/l24-props-final-r53-a.gif) | A beacon pulsing, the wreck shot open and its crate rising, a Scuttler striding with silt puffs | proposed (round 53) |
-| [concept/plains-edge-capture-r53-a.png](concept/plains-edge-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along): the plain's edge at t=6, 13.5 and 23.5, the three grow-lamp pylons' pools of light on the silt, an Eel Swarm in the last frame | proposed (round 53) |
-| [concept/beacon-line-capture-r53-a.png](concept/beacon-line-capture-r53-a.png) | The beacon line at its pulses, t=102, 113.95 and 128: the first beacon (x 60), the second (x 420) pulsing beside the second Ray's rise, the third (x 100) | proposed (round 53) |
-| [concept/wreck-capture-r53-a.png](concept/wreck-capture-r53-a.png) | The *Meridian* (2× detail of the left lane; the ship steered under it) at t=106, 107, 107.5 and 109: the wreck lying, hit, the crate let go and rising off it | proposed (round 53) |
-| [concept/dark-crossing-capture-r53-a.png](concept/dark-crossing-capture-r53-a.png) | The Ray crossing at t=146, 151.5, 154 and 170: the dark plain lit only by the headlights, the third Ray's shadow taking a harpoon, its fan, the darker run-in to the trench's mouth | proposed (round 53) |
+| [concept/backdrop-final-r53-a.png](concept/backdrop-final-r53-a.png) | Production backdrop (`tools/art/backdrop_l24.py`, from europa-abyssal-plain-r48-a): four plain tile sets darkening by section, the ice ceiling, Thera Deep's last pylons with baked pools, the ridge, dead coral stacks, the Meridian's scour, three relay beacons (16-frame pulse plus an additive glow) on cable-trenched footings, the trench's mouth; ten screens under the proposed grade ladder 0.50/0.32/0.18/0.14 (sheet) | chosen (round 53, F.1: accepted as final) |
+| [concept/backdrop-final-r53-a.gif](concept/backdrop-final-r53-a.gif) | t 97–107 at half size: the first beacon's pulse in the dark | chosen (round 53, F.1: accepted as final) |
+| [concept/l24-props-final-r53-a.png](concept/l24-props-final-r53-a.png) | The level's props (`tools/art/l24_props.py`): the relay beacon and its glow, a grow-lamp pylon, the Meridian wreck (lying, hit, opened) with its lamp and spark glow, the Scuttler's silt puff (sheet) | chosen (round 53, F.5: accepted as final) |
+| [concept/l24-props-final-r53-a.gif](concept/l24-props-final-r53-a.gif) | A beacon pulsing, the wreck shot open and its crate rising, a Scuttler striding with silt puffs | chosen (round 53, F.5: accepted as final) |
+| [concept/plains-edge-capture-r53-a.png](concept/plains-edge-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along): the plain's edge at t=6, 13.5 and 23.5, the three grow-lamp pylons' pools of light on the silt, an Eel Swarm in the last frame | chosen (round 53, F.1: accepted as final) |
+| [concept/beacon-line-capture-r53-a.png](concept/beacon-line-capture-r53-a.png) | The beacon line at its pulses, t=102, 113.95 and 128: the first beacon (x 60), the second (x 420) pulsing beside the second Ray's rise, the third (x 100) | chosen (round 53, F.5: accepted as final) |
+| [concept/wreck-capture-r53-a.png](concept/wreck-capture-r53-a.png) | The *Meridian* (2× detail of the left lane; the ship steered under it) at t=106, 107, 107.5 and 109: the wreck lying, hit, the crate let go and rising off it | chosen (round 53, F.5: accepted as final) |
+| [concept/dark-crossing-capture-r53-a.png](concept/dark-crossing-capture-r53-a.png) | The Ray crossing at t=146, 151.5, 154 and 170: the dark plain lit only by the headlights, the third Ray's shadow taking a harpoon, its fan, the darker run-in to the trench's mouth | chosen (round 53, F.1: accepted as final) |
 
 ## Implementation
 
@@ -339,7 +339,7 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
 - [x] Briefing: Okafor's and Varga's pages, each one screen (`BriefingLayoutTest`), with their images (`BriefingLayoutTest.everyPageImageIsInTheAssetsAtItsSize`, `BriefingsTest`)
 - [x] Typical haul within ±5 % of budget(24) = 3 318 with the level's `bounty_scale` (`TypicalHaulTest`)
 - [x] Music and ambience: the stems by section, the beacon ping layer, the Ray, reef and Barbfin sounds (`Level24SoundsTest`;
-      round 53's a files play until the picks; step D4)
+      round 53's picks in the game since step E5; step D4)
 - [x] Easy/hard variations as in *Difficulty notes*; the autopilot flies the level with Rook on every difficulty (`--escort none` too)
 - [x] Production art and captures for part D's round ([round 53](../../../concept-rounds/round-53/README.md), step D5; the
       looks: `Level24LooksTest`)
@@ -351,7 +351,7 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   soft level-local spawners; the beacons are scenery that Varga decodes once or twice a level (Q11 a: grey machines, red-gold beacons); Okafor first asks for a private record;
   numbers from the proposed reference DPS 104.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-22 (M8 part D, step D2; the gap check's defaults, `m8d-gaps.md` §5, pending the user's review in round 53):
+- 2026-10-22 (M8 part D, step D2; the gap check's defaults, `m8d-gaps.md` §5, accepted in round 53 (2026-10-23)):
   the data file from the approved tables, the hand tables replaced by tables rendered from it, the stray "(Eel Swarm
   whole, 48)" removed. The two open questions closed, settled by round 48's approval (D11): three Rays (J4: all three
   with four Barbfins, D9), the reef not hardened. The spawning reef its own part (D1); the Ray's shadow ahead of the ship
@@ -362,7 +362,7 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   ("Two new forms: …", "a shadow", "human relay beacons"); the schools' and eels' routes, the walkers' paths, the nests'
   x (t≈18 x 150/200, t≈50 x 250, t≈66 x 200, t≈114 x 380/440), the wreck's 80 × 48 size and the beacons' rows; the
   `pair` of walkers as a `single` of two; the eel pairs as two rows 4 s apart; the Barbfin circles' 9 s hold.
-- 2026-10-22 (M8 part D, step D3, pending the user's review in round 53): mapped and flown (`AbyssRules`, `Level24Test`).
+- 2026-10-22 (M8 part D, step D3, accepted in round 53 (2026-10-23)): mapped and flown (`AbyssRules`, `Level24Test`).
   `bounty_scale` **0.40 → 0.42** (typical 3,322 vs budget 3,318; perfect 5,481). The `first-ray` line on the
   simulation's first shadow (t=58). The reefs' fry draw their ram as they leave the iris (`ram_after: 0` on the reef's
   spawn: with the school's 3 s none rammed). The Barbfin's hard interval **2.1 → 2.6 s** (the plan's fit without Rook
@@ -371,7 +371,7 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   absorb the torpedoes, an eel covers the second reef), kept as approved and printed, not asserted. The beam era's small
   units live 1.42 × Level 10's time on the screen (0.9–1.5). The autopilot's play (`AbyssPlay`): the torpedoes into the
   Ray's shadow, the Barbfins before the fry.
-- 2026-10-22 (M8 part D, steps ART-D and D4; pending the user's review in round 53): the production backdrop
+- 2026-10-22 (M8 part D, steps ART-D and D4; accepted in round 53 (2026-10-23)): the production backdrop
   (`tools/art/backdrop_l24.py`: the tile sets `lamp-edge`, `plain-reefs`, `beacon-line`, `deep-silt`, the `ice-ceiling`
   high-air, Thera Deep's last pylons with baked lamp pools, the ridge, the coral stacks, the *Meridian*'s scour, three
   relay beacons on cable-trenched footings, the trench's mouth) under the proposed grade ladder (ambient 0.50 / 0.32 /
@@ -387,3 +387,21 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   captures and shown as weak spots in round 53: the fry hardly read, the reef's razing burst looks like the fry's, a
   reef is on the screen about 6 s (razed only from under it), the Ray's escorts and the first Barbfins die almost as
   they come under auto-fire, the shadow shows no hit of its own, the run-in to the trench's mouth is almost black.
+- 2026-10-23 (user, round 53 C.1: "allow 1"): hard's REEFS allows one reef away, as medium (3 of 4; the approved table had
+  all 4): with the plan's fit the autopilot never razed all four on hard (the fry soak up the harpoons, an Eel Swarm covers
+  the second reef); hard stays harder by HP, fry and fire. Okafor's line is "Third reef down" on hard too (step E3).
+  Measured in step E3 (`levelReport -Plevel=24`, the plan's fit, seeds 1–3): the autopilot still razes only two of the
+  four on hard (the second reef away by t≈72, the fourth by t≈88), so hard's REEFS stays unmet for it (0/3; easy and
+  medium 3/3): open for the user (a hard reef's 260 HP, or the autopilot's reef play).
+- 2026-10-23 (step E4, pending the user's review in round 54): the autopilot's reef play closes it without a number
+  changed: a reef of more than 230 HP (hard's 260; `WaterPlay.TOUGH_HP`) is shot from its entry, the ship closes in to
+  60 px under it (at most 300 px up the screen), where the reef is shut and the harpoons reach it past no fry, and once it
+  passes under the ship it holds 50 px above it so the Depth Charges burst on it. Measured (`levelReport -Plevel=24`, the
+  plan's fit with Rook): hard won 3/3 with REEFS met 3/3 (8 seeds: 7/8, two retries), so `Level24Test` now asserts
+  REEFS on hard too. Easy and medium keep the plain play and their numbers (medium 6.0 on the screen, the small units
+  1.42 × Level 10's time): played hard there, the fry stayed on the screen longer (1.55–1.63 ×, over the beam era's
+  1.5).
+- 2026-10-23 (user, round 53, closed): Level 24's backdrop, props and captures accepted as final (F.1, F.5; the level is
+  `art: final`); **C.1 allow 1** (hard's REEFS asks for 3 of 4, as medium, built in step E3), C.2–C.7 accepted (the
+  Barbfin's hard interval, the fry's ram, the Ray's glide off the edge and firing only on the field, the radio retimed,
+  the density); the steps' logged small rules accepted.

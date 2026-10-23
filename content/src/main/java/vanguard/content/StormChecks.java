@@ -43,8 +43,9 @@ final class StormChecks {
         for (int i = 0; i < enemy.attacks().size(); i++) {
             EnemyData.Attack attack = enemy.attacks().get(i);
             String field = "attacks[" + i + "]";
-            if (attack.whileOpen() && !vortex) {
-                problem.accept(field + ".while", "'while: open' needs a vortex (a spin cycle's open window)");
+            // M8 part E: or a coil's (the Spiral Nautilus's uncoiled window).
+            if (attack.whileOpen() && !vortex && enemy.movement().coil().isEmpty()) {
+                problem.accept(field + ".while", "'while: open' needs a vortex (a spin cycle's open window) or a coil");
             }
             if (attack.pattern().equals("spiral") && enemy.boss().isEmpty() && !attack.whileOpen()) {
                 problem.accept(field, "a spiral on a unit that is not a boss fires in its window ('while: open')");
@@ -59,7 +60,11 @@ final class StormChecks {
                                     && attack.name()
                                             .filter(part.attackNames()::contains)
                                             .isPresent());
-            if (attack.tell().isPresent() && attack.trigger().isEmpty() && !chainHead) {
+            // M8 part E: or before each ring of a slowing ring (the Siren's sac glow).
+            if (attack.tell().isPresent()
+                    && attack.trigger().isEmpty()
+                    && !chainHead
+                    && attack.slow().isEmpty()) {
                 problem.accept(
                         field + ".tell",
                         "a tell comes before a triggered burst or a chain head's shot (a tell without a trigger)");

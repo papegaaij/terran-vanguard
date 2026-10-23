@@ -472,7 +472,8 @@ public record EnemyData(
                         movement.laneStrafe(),
                         movement.stride(),
                         movement.breach(),
-                        movement.rise()))
+                        movement.rise(),
+                        movement.coil()))
                 .orElse(movement);
         return new EnemyData(
                 name,
@@ -544,6 +545,17 @@ public record EnemyData(
         /** M7 part E: the closed vanes' armour. */
         public static final String VANES = "vanes";
 
+        /**
+         * M8 part E: whether it is {@code shell} (design/enemies/naval/spiral-nautilus): while its coil is closed every
+         * shot glances off, the specials' blasts and {@code anti-sub} fire excepted (§5 E8); open, none.
+         */
+        public boolean shell() {
+            return text.filter(SHELL::equals).isPresent();
+        }
+
+        /** M8 part E: the closed coil's shell. */
+        public static final String SHELL = "shell";
+
         /** The armour written as a text. */
         @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
         public static Armour of(String text) {
@@ -563,6 +575,8 @@ public record EnemyData(
      * @param breach M7 part H: a breaching boss's cycle under its crawling arena (the Dust Colossus)
      * @param rise M8 part D: it rises out of the deep water below the play plane, glides across and sinks away (the
      *     Abyss Ray)
+     * @param coil M8 part E: it orbits the ship in a closed, armoured shell, spiralling in, then uncoils and fires (the
+     *     Spiral Nautilus)
      */
     public record Movement(
             Optional<Snake> snake,
@@ -587,7 +601,110 @@ public record EnemyData(
             Optional<LaneStrafe> laneStrafe,
             Optional<Stride> stride,
             Optional<Breach> breach,
-            Optional<Rise> rise) {}
+            Optional<Rise> rise,
+            Optional<Coil> coil) {}
+
+    /**
+     * M8 part E, the coiling orbit (design/enemies/naval/spiral-nautilus; m8e-gaps.md §1.3, §5 E7–E8): closed in its
+     * armoured shell it spirals in round the ship from {@code outer} to {@code inner} px over {@code closing} s at its
+     * speed (never closer than {@code inner}); then it uncoils: {@code opening} s opening (still armoured, its crown's
+     * tell the last {@code tell} s of it) and {@code open} s open (hittable, its spiral firing) at {@code open_speed}
+     * px/s; then it closes, breaks outward and spirals in again. A wave's units orbit in turn the other way round, each
+     * cycle {@code offset} s after the one before; they leave after their wave's hold.
+     */
+    public record Coil(
+            double outer,
+            double inner,
+            double closing,
+            double opening,
+            double tell,
+            double open,
+            double openSpeed,
+            double offset) {
+        public Coil {
+            Check.positive("inner", inner);
+            Check.that(outer >= inner, "outer: at least inner, was " + outer);
+            Check.positive("closing", closing);
+            Check.notNegative("opening", opening);
+            Check.that(tell >= 0 && tell <= opening, "tell: within the opening, was " + tell);
+            Check.positive("open", open);
+            Check.positive("open_speed", openSpeed);
+            Check.notNegative("offset", offset);
+        }
+
+        /** One cycle, s: spiralling in, opening and open. */
+        public double cycle() {
+            return closing + opening + open;
+        }
+
+        /** The cycle with another open window, s (a difficulty's {@link CoilChange}). */
+        public Coil withOpen(double seconds) {
+            return new Coil(outer, inner, closing, opening, tell, seconds, openSpeed, offset);
+        }
+    }
+
+    /** M8 part E: a difficulty's change to a coiling orbit: its open window instead (the Nautilus's easy 1.8, hard 1.4 s). */
+    public record CoilChange(Optional<Double> open) {
+        public CoilChange {
+            open.ifPresent(o -> Check.positive("open", o));
+        }
+    }
+
+    /** M8 part E: its coiling orbit on {@code difficulty}: the stat block's with the difficulty's open window. */
+    public Optional<Coil> coil(Difficulty difficulty) {
+        Optional<Double> open = hook(difficulty).flatMap(Hook::coil).flatMap(CoilChange::open);
+        return movement.coil().map(cycle -> open.map(cycle::withOpen).orElse(cycle));
+    }
+
+    /**
+     * M8 part E, a ring that slows (design/enemies/naval/siren; m8e-gaps.md §1.2, §5 E2, E4): a {@code ring} attack with
+     * this block sends a ring of sound, not bullets: it expands from the sac at the attack's {@code speed} (not the
+     * water's × 0.7) to {@code radius} px, its band {@code band} px wide behind its edge; it deals no damage. A hull it
+     * reaches with a clear line from the sac is slowed to {@code factor} of its speed and acceleration for {@code
+     * seconds}, then immune to slows for {@code immunity} s. The attack's {@code tell} is the sac's glow before each
+     * ring, its {@code first_shot_delay} the first ring's time after the unit enters, its {@code interval} the time
+     * between two rings.
+     */
+    public record Slow(double radius, double band, double factor, double seconds, double immunity) {
+        public Slow {
+            Check.positive("radius", radius);
+            Check.positive("band", band);
+            Check.that(factor > 0 && factor <= 1, "factor: a share of the speed above 0 and at most 1, was " + factor);
+            Check.positive("seconds", seconds);
+            Check.notNegative("immunity", immunity);
+        }
+
+        /** The slow with a difficulty's {@link SlowChange} applied. */
+        public Slow with(SlowChange change) {
+            return new Slow(
+                    radius,
+                    band,
+                    change.factor().orElse(factor),
+                    change.seconds().orElse(seconds),
+                    change.immunity().orElse(immunity));
+        }
+    }
+
+    /** M8 part E: a difficulty's change to a slowing ring: its factor, time or immunity instead (the Siren's). */
+    public record SlowChange(Optional<Double> factor, Optional<Double> seconds, Optional<Double> immunity) {
+        public SlowChange {
+            factor.ifPresent(f -> Check.that(f > 0 && f <= 1, "factor: above 0 and at most 1, was " + f));
+            seconds.ifPresent(t -> Check.positive("seconds", t));
+            immunity.ifPresent(t -> Check.notNegative("immunity", t));
+        }
+    }
+
+    /** M8 part E: its slowing ring's attack (the Siren's song); none without one. */
+    public Optional<Attack> slowRing() {
+        return attacks.stream().filter(attack -> attack.slow().isPresent()).findFirst();
+    }
+
+    /** M8 part E: its slowing ring on {@code difficulty}: the attack's slow with the difficulty's change. */
+    public Optional<Slow> slow(Difficulty difficulty) {
+        Optional<SlowChange> change = hook(difficulty).flatMap(Hook::slow);
+        return slowRing().flatMap(Attack::slow).map(slow -> change.map(slow::with)
+                .orElse(slow));
+    }
 
     /**
      * M8 part D, a rise (design/enemies/naval/abyss-ray, Behaviour; gap check m8d-gaps.md §5 D2): from its entry it is a
@@ -1612,7 +1729,8 @@ public record EnemyData(
             Optional<Double> tell,
             Optional<Boolean> reaim,
             Optional<List<String>> parts,
-            Optional<Homing> homing) {
+            Optional<Homing> homing,
+            Optional<Slow> slow) {
         /** M7 part E: {@code while: open}, a spin cycle's open window. */
         public static final String WHILE_OPEN = "open";
 
@@ -1720,6 +1838,8 @@ public record EnemyData(
                             || pattern.equals("drain")
                             || pattern.equals("link")
                             || pattern.equals("aura")
+                            // M8 part E: a slowing ring is sound, no bullet (its speed below).
+                            || slow.isPresent()
                             || pattern.equals("spawn") != (bullet.isPresent() && speed.isPresent()),
                     "an attack has a bullet and a speed, a spawn attack neither");
             Check.that(!pattern.equals("spawn") || interval.isEmpty(), "a spawn attack has no interval");
@@ -1731,8 +1851,17 @@ public record EnemyData(
             speed.ifPresent(s -> Check.positive("speed", s));
             firstShotDelay.ifPresent(d -> Check.notNegative("first_shot_delay", d));
             Check.that(
-                    (pattern.equals("fan") || pattern.equals("ring")) == count.isPresent(),
-                    "a fan or a ring has a count, the others none");
+                    (pattern.equals("fan") || (pattern.equals("ring") && slow.isEmpty())) == count.isPresent(),
+                    "a fan or a ring of bullets has a count, the others none");
+            Check.that(slow.isEmpty() || pattern.equals("ring"), "only a ring slows");
+            Check.that(
+                    slow.isEmpty()
+                            || (bullet.isEmpty()
+                                    && speed.isPresent()
+                                    && interval.isPresent()
+                                    && tell.isPresent()
+                                    && within.isEmpty()),
+                    "a slowing ring has its speed, interval and tell, and no bullet or reach");
             boolean up = aim.filter("up"::equals).isPresent();
             Check.that(!up || pattern.equals("aimed"), "only an aimed attack fires straight up");
             Check.that(
@@ -2448,6 +2577,8 @@ public record EnemyData(
      * @param suction M7 part H: a suction's speed instead (the Dust Colossus's easy 30, hard 55 px/s)
      * @param eruption M7 part H: an eruption's marker time instead (the Dust Colossus's easy 1.8 s, hard 1.2 s)
      * @param ram M8 part C: a flock's ram share instead (the Glassfin's easy 0.15, hard 0.40)
+     * @param coil M8 part E: a coiling orbit's open window instead (the Spiral Nautilus's easy 1.8, hard 1.4 s)
+     * @param slow M8 part E: a slowing ring's factor, time or immunity instead (the Siren's easy 1.5 s, hard 2 s)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -2486,7 +2617,9 @@ public record EnemyData(
             Optional<BreachChange> breach,
             Optional<SuctionChange> suction,
             Optional<EruptionChange> eruption,
-            Optional<RamChange> ram) {
+            Optional<RamChange> ram,
+            Optional<CoilChange> coil,
+            Optional<SlowChange> slow) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

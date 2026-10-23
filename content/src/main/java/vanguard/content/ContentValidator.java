@@ -61,6 +61,14 @@ final class ContentValidator {
                 .values()
                 .forEach(
                         level -> AbyssChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M8 part E: the coil and the slowing ring (the Spiral Nautilus's, the Siren's) and a level's caves and nests.
+        content.enemies()
+                .values()
+                .forEach(enemy -> TrenchChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level ->
+                        TrenchChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M8 part A: the under-water rules, Rook's absence and a level's medium and special limits.
         ActFourChecks.europa(content, (field, message) -> problem(content.europa(), field, message));
         ActFourChecks.wingmen(content, (field, message) -> problem(content.wingmen(), field, message));

@@ -222,3 +222,14 @@ trench's mouth at the south end, the route in teal and the four sections; the st
 soft to torpedoes, human-built beacons, a shadow below means a Ray) and Varga's scan (a depth cut with the play plane,
 the Ray's shadow far below and its rise; the production Abyss Ray from above with its lime gill slits circled and a fan
 of nine; a Barbfin inset at 2x with its violet needles).
+
+## briefing-images-final-r54-a
+
+Round 54, production art (M8 part E batch, step ART-E): Level 25's two briefing images (672x240), written by
+[tools/art/briefing_images.py](../../../../tools/art/briefing_images.py) `level-25-siren-trench level-25-sonar-ring`:
+Okafor's sonar chart of the trench, north up (the walls and notches, the pillar and the beacons of
+tools/art/backdrop_l25.py's terrain; the Siren nests as teal dots on both walls, the red-gold beacons, the survey sub's
+cave, the route in teal and the six sections; the strip: the walls hurt, 31 nests, side caves, the beacons, cross it)
+and Varga's diagram of the ring (the production Siren on a wall with its sac at full glow, two rippled rings and the gap
+between them, the ship slowed in the band with its shimmer, a speed strip with the 2 s slow and the 3 s immunity; the
+strip: the tell, one slow then immunity, slip the gap or shoot the sac, side and anti-sub guns).

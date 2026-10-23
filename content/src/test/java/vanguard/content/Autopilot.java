@@ -48,7 +48,8 @@ import vanguard.sim.Sortie;
  * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay}, {@link RetreatPlay} (M7 part G: the
  * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21), {@link WaterPlay} (M8 part C:
  * the drag, the siphon pumps and the Glassfin's rams, Level 23), {@link AbyssPlay} (M8 part D: the Abyss Ray's shadow,
- * the Barbfins, Level 24) and the moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
+ * the Barbfins, Level 24), {@link SirenPlay} (M8 part E: the nests' bodies, the trench's rock and the slow, Level 25) and the
+ * moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
 public final class Autopilot {
@@ -313,6 +314,8 @@ public final class Autopilot {
         Enemy escapee = WaterPlay.escapee(sortie, shipY);
         if (escapee != null) {
             lowest = escapee;
+            // M8 part D (step E4): close under a tough spawning reef, where it is shut, then over it (Level 24).
+            targetY = WaterPlay.escapeeY(sortie, escapee, targetY);
         }
         // M8 part D: an Abyss Ray's shadow and rise, the torpedoes reaching it under the play plane (Level 24).
         Enemy shadow = AbyssPlay.shadow(sortie);

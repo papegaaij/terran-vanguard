@@ -177,6 +177,10 @@ final class Formations {
             planner.vortices();
             return;
         }
+        if (wave.enemy().coil().isPresent()) {
+            planner.coils();
+            return;
+        }
         if (wave.enemy().walker().isPresent()) {
             planner.walkers();
             return;
@@ -344,6 +348,31 @@ final class Formations {
                         FlightPath.through(x, HEIGHT + half, x, -half),
                         speed(enemy().speed()),
                         0,
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
+            }
+        }
+
+        /**
+         * M8 part E (design/enemies/naval/spiral-nautilus; §5 E7): coiling units entering together at the top edge,
+         * whatever the formation (a {@code circle} pair in the level), evenly across ((i + 1) × 480 ÷ (n + 1), mapped
+         * onto a canyon's span) or, a single unit, at the authored point's x; their centres just above the top edge.
+         * Their {@link Coiling} moves them from there round the ship for the wave's hold (required), each cycle offset
+         * by its place, a pair orbiting in opposite directions.
+         */
+        void coils() {
+            requireFront();
+            double hold = required(wave.holdSeconds(), "hold");
+            int count = wave.count();
+            double half = enemy().hitbox().height() / 2;
+            for (int i = 0; i < count; i++) {
+                double x = count == 1 && wave.at().isPresent() ? wave.at().get().x() : (i + 1) * WIDTH / (count + 1);
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(x, HEIGHT + half, x, HEIGHT - half),
+                        speed(enemy().speed()),
+                        hold,
                         Optional.empty(),
                         Spawn.Exit.DOWN);
             }

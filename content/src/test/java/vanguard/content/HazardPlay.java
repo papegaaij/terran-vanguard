@@ -1,6 +1,7 @@
 package vanguard.content;
 
 import vanguard.sim.Command;
+import vanguard.sim.Enemy;
 import vanguard.sim.FurnaceVents;
 import vanguard.sim.Hitbox;
 import vanguard.sim.PlayField;
@@ -65,7 +66,8 @@ final class HazardPlay {
         double speed = sortie.groundSpeed();
         double lo = Double.NEGATIVE_INFINITY;
         double hi = Double.POSITIVE_INFINITY;
-        for (double ahead = 0; ahead <= ROCK_AHEAD + 1e-9; ahead += 0.1) {
+        double rockAhead = SirenPlay.rockAhead(sortie, terrain);
+        for (double ahead = 0; ahead <= rockAhead + 1e-9; ahead += 0.1) {
             double at = scroll + speed * ahead;
             for (double dy = -HULL_HALF_HEIGHT; dy <= HULL_HALF_HEIGHT; dy += HULL_HALF_HEIGHT) {
                 lo = Math.max(lo, channelLeft(terrain, at, shipY + dy, channel));
@@ -78,6 +80,13 @@ final class HazardPlay {
             lo = channelLeft(terrain, scroll, shipY, channel);
             hi = channelRight(terrain, scroll, shipY, channel);
             margin = Math.min(margin, (hi - lo) / 2);
+        }
+        // M8 part E: a nest on a wall's foot (Level 25's Sirens) is rock to its hull while it scrolls past its height.
+        double nestLo = nestLeft(sortie, terrain, lo);
+        double nestHi = nestRight(sortie, terrain, hi);
+        if (nestHi - nestLo >= 2 * margin) {
+            lo = nestLo;
+            hi = nestHi;
         }
         double left = lo + margin;
         double right = hi - margin;
@@ -98,6 +107,53 @@ final class HazardPlay {
         }
         return commands;
     }
+
+    /**
+     * M8 part E: the left edge {@code lo} moved past the nests of the left wall (Level 25's Sirens: a body on the wall's
+     * foot that a hull touching it takes contact from) that come down to its hull's rows within {@link #NEST_AHEAD} s
+     * (the slow's share longer while slowed); {@code lo} unchanged without one.
+     */
+    private static double nestLeft(Sortie sortie, Terrain terrain, double lo) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy nest = sortie.enemy(i);
+            if (nest.wallMounted() && leftWall(sortie, terrain, nest) && nearing(sortie, nest)) {
+                lo = Math.max(lo, nest.renderX(1) + nest.hitbox().width() / 2);
+            }
+        }
+        return lo;
+    }
+
+    /** M8 part E: the right edge {@code hi} moved past the right wall's nests coming down (see {@link #nestLeft}). */
+    private static double nestRight(Sortie sortie, Terrain terrain, double hi) {
+        for (int i = 0; i < sortie.enemyCount(); i++) {
+            Enemy nest = sortie.enemy(i);
+            if (nest.wallMounted() && !leftWall(sortie, terrain, nest) && nearing(sortie, nest)) {
+                hi = Math.min(hi, nest.renderX(1) - nest.hitbox().width() / 2);
+            }
+        }
+        return hi;
+    }
+
+    /** M8 part E: whether a wall's nest stands on the left wall (left of the trench's middle at its row). */
+    private static boolean leftWall(Sortie sortie, Terrain terrain, Enemy nest) {
+        double scroll = sortie.groundScroll();
+        double y = nest.renderY(1);
+        return nest.renderX(1) < (wallLeft(terrain, scroll, y) + wallRight(terrain, scroll, y)) / 2;
+    }
+
+    /** M8 part E: whether a wall's nest reaches the hull's rows (with {@link #NEST_GAP}) within the look-ahead. */
+    static boolean nearing(Sortie sortie, Enemy nest) {
+        double ahead = NEST_AHEAD / (sortie.ship().slow().slowed() ? SirenPlay.SLOW : 1);
+        double reach = nest.hitbox().height() / 2 + HULL_HALF_HEIGHT + NEST_GAP;
+        double dy = nest.renderY(1) - sortie.ship().y();
+        return dy > -reach && dy - sortie.groundSpeed() * ahead < reach;
+    }
+
+    /** M8 part E: how far ahead it keeps clear of a wall's nest coming down at its height, s. */
+    static final double NEST_AHEAD = 0.9;
+
+    /** M8 part E: the gap it keeps between its hull's rows and a nest's box, px. */
+    private static final double NEST_GAP = 8;
 
     /**
      * M7 part C: the left edge of the flyable span at play-field height {@code y} of the channel the pilot takes (see

@@ -77,6 +77,8 @@ public final class FlightSounds {
     private final UnderIceCues underIce;
     /** M8 part D: Level 24's units, beacons and wreck. */
     private final AbyssCues abyss;
+    /** M8 part E: Level 25's Sirens and Spiral Nautili. */
+    private final TrenchCues trench;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -134,7 +136,8 @@ public final class FlightSounds {
         Sfx.RIG_COLLAR,
         Sfx.PUMP_HUM,
         Sfx.SWARM_HUM,
-        Sfx.COLOSSUS_SUCTION
+        Sfx.COLOSSUS_SUCTION,
+        Sfx.NAUTILUS_SPIN
     };
     /**
      * M7 part C: a unit's loop (the tendril hum and burn, the Threadcrawler's walk; design/audio/sfx, Mixing) is
@@ -191,13 +194,14 @@ public final class FlightSounds {
         colossus = new ColossusCues(mix);
         underIce = new UnderIceCues(mix);
         abyss = new AbyssCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss);
+        trench = new TrenchCues(mix);
+        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix, underIce);
         all = new SoundFamily[] {
             player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels, deepWater,
-            underIce, abyss
+            underIce, abyss, trench
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -565,6 +569,7 @@ public final class FlightSounds {
         deepWater.watch(sortie);
         underIce.watch(sortie);
         abyss.watch(sortie);
+        trench.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -615,6 +620,7 @@ public final class FlightSounds {
             pursuit.silence(loop);
             colossus.silence(loop);
             underIce.silence(loop);
+            trench.silence(loop);
         }
         deepWater.silence();
     }

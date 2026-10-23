@@ -3583,7 +3583,7 @@ Use: every kill of a `tiny` unit below the waterline (Levels 23-28, e.g. Glassfi
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; at most 0.6 s; a real recording, heavy, nothing bubbly or popping.
 This one: the depth bomb: an under-water impact muffled at 1.5 kHz over a depth bomb's sub boom, cut short: a small deep thud, 0.5 s.
 Edit: 0.50 s, the loudest 100 ms band −17.1 dB, peak −3.9 dBFS, −13.7 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Chosen** (round 53, S.10: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### explosion-underwater-tiny-r52-b — "Snapping_Shrimp_Slowed_32X.mp3" by digifishmusic + "Deep Thumps.wav" by eardeer
 
@@ -3593,7 +3593,7 @@ Use: every kill of a `tiny` unit below the waterline (Levels 23-28, e.g. Glassfi
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; at most 0.6 s; a real recording, heavy, nothing bubbly or popping.
 This one: the hydrophone: a snapping shrimp's click slowed 32 times (a clean, deep boom) with a deep thump muffled at 1.5 kHz: tighter and lower than a, 0.5 s.
 Edit: 0.50 s, the loudest 100 ms band −17.9 dB, peak −2.0 dBFS, −12.8 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Rejected** (round 53, S.10, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### explosion-underwater-small-r52-a — "Underwater Impact" by deleted_user_7709760 + "DepthBomb_08.aif" by ZeSoundResearchInc.
 
@@ -3603,7 +3603,7 @@ Use: every kill of a `small` unit below the waterline (Levels 23-28, e.g. Driftj
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; 0.7-1.1 s; a real recording, heavy, nothing bubbly or popping.
 This one: the depth bomb: an under-water impact slowed to 0.85 and muffled over a depth bomb's sub boom: a round deep thud with a short tail, 0.9 s.
 Edit: 0.90 s, the loudest 100 ms band −16.6 dB, peak −3.0 dBFS, −13.8 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Chosen** (round 53, S.10: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### explosion-underwater-small-r52-b — "Snapping_Shrimp_Slowed_32X.mp3" by digifishmusic + "Quarry blasting.wav" by juskiddink
 
@@ -3613,7 +3613,7 @@ Use: every kill of a `small` unit below the waterline (Levels 23-28, e.g. Driftj
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; 0.7-1.1 s; a real recording, heavy, nothing bubbly or popping.
 This one: the hydrophone: a snapping shrimp's click slowed 32 times (a deep boom) with a granite quarry blast heard from 800 m, slowed to 0.8 and muffled at 1.5 kHz, as its body: a boom with a rough rolling body, 0.9 s.
 Edit: 0.92 s, the loudest 100 ms band −19.3 dB, peak −1.6 dBFS, −13.4 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Rejected** (round 53, S.10, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### explosion-underwater-medium-r52-a — "DepthBomb_07.aif" by ZeSoundResearchInc. + "Underwater Impact" by deleted_user_7709760 + "Explosive works.wav" by tosha73
 
@@ -3623,7 +3623,7 @@ Use: every kill of a `medium` unit below the waterline (Levels 23-28, e.g. Reef 
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; 1.6-2 s; a real recording, heavy, nothing bubbly or popping.
 This one: the depth bomb: a depth bomb's sub boom with an under-water impact slowed to 0.7 and muffled at 1.2 kHz as its body and a quarry blast's roar slowed to 0.7 and muffled at 1 kHz low under it: a heavy pressure boom with a rolling tail, 1.8 s.
 Edit: 1.80 s, the loudest 100 ms band −16.5 dB, peak −1.7 dBFS, −12.2 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Chosen** (round 53, S.10: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### explosion-underwater-medium-r52-b — "Snapping_Shrimp_Slowed_32X.mp3" by digifishmusic + "Quarry blasting.wav" by juskiddink
 
@@ -3633,7 +3633,7 @@ Use: every kill of a `medium` unit below the waterline (Levels 23-28, e.g. Reef 
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; 1.6-2 s; a real recording, heavy, nothing bubbly or popping.
 This one: the hydrophone: a snapping shrimp's click slowed 32 times (a deep, clean boom) with a granite quarry blast heard from 800 m, slowed to 0.8 and muffled at 1.8 kHz: more crack and roll in the body than a, 1.8 s.
 Edit: 1.80 s, the loudest 100 ms band −18.4 dB, peak −1.6 dBFS, −15.0 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Rejected** (round 53, S.10, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### explosion-underwater-large-r52-a — "DepthBomb_05.aif" by ZeSoundResearchInc. + "Underwater Impact" by deleted_user_7709760 + "Explosive works.wav" by tosha73
 
@@ -3643,7 +3643,7 @@ Use: every kill of a `large` unit below the waterline (Levels 23-28, e.g. Abyss 
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; 2.8-3.1 s; a real recording, heavy, nothing bubbly or popping.
 This one: the depth bomb: a long depth-bomb boom with an under-water impact slowed to 0.6 and a quarry blast's roar slowed to 0.6, both muffled under 1 kHz: a huge pressure boom and a long low rumble, 3.0 s.
 Edit: 3.00 s, the loudest 100 ms band −15.1 dB, peak −1.6 dBFS, −12.5 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Chosen** (round 53, S.10: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### explosion-underwater-large-r52-b — "Snapping_Shrimp_Slowed_32X.mp3" by digifishmusic + "Quarry blasting.wav" by juskiddink
 
@@ -3653,12 +3653,12 @@ Use: every kill of a `large` unit below the waterline (Levels 23-28, e.g. Abyss 
 Brief: a deep, heavy pressure boom heard under water: a muffled body and a long low tail, no splash, no bubble rattle, nothing that pops; 2.8-3.1 s; a real recording, heavy, nothing bubbly or popping.
 This one: the hydrophone: a snapping shrimp's click slowed 32 times (a deep boom and a second one 0.7 s after, rolling) with a granite quarry blast heard from 800 m slowed to 0.65 and muffled at 1.4 kHz: a double boom with a long rough rumble, 3.0 s.
 Edit: 3.00 s, the loudest 100 ms band −17.2 dB, peak −1.7 dBFS, −14.3 LUFS.
-**Still open** (round 52, S.10: the user asked which family is which; asked again in round 53, family a plays in the game).
+**Rejected** (round 53, S.10, 2026-10-23: a picked); the file is in `rejected/`.
 
 ## Concept round 53, step AUD-D (Level 24: the Abyss Ray, the Barbfin, the spawning reef, the beacons, the *Meridian*)
 
 The generator is `tools/concept/audio/sfx_r53d.py` (Freesound HQ previews; nothing synthesized; no source AI-made, every
-description checked). Pending the user's picks in [round 53](../../../concept-rounds/round-53/README.md).
+description checked). Closed in [round 53](../../../concept-rounds/round-53/README.md) (the user, 2026-10-23): rise b, glide a, fan b, death a, needle b, iris a, razed b, pulse a, hatch b; the rejected files are in `rejected/`.
 
 ### ray-rise-r53-a — "Ship Horn - Fog Horn - Cruise Ship Grand Princess" by coalcon + "Deep Sea Ambience" by jhumbucker
 
@@ -3668,6 +3668,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: a low, heavy, swelling horn-like call from deep below: it grows over the shadow's 1.5 s, is loudest as the Ray breaks out (about 2.4 s) and lets go; huge, far down and muffled, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a cruise ship's fog horn (a real one, recorded on deck) slowed to 0.7 (its 106 Hz note down to about 75 Hz) and muffled at 900 Hz, swelling up out of a deep-sea rumble and letting go: a vast mechanical 'hoooo' from the dark, 2.9 s.
 Edit: 2.90 s, the loudest 100 ms band −21.0 dB, peak −7.7 dBFS, −19.1 LUFS.
+**Rejected** (round 53, S.1, 2026-10-23: b picked); the file is in `rejected/`.
 
 ### ray-rise-r53-b — "Conch.wav" by RoofDog + "Earthquake  **audible only with appropriate speakers**" by MBARI_MARS
 
@@ -3677,6 +3678,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: a low, heavy, swelling horn-like call from deep below: it grows over the shadow's 1.5 s, is loudest as the Ray breaks out (about 2.4 s) and lets go; huge, far down and muffled, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a conch shell blown on a rooftop, slowed to 0.55 and rising to 0.7 as it swells (about 160 to 220 Hz), over a real earthquake heard by a deep-sea hydrophone at 900 m, sped up 2.5 times into an audible rumble: an animal call, rounder and more alive than a, 2.9 s.
 Edit: 2.90 s, the loudest 100 ms band −21.0 dB, peak −10.2 dBFS, −18.5 LUFS.
+**Chosen** (round 53, S.1: b picked; to be rebuilt from the originals when the download limit allows).
 
 ### ray-glide-r53-a — "R24-18-Tent or Tarp Whoosh.wav" by craigsmith + "Deep Sea Ambience" by jhumbucker
 
@@ -3686,6 +3688,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: the huge wings pushing water: two or three slow, deep strokes, a soft rushing swell rather than a flap, about 3.5 s; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: two whooshes of a big tarp shaken through the air (a vintage film-library foley), slowed to half and muffled at 600 Hz, 1.5 s apart, over a faint deep-sea rumble: two deep soft 'whooom' strokes, 3.5 s.
 Edit: 3.50 s, the loudest 100 ms band −24.0 dB, peak −11.0 dBFS, −25.1 LUFS.
+**Chosen** (round 53, S.2: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### ray-glide-r53-b — "Large Wings Flapping - Foley.wav" by tothrec2 + "bolivar_waves_underwater.flac" by wjoojoo
 
@@ -3695,6 +3698,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: the huge wings pushing water: two or three slow, deep strokes, a soft rushing swell rather than a flap, about 3.5 s; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a winged beast's large wing beats (foley) slowed to half and muffled at 900 Hz, three heavy beats 1.5 s apart, over a wave surging past a hydrophone slowed and muffled: more of a beat than a, 3.6 s.
 Edit: 3.60 s, the loudest 100 ms band −24.5 dB, peak −6.2 dBFS, −24.7 LUFS.
+**Rejected** (round 53, S.2, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### ray-fan-r53-a — "Tire Bead Seater Air Blast" by j_soundeffects + "DepthBomb_05.aif" by ZeSoundResearchInc.
 
@@ -3704,6 +3708,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: a heavy pressure push from the Ray's mouth: a deep, soft-edged whump with a short rushing exhale, the heavy enemy shot's weight, about 0.6 s; no gunshot crack, no pop; a real recording, heavy, nothing bubbly or popping.
 This one: a tyre bead seater's compressed-air blast (an air tank with a bazooka nozzle) slowed to 0.7 and muffled at 1.4 kHz, over a depth bomb's sub boom: a round heavy 'whumf' with a short rush, 0.65 s.
 Edit: 0.65 s, the loudest 100 ms band −23.1 dB, peak −9.9 dBFS, −22.7 LUFS.
+**Rejected** (round 53, S.3, 2026-10-23: b picked); the file is in `rejected/`.
 
 ### ray-fan-r53-b — "HMNBrth-Blue Snowball Microphone, MCU_Thru Didgeridoo, Elephant Like_Nicholas Judy_TDC" by designerschoice + "DepthBomb_07.aif" by ZeSoundResearchInc.
 
@@ -3713,6 +3718,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: a heavy pressure push from the Ray's mouth: a deep, soft-edged whump with a short rushing exhale, the heavy enemy shot's weight, about 0.6 s; no gunshot crack, no pop; a real recording, heavy, nothing bubbly or popping.
 This one: a forced breath blown through a didgeridoo (an elephant-like exhale) slowed to 0.75 and muffled, over a depth bomb's sub boom: breathier and more animal than a, a 'hhhff' with a thud under it, 0.65 s.
 Edit: 0.65 s, the loudest 100 ms band −23.0 dB, peak −10.8 dBFS, −22.3 LUFS.
+**Chosen** (round 53, S.3: b picked; to be rebuilt from the originals when the download limit allows).
 
 ### ray-death-r53-a — "S035_Camels_Mono.wav" by Pól + "DepthBomb_06.aif" by ZeSoundResearchInc.
 
@@ -3722,6 +3728,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: a huge creature's dying groan sinking away over a deep boom: a long low moan falling in pitch, heavy and muffled, about 2.5 s; no squeal, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a camel's groan (a real one, recorded at a bazaar) slowed from 0.6 to 0.42 so it sinks as it goes and muffled at 1.2 kHz, over a depth bomb's sub boom: a deep dying moan with a body, 2.8 s.
 Edit: 2.80 s, the loudest 100 ms band −19.3 dB, peak −4.6 dBFS, −15.0 LUFS.
+**Chosen** (round 53, S.4: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### ray-death-r53-b — "Conch.wav" by RoofDog + "Snapping_Shrimp_Slowed_32X.mp3" by digifishmusic
 
@@ -3731,6 +3738,7 @@ Use: Level 24, each Abyss Ray (three a run, the first at t≈57.6, the second ov
 Brief: a huge creature's dying groan sinking away over a deep boom: a long low moan falling in pitch, heavy and muffled, about 2.5 s; no squeal, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: the conch call of rise b slowed from 0.65 to 0.4 so it falls away (about 210 down to 130 Hz), muffled, over a snapping shrimp's click slowed 32 times (a real hydrophone recording: a clean deep boom): the Ray's own call dying, more tonal than a, 2.8 s.
 Edit: 2.80 s, the loudest 100 ms band −20.7 dB, peak −7.2 dBFS, −14.9 LUFS.
+**Rejected** (round 53, S.4, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### barbfin-needle-r53-a — "blowgun - pipeblow - dart shotting" by ramonmineiro
 
@@ -3740,6 +3748,7 @@ Use: Level 24 on, every needle a Barbfin fires: an aimed small violet needle eve
 Brief: a short, sharp spit: a dart blown hard from a tube, tight and dry with a little body, 0.2-0.3 s; not a laser zap, not a pop, never tiring when many fire; a real recording, heavy, nothing bubbly or popping.
 This one: a blowgun dart shot (a real blowpipe) slowed to 0.85, its breath plosive's low thump cut at 250 Hz: a quick 'fsst-tk', 0.3 s.
 Edit: 0.30 s, the loudest 100 ms band −27.4 dB, peak −10.8 dBFS, −inf LUFS.
+**Rejected** (round 53, S.5, 2026-10-23: b picked); the file is in `rejected/`.
 
 ### barbfin-needle-r53-b — "industrial_nailgun_1shot+ring" by gilly11
 
@@ -3749,6 +3758,7 @@ Use: Level 24 on, every needle a Barbfin fires: an aimed small violet needle eve
 Brief: a short, sharp spit: a dart blown hard from a tube, tight and dry with a little body, 0.2-0.3 s; not a laser zap, not a pop, never tiring when many fire; a real recording, heavy, nothing bubbly or popping.
 This one: an industrial nail gun's shot slowed to 0.8 and muffled at 3.5 kHz: a harder pneumatic 'tchk' than a, more mechanical, 0.25 s.
 Edit: 0.25 s, the loudest 100 ms band −27.2 dB, peak −8.2 dBFS, −inf LUFS.
+**Chosen** (round 53, S.5: b picked; to be rebuilt from the originals when the download limit allows).
 
 ### reef-iris-r53-a — "Guterton - Heavy Stone Grind" by guterton.wav + "Jammed seashells" by MBPL
 
@@ -3758,6 +3768,7 @@ Use: Level 24, each spawning reef's 0.5 s telegraph before it releases its fry (
 Brief: a slow grinding of heavy chitin plates sliding apart: a rough stone-and-shell grind, dry and heavy, 0.6 s; nothing bubbly, no squelch; a real recording, heavy, nothing bubbly or popping.
 This one: a heavy stone ground on stone, slowed to 0.75 and muffled at 3 kHz, with a handful of seashells jammed together under it (slowed, quiet): a gritty shell-plate grind, 0.6 s.
 Edit: 0.60 s, the loudest 100 ms band −22.0 dB, peak −8.7 dBFS, −17.9 LUFS.
+**Chosen** (round 53, S.6: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### reef-iris-r53-b — "stone_on_stone.aif" by thanvannispen + "FOLYProp-Blue Snowball Microphone, CU_Seashell, Clatter 08_Nicholas Judy_TDC" by designerschoice
 
@@ -3767,6 +3778,7 @@ Use: Level 24, each spawning reef's 0.5 s telegraph before it releases its fry (
 Brief: a slow grinding of heavy chitin plates sliding apart: a rough stone-and-shell grind, dry and heavy, 0.6 s; nothing bubbly, no squelch; a real recording, heavy, nothing bubbly or popping.
 This one: stone dragged on stone slowed to 0.6 and muffled, with a seashell clattering slowed under it: a deeper, smoother drag than a with a brittle shell rattle in it, 0.65 s.
 Edit: 0.65 s, the loudest 100 ms band −22.6 dB, peak −5.0 dBFS, −22.9 LUFS.
+**Rejected** (round 53, S.6, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### reef-death-r53-a — "Rockslide 2.wav" by juskiddink + "DepthBomb_07.aif" by ZeSoundResearchInc.
 
@@ -3776,6 +3788,7 @@ Use: Level 24, a spawning reef razed (200 HP, the secondary REEFS RAZED; three o
 Brief: a heavy crumbling of coral-like rock: a big brittle break and rubble sliding down, muffled by the water, about 2 s; no splash, nothing that pops; a real recording, heavy, nothing bubbly or popping.
 This one: a rockslide of large granite rocks slowed to 0.9 and muffled at 3.5 kHz, over a depth bomb's boom: a heavy rumbling collapse, rock on rock, 2.2 s.
 Edit: 2.20 s, the loudest 100 ms band −21.9 dB, peak −3.1 dBFS, −15.1 LUFS.
+**Rejected** (round 53, S.7, 2026-10-23: b picked); the file is in `rejected/`.
 
 ### reef-death-r53-b — "Bricks Falling 2.wav" by Benboncan + "S30-08 Wall falls down from fire damage.wav" by craigsmith
 
@@ -3785,6 +3798,7 @@ Use: Level 24, a spawning reef razed (200 HP, the secondary REEFS RAZED; three o
 Brief: a heavy crumbling of coral-like rock: a big brittle break and rubble sliding down, muffled by the water, about 2 s; no splash, nothing that pops; a real recording, heavy, nothing bubbly or popping.
 This one: a load of kilned clay bricks falling (a brittle, chalky break) slowed to 0.8 and muffled, over a wall falling down (a vintage film-library recording) slowed and muffled: sharper and more brittle than a, more like breaking coral, 2.4 s.
 Edit: 2.40 s, the loudest 100 ms band −19.1 dB, peak −5.9 dBFS, −18.9 LUFS.
+**Chosen** (round 53, S.7: b picked; to be rebuilt from the originals when the download limit allows).
 
 ### beacon-pulse-r53-a — "Sonar_pings.ogg" by Peter_Gross
 
@@ -3794,6 +3808,7 @@ Use: Level 24's section 3 (t≈95-135): each relay beacon's 2 s lamp pulse while
 Brief: a deep, far, clean sonar ping: one round low tone with a long soft tail, heard from far off, about 1.9 s so pulses 2 s apart do not pile up; not a beep, not a pop; a real recording, heavy, nothing bubbly or popping.
 This one: a real 625 Hz active sonar ping (a long-range anti-submarine type) slowed to 0.6 (about 400 Hz) and muffled at 1.5 kHz: a clean far 'pinnng' with its own water echo, 1.9 s.
 Edit: 1.90 s, the loudest 100 ms band −15.9 dB, peak −7.7 dBFS, −21.9 LUFS.
+**Chosen** (round 53, S.8: a picked; to be rebuilt from the originals when the download limit allows).
 
 ### beacon-pulse-r53-b — "Singing Bowl - Soft Stick Meditative Hit" by Rimych
 
@@ -3803,6 +3818,7 @@ Use: Level 24's section 3 (t≈95-135): each relay beacon's 2 s lamp pulse while
 Brief: a deep, far, clean sonar ping: one round low tone with a long soft tail, heard from far off, about 1.9 s so pulses 2 s apart do not pile up; not a beep, not a pop; a real recording, heavy, nothing bubbly or popping.
 This one: a large singing bowl's soft-stick hit (a round 156 Hz tone, recorded close) sped to 1.25 (about 195 Hz) and muffled at 1.5 kHz: lower, softer and warmer than a, a deep 'bommm' rather than a ping, 1.9 s.
 Edit: 1.90 s, the loudest 100 ms band −19.6 dB, peak −9.7 dBFS, −16.0 LUFS.
+**Rejected** (round 53, S.8, 2026-10-23: a picked); the file is in `rejected/`.
 
 ### wreck-hatch-r53-a — "G45-30-Submarine Hatch Opening.wav" by craigsmith + "Underwater Impact" by deleted_user_7709760
 
@@ -3812,6 +3828,7 @@ Use: Level 24 at t≈105, once a run (the secret): the wrecked survey sub *Merid
 Brief: a heavy metal hatch giving way under water: a deep clunk of a breaking latch, then a slow creak as it swings open, about 1.5 s, muffled; built, not grown; a real recording, heavy, nothing bubbly or popping.
 This one: a real submarine hatch opening (heavy metal clanks and a creak; a vintage film-library recording) slowed to 0.85 and muffled at 2.5 kHz, on a soft under-water impact: clank, clank and the hatch free, 1.6 s.
 Edit: 1.60 s, the loudest 100 ms band −20.1 dB, peak −9.5 dBFS, −23.8 LUFS.
+**Rejected** (round 53, S.9, 2026-10-23: b picked); the file is in `rejected/`.
 
 ### wreck-hatch-r53-b — "Metal_Hatch_Small_Close_01" by Rudmer_Rotteveel + "Metallic Groan" by hinchinbrook
 
@@ -3821,3 +3838,135 @@ Use: Level 24 at t≈105, once a run (the secret): the wrecked survey sub *Merid
 Brief: a heavy metal hatch giving way under water: a deep clunk of a breaking latch, then a slow creak as it swings open, about 1.5 s, muffled; built, not grown; a real recording, heavy, nothing bubbly or popping.
 This one: a metal hatch slammed, slowed to 0.6 into a deep clunk, then a heavy bunker door's low hinge groan slowed to 0.8 and muffled: one big clunk and a long creak, 1.65 s.
 Edit: 1.65 s, the loudest 100 ms band −20.5 dB, peak −7.3 dBFS, −17.0 LUFS.
+**Chosen** (round 53, S.9: b picked; to be rebuilt from the originals when the download limit allows).
+
+## Concept round 54, step AUD-E (Level 25: the Siren, the Spiral Nautilus, the trench bed)
+
+The generator is `tools/concept/audio/sfx_r54e.py` (Freesound HQ previews; nothing synthesized). Pending the user's picks
+in [round 54](../../../concept-rounds/round-54/README.md).
+
+### siren-ring-r54-a — "alfonso_low_01.wav" by Bram + "Deep Sea Ambience" by jhumbucker
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/Bram/sounds/19517/> (alfonso_low_01.wav by Bram, CC-BY 4.0), <https://freesound.org/people/jhumbucker/sounds/193822/> (Deep Sea Ambience by jhumbucker, CC0 1.0).
+Use: Level 25 (and Levels 26-27), each Siren nest in the trench walls: every 4.5 s a nest (6 s on easy, 3.6 s on hard), up to four nests on the screen, their rings at least 1.5 s apart: from the sac's 0.8 s teal tell through the ring spreading out (120 px/s to 230 px, about 1.9 s); shooting the sac during the tell ends it (the Sirens' 'song drone' of the music text is this sound).
+Brief: a soft, heavy, low sweep, sung rather than pinged: a deep voice-like tone swelling over the tell, loudest as the ring leaves the sac, then spreading and sinking away; muffled, no bubbles, no sonar ping; a real recording, heavy, nothing bubbly or popping.
+This one: Tuvan throat singing (kargyraa, a real singer's growling low drone with its overtones) slowed to 0.62 and sliding down to 0.5 and muffled at 1.2 kHz, swelling in over the 0.8 s tell and fading as the ring spreads, over a deep-sea rumble: a deep sung 'hmmmoooaa' from the wall, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −24.0 dB, peak −9.4 dBFS, −21.0 LUFS.
+
+### siren-ring-r54-b — "Tibetan bowl_rubbing rim.wav" by dersinnsspace + "Deep Sea Ambience" by jhumbucker
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/dersinnsspace/sounds/417115/> (Tibetan bowl_rubbing rim.wav by dersinnsspace, CC0 1.0), <https://freesound.org/people/jhumbucker/sounds/193822/> (Deep Sea Ambience by jhumbucker, CC0 1.0).
+Use: Level 25 (and Levels 26-27), each Siren nest in the trench walls: every 4.5 s a nest (6 s on easy, 3.6 s on hard), up to four nests on the screen, their rings at least 1.5 s apart: from the sac's 0.8 s teal tell through the ring spreading out (120 px/s to 230 px, about 1.9 s); shooting the sac during the tell ends it (the Sirens' 'song drone' of the music text is this sound).
+Brief: a soft, heavy, low sweep, sung rather than pinged: a deep voice-like tone swelling over the tell, loudest as the ring leaves the sac, then spreading and sinking away; muffled, no bubbles, no sonar ping; a real recording, heavy, nothing bubbly or popping.
+This one: a Tibetan bowl's rubbed rim ring (a long sustained sung tone, 276 Hz) slowed to 0.8 and sliding down to 0.6 (about 220 to 165 Hz) and muffled at 2 kHz, swelling and fading the same over a deep-sea rumble: purer and rounder than a, a sung 'ooooom' rather than a voice, 2.8 s.
+Edit: 2.80 s, the loudest 100 ms band −23.9 dB, peak −18.6 dBFS, −26.3 LUFS.
+
+### siren-slow-r54-a — "Hand cranked siren.wav" by mikewest + "drone6_bowed_cymbal1.wav" by decembered
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/mikewest/sounds/239498/> (Hand cranked siren.wav by mikewest, CC0 1.0), <https://freesound.org/people/decembered/sounds/372202/> (drone6_bowed_cymbal1.wav by decembered, CC0 1.0).
+Use: Level 25 on, each time a Siren's ring slows the ship (60 % speed and acceleration for 2 s, 1.5 s on easy; then 3 s immune): once, as the ring's band passes the ship, with the sonar shimmer on the hull.
+Brief: the ship dragged down: a falling tone, as of the hull's engines losing power, with a metallic shimmer on the hull over it, about 2 s; muffled, nothing that pops; a real recording, heavy, nothing bubbly or popping.
+This one: a rural fire brigade's hand-cranked siren at the top of its note, slowed to 0.5 and sliding down to 0.28 (its tone falling about an octave) and muffled at 1.5 kHz, with a bowed cymbal's high shimmer over it: a dropping 'wooouuuh' with a glassy ring, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −23.0 dB, peak −16.4 dBFS, −21.9 LUFS.
+
+### siren-slow-r54-b — "drone8_bowed_cymbal2.wav" by decembered + "Real electro-mechanical fire siren" by AudioPapkin
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/decembered/sounds/372206/> (drone8_bowed_cymbal2.wav by decembered, CC0 1.0), <https://freesound.org/people/AudioPapkin/sounds/715561/> (Real electro-mechanical fire siren by AudioPapkin, CC0 1.0).
+Use: Level 25 on, each time a Siren's ring slows the ship (60 % speed and acceleration for 2 s, 1.5 s on easy; then 3 s immune): once, as the ring's band passes the ship, with the sonar shimmer on the hull.
+Brief: the ship dragged down: a falling tone, as of the hull's engines losing power, with a metallic shimmer on the hull over it, about 2 s; muffled, nothing that pops; a real recording, heavy, nothing bubbly or popping.
+This one: a bowed cymbal's ring sliding down from 0.9 to 0.45 (the metal's own tone falling) over an electro-mechanical fire siren winding down between two wails, slowed to 0.6 and muffled at 900 Hz: more metal and less engine than a, a sinking 'shiiiing', 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −23.0 dB, peak −12.8 dBFS, −20.1 LUFS.
+
+### siren-death-r54-a — "alfonso_low_01.wav" by Bram + "DepthBomb_06.aif" by ZeSoundResearchInc.
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/Bram/sounds/19517/> (alfonso_low_01.wav by Bram, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147879/> (DepthBomb_06.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 25 (and Levels 26-27), each Siren nest in the trench walls: every 4.5 s a nest (6 s on easy, 3.6 s on hard), up to four nests on the screen, their rings at least 1.5 s apart: a Siren killed (90 HP, its throat sac shot), with the under-water `medium` burst, as the sac bursts and the nest goes dark; its song stops.
+Brief: the song choked off: the sung tone falling away and dying over a deep soft boom, about 2 s, muffled; no squeal, no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the throat singing of ring a slowed from 0.6 to 0.25 so it sinks and dies, muffled, over a depth bomb's sub boom: the Siren's own voice choked off, 2.2 s; pairs with ring a.
+Edit: 2.20 s, the loudest 100 ms band −21.0 dB, peak −4.6 dBFS, −16.0 LUFS.
+
+### siren-death-r54-b — "humpback_whales_and_orcas_ambient_underwater_recording" by raiden04 + "DepthBomb_05.aif" by ZeSoundResearchInc.
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/raiden04/sounds/797762/> (humpback_whales_and_orcas_ambient_underwater_recording by raiden04, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147880/> (DepthBomb_05.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 25 (and Levels 26-27), each Siren nest in the trench walls: every 4.5 s a nest (6 s on easy, 3.6 s on hard), up to four nests on the screen, their rings at least 1.5 s apart: a Siren killed (90 HP, its throat sac shot), with the under-water `medium` burst, as the sac bursts and the nest goes dark; its song stops.
+Brief: the song choked off: the sung tone falling away and dying over a deep soft boom, about 2 s, muffled; no squeal, no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a humpback whale's call (a real hydrophone recording) slowed from 0.75 to 0.45 so it falls away (about 170 down to 95 Hz), muffled, over a depth bomb's boom: more of an animal's dying moan than a, 2.2 s.
+Edit: 2.20 s, the loudest 100 ms band −25.0 dB, peak −7.0 dBFS, −16.0 LUFS.
+
+### nautilus-spin-r54-a — "Water mill - the inside of a grind stone" by borralbi + "cement mixer small empty turning with horrible grinding metal friction on and offmic1 from front.wav" by kyles
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/borralbi/sounds/342821/> (Water mill - the inside of a grind stone by borralbi, CC-BY 4.0), <https://freesound.org/people/kyles/sounds/407295/> (cement mixer small empty turning with horrible grinding metal friction on and offmic1 from front.wav by kyles, CC0 1.0).
+Use: Level 25 on, each Spiral Nautilus (five pairs in Level 25, orbiting the ship in opposite directions): while one is on the screen, as its shell spins round the ship (one quiet loop for all of them, the nearest; it stops with the last).
+Brief: a heavy rolling grind: a big stone shell turning, a rough slow rumble with grit in it, low in the mix, no clicks, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a water mill's millstone grinding (recorded inside the stone; a mill from 1863) slowed to 0.6 and muffled at 900 Hz (its feeder's taps dulled), over a small cement mixer's empty drum turning, slowed to 0.5 and muffled: a steady deep stone grind, 4.0 s loop.
+Edit: 4.00 s, band RMS −34.1 dB, peak −14.3 dBFS, −27.1 LUFS.
+
+### nautilus-spin-r54-b — "Trash Can Wheels Rolling" by Filmscore + "Tumbler Rotary (Bryte) -low Speed - 1" by FOSSarts
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/Filmscore/sounds/823071/> (Trash Can Wheels Rolling by Filmscore, CC0 1.0), <https://freesound.org/people/FOSSarts/sounds/763459/> (Tumbler Rotary (Bryte) -low Speed - 1 by FOSSarts, CC0 1.0).
+Use: Level 25 on, each Spiral Nautilus (five pairs in Level 25, orbiting the ship in opposite directions): while one is on the screen, as its shell spins round the ship (one quiet loop for all of them, the nearest; it stops with the last).
+Brief: a heavy rolling grind: a big stone shell turning, a rough slow rumble with grit in it, low in the mix, no clicks, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a wheeled bin rolled over pavement (a boulder-roll foley) slowed to 0.5 and muffled at 1 kHz, over a rotary rock tumbler slowed to 0.5: rougher and more of a roll than a, rocks churning in a drum, 4.0 s loop.
+Edit: 4.00 s, band RMS −40.3 dB, peak −13.0 dBFS, −27.0 LUFS.
+
+### nautilus-uncoil-r54-a — "Opening the sarcophagus" by Breviceps + "shells and quartz crystals delicately scraping marble and tapping ceramic plate.wav" by CVLTIV8R
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/Breviceps/sounds/457529/> (Opening the sarcophagus by Breviceps, CC0 1.0), <https://freesound.org/people/CVLTIV8R/sounds/800116/> (shells and quartz crystals delicately scraping marble and tapping ceramic plate.wav by CVLTIV8R, CC0 1.0).
+Use: Level 25 on, each Spiral Nautilus (five pairs in Level 25, orbiting the ship in opposite directions): each uncoil, every cycle (about 5 s) at the start of its 0.6 s opening, with the 0.4 s crown tell before it fires its spiral.
+Brief: a shell scraping open: a heavy stone-on-shell scrape, dry and gritty, about 0.6 s; nothing bubbly, no squelch; a real recording, heavy, nothing bubbly or popping.
+This one: a heavy stone sarcophagus lid sliding, slowed to 0.7 and muffled at 2.5 kHz, with shells and quartz scraping marble quietly under it: a gritty stone-and-shell scrape, 0.7 s.
+Edit: 0.70 s, the loudest 100 ms band −22.9 dB, peak −5.4 dBFS, −18.1 LUFS.
+
+### nautilus-uncoil-r54-b — "Stone Slab Door Grinding - Heavy Rock Scrape (Mono)" by NahuelMartinez + "Heavy stone door opens" by PostProdDog
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/NahuelMartinez/sounds/844329/> (Stone Slab Door Grinding - Heavy Rock Scrape (Mono) by NahuelMartinez, CC0 1.0), <https://freesound.org/people/PostProdDog/sounds/578490/> (Heavy stone door opens by PostProdDog, CC0 1.0).
+Use: Level 25 on, each Spiral Nautilus (five pairs in Level 25, orbiting the ship in opposite directions): each uncoil, every cycle (about 5 s) at the start of its 0.6 s opening, with the 0.4 s crown tell before it fires its spiral.
+Brief: a shell scraping open: a heavy stone-on-shell scrape, dry and gritty, about 0.6 s; nothing bubbly, no squelch; a real recording, heavy, nothing bubbly or popping.
+This one: a stone slab door grinding open, slowed to 0.6 and muffled at 2 kHz, over a heavy stone door's low drag: deeper and harder at the start than a, more stone than shell, 0.75 s.
+Edit: 0.75 s, the loudest 100 ms band −22.0 dB, peak −5.9 dBFS, −19.2 LUFS.
+
+### nautilus-death-r54-a — "Breaking pot low" by anna_bliss + "DepthBomb_06.aif" by ZeSoundResearchInc.
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/anna_bliss/sounds/810042/> (Breaking pot low by anna_bliss, CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147879/> (DepthBomb_06.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 25 on, each Spiral Nautilus (five pairs in Level 25, orbiting the ship in opposite directions): one killed (100 HP; the closed shell glances off all but the specials and the anti-sub weapons), with the under-water `medium` burst, as the shell cracks into two halves that sink and the crown goes dark.
+Brief: a big shell cracking: a hard, hollow, brittle crack and the halves breaking away, heavy and muffled, about 1.5 s; no splash, nothing that pops; a real recording, heavy, nothing bubbly or popping.
+This one: a big clay pot smashed with a hammer (a hit, then the pot breaking apart), slowed to 0.65 and muffled at 3 kHz, over a depth bomb's boom: a hollow ceramic crack and pieces breaking away, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −20.1 dB, peak −4.1 dBFS, −18.4 LUFS.
+
+### nautilus-death-r54-b — "Breaking_large_ice.wav" by CGEffex + "FOL_IMPACT_DROP_COCONUT_HIT_RODENTG3_JACKMENHORN.wav" by JackMenhorn + "DepthBomb_05.aif" by ZeSoundResearchInc.
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/CGEffex/sounds/113679/> (Breaking_large_ice.wav by CGEffex, CC-BY 4.0), <https://freesound.org/people/JackMenhorn/sounds/136494/> (FOL_IMPACT_DROP_COCONUT_HIT_RODENTG3_JACKMENHORN.wav by JackMenhorn, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147880/> (DepthBomb_05.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 25 on, each Spiral Nautilus (five pairs in Level 25, orbiting the ship in opposite directions): one killed (100 HP; the closed shell glances off all but the specials and the anti-sub weapons), with the under-water `medium` burst, as the shell cracks into two halves that sink and the crown goes dark.
+Brief: a big shell cracking: a hard, hollow, brittle crack and the halves breaking away, heavy and muffled, about 1.5 s; no splash, nothing that pops; a real recording, heavy, nothing bubbly or popping.
+This one: a large sheet of ice cracking underfoot (meaty cracks and snaps) slowed to 0.6 and muffled, on a coconut's hollow knock on concrete slowed to 0.5, over a depth bomb's boom: sharper and more splintering than a, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −20.1 dB, peak −7.8 dBFS, −22.7 LUFS.
+
+### europa-trench-r54-a — "Deep Sea Ambience" by jhumbucker + "130525 rock stone moving scraping concrete shifting tectonic plate, 77mel" by TRP + "humpback_whales_and_orcas_ambient_underwater_recording" by raiden04
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/jhumbucker/sounds/193822/> (Deep Sea Ambience by jhumbucker, CC0 1.0), <https://freesound.org/people/TRP/sounds/715671/> (130525 rock stone moving scraping concrete shifting tectonic plate, 77mel by TRP, CC0 1.0), <https://freesound.org/people/raiden04/sounds/797762/> (humpback_whales_and_orcas_ambient_underwater_recording by raiden04, CC-BY 4.0).
+Use: Level 25 throughout (and Level 26 at the scarp): the ambience bed of the Siren Trench, in place of `europa-under`.
+Brief: the under-water bed lower and closer: a deep cut's heavy rumble close round the ship, far rock grinding now and then and distant whale calls; quiet, under the music, no bubbles, no drips, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: the deep-sea rumble of `europa-under` slowed to 0.75 (lower and heavier), rock and concrete scraping and shifting slowed to 0.5 and muffled at 700 Hz far off, and humpback whales calling far off (a real hydrophone recording, other calls than `europa-under`'s) slowed to 0.7: 16.0 s loop.
+Edit: 16.00 s, band RMS −42.4 dB, peak −10.9 dBFS, −28.0 LUFS.
+
+### europa-trench-r54-b — "Dark Cave Drone" by Kinoton + "Heavy stone door opens" by PostProdDog + "Blue Whale B call @ 5X" by MBARI_MARS
+
+Proposed (round 54), cut from the HQ previews by `tools/concept/audio/sfx_r54e.py`.
+Sources: <https://freesound.org/people/Kinoton/sounds/421826/> (Dark Cave Drone by Kinoton, CC0 1.0), <https://freesound.org/people/PostProdDog/sounds/578490/> (Heavy stone door opens by PostProdDog, CC0 1.0), <https://freesound.org/people/MBARI_MARS/sounds/343682/> (Blue Whale B call @ 5X by MBARI_MARS, CC-BY 4.0).
+Use: Level 25 throughout (and Level 26 at the scarp): the ambience bed of the Siren Trench, in place of `europa-under`.
+Brief: the under-water bed lower and closer: a deep cut's heavy rumble close round the ship, far rock grinding now and then and distant whale calls; quiet, under the music, no bubbles, no drips, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a dark cave drone (layered thunder-drum recordings, a low rumble with slow air swells) slowed to 0.8, a heavy stone door dragging slowed to 0.6 and muffled at 600 Hz far off, and a blue whale's B call (a deep-sea hydrophone recording at 900 m, played at 2.5 times its speed) far off: more of a closed cave than a, two long moans a loop, 16.0 s loop.
+Edit: 16.00 s, band RMS −45.0 dB, peak −11.7 dBFS, −28.0 LUFS.

@@ -83,6 +83,7 @@ abstract class RadioTimeline {
     static final String LEVEL_22 = "act-4-deep-water/level-22-ice-shelf";
     static final String LEVEL_23 = "act-4-deep-water/level-23-through-the-ice";
     static final String LEVEL_24 = "act-4-deep-water/level-24-abyssal-plain";
+    static final String LEVEL_25 = "act-4-deep-water/level-25-siren-trench";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -437,9 +438,9 @@ abstract class RadioTimeline {
                         List.of(new Event(130, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         // M8 part D: Level 24's events at the autopilot's times (step D4, the plan's fit, seeds 1-3): the first Ray's
         // shadow at its wave's entry (t=58.0 on every run); the reefs' secondary (reefs at t=36, 48, 64, 80) met with
-        // the
-        // second reef on easy (t≈51.5), the third on medium (t≈66.7), the fourth on hard if at all (t≈82-84.5); the
-        // Meridian wreck (t≈105, x 70) shot at t≈107.1-110.8, or not at all
+        // the second reef on easy (t≈51.5), the third on medium (t≈66.7); M8 part E, step E5 (round 53 C.1: hard allows
+        // one reef away too): on hard with the third (t≈67.5, its reefs 260 HP) or, one reef away, the fourth
+        // (t≈82-84.5); the Meridian wreck (t≈105, x 70) shot at t≈107.1-110.8, or not at all
         runs.put(
                 LEVEL_24,
                 List.of(
@@ -454,12 +455,25 @@ abstract class RadioTimeline {
                                 new Event(110.5, CueTrigger.SECRET, "Meridian")),
                         List.of(
                                 new Event(58, CueTrigger.FIRST_RAY, ""),
-                                new Event(84.5, CueTrigger.SECONDARY_OBJECTIVE, ""),
+                                new Event(67.5, CueTrigger.SECONDARY_OBJECTIVE, ""),
                                 new Event(107, CueTrigger.SECRET, "Meridian")),
                         List.of(
                                 new Event(58, CueTrigger.FIRST_RAY, ""),
                                 new Event(82, CueTrigger.SECONDARY_OBJECTIVE, ""),
                                 new Event(109.5, CueTrigger.SECRET, "Meridian"))));
+        // M8 part E: Level 25's events (step E3's runs from the data's rows): the survey sub inside the left wall's
+        // notch
+        // (t≈78, x 78; the autopilot leaves it) shot as it passes the ship (t≈79-82) or not at all; the kill-ratio
+        // secondary judged at the level's end (t=173).
+        runs.put(
+                LEVEL_25,
+                List.of(
+                        List.of(),
+                        List.of(new Event(79.5, CueTrigger.SECRET, "survey sub")),
+                        List.of(
+                                new Event(81.5, CueTrigger.SECRET, "survey sub"),
+                                new Event(173, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(173, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         return runs;
     }
 

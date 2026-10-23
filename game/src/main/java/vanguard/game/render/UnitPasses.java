@@ -160,6 +160,18 @@ final class UnitPasses {
                 }
                 continue;
             }
+            if (kinds.sirens(sortie).draws(enemy)) {
+                // M8 part E: a Siren on its wall's foot.
+                kinds.sirens(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
+                continue;
+            }
+            if (kinds.nautili(sortie).draws(enemy)) {
+                // M8 part E: a Spiral Nautilus's shell and crown; leaving through rock it is drawn under the walls.
+                if (!kinds.nautili(sortie).underWall(sortie, enemy, alpha)) {
+                    kinds.nautili(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
+                }
+                continue;
+            }
             EnemyLooks look = looks[enemy.kind()];
             AtlasRegion frame = enemyFrame(sortie, enemy, i, alpha);
             // M7 part B: a Dust Kite fades in from the dust as it enters (a look only).
@@ -344,6 +356,15 @@ final class UnitPasses {
         if (glide != null) {
             return glide;
         }
+        // M8 part E: a Siren's step, a Spiral Nautilus's shell (rolling closed, or open toward the ship).
+        AtlasRegion nest = kinds.sirens(sortie).frame(sortie, enemy, alpha);
+        if (nest != null) {
+            return nest;
+        }
+        AtlasRegion shell = kinds.nautili(sortie).frame(sortie, enemy, alpha);
+        if (shell != null) {
+            return shell;
+        }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
@@ -465,6 +486,11 @@ final class UnitPasses {
     /** M8 part D: the Abyss Rays on {@code sub} (their shadow, the rise's first half, the sink's second). */
     void drawRisers(SpriteBatch batch, Sortie sortie, float alpha) {
         kinds.rays(sortie).drawDeep(batch, sortie, alpha, unitFlash);
+    }
+
+    /** M8 part E: under the walls, the Spiral Nautili leaving through their rock (behind the walls' face). */
+    void drawUnderWalls(SpriteBatch batch, Sortie sortie, float alpha) {
+        kinds.nautili(sortie).drawUnderWalls(batch, sortie, alpha, unitFlash);
     }
 
     /** A unit's frame at (x, y), flashing white just after a hit. */
@@ -771,6 +797,10 @@ final class UnitPasses {
                 // and the sink are translucent).
                 continue;
             }
+            if (kinds.sirens(sortie).draws(enemy) || kinds.nautili(sortie).underWall(sortie, enemy, alpha)) {
+                // M8 part E: a Siren is part of its wall; a Nautilus in the rock is behind it.
+                continue;
+            }
             float shade = EnemyLooks.bodyOpacity(enemy.decloak(alpha)) * kiteFade.opacity(enemy, sortie.tick(), alpha);
             if (PursuitLooks.pursuing(enemy.flock())) {
                 // Step GFX2: the pursuit swarm's shadows only faint (at 50 % they read as a second flock).
@@ -876,8 +906,11 @@ final class UnitPasses {
                     || enemy.chain() != null
                     || enemy.latched()
                     || enemy.decloak(alpha) < 1
-                    || kinds.rays(sortie).draws(enemy)) {
-                // M8 part D: an Abyss Ray's glow follows its rise (drawDeepGlows).
+                    || kinds.rays(sortie).draws(enemy)
+                    || kinds.sirens(sortie).draws(enemy)
+                    || kinds.nautili(sortie).draws(enemy)) {
+                // M8 part D: an Abyss Ray's glow follows its rise (drawDeepGlows); M8 part E: a Siren's and a
+                // Nautilus's their steps (after the grade).
                 continue;
             }
             float glow = ArsenalLooks.glowShare(enemy) * kiteFade.opacity(enemy, sortie.tick(), alpha);

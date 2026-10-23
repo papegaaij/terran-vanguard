@@ -61,7 +61,14 @@ public final class Enemy implements Hashed {
          * M8 part D: a unit with a rise (design/enemies/naval/abyss-ray), placed by its {@link Rising}: its shadow, the
          * rise, the glide and the sink.
          */
-        RISE
+        RISE,
+        /**
+         * M8 part E: a nest on a wall's foot (design/enemies/naval/siren; {@link WallMounts}): on the play plane, fixed to
+         * the ground at its spot and scrolling with it.
+         */
+        MOUNT,
+        /** M8 part E: a coiling unit (design/enemies/naval/spiral-nautilus), placed by its {@link Coiling}. */
+        COIL
     }
 
     /**
@@ -326,6 +333,10 @@ public final class Enemy implements Hashed {
     final Rising rising = new Rising();
     /** M8 part D, a hover held above the ship (design/enemies/naval/barbfin; hashed only with one). */
     final HoverHold hoverHold = new HoverHold();
+    /** M8 part E, a song of slowing rings (design/enemies/naval/siren; hashed only with one). */
+    final SirenSong song = new SirenSong();
+    /** M8 part E, a coiling orbit round the ship (design/enemies/naval/spiral-nautilus; hashed only with one). */
+    final Coiling coiling = new Coiling();
     /** M5 part F: a chaser's chase, latch and shake-off (design/enemies/air/lamprey; hashed only with a chase). */
     final Chasing chasing = new Chasing(this);
 
@@ -439,6 +450,29 @@ public final class Enemy implements Hashed {
     /** A unit released by a spawner (design/enemies/air/brood-pod; {@link EnemyStarts#hatch}). */
     void hatch(EnemySpec enemySpec, int enemyKind, double atX, double atY, double velX, double velY, int unitSerial) {
         starts.hatch(enemySpec, enemyKind, atX, atY, velX, velY, unitSerial);
+    }
+
+    /** M8 part E: placed by its wave's mount: a wall's nest, or a cave's swimmer ({@link EnemyStarts#mounted}). */
+    void mounted(WallMounts.Placed placed) {
+        starts.mounted(placed);
+    }
+
+    /** M8 part E: whether it is a nest on a wall's foot (design/enemies/naval/siren), scrolling with the ground. */
+    public boolean wallMounted() {
+        return phase == Phase.MOUNT;
+    }
+
+    /**
+     * M8 part E: how far its sac's tell before its next ring has run between the previous and the current step, 0 to 1
+     * (design/enemies/naval/siren); 0 outside the tell or for a unit without a song.
+     */
+    public double ringTell(double alpha) {
+        return song.tell(alpha);
+    }
+
+    /** M8 part E: seconds to its next ring; NaN for a unit without a song. */
+    public double secondsToRing() {
+        return song.secondsToRing();
     }
 
     /** M8 part D: an escort peeling off its rising carrier ({@link EnemyStarts#peel}). */
@@ -594,6 +628,8 @@ public final class Enemy implements Hashed {
         swooping.wavePlace(place);
         // M7 part E: a vortex's cycle starts its place times the wave's offset later.
         vortexCycle.wavePlace(place);
+        // M8 part E: a coil's cycle starts its place times the offset later; a pair orbits in opposite directions.
+        coiling.wavePlace(place);
     }
 
     /** M7 part B: whether it is in its swoop (design/enemies/air/dust-kite). */
@@ -1261,7 +1297,12 @@ public final class Enemy implements Hashed {
      * vortex's closed vanes let through.
      */
     boolean damage(double amount, boolean fromAbove, boolean blast) {
-        return hurt.damage(amount, fromAbove, blast);
+        return hurt.damage(amount, fromAbove, blast, false);
+    }
+
+    /** As {@link #damage(double, boolean, boolean)}; M8 part E: {@code antiSub} fire cracks a closed coil's shell. */
+    boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub) {
+        return hurt.damage(amount, fromAbove, blast, antiSub);
     }
 
     /** The hit points left. */
@@ -1748,7 +1789,40 @@ public final class Enemy implements Hashed {
      * boolean, boolean)}).
      */
     public boolean armoured() {
-        return curlRoll.armoured() || vanesClosed();
+        return curlRoll.armoured() || vanesClosed() || shellClosed();
+    }
+
+    /**
+     * M8 part E: whether it is a coiling unit whose shell is closed (design/enemies/naval/spiral-nautilus): it glances
+     * off all but the specials' blasts and {@code anti-sub} fire.
+     */
+    boolean shellClosed() {
+        return phase == Phase.COIL && coiling.closed();
+    }
+
+    /** M8 part E: where its coil is in its cycle; {@link CoilPhase#NONE} for a unit without one. */
+    public CoilPhase coilPhase() {
+        return phase == Phase.COIL ? coiling.phase() : CoilPhase.NONE;
+    }
+
+    /** M8 part E: how far into its coil's current phase it is, 0 to 1; 0 for a unit without one. */
+    public double coilProgress() {
+        return phase == Phase.COIL ? coiling.progress() : 0;
+    }
+
+    /** M8 part E: whether its crown glows before it opens (its coil's tell); false for a unit without one. */
+    public boolean coilTell() {
+        return phase == Phase.COIL && coiling.tell();
+    }
+
+    /** M8 part E: whether its coil orbits clockwise (the shell's roll); false for a unit without one. */
+    public boolean coilClockwise() {
+        return phase == Phase.COIL && coiling.clockwise();
+    }
+
+    /** M8 part E: whether it is a coiling unit (its stat block has a coil). */
+    boolean coils() {
+        return phase == Phase.COIL;
     }
 
     /** M7 part E: whether it is a vortex whose vanes are closed (it is not open). */

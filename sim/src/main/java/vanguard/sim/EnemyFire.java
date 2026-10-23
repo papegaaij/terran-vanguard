@@ -96,9 +96,29 @@ final class EnemyFire {
         if ((now & VortexCycle.NOW_OPENED) != 0) {
             events.add(SimEvents.Type.VORTEX_OPENED, enemy.x(), enemy.y(), enemy.kind());
         }
-        if ((now & VortexCycle.NOW_SPIRAL) == 0
-                || !firing
-                || !PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
+        if ((now & VortexCycle.NOW_SPIRAL) != 0 && firing) {
+            spiral(enemy, ship, cycle.spiralAngle());
+        }
+    }
+
+    /**
+     * M8 part E, a coil's step after its move (design/enemies/naval/spiral-nautilus): while it is open its spiral's
+     * volleys when due (while {@code firing}), as a vortex's ({@link #spiral}); its events come from its {@link
+     * Coiling}.
+     */
+    void coil(Enemy enemy, Ship ship, boolean firing) {
+        if ((enemy.coiling.now() & Coiling.NOW_SPIRAL) != 0 && firing) {
+            spiral(enemy, ship, enemy.coiling.spiralAngle());
+        }
+    }
+
+    /**
+     * A spiral gun's volley (M7 part E, the vortex's; M8 part E, the coil's) with its first arm at {@code firstArm}: on
+     * the play field and not while the ship is closer than bullets may spawn, a bullet per arm, the arms evenly round,
+     * one {@link SimEvents.Type#ENEMY_FIRED} per volley (a fan counts once).
+     */
+    private void spiral(Enemy enemy, Ship ship, double firstArm) {
+        if (!PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
             return;
         }
         double dx = ship.x() - enemy.x();
@@ -111,7 +131,7 @@ final class EnemyFire {
         // M7 part G: the spiral turns in the vortex's frame; its arms come out mirrored for a flipped one.
         TravelFrame frame = enemy.frame();
         for (int k = 0; k < arms && bullets.size() < rules.bulletBudget(); k++) {
-            double angle = cycle.spiralAngle() + 2 * StrictMath.PI * k / arms;
+            double angle = firstArm + 2 * StrictMath.PI * k / arms;
             bullets.obtain()
                     .fire(
                             enemy.x(),

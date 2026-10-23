@@ -559,6 +559,13 @@ def entry(wave, level=None):
     edge = wave.get("edge")
     if wave["from"] == "all":
         return "all edges"
+    # M8 part E: a wave out of a cave's notch, or nests on the walls' feet (Level 25)
+    if "cave" in wave:
+        return f"side ({edge} cave)"
+    if "wall" in wave:
+        if wave["wall"] == "opposite":
+            return "wall (left and right, opposite)"
+        return f"wall ({edge})" if edge else "wall (both, staggered)"
     if wave["from"] == "sides" and edge in ("left", "right"):
         return f"{edge} side"
     if level is not None and reverses(level) and wave["from"] in ("front", "rear"):
@@ -743,6 +750,15 @@ def terrain_table(d):
     for island in islands:
         outline = " → ".join(f"({num(p[0])}, {grouped(p[1], ',')})" for p in island["points"])
         out += f"\n\n**{island['name'][0].upper()}{island['name'][1:]}** (`{island['look']}`; x, scroll at the top edge): {outline}."
+    notches = terrain.get("notches", [])
+    if notches:
+        # M8 part E: the side caves (Level 25), each a notch in its wall with the time it reaches the top edge
+        listed = "; ".join(f"{k} {n['side']} {num(round(time_at(level, n['scroll']), 1))} ({grouped(n['scroll'], ',')})"
+                           for k, n in enumerate(notches))
+        sizes = {(n["width"], n["depth"]) for n in notches}
+        size = " and ".join(f"{num(w)} px along the wall, {num(d)} deep" for w, d in sorted(sizes))
+        out += (f"\n\n**Notches** (the side caves, {size}; index, wall, t at the top edge of the middle (scroll px)): "
+                f"{listed}.")
     contact = terrain["contact"]
     damage = contact["damage"]
     out += (f"\n\n**Contact**: {num(damage['medium'])} per touch (easy {num(damage['easy'])}, hard {num(damage['hard'])}), "

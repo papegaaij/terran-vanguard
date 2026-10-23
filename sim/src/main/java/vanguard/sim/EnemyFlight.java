@@ -50,6 +50,8 @@ final class EnemyFlight {
             u.ringWait--;
         }
         u.swooping.scratch();
+        // M8 part E: a song's clock (only with one; it stops while stunned, above).
+        u.song.step();
         if (u.phase == Enemy.Phase.CHAIN || u.phase == Enemy.Phase.FLOCK) {
             // Its chain or its flock placed it this step already.
             return true;
@@ -57,6 +59,11 @@ final class EnemyFlight {
         u.prevX = u.x;
         u.prevY = u.y;
         switch (u.phase) {
+            case MOUNT -> {
+                // M8 part E: a wall's nest scrolls with the ground; gone below the bottom edge.
+                u.y -= groundScroll;
+                return u.y + u.box.height() / 2 > 0 && !carriedOffTop(groundScroll);
+            }
             case RISE -> {
                 // M8 part D: its shadow, rise, glide and sink; gone at the sink's end or off the play field.
                 return u.rising.step(u.spec.rise().orElseThrow(), u, shipX, shipY);
@@ -68,6 +75,12 @@ final class EnemyFlight {
                 u.y = u.burrowing.y();
                 turn();
                 return on && !carriedOffTop(groundScroll);
+            }
+            case COIL -> {
+                // M8 part E: its orbit round the ship (the trench clamp), its cycle; gone once off the field leaving.
+                boolean on = u.coiling.step(u, shipX, shipY);
+                turn();
+                return on;
             }
             case VORTEX -> {
                 // M7 part E: its swirl round its centre line, scrolling with the ground, kept off the ship.
@@ -296,7 +309,7 @@ final class EnemyFlight {
                 u.chasing.hold(shipX, shipY);
                 return true;
             }
-            case GROUND -> {
+            case GROUND, MOUNT -> {
                 u.y -= groundScroll;
                 return u.y + u.box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }
@@ -318,6 +331,10 @@ final class EnemyFlight {
             }
             case BURROW -> {
                 // M7 part B: up (only then can the EMP reach it) it is fixed on the screen; its timers wait.
+                return true;
+            }
+            case COIL -> {
+                // M8 part E: its cycle and orbit wait; it stays where it is.
                 return true;
             }
             case VORTEX -> {

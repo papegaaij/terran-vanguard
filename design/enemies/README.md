@@ -568,8 +568,8 @@ Production art for concept round 12 (the Level 01 batch; part P2 opens the round
 |---|---|---|
 | [concept/enemy-bullets-final-r12-a.png](concept/enemy-bullets-final-r12-a.png) | Final Vrell `small` bullets: the orb (15×15, 4-frame core pulse) and the needle (23×23, 16 headings clockwise from straight down; a gold deep band and a tight 2/3 halo instead of the faint olive one) | chosen |
 | [concept/enemy-bullets-final-r12-a.gif](concept/enemy-bullets-final-r12-a.gif) | Orbs and needles drifting over a dark blue field | chosen |
-| [concept/enemy-bullets-final-r53-a.png](concept/enemy-bullets-final-r53-a.png) | The Barbfin's violet needle `needle-violet` (16 headings; `tools/art/enemy_bullets.py violet`) next to the yellow needle and the orb (sheet) | proposed (round 53) |
-| [concept/enemy-bullets-final-r53-a.gif](concept/enemy-bullets-final-r53-a.gif) | Violet needles and orbs drifting over Level 24's graded plain, 3x | proposed (round 53) |
+| [concept/enemy-bullets-final-r53-a.png](concept/enemy-bullets-final-r53-a.png) | The Barbfin's violet needle `needle-violet` (16 headings; `tools/art/enemy_bullets.py violet`) next to the yellow needle and the orb (sheet) | chosen (round 53, F.3: accepted as final) |
+| [concept/enemy-bullets-final-r53-a.gif](concept/enemy-bullets-final-r53-a.gif) | Violet needles and orbs drifting over Level 24's graded plain, 3x | chosen (round 53, F.3: accepted as final) |
 
 Production art for concept round 26 (the M4 part H batch), review files built from the final frames in `assets/` by `tools/art/bullet_medium.py` (`--review` rebuilds only them); prompts: [concept/prompts.md](concept/prompts.md).
 

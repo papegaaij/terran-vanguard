@@ -84,6 +84,10 @@ import java.util.Optional;
  *     the player's homing shots and turrets, Rook's target; a shot that flies into it still hits
  * @param rise M8 part D: its rise (design/enemies/naval/abyss-ray): a shadow on {@code sub}, the rise to {@code air},
  *     the glide and the sink ({@link Rise}); its stat block's layer is {@code sub}
+ * @param slowRing M8 part E: its sung ring that slows the ship (design/enemies/naval/siren; {@link SlowRing}); empty for
+ *     none
+ * @param coil M8 part E: its coiling orbit round the ship (design/enemies/naval/spiral-nautilus; {@link Coil}); empty
+ *     for none
  */
 public record EnemySpec(
         String slug,
@@ -136,7 +140,9 @@ public record EnemySpec(
         Optional<Turret> turret,
         Optional<RearPlate> rearPlate,
         boolean seekersIgnore,
-        Optional<Rise> rise)
+        Optional<Rise> rise,
+        Optional<SlowRing> slowRing,
+        Optional<Coil> coil)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -232,6 +238,153 @@ public record EnemySpec(
             throw new IllegalArgumentException(
                     slug + ": a rise is a plain unit's entering on the sub layer (M8 part D, the Abyss Ray)");
         }
+        java.util.Objects.requireNonNull(slowRing);
+        java.util.Objects.requireNonNull(coil);
+        if (coil.isPresent()
+                && (layer != Layer.AIR
+                        || walker.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || burrow.isPresent()
+                        || submerge.isPresent()
+                        || vortex.isPresent()
+                        || laneStrafe.isPresent()
+                        || swoop.isPresent()
+                        || chase.isPresent()
+                        || rise.isPresent()
+                        || hover.isPresent()
+                        || orbit.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a coil is a plain air unit's (M8 part E, the Spiral Nautilus)");
+        }
+    }
+
+    /** The constructor without M8 part E's {@code slowRing}. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            List<UnitPart> parts,
+            Optional<Roll> roll,
+            Optional<Vortex> vortex,
+            Optional<Pull> pull,
+            Optional<LaneStrafe> laneStrafe,
+            Optional<Turret> turret,
+            Optional<RearPlate> rearPlate,
+            boolean seekersIgnore,
+            Optional<Rise> rise) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                parts,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                turret,
+                rearPlate,
+                seekersIgnore,
+                rise,
+                Optional.empty(),
+                Optional.empty());
+    }
+
+    /**
+     * M8 part E: this air unit with its coiling orbit round the ship (design/enemies/naval/spiral-nautilus); empty for
+     * none.
+     */
+    public EnemySpec withCoil(Optional<Coil> withCoil) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.coil = withCoil;
+        return copy.build();
+    }
+
+    /**
+     * M8 part E: this unit with its sung ring that slows the ship (design/enemies/naval/siren); empty for none.
+     */
+    public EnemySpec withSlowRing(Optional<SlowRing> ring) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.slowRing = ring;
+        return copy.build();
     }
 
     /** The constructor without M8 part D's {@code rise}. */

@@ -55,6 +55,8 @@ final class WaveSchedule {
     private final boolean[] flips;
     /** M8 part C: per planned unit, whether its carried pickup drops only with a head-first kill (a chain's head). */
     private final boolean[] headFirsts;
+    /** M8 part E: per planned unit, its mount on a wall or its swim out of a cave; null for any other. */
+    private final WallMounts.Placed[] mounted;
 
     private final int[] warningStarts;
     private final int[] warningEnds;
@@ -88,6 +90,17 @@ final class WaveSchedule {
             SplitMix64 rng,
             java.util.function.Function<WaveSpec, java.util.Optional<Formations.Span>> spans,
             java.util.function.DoublePredicate reversedAt) {
+        this(waves, kinds, rng, spans, reversedAt, WallMounts.NONE);
+    }
+
+    /** @param mounts M8 part E: the level's walls for the waves out of them ({@link WaveSpec#mount()}) */
+    WaveSchedule(
+            List<WaveSpec> waves,
+            List<EnemySpec> kinds,
+            SplitMix64 rng,
+            java.util.function.Function<WaveSpec, java.util.Optional<Formations.Span>> spans,
+            java.util.function.DoublePredicate reversedAt,
+            WallMounts mounts) {
         this.kinds = kinds;
         List<Spawn> planned = new ArrayList<>();
         List<WaveSpec> warned = new ArrayList<>();
@@ -102,7 +115,12 @@ final class WaveSchedule {
         int burrows = 0;
         for (WaveSpec wave : waves) {
             int before = planned.size();
-            Formations.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
+            if (wave.mount().isPresent()) {
+                // M8 part E: a wall's nests or a cave's units.
+                mounts.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
+            } else {
+                Formations.plan(wave, kinds.indexOf(wave.enemy()), rng, planned, spans.apply(wave));
+            }
             boolean cross = wave.formation() == WaveSpec.Formation.CROSS;
             boolean flipped = flips(wave) && reversedAt.test(wave.t());
             int crossEdges = 0;
@@ -166,7 +184,9 @@ final class WaveSchedule {
         burrowGroups = new int[spawns.length];
         flips = new boolean[spawns.length];
         headFirsts = new boolean[spawns.length];
+        mounted = new WallMounts.Placed[spawns.length];
         for (int i = 0; i < spawns.length; i++) {
+            mounted[i] = mounts.placed(spawns[i]);
             flips[i] = flipOf.containsKey(spawns[i]);
             headFirsts[i] = headFirstOf.containsKey(spawns[i]);
             int[] place = placeOf.getOrDefault(spawns[i], new int[] {0, -1, 1});
@@ -309,6 +329,11 @@ final class WaveSchedule {
      */
     boolean lastHeadFirst() {
         return headFirsts[next - 1];
+    }
+
+    /** M8 part E: the mount of the unit {@link #due} returned last (a wall's nest, a cave's swimmer); null for none. */
+    WallMounts.Placed lastMounted() {
+        return mounted[next - 1];
     }
 
     /** The volley clock of the unit {@link #due} returned last; -1 without one. */

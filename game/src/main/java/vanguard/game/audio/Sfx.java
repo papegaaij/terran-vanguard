@@ -544,50 +544,80 @@ public enum Sfx {
     EXPLOSION_DEEP_MEDIUM("sfx/explosion-underwater-medium-r52-a.ogg", 4, Bus.EFFECTS, EXPLOSION),
     EXPLOSION_DEEP_LARGE("sfx/explosion-underwater-large-r52-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part D: the Abyss Ray's rising horn, its tell (round 53 a, proposed: a cruise ship's fog horn slowed and
-     * muffled, swelling out of a deep-sea rumble, 2.9 s), from its shadow's start through the rise.
+     * M8 part D: the Abyss Ray's rising horn, its tell (round 53 b, the user's pick: a conch slowed and rising over a
+     * hydrophone's earthquake rumble), from its shadow's start through the rise.
      */
-    RAY_RISE("sfx/ray-rise-r53-a.ogg", 1, Bus.EFFECTS, WARNING),
+    RAY_RISE("sfx/ray-rise-r53-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
      * M8 part D: the Abyss Ray's wing strokes (round 53 a, proposed: two slowed, muffled tarp whooshes over a faint
      * rumble, 3.5 s), once as it levels out into its glide.
      */
     RAY_GLIDE("sfx/ray-glide-r53-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part D: each fan the Abyss Ray fires (round 53 a, proposed: a tyre bead seater's air blast slowed and muffled
-     * over a depth bomb's sub boom, 0.65 s), instead of the shots' report.
+     * M8 part D: each fan the Abyss Ray fires (round 53 b, the user's pick: a didgeridoo's exhale on a depth
+     * bomb), instead of the shots' report.
      */
-    RAY_FAN("sfx/ray-fan-r53-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    RAY_FAN("sfx/ray-fan-r53-b.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M8 part D: an Abyss Ray killed (round 53 a, proposed: a camel's groan slowed further and further over a depth
      * bomb's sub boom, 2.8 s), with its under-water {@code large} burst.
      */
     RAY_DEATH("sfx/ray-death-r53-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part D: a Barbfin's needle (round 53 a, proposed: a blowgun dart's shot slowed a little, its plosive cut,
-     * 0.3 s), instead of the small shot's report.
+     * M8 part D: a Barbfin's needle (round 53 b, the user's pick: a nail gun's shot, slowed and muffled), instead of the small shot's report.
      */
-    BARBFIN_NEEDLE("sfx/barbfin-needle-r53-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    BARBFIN_NEEDLE("sfx/barbfin-needle-r53-b.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
     /**
      * M8 part D: a spawning reef's iris opening (round 53 a, proposed: a heavy stone grind slowed and muffled over
      * jammed seashells, 0.6 s), with its 0.5 s telegraph before a release.
      */
     REEF_IRIS("sfx/reef-iris-r53-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part D: a spawning reef razed (round 53 a, proposed: a granite rockslide slowed and muffled over a depth
-     * bomb's boom, 2.2 s), with its under-water {@code large} burst.
+     * M8 part D: a spawning reef razed (round 53 b, the user's pick: clay bricks falling over a wall falling,
+     * slowed and muffled), with its under-water {@code large} burst.
      */
-    REEF_DEATH("sfx/reef-death-r53-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    REEF_DEATH("sfx/reef-death-r53-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
      * M8 part D: a relay beacon's pulse (round 53 a, proposed: a real 625 Hz sonar ping slowed to about 400 Hz and
      * muffled, 1.9 s), on each 2 s pulse while a beacon is on the screen, low under the music.
      */
     BEACON_PULSE("sfx/beacon-pulse-r53-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part D: the Meridian's hatch letting go (round 53 a, proposed: a submarine hatch's clanks and creak slowed
-     * and muffled on an under-water impact, 1.6 s), once as the wreck is shot open.
+     * M8 part D: the Meridian's hatch letting go (round 53 b, the user's pick: a metal hatch slammed and slowed, a
+     * bunker door's hinge groan), once as the wreck is shot open; M8 part E: Level 25's survey sub shot open too.
      */
-    WRECK_HATCH("sfx/wreck-hatch-r53-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    WRECK_HATCH("sfx/wreck-hatch-r53-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part E: a Siren's song (round 54 a, proposed: a throat singer's low drone slowed and sliding down, muffled,
+     * over a deep-sea rumble, 2.8 s): one file from its sac's 0.8 s tell through the ring spreading out; also the
+     * music text's "Sirens' song drone".
+     */
+    SIREN_RING("sfx/siren-ring-r54-a.ogg", 4, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part E: a ring slowing the ship (round 54 a, proposed: a hand-cranked siren sliding down an octave, muffled,
+     * a bowed cymbal's shimmer over it, 2.0 s), once as the ring's band passes the ship.
+     */
+    SIREN_SLOW("sfx/siren-slow-r54-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part E: a Siren killed (round 54 a, proposed: its song slowed until it dies, over a depth bomb's boom, 2.2 s),
+     * with its under-water {@code medium} burst.
+     */
+    SIREN_DEATH("sfx/siren-death-r54-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part E: the Spiral Nautilus's shell spin (round 54 a, proposed: a millstone's grind slowed and muffled over a
+     * cement mixer's drum, a seamless 4 s loop): one quiet loop for the nearest on the screen.
+     */
+    NAUTILUS_SPIN("sfx/nautilus-spin-r54-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part E: a Spiral Nautilus's shell scraping open (round 54 a, proposed: a stone sarcophagus lid sliding, shells
+     * scraping marble under it, 0.7 s), at the start of each uncoil.
+     */
+    NAUTILUS_UNCOIL("sfx/nautilus-uncoil-r54-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part E: a Spiral Nautilus's shell cracked (round 54 a, proposed: a big clay pot smashed, slowed and muffled,
+     * over a depth bomb's boom, 1.8 s), with its under-water {@code medium} burst.
+     */
+    NAUTILUS_DEATH("sfx/nautilus-death-r54-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
@@ -801,6 +831,11 @@ public enum Sfx {
      * slowed, humpback whales calling far off, a seamless 16 s loop): Level 23 from the waterline on, and Level 24.
      */
     AMBIENCE_EUROPA_UNDER("sfx/europa-under-r52-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part E: the Siren Trench's bed (round 54 a, proposed: {@code europa-under}'s rumble slowed, rock scraping far
+     * off, humpback whales calling far off, a seamless 16 s loop): Level 25, in place of {@code europa-under}.
+     */
+    AMBIENCE_EUROPA_TRENCH("sfx/europa-trench-r54-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -900,6 +935,8 @@ public enum Sfx {
             case "conamara-station" -> AMBIENCE_CONAMARA;
             // M8 part C: the bed under the ice (Level 23 from the waterline).
             case "europa-under" -> AMBIENCE_EUROPA_UNDER;
+            // M8 part E: the Siren Trench's bed (Level 25).
+            case "europa-trench" -> AMBIENCE_EUROPA_TRENCH;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

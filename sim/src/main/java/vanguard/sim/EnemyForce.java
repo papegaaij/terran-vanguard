@@ -98,6 +98,8 @@ final class EnemyForce {
     private Enemy lastCarrier;
     /** M8 part D: the escorts held by a rising carrier until its rise's middle. */
     private final RiseEscorts riseEscorts = new RiseEscorts();
+    /** M8 part E: the slowing rings in flight (design/enemies/naval/siren); null in a level without a ring unit. */
+    private final SonarRings rings;
     /**
      * M5 part B: per staggered walker wave its volley clock, in steps since the first of its units
      * came onto the screen (counting that step as 1); 0 before (see {@link Enemy#staggeredVolley}).
@@ -172,6 +174,21 @@ final class EnemyForce {
             Escapes escapes,
             java.util.function.Function<WaveSpec, Optional<Formations.Span>> spans,
             java.util.function.DoublePredicate reversedAt) {
+        this(waveSpecs, groundUnits, extraKinds, rng, rules, events, escapes, spans, reversedAt, WallMounts.NONE);
+    }
+
+    /** @param mounts M8 part E: the level's walls, for the waves out of them (a cave's, a wall's nests) */
+    EnemyForce(
+            List<WaveSpec> waveSpecs,
+            List<GroundUnit> groundUnits,
+            List<EnemySpec> extraKinds,
+            SplitMix64 rng,
+            Rules rules,
+            SimEvents events,
+            Escapes escapes,
+            java.util.function.Function<WaveSpec, Optional<Formations.Span>> spans,
+            java.util.function.DoublePredicate reversedAt,
+            WallMounts mounts) {
         this.rng = rng;
         this.rules = rules;
         this.events = events;
@@ -229,7 +246,9 @@ final class EnemyForce {
                             ? kinds.indexOf(spec.spawner().get().enemy())
                             : -1;
         }
-        this.waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt);
+        this.waves = new WaveSchedule(waveSpecs, kinds, rng, spans, reversedAt, mounts);
+        // M8 part E: only with a unit that sings a slowing ring.
+        rings = kinds.stream().anyMatch(kind -> kind.slowRing().isPresent()) ? new SonarRings() : null;
         volleyClocks = new int[waves.volleyClocks()];
         burrowers = new Burrowers(waves.burrowClocks(), enemies, events, guns);
         chainRules = new ChainRules(this, kinds, waves, enemies, events, escapes, guns);
@@ -261,6 +280,32 @@ final class EnemyForce {
                 sideWarningEnds[w] = SimStep.ticks(unit.t());
                 sideWarningEdges[w] = unit.side().get().fromLeft() ? WarningEdge.LEFT.bit() : WarningEdge.RIGHT.bit();
                 w++;
+            }
+        }
+    }
+
+    /** M8 part E: the slowing rings in flight; null in a level without a unit that sings one. */
+    SonarRings rings() {
+        return rings;
+    }
+
+    /** M8 part E: a singing unit was destroyed: its song ends, its ring in flight with it. */
+    void silence(Enemy unit) {
+        if (rings != null) {
+            rings.silence(unit.serial());
+        }
+    }
+
+    /**
+     * M8 part E: the rings and the hulls' slows (the ship's, Rook's), only in a level with a ring unit, so the other
+     * levels hash as before.
+     */
+    void addRingsTo(StateHash hash, Ship ship, Wingman wingman) {
+        if (rings != null) {
+            rings.addTo(hash);
+            ship.slow.addTo(hash);
+            if (wingman != null) {
+                wingman.slow.addTo(hash);
             }
         }
     }
@@ -312,6 +357,9 @@ final class EnemyForce {
         nextGround = 0;
         lastCarrier = null;
         riseEscorts.reset();
+        if (rings != null) {
+            rings.reset();
+        }
         java.util.Arrays.fill(volleyClocks, 0);
         burrowers.reset();
         objectiveHook.clearAllyHits();
@@ -350,6 +398,11 @@ final class EnemyForce {
             Enemy enemy = enemies.obtain();
             if (enemy != null) {
                 enemy.spawn(spawn, spawned);
+                WallMounts.Placed mounted = waves.lastMounted();
+                if (mounted != null) {
+                    // M8 part E: a wall's nest stands on its foot; a cave's unit holds its hover only once out.
+                    enemy.mounted(mounted);
+                }
                 if (waves.lastFlipped()) {
                     // M7 part G: its wave entered while the scroll ran reversed.
                     enemy.flip();
@@ -358,6 +411,10 @@ final class EnemyForce {
                 enemy.tag(waves.lastTag());
                 enemy.volley(waves.lastVolleyGroup(), waves.lastVolleyUnit());
                 enemy.wavePlace(waves.lastPlace());
+                if (enemy.coils()) {
+                    // M8 part E: a coil keeps its orbit off the level's rock (the trench clamp).
+                    enemy.coiling.canyon(canyon);
+                }
                 if (spawn.enemy().burrow().isPresent()) {
                     enemy.burrowGroup(waves.lastBurrowGroup());
                     enemy.surfaceZones(zones);
@@ -685,6 +742,10 @@ final class EnemyForce {
             }
         }
         burrowers.tick();
+        if (rings != null) {
+            // M8 part E: the rings in flight expand and scroll with the ground before the nests sing new ones.
+            rings.step(groundScroll);
+        }
         for (int i = enemies.size() - 1; i >= 0; i--) {
             Enemy enemy = enemies.get(i);
             // M7 part A: a unit the EMP Burst stuns at the step's start does nothing of its own this step.
@@ -700,6 +761,10 @@ final class EnemyForce {
             // M5 part G: a diver under the always hook dives at the objective while it can be aimed at.
             int dive =
                     objectiveHook.mode(enemy.kind()) == HookMode.ALWAYS ? convoy.objective(enemy.x(), enemy.y()) : -1;
+            if (enemy.hoverHold.active()) {
+                // M8 part E: a hover's drift keeps off the level's rock (none: as before).
+                enemy.hoverHold.canyon(canyon);
+            }
             boolean flying = dive < 0
                     ? enemy.move(ship.x(), ship.y(), groundScroll, aimX, aimY, wind)
                     : enemy.move(
@@ -727,6 +792,10 @@ final class EnemyForce {
             if (flying && enemy.risenNow()) {
                 // M8 part D: its layer flipped: its escorts peel off its shadow.
                 peel(enemy, ship);
+            }
+            if (flying && !stunned && rings != null) {
+                // M8 part E: its sac's tell, its ring leaving the sac.
+                rings.sing(enemy, events);
             }
             if (flying && !stunned && enemy.decloakedNow()) {
                 events.add(SimEvents.Type.DECLOAK, enemy.x(), enemy.y(), enemy.kind());
@@ -780,6 +849,8 @@ final class EnemyForce {
                 burrowers.burrow(enemy, ship, firing);
             } else if (enemy.vortex()) {
                 guns.vortex(enemy, ship, firing);
+            } else if (enemy.coils()) {
+                guns.coil(enemy, ship, firing);
             } else if (enemy.laneStrafer()) {
                 guns.passTrigger(enemy, ship, firing);
             } else if (enemy.trigger() && firing) {

@@ -63,6 +63,8 @@ public final class DroneLooks {
         // M8 part B: a drop carried by a ground vehicle (Level 22's ice-crawler) is IceCrawlerLooks'.
         List<LevelData.Drop> drops = level.released().stream()
                 .filter(drop -> !IceCrawlerLooks.carried(drop))
+                // M8 part E: a drop released by a moored buoy (Level 25's survey buoy) is BuoyLooks'.
+                .filter(drop -> !BuoyLooks.moored(drop))
                 .filter(drop -> drop.sprite().filter(sprites::has).isPresent())
                 .toList();
         if (drops.isEmpty()) {

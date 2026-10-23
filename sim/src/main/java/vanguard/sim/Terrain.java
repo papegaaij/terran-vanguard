@@ -18,6 +18,13 @@ import java.util.Optional;
  * level data writes it); its contact normal assumes a convex one (the rock test is exact for any simple
  * polygon). The data's third value per wall point (the wall's drawn height) is presentation only and
  * not kept here.
+ *
+ * <p>M8 part E (design/campaign Level 25, The caves): a wall may carry <em>notches</em>, caves cut into it ({@link
+ * Notch}): over a notch's rows its rock steps back by the notch's depth, so the notch is open water with rock on three
+ * sides (its floor, its back and its ceiling). {@link #rock}, {@link #contact}, {@link #flyableX}, {@link #ceiling} and
+ * the spans asked {@code withNotches} open them; the collision lines ({@link #leftAt}, {@link #rightAt}), the plain
+ * spans and {@link #channels} are the walls' lines without them (the geometry rules, Rook and the Autopilot treat a
+ * notch as rock). A terrain without notches answers exactly as before.
  */
 public final class Terrain {
     /**
@@ -109,7 +116,44 @@ public final class Terrain {
         }
     }
 
+    /** M8 part E: the wall a notch is cut into. */
+    public enum Side {
+        LEFT,
+        RIGHT
+    }
+
+    /**
+     * M8 part E (design/campaign Level 25, The caves): a cave cut into a wall: over the rows {@code scroll ± width / 2}
+     * the wall's rock steps back {@code depth} px from its line (left of it for the left wall, right of it for the
+     * right one), leaving open water with a floor, a back and a ceiling.
+     *
+     * @param side the wall it is cut into
+     * @param scroll the row of its middle
+     * @param width its opening along the wall, rows (px)
+     * @param depth how far its back lies behind the wall's line, px across
+     */
+    public record Notch(Side side, double scroll, double width, double depth) {
+        public Notch {
+            java.util.Objects.requireNonNull(side);
+            if (!(width > 0) || !(depth > 0) || !Double.isFinite(scroll)) {
+                throw new IllegalArgumentException(
+                        "a notch has a row, a width and a depth: " + scroll + ", " + width + ", " + depth);
+            }
+        }
+
+        /** Its lowest row (its floor). */
+        public double low() {
+            return scroll - width / 2;
+        }
+
+        /** Its highest row (its ceiling). */
+        public double high() {
+            return scroll + width / 2;
+        }
+    }
+
     private static final double WIDTH = PlayField.WIDTH;
+    private static final double[] NONE = new double[0];
 
     /** The left wall's rows and x; null without one. */
     private final double[] leftRows;
@@ -125,8 +169,25 @@ public final class Terrain {
     private final double[] islandMaxX;
     private final double[] islandMinRow;
     private final double[] islandMaxRow;
+    /** M8 part E: the notches as given, and per wall its notches' lowest and highest rows and depths, by row. */
+    private final List<Notch> notchList;
+
+    private final double[] leftLow;
+    private final double[] leftHigh;
+    private final double[] leftDepth;
+    private final double[] rightLow;
+    private final double[] rightHigh;
+    private final double[] rightDepth;
 
     public Terrain(Optional<Wall> left, Optional<Wall> right, List<Island> islands) {
+        this(left, right, islands, List.of());
+    }
+
+    /**
+     * M8 part E: with {@code notches} cut into the walls (design/campaign Level 25): each lies on its wall's rows, and
+     * the notches of one wall do not overlap.
+     */
+    public Terrain(Optional<Wall> left, Optional<Wall> right, List<Island> islands, List<Notch> notches) {
         leftRows = left.map(Wall::scrolls).orElse(null);
         leftXs = left.map(Wall::xs).orElse(null);
         rightRows = right.map(Wall::scrolls).orElse(null);
@@ -146,6 +207,70 @@ public final class Terrain {
             islandMinRow[i] = Arrays.stream(islandRows[i]).min().orElseThrow();
             islandMaxRow[i] = Arrays.stream(islandRows[i]).max().orElseThrow();
         }
+        notchList = List.copyOf(notches);
+        double[][] l = notchRows(notchList, Side.LEFT, leftRows);
+        double[][] r = notchRows(notchList, Side.RIGHT, rightRows);
+        leftLow = l[0];
+        leftHigh = l[1];
+        leftDepth = l[2];
+        rightLow = r[0];
+        rightHigh = r[1];
+        rightDepth = r[2];
+    }
+
+    /** One wall's notches as rows and depths sorted by row: [lows, highs, depths]; checked against its wall. */
+    private static double[][] notchRows(List<Notch> notches, Side side, double[] wallRows) {
+        List<Notch> own = notches.stream()
+                .filter(notch -> notch.side() == side)
+                .sorted(java.util.Comparator.comparingDouble(Notch::scroll))
+                .toList();
+        if (own.isEmpty()) {
+            return new double[][] {NONE, NONE, NONE};
+        }
+        double[][] out = new double[3][own.size()];
+        for (int k = 0; k < own.size(); k++) {
+            Notch notch = own.get(k);
+            if (wallRows == null || notch.low() < wallRows[0] || notch.high() > wallRows[wallRows.length - 1]) {
+                throw new IllegalArgumentException("a notch lies on its wall's rows: " + notch);
+            }
+            if (k > 0 && notch.low() < out[1][k - 1]) {
+                throw new IllegalArgumentException("the notches of one wall do not overlap: " + notch);
+            }
+            out[0][k] = notch.low();
+            out[1][k] = notch.high();
+            out[2][k] = notch.depth();
+        }
+        return out;
+    }
+
+    /** M8 part E: the notches, in the order given (a cave wave names its notch by this index). */
+    public List<Notch> notches() {
+        return notchList;
+    }
+
+    /**
+     * M8 part E: the mouth of notch {@code index} (in {@link #notches()}' order): its wall's line where it reaches
+     * farthest into the water over the notch's rows, px; what swims out of the notch is clear of the rock past it. Its
+     * back lies the notch's depth behind the line, at most this less the depth into the water.
+     */
+    public double notchMouth(int index) {
+        Notch notch = notchList.get(index);
+        return notch.side() == Side.LEFT
+                ? most(leftRows, leftXs, notch.low(), notch.high(), 1)
+                : -most(rightRows, rightXs, notch.low(), notch.high(), -1);
+    }
+
+    /**
+     * M8 part E: the left wall's rock edge at {@code row} with its notches open: its collision line, or the notch's back
+     * where a notch is cut; NaN where there is no left wall.
+     */
+    public double leftRockAt(double row) {
+        return leftAt(row) - depthAt(leftLow, leftHigh, leftDepth, row);
+    }
+
+    /** M8 part E: the right wall's rock edge at {@code row} with its notches open (see {@link #leftRockAt}). */
+    public double rightRockAt(double row) {
+        return rightAt(row) + depthAt(rightLow, rightHigh, rightDepth, row);
     }
 
     /** The ground row of play-field height {@code y} at {@code groundScroll}: {@code groundScroll + y − 540}. */
@@ -183,13 +308,13 @@ public final class Terrain {
         double r0 = row(groundScroll, y - halfH);
         double r1 = row(groundScroll, y + halfH);
         if (leftRows != null) {
-            double most = most(leftRows, leftXs, r0, r1, 1);
+            double most = reach(leftRows, leftXs, leftLow, leftHigh, leftDepth, r0, r1, 1);
             if (Math.max(x - halfW, 0) < most) {
                 return true;
             }
         }
         if (rightRows != null) {
-            double least = -most(rightRows, rightXs, r0, r1, -1);
+            double least = -reach(rightRows, rightXs, rightLow, rightHigh, rightDepth, r0, r1, -1);
             if (Math.min(x + halfW, WIDTH) > least) {
                 return true;
             }
@@ -212,10 +337,10 @@ public final class Terrain {
         double xr = x + halfW;
         double best = Double.POSITIVE_INFINITY;
         if (leftRows != null) {
-            best = Math.min(best, firstBeyond(leftRows, leftXs, r0, xl, 1));
+            best = Math.min(best, firstBeyond(leftRows, leftXs, leftLow, leftHigh, leftDepth, r0, xl, 1));
         }
         if (rightRows != null) {
-            best = Math.min(best, firstBeyond(rightRows, rightXs, r0, -xr, -1));
+            best = Math.min(best, firstBeyond(rightRows, rightXs, rightLow, rightHigh, rightDepth, r0, -xr, -1));
         }
         for (int i = 0; i < islandXs.length && best > r0; i++) {
             if (islandMaxX[i] <= xl || islandMinX[i] >= xr || islandMaxRow[i] < r0 || islandMinRow[i] >= best) {
@@ -243,9 +368,17 @@ public final class Terrain {
      * island's right side or the field's left edge (0); NaN when x lies in rock there.
      */
     public double spanLeft(double groundScroll, double y, double x) {
+        return spanLeft(groundScroll, y, x, false);
+    }
+
+    /**
+     * As {@link #spanLeft(double, double, double)}; M8 part E: {@code withNotches} opens the walls' notches (in one the
+     * channel reaches its back), else they are rock.
+     */
+    public double spanLeft(double groundScroll, double y, double x, boolean withNotches) {
         double r = row(groundScroll, y);
-        double lo = boundLeft(r);
-        double hi = boundRight(r);
+        double lo = boundLeft(r, withNotches);
+        double hi = boundRight(r, withNotches);
         if (!(x > lo && x < hi) || inAnyIsland(x, r)) {
             return Double.NaN;
         }
@@ -271,9 +404,14 @@ public final class Terrain {
      * island's left side or the field's right edge (480); NaN when x lies in rock there.
      */
     public double spanRight(double groundScroll, double y, double x) {
+        return spanRight(groundScroll, y, x, false);
+    }
+
+    /** As {@link #spanRight(double, double, double)}; M8 part E: {@code withNotches} opens the walls' notches. */
+    public double spanRight(double groundScroll, double y, double x, boolean withNotches) {
         double r = row(groundScroll, y);
-        double lo = boundLeft(r);
-        double hi = boundRight(r);
+        double lo = boundLeft(r, withNotches);
+        double hi = boundRight(r, withNotches);
         if (!(x > lo && x < hi) || inAnyIsland(x, r)) {
             return Double.NaN;
         }
@@ -300,8 +438,8 @@ public final class Terrain {
      */
     public int channels(double groundScroll, double y) {
         double r = row(groundScroll, y);
-        double lo = boundLeft(r);
-        double hi = boundRight(r);
+        double lo = boundLeft(r, false);
+        double hi = boundRight(r, false);
         int crossings = 0;
         for (int i = 0; i < islandXs.length; i++) {
             if (r < islandMinRow[i] || r > islandMaxRow[i]) {
@@ -329,8 +467,8 @@ public final class Terrain {
      */
     public double flyableX(double groundScroll, double y, double x, double margin) {
         double r = row(groundScroll, y);
-        double left = leftAt(r);
-        double right = rightAt(r);
+        double left = leftRockAt(r);
+        double right = rightRockAt(r);
         double out = x;
         for (int pass = 0; pass < 2; pass++) {
             double lo = Double.isNaN(left) ? Double.NEGATIVE_INFINITY : left + margin;
@@ -384,10 +522,25 @@ public final class Terrain {
             double r0 = row(groundScroll, cy - hh);
             double r1 = row(groundScroll, cy + hh);
             if (leftRows != null) {
-                any |= wallContact(leftRows, leftXs, r0, r1, Math.max(cx - hw, 0), 1, out);
+                any |= leftLow.length == 0
+                        ? wallContact(leftRows, leftXs, r0, r1, Math.max(cx - hw, 0), 1, 0, Double.NaN, out)
+                        : notchedContact(
+                                leftRows, leftXs, leftLow, leftHigh, leftDepth, r0, r1, Math.max(cx - hw, 0), 1, out);
             }
             if (rightRows != null) {
-                any |= wallContact(rightRows, rightXs, r0, r1, Math.min(cx + hw, WIDTH), -1, out);
+                any |= rightLow.length == 0
+                        ? wallContact(rightRows, rightXs, r0, r1, Math.min(cx + hw, WIDTH), -1, 0, Double.NaN, out)
+                        : notchedContact(
+                                rightRows,
+                                rightXs,
+                                rightLow,
+                                rightHigh,
+                                rightDepth,
+                                r0,
+                                r1,
+                                Math.min(cx + hw, WIDTH),
+                                -1,
+                                out);
             }
             for (int i = 0; i < islandXs.length; i++) {
                 any |= islandContact(i, cx, row(groundScroll, cy), hw, hh, out);
@@ -396,16 +549,104 @@ public final class Terrain {
         return any;
     }
 
-    /** The left boundary at row r: the left wall, else the field's edge. */
-    private double boundLeft(double r) {
-        double left = leftAt(r);
+    /** The left boundary at row r: the left wall (its notch's back {@code withNotches}), else the field's edge. */
+    private double boundLeft(double r, boolean withNotches) {
+        double left = withNotches ? leftRockAt(r) : leftAt(r);
         return Double.isNaN(left) ? 0 : Math.max(0, left);
     }
 
-    /** The right boundary at row r: the right wall, else the field's edge. */
-    private double boundRight(double r) {
-        double right = rightAt(r);
+    /** The right boundary at row r: the right wall (its notch's back {@code withNotches}), else the field's edge. */
+    private double boundRight(double r, boolean withNotches) {
+        double right = withNotches ? rightRockAt(r) : rightAt(r);
         return Double.isNaN(right) ? WIDTH : Math.min(WIDTH, right);
+    }
+
+    /** M8 part E: the index of the first notch whose highest row lies above r (the notches' count for none). */
+    private static int firstNotch(double[] highs, double r) {
+        int lo = 0;
+        int hi = highs.length;
+        while (lo < hi) {
+            int mid = (lo + hi) >>> 1;
+            if (highs[mid] <= r) {
+                lo = mid + 1;
+            } else {
+                hi = mid;
+            }
+        }
+        return lo;
+    }
+
+    /** M8 part E: the depth of the notch holding row r (strictly between its floor and its ceiling); 0 for none. */
+    private static double depthAt(double[] lows, double[] highs, double[] depths, double r) {
+        if (lows.length == 0) {
+            return 0;
+        }
+        int k = firstNotch(highs, r);
+        return k < lows.length && r > lows[k] && r < highs[k] ? depths[k] : 0;
+    }
+
+    /**
+     * M8 part E: {@link #most} of a wall over the rows [r0, r1] with its notches open: over a notch's rows its {@code
+     * sign × value} less the notch's depth.
+     */
+    private static double reach(
+            double[] rows,
+            double[] xs,
+            double[] lows,
+            double[] highs,
+            double[] depths,
+            double r0,
+            double r1,
+            int sign) {
+        if (lows.length == 0) {
+            return most(rows, xs, r0, r1, sign);
+        }
+        double best = Double.NEGATIVE_INFINITY;
+        double from = r0;
+        for (int k = firstNotch(highs, r0); k < lows.length && lows[k] < r1; k++) {
+            if (lows[k] > from) {
+                best = Math.max(best, most(rows, xs, from, lows[k], sign));
+            }
+            best = Math.max(best, most(rows, xs, Math.max(from, lows[k]), Math.min(r1, highs[k]), sign) - depths[k]);
+            from = highs[k];
+        }
+        if (from < r1 || from == r0) {
+            best = Math.max(best, most(rows, xs, from, r1, sign));
+        }
+        return best;
+    }
+
+    /**
+     * M8 part E: {@link #firstBeyond(double[], double[], double, double, int)} with a wall's notches open: in a notch's
+     * rows the rock reaches beyond {@code bound} only where it does by more than the notch's depth.
+     */
+    private static double firstBeyond(
+            double[] rows,
+            double[] xs,
+            double[] lows,
+            double[] highs,
+            double[] depths,
+            double r0,
+            double bound,
+            int sign) {
+        if (lows.length == 0) {
+            return firstBeyond(rows, xs, r0, bound, sign);
+        }
+        double from = r0;
+        for (int k = firstNotch(highs, r0); k < lows.length; k++) {
+            if (lows[k] > from) {
+                double hit = firstBeyond(rows, xs, from, bound, sign);
+                if (hit <= lows[k]) {
+                    return hit;
+                }
+            }
+            double hit = firstBeyond(rows, xs, Math.max(from, lows[k]), bound + depths[k], sign);
+            if (hit < highs[k]) {
+                return hit;
+            }
+            from = highs[k];
+        }
+        return firstBeyond(rows, xs, from, bound, sign);
     }
 
     private boolean inAnyIsland(double x, double r) {
@@ -573,7 +814,15 @@ public final class Terrain {
      * h along it. Records it in {@code out} when deeper than what is there. Sign 1: the left wall.
      */
     private static boolean wallContact(
-            double[] rows, double[] xs, double r0, double r1, double edge, int sign, double[] out) {
+            double[] rows,
+            double[] xs,
+            double r0,
+            double r1,
+            double edge,
+            int sign,
+            double inset,
+            double lift,
+            double[] out) {
         int last = rows.length - 1;
         double from = Math.max(r0, rows[0]);
         double to = Math.min(r1, rows[last]);
@@ -593,7 +842,7 @@ public final class Terrain {
                 bestRow = rows[k];
             }
         }
-        double across = best - sign * edge;
+        double across = best - inset - sign * edge;
         if (!(across > 0)) {
             return false;
         }
@@ -605,6 +854,15 @@ public final class Terrain {
         }
         double norm = Math.sqrt(1 + slope * slope);
         double depth = across / norm;
+        if (!Double.isNaN(lift) && Math.abs(lift) < depth) {
+            // M8 part E: a notch's lip: up onto its floor's or down under its ceiling's line frees it with less.
+            if (Math.abs(lift) > out[2]) {
+                out[0] = 0;
+                out[1] = Math.signum(lift);
+                out[2] = Math.abs(lift);
+            }
+            return true;
+        }
         if (depth > out[2]) {
             // Out of the rock: right for the left wall, left for the right one, across the line's lean.
             out[0] = sign / norm;
@@ -612,6 +870,45 @@ public final class Terrain {
             out[2] = depth;
         }
         return true;
+    }
+
+    /**
+     * M8 part E: a wall's touch with its notches open on a box whose side toward it is at {@code edge} over rows [r0,
+     * r1]: over a notch's rows its back (the line less the notch's depth), elsewhere the line; where the box reaches
+     * from a notch into the rock beside it (its floor below, its ceiling above) and fits in the notch, the way out may
+     * be up or down onto the notch's rows instead of across. Records the deepest way out in {@code out}.
+     */
+    private static boolean notchedContact(
+            double[] rows,
+            double[] xs,
+            double[] lows,
+            double[] highs,
+            double[] depths,
+            double r0,
+            double r1,
+            double edge,
+            int sign,
+            double[] out) {
+        boolean any = false;
+        double from = r0;
+        double lastLow = Double.NaN;
+        for (int k = firstNotch(highs, r0); k < lows.length && lows[k] < r1; k++) {
+            if (lows[k] > from) {
+                // The rock below notch k: its floor's lip when the box reaches up into the notch and fits in it.
+                double lift = from == r0 && r1 - r0 <= highs[k] - lows[k] ? lows[k] - r0 : Double.NaN;
+                any |= wallContact(rows, xs, from, lows[k], edge, sign, 0, lift, out);
+            }
+            any |= wallContact(
+                    rows, xs, Math.max(from, lows[k]), Math.min(r1, highs[k]), edge, sign, depths[k], Double.NaN, out);
+            lastLow = lows[k];
+            from = highs[k];
+        }
+        if (from < r1 || from == r0) {
+            // The rock above the last notch: its ceiling's lip when the box reaches down into it and fits in it.
+            double lift = !Double.isNaN(lastLow) && r1 - r0 <= from - lastLow ? -(r1 - from) : Double.NaN;
+            any |= wallContact(rows, xs, from, r1, edge, sign, 0, lift, out);
+        }
+        return any;
     }
 
     /**

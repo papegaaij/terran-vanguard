@@ -15,12 +15,33 @@ final class HoverHold {
     private double above;
     /** Its drift's direction: 1 to the right, -1 to the left. */
     private int drift = 1;
+    /**
+     * M8 part E: how far along its path it must be before it may stop (a cave's unit, out of its notch); 0 for any
+     * other. Not hashed: it follows from its wave's plan, as its path does.
+     */
+    private double from;
+    /**
+     * M8 part E: the level's rock and scroll its drift keeps off (null without rock). Not hashed: the level's, set by
+     * its force each step.
+     */
+    private Canyon canyon;
 
     /** Back to a unit without a hover above the ship. */
     void clear() {
         active = false;
         above = 0;
         drift = 1;
+        from = 0;
+    }
+
+    /** M8 part E: its drift keeps off {@code rock} (null: the level has none). */
+    void canyon(Canyon rock) {
+        canyon = rock;
+    }
+
+    /** M8 part E: it may stop only {@code distance} px along its path and beyond (a cave's unit, out of its notch). */
+    void notBefore(double distance) {
+        from = distance;
     }
 
     /** It starts with {@code spec}'s hover, drawing its height and its drift's side by its own {@code serial}. */
@@ -57,6 +78,7 @@ final class HoverHold {
      */
     boolean stopsNow(Enemy u, double shipY) {
         return active
+                && u.distance >= from
                 && u.y < u.prevY
                 && PlayField.overlaps(u.x, u.y, u.box)
                 && u.y <= holdY(u.spec.hover().orElseThrow(), shipY);
@@ -64,18 +86,33 @@ final class HoverHold {
 
     /**
      * One step of {@code u}'s hold: it drifts sideways at the hover's drift (turning back at the side edges, its hit
-     * box kept on the play field) and turns its facing toward the ship at (shipX, shipY).
+     * box kept on the play field) and turns its facing toward the ship at (shipX, shipY). M8 part E: in a level with
+     * rock it turns back at the flyable span's edges too ({@link Terrain#spanLeft}, {@link Terrain#spanRight}: its hit
+     * box kept off the walls and islands where the span holds it), and its centre is kept out of the rock as the walls
+     * scroll in on it (laid out at a span's edge, it may stand closer than its half width).
      */
     void hold(Enemy u, double shipX, double shipY) {
         double speed = u.spec.hover().orElseThrow().drift();
         if (speed > 0) {
             double half = u.box.width() / 2;
+            double lo = half;
+            double hi = PlayField.WIDTH - half;
+            if (canyon != null) {
+                double left = canyon.terrain.spanLeft(canyon.scroll(), u.y, u.x);
+                double right = canyon.terrain.spanRight(canyon.scroll(), u.y, u.x);
+                if (!Double.isNaN(left)) {
+                    lo = Math.max(lo, left + half);
+                }
+                if (!Double.isNaN(right)) {
+                    hi = Math.min(hi, right - half);
+                }
+            }
             double x = u.x + drift * speed * SimStep.SECONDS;
-            if (x < half && drift < 0 || x > PlayField.WIDTH - half && drift > 0) {
+            if (x < lo && drift < 0 || x > hi && drift > 0) {
                 drift = -drift;
                 x = u.x;
             }
-            u.x = x;
+            u.x = canyon == null ? x : canyon.flyableX(u.y, x, 0);
         }
         double dx = shipX - u.x;
         double dy = shipY - u.y;

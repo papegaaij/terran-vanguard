@@ -142,6 +142,8 @@ final class SortieHash {
             // M8 part B: only once a target-destroyed cue's unit fell, so the other levels hash as before.
             hash.add(1);
         }
+        // M8 part E: only in a level with a ring unit, so the other levels hash as before.
+        s.force.addRingsTo(hash, s.ship, s.wingman);
         return hash.value();
     }
 }

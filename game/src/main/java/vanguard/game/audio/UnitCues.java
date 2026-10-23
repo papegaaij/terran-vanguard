@@ -112,6 +112,8 @@ final class UnitCues extends SoundFamily {
     private final UnderIceCues underIce;
     /** M8 part D: Level 24's units' own sounds (the Ray, the Barbfin, the reef). */
     private final AbyssCues abyss;
+    /** M8 part E: Level 25's units' own deaths (the Siren, the Spiral Nautilus). */
+    private final TrenchCues trench;
 
     UnitCues(
             SoundMix mix,
@@ -121,8 +123,10 @@ final class UnitCues extends SoundFamily {
             WalkerCues walker,
             DeepWaterCues deepWater,
             UnderIceCues underIce,
-            AbyssCues abyss) {
+            AbyssCues abyss,
+            TrenchCues trench) {
         super(mix);
+        this.trench = trench;
         this.deepWater = deepWater;
         this.underIce = underIce;
         this.abyss = abyss;
@@ -160,6 +164,8 @@ final class UnitCues extends SoundFamily {
                 underIce.destroyed(events.value(i), pan);
                 // M8 part D: a Ray's dying groan, a reef's collapse over it.
                 abyss.destroyed(events.value(i), pan);
+                // M8 part E: a Siren's song choked off, a Nautilus's shell cracking over it.
+                trench.destroyed(events.value(i), pan);
                 // M8 part B: a Drill Rig's core also plays the rig's collapse (FoundryCues).
                 foundry.destroyed(events.value(i), pan);
             }

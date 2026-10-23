@@ -2,9 +2,9 @@
 title: Abyss Ray
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Abyss Ray
@@ -79,7 +79,7 @@ The production frames (round 48's b, the bone skate; `tools/art/abyss_ray.py`, s
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (decided by me, gap analysis section 3.2): no mid-boss in Act 4; the Abyss Ray is the act's large set-piece unit.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-22 (M8 part D, step D2; gap check `m8d-gaps.md` §5 D2, D3, pending the user's review in round 53): the stat block as
+- 2026-10-22 (M8 part D, step D2; gap check `m8d-gaps.md` §5 D2, D3, accepted in round 53 (2026-10-23)): the stat block as
   data, the table rendered from it. The open question closed (the shadow is hittable by `anti-sub` fire and the Smart
   Bomb: approved in round 48). The shadow grows in the ship's lane about 200 px ahead of the ship, not on it, and the
   Ray does no contact damage from the layer flip until the rise ends (a 130 × 90 body flipping to `air` on the ship
@@ -87,12 +87,12 @@ The production frames (round 48's b, the bone skate; `tools/art/abyss_ray.py`, s
   escorts are held until the rise's midpoint and fan out from it. The fan: a `burst` of 3 (easy 2, hard 4) 1.2 s apart
   from the rise's end and an `interval` of 20 s (longer than the 8.3 s visit: one salvo a visit); a rising unit's fan
   may come in a burst (as a boss's).
-- 2026-10-22 (M8 part D, step D3, pending the user's review in round 53): mapped and flown in Level 24 (`AbyssRules`):
+- 2026-10-22 (M8 part D, step D3, accepted in round 53 (2026-10-23)): mapped and flown in Level 24 (`AbyssRules`):
   the rise, the fan in its burst (only a rising unit's fan takes the `burst`; every other fan keeps one volley), the
   first-ray line on the simulation's first shadow. Numbers unchanged: the autopilot holds its line under the shadow
   with the Harpoon Torpedoes (`AbyssPlay`), the fans and the escorts are dodged as any bullets; never two Rays on the
   screen (`Level24Test`, hard).
-- 2026-10-22 (M8 part D, steps D1, ART-D and D4; pending the user's review in round 53): step D1's own: the fans fire
+- 2026-10-22 (M8 part D, steps D1, ART-D and D4; accepted in round 53 (2026-10-23)): step D1's own: the fans fire
   only while the Ray's centre is on the field (on hard a glide may carry it off before its fourth fan), a Ray leaving
   the field is gone, its escorts' holds spread evenly across ± the hold radius. Step ART-D: the final frames from round
   48's b (16 glide headings × 3 wing beats, the rise, the sink, the shadow growing, the gill and spot glow, the mouth
@@ -101,3 +101,4 @@ The production frames (round 48's b, the bone skate; `tools/art/abyss_ray.py`, s
   death at the nearest of headings 0/4/12 with the under-water `large` burst. Weak spots shown in the round: the wing
   beat is faint at play size, the body reads dark under the reef field's 0.32 grade, and a Ray rising mid-lane glides
   off the right edge before it sinks (a call in round 53).
+- 2026-10-23 (user, round 53, closed): the final frames accepted (F.2; the part is `art: final`); the rise **b**, glide **a**, fan **b** and death **a** sounds picked; C.4 (the glide off the edge) and C.5 (the fans only on the field) accepted.

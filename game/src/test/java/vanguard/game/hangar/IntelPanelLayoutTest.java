@@ -436,6 +436,50 @@ class IntelPanelLayoutTest {
         assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(IntelPanel.RAY_VIOLET)), "no strip at L2");
     }
 
+    /**
+     * M8 part E (design/campaign Level 25, Threat profile at L3: "the side caves' entry points"): the strip marks the ten
+     * cave waves (29 to 149.5 s) with slate ticks over its upper half; no other level has a cave yet, and below L3 no
+     * strip.
+     */
+    @Test
+    void level25sStripMarksTheCaveEntries() {
+        String level = CONTENT.levelKey(25).orElseThrow();
+        Intel intel = Intel.of(CONTENT, level, 3);
+        List<Double> caves = intel.marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.CAVE)
+                .map(Intel.Mark::from)
+                .toList();
+        assertEquals(List.of(29.0, 39.0, 49.0, 58.5, 72.0, 86.0, 101.0, 117.5, 133.5, 149.5), caves);
+        Measure measure = new Measure();
+        IntelPanel.layout(measure, intel, CONTENT.level(level).briefing().teaser(), level);
+        Box strip = measure.parts.stream()
+                .filter(part -> part.what().equals("wave strip"))
+                .findFirst()
+                .orElseThrow();
+        List<Fill> ticks = measure.fills.stream()
+                .filter(fill -> fill.colour().equals(IntelPanel.CAVE_SLATE))
+                .toList();
+        assertEquals(caves.size(), ticks.size(), "a tick a cave wave");
+        for (int c = 0; c < caves.size(); c++) {
+            float at = strip.left()
+                    + 2
+                    + (strip.right() - strip.left() - 4) * caves.get(c).floatValue() / (float) intel.seconds();
+            assertTrue(Math.abs(ticks.get(c).x() - at) <= 2, caves.get(c) + " s: " + ticks.get(c) + " vs " + at);
+        }
+        for (String other : CONTENT.levels().keySet()) {
+            if (!other.equals(level)) {
+                assertTrue(
+                        Intel.of(CONTENT, other, 3).marks().stream()
+                                .noneMatch(mark -> mark.kind() == Intel.Mark.Kind.CAVE),
+                        other);
+            }
+        }
+        Measure l2 = new Measure();
+        IntelPanel.layout(
+                l2, Intel.of(CONTENT, level, 2), CONTENT.level(level).briefing().teaser(), level);
+        assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(IntelPanel.CAVE_SLATE)), "no strip at L2");
+    }
+
     /** M7 part H (H.7e): Level 21's strip at sensor L3 marks the Dust Colossus's silhouette at 105 s. */
     @Test
     void level21sStripMarksTheColossusSilhouetteAtItsArrival() {

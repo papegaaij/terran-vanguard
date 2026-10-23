@@ -146,4 +146,38 @@ public interface FlightSpecs {
             }
         }
     }
+
+    /**
+     * M8 part E, the coiling orbit (design/enemies/naval/spiral-nautilus; {@link Coiling}): a unit that orbits the ship
+     * in a closed, armoured shell, spiralling in from {@code outerRadius} to {@code innerRadius} px over {@code
+     * inSeconds} at its speed, never closer than {@code innerRadius}; then it uncoils: {@code openingSeconds} opening
+     * (still armoured, its crown's tell the last {@code tellSeconds} of it) and {@code openSeconds} open (hittable, its
+     * spiral gun firing) at {@code openSpeed} px/s; then it closes, breaks outward and spirals in again. A wave's units
+     * orbit in turn the other way round (its first counter-clockwise), each cycle {@code offsetSeconds} after the one
+     * before; they leave after their wave's hold.
+     */
+    public record Coil(
+            double outerRadius,
+            double innerRadius,
+            double inSeconds,
+            double openingSeconds,
+            double tellSeconds,
+            double openSeconds,
+            double openSpeed,
+            double offsetSeconds) {
+        public Coil {
+            if (!(innerRadius > 0)
+                    || !(outerRadius >= innerRadius)
+                    || !(inSeconds > 0)
+                    || !(openingSeconds >= 0)
+                    || !(tellSeconds >= 0 && tellSeconds <= openingSeconds)
+                    || !(openSeconds > 0)
+                    || !(openSpeed > 0)
+                    || !(offsetSeconds >= 0)) {
+                throw new IllegalArgumentException("a coil spirals in, opens and closes: " + outerRadius + " → "
+                        + innerRadius + " px, " + inSeconds + " s, " + openingSeconds + " s (tell " + tellSeconds
+                        + " s), " + openSeconds + " s at " + openSpeed + " px/s, offset " + offsetSeconds + " s");
+            }
+        }
+    }
 }

@@ -1,0 +1,64 @@
+# Spiral Nautilus stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part E, step E3 (Level 25): the approved stat block (round 48) as data. New in it: the `coil` movement (the orbit
+# round the ship in a closed shell, spiralling in, then the uncoil; flown from step E2, mapped in step E3) and the
+# `shell` armour (closed: every shot glances off but the specials' blasts and `anti-sub` fire). Its `spiral` fires
+# `while: open` (the Dust Devil's rule). Defaults of the gap check (m8e-gaps.md §5, pending the user's review in round
+# 54): the orbit's centre clamped to the trench so a 90 px circle and its hit box fit, a pair held for its wave's `hold`
+# (15 s, about 3 cycles), then breaking off the nearer side (E7); "open about 60 % of the cycle" read as either of the
+# pair, the numbers (3 s + 2.2 s, a 2 s offset) win (E7); the closed shell cracked by the specials' blasts and
+# `anti-sub` deliveries (E8).
+name: Spiral Nautilus
+faction: Vrell
+layer: air        # the play plane under water
+tier: medium
+size: [56, 56]    # sprite px: the shell (the crown 64×64 uncoiled)
+hitbox: [40, 40]
+parts: single (shell closed, crown open)
+orientation: radial
+hp: 100
+armour: shell     # closed: shots spark off; the specials' blasts and anti-sub fire excepted; open: none
+speed: 150        # px/s on its spiral
+movement:
+  coil:
+    outer: 220        # px from the ship where it starts spiralling in
+    inner: 90         # px: never closer
+    closing: 3        # s spiralling in, closed
+    opening: 0.6      # s opening (still armoured)
+    tell: 0.4         # s: the crown glows violet before it fires (the opening's last)
+    open: 1.6         # s open: hittable, the spiral firing
+    open_speed: 60    # px/s while open
+    offset: 2         # s between the cycles of a wave's units (a pair orbits in opposite directions)
+attacks:
+  - pattern: spiral
+    name: spiral
+    bullet: small
+    arms: 3
+    turn_rate: 90        # °/s
+    interval: 0.1        # s between two bullets of an arm: 16 per arm per 1.6 s window
+    speed: 100           # px/s base (× 0.7 under water)
+    while: open
+    notes:
+      text: '`{pattern}` while open: {arms} arms rotating {turn_rate}°/s, `{bullet}` = {damage}, {speed} px/s base, a shot per arm every {interval} s over the {movement.coil.open} s window; the crown glows violet {movement.coil.tell} s before it fires'
+formations:
+  - {name: circle, size: [2]}   # pairs orbiting in opposite directions
+weak_points:
+  - {name: the violet crown and eyes}
+drops: []
+traits: [homing, spread, anti-sub]
+bounty: 30
+first_level: 25
+difficulty:
+  easy: {coil: {open: 1.8}, attacks: {spiral: {arms: 2}}}
+  hard: {coil: {open: 1.4}, attacks: {spiral: {arms: 4}}}
+notes:
+  layer: ' (the play plane under water)'
+  size: (the shell; the crown 64×64 uncoiled)
+  orientation: 'shell spin (24 frames), the crown at `16 angles` toward the ship'
+  armour: 'closed (`shell`): shots spark off with a grey flash, the specials'' blasts (Smart Bomb, Airstrike) and `anti-sub` fire (Harpoon Torpedoes, Torpedo Pods, Depth Charges) excepted; uncoiled: none'
+  speed: on its spiral, {movement.coil.open_speed} px/s while uncoiled
+  movement: '`spiral-in` round the ship: radius {movement.coil.outer} px closing to {movement.coil.inner} px over {movement.coil.closing} s closed (never closer than {movement.coil.inner}), `spin` 24 frames; uncoils for 2.2 s ({movement.coil.opening} s opening, {movement.coil.open} s open, the weak crown), then closes and breaks outward; pairs orbit in opposite directions with their cycles offset by {movement.coil.offset} s; in a trench its orbit''s centre is clamped so its circle fits the flyable width; it leaves after its wave''s hold'
+  formations: (pairs orbiting in opposite directions)
+  weak_points: (open only, glowing lime-white)
+  death: '`medium` flash, the shell cracks into two halves that sink, the crown goes dark'
+  used_in: 'L26 (the dark: its crown is the glow), L27'
+  difficulty: 'easy: 2 arms, a 1.8 s open window; hard: 4 arms, 1.4 s window'

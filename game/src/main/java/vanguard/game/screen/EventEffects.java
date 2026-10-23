@@ -877,10 +877,54 @@ final class EventEffects {
      * with it and with its husk; a flyer's stay where it died on the play field.
      */
     private void death(int kind, double x, double y) {
-        boolean onGround = sortie.enemyKinds().get(kind).layer() == Layer.GROUND;
+        // M8 part E: a Siren's nest dies on its wall, scrolling with the ground.
+        boolean onGround = sortie.enemyKinds().get(kind).layer() == Layer.GROUND
+                || renderer.deepDeaths().mounted(sortie, kind);
         if (!deepDeath(kind, x, y, onGround)) {
             death(kind, x, y, onGround);
         }
+        trenchDeath(kind, x, y);
+    }
+
+    /**
+     * M8 part E: a Siren's collapse on its wall, the pale plume rising from its sac, then its husk left on the wall
+     * (all on the ground); a Spiral Nautilus's shell cracking into halves and, killed uncoiled, its dark crown sinking.
+     */
+    private void trenchDeath(int kind, double x, double y) {
+        DeepDeaths deep = renderer.deepDeaths();
+        Array<AtlasRegion> collapse = deep.sirenCollapse(sortie, kind, x);
+        if (!collapse.isEmpty()) {
+            double bodyX = deep.sirenBodyX(x);
+            start(pieces, collapse, DeepDeaths.sirenCollapseTicks(), bodyX, y, 0, true);
+            Array<AtlasRegion> plume = deep.sirenPlume(sortie, kind);
+            if (!plume.isEmpty()) {
+                pieces.startOnGround(
+                        plume,
+                        DeepDeaths.sirenPlumeTicks(),
+                        deep.sirenSacX(sortie, x),
+                        y + deep.sirenSacDy(sortie, x),
+                        0,
+                        sortie.groundScroll(),
+                        0,
+                        DeepDeaths.sirenPlumeRise(plume.size));
+            }
+            Array<AtlasRegion> husk = deep.sirenHusk(sortie, kind, x);
+            if (!husk.isEmpty()) {
+                debris.startOnGround(husk, REMAINS_TICKS, bodyX, y, DeepDeaths.sirenHuskDelay(), sortie.groundScroll());
+            }
+        }
+        Array<AtlasRegion> dark = deep.nautilusDark(sortie, kind, x, y);
+        if (!dark.isEmpty()) {
+            pieces.startDrifting(
+                    dark,
+                    DeepDeaths.halvesTicks(),
+                    x + deep.nautilusDarkDx(sortie),
+                    y + deep.nautilusDarkDy(sortie),
+                    0,
+                    0,
+                    -DeepDeaths.darkSink());
+        }
+        start(pieces, deep.nautilusHalves(sortie, kind), DeepDeaths.halvesTicks(), x, y, 0, false);
     }
 
     /**

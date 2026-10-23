@@ -140,6 +140,24 @@ class PortraitsTest {
         }
     }
 
+    /**
+     * M8 part E: Level 25's speakers (Okafor, Varga, Rook) have their portraits; the Siren and the Spiral Nautilus, new on
+     * the sensor suite's L2 contacts, have their sensor portraits.
+     */
+    @Test
+    void level25sNewUnitsHaveTheirSensorPortraits() {
+        LevelData level = content.level(content.levelKey(25).orElseThrow());
+        for (LevelData.RadioCue cue : level.radio()) {
+            assertTrue(List.of("Okafor", "Varga", "Rook").contains(cue.speaker()), cue.speaker());
+        }
+        List<String> enemies =
+                Intel.of(content, content.levelKey(25).orElseThrow(), 2).enemies();
+        assertTrue(enemies.containsAll(List.of("Siren", "Spiral Nautilus")), "the L2 contacts: " + enemies);
+        for (String unit : List.of("siren", "spiral-nautilus")) {
+            assertTrue(Files.isRegularFile(INTEL.resolve(unit + ".png")), unit + "'s sensor portrait");
+        }
+    }
+
     /** tools/art/intel.py renders the sensor silhouette of every set piece a level's intel shows as an unknown contact. */
     @Test
     void everyContactOfALevelHasItsIntelSilhouette() {

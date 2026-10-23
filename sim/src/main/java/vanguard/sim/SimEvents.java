@@ -673,7 +673,23 @@ public final class SimEvents {
          */
         RISE_SHADOW,
         /** M8 part D: its shadow's time is over and it rises at its spot (at it); value: its kind. */
-        RISE;
+        RISE,
+        /**
+         * M8 part E: a Siren's sac began its tell before a ring (design/enemies/naval/siren; at the unit); value: its
+         * kind.
+         */
+        RING_TELL,
+        /** M8 part E: a slowing ring left a Siren's sac (at the sac); value: its kind. */
+        RING,
+        /** M8 part E: a ring slowed a hull (at the hull: the sonar shimmer and the falling tone); value: 0 the ship, 1 Rook. */
+        SLOWED,
+        /**
+         * M8 part E: a coiling unit began to uncoil (design/enemies/naval/spiral-nautilus; at it): its crown opens, the
+         * tell before its spiral; value: its kind.
+         */
+        UNCOIL,
+        /** M8 part E: a coiling unit closed its shell after its spiral (at it) and breaks outward; value: its kind. */
+        COIL;
 
         private static final Type[] VALUES = values();
     }

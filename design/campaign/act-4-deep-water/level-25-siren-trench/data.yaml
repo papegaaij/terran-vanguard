@@ -1,0 +1,555 @@
+# Level 25 – Siren Trench: the level script, rendered into README.md (briefing, threat profile, layout, terrain, waves,
+# ground targets, radio, credit budget). Times are seconds from the level start. M8 part E, step E3, from the README's
+# approved hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M8 part E (loaded and checked by content in step E3; flown from steps E1/E2, mapped in step E3, drawn by
+# step E5): the terrain's `notches` (the side caves: flyable dead ends cut into a wall, rock on three sides), a wave's
+# `cave` (its units swim out of that notch, warned 3 s ahead at its wall's edge) and `wall` (Siren nests on the walls'
+# feet: `staggered` a nest every 1.5 s, the walls taking turns from the right, or `opposite` pairs at one row, the left
+# one's song 1.5 s later), the Siren's slowing `ring` and the Spiral Nautilus's `coil` (their stat blocks).
+# Defaults of the gap check (m8e-gaps.md §5, pending the user's review in round 54): the nests `air` and counted as
+# waves (E1: 271 + 9), the cave waves and the walls' nests counted as side entries (the intel's rule), the caves
+# `terrain.notches` (E5), the pillar's Reef Spitters in the island's foot band (E6), the Nautilus's clamp and hold (E7: a
+# pair holds 15 s), no Nautilus while the narrows are at the top edge (E9), the survey sub a trigger inside the left
+# notch and the armour patch a drop with the `survey-buoy` look (E12). Step E3's own placements (pending review): ART-E's
+# terrain proposal adopted unchanged (the walls, the pillar island, the 25 notches: one per cave wave, the survey sub's
+# and fillers), the ground targets at ART-E's spots, the schools' routes (x 190–290 in the 260 px trench, x 210–270 in the
+# narrows, down the fork's left channel at x 145–150 while the pillar is on the screen), the nest waves moved 0.3–0.5 s
+# off notch mouths and beacons (26.8, 47, 56.2, 70, 91.3, 131.3, 152.3), the radio retimed to the HUD's hold (Rook t=13,
+# Varga t=20, Okafor t=44).
+scroll_speed: 140     # the trench; the narrows and the Song set their own
+launch_seconds: 5
+bounty_scale: 0.48    # every bounty × 0.48: the README's estimate, fitted in step E3 (TypicalHaulTest, levelReport)
+control_prompts: []
+medium: underwater    # the whole level (the descent's waterline was Level 23): the water's factors, the grade, the special limits (UNDER ICE)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Europa, Siren Trench
+  layers: [air, ground]
+  density: 4
+  traits: [anti-sub, spread]   # the README draft named `homing` too: three do not fit the intel panel at L3 (IntelPanelLayoutTest; step E3); the L3 line names torpedoes and spread
+  hazards: [walls, sonar slow]
+  boss: none
+  objective: CROSS THE TRENCH   # the OBJECTIVE field from sensor L1
+  varga:
+    none: A trench with singing walls. Narrow, and no way round.
+    l1: Nests on both walls and enemies out of the caves. Keep off the rock.
+    l2: "New: Sirens slow you with sound. Nautilus spirals round you."
+    l3: Cave entries marked. Torpedoes and spread; keep moving.
+  notes:
+    Dominant layers: '`air` (the play plane under water: Glassfin schools, Barbfin groups, Nautilus pairs, the wall nests'' sacs), `ground` (Reef Spitters on the ledges at the walls'' foot)'
+    Attack directions: '{directions} (the cave entries and the walls'' nests count as sides)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: Trench walls (terrain collision); Siren rings that slow the ship (60 % for 2 s)
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: Europa, the trench, `air` + `ground`, front and sides · L1: + directions (all), density {density}, hazards "walls" and "sonar slow", the objective `{objective}` and the secondary `KILL RATIO 65 %` · L2: + Siren (new), Spiral Nautilus (new), Barbfin, Glassfin, Reef Spitter portraits, the `ring` slow marked as no damage · L3: + the side caves'' entry points on the threat arrows'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); the whole level under water (the level's medium)
+  - name: Trench Mouth
+    end: 22
+    atmosphere: clear
+    tiles: [trench-floor]
+    notes:
+      layers:
+        ground: 'the plain''s edge dropping into the trench, the first walls rising from t=8, three beacons on the left wall.'
+        sub: the abyss below, a faint glow.
+      purpose: Glassfin and Barbfin popcorn; the first Siren alone (t=18).
+  - name: The Walls
+    end: 60
+    atmosphere: clear
+    tiles: [trench-floor]
+    notes:
+      layers:
+        ground: 'ice-rock walls with caves notched in them every 700 px, alternating sides (the first at t=29), Reef Spitters on the ledges (t=30), beacons every 900 px.'
+      purpose: Siren pairs and cave entries; the nests taught as a rhythm.
+  - name: Cave Mouths
+    end: 95
+    atmosphere: clear
+    tiles: [trench-floor]
+    notes:
+      layers:
+        ground: As section 2; the survey sub wreck in the left cave (t≈78, the secret).
+      purpose: The Nautilus's first pair (t=62.5) with Sirens on top.
+  - name: The Narrows
+    end: 130
+    speed: 120
+    ramp: 2   # eased from 140 over its first 2 s
+    atmosphere: clear
+    tiles: [trench-scour]
+    notes:
+      layers:
+        ground: 'a rock pillar mid-trench at t=98–106 splitting it into two 140 px channels, then the walls close to 190 px (t=108–118), a Conamara survey buoy (t=118, the armour patch).'
+      purpose: The tightest stretch; Sirens flank the fork; no Nautilus inside the 190 px stretch.
+  - name: The Song
+    end: 160
+    speed: 130
+    ramp: 2   # eased from 120
+    atmosphere: clear
+    tiles: [trench-song]
+    notes:
+      layers:
+        ground: As section 2, nests on both walls at their densest (up to four on the screen).
+      purpose: The Sirens, Nautilus pairs and Barbfin together.
+  - name: Trench Floor
+    end: 173
+    speed: 140
+    ramp: 2   # eased from 130
+    atmosphere: clear
+    tiles: [abyss-floor]
+    underwater_look: {ambient: 0.1, tint: 98c0e0, caustics: 0.0, snow: 80, headlights: 0.9}   # the floor opening, the lights going out (Level 26)
+    notes:
+      layers:
+        ground: the walls falling away, the sea floor opening to flat black water; no more nests.
+      purpose: Release; level end; the lights ahead go out (Level 26).
+
+# The game's under-water grade (presentation only; step C4's UnderwaterGrade): the trench is dark but not black (Q2 a):
+# the ship's headlight cone, the nests' teal sacs and the beacons' red-gold pulse light it, a dim blue ambient of about
+# 14 % (ART-E's proposal for round 54); a bit darker over the floor of section 6. Glows, bullets and the HUD ungraded.
+underwater_look: {ambient: 0.14, tint: a0c8e8, caustics: 0.0, snow: 100, headlights: 0.9}
+
+# The trench (Level 16's terrain rules under water, design/campaign Level 25, The trench): the walls' collision lines
+# (their foot) [scroll, x(, height)] with scroll the ground scroll at which the row reaches the top edge; the pillar
+# island [x, scroll]; the notches (the side caves) {side, scroll: the row of the notch's middle, width along the wall,
+# depth into it}. ART-E's proposal (concept/backdrop-proposal.yaml), adopted unchanged: the walls rise at the field's
+# edges from t=5 (400 px by t=12), 320 px by t=20, 260 px from t=34, the fork at 330 px round the pillar (two 140 px
+# channels, t≈98–106 at the top edge), the narrows at 190 px (t≈108–118), 260 px again from t≈120 to 160, the walls
+# leaving the field by t=169. A cave wave's notch is on the screen at its wave's time, its middle about 150 px below the
+# top edge. The same geometry on every difficulty.
+terrain:
+  left:
+    - [700, 0, 0]        # t=5: the trench's mouth, the walls begin at the field's edges, flat
+    - [1260, 40, 0.7]    # t=9
+    - [1680, 40]         # t=12: 400 px, the walls at full height
+    - [2800, 80]         # t=20: 320 px
+    - [3640, 80]
+    - [4760, 110]        # t=34: 260 px
+    - [13300, 110]       # t=95: the fork opens
+    - [13510, 75]
+    - [14690, 75]
+    - [14900, 145]       # the narrows: 190 px
+    - [16060, 145]
+    - [16270, 110]       # 260 px again
+    - [21410, 110]       # t=160: the floor opens
+    - [21960, 40, 0.6]
+    - [22660, 0, 0]      # t=169: the walls leave the field, flat
+  right:
+    - [700, 480, 0]
+    - [1260, 440, 0.7]
+    - [1680, 440]
+    - [2800, 400]
+    - [3640, 400]
+    - [4760, 370]
+    - [13300, 370]
+    - [13510, 405]
+    - [14690, 405]
+    - [14900, 335]
+    - [16060, 335]
+    - [16270, 370]
+    - [21410, 370]
+    - [21960, 440, 0.6]
+    - [22660, 480, 0]
+  islands:
+    - name: rock pillar   # the fork: two 140 px channels
+      look: pillar
+      points: [[240, 13680], [262, 13750], [265, 13860], [265, 14460], [262, 14570], [240, 14640], [218, 14570], [215, 14460], [215, 13860], [218, 13750]]
+  notches:   # the side caves, 90 px along the wall and 70 deep; a cave wave names its notch by its index (0-based)
+    - {side: right, scroll: 3520, width: 90, depth: 70}    # 0: filler
+    - {side: left, scroll: 3910, width: 90, depth: 70}     # 1: the t=29 cave wave
+    - {side: right, scroll: 5310, width: 90, depth: 70}    # 2: the t=39 cave wave
+    - {side: left, scroll: 5630, width: 90, depth: 70}     # 3: filler
+    - {side: right, scroll: 6360, width: 90, depth: 70}    # 4: filler
+    - {side: left, scroll: 6710, width: 90, depth: 70}     # 5: the t=49 cave wave
+    - {side: right, scroll: 8040, width: 90, depth: 70}    # 6: the t=58.5 cave wave
+    - {side: left, scroll: 8400, width: 90, depth: 70}     # 7: filler
+    - {side: right, scroll: 9320, width: 90, depth: 70}    # 8: filler
+    - {side: left, scroll: 9930, width: 90, depth: 70}     # 9: the t=72 cave wave
+    - {side: right, scroll: 10610, width: 90, depth: 70}   # 10: filler
+    - {side: left, scroll: 10940, width: 90, depth: 70}    # 11: the survey sub's cave (t≈78)
+    - {side: right, scroll: 11890, width: 90, depth: 70}   # 12: the t=86 cave wave
+    - {side: left, scroll: 12420, width: 90, depth: 70}    # 13: filler
+    - {side: right, scroll: 13140, width: 90, depth: 70}   # 14: filler
+    - {side: left, scroll: 13890, width: 90, depth: 70}    # 15: the t=101 cave wave (the fork's left channel)
+    - {side: left, scroll: 15200, width: 90, depth: 70}    # 16: filler (the narrows)
+    - {side: right, scroll: 15870, width: 90, depth: 70}   # 17: the t=117.5 cave wave
+    - {side: left, scroll: 16510, width: 90, depth: 70}    # 18: filler
+    - {side: right, scroll: 17210, width: 90, depth: 70}   # 19: filler
+    - {side: left, scroll: 17820, width: 90, depth: 70}    # 20: the t=133.5 cave wave
+    - {side: right, scroll: 18560, width: 90, depth: 70}   # 21: filler
+    - {side: left, scroll: 19160, width: 90, depth: 70}    # 22: filler
+    - {side: right, scroll: 19900, width: 90, depth: 70}   # 23: the t=149.5 cave wave
+    - {side: left, scroll: 20510, width: 90, depth: 70}    # 24: filler
+  contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}   # Level 16's: 10 per touch (easy 6), a 28 px push, 0.5 s
+  notes:   # the README's wall table, by row
+    before: Level 24's plain at its edge, no walls
+    rows:
+      700: 'The trench''s mouth: the walls begin at the field''s edges'
+      1680: The trench 400 px wide, the walls at full height; three beacons on the left wall
+      2800: The walls close to 320 px
+      4760: 'The walls at 260 px: the caves and the nests'
+      13300: The fork opens round the rock pillar
+      14900: 'The narrows: 190 px'
+      16270: 260 px again; the Song
+      21410: The floor opens
+      22660: 'The walls leave the field: flat black water'
+
+# The README's waves at their times (draft, measured with levelReport in step E3). The schools (`swarm`) fly an S-shaped
+# route down the trench (x 190–290, the flock's spread and its 14 px sway clear of the 260 px walls; x 210–270 in the
+# narrows; down the fork's left channel at x 145–150 while the pillar is on the screen); the Barbfins' groups from the
+# front are laid out on the trench's span (the simulation's formation span) and hold above the ship; a cave wave
+# (`cave`, from the side of its notch's wall) swims out of its notch, warned 3 s ahead at that edge; the Sirens are nests
+# on the walls' feet (`wall`), a nest every 1.5 s (staggered: both walls taking turns from the right) or a pair opposite;
+# a Nautilus pair (`circle`) orbits the ship for its 15 s hold, then breaks off. Quiet windows: no other wave enters
+# t=18–21.5 (the first Siren) or t=62.5–66 (the first Nautilus pair).
+waves:
+  - t: 6
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]   # the trench's mouth, still wide
+  - {t: 8.5, formation: line abreast, enemy: barbfin, count: 3, from: front}
+  - t: 11
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[320, -60], [290, 150], [190, 310], [290, 470], [250, 640]]]
+    notes: In from the right
+  - {t: 13.5, formation: column, enemy: barbfin, count: 3, from: front, edge: left}
+  - t: 16
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [170, 140], [310, 300], [180, 460], [240, 640]]]
+  - {t: 18, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: "**New.** The first Siren, alone: one ring, quiet window of 3.5 s after it"}
+  - {t: 21.5, formation: V-wing, enemy: barbfin, count: 3, from: front}
+  - t: 24
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+  - {t: 26.8, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
+  - {t: 29, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 1, notes: "First cave entry, warned 3 s ahead"}
+  - t: 31.5
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
+  - {t: 34, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 36.5, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
+  - {t: 39, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 2, notes: Warned 3 s ahead}
+  - t: 41.5
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+  - {t: 44, formation: V-wing, enemy: barbfin, count: 4, from: front}
+  - {t: 47, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
+  - {t: 49, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 5}
+  - t: 51.5
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
+  - {t: 54, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 56.2, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered}
+  - {t: 58.5, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 6}
+  - {t: 62.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: "**New.** The first pair, orbiting in opposite directions: quiet window of 3.5 s after it"}
+  - t: 67
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+  - {t: 70, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
+  - {t: 72, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 9}
+  - t: 74.5
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
+  - {t: 77, formation: V-wing, enemy: barbfin, count: 4, from: front}
+  - {t: 79.5, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
+  - {t: 82, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 86, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 12}
+  - t: 88.5
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+  - {t: 91.3, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered, notes: The last one drops an overdrive}
+  - {t: 93, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - t: 96
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+    notes: Into the fork, ahead of the pillar
+  - {t: 98.5, formation: turret nest, enemy: siren, count: 2, from: sides, wall: opposite, notes: Two rings cross the pillar fork}
+  - {t: 101, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 15}
+  - t: 103.5
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[150, -60], [145, 150], [150, 310], [145, 470], [150, 640]]]
+    notes: Down the fork's left channel
+  - t: 106
+    formation: swarm
+    enemy: glassfin
+    count: 6
+    from: front
+    paths: [[[150, -60], [145, 150], [150, 310], [150, 470], [160, 640]]]
+    notes: Closing into the narrows (190 px), down the left channel past the pillar's end
+  - {t: 110, formation: V-wing, enemy: barbfin, count: 3, from: front}
+  - t: 112.5
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [210, 140], [270, 300], [210, 460], [240, 640]]]
+    notes: In the narrows
+  - {t: 115, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
+  - {t: 117.5, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 17}
+  - {t: 120, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - t: 124
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+  - {t: 126.5, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - t: 129
+    formation: swarm
+    enemy: glassfin
+    count: 6
+    from: front
+    paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
+  - {t: 131.3, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered, notes: The Song begins}
+  - {t: 133.5, formation: column, enemy: barbfin, count: 4, from: sides, edge: left, cave: 20}
+  - t: 136
+    formation: swarm
+    enemy: glassfin
+    count: 9
+    from: front
+    paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
+  - {t: 138.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: "A slowed ship on a spiral's gap: the act's hardest moment"}
+  - {t: 142, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered}
+  - {t: 144.5, formation: V-wing, enemy: barbfin, count: 4, from: front}
+  - t: 147
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
+  - {t: 149.5, formation: column, enemy: barbfin, count: 4, from: sides, edge: right, cave: 23}
+  - {t: 152.3, formation: turret nest, enemy: siren, count: 4, from: sides, wall: staggered, notes: "The most nests on the screen: four"}
+  - {t: 154.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 157.5, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - t: 161
+    formation: swarm
+    enemy: glassfin
+    count: 7
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+    notes: The trench widening
+  - {t: 164, formation: V-wing, enemy: barbfin, count: 3, from: front}
+  - t: 167
+    formation: swarm
+    enemy: glassfin
+    count: 6
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+    notes: The last wave
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x; on a ledge in the foot band of a wall or the pillar
+  - target: left ledge nest
+    section: 2
+    enemy: reef-spitter
+    count: 2
+    at: [[30, 114], [30.7, 116]]   # the left wall's foot (ART-E's ledges)
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) pair on the left ledge (t≈30)'
+      effect: Bounty {bounty} each; their fans × 0.7
+  - target: right ledge nest
+    section: 3
+    enemy: reef-spitter
+    count: 2
+    at: [[73, 352], [73.7, 352]]   # the right wall's foot
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) pair on the right ledge (t≈73)'
+      effect: Bounty {bounty} each
+  - target: survey sub
+    section: 3
+    layer: ground
+    size: [56, 40]
+    sprite: survey-sub   # tools/art/l25_props.py (step ART-E): Conamara's survey sub nose-down in the left cave's mouth, its break frames; the crate it frees
+    hp: 20
+    reveals: survey sub
+    at: [[78, 78]]   # inside the left wall's notch 11 (its back at x 40, the wall's line at 110)
+    notes:
+      target: 'Conamara survey sub wreck in the left cave (`ground` trigger, {hp} HP, t≈78)'
+      effect: 'The secret: frees a crate worth 100 (410)'
+  - target: pillar nest
+    section: 4
+    enemy: reef-spitter
+    count: 2
+    at: [[100, 203], [100.6, 277]]   # either side of the pillar's foot (x 215–265), out of the way of the 190 px stretch
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) pair on the fork''s pillar (t≈100)'
+      effect: Bounty {bounty} each
+  - target: song nest
+    section: 5
+    enemy: reef-spitter
+    count: 3
+    at: [[140, 352], [140.7, 352], [141.4, 352]]   # the right wall's foot
+    notes:
+      target: '[Reef Spitter](../../../enemies/naval/reef-spitter/README.md) trio on the right ledge (t≈140)'
+      effect: Bounty {bounty} each
+
+secrets:
+  - name: survey sub
+    crate: 100   # Act 1 terms: pays 410 with the act factor
+    radio: {speaker: Varga, line: "Conamara's survey sub. Someone was down here before the Vrell."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 91.3, enemy: siren, unit: last}}                  # the last Siren of the t=91 trio
+  - {pickup: shield cell, dropped_by: {wave: 62.5, enemy: spiral-nautilus, unit: second}}  # the second Nautilus of the first pair, at its death
+
+drops:  # a Conamara survey buoy at the narrows' end releases an armour patch
+  - {t: 118, x: 240, y: 380, pickup: armour patch, sprite: survey-buoy}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
+  - {t: 1, speaker: Okafor, line: "The Siren Trench, Lancer. Vrell nests sing in the walls. Get through it and out the other side."}
+  - {t: 13, speaker: Rook, requires: escort, line: "Water outside, singing inside. I'd like a refund."}   # the README's t=11, after Okafor's opening (it holds the radio until t≈12.6)
+  - {t: 20, speaker: Varga, line: "A Siren. Its ring does no damage, it slows you. Slip through the gap, or shoot the sac."}   # the README's t=19, after Rook's line (with him on the wing it holds the radio until t≈20.1); the first ring at t≈19.2
+  - {t: 33, speaker: Varga, line: "The beacons on the walls again. Same carrier, same Helix handshake."}
+  - {t: 44, speaker: Okafor, line: "Log it, Doctor. Later."}   # the README's t=41, after Varga's beacon line (it holds the radio until t≈43.7)
+  - {t: 63.5, speaker: Varga, line: "Nautilus. The shell is armour, the crown is the weak point. Shoot it when it opens."}
+  - {t: 94, speaker: Okafor, line: "The narrows, Lancer. Stay off the walls."}
+  - {t: 131.5, speaker: Varga, line: "Sirens on both walls and Nautilus between. A slowed ship can't thread a spiral. Keep moving."}
+  - {t: 158, speaker: Okafor, line: "The trench opens ahead. Almost through, Aegis."}
+  - {t: 164, speaker: Okafor, line: "Out of the trench. Dark water next. Keep your light on."}
+  - {event: secondary-objective, speaker: Okafor, line: "Clean crossing. The song is quiet.", notes: {trigger: Secondary met (at the end)}}
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, credits: 100, name: Clean crossing}   # at least 65 % of the level's enemies, judged at the end (100 in Act 1 terms: pays 410)
+
+music:
+  track: 11           # Act 4 B "Pressure Line" (audio/music track list)
+  start_section: 2    # the A theme's sonar and pad over the mouth are the bed alone here; the B base stem from the walls
+  full_section: 5     # the full mix in the Song
+  stems: {6: base}    # the base stem over the floor, then out into silence
+  ambience_from: 168  # the theme fades out over the floor: the trench bed alone as the lights go out
+  ambience: europa-trench   # a low rumble of a deep cut, distant whale calls, no bubbles (step AUD-E proposes it, round 54)
+  end_jingle: mission-complete
+
+difficulty: {}  # the formation lever sizes the waves; the stat blocks' hooks apply (the Siren's easy 1.5 s slow and a ring every 6 s, hard every 3.6 s and 2 s of immunity; the Nautilus's easy 2 arms and 1.8 s window, hard 4 arms and 1.4 s; the Barbfin's easy 3 s needle, hard 2-needle burst every 2.6 s)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-25-siren-trench, line: "Beyond the plain the sea floor splits into a trench, and the Vrell have grown nests in its walls. Fly it end to end. Don't touch the rock, Lancer."}
+    - {speaker: Varga, image: level-25-sonar-ring, line: "The nests sing. The ring does no damage, but it slows you, and a slowed ship can't dodge. Slip through the gap between rings, or shoot the sac. Side and anti-sub guns."}
+  teaser: {speaker: Rook, line: "A trench full of singing walls. I'll hum along if it helps, Lancer."}
+
+backdrop:
+  # Presentation only: Level 25's trench (tools/art/backdrop_l25.py, step ART-E, from the level's data.yaml; its
+  # `--proposal`, concept/backdrop-proposal.yaml, adopted in step E3). Re-run the generator after the data moves a
+  # section, a wall, a notch or a target.
+  # No deep layer (the ground is opaque; the walls' rims project beyond the field's edges). The walls and the pillar are
+  # the terrain's (WallProjection, the ice path): ice-wall, ice-wall-glow (additive growth nodules), ice-wall-foot,
+  # pillar-face, pillar-top_0..1, in CanyonProfile's convention. cave-mouth-left/right are drawn by the game over the
+  # walls at each terrain notch (not placed); relay-beacon-glow is added over the grade at relay-beacon's placements on
+  # the same frame clock (D4).
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 041c26  # the trench's blue-black water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    trench-floor: {layer: ground, height: 960}   # sections 1-3: dark silt between rubble fans shed by the walls, boulders, current lines
+    trench-scour: {layer: ground, height: 960}   # section 4: current-scoured rock, ripples, boulders (the fork and the narrows)
+    trench-song: {layer: ground, height: 960}   # section 5: the silt grown over with Vrell root mats
+    abyss-floor: {layer: ground, height: 960}   # section 6: the floor opening into flat black silt
+  pieces:
+    trench-lip: {layer: ground, size: [480, 800]}
+    seam-trench-scour: {layer: ground, size: [480, 320]}
+    seam-trench-song: {layer: ground, size: [480, 320]}
+    seam-abyss-floor: {layer: ground, size: [480, 320]}
+    rock-ledge-left: {layer: ground, size: [64, 56]}
+    rock-ledge-right: {layer: ground, size: [64, 56]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 4, keep_clear: 100}   # scenery: no ground target, no walk start and no Siren nest within 100 px of it
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    cave-mouth-left: {layer: ground, size: [112, 124]}
+    cave-mouth-right: {layer: ground, size: [112, 124]}
+  placed:
+    # 1. Level 24's plain and its lip at the bottom edge, the slope into the trench; exact rows
+    - {piece: trench-lip, t: 0.929, x: 240}
+    # section 4's seam (ground 13840): trench-floor into trench-scour; exact rows
+    - {piece: seam-trench-scour, t: 97.083, x: 240}
+    # section 5's seam (ground 18060): trench-scour into trench-song; exact rows
+    - {piece: seam-trench-song, t: 132.154, x: 240}
+    # section 6's seam (ground 21950): trench-song into abyss-floor; exact rows
+    - {piece: seam-abyss-floor, t: 162.0, x: 240}
+    # the Reef Spitter at t=30 x 114 on its ledge
+    - {piece: rock-ledge-left, t: 32.129, x: 114}
+    # the Reef Spitter at t=30.7 x 116 on its ledge
+    - {piece: rock-ledge-left, t: 32.829, x: 116}
+    # the Reef Spitter at t=73 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 75.129, x: 352}
+    # the Reef Spitter at t=73.7 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 75.829, x: 352}
+    # the Reef Spitter at t=100 x 203 on its ledge
+    - {piece: rock-ledge-right, t: 102.483, x: 203}
+    # the Reef Spitter at t=100.6 x 277 on its ledge
+    - {piece: rock-ledge-left, t: 103.083, x: 277}
+    # the Reef Spitter at t=140 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 142.292, x: 352}
+    # the Reef Spitter at t=140.7 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 142.992, x: 352}
+    # the Reef Spitter at t=141.4 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 143.692, x: 352}
+    # relay beacon 1 at the left wall's foot (its foot enters at the top edge at t=12.5; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 14.55, x: 69}
+    # relay beacon 2 at the left wall's foot (its foot enters at the top edge at t=16)
+    - {piece: relay-beacon, t: 18.05, x: 86}
+    # relay beacon 3 at the left wall's foot (its foot enters at the top edge at t=19.5)
+    - {piece: relay-beacon, t: 21.55, x: 103}
+    # relay beacon 4 at the right wall's foot (its foot enters at the top edge at t=24)
+    - {piece: relay-beacon, t: 26.05, x: 374}
+    # relay beacon 5 at the left wall's foot (its foot enters at the top edge at t=32.57)
+    - {piece: relay-beacon, t: 34.621, x: 131}
+    # relay beacon 6 at the right wall's foot (its foot enters at the top edge at t=40.07)
+    - {piece: relay-beacon, t: 42.121, x: 344}
+    # relay beacon 7 at the left wall's foot (its foot enters at the top edge at t=46.5)
+    - {piece: relay-beacon, t: 48.55, x: 136}
+    # relay beacon 8 at the right wall's foot (its foot enters at the top edge at t=52.93)
+    - {piece: relay-beacon, t: 54.979, x: 344}
+    # relay beacon 9 at the left wall's foot (its foot enters at the top edge at t=61.5)
+    - {piece: relay-beacon, t: 63.55, x: 136}
+    # relay beacon 10 at the right wall's foot (its foot enters at the top edge at t=67.93)
+    - {piece: relay-beacon, t: 69.979, x: 344}
+    # relay beacon 11 at the left wall's foot (its foot enters at the top edge at t=74.36)
+    - {piece: relay-beacon, t: 76.407, x: 136}
+    # relay beacon 12 at the right wall's foot (its foot enters at the top edge at t=80.79)
+    - {piece: relay-beacon, t: 82.843, x: 344}
+    # relay beacon 13 at the left wall's foot (its foot enters at the top edge at t=87.21)
+    - {piece: relay-beacon, t: 89.257, x: 136}
+    # relay beacon 14 at the right wall's foot (its foot enters at the top edge at t=122)
+    - {piece: relay-beacon, t: 124.392, x: 344}
+    # relay beacon 15 at the left wall's foot (its foot enters at the top edge at t=129.5)
+    - {piece: relay-beacon, t: 131.823, x: 136}
+    # relay beacon 16 at the right wall's foot (its foot enters at the top edge at t=136.54)
+    - {piece: relay-beacon, t: 138.746, x: 344}
+    # relay beacon 17 at the left wall's foot (its foot enters at the top edge at t=144.62)
+    - {piece: relay-beacon, t: 146.831, x: 136}
+    # relay beacon 18 at the right wall's foot (its foot enters at the top edge at t=151.54)
+    - {piece: relay-beacon, t: 153.746, x: 344}

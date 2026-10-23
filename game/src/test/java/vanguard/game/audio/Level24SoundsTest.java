@@ -24,7 +24,7 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M8 part D's Level 24 sounds (design/audio/sfx, Level 24's rows; round 53's a variants until the user's pick): the
+ * M8 part D's Level 24 sounds (design/audio/sfx, Level 24's rows; round 53's picks, the user's of 2026-10-23): the
  * Abyss Ray's horn at its shadow, its strokes as it starts its glide, its fans; the Barbfin's needles; the spawning
  * reefs' iris instead of the Hive Node's; a Ray's and a reef's death over their bursts; the relay beacons' pulse while
  * one is on the screen; the Meridian's hatch; track 10 "Thera Deep" from the reef field, its full mix along the beacon
@@ -49,11 +49,20 @@ class Level24SoundsTest {
             Sfx.BEACON_PULSE,
             Sfx.WRECK_HATCH);
 
+    /** Round 53's picks (the user, 2026-10-23): the rise, fan, needle, reef death and hatch b, the rest a. */
+    private static final List<Sfx> PICKED_B =
+            List.of(Sfx.RAY_RISE, Sfx.RAY_FAN, Sfx.BARBFIN_NEEDLE, Sfx.REEF_DEATH, Sfx.WRECK_HATCH);
+
     @Test
-    void everySoundHasItsFileRoundFiftyThreesA() {
+    void everySoundHasItsFileRoundFiftyThreesPick() {
         for (Sfx sfx : SOUNDS) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r53-a.ogg"), "round 53's a until the pick: " + sfx.path());
+            String pick = PICKED_B.contains(sfx) ? "-r53-b.ogg" : "-r53-a.ogg";
+            assertTrue(sfx.path().endsWith(pick), "round 53's pick: " + sfx.path());
+            assertFalse(
+                    Files.exists(ASSETS.resolve(sfx.path().replace("-r53-b.ogg", "-r53-a.ogg")))
+                            && PICKED_B.contains(sfx),
+                    "the a file left the assets: " + sfx);
             assertTrue(sfx.priority() != Sfx.Priority.AMBIENCE, "a one-shot, not a loop: " + sfx);
         }
         assertFalse(

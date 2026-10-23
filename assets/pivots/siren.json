@@ -1,0 +1,28 @@
+{
+ "source": "tools/art/siren.py (production art, M8 part E batch)",
+ "frame": [
+  64,
+  56
+ ],
+ "facings": [
+  "left wall, facing right",
+  "right wall, facing left"
+ ],
+ "sac": [
+  [
+   37.0,
+   28.0
+  ],
+  [
+   27.0,
+   28.0
+  ]
+ ],
+ "ring": {
+  "strip": [
+   64,
+   24
+  ],
+  "front_row": 7
+ }
+}

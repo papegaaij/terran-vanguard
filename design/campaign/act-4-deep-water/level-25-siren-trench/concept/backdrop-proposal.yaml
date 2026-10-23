@@ -1,0 +1,161 @@
+backdrop:
+  # Presentation only: Level 25's trench (tools/art/backdrop_l25.py, step ART-E, from the level's data.yaml).
+  # No deep layer (the ground is opaque; the walls' rims project beyond the field's edges). The walls and the
+  # pillar are the terrain's (WallProjection, the ice path): ice-wall, ice-wall-glow (additive growth nodules),
+  # ice-wall-foot, pillar-face, pillar-top_0..1, in CanyonProfile's convention. cave-mouth-left/right are drawn
+  # by the game over the walls at each terrain notch (not placed); relay-beacon-glow is added over the grade at
+  # relay-beacon's placements on the same frame clock (D4). Re-run the generator after the data moves a
+  # section, a wall, a notch or a target.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 041c26  # the trench's blue-black water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    trench-floor: {layer: ground, height: 960}   # sections 1-3: dark silt between rubble fans shed by the walls, boulders, current lines
+    trench-scour: {layer: ground, height: 960}   # section 4: current-scoured rock, ripples, boulders (the fork and the narrows)
+    trench-song: {layer: ground, height: 960}   # section 5: the silt grown over with Vrell root mats
+    abyss-floor: {layer: ground, height: 960}   # section 6: the floor opening into flat black silt
+  pieces:
+    trench-lip: {layer: ground, size: [480, 800]}
+    seam-trench-scour: {layer: ground, size: [480, 320]}
+    seam-trench-song: {layer: ground, size: [480, 320]}
+    seam-abyss-floor: {layer: ground, size: [480, 320]}
+    rock-ledge-left: {layer: ground, size: [64, 56]}
+    rock-ledge-right: {layer: ground, size: [64, 56]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 4, keep_clear: 100}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    cave-mouth-left: {layer: ground, size: [112, 124]}
+    cave-mouth-right: {layer: ground, size: [112, 124]}
+  placed:
+    # 1. Level 24's plain and its lip at the bottom edge, the slope into the trench; exact rows
+    - {piece: trench-lip, t: 0.929, x: 240}
+    # section 4's seam (ground 13840): trench-floor into trench-scour; exact rows
+    - {piece: seam-trench-scour, t: 97.083, x: 240}
+    # section 5's seam (ground 18060): trench-scour into trench-song; exact rows
+    - {piece: seam-trench-song, t: 132.154, x: 240}
+    # section 6's seam (ground 21950): trench-song into abyss-floor; exact rows
+    - {piece: seam-abyss-floor, t: 162.0, x: 240}
+    # the Reef Spitter at t=30 x 114 on its ledge
+    - {piece: rock-ledge-left, t: 32.129, x: 114.0}
+    # the Reef Spitter at t=30.7 x 116 on its ledge
+    - {piece: rock-ledge-left, t: 32.829, x: 116.0}
+    # the Reef Spitter at t=73 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 75.129, x: 352.0}
+    # the Reef Spitter at t=73.7 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 75.829, x: 352.0}
+    # the Reef Spitter at t=100 x 203 on its ledge
+    - {piece: rock-ledge-right, t: 102.483, x: 203.0}
+    # the Reef Spitter at t=100.6 x 277 on its ledge
+    - {piece: rock-ledge-left, t: 103.083, x: 277.0}
+    # the Reef Spitter at t=140 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 142.292, x: 352.0}
+    # the Reef Spitter at t=140.7 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 142.992, x: 352.0}
+    # the Reef Spitter at t=141.4 x 352 on its ledge
+    - {piece: rock-ledge-right, t: 143.692, x: 352.0}
+    # relay beacon 1 at the left wall's foot (its foot enters at the top edge at t=12.5; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 14.55, x: 69}
+    # relay beacon 2 at the left wall's foot (its foot enters at the top edge at t=16; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 18.05, x: 86}
+    # relay beacon 3 at the left wall's foot (its foot enters at the top edge at t=19.5; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 21.55, x: 103}
+    # relay beacon 4 at the right wall's foot (its foot enters at the top edge at t=24; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 26.05, x: 374}
+    # relay beacon 5 at the left wall's foot (its foot enters at the top edge at t=32.57; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 34.621, x: 131}
+    # relay beacon 6 at the right wall's foot (its foot enters at the top edge at t=40.07; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 42.121, x: 344}
+    # relay beacon 7 at the left wall's foot (its foot enters at the top edge at t=46.5; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 48.55, x: 136}
+    # relay beacon 8 at the right wall's foot (its foot enters at the top edge at t=52.93; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 54.979, x: 344}
+    # relay beacon 9 at the left wall's foot (its foot enters at the top edge at t=61.5; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 63.55, x: 136}
+    # relay beacon 10 at the right wall's foot (its foot enters at the top edge at t=67.93; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 69.979, x: 344}
+    # relay beacon 11 at the left wall's foot (its foot enters at the top edge at t=74.36; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 76.407, x: 136}
+    # relay beacon 12 at the right wall's foot (its foot enters at the top edge at t=80.79; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 82.843, x: 344}
+    # relay beacon 13 at the left wall's foot (its foot enters at the top edge at t=87.21; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 89.257, x: 136}
+    # relay beacon 14 at the right wall's foot (its foot enters at the top edge at t=122; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 124.392, x: 344}
+    # relay beacon 15 at the left wall's foot (its foot enters at the top edge at t=129.5; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 131.823, x: 136}
+    # relay beacon 16 at the right wall's foot (its foot enters at the top edge at t=136.54; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 138.746, x: 344}
+    # relay beacon 17 at the left wall's foot (its foot enters at the top edge at t=144.62; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 146.831, x: 136}
+    # relay beacon 18 at the right wall's foot (its foot enters at the top edge at t=151.54; the 4 s pulse; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 153.746, x: 344}
+# sections' tiles: 1: [trench-floor]; 2: [trench-floor]; 3: [trench-floor]; 4: [trench-scour]; 5: [trench-song]; 6: [abyss-floor]
+# underwater_look (ART-E's proposal, round 54): level-wide {ambient: 0.14, tint: a0c8e8, caustics: 0.0, snow: 100, headlights: 0.9}; section 6 (the floor opening, the lights going out): {ambient: 0.1, tint: 98c0e0, caustics: 0.0, snow: 80, headlights: 0.9}
+
+# terrain this art is drawn for (the level's data.yaml); E3: adopt it or re-run the generator after changing it
+terrain:
+  left:
+    - [700, 0, 0]   # t=5.0
+    - [1260, 40, 0.7]   # t=9.0
+    - [1680, 40]   # t=12.0
+    - [2800, 80]   # t=20.0
+    - [3640, 80]   # t=26.0
+    - [4760, 110]   # t=34.0
+    - [13300, 110]   # t=95.0
+    - [13510, 75]   # t=96.6
+    - [14690, 75]   # t=106.4
+    - [14900, 145]   # t=108.2
+    - [16060, 145]   # t=117.8
+    - [16270, 110]   # t=119.6
+    - [21410, 110]   # t=160.0
+    - [21960, 40, 0.6]   # t=164.0
+    - [22660, 0, 0]   # t=169.0
+  right:
+    - [700, 480, 0]
+    - [1260, 440, 0.7]
+    - [1680, 440]
+    - [2800, 400]
+    - [3640, 400]
+    - [4760, 370]
+    - [13300, 370]
+    - [13510, 405]
+    - [14690, 405]
+    - [14900, 335]
+    - [16060, 335]
+    - [16270, 370]
+    - [21410, 370]
+    - [21960, 440, 0.6]
+    - [22660, 480, 0]
+  islands:
+    - name: rock pillar   # the fork: two 140 px channels
+      look: pillar
+      points: [[240, 13680], [262, 13750], [265, 13860], [265, 14460], [262, 14570], [240, 14640], [218, 14570], [215, 14460], [215, 13860], [218, 13750]]
+  notches:   # side, scroll = the terrain row of the notch's middle, width along the wall, depth into it
+    - {side: right, scroll: 3520, width: 90, depth: 70}   # data, t=25.1 at the top edge
+    - {side: left, scroll: 3910, width: 90, depth: 70}   # data, t=27.9 at the top edge
+    - {side: right, scroll: 5310, width: 90, depth: 70}   # data, t=37.9 at the top edge
+    - {side: left, scroll: 5630, width: 90, depth: 70}   # data, t=40.2 at the top edge
+    - {side: right, scroll: 6360, width: 90, depth: 70}   # data, t=45.4 at the top edge
+    - {side: left, scroll: 6710, width: 90, depth: 70}   # data, t=47.9 at the top edge
+    - {side: right, scroll: 8040, width: 90, depth: 70}   # data, t=57.4 at the top edge
+    - {side: left, scroll: 8400, width: 90, depth: 70}   # data, t=60.0 at the top edge
+    - {side: right, scroll: 9320, width: 90, depth: 70}   # data, t=66.6 at the top edge
+    - {side: left, scroll: 9930, width: 90, depth: 70}   # data, t=70.9 at the top edge
+    - {side: right, scroll: 10610, width: 90, depth: 70}   # data, t=75.8 at the top edge
+    - {side: left, scroll: 10940, width: 90, depth: 70}   # data, t=78.1 at the top edge
+    - {side: right, scroll: 11890, width: 90, depth: 70}   # data, t=84.9 at the top edge
+    - {side: left, scroll: 12420, width: 90, depth: 70}   # data, t=88.7 at the top edge
+    - {side: right, scroll: 13140, width: 90, depth: 70}   # data, t=93.9 at the top edge
+    - {side: left, scroll: 13890, width: 90, depth: 70}   # data, t=99.7 at the top edge
+    - {side: left, scroll: 15200, width: 90, depth: 70}   # data, t=110.7 at the top edge
+    - {side: right, scroll: 15870, width: 90, depth: 70}   # data, t=116.2 at the top edge
+    - {side: left, scroll: 16510, width: 90, depth: 70}   # data, t=121.6 at the top edge
+    - {side: right, scroll: 17210, width: 90, depth: 70}   # data, t=127.4 at the top edge
+    - {side: left, scroll: 17820, width: 90, depth: 70}   # data, t=132.4 at the top edge
+    - {side: right, scroll: 18560, width: 90, depth: 70}   # data, t=138.1 at the top edge
+    - {side: left, scroll: 19160, width: 90, depth: 70}   # data, t=142.7 at the top edge
+    - {side: right, scroll: 19900, width: 90, depth: 70}   # data, t=148.4 at the top edge
+    - {side: left, scroll: 20510, width: 90, depth: 70}   # data, t=153.1 at the top edge
+  contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}
+# ground targets this art assumes (t, x): reef-spitter (30, 114); reef-spitter (30.7, 116); reef-spitter (73, 352); reef-spitter (73.7, 352); survey-sub (78, 78); reef-spitter (100, 203); reef-spitter (100.6, 277); reef-spitter (140, 352); reef-spitter (140.7, 352); reef-spitter (141.4, 352)

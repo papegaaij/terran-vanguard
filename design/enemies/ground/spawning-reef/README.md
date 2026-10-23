@@ -2,9 +2,9 @@
 title: Spawning Reef
 design: review
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy, ../hive-node, ../../naval/glassfin, ../../../campaign/act-4-deep-water/level-24-abyssal-plain]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Spawning Reef
@@ -58,7 +58,7 @@ promotion). Numbers at **medium** (see the [balancing basis](../../README.md#bal
   dive down the ship's lane), without a school's flock (gap check D4).
 - **Razed**: the iris closes, a `large` coral burst, a razed stump; it releases no more fry (the Hive Node's rule). The
   fry already out live on: the level README's "the fry stop when a reef dies" read as no new releases (gap check D4;
-  killing the released fry with their reef would be a new link, pending the user's review in round 53).
+  killing the released fry with their reef would be a new link, accepted in round 53 (2026-10-23)).
 - **Soft**: no armour (unlike the hardened Hive Node), so the plan's harpoon loadout can raze it: under water the torpedo
   weapons hit it at full damage, every other weapon at × 0.7 (after `anti-ground`'s × 2 for bolts), Europa's
   [under water rules](../../../world/europa/README.md#under-water-rules).
@@ -73,9 +73,9 @@ promotion). Numbers at **medium** (see the [balancing basis](../../README.md#bal
 ## Concept art
 
 Production art straight away (M8 part D, step ART-D, `tools/art/spawning_reef.py --look a|b`, from the abyssal plain mood
-still), two looks for [round 53](../../../concept-rounds/round-53/README.md) to pick: **a** "coral knot" (plum coral bulbs,
-bone finger coral, teal polyps, a six-petal iris; in `assets/` until the pick) and **b** "bone chimneys" (a plum dome
-ringed by seven leaning bone tube chimneys, the iris at the crown); both in the Hive Node's frame layout (6 iris states ×
+still), two looks for [round 53](../../../concept-rounds/round-53/README.md): **b** "bone chimneys" (a plum dome ringed by
+seven leaning bone tube chimneys, the iris at the crown) was **chosen** (accepted as final, in `assets/` since step E5)
+and **a** "coral knot" (plum coral bulbs, bone finger coral, teal polyps, a six-petal iris) rejected; both in the Hive Node's frame layout (6 iris states ×
 4 breathing frames, `-glow`, `-creep`, `-death`, `-tatters`, `-stump`), so the game's periodic-spawner looks draw either.
 The sheets, GIFs and the game capture `spawning-reef-capture-r53-a` are in the [ground](../README.md#concept-art) Concept
 art table.
@@ -86,24 +86,25 @@ art table.
 - [x] The fry released as single rammers (a flock kind's fan-out, step D1) and mapped (step D3); the four reefs counted by
       Level 24's secondary (`escapes: spawning-reef`, step D3)
 - [x] Production sprite (coral tower, iris open/close frames over the 0.5 s telegraph, the teal glow, the coral-burst
-      death, the razed stump), its iris and collapse sounds (steps ART-D, AUD-D and D4; look a/b and the sounds a/b in
+      death, the razed stump), its iris and collapse sounds (steps ART-D, AUD-D and D4; look b and the sounds picked in
       round 53; `Level24LooksTest.theArtIsWhatTheLooksDraw`, `Level24SoundsTest.theRayAndTheReefDieWithTheirOwnSounds`)
 
 ## Decisions
 
-- 2026-10-22 (M8 part D, step D2; gap check `m8d-gaps.md` §5 D1 and D4, pending the user's review in round 53):
+- 2026-10-22 (M8 part D, step D2; gap check `m8d-gaps.md` §5 D1 and D4, accepted in round 53 (2026-10-23)):
   promoted from Level 24's ground targets to its own part (the loader and the secondary need a unit), its text Level
   24's approved one; `tier: large` (200 HP is 1.9 s at the L24 reference, first level 24 so act factor 1), soft (no
   armour), the Hive Node's spawn rule including its 96 px `shut_within`; the fry released as single rammers that outlive
   the reef. Step D2's own: the 96 × 96 sprite with a 72 × 72 hit box, the `radial` orientation, the effective traits
   `anti-sub` (the torpedo weapons at full damage under water) and `anti-ground` (× 2), as the siphon pump's.
-- 2026-10-22 (M8 part D, step D3, pending the user's review in round 53): the fry **draw their ram as they leave the
+- 2026-10-22 (M8 part D, step D3, accepted in round 53 (2026-10-23)): the fry **draw their ram as they leave the
   iris** (the spawn's new `ram_after: 0`; the school's ram still after 3 s on the field): with the Glassfin's own 3 s no
   fry ever rammed, as they are gone in 0.6–1.2 s (measured on Level 24 at every difficulty); now about a quarter of them
   (the Glassfin's share by difficulty) glint and dive. Hard's REEFS (all four, none away) is met on none of three
   autopilot seeds: the fry soak up the Harpoon Torpedoes (the homing pods ignore them) and an eel shields the second reef;
   the reef's 200 HP (260 on hard) and hard's 0 allowed are kept as approved.
-- 2026-10-22 (M8 part D, steps ART-D and D4; pending the user's review in round 53): two production looks (a "coral
-  knot", b "bone chimneys") on the Hive Node's frame layout, a in `assets/` until the pick; the reef in the game's death
+- 2026-10-22 (M8 part D, steps ART-D and D4; accepted in round 53 (2026-10-23)): two production looks (a "coral
+  knot", b "bone chimneys") on the Hive Node's frame layout, b in `assets/` since the pick (step E5); the reef in the game's death
   tiers as `large` (under water the deep large burst) with its own collapse sound. Weak spot: a release plays no sound of
   its own yet (the iris sound plays with the 0.5 s telegraph only).
+- 2026-10-23 (user, round 53, closed): look **b** "bone chimneys" chosen (F.4; a, "coral knot", rejected and moved to `design/enemies/ground/concept/rejected/`; b in `assets/` since step E5; the part is `art: final`); the iris sound **a** and the razed sound **b** picked; **C.1 allow 1** (hard's REEFS asks for 3 of 4, built in step E3); C.3 (the fry ram at once) accepted.

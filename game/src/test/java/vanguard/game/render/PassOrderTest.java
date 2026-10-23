@@ -115,6 +115,7 @@ class PassOrderTest {
             auras.drawRings(batch, sortie, alpha, false)
             units.drawChains(batch, sortie, alpha)
             tenderDrops.drawBodies(batch, seconds)
+            buoys.drawBodies(batch, seconds, scroll)
             storm.drawSilhouettes(batch, sortie, alpha, units)
             units.drawAirGlows(batch, sortie, alpha)
             farside.drawSweeps(batch, sortie, alpha)

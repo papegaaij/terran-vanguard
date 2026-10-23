@@ -117,6 +117,17 @@ final class EnemyStarts {
                     u.y,
                     0x5DEECE66DL ^ (0x9E3779B97F4A7C15L * (unitSerial + 1L)));
         }
+        if (u.spec.coil().isPresent()) {
+            // M8 part E: a coil orbits the ship from where it appears for its wave's hold.
+            u.phase = Enemy.Phase.COIL;
+            u.coiling.start(
+                    u.spec.coil().get(),
+                    u.spec.gun().isPresent() && u.spec.gun().get().spiral().isPresent()
+                            ? u.spec.gun().get().spiral().get()
+                            : null,
+                    plan.holdSeconds(),
+                    u.x);
+        }
         if (u.spec.laneStrafe().isPresent() && u.phase == Enemy.Phase.ENTER) {
             // M7 part E: a lane strafer flies by its strafe from its planned path's start toward its end.
             u.phase = Enemy.Phase.STRAFE;
@@ -153,6 +164,23 @@ final class EnemyStarts {
         if (u.phase == Enemy.Phase.ENTER) {
             // M8 part D: a hover held above the ship draws its height (only with one).
             u.hoverHold.start(u.spec, unitSerial);
+        }
+        // M8 part E: a song of slowing rings starts its clock (only with one).
+        u.song.start(u.spec, 0);
+    }
+
+    /**
+     * M8 part E ({@link WallMounts}): a wall's nest stands at its path's start on the wall's foot, fixed to the ground,
+     * facing the open water, its song's first ring its place's offset later; a cave's unit holds its hover above the
+     * ship only once it is out of its notch.
+     */
+    void mounted(WallMounts.Placed placed) {
+        if (placed.nest()) {
+            u.phase = Enemy.Phase.MOUNT;
+            u.facing = Enemy.heading(placed.left() ? 1 : -1, 0);
+            u.song.start(u.spec, placed.delaySeconds());
+        } else {
+            u.hoverHold.notBefore(placed.swimOut());
         }
     }
 
@@ -210,6 +238,8 @@ final class EnemyStarts {
         u.laneStrafing.clear();
         u.rising.clear();
         u.hoverHold.clear();
+        u.song.clear();
+        u.coiling.clear();
     }
 
     /**

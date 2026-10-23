@@ -62,6 +62,12 @@ final class KindLooks {
     /** M8 part D: the Barbfins' swim, tell and snout sparkle (built with the first sortie). */
     private BarbfinLooks barbfins;
 
+    /** M8 part E: the Sirens' nests, glow, rings and the slowed hulls' shimmer (built with the first sortie). */
+    private SirenLooks sirens;
+
+    /** M8 part E: the Spiral Nautili's shell, crown, glow and flecks (built with the first sortie). */
+    private NautilusLooks nautili;
+
     private final Sprites sprites;
     private final Files files;
 
@@ -181,6 +187,22 @@ final class KindLooks {
         return barbfins;
     }
 
+    /** M8 part E: the Sirens' looks for the sortie's enemy kinds, built once. */
+    SirenLooks sirens(Sortie sortie) {
+        if (sirens == null) {
+            sirens = new SirenLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return sirens;
+    }
+
+    /** M8 part E: the Spiral Nautili's looks for the sortie's enemy kinds, built once. */
+    NautilusLooks nautili(Sortie sortie) {
+        if (nautili == null) {
+            nautili = new NautilusLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return nautili;
+    }
+
     /** M8 part C: the siphon pumps' looks for the sortie's enemy kinds, built once. */
     SiphonPumpLooks pumps(Sortie sortie) {
         if (pumps == null) {
@@ -251,6 +273,12 @@ final class KindLooks {
         }
         if (barbfins != null) {
             barbfins.restart();
+        }
+        if (sirens != null) {
+            sirens.restart();
+        }
+        if (nautili != null) {
+            nautili.restart();
         }
     }
 }

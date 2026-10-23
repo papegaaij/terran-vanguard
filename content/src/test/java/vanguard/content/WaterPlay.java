@@ -1,5 +1,6 @@
 package vanguard.content;
 
+import vanguard.sim.Armament;
 import vanguard.sim.Command;
 import vanguard.sim.Enemy;
 import vanguard.sim.PlayField;
@@ -20,6 +21,69 @@ final class WaterPlay {
 
     /** A pump (an escapee) lower than this on the screen is shot first, px from the bottom edge. */
     static final double ESCAPEE_FIRST_BELOW = 360;
+
+    /**
+     * M8 part D (step E4): a spawning escapee of more HP than this (Level 24's spawning reefs on hard, 260;
+     * design/enemies/ground/spawning-reef) is played hard: shot from its entry on ({@link #TOUGH_FIRST_BELOW}), closed in
+     * under ({@link #TOUGH_UNDER}) and, once it passes under the ship, kept under the stern for the rear gun's charges
+     * ({@link #TOUGH_OVER}). The plain play razes a reef of medium's 200 HP (easy's 150) in its window; on hard it left
+     * two of the four standing (the fry soak up the harpoons from afar, the sidesteps carry the ship off its line).
+     * Played hard on medium too it kept the fry on the screen longer (1.55-1.63× Level 10's small-unit time, the beam
+     * era's most 1.5), so medium keeps the plain play.
+     */
+    static final double TOUGH_HP = 230;
+
+    /** A tough spawning escapee is shot from this height on, px from the bottom edge: its entry. */
+    static final double TOUGH_FIRST_BELOW = PlayField.HEIGHT - 10;
+
+    /**
+     * It closes in under a tough spawning escapee to this far below it, px: within the reef's 96 px it is shut (no fry
+     * between the guns and the reef).
+     */
+    static final double TOUGH_UNDER = 60;
+
+    /** ... but no higher than this on the screen, px. */
+    static final double TOUGH_HIGHEST = 300;
+
+    /**
+     * A tough spawning escapee passing under the ship is kept under its stern, this far below it, px, while a rear gun
+     * reaches the ground under water ({@code anti-sub}: the Depth Charges burst behind the stern).
+     */
+    static final double TOUGH_OVER = 50;
+
+    /** Whether {@code unit} is a tough spawning escapee (see {@link #TOUGH_HP}). */
+    static boolean tough(Enemy unit) {
+        return unit.spec().spawner().isPresent() && unit.spec().hp() > TOUGH_HP;
+    }
+
+    /**
+     * The height to fly at for the escapes objective's unit {@code escapee}: close under a tough spawning one, or above
+     * it once it passes under the ship (see {@link #TOUGH_HP}); else {@code cruise}.
+     */
+    static double escapeeY(Sortie sortie, Enemy escapee, double cruise) {
+        if (!tough(escapee)) {
+            return cruise;
+        }
+        double y = escapee.renderY(1);
+        if (y < sortie.ship().y() + 20) {
+            return Math.clamp(y + TOUGH_OVER, 40, cruise);
+        }
+        return Math.clamp(y - TOUGH_UNDER, 40, Math.max(cruise, TOUGH_HIGHEST));
+    }
+
+    /** Whether the rear gun reaches the ground under water ({@code anti-sub}: the Depth Charges). */
+    private static boolean rearReachesGround(Sortie sortie) {
+        Armament armament = sortie.armament();
+        for (int m = 0; m < armament.size(); m++) {
+            Armament.Mount mount = armament.mount(m);
+            if (mount.slot() == Armament.Slot.REAR
+                    && mount.weapon() != null
+                    && mount.weapon().antiSub()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /** How far ahead a ram dive is followed, s. */
     private static final double RAM_AHEAD = 0.7;
@@ -128,7 +192,8 @@ final class WaterPlay {
 
     /**
      * The escapes objective's unit to break first (Level 23's siphon pumps): the lowest one on the screen in the lower
-     * part ({@link #ESCAPEE_FIRST_BELOW}), above the ship; null without one, for a hardened one ({@link
+     * part ({@link #ESCAPEE_FIRST_BELOW}), above the ship (M8 part D: a tough spawning one from its entry, and below the
+     * ship too while a rear gun reaches it, {@link #TOUGH_HP}); null without one, for a hardened one ({@link
      * TargetPlay#hardenedEscapee} serves those: Level 22's rigs), out of the water or on a level with a destroy-targets
      * primary.
      */
@@ -140,14 +205,16 @@ final class WaterPlay {
                 || !sortie.script().objectives().targets().isEmpty()) {
             return null;
         }
+        boolean rear = rearReachesGround(sortie);
         Enemy lowest = null;
         for (int i = 0; i < sortie.enemyCount(); i++) {
             Enemy enemy = sortie.enemy(i);
             double y = enemy.renderY(1);
+            boolean tough = tough(enemy);
             if (!enemy.spec().hardened()
                     && enemy.spec().slug().equals(escapes)
-                    && y < ESCAPEE_FIRST_BELOW
-                    && y > shipY + 20
+                    && y < (tough ? TOUGH_FIRST_BELOW : ESCAPEE_FIRST_BELOW)
+                    && y > (tough && rear ? 0 : shipY + 20)
                     && (lowest == null || y < lowest.renderY(1))) {
                 lowest = enemy;
             }

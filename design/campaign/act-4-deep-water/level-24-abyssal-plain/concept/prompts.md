@@ -1,6 +1,6 @@
 # Level 24 – concept and production notes
 
-Round 53 (M8 part D, step ART-D: production straight away, as the Act 2–4 levels; pending the user's review in round 53).
+Round 53 (M8 part D, step ART-D: production straight away, as the Act 2–4 levels; accepted in round 53 (2026-10-23)).
 None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r53-a

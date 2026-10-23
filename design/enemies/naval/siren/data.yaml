@@ -1,0 +1,57 @@
+# Siren stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part E, step E3 (Level 25): the approved stat block (round 48) as data. New in it: the `ring` attack's `slow` (a
+# ring of sound, not bullets: no damage; its speed not scaled by the water's × 0.7 or the bullet-speed lever; flown from
+# step E1, mapped in step E3) and the wall mount (the level's `turret nest` wave with `wall: staggered` or `opposite`:
+# each nest on its wall's foot, 12 px out from the collision line, scrolling with the ground). Defaults of the gap check
+# (m8e-gaps.md §5, pending the user's review in round 54): the layer `air` (E1), the ring's numbers the Siren page's
+# (E2, not the Europa page's 140 px/s to 420 px), the slow tested once a ring per hull at its band with a clear line
+# from the sac, a Dash passing (E4), easy's "40 % for 1.5 s" read as medium's slow (to 60 %) lasting 1.5 s (E4).
+name: Siren
+faction: Vrell
+layer: air        # a wall mount on the play plane; its nest is part of the wall's terrain
+tier: medium
+size: [64, 56]    # sprite px
+hitbox: [48, 40]
+parts: single (the throat sac)
+orientation: fixed
+hp: 90
+armour: none
+speed: 0          # it scrolls with the wall
+movement:
+  terrain: {}     # mounted on a trench wall's foot (the level's `wall` waves)
+attacks:
+  - pattern: ring
+    name: song
+    interval: 4.5          # s between two rings
+    speed: 120             # px/s: sound, not a projectile (not × 0.7 under water, not the bullet-speed lever)
+    first_shot_delay: 1.2  # s after it enters: the first ring (its tell from 0.4 s)
+    tell: 0.8              # s: the throat sac glows teal before each ring
+    slow:
+      radius: 230     # px: the ring expands to this, then fades
+      band: 10        # px: the band behind its edge that slows
+      factor: 0.6     # of the speed and the acceleration (on top of the water's drag)
+      seconds: 2      # s slowed
+      immunity: 3     # s immune to slows after it
+    notes:
+      text: '`{pattern}` of sound, no damage: every {interval} s the throat sac glows teal for {tell} s (the tell), then an expanding ring ({speed} px/s to a radius of {slow.radius} px, a band {slow.band} px wide) crosses the field once; the first {first_shot_delay} s after it enters; a ship (or Rook) it passes through with a clear line from the sac is slowed to {slow.factor} of its speed and acceleration for {slow.seconds} s with a sonar shimmer on the hull, then immune to slows for {slow.immunity} s (round 48 Q5 a; a Dash passes through it; the far wall, the pillar and a cave''s rock stop it)'
+formations:
+  - {name: turret nest, size: [1, 4]}   # staggered on both walls a nest every 1.5 s, or pairs opposite (Level 25)
+weak_points:
+  - {name: the glowing throat sac}
+drops: []
+traits: [spread, homing]
+bounty: 28
+first_level: 25
+difficulty:
+  easy: {attacks: {song: {interval: 6}}, slow: {seconds: 1.5}}
+  hard: {attacks: {song: {interval: 3.6}}, slow: {immunity: 2}}
+notes:
+  layer: ' (a wall mount on the play plane; its nest is part of the wall''s terrain; gap check §5 E1)'
+  orientation: (it faces the open water)
+  speed: (it scrolls with the wall)
+  movement: '`terrain`: a nest on a trench wall''s foot (or a cave mouth''s), scrolling with the ground; it sings once a pass at the trench''s scroll (about 3.9 s on the screen at 140 px/s)'
+  formations: '(staggered on both walls, a nest every 1.5 s; or a pair opposite, the second ring 1.5 s later: never two rings within 1.5 s, at most one ring in flight per wall, at most four nests on the screen, never two of one wall within 90 px)'
+  weak_points: (drawn only)
+  death: '`medium` flash; the sac collapses in a pale plume and its cave mouth goes dark'
+  used_in: L26 (its glow is its tell in the dark), L27
+  difficulty: 'easy: slow for 1.5 s, a ring every 6 s; hard: a ring every 3.6 s, 2 s of immunity'

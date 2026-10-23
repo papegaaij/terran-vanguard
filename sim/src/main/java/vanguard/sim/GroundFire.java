@@ -86,7 +86,7 @@ final class GroundFire {
                 events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), shot.mount());
             } else {
                 blastPart(j, enemy, x, y, weapon.blast(), shot.damage(), shot.mount());
-                if (enemy.damage(shot.damage(), true)) {
+                if (enemy.damage(shot.damage(), true, false, weapon.antiSub())) {
                     hits.enemyDestroyed(j, shot.mount());
                 }
             }
@@ -201,7 +201,7 @@ final class GroundFire {
                 events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), shot.mount());
             } else {
                 blastPart(j, enemy, x, y, weapon.blast(), shot.damage(), shot.mount());
-                if (enemy.damage(shot.damage(), true)) {
+                if (enemy.damage(shot.damage(), true, false, weapon.antiSub())) {
                     hits.enemyDestroyed(j, shot.mount());
                 }
             }
@@ -299,7 +299,7 @@ final class GroundFire {
                 events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), mine.mount());
             } else {
                 blastPart(j, enemy, x, y, radius, mine.damage(), mine.mount());
-                if (enemy.damage(mine.damage(), true)) {
+                if (enemy.damage(mine.damage(), true, false, weapon.antiSub())) {
                     hits.enemyDestroyed(j, mine.mount());
                 }
             }
@@ -370,7 +370,7 @@ final class GroundFire {
                 events.add(SimEvents.Type.SHOT_GLANCED, enemy.x(), enemy.y(), charge.mount());
             } else {
                 blastPart(j, enemy, x, y, radius, damage, charge.mount());
-                if (enemy.damage(damage, true)) {
+                if (enemy.damage(damage, true, false, weapon.antiSub())) {
                     hits.enemyDestroyed(j, charge.mount());
                 }
             }

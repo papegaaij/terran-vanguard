@@ -30,6 +30,8 @@ public final class Ship {
      * sortie every step from its medium; exactly 1 in the air. Not hashed: the medium it comes from is.
      */
     private double drag = 1;
+    /** M8 part E: the sonar slow (design/enemies/naval/siren); hashed by the sortie only in a level with a ring unit. */
+    final ShipSlow slow = new ShipSlow();
 
     Ship(ShipSpec spec, Defences defences) {
         this(spec, defences, null);
@@ -77,6 +79,7 @@ public final class Ship {
         if (thrusters != null) {
             thrusters.reset();
         }
+        slow.reset();
     }
 
     void rememberPosition() {
@@ -118,6 +121,8 @@ public final class Ship {
         if (dx != 0 && dy != 0) {
             speed *= DIAGONAL;
         }
+        // M8 part E: a Siren's ring slows its speed and (below) its acceleration; exactly 1 without a slow.
+        speed *= slow.factor();
         vx = approach(vx, dx * speed);
         vy = approach(vy, dy * speed);
         x += vx * SimStep.SECONDS;
@@ -139,6 +144,7 @@ public final class Ship {
         }
         steerBank();
         defences.step();
+        slow.step();
     }
 
     /**
@@ -161,6 +167,7 @@ public final class Ship {
         y = Math.clamp(y, margin, PlayField.HEIGHT - margin);
         steerBank();
         defences.step();
+        slow.step();
     }
 
     /**
@@ -191,7 +198,7 @@ public final class Ship {
 
     /** Moves one velocity component towards its target: accelerating, or braking to a stop. */
     private double approach(double velocity, double target) {
-        double rate = (target == 0 ? stopPerStep : accelerationPerStep) * drag;
+        double rate = (target == 0 ? stopPerStep : accelerationPerStep) * drag * slow.factor();
         if (velocity < target) {
             return Math.min(target, velocity + rate);
         }
@@ -217,6 +224,11 @@ public final class Ship {
             // M7 part A: only with the Evasive thrusters fitted, so other runs hash as before.
             thrusters.addTo(hash);
         }
+    }
+
+    /** M8 part E: the sonar slow on the ship (slowed, immune, the slow's share left: the shimmer). */
+    public ShipSlow slow() {
+        return slow;
     }
 
     /** M7 part A: whether the Evasive thrusters are fitted (the HUD's dash pip). */

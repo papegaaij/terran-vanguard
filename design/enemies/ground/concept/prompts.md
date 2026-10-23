@@ -385,9 +385,13 @@ a silt-and-coral dust cloud; no fire, no bubbles) and the razed stump; the GIF o
 review grade: two reefs scrolling at 80 px/s, the iris opening and four Glassfin fanning out every 3.5 s, one reef shot
 and razed.
 
+Closed in round 53 (user, 2026-10-23, F.4 = b): **Rejected: a** ("coral knot": `rejected/spawning-reef-final-r53-a.png`/`.gif`, `rejected/spawning-reef-capture-r53-a.png`/`.mp4`).
+
 ## spawning-reef-final-r53-b
 
 Look **b "bone chimneys"** of the same script (`--look b`; written to the same sprite names, so the pick decides which
 stays): a plum dome ringed by seven leaning bone tube chimneys of different heights with violet lips and a teal glow
 deep in their mouths, the six-petal iris at the dome's crown; the same states, decal, burst, tatters (the chimneys
 breaking off whole) and stump; the same GIF.
+
+Closed in round 53 (user, 2026-10-23, F.4 = b): **Chosen: b** ("bone chimneys", `spawning-reef-final-r53-b`, the frames in the game since step E5), accepted as final. **Rejected: a** ("coral knot").

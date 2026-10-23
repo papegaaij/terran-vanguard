@@ -150,7 +150,8 @@ final class DodgePlay {
         boolean holding =
                 TargetPlay.battery(sortie, shipY) != null || TargetPlay.hardenedTarget(sortie) != null || overRig;
         double bulletDx = holding ? 18 : 24;
-        double bulletDy = holding ? 40 : DANGER;
+        // M8 part E: slowed by a Siren's ring, it looks further up (Level 25, SirenPlay).
+        double bulletDy = SirenPlay.dangerRange(sortie, holding ? 40 : DANGER);
         boolean fromBelow = sortie.airEscort();
         for (int i = 0; i < sortie.bulletCount(); i++) {
             EnemyBullet bullet = sortie.bullet(i);

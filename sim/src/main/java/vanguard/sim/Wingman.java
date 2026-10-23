@@ -190,6 +190,8 @@ public final class Wingman {
     private double aimY;
     /** Whether his slot was moved clear of a body this step: he jinks as in a sidestep. */
     private boolean evading;
+    /** M8 part E: the sonar slow; hashed by the sortie only in a level with a ring unit. */
+    final ShipSlow slow = new ShipSlow();
 
     /** His target: an enemy's serial, or a set-piece part's as the homing locks use; -1 for none. */
     private int target;
@@ -241,6 +243,7 @@ public final class Wingman {
     /** The start of an attempt: {@code armour} points, in his Wing slot beside the ship at (shipX, shipY). */
     void reset(double startArmour, double shipX, double shipY) {
         armour = startArmour;
+        slow.reset();
         critical = false;
         ejected = false;
         ejectTicks = 0;
@@ -341,6 +344,7 @@ public final class Wingman {
         }
         move(shipX, shipY);
         steerBank();
+        slow.step();
     }
 
     /**
@@ -1046,7 +1050,8 @@ public final class Wingman {
         double wantedX = 0;
         double wantedY = 0;
         if (distance > 0) {
-            double speed = Math.min(craft.speed(), distance / ARRIVE_SECONDS);
+            // M8 part E: a Siren's ring slows his top speed and (below) his acceleration; exactly 1 without a slow.
+            double speed = Math.min(craft.speed() * slow.factor(), distance / ARRIVE_SECONDS);
             wantedX = ex / distance * speed;
             wantedY = ey / distance * speed;
         }
@@ -1063,6 +1068,7 @@ public final class Wingman {
             // M8 part A: the water's drag on his acceleration.
             most *= medium.acceleration();
         }
+        most *= slow.factor();
         if (change > most) {
             dvx *= most / change;
             dvy *= most / change;
@@ -1395,6 +1401,11 @@ public final class Wingman {
 
     Hull hull() {
         return hull;
+    }
+
+    /** M8 part E: the sonar slow on him (design/enemies/naval/siren: his own, the ship's numbers). */
+    public ShipSlow slow() {
+        return slow;
     }
 
     public WingmanSpec spec() {

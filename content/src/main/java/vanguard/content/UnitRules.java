@@ -349,28 +349,37 @@ final class UnitRules {
         // M7 part E: a spin cycle and a pull (the Dust Devil), a lane strafe (the Ghost Drone) (StormRules).
         // M7 part F: a turret and a rear plate (the Warden Tank) (FoundryRules).
         // M8 part D: a rise (the Abyss Ray) (AbyssRules).
-        return AbyssRules.unit(
+        // M8 part E: a coil (the Spiral Nautilus) and a slowing ring (the Siren) (TrenchRules).
+        return TrenchRules.unit(
+                content,
                 enemy,
-                FoundryRules.unit(
+                difficulty,
+                AbyssRules.unit(
                         enemy,
-                        difficulty,
-                        StormRules.unit(
+                        FoundryRules.unit(
                                 enemy,
                                 difficulty,
-                                SiegeRules.unit(
-                                        content,
+                                StormRules.unit(
                                         enemy,
                                         difficulty,
-                                        actHp,
-                                        TerrainRules.anchor(
+                                        SiegeRules.unit(
                                                 content,
                                                 enemy,
                                                 difficulty,
-                                                MarsRules.kite(
+                                                actHp,
+                                                TerrainRules.anchor(
+                                                        content,
                                                         enemy,
-                                                        hook,
-                                                        MarsRules.burrower(
-                                                                content, enemy, hook, difficulty, machine)))))));
+                                                        difficulty,
+                                                        MarsRules.kite(
+                                                                enemy,
+                                                                hook,
+                                                                MarsRules.burrower(
+                                                                        content,
+                                                                        enemy,
+                                                                        hook,
+                                                                        difficulty,
+                                                                        machine))))))));
     }
 
     /** M5 part E: whether {@code attack} is a proximity ring (a {@code ring} fired within a reach, the Driftjelly's). */
@@ -418,7 +427,7 @@ final class UnitRules {
      * as it is (the fire-rate lever does not apply on top of it: the Mantis's beam, the Creeper's
      * hard fan), otherwise its interval by the fire-rate lever; infinite without one.
      */
-    private static double interval(
+    static double interval(
             Content content, EnemyData.Attack attack, Optional<EnemyData.Hook> hook, Difficulty difficulty) {
         Optional<Double> authored = attack.name()
                 .flatMap(name -> hook.flatMap(EnemyData.Hook::attacks).map(changes -> changes.get(name)))
@@ -503,6 +512,8 @@ final class UnitRules {
                 .filter(attack -> !TerrainRules.notAGun(attack))
                 // M7 part D: an aura (the Choir Herald's) is not a gun (EnemySpec.aura, SiegeRules).
                 .filter(attack -> !SiegeRules.notAGun(attack))
+                // M8 part E: a slowing ring (the Siren's song) is not a gun (EnemySpec.slowRing, TrenchRules).
+                .filter(attack -> attack.slow().isEmpty())
                 .filter(attack -> attack.firesOn(difficulty))
                 .filter(attack ->
                         attack.away().isEmpty() || enemy.movement().walk().isEmpty())

@@ -297,3 +297,11 @@ wings level, scaled to the card) and `barbfin` (the bone lionfish nose down, its
 models of [tools/art/abyss_ray.py](../../../../tools/art/abyss_ray.py) and
 [tools/art/barbfin.py](../../../../tools/art/barbfin.py), written by [tools/art/intel.py](../../../../tools/art/intel.py)
 `abyss-ray barbfin`.
+
+## intel-final-r54-a
+
+Round 54, production art (M8 part E batch, step ART-E): the sensor L2 portraits `siren` (the frill bell facing down,
+its sac mid-tell) and `spiral-nautilus` (uncoiled nose down: the striped shell behind the open crown with its lime-white
+eyes, scaled to the card), 30x30, from the production models of [tools/art/siren.py](../../../../tools/art/siren.py)
+and [tools/art/spiral_nautilus.py](../../../../tools/art/spiral_nautilus.py), written by
+[tools/art/intel.py](../../../../tools/art/intel.py) `siren spiral-nautilus`.

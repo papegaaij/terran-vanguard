@@ -3,7 +3,7 @@ title: Naval enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-20
+updated: 2026-10-23
 ---
 
 # Naval enemies
@@ -25,10 +25,10 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 4 draft
 | [skimmer](skimmer/README.md) | Flying-fish skiff weaving between floes from every edge (L13) | approved | done | final |
 | [glassfin](glassfin/README.md) | Transparent fry school, the act's `tiny` popcorn that streams and rams (L23) | approved | done | final |
 | [eel-swarm](eel-swarm/README.md) | Segmented eel chain, vital head fires aimed shots (L23) | approved | done | final |
-| [barbfin](barbfin/README.md) | Small swimmer that holds and spits aimed needles, the Ray's escort (L24) | approved | in-progress | chosen |
-| [abyss-ray](abyss-ray/README.md) | Manta that rises from a shadow and sweeps a wide fan (L24) | approved | in-progress | chosen |
-| [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | not-started | chosen |
-| [spiral-nautilus](spiral-nautilus/README.md) | Armoured shell orbiting the ship, uncoils to fire a spiral (L25) | approved | not-started | chosen |
+| [barbfin](barbfin/README.md) | Small swimmer that holds and spits aimed needles, the Ray's escort (L24) | approved | in-progress | final |
+| [abyss-ray](abyss-ray/README.md) | Manta that rises from a shadow and sweeps a wide fan (L24) | approved | in-progress | final |
+| [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | in-progress | chosen |
+| [spiral-nautilus](spiral-nautilus/README.md) | Armoured shell orbiting the ship, uncoils to fire a spiral (L25) | approved | in-progress | chosen |
 | [glow-angler](glow-angler/README.md) | Dark-water ambusher with a pickup-like lure that lunges and rings (L26) | approved | not-started | chosen |
 | [depth-hunter](depth-hunter/README.md) | Unmarked grey human sub drone, shootable homing torpedoes from below, hint 3 (L27) | approved | not-started | chosen |
 
@@ -99,11 +99,11 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 | [concept/rejected/abyss-ray-r48-a.gif](concept/rejected/abyss-ray-r48-a.gif) | Abyss Ray A — a shadow grows, the ray rises, four Barbfins peel off, three 9-way fans, it glides off and sinks; L24's lamps' edge (motion) | rejected — round 48: b picked |
 | [concept/abyss-ray-r48-b.png](concept/abyss-ray-r48-b.png) | Abyss Ray B, bone skate — a bone disc with a tubercle ridge, violet spots, lime gill slits, whip tail (sheet) | chosen — round 48 |
 | [concept/abyss-ray-r48-b.gif](concept/abyss-ray-r48-b.gif) | Abyss Ray B — the same scene as A (motion) | chosen — round 48 |
-| [concept/abyss-ray-final-r53-a.png](concept/abyss-ray-final-r53-a.png) | Abyss Ray final frames (`tools/art/abyss_ray.py`, round 48 b, the bone skate): 16 glide headings × 3 wing-beat frames, the gill/spot glow (additive), the shadow growing, the rise, the sink, the mouth flash, the break-up and bloom (sheet) | proposed (round 53) |
-| [concept/abyss-ray-final-r53-a.gif](concept/abyss-ray-final-r53-a.gif) | A whole visit: the shadow ahead of the ship, the rise, four Barbfins peeling off, three fans 1.2 s apart, the glide off; then a second visit killed after its second fan | proposed (round 53) |
-| [concept/abyss-ray-capture-r53-a.png](concept/abyss-ray-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along): the first Abyss Ray at t=59.3, 60.1, 61.3 and 64: the shadow in the ship's lane, the rise, a fan, the glide off to the right | proposed (round 53) |
-| [concept/abyss-ray-capture-r53-a.mp4](concept/abyss-ray-capture-r53-a.mp4) | The same as a video with the game's sound (t=56–67): shadow, rise, the Barbfins peeling off, three fans, glide off | proposed (round 53) |
-| [concept/ray-shadow-hit-capture-r53-a.png](concept/ray-shadow-hit-capture-r53-a.png) | A harpoon hitting the first Ray's shadow (2× detail) at t=59.25, 59.35, 59.45 and 59.55: the shadow grown, the torpedo striking, the burst as the Ray starts to rise | proposed (round 53) |
+| [concept/abyss-ray-final-r53-a.png](concept/abyss-ray-final-r53-a.png) | Abyss Ray final frames (`tools/art/abyss_ray.py`, round 48 b, the bone skate): 16 glide headings × 3 wing-beat frames, the gill/spot glow (additive), the shadow growing, the rise, the sink, the mouth flash, the break-up and bloom (sheet) | chosen (round 53, F.2: accepted as final) |
+| [concept/abyss-ray-final-r53-a.gif](concept/abyss-ray-final-r53-a.gif) | A whole visit: the shadow ahead of the ship, the rise, four Barbfins peeling off, three fans 1.2 s apart, the glide off; then a second visit killed after its second fan | chosen (round 53, F.2: accepted as final) |
+| [concept/abyss-ray-capture-r53-a.png](concept/abyss-ray-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along): the first Abyss Ray at t=59.3, 60.1, 61.3 and 64: the shadow in the ship's lane, the rise, a fan, the glide off to the right | chosen (round 53, F.2: accepted as final) |
+| [concept/abyss-ray-capture-r53-a.mp4](concept/abyss-ray-capture-r53-a.mp4) | The same as a video with the game's sound (t=56–67): shadow, rise, the Barbfins peeling off, three fans, glide off | chosen (round 53, F.2: accepted as final) |
+| [concept/ray-shadow-hit-capture-r53-a.png](concept/ray-shadow-hit-capture-r53-a.png) | A harpoon hitting the first Ray's shadow (2× detail) at t=59.25, 59.35, 59.45 and 59.55: the shadow grown, the torpedo striking, the burst as the Ray starts to rise | chosen (round 53, F.2: accepted as final) |
 | [concept/rejected/siren-r48-a.png](concept/rejected/siren-r48-a.png) | Siren A, conch throat — a slate spiral shell in a cave mouth, teal throat sac; tell frames, both walls, the smooth sound ring, the slowed ship's shimmer (sheet) | rejected — round 48: b picked |
 | [concept/rejected/siren-r48-a.gif](concept/rejected/siren-r48-a.gif) | Siren A — three nests in the dark L25 trench with red-gold beacons: one ring slows the ship 2 s, a later one passes during the 3 s immunity, a nest shot (motion) | rejected — round 48: b picked |
 | [concept/siren-r48-b.png](concept/siren-r48-b.png) | Siren B, frill bell — a slate dome with five membrane frills round a teal sac; a rippled double-wavefront ring (sheet) | chosen — round 48 |
@@ -128,9 +128,17 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 | [concept/barbfin-r48-a.gif](concept/barbfin-r48-a.gif) | Barbfin A — a column of four and a group of three dart in, hold, spit needles, two shot (ink cloud, sinking shell) on the L24 plain (motion) | chosen — round 48 |
 | [concept/rejected/barbfin-r48-b.png](concept/rejected/barbfin-r48-b.png) | Barbfin B, plated box — bone armour plates with violet seams, barbed snout (sheet) | rejected — round 48: a picked |
 | [concept/rejected/barbfin-r48-b.gif](concept/rejected/barbfin-r48-b.gif) | Barbfin B — the same scene as A (motion) | rejected — round 48: a picked |
-| [concept/barbfin-final-r53-a.png](concept/barbfin-final-r53-a.png) | Barbfin final frames (`tools/art/barbfin.py`, round 48 a, the bone lionfish): 32 headings × 2 swim frames + the shot's tell, the eye/barb glow, the snout sparkle, the sinking shell, the ink cloud, the violet needle (sheet) | proposed (round 53) |
-| [concept/barbfin-final-r53-a.gif](concept/barbfin-final-r53-a.gif) | Seven Barbfins darting in, holding above the ship turned toward it, violet needles every 2.4 s, two kills | proposed (round 53) |
-| [concept/barbfin-capture-r53-a.png](concept/barbfin-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along; the guns held until t=15.5): the first Barbfins at t=8.5, 10.5, 14.5 and 16.2, the column arriving, holding above the ship and spitting violet needles, the second column joining, shot at last | proposed (round 53) |
+| [concept/barbfin-final-r53-a.png](concept/barbfin-final-r53-a.png) | Barbfin final frames (`tools/art/barbfin.py`, round 48 a, the bone lionfish): 32 headings × 2 swim frames + the shot's tell, the eye/barb glow, the snout sparkle, the sinking shell, the ink cloud, the violet needle (sheet) | chosen (round 53, F.3: accepted as final) |
+| [concept/barbfin-final-r53-a.gif](concept/barbfin-final-r53-a.gif) | Seven Barbfins darting in, holding above the ship turned toward it, violet needles every 2.4 s, two kills | chosen (round 53, F.3: accepted as final) |
+| [concept/barbfin-capture-r53-a.png](concept/barbfin-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along; the guns held until t=15.5): the first Barbfins at t=8.5, 10.5, 14.5 and 16.2, the column arriving, holding above the ship and spitting violet needles, the second column joining, shot at last | chosen (round 53, F.3: accepted as final) |
+| [concept/siren-final-r54-a.png](concept/siren-final-r54-a.png) | Siren final frames (`tools/art/siren.py`, round 48 b, the frill bell): both wall facings × idle, breath, tell × 3, song; the sac and frill glow, the collapse and husk, the plume, the ring strip (rippled double wavefront), the slowed hull's shimmer (sheet) | proposed (round 54) |
+| [concept/siren-final-r54-a.gif](concept/siren-final-r54-a.gif) | Nests on Level 25's walls telling and singing, a ring slowing the ship, a later ring passing during the immunity, a nest shot | proposed (round 54) |
+| [concept/siren-capture-r54-a.png](concept/siren-capture-r54-a.png) | Game capture, M8 part E (step E6; Level 25 on medium, `--invulnerable`, the balance plan's Level 25 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods L3, the Pressure hull, the Sonar Pulse, Rook along): the t=26.8 nests on the left wall singing, the ring spreading to the ship and Rook, both slowed (their shimmer; t=29.6, 30.2, 30.8, 31.4) | proposed (round 54) |
+| [concept/siren-capture-r54-a.mp4](concept/siren-capture-r54-a.mp4) | The same as a video with the game's sound (t=25.5–33): the nests' tell and song, the ring, the slow | proposed (round 54) |
+| [concept/spiral-nautilus-final-r54-a.png](concept/spiral-nautilus-final-r54-a.png) | Spiral Nautilus final frames (`tools/art/spiral_nautilus.py`, round 06 a to production): 24 spin frames and the lip glow, the open shell and crown at 16 headings (emerging, sway, tell), the crown glow with lime-white eyes, the dead crown, the halves sinking, the glance flecks (sheet) | proposed (round 54) |
+| [concept/spiral-nautilus-final-r54-a.gif](concept/spiral-nautilus-final-r54-a.gif) | A pair orbiting the ship in opposite directions, uncoiling 2 s apart and firing 3-arm spirals, flecks off a closed shell, one cracked open | proposed (round 54) |
+| [concept/spiral-nautilus-capture-r54-a.png](concept/spiral-nautilus-capture-r54-a.png) | Game capture (step E6, the same run, 1:1 round the ship): the first pair (t=62.5) closed and rolling round the ship (t=66), one uncoiling below it (t=67.5), its spirals (t=68, 69) | proposed (round 54) |
+| [concept/spiral-nautilus-capture-r54-a.mp4](concept/spiral-nautilus-capture-r54-a.mp4) | The same as a video with the game's sound (t=61.5–76): the pair's orbit, the uncoil, the spirals, the shells spinning | proposed (round 54) |
 
 ## Implementation
 
@@ -164,3 +172,4 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 - 2026-10-20 (user, round 44, A.b (a): production assets (a `Source` chunk in `assets/`, every Concept art row decided)): **`art: final`** for this part. A later addition (a new sprite, a new concept round) is its own row and does not reopen the rest.
 - 2026-10-21 (Act 4 design phase, step m8-denemies): the six roster units plus two new popcorn swimmers (Glassfin `tiny`, Barbfin `small`, round 48 Q3 a, pending the user's review) promoted to draft specs; the roster is empty. The Glow Angler's lure follows round 48 Q6 a (a near-miss lure, which answers the open question above). Returning units' under-water notes added.
 - 2026-10-22 (user, round 52, closed): the Eel Swarm's (F.2) and the Glassfin's (F.3) final frames accepted; both parts `art: final`.
+- 2026-10-23 (user, round 53, closed): the Abyss Ray's (F.2) and the Barbfin's (F.3) final frames accepted; both parts `art: final`.

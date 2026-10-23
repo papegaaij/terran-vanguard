@@ -2,9 +2,9 @@
 title: Barbfin
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Barbfin
@@ -74,20 +74,20 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (our reading, Q3 a): the small firing swimmer, named Barbfin; first appears at L24 as the plan's part D asks.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-22 (M8 part D, step D2; gap check `m8d-gaps.md` §5 D3, D5, pending the user's review in round 53): the stat block as
+- 2026-10-22 (M8 part D, step D2; gap check `m8d-gaps.md` §5 D3, D5, accepted in round 53 (2026-10-23)): the stat block as
   data, the table rendered from it. The open question closed by the default: the beam era's × 2 only (24 HP at L24),
   not `small_act_hp` (re-measured in step D3). The hold `above_ship` (90–200 px above the ship's y, a seeded draw, a 6
   px/s drift, the facing turned toward the ship); as the Ray's escort held until its rise and fanned out from it. Step
   D2's own: the Needler's `orbit` (90 px, 60°/s) for its `circle` formations, the attack named `needle` (its easy and
   hard intervals), hard's burst gap 0.12 s on the attack.
-- 2026-10-22 (M8 part D, step D3, pending the user's review in round 53): mapped and flown in Level 24. The drift as the
+- 2026-10-22 (M8 part D, step D3, accepted in round 53 (2026-10-23)): mapped and flown in Level 24. The drift as the
   hover's `drift` key (6 px/s); the hold's depth below the top edge 60–460 px (never higher than 60, a path from the top
   ends at 460 at the latest). HP kept at 24 (the beam era's × 2): Level 24's small units live 2.27 s on the screen, 1.42
   × Level 10's (allowed 0.9–1.5) once the autopilot shoots the Barbfins before the mute fry. **Hard's interval 2.1 → 2.6
   s** (the 2-needle burst kept): with 2.1 the plan's fit without Rook (`--escort none`) lost every retry of Level 24 on
   hard (seed 1 at t≈161, seed 2 at t≈144; the needles the largest share, ~90 of ~320 damage); with 2.6 seeds 1 and 2
   complete in one attempt (seed 3 still not: measured, not asserted).
-- 2026-10-22 (M8 part D, steps D1, ART-D and D4; pending the user's review in round 53): step D1's own: the drift's
+- 2026-10-22 (M8 part D, steps D1, ART-D and D4; accepted in round 53 (2026-10-23)): step D1's own: the drift's
   side is drawn per unit. Step ART-D: the final frames from round 48's a (32 headings × 2 swim frames and the shot's
   tell, the eye and barb glow, added as `barbfin-glow`, the snout sparkle, the sinking shell, the ink cloud) and the
   violet needle `needle-violet` (16 headings, as the yellow `needle`). Step D4 (`BarbfinLooks`, `BulletLooks`): the
@@ -95,3 +95,4 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
   frame 2 held 0.25 s before a needle; its death the under-water `small` burst, then the shell (heading ÷ 4) and the ink.
   Weak spot: the first needle after the Barbfin arrives comes without the 0.25 s tell (the tell keys on the previous
   shot's clock).
+- 2026-10-23 (user, round 53, closed): the final frames and the violet needle accepted (F.3; the part is `art: final`); the needle sound **b** picked; C.2 (hard's 2.6 s interval) accepted.

@@ -81,8 +81,9 @@ final class WaveRules {
                                     formation(group.formation()),
                                     unit,
                                     count,
-                                    // M5 part G: a cross enters from all four edges, by its lanes.
-                                    PartGRules.entry(entry),
+                                    // M5 part G: a cross enters from all four edges, by its lanes; M8 part E: a
+                                    // wall's nests at the front, with the ground.
+                                    TrenchRules.entry(wave, PartGRules.entry(entry)),
                                     edge.map(WaveRules::edge).orElse(WaveSpec.Edge.NONE),
                                     change.flatMap(LevelData.Change::hold).or(wave::hold),
                                     warning,
@@ -109,11 +110,14 @@ final class WaveRules {
                                     field(wave, unit))
                             // M5 part F: a circle's sense of orbit (Level 12's eye).
                             .clockwise(wave.turnsClockwise()));
-            // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules).
-            out.add(
+            // M7 part G: a pursuit wave's block (Level 20's Mote Swarm, RetreatRules); M8 part E: a cave's or the
+            // walls'
+            // mount (TrenchRules).
+            out.add(TrenchRules.mount(
+                    wave,
                     wave.pursues()
                             ? spec.withPursuit(RetreatRules.pursuit(content, wave, group.enemy(), difficulty))
-                            : spec);
+                            : spec));
         }
     }
 
@@ -157,6 +161,8 @@ final class WaveRules {
             case "pincer" -> WaveSpec.Formation.PINCER;
             case "circle" -> WaveSpec.Formation.CIRCLE;
             case "single" -> WaveSpec.Formation.SINGLE;
+            // M8 part E: a wall's nests (the Sirens of Level 25), one by one on their walls (WallMounts).
+            case "turret nest" -> WaveSpec.Formation.SINGLE;
             case "column" -> WaveSpec.Formation.COLUMN;
             case "convoy" -> WaveSpec.Formation.CONVOY;
             case "whirl cluster" -> WaveSpec.Formation.WHIRL_CLUSTER;

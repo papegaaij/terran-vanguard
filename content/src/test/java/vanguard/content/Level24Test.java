@@ -257,12 +257,12 @@ class Level24Test {
      * The spawning reefs: four soft ground units (t=36, 48, 64, 80) releasing 4 Glassfin fry every 3.5 s (easy 3) over
      * 120° at 160 px/s, shut while the ship is within 96 px; each fry draws its ram as it leaves the iris (the
      * Glassfin's share by difficulty, its glint and its dive). REEFS: at least 3 of the 4 razed at medium, 2 on easy,
-     * all 4 on hard; 100 credits.
+     * 3 on hard too (round 53 C.1, the user's "allow 1"); 100 credits.
      */
     @Test
     void theReefsBreedFryAndTheSecondaryCountsThem() {
         int[] count = {3, 4, 4};
-        int[] allowed = {2, 1, 0};
+        int[] allowed = {2, 1, 1};
         double[] share = {0.15, 0.25, 0.40};
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript level = SimSpecs.level(content, LEVEL, difficulty);
@@ -366,7 +366,7 @@ class Level24Test {
     /**
      * The radio: Varga's {@code first-ray} line on the first Ray's shadow (the simulation's sighting, at t=58), Rook's
      * two lines only with him on the wing, the secondary's line true on every difficulty (the third reef razed, easy the
-     * second, hard the fourth).
+     * second; hard the third too, round 53 C.1).
      */
     @Test
     void theFirstRayLinePlaysAtItsShadow() {
@@ -384,7 +384,7 @@ class Level24Test {
                 radio.stream()
                         .filter(cue -> cue.speaker().equals("Rook") && cue.requires() == RadioCue.FITTED_ESCORT)
                         .count());
-        String[] lines = {"Second reef down.", "Third reef down.", "Last reef down."};
+        String[] lines = {"Second reef down.", "Third reef down.", "Third reef down."};
         for (Difficulty difficulty : Difficulty.values()) {
             RadioCue met = SimSpecs.level(content, LEVEL, difficulty).radio().stream()
                     .filter(cue -> cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE)
@@ -439,9 +439,10 @@ class Level24Test {
 
     /**
      * The autopilot completes the level with the plan's fit on every difficulty and seed ({@link AbyssPlay}: the
-     * torpedoes into the Ray's shadow, the Barbfins before the fry) and meets REEFS on most seeds on easy and medium.
-     * Printed: the secondary's rate, the credits, the retries; hard asks all four reefs (none allowed away) and is
-     * printed, not asserted (the reefs' fry eat the torpedoes; pending the user's review in round 53).
+     * torpedoes into the Ray's shadow, the Barbfins before the fry) and meets REEFS on most seeds on every difficulty
+     * (hard allows one reef away since round 53 C.1, as medium; step E4: on hard the reefs' 260 HP are played from their
+     * entry, close under them where they are shut and over them for the Depth Charges, {@link WaterPlay#TOUGH_HP}).
+     * Printed: the secondary's rate, the credits, the retries.
      */
     @Test
     void theAutopilotFliesTheLevel() {
@@ -461,9 +462,7 @@ class Level24Test {
             report.append(String.format(
                     "%n  %s: secondary met %d/%d, credits %.0f, retries %d",
                     difficulty, met, SEEDS, credits / (double) SEEDS, retries));
-            if (difficulty != Difficulty.HARD) {
-                assertTrue(met * 2 > SEEDS, difficulty + ": the REEFS secondary on most seeds: " + met);
-            }
+            assertTrue(met * 2 > SEEDS, difficulty + ": the REEFS secondary on most seeds: " + met);
         }
         System.out.println(report);
     }

@@ -286,18 +286,28 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "explosion-underwater-small-r52-a.ogg",
         "explosion-underwater-medium-r52-a.ogg",
         "explosion-underwater-large-r52-a.ogg",
-        // M8 part D: round 53's proposals for Level 24 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-D),
-        // their a variants until the user's pick, which may swap the file: the Abyss Ray's rise, glide, fan and death,
-        // the Barbfin's needle, the spawning reef's iris and death, the relay beacons' pulse, the Meridian's hatch.
-        "ray-rise-r53-a.ogg",
+        // M8 part D: round 53's picks for Level 24 (the user, 2026-10-23; CC0/CC-BY Freesound HQ previews, CREDITS rows
+        // from step AUD-D): the Abyss Ray's rise b, glide a, fan b and death a, the Barbfin's needle b, the spawning
+        // reef's iris a and death b, the relay beacons' pulse a, the Meridian's hatch b.
+        "ray-rise-r53-b.ogg",
         "ray-glide-r53-a.ogg",
-        "ray-fan-r53-a.ogg",
+        "ray-fan-r53-b.ogg",
         "ray-death-r53-a.ogg",
-        "barbfin-needle-r53-a.ogg",
+        "barbfin-needle-r53-b.ogg",
         "reef-iris-r53-a.ogg",
-        "reef-death-r53-a.ogg",
+        "reef-death-r53-b.ogg",
         "beacon-pulse-r53-a.ogg",
-        "wreck-hatch-r53-a.ogg",
+        "wreck-hatch-r53-b.ogg",
+        // M8 part E: round 54's proposals for Level 25 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-E),
+        // their a variants until the user's pick, which may swap the file: the Siren's ring, slow and death, the Spiral
+        // Nautilus's spin, uncoil and death, the trench's bed.
+        "siren-ring-r54-a.ogg",
+        "siren-slow-r54-a.ogg",
+        "siren-death-r54-a.ogg",
+        "nautilus-spin-r54-a.ogg",
+        "nautilus-uncoil-r54-a.ogg",
+        "nautilus-death-r54-a.ogg",
+        "europa-trench-r54-a.ogg",
     )
 }
 

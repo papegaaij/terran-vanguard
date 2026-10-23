@@ -114,8 +114,8 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 | **A** Act 4 systems — **done**; round 50 closed 2026-10-22: the finals accepted, the sounds picked (the recorded picks from the Freesound previews until their originals), the seven calls accepted, the Level 23 dry shaft kept as approved (Q.1 a) | Under-water mode (medium field, trait factor, bullet speed, drag, beam reach, torpedo reach, section switch), special setting restrictions and the greyed HUD, Sonar Pulse, Decoy Flares, Harpoon Torpedoes, Depth Charges, pressure hull, Auto-repair nanites, Mk IV (20 MW, round 48 J1), the Bulwark heavy drone, Rook's per-level availability; `reference_dps` 22–28 and the Act 4 balance plan; flown on built levels with the `--medium underwater` debug option and on simulation fixtures | — | 50 |
 | **B** Level 22 + Act 4 intro — **built** (2026-10-22, steps B1–B5, ART-B, AUD-B, VOX-B); [round 51](../../concept-rounds/round-51/README.md) closed (2026-10-22): the art accepted but the Act 4 title card (F.6 redo, a geyser added, round 52), Dr. Brandt cast a, the sounds picked, tracks 10 and 11 and the calls accepted; F.3: no deep layer | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 51 |
 | **C** Level 23 — **built** (2026-10-22, steps C1–C5b, ART-C, ART-T, AUD-C, VOX-C); [round 52](../../concept-rounds/round-52/README.md) closed (2026-10-22): the art accepted, the bursts a, the title card's geyser a, Thera Deep Control cast b, the sounds picked (the under-water explosion family S.10 asked again in round 53), the AI-made r04-a replaced, the calls accepted | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 52 |
-| **D** Level 24 — **built** (2026-10-22, steps D1–D5, ART-D, AUD-D, VOX-D); [round 53](../../concept-rounds/round-53/README.md) open | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
-| **E** Level 25 | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
+| **D** Level 24 — **built** (2026-10-22, steps D1–D5, ART-D, AUD-D, VOX-D); [round 53](../../concept-rounds/round-53/README.md) closed (2026-10-23): the art accepted, the spawning reef b, the sounds picked (rise b, glide a, fan b, death a, needle b, iris a, razed b, pulse a, hatch b, the explosion family a), hard's reefs allow 1, the other calls accepted, the Nautilus rule as decided | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
+| **E** Level 25 — **built** (2026-10-23, steps E1–E6, ART-E, AUD-E, VOX-E); [round 54](../../concept-rounds/round-54/README.md) open | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
 | **F** Level 26 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
 | **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F | 56 |
 | **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 57 |
@@ -614,7 +614,24 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
   `tools/balance.py` and `tools/check_docs.py` clean): Level 24 *Abyssal Plain* with the Abyss Ray (the shadow, the rise,
   the fans, the escorts), the Barbfin, the spawning reefs and their secondary, the beacons, the *Meridian* wreck and the
   plain's grade by section; the parts' checklists ticked with their tests, the steps' small rules logged in the parts'
-  *Decisions* as pending the user's review in round 53; the frame rate of a full medium run 419 fps (longest frame
+  *Decisions* as accepted in round 53 (2026-10-23); the frame rate of a full medium run 419 fps (longest frame
   46.6 ms) on the software renderer; concept [round 53](../../concept-rounds/round-53/README.md)
   opened (the finals with game captures, the spawning reef's look a/b, nine sound pairs and round 52's under-water
   explosion family, the calls the build made, and Level 25's one rule ahead).
+- 2026-10-23 (user, round 53, closed): part D's art accepted (Level 24, the Abyss Ray, the Barbfin and its violet needle,
+  the props, the briefing images and the intel portraits; the Abyss Ray, the Barbfin and the spawning reef are
+  `art: final`); the spawning reef is look **b** "bone chimneys" (a to `concept/rejected/`); the sounds picked (the Ray's
+  rise b, glide a, fan b, death a, the Barbfin's needle b, the reef's iris a, razed b, the beacon pulse a, the
+  *Meridian*'s hatch b, the under-water explosion family a); **C.1 allow 1** (hard's REEFS asks for 3 of 4); C.2-C.7
+  accepted; **A.1 as decided** (the Nautilus rule); the steps' logged small rules accepted.
+- 2026-10-23 (step E6): M8 part E built (steps E1–E6, ART-E, AUD-E, VOX-E): Level 25 *Siren Trench* flown, drawn and
+  heard: the trench's walls with the 25 side caves (`terrain.notches`, cave waves warned 3 s at their wall), the rock
+  pillar's fork and the 190 px narrows, the Siren's wall nests and their slowing sonar rings on the ship and Rook, the
+  Spiral Nautilus pairs orbiting the ship (clamped to the channel, armoured while closed, cracked by `anti-sub` fire),
+  the survey sub (the secret) and the survey buoy's armour patch, the kill-ratio secondary; the parts' checklists ticked
+  with their tests (`Level25Test`, `SirenTest`, `SpiralNautilusTest`, `CaveEntryTest`, `TerrainNotchTest`,
+  `Level25LooksTest`, `Level25SoundsTest`, `RadioTimelineLevel25Test`), the steps' small rules logged in the parts'
+  *Decisions* as pending the user's review in round 54; the frame rate of a full medium run 190 fps on the software
+  renderer (the longest frame 73–90 ms, the level's first frame; none of 50 ms or more after it); concept
+  [round 54](../../concept-rounds/round-54/README.md) opened (the finals with game captures, the trench's darkness,
+  seven sound pairs and the calls the build made).

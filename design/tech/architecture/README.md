@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Architecture
@@ -1271,7 +1271,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
 - **Level and unit, M8 part D** ([Level 24](../../campaign/act-4-deep-water/level-24-abyssal-plain/README.md), the
   [Abyss Ray](../../enemies/naval/abyss-ray/README.md), the [Barbfin](../../enemies/naval/barbfin/README.md) and the
   [spawning reef](../../enemies/ground/spawning-reef/README.md); loaded and checked in step D2 by content's `AbyssChecks`,
-  flown from step D1, mapped in step D3; the gap check's defaults pending the user's review in round 53): a unit's
+  flown from step D1, mapped in step D3; the gap check's defaults accepted in round 53 (2026-10-23)): a unit's
   **`rise`** movement (`shadow` s on `sub`, growing in the ship's lane `ahead` px above the ship, reached only by
   `anti-sub` fire and the Smart Bomb, no contact; the `rise` s, the layer flipping to `air` at its middle, no contact
   until it ends; the `glide` s at `speed` px/s toward the far side, its attack firing from the rise's end; the `sink` s,
@@ -1290,6 +1290,35 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   point, lies within that far of the piece's centre wherever it is placed; Level 24's relay beacons, 100). The intel wave
   strip's **`RAY`** marks (each wave with a rising unit at its time, flown at medium). The stems' existing `stems`
   override plays the base stem again in a later section (Level 24's `{4: base}`).
+- **Level and unit, M8 part E** ([Level 25](../../campaign/act-4-deep-water/level-25-siren-trench/README.md), the
+  [Siren](../../enemies/naval/siren/README.md) and the [Spiral Nautilus](../../enemies/naval/spiral-nautilus/README.md);
+  loaded, checked (`TrenchChecks`) and mapped (`TrenchRules`) in step E3, flown from steps E1/E2; the gap check's
+  defaults pending the user's review in round 54): the terrain's **`notches`** (the side caves: each a `side`, `left` or
+  `right`, a `scroll`, the row of its middle, a `width` along the wall (rows) and a `depth` behind the wall's line, px;
+  on its wall's rows, the notches of one wall not overlapping; open water with rock on three sides: `TerrainBlock.rock`
+  opens them, the geometry rules read the walls' lines without them; an index into the list names a notch). A wave's
+  **`cave`** (its units swim out of that notch, spawning at its back: `from: sides` with the notch's wall as its
+  `edge`, the notch on the screen at the wave's t, one group, the entry the same on every difficulty) and **`wall`**
+  (`staggered` or `opposite`: its units are nests on the walls' feet, 12 px out from the collision line at their row,
+  entering with the ground; `from: sides` (counted as side entries by the intel) with an `edge` `left` or `right` for one
+  wall or none for both, staggered a nest every 1.5 s, the walls taking turns from the right; `opposite`: pairs at one
+  row, no edge, the left one's ring 1.5 s later; the formation `turret nest`, and a `turret nest` wave is a wall wave; the
+  unit a fixed `air` nest with `terrain` movement). The validator plans the nests on every difficulty as the simulation
+  does: at most four on the screen, never two of one wall within 90 px, every two rings at least 1.5 s apart and at most
+  one ring in flight per wall, no nest on a notch's mouth (its rows ± 20 px) or within a backdrop piece's `keep_clear`;
+  no coiling unit holds while the flyable width at the top edge is under twice its `inner` radius plus its hit box (no
+  Nautilus in the 190 px narrows); in a terrain with notches every enemy ground target stands in the 24 px foot band of
+  a wall's or an island's line (a ledge). A unit's **`ring`** attack with a **`slow`** block (`radius`, `band` px,
+  `factor` of the speed and acceleration, `seconds`, `immunity` s; the attack's `speed` px/s (sound: not the water's
+  × 0.7, not the bullet-speed lever), `interval`, `tell` and `first_shot_delay`; no bullet, count or reach; one to a
+  unit, a fixed `air` nest's with `terrain` movement); its difficulty hook **`slow`** (`factor`, `seconds`,
+  `immunity` instead). The movement **`coil`** (`outer` → `inner` px over `closing` s spiralling in round the ship,
+  never closer than `inner`; `opening` s (its last `tell` s the crown's tell), `open` s open at `open_speed` px/s;
+  `offset` s between a wave's units' cycles, the units orbiting in turn the other way round; the whole movement of an
+  `air` unit, which leaves after its wave's `hold`), with the armour **`shell`** (closed: every shot glances off but the
+  specials' blasts and `anti-sub` fire; only and always with a coil) and its `spiral` fired `while: open`; the hook
+  **`coil`** (`open` instead). The intel's **`CAVE`** marks (each cave wave flown at medium, at its time: the panel's
+  side arrows at sensor L3).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

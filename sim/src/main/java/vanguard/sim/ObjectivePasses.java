@@ -151,6 +151,10 @@ final class ObjectivePasses {
             // M7 part C: a gate's anchor: its standing tendril breaks.
             links.anchorGone(enemy, true);
         }
+        if (spec.slowRing().isPresent()) {
+            // M8 part E: shooting the sac ends the song, its ring in flight with it.
+            force.silence(enemy);
+        }
         int headBonus = 0;
         // M8 part C: a chain head's head-first pickup drops only with a head-first kill.
         boolean dropsCarried = true;

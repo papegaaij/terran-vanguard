@@ -336,7 +336,8 @@ public final class Sortie {
                 hits,
                 ScrollPlan.spans(script),
                 // M7 part G: the waves and the ground units of a reversed scroll are flipped.
-                script.reverses() ? t -> travelAt(script, t) < 0 : t -> false);
+                script.reverses() ? t -> travelAt(script, t) < 0 : t -> false,
+                WallMounts.of(script));
         force.canyon(canyon);
         if (medium.water()) {
             // M8 part A: the enemies' bullets and missiles fire at the water's speed.
@@ -683,6 +684,16 @@ public final class Sortie {
                 latches.drainShield();
             }
         }
+        if (force.rings() != null && flying() && !complete && !failed) {
+            // M8 part E: the Sirens' rings slow the ship (not in a dash) and Rook.
+            force.rings()
+                    .reach(
+                            ship,
+                            !ship.evading(),
+                            wingman == null || wingman.ejected() ? null : wingman,
+                            canyon,
+                            events);
+        }
         if (canyon != null) {
             contacts.scrape();
         }
@@ -1015,6 +1026,11 @@ public final class Sortie {
     /** Mount {@code m}'s turret heading (the Swivel Gun's pod), radians clockwise from up. */
     public double turretHeading(int m) {
         return fire.turretHeading(m);
+    }
+
+    /** M8 part E: the Sirens' rings in flight (design/enemies/naval/siren); null in a level without a ring unit. */
+    public SonarRings sonarRings() {
+        return force.rings();
     }
 
     /** M5 part A: the wingman flying in the escort slot (Rook), if one flies in this sortie. */

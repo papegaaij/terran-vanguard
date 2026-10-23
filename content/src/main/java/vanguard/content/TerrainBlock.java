@@ -27,12 +27,16 @@ import vanguard.sim.PlayField;
  * @param right the right wall's collision line, rock right of it
  * @param islands the rock islands (Level 16's fork mesa and rock pillar), rock inside
  * @param contact what a touch of rock costs the ship (and Rook)
+ * @param notches M8 part E (design/campaign Level 25, The caves; m8e-gaps.md §1.1, §5 E5): caves cut into the walls,
+ *     flyable dead ends with rock on three sides; the geometry rules (width, channels, slope) read the walls' lines
+ *     without them, {@link #rock} opens them
  */
 public record TerrainBlock(
         Optional<List<WallPoint>> left,
         Optional<List<WallPoint>> right,
         Optional<List<Island>> islands,
-        Contact contact) {
+        Contact contact,
+        Optional<List<Notch>> notches) {
     /** The flyable width the validator asks for wherever there are walls, px (the ship's hull is 36 px wide). */
     public static final double MIN_WIDTH = 180;
 
@@ -53,6 +57,52 @@ public record TerrainBlock(
         right = right.map(points -> wall("right", points));
         islands = islands.map(List::copyOf);
         islands.ifPresent(list -> Check.notEmpty("islands", list));
+        notches = notches.map(List::copyOf);
+        if (notches.isPresent()) {
+            List<Notch> list = notches.get();
+            Check.notEmpty("notches", list);
+            for (int i = 0; i < list.size(); i++) {
+                Notch notch = list.get(i);
+                Optional<List<WallPoint>> wall = notch.side() == Side.LEFT ? left : right;
+                Check.that(
+                        wall.isPresent()
+                                && notch.low() >= wall.get().getFirst().scroll()
+                                && notch.high() <= wall.get().getLast().scroll(),
+                        "notches[" + i + "]: a notch lies on its wall's rows");
+                for (int j = 0; j < i; j++) {
+                    Notch other = list.get(j);
+                    Check.that(
+                            other.side() != notch.side() || notch.low() >= other.high() || notch.high() <= other.low(),
+                            "notches[" + i + "]: the notches of one wall do not overlap");
+                }
+            }
+        }
+    }
+
+    /** The walls and islands without M8 part E's notches. */
+    public TerrainBlock(
+            Optional<List<WallPoint>> left,
+            Optional<List<WallPoint>> right,
+            Optional<List<Island>> islands,
+            Contact contact) {
+        this(left, right, islands, contact, Optional.empty());
+    }
+
+    /** M8 part E: the notches, none if not given (in the order given: a cave wave names its notch by this index). */
+    public List<Notch> notchList() {
+        return notches.orElse(List.of());
+    }
+
+    /**
+     * M8 part E: the notch cut at {@code row} into the wall on {@code side}, or null: the one whose rows hold it.
+     */
+    public Notch notchAt(Side side, double row) {
+        for (Notch notch : notchList()) {
+            if (notch.side() == side && row >= notch.low() && row <= notch.high()) {
+                return notch;
+            }
+        }
+        return null;
     }
 
     private static List<WallPoint> wall(String side, List<WallPoint> points) {
@@ -126,6 +176,15 @@ public record TerrainBlock(
     public boolean rock(double row, double x) {
         double l = leftAt(row);
         double r = rightAt(row);
+        // M8 part E: a notch opens its wall's rock back by its depth over its rows.
+        Notch leftNotch = Double.isNaN(l) ? null : notchAt(Side.LEFT, row);
+        Notch rightNotch = Double.isNaN(r) ? null : notchAt(Side.RIGHT, row);
+        if (leftNotch != null) {
+            l -= leftNotch.depth();
+        }
+        if (rightNotch != null) {
+            r += rightNotch.depth();
+        }
         if (!Double.isNaN(l) && x < l || !Double.isNaN(r) && x > r) {
             return true;
         }
@@ -192,6 +251,39 @@ public record TerrainBlock(
             island.points().forEach(p -> rows.add(p.y()));
         }
         return List.copyOf(rows);
+    }
+
+    /** M8 part E: the wall a notch is cut into. */
+    public enum Side {
+        LEFT,
+        RIGHT
+    }
+
+    /**
+     * M8 part E (design/campaign Level 25, The caves): a cave cut into the wall on {@code side}: over the rows {@code
+     * scroll ± width / 2} its rock steps back {@code depth} px from the wall's line, open water with a floor, a back and
+     * a ceiling (70 deep and 90 wide in Level 25).
+     *
+     * @param scroll the row of its middle (the ground scroll at which it reaches the top edge)
+     * @param width its opening along the wall, rows (px)
+     * @param depth how far its back lies behind the wall's line, px
+     */
+    public record Notch(Side side, double scroll, double width, double depth) {
+        public Notch {
+            Check.notNegative("scroll", scroll);
+            Check.positive("width", width);
+            Check.positive("depth", depth);
+        }
+
+        /** Its lowest row (its floor). */
+        public double low() {
+            return scroll - width / 2;
+        }
+
+        /** Its highest row (its ceiling). */
+        public double high() {
+            return scroll + width / 2;
+        }
     }
 
     /**

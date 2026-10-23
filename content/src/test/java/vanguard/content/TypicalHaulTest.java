@@ -78,7 +78,9 @@ class TypicalHaulTest {
                         // M8 part C (step C3): the scale fitted to 0.49; an eel taken apart with the tail first
                         Map.entry(23, 5_330),
                         // M8 part D (step D3): the scale fitted to 0.42; one release per reef
-                        Map.entry(24, 5_481)),
+                        Map.entry(24, 5_481),
+                        // M8 part E (step E3): the README's scale 0.48 (typical −1.7 %; Level25Test's sources)
+                        Map.entry(25, 5_867)),
                 perfect);
     }
 

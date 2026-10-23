@@ -131,8 +131,9 @@ class ActFourDataTest {
             // M8 part C: Level 23 dives at its waterline (25.5 s): from there under water, the Airstrike and the Lance
             // forbidden, the Sonar Pulse free.
             boolean descent = key.equals("act-4-deep-water/level-23-through-the-ice");
-            // M8 part D: Level 24 is under water from its start (the level's medium).
-            boolean plain = key.equals("act-4-deep-water/level-24-abyssal-plain");
+            // M8 part D: Level 24 is under water from its start (the level's medium); M8 part E: Level 25 too.
+            boolean plain = key.equals("act-4-deep-water/level-24-abyssal-plain")
+                    || key.equals("act-4-deep-water/level-25-siren-trench");
             assertEquals(descent || plain, level.underwater(), key);
             for (int i = 0; i < level.sections().size(); i++) {
                 if ((descent && level.sectionStart(i) >= 25.5) || plain) {

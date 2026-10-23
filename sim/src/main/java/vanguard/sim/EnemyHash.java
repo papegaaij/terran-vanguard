@@ -140,6 +140,14 @@ final class EnemyHash {
         if (u.hoverHold.active()) {
             u.hoverHold.addTo(hash);
         }
+        // M8 part E's songs add theirs; earlier units hash as before.
+        if (u.song.active()) {
+            u.song.addTo(hash);
+        }
+        // M8 part E's coils add theirs; earlier units hash as before.
+        if (u.phase == Enemy.Phase.COIL) {
+            u.coiling.addTo(hash);
+        }
         // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
         if (u.spec.turret().isPresent()) {
             u.turretGun.addTo(hash);

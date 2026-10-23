@@ -198,6 +198,13 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
                           below, its rise, the lime gill slits), the production Ray (tools/art/abyss_ray.py) from
                           above with its gill slits circled and a fan of nine; a Barbfin inset at 2x
                           (tools/art/barbfin.py: the barbed snout, the violet needles)
+  level-25-siren-trench   L25 p1 (M8 part E batch): Okafor's sonar chart of the trench, north up (tools/art/
+                          backdrop_l25.py's walls, notches, pillar and beacons): the walls as the collision lines, the
+                          side caves as notches, the pillar's fork and the narrows, the Siren nests as teal dots on
+                          both walls, the red-gold beacons, the survey sub's cave; the route in teal and six sections
+  level-25-sonar-ring     L25 p2: Varga's diagram of the Siren's ring: the production nest on a wall (tools/art/
+                          siren.py) with its sac, two rippled rings and the gap between them, the ship slowed in the
+                          band with its shimmer (60 %, 2 s), a speed strip with the 3 s immunity
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -223,6 +230,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r51-a.png   review sheet, Act 4 intro + L22 (M8 part B)
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
   design/ui/briefing/concept/briefing-images-final-r53-a.png   review sheet, L24 (M8 part D)
+  design/ui/briefing/concept/briefing-images-final-r54-a.png   review sheet, L25 (M8 part E)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -233,7 +241,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53|r54] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -273,7 +281,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r53"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r54"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -5381,6 +5389,170 @@ def abyss_ray_scan():
     return b
 
 
+# --------------------------------------------------------------------------- Level 25 (M8 part E)
+
+SOURCE_M8E = artkit.source_note(SCRIPT, "M8 part E batch")
+L25_NESTS = [(18, "R"), (26.5, "R"), (28, "L"), (36.5, "R"), (38, "L"), (46.5, "R"), (48, "L"), (56.5, "R"),
+             (58, "L"), (59.5, "R"), (69.5, "R"), (71, "L"), (79.5, "R"), (81, "L"), (91, "R"), (92.5, "L"),
+             (94, "R"), (98.5, "L"), (98.5, "R"), (115, "R"), (116.5, "L"), (131, "R"), (132.5, "L"), (134, "R"),
+             (142, "R"), (143.5, "L"), (145, "R"), (152, "R"), (153.5, "L"), (155, "R"), (156.5, "L")]
+
+
+def l25_map_xy(t, x):
+    """Level 25's (t s, play-field x px) on Okafor's chart: north (the level's start) up."""
+    return 24 + x * 400 / 480, 30 + t / 173 * 198
+
+
+def siren_trench():
+    """L25 p1: Okafor's sonar chart of the trench, north up: the plain's edge at the top, the walls closing in from
+    the field's sides (the rock beyond them dark), the side caves as notches cut into the wall lines, the pillar
+    splitting the fork and the narrows, the Siren nests as teal dots along both walls, the red-gold relay beacons as
+    dots at the walls' foot, the floor opening at the south end; the route in teal down the middle and the six
+    sections."""
+    import backdrop_l25 as b25                              # noqa: E402  (the trench's terrain and pieces)
+    b = Board()
+    mx0, mx1, my0, my1 = 24, 424, 26, H - 8
+    ts = np.linspace(0, 173, 400)
+    rows = np.array([b25.scroll(t) for t in ts])
+    xl = np.nan_to_num(b25.foot(0, rows), nan=0.0)
+    xr = np.nan_to_num(b25.foot(1, rows), nan=480.0)
+    inside = (b.xx > mx0) & (b.xx < mx1) & (b.yy > my0) & (b.yy < my1)
+    t_of = np.clip((b.yy - 30) / 198 * 173, 0, 173)
+    fx = (b.xx - 24) * 480 / 400
+    wl = np.interp(t_of, ts, xl)
+    wr = np.interp(t_of, ts, xr)
+    rock = inside & ((fx < wl) | (fx > wr))
+    n = raster.fbm(W, H, 32, 2641, octaves=4, period=False)
+    floor = np.array((4, 16, 26.0)) + 10 * (n[..., None] - 0.5)
+    b.base = np.where(inside[..., None], floor, b.base)
+    b.base = np.where(rock[..., None], np.array((14, 30, 40.0)) + 14 * (n[..., None] - 0.5), b.base)
+    level = (n * 7 + t_of / 60) % 1.0
+    contour = rock & (np.abs(level - 0.5) < 0.06)
+    b.base = np.where(contour[..., None], b.base + np.array((10, 40, 50.0)), b.base)
+    for side, xs in ((0, xl), (1, xr)):                       # the wall lines (the collision line)
+        pts = [l25_map_xy(t, x) for t, x in zip(ts, xs) if 0 < x < 480]
+        if len(pts) > 1:
+            b.line(pts, CYAN, 1, 230)
+    span = b25.PILLAR
+    poly = [l25_map_xy(b25.time_at(r), x) for x, r in span]
+    b.draw.polygon(poly, fill=(14, 30, 40, 255), outline=CYAN + (230,))
+    for nt in b25.NOTCHES:                                    # the side caves: notches cut into the wall lines
+        side = 0 if nt["side"] == "left" else 1
+        t = b25.time_at(nt["scroll"])
+        x0, y = l25_map_xy(t, float(b25.foot(side, nt["scroll"])))
+        x1 = x0 - 7 if side == 0 else x0 + 7
+        b.draw.rectangle([min(x0, x1), y - 2, max(x0, x1), y + 2], fill=(2, 6, 12, 255), outline=CYAN + (230,))
+    b.title("CDF SONAR - THE SIREN TRENCH, NORTH UP")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    pts = [l25_map_xy(t, x) for t, x in ((0, 240), (40, 245), (80, 235), (100, 170), (106, 185), (113, 240),
+                                         (140, 240), (173, 240))]
+    b.dashed(pts, TEAL_V, 2)
+    b.arrow(*pts[-2], *pts[-1], TEAL_V, 4, dashed=False)
+    for t, side in L25_NESTS:                                 # the nests on both walls
+        s = 0 if side == "L" else 1
+        x = float(b25.foot(s, b25.scroll(t) + 28))
+        mx, my = l25_map_xy(t, x + (5 if s == 0 else -5))
+        b.glow(mx, my, 4, (0, 120, 80), 0.9)
+        b.marker(mx, my, "dot", TEAL_V, 1)
+    for t, side in b25.BEACONS:                               # the relay beacons, red-gold
+        x = float(b25.foot(side, b25.scroll(t))) + (26 if side == 0 else -26)
+        mx, my = l25_map_xy(t, x)
+        b.glow(mx, my, 3.5, (160, 60, 10), 0.9)
+        b.marker(mx, my, "dot", BEACON_RG, 1)
+    sub = min(b25.NOTCHES, key=lambda nt: abs(b25.time_at(nt["scroll"]) - 78) + (nt["side"] != "left") * 99)
+    sx, sy = l25_map_xy(b25.time_at(sub["scroll"]), float(b25.foot(0, sub["scroll"])))
+    b.ring(sx - 4, sy, 6, colour=AMBER, alpha=230)
+    tag(b, sx + 8, sy - 4, "SURVEY SUB?", AMBER)
+    for t, label in ((0, "1 MOUTH"), (22, "2 THE WALLS"), (60, "3 CAVE MOUTHS"), (95, "4 THE NARROWS"),
+                     (130, "5 THE SONG"), (160, "6 THE FLOOR")):
+        _, y = l25_map_xy(t, 0)
+        if t:
+            b.line([(mx0, y), (mx1, y)], CYAN_DIM, 1, 70)
+        tag(b, mx1 - 4, y + 3, label, CYAN, right=True)
+    b.label(mx1 + 8, 30, "N", WHITE)
+    b.arrow(mx1 + 11, 58, mx1 + 11, 42, WHITE, 4, dashed=False)
+    px = 470
+    b.label(px, 30, "THE TRENCH", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "WALLS HURT:", CYAN)
+    b.label(px, 62, "260 PX, 190 AT", CYAN)
+    b.label(px, 72, "THE NARROWS", CYAN)
+    b.label(px, 90, "SIREN NESTS", TEAL_V)
+    big(b, px, 102, "31", TEAL_V)
+    b.label(px + 28, 106, "ON BOTH WALLS", TEAL_V)
+    b.label(px, 126, "SIDE CAVES:", WHITE)
+    b.label(px, 136, "ENEMIES SWIM OUT", WHITE)
+    b.label(px, 154, "RED-GOLD BEACONS", BEACON_RG)
+    b.label(px, 164, "ON THE WALLS", BEACON_RG)
+    b.label(px, 182, "CROSS IT", GREEN)
+    b.label(px, 192, "END TO END", GREEN)
+    return b
+
+
+def sonar_ring():
+    """L25 p2: Varga's diagram of the Siren's ring: the nest on a wall with its sac glowing (the production
+    sprite), two rings expanding from it with the gap between them, the ship inside the outer band with the sonar
+    shimmer (slowed to 60 % for 2 s), the 3 s immunity after it on a speed strip; the rules beside it."""
+    b = Board()
+    b.base = b.base * 0.8 + np.array((1, 12, 20.0)) * 0.6
+    b.title("CDF SCAN - SIREN, THE SONAR RING")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    wx = 40                                                    # the wall at the left, its foot at x = wx
+    wall = (b.xx < wx + 4 * np.sin(b.yy / 13.0)) & (b.yy > 24) & (b.yy < 230)
+    n = raster.fbm(W, H, 16, 2651, octaves=3, period=False)
+    b.base = np.where(wall[..., None], np.array((22, 38, 50.0)) + 20 * (n[..., None] - 0.5), b.base)
+    b.line([(wx + 4 * np.sin(y / 13.0), y) for y in range(24, 231, 2)], CYAN, 1, 230)
+    sx, sy = wx + 14, 128
+    try:
+        nest = held_frame("siren_4", 1.5, 48)
+        b.sprite(nest, sx, sy)
+        gl = np.array(scaled(held_asset("siren-glow_4"), 1.5, 32)).astype(float)
+        b.add_light(gl[..., :3] * gl[..., 3:4] / 255, sx - gl.shape[1] / 2, sy - gl.shape[0] / 2, "over")
+    except FileNotFoundError:
+        b.marker(sx, sy, "dot", TEAL_V, 6)
+    cx, cy = sx + 14, sy
+    for r, a in ((70, 230), (165, 200)):                       # two rings: the second 1.5 s behind (180 px)
+        th = np.linspace(-np.pi / 2 + 0.06, np.pi / 2 - 0.06, 120)
+        for k, off in enumerate((0, -6)):
+            rr = r + off + 2.2 * np.sin(th * r / 9)
+            pts = [(cx + q * np.cos(t), cy + q * np.sin(t)) for t, q in zip(th, rr)]
+            b.line(pts, TEAL_V, 2 if k == 0 else 1, a if k == 0 else a // 2)
+    b.arrow(cx + 70, cy - 8, cx + 100, cy - 8, TEAL_V, 3, dashed=True)
+    tag(b, cx + 74, cy - 24, "GAP", WHITE)
+    tag(b, cx + 4, 30, "120 PX/S TO 230 PX, NO DAMAGE", TEAL_V)
+    shp = turned(asset("ship_2"), 0)
+    ax = cx + 165 * np.cos(0.5)
+    ay = cy + 165 * np.sin(0.5)
+    b.sprite(scaled(shp, 0.8), ax, ay)
+    for k in range(3):
+        b.ring(ax, ay, 14 + 5 * k, 12 + 4 * k, colour=(140, 255, 210), alpha=200 - 50 * k)
+    tag(b, ax + 24, ay - 4, "SLOWED 60 %, 2 S", (140, 255, 210))
+    b.ring(sx, sy, 15, colour=RED, alpha=230)
+    tag(b, sx - 8, sy + 44, "SHOOT THE SAC", RED)
+    # the speed strip: 100 % -> 60 % for 2 s -> 3 s immune -> 100 %
+    x0, x1, y0 = 330, 450, 200
+    b.label(x0, y0 - 24, "YOUR SPEED", WHITE)
+    seg = [(0, 0.15, 1.0, CYAN), (0.15, 0.48, 0.6, (140, 255, 210)), (0.48, 0.98, 1.0, GREY)]
+    for a, c, v, col in seg:
+        b.line([(x0 + (x1 - x0) * a, y0 - 14 * v), (x0 + (x1 - x0) * c, y0 - 14 * v)], col, 2, 240)
+    b.line([(x0, y0 + 2), (x1, y0 + 2)], CYAN_DIM, 1, 160)
+    tag(b, x0 + 18, y0 + 8, "2 S", (140, 255, 210))
+    tag(b, x0 + 66, y0 + 8, "3 S IMMUNE", GREY)
+    px = 470
+    b.label(px, 30, "THE SIREN", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "THE SAC GLOWS", TEAL_V)
+    b.label(px, 62, "0.8 S, THEN SINGS", TEAL_V)
+    b.label(px, 80, "A RING SLOWS YOU", WHITE)
+    b.label(px, 90, "ONCE, THEN 3 S", WHITE)
+    b.label(px, 100, "OF IMMUNITY", WHITE)
+    b.label(px, 118, "SLIP THE GAP", GREEN)
+    b.label(px, 128, "OR SHOOT THE SAC", GREEN)
+    b.label(px, 146, "SIDE AND", GREEN)
+    b.label(px, 156, "ANTI-SUB GUNS", GREEN)
+    return b
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -5451,6 +5623,8 @@ IMAGES = {
     "level-23-eel-and-fry": eel_and_fry,
     "level-24-abyssal-plain": abyssal_plain,
     "level-24-abyss-ray": abyss_ray_scan,
+    "level-25-siren-trench": siren_trench,
+    "level-25-sonar-ring": sonar_ring,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -5477,6 +5651,7 @@ BATCHES = {
     "r51": (list(IMAGES)[59:65], "M8 PART B"),
     "r52": (list(IMAGES)[65:67], "M8 PART C"),
     "r53": (list(IMAGES)[67:69], "M8 PART D"),
+    "r54": (list(IMAGES)[69:71], "M8 PART E"),
 }
 
 
@@ -5499,6 +5674,7 @@ def build(names):
                   else SOURCE_M8B if name in BATCHES["r51"][0]
                   else SOURCE_M8C if name in BATCHES["r52"][0]
                   else SOURCE_M8D if name in BATCHES["r53"][0]
+                  else SOURCE_M8E if name in BATCHES["r54"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

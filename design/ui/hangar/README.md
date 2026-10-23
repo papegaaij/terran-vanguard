@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Hangar
@@ -215,7 +215,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): the 
 | [concept/intel-final-r44-a.png](concept/intel-final-r44-a.png) | The `boss-dust-colossus` sensor silhouette (40×40, the open mouth as phase 3 shows it, outline only; `tools/art/intel.py`, M7 part H batch, step ART-H2) | final (round 44, F.d: approved as final) |
 | [concept/intel-final-r51-a.png](concept/intel-final-r51-a.png) | The `drill-rig` sensor L2 portrait (30×30, the core and its four pumps; `tools/art/intel.py`, M8 part B batch) | chosen (round 51, F.8: accepted as final) |
 | [concept/intel-final-r52-a.png](concept/intel-final-r52-a.png) | The `glassfin` and `eel-swarm` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part C batch) | chosen (round 52, F.10: accepted as final) |
-| [concept/intel-final-r53-a.png](concept/intel-final-r53-a.png) | The `abyss-ray` and `barbfin` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part D batch) | proposed (round 53) |
+| [concept/intel-final-r53-a.png](concept/intel-final-r53-a.png) | The `abyss-ray` and `barbfin` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part D batch) | chosen (round 53, F.7: accepted as final) |
+| [concept/intel-final-r54-a.png](concept/intel-final-r54-a.png) | The `siren` and `spiral-nautilus` sensor L2 portraits (30×30; `tools/art/intel.py`, M8 part E batch) | proposed (round 54) |
+| [concept/level-25-intel-capture-r54-a.png](concept/level-25-intel-capture-r54-a.png) | Game capture, M8 part E (step E6, a playthrough save at Level 25 on medium, the sensor suite L2): the hangar with Level 25's intel (Varga's L2 line, the threat strip, the four portraits incl. the Siren and the Spiral Nautilus), the panel at 1:1 | proposed (round 54) |
 
 M4 part H, test fire ([round 26](../../concept-rounds/README.md)): a game capture, see
 [concept/prompts.md](concept/prompts.md#test-fire-capture-r26-a).

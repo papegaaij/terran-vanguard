@@ -335,3 +335,29 @@ the snout barb and eyes lit), the violet snout sparkle (additive), the dead shel
 ink-grey cloud (no bubbles); the needles are **violet** (the README), not the mockup's yellow
 (`enemy_bullets.py violet`). The GIF: a column of four from the left and three from the right darting in, holding
 90-200 px above the ship turned toward it, a violet needle every 2.4 s, two kills over the under-water burst.
+
+## siren-final-r54-a
+
+Round 54, production art (M8 part E batch, step ART-E; from the chosen concept siren-r48-b, the frill bell of
+`tools/concept/enemies_r48.py`, model imported unchanged). Not a mockup: the review sheet and a loop of the files
+written by [tools/art/siren.py](../../../../tools/art/siren.py) (held in `build/art-held/sprites/` until the Siren's
+`data.yaml` exists): the 64x56 wall nest in both facings (left wall facing right, right wall facing left, each its own
+render) x (idle, the breath, three tell steps with the frills spreading and the sac swelling, the song with the frills
+flared), the sac's and frills' teal glow (additive, ungraded), the death (the sac collapsing and going dark, the frills
+folding), the dark husk left on the wall, the pale plume (stepped, no bubbles), the ring as a 64x24 additive strip the
+game wraps round the circle (b's rippled double wavefront, row 7 the wavefront), the slowed hull's teal shimmer. The
+GIF: on Level 25's walls under the review grade, nests on both walls telling and singing, a ring crossing the trench
+and slowing the ship (the shimmer, 2 s), a later ring passing during the 3 s immunity, one nest shot (plume, husk).
+
+## spiral-nautilus-final-r54-a
+
+Round 54, production art (M8 part E batch, step ART-E; round 06's chosen concept spiral-nautilus-r06-a to production,
+`tools/concept/render/r06_models.py`'s shell and crown imported unchanged, the crown's eyes re-lit lime-white for the
+stat block's weak point). Not a mockup: the review sheet and a loop of the files written by
+[tools/art/spiral_nautilus.py](../../../../tools/art/spiral_nautilus.py) (held until its `data.yaml` exists): the 56 px
+striped shell rolling (24 spin frames) with its violet aperture lip glow, the shell held open toward 16 headings, the
+tentacle crown at 16 headings x (three emerging steps, two sway frames, the tell), its glow (eyes, tips, mantle rim;
+additive), the dead crown, the death (the shell cracked into two halves drifting apart and sinking, two crack axes), the
+lime-grey glance flecks off the closed shell. The GIF: a pair orbiting the ship in opposite directions on Level 25's
+trench, spiralling in closed, uncoiling 2 s apart and firing 3-arm spirals of orbs (x 0.7), flecks off a closed shell,
+one cracked open while uncoiled.

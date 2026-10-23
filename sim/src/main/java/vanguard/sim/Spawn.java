@@ -174,6 +174,30 @@ record Spawn(
      */
     record Field(double x, double y, double vx, double vy, boolean submerged, long seed) {}
 
+    /** M8 part E: this unit flying {@code flight} instead of its path (a cave's swim out, {@link WallMounts}). */
+    Spawn withPath(FlightPath flight) {
+        return new Spawn(
+                tick,
+                kind,
+                enemy,
+                flight,
+                speed,
+                holdSeconds,
+                orbit,
+                exit,
+                leadsTarget,
+                carried,
+                release,
+                escort,
+                walk,
+                loop,
+                ambush,
+                swarm,
+                field,
+                chaseDelay,
+                lane);
+    }
+
     /**
      * M7 part C: this unit with its flight mapped onto the flyable span {@code span} (design/campaign Level
      * 16, formations in a canyon): its path, its orbit's centre, its release point, its loop-back, its

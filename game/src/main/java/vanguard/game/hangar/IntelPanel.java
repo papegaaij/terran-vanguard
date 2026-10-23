@@ -83,6 +83,12 @@ final class IntelPanel {
      * above (the Ray's violet eye spots; it rises from below, so its mark reaches up).
      */
     static final Color RAY_VIOLET = new Color(176 / 255f, 110 / 255f, 236 / 255f, 1);
+    /**
+     * M8 part E (design/campaign Level 25, Threat profile at L3: "the side caves' entry points"): a wave out of a side
+     * cave as a pale slate tick over the strip's upper half and a pixel above it (it comes out of the wall, not in from
+     * an edge).
+     */
+    static final Color CAVE_SLATE = new Color(168 / 255f, 192 / 255f, 210 / 255f, 1);
 
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
@@ -610,7 +616,7 @@ final class IntelPanel {
                 // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
                 // under the waves, from its surfacing to its head off the far edge.
                 case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY -> {
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY, CAVE -> {
                     // drawn over the waves, below
                 }
             }
@@ -661,6 +667,10 @@ final class IntelPanel {
                 // M8 part D: a rising unit's wave (Level 24's Abyss Rays) as a violet tick the strip's full depth and a
                 // pixel above it.
                 canvas.fill(RAY_VIOLET, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 11);
+            } else if (mark.kind() == Intel.Mark.Kind.CAVE) {
+                // M8 part E: a cave wave's entry (Level 25's side caves) as a slate tick over the strip's upper half
+                // and a pixel above it.
+                canvas.fill(CAVE_SLATE, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 2, 2, 7);
             } else if (mark.kind() == Intel.Mark.Kind.TARGET) {
                 // M8 part B: a site of the secondary's targets (Level 22's four rigs) as a red "T" over the strip's
                 // lower half: its tick and a crossbar on it (the boss's tick is plain and full depth).

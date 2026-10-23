@@ -377,13 +377,13 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 98, speaker: Varga, line: "A beacon. Human-made, relay hardware, an amber pulse. And the carrier on it is Helix's."}
   - {t: 109.5, speaker: Okafor, line: "Log it, Doctor. Full record, for my eyes only."}   # the README's t=106, after Varga's t=98 line (until t≈108.9)
   - {t: 120, speaker: Rook, requires: escort, line: "Ray at six, Lancer: it is rising!"}   # the Ray's flank bark; may drop by the 1 s rule (the README allows it)
-  - {event: secondary-objective, speaker: Okafor, line: "Third reef down. The Vrell will have to breed somewhere else.", easy: {line: "Second reef down. The Vrell will have to breed somewhere else."}, hard: {line: "Last reef down. The Vrell will have to breed somewhere else."}, notes: {trigger: Secondary met (`secondary-objective`)}}   # met at the third reef razed (easy the second, hard the fourth): the line counts true on every difficulty
+  - {event: secondary-objective, speaker: Okafor, line: "Third reef down. The Vrell will have to breed somewhere else.", easy: {line: "Second reef down. The Vrell will have to breed somewhere else."}, notes: {trigger: Secondary met (`secondary-objective`)}}   # met at the third reef razed (easy the second; hard the third too, round 53 C.1): the line counts true on every difficulty
   - {t: 131, speaker: Varga, line: "A third beacon. The same pulse every two kilometres. Somebody laid a road down here."}
   - {event: level-end, speaker: Okafor, line: "The plain is behind us. The beacons lead into the trench, and so do we. Refit, Aegis."}
 
 objectives:
   primary: reach-end
-  secondary: {escapes: spawning-reef, allowed: 1, easy: {allowed: 2}, hard: {allowed: 0}, label: REEFS, credits: 100, name: Raze 3 of the 4 spawning reefs}   # at least 3 of the 4 reefs destroyed before they leave the screen (easy 2, hard all 4), failed by the second reef away (100 in Act 1 terms: pays 410)
+  secondary: {escapes: spawning-reef, allowed: 1, easy: {allowed: 2}, label: REEFS, credits: 100, name: Raze 3 of the 4 spawning reefs}   # at least 3 of the 4 reefs destroyed before they leave the screen (easy 2; hard 3 too, one allowed away: round 53 C.1, the user "allow 1"), failed by the second reef away (100 in Act 1 terms: pays 410)
 
 music:
   track: 10           # Act 4 A "Thera Deep" (audio/music track list)

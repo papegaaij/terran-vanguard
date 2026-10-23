@@ -63,6 +63,8 @@ speakers:
       2a7ad409bba3: 47543305    # Level 23 t=134 "The farms are clear…": the key's seed read "Hold your light, sieges" through the filter; the pin reads "lights, Aegis" at 151 Hz
       86ecad13e612: 143478609   # Level 24 briefing page 1 "Past the farms is the abyssal plain…": the key's seed read "tear a deep's" for "Thera Deep's" both ways (its first chunk retried three times for 0.8-1.1 s pauses); the pin reads it word for word with the name prompt at 147 Hz
       92374b1e90be: 155318577   # Level 24 t=1 "Past the farms is the abyssal plain, Aegis…": the key's seed (five takes, 0.8-1.9 s pauses) read "lumps" for "lamps" and "light"; the pin reads it word for word with the name prompt at 157 Hz
+      68b1de64c583: 109780469   # Level 25 t=1 "The Siren Trench, Lancer…": the key's seed read "Relness sing" / "Roll nests" for "Vrell nests" (four pause retries); the pin reads "Vrell nests" with the name prompt at 152 Hz
+      f6aaa2b9a46a: 258648631   # Level 25 t=158 "The trench opens ahead…": the key's seed jumped an octave on 23 % of the line (p90 about 400 Hz); the pin stays at 156 Hz (p90 210) and reads "Aegis" both ways
   varga:
     names: [Varga]
     ref: ref-varga
@@ -93,6 +95,11 @@ speakers:
       0e301c25bf15: 17877131    # Level 23 t=77 "Siphon pumps on the racks…": the key's seed read "into the rail" for "into the Vrell" through the filter; the pin reads "Vrell" at 197 Hz
       907d82c74798: 153509136   # Level 24 first-ray "Something huge under you…": the key's seed jumped an octave on 18 % of the line (p90 about 490 Hz); the pin stays at her 192 Hz (p90 256)
       e20571c1375f: 239000676   # Level 24 Meridian secret "That's the Meridian…": the key's seed jumped an octave (p90 about 420 Hz) and read "the realm" for "the Vrell"; the pin reads it word for word with the name prompt at 198 Hz (p90 276)
+      8eaffeebd009: 149618681   # Level 25 t=20 "A Siren. Its ring does no damage…": the key's seed jumped an octave on a quarter of the line (median 259 Hz, p90 about 460); the pin stays at 212 Hz (p90 261)
+      9e55419a9b2b: 166024228   # Level 25 t=33 "The beacons on the walls again…": the key's seed jumped an octave on 18 % of the line (p90 about 480 Hz); the pin is the steadiest of four (219 Hz, p90 256)
+      c80f1f044656: 209777147   # Level 25 t=131.5 "Sirens on both walls…": the key's seed read "threat a spiral" and jumped an octave (p90 about 500 Hz); the pin reads "thread" both ways at 196 Hz
+      11407b40994f: 18089919    # Level 25 survey sub secret "Conamara's survey sub…": the key's seed jumped an octave (p90 about 500 Hz); the pin stays at 199 Hz and reads "the Vrell" with the name prompt
+      d316a7f1c744: 221342345   # Level 25 briefing page 2 "The nests sing…": the key's seed ran high (median 216 Hz, p90 about 320); the pin stays at 204 Hz (p90 268)
   rook:
     names: [Rook]
     ref: ref-rook

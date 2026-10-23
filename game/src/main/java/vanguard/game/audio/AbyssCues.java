@@ -34,6 +34,8 @@ final class AbyssCues extends SoundFamily {
     static final String REEF = "spawning-reef";
     /** The secret's wreck by its look, and the beacon pieces by their id. */
     static final String WRECK = "meridian-wreck";
+    /** M8 part E: Level 25's secret, Conamara's survey sub in its cave, lets go with the Meridian's hatch. */
+    static final String SURVEY_SUB = "survey-sub";
 
     static final String BEACON = "relay-beacon";
     /** The beacons pulse every 2 s on the real clock (the pieces' 16 frames at 8 fps, the flash on frame 0). */
@@ -95,7 +97,8 @@ final class AbyssCues extends SoundFamily {
     void noteGround(List<GroundObjectSpec> objects) {
         wrecks = new boolean[objects.size()];
         for (int g = 0; g < wrecks.length; g++) {
-            wrecks[g] = WRECK.equals(objects.get(g).look());
+            wrecks[g] = WRECK.equals(objects.get(g).look())
+                    || SURVEY_SUB.equals(objects.get(g).look());
         }
     }
 

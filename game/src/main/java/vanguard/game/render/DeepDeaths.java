@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import java.util.ArrayList;
 import java.util.List;
+import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
@@ -157,5 +158,86 @@ public final class DeepDeaths {
 
     public static double inkBelow() {
         return BarbfinLooks.INK_BELOW;
+    }
+
+    /** M8 part E: whether kind {@code kind}'s death plays on the ground (a Siren's nest scrolls with its wall). */
+    public boolean mounted(Sortie sortie, int kind) {
+        return kinds.sirens(sortie).siren(kind);
+    }
+
+    /** M8 part E: a Siren's collapse at its facing (solid; at {@code x}, its unit's centre); empty for another kind. */
+    public Array<AtlasRegion> sirenCollapse(Sortie sortie, int kind, double x) {
+        return kinds.sirens(sortie).collapse(kind, x);
+    }
+
+    /** M8 part E: a Siren's husk left on its wall, a one-frame animation; empty for another kind. */
+    public Array<AtlasRegion> sirenHusk(Sortie sortie, int kind, double x) {
+        return kinds.sirens(sortie).husk(kind, x);
+    }
+
+    /** M8 part E: a Siren's pale plume (solid, stepped translucency); empty for another kind. */
+    public Array<AtlasRegion> sirenPlume(Sortie sortie, int kind) {
+        return kinds.sirens(sortie).plume(kind);
+    }
+
+    /** M8 part E: the collapse's and the art's centre across from the unit's ({@code x}), and the sac's. */
+    public double sirenBodyX(double x) {
+        return SirenLooks.bodyX(x);
+    }
+
+    public double sirenSacX(Sortie sortie, double x) {
+        return kinds.sirens(sortie).sacX(x);
+    }
+
+    /** M8 part E: the sac's height from the unit's centre, px. */
+    public double sirenSacDy(Sortie sortie, double x) {
+        return kinds.sirens(sortie).sacDy(x);
+    }
+
+    /** M8 part E: the collapse's frames' steps, the plume's, its rise (px/s, up) and the husk's wait (the collapse). */
+    public static int sirenCollapseTicks() {
+        return SirenLooks.DEATH_FRAME_TICKS;
+    }
+
+    public static int sirenPlumeTicks() {
+        return SirenLooks.PLUME_FRAME_TICKS;
+    }
+
+    public static double sirenPlumeRise(int frames) {
+        return SirenLooks.PLUME_RISE / Math.max(1, frames * SirenLooks.PLUME_FRAME_TICKS * SimStep.SECONDS);
+    }
+
+    public static int sirenHuskDelay() {
+        return SirenLooks.DEATH_STEPS * SirenLooks.DEATH_FRAME_TICKS;
+    }
+
+    /** M8 part E: a Spiral Nautilus's shell cracked into halves (solid); empty for another kind. */
+    public Array<AtlasRegion> nautilusHalves(Sortie sortie, int kind) {
+        return kinds.nautili(sortie).halves(kind);
+    }
+
+    /**
+     * M8 part E: a Spiral Nautilus killed uncoiled near (x, y): its dark crown (solid), offset by {@link
+     * #nautilusDarkDx}, {@link #nautilusDarkDy}; empty for another kind or a closed shell.
+     */
+    public Array<AtlasRegion> nautilusDark(Sortie sortie, int kind, double x, double y) {
+        return kinds.nautili(sortie).darkCrown(kind, x, y);
+    }
+
+    public double nautilusDarkDx(Sortie sortie) {
+        return kinds.nautili(sortie).darkDx();
+    }
+
+    public double nautilusDarkDy(Sortie sortie) {
+        return kinds.nautili(sortie).darkDy();
+    }
+
+    /** M8 part E: the halves' frames' steps and the dark crown's sinking, px/s. */
+    public static int halvesTicks() {
+        return NautilusLooks.HALVES_FRAME_TICKS;
+    }
+
+    public static double darkSink() {
+        return NautilusLooks.DARK_SINK;
     }
 }

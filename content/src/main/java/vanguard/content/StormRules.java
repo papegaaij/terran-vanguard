@@ -34,8 +34,10 @@ final class StormRules {
                 .flatMap(EnemyData.Hook::attacks)
                 .map(changes -> changes.get(name)));
         if (attack.pattern().equals(SPIRAL)) {
-            if (!attack.whileOpen() || enemy.vortex().isEmpty()) {
-                throw new IllegalArgumentException(enemy.name() + ": a unit's spiral fires while its vortex is open");
+            if (!attack.whileOpen()
+                    || (enemy.vortex().isEmpty() && enemy.movement().coil().isEmpty())) {
+                throw new IllegalArgumentException(
+                        enemy.name() + ": a unit's spiral fires while its vortex (or coil) is open");
             }
             int arms = change.flatMap(EnemyData.AttackChange::arms)
                     .or(attack::arms)
@@ -45,8 +47,11 @@ final class StormRules {
             double interval = attack.interval()
                             .orElseThrow(() -> new IllegalArgumentException(enemy.name() + ": a spiral's interval"))
                     / content.difficulty().enemyFireRate().of(difficulty);
+            // M8 part E (design/enemies/naval/spiral-nautilus): a coil's spiral turns the other way (counter-clockwise
+            // on the screen, step E2's numbers); the Dust Devil's clockwise with its vanes.
+            double sense = enemy.movement().coil().isPresent() ? 1 : -1;
             return EnemyGun.aimed(interval, 0, 1, gun.bulletSpeed(), gun.damage(), false)
-                    .withSpiral(Optional.of(new EnemyGun.SpiralSpec(arms, -turn, interval)));
+                    .withSpiral(Optional.of(new EnemyGun.SpiralSpec(arms, sense * turn, interval)));
         }
         if (attack.trigger().isPresent()) {
             int burst = change.flatMap(EnemyData.AttackChange::burst)

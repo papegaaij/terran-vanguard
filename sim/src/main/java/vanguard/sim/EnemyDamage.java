@@ -1,8 +1,8 @@
 package vanguard.sim;
 
 /**
- * How one {@link Enemy} takes damage (split out of {@link Enemy}): a growth's immunity, a curled shell's and a closed
- * vortex's glance, an aura ring's absorb, the chain head's, latch's and belly's factors, a unit part's HP, and the
+ * How one {@link Enemy} takes damage (split out of {@link Enemy}): a growth's immunity, a curled shell's, a closed
+ * vortex's and a closed coil's glance, an aura ring's absorb, the chain head's, latch's and belly's factors, a unit part's HP, and the
  * curl it starts at its roll's share.
  */
 final class EnemyDamage {
@@ -24,16 +24,19 @@ final class EnemyDamage {
      * down from above (bomb and shell blasts, the Airstrike): it ignores the frontal armour of a
      * walker such as the Scuttler (design/player/specials, decisions), which reads it once that
      * armour exists. M7 part E: {@code blast} marks the specials' blasts (the Smart Bomb's ring and the
-     * Airstrike's bombs; Q.22e), which a vortex's closed vanes let through; a curled shell still glances them off.
+     * Airstrike's bombs; Q.22e), which a vortex's closed vanes let through; a curled shell still glances them off. M8
+     * part E: {@code antiSub} marks {@code anti-sub} fire (the Harpoon and Torpedo Pod, the Depth Charges, the
+     * proximity mines, an {@code anti-sub} wingman gun), which cracks a coil's closed shell as a blast does (§5 E8).
      */
-    boolean damage(double amount, boolean fromAbove, boolean blast) {
+    boolean damage(double amount, boolean fromAbove, boolean blast, boolean antiSub) {
         if (u.growTicks > 0) {
             // M5 part H: a root burst's growth takes no damage while it grows.
             return false;
         }
-        if (u.curlRoll.armoured() || (u.vanesClosed() && !blast)) {
+        if (u.curlRoll.armoured() || (u.vanesClosed() && !blast) || (u.shellClosed() && !blast && !antiSub)) {
             // M7 part D: a curled shell glances off everything, blasts and the Lance included; M7 part E: a
-            // closed vortex's vanes glance off all but the specials' blasts.
+            // closed vortex's vanes glance off all but the specials' blasts; M8 part E: a coil's closed shell all but
+            // those and anti-sub fire.
             glancedOff();
             return false;
         }

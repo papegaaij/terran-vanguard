@@ -201,4 +201,43 @@ public interface AttackSpecs {
             return distance >= shipRadius ? 0 : shipSpeed * (1 - distance / shipRadius);
         }
     }
+
+    /**
+     * M8 part E, a sung ring that slows (design/enemies/naval/siren, its {@code ring} attack): {@code firstSeconds}
+     * after it enters, then every {@code intervalSeconds}, a ring of sound leaves its sac, each told by the sac's glow
+     * for the {@code tellSeconds} before it. The ring expands from the sac at {@code speed} px/s (sound: not the water's
+     * x 0.7) to a radius of {@code radius} px, its band {@code band} px wide behind its edge; it deals no damage. Each
+     * hull it reaches (the ship, Rook) is tested once, when its band first touches the hull, with a clear line from the
+     * sac (rock stops it; a dash passes): a hit slows the hull to {@code slow} of its speed and acceleration for {@code
+     * slowSeconds}, then makes it immune to slows for {@code immunitySeconds}. Shooting the sac ends its song (a ring
+     * told or in flight with it).
+     */
+    public record SlowRing(
+            double firstSeconds,
+            double intervalSeconds,
+            double tellSeconds,
+            double speed,
+            double radius,
+            double band,
+            double slow,
+            double slowSeconds,
+            double immunitySeconds) {
+        public SlowRing {
+            if (!(firstSeconds >= 0)
+                    || !(intervalSeconds > 0)
+                    || !(tellSeconds >= 0)
+                    || !(speed > 0)
+                    || !(radius > 0)
+                    || !(band > 0)
+                    || !(slow > 0 && slow <= 1)
+                    || !(slowSeconds > 0)
+                    || !(immunitySeconds >= 0)) {
+                throw new IllegalArgumentException("a slowing ring needs its times, its speed, its radius and band, and"
+                        + " a slow between 0 and 1");
+            }
+            if (tellSeconds > intervalSeconds) {
+                throw new IllegalArgumentException("a ring's tell fits between two rings: " + tellSeconds);
+            }
+        }
+    }
 }

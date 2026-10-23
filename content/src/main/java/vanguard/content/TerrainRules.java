@@ -24,13 +24,23 @@ final class TerrainRules {
         return attack.link().isPresent() || attack.pores().isPresent();
     }
 
-    /** The level's canyon as the simulation's {@link Terrain}: the walls' foot lines and the islands; heights not. */
+    /**
+     * The level's canyon as the simulation's {@link Terrain}: the walls' foot lines and the islands; heights not. M8
+     * part E: with the walls' notches (Level 25's caves), in their order.
+     */
     static Terrain terrain(TerrainBlock block) {
         return new Terrain(
                 block.left().map(TerrainRules::wall),
                 block.right().map(TerrainRules::wall),
                 block.islands().orElse(List.of()).stream()
                         .map(TerrainRules::island)
+                        .toList(),
+                block.notchList().stream()
+                        .map(notch -> new Terrain.Notch(
+                                notch.side() == TerrainBlock.Side.LEFT ? Terrain.Side.LEFT : Terrain.Side.RIGHT,
+                                notch.scroll(),
+                                notch.width(),
+                                notch.depth()))
                         .toList());
     }
 

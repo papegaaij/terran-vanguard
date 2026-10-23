@@ -277,8 +277,9 @@ public record EnemyLooks(
                 chain ? chainBurst : explosionSound(slug, tier, true),
                 sprites.has(slug + "-flare") ? sprites.frames(slug + "-flare") : none,
                 remains(sprites, slug, none),
-                // M8 part D: the Abyss Ray's -death set is its solid break-up per heading (AbyssRayLooks), not a glow.
-                slug.equals(AbyssRayLooks.SLUG)
+                // M8 part D: the Abyss Ray's -death set is its solid break-up per heading (AbyssRayLooks), not a glow;
+                // M8 part E: the Siren's its collapse per facing (SirenLooks).
+                slug.equals(AbyssRayLooks.SLUG) || slug.equals(SirenLooks.SLUG)
                         ? new DeathEffect(none, DEATH_FRAME_TICKS, 0)
                         : death(sprites, slug, DEATH_GLOW, tier, true, walker),
                 // M8 part C: the eel's -husk set is its parts' sinking husks per heading (EelLooks), not a death.

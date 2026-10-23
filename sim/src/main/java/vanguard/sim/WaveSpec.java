@@ -41,6 +41,9 @@ import java.util.Optional;
  *     units enter in pairs side by side, the pairs this far apart; empty for one by one
  * @param pursuit M7 part G (design/campaign Level 20, The pursuit swarm): a {@code pursuit} wave's band, lunges,
  *     refills and break-off ({@link Pursuit}); empty for every other wave
+ * @param mount M8 part E (design/campaign Level 25): where its units come out of the trench's walls: a cave's ({@link
+ *     Mount#cave}: they spawn at a notch's back and swim out) or the walls' feet ({@link Mount#wall}: nests mounted
+ *     on them); empty for every other wave
  */
 public record WaveSpec(
         double t,
@@ -63,7 +66,8 @@ public record WaveSpec(
         boolean clockwise,
         List<List<At>> lanes,
         Optional<Double> pairSeconds,
-        Optional<Pursuit> pursuit) {
+        Optional<Pursuit> pursuit,
+        Optional<Mount> mount) {
     public WaveSpec {
         if (edge == Edge.TOP || edge == Edge.BOTTOM) {
             throw new IllegalArgumentException("a wave enters from no top or bottom edge: " + edge);
@@ -89,6 +93,146 @@ public record WaveSpec(
         if (pursuit.isPresent() && !(pursuit.get().breakAt() > t)) {
             throw new IllegalArgumentException(
                     "a pursuit breaks off after it entered: " + pursuit.get().breakAt());
+        }
+        java.util.Objects.requireNonNull(mount);
+        if (mount.isPresent() && mount.get().wall() && entry != Entry.FRONT) {
+            throw new IllegalArgumentException("a wall's nests come in with the ground, at the front: " + entry);
+        }
+        if (mount.isPresent()
+                && !mount.get().wall()
+                && (entry != Entry.SIDES || (edge != Edge.LEFT && edge != Edge.RIGHT))) {
+            throw new IllegalArgumentException("a cave wave enters from its notch's side edge: " + entry + " " + edge);
+        }
+        if (mount.isPresent() && mount.get().wall() && mount.get().opposite() && edge != Edge.NONE) {
+            throw new IllegalArgumentException("opposite nests stand on both walls: " + edge);
+        }
+    }
+
+    /** A wave without M8 part E's mount. */
+    public WaveSpec(
+            double t,
+            Formation formation,
+            EnemySpec enemy,
+            int count,
+            Entry entry,
+            Edge edge,
+            Optional<Double> holdSeconds,
+            Optional<Double> warningSeconds,
+            int breakGroup,
+            Optional<Double> speed,
+            Optional<Double> intervalSeconds,
+            List<Carried> carried,
+            Optional<At> at,
+            List<List<At>> paths,
+            Optional<LoopBack> loopBack,
+            String tag,
+            Optional<Field> field,
+            boolean clockwise,
+            List<List<At>> lanes,
+            Optional<Double> pairSeconds,
+            Optional<Pursuit> pursuit) {
+        this(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                Optional.empty());
+    }
+
+    /**
+     * M8 part E (design/campaign Level 25, The caves): this wave out of the cave {@code notch} (an index into {@link
+     * Terrain#notches()}): its units spawn at the notch's back, each at its own time, and swim out of its mouth (the
+     * scroll carrying the notch down meanwhile) on to where its formation puts it. It enters from the notch's side
+     * ({@link Entry#SIDES}, its {@link Edge}), warned at that edge as any side wave.
+     */
+    public WaveSpec withCave(int notch) {
+        return withMount(Mount.cave(notch));
+    }
+
+    /**
+     * M8 part E (design/campaign Level 25, Siren nests): this wave's units are nests mounted on the walls' feet ({@link
+     * WallMounts}), coming in with the ground at the front: on the left wall ({@link Edge#LEFT}), the right one ({@link
+     * Edge#RIGHT}) or both ({@link Edge#NONE} or {@link Edge#ALTERNATING}): staggered, a nest every {@link
+     * WallMounts#STAGGER_SECONDS} s, the walls taking turns from the right; or, {@code opposite}, in pairs facing each
+     * other across the trench at one row, the left one's song {@link WallMounts#STAGGER_SECONDS} s behind the right
+     * one's (the phase rule).
+     */
+    public WaveSpec withWall(boolean opposite) {
+        return withMount(Mount.wall(opposite));
+    }
+
+    private WaveSpec withMount(Mount point) {
+        return new WaveSpec(
+                t,
+                formation,
+                enemy,
+                count,
+                entry,
+                edge,
+                holdSeconds,
+                warningSeconds,
+                breakGroup,
+                speed,
+                intervalSeconds,
+                carried,
+                at,
+                paths,
+                loopBack,
+                tag,
+                field,
+                clockwise,
+                lanes,
+                pairSeconds,
+                pursuit,
+                Optional.of(point));
+    }
+
+    /**
+     * M8 part E: where a wave's units come out of the trench's walls.
+     *
+     * @param cave the notch they swim out of (an index into {@link Terrain#notches()}); -1 for nests on the walls
+     * @param opposite nests only: in pairs across the trench at one row (else staggered)
+     */
+    public record Mount(int cave, boolean opposite) {
+        public Mount {
+            if (cave < -1 || (cave >= 0 && opposite)) {
+                throw new IllegalArgumentException("a mount is a cave's notch or the walls' nests: " + cave);
+            }
+        }
+
+        /** Out of the cave {@code notch}. */
+        public static Mount cave(int notch) {
+            if (notch < 0) {
+                throw new IllegalArgumentException("a cave's notch is an index: " + notch);
+            }
+            return new Mount(notch, false);
+        }
+
+        /** Nests on the walls' feet, {@code opposite} in pairs or staggered. */
+        public static Mount wall(boolean opposite) {
+            return new Mount(-1, opposite);
+        }
+
+        /** Whether its units are nests on the walls (else they swim out of a cave). */
+        public boolean wall() {
+            return cave < 0;
         }
     }
 
@@ -163,7 +307,8 @@ public record WaveSpec(
                 clockwise,
                 lanes,
                 pairSeconds,
-                Optional.of(block));
+                Optional.of(block),
+                mount);
     }
 
     /**
@@ -301,7 +446,8 @@ public record WaveSpec(
                 clockwise,
                 walkerLanes,
                 pairSeconds,
-                pursuit);
+                pursuit,
+                mount);
     }
 
     /** M5 part G: this wave with its units entering in pairs {@code seconds} apart (see {@link #pairSeconds()}). */
@@ -327,7 +473,8 @@ public record WaveSpec(
                 clockwise,
                 lanes,
                 Optional.of(seconds),
-                pursuit);
+                pursuit,
+                mount);
     }
 
     /** M5 part G: this wave with {@code point} as its {@link #at()} (a whirl cluster's release point, a circle's centre). */
@@ -353,7 +500,8 @@ public record WaveSpec(
                 clockwise,
                 lanes,
                 pairSeconds,
-                pursuit);
+                pursuit,
+                mount);
     }
 
     /** A wave without M5 part F's clockwise circle. */
@@ -419,7 +567,8 @@ public record WaveSpec(
                 turning,
                 lanes,
                 pairSeconds,
-                pursuit);
+                pursuit,
+                mount);
     }
 
     /** A wave without M5 part E's field. */

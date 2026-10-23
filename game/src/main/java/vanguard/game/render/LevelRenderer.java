@@ -230,6 +230,12 @@ public final class LevelRenderer {
     private final DeepDeaths deepDeaths;
     /** M8 part C: the swimming vehicles carrying drops (Level 23's Thera Deep tender); null without them. */
     private final IceCrawlerLooks tenderDrops;
+    /** M8 part E: the moored buoys releasing drops (Level 25's survey buoy); null without them. */
+    private final BuoyLooks buoys;
+    /** M8 part E: the sortie and interpolation being drawn, for what is drawn under the walls ({@link #drawUnderWalls}). */
+    private Sortie drawing;
+
+    private float drawingAlpha;
 
     /**
      * @param files the assets, for the pivot files of the cranes and set pieces
@@ -340,6 +346,9 @@ public final class LevelRenderer {
         shipLooks.hydro(shipHydro);
         wingmanLooks.hydro(new HydroLooks(sprites, "rook", waterlines));
         tenderDrops = IceCrawlerLooks.of(sprites, level, pivots(files, "thera-tender"), true);
+        // M8 part E: the survey buoy at the narrows' end; the Nautili leaving through the trench's rock.
+        buoys = BuoyLooks.of(sprites, level);
+        backdrop.underWalls(this::drawUnderWalls);
         canyonLooks.ice(sprites.hasBackdrop(folder + Backdrop.ICE_WALL));
         if (!waterlines.isEmpty()) {
             backdrop.wetFrom(
@@ -504,6 +513,9 @@ public final class LevelRenderer {
         // M8 part D: the Rays' fans, the Barbfins' needles (their tells), the bullets' shooters, the walkers' silt.
         kinds.rays(sortie).stepped(sortie);
         kinds.barbfins(sortie).stepped(sortie);
+        // M8 part E: the rings' rock, the Nautili's roll and glances.
+        kinds.sirens(sortie).stepped(sortie);
+        kinds.nautili(sortie).stepped(sortie);
         props.steppedBullets(sortie);
         plain.stepped(sortie, looks);
     }
@@ -627,6 +639,8 @@ public final class LevelRenderer {
             boolean flashReduction,
             ScreenFlash screenFlash) {
         play.whiteFlash = flashReduction ? REDUCED_FLASH : 1;
+        drawing = sortie;
+        drawingAlpha = alpha;
         // M8 part A: Rook's craft wears the hydro-kit under water (the ship's: PlayerPasses.hull).
         wingmanLooks.underwater(sortie.underwater());
         shipLooks.underwater(sortie.underwater());
@@ -847,6 +861,10 @@ public final class LevelRenderer {
             // M8 part C: the Thera Deep tender swimming up with the armour patch, and back.
             tenderDrops.drawBodies(batch, seconds);
         }
+        if (buoys != null) {
+            // M8 part E: the survey buoy moored on the play plane, releasing the armour patch.
+            buoys.drawBodies(batch, seconds, scroll);
+        }
         if (storm != null) {
             // M7 part E: the air units outside the radius as silhouettes in the dust keeping their lights, then glows.
             storm.drawSilhouettes(batch, sortie, alpha, units);
@@ -999,8 +1017,14 @@ public final class LevelRenderer {
         }
         backdrop.drawCanyonGlow(batch);
         units.drawDeepGlows(batch, sortie, alpha);
+        // M8 part E: the Sirens' glow, their rings and the slowed hulls' shimmer; the Nautili's lip, crown and flecks.
+        kinds.sirens(sortie).drawGlows(batch, sortie, alpha, clock.real());
+        kinds.nautili(sortie).drawGlows(batch, sortie, alpha);
         if (tenderDrops != null) {
             tenderDrops.drawLights(batch, seconds);
+        }
+        if (buoys != null) {
+            buoys.drawLights(batch, seconds, clock.real(), scroll);
         }
         if (sortie.flying()) {
             shipHydro.drawRefit(
@@ -1011,6 +1035,13 @@ public final class LevelRenderer {
         }
         if (rook != null) {
             wingmanLooks.drawRefit(batch, rook, seconds, alpha);
+        }
+    }
+
+    /** M8 part E: under the canyon's walls, over its floor: the Spiral Nautili leaving through the rock. */
+    private void drawUnderWalls(SpriteBatch batch) {
+        if (drawing != null) {
+            units.drawUnderWalls(batch, drawing, drawingAlpha);
         }
     }
 
