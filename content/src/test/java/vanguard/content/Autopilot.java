@@ -48,7 +48,8 @@ import vanguard.sim.Sortie;
  * {@link KrakenPlay}, {@link SpirePlay}, {@link WalkerPlay}, {@link SiegePlay}, {@link RetreatPlay} (M7 part G: the
  * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21), {@link WaterPlay} (M8 part C:
  * the drag, the siphon pumps and the Glassfin's rams, Level 23), {@link AbyssPlay} (M8 part D: the Abyss Ray's shadow,
- * the Barbfins, Level 24), {@link SirenPlay} (M8 part E: the nests' bodies, the trench's rock and the slow, Level 25) and the
+ * the Barbfins, Level 24), {@link SirenPlay} (M8 part E: the nests' bodies, the trench's rock and the slow, Level 25), {@link DarkPlay} (M8 part
+ * F: every move planned among the Glow Anglers' lunges and the jellies' rings, Level 26) and the
  * moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
@@ -163,6 +164,10 @@ public final class Autopilot {
             // M5 part F: a latched Lamprey drains the shield; shake it off at once (4 reversals within 1.2 s).
             boolean left = ((long) Math.floor(sortie.realSeconds() / SHAKE_SECONDS)) % 2 == 0;
             return commands | (left ? Command.LEFT.bit() : Command.RIGHT.bit());
+        }
+        if (DarkPlay.dark(sortie)) {
+            // M8 part F: a level with lunging units (Level 26's Glow Anglers): every move planned (DarkPlay).
+            return commands | DarkPlay.move(sortie);
         }
         double lob = DodgePlay.lobThreat(sortie, shipX, shipY);
         if (lob != 0) {

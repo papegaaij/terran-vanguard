@@ -134,6 +134,11 @@ public final class Barks {
     private RadioQueue.Message waiting;
     private int waitingPriority;
     private boolean ejected;
+    /**
+     * M8 part F: his loss's trails have started (Level 26's {@code rook_loss}, {@link vanguard.sim.Wingman#onRadio}):
+     * no bark of his fires for the rest of the attempt.
+     */
+    private boolean lost;
     /** The level is won: the outro's radio is the closing lines', so no bark fires (see {@link #levelComplete}). */
     private boolean over;
     /** The player's armour latch: below the share since the last bark; null before the first step. */
@@ -346,6 +351,7 @@ public final class Barks {
         }
         waiting = null;
         ejected = false;
+        lost = false;
         over = false;
         reentryCount = 0;
         playerLow = null;
@@ -413,6 +419,25 @@ public final class Barks {
             waiting = null;
         }
         return fire(Trigger.ROOK_EJECTS, t);
+    }
+
+    /**
+     * M8 part F: his loss's trails start ({@code ROOK_TRAILS}, design/player/wingmen, Rook's loss): his barks end. A bark
+     * of his that still waits is withdrawn and none fires after it (one already on the radio finishes); his {@code
+     * requires: escort} lines no longer count for the spacing. His scripted lines are the radio's, not barks.
+     */
+    public void rookLost() {
+        lost = true;
+        ejected = true;
+        if (waiting != null && radio.waiting(waiting)) {
+            radio.withdraw(waiting);
+        }
+        waiting = null;
+    }
+
+    /** M8 part F: whether his barks have ended with his loss's trails in this attempt. */
+    public boolean silenced() {
+        return lost;
     }
 
     /** An enemy was destroyed (by the player or by him): ten within five seconds is a streak, then the count starts over. */
@@ -566,7 +591,7 @@ public final class Barks {
      */
     public boolean fire(Trigger trigger, double t, boolean top) {
         WingmenData.Bark bark = barks[trigger.ordinal()];
-        if (bark == null || over) {
+        if (bark == null || over || lost) {
             return false;
         }
         boolean eject = trigger == Trigger.ROOK_EJECTS;

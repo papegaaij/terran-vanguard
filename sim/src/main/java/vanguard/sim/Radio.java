@@ -143,7 +143,7 @@ final class Radio {
     }
 
     private boolean allowed(RadioCue cue) {
-        boolean flying = escort != null && !escort.ejected();
+        boolean flying = escort != null && escort.onRadio();
         return cue.allowedWith(fitted | (flying ? RadioCue.FITTED_ESCORT : 0));
     }
 

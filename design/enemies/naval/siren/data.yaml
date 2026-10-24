@@ -3,7 +3,7 @@
 # ring of sound, not bullets: no damage; its speed not scaled by the water's × 0.7 or the bullet-speed lever; flown from
 # step E1, mapped in step E3) and the wall mount (the level's `turret nest` wave with `wall: staggered` or `opposite`:
 # each nest on its wall's foot, 12 px out from the collision line, scrolling with the ground). Defaults of the gap check
-# (m8e-gaps.md §5, pending the user's review in round 54): the layer `air` (E1), the ring's numbers the Siren page's
+# (m8e-gaps.md §5, accepted in round 54 (2026-10-23)): the layer `air` (E1), the ring's numbers the Siren page's
 # (E2, not the Europa page's 140 px/s to 420 px), the slow tested once a ring per hull at its band with a clear line
 # from the sac, a Dash passing (E4), easy's "40 % for 1.5 s" read as medium's slow (to 60 %) lasting 1.5 s (E4).
 name: Siren

@@ -555,7 +555,7 @@ public final class Sortie {
             fire.ceaseBeams();
             force.noPull();
         }
-        escorts.fly(commands, push);
+        escorts.fly(commands, push, scrollStep);
         force.wind(push);
         // M8 part A: the special's setting limit now (the medium at the level clock, the level's lists).
         special.setting(levelTick, ship.x(), ship.y());
@@ -687,12 +687,7 @@ public final class Sortie {
         if (force.rings() != null && flying() && !complete && !failed) {
             // M8 part E: the Sirens' rings slow the ship (not in a dash) and Rook.
             force.rings()
-                    .reach(
-                            ship,
-                            !ship.evading(),
-                            wingman == null || wingman.ejected() ? null : wingman,
-                            canyon,
-                            events);
+                    .reach(ship, !ship.evading(), wingman == null || wingman.out() ? null : wingman, canyon, events);
         }
         if (canyon != null) {
             contacts.scrape();

@@ -115,9 +115,10 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 | **B** Level 22 + Act 4 intro — **built** (2026-10-22, steps B1–B5, ART-B, AUD-B, VOX-B); [round 51](../../concept-rounds/round-51/README.md) closed (2026-10-22): the art accepted but the Act 4 title card (F.6 redo, a geyser added, round 52), Dr. Brandt cast a, the sounds picked, tracks 10 and 11 and the calls accepted; F.3: no deep layer | Act 4 `data.yaml` (title card, four pages, the Act 3 handover), ice surface backdrop, geysers, drill rigs, open leads, the Conamara voice | A | 51 |
 | **C** Level 23 — **built** (2026-10-22, steps C1–C5b, ART-C, ART-T, AUD-C, VOX-C); [round 52](../../concept-rounds/round-52/README.md) closed (2026-10-22): the art accepted, the bursts a, the title card's geyser a, Thera Deep Control cast b, the sounds picked (the under-water explosion family S.10 asked again in round 53), the AI-made r04-a replaced, the calls accepted | The descent shaft (`Terrain`), the waterline switch, the under-water render grade and particles, Eel Swarm, the tiny school, Thera Deep's farms | A, B | 52 |
 | **D** Level 24 — **built** (2026-10-22, steps D1–D5, ART-D, AUD-D, VOX-D); [round 53](../../concept-rounds/round-53/README.md) closed (2026-10-23): the art accepted, the spawning reef b, the sounds picked (rise b, glide a, fan b, death a, needle b, iris a, razed b, pulse a, hatch b, the explosion family a), hard's reefs allow 1, the other calls accepted, the Nautilus rule as decided | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
-| **E** Level 25 — **built** (2026-10-23, steps E1–E6, ART-E, AUD-E, VOX-E); [round 54](../../concept-rounds/round-54/README.md) open | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
-| **F** Level 26 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
-| **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F | 56 |
+| **E** Level 25 — **built** (2026-10-23, steps E1–E6, ART-E, AUD-E, VOX-E); [round 54](../../concept-rounds/round-54/README.md) closed (2026-10-23): F.3–F.7 accepted, the backdrop and the trench's darkness to be redone (round 55), the sounds picked (ring a, slow b, death a, spin a, uncoil a, Nautilus death b, bed a), C.1–C.8 accepted | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
+| **F** Level 26 — **built** (2026-10-23, steps F1–F6, LX, ART-F, AUD-F, VOX-F); [round 55](../../concept-rounds/round-55/README.md) open (with Level 25's redo, step LX) | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
+| **AW** Under-water weapons rework — **decided by the user (2026-10-23, playtest of Levels 22–25), to be built next, before part G**; not started | Energy weapons (Ion Beam, Lance Laser, Rear Lance) nearly useless under water (proposed ×0.2 damage, ×0.4 reach); the Harpoon Torpedoes tuned for swarms (faster rate, about 2 → 3 a second, about +50 % travel speed, blast 20 → 40 px, less damage a torpedo, homing only in a narrow ±15° cone ahead); the Depth Charges thrown forward, sinking ahead and bursting on their fuse or on touching a swimmer (hitting swimmers, ground and `sub`); the Act 4 intro briefing (and the hangar notice before Level 23) warning to keep credits for under-water weapons; the balance plan without selling (the beam kept for later levels; the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded at Level 24). No extra prevention tests (the user: "You just have to play it to see"); the Nautilus and the micro-missiles' angle unchanged until replayed | F | — |
+| **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F, AW | 56 |
 | **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 57 |
 | **I** Close-out | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 58 |
 
@@ -631,7 +632,28 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
   the survey sub (the secret) and the survey buoy's armour patch, the kill-ratio secondary; the parts' checklists ticked
   with their tests (`Level25Test`, `SirenTest`, `SpiralNautilusTest`, `CaveEntryTest`, `TerrainNotchTest`,
   `Level25LooksTest`, `Level25SoundsTest`, `RadioTimelineLevel25Test`), the steps' small rules logged in the parts'
-  *Decisions* as pending the user's review in round 54; the frame rate of a full medium run 190 fps on the software
+  *Decisions* as accepted in round 54 (2026-10-23); the frame rate of a full medium run 190 fps on the software
   renderer (the longest frame 73–90 ms, the level's first frame; none of 50 ms or more after it); concept
   [round 54](../../concept-rounds/round-54/README.md) opened (the finals with game captures, the trench's darkness,
   seven sound pairs and the calls the build made).
+- 2026-10-23 (user, round 54, closed): part E's art F.3–F.7 accepted as final (the Siren, the Spiral Nautilus, the props,
+  the briefing images, the intel portraits); **F.1/F.2 redo** (Level 25's backdrop is too dark and the cave edges can
+  hardly be seen, the fork's start too sharp: the dark ambient kept, headlights that light the world, a faint rim light on
+  the walls' edges and cave mouths, the pillar's head rounded; step LX, shown again in round 55); the sounds picked
+  (the Siren's ring a, slow **b**, death a, the shell spin a, uncoil a, the Nautilus's death **b**, the bed a); C.1-C.8
+  accepted; the steps' logged small rules accepted.
+- 2026-10-23 (step F6): M8 part F built (steps F1–F6, LX, ART-F, AUD-F, VOX-F): Level 26 *Blackwater* flown, drawn and
+  heard: the dark as Level 26's values on step LX's light map (the ambient ramp 20 → 6 %, the hard 70° × 260 px cones
+  with a faint beam haze, a 15 % rim per unit, the static lamps, Rook's 56 px lamp, every unit whole in the Sonar
+  Pulse's window, the Dark levels assist), the Glow Angler's lure and lunge, the glow-only Driftjelly and Eel Swarm, the
+  fault scarp's three notches and Siren nests, the Choir's line with its HUD static and the music's duck, Rook's
+  scripted loss (the trails, the hit, the spin-down, the silence, the vents' warm pad, `rook_missing` at the win and the
+  debrief's `ROOK  MIA`), the farm barge (the secret) and the kill-ratio secondary; the parts' checklists ticked with
+  their tests (`Level26Test`, `GlowAnglerTest`, `RookLossTest`, `Level26LooksTest`, `RookLossLooksTest`,
+  `Level26SoundsTest`, `StaticLeadsTest`, `RadioTimelineLevel26Test`), the steps' small rules logged in the parts'
+  *Decisions* as pending the user's review in round 55; concept [round 55](../../concept-rounds/round-55/README.md)
+  opened (Level 25's redo, the finals with game captures, the sounds and the warm pad, the calls the build made).
+- 2026-10-23 (user, playtest of Levels 22–25): **decided, to be built next as rework AW, before part G** (see the *M8
+  parts* row AW): the energy weapons nearly useless under water, the Harpoon tuned for swarms with a narrow aim cone,
+  the Depth Charges thrown forward, the Act 4 briefing's warning, no selling in the balance plan; the numbers are
+  changed in that step, not before.

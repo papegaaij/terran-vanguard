@@ -82,6 +82,11 @@ final class EnemyFlight {
                 turn();
                 return on;
             }
+            case LURE -> {
+                // M8 part F: its drift with the water, its lunge at the ship and its retreat; gone off a side or the
+                // bottom.
+                return u.lunging.step(u, shipX, shipY, groundScroll) && !carriedOffTop(groundScroll);
+            }
             case VORTEX -> {
                 // M7 part E: its swirl round its centre line, scrolling with the ground, kept off the ship.
                 boolean on = u.vortexCycle.step(shipX, shipY, groundScroll, u.box.height() / 2);
@@ -336,6 +341,11 @@ final class EnemyFlight {
             case COIL -> {
                 // M8 part E: its cycle and orbit wait; it stays where it is.
                 return true;
+            }
+            case LURE -> {
+                // M8 part F: its drift, lunge and retreat wait; it scrolls with the ground.
+                u.y -= groundScroll;
+                return u.y + u.box.height() / 2 > 0 && !carriedOffTop(groundScroll);
             }
             case VORTEX -> {
                 // M7 part E: its cycle and swirl wait (it stays as it is, open or closed); it scrolls with the ground.

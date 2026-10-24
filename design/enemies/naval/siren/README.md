@@ -2,7 +2,7 @@
 title: Siren
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-23
 ---
@@ -65,7 +65,7 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): wall nest an
 - [x] Stat block loaded from a `data.yaml` (step E3); global difficulty multipliers applied; HP re-measured with `levelReport` (the beam's halved reach and the 0.7 non-`anti-sub` damage change its time on the screen) (`Level25Test`, `ContentLoaderTest`)
 - [x] Behaviour, attack and tells per this spec, deterministic and allocation-free (`SirenTest`, `Level25Test.theSirensSingSlowingRings`, `theNestsKeepTheirPhaseRulesInFlight`)
 - [x] Production sprites straight to production as a/b in the part's round (`tools/art/`), the in-water grade and the intel portrait (`tools/art/siren.py`, `tools/art/intel.py`; `Level25LooksTest.theSirensStepsAndPlace`; round 54)
-- [x] Death effect, bounty and sounds (Freesound, no bubble pops) per this spec (`Level25SoundsTest.theSirenAndTheNautilusDieWithTheirOwnSounds`, `theNestsSingSlowTheShipAndTheShellsSpinAndOpen`; the a/b in round 54)
+- [x] Death effect, bounty and sounds (Freesound, no bubble pops) per this spec (`Level25SoundsTest.theSirenAndTheNautilusDieWithTheirOwnSounds`, `theNestsSingSlowTheShipAndTheShellsSpinAndOpen`; round 54's picks)
 - [x] The slow as a timed ship status (60 % speed, 2 s, 3 s immunity) on the ship and on Rook, and the sonar shimmer tell (`SirenTest.theRingSlowsTheShipTo60PercentFor2SThen3SOfImmunityEasyAndHardByTheirNumbers`, `rookIsSlowedTooWithHisOwnImmunity`; the shimmer: `Level25LooksTest`)
 
 ## Decisions
@@ -73,13 +73,15 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): wall nest an
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (recommended option, decided in round 48 (2026-10-22), Q5 a): a visible ring, 60 % for 2 s, 3 s immunity, no damage; rejected: b (as drafted, no immunity) and c (a weapon jam).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-23 (step E3, gap check `m8e-gaps.md` §5, pending the user's review in round 54): the stat block as data; the open
+- 2026-10-23 (step E3, gap check `m8e-gaps.md` §5, accepted in round 54 (2026-10-23)): the stat block as data; the open
   question closes: the nest is `air` (a wall mount on the play plane), counted as a wave (E1); the ring's numbers are this
   page's, 120 px/s to 230 px, not × 0.7 (E2); a ring slows a hull once, at its band, with a clear line from the sac, a Dash
   passing; easy's "40 % for 1.5 s" read as the medium slow (to 60 %) lasting 1.5 s, hard 2 s of immunity (E4).
-- 2026-10-23 (steps E1, E5 and ART-E, pending the user's review in round 54): shooting a nest's sac ends its ring
+- 2026-10-23 (steps E1, E5 and ART-E, accepted in round 54 (2026-10-23)): shooting a nest's sac ends its ring
   in flight (`SirenTest.shootingTheSacEndsItsSong`); a Dash passes a ring unslowed (`aDashPassesTheRing`); the debug
   `--invulnerable` still lets a ring slow the ship (it takes no damage, the slow is no hit); Sirens killed count for the
   kill ratio like any wave unit. Drawn: the nest centred 6 px off the wall's foot line into the water, the ring a wrapped
   strip round the sac (its lines stopped by rock, faded over the last 25 % of its 230 px), the slowed hulls' shimmer;
-  the sounds round 54's a until the picks.
+  the sounds are round 54's picks (ring a, slow b, death a).
+- 2026-10-23 (user, round 54, closed): the final art accepted (F.3; `art: final`); sounds: the ring a, the slow **b**,
+  the death a; calls C.4 (a Dash is not slowed) and C.5 (a kill ends its ring) accepted.

@@ -473,7 +473,8 @@ public record EnemyData(
                         movement.stride(),
                         movement.breach(),
                         movement.rise(),
-                        movement.coil()))
+                        movement.coil(),
+                        movement.lunge()))
                 .orElse(movement);
         return new EnemyData(
                 name,
@@ -577,6 +578,8 @@ public record EnemyData(
      *     Abyss Ray)
      * @param coil M8 part E: it orbits the ship in a closed, armoured shell, spiralling in, then uncoils and fires (the
      *     Spiral Nautilus)
+     * @param lunge M8 part F: it hangs drifting by its lure and lunges at the ship that comes close, rings and retreats
+     *     (the Glow Angler)
      */
     public record Movement(
             Optional<Snake> snake,
@@ -602,7 +605,62 @@ public record EnemyData(
             Optional<Stride> stride,
             Optional<Breach> breach,
             Optional<Rise> rise,
-            Optional<Coil> coil) {}
+            Optional<Coil> coil,
+            Optional<Lunge> lunge) {}
+
+    /**
+     * M8 part F, the lunge from a lure (design/enemies/naval/glow-angler; m8f-gaps.md §1.1, §5 F2): it hangs drifting
+     * with the water at its speed (a field's current, else its path's way); when the ship's centre comes within {@code
+     * trigger} px of its centre (its lure, at most 48 px from the body, lies inside that: touching the lure needs no test
+     * of its own) it dives at {@code speed} px/s at where the ship was then, stopping {@code stop_short} px short of that
+     * point or after {@code seconds}; there its {@code ring} attack fires once and it retreats away from the ship at
+     * {@code retreat_speed} px/s for {@code retreat_seconds}, then drifts again; it re-arms the ring attack's {@code
+     * interval} after the ring. The ring is the lunge's, not a gun.
+     */
+    public record Lunge(
+            double trigger,
+            double speed,
+            double seconds,
+            double stopShort,
+            double retreatSpeed,
+            double retreatSeconds) {
+        public Lunge {
+            Check.notNegative("stop_short", stopShort);
+            Check.that(trigger > stopShort, "trigger: beyond stop_short, was " + trigger);
+            Check.positive("speed", speed);
+            Check.positive("seconds", seconds);
+            Check.notNegative("retreat_speed", retreatSpeed);
+            Check.notNegative("retreat_seconds", retreatSeconds);
+        }
+
+        /** The lunge with another trigger distance, px (a difficulty's {@link LungeChange}). */
+        public Lunge withTrigger(double px) {
+            return new Lunge(px, speed, seconds, stopShort, retreatSpeed, retreatSeconds);
+        }
+    }
+
+    /** M8 part F: a difficulty's change to a lunge: its trigger distance instead (the Glow Angler's easy 100, hard 160). */
+    public record LungeChange(Optional<Double> trigger) {
+        public LungeChange {
+            trigger.ifPresent(t -> Check.positive("trigger", t));
+        }
+    }
+
+    /** M8 part F: its lunge on {@code difficulty}: the stat block's with the difficulty's trigger distance. */
+    public Optional<Lunge> lunge(Difficulty difficulty) {
+        Optional<Double> trigger = hook(difficulty).flatMap(Hook::lunge).flatMap(LungeChange::trigger);
+        return movement.lunge().map(lunge -> trigger.map(lunge::withTrigger).orElse(lunge));
+    }
+
+    /** M8 part F: its lunge's ring (the {@code ring} attack of a lunging unit, the Glow Angler's); none without one. */
+    public Optional<Attack> lungeRing() {
+        if (movement.lunge().isEmpty()) {
+            return Optional.empty();
+        }
+        return attacks.stream()
+                .filter(attack -> attack.pattern().equals("ring"))
+                .findFirst();
+    }
 
     /**
      * M8 part E, the coiling orbit (design/enemies/naval/spiral-nautilus; m8e-gaps.md §1.3, §5 E7–E8): closed in its
@@ -2579,6 +2637,7 @@ public record EnemyData(
      * @param ram M8 part C: a flock's ram share instead (the Glassfin's easy 0.15, hard 0.40)
      * @param coil M8 part E: a coiling orbit's open window instead (the Spiral Nautilus's easy 1.8, hard 1.4 s)
      * @param slow M8 part E: a slowing ring's factor, time or immunity instead (the Siren's easy 1.5 s, hard 2 s)
+     * @param lunge M8 part F: a lunge's trigger distance instead (the Glow Angler's easy 100, hard 160 px)
      */
     public record Hook(
             Optional<List<String>> leadsTargetIn,
@@ -2619,7 +2678,8 @@ public record EnemyData(
             Optional<EruptionChange> eruption,
             Optional<RamChange> ram,
             Optional<CoilChange> coil,
-            Optional<SlowChange> slow) {
+            Optional<SlowChange> slow,
+            Optional<LungeChange> lunge) {
         public Hook {
             swoopSpeed.ifPresent(s -> Check.positive("swoop_speed", s));
             drain.ifPresent(d -> Check.positive("drain", d));

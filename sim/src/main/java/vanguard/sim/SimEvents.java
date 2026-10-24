@@ -689,7 +689,24 @@ public final class SimEvents {
          */
         UNCOIL,
         /** M8 part E: a coiling unit closed its shell after its spiral (at it) and breaks outward; value: its kind. */
-        COIL;
+        COIL,
+        /**
+         * M8 part F: a lunging unit triggered and dives at where the ship is (design/enemies/naval/glow-angler; at it):
+         * the lunge's sound; value: its kind.
+         */
+        LURE_LUNGE,
+        /** M8 part F: a lunging unit's ring left it after its dive (at it); value: its kind. */
+        LURE_RING,
+        /**
+         * M8 part F: Rook's trails start (design/player/wingmen, Rook's loss; Level 26's {@code rook_loss}; at him):
+         * his barks end; the trails are the presentation's. Only while he flies (not ejected); value: 0.
+         */
+        ROOK_TRAILS,
+        /**
+         * M8 part F: Rook is lost (at him): he stops firing and taking hits and spirals down off the bottom edge; not
+         * an eject (no pod). Only while he flies; value: his spin's side, -1 left or 1 right.
+         */
+        ROOK_LOST;
 
         private static final Type[] VALUES = values();
     }

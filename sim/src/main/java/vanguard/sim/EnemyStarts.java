@@ -128,6 +128,20 @@ final class EnemyStarts {
                     plan.holdSeconds(),
                     u.x);
         }
+        if (u.spec.lunge().isPresent()) {
+            // M8 part F: a lunging unit hangs where it appears, drifting with the water: a field's current, else its
+            // path's way at its speed.
+            u.phase = Enemy.Phase.LURE;
+            if (plan.field().isEmpty()) {
+                double dx = u.path.dx(0);
+                double dy = u.path.dy(0);
+                double length = Math.sqrt(dx * dx + dy * dy);
+                u.driftX = length > 0 ? dx / length * u.speed : 0;
+                u.driftY = length > 0 ? dy / length * u.speed : -u.speed;
+            }
+            u.facing = 0;
+            u.lunging.start(u.spec.lunge().get());
+        }
         if (u.spec.laneStrafe().isPresent() && u.phase == Enemy.Phase.ENTER) {
             // M7 part E: a lane strafer flies by its strafe from its planned path's start toward its end.
             u.phase = Enemy.Phase.STRAFE;
@@ -240,6 +254,7 @@ final class EnemyStarts {
         u.hoverHold.clear();
         u.song.clear();
         u.coiling.clear();
+        u.lunging.clear();
     }
 
     /**

@@ -157,7 +157,15 @@ final class OptionTabs {
                                 (target, chip) -> target.change(gameplay(
                                         target.settings(),
                                         target.settings().gameplay().withCreditNumbers(chip == 1))),
-                                List.of("", "SHOWS THE CREDITS OF EVERY PICKUP WHERE IT WAS TAKEN."))),
+                                List.of("", "SHOWS THE CREDITS OF EVERY PICKUP WHERE IT WAS TAKEN.")),
+                        new OptionRow.Choice(
+                                "DARK LEVELS ASSIST",
+                                OFF_ON,
+                                target -> target.settings().gameplay().darkAssist() ? 1 : 0,
+                                (target, chip) -> target.change(gameplay(
+                                        target.settings(),
+                                        target.settings().gameplay().withDarkAssist(chip == 1))),
+                                List.of("", "LIFTS THE BLACK WATER OF THE DARK LEVELS TO 20 % LIGHT."))),
                 "EDGE WARNINGS FOR SIDE AND REAR WAVES ARE ALWAYS ON (READABILITY RULE). DIFFICULTY IS CHOSEN PER"
                         + " CAMPAIGN WHEN STARTING A NEW GAME.");
     }

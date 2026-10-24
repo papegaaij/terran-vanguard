@@ -1374,15 +1374,39 @@ final class Formations {
                     .map(submerge -> (int) Math.round(submerge.start() * wave.count()))
                     .orElse(0);
             double left = field.x() - field.width() / 2;
-            for (int i = 0; i < wave.count(); i++) {
+            // The scatter first (the seeded draws in the order they always had), then the units: M8 part F's centre
+            // pickup goes to the unit nearest the area's centre (WaveSpec.Carried.CENTRE).
+            int count = wave.count();
+            double[] xs = new double[count];
+            double[] aboves = new double[count];
+            long[] seeds = new long[count];
+            for (int i = 0; i < count; i++) {
                 int pick = i + rng.nextInt(cells.length - i);
                 int cell = cells[pick];
                 cells[pick] = cells[i];
                 cells[i] = cell;
                 double jitterX = (cellWidth - spacing) / 2;
                 double jitterY = (cellHeight - spacing) / 2;
-                double x = left + (cell % columns + 0.5) * cellWidth + rng.range(-jitterX, jitterX);
-                double above = (cell / columns + 0.5) * cellHeight + rng.range(-jitterY, jitterY);
+                xs[i] = left + (cell % columns + 0.5) * cellWidth + rng.range(-jitterX, jitterX);
+                aboves[i] = (cell / columns + 0.5) * cellHeight + rng.range(-jitterY, jitterY);
+                seeds[i] = rng.nextLong();
+            }
+            int centre = -1;
+            double nearest = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < count; i++) {
+                double distance = Math.hypot(xs[i] - field.x(), aboves[i] - field.height() / 2);
+                if (distance < nearest) {
+                    nearest = distance;
+                    centre = i;
+                }
+            }
+            Optional<PickupType> centrePickup = wave.carried().stream()
+                    .filter(WaveSpec.Carried::centreUnit)
+                    .map(WaveSpec.Carried::pickup)
+                    .findFirst();
+            for (int i = 0; i < count; i++) {
+                double x = xs[i];
+                double above = aboves[i];
                 out.add(new Spawn(
                         SimStep.ticks(wave.t()),
                         kind,
@@ -1393,14 +1417,14 @@ final class Formations {
                         Optional.empty(),
                         Spawn.Exit.DOWN,
                         false,
-                        carried(i),
+                        i == centre && centrePickup.isPresent() ? centrePickup : carried(i),
                         Optional.empty(),
                         Optional.empty(),
                         Optional.empty(),
                         Optional.empty(),
                         Optional.empty(),
                         Optional.empty(),
-                        Optional.of(new Spawn.Field(x, HEIGHT + above, vx, vy, i < submerged, rng.nextLong()))));
+                        Optional.of(new Spawn.Field(x, HEIGHT + above, vx, vy, i < submerged, seeds[i]))));
             }
         }
 
@@ -1449,7 +1473,11 @@ final class Formations {
 
         private Optional<PickupType> carried(int unit) {
             for (WaveSpec.Carried carried : wave.carried()) {
-                if (unit == (carried.lastUnit() ? wave.count() - 1 : Math.min(carried.unit(), wave.count() - 1))) {
+                if (!carried.centreUnit()
+                        && unit
+                                == (carried.lastUnit()
+                                        ? wave.count() - 1
+                                        : Math.min(carried.unit(), wave.count() - 1))) {
                     return Optional.of(carried.pickup());
                 }
             }

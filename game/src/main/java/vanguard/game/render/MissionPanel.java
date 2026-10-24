@@ -249,6 +249,14 @@ final class MissionPanel {
                 sortie.chainWindow());
     }
 
+    /** M8 part F: the portrait's interference ahead of a line with a {@code static_lead}, 0 to 1 this frame. */
+    private float staticLead;
+
+    /** M8 part F: the radio portrait's interference ahead of a line (Level 26's Choir), 0 to 1 this frame. */
+    void staticLead(float strength) {
+        staticLead = strength;
+    }
+
     private void drawRadio(SpriteBatch batch, RadioQueue radio) {
         int top = MissionLayout.RADIO.yTop();
         plate(batch, "RADIO", top);
@@ -257,6 +265,8 @@ final class MissionPanel {
         kit.portraitWell(batch, X, portraitY, PORTRAIT);
         int subtitleTop = well(batch, portraitY - FRAME - 4, PAGE_WELL);
         if (radio.current().isEmpty()) {
+            // M8 part F: the Choir's static creeping into the empty portrait frame ahead of its line.
+            transmissionStatic.draw(batch, X, portraitY, PORTRAIT, PORTRAIT, staticLead);
             return;
         }
         RadioQueue.Message message = radio.current().get();
@@ -265,7 +275,7 @@ final class MissionPanel {
             portrait = Portraits.radio(sprites, message.portrait(), message.expression());
         }
         batch.draw(Portraits.frame(portrait, radio.sinceOpened()), X, portraitY);
-        float noise = TransmissionStatic.strength(radio.sinceOpened(), radio.untilClosed());
+        float noise = Math.max(staticLead, TransmissionStatic.strength(radio.sinceOpened(), radio.untilClosed()));
         transmissionStatic.draw(batch, X, portraitY, PORTRAIT, PORTRAIT, noise);
         Color colour = message.distorted() ? CHOIR : HudKit.AMBER;
         String[] names = message.speaker().toUpperCase(Locale.ROOT).split(" ", 2);

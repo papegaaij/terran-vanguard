@@ -165,6 +165,11 @@ final class UnitPasses {
                 kinds.sirens(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
                 continue;
             }
+            if (kinds.anglers(sortie).draws(enemy)) {
+                // M8 part F: a Glow Angler at its heading and jaw (its glows after the grade, AnglerLooks).
+                kinds.anglers(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
+                continue;
+            }
             if (kinds.nautili(sortie).draws(enemy)) {
                 // M8 part E: a Spiral Nautilus's shell and crown; leaving through rock it is drawn under the walls.
                 if (!kinds.nautili(sortie).underWall(sortie, enemy, alpha)) {
@@ -365,6 +370,11 @@ final class UnitPasses {
         if (shell != null) {
             return shell;
         }
+        // M8 part F: a Glow Angler at its heading and jaw.
+        AtlasRegion angler = kinds.anglers(sortie).frame(sortie, enemy);
+        if (angler != null) {
+            return angler;
+        }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
@@ -466,6 +476,15 @@ final class UnitPasses {
                 Array<AtlasRegion> pulse = looks[enemy.kind()].naval().pulse();
                 if (pulse.isEmpty() || kinds.deepBodies(sortie).deep(enemy.kind()) == null) {
                     continue;
+                }
+                Array<AtlasRegion> veins = kinds.deepBodies(sortie).veins(enemy.kind());
+                if (kinds.dark() && veins != null) {
+                    // M8 part F: in the dark a jelly reads as its veins, the pulse bloom over them stays the tell.
+                    drawCentred(
+                            batch,
+                            veins.get(jellyPulse(sortie, enemy, alpha) % veins.size),
+                            enemy.renderX(alpha),
+                            enemy.renderY(alpha));
                 }
                 drawCentred(
                         batch,
@@ -908,9 +927,12 @@ final class UnitPasses {
                     || enemy.decloak(alpha) < 1
                     || kinds.rays(sortie).draws(enemy)
                     || kinds.sirens(sortie).draws(enemy)
-                    || kinds.nautili(sortie).draws(enemy)) {
+                    || kinds.nautili(sortie).draws(enemy)
+                    || kinds.anglers(sortie).angler(enemy.kind())
+                    || kinds.deepBodies(sortie).veins(enemy.kind()) != null) {
                 // M8 part D: an Abyss Ray's glow follows its rise (drawDeepGlows); M8 part E: a Siren's and a
-                // Nautilus's their steps (after the grade).
+                // Nautilus's their steps (after the grade); M8 part F: an Angler's its heading and jaw (AnglerLooks), a
+                // Driftjelly's veins its pulse, in the dark only (drawDeepGlows).
                 continue;
             }
             float glow = ArsenalLooks.glowShare(enemy) * kiteFade.opacity(enemy, sortie.tick(), alpha);

@@ -47,7 +47,22 @@ public final class StemMix implements PcmStream {
     private float stemsLevel = 1;
 
     private volatile float stemsTarget = 1;
-    private final float stemsPace;
+    private volatile float stemsPace;
+    /** M7 part F's default pace of the stems' fade per frame. */
+    private final float stemsDefaultPace;
+
+    /**
+     * M8 part F (Level 26's {@code stem_times}): the theme's extra stems on the same grid (the dark stem, the warm pad),
+     * each played alone at its level, fading to its target at its own pace; written from the render thread before
+     * {@link #extrasVersion}, read on the music thread after it.
+     */
+    private final PcmStream[] extras;
+
+    private final float[] extraLevel;
+    private final float[] extraTarget;
+    private final float[] extraPace;
+    private short[][] extraChunks;
+    private volatile int extrasVersion;
 
     /** @param fadeSeconds how long a whole crossfade takes */
     StemMix(PcmStream base, PcmStream full, double fadeSeconds) {
@@ -60,6 +75,21 @@ public final class StemMix implements PcmStream {
      * @param fadeSeconds how long a whole crossfade takes
      */
     StemMix(PcmStream base, PcmStream full, PcmStream motif, double fadeSeconds) {
+        this(base, full, motif, new PcmStream[0], fadeSeconds);
+    }
+
+    /** M8 part F: with the theme's extra stems ({@link #extra}), silent until asked for. */
+    StemMix(PcmStream base, PcmStream full, PcmStream motif, PcmStream[] extras, double fadeSeconds) {
+        for (PcmStream extra : extras) {
+            if (extra.channels() != base.channels() || extra.sampleRate() != base.sampleRate()) {
+                throw new IllegalArgumentException("an extra stem differs in format");
+            }
+        }
+        this.extras = extras.clone();
+        extraLevel = new float[extras.length];
+        extraTarget = new float[extras.length];
+        extraPace = new float[extras.length];
+        extraChunks = new short[extras.length][0];
         if (base.channels() != full.channels() || base.sampleRate() != full.sampleRate()) {
             throw new IllegalArgumentException("the stems differ in format");
         }
@@ -73,7 +103,14 @@ public final class StemMix implements PcmStream {
         step = stepPerFrame;
         motifIn = (float) (1 / (MOTIF_IN_SECONDS * base.sampleRate()));
         motifOut = (float) (1 / (MOTIF_OUT_SECONDS * base.sampleRate()));
-        stemsPace = (float) (1 / (STEMS_FADE_SECONDS * base.sampleRate()));
+        stemsDefaultPace = (float) (1 / (STEMS_FADE_SECONDS * base.sampleRate()));
+        stemsPace = stemsDefaultPace;
+        java.util.Arrays.fill(extraPace, stemsDefaultPace);
+    }
+
+    /** A fade of {@code seconds} as a pace per frame (at once for none). */
+    private float pace(double seconds) {
+        return seconds > 0 ? (float) (1 / (seconds * base.sampleRate())) : 1;
     }
 
     /**
@@ -93,6 +130,26 @@ public final class StemMix implements PcmStream {
      */
     static StemMix of(
             VorbisFile base, VorbisFile full, VorbisFile motif, double fadeSeconds, float fullShare, boolean motifOn) {
+        return of(base, full, motif, new VorbisFile[0], fadeSeconds, fullShare, motifOn);
+    }
+
+    /** M8 part F: with the theme's extra stems, which must be sample-aligned with the others too. */
+    static StemMix of(
+            VorbisFile base,
+            VorbisFile full,
+            VorbisFile motif,
+            VorbisFile[] extras,
+            double fadeSeconds,
+            float fullShare,
+            boolean motifOn) {
+        PcmStream[] streams = new PcmStream[extras.length];
+        for (int i = 0; i < extras.length; i++) {
+            if (extras[i].frameCount() != base.frameCount()
+                    || !extras[i].loopPoints().equals(base.loopPoints())) {
+                throw new IllegalArgumentException("an extra stem is not sample-aligned");
+            }
+            streams[i] = LoopingStream.of(extras[i]);
+        }
         if (base.frameCount() != full.frameCount() || !base.loopPoints().equals(full.loopPoints())) {
             throw new IllegalArgumentException("the stems are not sample-aligned");
         }
@@ -105,6 +162,7 @@ public final class StemMix implements PcmStream {
                 LoopingStream.of(base),
                 LoopingStream.of(full),
                 motif == null ? null : LoopingStream.of(motif),
+                streams,
                 fadeSeconds);
         stems.target = fullShare;
         stems.mix = fullShare;
@@ -131,7 +189,30 @@ public final class StemMix implements PcmStream {
      * #STEMS_FADE_SECONDS} s either way); the motif layer is not touched (a stems-only gain, risk 6).
      */
     public void stems(boolean on) {
+        stems(on, STEMS_FADE_SECONDS);
+    }
+
+    /** M8 part F: as {@link #stems(boolean)}, the fade taking {@code seconds} (0: at once). */
+    public void stems(boolean on, double seconds) {
+        stemsPace = seconds == STEMS_FADE_SECONDS ? stemsDefaultPace : pace(seconds);
         stemsTarget = on ? 1 : 0;
+    }
+
+    /** M8 part F: how many extra stems the theme has. */
+    public int extras() {
+        return extras.length;
+    }
+
+    /** M8 part F: extra stem {@code i} fades to {@code level} (0..1) over {@code seconds} (0: at once). */
+    public void extra(int i, float level, double seconds) {
+        extraTarget[i] = Math.clamp(level, 0, 1);
+        extraPace[i] = pace(seconds);
+        extrasVersion++;
+    }
+
+    /** M8 part F: extra stem {@code i}'s level now, 0..1, for the tests. */
+    float extraLevel(int i) {
+        return extraLevel[i];
     }
 
     /** M7 part F: the stems' level now, 0..1, for the tests. */
@@ -174,11 +255,20 @@ public final class StemMix implements PcmStream {
             // Read even while silent: the motif stays sample-aligned with the other two.
             motif.read(m);
         }
+        int version = extrasVersion;
+        for (int e = 0; e < extras.length; e++) {
+            if (extraChunks[e].length != out.length) {
+                extraChunks[e] = new short[out.length];
+            }
+            // Read even while silent: each extra stem stays sample-aligned with the others.
+            extras[e].read(extraChunks[e]);
+        }
         int channels = channels();
         float goal = target;
         float pace = step;
         float motifGoal = motif == null ? 0 : motifTarget;
         float stemsGoal = stemsTarget;
+        float stemsStep = stemsPace;
         for (int frame = 0; frame < out.length / channels; frame++) {
             if (mix < goal) {
                 mix = Math.min(goal, mix + pace);
@@ -191,15 +281,28 @@ public final class StemMix implements PcmStream {
                 motifLevel = Math.max(motifGoal, motifLevel - motifOut);
             }
             if (stemsLevel < stemsGoal) {
-                stemsLevel = Math.min(stemsGoal, stemsLevel + stemsPace);
+                stemsLevel = Math.min(stemsGoal, stemsLevel + stemsStep);
             } else if (stemsLevel > stemsGoal) {
-                stemsLevel = Math.max(stemsGoal, stemsLevel - stemsPace);
+                stemsLevel = Math.max(stemsGoal, stemsLevel - stemsStep);
+            }
+            for (int e = 0; e < extras.length && version >= 0; e++) {
+                float extraGoal = extraTarget[e];
+                if (extraLevel[e] < extraGoal) {
+                    extraLevel[e] = Math.min(extraGoal, extraLevel[e] + extraPace[e]);
+                } else if (extraLevel[e] > extraGoal) {
+                    extraLevel[e] = Math.max(extraGoal, extraLevel[e] - extraPace[e]);
+                }
             }
             for (int c = 0; c < channels; c++) {
                 int i = frame * channels + c;
                 float sample = (b[i] + (f[i] - b[i]) * mix) * stemsLevel;
                 if (motifLevel > 0) {
                     sample += m[i] * motifLevel;
+                }
+                for (int e = 0; e < extras.length; e++) {
+                    if (extraLevel[e] > 0) {
+                        sample += extraChunks[e][i] * extraLevel[e];
+                    }
                 }
                 out[i] = (short) Math.clamp(Math.round(sample), Short.MIN_VALUE, Short.MAX_VALUE);
             }
@@ -222,6 +325,9 @@ public final class StemMix implements PcmStream {
         full.close();
         if (motif != null) {
             motif.close();
+        }
+        for (PcmStream extra : extras) {
+            extra.close();
         }
     }
 }

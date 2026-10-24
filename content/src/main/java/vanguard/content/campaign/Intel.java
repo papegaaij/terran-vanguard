@@ -145,7 +145,13 @@ public record Intel(
              * arrows"): a wave out of a cave ({@code cave}) entering, a moment at its time: the panel marks the cave
              * entries on the side arrows.
              */
-            CAVE
+            CAVE,
+            /**
+             * M8 part F (design/campaign Level 26, Threat profile at L3: "the scarp's nest positions on the threat
+             * arrows"): in a dark level (the {@code darkness} hazard) a wave of nests on a wall ({@code wall}) entering,
+             * a moment at its time: the panel marks where the unseen nests sit.
+             */
+            NEST
         }
     }
 
@@ -230,7 +236,8 @@ public record Intel(
      * (Level 17's two dome sections) as phases; M7 part G: a reversed level its turn and lull ({@link #turnAndLull});
      * round 44 Q.8 d: a level with a {@code ridge} its ridge pass; M8 part B: the ground targets an escapes secondary
      * counts (Level 22's rig sites); M8 part C: each waterline (Level 23's); M8 part D: each wave with a rising unit
-     * (Level 24's Abyss Rays); M8 part E: each cave wave (Level 25's side caves); none for another level.
+     * (Level 24's Abyss Rays); M8 part E: each cave wave (Level 25's side caves); M8 part F: in the dark each wave of
+     * wall nests (Level 26's scarp); none for another level.
      */
     static List<Mark> marks(Content content, LevelData level) {
         List<Mark> marks = new java.util.ArrayList<>();
@@ -303,6 +310,15 @@ public record Intel(
                 marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.CAVE));
             }
         }
+        // M8 part F: in the dark each wave of wall nests at its time (Level 26's scarp).
+        if (level.threatProfile().hazards().contains(DARKNESS)) {
+            for (LevelData.Wave wave : level.waves()) {
+                if (wave.fliesOn(vanguard.content.Difficulty.MEDIUM)
+                        && wave.wall().isPresent()) {
+                    marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.NEST));
+                }
+            }
+        }
         // M8 part B: each ground target of the escapes secondary's enemy at its time (Level 22's four rig sites).
         java.util.Optional<String> escapes = level.objectives().secondary().flatMap(LevelData.Secondary::escapes);
         for (LevelData.GroundTarget target : level.groundTargets()) {
@@ -314,6 +330,9 @@ public record Intel(
         }
         return marks;
     }
+
+    /** M8 part F: the hazard that makes a level dark (its threat profile's), whose wall nests the strip marks. */
+    static final String DARKNESS = "darkness";
 
     /** M7 part G: how finely {@link #turnAndLull} looks for the turn, s. */
     private static final double TURN_STEP = 0.05;

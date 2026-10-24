@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../controls, ../../art-direction, ../../audio/voice]
-updated: 2026-10-12
+updated: 2026-10-23
 ---
 
 # Options
@@ -36,7 +36,9 @@ Settings screen reachable from the main menu and the pause menu, in the glass st
   swap), **auto-fire toggle (off = hold to fire, the default)**, gamepad dead zone. Mapping
   rules live in [controls](../controls/README.md).
 - **Gameplay:** text speed for briefings and radio, screen shake, flash reduction, floating credit
-  numbers on or off (see [HUD](../hud/README.md)).
+  numbers on or off (see [HUD](../hud/README.md)), and **Dark levels assist** (off / on, default off:
+  a dark level's ambient light at 20 % instead of its own; Level 26's
+  [Darkness](../../campaign/act-4-deep-water/level-26-blackwater/README.md#darkness-q4-a-a-look-only)).
 - Changes apply immediately and persist with the settings file, not with save slots.
 - **Mouse** (M6 part A, see [ui](../README.md#mouse)): a click on a tab shows it; hovering a row
   selects it; a click on a chip sets it; a click or a drag on a slider's track sets the value at
@@ -70,6 +72,7 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - [x] Display mode switch in the Video tab
 - [x] Sound test in the Audio tab
 - [x] Gameplay: the floating credit numbers on or off (M4 part H)
+- [x] Gameplay: the Dark levels assist on or off (M8 part F, step F4; `gameplay.dark-assist`)
 - [x] Mouse: tabs, rows, chips, slider drag, sound test, remapping by click (M6 part A,
       `OptionsLayout`, `MouseRegionsTest`; accepted by the user in concept round 35)
 
@@ -144,3 +147,5 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
 - 2026-10-12: Back to `design: review` until [concept round 35](../../concept-rounds/round-35/README.md) closes (the mouse, A.1).
 - 2026-10-12 (user, round 35): the mouse on the Options screen and the build choices A.1 accepted
   as built; `design: approved`.
+- 2026-10-23 (step F4, M8 part F): the Gameplay tab's fifth row `DARK LEVELS ASSIST` (OFF / ON, default off;
+  `gameplay.dark-assist`), Level 26's approved lever: on, a dark level's ambient is held at 20 %.

@@ -66,6 +66,7 @@ final class SettingsFile implements SettingsStore {
     private static final String SCREEN_SHAKE = "gameplay.screen-shake";
     private static final String FLASH_REDUCTION = "gameplay.flash-reduction";
     private static final String CREDIT_NUMBERS = "gameplay.credit-numbers";
+    private static final String DARK_ASSIST = "gameplay.dark-assist";
     private static final String NO_KEY = "none";
 
     private final Path path;
@@ -114,7 +115,8 @@ final class SettingsFile implements SettingsStore {
                 (int) share(properties, TEXT_SPEED, gameplay.textSpeed(), 10, 90),
                 share(properties, SCREEN_SHAKE, gameplay.screenShake(), 0, 1),
                 Boolean.parseBoolean(properties.getProperty(FLASH_REDUCTION)),
-                flag(properties, CREDIT_NUMBERS, gameplay.creditNumbers()));
+                flag(properties, CREDIT_NUMBERS, gameplay.creditNumbers()),
+                flag(properties, DARK_ASSIST, gameplay.darkAssist()));
         return new Settings(video, readAudio, controls, readGameplay);
     }
 
@@ -275,6 +277,7 @@ final class SettingsFile implements SettingsStore {
             properties.setProperty(SCREEN_SHAKE, Double.toString(gameplay.screenShake()));
             properties.setProperty(FLASH_REDUCTION, Boolean.toString(gameplay.flashReduction()));
             properties.setProperty(CREDIT_NUMBERS, Boolean.toString(gameplay.creditNumbers()));
+            properties.setProperty(DARK_ASSIST, Boolean.toString(gameplay.darkAssist()));
         });
     }
 

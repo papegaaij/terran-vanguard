@@ -480,6 +480,46 @@ class IntelPanelLayoutTest {
         assertTrue(l2.fills.stream().noneMatch(fill -> fill.colour().equals(IntelPanel.CAVE_SLATE)), "no strip at L2");
     }
 
+    /**
+     * M8 part F (design/campaign Level 26, Threat profile): from sensor L2 the Glow Angler's lure is tagged as no
+     * pickup under the enemies' names (only a level with an Angler is tagged); at L3 the strip marks the scarp's seven wall
+     * nests in the dark with a teal tick each.
+     */
+    @Test
+    void level26sIntelTagsTheLureAndMarksTheNests() {
+        String level = CONTENT.levelKey(26).orElseThrow();
+        for (int sensor = 0; sensor <= 3; sensor++) {
+            Measure measure = new Measure();
+            IntelPanel.layout(
+                    measure,
+                    Intel.of(CONTENT, level, sensor),
+                    CONTENT.level(level).briefing().teaser(),
+                    level);
+            boolean tagged = measure.parts.stream()
+                    .anyMatch(part -> part.what().equals("text \"" + IntelPanel.NOT_A_PICKUP + "\""));
+            assertEquals(sensor >= 2, tagged, "the lure's tag at L" + sensor);
+            long nests = measure.fills.stream()
+                    .filter(fill -> fill.colour().equals(IntelPanel.NEST_TEAL))
+                    .count();
+            assertEquals(sensor >= 3 ? 7 : 0, nests, "the nests' ticks at L" + sensor);
+        }
+        for (String other : CONTENT.levels().keySet()) {
+            if (other.equals(level)) {
+                continue;
+            }
+            Measure measure = new Measure();
+            Intel intel = Intel.of(CONTENT, other, 3);
+            IntelPanel.layout(measure, intel, CONTENT.level(other).briefing().teaser(), other);
+            boolean lure = intel.enemies().stream()
+                    .map(vanguard.game.render.Portraits::slug)
+                    .anyMatch(IntelPanel.LURES::contains);
+            assertEquals(
+                    lure,
+                    measure.parts.stream().anyMatch(part -> part.what().contains(IntelPanel.NOT_A_PICKUP)),
+                    other);
+        }
+    }
+
     /** M7 part H (H.7e): Level 21's strip at sensor L3 marks the Dust Colossus's silhouette at 105 s. */
     @Test
     void level21sStripMarksTheColossusSilhouetteAtItsArrival() {

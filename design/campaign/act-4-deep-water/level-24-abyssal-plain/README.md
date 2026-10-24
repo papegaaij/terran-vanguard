@@ -393,7 +393,7 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   Measured in step E3 (`levelReport -Plevel=24`, the plan's fit, seeds 1–3): the autopilot still razes only two of the
   four on hard (the second reef away by t≈72, the fourth by t≈88), so hard's REEFS stays unmet for it (0/3; easy and
   medium 3/3): open for the user (a hard reef's 260 HP, or the autopilot's reef play).
-- 2026-10-23 (step E4, pending the user's review in round 54): the autopilot's reef play closes it without a number
+- 2026-10-23 (step E4, accepted in round 54 (2026-10-23)): the autopilot's reef play closes it without a number
   changed: a reef of more than 230 HP (hard's 260; `WaterPlay.TOUGH_HP`) is shot from its entry, the ship closes in to
   60 px under it (at most 300 px up the screen), where the reef is shut and the harpoons reach it past no fry, and once it
   passes under the ship it holds 50 px above it so the Depth Charges burst on it. Measured (`levelReport -Plevel=24`, the

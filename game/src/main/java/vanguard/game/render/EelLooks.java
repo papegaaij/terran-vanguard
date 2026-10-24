@@ -64,6 +64,10 @@ final class EelLooks {
     private final Array<AtlasRegion> tail;
     private final Array<AtlasRegion> stripe;
     private final Array<AtlasRegion> muzzle;
+    /** M8 part F: the eels at rest in the dark ({@code -glow}, heading × 3 + part: the stripe's resting glow, the eyes). */
+    private final Array<AtlasRegion> rest;
+    /** M8 part F: whether the level is a dark one: the resting glow is drawn under the tell. */
+    private boolean dark;
     /** Per heading the husk's 4 steps (body and tail, and the head's), built once. */
     private final Array<Array<AtlasRegion>> husks = new Array<>();
 
@@ -78,6 +82,7 @@ final class EelLooks {
     EelLooks(Sprites sprites, List<EnemySpec> kinds, Function<String, JsonValue> pivots) {
         head = optional(sprites, SLUG);
         segment = optional(sprites, SLUG + "-segment");
+        rest = optional(sprites, SLUG + "-glow");
         tail = optional(sprites, SLUG + "-tail");
         stripe = optional(sprites, SLUG + "-stripe");
         muzzle = optional(sprites, SLUG + "-muzzle");
@@ -254,6 +259,20 @@ final class EelLooks {
             if (!draws(chain)) {
                 continue;
             }
+            if (dark && !rest.isEmpty()) {
+                // M8 part F: in the dark a snake lit by its stripe at rest and its eyes.
+                for (int k = 0; k < chain.size(); k++) {
+                    Enemy member = chain.member(k);
+                    if (member != null) {
+                        PlayFrame.drawCentred(
+                                batch,
+                                rest.get(
+                                        (EnemyLooks.heading(member.facing(), HEADINGS) * 3 + part(member)) % rest.size),
+                                member.renderX(alpha),
+                                member.renderY(alpha));
+                    }
+                }
+            }
             long[] clock = clocks.get(chain);
             if (clock == null) {
                 continue;
@@ -266,10 +285,9 @@ final class EelLooks {
                     continue;
                 }
                 int heading = EnemyLooks.heading(member.facing(), HEADINGS);
-                int part = role[member.kind()] == 1 ? PART_HEAD : role[member.kind()] == 3 ? PART_TAIL : PART_SEGMENT;
                 PlayFrame.drawCentred(
                         batch,
-                        stripe.get((heading * 3 + part) % stripe.size),
+                        stripe.get((heading * 3 + part(member)) % stripe.size),
                         member.renderX(alpha),
                         member.renderY(alpha));
             }
@@ -288,6 +306,17 @@ final class EelLooks {
             }
         }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+    }
+
+    /** A member's part in the stripe's frames: the head, a body eel or the tail. */
+    private int part(Enemy member) {
+        int r = role[member.kind()];
+        return r == 1 ? PART_HEAD : r == 3 ? PART_TAIL : PART_SEGMENT;
+    }
+
+    /** M8 part F: a dark level: the eels' resting glow is drawn under the tell. */
+    void dark(boolean on) {
+        dark = on;
     }
 
     /**

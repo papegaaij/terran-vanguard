@@ -233,3 +233,14 @@ cave, the route in teal and the six sections; the strip: the walls hurt, 31 nest
 and Varga's diagram of the ring (the production Siren on a wall with its sac at full glow, two rippled rings and the gap
 between them, the ship slowed in the band with its shimmer, a speed strip with the 2 s slow and the 3 s immunity; the
 strip: the tell, one slow then immunity, slip the gap or shoot the sac, side and anti-sub guns).
+
+## briefing-images-final-r55-a
+
+Round 55, production art (M8 part F batch, step ART-F). Not a mockup: the review sheet of Level 26's two 672x240
+images written by [tools/art/briefing_images.py](../../../../tools/art/briefing_images.py): `level-26-blackwater`
+(Okafor's chart, north up: the trench's mouth and its last beacons, the drowned pipeline's last lamps, then nothing
+charted, no sonar return, the CDF's survey buoys lost and crossed out at the chart's edges, a dotted route down the
+middle, the vent field's red glow far to the south) and `level-26-lure` (Varga's diagram: the Glow Angler as the dark
+shows it, tools/art/glow_angler.py's bead, stalk and eyes with the body a faint rim, a gold pickup beside it, the
+ship's headlight cone, the 130 px lunge radius and the ring of 8 it fires short of the ship).
+

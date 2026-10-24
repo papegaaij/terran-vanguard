@@ -379,7 +379,10 @@ final class SirenLooks {
             }
         }
         Wingman rook = sortie.wingman().orElse(null);
-        if (rook != null && !rook.ejected() && rook.slow().slowed()) {
+        if (rook != null
+                && !rook.ejected()
+                && !rook.loss().lost()
+                && rook.slow().slowed()) {
             batch.setColor(1, 1, 1, shimmerOpacity(rook.slow().share()));
             drawCentred(batch, frame, rook.renderX(alpha), rook.renderY(alpha));
         }

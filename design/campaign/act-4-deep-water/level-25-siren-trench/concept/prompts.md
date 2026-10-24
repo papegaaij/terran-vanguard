@@ -1,6 +1,6 @@
 # Level 25 – concept and production notes
 
-Round 54 (M8 part E, step ART-E: production straight away, as the Act 2–4 levels; pending the user's review in round 54).
+Round 54 (M8 part E, step ART-E: production straight away, as the Act 2–4 levels; accepted in round 54 (2026-10-23)).
 None of it is prompted: every file is rendered by a generator in `tools/art/`.
 
 ## backdrop-final-r54-a
@@ -25,6 +25,16 @@ the walls and the pillar projected approximately as the game does; stand-ins: Re
 and the wall texture ungraded, three crops at 1x; the GIF: t 96–104 at half size, the fork round the pillar.
 `backdrop-proposal.yaml` holds the generator's `backdrop:` block for the level's data and the `terrain:` block (walls,
 the pillar island, 25 notches) the art is drawn for (`--proposal`).
+
+## backdrop-final-r55-a
+
+Round 54's F.1/F.2 redo (step LX), the same generator and sheet as `backdrop-final-r54-a` (now `ROUND = "r55"`):
+the rock pillar's two ends rounded (25 x 40 px half-ellipses in the level's `terrain.islands`, so `pillar-top_0..1`
+are rebuilt) and a faint cool rim along the walls' frosted lip in `ice-wall-glow` (additive, ungraded: 22 % of
+(176, 204, 224) over the lip's outer half); on the sheet the glow is laid on the walls' face only. The headlights that
+light the world and the rim light along the rock edges are the game's (`UnderwaterGrade`, the level's
+`underwater_look`); the sheet's stand-in grade shows the ambient only, the `*-capture-r55-a.png` game captures show
+the light (their frames from a game recording on Xvfb, the field at 1:1, the level time on each frame).
 
 ## l25-props-final-r54-a
 

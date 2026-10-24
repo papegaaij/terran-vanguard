@@ -85,7 +85,7 @@ public sealed interface PickupsBlock permits LevelData {
     }
 
     /**
-     * The {@code unit} ({@code first}, {@code second} or {@code last}) of the wave starting at
+     * The {@code unit} ({@code first}, {@code second}, {@code last} or, M8 part F, a field's {@code centre}) of the wave starting at
      * {@code wave} seconds, the {@code last} unit of a ground-target {@code group} to die (when the
      * group is cleared), or (part G) the {@code unit}-th of the level boss's {@code parts} to be
      * shot off (Level 07's first destroyed bay sac); parts lost in the boss's death drop nothing. M7 part D: a wave's
@@ -127,6 +127,9 @@ public sealed interface PickupsBlock permits LevelData {
             Check.that(
                     group.isEmpty() || unit == CarrierUnit.LAST,
                     "dropped_by: a group's pickup comes from its last unit");
+            Check.that(
+                    unit != CarrierUnit.CENTRE || wave.isPresent(),
+                    "dropped_by: only a field wave's carrier is its centre unit");
             parts.ifPresent(names -> {
                 Check.notEmpty("parts", names);
                 Check.that(
@@ -149,6 +152,11 @@ public sealed interface PickupsBlock permits LevelData {
     public enum CarrierUnit {
         FIRST,
         SECOND,
-        LAST
+        LAST,
+        /**
+         * M8 part F (design/campaign Level 26, the constellation's shield cell; m8f-gaps.md §5 F10): a {@code field}
+         * wave's unit nearest the field's centre where it is scattered; only on a field wave's carrier.
+         */
+        CENTRE
     }
 }

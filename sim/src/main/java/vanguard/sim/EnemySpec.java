@@ -88,6 +88,7 @@ import java.util.Optional;
  *     none
  * @param coil M8 part E: its coiling orbit round the ship (design/enemies/naval/spiral-nautilus; {@link Coil}); empty
  *     for none
+ * @param lunge M8 part F: its lunge from a lure (design/enemies/naval/glow-angler; {@link Lunge}); empty for none
  */
 public record EnemySpec(
         String slug,
@@ -142,7 +143,8 @@ public record EnemySpec(
         boolean seekersIgnore,
         Optional<Rise> rise,
         Optional<SlowRing> slowRing,
-        Optional<Coil> coil)
+        Optional<Coil> coil,
+        Optional<Lunge> lunge)
         implements FlightSpecs, WalkerSpecs, ChainSpecs, LayerSpecs, AttackSpecs, HostSpecs {
     /** M8 part B: the most destroyable parts a unit carries (the Drill Rig's four pumps). */
     public static final int MOST_PARTS = 4;
@@ -257,6 +259,142 @@ public record EnemySpec(
             throw new IllegalArgumentException(
                     slug + ": a coil is a plain air unit's (M8 part E, the Spiral Nautilus)");
         }
+        java.util.Objects.requireNonNull(lunge);
+        if (lunge.isPresent()
+                && (layer != Layer.AIR
+                        || gun.isPresent()
+                        || ring.isPresent()
+                        || walker.isPresent()
+                        || chain.isPresent()
+                        || flock.isPresent()
+                        || burrow.isPresent()
+                        || submerge.isPresent()
+                        || vortex.isPresent()
+                        || laneStrafe.isPresent()
+                        || swoop.isPresent()
+                        || chase.isPresent()
+                        || rise.isPresent()
+                        || coil.isPresent()
+                        || hover.isPresent()
+                        || orbit.isPresent()
+                        || dive.isPresent()
+                        || spawner.isPresent()
+                        || brood.isPresent())) {
+            throw new IllegalArgumentException(
+                    slug + ": a lunge is a plain air unit's, its ring its only attack (M8 part F, the Glow Angler)");
+        }
+    }
+
+    /** The constructor without M8 part F's {@code lunge}. */
+    public EnemySpec(
+            String slug,
+            double hp,
+            Hitbox hitbox,
+            Layer layer,
+            double contactDamage,
+            boolean destroyedByRamming,
+            int bounty,
+            double speed,
+            Optional<Snake> snake,
+            Optional<Double> streamSpeed,
+            Optional<Hover> hover,
+            Optional<Orbit> orbit,
+            Optional<EnemyGun> gun,
+            Optional<Drop> drop,
+            Optional<Dive> dive,
+            boolean terrain,
+            Optional<Spiral> spiral,
+            Optional<Range> strafe,
+            Optional<DeathBurst> deathBurst,
+            Optional<Sine> sine,
+            Optional<Brood> brood,
+            Optional<Walker> walker,
+            Optional<SideHover> sideHover,
+            Optional<Sweep> sweep,
+            Optional<ChainSpec> chain,
+            boolean hardened,
+            Optional<Spawner> spawner,
+            Optional<Pounce> pounce,
+            Optional<Cloak> cloak,
+            Optional<Ambush> ambush,
+            Optional<FlockSpec> flock,
+            Optional<Submerge> submerge,
+            Optional<ProximityRing> ring,
+            double drift,
+            Optional<Chase> chase,
+            Optional<Latch> latch,
+            boolean machine,
+            Optional<Burrow> burrow,
+            Optional<Swoop> swoop,
+            Optional<Link> link,
+            Optional<Crawl> crawl,
+            Optional<Aura> aura,
+            List<UnitPart> parts,
+            Optional<Roll> roll,
+            Optional<Vortex> vortex,
+            Optional<Pull> pull,
+            Optional<LaneStrafe> laneStrafe,
+            Optional<Turret> turret,
+            Optional<RearPlate> rearPlate,
+            boolean seekersIgnore,
+            Optional<Rise> rise,
+            Optional<SlowRing> slowRing,
+            Optional<Coil> coil) {
+        this(
+                slug,
+                hp,
+                hitbox,
+                layer,
+                contactDamage,
+                destroyedByRamming,
+                bounty,
+                speed,
+                snake,
+                streamSpeed,
+                hover,
+                orbit,
+                gun,
+                drop,
+                dive,
+                terrain,
+                spiral,
+                strafe,
+                deathBurst,
+                sine,
+                brood,
+                walker,
+                sideHover,
+                sweep,
+                chain,
+                hardened,
+                spawner,
+                pounce,
+                cloak,
+                ambush,
+                flock,
+                submerge,
+                ring,
+                drift,
+                chase,
+                latch,
+                machine,
+                burrow,
+                swoop,
+                link,
+                crawl,
+                aura,
+                parts,
+                roll,
+                vortex,
+                pull,
+                laneStrafe,
+                turret,
+                rearPlate,
+                seekersIgnore,
+                rise,
+                slowRing,
+                coil,
+                Optional.empty());
     }
 
     /** The constructor without M8 part E's {@code slowRing}. */
@@ -375,6 +513,15 @@ public record EnemySpec(
     public EnemySpec withCoil(Optional<Coil> withCoil) {
         EnemySpecCopy copy = new EnemySpecCopy(this);
         copy.coil = withCoil;
+        return copy.build();
+    }
+
+    /**
+     * M8 part F: this air unit with its lunge from a lure (design/enemies/naval/glow-angler); empty for none.
+     */
+    public EnemySpec withLunge(Optional<Lunge> withLunge) {
+        EnemySpecCopy copy = new EnemySpecCopy(this);
+        copy.lunge = withLunge;
         return copy.build();
     }
 

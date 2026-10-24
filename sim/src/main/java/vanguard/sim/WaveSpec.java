@@ -76,6 +76,9 @@ public record WaveSpec(
         if (carried.stream().anyMatch(Carried::headFirst) && enemy.chain().isEmpty()) {
             throw new IllegalArgumentException("only a segment chain's head drops a pickup for a head-first kill");
         }
+        if (carried.stream().anyMatch(Carried::centreUnit) && (formation != Formation.FIELD || field.isEmpty())) {
+            throw new IllegalArgumentException("only a field's unit nearest its centre carries a centre pickup");
+        }
         paths = paths.stream().map(List::copyOf).toList();
         lanes = lanes.stream().map(List::copyOf).toList();
         if (lanes.stream().anyMatch(List::isEmpty)) {
@@ -864,7 +867,7 @@ public record WaveSpec(
     /**
      * A pickup carried by one unit of the group.
      *
-     * @param unit the unit's index in the group, or {@link #LAST}
+     * @param unit the unit's index in the group, {@link #LAST} or (M8 part F, a field only) {@link #CENTRE}
      * @param headFirst M8 part C (design/campaign Level 23, the shield cell's {@code dropped_by: {head_first: true}}): a
      *     segment chain's head drops it only when it is destroyed before any other part of its chain; false for every
      *     other pickup
@@ -872,6 +875,12 @@ public record WaveSpec(
     public record Carried(PickupType pickup, int unit, boolean headFirst) {
         /** The group's last unit, whatever its size on the difficulty. */
         public static final int LAST = -1;
+
+        /**
+         * M8 part F (design/campaign Level 26, the shield cell of the constellation; m8f-gaps.md §5 F10): a field's
+         * unit nearest its area's centre where the units are scattered (the first of them on a tie); only on a field.
+         */
+        public static final int CENTRE = -2;
 
         /** Dropped by its unit however it dies. */
         public Carried(PickupType pickup, int unit) {
@@ -891,6 +900,11 @@ public record WaveSpec(
         /** Whether the last unit carries it. */
         public boolean lastUnit() {
             return unit == LAST;
+        }
+
+        /** M8 part F: whether a field's unit nearest its centre carries it ({@link #CENTRE}). */
+        public boolean centreUnit() {
+            return unit == CENTRE;
         }
     }
 }

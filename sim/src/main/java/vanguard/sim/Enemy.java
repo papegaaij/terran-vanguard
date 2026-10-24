@@ -68,7 +68,9 @@ public final class Enemy implements Hashed {
          */
         MOUNT,
         /** M8 part E: a coiling unit (design/enemies/naval/spiral-nautilus), placed by its {@link Coiling}. */
-        COIL
+        COIL,
+        /** M8 part F: a lunging unit (design/enemies/naval/glow-angler), placed by its {@link Lunging}. */
+        LURE
     }
 
     /**
@@ -337,6 +339,8 @@ public final class Enemy implements Hashed {
     final SirenSong song = new SirenSong();
     /** M8 part E, a coiling orbit round the ship (design/enemies/naval/spiral-nautilus; hashed only with one). */
     final Coiling coiling = new Coiling();
+    /** M8 part F, a lunge from a lure (design/enemies/naval/glow-angler; hashed only with one). */
+    final Lunging lunging = new Lunging();
     /** M5 part F: a chaser's chase, latch and shake-off (design/enemies/air/lamprey; hashed only with a chase). */
     final Chasing chasing = new Chasing(this);
 
@@ -1818,6 +1822,16 @@ public final class Enemy implements Hashed {
     /** M8 part E: whether its coil orbits clockwise (the shell's roll); false for a unit without one. */
     public boolean coilClockwise() {
         return phase == Phase.COIL && coiling.clockwise();
+    }
+
+    /** M8 part F: where its lunge is (design/enemies/naval/glow-angler); {@link LurePhase#NONE} for a unit without one. */
+    public LurePhase lurePhase() {
+        return phase == Phase.LURE ? lunging.phase() : LurePhase.NONE;
+    }
+
+    /** M8 part F: whether it is a lunging unit (its stat block has a lunge). */
+    boolean lunges() {
+        return phase == Phase.LURE;
     }
 
     /** M8 part E: whether it is a coiling unit (its stat block has a coil). */

@@ -60,11 +60,11 @@ final class HitPasses {
      * aim at him.
      */
     void hitWingman() {
-        if (wingman.ejected()) {
+        if (wingman.out()) {
             return;
         }
         bossBeamsHitWingman();
-        if (wingman.ejected()) {
+        if (wingman.out()) {
             return;
         }
         Hull hull = wingman.hull();
@@ -93,7 +93,7 @@ final class HitPasses {
             }
         }
         missilesAndConesHitWingman(hull, x, y);
-        if (wingman.ejected()) {
+        if (wingman.out()) {
             return;
         }
         if (s.vents.grates() > 0 && ventsHitWingman(hull, x, y)) {

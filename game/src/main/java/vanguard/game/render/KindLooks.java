@@ -68,6 +68,12 @@ final class KindLooks {
     /** M8 part E: the Spiral Nautili's shell, crown, glow and flecks (built with the first sortie). */
     private NautilusLooks nautili;
 
+    /** M8 part F: the Glow Anglers' heading, jaw, lure, stalk, ring flash and death (built with the first sortie). */
+    private AnglerLooks anglers;
+
+    /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
+    private boolean dark;
+
     private final Sprites sprites;
     private final Files files;
 
@@ -151,6 +157,7 @@ final class KindLooks {
     EelLooks eels(Sortie sortie) {
         if (eels == null) {
             eels = new EelLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+            eels.dark(dark);
         }
         return eels;
     }
@@ -201,6 +208,27 @@ final class KindLooks {
             nautili = new NautilusLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
         }
         return nautili;
+    }
+
+    /** M8 part F: the Glow Anglers' looks for the sortie's enemy kinds, built once. */
+    AnglerLooks anglers(Sortie sortie) {
+        if (anglers == null) {
+            anglers = new AnglerLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return anglers;
+    }
+
+    /** M8 part F: a dark level ({@link DarkLight}): the Driftjellies' veins and the eels' resting stripe are drawn. */
+    void dark(boolean on) {
+        dark = on;
+        if (eels != null) {
+            eels.dark(on);
+        }
+    }
+
+    /** M8 part F: whether the level is a dark one. */
+    boolean dark() {
+        return dark;
     }
 
     /** M8 part C: the siphon pumps' looks for the sortie's enemy kinds, built once. */
@@ -279,6 +307,9 @@ final class KindLooks {
         }
         if (nautili != null) {
             nautili.restart();
+        }
+        if (anglers != null) {
+            anglers.restart();
         }
     }
 }

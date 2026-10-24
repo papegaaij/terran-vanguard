@@ -18,6 +18,9 @@ final class DeepBodyLooks {
     static final float FLOOR_GUN_DY = 1;
 
     private final Array<Array<AtlasRegion>> deep = new Array<>();
+    /** M8 part F: per kind with a deep body its veined look in the dark ({@code -glow} at its pulse frames), or null. */
+    private final Array<Array<AtlasRegion>> veins = new Array<>();
+
     private final AtlasRegion[] floor;
 
     DeepBodyLooks(Sprites sprites, List<EnemySpec> kinds) {
@@ -25,6 +28,8 @@ final class DeepBodyLooks {
         for (int k = 0; k < kinds.size(); k++) {
             String slug = kinds.get(k).slug();
             deep.add(sprites.has(slug + "-deep") ? sprites.frames(slug + "-deep") : null);
+            veins.add(
+                    sprites.has(slug + "-deep") && sprites.has(slug + "-glow") ? sprites.frames(slug + "-glow") : null);
             floor[k] = sprites.has(slug + "-floor")
                     ? sprites.frames(slug + "-floor").first()
                     : null;
@@ -34,6 +39,14 @@ final class DeepBodyLooks {
     /** Kind {@code kind}'s whole body under water at its pulse frames (a jelly's), null for none. */
     Array<AtlasRegion> deep(int kind) {
         return kind >= 0 && kind < deep.size ? deep.get(kind) : null;
+    }
+
+    /**
+     * M8 part F: kind {@code kind}'s veined look in the dark at its pulse frames (the Driftjelly's {@code -glow},
+     * tools/art/l26_glows.py), drawn ungraded over its deep body in a dark level; null for none.
+     */
+    Array<AtlasRegion> veins(int kind) {
+        return kind >= 0 && kind < veins.size ? veins.get(kind) : null;
     }
 
     /** Kind {@code kind}'s floor base under water (a raft's in the air), null for none. */

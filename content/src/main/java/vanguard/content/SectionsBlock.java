@@ -1,6 +1,8 @@
 package vanguard.content;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import vanguard.sim.PlayField;
 
@@ -238,15 +240,69 @@ public sealed interface SectionsBlock permits LevelData {
      * @param tint the ambient light's colour, {@code rrggbb}
      * @param caustics the animated caustics' strength on the floor and the walls, 0 (none) to 1
      * @param snow the marine snow, particles on the screen at once (0: none)
-     * @param headlights the hydro-kit's twin headlight cones' strength, 0 (off) to 1
+     * @param headlights the hydro-kit's twin headlights ({@link Headlights}: a strength alone or {@code {strength,
+     *     reach, angle}})
+     * @param rim M8 step LX (round 54's F.2): a faint rim light along the walls' rock edges, the cave notches' and the
+     *     islands', 0 (none, if not given) to 1, so the trench's shape reads outside the headlights
+     * @param ramp M8 part F (design/campaign Level 26, the lights going out; m8f-gaps.md §5 F4): only a section's own look
+     *     gives it: the ambient eases from the section's {@code ambient} to its {@code to} over level time {@code
+     *     from}–{@code until}; none if not given
+     * @param lights M8 part F (Level 26's lamp posts, beacons, the farm barge's lamp and the survey buoy): static pools of
+     *     light on the ground, scrolling with it; only the level's look gives them; none if not given
+     * @param escortLamp M8 part F (Level 26's Rook's lamp, design/campaign Level 26, Darkness): the radius of the light
+     *     pool round the escort in his slot (Rook or the Bulwark), px; only the level's look gives it; none if not given
      */
-    public record UnderwaterLook(double ambient, String tint, double caustics, int snow, double headlights) {
+    public record UnderwaterLook(
+            double ambient,
+            String tint,
+            double caustics,
+            int snow,
+            Headlights headlights,
+            Optional<Double> rim,
+            Optional<AmbientRamp> ramp,
+            Optional<List<Light>> lights,
+            Optional<Double> escortLamp) {
+        /** Without M8 part F's ramp, lights and escort lamp. */
+        public UnderwaterLook(
+                double ambient, String tint, double caustics, int snow, Headlights headlights, Optional<Double> rim) {
+            this(ambient, tint, caustics, snow, headlights, rim, Optional.empty(), Optional.empty(), Optional.empty());
+        }
+
         public UnderwaterLook {
+            lights = lights.map(List::copyOf);
+            escortLamp.ifPresent(r -> Check.positive("escort_lamp", r));
             Check.that(ambient > 0 && ambient <= 1, "ambient: above 0, at most 1, was " + ambient);
             Check.that(tint.matches("[0-9a-f]{6}"), "tint: rrggbb in lower case, was '" + tint + "'");
             Check.that(caustics >= 0 && caustics <= 1, "caustics: 0 to 1, was " + caustics);
             Check.notNegative("snow", snow);
-            Check.that(headlights >= 0 && headlights <= 1, "headlights: 0 to 1, was " + headlights);
+            Check.that(headlights != null, "headlights: give them");
+            rim.ifPresent(r -> Check.that(r >= 0 && r <= 1, "rim: 0 to 1, was " + r));
+        }
+
+        /** The rim light, 0 if not given. */
+        public double rimLight() {
+            return rim.orElse(0.0);
+        }
+
+        /** M8 part F: the static lights, none if not given. */
+        public List<Light> lightList() {
+            return lights.orElse(List.of());
+        }
+
+        /**
+         * M8 part F: the ambient light at level time {@code t}: its {@code ambient}, eased (smoothstep) to its ramp's
+         * {@code to} over the ramp's time and held there after it; its {@code ambient} without a ramp.
+         */
+        public double ambientAt(double t) {
+            if (ramp.isEmpty() || t <= ramp.get().from()) {
+                return ambient;
+            }
+            AmbientRamp r = ramp.get();
+            if (t >= r.until()) {
+                return r.to();
+            }
+            double u = (t - r.from()) / (r.until() - r.from());
+            return ambient + (r.to() - ambient) * u * u * (3 - 2 * u);
         }
 
         /** This look with a section's {@code change} applied (each value it gives instead of this one's). */
@@ -256,7 +312,89 @@ public sealed interface SectionsBlock permits LevelData {
                     change.tint().orElse(tint),
                     change.caustics().orElse(caustics),
                     change.snow().orElse(snow),
-                    change.headlights().orElse(headlights));
+                    change.headlights().orElse(headlights),
+                    change.rim().or(() -> rim),
+                    // M8 part F: a section's ramp is its own; the lights and the escort's lamp are the level's.
+                    change.ramp(),
+                    lights,
+                    escortLamp);
+        }
+    }
+
+    /**
+     * M8 part F (design/campaign Level 26, Layout: 20 % → 6 % over t=8–18; m8f-gaps.md §5 F4): the ambient light eases
+     * from the section's {@code ambient} to {@code to} over level time {@code from}–{@code until}.
+     */
+    public record AmbientRamp(double to, double from, double until) {
+        public AmbientRamp {
+            Check.that(to > 0 && to <= 1, "ramp.to: above 0, at most 1, was " + to);
+            Check.notNegative("ramp.from", from);
+            Check.that(until > from, "ramp.until: after its from, was " + until);
+        }
+    }
+
+    /**
+     * M8 part F (design/campaign Level 26, Darkness: the light pools): a static pool of light on the ground, scrolling
+     * with it: its centre on the terrain's row {@code scroll} (the ground scroll at which that row reaches the top edge,
+     * {@link TerrainBlock}'s rows: a row below 0 is on the screen at the start) and {@code x} px from the left edge, its
+     * {@code radius} px and its {@code colour}, {@code rrggbb} (presentation only).
+     */
+    public record Light(double scroll, double x, double radius, String colour) {
+        public Light {
+            Check.that(x >= 0 && x <= PlayField.WIDTH, "lights: x inside the play field, was " + x);
+            Check.positive("radius", radius);
+            Check.that(colour.matches("[0-9a-f]{6}"), "lights: colour rrggbb in lower case, was '" + colour + "'");
+        }
+    }
+
+    /**
+     * M8 step LX (round 54's F.2, "headlights that illuminate the world"): the hydro-kit's twin headlights, light that
+     * brings the world inside their cones (the floor, the walls, the cave mouths, the units) up toward its full colour,
+     * with a soft falloff along and across the beams; outside them the ambient. Written as a strength alone (the
+     * default beam: {@value #REACH} px, {@value #ANGLE}°) or as {@code {strength, reach, angle}}.
+     *
+     * @param strength how near the world in the cones comes to its full colour, 0 (off) to 1
+     * @param reach the beams' length ahead of the lamps, px
+     * @param angle the lit sector ahead, both cones together, degrees
+     */
+    public record Headlights(double strength, double reach, double angle) {
+        /** The default beam: the round-48 twin cones' length and the sector they cover together. */
+        public static final double REACH = 200;
+
+        public static final double ANGLE = 44;
+
+        public Headlights {
+            Check.that(strength >= 0 && strength <= 1, "headlights: strength 0 to 1, was " + strength);
+            Check.that(reach >= 40 && reach <= PlayField.HEIGHT, "headlights: reach 40 to 540 px, was " + reach);
+            Check.that(angle >= 10 && angle <= 120, "headlights: angle 10° to 120°, was " + angle);
+        }
+
+        @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+        static Headlights of(Object value) {
+            if (value instanceof Number strength) {
+                return new Headlights(strength.doubleValue(), REACH, ANGLE);
+            }
+            if (value instanceof Map<?, ?> map) {
+                for (Object key : map.keySet()) {
+                    Check.that(
+                            List.of("strength", "reach", "angle").contains(key),
+                            "headlights: strength, reach and angle, was '" + key + "'");
+                }
+                Check.that(map.get("strength") instanceof Number, "headlights: give the strength");
+                return new Headlights(
+                        number(map, "strength", 0), number(map, "reach", REACH), number(map, "angle", ANGLE));
+            }
+            throw new IllegalArgumentException(
+                    "headlights must be a strength or {strength, reach, angle}, was " + value);
+        }
+
+        private static double number(Map<?, ?> map, String key, double otherwise) {
+            Object value = map.get(key);
+            if (value == null) {
+                return otherwise;
+            }
+            Check.that(value instanceof Number, "headlights: " + key + " a number, was " + value);
+            return ((Number) value).doubleValue();
         }
     }
 
@@ -266,19 +404,23 @@ public sealed interface SectionsBlock permits LevelData {
             Optional<String> tint,
             Optional<Double> caustics,
             Optional<Integer> snow,
-            Optional<Double> headlights) {
+            Optional<Headlights> headlights,
+            Optional<Double> rim,
+            Optional<AmbientRamp> ramp) {
         public UnderwaterLookChange {
             ambient.ifPresent(a -> Check.that(a > 0 && a <= 1, "ambient: above 0, at most 1, was " + a));
             tint.ifPresent(t -> Check.that(t.matches("[0-9a-f]{6}"), "tint: rrggbb in lower case, was '" + t + "'"));
             caustics.ifPresent(c -> Check.that(c >= 0 && c <= 1, "caustics: 0 to 1, was " + c));
             snow.ifPresent(n -> Check.notNegative("snow", n));
-            headlights.ifPresent(h -> Check.that(h >= 0 && h <= 1, "headlights: 0 to 1, was " + h));
+            rim.ifPresent(r -> Check.that(r >= 0 && r <= 1, "rim: 0 to 1, was " + r));
             Check.that(
                     ambient.isPresent()
                             || tint.isPresent()
                             || caustics.isPresent()
                             || snow.isPresent()
-                            || headlights.isPresent(),
+                            || headlights.isPresent()
+                            || rim.isPresent()
+                            || ramp.isPresent(),
                     "underwater_look: a section's change gives at least one value");
         }
     }

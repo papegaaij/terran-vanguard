@@ -68,6 +68,9 @@ final class LevelRules {
                         case FIRST -> 1;
                         case SECOND -> 2;
                         case LAST -> DropSpec.PartDrop.LAST;
+                        case CENTRE ->
+                            throw new IllegalArgumentException(
+                                    "dropped_by: a boss's part has no centre unit (a field's)");
                     },
                     pickupType.apply(placed.pickup())));
         }

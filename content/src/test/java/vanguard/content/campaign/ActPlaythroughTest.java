@@ -23,8 +23,10 @@ import vanguard.content.Difficulty;
  * flies the level until it is won, in at most {@link Playthrough#MAX_ATTEMPTS} attempts; the campaign goes through a
  * save and a load before and after every visit. Level 07's win ends Act 1 with its outro and Act 2's intro briefing
  * follows; Level 14's win ends Act 2 and Act 3's intro follows; Level 21's win ends Act 3 with its outro, and Act 4's
- * intro follows (M8 part B: Level 22 is built, {@link CampaignRoute#releaseEnd} is false). The credits and the fit per visit are
- * printed per act (the playthrough sheet in the test report). Round 34, P3 = A: the credits at each act's end lie
+ * intro follows (M8 part B: Level 22 is built, {@link CampaignRoute#releaseEnd} is false). M8 part F (step F3): Act 4 is
+ * flown to Level 26, whose win records Rook missing; the Level 27 visit (the interim release's end: the hangar with no
+ * level to launch) has the loaner Bulwark in his slot. The credits and the fit per visit are printed per act (the
+ * playthrough sheet in the test report; Act 4's so far at the end). Round 34, P3 = A: the credits at each act's end lie
  * within the balance plan's tolerance of the expert's bound, the starting credits plus each level's perfect run × the
  * difficulty's income × the expert's collection, with the expert's grade bonus, less the purchases and repairs paid
  * ({@link Playthrough#bound}); on hard up to the plan's {@code hard_under} below it. Rook's ejections and the refused
@@ -36,7 +38,8 @@ class ActPlaythroughTest {
     /** The acts' last levels: Act 1 ends at Level 07, Act 2 at Level 14, Act 3 at Level 21. */
     private static final List<Integer> ACT_ENDS = List.of(7, 14, 21);
 
-    private static final int LAST = 21;
+    /** M8 part F: the last level built (the interim release ends before Level 27). */
+    private static final int LAST = 26;
 
     /**
      * An act's end outside the expert's bound reported for the user's decision: the test prints it instead of failing,
@@ -54,7 +57,7 @@ class ActPlaythroughTest {
 
     @ParameterizedTest
     @EnumSource(Difficulty.class)
-    void theAutopilotFliesActsOneToThreeOnTheBalancePlan(Difficulty difficulty) {
+    void theAutopilotFliesTheCampaignOnTheBalancePlan(Difficulty difficulty) {
         Playthrough playthrough = new Playthrough(difficulty);
         BalancePlan plan = playthrough.plan();
         assertInstanceOf(
@@ -106,6 +109,20 @@ class ActPlaythroughTest {
             playthrough.autosave();
         }
         assertEquals(LAST + 1, playthrough.campaign().nextLevel());
+        Campaign campaign = playthrough.campaign();
+        report(difficulty, 4, visits, campaign);
+        // M8 part F: Level 26's win records Rook missing (design/player/wingmen, Rook's loss); at the Level 27 visit
+        // the
+        // loaner Bulwark takes his slot (the hangar's ROOK MIA and LOANER callouts) and, the interim release's end, the
+        // hangar has no level to launch.
+        assertTrue(campaign.storyFlags().contains(Campaign.ROOK_MISSING), difficulty + ": Rook missing after Level 26");
+        assertTrue(campaign.rookMissing());
+        assertFalse(campaign.rookFlies(), "his requires: escort lines are dropped");
+        Campaign.EscortFlight loaner = campaign.escortFlight(LAST + 1).orElseThrow();
+        assertEquals(Escort.Escorter.BULWARK, loaner.escorter());
+        assertTrue(loaner.loaner(), "the loaner Bulwark in his slot");
+        assertInstanceOf(CampaignRoute.Step.Hangar.class, CampaignRoute.afterLevel(CONTENT, campaign));
+        assertTrue(CampaignRoute.launch(CONTENT, campaign).isEmpty(), "Level 27 is not built");
         assertTrue(
                 playthrough.problems().isEmpty(),
                 difficulty + ": the balance plan at the visits: " + playthrough.problems());

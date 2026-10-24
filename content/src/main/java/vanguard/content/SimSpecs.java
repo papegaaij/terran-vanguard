@@ -33,7 +33,8 @@ import vanguard.sim.WingmanSpec;
  * level's script), {@link WaveRules} (air waves), {@link GroundRules} (ground units, destructibles,
  * cranes), {@link BossRules} (set pieces and bosses), {@link UnitRules} (an enemy unit) and {@link
  * ChainRules} (a segment chain) — next to the parts' rules ({@code MarsRules}, {@code TerrainRules},
- * {@code SiegeRules}, {@code StormRules}, {@code FoundryRules}, …) and (M8 part A) {@link WaterRules} (the medium and the special limits).
+ * {@code SiegeRules}, {@code StormRules}, {@code FoundryRules}, …) and (M8 part A) {@link WaterRules} (the medium and the special limits);
+ * M8 part F's {@link DarkRules}: the Glow Angler's lunge, Rook's scripted loss and a field's centre carrier.
  */
 public final class SimSpecs {
     /** The starter front gun's slug. */

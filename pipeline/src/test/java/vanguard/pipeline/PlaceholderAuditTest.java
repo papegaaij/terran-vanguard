@@ -80,8 +80,15 @@ class PlaceholderAuditTest {
             "M8 part D: round 53's picks for Level 24 (user 2026-10-23; the Freesound HQ previews of CC0/CC-BY sounds,"
                     + " CREDITS rows from step AUD-D, by tools/concept/audio/sfx_r53d.py)";
     private static final String ROUND_54 =
-            "M8 part E: round 54's proposals for Level 25 (the Freesound HQ previews of CC0/CC-BY sounds, CREDITS rows"
-                    + " from step AUD-E, by tools/concept/audio/sfx_r54e.py), their a variants until the user's pick";
+            "M8 part E: round 54's picks for Level 25 (user 2026-10-23; the Freesound HQ previews of CC0/CC-BY sounds,"
+                    + " CREDITS rows from step AUD-E, by tools/concept/audio/sfx_r54e.py)";
+    private static final String ROUND_55 =
+            "M8 part F: round 55's proposals for Level 26, their a variants until the user's pick (the Freesound HQ"
+                    + " previews of CC0/CC-BY sounds, CREDITS rows from step AUD-F, by tools/concept/audio/sfx_r55f.py)";
+    private static final String ROUND_55_MUSIC =
+            "M8 part F: track 10's dark stem (round 51 a, by tools/concept/audio/music_r51b.py) and its warm pad (round"
+                    + " 55 a until the user's pick, by tools/concept/audio/sfx_r55f.py), the concept files on the theme's grid"
+                    + " (Level 26's stem_times)";
     private static final String ROUND_50 =
             "M8 part A: round 50's picks for the Act 4 arsenal (user 2026-10-22; the Freesound HQ previews of"
                     + " CC0/CC-BY sounds, CREDITS.md, by tools/concept/audio/sfx_r50a.py; the limit chime synthesized),"
@@ -281,14 +288,25 @@ class PlaceholderAuditTest {
             Map.entry("sfx/reef-death-r53-b.ogg", ROUND_53),
             Map.entry("sfx/beacon-pulse-r53-a.ogg", ROUND_53),
             Map.entry("sfx/wreck-hatch-r53-b.ogg", ROUND_53),
-            // M8 part E: round 54's a variants, from the Freesound previews until the pick and the originals
+            // M8 part E: round 54's picks (S.2 and S.6 b, the rest a), from the Freesound previews until the originals
             Map.entry("sfx/siren-ring-r54-a.ogg", ROUND_54),
-            Map.entry("sfx/siren-slow-r54-a.ogg", ROUND_54),
+            Map.entry("sfx/siren-slow-r54-b.ogg", ROUND_54),
             Map.entry("sfx/siren-death-r54-a.ogg", ROUND_54),
             Map.entry("sfx/nautilus-spin-r54-a.ogg", ROUND_54),
             Map.entry("sfx/nautilus-uncoil-r54-a.ogg", ROUND_54),
-            Map.entry("sfx/nautilus-death-r54-a.ogg", ROUND_54),
+            Map.entry("sfx/nautilus-death-r54-b.ogg", ROUND_54),
             Map.entry("sfx/europa-trench-r54-a.ogg", ROUND_54),
+            Map.entry("sfx/lure-hum-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/angler-lunge-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/crown-hum-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/torpedo-trails-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/rook-hit-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/rook-spin-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/headlight-click-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/choir-static-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/europa-black-r55-a.ogg", ROUND_55),
+            Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),
+            Map.entry("music/thera-deep-warm.ogg", ROUND_55_MUSIC),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-base.ogg", ROUND_41_MUSIC),
             Map.entry("music/grey-signal-motif.ogg", ROUND_41_MUSIC),

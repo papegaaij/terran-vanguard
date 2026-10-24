@@ -1,0 +1,80 @@
+backdrop:
+  # Presentation only: Level 26's black water (tools/art/backdrop_l26.py, step ART-F, from the level's data.yaml).
+  # Almost all black: the ground is unlit albedo, the light map shows it. The scarp is the terrain's right
+  # wall (WallProjection, the ice path): ice-wall, ice-wall-glow, ice-wall-foot; cave-mouth-right is drawn by
+  # the game at each notch (not placed). Every piece's -glow is added over the grade on its frame clock.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 02080e  # the black water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    pipeline-floor: {layer: ground, height: 960}   # section 1: dark silt, the drowned Thera Deep pipeline and its anchor blocks
+    black-water: {layer: ground, height: 960}   # sections 2-6: the far floor, near black (the cone reveals a dim murk)
+  pieces:
+    seam-black-water: {layer: ground, size: [480, 320]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 4, keep_clear: 100}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    lamp-post: {layer: ground, size: [64, 96], frames: 4, fps: 4}
+    lamp-post-dying: {layer: ground, size: [64, 96], frames: 8, fps: 6}
+    lamp-post-glow: {layer: ground, size: [64, 96], frames: 4, fps: 4}
+    lamp-post-dying-glow: {layer: ground, size: [64, 96], frames: 8, fps: 6}
+    amber-seep: {layer: ground, size: [320, 320]}
+    amber-seep-glow: {layer: ground, size: [320, 320]}
+    vent-field: {layer: ground, size: [480, 2040]}
+    vent-field-glow: {layer: ground, size: [480, 2040]}
+    cave-mouth-right: {layer: ground, size: [112, 124]}
+  placed:
+    # section 2's seam (ground 3140): the pipeline floor into the black water, the pipe broken off; exact rows
+    - {piece: seam-black-water, t: 22.167, x: 240}
+    # the trench's last beacon 1, falling behind at the start (its foot at ground row 330); its light relay-beacon-glow, added over the grade
+    - {piece: relay-beacon, t: 0.592, x: 64}
+    # the trench's last beacon 2, falling behind at the start (its foot at ground row 470); its light relay-beacon-glow, added over the grade
+    - {piece: relay-beacon, t: 1.669, x: 420}
+    # lamp post 1 beside the pipeline (its foot at ground row 115); its light lamp-post-glow
+    - {piece: lamp-post, t: 0.0, x: 168}
+    # lamp post 2 beside the pipeline (its foot at ground row 475); its light lamp-post-glow
+    - {piece: lamp-post, t: 1.815, x: 168}
+    # lamp post 3 beside the pipeline (its foot at ground row 835); its light lamp-post-glow
+    - {piece: lamp-post, t: 4.585, x: 168}
+    # lamp post 4 beside the pipeline (its foot at ground row 1195); its light lamp-post-glow
+    - {piece: lamp-post, t: 7.354, x: 168}
+    # lamp post 5 beside the pipeline (its foot at ground row 1555); its light lamp-post-glow
+    - {piece: lamp-post, t: 10.123, x: 168}
+    # lamp post 6 beside the pipeline (its foot at ground row 1915; the last, failing); its light lamp-post-dying-glow
+    - {piece: lamp-post-dying, t: 12.892, x: 168}
+    # an amber seep far below at t=143 (section 5); its light amber-seep-glow
+    - {piece: amber-seep, t: 143.0, x: 130}
+    # an amber seep far below at t=149.5 (section 5); its light amber-seep-glow
+    - {piece: amber-seep, t: 149.5, x: 352}
+    # the vent field's far chimneys and red glow (vent-field-glow) rising on the horizon from t~168; exact rows
+    - {piece: vent-field, t: 177.727, x: 240}
+# sections' tiles: 1: [pipeline-floor]; 2: [black-water]; 3: [black-water]; 4: [black-water]; 5: [black-water]; 6: [black-water]
+# underwater_look (ART-F's proposal, round 55): section 1 {ambient: 0.20, ramp: {to: 0.06, from: 8, until: 18}, tint: 80aceb, caustics: 0.0, snow: 110, headlights: {reach: 260, angle: 70, strength: 1.0}, rim: 0.15}; sections 2-6 {ambient: 0.06, tint: 80aceb, caustics: 0.0, snow: 110, headlights: {reach: 260, angle: 70, strength: 1.0}, rim: 0.15}
+
+# terrain this art is drawn for (the level's data.yaml); F2: adopt it or re-run the generator after changing it
+terrain:
+  right:   # the fault scarp; no left wall (open water)
+    - [6930, 480, 0]   # t=56.0
+    - [7290, 430, 0.7]   # t=59.0
+    - [7530, 400]   # t=61.0
+    - [8130, 400]   # t=66.0
+    - [9090, 330]   # t=74.0
+    - [9810, 290]   # t=80.0
+    - [11250, 280]   # t=92.0
+    - [11850, 300]   # t=97.0
+    - [12210, 360, 0.5]   # t=100.0
+    - [12570, 480, 0]   # t=103.0
+  notches:   # side, scroll = the terrain row of the notch's middle, width along the wall, depth into it
+    - {side: right, scroll: 7500, width: 90, depth: 70}   # data, t=60.8 at the top edge
+    - {side: right, scroll: 8700, width: 90, depth: 70}   # data, t=70.8 at the top edge
+    - {side: right, scroll: 10380, width: 90, depth: 70}   # data, t=84.7 at the top edge
+  contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}
+# static lights this art assumes (F2's `lights:`; the pools are the game's light map, not baked):
+#   lamp post 1: x 158, ground row 106 (on the screen's top at t=0.0), radius 90, colour ffc46e
+#   lamp post 2: x 158, ground row 466 (on the screen's top at t=0.0), radius 90, colour ffc46e
+#   lamp post 3: x 158, ground row 826 (on the screen's top at t=2.3), radius 90, colour ffc46e
+#   lamp post 4: x 158, ground row 1186 (on the screen's top at t=5.0), radius 90, colour ffc46e
+#   lamp post 5: x 158, ground row 1546 (on the screen's top at t=7.8), radius 90, colour ffc46e
+#   lamp post 6: x 158, ground row 1906 (on the screen's top at t=10.6), radius 90, colour ffc46e (failing: its piece loops a stutter)
+#   the two beacons: radius 40, colour ff6040 (the 4 s pulse); the farm barge's lamp (l26_props.py, t~84, x 60): radius 80, ffc46e; the survey buoy (t=130): radius 30, ffe0a0

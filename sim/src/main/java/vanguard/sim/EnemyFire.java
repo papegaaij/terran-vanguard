@@ -113,6 +113,29 @@ final class EnemyFire {
     }
 
     /**
+     * M8 part F, a lunging unit's step after its move (design/enemies/naval/glow-angler; {@link Lunging}): its ring once
+     * due (while {@code firing}, on the play field), as a proximity ring's burst; while the ship is closer than bullets
+     * may spawn it waits (its {@link Lunging} drops it at its retreat's end). One {@link SimEvents.Type#ENEMY_FIRED} and
+     * one {@link SimEvents.Type#LURE_RING} (value: its kind) per ring; its re-arm then starts.
+     */
+    void lure(Enemy enemy, Ship ship, boolean firing) {
+        Lunging lunging = enemy.lunging;
+        if (!firing || !lunging.ringDue() || !PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
+            return;
+        }
+        double dx = ship.x() - enemy.x();
+        double dy = ship.y() - enemy.y();
+        if (dx * dx + dy * dy < NO_FIRE_DISTANCE * NO_FIRE_DISTANCE) {
+            return;
+        }
+        EnemySpec.Lunge lunge = enemy.spec().lunge().orElseThrow();
+        burst(enemy.x(), enemy.y(), lunge.ring(), lunge.ringSpeed(), lunge.ringDamage(), ship);
+        lunging.ringFired();
+        events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) lunge.ringDamage());
+        events.add(SimEvents.Type.LURE_RING, enemy.x(), enemy.y(), enemy.kind());
+    }
+
+    /**
      * A spiral gun's volley (M7 part E, the vortex's; M8 part E, the coil's) with its first arm at {@code firstArm}: on
      * the play field and not while the ship is closer than bullets may spawn, a bullet per arm, the arms evenly round,
      * one {@link SimEvents.Type#ENEMY_FIRED} per volley (a fan counts once).

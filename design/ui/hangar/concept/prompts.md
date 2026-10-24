@@ -305,3 +305,10 @@ its sac mid-tell) and `spiral-nautilus` (uncoiled nose down: the striped shell b
 eyes, scaled to the card), 30x30, from the production models of [tools/art/siren.py](../../../../tools/art/siren.py)
 and [tools/art/spiral_nautilus.py](../../../../tools/art/spiral_nautilus.py), written by
 [tools/art/intel.py](../../../../tools/art/intel.py) `siren spiral-nautilus`.
+
+## intel-final-r55-a
+
+Round 55, production art (M8 part F batch, step ART-F). Not a mockup: the review sheet of the `glow-angler` sensor L2
+portrait (30x30) written by [tools/art/intel.py](../../../../tools/art/intel.py) from tools/art/glow_angler.py's
+production model: the rust angler nose down, its gape half open, the teal lure lit on its stalk.
+

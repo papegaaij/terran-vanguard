@@ -130,7 +130,7 @@ terrain:
   islands:
     - name: rock pillar   # the fork: two 140 px channels
       look: pillar
-      points: [[240, 13680], [262, 13750], [265, 13860], [265, 14460], [262, 14570], [240, 14640], [218, 14570], [215, 14460], [215, 13860], [218, 13750]]
+      points: [[240, 13680], [250.6, 13683.7], [259.2, 13694.3], [263.5, 13706.3], [265, 13720], [265, 14600], [263.5, 14613.7], [259.2, 14625.7], [250.6, 14636.3], [240, 14640], [229.4, 14636.3], [220.8, 14625.7], [216.5, 14613.7], [215, 14600], [215, 13720], [216.5, 13706.3], [220.8, 13694.3], [229.4, 13683.7]]
   notches:   # side, scroll = the terrain row of the notch's middle, width along the wall, depth into it
     - {side: right, scroll: 3520, width: 90, depth: 70}   # data, t=25.1 at the top edge
     - {side: left, scroll: 3910, width: 90, depth: 70}   # data, t=27.9 at the top edge

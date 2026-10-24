@@ -239,4 +239,19 @@ public sealed interface EscortBlock permits LevelData {
             lane.ifPresent(l -> Check.positive("lane", l));
         }
     }
+
+    /**
+     * M8 part F (design/campaign Level 26, Rook's loss; design/player/wingmen, Rook's loss and absence; m8f-gaps.md §1.2,
+     * §5 F6, F7): at {@code trails} s on the level clock the torpedo trails rise and Rook's barks end; at {@code t} s he
+     * is hit, stops firing and taking hits and spirals down off the bottom edge in {@code spin} s, gone for the attempt.
+     * Not an eject (no pod, no repair). Only Rook flying in the escort slot plays it; ejected, without an escort or with
+     * the Bulwark it is the radio's alone. A retry replays it.
+     */
+    public record RookLoss(double t, double trails, double spin) {
+        public RookLoss {
+            Check.notNegative("trails", trails);
+            Check.that(t > trails, "rook_loss.t: after its trails, was " + t);
+            Check.positive("spin", spin);
+        }
+    }
 }

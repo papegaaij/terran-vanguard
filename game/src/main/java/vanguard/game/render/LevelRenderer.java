@@ -113,6 +113,8 @@ public final class LevelRenderer {
     private final ShuttleLooks shuttles;
     /** M5 part D: a scripted loss's glow and lance (Level 10), if the level has one. */
     private final LossLooks loss;
+    /** M8 part F: Rook's loss's trails, flashes and spin-down (Level 26), if the level has one. */
+    private final RookLossLooks rookLoss;
 
     private final FlashShader flash;
     /** M7 part A: the Act 3 arsenal in flight: beams, drones, fields, EMP, lance, overcharge, dash. */
@@ -224,6 +226,16 @@ public final class LevelRenderer {
     private final UnderwaterGrade grade;
     /** M8 part C: whether the grade covers some of the field this frame: the glows are drawn after it. */
     private boolean graded;
+    /**
+     * M8 part F: a dark level's lights and pools in the grade's light map and its pickups' gold halos (Level 26); null
+     * in another level ({@link DarkLight}).
+     */
+    private final DarkLight dark;
+
+    /** M8 part F: whether the level is a dark level (Level 26: {@link DarkLight}'s lights and lamps). */
+    public static boolean darkLevel(LevelData level) {
+        return UnderwaterGrade.hasLook(level) && DarkLight.dark(level);
+    }
     /** M8 part C: the Stormhawk's hydro-kit wakes and refit flash (Rook's: {@link WingmanLooks#hydro}). */
     private final HydroLooks shipHydro;
     /** M8 part C: the kills below the waterline (the under-water bursts, shards, husks, the pumps' breaks). */
@@ -311,6 +323,7 @@ public final class LevelRenderer {
                         .map(escort -> pivots(files, escort.ally().slug()))
                         .orElse(null));
         this.loss = new LossLooks(sprites, script);
+        this.rookLoss = new RookLossLooks(sprites, files, script.rookLoss());
         this.flash = flash;
         this.farside = new FarsideLooks(sprites, script);
         this.tows = new TowLooks(sprites);
@@ -340,6 +353,16 @@ public final class LevelRenderer {
         plain = new PlainLooks(sprites);
         // M8 part C: the under-water grade, the hydro-kit's effects, the tender, the ice shaft's walls.
         grade = UnderwaterGrade.of(level, sprites.pixel);
+        // M8 part F: a dark level's light pools in the grade, the units' glow-only frames.
+        dark = grade == null ? null : DarkLight.of(level, kinds, softGlow);
+        if (dark != null) {
+            grade.dark(dark);
+            kinds.dark(true);
+            dark.rookLoss(rookLoss);
+        }
+        if (grade != null) {
+            grade.rookLoss(rookLoss);
+        }
         deepDeaths = new DeepDeaths(sprites, kinds);
         List<Double> waterlines = level.waterlines();
         shipHydro = new HydroLooks(sprites, "ship", waterlines);
@@ -362,6 +385,16 @@ public final class LevelRenderer {
      */
     public boolean underwaterAt(double y) {
         return grade != null && grade.underwaterAt(y);
+    }
+
+    /**
+     * M8 part F: the settings' Dark levels assist (design/campaign Level 26, Darkness): in a dark level the ambient is
+     * held at least at {@value DarkLight#ASSIST_AMBIENT}; no change elsewhere.
+     */
+    public void darkAssist(boolean on) {
+        if (dark != null) {
+            grade.ambientFloor(on ? DarkLight.ASSIST_AMBIENT : 0);
+        }
     }
 
     /** M8 part C: the kills below the waterline ({@link DeepDeaths}). */
@@ -406,6 +439,9 @@ public final class LevelRenderer {
         farside.dispose();
         if (grade != null) {
             grade.dispose();
+        }
+        if (dark != null) {
+            dark.dispose();
         }
         if (storm != null) {
             storm.dispose();
@@ -516,6 +552,8 @@ public final class LevelRenderer {
         // M8 part E: the rings' rock, the Nautili's roll and glances.
         kinds.sirens(sortie).stepped(sortie);
         kinds.nautili(sortie).stepped(sortie);
+        // M8 part F: the Anglers' triggers, rings and deaths.
+        kinds.anglers(sortie).stepped(sortie);
         props.steppedBullets(sortie);
         plain.stepped(sortie, looks);
     }
@@ -903,6 +941,8 @@ public final class LevelRenderer {
         deepWater.drawBulwark(batch, sortie, alpha);
         if (rook != null) {
             wingmanLooks.draw(batch, rook, sortie.tick(), alpha, play.whiteFlash);
+            // M8 part F: his spin-down after his loss (Level 26), in his craft's place.
+            rookLoss.drawSpin(batch, rook, alpha);
             if (storm != null) {
                 // M7 part E: Rook outside the radius, a silhouette with his running lights.
                 storm.drawWingman(batch, rook, alpha, wingmanLooks);
@@ -913,6 +953,11 @@ public final class LevelRenderer {
             units.drawLatched(batch, sortie, alpha);
         }
         drawUnderGrade(batch, sortie, alpha, scroll, seconds, rook);
+        // M8 part F: over the grade the Anglers' glow, stalk, lure, ring flash and death; the pickups' gold halos.
+        kinds.anglers(sortie).drawGlows(batch, sortie, alpha);
+        if (dark != null) {
+            dark.drawHalos(batch, sortie, alpha, clock.real());
+        }
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         player.drawShots(batch, sortie, alpha, true);
         // M8 part A: the depth charges' fuse lamps and the Decoy Flares.
@@ -940,6 +985,8 @@ public final class LevelRenderer {
         canyonLooks.draw(batch, scroll);
         // M5 part D: the lance above the air layer.
         loss.drawLance(batch, sortie, alpha);
+        // M8 part F: Rook's loss: the torpedo trails, the hits' flashes, his failing lamp (over the grade).
+        rookLoss.drawOver(batch, sortie, alpha);
         if (rook != null) {
             // His eject pod over the explosion once it has popped out of it.
             wingmanLooks.drawOver(batch, rook, sortie.tick(), alpha);
@@ -1005,6 +1052,8 @@ public final class LevelRenderer {
             SpriteBatch batch, Sortie sortie, float alpha, double scroll, double seconds, Wingman rook) {
         if (grade != null) {
             grade.draw(batch, sortie, alpha, scroll, clock.real());
+            // M8 part F: the headlights' faint volume, so the cones read in empty black water.
+            grade.drawHaze(batch);
         }
         // M8 part D: the ground pieces' lights over the grade (Level 24's relay beacons' pulse).
         backdrop.drawPieceGlows(batch, scroll, clock);

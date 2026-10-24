@@ -37,7 +37,7 @@ yet: the loader would fly it, so every number here is a hand table marked draft,
 | [level-23-through-the-ice](level-23-through-the-ice/README.md) | The descent: a drill shaft, the waterline where the hydro-kit switches the ship to the water rules, Thera Deep's kelp farms; Glassfin schools and the Eel Swarm | approved | in-progress | final |
 | [level-24-abyssal-plain](level-24-abyssal-plain/README.md) | The ocean floor: Vrell spawning reefs, the Barbfin, three Abyss Rays rising from below, the first red-gold relay beacons | approved | in-progress | final |
 | [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | in-progress | proposed |
-| [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | not-started | none |
+| [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | in-progress | proposed |
 | [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | not-started | none |
 | [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | not-started | none |
 

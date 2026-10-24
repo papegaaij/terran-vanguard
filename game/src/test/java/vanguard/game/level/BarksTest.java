@@ -224,6 +224,28 @@ class BarksTest {
         assertTrue(barks.bossWarning(40), "the others still fire");
     }
 
+    /**
+     * M8 part F (design/player/wingmen, Rook's loss): his loss's trails end his barks: a waiting one is withdrawn, none
+     * fires after them (not even an eject), and a new attempt brings them back.
+     */
+    @Test
+    void hisBarksEndWithHisLossesTrails() {
+        Barks barks = barks(26);
+        busy();
+        assertTrue(barks.bossWarning(10), "queued behind the busy radio");
+        assertTrue(radio.waiting(lastQueued));
+        barks.rookLost();
+        assertFalse(radio.waiting(lastQueued), "the waiting bark is withdrawn");
+        assertTrue(barks.silenced());
+        assertFalse(barks.bossWarning(40));
+        assertFalse(barks.kill(41));
+        assertFalse(barks.rookCritical(42));
+        assertFalse(barks.rookEjected(43), "no bark at all after the trails");
+        barks.reset(0);
+        assertFalse(barks.silenced(), "a retry brings him back");
+        assertTrue(barks.bossWarning(60));
+    }
+
     @Test
     void theEjectBarkIgnoresTheSpacingAndTheScriptedRookLines() {
         Barks barks = barks(6, new double[] {136}, NONE, NONE);

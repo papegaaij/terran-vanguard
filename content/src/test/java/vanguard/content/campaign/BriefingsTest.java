@@ -256,6 +256,6 @@ class BriefingsTest {
 
     @Test
     void aLevelThatIsNotBuiltYetHasNoBriefing() {
-        assertEquals(Optional.empty(), Briefings.before(content, 26)); // M8 part E: Level 25 is built
+        assertEquals(Optional.empty(), Briefings.before(content, 27)); // M8 part F: Level 26 is built
     }
 }

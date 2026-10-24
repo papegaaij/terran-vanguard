@@ -98,6 +98,14 @@ public final class Hud {
         ship.specialReady();
     }
 
+    /**
+     * M8 part F: the radio portrait's interference ahead of a line with a {@code static_lead} (Level 26's Choir), 0 to 1
+     * this frame ({@link vanguard.game.level.StaticLeads}).
+     */
+    public void staticLead(float strength) {
+        mission.staticLead(strength);
+    }
+
     /** @param prompts the control prompts to show */
     public void draw(SpriteBatch batch, Sortie sortie, RadioQueue radio, List<PromptTexts.Text> prompts) {
         mission.draw(batch, sortie, radio, prompts);

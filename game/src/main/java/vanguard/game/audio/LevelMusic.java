@@ -51,6 +51,13 @@ import java.util.function.IntToDoubleFunction;
  * and out over their fades), silent outside it. M7 part H (Level 21): while an act boss fights they swell and hold, and
  * the kill cuts them ({@link #layers}); the wind's calm over the settling dust is {@link #calmDb}.
  *
+ * <p>M8 part F (Level 26): the theme's timed stem changes ({@link #stemTimes}: the level's {@code music.stem_times}):
+ * from a change's time on, eased over its fade, its {@code stems} play (the theme's stems; an extra stem of the theme
+ * alone, the stems out, on the same grid through {@link StemMix}'s extras; or none, the ambience alone) at its {@code
+ * db}. A change that brings in an extra stem without a {@code db} plays it at its file's level (0 dB): each stem is
+ * levelled in its file (the warm pad after the dark stem's −6 dB thinning). And a radio line with its own duck ({@link
+ * #radioDuck}: Level 26's Choir, −6 dB) ducks the theme by that much instead of the radio's −4 dB.
+ *
  * <p>An act boss (Level 07) has its own music: at its arrival the theme crossfades out over 0.5 s
  * while the boss warning (track 22) starts, and the boss track (track 18) comes in on the downbeat
  * after the warning's bars ({@link BossCue}); at the kill it fades out in a second, leaving the
@@ -327,6 +334,141 @@ public final class LevelMusic implements Disposable {
 
     private boolean stemsOn = true;
 
+    /** M8 part F: the level's timed stem changes, in time order; none by default. */
+    private List<vanguard.content.LevelData.Music.StemTime> stemTimes = List.of();
+    /** M8 part F: the theme's extra stems the changes name, in order of first use, and their files. */
+    private List<String> extraNames = List.of();
+
+    private List<FileHandle> extraFiles = List.of();
+    /** M8 part F: the last change applied to the stream (-1: none yet, the sections' stems). */
+    private int stemTime = -1;
+    /** M8 part F: what the changes ask for now: the stems on, a full-mix share (-1: the section's), the extra (-1). */
+    private boolean timedStemsOn = true;
+
+    private float timedShare = -1;
+    private int timedExtra = -1;
+    /** M8 part F: the stems' fade of the last change, s (the default 2 s before any). */
+    private double timedFade = StemMix.STEMS_FADE_SECONDS;
+    /** M8 part F: the changes' level now (linear), where its ramp started, where it goes, its length and what is left. */
+    private float timedGain = 1;
+
+    private float timedFrom = 1;
+    private float timedTarget = 1;
+    private double timedLength;
+    private double timedLeft;
+    /** M8 part F: the radio line's own duck now, dB (0: the radio's usual {@link #DUCKED}). */
+    private double radioDuckDb;
+
+    /**
+     * M8 part F: the theme's timed stem changes (the level's {@code music.stem_times}); {@code extraFile} gives an extra
+     * stem's file by its name ({@code <theme>-<name>.ogg}); a stem whose file does not exist stays silent.
+     */
+    public LevelMusic stemTimes(
+            List<vanguard.content.LevelData.Music.StemTime> times,
+            java.util.function.Function<String, FileHandle> extraFile) {
+        stemTimes = List.copyOf(times);
+        List<String> names = new java.util.ArrayList<>();
+        List<FileHandle> files = new java.util.ArrayList<>();
+        for (var time : stemTimes) {
+            String name = time.stems().orElse("");
+            if (time.extraStem()
+                    && !names.contains(name)
+                    && extraFile.apply(name).exists()) {
+                names.add(name);
+                files.add(extraFile.apply(name));
+            }
+        }
+        extraNames = List.copyOf(names);
+        extraFiles = List.copyOf(files);
+        return this;
+    }
+
+    /** M8 part F: the extra stems' files, decoded, in {@link #extraNames}' order. */
+    private VorbisFile[] extraStems() {
+        VorbisFile[] files = new VorbisFile[extraFiles.size()];
+        for (int i = 0; i < files.length; i++) {
+            files[i] = new VorbisFile(extraFiles.get(i).readBytes());
+        }
+        return files;
+    }
+
+    /**
+     * M8 part F: the radio line on the air now asks the music to duck by {@code db} (positive; 0: the radio's usual
+     * duck), Level 26's Choir 6 dB.
+     */
+    public void radioDuck(double db) {
+        radioDuckDb = db;
+    }
+
+    /** M8 part F: the timed changes' level now, linear, for the tests. */
+    float timedGain() {
+        return timedGain;
+    }
+
+    /** M8 part F: the extra stem the changes play now (-1: none), for the tests. */
+    int timedExtra() {
+        return timedExtra;
+    }
+
+    /** M8 part F: whether the changes have the theme's stems play now, for the tests. */
+    boolean timedStemsOn() {
+        return timedStemsOn;
+    }
+
+    /**
+     * M8 part F: the last change due by {@code levelSeconds}; when it is a new one, the state it asks for (a jump over
+     * several, or a new stream, at once) goes to the stems.
+     */
+    private void stemTimes(double levelSeconds, float seconds) {
+        int due = -1;
+        while (due + 1 < stemTimes.size() && stemTimes.get(due + 1).t() <= levelSeconds) {
+            due++;
+        }
+        if (due != stemTime) {
+            boolean step = due == stemTime + 1;
+            stemTime = due;
+            applyStemTime(due, step);
+        }
+        timedLeft = Math.max(0, timedLeft - seconds);
+        timedGain = timedLength <= 0
+                ? timedTarget
+                : (float) (timedTarget + (timedFrom - timedTarget) * (timedLeft / timedLength));
+    }
+
+    /** Applies the state change {@code due} asks for (-1: back to the sections' stems), eased when {@code eased}. */
+    private void applyStemTime(int due, boolean eased) {
+        String stemsName = null;
+        double db = 0;
+        for (int i = 0; i <= due; i++) {
+            var time = stemTimes.get(i);
+            if (time.stems().isPresent()) {
+                stemsName = time.stems().get();
+                if (time.extraStem()) {
+                    db = 0;
+                }
+            }
+            if (time.db().isPresent()) {
+                db = time.db().get();
+            }
+        }
+        double fade = due >= 0 && eased ? stemTimes.get(due).fade() : 0;
+        timedFade = due >= 0 ? fade : StemMix.STEMS_FADE_SECONDS;
+        timedStemsOn = stemsName == null || stemsName.equals("full") || stemsName.equals("base");
+        timedShare = "full".equals(stemsName) ? 1 : "base".equals(stemsName) ? 0 : -1;
+        timedExtra = stemsName == null ? -1 : extraNames.indexOf(stemsName);
+        float target = (float) Math.pow(10, db / 20);
+        timedFrom = fade > 0 ? timedGain : target;
+        timedTarget = target;
+        timedLength = fade;
+        timedLeft = fade;
+        if (stems.isPresent()) {
+            StemMix mix = stems.get();
+            for (int e = 0; e < mix.extras(); e++) {
+                mix.extra(e, e == timedExtra ? 1 : 0, fade);
+            }
+        }
+    }
+
     /** M7 part E: whether the motif layer was asked for at the last update, for the tests. */
     boolean motifOn() {
         return motifOn;
@@ -466,7 +608,12 @@ public final class LevelMusic implements Disposable {
      * duck's {@code event} while it lasts (1 for none); the lower of the two, they do not add up.
      */
     static float duckTarget(boolean radio, float event) {
-        return Math.min(radio ? DUCKED : 1, event);
+        return duckTarget(radio, DUCKED, event);
+    }
+
+    /** M8 part F: as above with the radio line's own duck level {@code radioLevel} (linear). */
+    static float duckTarget(boolean radio, float radioLevel, float event) {
+        return Math.min(radio ? radioLevel : 1, event);
     }
 
     /** The ambience looping at full now (or fading in), for the tests. */
@@ -548,9 +695,10 @@ public final class LevelMusic implements Disposable {
     public void update(int section, double levelSeconds, float seconds, boolean radio, boolean runTimeFull) {
         boolean wasIntense = intense;
         intense = runTimeFull;
-        boolean wanted = fullMix.test(section) || runTimeFull;
-        stemsOn = !motifAlone.test(section);
-        motifOn = motifCue.on(section, levelSeconds) || !stemsOn;
+        stemTimes(levelSeconds, seconds);
+        boolean wanted = timedShare >= 0 ? timedShare > 0 : fullMix.test(section) || runTimeFull;
+        stemsOn = !motifAlone.test(section) && timedStemsOn;
+        motifOn = motifCue.on(section, levelSeconds) || motifAlone.test(section);
         if (levelSeconds >= ambienceFrom && fade < 0 && music.isPresent()) {
             fadeOut();
         }
@@ -570,16 +718,20 @@ public final class LevelMusic implements Disposable {
                     new VorbisFile(base.readBytes()),
                     new VorbisFile(full.readBytes()),
                     motifFile != null && motifFile.exists() ? new VorbisFile(motifFile.readBytes()) : null,
+                    extraStems(),
                     CROSSFADE_SECONDS,
                     wanted ? 1 : 0,
                     motifOn);
             stemTarget = wanted ? 1 : 0;
             stems = Optional.of(mix);
+            // M8 part F: the timed changes due now apply to the new stream at once.
+            stemTime = -2;
+            stemTimes(levelSeconds, 0);
             music = Optional.of(MusicStreamer.play(audio, mix, MUSIC_VOLUME * rise, mixer));
         }
         if (stems.isPresent()) {
             stems.get().motif(motifOn);
-            stems.get().stems(stemsOn);
+            stems.get().stems(stemsOn, timedFade);
         }
         float share = wanted ? 1 : 0;
         if (stems.isPresent() && share != stemTarget) {
@@ -591,11 +743,13 @@ public final class LevelMusic implements Disposable {
         }
         ambience(section, seconds);
         sectionLevel(section, seconds);
-        float target = duckTarget(radio, eventDuckLeft > 0 ? eventDuck : 1);
+        float radioLevel = radioDuckDb > 0 ? (float) Math.pow(10, -radioDuckDb / 20) : DUCKED;
+        float target = duckTarget(radio, radioLevel, eventDuckLeft > 0 ? eventDuck : 1);
         eventDuckLeft = Math.max(0, eventDuckLeft - seconds);
         duck += (target - duck) * Math.min(1, DUCK_RATE * seconds);
         float faded = fade >= 0 ? fade / fadeLength : 1;
-        float level = rise * sectionGain * faded * stingDip() * (themeOut >= 0 ? themeOut / BOSS_CROSSFADE : 1);
+        float level =
+                rise * sectionGain * timedGain * faded * stingDip() * (themeOut >= 0 ? themeOut / BOSS_CROSSFADE : 1);
         if (sting >= 0) {
             sting -= seconds;
         }
@@ -797,6 +951,9 @@ public final class LevelMusic implements Disposable {
     /** The level restarts: the theme waits for its section again, at its start level. */
     public void restart() {
         cut = false;
+        stemTime = -1;
+        applyStemTime(-1, false);
+        timedGain = 1;
         sting = -1;
         eventDuckLeft = 0;
         restartAmbience();

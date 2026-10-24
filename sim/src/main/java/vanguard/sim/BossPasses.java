@@ -225,7 +225,7 @@ final class BossPasses implements SetPiece.BossActions {
                 hitPasses.damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
             }
             if (wingman != null
-                    && !wingman.ejected()
+                    && !wingman.out()
                     && wingman.hull().overlaps(wingman.x(), wingman.y(), laneBox, laneX, laneY)) {
                 wingman.hit(damage, ship.x(), ship.y(), events);
             }
@@ -262,7 +262,7 @@ final class BossPasses implements SetPiece.BossActions {
                 }
                 if (piece.stride().isPresent()) {
                     // M7 part F: its passes' lanes and its cone read where the ship and Rook are.
-                    boolean rook = wingman != null && !wingman.ejected();
+                    boolean rook = wingman != null && !wingman.out();
                     piece.strideTargets(ship.x(), ship.y(), rook ? wingman.x() : 0, rook ? wingman.y() : 0, rook);
                 }
                 piece.update(s.levelTick);
@@ -455,7 +455,7 @@ final class BossPasses implements SetPiece.BossActions {
                 double lost = ship.defences().armourLost();
                 hitPasses.damaged(lost, ship.defences().takeShot(damage, events, ship.x(), ship.y()));
             }
-            if (wingman != null && !wingman.ejected() && within(wingman.x(), wingman.y(), x, y, radius)) {
+            if (wingman != null && !wingman.out() && within(wingman.x(), wingman.y(), x, y, radius)) {
                 hit |= BreachArena.BITE_WINGMAN;
                 wingman.hit(damage, ship.x(), ship.y(), events);
             }
@@ -474,7 +474,7 @@ final class BossPasses implements SetPiece.BossActions {
             }
             if ((spared & BreachArena.BITE_WINGMAN) == 0
                     && wingman != null
-                    && !wingman.ejected()
+                    && !wingman.out()
                     && within(wingman.x(), wingman.y(), x, y, radius)) {
                 hit |= BreachArena.BITE_WINGMAN;
                 wingman.hit(damage, ship.x(), ship.y(), events);

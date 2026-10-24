@@ -180,4 +180,46 @@ public interface FlightSpecs {
             }
         }
     }
+
+    /**
+     * M8 part F, the lunge from a lure (design/enemies/naval/glow-angler; {@link Lunging}; m8f-gaps.md §1.1, §5 F2): a
+     * unit that hangs drifting with the water (a field's current, else its path's way, at its speed, scrolling with the
+     * ground) and, armed and on the play field with the ship's centre within {@code trigger} px of its centre (its lure
+     * lies inside that, so touching the lure needs no test of its own), dives at {@code speed} px/s at where the ship was
+     * then, stopping {@code stopShort} px short of that point or after {@code seconds}; at the dive's end its {@code
+     * ring} of bullets at {@code ringSpeed} px/s, each dealing {@code ringDamage}, is due, and it retreats away from the
+     * ship at {@code retreatSpeed} px/s for {@code retreatSeconds}, then drifts again. A ring due while the ship is closer
+     * than bullets may spawn waits for room within the retreat (none once it is over); it re-arms {@code rearmSeconds}
+     * after its ring (or after its retreat when none fired).
+     */
+    public record Lunge(
+            double trigger,
+            double speed,
+            double seconds,
+            double stopShort,
+            int ring,
+            double ringSpeed,
+            double ringDamage,
+            double retreatSpeed,
+            double retreatSeconds,
+            double rearmSeconds) {
+        public Lunge {
+            if (!(stopShort >= 0)
+                    || !(trigger > stopShort)
+                    || !(speed > 0)
+                    || !(seconds > 0)
+                    || ring < 1
+                    || !(ringSpeed > 0)
+                    || !(ringDamage >= 0)
+                    || !(retreatSpeed >= 0)
+                    || !(retreatSeconds >= 0)
+                    || !(rearmSeconds >= 0)) {
+                throw new IllegalArgumentException("a lunge triggers beyond its stop and fires a ring: trigger "
+                        + trigger + " px, " + speed + " px/s for " + seconds + " s, " + stopShort
+                        + " px short, a ring of "
+                        + ring + " at " + ringSpeed + " px/s, retreat " + retreatSpeed + " px/s for " + retreatSeconds
+                        + " s, re-arm " + rearmSeconds + " s");
+            }
+        }
+    }
 }

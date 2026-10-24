@@ -80,9 +80,12 @@ public final class RadioSchedule {
         return fitted;
     }
 
-    /** Whether the sortie's escort flies now (hired, fitted and not ejected): a {@code requires: escort} cue plays. */
+    /**
+     * Whether the sortie's escort flies now (hired, fitted and not ejected; M8 part F: nor past his loss's trails, {@link
+     * vanguard.sim.Wingman#onRadio}): a {@code requires: escort} cue plays.
+     */
     public static boolean escortFlying(Sortie sortie) {
-        return sortie.wingman().map(wingman -> !wingman.ejected()).orElse(false);
+        return sortie.wingman().map(vanguard.sim.Wingman::onRadio).orElse(false);
     }
 
     /** How cue {@code index} of the script queues. */

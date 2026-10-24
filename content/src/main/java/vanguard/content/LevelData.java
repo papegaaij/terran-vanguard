@@ -84,6 +84,8 @@ import vanguard.sim.PlayField;
  * @param underwaterLook M8 part C (design/world/europa, Palette and lighting): how the game grades the play field under
  *     water (presentation only), a section's {@code underwater_look} changing it ({@link #underwaterLookOf}); only on a
  *     level that is under water somewhere; none if not given
+ * @param rookLoss M8 part F (design/campaign Level 26, Rook's loss; design/player/wingmen): Rook's scripted loss; none
+ *     if not given
  */
 public record LevelData(
         double scrollSpeed,
@@ -134,7 +136,8 @@ public record LevelData(
         Optional<Ridge> ridge,
         Optional<Medium> medium,
         Optional<List<String>> specialLimits,
-        Optional<UnderwaterLook> underwaterLook)
+        Optional<UnderwaterLook> underwaterLook,
+        Optional<RookLoss> rookLoss)
         implements SectionsBlock,
                 WavesBlock,
                 SetPiecesBlock,
@@ -612,7 +615,85 @@ public record LevelData(
             Optional<Map<Integer, Double>> sectionDb,
             Optional<Jingle> jingle,
             Optional<Motif> motif,
-            Optional<List<AmbienceLayer>> ambienceLayers) {
+            Optional<List<AmbienceLayer>> ambienceLayers,
+            Optional<List<StemTime>> stemTimes) {
+
+        /** Without M8 part F's timed stems. */
+        public Music(
+                int track,
+                int startSection,
+                Optional<Double> startDb,
+                int fullSection,
+                Optional<Map<Integer, Stems>> stems,
+                String ambience,
+                String endJingle,
+                Optional<String> bossSting,
+                Optional<Double> ambienceFrom,
+                Optional<VoiceLoop> voiceLoop,
+                Optional<String> bossWarning,
+                Optional<String> bossTrack,
+                Optional<List<FullOn>> fullOn,
+                Optional<Duck> duck,
+                Optional<List<AmbienceChange>> ambienceChanges,
+                Optional<Map<Integer, Double>> sectionDb,
+                Optional<Jingle> jingle,
+                Optional<Motif> motif,
+                Optional<List<AmbienceLayer>> ambienceLayers) {
+            this(
+                    track,
+                    startSection,
+                    startDb,
+                    fullSection,
+                    stems,
+                    ambience,
+                    endJingle,
+                    bossSting,
+                    ambienceFrom,
+                    voiceLoop,
+                    bossWarning,
+                    bossTrack,
+                    fullOn,
+                    duck,
+                    ambienceChanges,
+                    sectionDb,
+                    jingle,
+                    motif,
+                    ambienceLayers,
+                    Optional.empty());
+        }
+
+        /**
+         * M8 part F (design/campaign Level 26, Music &amp; ambience; design/audio/music, track 10's dark stem and warm pad;
+         * m8f-gaps.md §1.5, §5 F12): a change of the theme at level time {@code t}, eased over {@code fade} s: {@code
+         * stems} what plays from then on ({@code full} or {@code base}: the theme's stems; another name, {@code dark} or
+         * {@code warm}: that extra stem of the theme, {@code <theme>-<name>.ogg} on the same grid, alone through the
+         * third lockstep stream (Level 19's machinery), the theme's stems out; {@code none}: the theme silent, the
+         * ambience alone) and {@code db} its level from then on (at most 0); each change gives at least one of them.
+         */
+        public record StemTime(double t, Optional<String> stems, Optional<Double> db, double fade) {
+            /** The theme silent from then on, the ambience alone. */
+            public static final String NONE = "none";
+
+            public StemTime {
+                Check.notNegative("t", t);
+                Check.notNegative("fade", fade);
+                Check.that(stems.isPresent() || db.isPresent(), "stem_times: a change gives its stems or its db");
+                stems.ifPresent(name -> Check.that(
+                        name.matches("[a-z][a-z0-9-]*"), "stem_times: stems a name in lower case, was '" + name + "'"));
+                db.ifPresent(level -> Check.that(level <= 0, "stem_times: db at most 0, was " + level));
+            }
+
+            /** Whether it plays an extra stem of the theme alone (not {@code full}, {@code base} or {@code none}). */
+            public boolean extraStem() {
+                return stems.filter(name -> !name.equals("full") && !name.equals("base") && !name.equals(NONE))
+                        .isPresent();
+            }
+        }
+
+        /** M8 part F: the timed stem changes in time order, none if not given. */
+        public List<StemTime> stemTimeList() {
+            return stemTimes.orElse(List.of());
+        }
 
         /** Without M7 part G's ambience layers. */
         public Music(
@@ -971,6 +1052,16 @@ public record LevelData(
 
         public Music {
             ambienceLayers = ambienceLayers.map(List::copyOf);
+            stemTimes = stemTimes.map(List::copyOf);
+            stemTimes.ifPresent(times -> {
+                Check.notEmpty("stem_times", times);
+                for (int i = 1; i < times.size(); i++) {
+                    Check.that(
+                            times.get(i).t()
+                                    >= times.get(i - 1).t() + times.get(i - 1).fade(),
+                            "stem_times[" + i + "]: in time order, each after the fade before it");
+                }
+            });
             Check.that(startSection <= fullSection, "full_section must not come before start_section");
             startDb.ifPresent(db -> Check.that(db <= 0, "start_db: must not be above full level"));
             ambienceFrom.ifPresent(t -> Check.positive("ambience_from", t));

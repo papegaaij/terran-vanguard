@@ -31,7 +31,8 @@ growth's sparse teal nodules, so the walls' line reads in the dark; the beacons'
 Wall textures (CanyonProfile's convention, backdrop_l23.py's names; not pieces):
   ice-wall        128x1280  the trench's ice-rock: segment 0 the dark wet foot cliff, 1 a narrow silted ledge, 2 the
                             main strata face with Vrell growth, 3 a ledge, 4 the upper face, 5 the pale frosted lip
-  ice-wall-glow   128x1280  additive: the growth's teal nodules (a few per period) and short vein glints
+  ice-wall-glow   128x1280  additive: the growth's teal nodules (a few per period) and short vein glints; a faint
+                            cool rim along the frosted lip (round 54's redo, step LX)
   ice-wall-foot   24x512    the foot band (column 0 the collision line: a dark crack, the lit rock edge, rubble and
                             silt thinning out by column 23; lit from straight up only: mirrored for the right wall)
   pillar-face     128x528   the island's steps (rows along its perimeter, period 512, 16 rows repeated)
@@ -54,7 +55,7 @@ Pieces (ground; exact rows):
                   row 62, the foot line at column 84 (left) / 27 (right); the recess (its floor darkening into the
                   overhang, the back wall, the side walls lit or shaded by the key light), the rock round it dithering
                   out into the wall, the rubble spilling over the foot band
-Review: design/campaign/act-4-deep-water/level-25-siren-trench/concept/backdrop-final-r54-a.png/.gif (the walls and the
+Review: design/campaign/act-4-deep-water/level-25-siren-trench/concept/backdrop-final-r55-a.png/.gif (the walls and the
 pillar projected as WallProjection does, approximately; stand-ins for the units); `--proposal` writes the `backdrop:`
 and the proposed `terrain:` block to the level's concept/backdrop-proposal.yaml (never into data.yaml).
 
@@ -83,7 +84,7 @@ import europa_r48 as eu  # noqa: E402  (concept script, unchanged: Europa's colo
 SCRIPT = "backdrop_l25.py"
 BATCH = "M8 part E batch"
 SOURCE = artkit.source_note(SCRIPT, BATCH)
-ROUND = "r54"
+ROUND = "r55"
 artkit.REVIEW_ROUND = ROUND
 LEVEL_DIR = DESIGN / "campaign" / "act-4-deep-water" / "level-25-siren-trench"
 CONCEPT = LEVEL_DIR / "concept"
@@ -626,6 +627,10 @@ def ice_wall():
     return finish(padded(rgb), 32, amount=0.04)
 
 
+LIP_RIM = np.array((176, 204, 224), float)   # the lip's rim light (additive), at most this x LIP_GLOW
+LIP_GLOW = 0.22
+
+
 def ice_wall_glow():
     yy, xx, G, T = _wall_fields()
     _, nods = rock_wall_rgb()
@@ -635,7 +640,10 @@ def ice_wall_glow():
             d = np.hypot(xx - x, yy - y - dy)
             f = np.maximum(f, np.clip(1 - d / r, 0, 1) + 0.35 * np.clip(1 - d / (r + 2.5), 0, 1))
     v = artkit.ordered_dither(np.clip(f, 0, 1), 4)
-    rgb = padded(TEAL * 0.6 * v[..., None])
+    # Round 54's F.1/F.2 redo (step LX): a faint cool rim along the frosted lip, so the trench's upper edge reads
+    # outside the headlights (the game adds a rim light along the walls' foot; the grade leaves this glow unlit).
+    lip = np.where(G == 5, np.clip((T - 0.5) / 0.45, 0, 1), 0) * LIP_GLOW
+    rgb = padded(np.maximum(TEAL * 0.6 * v[..., None], LIP_RIM * lip[..., None]))
     alpha = np.where(rgb.max(axis=-1) >= 1, 255, 0)
     return Image.fromarray(np.dstack([rgb, alpha]).astype(np.uint8), "RGBA")
 
@@ -1137,7 +1145,8 @@ def draw_walls(img, t, glow_out):
     rgb = tex[vr, col, :3].astype(float) * shade[..., None]
     a[..., :3] = np.where(on[..., None], rgb, a[..., :3])
     g = glow[vr, col, :3].astype(float)
-    glow_out[...] = np.where(on[..., None], g, 0)
+    # the glow on the wall's face only (the z=1 paint beyond the lip stands in for the plateau, which has no glow)
+    glow_out[...] = np.where((on & (zmap < 1))[..., None], g, 0)
     return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8), "RGBA")
 
 
@@ -1354,7 +1363,7 @@ def review():
     cw, ch = 240, 270
     right = 3 * (100 + 8) + 16
     sheet = raster.sheet(16 + cols * (cw + 8) + 8 + right, 60 + 2 * (ch + 24) + 330,
-                         "LEVEL 25 BACKDROP - SIREN TRENCH (FINAL)", f"PRODUCTION ART, {BATCH.upper()} - R54")
+                         "LEVEL 25 BACKDROP - SIREN TRENCH (FINAL)", f"PRODUCTION ART, {BATCH.upper()} - {ROUND.upper()}")
     raster.draw_text(sheet, 16, 38, "THE SCREEN AT 1/2 UNDER THE REVIEW GRADE (AMBIENT 0.14); THE WALLS AND THE PILLAR "
                      "PROJECTED AS THE GAME DOES (APPROX.); STAND-INS: REEF SPITTERS, SHIP", raster.LABEL)
     for i, ((t, label), img) in enumerate(zip(TIMES, shots)):

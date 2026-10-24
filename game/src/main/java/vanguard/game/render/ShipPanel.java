@@ -114,6 +114,8 @@ final class ShipPanel {
     static final int ESCORT_BAR_HEIGHT = 8;
     static final String ESCORT_NAME = "ROOK";
     static final String EJECTED = "EJECTED";
+    /** M8 part F: what his box reads from his loss on (Level 26, design/player/wingmen, Rook's loss): missing. */
+    static final String MIA = "MIA";
     /** M8 part A: the Bulwark's name in the escort box, and what it reads once it is lost. */
     static final String BULWARK_NAME = "BULWARK";
 
@@ -338,10 +340,22 @@ final class ShipPanel {
 
     /**
      * The escort box under the special's row: {@code ESCORT}, then {@code [icon] ROOK} with his armour
-     * number over his armour bar; the bar empty and {@code EJECTED} in red once he is out.
+     * number over his armour bar; the bar empty and {@code EJECTED} in red once he is out; M8 part F: {@code MIA} from
+     * his loss (not an eject).
      */
     private void escort(SpriteBatch batch, Wingman rook, long tick, int x, int y) {
-        escortBox(batch, escortIcon, ESCORT_NAME, rook.ejected(), EJECTED, rook.armour(), rook.maxArmour(), tick, x, y);
+        boolean lost = rook.loss().lost();
+        escortBox(
+                batch,
+                escortIcon,
+                ESCORT_NAME,
+                rook.ejected() || lost,
+                lost ? MIA : EJECTED,
+                rook.armour(),
+                rook.maxArmour(),
+                tick,
+                x,
+                y);
     }
 
     /**

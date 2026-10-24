@@ -1265,3 +1265,31 @@ through water, no bubbles, about three minutes, instrumental, seamless loop."*
 - `pressure-line-sheet-r51-a.png`: review sheet, as track 10's (the third column the motif against the full mix).
 
 **Chosen** (round 51, M.2, 2026-10-22: accepted as proposed).
+
+## thera-deep-warm-r55-a / -b — track 10's warm pad (Level 26 from t=168)
+
+Proposed (round 55, M8 part F, step AUD-F), synthesized by `tools/concept/audio/sfx_r55f.py` (the music tool: the
+voices of `music.py` and `music_r02.py` on `music_r51b.py`'s track-10 grid; no Freesound source). Use: Level 26's
+aftermath: the music is out at t=160 (Rook's loss), and from t=168 "the vent field's warm pad creeps in" to the level's
+end (t≈182; gap check F12). Each file is a fourth stem of track 10 on the same grid (180.72 s, `LOOPSTART` 349272,
+`LOOPLENGTH` 7451136, sample-equal to the other stems), so the game can play it through the third lockstep stream as
+it plays the dark stem (`alone`), faded in over about 10 s. Levelled to −20 LUFS over the loop, 2 LU under the dark
+stem: it sits under the aftermath's radio lines (t=165, 171, 176).
+
+- **a, "the dark stem's pad opened"**: the dark stem's own pad (the `v_pad` supersaw, the same chords, unducked)
+  brighter (its filter at 3200 Hz, the dark stem's 1600) through the water low-pass held open at 4800 Hz (the dark
+  stem's moves 1300–4800 Hz with the sections), its F1 + C2 pedal drone quieter and warmer (900 Hz, the dark stem's
+  300), no sonar pings: the same music as the dark, come up into warmer water. Measured: −20.0 LUFS, −8.2 dBTP,
+  seam 0.30; spectral centroid 438 Hz (the dark stem's 334).
+- **b, "a synth pad"**: a new warm voice, two detuned saws (±0.3 %) and a triangle through a soft 1400 Hz low-pass
+  (q 0.6) with a 1.4 s attack, 1.5 s release and a slow 0.3 Hz vibrato, over a sine sub, on a warm 8-bar progression
+  in D♭ (the A theme's ♭VI: D♭maj9, A♭/C, B♭m9, G♭maj9, two bars each, eleven times round the loop), a 5 s reverb:
+  rounder and darker than a, a new colour after the silence. Measured: −20.0 LUFS, −9.0 dBTP, seam 0.77; centroid
+  215 Hz.
+- `thera-deep-warm-join-r55-a.ogg`, `thera-deep-warm-join-r55-b.ogg`: listening aids, Level 26 from t=146 to 186 as
+  the plan plays it: the dark stem (6 dB down from 150, out at 160), silence, the pad creeping in from 168 over 10 s.
+
+**AI prompt** (if replaced by a musician): *"A warm, slow synth pad for the end of a dark underwater level, after a
+silence: soft detuned analog pad swelling in over ten seconds, D-flat major colours, a low sine sub, long reverb, no
+drums, no melody, gentle and consoling but still deep and muffled, seamless loop, about three minutes."*
+

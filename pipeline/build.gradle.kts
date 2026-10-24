@@ -302,12 +302,25 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         // their a variants until the user's pick, which may swap the file: the Siren's ring, slow and death, the Spiral
         // Nautilus's spin, uncoil and death, the trench's bed.
         "siren-ring-r54-a.ogg",
-        "siren-slow-r54-a.ogg",
+        "siren-slow-r54-b.ogg",
         "siren-death-r54-a.ogg",
         "nautilus-spin-r54-a.ogg",
         "nautilus-uncoil-r54-a.ogg",
-        "nautilus-death-r54-a.ogg",
+        "nautilus-death-r54-b.ogg",
         "europa-trench-r54-a.ogg",
+        // M8 part F: round 55's proposals for Level 26 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-F),
+        // their a variants until the user's pick, which may swap the file: the Glow Angler's lure hum and lunge, the
+        // Nautilus's crown hum in the dark, Rook's loss (the trails, the hits, the spin), the headlight click, the Choir's
+        // static lead, the black water's bed.
+        "lure-hum-r55-a.ogg",
+        "angler-lunge-r55-a.ogg",
+        "crown-hum-r55-a.ogg",
+        "torpedo-trails-r55-a.ogg",
+        "rook-hit-r55-a.ogg",
+        "rook-spin-r55-a.ogg",
+        "headlight-click-r55-a.ogg",
+        "choir-static-r55-a.ogg",
+        "europa-black-r55-a.ogg",
     )
 }
 
@@ -361,6 +374,10 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         "grey-signal-r41-a.ogg=grey-signal.ogg",
         "grey-signal-base-r41-a.ogg=grey-signal-base.ogg",
         "grey-signal-motif-r41-a.ogg=grey-signal-motif.ogg",
+        // M8 part F: track 10's dark stem (round 51 a, the stem tools/art/themes.py's thera-deep{,-base} were copied
+        // from, same grid) and its warm pad (round 55 a until the user's pick), Level 26's `stem_times`.
+        "thera-deep-dark-r51-a.ogg=thera-deep-dark.ogg",
+        "thera-deep-warm-r55-a.ogg=thera-deep-warm.ogg",
     )
 }
 

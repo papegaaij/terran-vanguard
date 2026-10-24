@@ -110,7 +110,7 @@ class Level23LooksTest {
             looks.add(level.underwaterLookOf(i));
             starts[i] = level.sectionStart(i);
         }
-        float[] out = new float[7];
+        float[] out = new float[UnderwaterGrade.LOOK_SIZE];
         UnderwaterGrade.lookAt(looks, starts, 10, out);
         assertEquals(1, out[0], 1e-6, "the dry shaft: unlit");
         assertEquals(0, out[4], 1e-6, "no caustics in the air");

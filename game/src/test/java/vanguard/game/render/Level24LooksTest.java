@@ -119,7 +119,7 @@ class Level24LooksTest {
             looks.add(level.underwaterLookOf(i));
             starts[i] = level.sectionStart(i);
         }
-        float[] out = new float[7];
+        float[] out = new float[UnderwaterGrade.LOOK_SIZE];
         double[] mids = {15, 60, 115, 160};
         double[] ambient = {0.5, 0.32, 0.18, 0.14};
         for (int s = 0; s < mids.length; s++) {

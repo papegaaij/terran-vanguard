@@ -185,7 +185,7 @@ final class WingmanLooks {
 
     /** M8 part C: his refit flash at a waterline at level time {@code seconds}, additive over his hull. */
     void drawRefit(SpriteBatch batch, Wingman rook, double seconds, float alpha) {
-        if (hydro != null && !rook.ejected()) {
+        if (hydro != null && !rook.ejected() && !rook.loss().lost()) {
             hydro.drawRefit(
                     batch,
                     seconds,
@@ -202,6 +202,10 @@ final class WingmanLooks {
 
     /** His craft's shadow (and his pod's) on the ground; between {@link Shadows#begin} and {@link Shadows#end}. */
     void drawShadow(SpriteBatch batch, Wingman rook, float alpha) {
+        if (rook.loss().lost()) {
+            // M8 part F: spinning down in the deep (RookLossLooks), no shadow.
+            return;
+        }
         if (!rook.ejected()) {
             Shadows.draw(
                     batch,
@@ -226,13 +230,17 @@ final class WingmanLooks {
     /**
      * His craft: the smoke trail and the engine flames under the hull, the hull (white for a moment
      * after a hit); after his ejection only the pod while it is on the play field, for its first
-     * {@link #POD_OVER_TICKS} steps (under the explosion; then {@link #drawOver}).
+     * {@link #POD_OVER_TICKS} steps (under the explosion; then {@link #drawOver}). M8 part F: from his loss nothing
+     * but the smoke already in the water ({@link RookLossLooks} draws his spin).
      *
      * @param whiteFlash how strongly the hit flash shows (the Gameplay tab's flash reduction)
      */
     void draw(SpriteBatch batch, Wingman rook, long tick, float alpha, float whiteFlash) {
         advanceSmoke(rook, tick);
         drawSmoke(batch, tick, alpha);
+        if (rook.loss().lost()) {
+            return;
+        }
         if (rook.ejected()) {
             if (rook.ticksSinceEject() < POD_OVER_TICKS) {
                 drawPod(batch, rook, tick, alpha);
@@ -366,7 +374,7 @@ final class WingmanLooks {
 
     /** The muzzle flash of his gun (the mount {@code mount} of the weapon looks) at each muzzle of its pattern. */
     void drawMuzzle(SpriteBatch batch, Wingman rook, WeaponLooks weapons, int mount, float alpha, boolean glowing) {
-        if (rook.ejected()) {
+        if (rook.ejected() || rook.loss().lost()) {
             return;
         }
         WeaponLooks.Look look = weapons.look(mount);
@@ -404,7 +412,7 @@ final class WingmanLooks {
         LowArmour stage = LowArmour.of(rook.armour(), rook.maxArmour());
         for (long t = Math.max(lastTick + 1, tick - (long) puffX.length * SMOKE_TICKS); t <= tick; t++) {
             int every = stage == LowArmour.CRITICAL ? SMOKE_HEAVY_TICKS : SMOKE_TICKS;
-            if (!rook.ejected() && stage != LowArmour.NONE && t % every == 0) {
+            if (!rook.ejected() && !rook.loss().lost() && stage != LowArmour.NONE && t % every == 0) {
                 long mix = t * 0x9E3779B97F4A7C15L;
                 float jitter = Math.floorMod(mix >>> 40, 7L) - 3;
                 puffX[nextPuff] = (float) rook.x() + jitter;

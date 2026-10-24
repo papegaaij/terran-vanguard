@@ -59,11 +59,8 @@ final class WaveRules {
                             .orElse(p.carrier().unit() == LevelData.CarrierUnit.LAST ? last : first))
                     .map(p -> new WaveSpec.Carried(
                             SimSpecs.pickup(p.pickup()),
-                            switch (p.carrier().unit()) {
-                                case FIRST -> 0;
-                                case SECOND -> 1;
-                                case LAST -> WaveSpec.Carried.LAST;
-                            },
+                            // M8 part F: or a field's unit nearest its centre (Level 26's constellation).
+                            DarkRules.carrier(p.carrier().unit()),
                             // M8 part C (Level 23's shield cell): only a head-first kill of the chain drops it.
                             p.carrier().dropsHeadFirst()))
                     .toList();

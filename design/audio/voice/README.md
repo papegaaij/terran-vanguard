@@ -381,10 +381,14 @@ Rook's scripted Level 26 and his silence in Levels 27–28 are in the
   the part-H pick of a or b, the `distorted` filter with the dropouts between the fragments). Level 26's line is
   quieter and closer, "a reversed-whisper line" as its level document asks: proposal, the same layering with the
   reversed copy raised from 0.22 to 0.4 and the take at exaggeration 0.25, so it reads as a whisper through the
-  radio, not a chant; one take each, pinned. It still **sings** (its round-29 stage sound) before Level 28's boss.
+  radio, not a chant; one take each, pinned. Step VOX-F (M8 part F) rendered Level 26's line with Level 21's treatment as
+  built (one take in the Choir's fixed settings, the round-18 layering, the `distorted` filter; no fragment joins): the
+  whisper variant above needs a renderer change and is not built (pending the user's review in round 55). It still **sings** (its round-29 stage sound) before Level 28's boss.
 - **Rook's cut-off** (Level 26, t=160.3, "*Lancer, something's below u—*"): rendered whole and cut by Whisper's word
   timing inside "us", then a burst of static and silence, as Lifeline Three's cut in round 32 (`tts_r32.py`); his
-  t=150 line is read at the neutral row, slower, with no joke (Level 20's quiet beat), pinned.
+  t=150 line is read at the neutral row, slower, with no joke (Level 20's quiet beat), pinned. Built in step VOX-F: the
+  speaker table's respelling `u: us` makes the voice say "us" (the subtitle keeps "u—"), Whisper times it and
+  the take is cut inside it; his t=148 (the README's t=150) line pinned at the neutral row.
 - **Pronunciation** (to try at the render step, as Act 3's: Whisper's read-back with the name prompt, three seeds,
   the plain spelling against a respelling; kept only where it reads better):
 
@@ -599,7 +603,14 @@ level).
       the two briefing pages) rendered with the cast speakers (Okafor, Varga, Rook; no new speaker, no Thera Deep Control
       line): 14 files, seven takes pinned; the Act 4 names read back as written; `VoiceFilesTest` (with Level 25 in
       `briefs/m8voxe-tests.patch`) and `RadioTimelineLevel25Test` (step E3's patch) green in a snapshot
-      (M8 part E, step VOX-E, 2026-10-23; pending the user's review in round 54)
+      (M8 part E, step VOX-E, 2026-10-23; accepted in round 54 (2026-10-23))
+- [x] Level 26's lines (16 radio, Rook's three scripted lines with his cut-off at t=160.3 and the Choir's t=99 words
+      among them; the farm barge's secret; the two briefing pages) rendered with the cast speakers (Okafor, Varga, Rook,
+      the Choir; no Thera Deep Control line): 19 files, five takes pinned; Rook's cut spoken "us" (the respelling `u: us`)
+      and cut inside it; the Choir's line through Level 21's treatment (one take, the round-18 layering, `distorted`);
+      `VoiceFilesTest` and `RadioTimelineLevel26Test` (with Level 26 voiced: `briefs/m8voxf-tests.patch` after step F2's
+      `briefs/m8f2-radio.patch`) green in a snapshot (M8 part F, step VOX-F, 2026-10-23; pending the user's review in
+      round 55)
 - [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
       speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
       line); Rook's cut-off at t=160.3; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
@@ -1357,7 +1368,7 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   out of `assets/` in step D4) and the clip `ref-thera-control-r52-a.wav/.txt` in `concept/rejected/`, the clip's
   CREDITS.md row with them. The chosen clip keeps its `-r52-` name (the name is part of the lines' key). The calls of
   round 52 (C.2, the radio retime and Thera's new secondary line) accepted.
-- 2026-10-23 (step VOX-E, M8 part E; pending the user's review in round 54): Level 25's 10 radio lines (Rook's t=13
+- 2026-10-23 (step VOX-E, M8 part E; accepted in round 54 (2026-10-23)): Level 25's 10 radio lines (Rook's t=13
   `requires: escort` line among them), the kill-ratio secondary's line, the survey sub's secret and its two briefing
   pages rendered with Okafor, Varga and Rook (14 files; Level 25 has no Thera Deep Control line, so round 52's pick of b
   did not apply). Seven takes pinned after three candidate seeds each: Okafor's t=1 ("Relness sing" for "Vrell nests")
@@ -1368,3 +1379,21 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   respelling. Pitch (pyin, raw): Okafor 141-186 Hz, Varga 184-219 Hz, Rook 143 Hz. The level's timed lines start on
   time with and without Rook (`RadioTimelineLevel25Test` in a snapshot with step E3's `briefs/m8e3-radio.patch`: the
   survey sub at t≈79-82, the secondary at t=173): no retime. Measured only, not listened to.
+- 2026-10-23 (step VOX-F, M8 part F; pending the user's review in round 55): Level 26's 16 radio lines (Rook's three
+  scripted lines, his t=160.3 cut-off among them, and the Choir's t=99 "…small ones… in the dark… your kin… came before
+  you…"), the farm barge's secret and its two briefing pages rendered with Okafor, Varga, Rook and the Choir (19 files;
+  no Thera Deep Control line). Rook's cut: spoken as written ("below u,") the voice said "you" and Whisper read "Thumb,
+  something's below you", so the speaker table respells `u` as `us` (whole words; no other line has it) and the take
+  is cut where Whisper ends "us", as Lifeline Three's. The Choir's line: Level 21's treatment as built (one take in its
+  fixed settings, the round-18 layering, `distorted`), the key's own seed; every raw take of nine seeds reads word for
+  word, while the layered and distorted file reads differently on every run of Whisper (the dropouts), so it is not
+  pinned; the whisper variant (the reversed copy at 0.4, exaggeration 0.25) and the fragment joins are not built. Five
+  takes pinned after four candidate seeds each: Okafor's t=167.5 (an octave jump on 31 %), Varga's briefing page 2
+  (a jump on 18 %, p90 about 470 Hz) and t=110.5 (a jump on 22 %), Rook's t=148 (a jump on 20 %; the pin level and
+  unhurried, his quiet beat) and his cut (the only seed of four reading "Lancer"). Whisper (base.en) reads every other
+  take back word for word with the Act 4 name prompt (Vrell, Blackwater, Commander; homophones aside: "pick-up", "2");
+  without it "Vrell" reads "rail" or "well". No other respelling. Pitch (pyin, raw): Okafor 140-173 Hz, Varga 188-220 Hz
+  (her shouted "Contacts below!" 240), Rook 146-188 Hz. The level's timed lines start on time voiced, with Rook, without
+  him and with the Bulwark (`RadioTimelineLevel26Test` in a snapshot with step F2's `briefs/m8f2-radio.patch` and
+  `briefs/m8voxf-tests.patch`: Level 26 out of `UNVOICED`, `VoiceFilesTest` with Level 26): no retime. Measured only,
+  not listened to.

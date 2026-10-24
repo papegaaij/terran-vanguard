@@ -128,6 +128,9 @@ public final class Wingman {
     private boolean critical;
     private boolean ejected;
     private int ejectTicks;
+    /** M8 part F: his scripted loss in a level with one (design/player/wingmen, Rook's loss); made once. */
+    private final RookLoss loss = new RookLoss();
+
     private double ejectX;
     private double ejectY;
     private int podSign;
@@ -247,6 +250,7 @@ public final class Wingman {
         critical = false;
         ejected = false;
         ejectTicks = 0;
+        loss.reset();
         contactCount = 0;
         formation = Formation.WING;
         formationWait = -1;
@@ -318,6 +322,10 @@ public final class Wingman {
             int playerHit) {
         if (ejected) {
             ejectTicks++;
+            return;
+        }
+        if (loss.lost()) {
+            // M8 part F: his spin places him ({@link RookLoss}).
             return;
         }
         if (cooldown > 0) {
@@ -1268,7 +1276,7 @@ public final class Wingman {
      * or not (the target only steers a homing shot's lock). Starts the gun's interval when he does.
      */
     boolean fires(boolean playerFiring) {
-        if (ejected || cooldown > 0 || !playerFiring) {
+        if (ejected || loss.lost() || cooldown > 0 || !playerFiring) {
             return false;
         }
         cooldown = spec.gun().intervalTicks();
@@ -1309,7 +1317,7 @@ public final class Wingman {
      * clear of the ship at (shipX, shipY). Returns whether he ejected.
      */
     boolean hit(double damage, double shipX, double shipY, SimEvents events) {
-        if (ejected || !(damage > 0)) {
+        if (ejected || loss.lost() || !(damage > 0)) {
             return false;
         }
         armour = Math.max(0, armour - damage);
@@ -1340,6 +1348,21 @@ public final class Wingman {
         target = -1;
         dodgeX = dodgeY = 0;
         events.add(SimEvents.Type.WINGMAN_EJECTED, x, y, podSign);
+    }
+
+    /** M8 part F: lost ({@link RookLoss}): his gun, his target and his sidestep stop where he is. */
+    void lose() {
+        vx = vy = 0;
+        target = -1;
+        dodgeX = dodgeY = 0;
+    }
+
+    /** M8 part F: his spin's step to (toX, toY) (its velocity the step's). */
+    void spinTo(double toX, double toY) {
+        vx = (toX - x) / SimStep.SECONDS;
+        vy = (toY - y) / SimStep.SECONDS;
+        x = toX;
+        y = toY;
     }
 
     /**
@@ -1397,6 +1420,8 @@ public final class Wingman {
                         .add(reacted[m] ? 1 : 0);
             }
         }
+        // M8 part F: only in a level with his scripted loss, so the other levels hash as before.
+        loss.addTo(hash);
     }
 
     Hull hull() {
@@ -1454,6 +1479,24 @@ public final class Wingman {
 
     public double maxArmour() {
         return spec.craft().maxArmour();
+    }
+
+    /** M8 part F: his scripted loss (design/player/wingmen, Rook's loss); {@link RookLoss#planned()} only in its level. */
+    public RookLoss loss() {
+        return loss;
+    }
+
+    /**
+     * M8 part F: whether he still talks on the radio: he flies (not ejected) and his loss's trails have not started (his
+     * barks and the {@code requires: escort} lines end with them).
+     */
+    public boolean onRadio() {
+        return !ejected && !loss.trailing();
+    }
+
+    /** M8 part F: whether he is out of the fight in this attempt: ejected, or lost ({@link RookLoss}). */
+    boolean out() {
+        return ejected || loss.lost();
     }
 
     /** Whether he has ejected in this attempt: out for the rest of it. */

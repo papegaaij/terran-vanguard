@@ -323,7 +323,7 @@ final class ContactPasses {
                 }
             }
         }
-        if (wingman == null || wingman.ejected() || s.launching()) {
+        if (wingman == null || wingman.out() || s.launching()) {
             return;
         }
         if (rookContact.step()) {

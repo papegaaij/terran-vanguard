@@ -79,6 +79,8 @@ public final class FlightSounds {
     private final AbyssCues abyss;
     /** M8 part E: Level 25's Sirens and Spiral Nautili. */
     private final TrenchCues trench;
+    /** M8 part F: Level 26's sounds (the Angler's lure and lunge, the crown in the dark, Rook's loss, the headlights). */
+    private final BlackwaterCues blackwater;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -117,6 +119,8 @@ public final class FlightSounds {
 
     /** M7 part A: the loops a flight holds, stopped as the level screen closes. */
     private static final Sfx[] FLIGHT_LOOPS = {
+        Sfx.LURE_HUM,
+        Sfx.CROWN_HUM,
         Sfx.LAMPREY_DRAIN,
         Sfx.ION_BEAM_LOOP,
         Sfx.BEAM_IMPACT,
@@ -195,13 +199,28 @@ public final class FlightSounds {
         underIce = new UnderIceCues(mix);
         abyss = new AbyssCues(mix);
         trench = new TrenchCues(mix);
+        blackwater = new BlackwaterCues(mix);
         units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix, underIce);
         all = new SoundFamily[] {
-            player, bosses, units, storm, walker, foundry, pursuit, colossus, allies, arsenal, levels, deepWater,
-            underIce, abyss, trench
+            player,
+            bosses,
+            units,
+            storm,
+            walker,
+            foundry,
+            pursuit,
+            colossus,
+            allies,
+            arsenal,
+            levels,
+            deepWater,
+            underIce,
+            abyss,
+            trench,
+            blackwater
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -224,6 +243,14 @@ public final class FlightSounds {
     /** M8 part D: the level's relay beacons (Level 24's backdrop), whose pulse pings while one is on the screen. */
     public void beacons(vanguard.content.LevelData level) {
         abyss.noteBeacons(level);
+    }
+
+    /**
+     * M8 part F: the level is dark (Level 26): the Spiral Nautilus's crown hums, and the headlights click on at the
+     * start and as the last lamps go out at level time {@code lampsOut} (NaN for none) ({@link BlackwaterCues}).
+     */
+    public void dark(double lampsOut) {
+        blackwater.dark(lampsOut);
     }
 
     /** How long the level's flares burn (its darkness at the difficulty): the burn loop's length. */
@@ -570,6 +597,7 @@ public final class FlightSounds {
         underIce.watch(sortie);
         abyss.watch(sortie);
         trench.watch(sortie);
+        blackwater.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -621,6 +649,7 @@ public final class FlightSounds {
             colossus.silence(loop);
             underIce.silence(loop);
             trench.silence(loop);
+            blackwater.silence(loop);
         }
         deepWater.silence();
     }

@@ -62,6 +62,7 @@ final class EnemySpecCopy {
     Optional<EnemySpec.Rise> rise;
     Optional<EnemySpec.SlowRing> slowRing;
     Optional<EnemySpec.Coil> coil;
+    Optional<EnemySpec.Lunge> lunge;
 
     EnemySpecCopy(EnemySpec spec) {
         slug = spec.slug();
@@ -117,6 +118,7 @@ final class EnemySpecCopy {
         rise = spec.rise();
         slowRing = spec.slowRing();
         coil = spec.coil();
+        lunge = spec.lunge();
     }
 
     EnemySpec build() {
@@ -173,6 +175,7 @@ final class EnemySpecCopy {
                 seekersIgnore,
                 rise,
                 slowRing,
-                coil);
+                coil,
+                lunge);
     }
 }

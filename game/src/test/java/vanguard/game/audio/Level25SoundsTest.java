@@ -42,10 +42,11 @@ class Level25SoundsTest {
             Sfx.AMBIENCE_EUROPA_TRENCH);
 
     @Test
-    void everySoundHasItsFileRoundFiftyFoursA() {
+    void everySoundHasItsFileRoundFiftyFoursPick() {
         for (Sfx sfx : SOUNDS) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r54-a.ogg"), "round 54's a until the pick: " + sfx.path());
+            boolean b = sfx == Sfx.SIREN_SLOW || sfx == Sfx.NAUTILUS_DEATH;
+            assertTrue(sfx.path().endsWith(b ? "-r54-b.ogg" : "-r54-a.ogg"), "round 54's pick: " + sfx.path());
         }
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_TRENCH.priority());
         assertTrue(Sfx.NAUTILUS_SPIN.priority() != Sfx.Priority.AMBIENCE, "a unit's loop is stolen like its peers");

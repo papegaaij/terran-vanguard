@@ -35,6 +35,7 @@ import vanguard.game.level.Outro;
 import vanguard.game.level.PromptTexts;
 import vanguard.game.level.RadioQueue;
 import vanguard.game.level.RadioSchedule;
+import vanguard.game.level.StaticLeads;
 import vanguard.game.render.AirborneWalkers;
 import vanguard.game.render.AtmosphereRamp;
 import vanguard.game.render.BossBanner;
@@ -263,6 +264,7 @@ public final class LevelScreen implements GameScreen {
                         this::bark)
                 : null;
         radioEvents = new RadioEvents(services, level, sortie, radio, radioSchedule, barks);
+        staticLeads = new StaticLeads(level.radio());
         wrecks = new SetPieceWrecks(sortie.setPieceCount());
         looks = EnemyLooks.of(sortie.enemyKinds(), services.sprites, services.content);
         weaponLooks = new WeaponLooks(
@@ -304,6 +306,10 @@ public final class LevelScreen implements GameScreen {
         }
         // M8 part D: Level 24's relay beacons ping with their pulse while one is on the screen.
         sounds.beacons(level);
+        if (vanguard.game.render.LevelRenderer.darkLevel(level)) {
+            // M8 part F: the dark's sounds (the crown hum, the headlights' clicks at the start and the lamps' out).
+            sounds.dark(lampsOut(level));
+        }
         easy = difficulty == Difficulty.EASY;
         sortie.script().setPieces().stream()
                 .flatMap(piece -> piece.boss().stream())
@@ -433,6 +439,8 @@ public final class LevelScreen implements GameScreen {
         music.motifAlone(level.music()::motifAlone);
         // M7 part G: the ambience layers over the setting's loop (Level 20's basin rumble under the ridge).
         music.ambienceLayers(ambienceLayers(level.music()));
+        // M8 part F: the timed stem changes (Level 26's dark stem, the silence, the warm pad).
+        music.stemTimes(level.music().stemTimeList(), stem -> services.files.internal(Tracks.stemPath(theme, stem)));
     }
 
     /** M7 part H: the end of the level's crawling arena (a breaching boss's, Level 21's), s; NaN without one. */
@@ -623,6 +631,8 @@ public final class LevelScreen implements GameScreen {
         Settings settings = services.settings();
         radio.charsPerSecond(settings.gameplay().textSpeed());
         creditNumbers.visible(settings.gameplay().creditNumbers());
+        // M8 part F: the Dark levels assist (a dark level's ambient at 20 %).
+        renderer.darkAssist(settings.gameplay().darkAssist());
         float simSeconds = seconds;
         if (slowMotion > 0) {
             slowMotion -= seconds;
@@ -694,6 +704,9 @@ public final class LevelScreen implements GameScreen {
         services.voices.resume();
         playRadio(seconds);
         services.voices.update(seconds);
+        // M8 part F: a line with its own duck (Level 26's Choir); the portrait's static ahead of its line, its sound.
+        music.radioDuck(radioEvents.radioDuckDb());
+        staticLead();
         music.update(
                 sortie.section(),
                 sortie.levelSeconds(),
@@ -702,6 +715,41 @@ public final class LevelScreen implements GameScreen {
                 runTimeFull(level.music(), sortie.holdActive(), sortie.collapseStarted()));
         return Transition.STAY;
     }
+
+    /** M8 part F: the level time the last lamps go out (its under-water look's ambient ramp's end); NaN for none. */
+    static double lampsOut(LevelData level) {
+        for (int i = 0; i < level.sections().size(); i++) {
+            var ramp = level.underwaterLookOf(i).flatMap(look -> look.ramp());
+            if (ramp.isPresent()) {
+                return ramp.get().until();
+            }
+        }
+        return Double.NaN;
+    }
+
+    /**
+     * M8 part F (design/campaign Level 26, The Choir): the HUD portrait's interference ahead of a line with a {@code
+     * static_lead}, and its sound (the Choir's static) as it starts; replayed by a retry (the level clock).
+     */
+    private void staticLead() {
+        if (!staticLeads.any()) {
+            return;
+        }
+        double now = sortie.levelSeconds();
+        if (staticLeads.started(leadSeconds, now) && !sortie.complete()) {
+            services.sfx.play(Sfx.CHOIR_STATIC, CHOIR_STATIC_VOLUME, 1, 0);
+        }
+        leadSeconds = now;
+        hud.staticLead(staticLeads.strength(now));
+    }
+
+    /** M8 part F: the Choir's static plays at its file's level (it is levelled under the voices). */
+    static final float CHOIR_STATIC_VOLUME = 1f;
+
+    /** M8 part F: the level's static leads ({@code static_lead}) and the level time at the last frame. */
+    private final StaticLeads staticLeads;
+
+    private double leadSeconds;
 
     /**
      * M5 part C, the music's run-time hook ({@code full_on}, design/audio/music): whether the full mix

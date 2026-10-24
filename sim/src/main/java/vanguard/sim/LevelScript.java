@@ -39,6 +39,8 @@ import vanguard.sim.ObjectiveSpec.Naval;
  *     sections' starts; {@link MediumSpec#AIR} (the default) for every level before Act 4
  * @param specialLimits M8 part A (design/player/specials, Setting restrictions): the level's and its sections' lists
  *     of forbidden specials; {@link SpecialLimits#NONE} (the default): the specials' own settings decide
+ * @param rookLoss M8 part F (design/player/wingmen, Rook's loss; Level 26): the scripted loss of Rook; empty (the
+ *     default) for none
  */
 public record LevelScript(
         int number,
@@ -57,7 +59,8 @@ public record LevelScript(
         HazardSpec hazards,
         DropSpec drops,
         MediumSpec medium,
-        SpecialLimits specialLimits) {
+        SpecialLimits specialLimits,
+        Optional<RookLossSpec> rookLoss) {
     public LevelScript {
         checkGroundAllies(
                 sections,
@@ -108,6 +111,53 @@ public record LevelScript(
                 && ground.road().isEmpty()) {
             throw new IllegalArgumentException("a convoy follows the level's road");
         }
+        java.util.Objects.requireNonNull(rookLoss);
+        if (rookLoss.isPresent()
+                && !(rookLoss.get().trails() >= launchSeconds
+                        && rookLoss.get().t() < sections.getLast().end())) {
+            throw new IllegalArgumentException(
+                    "Rook's loss falls after the launch and before the level's end: " + rookLoss.get());
+        }
+    }
+
+    /** A level without M8 part F's scripted loss of Rook. */
+    public LevelScript(
+            int number,
+            int act,
+            double launchSeconds,
+            boolean launchDrop,
+            List<Section> sections,
+            List<WaveSpec> waves,
+            List<GroundObjectSpec> groundObjects,
+            List<GroundUnit> groundUnits,
+            List<SetPieceSpec> setPieces,
+            int secrets,
+            List<RadioCue> radio,
+            ObjectiveSpec objectives,
+            GroundSpec ground,
+            HazardSpec hazards,
+            DropSpec drops,
+            MediumSpec medium,
+            SpecialLimits specialLimits) {
+        this(
+                number,
+                act,
+                launchSeconds,
+                launchDrop,
+                sections,
+                waves,
+                groundObjects,
+                groundUnits,
+                setPieces,
+                secrets,
+                radio,
+                objectives,
+                ground,
+                hazards,
+                drops,
+                medium,
+                specialLimits,
+                Optional.empty());
     }
 
     /** A level in the air (every level before Act 4): {@link MediumSpec#AIR}. */
@@ -211,7 +261,8 @@ public record LevelScript(
                 .hazards(hazards)
                 .drops(drops)
                 .medium(medium)
-                .specialLimits(specialLimits);
+                .specialLimits(specialLimits)
+                .rookLoss(rookLoss);
     }
 
     /**
@@ -237,6 +288,7 @@ public record LevelScript(
         private DropSpec drops = DropSpec.NONE;
         private MediumSpec medium = MediumSpec.AIR;
         private SpecialLimits specialLimits = SpecialLimits.NONE;
+        private Optional<RookLossSpec> rookLoss = Optional.empty();
 
         private Builder(int number, int act) {
             this.number = number;
@@ -333,6 +385,12 @@ public record LevelScript(
             return this;
         }
 
+        /** M8 part F: the scripted loss of Rook (design/player/wingmen, Rook's loss); empty by default. */
+        public Builder rookLoss(Optional<RookLossSpec> rookLoss) {
+            this.rookLoss = rookLoss;
+            return this;
+        }
+
         /** The level: the sub-records validated their own parts, the level checks them against each other. */
         public LevelScript build() {
             return new LevelScript(
@@ -352,7 +410,8 @@ public record LevelScript(
                     hazards,
                     drops,
                     medium,
-                    specialLimits);
+                    specialLimits,
+                    rookLoss);
         }
     }
 

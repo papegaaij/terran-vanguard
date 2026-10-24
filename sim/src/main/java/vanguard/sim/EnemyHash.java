@@ -148,6 +148,10 @@ final class EnemyHash {
         if (u.phase == Enemy.Phase.COIL) {
             u.coiling.addTo(hash);
         }
+        // M8 part F's lunges add theirs; earlier units hash as before.
+        if (u.phase == Enemy.Phase.LURE) {
+            u.lunging.addTo(hash);
+        }
         // M7 part F's turrets add theirs (the aim is hashed above); earlier units hash as before.
         if (u.spec.turret().isPresent()) {
             u.turretGun.addTo(hash);

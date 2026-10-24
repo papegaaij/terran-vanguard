@@ -96,7 +96,7 @@ class Level25LooksTest {
             looks.add(level.underwaterLookOf(i));
             starts[i] = level.sectionStart(i);
         }
-        float[] out = new float[7];
+        float[] out = new float[UnderwaterGrade.LOOK_SIZE];
         UnderwaterGrade.lookAt(looks, starts, 40, out);
         assertEquals(0.14, out[0], 1e-6, "the walls");
         UnderwaterGrade.lookAt(looks, starts, 120, out);

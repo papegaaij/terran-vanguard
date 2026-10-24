@@ -22,7 +22,10 @@ import java.util.Set;
  * fight. M8 part D (step D2): Level 24 Abyssal Plain (the Abyss Ray's {@code rise} with its escorts held until the rise,
  * the Barbfin's hover {@code above_ship}, the spawning reef's release of Glassfin fry, the {@code first-ray} cue as an
  * event) and its three units were left out until step D3 mapped step D1's simulation pieces ({@link AbyssRules}) and
- * gave the autopilot its shadow targeting. None is left out now.
+ * gave the autopilot its shadow targeting. M8 part F (step F2): Level 26 Blackwater is loaded, checked and mapped (the
+ * Glow Angler's {@code lunge}, {@code rook_loss}, a field's {@code unit: centre}: {@link DarkRules}); the tests that fly
+ * or tune it left it out until step F3 gave it its plan fit and the autopilot its play in the dark ({@link DarkPlay}).
+ * None is left out now.
  */
 final class Unmapped {
     /** Why a test leaves a level out. */

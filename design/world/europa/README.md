@@ -3,7 +3,7 @@ title: Europa
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-22
+updated: 2026-10-23
 ---
 
 # Europa
@@ -62,7 +62,8 @@ Act 4's seven levels in order ([the act](../../campaign/act-4-deep-water/README.
 ### Palette & lighting
 
 - Surface: white-blue ice, orange-brown Jupiter looming, hard sunlight from top-left.
-- Under water: near-black blue; light comes from the player's headlights (a soft cone ahead),
+- Under water: near-black blue; light comes from the player's headlights (a soft cone ahead that
+  lights the world in it nearly to its full colour: round 54's redo of Level 25, step LX),
   city lights (warm) and bioluminescence (teal/violet — so Vrell bullets must be brighter and
   larger here to stay readable).
 - Human beacons pulse red-gold — the visual hint of the Ascendancy.
@@ -160,6 +161,10 @@ what a shot can do:
 - **Sonar Pulse**: every unit and lure on the screen is drawn whole for 6 s (and every weapon does full
   damage, see [specials](../../player/specials/README.md#sonar-pulse-l22)); L26 is the level where it pays.
 - Option (planned for the settings): *Dark levels assist* raises the ambient to 20 %.
+- **Built as** (M8 part F, gap check F1): the under-water light map of step LX with the level's values in its
+  `underwater_look` (the headlights' hard 70° × 260 px cone, the ambient and its ramp, the rim, the escort's lamp, the
+  static `lights`; [Level 26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#darkness-q4-a-a-look-only));
+  Level 06's `hazards.darkness` is not used, and the simulation does not know the dark.
 - Alternatives (not recommended): (b) shots hit only lit units, the L06 rule extended: it punishes
   non-homing loadouts in the act's breather; (c) a sonar-blip display only: a new display mode,
   hard to read.
@@ -269,3 +274,21 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
   the hydro-kit's pump-jet wake and the refit flash on the waterline (`hydro-fx-final-r52-a`); the caustics kept subtle.
   Captured in Level 23 (`waterline-capture-r52-a`).
 - 2026-10-22 (user, round 52, closed): the hydro-kit's wake and refit flash accepted as final (F.6); the waterline crossing's sound **a** and the refit's **a** picked; the under-water grade as built (Level 23) accepted with the round's calls.
+- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5 F1, pending the user's review in round 55): Level 26's darkness is the
+  under-water light map with the level's values (its `underwater_look`), not Level 06's `hazards.darkness`.
+- 2026-10-23 (step F4/F5, pending the user's review in round 55): the dark's look in the game: step LX's light map with
+  Level 26's values (the ambient ramp 20 → 6 % over t=8–18 in section 1, the hydro-kit's hard 70° × 260 px cones, a
+  15 % rim pool per unit, the static lamps' pools scrolling with the ground, Rook's or the Bulwark's 56 px lamp); every
+  unit lit whole for the Sonar Pulse's 6 s, the backdrop staying dark; the cones show a faint haze (0.07) and light the
+  marine snow in Levels 23–26, so the beam reads in open water; the Dark levels assist (Options, off by default) holds
+  a dark level's ambient at 20 %.
+- 2026-10-23 (user, playtest of Levels 22–25): **decided, to be built next (rework AW, before part G; the
+  [roadmap](../../tech/roadmap/README.md#m8-parts)'s row AW)**: the energy weapons (Ion Beam, Lance Laser, Rear Lance)
+  nearly useless under water (proposed ×0.2 damage and ×0.4 reach); the Harpoon Torpedoes tuned for swarms (a faster
+  rate, about 2 → 3 a second, about +50 % travel speed, blast 20 → 40 px, less damage a torpedo, homing only in a narrow
+  ±15° cone ahead); the Depth Charges thrown forward, sinking ahead and bursting on their fuse or on touching a swimmer
+  (hitting swimmers, ground and `sub`); an explicit warning in the Act 4 intro briefing (and the hangar notice before
+  Level 23) to keep credits for under-water weapons; no selling in the balance plan (the beam stays in the inventory
+  for later levels: the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded
+  at Level 24). No extra prevention tests ("You just have to play it to see"); the Spiral Nautilus and the
+  micro-missiles' angle unchanged until replayed. The numbers in this README and the weapons' are not changed yet.

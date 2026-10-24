@@ -278,8 +278,10 @@ public record EnemyLooks(
                 sprites.has(slug + "-flare") ? sprites.frames(slug + "-flare") : none,
                 remains(sprites, slug, none),
                 // M8 part D: the Abyss Ray's -death set is its solid break-up per heading (AbyssRayLooks), not a glow;
-                // M8 part E: the Siren's its collapse per facing (SirenLooks).
-                slug.equals(AbyssRayLooks.SLUG) || slug.equals(SirenLooks.SLUG)
+                // M8 part E: the Siren's its collapse per facing (SirenLooks); M8 part F: the Glow Angler's its lure
+                // blown
+                // out at the bead of its heading (AnglerLooks).
+                slug.equals(AbyssRayLooks.SLUG) || slug.equals(SirenLooks.SLUG) || slug.equals(AnglerLooks.SLUG)
                         ? new DeathEffect(none, DEATH_FRAME_TICKS, 0)
                         : death(sprites, slug, DEATH_GLOW, tier, true, walker),
                 // M8 part C: the eel's -husk set is its parts' sinking husks per heading (EelLooks), not a death.

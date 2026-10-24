@@ -135,7 +135,7 @@ final class ObjectivePasses {
      * once per attempt. Called just before the kill is paid.
      */
     void escortKill(int mount) {
-        if (wingman == null || mount != wingmanMount || escortKilled || wingman.ejected()) {
+        if (wingman == null || mount != wingmanMount || escortKilled || wingman.out()) {
             return;
         }
         escortKilled = true;

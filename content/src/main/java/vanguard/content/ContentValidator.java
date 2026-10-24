@@ -69,6 +69,13 @@ final class ContentValidator {
                 .values()
                 .forEach(level ->
                         TrenchChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M8 part F: the lunge (the Glow Angler's) and a level's dark keys, Rook's loss and centre carrier.
+        content.enemies()
+                .values()
+                .forEach(enemy -> DarkChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level -> DarkChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M8 part A: the under-water rules, Rook's absence and a level's medium and special limits.
         ActFourChecks.europa(content, (field, message) -> problem(content.europa(), field, message));
         ActFourChecks.wingmen(content, (field, message) -> problem(content.wingmen(), field, message));

@@ -2,7 +2,7 @@
 title: Spiral Nautilus
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
 updated: 2026-10-23
 ---
@@ -66,7 +66,7 @@ Chosen round 06 concept: [spiral-nautilus-r06-a.png](../concept/spiral-nautilus-
 - [x] Stat block loaded from a `data.yaml` (step E3); global difficulty multipliers applied; HP re-measured with `levelReport` (the beam's halved reach and the 0.7 non-`anti-sub` damage change its time on the screen) (`Level25Test`, `ContentLoaderTest`)
 - [x] Behaviour, attack and tells per this spec, deterministic and allocation-free (`SpiralNautilusTest`, `aPairReplaysWithoutAllocating`)
 - [x] Production sprites straight to production as a/b in the part's round (`tools/art/`), the in-water grade and the intel portrait (`tools/art/spiral_nautilus.py`, `tools/art/intel.py`; `Level25LooksTest.theNautilusRollsAndUncoils`; round 54)
-- [x] Death effect, bounty and sounds (Freesound, no bubble pops) per this spec (`Level25SoundsTest.theSirenAndTheNautilusDieWithTheirOwnSounds`; the a/b in round 54)
+- [x] Death effect, bounty and sounds (Freesound, no bubble pops) per this spec (`Level25SoundsTest.theSirenAndTheNautilusDieWithTheirOwnSounds`; round 54's picks)
 - [x] The orbit round the ship (`spiral-in` with the 90 px floor), the armoured closed state and the uncoil window (`SpiralNautilusTest.itSpiralsInFrom220To90OverThreeSecondsUncoilsForTwoPointTwoAndBreaksOutward`, `closedItsShellGlancesOffAllButTheSpecialsBlastsAndAntiSubFireOpenItsCrownTakesTheDamage`, `inATrenchTooNarrowForTheSpiralItsOrbitIsClampedNearTheChannelsMiddle`)
 
 ## Decisions
@@ -75,15 +75,18 @@ Chosen round 06 concept: [spiral-nautilus-r06-a.png](../concept/spiral-nautilus-
 - - 2026-06 (round 06): the shell, crown and stripes chosen (Spiral Nautilus r06-a).
 - - 2026-10-21: drafted at L25; promoted from the roster fork addition.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-23 (step E3, gap check `m8e-gaps.md` §5, pending the user's review in round 54): the stat block as data; the open
+- 2026-10-23 (step E3, gap check `m8e-gaps.md` §5, accepted in round 54 (2026-10-23)): the stat block as data; the open
   question closes: the closed shell glances off all but the specials' blasts and `anti-sub` deliveries (the Harpoon, the
   Torpedo Pods, the Depth Charges): the stat block's "`anti-sub` (cracks the shell)" (E8); in a trench the orbit's centre is
   clamped so its 90 px circle and hit box fit the flyable width, a pair holds for its wave's `hold` (15 s, about 3 cycles),
   then breaks off the nearer side; "open about 60 % of the cycle" read as either of the pair, the numbers win (E7).
-- 2026-10-23 (steps E2, E5 and ART-E, pending the user's review in round 54): a Nautilus that would orbit closer is
+- 2026-10-23 (steps E2, E5 and ART-E, accepted in round 54 (2026-10-23)): a Nautilus that would orbit closer is
   pushed out to the 90 px floor (as the Dust Devil); its orbit's centre is raised to keep the pair on the field; the shell
   stays armoured through the 0.6 s opening (the crown takes damage only once open); all four `anti-sub` weapons crack the
   closed shell (Harpoon Torpedoes, Depth Charges, both Torpedo Pods); under the EMP a pair holds still; a pair leaving
   after its hold crosses the wall's rock sideways, drawn behind the wall face. Drawn: the closed shell rolling (24 spin
-  frames by the distance rolled), the crown at 16 headings, the glance flecks, the halves sinking; the sounds round 54's
-  a until the picks.
+  frames by the distance rolled), the crown at 16 headings, the glance flecks, the halves sinking; the sounds are round 54's
+  picks (spin a, uncoil a, death b).
+- 2026-10-23 (user, round 54, closed): the final art accepted (F.4; `art: final`); sounds: the shell spin a, the uncoil a,
+  the death **b**; calls C.1 (the 90 px floor), C.2 (armoured while it opens) and C.3 (every anti-sub weapon cracks the
+  shell) accepted.

@@ -597,7 +597,7 @@ public enum Sfx {
      * M8 part E: a ring slowing the ship (round 54 a, proposed: a hand-cranked siren sliding down an octave, muffled,
      * a bowed cymbal's shimmer over it, 2.0 s), once as the ring's band passes the ship.
      */
-    SIREN_SLOW("sfx/siren-slow-r54-a.ogg", 1, Bus.EFFECTS, WARNING),
+    SIREN_SLOW("sfx/siren-slow-r54-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
      * M8 part E: a Siren killed (round 54 a, proposed: its song slowed until it dies, over a depth bomb's boom, 2.2 s),
      * with its under-water {@code medium} burst.
@@ -617,7 +617,49 @@ public enum Sfx {
      * M8 part E: a Spiral Nautilus's shell cracked (round 54 a, proposed: a big clay pot smashed, slowed and muffled,
      * over a depth bomb's boom, 1.8 s), with its under-water {@code medium} burst.
      */
-    NAUTILUS_DEATH("sfx/nautilus-death-r54-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    NAUTILUS_DEATH("sfx/nautilus-death-r54-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part F: the Glow Angler's lure (round 55 a, proposed: a neon sign's buzzing hum slowed and muffled, pulsing
+     * with the bead, a seamless 5 s loop): one quiet loop while an Angler is on the screen, the nearest, louder as the
+     * ship comes close.
+     */
+    LURE_HUM("sfx/lure-hum-r55-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part F: a Glow Angler's lunge (round 55 a, proposed: a hydrophone's rush of water past the microphone, slowed
+     * and muffled, 1.3 s), at each lunge's trigger.
+     */
+    ANGLER_LUNGE("sfx/angler-lunge-r55-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part F: the Spiral Nautilus's crown in the dark (round 55 a, proposed: a singing bowl rubbed round its rim, a
+     * seamless 4 s loop): in a dark level one quiet loop while a Nautilus is on the screen, with its shell spin.
+     */
+    CROWN_HUM("sfx/crown-hum-r55-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part F: Rook's loss, the torpedo trails rising (round 55 a, proposed: a jet's approach slowed and gliding up,
+     * muffled, 1.2 s), at the trails' start.
+     */
+    TORPEDO_TRAILS("sfx/torpedo-trails-r55-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part F: Rook's loss, the three hits (round 55 a, proposed: three depth bombs' sub booms 0.13 s apart, 2.6 s),
+     * at his loss.
+     */
+    ROOK_HIT("sfx/rook-hit-r55-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part F: Rook's loss, his lamp's flicker and spin-down (round 55 a, proposed: a faulty fluorescent tube's buzz
+     * in five irregular bursts, muffled, 3.0 s), with the hits.
+     */
+    ROOK_SPIN("sfx/rook-spin-r55-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part F: the headlights on, the lamps out (round 55 a, proposed: a heavy motor contactor closing, slowed and
+     * muffled, 0.6 s): as the ship's twin headlights come on at the level's start and as the last lamps go out behind
+     * it (the dark's ramp's end).
+     */
+    HEADLIGHT_CLICK("sfx/headlight-click-r55-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
+     * M8 part F: the Choir's static lead (round 55 a, proposed: an AM boombox's washy interference slowed and smoothed,
+     * swelling over 2 s, 2.4 s), as the portrait's interference starts ahead of the Choir's line (Level 26, t=97).
+     */
+    CHOIR_STATIC("sfx/choir-static-r55-a.ogg", 1, Bus.EFFECTS, WARNING),
     /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
@@ -836,6 +878,11 @@ public enum Sfx {
      * off, humpback whales calling far off, a seamless 16 s loop): Level 25, in place of {@code europa-under}.
      */
     AMBIENCE_EUROPA_TRENCH("sfx/europa-trench-r54-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part F: the black water's bed (round 55 a, proposed: a submarine's air conditioner slowed and muffled, a deep
+     * rumble swelling once a loop, a seamless 24 s loop): Level 26, in place of {@code europa-under}.
+     */
+    AMBIENCE_EUROPA_BLACK("sfx/europa-black-r55-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -937,6 +984,8 @@ public enum Sfx {
             case "europa-under" -> AMBIENCE_EUROPA_UNDER;
             // M8 part E: the Siren Trench's bed (Level 25).
             case "europa-trench" -> AMBIENCE_EUROPA_TRENCH;
+            // M8 part F: Level 26's black-water bed (round 55's a until the user's pick).
+            case "europa-black" -> AMBIENCE_EUROPA_BLACK;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

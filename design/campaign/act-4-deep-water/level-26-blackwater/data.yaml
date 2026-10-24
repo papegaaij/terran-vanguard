@@ -1,0 +1,395 @@
+# Level 26 – Blackwater: the level script, rendered into README.md (briefing, threat profile, layout, terrain, waves,
+# ground targets, radio, credit budget). Times are seconds from the level start. M8 part F, step F2, from the README's
+# approved hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M8 part F (loaded and checked by content in step F2; flown from step F1, drawn and played by steps F4/F5):
+# the Glow Angler's `lunge` (its stat block), `rook_loss` (Rook's scripted loss: the trails, the hit, the spin-down),
+# the look's dark keys (`underwater_look`: a section's ambient `ramp`, the static `lights`, the escort's `escort_lamp`,
+# with step LX's `headlights {strength, reach, angle}` and `rim`), a radio row's `static_lead` and `duck_db` (the
+# Choir), a field carrier's `unit: centre` and the music's `stem_times`.
+# Defaults of the gap check (m8f-gaps.md §5, pending the user's review in round 55): the dark is the light map with this
+# level's values, nothing in the simulation knows it (F1); the ambient ramp 20 → 6 % over t=8–18 in section 1 (F4); the
+# scarp a right wall only, each `turret nest` wave just above its notch (F5); the loss not an eject (F7); the aftermath's
+# quiet window t=156–160, the jellies at 160/166 after it (F9); "the central Angler" the field member nearest the
+# field's centre at entry (F10); the eel counted whole (48 typical, F11); track 10 only (F12).
+# Step F2's own placements (pending review): ART-F's terrain proposal adopted unchanged (concept/backdrop-proposal.yaml:
+# the scarp t=56–103, 3 notches); the README's `scattered` Angler rows are sparse `field`s (no `scattered` formation in
+# the vocabulary: a 400 px wide area, 100 px between units); the t=26 Angler row moved to 27.5 (the first sight's quiet
+# window, 24–27.5); the eel pairs of t=96 and 141.5 two rows 4 s apart (Level 24's pairs); the fields and snakes of the
+# scarp on its open left side.
+scroll_speed: 130     # the lamp stretch; the dark and the silence set their own
+launch_seconds: 5
+bounty_scale: 0.43    # every bounty × 0.43: the README's estimate 0.41, fitted in step F2 (TypicalHaulTest, levelReport)
+control_prompts: []
+medium: underwater    # the whole level: the water's factors, the grade, the special limits (no Airstrike, no Orbital Lance)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Europa, Blackwater
+  layers: [air]
+  density: 3
+  traits: [homing, area]   # the README draft named `spread` too: the L3 line names homing and area guns
+  hazards: [darkness, lures]
+  boss: none
+  objective: CROSS THE BLACKWATER   # the OBJECTIVE field from sensor L1
+  varga:
+    none: Black water. You'll fly by headlight and by their glow.
+    l1: Nothing hides from a shot, only from your eyes. Bullets always show.
+    l2: "New: Glow Angler. Its lure is not a pickup. Sonar lights it."
+    l3: Homing and area guns. Pulse the sonar when it gets thick.
+  notes:
+    Dominant layers: '`air` (the play plane under water, seen as glows: Glow Anglers, Driftjellies, Nautilus pairs, Eel Swarm snakes), the fault scarp''s Siren nests'
+    Attack directions: '{directions} (the scarp''s nests count as sides)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'Darkness: only the headlight cone, light pools and the Vrell''s glow; Glow Anglers lunge when touched; Driftjelly rings; Siren rings at the scarp'
+    Boss / mid-boss: none
+    Sensor-suite detail: 'none: Europa, deep water, `air`, front · L1: + directions (all), density {density}, hazard "darkness", the objective `{objective}` and the secondary `KILL RATIO 65 %` · L2: + Glow Angler (new), Driftjelly, Eel Swarm, Spiral Nautilus, Siren portraits, the lure marked "not a pickup" · L3: + the scarp''s nest positions on the threat arrows'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); the whole level under water (the level's medium)
+  - name: The Last Lamp
+    end: 20
+    atmosphere: clear
+    tiles: [pipeline-floor]
+    underwater_look: {ambient: 0.20, ramp: {to: 0.06, from: 8, until: 18}}   # the lamps going out behind the ship (F4)
+    notes:
+      layers:
+        ground: 'the last Thera Deep lamp posts along a drowned pipeline, one every 360 px, until t=14; the trench''s beacons falling behind.'
+      purpose: The lights go out behind the ship; the Nautilus's crown learnt while lamps still burn.
+  - name: The Dark
+    end: 60
+    speed: 120
+    ramp: 2   # eased from 130 over its first 2 s
+    atmosphere: clear
+    tiles: [black-water]
+    notes:
+      layers:
+        ground: Black water; marine snow in the cone; the only light the units' glow and the pickups' warm gold.
+      purpose: The Glow Angler (t=24); the lure learnt.
+  - name: The Scarp
+    end: 100
+    speed: 120
+    atmosphere: clear
+    tiles: [black-water]
+    notes:
+      layers:
+        ground: 'A single **fault wall on the right** (a scarp, flyable width 400 → 280 px) with three cave mouths; the Sirens'' sacs glowing beside them; the farm barge lamp (t≈84, left). The scarp sinks away at t=100.'
+      purpose: 'The Sirens in the dark: their glow is their tell.'
+  - name: The Choir
+    end: 130
+    speed: 120
+    atmosphere: clear
+    tiles: [black-water]
+    notes:
+      layers:
+        ground: Open black water; the Choir's static in the HUD portrait from t=97.
+      purpose: The Choir's fragment (t=99); the constellation of Anglers (t=108).
+  - name: The Deep
+    end: 155
+    speed: 120
+    atmosphere: clear
+    tiles: [black-water]
+    notes:
+      layers:
+        ground: Open black water; a faint amber seep glow far below from t=140.
+      purpose: The last fights; Rook's pre-line (t=150).
+  - name: The Silence
+    end: 182
+    speed: 110
+    ramp: 2   # eased from 120
+    atmosphere: clear
+    tiles: [black-water]
+    notes:
+      layers:
+        ground: Black water; the vent field's red glow rising on the horizon from t=168; Rook's lamp beside the ship until t≈160.
+      purpose: Rook's loss (t=157–160); the aftermath; level end.
+
+# The game's under-water grade and its light map (presentation only; step LX's headlights, step F4's dark): the black
+# level of round 48's Q2 a. The ambient 6 % (section 1 from 20 %, ramping down over t=8–18); the hard cone of the twin
+# headlights, 70° × 260 px (the README's Darkness), bringing the world in it to its full colour; a faint 15 % rim on the
+# scarp's rock edges; Rook's lamp a 56 px pool (the Bulwark's too, F7); the static pools of the lamp posts (sodium, until
+# the last one fails at t≈14), the trench's two last beacons, the farm barge's lamp and the survey buoy. Glows, bullets,
+# markers and the HUD stay ungraded. ART-F's proposal (round 55), adopted.
+underwater_look:
+  ambient: 0.06
+  tint: 80aceb
+  caustics: 0.0
+  snow: 110
+  headlights: {strength: 1.0, reach: 260, angle: 70}
+  rim: 0.15
+  escort_lamp: 56
+  lights:   # scroll: the terrain's row of the pool's centre (below 0: on the screen at the start), x, radius px, colour
+    - {scroll: -434, x: 158, radius: 90, colour: ffc46e}   # lamp post 1
+    - {scroll: -74, x: 158, radius: 90, colour: ffc46e}    # lamp post 2
+    - {scroll: 286, x: 158, radius: 90, colour: ffc46e}    # lamp post 3
+    - {scroll: 646, x: 158, radius: 90, colour: ffc46e}    # lamp post 4
+    - {scroll: 1006, x: 158, radius: 90, colour: ffc46e}   # lamp post 5
+    - {scroll: 1366, x: 158, radius: 90, colour: ffc46e}   # lamp post 6, the last, failing (its piece loops a stutter)
+    - {scroll: -210, x: 64, radius: 40, colour: ff6040}    # the trench's last beacon 1 (the 4 s pulse is its glow piece's)
+    - {scroll: -70, x: 420, radius: 40, colour: ff6040}    # the trench's last beacon 2
+    - {scroll: 10314, x: 64, radius: 80, colour: ffc46e}   # the farm barge's lamp (t≈84, x 60): the only warm light
+    - {scroll: 15650, x: 240, radius: 30, colour: ffe0a0}  # the survey buoy (t=130, y 380)
+
+# The fault scarp (Level 25's terrain rules with one wall; the README's The fault scarp): the right wall's collision line
+# (its foot) [scroll, x(, height)], scroll the ground scroll at which the row reaches the top edge; no left wall (open
+# water). ART-F's proposal (concept/backdrop-proposal.yaml), adopted unchanged: the scarp rises at the field's right edge
+# from t=56, 400 px of flyable width by t=61, closing to 280 px at t≈80–92, sinking away at t=97–103. Its three notches
+# (cave mouths) lie just below each `turret nest` wave's first nest (on the screen when the nests enter; gap check F5).
+# The same geometry on every difficulty.
+terrain:
+  right:
+    - [6930, 480, 0]     # t=56: the scarp begins at the field's edge, flat
+    - [7290, 430, 0.7]   # t=59
+    - [7530, 400]        # t=61: 400 px, at full height
+    - [8130, 400]        # t=66
+    - [9090, 330]        # t=74
+    - [9810, 290]        # t=80
+    - [11250, 280]       # t=92: 280 px, the narrowest
+    - [11850, 300]       # t=97
+    - [12210, 360, 0.5]  # t=100: sinking away
+    - [12570, 480, 0]    # t=103: gone, flat
+  notches:   # the cave mouths, 90 px along the wall and 70 deep (0-based)
+    - {side: right, scroll: 7500, width: 90, depth: 70}    # 0: the t=62 nests' cave (t=60.8 at the top edge)
+    - {side: right, scroll: 8700, width: 90, depth: 70}    # 1: the t=72 nests' cave (t=70.8)
+    - {side: right, scroll: 10380, width: 90, depth: 70}   # 2: the t=86 nests' cave (t=84.7)
+  contact: {damage: {easy: 6, medium: 10, hard: 10}, push: 28, push_seconds: 0.12, cooldown: 0.5}   # Level 25's: 10 per touch (easy 6)
+  notes:   # the README's scarp table, by row
+    before: Open black water, no walls
+    rows:
+      6930: 'The scarp rises at the field''s right edge'
+      7530: The flyable width 400 px; the first cave mouth and its nests
+      9090: The scarp closing in
+      11250: 'The narrowest: 280 px'
+      12210: The scarp sinks away
+      12570: 'Gone: open black water'
+
+# The README's waves at their times (draft, measured with levelReport in step F2). Every wave enters from the front but
+# the scarp's nests (`wall`: a nest every 1.5 s on the right wall's foot, 180 px apart at 120 px/s). The Driftjelly and
+# Glow Angler fields enter with the water and drift on it (straight down); the README's `scattered` Angler rows are sparse
+# fields (a 400 px wide area, 100 px between units); during the scarp (t=62–100) the fields and the snakes keep to its
+# open left side (x 30–270). A Nautilus pair (`circle`) orbits the ship for its 15 s hold, then breaks off; an eel swims
+# its route with its sway, a pair of eels is two rows 4 s apart. Quiet windows: no other wave enters t=24–27.5 (the
+# Anglers' first sight), 104.5–108 (after the Choir's fragment, before the constellation) or 152–160 (the loss; the
+# jellies at 160 and 166 are the aftermath's only units).
+waves:
+  - {t: 5, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200], notes: "In the last lamps' reach, veins lit"}
+  - {t: 8, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - {t: 11, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: The crown glow seen while the lamps still burn}
+  - {t: 13, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 15, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - t: 18
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+    notes: The stripe lit; the last lamp goes out behind it
+  - {t: 24, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [360, 240], spacing: 70, notes: "**New.** First sight: Varga's warning; quiet window of 3.5 s after it"}
+  - {t: 27.5, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: "Scattered (the README's t=26, after the quiet window)"}
+  - {t: 28.5, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 32, formation: field, enemy: glow-angler, count: 3, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - {t: 35, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 37, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 39, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 42, formation: field, enemy: glow-angler, count: 5, from: front, x: 240, size: [360, 240], spacing: 70}
+  - t: 45.5
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[280, -60], [170, 140], [310, 300], [160, 460], [240, 640]]]
+  - {t: 49, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 52, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - {t: 55, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 58.5, formation: field, enemy: driftjelly, count: 6, from: front, x: 200, size: [320, 200]}
+  - {t: 61.2, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: "The first Sirens of the dark, beside the first cave: their glow is the tell"}
+  - {t: 64, formation: field, enemy: glow-angler, count: 5, from: front, x: 150, size: [240, 240], spacing: 60, notes: "On the open left side (the README's t=65.5: no empty stretch after the first nest)"}
+  - {t: 66.8, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered}
+  - t: 69
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[150, -60], [220, 140], [80, 300], [210, 460], [140, 640]]]
+  - {t: 72.4, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: Beside the second cave}
+  - {t: 75.5, formation: field, enemy: driftjelly, count: 6, from: front, x: 150, size: [240, 200]}
+  - {t: 78, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered}
+  - {t: 79, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 81, formation: field, enemy: glow-angler, count: 4, from: front, x: 150, size: [240, 360], spacing: 80, notes: Scattered}
+  - {t: 83, formation: field, enemy: glow-angler, count: 4, from: front, x: 150, size: [240, 360], spacing: 80, notes: Scattered}
+  - {t: 83.6, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: Beside the third cave}
+  - {t: 89, formation: field, enemy: driftjelly, count: 6, from: front, x: 150, size: [240, 200]}
+  - {t: 89.2, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered}
+  - {t: 92, formation: field, enemy: glow-angler, count: 6, from: front, x: 150, size: [240, 240], spacing: 60}
+  - {t: 94, formation: field, enemy: driftjelly, count: 6, from: front, x: 150, size: [240, 200]}
+  - {t: 94.8, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: The last nest as the scarp sinks}
+  - t: 96
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[140, -60], [210, 140], [80, 300], [200, 460], [140, 640]]]
+    notes: The first of a pair 4 s apart; its head drops an overdrive
+  - t: 100
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[160, -60], [80, 140], [220, 300], [100, 460], [200, 640]]]
+    notes: The second of the pair; the scarp sinks away
+  - {t: 102, formation: field, enemy: driftjelly, count: 5, from: front, x: 240, size: [200, 600], spacing: 100, notes: "Drifting through the Choir's fragment, in over 5 s"}
+  - {t: 108, formation: field, enemy: glow-angler, count: 8, from: front, x: 240, size: [400, 300], spacing: 60, notes: "The constellation, the big swarm the Choir announced; quiet window of 3.5 s before it; its centre Angler drops a shield cell"}
+  - {t: 110, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - {t: 112.5, formation: field, enemy: driftjelly, count: 8, from: front, x: 240, size: [360, 240]}
+  - {t: 116, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 118, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 120, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - t: 123.5
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+  - {t: 127, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 129, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - {t: 131, formation: field, enemy: glow-angler, count: 6, from: front, x: 240, size: [360, 240], spacing: 70}
+  - {t: 134.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
+  - {t: 138, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - t: 141.5
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[280, -60], [170, 140], [310, 300], [160, 460], [240, 640]]]
+    notes: The first of a pair 4 s apart
+  - {t: 143.5, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - t: 145.5
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
+    notes: The second of the pair
+  - {t: 145.5, formation: field, enemy: glow-angler, count: 5, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
+  - {t: 149, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
+  - {t: 152, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [360, 420], spacing: 70, notes: "The last fight before the silence, spread out to the loss's quiet window"}
+  - {t: 160, formation: field, enemy: driftjelly, count: 5, from: front, x: 240, size: [360, 760], notes: "Harmless drifters: their veins are the only light in the aftermath; no other wave after this"}
+  - {t: 166, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 600], notes: "Drifting in over 5 s"}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x
+  - target: farm barge
+    section: 3
+    layer: ground
+    size: [80, 48]
+    sprite: farm-barge   # tools/art/l26_props.py (step ART-F): the drowned Thera Deep farm barge with its one working lamp, its break frames and its glow
+    hp: 20
+    reveals: farm barge
+    at: [[84, 60]]   # on the sea floor in the dark's open left side
+    notes:
+      target: 'Thera Deep farm barge (`ground` trigger, {hp} HP, t≈84, x 60)'
+      effect: 'The secret: frees a crate worth 100 (410)'
+
+secrets:
+  - name: farm barge
+    crate: 100   # Act 1 terms: pays 410 with the act factor
+    radio: {speaker: Varga, line: "A farm barge, lamp still on. Warm light, Lancer: that one is ours."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 96, unit: first}}       # the first eel of the t=96 pair
+  - {pickup: shield cell, dropped_by: {wave: 108, unit: centre}}   # the constellation's Angler nearest its centre (F10)
+
+drops:  # a drifting Thera Deep survey buoy (warm gold glow) releases an armour patch in the open water before the deep
+  - {t: 130, x: 240, y: 380, pickup: armour patch, sprite: survey-buoy}
+
+radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected). Rook's three
+  # lines are scripted, not barks (no `requires`): they play with him, ejected, without him or with the Bulwark; his
+  # barks end at the loss's trails (t=157). The Choir's line: the HUD portrait's static 2 s before it, the music 6 dB
+  # under it. Step F2 retimed the loss's lines to the radio's hold (every line on the panel at least 5 s and 0.4 s of
+  # silence: RadioTimelineLevel26Test): Rook's pre-line 148, Varga's warning 155, Okafor 167.5, Varga 174.5, Okafor 181.
+  - {t: 1, speaker: Okafor, line: "Blackwater, Lancer. No lamps, no charts. Your headlight and whatever glows, nothing else."}
+  - {t: 13, speaker: Rook, line: "Dark and wet. At least nobody sees me being scared."}
+  - {t: 24.5, speaker: Varga, line: "That glow is not a pickup. Teal is Vrell. Touch it and it lunges."}
+  - {t: 46, speaker: Varga, line: "Lost them? Pulse the sonar. It lights everything for six seconds."}
+  - {t: 63, speaker: Varga, line: "A fault wall on your right. Sirens in its caves: watch for the glow before the ring."}
+  - {t: 99, speaker: The Choir, distorted: true, static_lead: 2, duck_db: 6, line: "…small ones… in the dark… your kin… came before you…"}
+  - {t: 110.5, speaker: Varga, line: "Your kin. It said your kin, Commander."}
+  - {t: 118, speaker: Okafor, line: "Noted, Doctor. Eyes front."}
+  - {t: 140, speaker: Okafor, line: "Almost through the deep, Lancer. Vents ahead."}
+  - {t: 148, speaker: Rook, line: "Lancer, if I buy you a drink for this one, we're even."}   # the README's t=150, so Varga's warning follows it
+  - {t: 155, speaker: Varga, shout: true, line: "Contacts below!"}   # the README's t=157: her sonar finds them as they launch, 2 s before the trails rise (the radio holds a line at least 5 s)
+  - {t: 160.3, speaker: Rook, line: "Lancer, something's below u—"}   # cut mid-word (Level 10's cut dash), as his lamp goes dark at the bottom edge
+  - {t: 167.5, speaker: Okafor, line: "Aegis Two, report. Rook? Rook, answer!"}   # the README's t=165, after the cut line
+  - {t: 174.5, speaker: Varga, line: "His lamp went down, Commander."}   # the README's t=171
+  - {t: 181, speaker: Okafor, line: "Finish the dive, Lancer. We will find him.", notes: {trigger: "Level end (t=181)"}}   # the README's t=176
+  - {event: secondary-objective, speaker: Okafor, line: "Clean crossing. Now find him, Lancer.", notes: {trigger: Secondary met (at the end)}}
+
+rook_loss: {t: 157.5, trails: 157, spin: 2.5}   # the trails from 157 (his barks end), the hit at 157.5, 2.5 s spinning down off the bottom edge
+
+objectives:
+  primary: reach-end
+  secondary: {kill_ratio: 0.65, credits: 100, name: Clean crossing}   # at least 65 % of the level's enemies, judged at the end (100 in Act 1 terms: pays 410)
+
+music:
+  track: 10           # Act 4 A "Thera Deep", its darkness variant (audio/music track list)
+  start_section: 1    # the full A theme with the lamps
+  full_section: 1
+  stem_times:         # the strip-back as the lights go out, the thinning, the silence and the vents' warm pad (F12)
+    - {t: 8, stems: dark, fade: 10}      # the dark stem (thera-deep-dark: pings, the deep pad, the drone) alone over t=8-18
+    - {t: 150, db: -6, fade: 2}          # the pad thins under Rook's last lines
+    - {t: 158, stems: none, fade: 2}     # out at t=160: the silence of the loss
+    - {t: 168, stems: warm, fade: 10}    # the vent field's warm pad creeping in (round 55's pick, thera-deep-warm)
+  ambience: europa-black   # a heavy pressure drone, distant whale calls, no bubbles (step AUD-F)
+  ambience_layers:
+    - {ambience: europa-trench, from: 56, to: 104, fade_in: 4, fade_out: 4}   # the scarp's rumble
+  end_jingle: mission-complete
+
+difficulty: {}  # the formation lever sizes the waves; the stat blocks' hooks apply (the Angler's easy 100 px trigger and ring of 6, hard 160 px and 10; the Nautilus's easy 2 arms and 1.8 s window, hard 4 arms and 1.4 s; the Siren's easy 1.5 s slow and a ring every 6 s, hard every 3.6 s and 2 s of immunity)
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-26-blackwater, line: "Past the trench there is nothing on the charts, only black water between us and the vents. The Vrell route runs through it. Fly it on your headlight, Lancer, and keep Rook close."}
+    - {speaker: Varga, image: level-26-lure, line: "You'll see only what glows. The Vrell glow teal and violet, and so do their lures: a teal bead on a stalk is not a pickup. Bullets always show. The Sonar Pulse lights everything for six seconds."}
+  teaser: {speaker: Rook, line: "Black water ahead. Stay where I can see your lights, Lancer. I'm not that good in the dark."}
+
+backdrop:
+  # Presentation only: Level 26's black water (tools/art/backdrop_l26.py, step ART-F; its `--proposal`,
+  # concept/backdrop-proposal.yaml, adopted in step F2). Re-run the generator after the data moves a section, the scarp,
+  # a notch or a target. Almost all black: the ground is unlit albedo, the light map shows it. The scarp is the
+  # terrain's right wall (WallProjection, the ice path): ice-wall, ice-wall-glow, ice-wall-foot; cave-mouth-right is
+  # drawn by the game at each notch (not placed). Every piece's -glow is added over the grade on its frame clock.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 02080e  # the black water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    pipeline-floor: {layer: ground, height: 960}   # section 1: dark silt, the drowned Thera Deep pipeline and its anchor blocks
+    black-water: {layer: ground, height: 960}   # sections 2-6: the far floor, near black (the cone reveals a dim murk)
+  pieces:
+    seam-black-water: {layer: ground, size: [480, 320]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 4, keep_clear: 100}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    lamp-post: {layer: ground, size: [64, 96], frames: 4, fps: 4}
+    lamp-post-dying: {layer: ground, size: [64, 96], frames: 8, fps: 6}
+    lamp-post-glow: {layer: ground, size: [64, 96], frames: 4, fps: 4}
+    lamp-post-dying-glow: {layer: ground, size: [64, 96], frames: 8, fps: 6}
+    amber-seep: {layer: ground, size: [320, 320]}
+    amber-seep-glow: {layer: ground, size: [320, 320]}
+    vent-field: {layer: ground, size: [480, 2040]}
+    vent-field-glow: {layer: ground, size: [480, 2040]}
+    cave-mouth-right: {layer: ground, size: [112, 124]}
+  placed:
+    # section 2's seam: the pipeline floor into the black water, the pipe broken off; exact rows
+    - {piece: seam-black-water, t: 22.167, x: 240}
+    # the trench's last beacons, falling behind at the start; their light relay-beacon-glow, added over the grade
+    - {piece: relay-beacon, t: 0.592, x: 64}
+    - {piece: relay-beacon, t: 1.669, x: 420}
+    # the lamp posts beside the pipeline, one every 360 px; the last one failing; their light the -glow pieces
+    - {piece: lamp-post, t: 0.0, x: 168}
+    - {piece: lamp-post, t: 1.815, x: 168}
+    - {piece: lamp-post, t: 4.585, x: 168}
+    - {piece: lamp-post, t: 7.354, x: 168}
+    - {piece: lamp-post, t: 10.123, x: 168}
+    - {piece: lamp-post-dying, t: 12.892, x: 168}
+    # the amber seeps far below (section 5); their light amber-seep-glow
+    - {piece: amber-seep, t: 143.0, x: 130}
+    - {piece: amber-seep, t: 149.5, x: 352}
+    # the vent field's far chimneys and red glow (vent-field-glow) rising on the horizon from t~168; exact rows
+    - {piece: vent-field, t: 177.727, x: 240}

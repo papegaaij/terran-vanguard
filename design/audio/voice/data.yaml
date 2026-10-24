@@ -16,6 +16,7 @@ respell:
   Burroughs: Burrows
   Valles Marineris: Vallis Marinairis
   Coprates: Coprateez
+  u: us   # M8 part F: Rook's cut "…below u—" (Level 26, t=160.3) is spoken "us" and cut inside it by Whisper's timing (the subtitle keeps "u—")
 
 expressions:   # exaggeration 0.25-2, cfg_weight (lower: slower, more dramatic), temperature
   neutral: {exaggeration: 0.5, cfg_weight: 0.5, temperature: 0.7}
@@ -65,6 +66,7 @@ speakers:
       92374b1e90be: 155318577   # Level 24 t=1 "Past the farms is the abyssal plain, Aegis…": the key's seed (five takes, 0.8-1.9 s pauses) read "lumps" for "lamps" and "light"; the pin reads it word for word with the name prompt at 157 Hz
       68b1de64c583: 109780469   # Level 25 t=1 "The Siren Trench, Lancer…": the key's seed read "Relness sing" / "Roll nests" for "Vrell nests" (four pause retries); the pin reads "Vrell nests" with the name prompt at 152 Hz
       f6aaa2b9a46a: 258648631   # Level 25 t=158 "The trench opens ahead…": the key's seed jumped an octave on 23 % of the line (p90 about 400 Hz); the pin stays at 156 Hz (p90 210) and reads "Aegis" both ways
+      553b9b37180b: 89375107    # Level 26 t=167.5 "Aegis Two, report. Rook? Rook, answer!": the key's seed jumped an octave on 31 % of the line (p90 about 400 Hz); the pin reads it word for word with the name prompt at 142 Hz (p90 190)
   varga:
     names: [Varga]
     ref: ref-varga
@@ -100,6 +102,8 @@ speakers:
       c80f1f044656: 209777147   # Level 25 t=131.5 "Sirens on both walls…": the key's seed read "threat a spiral" and jumped an octave (p90 about 500 Hz); the pin reads "thread" both ways at 196 Hz
       11407b40994f: 18089919    # Level 25 survey sub secret "Conamara's survey sub…": the key's seed jumped an octave (p90 about 500 Hz); the pin stays at 199 Hz and reads "the Vrell" with the name prompt
       d316a7f1c744: 221342345   # Level 25 briefing page 2 "The nests sing…": the key's seed ran high (median 216 Hz, p90 about 320); the pin stays at 204 Hz (p90 268)
+      98a59ec8c2b3: 160064932   # Level 26 briefing page 2 "You'll see only what glows…": the key's seed jumped an octave on 18 % of the page (p90 about 470 Hz); the pin stays at 220 Hz (p90 284) and reads "Vrell" and "stalk" with the name prompt
+      60a839dd854d: 101354349   # Level 26 t=110.5 "Your kin. It said your kin, Commander.": the key's seed jumped an octave on 22 % of the line (p90 about 500 Hz); the pin is the only steady one of five (214 Hz, p90 269)
   rook:
     names: [Rook]
     ref: ref-rook
@@ -123,6 +127,8 @@ speakers:
       4dfea2344c1f: 233372167   # Level 21 t=13 "On your left, Lancer. Let's finish this.": the key's seed was barely voiced (8 %); the pin is voiced at about 132 Hz like the right-side take
       26f36c7b9641: 18900666    # Level 22 t=87 (t=82 until step B3b) "Mantis, both flanks!": the key's seed was unvoiced (a whisper, no pitch found; so were four of six more seeds); the pin is voiced at about 141 Hz
       56de5260936b: 93088266    # Level 24 t=24 "Dark's coming, Lancer…": the key's seed jumped an octave on 13 % of the line (p90 about 400 Hz) and read "Darks come in"; the pin reads it word for word at his 154 Hz (p90 183)
+      8689cf844d62: 141074656   # Level 26 t=148 "Lancer, if I buy you a drink…" (his quiet last beat, pinned as the voice design asks): the key's seed jumped an octave on 20 % of the line (p90 about 430 Hz); the pin is level and unhurried at 152 Hz (p90 176)
+      799501ca3f8b: 127489028   # Level 26 t=160.3 "Lancer, something's below u—" (cut inside "us"): spoken "u" before the respelling, its take read "Thumb, something's below you"; the pin reads "Lancer, something's below us" both ways, the only one of four seeds
   choir:
     names: [The Choir]
     ref: ref-varga

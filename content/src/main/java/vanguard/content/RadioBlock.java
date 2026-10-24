@@ -50,6 +50,10 @@ public sealed interface RadioBlock permits LevelData {
      *     dropped below (Level 13's 0.5 and 0.25)
      * @param delay round 45 B.a, an event cue: the seconds (at least 0) the radio holds the line after its event before
      *     it plays, the lines queued after it waiting behind it (Level 21's Choir under the Colossus's death roar)
+     * @param staticLead M8 part F (design/campaign Level 26, The Choir; m8f-gaps.md §1.5): the HUD portrait frame's
+     *     interference shows this many seconds before a timed line plays (Level 26's Choir, 2 s); none if not given
+     * @param duckDb M8 part F: the music ducks this many dB under the line while it plays (Level 26's Choir, 6); none
+     *     if not given
      */
     public record RadioCue(
             Optional<Double> t,
@@ -71,8 +75,15 @@ public sealed interface RadioBlock permits LevelData {
             Optional<Boolean> timeout,
             Optional<List<String>> parts,
             Optional<Double> below,
-            Optional<Double> delay) {
+            Optional<Double> delay,
+            Optional<Double> staticLead,
+            Optional<Double> duckDb) {
         public RadioCue {
+            staticLead.ifPresent(seconds -> {
+                Check.that(t.isPresent(), "static_lead: only on a timed line");
+                Check.that(seconds > 0 && seconds <= 10, "static_lead: above 0 and at most 10 s, was " + seconds);
+            });
+            duckDb.ifPresent(db -> Check.that(db > 0 && db <= 24, "duck_db: above 0 and at most 24 dB, was " + db));
             Check.that(delay.isEmpty() || event.isPresent(), "only an event cue waits a delay");
             delay.ifPresent(seconds ->
                     Check.that(Double.isFinite(seconds) && seconds >= 0, "delay: seconds, at least 0, was " + seconds));
@@ -107,6 +118,16 @@ public sealed interface RadioBlock permits LevelData {
             Check.that(
                     group.isPresent() == byGroup,
                     "a group-cleared or group-lost event names its group, other triggers do not");
+        }
+
+        /** M8 part F: the portrait's interference before the line, s: its {@code static_lead}; 0 if not given. */
+        public double staticLeadSeconds() {
+            return staticLead.orElse(0.0);
+        }
+
+        /** M8 part F: how far the music ducks under the line, dB (positive): its {@code duck_db}; 0 if not given. */
+        public double musicDuckDb() {
+            return duckDb.orElse(0.0);
         }
 
         /** Round 45 B.a: the seconds the radio holds the line after its event, its {@code delay}; 0 if not given. */

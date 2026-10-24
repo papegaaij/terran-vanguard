@@ -205,6 +205,13 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-25-sonar-ring     L25 p2: Varga's diagram of the Siren's ring: the production nest on a wall (tools/art/
                           siren.py) with its sac, two rippled rings and the gap between them, the ship slowed in the
                           band with its shimmer (60 %, 2 s), a speed strip with the 3 s immunity
+  level-26-blackwater     L26 p1 (M8 part F batch): Okafor's chart of the Blackwater, north up: the trench's mouth and
+                          its last beacons at the top, the drowned pipeline's last lamps, then nothing charted (no
+                          sonar return, the CDF's survey buoys lost and crossed out at the chart's edges), a dotted
+                          route down the middle, the vent field's red glow far to the south
+  level-26-lure           L26 p2: Varga's diagram of the Glow Angler as the dark shows it (tools/art/glow_angler.py:
+                          the bead on its stalk and the eyes, the body a faint rim), a gold pickup beside it, the
+                          ship's headlight cone from below, the 130 px lunge radius and the ring it fires
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -231,6 +238,7 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   design/ui/briefing/concept/briefing-images-final-r52-a.png   review sheet, L23 (M8 part C)
   design/ui/briefing/concept/briefing-images-final-r53-a.png   review sheet, L24 (M8 part D)
   design/ui/briefing/concept/briefing-images-final-r54-a.png   review sheet, L25 (M8 part E)
+  design/ui/briefing/concept/briefing-images-final-r55-a.png   review sheet, L26 (M8 part F)
  Every image is composed
 in layers like the hangar map (tools/art/ui_scenes.py): the display and planets posterized to 24
 colours with ordered dither, the lines, markers and labels to 16 of their own, then the sprites
@@ -241,7 +249,7 @@ additive light (the Mantis's beam parts from assets/, its wedge from mantis_beam
 code; the carrier's core glow, also on its open sacs) added as the game blends it, its pixels to 32 colours of their own.
 The labels use the concept pixel font (render/raster.py), as the chosen mockup does.
 
-Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53|r54] [--review]   (~15 s; after
+Run: python3 tools/art/briefing_images.py [name ...] [r13|r20|r21|r23|r25|r30|r31|r32|r33|r34|r35|r36|r38|r39|r40|r41|r42|r43|r44|r51|r52|r53|r54|r55] [--review]   (~15 s; after
 stormhawk.py, vrell_air.py, intel.py, vrell_l03.py, leviathan.py, vrell_l04.py, civilian_crawler.py
 airstrike_bomber.py, l05_hazards.py, mantis.py, mantis_beam.py, coilwyrm.py, l06_darkness.py,
 backdrop_l06.py, brood_carrier.py, brood_carrier_death.py, backdrop_l07.py, portraits.py, rook.py,
@@ -281,7 +289,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r54"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r55"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -5553,6 +5561,167 @@ def sonar_ring():
     return b
 
 
+SOURCE_M8F = artkit.source_note(SCRIPT, "M8 part F batch")
+VENT_RED = (255, 80, 40)
+GOLD_P = (255, 196, 64)
+
+
+def l26_map_xy(t, x):
+    """Level 26's (t s, play-field x px) on Okafor's chart: north (the level's start) up."""
+    return 24 + x * 400 / 480, 30 + t / 182 * 198
+
+
+def blackwater():
+    """L26 p1: Okafor's chart of the Blackwater, north up: the trench's mouth and its last beacons at the top, then
+    nothing on the charts (no sonar return, the CDF's survey buoys lost off the chart's edges, crossed out), a dotted
+    route down the middle, and far to the south the vent field's red glow."""
+    b = Board()
+    b.base = b.base * 0.55
+    mx0, mx1, my0, my1 = 24, 424, 26, H - 8
+    inside = (b.xx > mx0) & (b.xx < mx1) & (b.yy > my0) & (b.yy < my1)
+    n = raster.fbm(W, H, 32, 2771, octaves=4, period=False)
+    b.base = np.where(inside[..., None], np.array((2, 7, 14.0)) + 6 * (n[..., None] - 0.5), b.base)
+    # the trench's mouth at the top: two wall lines opening out to the chart's edges
+    for side in (0, 1):
+        pts = [l26_map_xy(t, (150 - 15 * t) if side == 0 else (330 + 15 * t)) for t in np.linspace(0, 10, 6)]
+        b.line(pts, CYAN, 1, 220)
+    for x, t in ((64, 2.4), (420, 3.6)):
+        mx, my = l26_map_xy(t, x)
+        b.glow(mx, my, 3.5, (160, 60, 10), 0.9)
+        b.marker(mx, my, "dot", BEACON_RG, 1)
+    # the drowned pipeline and its lamp posts (section 1)
+    p0, p1 = l26_map_xy(0, 150), l26_map_xy(20, 150)
+    b.line([p0, p1], GREY, 1, 200)
+    for k in range(6):
+        mx, my = l26_map_xy(1 + k * 2.6, 168)
+        b.glow(mx, my, 3, (150, 110, 40), 0.9)
+        b.marker(mx, my, "dot", AMBER, 1)
+    tag(b, l26_map_xy(4, 140)[0] - 4, l26_map_xy(12, 0)[1] - 4, "LAST LAMPS", AMBER, right=True)
+    # no sonar return between: a faint hatch, the label
+    band = inside & (b.yy > l26_map_xy(24, 0)[1]) & (b.yy < l26_map_xy(160, 0)[1])
+    hatch = band & (np.mod(b.xx + b.yy, 14) < 1)
+    b.base = np.where(hatch[..., None], b.base + np.array((6, 18, 26.0)), b.base)
+    tag(b, 150, l26_map_xy(70, 0)[1], "NO SONAR RETURN", CYAN_DIM)
+    tag(b, 168, l26_map_xy(70, 0)[1] + 12, "NOTHING CHARTED", CYAN_DIM)
+    # the CDF's survey buoys, lost off the chart's edges
+    for t, x in ((34, 30), (58, 410), (96, 26), (128, 418)):
+        mx, my = l26_map_xy(t, x)
+        b.marker(mx, my, "square", GREY, 3)
+        b.marker(mx, my, "cross", RED, 3)
+    tag(b, l26_map_xy(34, 30)[0] + 8, l26_map_xy(34, 30)[1] - 4, "CDF BUOYS: NO SIGNAL", GREY)
+    # the vent field far to the south
+    for k, (x, t, r) in enumerate(((140, 176, 10), (210, 172, 14), (290, 178, 11), (360, 174, 9), (250, 181, 12))):
+        mx, my = l26_map_xy(t, x)
+        b.glow(mx, my, r, (230, 40, 8), 1.4)
+        b.marker(mx, my, "dot", VENT_RED, 2)
+    tag(b, l26_map_xy(176, 380)[0], l26_map_xy(166, 0)[1], "VENT GLOW", VENT_RED)
+    # the route: a dotted line straight down the middle
+    pts = [l26_map_xy(t, 240 + 10 * np.sin(t / 30)) for t in np.linspace(0, 170, 30)]
+    b.dashed(pts, TEAL_V, 1, dash=3, gap=5)
+    b.arrow(*pts[-2], *pts[-1], TEAL_V, 4, dashed=False)
+    sx, sy = l26_map_xy(4, 240)
+    b.marker(sx, sy, "square", CYAN, 3)
+    tag(b, sx + 22, sy + 4, "LANCER", CYAN)
+    rx, ry = l26_map_xy(4, 272)
+    b.marker(rx + 12, ry + 6, "square", CYAN_DIM, 2)
+    b.title("CDF CHART - THE BLACKWATER, NORTH UP")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(mx1 + 8, 30, "N", WHITE)
+    b.arrow(mx1 + 11, 58, mx1 + 11, 42, WHITE, 4, dashed=False)
+    px = 470
+    b.label(px, 30, "THE BLACKWATER", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "NO LAMPS,", CYAN)
+    b.label(px, 62, "NO CHARTS", CYAN)
+    b.label(px, 80, "THE VRELL ROUTE", WHITE)
+    b.label(px, 90, "RUNS THROUGH IT", WHITE)
+    b.label(px, 108, "FLY ON YOUR", AMBER)
+    b.label(px, 118, "HEADLIGHT", AMBER)
+    b.label(px, 136, "KEEP ROOK CLOSE", CYAN)
+    b.label(px, 164, "THE VENTS", VENT_RED)
+    b.label(px, 174, "AT THE FAR END", VENT_RED)
+    b.label(px, 192, "CROSS IT", GREEN)
+    return b
+
+
+def lure_scan():
+    """L26 p2: Varga's diagram of the Glow Angler in the dark: the angler as the dark shows it (its glow only: the
+    teal bead on its stalk, the crimson eyes; the body a faint rim, tools/art/glow_angler.py), a warm gold pickup
+    beside it for contrast, the ship's headlight cone from below, the 130 px lunge radius and the ring it fires."""
+    b = Board()
+    b.base = b.base * 0.35
+    b.title("CDF SCAN - GLOW ANGLER, THE LURE")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    k = 0.7                                                    # the diagram's scale (px on the display per field px)
+    ax, ay = 150, 70                                           # the angler (heading 0: facing down)
+    sx, sy = 196, 228                                          # the ship, below
+    # the headlight cone from the ship (a faint wedge under the lines), its edge
+    ang = np.degrees(np.arctan2(b.xx - sx, -(b.yy - sy)))
+    r = np.hypot(b.xx - sx, b.yy - sy)
+    wedge = (np.abs(ang) < 35) & (r < 260 * k) & (b.yy < sy)
+    b.base = np.where(wedge[..., None], b.base + np.array((10, 16, 18.0)), b.base)
+    for s in (-1, 1):
+        a = np.radians(35 * s)
+        b.line([(sx, sy - 10), (sx + np.sin(a) * 260 * k, sy - np.cos(a) * 260 * k)], CYAN_DIM, 1, 140)
+    tag(b, sx + 70, sy - 40, "HEADLIGHT", CYAN_DIM)
+    try:
+        body = held_asset("glow-angler_0")
+        dim = np.array(body).astype(np.float64)
+        dim[..., :3] *= 0.22                                   # the 15 % rim in the dark
+        b.sprite(held_frame_img(Image.fromarray(dim.astype(np.uint8), "RGBA"), 24), ax, ay)
+        for name in ("glow-angler-glow_0", "glow-angler-stalk_0"):
+            g = np.array(held_asset(name)).astype(np.float64)
+            b.add_light(g[..., :3] * g[..., 3:4] / 255, ax - g.shape[1] / 2, ay - g.shape[0] / 2, "over")
+        piv = json.loads((ROOT / "assets" / "pivots" / "glow-angler.json").read_text(encoding="utf-8"))
+        lx, ly = ax + piv["lure"][0][0] - 40, ay + piv["lure"][0][1] - 40
+        lure = np.array(held_asset("glow-angler-lure_4")).astype(np.float64)
+        b.add_light(lure[..., :3] * lure[..., 3:4] / 255, lx - 12, ly - 12, "over")
+    except FileNotFoundError:
+        b.marker(ax, ay, "dot", TEAL_V, 3)
+        lx, ly = ax, ay + 34
+    b.ring(ax, ay, 130 * k, colour=RED, alpha=200)
+    tag(b, ax - 30, ay + 130 * k + 6, "130 PX: IT LUNGES", RED, right=True)
+    d = np.array((ax - sx, ay - sy), float)
+    d /= np.linalg.norm(d)
+    ex, ey = sx + d[0] * 60 * k + 0, sy - 8 + d[1] * 60 * k      # the lunge stops 60 px short of the ship: its ring
+    b.arrow(ax + d[0] * -40, ay + 40, ex + d[0] * 20, ey + d[1] * 20, RED, 4, dashed=True)
+    for j in range(8):
+        a = TAU_B * j / 8
+        b.marker(ex + 16 * np.cos(a), ey + 16 * np.sin(a), "dot", (255, 110, 200), 2)
+    tag(b, ex + 22, ey - 4, "THE RING OF 8", (255, 110, 200))
+    tag(b, lx - 12, ly - 4, "TEAL ON A STALK:", TEAL_V, right=True)
+    tag(b, lx - 12, ly + 6, "NOT A PICKUP", TEAL_V, right=True)
+    # a real pickup beside it, warm gold
+    gx, gy = 300, 96
+    b.glow(gx, gy, 10, (120, 80, 10), 1.2)
+    try:
+        pk = held_frame("pickup-salvage-small_0", 1.0, 32)
+        b.sprite(pk, gx, gy)
+    except FileNotFoundError:
+        b.marker(gx, gy, "dot", GOLD_P, 4)
+    tag(b, gx + 18, gy - 4, "PICKUP: GOLD", GOLD_P)
+    shp = held_frame("ship-hydro_2", 0.8, 48) if (SPRITES / "ship-hydro_2.png").exists() else scaled(asset("ship_2"), 0.8)
+    b.sprite(shp, sx, sy - 8)
+    px = 470
+    b.label(px, 30, "THE GLOW ANGLER", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "YOU SEE ONLY", CYAN)
+    b.label(px, 62, "WHAT GLOWS", CYAN)
+    b.label(px, 80, "A TEAL BEAD ON", TEAL_V)
+    b.label(px, 90, "A STALK IS VRELL", TEAL_V)
+    b.label(px, 108, "TOO CLOSE: IT", RED)
+    b.label(px, 118, "LUNGES AND FIRES", RED)
+    b.label(px, 128, "A RING", RED)
+    b.label(px, 146, "PICKUPS GLOW GOLD", GOLD_P)
+    b.label(px, 164, "BULLETS ALWAYS SHOW", WHITE)
+    b.label(px, 182, "SONAR PULSE:", GREEN)
+    b.label(px, 192, "ALL LIT FOR 6 S", GREEN)
+    return b
+
+
+TAU_B = 2 * np.pi
+
+
 IMAGES = {
     "act-1-tether-gate": tether_gate,
     "act-1-outer-stations": outer_stations,
@@ -5625,6 +5794,8 @@ IMAGES = {
     "level-24-abyss-ray": abyss_ray_scan,
     "level-25-siren-trench": siren_trench,
     "level-25-sonar-ring": sonar_ring,
+    "level-26-blackwater": blackwater,
+    "level-26-lure": lure_scan,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -5652,6 +5823,7 @@ BATCHES = {
     "r52": (list(IMAGES)[65:67], "M8 PART C"),
     "r53": (list(IMAGES)[67:69], "M8 PART D"),
     "r54": (list(IMAGES)[69:71], "M8 PART E"),
+    "r55": (list(IMAGES)[71:73], "M8 PART F"),
 }
 
 
@@ -5675,6 +5847,7 @@ def build(names):
                   else SOURCE_M8C if name in BATCHES["r52"][0]
                   else SOURCE_M8D if name in BATCHES["r53"][0]
                   else SOURCE_M8E if name in BATCHES["r54"][0]
+                  else SOURCE_M8F if name in BATCHES["r55"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

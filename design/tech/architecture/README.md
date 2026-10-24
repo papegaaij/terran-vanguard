@@ -1260,7 +1260,9 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   none), `look: floor` the game's base for a ground unit; `EnemyData.inWater()`): the Driftjelly's `{layer: air,
   submerge: false}`, the Reef Spitter's `{drift: 0, look: floor}`. A level's **`underwater_look`** (presentation only, the
   game's under-water grade: `ambient` 0–1, `tint` `rrggbb`, `caustics` 0–1, `snow` particles on the screen, `headlights`
-  0–1; only on a level that is under water somewhere; the game's defaults where it is left out) and a section's own **`underwater_look`** (any of
+  a strength 0–1 (the default beam, 200 px over a 44° sector) or `{strength, reach, angle}` (reach px, the lit sector's
+  full angle in degrees; step LX: light that brings the world in the cones up toward its full colour, `SectionsBlock.Headlights`),
+  `rim` 0–1 (optional, step LX: a faint light along the terrain's rock edges, the notches' and the islands'); only on a level that is under water somewhere; the game's defaults where it is left out) and a section's own **`underwater_look`** (any of
   those values instead of the level's, only on an under-water section of a level that gives the block: part D's Level 24 darkens section by section;
   `LevelData.underwaterLookOf(section)`). The radio event **`waterline`** (the level's first waterline, the start of the
   first section whose medium differs from the one before it, `LevelData.firstWaterline()`; content resolves it to that
@@ -1293,7 +1295,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
 - **Level and unit, M8 part E** ([Level 25](../../campaign/act-4-deep-water/level-25-siren-trench/README.md), the
   [Siren](../../enemies/naval/siren/README.md) and the [Spiral Nautilus](../../enemies/naval/spiral-nautilus/README.md);
   loaded, checked (`TrenchChecks`) and mapped (`TrenchRules`) in step E3, flown from steps E1/E2; the gap check's
-  defaults pending the user's review in round 54): the terrain's **`notches`** (the side caves: each a `side`, `left` or
+  defaults accepted in round 54 (2026-10-23)): the terrain's **`notches`** (the side caves: each a `side`, `left` or
   `right`, a `scroll`, the row of its middle, a `width` along the wall (rows) and a `depth` behind the wall's line, px;
   on its wall's rows, the notches of one wall not overlapping; open water with rock on three sides: `TerrainBlock.rock`
   opens them, the geometry rules read the walls' lines without them; an index into the list names a notch). A wave's
@@ -1319,6 +1321,26 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   specials' blasts and `anti-sub` fire; only and always with a coil) and its `spiral` fired `while: open`; the hook
   **`coil`** (`open` instead). The intel's **`CAVE`** marks (each cave wave flown at medium, at its time: the panel's
   side arrows at sensor L3).
+- **Level and unit, M8 part F** ([Level 26](../../campaign/act-4-deep-water/level-26-blackwater/README.md) and the
+  [Glow Angler](../../enemies/naval/glow-angler/README.md); loaded, checked (`DarkChecks`) and mapped (`DarkRules`) in
+  step F2, flown from step F1; the gap check's defaults pending the user's review in round 55): the movement
+  **`lunge`** (`trigger` px from the unit's centre to the ship's, `speed` px/s for at most `seconds`, `stop_short` px
+  short of where the ship was at the trigger, `retreat_speed` px/s for `retreat_seconds`; an `air` unit that drifts
+  (`drift`, a field's current) between lunges, with exactly one attack, its `ring` (`count`, `bullet`, `speed`, the
+  re-arm `interval` after the ring, no reach): the lunge's, not a gun; `EnemySpec.Lunge`) and the hook **`lunge`**
+  (`trigger` instead). A level's **`rook_loss`** (`trails`, `t`, `spin` s: the torpedo trails and the end of Rook's
+  barks at `trails`, the hit at `t`, the spin-down off the bottom edge in `spin`; `trails` after the launch, `t` after
+  `trails` and inside the level, no boss; `LevelScript.rookLoss`). The look **`underwater_look`**'s dark keys
+  (presentation only): a section's **`ramp`** (`to`, `from`, `until`: its ambient eased to `to` over that level time,
+  inside the section; only a section's own look), the level's **`lights`** (static pools on the ground: `scroll`, the
+  terrain row of the centre (below 0: on the screen at the start), `x`, `radius` px, `colour` `rrggbb`; on the level's
+  rows) and **`escort_lamp`** (the radius of the escort's light pool, px). A radio row's **`static_lead`** (s the HUD
+  portrait's interference shows before a timed line, from the level's start on) and **`duck_db`** (dB the music ducks
+  under the line, above 0). A wave carrier's **`unit: centre`** (a `field` wave of one group: the unit nearest the
+  field's centre where the scatter puts it; `WaveSpec.Carried.CENTRE`). The music's **`stem_times`** (`t`, `fade` s and
+  `stems` and/or `db`: from `t` the theme plays `full`, `base`, an extra stem of the theme alone by its name (`dark`,
+  `warm`: `<theme>-<name>.ogg` on the same grid) or `none`, at `db` (at most 0); in time order, each after the fade
+  before it, inside the level).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

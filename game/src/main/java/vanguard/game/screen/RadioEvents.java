@@ -38,6 +38,14 @@ final class RadioEvents {
      */
     private static final float SECONDARY_DROP_SECONDS = 1.5f;
 
+    /**
+     * M8 part F: the last line queued with its own music duck ({@code duck_db}, Level 26's Choir) and that duck, dB;
+     * null and 0 before.
+     */
+    private RadioQueue.Message duckLine;
+
+    private double duckDb;
+
     /** Round 41: the set pieces warned of ahead of their arrival ({@code BOSS_INCOMING}) in this attempt. */
     private final java.util.Set<Integer> announced = new java.util.HashSet<>();
 
@@ -64,6 +72,14 @@ final class RadioEvents {
         this.radio = radio;
         this.radioSchedule = radioSchedule;
         this.barks = barks;
+    }
+
+    /**
+     * M8 part F: how far the music ducks under the line on the radio now, dB: its row's {@code duck_db}, or 0 for the
+     * radio's usual duck (design/audio, Mix groups).
+     */
+    double radioDuckDb() {
+        return duckLine != null && radio.current().orElse(null) == duckLine ? duckDb : 0;
     }
 
     /** The level's own line for the mission failed screen, when its primary objective failed (design/systems/retry). */
@@ -150,6 +166,14 @@ final class RadioEvents {
                 if (cue.trigger() == CueTrigger.SECONDARY_OBJECTIVE) {
                     secondaryLine = message;
                 }
+                int index = events.value(i);
+                double duck =
+                        index < level.radio().size() ? level.radio().get(index).musicDuckDb() : 0;
+                if (duck > 0) {
+                    // M8 part F: the music ducks this much under the line while it plays (Level 26's Choir).
+                    duckLine = message;
+                    duckDb = duck;
+                }
             }
             case WINGMAN_CRITICAL -> {
                 if (barks != null) {
@@ -159,6 +183,12 @@ final class RadioEvents {
             case WINGMAN_EJECTED -> {
                 if (barks != null) {
                     barks.rookEjected(sortie.realSeconds());
+                }
+            }
+            // M8 part F: his loss's trails end his barks (Level 26); his scripted lines play on.
+            case ROOK_TRAILS -> {
+                if (barks != null) {
+                    barks.rookLost();
                 }
             }
             case SORTIE_RESTARTED -> {

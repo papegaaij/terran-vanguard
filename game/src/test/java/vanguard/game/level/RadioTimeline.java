@@ -84,6 +84,7 @@ abstract class RadioTimeline {
     static final String LEVEL_23 = "act-4-deep-water/level-23-through-the-ice";
     static final String LEVEL_24 = "act-4-deep-water/level-24-abyssal-plain";
     static final String LEVEL_25 = "act-4-deep-water/level-25-siren-trench";
+    static final String LEVEL_26 = "act-4-deep-water/level-26-blackwater";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -474,6 +475,19 @@ abstract class RadioTimeline {
                                 new Event(81.5, CueTrigger.SECRET, "survey sub"),
                                 new Event(173, CueTrigger.SECONDARY_OBJECTIVE, "")),
                         List.of(new Event(173, CueTrigger.SECONDARY_OBJECTIVE, ""))));
+        // M8 part F: Level 26's events (step F2's runs from the data's rows): the farm barge (t≈84, x 60, on the dark's
+        // open left side) shot as it enters (t≈85) or as it passes the ship (t≈88), or not at all; the kill-ratio
+        // secondary judged at the level's end (t=182). Rook's three lines are scripted (no escort needed); the Choir's
+        // line at t=99 between Varga's t=63 and t=110.5.
+        runs.put(
+                LEVEL_26,
+                List.of(
+                        List.of(),
+                        List.of(new Event(85.5, CueTrigger.SECRET, "farm barge")),
+                        List.of(
+                                new Event(88.5, CueTrigger.SECRET, "farm barge"),
+                                new Event(182, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(182, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         return runs;
     }
 

@@ -42,7 +42,9 @@ Outputs (assets/sprites/intel/, packed onto the shared sprite pages as ``intel/<
                      and tools/art/barbfin.py, the bone lionfish nose down with its barb lit); siren,
                      spiral-nautilus (Level 25, M8 part E batch: the production models of tools/art/siren.py, the
                      frill bell facing down with its sac mid-tell, and tools/art/spiral_nautilus.py, uncoiled nose
-                     down, the shell behind the open crown with its lime-white eyes, scaled to fit)
+                     down, the shell behind the open crown with its lime-white eyes, scaled to fit); glow-angler
+                     (Level 26, M8 part F batch: the production model of tools/art/glow_angler.py, the rust angler
+                     nose down with its gape half open and the teal lure lit on its stalk)
   unclassified-<enemy>.png  30x30 the sensor-L2 picture of a unit the intel does not name yet
                      (`unclassified_until_flown`, M7 part E batch): unclassified-ghost-drone, the Ghost
                      Drone's outline only, filled flat in dark teal with the plate's grid and a cyan rim
@@ -117,6 +119,7 @@ import drill_rig  # noqa: E402  (the Drill Rig's production models)
 import abyss_ray  # noqa: E402  (the Abyss Ray's production model)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
+import glow_angler  # noqa: E402  (the Glow Angler's production model)
 import spiral_nautilus  # noqa: E402  (the Spiral Nautilus's production models)
 import eel_swarm  # noqa: E402  (the Eel Swarm's production models)
 import glassfin  # noqa: E402  (the Glassfin's production model)
@@ -170,14 +173,15 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "boss-revenant-walker": "M7 part F batch", "boss-dust-colossus": "M7 part H batch",
            "drill-rig": "M8 part B batch", "glassfin": "M8 part C batch", "eel-swarm": "M8 part C batch",
            "abyss-ray": "M8 part D batch", "barbfin": "M8 part D batch",
-           "siren": "M8 part E batch", "spiral-nautilus": "M8 part E batch"}
+           "siren": "M8 part E batch", "spiral-nautilus": "M8 part E batch", "glow-angler": "M8 part F batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
           "M5 part F batch": "r34", "M5 part G batch": "r35", "M5 part H batch": "r36",
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
           "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44", "M8 part B batch": "r51",
-          "M8 part C batch": "r52", "M8 part D batch": "r53", "M8 part E batch": "r54"}
+          "M8 part C batch": "r52", "M8 part D batch": "r53", "M8 part E batch": "r54",
+          "M8 part F batch": "r55"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -220,6 +224,7 @@ ENEMIES = {
     "barbfin": barbfin.intel_model,
     "siren": siren.intel_model,
     "spiral-nautilus": spiral_nautilus.intel_model,
+    "glow-angler": glow_angler.intel_model,
 }
 # units the intel shows unnamed before their first level is flown: name -> the model whose outline it shows
 UNCLASSIFIED = {"ghost-drone": storm_units.ghost_intel_model}

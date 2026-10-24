@@ -46,6 +46,15 @@ final class EscortSlot {
                 wingman.vents(vents);
             }
         }
+        if (sortie.script.rookLoss().isPresent()) {
+            if (sortie.checkpointBoss >= 0) {
+                throw new IllegalArgumentException("Rook's loss in a level with a boss checkpoint is not supported");
+            }
+            if (wingman != null) {
+                // M8 part F: his scripted loss; without him (no escort, the Bulwark) it is the radio's only.
+                wingman.loss().plan(sortie.script.rookLoss().get());
+            }
+        }
         wingmanView = Optional.ofNullable(wingman);
         wingmanMount = loadout.armament().size();
         wingmanStart = loadout.wingman().map(WingmanSpec::armour).orElse(0.0);
@@ -88,11 +97,11 @@ final class EscortSlot {
         }
     }
 
-    /** The escort's step, the wind's {@code push} on the wingman first. */
-    void fly(int commands, double push) {
+    /** The escort's step, the wind's {@code push} on the wingman first, the ground scrolling {@code scrollStep} px. */
+    void fly(int commands, double push, double scrollStep) {
         if (wingman != null) {
             wingman.wind(push);
-            flyWingman(commands);
+            flyWingman(commands, scrollStep);
         }
         if (bulwark != null) {
             flyBulwark(commands);
@@ -103,7 +112,7 @@ final class EscortSlot {
     void hit() {
         if (wingman != null) {
             s.hitPasses.hitWingman();
-            if (s.links != null && !wingman.ejected()) {
+            if (s.links != null && !wingman.out()) {
                 double damage = s.links.touch(wingman.hull(), wingman.x(), wingman.y(), true);
                 if (damage > 0) {
                     wingman.hit(damage, s.ship.x(), s.ship.y(), s.events);
@@ -135,14 +144,18 @@ final class EscortSlot {
 
     /**
      * The wingman's step: in his slot during the launch; then his AI and, while the player fires,
-     * his gun.
+     * his gun; M8 part F: once lost, his spin instead ({@link RookLoss}).
      */
-    private void flyWingman(int commands) {
+    private void flyWingman(int commands, double scrollStep) {
         Ship ship = s.ship;
         EnemyForce force = s.force;
         wingman.rememberPosition();
         if (s.launching()) {
             wingman.formUp(ship.x(), ship.y());
+            return;
+        }
+        if (wingman.loss().step(s.levelTick, wingman, ship.x(), scrollStep, s.events)) {
+            // M8 part F: lost, he spins down (no AI, no gun).
             return;
         }
         // M7 part G: he keeps out of a pursuit's lunge lane during its tell and its dive.

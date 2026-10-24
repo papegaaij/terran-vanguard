@@ -77,4 +77,12 @@ public final class Tracks {
     public static String motifPath(String name) {
         return "music/" + name + "-motif.ogg";
     }
+
+    /**
+     * M8 part F: a level theme's extra stem by its name ({@code music/thera-deep-dark.ogg}, track 10's dark stem; the
+     * level's {@code music.stem_times}), sample-aligned with its base stem and full mix.
+     */
+    public static String stemPath(String name, String stem) {
+        return "music/" + name + "-" + stem + ".ogg";
+    }
 }

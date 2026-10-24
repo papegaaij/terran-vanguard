@@ -851,6 +851,8 @@ final class EnemyForce {
                 guns.vortex(enemy, ship, firing);
             } else if (enemy.coils()) {
                 guns.coil(enemy, ship, firing);
+            } else if (enemy.lunges()) {
+                guns.lure(enemy, ship, firing);
             } else if (enemy.laneStrafer()) {
                 guns.passTrigger(enemy, ship, firing);
             } else if (enemy.trigger() && firing) {

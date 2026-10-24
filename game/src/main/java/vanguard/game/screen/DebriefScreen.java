@@ -56,6 +56,10 @@ public final class DebriefScreen implements GameScreen {
     private static final Color GAIN = Color.valueOf("40FF80");
     private static final Color CREDITS = Color.valueOf("FFE04A");
     private static final Color HEADING = Color.valueOf("FFE04A");
+    /** M8 part F: the {@code ROOK  MIA} row's red (the HUD's alert). */
+    static final Color ALERT = Color.valueOf("FF4A3A");
+    /** M8 part F: the row naming Rook missing after the level that lost him (Level 26). */
+    static final String ROOK_MIA = "ROOK  MIA";
     /** The act summary's total row. */
     private static final String ACT_TOTAL = "ACT TOTAL";
 
@@ -194,6 +198,10 @@ public final class DebriefScreen implements GameScreen {
         grade = result.grade().letter();
         rating = result.rating();
         addTally(result);
+        if (rookLost(campaign, number)) {
+            // M8 part F (design/campaign Level 26, gap check F8): the debrief names him.
+            rows.add(new Row(ROOK_MIA, "", -1, "", "", ALERT));
+        }
         if (campaign.replay().isPresent()) {
             addReplay(result, launchBalance);
         } else {
@@ -268,6 +276,17 @@ public final class DebriefScreen implements GameScreen {
                     " CR",
                     CREDITS));
         }
+    }
+
+    /**
+     * M8 part F: whether winning Level {@code number} lost Rook (design/player/wingmen, Rook's loss and absence): he was
+     * hired, flies in it and is missing from the next level on (not in a replay).
+     */
+    static boolean rookLost(Campaign campaign, int number) {
+        return campaign.replay().isEmpty()
+                && campaign.gear().escort().hired()
+                && !campaign.rookMissing(number)
+                && campaign.rookMissing(number + 1);
     }
 
     /** The rows' labels: M5 part E's hulls afloat, M5 part F's weather sondes collected. */
@@ -465,7 +484,7 @@ public final class DebriefScreen implements GameScreen {
                 glass.rule(batch, LEFT + start, RIGHT, PixelScreen.HEIGHT - y + 6);
                 continue;
             }
-            text(font, batch, row.label(), LABEL, LEFT, y, 220, Align.left);
+            text(font, batch, row.label(), row.colour() == ALERT ? ALERT : LABEL, LEFT, y, 220, Align.left);
             text(font, batch, row.middle(), VALUE, LEFT + 230, y, 200, Align.left);
             text(font, batch, row.right(progress), row.colour(), RIGHT - 200, y, 200, Align.right);
         }

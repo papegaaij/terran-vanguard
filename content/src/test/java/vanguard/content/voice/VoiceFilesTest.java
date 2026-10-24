@@ -64,6 +64,7 @@ class VoiceFilesTest {
             "act-4-deep-water/level-23-through-the-ice",
             "act-4-deep-water/level-24-abyssal-plain",
             "act-4-deep-water/level-25-siren-trench",
+            "act-4-deep-water/level-26-blackwater",
             "act-4-deep-water briefing",
             "specials",
             "armour",

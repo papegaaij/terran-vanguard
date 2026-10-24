@@ -35,6 +35,26 @@ class IntelTest {
                 .toList();
     }
 
+    /**
+     * M8 part F (design/campaign Level 26, Threat profile at L3): in the dark the strip marks each wave of the scarp's
+     * wall nests (seven Sirens at t=61.2-94.8); a level with nests in the light (Level 25) or dark without nests (Level
+     * 06) marks none.
+     */
+    @Test
+    void theStripMarksTheNestsInTheDarkOfLevel26() {
+        assertEquals(
+                List.of(61.2, 66.8, 72.4, 78.0, 83.6, 89.2, 94.8),
+                nests(26).stream().map(Intel.Mark::from).toList());
+        assertEquals(List.of(), nests(25), "the trench's nests show in its light");
+        assertEquals(List.of(), nests(6), "Farside's dark has no wall nests");
+    }
+
+    private static List<Intel.Mark> nests(int number) {
+        return Intel.of(CONTENT, CONTENT.levelKey(number).orElseThrow(), 3).marks().stream()
+                .filter(mark -> mark.kind() == Intel.Mark.Kind.NEST)
+                .toList();
+    }
+
     @Test
     void withoutASensorSuiteLevel01ShowsTheSettingTheLayersAndTheMainDirection() {
         Intel intel = Intel.of(CONTENT, LEVEL_01, 0);

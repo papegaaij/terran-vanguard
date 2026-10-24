@@ -93,7 +93,7 @@ class SettingsFileTest {
                 new VideoSettings(Scaling.SHARP_BILINEAR, true),
                 new AudioSettings(0.8, 0.55, 0.3, 0.05, 0.65),
                 new ControlSettings(true, 0.35, bindings),
-                new GameplaySettings(60, 0.4, true, false));
+                new GameplaySettings(60, 0.4, true, false, true));
 
         file.save(settings);
 

@@ -361,3 +361,28 @@ additive), the dead crown, the death (the shell cracked into two halves drifting
 lime-grey glance flecks off the closed shell. The GIF: a pair orbiting the ship in opposite directions on Level 25's
 trench, spiralling in closed, uncoiling 2 s apart and firing 3-arm spirals of orbs (x 0.7), flecks off a closed shell,
 one cracked open while uncoiled.
+
+## glow-angler-final-r55-a
+
+Round 55, production art (M8 part F batch, step ART-F; from the chosen concept glow-angler-r48-a, the rust angler of
+`tools/concept/enemies_r48.py`, model imported unchanged). Not a mockup: the review sheet and a loop of the files
+written by [tools/art/glow_angler.py](../../../../tools/art/glow_angler.py) (held in `build/art-held/sprites/` until
+the Glow Angler's `data.yaml` exists): the 80x80 frames (the 40x32 body centred, the stalk and teal bead reaching ahead)
+at 16 headings x (hanging, the lunge with the gape wide), the glow-only frames (the teal bead and the crimson eyes,
+additive), the stalk lit by its bead (additive: the game fades it in within 160 px of the ship and keeps it lit for
+1 s at the death), the bead's pulse, the ring's flash at the gape and the lure blown out at the death. The GIF: in
+Level 26's dark (the review's stand-in of the light map, tools/art/l26kit.py) anglers hanging in the black as a bead
+and two eyes, the stalk fading in as the ship nears, a lunge and its ring of 8, one shot (the lure blown out, the
+stalk lit 1 s), a real pickup's gold halo beside them, the Sonar Pulse lighting every unit.
+
+## dark-units-final-r55-a
+
+Round 55, production art (M8 part F batch, step ART-F). Not a mockup: the review sheet and a loop of the glow-only
+frames written by [tools/art/l26_glows.py](../../../../tools/art/l26_glows.py) for the units Level 26 flies in the
+dark: `driftjelly-glow` (the Driftjelly's veined look: the lime vein network as crisp emission at its four pulse
+frames) and `eel-swarm-glow` (the Eel Swarm at rest: the violet stripe at a resting glow, the head's violet eyes and
+lime gills, per heading and part); the Siren's and the Spiral Nautilus's glows are part E's, unchanged. The sheet shows
+every unit of the level (Driftjelly, Eel head and body, Nautilus shut and open, Siren, Glow Angler) in the cone, in the
+dark (6 % ambient and the 15 % rim pool, glows added) and as glow only. The GIF: Level 26's fault scarp at t~61 in the
+dark look's stand-in: jellies drifting, a snake crossing, a Nautilus pair rolling and one uncoiling, two Sirens at a
+cave telling and singing, then the Sonar Pulse lighting all of them.

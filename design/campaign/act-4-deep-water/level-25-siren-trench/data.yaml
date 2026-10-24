@@ -6,7 +6,7 @@
 # `cave` (its units swim out of that notch, warned 3 s ahead at its wall's edge) and `wall` (Siren nests on the walls'
 # feet: `staggered` a nest every 1.5 s, the walls taking turns from the right, or `opposite` pairs at one row, the left
 # one's song 1.5 s later), the Siren's slowing `ring` and the Spiral Nautilus's `coil` (their stat blocks).
-# Defaults of the gap check (m8e-gaps.md §5, pending the user's review in round 54): the nests `air` and counted as
+# Defaults of the gap check (m8e-gaps.md §5, accepted in round 54 (2026-10-23)): the nests `air` and counted as
 # waves (E1: 271 + 9), the cave waves and the walls' nests counted as side entries (the intel's rule), the caves
 # `terrain.notches` (E5), the pillar's Reef Spitters in the island's foot band (E6), the Nautilus's clamp and hold (E7: a
 # pair holds 15 s), no Nautilus while the narrows are at the top edge (E9), the survey sub a trigger inside the left
@@ -95,7 +95,7 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
     ramp: 2   # eased from 130
     atmosphere: clear
     tiles: [abyss-floor]
-    underwater_look: {ambient: 0.1, tint: 98c0e0, caustics: 0.0, snow: 80, headlights: 0.9}   # the floor opening, the lights going out (Level 26)
+    underwater_look: {ambient: 0.1, tint: 98c0e0, caustics: 0.0, snow: 80}   # the floor opening, the lights going out (Level 26)
     notes:
       layers:
         ground: the walls falling away, the sea floor opening to flat black water; no more nests.
@@ -104,7 +104,10 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
 # The game's under-water grade (presentation only; step C4's UnderwaterGrade): the trench is dark but not black (Q2 a):
 # the ship's headlight cone, the nests' teal sacs and the beacons' red-gold pulse light it, a dim blue ambient of about
 # 14 % (ART-E's proposal for round 54); a bit darker over the floor of section 6. Glows, bullets and the HUD ungraded.
-underwater_look: {ambient: 0.14, tint: a0c8e8, caustics: 0.0, snow: 100, headlights: 0.9}
+# Round 54 (F.2 redo, step LX): the dark ambient kept; the headlights light the world in their cones (the walls, the
+# cave mouths, the floor and the pillar near their full colour, 240 px ahead over a 50° sector) and a faint rim light
+# runs along the rock edges (the walls, the caves, the pillar), so the trench's shape reads outside the beams.
+underwater_look: {ambient: 0.14, tint: a0c8e8, caustics: 0.0, snow: 100, headlights: {strength: 0.95, reach: 240, angle: 50}, rim: 0.5}
 
 # The trench (Level 16's terrain rules under water, design/campaign Level 25, The trench): the walls' collision lines
 # (their foot) [scroll, x(, height)] with scroll the ground scroll at which the row reaches the top edge; the pillar
@@ -148,9 +151,9 @@ terrain:
     - [21960, 440, 0.6]
     - [22660, 480, 0]
   islands:
-    - name: rock pillar   # the fork: two 140 px channels
+    - name: rock pillar   # the fork: two 140 px channels; round 54 (F.1 redo): its ends rounded (25 x 40 px half-ellipses)
       look: pillar
-      points: [[240, 13680], [262, 13750], [265, 13860], [265, 14460], [262, 14570], [240, 14640], [218, 14570], [215, 14460], [215, 13860], [218, 13750]]
+      points: [[240, 13680], [250.6, 13683.7], [259.2, 13694.3], [263.5, 13706.3], [265, 13720], [265, 14600], [263.5, 14613.7], [259.2, 14625.7], [250.6, 14636.3], [240, 14640], [229.4, 14636.3], [220.8, 14625.7], [216.5, 14613.7], [215, 14600], [215, 13720], [216.5, 13706.3], [220.8, 13694.3], [229.4, 13683.7]]
   notches:   # the side caves, 90 px along the wall and 70 deep; a cave wave names its notch by its index (0-based)
     - {side: right, scroll: 3520, width: 90, depth: 70}    # 0: filler
     - {side: left, scroll: 3910, width: 90, depth: 70}     # 1: the t=29 cave wave
