@@ -35,7 +35,8 @@ import java.util.List;
  * is fired ({@link #soak}: its damage, speed and range; the ship's, the drones' and Rook's), and per step on the beam
  * ({@link Beams}); every layer rule reads {@link Medium#reaches}. A torpedo runs where there is water (over water or
  * under it) and, with a splash (the Harpoon Torpedoes), its hit deals a share of its damage to the units round it; a
- * {@link WeaponSpec.Delivery#DEPTH_CHARGE} rolls out, hovers, sinks with the scroll and bursts on its fuse.
+ * {@link WeaponSpec.Delivery#DEPTH_CHARGE} is tossed forward (M8 AW), hovers, sinks with the scroll and bursts on its fuse
+ * or, under water, on touching a swimmer.
  */
 final class PlayerFire {
     private static final int SHOT_CAPACITY = 256;
@@ -211,6 +212,11 @@ final class PlayerFire {
         return medium;
     }
 
+    /** M8 AW: the ship (a depth charge over its hull touches a unit latched on it, {@link GroundFire}). */
+    Ship ship() {
+        return ship;
+    }
+
     /** The level's rock; null without terrain. */
     Canyon canyon() {
         return canyon;
@@ -345,7 +351,7 @@ final class PlayerFire {
     /**
      * M8 part A (design/world/europa, Under water rules; decided D3): the water's factors on a shot just fired, once:
      * its damage × the medium's (an {@code anti-sub} weapon's full), its speed × the bullet speed (a depth charge's
-     * roll-out × the torpedo range too, D12), a torpedo-type weapon's range × the torpedo range, a reach-limited
+     * toss × the torpedo range too, D12), a torpedo-type weapon's range × the torpedo range, a reach-limited
      * weapon's (the lances') at most its reach of the field's height. Nothing in the air.
      */
     private void soak(Shot shot) {
@@ -468,7 +474,8 @@ final class PlayerFire {
                 continue;
             }
             if (weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE) {
-                // M8 part A: it rolls out, hovers, then sinks with the ground; it bursts on its fuse (hitGround).
+                // M8 part A: it is tossed, hovers, then sinks with the ground; it bursts on its fuse or a swimmer
+                // (hitGround).
                 shot.sink(groundScroll);
                 if (canyon != null) {
                     shot.placeX(

@@ -18,7 +18,7 @@
 # Varga t=20, Okafor t=44).
 scroll_speed: 140     # the trench; the narrows and the Song set their own
 launch_seconds: 5
-bounty_scale: 0.48    # every bounty × 0.48: the README's estimate, fitted in step E3 (TypicalHaulTest, levelReport)
+bounty_scale: 0.42    # every bounty × 0.42: the README's estimate 0.48, fitted in step E3; refitted in step AW2 (M8 AW: more Barbfins; TypicalHaulTest, levelReport)
 control_prompts: []
 medium: underwater    # the whole level (the descent's waterline was Level 23): the water's factors, the grade, the special limits (UNDER ICE)
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
@@ -209,7 +209,7 @@ waves:
     count: 7
     from: front
     paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]   # the trench's mouth, still wide
-  - {t: 8.5, formation: line abreast, enemy: barbfin, count: 3, from: front}
+  - {t: 8.5, formation: line abreast, enemy: barbfin, count: 4, from: front}
   - t: 11
     formation: swarm
     enemy: glassfin
@@ -217,7 +217,7 @@ waves:
     from: front
     paths: [[[320, -60], [290, 150], [190, 310], [290, 470], [250, 640]]]
     notes: In from the right
-  - {t: 13.5, formation: column, enemy: barbfin, count: 3, from: front, edge: left}
+  - {t: 13.5, formation: column, enemy: barbfin, count: 4, from: front, edge: left}
   - t: 16
     formation: swarm
     enemy: glassfin
@@ -225,7 +225,7 @@ waves:
     from: front
     paths: [[[240, -60], [170, 140], [310, 300], [180, 460], [240, 640]]]
   - {t: 18, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: "**New.** The first Siren, alone: one ring, quiet window of 3.5 s after it"}
-  - {t: 21.5, formation: V-wing, enemy: barbfin, count: 3, from: front}
+  - {t: 21.5, formation: V-wing, enemy: barbfin, count: 4, from: front}
   - t: 24
     formation: swarm
     enemy: glassfin
@@ -233,34 +233,34 @@ waves:
     from: front
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
   - {t: 26.8, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
-  - {t: 29, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 1, notes: "First cave entry, warned 3 s ahead"}
+  - {t: 29, formation: column, enemy: barbfin, count: 5, from: sides, edge: left, cave: 1, notes: "First cave entry, warned 3 s ahead"}
   - t: 31.5
     formation: swarm
     enemy: glassfin
     count: 9
     from: front
     paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
-  - {t: 34, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 34, formation: line abreast, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - {t: 36.5, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
-  - {t: 39, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 2, notes: Warned 3 s ahead}
+  - {t: 39, formation: column, enemy: barbfin, count: 5, from: sides, edge: right, cave: 2, notes: Warned 3 s ahead}
   - t: 41.5
     formation: swarm
     enemy: glassfin
     count: 7
     from: front
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
-  - {t: 44, formation: V-wing, enemy: barbfin, count: 4, from: front}
+  - {t: 44, formation: V-wing, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - {t: 47, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
-  - {t: 49, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 5}
+  - {t: 49, formation: column, enemy: barbfin, count: 5, from: sides, edge: left, cave: 5}
   - t: 51.5
     formation: swarm
     enemy: glassfin
     count: 9
     from: front
     paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
-  - {t: 54, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 54, formation: line abreast, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - {t: 56.2, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered}
-  - {t: 58.5, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 6}
+  - {t: 58.5, formation: column, enemy: barbfin, count: 5, from: sides, edge: right, cave: 6}
   - {t: 62.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: "**New.** The first pair, orbiting in opposite directions: quiet window of 3.5 s after it"}
   - t: 67
     formation: swarm
@@ -269,17 +269,17 @@ waves:
     from: front
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
   - {t: 70, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
-  - {t: 72, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 9}
+  - {t: 72, formation: column, enemy: barbfin, count: 5, from: sides, edge: left, cave: 9}
   - t: 74.5
     formation: swarm
     enemy: glassfin
     count: 9
     from: front
     paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
-  - {t: 77, formation: V-wing, enemy: barbfin, count: 4, from: front}
+  - {t: 77, formation: V-wing, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - {t: 79.5, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
   - {t: 82, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
-  - {t: 86, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 12}
+  - {t: 86, formation: column, enemy: barbfin, count: 5, from: sides, edge: right, cave: 12}
   - t: 88.5
     formation: swarm
     enemy: glassfin
@@ -287,7 +287,7 @@ waves:
     from: front
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
   - {t: 91.3, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered, notes: The last one drops an overdrive}
-  - {t: 93, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 93, formation: line abreast, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - t: 96
     formation: swarm
     enemy: glassfin
@@ -296,7 +296,7 @@ waves:
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
     notes: Into the fork, ahead of the pillar
   - {t: 98.5, formation: turret nest, enemy: siren, count: 2, from: sides, wall: opposite, notes: Two rings cross the pillar fork}
-  - {t: 101, formation: column, enemy: barbfin, count: 3, from: sides, edge: left, cave: 15}
+  - {t: 101, formation: column, enemy: barbfin, count: 5, from: sides, edge: left, cave: 15}
   - t: 103.5
     formation: swarm
     enemy: glassfin
@@ -311,7 +311,8 @@ waves:
     from: front
     paths: [[[150, -60], [145, 150], [150, 310], [150, 470], [160, 640]]]
     notes: Closing into the narrows (190 px), down the left channel past the pillar's end
-  - {t: 110, formation: V-wing, enemy: barbfin, count: 3, from: front}
+  - {t: 107.5, formation: column, enemy: barbfin, count: 3, from: front, notes: "M8 AW: down the narrows ahead of the V (step AW2)"}
+  - {t: 110, formation: V-wing, enemy: barbfin, count: 4, from: front}
   - t: 112.5
     formation: swarm
     enemy: glassfin
@@ -320,7 +321,7 @@ waves:
     paths: [[[240, -60], [210, 140], [270, 300], [210, 460], [240, 640]]]
     notes: In the narrows
   - {t: 115, formation: turret nest, enemy: siren, count: 2, from: sides, wall: staggered}
-  - {t: 117.5, formation: column, enemy: barbfin, count: 3, from: sides, edge: right, cave: 17}
+  - {t: 117.5, formation: column, enemy: barbfin, count: 5, from: sides, edge: right, cave: 17}
   - {t: 120, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
   - t: 124
     formation: swarm
@@ -328,7 +329,7 @@ waves:
     count: 7
     from: front
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
-  - {t: 126.5, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 126.5, formation: line abreast, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - t: 129
     formation: swarm
     enemy: glassfin
@@ -336,7 +337,7 @@ waves:
     from: front
     paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
   - {t: 131.3, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered, notes: The Song begins}
-  - {t: 133.5, formation: column, enemy: barbfin, count: 4, from: sides, edge: left, cave: 20}
+  - {t: 133.5, formation: column, enemy: barbfin, count: 5, from: sides, edge: left, cave: 20}
   - t: 136
     formation: swarm
     enemy: glassfin
@@ -345,17 +346,17 @@ waves:
     paths: [[[240, -60], [190, 140], [290, 300], [190, 460], [240, 640]]]
   - {t: 138.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: "A slowed ship on a spiral's gap: the act's hardest moment"}
   - {t: 142, formation: turret nest, enemy: siren, count: 3, from: sides, wall: staggered}
-  - {t: 144.5, formation: V-wing, enemy: barbfin, count: 4, from: front}
+  - {t: 144.5, formation: V-wing, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - t: 147
     formation: swarm
     enemy: glassfin
     count: 7
     from: front
     paths: [[[240, -60], [290, 140], [190, 300], [290, 460], [240, 640]]]
-  - {t: 149.5, formation: column, enemy: barbfin, count: 4, from: sides, edge: right, cave: 23}
+  - {t: 149.5, formation: column, enemy: barbfin, count: 5, from: sides, edge: right, cave: 23}
   - {t: 152.3, formation: turret nest, enemy: siren, count: 4, from: sides, wall: staggered, notes: "The most nests on the screen: four"}
   - {t: 154.5, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15}
-  - {t: 157.5, formation: line abreast, enemy: barbfin, count: 4, from: front}
+  - {t: 157.5, formation: line abreast, enemy: barbfin, count: 5, from: front, hard: {count: 5}}
   - t: 161
     formation: swarm
     enemy: glassfin
@@ -363,7 +364,7 @@ waves:
     from: front
     paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
     notes: The trench widening
-  - {t: 164, formation: V-wing, enemy: barbfin, count: 3, from: front}
+  - {t: 164, formation: V-wing, enemy: barbfin, count: 4, from: front}
   - t: 167
     formation: swarm
     enemy: glassfin

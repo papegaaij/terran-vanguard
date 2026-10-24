@@ -203,14 +203,14 @@ class ActHpFactorTest {
     /**
      * M8 part D (step D3): Level 24's units (reference 104): the Scuttler (28 HP, L04, reference 36) by the ratio, the
      * returning small units (the Driftjelly and the Reef Spitter, L11) and the new Barbfin by the beam era's ×2 only
-     * (gap check D5), the Abyss Ray and the spawning reef at their own first level, the Glassfin (tiny) unchanged.
+     * (gap check D5; M8 AW, step AW2: its HP 12 → 26, two of the harpoon's L3 hits), the Abyss Ray and the spawning reef at their own first level, the Glassfin (tiny) unchanged.
      */
     @Test
     void levelTwentyFoursUnits() {
         assertEquals(
                 Math.rint(28 * 104.0 / 38),
                 at("scuttler", Difficulty.MEDIUM, 4, 24).hp());
-        assertEquals(24, at("barbfin", Difficulty.MEDIUM, 4, 24).hp());
+        assertEquals(52, at("barbfin", Difficulty.MEDIUM, 4, 24).hp());
         assertEquals(8, at("driftjelly", Difficulty.MEDIUM, 4, 24).hp());
         assertEquals(14, at("reef-spitter", Difficulty.MEDIUM, 4, 24).hp());
         assertEquals(210, at("abyss-ray", Difficulty.MEDIUM, 4, 24).hp());

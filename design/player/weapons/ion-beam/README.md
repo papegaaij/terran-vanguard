@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy, ../../../enemies]
-updated: 2026-10-21
+updated: 2026-10-24
 ---
 
 # Ion Beam
@@ -122,7 +122,7 @@ The `beam` delivery is new; these rules also hold for the Orbital Lance special
 - **Kills and score**: as any shot: bounty, chain, objectives, statistics. The hit flash of a
   unit under the beam is a steady heat tint while it burns, not a blink per step.
 - **Rook** has no beam gun (M17 = a); the Ion Beam is not one of his four guns.
-- **Under water** (Act 4): later, with the [Europa rules](../../../world/europa/README.md#under-water-rules).
+- **Under water** (Act 4): an energy weapon by the [Europa rules](../../../world/europa/README.md#under-water-rules): it reaches 0.4 of the field's height and burns at × 0.2 (M8 AW, the user's playtest decision of 2026-10-23: the L3 beam's 80 DPS becomes 16); the Sonar Pulse's window gives it its full damage back, not its reach.
 
 ### Price and power (M11)
 

@@ -131,7 +131,8 @@ class Act4ArsenalFlightTest {
                         0.7,
                         0.6,
                         0.7,
-                        0.75,
+                        0.2,
+                        0.4,
                         1.5,
                         1,
                         Set.of("ion-beam", "lance-laser", "rear-lance"),
@@ -221,20 +222,22 @@ class Act4ArsenalFlightTest {
 
     @Test
     void theHarpoonTorpedoesAreATorpedoFromTheNoseWithASplash() {
+        // M8 AW (the user, 2026-10-23): a larger blast and splash, the +-15 deg cone.
+        double[] blast = {40, 40, 44, 48, 48, 52};
         for (int level = 1; level <= 6; level++) {
             WeaponSpec harpoon = SimSpecs.weapon(CONTENT, Armament.Slot.FRONT, HARPOON, level);
             assertEquals(WeaponSpec.Delivery.TORPEDO, harpoon.delivery());
             assertTrue(harpoon.antiSub());
-            assertEquals(0.5, harpoon.splash());
-            assertEquals(20, harpoon.blast());
+            assertEquals(0.6, harpoon.splash());
+            assertEquals(blast[level - 1], harpoon.blast());
             assertEquals(600, harpoon.range());
-            assertEquals(Math.toRadians(35), harpoon.coneHalfAngle(), 1e-12);
+            assertEquals(Math.toRadians(15), harpoon.coneHalfAngle(), 1e-12);
             assertEquals(Math.toRadians(90), harpoon.turnRate(), 1e-12, "no Targeting computer bonus on a torpedo");
             assertEquals(level >= 5 ? 2 : 1, harpoon.muzzles().size());
         }
         WeaponSpec first = SimSpecs.weapon(CONTENT, Armament.Slot.FRONT, HARPOON, 1);
         assertEquals(
-                List.of(0.8, 37.5, 360.0, 520.0),
+                List.of(2.4, 27.0, 540.0, 780.0),
                 List.of(first.rate(), first.damage(), first.speed(), first.endSpeed()));
         WeaponSpec pod = SimSpecs.weapon(CONTENT, Armament.Slot.LEFT_WING, "torpedo-pod", 1);
         assertTrue(pod.antiSub());
@@ -246,19 +249,25 @@ class Act4ArsenalFlightTest {
     }
 
     @Test
-    void theDepthChargesAreABarrelOnAFuse() {
-        double[] fuse = {0.9, 0.9, 0.8, 0.8, 0.7, 0.7};
-        double[] blast = {40, 46, 52, 58, 64, 64};
+    void theDepthChargesAreABarrelTossedForwardOnAFuse() {
+        // M8 AW (the user, 2026-10-23): tossed forward from the stern rack, a longer fuse, a larger blast.
+        double[] fuse = {1.4, 1.4, 1.3, 1.3, 1.2, 1.2};
+        double[] blast = {48, 52, 56, 60, 64, 68};
         for (int level = 1; level <= 6; level++) {
             WeaponSpec charges = SimSpecs.weapon(CONTENT, Armament.Slot.REAR, CHARGES, level);
             assertEquals(WeaponSpec.Delivery.DEPTH_CHARGE, charges.delivery());
             assertTrue(charges.antiSub());
-            assertEquals(140, charges.speed());
+            assertEquals(380, charges.speed());
             assertEquals(blast[level - 1], charges.blast());
             assertEquals(
-                    WeaponSpec.Mines.charge(0.6, fuse[level - 1], WeaponRules.DEPTH_CHARGES_LIVE), charges.mines());
+                    WeaponSpec.Mines.charge(1.0, fuse[level - 1], WeaponRules.DEPTH_CHARGES_LIVE), charges.mines());
             assertEquals(level >= 5 ? 2 : 1, charges.muzzles().size());
-            assertEquals(Math.PI, charges.muzzles().getFirst().angle(), 1e-12, "rolled out backwards");
+            assertEquals(
+                    level >= 5 ? Math.toRadians(-8) : 0,
+                    charges.muzzles().getFirst().angle(),
+                    1e-12,
+                    "tossed forward (L5 a slight fan)");
+            assertTrue(charges.muzzles().getFirst().dy() < 0, "from the stern rack");
         }
     }
 
@@ -269,10 +278,23 @@ class Act4ArsenalFlightTest {
         Loadout harpoon = loadout(new SimSpecs.FittedWeapon(Armament.Slot.FRONT, HARPOON, 1));
         double wet = lost(range(harpoon, underwater(), 30, new GroundUnit(0, SHIP_X, sub, -1)), sub, 6, FIRE);
         assertTrue(wet > 0, "it hits under water");
-        assertTrue(hitsOf(wet, 37.5), "full damage: " + wet);
+        assertTrue(hitsOf(wet, 27), "full damage: " + wet);
 
         EnemySpec dry = dummy(Layer.SUB, 40);
         assertEquals(0, lost(range(harpoon, MediumSpec.AIR, 30, new GroundUnit(0, SHIP_X, dry, -1)), dry, 6, FIRE));
+    }
+
+    /** M8 AW (the user, 2026-10-23): the Ion Beam, an energy weapon, burns at × 0.2 under water, not × 0.7. */
+    @Test
+    void theIonBeamBurnsAtOneFifthUnderWater() {
+        EnemySpec target = dummy(Layer.AIR, 40);
+        Loadout beam = loadout(new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "ion-beam", 1));
+        double perStep =
+                SimSpecs.weapon(CONTENT, Armament.Slot.FRONT, "ion-beam", 1).damage();
+        double wet = lost(range(beam, underwater(), 30, new GroundUnit(0, SHIP_X, target, -1)), target, 12, FIRE);
+        assertTrue(wet > 0);
+        assertTrue(hitsOf(wet, perStep * 0.2), "a fifth a step: " + wet);
+        assertFalse(hitsOf(wet, perStep * 0.7), "not × 0.7: " + wet);
     }
 
     /** The Pulse Cannon (no {@code anti-sub}) does × 0.7 under water. */
@@ -287,27 +309,24 @@ class Act4ArsenalFlightTest {
     }
 
     /**
-     * Under water the barrels burst on what passes behind the ship, at their full damage (the ship climbs first, so the
-     * barrels burst on the field: one sinking off it is lost).
+     * Under water the barrels tossed ahead of the ship burst on what comes down the screen, at their full damage: on
+     * their fuse on the sea floor, on touching a swimmer.
      */
     @Test
-    void theDepthChargesBurstOnWhatPassesBehindTheShip() {
+    void theDepthChargesBurstOnWhatIsAheadOfTheShip() {
         Loadout charges = loadout(new SimSpecs.FittedWeapon(Armament.Slot.REAR, CHARGES, 1));
-        for (boolean water : new boolean[] {true, false}) {
-            EnemySpec target = dummy(Layer.GROUND, 60);
-            Sortie sortie =
-                    range(charges, water ? underwater() : MediumSpec.AIR, 60, new GroundUnit(0, SHIP_X, target, -1));
-            for (int i = 0; i < SimStep.ticks(1.5); i++) {
-                sortie.step(Command.UP.bit());
-            }
-            double lost = lost(sortie, target, 12, FIRE);
-            if (water) {
-                assertTrue(lost > 0, "they burst on it");
-                assertTrue(hitsOf(lost, 25), "full damage: " + lost);
-            } else {
-                assertEquals(0, lost, "NO WATER in a dry level");
-            }
+        for (Layer layer : List.of(Layer.GROUND, Layer.AIR)) {
+            EnemySpec swimmer = dummy(layer, 60);
+            double lost =
+                    lost(range(charges, underwater(), 60, new GroundUnit(0, SHIP_X, swimmer, -1)), swimmer, 12, FIRE);
+            assertTrue(lost > 0, layer + ": they burst on it");
+            assertTrue(hitsOf(lost, 28), layer + ": full damage: " + lost);
         }
+        EnemySpec dry = dummy(Layer.GROUND, 60);
+        assertEquals(
+                0,
+                lost(range(charges, MediumSpec.AIR, 60, new GroundUnit(0, SHIP_X, dry, -1)), dry, 12, FIRE),
+                "NO WATER in a dry level");
     }
 
     @Test

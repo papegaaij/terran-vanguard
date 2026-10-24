@@ -3,7 +3,7 @@ title: Europa
 design: approved
 implementation: n/a
 art: chosen
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Europa
@@ -113,23 +113,23 @@ render grade, sound and special limits switch with it.
 | Projectile speed | All bullets, the player's and the enemies', move at × 0.7 (the enemy's difficulty scale is multiplied in; a shot stays on the screen longer, so fire rates are tuned per level). |
 | Handling | **Drag:** acceleration × 0.6 (more inertia), top speed unchanged. The ship's `precision` (focus) mode still applies on top. |
 | Shield | Regeneration unchanged (the as-drafted −25 % is dropped). |
-| Beams and lasers | Reach × 0.75 of the play field's height (the Ion Beam, Lance Laser, Rear Lance; a pierce count is unchanged). |
+| Energy weapons | The beam and the lasers (the Ion Beam, Lance Laser, Rear Lance) are nearly useless under water: damage **× 0.2** (in place of the × 0.7 below, not on top of it) and reach × 0.4 of the play field's height (a pierce count is unchanged); the Sonar Pulse's window lifts the damage factor, not the reach (M8 AW, the user's playtest decision of 2026-10-23). |
 | Torpedo-type weapons | Range +50 % (the Torpedo Pod 750 px, the [Harpoon Torpedoes](../../player/weapons/harpoon-torpedoes/README.md), the [Depth Charges](../../player/weapons/depth-charges/README.md)); they hit every target in the water (see the plane table) at full damage. |
-| Damage | A weapon without the `anti-sub` trait does **× 0.7** of its damage under water (the as-drafted value was × 0.5); `anti-sub` weapons do full damage. It applies to the ship's weapons and to Rook's guns, after `anti-ground`'s ×2; it does not apply to specials (their damage is as in their tables) or to the damage the enemy deals. |
+| Damage | A weapon without the `anti-sub` trait does **× 0.7** of its damage under water (the as-drafted value was × 0.5; an energy weapon × 0.2, above); `anti-sub` weapons do full damage. It applies to the ship's weapons and to Rook's guns, after `anti-ground`'s ×2; it does not apply to specials (their damage is as in their tables) or to the damage the enemy deals. |
 | Specials | No Airstrike or Orbital Lance under the ice; the Sonar Pulse works only in water and, under water, lights the field and gives every weapon full damage for 6 s (see [specials](../../player/specials/README.md#sonar-pulse-l22) and the *special limits* there). |
 | Pressure hull | Optional utility module that **removes the drag** (acceleration back to normal; the speed and shield penalties of the draft are gone); see [ship systems](../../player/systems/README.md#pressure-hull-l22). |
 | Rook | Flies with the same hydro-kit: the same drag (his formation slot lags a little more), his guns × 0.7 (none of his guns is `anti-sub`); the [Bulwark](../../player/wingmen/README.md#heavy-drone-bulwark-escort-alternative-l22)'s cannon is `anti-sub`. |
 
-The numbers the game reads (M8 part A) are in [data.yaml](data.yaml), with the weapons each reach and
-range rule names:
+The numbers the game reads (M8 part A) are in [data.yaml](data.yaml), with the weapons the energy and
+range rules name:
 
 <!-- data: underwater -->
 | Rule | Number |
 |---|---|
 | Projectile speed | × 0.7: every bullet, the player's and the enemies', at its spawn |
 | Handling (drag) | acceleration and braking × 0.6, top speed unchanged (the pressure hull removes it) |
-| Damage | × 0.7 for a weapon without the `anti-sub` trait (the ship's and Rook's guns), after `anti-ground`'s ×2 |
-| Beam and laser reach | × 0.75 of the play field's height: [Ion Beam](../../player/weapons/ion-beam/README.md), [Lance Laser](../../player/weapons/lance-laser/README.md), [Rear Lance](../../player/weapons/rear-lance/README.md) |
+| Damage | × 0.7 for a weapon without the `anti-sub` trait (the ship's and Rook's guns), after `anti-ground`'s ×2; not an energy weapon |
+| Energy weapons | damage × 0.2 (in place of the guns' × 0.7), reach × 0.4 of the play field's height: [Ion Beam](../../player/weapons/ion-beam/README.md), [Lance Laser](../../player/weapons/lance-laser/README.md), [Rear Lance](../../player/weapons/rear-lance/README.md) |
 | Torpedo-type range | × 1.5: [Torpedo Pod](../../player/weapons/torpedo-pod/README.md), [Harpoon Torpedoes](../../player/weapons/harpoon-torpedoes/README.md), [Depth Charges](../../player/weapons/depth-charges/README.md) |
 | Waterline ease | 1 s, for new projectiles |
 | Hydro-kit refit | at the hangar visit before L23 (a one-off notice) |
@@ -292,3 +292,9 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
   for later levels: the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded
   at Level 24). No extra prevention tests ("You just have to play it to see"); the Spiral Nautilus and the
   micro-missiles' angle unchanged until replayed. The numbers in this README and the weapons' are not changed yet.
+- 2026-10-24 (M8 AW, step AW1; decided by the user 2026-10-23 after playing L22–25, the defaults of the rework's plan
+  pending the user's review in round 56): built. `underwater` names the **energy weapons** (`energy_weapons`, was
+  `reach_weapons`: Ion Beam, Lance Laser, Rear Lance) with `energy_damage: 0.2` **in place of** the guns' × 0.7 (not
+  multiplied: the L3 beam's 80 DPS becomes 16, was 56) and `reach: 0.4` (was 0.75); the Sonar Pulse's window still
+  gives every weapon full damage (the beam × 1 then, its reach still 0.4); nothing changes in the air (Acts 1–3's replay
+  hashes unchanged). The Harpoon Torpedoes and the Depth Charges reworked in their own READMEs.

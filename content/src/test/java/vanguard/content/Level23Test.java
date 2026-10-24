@@ -53,8 +53,9 @@ class Level23Test {
     private final Content content = ContentLoader.fromClasspath();
 
     /**
-     * The balance plan's fit at Level 23 ({@code "23"}: the Tail Gun sold, the Depth Charges bought and to L3, the
-     * Harpoon Torpedoes fitted in front and to L3, the Sonar Pulse fitted with its free charge): the wings' two
+     * The balance plan's fit at Level 23 ({@code "23"}, M8 AW: nothing sold, no upgrade: the Depth Charges L1 bought
+     * on the rear in place of the Tail Gun, the Harpoon Torpedoes L1 fitted in front in place of the beam, the Sonar
+     * Pulse fitted with its free charge): the wings' two
      * Micro-missile Pods L2, the Mk II shield, Composite III, and Rook's Autocannon.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
@@ -73,10 +74,10 @@ class Level23Test {
                         content,
                         content.systems().engines().getFirst().name(),
                         List.of(
-                                new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "harpoon-torpedoes", 3),
+                                new SimSpecs.FittedWeapon(Armament.Slot.FRONT, "harpoon-torpedoes", 1),
                                 new SimSpecs.FittedWeapon(Armament.Slot.LEFT_WING, "micro-missile-pod", 2),
                                 new SimSpecs.FittedWeapon(Armament.Slot.RIGHT_WING, "micro-missile-pod", 2),
-                                new SimSpecs.FittedWeapon(Armament.Slot.REAR, "depth-charges", 3)),
+                                new SimSpecs.FittedWeapon(Armament.Slot.REAR, "depth-charges", 1)),
                         content.shields().models().get(1).name(),
                         content.armour().plating().get(3).name(),
                         0,
@@ -255,7 +256,7 @@ class Level23Test {
                     flock.ram().orElseThrow());
             assertTrue(fry.seekersIgnore());
             assertEquals(1, fry.hp());
-            WaveSpec column = wave(difficulty, 35.5);
+            WaveSpec column = wave(difficulty, 34.5); // M8 AW (step AW2): 1 s earlier, the pacing
             assertEquals(WaveSpec.Formation.COLUMN, column.formation());
             assertEquals(WaveSpec.Edge.LEFT, column.edge());
         }

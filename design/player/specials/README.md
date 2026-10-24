@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign, ../../world]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Special abilities
@@ -220,7 +220,7 @@ rule table above is read from that list instead of from the special's name:
 | Call | Instant. A teal ring expands from the ship to cover the field in 0.5 s (a soft, heavy, low ping: no bubbles, no pops), then every unit stays outlined for the duration |
 | Duration | **6 s** from the call; a second call while it lasts restarts the 6 s (no stacking) |
 | Above water | Reveals the `sub` layer (the outline) and makes it hittable by **all weapons** for the 6 s, as first drafted |
-| Under water | Everything on the screen is lit and drawn whole (outlined in teal), including the lures and the glow-only units of L26 (the Glow Angler's lure is then plain to see), and **every weapon does full damage** (the × 0.7 water rule is off) for the 6 s; the `sub` layer (a unit rising from below) is hittable by all weapons too. A unit that is only lit by it is not slowed, revealed to the radar or marked for homing: it is a lamp, not a lock |
+| Under water | Everything on the screen is lit and drawn whole (outlined in teal), including the lures and the glow-only units of L26 (the Glow Angler's lure is then plain to see), and **every weapon does full damage** (the water's × 0.7, and the energy weapons' × 0.2, are off) for the 6 s; the `sub` layer (a unit rising from below) is hittable by all weapons too. A unit that is only lit by it is not slowed, revealed to the radar or marked for homing: it is a lamp, not a lock |
 | Not affected | Enemy bullets and speeds, the Siren's slow, the ceiling (`high-air`) rules |
 | Repeat | 1.5 s between pulses |
 | Rewards | Kills pay their normal bounty |
@@ -229,7 +229,7 @@ rule table above is read from that list instead of from the special's name:
 Why it exists: above water it was "reveal the sub layer"; under the ice the play plane is already
 the water, so the pulse becomes the answer to the dark and to the **×0.7**: a charge buys six
 seconds of the surface's firepower for a loadout that still carries non-`anti-sub` guns (the
-Act 3 loadout's beam gains 43 %: 56 → 80 DPS), the lamp for the black level, and the only way
+Act 3 loadout's beam, × 0.2 under water since M8 AW, gains fivefold: 16 → 80 DPS, its reach still 0.4), the lamp for the black level, and the only way
 for such a gun to reach a rising `sub` unit.
 
 #### Decoy Flares (L27) under water

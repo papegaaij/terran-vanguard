@@ -215,7 +215,7 @@ waves:
   - {t: 81, formation: field, enemy: glow-angler, count: 4, from: front, x: 150, size: [240, 360], spacing: 80, notes: Scattered}
   - {t: 83, formation: field, enemy: glow-angler, count: 4, from: front, x: 150, size: [240, 360], spacing: 80, notes: Scattered}
   - {t: 83.6, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered, notes: Beside the third cave}
-  - {t: 89, formation: field, enemy: driftjelly, count: 6, from: front, x: 150, size: [240, 200]}
+  - {t: 87.5, formation: field, enemy: driftjelly, count: 6, from: front, x: 150, size: [240, 200]}
   - {t: 89.2, formation: turret nest, enemy: siren, count: 1, from: sides, edge: right, wall: staggered}
   - {t: 92, formation: field, enemy: glow-angler, count: 6, from: front, x: 150, size: [240, 240], spacing: 60}
   - {t: 94, formation: field, enemy: driftjelly, count: 6, from: front, x: 150, size: [240, 200]}
@@ -269,7 +269,7 @@ waves:
     notes: The second of the pair
   - {t: 145.5, formation: field, enemy: glow-angler, count: 5, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
   - {t: 149, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
-  - {t: 152, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [360, 420], spacing: 70, notes: "The last fight before the silence, spread out to the loss's quiet window"}
+  - {t: 151, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [360, 420], spacing: 70, notes: "The last fight before the silence, spread out to the loss's quiet window"}
   - {t: 160, formation: field, enemy: driftjelly, count: 5, from: front, x: 240, size: [360, 760], notes: "Harmless drifters: their veins are the only light in the aftermath; no other wave after this"}
   - {t: 166, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 600], notes: "Drifting in over 5 s"}
 

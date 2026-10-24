@@ -37,8 +37,9 @@ import vanguard.sim.WingmanSpec;
  * its snap, a homing missile on its turn and a turret wherever it swings. For proximity mines the
  * dummies fly low ({@code low-air}, which sets mines off) and pass through the mines behind the
  * ship; for torpedoes (M5 part E) the range is water and the dummies run submerged ({@code sub}); M8 part A (D9): so
- * for every torpedo-type weapon (the Harpoon Torpedoes from the nose too) and the Depth Charges, whose drums burst
- * among the submerged dummies behind the ship (one level-1 burst destroys one). The range is the surface of the
+ * for every torpedo-type weapon (the Harpoon Torpedoes from the nose too) and the Depth Charges, whose drums (M8 AW)
+ * are tossed forward from the stern rack and burst on their fuse among the submerged dummies ahead of the ship (one
+ * level-1 burst destroys one; the range's surface has no swimmers to set one off on contact). The range is the surface of the
  * water, not under it: the water's factors (design/world/europa) stay out of the hangar.
  * The dummies take {@value #HITS_TO_KILL} of the weapon's level-1 hits (one level-1 blast of a
  * bomb, shell or mine), so a higher level kills them sooner. When all three are gone the loop starts over

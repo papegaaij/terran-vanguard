@@ -34,7 +34,8 @@ import vanguard.sim.WeaponSpec;
  * points to the box, a scissor keeps everything inside it. M5 part E: a torpedo's range is water (its
  * loop's level is over water): a band of sea under the grid, the dummies submerged under it as faint
  * cyan boxes, the torpedoes with their bubbles running under the surface (dimmed as the {@code sub}
- * pass would), dropping in with a splash and bursting under the water. M7 part A: the Ion Beam's
+ * pass would), dropping in with a splash and bursting under the water (M8 AW: so do the depth charges, tossed ahead
+ * from the stern rack over the hull first). M7 part A: the Ion Beam's
  * column (its level's tile, cut at the dummy it burns, with its tip and the small contact flare), the
  * Light Drone Bay's drone on its orbit facing its convergence point (fading in while rebuilt), and the
  * Deflector Pod's field on its side while it holds a charge (brighter for a moment as one returns)
@@ -304,6 +305,7 @@ public final class TestFireView implements Disposable {
         trails.draw(batch, 0);
         drawShots(batch, sortie, alpha, false);
         drawShip(batch, sortie.ship(), alpha);
+        drawTossed(batch, sortie, alpha);
         drawDrones(batch, sortie, alpha);
         batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
         drawFields(batch, sortie, alpha);
@@ -437,8 +439,25 @@ public final class TestFireView implements Disposable {
     private void drawUnder(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
-            if (shot.weapon().delivery() == WeaponSpec.Delivery.TORPEDO) {
+            if (shot.weapon().delivery() == WeaponSpec.Delivery.TORPEDO
+                    // M8 AW: a depth charge once it dropped in ahead of the hull.
+                    || (shot.weapon().delivery() == WeaponSpec.Delivery.DEPTH_CHARGE && !DeepWaterLooks.tossed(shot))) {
                 drawScaled(batch, weapons.sprite(shot), shot.renderX(alpha), shot.renderY(alpha), 1);
+            }
+        }
+    }
+
+    /** M8 AW: the depth charges in their toss from the stern rack over the hull, swelling on their arc, as the level's. */
+    private void drawTossed(SpriteBatch batch, Sortie sortie, float alpha) {
+        for (int i = 0; i < sortie.shotCount(); i++) {
+            Shot shot = sortie.shot(i);
+            if (DeepWaterLooks.tossed(shot)) {
+                drawScaled(
+                        batch,
+                        weapons.sprite(shot),
+                        shot.renderX(alpha),
+                        shot.renderY(alpha),
+                        DeepWaterLooks.tossScale(shot, alpha));
             }
         }
     }

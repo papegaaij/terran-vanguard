@@ -371,9 +371,9 @@ public record WeaponSpec(
         }
 
         /**
-         * M8 part A (design/player/weapons/depth-charges): a {@link Delivery#DEPTH_CHARGE}'s numbers: it rolls out and
+         * M8 part A (design/player/weapons/depth-charges): a {@link Delivery#DEPTH_CHARGE}'s numbers: it is tossed and
          * slows to a hover over {@code driftSeconds}, then sinks with the scroll, and bursts {@code fuseSeconds} after
-         * its launch; at most {@code maxLive} of a mount's charges are out at once.
+         * its launch (M8 AW: or sooner on touching a swimmer under water); at most {@code maxLive} of a mount's charges are out at once.
          */
         public static Mines charge(double driftSeconds, double fuseSeconds, int maxLive) {
             return new Mines(driftSeconds, 0, 0, maxLive, fuseSeconds);
@@ -433,10 +433,11 @@ public record WeaponSpec(
         BEAM,
         /**
          * M8 part A (design/player/weapons/depth-charges, the {@code anti-sub} and {@code area} rear weapon): a barrel
-         * rolls out of the muzzle at the weapon's speed, slows to a hover over its {@link Mines#driftSeconds()}, then
-         * sinks with the scroll, and bursts on its {@link Mines#fuseSeconds()} (never on contact) in its blast: once on
-         * every target in the water ({@link Medium#chargeReaches}; above water the {@code sub} layer and the naval
-         * ground), never the ship or Rook. It hits nothing on its way and is hit by nothing. Only where there is water
+         * leaves the muzzle at the weapon's speed on the muzzle's angle (M8 AW: tossed forward), slows to a hover over
+         * its {@link Mines#driftSeconds()}, then sinks with the scroll, and bursts on its {@link Mines#fuseSeconds()}
+         * or (M8 AW) under water on touching a swimmer in its blast: once on every target in the water ({@link
+         * Medium#chargeReaches}; above water the {@code sub} layer and the naval ground), never the ship or Rook. It
+         * damages nothing on its way and is hit by nothing. Only where there is water
          * (a level over water or under water): elsewhere its mount fires nothing. Appended last so the earlier
          * deliveries keep their ordinals.
          */

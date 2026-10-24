@@ -86,8 +86,8 @@ class ActFourSoundsTest {
         Sortie sortie = sortie(weapons(new SimSpecs.FittedWeapon(Armament.Slot.REAR, "depth-charges", 1)));
         FlightSounds sounds = new FlightSounds(bank, new EnemyLooks[0], sortie.armament(), List.of());
         launch(sortie, sounds);
-        // Up the field first, so the barrel bursts on the screen rather than rolling off its bottom edge.
-        run(sortie, sounds, Command.UP.bit(), SimStep.ticks(1.5));
+        // M8 AW: from the ship's place low on the field the barrel tossed ahead bursts on the screen (its roll-out
+        // sound stands in for the toss).
         assertTrue(until(sortie, sounds, FIRE, SimStep.ticks(3), type -> type == SimEvents.Type.SHOT_FIRED), "fired");
         assertTrue(bank.playing(Sfx.SHOT_DEPTH_CHARGE) > 0, "the roll-out");
         assertTrue(until(sortie, sounds, 0, SimStep.ticks(2), type -> type == SimEvents.Type.BLAST), "burst");

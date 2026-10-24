@@ -7,7 +7,7 @@ import java.util.function.BiConsumer;
  * M8 part A's static checks (design/world/europa, Under water rules; design/player/specials, Setting restrictions;
  * design/player/wingmen, the Bulwark and Rook's absence).
  *
- * <p>Europa's: every weapon its reach rule names is a beam or a laser that flies to the screen's edge, every weapon its
+ * <p>Europa's: every weapon its energy rule names is a beam or a laser that flies to the screen's edge, every weapon its
  * torpedo rule names is {@code anti-sub}, the hydro-kit's refit comes in Act 4. A level's: {@code medium: underwater}
  * (the level's or a section's) only from Act 4's first level on (the debug option flies a built level under water,
  * never its data); its and its sections' {@code special_limits} name known specials (by slug) that a setting of the
@@ -24,18 +24,18 @@ final class ActFourChecks {
     /** Europa's under-water rules. */
     static void europa(Content content, BiConsumer<String, String> problem) {
         EuropaData.Underwater water = content.europa().underwater();
-        List<String> reach = water.reachWeapons();
-        for (int i = 0; i < reach.size(); i++) {
-            WeaponData weapon = content.weapons().get(reach.get(i));
+        List<String> energy = water.energyWeapons();
+        for (int i = 0; i < energy.size(); i++) {
+            WeaponData weapon = content.weapons().get(energy.get(i));
             if (weapon == null) {
-                problem.accept("underwater.reach_weapons[" + i + "]", "no weapon '" + reach.get(i) + "'");
+                problem.accept("underwater.energy_weapons[" + i + "]", "no weapon '" + energy.get(i) + "'");
             } else if (!weapon.beam()
                     && weapon.range()
                             .filter(range -> range.kind() == WeaponData.Range.Kind.SCREEN)
                             .isEmpty()) {
                 problem.accept(
-                        "underwater.reach_weapons[" + i + "]",
-                        reach.get(i) + " is neither a beam nor a laser that flies to the screen's edge");
+                        "underwater.energy_weapons[" + i + "]",
+                        energy.get(i) + " is neither a beam nor a laser that flies to the screen's edge");
             }
         }
         List<String> torpedoes = water.torpedoWeapons();

@@ -225,10 +225,13 @@ def weapon_properties(d):
     else:
         speed_text = f"{num(speed)} px/s"
     rng = w.get("range")
-    if w["hits"] == "depth-charge":  # M8 part A: rolled out, a fuse per level instead of a range
+    if w["hits"] == "depth-charge":  # M8 part A: tossed, a fuse per level instead of a range
         fuses = [lv["fuse"] for lv in w["levels"]]
         blasts = [lv["blast"] for lv in w["levels"]]
-        speed_text = (f"{num(speed)} px/s backwards from the stern, slowing to a hover over {num(w['drift'])} s, then "
+        # M8 AW (the user, 2026-10-23): tossed forward (angle 0) instead of rolled out backwards (180).
+        way = "backwards from the stern" if abs(w["levels"][0]["pattern"][0][1]) > 90 else \
+            "tossed forward from the stern rack over the hull"
+        speed_text = (f"{num(speed)} px/s {way}, slowing to a hover over {num(w['drift'])} s, then "
                       "sinking with the scroll")
         range_text = (f"a burst on its fuse ({num(fuses[0])} → {num(fuses[-1])} s) of {num(blasts[0])} → "
                       f"{num(blasts[-1])} px radius")
@@ -1279,8 +1282,9 @@ def underwater(d):
         ["Handling (drag)", f"acceleration and braking × {num(u['acceleration'])}, top speed unchanged (the pressure "
                             "hull removes it)"],
         ["Damage", f"× {num(u['damage'])} for a weapon without the `anti-sub` trait (the ship's and Rook's guns), "
-                   "after `anti-ground`'s ×2"],
-        ["Beam and laser reach", f"× {num(u['reach'])} of the play field's height: {names(u['reach_weapons'])}"],
+                   "after `anti-ground`'s ×2; not an energy weapon"],
+        ["Energy weapons", f"damage × {num(u['energy_damage'])} (in place of the guns' × {num(u['damage'])}), reach "
+                           f"× {num(u['reach'])} of the play field's height: {names(u['energy_weapons'])}"],
         ["Torpedo-type range", f"× {num(u['torpedo_range'])}: {names(u['torpedo_weapons'])}"],
         ["Waterline ease", f"{num(u['ease'])} s, for new projectiles"],
         ["Hydro-kit refit", f"at the hangar visit before L{u['hydro_kit']:02d} (a one-off notice)"],

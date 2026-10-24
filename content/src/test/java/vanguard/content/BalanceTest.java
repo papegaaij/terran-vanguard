@@ -234,10 +234,8 @@ class BalanceTest {
             if (hangar.load() > hangar.output() + 1e-9) {
                 problems.add("load " + hangar.load() + " MW over the output " + hangar.output());
             }
-            double water = plan.underwater().contains(level)
-                    ? CONTENT.europa().underwater().damage()
-                    : 1;
-            double[] dps = dps(campaign.gear().loadout(), water);
+            boolean wet = plan.underwater().contains(level);
+            double[] dps = dps(campaign.gear().loadout(), wet);
             // M7 part I: every planned level has its data (Level 21 since part H), so the income is always the
             // level's typical haul; M8 part A (temporary, until part I): an Act 4 level without its data earns
             // budget(n).
@@ -268,7 +266,7 @@ class BalanceTest {
                     dps[0] + dps[1],
                     Optional.ofNullable(CONTENT.enemyBasis().referenceDps().get(level)),
                     antiGround(campaign.gear().loadout()),
-                    escort(campaign, water)));
+                    escort(campaign, wet)));
             SaveGame after = campaign.save(Instant.EPOCH);
             save = next(
                     after,
@@ -316,14 +314,27 @@ class BalanceTest {
 
     /** {forward single-target DPS, rear single-target DPS} of a loadout's weapons. */
     static double[] dps(Map<LoadoutSlot, Fitted> loadout) {
-        return dps(loadout, 1);
+        return dps(loadout, false);
     }
 
     /**
-     * {forward single-target DPS, rear single-target DPS} of a loadout's weapons, M8 part A: a weapon without the
-     * {@code anti-sub} trait at {@code water} (the water's damage factor under water, else 1).
+     * M8 part A: the weapon's (slug's) damage factor under water ({@code wet}): 1 with the {@code anti-sub} trait, else the
+     * water's damage factor; M8 AW (the user, 2026-10-23): an energy weapon's (the beam, the lasers) {@code
+     * energy_damage} in its place. 1 when not {@code wet}.
      */
-    static double[] dps(Map<LoadoutSlot, Fitted> loadout, double water) {
+    static double water(String slug, boolean wet) {
+        EuropaData.Underwater underwater = CONTENT.europa().underwater();
+        if (!wet || CONTENT.weapon(slug).antiSub()) {
+            return 1;
+        }
+        return underwater.energy(slug) ? underwater.energyDamage() : underwater.damage();
+    }
+
+    /**
+     * {forward single-target DPS, rear single-target DPS} of a loadout's weapons, M8 part A: under water ({@code
+     * wet}) each at its {@link #water(String, boolean) factor}.
+     */
+    static double[] dps(Map<LoadoutSlot, Fitted> loadout, boolean wet) {
         double front = 0;
         double rear = 0;
         for (LoadoutSlot slot :
@@ -333,8 +344,7 @@ class BalanceTest {
                 continue;
             }
             WeaponData weapon = CONTENT.weapon(fitted.item());
-            double single =
-                    singleTarget(weapon, weapon.levels().get(fitted.level() - 1)) * (weapon.antiSub() ? 1 : water);
+            double single = singleTarget(weapon, weapon.levels().get(fitted.level() - 1)) * water(fitted.item(), wet);
             if (slot == LoadoutSlot.REAR) {
                 rear += single;
             } else {
@@ -350,25 +360,30 @@ class BalanceTest {
      * the reference compares (he flies his own line and picks his own targets).
      */
     static double escort(Map<LoadoutSlot, Fitted> loadout) {
+        return escort(loadout, false);
+    }
+
+    /** Rook's single-target DPS ({@link #escort(Map)}), M8 part A: under water ({@code wet}) at his gun's factor. */
+    static double escort(Map<LoadoutSlot, Fitted> loadout, boolean wet) {
         Fitted fitted = loadout.get(LoadoutSlot.ESCORT);
         if (fitted == null) {
             return 0;
         }
         WingmenData.Gun gun = escortGun(fitted.item());
         WeaponData base = CONTENT.weapon(gun.base());
-        return gun.scale() * singleTarget(base, base.levels().get(fitted.level() - 1));
+        return gun.scale() * singleTarget(base, base.levels().get(fitted.level() - 1)) * water(gun.base(), wet);
     }
 
     /**
-     * M8 part A: the escort's single-target DPS in the next flight: Rook's ({@link #escort(Map)}) at {@code water}, or
-     * the Bulwark's cannon (anti-sub: full damage) when it flies (while Rook is missing, the loaner).
+     * M8 part A: the escort's single-target DPS in the next flight: Rook's ({@link #escort(Map, boolean)}), or the
+     * Bulwark's cannon (anti-sub: full damage) when it flies (while Rook is missing, the loaner).
      */
-    static double escort(Campaign campaign, double water) {
+    static double escort(Campaign campaign, boolean wet) {
         return campaign.escortFlight()
                 .map(flight -> flight.rook()
-                        ? escort(campaign.gear().loadout()) * water
+                        ? escort(campaign.gear().loadout(), wet)
                         : CONTENT.wingmen().bulwark().gun().dps())
-                .orElse(escort(campaign.gear().loadout()) * water);
+                .orElse(escort(campaign.gear().loadout(), wet));
     }
 
     private static WingmenData.Gun escortGun(String id) {

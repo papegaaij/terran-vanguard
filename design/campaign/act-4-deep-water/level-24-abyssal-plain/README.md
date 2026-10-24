@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/naval/abyss-ray, ../../../enemies/naval/barbfin, ../../../enemies/ground/spawning-reef, ../../../enemies/naval/glassfin, ../../../enemies/naval/eel-swarm, ../../../enemies/ground/scuttler, ../../../player/weapons/harpoon-torpedoes, ../../../world/europa]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Level 24 – Abyssal Plain
@@ -116,13 +116,19 @@ Enemy definitions are linked per row; formation names come from the
 [formation vocabulary](../../../enemies/README.md#formation-vocabulary). Data in **Act 1 terms** with
 a `bounty_scale` (see *Credit budget*). Measured (step D3, `levelReport -Plevel=24`, the plan's fit): 281 enemies at
 medium with the reefs' first releases (101 a minute), 6.0 on the screen and 31 shots a minute, one stretch over 2 s
-(the first Barbfins' quiet window); easy 3.4 on the screen, hard 9.6.
+(the first Barbfins' quiet window); easy 3.4 on the screen, hard 9.6. **M8 AW** (step AW2, pending the user's review in
+round 56): the faster harpoon (2.8 a second at L3, its splash 44 px) cleared the Barbfins in about a second, before they
+fired (small units 0.68× Level 10's time on the screen, four stretches over 2 s): the [Barbfin](../../../enemies/naval/barbfin/README.md)
+26 HP (52 here, two L3 hits), one more Barbfin in every group but the first and the Rays' escorts, the t=12 column at
+t=10 and, at the ends of the Rays' quiet windows, the t=63 ribbon at t=62 and the t=156 Scuttlers at t=154. Measured:
+276 enemies, 3.4 on the screen, 16.5 shots a minute, the small units 1.51 s (0.94×), three stretches over 2 s (easy two
+over 3 s, hard none), won 3/3 and REEFS 3/3 on every difficulty.
 
 - **Act HP factor** ([balancing basis](../../../enemies/README.md#balancing-basis)) from the proposed
   reference DPS 104 at L24: **Scuttler** (L04, 38) ×2.74 → 77 HP; **Driftjelly** 8, **Reef Spitter** 14, **Lamprey** 6 (the `small` units take the beam-era ×2 only); new units at their
-  specs: **Barbfin** 12 → 24 (beam-era ×2 from the level number), **Abyss Ray** 210 (2.0 s of the reference), **Eel Swarm** (the L23 spec ×1.04: head 104,
+  specs: **Barbfin** 26 → 52 (beam-era ×2 from the level number; M8 AW: 12 → 24 before), **Abyss Ray** 210 (2.0 s of the reference), **Eel Swarm** (the L23 spec ×1.04: head 104,
   whole about 255), **Glassfin** 1; the **spawning reef** is 200 HP (about 1.9 s). Re-measured in part D under the beam's halved reach (`BeamEraHpTest`).
-- **Density and pacing** (§1.7: drafted to the Act 2+ floor): **265 enemies** (waves 255 + ground targets 10) over the 172 s,
+- **Density and pacing** (§1.7: drafted to the Act 2+ floor): **276 enemies** (waves 266 + ground targets 10; 265 before M8 AW) over the 172 s,
   **≈ 92 a minute** at medium (≥ 60; the reefs' fry add more, not counted); a wave about every 3 s from t=3, **front 100 %**. The **firing groups** carry the floor: Barbfin
   columns and circles (the act's shot source: a group of 4 fires about 100 shots in 60 s), Eel Swarm heads, Driftjelly rings, Lamprey streams, the Reef Spitter
   nests and the Rays' fans (9-way, three a visit). Expected to meet ≥ 2.5 enemies on the screen and ≥ 10 shots a minute, **to be confirmed with `levelReport`** in part D
@@ -141,59 +147,59 @@ paths (the formation vocabulary has no pair). The walkers keep 100 px from the b
 |---|---|---|---|---|---|---|
 | 3 | 1 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
 | 6 | 1 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front | **New.** Three Barbfins hold and spit needles; Varga's line at t=13, after Okafor's opening; alone until t=9.5 |
-| 12 | 1 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 10 | 1 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 15 | 1 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 18 | 1 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 20 | 1 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | Solo; the Barbfins' first holders are gone |
-| 24 | 1 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 24 | 1 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 27 | 1 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
 | 30 | 2 | single | [Scuttler](../../../enemies/ground/scuttler/README.md) | 2 | front | Two walkers on the sea floor (`ground`) |
 | 33 | 2 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 36 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 39 | 2 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (left) | |
-| 42 | 2 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 42 | 2 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 44 | 2 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | Over the first spawning reef |
-| 48 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 48 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 51 | 2 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 54 | 2 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 58 | 2 | carrier + escorts | [Abyss Ray](../../../enemies/naval/abyss-ray/README.md) + [Barbfin](../../../enemies/naval/barbfin/README.md) | 1 + 4 | front | **New.** The first Ray: a shadow grows in the ship's lane ahead of it for 1.5 s, the Ray rises, fans three times and glides off; the four Barbfins peel off its shadow; Varga's line at its first shadow (`first-ray`); no wave enters until t=62; it drops an overdrive when it dies |
-| 63 | 2 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (right) | |
+| 62 | 2 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (right) | |
 | 66 | 2 | convoy | [Scuttler](../../../enemies/ground/scuttler/README.md) | 3 | front | Three walkers 3 s apart down the reefs' lane |
 | 69 | 2 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
-| 72 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 72 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 75 | 2 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 78 | 2 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The first of two eels staggered 4 s apart |
 | 81 | 2 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (left) | |
 | 82 | 2 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The second of the pair, on the mirrored route |
-| 84 | 2 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 84 | 2 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 87 | 2 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
 | 90 | 2 | single | [Scuttler](../../../enemies/ground/scuttler/README.md) | 2 | front | Past the last reef |
 | 93 | 2 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 96 | 3 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 100 | 3 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | Under the first beacon |
-| 102 | 3 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 102 | 3 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 105 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
-| 108 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 108 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 112 | 3 | carrier + escorts | [Abyss Ray](../../../enemies/naval/abyss-ray/README.md) + [Barbfin](../../../enemies/naval/barbfin/README.md) | 1 + 4 | front | The second Ray, over the beacon line: its fans cross the beacons' pulse; no wave enters until t=116; it drops a shield cell when it dies |
 | 117 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 120 | 3 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 124 | 3 | convoy | [Scuttler](../../../enemies/ground/scuttler/README.md) | 3 | front | Along the beacon line's floor |
-| 126 | 3 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 126 | 3 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 128 | 3 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The first of two eels staggered 4 s apart |
-| 132 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 132 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 132 | 3 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The second of the pair, on the mirrored route |
 | 135 | 4 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 138 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 141 | 4 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (right) | |
-| 144 | 4 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 144 | 4 | circle | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 150 | 4 | carrier + escorts | [Abyss Ray](../../../enemies/naval/abyss-ray/README.md) + [Barbfin](../../../enemies/naval/barbfin/README.md) | 1 + 4 | front | The last Ray; the Barbfins stay when it sinks; no wave enters until t=154 |
-| 156 | 4 | single | [Scuttler](../../../enemies/ground/scuttler/README.md) | 2 | front | The last walkers |
+| 154 | 4 | single | [Scuttler](../../../enemies/ground/scuttler/README.md) | 2 | front | The last walkers |
 | 160 | 4 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The last eel |
 | 162 | 4 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
 | 165 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (alternating edges) | |
 | 168 | 4 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (left) | The last wave |
 
-Totals: Glassfin 120 · Barbfin 59 · Driftjelly 32 · Lamprey 21 · Eel Swarm 8 · Scuttler 12 · Abyss Ray 3.
+Totals: Glassfin 120 · Barbfin 70 · Driftjelly 32 · Lamprey 21 · Eel Swarm 8 · Scuttler 12 · Abyss Ray 3.
 <!-- /data -->
 
 ## Ground targets
@@ -275,18 +281,18 @@ the act's sfx step ([sfx](../../../audio/sfx/README.md)); real-thing sounds from
 Budget(24) = 700 × 1.07²³ ≈ **3,318**, the typical haul's target
 ([economy](../../../systems/economy/README.md#per-level-budget)). The data keeps **Act 1 terms**
 (Glassfin 2, Barbfin 12, Eel Swarm 48 whole, Abyss Ray 60, Driftjelly 10, Lamprey 12, Scuttler 25, Reef Spitter 14, spawning reef 40, the crate 100, the secondary 100); the code pays each × the act factor
-**4.096**, bounties also × the scale. A **`bounty_scale` of 0.42** (the model of the earlier Act 3 levels: typical = 0.663 of the kills, 0.8 of the ground targets, half of the secret and secondary;
+**4.096**, bounties also × the scale. A **`bounty_scale` of 0.40** (M8 AW, step AW2: refitted for the extra Barbfins; 0.42 before; the model of the earlier Act 3 levels: typical = 0.663 of the kills, 0.8 of the ground targets, half of the secret and secondary;
 fitted in step D3 with `TypicalHaulTest` and `levelReport`, the first estimate 0.40 being 3.9 % under) puts the typical haul on budget(24). No boss or mid-boss; the reefs' fry pay as Glassfin (not in the table).
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Glassfin 120 × 2 + Barbfin 59 × 12 + Driftjelly 32 × 10 + Lamprey 21 × 12 + Eel Swarm 8 × 60 by parts (48 whole) + Scuttler 12 × 25 + Abyss Ray 3 × 60 + released Glassfin 16 × 2 | 4,241 | 2,685 |
-| Ground targets: Reef Spitter 6 × 14 + Spawning Reef 4 × 40 | 420 | 336 |
+| Kills: Glassfin 120 × 2 + Barbfin 70 × 12 + Driftjelly 32 × 10 + Lamprey 21 × 12 + Eel Swarm 8 × 60 by parts (48 whole) + Scuttler 12 × 25 + Abyss Ray 3 × 60 + released Glassfin 16 × 2 | 4,286 | 2,691 |
+| Ground targets: Reef Spitter 6 × 14 + Spawning Reef 4 × 40 | 402 | 322 |
 | Secret: Meridian (hidden crate, 3% of budget) | 410 | 205 |
 | Secondary: raze 3 of the 4 spawning reefs | 410 | 205 |
-| **Total** (bounty scale 0.42) | **5,481** | **3,431** |
-| Budget(n) = the typical haul's target; typical +3 %, perfect 1.65 × budget | | 3,318 |
+| **Total** (bounty scale 0.4) | **5,508** | **3,422** |
+| Budget(n) = the typical haul's target; typical +3 %, perfect 1.66 × budget | | 3,318 |
 <!-- /data -->
 
 **Balance plan**: the plan's L24 visit (4 104 cash) buys the Pressure hull 2 000 and one wing pod's Micro-missiles L3 800
@@ -405,3 +411,10 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   `art: final`); **C.1 allow 1** (hard's REEFS asks for 3 of 4, as medium, built in step E3), C.2–C.7 accepted (the
   Barbfin's hard interval, the fry's ram, the Ray's glide off the edge and firing only on the field, the radio retimed,
   the density); the steps' logged small rules accepted.
+- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): the harpoon's rework cleared the level too fast
+  (`BeamEraHpTest` 0.68×, `PacingTest` red on every difficulty): the Barbfin's HP 12 → 26 (its stat block: two L3
+  harpoon hits; "tougher, not more", the user's rule of 2026-10-19), one Barbfin more in each column and circle (not the
+  first three nor the Rays' escorts; its stat block's circle now 4–5), the t=12 column at t=10, the t=63 ribbon at t=62,
+  the t=156 Scuttlers at t=154, `bounty_scale` 0.42 → 0.40 (typical +0.0 %). Tried and rejected: the columns as lines
+  abreast (0.87×), five per column and circle without the HP (0.69×; six 0.60×: a column dies in one splash), the HP alone
+  (0.83×), the Depth Charges kept at L1 (no change).

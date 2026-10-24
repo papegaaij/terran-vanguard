@@ -10,10 +10,10 @@ package vanguard.sim;
  *   <li>every bullet's speed (the ship's, Rook's, the drones' and the enemies' bullets and missiles) × the rules'
  *       {@code bulletSpeed};
  *   <li>a weapon without {@code anti-sub} does × {@code damage} (after {@code anti-ground}'s ×2; specials and the
- *       enemies' damage untouched);
+ *       enemies' damage untouched), an energy weapon (the beam, the lances; M8 AW) × {@code energyDamage} instead;
  *   <li>the ship's and Rook's acceleration and braking × {@code acceleration} (the drag);
- *   <li>a reach-limited weapon (the beam, the lances) reaches {@code reach} × the field's height from its muzzle;
- *   <li>a torpedo-type weapon runs {@code torpedoRange} × its range (a depth charge rolls out that much faster);
+ *   <li>an energy weapon (the beam, the lances) reaches {@code reach} × the field's height from its muzzle;
+ *   <li>a torpedo-type weapon runs {@code torpedoRange} × its range (a depth charge is tossed that much faster);
  *   <li>{@link #reaches}: a torpedo reaches every layer in the water but {@code high-air}; an {@code anti-sub} weapon
  *       reaches {@code sub} (in either medium).
  * </ul>
@@ -152,14 +152,21 @@ final class Medium {
         return factor(rules.acceleration());
     }
 
-    /** {@code weapon}'s damage factor now: 1 for an {@code anti-sub} weapon (and in the Sonar Pulse's window). */
+    /**
+     * {@code weapon}'s damage factor now: 1 for an {@code anti-sub} weapon (and for every weapon in the Sonar Pulse's
+     * window), the rules' {@code energyDamage} for an energy weapon (M8 AW: in place of {@code damage}), else {@code
+     * damage}.
+     */
     double damage(WeaponSpec weapon) {
-        return weapon.antiSub() || sonar ? 1 : factor(rules.damage());
+        if (weapon.antiSub() || sonar) {
+            return 1;
+        }
+        return factor(rules.energyWeapons().contains(weapon.slug()) ? rules.energyDamage() : rules.damage());
     }
 
-    /** {@code weapon}'s reach as a share of the field's height now: below 1 only for a reach-limited weapon. */
+    /** {@code weapon}'s reach as a share of the field's height now: below 1 only for an energy weapon. */
     double reach(WeaponSpec weapon) {
-        return rules.reachWeapons().contains(weapon.slug()) ? factor(rules.reach()) : 1;
+        return rules.energyWeapons().contains(weapon.slug()) ? factor(rules.reach()) : 1;
     }
 
     /** {@code weapon}'s range factor now: above 1 only for a torpedo-type weapon. */

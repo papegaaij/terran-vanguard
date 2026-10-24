@@ -27,10 +27,11 @@ final class WaterRules {
                 water.bulletSpeed(),
                 water.acceleration(),
                 water.damage(),
+                water.energyDamage(),
                 water.reach(),
                 water.torpedoRange(),
                 water.ease(),
-                Set.copyOf(water.reachWeapons()),
+                Set.copyOf(water.energyWeapons()),
                 Set.copyOf(water.torpedoWeapons()));
     }
 

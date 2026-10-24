@@ -27,6 +27,28 @@ class DeepWaterLooksTest {
     private static final BitmapFont.BitmapFontData SMALL = new BitmapFont.BitmapFontData(
             new FileHandle(new File(System.getProperty("vanguard.assetsDir", "../assets"), Fonts.LABEL_FILE)), false);
 
+    /**
+     * M8 AW: the depth charge's toss over the hull: 0.15 s, swelling to its most at the arc's top and back to its size
+     * as it drops in ahead.
+     */
+    @Test
+    void theTossSwellsOverTheHullAndDropsIn() {
+        assertEquals(Math.round(0.15f * SimStep.PER_SECOND), DeepWaterLooks.TOSS_TICKS);
+        assertEquals(1, DeepWaterLooks.tossScale(0), 1e-6);
+        assertEquals(1 + DeepWaterLooks.TOSS_SWELL, DeepWaterLooks.tossScale(DeepWaterLooks.TOSS_TICKS / 2.0), 1e-6);
+        assertEquals(1, DeepWaterLooks.tossScale(DeepWaterLooks.TOSS_TICKS), 1e-6);
+        assertEquals(1, DeepWaterLooks.tossScale(-1), 1e-6, "before its first step");
+    }
+
+    /** M8 AW: the beam under water runs faint, eased with the water's blend. */
+    @Test
+    void theBeamRunsFaintUnderWater() {
+        assertEquals(1, ArsenalLooks.waterStrength(0), 1e-6);
+        assertEquals(ArsenalLooks.WATER_STRENGTH, ArsenalLooks.waterStrength(1), 1e-6);
+        float half = ArsenalLooks.waterStrength(0.5);
+        assertTrue(half < 1 && half > ArsenalLooks.WATER_STRENGTH);
+    }
+
     @Test
     void everyActFourSpriteIsInTheAssets() {
         List<String> files = List.of(

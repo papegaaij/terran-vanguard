@@ -125,8 +125,8 @@ class TestFireTest {
             case TORPEDO -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
             // M7 part A: the column burns the dummy on its line ahead.
             case BEAM -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
-            // M8 part A: over the test range's water, the drums burst among the submerged dummies behind the ship.
-            case DEPTH_CHARGE -> assertTrue(hits.stream().anyMatch(hit -> hit.y() < shipY - HULL), "behind: " + where);
+            // M8 AW: over the test range's water, the drums tossed forward burst among the submerged dummies ahead.
+            case DEPTH_CHARGE -> assertTrue(hits.stream().anyMatch(hit -> hit.y() > shipY + HULL), "ahead: " + where);
         }
     }
 

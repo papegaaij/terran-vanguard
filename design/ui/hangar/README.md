@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../player, ../../systems/economy, ../../campaign]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Hangar
@@ -674,3 +674,6 @@ release's end, which writes that autosave.
   threat strip marks the four rig sites with a red "T" (`IntelPanelLayoutTest.level22sStripMarksTheFourRigSites`).
 - 2026-10-22 (user, round 51, closed; F.8): the `drill-rig` intel portrait accepted as final.
 - 2026-10-22 (user, round 52, closed): the `glassfin` and `eel-swarm` intel portraits and Level 23's threat strip accepted as final (F.10).
+- 2026-10-24 (M8 AW, step AW3; pending the user's review in round 56): a visit's second notice. At the one-off visit
+  before the first under-water level the hydro-kit's notice is followed, on the next move or slot change, by `ENERGY
+  WEAPONS SCATTER IN WATER: FIT TORPEDOES AND DEPTH CHARGES` (`HangarState.notice` queues it behind the first).

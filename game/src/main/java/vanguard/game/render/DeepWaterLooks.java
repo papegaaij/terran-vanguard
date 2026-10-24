@@ -23,8 +23,9 @@ import vanguard.sim.WeaponSpec;
 /**
  * M8 part A, the Act 4 systems in flight (round 48's picks, the production frames of tools/art/act4_gear.py, whose
  * header gives the layouts, blending, timings and anchors used here): the Harpoon Torpedoes' cable trail, motor light
- * and impact over its dark cavity; the Depth Charges' blinking fuse lamp and their pressure-dome burst over its
- * collapsing cavity, sized by the level's burst radius; the Sonar Pulse's dashed double ring and the contact brackets
+ * and impact over its dark cavity; the Depth Charges' toss over the hull (M8 AW: thrown forward from the stern rack,
+ * swelling on its arc), their blinking fuse lamp and their pressure-dome burst over its collapsing cavity, sized by
+ * the level's burst radius (on the fuse or, under water, on touching a swimmer: the same burst); the Sonar Pulse's dashed double ring and the contact brackets
  * on every unit it reached; the Decoy Flares with their halos; the Bulwark heavy drone with its lure halo while it draws
  * fire, its pump-jets, muzzle light, hit sparks and its under-water loss. Over water (Levels 11–13) the cables, lamps
  * and bursts are drawn in the {@code sub} pass with the shots that run under it. Pure presentation: it follows the
@@ -60,6 +61,13 @@ public final class DeepWaterLooks {
     static final double LAMP_PERIOD = 0.32;
 
     static final double LAMP_SPEED_UP = 0.24;
+    /**
+     * M8 AW: a depth charge is tossed forward from the stern rack over the hull: for this many steps after its launch
+     * (0.15 s) it is drawn over the ship, swelling by up to {@value #TOSS_SWELL} of its size at the toss's top.
+     */
+    static final int TOSS_TICKS = Math.round(0.15f * SimStep.PER_SECOND);
+
+    static final float TOSS_SWELL = 0.3f;
     /** The Sonar Pulse ring: 36 dashes of 6 degrees every 10, the outer ring at r, the inner at r - 7, dimmer. */
     static final int SONAR_DASHES = 36;
 
@@ -490,6 +498,40 @@ public final class DeepWaterLooks {
         batch.draw(cable, (float) (X0 + x0 - width / 2), (float) y0, width / 2, 0, width, along, 1, 1, rotation);
     }
 
+    /** M8 AW: whether {@code shot} is a depth charge still in its toss over the hull (drawn by {@link #drawTossed}). */
+    static boolean tossed(Shot shot) {
+        return shot.weapon().delivery() == WeaponSpec.Delivery.DEPTH_CHARGE && shot.age() <= TOSS_TICKS;
+    }
+
+    /**
+     * M8 AW: a tossed depth charge's scale {@code ticks} steps (a fraction at render time) after its launch: it swells
+     * by up to {@value #TOSS_SWELL} on its arc over the hull and is back to its size as it drops in ahead.
+     */
+    static float tossScale(double ticks) {
+        double p = Math.clamp(ticks / TOSS_TICKS, 0, 1);
+        return 1 + TOSS_SWELL * (float) Math.sin(Math.PI * p);
+    }
+
+    /** The scale of a tossed {@code shot} drawn at {@code alpha} (its position runs a step behind its age). */
+    static float tossScale(Shot shot, float alpha) {
+        return tossScale(shot.age() - 1 + alpha);
+    }
+
+    /**
+     * M8 AW, over the ship (normal blending): the depth charges in their toss, thrown from the stern rack over the
+     * hull, swelling on their arc; the shot passes and the {@code sub} pass leave them out until they drop in ahead.
+     */
+    void drawTossed(SpriteBatch batch, Sortie sortie, float alpha) {
+        for (int i = 0; i < sortie.shotCount(); i++) {
+            Shot shot = sortie.shot(i);
+            if (!tossed(shot) || shot.mount() >= weapons.size()) {
+                continue;
+            }
+            PlayFrame.drawScaled(
+                    batch, weapons.sprite(shot), shot.renderX(alpha), shot.renderY(alpha), tossScale(shot, alpha));
+        }
+    }
+
     /** The depth charges' fuse lamps and the Decoy Flares (additive; the batch is in additive blending). */
     void drawOverShots(SpriteBatch batch, Sortie sortie, float alpha) {
         if (!overWater) {
@@ -504,7 +546,8 @@ public final class DeepWaterLooks {
         }
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
-            if (shot.weapon().delivery() != WeaponSpec.Delivery.DEPTH_CHARGE) {
+            // M8 AW: lit once it dropped in ahead of the hull.
+            if (shot.weapon().delivery() != WeaponSpec.Delivery.DEPTH_CHARGE || tossed(shot)) {
                 continue;
             }
             if (lampLit(shot.age() * SimStep.SECONDS, shot.weapon().mines().fuseSeconds())) {

@@ -270,13 +270,14 @@ class AbyssRayTest {
 
     @Test
     void itsShadowIsHitByADepthCharge() {
-        // The shadow on the ship's spot for 6 s; the ship climbs 150 px past it and drops charges behind.
+        // The shadow on its spot ahead of the ship for 6 s; the ship backs down to the bottom edge and (M8 AW) tosses
+        // its charges forward onto it.
         EnemySpec still = ray(new EnemySpec.Rise(6, 0.9, 5, 70, 0.9, 0), Optional.empty());
         Sortie sortie =
                 sortie(under(List.of(carrier(1, still, 1))), true, DepthChargeTest.rear(DepthChargeTest.CHARGES));
         Enemy shadow = toShadow(sortie, Command.NONE);
-        while (sortie.ship().y() < shadow.y() + 150) {
-            sortie.step(Command.UP.bit());
+        for (int i = 0; i < SimStep.ticks(0.5); i++) {
+            sortie.step(Command.DOWN.bit());
         }
         int blasts = 0;
         while (shadow.risePhase() == RisePhase.SHADOW && blasts < 2) {

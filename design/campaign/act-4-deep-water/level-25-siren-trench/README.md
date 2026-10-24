@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/barbfin, ../../../enemies/naval/glassfin, ../../../enemies/naval/reef-spitter, ../../../world/europa, ../../../player/wingmen, ../../../player/systems, ../../../story/twist]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Level 25 – Siren Trench
@@ -62,7 +62,7 @@ intel panel marks the cave entries on the side arrows (`Intel` `CAVE`, each cave
 | Field | Value |
 |---|---|
 | Dominant layers | `air` (the play plane under water: Glassfin schools, Barbfin groups, Nautilus pairs, the wall nests' sacs), `ground` (Reef Spitters on the ledges at the walls' foot) |
-| Attack directions | front 77% · sides 23% (the cave entries and the walls' nests count as sides) |
+| Attack directions | front 73% · sides 27% (the cave entries and the walls' nests count as sides) |
 | Density | 4 |
 | Recommended traits | `anti-sub`, `spread` |
 | Hazards | Trench walls (terrain collision); Siren rings that slow the ship (60 % for 2 s) |
@@ -196,12 +196,18 @@ Enemy definitions are linked per row; formation names from the
 (100 a minute), 3.6 on the screen and 21 shots a minute (the Act 2+ floor: 2.5 and 10), one stretch over 2 s
 (t≈107.7–110.3, into the narrows; three allowed); easy 225 (2.3 on the screen), hard 335 (4.9). With step E4's trench
 play: 3.5 on the screen, 20 shots a minute, two stretches over 2 s (t≈65–67 and the floor's last 4 s); hard 5.5.
+**M8 AW** (step AW2, pending the user's review in round 56): the faster harpoon emptied the trench (1.7 on the screen,
+3 shots a minute, the small units 0.68× Level 10's): the [Barbfin](../../../enemies/naval/barbfin/README.md) 26 HP (52
+here), one more in every group from the front (a group of 5 held at 5 on hard: the trench's span), two more from every
+cave (at most the column's 5) and a column of 3 down the narrows at t=107.5; `bounty_scale` 0.42. Measured: 314
+enemies, 2.6 on the screen, 15 shots a minute, the small units 2.0 s (1.25×), three stretches over 2 s; won 3/3 on every
+difficulty.
 
-- **HP** (the units' own pages): the Barbfin 24 (12 ×2 beam era), the Siren 90 and the Nautilus
+- **HP** (the units' own pages): the Barbfin 52 (26 ×2 beam era; M8 AW, 24 before), the Siren 90 and the Nautilus
   100 (set at L25's reference DPS **108**, round 48's proposal), the Glassfin 1 (`tiny`), the Reef
   Spitter by its spec with the beam-era factor.
-- **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`): **280 enemies** (waves
-  271 + ground targets 9) over 173 s, **100 a minute** at medium (easy 225, hard 335 by the
+- **Density and pacing** (the Act 2+ rules, `PacingTest` and `ActFloorTest`): **314 enemies** (waves
+  305 + ground targets 9; M8 AW, 280 before) over 173 s, **109 a minute** at medium (easy 258, hard 362 by the
   formation lever), a wave about every 2.5 s, no stretch over 2 s with nothing on the screen (the
   schools and Barbfin groups stay on the screen for seconds). The enemy-shot rate comes mostly from the
   Barbfin groups (a group of 4 fires about 100 shots in 60 s) and the Nautilus spirals (48 shots
@@ -223,68 +229,69 @@ orbits the ship for its 15 s hold, then breaks off the nearer side (gap check E7
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
 |---|---|---|---|---|---|---|
 | 6 | 1 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
-| 8.5 | 1 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front | |
+| 8.5 | 1 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
 | 11 | 1 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | In from the right |
-| 13.5 | 1 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front (left) | |
+| 13.5 | 1 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front (left) | |
 | 16 | 1 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | |
 | 18 | 1 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 1 | wall (right) | **New.** The first Siren, alone: one ring, quiet window of 3.5 s after it |
-| 21.5 | 1 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front | |
+| 21.5 | 1 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
 | 24 | 2 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
 | 26.8 | 2 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (both, staggered) | |
-| 29 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (left cave) | First cave entry, warned 3 s ahead |
+| 29 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (left cave) | First cave entry, warned 3 s ahead |
 | 31.5 | 2 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | |
-| 34 | 2 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 34 | 2 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 36.5 | 2 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (both, staggered) | |
-| 39 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (right cave) | Warned 3 s ahead |
+| 39 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (right cave) | Warned 3 s ahead |
 | 41.5 | 2 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
-| 44 | 2 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 44 | 2 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 47 | 2 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (both, staggered) | |
-| 49 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (left cave) | |
+| 49 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (left cave) | |
 | 51.5 | 2 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | |
-| 54 | 2 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 54 | 2 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 56.2 | 2 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 3 | wall (both, staggered) | |
-| 58.5 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (right cave) | |
+| 58.5 | 2 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (right cave) | |
 | 62.5 | 3 | circle | [Spiral Nautilus](../../../enemies/naval/spiral-nautilus/README.md) | 2 | front | **New.** The first pair, orbiting in opposite directions: quiet window of 3.5 s after it |
 | 67 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
 | 70 | 3 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (both, staggered) | |
-| 72 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (left cave) | |
+| 72 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (left cave) | |
 | 74.5 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | |
-| 77 | 3 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 77 | 3 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 79.5 | 3 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (both, staggered) | |
 | 82 | 3 | circle | [Spiral Nautilus](../../../enemies/naval/spiral-nautilus/README.md) | 2 | front | |
-| 86 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (right cave) | |
+| 86 | 3 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (right cave) | |
 | 88.5 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
 | 91.3 | 3 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 3 | wall (both, staggered) | The last one drops an overdrive |
-| 93 | 3 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 93 | 3 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 96 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | Into the fork, ahead of the pillar |
 | 98.5 | 4 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (left and right, opposite) | Two rings cross the pillar fork |
-| 101 | 4 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (left cave) | |
+| 101 | 4 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (left cave) | |
 | 103.5 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | Down the fork's left channel |
 | 106 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 6 | front | Closing into the narrows (190 px), down the left channel past the pillar's end |
-| 110 | 4 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front | |
+| 107.5 | 4 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front | M8 AW: down the narrows ahead of the V (step AW2) |
+| 110 | 4 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
 | 112.5 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | In the narrows |
 | 115 | 4 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 2 | wall (both, staggered) | |
-| 117.5 | 4 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | side (right cave) | |
+| 117.5 | 4 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (right cave) | |
 | 120 | 4 | circle | [Spiral Nautilus](../../../enemies/naval/spiral-nautilus/README.md) | 2 | front | |
 | 124 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
-| 126.5 | 4 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 126.5 | 4 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 129 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 6 | front | |
 | 131.3 | 5 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 3 | wall (both, staggered) | The Song begins |
-| 133.5 | 5 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | side (left cave) | |
+| 133.5 | 5 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (left cave) | |
 | 136 | 5 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 9 | front | |
 | 138.5 | 5 | circle | [Spiral Nautilus](../../../enemies/naval/spiral-nautilus/README.md) | 2 | front | A slowed ship on a spiral's gap: the act's hardest moment |
 | 142 | 5 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 3 | wall (both, staggered) | |
-| 144.5 | 5 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 144.5 | 5 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 147 | 5 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | |
-| 149.5 | 5 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | side (right cave) | |
+| 149.5 | 5 | column | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | side (right cave) | |
 | 152.3 | 5 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 4 | wall (both, staggered) | The most nests on the screen: four |
 | 154.5 | 5 | circle | [Spiral Nautilus](../../../enemies/naval/spiral-nautilus/README.md) | 2 | front | |
-| 157.5 | 5 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
+| 157.5 | 5 | line abreast | [Barbfin](../../../enemies/naval/barbfin/README.md) | 5 | front | |
 | 161 | 6 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 7 | front | The trench widening |
-| 164 | 6 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 3 | front | |
+| 164 | 6 | V-wing | [Barbfin](../../../enemies/naval/barbfin/README.md) | 4 | front | |
 | 167 | 6 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 6 | front | The last wave |
 
-Totals: Glassfin 151 · Barbfin 79 · Siren 31 · Spiral Nautilus 10.
+Totals: Glassfin 151 · Barbfin 113 · Siren 31 · Spiral Nautilus 10.
 <!-- /data -->
 
 ## Ground targets
@@ -373,18 +380,18 @@ uncoil and its spiral shots, the Barbfin's needle, the Glassfin shatter, the wal
 
 Budget(25) = 700 × 1.07²⁴ ≈ **3,551** ([economy](../../../systems/economy/README.md#per-level-budget)).
 Data in **Act 1 terms** (Glassfin 2, Barbfin 12, Siren 28, Spiral Nautilus 30, Reef Spitter 14, the
-crate 100, the secondary 100), × the act factor **4.096** (1.6³), bounties × the scale. A **`bounty_scale` of 0.48**
-(the README's estimate) puts the typical haul at 3,489, **−1.7 %** of budget(25) (`levelReport -Plevel=25`, step E3;
-0.49 would hit it; within the ±5 % of `TypicalHaulTest`).
+crate 100, the secondary 100), × the act factor **4.096** (1.6³), bounties × the scale. A **`bounty_scale` of 0.42**
+(M8 AW, step AW2: refitted for the extra Barbfins; the README's estimate 0.48 before) puts the typical haul at 3,483,
+**−1.9 %** of budget(25) (`levelReport -Plevel=25`; 0.43 would hit it; within the ±5 % of `TypicalHaulTest`).
 
 <!-- data: credit-budget -->
 | Source | Perfect run | Typical haul |
 |---|---|---|
-| Kills: Glassfin 151 × 2 + Barbfin 79 × 12 + Siren 31 × 28 + Spiral Nautilus 10 × 30 | 4,795 | 2,877 |
-| Ground targets: Reef Spitter 9 × 14 | 252 | 202 |
+| Kills: Glassfin 151 × 2 + Barbfin 113 × 12 + Siren 31 × 28 + Spiral Nautilus 10 × 30 | 4,834 | 2,900 |
+| Ground targets: Reef Spitter 9 × 14 | 216 | 173 |
 | Secret: survey sub (hidden crate, 3% of budget) | 410 | 205 |
 | Secondary: clean crossing | 410 | 205 |
-| **Total** (bounty scale 0.48) | **5,867** | **3,489** |
+| **Total** (bounty scale 0.42) | **5,870** | **3,483** |
 | Budget(n) = the typical haul's target; typical -2 %, perfect 1.65 × budget | | 3,551 |
 <!-- /data -->
 
@@ -531,3 +538,12 @@ row's text.
   half-ellipses (both ends, the head and the tail; the channels stay 140 px, `Level25Test` unchanged). Frame rate of a
   full medium run with Rook on the software renderer (Xvfb, no capture, the machine under other load): 142 fps against
   144 for the round-54 build in the same conditions back to back; one frame of 50 ms or more after the first (78 ms).
+- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): the harpoon's rework emptied the trench
+  (`ActFloorTest` 1.7 on the screen and 3 shots a minute, `BeamEraHpTest` 0.68×, `PacingTest` red on easy and medium): the
+  Barbfin's HP 12 → 26 (its stat block, with Level 24), one more Barbfin in every group from the front (`hard: {count}`
+  holds a group of 5 at 5: a 7-wide group stood in the rock), two more from every cave (at most the column's 5), a column
+  of 3 at t=107.5 (the narrows' gap), `bounty_scale` 0.48 → 0.42. **Open**: `Level25Test.noAirUnitFliesInRock` is red: a
+  Barbfin that outlives its 9 s hold (a cave's, out of the harpoon's ±15° cone at the wall) and a Spiral Nautilus that
+  outlives its orbit leave down their path through the trench's lower walls (the simulation keeps only the hold's drift
+  off the rock); with the original waves and the 26 HP a Nautilus and two Barbfins already do. A simulation fix
+  (the leave kept to the flyable span) is a step of its own.

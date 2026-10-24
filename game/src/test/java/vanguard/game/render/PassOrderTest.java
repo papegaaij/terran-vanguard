@@ -140,6 +140,7 @@ class PassOrderTest {
             storm.drawWingman(batch, rook, alpha, wingmanLooks)
             player.drawShip(batch, sortie, alpha, shieldShimmer)
             units.drawLatched(batch, sortie, alpha)
+            deepWater.drawTossed(batch, sortie, alpha)
             drawUnderGrade(batch, sortie, alpha, scroll, seconds, rook)
             anglers(sortie).drawGlows(batch, sortie, alpha)
             dark.drawHalos(batch, sortie, alpha, clock.real())

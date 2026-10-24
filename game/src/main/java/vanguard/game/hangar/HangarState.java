@@ -1,5 +1,6 @@
 package vanguard.game.hangar;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -150,6 +151,8 @@ public final class HangarState {
     private String message = "";
     /** M7 part A: the notice the message line shows until the next move, empty once it is gone. */
     private String notice = "";
+    /** M8 AW: the visit's further notices, each shown in turn as the one before goes on a move. */
+    private final ArrayDeque<String> notices = new ArrayDeque<>();
     /** What the pointer rests on, if anything. */
     private Optional<Hover> hover = Optional.empty();
 
@@ -547,6 +550,11 @@ public final class HangarState {
      * change or transaction (M7 part A, round 37 R.4 g: it no longer stays on every slot).
      */
     public void notice(String text) {
+        if (!notice.isEmpty() && message.equals(notice)) {
+            // M8 AW: a visit's second notice (the hydro-kit's, then the energy weapons' warning) waits its turn.
+            notices.add(text);
+            return;
+        }
         message = text;
         notice = text;
     }
@@ -555,9 +563,14 @@ public final class HangarState {
     private Outcome moved(Outcome outcome) {
         if (outcome == Outcome.MOVED && !notice.isEmpty()) {
             if (message.equals(notice)) {
-                message = "";
+                // M8 AW: the next notice of the visit, if any, takes its place.
+                String next = notices.isEmpty() ? "" : notices.poll();
+                message = next;
+                notice = next;
+            } else {
+                notice = "";
+                notices.clear();
             }
-            notice = "";
         }
         return outcome;
     }
@@ -567,6 +580,12 @@ public final class HangarState {
      * under-water level (pending the user's review: the wording).
      */
     public static final String HYDRO_KIT_NOTICE = "HYDRO-KIT FITTED: THE STORMHAWK AND ROOK ARE SEALED FOR THE OCEAN";
+
+    /**
+     * M8 AW (design/world/europa, Under water rules: energy weapons ×0.2 damage, ×0.4 reach): the second notice of the
+     * hydro-kit's visit, after {@link #HYDRO_KIT_NOTICE} (pending the user's review in round 56: the wording).
+     */
+    public static final String UNDER_WATER_NOTICE = "ENERGY WEAPONS SCATTER IN WATER: FIT TORPEDOES AND DEPTH CHARGES";
 
     /** The notice for a special's free charges: "1 FREE AIRSTRIKE CHARGE, FITTED". */
     public static String freeChargesNotice(Campaign.FreeCharges free) {

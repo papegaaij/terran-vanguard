@@ -14,9 +14,10 @@ public record EuropaData(EuropaData.Underwater underwater) {
      * @param acceleration the drag: the ship's (Rook's, the Bulwark's) acceleration and braking; the pressure hull
      *     removes it
      * @param damage a weapon without the {@code anti-sub} trait, after anti-ground's ×2; not specials or the
-     *     enemy's damage
-     * @param reach the share of the play field's height a beam or laser of {@code reachWeapons} reaches
-     * @param reachWeapons the weapons (slugs) whose reach is cut
+     *     enemy's damage; not an energy weapon's
+     * @param energyDamage M8 AW (the user, 2026-10-23): an energy weapon's damage, in place of {@code damage}
+     * @param reach the share of the play field's height an energy weapon reaches
+     * @param energyWeapons the energy weapons (slugs): the beam and the lasers, their damage and reach cut
      * @param torpedoRange the factor on the range of {@code torpedoWeapons}
      * @param torpedoWeapons the torpedo-type weapons (slugs)
      * @param ease seconds the factors ease in or out over as the ship crosses a waterline (new projectiles only)
@@ -26,8 +27,9 @@ public record EuropaData(EuropaData.Underwater underwater) {
             double bulletSpeed,
             double acceleration,
             double damage,
+            double energyDamage,
             double reach,
-            List<String> reachWeapons,
+            List<String> energyWeapons,
             double torpedoRange,
             List<String> torpedoWeapons,
             double ease,
@@ -36,18 +38,20 @@ public record EuropaData(EuropaData.Underwater underwater) {
             Check.positive("bullet_speed", bulletSpeed);
             Check.positive("acceleration", acceleration);
             Check.positive("damage", damage);
+            Check.share("energy_damage", energyDamage);
+            Check.positive("energy_damage", energyDamage);
             Check.share("reach", reach);
             Check.positive("reach", reach);
-            reachWeapons = List.copyOf(reachWeapons);
+            energyWeapons = List.copyOf(energyWeapons);
             Check.positive("torpedo_range", torpedoRange);
             torpedoWeapons = List.copyOf(torpedoWeapons);
             Check.notNegative("ease", ease);
             Check.positive("hydro_kit", hydroKit);
         }
 
-        /** Whether the weapon's beam or laser reach is cut under water. */
-        public boolean reachCut(String weapon) {
-            return reachWeapons.contains(weapon);
+        /** Whether the weapon is an energy weapon: its damage and its beam or laser reach are cut under water. */
+        public boolean energy(String weapon) {
+            return energyWeapons.contains(weapon);
         }
 
         /** Whether the weapon's range is a torpedo's, raised under water. */

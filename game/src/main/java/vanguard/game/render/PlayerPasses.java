@@ -160,7 +160,8 @@ final class PlayerPasses {
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
             WeaponLooks.Look look = weapons.look(shot.mount());
-            if (look.glowingShot != glowing || runsUnder(shot)) {
+            // M8 AW: a depth charge in its toss is drawn over the ship (DeepWaterLooks.drawTossed).
+            if (look.glowingShot != glowing || runsUnder(shot) || DeepWaterLooks.tossed(shot)) {
                 continue;
             }
             AtlasRegion sprite = weapons.sprite(shot);
@@ -302,7 +303,7 @@ final class PlayerPasses {
     void drawUnderWater(SpriteBatch batch, Sortie sortie, float alpha) {
         for (int i = 0; i < sortie.shotCount(); i++) {
             Shot shot = sortie.shot(i);
-            if (!runsUnder(shot)) {
+            if (!runsUnder(shot) || DeepWaterLooks.tossed(shot)) {
                 continue;
             }
             double left = shot.rangeLeft();

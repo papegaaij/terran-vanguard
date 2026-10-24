@@ -230,6 +230,22 @@ class ActFourHangarTest {
         assertTrue(Words.wrap(HangarState.HYDRO_KIT_NOTICE, (ShopPanel.WIDTH - 20) / 8)
                         .size()
                 <= 2);
+        assertTrue(Words.wrap(HangarState.UNDER_WATER_NOTICE, (ShopPanel.WIDTH - 20) / 8)
+                        .size()
+                <= 2);
+    }
+
+    /** M8 AW: the hydro-kit's visit shows its two notices in turn, each until the next move. */
+    @Test
+    void theUnderWaterWarningFollowsTheHydroKitsNotice() {
+        HangarState state = new HangarState(new Hangar(CATALOGUE, campaign(23, 5_000, Optional.empty(), false)), true);
+        state.notice(HangarState.HYDRO_KIT_NOTICE);
+        state.notice(HangarState.UNDER_WATER_NOTICE);
+        assertEquals(HangarState.HYDRO_KIT_NOTICE, state.message());
+        state.down();
+        assertEquals(HangarState.UNDER_WATER_NOTICE, state.message(), "the second on the first move");
+        state.down();
+        assertEquals("", state.message(), "both gone");
     }
 
     @Test

@@ -88,8 +88,8 @@ final class HoverHold {
      * One step of {@code u}'s hold: it drifts sideways at the hover's drift (turning back at the side edges, its hit
      * box kept on the play field) and turns its facing toward the ship at (shipX, shipY). M8 part E: in a level with
      * rock it turns back at the flyable span's edges too ({@link Terrain#spanLeft}, {@link Terrain#spanRight}: its hit
-     * box kept off the walls and islands where the span holds it), and its centre is kept out of the rock as the walls
-     * scroll in on it (laid out at a span's edge, it may stand closer than its half width).
+     * box kept off the walls and islands where the span holds it), and as the walls scroll in on it, it is pushed off
+     * them ({@link Canyon#inSpan}; laid out at a span's edge, it eases off to its half width).
      */
     void hold(Enemy u, double shipX, double shipY) {
         double speed = u.spec.hover().orElseThrow().drift();
@@ -112,13 +112,25 @@ final class HoverHold {
                 drift = -drift;
                 x = u.x;
             }
-            u.x = canyon == null ? x : canyon.flyableX(u.y, x, 0);
+            // M8 AW: pushed off the walls and islands as they scroll in on it (Level 25's narrows).
+            u.x = canyon == null ? x : canyon.inSpan(u.y, x, u.x, half);
         }
         double dx = shipX - u.x;
         double dy = shipY - u.y;
         if (dx != 0 || dy != 0) {
             double delta = Math.IEEEremainder(Enemy.heading(dx, dy) - u.facing, 2 * StrictMath.PI);
             u.facing = Math.IEEEremainder(u.facing + Math.clamp(delta, -MAX_TURN, MAX_TURN), 2 * StrictMath.PI);
+        }
+    }
+
+    /**
+     * M8 AW: one step of {@code u} leaving after its hold (down and out to its side): in a level with rock its path
+     * is kept inside the flyable span it leaves from ({@link Canyon#inSpan}), so it slides down along a wall instead
+     * of flying into it. Without rock nothing changes.
+     */
+    void leaving(Enemy u) {
+        if (active && canyon != null) {
+            u.x = canyon.inSpan(u.y, u.x, u.prevX, u.box.width() / 2);
         }
     }
 

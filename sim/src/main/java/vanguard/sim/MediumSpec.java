@@ -54,28 +54,37 @@ public record MediumSpec(Rules rules, List<Switch> switches) {
      * @param bulletSpeed every bullet's speed factor at its spawn (the player's, Rook's and the enemies')
      * @param acceleration the ship's and Rook's acceleration and braking factor (the drag)
      * @param damage the damage factor of a weapon without the {@code anti-sub} trait, after {@code anti-ground}'s ×2
-     * @param reach a reach-limited weapon's reach, a share of the play field's height from its muzzle
-     * @param torpedoRange a torpedo-type weapon's range factor (a depth charge's roll-out speed too)
+     *     (not an energy weapon's)
+     * @param energyDamage M8 AW (the user, 2026-10-23): an energy weapon's damage factor, in place of {@code damage}
+     * @param reach an energy weapon's reach, a share of the play field's height from its muzzle
+     * @param torpedoRange a torpedo-type weapon's range factor (a depth charge's toss speed too)
      * @param easeSeconds how long the factors take to change at a crossing
-     * @param reachWeapons the weapons (slugs) whose reach is limited (the beam's, the lances')
+     * @param energyWeapons the energy weapons (slugs): the beam and the lances, their reach limited and their damage
+     *     {@code energyDamage}
      * @param torpedoWeapons the torpedo-type weapons (slugs)
      */
     public record Rules(
             double bulletSpeed,
             double acceleration,
             double damage,
+            double energyDamage,
             double reach,
             double torpedoRange,
             double easeSeconds,
-            Set<String> reachWeapons,
+            Set<String> energyWeapons,
             Set<String> torpedoWeapons) {
         /** No factors at all (the air's). */
-        public static final Rules NONE = new Rules(1, 1, 1, 1, 1, 0, Set.of(), Set.of());
+        public static final Rules NONE = new Rules(1, 1, 1, 1, 1, 1, 0, Set.of(), Set.of());
 
         public Rules {
-            reachWeapons = Set.copyOf(reachWeapons);
+            energyWeapons = Set.copyOf(energyWeapons);
             torpedoWeapons = Set.copyOf(torpedoWeapons);
-            if (!(bulletSpeed > 0) || !(acceleration > 0) || !(damage > 0) || !(reach > 0) || !(torpedoRange > 0)) {
+            if (!(bulletSpeed > 0)
+                    || !(acceleration > 0)
+                    || !(damage > 0)
+                    || !(energyDamage > 0)
+                    || !(reach > 0)
+                    || !(torpedoRange > 0)) {
                 throw new IllegalArgumentException("the water's factors are above 0");
             }
             if (!(easeSeconds >= 0)) {

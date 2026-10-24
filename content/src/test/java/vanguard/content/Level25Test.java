@@ -105,16 +105,17 @@ class Level25Test {
     }
 
     /**
-     * The README: 280 enemies at medium, the waves' 271 (Glassfin 151, Barbfin 79, Siren 31, Spiral Nautilus 10) and
-     * the ground targets' 9 Reef Spitters; the survey sub is a trigger with its secret. Easy 225 (216 + 9), hard 335
-     * (326 + 9) by the formation lever.
+     * The README: 314 enemies at medium, the waves' 305 (Glassfin 151, Barbfin 113, Siren 31, Spiral Nautilus 10) and
+     * the ground targets' 9 Reef Spitters; the survey sub is a trigger with its secret. Easy 258 (249 + 9), hard 362
+     * (353 + 9) by the formation lever (M8 AW, step AW2: the Barbfins' groups one more from the front, the hard ones
+     * held at that, the caves' two more up to the column's 5, and a column of 3 at t=107.5).
      */
     @Test
     void theLevelHoldsTheReadmesCount() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        assertEquals(271, level.waves().stream().mapToInt(LevelMetrics::planned).sum());
+        assertEquals(305, level.waves().stream().mapToInt(LevelMetrics::planned).sum());
         String[] slugs = {"glassfin", "barbfin", "siren", "spiral-nautilus"};
-        int[] counts = {151, 79, 31, 10};
+        int[] counts = {151, 113, 31, 10};
         for (int i = 0; i < slugs.length; i++) {
             String slug = slugs[i];
             assertEquals(
@@ -129,7 +130,7 @@ class Level25Test {
         assertTrue(level.groundUnits().stream()
                 .allMatch(unit -> unit.enemy().slug().equals("reef-spitter")));
         assertEquals(1, level.secrets());
-        int[] waves = {216, 271, 326};
+        int[] waves = {249, 305, 353};
         for (Difficulty difficulty : Difficulty.values()) {
             LevelScript at = SimSpecs.level(content, LEVEL, difficulty);
             assertEquals(
@@ -517,8 +518,8 @@ class Level25Test {
     }
 
     /**
-     * The README's credit table ({@code bounty_scale} 0.48): a perfect run at medium in Act 1 terms, Glassfin 151 × 2,
-     * Barbfin 79 × 12, Siren 31 × 28, Spiral Nautilus 10 × 30 and the Reef Spitters 9 × 14, against budget(25) = 3,551.
+     * The README's credit table ({@code bounty_scale} 0.42, M8 AW step AW2's refit): a perfect run at medium in Act 1
+     * terms, Glassfin 151 × 2, Barbfin 113 × 12, Siren 31 × 28, Spiral Nautilus 10 × 30 and the Reef Spitters 9 × 14, against budget(25) = 3,551.
      */
     @Test
     void aPerfectRunAtMediumEarnsTheReadmesTotal() {
@@ -534,9 +535,9 @@ class Level25Test {
         int ground = level.groundUnits().stream()
                 .mapToInt(unit -> unit.enemy().bounty())
                 .sum();
-        assertEquals(151 * 2 + 79 * 12 + 31 * 28 + 10 * 30, kills, "Glassfin, Barbfin, Siren, Spiral Nautilus");
+        assertEquals(151 * 2 + 113 * 12 + 31 * 28 + 10 * 30, kills, "Glassfin, Barbfin, Siren, Spiral Nautilus");
         assertEquals(9 * 14, ground, "the Reef Spitters");
-        assertEquals(0.48, content.level(LEVEL).bounties());
+        assertEquals(0.42, content.level(LEVEL).bounties());
         assertEquals(3_551, Math.round(content.economy().budget().of(level.number())), "700 × 1.07²⁴");
     }
 

@@ -5,8 +5,9 @@ underwater:
   bullet_speed: 0.7       # every bullet's speed, the player's and the enemies' (the difficulty's scale multiplied in), at its spawn
   acceleration: 0.6       # the drag: the ship's (and Rook's, the Bulwark's) acceleration and braking; top speed unchanged; the pressure hull removes it
   damage: 0.7             # a weapon without the `anti-sub` trait (the ship's and Rook's guns), after anti-ground's x2; not specials, not the enemy's damage
-  reach: 0.75             # share of the play field's height a beam or laser reaches from its muzzle (a pierce count unchanged)
-  reach_weapons: [ion-beam, lance-laser, rear-lance]
+  energy_damage: 0.2      # M8 AW (the user, 2026-10-23): an energy weapon's damage, in place of `damage` (not on top of it)
+  reach: 0.4              # share of the play field's height an energy weapon reaches from its muzzle (a pierce count unchanged)
+  energy_weapons: [ion-beam, lance-laser, rear-lance]   # the beam and the lasers: `energy_damage` and `reach`
   torpedo_range: 1.5      # torpedo-type weapons' range (the depth charges' first roll-out)
   torpedo_weapons: [torpedo-pod, harpoon-torpedoes, depth-charges]
   ease: 1                 # s the factors ease in or out over as the ship crosses a waterline (new projectiles only)

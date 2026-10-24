@@ -17,6 +17,7 @@ import vanguard.game.render.BlackwaterFixture;
 import vanguard.game.render.IceShelfFixture;
 import vanguard.game.render.SiegeUnitsFixture;
 import vanguard.game.settings.AudioSettings;
+import vanguard.sim.Command;
 import vanguard.sim.Enemy;
 import vanguard.sim.PlayField;
 import vanguard.sim.SimEvents;
@@ -195,7 +196,9 @@ class Level26SoundsTest {
         int hushing = 0;
         while (sortie.levelSeconds() < 158 && !sortie.complete()) {
             int before = bank.playing(Sfx.HEADLIGHT_CLICK);
-            step(sortie, sounds, IceShelfFixture.toward(sortie, 240, 110));
+            // M8 AW: holding fire: the reworked harpoon and the charges tossed ahead kill the Anglers before they
+            // lunge.
+            step(sortie, sounds, IceShelfFixture.toward(sortie, 240, 110) & ~Command.FIRE.bit());
             clicks += Math.max(0, bank.playing(Sfx.HEADLIGHT_CLICK) - before);
             SimEvents events = sortie.events();
             for (int e = 0; e < events.size(); e++) {

@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Barbfin
@@ -28,12 +28,12 @@ Approved in round 48 (2026-10-22). Numbers at **medium** (see the [balancing bas
 | Size | 36×28 px, hitbox 26×20 |
 | Parts | single |
 | Orientation | `32 angles` (it turns toward the ship while it holds) |
-| HP | 12 (easy 9 / hard 16, from the global multipliers) |
+| HP | 26 (easy 20 / hard 34, from the global multipliers) |
 | Armour / shield | none |
 | Speed | 120 px/s in, 0 while it holds |
 | Movement | `swoop` in from a side or top edge along a short curve, stops 90–200 px above the ship's lane and holds 9 s with a 6 px/s drift, turning toward the ship, then leaves toward the nearest side; as an Abyss Ray's escort it peels off the Ray's shadow as it rises |
 | Attack | `aimed` needle (a violet-hued shot) every 2.4 s, 150 px/s, `small` = 4; first shot 0.9 s after it stops |
-| Formations | column (3–5), circle (4), carrier + escorts (4) (the [Abyss Ray](../abyss-ray/README.md)'s escort); scattered pairs |
+| Formations | column (3–5), circle (4–5), carrier + escorts (4) (the [Abyss Ray](../abyss-ray/README.md)'s escort); scattered pairs |
 | Weak points | violet snout barb (drawn only) |
 | Effective traits | `spread`, `homing` |
 | Credits | 12 (score 120 × chain) |
@@ -52,7 +52,7 @@ Approved in round 48 (2026-10-22). Numbers at **medium** (see the [balancing bas
 ### Difficulty and level use
 
 - L24 introduces it (with the Abyss Ray); a school-plus-Barbfin wave is the L24-L27 workhorse.
-- Beam-era HP applies by level number (`small`): 24 at L24, not `small_act_hp` (gap check D5); the reduction of the beam's reach is re-measured in part D (`BeamEraHpTest`'s 0.9-1.5x rule, step D3).
+- Beam-era HP applies by level number (`small`): 52 at L24 (M8 AW: 26 × 2; 24 before), not `small_act_hp` (gap check D5); the reduction of the beam's reach is re-measured in part D (`BeamEraHpTest`'s 0.9-1.5x rule, step D3).
 
 ## Concept art
 
@@ -96,3 +96,12 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
   Weak spot: the first needle after the Barbfin arrives comes without the 0.25 s tell (the tell keys on the previous
   shot's clock).
 - 2026-10-23 (user, round 53, closed): the final frames and the violet needle accepted (F.3; the part is `art: final`); the needle sound **b** picked; C.2 (hard's 2.6 s interval) accepted.
+- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): HP 12 → 26 (52 at L24–25 with the beam era's
+  × 2): the reworked harpoon (2.8 torpedoes a second at L3, 31 damage, a 44 px splash) killed a Barbfin in about a second
+  from its entry, before its first needle (Level 24's small units 0.68× Level 10's time on the screen, Level 25's floor
+  3 shots a minute); at 52 it takes two L3 hits (a hit and its splash, 50, do not kill it). Measured with the levels'
+  extra Barbfins: Level 24 0.94×, Level 25 1.25×. "Tougher, not more" (the user's rule of 2026-10-19) as far as it went:
+  16 and 20 HP did not reach 0.9×. The circle's size 4–5 (Level 24's circles of 5).
+- 2026-10-24 (M8 AW, step AW3; pending the user's review in round 56): in a level with rock walls (Levels 24–26's trench
+  and scarp) a Barbfin's hold and its leaving after the hold stay inside the flyable span (`Canyon.inSpan`): it slides
+  down along a wall and leaves inside the trench instead of crossing the rock sideways.

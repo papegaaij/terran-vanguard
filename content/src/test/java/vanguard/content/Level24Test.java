@@ -54,8 +54,8 @@ class Level24Test {
     private final Content content = ContentLoader.fromClasspath();
 
     /**
-     * The balance plan's fit at Level 24 ({@code "24"}: the Pressure hull and the left wing's Micro-missile Pod to L3 on
-     * Level 23's): the Harpoon Torpedoes L3 in front, the Micro-missile Pods L3 (left) and L2 (right), the Depth Charges
+     * The balance plan's fit at Level 24 ({@code "24"}, M8 AW: the harpoon and the Depth Charges to L3, the Pressure hull
+     * and the left wing's Micro-missile Pod to L3 on Level 23's): the Harpoon Torpedoes L3 in front, the Micro-missile Pods L3 (left) and L2 (right), the Depth Charges
      * L3, the Sonar Pulse, the Mk II shield, Composite III, and Rook's Autocannon.
      */
     static Loadout planLoadout(Content content, Difficulty difficulty) {
@@ -98,16 +98,16 @@ class Level24Test {
     }
 
     /**
-     * The README: 265 enemies at medium, the waves' 255 (Glassfin 120, Barbfin 59, Driftjelly 32, Lamprey 21, Scuttler
-     * 12, Eel Swarm 8, Abyss Ray 3) and the ground targets' 10 (4 spawning reefs, 6 Reef Spitters); the wreck
+     * The README: 276 enemies at medium, the waves' 266 (Glassfin 120, Barbfin 70 (M8 AW, step AW2: one more in each
+     * group but the first and the Rays' escorts), Driftjelly 32, Lamprey 21, Scuttler 12, Eel Swarm 8, Abyss Ray 3) and the ground targets' 10 (4 spawning reefs, 6 Reef Spitters); the wreck
      * <i>Meridian</i> is a trigger with its secret.
      */
     @Test
     void theLevelHoldsTheReadmesCount() {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
-        assertEquals(255, level.waves().stream().mapToInt(LevelMetrics::planned).sum());
+        assertEquals(266, level.waves().stream().mapToInt(LevelMetrics::planned).sum());
         String[] slugs = {"glassfin", "barbfin", "driftjelly", "lamprey", "scuttler", "eel-swarm", "abyss-ray"};
-        int[] counts = {120, 59, 32, 21, 12, 8, 3};
+        int[] counts = {120, 70, 32, 21, 12, 8, 3};
         for (int i = 0; i < slugs.length; i++) {
             String slug = slugs[i];
             assertEquals(
@@ -225,7 +225,8 @@ class Level24Test {
     }
 
     /**
-     * The Barbfin: 24 HP (12 by the beam era's ×2, gap check D5), held 9 s 90–200 px above the ship drifting 6 px/s;
+     * The Barbfin: 52 HP (26 by the beam era's ×2, gap check D5; M8 AW, step AW2: 12 → 26, the harpoon's faster rate
+     * killed it before it fired), held 9 s 90–200 px above the ship drifting 6 px/s;
      * its aimed needle every 2.4 s by the fire-rate lever (easy every 3 s, hard a 2-needle burst 0.12 s apart every 2.6
      * s: step D3, the approved 2.1 lost the plan's fit without Rook on hard), the first 0.9 s after it stops.
      */
@@ -250,7 +251,7 @@ class Level24Test {
             assertEquals(0.9, gun.firstShotDelay());
             assertEquals(0.12, gun.burstGapSeconds());
         }
-        assertEquals(24, wave(Difficulty.MEDIUM, 6).enemy().hp());
+        assertEquals(52, wave(Difficulty.MEDIUM, 6).enemy().hp());
     }
 
     /**

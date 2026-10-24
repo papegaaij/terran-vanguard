@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [../act-3-red-dust, ../../world/europa, ../../story/twist, ../../enemies/naval, ../../enemies/bosses/abyssal-maw, ../../player/systems]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Act 4 – Deep Water
@@ -133,8 +133,8 @@ Images are production art straight away (the build's art step makes them with `t
 > ocean. They are not here for the ice."
 >
 > **Commander Okafor:** "The Stormhawks are refitted for the water: sealed intakes, a torpedo
-> rack, a hull that does not mind the pressure. Everything slows down there, theirs and yours.
-> Anything that is not a torpedo or a depth charge loses a third of its bite. Fly accordingly."
+> rack, a pressure-proof hull. Everything slows down there, theirs and yours. Guns lose a third
+> of their bite, beams and lasers nearly all. Save your credits for torpedoes and charges."
 >
 > **Commander Okafor:** "We hit the rigs on the surface first, then we follow the hole down.
 > Drop in ninety minutes. Mission briefing follows. Aegis Actual out."
@@ -447,3 +447,8 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
   `A4_GEYSER = "a"` into `assets/ui/act-4-deep-water-still.png` and its review sheet `act-4-still-final-r51-a.png`
   (step D4); b (the nearer fissure plume) rejected, its still moved to `concept/rejected/`. The round 51 intro captures
   show the old still (not re-captured). C.1–C.7 of round 52 accepted with Level 23.
+- 2026-10-24 (M8 AW, step AW2; the user's decision of 2026-10-23, the wording pending the user's review in round 56):
+  Okafor's intro page 3 warns that beams and lasers lose nearly all their bite under water and to save credits for
+  torpedoes and depth charges ("... a pressure-proof hull. Everything slows down there, theirs and yours. Guns lose a
+  third of their bite, beams and lasers nearly all. Save your credits for torpedoes and charges."; the plan's wording,
+  shortened to the page's four lines: `BriefingLayoutTest`); its voice take is re-rendered by step VOX-AW.

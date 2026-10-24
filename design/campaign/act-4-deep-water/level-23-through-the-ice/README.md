@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/naval/eel-swarm, ../../../enemies/naval/glassfin, ../../../enemies/naval/driftjelly, ../../../enemies/naval/reef-spitter, ../../../enemies/air/lamprey, ../../../player/weapons/harpoon-torpedoes, ../../../player/weapons/depth-charges, ../../../player/systems, ../../../world/europa]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Level 23 – Through the Ice
@@ -35,9 +35,9 @@ Two pages, each one screen (`BriefingLayoutTest`) with room for its image. Texts
 > Stormhawks have been fitted with hydro-kits overnight: they swim. Below is Thera Deep. Forty
 > thousand people live there, and the Vrell are draining their farms."
 >
-> **Dr. Varga:** "Under water everything slows, theirs and yours. Torpedoes and depth charges
-> keep their strength; your other guns lose a third. Eels have a head that fires: cut it. A
-> Sonar Pulse lights the water. The Airstrike and the Lance cannot reach under the ice."
+> **Dr. Varga:** "Under water everything slows. Torpedoes and depth charges keep their strength;
+> guns lose a third, beams and lasers nearly all. Eels have a head that fires: cut it. A Sonar
+> Pulse lights the water. The Airstrike and the Lance cannot reach under the ice."
 <!-- /data -->
 
 *Images* (briefs only tonight; [briefing images](../../../ui/briefing/README.md)):
@@ -189,7 +189,7 @@ and 94.5, 123.5 and 127.5), each on the other's mirrored route.
 | 22 | 1 | V-wing | [Stinger](../../../enemies/air/stinger/README.md) | 3 | front | The last surface wave; still on the screen at the waterline |
 | 28.5 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 12 | front | **New.** The first school; the first harpoon target. The quiet window is until t=32 |
 | 32 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 3 | front | Drifting between the shaft's ledges |
-| 35.5 | 3 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 8 | front (left) | Ribbons down the shaft |
+| 34.5 | 3 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 8 | front (left) | Ribbons down the shaft |
 | 38.5 | 3 | line abreast | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front | Homing; the shaft's width keeps them honest |
 | 42 | 3 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | **New.** A solo 12-segment snake (10 on easy, 16 on hard); alone until t=45.5; Varga's line at t=41; its head shot first drops a shield cell |
 | 45.5 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
@@ -199,9 +199,9 @@ and 94.5, 123.5 and 127.5), each on the other's mirrored route.
 | 57.5 | 3 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | Second solo eel; the head fires the aimed shot first |
 | 60 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 12 | front | |
 | 63 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | |
-| 66 | 3 | line abreast | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | front | |
+| 66 | 3 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 4 | front (alternating edges) | |
 | 69 | 3 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 16 | front | The shaft opens onto the farms |
-| 72.5 | 4 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (left) | The first lamps of Thera Deep |
+| 71.5 | 3 | column | [Glassfin](../../../enemies/naval/glassfin/README.md) | 10 | front (left) | The first lamps of Thera Deep |
 | 75.5 | 4 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | Over the first farm rack |
 | 78.5 | 4 | stream | [Lamprey](../../../enemies/air/lamprey/README.md) | 3 | front (right) | |
 | 81.5 | 4 | swarm | [Glassfin](../../../enemies/naval/glassfin/README.md) | 14 | front | |
@@ -289,7 +289,7 @@ by the data to the waterline section's start (gap check D5): a timed line at t=2
 | Trigger | Speaker | Line |
 |---|---|---|
 | t=1 | Okafor | "Aegis flight, down the shaft. The hydro-kits are fitted; trust them. Thera Deep is at the bottom." |
-| t=13.5 | Varga | "Water in twelve seconds. Everything slows, theirs and yours. Torpedoes keep their bite; the rest lose a third." |
+| t=13.5 | Varga | "Water in twelve seconds. Everything slows. Torpedoes and charges bite as ever; guns lose a third, beams nearly all." |
 | Waterline crossed (`waterline`, t=25.5) | Varga | "Under the ice. Airstrike and Lance are dead weight now. A Sonar Pulse lights the water." |
 | t=41 | Varga | "Eel chain. Cut the head and the body dies; cut the body and the tail scatters." |
 | t=65 | Thera Deep (Thera Deep Control) | "Aegis, Thera Deep Control. We see you on the shaft. The farms are below you, and so is whatever is draining them." |
@@ -335,8 +335,10 @@ Flown with the balance plan's fit (`levelReport`, step C3) the typical haul came
 | Budget(n) = the typical haul's target; typical +3 %, perfect 1.72 × budget | | 3,101 |
 <!-- /data -->
 
-**Balance plan**: the plan's L23 visit (3 418 cash plus 900 from selling the Tail Gun L3) buys Depth Charges 1 300 + L2 400 + L3 800 and the Harpoon L3 1 000
-([generator](../../../player/generator/README.md#act-4-hand-plan-draft)); a loadout without `anti-sub` is flyable but does 70 % of its damage.
+**Balance plan** (M8 AW, the user's decision of 2026-10-23: nothing sold in Act 4): the plan's L23 visit buys the Depth
+Charges L1 (1 300) and fits the Harpoon Torpedoes L1 bought at L22, the beam and the Tail Gun kept in the inventory; the
+upgrades come at L24 from what L23 pays ([balance-plan.yaml](../../../player/balance-plan.yaml)). A loadout without
+`anti-sub` is flyable but its guns do 70 % of their damage, a beam or a laser 20 % ([europa](../../../world/europa/README.md)).
 
 ## Difficulty notes
 
@@ -447,3 +449,18 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   since step D4); the under-water explosion family (S.10) asked again in round 53. C.1–C.7 accepted (the density, the
   radio retime, the straight Glassfin columns, the eel's first shots, the Glassfin's dive, `small_act_hp`, the pumps'
   secondary), and with them the small rules the steps logged as pending this round (now "accepted in round 52").
+- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): the plan flies the Harpoon L1 and the Depth Charges
+  L1 here (no sale, no upgrade; the user: Level 23 must be doable with the low-level torpedoes): `levelReport` won 3/3 on
+  every difficulty, the secondary met 3/3; medium 3.7 on the screen, 10.9 shots a minute, the small units 1.64 s (1.03×
+  Level 10's), the typical haul unchanged (−0.7 %). The harpoon's faster rate cleared the waves sooner (five stretches
+  over 2 s at medium, three allowed): the t=35.5 ribbon at t=34.5, the t=66 Lamprey line a stream of 4 (1.5 s apart) and
+  the t=72.5 ribbon at t=71.5 (three stretches left, two of them the waterline's quiet window). The Act 4 intro's page 3
+  and Varga's briefing page warn that beams and lasers lose nearly all their bite under water (the intro: save credits for
+  torpedoes and charges), the threat profile's L3 line too (Varga's page drops "theirs and yours" to keep its four
+  lines); the two pages' voice takes are re-rendered by step VOX-AW.
+  Varga's radio line at t=13.5 ("the rest lose a third") is voiced and left as it is (pending the user's review).
+- 2026-10-24 (M8 AW, step VOX-AW; pending the user's review in round 56): Varga's t=13.5 radio line corrected for the
+  rework: "Water in twelve seconds. Everything slows. Torpedoes and charges bite as ever; guns lose a third, beams nearly
+  all." ("theirs and yours" dropped and "bite as ever" for "keep their bite", so it keeps its six radio lines, two pages:
+  the seven-line wording held the radio until the waterline line started 3.4 s late on easy). Re-rendered with the two
+  briefing pages; `RadioTimelineLevel23Test`, `BriefingLayoutTest` and `VoiceFilesTest` green.

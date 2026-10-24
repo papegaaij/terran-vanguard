@@ -209,8 +209,9 @@ first entry of a part's model list is the starter (price 0, `start`).
 - **Europa** (`world/europa/data.yaml`, M8 part A, `EuropaData`): the **`underwater`** rules a level or section with
   `medium: underwater` flies by: `bullet_speed` (every bullet's speed at its spawn), `acceleration` (the drag: the
   ship's, Rook's and the Bulwark's acceleration and braking), `damage` (a weapon without `anti-sub`, after
-  `anti-ground`'s ×2; not specials, not the enemy's damage), `reach` (the share of the play field's height the
-  `reach_weapons` reach) with `reach_weapons` (beams or lasers that fly to the screen's edge), `torpedo_range` with
+  `anti-ground`'s ×2; not specials, not the enemy's damage, not an energy weapon's), `energy_damage` (M8 AW: the
+  `energy_weapons`' damage, in place of `damage`), `reach` (the share of the play field's height the
+  `energy_weapons` reach) with `energy_weapons` (beams or lasers that fly to the screen's edge), `torpedo_range` with
   `torpedo_weapons` (each `anti-sub`), `ease` (s the factors ease over at a waterline, for new projectiles) and
   `hydro_kit` (the level whose hangar visit fits the hydro-kit, its one-off notice; Act 4). The README's *Under water
   rules* numbers table is rendered from it (`underwater`).

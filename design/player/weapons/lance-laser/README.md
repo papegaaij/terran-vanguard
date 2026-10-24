@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [.., ../../generator, ../../../systems/economy]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Lance Laser
@@ -48,7 +48,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 
 - Each lance passes through up to *pierce* enemies, dealing full damage to each, then disappears. Terrain walls stop it.
 - Hardened ground targets stop a lance without damage (glance spark); it is not `anti-ground`.
-- Under water the range is halved to 270 px and damage is 50 % ([Europa rules](../../../world/europa/README.md#under-water-rules)).
+- Under water it is an energy weapon: its reach is 0.4 of the field's height (216 px) and its damage × 0.2 (M8 AW, the user's playtest decision of 2026-10-23; [Europa rules](../../../world/europa/README.md#under-water-rules)).
 
 ## Implementation
 
@@ -58,7 +58,7 @@ Generated from [data.yaml](data.yaml) by `tools/sync_tables.py`; do not edit by 
 - [x] Muzzle flash, projectile and impact sprites of its VFX family; sound of its family
 - [x] Behaviour as described above, except:
 - [x] Terrain walls stop a lance (canyon walls and rock islands, Act 3; `LanceWallTest`)
-- [x] Under water (the [Europa rules](../../../world/europa/README.md#under-water-rules)) — **later: Act 4** (the first level under water) (M8 part A, step A1: its bolts go no farther than the beam's reach, ×0.7 speed and damage; `UnderwaterTest.aLancesBoltsGoNoFartherThanTheBeamsReach`)
+- [x] Under water (the [Europa rules](../../../world/europa/README.md#under-water-rules)) — **later: Act 4** (the first level under water) (M8 part A, step A1: its bolts go no farther than the beam's reach, ×0.7 speed; M8 AW: × 0.2 damage and 0.4 reach as an energy weapon; `UnderwaterTest.aLancesBoltsGoNoFartherThanTheBeamsReach`, `UnderwaterTest.theEnergyFactorReplacesTheGunsAndTheSonarPulsesWindowLiftsBoth`)
 - [x] Power draw per level counted in the loadout; upgrades priced as listed
 
 ## Decisions

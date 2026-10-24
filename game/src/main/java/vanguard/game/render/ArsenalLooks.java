@@ -63,6 +63,16 @@ public final class ArsenalLooks {
     private static final int BEAM_FRAMES = 8;
     /** The beam's widths per sprite level 1..5 and the overdrive's (6). */
     private static final int[] BEAM_WIDTHS = {6, 8, 10, 12, 14, 18};
+    /**
+     * M8 AW (design/world/europa, Under water rules: an energy weapon ×0.2 damage, ×0.4 reach): under water the beam
+     * runs faint, at this share of its strength, and where nothing stops it short of its reach it scatters out over
+     * its last {@value #WATER_TAIL} px instead of ending in a cut (both eased with the water's blend at a crossing).
+     */
+    static final float WATER_STRENGTH = 0.4f;
+
+    static final double WATER_TAIL = 72;
+    /** The scattering tail is drawn in slices this tall, px, each a little fainter. */
+    private static final int TAIL_SLICE = 4;
     /** A beam's fade after its release, steps (0.08 s). */
     private static final int BEAM_FADE_TICKS = SimStep.ticks(0.08);
     /** The contact flares show a frame two steps; the glance spark three. */
@@ -203,6 +213,8 @@ public final class ArsenalLooks {
     private final double[] fadeFrom = new double[MAX_MOUNTS];
     private final double[] fadeEnd = new double[MAX_MOUNTS];
     private final double[] fadeWidth = new double[MAX_MOUNTS];
+    /** M8 AW: a released beam's scattering tail under water, px (0: none). */
+    private final double[] fadeTail = new double[MAX_MOUNTS];
     /** The beam's scorch marks on the ground: x, y plus the ground's scroll when laid, age in steps. */
     private final double[] scorchX = new double[MAX_SCORCH];
 
@@ -394,6 +406,23 @@ public final class ArsenalLooks {
         fadeFrom[m] = beam.fromY();
         fadeEnd[m] = beam.endY();
         fadeWidth[m] = beam.width();
+        fadeTail[m] = waterTail(sortie, beam);
+    }
+
+    /** M8 AW: a beam's strength in the water's blend now (1 in the air, {@link #WATER_STRENGTH} under water). */
+    static float waterStrength(double blend) {
+        return 1 - (1 - WATER_STRENGTH) * (float) Math.clamp(blend, 0, 1);
+    }
+
+    /**
+     * M8 AW: the length of a beam's scattering tail, px: under water (by the water's blend), when nothing stops it
+     * short of its reach; 0 otherwise (it burns, glances or meets rock, or runs off the top edge).
+     */
+    static double waterTail(Sortie sortie, Beam beam) {
+        if (beam.contact() != Beam.Contact.NONE || beam.endY() >= PlayField.HEIGHT) {
+            return 0;
+        }
+        return Math.min(WATER_TAIL * Math.clamp(sortie.waterBlend(), 0, 1), beam.endY() - beam.fromY());
     }
 
     /** Every other step a beam burning on the ground (a ground unit or object) leaves a scorch mark there. */
@@ -708,7 +737,8 @@ public final class ArsenalLooks {
                         fadeEnd[m],
                         fadeWidth[m],
                         false,
-                        (float) beamFade[m] / (BEAM_FADE_TICKS + 1));
+                        (float) beamFade[m] / (BEAM_FADE_TICKS + 1) * waterStrength(sortie.waterBlend()),
+                        fadeTail[m]);
             }
         }
         drawShell(batch, ship.defences(), shipX, shipY, sortie.tick());
@@ -780,7 +810,17 @@ public final class ArsenalLooks {
         boolean burning = beam.contact() == Beam.Contact.BURN;
         double blocked = blockedEdge(beam);
         double end = Double.isNaN(blocked) ? beam.endY() : blocked;
-        drawColumn(batch, tick, beam.x(), beam.fromY(), end, beam.width(), burning, strength);
+        // M8 AW: under water faint, and scattering out where it runs to its short reach.
+        drawColumn(
+                batch,
+                tick,
+                beam.x(),
+                beam.fromY(),
+                end,
+                beam.width(),
+                burning,
+                strength * waterStrength(sortie.waterBlend()),
+                waterTail(sortie, beam));
         drawScaled(
                 batch,
                 sprites.pulseMuzzle.get((int) (tick / MUZZLE_FRAME_TICKS % sprites.pulseMuzzle.size)),
@@ -840,7 +880,8 @@ public final class ArsenalLooks {
             double end,
             double width,
             boolean burning,
-            float strength) {
+            float strength,
+            double tail) {
         int level = level(BEAM_WIDTHS, width);
         Array<AtlasRegion> columns = beamColumns.get(level);
         Array<AtlasRegion> tips = beamTips.get(level);
@@ -855,17 +896,39 @@ public final class ArsenalLooks {
                 (float) Math.min(end, PlayField.HEIGHT + tile.getRegionHeight()) - (tipped ? tip.getRegionHeight() : 0);
         float x = (float) (X0 + centre - tile.getRegionWidth() / 2f);
         int height = tile.getRegionHeight();
-        batch.setColor(1, 1, 1, strength);
+        float fadeFrom = (float) (top - tail);
         for (float y = (float) from; y < top; y += height) {
-            int shown = (int) Math.min(height, Math.ceil(top - y));
-            // The tile's lower rows, so the column runs on seamlessly to its cut end.
-            cut.setRegion(tile, 0, height - shown, tile.getRegionWidth(), shown);
-            batch.draw(cut, Math.round(x), Math.round(y));
+            float upTo = Math.min(y + height, top);
+            float solid = Math.min(upTo, Math.max(y, fadeFrom));
+            if (solid > y) {
+                rows(batch, tile, x, y, y, solid, strength);
+            }
+            // M8 AW: the scattering tail under water, each slice fainter toward its end.
+            for (float a = Math.max(y, fadeFrom); a < upTo; a += TAIL_SLICE) {
+                float b = Math.min(upTo, a + TAIL_SLICE);
+                rows(batch, tile, x, y, a, b, strength * (float) Math.clamp((top - (a + b) / 2) / tail, 0, 1));
+            }
         }
         if (tipped) {
             batch.draw(tip, Math.round(X0 + centre - tip.getRegionWidth() / 2f), Math.round(top));
         }
         batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * The rows of a column {@code tile} laid from {@code base} that fall between the heights {@code a} and {@code b},
+     * at {@code strength}: its lower rows first, so the column runs on seamlessly to its cut end.
+     */
+    private void rows(SpriteBatch batch, AtlasRegion tile, float x, float base, float a, float b, float strength) {
+        int height = tile.getRegionHeight();
+        int offset = Math.min(height - 1, (int) (a - base));
+        int shown = Math.min(height - offset, (int) Math.ceil(b - a));
+        if (shown <= 0) {
+            return;
+        }
+        batch.setColor(1, 1, 1, strength);
+        cut.setRegion(tile, 0, height - offset - shown, tile.getRegionWidth(), shown);
+        batch.draw(cut, Math.round(x), Math.round(a));
     }
 
     /** The overcharge's white double shell while it lasts (fading over the bleed) and its activation flare. */

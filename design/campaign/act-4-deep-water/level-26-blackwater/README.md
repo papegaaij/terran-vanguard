@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/naval/glow-angler, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/driftjelly, ../../../story/characters/the-choir, ../../../story/characters/rook, ../../../world/europa, ../../../player/wingmen, ../../../player/specials]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Level 26 – Blackwater
@@ -198,7 +198,7 @@ Enemy definitions are linked per row; formation names from the
   (t=99–105) keeps the field to the snakes and the drifters already out.
 - **The constellation** (t=108, 8 Anglers in a field, with a jelly field after): the "big swarm" the Choir's
   static announces; it is the level's hardest stretch and the Sonar Pulse's showcase.
-- **Rook's loss** (t=157–163, see below) takes the field: after t=152 only the jelly drifters come (t=160 and
+- **Rook's loss** (t=157–163, see below) takes the field: after t=151 only the jelly drifters come (t=160 and
   166): the aftermath is intentionally quiet and counts as the level's one long gap.
 
 The data's waves (step F2; `side` = a Siren nest on the scarp's foot, `wall` in the data). Every other wave enters from
@@ -209,7 +209,9 @@ route with its sway, a pair of eels is two rows 4 s apart (t=96/100, 141.5/145.5
 the ship for its 15 s hold. Step F2's tuning against the draft (`levelReport -Plevel=26`, pending review): the t=26
 Angler row at 27.5 (the first sight's quiet window, 24–27.5), the t=65.5 field at 64 (no empty stretch after the first
 nest), the nests one at a time (above), the t=102 field in over 5 s (it drifts through the Choir's quiet window), the
-t=152 field spread out to the loss's window and the aftermath's jellies in over 5–6 s each.
+t=152 field spread out to the loss's window and the aftermath's jellies in over 5–6 s each. M8 AW (step AW2, pending the
+user's review in round 56): the faster harpoon left gaps on easy (three over 3 s) and the small units at 0.89× Level
+10's: the t=152 Angler field at t=151 and the t=89 jelly field at t=87.5 (0.92×, easy two over 3 s).
 
 <!-- data: waves -->
 | t (s) | Section | Formation | Enemies (link) | Count | Enter from | Notes |
@@ -244,7 +246,7 @@ t=152 field spread out to the loss's window and the aftermath's jellies in over 
 | 81 | 3 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 4 | front | Scattered |
 | 83 | 3 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 4 | front | Scattered |
 | 83.6 | 3 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 1 | wall (right) | Beside the third cave |
-| 89 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | |
+| 87.5 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | |
 | 89.2 | 3 | turret nest | [Siren](../../../enemies/naval/siren/README.md) | 1 | wall (right) | |
 | 92 | 3 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 6 | front | |
 | 94 | 3 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | |
@@ -269,7 +271,7 @@ t=152 field spread out to the loss's window and the aftermath's jellies in over 
 | 145.5 | 5 | snake | [Eel Swarm](../../../enemies/naval/eel-swarm/README.md) | 1 | front | The second of the pair |
 | 145.5 | 5 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 5 | front | Scattered |
 | 149 | 5 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | |
-| 152 | 5 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 4 | front | The last fight before the silence, spread out to the loss's quiet window |
+| 151 | 5 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 4 | front | The last fight before the silence, spread out to the loss's quiet window |
 | 160 | 6 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 5 | front | Harmless drifters: their veins are the only light in the aftermath; no other wave after this |
 | 166 | 6 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | Drifting in over 5 s |
 
@@ -548,3 +550,7 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   the farm barge's look (no concept of its own); the Driftjelly's "veined re-tint" as glow-only veins (no re-coloured
   body); the eels' resting stripe at 0.35; Rook's spin as a scorched tumble with his lamp dark (its light is the glow
   set), the trails as a repeated strip.
+- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): with the reworked harpoon (L4) the t=152 Angler
+  field moves to t=151 and the t=89 jelly field to t=87.5 (`PacingTest` easy, `BeamEraHpTest` 0.89× → 0.92×); won 3/3 and
+  the secondary 3/3 on every difficulty, the typical haul unchanged (+1.3 %). The Glow Angler's HP 17 (34 here) was tried
+  and dropped (0.90×, a medium stretch more).

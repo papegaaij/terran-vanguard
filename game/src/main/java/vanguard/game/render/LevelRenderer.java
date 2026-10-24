@@ -952,6 +952,8 @@ public final class LevelRenderer {
             player.drawShip(batch, sortie, alpha, shieldShimmer);
             units.drawLatched(batch, sortie, alpha);
         }
+        // M8 AW: the depth charges tossed from the stern rack over the hull.
+        deepWater.drawTossed(batch, sortie, alpha);
         drawUnderGrade(batch, sortie, alpha, scroll, seconds, rook);
         // M8 part F: over the grade the Anglers' glow, stalk, lure, ring flash and death; the pickups' gold halos.
         kinds.anglers(sortie).drawGlows(batch, sortie, alpha);

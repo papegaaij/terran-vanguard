@@ -17,9 +17,10 @@ import org.junit.jupiter.api.Test;
  * M8 part A, step A1 (design/world/europa, Under water rules; m8a-gaps.md §1.1): the {@link Medium} and its factors.
  * Under water every bullet (the ship's, Rook's, the drones', the enemies' bullets and missiles) flies at × 0.7 from
  * its spawn, a weapon without {@code anti-sub} does × 0.7 once (after {@code anti-ground}'s ×2), the ship and Rook
- * accelerate and brake at × 0.6, the beam and the lances reach 0.75 of the field's height, torpedo-type weapons run
- * × 1.5 and torpedoes reach every layer in the water but {@code high-air}; a crossing eases the factors over 1 s; the
- * air changes nothing.
+ * accelerate and brake at × 0.6, torpedo-type weapons run × 1.5 and torpedoes reach every layer in the water but
+ * {@code high-air}; a crossing eases the factors over 1 s; the air changes nothing. M8 AW (the user, 2026-10-23): the
+ * energy weapons (the beam and the lances) do × 0.2 in place of × 0.7 and reach 0.4 of the field's height; in the
+ * Sonar Pulse's window every weapon does full damage.
  */
 class UnderwaterTest {
     private static final int FIRE = Command.FIRE.bit();
@@ -32,7 +33,8 @@ class UnderwaterTest {
             0.7,
             0.6,
             0.7,
-            0.75,
+            0.2,
+            0.4,
             1.5,
             1,
             Set.of("ion-beam", "lance-laser", "rear-lance"),
@@ -120,7 +122,10 @@ class UnderwaterTest {
                 .build());
         assertThrows(
                 IllegalArgumentException.class,
-                () -> new MediumSpec.Rules(0, 0.6, 0.7, 0.75, 1.5, 1, Set.of(), Set.of()));
+                () -> new MediumSpec.Rules(0, 0.6, 0.7, 0.2, 0.4, 1.5, 1, Set.of(), Set.of()));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new MediumSpec.Rules(0.7, 0.6, 0.7, 0, 0.4, 1.5, 1, Set.of(), Set.of()));
     }
 
     @Test
@@ -244,12 +249,12 @@ class UnderwaterTest {
     }
 
     @Test
-    void theBeamReachesThreeQuartersOfTheFieldAndBurnsAtSevenTenths() {
+    void theBeamReachesTwoFifthsOfTheFieldAndBurnsAtOneFifth() {
         Sortie empty = sortie(under(units()), PartASpecs.beamMount(1));
         run(empty, 60, FIRE);
         Beam beam = empty.beam(0);
         assertEquals(Beam.Contact.NONE, beam.contact());
-        assertEquals(0.75 * PlayField.HEIGHT, beam.endY() - beam.fromY(), 1e-9);
+        assertEquals(0.4 * PlayField.HEIGHT, beam.endY() - beam.fromY(), 1e-9);
 
         LevelScript level = units(new GroundUnit(0, X, TorpedoTest.dummy(Layer.AIR, 1000), -1));
         Sortie air = sortie(level, PartASpecs.beamMount(1));
@@ -261,7 +266,30 @@ class UnderwaterTest {
         run(air, 60, FIRE);
         run(water, 60, FIRE);
         assertEquals(PartASpecs.BEAM_DPS[1], airHp - air.enemy(0).hp(), 1e-6);
-        assertEquals(PartASpecs.BEAM_DPS[1] * 0.7, waterHp - water.enemy(0).hp(), 1e-6);
+        assertEquals(PartASpecs.BEAM_DPS[1] * 0.2, waterHp - water.enemy(0).hp(), 1e-6);
+    }
+
+    @Test
+    void theEnergyFactorReplacesTheGunsAndTheSonarPulsesWindowLiftsBoth() {
+        Medium under = new Medium(MediumSpec.underwater(EUROPA));
+        WeaponSpec beam = PartASpecs.ionBeam(3);
+        WeaponSpec lance = bolt("lance-laser", false, INFINITE);
+        WeaponSpec rearLance = bolt("rear-lance", false, INFINITE);
+        for (WeaponSpec energy : List.of(beam, lance, rearLance)) {
+            assertEquals(0.2, under.damage(energy), 1e-12, energy.slug() + ": × 0.2, not × 0.7 × 0.2");
+            assertEquals(0.4, under.reach(energy), 1e-12, energy.slug());
+        }
+        assertEquals(0.7, under.damage(BOLT), 1e-12, "a gun keeps × 0.7");
+        assertEquals(1, under.reach(BOLT));
+        assertEquals(1, under.damage(BOLT.antiSub(true)));
+        under.sonar(true);
+        for (WeaponSpec weapon : List.of(beam, lance, rearLance, BOLT)) {
+            assertEquals(1, under.damage(weapon), weapon.slug() + ": full damage in the window");
+        }
+        assertEquals(0.4, under.reach(beam), 1e-12, "the window leaves the reach");
+        Medium air = Medium.air();
+        assertEquals(1, air.damage(beam), "nothing changes in the air");
+        assertEquals(1, air.reach(beam));
     }
 
     @Test
@@ -270,7 +298,8 @@ class UnderwaterTest {
         run(water, 5, Command.NONE);
         water.step(FIRE);
         Shot lance = water.shot(0);
-        assertEquals(0.75 * PlayField.HEIGHT, lance.range(), 1e-9);
+        assertEquals(0.4 * PlayField.HEIGHT, lance.range(), 1e-9);
+        assertEquals(2, lance.damage(), 1e-12, "an energy weapon: × 0.2");
         double startY = lance.y();
         double lastY = startY;
         while (water.shotCount() > 0) {
@@ -278,7 +307,7 @@ class UnderwaterTest {
             water.step(Command.NONE);
         }
         // It flew its first step in the step it was fired.
-        assertEquals(0.75 * PlayField.HEIGHT, lastY - startY, 2 * 420 * SimStep.SECONDS + 1e-9);
+        assertEquals(0.4 * PlayField.HEIGHT, lastY - startY, 2 * 420 * SimStep.SECONDS + 1e-9);
         Sortie bolt = sortie(under(units()), front(BOLT));
         bolt.step(FIRE);
         assertEquals(INFINITE, bolt.shot(0).range(), "a weapon not named in the rules flies to the edge");

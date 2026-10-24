@@ -16,8 +16,8 @@ package vanguard.sim;
  * circle's top and bottom rows), its middle when even that does not fit, and the radius is cut to the room the span
  * leaves (never under the inner radius). After its move it is pushed out to the inner radius from the ship (as a
  * vortex keeps away: a clamped circle can run past a ship near a wall) and then clear of the rock. Once its wave's hold is over it leaves at its next closed moment: closed, it
- * breaks off sideways toward the nearer side of its orbit's centre at its speed and is gone off the play field (missed
- * for a kill ratio). Each {@link Enemy} owns one, used only while its stat block has a coil (hashed only then); its
+ * breaks off sideways toward the nearer side of its orbit's centre at its speed (M8 AW: in a level with rock down and
+ * out to that side inside the flyable span) and is gone off the play field (missed for a kill ratio). Each {@link Enemy} owns one, used only while its stat block has a coil (hashed only then); its
  * {@link Canyon} is set at its spawn. Allocation-free. Not for a flipped scroll (no level reverses with one).
  */
 final class Coiling {
@@ -27,6 +27,11 @@ final class Coiling {
     static final int NOW_COILED = 2;
     /** {@link #now()}: its spiral fires a volley in this step (while open). */
     static final int NOW_SPIRAL = 4;
+
+    /** M8 AW: its way out in a level with rock, across and down (a unit vector, as {@link Spawn.Exit#DOWN_LEFT}). */
+    private static final double LEAVE_ACROSS = 0.6;
+
+    private static final double LEAVE_DOWN = 0.8;
 
     private EnemySpec.Coil coil;
     private EnemyGun.SpiralSpec spiral;
@@ -99,6 +104,23 @@ final class Coiling {
         return coil != null;
     }
 
+    /**
+     * One step of its way out: sideways toward {@link #leaveDir} at its speed; M8 AW: in a level with rock, down and
+     * out to that side (as a hover leaves, {@link Spawn.Exit#awayFromCentre}) with its path kept inside the flyable
+     * span it leaves from ({@link Canyon#inSpan}), so it slides down along a wall instead of flying into it. Returns
+     * whether it is still on the play field.
+     */
+    private boolean leave(Enemy u) {
+        if (canyon == null) {
+            u.x += leaveDir * u.speed * SimStep.SECONDS;
+        } else {
+            u.x += leaveDir * LEAVE_ACROSS * u.speed * SimStep.SECONDS;
+            u.y -= LEAVE_DOWN * u.speed * SimStep.SECONDS;
+            u.x = canyon.inSpan(u.y, u.x, u.prevX, u.box.width() / 2);
+        }
+        return PlayField.overlaps(u.x, u.y, u.box);
+    }
+
     /** The level's rock and scroll it keeps clear of (null: none). */
     void canyon(Canyon rock) {
         canyon = rock;
@@ -119,8 +141,7 @@ final class Coiling {
     boolean step(Enemy u, double shipX, double shipY) {
         now = 0;
         if (leaving) {
-            u.x += leaveDir * u.speed * SimStep.SECONDS;
-            return PlayField.overlaps(u.x, u.y, u.box);
+            return leave(u);
         }
         if (stayTicks > 0) {
             stayTicks--;
@@ -129,8 +150,7 @@ final class Coiling {
             // Its hold is over and it is closed: it breaks off toward the nearer side of its orbit's centre.
             leaving = true;
             leaveDir = u.x < centreX ? -1 : 1;
-            u.x += leaveDir * u.speed * SimStep.SECONDS;
-            return PlayField.overlaps(u.x, u.y, u.box);
+            return leave(u);
         }
         cycle++;
         int cycleTicks = inTicks + openingTicks + openTicks;

@@ -4,7 +4,7 @@ design: draft
 implementation: in-progress
 art: chosen
 depends-on: [.., ../../story/characters, ../../ui/hud, ../../ui/options, ../../tech/architecture]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Voice
@@ -1397,3 +1397,12 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   him and with the Bulwark (`RadioTimelineLevel26Test` in a snapshot with step F2's `briefs/m8f2-radio.patch` and
   `briefs/m8voxf-tests.patch`: Level 26 out of `UNVOICED`, `VoiceFilesTest` with Level 26): no retime. Measured only,
   not listened to.
+- 2026-10-24 (step VOX-AW, M8 AW; pending the user's review in round 56): the three lines the water rework changed
+  re-rendered: Okafor's Act 4 intro page 3 (guns lose a third, beams and lasers nearly all, save credits for torpedoes and
+  charges; 19.9 s, one retry for a 1.0 s pause inside the first chunk), Varga's Level 23 briefing page 2 (16.2 s) and her
+  Level 23 t=13.5 radio line, now "…Torpedoes and charges bite as ever; guns lose a third, beams nearly all." (8.3 s;
+  worded to keep its six radio lines: a seven-line wording held the radio until the waterline line started 3.4 s late
+  on easy). Whisper (base.en) reads every take back word for word, with and without the Act 4 name prompt (spelling
+  aside: "12", "Underwater", "storm hawks", "air strike"); pitch (pyin, raw) Okafor median 145 Hz, Varga 204-209 Hz, no
+  octave jumps (at most 7 % of frames over 1.6× the median, p90 237-263 Hz): no pins. The three superseded takes deleted.
+  Measured only, not listened to.

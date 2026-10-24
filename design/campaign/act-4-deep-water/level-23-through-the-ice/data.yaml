@@ -27,7 +27,7 @@ threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Th
     none: A drill shaft, Lancer, then Thera Deep. Below the line it is all water.
     l1: All from ahead. The walls hurt. Everything slows under water.
     l2: "New: glass-fry schools and a head-fired eel chain."
-    l3: Torpedoes and charges keep their bite. The rest lose a third.
+    l3: Torpedoes and charges keep their bite; guns lose a third, beams nearly all.
   notes:
     Dominant layers: '`air` (the play plane; Stinger and Needler above the waterline, then Glassfin schools, Eel Swarms, Driftjellies, Lampreys), `ground` (shaft ledges, farm racks: Spine Turrets, Reef Spitters, siphon pumps)'
     Attack directions: '{directions}'
@@ -147,7 +147,7 @@ waves:
     paths: [[[240, -60], [170, 140], [310, 300], [180, 460], [240, 640]]]
     notes: '**New.** The first school; the first harpoon target. The quiet window is until t=32'
   - {t: 32, formation: field, enemy: driftjelly, count: 3, from: front, x: 240, size: [260, 160], notes: "Drifting between the shaft's ledges"}
-  - t: 35.5
+  - t: 34.5
     formation: column
     enemy: glassfin
     count: 8
@@ -191,7 +191,7 @@ waves:
     from: front
     paths: [[[240, -60], [170, 140], [310, 300], [180, 460], [240, 640]]]
   - {t: 63, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [260, 160]}
-  - {t: 66, formation: line abreast, enemy: lamprey, count: 4, from: front}
+  - {t: 66, formation: stream, enemy: lamprey, count: 4, from: front, edge: alternating, interval: 1.5}
   - t: 69
     formation: swarm
     enemy: glassfin
@@ -201,7 +201,7 @@ waves:
     hard: {count: 22}
     paths: [[[240, -60], [310, 140], [170, 300], [300, 460], [240, 640]]]
     notes: The shaft opens onto the farms
-  - t: 72.5
+  - t: 71.5
     formation: column
     enemy: glassfin
     count: 10
@@ -426,7 +426,7 @@ drops:  # a Thera Deep tender (a pressure-hull supply drone, the CDF supply dron
 
 radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected)
   - {t: 1, speaker: Okafor, line: "Aegis flight, down the shaft. The hydro-kits are fitted; trust them. Thera Deep is at the bottom."}
-  - {t: 13.5, speaker: Varga, line: "Water in twelve seconds. Everything slows, theirs and yours. Torpedoes keep their bite; the rest lose a third."}
+  - {t: 13.5, speaker: Varga, line: "Water in twelve seconds. Everything slows. Torpedoes and charges bite as ever; guns lose a third, beams nearly all."}
   - {event: waterline, speaker: Varga, line: "Under the ice. Airstrike and Lance are dead weight now. A Sonar Pulse lights the water.", notes: {trigger: "Waterline crossed (`waterline`, t=25.5)"}}
   - {t: 41, speaker: Varga, line: "Eel chain. Cut the head and the body dies; cut the body and the tail scatters."}
   - {t: 65, speaker: Thera Deep Control, portrait: thera-deep, line: "Aegis, Thera Deep Control. We see you on the shaft. The farms are below you, and so is whatever is draining them."}
@@ -455,7 +455,7 @@ difficulty: {}  # the schools of 16's easy and hard counts are in their waves, t
 briefing:
   pages:
     - {speaker: Okafor, image: level-23-drill-shaft, line: "The Vrell drilled a shaft from Conamara to the ocean. We take it. Your Stormhawks have been fitted with hydro-kits overnight: they swim. Below is Thera Deep. Forty thousand people live there, and the Vrell are draining their farms."}
-    - {speaker: Varga, image: level-23-eel-and-fry, line: "Under water everything slows, theirs and yours. Torpedoes and depth charges keep their strength; your other guns lose a third. Eels have a head that fires: cut it. A Sonar Pulse lights the water. The Airstrike and the Lance cannot reach under the ice."}
+    - {speaker: Varga, image: level-23-eel-and-fry, line: "Under water everything slows. Torpedoes and depth charges keep their strength; guns lose a third, beams and lasers nearly all. Eels have a head that fires: cut it. A Sonar Pulse lights the water. The Airstrike and the Lance cannot reach under the ice."}
   teaser: {speaker: Rook, line: "A shaft, then water. Torpedoes, Lancer. Guns only tickle it down there."}
 
 backdrop:

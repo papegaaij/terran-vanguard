@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: none
 depends-on: [.., ../lance-laser, ../../generator, ../../../systems/economy]
-updated: 2026-10-21
+updated: 2026-10-24
 ---
 
 # Rear Lance
@@ -85,7 +85,7 @@ Mk III on (Pulse L5 4 + pods L3 4 + shield Mk II 3 + Rear Lance L1 3 = 14 of 16 
 - In the reverse scroll of Level 20 (M4 = a, M5 = a) "rear" stays the
   bottom of the screen: the lances fly down the screen, which is ahead in the direction of travel
   there, where the new obstacles and ambushes come from.
-- Under water: range halved and 50 % damage like the Lance Laser (Act 4).
+- Under water: an energy weapon like the Lance Laser: reach 0.4 of the field's height and damage × 0.2 (M8 AW, the user's playtest decision of 2026-10-23; [Europa rules](../../../world/europa/README.md#under-water-rules)).
 
 ## Implementation
 

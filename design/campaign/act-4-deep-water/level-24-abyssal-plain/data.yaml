@@ -20,7 +20,7 @@
 # fit one screen.
 scroll_speed: 100     # the plain's edge and the beacon line; the reef field and the Ray crossing set their own
 launch_seconds: 5
-bounty_scale: 0.42    # every bounty × 0.42: fitted in step D3 (TypicalHaulTest, levelReport; the README's first estimate 0.40 was 3.9 % under the budget)
+bounty_scale: 0.40    # every bounty × 0.40: fitted in step D3 at 0.42 (TypicalHaulTest, levelReport), refitted in step AW2 (M8 AW: a Barbfin more in most groups)
 control_prompts: []
 medium: underwater    # the whole level (no waterline): the water's factors, the grade, the special limits (UNDER ICE)
 threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
@@ -112,7 +112,7 @@ waves:
     from: front
     paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
   - {t: 6, formation: column, enemy: barbfin, count: 3, from: front, notes: "**New.** Three Barbfins hold and spit needles; Varga's line at t=13, after Okafor's opening; alone until t=9.5"}
-  - {t: 12, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 10, formation: column, enemy: barbfin, count: 5, from: front}
   - {t: 15, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
   - {t: 18, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
   - t: 20
@@ -122,7 +122,7 @@ waves:
     from: front
     paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
     notes: Solo; the Barbfins' first holders are gone
-  - {t: 24, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - {t: 24, formation: circle, enemy: barbfin, count: 5, from: front, hold: 9}
   - t: 27
     formation: swarm
     enemy: glassfin
@@ -146,7 +146,7 @@ waves:
     count: 10
     from: front
     edge: left   # a straight column at x 144 (a column flies no path)
-  - {t: 42, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - {t: 42, formation: circle, enemy: barbfin, count: 5, from: front, hold: 9}
   - t: 44
     formation: snake
     enemy: eel-swarm
@@ -154,7 +154,7 @@ waves:
     from: front
     paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
     notes: Over the first spawning reef
-  - {t: 48, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 48, formation: column, enemy: barbfin, count: 5, from: front}
   - {t: 51, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
   - {t: 54, formation: stream, enemy: lamprey, count: 3, from: front, edge: alternating, interval: 1.5}
   - t: 58
@@ -163,7 +163,7 @@ waves:
       - {formation: carrier + escorts, enemy: barbfin, count: 4}
     from: front
     notes: "**New.** The first Ray: a shadow grows in the ship's lane ahead of it for 1.5 s, the Ray rises, fans three times and glides off; the four Barbfins peel off its shadow; Varga's line at its first shadow (`first-ray`); no wave enters until t=62; it drops an overdrive when it dies"
-  - t: 63
+  - t: 62
     formation: column
     enemy: glassfin
     count: 10
@@ -183,7 +183,7 @@ waves:
     count: 14
     from: front
     paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
-  - {t: 72, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 72, formation: column, enemy: barbfin, count: 5, from: front}
   - {t: 75, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 200]}
   - t: 78
     formation: snake
@@ -205,7 +205,7 @@ waves:
     from: front
     paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
     notes: The second of the pair, on the mirrored route
-  - {t: 84, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - {t: 84, formation: circle, enemy: barbfin, count: 5, from: front, hold: 9}
   - t: 87
     formation: swarm
     enemy: glassfin
@@ -230,14 +230,14 @@ waves:
     from: front
     paths: [[[280, -60], [180, 140], [310, 300], [170, 460], [250, 640]]]
     notes: Under the first beacon
-  - {t: 102, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - {t: 102, formation: circle, enemy: barbfin, count: 5, from: front, hold: 9}
   - t: 105
     formation: swarm
     enemy: glassfin
     count: 14
     from: front
     paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
-  - {t: 108, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 108, formation: column, enemy: barbfin, count: 5, from: front}
   - t: 112
     groups:
       - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
@@ -254,7 +254,7 @@ waves:
     interval: 3
     paths: [[[260, -40], [240, 260], [270, 600]]]   # down the middle of the beacon line, clear of the beacons (x 60, 420, 100) by more than 100 px
     notes: Along the beacon line's floor
-  - {t: 126, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - {t: 126, formation: circle, enemy: barbfin, count: 5, from: front, hold: 9}
   - t: 128
     formation: snake
     enemy: eel-swarm
@@ -262,7 +262,7 @@ waves:
     from: front
     paths: [[[200, -60], [300, 140], [170, 300], [310, 460], [230, 640]]]
     notes: The first of two eels staggered 4 s apart
-  - {t: 132, formation: column, enemy: barbfin, count: 4, from: front}
+  - {t: 132, formation: column, enemy: barbfin, count: 5, from: front}
   - t: 132
     formation: snake
     enemy: eel-swarm
@@ -278,14 +278,14 @@ waves:
     count: 10
     from: front
     edge: right   # a straight column at x 336
-  - {t: 144, formation: circle, enemy: barbfin, count: 4, from: front, hold: 9}
+  - {t: 144, formation: circle, enemy: barbfin, count: 5, from: front, hold: 9}
   - t: 150
     groups:
       - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
       - {formation: carrier + escorts, enemy: barbfin, count: 4}
     from: front
     notes: The last Ray; the Barbfins stay when it sinks; no wave enters until t=154
-  - t: 156
+  - t: 154
     formation: single
     enemy: scuttler
     count: 2

@@ -129,7 +129,8 @@ final class GroundFire {
                 continue;
             }
             if (weapon.delivery() == WeaponSpec.Delivery.DEPTH_CHARGE) {
-                if (shot.fused()) {
+                // M8 AW (the user, 2026-10-23): on its fuse, or under water on touching a swimmer.
+                if (shot.fused() || touched(shot, enemies)) {
                     chargeBurst(shot, ground, enemies, spores);
                     shots.free(i);
                 }
@@ -333,7 +334,56 @@ final class GroundFire {
     }
 
     /**
-     * M8 part A (design/player/weapons/depth-charges): a depth charge bursts on its fuse: its pressure wave deals its
+     * M8 AW (design/player/weapons/depth-charges; the user, 2026-10-23): whether a depth charge under water touches a
+     * swimmer: its barrel's box overlaps a unit on {@code air} or {@code low-air} on the field, or a set piece's body or
+     * living part on one of those layers; a unit latched on the hull (a Lamprey) counts while the barrel is over the
+     * hull (the ship's square), so a charge tossed with one on the hull bursts on it at once (its blast covers every
+     * latch spot; the ship and Rook are never hit). Above water nothing swims: only its fuse bursts it.
+     */
+    private boolean touched(Shot charge, Pool<Enemy> enemies) {
+        if (!fire.medium().underwater()) {
+            return false;
+        }
+        Hitbox size = charge.weapon().size();
+        double x = charge.x();
+        double y = charge.y();
+        Ship ship = fire.ship();
+        double half = (ship.spec().size() + size.width()) / 2;
+        double halfHeight = (ship.spec().size() + size.height()) / 2;
+        boolean overHull = Math.abs(x - ship.x()) < half && Math.abs(y - ship.y()) < halfHeight;
+        for (int j = 0; j < enemies.size(); j++) {
+            Enemy enemy = enemies.get(j);
+            if (triggers(enemy.layer())
+                    && onField(enemy)
+                    && ((overHull && enemy.latched()) || size.overlaps(x, y, enemy.hitbox(), enemy.x(), enemy.y()))) {
+                return true;
+            }
+        }
+        for (SetPiece piece : setPieces) {
+            if (!piece.present()) {
+                continue;
+            }
+            if (triggers(piece.layer())
+                    && PlayField.overlaps(piece.x(), piece.y(), piece.body())
+                    && size.overlaps(x, y, piece.body(), piece.x(), piece.y())) {
+                return true;
+            }
+            List<PartSpec> parts = piece.spec().parts();
+            for (int p = 0; p < parts.size(); p++) {
+                if (triggers(piece.partLayer(p))
+                        && !piece.partWrecked(p)
+                        && piece.partOnField(p)
+                        && size.overlaps(x, y, parts.get(p).box(), piece.partX(p), piece.partY(p))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * M8 part A (design/player/weapons/depth-charges): a depth charge bursts on its fuse (M8 AW: or on touching a
+     * swimmer, {@link #touched}): its pressure wave deals its
      * damage once to every target within its blast on a layer {@link Medium#chargeReaches} (under water every layer in
      * the water, never {@code high-air}; above water {@code sub} and the naval {@code ground}): units (their standing
      * unit part too), ground objects (sunken ones included; above water not the drifting low-air ones), set pieces'

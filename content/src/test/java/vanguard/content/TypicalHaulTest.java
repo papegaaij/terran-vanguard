@@ -77,10 +77,12 @@ class TypicalHaulTest {
                         Map.entry(22, 4_538),
                         // M8 part C (step C3): the scale fitted to 0.49; an eel taken apart with the tail first
                         Map.entry(23, 5_330),
-                        // M8 part D (step D3): the scale fitted to 0.42; one release per reef
-                        Map.entry(24, 5_481),
-                        // M8 part E (step E3): the README's scale 0.48 (typical −1.7 %; Level25Test's sources)
-                        Map.entry(25, 5_867),
+                        // M8 part D (step D3): the scale fitted to 0.42; one release per reef; M8 AW (step AW2): a
+                        // Barbfin more in most groups, the scale refitted to 0.40
+                        Map.entry(24, 5_508),
+                        // M8 part E (step E3): the README's scale 0.48 (typical −1.7 %; Level25Test's sources); M8 AW
+                        // (step AW2): more Barbfins, the scale refitted to 0.42 (typical −1.9 %)
+                        Map.entry(25, 5_870),
                         // M8 part F (step F3): the README's scale 0.43 (typical +1.3 %; the README's credit table)
                         Map.entry(26, 6_769)),
                 perfect);

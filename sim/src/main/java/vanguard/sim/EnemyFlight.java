@@ -268,6 +268,8 @@ final class EnemyFlight {
             case LEAVE -> {
                 u.x += u.vx * SimStep.SECONDS;
                 u.y += u.vy * SimStep.SECONDS;
+                // M8 AW: a hover's way out keeps off the level's rock (none: as before).
+                u.hoverHold.leaving(u);
                 u.spiralling.ricochet();
                 turn();
                 if (u.glideTicks > 0 && --u.glideTicks == 0) {

@@ -79,12 +79,15 @@ plan:
   # Act 4 (M8 part A, step A2; the generator's hand plan of round 48, design/player/generator, Act 4 hand plan, and
   # D7 of the part's gap check, accepted in round 50 (2026-10-22)). Income: Level 21's data, then budget(n) for
   # the levels without data (temporary, M8 part I removes it). The harpoon is bought at L22 but the beam flies the
-  # dry ice; the shop upgrades only a fitted item, so the harpoon's L2 moves to the L23 visit with its L3. The free
-  # Sonar Pulse charge (given at the L22 visit, the Airstrike fitted) is fitted at L23, where the Airstrike is
-  # forbidden under the ice. Rook is missing in L27-28: the loaner Bulwark flies (free, no repairs).
+  # dry ice. M8 AW (the user, 2026-10-23, after playing L22-25: "Selling wastes a lot of credits ... you need the ion
+  # beam again in a later level"): nothing is sold in Act 4; the beam and the Tail Gun stay in the inventory. L23
+  # flies the harpoon L1 and the Depth Charges L1 (bought there), the upgrades come at L24 from what L23 pays (the
+  # shop upgrades only a fitted item). The free Sonar Pulse charge (given at the L22 visit, the Airstrike fitted) is
+  # fitted at L23, where the Airstrike is forbidden under the ice. Rook is missing in L27-28: the loaner Bulwark
+  # flies (free, no repairs).
   "22": {buy: [[front, harpoon-torpedoes]], fit: [[front, ion-beam]]}   # Harpoon Torpedoes (2 000) into the inventory; the Ion Beam L3 flies the dry ice: 15 of 16 MW
-  "23": {sell: [rear], buy: [[rear, depth-charges]], fit: [[front, harpoon-torpedoes], [special, Sonar Pulse]], upgrade: [[front, 3], [rear, 3]]}   # the Tail Gun L3 sold; Depth Charges to L3, the harpoon fitted and to L3; the Sonar Pulse fitted: 13.5 of 16 MW
-  "24": {utility: [[Pressure hull, 1]], upgrade: [[wing_l, 3]]}   # the pressure hull (2 000) and one wing pod's Micro-missiles L3: 15 of 16 MW
+  "23": {buy: [[rear, depth-charges]], fit: [[front, harpoon-torpedoes], [special, Sonar Pulse]]}   # M8 AW: Depth Charges L1 (1 300) on the rear in place of the Tail Gun L3 (kept), the harpoon L1 fitted in place of the beam (kept), the Sonar Pulse fitted; no sale, no upgrade
+  "24": {upgrade: [[front, 3], [rear, 3], [wing_l, 3]], utility: [[Pressure hull, 1]]}   # M8 AW: the harpoon and the Depth Charges to L3 from what L23 pays, the pressure hull (2 000) and one wing pod's Micro-missiles L3
   "25": {upgrade: [[wing_r, 3]]}   # the other pod's Micro-missiles L3: 15.5 of 16 MW
   "26": {upgrade: [[front, 4]]}    # Harpoon L4 (2 000), one visit before the hand plan's L27: L26's forward DPS would be 83 of 112 (0.74) without it; 16 of 16 MW
   "27": {core: [[generator, 3]]}   # Mk IV "Tokamak" (9 000, 20 MW since round 48 J1): 16 of 20 MW

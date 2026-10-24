@@ -22,7 +22,8 @@ P3 = A), the plan's purchases (with the free charges a special gives at its unlo
 estimate (the ship's, and Rook's after a level flown with him), the power load and the plan's forward
 single-target DPS against the reference DPS the enemy stat blocks assume (design/enemies/data.yaml),
 inside 0.75-1.33x (M8 part A: at the plan's `underwater` levels a weapon without the anti-sub trait, and Rook's
-gun, counts at the water's damage factor of design/world/europa/data.yaml; the Bulwark's anti-sub cannon is the
+gun, counts at the water's damage factor of design/world/europa/data.yaml, an energy weapon at its energy_damage,
+M8 AW; the Bulwark's anti-sub cannon is the
 escort's DPS while Rook is missing); Levels 01-03's gentle onboarding (up to 1.75x) is the accepted exception
 (user decision 2026-10-01). Per level with data: the slowest time to kill among its enemies and its
 boss's at the plan's DPS. Per enemy: the time to kill at its first level and the bounty against
@@ -120,10 +121,14 @@ def income(data, n):
     return typical_haul(d)
 
 
-def water(data, n):
-    """M8 part A: the damage factor on a weapon without the anti-sub trait in Level n: the water's at the plan's
-    underwater levels, else 1."""
-    return data["water"]["damage"] if n in data["plan"].get("underwater", []) else 1
+def water(data, n, slug):
+    """M8 part A: the damage factor on the weapon (slug) in Level n: 1 above water and for a weapon with the anti-sub
+    trait; under water (the plan's `underwater` levels) the water's `damage`, an energy weapon's `energy_damage` in
+    its place (M8 AW, the user, 2026-10-23: the beam and the lasers lose nearly all their bite)."""
+    if n not in data["plan"].get("underwater", []) or "anti-sub" in data["weapons"][slug]["traits"]:
+        return 1
+    u = data["water"]
+    return u["energy_damage"] if slug in u["energy_weapons"] else u["damage"]
 
 
 def rook_missing(data, n):
@@ -266,7 +271,7 @@ def escort_dps(data, state, n):
     slug, lvl = state["slots"]["escort"]
     gun = escort_gun(data, slug)
     w = data["weapons"][gun["base"]]
-    return gun["scale"] * stats(w, w["levels"][lvl - 1])[1] * water(data, n)
+    return gun["scale"] * stats(w, w["levels"][lvl - 1])[1] * water(data, n, gun["base"])
 
 
 def loadout_numbers(data, state, n):
@@ -279,7 +284,7 @@ def loadout_numbers(data, state, n):
             continue
         w = W[slug]
         v, s = stats(w, w["levels"][lvl - 1])
-        factor = 1 if "anti-sub" in w["traits"] else water(data, n)
+        factor = water(data, n, slug)
         v, s = v * factor, s * factor
         load_mw += draw(w, lvl)
         volley += v

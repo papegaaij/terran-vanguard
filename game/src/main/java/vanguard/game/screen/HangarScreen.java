@@ -104,6 +104,8 @@ public final class HangarScreen implements GameScreen {
         // set here, before the autosave).
         if (replay.isEmpty() && campaign.hydroKitNotice()) {
             state.notice(HangarState.HYDRO_KIT_NOTICE);
+            // M8 AW: then, on the next move, the energy weapons' warning (the same one-off visit).
+            state.notice(HangarState.UNDER_WATER_NOTICE);
         }
         view = new HangarView(services.files, services.glass, services.sprites, services.catalogue, services.content);
         if (autosave && services.debugRun()) {

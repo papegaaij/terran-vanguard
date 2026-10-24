@@ -29,11 +29,13 @@ class ActFourDataTest {
         assertEquals(0.7, water.bulletSpeed());
         assertEquals(0.6, water.acceleration());
         assertEquals(0.7, water.damage());
-        assertEquals(0.75, water.reach());
+        assertEquals(0.2, water.energyDamage(), "M8 AW: the energy weapons' factor, in place of the guns'");
+        assertEquals(0.4, water.reach());
         assertEquals(1.5, water.torpedoRange());
         assertEquals(1, water.ease());
         assertEquals(23, water.hydroKit());
-        assertTrue(water.reachCut("ion-beam") && water.reachCut("lance-laser") && water.reachCut("rear-lance"));
+        assertEquals(List.of("ion-beam", "lance-laser", "rear-lance"), water.energyWeapons());
+        assertFalse(water.energy("pulse-cannon"));
         assertTrue(
                 water.torpedo("harpoon-torpedoes") && water.torpedo("depth-charges") && water.torpedo("torpedo-pod"));
         assertFalse(water.torpedo("micro-missile-pod"));
@@ -45,11 +47,18 @@ class ActFourDataTest {
         assertEquals(WeaponData.Slot.FRONT, harpoon.slot());
         assertEquals(WeaponData.TORPEDO, harpoon.hits());
         assertTrue(harpoon.antiSub());
-        assertEquals(Optional.of(0.5), harpoon.splash());
-        assertTrue(harpoon.levels().stream().allMatch(level -> level.blast().equals(Optional.of(20.0))));
+        // M8 AW (the user, 2026-10-23): faster, lighter, a larger blast and a bigger splash.
+        assertEquals(Optional.of(0.6), harpoon.splash());
         assertEquals(
-                List.of(30.0, 45.0, 62.0, 80.0, 100.0),
-                harpoon.levels().stream().map(harpoon::volleyDps).toList());
+                List.of(40.0, 40.0, 44.0, 48.0, 48.0),
+                harpoon.levels().stream()
+                        .map(level -> level.blast().orElseThrow())
+                        .toList());
+        assertEquals(Optional.of(52.0), harpoon.overdrive().blast());
+        double[] dps = {64.8, 75.4, 86.8, 99, 118.8};
+        for (int i = 0; i < dps.length; i++) {
+            assertEquals(dps[i], harpoon.volleyDps(harpoon.levels().get(i)), 1e-9, "L" + (i + 1));
+        }
         assertTrue(SimSpecs.flies(CONTENT, "harpoon-torpedoes"), "the Torpedo Pod's delivery, from the nose");
         Catalogue.Item item = Catalogue.complete(CONTENT).item(ItemKind.FRONT, "harpoon-torpedoes");
         assertEquals(List.of(500, 1000, 2000, 4000), item.upgrades());
@@ -64,17 +73,23 @@ class ActFourDataTest {
         assertEquals(WeaponData.DEPTH_CHARGE, charges.hits());
         assertTrue(charges.antiSub());
         assertEquals(Optional.empty(), charges.range());
+        // M8 AW (the user, 2026-10-23): tossed forward, a longer fuse, a larger blast.
         assertEquals(
-                List.of(0.9, 0.9, 0.8, 0.8, 0.7),
+                List.of(1.4, 1.4, 1.3, 1.3, 1.2),
                 charges.levels().stream()
                         .map(level -> level.fuse().orElseThrow())
                         .toList());
         assertEquals(
-                List.of(40.0, 46.0, 52.0, 58.0, 64.0),
+                List.of(48.0, 52.0, 56.0, 60.0, 64.0),
                 charges.levels().stream()
                         .map(level -> level.blast().orElseThrow())
                         .toList());
-        assertEquals(2, charges.levels().get(4).pattern().size(), "L5 rolls out two charges");
+        assertEquals(
+                List.of(28.0, 34.0, 42.0, 50.0, 52.0),
+                charges.levels().stream().map(WeaponData.Level::damage).toList());
+        assertEquals(Optional.of(68.0), charges.overdrive().blast());
+        assertEquals(Optional.of(1.2), charges.overdrive().fuse());
+        assertEquals(2, charges.levels().get(4).pattern().size(), "L5 tosses two charges");
         Catalogue.Item item = Catalogue.complete(CONTENT).item(ItemKind.REAR, "depth-charges");
         assertEquals(List.of(400, 800, 1600, 3200), item.upgrades());
         assertEquals(List.of(2.0, 2.5, 2.5, 3.0, 3.0), item.draws());
@@ -86,7 +101,7 @@ class ActFourDataTest {
 
     @Test
     void aDepthChargeWithoutAFuseOrAWeaponWithAFuseIsRejected() {
-        assertProblem(DEPTH_CHARGES, text -> text.replace(", fuse: 0.9}", "}"), "fuse and a blast");
+        assertProblem(DEPTH_CHARGES, text -> text.replace(", fuse: 1.4}", "}"), "fuse and a blast");
         assertProblem(
                 "player/weapons/torpedo-pod/data.yaml",
                 text -> text.replace("damage: 12.5, turn: 60}", "damage: 12.5, turn: 60, fuse: 1}"),

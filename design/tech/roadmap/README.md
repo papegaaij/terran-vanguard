@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Implementation roadmap
@@ -117,7 +117,7 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 | **D** Level 24 — **built** (2026-10-22, steps D1–D5, ART-D, AUD-D, VOX-D); [round 53](../../concept-rounds/round-53/README.md) closed (2026-10-23): the art accepted, the spawning reef b, the sounds picked (rise b, glide a, fan b, death a, needle b, iris a, razed b, pulse a, hatch b, the explosion family a), hard's reefs allow 1, the other calls accepted, the Nautilus rule as decided | Abyss Ray, the small firing swimmer, Scuttler and Reef Spitter on the sea floor, spawning reefs, beacons | C | 53 |
 | **E** Level 25 — **built** (2026-10-23, steps E1–E6, ART-E, AUD-E, VOX-E); [round 54](../../concept-rounds/round-54/README.md) closed (2026-10-23): F.3–F.7 accepted, the backdrop and the trench's darkness to be redone (round 55), the sounds picked (ring a, slow b, death a, spin a, uncoil a, Nautilus death b, bed a), C.1–C.8 accepted | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
 | **F** Level 26 — **built** (2026-10-23, steps F1–F6, LX, ART-F, AUD-F, VOX-F); [round 55](../../concept-rounds/round-55/README.md) open (with Level 25's redo, step LX) | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
-| **AW** Under-water weapons rework — **decided by the user (2026-10-23, playtest of Levels 22–25), to be built next, before part G**; not started | Energy weapons (Ion Beam, Lance Laser, Rear Lance) nearly useless under water (proposed ×0.2 damage, ×0.4 reach); the Harpoon Torpedoes tuned for swarms (faster rate, about 2 → 3 a second, about +50 % travel speed, blast 20 → 40 px, less damage a torpedo, homing only in a narrow ±15° cone ahead); the Depth Charges thrown forward, sinking ahead and bursting on their fuse or on touching a swimmer (hitting swimmers, ground and `sub`); the Act 4 intro briefing (and the hangar notice before Level 23) warning to keep credits for under-water weapons; the balance plan without selling (the beam kept for later levels; the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded at Level 24). No extra prevention tests (the user: "You just have to play it to see"); the Nautilus and the micro-missiles' angle unchanged until replayed | F | — |
+| **AW** Under-water weapons rework — **decided by the user (2026-10-23, playtest of Levels 22–25), built before part G**; built (2026-10-24), [round 56](../../concept-rounds/round-56/README.md) open | Energy weapons (Ion Beam, Lance Laser, Rear Lance) nearly useless under water (proposed ×0.2 damage, ×0.4 reach); the Harpoon Torpedoes tuned for swarms (faster rate, about 2 → 3 a second, about +50 % travel speed, blast 20 → 40 px, less damage a torpedo, homing only in a narrow ±15° cone ahead); the Depth Charges thrown forward, sinking ahead and bursting on their fuse or on touching a swimmer (hitting swimmers, ground and `sub`); the Act 4 intro briefing (and the hangar notice before Level 23) warning to keep credits for under-water weapons; the balance plan without selling (the beam kept for later levels; the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded at Level 24). No extra prevention tests (the user: "You just have to play it to see"); the Nautilus and the micro-missiles' angle unchanged until replayed | F | — |
 | **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F, AW | 56 |
 | **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 57 |
 | **I** Close-out | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 58 |
@@ -657,3 +657,7 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
   parts* row AW): the energy weapons nearly useless under water, the Harpoon tuned for swarms with a narrow aim cone,
   the Depth Charges thrown forward, the Act 4 briefing's warning, no selling in the balance plan; the numbers are
   changed in that step, not before.
+- 2026-10-24: rework AW built (steps AW-P, AW1–AW4, VOX-AW): energy ×0.2 damage / ×0.4 reach under water, the swarm-killer
+  Harpoon, the Depth Charges tossed forward, the tougher Barbfin and retuned Levels 23–26, the plan without selling, the warnings
+  (intro, briefing, radio, hangar notice); concept [round 56](../../concept-rounds/round-56/README.md) opened (the numbers, the
+  beam against Level 26, the texts, one question); part G has not started.
