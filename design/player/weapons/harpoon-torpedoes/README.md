@@ -92,10 +92,10 @@ round-48 under-water grade (Level 24) with stand-in targets.
 | [concept/harpoon-torpedoes-final-r50-a.gif](concept/harpoon-torpedoes-final-r50-a.gif) | Two L5 volleys running up from the nose with their lines of light, curving onto a stand-in Needler and hitting it, 20 fps at 2x | chosen (round 50, F.1: accepted as final) |
 | [concept/harpoon-torpedoes-capture-r50-a.png](concept/harpoon-torpedoes-capture-r50-a.png) | Game capture, Level 18 with `--medium underwater@10`: harpoons at L3 with their lines of light running from the nose under water, the Depth Charges behind (a frame) | chosen (round 50, F.1: accepted) |
 | [concept/harpoon-torpedoes-capture-r50-a.mp4](concept/harpoon-torpedoes-capture-r50-a.mp4) | Game capture with the game's sound: the `HARPOONS … NO WATER` row while dry, then the harpoons' launches, run loop and hits under water, the ship swept left and right (the drag) | chosen (round 50, F.1: accepted) |
-| [concept/aw-capture-r56-a-toss.png](concept/aw-capture-r56-a-toss.png) | Game capture, M8 AW (step AW3; Level 23 on medium, `--invulnerable`, the plan's Harpoon L1 + Depth Charges L1): the depth charge tossed forward from the stern rack over the hull, swelling on its 0.15 s arc and dropping in ahead (8 frames, 1/30 s apart, 1.7×; Q1 a, the built default) | proposed (round 56) |
-| [concept/aw-capture-r56-a-charges.png](concept/aw-capture-r56-a-charges.png) | Level 23 under the ice: the tossed charges bursting about 150–200 px ahead of the ship (the pressure dome, then its ring) among the swarm, harpoon cables above (4 frames, 0.2 s apart) | proposed (round 56) |
-| [concept/aw-capture-r56-a-harpoon.png](concept/aw-capture-r56-a-harpoon.png) | Level 23: Glassfin swarms falling to the reworked harpoon (L1, 2.4 shots/s, ±15° cone) and its splash as the ship weaves, a charge's burst ring ahead (3 frames) | proposed (round 56) |
-| [concept/aw-capture-r56-a-beam.png](concept/aw-capture-r56-a-beam.png) | Level 24: the Ion Beam L3 under water (×0.4 reach, ×0.2 damage): short and faint (40 % strength), scattering out over its last 72 px where nothing stops it; burning a unit close ahead in the middle frame (Q3: the one look built) | proposed (round 56) |
+| [concept/aw-capture-r56-a-toss.png](concept/aw-capture-r56-a-toss.png) | Game capture, M8 AW (step AW3; Level 23 on medium, `--invulnerable`, the plan's Harpoon L1 + Depth Charges L1): the depth charge tossed forward from the stern rack over the hull, swelling on its 0.15 s arc and dropping in ahead (8 frames, 1/30 s apart, 1.7×; Q1 a, the built default) | chosen (round 56, A.1: accepted) |
+| [concept/aw-capture-r56-a-charges.png](concept/aw-capture-r56-a-charges.png) | Level 23 under the ice: the tossed charges bursting about 150–200 px ahead of the ship (the pressure dome, then its ring) among the swarm, harpoon cables above (4 frames, 0.2 s apart) | chosen (round 56, A.1: accepted) |
+| [concept/aw-capture-r56-a-harpoon.png](concept/aw-capture-r56-a-harpoon.png) | Level 23: Glassfin swarms falling to the reworked harpoon (L1, 2.4 shots/s, ±15° cone) and its splash as the ship weaves, a charge's burst ring ahead (3 frames) | chosen (round 56, A.1: accepted) |
+| [concept/aw-capture-r56-a-beam.png](concept/aw-capture-r56-a-beam.png) | Level 24: the Ion Beam L3 under water (×0.4 reach, ×0.2 damage): short and faint (40 % strength), scattering out over its last 72 px where nothing stops it; burning a unit close ahead in the middle frame (Q3: the one look built) | chosen (round 56, A.1: accepted) |
 
 Prompts: [concept/prompts.md](concept/prompts.md).
 
@@ -129,5 +129,6 @@ Prompts: [concept/prompts.md](concept/prompts.md).
   a larger blast, less damage a torpedo, homing only in a narrow ±15° cone ahead"): the numbers of the rework's plan
   in [data.yaml](data.yaml): speed 360 → 520 became 540 → 780 px/s (+50 %, `accelerate` 0.4), `cone` 70 → 30, rate
   2.4 / 2.6 / 2.8 / 3 / 1.8 (two tubes) / OD 2, damage 27 / 29 / 31 / 33 / 33 / 35, blast 40 / 40 / 44 / 48 / 48 / 52 px,
-  `splash` 0.5 → 0.6; prices, draw, range and turn unchanged. Defaults pending the user's review in round 56: the
+  `splash` 0.5 → 0.6; prices, draw, range and turn unchanged. Defaults accepted in round 56 (2026-10-24): the
   splash share 0.6, the turn 90°/s kept.
+- 2026-10-24 (user, round 56 closed): the new numbers (C.1) and the four stills (A.1) accepted.

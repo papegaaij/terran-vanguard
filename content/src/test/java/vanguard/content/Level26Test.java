@@ -34,7 +34,7 @@ import vanguard.sim.WingmanSpec;
  * design/enemies/naval/glow-angler; design/player/wingmen, Rook's loss): its count, its six sections under water from the
  * start, the dark as the look's keys only (the simulation knows no darkness), the fault scarp (one wall, three notches,
  * seven nests one at a time), the quiet windows, the Glow Angler (its lunge by difficulty, lunging and ringing in flight),
- * Rook's loss at t=157.5 (the trails, the spin off the screen, replayed on a retry; with the Bulwark or without an escort
+ * Rook's loss at t=163.5 (the trails, the spin on the screen, replayed on a retry; with the Bulwark or without an escort
  * the radio's only), the Choir's line, the carriers (the constellation's centre Angler), the kill-ratio secondary, the
  * credits of a perfect run, the radio, and whole runs of the autopilot with the balance plan's fit ({@link DarkPlay}:
  * every move planned off the bullets, out of the Anglers' triggers and the jellies' reach) with and without Rook. The
@@ -50,7 +50,7 @@ class Level26Test {
     /** The Siren nests' waves: one nest each, on the scarp's foot. */
     static final double[] NESTS = {61.2, 66.8, 72.4, 78, 83.6, 89.2, 94.8};
     /** Rook's three scripted lines (no {@code requires}: they play in every case): t, start of the line. */
-    static final double[] ROOK_LINES = {13, 148, 160.3};
+    static final double[] ROOK_LINES = {13, 148, 161.2};
 
     private final Content content = ContentLoader.fromClasspath();
 
@@ -137,7 +137,7 @@ class Level26Test {
 
     /**
      * Six sections, the whole level under water from its start (no waterline): the last lamp at 130 px/s to 20 s, the
-     * dark, the scarp, the Choir and the deep at 120 to 60, 100, 130 and 155 s, the silence at 110 to 182 s, each change
+     * dark, the scarp, the Choir and the deep at 120 to 60, 100, 130 and 155 s, the silence at 110 to 188 s, each change
      * of speed eased over 2 s; under water the Airstrike and the Orbital Lance cannot reach and the Sonar Pulse is free.
      */
     @Test
@@ -145,7 +145,7 @@ class Level26Test {
         LevelScript level = SimSpecs.level(content, LEVEL, Difficulty.MEDIUM);
         List<Section> sections = level.sections();
         assertEquals(
-                List.of(20.0, 60.0, 100.0, 130.0, 155.0, 182.0),
+                List.of(20.0, 60.0, 100.0, 130.0, 155.0, 188.0),
                 sections.stream().map(Section::end).toList());
         assertEquals(
                 List.of(130.0, 120.0, 120.0, 120.0, 120.0, 110.0),
@@ -273,8 +273,8 @@ class Level26Test {
 
     /**
      * The quiet windows: no other wave enters for 3.5 s after the Anglers' first sight (t=24), before the constellation
-     * (t=104.5–108) or in the loss's silence (t=152–160); after t=152 only the drifting jellies of t=160 and t=166, on
-     * every difficulty.
+     * (t=104.5–108) or in the loss's silence (t=152–166, round 55's retime); after t=152 only the drifting jellies of
+     * t=166 and t=172, on every difficulty.
      */
     @Test
     void theQuietWindows() {
@@ -283,10 +283,10 @@ class Level26Test {
                 double t = wave.t();
                 assertFalse(t > 24 && t < 27.5, difficulty + ": a wave at t=" + t);
                 assertFalse(t > 104.5 && t < 108, difficulty + ": a wave at t=" + t);
-                assertFalse(t > 152 && t < 160, difficulty + ": a wave at t=" + t);
+                assertFalse(t > 152 && t < 166, difficulty + ": a wave at t=" + t);
                 if (t > 152) {
                     assertEquals("driftjelly", wave.enemy().slug(), difficulty + " t=" + t);
-                    assertTrue(t == 160 || t == 166, difficulty + " t=" + t);
+                    assertTrue(t == 166 || t == 172, difficulty + " t=" + t);
                 }
             }
         }
@@ -351,24 +351,25 @@ class Level26Test {
     }
 
     /**
-     * Rook's loss (design/player/wingmen, Rook's loss; gap check F6, F7): its data (the trails from t=157, the hit at
-     * 157.5, 2.5 s spinning down); in the level (invulnerable, medium) his trails start at 157 and his barks end with
-     * them, he is lost at 157.5 (no pod) and below the bottom edge by 160; a retry after the loss replays it at the same
-     * level time.
+     * Rook's loss (design/player/wingmen, Rook's loss; gap check F6, F7; round 55's retime): its data (the trails from
+     * t=162.5, the hits at 163.5 cutting his line of t=161.2, 2.5 s spinning down); in the level (invulnerable, medium)
+     * his trails start at 162.5 and his barks end with them, he is lost at 163.5 (no pod), on the screen through his
+     * spin and below the bottom edge by 166; a retry after the loss replays it at the same level time.
      */
     @Test
     void rooksLossAndItsReplayOnARetry() {
         assertEquals(
-                new RookLossSpec(157.5, 157, 2.5),
+                new RookLossSpec(163.5, 162.5, 2.5),
                 SimSpecs.level(content, LEVEL, Difficulty.MEDIUM).rookLoss().orElseThrow());
         Sortie sortie = sortie(content, 1, Difficulty.MEDIUM, true);
         Wingman rook = sortie.wingman().orElseThrow();
         Loss first = flyThroughTheLoss(sortie);
-        assertEquals(157, first.trails, 0.05);
-        assertEquals(157.5, first.lost, 0.05);
+        assertEquals(162.5, first.trails, 0.05);
+        assertEquals(163.5, first.lost, 0.05);
         assertTrue(first.offRadioAfterTrails, "his barks end with the trails");
         assertEquals(0, first.ejected, "not an eject");
-        assertTrue(rook.loss().gone(), "below the bottom edge by t=160");
+        assertTrue(first.onScreen, "his centre on the screen through most of his spin");
+        assertTrue(rook.loss().gone(), "below the bottom edge by t=166");
 
         sortie.retry(
                 sortie.ship().defences().maxArmour(), content.wingmen().rook().armour());
@@ -381,17 +382,21 @@ class Level26Test {
         assertTrue(rook.loss().gone());
     }
 
-    /** The trails' and the loss's level times of one flight through the loss (to t=160.5). */
-    private record Loss(double trails, double lost, boolean offRadioAfterTrails, int ejected) {}
+    /**
+     * The trails' and the loss's level times of one flight through the loss (to t=166.5), and whether his centre stayed
+     * above the bottom edge for the first 2.2 s of his spin.
+     */
+    private record Loss(double trails, double lost, boolean offRadioAfterTrails, int ejected, boolean onScreen) {}
 
     private static Loss flyThroughTheLoss(Sortie sortie) {
         double trails = Double.NaN;
         double lost = Double.NaN;
         boolean offRadio = true;
         int ejected = 0;
+        boolean onScreen = true;
         Wingman rook = sortie.wingman().orElseThrow();
         int steps = 0;
-        while (sortie.levelSeconds() < 160.5 && steps++ < MAX_STEPS) {
+        while (sortie.levelSeconds() < 166.5 && steps++ < MAX_STEPS) {
             sortie.step(Autopilot.commands(sortie));
             SimEvents events = sortie.events();
             for (int i = 0; i < events.size(); i++) {
@@ -405,14 +410,17 @@ class Level26Test {
             if (!Double.isNaN(trails) && rook.onRadio()) {
                 offRadio = false;
             }
+            if (rook.loss().lost() && rook.loss().spinProgress() < 2.2 / 2.5 && !(rook.y() > 0)) {
+                onScreen = false;
+            }
         }
-        return new Loss(trails, lost, offRadio, ejected);
+        return new Loss(trails, lost, offRadio, ejected, onScreen);
     }
 
     /**
      * Without Rook ({@code --escort none}) and with the Bulwark in the slot the loss is the radio's only (gap check F7):
      * no trails, no loss, the Bulwark untouched to the end; Rook's three scripted lines play in every case (none needs
-     * an escort), the cut line at t=160.3 included.
+     * an escort), the cut line at t=161.2 included.
      */
     @Test
     void withTheBulwarkOrNoEscortTheLossIsTheRadiosOnly() {
@@ -426,7 +434,7 @@ class Level26Test {
             }
         }
         assertEquals(
-                List.of(13.0, 148.0, 160.3),
+                List.of(13.0, 148.0, 161.2),
                 rookCues.stream().map(i -> level.radio().get(i).t()).toList());
         Loadout none = withoutRook(content, Difficulty.MEDIUM);
         Loadout bulwark = none.withBulwark(SimSpecs.bulwark(content, WingmanSpec.Side.LEFT, 120));
@@ -501,7 +509,7 @@ class Level26Test {
     /**
      * The secondary: at least 65 % of the level's enemies destroyed, judged at the end, 100 credits (Act 1 terms); its
      * line Okafor's at the end. The radio: Varga's lure warning at the Anglers' first sight (t=24.5), her shout before
-     * the trails (t=155), Okafor's last line at the level's end (t=181).
+     * the trails (t=155), Okafor's last line at the level's end (t=187).
      */
     @Test
     void theKillRatioSecondaryAndTheRadio() {
@@ -520,7 +528,8 @@ class Level26Test {
         assertEquals(24.5, line(radio, "That glow is not a pickup.").t());
         assertEquals("Varga", line(radio, "That glow is not a pickup.").speaker());
         assertEquals(155, line(radio, "Contacts below!").t());
-        assertEquals(181, line(radio, "Finish the dive, Lancer.").t());
+        assertEquals(187, line(radio, "Finish the dive, Lancer.").t());
+        assertEquals(161.2, line(radio, "Lancer, something's below").t(), "Rook's cut line before the hits");
         assertEquals(
                 "Lancer, something's below u—",
                 line(radio, "Lancer, something's below").line());

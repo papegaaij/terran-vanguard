@@ -3,7 +3,7 @@ title: Naval enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Naval enemies
@@ -29,7 +29,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 4 draft
 | [abyss-ray](abyss-ray/README.md) | Manta that rises from a shadow and sweeps a wide fan (L24) | approved | in-progress | final |
 | [siren](siren/README.md) | Wall nest whose sonar ring slows the ship (L25) | approved | in-progress | final |
 | [spiral-nautilus](spiral-nautilus/README.md) | Armoured shell orbiting the ship, uncoils to fire a spiral (L25) | approved | in-progress | final |
-| [glow-angler](glow-angler/README.md) | Dark-water ambusher with a pickup-like lure that lunges and rings (L26) | approved | in-progress | chosen |
+| [glow-angler](glow-angler/README.md) | Dark-water ambusher with a pickup-like lure that lunges and rings (L26) | approved | in-progress | final |
 | [depth-hunter](depth-hunter/README.md) | Unmarked grey human sub drone, shootable homing torpedoes from below, hint 3 (L27) | approved | not-started | chosen |
 
 ## Design
@@ -139,10 +139,10 @@ under-water grade of the unit's first level (Q2 a, pending the user's review); g
 | [concept/spiral-nautilus-final-r54-a.gif](concept/spiral-nautilus-final-r54-a.gif) | A pair orbiting the ship in opposite directions, uncoiling 2 s apart and firing 3-arm spirals, flecks off a closed shell, one cracked open | chosen (round 54, F.4: accepted as final) |
 | [concept/spiral-nautilus-capture-r54-a.png](concept/spiral-nautilus-capture-r54-a.png) | Game capture (step E6, the same run, 1:1 round the ship): the first pair (t=62.5) closed and rolling round the ship (t=66), one uncoiling below it (t=67.5), its spirals (t=68, 69) | chosen (round 54, F.4: accepted as final) |
 | [concept/spiral-nautilus-capture-r54-a.mp4](concept/spiral-nautilus-capture-r54-a.mp4) | The same as a video with the game's sound (t=61.5–76): the pair's orbit, the uncoil, the spirals, the shells spinning | chosen (round 54, F.4: accepted as final) |
-| [concept/glow-angler-final-r55-a.png](concept/glow-angler-final-r55-a.png) | Glow Angler final frames (`tools/art/glow_angler.py`, round 48 a, the rust angler): 16 headings x hanging and lunge, the glow-only bead and eyes, the stalk lit by its bead, the bead's pulse, the ring's flash, the lure blown out; in Level 26's dark (sheet) | proposed (round 55) |
-| [concept/glow-angler-final-r55-a.gif](concept/glow-angler-final-r55-a.gif) | Anglers in the black as a bead and two eyes, the stalk fading in, a lunge and its ring, one shot, a gold pickup beside them, the Sonar Pulse | proposed (round 55) |
-| [concept/dark-units-final-r55-a.png](concept/dark-units-final-r55-a.png) | Level 26's glow-only frames (`tools/art/l26_glows.py`): the Driftjelly's veined look, the Eel Swarm at rest by heading and part; every unit of the level in the cone, in the dark and as glow only (sheet) | proposed (round 55) |
-| [concept/dark-units-final-r55-a.gif](concept/dark-units-final-r55-a.gif) | The scarp in the dark: jellies, a snake, a Nautilus pair (one uncoiling), two Sirens at a cave singing, the Sonar Pulse | proposed (round 55) |
+| [concept/glow-angler-final-r55-a.png](concept/glow-angler-final-r55-a.png) | Glow Angler final frames (`tools/art/glow_angler.py`, round 48 a, the rust angler): 16 headings x hanging and lunge, the glow-only bead and eyes, the stalk lit by its bead, the bead's pulse, the ring's flash, the lure blown out; in Level 26's dark (sheet) | chosen (round 55, F.3: accepted as final) |
+| [concept/glow-angler-final-r55-a.gif](concept/glow-angler-final-r55-a.gif) | Anglers in the black as a bead and two eyes, the stalk fading in, a lunge and its ring, one shot, a gold pickup beside them, the Sonar Pulse | chosen (round 55, F.3: accepted as final) |
+| [concept/dark-units-final-r55-a.png](concept/dark-units-final-r55-a.png) | Level 26's glow-only frames (`tools/art/l26_glows.py`): the Driftjelly's veined look, the Eel Swarm at rest by heading and part; every unit of the level in the cone, in the dark and as glow only (sheet) | chosen (round 55, F.4: accepted as final) |
+| [concept/dark-units-final-r55-a.gif](concept/dark-units-final-r55-a.gif) | The scarp in the dark: jellies, a snake, a Nautilus pair (one uncoiling), two Sirens at a cave singing, the Sonar Pulse | chosen (round 55, F.4: accepted as final) |
 
 ## Implementation
 

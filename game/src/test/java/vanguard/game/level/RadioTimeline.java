@@ -477,8 +477,9 @@ abstract class RadioTimeline {
                         List.of(new Event(173, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         // M8 part F: Level 26's events (step F2's runs from the data's rows): the farm barge (t≈84, x 60, on the dark's
         // open left side) shot as it enters (t≈85) or as it passes the ship (t≈88), or not at all; the kill-ratio
-        // secondary judged at the level's end (t=182). Rook's three lines are scripted (no escort needed); the Choir's
-        // line at t=99 between Varga's t=63 and t=110.5.
+        // secondary judged at the level's end (t=188 since round 55's retime). Rook's three lines are scripted (no
+        // escort
+        // needed); the Choir's line at t=99 between Varga's t=63 and t=110.5.
         runs.put(
                 LEVEL_26,
                 List.of(
@@ -486,8 +487,8 @@ abstract class RadioTimeline {
                         List.of(new Event(85.5, CueTrigger.SECRET, "farm barge")),
                         List.of(
                                 new Event(88.5, CueTrigger.SECRET, "farm barge"),
-                                new Event(182, CueTrigger.SECONDARY_OBJECTIVE, "")),
-                        List.of(new Event(182, CueTrigger.SECONDARY_OBJECTIVE, ""))));
+                                new Event(188, CueTrigger.SECONDARY_OBJECTIVE, "")),
+                        List.of(new Event(188, CueTrigger.SECONDARY_OBJECTIVE, ""))));
         return runs;
     }
 

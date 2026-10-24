@@ -619,47 +619,47 @@ public enum Sfx {
      */
     NAUTILUS_DEATH("sfx/nautilus-death-r54-b.ogg", 2, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part F: the Glow Angler's lure (round 55 a, proposed: a neon sign's buzzing hum slowed and muffled, pulsing
+     * M8 part F: the Glow Angler's lure (round 55 a, the user's pick: a neon sign's buzzing hum slowed and muffled, pulsing
      * with the bead, a seamless 5 s loop): one quiet loop while an Angler is on the screen, the nearest, louder as the
      * ship comes close.
      */
     LURE_HUM("sfx/lure-hum-r55-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part F: a Glow Angler's lunge (round 55 a, proposed: a hydrophone's rush of water past the microphone, slowed
+     * M8 part F: a Glow Angler's lunge (round 55 a, the user's pick: a hydrophone's rush of water past the microphone, slowed
      * and muffled, 1.3 s), at each lunge's trigger.
      */
     ANGLER_LUNGE("sfx/angler-lunge-r55-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part F: the Spiral Nautilus's crown in the dark (round 55 a, proposed: a singing bowl rubbed round its rim, a
+     * M8 part F: the Spiral Nautilus's crown in the dark (round 55 a, the user's pick: a singing bowl rubbed round its rim, a
      * seamless 4 s loop): in a dark level one quiet loop while a Nautilus is on the screen, with its shell spin.
      */
     CROWN_HUM("sfx/crown-hum-r55-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
     /**
-     * M8 part F: Rook's loss, the torpedo trails rising (round 55 a, proposed: a jet's approach slowed and gliding up,
+     * M8 part F: Rook's loss, the torpedo trails rising (round 55 a, the user's pick: a jet's approach slowed and gliding up,
      * muffled, 1.2 s), at the trails' start.
      */
     TORPEDO_TRAILS("sfx/torpedo-trails-r55-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part F: Rook's loss, the three hits (round 55 a, proposed: three depth bombs' sub booms 0.13 s apart, 2.6 s),
+     * M8 part F: Rook's loss, the three hits (round 55 a, the user's pick: three depth bombs' sub booms 0.13 s apart, 2.6 s),
      * at his loss.
      */
     ROOK_HIT("sfx/rook-hit-r55-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part F: Rook's loss, his lamp's flicker and spin-down (round 55 a, proposed: a faulty fluorescent tube's buzz
-     * in five irregular bursts, muffled, 3.0 s), with the hits.
+     * M8 part F: Rook's loss, his lamp's flicker and spin-down (round 55 b, the user's pick: a fluorescent fixture
+     * flickering on with its buzz, muffled, over a machine's motor winding down, 3.0 s), with the hits.
      */
-    ROOK_SPIN("sfx/rook-spin-r55-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    ROOK_SPIN("sfx/rook-spin-r55-b.ogg", 1, Bus.EFFECTS, EXPLOSION),
     /**
-     * M8 part F: the headlights on, the lamps out (round 55 a, proposed: a heavy motor contactor closing, slowed and
-     * muffled, 0.6 s): as the ship's twin headlights come on at the level's start and as the last lamps go out behind
+     * M8 part F: the headlights on, the lamps out (round 55 b, the user's pick: a heavy rattling lever switch thrown,
+     * slowed and muffled, a transformer's hum swelling after it, 0.8 s): as the ship's twin headlights come on at the level's start and as the last lamps go out behind
      * it (the dark's ramp's end).
      */
-    HEADLIGHT_CLICK("sfx/headlight-click-r55-a.ogg", 1, Bus.EFFECTS, WARNING),
+    HEADLIGHT_CLICK("sfx/headlight-click-r55-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
-     * M8 part F: the Choir's static lead (round 55 a, proposed: an AM boombox's washy interference slowed and smoothed,
-     * swelling over 2 s, 2.4 s), as the portrait's interference starts ahead of the Choir's line (Level 26, t=97).
+     * M8 part F: the Choir's static lead (round 55 b, the user's pick: a radio's white-noise hiss between stations,
+     * slowed and muffled, over a transformer's low hum, swelling over 2 s, 2.4 s), as the portrait's interference starts ahead of the Choir's line (Level 26, t=97).
      */
-    CHOIR_STATIC("sfx/choir-static-r55-a.ogg", 1, Bus.EFFECTS, WARNING),
+    CHOIR_STATIC("sfx/choir-static-r55-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
@@ -783,15 +783,23 @@ public enum Sfx {
     DASH("sfx/dash-r46-b.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
     /**
      * M8 part A, the Act 4 arsenal (design/audio/sfx, round 50's picks, 2026-10-22: launch b, run a, hit a, roll-out b,
-     * burst a; cut from the Freesound previews until their originals): the Harpoon Torpedoes' launch, its run (one loop
-     * while any harpoon is in flight) and its hit; the Depth Charges' roll-out and burst.
+     * burst a, the burst since 2026-10-24 the under-water large explosion; cut from the Freesound previews until their
+     * originals): the Harpoon Torpedoes' launch, its run (one loop while any harpoon is in flight) and its hit; the Depth
+     * Charges' roll-out and burst.
      */
     SHOT_HARPOON("sfx/shot-harpoon-r50-b.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
 
     HARPOON_RUN("sfx/harpoon-run-r50-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
     HARPOON_HIT("sfx/harpoon-hit-r50-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
     SHOT_DEPTH_CHARGE("sfx/shot-depth-charge-r50-b.ogg", 2, Bus.EFFECTS, PLAYER_FIRE),
-    DEPTH_CHARGE_BURST("sfx/depth-charge-burst-r50-a.ogg", 3, Bus.EFFECTS, EXPLOSION),
+    /**
+     * The depth charge's burst: since the user's playtest of 2026-10-24 ("supposed to be large explosions, but they
+     * hardly stand out") the under-water family's large explosion (round 52 a), played at full gain; its own entry so
+     * its six instances (L5's pair of charges a volley, 0.9 volleys a second in overdrive, each burst 3 s long) are
+     * not shared with the large kills' and a volley's two bursts are both heard. Round 50's
+     * burst a ({@code depth-charge-burst-r50-a}) stays in design/audio/sfx/concept, unused.
+     */
+    DEPTH_CHARGE_BURST("sfx/explosion-underwater-large-r52-a.ogg", 6, Bus.EFFECTS, EXPLOSION),
     /** M8 part A: the Sonar Pulse's ping (round 04 a, chosen) and the Decoy Flares' launch (round 08 a, chosen). */
     SPECIAL_SONAR("sfx/special-sonar-r04-a.ogg", 1, Bus.EFFECTS, PLAYER_FIRE),
 
@@ -879,7 +887,7 @@ public enum Sfx {
      */
     AMBIENCE_EUROPA_TRENCH("sfx/europa-trench-r54-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /**
-     * M8 part F: the black water's bed (round 55 a, proposed: a submarine's air conditioner slowed and muffled, a deep
+     * M8 part F: the black water's bed (round 55 a, the user's pick: a submarine's air conditioner slowed and muffled, a deep
      * rumble swelling once a loop, a seamless 24 s loop): Level 26, in place of {@code europa-under}.
      */
     AMBIENCE_EUROPA_BLACK("sfx/europa-black-r55-a.ogg", 1, Bus.EFFECTS, AMBIENCE),

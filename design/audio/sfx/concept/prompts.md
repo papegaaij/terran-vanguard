@@ -4053,7 +4053,7 @@ Edit: 4.00 s, band RMS −37.9 dB, peak −30.1 dBFS, −35.5 LUFS.
 
 Proposed (round 55), cut from the HQ previews by `tools/concept/audio/sfx_r55f.py`.
 Source: <https://freesound.org/people/Heigh-hoo/sounds/51491/> (airliner_approach_2.aif by Heigh-hoo, CC0 1.0).
-Use: Level 26 at t=157 (the event ROOK_TRAILS): Rook's loss, three thin torpedo trails rising from the bottom edge and converging on his lamp at t=157.5, where the hits take over (rook-hit); with Rook only (not with the Bulwark, not after he ejected); the Depth Hunters themselves are never seen.
+Use: Level 26 at t=162.5 (the event ROOK_TRAILS; t=157 when proposed): Rook's loss, three thin torpedo trails rising from the bottom edge and converging on his lamp at t=163.5, where the hits take over (rook-hit); with Rook only (not with the Bulwark, not after he ejected); the Depth Hunters themselves are never seen.
 Brief: a long, distant, rising hiss: three torpedoes running up fast from far below, the hiss growing and rising in pitch for half a second, then lost under the hits; far and muffled, no whistle, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: an airliner's jet approach heard from the ground (its roar swelling as it comes in) slowed and gliding up from 0.6 to 0.95, muffled at 2.5 kHz and without its low rumble: a far jet-like hiss rising fast, 1.2 s.
 Edit: 1.20 s, the loudest 100 ms band −27.1 dB, peak −16.9 dBFS, −27.1 LUFS.
@@ -4062,7 +4062,7 @@ Edit: 1.20 s, the loudest 100 ms band −27.1 dB, peak −16.9 dBFS, −27.1 LUF
 
 Proposed (round 55), cut from the HQ previews by `tools/concept/audio/sfx_r55f.py`.
 Sources: <https://freesound.org/people/craigsmith/sounds/438641/> (G39-24-Steam Hiss.wav by craigsmith, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438720/> (G45-18-Submarine Motor Stop.wav by craigsmith, CC0 1.0).
-Use: Level 26 at t=157 (the event ROOK_TRAILS): Rook's loss, three thin torpedo trails rising from the bottom edge and converging on his lamp at t=157.5, where the hits take over (rook-hit); with Rook only (not with the Bulwark, not after he ejected); the Depth Hunters themselves are never seen.
+Use: Level 26 at t=162.5 (the event ROOK_TRAILS; t=157 when proposed): Rook's loss, three thin torpedo trails rising from the bottom edge and converging on his lamp at t=163.5, where the hits take over (rook-hit); with Rook only (not with the Bulwark, not after he ejected); the Depth Hunters themselves are never seen.
 Brief: a long, distant, rising hiss: three torpedoes running up fast from far below, the hiss growing and rising in pitch for half a second, then lost under the hits; far and muffled, no whistle, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a long steam hiss gliding up from 0.55 to 0.85, muffled at 3 kHz, over a submarine's motors speeding up (their whirr gliding 0.8 to 1.3): more machine than a, a torpedo's motor under the hiss, 1.2 s.
 Edit: 1.20 s, the loudest 100 ms band −27.3 dB, peak −16.1 dBFS, −25.9 LUFS.
@@ -4071,7 +4071,7 @@ Edit: 1.20 s, the loudest 100 ms band −27.3 dB, peak −16.1 dBFS, −25.9 LUF
 
 Proposed (round 55), cut from the HQ previews by `tools/concept/audio/sfx_r55f.py`.
 Sources: <https://freesound.org/people/ZeSoundResearchInc./sounds/147876/> (DepthBomb_01.aif by ZeSoundResearchInc., CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147875/> (DepthBomb_02.aif by ZeSoundResearchInc., CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147873/> (DepthBomb_04.aif by ZeSoundResearchInc., CC0 1.0), <https://freesound.org/people/kyles/sounds/407300/> (door metal heavy close both sides same time impact rattle2 +bg voices.wav by kyles, CC0 1.0).
-Use: Level 26 at t=157.5 (the event ROOK_LOST): the three torpedoes strike Rook's lamp, three white-orange flashes, then the lamp spins down (rook-spin plays with it); with Rook only, once a sortie (a retry replays it); harmless to the player.
+Use: Level 26 at t=163.5 (the event ROOK_LOST; t=157.5 when proposed): the three torpedoes strike Rook's lamp, three white-orange flashes, then the lamp spins down (rook-spin plays with it); with Rook only, once a sortie (a retry replays it); harmless to the player.
 Brief: three heavy hits in quick succession on a small hull: deep under-water blasts with a hard metal crunch in them, the last ringing off into a low rumble, about 2.5 s; the act's beat, bigger than a kill but not a boss death; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: three depth bombs' sub booms 0.13 s apart, the first and last on a heavy steel door's double slam (both halves shut at once) slowed to 0.6 and muffled at 2 kHz: 'BOOM-boom-BOOM' with a hull's clang in it, 2.6 s.
 Edit: 2.60 s, the loudest 100 ms band −18.1 dB, peak −3.1 dBFS, −14.6 LUFS.
@@ -4080,7 +4080,7 @@ Edit: 2.60 s, the loudest 100 ms band −18.1 dB, peak −3.1 dBFS, −14.6 LUFS
 
 Proposed (round 55), cut from the HQ previews by `tools/concept/audio/sfx_r55f.py`.
 Sources: <https://freesound.org/people/deleted_user_7709760/sounds/400793/> (Underwater Impact by deleted_user_7709760, CC-BY 3.0), <https://freesound.org/people/Halleck/sounds/121623/> (big metal side impact 3 scraping.wav by Halleck, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147880/> (DepthBomb_05.aif by ZeSoundResearchInc., CC0 1.0).
-Use: Level 26 at t=157.5 (the event ROOK_LOST): the three torpedoes strike Rook's lamp, three white-orange flashes, then the lamp spins down (rook-spin plays with it); with Rook only, once a sortie (a retry replays it); harmless to the player.
+Use: Level 26 at t=163.5 (the event ROOK_LOST; t=157.5 when proposed): the three torpedoes strike Rook's lamp, three white-orange flashes, then the lamp spins down (rook-spin plays with it); with Rook only, once a sortie (a retry replays it); harmless to the player.
 Brief: three heavy hits in quick succession on a small hull: deep under-water blasts with a hard metal crunch in them, the last ringing off into a low rumble, about 2.5 s; the act's beat, bigger than a kill but not a boss death; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: three real under-water impacts 0.13 s apart (each slower and deeper), over a big metal side impact scraping slowed to 0.5 (the hull torn open) and a depth bomb's boom: more tearing metal than a, 2.6 s.
 Edit: 2.60 s, the loudest 100 ms band −17.1 dB, peak −3.6 dBFS, −18.9 LUFS.
@@ -4089,7 +4089,7 @@ Edit: 2.60 s, the loudest 100 ms band −17.1 dB, peak −3.6 dBFS, −18.9 LUFS
 
 Proposed (round 55), cut from the HQ previews by `tools/concept/audio/sfx_r55f.py`.
 Sources: <https://freesound.org/people/iainmccurdy/sounds/737060/> (Buzzing Faulty and Sparking Fluorescent Light by iainmccurdy, CC-BY 4.0), <https://freesound.org/people/craigsmith/sounds/438720/> (G45-18-Submarine Motor Stop.wav by craigsmith, CC0 1.0).
-Use: Level 26 at t=157.5 (the event ROOK_LOST), with the hits (rook-hit): Rook's lamp flickers and spins down off the bottom edge in 2.5 s, going dark; with Rook only.
+Use: Level 26 at t=163.5 (the event ROOK_LOST; t=157.5 when proposed), with the hits (rook-hit): Rook's lamp flickers and spins down off the bottom edge in 2.5 s, going dark; with Rook only.
 Brief: a dying lamp and engine: an electrical flicker (the lamp's buzz cutting in and out), then his engine winding down into silence as he falls away, about 3 s, muffled; no pops, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a faulty fluorescent tube's buzz (iainmccurdy's recording) muffled at 2.5 kHz and switched on and off in five irregular bursts over the first second (the lamp flickering), over a submarine's motors running down to a stop (an engine-room recording) slowed from 0.75 to 0.4 and fading out: 3.0 s.
 Edit: 3.00 s, the loudest 100 ms band −22.0 dB, peak −8.7 dBFS, −23.6 LUFS.
@@ -4098,7 +4098,7 @@ Edit: 3.00 s, the loudest 100 ms band −22.0 dB, peak −8.7 dBFS, −23.6 LUFS
 
 Proposed (round 55), cut from the HQ previews by `tools/concept/audio/sfx_r55f.py`.
 Sources: <https://freesound.org/people/TRP/sounds/577277/> (Fluorescent light fixture, buzz, clicks, noisy, lofi, 2011.wav by TRP, CC0 1.0), <https://freesound.org/people/timgormly/sounds/151288/> (Wind-down 1.aif by timgormly, CC0 1.0).
-Use: Level 26 at t=157.5 (the event ROOK_LOST), with the hits (rook-hit): Rook's lamp flickers and spins down off the bottom edge in 2.5 s, going dark; with Rook only.
+Use: Level 26 at t=163.5 (the event ROOK_LOST; t=157.5 when proposed), with the hits (rook-hit): Rook's lamp flickers and spins down off the bottom edge in 2.5 s, going dark; with Rook only.
 Brief: a dying lamp and engine: an electrical flicker (the lamp's buzz cutting in and out), then his engine winding down into silence as he falls away, about 3 s, muffled; no pops, no bubbles; a real recording, heavy, nothing bubbly or popping.
 This one: a fluorescent fixture flickering on with its buzz (the tube's starter muffled at 1.8 kHz) slowed to 0.8, over a machine's motor winding down after it is switched off, slowed from 0.8 to 0.5: lighter and higher than a, a smaller engine whining down, 3.0 s.
 Edit: 3.00 s, the loudest 100 ms band −22.1 dB, peak −9.6 dBFS, −30.2 LUFS.

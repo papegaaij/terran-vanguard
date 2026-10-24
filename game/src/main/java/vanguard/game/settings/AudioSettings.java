@@ -8,8 +8,12 @@ package vanguard.game.settings;
  * @param voice the spoken radio lines and briefing pages (design/audio/voice)
  */
 public record AudioSettings(double master, double music, double effects, double radio, double voice) {
+    /**
+     * The defaults: the effects at 50 % and the radio blips at 90 %, the rest full (the user's playtest of 2026-10-24:
+     * many explosions and much firing at once drowned the music and the radio); a saved settings file keeps its own.
+     */
     public static AudioSettings defaults() {
-        return new AudioSettings(1, 1, 1, 1, 1);
+        return new AudioSettings(1, 1, 0.5, 0.9, 1);
     }
 
     public AudioSettings withMaster(double volume) {

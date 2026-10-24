@@ -7,9 +7,12 @@ package vanguard.sim;
  * SimEvents.Type#ROOK_TRAILS}) and he stops counting as flying for the radio ({@link Wingman#onRadio()}: his barks and
  * the {@code requires: escort} lines end); at the loss's time, while he still flies, he is lost ({@link
  * SimEvents.Type#ROOK_LOST}): no more firing, hits or AI, and he spirals down from where he was toward the side away
- * from the ship at a steady speed that takes him below the bottom edge within the spin's time and is at least {@link
- * #FASTER} times the scroll's then (he falls faster than the field), then is gone for the attempt. Not an
- * eject: no pod, his armour stays as it was. Ejected before either time, neither happens (the loss is the radio's
+ * from the ship, then is gone for the attempt. His fall plays the whole spin on the screen (round 55 C.2, the user's
+ * playtest of 2026-10-24: flying low beside the ship he used to leave it in 0.7 s): he crosses the bottom edge just as
+ * the spin ends, at {@link #FASTER} times the scroll's speed then (he falls faster than the field as he leaves it);
+ * from low on the screen the torpedoes' hits first toss him up a little and he sinks back, accelerating (a steady
+ * fall from high up, where that speed alone would take him off in time). Not an eject: no pod, his armour stays as it
+ * was. Ejected before either time, neither happens (the loss is the radio's
  * only). Each attempt starts it afresh ({@link #reset()}), so a retry replays it. Its state is hashed only in a level
  * with a loss. Allocation-free.
  */
@@ -44,8 +47,12 @@ public final class RookLoss {
     private double fromY;
     /** The side he spins to: -1 left, 1 right (away from the ship). */
     private int side;
-    /** His fall's speed, px/s. */
+    /** His fall's speed as he crosses the bottom edge, px/s. */
     private double fall;
+    /** His speed up the screen at the loss (the hits' toss; negative: falling from the start), px/s. */
+    private double rise;
+    /** How fast his fall gains, px/s². */
+    private double sink;
 
     /** The level's loss (once, at the sortie's start). */
     void plan(RookLossSpec loss) {
@@ -63,7 +70,7 @@ public final class RookLoss {
         lossTicks = 0;
         fromX = fromY = 0;
         side = 0;
-        fall = 0;
+        fall = rise = sink = 0;
     }
 
     /** Whether the level has a loss. */
@@ -98,7 +105,20 @@ public final class RookLoss {
             fromY = rook.y();
             side = fromX < shipX ? -1 : 1;
             double below = fromY + rook.spec().craft().hitbox().height() / 2 + BELOW;
-            fall = Math.max(below / spec.spin(), FASTER * Math.abs(scrollStep) / SimStep.SECONDS);
+            double spin = spec.spin();
+            double faster = FASTER * Math.abs(scrollStep) / SimStep.SECONDS;
+            if (below >= faster * spin) {
+                // High up: a steady fall at the speed that takes him off the bottom edge as the spin ends.
+                fall = below / spin;
+                rise = -fall;
+                sink = 0;
+            } else {
+                // Low: tossed by the hits, then sinking faster and faster, off the bottom edge at the spin's end at
+                // the faster speed (y = fromY + rise t - sink t^2 / 2 reaches -(below - fromY) at t = spin).
+                fall = faster;
+                sink = 2 * (faster * spin - below) / (spin * spin);
+                rise = sink * spin - faster;
+            }
             rook.lose();
             events.add(SimEvents.Type.ROOK_LOST, fromX, fromY, side);
             return true;
@@ -106,9 +126,10 @@ public final class RookLoss {
         if (lossTicks < spinTicks) {
             lossTicks++;
             double p = (double) lossTicks / spinTicks;
+            double t = lossTicks * SimStep.SECONDS;
             rook.spinTo(
                     fromX + side * (DRIFT * p + RADIUS * Trig.sin(2 * StrictMath.PI * TURNS * p)),
-                    fromY - fall * lossTicks * SimStep.SECONDS);
+                    fromY + rise * t - sink * t * t / 2);
         } else {
             rook.spinTo(rook.x(), rook.y());
         }
@@ -125,9 +146,14 @@ public final class RookLoss {
         return lost;
     }
 
-    /** His fall's speed, px/s; 0 before his loss. */
+    /** His fall's speed as he crosses the bottom edge at the spin's end, px/s; 0 before his loss. */
     public double fallSpeed() {
         return fall;
+    }
+
+    /** His speed up the screen just after the hits, px/s (negative: falling from the start); 0 before his loss. */
+    public double tossSpeed() {
+        return rise;
     }
 
     /** Whether his spin is over: he is below the bottom edge, gone for the attempt. */
@@ -166,6 +192,8 @@ public final class RookLoss {
                 .add(fromX)
                 .add(fromY)
                 .add(side)
-                .add(fall);
+                .add(fall)
+                .add(rise)
+                .add(sink);
     }
 }

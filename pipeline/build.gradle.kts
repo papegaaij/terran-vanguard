@@ -257,7 +257,6 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "harpoon-run-r50-a.ogg",
         "harpoon-hit-r50-a.ogg",
         "shot-depth-charge-r50-b.ogg",
-        "depth-charge-burst-r50-a.ogg",
         "special-limit-r50-b.ogg",
         // M8 part B: round 51's picks for Level 22 (user 2026-10-22; CC0/CC-BY Freesound HQ previews, CREDITS rows from
         // step AUD-B): the ice geyser's tell b and burst a, the Drill Rig's collar loop, shard ring and core death b, the
@@ -308,18 +307,17 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "nautilus-uncoil-r54-a.ogg",
         "nautilus-death-r54-b.ogg",
         "europa-trench-r54-a.ogg",
-        // M8 part F: round 55's proposals for Level 26 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-F),
-        // their a variants until the user's pick, which may swap the file: the Glow Angler's lure hum and lunge, the
-        // Nautilus's crown hum in the dark, Rook's loss (the trails, the hits, the spin), the headlight click, the Choir's
-        // static lead, the black water's bed.
+        // M8 part F: round 55's picks for Level 26 (user 2026-10-24; CC0/CC-BY Freesound HQ previews, CREDITS rows from
+        // step AUD-F): the Glow Angler's lure hum a and lunge a, the Nautilus's crown hum in the dark a, Rook's loss (the
+        // trails a, the hits a, the spin b), the headlight click b, the Choir's static lead b, the black water's bed a.
         "lure-hum-r55-a.ogg",
         "angler-lunge-r55-a.ogg",
         "crown-hum-r55-a.ogg",
         "torpedo-trails-r55-a.ogg",
         "rook-hit-r55-a.ogg",
-        "rook-spin-r55-a.ogg",
-        "headlight-click-r55-a.ogg",
-        "choir-static-r55-a.ogg",
+        "rook-spin-r55-b.ogg",
+        "headlight-click-r55-b.ogg",
+        "choir-static-r55-b.ogg",
         "europa-black-r55-a.ogg",
     )
 }
@@ -375,9 +373,9 @@ val copyPlaceholderMusic = tasks.register<JavaExec>("copyPlaceholderMusic") {
         "grey-signal-base-r41-a.ogg=grey-signal-base.ogg",
         "grey-signal-motif-r41-a.ogg=grey-signal-motif.ogg",
         // M8 part F: track 10's dark stem (round 51 a, the stem tools/art/themes.py's thera-deep{,-base} were copied
-        // from, same grid) and its warm pad (round 55 a until the user's pick), Level 26's `stem_times`.
+        // from, same grid) and its warm pad (round 55 b, the user's pick), Level 26's `stem_times`.
         "thera-deep-dark-r51-a.ogg=thera-deep-dark.ogg",
-        "thera-deep-warm-r55-a.ogg=thera-deep-warm.ogg",
+        "thera-deep-warm-r55-b.ogg=thera-deep-warm.ogg",
     )
 }
 

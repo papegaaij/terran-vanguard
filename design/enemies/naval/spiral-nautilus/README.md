@@ -90,6 +90,6 @@ Chosen round 06 concept: [spiral-nautilus-r06-a.png](../concept/spiral-nautilus-
 - 2026-10-23 (user, round 54, closed): the final art accepted (F.4; `art: final`); sounds: the shell spin a, the uncoil a,
   the death **b**; calls C.1 (the 90 px floor), C.2 (armoured while it opens) and C.3 (every anti-sub weapon cracks the
   shell) accepted.
-- 2026-10-24 (M8 AW, step AW3; pending the user's review in round 56): the break-off of a pair after its hold no longer
+- 2026-10-24 (M8 AW, step AW3; accepted in round 56 (2026-10-24)): the break-off of a pair after its hold no longer
   crosses the wall's rock sideways: in a rock level it leaves inside the flyable span (`Canyon.inSpan`), sliding down along
   a wall, as the Barbfin does; this replaces the earlier rule that it left across the rock, drawn behind the wall face.

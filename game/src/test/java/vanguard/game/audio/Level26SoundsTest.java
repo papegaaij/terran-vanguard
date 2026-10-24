@@ -25,10 +25,10 @@ import vanguard.sim.SimStep;
 import vanguard.sim.Sortie;
 
 /**
- * M8 part F's Level 26 sounds (design/audio/sfx and design/audio/music, Level 26's rows; round 55's a variants until the
- * user's pick): the Glow Angler's lure hum and lunge, the Nautilus's crown hum in the dark, Rook's loss (the trails, the
+ * M8 part F's Level 26 sounds (design/audio/sfx and design/audio/music, Level 26's rows; round 55's picks, closed
+ * 2026-10-24: the spin, the click and the static b, the rest a; the warm pad b): the Glow Angler's lure hum and lunge, the Nautilus's crown hum in the dark, Rook's loss (the trails, the
  * hits, the spin), the headlights' clicks, the Choir's static; the black water's bed; track 10 with its timed stems
- * (the dark stem alone from t=8, −6 dB from 150, out at 160, the warm pad from 168) and the Choir's 6 dB duck.
+ * (the dark stem alone from t=8, −6 dB from 150, out at 166, the warm pad from 174) and the Choir's 6 dB duck.
  */
 class Level26SoundsTest {
     private static final Path ASSETS = Path.of(System.getProperty("vanguard.assetsDir", "../assets"));
@@ -49,10 +49,13 @@ class Level26SoundsTest {
             Sfx.AMBIENCE_EUROPA_BLACK);
 
     @Test
-    void everySoundHasItsFileRoundFiftyFivesA() {
+    void everySoundHasItsFileRoundFiftyFivesPick() {
+        List<Sfx> b = List.of(Sfx.ROOK_SPIN, Sfx.HEADLIGHT_CLICK, Sfx.CHOIR_STATIC);
         for (Sfx sfx : SOUNDS) {
             assertTrue(Files.isRegularFile(ASSETS.resolve(sfx.path())), sfx.path());
-            assertTrue(sfx.path().endsWith("-r55-a.ogg"), "round 55's a until the pick: " + sfx.path());
+            assertTrue(
+                    sfx.path().endsWith(b.contains(sfx) ? "-r55-b.ogg" : "-r55-a.ogg"),
+                    "round 55's pick: " + sfx.path());
         }
         assertEquals(Sfx.Priority.AMBIENCE, Sfx.AMBIENCE_EUROPA_BLACK.priority());
         assertTrue(Sfx.LURE_HUM.priority() != Sfx.Priority.AMBIENCE, "a unit's loop is stolen like its peers");
@@ -91,7 +94,7 @@ class Level26SoundsTest {
 
     /**
      * The level's stem changes through the music: the stems until t=8, the dark stem alone from 8, 6 dB down over 2 s
-     * from 150, silent from 158 (out at 160), the warm pad from 168 at its file's level; a restart starts over.
+     * from 150, silent from 164 (out at 166), the warm pad from 174 at its file's level; a restart starts over.
      */
     @Test
     void theStemsStripBackThinGoSilentAndTheWarmPadComesIn() {
@@ -130,12 +133,14 @@ class Level26SoundsTest {
         }
         assertEquals(Math.pow(10, -6 / 20.0), music.timedGain(), 1e-3, "-6 dB from t=150 over 2 s");
         music.update(1, 158.05, 0.1f, false);
-        assertEquals(-1, music.timedExtra(), "out from 158, silent at 160");
+        assertEquals(0, music.timedExtra(), "the dark stem through Rook's cut line");
+        music.update(1, 164.05, 0.1f, false);
+        assertEquals(-1, music.timedExtra(), "out from 164, silent at 166");
         assertFalse(music.timedStemsOn());
-        music.update(1, 168.05, 0.1f, false);
-        assertEquals(1, music.timedExtra(), "the warm pad from 168");
-        t = 168.15;
-        while (t < 179) {
+        music.update(1, 174.05, 0.1f, false);
+        assertEquals(1, music.timedExtra(), "the warm pad from 174");
+        t = 174.15;
+        while (t < 185) {
             music.update(1, t, 0.1f, false);
             t += 0.1;
         }
@@ -175,7 +180,7 @@ class Level26SoundsTest {
     /**
      * Flown through the level with Rook along, invulnerable, firing, held low in the middle: the headlights click on
      * at the start and as the lamps go out (t=18); an Angler's lure hums while one is on the screen and its lunge
-     * sounds; the crown hums with a Nautilus on the screen; Rook's trails at 157, his hits and spin at 157.5.
+     * sounds; the crown hums with a Nautilus on the screen; Rook's trails at 162.5, his hits and spin at 163.5.
      */
     @Test
     void theLuresHumTheCrownsSingAndRooksLossIsHeard() {
@@ -194,7 +199,7 @@ class Level26SoundsTest {
         boolean trails = false;
         boolean lost = false;
         int hushing = 0;
-        while (sortie.levelSeconds() < 158 && !sortie.complete()) {
+        while (sortie.levelSeconds() < 164 && !sortie.complete()) {
             int before = bank.playing(Sfx.HEADLIGHT_CLICK);
             // M8 AW: holding fire: the reworked harpoon and the charges tossed ahead kill the Anglers before they
             // lunge.

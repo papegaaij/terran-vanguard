@@ -383,8 +383,8 @@ Rook's scripted Level 26 and his silence in Levels 27–28 are in the
   reversed copy raised from 0.22 to 0.4 and the take at exaggeration 0.25, so it reads as a whisper through the
   radio, not a chant; one take each, pinned. Step VOX-F (M8 part F) rendered Level 26's line with Level 21's treatment as
   built (one take in the Choir's fixed settings, the round-18 layering, the `distorted` filter; no fragment joins): the
-  whisper variant above needs a renderer change and is not built (pending the user's review in round 55). It still **sings** (its round-29 stage sound) before Level 28's boss.
-- **Rook's cut-off** (Level 26, t=160.3, "*Lancer, something's below u—*"): rendered whole and cut by Whisper's word
+  whisper variant above needs a renderer change and is not built (accepted in round 55 (2026-10-24)). It still **sings** (its round-29 stage sound) before Level 28's boss.
+- **Rook's cut-off** (Level 26, t=161.2 since 2026-10-24, cut by the hits at t=163.5; "*Lancer, something's below u—*"): rendered whole and cut by Whisper's word
   timing inside "us", then a burst of static and silence, as Lifeline Three's cut in round 32 (`tts_r32.py`); his
   t=150 line is read at the neutral row, slower, with no joke (Level 20's quiet beat), pinned. Built in step VOX-F: the
   speaker table's respelling `u: us` makes the voice say "us" (the subtitle keeps "u—"), Whisper times it and
@@ -604,7 +604,7 @@ level).
       line): 14 files, seven takes pinned; the Act 4 names read back as written; `VoiceFilesTest` (with Level 25 in
       `briefs/m8voxe-tests.patch`) and `RadioTimelineLevel25Test` (step E3's patch) green in a snapshot
       (M8 part E, step VOX-E, 2026-10-23; accepted in round 54 (2026-10-23))
-- [x] Level 26's lines (16 radio, Rook's three scripted lines with his cut-off at t=160.3 and the Choir's t=99 words
+- [x] Level 26's lines (16 radio, Rook's three scripted lines with his cut-off at t=161.2 and the Choir's t=99 words
       among them; the farm barge's secret; the two briefing pages) rendered with the cast speakers (Okafor, Varga, Rook,
       the Choir; no Thera Deep Control line): 19 files, five takes pinned; Rook's cut spoken "us" (the respelling `u: us`)
       and cut inside it; the Choir's line through Level 21's treatment (one take, the round-18 layering, `distorted`);
@@ -613,7 +613,7 @@ level).
       round 55)
 - [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
       speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
-      line); Rook's cut-off at t=160.3; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
+      line); Rook's cut-off at t=161.2; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
       intro and outro pages rendered and reviewed in its part's round
 
 ## Concept art
@@ -1379,7 +1379,7 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   respelling. Pitch (pyin, raw): Okafor 141-186 Hz, Varga 184-219 Hz, Rook 143 Hz. The level's timed lines start on
   time with and without Rook (`RadioTimelineLevel25Test` in a snapshot with step E3's `briefs/m8e3-radio.patch`: the
   survey sub at t≈79-82, the secondary at t=173): no retime. Measured only, not listened to.
-- 2026-10-23 (step VOX-F, M8 part F; pending the user's review in round 55): Level 26's 16 radio lines (Rook's three
+- 2026-10-23 (step VOX-F, M8 part F; accepted in round 55 (2026-10-24)): Level 26's 16 radio lines (Rook's three
   scripted lines, his t=160.3 cut-off among them, and the Choir's t=99 "…small ones… in the dark… your kin… came before
   you…"), the farm barge's secret and its two briefing pages rendered with Okafor, Varga, Rook and the Choir (19 files;
   no Thera Deep Control line). Rook's cut: spoken as written ("below u,") the voice said "you" and Whisper read "Thumb,
@@ -1397,7 +1397,7 @@ Ted Lienhart's audition, clip and transcript moved to `concept/rejected/`, the c
   him and with the Bulwark (`RadioTimelineLevel26Test` in a snapshot with step F2's `briefs/m8f2-radio.patch` and
   `briefs/m8voxf-tests.patch`: Level 26 out of `UNVOICED`, `VoiceFilesTest` with Level 26): no retime. Measured only,
   not listened to.
-- 2026-10-24 (step VOX-AW, M8 AW; pending the user's review in round 56): the three lines the water rework changed
+- 2026-10-24 (step VOX-AW, M8 AW; accepted in round 56 (2026-10-24)): the three lines the water rework changed
   re-rendered: Okafor's Act 4 intro page 3 (guns lose a third, beams and lasers nearly all, save credits for torpedoes and
   charges; 19.9 s, one retry for a 1.0 s pause inside the first chunk), Varga's Level 23 briefing page 2 (16.2 s) and her
   Level 23 t=13.5 radio line, now "…Torpedoes and charges bite as ever; guns lose a third, beams nearly all." (8.3 s;

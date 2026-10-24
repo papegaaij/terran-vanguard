@@ -83,11 +83,11 @@ class PlaceholderAuditTest {
             "M8 part E: round 54's picks for Level 25 (user 2026-10-23; the Freesound HQ previews of CC0/CC-BY sounds,"
                     + " CREDITS rows from step AUD-E, by tools/concept/audio/sfx_r54e.py)";
     private static final String ROUND_55 =
-            "M8 part F: round 55's proposals for Level 26, their a variants until the user's pick (the Freesound HQ"
-                    + " previews of CC0/CC-BY sounds, CREDITS rows from step AUD-F, by tools/concept/audio/sfx_r55f.py)";
+            "M8 part F: round 55's picks for Level 26 (user 2026-10-24; the Freesound HQ previews of CC0/CC-BY sounds,"
+                    + " CREDITS rows from step AUD-F, by tools/concept/audio/sfx_r55f.py)";
     private static final String ROUND_55_MUSIC =
             "M8 part F: track 10's dark stem (round 51 a, by tools/concept/audio/music_r51b.py) and its warm pad (round"
-                    + " 55 a until the user's pick, by tools/concept/audio/sfx_r55f.py), the concept files on the theme's grid"
+                    + " 55 b, the user's pick, by tools/concept/audio/sfx_r55f.py), the concept files on the theme's grid"
                     + " (Level 26's stem_times)";
     private static final String ROUND_50 =
             "M8 part A: round 50's picks for the Act 4 arsenal (user 2026-10-22; the Freesound HQ previews of"
@@ -252,7 +252,6 @@ class PlaceholderAuditTest {
             Map.entry("sfx/harpoon-run-r50-a.ogg", ROUND_50),
             Map.entry("sfx/harpoon-hit-r50-a.ogg", ROUND_50),
             Map.entry("sfx/shot-depth-charge-r50-b.ogg", ROUND_50),
-            Map.entry("sfx/depth-charge-burst-r50-a.ogg", ROUND_50),
             Map.entry("sfx/special-limit-r50-b.ogg", ROUND_50),
             // M8 part B: round 51's a variants, from the Freesound previews until the pick and the originals
             Map.entry("sfx/geyser-tell-r51-b.ogg", ROUND_51),
@@ -301,9 +300,9 @@ class PlaceholderAuditTest {
             Map.entry("sfx/crown-hum-r55-a.ogg", ROUND_55),
             Map.entry("sfx/torpedo-trails-r55-a.ogg", ROUND_55),
             Map.entry("sfx/rook-hit-r55-a.ogg", ROUND_55),
-            Map.entry("sfx/rook-spin-r55-a.ogg", ROUND_55),
-            Map.entry("sfx/headlight-click-r55-a.ogg", ROUND_55),
-            Map.entry("sfx/choir-static-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/rook-spin-r55-b.ogg", ROUND_55),
+            Map.entry("sfx/headlight-click-r55-b.ogg", ROUND_55),
+            Map.entry("sfx/choir-static-r55-b.ogg", ROUND_55),
             Map.entry("sfx/europa-black-r55-a.ogg", ROUND_55),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),
             Map.entry("music/thera-deep-warm.ogg", ROUND_55_MUSIC),

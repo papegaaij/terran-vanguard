@@ -250,10 +250,11 @@ final class LoadoutPanel {
         glass.shadowed(batch, glass.fonts.label, Names.slot(LoadoutSlot.ESCORT), edge, x + ESCORT_INSET, y + 6);
         glass.right(
                 batch, glass.fonts.label, side(campaign), Glass.CYAN, x + ESCORT_CALLOUT_WIDTH - ESCORT_INSET, y + 6);
+        // The escort of the hangar's level: the next one, or the replayed mission's (Rook, the Bulwark).
         Optional<Campaign.EscortFlight> bulwark =
-                campaign.escortFlight().filter(flight -> flight.escorter() == Escort.Escorter.BULWARK);
+                hangar.escortFlight().filter(flight -> flight.escorter() == Escort.Escorter.BULWARK);
         if (bulwark.isPresent()) {
-            drawBulwark(batch, campaign, bulwark.get(), x, y);
+            drawBulwark(batch, hangar, bulwark.get(), x, y);
             return;
         }
         TextureRegion rook = icons.escort().large();
@@ -274,12 +275,12 @@ final class LoadoutPanel {
             glass.bar(
                     batch, i < level ? Glass.AMBER : Glass.UNLIT, x + ESCORT_INSET + i * 9, y + ESCORT_PIPS_ROW, 7, 7);
         }
-        boolean grounded = campaign.escortGrounded();
+        boolean grounded = campaign.escortGrounded(hangar.level());
         glass.shadowed(
                 batch,
                 glass.fonts.label,
                 grounded ? GROUNDED : armour(campaign),
-                grounded ? Glass.ALERT : campaign.escortArmourLow() ? Glass.AMBER : Glass.CYAN,
+                grounded ? Glass.ALERT : campaign.escortArmourLow(hangar.level()) ? Glass.AMBER : Glass.CYAN,
                 x + ESCORT_INSET,
                 y + ESCORT_ARMOUR_ROW);
     }
@@ -288,7 +289,8 @@ final class LoadoutPanel {
      * M8 part A: the Bulwark's callout under the plate: its icon and name, {@code LOANER} for the loaner, its cannon,
      * {@code ROOK MIA} while he is missing, and its armour (amber below half).
      */
-    private void drawBulwark(SpriteBatch batch, Campaign campaign, Campaign.EscortFlight flight, int x, int y) {
+    private void drawBulwark(SpriteBatch batch, Hangar hangar, Campaign.EscortFlight flight, int x, int y) {
+        Campaign campaign = hangar.campaign();
         TextureRegion icon = icons.bulwark().large();
         batch.draw(icon, x + ESCORT_INSET, PixelScreen.HEIGHT - y - 18 - icon.getRegionHeight());
         glass.shadowed(
@@ -297,7 +299,7 @@ final class LoadoutPanel {
             glass.shadowed(batch, glass.fonts.label, LOANER, Glass.CYAN, x + NAME_INDENT, y + ESCORT_NAME_ROW + 12);
         }
         glass.shadowed(batch, glass.fonts.label, CANNON, Glass.WHITE, x + ESCORT_INSET, y + ESCORT_GUN_ROW);
-        if (campaign.rookMissing()) {
+        if (hangar.rookMissing()) {
             glass.shadowed(batch, glass.fonts.label, ROOK_MIA, Glass.ALERT, x + ESCORT_INSET, y + ESCORT_PIPS_ROW);
         }
         double max = campaign.bulwarkMaxArmour();

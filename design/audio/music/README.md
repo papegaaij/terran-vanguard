@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../campaign]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Music
@@ -295,9 +295,9 @@ theme and a new sting:
   alone, played through track 9's third, lockstep stream with `alone` (the base and full stems fade out over 2 s,
   the dark stem stays), so Level 26 strips back from the full mix to pings in the dark at t=8–18 with the machinery
   built for Level 19's wreck crawl; no new hook.
-  **Warm pad** (Level 26 from t=168, after the silence at t=160): round 55 offers a fourth stem on the same grid,
-  a "the dark stem's pad opened" or b "a synth pad" ([concept](#concept-art), `sfx_r55f.py`), played like the dark
-  stem through the third lockstep stream, creeping in over about 10 s.
+  **Warm pad** (Level 26 from t=174, after the silence from t=166): a fourth stem on the same grid, round 55's **b**
+  "a synth pad" (the user's pick; a "the dark stem's pad opened" rejected; [concept](#concept-art), `sfx_r55f.py`),
+  played like the dark stem through the third lockstep stream, creeping in over about 10 s.
 - **Track 11, the Act 4 B theme**: Level 25 and Levels 27–28. Brief: the A theme's water world turned colder and
   deeper, muffled ambient drum & bass, a faint Vorne's motif; no bubbles, no resonant plucks. Round 48 offers two
   sketches (below, *Concept art*): a "Pressure Line" (175 BPM, F minor, the A theme's key and pads, a liquid two-step
@@ -325,7 +325,7 @@ theme and a new sting:
 | [23](../../campaign/act-4-deep-water/level-23-through-the-ice/README.md#music--ambience) | 10 | the shaft mouth on the ambience; base from the waterline; full from s3 (the farms) | — | — | `europa-ice` in the shaft mouth, `europa-under` from the waterline |
 | [24](../../campaign/act-4-deep-water/level-24-abyssal-plain/README.md#music--ambience) | 10 | s1 the bed alone; base from s2 (the reef field); full in s3 (the beacon line); base in s4 | — | — | `europa-under` |
 | [25](../../campaign/act-4-deep-water/level-25-siren-trench/README.md#music--ambience) | 11 | s1 the A theme's sonar-and-pad intro; B base from s2; full in s5 (the Song); out into silence as the lights go out | — | muted | `europa-trench` |
-| [26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#music--ambience) | 10 (dark) | s1 the full mix with the lamps; the dark stem `alone` from t=8–18; the Choir's line ducks it (−6 dB); thinning from t=150; out at t=160 (Rook's loss); a warm pad from t=168 | — | — | `europa-black`; `europa-trench` at the scarp |
+| [26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#music--ambience) | 10 (dark) | s1 the full mix with the lamps; the dark stem `alone` from t=8–18; the Choir's line ducks it (−6 dB); thinning from t=150; out at t=166 (Rook's loss); a warm pad from t=174 | — | — | `europa-black`; `europa-trench` at the scarp |
 | 27 | 11 | the level document (in progress) | — | on (hint 3) | `europa-vents` |
 | 28 | 11, then 18 | the level document (in progress): the B theme to the caldera, the boss warning and the boss theme, silence under the dive's darkness | boss warning, boss theme, the reveal sting (30) at the cruisers' rise | on, and under the run | the caldera bed, `europa-ice` after the breakout |
 
@@ -585,10 +585,10 @@ only, not listened to. Concept files, no `SOURCE` comment and not in `assets/` y
 | [concept/thera-deep-dark-seam-r51-a.ogg](concept/thera-deep-dark-seam-r51-a.ogg) | Listening aid: the dark stem across its loop seam, 8 s each side | chosen (round 51) |
 | [concept/thera-deep-dark-join-r51-a.ogg](concept/thera-deep-dark-join-r51-a.ogg) | Listening aid: loop bars 1–16, the full mix crossfading over 2 s into the dark stem alone at bar 9 (as Level 26 strips back), 30.7 s | chosen (round 51) |
 | [concept/thera-deep-sheet-r51-a.png](concept/thera-deep-sheet-r51-a.png) | Review sheet: the three files' waveforms with intro, loop and fade tail, their loop points, loudness, true peak, seam and size, and the loudness of each loop section (full, base, dark) | chosen (round 51) |
-| [concept/thera-deep-warm-r55-a.ogg](concept/thera-deep-warm-r55-a.ogg) | #10 warm pad a, "the dark stem's pad opened": the dark stem's own pad (same chords and voice) brighter (3200 Hz, the dark stem's 1600) through the water held open at 4800 Hz, its F pedal drone quieter and warmer (900 Hz), no pings; a fourth stem on the same grid (same length, `LOOPSTART` 349272, `LOOPLENGTH` 7451136), −20.0 LUFS (2 LU under the dark stem), −8.2 dBTP, seam 0.30; Level 26 from t=168 (the vent field's warm pad after the silence) | proposed (round 55) |
-| [concept/thera-deep-warm-r55-b.ogg](concept/thera-deep-warm-r55-b.ogg) | #10 warm pad b, "a synth pad": a new warm voice (two detuned saws and a triangle through a soft 1400 Hz low-pass, 1.4 s attack, slow vibrato) over a sine sub on a warm 8-bar progression in D♭ (D♭maj9, A♭/C, B♭m9, G♭maj9), a long reverb; same grid and loop as a, −20.0 LUFS, −9.0 dBTP, seam 0.77 | proposed (round 55) |
-| [concept/thera-deep-warm-join-r55-a.ogg](concept/thera-deep-warm-join-r55-a.ogg) | Listening aid for a: Level 26 from t=146 to 186: the dark stem (6 dB down from 150, out at 160), 8 s of silence, the warm pad creeping in from 168 over 10 s, 40 s | proposed (round 55) |
-| [concept/thera-deep-warm-join-r55-b.ogg](concept/thera-deep-warm-join-r55-b.ogg) | Listening aid for b: the same 40 s with pad b | proposed (round 55) |
+| [concept/rejected/thera-deep-warm-r55-a.ogg](concept/rejected/thera-deep-warm-r55-a.ogg) | #10 warm pad a, "the dark stem's pad opened": the dark stem's own pad (same chords and voice) brighter (3200 Hz, the dark stem's 1600) through the water held open at 4800 Hz, its F pedal drone quieter and warmer (900 Hz), no pings; a fourth stem on the same grid (same length, `LOOPSTART` 349272, `LOOPLENGTH` 7451136), −20.0 LUFS (2 LU under the dark stem), −8.2 dBTP, seam 0.30; Level 26 from t=168 (the vent field's warm pad after the silence) | rejected (round 55, S.10: the user picked b) |
+| [concept/thera-deep-warm-r55-b.ogg](concept/thera-deep-warm-r55-b.ogg) | #10 warm pad b, "a synth pad": a new warm voice (two detuned saws and a triangle through a soft 1400 Hz low-pass, 1.4 s attack, slow vibrato) over a sine sub on a warm 8-bar progression in D♭ (D♭maj9, A♭/C, B♭m9, G♭maj9), a long reverb; same grid and loop as a, −20.0 LUFS, −9.0 dBTP, seam 0.77 | chosen (round 55, S.10 b: the user's pick) |
+| [concept/rejected/thera-deep-warm-join-r55-a.ogg](concept/rejected/thera-deep-warm-join-r55-a.ogg) | Listening aid for a: Level 26 from t=146 to 186: the dark stem (6 dB down from 150, out at 160), 8 s of silence, the warm pad creeping in from 168 over 10 s, 40 s | rejected (round 55, S.10: the user picked b) |
+| [concept/thera-deep-warm-join-r55-b.ogg](concept/thera-deep-warm-join-r55-b.ogg) | Listening aid for b: the same 40 s with pad b | chosen (round 55, S.10 b: the listening aid of the pick) |
 | [concept/pressure-line-r51-a.ogg](concept/pressure-line-r51-a.ogg) | #11 "Pressure Line" full mix at full length: 183.9 s, loop 249480 + 7741440 samples (5.66 s + 175.54 s, 128 bars at 175 BPM), −14.0 LUFS, −1.8 dBTP, seam 1.21 (the loop point falls on a 16th hat's onset: the step is the music's own, the source is periodic) | chosen (round 51) |
 | [concept/pressure-line-base-r51-a.ogg](concept/pressure-line-base-r51-a.ogg) | #11 base stem (kick and backbeat snares, sub, pad, whale calls, sonar pings, the deep current): same length, loop and gain, −15.6 LUFS (−1.6 LU), −2.0 dBTP, seam 1.00 | chosen (round 51) |
 | [concept/pressure-line-motif-r51-a.ogg](concept/pressure-line-motif-r51-a.ogg) | #11 motif stem, Vorne's motif as the intercepted whistle under water alone (19 statements): same length, loop and gain, −33.8 LUFS; its statements 18.0–19.9 dB under the full mix (15.5–16.1 in the breakdowns C and F) | chosen (round 51) |
@@ -879,8 +879,12 @@ only, not listened to. Concept files, no `SOURCE` comment and not in `assets/` y
   track 10's base stem from the rig field and the full mix from the run-in (`Level22SoundsTest`); track 11 is made in
   part B but first heard from Level 25 (part E).
 - 2026-10-22 (user, round 51, closed; M.1, M.2): tracks 10 "Thera Deep" and 11 "Pressure Line" accepted as proposed (full mixes, stems and loop points); both already play from `assets/music/` (track 11 first heard in Level 25).
-- 2026-10-23 (step AUD-F, M8 part F; pending round 55): Level 26's warm pad from t=168 (gap check F12) as a fourth stem
+- 2026-10-23 (step AUD-F, M8 part F; closed in round 55, 2026-10-24: b): Level 26's warm pad from t=168 (gap check F12) as a fourth stem
   of track 10 on `music_r51b.py`'s grid (same length and loop points, −20 LUFS, 2 LU under the dark stem), by
   `tools/concept/audio/sfx_r55f.py`: a "the dark stem's pad opened" (its own pad brighter through open water, the
   drone warmer, no pings) or b "a synth pad" (a new warm voice on a D♭ progression); listening aids for Level 26's
   t=146–186. Not listened to by Claude: checked by loudness, true peak, the seam and the alignment with the dark stem.
+- 2026-10-24 (user, round 55 closed, S.10): the warm pad **b** "a synth pad" (a new rounder voice on a warm D♭
+  progression, darker and softer than a) is track 10's fourth stem (`thera-deep-warm`, in `assets/music/` by
+  `importPlaceholders`); a and its listening aid moved to `concept/rejected/`. Rook's loss moved 6 s later in the same
+  step (Level 26: the music out at t=164–166, the warm pad from t=174).

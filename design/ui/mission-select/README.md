@@ -4,7 +4,7 @@ design: review
 implementation: done
 art: n/a
 depends-on: [../main-menu, ../debrief, ../../systems/scoring, ../../systems/saves, ../../systems/economy]
-updated: 2026-10-19
+updated: 2026-10-24
 ---
 
 # Mission select
@@ -140,3 +140,12 @@ campaign's progress where it is. This is the "level-select of a replay mode" tha
   about the ship's armour (the replay flies at full armour), but still about Rook's (a replay does
   not repair him, and the replay hangar cannot).
 - 2026-10-19 (user, round 41, P.g): the replay hangar as built, refit only (owned items fitted and unfitted and kept; buying, selling, upgrading and repairs off).
+- 2026-10-24 (the user's playtest: "The shop shows the bulwark even when selecting older missions. The shop should
+  show what flies in the mission."): the replay hangar is the hangar **for the replayed mission**: its escort slot, the
+  callout, the shop's escort rows, the Bulwark row and the launch warnings follow the escort that mission's flight takes
+  (`Campaign.escortFlight(level)`): Rook with his gun before Rook's loss and after his return, the Bulwark where the
+  player chose it (from its unlock, Level 22), the owned Bulwark or the loaner in Levels 27–29, and no escort slot for a
+  mission before Rook joins (Level 08). The cause: the replay hangar ran on the real campaign and asked it for the
+  escort of the campaign's **next** level (with Rook missing at Level 27, the Bulwark for every replay). Fixed by a
+  hangar for a level (`Hangar(catalogue, campaign, level)`, `HangarState.of`); `ActFourHangarTest.
+  theReplayHangarShowsTheEscortOfTheMissionItReplays` checks the hangar's escort against the replay flight's.

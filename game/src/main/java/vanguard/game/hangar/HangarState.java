@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import vanguard.content.campaign.Campaign;
+import vanguard.content.campaign.Catalogue;
 import vanguard.content.campaign.Escort;
 import vanguard.content.campaign.Hangar;
 import vanguard.content.campaign.Hangar.Action;
@@ -172,6 +173,19 @@ public final class HangarState {
         this.refitOnly = refitOnly;
     }
 
+    /**
+     * The hangar screen's state: for the campaign's next level, or (the replay hangar, refit only) for the mission
+     * {@code replay} replays, whose escort it shows and fits: Rook, the Bulwark or none, as that mission's flight takes
+     * it (the user's playtest of 2026-10-24: a replay of an earlier mission showed the Bulwark of Rook's absence).
+     *
+     * @param launchable whether the level is built
+     */
+    public static HangarState of(
+            Catalogue catalogue, Campaign campaign, Optional<Campaign.Replay> replay, boolean launchable) {
+        int level = replay.map(Campaign.Replay::level).orElse(campaign.nextLevel());
+        return new HangarState(new Hangar(catalogue, campaign, level), launchable, replay.isPresent());
+    }
+
     /** Whether this is the replay hangar, which only refits. */
     public boolean refitOnly() {
         return refitOnly;
@@ -227,14 +241,17 @@ public final class HangarState {
     /**
      * M8 part A: the escort's Bulwark row, after Rook's guns: the Bulwark's shop line (locked with its unlock level,
      * for sale, or owned); empty in another slot and before Rook is hired, and in the replay hangar unless one is
-     * owned (it is then only fitted and unfitted).
+     * owned and the replayed mission is from its unlock on (it is then only fitted and unfitted).
      */
     public Optional<Hangar.BulwarkOffer> bulwarkRow() {
         if (slot() != LoadoutSlot.ESCORT || !hangar.escortHired()) {
             return Optional.empty();
         }
         Hangar.BulwarkOffer line = hangar.bulwark();
-        return refitOnly && line.state() != Hangar.State.OWNED ? Optional.empty() : Optional.of(line);
+        // The replay hangar: only an owned Bulwark, and only for a mission it can fly (from its unlock on).
+        return refitOnly && (line.state() != Hangar.State.OWNED || hangar.level() < line.unlock())
+                ? Optional.empty()
+                : Optional.of(line);
     }
 
     /** M8 part A: whether the Bulwark row (after Rook's guns) is selected. */
@@ -710,12 +727,11 @@ public final class HangarState {
     }
 
     /**
-     * M8 part A: whether the Bulwark (owned or the loaner) flies the next level, so the side row and its message name
-     * it instead of Rook.
+     * M8 part A: whether the Bulwark (owned or the loaner) flies the hangar's level (the next one, or the replayed
+     * mission), so the side row and its message name it instead of Rook.
      */
     public boolean bulwarkFliesNext() {
-        return hangar.campaign()
-                .escortFlight()
+        return hangar.escortFlight()
                 .filter(flight -> flight.escorter() == Escort.Escorter.BULWARK)
                 .isPresent();
     }
@@ -1214,9 +1230,9 @@ public final class HangarState {
             warnings.add("ARMOUR BELOW 50 %");
         }
         Campaign campaign = hangar.campaign();
-        if (campaign.escortGrounded()) {
+        if (campaign.escortGrounded(hangar.level())) {
             warnings.add(ROOK_GROUNDED);
-        } else if (campaign.escortArmourLow()) {
+        } else if (campaign.escortArmourLow(hangar.level())) {
             warnings.add(rookArmour(campaign.gear().escort().armour(), campaign.escortMaxArmour()));
         }
         return warnings;

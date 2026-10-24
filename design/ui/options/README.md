@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../controls, ../../art-direction, ../../audio/voice]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Options
@@ -112,7 +112,8 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
   `controls.auto-fire`, `controls.dead-zone`, `controls.<action>.primary|alternative` (libGDX key
   names, `none`), `controls.<action>.gamepad` (button names), `gameplay.text-speed`,
   `gameplay.screen-shake`, `gameplay.flash-reduction`; an unreadable value falls back to its own
-  default. Defaults: every volume 100 % (the game's own mix sets the levels between the buses).
+  default. Defaults: master, music and voice 100 %, effects 50 %, radio blips 90 % (since 2026-10-24; before, every
+  volume 100 %; the game's own mix sets the levels between the buses).
   The sound test is not built yet (new open item). The mock's extra rows (resolution, VSync,
   brightness, interface volume, music style, floating credit numbers, radio subtitle box, HUD
   brightness, pause on focus loss, language) are not in this document and were not built.
@@ -149,3 +150,9 @@ Production art, UI batch part U2 (for concept round 13, opened by part U3): no a
   as built; `design: approved`.
 - 2026-10-23 (step F4, M8 part F): the Gameplay tab's fifth row `DARK LEVELS ASSIST` (OFF / ON, default off;
   `gameplay.dark-assist`), Level 26's approved lever: on, a dark level's ambient is held at 20 %.
+- 2026-10-24 (user, after the playtest of Levels 22–26): the default volumes are **effects 50 %** and **radio blips
+  90 %**, master, music and voice 100 % ("Otherwise, the music and the radio is overpowered by all the explosions and
+  firing. A single explosion is ok with the current audio levels, but the gameplay plays many at the same time";
+  `AudioSettings.defaults()`). A saved settings file keeps its own values; only a first start or a missing key takes
+  the new defaults. The louder depth charge burst of the same day ([sfx](../../audio/sfx/README.md#decisions)) is
+  judged against this mix.

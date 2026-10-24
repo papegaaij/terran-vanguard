@@ -615,7 +615,12 @@ public final class Campaign {
      * only while he is the slot's choice and not missing.
      */
     public boolean escortGrounded() {
-        return rookChosen() && gear.escort().armour() <= 0;
+        return escortGrounded(nextLevel);
+    }
+
+    /** Whether Rook is grounded for Level {@code level} (the replay hangar's mission), as {@link #escortGrounded()}. */
+    public boolean escortGrounded(int level) {
+        return rookChosen(level) && gear.escort().armour() <= 0;
     }
 
     /**
@@ -623,15 +628,20 @@ public final class Campaign {
      * only while he is the slot's choice and not missing.
      */
     public boolean escortArmourLow() {
-        return rookChosen() && gear.escort().armour() < rules.escort().launchWarning() * escortMaxArmour();
+        return escortArmourLow(nextLevel);
+    }
+
+    /** Whether Rook's armour is low for Level {@code level} (the replay hangar's mission), as {@link #escortArmourLow()}. */
+    public boolean escortArmourLow(int level) {
+        return rookChosen(level) && gear.escort().armour() < rules.escort().launchWarning() * escortMaxArmour();
     }
 
     /**
-     * M8 part A: whether the slot is Rook's at the next level: he is hired, not missing, and the player has not chosen
-     * an owned Bulwark instead.
+     * M8 part A: whether the slot is Rook's at Level {@code level}: he is hired, not missing, and the player has not
+     * chosen an owned Bulwark instead.
      */
-    private boolean rookChosen() {
-        return gear.escort().hired() && !rookMissing() && !bulwarkChosen(nextLevel);
+    private boolean rookChosen(int level) {
+        return gear.escort().hired() && !rookMissing(level) && !bulwarkChosen(level);
     }
 
     /** M8 part A: whether an owned Bulwark is the slot's choice at {@code level} (it is for sale by then). */
@@ -640,6 +650,11 @@ public final class Campaign {
         return escort.flies() == Escort.Escorter.BULWARK
                 && escort.bulwark().owned()
                 && level >= rules.bulwark().unlock();
+    }
+
+    /** Whether Level {@code level} is from Rook's joining level on: an escort can fly it once he is hired. */
+    public boolean escortJoined(int level) {
+        return level >= rules.escort().joins();
     }
 
     /** M8 part A: whether Rook is missing in the next level (design/player/wingmen, Rook's loss and absence). */

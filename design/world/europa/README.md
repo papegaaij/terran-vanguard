@@ -274,9 +274,9 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
   the hydro-kit's pump-jet wake and the refit flash on the waterline (`hydro-fx-final-r52-a`); the caustics kept subtle.
   Captured in Level 23 (`waterline-capture-r52-a`).
 - 2026-10-22 (user, round 52, closed): the hydro-kit's wake and refit flash accepted as final (F.6); the waterline crossing's sound **a** and the refit's **a** picked; the under-water grade as built (Level 23) accepted with the round's calls.
-- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5 F1, pending the user's review in round 55): Level 26's darkness is the
+- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5 F1, accepted in round 55 (2026-10-24)): Level 26's darkness is the
   under-water light map with the level's values (its `underwater_look`), not Level 06's `hazards.darkness`.
-- 2026-10-23 (step F4/F5, pending the user's review in round 55): the dark's look in the game: step LX's light map with
+- 2026-10-23 (step F4/F5, accepted in round 55 (2026-10-24)): the dark's look in the game: step LX's light map with
   Level 26's values (the ambient ramp 20 → 6 % over t=8–18 in section 1, the hydro-kit's hard 70° × 260 px cones, a
   15 % rim pool per unit, the static lamps' pools scrolling with the ground, Rook's or the Bulwark's 56 px lamp); every
   unit lit whole for the Sonar Pulse's 6 s, the backdrop staying dark; the cones show a faint haze (0.07) and light the
@@ -293,8 +293,11 @@ are stand-ins (their own sheets are in [naval](../../enemies/naval/README.md#con
   at Level 24). No extra prevention tests ("You just have to play it to see"); the Spiral Nautilus and the
   micro-missiles' angle unchanged until replayed. The numbers in this README and the weapons' are not changed yet.
 - 2026-10-24 (M8 AW, step AW1; decided by the user 2026-10-23 after playing L22–25, the defaults of the rework's plan
-  pending the user's review in round 56): built. `underwater` names the **energy weapons** (`energy_weapons`, was
+  accepted in round 56 (2026-10-24)): built. `underwater` names the **energy weapons** (`energy_weapons`, was
   `reach_weapons`: Ion Beam, Lance Laser, Rear Lance) with `energy_damage: 0.2` **in place of** the guns' × 0.7 (not
   multiplied: the L3 beam's 80 DPS becomes 16, was 56) and `reach: 0.4` (was 0.75); the Sonar Pulse's window still
   gives every weapon full damage (the beam × 1 then, its reach still 0.4); nothing changes in the air (Acts 1–3's replay
   hashes unchanged). The Harpoon Torpedoes and the Depth Charges reworked in their own READMEs.
+- 2026-10-24 (user, round 55 and round 56 closed): round 55's C.7 (the cones' faint haze in Levels 23–26) accepted;
+  round 56's C.3 **keep**: the beam may still clear Level 26, its units stay as they are; Q.1 yes: the waterline strip
+  names the energy weapons (`BEAMS ×0.2`, [hangar](../../ui/hangar/README.md#decisions)).

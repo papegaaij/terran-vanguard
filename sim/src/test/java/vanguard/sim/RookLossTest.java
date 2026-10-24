@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * every case. A retry replays it. Deterministic and allocation-free; a level without one hashes as before.
  */
 class RookLossTest {
-    /** The trails at 3 s, the loss at 3.5 s, 2.5 s of spin (Level 26: 157, 157.5, 2.5). */
+    /** The trails at 3 s, the loss at 3.5 s, 2.5 s of spin (Level 26: 162.5, 163.5, 2.5). */
     static final RookLossSpec LOSS = new RookLossSpec(3.5, 3, 2.5);
 
     private static final double SCROLL = 40;
@@ -116,7 +116,7 @@ class RookLossTest {
     }
 
     @Test
-    void withRookHisTrailsStartThenHeIsLostAndSpinsOffTheBottomEdgeFasterThanTheScroll() {
+    void withRookHisTrailsStartThenHeIsLostAndSpinsOnTheScreenOffTheBottomEdgeFasterThanTheScroll() {
         Sortie sortie = withRook();
         Wingman rook = sortie.wingman().orElseThrow();
         assertTrue(rook.loss().planned());
@@ -146,19 +146,35 @@ class RookLossTest {
         assertFalse(rook.hit(1000, shipX, sortie.ship().y(), sortie.events()), "he takes no hits");
         assertEquals(armour, rook.armour(), "his armour as at the loss");
 
+        // Round 55 C.2: the whole spin plays on the screen. From low beside the ship the hits toss him up a little,
+        // then he sinks back faster and faster and crosses the bottom edge as the spin ends, faster than the scroll.
+        double half = rook.spec().craft().hitbox().height() / 2;
+        double below = fromY + half + RookLoss.BELOW;
+        double faster = RookLoss.FASTER * SCROLL;
+        assertTrue(below < faster * 2.5, "low: " + fromY);
+        assertEquals(faster - 2 * below / 2.5, rook.loss().tossSpeed(), 1e-9, "the hits' toss");
         double lastY = rook.y();
+        double highest = rook.y();
         int steps = 0;
+        int onScreen = 0;
         while (!rook.loss().gone()) {
             sortie.step(Command.FIRE.bit());
             steps++;
-            assertTrue(rook.y() < lastY, "falling");
+            highest = Math.max(highest, rook.y());
+            if (rook.y() > 0) {
+                onScreen++;
+            }
+            if (steps > SimStep.ticks(1.5)) {
+                assertTrue(rook.y() < lastY, "sinking");
+            }
             lastY = rook.y();
             assertEquals(0, sortie.events().count(SimEvents.Type.WINGMAN_EJECTED), "no pod");
         }
         assertEquals(SimStep.ticks(2.5), steps, "off the bottom edge in 2.5 s");
-        assertTrue(rook.y() + rook.spec().craft().hitbox().height() / 2 < 0, "below the bottom edge: " + rook.y());
-        assertTrue((fromY - rook.y()) / 2.5 > SCROLL, "faster than the scroll");
-        assertEquals(RookLoss.FASTER * SCROLL, rook.loss().fallSpeed(), 1e-9, "near the bottom: 1.25 × the scroll");
+        assertTrue(rook.loss().tossSpeed() <= 0 || highest > fromY, "tossed up first");
+        assertTrue(onScreen >= SimStep.ticks(1.8), "his centre on the screen for most of the spin: " + onScreen);
+        assertTrue(rook.y() + half < 0, "below the bottom edge: " + rook.y());
+        assertEquals(faster, rook.loss().fallSpeed(), 1e-9, "off the edge at 1.25 × the scroll");
         assertTrue(loss.lostValue < 0 ? rook.x() < fromX : rook.x() > fromX, "toward his side");
         assertEquals(Integer.MAX_VALUE, rook.ticksSinceShot(), "never fired: the ship held its fire before, he after");
 

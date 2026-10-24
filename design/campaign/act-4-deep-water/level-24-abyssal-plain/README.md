@@ -411,7 +411,7 @@ under-water grade are in [europa](../../../world/europa/README.md#concept-art), 
   `art: final`); **C.1 allow 1** (hard's REEFS asks for 3 of 4, as medium, built in step E3), C.2–C.7 accepted (the
   Barbfin's hard interval, the fry's ram, the Ray's glide off the edge and firing only on the field, the radio retimed,
   the density); the steps' logged small rules accepted.
-- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): the harpoon's rework cleared the level too fast
+- 2026-10-24 (M8 AW, step AW2; accepted in round 56 (2026-10-24)): the harpoon's rework cleared the level too fast
   (`BeamEraHpTest` 0.68×, `PacingTest` red on every difficulty): the Barbfin's HP 12 → 26 (its stat block: two L3
   harpoon hits; "tougher, not more", the user's rule of 2026-10-19), one Barbfin more in each column and circle (not the
   first three nor the Rays' escorts; its stat block's circle now 4–5), the t=12 column at t=10, the t=63 ribbon at t=62,

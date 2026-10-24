@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Architecture
@@ -1324,7 +1324,7 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   side arrows at sensor L3).
 - **Level and unit, M8 part F** ([Level 26](../../campaign/act-4-deep-water/level-26-blackwater/README.md) and the
   [Glow Angler](../../enemies/naval/glow-angler/README.md); loaded, checked (`DarkChecks`) and mapped (`DarkRules`) in
-  step F2, flown from step F1; the gap check's defaults pending the user's review in round 55): the movement
+  step F2, flown from step F1; the gap check's defaults accepted in round 55 (2026-10-24)): the movement
   **`lunge`** (`trigger` px from the unit's centre to the ship's, `speed` px/s for at most `seconds`, `stop_short` px
   short of where the ship was at the trigger, `retreat_speed` px/s for `retreat_seconds`; an `air` unit that drifts
   (`drift`, a field's current) between lunges, with exactly one attack, its `ring` (`count`, `bullet`, `speed`, the

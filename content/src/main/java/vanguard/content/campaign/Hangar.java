@@ -196,16 +196,42 @@ public final class Hangar {
 
     private final Catalogue catalogue;
     private final Campaign campaign;
+    /**
+     * The level the hangar fits the ship for: the campaign's next level, or (the replay hangar) the earlier mission it
+     * replays; its escort is that mission's (the user's playtest of 2026-10-24: a replay showed the Bulwark of Rook's
+     * absence for a mission he flew in).
+     */
+    private final int level;
+
     private Bought bought = Bought.NONE;
     private final Deque<Step> undo = new ArrayDeque<>();
 
     public Hangar(Catalogue catalogue, Campaign campaign) {
+        this(catalogue, campaign, campaign.nextLevel());
+    }
+
+    /**
+     * The hangar for Level {@code level}: the campaign's next level, or for the replay hangar the mission it replays
+     * (whose flight is {@link Campaign#replay}, with that level's escort).
+     */
+    public Hangar(Catalogue catalogue, Campaign campaign, int level) {
         this.catalogue = catalogue;
         this.campaign = campaign;
+        this.level = level;
     }
 
     public Campaign campaign() {
         return campaign;
+    }
+
+    /** The level the hangar fits the ship for: the next level, or the replayed mission. */
+    public int level() {
+        return level;
+    }
+
+    /** The escort as the flight of {@link #level} takes it ({@link Campaign#escortFlight(int)}). */
+    public Optional<Campaign.EscortFlight> escortFlight() {
+        return campaign.escortFlight(level);
     }
 
     /** The item fitted in a slot. */
@@ -293,11 +319,9 @@ public final class Hangar {
                         .forEach(traits::add);
             }
         });
-        campaign.escortFlight()
-                .flatMap(Campaign.EscortFlight::gun)
-                .ifPresent(gun -> item(ItemKind.ESCORT, gun).traits().stream()
-                        .filter(trait -> !trait.equals(REAR))
-                        .forEach(traits::add));
+        escortFlight().flatMap(Campaign.EscortFlight::gun).ifPresent(gun -> item(ItemKind.ESCORT, gun).traits().stream()
+                .filter(trait -> !trait.equals(REAR))
+                .forEach(traits::add));
         Fitted special = campaign.gear().loadout().get(LoadoutSlot.SPECIAL);
         if (special != null
                 && HARDENED_SPECIALS.contains(special.item())
@@ -404,7 +428,7 @@ public final class Hangar {
     public List<Offer> shop(LoadoutSlot slot) {
         ItemKind kind = slot.kind();
         Gear gear = campaign.gear();
-        if (kind == ItemKind.ESCORT && (!gear.escort().hired() || campaign.rookMissing())) {
+        if (kind == ItemKind.ESCORT && (!escortHired() || rookMissing())) {
             // The escort slot opens when Rook joins (Level 08); M8 part A: while he is missing his card is MIA, his
             // guns kept in the inventory but not offered.
             return List.of();
@@ -719,22 +743,28 @@ public final class Hangar {
         return true;
     }
 
-    /** Whether Rook is hired: the escort slot is open. */
+    /**
+     * Whether Rook is hired: the escort slot is open; in the replay hangar only for a mission from his joining level on
+     * (an Act 1 replay flies without an escort).
+     */
     public boolean escortHired() {
-        return campaign.gear().escort().hired();
+        return campaign.gear().escort().hired() && campaign.escortJoined(level);
     }
 
     /** Rook's whole armour points missing; 0 before he is hired and (M8 part A) while he is missing. */
     public int escortMissingArmour() {
         Escort escort = campaign.gear().escort();
-        return escort.hired() && !campaign.rookMissing()
+        return escort.hired() && !rookMissing()
                 ? (int) Math.ceil(campaign.escortMaxArmour() - escort.armour() - EPSILON)
                 : 0;
     }
 
-    /** M8 part A: whether Rook is missing in the next level: his card is MIA (no gun rows, no repair line). */
+    /**
+     * M8 part A: whether Rook is missing in the hangar's level (the next one, or the replayed mission): his card is MIA
+     * (no gun rows, no repair line).
+     */
     public boolean rookMissing() {
-        return campaign.rookMissing();
+        return campaign.rookMissing(level);
     }
 
     /** M8 part A: the Bulwark's shop line. */

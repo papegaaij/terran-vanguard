@@ -96,12 +96,13 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
   Weak spot: the first needle after the Barbfin arrives comes without the 0.25 s tell (the tell keys on the previous
   shot's clock).
 - 2026-10-23 (user, round 53, closed): the final frames and the violet needle accepted (F.3; the part is `art: final`); the needle sound **b** picked; C.2 (hard's 2.6 s interval) accepted.
-- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): HP 12 → 26 (52 at L24–25 with the beam era's
+- 2026-10-24 (M8 AW, step AW2; accepted in round 56 (2026-10-24)): HP 12 → 26 (52 at L24–25 with the beam era's
   × 2): the reworked harpoon (2.8 torpedoes a second at L3, 31 damage, a 44 px splash) killed a Barbfin in about a second
   from its entry, before its first needle (Level 24's small units 0.68× Level 10's time on the screen, Level 25's floor
   3 shots a minute); at 52 it takes two L3 hits (a hit and its splash, 50, do not kill it). Measured with the levels'
   extra Barbfins: Level 24 0.94×, Level 25 1.25×. "Tougher, not more" (the user's rule of 2026-10-19) as far as it went:
   16 and 20 HP did not reach 0.9×. The circle's size 4–5 (Level 24's circles of 5).
-- 2026-10-24 (M8 AW, step AW3; pending the user's review in round 56): in a level with rock walls (Levels 24–26's trench
+- 2026-10-24 (M8 AW, step AW3; accepted in round 56 (2026-10-24)): in a level with rock walls (Levels 24–26's trench
   and scarp) a Barbfin's hold and its leaving after the hold stay inside the flyable span (`Canyon.inSpan`): it slides
   down along a wall and leaves inside the trench instead of crossing the rock sideways.
+- 2026-10-24 (user, round 56 closed, C.4): the tougher Barbfin and the retuned waves of Levels 23–26 accepted.

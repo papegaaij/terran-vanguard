@@ -96,7 +96,7 @@ public final class HangarScreen implements GameScreen {
                 : CampaignRoute.launch(services.content, campaign);
         // A special's free charges at its unlock (the first Airstrike charge), before the autosave.
         List<Campaign.FreeCharges> given = campaign.giveFreeCharges(services.content.specials());
-        state = new HangarState(new Hangar(services.catalogue, campaign), nextLevel.isPresent(), replay.isPresent());
+        state = HangarState.of(services.catalogue, campaign, replay, nextLevel.isPresent());
         for (Campaign.FreeCharges free : given) {
             state.notice(HangarState.freeChargesNotice(free));
         }

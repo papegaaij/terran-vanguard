@@ -36,7 +36,7 @@ yet: the loader would fly it, so every number here is a hand table marked draft,
 | [level-22-ice-shelf](level-22-ice-shelf/README.md) | Act 4's opener and breather: four Vrell drill rigs on Conamara's ice shelf, ice geysers, the run-in to the station | approved | in-progress | final |
 | [level-23-through-the-ice](level-23-through-the-ice/README.md) | The descent: a drill shaft, the waterline where the hydro-kit switches the ship to the water rules, Thera Deep's kelp farms; Glassfin schools and the Eel Swarm | approved | in-progress | final |
 | [level-24-abyssal-plain](level-24-abyssal-plain/README.md) | The ocean floor: Vrell spawning reefs, the Barbfin, three Abyss Rays rising from below, the first red-gold relay beacons | approved | in-progress | final |
-| [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | in-progress | proposed |
+| [level-25-siren-trench](level-25-siren-trench/README.md) | A narrow trench with side caves: Sirens whose rings slow the ship, the Spiral Nautilus, wall collision; the act's hardest stretch before the Maw | approved | in-progress | final |
 | [level-26-blackwater](level-26-blackwater/README.md) | Darkness: headlight and glow only, the Glow Angler's lure, the Choir's first hint of the door; Rook is shot down | approved | in-progress | proposed |
 | [level-27-hydrothermal-vents](level-27-hydrothermal-vents/README.md) | The vent field: heat plumes that burn and bend shots, grey Depth Hunters from below (hint 3: a Helix hull code), a Bulwark in Rook's slot | approved | not-started | none |
 | [level-28-abyssal-maw](level-28-abyssal-maw/README.md) | The hatchery and the act boss, the Abyssal Maw; then the climb, the ice breakout and the reveal: two Ascendancy cruisers; the act end | approved | not-started | none |
@@ -328,7 +328,7 @@ teaser stays text only. **Two new colony voices** (cast in the audition step, pe
 - **Thera Deep Control** (L23, L27): the city's harbour controller, a calm man's voice, older than Rook's.
 
 Rook flies L22–L26 from the escort slot (his lines `requires: escort`, one dry joke a level), and in **L26 his
-lines are scripted** (the warm one at t=150, the cut line at t=160.3, "*Lancer, something's below u—*"); from L27
+lines are scripted** (the warm one at t=150, the cut line at t=161.2, cut by the hits, "*Lancer, something's below u—*"); from L27
 he is missing, so he has **no lines** in L27–L28 (dropped, not just `requires: escort`) and the Bulwark has no
 radio. **The Choir** sings in L28 before the boss (t=97.5) and **speaks** twice: L26's "*…small ones… in the dark…
 your kin… came before you…*" and L28's "*…many… we were many here…*" as the Maw dies, delayed 3 s after the chain's
@@ -447,8 +447,10 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
   `A4_GEYSER = "a"` into `assets/ui/act-4-deep-water-still.png` and its review sheet `act-4-still-final-r51-a.png`
   (step D4); b (the nearer fissure plume) rejected, its still moved to `concept/rejected/`. The round 51 intro captures
   show the old still (not re-captured). C.1–C.7 of round 52 accepted with Level 23.
-- 2026-10-24 (M8 AW, step AW2; the user's decision of 2026-10-23, the wording pending the user's review in round 56):
+- 2026-10-24 (M8 AW, step AW2; the user's decision of 2026-10-23, the wording accepted in round 56 (2026-10-24)):
   Okafor's intro page 3 warns that beams and lasers lose nearly all their bite under water and to save credits for
   torpedoes and depth charges ("... a pressure-proof hull. Everything slows down there, theirs and yours. Guns lose a
   third of their bite, beams and lasers nearly all. Save your credits for torpedoes and charges."; the plan's wording,
   shortened to the page's four lines: `BriefingLayoutTest`); its voice take is re-rendered by step VOX-AW.
+- 2026-10-24 (user, round 56 closed, C.7): the four warning texts accepted as built. Round 55 closed the same day
+  (Level 26; Rook's loss retimed after the playtest: [Level 26](level-26-blackwater/README.md#decisions)).

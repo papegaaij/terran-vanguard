@@ -9,7 +9,7 @@
 # Defaults of the gap check (m8f-gaps.md §5, pending the user's review in round 55): the dark is the light map with this
 # level's values, nothing in the simulation knows it (F1); the ambient ramp 20 → 6 % over t=8–18 in section 1 (F4); the
 # scarp a right wall only, each `turret nest` wave just above its notch (F5); the loss not an eject (F7); the aftermath's
-# quiet window t=156–160, the jellies at 160/166 after it (F9); "the central Angler" the field member nearest the
+# quiet window t=156–160, the jellies at 160/166 after it (F9; round 55's retime: 152–166, the jellies at 166/172); "the central Angler" the field member nearest the
 # field's centre at entry (F10); the eel counted whole (48 typical, F11); track 10 only (F12).
 # Step F2's own placements (pending review): ART-F's terrain proposal adopted unchanged (concept/backdrop-proposal.yaml:
 # the scarp t=56–103, 3 notches); the README's `scattered` Angler rows are sparse `field`s (no `scattered` formation in
@@ -91,15 +91,15 @@ sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); t
         ground: Open black water; a faint amber seep glow far below from t=140.
       purpose: The last fights; Rook's pre-line (t=150).
   - name: The Silence
-    end: 182
+    end: 188
     speed: 110
     ramp: 2   # eased from 120
     atmosphere: clear
     tiles: [black-water]
     notes:
       layers:
-        ground: Black water; the vent field's red glow rising on the horizon from t=168; Rook's lamp beside the ship until t≈160.
-      purpose: Rook's loss (t=157–160); the aftermath; level end.
+        ground: Black water; the vent field's red glow rising on the horizon from t=174; Rook's lamp beside the ship until t≈163.5.
+      purpose: Rook's loss (t=161–166); the aftermath; level end.
 
 # The game's under-water grade and its light map (presentation only; step LX's headlights, step F4's dark): the black
 # level of round 48's Q2 a. The ambient 6 % (section 1 from 20 %, ramping down over t=8–18); the hard cone of the twin
@@ -166,8 +166,8 @@ terrain:
 # fields (a 400 px wide area, 100 px between units); during the scarp (t=62–100) the fields and the snakes keep to its
 # open left side (x 30–270). A Nautilus pair (`circle`) orbits the ship for its 15 s hold, then breaks off; an eel swims
 # its route with its sway, a pair of eels is two rows 4 s apart. Quiet windows: no other wave enters t=24–27.5 (the
-# Anglers' first sight), 104.5–108 (after the Choir's fragment, before the constellation) or 152–160 (the loss; the
-# jellies at 160 and 166 are the aftermath's only units).
+# Anglers' first sight), 104.5–108 (after the Choir's fragment, before the constellation) or 152–166 (the loss, its
+# cut line and the silence after it; the jellies at 166 and 172 are the aftermath's only units).
 waves:
   - {t: 5, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200], notes: "In the last lamps' reach, veins lit"}
   - {t: 8, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
@@ -270,8 +270,8 @@ waves:
   - {t: 145.5, formation: field, enemy: glow-angler, count: 5, from: front, x: 240, size: [400, 360], spacing: 100, notes: Scattered}
   - {t: 149, formation: field, enemy: driftjelly, count: 6, from: front, x: 240, size: [360, 200]}
   - {t: 151, formation: field, enemy: glow-angler, count: 4, from: front, x: 240, size: [360, 420], spacing: 70, notes: "The last fight before the silence, spread out to the loss's quiet window"}
-  - {t: 160, formation: field, enemy: driftjelly, count: 5, from: front, x: 240, size: [360, 760], notes: "Harmless drifters: their veins are the only light in the aftermath; no other wave after this"}
-  - {t: 166, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 600], notes: "Drifting in over 5 s"}
+  - {t: 166, formation: field, enemy: driftjelly, count: 5, from: front, x: 240, size: [360, 760], notes: "Harmless drifters: their veins are the only light in the aftermath; no other wave after this"}
+  - {t: 172, formation: field, enemy: driftjelly, count: 4, from: front, x: 240, size: [360, 600], notes: "Drifting in over 5 s"}
 
 ground_targets:  # at: [t, x], when it enters at the top edge and its x
   - target: farm barge
@@ -300,9 +300,12 @@ drops:  # a drifting Thera Deep survey buoy (warm gold glow) releases an armour 
 
 radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, fitted and not ejected). Rook's three
   # lines are scripted, not barks (no `requires`): they play with him, ejected, without him or with the Bulwark; his
-  # barks end at the loss's trails (t=157). The Choir's line: the HUD portrait's static 2 s before it, the music 6 dB
+  # barks end at the loss's trails (t=162.5). The Choir's line: the HUD portrait's static 2 s before it, the music 6 dB
   # under it. Step F2 retimed the loss's lines to the radio's hold (every line on the panel at least 5 s and 0.4 s of
   # silence: RadioTimelineLevel26Test): Rook's pre-line 148, Varga's warning 155, Okafor 167.5, Varga 174.5, Okafor 181.
+  # Round 55's retime (the user's playtest of 2026-10-24: the cut line came seconds after his loss): Rook's cut line
+  # opens as soon as Varga's shout has closed (t≈161.1 at the default text speed) and the hits cut it, 2.3 s in, in
+  # its last word; the loss and everything after it 6 s later than before: Okafor 173.5, Varga 180.5, Okafor 187.
   - {t: 1, speaker: Okafor, line: "Blackwater, Lancer. No lamps, no charts. Your headlight and whatever glows, nothing else."}
   - {t: 13, speaker: Rook, line: "Dark and wet. At least nobody sees me being scared."}
   - {t: 24.5, speaker: Varga, line: "That glow is not a pickup. Teal is Vrell. Touch it and it lunges."}
@@ -313,14 +316,14 @@ radio:  # trigger: t or event; requires: escort = only while Rook flies (hired, 
   - {t: 118, speaker: Okafor, line: "Noted, Doctor. Eyes front."}
   - {t: 140, speaker: Okafor, line: "Almost through the deep, Lancer. Vents ahead."}
   - {t: 148, speaker: Rook, line: "Lancer, if I buy you a drink for this one, we're even."}   # the README's t=150, so Varga's warning follows it
-  - {t: 155, speaker: Varga, shout: true, line: "Contacts below!"}   # the README's t=157: her sonar finds them as they launch, 2 s before the trails rise (the radio holds a line at least 5 s)
-  - {t: 160.3, speaker: Rook, line: "Lancer, something's below u—"}   # cut mid-word (Level 10's cut dash), as his lamp goes dark at the bottom edge
-  - {t: 167.5, speaker: Okafor, line: "Aegis Two, report. Rook? Rook, answer!"}   # the README's t=165, after the cut line
-  - {t: 174.5, speaker: Varga, line: "His lamp went down, Commander."}   # the README's t=171
-  - {t: 181, speaker: Okafor, line: "Finish the dive, Lancer. We will find him.", notes: {trigger: "Level end (t=181)"}}   # the README's t=176
+  - {t: 155, speaker: Varga, shout: true, line: "Contacts below!"}   # the README's t=157: her sonar finds them as they launch, before the trails rise (t=162.5) (the radio holds a line at least 5 s)
+  - {t: 161.2, speaker: Rook, line: "Lancer, something's below u—"}   # cut mid-word (Level 10's cut dash) by the hits at t=163.5, his voice in the "u" (the take's 2.3-2.45 s); the trails rise from t=162.5 under "something's below"
+  - {t: 173.5, speaker: Okafor, line: "Aegis Two, report. Rook? Rook, answer!"}   # the README's t=165, 10 s after the hits
+  - {t: 180.5, speaker: Varga, line: "His lamp went down, Commander."}   # the README's t=171
+  - {t: 187, speaker: Okafor, line: "Finish the dive, Lancer. We will find him.", notes: {trigger: "Level end (t=187)"}}   # the README's t=176
   - {event: secondary-objective, speaker: Okafor, line: "Clean crossing. Now find him, Lancer.", notes: {trigger: Secondary met (at the end)}}
 
-rook_loss: {t: 157.5, trails: 157, spin: 2.5}   # the trails from 157 (his barks end), the hit at 157.5, 2.5 s spinning down off the bottom edge
+rook_loss: {t: 163.5, trails: 162.5, spin: 2.5}   # the trails from 162.5 (his barks end; his cut line from 161.2), the hits at 163.5 cutting it, 2.5 s spinning down on the screen, off the bottom edge at 166
 
 objectives:
   primary: reach-end
@@ -333,8 +336,8 @@ music:
   stem_times:         # the strip-back as the lights go out, the thinning, the silence and the vents' warm pad (F12)
     - {t: 8, stems: dark, fade: 10}      # the dark stem (thera-deep-dark: pings, the deep pad, the drone) alone over t=8-18
     - {t: 150, db: -6, fade: 2}          # the pad thins under Rook's last lines
-    - {t: 158, stems: none, fade: 2}     # out at t=160: the silence of the loss
-    - {t: 168, stems: warm, fade: 10}    # the vent field's warm pad creeping in (round 55's pick, thera-deep-warm)
+    - {t: 164, stems: none, fade: 2}     # out at t=166: the silence of the loss
+    - {t: 174, stems: warm, fade: 10}    # the vent field's warm pad creeping in (round 55's pick b, thera-deep-warm)
   ambience: europa-black   # a heavy pressure drone, distant whale calls, no bubbles (step AUD-F)
   ambience_layers:
     - {ambience: europa-trench, from: 56, to: 104, fade_in: 4, fade_out: 4}   # the scarp's rumble
@@ -391,5 +394,5 @@ backdrop:
     # the amber seeps far below (section 5); their light amber-seep-glow
     - {piece: amber-seep, t: 143.0, x: 130}
     - {piece: amber-seep, t: 149.5, x: 352}
-    # the vent field's far chimneys and red glow (vent-field-glow) rising on the horizon from t~168; exact rows
-    - {piece: vent-field, t: 177.727, x: 240}
+    # the vent field's far chimneys and red glow (vent-field-glow) rising on the horizon from t~174; exact rows
+    - {piece: vent-field, t: 183.727, x: 240}

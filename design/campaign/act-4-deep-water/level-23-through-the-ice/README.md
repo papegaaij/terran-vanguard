@@ -449,7 +449,7 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   since step D4); the under-water explosion family (S.10) asked again in round 53. C.1–C.7 accepted (the density, the
   radio retime, the straight Glassfin columns, the eel's first shots, the Glassfin's dive, `small_act_hp`, the pumps'
   secondary), and with them the small rules the steps logged as pending this round (now "accepted in round 52").
-- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): the plan flies the Harpoon L1 and the Depth Charges
+- 2026-10-24 (M8 AW, step AW2; accepted in round 56 (2026-10-24)): the plan flies the Harpoon L1 and the Depth Charges
   L1 here (no sale, no upgrade; the user: Level 23 must be doable with the low-level torpedoes): `levelReport` won 3/3 on
   every difficulty, the secondary met 3/3; medium 3.7 on the screen, 10.9 shots a minute, the small units 1.64 s (1.03×
   Level 10's), the typical haul unchanged (−0.7 %). The harpoon's faster rate cleared the waves sooner (five stretches
@@ -459,8 +459,11 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
   torpedoes and charges), the threat profile's L3 line too (Varga's page drops "theirs and yours" to keep its four
   lines); the two pages' voice takes are re-rendered by step VOX-AW.
   Varga's radio line at t=13.5 ("the rest lose a third") is voiced and left as it is (pending the user's review).
-- 2026-10-24 (M8 AW, step VOX-AW; pending the user's review in round 56): Varga's t=13.5 radio line corrected for the
+- 2026-10-24 (M8 AW, step VOX-AW; accepted in round 56 (2026-10-24)): Varga's t=13.5 radio line corrected for the
   rework: "Water in twelve seconds. Everything slows. Torpedoes and charges bite as ever; guns lose a third, beams nearly
   all." ("theirs and yours" dropped and "bite as ever" for "keep their bite", so it keeps its six radio lines, two pages:
   the seven-line wording held the radio until the waterline line started 3.4 s late on easy). Re-rendered with the two
   briefing pages; `RadioTimelineLevel23Test`, `BriefingLayoutTest` and `VoiceFilesTest` green.
+- 2026-10-24 (user, round 56 closed, Q.1 yes): the waterline's rules strip names the energy weapons:
+  `UNDER WATER · BULLETS ×0.7 · BEAMS ×0.2 · TORPEDOES +50 %` (`DRAG` dropped to keep it on one line; see
+  [hangar](../../../ui/hangar/README.md#decisions)).

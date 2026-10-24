@@ -41,7 +41,7 @@ class RookLossLooksTest {
         assertEquals(10, frames("rook-flash"));
         JsonValue pivots = new JsonReader().parse(Files.readString(ASSETS.resolve("pivots/rook-spin.json")));
         assertEquals(16, pivots.get("lamp").size, "the lamp per spin frame");
-        assertEquals(new RookLossSpec(157.5, 157, 2.5), LOSS, "Level 26's loss");
+        assertEquals(new RookLossSpec(163.5, 162.5, 2.5), LOSS, "Level 26's loss");
     }
 
     /** The lanes are his x and x ± 48; one within 40 px of the ship moves to his far side (F6). */

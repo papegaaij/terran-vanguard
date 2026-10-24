@@ -2,9 +2,9 @@
 title: Glow Angler
 design: approved
 implementation: in-progress
-art: chosen
+art: final
 depends-on: [../../../systems/difficulty, ../../../systems/economy]
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Glow Angler
@@ -71,7 +71,7 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): the Angler w
 - - 2026-10-21 (step m8-denemies): drafted for the Act 4 design phase from the roster row and the gap analysis; every number is a first draft decided in round 48 (2026-10-22).
 - - 2026-10-21 (recommended option, decided in round 48 (2026-10-22), Q6 a): a near-miss lure, teal with a visible stalk; rejected: b (looks exactly like a pickup) and c (no mimicry).
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5 F2, pending the user's review in round 55): the stat block as data; the
+- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5 F2, accepted in round 55 (2026-10-24)): the stat block as data; the
   trigger is one distance test from the body (130 px, easy 100, hard 160): the lure, at most 48 px from it, lies inside
   it, so touching the lure needs no test of its own; the dive aims at the ship's position at the trigger and stops 60 px
   short or after 0.6 s; the retreat lasts 1.5 s; the ring re-arms 5 s after it (the fire-rate lever applies, as to every
@@ -80,9 +80,11 @@ Concept round 48 proposals (a/b, decided in round 48 (2026-10-22)): the Angler w
 - 2026-10-23 (step F3): flown in Level 26 on every difficulty (`Level26Test`: it lunges and rings in a flight, never
   ringing more often than it lunged; its re-arm the 5 s by the fire-rate lever: easy 7.1 s, hard 3.8 s); the test
   autopilot keeps out of a drifting Angler's trigger where it can and clear of a diving one's ring (`DarkPlay`).
-- 2026-10-23 (steps F1, F4 and ART-F, pending the user's review in round 55): the ring waits for room while the ship is
+- 2026-10-23 (steps F1, F4 and ART-F, accepted in round 55 (2026-10-24)): the ring waits for room while the ship is
   within 72 px of the Angler (no ring point-blank), and one that never finds room by the retreat's end is dropped; the
   lunge ignores the scroll (it dives in the water, not along the ground); the sprite is an 80 px frame with the body
   centred (the sprite's centre is the hitbox's), drawn graded (the 15 % rim lights it in the dark) with the bead, eyes
   and stalk over the grade; the stalk lights up within 160 px of the ship on every difficulty, and in a light pool, the
   cone or the Sonar Pulse.
+- 2026-10-24 (user, round 55 closed, F.3): the Glow Angler's final art accepted (`glow-angler-final-r55-a`); its lure
+  hum **a** and lunge **a** picked.

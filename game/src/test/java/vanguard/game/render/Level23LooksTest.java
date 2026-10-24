@@ -196,9 +196,11 @@ class Level23LooksTest {
     /** The rules strip from the water's factors, shown on the step the sortie goes under water (not a start under it). */
     @Test
     void theRulesStripReadsTheWatersFactors() {
-        assertEquals(
-                "BULLETS ×0.7 · DRAG · TORPEDOES +50 %",
-                WaterlineTell.rules(ThroughIceFixture.CONTENT.europa().underwater(), "×"));
+        String rules = WaterlineTell.rules(ThroughIceFixture.CONTENT.europa().underwater(), "×");
+        assertEquals("BULLETS ×0.7 · BEAMS ×0.2 · TORPEDOES +50 %", rules, "round 56 Q.1: the energy weapons named");
+        assertTrue(
+                WaterlineTell.fits(labelWidth(WaterlineTell.ACTION), labelWidth(rules), 8),
+                "one line inside the play field, 8 px clear of its edges");
         WaterlineTell tell = new WaterlineTell();
         assertFalse(tell.step(true), "an attempt starting under water");
         tell.reset();
@@ -214,5 +216,22 @@ class Level23LooksTest {
             assertEquals(UnderwaterGrade.caustic(0, v), UnderwaterGrade.caustic(1, v), 1e-9);
             assertEquals(UnderwaterGrade.caustic(v, 0), UnderwaterGrade.caustic(v, 1), 1e-9);
         }
+    }
+
+    /** A text's width in the HUD's label font (monospaced; every glyph it uses is in the font). */
+    private static int labelWidth(String text) {
+        com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData font =
+                new com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData(
+                        new com.badlogic.gdx.files.FileHandle(new java.io.File(
+                                System.getProperty("vanguard.assetsDir", "../assets"),
+                                vanguard.game.ui.Fonts.LABEL_FILE)),
+                        false);
+        int width = 0;
+        for (int i = 0; i < text.length(); i++) {
+            com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph glyph = font.getGlyph(text.charAt(i));
+            assertTrue(glyph != null, "the label font has '" + text.charAt(i) + "'");
+            width += glyph.xadvance;
+        }
+        return width;
     }
 }

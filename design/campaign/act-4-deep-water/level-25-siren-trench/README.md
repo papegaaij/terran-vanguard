@@ -2,7 +2,7 @@
 title: Level 25 – Siren Trench
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/barbfin, ../../../enemies/naval/glassfin, ../../../enemies/naval/reef-spitter, ../../../world/europa, ../../../player/wingmen, ../../../player/systems, ../../../story/twist]
 updated: 2026-10-24
 ---
@@ -196,7 +196,7 @@ Enemy definitions are linked per row; formation names from the
 (100 a minute), 3.6 on the screen and 21 shots a minute (the Act 2+ floor: 2.5 and 10), one stretch over 2 s
 (t≈107.7–110.3, into the narrows; three allowed); easy 225 (2.3 on the screen), hard 335 (4.9). With step E4's trench
 play: 3.5 on the screen, 20 shots a minute, two stretches over 2 s (t≈65–67 and the floor's last 4 s); hard 5.5.
-**M8 AW** (step AW2, pending the user's review in round 56): the faster harpoon emptied the trench (1.7 on the screen,
+**M8 AW** (step AW2, accepted in round 56 (2026-10-24)): the faster harpoon emptied the trench (1.7 on the screen,
 3 shots a minute, the small units 0.68× Level 10's): the [Barbfin](../../../enemies/naval/barbfin/README.md) 26 HP (52
 here), one more in every group from the front (a group of 5 held at 5 on hard: the trench's span), two more from every
 cave (at most the column's 5) and a column of 3 down the narrows at t=107.5; `bounty_scale` 0.42. Measured: 314
@@ -416,22 +416,22 @@ row's text.
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r54-a.png](concept/backdrop-final-r54-a.png) | Production backdrop (`tools/art/backdrop_l25.py`, from europa-siren-trench-r48-a): the trench's ice-rock walls with Vrell growth and glowing nodules, the side caves, the rock pillar at the fork, the narrows; the plain's lip at the start, four floor tile sets (rubble, scour, root mats, the open floor), ledges under the Reef Spitters, eighteen relay beacons at the walls' foot (4 s pulse); ten screens under the proposed ambient 0.14, the walls projected as the game does (sheet) | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
-| [concept/backdrop-final-r54-a.gif](concept/backdrop-final-r54-a.gif) | t 96–104 at half size: the fork round the pillar | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
-| [concept/backdrop-final-r55-a.png](concept/backdrop-final-r55-a.png) | The backdrop again after round 54's redo (step LX, the same sheet as r54's): the pillar's ends rounded, the walls' frosted lip with a faint rim glow (`ice-wall-glow`); the headlights and the rim light are the game's (see the r55 captures), the review grade shows the ambient only | proposed (round 55) |
-| [concept/backdrop-final-r55-a.gif](concept/backdrop-final-r55-a.gif) | t 96–104 at half size: the fork round the rounded pillar | proposed (round 55) |
-| [concept/walls-capture-r55-a.png](concept/walls-capture-r55-a.png) | Game capture (step LX; Level 25 on medium, `--invulnerable`, the default loadout, Rook along with an autocannon; Xvfb, the software renderer; the field at 1:1, t≈17, 37, 57, 77): the dark trench, the ship's and Rook's headlights lighting the floor and the walls ahead, the rim light on the walls' foot and the lip's glow | proposed (round 55) |
-| [concept/cave-entry-capture-r55-a.png](concept/cave-entry-capture-r55-a.png) | The same run (t≈25, 27, 28, 29): cave mouths in both walls with their rock edges in the rim light, the t=29 cave wave warned on the left | proposed (round 55) |
-| [concept/fork-capture-r55-a.png](concept/fork-capture-r55-a.png) | The same run (t≈98–101): the pillar's rounded head coming down the trench and into the headlights | proposed (round 55) |
-| [concept/narrows-capture-r55-a.png](concept/narrows-capture-r55-a.png) | The same run (t≈107, 110, 113, 116): the pillar's rounded tail, the narrows' walls (190 px) in the cones and the rim | proposed (round 55) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block and the `terrain:` block (walls, pillar, 25 notches) the art is drawn for | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
+| [concept/rejected/backdrop-final-r54-a.png](concept/rejected/backdrop-final-r54-a.png) | Production backdrop (`tools/art/backdrop_l25.py`, from europa-siren-trench-r48-a): the trench's ice-rock walls with Vrell growth and glowing nodules, the side caves, the rock pillar at the fork, the narrows; the plain's lip at the start, four floor tile sets (rubble, scour, root mats, the open floor), ledges under the Reef Spitters, eighteen relay beacons at the walls' foot (4 s pulse); ten screens under the proposed ambient 0.14, the walls projected as the game does (sheet) | rejected (round 54, F.1/F.2: redo; its redo, the r55 files, accepted in round 55, L.1) |
+| [concept/rejected/backdrop-final-r54-a.gif](concept/rejected/backdrop-final-r54-a.gif) | t 96–104 at half size: the fork round the pillar | rejected (round 54, F.1/F.2: redo; its redo, the r55 files, accepted in round 55, L.1) |
+| [concept/backdrop-final-r55-a.png](concept/backdrop-final-r55-a.png) | The backdrop again after round 54's redo (step LX, the same sheet as r54's): the pillar's ends rounded, the walls' frosted lip with a faint rim glow (`ice-wall-glow`); the headlights and the rim light are the game's (see the r55 captures), the review grade shows the ambient only | chosen (round 55, L.1: accepted as final) |
+| [concept/backdrop-final-r55-a.gif](concept/backdrop-final-r55-a.gif) | t 96–104 at half size: the fork round the rounded pillar | chosen (round 55, L.1: accepted as final) |
+| [concept/walls-capture-r55-a.png](concept/walls-capture-r55-a.png) | Game capture (step LX; Level 25 on medium, `--invulnerable`, the default loadout, Rook along with an autocannon; Xvfb, the software renderer; the field at 1:1, t≈17, 37, 57, 77): the dark trench, the ship's and Rook's headlights lighting the floor and the walls ahead, the rim light on the walls' foot and the lip's glow | chosen (round 55, L.1: accepted as final) |
+| [concept/cave-entry-capture-r55-a.png](concept/cave-entry-capture-r55-a.png) | The same run (t≈25, 27, 28, 29): cave mouths in both walls with their rock edges in the rim light, the t=29 cave wave warned on the left | chosen (round 55, L.1: accepted as final) |
+| [concept/fork-capture-r55-a.png](concept/fork-capture-r55-a.png) | The same run (t≈98–101): the pillar's rounded head coming down the trench and into the headlights | chosen (round 55, L.1: accepted as final) |
+| [concept/narrows-capture-r55-a.png](concept/narrows-capture-r55-a.png) | The same run (t≈107, 110, 113, 116): the pillar's rounded tail, the narrows' walls (190 px) in the cones and the rim | chosen (round 55, L.1: accepted as final) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block and the `terrain:` block (walls, pillar, 25 notches) the art is drawn for | chosen (round 55, L.1: accepted as final, after round 54's redo) |
 | [concept/l25-props-final-r54-a.png](concept/l25-props-final-r54-a.png) | The level's props (`tools/art/l25_props.py`): Conamara's survey sub nose-down in its cave (lying, hit, opened; its dead lamp's pinger, sparks), the survey buoy (shut, opening, open; its strobe) (sheet) | chosen (round 54, F.5: accepted as final) |
 | [concept/l25-props-final-r54-a.gif](concept/l25-props-final-r54-a.gif) | The sub shot open in its cave and its crate rising; the buoy releasing the armour patch at the narrows' end | chosen (round 54, F.5: accepted as final) |
-| [concept/cave-entry-capture-r54-a.png](concept/cave-entry-capture-r54-a.png) | Game capture, M8 part E (step E6; Level 25 on medium, `--invulnerable`, the balance plan's Level 25 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods L3, the Pressure hull, the Sonar Pulse, Rook along): the first cave wave (t=27 the edge warning on the left, t=29.4–30.8 three Barbfins swimming out of the left wall's cave mouth while a Siren's ring crosses) | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
-| [concept/fork-capture-r54-a.png](concept/fork-capture-r54-a.png) | The fork (t=99, 102, 105, 108): the rock pillar splitting the trench into two 140 px channels, its Reef Spitters, the ship in the right channel | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
-| [concept/narrows-capture-r54-a.png](concept/narrows-capture-r54-a.png) | The narrows (t=109.5, 111, 114, 117): the walls at 190 px, no Nautilus, a cave wave warned on the right | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
+| [concept/rejected/cave-entry-capture-r54-a.png](concept/rejected/cave-entry-capture-r54-a.png) | Game capture, M8 part E (step E6; Level 25 on medium, `--invulnerable`, the balance plan's Level 25 fit: Harpoon Torpedoes L3, Depth Charges L3, two Micro-Missile Pods L3, the Pressure hull, the Sonar Pulse, Rook along): the first cave wave (t=27 the edge warning on the left, t=29.4–30.8 three Barbfins swimming out of the left wall's cave mouth while a Siren's ring crosses) | rejected (round 54, F.1/F.2: redo; its redo, the r55 files, accepted in round 55, L.1) |
+| [concept/rejected/fork-capture-r54-a.png](concept/rejected/fork-capture-r54-a.png) | The fork (t=99, 102, 105, 108): the rock pillar splitting the trench into two 140 px channels, its Reef Spitters, the ship in the right channel | rejected (round 54, F.1/F.2: redo; its redo, the r55 files, accepted in round 55, L.1) |
+| [concept/rejected/narrows-capture-r54-a.png](concept/rejected/narrows-capture-r54-a.png) | The narrows (t=109.5, 111, 114, 117): the walls at 190 px, no Nautilus, a cave wave warned on the right | rejected (round 54, F.1/F.2: redo; its redo, the r55 files, accepted in round 55, L.1) |
 | [concept/siren-nautilus-capture-r54-a.png](concept/siren-nautilus-capture-r54-a.png) | The t=138.5 combination (t=141.5, 144, 146, 147): a Nautilus pair's spirals with the t=142 nests' rings, the ship and Rook slowed (their shimmer) | chosen (round 54, F.3/F.4: accepted as final; the trench round it is redrawn in round 55) |
-| [concept/walls-capture-r54-a.png](concept/walls-capture-r54-a.png) | Wall crops at 1:1 (top) and the same lifted (gamma 0.5, bottom, to show what the grade hides): the left wall with a cave mouth (t=40.5), a Siren singing on the right wall (t=95.6), the pillar's tip (t=103), the narrows' wall (t=112) | redo (round 54, F.1/F.2: the user asked for a redo, shown again in round 55; the file stays until then) |
+| [concept/rejected/walls-capture-r54-a.png](concept/rejected/walls-capture-r54-a.png) | Wall crops at 1:1 (top) and the same lifted (gamma 0.5, bottom, to show what the grade hides): the left wall with a cave mouth (t=40.5), a Siren singing on the right wall (t=95.6), the pillar's tip (t=103), the narrows' wall (t=112) | rejected (round 54, F.1/F.2: redo; its redo, the r55 files, accepted in round 55, L.1) |
 | [concept/survey-sub-capture-r54-a.png](concept/survey-sub-capture-r54-a.png) | The secret at 1:1 (a second run, the ship steered to the left wall at t=76.3): the survey sub in its cave (t=79.5, 80.5), hit (t=81), its crate taken (+410, t=82) | chosen (round 54, F.5: accepted as final) |
 | [concept/survey-buoy-capture-r54-a.png](concept/survey-buoy-capture-r54-a.png) | The survey buoy at 1:1 (t=117.5–119.5): moored and shut, opening, the armour patch released and drifting | chosen (round 54, F.5: accepted as final) |
 
@@ -525,7 +525,7 @@ row's text.
   Sounds: the Siren's ring a, slow **b**, death a; the shell spin a, uncoil a, the Nautilus's death **b**; the bed a.
   C.1–C.8 accepted (the 90 px floor, armoured while it opens, every anti-sub weapon cracks the shell, a Dash is not slowed,
   a kill ends its ring, the nests nudged, the radio retimed, the intel without `homing`).
-- 2026-10-23 (step LX, round 54's F.1/F.2 redo, pending the user's review in round 55): the dark ambient (0.14, 0.10 over
+- 2026-10-23 (step LX, round 54's F.1/F.2 redo, accepted in round 55 (2026-10-24)): the dark ambient (0.14, 0.10 over
   the floor) kept; the headlights are real light now: each lamp's cone adds the light still missing to full (slightly
   warm) times the look's strength, so the world inside comes up nearly to its own colour, full to 30 % of the reach,
   then fading to its end, and soft over the outer 45 % of its half-angle; each lamp's cone spans 84 % of the sector, toed
@@ -538,7 +538,7 @@ row's text.
   half-ellipses (both ends, the head and the tail; the channels stay 140 px, `Level25Test` unchanged). Frame rate of a
   full medium run with Rook on the software renderer (Xvfb, no capture, the machine under other load): 142 fps against
   144 for the round-54 build in the same conditions back to back; one frame of 50 ms or more after the first (78 ms).
-- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): the harpoon's rework emptied the trench
+- 2026-10-24 (M8 AW, step AW2; accepted in round 56 (2026-10-24)): the harpoon's rework emptied the trench
   (`ActFloorTest` 1.7 on the screen and 3 shots a minute, `BeamEraHpTest` 0.68×, `PacingTest` red on easy and medium): the
   Barbfin's HP 12 → 26 (its stat block, with Level 24), one more Barbfin in every group from the front (`hard: {count}`
   holds a group of 5 at 5: a 7-wide group stood in the rock), two more from every cave (at most the column's 5), a column
@@ -547,3 +547,7 @@ row's text.
   outlives its orbit leave down their path through the trench's lower walls (the simulation keeps only the hold's drift
   off the rock); with the original waves and the 26 HP a Nautilus and two Barbfins already do. A simulation fix
   (the leave kept to the flyable span) is a step of its own.
+- 2026-10-24 (user, round 55 closed, L.1: "This looks really great!"): the backdrop and light redone in step LX accepted
+  as final: the trench's dark ambient, the headlights lighting the world, the rim on the rock's edges, the fork's rounded
+  pillar (`backdrop-final-r55-a` and the r55 captures); round 54's backdrop sheet and captures moved to
+  `concept/rejected/`. Every asset of the level is final.

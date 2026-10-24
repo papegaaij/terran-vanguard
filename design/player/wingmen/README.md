@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Wingmen and drones
@@ -367,7 +367,9 @@ changes and the loaner are new).*
 beat is in [Rook](../../story/characters/rook/README.md) and the L26 level draft.*
 
 - **L26's end:** a scripted loss. In the black, torpedo trails from unseen Depth Hunters, Rook's
-  light spins down into the dark, his last radio line is cut mid-word. It is not a normal
+  light spins down into the dark, his last radio line is cut mid-word by the hits (since 2026-10-24 the line comes
+  first and the torpedoes strike while he speaks; his 2.5 s spin plays on the screen: tossed up by the hits, he sinks
+  back faster and faster and leaves the bottom edge as it ends). It is not a normal
   "Downed" (the eject, the repair at the next visit): the save records `rook_missing: true` from the
   win of L26.
 - **L27, L28 and L29 (Act 5's first level):** the escort slot shows Rook as **MIA** (a greyed card,
@@ -774,3 +776,8 @@ built were accepted in concept round 28.
   loaner only when none is owned. Draw-fire (D11) is the simulation's (step A3).
 - 2026-10-22 (M8 part A, steps A3–A6; accepted in round 50 (2026-10-22)): the Bulwark reaches its slot in 0.4 s and settles in 0.25 s; it fires only while the player fires, its shell at 500 px/s (not in the data); boss beams, cones and vents pass through it; rammers die on it without ram damage; the draw-fire rolls 30 % per aimed **volley** (not per bullet as D11 had it), and turret barrels, aim-along fans and the convoy's shots are never drawn; its cannon plays the ballistic shot at pitch 0.8, its hit the metal hit at 0.85, its loss the drone break at 0.75 with the medium explosion.
 - 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): F.5: the Bulwark's final art and game capture accepted, the concept rows `chosen`. B.1 (the draw-fire per aimed volley, 30 % within 150 px), B.3 (Rook and the Bulwark in one slot, the free rebuild) and B.6 (how the Bulwark fights) accepted.
+- 2026-10-24 (the user's playtest of Level 26, round 55 C.2 changed): Rook's spin after his loss plays on the screen.
+  Flying low beside the ship he used to fall off the bottom edge in about 0.7 s; now the hits toss him up a little and
+  he sinks back faster and faster, crossing the bottom edge as the 2.5 s spin ends at 1.25× the scroll (from high on the
+  screen, where that speed alone takes him off in time, a steady fall); his cut line comes before the hits, which cut it
+  ([Level 26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#decisions); `RookLoss`, `RookLossTest`).

@@ -19,7 +19,7 @@ and carries the [Choir](../../../story/characters/the-choir/README.md)'s first h
 register ("…your kin… came before you…", Q8 a). The act's breather by threat, not by count (no boss,
 ≈ 74 enemies a minute at the Act 2+ floor, lighter firing groups), it ends with its story beat: **Rook is
 shot down** by torpedoes from unseen [Depth Hunters](../../../enemies/naval/depth-hunter/README.md), on the
-screen, in the black (Q7 a). 182 s: the last lamps, the dark, the fault scarp with its Sirens, the Choir
+screen, in the black (Q7 a). 188 s: the last lamps, the dark, the fault scarp with its Sirens, the Choir
 and the constellation, the deep, and the silence.
 
 **Status: approved in round 48 (2026-10-22); in the build (M8 part F).** Drafted in the Act 4 design phase
@@ -109,7 +109,7 @@ second; the rest is black.
 | 3. The Scarp | 60–100 | 7,410–12,210 | 120 | clear | `ground`: A single **fault wall on the right** (a scarp, flyable width 400 → 280 px) with three cave mouths; the Sirens' sacs glowing beside them; the farm barge lamp (t≈84, left). The scarp sinks away at t=100. | The Sirens in the dark: their glow is their tell. |
 | 4. The Choir | 100–130 | 12,210–15,810 | 120 | clear | `ground`: Open black water; the Choir's static in the HUD portrait from t=97. | The Choir's fragment (t=99); the constellation of Anglers (t=108). |
 | 5. The Deep | 130–155 | 15,810–18,810 | 120 | clear | `ground`: Open black water; a faint amber seep glow far below from t=140. | The last fights; Rook's pre-line (t=150). |
-| 6. The Silence | 155–182 | 18,810–21,790 | 110 | clear | `ground`: Black water; the vent field's red glow rising on the horizon from t=168; Rook's lamp beside the ship until t≈160. | Rook's loss (t=157–160); the aftermath; level end. |
+| 6. The Silence | 155–188 | 18,810–22,450 | 110 | clear | `ground`: Black water; the vent field's red glow rising on the horizon from t=174; Rook's lamp beside the ship until t≈163.5. | Rook's loss (t=161–166); the aftermath; level end. |
 <!-- /data -->
 
 ### Darkness (Q4 a: a look only)
@@ -186,20 +186,22 @@ Enemy definitions are linked per row; formation names from the
 - **HP** (the units' own pages): the Glow Angler 28 (14 ×2 beam era, L26 reference **112**), the Nautilus 100 → 104 (the act HP factor, reference 112 against its first level's 108),
   the Siren 90 → 93; the Eel Swarm and the Driftjelly returning with the act HP factor of part A (from the reference
   DPS 22–28, the Eel's head at about 100 × 112/100 = 112); the beam-era ×2 on the small ones.
-- **Density and pacing** (the Act 2+ rules): **223 enemies** over 182 s, **≈ 74 a minute** at medium (easy ≈ 178,
+- **Density and pacing** (the Act 2+ rules): **223 enemies** over 188 s, **≈ 74 a minute** at medium (easy ≈ 178,
   hard ≈ 245), the act's breather by threat: lighter groups and the dark's slow reading, not fewer shots. A wave
   about every 3 s; no stretch over 2 s with nothing on the screen (the drifters keep it: the aftermath's jellies
   hang on the screen). The Anglers' rings, the Nautilus's spirals and the Driftjelly's rings are the shot
   source. Measured in step F2 (`levelReport -Plevel=26`, Level 25's plan fit until step F3 gives the level its own):
   223 at medium (184 easy, 262 hard), 75.6 a minute; 5.2 on the screen and 57 shots a minute (the Act 2+ floor 2.5 and
   10); two stretches over 2 s at medium (the loss's window, ≈ 158–160, and the aftermath from ≈ 170), two over 3 s on
-  easy; the small units 2.2 s on the screen (1.39× Level 10's).
+  easy; the small units 2.2 s on the screen (1.39× Level 10's). After round 55's retime (2026-10-24, the loss 6 s
+  later): 73.1 a minute at medium, 3.85 on the screen and 73.8 shots a minute; the two long stretches are the loss's
+  (≈ 157–166) and the aftermath's (≈ 176–188); the typical haul +1.3 %.
 - **Quiet windows**: no other wave for 3.5 s after the Anglers' first sight (t=24); the Choir's fragment
   (t=99–105) keeps the field to the snakes and the drifters already out.
 - **The constellation** (t=108, 8 Anglers in a field, with a jelly field after): the "big swarm" the Choir's
   static announces; it is the level's hardest stretch and the Sonar Pulse's showcase.
-- **Rook's loss** (t=157–163, see below) takes the field: after t=151 only the jelly drifters come (t=160 and
-  166): the aftermath is intentionally quiet and counts as the level's one long gap.
+- **Rook's loss** (t=161–166, see below) takes the field: after t=151 only the jelly drifters come (t=166 and
+  172): the aftermath is intentionally quiet and counts as the level's one long gap.
 
 The data's waves (step F2; `side` = a Siren nest on the scarp's foot, `wall` in the data). Every other wave enters from
 the front. The Driftjelly and Glow Angler fields enter with the water and drift on it; the draft's `scattered` Angler rows
@@ -272,8 +274,8 @@ user's review in round 56): the faster harpoon left gaps on easy (three over 3 s
 | 145.5 | 5 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 5 | front | Scattered |
 | 149 | 5 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 6 | front | |
 | 151 | 5 | field | [Glow Angler](../../../enemies/naval/glow-angler/README.md) | 4 | front | The last fight before the silence, spread out to the loss's quiet window |
-| 160 | 6 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 5 | front | Harmless drifters: their veins are the only light in the aftermath; no other wave after this |
-| 166 | 6 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | Drifting in over 5 s |
+| 166 | 6 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 5 | front | Harmless drifters: their veins are the only light in the aftermath; no other wave after this |
+| 172 | 6 | field | [Driftjelly](../../../enemies/naval/driftjelly/README.md) | 4 | front | Drifting in over 5 s |
 
 Totals: Driftjelly 118 · Glow Angler 78 · Spiral Nautilus 12 · Eel Swarm 8 · Siren 7.
 <!-- /data -->
@@ -287,13 +289,13 @@ end of the level. Rook's escort flight plays it; without him it is radio only.
 |---|---|
 | 148 | Rook's last pre-line (his one dry joke is earlier, t=13). The music thins to the pad at 150. |
 | 155 | Varga: "Contacts below!" (short): her sonar finds them as they launch. |
-| 157 | Three thin **torpedo trails** rise from the bottom edge, one each in the lanes either side of Rook and one on him, white-orange against the black. The Depth Hunters themselves are never drawn: they stay below the field (their first, unexplained appearance; no hit boxes, no damage; the player's own lane is never one of the lanes). |
-| 157.5 | The trails converge on Rook's lamp: three flashes; the lamp flickers and **spins down** off the bottom edge in a long spiral, scrolling faster than the field, 2.5 s, going dark. |
-| 160.3 | Rook's last line, voiced and **cut mid-word**: "Lancer, something's below u—"; the subtitle ends on "…below u—". |
-| 160–165 | Silence; the music out; the ship alone in the black with the jellies' glow. |
-| 167.5 | Okafor: "Aegis Two, report. Rook? Rook, answer!" (no answer). |
-| 174.5 | Varga: "His lamp went down, Commander." |
-| 181 | Okafor: "Finish the dive, Lancer. We will find him." (the level-end line). |
+| 161.2 | Rook's last line, voiced: "Lancer, something's below u—", opening as Varga's shout closes. |
+| 162.5 | While he speaks, three thin **torpedo trails** rise from the bottom edge, one each in the lanes either side of Rook and one on him, white-orange against the black. The Depth Hunters themselves are never drawn: they stay below the field (their first, unexplained appearance; no hit boxes, no damage; the player's own lane is never one of the lanes). |
+| 163.5 | The trails converge on Rook's lamp: three flashes that **cut his line mid-word** (his voice in the "u"; the subtitle ends on "…below u—"); tossed up a little by the hits, the lamp flickers and **spins down** on the screen in a long spiral, sinking faster and faster, 2.5 s, going dark as it leaves the bottom edge (at 1.25× the scroll). |
+| 166–172 | Silence; the music out; the ship alone in the black with the jellies' glow. |
+| 173.5 | Okafor: "Aegis Two, report. Rook? Rook, answer!" (no answer). |
+| 180.5 | Varga: "His lamp went down, Commander." |
+| 187 | Okafor: "Finish the dive, Lancer. We will find him." (the level-end line). |
 
 - **The state**: it is not a normal "Downed" (the eject and the repair of the next visit): the save records
   `rook_missing: true` **from the win** of this level ([wingmen](../../../player/wingmen/README.md#rooks-loss-and-absence-l26l29)).
@@ -356,7 +358,7 @@ secret:
 Spoken radio ([voice](../../../audio/voice/README.md)), checked against the HUD's **1 s rule** (no timed line more than
 1 s late, with Rook and without) by the game's radio timeline test (step F2 wrote its runs, `briefs/m8f2-radio.patch`,
 for step F5; the lines play as text until step VOX-F voices them). Event lines drop after 6 s. Rook's barks carry
-`requires: escort` and end at the loss's trails (t=157); his scripted lines at t=13, 148 and 160.3 are not barks (no
+`requires: escort` and end at the loss's trails (t=162.5); his scripted lines at t=13, 148 and 161.2 are not barks (no
 `requires`: they play with him, ejected, without him or with the Bulwark). The Choir's line is subtitled in lowercase,
 voiced as the Choir; its row's `static_lead: 2` shows the HUD portrait's interference from t=97 and its `duck_db: 6`
 ducks the music under it. The secret's line (the farm barge destroyed): Varga, "A farm barge, lamp still on. Warm
@@ -376,10 +378,10 @@ light, Lancer: that one is ours."
 | t=140 | Okafor | "Almost through the deep, Lancer. Vents ahead." |
 | t=148 | Rook | "Lancer, if I buy you a drink for this one, we're even." |
 | t=155 | Varga | "Contacts below!" |
-| t=160.3 | Rook | "Lancer, something's below u—" |
-| t=167.5 | Okafor | "Aegis Two, report. Rook? Rook, answer!" |
-| t=174.5 | Varga | "His lamp went down, Commander." |
-| t=181 (Level end (t=181)) | Okafor | "Finish the dive, Lancer. We will find him." |
+| t=161.2 | Rook | "Lancer, something's below u—" |
+| t=173.5 | Okafor | "Aegis Two, report. Rook? Rook, answer!" |
+| t=180.5 | Varga | "His lamp went down, Commander." |
+| t=187 (Level end (t=187)) | Okafor | "Finish the dive, Lancer. We will find him." |
 | Secondary met (at the end) | Okafor | "Clean crossing. Now find him, Lancer." |
 <!-- /data -->
 
@@ -390,13 +392,21 @@ launch, 2 s before their trails rise; at 157 it would hold the radio past the cu
 167.5, Varga's reply from 171 to 174.5 and Okafor's level-end line from 176 to 181, each after the line before it. Rook's
 one dry joke (t=13) is the level's; his t=148 line is the warm one the cut line answers.
 
+Retimed again after round 55 (the user's playtest of 2026-10-24: "The line comes several seconds after he's been shot
+down"; "Rook can't talk after being shot down"): the cut line comes **before** the hits and the hits cut it. It is due
+at t=161.2, as soon as Varga's shout has closed (≈ 161.1 at the default text speed), the trails rise from t=162.5 under
+"something's below" and the hits land at t=163.5, 2.3 s into the line, in its last word (the take's "u"); everything
+after the loss moved 6 s later (Okafor 173.5, Varga 180.5, Okafor's level-end line 187, the level's end 188).
+`RadioTimelineLevel26Test` checks on every difficulty and fit that the line opens before the trails and that the hits
+land at least 2 s in and while its voice still speaks.
+
 ## Music & ambience
 
 The Act 4 **darkness variant** of the A theme ([track 10](../../../audio/music/README.md#track-list)
 "Thera Deep"): in section 1 the full A theme with the lamps, then it **strips back** as the lights go
 out (t=8–18) to sonar pings in silence and a deep drone; the scarp adds the Sirens' harmonic layer; the Choir's
-fragment ducks it; the pad thins from t=150; **out at t=160** (silence for the aftermath, Rook's loss);
-the vent field's warm pad creeps in from t=168. No bubble layer (round 48 Q12 a). Ambience: the `europa-black`
+fragment ducks it; the pad thins from t=150; **out at t=166** (silence for the aftermath, Rook's loss);
+the vent field's warm pad creeps in from t=174. No bubble layer (round 48 Q12 a). Ambience: the `europa-black`
 bed (a heavy pressure drone, distant whale calls, no bubbles), the `europa-trench` rumble at the scarp.
 New sounds this level needs: the Angler's lure hum and lunge, its ring, the Driftjelly's soft pulse, the
 Nautilus crown's violet hum, the torpedo trails (a long, distant rising hiss), Rook's lamp flicker and spin-down,
@@ -404,8 +414,8 @@ the Choir's layered whisper, the headlight click on at the level start; listed i
 [sfx](../../../audio/sfx/README.md) by the act's audio step (Freesound for real-world sounds only).
 
 The data (step F2; played by step F5): track 10 from section 1 with every stem, then the music's `stem_times`: the dark
-stem (`thera-deep-dark`) alone from t=8 over 10 s, −6 dB from t=150, out (`none`) at t=158–160, the warm pad stem
-(`thera-deep-warm`, round 55's pick) from t=168 over 10 s; the ambience `europa-black`, with an `ambience_layers`
+stem (`thera-deep-dark`) alone from t=8 over 10 s, −6 dB from t=150, out (`none`) at t=164–166, the warm pad stem
+(`thera-deep-warm`, round 55's pick b "a synth pad") from t=174 over 10 s; the ambience `europa-black`, with an `ambience_layers`
 `europa-trench` over the scarp (t=56–104).
 
 ## Credit budget
@@ -446,25 +456,25 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 
 | File | What | Status |
 |---|---|---|
-| [concept/backdrop-final-r55-a.png](concept/backdrop-final-r55-a.png) | Production backdrop (`tools/art/backdrop_l26.py`, from darkness-r48-a): the drowned pipeline and its lamp posts (the last one failing), the trench's last beacons, the black water (near black: the light map shows it), the fault scarp on the right with three caves, two amber seeps far below, the vent field's red glow at the end; ten screens in the dark look's stand-in (ambient 20 -> 6 %, the headlights, Rook's lamp) (sheet) | proposed (round 55) |
-| [concept/backdrop-final-r55-a.gif](concept/backdrop-final-r55-a.gif) | t 10-18 at half size: the last lamps and the light going out | proposed (round 55) |
-| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the `terrain:` block (the scarp, three notches) the art is drawn for and the static lights it assumes | proposed (round 55) |
-| [concept/l26-props-final-r55-a.png](concept/l26-props-final-r55-a.png) | The secret (`tools/art/l26_props.py`): the drowned farm barge with its one working sodium lamp (lying, hit, opened) and its glow (the lamp, then the stutter and sparks) (sheet) | proposed (round 55) |
-| [concept/l26-props-final-r55-a.gif](concept/l26-props-final-r55-a.gif) | The barge's warm lamp among the anglers' teal lures, found by the cone, shot open, its crate rising | proposed (round 55) |
-| [concept/rook-loss-final-r55-a.png](concept/rook-loss-final-r55-a.png) | Rook's loss (`tools/art/rook_loss.py`): the hydro craft's tumble and its failing lamp, the torpedo trail strip and motor, the hit's flash under water (sheet) | proposed (round 55) |
-| [concept/rook-loss-final-r55-a.gif](concept/rook-loss-final-r55-a.gif) | The trails rising in their lanes, the three flashes, the spin-down off the bottom edge, the dark | proposed (round 55) |
-| [concept/lamps-capture-r55-a.png](concept/lamps-capture-r55-a.png) | Game capture, M8 part F (step F6; Level 26 on medium, `--invulnerable`, auto-fire, the balance plan's Level 26 fit: Harpoon Torpedoes L4, Depth Charges L3, two Micro-Missile Pods L3, the Pressure hull, the Sonar Pulse pressed at t≈64 and t≈110, Rook along; t = the level time): the lamp stretch into the dark (t=1, 5, 9, 13, 17): the lamp posts' sodium pools and the beacons scrolling with the ground, the ambient ramping 20 → 6 % over t=8–18, the twin headlight cones with their faint haze lighting the floor and the marine snow | proposed (round 55) |
-| [concept/open-water-capture-r55-a.png](concept/open-water-capture-r55-a.png) | Game capture (step F6, the same run, 1:1): the cones in open water (t=26, 28, 30): the faint beam haze (step F5) and the snow lit only inside the cones, Rook's lamp beside the ship | proposed (round 55) |
-| [concept/angler-capture-r55-a.png](concept/angler-capture-r55-a.png) | Game capture (step F6, a run with the guns held, 1:1 round the ship, t≈34–36): Glow Anglers in the dark as a teal bead and red eyes on the faint rim, one lunging at the ship and ringing its 8 shots | proposed (round 55) |
-| [concept/angler-capture-r55-a.mp4](concept/angler-capture-r55-a.mp4) | The same as a video with the game's sound (t≈31–41): the lures' hum, the lunges and their rings | proposed (round 55) |
-| [concept/scarp-capture-r55-a.png](concept/scarp-capture-r55-a.png) | Game capture (step F6, the main run): the fault scarp on the right (t=64.5, 70, 78, 84, 92): the first Sonar Pulse lighting every unit whole (64.5), the Sirens' sacs glowing at the caves and their rings, a Nautilus's crown, the farm barge's warm lamp (84) | proposed (round 55) |
-| [concept/sonar-capture-r55-a.png](concept/sonar-capture-r55-a.png) | Game capture (step F6, the main run): the constellation (t=109.5, 111, 113, 116, 118): the Anglers as beads in the black, the second Sonar Pulse (t≈110) lighting them whole for its 6 s, the dark again after it | proposed (round 55) |
-| [concept/choir-capture-r55-a.png](concept/choir-capture-r55-a.png) | Game capture (step F6, the main run, whole screen): the Choir's line (t=97, 98.5, 99.5, 101): the static in the HUD's portrait frame for the 2 s before it, then the Choir's portrait and its subtitled whisper | proposed (round 55) |
-| [concept/choir-capture-r55-a.mp4](concept/choir-capture-r55-a.mp4) | The same as a video with the game's sound (t≈94.5–106.5): the static's sound (choir-static a), the whisper, the music ducked 6 dB under it | proposed (round 55) |
-| [concept/rook-loss-capture-r55-a.png](concept/rook-loss-capture-r55-a.png) | Game capture (step F6, the main run): Rook's loss (t=156.9, 157.2, 157.5, 157.8, 158.2, 159, 162): the three trails rising to his lamp, the flashes, the spin-down off the bottom edge, the dark without his lamp | proposed (round 55) |
-| [concept/rook-loss-capture-r55-a.mp4](concept/rook-loss-capture-r55-a.mp4) | The same as a video with the game's sound (t≈153.5–177.5): his last lines, the trails and the hits, the spin, the silence from t=160 and the vents' warm pad (a) creeping in from t=168 | proposed (round 55) |
-| [concept/debrief-capture-r55-a.png](concept/debrief-capture-r55-a.png) | Game capture (step F6, the main run): the debrief with the red `ROOK  MIA` row under the tally | proposed (round 55) |
-| [concept/dark-assist-capture-r55-a.png](concept/dark-assist-capture-r55-a.png) | Game capture (step F6): the Dark levels assist (Options) at t=28: off (left, the main run) and on (right, a second run: the ambient held at 20 %) | proposed (round 55) |
+| [concept/backdrop-final-r55-a.png](concept/backdrop-final-r55-a.png) | Production backdrop (`tools/art/backdrop_l26.py`, from darkness-r48-a): the drowned pipeline and its lamp posts (the last one failing), the trench's last beacons, the black water (near black: the light map shows it), the fault scarp on the right with three caves, two amber seeps far below, the vent field's red glow at the end; ten screens in the dark look's stand-in (ambient 20 -> 6 %, the headlights, Rook's lamp) (sheet) | chosen (round 55, F.1: accepted as final) |
+| [concept/backdrop-final-r55-a.gif](concept/backdrop-final-r55-a.gif) | t 10-18 at half size: the last lamps and the light going out | chosen (round 55, F.1: accepted as final) |
+| [concept/backdrop-proposal.yaml](concept/backdrop-proposal.yaml) | The generator's `backdrop:` block, the `terrain:` block (the scarp, three notches) the art is drawn for and the static lights it assumes | chosen (round 55, F.1: accepted as final) |
+| [concept/l26-props-final-r55-a.png](concept/l26-props-final-r55-a.png) | The secret (`tools/art/l26_props.py`): the drowned farm barge with its one working sodium lamp (lying, hit, opened) and its glow (the lamp, then the stutter and sparks) (sheet) | chosen (round 55, F.6: accepted as final) |
+| [concept/l26-props-final-r55-a.gif](concept/l26-props-final-r55-a.gif) | The barge's warm lamp among the anglers' teal lures, found by the cone, shot open, its crate rising | chosen (round 55, F.6: accepted as final) |
+| [concept/rook-loss-final-r55-a.png](concept/rook-loss-final-r55-a.png) | Rook's loss (`tools/art/rook_loss.py`): the hydro craft's tumble and its failing lamp, the torpedo trail strip and motor, the hit's flash under water (sheet) | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
+| [concept/rook-loss-final-r55-a.gif](concept/rook-loss-final-r55-a.gif) | The trails rising in their lanes, the three flashes, the spin-down off the bottom edge, the dark | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
+| [concept/lamps-capture-r55-a.png](concept/lamps-capture-r55-a.png) | Game capture, M8 part F (step F6; Level 26 on medium, `--invulnerable`, auto-fire, the balance plan's Level 26 fit: Harpoon Torpedoes L4, Depth Charges L3, two Micro-Missile Pods L3, the Pressure hull, the Sonar Pulse pressed at t≈64 and t≈110, Rook along; t = the level time): the lamp stretch into the dark (t=1, 5, 9, 13, 17): the lamp posts' sodium pools and the beacons scrolling with the ground, the ambient ramping 20 → 6 % over t=8–18, the twin headlight cones with their faint haze lighting the floor and the marine snow | chosen (round 55, F.2: accepted) |
+| [concept/open-water-capture-r55-a.png](concept/open-water-capture-r55-a.png) | Game capture (step F6, the same run, 1:1): the cones in open water (t=26, 28, 30): the faint beam haze (step F5) and the snow lit only inside the cones, Rook's lamp beside the ship | chosen (round 55, F.2: accepted) |
+| [concept/angler-capture-r55-a.png](concept/angler-capture-r55-a.png) | Game capture (step F6, a run with the guns held, 1:1 round the ship, t≈34–36): Glow Anglers in the dark as a teal bead and red eyes on the faint rim, one lunging at the ship and ringing its 8 shots | chosen (round 55, F.3: accepted) |
+| [concept/angler-capture-r55-a.mp4](concept/angler-capture-r55-a.mp4) | The same as a video with the game's sound (t≈31–41): the lures' hum, the lunges and their rings | chosen (round 55, F.3: accepted) |
+| [concept/scarp-capture-r55-a.png](concept/scarp-capture-r55-a.png) | Game capture (step F6, the main run): the fault scarp on the right (t=64.5, 70, 78, 84, 92): the first Sonar Pulse lighting every unit whole (64.5), the Sirens' sacs glowing at the caves and their rings, a Nautilus's crown, the farm barge's warm lamp (84) | chosen (round 55, F.2: accepted) |
+| [concept/sonar-capture-r55-a.png](concept/sonar-capture-r55-a.png) | Game capture (step F6, the main run): the constellation (t=109.5, 111, 113, 116, 118): the Anglers as beads in the black, the second Sonar Pulse (t≈110) lighting them whole for its 6 s, the dark again after it | chosen (round 55, F.2: accepted) |
+| [concept/choir-capture-r55-a.png](concept/choir-capture-r55-a.png) | Game capture (step F6, the main run, whole screen): the Choir's line (t=97, 98.5, 99.5, 101): the static in the HUD's portrait frame for the 2 s before it, then the Choir's portrait and its subtitled whisper | chosen (round 55, C.5: accepted) |
+| [concept/choir-capture-r55-a.mp4](concept/choir-capture-r55-a.mp4) | The same as a video with the game's sound (t≈94.5–106.5): the static's sound (choir-static a), the whisper, the music ducked 6 dB under it | chosen (round 55, C.5: accepted) |
+| [concept/rook-loss-capture-r55-a.png](concept/rook-loss-capture-r55-a.png) | Game capture (step F6, the main run): Rook's loss (t=156.9, 157.2, 157.5, 157.8, 158.2, 159, 162): the three trails rising to his lamp, the flashes, the spin-down off the bottom edge, the dark without his lamp | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
+| [concept/rook-loss-capture-r55-a.mp4](concept/rook-loss-capture-r55-a.mp4) | The same as a video with the game's sound (t≈153.5–177.5): his last lines, the trails and the hits, the spin, the silence from t=160 and the vents' warm pad (a) creeping in from t=168 | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
+| [concept/debrief-capture-r55-a.png](concept/debrief-capture-r55-a.png) | Game capture (step F6, the main run): the debrief with the red `ROOK  MIA` row under the tally | chosen (round 55: accepted) |
+| [concept/dark-assist-capture-r55-a.png](concept/dark-assist-capture-r55-a.png) | Game capture (step F6): the Dark levels assist (Options) at t=28: off (left, the main run) and on (right, a second run: the ambient held at 20 %) | chosen (round 55, C.6: accepted) |
 
 ## Implementation
 
@@ -501,6 +511,11 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 - [x] Easy/hard variations; the autopilot flies the level on every difficulty (with and without Rook; `Level26Test`,
       the campaign playthrough to the Level 27 visit, `ActPlaythroughTest`)
 - [x] Production art and captures for the round (steps ART-F, F4 and F6; [round 55](../../../concept-rounds/round-55/README.md))
+- [x] Round 55's fixes (the user's playtest of 2026-10-24, step FX): Rook's cut line before the hits, the hits cutting
+      it (`RadioTimelineLevel26Test.theHitsCutRooksLastLine`), the loss and the aftermath 6 s later (`Level26Test`,
+      `Level26SoundsTest`), his spin on the screen (`RookLossTest`, `Level26Test.rooksLossAndItsReplayOnARetry`); the
+      round's sound picks in the game (`Level26SoundsTest.everySoundHasItsFileRoundFiftyFivesPick`); the spin's look
+      shown again in round 57 (F.5)
 
 ## Decisions
 
@@ -513,14 +528,14 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 - 2026-10-21: the secret is the farm barge's warm lamp, the only warm light in the black; the pre-loss line
   and the cut line are scripted, Rook's barks stop after t=157.
 - 2026-10-22 (user, round 48 D1–D13: "approve"; confirmed: "Yes, set them approved"): design approved.
-- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5, pending the user's review in round 55): the level as data. The open
+- 2026-10-23 (step F2, gap check `m8f-gaps.md` §5, accepted in round 55 (2026-10-24)): the level as data. The open
   questions close: the Sirens stand on the scarp as drafted (F5); the eel pays by the code's count, 48 whole typical and
   60 by parts perfect (F11); a retry after the loss replays it (J3). The dark is the light map with this level's values,
   not `hazards.darkness` (F1, the *Code fit* line corrected); the ambient ramp is a look key of section 1 (F4); the
   central Angler is the field's unit nearest its centre (`unit: centre`, F10). Step F2's own choices: ART-F's scarp and
   notches adopted; the nests one at a time, 5.6 s apart (one ring in flight per wall on one wall, every difficulty); the
   draft's `scattered` rows as sparse fields; the waves' and the loss's radio retimes above; `bounty_scale` 0.43.
-- 2026-10-23 (step F3, pending the user's review in round 55): the tests, the plan fit and the autopilot. The balance
+- 2026-10-23 (step F3, accepted in round 55 (2026-10-24)): the tests, the plan fit and the autopilot. The balance
   plan's fit (the harpoon L4, both pods L3, the Depth Charges L3, the Sonar Pulse, the Pressure hull, Composite III,
   Rook's Autocannon) flies the level on every difficulty with and without Rook, no retries; hard is won without any
   tuning of the data: the autopilot plays the dark by planning every move (`DarkPlay`: the bullets flown on, the bodies,
@@ -531,11 +546,12 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   easy and medium; on hard the autopilot kills about 60–65 % (the harpoon's one torpedo a second bounds it; met in the
   campaign playthrough's hard run, 172 of 262), printed, not asserted. The campaign playthrough now flies Act 4 to Level
   26: its win records Rook missing and the Level 27 visit has the loaner Bulwark in his slot.
-- 2026-10-23 (steps F1, F4, F5, ART-F and the gap check `m8f-gaps.md` §5, pending the user's review in round 55): the
+- 2026-10-23 (steps F1, F4, F5, ART-F and the gap check `m8f-gaps.md` §5, accepted in round 55 (2026-10-24)): the
   rest of the level's small rules. **Rook's loss** (F1, F6–F8): the trails rise in Rook's lane and x ± 48 px (a lane
   within 40 px of the ship's x moves to his far side), visual only with no hit boxes; his barks end at the trails
   (t=157), his scripted lines play in every case; the loss is no eject (no pod, no repair line); he falls at
-  max(distance / 2.5 s, 1.25 × the scroll), so he leaves the screen in about 0.7 s, spinning away with a 40 px drift;
+  max(distance / 2.5 s, 1.25 × the scroll), so he leaves the screen in about 0.7 s, spinning away with a 40 px drift
+  (changed after round 55, C.2: see 2026-10-24);
   the Bulwark in the slot (or no escort) hears the loss on the radio only and carries Rook's 56 px lamp; the debrief
   names him with a red `ROOK  MIA` row when the win sets the flag. **The dark** (F3, F4, F5): a 15 % rim pool per unit
   (its body and a faint halo), the kinds' glow frames drawn over the grade; every unit whole for the Sonar Pulse's 6 s,
@@ -550,7 +566,24 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   the farm barge's look (no concept of its own); the Driftjelly's "veined re-tint" as glow-only veins (no re-coloured
   body); the eels' resting stripe at 0.35; Rook's spin as a scorched tumble with his lamp dark (its light is the glow
   set), the trails as a repeated strip.
-- 2026-10-24 (M8 AW, step AW2; pending the user's review in round 56): with the reworked harpoon (L4) the t=152 Angler
+- 2026-10-24 (M8 AW, step AW2; accepted in round 56 (2026-10-24)): with the reworked harpoon (L4) the t=152 Angler
   field moves to t=151 and the t=89 jelly field to t=87.5 (`PacingTest` easy, `BeamEraHpTest` 0.89× → 0.92×); won 3/3 and
   the secondary 3/3 on every difficulty, the typical haul unchanged (+1.3 %). The Glow Angler's HP 17 (34 here) was tried
   and dropped (0.90×, a medium stretch more).
+- 2026-10-24 (user, round 55 closed): F.1–F.4 and F.6–F.8 accepted as final (the backdrop, the dark look, the Glow
+  Angler, the glow-only frames, the farm barge, the briefing images and the intel), C.1, C.3 and C.5–C.7 accepted; the
+  sounds lure a, lunge a, crown a, trails a, hits a, spin **b**, click **b**, static **b**, bed a and the warm pad **b**
+  (in the game since step FX). The steps' logged small rules are accepted. **C.2 and C.4 changed, F.5 redone** after
+  the user's playtest of Level 26 ("The timing with Rook's 'Lancer, something's below us' radio call is very bad. The
+  line comes several seconds after he's been shot down"; "Rook can't talk after being shot down"), step FX: his cut
+  line comes **before** the hits and the hits cut it: due at t=161.2 (as soon as Varga's 5.5 s shout has closed, so it
+  opens on time), the trails from t=162.5 under "something's below", the hits at t=163.5, 2.3 s in, in his last word;
+  the loss and everything after it 6 s later than before (the music out at t=164–166, the jellies at t=166 and 172, the
+  warm pad from t=174, Okafor 173.5, Varga 180.5, Okafor 187, the vent field's piece, the level's end 188; Varga's
+  shout stays at t=155, before the trails). His **spin plays on the screen** (C.2): the hits toss him up a little and
+  he sinks back faster and faster, crossing the bottom edge as the 2.5 s spin ends at 1.25× the scroll (from high on
+  the screen a steady fall at the speed that takes him off in time); the lamp's flicker and going dark are seen whole.
+  `levelReport -Plevel=26` after it: medium 73.1 a minute, 3.85 on the screen, 73.8 shots a minute, three stretches
+  over 2 s (the loss's ≈ 157–166 and the aftermath's ≈ 176–188 the long ones; the rule's at most 3: ok), the typical
+  haul +1.3 %, won and the secondary met 3/3 on every difficulty. F.5 (Rook's loss) is shown again in round 57 with
+  part G. The debrief's `ROOK  MIA` row is unchanged.

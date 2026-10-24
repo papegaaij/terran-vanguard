@@ -1,5 +1,6 @@
 package vanguard.game.audio;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -57,7 +58,13 @@ class ActFourSoundsTest {
         assertTrue(Sfx.HARPOON_RUN.path().endsWith("harpoon-run-r50-a.ogg"), "the picked run");
         assertTrue(Sfx.HARPOON_HIT.path().endsWith("harpoon-hit-r50-a.ogg"), "the picked hit");
         assertTrue(Sfx.SHOT_DEPTH_CHARGE.path().endsWith("shot-depth-charge-r50-b.ogg"), "the picked roll-out");
-        assertTrue(Sfx.DEPTH_CHARGE_BURST.path().endsWith("depth-charge-burst-r50-a.ogg"), "the picked burst");
+        assertEquals(
+                Sfx.EXPLOSION_DEEP_LARGE.path(),
+                Sfx.DEPTH_CHARGE_BURST.path(),
+                "the burst: the under-water large explosion (the user's playtest of 2026-10-24)");
+        assertTrue(
+                Sfx.DEPTH_CHARGE_BURST.instanceLimit() >= 6, "L5's pairs in overdrive: six bursts at once, 3 s each");
+        assertEquals(1f, PlayerCues.BURST, "at full gain");
         assertTrue(Sfx.SPECIAL_LIMIT.path().endsWith("special-limit-r50-b.ogg"), "the picked limit chime");
         assertTrue(Sfx.SPECIAL_SONAR.path().endsWith("special-sonar-r04-a.ogg"), "the chosen ping");
         assertTrue(Sfx.SPECIAL_FLARES.path().endsWith("special-flares-r08-a.ogg"), "the chosen flares");

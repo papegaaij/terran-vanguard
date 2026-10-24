@@ -24,6 +24,9 @@ import vanguard.sim.WeaponSpec;
  * the shield's restore chime).
  */
 final class PlayerCues extends SoundFamily {
+    /** The depth charge's burst at full gain (the user's playtest of 2026-10-24: large explosions that stand out). */
+    static final float BURST = 1f;
+
     /** A proximity mine's arming beep: a quiet tick above the shots' level, below the hits'. */
     private static final float MINE_ARMING = FlightSounds.decibels(-10);
     /** A proximity mine's drop: at the arming beep's level, or the front gun firing on the same tick masks it. */
@@ -173,8 +176,10 @@ final class PlayerCues extends SoundFamily {
             case BLAST -> {
                 int mount = events.value(i);
                 if (mount >= 0 && mount < charges.length && charges[mount]) {
-                    // M8 part A: a depth charge bursts in its low under-water thud.
-                    bank.play(Sfx.DEPTH_CHARGE_BURST, EXPLOSIONS, pitch(0.05), pan);
+                    // M8 part A: a depth charge bursts; since the user's playtest of 2026-10-24 ("hardly stands out")
+                    // in the under-water family's large explosion at full gain, a little pitch jitter, its own
+                    // instance limit (Sfx.DEPTH_CHARGE_BURST) so a pair bursting together is heard whole.
+                    bank.play(Sfx.DEPTH_CHARGE_BURST, BURST, pitch(0.04), pan);
                 } else {
                     bank.play(alternate(Sfx.EXPLOSION_SMALL_A, Sfx.EXPLOSION_SMALL_B), EXPLOSIONS, pitch(0.06), pan);
                 }

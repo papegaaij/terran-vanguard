@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../weapons, ../shields]
-updated: 2026-10-22
+updated: 2026-10-24
 ---
 
 # Generator
@@ -169,7 +169,7 @@ leave the nanites a luxury; rejected because a 3 MW module that no generator car
   balance plan buys it at the L27 visit (16 of 20 MW, see [balance-plan.yaml](../balance-plan.yaml)).
 - 2026-10-22 (M8 part A, step A2; accepted in round 50 (2026-10-22)): the Act 4 balance plan fits the free Sonar charge at L23 (the Airstrike is forbidden under water), keeps the beam fitted at L22 (the harpoon idle on the dry ice) and flies the loaner Bulwark at L27–28 (D7); it buys the Harpoon at L22 into the inventory, fits it at L23 and raises it to L3 there and L4 at L26 (the shop upgrades only a fitted item), the pressure hull at L24 and the Shield Mk III at L28 (the nanites stay out of the plan); planned levels from 22 without data earn a temporary budget(n) income (D8), removed in part I.
 - 2026-10-22 (user, [round 50](../../concept-rounds/round-50/README.md) closed): B.5 accepted: the Act 4 balance plan's purchases (the Harpoon bought at L22 and fitted at L23 with the Depth Charges, both to L3; the Harpoon to L4 at L26; the pressure hull at L24; the free Sonar charge at L23; the Shield Mk III at L28; the loaner Bulwark at L27–28).
-- 2026-10-24 (M8 AW, step AW2; the user's decision of 2026-10-23, pending the wording's review in round 56): nothing is
+- 2026-10-24 (M8 AW, step AW2; the user's decision of 2026-10-23, the wording accepted in round 56 (2026-10-24)): nothing is
   sold in Act 4 ("Selling wastes a lot of credits … you need the ion beam again in a later level"): the L23 visit buys the
   Depth Charges L1 and fits the Harpoon L1 (bought at L22) and the Sonar Pulse, the beam and the Tail Gun kept; the L24
   visit upgrades the harpoon and the Depth Charges to L3 with one wing pod's Micro-missiles and the pressure hull

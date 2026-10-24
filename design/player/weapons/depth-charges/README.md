@@ -128,6 +128,11 @@ Prompts: [concept/prompts.md](concept/prompts.md).
   rework's plan in [data.yaml](data.yaml): the pattern's angle 180 → 0 (L5/OD fanned ±8°), `speed` 140 → 380, `drift`
   0.6 → 1.0 (≈ 200 px ahead), rate 1 / 1.1 / 1.2 / 1.3 / 0.8 / OD 0.9, damage 28 / 34 / 42 / 50 / 52 / 56, blast 48 /
   52 / 56 / 60 / 64 / 68 px, fuse 1.4 / 1.4 / 1.3 / 1.3 / 1.2 / 1.2 s; slot, prices, draw and the 8 live charges
-  unchanged. Defaults pending the user's review in round 56: the contact counts a latched unit (while the barrel
+  unchanged. Defaults accepted in round 56 (2026-10-24): the contact counts a latched unit (while the barrel
   crosses the hull: its burst covers every latch spot) and a set piece's body or living part on `air`/`low-air`; the
   charges keep the rear slot.
+- 2026-10-24 (user, round 56 closed): the rework's numbers (C.2), the latched Lamprey and the bosses (C.6) and the
+  toss's look (A.1) accepted. After the playtest of Levels 22–26 with the rework ("The sound for the depth charges
+  explosions is too weak. Those are supposed to be large explosions, but they hardly stand out") the **burst** plays the
+  under-water family's large explosion at full gain, its own six instances so a volley's pair is heard whole; round 50's
+  burst a stays chosen in the sfx part, unused ([sfx](../../../audio/sfx/README.md#decisions)).
