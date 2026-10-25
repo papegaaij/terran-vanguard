@@ -1,4 +1,4 @@
-# Abyss Ray stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Abyss Ray stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part D, step D2 (Level 24): the approved stat block (round 48) as data. New in it: the `rise` movement (flown from
 # step D1, mapped in step D3): a shadow on `sub` growing in the ship's lane about `ahead` px above the ship (gap check
 # m8d-gaps.md §5 D2: ahead of the ship, not on it; only `anti-sub` fire and the Smart Bomb reach it, no contact), the rise

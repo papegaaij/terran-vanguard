@@ -1,4 +1,4 @@
-# Tail Gun: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Tail Gun: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Tail Gun
 slot: rear
 traits: [rear]

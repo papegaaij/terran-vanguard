@@ -1,4 +1,4 @@
-# Lamprey stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Lamprey stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M5 part F (Level 12; user decisions F3, F4 and F9 = a of 2026-10-09 and the stated defaults): the
 # chase, the latch and the drain are flown by the simulation (step 3), read by the loader from step 4.
 name: Lamprey

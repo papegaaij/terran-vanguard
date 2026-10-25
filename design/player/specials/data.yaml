@@ -1,4 +1,4 @@
-# Specials: the charge specials and (M7 part A) the first cooldown special. Schema: ../../tech/architecture/README.md#data-file-schemas
+# Specials: the charge specials and (M7 part A) the first cooldown special. Schema: ../../tech/architecture/schemas-player/README.md
 # The README's specials table is hand-written; keep its Cost and Unlock cells in step.
 input_buffer: 0.1   # s a press of the special button waits while the special is busy (Common input rules)
 cooldown_pickup: 10 # s a special charge pickup takes off a cooldown special's running cooldown (Cooldown specials)

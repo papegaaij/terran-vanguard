@@ -1,6 +1,6 @@
 # Level 24 – Abyssal Plain: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
 # targets, radio, credit budget). Times are seconds from the level start. M8 part D, step D2, from the README's approved
-# hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# hand tables (round 48). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M8 part D (loaded and checked by content in step D2; flown from step D1, mapped in step D3, drawn by step
 # D4): the Abyss Ray's `rise` and the Barbfin's hover `above_ship` (their stat blocks), the spawning reef
 # (enemies/ground/spawning-reef: a periodic spawn of Glassfin fry), the radio event `first-ray` (until step D3 maps the

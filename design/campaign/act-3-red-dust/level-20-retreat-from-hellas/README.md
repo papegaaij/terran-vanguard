@@ -617,7 +617,7 @@ plate): [briefing-images-final-r42-a.png](../../../ui/briefing/concept/briefing-
   lives **2.53×** Level 10's time (was 2.48×, over Q.2's 2.5): `BeamEraHpTest`'s limit for a reversed level raised to
   **2.6×**, accepted in round 43 (2026-10-20) (the other way out: lower the Needler's and Stinger's HP on this level).
 - 2026-10-20 (round 43 Q.4, step LQ): the travelling ridge's pass is the level key **`ridge`** `{t: 12, seconds: 8,
-  from: left, to: right, depth: 70}` (the [schemas](../../../tech/architecture/README.md#data-file-schemas)), read by
+  from: left, to: right, depth: 70}` (the [schemas](../../../tech/architecture/schemas-levels/README.md)), read by
   the game's `RidgeLooks` instead of the `basin-rumble` layer's start; the approved track moved into it unchanged
   (the head off the left edge 70 px below the top at t=12, off the right edge 8 s later, the tail gone at t=27).
   Level 21's ridge pass uses the same key, from the right edge.

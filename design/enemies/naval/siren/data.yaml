@@ -1,4 +1,4 @@
-# Siren stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Siren stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part E, step E3 (Level 25): the approved stat block (round 48) as data. New in it: the `ring` attack's `slow` (a
 # ring of sound, not bullets: no damage; its speed not scaled by the water's × 0.7 or the bullet-speed lever; flown from
 # step E1, mapped in step E3) and the wall mount (the level's `turret nest` wave with `wall: staggered` or `opposite`:

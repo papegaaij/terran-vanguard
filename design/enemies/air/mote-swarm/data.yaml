@@ -1,5 +1,5 @@
 # Mote Swarm stat block at medium (one mote; a swarm is a wave of them): rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # M5 part D (Level 10; user decision D8 = a of 2026-10-08: real flocking): the flock is flown by the
 # simulation.
 name: Mote Swarm

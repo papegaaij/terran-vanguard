@@ -1,5 +1,5 @@
 # Revenant Walker stat block and boss script at medium: the stat block is rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part F, step F2 (Level 19's mid-boss; approved in round 36, D.18 and B.1 = a): a walking arena boss. It walks
 # passes across the halted casting yard (`movement.stride`), its front plate turning every shot from ahead
 # (`boss.plate`), its rear flame cone burning whoever slips behind it (`boss.cone`), its shoulder pods firing homing

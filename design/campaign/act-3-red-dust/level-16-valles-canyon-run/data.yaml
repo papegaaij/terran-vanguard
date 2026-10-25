@@ -1,6 +1,6 @@
 # Level 16 – Valles Canyon Run: the level script, rendered into README.md (briefing, threat profile, layout, wall
 # table, waves, ground targets, radio, credit budget). Times are seconds from the level start. M7 part C, step C2,
-# from the README's approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# from the README's approved hand tables (round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M7 part C (loaded and checked in step C2, flown by the simulation from steps C1/C3/C4): `terrain` (the
 # walls' and islands' collision lines and the contact), a linked nest's `link: pairs` (the gates), a wave's `crawl`
 # path (the Threadcrawlers), the `links` secondary, the radio event `first-wall-contact`.

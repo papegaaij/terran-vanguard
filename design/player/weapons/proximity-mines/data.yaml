@@ -1,4 +1,4 @@
-# Proximity Mines: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Proximity Mines: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Proximity Mines
 slot: rear
 traits: [rear, area]

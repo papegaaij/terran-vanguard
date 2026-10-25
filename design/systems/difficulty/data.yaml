@@ -1,4 +1,4 @@
-# The global difficulty levers: rendered into README.md. Schema: ../../tech/architecture/README.md#data-file-schemas
+# The global difficulty levers: rendered into README.md. Schema: ../../tech/architecture/schemas-player/README.md
 # Factors multiply the medium value; changes are shares of the base value (−0.25 = −25 %).
 enemy_hp: {easy: 0.75, medium: 1.0, hard: 1.3}
 enemy_bullet_speed: {easy: 0.8, medium: 1.0, hard: 1.15}

@@ -1,4 +1,4 @@
-# Skimmer stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Skimmer stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M5 part G (Level 13; user decisions G1, G4 and G5 = a of 2026-10-11 and the stated defaults, pending the
 # user's review): the lane walk with its weave and the `alternate` hook are flown by the simulation (step
 # G3), read by the loader from step G4. A Skimmer is a lane walker by its waves' `lanes`.

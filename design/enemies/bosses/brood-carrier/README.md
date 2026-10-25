@@ -17,7 +17,7 @@ The Act 1 boss: a teal-black living carrier about one screen long. It comes over
 
 ### Stat block
 
-Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. The stat block and the boss script are in this directory's [data.yaml](data.yaml) (schema in the [architecture](../../../tech/architecture/README.md#data-file-schemas)); the table is rendered from it, as the [Gorgon Frigate](../gorgon-frigate/README.md)'s.
+Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. The stat block and the boss script are in this directory's [data.yaml](data.yaml) (schema in the [architecture](../../../tech/architecture/schemas-units/README.md)); the table is rendered from it, as the [Gorgon Frigate](../gorgon-frigate/README.md)'s.
 
 <!-- data: stat-block -->
 | Field | Value |

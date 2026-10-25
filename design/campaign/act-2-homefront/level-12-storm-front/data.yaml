@@ -1,7 +1,7 @@
 # Level 12 – Storm Front: the level script, rendered into README.md (briefing, threat profile, layout,
 # waves, ground targets, radio, credit budget). Times are seconds from the level start (no holds, no
 # arena: the level clock runs with the scroll). M5 part F, step 4 (user decisions F1–F9 of 2026-10-09
-# and the stated defaults). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# and the stated defaults). Schema: ../../../tech/architecture/schemas-levels/README.md
 # The `backdrop` block and the sections' tiles are merged in from the round 34 backdrop proposal
 # (concept/backdrop-proposal.yaml, tools/art/backdrop_l12.py --proposal, which reads this file).
 scroll_speed: 140     # the chosen storm scene's swell

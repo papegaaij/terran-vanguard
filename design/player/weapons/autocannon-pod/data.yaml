@@ -1,4 +1,4 @@
-# Autocannon Pod: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Autocannon Pod: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Autocannon Pod
 slot: wing
 traits: [forward]

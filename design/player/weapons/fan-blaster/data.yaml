@@ -1,4 +1,4 @@
-# Fan Blaster: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Fan Blaster: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Fan Blaster
 slot: rear
 traits: [rear, spread]

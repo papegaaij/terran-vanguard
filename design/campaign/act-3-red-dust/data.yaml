@@ -2,7 +2,7 @@
 # README.md (Act intro and outro), and its act-end outro after Level 21 (M7 part H, step PH2: the four approved pages,
 # the text unchanged, one paragraph each, each with its image). M7 part B, step B2. M8 part B (step B2): no `next_act`
 # any more: Act 4 is built from Level 22 on, so its outro leads to Act 4's intro; Act 4 names the next act in part H.
-# Schema: ../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [15, 21]
 
 title_card:  # over the act's still (ui/act-3-red-dust-still.png, tools/art/act_stills.py act-3 from Level 15's backdrop): Mars from the entry corridor, Olympus Mons far below through thin cirrus

@@ -1,4 +1,4 @@
-# Torpedo Pod: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Torpedo Pod: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Torpedo Pod
 slot: wing
 traits: [anti-sub]

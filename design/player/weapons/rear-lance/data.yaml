@@ -1,4 +1,4 @@
-# Rear Lance: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Rear Lance: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Rear Lance
 slot: rear
 traits: [rear, piercing]

@@ -1,4 +1,4 @@
-# Barbfin stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Barbfin stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part D, step D2 (Level 24): the approved stat block (round 48) as data, the Needler's as its template. New in it: the
 # hover's `above_ship` (flown from step D1, mapped in step D3): it stops a seeded 90–200 px above the ship's y at the
 # moment it stops, drifts 6 px/s while it holds and turns toward the ship (32 angles). As an Abyss Ray's escort it is held

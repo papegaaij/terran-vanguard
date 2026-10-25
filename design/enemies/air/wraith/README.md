@@ -17,7 +17,7 @@ A rust-and-blue-violet Vrell manta ghost that passes overhead cloaked, loops beh
 
 ### Stat block
 
-The numbers live in [data.yaml](data.yaml). Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. Its HP is set for the balance plan's **rear** firepower, not the reference DPS (user decision D7 = a of M5 part D, see *Behaviour*). The cloak, the ambush path and the hard hold are planned keys (the [schemas](../../../tech/architecture/README.md#data-file-schemas)): they wait in the data's comment until the simulation reads them.
+The numbers live in [data.yaml](data.yaml). Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. Its HP is set for the balance plan's **rear** firepower, not the reference DPS (user decision D7 = a of M5 part D, see *Behaviour*). The cloak, the ambush path and the hard hold are planned keys (the [schemas](../../../tech/architecture/schemas-units/README.md)): they wait in the data's comment until the simulation reads them.
 
 <!-- data: stat-block -->
 | Field | Value |

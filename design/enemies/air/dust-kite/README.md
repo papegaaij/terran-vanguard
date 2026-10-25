@@ -21,7 +21,7 @@ Level 15).
 
 ### Stat block
 
-Numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). The numbers live in [data.yaml](data.yaml) (M7 part B, step B2), with the swoop's `trigger` and the hard hook `swoop_speed` of the [schemas](../../../tech/architecture/README.md#data-file-schemas); the table is rendered from it. HP is in damage units (a Pulse Cannon L1 shot
+Numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). The numbers live in [data.yaml](data.yaml) (M7 part B, step B2), with the swoop's `trigger` and the hard hook `swoop_speed` of the [schemas](../../../tech/architecture/schemas-units/README.md); the table is rendered from it. HP is in damage units (a Pulse Cannon L1 shot
 does 2). A `tiny` unit dies in one hit at any level and keeps its HP (the act HP factor is only
 for `medium` and larger).
 

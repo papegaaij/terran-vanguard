@@ -1,0 +1,16 @@
+{
+  "include": ["tools"],
+  "exclude": ["**/build", "**/.gradle", "**/__pycache__"],
+  "typeCheckingMode": "off",
+  "pythonVersion": "3.14",
+  "reportMissingModuleSource": "none",
+  "extraPaths": [
+    "tools",
+    "tools/art",
+    "tools/concept",
+    "tools/concept/audio",
+    "tools/concept/render",
+    "build/pyright-venvs/chatterbox",
+    "build/pyright-venvs/dia"
+  ]
+}

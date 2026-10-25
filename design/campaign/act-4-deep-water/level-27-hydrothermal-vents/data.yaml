@@ -1,7 +1,7 @@
 # Level 27 – Hydrothermal Vents: the level script, rendered into README.md (briefing, threat profile, layout, waves,
 # ground targets, radio, credit budget). Times are seconds from the level start. M8 part G, step G2, from the README's
 # approved hand tables (round 48) and ART-G's backdrop proposal (concept/backdrop-proposal.yaml, adopted).
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M8 part G (loaded, checked and flown from step G1, drawn and played by step G4): the vents' `look:
 # heat-plume` with `shape: disc`, `enemy_damage` and `bend`; the Depth Hunter's hover `y` band with a `drift` and its
 # torpedo's `aim: facing` (its stat block); a `column` `from: rear` of hovering units; a `rear ambush` of units that hold

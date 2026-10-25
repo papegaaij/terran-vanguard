@@ -1,6 +1,6 @@
 # Level 08 – Neon Skyline: the level script, rendered into README.md (briefing, threat profile,
 # layout, waves, ground targets, radio, credit budget). Times are seconds from the level start.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 140     # a calm-to-normal city pace, as in the chosen megacity scene
 launch_seconds: 5     # flying in from the bottom edge with Rook in his slot, as in Act 1
 bounty_scale: 0.28    # every bounty × 0.28: the typical haul on budget(8) (0.56 before the L10-style waves of 2026-10-18)

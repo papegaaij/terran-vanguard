@@ -1,4 +1,4 @@
-# Wingmen: Rook and the escort slot (README.md). Schema: ../../tech/architecture/README.md#data-file-schemas
+# Wingmen: Rook and the escort slot (README.md). Schema: ../../tech/architecture/schemas-player/README.md
 rook:
   joins: 8                    # hired when the hangar opens with this level (or a later one) next
   side: left                  # a new campaign's side (hangar setting, saved)

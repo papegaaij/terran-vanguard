@@ -1,6 +1,6 @@
 # Level 04 – Tranquility Run: the level script, rendered into README.md (briefing, threat profile,
 # layout, waves, ground targets, radio, credit budget). Times are seconds from the level start.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 # The `backdrop` and `road` blocks and the sections' tiles are merged in from the round 17
 # backdrop proposal (art: tools/art/backdrop_l04.py, which reads them from here).
 scroll_speed: 120     # px/s: the crawlers' pace

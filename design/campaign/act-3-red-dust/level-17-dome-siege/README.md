@@ -94,7 +94,7 @@ Rendered from the data; directions are counted by each wave's `from` (the intel'
   share (50 %). Kind: `standing` (round 41), next to `untouched` (the ally group took no hit: M16 = a's "No dome
   hit", the roster's "no bomber reaches the domes" widened to every attack that can hit a dome, which the
   autopilot met 4 of 8 times at medium and never on hard), Level 11's `afloat` and Level 13's `integrity`
-  ([schemas](../../../tech/architecture/README.md#data-file-schemas), for the build).
+  ([schemas](../../../tech/architecture/schemas-levels/README.md), for the build).
 
 ### The Ares Landing domes (new ally, M16 = a)
 

@@ -1,4 +1,4 @@
-# Depth Hunter stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Depth Hunter stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part G, step G2 (Level 27): the approved stat block (round 48) as data, step G1's stand-in (VentKeysTest) as its
 # template. New in it (flown from step G1): the hover's `y` band with a `drift` (it holds at its depth, its facing turned
 # up the screen), the `column` from the rear (up from the bottom edge, unit i of n at the band's min + i ÷ (n − 1) of its

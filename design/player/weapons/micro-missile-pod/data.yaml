@@ -1,4 +1,4 @@
-# Micro-missile Pod: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Micro-missile Pod: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Micro-missile Pod
 slot: wing
 traits: [homing]

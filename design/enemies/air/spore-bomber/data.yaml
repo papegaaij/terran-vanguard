@@ -1,4 +1,4 @@
-# Spore Bomber stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Spore Bomber stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 name: Spore Bomber
 faction: Vrell
 layer: low-air

@@ -1,4 +1,4 @@
-# Ghost Drone stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Ghost Drone stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part E, step E2 (Level 18): the `lane_strafe` movement (drop to a lane, bank, strafe across), the burst fired
 # once per pass by its `trigger` (within 60 px of the ship's x) after the eye-glint `tell`, each shot re-aimed
 # (`reaim`), the hard `second_pass`, and the intel's "unclassified" silhouette until Level 18 is first flown. Loaded

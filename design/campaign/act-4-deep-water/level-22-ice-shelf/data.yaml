@@ -1,6 +1,6 @@
 # Level 22 – Ice Shelf: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
 # targets, radio, credit budget). Times are seconds from the level start. M8 part B, step B2, from the README's approved
-# hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# hand tables (round 48). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M8 part B (loaded and checked by content in step B2; flown from steps B1/B3, drawn by step B4): the vents'
 # `look` (ice-geyser) and a row's own `period` and `ripple` (with its own easy and hard), the secondary's per-difficulty
 # `allowed` (its easy and hard), the radio events `first-geyser` and `target-destroyed`, the Drill Rig's pumps that carry

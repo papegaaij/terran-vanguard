@@ -1,4 +1,4 @@
-# Dust Kite stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Dust Kite stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part B (Level 15; M10 = b): the sine glide and the swoop triggered by the ship's distance. The
 # swoop's `trigger` and the hook `swoop_speed` are loaded and checked (step B2) and flown by the simulation
 # (steps B1, B3; the curve's sideways bend of 60 px has no key here: content's MarsRules, a default pending the

@@ -1,4 +1,4 @@
-# Rear-guard Drone Bay: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Rear-guard Drone Bay: its per-level table rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 # M7 part G (step G2): the drone (../../wingmen/README.md#rear-guard-drone) trails the ship and fires the levels' shots
 # straight back; each level adds the hits it takes before it breaks and its rebuild time. The numbers are the wingmen
 # document's table (approved in round 36, D.26), moved here; the trail station is flown from step G3, mapped in step G4.

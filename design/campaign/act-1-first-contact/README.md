@@ -107,7 +107,7 @@ no outro.
 **Act-end outro** (four pages in the briefing format, each voiced and with its own image in
 `assets/ui/briefing/`; track 24 *act complete* starts under the first page and plays once). The
 pages are in the act's [data.yaml](data.yaml) (`outro`, see the
-[architecture](../../tech/architecture/README.md#data-file-schemas) schema text) and rendered
+[architecture](../../tech/architecture/schemas-levels/README.md) schema text) and rendered
 here, as the act briefing.
 
 <!-- data: act-outro-pages -->

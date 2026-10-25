@@ -1,4 +1,4 @@
-# Tendril Anchor stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Tendril Anchor stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part C, step C2 (Level 16; M9 = a of round 36): a pair of anchors at the canyon walls' foot and the tendril
 # between them. A level places the pairs as a linked enemy nest (`link: pairs`, consecutive placements paired: a
 # default of the gap check, pending the user's review in round 39); the `link` attack is the tendril. Loaded and

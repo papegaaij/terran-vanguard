@@ -17,7 +17,7 @@ The Act 2 mid-boss: a rust cephalopod wrapped around an offshore UTC platform. F
 
 ### Stat block
 
-Values are first-draft balancing numbers at **medium**, in [data.yaml](data.yaml) with the boss script (`boss`: the lanes, the slam cycle, the phases, the par; the slam-arm chains; the part layers and the eyes' weak spots; M5 part E, step E2c, keys in the [schemas](../../../tech/architecture/README.md#data-file-schemas)) (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis.
+Values are first-draft balancing numbers at **medium**, in [data.yaml](data.yaml) with the boss script (`boss`: the lanes, the slam cycle, the phases, the par; the slam-arm chains; the part layers and the eyes' weak spots; M5 part E, step E2c, keys in the [schemas](../../../tech/architecture/schemas-units/README.md)) (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis.
 
 <!-- data: stat-block -->
 | Field | Value |

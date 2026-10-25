@@ -1,5 +1,5 @@
 # Level 03 – Spore Drift: the level script, rendered into README.md (threat profile, layout, waves,
-# radio, credit budget, briefing). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# radio, credit budget, briefing). Schema: ../../../tech/architecture/schemas-levels/README.md
 # The `backdrop` block is merged in from backdrop-proposal.yaml (the sections' tiles are its).
 scroll_speed: 140     # px/s; the second pass slows it to 90 (section 5)
 launch_seconds: 5     # the launch, as in Levels 01 and 02

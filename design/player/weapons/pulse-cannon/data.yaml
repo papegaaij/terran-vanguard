@@ -1,4 +1,4 @@
-# Pulse Cannon: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Pulse Cannon: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Pulse Cannon
 slot: front
 traits: [forward]

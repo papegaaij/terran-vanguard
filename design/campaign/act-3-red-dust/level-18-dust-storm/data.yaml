@@ -1,6 +1,6 @@
 # Level 18 – Dust Storm: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
 # targets, radio, credit budget). Times are seconds from the level start. M7 part E, step E2, from the README's
-# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M7 part E (loaded and checked in step E2 by content's LevelData and StormChecks, mapped for the
 # simulation in step E4, flown from steps E1/E3, drawn by step G1): the presentation key `visibility` (the dust
 # storm's radius round the ship and its ramps; the simulation never reads it), the music's `motif` (track 9's motif

@@ -1,4 +1,4 @@
-# Engines and utility modules: rendered into README.md. Schema: ../../tech/architecture/README.md#data-file-schemas
+# Engines and utility modules: rendered into README.md. Schema: ../../tech/architecture/schemas-player/README.md
 engines:
   # speed px/s, draw MW, price cr (0 = starter), available
   - {name: Mk I, speed: 270, draw: 0, price: 0, available: start}

@@ -1,4 +1,4 @@
-# Scatter Vulcan: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Scatter Vulcan: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Scatter Vulcan
 slot: front
 traits: [spread]

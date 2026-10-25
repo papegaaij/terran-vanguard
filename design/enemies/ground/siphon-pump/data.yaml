@@ -1,4 +1,4 @@
-# Siphon Pump stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Siphon Pump stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part C, step C2 (Level 23; gap check m8c-gaps.md §5 D3): Level 23's siphon pumps promoted to a part of their own,
 # because the secondary's `escapes` counts a unit by its slug and the loader finds units only here. The approved text of
 # Level 23 (round 48); the 40 × 40 sprite and its 32 × 32 hit box are the gap check's, pending the user's review in

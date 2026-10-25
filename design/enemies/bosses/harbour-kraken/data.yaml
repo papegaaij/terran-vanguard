@@ -1,5 +1,5 @@
 # Harbour Kraken stat block and boss script at medium: the stat block is rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # M5 part E, step E2c (Level 11's mid-boss; user decisions E5 = a, E6 = a and E7 = a of 2026-10-08):
 # an arena boss. It has no descent: it is anchored to Platform Tiamat (a backdrop piece of the level),
 # scrolls in with it and engages when the scroll halts in its arena. All offsets are px from the

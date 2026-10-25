@@ -1,4 +1,4 @@
-# Threadcrawler stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Threadcrawler stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part C, step C2 (Level 16): a segment chain on the ground. Its head crawls the wave's `crawl` path (points in
 # the walls' rows along the canyon floor and the walls' foot) at the `crawl` speed on top of the scroll; the body
 # follows by the chain; the pore wave is its attack. A cut's rear part dies (`cut`), it never regrows. Counts as one

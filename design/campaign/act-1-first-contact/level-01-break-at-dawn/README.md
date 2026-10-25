@@ -78,7 +78,7 @@ drifting low-air cloud decks and, in section 4, the burning platforms.
 ### Backdrop
 
 How the layers above are composed, rendered from the `backdrop` in [data.yaml](data.yaml) (schema
-in [architecture](../../../tech/architecture/README.md#data-file-schemas)). A layer's tile set
+in [architecture](../../../tech/architecture/schemas-backdrops/README.md)). A layer's tile set
 repeats along the layer and changes at a seam that enters at the top edge when the section starts;
 a set piece is listed with the seconds it is on screen; the atmosphere names the low-air cloud
 banks, the high-air wisps and the haze over `deep` and `far`, and a change ramps across the

@@ -1,4 +1,4 @@
-# Scoring: rendered into README.md. Schema: ../../tech/architecture/README.md#data-file-schemas
+# Scoring: rendered into README.md. Schema: ../../tech/architecture/schemas-player/README.md
 # The rules in the README's prose are hand-written; keep them in step with these numbers.
 kill_score: 10    # score per kill = bounty × kill_score × chain multiplier
 pickup_score: 10  # pickups and bonuses: score = pickup_score × their credit value

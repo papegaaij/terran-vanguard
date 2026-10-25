@@ -1,6 +1,6 @@
 # Level 23 – Through the Ice: the level script, rendered into README.md (briefing, threat profile, layout, terrain,
 # waves, ground targets, radio, credit budget). Times are seconds from the level start. M8 part C, step C2, from the
-# README's approved hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# README's approved hand tables (round 48). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M8 part C (loaded and checked by content in step C2; flown from step C1, mapped in step C3, drawn by step
 # C4): the `waterline` radio event (resolved by content to the waterline's time, a timed line), a pickup's
 # `dropped_by.head_first`, the `underwater_look` block and a section's own `underwater_look`, the Eel Swarm's and the

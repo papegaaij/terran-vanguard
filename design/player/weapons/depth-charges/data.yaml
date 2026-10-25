@@ -1,4 +1,4 @@
-# Depth Charges: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon). M8 part A.
+# Depth Charges: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md). M8 part A.
 # hits: depth-charge, a delivery of its own: a barrel tossed forward from the stern rack over the hull at `speed` px/s
 # (M8 AW, the user 2026-10-23; it was rolled out backwards), its drift decaying over `drift` s (about 200 px ahead),
 # then sinking with the scroll; it bursts on its level's `fuse` (s from the launch) or, under water, on touching a

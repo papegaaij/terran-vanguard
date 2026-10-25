@@ -22,7 +22,7 @@ chain (Level 16; returns in Act 7).
 
 Numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). The numbers live in
 [data.yaml](data.yaml) (M7 part C, step C2), with the `crawl` movement (the path is the wave's), the segment chain's
-`cut` and `width` and the `pores` attack of the [schemas](../../../tech/architecture/README.md#data-file-schemas);
+`cut` and `width` and the `pores` attack of the [schemas](../../../tech/architecture/schemas-units/README.md);
 the table is rendered from it. HP is in damage units (a Pulse Cannon L1 shot
 does 2). Set at its first level from the proposed Act 3 reference DPS (M18 = a, approved in round 36:
 L16 = 80): the head's 80 HP is 1.0 s (a `large` head, 1–3 s with the body in the way), a segment

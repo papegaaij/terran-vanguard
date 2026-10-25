@@ -17,7 +17,7 @@ A slate barnacle gun grown on a bobbing kelp raft. It rotates to aim and fires t
 
 ### Stat block
 
-Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. The numbers live in [data.yaml](data.yaml) (M5 part E, step E2b), with the raft's drift (`terrain.drift`, along its nest's `current`) of the [schemas](../../../tech/architecture/README.md#data-file-schemas); the table is rendered from it.
+Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. The numbers live in [data.yaml](data.yaml) (M5 part E, step E2b), with the raft's drift (`terrain.drift`, along its nest's `current`) of the [schemas](../../../tech/architecture/schemas-units/README.md); the table is rendered from it.
 
 <!-- data: stat-block -->
 | Field | Value |

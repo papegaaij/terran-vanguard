@@ -1,6 +1,6 @@
 # Level 25 – Siren Trench: the level script, rendered into README.md (briefing, threat profile, layout, terrain, waves,
 # ground targets, radio, credit budget). Times are seconds from the level start. M8 part E, step E3, from the README's
-# approved hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 48). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M8 part E (loaded and checked by content in step E3; flown from steps E1/E2, mapped in step E3, drawn by
 # step E5): the terrain's `notches` (the side caves: flyable dead ends cut into a wall, rock on three sides), a wave's
 # `cave` (its units swim out of that notch, warned 3 s ahead at its wall's edge) and `wall` (Siren nests on the walls'

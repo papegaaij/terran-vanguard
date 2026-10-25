@@ -1,5 +1,5 @@
 # Allies: the specs the game reads, one entry per ally slug; README.md's tables are hand-written for
-# now. Schema: ../tech/architecture/README.md#data-file-schemas
+# now. Schema: ../tech/architecture/schemas-units/README.md
 # The civilian crawler (Level 04), the evacuation shuttle (Level 10, M5 part D), the naval convoy's
 # cargo ship and escort frigate (Level 11, M5 part E) and the Nansen Relay (Level 13, M5 part G); the
 # other allies get theirs with the levels that use them. The CDF supply drone is presentation only (no

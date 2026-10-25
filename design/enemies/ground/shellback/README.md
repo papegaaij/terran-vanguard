@@ -22,7 +22,7 @@ then uncurls with its belly exposed. Animal, not insect (Level 17).
 
 Numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). The numbers live
 in [data.yaml](data.yaml) (M7 part D, step D2), with the body and vent as parts, the new `roll` block
-and its hook of the [schemas](../../../tech/architecture/README.md#data-file-schemas); the table is
+and its hook of the [schemas](../../../tech/architecture/schemas-units/README.md); the table is
 rendered from it. HP is in damage units (a Pulse Cannon L1 shot
 does 2). Set at its first level from the proposed Act 3 reference DPS (M18 = a, approved in round 36:
 L17 = 84) and made weaker in round 40 (K.a: "The shell creatures seem too strong. None are

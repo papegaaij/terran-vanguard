@@ -1,4 +1,4 @@
-# Spawning Reef stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Spawning Reef stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part D, step D2 (Level 24; gap check m8d-gaps.md §5 D1): Level 24's spawning reefs promoted to a part of their own,
 # because the secondary's `escapes` counts a unit by its slug and the loader finds units only here. The approved text of
 # Level 24 (round 48: a coral tower with an iris that releases 4 Glassfin every 3.5 s while it is on the screen, 200 HP,

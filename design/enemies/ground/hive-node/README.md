@@ -116,7 +116,7 @@ The production files, generator notes in [concept/prompts.md](concept/prompts.md
   which the vocabulary defines as 3–6 turrets. Our readings, for review in round 31: the cycle
   counted from the top edge (first release 4 s after entering), a skipped opening waits a whole
   cycle, the 120° arc and 160 px/s of the Brood Pod. The spawn's keys are planned (the
-  [schemas](../../../tech/architecture/README.md#data-file-schemas)): they wait in the data's
+  [schemas](../../../tech/architecture/schemas-units/README.md)): they wait in the data's
   comment until the simulation reads them. `design` goes to `review` for round 31.
 - 2026-10-07: M5 part C simulation built: the spawn and its keys are read from the data file (no longer a comment); the simulation items are ticked, the drawing and the art follow.
 - 2026-10-07: [Concept round 31](../../../concept-rounds/round-31/README.md) closed for the Hive

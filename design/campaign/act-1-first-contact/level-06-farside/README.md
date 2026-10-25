@@ -424,7 +424,7 @@ D8), with their briefs: [concept/prompts.md](concept/prompts.md); reviewed in
   chain and loop-back, the Mantis's side hover and sweep, the darkness (the sim checks only the
   headlight cone and the flares; a `dark: true` trigger takes hits only while lit), the Smart
   Bomb and the data core (a secret with `data_core: {unlocks: ...}`), with placeholder art and
-  sounds; the schema is in the [architecture](../../../tech/architecture/README.md#data-file-schemas).
+  sounds; the schema is in the [architecture](../../../tech/architecture/schemas-levels/README.md).
   The waves, flares, survey cache and terminal are placed in the next step, in this level's
   `data.yaml`.
 - 2026-10-04: M4 part F step 3 made the level playable (main-agent brief): the level's

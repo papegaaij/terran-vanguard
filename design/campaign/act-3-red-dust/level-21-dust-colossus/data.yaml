@@ -1,6 +1,6 @@
 # Level 21 – Dust Colossus: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
 # targets, radio, credit budget). Times are seconds from the level start. M7 part H, step PH2, from the README's
-# approved hand tables (round 36) and the user's round 43 answers (H.1-H.7). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 36) and the user's round 43 answers (H.1-H.7). Schema: ../../../tech/architecture/schemas-levels/README.md
 # The arena CRAWLS (round 36): section 5 is an arena of speed 20 whose ground scrolls on at 20 px/s on the real steps
 # while the Dust Colossus lives (the level's boss breaches: content's ColossusRules makes a moving arena of a breaching
 # boss crawl); the level clock halts at its end (t=245) and a kill jumps it there without moving the ground. The

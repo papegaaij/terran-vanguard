@@ -1,4 +1,4 @@
-# Drill Rig stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Drill Rig stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part B, step B2 (Level 22), from the approved hand table (round 48): a hardened ground structure with a vital core
 # and four destroyable pumps (the Shellback's unit parts, four of them) that carry the collar's ring: each pump lost
 # slows it 0.5 s (`slows`), the ring stops with the last pump (sim: step B1; mapped in step B3). Credits: a core-first

@@ -1,4 +1,4 @@
-# Glow Angler stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Glow Angler stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part F, step F2 (Level 26): the approved stat block (round 48) as data. New in it: the `lunge` movement (it hangs
 # drifting by its lure; the ship within `trigger` px sets off a dive at where the ship was, ending `stop_short` px short
 # of it or after `seconds`, its ring there, a retreat, then the drift again; flown from step F1 (`Lunging`), mapped in

@@ -1,4 +1,4 @@
-# Warden Tank stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Warden Tank stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part F, step F2 (Level 19): a tracked walker with an independent turret (a destroyable part that silences its gun,
 # turning on its own toward the ship: `turret`) and a thin rear plate (`rear_plate`). Loaded, checked and mapped for the
 # simulation in step F2 (content's EnemyData, FoundryChecks, FoundryRules; sim: step F3). Credits: a hull-first kill pays

@@ -113,7 +113,7 @@ Chosen concept: [coilwyrm-r08-a.png](../concept/coilwyrm-r08-a.png), [coilwyrm-r
 - 2026-10-04: M4 part F: the stat block moved into [data.yaml](data.yaml) (a `segment_chain`
   block, the tail's `first_bonus`, `path` movement and the hard hooks `segments` and
   `regrown_fan_count`; planned keys in the
-  [schemas](../../../tech/architecture/README.md#data-file-schemas)). The concept link points at
+  [schemas](../../../tech/architecture/schemas-units/README.md)). The concept link points at
   the chosen `coilwyrm-r08-a` instead of the superseded r05. The 1.5 s edge warning follows the
   code's 3 s minimum (main-agent choice).
 - 2026-10-04: A Coilwyrm counts as one enemy for density and the kill ratio, its segments pay

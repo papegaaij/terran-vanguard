@@ -1,6 +1,6 @@
 # Level 20 – Retreat from Hellas: the level script, rendered into README.md (briefing, threat profile, layout, waves,
 # ground targets, radio, credit budget). Times are seconds from the level start. M7 part G, step G2, from the README's
-# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M7 part G (loaded and checked in step G2 by content's LevelData and RetreatChecks; flown from steps G1
 # (the reverse scroll) and G3 (the pursuit), mapped in step G4, drawn by steps GA/GB): a section's **negative speed**
 # (the ground moving up the screen: the retreat; its `ramp` eases through zero at the turnabout), the `pursuit`

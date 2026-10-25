@@ -1,5 +1,5 @@
 # Act 1 – First Contact: its levels, the act intro (title card and act briefing) and the act-end
-# outro, rendered into README.md (Act intro and outro). Schema: ../../tech/architecture/README.md#data-file-schemas
+# outro, rendered into README.md (Act intro and outro). Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [1, 7]
 
 title_card:  # over a still of the Gagarin shipyards at dawn, Earth's terminator behind

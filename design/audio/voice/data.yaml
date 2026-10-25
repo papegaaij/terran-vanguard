@@ -1,5 +1,5 @@
 # The voice pipeline's speaker table (design/audio/voice): the Chatterbox settings per expression
-# and the speakers' voices. Schema: ../../tech/architecture/README.md#data-file-schemas
+# and the speakers' voices. Schema: ../../tech/architecture/schemas-voice/README.md
 # The renderer (tools/art/voice.py) and the game (vanguard.content.voice.VoiceLines) read it: a
 # change here changes the key of every line it touches, so only those lines are rendered again.
 

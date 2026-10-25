@@ -1,4 +1,4 @@
-# Eel Swarm stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Eel Swarm stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part C, step C2 (Level 23): the approved stat block (round 48) as data. A segment chain in the water: the head swims
 # the wave's authored path with a sine sway about it, the body and the tail follow its path history (the Coilwyrm's
 # rig), the head fires two attacks (its part's `attacks` list), and a cut's rear part scatters instead of regrowing

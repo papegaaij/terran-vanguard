@@ -2,7 +2,7 @@
 # layout, waves, radio, credit budget). Times are seconds from the level start; after t = 100 they
 # run on the arena's pausable clock (the clock halts at the arena's end while the carrier lives and
 # jumps there at an earlier kill, so the aftermath always runs its 35 s after the kill).
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 170     # the approach, pressing forward; the arena 20 px/s, the aftermath 40 px/s
 launch_seconds: 5     # flying in from the bottom edge, as in Levels 01-06
 bounty_scale: 0.75    # every bounty × 0.75: the typical haul on budget(7) (part G; the boss's parts at 100 %, its typical spawns counted)

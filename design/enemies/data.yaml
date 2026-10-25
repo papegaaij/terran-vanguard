@@ -1,5 +1,5 @@
 # The shared balancing basis and vocabularies: rendered into README.md.
-# Schema: ../tech/architecture/README.md#data-file-schemas
+# Schema: ../tech/architecture/schemas-units/README.md
 reference_dps:  # assumed single-target player DPS per level (medium)
   1: 20
   2: 26

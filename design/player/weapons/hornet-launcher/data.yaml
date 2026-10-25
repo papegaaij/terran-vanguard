@@ -1,4 +1,4 @@
-# Hornet Launcher: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Hornet Launcher: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Hornet Launcher
 slot: front
 traits: [homing]

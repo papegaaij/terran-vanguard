@@ -3,7 +3,7 @@
 # halts at the arena's end (t = 250) while the Siege Spire lives and jumps to it at the kill, so
 # everything in the fight runs on the simulation's real steps and the arena's radio lines are events
 # (M5 part H, step H4; decisions H1–H10 = a of 2026-10-11 and the stated defaults, pending the user's
-# review in the combined round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# review in the combined round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # The `backdrop` block is a placeholder (Level 09's megacity tiles, `images: level-09`) until the
 # Geneva backdrop's proposal (tools/art/backdrop_l14.py --proposal, step H5) replaces it and the
 # sections' tiles.

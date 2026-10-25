@@ -2,7 +2,7 @@
 # layout, waves, ground targets, radio, credit budget). Times are SCRIPT time (user decision D2 = a
 # of M5 part C): the scroll distance ÷ 150 px/s. In a hold zone the level clock slows with the
 # scroll, so waves, ground targets, radio t-lines and the backdrop's placements wait with it.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 150
 launch_seconds: 5     # flying in from the bottom edge with Rook in his slot, as in Level 08
 bounty_scale: 0.29    # every bounty × 0.29: the typical haul on budget(9) (0.4 before the L10-style waves of 2026-10-18)

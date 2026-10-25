@@ -1,6 +1,6 @@
 # Level 01 – Break at Dawn: the level script, rendered into README.md (Layout, Waves, Ground
 # targets, Radio chatter, Credit budget). Times are seconds from the level start.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 130     # px/s at the 960×540 baseline; a section may set its own speed
 launch_seconds: 5     # non-playable launch off the south rail; control starts after it
 bounty_scale: 1.21         # every bounty × 1.21: the typical haul on budget (density rework)

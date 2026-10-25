@@ -1,5 +1,5 @@
 # Player-wide rules: shop availability and the in-level pickups (rendered into README.md).
-# Schema: ../tech/architecture/README.md#data-file-schemas
+# Schema: ../tech/architecture/schemas-player/README.md
 availability:  # "available: <key>" means: in the shop from the hangar visit before this level
   start: 1
   act 1: 2

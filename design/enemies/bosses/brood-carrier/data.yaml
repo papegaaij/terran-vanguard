@@ -1,5 +1,5 @@
 # Brood Carrier stat block and boss script at medium: the stat block is rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # The Act 1 boss (Level 07; user decision D1 of M4 part G). Its parts are hit boxes around the hull's
 # centre in its own frame, sprite px at 1× (dx right, dy up: nose-down the head hangs at negative dy).
 # The part_list offsets and the hitbox are the arrival pose, nose-down (the sim's pose 0); `poses`

@@ -1,4 +1,4 @@
-# Coilwyrm stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Coilwyrm stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # A segment chain: the head flies the wave's authored path, the body segments and the tail follow its
 # path history. Counts as one enemy (density, kill ratio); the segments pay bounty only.
 name: Coilwyrm

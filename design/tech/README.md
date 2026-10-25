@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: n/a
 depends-on: [../art-direction, ../audio, ../ui/controls]
-updated: 2026-10-12
+updated: 2026-10-25
 ---
 
 # Tech stack
@@ -23,6 +23,7 @@ engine-agnostic; this section is the only place that names engine APIs.
 | [architecture](architecture/README.md) | Module layout, simulation, data files next to the documents, testing, conventions, CI | approved | in-progress | n/a |
 | [roadmap](roadmap/README.md) | Seven milestones from skeleton to the first release (`v0.1` = Acts 1–3, round 44) | approved | in-progress | n/a |
 | [release](release/README.md) | Version, application icon, bundle contents, release notes and the CI release job | approved | in-progress | final |
+| [agent-tooling](agent-tooling/README.md) | Language servers (jdtls, Pyright) and the section reader the agents use; setup on a new machine | review | done | n/a |
 
 ## Design
 

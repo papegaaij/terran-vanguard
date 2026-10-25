@@ -1,5 +1,5 @@
 # AF-12 Stormhawk: flight numbers, rendered into README.md (Movement).
-# Schema: ../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../tech/architecture/schemas-player/README.md
 # Base speed is the fitted engine's (../systems/data.yaml); the starter engine is shown here.
 acceleration_seconds: 0.08  # standing still to full speed
 stop_seconds: 0.06          # full speed to standing still

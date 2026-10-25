@@ -1,7 +1,7 @@
 # Level 05 – Crater Nest: the level script, rendered into README.md (briefing, threat profile,
 # layout, waves, ground targets, radio, credit budget). Times are seconds from the level start;
 # after t = 150 they run on the arena's pausable clock (see the README's Arena clock).
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 150
 launch_seconds: 5     # flying in from the bottom edge, as in Levels 01-04
 bounty_scale: 0.79         # every bounty × 0.79: the typical haul on budget (density rework)

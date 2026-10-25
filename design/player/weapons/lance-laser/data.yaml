@@ -1,4 +1,4 @@
-# Lance Laser: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Lance Laser: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Lance Laser
 slot: front
 traits: [piercing, forward]

@@ -118,7 +118,7 @@ The production files, generator notes in [concept/prompts.md](concept/prompts.md
   concept generator's), the 200 px measured centre to centre, the air window at 0.225–0.525 s, the
   pounce only while on the screen, the cooldown counted from landing, contact not destroying it
   (it is `medium`, not a rammer). The pounce's keys are planned (the
-  [schemas](../../../tech/architecture/README.md#data-file-schemas)): they wait in the data's
+  [schemas](../../../tech/architecture/schemas-units/README.md)): they wait in the data's
   comment until the simulation reads them. `design` goes to `review` for round 31.
 - 2026-10-07: Overshoot (user): as first built the leap landed on the ship's take-off position, so
   in its middle 0.3 s on `air` it was still 60–140 px short and a ship that held still was never

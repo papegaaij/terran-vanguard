@@ -1,6 +1,6 @@
 # Level 26 – Blackwater: the level script, rendered into README.md (briefing, threat profile, layout, terrain, waves,
 # ground targets, radio, credit budget). Times are seconds from the level start. M8 part F, step F2, from the README's
-# approved hand tables (round 48). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 48). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M8 part F (loaded and checked by content in step F2; flown from step F1, drawn and played by steps F4/F5):
 # the Glow Angler's `lunge` (its stat block), `rook_loss` (Rook's scripted loss: the trails, the hit, the spin-down),
 # the look's dark keys (`underwater_look`: a section's ambient `ramp`, the static `lights`, the escort's `escort_lamp`,

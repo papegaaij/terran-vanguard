@@ -1,5 +1,5 @@
 # Siege Spire stat block and boss script at medium: the stat block is rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # M5 part H, step H4 (Level 14's act boss; decisions H1, H3, H4, H5 and H10 = a of 2026-10-11, pending
 # the user's review in the combined round): an arena boss without lanes. It has no descent: it is
 # anchored at the Concord rotunda, scrolls in with the ground and engages when the scroll halts in its

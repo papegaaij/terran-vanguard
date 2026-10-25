@@ -1,4 +1,4 @@
-# Reef Spitter stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Reef Spitter stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M5 part E (Level 11; the stated defaults of 2026-10-08): the raft's drift along its nest's current is
 # flown by the simulation; the bobbing and the sinking are presentation.
 name: Reef Spitter

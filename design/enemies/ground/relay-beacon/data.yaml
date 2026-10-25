@@ -1,4 +1,4 @@
-# Relay Beacon stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Relay Beacon stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M8 part G, step G2 (Level 27; gap check m8g-gaps.md §1.4): Level 27's relay beacons promoted to a part of their own,
 # because the secondary's `escapes` counts a unit by its slug and the loader finds units only here (as the siphon pump,
 # design: review). The approved text of Level 27 (round 48: `ground`, not hardened, draft 60 HP, a red-gold pulse every

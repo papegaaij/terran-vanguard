@@ -62,7 +62,7 @@ briefing → the hangar visit before L08 (autosave) → L08, as the [ui](../../u
 flow puts every mission briefing before its hangar visit. The game shows the title card and the
 act briefing in front of the briefing of the act's first level; they live in the act's
 [data.yaml](data.yaml) (`levels`, `title_card`, `briefing`, see the
-[architecture](../../tech/architecture/README.md#data-file-schemas) schema text) and are rendered
+[architecture](../../tech/architecture/schemas-levels/README.md) schema text) and are rendered
 here. A save written at the L08 hangar by an M4 build skips this intro (a default of M5 part B, accepted by the user);
 `--level 7` shows it, since winning Level 07 plays the outro and then this intro. After the Siege
 Spire falls, the act ends as the *Act-end order* below says (M5 part H).

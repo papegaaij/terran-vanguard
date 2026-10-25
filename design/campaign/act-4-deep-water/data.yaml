@@ -1,7 +1,7 @@
 # Act 4 – Deep Water: its levels and the act intro (title card and the four intro pages), rendered into README.md (Act
 # intro and outro). M8 part B, step B2, from the approved texts (round 48). The act-end outro after Level 28 and the
 # `next_act` for the release's end (ACT V · THE BELT) come with part H, with their images and voices.
-# Schema: ../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [22, 28]
 
 title_card:  # over the act's still (ui/act-4-deep-water-still.png, tools/art/act_stills.py act-4 from Level 22's backdrop): Europa's ice shelf from the entry corridor, the Conamara Chaos ice field, Jupiter filling the sky, a thin steam plume from the first rig

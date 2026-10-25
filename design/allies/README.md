@@ -67,7 +67,7 @@ no renderer for allies yet).
 
 Civilian orbital shuttle with a CDF evac stripe. Its numbers live in [data.yaml](data.yaml) (the
 table is hand-written), with the air escort's hits, banking and glide (M5 part D, the
-[schemas](../tech/architecture/README.md#data-file-schemas)); the simulation flies it.
+[schemas](../tech/architecture/schemas-units/README.md)); the simulation flies it.
 
 | Property | Value |
 |---|---|
@@ -83,7 +83,7 @@ table is hand-written), with the air escort's hits, banking and glide (M5 part D
 
 UTC container ship (naval surface). Its numbers live in [data.yaml](data.yaml) (M5 part E, step
 E2b: `follows: stations`, `damaged_by.slams`, the
-[schemas](../tech/architecture/README.md#data-file-schemas)); the table is hand-written. The
+[schemas](../tech/architecture/schemas-units/README.md)); the table is hand-written. The
 simulation sails it as a unit of a level's `convoy` block.
 
 | Property | Value |
@@ -311,7 +311,7 @@ Prompts and briefs: [concept/prompts.md](concept/prompts.md). Generator:
   [Level 11](../campaign/act-2-homefront/level-11-atlantic-convoy/README.md#decisions)). Its
   `smoke_below` is 0.85 so it still smokes from its first hit. A naval convoy **holds clear** after
   the boss: the level's `hold_clear` (px of scroll) and a unit's optional `hold` point (the
-  [schemas](../tech/architecture/README.md#data-file-schemas)); Level 11's ships wait while Platform
+  [schemas](../tech/architecture/schemas-units/README.md)); Level 11's ships wait while Platform
   Tiamat's deck scrolls through instead of gliding back under it.
 - 2026-10-09: Concept round 33 closed (user): the convoy ship pair **a** "Atlantic line" (the feeder
   container ship and the grey CDF frigate, already in the game) approved as **final**, the weak spots

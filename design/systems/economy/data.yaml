@@ -1,4 +1,4 @@
-# Economy numbers (Act 1 values at medium). Schema: ../../tech/architecture/README.md#data-file-schemas
+# Economy numbers (Act 1 values at medium). Schema: ../../tech/architecture/schemas-player/README.md
 # The README's tables are hand-written; keep them in step with these numbers. A level's
 # bounty_scale (its data.yaml) multiplies every bounty after these factors, before the one rounding.
 starting_credits: 300

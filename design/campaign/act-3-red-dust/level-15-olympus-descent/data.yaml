@@ -1,6 +1,6 @@
 # Level 15 – Olympus Descent: the level script, rendered into README.md (briefing, threat profile, layout,
 # waves, ground targets, radio, credit budget). Times are seconds from the level start. M7 part B, step B2,
-# from the README's approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# from the README's approved hand tables (round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M7 part B, flown by the simulation since step B3: the sections' moving `ramp` (each speed change
 # eased over 1 s), `launch: drop`, `no_surface` and the Burrower's and the Dust Kite's own blocks (their stat blocks).
 # The `backdrop` block and the sections' tiles, atmospheres and peaks are step ART-B's proposal

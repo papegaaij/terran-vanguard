@@ -1,4 +1,4 @@
-# Dust Devil stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Dust Devil stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part E, step E2 (Level 18): the spin cycle (`vortex`: closed on `ground` with the armoured `vanes`, the rise, open
 # on `low-air`), the radial `pull` on the ship and the pickups, and the grit `spiral` fired only `while: open` (a
 # non-boss spiral). Loaded and checked in step E2 by content's EnemyData and StormChecks, mapped for the simulation in

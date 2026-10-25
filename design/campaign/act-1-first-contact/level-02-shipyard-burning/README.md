@@ -85,7 +85,7 @@ cloud decks thin out while it sweeps.
 ### Backdrop
 
 How the layers above are composed, rendered from the `backdrop` in [data.yaml](data.yaml) (schema
-in [architecture](../../../tech/architecture/README.md#data-file-schemas)), the same model as
+in [architecture](../../../tech/architecture/schemas-backdrops/README.md)), the same model as
 [Level 01](../level-01-break-at-dawn/README.md#backdrop): a layer's tile set repeats along the layer
 and changes at a seam that enters at the top edge when the section starts; a set piece is listed
 with the seconds it is on screen; the atmosphere names the low-air banks (smoke, and the coolant

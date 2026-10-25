@@ -1,5 +1,5 @@
 # Gorgon Frigate stat block and boss script at medium: the stat block is rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # A multi-part boss: its parts are hit boxes around the bell's centre, in its own frame (facing down
 # the screen: dx right, dy up towards its tail, so the heads hang at negative dy).
 name: Gorgon Frigate

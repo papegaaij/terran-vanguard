@@ -1,6 +1,6 @@
 # Act 2 – Homefront: its levels and the act intro (title card and act briefing), rendered into
 # README.md (Act intro and outro), and its act-end outro (after Level 14; M5 part H, H7 = a, pending the user's review).
-# Schema: ../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../tech/architecture/schemas-levels/README.md
 levels: [8, 14]
 
 title_card:  # over a still of Nova Lagos at night from low orbit, fires along the coast, the landing trails through the cloud deck

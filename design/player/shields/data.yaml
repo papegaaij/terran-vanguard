@@ -1,4 +1,4 @@
-# Shields: rendered into README.md. Schema: ../../tech/architecture/README.md#data-file-schemas
+# Shields: rendered into README.md. Schema: ../../tech/architecture/schemas-player/README.md
 break_seconds: 1.0  # a broken shield stays down this long before the regen delay starts
 models:
   # capacity points, regen points/s, delay s, draw MW, price cr (0 = starter), available

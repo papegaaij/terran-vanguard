@@ -1,5 +1,5 @@
 # Europa's under-water rules (README.md, Under water rules; M8 part A): rendered into README.md.
-# Schema: ../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../tech/architecture/schemas-act-4/README.md
 # A level, or a section of one, with `medium: underwater` flies by these numbers (round 48, Q1 = b).
 underwater:
   bullet_speed: 0.7       # every bullet's speed, the player's and the enemies' (the difficulty's scale multiplied in), at its spawn

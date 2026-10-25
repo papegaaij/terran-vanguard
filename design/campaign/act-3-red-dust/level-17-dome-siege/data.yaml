@@ -1,6 +1,6 @@
 # Level 17 – Dome Siege: the level script, rendered into README.md (briefing, threat profile, layout, waves, ground
 # targets, radio, credit budget). Times are seconds from the level start. M7 part D, step D2, from the README's
-# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M7 part D (loaded and checked in step D2 by content's LevelData and SiegeChecks, mapped for the
 # simulation in step D4, flown from steps D1/D3): the level's `allies` block (the five Ares Landing domes, scrolling
 # through with the ground, and the target-the-objective hook that goes for them: `targeted_by`, `bomb_row`,

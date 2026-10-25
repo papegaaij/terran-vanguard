@@ -22,7 +22,7 @@ whose secondary objective is that none of them is hit (M16 = a).
 The spec, approved with Level 17 in concept round 36 (M16 = a, Q.17a, MA.3 = a), moved here as its own
 document in M7 part D (Q.25b). Its numbers live in the allies' [data.yaml](../data.yaml) under the slug
 `ares-landing-dome` (one loader for every ally; the defaults of the gap check below accepted in round 40 (2026-10-19); the table is hand-written. Level 17 places the domes (the level's `allies` block,
-[schemas](../../tech/architecture/README.md#data-file-schemas)).
+[schemas](../../tech/architecture/schemas-units/README.md)).
 
 | Property | Value |
 |---|---|

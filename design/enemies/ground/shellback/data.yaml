@@ -1,4 +1,4 @@
-# Shellback stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Shellback stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part D, step D2 (Level 17): a walker with a destroyable mortar vent (a part on a unit that is not a boss) and the
 # curl-roll (`roll`). Loaded and checked in step D2, mapped for the simulation in step D4 (sim: step D3). Credits: a
 # body-first kill pays the whole 48 (the body's 40 and its first_bonus 8); the vent first pays 52 (vent 12, body 40).

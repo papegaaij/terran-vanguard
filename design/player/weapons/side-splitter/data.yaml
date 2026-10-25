@@ -1,4 +1,4 @@
-# Side Splitter: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Side Splitter: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Side Splitter
 slot: rear
 traits: [side]

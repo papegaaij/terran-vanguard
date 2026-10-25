@@ -2,7 +2,7 @@
 # layout, waves, ground targets, radio, credit budget). Times are seconds from the level start; the
 # level clock halts at the arena's end (t = 161) while the Harbour Kraken lives, so everything in the
 # fight runs on the simulation's real steps and the arena's radio lines are events (M5 part E).
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 # The `backdrop` block and the sections' tiles are merged in from the round 33 backdrop proposal
 # (concept/backdrop-proposal.yaml, tools/art/backdrop_l11.py --proposal, which reads this file).
 scroll_speed: 140     # the chosen ocean scene's slower swell

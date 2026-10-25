@@ -19,7 +19,7 @@ The Act 2 boss: a slate citadel rooted in Geneva Concord under the Vrell canopy.
 
 ### Stat block
 
-Values are balancing numbers at **medium**, in [data.yaml](data.yaml) with the boss script (`boss`: the phases, the free pose, the maw's windows and their ambush launches, the lift, the par; the anchored arrival and the free spire's sway; M5 part H, step H4, keys in the [schemas](../../../tech/architecture/README.md#data-file-schemas)) (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis.
+Values are balancing numbers at **medium**, in [data.yaml](data.yaml) with the boss script (`boss`: the phases, the free pose, the maw's windows and their ambush launches, the lift, the par; the anchored arrival and the free spire's sway; M5 part H, step H4, keys in the [schemas](../../../tech/architecture/schemas-units/README.md)) (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis.
 
 <!-- data: stat-block -->
 | Field | Value |

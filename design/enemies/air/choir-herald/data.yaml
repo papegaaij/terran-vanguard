@@ -1,4 +1,4 @@
-# Choir Herald stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Choir Herald stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part D, step D2 (Level 17; M8 = a): a support flyer whose `aura` sings a shield ring onto every other enemy
 # near it. Loaded and checked in step D2, mapped for the simulation in step D4 (sim: step D3). Defaults of the gap
 # check, pending the user's review in round 40: its escorts (`carrier + escorts`) orbit it at 0.8 × the aura's radius

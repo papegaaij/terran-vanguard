@@ -17,7 +17,7 @@ A flock of tiny ember-like motes that swirls in front of the player, sweeps off 
 
 ### Stat block
 
-The numbers live in [data.yaml](data.yaml); the stat block is one mote's, a swarm is a wave of them. Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. The flock is a planned key (the [schemas](../../../tech/architecture/README.md#data-file-schemas)): it waits in the data's comment until the simulation reads it.
+The numbers live in [data.yaml](data.yaml); the stat block is one mote's, a swarm is a wave of them. Values are first-draft balancing numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). HP is in damage units (a Pulse Cannon L1 shot does 2); bullet damage classes and speeds are defined in the balancing basis. The flock is a planned key (the [schemas](../../../tech/architecture/schemas-units/README.md)): it waits in the data's comment until the simulation reads it.
 
 <!-- data: stat-block -->
 | Field | Value |
@@ -140,7 +140,7 @@ The production files (M5 part D, straight to production per D10 = a; approved as
   `implementation: in-progress` until the pursuit flies.
 - 2026-10-20 (user, after step G4 measured the pursuit melting under the homing pods and Rook):
   **"Homing ignores motes"**: the seekers never target a mote, and direct fire still hits it. Step SW
-  added it as the stat block's `seekers_ignore: true` (the [schemas](../../../tech/architecture/README.md#data-file-schemas)),
+  added it as the stat block's `seekers_ignore: true` (the [schemas](../../../tech/architecture/schemas-units/README.md)),
   honoured by the player's homing shots, torpedoes and turrets and by Rook. The turrets count as seekers
   in our reading, accepted in round 43 (2026-10-20). Levels 10, 11, 17 and 18 fly motes too. Their
   measures moved a little and every rule still holds: Level 11 unchanged; Level 10's pacing flight at

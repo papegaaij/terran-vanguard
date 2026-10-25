@@ -1,6 +1,6 @@
 # Level 02 – Shipyard Burning: the level script, rendered into README.md (Briefing, Threat
 # profile, Layout, Waves, Ground targets, Hazards, Radio chatter, Credit budget). Times are
-# seconds from the level start. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# seconds from the level start. Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 140     # px/s (calm)
 launch_seconds: 5     # the launch off the south rail, as in Level 01
 bounty_scale: 1.05         # every bounty × 1.05: the typical haul on budget (density rework)

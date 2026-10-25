@@ -743,8 +743,4 @@ points (the a/b and one-version files are also on the board's cards).
 
 ## Decisions
 
-- 2026-10-12: Opened as the combined round of M5 parts F–I (the user's request before the vacation:
-  one large round at the end), replacing the planned rounds 34–37; `board.py` takes several round
-  numbers for it.
-- 2026-10-12 (user): closed as summarised at the top; the board regenerated with the rejected files
-  (`board.py 34 35 36 --subjects …`, leaving out round 35's own M6 files that share the `r35` names).
+Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-archive.md).

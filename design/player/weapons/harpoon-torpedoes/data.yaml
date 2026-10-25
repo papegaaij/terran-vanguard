@@ -1,4 +1,4 @@
-# Harpoon Torpedoes: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon). M8 part A.
+# Harpoon Torpedoes: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md). M8 part A.
 # The front-slot torpedo (hits: anti-sub, the Torpedo Pod's delivery fired from the nose); under water the
 # water rules apply (../../../world/europa/data.yaml: range x 1.5, the bullet speed x 0.7, full damage).
 name: Harpoon Torpedoes

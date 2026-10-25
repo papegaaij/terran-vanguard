@@ -102,7 +102,7 @@ Chosen concept: [mantis-r04-a.png](../concept/mantis-r04-a.png) (listed in the [
 - 2026-10-01: Approved by the user in the [Acts 1–2 design review](../../../reviews/acts-1-2/README.md).
 - 2026-10-04: M4 part F: the stat block moved into [data.yaml](data.yaml) (`laser-sweep` with its
   `sweep` block, `hover` `edge_x` and `exit: back`, the hard hook `sweep_arc`; planned keys in the
-  [schemas](../../../tech/architecture/README.md#data-file-schemas)). The 1.5 s edge warning
+  [schemas](../../../tech/architecture/schemas-units/README.md)). The 1.5 s edge warning
   follows the code's 3 s minimum for every side and rear entry (main-agent choice).
 - 2026-10-04: The beam is 300 px long and sweeps centred on the ship's bearing, with the 0.6 s
   arc telegraph (user decision D4 of M4 part F); rejected: a full-width beam (the edge dilemma

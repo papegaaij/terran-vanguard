@@ -21,7 +21,7 @@ anchor to drop the barrier, or burn through the tendril itself with a `beam` (Le
 
 Numbers at **medium** (see the [balancing basis](../../README.md#balancing-basis)). The numbers live in
 [data.yaml](data.yaml) (M7 part C, step C2), with the `link` attack (the tendril's HP, tell, band, cooldown and
-burnt bounty) and the hard-only orb (`only: [hard]`) of the [schemas](../../../tech/architecture/README.md#data-file-schemas);
+burnt bounty) and the hard-only orb (`only: [hard]`) of the [schemas](../../../tech/architecture/schemas-units/README.md);
 the table is rendered from it. HP is in damage units (a Pulse Cannon L1 shot
 does 2). Set at its first level from the proposed Act 3 reference DPS (M18 = a, approved in round 36:
 L16 = 80): 12 HP per anchor is a time-to-kill of 0.15 s. As a `small` unit it keeps its HP in

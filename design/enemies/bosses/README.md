@@ -63,7 +63,7 @@ boss assets with a spectral tint, not new designs.
   has a **par** time in its data; a kill under par pays the
   [Boss rush](../../systems/scoring/README.md#level-end-bonuses) bonus.
 - A boss's stat block and script (parts, neck or limb chains, phases, par) live in its
-  `data.yaml` ([schema](../../tech/architecture/README.md#data-file-schemas)); the first is the
+  `data.yaml` ([schema](../../tech/architecture/schemas-units/README.md)); the first is the
   [Gorgon Frigate](gorgon-frigate/README.md) (M4 part E).
 
 ## Concept art

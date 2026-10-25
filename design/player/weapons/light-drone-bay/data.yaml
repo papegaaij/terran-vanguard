@@ -1,4 +1,4 @@
-# Light Drone Bay: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Light Drone Bay: its per-level table rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 # M7 part A: the drone (../../wingmen/README.md#light-drone) fires the levels' shots from its orbit at
 # the convergence point; each level adds the hits it takes before it breaks and its rebuild time.
 name: Light Drone Bay

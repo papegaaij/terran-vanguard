@@ -2,7 +2,7 @@
 # waves, ground targets, radio, credit budget). Times are seconds from the level start: the timed halt
 # (sections 2-4, speed 0 without an arena) keeps the level clock running, so every time is the clock's
 # (M5 part G, step G4; user decisions G1–G9 = a of 2026-10-11 and the stated defaults, pending the
-# user's review in the combined round). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# user's review in the combined round). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Screen places in the halt are fixed (the ground stands): x px from the left edge, y px below the top
 # edge, except where a key says y up (the defend's `at`, the drops, a side nest's `at`).
 scroll_speed: 140     # the arctic scene's pack ice

@@ -1,5 +1,5 @@
 # Dust Colossus stat block and boss script at medium: the stat block is rendered into README.md.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-units/README.md
 # M7 part H, step PH2 (Level 21's act boss; approved in round 36, D.19 and B.2 = b; the user's round 43 answers H.4, H.5
 # and H.7): a breaching arena boss. Its body stays `buried` under the crawling arena (Level 21's arena scrolls on at
 # 20 px/s while it lives); a mouth (the vital part, the bar) breaches at a point in turn (`movement.breach`), rises

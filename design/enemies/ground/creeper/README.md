@@ -87,7 +87,7 @@ The production files, generator notes in [concept/prompts.md](concept/prompts.md
 - [x] Stat block values loaded from [data.yaml](data.yaml); global difficulty multipliers applied
 - [x] Walker path (the Scuttler's walk) with turn rate and distance-driven walk phase; facing in the state hash
 - [x] Fan aimed at the player from a walker
-- [x] Staggered convoy fans (0.5 s, the `stagger` key in the data and the [schemas](../../../tech/architecture/README.md#data-file-schemas))
+- [x] Staggered convoy fans (0.5 s, the `stagger` key in the data and the [schemas](../../../tech/architecture/schemas-units/README.md))
 - [x] Hard: 7-way fan with the authored 2.6 s interval
 - [x] Death effect (16-frame organic burst), the husk at its last heading, bounty and score per this spec
 - [x] The Vrell screech as it comes onto the screen

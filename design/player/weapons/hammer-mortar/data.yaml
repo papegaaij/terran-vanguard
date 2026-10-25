@@ -1,4 +1,4 @@
-# Hammer Mortar: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Hammer Mortar: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Hammer Mortar
 slot: front
 traits: [anti-ground, area]

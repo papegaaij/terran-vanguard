@@ -79,7 +79,7 @@ the document in review); later weapons are still roster rows below.
 All numbers of the designed weapons (pattern, rate, damage, speed, draw, prices) live in the
 `data.yaml` next to each weapon's README, the single source; the rules they share (upgrade cost
 factors, draw rounding, the single-target DPS target) are in [data.yaml](data.yaml) here (schema:
-[data file schemas](../../tech/architecture/README.md#data-file-schemas)). Each weapon's property
+[data file schemas](../../tech/architecture/schemas-player/README.md)). Each weapon's property
 and per-level tables are rendered from it with `python3 tools/sync_tables.py`;
 `python3 tools/balance.py` checks a typical player's purchases
 ([balance-plan.yaml](../balance-plan.yaml)) for levels 01–21 against the [credit budget](../../systems/economy/README.md#per-level-budget),
@@ -244,7 +244,7 @@ targets; generator `tools/concept/gear_r48.py`; prompts in [concept/prompts.md](
   every layer a homing missile does) and `MINE` (the Proximity Mines: dropped, holding their screen
   position, arming, set off by `air` and `low-air` enemies, one `area` blast on `air`, `low-air`
   and `ground`); the Hornet accelerates and leaves its ports in turn. New data fields (schema in
-  [architecture](../../tech/architecture/README.md#data-file-schemas)): `accelerate`, `ports`,
+  [architecture](../../tech/architecture/schemas-player/README.md)): `accelerate`, `ports`,
   `slew`, `drift`, `arm`, `trigger`; `hits: area` marks the mines. A homing missile's turn and a
   turret's slew are the one turn rate the Targeting computer scales. Effects from
   `tools/art/act2_weapon_fx.py`, proposed for round 28; Act 1's replays and hashes are unchanged.

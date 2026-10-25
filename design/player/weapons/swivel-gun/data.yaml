@@ -1,4 +1,4 @@
-# Swivel Gun: rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Swivel Gun: rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 name: Swivel Gun
 slot: wing
 traits: [side, homing]

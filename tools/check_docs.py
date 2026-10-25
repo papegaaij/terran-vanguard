@@ -6,13 +6,20 @@ Checks (see CLAUDE.md for the rules):
   2. every README.md has valid frontmatter
   3. every subdirectory is listed in its parent's Contents table, with Design/Impl/Art
      columns matching the child's frontmatter
-  4. every file in a concept/ directory is referenced by the owning README
+  4. every file in a concept/ directory is referenced by the owning README, or (rejected proposals)
+     by concept/rejected/README.md, the one file allowed there, which the README must link to and
+     whose rows must all be rejected
   5. relative links in markdown files, depends-on entries and review-board HTML resolve
   6. tables marked <!-- data: NAME --> match what tools/sync_tables.py renders from data.yaml
+  7. a decisions-archive.md (a README's older Decisions entries) sits next to a README.md that
+     links to it; its links are checked as in 5
 
 Usage: python3 tools/check_docs.py        exit code 1 when problems are found
        python3 tools/check_docs.py --fix  first sync Contents status cells from the children and
                                           re-render the marked tables
+       python3 tools/check_docs.py --self-test
+                                          run the checker on small generated trees (the rejected
+                                          table and decisions archive rules) and report the result
 """
 import re
 import sys
@@ -118,18 +125,63 @@ def check_contents(readme, subdirs, metas):
                                f"child says '{child.get(key)}'")
 
 
+REJECTED = "concept/rejected/README.md"
+
+
+def link_targets(path):
+    """The relative link targets of a markdown file, resolved (without anchors)."""
+    text = path.read_text(encoding="utf-8")
+    out = set()
+    for target in MD_LINK.findall(text):
+        if re.match(r"^(?:[a-z]+:|#|//)", target):
+            continue
+        out.add((path.parent / target.split("#", 1)[0]).resolve())
+    return out
+
+
+def check_rejected_table(readme, rejected):
+    if REJECTED not in readme.read_text(encoding="utf-8"):
+        report(readme, f"does not link its {REJECTED}")
+    for line in rejected.read_text(encoding="utf-8").splitlines():
+        if not line.startswith("|") or re.fullmatch(r"[|\s:-]+", line):
+            continue
+        cells = [c.strip() for c in re.split(r"(?<!\\)\|", line.strip().strip("|"))]
+        if cells[0] == "File":
+            continue
+        if not cells[-1].lower().startswith("rejected"):
+            report(rejected, f"row with status '{cells[-1][:40]}' is not rejected: {cells[0][:80]}")
+
+
 def check_concept_files(owner_dir):
     readme = owner_dir / "README.md"
     if not readme.exists():
         return
     text = readme.read_text(encoding="utf-8")
+    rejected = owner_dir / REJECTED
+    rejected_text, rejected_links = "", set()
+    if rejected.exists():
+        check_rejected_table(readme, rejected)
+        rejected_text, rejected_links = rejected.read_text(encoding="utf-8"), link_targets(rejected)
     for f in sorted((owner_dir / "concept").rglob("*")):
-        if f.is_file() and f.name != "prompts.md":
+        if f.is_file() and f.name != "prompts.md" and f != rejected:
             ref = f.relative_to(owner_dir).as_posix()
-            if ref not in text:
-                report(readme, f"concept file '{ref}' is not listed in the README")
+            if ref not in text and ref not in rejected_text and f.resolve() not in rejected_links:
+                report(readme, f"concept file '{ref}' is not listed in the README or {REJECTED}")
     if not (owner_dir / "concept" / "prompts.md").exists():
         report(readme, "concept/ has no prompts.md")
+    for md in sorted((owner_dir / "concept").rglob("*.md")):
+        if md.name != "prompts.md" and md != rejected:
+            report(md, "only prompts.md and rejected/README.md are allowed markdown files in concept/")
+
+
+def check_archive(archive):
+    readme = archive.parent / "README.md"
+    if not readme.exists():
+        report(archive, "has no README.md next to it")
+    elif "](decisions-archive.md" not in readme.read_text(encoding="utf-8"):
+        report(readme, "does not link its decisions-archive.md")
+    if not archive.read_text(encoding="utf-8").startswith("# "):
+        report(archive, "does not start with a '# ' title")
 
 
 def check_links(path, pattern):
@@ -160,10 +212,10 @@ def check_data_tables():
             report(readme, "a marked table differs from its data.yaml (run tools/sync_tables.py)")
 
 
-def main():
+def run(data_tables=True):
     if not DESIGN.is_dir():
         print("design/ not found")
-        return 1
+        return None
     dirs = [DESIGN] + sorted(d for d in DESIGN.rglob("*") if d.is_dir())
     metas = {}
     for d in dirs:
@@ -184,16 +236,89 @@ def main():
         check_contents(d / "README.md", subdirs, metas)
         if (d / "concept").is_dir():
             check_concept_files(d)
+    for archive in sorted(DESIGN.rglob("decisions-archive.md")):
+        check_archive(archive)
     for md in [ROOT / "README.md", ROOT / "CLAUDE.md"] + sorted(DESIGN.rglob("*.md")):
         if md.exists():
             check_links(md, MD_LINK)
     for html in sorted(DESIGN.rglob("*.html")):
         check_links(html, HTML_LINK)
-    check_data_tables()
+    if data_tables:
+        check_data_tables()
+    return len(metas)
 
+
+def self_test():
+    """Run the checker on small generated trees; each case names the problems it must (not) find."""
+    import tempfile
+    global ROOT, DESIGN
+    saved = ROOT, DESIGN
+    fm = "---\ntitle: T\ndesign: draft\nimplementation: n/a\nart: proposed\nupdated: 2026-10-25\n---\n\n# T\n"
+    base = {
+        "design/README.md": fm + "\n| Part | Summary | Design | Impl | Art |\n|---|---|---|---|---|\n"
+                             "| [part](part/README.md) | x | draft | n/a | proposed |\n",
+        "design/part/concept/prompts.md": "# prompts\n",
+        "design/part/concept/a-r01-a.png": "",
+        "design/part/concept/rejected/a-r01-b.png": "",
+        "design/part/README.md": fm + "\n## Concept art\n\nRejected: [concept/rejected/README.md]"
+                                  "(concept/rejected/README.md).\n\n| File | What | Status |\n|---|---|---|\n"
+                                  "| [concept/a-r01-a.png](concept/a-r01-a.png) | a | chosen |\n"
+                                  "\n## Decisions\n\nOlder: [decisions-archive.md](decisions-archive.md).\n",
+        "design/part/concept/rejected/README.md": "# T rejected\n\n| File | What | Status |\n|---|---|---|\n"
+                                                  "| [concept/rejected/a-r01-b.png](a-r01-b.png) | b | rejected |\n",
+        "design/part/decisions-archive.md": "# T decisions archive\n\n- 2026-10-01: [x](README.md#decisions)\n",
+    }
+    cases = [  # (name, file changes, substrings every expected problem contains)
+        ("valid tree", {}, []),
+        ("rejected file listed nowhere", {"design/part/concept/rejected/README.md": "# T rejected\n"},
+         ["concept file 'concept/rejected/a-r01-b.png' is not listed"]),
+        ("rejected file listed only by its link", {"design/part/concept/rejected/README.md":
+            "# T\n\n| File | What | Status |\n|---|---|---|\n| [b](a-r01-b.png) | b | rejected |\n"}, []),
+        ("chosen row in the rejected table", {"design/part/concept/rejected/README.md":
+            "# T\n\n| File | What | Status |\n|---|---|---|\n| [b](a-r01-b.png) | b | chosen |\n"},
+         ["is not rejected"]),
+        ("rejected table not linked", {"design/part/README.md": fm + "\n[concept/a-r01-a.png](concept/a-r01-a.png)"
+            " [d](decisions-archive.md)\n"}, ["does not link its concept/rejected/README.md"]),
+        ("broken link in the rejected table", {"design/part/concept/rejected/README.md":
+            "# T\n\n| File | What | Status |\n|---|---|---|\n| [concept/rejected/a-r01-b.png](a-r01-b.png) |"
+            " [c](../gone.png) | rejected |\n"}, ["broken link '../gone.png'"]),
+        ("other markdown in concept/", {"design/part/concept/notes.md": "# n\n"},
+         ["only prompts.md", "concept file 'concept/notes.md' is not listed"]),
+        ("archive not linked", {"design/part/README.md": base["design/part/README.md"].replace(
+            "Older: [decisions-archive.md](decisions-archive.md).", "")}, ["does not link its decisions-archive.md"]),
+        ("broken link in the archive", {"design/part/decisions-archive.md": "# A\n\n- 2026-10-01: [x](gone.md)\n"},
+         ["broken link 'gone.md'"]),
+    ]
+    failed = 0
+    try:
+        for name, changes, expected in cases:
+            with tempfile.TemporaryDirectory() as tmp:
+                ROOT, DESIGN = Path(tmp), Path(tmp) / "design"
+                for rel_path, content in {**base, **changes}.items():
+                    f = ROOT / rel_path
+                    f.parent.mkdir(parents=True, exist_ok=True)
+                    f.write_text(content, encoding="utf-8")
+                problems.clear()
+                run(data_tables=False)
+                ok = (all(any(e in p for p in problems) for e in expected)
+                      and all(any(e in p for e in expected) for p in problems))
+                failed += not ok
+                print(f"{'ok  ' if ok else 'FAIL'} {name}" + ("" if ok else f": {problems}"))
+    finally:
+        ROOT, DESIGN = saved
+        problems.clear()
+    print(f"self-test: {len(cases) - failed} of {len(cases)} cases passed")
+    return 1 if failed else 0
+
+
+def main():
+    if "--self-test" in sys.argv[1:]:
+        return self_test()
+    count = run()
+    if count is None:
+        return 1
     for p in problems:
         print(p)
-    count = len(metas)
     print(f"{count} documents checked, {len(problems)} problem(s)")
     return 1 if problems else 0
 

@@ -45,7 +45,7 @@ The numbers live in [data.yaml](data.yaml) (M5 part F, step 4: the `chase` movem
 ### Behaviour
 
 The rules of M5 part F (user decisions F3 = a, F4 = a and F9 = a of 2026-10-09 and the part's
-stated defaults; the schema keys in [architecture](../../../tech/architecture/README.md#data-file-schemas)):
+stated defaults; the schema keys in [architecture](../../../tech/architecture/schemas-units/README.md)):
 
 - **Chase.** From its entry (its centre crossing the edge; in a swarm after its own seeded
   0–0.6 s delay, flying straight in until then) it steers toward the ship's centre at 220 px/s,

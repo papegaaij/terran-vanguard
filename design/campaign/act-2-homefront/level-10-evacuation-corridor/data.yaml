@@ -1,7 +1,7 @@
 # Level 10 – Evacuation Corridor: the level script, rendered into README.md (briefing, threat
 # profile, layout, waves, ground targets, radio, credit budget). Times are seconds from the level
 # start; L10 has no hold zones, so script time is real time (the scroll distance ÷ 190 px/s).
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 # The `backdrop` block and the sections' tiles are merged in from the round 32 backdrop proposal
 # (concept/backdrop-proposal.yaml, tools/art/backdrop_l10.py --proposal, which reads this file).
 scroll_speed: 190     # a chase level, the fastest scroll so far

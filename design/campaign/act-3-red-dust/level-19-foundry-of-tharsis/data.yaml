@@ -1,6 +1,6 @@
 # Level 19 – Foundry of Tharsis: the level script, rendered into README.md (briefing, threat profile, layout, waves,
 # ground targets, radio, credit budget). Times are seconds from the level start. M7 part F, step F2, from the README's
-# approved hand tables (round 36). Schema: ../../../tech/architecture/README.md#data-file-schemas
+# approved hand tables (round 36). Schema: ../../../tech/architecture/schemas-levels/README.md
 # Keys new in M7 part F (loaded, checked and mapped in step F2 by content's LevelData, FoundryChecks and FoundryRules;
 # flown from steps F1/F3, drawn by steps G1/G2): the conveyor `belts` (runs up the screen at 40 px/s that carry ground
 # units), the furnace `vents` (rows of grates firing as a ripple), a nest's `arc: up` (the gantry nests turned 180°),

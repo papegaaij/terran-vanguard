@@ -1,4 +1,4 @@
-# Deflector Pod: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Deflector Pod: its per-level table rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 # M7 part A: hits: deflector, no shots; each level (per pod) the field's radius (px round the ship's
 # centre, on the pod's side), its charges and the seconds until one charge returns.
 name: Deflector Pod

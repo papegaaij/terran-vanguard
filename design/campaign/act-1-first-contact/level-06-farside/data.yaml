@@ -1,6 +1,6 @@
 # Level 06 – Farside: the level script, rendered into README.md (briefing, threat profile, layout,
 # waves, ground targets, radio, credit budget). Times are seconds from the level start.
-# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Schema: ../../../tech/architecture/schemas-levels/README.md
 scroll_speed: 130     # calm, so the dark stays readable
 launch_seconds: 5     # flying in from the bottom edge, as in Levels 01-05
 bounty_scale: 0.75    # every bounty × 0.75: the typical haul on budget(6) (user decision D1)

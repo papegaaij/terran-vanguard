@@ -1,4 +1,4 @@
-# Armour plating: rendered into README.md. Schema: ../../tech/architecture/README.md#data-file-schemas
+# Armour plating: rendered into README.md. Schema: ../../tech/architecture/schemas-player/README.md
 plating:
   # max armour points, price cr (0 = starter), available
   - {name: Standard, max: 60, price: 0, available: start}

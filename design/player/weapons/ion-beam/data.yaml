@@ -1,4 +1,4 @@
-# Ion Beam: its per-level table rendered into README.md (schema: ../../../tech/architecture/README.md#weapon).
+# Ion Beam: its per-level table rendered into README.md (schema: ../../../tech/architecture/schemas-player/README.md).
 # M7 part A: hits: beam, each level a width (px) and a damage per second (no pattern, rate, speed or range).
 name: Ion Beam
 slot: front
