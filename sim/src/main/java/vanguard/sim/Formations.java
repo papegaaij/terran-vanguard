@@ -74,6 +74,8 @@ final class Formations {
      * is straight in its lane from twice this above its hold point.
      */
     static final double AMBUSH_EXIT_RISE = 60;
+    /** M8 part G: the gap between two hit boxes of a column rising from the rear, px (the Depth Hunters'). */
+    static final double REAR_COLUMN_GAP = 16;
     /** The sunflower's turn between two points of a swarm's starting cloud. */
     private static final double GOLDEN_ANGLE = StrictMath.PI * (3 - Math.sqrt(5));
     /** M5 part F: about this far apart, px, the members of a swarm of chasers start in their cloud. */
@@ -470,6 +472,10 @@ final class Formations {
                 }
                 return;
             }
+            if (wave.entry() == Entry.REAR) {
+                rearColumn();
+                return;
+            }
             requireFront();
             if (wave.pairSeconds().isPresent()) {
                 pairs(wave.pairSeconds().get());
@@ -493,6 +499,38 @@ final class Formations {
                             Optional.empty(),
                             Spawn.Exit.DOWN);
                 }
+            }
+        }
+
+        /**
+         * M8 part G (design/enemies/naval/depth-hunter, Movement; design/campaign Level 27): a column of hovering units
+         * rising from below the bottom edge in the column's x ({@link #frontColumn()}), one behind the other ({@link
+         * #REAR_COLUMN_GAP} px between their hit boxes at their speed, at least {@link #DIVE_STAGGER_SECONDS} apart),
+         * each to its own hold height: unit i of n at the hover depth's min + i ÷ (n − 1) of its span below the top edge
+         * (the first, which rises furthest, highest; a lone one at the span's middle). Each holds its hover time and
+         * leaves straight down; a hover with a drift drifts sideways while it holds ({@link HoverHold#driftUp}).
+         */
+        private void rearColumn() {
+            EnemySpec.Hover hover = required(enemy().hover(), "a hover (a column from the rear stops)");
+            if (hover.aboveShip().isPresent() || enemy().dive().isPresent()) {
+                throw unsupported("a column from the rear holds at its hover's depth");
+            }
+            double speed = speed(enemy().speed());
+            double gap = Math.max(DIVE_STAGGER_SECONDS, (enemy().hitbox().height() + REAR_COLUMN_GAP) / speed);
+            double x = frontColumn();
+            Range depth = hover.depth();
+            int count = wave.count();
+            for (int i = 0; i < count; i++) {
+                double share = count == 1 ? 0.5 : (double) i / (count - 1);
+                double holdY = HEIGHT - depth.at(share);
+                add(
+                        i,
+                        wave.t() + i * gap,
+                        FlightPath.through(x, -OUTSIDE, x, holdY),
+                        speed,
+                        hover.seconds().pick(rng),
+                        Optional.empty(),
+                        Spawn.Exit.DOWN);
             }
         }
 
@@ -1281,6 +1319,35 @@ final class Formations {
         }
 
         /**
+         * M8 part G (design/campaign Level 27, the rear Barbfin pairs; §5 G9): a rear ambush of units that hold above
+         * the ship without an ambush path ({@link EnemySpec.Hover#aboveShip()}, the Barbfin): {@code count} (1–4)
+         * units, unit i in the lane x = (i + 1) × 480 ÷ (n + 1), entering together from below the bottom edge at the
+         * wave's time and rising up the lane at their speed until they are their own height above the ship ({@link
+         * HoverHold#stopsNow}; the hover depth's min below the top edge at the latest, its path's end); they hold as
+         * from the front (their drift, their facing on the ship) and leave down and out to their side. Warned at the
+         * bottom edge as a rear wave.
+         */
+        private void rearSwoops() {
+            EnemySpec.Hover hover = enemy().hover().orElseThrow();
+            if (wave.count() < 1 || wave.count() > AMBUSH_MOST) {
+                throw unsupported("a rear ambush has 1 to " + AMBUSH_MOST + " units, not " + wave.count());
+            }
+            double speed = speed(enemy().speed());
+            double top = HEIGHT - hover.depth().min();
+            for (int i = 0; i < wave.count(); i++) {
+                double x = (i + 1) * WIDTH / (wave.count() + 1);
+                add(
+                        i,
+                        wave.t(),
+                        FlightPath.through(x, -OUTSIDE, x, top),
+                        speed,
+                        hover.seconds().pick(rng),
+                        Optional.empty(),
+                        Spawn.Exit.awayFromCentre(x));
+            }
+        }
+
+        /**
          * M5 part D, a rear ambush (design/enemies/air/wraith): {@code count} (1–4) units, unit i in
          * the lane x = (i + 1) × 480 ÷ (n + 1) (a lone one in the middle); each enters at the top edge
          * at the wave's time and flies its {@link EnemySpec.Ambush}: down its lane at its speed past
@@ -1288,6 +1355,11 @@ final class Formations {
          * its hover range), the decloak and the hold, then out up the nearer side lane.
          */
         void rearAmbush() {
+            if (enemy().ambush().isEmpty()
+                    && enemy().hover().flatMap(EnemySpec.Hover::aboveShip).isPresent()) {
+                rearSwoops();
+                return;
+            }
             EnemySpec.Ambush ambush = required(enemy().ambush(), "an ambush path");
             EnemySpec.Hover hover = required(enemy().hover(), "hover");
             if (wave.count() < 1 || wave.count() > AMBUSH_MOST) {

@@ -64,8 +64,12 @@ final class WalkerCues extends SoundFamily {
     /** The flame loop's level now (its fade). */
     private float flameLevel;
 
-    WalkerCues(SoundMix mix) {
+    /** M8 part G: Level 27's sounds, whose torpedoes are the level's homing missiles ({@link VentFieldCues}). */
+    private final VentFieldCues ventField;
+
+    WalkerCues(SoundMix mix, VentFieldCues ventField) {
         super(mix);
+        this.ventField = ventField;
     }
 
     @Override
@@ -84,13 +88,15 @@ final class WalkerCues extends SoundFamily {
             case WALKER_STEP -> bank.play(Sfx.WALKER_STOMP, WALKER_LEVEL, pitch(0.03), pan);
             case POD_HATCH -> bank.play(Sfx.WALKER_HATCH, WALKER_LEVEL, pitch(0.03), pan);
             case MISSILE_LAUNCHED -> {
-                if (launchDue(lastLaunch, now)) {
+                // M8 part G: a Depth Hunter's torpedo launches with its volley's report (VentFieldCues.fired).
+                if (!ventField.torpedoes() && launchDue(lastLaunch, now)) {
                     bank.play(Sfx.WALKER_MISSILE, WALKER_LEVEL, pitch(0.04), pan);
                     lastLaunch = now;
                 }
             }
             case MISSILE_DESTROYED -> {
-                if (events.value(i) == Missiles.SHOT_DOWN) {
+                // M8 part G: a torpedo's impact or under-water burst (VentFieldCues).
+                if (!ventField.missileGone(events.value(i), pan) && events.value(i) == Missiles.SHOT_DOWN) {
                     bank.play(alternate(Sfx.EXPLOSION_TINY_A, Sfx.EXPLOSION_TINY_B), EXPLOSIONS, pitch(0.05), pan);
                 }
             }

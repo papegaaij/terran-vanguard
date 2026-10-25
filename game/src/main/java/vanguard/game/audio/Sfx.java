@@ -661,6 +661,62 @@ public enum Sfx {
      */
     CHOIR_STATIC("sfx/choir-static-r55-b.ogg", 1, Bus.EFFECTS, WARNING),
     /**
+     * M8 part G: a heat plume's tell (round 57 a, proposed until the user's pick: a deep-sea earthquake's rumble gliding
+     * up over a waterfall's roar, 1.4 s), as each plume's mouth starts to glow (Level 27's vents, {@code look:
+     * heat-plume}).
+     */
+    PLUME_TELL("sfx/plume-tell-r57-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part G: a heat plume's eruption (round 57 a, proposed: Iceland's Geysir erupting slowed, the waterfall's roar and
+     * a depth bomb's boom, 2.0 s), as its column stands up.
+     */
+    PLUME_ERUPTION("sfx/plume-eruption-r57-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part G: a plume bending a shot (round 57 a, proposed: water whooshing by, slowed and muffled, 0.4 s), at most one
+     * every {@code VentFieldCues.BEND_GAP_STEPS} steps.
+     */
+    BEND_SWISH("sfx/bend-swish-r57-a.ogg", 2, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part G: a Depth Hunter's torpedo launch (round 57 a, proposed: an air cannon's blast slowed, a motor spinning up,
+     * 0.9 s), instead of the shot's report.
+     */
+    TORPEDO_LAUNCH("sfx/torpedo-launch-r57-a.ogg", 3, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part G: the torpedoes' run (round 57 a, proposed: a boat propeller under water, sped up, a seamless 4 s loop):
+     * one quiet loop while a torpedo runs, the nearest, louder as it closes on the ship.
+     */
+    TORPEDO_RUN("sfx/torpedo-run-r57-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part G: a torpedo bursting on a hull (round 57 a, proposed: an under-water impact with a file cabinet's metal
+     * clang, 1.5 s): the ship's, the Bulwark's or Rook's; one shot down bursts on the under-water {@code tiny} rung.
+     */
+    TORPEDO_IMPACT("sfx/torpedo-impact-r57-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part G: a Depth Hunter's hull breaking up (round 57 a, proposed: scrap metal crashing slowed, a motor running
+     * down, 1.8 s), over its under-water {@code medium} burst.
+     */
+    HUNTER_BREAK("sfx/hunter-break-r57-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part G: the relay beacons' hum (round 57 a, proposed: power lines buzzing in rain, the crackle smoothed out,
+     * swelling with the 4 s lamp, a seamless 4 s loop): one quiet loop while a beacon lives on the screen, the nearest.
+     */
+    BEACON_HUM("sfx/beacon-hum-r57-a.ogg", 1, Bus.EFFECTS, ENEMY_FIRE),
+    /**
+     * M8 part G: a relay beacon destroyed (round 57 a, proposed: the hum dying under a felled trunk's crack, 2.2 s), with
+     * its under-water {@code small} burst.
+     */
+    BEACON_BREAK("sfx/beacon-break-r57-a.ogg", 2, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part G: the Marlin's resin cracking open (round 57 a, proposed: a tree trunk's crack slowed on a deep thump,
+     * 1.6 s), as the hauler is shot open (Level 27's secret).
+     */
+    MARLIN_CRACK("sfx/marlin-crack-r57-a.ogg", 1, Bus.EFFECTS, EXPLOSION),
+    /**
+     * M8 part G: Varga's hull-code scan (round 57 a, proposed, synthesized: one clean 1.5 kHz ping in a water reverb,
+     * 2.2 s), once a run as the wreck scrolls in, 2 s before her line.
+     */
+    SCAN_PING("sfx/scan-ping-r57-a.ogg", 1, Bus.EFFECTS, WARNING),
+    /**
      * M7 part G: the pursuit swarm's band hum (round 43 a, proposed: a designed swarm drone slowed to 0.85 over a bee
      * box's hive hum, a seamless 6 s loop, -32 dB): one loop while a pursuit holds the top band, panned to its leader
      * point.
@@ -891,6 +947,12 @@ public enum Sfx {
      * rumble swelling once a loop, a seamless 24 s loop): Level 26, in place of {@code europa-under}.
      */
     AMBIENCE_EUROPA_BLACK("sfx/europa-black-r55-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
+    /**
+     * M8 part G: the vent field's bed (round 57 a, proposed until the user's pick: a waterfall's massive roar slowed to a
+     * deep rumble; once a loop a boiler blowdown far off swelling and a bunker door's low metal groan, a seamless 24 s
+     * loop): Level 27, in place of {@code europa-under}.
+     */
+    AMBIENCE_EUROPA_VENTS("sfx/europa-vents-r57-a.ogg", 1, Bus.EFFECTS, AMBIENCE),
     /** The mission complete jingle (design/audio/music, track 23), played as a one-shot. */
     MISSION_COMPLETE("music/mission-complete.ogg", 1, Bus.MUSIC, WARNING),
     /** The music's failure sting (design/audio/music, track 25), played over the cut music. */
@@ -994,6 +1056,8 @@ public enum Sfx {
             case "europa-trench" -> AMBIENCE_EUROPA_TRENCH;
             // M8 part F: Level 26's black-water bed (round 55's a until the user's pick).
             case "europa-black" -> AMBIENCE_EUROPA_BLACK;
+            // M8 part G: Level 27's vent-field bed (round 57's a until the user's pick).
+            case "europa-vents" -> AMBIENCE_EUROPA_VENTS;
             default -> throw new IllegalArgumentException("no ambience for " + setting + " yet");
         };
     }

@@ -152,11 +152,12 @@ class Act4ArsenalFlightTest {
                 // M8 part C: Level 23 dives at its waterline (25.5 s); step C3's Level23Test flies the rest. M8 part D:
                 // Level 24 is under water from its start (the level's medium), no waterline; M8 part E: Level 25 too;
                 // M8
-                // part F: Level 26 too.
+                // part F: Level 26 too; M8 part G: Level 27 too.
                 assertEquals(
                         key.equals("act-4-deep-water/level-24-abyssal-plain")
                                         || key.equals("act-4-deep-water/level-25-siren-trench")
                                         || key.equals("act-4-deep-water/level-26-blackwater")
+                                        || key.equals("act-4-deep-water/level-27-hydrothermal-vents")
                                 ? List.of()
                                 : List.of(25.5),
                         level.waterlines(),

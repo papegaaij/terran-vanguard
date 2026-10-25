@@ -76,6 +76,13 @@ final class ContentValidator {
         content.levels()
                 .values()
                 .forEach(level -> DarkChecks.level(content, level, (field, message) -> problem(level, field, message)));
+        // M8 part G: the heat plumes, a column from the rear, the torpedoes along a unit's facing, the ground nests.
+        content.enemies()
+                .values()
+                .forEach(enemy -> VentChecks.enemy(enemy, (field, message) -> problem(enemy, field, message)));
+        content.levels()
+                .values()
+                .forEach(level -> VentChecks.level(content, level, (field, message) -> problem(level, field, message)));
         // M8 part A: the under-water rules, Rook's absence and a level's medium and special limits.
         ActFourChecks.europa(content, (field, message) -> problem(content.europa(), field, message));
         ActFourChecks.wingmen(content, (field, message) -> problem(content.wingmen(), field, message));
@@ -1384,7 +1391,8 @@ final class ContentValidator {
      * ambush, its wave enters {@code from: rear} with 1–4 units on every difficulty and no paths; a
      * flock or an ambush unit flies only its own formation; only a swarm loops back more than once
      * ({@code loop_back.count}, a change's {@code loops}); a snake's {@code paths} is one route, as a
-     * stream's (its left-edge units' route, mirrored for the right-edge ones).
+     * stream's (its left-edge units' route, mirrored for the right-edge ones). M8 part G (step G3): a pincer of a hovering unit
+     * that is not a side hover (the Barbfin) has a {@code hold} on every difficulty it flies.
      */
     private void checkPartD(LevelData level) {
         for (int i = 0; i < level.waves().size(); i++) {
@@ -1398,6 +1406,17 @@ final class ContentValidator {
                 EnemyData enemy = content.enemy(group.enemy());
                 Optional<EnemyData.Flock> flock = enemy.movement().flock();
                 boolean ambush = enemy.movement().ambush().isPresent();
+                // M8 part G (§5 G9): a unit that holds above the ship rises from below in a rear ambush (the Barbfin).
+                boolean risesUp = enemy.movement()
+                        .hover()
+                        .flatMap(EnemyData.Hover::aboveShip)
+                        .isPresent();
+                // M8 part G (step G3): a hovering unit that is not a side hover (the Barbfin's hold above the ship).
+                boolean plainHover = enemy.movement().hover().isPresent()
+                        && enemy.movement()
+                                .hover()
+                                .flatMap(EnemyData.Hover::edgeX)
+                                .isEmpty();
                 // M5 part F (F9 = a): a swarm of chasers needs no flock and flies no route.
                 boolean chasers = enemy.movement().chase().isPresent() && flock.isEmpty();
                 swarm |= group.formation().equals("swarm") && !chasers;
@@ -1418,14 +1437,15 @@ final class ContentValidator {
                                     ? "'" + group.enemy() + "' flies only a swarm"
                                     : "a swarm's enemy has a flock (movement.flock), '" + group.enemy() + "' has none");
                 }
-                if (group.formation().equals("rear ambush") != ambush) {
+                boolean rearAmbush = group.formation().equals("rear ambush");
+                if (ambush ? !rearAmbush : rearAmbush && !risesUp) {
                     problem(
                             level,
                             field + ".formation",
                             ambush
                                     ? "'" + group.enemy() + "' flies only a rear ambush"
-                                    : "a rear ambush's enemy has an ambush (movement.ambush), '" + group.enemy()
-                                            + "' has none");
+                                    : "a rear ambush's enemy has an ambush (movement.ambush) or holds above the ship"
+                                            + " (movement.hover.above_ship), '" + group.enemy() + "' has neither");
                 }
                 for (Difficulty difficulty : Difficulty.values()) {
                     if (!wave.fliesOn(difficulty)) {
@@ -1442,6 +1462,25 @@ final class ContentValidator {
                     }
                     if (group.formation().equals("rear ambush") && (count < 1 || count > 4)) {
                         problem(level, field + ".count", "a rear ambush has 1 to 4 units, not " + count + on);
+                    }
+                    // M8 part G (step G3): a pincer of a hovering unit that is not a side hover (the Barbfin) holds at
+                    // its edges for its wave's hold, which the simulation needs on every difficulty it flies.
+                    Optional<LevelData.Change> change =
+                            switch (difficulty) {
+                                case EASY -> wave.easy();
+                                case MEDIUM -> Optional.empty();
+                                case HARD -> wave.hard();
+                            };
+                    if (group.formation().equals("pincer")
+                            && plainHover
+                            && change.flatMap(LevelData.Change::hold)
+                                    .or(wave::hold)
+                                    .isEmpty()) {
+                        problem(
+                                level,
+                                field + ".hold",
+                                "a pincer of '" + group.enemy()
+                                        + "' (a hover, not at the side) holds at its edges: it needs a hold" + on);
                     }
                 }
                 if (group.formation().equals("swarm")

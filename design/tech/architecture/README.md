@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [.., ../../player, ../../enemies, ../../campaign]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Architecture
@@ -1335,13 +1335,38 @@ optional `skip` list of the difficulties it is left out on (Level 06's hard-only
   (presentation only): a section's **`ramp`** (`to`, `from`, `until`: its ambient eased to `to` over that level time,
   inside the section; only a section's own look), the level's **`lights`** (static pools on the ground: `scroll`, the
   terrain row of the centre (below 0: on the screen at the start), `x`, `radius` px, `colour` `rrggbb`; on the level's
-  rows) and **`escort_lamp`** (the radius of the escort's light pool, px). A radio row's **`static_lead`** (s the HUD
+  rows) and **`escort_lamp`** (the radius of the escort's light pool, px); M8 part G: a level with them is *black water*
+  (the units' glow-only frames, the crown hum, the headlights' clicks) only where a section's ambient or its ramp's
+  `to` is below 0.3 (`DarkLight.blackWater`): Level 27's lit vent field draws its pools and keeps its plain looks. A radio row's **`static_lead`** (s the HUD
   portrait's interference shows before a timed line, from the level's start on) and **`duck_db`** (dB the music ducks
   under the line, above 0). A wave carrier's **`unit: centre`** (a `field` wave of one group: the unit nearest the
   field's centre where the scatter puts it; `WaveSpec.Carried.CENTRE`). The music's **`stem_times`** (`t`, `fade` s and
   `stems` and/or `db`: from `t` the theme plays `full`, `base`, an extra stem of the theme alone by its name (`dark`,
   `warm`: `<theme>-<name>.ogg` on the same grid) or `none`, at `db` (at most 0); in time order, each after the fade
   before it, inside the level).
+- **Level and unit, M8 part G** ([Level 27](../../campaign/act-4-deep-water/level-27-hydrothermal-vents/README.md)
+  and the [Depth Hunter](../../enemies/naval/depth-hunter/README.md); loaded, checked (`VentChecks`, `FoundryChecks`)
+  and mapped (`FoundryRules`, `AbyssRules`, `TrenchRules`) and flown in step G1; defaults pending round 57): the
+  `vents`' **`look: heat-plume`** with **`shape: disc`** (`square` the default: each grate's flame a disc `width` px
+  across; `look: heat-plume` and `shape: disc` go together), **`enemy_damage`** (each `air` or `low-air` unit over a
+  burning disc takes it once per burst; the kill is the player's) and **`bend`** (° below 90: a player's shot, an enemy
+  bullet or a homing torpedo entering a burning disc turns that far away from its centre, once; not beams, the Lance,
+  bombs, shells, mines, depth charges or lobs); a disc row's neighbouring xs at least 100 px apart; the discs burn the
+  ship, Rook and the Bulwark (`HeatPlumes`, events `PLUME_BEND` and `PLUME_BURN`, `VENT_HIT` value 2 for the Bulwark).
+  A hover's **`drift`** at its `y` too (px/s sideways while it holds at its depth, its facing turned up the screen: the
+  Depth Hunter's). An attack's **`homing`** on a unit that is not a boss: its one `aimed` attack with **`aim: facing`**
+  (each volley one torpedo launched along the unit's facing, `Missiles.launchAlong`; the unit hovers). A **`column`**
+  wave **`from: rear`** of a unit hovering at its `y` (the Depth Hunters: up from the bottom edge in the column's x,
+  unit i of n holding at the depth's min + i ÷ (n − 1) of its span, 16 px between hit boxes; warned at the bottom
+  edge; never two such columns on the screen at once); a **`rear ambush`** of a unit that holds `above_ship` (the Barbfin: up the ambush lanes from the bottom edge,
+  stopping on the way up; warned). A `turret nest` wave's **`on_ground`** (`[x, …]` px, one per unit on every
+  difficulty, `from: front`: nests of a fixed `air` unit standing on the ground at one row, entering with it at the
+  top edge, facing down, their songs 1.5 s apart in turn; no terrain needed; `WaveSpec.withGroundNests`). Drawn and
+  played in step G4: the vents' look names their sprite root (`SpriteUse`: `heat-plume*`; `PlumeLooks`, the mouth's
+  pool by phase in `DarkLight`), the Hunters, their torpedoes and the relay beacons (`HunterLooks`, `BeaconLooks`), the
+  sounds (`VentFieldCues`: in a level with Depth Hunters the homing missiles are their torpedoes); `stem_times`'
+  `stems: none` with the music's `motif` leaves the motif layer alone over the bed (Level 27's wreck beat); the
+  intel's strip marks a `column` `from: rear` (`Intel.Mark.Kind.COLUMN`).
 - **Level backdrop** (`backdrop` in a level's data file; the *Backdrop* table is rendered from it):
   `scroll_factors` per layer (`deep`, `far`, `ground` = 1.0, `low-air`, `high-air`; `deep` may be
   left out on a top-down surface, Level 04's Luna: then the ground is the layer that covers the

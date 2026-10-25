@@ -1622,7 +1622,10 @@ public record EnemyData(
             Optional<Double> drift) {
         public Hover {
             drift.ifPresent(speed -> Check.notNegative("drift", speed));
-            Check.that(drift.isEmpty() || aboveShip.isPresent(), "only a hover above the ship drifts");
+            // M8 part G: a hover at its y drifts too (the Depth Hunter's, in its lower band).
+            Check.that(
+                    drift.isEmpty() || aboveShip.isPresent() || y.isPresent(),
+                    "a hover drifts at its y or above the ship");
             Check.that(y.isPresent() != aboveShip.isPresent(), "a hover holds at a y or above_ship, one of the two");
             aboveShip.ifPresent(above -> {
                 Check.notNegative("above_ship", above.min());

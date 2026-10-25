@@ -37,6 +37,26 @@ public record Hull(List<Part> parts) {
     }
 
     /**
+     * M8 part G (design/campaign Level 27, the heat plumes): whether this hull around (x, y) touches the disc of {@code
+     * radius} round (cx, cy): a box's nearest point to the centre lies within the radius.
+     */
+    boolean touchesDisc(double x, double y, double cx, double cy, double radius) {
+        for (int i = 0; i < parts.size(); i++) {
+            Part part = parts.get(i);
+            double px = x + part.dx();
+            double py = y + part.dy();
+            double hw = part.box().width() / 2;
+            double hh = part.box().height() / 2;
+            double nx = Math.clamp(cx, px - hw, px + hw) - cx;
+            double ny = Math.clamp(cy, py - hh, py + hh) - cy;
+            if (nx * nx + ny * ny <= radius * radius) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Whether this hull around (x, y) touches the segment from (ax, ay) to (bx, by) thickened by
      * {@code halfWidth} on each side (a beam): a slab test against each box grown by it.
      */

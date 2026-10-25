@@ -12,7 +12,8 @@ import vanguard.sim.PlayField;
  * a {@code rear_plate} only on a walker; a {@code stride} only on a boss, without a hover, an anchor or a straight
  * descent; a boss's {@code plate} and {@code cone} only with a stride, the plate on a part of it, the cone's bullet a
  * known class; an attack's {@code parts} only a boss's, naming its parts; {@code homing} only a boss's (the walker's
- * pods) and not on a fan; a fan's {@code burst} only a boss's (round 43); {@code aim: facing} on a boss attack only
+ * pods) and not on a fan (M8 part G: or a unit's one {@code aimed} attack with {@code aim: facing}, the Depth Hunter's
+ * torpedoes); a fan's {@code burst} only a boss's (round 43); {@code aim: facing} on a boss attack only
  * for a walking boss; a phase's {@code until.share} naming its parts; the hooks {@code turret}, {@code homing} and
  * {@code cone} only with what they change.
  *
@@ -94,8 +95,17 @@ final class FoundryChecks {
                     }
                 }
             }
-            if (attack.homing().isPresent() && !boss) {
-                problem.accept(field + ".homing", "only a boss's parts fire homing missiles (the walker's pods)");
+            // M8 part G (design/enemies/naval/depth-hunter): a unit's aimed attack launched along its facing fires
+            // them.
+            if (attack.homing().isPresent()
+                    && !boss
+                    && (!attack.pattern().equals("aimed")
+                            || attack.aim().filter("facing"::equals).isEmpty()
+                            || enemy.attacks().size() != 1)) {
+                problem.accept(
+                        field + ".homing",
+                        "only a boss's parts or a unit's one aimed attack along its facing (aim: facing) fire homing"
+                                + " missiles");
             }
             // M8 part D: a rising unit's fan comes in a burst too (the Abyss Ray's three fans 1.2 s apart).
             if (!boss

@@ -94,6 +94,11 @@ final class IntelPanel {
      * wall nest's wave in the dark as a Siren-teal tick (the sac's glow, the only thing of it that shows).
      */
     static final Color NEST_TEAL = new Color(40 / 255f, 230 / 255f, 170 / 255f, 1);
+    /**
+     * M8 part G (design/campaign Level 27, Threat profile at L3: "the timeline strip marks the three Hunter columns"): a
+     * column from the rear as a hull-grey tick the strip's full depth and a pixel below it (it rises from below).
+     */
+    static final Color HULL_GREY = new Color(150 / 255f, 158 / 255f, 166 / 255f, 1);
 
     private static final int PICTURE_GAP = 6;
     /** The characters of a contact's label beside its silhouette. */
@@ -496,8 +501,20 @@ final class IntelPanel {
             canvas.text(NOT_A_PICKUP, Glass.ALERT, VALUE_X, y, false);
             y += step;
         }
+        if (intel.enemies().stream().map(Portraits::slug).anyMatch(UNMARKED::contains)) {
+            // M8 part G (design/campaign Level 27, Threat profile at L2: the Depth Hunter "shown as unmarked grey,
+            // human-built"; the value column fits the tag, not the gloss).
+            canvas.text(UNMARKED_GREY, Glass.ALERT, VALUE_X, y, false);
+            y += step;
+        }
         return y;
     }
+
+    /** M8 part G: the units the intel shows as human-built and unmarked (the Depth Hunter), tagged from sensor L2. */
+    static final java.util.Set<String> UNMARKED = java.util.Set.of("depth-hunter");
+
+    /** M8 part G: their tag under the names. */
+    static final String UNMARKED_GREY = "UNMARKED GREY";
 
     /** M8 part F: the units whose lure looks like a pickup (the Glow Angler's teal bead), tagged from sensor L2. */
     static final java.util.Set<String> LURES = java.util.Set.of("glow-angler");
@@ -633,7 +650,7 @@ final class IntelPanel {
                 // Round 44 Q.8 d (step GI1): the Dust Colossus's ridge pass (Levels 20 and 21) as a muted sand band
                 // under the waves, from its surfacing to its head off the far edge.
                 case RIDGE -> canvas.fill(RIDGE_SAND, left + 1, y - 1, right - left - 2, 10);
-                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY, CAVE, NEST -> {
+                case BOSS, BURROW_FIELD, GATE, CRAWLER, TURN, TARGET, WATERLINE, RAY, CAVE, NEST, COLUMN -> {
                     // drawn over the waves, below
                 }
             }
@@ -688,6 +705,10 @@ final class IntelPanel {
                 // M8 part F: a wall nest's entry in the dark (Level 26's scarp) as a Siren-teal tick the strip's full
                 // depth and a pixel below it (it sits on the wall, unseen in the black).
                 canvas.fill(NEST_TEAL, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 1, 2, 11);
+            } else if (mark.kind() == Intel.Mark.Kind.COLUMN) {
+                // M8 part G: a column from below (Level 27's Depth Hunters) as a hull-grey tick the strip's full depth
+                // and a pixel below it.
+                canvas.fill(HULL_GREY, (float) (VALUE_X + width * mark.from() / intel.seconds()), y - 1, 2, 11);
             } else if (mark.kind() == Intel.Mark.Kind.CAVE) {
                 // M8 part E: a cave wave's entry (Level 25's side caves) as a slate tick over the strip's upper half
                 // and a pixel above it.

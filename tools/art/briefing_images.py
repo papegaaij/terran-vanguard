@@ -212,6 +212,13 @@ Outputs (assets/ui/briefing/<name>.png, 672x240, textures of their own like the 
   level-26-lure           L26 p2: Varga's diagram of the Glow Angler as the dark shows it (tools/art/glow_angler.py:
                           the bead on its stalk and the eyes, the body a faint rim), a gold pickup beside it, the
                           ship's headlight cone from below, the 130 px lunge radius and the ring it fires
+  level-27-vent-field     L27 p1 (M8 part G batch): Okafor's sonar chart of the vent field, north up: the plain's edge,
+                          the smokers and every plume vent ringed amber (tools/art/l27kit.py's rows), the beacon
+                          ridge's four red-gold relays, the hatchery gate's teal at the bottom, the dotted route and
+                          Aegis Two's last position as an empty circle
+  level-27-plume-cycle    L27 p2: Varga's diagram of a heat plume's cycle (tools/art/l27_props.py's frames: the
+                          glowing mouth 1.4 s, the eruption 1.6 s, the cold mouth 1.5 s), a shot bent 25 degrees off
+                          the burning disc; a grey Depth Hunter below the ship's lane with a torpedo rising
   level-21-colossus-scan  L21 p2 (M7 part H batch): Varga's seismic cut through the basin floor (the body under
                           the sand, colony-sized, the ridge its back raises, a mouth breaching at the cut's edge with
                           the lime gullet) beside a breach seen from above at the field's left edge: the Dust
@@ -289,7 +296,7 @@ SOURCE_M5G = artkit.source_note(SCRIPT, "M5 part G batch")
 SOURCE_M5H = artkit.source_note(SCRIPT, "M5 part H batch")
 SOURCE_M7B = artkit.source_note(SCRIPT, "M7 part B batch")
 SOURCE_M7C = artkit.source_note(SCRIPT, "M7 part C batch")
-ROUND = "r55"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
+ROUND = "r57"  # the open round; the sheet of an earlier batch: name its round (r13, r20, r21, r23, r25, r30, ..., r36)
 OUT = ROOT / "assets" / "ui" / "briefing"
 CONCEPT = DESIGN / "ui" / "briefing" / "concept"
 W, H = 672, 240
@@ -5721,6 +5728,156 @@ def lure_scan():
 
 TAU_B = 2 * np.pi
 
+SOURCE_M8G = artkit.source_note(SCRIPT, "M8 part G batch")
+TEAL_G = (40, 255, 200)
+
+
+def l27_map_xy(t, x):
+    """Level 27's (t s, play-field x px) on Okafor's chart: north (the level's start) up."""
+    return 24 + x * 400 / 480, 30 + t / 150 * 196
+
+
+def vent_field():
+    """L27 p1: Okafor's sonar chart of the vent field, north up: the plain's edge and its old beacons at the top, the
+    black smokers and the chimney garden with every plume vent ringed amber (tools/art/l27kit.py's rows), the beacon
+    ridge's four red-gold relays, the bowl and the hatchery gate's teal glow at the bottom, a dotted route down it and
+    Aegis Two's last position as an empty circle."""
+    import l27kit                                                # noqa: E402  (the plume rows, the beacons)
+    import backdrop_l27 as b27                                   # noqa: E402  (the smokers' places)
+    b = Board()
+    b.base = b.base * 0.55
+    mx0, mx1, my0, my1 = 24, 424, 26, H - 8
+    inside = (b.xx > mx0) & (b.xx < mx1) & (b.yy > my0) & (b.yy < my1)
+    n = raster.fbm(W, H, 32, 2871, octaves=4, period=False)
+    b.base = np.where(inside[..., None], np.array((6, 9, 14.0)) + 8 * (n[..., None] - 0.5), b.base)
+    # sonar returns: the smokers as dim mounds, the plume vents ringed amber
+    for t, x, kind in b27.SMOKERS:
+        mx, my = l27_map_xy(t + 1.2, x)
+        b.glow(mx, my, 3, (90, 60, 30), 0.8)
+        b.marker(mx, my, "dot", (170, 120, 70), 1)
+    for t, xs in l27kit.PLUME_ROWS:
+        for x in xs:
+            mx, my = l27_map_xy(t + 0.3, x)
+            b.glow(mx, my, 4, (150, 70, 10), 0.9)
+            b.ring(mx, my, 3.5, colour=AMBER, alpha=230)
+    tag(b, l27_map_xy(40, 300)[0], l27_map_xy(36, 0)[1], "BLACK SMOKERS", AMBER)
+    tag(b, l27_map_xy(70, 300)[0], l27_map_xy(70, 0)[1], "CHIMNEY GARDEN", AMBER)
+    # the plain's edge and its old beacons at the top
+    b.line([l27_map_xy(5, 0), l27_map_xy(4, 160), l27_map_xy(5.5, 320), l27_map_xy(4.5, 480)], GREY, 1, 200)
+    for x in (70, 420):
+        mx, my = l27_map_xy(4, x)
+        b.marker(mx, my, "dot", BEACON_RG, 1)
+    tag(b, l27_map_xy(0, 300)[0], l27_map_xy(10, 0)[1], "THE PLAIN'S EDGE", GREY)
+    # the beacon ridge: its crest line and the four relays
+    pts = [l27_map_xy(t, x) for t, x in l27kit.BEACONS]
+    b.line([l27_map_xy(90, 30)] + pts + [l27_map_xy(122, 60)], (90, 100, 120), 1, 200)
+    for mx, my in pts:
+        b.glow(mx, my, 4, (160, 60, 10), 1.0)
+        b.marker(mx, my, "dot", BEACON_RG, 2)
+    tag(b, l27_map_xy(104, 300)[0], l27_map_xy(100, 0)[1], "BEACON RIDGE: 4 RELAYS", BEACON_RG)
+    # the bowl and the gate
+    b.line([l27_map_xy(124, x) for x in np.linspace(0, 480, 9)], CYAN_DIM, 1, 160)
+    gx, gy = l27_map_xy(149, 240)
+    b.glow(gx, gy, 16, (0, 120, 90), 1.4)
+    b.ring(gx, gy, 12, 7, colour=TEAL_G, alpha=230)
+    tag(b, gx - 22, gy - 4, "THE HATCHERY GATE", TEAL_G, right=True)
+    # the route and Aegis Two's last position
+    rpts = [l27_map_xy(t, 240 + 60 * np.sin(t / 19)) for t in np.linspace(0, 148, 34)]
+    b.dashed(rpts, CYAN, 1, dash=3, gap=5)
+    b.arrow(*rpts[-2], *rpts[-1], CYAN, 4, dashed=False)
+    sx, sy = l27_map_xy(1, 240)
+    b.marker(sx, sy, "square", CYAN, 3)
+    tag(b, sx + 10, sy + 8, "LANCER", CYAN)
+    ax, ay = l27_map_xy(-2, 40)
+    b.ring(ax, ay + 6, 5, colour=WHITE, alpha=230)
+    tag(b, ax + 9, ay + 2, "AEGIS TWO: LAST SIGNAL", WHITE)
+    b.title("CDF SONAR CHART - THE VENT FIELD, NORTH UP")
+    b.label(W - 10, 9, "CMDR. OKAFOR", CYAN_DIM, right=True)
+    b.label(mx1 + 8, 30, "N", WHITE)
+    b.arrow(mx1 + 11, 58, mx1 + 11, 42, WHITE, 4, dashed=False)
+    px = 470
+    b.label(px, 30, "THE VENT FIELD", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "PLUMES ERUPT", AMBER)
+    b.label(px, 62, "IN CYCLES", AMBER)
+    b.label(px, 80, "4 RELAY BEACONS", BEACON_RG)
+    b.label(px, 90, "ON THE RIDGE", BEACON_RG)
+    b.label(px, 108, "AEGIS TWO", WHITE)
+    b.label(px, 118, "IS MISSING", WHITE)
+    b.label(px, 136, "A BULWARK DRONE", CYAN)
+    b.label(px, 146, "FLIES HIS SLOT", CYAN)
+    b.label(px, 164, "THE GATE AHEAD", TEAL_G)
+    b.label(px, 182, "REACH IT", GREEN)
+    return b
+
+
+def plume_cycle():
+    """L27 p2: Varga's diagram of a heat plume's cycle (tools/art/l27_props.py's frames): the glowing mouth with the
+    silt lifting (1.4 s), the eruption column seen from above (1.6 s), the cold mouth (1.5 s), a shot bending 25 degrees
+    off the burning disc; in the corner a grey hull under the ship's lane with a torpedo rising."""
+    b = Board()
+    b.base = b.base * 0.4
+    b.title("CDF SCAN - HEAT PLUME, THE CYCLE")
+    b.label(W - 10, 9, "DR. VARGA", CYAN_DIM, right=True)
+    xs, cy = (70, 170, 270), 96
+    steps = [("heat-plume_3", ["heat-plume-glow_2"], ["heat-plume-silt_3"], "GLOWS 1.4 S", AMBER),
+             ("heat-plume_3", ["heat-plume-heat_7"], ["heat-plume-column_7"], "ERUPTS 1.6 S", RED),
+             ("heat-plume_0", [], [], "COLD 1.5 S", GREY)]
+    for x, (mouth, lights, overs, cap, col) in zip(xs, steps):
+        try:
+            b.sprite(held_frame(mouth, 1.0, 32), x, cy)
+            for o in overs:
+                b.sprite(held_frame(o, 1.0, 16), x, cy)
+            for name in lights:
+                g = np.array(held_asset(name)).astype(np.float64)
+                b.add_light(g[..., :3] * g[..., 3:4] / 255, x - g.shape[1] / 2, cy - g.shape[0] / 2, "over")
+        except FileNotFoundError:
+            b.ring(x, cy, 32, colour=col)
+        b.ring(x, cy, 32, colour=CYAN_DIM, alpha=120)
+        tag(b, x - raster.text_width(cap) / 2, cy + 46, cap, col)
+    for x0, x1 in ((xs[0] + 40, xs[1] - 40), (xs[1] + 40, xs[2] - 40)):
+        b.arrow(x0, cy, x1, cy, CYAN_DIM, 4, dashed=False)
+    b.arrow(xs[2], cy - 50, xs[0], cy - 50, CYAN_DIM, 4, dashed=True)
+    tag(b, xs[1] - 30, cy - 62, "EVERY 4.5 S", CYAN_DIM)
+    # a shot bending off the burning disc: up the screen, turned 25 degrees away from the centre where it enters
+    ex, ey = xs[1] - 14, cy + 28
+    b.dashed([(ex, cy + 92), (ex, ey)], CYAN, 1, dash=4, gap=3)
+    a = np.radians(25)
+    b.arrow(ex, ey, ex - np.sin(a) * 66, ey - np.cos(a) * 66, CYAN, 4, dashed=False)
+    tag(b, ex - 58, ey - 10, "25 DEG", CYAN)
+    tag(b, ex + 8, cy + 72, "EVERY SHOT BENDS", CYAN)
+    # the corner: a grey hull below the ship's lane, a torpedo rising
+    hx, hy = 382, 196
+    try:
+        b.sprite(held_frame("depth-hunter_16", 0.6, 32), hx, hy)
+        tp = held_frame("depth-hunter-torpedo_16", 1.0, 16)
+        b.sprite(tp, 396, 112)
+        g = np.array(held_asset("depth-hunter-glow_16")).astype(np.float64)
+        g = np.array(Image.fromarray(g.astype(np.uint8), "RGBA").resize((46, 46), Image.BOX)).astype(np.float64)
+        b.add_light(g[..., :3] * g[..., 3:4] / 255, hx - 23, hy - 23, "over")
+    except FileNotFoundError:
+        b.marker(hx, hy, "chevron", GREY, 6)
+    b.dashed([(hx + 4, hy - 26), (392, 140), (400, 100), (412, 64)], RED, 1, dash=3, gap=3)
+    shp = held_frame("ship-hydro_2", 0.8, 48) if (SPRITES / "ship-hydro_2.png").exists() else scaled(asset("ship_2"), 0.8)
+    b.sprite(shp, 420, 50)
+    b.line([(330, 30), (330, 226)], CYAN_DIM, 1, 90)
+    tag(b, 338, 216, "GREY HULL BELOW", GREY)
+    px = 470
+    b.label(px, 30, "HEAT PLUMES", WHITE)
+    b.line([(px, 42), (W - 12, 42)], CYAN_DIM, 1, 120)
+    b.label(px, 52, "THE MOUTH GLOWS:", AMBER)
+    b.label(px, 62, "MOVE OFF IT", AMBER)
+    b.label(px, 80, "AN ERUPTION BURNS", RED)
+    b.label(px, 90, "YOU AND THEM", RED)
+    b.label(px, 108, "AND BENDS SHOTS", CYAN)
+    b.label(px, 126, "SOMETHING GREY", GREY)
+    b.label(px, 136, "FIRES UP FROM", GREY)
+    b.label(px, 146, "BELOW", GREY)
+    b.label(px, 164, "SHOOT TORPEDOES", GREEN)
+    b.label(px, 174, "DOWN; REAR GUNS,", GREEN)
+    b.label(px, 184, "ANTI-SUB", GREEN)
+    return b
+
 
 IMAGES = {
     "act-1-tether-gate": tether_gate,
@@ -5796,6 +5953,8 @@ IMAGES = {
     "level-25-sonar-ring": sonar_ring,
     "level-26-blackwater": blackwater,
     "level-26-lure": lure_scan,
+    "level-27-vent-field": vent_field,
+    "level-27-plume-cycle": plume_cycle,
 }
 
 # Review sheets per batch: round, the images on it, the batch name.
@@ -5824,6 +5983,7 @@ BATCHES = {
     "r53": (list(IMAGES)[67:69], "M8 PART D"),
     "r54": (list(IMAGES)[69:71], "M8 PART E"),
     "r55": (list(IMAGES)[71:73], "M8 PART F"),
+    "r57": (list(IMAGES)[73:75], "M8 PART G"),
 }
 
 
@@ -5848,6 +6008,7 @@ def build(names):
                   else SOURCE_M8D if name in BATCHES["r53"][0]
                   else SOURCE_M8E if name in BATCHES["r54"][0]
                   else SOURCE_M8F if name in BATCHES["r55"][0]
+                  else SOURCE_M8G if name in BATCHES["r57"][0]
                   else SOURCE_M4)
         artkit.save_png(IMAGES[name]().image(), OUT / f"{name}.png", source)
     print(f"{len(names)} briefing images in {OUT.relative_to(ROOT)}")

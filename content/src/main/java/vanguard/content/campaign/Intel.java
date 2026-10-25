@@ -151,7 +151,12 @@ public record Intel(
              * arrows"): in a dark level (the {@code darkness} hazard) a wave of nests on a wall ({@code wall}) entering,
              * a moment at its time: the panel marks where the unseen nests sit.
              */
-            NEST
+            NEST,
+            /**
+             * M8 part G (design/campaign Level 27, Threat profile at L3: "the timeline strip marks the three Hunter
+             * columns"): a {@code column} from the rear entering (up from the bottom edge), a moment at its time.
+             */
+            COLUMN
         }
     }
 
@@ -319,6 +324,14 @@ public record Intel(
                 }
             }
         }
+        // M8 part G: each column from the rear at its time (Level 27's three Depth Hunter columns).
+        for (LevelData.Wave wave : level.waves()) {
+            if (wave.fliesOn(vanguard.content.Difficulty.MEDIUM)
+                    && wave.formation().filter(COLUMN::equals).isPresent()
+                    && wave.from() == LevelData.Entry.REAR) {
+                marks.add(new Mark(wave.t(), wave.t(), Mark.Kind.COLUMN));
+            }
+        }
         // M8 part B: each ground target of the escapes secondary's enemy at its time (Level 22's four rig sites).
         java.util.Optional<String> escapes = level.objectives().secondary().flatMap(LevelData.Secondary::escapes);
         for (LevelData.GroundTarget target : level.groundTargets()) {
@@ -330,6 +343,9 @@ public record Intel(
         }
         return marks;
     }
+
+    /** M8 part G: the formation of a column, which the strip marks when it comes from the rear. */
+    static final String COLUMN = "column";
 
     /** M8 part F: the hazard that makes a level dark (its threat profile's), whose wall nests the strip marks. */
     static final String DARKNESS = "darkness";

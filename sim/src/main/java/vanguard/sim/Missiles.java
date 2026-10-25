@@ -1,7 +1,8 @@
 package vanguard.sim;
 
 /**
- * M7 part F, the enemies' homing missiles (design/enemies/bosses/revenant-walker, Attacks): a pool of {@link
+ * M7 part F, the enemies' homing missiles (design/enemies/bosses/revenant-walker, Attacks; M8 part G: the Depth Hunter's
+ * torpedoes, launched along its facing by {@link #launchAlong}): a pool of {@link
  * Missile}s launched by a boss's homing gun ({@link EnemyGun#homing()}), at most its {@link
  * EnemyGun.HomingSpec#mostAlive()} at once, each steering toward the ship until it hits a hull, is shot down or
  * fizzles. Owned by the {@link EnemyFire}; nothing here allocates once made.
@@ -79,6 +80,26 @@ public final class Missiles {
                 Math.rint(bearing / BEARING_STEP) * BEARING_STEP,
                 launched++,
                 medium != null && medium.wet() ? medium.bulletSpeed() : 1);
+        events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
+        return true;
+    }
+
+    /**
+     * M8 part G (design/enemies/naval/depth-hunter, Attack; m8g-gaps.md §1.1): one missile (a torpedo) of {@code gun}
+     * from (x, y) along {@code heading} (radians clockwise from straight down: the unit's facing), not snapped to the
+     * ship's bearing; it steers toward the ship (or a burning decoy flare) from its next step on. Left out when {@code
+     * gun}'s most are in flight already. Returns whether it was launched.
+     */
+    boolean launchAlong(double x, double y, EnemyGun gun, double heading) {
+        EnemyGun.HomingSpec spec = gun.homing().orElseThrow();
+        if (pool.size() >= spec.mostAlive()) {
+            return false;
+        }
+        Missile missile = pool.obtain();
+        if (missile == null) {
+            return false;
+        }
+        missile.launch(gun, x, y, heading, launched++, medium != null && medium.wet() ? medium.bulletSpeed() : 1);
         events.add(SimEvents.Type.MISSILE_LAUNCHED, x, y, missile.serial());
         return true;
     }

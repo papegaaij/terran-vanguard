@@ -31,9 +31,9 @@ Approved in round 48 (2026-10-22). Numbers at **medium** (see the [balancing bas
 | HP | 26 (easy 20 / hard 34, from the global multipliers) |
 | Armour / shield | none |
 | Speed | 120 px/s in, 0 while it holds |
-| Movement | `swoop` in from a side or top edge along a short curve, stops 90–200 px above the ship's lane and holds 9 s with a 6 px/s drift, turning toward the ship, then leaves toward the nearest side; as an Abyss Ray's escort it peels off the Ray's shadow as it rises |
+| Movement | `swoop` in from a side or top edge along a short curve (in a rear ambush up from the bottom edge, stopping on the way up), stops 90–200 px above the ship's lane and holds 9 s with a 6 px/s drift, turning toward the ship, then leaves toward the nearest side; as an Abyss Ray's escort it peels off the Ray's shadow as it rises |
 | Attack | `aimed` needle (a violet-hued shot) every 2.4 s, 150 px/s, `small` = 4; first shot 0.9 s after it stops |
-| Formations | column (3–5), circle (4–5), carrier + escorts (4) (the [Abyss Ray](../abyss-ray/README.md)'s escort); scattered pairs |
+| Formations | column (3–5), circle (4–5), carrier + escorts (4), line abreast (2), pincer (2), rear ambush (2) (carrier + escorts: the [Abyss Ray](../abyss-ray/README.md)'s escort; rear ambush: up from the bottom edge on the ambush lanes, Level 27); scattered pairs |
 | Weak points | violet snout barb (drawn only) |
 | Effective traits | `spread`, `homing` |
 | Credits | 12 (score 120 × chain) |
@@ -106,3 +106,7 @@ The production frames (round 48's a, the bone lionfish; `tools/art/barbfin.py`, 
   and scarp) a Barbfin's hold and its leaving after the hold stay inside the flyable span (`Canyon.inSpan`): it slides
   down along a wall and leaves inside the trench instead of crossing the rock sideways.
 - 2026-10-24 (user, round 56 closed, C.4): the tougher Barbfin and the retuned waves of Levels 23–26 accepted.
+- 2026-10-24 (M8 part G, step m8g1; pending round 57, gap check `m8g-gaps.md` §5 G9): formations `line abreast`,
+  `pincer` and `rear ambush` (Level 27). In a rear ambush it has no ambush path: the pair rises from the bottom edge on
+  the ambush lanes (x = (i + 1) × 480 ÷ (n + 1)), stops on the way up at its own height above the ship and holds as
+  usual; the wave is warned at the bottom edge (`Formations.rearSwoops`).

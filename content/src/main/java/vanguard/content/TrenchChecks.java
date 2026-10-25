@@ -101,8 +101,10 @@ final class TrenchChecks {
             String field = "waves[" + i + "]";
             boolean nest = wave.groupList().stream()
                     .anyMatch(group -> group.formation().equals("turret nest"));
-            if (nest != wave.onWalls()) {
-                problem.accept(field + ".wall", "a turret nest wave stands on the walls (wall), and only it");
+            if (nest != (wave.onWalls() || wave.onGroundNests())) {
+                problem.accept(
+                        field + ".wall",
+                        "a turret nest wave stands on the walls (wall) or the ground (on_ground), and only it");
             }
             if (wave.cave().isPresent() || wave.onWalls()) {
                 if (wave.groupList().size() != 1) {

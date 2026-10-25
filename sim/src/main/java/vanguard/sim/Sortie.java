@@ -156,6 +156,10 @@ public final class Sortie {
     final Belts belts;
     /** M7 part F: the furnace vents (no grates in most levels). */
     final FurnaceVents vents;
+    /** M8 part G: the heat plumes' burns and bends over the vents' disc rows; null without plumes (Level 27 only). */
+    final HeatPlumes plumes;
+    /** M8 part G: a plume's kill, paid as the player's ({@link ObjectivePasses#destroy}); made once. */
+    private final java.util.function.IntConsumer plumeKills;
     /** The level's darkness; null in a lit level. */
     private final HazardSpec.Darkness darkness;
     /** Part G: the tows (Level 07's lifeboat). */
@@ -373,6 +377,7 @@ public final class Sortie {
         sledView = java.util.Optional.ofNullable(sled);
         belts = new Belts(script.ground().belts());
         vents = new FurnaceVents(script.hazards().vents(), arenaStartTicks >= 0 ? arenaStartTicks : Integer.MAX_VALUE);
+        plumes = vents.plumes() ? new HeatPlumes(vents, events) : null;
         radio = new Radio(script.radio(), events, ship, Radio.fitted(loadout.armament(), special));
         convoy = AllyPasses.convoy(script, force);
         surfaceZones = SurfaceZones.of(script);
@@ -441,6 +446,7 @@ public final class Sortie {
                 sondes,
                 partDropPiece,
                 partsPiece);
+        plumeKills = objectivePasses::destroy;
         pickupPasses = new PickupPasses(
                 this, script, loadout, rules, ship, fire, special, events, radio, tally, pickups, canyon);
         groundPasses = new GroundPasses(
@@ -620,6 +626,10 @@ public final class Sortie {
             // M7 part F: the homing missiles steer toward the ship.
             force.missiles().fly(ship.x(), ship.y());
         }
+        if (plumes != null) {
+            // M8 part G: a burning plume bends what entered it (the shots, bullets and torpedoes just moved).
+            plumes.bend(fire.shots(), force.bullets(), force.missiles());
+        }
         directHits = force.moveLobs(
                 ship,
                 scrollStep,
@@ -637,6 +647,10 @@ public final class Sortie {
         }
         fire.hitGround(ground, force.enemies(), force.mines());
         fire.burn(force.enemies(), ground, force.mines());
+        if (plumes != null && !complete) {
+            // M8 part G: after the player's hits, so a unit a shot killed is paid once; a plume's kill is the player's.
+            plumes.burn(force.enemies(), plumeKills);
+        }
         if (canyon != null) {
             // M7 part C: after the hit passes, so a unit at a wall's foot is hit before the rock stops the shot.
             fire.stopAtRock(ground, force.enemies());

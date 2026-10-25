@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../weapons, ../../story, ../../systems/saves, ../../ui/hangar, ../../ui/hud]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Wingmen and drones
@@ -781,3 +781,7 @@ built were accepted in concept round 28.
   he sinks back faster and faster, crossing the bottom edge as the 2.5 s spin ends at 1.25× the scroll (from high on the
   screen, where that speed alone takes him off in time, a steady fall); his cut line comes before the hits, which cut it
   ([Level 26](../../campaign/act-4-deep-water/level-26-blackwater/README.md#decisions); `RookLoss`, `RookLossTest`).
+- 2026-10-25 (M8 part G, steps G1 and G5; pending the user's review in [round 57](../../concept-rounds/round-57/README.md) C.1):
+  in Level 27 the Bulwark keeps out of a plume's disc while it glows or burns and off every homing torpedo's line over
+  the next second (`BulwarkHazards`, `BulwarkHazardsTest`), aims its shell at the nearest Depth Hunter while one is on
+  the screen, is burnt by a plume like the ship and hit by the torpedoes, and never draws them (aimed bullets only).

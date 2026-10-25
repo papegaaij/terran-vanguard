@@ -33,6 +33,9 @@ formations:
   - {name: column, size: [3, 5]}
   - {name: circle, size: [4, 5]}   # M8 AW (step AW2): Level 24's circles of 5
   - {name: carrier + escorts, size: [4]}   # the Abyss Ray's escort, in `circle`
+  - {name: line abreast, size: [2]}   # M8 part G (step m8g1): Level 27's firing pairs
+  - {name: pincer, size: [2]}         # M8 part G: Level 27's, one per side
+  - {name: rear ambush, size: [2]}    # M8 part G (§5 G9): Level 27's rear pairs rise from the bottom edge on the ambush lanes and hold above the ship
 weak_points:
   - {name: violet snout barb}
 drops: []
@@ -46,8 +49,8 @@ notes:
   layer: ' (the play plane under water)'
   orientation: (it turns toward the ship while it holds)
   speed: in, 0 while it holds
-  movement: '`swoop` in from a side or top edge along a short curve, stops {movement.hover.above_ship.0}–{movement.hover.above_ship.1} px above the ship''s lane and holds {movement.hover.seconds} s with a {movement.hover.drift} px/s drift, turning toward the ship, then leaves toward the nearest side; as an Abyss Ray''s escort it peels off the Ray''s shadow as it rises'
-  formations: '(the [Abyss Ray](../abyss-ray/README.md)''s escort); scattered pairs'
+  movement: '`swoop` in from a side or top edge along a short curve (in a rear ambush up from the bottom edge, stopping on the way up), stops {movement.hover.above_ship.0}–{movement.hover.above_ship.1} px above the ship''s lane and holds {movement.hover.seconds} s with a {movement.hover.drift} px/s drift, turning toward the ship, then leaves toward the nearest side; as an Abyss Ray''s escort it peels off the Ray''s shadow as it rises'
+  formations: '(carrier + escorts: the [Abyss Ray](../abyss-ray/README.md)''s escort; rear ambush: up from the bottom edge on the ambush lanes, Level 27); scattered pairs'
   weak_points: (drawn only)
   death: '`small` flash with a sinking shell and a short ink-grey cloud'
   used_in: L25, L27 and the Maw's L28 escorts

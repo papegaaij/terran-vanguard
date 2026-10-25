@@ -857,7 +857,12 @@ final class EnemyForce {
                 guns.passTrigger(enemy, ship, firing);
             } else if (enemy.trigger() && firing) {
                 EnemyGun gun = enemy.spec().gun().orElseThrow();
-                if (gun.mine().isPresent()) {
+                if (gun.homing().isPresent()) {
+                    // M8 part G (design/enemies/naval/depth-hunter): a torpedo along its facing (up), not at the ship.
+                    if (guns.missiles().launchAlong(enemy.x(), enemy.y(), gun, enemy.facing())) {
+                        events.add(SimEvents.Type.ENEMY_FIRED, enemy.x(), enemy.y(), (int) gun.damage());
+                    }
+                } else if (gun.mine().isPresent()) {
                     guns.dropMine(enemy, gun);
                 } else if (gun.mortar().isPresent()) {
                     guns.lob(enemy, gun, ship);

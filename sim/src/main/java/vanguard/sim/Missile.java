@@ -25,6 +25,8 @@ public final class Missile implements Hashed {
     private int serial;
     /** M8 part A: its speed factor, fixed at its launch (the water's bullet speed); 1 in the air. */
     private double speedFactor = 1;
+    /** M8 part G: whether a heat plume bent it already (once per missile; hashed only once set). */
+    private boolean bent;
 
     /** Launched at (x, y) by {@code launcher} along {@code angle} (radians clockwise from straight down). */
     void launch(EnemyGun launcher, double startX, double startY, double angle, int id) {
@@ -34,6 +36,7 @@ public final class Missile implements Hashed {
     /** As {@link #launch(EnemyGun, double, double, double, int)}; M8 part A: flying at {@code speed} × its gun's. */
     void launch(EnemyGun launcher, double startX, double startY, double angle, int id, double speed) {
         speedFactor = speed;
+        bent = false;
         gun = launcher;
         spec = launcher.homing().orElseThrow();
         x = prevX = startX;
@@ -76,6 +79,33 @@ public final class Missile implements Hashed {
             // M8 part A: only one launched in the water, so the other levels hash as before.
             hash.add(speedFactor);
         }
+        if (bent) {
+            // M8 part G: only a torpedo a plume bent, so the other levels hash as before.
+            hash.add(1);
+        }
+    }
+
+    /** M8 part G (design/campaign Level 27; {@link HeatPlumes}): whether a heat plume bent it already. */
+    boolean bent() {
+        return bent;
+    }
+
+    /**
+     * M8 part G: a heat plume turns it by {@code radians} (clockwise on the screen for a positive angle), once; it
+     * steers on toward its target from its new heading.
+     */
+    void bend(double radians) {
+        bent = true;
+        heading = Math.IEEEremainder(heading + radians, 2 * StrictMath.PI);
+    }
+
+    /** M8 part G: its velocity across the screen, px/s (y up). */
+    double vx() {
+        return -Trig.sin(heading) * gun.bulletSpeed() * speedFactor;
+    }
+
+    double vy() {
+        return -Trig.cos(heading) * gun.bulletSpeed() * speedFactor;
     }
 
     public double x() {

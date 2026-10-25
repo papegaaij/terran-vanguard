@@ -243,6 +243,9 @@ final class EnemyFlight {
                 } else if (u.hoverHold.active()) {
                     // M8 part D: its drift sideways, its facing toward the ship.
                     u.hoverHold.hold(u, shipX, shipY);
+                } else if (u.hoverHold.driftsOnly()) {
+                    // M8 part G: its drift sideways at its depth, its facing up the screen (the Depth Hunter's).
+                    u.hoverHold.driftUp(u);
                 }
                 if (u.spec.sweep().isPresent()) {
                     sweep(shipX, shipY);
@@ -260,8 +263,10 @@ final class EnemyFlight {
                         leave(shipX, shipY);
                     }
                 }
-                if (u.phase == Enemy.Phase.HOLD && u.orbit.isEmpty() && u.hoverHold.active()) {
-                    // M8 part D: its facing is on the ship, not along its drift.
+                if (u.phase == Enemy.Phase.HOLD
+                        && u.orbit.isEmpty()
+                        && (u.hoverHold.active() || u.hoverHold.driftsOnly())) {
+                    // M8 part D: its facing is on the ship, not along its drift (M8 part G: up the screen).
                     return true;
                 }
             }

@@ -1,0 +1,218 @@
+backdrop:
+  # Presentation only: Level 27's vent field (tools/art/backdrop_l27.py, step ART-G, from the level's data.yaml).
+  # Not dark: the grade's per-section underwater_look lights it (ART-G's proposal below), plus the smokers'
+  # amber pools (lights:) and the plumes' pools by phase. Every piece's -glow is added over the grade on its
+  # frame clock (drawPieceGlows): the smokers' mouths, the old beacons on the ridge's lip, the gate's teal.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 1a1410  # the vent-lit water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    vent-edge: {layer: ground, height: 960}   # section 1: the plain's last silt going to basalt, tube-worm clumps
+    smoker-field: {layer: ground, height: 960}   # section 2: basalt silt, sulphide staining, pale bacterial mats, worms
+    chimney-garden: {layer: ground, height: 960}   # section 3: rougher basalt, heavier crust and mats
+    ridge-basalt: {layer: ground, height: 960}   # section 4: blue-grey pillow basalt ribbed along the ridge
+    bowl-floor: {layer: ground, height: 960}   # section 5: the bowl's floor, resin-stained silt and chitin root veins
+  pieces:
+    ridge-lip: {layer: ground, size: [480, 176]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    smoker-1: {layer: ground, size: [176, 176]}
+    smoker-1-glow: {layer: ground, size: [176, 176]}
+    smoker-2: {layer: ground, size: [160, 160]}
+    smoker-2-glow: {layer: ground, size: [160, 160]}
+    smoker-3: {layer: ground, size: [144, 144]}
+    smoker-3-glow: {layer: ground, size: [144, 144]}
+    smoker-4: {layer: ground, size: [144, 144]}
+    smoker-4-glow: {layer: ground, size: [144, 144]}
+    smoker-5: {layer: ground, size: [160, 160]}
+    smoker-5-glow: {layer: ground, size: [160, 160]}
+    smoker-6: {layer: ground, size: [176, 176]}
+    smoker-6-glow: {layer: ground, size: [176, 176]}
+    smoker-7: {layer: ground, size: [144, 144]}
+    smoker-7-glow: {layer: ground, size: [144, 144]}
+    smoker-8: {layer: ground, size: [160, 160]}
+    smoker-8-glow: {layer: ground, size: [160, 160]}
+    smoker-9: {layer: ground, size: [176, 176]}
+    smoker-9-glow: {layer: ground, size: [176, 176]}
+    smoker-10: {layer: ground, size: [144, 144]}
+    smoker-10-glow: {layer: ground, size: [144, 144]}
+    smoker-11: {layer: ground, size: [160, 160]}
+    smoker-11-glow: {layer: ground, size: [160, 160]}
+    smoker-12: {layer: ground, size: [144, 144]}
+    smoker-12-glow: {layer: ground, size: [144, 144]}
+    smoker-13: {layer: ground, size: [176, 176]}
+    smoker-13-glow: {layer: ground, size: [176, 176]}
+    smoker-14: {layer: ground, size: [160, 160]}
+    smoker-14-glow: {layer: ground, size: [160, 160]}
+    smoker-15: {layer: ground, size: [176, 176]}
+    smoker-15-glow: {layer: ground, size: [176, 176]}
+    smoker-16: {layer: ground, size: [144, 144]}
+    smoker-16-glow: {layer: ground, size: [144, 144]}
+    smoker-17: {layer: ground, size: [160, 160]}
+    smoker-17-glow: {layer: ground, size: [160, 160]}
+    smoker-18: {layer: ground, size: [144, 144]}
+    smoker-18-glow: {layer: ground, size: [144, 144]}
+    nest-stack: {layer: ground, size: [176, 152]}
+    marlin-stack: {layer: ground, size: [176, 176]}
+    marlin-stack-glow: {layer: ground, size: [176, 176]}
+    hull-wreck: {layer: ground, size: [144, 128]}
+    mortar-mound: {layer: ground, size: [176, 128]}
+    siren-stack: {layer: ground, size: [208, 160]}
+    ridge-crest-1: {layer: ground, size: [160, 160]}
+    ridge-crest-2: {layer: ground, size: [160, 160]}
+    ridge-crest-3: {layer: ground, size: [160, 160]}
+    ridge-crest-4: {layer: ground, size: [160, 160]}
+    ridge-shoulder-1: {layer: ground, size: [176, 128]}
+    ridge-shoulder-2: {layer: ground, size: [176, 128]}
+    seam-smoker-field: {layer: ground, size: [480, 320]}
+    seam-chimney-garden: {layer: ground, size: [480, 320]}
+    seam-ridge-basalt: {layer: ground, size: [480, 320]}
+    seam-bowl-floor: {layer: ground, size: [480, 320]}
+    hatchery-gate: {layer: ground, size: [480, 720]}
+    hatchery-gate-glow: {layer: ground, size: [480, 720]}
+  placed:
+    # the plain's last ridge at the start; exact rows
+    - {piece: ridge-lip, t: 3.0, x: 240}
+    # Levels 24-26's beacon 1 on the ridge's lip (scenery; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 3.208, x: 70}
+    # Levels 24-26's beacon 2 on the ridge's lip (scenery; its light relay-beacon-glow, added over the grade)
+    - {piece: relay-beacon, t: 3.208, x: 420}
+    # black smoker cluster 1 (look c) at t~9, x 400: its mouths' heat smoker-1-glow; exact rows
+    - {piece: smoker-1, t: 11.25, x: 392}
+    # black smoker cluster 2 (look b) at t~15, x 70: its mouths' heat smoker-2-glow; exact rows
+    - {piece: smoker-2, t: 17.25, x: 80}
+    # black smoker cluster 3 (look a) at t~20, x 300: its mouths' heat smoker-3-glow; exact rows
+    - {piece: smoker-3, t: 22.25, x: 300}
+    # black smoker cluster 4 (look a) at t~29.5, x 250: its mouths' heat smoker-4-glow; exact rows
+    - {piece: smoker-4, t: 31.955, x: 250}
+    # black smoker cluster 5 (look b) at t~36.5, x 160: its mouths' heat smoker-5-glow; exact rows
+    - {piece: smoker-5, t: 38.955, x: 160}
+    # black smoker cluster 6 (look c) at t~43.5, x 340: its mouths' heat smoker-6-glow; exact rows
+    - {piece: smoker-6, t: 45.955, x: 340}
+    # black smoker cluster 7 (look a) at t~49.5, x 50: its mouths' heat smoker-7-glow; exact rows
+    - {piece: smoker-7, t: 51.955, x: 72}
+    # black smoker cluster 8 (look b) at t~55, x 290: its mouths' heat smoker-8-glow; exact rows
+    - {piece: smoker-8, t: 57.455, x: 290}
+    # black smoker cluster 9 (look c) at t~61.5, x 150: its mouths' heat smoker-9-glow; exact rows
+    - {piece: smoker-9, t: 63.955, x: 150}
+    # black smoker cluster 10 (look a) at t~61.5, x 335: its mouths' heat smoker-10-glow; exact rows
+    - {piece: smoker-10, t: 63.955, x: 335}
+    # black smoker cluster 11 (look b) at t~68.5, x 410: its mouths' heat smoker-11-glow; exact rows
+    - {piece: smoker-11, t: 70.955, x: 400}
+    # black smoker cluster 12 (look a) at t~75.5, x 215: its mouths' heat smoker-12-glow; exact rows
+    - {piece: smoker-12, t: 77.955, x: 215}
+    # black smoker cluster 13 (look c) at t~75.5, x 440: its mouths' heat smoker-13-glow; exact rows
+    - {piece: smoker-13, t: 77.955, x: 392}
+    # black smoker cluster 14 (look b) at t~82.5, x 245: its mouths' heat smoker-14-glow; exact rows
+    - {piece: smoker-14, t: 84.955, x: 245}
+    # black smoker cluster 15 (look c) at t~88.5, x 150: its mouths' heat smoker-15-glow; exact rows
+    - {piece: smoker-15, t: 90.94, x: 150}
+    # black smoker cluster 16 (look a) at t~88.5, x 345: its mouths' heat smoker-16-glow; exact rows
+    - {piece: smoker-16, t: 90.94, x: 345}
+    # black smoker cluster 17 (look b) at t~112, x 400: its mouths' heat smoker-17-glow; exact rows
+    - {piece: smoker-17, t: 114.25, x: 400}
+    # black smoker cluster 18 (look a) at t~120.5, x 300: its mouths' heat smoker-18-glow; exact rows
+    - {piece: smoker-18, t: 122.75, x: 300}
+    # the Spine Turret nest's chimney stack (t=34: the three turrets on its top at x 340, 384, 428); exact rows
+    - {piece: nest-stack, t: 36.455, x: 384}
+    # the smoker the Marlin lies against and her scour (the trigger at t=40, x 90); its mouth marlin-stack-glow
+    - {piece: marlin-stack, t: 42.455, x: 90}
+    # hint 3: the Depth Hunter wreck with its blistered hull code (mid-screen at t=70, x 175); exact rows
+    - {piece: hull-wreck, t: 70.0, x: 175}
+    # the Polyp Mortars' mound (t=80, x 70 and 128); exact rows
+    - {piece: mortar-mound, t: 82.455, x: 99}
+    # the chimney stack the two Sirens are grown on (t=81, x 360 and 430); exact rows
+    - {piece: siren-stack, t: 83.455, x: 376}
+    # relay beacon 1's knoll and footing (the unit at t=94, x 80; its foot on the pad); exact rows
+    - {piece: ridge-crest-1, t: 96.5, x: 80}
+    # relay beacon 2's knoll and footing (the unit at t=101, x 400; its foot on the pad); exact rows
+    - {piece: ridge-crest-2, t: 103.5, x: 400}
+    # relay beacon 3's knoll and footing (the unit at t=108, x 240; its foot on the pad); exact rows
+    - {piece: ridge-crest-3, t: 110.5, x: 240}
+    # relay beacon 4's knoll and footing (the unit at t=116, x 90; its foot on the pad); exact rows
+    - {piece: ridge-crest-4, t: 118.5, x: 90}
+    # the ridge's shoulder 1 under its Spine Turret nest (t=99.5); exact rows
+    - {piece: ridge-shoulder-1, t: 101.75, x: 130}
+    # the ridge's shoulder 2 under its Spine Turret nest (t=99.5); exact rows
+    - {piece: ridge-shoulder-2, t: 101.75, x: 330}
+    # section 2's seam (ground 3420): vent-edge into smoker-field; exact rows
+    - {piece: seam-smoker-field, t: 26.364, x: 240}
+    # section 3's seam (ground 6950): smoker-field into chimney-garden; exact rows
+    - {piece: seam-chimney-garden, t: 58.455, x: 240}
+    # section 4's seam (ground 10690): chimney-garden into ridge-basalt; exact rows
+    - {piece: seam-ridge-basalt, t: 92.333, x: 240}
+    # section 5's seam (ground 14760): the bowl's rim, the plain falling away; exact rows
+    - {piece: seam-bowl-floor, t: 126.154, x: 240}
+    # the hatchery gate's ring of arches, mid-screen at the level's end (t=150); its teal light hatchery-gate-glow; exact rows
+    - {piece: hatchery-gate, t: 150.0, x: 240}
+# sections' tiles: 1: [vent-edge]; 2: [smoker-field]; 3: [chimney-garden]; 4: [ridge-basalt]; 5: [bowl-floor]
+# sections' underwater_look (ART-G's proposal, round 57; the level-wide block = section 1's):
+#   1: underwater_look: {ambient: 0.45, tint: 80aceb, caustics: 0.0, snow: 90, headlights: {strength: 0.8, reach: 260, angle: 70}}
+#   2: underwater_look: {ambient: 0.60, tint: e0bd9e, caustics: 0.0, snow: 70, headlights: {strength: 0.0}}
+#   3: underwater_look: {ambient: 0.62, tint: e0bd9e, caustics: 0.0, snow: 70, headlights: {strength: 0.0}}
+#   4: underwater_look: {ambient: 0.45, tint: 80aceb, caustics: 0.0, snow: 90, headlights: {strength: 0.8, reach: 260, angle: 70}}
+#   5: underwater_look: {ambient: 0.60, tint: 80e6d6, caustics: 0.0, snow: 60, headlights: {strength: 0.0}}
+
+# the heat plumes this art is drawn for (G2's `vents:`; gap check §1.2): 16 rows at the README's times,
+# 2-3 discs each, the ripple's order alternating ends, neighbouring discs >= 164 px apart centre to centre
+# (a 100 px gap between 64 px discs); no backdrop piece within 48 px of a disc's centre
+vents:
+  look: heat-plume
+  shape: disc
+  width: 64
+  rows:
+    - {t: 26, xs: [120, 360]}
+    - {t: 33, xs: [230, 60]}
+    - {t: 40, xs: [250, 420]}
+    - {t: 47, xs: [420, 250, 80]}
+    - {t: 52, xs: [160, 380]}
+    - {t: 58, xs: [410, 240, 70]}
+    - {t: 65, xs: [60, 400]}
+    - {t: 72, xs: [290, 60]}
+    - {t: 79, xs: [400, 215]}
+    - {t: 85, xs: [410, 240, 70]}
+    - {t: 94, xs: [240, 420]}
+    - {t: 101, xs: [250, 80]}
+    - {t: 108, xs: [60, 420]}
+    - {t: 115, xs: [420, 240]}
+    - {t: 126, xs: [80, 250, 420]}
+    - {t: 133, xs: [400, 160]}
+
+# ground places this art is drawn for (G2's `ground_targets:` and the Siren nest's `on_ground` xs; t = the top
+# edge, x the unit's centre):
+#   Spine Turret nest x3 on the nest-stack: t 34, x 340, 384, 428
+#   the Marlin (`sprite: marlin-hauler`, size [64, 64], 20 / hard 28 HP): t 40, x 90
+#   Polyp Mortar x2 on the mortar-mound: t 80, x 70, 128
+#   Siren x2 grown on the siren-stack (`on_ground` xs, every difficulty): t 81, x 360, 430
+#   relay beacons (`enemy: relay-beacon`, size [72, 104], hitbox [36, 80]: the mast's foot 22 px below the
+#     unit's centre on its ridge-crest pad): t 94 x 80, t 101 x 400, t 108 x 240, t 116 x 90
+#   Spine Turret x3 on the ridge's shoulders: t 99.5, x 130, 172 (shoulder 1) and 310 (shoulder 2); hard x5: + x 88 and 352
+#   the hull-code wreck is the hull-wreck piece (mid-screen at t=70, x 175; Varga's t=70 line)
+
+# static lights this art assumes (G2's underwater_look `lights:`; the pools are the game's light map, not
+# baked); the plumes' pools follow their phase in the game (PlumeLooks), not listed:
+#   lights:
+#     - {scroll: 160, x: 70, radius: 40, colour: ff6040}   # the old beacon 1 on the ridge's lip (its 4 s pulse is the glow piece's)
+#     - {scroll: 160, x: 420, radius: 40, colour: ff6040}   # the old beacon 2 on the ridge's lip (its 4 s pulse is the glow piece's)
+#     - {scroll: 1080, x: 399, radius: 100, colour: ffa040}   # smoker-1 (look c) at t~9
+#     - {scroll: 1803, x: 71, radius: 100, colour: ffa040}   # smoker-2 (look b) at t~15
+#     - {scroll: 2400, x: 300, radius: 100, colour: ffa040}   # smoker-3 (look a) at t~20
+#     - {scroll: 3495, x: 250, radius: 100, colour: ffa040}   # smoker-4 (look a) at t~29.5
+#     - {scroll: 4268, x: 161, radius: 100, colour: ffa040}   # smoker-5 (look b) at t~36.5
+#     - {scroll: 4690, x: 56, radius: 90, colour: ffa040}   # the Marlin's smoker
+#     - {scroll: 5035, x: 339, radius: 100, colour: ffa040}   # smoker-6 (look c) at t~43.5
+#     - {scroll: 5695, x: 50, radius: 100, colour: ffa040}   # smoker-7 (look a) at t~49.5
+#     - {scroll: 6303, x: 291, radius: 100, colour: ffa040}   # smoker-8 (look b) at t~55
+#     - {scroll: 7015, x: 149, radius: 100, colour: ffa040}   # smoker-9 (look c) at t~61.5
+#     - {scroll: 7015, x: 335, radius: 100, colour: ffa040}   # smoker-10 (look a) at t~61.5
+#     - {scroll: 7788, x: 411, radius: 100, colour: ffa040}   # smoker-11 (look b) at t~68.5
+#     - {scroll: 8555, x: 215, radius: 100, colour: ffa040}   # smoker-12 (look a) at t~75.5
+#     - {scroll: 8555, x: 439, radius: 100, colour: ffa040}   # smoker-13 (look c) at t~75.5
+#     - {scroll: 9328, x: 246, radius: 100, colour: ffa040}   # smoker-14 (look b) at t~82.5
+#     - {scroll: 9985, x: 149, radius: 100, colour: ffa040}   # smoker-15 (look c) at t~88.5
+#     - {scroll: 9985, x: 345, radius: 100, colour: ffa040}   # smoker-16 (look a) at t~88.5
+#     - {scroll: 12783, x: 401, radius: 100, colour: ffa040}   # smoker-17 (look b) at t~112
+#     - {scroll: 13800, x: 300, radius: 100, colour: ffa040}   # smoker-18 (look a) at t~120.5
+#     - {scroll: 17320, x: 240, radius: 240, colour: 40ffc8}   # the hatchery gate's teal

@@ -4,7 +4,7 @@ design: approved
 implementation: done
 art: final
 depends-on: [../../story, ../../campaign]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Briefing screen
@@ -106,7 +106,9 @@ Production art, UI batch part U3: the briefing images, rendered by [tools/art/br
 | [concept/briefing-images-final-r54-a.png](concept/briefing-images-final-r54-a.png) | Review sheet, M8 part E (round 54): Level 25's two 672×240 images, `level-25-siren-trench` (Okafor's sonar chart: the walls, side caves, pillar and narrows, the nests on both walls, the beacons, the survey sub's cave, the route) and `level-25-sonar-ring` (Varga's diagram: the Siren on a wall, two rings and the gap, the ship slowed in the band, the 2 s slow and 3 s immunity; `tools/art/briefing_images.py`) | chosen (round 54, F.6: accepted as final) |
 | [concept/level-25-briefing-capture-r54-a.png](concept/level-25-briefing-capture-r54-a.png) | Game capture, M8 part E (step E6, a playthrough save at Level 25 on medium): the briefing's two pages in the game, Okafor's chart and Varga's ring diagram | chosen (round 54, F.6: accepted as final) |
 | [concept/briefing-images-final-r55-a.png](concept/briefing-images-final-r55-a.png) | Review sheet, M8 part F (round 55): Level 26's two 672x240 images, `level-26-blackwater` (Okafor's chart: the trench's mouth, the last lamps, nothing charted, the lost CDF buoys, the dotted route, the vents' glow far south) and `level-26-lure` (Varga's diagram: the angler as the dark shows it, a gold pickup beside it, the headlight cone, the 130 px lunge radius, the ring of 8; `tools/art/briefing_images.py`) | chosen (round 55, F.7: accepted as final) |
+| [concept/briefing-images-final-r57-a.png](concept/briefing-images-final-r57-a.png) | Review sheet, M8 part G (round 57): Level 27's two 672x240 images, `level-27-vent-field` (Okafor's sonar chart: the smokers, every plume vent ringed amber, the ridge's four red-gold relays, the gate's teal, the route, Aegis Two's last position) and `level-27-plume-cycle` (Varga's diagram: glowing 1.4 s, erupting 1.6 s, cold 1.5 s, a shot bent 25 degrees; a grey hull below with a torpedo rising; `tools/art/briefing_images.py`) | proposed (round 57) |
 | [concept/level-26-briefing-capture-r55-a.png](concept/level-26-briefing-capture-r55-a.png) | Game capture, M8 part F (step F6, a playthrough save at Level 26 on medium): the briefing's two pages in the game, Okafor's chart and Varga's lure diagram | chosen (round 55, F.7: accepted as final) |
+| [concept/level-27-briefing-capture-r57-a.png](concept/level-27-briefing-capture-r57-a.png) | Game capture, M8 part G (step G5, a playthrough save at Level 27): Level 27's two pages in the game, Okafor's sonar chart of the vent field and Varga's plume cycle with the grey hull below | proposed (round 57) |
 | [concept/act3-outro-final-r44-a.png](concept/act3-outro-final-r44-a.png) | Review sheet, M7 part H (round 44): the Act 3 outro's four 672×240 images (`act-3-outro-hellas`: the basin at dawn, the collapsed crater, the last spore trails; `act-3-outro-domes`: Ares Landing's domes at night, every pane lit, colonists on the ring road looking up; `act-3-outro-europa`: Varga's plot of the courses off Mars converging on Europa, the filed plate in a minimised window; `act-3-outro-aegis`: Aegis Wing refitting on the spaceport apron at dusk, Jupiter a bright point; `tools/art/outro_l21_images.py`, step ART-H3) | final (round 44, F.f: approved as final) |
 
 ## Implementation

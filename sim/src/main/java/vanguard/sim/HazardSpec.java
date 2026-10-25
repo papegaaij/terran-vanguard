@@ -92,6 +92,13 @@ public record HazardSpec(
      * tellSeconds} from {@code i × rippleSeconds} into the cycle, then its flame column stands for {@code
      * burnSeconds}, hitting the ship and Rook whatever their layer for {@code damage} (a collision), once per burst
      * each. The vents are cold from the arena on (a level's arena section) and once the row left the bottom edge.
+     *
+     * <p>M8 part G (design/campaign Level 27, Hazards: the heat plumes; m8g-gaps.md §1.2, §5 G5, G6): a {@code disc}
+     * row's grates are plume mouths: each burns a disc {@code width} px across (not a square), hitting the ship, Rook
+     * and the Bulwark whose hull it touches; it burns every {@code air} or {@code low-air} unit over it for {@code
+     * enemyDamage} once per burst (the kill is the player's), and bends a shot, an enemy bullet or a homing missile
+     * entering it {@code bendRadians} away from its centre once ({@link HeatPlumes}). Every row before Level 27 is
+     * square, burns no unit and bends nothing.
      */
     public record VentRow(
             double t,
@@ -101,8 +108,32 @@ public record HazardSpec(
             double burnSeconds,
             double periodSeconds,
             double rippleSeconds,
-            double damage) {
+            double damage,
+            boolean disc,
+            double enemyDamage,
+            double bendRadians) {
+        /** A square row of grates that burns no unit and bends nothing (every row before M8 part G). */
+        public VentRow(
+                double t,
+                double[] xs,
+                double width,
+                double tellSeconds,
+                double burnSeconds,
+                double periodSeconds,
+                double rippleSeconds,
+                double damage) {
+            this(t, xs, width, tellSeconds, burnSeconds, periodSeconds, rippleSeconds, damage, false, 0, 0);
+        }
+
         public VentRow {
+            if (!disc && (enemyDamage != 0 || bendRadians != 0)) {
+                throw new IllegalArgumentException("only a plume's disc burns units or bends shots");
+            }
+            if (!(enemyDamage >= 0) || !(bendRadians >= 0) || !(bendRadians < StrictMath.PI / 2)) {
+                throw new IllegalArgumentException(
+                        "a plume burns units for 0 or more and bends by 0 up to a right angle: " + enemyDamage + ", "
+                                + bendRadians);
+            }
             if (!(t >= 0)
                     || xs.length == 0
                     || !(width > 0)
@@ -142,7 +173,10 @@ public record HazardSpec(
                     && row.burnSeconds == burnSeconds
                     && row.periodSeconds == periodSeconds
                     && row.rippleSeconds == rippleSeconds
-                    && row.damage == damage;
+                    && row.damage == damage
+                    && row.disc == disc
+                    && row.enemyDamage == enemyDamage
+                    && row.bendRadians == bendRadians;
         }
 
         @Override
@@ -155,12 +189,16 @@ public record HazardSpec(
                     burnSeconds,
                     periodSeconds,
                     rippleSeconds,
-                    damage);
+                    damage,
+                    disc,
+                    enemyDamage,
+                    bendRadians);
         }
 
         @Override
         public String toString() {
-            return "VentRow[t=" + t + ", xs=" + java.util.Arrays.toString(xs) + ", width=" + width + "]";
+            return "VentRow[t=" + t + ", xs=" + java.util.Arrays.toString(xs) + ", width=" + width
+                    + (disc ? ", disc" : "") + "]";
         }
     }
 

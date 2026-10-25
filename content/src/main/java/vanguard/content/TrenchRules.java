@@ -49,6 +49,10 @@ final class TrenchRules {
 
     /** {@code spec} with {@code wave}'s mount: out of its cave's notch, or nests on the walls; as it is without one. */
     static WaveSpec mount(LevelData.Wave wave, WaveSpec spec) {
+        if (wave.onGround().isPresent()) {
+            // M8 part G: nests on the ground at their xs (Level 27's Sirens on a chimney stack).
+            return spec.withGroundNests(wave.onGround().get());
+        }
         if (wave.cave().isPresent()) {
             return spec.withCave(wave.cave().get());
         }

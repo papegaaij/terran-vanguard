@@ -62,6 +62,10 @@ final class SortieHash {
         }
         // M7 part F: nothing without furnace vents, so the other levels hash as before.
         s.vents.addTo(hash);
+        if (s.plumes != null) {
+            // M8 part G: only in a level with heat plumes.
+            s.plumes.addTo(hash);
+        }
         if (s.force.chains().size() > 0) {
             Pools.addAll(hash, s.force.chains());
         }

@@ -85,13 +85,16 @@ class DestructibleGlowTest {
         // Meridian wreck (its failing hull lamp until its first hit, sparks at the dent after it), M8 part E: Level
         // 25's
         // survey sub (its dead lamp's pinger until its first hit, sparks at the dent after it), M8 part F: Level 26's
-        // farm barge (its sodium lamp until its first hit, the lamp stuttering and sparks at the dent after it).
+        // farm barge (its sodium lamp until its first hit, the lamp stuttering and sparks at the dent after it), M8
+        // part
+        // G: Level 27's Marlin (her stern lamp until the first hit, the resin's teal glints and sparks after it).
         assertEquals(
                 Set.of(
                         "crevasse-lip",
                         "emergency-cache",
                         "farm-barge",
                         "greenhouse-frame",
+                        "marlin-hauler",
                         "meridian-wreck",
                         "payroll-safe",
                         "survey-probe",

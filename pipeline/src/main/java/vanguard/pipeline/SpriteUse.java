@@ -146,6 +146,9 @@ final class SpriteUse {
     /** M8 part B: the ice geysers' crack, glow, steam and residue (the vents' {@code look: ice-geyser}). */
     static final String GEYSER_ROOT = "ice-geyser";
 
+    /** M8 part G: the heat plumes' mouth, tell, eruption, settling silt and bend ripple (the vents' {@code look: heat-plume}). */
+    static final String PLUME_ROOT = "heat-plume";
+
     /**
      * M7 part F: a level with up-facing nests ({@code arc: up}) draws the steel truss gantry under them and each
      * nest's cradle, {@code gantry} and {@code gantry-cradle}.
@@ -306,8 +309,7 @@ final class SpriteUse {
         });
         level.flak().ifPresent(flak -> roots.add(FLAK_ROOT));
         // M7 part F: the furnace vents' looks, a foundry's ingots and rovers.
-        level.vents()
-                .ifPresent(vents -> roots.add(GEYSER_ROOT.equals(vents.lookOrDefault()) ? GEYSER_ROOT : VENT_ROOT));
+        level.vents().ifPresent(vents -> roots.add(ventRoot(vents.lookOrDefault())));
         level.belts().ifPresent(belts -> roots.addAll(FOUNDRY_ROOTS));
         // M7 part G: the travelling ridge (its ridge key).
         level.ridge().ifPresent(ridge -> roots.add(RIDGE_ROOT));
@@ -316,6 +318,11 @@ final class SpriteUse {
             roots.add(ROOT_BURST_ROOT);
         }
         return roots;
+    }
+
+    /** The sprite root of a vents look: the ice geyser, the heat plume, else the furnace vent. */
+    static String ventRoot(String look) {
+        return GEYSER_ROOT.equals(look) || PLUME_ROOT.equals(look) ? look : VENT_ROOT;
     }
 
     private static boolean claims(Set<String> roots, String sprite) {

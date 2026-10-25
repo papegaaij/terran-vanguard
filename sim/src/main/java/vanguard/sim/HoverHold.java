@@ -11,6 +11,12 @@ final class HoverHold {
     private static final double MAX_TURN = StrictMath.PI / 16;
 
     private boolean active;
+    /**
+     * M8 part G (design/enemies/naval/depth-hunter): a hover at its depth with a drift but no height above the ship: it
+     * stops at its path's end, drifts sideways while it holds (turning back at the side edges) and turns its facing up
+     * the screen. Not {@link #active()}.
+     */
+    private boolean driftOnly;
     /** How far above the ship's centre it holds, px (its own draw). */
     private double above;
     /** Its drift's direction: 1 to the right, -1 to the left. */
@@ -29,6 +35,7 @@ final class HoverHold {
     /** Back to a unit without a hover above the ship. */
     void clear() {
         active = false;
+        driftOnly = false;
         above = 0;
         drift = 1;
         from = 0;
@@ -47,6 +54,14 @@ final class HoverHold {
     /** It starts with {@code spec}'s hover, drawing its height and its drift's side by its own {@code serial}. */
     void start(EnemySpec spec, int serial) {
         clear();
+        if (spec.hover().isPresent()
+                && spec.hover().get().aboveShip().isEmpty()
+                && spec.hover().get().drift() > 0) {
+            // M8 part G: the Depth Hunter's drift at its depth (its side by its own serial, as a Barbfin's).
+            driftOnly = true;
+            drift = Ramming.draw(0xBB67AE8584CAA73BL ^ serial) < 0.5 ? -1 : 1;
+            return;
+        }
         if (spec.hover().isEmpty() || spec.hover().get().aboveShip().isEmpty()) {
             return;
         }
@@ -57,6 +72,31 @@ final class HoverHold {
 
     boolean active() {
         return active;
+    }
+
+    /** M8 part G: whether it drifts at its depth while it holds (a hover with a drift, not above the ship). */
+    boolean driftsOnly() {
+        return driftOnly;
+    }
+
+    /** M8 part G: its drift's side from now, -1 left or 1 right (a column's units fan out). */
+    void driftSide(int side) {
+        drift = side < 0 ? -1 : 1;
+    }
+
+    /** Its drift's side now, -1 left or 1 right. */
+    int driftSide() {
+        return drift;
+    }
+
+    /**
+     * M8 part G: one step of {@code u}'s hold at its depth: it drifts sideways at the hover's drift (turning back at the
+     * side edges, as {@link #hold}) and turns its facing up the screen (its torpedoes leave along it).
+     */
+    void driftUp(Enemy u) {
+        driftStep(u);
+        double delta = Math.IEEEremainder(StrictMath.PI - u.facing, 2 * StrictMath.PI);
+        u.facing = Math.IEEEremainder(u.facing + Math.clamp(delta, -MAX_TURN, MAX_TURN), 2 * StrictMath.PI);
     }
 
     /** How far above the ship's centre it holds, px. */
@@ -74,14 +114,18 @@ final class HoverHold {
 
     /**
      * Whether {@code u}, coming down its path on the play field, stops now: its centre came down to its hold height
-     * above the ship at (shipX, shipY).
+     * above the ship at (shipX, shipY). M8 part G (design/campaign Level 27, the rear Barbfin pairs): a unit that entered
+     * from the rear stops coming up instead, its centre risen to its hold height.
      */
     boolean stopsNow(Enemy u, double shipY) {
-        return active
-                && u.distance >= from
-                && u.y < u.prevY
-                && PlayField.overlaps(u.x, u.y, u.box)
-                && u.y <= holdY(u.spec.hover().orElseThrow(), shipY);
+        if (!active || u.distance < from || !PlayField.overlaps(u.x, u.y, u.box)) {
+            return false;
+        }
+        double holdY = holdY(u.spec.hover().orElseThrow(), shipY);
+        if (u.entry() == WaveSpec.Entry.REAR) {
+            return u.y > u.prevY && u.y >= holdY;
+        }
+        return u.y < u.prevY && u.y <= holdY;
     }
 
     /**
@@ -92,6 +136,17 @@ final class HoverHold {
      * them ({@link Canyon#inSpan}; laid out at a span's edge, it eases off to its half width).
      */
     void hold(Enemy u, double shipX, double shipY) {
+        driftStep(u);
+        double dx = shipX - u.x;
+        double dy = shipY - u.y;
+        if (dx != 0 || dy != 0) {
+            double delta = Math.IEEEremainder(Enemy.heading(dx, dy) - u.facing, 2 * StrictMath.PI);
+            u.facing = Math.IEEEremainder(u.facing + Math.clamp(delta, -MAX_TURN, MAX_TURN), 2 * StrictMath.PI);
+        }
+    }
+
+    /** One step of {@code u}'s drift sideways while it holds (see {@link #hold}). */
+    private void driftStep(Enemy u) {
         double speed = u.spec.hover().orElseThrow().drift();
         if (speed > 0) {
             double half = u.box.width() / 2;
@@ -115,12 +170,6 @@ final class HoverHold {
             // M8 AW: pushed off the walls and islands as they scroll in on it (Level 25's narrows).
             u.x = canyon == null ? x : canyon.inSpan(u.y, x, u.x, half);
         }
-        double dx = shipX - u.x;
-        double dy = shipY - u.y;
-        if (dx != 0 || dy != 0) {
-            double delta = Math.IEEEremainder(Enemy.heading(dx, dy) - u.facing, 2 * StrictMath.PI);
-            u.facing = Math.IEEEremainder(u.facing + Math.clamp(delta, -MAX_TURN, MAX_TURN), 2 * StrictMath.PI);
-        }
     }
 
     /**
@@ -134,7 +183,7 @@ final class HoverHold {
         }
     }
 
-    /** Hashed only while active. */
+    /** Hashed only while active (M8 part G: or drifting at its depth). */
     void addTo(StateHash hash) {
         hash.add(above).add(drift);
     }

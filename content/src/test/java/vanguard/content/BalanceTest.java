@@ -151,9 +151,13 @@ class BalanceTest {
 
     /**
      * Deviations from the balancing basis reported for a decision; the test fails when one is fixed
-     * (remove it here) or a new one appears. None are open.
+     * (remove it here) or a new one appears.
      */
-    static final Map<String, String> PENDING = Map.of();
+    static final Map<String, String> PENDING = Map.of(
+            "relay-beacon bounty",
+            "Level 27's approved bounty 15 (round 48) is below the medium class's 18-30 at 60 HP (0.5 s at L27's"
+                    + " reference DPS 116, the medium class's time): kept as drafted, for the user's review in round 57"
+                    + " (M8 part G, step G2)");
 
     /** One hangar visit of the balancing sheet. */
     record Row(

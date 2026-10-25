@@ -130,7 +130,9 @@ final class HitPasses {
      * M8 part A (design/player/wingmen, Heavy drone "Bulwark"): the enemy bullets, armed mines and homing missiles
      * that touch the Bulwark burst on it, and an {@code air} enemy touching it hurts it once per contact by its contact
      * damage (a rammer destroyed by ramming is destroyed, paying as the player's kills). Default pending the user's
-     * review: the bosses' beams, cones, vents and strikes pass it.
+     * review: the bosses' beams, cones, vents and strikes pass it. M8 part G (design/campaign Level 27; §5 G7): a heat
+     * plume's burning disc burns it once per burst ({@link SimEvents.Type#VENT_HIT} value 2); the square grates and the
+     * geysers still pass it.
      */
     void hitBulwark(Bulwark bulwark) {
         if (bulwark.destroyed()) {
@@ -168,6 +170,17 @@ final class HitPasses {
                 double damage = missile.damage();
                 missiles.destroy(i, Missiles.STRUCK);
                 if (bulwark.hit(damage, events)) {
+                    return;
+                }
+            }
+        }
+        if (s.plumes != null) {
+            FurnaceVents vents = s.vents;
+            for (int g = vents.strike(hull, x, y, FurnaceVents.BULWARK, 0);
+                    g >= 0;
+                    g = vents.strike(hull, x, y, FurnaceVents.BULWARK, g + 1)) {
+                events.add(SimEvents.Type.VENT_HIT, x, y, 2);
+                if (bulwark.hit(vents.damage(g), events)) {
                     return;
                 }
             }

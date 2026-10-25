@@ -170,6 +170,11 @@ final class UnitPasses {
                 kinds.anglers(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
                 continue;
             }
+            if (kinds.hunters(sortie).draws(enemy)) {
+                // M8 part G: a Depth Hunter at its heading and nozzle flicker, fading in as it rises (HunterLooks).
+                kinds.hunters(sortie).draw(batch, sortie, enemy, alpha, unitFlash);
+                continue;
+            }
             if (kinds.nautili(sortie).draws(enemy)) {
                 // M8 part E: a Spiral Nautilus's shell and crown; leaving through rock it is drawn under the walls.
                 if (!kinds.nautili(sortie).underWall(sortie, enemy, alpha)) {
@@ -375,6 +380,15 @@ final class UnitPasses {
         if (angler != null) {
             return angler;
         }
+        // M8 part G: a Depth Hunter at its heading and flicker; a relay beacon at its lamp's pulse.
+        AtlasRegion hunter = kinds.hunters(sortie).frame(sortie, enemy);
+        if (hunter != null) {
+            return hunter;
+        }
+        AtlasRegion mast = kinds.beacons(sortie).frame(enemy, sortie.tick());
+        if (mast != null) {
+            return mast;
+        }
         // M7 part C: a Tendril Anchor faces its partner and pulses.
         AtlasRegion anchor = kinds.tendrils(sortie).anchorFrame(sortie, enemy, look);
         if (anchor != null) {
@@ -500,6 +514,9 @@ final class UnitPasses {
         // M8 part D: the Rays' gill slits and mouth flash, the Barbfins' snout sparkle.
         kinds.rays(sortie).drawGlows(batch, sortie, alpha);
         kinds.barbfins(sortie).drawGlows(batch, sortie, alpha);
+        // M8 part G: the Depth Hunters' slit and nozzles, the relay beacons' lamps.
+        kinds.hunters(sortie).drawGlows(batch, sortie, alpha);
+        kinds.beacons(sortie).drawGlows(batch, sortie, alpha);
     }
 
     /** M8 part D: the Abyss Rays on {@code sub} (their shadow, the rise's first half, the sink's second). */
@@ -929,10 +946,13 @@ final class UnitPasses {
                     || kinds.sirens(sortie).draws(enemy)
                     || kinds.nautili(sortie).draws(enemy)
                     || kinds.anglers(sortie).angler(enemy.kind())
+                    || kinds.hunters(sortie).hunter(enemy.kind())
                     || kinds.deepBodies(sortie).veins(enemy.kind()) != null) {
                 // M8 part D: an Abyss Ray's glow follows its rise (drawDeepGlows); M8 part E: a Siren's and a
                 // Nautilus's their steps (after the grade); M8 part F: an Angler's its heading and jaw (AnglerLooks), a
-                // Driftjelly's veins its pulse, in the dark only (drawDeepGlows).
+                // Driftjelly's veins its pulse, in the dark only (drawDeepGlows); M8 part G: a Depth Hunter's its
+                // rise's
+                // fade (HunterLooks, drawDeepGlows).
                 continue;
             }
             float glow = ArsenalLooks.glowShare(enemy) * kiteFade.opacity(enemy, sortie.tick(), alpha);

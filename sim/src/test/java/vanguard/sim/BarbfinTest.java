@@ -201,6 +201,34 @@ class BarbfinTest {
     }
 
     @Test
+    void aRearPairRisesUpItsLanesFromBelowStopsAboveTheShipAndIsWarned() {
+        // M8 part G (design/campaign Level 27, the rear Barbfin pairs; §5 G9).
+        WaveSpec rear =
+                TestSpecs.wave(4, WaveSpec.Formation.REAR_AMBUSH, BARBFIN, 2, WaveSpec.Entry.REAR, WaveSpec.Edge.NONE);
+        Sortie sortie = sortie(List.of(rear));
+        boolean warned = false;
+        for (int i = 0; i < SimStep.ticks(3.9); i++) {
+            sortie.step(Command.NONE);
+            warned |= WarningEdge.BOTTOM.in(sortie.edgeWarnings());
+            assertTrue(AbyssRayTest.all(sortie, "barbfin").isEmpty(), "not before its time");
+        }
+        assertTrue(warned, "BOTTOM warning");
+        sortie.step(Command.NONE);
+        for (Enemy unit : AbyssRayTest.all(sortie, "barbfin")) {
+            assertTrue(unit.y() < 0, "it comes up from below the bottom edge: " + unit.y());
+        }
+        Stops stops = fly(sortie, SimStep.ticks(6), Command.NONE);
+        assertEquals(2, stops.above().size(), "both stopped");
+        Set<Long> lanes = new HashSet<>();
+        for (int serial : stops.x().keySet()) {
+            lanes.add(Math.round(stops.x().get(serial)));
+            double above = stops.above().get(serial);
+            assertTrue(above >= 90 && above <= 200 + 120 * SimStep.SECONDS, "90-200 px above the ship: " + above);
+        }
+        assertEquals(Set.of(160L, 320L), lanes, "the ambush lanes");
+    }
+
+    @Test
     void theSameSeedFliesTheSameBarbfins() {
         Sortie a = sortie(List.of(column(1, BARBFIN, 5), column(4, BARBFIN, 3)));
         Sortie b = sortie(List.of(column(1, BARBFIN, 5), column(4, BARBFIN, 3)));

@@ -1,0 +1,53 @@
+# Depth Hunter stat block at medium: rendered into README.md. Schema: ../../../tech/architecture/README.md#data-file-schemas
+# M8 part G, step G2 (Level 27): the approved stat block (round 48) as data, step G1's stand-in (VentKeysTest) as its
+# template. New in it (flown from step G1): the hover's `y` band with a `drift` (it holds at its depth, its facing turned
+# up the screen), the `column` from the rear (up from the bottom edge, unit i of n at the band's min + i ÷ (n − 1) of its
+# span) and the non-boss `homing` attack `aim: facing` (each volley one torpedo launched along its facing, at most 8 in
+# flight). HP 120 at its first level (Level 27, no act factor). No wreck on death (gap check m8g-gaps.md §5 G3: the
+# hull-code wreck is a placed prop); the torpedo bursts on the ship, Rook and the Bulwark (§5 G4).
+name: Depth Hunter
+faction: Unmarked
+layer: air        # the play plane under water
+tier: medium
+size: [72, 40]    # sprite px
+hitbox: [56, 28]
+parts: single
+orientation: 16 angles
+hp: 120           # 1.0 s at the L27 reference DPS of 116
+armour: none
+speed: 80         # px/s while rising and leaving
+machine: true     # the EMP Burst stuns it 3 s
+movement:
+  hover: {seconds: 10, y: [380, 460], drift: 12}   # s; px below the top edge where the column holds; px/s sideways while it holds
+attacks:
+  - pattern: aimed
+    name: torpedo
+    bullet: heavy
+    interval: 3.5          # s
+    speed: 90              # px/s base (× 0.7 under water)
+    first_shot_delay: 0.5  # s after it stops
+    aim: facing            # along its facing: up the screen while it holds
+    homing: {turn_rate: 70, life: 5, hp: 3, most: 8, hatch: 0}   # °/s, s, HP, at most in flight for the gun, no hatch tell
+    notes:
+      text: 'a `homing` torpedo every {interval} s along its facing (up), {speed} px/s, turn rate {homing.turn_rate}°/s, {homing.hp} HP, `{bullet}` = {damage} on impact, life {homing.life} s, at most {homing.most} in flight; the Decoy Flares retarget it; shot down with the ship''s weapons'
+formations:
+  - {name: column, size: [3, 4]}   # from the rear: up from the bottom edge (a 3 s BOTTOM warning)
+weak_points: []
+drops: []
+traits: [spread, homing, rear, anti-sub]
+bounty: 30
+first_level: 27
+difficulty:
+  easy: {homing: {turn_rate: 55}, attacks: {torpedo: {interval: 4.5}}}
+  hard: {homing: {turn_rate: 85}, attacks: {torpedo: {interval: 2.8}}}
+notes:
+  layer: ' (the play plane under water)'
+  orientation: (the torpedoes are launched along its facing, up)
+  speed: 'rising and leaving, holds in the lower band'
+  movement: '`column` from the bottom edge (`from: rear`, a 3 s edge warning): 3–4 hunters in a line, unit i of n holding at {movement.hover.y.0} + i ÷ (n − 1) × 80 px from the top (the band {movement.hover.y.0}–{movement.hover.y.1}), drifting {movement.hover.drift} px/s sideways, facing up; leaves downward after {movement.hover.seconds} s'
+  formations: (entering from below)
+  weak_points: (a plain grey hull; the thruster glow is drawn only)
+  bounty: '; torpedoes 0'
+  death: '`medium` hull break, grey debris and an oil bloom; no wreck (the hull-code wreck is a placed prop)'
+  used_in: 'L26 as unseen torpedo trails at the end (Rook''s shoot-down, no unit on the screen), first seen at L27; L28 as escort'
+  difficulty: 'easy: a torpedo every 4.5 s, turn rate 55°/s; hard: every 2.8 s, 85°/s'

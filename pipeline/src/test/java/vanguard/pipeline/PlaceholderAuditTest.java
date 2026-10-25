@@ -85,6 +85,10 @@ class PlaceholderAuditTest {
     private static final String ROUND_55 =
             "M8 part F: round 55's picks for Level 26 (user 2026-10-24; the Freesound HQ previews of CC0/CC-BY sounds,"
                     + " CREDITS rows from step AUD-F, by tools/concept/audio/sfx_r55f.py)";
+    private static final String ROUND_57 =
+            "M8 part G: round 57's proposals for Level 27, their a variants as stand-ins until the user's pick (the"
+                    + " Freesound HQ previews of CC0/CC-BY sounds, CREDITS rows from step AUD-G; the scan ping"
+                    + " synthesized; by tools/concept/audio/sfx_r57g.py)";
     private static final String ROUND_55_MUSIC =
             "M8 part F: track 10's dark stem (round 51 a, by tools/concept/audio/music_r51b.py) and its warm pad (round"
                     + " 55 b, the user's pick, by tools/concept/audio/sfx_r55f.py), the concept files on the theme's grid"
@@ -304,6 +308,18 @@ class PlaceholderAuditTest {
             Map.entry("sfx/headlight-click-r55-b.ogg", ROUND_55),
             Map.entry("sfx/choir-static-r55-b.ogg", ROUND_55),
             Map.entry("sfx/europa-black-r55-a.ogg", ROUND_55),
+            Map.entry("sfx/europa-vents-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/plume-tell-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/plume-eruption-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/bend-swish-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/torpedo-launch-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/torpedo-run-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/torpedo-impact-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/hunter-break-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/beacon-hum-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/beacon-break-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/marlin-crack-r57-a.ogg", ROUND_57),
+            Map.entry("sfx/scan-ping-r57-a.ogg", ROUND_57),
             Map.entry("music/thera-deep-dark.ogg", ROUND_55_MUSIC),
             Map.entry("music/thera-deep-warm.ogg", ROUND_55_MUSIC),
             Map.entry("music/grey-signal.ogg", ROUND_41_MUSIC),

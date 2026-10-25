@@ -1,0 +1,542 @@
+# Level 27 – Hydrothermal Vents: the level script, rendered into README.md (briefing, threat profile, layout, waves,
+# ground targets, radio, credit budget). Times are seconds from the level start. M8 part G, step G2, from the README's
+# approved hand tables (round 48) and ART-G's backdrop proposal (concept/backdrop-proposal.yaml, adopted).
+# Schema: ../../../tech/architecture/README.md#data-file-schemas
+# Keys new in M8 part G (loaded, checked and flown from step G1, drawn and played by step G4): the vents' `look:
+# heat-plume` with `shape: disc`, `enemy_damage` and `bend`; the Depth Hunter's hover `y` band with a `drift` and its
+# torpedo's `aim: facing` (its stat block); a `column` `from: rear` of hovering units; a `rear ambush` of units that hold
+# `above_ship` (the Barbfin); a `turret nest` wave's `on_ground` (the Sirens grown on a chimney stack).
+# Defaults of the gap check (m8g-gaps.md §5, pending the user's review in round 57): the plume kills the player's (G5),
+# the bend's kinds (G6), the Bulwark's aimed shell and its hazards (G7), the Sirens' ground nest (G8), the rear Barbfin
+# pairs (G9), the light (G10), the music (G11), the beacons scenery in Levels 24–26 (G13); the user's Q.1 = a (the plan
+# refits the Tail Gun on the rear at this visit: step G3's balance plan).
+# Step G2's own placements (pending review): ART-G's plume rows, target places and looks adopted unchanged; the README's
+# Nautilus `pincer` is the unit's `circle` (its only formation: a pair orbiting the ship, 15 s); the Glassfin columns
+# alternate the left and right sides (x 144 / 336), the side schools enter on one side's S-route each, alternating; the
+# Hunter columns rise at x 144, 336 and 240 (left, right, the middle); easy's Hunter columns all 3 and hard's 3 / 4 / 4
+# (the README's "columns of 3 only" and "the third column 4"); the relay beacons' hard HP the global multiplier's 78
+# (the README's 90 has no stat-block key).
+scroll_speed: 120     # the field's edge; the smokers and the garden 110, the ridge 120, the gate 130
+launch_seconds: 5
+bounty_scale: 0.79    # every bounty × 0.79: the README's hand estimate 0.78, fitted in step G2 (levelReport: typical haul on budget(27) 4,065)
+control_prompts: []
+medium: underwater    # the whole level: the water's factors, the grade, the special limits (no Airstrike, no Orbital Lance)
+threat_profile:  # the hangar intel panel (design/ui/hangar) and the README's Threat profile table
+  setting: Europa, the vent field
+  layers: [air, ground, sub]
+  density: 4
+  traits: [anti-sub, rear]
+  hazards: [heat plumes, water]
+  boss: none
+  objective: REACH THE HATCHERY GATE   # the OBJECTIVE field from sensor L1
+  varga:
+    none: The vent field. Hot water, and Rook still missing.
+    l1: Plumes bend your shots. Contacts from below and behind.
+    l2: "New: grey hulls, not Vrell. They fire up from below."
+    l3: Rear guns for the grey hulls. Anti-sub, and flares for the torpedoes.
+  notes:
+    Dominant layers: '`air` (the play plane under water: Glassfin schools, Barbfin groups, Depth Hunters, Eel Swarms, Nautilus pairs, Sirens, an Abyss Ray), `ground` (smoker chimneys with Spine Turret nests and Polyp Mortars, the relay beacons), `sub` (the Ray''s shadow and the Hunters'' rise from below)'
+    Attack directions: '{directions} (the Hunter columns and the rear ambushes from below)'
+    Density: '{density}'
+    Recommended traits: '{traits}'
+    Hazards: 'Heat plumes (burn, and bend shots that cross them); the water''s rules ([europa](../../../world/europa/README.md#under-water-rules))'
+    Boss / mid-boss: none
+    Sensor-suite detail: '**none**: Europa, the vent field, `air` + `ground`, front and rear · **L1**: + directions (front, sides, rear), density {density}, hazard "heat plumes", the objective `{objective}` and the secondary `BEACONS 0/4` · **L2**: + Depth Hunter (new, shown as "unmarked grey, human-built"), Eel Swarm, Abyss Ray, Siren, Spiral Nautilus, Glow Angler, Barbfin and Glassfin portraits; the plumes'' rings on the map · **L3**: + `anti-sub` and `rear` highlighted; the timeline strip marks the three Hunter columns (56, 96 and 126 s) and the beacon ridge (94–124 s); 1 secret'
+
+sections:  # back to back from t = 0; each speed change eased over 2 s (ramp); the whole level under water (the level's medium)
+  - name: Vent Field Edge
+    end: 24
+    atmosphere: clear
+    tiles: [vent-edge]
+    underwater_look: {ambient: 0.45, tint: 80aceb, caustics: 0.0, snow: 90, headlights: {strength: 0.8, reach: 260, angle: 70}}   # dim blue, L25's headlights
+    notes:
+      layers:
+        ground: 'the plain''s last ridge, sea-floor silt, scattered tube worms and the first black smokers'' stacks (scenery); the beacons of Levels 24–26 on the ridge''s lip (scenery).'
+        low-air: drifting silt.
+        sub: the abyss below with a warm red haze.
+      purpose: 'Dim blue, the vent glow ahead. The launch (5 s); the Glassfin and Barbfin popcorn; the water''s lesson from Level 26 refreshed in the light.'
+  - name: Black Smokers
+    end: 56
+    speed: 110
+    ramp: 2   # eased from 120 over its first 2 s
+    atmosphere: clear
+    tiles: [smoker-field]
+    underwater_look: {ambient: 0.60, tint: e0bd9e, caustics: 0.0, snow: 70, headlights: {strength: 0.0}}   # vent-lit; the amber is in the pools
+    notes:
+      layers:
+        ground: 'fields of black smokers, bacterial mats glowing amber round the vents, the Thera Deep hauler *Marlin* nose-down by a stack (t≈40, the secret), the first Spine Turret nest on a chimney (t≈34). **Heat plumes** from t=26.'
+      purpose: 'Vent glow (amber). The plumes taught alone first (t=26), then with waves; Eel Swarm and Glow Anglers in the glow.'
+  - name: Chimney Garden
+    end: 90
+    speed: 110
+    atmosphere: clear
+    tiles: [chimney-garden]
+    underwater_look: {ambient: 0.62, tint: e0bd9e, caustics: 0.0, snow: 70, headlights: {strength: 0.0}}   # vent glow, brightest
+    notes:
+      layers:
+        ground: 'a forest of chimneys 60–120 px wide, plume vents between them, the **wreck of a grey Depth Hunter** scorched by a plume (t≈66–74), Polyp Mortars on a mound (t≈80), a Siren nest on a stack (t≈81).'
+        sub: the Hunters' columns rise from here.
+      purpose: 'Vent glow, brightest. The first Depth Hunter column (t=56), hint 3 at the wreck (t=70), Sirens and Nautilus pairs between the plumes.'
+  - name: Beacon Ridge
+    end: 124
+    speed: 120
+    ramp: 2   # eased from 110
+    atmosphere: clear
+    tiles: [ridge-basalt]
+    underwater_look: {ambient: 0.45, tint: 80aceb, caustics: 0.0, snow: 90, headlights: {strength: 0.8, reach: 260, angle: 70}}   # dim blue, red-gold pulses
+    notes:
+      layers:
+        ground: 'a long ridge with four relay beacons on masts (t≈94, 101, 108, 116: **the secondary''s targets**), a Spine Turret nest on each shoulder, the supply buoy (t≈118).'
+        sub: the Abyss Ray's shadow (t≈106).
+      purpose: 'Dim blue, red-gold pulses. The beacons shot down under fire; the second Hunter column; the Ray with its Barbfin.'
+  - name: The Gate
+    end: 150
+    speed: 130
+    ramp: 2   # eased from 120
+    atmosphere: clear
+    tiles: [bowl-floor]
+    underwater_look: {ambient: 0.60, tint: 80e6d6, caustics: 0.0, snow: 60, headlights: {strength: 0.0}}   # teal, the hatchery's glow
+    notes:
+      layers:
+        ground: 'the plain falling away into a vast bowl, the **hatchery gate** ahead: a ring of grown chitin arches lit teal; the last plumes at t≈126 and 133.'
+        sub: the abyss opening.
+      purpose: 'Teal, the hatchery''s glow. The third Hunter column and the last Eel Swarm; the gate''s glow clears the vents; level end.'
+
+# The game's under-water grade and its light map (presentation only; gap check §5 G10, ART-G's proposal for round 57):
+# not dark: the dim blue of Levels 25–26 with L25's headlights in sections 1 and 4, vent-lit warm grey (0.60–0.62) in
+# sections 2–3, the hatchery's teal in section 5 (each section's own look above; this level-wide block is section 1's).
+# The amber is in the pools, not the tint: one 100 px pool per smoker, the two old beacons on the ridge's lip, the gate's
+# teal; the plumes' own pools follow their phase in the game (PlumeLooks, step G4).
+underwater_look:
+  ambient: 0.45
+  tint: 80aceb
+  caustics: 0.0
+  snow: 90
+  headlights: {strength: 0.8, reach: 260, angle: 70}
+  lights:   # scroll: the terrain's row of the pool's centre, x, radius px, colour
+    - {scroll: 160, x: 70, radius: 40, colour: ff6040}      # the old beacon 1 on the ridge's lip (its 4 s pulse is the glow piece's)
+    - {scroll: 160, x: 420, radius: 40, colour: ff6040}     # the old beacon 2 on the ridge's lip
+    - {scroll: 1080, x: 399, radius: 100, colour: ffa040}   # smoker-1
+    - {scroll: 1803, x: 71, radius: 100, colour: ffa040}    # smoker-2
+    - {scroll: 2400, x: 300, radius: 100, colour: ffa040}   # smoker-3
+    - {scroll: 3495, x: 250, radius: 100, colour: ffa040}   # smoker-4
+    - {scroll: 4268, x: 161, radius: 100, colour: ffa040}   # smoker-5
+    - {scroll: 4690, x: 56, radius: 90, colour: ffa040}     # the Marlin's smoker
+    - {scroll: 5035, x: 339, radius: 100, colour: ffa040}   # smoker-6
+    - {scroll: 5695, x: 50, radius: 100, colour: ffa040}    # smoker-7
+    - {scroll: 6303, x: 291, radius: 100, colour: ffa040}   # smoker-8
+    - {scroll: 7015, x: 149, radius: 100, colour: ffa040}   # smoker-9
+    - {scroll: 7015, x: 335, radius: 100, colour: ffa040}   # smoker-10
+    - {scroll: 7788, x: 411, radius: 100, colour: ffa040}   # smoker-11
+    - {scroll: 8555, x: 215, radius: 100, colour: ffa040}   # smoker-12
+    - {scroll: 8555, x: 439, radius: 100, colour: ffa040}   # smoker-13
+    - {scroll: 9328, x: 246, radius: 100, colour: ffa040}   # smoker-14
+    - {scroll: 9985, x: 149, radius: 100, colour: ffa040}   # smoker-15
+    - {scroll: 9985, x: 345, radius: 100, colour: ffa040}   # smoker-16
+    - {scroll: 12783, x: 401, radius: 100, colour: ffa040}  # smoker-17
+    - {scroll: 13800, x: 300, radius: 100, colour: ffa040}  # smoker-18
+    - {scroll: 17320, x: 240, radius: 240, colour: 40ffc8}  # the hatchery gate's teal
+
+# The heat plumes (the README's Hazards; gap check §1.2; Level 19's furnace vents as discs): each row's vents at the
+# README's times (a row's t = its row at the top edge), ART-G's xs in ripple order (alternating ends, neighbours ≥ 164 px
+# centre to centre: a gap of 100 px between 64 px discs). Tell 1.4 s, burn 1.6 s, every 4.5 s, 0.5 s from one vent to the
+# next; `heavy` 10 on the ship and the escort once a burst, 40 on every `air`/`low-air` unit over a burning disc (the
+# player's kill), a bullet entering a burning disc turned 25° away from its centre once. Easy tell 1.8 s, every 6 s; hard
+# tell 1.0 s, every 4 s. The first row (t=26) erupts alone: no wave reaches it before the t=26 column.
+vents:
+  look: heat-plume
+  shape: disc
+  width: 64
+  tell: 1.4
+  burn: 1.6
+  period: 4.5
+  ripple: 0.5
+  bullet: heavy
+  enemy_damage: 40
+  bend: 25
+  easy: {tell: 1.8, period: 6}
+  hard: {tell: 1.0, period: 4}
+  rows:
+    - {t: 26, xs: [120, 360]}
+    - {t: 33, xs: [230, 60]}
+    - {t: 40, xs: [250, 420]}
+    - {t: 47, xs: [420, 250, 80]}
+    - {t: 52, xs: [160, 380]}
+    - {t: 58, xs: [410, 240, 70]}
+    - {t: 65, xs: [60, 400]}
+    - {t: 72, xs: [290, 60]}
+    - {t: 79, xs: [400, 215]}
+    - {t: 85, xs: [410, 240, 70]}
+    - {t: 94, xs: [240, 420]}
+    - {t: 101, xs: [250, 80]}
+    - {t: 108, xs: [60, 420]}
+    - {t: 115, xs: [420, 240]}
+    - {t: 126, xs: [80, 250, 420]}
+    - {t: 133, xs: [400, 160]}
+
+# The README's waves at their times (draft, measured with levelReport in step G2): a wave about every 2.5 s, 219 enemies
+# at medium. Schools (`swarm`) fly an S-route over the field from the front, or in from one side (`from: sides`, edge
+# warnings), alternating; Glassfin columns run straight down the left or right side (x 144 / 336); Barbfin pairs
+# (`line abreast`), columns and pincers stop and hold above the ship (9 s); the four rear pairs (`rear ambush`) rise up the
+# ambush lanes from the bottom edge (BOTTOM warning 3 s ahead); the three Hunter columns (`column` `from: rear`) rise from
+# the bottom edge under a BOTTOM warning 3 s ahead, hold in the lower band 10 s and leave downward: one on the screen at a
+# time, and none in the Sirens' stretch (t=81). Easy: no Barbfin pincer in sections 2–3.
+waves:
+  - t: 6
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+    notes: Popcorn over the vent field's edge; the first school of the act's second half
+  - t: 8.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - {t: 11, formation: line abreast, enemy: barbfin, count: 2, from: front, notes: A firing pair}
+  - {t: 13.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 16, formation: column, enemy: glassfin, count: 6, from: front, edge: left}
+  - {t: 18.5, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 21, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, notes: 1 per side; edge warnings}
+  - t: 23.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[-60, 100], [140, 180], [330, 300], [170, 460], [240, 640]]]
+    notes: Popcorn from the left side; edge warning
+  - {t: 26, formation: column, enemy: barbfin, count: 3, from: front, notes: "Into the first plume row (t=26: no wave reaches the vents before them)"}
+  - {t: 28.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 31, formation: rear ambush, enemy: barbfin, count: 2, from: rear, notes: "Rear ambush, BOTTOM warning at t=28: up from below, the rear gun's target"}
+  - t: 33.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - {t: 36, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 38.5, formation: column, enemy: glassfin, count: 6, from: front, edge: right}
+  - t: 41
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[130, -60], [250, 140], [110, 300], [270, 460], [180, 640]]]
+    notes: Its stripe lit by the vent glow; act HP factor
+  - {t: 43.5, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 46, formation: field, enemy: glow-angler, count: 3, from: front, x: 240, size: [400, 300], spacing: 100, notes: "Hanging in the vent glow, lures lit by the plumes; lighter than Level 26 (the glow shows them)"}
+  - {t: 48.5, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, skip: [easy], notes: 1 per side; edge warnings; not on easy}
+  - t: 51
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[540, 100], [340, 180], [150, 300], [310, 460], [240, 640]]]
+    notes: Popcorn from the right side; edge warning
+  - {t: 53.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 56, formation: column, enemy: depth-hunter, count: 3, from: rear, edge: left, easy: {count: 3}, hard: {count: 3}, notes: "**First sight of the grey hulls** (BOTTOM warning at t=53): hold in the lower band and fire up; Varga names nothing"}
+  - t: 58.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - {t: 61, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 63.5, formation: column, enemy: glassfin, count: 6, from: front, edge: left}
+  - {t: 66, formation: rear ambush, enemy: barbfin, count: 2, from: rear, notes: "Rear ambush, BOTTOM warning at t=63"}
+  - {t: 68.5, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 71, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, skip: [easy], notes: 1 per side; edge warnings; not on easy}
+  - t: 73.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[-60, 100], [140, 180], [330, 300], [170, 460], [240, 640]]]
+    notes: Popcorn from the left side; edge warning
+  - {t: 76, formation: circle, enemy: spiral-nautilus, count: 2, from: front, hold: 15, notes: "Spirals through the Chimney Garden's plume gaps (the README's pincer: the pair orbits the ship); act HP factor"}
+  - {t: 78.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 81, formation: turret nest, enemy: siren, count: 2, from: front, on_ground: [360, 430], notes: "Sirens grown on a chimney stack; act HP factor; never together with a Hunter column (Q5)"}
+  - t: 83.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - {t: 86, formation: rear ambush, enemy: barbfin, count: 2, from: rear, notes: Rear ambush}
+  - {t: 88.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 91, formation: column, enemy: glassfin, count: 6, from: front, edge: right}
+  - {t: 93.5, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 96, formation: column, enemy: depth-hunter, count: 4, from: rear, edge: right, hard: {count: 4}, notes: "Second column over the Beacon Ridge (BOTTOM warning at t=93), while the first beacons burn; its last drops a shield cell"}
+  - {t: 98.5, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, notes: 1 per side; edge warnings}
+  - t: 101
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[540, 100], [340, 180], [150, 300], [310, 460], [240, 640]]]
+    notes: Popcorn from the right side; edge warning
+  - {t: 103.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - t: 106
+    groups:
+      - {formation: carrier + escorts, enemy: abyss-ray, count: 1}
+      - {formation: carrier + escorts, enemy: barbfin, count: 4}
+    from: front
+    notes: "The shadow's 1.5 s tell; four Barbfin in `circle` peel off as it rises; act HP factor; the Ray drops an overdrive"
+  - t: 108.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [320, 140], [160, 300], [310, 460], [240, 640]]]
+  - {t: 111, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - {t: 113.5, formation: column, enemy: glassfin, count: 6, from: front, edge: left}
+  - {t: 116, formation: rear ambush, enemy: barbfin, count: 2, from: rear, notes: "Rear ambush, BOTTOM warning at t=113"}
+  - {t: 118.5, formation: column, enemy: barbfin, count: 3, from: front}
+  - {t: 121, formation: pincer, enemy: barbfin, count: 2, from: sides, hold: 9, notes: 1 per side; edge warnings}
+  - t: 123.5
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: sides
+    paths: [[[-60, 100], [140, 180], [330, 300], [170, 460], [240, 640]]]
+    notes: Popcorn from the left side; edge warning
+  - {t: 126, formation: column, enemy: depth-hunter, count: 3, from: rear, easy: {count: 3}, hard: {count: 4}, notes: "The last column (BOTTOM warning at t=123), in the gate's glow; Decoy Flares or shooting the torpedoes"}
+  - {t: 128.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - t: 131
+    formation: swarm
+    enemy: glassfin
+    count: 8
+    from: front
+    paths: [[[240, -60], [160, 140], [320, 300], [170, 460], [240, 640]]]
+  - {t: 133.5, formation: line abreast, enemy: barbfin, count: 2, from: front}
+  - t: 136
+    formation: snake
+    enemy: eel-swarm
+    count: 1
+    from: front
+    paths: [[[350, -60], [230, 140], [370, 300], [210, 460], [300, 640]]]
+    notes: The last chain before the gate
+  - {t: 138.5, formation: column, enemy: glassfin, count: 6, from: front, edge: right}
+  - {t: 141, formation: column, enemy: barbfin, count: 3, from: front, notes: The last wave}
+
+ground_targets:  # at: [t, x], when it enters at the top edge and its x (ART-G's places on its stacks, mound and crests)
+  - target: chimney nest
+    section: 2
+    enemy: spine-turret
+    count: 3
+    at: [[34, 340], [34, 384], [34, 428]]   # on the nest-stack
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on a smoker chimney (t≈34)'
+      effect: Bounty {bounty} each
+  - target: Marlin
+    section: 2
+    layer: ground
+    size: [64, 64]
+    sprite: marlin-hauler   # tools/art/l27_props.py (step ART-G): the Thera Deep hauler nose-down by her stack, sealed under Vrell resin, hit, opened
+    hp: 20
+    hard: {hp: 28}
+    reveals: Marlin
+    at: [[40, 90]]   # by the marlin-stack
+    notes:
+      target: 'The hauler *Marlin* nose-down by a stack (`ground` trigger, {hp} HP, hard 28, t≈40, x 90)'
+      effect: 'The secret: frees a crate worth 100 (410)'
+  - target: mortar mound
+    section: 3
+    enemy: polyp-mortar
+    count: 2
+    at: [[80, 70], [80, 128]]   # on the mortar-mound
+    notes:
+      target: '[Polyp Mortar](../../../enemies/ground/polyp-mortar/README.md) ×{count} on a mound (t≈80)'
+      effect: Bounty {bounty} each; the mortars lob over the plumes' gaps
+  - target: relay beacons
+    section: 4
+    enemy: relay-beacon
+    count: 4
+    at: [[94, 80], [101, 400], [108, 240], [116, 90]]   # each on its ridge-crest pad
+    notes:
+      target: '**[Relay beacons](../../../enemies/ground/relay-beacon/README.md)** ×{count} on masts (t≈94 at x 80, 101 at x 400, 108 at x 240, 116 at x 90; `ground`, not hardened, 60 HP, a red-gold pulse every 4 s)'
+      effect: The secondary (3 of 4); bounty {bounty} each; a destroyed beacon goes dark
+  - target: shoulder nests
+    section: 4
+    enemy: spine-turret
+    count: 3
+    at: [[99.5, 130], [99.5, 172], [99.5, 310]]   # shoulder 1 (130, 172) and shoulder 2 (310)
+    hard: {at: [[99.5, 88], [99.5, 130], [99.5, 172], [99.5, 310], [99.5, 352]]}
+    notes:
+      target: '[Spine Turret](../../../enemies/ground/spine-turret/README.md) nest ×{count} on the ridge shoulders (t≈100); hard ×5'
+      effect: Bounty {bounty} each
+
+secrets:
+  - name: Marlin
+    crate: 100   # Act 1 terms: pays 410 with the act factor
+    radio: {speaker: Thera Deep Control, portrait: thera-deep, line: "That's the Marlin. Whatever is in her hold is yours, Aegis."}
+
+pickups:
+  - {pickup: overdrive, dropped_by: {wave: 106, enemy: abyss-ray, unit: first}}     # the Ray, when it dies
+  - {pickup: shield cell, dropped_by: {wave: 96, enemy: depth-hunter, unit: last}}  # the second Hunter column's last unit
+
+drops:  # a Thera Deep service buoy at the ridge's end releases an armour patch (a Level 25-style buoy)
+  - {t: 118, x: 240, y: 380, pickup: armour patch, sprite: survey-buoy}
+
+radio:  # trigger: t or event. No Rook lines (he is missing since Level 26: dropped, not `requires: escort`); the Bulwark has
+  # no radio. Thera Deep Control is the colony's voice of Level 23.
+  - {t: 1, speaker: Okafor, line: "Aegis Two is dark, and a Bulwark drone has his slot. Vent field ahead, Lancer. Eyes up and hands steady."}
+  - {t: 12, speaker: Varga, line: "The vents erupt in cycles. A plume burns whatever it touches and bends every shot that crosses it."}
+  - {t: 24, speaker: Thera Deep Control, portrait: thera-deep, line: "Thera Deep Control, Aegis. Our hauler Marlin went down by the smokers in week one. If you see her, say so."}
+  - {t: 52, speaker: Varga, line: "Contacts rising from below. Grey hulls, not Vrell. Stay high and shoot down their torpedoes."}
+  - {t: 70, speaker: Varga, line: "That wreck on the floor, its paint burnt off by a plume. There's a hull code under it. It's Helix Dynamics, Commander."}
+  - {t: 82.5, speaker: Okafor, line: "I'm sending it to UTC High Command now. Keep scanning, Doctor. I want every frequency."}
+  - {t: 94.5, speaker: Varga, line: "The ridge beacons carry the same Helix handshake as that hull. Take them down, Lancer."}
+  - {event: first-ray, speaker: Varga, shout: true, line: "Large contact below you! It's rising!", notes: {trigger: "The Abyss Ray's shadow (`first-ray`, t=106)"}}
+  - {t: 117, speaker: Okafor, line: "High Command answers: the drones were stolen, stand by. I'm done standing by, Aegis."}
+  - {t: 129, speaker: Varga, line: "Third column below you, and the gate's lights ahead. Flares, Lancer."}
+  - {event: level-end, speaker: Okafor, line: "The hatchery gate. Whatever Helix is hiding, it's down there. Aegis, we go in.", notes: {trigger: Level end (the closing line)}}
+
+objectives:
+  primary: reach-end
+  secondary: {escapes: relay-beacon, allowed: 1, label: BEACONS, credits: 100, name: Silence 3 of the 4 beacons}   # at least 3 of the 4 beacons destroyed before they leave the screen, on every difficulty, failed by the second beacon away (100 in Act 1 terms: pays 410); no radio line (Varga's t=94.5 line is the instruction)
+
+music:
+  track: 11           # Act 4 B "Pressure Line" (audio/music track list)
+  start_section: 2    # section 1 the bed alone (gap check §5 G11: L25's reading of "the A theme's intro"), the base stem from the smokers
+  full_section: 3     # the full mix from the chimney garden
+  stems: {5: base}    # the base stem from the gate
+  motif: {from: 56, sections: {}}   # Vorne's motif as a faint layer from the Hunters' first sight to the end
+  stem_times:         # the motif alone over the ambience while Varga reads the hull code (Level 19's wreck beat), then back
+    - {t: 68, stems: none, fade: 2}    # the stems out, the motif layer (on from t=56) alone over the bed (step G4: `motif` here would load the motif file a second time as an extra stem)
+    - {t: 82, stems: full, fade: 2}
+    - {t: 124, stems: base, fade: 2}   # the timed `full` holds past the sections, so the gate's base stem is timed too (as `stems: {5: base}`)
+    - {t: 144, stems: none, db: -40, fade: 6}   # out over the last 6 s, the motif with it
+  ambience: europa-vents   # a deep rumble of hot water, a distant black-smoker roar, a slow groan of chimneys, no bubbles (step AUD-G)
+  end_jingle: mission-complete
+
+difficulty: {}  # the plumes' easy and hard tell and period are in `vents`; the Hunter columns' easy and hard counts and the easy pincers' skip are in their waves; the formation lever sizes the rest; the stat blocks' hooks apply (the Hunter's easy torpedo every 4.5 s at 55°/s, hard 2.8 s at 85°/s; the Barbfin's easy 3 s needle, hard 2-needle burst; the Siren's and Nautilus's hooks); the Marlin's hard 28 HP is its entry
+
+briefing:
+  pages:
+    - {speaker: Okafor, image: level-27-vent-field, line: "Aegis Two is missing. Rook's beacon went dark in the black water, and a Bulwark drone flies his slot until we find him. The vents are the last stretch before the hatchery, Lancer."}
+    - {speaker: Varga, image: level-27-plume-cycle, line: "Vent plumes erupt in cycles and bend every shot that crosses them. Something grey rises from below and fires up: stay high and shoot its torpedoes down. Rear guns, and anti-sub."}
+  teaser: {speaker: Okafor, line: "Vent field ahead, and a drone in Rook's slot. Bring flares and a rear gun, Lancer."}
+
+backdrop:
+  # Presentation only: Level 27's vent field (tools/art/backdrop_l27.py, step ART-G; its `--proposal`,
+  # concept/backdrop-proposal.yaml, adopted in step G2). Re-run the generator after the data moves a section, a plume row
+  # or a target. Not dark: the grade's per-section underwater_look lights it, plus the smokers' amber pools (lights) and
+  # the plumes' pools by phase. Every piece's -glow is added over the grade on its frame clock (drawPieceGlows): the
+  # smokers' mouths, the old beacons on the ridge's lip, the Marlin's stack, the gate's teal.
+  scroll_factors: {far: 0.5, ground: 1, low-air: 1.35, high-air: 2.2}   # far unused, given as the loader asks
+  ramp: 2
+  haze_colour: 1a1410  # the vent-lit water
+  atmosphere:
+    clear: {haze: 0.0}
+  tile_sets:
+    vent-edge: {layer: ground, height: 960}   # section 1: the plain's last silt going to basalt, tube-worm clumps
+    smoker-field: {layer: ground, height: 960}   # section 2: basalt silt, sulphide staining, pale bacterial mats, worms
+    chimney-garden: {layer: ground, height: 960}   # section 3: rougher basalt, heavier crust and mats
+    ridge-basalt: {layer: ground, height: 960}   # section 4: blue-grey pillow basalt ribbed along the ridge
+    bowl-floor: {layer: ground, height: 960}   # section 5: the bowl's floor, resin-stained silt and chitin root veins
+  pieces:
+    ridge-lip: {layer: ground, size: [480, 176]}
+    relay-beacon: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    relay-beacon-glow: {layer: ground, size: [128, 192], frames: 16, fps: 4}
+    smoker-1: {layer: ground, size: [176, 176]}
+    smoker-1-glow: {layer: ground, size: [176, 176]}
+    smoker-2: {layer: ground, size: [160, 160]}
+    smoker-2-glow: {layer: ground, size: [160, 160]}
+    smoker-3: {layer: ground, size: [144, 144]}
+    smoker-3-glow: {layer: ground, size: [144, 144]}
+    smoker-4: {layer: ground, size: [144, 144]}
+    smoker-4-glow: {layer: ground, size: [144, 144]}
+    smoker-5: {layer: ground, size: [160, 160]}
+    smoker-5-glow: {layer: ground, size: [160, 160]}
+    smoker-6: {layer: ground, size: [176, 176]}
+    smoker-6-glow: {layer: ground, size: [176, 176]}
+    smoker-7: {layer: ground, size: [144, 144]}
+    smoker-7-glow: {layer: ground, size: [144, 144]}
+    smoker-8: {layer: ground, size: [160, 160]}
+    smoker-8-glow: {layer: ground, size: [160, 160]}
+    smoker-9: {layer: ground, size: [176, 176]}
+    smoker-9-glow: {layer: ground, size: [176, 176]}
+    smoker-10: {layer: ground, size: [144, 144]}
+    smoker-10-glow: {layer: ground, size: [144, 144]}
+    smoker-11: {layer: ground, size: [160, 160]}
+    smoker-11-glow: {layer: ground, size: [160, 160]}
+    smoker-12: {layer: ground, size: [144, 144]}
+    smoker-12-glow: {layer: ground, size: [144, 144]}
+    smoker-13: {layer: ground, size: [176, 176]}
+    smoker-13-glow: {layer: ground, size: [176, 176]}
+    smoker-14: {layer: ground, size: [160, 160]}
+    smoker-14-glow: {layer: ground, size: [160, 160]}
+    smoker-15: {layer: ground, size: [176, 176]}
+    smoker-15-glow: {layer: ground, size: [176, 176]}
+    smoker-16: {layer: ground, size: [144, 144]}
+    smoker-16-glow: {layer: ground, size: [144, 144]}
+    smoker-17: {layer: ground, size: [160, 160]}
+    smoker-17-glow: {layer: ground, size: [160, 160]}
+    smoker-18: {layer: ground, size: [144, 144]}
+    smoker-18-glow: {layer: ground, size: [144, 144]}
+    nest-stack: {layer: ground, size: [176, 152]}
+    marlin-stack: {layer: ground, size: [176, 176]}
+    marlin-stack-glow: {layer: ground, size: [176, 176]}
+    hull-wreck: {layer: ground, size: [144, 128]}
+    mortar-mound: {layer: ground, size: [176, 128]}
+    siren-stack: {layer: ground, size: [208, 160]}
+    ridge-crest-1: {layer: ground, size: [160, 160]}
+    ridge-crest-2: {layer: ground, size: [160, 160]}
+    ridge-crest-3: {layer: ground, size: [160, 160]}
+    ridge-crest-4: {layer: ground, size: [160, 160]}
+    ridge-shoulder-1: {layer: ground, size: [176, 128]}
+    ridge-shoulder-2: {layer: ground, size: [176, 128]}
+    seam-smoker-field: {layer: ground, size: [480, 320]}
+    seam-chimney-garden: {layer: ground, size: [480, 320]}
+    seam-ridge-basalt: {layer: ground, size: [480, 320]}
+    seam-bowl-floor: {layer: ground, size: [480, 320]}
+    hatchery-gate: {layer: ground, size: [480, 720]}
+    hatchery-gate-glow: {layer: ground, size: [480, 720]}
+  placed:
+    # the plain's last ridge with Levels 24–26's beacons on its lip (their light relay-beacon-glow, added over the grade)
+    - {piece: ridge-lip, t: 3.0, x: 240}
+    - {piece: relay-beacon, t: 3.208, x: 70}
+    - {piece: relay-beacon, t: 3.208, x: 420}
+    # the black smokers (18 chimney clusters; their mouths' -glow over the grade, their pools in `lights`)
+    - {piece: smoker-1, t: 11.25, x: 392}
+    - {piece: smoker-2, t: 17.25, x: 80}
+    - {piece: smoker-3, t: 22.25, x: 300}
+    - {piece: smoker-4, t: 31.955, x: 250}
+    - {piece: smoker-5, t: 38.955, x: 160}
+    - {piece: smoker-6, t: 45.955, x: 340}
+    - {piece: smoker-7, t: 51.955, x: 72}
+    - {piece: smoker-8, t: 57.455, x: 290}
+    - {piece: smoker-9, t: 63.955, x: 150}
+    - {piece: smoker-10, t: 63.955, x: 335}
+    - {piece: smoker-11, t: 70.955, x: 400}
+    - {piece: smoker-12, t: 77.955, x: 215}
+    - {piece: smoker-13, t: 77.955, x: 392}
+    - {piece: smoker-14, t: 84.955, x: 245}
+    - {piece: smoker-15, t: 90.94, x: 150}
+    - {piece: smoker-16, t: 90.94, x: 345}
+    - {piece: smoker-17, t: 114.25, x: 400}
+    - {piece: smoker-18, t: 122.75, x: 300}
+    # the targets' stacks: the Spine Turret nest (t=34), the Marlin's smoker (t=40), the hull-code wreck (mid-screen at
+    # t=70, x 175: Varga's t=70 line), the mortar mound (t=80), the Sirens' stack (t=81)
+    - {piece: nest-stack, t: 36.455, x: 384}
+    - {piece: marlin-stack, t: 42.455, x: 90}
+    - {piece: hull-wreck, t: 70.0, x: 175}
+    - {piece: mortar-mound, t: 82.455, x: 99}
+    - {piece: siren-stack, t: 83.455, x: 376}
+    # the beacon ridge: a crest pad under each relay beacon, the shoulders under the turret nests
+    - {piece: ridge-crest-1, t: 96.5, x: 80}
+    - {piece: ridge-crest-2, t: 103.5, x: 400}
+    - {piece: ridge-crest-3, t: 110.5, x: 240}
+    - {piece: ridge-crest-4, t: 118.5, x: 90}
+    - {piece: ridge-shoulder-1, t: 101.75, x: 130}
+    - {piece: ridge-shoulder-2, t: 101.75, x: 330}
+    # the sections' seams; exact rows
+    - {piece: seam-smoker-field, t: 26.364, x: 240}
+    - {piece: seam-chimney-garden, t: 58.455, x: 240}
+    - {piece: seam-ridge-basalt, t: 92.333, x: 240}
+    - {piece: seam-bowl-floor, t: 126.154, x: 240}
+    # the hatchery gate's ring of chitin arches, mid-screen at the level's end; its teal the -glow piece
+    - {piece: hatchery-gate, t: 150.0, x: 240}

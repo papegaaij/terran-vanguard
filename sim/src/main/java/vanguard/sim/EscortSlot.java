@@ -135,11 +135,57 @@ final class EscortSlot {
             bulwark.formUp(ship.x(), ship.y());
             return;
         }
-        bulwark.fly(ship.x(), ship.y());
-        if (bulwark.fires(s.flying() && !s.complete && Command.FIRE.in(commands))) {
-            s.fire.wingmanVolley(
-                    wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, s.force.enemies(), s.ground);
+        double goalX = bulwark.slotX(ship.x());
+        double goalY = bulwark.slotY(ship.y());
+        Missiles missiles = s.force.missiles();
+        if (s.plumes != null || missiles.size() > 0) {
+            // M8 part G: its goal out of a hot plume's disc and off a torpedo's line (as Rook keeps out of the vents).
+            BulwarkHazards hazards = bulwark.hazards();
+            if (hazards.clear(goalX, goalY, s.plumes != null ? s.vents : null, missiles.size() > 0 ? missiles : null)) {
+                goalX = hazards.x();
+                goalY = hazards.y();
+            }
         }
+        bulwark.flyTo(goalX, goalY);
+        if (bulwark.fires(s.flying() && !s.complete && Command.FIRE.in(commands))) {
+            int hunter = nearestTorpedoLauncher(bulwark.x(), bulwark.y());
+            if (hunter < 0) {
+                s.fire.wingmanVolley(
+                        wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, s.force.enemies(), s.ground);
+            } else {
+                // M8 part G (design/campaign Level 27, Escort; §5 G7): its shell aimed at the nearest Depth Hunter.
+                Enemy target = s.force.enemies().get(hunter);
+                double aim = StrictMath.atan2(target.x() - bulwark.x(), target.y() - bulwark.y());
+                s.fire.wingmanVolley(
+                        wingmanMount, bulwark.gun(), bulwark.x(), bulwark.y(), -1, s.force.enemies(), s.ground, aim);
+            }
+        }
+    }
+
+    /**
+     * M8 part G: the index of the unit nearest to (x, y) on the play field whose gun launches homing torpedoes (a Depth
+     * Hunter: a unit's homing gun, {@link EnemyGun#homing()}); -1 for none.
+     */
+    private int nearestTorpedoLauncher(double x, double y) {
+        Pool<Enemy> enemies = s.force.enemies();
+        int best = -1;
+        double bestDistance = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy enemy = enemies.get(i);
+            if (enemy.spec().gun().isEmpty()
+                    || enemy.spec().gun().get().homing().isEmpty()
+                    || !PlayField.overlaps(enemy.x(), enemy.y(), enemy.hitbox())) {
+                continue;
+            }
+            double dx = enemy.x() - x;
+            double dy = enemy.y() - y;
+            double distance = dx * dx + dy * dy;
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                best = i;
+            }
+        }
+        return best;
     }
 
     /**

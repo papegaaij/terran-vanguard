@@ -163,7 +163,8 @@ class PacingTest {
      * Composite III; M8 part B: Level 22 with Level 21's; M8 part C: Level 23 with its plan's fit, the Harpoon Torpedoes
      * and the Depth Charges at L3 and the Sonar Pulse; M8 part D: Level 24 with its plan's fit, the Pressure hull and the
      * left pod at L3; M8 part E: Level 25 with its plan's fit, the right pod at L3; M8 part F: Level 26 with its plan's
-     * fit, the harpoon at L4).
+     * fit, the harpoon at L4; M8 part G: Level 27 with its plan's fit, the Mk IV and the Tail Gun L3 on the rear, the loaner
+     * Bulwark).
      */
     static Loadout planLoadout(String key, Difficulty difficulty) {
         BiFunction<Content, Difficulty, Loadout> plan = PLAN_FITS.get(key);
@@ -192,7 +193,8 @@ class PacingTest {
             Map.entry(Level23Test.LEVEL, Level23Test::planLoadout),
             Map.entry(Level24Test.LEVEL, Level24Test::planLoadout),
             Map.entry(Level25Test.LEVEL, Level25Test::planLoadout),
-            Map.entry(Level26Test.LEVEL, Level26Test::planLoadout));
+            Map.entry(Level26Test.LEVEL, Level26Test::planLoadout),
+            Map.entry(Level27Test.LEVEL, Level27Test::planLoadout));
 
     /** Flies the level with the autopilot on {@link LevelMetrics#SEED} and measures it ({@link LevelMetrics.Pacing}). */
     static LevelMetrics.Flight fly(String key, Difficulty difficulty, Loadout loadout) {

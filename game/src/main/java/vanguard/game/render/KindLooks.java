@@ -70,6 +70,10 @@ final class KindLooks {
 
     /** M8 part F: the Glow Anglers' heading, jaw, lure, stalk, ring flash and death (built with the first sortie). */
     private AnglerLooks anglers;
+    /** M8 part G: the Depth Hunters' rise, flicker, glow, death and torpedoes (built with the first sortie). */
+    private HunterLooks hunters;
+    /** M8 part G: the relay beacons' pulse, light, break and dark mast (built with the first sortie). */
+    private BeaconLooks beacons;
 
     /** M8 part F: whether the level is a dark one ({@link DarkLight}): the units' glow-only frames are drawn. */
     private boolean dark;
@@ -218,6 +222,22 @@ final class KindLooks {
         return anglers;
     }
 
+    /** M8 part G: the Depth Hunters' looks for the sortie's enemy kinds, built once. */
+    HunterLooks hunters(Sortie sortie) {
+        if (hunters == null) {
+            hunters = new HunterLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return hunters;
+    }
+
+    /** M8 part G: the relay beacons' looks for the sortie's enemy kinds, built once. */
+    BeaconLooks beacons(Sortie sortie) {
+        if (beacons == null) {
+            beacons = new BeaconLooks(sprites, sortie.enemyKinds(), name -> LevelRenderer.pivots(files, name));
+        }
+        return beacons;
+    }
+
     /** M8 part F: a dark level ({@link DarkLight}): the Driftjellies' veins and the eels' resting stripe are drawn. */
     void dark(boolean on) {
         dark = on;
@@ -310,6 +330,9 @@ final class KindLooks {
         }
         if (anglers != null) {
             anglers.restart();
+        }
+        if (hunters != null) {
+            hunters.restart();
         }
     }
 }

@@ -395,3 +395,15 @@ deep in their mouths, the six-petal iris at the dome's crown; the same states, d
 breaking off whole) and stump; the same GIF.
 
 Closed in round 53 (user, 2026-10-23, F.4 = b): **Chosen: b** ("bone chimneys", `spawning-reef-final-r53-b`, the frames in the game since step E5), accepted as final. **Rejected: a** ("coral knot").
+
+## relay-beacon-final-r57-a
+
+Round 57, production art (M8 part G batch, step ART-G; straight to production from Levels 24-26's scenery beacon,
+[tools/art/l24_props.py](../../../../tools/art/l24_props.py) `beacon_scene`: the same human-built mast, its materials
+and 4 s pulse imported unchanged). Not a mockup: the review sheet and a loop of the files written by
+[tools/art/relay_beacon.py](../../../../tools/art/relay_beacon.py) (held until `enemies/ground/relay-beacon/data.yaml`
+exists): the 72x104 mast leaning toward the camera's top as the scenery pieces do (the grey mast with its amber hazard
+bands, the head with the cross-arm and relay pods, the red-gold lamp, three guy cables), 16 pulse frames (the lens dim
+red at rest, gold at the flash), its additive light, the destroyed dark frame (snapped at the lower band, the head lying
+across the rock, a cable whipped loose, scorch) and the break's red-gold burst and sparks. The GIF: on Level 27's
+beacon ridge under the review's vent light (section 4's dim blue, the headlights), four masts pulsing, two shot down.

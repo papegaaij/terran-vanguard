@@ -90,5 +90,5 @@ plan:
   "24": {upgrade: [[front, 3], [rear, 3], [wing_l, 3]], utility: [[Pressure hull, 1]]}   # M8 AW: the harpoon and the Depth Charges to L3 from what L23 pays, the pressure hull (2 000) and one wing pod's Micro-missiles L3
   "25": {upgrade: [[wing_r, 3]]}   # the other pod's Micro-missiles L3: 15.5 of 16 MW
   "26": {upgrade: [[front, 4]]}    # Harpoon L4 (2 000), one visit before the hand plan's L27: L26's forward DPS would be 83 of 112 (0.74) without it; 16 of 16 MW
-  "27": {core: [[generator, 3]]}   # Mk IV "Tokamak" (9 000, 20 MW since round 48 J1): 16 of 20 MW
+  "27": {core: [[generator, 3]], fit: [[rear, tail-gun]]}   # Mk IV "Tokamak" (9 000, 20 MW since round 48 J1); M8 part G (the user's Q.1 = a, round 57): the owned Tail Gun L3 on the rear again in place of the Depth Charges (kept) for the Depth Hunters and their torpedoes below the ship
   "28": {core: [[shield, 2]]}      # Shield Mk III (3 000; the Mk IV's 7 000 is not affordable) for the Abyssal Maw: 17 of 20 MW; the nanites (6 000) stay out of the typical plan

@@ -4156,3 +4156,228 @@ Use: Level 26 throughout but the scarp (where `europa-trench` takes over): the a
 Brief: total dark: a heavy pressure drone close round the ship, nothing to see and almost nothing to hear, a very far call now and then (one a loop); quieter and emptier than `europa-under`, no bubbles, no drips, a seamless loop; a real recording, heavy, nothing bubbly or popping.
 This one: a giant air pump's drone (inflating a marquee) slowed to 0.55 and muffled at 400 Hz, a submarine engine room's undulating hum slowed to 0.45 under it; once a loop a blue whale's B call far off (a deep-sea hydrophone, slowed to 0.7): rounder and more machine-like than a, 24.0 s loop.
 Edit: 24.00 s, band RMS −45.7 dB, peak −16.1 dBFS, −30.0 LUFS.
+
+## Concept round 57, step AUD-G (Level 27: the vent field's bed, the heat plumes, the bend, the Depth Hunter's torpedoes and hull break, the relay beacons, the *Marlin*, the hull-code scan)
+
+The generator is `tools/concept/audio/sfx_r57g.py` (Freesound HQ previews: the sfx are cut, slowed, glided, layered,
+smoothed, pulsed, faded, filtered and looped; only the scan ping is synthesized). Pending the user's picks in round 57.
+Passed over (read in their descriptions): "Simulated jet engine burner" (a processed gasoline burner), a "Rocket launch"
+mixed from jets, fireworks and dynamite, synthesized power-line hums (ZynAddSubFX), "Underwater Rumble" and
+"Underwater_rumble_CsG" (designed), Akkaittou's "UnderWater_Explosion" set (synthetic), the circuit-breaker "sparks"
+(wavetable synthesis), torpedo launches built with V-Station and phaser bubbles, every mud pot, hot spring and
+geothermal hydrophone recording (all bubbling), "Underwater swishes" tagged with bubbles. Reused, no entry: the Glassfin
+shatter (round 52 b), the under-water explosion family (round 52 a), the Decoy Flares' launch (special-flares-r08-a).
+
+### europa-vents-r57-a — "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it + "d_s478_blowboiler.wav" by relwin + "Metallic Groan" by hinchinbrook
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0), <https://freesound.org/people/relwin/sounds/686055/> (d_s478_blowboiler.wav by relwin, CC0 1.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0).
+Use: Level 27 throughout: the ambience bed of the vent field (a caldera variant may follow for Level 28's arena), in place of `europa-under`; under the music, and alone with Vorne's motif while Varga reads the hull code (t=68-82).
+Brief: a deep rumble of hot water, a distant black-smoker roar swelling now and then, a slow groan of the chimneys; heavy, warm and close, louder and busier than `europa-black`; no bubbles, no boiling, no hiss-pops, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a waterfall's massive roar recorded at the bottom of its gorge (High Force, Teesdale) slowed to 0.45 and muffled at 350 Hz: a deep, steady rumble of water; once a loop a steam locomotive's boiler blowdown far off (slowed to 0.5, muffled at 500 Hz) swelling in and out over 8 s, the black smoker roaring, and a bunker door's low metal groan slowed to 0.4 (the chimneys): 24.0 s loop.
+Edit: 24.00 s, band RMS −42.0 dB, peak −23.3 dBFS, −34.9 LUFS.
+
+### europa-vents-r57-b — "NIAGARA WATERS ROARING.mp3" by KevinT1001 + "G53-24-River or Rapids or Waterfall.wav" by craigsmith + "Islanti, geysir purkautuu, turistit / Iceland, geyser erupting twice, tourists reacting, talking" by YleArkisto + "Metallic Groan" by hinchinbrook
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/KevinT1001/sounds/379905/> (NIAGARA WATERS ROARING.mp3 by KevinT1001, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438835/> (G53-24-River or Rapids or Waterfall.wav by craigsmith, CC0 1.0), <https://freesound.org/people/YleArkisto/sounds/263878/> (Islanti, geysir purkautuu, turistit / Iceland, geyser erupting twice, tourists reacting, talking by YleArkisto, CC-BY 4.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0).
+Use: Level 27 throughout: the ambience bed of the vent field (a caldera variant may follow for Level 28's arena), in place of `europa-under`; under the music, and alone with Vorne's motif while Varga reads the hull code (t=68-82).
+Brief: a deep rumble of hot water, a distant black-smoker roar swelling now and then, a slow groan of the chimneys; heavy, warm and close, louder and busier than `europa-black`; no bubbles, no boiling, no hiss-pops, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: Niagara's roar (a recording layered for its deep lows) slowed to 0.4 and muffled at 300 Hz, a river's rapids slowed to 0.3 under it: rounder and more surging than a; once a loop a geyser's eruption far off (Iceland's Geysir, slowed to 0.5, muffled at 500 Hz) and the bunker door's other groan slowed to 0.35: 24.0 s loop.
+Edit: 24.00 s, band RMS −43.9 dB, peak −16.2 dBFS, −29.0 LUFS.
+
+### plume-tell-r57-a — "Earthquake  **audible only with appropriate speakers**" by MBARI_MARS + "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/MBARI_MARS/sounds/369485/> (Earthquake  **audible only with appropriate speakers** by MBARI_MARS, CC0 1.0), <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0).
+Use: Level 27 from t=26 to the gate (sections 2-5): each heat plume (16 groups of 2-3 vents rippling 0.5 s apart, each vent every 4.5 s; easy every 6 s, hard every 4 s), one per vent: the 1.4 s tell (easy 1.8, hard 1.0) as the mouth glows amber and silt lifts off it, right before the eruption (plume-eruption).
+Brief: a low rising rumble from below: the vent waking, deep and heavy, growing and rising in pitch into the eruption; no crack, no hiss-pop, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a deep-sea earthquake's rumble (a hydrophone at 900 m) gliding up from 1.0 to 1.6 and swelling, the waterfall's roar low under it rising with it (0.3 to 0.5, muffled at 500 Hz): a rumble from the sea floor climbing into a roar, 1.4 s.
+Edit: 1.40 s, the loudest 100 ms band −21.2 dB, peak −4.1 dBFS, −18.2 LUFS.
+
+### plume-tell-r57-b — "d_s478_blowboiler.wav" by relwin + "G53-24-River or Rapids or Waterfall.wav" by craigsmith
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/relwin/sounds/686055/> (d_s478_blowboiler.wav by relwin, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438835/> (G53-24-River or Rapids or Waterfall.wav by craigsmith, CC0 1.0).
+Use: Level 27 from t=26 to the gate (sections 2-5): each heat plume (16 groups of 2-3 vents rippling 0.5 s apart, each vent every 4.5 s; easy every 6 s, hard every 4 s), one per vent: the 1.4 s tell (easy 1.8, hard 1.0) as the mouth glows amber and silt lifts off it, right before the eruption (plume-eruption).
+Brief: a low rising rumble from below: the vent waking, deep and heavy, growing and rising in pitch into the eruption; no crack, no hiss-pop, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the boiler blowdown's roar slowed and gliding up from 0.3 to 0.55, muffled at 600 Hz, the rapids rising under it: more of a roar building than a's rumble, 1.4 s.
+Edit: 1.40 s, the loudest 100 ms band −21.0 dB, peak −11.3 dBFS, −22.7 LUFS.
+
+### plume-eruption-r57-a — "Islanti, geysir purkautuu, turistit / Iceland, geyser erupting twice, tourists reacting, talking" by YleArkisto + "High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo" by Hear_it_use_it + "DepthBomb_01.aif" by ZeSoundResearchInc.
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/YleArkisto/sounds/263878/> (Islanti, geysir purkautuu, turistit / Iceland, geyser erupting twice, tourists reacting, talking by YleArkisto, CC-BY 4.0), <https://freesound.org/people/Hear_it_use_it/sounds/849934/> (High Force Waterfall, Bottom of Gorge, Massive Roar, Teesdale UK - Stereo by Hear_it_use_it, CC-BY 4.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147876/> (DepthBomb_01.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 27 from t=26 to the gate (sections 2-5): each heat plume (16 groups of 2-3 vents rippling 0.5 s apart, each vent every 4.5 s; easy every 6 s, hard every 4 s), one per vent: the 1.6 s eruption, the column of shimmering water standing over the mouth (it burns and bends shots), right after its tell.
+Brief: a heavy roar of superheated water tearing upward: big and dense, a soft onset (no hiss-pop at the start), the roar dying away at the end; muffled, no bubbles, no boiling; a real recording, heavy, nothing bubbly or popping.
+This one: Iceland's Geysir erupting (a 1981 tape recording, the column itself) slowed to 0.7 and muffled at 1.8 kHz, the waterfall's roar under it slowed to 0.6 and a depth bomb's low boom: a deep, wet roar with weight under it, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −19.1 dB, peak −5.6 dBFS, −16.5 LUFS.
+
+### plume-eruption-r57-b — "d_s478_blowboiler.wav" by relwin + "NIAGARA WATERS ROARING.mp3" by KevinT1001 + "DepthBomb_05.aif" by ZeSoundResearchInc.
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/relwin/sounds/686055/> (d_s478_blowboiler.wav by relwin, CC0 1.0), <https://freesound.org/people/KevinT1001/sounds/379905/> (NIAGARA WATERS ROARING.mp3 by KevinT1001, CC0 1.0), <https://freesound.org/people/ZeSoundResearchInc./sounds/147880/> (DepthBomb_05.aif by ZeSoundResearchInc., CC0 1.0).
+Use: Level 27 from t=26 to the gate (sections 2-5): each heat plume (16 groups of 2-3 vents rippling 0.5 s apart, each vent every 4.5 s; easy every 6 s, hard every 4 s), one per vent: the 1.6 s eruption, the column of shimmering water standing over the mouth (it burns and bends shots), right after its tell.
+Brief: a heavy roar of superheated water tearing upward: big and dense, a soft onset (no hiss-pop at the start), the roar dying away at the end; muffled, no bubbles, no boiling; a real recording, heavy, nothing bubbly or popping.
+This one: the boiler blowdown (a steam locomotive blowing its boiler down) slowed to 0.6 and muffled at 1.5 kHz over Niagara's roar slowed to 0.55, a depth bomb's low boom: steadier and more steam-like than a, a jet of pressure, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −19.0 dB, peak −8.1 dBFS, −17.4 LUFS.
+
+### bend-swish-r57-a — "WATRMvmt-Samsung Galaxy Smartphone, CU_Whoosh By_Nicholas Judy_TDC" by designerschoice
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Source: <https://freesound.org/people/designerschoice/sounds/814845/> (WATRMvmt-Samsung Galaxy Smartphone, CU_Whoosh By_Nicholas Judy_TDC by designerschoice, CC-BY 4.0).
+Use: Level 27 from t=26: each bullet a plume's erupting disc turns 25° (the player's shots, enemy bullets, torpedoes; once a bullet), so very often under fire; at most a few a second (the game throttles it).
+Brief: a short, soft swish of water as the shot is turned: quick and light, well under the shots; muffled, no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: water whooshing by (a phone recording close up) slowed to 0.8 and muffled at 1.5 kHz: a soft 'fsshh', 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −27.5 dB, peak −8.7 dBFS, −inf LUFS.
+
+### bend-swish-r57-b — "WATRMvmt underwater passby slosh medium light whoosh" by jerry.berumen
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Source: <https://freesound.org/people/jerry.berumen/sounds/772895/> (WATRMvmt underwater passby slosh medium light whoosh by jerry.berumen, CC-BY 4.0).
+Use: Level 27 from t=26: each bullet a plume's erupting disc turns 25° (the player's shots, enemy bullets, torpedoes; once a bullet), so very often under fire; at most a few a second (the game throttles it).
+Brief: a short, soft swish of water as the shot is turned: quick and light, well under the shots; muffled, no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a hydrophone's under-water pass-by whoosh (water rushing past the microphone) sped to 1.1 and muffled at 1.3 kHz: rounder and more under-water than a, a 'whoom', 0.4 s.
+Edit: 0.40 s, the loudest 100 ms band −27.1 dB, peak −14.5 dBFS, −inf LUFS.
+
+### torpedo-launch-r57-a — "Cannon Fires, Take 1, Quarter Speed" by CHallSmith + "G45-18-Submarine Motor Stop.wav" by craigsmith
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/CHallSmith/sounds/870742/> (Cannon Fires, Take 1, Quarter Speed by CHallSmith, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438720/> (G45-18-Submarine Motor Stop.wav by craigsmith, CC0 1.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): each torpedo it fires up the screen (every 3.5 s a Hunter; easy 4.5, hard 2.8; up to 8 torpedoes in flight).
+Brief: a heavy pneumatic launch thump: a tube blowing a torpedo out, deep and short, the motor catching after it; built, not grown; muffled, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: an air cannon's blast (compressed air through a pipe, recorded at quarter speed) slowed to 0.8 and muffled at 1.2 kHz, a submarine motor's whirr speeding up after it: a deep 'THOOMP' and a motor spinning up, 0.9 s.
+Edit: 0.90 s, the loudest 100 ms band −23.1 dB, peak −8.7 dBFS, −21.4 LUFS.
+
+### torpedo-launch-r57-b — "Tire Bead Seater Air Blast" by j_soundeffects + "Deep Thumps.wav" by eardeer
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/j_soundeffects/sounds/863981/> (Tire Bead Seater Air Blast by j_soundeffects, CC-BY 4.0), <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): each torpedo it fires up the screen (every 3.5 s a Hunter; easy 4.5, hard 2.8; up to 8 torpedoes in flight).
+Brief: a heavy pneumatic launch thump: a tube blowing a torpedo out, deep and short, the motor catching after it; built, not grown; muffled, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a tyre bead seater's air blast (a compressed-air bazooka) slowed to 0.6 and muffled at 1 kHz, on a deep thump: a harder, airier 'WHUMP' than a, no motor, 0.8 s.
+Edit: 0.80 s, the loudest 100 ms band −23.1 dB, peak −8.0 dBFS, −21.2 LUFS.
+
+### torpedo-run-r57-a — "underwater ship propeller 3.45 PM 220920_0532.wav" by klankbeeld
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Source: <https://freesound.org/people/klankbeeld/sounds/680037/> (underwater ship propeller 3.45 PM 220920_0532.wav by klankbeeld, CC-BY 4.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): while a torpedo runs (one quiet loop for all of them, the nearest, louder as it closes on the ship; it stops with the last).
+Brief: a torpedo's thruster: a small, fast propeller and motor churning through the water, a steady muffled whirr, menacing as it nears; no bubbles, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a river boat's propeller recorded under water with hydrophones (its rhythmic churn) sped to 1.3 and muffled at 1.5 kHz: a smaller, faster screw beating, 4.0 s loop.
+Edit: 4.00 s, band RMS −38.2 dB, peak −17.4 dBFS, −32.5 LUFS.
+
+### torpedo-run-r57-b — "coast_guard_zodiac_14may2007_05.mp3" by aguasonic
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Source: <https://freesound.org/people/aguasonic/sounds/52205/> (coast_guard_zodiac_14may2007_05.mp3 by aguasonic, CC-BY 4.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): while a torpedo runs (one quiet loop for all of them, the nearest, louder as it closes on the ship; it stops with the last).
+Brief: a torpedo's thruster: a small, fast propeller and motor churning through the water, a steady muffled whirr, menacing as it nears; no bubbles, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a Coast Guard Zodiac's outboards at full throttle heard under water (a hydrophone) slowed to 0.8 and muffled at 1.4 kHz: a smoother, whining motor drone than a, 4.0 s loop.
+Edit: 4.00 s, band RMS −38.1 dB, peak −24.2 dBFS, −33.7 LUFS.
+
+### torpedo-impact-r57-a — "Underwater Impact" by deleted_user_7709760 + "heavy_mechanical_impacts_different_pitches_from_4_drawer_metal_file_cabinet_03232024" by Artninja
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/deleted_user_7709760/sounds/400793/> (Underwater Impact by deleted_user_7709760, CC-BY 3.0), <https://freesound.org/people/Artninja/sounds/751170/> (heavy_mechanical_impacts_different_pitches_from_4_drawer_metal_file_cabinet_03232024 by Artninja, CC-BY 4.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): a torpedo bursting on the ship (`heavy` 10), the Bulwark or Rook; a torpedo shot down plays the under-water `tiny` burst instead.
+Brief: a heavy hit on the hull under water: a deep pressure thud with a hard metal clang in it, short; bigger than a bullet hit; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a real under-water impact slowed to 0.75 and muffled, over a heavy metal file cabinet's impact slowed to 0.6: a deep 'DOOM' with a steel clang in it, 1.5 s.
+Edit: 1.50 s, the loudest 100 ms band −19.0 dB, peak −7.8 dBFS, −22.0 LUFS.
+
+### torpedo-impact-r57-b — "DepthBomb_04.aif" by ZeSoundResearchInc. + "door metal heavy close both sides same time impact rattle1 on offmic +bg voices.wav" by kyles
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/ZeSoundResearchInc./sounds/147873/> (DepthBomb_04.aif by ZeSoundResearchInc., CC0 1.0), <https://freesound.org/people/kyles/sounds/407301/> (door metal heavy close both sides same time impact rattle1 on offmic +bg voices.wav by kyles, CC0 1.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): a torpedo bursting on the ship (`heavy` 10), the Bulwark or Rook; a torpedo shot down plays the under-water `tiny` burst instead.
+Brief: a heavy hit on the hull under water: a deep pressure thud with a hard metal clang in it, short; bigger than a bullet hit; no splash, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a depth bomb's boom (its sub cut below 70 Hz) with a heavy steel door's slam (both halves at once, off-mic) slowed to 0.5 in it: rounder and more boom than a, the clang further off, 1.6 s.
+Edit: 1.60 s, the loudest 100 ms band −21.0 dB, peak −3.1 dBFS, −15.0 LUFS.
+
+### beacon-hum-r57-a — "Standing under large power lines during light rain buzzing" by Whats_The_Frequency_Kennett
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Source: <https://freesound.org/people/Whats_The_Frequency_Kennett/sounds/760860/> (Standing under large power lines during light rain buzzing by Whats_The_Frequency_Kennett, CC0 1.0).
+Use: Level 27's Beacon Ridge (t≈94-124): each of the four relay beacons, the secondary's targets: while a beacon lives on the screen (one quiet loop for all of them, the nearest; its lamp pulses red-gold every 4 s; it stops with the last or when the ridge scrolls off).
+Brief: a low electrical hum, the relay alive: steady, swelling once with each 4 s pulse of the lamp, low in the mix; human-built (not the Vrell songs), no crackle, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: big power lines buzzing in light rain (a real recording under them), the rain's crackle smoothed out, slowed to 0.7 and muffled at 1.2 kHz, swelling once a loop (5 dB) with the lamp: a high-voltage buzz breathing every 4 s, 4.0 s loop.
+Edit: 4.00 s, band RMS −38.1 dB, peak −18.8 dBFS, −32.5 LUFS.
+
+### beacon-hum-r57-b — "hum electric transformer in large room1.flac" by kyles
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Source: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0).
+Use: Level 27's Beacon Ridge (t≈94-124): each of the four relay beacons, the secondary's targets: while a beacon lives on the screen (one quiet loop for all of them, the nearest; its lamp pulses red-gold every 4 s; it stops with the last or when the ridge scrolls off).
+Brief: a low electrical hum, the relay alive: steady, swelling once with each 4 s pulse of the lamp, low in the mix; human-built (not the Vrell songs), no crackle, a seamless loop; a real recording, heavy, nothing bubbly or popping.
+This one: a transformer's hum in a large room slowed to 0.7 and muffled at 1 kHz, swelling the same: lower and rounder than a, a hum rather than a buzz, 4.0 s loop.
+Edit: 4.00 s, band RMS −38.0 dB, peak −17.9 dBFS, −31.1 LUFS.
+
+### beacon-break-r57-a — "Standing under large power lines during light rain buzzing" by Whats_The_Frequency_Kennett + "tree cut crack and fall in forest3 movement not thud.flac" by kyles
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/Whats_The_Frequency_Kennett/sounds/760860/> (Standing under large power lines during light rain buzzing by Whats_The_Frequency_Kennett, CC0 1.0), <https://freesound.org/people/kyles/sounds/637912/> (tree cut crack and fall in forest3 movement not thud.flac by kyles, CC0 1.0).
+Use: Level 27's Beacon Ridge (t≈94-124): each of the four relay beacons, the secondary's targets: a beacon destroyed (60 HP; with its under-water burst): the lamp goes dark and the mast breaks (the hum loop stops).
+Brief: the relay dying: its hum dropping away, a heavy mast snapping and falling; muffled, about 2 s; no sparks crackle, no pops, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the power line hum (smoothed) dying from 0.7 to 0.3, under a tree trunk's crack as it is felled and starts to fall, slowed to 0.5 and muffled at 2.5 kHz: the hum sinking away under a long splintering crack, 2.2 s.
+Edit: 2.25 s, the loudest 100 ms band −19.3 dB, peak −3.1 dBFS, −18.4 LUFS.
+
+### beacon-break-r57-b — "hum electric transformer in large room1.flac" by kyles + "Cracking, snapping, and clanging (metal can)" by Ashley12275 + "door metal heavy close both sides same time impact rattle1 on offmic +bg voices.wav" by kyles
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/kyles/sounds/453444/> (hum electric transformer in large room1.flac by kyles, CC0 1.0), <https://freesound.org/people/Ashley12275/sounds/518731/> (Cracking, snapping, and clanging (metal can) by Ashley12275, CC0 1.0), <https://freesound.org/people/kyles/sounds/407301/> (door metal heavy close both sides same time impact rattle1 on offmic +bg voices.wav by kyles, CC0 1.0).
+Use: Level 27's Beacon Ridge (t≈94-124): each of the four relay beacons, the secondary's targets: a beacon destroyed (60 HP; with its under-water burst): the lamp goes dark and the mast breaks (the hum loop stops).
+Brief: the relay dying: its hum dropping away, a heavy mast snapping and falling; muffled, about 2 s; no sparks crackle, no pops, no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: the transformer hum dying the same, under a metal can's snap and clang slowed to 0.35 (a mast snapping) and a heavy steel door's clang slowed to 0.5 as it lands: more metal than a, 2.0 s.
+Edit: 2.00 s, the loudest 100 ms band −19.0 dB, peak −4.6 dBFS, −20.3 LUFS.
+
+### marlin-crack-r57-a — "tree cut crack and fall in forest1 mono.flac" by kyles + "Deep Thumps.wav" by eardeer
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/kyles/sounds/637910/> (tree cut crack and fall in forest1 mono.flac by kyles, CC0 1.0), <https://freesound.org/people/eardeer/sounds/400997/> (Deep Thumps.wav by eardeer, CC0 1.0).
+Use: Level 27 at t≈40, once a run (the secret): the hauler *Marlin* destroyed (20 HP, 28 on hard), the Vrell resin sealing her hold cracking open; her crate floats up.
+Brief: a thick skin of resin cracking open: a deep, splintering crack, heavy and dull, with the hull under it; muffled, about 1.5 s; no glassy tinkle, no pops; a real recording, heavy, nothing bubbly or popping.
+This one: a tree trunk cracking as it is felled (the trunk's last crack) slowed to 0.45 and muffled at 2 kHz, on a deep thump: a deep, woody 'KRRRACK', 1.6 s.
+Edit: 1.60 s, the loudest 100 ms band −20.0 dB, peak −5.3 dBFS, −19.1 LUFS.
+
+### marlin-crack-r57-b — "ice cracking breaking up on river styrofoam squeaking awesome great detail1 stereo XY.flac" by kyles + "Metallic Groan" by hinchinbrook
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/kyles/sounds/637606/> (ice cracking breaking up on river styrofoam squeaking awesome great detail1 stereo XY.flac by kyles, CC0 1.0), <https://freesound.org/people/hinchinbrook/sounds/496836/> (Metallic Groan by hinchinbrook, CC0 1.0).
+Use: Level 27 at t≈40, once a run (the secret): the hauler *Marlin* destroyed (20 HP, 28 on hard), the Vrell resin sealing her hold cracking open; her crate floats up.
+Brief: a thick skin of resin cracking open: a deep, splintering crack, heavy and dull, with the hull under it; muffled, about 1.5 s; no glassy tinkle, no pops; a real recording, heavy, nothing bubbly or popping.
+This one: a river's ice cracking and breaking up (a field recording, close) slowed to 0.4 and muffled at 2.2 kHz, the bunker door's metal groan slowed under it (the hull): a crackling, glassier break than a, 1.6 s.
+Edit: 1.60 s, the loudest 100 ms band −20.0 dB, peak −4.7 dBFS, −21.0 LUFS.
+
+### hunter-break-r57-a — "Scrap metal dropping / crashing" by SamsterBirdies + "G45-18-Submarine Motor Stop.wav" by craigsmith
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/SamsterBirdies/sounds/587443/> (Scrap metal dropping / crashing by SamsterBirdies, CC0 1.0), <https://freesound.org/people/craigsmith/sounds/438720/> (G45-18-Submarine Motor Stop.wav by craigsmith, CC0 1.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): each one destroyed, over its `medium` under-water burst (the explosion family's a): its hull breaking up, grey debris and an oil bloom; no wreck.
+Brief: a machine breaking up: metal crumpling and tearing, its motor dying; it must sound built, not grown (no screech); muffled, about 2 s; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: a pile of scrap metal dropped and crashing on concrete, slowed to 0.55 and muffled at 2.2 kHz, a submarine's motors running down under it: a heavy crumpling crash and a dying whine, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −19.1 dB, peak −8.0 dBFS, −19.1 LUFS.
+
+### hunter-break-r57-b — "Car Crash (with Glass)" by magnuswaker + "heavy_mechanical_impacts_different_pitches_from_4_drawer_metal_file_cabinet_03232024" by Artninja
+
+Proposed (round 57), cut from the HQ previews by `tools/concept/audio/sfx_r57g.py`.
+Sources: <https://freesound.org/people/magnuswaker/sounds/592388/> (Car Crash (with Glass) by magnuswaker, CC0 1.0), <https://freesound.org/people/Artninja/sounds/751170/> (heavy_mechanical_impacts_different_pitches_from_4_drawer_metal_file_cabinet_03232024 by Artninja, CC-BY 4.0).
+Use: Level 27 (and Level 28 as escorts): each Depth Hunter (10 at L27, in columns of 4 rising from below): each one destroyed, over its `medium` under-water burst (the explosion family's a): its hull breaking up, grey debris and an oil bloom; no wreck.
+Brief: a machine breaking up: metal crumpling and tearing, its motor dying; it must sound built, not grown (no screech); muffled, about 2 s; no bubbles; a real recording, heavy, nothing bubbly or popping.
+This one: PC side panels dropped on each other (a 'car crash' foley) slowed to 0.5 and muffled at 2 kHz, a heavy metal file cabinet's double impact slowed in it: a tighter, more panel-like crunch than a, no motor, 1.8 s.
+Edit: 1.80 s, the loudest 100 ms band −19.1 dB, peak −6.1 dBFS, −19.2 LUFS.
+
+### scan-ping-r57-a — synthesized
+
+Proposed (round 57), synthesized by `tools/concept/audio/sfx_r57g.py` (no third-party source).
+Use: Level 27 at t≈68, once a run: Varga's hull-code scan of the wreck as it scrolls in (her line at t=70; Vorne's motif alone over the ambience).
+Brief: a single scanner ping: clean, clear and short with a soft water tail, an instrument, not the Sonar Pulse's sonar ping; well under the voice and the motif (synthesized: a UI-like sound).
+This one: synthesized: one clean 1.5 kHz ping (4 ms attack, 0.22 s decay) with a soft second partial, through a 1.6 s water reverb: a bright 'pinnng', 2.2 s with its tail.
+Edit: 2.20 s, the loudest 100 ms band −24.0 dB, peak −17.5 dBFS, −27.1 LUFS.
+
+### scan-ping-r57-b — synthesized
+
+Proposed (round 57), synthesized by `tools/concept/audio/sfx_r57g.py` (no third-party source).
+Use: Level 27 at t≈68, once a run: Varga's hull-code scan of the wreck as it scrolls in (her line at t=70; Vorne's motif alone over the ambience).
+Brief: a single scanner ping: clean, clear and short with a soft water tail, an instrument, not the Sonar Pulse's sonar ping; well under the voice and the motif (synthesized: a UI-like sound).
+This one: synthesized: a soft rising sweep (600 to 1800 Hz in 0.28 s) landing on a glassy two-tone ping (1800 and 2700 Hz), through the same reverb: a 'whee-ping', more of a scan locking on, 2.2 s.
+Edit: 2.20 s, the loudest 100 ms band −24.0 dB, peak −16.4 dBFS, −25.0 LUFS.

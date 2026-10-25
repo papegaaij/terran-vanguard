@@ -73,6 +73,9 @@ final class Attempts {
             s.sled.reset();
         }
         s.vents.reset();
+        if (s.plumes != null) {
+            s.plumes.reset();
+        }
         for (Tow tow : s.tows) {
             tow.reset();
         }

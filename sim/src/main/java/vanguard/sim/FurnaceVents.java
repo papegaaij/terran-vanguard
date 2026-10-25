@@ -11,6 +11,9 @@ import java.util.List;
  * clock, so a retry replays it exactly; the vents are cold from the arena on (the level clock at the arena section's
  * start) and once a row has left the bottom edge.
  *
+ * <p>M8 part G (design/campaign Level 27, the heat plumes): a disc row's grates are plume mouths, whose flame is a disc
+ * (it hits a hull it touches, the Bulwark's too); their burns of the swimmers and their bends are {@link HeatPlumes}'.
+ *
  * <p>The grates are numbered through the level, row by row in time order ({@link #grate(int, int)}); the presentation
  * reads each one's {@link #phase(int)}, {@link #progress(int)} and place.
  */
@@ -29,6 +32,11 @@ public final class FurnaceVents implements Hashed {
     static final int SHIP = 1;
     /** {@link #strike}: Rook. */
     static final int ROOK = 2;
+    /**
+     * M8 part G: {@link #strike}: the Bulwark, which only a plume's disc burns (the square grates and geysers pass it,
+     * as before).
+     */
+    static final int BULWARK = 4;
 
     private final HazardSpec.VentRow[] rows;
     private final int[] rowTicks;
@@ -234,17 +242,62 @@ public final class FurnaceVents implements Hashed {
         return rows[grateRow[g]].damage();
     }
 
+    /** Whether grate {@code g}'s flame touches {@code hull} at (hx, hy): its disc for a plume, else its box. */
+    private boolean touches(int g, Hull hull, double hx, double hy) {
+        if (disc(g)) {
+            return hull.touchesDisc(hx, hy, x(g), y(g), radius(g));
+        }
+        return hull.overlaps(hx, hy, box(g), x(g), y(g));
+    }
+
+    /** M8 part G: whether grate {@code g} is a heat plume's mouth: its flame is a disc ({@link HazardSpec.VentRow#disc()}). */
+    public boolean disc(int g) {
+        return rows[grateRow[g]].disc();
+    }
+
+    /** M8 part G: the radius of grate {@code g}'s disc (half its row's width), px. */
+    public double radius(int g) {
+        return rows[grateRow[g]].width() / 2;
+    }
+
+    /** M8 part G: whether any row is a plume's ({@link #disc(int)}). */
+    boolean plumes() {
+        for (HazardSpec.VentRow row : rows) {
+            if (row.disc()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** M8 part G: the damage grate {@code g}'s plume deals each unit over it once per burst; 0 for a grate. */
+    double enemyDamage(int g) {
+        return rows[grateRow[g]].enemyDamage();
+    }
+
+    /** M8 part G: how far grate {@code g}'s plume bends what enters it, radians; 0 for a grate. */
+    double bend(int g) {
+        return rows[grateRow[g]].bendRadians();
+    }
+
+    /** M8 part G: whether grate {@code g}'s flame stands now (its burn, after its tell). */
+    boolean burning(int g) {
+        int into = cycle(g);
+        return into >= tellTicks[grateRow[g]];
+    }
+
     /**
      * The first grate from {@code from} on whose burning flame touches {@code hull} at (hx, hy) and has not hit {@code
-     * who} ({@link #SHIP}, {@link #ROOK}) in this burst; it is marked as hit. -1 for none.
+     * who} ({@link #SHIP}, {@link #ROOK}, M8 part G: {@link #BULWARK}, a plume's disc only) in this burst; it is
+     * marked as hit. -1 for none. M8 part G: a plume's flame is its disc ({@link #disc(int)}), not its box.
      */
     int strike(Hull hull, double hx, double hy, int who, int from) {
         for (int g = from; g < grateRow.length; g++) {
-            if ((hits[g] & who) != 0) {
+            if ((hits[g] & who) != 0 || (who == BULWARK && !disc(g))) {
                 continue;
             }
             int into = cycle(g);
-            if (into < tellTicks[grateRow[g]] || !hull.overlaps(hx, hy, box(g), x(g), y(g))) {
+            if (into < tellTicks[grateRow[g]] || !touches(g, hull, hx, hy)) {
                 continue;
             }
             hits[g] |= who;

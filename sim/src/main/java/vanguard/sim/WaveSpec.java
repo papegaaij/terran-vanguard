@@ -98,11 +98,13 @@ public record WaveSpec(
                     "a pursuit breaks off after it entered: " + pursuit.get().breakAt());
         }
         java.util.Objects.requireNonNull(mount);
-        if (mount.isPresent() && mount.get().wall() && entry != Entry.FRONT) {
-            throw new IllegalArgumentException("a wall's nests come in with the ground, at the front: " + entry);
+        if (mount.isPresent() && (mount.get().wall() || mount.get().ground()) && entry != Entry.FRONT) {
+            throw new IllegalArgumentException(
+                    "a wall's or the ground's nests come in with the ground, at the front: " + entry);
         }
         if (mount.isPresent()
                 && !mount.get().wall()
+                && !mount.get().ground()
                 && (entry != Entry.SIDES || (edge != Edge.LEFT && edge != Edge.RIGHT))) {
             throw new IllegalArgumentException("a cave wave enters from its notch's side edge: " + entry + " " + edge);
         }
@@ -181,6 +183,16 @@ public record WaveSpec(
         return withMount(Mount.wall(opposite));
     }
 
+    /**
+     * M8 part G (design/campaign Level 27, the Sirens on a chimney stack; §5 G8): this wave's units are nests standing on
+     * the ground at {@code xs} (px from the left; unit i at xs[i]), all at one row: they come in with the ground at the
+     * top edge at the wave's time and scroll with it, facing down the screen; unit i's song starts i × {@link
+     * WallMounts#STAGGER_SECONDS} s behind the first's (the phase rule). No terrain needed.
+     */
+    public WaveSpec withGroundNests(List<Double> xs) {
+        return withMount(Mount.ground(xs));
+    }
+
     private WaveSpec withMount(Mount point) {
         return new WaveSpec(
                 t,
@@ -212,12 +224,34 @@ public record WaveSpec(
      *
      * @param cave the notch they swim out of (an index into {@link Terrain#notches()}); -1 for nests on the walls
      * @param opposite nests only: in pairs across the trench at one row (else staggered)
+     * @param xs M8 part G: nests standing on the ground at these xs, px from the left, one per unit ({@link
+     *     WaveSpec#withGroundNests}); empty for the walls' nests and a cave's units
      */
-    public record Mount(int cave, boolean opposite) {
+    public record Mount(int cave, boolean opposite, List<Double> xs) {
         public Mount {
-            if (cave < -1 || (cave >= 0 && opposite)) {
-                throw new IllegalArgumentException("a mount is a cave's notch or the walls' nests: " + cave);
+            xs = List.copyOf(xs);
+            if (cave < -1 || (cave >= 0 && opposite) || (!xs.isEmpty() && (cave >= 0 || opposite))) {
+                throw new IllegalArgumentException(
+                        "a mount is a cave's notch, the walls' nests or the ground's: " + cave);
             }
+        }
+
+        /** M8 part E: a cave's notch or the walls' nests. */
+        public Mount(int cave, boolean opposite) {
+            this(cave, opposite, List.of());
+        }
+
+        /** M8 part G: nests standing on the ground at {@code xs}. */
+        public static Mount ground(List<Double> xs) {
+            if (xs.isEmpty()) {
+                throw new IllegalArgumentException("ground nests stand at their xs");
+            }
+            return new Mount(-1, false, xs);
+        }
+
+        /** M8 part G: whether its units are nests standing on the ground at {@link #xs()}. */
+        public boolean ground() {
+            return !xs.isEmpty();
         }
 
         /** Out of the cave {@code notch}. */
@@ -233,9 +267,9 @@ public record WaveSpec(
             return new Mount(-1, opposite);
         }
 
-        /** Whether its units are nests on the walls (else they swim out of a cave). */
+        /** Whether its units are nests on the walls (else they swim out of a cave or stand on the ground). */
         public boolean wall() {
-            return cave < 0;
+            return cave < 0 && xs.isEmpty();
         }
     }
 

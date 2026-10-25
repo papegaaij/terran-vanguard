@@ -35,6 +35,8 @@ public final class Bulwark {
     private final double drawRadiusSquared;
     /** The level's medium (the drag); null in the air. */
     private Medium medium;
+    /** M8 part G: where its goal moves to keep out of the plumes and the torpedoes' lines. */
+    private final BulwarkHazards hazards;
 
     private double x;
     private double y;
@@ -61,6 +63,7 @@ public final class Bulwark {
         hull = new Hull(List.of(new Hull.Part(0, 0, spec.hitbox())));
         accelerationStep = spec.speed() / ACCELERATION_SECONDS * SimStep.SECONDS;
         limit = spec.size() / 2 + EDGE_GAP;
+        hazards = new BulwarkHazards(spec.hitbox(), limit);
         drawRadiusSquared = spec.drawRadius() * spec.drawRadius();
         reset(spec.armour(), Ship.START_X, Ship.START_Y);
     }
@@ -104,16 +107,26 @@ public final class Bulwark {
         vx = vy = 0;
     }
 
-    private double slotX(double shipX) {
+    /** Its slot's x beside the ship at {@code shipX} (M8 part G: the goal its hazards may move). */
+    double slotX(double shipX) {
         return Math.clamp(shipX + spec.side().sign() * spec.slot().x(), limit, PlayField.WIDTH - limit);
     }
 
-    private double slotY(double shipY) {
+    /** Its slot's y beside the ship at {@code shipY}. */
+    double slotY(double shipY) {
         return Math.clamp(shipY - spec.slot().y(), limit, PlayField.HEIGHT - limit);
     }
 
     /** One step: it flies toward its slot beside the ship at (shipX, shipY); its gun's interval runs. */
     void fly(double shipX, double shipY) {
+        flyTo(slotX(shipX), slotY(shipY));
+    }
+
+    /**
+     * One step toward (goalX, goalY) (its slot, or M8 part G: its slot moved out of a plume or a torpedo's line,
+     * {@link BulwarkHazards}); its gun's interval runs.
+     */
+    void flyTo(double goalX, double goalY) {
         if (cooldown > 0) {
             cooldown--;
         }
@@ -123,8 +136,8 @@ public final class Bulwark {
         if (destroyed) {
             return;
         }
-        double ex = slotX(shipX) - x;
-        double ey = slotY(shipY) - y;
+        double ex = goalX - x;
+        double ey = goalY - y;
         double distance = Math.sqrt(ex * ex + ey * ey);
         double wantedX = 0;
         double wantedY = 0;
@@ -245,6 +258,11 @@ public final class Bulwark {
 
     Hull hull() {
         return hull;
+    }
+
+    /** M8 part G: its hazards' goal finder ({@link BulwarkHazards}). */
+    BulwarkHazards hazards() {
+        return hazards;
     }
 
     /** Its generator's state (the boss checkpoint keeps it). */

@@ -319,6 +319,22 @@ val copyPlaceholderSounds = tasks.register<JavaExec>("copyPlaceholderSounds") {
         "headlight-click-r55-b.ogg",
         "choir-static-r55-b.ogg",
         "europa-black-r55-a.ogg",
+        // M8 part G: round 57's proposals for Level 27 (CC0/CC-BY Freesound HQ previews, CREDITS rows from step AUD-G; the
+        // scan ping synthesized), their a variants as stand-ins until the user's pick, which may swap the file: the vent
+        // field's bed, the plume's tell and eruption, the bend's swish, the Depth Hunter's torpedo launch, run and impact
+        // and its hull break, the relay beacons' hum and break, the Marlin's resin crack, Varga's scan ping.
+        "europa-vents-r57-a.ogg",
+        "plume-tell-r57-a.ogg",
+        "plume-eruption-r57-a.ogg",
+        "bend-swish-r57-a.ogg",
+        "torpedo-launch-r57-a.ogg",
+        "torpedo-run-r57-a.ogg",
+        "torpedo-impact-r57-a.ogg",
+        "hunter-break-r57-a.ogg",
+        "beacon-hum-r57-a.ogg",
+        "beacon-break-r57-a.ogg",
+        "marlin-crack-r57-a.ogg",
+        "scan-ping-r57-a.ogg",
     )
 }
 

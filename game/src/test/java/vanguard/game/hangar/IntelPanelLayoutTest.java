@@ -422,8 +422,16 @@ class IntelPanelLayoutTest {
                     + (strip.right() - strip.left() - 4) * rays.get(r).floatValue() / (float) intel.seconds();
             assertTrue(Math.abs(ticks.get(r).x() - at) <= 2, rays.get(r) + " s: " + ticks.get(r) + " vs " + at);
         }
+        // M8 part G (step G2): Level 27's one Ray (t=106) is marked too; its strip is step G4's (IntelPanelLayoutTest).
+        String level27 = "act-4-deep-water/level-27-hydrothermal-vents";
+        assertEquals(
+                List.of(106.0),
+                Intel.of(CONTENT, level27, 3).marks().stream()
+                        .filter(mark -> mark.kind() == Intel.Mark.Kind.RAY)
+                        .map(Intel.Mark::from)
+                        .toList());
         for (String other : CONTENT.levels().keySet()) {
-            if (!other.equals(level)) {
+            if (!other.equals(level) && !other.equals(level27)) {
                 assertTrue(
                         Intel.of(CONTENT, other, 3).marks().stream()
                                 .noneMatch(mark -> mark.kind() == Intel.Mark.Kind.RAY),
@@ -516,6 +524,61 @@ class IntelPanelLayoutTest {
             assertEquals(
                     lure,
                     measure.parts.stream().anyMatch(part -> part.what().contains(IntelPanel.NOT_A_PICKUP)),
+                    other);
+        }
+    }
+
+    /**
+     * M8 part G (design/campaign Level 27, Threat profile): from sensor L2 the Depth Hunter is tagged unmarked grey under
+     * the enemies' names (only a level with Hunters is tagged); at L3 the strip marks the three Hunter columns (56, 96,
+     * 126 s) with hull-grey ticks and the four relay beacons on the ridge (94–116 s) as the secondary's red marks.
+     */
+    @Test
+    void level27sIntelTagsTheGreyHullsAndMarksTheColumnsAndBeacons() {
+        String level = CONTENT.levelKey(27).orElseThrow();
+        Intel intel = Intel.of(CONTENT, level, 3);
+        assertEquals(
+                List.of(56.0, 96.0, 126.0),
+                intel.marks().stream()
+                        .filter(mark -> mark.kind() == Intel.Mark.Kind.COLUMN)
+                        .map(Intel.Mark::from)
+                        .toList());
+        assertEquals(
+                List.of(94.0, 101.0, 108.0, 116.0),
+                intel.marks().stream()
+                        .filter(mark -> mark.kind() == Intel.Mark.Kind.TARGET)
+                        .map(Intel.Mark::from)
+                        .toList(),
+                "the beacon ridge");
+        for (int sensor = 0; sensor <= 3; sensor++) {
+            Measure measure = assertFits(
+                    Intel.of(CONTENT, level, sensor),
+                    CONTENT.level(level).briefing().teaser(),
+                    level,
+                    "L" + sensor);
+            boolean tagged = measure.parts.stream()
+                    .anyMatch(part -> part.what().equals("text \"" + IntelPanel.UNMARKED_GREY + "\""));
+            assertEquals(sensor >= 2, tagged, "the grey hulls' tag at L" + sensor);
+            long columns = measure.fills.stream()
+                    .filter(fill -> fill.colour().equals(IntelPanel.HULL_GREY))
+                    .count();
+            assertEquals(sensor >= 3 ? 3 : 0, columns, "the columns' ticks at L" + sensor);
+        }
+        for (String other : CONTENT.levels().keySet()) {
+            if (other.equals(level)) {
+                continue;
+            }
+            Intel otherIntel = Intel.of(CONTENT, other, 3);
+            assertTrue(otherIntel.marks().stream().noneMatch(mark -> mark.kind() == Intel.Mark.Kind.COLUMN), other);
+            Measure measure = new Measure();
+            IntelPanel.layout(
+                    measure, otherIntel, CONTENT.level(other).briefing().teaser(), other);
+            boolean hunters = otherIntel.enemies().stream()
+                    .map(vanguard.game.render.Portraits::slug)
+                    .anyMatch(IntelPanel.UNMARKED::contains);
+            assertEquals(
+                    hunters,
+                    measure.parts.stream().anyMatch(part -> part.what().contains(IntelPanel.UNMARKED_GREY)),
                     other);
         }
     }

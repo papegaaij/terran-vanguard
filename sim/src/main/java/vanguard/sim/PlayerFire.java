@@ -1041,6 +1041,23 @@ final class PlayerFire {
             int target,
             Pool<Enemy> enemies,
             Pool<GroundObject> ground) {
+        wingmanVolley(mount, weapon, x, y, target, enemies, ground, 0);
+    }
+
+    /**
+     * As {@link #wingmanVolley(int, WeaponSpec, double, double, int, Pool, Pool)}, its straight shots turned by {@code
+     * aim} radians clockwise from straight up (M8 part G: the Bulwark's shell aimed at a Depth Hunter); 0 as its muzzles
+     * point.
+     */
+    void wingmanVolley(
+            int mount,
+            WeaponSpec weapon,
+            double x,
+            double y,
+            int target,
+            Pool<Enemy> enemies,
+            Pool<GroundObject> ground,
+            double aim) {
         List<WeaponSpec.Muzzle> muzzles = weapon.muzzles();
         double sumX = 0;
         double sumY = 0;
@@ -1067,7 +1084,7 @@ final class PlayerFire {
             } else if (weapon.delivery() == WeaponSpec.Delivery.DROPPED) {
                 shot.lob(weapon, mount, mx, my, mx, my);
             } else {
-                shot.fire(weapon, mount, mx, my, muzzle.angle());
+                shot.fire(weapon, mount, mx, my, aim == 0 ? muzzle.angle() : muzzle.angle() + aim);
                 if (weapon.delivery() == WeaponSpec.Delivery.HOMING) {
                     shot.lock(target);
                 }

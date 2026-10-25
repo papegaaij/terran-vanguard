@@ -15,6 +15,7 @@ import vanguard.content.SectionsBlock.UnderwaterLook;
 import vanguard.sim.Bulwark;
 import vanguard.sim.Enemy;
 import vanguard.sim.EnemySpec;
+import vanguard.sim.FurnaceVents;
 import vanguard.sim.Hitbox;
 import vanguard.sim.PlayField;
 import vanguard.sim.Sortie;
@@ -106,6 +107,8 @@ final class DarkLight implements Disposable {
 
     private final Texture plateauTexture;
     private final TextureRegion plateau;
+    /** M8 part G: whether the level's vents are heat plumes, whose mouths throw an amber pool by their phase. */
+    private final boolean plumes;
     /** Rook's loss's looks: his lamp's flicker and place as he spins down; null before {@link #rookLoss}. */
     private RookLossLooks rookLoss;
     /** Per enemy kind its glow pool's index in {@link #GLOWS} (-1 none), built at the first draw. */
@@ -131,6 +134,7 @@ final class DarkLight implements Disposable {
             lightColour[i][2] = (rgb & 0xff) / 255f;
         }
         escortLamp = look.escortLamp().map(Double::floatValue).orElse(0f);
+        plumes = PlumeLooks.plumes(level);
         plateauTexture = plateauTexture();
         plateau = new TextureRegion(plateauTexture);
     }
@@ -143,6 +147,35 @@ final class DarkLight implements Disposable {
     /** Whether the level is a dark level: a section's under-water look with static lights or an escort's lamp. */
     static boolean dark(LevelData level) {
         return darkLook(level).isPresent();
+    }
+
+    /**
+     * M8 part G: a section's ambient (or its ramp's end) below this is black water (Level 26's 6-20 %); Level 27's vent
+     * field (45-62 %) has static lights but is not dark (m8g-gaps.md §5 G10): its units keep their plain looks and sounds.
+     */
+    static final double BLACK_AMBIENT = 0.3;
+
+    /**
+     * M8 part G: whether the level's lights fall in black water: a dark level ({@link #dark}) with a section's ambient
+     * (or its ramp's end) below {@value #BLACK_AMBIENT}; the units' glow-only frames and the dark's sounds (the crown
+     * hum, the headlights' clicks) only there.
+     */
+    static boolean blackWater(LevelData level) {
+        if (!dark(level)) {
+            return false;
+        }
+        for (int i = 0; i < level.sections().size(); i++) {
+            Optional<UnderwaterLook> look = level.underwaterLookOf(i);
+            if (look.isPresent()
+                    && (look.get().ambient() < BLACK_AMBIENT
+                            || look.get()
+                                    .ramp()
+                                    .map(ramp -> ramp.to() < BLACK_AMBIENT)
+                                    .orElse(false))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static Optional<UnderwaterLook> darkLook(LevelData level) {
@@ -243,7 +276,32 @@ final class DarkLight implements Disposable {
             }
         }
         drawLamp(batch, grade, sortie, alpha);
+        if (plumes) {
+            drawPlumes(batch, grade, sortie, scroll);
+        }
         batch.setColor(Color.WHITE);
+    }
+
+    /**
+     * M8 part G: each heat plume's amber pool on its mouth ({@link PlumeLooks#poolLight}: rising through the tell, full
+     * while it burns, gone when cold), {@value PlumeLooks#POOL_REACH} times its disc's radius.
+     */
+    private void drawPlumes(SpriteBatch batch, UnderwaterGrade grade, Sortie sortie, double scroll) {
+        FurnaceVents vents = sortie.vents();
+        double lag = scroll - sortie.groundScroll();
+        for (int g = 0; g < vents.grates(); g++) {
+            if (!vents.present(g)) {
+                continue;
+            }
+            float light = PlumeLooks.poolLight(vents.phase(g), vents.progress(g));
+            double y = vents.y(g) - lag;
+            float radius = (float) (PlumeLooks.POOL_REACH * vents.radius(g));
+            if (light <= 0 || y < -radius || y > PlayField.HEIGHT + radius) {
+                continue;
+            }
+            tint(batch, grade, y, PlumeLooks.AMBER.r, PlumeLooks.AMBER.g, PlumeLooks.AMBER.b, light);
+            grade.pool(batch, vents.x(g), y, radius);
+        }
     }
 
     private void glowPool(

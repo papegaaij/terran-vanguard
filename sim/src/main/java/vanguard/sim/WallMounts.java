@@ -37,7 +37,7 @@ public final class WallMounts {
     /** Past the mouth its swim goes straight on this far before it turns toward its formation's point, px. */
     static final double LEAD = 16;
 
-    /** No walls: a mounted wave cannot be planned. */
+    /** No level: a mounted wave cannot be planned. */
     static final WallMounts NONE = new WallMounts(null);
 
     /**
@@ -47,8 +47,13 @@ public final class WallMounts {
      * @param delaySeconds a nest's song offset after its first ring's time (the phase rule); NaN for a cave unit
      * @param swimOut how far along its path a cave unit is out of its notch, px (its hover may stop past it); 0 for a
      *     nest
+     * @param ground M8 part G: a nest standing on the ground (facing down the screen), not on a wall
      */
-    record Placed(boolean left, double delaySeconds, double swimOut) {
+    record Placed(boolean left, double delaySeconds, double swimOut, boolean ground) {
+        Placed(boolean left, double delaySeconds, double swimOut) {
+            this(left, delaySeconds, swimOut, false);
+        }
+
         /** Whether it is a wall's nest (else it swims out of a cave). */
         boolean nest() {
             return !Double.isNaN(delaySeconds);
@@ -62,9 +67,9 @@ public final class WallMounts {
         this.script = script;
     }
 
-    /** The mounts of {@code script}'s level: its terrain and scroll (none without terrain). */
+    /** The mounts of {@code script}'s level: its terrain and scroll (M8 part G: its ground's nests without terrain). */
     static WallMounts of(LevelScript script) {
-        return script.ground().terrain().isPresent() ? new WallMounts(script) : NONE;
+        return new WallMounts(script);
     }
 
     /**
@@ -73,7 +78,12 @@ public final class WallMounts {
      */
     void plan(WaveSpec wave, int kind, SplitMix64 rng, List<Spawn> out, Optional<Formations.Span> span) {
         WaveSpec.Mount mount = wave.mount().orElseThrow();
-        if (script == null) {
+        if (script != null && mount.ground()) {
+            // M8 part G: nests on the ground at their xs (Level 27's chimney stack), no walls needed.
+            groundNests(wave, mount, kind, out);
+            return;
+        }
+        if (script == null || script.ground().terrain().isEmpty()) {
             throw new IllegalArgumentException(
                     wave.enemy().slug() + ": a wave out of the walls needs a level with walls");
         }
@@ -140,6 +150,32 @@ public final class WallMounts {
                     carried(wave, i));
             out.add(nest);
             placed.put(nest, new Placed(left, delay, 0));
+        }
+    }
+
+    /**
+     * M8 part G: unit i stands at xs[i] (wrapping), just above the top edge at the wave's time, its centre on the
+     * play field's row, scrolling with the ground; its song i staggers behind the first's.
+     */
+    private void groundNests(WaveSpec wave, WaveSpec.Mount mount, int kind, List<Spawn> out) {
+        EnemySpec enemy = wave.enemy();
+        double y = PlayField.HEIGHT + enemy.hitbox().height() / 2;
+        int tick = SimStep.ticks(wave.t());
+        for (int i = 0; i < wave.count(); i++) {
+            double x = mount.xs().get(i % mount.xs().size());
+            Spawn nest = new Spawn(
+                    tick,
+                    kind,
+                    enemy,
+                    FlightPath.through(x, y, x, -Formations.OUTSIDE),
+                    0,
+                    0,
+                    Optional.empty(),
+                    Spawn.Exit.DOWN,
+                    false,
+                    carried(wave, i));
+            out.add(nest);
+            placed.put(nest, new Placed(false, i * STAGGER_SECONDS, 0, true));
         }
     }
 

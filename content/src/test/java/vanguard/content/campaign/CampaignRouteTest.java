@@ -236,28 +236,29 @@ class CampaignRouteTest {
     }
 
     /**
-     * M8 part F: Level 26 is built: after Level 25 its own briefing (two pages, no act intro) and its launch; the interim
-     * release now ends before Level 27: after Level 26 (inside Act 4, no act end) the hangar, with no level to launch
+     * M8 part G: Level 27 is built: after Level 26 its own briefing (two pages, no act intro) and its launch; the interim
+     * release now ends before Level 28: after Level 27 (inside Act 4, no act end) the hangar, with no level to launch
      * (the hangar's release line, {@code ReleaseTexts}).
      */
     @Test
-    void afterLevel25ComesLevel26AndTheReleaseEndsBeforeLevel27() {
+    void afterLevel26ComesLevel27AndTheReleaseEndsBeforeLevel28() {
         Campaign campaign = Campaign.start(CampaignTest.RULES, Difficulty.MEDIUM);
-        for (int i = 0; i < 25; i++) {
+        for (int i = 0; i < 26; i++) {
             campaign.complete(CampaignTest.won("A", 80, 1000), 60);
         }
 
         var briefing = assertInstanceOf(CampaignRoute.Step.Briefing.class, CampaignRoute.afterLevel(content, campaign));
-        assertEquals(26, briefing.script().mission());
+        assertEquals(27, briefing.script().mission());
         assertTrue(briefing.script().titleCard().isEmpty());
         assertEquals(2, briefing.script().pages().size());
-        assertEquals(Optional.of("act-4-deep-water/level-26-blackwater"), CampaignRoute.launch(content, campaign));
+        assertEquals(
+                Optional.of("act-4-deep-water/level-27-hydrothermal-vents"), CampaignRoute.launch(content, campaign));
 
         campaign.complete(CampaignTest.won("A", 80, 1000), 60);
 
-        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 26 ends no act");
+        assertTrue(CampaignRoute.actEnd(content, campaign).isEmpty(), "Level 27 ends no act");
         assertInstanceOf(CampaignRoute.Step.Hangar.class, CampaignRoute.afterLevel(content, campaign));
-        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 27 is not built");
+        assertEquals(Optional.empty(), CampaignRoute.launch(content, campaign), "Level 28 is not built");
     }
 
     /**

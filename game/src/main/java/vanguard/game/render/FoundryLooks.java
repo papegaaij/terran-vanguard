@@ -42,7 +42,8 @@ import vanguard.sim.Sortie;
  * <p>M8 part B: the vents' {@code look} names their sprites ({@link #ventSprites}): Level 22's ice geysers
  * ({@code ice-geyser*}, tools/art/l22_props.py) draw a crack in the ice for the grate, its lime-white glow over the
  * tell, a steam column for the flame and the residue mist for the smoke; the steam is drawn with normal blending over
- * the ground units (stepped translucency, not additive light).
+ * the ground units (stepped translucency, not additive light). M8 part G: Level 27's heat plumes ({@code look:
+ * heat-plume}) are {@link PlumeLooks}', not drawn here.
  */
 final class FoundryLooks {
     /** The art's grate states: 0 shut, 1-3 the tell's steps (red, orange, white-hot). */
@@ -144,11 +145,13 @@ final class FoundryLooks {
     private static final long NEVER = Long.MIN_VALUE / 2;
 
     private FoundryLooks(Sprites sprites, LevelData level, LevelScript script) {
+        // M8 part G: a heat plume's mouth, tell and eruption are PlumeLooks'.
+        boolean plumes = PlumeLooks.plumes(level);
         String[] names = ventSprites(ventLook(level));
-        grate = optional(sprites, names[0]);
-        glow = optional(sprites, names[1]);
-        flame = optional(sprites, names[2]);
-        smoke = optional(sprites, names[3]);
+        grate = plumes ? new Array<>(0) : optional(sprites, names[0]);
+        glow = plumes ? new Array<>(0) : optional(sprites, names[1]);
+        flame = plumes ? new Array<>(0) : optional(sprites, names[2]);
+        smoke = plumes ? new Array<>(0) : optional(sprites, names[3]);
         steam = isGeyser(ventLook(level));
         gantry = sprites.has("gantry") ? sprites.region("gantry") : null;
         cradle = sprites.has("gantry-cradle") ? sprites.region("gantry-cradle") : null;
@@ -200,7 +203,7 @@ final class FoundryLooks {
 
     /** The level's foundry looks, or null for a level with no vents, belts, up-facing nests or surrounds. */
     static FoundryLooks of(Sprites sprites, LevelData level, LevelScript script) {
-        boolean any = !script.hazards().vents().isEmpty()
+        boolean any = (!script.hazards().vents().isEmpty() && !PlumeLooks.plumes(level))
                 || !script.ground().belts().isEmpty()
                 || script.groundUnits().stream()
                         .anyMatch(unit -> upFacing(unit.enemy().gun().orElse(null)))

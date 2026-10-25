@@ -66,6 +66,16 @@ public final class DeepDeaths {
         return flashes.get(1);
     }
 
+    /** M8 part G: the {@code small} rung's cavity (a torpedo shot down or burst on a hull). */
+    public Array<AtlasRegion> smallCavity() {
+        return cavities.get(1);
+    }
+
+    /** M8 part G: the {@code tiny} rung's under-water burst (a torpedo run out). */
+    public Array<AtlasRegion> tinyFlash() {
+        return flashes.get(0);
+    }
+
     /** The under-water burst's cavity of {@code look}'s rung (solid, under the flash). */
     public Array<AtlasRegion> cavity(EnemyLooks look) {
         return cavities.get(rung(look.explosion()));
@@ -131,6 +141,49 @@ public final class DeepDeaths {
 
     public static int rayBloomTicks() {
         return AbyssRayLooks.BLOOM_FRAME_TICKS;
+    }
+
+    /** M8 part G: a Depth Hunter's hull break (solid); empty for another kind. */
+    public Array<AtlasRegion> hunterBreak(Sortie sortie, int kind) {
+        return kinds.hunters(sortie).breakUp(kind);
+    }
+
+    /** M8 part G: a Depth Hunter's oil bloom (solid, under its break); empty for another kind. */
+    public Array<AtlasRegion> hunterOil(Sortie sortie, int kind) {
+        return kinds.hunters(sortie).oil(kind);
+    }
+
+    /** M8 part G: the hull break's and the oil bloom's frames' steps. */
+    public static int hunterBreakTicks() {
+        return HunterLooks.BREAK_FRAME_TICKS;
+    }
+
+    public static int hunterOilTicks() {
+        return HunterLooks.OIL_FRAME_TICKS;
+    }
+
+    /** M8 part G: a relay beacon's lamp breaking (additive, at its lamp); empty for another kind. */
+    public Array<AtlasRegion> beaconBreak(Sortie sortie, int kind) {
+        return kinds.beacons(sortie).breakUp(kind);
+    }
+
+    /** M8 part G: the lamp's place from the beacon's centre, x and y (up), px. */
+    public double beaconLampDx(Sortie sortie) {
+        return kinds.beacons(sortie).lampDx();
+    }
+
+    public double beaconLampDy(Sortie sortie) {
+        return kinds.beacons(sortie).lampDy();
+    }
+
+    /** M8 part G: the lamp's break's frames' steps. */
+    public static int beaconBreakTicks() {
+        return BeaconLooks.BREAK_FRAME_TICKS;
+    }
+
+    /** M8 part G: a relay beacon's dark mast left on the ground, a one-frame animation; none for another kind. */
+    public Array<Array<AtlasRegion>> beaconRemains(Sortie sortie, int kind) {
+        return kinds.beacons(sortie).remains(kind);
     }
 
     /** M8 part D: a Barbfin's shell sinking at its heading (solid); empty for another kind. */

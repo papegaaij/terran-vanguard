@@ -162,7 +162,10 @@ final class WaveSchedule {
                     warned.add(wave);
                     warnedEdges.add(crossEdges);
                 }
-            } else if (wave.entry() != WaveSpec.Entry.FRONT && wave.formation() != WaveSpec.Formation.REAR_AMBUSH) {
+            } else if (wave.entry() != WaveSpec.Entry.FRONT
+                    && (wave.formation() != WaveSpec.Formation.REAR_AMBUSH
+                            // M8 part G: a rear ambush without an ambush path comes up from below at once: warned.
+                            || wave.enemy().ambush().isEmpty())) {
                 warned.add(wave);
                 warnedEdges.add(flipped ? onScreen(edges(wave)) : edges(wave));
             } else if (flipped

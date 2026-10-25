@@ -259,7 +259,11 @@ public sealed interface HazardsBlock permits LevelData {
      * {@code hard} change the tell, period and ripple. Cold from the arena on. M8 part B (design/campaign Level 22,
      * Hazards: the ice geysers): a row may set its own period and ripple ({@link VentRowData}), and {@code look} names
      * how the game draws and sounds the rows ({@link #FURNACE_VENT} if not given, {@link #ICE_GEYSER}); the simulation
-     * never reads it.
+     * never reads it. M8 part G (design/campaign Level 27, Hazards: the heat plumes; m8g-gaps.md §1.2): {@code look:
+     * heat-plume} with {@code shape: disc} (each grate's flame a disc {@code width} px across, not a square), {@code
+     * enemy_damage} (each {@code air} or {@code low-air} unit over a burning disc takes it once per burst, the kill the
+     * player's) and {@code bend} (degrees: a shot, an enemy bullet or a homing torpedo entering a burning disc turns
+     * this far away from its centre, once).
      */
     public record Vents(
             double width,
@@ -271,14 +275,26 @@ public sealed interface HazardsBlock permits LevelData {
             Optional<VentChange> easy,
             Optional<VentChange> hard,
             List<VentRowData> rows,
-            Optional<String> look) {
+            Optional<String> look,
+            Optional<String> shape,
+            Optional<Double> enemyDamage,
+            Optional<Double> bend) {
         /** M7 part F: Level 19's furnace vents, the look if not given. */
         public static final String FURNACE_VENT = "furnace-vent";
 
         /** M8 part B: Level 22's ice geysers (a crack that glows, then a steam column). */
         public static final String ICE_GEYSER = "ice-geyser";
 
-        /** Without M8 part B's look. */
+        /** M8 part G: Level 27's heat plumes (a glowing mouth, then a shimmering column; {@code shape: disc}). */
+        public static final String HEAT_PLUME = "heat-plume";
+
+        /** M8 part G: a plume's flame shape: a disc {@code width} px across (the default is a square grate). */
+        public static final String DISC = "disc";
+
+        /** M8 part G: a square grate's flame (the default). */
+        public static final String SQUARE = "square";
+
+        /** Without M8 part G's shape, burns and bend. */
         public Vents(
                 double width,
                 double tell,
@@ -288,29 +304,67 @@ public sealed interface HazardsBlock permits LevelData {
                 String bullet,
                 Optional<VentChange> easy,
                 Optional<VentChange> hard,
-                List<VentRowData> rows) {
-            this(width, tell, burn, period, ripple, bullet, easy, hard, rows, Optional.empty());
+                List<VentRowData> rows,
+                Optional<String> look) {
+            this(
+                    width,
+                    tell,
+                    burn,
+                    period,
+                    ripple,
+                    bullet,
+                    easy,
+                    hard,
+                    rows,
+                    look,
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty());
         }
 
-        public Vents {
-            look.ifPresent(name -> Check.that(
-                    name.equals(FURNACE_VENT) || name.equals(ICE_GEYSER),
-                    "look: " + FURNACE_VENT + " or " + ICE_GEYSER + ", was '" + name + "'"));
-            rows = List.copyOf(rows);
-            Check.positive("width", width);
-            Check.notNegative("tell", tell);
-            Check.positive("burn", burn);
-            Check.positive("period", period);
-            Check.notNegative("ripple", ripple);
-            Check.notEmpty("rows", rows);
-            for (int i = 1; i < rows.size(); i++) {
-                Check.that(rows.get(i).t() >= rows.get(i - 1).t(), "rows[" + i + "]: listed in time order");
-            }
-        }
-
-        /** M8 part B: how the game draws and sounds the rows ({@link #FURNACE_VENT} if not given). */
+        /** Without M8 part B's look.
+         * public Vents(
+         * double width,
+         * double tell,
+         * double burn,
+         * double period,
+         * double ripple,
+         * String bullet,
+         * Optional<VentChange> easy,
+         * Optional<VentChange> hard,
+         * List<VentRowData> rows) {
+         * this(width, tell, burn, period, ripple, bullet, easy, hard, rows, Optional.empty());
+         * }
+         *
+         * public Vents {
+         * look.ifPresent(name -> Check.that(
+         * name.equals(FURNACE_VENT) || name.equals(ICE_GEYSER) || name.equals(HEAT_PLUME),
+         * "look: " + FURNACE_VENT + ", " + ICE_GEYSER + " or " + HEAT_PLUME + ", was '" + name + "'"));
+         * shape.ifPresent(name -> Check.that(
+         * name.equals(DISC) || name.equals(SQUARE),
+         * "shape: " + DISC + " or " + SQUARE + ", was '" + name + "'"));
+         * enemyDamage.ifPresent(d -> Check.notNegative("enemy_damage", d));
+         * bend.ifPresent(b -> Check.that(b >= 0 && b < 90, "bend: 0 up to (not) 90 degrees, was " + b));
+         * rows = List.copyOf(rows);
+         * Check.positive("width", width);
+         * Check.notNegative("tell", tell);
+         * Check.positive("burn", burn);
+         * Check.positive("period", period);
+         * Check.notNegative("ripple", ripple);
+         * Check.notEmpty("rows", rows);
+         * for (int i = 1; i < rows.size(); i++) {
+         * Check.that(rows.get(i).t() >= rows.get(i - 1).t(), "rows[" + i + "]: listed in time order");
+         * }
+         * }
+         *
+         * /** M8 part B: how the game draws and sounds the rows ({@link #FURNACE_VENT} if not given). */
         public String lookOrDefault() {
             return look.orElse(FURNACE_VENT);
+        }
+
+        /** M8 part G: whether each grate's flame is a disc ({@code shape: disc}, the heat plumes). */
+        public boolean disc() {
+            return shape.filter(DISC::equals).isPresent();
         }
 
         /**

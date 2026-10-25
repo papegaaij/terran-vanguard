@@ -600,7 +600,8 @@ public final class SimEvents {
         /** M7 part F: a furnace vent's flame column stands up (at the grate); value: the grate's number. */
         VENT_BURST,
         /**
-         * M7 part F: a furnace vent's flame hit the ship (value 0) or Rook (value 1), at him: once per burst each.
+         * M7 part F: a furnace vent's flame hit the ship (value 0) or Rook (value 1), at him: once per burst each. M8
+         * part G: a heat plume's also the Bulwark (value 2).
          */
         VENT_HIT,
         /**
@@ -706,7 +707,18 @@ public final class SimEvents {
          * M8 part F: Rook is lost (at him): he stops firing and taking hits and spirals down off the bottom edge; not
          * an eject (no pod). Only while he flies; value: his spin's side, -1 left or 1 right.
          */
-        ROOK_LOST;
+        ROOK_LOST,
+        /**
+         * M8 part G: a heat plume bent a shot, an enemy bullet or a homing torpedo that entered its burning disc
+         * (design/campaign Level 27, Hazards; {@link HeatPlumes}; at the bent projectile): its shimmer; value: the
+         * plume's grate number ({@link FurnaceVents#grate(int, int)}).
+         */
+        PLUME_BEND,
+        /**
+         * M8 part G: a heat plume burned a swimmer over its burning disc, once per burst (at the unit; the kill, if it
+         * was one, follows as the player's {@link #ENEMY_DESTROYED}); value: the unit's kind.
+         */
+        PLUME_BURN;
 
         private static final Type[] VALUES = values();
     }

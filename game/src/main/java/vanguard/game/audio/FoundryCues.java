@@ -28,6 +28,9 @@ import vanguard.sim.Sortie;
  * loop while a rig's collar turns on the screen (its core standing), panned to the rig nearest the ship; its ring of
  * shards plays the rig's ring once instead of the shots' report; its core's death plays the rig's collapse with its
  * {@code large} explosion.
+ *
+ * <p>M8 part G: Level 27's heat plumes (the vents' {@code look: heat-plume}, {@link #plumes}) play the plume's rising
+ * rumble for the tell and its roar for the eruption (round 57's a until the user's pick).
  */
 final class FoundryCues extends SoundFamily {
     private static final Set<SimEvents.Type> TYPES = EnumSet.of(SimEvents.Type.VENT_TELL, SimEvents.Type.VENT_BURST);
@@ -58,6 +61,8 @@ final class FoundryCues extends SoundFamily {
     private long now;
     /** M8 part B: the level's vents are ice geysers (their own tell and burst). */
     private boolean geysers;
+    /** M8 part G: the level's vents are heat plumes (their own tell and eruption). */
+    private boolean plumes;
     /** M8 part B: the rig collar's loop level now (its fade). */
     private float rigLevel;
     /** M8 part B: per enemy kind whether it is a Drill Rig, from the first watch; null before it. */
@@ -84,14 +89,19 @@ final class FoundryCues extends SoundFamily {
         this.geysers = geysers;
     }
 
+    /** M8 part G: the level's vents are heat plumes ({@code look: heat-plume}): their tell and eruption are the plume's. */
+    void plumes(boolean plumes) {
+        this.plumes = plumes;
+    }
+
     /** The tell's sound of the level's vents. */
     Sfx tell() {
-        return geysers ? Sfx.GEYSER_TELL : Sfx.VENT_TELL;
+        return plumes ? Sfx.PLUME_TELL : geysers ? Sfx.GEYSER_TELL : Sfx.VENT_TELL;
     }
 
     /** The burst's sound of the level's vents. */
     Sfx burst() {
-        return geysers ? Sfx.GEYSER_BURST : Sfx.VENT_BURST;
+        return plumes ? Sfx.PLUME_ERUPTION : geysers ? Sfx.GEYSER_BURST : Sfx.VENT_BURST;
     }
 
     @Override

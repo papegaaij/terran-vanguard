@@ -135,7 +135,10 @@ public record EnemyLooks(
             AbyssRayLooks.SLUG,
             Tier.LARGE,
             SPAWNING_REEF,
-            Tier.LARGE);
+            Tier.LARGE,
+            // M8 part G: the relay beacon (a `medium` target) dies in a `small` burst (its stat block).
+            BeaconLooks.SLUG,
+            Tier.SMALL);
     /**
      * M8 part B: the Drill Rig's collar spins at this rate (assets/pivots/drill-rig.json's {@code spin}: 8 frames of 15
      * degrees, 180 degrees/s), not the Vrell's organic 10 fps.

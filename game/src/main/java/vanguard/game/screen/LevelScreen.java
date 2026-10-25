@@ -296,6 +296,11 @@ public final class LevelScreen implements GameScreen {
         sounds.geysers(level.vents()
                 .map(vents -> vents.lookOrDefault().equals(HazardsBlock.Vents.ICE_GEYSER))
                 .orElse(false));
+        // M8 part G: Level 27's heat plumes rumble and roar as plumes; Varga's scan pings before the wreck.
+        sounds.plumes(level.vents()
+                .map(vents -> vents.lookOrDefault().equals(HazardsBlock.Vents.HEAT_PLUME))
+                .orElse(false));
+        sounds.scan(level);
         // M7 part D: Level 17's domes: glass hits and breaks, the bombers' drops.
         sounds.ground(sortie.groundAllies());
         // M5 part H: Level 14's canopy withers at the Siege Spire's death.

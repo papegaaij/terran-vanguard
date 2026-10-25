@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: proposed
 depends-on: [../../../enemies/naval/glow-angler, ../../../enemies/naval/depth-hunter, ../../../enemies/naval/siren, ../../../enemies/naval/spiral-nautilus, ../../../enemies/naval/eel-swarm, ../../../enemies/naval/driftjelly, ../../../story/characters/the-choir, ../../../story/characters/rook, ../../../world/europa, ../../../player/wingmen, ../../../player/specials]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Level 26 – Blackwater
@@ -474,6 +474,8 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
 | [concept/rook-loss-capture-r55-a.png](concept/rook-loss-capture-r55-a.png) | Game capture (step F6, the main run): Rook's loss (t=156.9, 157.2, 157.5, 157.8, 158.2, 159, 162): the three trails rising to his lamp, the flashes, the spin-down off the bottom edge, the dark without his lamp | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
 | [concept/rook-loss-capture-r55-a.mp4](concept/rook-loss-capture-r55-a.mp4) | The same as a video with the game's sound (t≈153.5–177.5): his last lines, the trails and the hits, the spin, the silence from t=160 and the vents' warm pad (a) creeping in from t=168 | proposed (round 55, F.5: the spin redone on the screen after the user's playtest, 2026-10-24; shown again in round 57) |
 | [concept/debrief-capture-r55-a.png](concept/debrief-capture-r55-a.png) | Game capture (step F6, the main run): the debrief with the red `ROOK  MIA` row under the tally | chosen (round 55: accepted) |
+| [concept/rook-loss-capture-r57-a.png](concept/rook-loss-capture-r57-a.png) | Rook's loss after step FX (round 55 F.5's redo; step G5, Xvfb, `--bench`, medium, the plan's fit, `--invulnerable`, the guns held until t=158 so the silence is heard): his lamp beside the ship at t≈162.4, the three trails at 163.2, the hits at 163.6–163.9, his ember sinking at 164.8–165.1 (1:1), the screen at t≈169 (`ROOK  MIA` in the escort row) | proposed (round 57) |
+| [concept/rook-loss-capture-r57-a.mp4](concept/rook-loss-capture-r57-a.mp4) | The same run t≈150–180 with the game's sound: his cut line, the trails, the hits cutting it, the spin, the silence, the warm pad b and the last lines | proposed (round 57) |
 | [concept/dark-assist-capture-r55-a.png](concept/dark-assist-capture-r55-a.png) | Game capture (step F6): the Dark levels assist (Options) at t=28: off (left, the main run) and on (right, a second run: the ambient held at 20 %) | chosen (round 55, C.6: accepted) |
 
 ## Implementation
@@ -587,3 +589,6 @@ Production art of M8 part F (round 55, step ART-F) and game captures; the genera
   over 2 s (the loss's ≈ 157–166 and the aftermath's ≈ 176–188 the long ones; the rule's at most 3: ok), the typical
   haul +1.3 %, won and the secondary met 3/3 on every difficulty. F.5 (Rook's loss) is shown again in round 57 with
   part G. The debrief's `ROOK  MIA` row is unchanged.
+- 2026-10-25 (step G5): Rook's loss after step FX captured again for [round 57](../../../concept-rounds/round-57/README.md)
+  L.1 (`rook-loss-capture-r57-a`, the guns held from t=158 so the silence is heard); after the hits his lamp is out, so
+  his spin shows only as a faint ember for about 1.5 s.

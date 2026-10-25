@@ -634,6 +634,10 @@ public final class Enemy implements Hashed {
         vortexCycle.wavePlace(place);
         // M8 part E: a coil's cycle starts its place times the offset later; a pair orbits in opposite directions.
         coiling.wavePlace(place);
+        if (hoverHold.driftsOnly()) {
+            // M8 part G: a column of Depth Hunters fans out, an even place drifting left and an odd one right.
+            hoverHold.driftSide(place % 2 == 0 ? -1 : 1);
+        }
     }
 
     /** M7 part B: whether it is in its swoop (design/enemies/air/dust-kite). */

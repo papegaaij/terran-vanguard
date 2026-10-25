@@ -137,7 +137,7 @@ final class EnemyHash {
         if (u.spec.rise().isPresent()) {
             u.rising.addTo(hash);
         }
-        if (u.hoverHold.active()) {
+        if (u.hoverHold.active() || u.hoverHold.driftsOnly()) {
             u.hoverHold.addTo(hash);
         }
         // M8 part E's songs add theirs; earlier units hash as before.

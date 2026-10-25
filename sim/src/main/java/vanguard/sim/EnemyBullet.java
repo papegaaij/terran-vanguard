@@ -13,6 +13,8 @@ public final class EnemyBullet implements Hashed {
     private int target;
     /** M8 part A: the level's medium (its bullet speed at the spawn); null in the air. */
     private Medium medium;
+    /** M8 part G: whether a heat plume bent it already (once per bullet; hashed only once set). */
+    private boolean bent;
 
     /** M8 part A: the level's medium, whose bullet speed scales every bullet as it is fired. */
     void medium(Medium water) {
@@ -26,6 +28,7 @@ public final class EnemyBullet implements Hashed {
     /** @param aimedAt the convoy unit it is aimed at; -1 for the ship */
     void fire(double startX, double startY, double velocityX, double velocityY, double bulletDamage, int aimedAt) {
         target = aimedAt;
+        bent = false;
         x = prevX = startX;
         y = prevY = startY;
         vx = velocityX;
@@ -52,6 +55,25 @@ public final class EnemyBullet implements Hashed {
         if (target >= 0) {
             hash.add(target);
         }
+        if (bent) {
+            // M8 part G: only a bullet a plume bent, so the other levels hash as before.
+            hash.add(1);
+        }
+    }
+
+    /** M8 part G (design/campaign Level 27; {@link HeatPlumes}): whether a heat plume bent it already. */
+    boolean bent() {
+        return bent;
+    }
+
+    /** M8 part G: a heat plume turns it by {@code radians} (clockwise on the screen for a positive angle), once. */
+    void bend(double radians) {
+        bent = true;
+        double cos = Trig.cos(radians);
+        double sin = Trig.sin(radians);
+        double turnedX = vx * cos + vy * sin;
+        vy = -vx * sin + vy * cos;
+        vx = turnedX;
     }
 
     /** Whether the target-the-objective hook aimed it at a convoy unit rather than the ship. */

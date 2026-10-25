@@ -42,7 +42,8 @@ import java.util.Optional;
  *     first one's line (every other aimed burst already aims each of its shots anew)
  * @param homing M7 part F (design/enemies/bosses/revenant-walker, homing missiles): a boss's aimed shots of this
  *     gun are homing {@link Missile}s instead of bullets ({@code bulletSpeed} their speed, {@code damage} a hit's);
- *     empty for every other gun
+ *     M8 part G (design/enemies/naval/depth-hunter): a unit's volley of such a gun is one missile (a torpedo) launched
+ *     along the unit's facing ({@link Missiles#launchAlong}); empty for every other gun
  * @param arcFacingRadians M7 part F (design/enemies/ground/spine-turret, Turned arc): the direction its {@code
  *     arcRadians} is measured from, radians clockwise from straight down; 0 (straight down) for every turret before
  *     Level 19, {@code PI} for a turret that faces up the screen ({@code arc: up}); its barrel starts along it

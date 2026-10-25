@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: final
 depends-on: [../../../enemies/naval/eel-swarm, ../../../enemies/naval/glassfin, ../../../enemies/naval/driftjelly, ../../../enemies/naval/reef-spitter, ../../../enemies/air/lamprey, ../../../player/weapons/harpoon-torpedoes, ../../../player/weapons/depth-charges, ../../../player/systems, ../../../world/europa]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Level 23 – Through the Ice
@@ -371,6 +371,7 @@ pump's in [ground](../../../enemies/ground/README.md#concept-art), the under-wat
 | [concept/plains-edge-capture-r52-a.png](concept/plains-edge-capture-r52-a.png) | The plain's edge at t=141, 148 and 156: the farms thinning into the dark plain, the last lamps | chosen (round 52, F.1: accepted as final) |
 | [concept/ice-ceiling-capture-r52-a.png](concept/ice-ceiling-capture-r52-a.png) | The ice ceiling (`high-air`, step C5a's thin cracks of light) over the wet shaft (t=39), the farms' entry (t=74) and the farms (t=135) | chosen (round 52, F.1: accepted as final) |
 | [concept/radio-capture-r52-a.png](concept/radio-capture-r52-a.png) | Thera Deep Control on the radio at t=66 and t=89.5 (his portrait, candidate a's voice) | chosen (round 52, F.8: accepted as final) |
+| [concept/waterline-capture-r57-a.png](concept/waterline-capture-r57-a.png) | The waterline strip after step FX (round 56 Q.1; step G5, medium): the play field at t≈26.5 and the strip at 1:1, `UNDER WATER · BULLETS ×0.7 · BEAMS ×0.2 · TORPEDOES +50 %` (`DRAG` dropped to keep one line) | proposed (round 57) |
 
 ## Implementation
 

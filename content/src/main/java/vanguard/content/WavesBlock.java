@@ -2,6 +2,7 @@ package vanguard.content;
 
 import java.util.List;
 import java.util.Optional;
+import vanguard.sim.PlayField;
 
 /**
  * The level's {@code waves} ({@link LevelData#waves()}): each wave, its groups and its changes on easy and hard.
@@ -55,6 +56,10 @@ public sealed interface WavesBlock permits LevelData {
      *     with the ground ({@code from: sides}, counted as side entries): {@code staggered} (a nest every 1.5 s, on the
      *     {@code edge}'s wall or both taking turns from the right) or {@code opposite} (pairs facing each other at one
      *     row, the left one's song 1.5 s later)
+     * @param onGround M8 part G (design/campaign Level 27, the Sirens on a chimney stack; m8g-gaps.md §5 G8): a {@code
+     *     turret nest}'s units stand on the ground at these xs (px from the left, one per unit), all at one row: they
+     *     come in with the ground at the top edge at the wave's {@code t} ({@code from: front}), scrolling with it,
+     *     their songs 1.5 s apart in turn (no terrain needed)
      */
     public record Wave(
             double t,
@@ -85,7 +90,8 @@ public sealed interface WavesBlock permits LevelData {
             Optional<List<TerrainBlock.GroundPoint>> crawl,
             Optional<Pursuit> pursuit,
             Optional<Integer> cave,
-            Optional<String> wall) {
+            Optional<String> wall,
+            Optional<List<Double>> onGround) {
         /** M8 part E: a wall's nests one after the other ({@link #wall}). */
         public static final String STAGGERED = "staggered";
 
@@ -93,6 +99,15 @@ public sealed interface WavesBlock permits LevelData {
         public static final String OPPOSITE = "opposite";
 
         public Wave {
+            onGround = onGround.map(List::copyOf);
+            onGround.ifPresent(xs -> {
+                Check.that(!xs.isEmpty(), "on_ground: the nests' xs");
+                xs.forEach(nestX ->
+                        Check.that(nestX > 0 && nestX < PlayField.WIDTH, "on_ground: on the play field, was " + nestX));
+            });
+            Check.that(
+                    onGround.isEmpty() || (cave.isEmpty() && wall.isEmpty() && from == LevelData.Entry.FRONT),
+                    "ground nests come in with the ground (from: front), not out of a cave or off the walls");
             cave.ifPresent(n -> Check.notNegative("cave", n));
             wall.ifPresent(w -> Check.that(
                     STAGGERED.equals(w) || OPPOSITE.equals(w), "wall: staggered or opposite, was '" + w + "'"));
@@ -180,6 +195,11 @@ public sealed interface WavesBlock permits LevelData {
         /** M8 part E: whether its units are nests on the walls ({@code wall}). */
         public boolean onWalls() {
             return wall.isPresent();
+        }
+
+        /** M8 part G: whether its units are nests standing on the ground ({@code on_ground}). */
+        public boolean onGroundNests() {
+            return onGround.isPresent();
         }
 
         /** M8 part E: whether its nests stand in pairs facing each other ({@code wall: opposite}). */

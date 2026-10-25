@@ -91,7 +91,8 @@ final class FoundryRules {
 
     /**
      * The vent rows at {@code difficulty}: the tell, period and ripple of its change (M8 part B: a row's own over the
-     * rows'), the damage of the bullet class.
+     * rows'), the damage of the bullet class; M8 part G: a plume's disc, its burn of the units over it and its bend
+     * (degrees to radians).
      */
     static List<HazardSpec.VentRow> vents(Content content, LevelData.Vents vents, Difficulty difficulty) {
         double damage = UnitRules.bulletDamage(content, vents.bullet());
@@ -105,7 +106,10 @@ final class FoundryRules {
                     vents.burn(),
                     vents.periodOn(row, difficulty),
                     vents.rippleOn(row, difficulty),
-                    damage));
+                    damage,
+                    vents.disc(),
+                    vents.disc() ? vents.enemyDamage().orElse(0.0) : 0,
+                    vents.disc() ? Math.toRadians(vents.bend().orElse(0.0)) : 0));
         }
         return out;
     }

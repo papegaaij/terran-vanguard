@@ -4,7 +4,7 @@ design: approved
 implementation: in-progress
 art: n/a
 depends-on: [../architecture, ../../campaign]
-updated: 2026-10-24
+updated: 2026-10-25
 ---
 
 # Implementation roadmap
@@ -118,9 +118,9 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
 | **E** Level 25 — **built** (2026-10-23, steps E1–E6, ART-E, AUD-E, VOX-E); [round 54](../../concept-rounds/round-54/README.md) closed (2026-10-23): F.3–F.7 accepted, the backdrop and the trench's darkness to be redone (round 55), the sounds picked (ring a, slow b, death a, spin a, uncoil a, Nautilus death b, bed a), C.1–C.8 accepted | Trench walls and side caves, Siren (slow), Spiral Nautilus | C | 54 |
 | **F** Level 26 — **built** (2026-10-23, steps F1–F6, LX, ART-F, AUD-F, VOX-F); [round 55](../../concept-rounds/round-55/README.md) closed (2026-10-24): Level 25's redo and F.1–F.4, F.6–F.8 accepted, the sounds picked (spin, click, static and the warm pad b), C.2/C.4 changed after the playtest and built in step FX (the hits cut Rook's line, his spin on the screen), F.5 shown again in round 57 | Darkness for every unit, Glow Angler, the Choir's words, Rook's shoot-down | C, A (heavy drone) | 55 |
 | **AW** Under-water weapons rework — **decided by the user (2026-10-23, playtest of Levels 22–25), built before part G**; built (2026-10-24), [round 56](../../concept-rounds/round-56/README.md) closed (2026-10-24): all accepted, C.3 keep, Q.1 yes (the strip names the energy weapons, step FX) | Energy weapons (Ion Beam, Lance Laser, Rear Lance) nearly useless under water (proposed ×0.2 damage, ×0.4 reach); the Harpoon Torpedoes tuned for swarms (faster rate, about 2 → 3 a second, about +50 % travel speed, blast 20 → 40 px, less damage a torpedo, homing only in a narrow ±15° cone ahead); the Depth Charges thrown forward, sinking ahead and bursting on their fuse or on touching a swimmer (hitting swimmers, ground and `sub`); the Act 4 intro briefing (and the hangar notice before Level 23) warning to keep credits for under-water weapons; the balance plan without selling (the beam kept for later levels; the Harpoon L1 bought at Level 22, the Harpoon L1 and the Depth Charges fitted at Level 23, upgraded at Level 24). No extra prevention tests (the user: "You just have to play it to see"); the Nautilus and the micro-missiles' angle unchanged until replayed | F | — |
-| **G** Level 27 | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F, AW | 56 |
-| **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 57 |
-| **I** Close-out | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 58 |
+| **G** Level 27 — **built** (2026-10-25, steps M8-PG, G1–G5, ART-G, AUD-G); [round 57](../../concept-rounds/round-57/README.md) open | Depth Hunter (hint 3), homing torpedoes and flares, heat plumes, Rook's absence, Vorne's motif | F, AW | 57 |
+| **H** Level 28 + act end | Abyssal Maw, the breakout, the reveal set piece (cruisers), the Act 4 outro, the release end moves to Act V | G | 58 |
+| **I** Close-out | Playthrough and balance tests through Act 4 (the temporary budget(n) income of part A removed), variety as built, `later` tags → Act 5, the voice listen-through | all | 59 |
 
 ## Implementation
 
@@ -668,3 +668,9 @@ Proposed by the Act 4 design phase (2026-10-21) and **decided in round 48** (202
   showed the Bulwark for every older mission); the depth charge's burst as the under-water large explosion; the default
   volumes effects 50 %, radio blips 90 %; round 55's sound picks and round 56's Q.1 (the waterline strip's `BEAMS ×0.2`).
   Round 55's F.5 (Rook's loss) is shown again in round 57 with part G.
+- 2026-10-25: part G built (steps M8-PG, G1–G5, ART-G, AUD-G): Level 27 "Hydrothermal Vents" in the data, flown and
+  drawn: the Depth Hunter's columns with their homing torpedoes, the heat plumes (tell, eruption, burn, the 25° bend),
+  the Bulwark's vent-field play, the hull-code wreck with the scan ping and Vorne's motif alone, the relay beacons as the
+  secondary, the *Marlin*, the gate; the balance plan refits the Tail Gun at Level 27 (Q.1 a); production art, 24 sound
+  proposals (the a variants as stand-ins), the voice; full `check` green. Concept [round 57](../../concept-rounds/round-57/README.md)
+  opened (Level 26's Rook loss again and the waterline strip, the art finals, the sounds, the calls).

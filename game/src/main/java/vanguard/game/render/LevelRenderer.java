@@ -153,6 +153,8 @@ public final class LevelRenderer {
      * office, the ingots and pallets, the crews' rovers); null without them.
      */
     private final FoundryLooks foundry;
+    /** M8 part G: Level 27's heat plumes (their mouths, tells, eruptions and bends); null without them. */
+    private final PlumeLooks plumes;
     /** M5 part H: the level's root bursts (Level 14); null without them. */
     private final RootBurstLooks rootBursts;
     /**
@@ -234,7 +236,7 @@ public final class LevelRenderer {
 
     /** M8 part F: whether the level is a dark level (Level 26: {@link DarkLight}'s lights and lamps). */
     public static boolean darkLevel(LevelData level) {
-        return UnderwaterGrade.hasLook(level) && DarkLight.dark(level);
+        return UnderwaterGrade.hasLook(level) && DarkLight.blackWater(level);
     }
     /** M8 part C: the Stormhawk's hydro-kit wakes and refit flash (Rook's: {@link WingmanLooks#hydro}). */
     private final HydroLooks shipHydro;
@@ -294,6 +296,7 @@ public final class LevelRenderer {
         walker = WalkerLooks.of(sprites, flash, boss, bossPivots);
         colossus = ColossusLooks.of(sprites, flash, boss, bossPivots, folder);
         foundry = FoundryLooks.of(sprites, level, script);
+        plumes = PlumeLooks.of(sprites, level);
         rootBursts = RootBurstLooks.of(sprites, script);
         List<EnemySpec> launches =
                 boss == null ? List.of() : boss.boss().map(BossSpec::spawnKinds).orElse(List.of());
@@ -357,7 +360,8 @@ public final class LevelRenderer {
         dark = grade == null ? null : DarkLight.of(level, kinds, softGlow);
         if (dark != null) {
             grade.dark(dark);
-            kinds.dark(true);
+            // M8 part G: Level 27's lit vent field keeps the units' plain looks (only black water draws the glow-only).
+            kinds.dark(DarkLight.blackWater(level));
             dark.rookLoss(rookLoss);
         }
         if (grade != null) {
@@ -477,6 +481,9 @@ public final class LevelRenderer {
             colossus.reset();
         }
         backdrop.crawlPending();
+        if (plumes != null) {
+            plumes.restart();
+        }
         if (foundry != null) {
             foundry.restart();
         }
@@ -538,6 +545,9 @@ public final class LevelRenderer {
                 backdrop.crawlPending();
             }
         }
+        if (plumes != null) {
+            plumes.stepped(sortie);
+        }
         if (foundry != null) {
             foundry.stepped(sortie);
         }
@@ -554,6 +564,8 @@ public final class LevelRenderer {
         kinds.nautili(sortie).stepped(sortie);
         // M8 part F: the Anglers' triggers, rings and deaths.
         kinds.anglers(sortie).stepped(sortie);
+        // M8 part G: the Hunters' rises and launches, the torpedoes' wakes.
+        kinds.hunters(sortie).stepped(sortie);
         props.steppedBullets(sortie);
         plain.stepped(sortie, looks);
     }
@@ -731,6 +743,10 @@ public final class LevelRenderer {
             // M7 part F: the vents' grates, the office, the ingots, the gantries and cradles, the rovers on the ground.
             foundry.drawGround(batch, sortie, scroll, seconds, clock.real());
         }
+        if (plumes != null) {
+            // M8 part G: the heat plumes' mouths on the sea floor.
+            plumes.drawGround(batch, sortie, scroll);
+        }
         shadows.endGround(batch);
         // M5 part F: the eye's light shaft on the calm sea, under the ground objects.
         weather.drawShaft(batch, seconds);
@@ -831,6 +847,10 @@ public final class LevelRenderer {
         if (foundry != null) {
             // M7 part F: the vents' heat glow over the tell, the flame column over the burn, the smoke after it.
             foundry.drawFire(batch, sortie, scroll);
+        }
+        if (plumes != null) {
+            // M8 part G: the plumes' silt, glow, eruption and heat over the ground units, the bends' ripples.
+            plumes.drawOver(batch, sortie, scroll);
         }
         ground.drawGlints(batch, sortie, alpha);
         // M5 part E: the telegraphed lanes' marks and the slams' splashes over the convoy and the rafts.
@@ -1036,6 +1056,9 @@ public final class LevelRenderer {
         if (walker != null) {
             // M7 part F: the homing missiles over their smoke trails, with the bullets.
             walker.drawMissiles(batch, sortie, alpha);
+        } else {
+            // M8 part G: the Depth Hunters' torpedoes over their wakes, with the bullets.
+            kinds.hunters(sortie).drawTorpedoes(batch, sortie, alpha);
         }
         props.drawBullets(batch, sortie, alpha);
         screenFlash.draw(batch, sprites.pixel, alpha, play.whiteFlash);

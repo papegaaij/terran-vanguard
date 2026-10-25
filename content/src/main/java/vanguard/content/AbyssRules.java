@@ -20,12 +20,19 @@ final class AbyssRules {
 
     private AbyssRules() {}
 
-    /** A stat block's hover with its time {@code seconds}: at its {@code y}, or above the ship with its drift. */
+    /**
+     * A stat block's hover with its time {@code seconds}: at its {@code y}, or above the ship with its drift; M8 part G:
+     * at its {@code y} with its drift (the Depth Hunter's).
+     */
     static EnemySpec.Hover hover(EnemyData.Hover hover, Range seconds) {
         return hover.aboveShip()
                 .map(above -> new EnemySpec.Hover(seconds, ABOVE_SHIP_DEPTH)
                         .aboveShip(UnitRules.range(above), hover.drift().orElse(0.0)))
-                .orElseGet(() -> new EnemySpec.Hover(seconds, UnitRules.range(hover.heightFromTop())));
+                .orElseGet(() -> new EnemySpec.Hover(
+                        seconds,
+                        UnitRules.range(hover.heightFromTop()),
+                        Optional.empty(),
+                        hover.drift().orElse(0.0)));
     }
 
     /** Whether {@code attack} is a rising unit's fan, which comes in its {@code burst} (the Abyss Ray's). */

@@ -81,6 +81,8 @@ public final class FlightSounds {
     private final TrenchCues trench;
     /** M8 part F: Level 26's sounds (the Angler's lure and lunge, the crown in the dark, Rook's loss, the headlights). */
     private final BlackwaterCues blackwater;
+    /** M8 part G: Level 27's plumes' bends, torpedoes, Hunters, beacons, the Marlin and the scan. */
+    private final VentFieldCues ventField;
     /** Per event type the family that plays it (by ordinal); null for an event without a sound. */
     private final SoundFamily[] families = new SoundFamily[SimEvents.Type.values().length];
     /** Every family, in the order they hear a step's start and end. */
@@ -119,6 +121,8 @@ public final class FlightSounds {
 
     /** M7 part A: the loops a flight holds, stopped as the level screen closes. */
     private static final Sfx[] FLIGHT_LOOPS = {
+        Sfx.TORPEDO_RUN,
+        Sfx.BEACON_HUM,
         Sfx.LURE_HUM,
         Sfx.CROWN_HUM,
         Sfx.LAMPREY_DRAIN,
@@ -192,7 +196,8 @@ public final class FlightSounds {
         deepWater = new DeepWaterCues(mix, armament, wingman);
         player = new PlayerCues(mix, armament, wingman, bosses, deepWater);
         storm = new StormCues(mix);
-        walker = new WalkerCues(mix);
+        ventField = new VentFieldCues(mix);
+        walker = new WalkerCues(mix, ventField);
         foundry = new FoundryCues(mix);
         pursuit = new PursuitCues(mix);
         colossus = new ColossusCues(mix);
@@ -200,7 +205,7 @@ public final class FlightSounds {
         abyss = new AbyssCues(mix);
         trench = new TrenchCues(mix);
         blackwater = new BlackwaterCues(mix);
-        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench);
+        units = new UnitCues(mix, looks, storm, foundry, walker, deepWater, underIce, abyss, trench, ventField);
         allies = new AllyCues(mix);
         arsenal = new ArsenalCues(mix);
         levels = new LevelCues(mix, underIce);
@@ -220,7 +225,8 @@ public final class FlightSounds {
             underIce,
             abyss,
             trench,
-            blackwater
+            blackwater,
+            ventField
         };
         for (SoundFamily family : all) {
             for (SimEvents.Type type : family.types()) {
@@ -372,6 +378,19 @@ public final class FlightSounds {
      */
     public void geysers(boolean geysers) {
         foundry.geysers(geysers);
+    }
+
+    /**
+     * M8 part G: the level's vents are heat plumes (Level 27's {@code look: heat-plume}): their tell and eruption play the
+     * plume's rumble and roar.
+     */
+    public void plumes(boolean plumes) {
+        foundry.plumes(plumes);
+    }
+
+    /** M8 part G: Level 27's hull-code scan: its ping before the wreck passes mid-screen ({@link VentFieldCues}). */
+    public void scan(vanguard.content.LevelData level) {
+        ventField.noteLevel(level);
     }
 
     /** M5 part E: the level's convoy sails on the water: its hits and losses play the ships' sounds. */
@@ -598,6 +617,7 @@ public final class FlightSounds {
         abyss.watch(sortie);
         trench.watch(sortie);
         blackwater.watch(sortie);
+        ventField.watch(sortie);
         units.watchCanyon(sortie);
         units.watchSiege(sortie);
         storm.watch(sortie);
@@ -650,6 +670,7 @@ public final class FlightSounds {
             underIce.silence(loop);
             trench.silence(loop);
             blackwater.silence(loop);
+            ventField.silence(loop);
         }
         deepWater.silence();
     }

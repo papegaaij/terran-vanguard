@@ -3,7 +3,7 @@ title: Ground enemies
 design: approved
 implementation: in-progress
 art: final
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 
 # Ground enemies
@@ -34,6 +34,7 @@ Promoted to their own documents for the Acts 1–2 wrap-up, plus the Act 3 draft
 | [drill-rig](drill-rig/README.md) | Hardened Vrell drill structure on Europa's ice shelf, vital core and four pumps (L22) | approved | done | final |
 | [siphon-pump](siphon-pump/README.md) | Vrell pump on Thera Deep's farm racks, no attack; Level 23's secondary (L23) | review | done | final |
 | [spawning-reef](spawning-reef/README.md) | Soft Vrell coral spawner releasing Glassfin fry; Level 24's secondary (L24) | review | in-progress | final |
+| [relay-beacon](relay-beacon/README.md) | Human-built relay mast with the Helix handshake, no attack; Level 27's secondary (L27) | review | in-progress | proposed |
 | [warden-tank](warden-tank/README.md) | Unmarked grey tank, hull and turret, bursts from behind (L19) | approved | in-progress | final |
 
 ## Roster
@@ -173,6 +174,8 @@ ice shelf; generator `tools/concept/enemies_r48.py`. Prompts:
 | [concept/spawning-reef-final-r53-b.gif](concept/spawning-reef-final-r53-b.gif) | b's reefs on the plain: releases, one razed | chosen (round 53, F.4 = b: "bone chimneys", accepted as final) |
 | [concept/rejected/spawning-reef-capture-r53-a.png](concept/rejected/spawning-reef-capture-r53-a.png) | Game capture, M8 part D (step D5; Level 24 on medium, `--invulnerable`, the balance plan's Level 24 fit: Harpoon Torpedoes L3, Depth Charges L3, Micro-Missile Pods L3/L2, the Pressure hull, the Sonar Pulse, Rook along): the first spawning reef, look a (2× detail; two runs) at t=39.8 and 40.2, its iris open and the fry darting out, then razed in a second run where the ship sat under it, t=39.9 and 40.6, the coral burst and the dead husk | rejected (round 53, F.4: b picked) |
 | [concept/rejected/spawning-reef-capture-r53-a.mp4](concept/rejected/spawning-reef-capture-r53-a.mp4) | The same as a video with the game's sound (t=36.5–43): the reef arriving, its iris opening, fry, razed | rejected (round 53, F.4: b picked) |
+| [concept/relay-beacon-final-r57-a.png](concept/relay-beacon-final-r57-a.png) | Relay beacon final frames (`tools/art/relay_beacon.py`, Levels 24-26's mast as Level 27's target): the 4 s pulse, its light, the destroyed dark frame, the break (sheet) | proposed (round 57) |
+| [concept/relay-beacon-final-r57-a.gif](concept/relay-beacon-final-r57-a.gif) | Four masts pulsing on the beacon ridge in the dim blue, two shot down | proposed (round 57) |
 | [concept/drill-rig-capture-r51-a.png](concept/drill-rig-capture-r51-a.png) | Game capture, Level 22 (M8 part B, step B5, medium, `--invulnerable`, Hammer Mortar + two Bomb Racks): the first rig's tell (t=41.5), its ring of shards (t=42), the next tell with the bombs on it (t=45), the core's death (t=46.5), the stump and dead pumps (t=48); the second rig's remains (t=63.5) | chosen (round 51, F.1: accepted as final) |
 | [concept/drill-rig-capture-r51-a.mp4](concept/drill-rig-capture-r51-a.mp4) | The same run, t 37–51 with the game's sound: the ship moving under the first rig, the collar's hum, the tells and rings, the pumps and the core breaking, the death | chosen (round 51, F.1: accepted as final) |
 

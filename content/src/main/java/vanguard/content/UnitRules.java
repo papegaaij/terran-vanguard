@@ -579,35 +579,47 @@ final class UnitRules {
                         bulletDamage(content, lob.ringBullet())));
         // M7 part D: a ring (the Choir Herald's song) is a fan round the whole circle (SiegeRules.ring).
         // M7 part E: a spiral fired while open (the Dust Devil's grit) and a pass-triggered burst (the Ghost Drone's).
-        return StormRules.gun(
-                content,
+        // M8 part G: a unit's homing torpedoes along its facing (the Depth Hunter's; FoundryRules.homing; a boss's
+        // homing guns are BossRules').
+        return unitHoming(
                 enemy,
                 attack,
-                difficulty,
-                SiegeRules.ring(
+                hook,
+                StormRules.gun(
+                        content,
                         enemy,
                         attack,
                         difficulty,
-                        new EnemyGun(
-                                interval(content, attack, hook, difficulty),
-                                attack.firstShotDelay().orElse(0.0),
-                                burst,
-                                attack.speed().orElseThrow()
-                                        * levers.enemyBulletSpeed().of(difficulty),
-                                damage,
-                                hook.flatMap(EnemyData.Hook::leadsTargetIn)
-                                        .map(in -> in.contains("circle"))
-                                        .orElse(false),
-                                fan,
-                                Math.toRadians(attack.spread().orElse(0.0)),
-                                attack.turnRate().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
-                                attack.arc().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
-                                mine,
-                                mortar,
-                                // M5 part D: the stat block's burst gap (the Wraith's 0.12 s).
-                                attack.burstGap().orElse(EnemyGun.BURST_GAP_SECONDS),
-                                // M5 part D: its bursts straight up the screen as a fixed fan (the Wraith's).
-                                attack.aim().filter("up"::equals).isPresent())));
+                        SiegeRules.ring(
+                                enemy,
+                                attack,
+                                difficulty,
+                                new EnemyGun(
+                                        interval(content, attack, hook, difficulty),
+                                        attack.firstShotDelay().orElse(0.0),
+                                        burst,
+                                        attack.speed().orElseThrow()
+                                                * levers.enemyBulletSpeed().of(difficulty),
+                                        damage,
+                                        hook.flatMap(EnemyData.Hook::leadsTargetIn)
+                                                .map(in -> in.contains("circle"))
+                                                .orElse(false),
+                                        fan,
+                                        Math.toRadians(attack.spread().orElse(0.0)),
+                                        attack.turnRate().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
+                                        attack.arc().map(Math::toRadians).orElse(Double.POSITIVE_INFINITY),
+                                        mine,
+                                        mortar,
+                                        // M5 part D: the stat block's burst gap (the Wraith's 0.12 s).
+                                        attack.burstGap().orElse(EnemyGun.BURST_GAP_SECONDS),
+                                        // M5 part D: its bursts straight up the screen as a fixed fan (the Wraith's).
+                                        attack.aim().filter("up"::equals).isPresent()))));
+    }
+
+    /** M8 part G: {@code gun} with a unit's homing torpedoes (not a boss's: those are its parts', BossRules). */
+    private static EnemyGun unitHoming(
+            EnemyData enemy, EnemyData.Attack attack, Optional<EnemyData.Hook> hook, EnemyGun gun) {
+        return enemy.boss().isPresent() ? gun : FoundryRules.homing(attack, hook, gun);
     }
 
     static Range range(Span span) {

@@ -114,6 +114,8 @@ final class UnitCues extends SoundFamily {
     private final AbyssCues abyss;
     /** M8 part E: Level 25's units' own deaths (the Siren, the Spiral Nautilus). */
     private final TrenchCues trench;
+    /** M8 part G: Level 27's Depth Hunters and relay beacons. */
+    private final VentFieldCues ventField;
 
     UnitCues(
             SoundMix mix,
@@ -124,9 +126,11 @@ final class UnitCues extends SoundFamily {
             DeepWaterCues deepWater,
             UnderIceCues underIce,
             AbyssCues abyss,
-            TrenchCues trench) {
+            TrenchCues trench,
+            VentFieldCues ventField) {
         super(mix);
         this.trench = trench;
+        this.ventField = ventField;
         this.deepWater = deepWater;
         this.underIce = underIce;
         this.abyss = abyss;
@@ -168,6 +172,8 @@ final class UnitCues extends SoundFamily {
                 trench.destroyed(events.value(i), pan);
                 // M8 part B: a Drill Rig's core also plays the rig's collapse (FoundryCues).
                 foundry.destroyed(events.value(i), pan);
+                // M8 part G: a Depth Hunter's hull break, a relay beacon's break over it.
+                ventField.destroyed(events.value(i), pan);
             }
             // A heavy shot for a medium bullet: the event's value is the bullet's damage, the same
             // class boundary as its large orb.
@@ -186,6 +192,8 @@ final class UnitCues extends SoundFamily {
                     // M8 part C: an Eel Swarm head's pulse shot (UnderIceCues).
                 } else if (abyss.fired(firer(events.x(i), events.y(i)), pan)) {
                     // M8 part D: an Abyss Ray's fan, a Barbfin's needle (AbyssCues).
+                } else if (ventField.fired(firer(events.x(i), events.y(i)), pan)) {
+                    // M8 part G: a Depth Hunter's torpedo launch (VentFieldCues).
                 } else {
                     bank.play(
                             FlightSounds.heavyShot(events.value(i))

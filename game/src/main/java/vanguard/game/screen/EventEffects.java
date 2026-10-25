@@ -468,16 +468,29 @@ final class EventEffects {
             // M5 part H, step H7b: the boss's credit shower after its chained bursts.
             case BOSS_DESTROYED -> creditShower(events.value(i), x, y);
             // M7 part F: a homing missile shot down or burst on a hull bursts small; one whose life ran out puffs out.
-            case MISSILE_DESTROYED ->
-                effects.start(
-                        events.value(i) == Missiles.FIZZLED ? explosionTiny : services.sprites.explosionSmall,
-                        TINY_EXPLOSION_FRAME_TICKS,
-                        x,
-                        y);
+            case MISSILE_DESTROYED -> missileGone(events.value(i), x, y);
             case WINGMAN_EJECTED -> effects.start(explosionMedium, MEDIUM_EXPLOSION_FRAME_TICKS, x, y);
             case SHIP_DESTROYED -> effects.start(services.sprites.explosionLarge, LARGE_EXPLOSION_FRAME_TICKS, x, y);
             default -> {}
         }
+    }
+
+    /**
+     * M7 part F: a homing missile shot down or burst on a hull bursts small; one whose life ran out puffs out. M8 part G:
+     * under the water (the Depth Hunter's torpedoes) the under-water bursts: the {@code small} one over its cavity, the
+     * {@code tiny} one for a torpedo that ran out.
+     */
+    private void missileGone(int cause, double x, double y) {
+        DeepDeaths deep = renderer.deepDeaths();
+        boolean fizzled = cause == Missiles.FIZZLED;
+        if (deep.present() && renderer.underwaterAt(y)) {
+            if (!fizzled) {
+                pieces.start(deep.smallCavity(), TINY_EXPLOSION_FRAME_TICKS, x, y);
+            }
+            effects.start(fizzled ? deep.tinyFlash() : deep.smallFlash(), TINY_EXPLOSION_FRAME_TICKS, x, y);
+            return;
+        }
+        effects.start(fizzled ? explosionTiny : services.sprites.explosionSmall, TINY_EXPLOSION_FRAME_TICKS, x, y);
     }
 
     /**
@@ -944,6 +957,9 @@ final class EventEffects {
         start(pieces, deathPieces.frames(), deathPieces.ticksPerFrame(), x, y, deathPieces.delayTicks(), onGround);
         start(pieces, deep.pieces(sortie, kind, x, y), DeepDeaths.piecesTicks(sortie, kind), x, y, 0, onGround);
         start(pieces, deep.pumpBreak(sortie, kind), DeepDeaths.breakTicks(), x, y, 0, onGround);
+        // M8 part G: a Depth Hunter's oil bloom and hull break under the burst (no wreck).
+        start(pieces, deep.hunterOil(sortie, kind), DeepDeaths.hunterOilTicks(), x, y, 0, onGround);
+        start(pieces, deep.hunterBreak(sortie, kind), DeepDeaths.hunterBreakTicks(), x, y, 0, onGround);
         // M8 part D: an Abyss Ray's break-up (faint for a shadow killed in the deep), a Barbfin's sinking shell and
         // ink cloud, under the burst.
         Array<AtlasRegion> breakUp = deep.rayBreakUp(sortie, kind);
@@ -964,6 +980,18 @@ final class EventEffects {
             effects.start(bloom, DeepDeaths.rayBloomTicks(), x, y, 0, 1, rayOpacity);
         }
         for (Array<AtlasRegion> remains : deep.pumpRemains(sortie, kind)) {
+            debris.startOnGround(remains, REMAINS_TICKS, x, y, 0, sortie.groundScroll());
+        }
+        // M8 part G: a relay beacon's lamp breaking at its lamp, its dark mast left on the ridge.
+        start(
+                effects,
+                deep.beaconBreak(sortie, kind),
+                DeepDeaths.beaconBreakTicks(),
+                x + deep.beaconLampDx(sortie),
+                y + deep.beaconLampDy(sortie),
+                0,
+                onGround);
+        for (Array<AtlasRegion> remains : deep.beaconRemains(sortie, kind)) {
             debris.startOnGround(remains, REMAINS_TICKS, x, y, 0, sortie.groundScroll());
         }
         return true;

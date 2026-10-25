@@ -85,6 +85,7 @@ abstract class RadioTimeline {
     static final String LEVEL_24 = "act-4-deep-water/level-24-abyssal-plain";
     static final String LEVEL_25 = "act-4-deep-water/level-25-siren-trench";
     static final String LEVEL_26 = "act-4-deep-water/level-26-blackwater";
+    static final String LEVEL_27 = "act-4-deep-water/level-27-hydrothermal-vents";
 
     /** Rook's sides: a {@code {side}} line is played with each one's text. */
     static final List<String> SIDES = VoiceLines.SIDES;
@@ -489,6 +490,18 @@ abstract class RadioTimeline {
                                 new Event(88.5, CueTrigger.SECRET, "farm barge"),
                                 new Event(188, CueTrigger.SECONDARY_OBJECTIVE, "")),
                         List.of(new Event(188, CueTrigger.SECONDARY_OBJECTIVE, ""))));
+        // M8 part G: Level 27's events (step G2's runs from the data's rows): the Marlin (t≈40, x 90, by her stack)
+        // shot
+        // as she enters (t≈41) or as she passes the ship (t≈45.5), or not at all; the Abyss Ray's shadow at its wave's
+        // entry (`first-ray`, t=106, its only Ray); the beacons' secondary has no line; no Rook lines (he is missing).
+        runs.put(
+                LEVEL_27,
+                List.of(
+                        List.of(new Event(106, CueTrigger.FIRST_RAY, "")),
+                        List.of(new Event(41, CueTrigger.SECRET, "Marlin"), new Event(106, CueTrigger.FIRST_RAY, "")),
+                        List.of(
+                                new Event(45.5, CueTrigger.SECRET, "Marlin"),
+                                new Event(106, CueTrigger.FIRST_RAY, ""))));
         return runs;
     }
 

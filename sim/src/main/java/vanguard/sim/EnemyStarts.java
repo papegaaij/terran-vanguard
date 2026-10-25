@@ -191,7 +191,8 @@ final class EnemyStarts {
     void mounted(WallMounts.Placed placed) {
         if (placed.nest()) {
             u.phase = Enemy.Phase.MOUNT;
-            u.facing = Enemy.heading(placed.left() ? 1 : -1, 0);
+            // M8 part G: a ground nest (on a chimney stack) faces down the screen, a wall's the open water.
+            u.facing = placed.ground() ? 0 : Enemy.heading(placed.left() ? 1 : -1, 0);
             u.song.start(u.spec, placed.delaySeconds());
         } else {
             u.hoverHold.notBefore(placed.swimOut());

@@ -312,3 +312,10 @@ Round 55, production art (M8 part F batch, step ART-F). Not a mockup: the review
 portrait (30x30) written by [tools/art/intel.py](../../../../tools/art/intel.py) from tools/art/glow_angler.py's
 production model: the rust angler nose down, its gape half open, the teal lure lit on its stalk.
 
+
+## intel-final-r57-a
+
+Round 57, production art (M8 part G batch, step ART-G). Not a mockup: the review sheet of the `depth-hunter` and
+`relay-beacon` sensor L2 portraits (30x30) written by [tools/art/intel.py](../../../../tools/art/intel.py) from
+tools/art/depth_hunter.py's production model (the grey glider nose down, its sensor slit and nozzles lit; the game adds
+the "UNMARKED GREY" tag) and tools/art/relay_beacon.py's (the lit mast).

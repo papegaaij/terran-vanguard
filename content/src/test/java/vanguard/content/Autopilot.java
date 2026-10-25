@@ -49,7 +49,8 @@ import vanguard.sim.Sortie;
  * reversed scroll, Level 20), {@link ColossusPlay} (M7 part H: the breaching boss, Level 21), {@link WaterPlay} (M8 part C:
  * the drag, the siphon pumps and the Glassfin's rams, Level 23), {@link AbyssPlay} (M8 part D: the Abyss Ray's shadow,
  * the Barbfins, Level 24), {@link SirenPlay} (M8 part E: the nests' bodies, the trench's rock and the slow, Level 25), {@link DarkPlay} (M8 part
- * F: every move planned among the Glow Anglers' lunges and the jellies' rings, Level 26) and the
+ * F: every move planned among the Glow Anglers' lunges and the jellies' rings, Level 26), {@link VentPlay} (M8 part G: every
+ * move planned among the heat plumes, the Depth Hunters' torpedoes and the bullets, the relay beacons first, Level 27) and the
  * moves' {@link MovePlanner}. It reads the sortie's state only, so it is deterministic; the recorded replay stores its commands. Public for the campaign tests (the
  * Act 1 playthrough, {@code ActPlaythroughTest}).
  */
@@ -150,7 +151,8 @@ public final class Autopilot {
             // M7 part D: a wounded Shellback's roll would crush a dome: no shot at it until the dome is out of reach.
             commands &= ~Command.FIRE.bit();
         }
-        if (sortie.vents().grates() > 0) {
+        if (sortie.vents().grates() > 0 && !VentPlay.plumes(sortie)) {
+            // M8 part G: the plumes' discs are VentPlay's own.
             commands = HazardPlay.ventFilter(sortie, commands);
         }
         return sortie.terrain() == null ? commands : HazardPlay.canyon(sortie, commands, channel);
@@ -165,8 +167,15 @@ public final class Autopilot {
             boolean left = ((long) Math.floor(sortie.realSeconds() / SHAKE_SECONDS)) % 2 == 0;
             return commands | (left ? Command.LEFT.bit() : Command.RIGHT.bit());
         }
+        if (VentPlay.plumes(sortie)) {
+            // M8 part G: a level with heat plumes (Level 27): every move planned among the discs, the torpedoes and the
+            // bullets, the beacons first (VentPlay).
+            return commands | VentPlay.move(sortie);
+        }
         if (DarkPlay.dark(sortie)) {
-            // M8 part F: a level with lunging units (Level 26's Glow Anglers): every move planned (DarkPlay).
+            // M8 part F: a level with lunging units (Level 26's Glow Anglers; Level 27's few are VentPlay's): every
+            // move
+            // planned (DarkPlay).
             return commands | DarkPlay.move(sortie);
         }
         double lob = DodgePlay.lobThreat(sortie, shipX, shipY);

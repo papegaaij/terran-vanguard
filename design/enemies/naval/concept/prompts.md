@@ -386,3 +386,17 @@ every unit of the level (Driftjelly, Eel head and body, Nautilus shut and open, 
 dark (6 % ambient and the 15 % rim pool, glows added) and as glow only. The GIF: Level 26's fault scarp at t~61 in the
 dark look's stand-in: jellies drifting, a snake crossing, a Nautilus pair rolling and one uncoiling, two Sirens at a
 cave telling and singing, then the Sonar Pulse lighting all of them.
+
+## depth-hunter-final-r57-a
+
+Round 57, production art (M8 part G batch, step ART-G; from the chosen concept depth-hunter-r48-b, the flat glider of
+`tools/concept/enemies_r48.py`, model and the unmarked grey livery imported unchanged). Not a mockup: the review sheet
+and a loop of the files written by [tools/art/depth_hunter.py](../../../../tools/art/depth_hunter.py) (held in
+`build/art-held/sprites/` until the Depth Hunter's `data.yaml` exists): the 76x76 frames at 16 headings x 2 nozzle
+flicker frames, the glow-only set (the red sensor slit and the two orange nozzles, additive), the Hunter's own torpedo
+(24x24, 16 headings x 2 motor frames: a slim grey body, a dark warhead band, cruciform tail fins, the motor's orange;
+no longer the walker missile) and its motor glow, the pale wake puff, the launch's push of water at a tube, the hull
+break (grey plates out of a dark cloud, over the under-water `medium` burst) and the dark oil bloom; no wreck stays.
+The GIF: in Level 27's chimney garden under the review's vent light (tools/art/l27kit.py) a column of three rises out
+of the deep from the bottom edge (a BOTTOM warning), holds low facing up, torpedoes rise and home on the ship, one is
+shot down, one Hunter breaks.

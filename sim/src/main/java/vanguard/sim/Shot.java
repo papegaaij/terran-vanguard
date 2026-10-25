@@ -44,6 +44,8 @@ public final class Shot implements Hashed {
     private double speedFactor = 1;
     /** M8 part A: how far it flies, px: its weapon's range, under water a torpedo's longer run or a lance's reach. */
     private double range;
+    /** M8 part G: whether a heat plume bent it already (once per shot; hashed only once set). */
+    private boolean bent;
 
     /** A bolt, a homing missile, a mine or a torpedo leaving (x, y) at {@code angle}. */
     void fire(WeaponSpec spec, int mountIndex, double startX, double startY, double angle) {
@@ -96,6 +98,7 @@ public final class Shot implements Hashed {
         arc = 1;
         speedFactor = 1;
         range = spec.range();
+        bent = false;
     }
 
     /**
@@ -284,6 +287,35 @@ public final class Shot implements Hashed {
         target = serial;
     }
 
+    /**
+     * M8 part G (design/campaign Level 27, Hazards; {@link HeatPlumes}): whether a heat plume can bend it: a bolt, a
+     * homing missile, a turret's shot or a torpedo (a harpoon) not bent yet; never a bomb, a shell, a mine or a depth
+     * charge (§5 G6).
+     */
+    boolean bendable() {
+        if (bent) {
+            return false;
+        }
+        return switch (weapon.delivery()) {
+            case BOLT, HOMING, TURRET, TORPEDO -> true;
+            case DROPPED, LOBBED, MINE, BEAM, DEPTH_CHARGE -> false;
+        };
+    }
+
+    /**
+     * M8 part G: a heat plume turns it by {@code radians} (clockwise on the screen for a positive angle), once; a homing
+     * shot steers on from its new heading.
+     */
+    void bend(double radians) {
+        bent = true;
+        heading = Math.IEEEremainder(heading + radians, 2 * StrictMath.PI);
+        double cos = Trig.cos(radians);
+        double sin = Trig.sin(radians);
+        double turnedX = vx * cos + vy * sin;
+        vy = -vx * sin + vy * cos;
+        vx = turnedX;
+    }
+
     @Override
     public void addTo(StateHash hash) {
         hash.add(mount)
@@ -310,6 +342,10 @@ public final class Shot implements Hashed {
         if (speedFactor != 1 || range != weapon.range()) {
             // M8 part A: only a shot fired in the water, so the other levels hash as before.
             hash.add(speedFactor).add(range);
+        }
+        if (bent) {
+            // M8 part G: only a shot a plume bent, so the other levels hash as before.
+            hash.add(1);
         }
     }
 

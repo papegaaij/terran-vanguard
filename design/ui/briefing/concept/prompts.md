@@ -244,3 +244,13 @@ middle, the vent field's red glow far to the south) and `level-26-lure` (Varga's
 shows it, tools/art/glow_angler.py's bead, stalk and eyes with the body a faint rim, a gold pickup beside it, the
 ship's headlight cone, the 130 px lunge radius and the ring of 8 it fires short of the ship).
 
+
+## briefing-images-final-r57-a
+
+Round 57, production art (M8 part G batch, step ART-G). Not a mockup: the review sheet of Level 27's two 672x240
+images written by [tools/art/briefing_images.py](../../../../tools/art/briefing_images.py): `level-27-vent-field`
+(Okafor's sonar chart, north up: the plain's edge and its old beacons, the black smokers and the chimney garden with
+every plume vent ringed amber, the beacon ridge's four red-gold relays, the hatchery gate's teal glow, the dotted route
+and Aegis Two's last position as an empty circle) and `level-27-plume-cycle` (Varga's diagram: tools/art/l27_props.py's
+plume frames in the cycle's three states, glowing 1.4 s, erupting 1.6 s, cold 1.5 s, every 4.5 s; a shot bent 25
+degrees off the burning disc; in the corner a grey Depth Hunter below the ship's lane with a torpedo rising).

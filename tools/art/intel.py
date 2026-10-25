@@ -120,6 +120,8 @@ import abyss_ray  # noqa: E402  (the Abyss Ray's production model)
 import barbfin  # noqa: E402  (the Barbfin's production model)
 import siren  # noqa: E402  (the Siren's production model)
 import glow_angler  # noqa: E402  (the Glow Angler's production model)
+import depth_hunter  # noqa: E402  (the Depth Hunter's production model)
+import relay_beacon  # noqa: E402  (the relay beacon's production model)
 import spiral_nautilus  # noqa: E402  (the Spiral Nautilus's production models)
 import eel_swarm  # noqa: E402  (the Eel Swarm's production models)
 import glassfin  # noqa: E402  (the Glassfin's production model)
@@ -173,7 +175,8 @@ BATCHES = {"spore-bomber": "M4 part C batch", "whirl-seed": "M4 part C batch",
            "boss-revenant-walker": "M7 part F batch", "boss-dust-colossus": "M7 part H batch",
            "drill-rig": "M8 part B batch", "glassfin": "M8 part C batch", "eel-swarm": "M8 part C batch",
            "abyss-ray": "M8 part D batch", "barbfin": "M8 part D batch",
-           "siren": "M8 part E batch", "spiral-nautilus": "M8 part E batch", "glow-angler": "M8 part F batch"}
+           "siren": "M8 part E batch", "spiral-nautilus": "M8 part E batch", "glow-angler": "M8 part F batch",
+           "depth-hunter": "M8 part G batch", "relay-beacon": "M8 part G batch"}
 # the concept round that reviews a batch
 ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "M4 part F batch": "r23",
           "M5 part B batch": "r30", "M5 part C batch": "r31", "M5 part D batch": "r32", "M5 part E batch": "r33",
@@ -181,7 +184,7 @@ ROUNDS = {UI_BATCH: "r13", "M4 part C batch": "r16", "M4 part D batch": "r17", "
           "M7 part B batch": "r38", "M7 part C batch": "r39", "M7 part D batch": "r40",
           "M7 part E batch": "r41", "M7 part F batch": "r42", "M7 part H batch": "r44", "M8 part B batch": "r51",
           "M8 part C batch": "r52", "M8 part D batch": "r53", "M8 part E batch": "r54",
-          "M8 part F batch": "r55"}
+          "M8 part F batch": "r55", "M8 part G batch": "r57"}
 OUT = SPRITES / "intel"
 CONCEPT = DESIGN / "ui" / "hangar" / "concept"
 PORTRAIT = 30
@@ -340,7 +343,13 @@ def reef_spitter_hi():
     return np.concatenate([rgb, alpha], axis=-1)
 
 
-HI = {"reef-spitter": reef_spitter_hi}
+def depth_hunter_hi():
+    """The Depth Hunter nose down at a little more than the portraits' usual extent, so the whole glider fits."""
+    scene, mats = depth_hunter.intel_model()
+    return sdf.render(scene, mats, (PORTRAIT * 8, PORTRAIT * 8), 2.7)
+
+
+HI = {"reef-spitter": reef_spitter_hi, "relay-beacon": relay_beacon.intel_hi, "depth-hunter": depth_hunter_hi}
 
 
 def portrait(slug):
