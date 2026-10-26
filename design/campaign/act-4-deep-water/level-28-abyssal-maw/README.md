@@ -456,8 +456,8 @@ the cruisers in the [bosses'](../../../enemies/bosses/README.md#concept-art) (st
 | [concept/orbit-capture-r58-a.png](concept/orbit-capture-r58-a.png) | The run's end and the orbit at t≈155.7, 157.7, 159.7 and 161.7: the cruisers falling off the bottom edge, the fade to white, 1:1 | chosen (round 58: accepted as final) |
 | [concept/no-escort-capture-r58-a.png](concept/no-escort-capture-r58-a.png) | A run with `--escort none`: the fight without the Bulwark at its 14.7 and 24.7 s (phase 1's rings and fans), 1:1 | chosen (round 58: accepted as final) |
 | [concept/pelagic-capture-r58-a.png](concept/pelagic-capture-r58-a.png) | A run steered under *Pelagic-3* (x 90): the sub hit under the fallen rack as she enters at the top edge (t≈58.2), opened (58.8), her crate rising (60.1), 1:1 | chosen (round 58: accepted as final) |
-| [concept/breakout-burst-capture-r59-a.png](concept/breakout-burst-capture-r59-a.png) | Game capture for round 59 R.3 (step I4; Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the balance plan's Level 28 fit, the Bulwark; four runs, the ship steered by held keys after the kill): the breakout's burst at the ship's breach for a ship at the left, in the middle, at the right and one weaving left-right and up-down, each just before the breach and 0.1, 0.3 and 0.7 s after; the lower field (y 120–540) at 1:1 | proposed (round 59) |
-| [concept/breakout-burst-capture-r59-a.mp4](concept/breakout-burst-capture-r59-a.mp4) | The weaving run from the shaft's climb to 8 s after the breach with the game's sound: the burst where the moving ship crossed the lip, anchored on the ice as the ship flies on, the ice slabs, the medium switching to air | proposed (round 59) |
+| [concept/breakout-burst-capture-r59-a.png](concept/breakout-burst-capture-r59-a.png) | Game capture for round 59 R.3 (step I4; Xvfb, `--bench`, medium, `--invulnerable`, auto-fire, the balance plan's Level 28 fit, the Bulwark; four runs, the ship steered by held keys after the kill): the breakout's burst at the ship's breach for a ship at the left, in the middle, at the right and one weaving left-right and up-down, each just before the breach and 0.1, 0.3 and 0.7 s after; the lower field (y 120–540) at 1:1 | chosen (round 59: accepted as final) |
+| [concept/breakout-burst-capture-r59-a.mp4](concept/breakout-burst-capture-r59-a.mp4) | The weaving run from the shaft's climb to 8 s after the breach with the game's sound: the burst where the moving ship crossed the lip, anchored on the ice as the ship flies on, the ice slabs, the medium switching to air | chosen (round 59: accepted as final) |
 
 The Maw's and the cruisers' production art (step ART-H1) and their captures are in the
 [bosses'](../../../enemies/bosses/README.md#concept-art) table, the Maw's intel silhouette and the intel capture in the
@@ -606,7 +606,7 @@ All decided in round 48 (2026-10-22):
   **Fix for the next code step (F.4, the user's note, verbatim):** "The effect is good, but the timing is off. It needs to be timed exactly when this ship breaches the surface. This is not fixed timing, because the ship can be anywhere on the screen and even move at that moment."
   The ceiling's burst must be placed and started at the moment the ship's position crosses the surface, wherever the ship
   is on the screen and even while it moves, not at a fixed time and place.
-- 2026-10-26 (step I2; pending the user's review in round 59): **F.4 fixed:** the burst (`BreakoutLooks`) and the
+- 2026-10-26 (step I2; accepted in round 59): **F.4 fixed:** the burst (`BreakoutLooks`) and the
   breakout's sound (`MawCues`) start on the step the shaft mouth's lip reaches the ship's nose at its x (`BreachLine`:
   the bore's circle of the backdrop's `shaft_mouth`, r 160 round x 240, its apex on the breakout line), at the lip where
   the ship crossed, and the burst stays anchored there on the ice, scrolling with the ground, while the ship flies on;
@@ -627,7 +627,7 @@ All decided in round 48 (2026-10-22):
   moving) and asked with V.1 (the Act 4 listen-through), Q.1 (the beds' volume) and seven calls: the Maw's par 138
   (C.1), easy's shorter fight (C.2), the head under the play plane on its way back (C.3), the hull riding the ice 2 s
   (C.4), the breach at the ship's nose with the medium switching at t=115 for the whole field (C.5), hard's credits
-  in Acts 3 and 4 (C.6), the homing diamond to Act 5 (C.7). The steps' small rules, pending the user's review in round
+  in Acts 3 and 4 (C.6), the homing diamond to Act 5 (C.7). The steps' small rules, accepted in round
   59: step I1's (the coil's 90 px arcs and the 55 px neck, the 5 s wind-in, the head's swim set at 16 headings, the
   dive's 3 s way back; the bight's tight bend kept, its segments up to ≈ 40° from their neighbours for the 0.8 s
   hold: a smaller swing or a longer bight would change the approved sweep; the tail's last three segments kept off the
@@ -637,3 +637,8 @@ All decided in round 48 (2026-10-22):
   in their `layers_hit` text corrected to the under-water rules: the play plane at the water's factor, the deep `sub`
   layer only in the Sonar Pulse's window; Level 28's beam-era time 1.52×, C.8 of round 58,
   unchanged with the real income).
+- 2026-10-26 (user, [round 59](../../../concept-rounds/round-59/README.md) closed): R.3 the breakout's burst **accepted**
+  (it starts as the ship's nose crosses the shaft mouth's lip, wherever the ship is; the round 58 F.4 fix is closed), with
+  R.1 the Maw's motion and R.2 the cruisers' rise (the Maw's and the cruisers' art `final`, the captures `chosen`). C.1
+  keep (the par 138), C.2-C.4 accepted, C.5 accepted (one medium switch at t=115 for the whole field, the burst at the
+  breach). The steps' small rules ("pending round 59") are accepted.

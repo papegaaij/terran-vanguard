@@ -2,7 +2,7 @@
 title: Abyssal Maw
 design: approved
 implementation: in-progress
-art: proposed
+art: final
 depends-on: [../../../world/europa, ../../../campaign/act-4-deep-water, ../../naval/eel-swarm, ../../../player/wingmen, ../../../story/twist, ../../../story/characters/the-choir, ../../../systems/economy]
 updated: 2026-10-26
 ---
@@ -225,7 +225,7 @@ body's 3 s and winds back in under the play plane: ≈ 5 s less of the head in t
 spec's HP: **138.4 s** at medium over its five seeds (120–163 s, every seed in the window; phases ≈ 34 / 69 / 30 s),
 easy ≈ 99 s, hard ≈ 161 s; over sixteen whole-level seeds (`levelReport -Pseeds=16`) the mean moved from 118.6 to
 125.1 s (+6.5 s; the five seeds' +12 s is mostly the dodges' divergence). The HP stays (the mean is within 7 % of the
-aim) and the **par follows the measured mean: 138** (pending the user's review). Phase 1 against the Kraken's: 2.51×
+aim) and the **par follows the measured mean: 138** (accepted in round 59, C.1 keep). Phase 1 against the Kraken's: 2.51×
 (the 3.0× allowance kept). The paper estimate: 134 s.
 
 Lessons from Acts 2–3 the build must apply (M8 part H):
@@ -400,7 +400,7 @@ looks (H5), the sounds and the music (H6); captured for round 58 in step H7.
       segments in 32 angles, the sacs, the implants shut / sparking / open / blown, the death, the intel
       silhouette; the cruisers rising and their gun ports; the head swimming in 16 headings (round 58 F.2,
       `abyssal-maw-head-swim`; the Maw ≈ 1.01 of a page with it, Level 28 within its 7 pages)
-- [x] Round 58 F.2's motion redo (step m8i1, pending the user's review in round 59): the arrival winds in from off the
+- [x] Round 58 F.2's motion redo (step m8i1, accepted in round 59): the arrival winds in from off the
       screen, the head first and the body following along the path (`MawMotionTest.itWindsInFromOffTheScreenHeadFirstAndTheBodyFollowsAlongThePath`,
       `Level28LooksTest.theHeadSwimsInTurningThroughTheBends`); rounded corners, every segment facing along the line
       as it lies, a sweep's bight turning its segments
@@ -411,11 +411,11 @@ looks (H5), the sounds and the music (H6); captured for round 58 in step H7.
 
 ## Open questions
 
-- **Redo in round 59 (round 58 F.2, the Maw's production art and motion; the user's note, verbatim):** "The creature just appears, a snake should wrap around you. The corners are just sharp 90 degree angles. The bump does not rotate the segments. After the creature runs through the middle, it teleports around you. Make it exit the screen entirely and then fold around you like at the (improved start)."
-  The art stays `proposed` until the redo is accepted: the coil's arrival and its sweeps must fold round the ship as a
+- **Closed (round 59, 2026-10-26: accepted; the Maw's art is `final`).** Redo of round 58 F.2 (the Maw's production art and motion; the Maw's production art and motion; the user's note, verbatim):** "The creature just appears, a snake should wrap around you. The corners are just sharp 90 degree angles. The bump does not rotate the segments. After the creature runs through the middle, it teleports around you. Make it exit the screen entirely and then fold around you like at the (improved start)."
+  The art stayed `proposed` until the redo was accepted: the coil's arrival and its sweeps must fold round the ship as a
   snake would (a path that exits the screen entirely and folds back in, rounded corners, segments turning along the path
   and over the bump), not appear or teleport. **Built in step m8i1 (2026-10-26), for round 59**: see *Arena* (the
-  intro), *Phases* (the sweeps, the dive) and the Decisions; pending the user's review there with the par (138), the
+  intro), *Phases* (the sweeps, the dive) and the Decisions; accepted there with the par (138), the
   dive's 3 s way back and the bight's tight bend (its segments turn up to ≈ 40° from their neighbours at its fullest).
 - Round 58 (step H4), **decided (2026-10-26)**: phase 1 costs the calibration harness's random dodger 2.6× the Kraken's
   phase 1 (band 0.8-1.2×); **keep** the attacks as approved (C.1 accepted; the test's 3.0× allowance stays).
@@ -457,7 +457,7 @@ All decided in round 48 (2026-10-22):
 - 2026-10-26 (user, [round 58](../../../concept-rounds/round-58/README.md) closed): the Maw's production art (F.2) is **redone**
   (the note in *Open questions*, verbatim); the cruisers' (F.3) too, see the [bosses'](../README.md#decisions) log. C.1
   (phase 1 at 2.6×) **keep**, the test's 3.0× allowance stays; the step's small rules (decided in round 58) accepted.
-- 2026-10-26 (round 58 F.2, step m8i1; pending the user's review in round 59): the coil's motion redone. The path's
+- 2026-10-26 (round 58 F.2, step m8i1; accepted in round 59): the coil's motion redone. The path's
   corners turn on 90 px arcs (`coil.body.bend`; the neck into the top run on 55 px) and every segment faces along the
   line as it lies now, so a sweep's bight turns its segments (the bight bends the body along its length, round a
   corner too); the walls' bottom corners round with the coil. The arrival winds in over the intro's last 5 s
@@ -468,3 +468,7 @@ All decided in round 48 (2026-10-22):
   where it is) until the tail tip has left the screen, then it winds back in as it arrived: `dive.return` 2 → 3 s
   (the wind-in; 2 s would be ≈ 1,100 px/s), under the play plane (only `anti-sub` and the Smart Bomb reach the head
   then). The fight re-measured: 138.4 s at medium, the HP kept, the par 127 → **138**.
+- 2026-10-26 (user, [round 59](../../../concept-rounds/round-59/README.md) closed): R.1 the Maw's motion **accepted** (the
+  arrival winding in, the rounded corners, the bight, the dive and the wind-in), so the Maw's art is `final`; C.1 **keep**
+  (the HP as approved, the par 138), C.2 (easy as the difficulty's factors make it) and C.3 (the head under the play
+  plane on the way back) accepted. The step's small rules ("pending round 59") are accepted.

@@ -418,3 +418,7 @@ formula is in [weapons](../../player/weapons/README.md#common-rules).
   tighter on purpose: its smaller firing groups and the Spire's half-paying hard Wraiths put Act 2 at −21.6 %.
 - 2026-10-22 (M8 part A, step A2; accepted in round 50 (2026-10-22)): a temporary budget(n) income for the Act 4
   levels without data (D8 of the part's gap check; removed in M8 part I) and the plan's Act 4 visits.
+- 2026-10-26 (user, [round 59](../../concept-rounds/round-59/README.md) closed, C.6 **accept for now**): hard's credits in
+  Acts 3 and 4 stay as they are: the autopilot's playthrough ends Act 4 on hard at -49.4 % of the expert's bound (13,164
+  against 25,991; Act 3 ended at -54.2 %, accepted for v0.1 in round 45), the plan's levers cannot close it. Revisited
+  after the user's playthrough of hard (a hard-only income bonus is the option).

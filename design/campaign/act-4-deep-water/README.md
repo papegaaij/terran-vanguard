@@ -410,7 +410,7 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
       picks in round 58).
 - [x] `ActPlaythroughTest` and `BalanceTest` through Act 4 with Rook (L22–L26) and the Bulwark (L27–L28; `--escort none` works) (M8 part I: on
       the levels' own typical hauls, part A's temporary `budget(n)` removed; the act's end at -2.3 % of the expert's
-      bound on medium and +8.8 % on easy, hard 49.4 % under it, pending in round 59; `BalanceTest`'s returning units
+      bound on medium and +8.8 % on easy, hard 49.4 % under it, accepted for now in round 59 (C.6); `BalanceTest`'s returning units
       through Level 28; `./gradlew :content:playthroughSave -Plevel=28` writes the save at the Level 28 hangar).
 - [ ] The user's playthrough of Act 4.
 
@@ -475,8 +475,13 @@ proposals in [naval](../../enemies/naval/README.md#concept-art) and the boss's i
 - 2026-10-25 (M8 part H, step H3): the act-end outro's four approved pages in the act's data (rendered into *Act intro
   and outro*, voiced) and `next_act` `{act: ACT V, name: THE BELT, setting: CERES}` for the release's end (the setting
   CERES, Level 29's Ceres Hub, a default of the step accepted in round 58 (2026-10-26)); Level 28 in data.
-- 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): the act's end (F.8: the debrief, the act summary, the four outro pages, the release's end card) accepted as final; C.5 (Act V's name on the end card, `ACT V - THE BELT. CERES. COMING SOON.`) accepted, C.8 (the balance exceptions, rechecked in part I) accepted. The Abyssal Maw (F.2) and the cruisers (F.3) are redone for round 59 ([Level 28](level-28-abyssal-maw/README.md#decisions)).
+- 2026-10-26 (user, [round 58](../../concept-rounds/round-58/README.md) closed): the act's end (F.8: the debrief, the act summary, the four outro pages, the release's end card) accepted as final; C.5 (Act V's name on the end card, `ACT V - THE BELT. CERES. COMING SOON.`) accepted, C.8 (the balance exceptions, rechecked in part I) accepted. The Abyssal Maw (F.2) and the cruisers (F.3) were redone and accepted in round 59 ([Level 28](level-28-abyssal-maw/README.md#decisions)).
 - 2026-10-26 (M8 part I, step I3): the playthrough and balance tests through Level 28 on the real income (part A's
   `budget(n)` fallback removed; no tuning pass: medium ends Act 4 at -2.3 % of the expert's bound, easy +8.8 %, hard
-  -49.4 %, 13,164 against 25,991, still pending the user's review in round 59); the act passes the
+  -49.4 %, 13,164 against 25,991, accepted for now in round 59, C.6, revisited after the user's playthrough of hard); the act passes the
   [variety checklist](../../enemies/README.md#variety-checklist-per-act) as built (25 units, 3 insectoid).
+- 2026-10-26 (user, [round 59](../../concept-rounds/round-59/README.md) closed): the round 58 redos accepted (R.1 the Maw's
+  motion, R.2 the cruisers' rise, R.3 the breakout's burst at the ship's breach), the Act 4 listen-through accepted (V.1),
+  the ambience beds 6 dB louder (Q.1 a, built), C.1 keep (the Maw's par 138), C.2-C.5 accepted, **C.6 accept for now**
+  (hard's credits in Acts 3 and 4 stay 49.4 % under the expert's bound at the act's end; revisited after the user's
+  playthrough of hard), C.7 accepted (the homing diamond to Act 5). Act 4 is built; the user's playthrough is open.

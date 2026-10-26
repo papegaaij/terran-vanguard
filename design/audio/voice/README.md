@@ -613,13 +613,13 @@ level).
       `VoiceFilesTest` and `RadioTimelineLevel26Test` (with Level 26 voiced: `briefs/m8voxf-tests.patch` after step F2's
       `briefs/m8f2-radio.patch`) green in a snapshot (M8 part F, step VOX-F, 2026-10-23; pending the user's review in
       round 55)
-- [ ] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
+- [x] Act 4 (draft, round 48, M8): Dr. Ilse Brandt and Thera Deep Control cast a/b (their clips in `refs/`, the
       speakers in the table without `uncast`); the Choir's two spoken lines (Level 26's whisper, Level 28's death
       line); Rook's cut-off at t=161.2; the Act 4 names tried in the read-back; each Act 4 level's lines and the act
       intro and outro pages rendered and reviewed in its part's round (built: Dr. Brandt cast a in round 51, Thera Deep Control b in
       round 52, Levels 22–26 above, Levels 27 and 28 and the outro in parts G and H, reviewed in rounds 57 and 58; M8 part
       I: the 119 voiced Act 4 lines checked against a Whisper transcript, no file missing, none clipped; the whole Act 4
-      listen-through waits for round 59)
+      listen-through accepted in round 59, V.1)
 
 ## Concept art
 
@@ -854,3 +854,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   aside: "12", "Underwater", "storm hawks", "air strike"); pitch (pyin, raw) Okafor median 145 Hz, Varga 204-209 Hz, no
   octave jumps (at most 7 % of frames over 1.6× the median, p90 237-263 Hz): no pins. The three superseded takes deleted.
   Measured only, not listened to.
+- 2026-10-26 (user, [round 59](../../concept-rounds/round-59/README.md) closed, V.1): the listen-through of the 119
+  voiced Act 4 lines (14 minutes) **accepted**; the 8 flagged lines stay as they are. The Act 4 voice item is ticked.

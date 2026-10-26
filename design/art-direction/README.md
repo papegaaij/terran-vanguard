@@ -541,3 +541,5 @@ Entries dated before 2026-10-21 (M8's start): [decisions-archive.md](decisions-a
   or **b** "quenched fire" (a short orange fireball choked into a teal glow, slow embers, a silt puff); a plays in the
   game (`tools/art/explosions.py --deep a` in `assets/`) until round 52's pick.
 - 2026-10-22 (user, round 52, closed; F.7 = a): the under-water kill bursts are **a**, the "pressure flash" (a white-teal flash, the pressure ring, the dark cavity; already in the game); b, the "quenched fire", rejected (its sheet and GIF moved to `concept/rejected/`). The `--deep b` frames are not in `assets/`.
+- 2026-10-26 (user, [round 59](../concept-rounds/round-59/README.md) closed, C.7): the homing diamond moves to Act 5, to be
+  drawn with the first homing enemy bullet; Act 4's only homing projectile keeps its own torpedo sprite.
